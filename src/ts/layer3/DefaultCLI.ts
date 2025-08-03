@@ -26,15 +26,23 @@ export class DefaultCLI {
       let ClassModule, ClassRef;
       try {
         if (!className) throw new Error('No class specified');
-        // Try to import from layer1, then layer2
+        // Try to import from layer1, then layer2, always with .ts extension
         try {
+          Logger.log(`[DefaultCLI] Trying import: ../layer1/${className}.ts`);
           ClassModule = await import(`../layer1/${className}.ts`);
-        } catch {
-          ClassModule = await import(`../layer2/${className}.ts`);
+        } catch (e1) {
+          try {
+            Logger.log(`[DefaultCLI] Trying import: ../layer2/${className}.ts`);
+            ClassModule = await import(`../layer2/${className}.ts`);
+          } catch (e2) {
+            Logger.log(`[DefaultCLI] Import failed for both layer1 and layer2: ${e1} | ${e2}`);
+            throw e2;
+          }
         }
-        ClassRef = ClassModule[className];
+        // Try both exact and capitalized class name
+        ClassRef = ClassModule[className] || ClassModule[className.charAt(0).toUpperCase() + className.slice(1)];
       } catch (e) {
-        Logger.log(`[DefaultCLI] Could not import class: ${className}`);
+        Logger.log(`[DefaultCLI] Could not import class: ${className} (${e})`);
         // fallback to OOSH
         const OOSHModule = await import('../layer1/OOSH.ts');
         const OOSH = OOSHModule.OOSH;

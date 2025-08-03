@@ -1,9 +1,10 @@
 import { execSync } from 'child_process';
+import path from 'path';
 import * as fs from 'fs';
-import { Project } from '../layer3/Project.js';
+import type { Project } from '../layer3/Project.ts';
 import { ParameterParser } from '../layer1/ParameterParser.ts';
-import { CLI } from '../layer3/CLI.js';
-import { DefaultCLI } from '../layer3/DefaultCLI.js';
+import type { CLI } from '../layer3/CLI.ts';
+import { DefaultCLI } from '../layer3/DefaultCLI.ts';
 
 export class GitScrumProject implements Project {
   private cli: CLI;
@@ -16,8 +17,7 @@ export class GitScrumProject implements Project {
   // Static entry point for CLI usage
   static start(): void {
     // Developer first principles: resolve git root, set PATH, etc.
-    const { execSync } = require('child_process');
-    const path = require('path');
+    // (execSync and path are now imported at the top for ESM compatibility)
     let gitRoot = process.env.GIT_ROOT;
     if (!gitRoot) {
       try {
