@@ -2,7 +2,7 @@
 process.env.NODE_NO_WARNINGS = '1';
 // OOSH.ts: Strict OOP CLI class for Web4Articles
 
-import { Logger } from './Logger.ts';
+import { Logger } from './Logger.js';
 import { ParameterParser } from './ParameterParser.ts';
 import { DefaultCLI } from '../layer3/DefaultCLI.ts';
 

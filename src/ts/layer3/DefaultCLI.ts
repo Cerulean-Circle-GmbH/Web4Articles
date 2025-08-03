@@ -1,15 +1,5 @@
-// Logger class for LOG_LEVEL-aware logging
-class Logger {
-  static getLevel(): number {
-    const lvl = Number(process.env.LOG_LEVEL);
-    return isNaN(lvl) ? 0 : lvl;
-  }
-  static log(msg: string, level = 4) {
-    if (Logger.getLevel() >= level) {
-      console.log(msg);
-    }
-  }
-}
+
+import { Logger } from '../layer1/Logger.js';
 
 export class DefaultCLI {
   private callback: (args: string[]) => void;
