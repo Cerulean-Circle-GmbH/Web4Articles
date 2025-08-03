@@ -82,14 +82,26 @@ To eliminate this warning, add "type": "module" to /Users/Shared/Workspaces/2cuG
 The following describes the shell and TypeScript completion integration for the oosh CLI:
 
 > When the user types `oosh` and presses [Tab], the shell calls a TypeScript class `TSCompletion` implementing the `Completion` interface. The completion responds with a list of TypeScript classes. As the user types further (e.g., `oosh GitScrumProject` [Tab]), the completion lists available methods, then sub-methods or parameters, and finally default parameter values. This enables context-aware tab completion for the CLI, driven by the TypeScript backend.
-
-Example flow:
-
-```
 oosh [Tab]                # completes: GitScrumProject
 oosh GitScrumProject [Tab] # completes: create createProject
 oosh GitScrumProject create [Tab] # completes: project
 oosh GitScrumProject create project [Tab] # completes: Web4Scrum
+
+### Completion Flow (Detailed)
+
 ```
+oosh [Tab]                # completes: GitScrumProject
+oosh GitScrumProject [Tab] # completes: create createProject
+oosh GitScrumProject create [Tab] # completes: all methods starting with 'create' (e.g. 'project', 'sprint', ...). If no such methods exist, completes parameters of the create() method (e.g. 'project').
+oosh GitScrumProject create project [Tab] # completes: Web4Scrum (default value for 'project')
+oosh GitScrumProject createSprint [Tab] # completes: parameters of createSprint()
+oosh GitScrumProject create sprint [Tab] # completes: parameters of createSprint()
+```
+
+**Completion logic:**
+- After a class and method name (e.g. 'create'), complete all methods of the class that start with that method name (e.g. 'create*').
+- If no such methods exist, complete the parameters of the method.
+- If a sub-method is chosen (e.g. 'sprint'), complete the parameters of the corresponding method (e.g. 'createSprint').
+- If a parameter is chosen, complete its default value if available.
 
 This specification is implemented by a shell script for bash completion and a TypeScript backend for dynamic completions.

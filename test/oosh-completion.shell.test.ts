@@ -28,5 +28,10 @@ describe('oosh-completion.sh integration', () => {
     expect(result).toMatch(/project/);
   });
 
+  it('completes default value for GitScrumProject create project', () => {
+    const result = runShell(`bash ${shScript} GitScrumProject create project`);
+    expect(result).toMatch(/Web4Scrum/);
+  });
+
 
 });

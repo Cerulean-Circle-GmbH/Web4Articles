@@ -3,7 +3,7 @@
 
 
 
-import type { Completion } from '../layer3/Completion.ts' with { type: 'typescript' };
+import type { Completion } from '../layer3/Completion.ts';
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import * as path from 'node:path';
 import * as ts from 'typescript';
@@ -62,23 +62,81 @@ export class TSCompletion implements Completion {
     return [];
   }
 
-  static getMethodParameters(className: string, methodName: string): string[] {
+  static getMethodParameters(className: string, methodName: string, paramName?: string): string[] {
     const files = TSCompletion.getProjectSourceFiles();
+    let params: string[] = [];
+    let defaultValues: Record<string, string> = {};
+    let paramMap: Record<string, string> = {};
     for (const file of files) {
       const src = readFileSync(file, 'utf8');
       const sourceFile = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true);
-      let params: string[] = [];
       ts.forEachChild(sourceFile, node => {
         if (ts.isClassDeclaration(node) && node.name && node.name.text === className) {
           for (const m of node.members) {
             if (ts.isMethodDeclaration(m) && m.name && ts.isIdentifier(m.name) && m.name.text === methodName) {
-              params = m.parameters.map(p => p.name.getText());
+              if (
+                m.parameters.length === 1 &&
+                ts.isIdentifier(m.parameters[0].name) &&
+                m.parameters[0].name.text === 'args' &&
+                m.parameters[0].type &&
+                ts.isArrayTypeNode(m.parameters[0].type)
+              ) {
+                if (m.body) {
+                  m.body.statements.forEach(stmt => {
+                    if (
+                      ts.isVariableStatement(stmt) &&
+                      stmt.declarationList.declarations.length === 1
+                    ) {
+                      const decl = stmt.declarationList.declarations[0];
+                      if (
+                        ts.isIdentifier(decl.name) &&
+                        decl.initializer &&
+                        ts.isBinaryExpression(decl.initializer)
+                      ) {
+                        const left = decl.initializer.left;
+                        const right = decl.initializer.right;
+                        if (
+                          ts.isElementAccessExpression(left) &&
+                          ts.isIdentifier(left.expression) &&
+                          left.expression.text === 'args'
+                        ) {
+                          params.push(decl.name.text);
+                          const logical = decl.name.text.replace(/Name$/i, '').toLowerCase();
+                          paramMap[logical] = decl.name.text;
+                          if (ts.isStringLiteral(right)) {
+                            defaultValues[decl.name.text] = right.text;
+                          }
+                        }
+                      }
+                    }
+                  });
+                }
+              } else {
+                params = m.parameters.map(p => p.name.getText());
+              }
             }
           }
         }
       });
-      if (params.length > 0) return params;
     }
+    if (paramName) {
+      // Try direct match
+      if (defaultValues[paramName]) return [defaultValues[paramName]];
+      // Try logical match (e.g. 'project' matches 'projectName')
+      const logical = paramName.replace(/Name$/i, '').toLowerCase();
+      if (paramMap[logical]) {
+        const mappedParam = paramMap[logical];
+        if (defaultValues[mappedParam]) {
+          return [defaultValues[mappedParam]];
+        } else {
+          // If logical mapping exists but no default value, do not return the param name
+          return [];
+        }
+      }
+      // If no mapping or default, do not return the param name
+      return [];
+    }
+    if (params.length > 0) return params;
     return [];
   }
 
@@ -90,13 +148,43 @@ export class TSCompletion implements Completion {
       return TSCompletion.getClassMethods(args[0]);
     }
     if (args.length === 2) {
-      return TSCompletion.getMethodParameters(args[0], args[1]);
+      // After class and method name, complete all methods starting with that method name (e.g. 'create*').
+      // If no such methods exist, complete the parameters of the method.
+      const [className, methodPrefix] = args;
+      const methods = TSCompletion.getClassMethods(className);
+      const subMethods = methods
+        .filter(m => m !== methodPrefix && m.startsWith(methodPrefix))
+        .map(m => m.replace(methodPrefix, '').toLowerCase())
+        .filter(m => m); // remove empty string
+      if (subMethods.length > 0) {
+        return subMethods;
+      } else {
+        return TSCompletion.getMethodParameters(className, methodPrefix);
+      }
+    }
+    if (args.length === 3) {
+      // If the second arg + third arg matches a method, complete its parameters
+      const [className, methodPrefix, subMethodOrParam] = args;
+      const methods = TSCompletion.getClassMethods(className);
+      const fullMethod = methodPrefix + (subMethodOrParam.charAt(0).toUpperCase() + subMethodOrParam.slice(1));
+      if (methods.includes(fullMethod)) {
+        return TSCompletion.getMethodParameters(className, fullMethod);
+      }
+      // Otherwise, try to complete default value for the parameter
+      // e.g. oosh GitScrumProject create project [Tab] should return Web4Scrum
+      const values = TSCompletion.getMethodParameters(className, methodPrefix, subMethodOrParam);
+      if (values.length > 0 && values[0] !== subMethodOrParam && values[0] !== undefined && values[0] !== '') {
+        return values;
+      }
+      return [];
     }
     return [];
   }
 
   static start() {
     const args = process.argv.slice(2);
+    // DEBUG: Log the received arguments for troubleshooting
+    console.error('[TSCompletion] args:', JSON.stringify(args));
     const completion = new TSCompletion();
     const results = completion.complete(args);
     if (results.length > 0) {

@@ -37,8 +37,9 @@ export class GitScrumProject implements Project {
     this.createProject(projectName);
   }
 
-
-  private createProject(projectName: string): void {
+  // CLI method to create a new project
+  // add a defaultvalue for projectName: 'Web4Scrum'
+  private createProject(projectName: string = 'Web4Scrum'): void {
     const submodulePath = `./${projectName}`;
     const repoUrl = `git@github.com:<YOUR_GITHUB_ORG_OR_USER>/${projectName}.git`;
 
