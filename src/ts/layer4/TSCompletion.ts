@@ -12,6 +12,7 @@ export class TSCompletion implements Completion {
   static getProjectSourceFiles(): string[] {
     const __dirname = path.dirname(new URL(import.meta.url).pathname);
     const dirs = [
+      path.resolve(__dirname, '../layer1'),
       path.resolve(__dirname, '../layer2'),
       path.resolve(__dirname, '../layer3'),
     ];
