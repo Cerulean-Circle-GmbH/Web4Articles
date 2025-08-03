@@ -1,5 +1,5 @@
 
-import { Logger } from '../layer1/Logger.js';
+import { Logger } from '../layer1/Logger.ts';
 
 export class DefaultCLI {
   private callback: (args: string[]) => void;

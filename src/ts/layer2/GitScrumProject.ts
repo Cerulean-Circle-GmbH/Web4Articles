@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import type { Project } from '../layer3/Project.ts';
 import { ParameterParser } from '../layer1/ParameterParser.ts';
 import type { CLI } from '../layer3/CLI.ts';
-import { DefaultCLI } from '../layer3/DefaultCLI.ts';
+import { DefaultCLI } from './DefaultCLI.ts';
 
 export class GitScrumProject implements Project {
   private cli: CLI;
