@@ -1,9 +1,27 @@
 import { execSync } from 'child_process';
 import * as fs from 'fs';
+import { execSync } from 'child_process';
+import * as fs from 'fs';
 import { Project } from '../layer3/Project';
+import { ParameterParser } from './ParameterParser';
+import { CLI } from '../layer3/CLI';
+import { DefaultCLI } from '../layer3/DefaultCLI';
 
 export class GitScrumProject implements Project {
-  create(args: string[]): void {
+  private cli: CLI;
+
+  constructor(cli?: CLI) {
+    // Compose CLI interface using DefaultCLI by default
+    this.cli = cli || new DefaultCLI((args: string[]) => this.create(args));
+  }
+
+  // Static entry point for CLI usage
+  static start(): void {
+    new GitScrumProject().cli.start();
+  }
+
+  // Project interface method
+  public create(args: string[]): void {
     const projectName = args[0] || 'Web4Scrum';
     this.createProject(projectName);
   }
