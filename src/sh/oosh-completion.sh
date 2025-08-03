@@ -10,7 +10,7 @@ _oosh_completion() {
 
   # Call the TypeScript completion backend
   local completions
-  completions=$(TS_NODE_PROJECT=tsconfig.json ts-node ../ts/layer4/TSCompletion.ts "${COMP_WORDS[@]:1}")
+  completions=$(TS_NODE_PROJECT="$(cd "$(dirname -- "$BASH_SOURCE")/../.." && pwd)/tsconfig.json" ts-node ../ts/layer4/TSCompletion.ts "${COMP_WORDS[@]:1}")
   COMPREPLY=( $(compgen -W "$completions" -- "$cur") )
 }
 
