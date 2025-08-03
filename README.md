@@ -4,15 +4,24 @@
 
 This Project will create a md-file based WIKI for CIRAS Project articles
 
-## Tech stack and first principles
-The projects code will be written in typescript.
-Radical OOP will be applied.
-No functions outside of classes.
-Each article will become a seperate gis submodule.
-The project is managed by and AI (LLM).
-The AI vibecodes its own tools to manage the project.
-Each tool will become it own git submodule with the same basic tech stack and first principles.
-The project will me radically managed in CMM 4 level via SCRUM (less scrumm flavor, but fully automated)
+
+## Tech Stack and First Principles
+
+- **TypeScript**: All code is written in strict TypeScript.
+- **ES Modules (ESM)**: All code, scripts, and CLI entry points must use the most modern ES module syntax (`import`/`export`).
+- **No CommonJS**: CommonJS (`require`, `module.exports`) is strictly forbidden. Do not use legacy Node.js module systems anywhere in the project.
+- **All scripts, tests, and automation must be ESM-compliant.**
+- All CLI entry points must be ESM TypeScript files, run via `ts-node --esm`.
+- All shell wrappers (e.g., `oosh`, completion scripts) must resolve the project root and invoke ESM TypeScript entry points.
+- Never use `main.ts` as a CLI entry point. Always use a static `start()` method in a dedicated entry class (e.g., `OOSH.start()` or `GitScrumProject.start()`).
+  - **start() methods and constructors must never take parameters.** All CLI argument parsing and dispatch must be handled inside the class, using a CLI interface (see `GitScrumProject` and `OOSH` for reference). This ensures strict OOP and testability.
+- **DRY Principle**: Do not repeat logic, code, or documentation. Always consolidate and refactor to a single canonical location if repetition is found.
+- Node.js 18+ (LTS recommended)
+- Bash for shell integration
+- Jest for testing (ESM compatible)
+- VS Code with recommended extensions
+
+Radical OOP will be applied. No functions outside of classes. Each article will become a separate git submodule. The project is managed by an AI (LLM). The AI vibecodes its own tools to manage the project. Each tool will become its own git submodule with the same basic tech stack and first principles. The project will be radically managed in CMMI Level 4 via SCRUM (less scrum flavor, but fully automated).
 
 ## Modus operandi
 The LLM AI acts in the first place as a scrum master of a scrm team interacting with the user as a QA auditor, that at any time audits and gives feedback.
@@ -23,29 +32,30 @@ Each role will be dilligently onboarded and everything will be fully tracable do
 ## Recovery
 
 
-## Recovery Procedure
 
-If the AI loses context or receives the prompt "recover" from the QA user, it will autonomously execute the following steps to regain full project understanding and state:
+## Optimized Recovery Procedure
 
-1. **Read the README.md thoroughly** to understand the project’s purpose, tech stack, and management principles.
-2. **Check for referenced files and folders:**
-   - Locate all markdown files, especially those referenced in the README (e.g., process, recovery, onboarding, QA feedback).
-   - Review the `scrum.pmo` directory for SCRUM management structure, roles, sprints, and tasks.
-   - Check for a `wiki` folder or submodule and review its contents (e.g., ontology, Home.md).
-3. **Review the current state:**
-   - Examine the latest sprint planning and task files to see what is in progress, completed, or planned.
-   - Check the QA audit and feedback sections in tasks and process files for recent activity and open issues.
-   - Review onboarding and process documentation for each role to understand responsibilities and current workflows.
-4. **Recovery steps if context is lost:**
-   - Start by reading the README.md and all referenced restart/recovery procedures.
-   - Autonomously read all markdown documentation in the project (especially in `scrum.pmo`, `wiki`, and any onboarding or process files) until the project’s context, state, and next steps are clear.
-   - Document findings and update the recovery process if any gaps are found.
-5. **Confirm the project’s state:**
-   - Summarize the current sprint, open tasks, and recent QA feedback.
-   - Identify any missing documentation or unclear areas and create tasks to address them.
-   - Ensure all roles are documented and that onboarding is up to date.
-6. **Communicate findings:**
-   - Record the recovery process and findings in a markdown file (e.g., `recovery.md` or a QA audit section).
-   - Notify the QA user with a summary of the project state and recommended next steps.
+**Autonomous Recovery Process**
 
-This procedure is fully autonomous. When the QA user prompts "recover", the AI will execute these steps, provide a summary of the project state, and outline the next actions to ensure rapid onboarding and continuity.
+If the AI loses context or receives the prompt "recover" from the QA user, it will autonomously:
+
+1. **Read this README.md** for project purpose, tech stack, and management principles.
+2. **Scan all markdown files** in the project, prioritizing:
+   - `scrum.pmo/` (roles, sprints, tasks, process docs)
+   - `wiki/` (ontology, Home.md, definitions)
+   - Any onboarding, process, or QA feedback files
+3. **Automated Indexing:**  
+   - Update or generate an index (e.g., `index.md` or `structure.json`) listing all markdown files, their roles, and last modified dates.
+4. **QA Feedback Aggregation:**  
+   - Aggregate all QA feedback and audit findings from task QA sections and sprint audit files into a single `qa-feedback-log.md`.
+5. **Role-Specific Recovery Hooks:**  
+   - Reference each role’s `process.md` “Recovery Checklist” for role-specific context and recent actions.
+6. **Sprint & Task Status Summary:**  
+   - Generate a summary table of all sprints, tasks, and their statuses (open/closed/in-progress), linking to their markdown files.
+7. **Automated Consistency Checks:**  
+   - Check for broken links, missing backlinks, and outdated templates in all markdown files, reporting issues in the recovery summary.
+8. **Document findings:**  
+   - Append a timestamped entry to `recovery.md` summarizing findings, gaps, and actions taken.
+   - Notify the QA user with the summary and next steps.
+
+This process is fully autonomous and designed for rapid, reliable project context recovery and onboarding.

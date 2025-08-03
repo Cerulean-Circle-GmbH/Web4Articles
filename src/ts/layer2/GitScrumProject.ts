@@ -1,11 +1,9 @@
 import { execSync } from 'child_process';
 import * as fs from 'fs';
-import { execSync } from 'child_process';
-import * as fs from 'fs';
-import { Project } from '../layer3/Project';
-import { ParameterParser } from './ParameterParser';
-import { CLI } from '../layer3/CLI';
-import { DefaultCLI } from '../layer3/DefaultCLI';
+import { Project } from '../layer3/Project.js';
+import { ParameterParser } from '../layer1/ParameterParser.ts';
+import { CLI } from '../layer3/CLI.js';
+import { DefaultCLI } from '../layer3/DefaultCLI.js';
 
 export class GitScrumProject implements Project {
   private cli: CLI;
@@ -17,6 +15,19 @@ export class GitScrumProject implements Project {
 
   // Static entry point for CLI usage
   static start(): void {
+    // Developer first principles: resolve git root, set PATH, etc.
+    const { execSync } = require('child_process');
+    const path = require('path');
+    let gitRoot = process.env.GIT_ROOT;
+    if (!gitRoot) {
+      try {
+        gitRoot = execSync('git rev-parse --show-toplevel', { encoding: 'utf-8' }).trim();
+        process.env.GIT_ROOT = gitRoot;
+      } catch (e) {
+        gitRoot = process.cwd();
+      }
+    }
+    process.env.PATH = path.join(gitRoot, 'node_modules/.bin') + ':' + process.env.PATH;
     new GitScrumProject().cli.start();
   }
 
@@ -25,6 +36,7 @@ export class GitScrumProject implements Project {
     const projectName = args[0] || 'Web4Scrum';
     this.createProject(projectName);
   }
+
 
   private createProject(projectName: string): void {
     const submodulePath = `./${projectName}`;

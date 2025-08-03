@@ -5,7 +5,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "start": "ts-node src/ts/layer4/main.ts"
+    "start": "ts-node -e 'import(\"./src/ts/layer4/main.ts\").then(m => m.MainEntrypoint.start())'"
   },
   "dependencies": {},
   "devDependencies": {
