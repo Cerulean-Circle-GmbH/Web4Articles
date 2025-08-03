@@ -1,20 +1,18 @@
-
-
-# Minimal pass-through: call TSCompletion backend and output result
+# Bash completion function for oosh
+# Usage: source this file and register with: complete -C oosh-completion.sh oosh
+DIR="$(cd "$(dirname "$0")/../.." && pwd)"
+# Bash completion function for oosh
+# Usage: source this file and register with: complete -C oosh-completion.sh oosh
+#echo "iARGS: ${args[@]}" 
 DIR="$(cd "$(dirname "$0")/../.." && pwd)"
 
-
-# If the last argument is a known parameter name, add an empty string to trigger value completion
-if [ "$#" -ge 3 ]; then
-  PARAMS=$(ts-node "$DIR/src/ts/layer4/TSCompletion.ts" "$1" "$2")
-  # Split PARAMS into lines and compare
-  IFS=' ' read -r -a param_array <<< "$PARAMS"
-  for param in "${param_array[@]}"; do
-    if [ "$param" = "${@: -1}" ]; then
-      echo "[oosh-completion.sh] value completion branch: $@ <empty>" 1>&2
-      exec ts-node "$DIR/src/ts/layer4/TSCompletion.ts" "$@" ""
-    fi
-  done
+# Minimal completion backend: strip command name, empty strings, output completions one per line
+args=("$@")
+if [ "${args[0]}" = "oosh" ]; then
+  args=("${args[@]:1}")
 fi
-
-exec ts-node "$DIR/src/ts/layer4/TSCompletion.ts" "$@"
+while [ "${#args[@]}" -gt 0 ] && [ "${args[0]}" = "" ]; do
+  args=("${args[@]:1}")
+done
+COMPREPLY=$(NODE_NO_WARNINGS=1 ts-node "$DIR/src/ts/layer4/TSCompletion.ts" "${args[@]}")
+#echo "$COMPLETIONS"

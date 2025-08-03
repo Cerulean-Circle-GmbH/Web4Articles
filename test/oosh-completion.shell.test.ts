@@ -1,3 +1,14 @@
+  it('completes default value for GitScrumProject create project using COMP_WORDS/COMP_CWORD', () => {
+    // Simulate Bash completion environment
+    const env = {
+      ...process.env,
+      COMP_WORDS: 'oosh GitScrumProject create project',
+      COMP_CWORD: '4',
+      NODE_NO_WARNINGS: '1',
+    };
+    const result = execSync(`bash ${shScript}`, { encoding: 'utf8', env });
+    expect(result).toMatch(/Web4Scrum/);
+  });
 import { describe, it, expect } from 'vitest';
 import { execSync } from 'node:child_process';
 import path from 'node:path';
@@ -28,10 +39,10 @@ describe('oosh-completion.sh integration', () => {
     expect(result).toMatch(/project/);
   });
 
-  it('completes default value for GitScrumProject create project', () => {
-    const result = runShell(`bash ${shScript} GitScrumProject create project`);
-    expect(result).toMatch(/Web4Scrum/);
-  });
+//   it('completes default value for GitScrumProject create project', () => {
+//     const result = runShell(`bash ${shScript} GitScrumProject create project`);
+//     expect(result).toMatch(/Web4Scrum/);
+//   });
 
 
 });
