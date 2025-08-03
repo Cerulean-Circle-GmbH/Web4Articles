@@ -9,9 +9,8 @@ COMPLETION_SCRIPT="$SCRIPT_DIR/oosh-completion.sh"
 # Register the completion function for oosh using a Bash function
 _oosh_completion() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local words=("${COMP_WORDS[@]}")
-    local cword=$COMP_CWORD
+    # Pass all words except the command itself to the backend
+    local args=("${COMP_WORDS[@]:1}")
     # Call the completion backend and collect completions
     COMPREPLY=( $(compgen -W "$(NODE_NO_WARNINGS=1 ts-node "../ts/layer4/TSCompletion.ts" "${args[@]}")" -- "$cur") )
     compopt -o default
