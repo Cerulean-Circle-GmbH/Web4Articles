@@ -141,11 +141,39 @@ export class TSCompletion implements Completion {
   }
 
   complete(args: string[]): string[] {
+    // If first arg is empty string and second is a prefix, return classes matching prefix
     if (args.length === 0) {
       return TSCompletion.getClasses();
     }
+    if (args.length === 1 && args[0] === '') {
+      return TSCompletion.getClasses();
+    }
+    if (args.length === 2 && args[0] === '') {
+      const prefix = args[1];
+      if (!prefix) {
+        return TSCompletion.getClasses();
+      }
+      return TSCompletion.getClasses().filter(c => c.startsWith(prefix));
+    }
     if (args.length === 1) {
-      return TSCompletion.getClassMethods(args[0]);
+      const prefix = args[0];
+      if (!prefix) {
+        return TSCompletion.getClasses();
+      }
+      // If prefix is an exact class name, return its methods
+      const classes = TSCompletion.getClasses();
+      if (classes.includes(prefix)) {
+        return TSCompletion.getClassMethods(prefix);
+      }
+      // Otherwise, return all classes that start with the prefix
+      return classes.filter(c => c.startsWith(prefix));
+    }
+    if (args.length === 2 && args[1] === "") {
+      // If second arg is empty, treat as requesting all methods for the class
+      const classes = TSCompletion.getClasses();
+      if (classes.includes(args[0])) {
+        return TSCompletion.getClassMethods(args[0]);
+      }
     }
     if (args.length === 2) {
       // After class and method name, complete all methods starting with that method name (e.g. 'create*').
@@ -183,8 +211,11 @@ export class TSCompletion implements Completion {
 
   static start() {
     const args = process.argv.slice(2);
-    // DEBUG: Log the received arguments for troubleshooting
-    console.error('[TSCompletion] args:', JSON.stringify(args));
+    // Only log args if LOG_LEVEL is 4 or higher
+    const logLevel = parseInt(process.env.LOG_LEVEL || '0', 10);
+    if (logLevel > 3) {
+      console.error('[TSCompletion] args:', JSON.stringify(args));
+    }
     const completion = new TSCompletion();
     const results = completion.complete(args);
     if (results.length > 0) {
