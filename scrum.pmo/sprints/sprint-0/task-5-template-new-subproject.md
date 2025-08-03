@@ -38,7 +38,7 @@
 
 
 ## QA Audit & User Feedback
-- 2025-08-03 UTC: QA: A previous process overwrote the content of `/po/iteration-3-task-1.md`. This must be restored via git and such overwrites must be prevented in the future. Update process documentation to guarantee this learning. Tasks should be created in the correct sprint folder, not in /po.
+2025-08-03 UTC: QA: When running git operations for subproject or submodule creation, always verify you are in the correct project root directory (not a submodule or subfolder). Previous attempts committed in the wrong directory (wiki submodule) led to confusion and missed updates. This must be avoided in the future. Document this as a CMMI Level 4 improvement for constant process refinement.
 
 ---
 ## Subtasks

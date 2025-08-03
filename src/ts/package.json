@@ -1,0 +1,15 @@
+{
+  "name": "web4articles-ts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "start": "ts-node src/ts/layer4/main.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "ts-node": "^10.0.0",
+    "typescript": "^4.0.0",
+    "@types/node": "^20.0.0"
+  }
+}
