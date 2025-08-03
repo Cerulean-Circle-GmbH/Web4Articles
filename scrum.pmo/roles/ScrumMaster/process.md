@@ -11,7 +11,11 @@ As Scrum Master, ensure the following best practices for committing and pushing 
 Subtasks must always be ordered to avoid blocking dependencies. If a blocking dependency is unavoidable, the Scrum Master is responsible for removing the impediment by reordering or splitting tasks. The Scrum Master should review all subtasks for dependency issues during sprint planning and execution.
 # Verification of Automated Actions
 
-Always verify that every automated or scripted action (such as file deletions, moves, or edits) has actually been completed as intended. Double-check by listing directories or checking file existence after the operation. Document any discrepancies and resolve them immediately. This ensures traceability, reliability, and trust in automation, and supports CMMI Level 4 process improvement by making verification explicit and auditable.
+**Always confirm with the user before deleting any folder or file.**
+
+Never perform a destructive operation (such as `rm -rf` or permanent file/folder deletion) without explicit user confirmation. This applies to all automation, scripts, and manual actions. If a deletion is requested, prompt the user for confirmation and document the action in the commit message and process logs.
+
+After any automated or scripted action (such as file deletions, moves, or edits), always verify that the action has actually been completed as intended. Double-check by listing directories or checking file existence after the operation. Document any discrepancies and resolve them immediately. This ensures traceability, reliability, and trust in automation, and supports CMMI Level 4 process improvement by making verification explicit and auditable.
 scrum.pmo/
   roles/
     ScrumMaster/
