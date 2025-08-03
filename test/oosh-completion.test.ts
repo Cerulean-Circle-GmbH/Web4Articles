@@ -1,3 +1,85 @@
+  it('bash completion script returns only valid completions (no warnings)', () => {
+    const projectRoot = path.resolve(__dirname, '..');
+    const shDir = path.join(projectRoot, 'src/sh');
+    const ooshCompletionScript = path.join(shDir, 'oosh-completion.sh');
+    // Simulate COMP_WORDS and COMP_CWORD for "oosh"
+    const env = {
+      ...process.env,
+      COMP_WORDS: 'oosh',
+      COMP_CWORD: '1',
+      BASH_SOURCE: ooshCompletionScript,
+    };
+    const result = spawnSync('bash', ['-c',
+      'source ./oosh-completion.sh && COMP_WORDS=(oosh); COMP_CWORD=1; _oosh_completion; printf "%s\n" "${COMPREPLY[@]}"'
+    ], {
+      cwd: shDir,
+      env,
+      encoding: 'utf-8',
+    });
+    if (result.error || result.status !== 0) {
+      console.error('DEBUG: shell script error:', result.error);
+      console.error('DEBUG: shell script stderr:', result.stderr);
+      console.error('DEBUG: shell script stdout:', result.stdout);
+    }
+    // Should contain only valid completions, no warnings
+    expect(result.stdout).toMatch(/GitScrumProject/);
+    expect(result.stdout).toMatch(/TestClass/);
+    expect(result.stdout).not.toMatch(/ExperimentalWarning/);
+  });
+
+  it('bash completion script returns methods for TestClass (no warnings)', () => {
+    const projectRoot = path.resolve(__dirname, '..');
+    const shDir = path.join(projectRoot, 'src/sh');
+    const ooshCompletionScript = path.join(shDir, 'oosh-completion.sh');
+    const env = {
+      ...process.env,
+      COMP_WORDS: 'oosh TestClass',
+      COMP_CWORD: '2',
+      BASH_SOURCE: ooshCompletionScript,
+    };
+    const result = spawnSync('bash', ['-c',
+      'source ./oosh-completion.sh && COMP_WORDS=(oosh TestClass); COMP_CWORD=2; _oosh_completion; printf "%s\n" "${COMPREPLY[@]}"'
+    ], {
+      cwd: shDir,
+      env,
+      encoding: 'utf-8',
+    });
+    if (result.error || result.status !== 0) {
+      console.error('DEBUG: shell script error:', result.error);
+      console.error('DEBUG: shell script stderr:', result.stderr);
+      console.error('DEBUG: shell script stdout:', result.stdout);
+    }
+    expect(result.stdout).toMatch(/hello/);
+    expect(result.stdout).toMatch(/world/);
+    expect(result.stdout).not.toMatch(/ExperimentalWarning/);
+  });
+  it('simulates the shell script and checks completions are visible', () => {
+    // Simulate the shell script invocation as in bash completion
+    const projectRoot = path.resolve(__dirname, '..');
+    const shDir = path.join(projectRoot, 'src/sh');
+    const ooshCompletionScript = path.join(shDir, 'oosh-completion.sh');
+    // Simulate COMP_WORDS and COMP_CWORD for "oosh"
+    const env = {
+      ...process.env,
+      COMP_WORDS: 'oosh',
+      COMP_CWORD: '1',
+      BASH_SOURCE: ooshCompletionScript,
+    };
+    const result = spawnSync('bash', ['-c',
+      'source ./oosh-completion.sh && COMP_WORDS=(oosh); COMP_CWORD=1; _oosh_completion; printf "%s\n" "${COMPREPLY[@]}"'
+    ], {
+      cwd: shDir,
+      env,
+      encoding: 'utf-8',
+    });
+    if (result.error || result.status !== 0) {
+      console.error('DEBUG: shell script error:', result.error);
+      console.error('DEBUG: shell script stderr:', result.stderr);
+      console.error('DEBUG: shell script stdout:', result.stdout);
+    }
+    // Should contain at least one completion (e.g., GitScrumProject)
+    expect(result.stdout).toMatch(/GitScrumProject/);
+  });
 import { spawnSync } from 'child_process';
 import * as path from 'path';
 

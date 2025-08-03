@@ -40,9 +40,9 @@ Implement the CLI interface, default implementation, and shell/TypeScript comple
 - Code is reviewed and accepted by the team.
 
 ## QA Audit & User Feedback
-## QA Audit & User Feedback
 - [x] Manual QA revealed that the completion script failed when sourced or run from different directories, due to incorrect TS_NODE_PROJECT path resolution.
 - [x] The automated test did not cover the real shell usage scenario, so the bug was not caught by CI.
+- [x] After suppressing Node.js warnings, no completions are shown in the shell after pressing [Tab], indicating a new or remaining bug in the completion pipeline.
 
 ### Manual QA Transcript (2025-08-03)
 ```
@@ -59,16 +59,23 @@ To eliminate this warning, add "type": "module" to /Users/Shared/Workspaces/2cuG
 ^C
 ```
 
+### Additional QA Feedback (2025-08-03)
+```
+[oosh McDonges.native] donges@McDonges-3:/Users/Shared/Workspaces/2cuGitHub/Web4Articles/src/sh > source oosh-completion.sh 
+[oosh McDonges.native] donges@McDonges-3:/Users/Shared/Workspaces/2cuGitHub/Web4Articles/src/sh > ./oosh G
+# (No completions shown after pressing [Tab])
+```
+
 ### QA Action Items
-- Fix the shell script to always resolve the correct absolute path to tsconfig.json.
-- Add a test that simulates running the completion backend from the shell script's directory (src/sh), with the correct TS_NODE_PROJECT path logic.
-- Ensure the test fails if the completion backend cannot find tsconfig.json or fails to run as the shell script would.
+- Fix the shell script and/or completion backend so that completions are actually shown in the shell after pressing [Tab].
+- Add a test that simulates the full shell completion pipeline, including the shell script, and verifies that completions are returned and visible to the user.
 
 - Write an automated test that:
   - Spawns the completion backend from the src/sh directory, as the shell script does
   - Sets TS_NODE_PROJECT to the correct absolute path
   - Verifies completions are returned as expected
   - Fails if the completion backend cannot find tsconfig.json or fails to run
+  - Simulates the shell script invocation and checks that completions are visible in the shell (not just in the backend)
 
 ## Completion Specification
 
