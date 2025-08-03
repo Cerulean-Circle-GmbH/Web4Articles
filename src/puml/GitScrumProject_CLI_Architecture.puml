@@ -1,0 +1,31 @@
+@startuml
+title GitScrumProject CLI OOP Architecture
+
+
+interface CLI {
+  +start()
+}
+
+class DefaultCLI implements CLI {
+  +start()
+}
+
+class ParameterParser {
+  -args: string[]
+  +parse(): { className, command, type, projectName }
+}
+
+class GitScrumProject implements Project {
+  -cli: CLI
+  +static start()
+  +create(args: string[])
+  -createProject(projectName: string)
+}
+
+GitScrumProject o-- DefaultCLI : composes
+DefaultCLI o-- ParameterParser : uses
+
+CLI <|.. DefaultCLI
+Project <|.. GitScrumProject
+
+@enduml

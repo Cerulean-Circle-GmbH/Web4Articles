@@ -15,8 +15,15 @@ The goal for Sprint 0 is to establish the foundational project structure, docume
   **Priority:** 4
 - [ ] [Task 4: Document Role Responsibilities](./task-4-document-role-responsibilities.md)  
   **Priority:** 5
+
 - [ ] [Task 5: Template for New Subproject Setup](./task-5-template-new-subproject.md)  
   **Priority:** 6
+    - [ ] [Task 5.1: Architect - PlantUML Specification](./task-5.1-architect-puml-spec.md)
+    - [ ] [Task 5.2: Developer - Implementation](./task-5.2-developer-implementation.md)
+    - [ ] [Task 5.3: Developer - Testing](./task-5.3-developer-testing.md)
+    - [ ] [Task 5.4: Developer - Documentation](./task-5.4-developer-documentation.md)
+    - [ ] [Task 5.5: PO - Planning & Acceptance](./task-5.5-po-planning-acceptance.md)
+    - [ ] [Task 5.6: Scrum Master - Process & Verification](./task-5.6-scrummaster-process-verification.md)
 
 ---
 
