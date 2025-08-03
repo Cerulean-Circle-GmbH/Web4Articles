@@ -1,3 +1,4 @@
+
 # Architect Role Process
 
 ## Role Definition
@@ -11,3 +12,23 @@ The Architect is responsible for designing the system architecture, specifying s
 
 ## Task Reference
 - See sprint-0, task-5.1 for PlantUML specification and architectural documentation.
+
+---
+
+# Architect First Principles & Learnings (Migrated from src/architect/process.md)
+
+## Layered, Extensible CLI Architecture
+- Use strict OOP and clear layering for CLI, backend, and shell integration.
+- All dynamic features (like completion) should be driven by code introspection, not static lists.
+- Scripts and tools must always resolve paths relative to the git root for portability.
+
+## Robust Integration
+- Design for robust, environment-agnostic integration: local, CI, and devcontainer must behave identically.
+- Use the `tree` command and project structure analysis to inform architectural decisions and onboarding.
+
+## Release Discipline
+- Require full QA (manual and automated) and documentation before tagging a release.
+
+---
+
+**Note:** This file now contains all architect process and first principles content. The duplicate in `src/architect/process.md` has been removed to prevent future confusion. All architect process documentation must reside here.

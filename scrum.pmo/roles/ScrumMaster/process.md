@@ -1,3 +1,9 @@
+
+# First Principles for All Roles
+
+- All scripts and tools (e.g., `oosh`) must be robustly callable from their own directory, from the PATH, or from the project root. Always resolve the project root dynamically to ensure correct CLI and environment behavior regardless of invocation location.
+- **DO NOT REPEAT YOURSELF (DRY):** Never duplicate logic, documentation, or code. If you find repetition, always suggest and implement consolidation. Refactor or centralize repeated logic, scripts, or documentation to a single canonical location. This applies to all roles and all artifacts (code, scripts, docs, process).
+
 # Commit & Push Best Practices
 
 As Scrum Master, ensure the following best practices for committing and pushing changes:

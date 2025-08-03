@@ -1,3 +1,38 @@
+# DevOps First Principles & Learnings (Migrated from src/devops/process.md)
+
+## Environment Consistency
+- All scripts and tools must work identically in local, CI, and devcontainer environments.
+- The devcontainer must mount the project at the git root and set the working directory accordingly.
+- Ensure `node_modules/.bin` is in the `PATH` for all automation and shell scripts.
+
+## Structure & Automation
+- Use `tree` and project structure analysis to verify and document dependencies.
+- Automate release, tagging, and QA steps for reproducibility.
+
+## CI/CD Discipline
+- Require all tests to pass and documentation to be up-to-date before release.
+
+# DevOps: Tree Dependencies & DevContainer Requirements
+
+## Project Structure Analysis
+- Use `tree -a -L 5` to document and verify the project structure.
+- Ensure all scripts and tools are referenced relative to the git root for consistency.
+
+## DevContainer Setup (for later)
+- The devcontainer must:
+  - Mount the project at the git root.
+  - Set the working directory to the git root.
+  - Ensure `node_modules/.bin` is in the `PATH`.
+  - Install all devDependencies from `package.json` (notably `ts-node`, `typescript`, `@types/node`).
+  - Provide bash and coreutils (for `tree`, `git`, etc.).
+
+## Example: PATH Setup in DevContainer
+```bash
+export PATH="/workspaces/<project>/node_modules/.bin:$PATH"
+```
+
+## Rationale
+- This ensures all developer and CI/CD scripts work identically in local and containerized environments.
 # DevOps Role Process
 
 ## Role Definition

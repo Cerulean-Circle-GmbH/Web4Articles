@@ -1,0 +1,8 @@
+{
+  // Migrated from UpDown/temp/daily.json
+  // Use this file to track daily project state, current sprint, and task status in JSON format.
+  "currentSprint": "",
+  "currentTask": "",
+  "status": "",
+  "history": []
+}
