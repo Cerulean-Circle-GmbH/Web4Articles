@@ -40,13 +40,35 @@ Implement the CLI interface, default implementation, and shell/TypeScript comple
 - Code is reviewed and accepted by the team.
 
 ## QA Audit & User Feedback
-- [ ] QA review pending.
-- [ ] Feedback to be collected after implementation and review.
+## QA Audit & User Feedback
+- [x] Manual QA revealed that the completion script failed when sourced or run from different directories, due to incorrect TS_NODE_PROJECT path resolution.
+- [x] The automated test did not cover the real shell usage scenario, so the bug was not caught by CI.
 
-## Subtasks
-- None (atomic subtask for this sprint).
+### Manual QA Transcript (2025-08-03)
+```
+[oosh McDonges.native] donges@McDonges-3:/Users/Shared/Workspaces/2cuGitHub/UpDown > source oosh-completion.sh 
+bash: oosh-completion.sh: No such file or directory
+ERROR> line 1: "source" from  returned with ERROR code: EPERM 1 Operation not permitted
+[oosh McDonges.native] donges@McDonges-3:/Users/Shared/Workspaces/2cuGitHub/UpDown > cd ../Web4Articles/src/sh/
+[oosh McDonges.native] donges@McDonges-3:/Users/Shared/Workspaces/2cuGitHub/Web4Articles/src/sh > source oosh-completion.sh 
+[oosh McDonges.native] donges@McDonges-3:/Users/Shared/Workspaces/2cuGitHub/Web4Articles/src/sh > ./oosh (node:51864) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51864) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/Shared/Workspaces/2cuGitHub/Web4Articles/src/ts/layer4/TSCompletion.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/Shared/Workspaces/2cuGitHub/Web4Articles/src/ts/package.json.
+^C
+```
 
----
+### QA Action Items
+- Fix the shell script to always resolve the correct absolute path to tsconfig.json.
+- Add a test that simulates running the completion backend from the shell script's directory (src/sh), with the correct TS_NODE_PROJECT path logic.
+- Ensure the test fails if the completion backend cannot find tsconfig.json or fails to run as the shell script would.
+
+- Write an automated test that:
+  - Spawns the completion backend from the src/sh directory, as the shell script does
+  - Sets TS_NODE_PROJECT to the correct absolute path
+  - Verifies completions are returned as expected
+  - Fails if the completion backend cannot find tsconfig.json or fails to run
 
 ## Completion Specification
 
