@@ -1,5 +1,3 @@
-
-
 import { describe, it, expect, beforeAll } from 'vitest';
 
 
@@ -59,5 +57,19 @@ describe('TSCompletion', () => {
         expect(result).toEqual(TSCompletion.getMethodParameters(classes[0], methods[0]));
       }
     }
+  });
+
+  it('completes parameter name for GitScrumProject create', () => {
+    const completion = new TSCompletion();
+    const result = completion.complete(['GitScrumProject', 'create']);
+    // Accept either 'project' or 'projectName' for flexibility
+    expect(result.join(' ')).toMatch(/project/);
+  });
+
+  it('completes default value for GitScrumProject create project', () => {
+    const completion = new TSCompletion();
+    // Simulate: oosh GitScrumProject create project [Tab]
+    const result = completion.complete(['GitScrumProject', 'create', 'project']);
+    expect(result.join(' ')).toMatch(/Web4Scrum/);
   });
 });
