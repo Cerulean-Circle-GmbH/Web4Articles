@@ -1,3 +1,11 @@
+# Commit & Push Best Practices
+
+As Scrum Master, ensure the following best practices for committing and pushing changes:
+- Commit and push after any significant process, template, or documentation update.
+- Commit after resolving dependencies or reordering tasks to remove blockers.
+- Push before sprint reviews or handoffs to ensure the team works with the latest state.
+- Commit and push after incorporating QA feedback or audit learnings.
+- Always document the reason for each commit in the commit message for traceability.
 # Subtask Dependency Management
 
 Subtasks must always be ordered to avoid blocking dependencies. If a blocking dependency is unavoidable, the Scrum Master is responsible for removing the impediment by reordering or splitting tasks. The Scrum Master should review all subtasks for dependency issues during sprint planning and execution.
