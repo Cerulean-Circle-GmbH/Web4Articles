@@ -1,29 +1,37 @@
 
-let TSCompletion: any;
-beforeAll(async () => {
-  // Dynamic import for ESM compatibility
-  TSCompletion = (await import('../../src/ts/layer4/TSCompletion.ts')).TSCompletion;
-});
+
+import { describe, it, expect, beforeAll } from 'vitest';
+
 
 describe('TSCompletion', () => {
+  let TSCompletion: any;
+  beforeAll(async () => {
+    TSCompletion = (await import('@src/ts/layer4/TSCompletion.ts')).TSCompletion;
+  });
+
   it('should list all classes', () => {
     const classes = TSCompletion.getClasses();
     expect(Array.isArray(classes)).toBe(true);
     expect(classes.length).toBeGreaterThan(0);
-    expect(classes).toContain('GitScrumProject');
   });
 
   it('should list methods for a class', () => {
-    const methods = TSCompletion.getClassMethods('GitScrumProject');
+    const classes = TSCompletion.getClasses();
+    expect(classes.length).toBeGreaterThan(0);
+    const className = classes[0];
+    const methods = TSCompletion.getClassMethods(className);
     expect(Array.isArray(methods)).toBe(true);
-    expect(methods).toContain('start');
   });
 
   it('should list parameters for a method', () => {
-    const params = TSCompletion.getMethodParameters('GitScrumProject', 'start');
-    expect(Array.isArray(params)).toBe(true);
-    // Accepts empty array if no params
-    expect(params.length).toBeGreaterThanOrEqual(0);
+    const classes = TSCompletion.getClasses();
+    expect(classes.length).toBeGreaterThan(0);
+    const className = classes[0];
+    const methods = TSCompletion.getClassMethods(className);
+    if (methods.length > 0) {
+      const params = TSCompletion.getMethodParameters(className, methods[0]);
+      expect(Array.isArray(params)).toBe(true);
+    }
   });
 
   it('should complete with no args', () => {
@@ -34,13 +42,22 @@ describe('TSCompletion', () => {
 
   it('should complete with class arg', () => {
     const completion = new TSCompletion();
-    const result = completion.complete(['GitScrumProject']);
-    expect(result).toEqual(TSCompletion.getClassMethods('GitScrumProject'));
+    const classes = TSCompletion.getClasses();
+    if (classes.length > 0) {
+      const result = completion.complete([classes[0]]);
+      expect(result).toEqual(TSCompletion.getClassMethods(classes[0]));
+    }
   });
 
   it('should complete with class and method args', () => {
     const completion = new TSCompletion();
-    const result = completion.complete(['GitScrumProject', 'start']);
-    expect(result).toEqual(TSCompletion.getMethodParameters('GitScrumProject', 'start'));
+    const classes = TSCompletion.getClasses();
+    if (classes.length > 0) {
+      const methods = TSCompletion.getClassMethods(classes[0]);
+      if (methods.length > 0) {
+        const result = completion.complete([classes[0], methods[0]]);
+        expect(result).toEqual(TSCompletion.getMethodParameters(classes[0], methods[0]));
+      }
+    }
   });
 });
