@@ -36,23 +36,23 @@ Guarantee that tab completion for `TSsh` and its methods (e.g., `installCompleti
 - Document all test results and any issues found.
 
 ## Requirements
-> The following test cases must be covered:
->
-> ```
-> oosh TSsh installCompletion
-> ```
->
-> ```
-> oosh TSs[Tab]
-> ```
->
-> ```
-> oosh TSsh in[Tab]
-> ```
->
-> In these cases, `installCompletion` is expected, not the default file completion of the shell.
->
-> The same cases must be tested on the `tssh` shell script as on `oosh`.
+ The following test cases must be covered:
+
+ ```
+ oosh TSsh installCompletion
+ ```
+
+ ```
+ oosh TSs[Tab]
+ ```
+
+ ```
+ oosh TSsh in[Tab]
+ ```
+
+ In these cases, `installCompletion` is expected, not the default file completion of the shell.
+
+ The same cases must be tested on the `tssh` shell script as on `oosh`.
 
 ## Acceptance Criteria
 - All specified test cases are implemented and executed for both oosh and tssh.
