@@ -29,11 +29,60 @@ The Product Owner is responsible for defining, prioritizing, and maintaining the
 - [Subtask Template](./sprint-n-template/task-0.1-example-subtask.md)
 
 ## How to Use the Templates
-1. When starting a new sprint, copy the `planning.md` template and update the sprint goal, task list, and priorities.
-2. For each new task, copy the task template, fill in the details, and ensure it is linked from the planning file.
-3. For each subtask, copy the subtask template, fill in the details, and ensure it is linked from its parent task.
-4. Always keep backlinks up to date for easy navigation.
-5. Review all tasks and planning for consistency before the sprint starts.
+
+### Step-by-Step Task Creation & Planning Update Process
+
+1. **Create or Update Sprint Planning**
+   - Copy the `planning.md` template into the new sprint folder if not present.
+   - Set the sprint goal and list all tasks in priority order.
+   - For each task, add a checklist entry with a link to the task file (e.g., `[Task 1: ...](./task-1-example.md)`).
+
+2. **Create a New Task**
+   - Copy the task template and name the file using the convention `task-<number>-<short-description>.md`.
+   - Fill in all required sections: naming conventions, status, description, context, intention, steps, requirements, acceptance criteria, QA audit, and subtasks.
+   - At the top of the task file, add a backlink to the sprint's `planning.md` (e.g., `[Back to Sprint 1 Planning](./planning.md)`).
+   - Add the new task to the sprint's `planning.md` if not already present.
+
+3. **Add Subtasks**
+   - For each subtask, copy the subtask template and name the file using the convention `task-<number>.<subnumber>-<role>-<short-description>.md`.
+   - Fill in all required sections for the subtask, including the full status breakdown (Planned, In Progress, QA Review, Done, with all sub-statuses).
+   - Link each subtask from the parent task's "Subtasks" section, and ensure the status format matches the template.
+   - Add a backlink at the top of each subtask to its parent task, using the correct format (e.g., `[Back to Main Task](./task-1-tssh-wrapper.md)`).
+   - Add a Subtasks section to each subtask, even if it is atomic ("None (atomic subtask for this sprint)").
+   - Ensure each subtask is also listed in the sprint's `planning.md` under its parent task.
+   - Checklist for each subtask:
+     - [ ] Full status breakdown present
+     - [ ] Backlink to parent task present and correct
+     - [ ] Subtasks section present (even if atomic)
+     - [ ] Listed in parent task and planning.md
+     - [ ] All links work
+
+4. **Check Backlinks and Navigation**
+   - Ensure every task links back to its sprint planning file.
+   - Ensure every subtask links back to its parent task.
+   - Verify that all links in planning, tasks, and subtasks are correct and not broken.
+
+5. **Check Dependencies and Order**
+   - Review all tasks and subtasks for dependencies.
+   - Subtasks must be ordered to avoid blocking dependencies. If unavoidable, notify the Scrum Master to resolve by reordering or splitting tasks.
+   - Update the planning file if task order or dependencies change.
+
+6. **Final Review**
+   - Before starting the sprint, review all planning, tasks, and subtasks for completeness, correct links, and compliance with templates.
+   - Ensure all QA audit and feedback sections are present and ready for use.
+
+**Tip:**
+Following this process ensures traceability, rapid onboarding, and minimal user intervention. The PO should proactively maintain planning, links, and task structure to keep the project audit-ready and reduce the need for external corrections.
+
+---
+
+**AI Role Switching Protocol:**
+
+When the Scrum Master requests a new task or task update, the AI must:
+1. Switch to the Product Owner (PO) role.
+2. Read and follow this process.md in full.
+3. Create or update the task and planning as a PO, ensuring full compliance with all templates and process steps.
+4. Only after the task is complete and compliant, switch back to the Scrum Master role and report the result to the user, showing exactly what the PO did.
 
 ## Best Practices
 - Use clear, concise language and actionable steps.

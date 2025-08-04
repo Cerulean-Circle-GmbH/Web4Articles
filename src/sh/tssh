@@ -1,0 +1,21 @@
+#!/bin/bash
+# tssh: Plain shell wrapper to call TSsh.ts
+# Finds project root and unit path based on $0
+
+SCRIPT_PATH=$(realpath "$0")
+PROJECT_NAME="Web4Articles"
+# Split at project name
+PROJECT_PATH="${SCRIPT_PATH%%$PROJECT_NAME*}$PROJECT_NAME"
+UNIT_PATH="${SCRIPT_PATH#*$PROJECT_NAME}"
+
+
+
+# If no arguments, print project root and unit path for verification
+if [ $# -eq 0 ]; then
+  echo "Project Root: $PROJECT_PATH"
+  echo "Unit Path: $UNIT_PATH"
+  exit 0
+fi
+
+# Only call the TSsh.ts backend if arguments are provided
+NODE_NO_WARNINGS=1 TSSH_PROJECT_ROOT="$PROJECT_PATH" TSSH_UNIT_PATH="$UNIT_PATH" ts-node --esm "$PROJECT_PATH/src/ts/layer1/TSsh.ts" "$@"

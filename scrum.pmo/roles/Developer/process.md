@@ -1,3 +1,28 @@
+# AI Feedback Processing Protocol
+
+When the AI is acting as Developer to process feedback:
+- Read this process.md in full before taking action.
+- Complete all required steps and document changes as needed.
+- After processing, always return to the Scrum Master role and report what was done as Developer.
+# Project First Principles (Canonical)
+- Jest is strictly forbidden in this project. Do not add, configure, or use Jest or any related files. Remove any Jest config or code immediately if found.
+- All file removals and renames must be performed using the shell (not via code or editors), to ensure traceability and auditability.
+- All code must be written in strict TypeScript and ESM.
+- No CommonJS or legacy Node.js patterns.
+- All scripts, tests, and automation must be ESM-compliant.
+- All CLI entry points must be ESM TypeScript files, run via `ts-node --esm`.
+- All shell wrappers and completion scripts must resolve the project root and invoke ESM TypeScript entry points.
+- Never use `main.ts` as a CLI entry point. Always use a static `start()` method in a dedicated entry class.
+- DRY Principle: Do not repeat logic, code, or documentation. Always consolidate and refactor to a single canonical location if repetition is found.
+- Node.js 18+ (LTS recommended)
+- Bash for shell integration
+- Vitest for testing (ESM compatible)
+- VS Code with recommended extensions
+- Radical OOP: No functions outside of classes.
+- Each article/tool is a separate git submodule.
+- Project is managed by an AI (LLM) and follows CMMI Level 4 SCRUM.
+- **Separation of Concerns:** Each unit (e.g., shell script, TypeScript backend) must be in its own file/module. Do not embed shell scripts in TypeScript files or vice versa.
+
 # Developer First Principles & Learnings (Migrated from src/developer/process.md)
 
 ## Pathing & Environment
@@ -6,28 +31,35 @@
 
 ## Testing & QA
 - Automated tests must simulate real shell usage, not just backend logic.
-- Manual QA must validate that completions are visible and correct in the shell.
+- Manual QA must validate that completions are visible and correct in the shell. Completion must only ever suggest valid, existing arguments. Shell-style options and unsupported input are never suggested. Invalid/unsupported input yields silence (no suggestions, no errors).
 - All warnings and extraneous output must be suppressed in completions.
 
 ## Documentation
 - Document all process, QA, and architectural learnings in markdown for onboarding and future reference.
+- Always reference the canonical project first principles at the top of this file for any new or updated process.
 
-# QA Issue: Shell Completion Returns Node Warnings Instead of TS Classes
 
-## Problem
-- When running the completion script and pressing [Tab], the shell displays Node.js experimental warnings (e.g., 'ExperimentalWarning: Type Stripping...') as completions, instead of TypeScript class names from the project.
+# tssh CLI: Test-Driven Development & Feedback Integration (2025-08-04)
 
-## Root Cause
-- The completion backend (TSCompletion.ts) outputs warnings to stdout, which are captured by the shell completion function and interpreted as possible completions.
+## Test Approach (Updated)
+- All integration and CLI tests for `tssh` must use realistic, user-facing scenarios and arguments.
+- Avoid placeholder or dummy arguments (e.g., `foo`, `bar`).
+- Test cases must cover:
+  - Project root/unit path output (no arguments)
+  - Bash completion installation (positional arguments)
+  - Shell-style option rejection
+  - Invalid/unknown command handling
+  - Direct backend invocation for completion install
+- All test code must be placed in the canonical `test/` directory and referenced in process docs and tasks.
+- Manual QA must validate that completions are visible and correct in the shell, with no warnings or extraneous output.
+- All feedback from QA and user must be incorporated into test refinement and process documentation.
 
-## Test Requirements (Refined)
-- The completion backend must output only valid completions (class, method, or parameter names) to stdout.
-- All warnings, errors, and diagnostics must be redirected to stderr or suppressed.
-- Automated and manual tests must verify that only valid completions are shown in the shell, with no warnings or extraneous output.
+## Lessons Learned
+- Realistic, user-driven test cases improve reliability and traceability.
+- Feedback loops between Developer, Tester, and QA are essential for robust CLI and completion features.
 
-## Next Steps
-- Update the completion backend to suppress or redirect Node.js warnings.
-- Add/extend automated tests to check for warning-free completions.
+## Reference
+- See `test/tssh-cli.integration.test.ts` for canonical test coverage and patterns.
 
 # Developer First Principles: Script Pathing & Environment
 
