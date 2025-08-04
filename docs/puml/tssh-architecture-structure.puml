@@ -1,0 +1,13 @@
+@startuml tssh-architecture-structure
+' tssh CLI Wrapper and Backend Structure (Component/Package Diagram)
+
+package "Shell Layer" {
+  [tssh] [[https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/src/sh/tssh]]
+}
+package "TypeScript Backend" {
+  [TSsh.ts] [[https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/src/ts/layer1/TSsh.ts]]
+  [BashCompletion] [[https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/src/sh/install.oosh-completion.sh]]
+}
+[tssh] --> [TSsh.ts] : invokes
+[TSsh.ts] --> [BashCompletion] : installCompletion()
+@enduml

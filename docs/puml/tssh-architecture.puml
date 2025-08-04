@@ -1,0 +1,19 @@
+@startuml 
+' tssh CLI Wrapper and Backend Architecture
+
+actor User
+User -> tssh : invoke shell command
+
+tssh -> TSsh.ts : forward args, project path, unit path
+TSsh.ts -> TSsh : OOP CLI logic
+TSsh.ts -> BashCompletion : installCompletion()
+
+' package "Shell Layer" {
+'   [tssh]
+' }
+' package "TypeScript Backend" {
+'   [TSsh.ts]
+'   [BashCompletion]
+' }
+
+@enduml

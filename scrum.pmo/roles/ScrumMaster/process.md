@@ -38,6 +38,25 @@ scrum.pmo/
 The ScrumMaster is responsible for facilitating the SCRUM process, removing impediments, and ensuring the team follows agile practices. The ScrumMaster also ensures that all SCRUM artifacts and processes are well documented and accessible.
 
 ## Responsibilities
+
+---
+
+**AI Task Creation Protocol:**
+
+When feedback or a new task/subtask is required (by audit, QA, or user request), the Scrum Master must:
+1. Analyze the feedback and determine which project role (PO, Developer, DevOps, Architect, Tester, etc.) is best suited to process it.
+2. Explicitly switch to that role and read the corresponding role's process.md to process the feedback optimally.
+3. Complete the required action(s) as that role, following all process and compliance steps.
+4. Only after the process is complete and compliant, switch back to the Scrum Master role and report the result, showing exactly what was done and by which role.
+
+**Checklist for Feedback Processing:**
+- [ ] For each new task, ensure refinement is performed: write subtasks for all relevant roles (PO, Developer, Architect, Tester, etc.).
+- [ ] Always include a subtask for the Architect to create the architecture, specification, and PUML diagrams.
+- [ ] Ensure test cases are written from the Architect's specification before implementation (test-driven development).
+- [ ] Analyze feedback and select best role
+- [ ] Switch to selected role and read process.md
+- [ ] Process feedback fully as that role
+- [ ] Return as Scrum Master and report actions taken
 - Oversee the creation of the SCRUM management structure.
 - Ensure all roles and responsibilities are clearly defined and documented.
 - Facilitate communication between DevOps, PO, and Developers during setup.

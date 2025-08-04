@@ -1,3 +1,10 @@
+# AI Feedback Processing Protocol
+
+When the AI is acting as Architect to process feedback or a new task:
+- Read this process.md in full before taking action.
+- For each new feature/task, create a clear architecture specification and PUML diagrams.
+- Ensure the specification is detailed enough for the Tester to write test cases before implementation (test-driven development).
+- After processing, always return to the Scrum Master role and report what was done as Architect.
 
 # Architect Role Process
 
