@@ -160,13 +160,23 @@ export class TSCompletion implements Completion {
       if (!prefix) {
         return TSCompletion.getClasses();
       }
-      // If prefix is an exact class name, return its methods
       const classes = TSCompletion.getClasses();
       if (classes.includes(prefix)) {
         return TSCompletion.getClassMethods(prefix);
       }
-      // Otherwise, return all classes that start with the prefix
-      return classes.filter(c => c.startsWith(prefix));
+      const matchingClasses = classes.filter(c => c.startsWith(prefix));
+      if (matchingClasses.length > 0) {
+        return matchingClasses;
+      } else {
+        // Fallback: if no class matches, use default class 'TSsh' and return method name suffixes after prefix
+        if (classes.includes('TSsh')) {
+          return TSCompletion.getClassMethods('TSsh')
+            .filter(m => m.startsWith(prefix) && m.length > prefix.length)
+            .map(m => m.slice(prefix.length));
+        } else {
+          return [];
+        }
+      }
     }
     if (args.length === 2 && args[1] === "") {
       // If second arg is empty, treat as requesting all methods for the class
@@ -180,11 +190,12 @@ export class TSCompletion implements Completion {
       // If no such methods exist, complete the parameters of the method.
       const [className, methodPrefix] = args;
       const methods = TSCompletion.getClassMethods(className);
-      const subMethods = methods
-        .filter(m => m !== methodPrefix && m.startsWith(methodPrefix))
-        .map(m => m.replace(methodPrefix, '').toLowerCase())
-        .filter(m => m); // remove empty string
-      if (subMethods.length > 0) {
+      const subMethods = methods.filter(m => m.startsWith(methodPrefix));
+      if (subMethods.length === 1) {
+        // Only one match: output the suffix after the prefix
+        return [subMethods[0].slice(methodPrefix.length)];
+      } else if (subMethods.length > 1) {
+        // Multiple matches: output full method names
         return subMethods;
       } else {
         return TSCompletion.getMethodParameters(className, methodPrefix);
