@@ -22,7 +22,15 @@ The Architect is responsible for designing the system architecture, specifying s
 
 ---
 
-# Architect First Principles & Learnings (Migrated from src/architect/process.md)
+# Architect First Principles & Learnings (Canonical)
+
+## CMMI Level 4 Feedback & Learning
+- All architectural process improvements, debugging lessons, and cross-role feedback must be documented in this file for traceability and continuous improvement.
+- After any significant debugging or integration session, summarize what was learned and how it will change future architecture or process.
+
+## Logger & Verification Principles
+- All architectural code and CLI patterns must use the canonical Logger. Logging must be environment-aware, non-intrusive in production, and support traceability for debugging and process improvement.
+- After any automated or scripted action, always verify the intended effect (e.g., file creation, output, or state change) and document any discrepancies for process improvement.
 
 ## Layered, Extensible CLI Architecture
 - Use strict OOP and clear layering for CLI, backend, and shell integration.

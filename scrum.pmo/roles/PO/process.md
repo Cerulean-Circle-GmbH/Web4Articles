@@ -1,5 +1,13 @@
 # Product Owner (PO) Role Process
 
+## CMMI Level 4 Feedback & Learning
+- All process improvements, debugging lessons, and cross-role feedback must be documented in this file for traceability and continuous improvement.
+- After any significant requirements change, debugging, or integration session, summarize what was learned and how it will change future requirements or documentation.
+
+## Logger & Verification Principles
+- All requirements, documentation, and automation must reference the canonical Logger and verification principles where applicable. Logging must be environment-aware, non-intrusive in production, and support traceability for debugging and process improvement.
+- After any automated or scripted action, always verify the intended effect (e.g., file creation, output, or state change) and document any discrepancies for process improvement.
+
 ## Role Definition
 The Product Owner (PO) is responsible for defining the vision, requirements, and priorities of the project. The PO ensures that the project delivers value to stakeholders and that all documentation and artifacts align with business goals.
 

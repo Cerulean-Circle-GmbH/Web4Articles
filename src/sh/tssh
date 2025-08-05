@@ -1,21 +1,33 @@
 #!/bin/bash
-# tssh: Plain shell wrapper to call TSsh.ts
-# Finds project root and unit path based on $0
 
-SCRIPT_PATH=$(realpath "$0")
-PROJECT_NAME="Web4Articles"
-# Split at project name
-PROJECT_PATH="${SCRIPT_PATH%%$PROJECT_NAME*}$PROJECT_NAME"
-UNIT_PATH="${SCRIPT_PATH#*$PROJECT_NAME}"
+# tssh: Shell wrapper for TSsh TypeScript CLI (strict OOP, class/method/param only)
 
+# Find project root (with package.json and src/ts)
+find_project_root() {
+  local dir="$PWD"
+  while [[ "$dir" != "/" ]]; do
+    if [[ -f "$dir/package.json" && -d "$dir/src/ts" ]]; then
+      echo "$dir"
+      return 0
+    fi
+    dir="$(dirname "$dir")"
+  done
+  return 1
+}
 
-
-# If no arguments, print project root and unit path for verification
-if [ $# -eq 0 ]; then
-  echo "Project Root: $PROJECT_PATH"
-  echo "Unit Path: $UNIT_PATH"
-  exit 0
+PROJECT_ROOT="$(find_project_root)"
+if [[ -z "$PROJECT_ROOT" ]]; then
+  echo "Error: Could not find project root (missing package.json and src/ts)." >&2
+  exit 1
 fi
 
-# Only call the TSsh.ts backend if arguments are provided
-NODE_NO_WARNINGS=1 TSSH_PROJECT_ROOT="$PROJECT_PATH" TSSH_UNIT_PATH="$UNIT_PATH" ts-node --esm "$PROJECT_PATH/src/ts/layer1/TSsh.ts" "$@"
+TS_NODE_PROJECT="$PROJECT_ROOT/tsconfig.json"
+TSSH_ENTRY="./src/ts/layer1/TSsh.ts"
+
+cd "$PROJECT_ROOT"
+export NODE_NO_WARNINGS=1
+if [[ -n "$LOG_LEVEL" && "$LOG_LEVEL" =~ ^[0-9]+$ && "$LOG_LEVEL" -gt 3 ]]; then
+  echo "[tssh debug] Running: NODE_OPTIONS=--no-deprecation NODE_NO_WARNINGS=1 npx ts-node --esm --project \"$TS_NODE_PROJECT\" $TSSH_ENTRY $@"
+fi
+
+NODE_OPTIONS=--no-deprecation NODE_NO_WARNINGS=1 npx ts-node --esm --project "$TS_NODE_PROJECT" $TSSH_ENTRY "$@"
