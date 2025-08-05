@@ -1,6 +1,14 @@
 
 # First Principles for All Roles
 
+## CMMI Level 4 Feedback & Learning
+- All process improvements, debugging lessons, and cross-role feedback must be documented in the appropriate process.md file for traceability and continuous improvement.
+- The ScrumMaster is responsible for ensuring that all roles update their process documentation after significant debugging, integration, or process improvement sessions.
+
+## Logger & Verification Principles
+- All CLI, automation, and scripts must use the canonical Logger where applicable. Logging must be environment-aware, non-intrusive in production, and support traceability for debugging and process improvement.
+- After any automated or scripted action, always verify the intended effect (e.g., file creation, output, or state change) and document any discrepancies for process improvement.
+
 - All scripts and tools (e.g., `oosh`) must be robustly callable from their own directory, from the PATH, or from the project root. Always resolve the project root dynamically to ensure correct CLI and environment behavior regardless of invocation location.
 - **DO NOT REPEAT YOURSELF (DRY):** Never duplicate logic, documentation, or code. If you find repetition, always suggest and implement consolidation. Refactor or centralize repeated logic, scripts, or documentation to a single canonical location. This applies to all roles and all artifacts (code, scripts, docs, process).
 

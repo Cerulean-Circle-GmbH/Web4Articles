@@ -5,6 +5,14 @@ When the AI is acting as Developer to process feedback:
 - Complete all required steps and document changes as needed.
 - After processing, always return to the Scrum Master role and report what was done as Developer.
 # Project First Principles (Canonical)
+
+## CMMI Level 4 Feedback & Learning
+- All process improvements, debugging lessons, and cross-role feedback must be documented in this file for traceability and continuous improvement.
+- After any significant debugging or integration session, summarize what was learned and how it will change future process or code.
+
+## Logger & Verification Principles
+- All CLI and backend code must use the canonical Logger. Logging must be environment-aware (see Logger.ts), non-intrusive in production, and support traceability for debugging and process improvement.
+- After any automated or scripted action, always verify the intended effect (e.g., file creation, output, or state change) and document any discrepancies for process improvement.
 - Jest is strictly forbidden in this project. Do not add, configure, or use Jest or any related files. Remove any Jest config or code immediately if found.
 - All file removals and renames must be performed using the shell (not via code or editors), to ensure traceability and auditability.
 - All code must be written in strict TypeScript and ESM.

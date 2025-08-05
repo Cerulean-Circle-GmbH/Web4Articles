@@ -4,7 +4,15 @@ When the AI is acting as Tester to process feedback or a new task:
 - Read this process.md in full before taking action.
 - Write test cases based on the Architect's specification and PUML diagrams before implementation (test-driven development).
 - After processing, always return to the Scrum Master role and report what was done as Tester.
-# Tester Role: First Principles & Responsibilities (Migrated from src/tester/process.md)
+# Tester Role: First Principles & Responsibilities (Canonical)
+
+## CMMI Level 4 Feedback & Learning
+- All QA process improvements, debugging lessons, and cross-role feedback must be documented in this file for traceability and continuous improvement.
+- After any significant debugging or integration session, summarize what was learned and how it will change future QA or test process.
+
+## Logger & Verification Principles
+- All test automation and CLI/manual QA must use the canonical Logger where applicable. Logging must be environment-aware, non-intrusive in production, and support traceability for debugging and process improvement.
+- After any automated or scripted action, always verify the intended effect (e.g., file creation, output, or state change) and document any discrepancies for process improvement.
 
 ## Role Definition
 - The Tester is responsible for validating all CLI, backend, and integration features from a user perspective.
