@@ -21,3 +21,7 @@ Ensure the templating tool works end-to-end, including GitHub repo creation, sub
 - All new tests pass in CI
 - Coverage added for critical paths
 - This task references all created artifact file paths
+
+---
+
+[Back to Planning](./planning.md)

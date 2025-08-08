@@ -14,8 +14,8 @@ Ensure all relevant markdown documents embed the generated SVG diagrams rendered
 
 ## Steps
 - Identify target markdown files to embed diagrams:
-  - `scrum.pmo/sprints/sprint-3/task-1.0-architect-gitscrumproject-spec.md`
-  - `docs/` sections where architecture is described (update as needed)
+  - [scrum.pmo/sprints/sprint-3/task-1.0-architect-gitscrumproject-spec.md](./task-1.0-architect-gitscrumproject-spec.md)
+  - [docs/](../../../docs/) sections where architecture is described (update as needed)
 - Embed SVGs using markdown image syntax with relative paths:
   - `src/puml/GitScrumProject_CLI_Architecture.svg`
   - `src/puml/GitScrumProject_TemplateAndRelease.svg`
@@ -23,8 +23,8 @@ Ensure all relevant markdown documents embed the generated SVG diagrams rendered
 
 ## Artifacts
 - Embedded references to:
-  - `src/puml/GitScrumProject_CLI_Architecture.svg`
-  - `src/puml/GitScrumProject_TemplateAndRelease.svg`
+  - [src/puml/GitScrumProject_CLI_Architecture.svg](../../../src/puml/GitScrumProject_CLI_Architecture.svg)
+  - [src/puml/GitScrumProject_TemplateAndRelease.svg](../../../src/puml/GitScrumProject_TemplateAndRelease.svg)
 
 ## Acceptance Criteria
 - All referenced PUMLs have corresponding SVGs in `src/puml/` and are embedded in the relevant markdown files.

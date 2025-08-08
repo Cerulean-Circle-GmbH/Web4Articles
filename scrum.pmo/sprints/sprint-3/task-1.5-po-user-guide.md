@@ -20,12 +20,16 @@ Document how to use the templating tool to create a new wrapper repo with a `sou
 - FAQ and troubleshooting (submodule detached HEAD, auth issues, CI secrets)
 
 ## Artifacts
-- Docs: `docs/` user guide sections updated
+- Docs: [docs/](../../../docs/) user guide sections updated
 - Embedded Diagrams:
-  - `src/puml/GitScrumProject_CLI_Architecture.svg`
-  - `src/puml/GitScrumProject_TemplateAndRelease.svg`
+  - [src/puml/GitScrumProject_CLI_Architecture.svg](../../../src/puml/GitScrumProject_CLI_Architecture.svg)
+  - [src/puml/GitScrumProject_TemplateAndRelease.svg](../../../src/puml/GitScrumProject_TemplateAndRelease.svg)
 
 ## Acceptance Criteria
 - PO validates guide for clarity and completeness
 - Examples match implemented CLI behavior
 - This task references all created artifact file paths
+
+---
+
+[Back to Planning](./planning.md)

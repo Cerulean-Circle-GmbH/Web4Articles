@@ -19,10 +19,10 @@ Define the architecture and CLI contracts for creating a new GitHub repo from th
 - Recovery and Release plan outline
 
 ## Artifacts
-- PUML: `src/puml/GitScrumProject_CLI_Architecture.puml`
-- PUML: `src/puml/GitScrumProject_TemplateAndRelease.puml`
-- SVG: `src/puml/GitScrumProject_CLI_Architecture.svg`
-- SVG: `src/puml/GitScrumProject_TemplateAndRelease.svg`
+- PUML: [src/puml/GitScrumProject_CLI_Architecture.puml](../../../src/puml/GitScrumProject_CLI_Architecture.puml)
+- PUML: [src/puml/GitScrumProject_TemplateAndRelease.puml](../../../src/puml/GitScrumProject_TemplateAndRelease.puml)
+- SVG: [src/puml/GitScrumProject_CLI_Architecture.svg](../../../src/puml/GitScrumProject_CLI_Architecture.svg)
+- SVG: [src/puml/GitScrumProject_TemplateAndRelease.svg](../../../src/puml/GitScrumProject_TemplateAndRelease.svg)
 
 ### Embedded Diagrams
 
@@ -62,3 +62,7 @@ Define the architecture and CLI contracts for creating a new GitHub repo from th
 - Clear release/recovery story for both repos
 - PUMLs compile without errors and corresponding SVGs are embedded above
 - This task references all created artifact file paths
+
+---
+
+[Back to Planning](./planning.md)

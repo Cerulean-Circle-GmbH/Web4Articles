@@ -21,8 +21,8 @@ Integrate the source repo as a submodule and ensure the wrapper project executes
 - Ensure `ts-node --esm` works from wrapper calling into submodule.
 
 ## Artifacts
-- Code: `src/ts/layer2/GitScrumProject.ts`
-- Code: `src/ts/layer4/TSRanger.ts` (delegation pattern reference)
+- Code: [src/ts/layer2/GitScrumProject.ts](../../../src/ts/layer2/GitScrumProject.ts)
+- Code: [src/ts/layer4/TSRanger.ts](../../../src/ts/layer4/TSRanger.ts) (delegation pattern reference)
 - Docs: `.gitmodules` in the new wrapper repo
 
 ## Acceptance Criteria
@@ -30,3 +30,7 @@ Integrate the source repo as a submodule and ensure the wrapper project executes
 - Shell wrappers run backend from `sources/` when present
 - No duplication of `src/` in wrapper
 - This task references all created artifact file paths
+
+---
+
+[Back to Planning](./planning.md)
