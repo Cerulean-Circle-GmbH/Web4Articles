@@ -5,21 +5,33 @@
 This Project will create a md-file based WIKI for CIRAS Project articles
 
 
-## Tech Stack and First Principles
 
-- **TypeScript**: All code is written in strict TypeScript.
-- **ES Modules (ESM)**: All code, scripts, and CLI entry points must use the most modern ES module syntax (`import`/`export`).
-- **No CommonJS**: CommonJS (`require`, `module.exports`) is strictly forbidden. Do not use legacy Node.js module systems anywhere in the project.
-- **All scripts, tests, and automation must be ESM-compliant.**
+- Jest is strictly forbidden in this project. Do not add, configure, or use Jest or any related files. Remove any Jest config or code immediately if found.
+- All file removals and renames must be performed using the shell (not via code or editors), to ensure traceability and auditability.
+- All code must be written in strict TypeScript and ESM.
+- No CommonJS or legacy Node.js patterns.
+- All scripts, tests, and automation must be ESM-compliant.
 - All CLI entry points must be ESM TypeScript files, run via `ts-node --esm`.
-- All shell wrappers (e.g., `oosh`, completion scripts) must resolve the project root and invoke ESM TypeScript entry points.
-- Never use `main.ts` as a CLI entry point. Always use a static `start()` method in a dedicated entry class (e.g., `OOSH.start()` or `GitScrumProject.start()`).
-  - **start() methods and constructors must never take parameters.** All CLI argument parsing and dispatch must be handled inside the class, using a CLI interface (see `GitScrumProject` and `OOSH` for reference). This ensures strict OOP and testability.
-- **DRY Principle**: Do not repeat logic, code, or documentation. Always consolidate and refactor to a single canonical location if repetition is found.
+- All shell wrappers and completion scripts must resolve the project root and invoke ESM TypeScript entry points.
+- Never use `main.ts` as a CLI entry point. Always use a static `start()` method in a dedicated entry class.
+- DRY Principle: Do not repeat logic, code, or documentation. Always consolidate and refactor to a single canonical location if repetition is found.
 - Node.js 18+ (LTS recommended)
 - Bash for shell integration
-- Jest for testing (ESM compatible)
+- Vitest for testing (ESM compatible)
 - VS Code with recommended extensions
+- Radical OOP: No functions outside of classes.
+- Each article/tool is a separate git submodule.
+- Project is managed by an AI (LLM) and follows CMMI Level 4 SCRUM.
+- **Separation of Concerns:** Each unit (e.g., shell script, TypeScript backend) must be in its own file/module. Do not embed shell scripts in TypeScript files or vice versa.
+
+- Do not use shell-style options (e.g., --install-completion) for CLI commands. All actions must be invoked as positional arguments (e.g., `tssh TSsh installCompletion`). This prevents ambiguity and enforces a clean, discoverable CLI interface. This is a core project principle.
+- All shell scripts, completion scripts, and TypeScript backends must be in separate files/units. Never embed shell code in TypeScript or vice versa. Always reference or import as needed.
+
+---
+
+## Tech Stack and Project Structure
+
+See above for canonical first principles. All other tech stack and structure details must comply with these principles.
 
 Radical OOP will be applied. No functions outside of classes. Each article will become a separate git submodule. The project is managed by an AI (LLM). The AI vibecodes its own tools to manage the project. Each tool will become its own git submodule with the same basic tech stack and first principles. The project will be radically managed in CMMI Level 4 via SCRUM (less scrum flavor, but fully automated).
 
@@ -35,11 +47,12 @@ Each role will be dilligently onboarded and everything will be fully tracable do
 
 ## Optimized Recovery Procedure
 
+
 **Autonomous Recovery Process**
 
 If the AI loses context or receives the prompt "recover" from the QA user, it will autonomously:
 
-1. **Read this README.md** for project purpose, tech stack, and management principles.
+1. **Read the canonical Project First Principles section in this README.md** for project purpose, tech stack, and management principles. Only scan other sections as needed for context or updates.
 2. **Scan all markdown files** in the project, prioritizing:
    - `scrum.pmo/` (roles, sprints, tasks, process docs)
    - `wiki/` (ontology, Home.md, definitions)
@@ -57,5 +70,17 @@ If the AI loses context or receives the prompt "recover" from the QA user, it wi
 8. **Document findings:**  
    - Append a timestamped entry to `recovery.md` summarizing findings, gaps, and actions taken.
    - Notify the QA user with the summary and next steps.
+
+**Important:**
+
+- During recovery, the AI must **not ask the user for confirmation or next steps**. Instead, it must only return when it has fully understood:
+  - The project purpose and state
+  - Its own role and responsibilities
+  - The next concrete project task to execute
+- After recovery, the AI must send a message to the QA user stating:
+  1. That recovery is complete
+  2. Who it is (its role)
+  3. The current project state
+  4. What the next project task is
 
 This process is fully autonomous and designed for rapid, reliable project context recovery and onboarding.
