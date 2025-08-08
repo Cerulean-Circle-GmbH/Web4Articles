@@ -72,3 +72,14 @@
 
 **Next Steps:**
 - Validate TUI behavior manually and via smoke tests; ensure no regressions in non-interactive tests.
+
+## 2025-08-08 (sticky footer & spacer)
+
+**Summary:**
+- Updated Sprint 2 requirements to: use as many terminal rows as available, keep key-help footer anchored to the last line on resize, insert a blank spacer line above the footer, and render the command preview above the spacer.
+- Implemented view rendering to pad content rows, added spacer line, and positioned preview accordingly.
+- Added a resize re-render in the controller.
+- Added a layout test to verify spacer and footer anchoring behavior.
+
+**Next Steps:**
+- Run the full test suite and manually verify behavior in a real terminal.

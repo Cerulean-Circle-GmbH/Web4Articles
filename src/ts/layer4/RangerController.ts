@@ -13,15 +13,24 @@ export class RangerController {
     this.model.updateParams();
 
     // Setup TTY
-    const { stdin } = process;
+    const { stdin, stdout } = process;
     stdin.setRawMode?.(true);
     stdin.resume();
     stdin.setEncoding('utf8');
 
+    const onResize = () => {
+      try {
+        this.view.render(this.model);
+      } catch (e: any) {
+        Logger.log(`[TSRanger] Resize render error: ${e?.stack || e}`, 'error');
+      }
+    };
+    stdout.on('resize', onResize);
+
     const onData = async (key: string) => {
       try {
         if (key === '\u0003' /* Ctrl-C */ || key === '\u001b' /* Esc */ || key === 'q') {
-          this.cleanup();
+          this.cleanup(onResize);
           return;
         }
 
@@ -212,11 +221,12 @@ export class RangerController {
     }
   }
 
-  private cleanup(): void {
+  private cleanup(onResize?: () => void): void {
     try {
-      const { stdin } = process;
+      const { stdin, stdout } = process;
       stdin.setRawMode?.(false);
       stdin.pause();
+      if (onResize) stdout.off('resize', onResize);
     } catch {}
   }
 }
