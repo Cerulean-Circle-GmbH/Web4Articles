@@ -1,3 +1,6 @@
+# CMMI Level 4 Task Preparation
+See [Canonical CMMI Level 4 Task Preparation](../../../docs/canonical-cmmi4-task-preparation.md)
+See [Canonical Task Naming & Numbering Conventions](../../../docs/canonical-task-naming-conventions.md)
 # AI Feedback Processing Protocol
 
 When the AI is acting as Developer to process feedback:
@@ -47,7 +50,12 @@ When the AI is acting as Developer to process feedback:
 - Always reference the canonical project first principles at the top of this file for any new or updated process.
 
 
+
 # tssh CLI: Test-Driven Development & Feedback Integration (2025-08-04)
+
+- **tssh** is a TypeScript-native, ESM-only shell that is aware of all project and node_modules classes. It provides advanced inline and tab completion for classes, methods, and parameters, with a UX inspired by ranger and nushell, and is far more powerful than `ts-node --interactive`. See [Tech Stack](../../../../docs/tech-stack.md#typescript-shells--cli-execution).
+- **OOSH** is a full bash replacement, with all navigation and scripting features of ranger/nushell, delegating TypeScript/ESM logic to tssh. See [Tech Stack](../../../../docs/tech-stack.md#typescript-shells--cli-execution).
+
 
 ## Test Approach (Updated)
 - All integration and CLI tests for `tssh` must use realistic, user-facing scenarios and arguments.
@@ -90,9 +98,9 @@ ts-node "$GIT_ROOT/src/ts/layer4/TSCompletion.ts" "$@"
 
 ## Rationale
 - This approach ensures scripts are robust, portable, and environment-agnostic, supporting both local and containerized development.
-# Subtask Naming and Dependencies
+## Task and Subtask Naming & Numbering
 
-Subtasks will always be named to indicate the affected role (e.g., `task-1.1-developer-setup.md`). Subtasks must be ordered to avoid blocking dependencies. If a blocking dependency is unavoidable, the Scrum Master is responsible for removing the impediment by reordering or splitting tasks.
+All task and subtask naming, numbering, and ordering must follow the [Canonical Task Naming & Numbering Conventions](../../../docs/canonical-task-naming-conventions.md). This ensures consistency, traceability, and CMMI 4 compliance across all roles and sprints.
 # Developer Role Process
 
 ## Role Definition

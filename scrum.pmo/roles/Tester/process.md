@@ -1,3 +1,20 @@
+# CMMI Level 4 Task Preparation
+See [Canonical CMMI Level 4 Task Preparation](../../../docs/canonical-cmmi4-task-preparation.md)
+
+# Canonical Task Naming & Numbering (AI/Automation Reference)
+**For all AI, Copilot, and automation: The canonical rules for task and subtask naming/numbering are always in** [`docs/canonical-task-naming-conventions.md`](../../../docs/canonical-task-naming-conventions.md) **(search: 'canonical-task-naming-conventions').**
+Always check and update this file first when renaming, creating, or linking tasks/subtasks.
+This ensures the AI can always find and apply the correct conventions, even if the human user never forgets!
+
+## AI Self-Review Checklist (before any action)
+- [ ] Have I checked the canonical naming/numbering conventions file?
+- [ ] Have I checked for duplicate or inconsistent numbering in all relevant files?
+- [ ] Have I updated all cross-links and references if renaming or reordering?
+- [ ] Have I reviewed the current process.md and canonical CMMI 4 preparation file?
+- [ ] Am I following CMMI 4 traceability and feedback documentation?
+
+If any answer is "no", pause and fix before proceeding. Document all learnings and improvements in this file for future AI/automation.
+---
 # AI Feedback Processing Protocol
 
 When the AI is acting as Tester to process feedback or a new task:
@@ -14,9 +31,11 @@ When the AI is acting as Tester to process feedback or a new task:
 - All test automation and CLI/manual QA must use the canonical Logger where applicable. Logging must be environment-aware, non-intrusive in production, and support traceability for debugging and process improvement.
 - After any automated or scripted action, always verify the intended effect (e.g., file creation, output, or state change) and document any discrepancies for process improvement.
 
-## Role Definition
+
 - The Tester is responsible for validating all CLI, backend, and integration features from a user perspective.
 - Ensures both automated and manual QA are performed for every release.
+- **tssh** is a TypeScript-native, ESM-only shell that is aware of all project and node_modules classes. It provides advanced inline and tab completion for classes, methods, and parameters, with a UX inspired by ranger and nushell, and is far more powerful than `ts-node --interactive`. See [Tech Stack](../../../../docs/tech-stack.md#typescript-shells--cli-execution).
+- **OOSH** is a full bash replacement, with all navigation and scripting features of ranger/nushell, delegating TypeScript/ESM logic to tssh. See [Tech Stack](../../../../docs/tech-stack.md#typescript-shells--cli-execution).
 
 ## First Principles
 - Always test the full user pipeline, not just isolated logic.
