@@ -6,16 +6,27 @@ interface CLI {
   +start()
 }
 
-class DefaultCLI implements CLI {
+interface Project {
+  +create(args: string[])
+}
+
+class DefaultCLI {
   +start()
 }
 
 class ParameterParser {
   -args: string[]
-  +parse(): { className, command, type, projectName }
+  +parse(): ParseArgs
 }
 
-class GitScrumProject implements Project {
+class ParseArgs {
+  +className
+  +command
+  +type
+  +projectName
+}
+
+class GitScrumProject {
   -cli: CLI
   +static start()
   +create(args: string[])

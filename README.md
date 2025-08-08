@@ -19,6 +19,8 @@ This Project will create a md-file based WIKI for CIRAS Project articles
 - Bash for shell integration
 - Vitest for testing (ESM compatible)
 - VS Code with recommended extensions
+- Docker (for devcontainer)
+- VS Code Dev Containers extension (or compatible devcontainer runtime)
 - Radical OOP: No functions outside of classes.
 - Each article/tool is a separate git submodule.
 - Project is managed by an AI (LLM) and follows CMMI Level 4 SCRUM.
@@ -52,6 +54,13 @@ Each role will be dilligently onboarded and everything will be fully tracable do
 
 If the AI loses context or receives the prompt "recover" from the QA user, it will autonomously:
 
+0. **DevOps Environment Verification (blocking, do first):**
+   - Check local environment and fix before proceeding:
+     - Docker engine is installed and running (`docker version` works)
+     - Devcontainer tooling available (VS Code Dev Containers or equivalent)
+     - Node.js satisfies engine ranges in `package.json`
+     - PlantUML and Graphviz installed (or plan to use devcontainer)
+   - If any prerequisite is missing, open a DevOps task to resolve locally, or prefer using the project devcontainer once available.
 1. **Read the canonical Project First Principles section in this README.md** for project purpose, tech stack, and management principles. Only scan other sections as needed for context or updates.
 2. **Scan all markdown files** in the project, prioritizing:
    - `scrum.pmo/` (roles, sprints, tasks, process docs)
@@ -70,6 +79,12 @@ If the AI loses context or receives the prompt "recover" from the QA user, it wi
 8. **Document findings:**  
    - Append a timestamped entry to `recovery.md` summarizing findings, gaps, and actions taken.
    - Notify the QA user with the summary and next steps.
+
+### DevContainer (cross-platform)
+
+- The project will provide a cross-platform devcontainer to standardize local/CI environments.
+- Requirements will be defined under `scrum.pmo/sprints/sprint-4/` and built in that sprint.
+- Until the devcontainer is available, ensure local environment matches the "DevOps Environment Verification" list above.
 
 **Important:**
 

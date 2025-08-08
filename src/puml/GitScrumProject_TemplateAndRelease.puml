@@ -1,26 +1,40 @@
 @startuml
 title GitScrumProject Templating, Submodule, Release Architecture
 
-interface CLI { +start() }
-class DefaultCLI implements CLI { +start() }
-class ParameterParser { +parse(): { className, command, args } }
+interface CLI {
+  +start()
+}
+class DefaultCLI { +start() }
+class ParameterParser { +parse(): ParseArgs }
+class ParseArgs {
+  +className
+  +command
+  +args
+}
 
 class GitScrumProject {
   +static start()
   +create(args: string[])
   +createTemplateRepo(org, newRepo, sourceRepoUrl, submodulePath)
   +linkSource(submodulePath, sourceRepoUrl, ref)
-  +overlayRun(entryClass, method, ...args)
+  +overlayRun(entryClass, method, args)
   +releasePlan(repoType)
 }
 
 class GitHubApi { +createRepo(org, name, visibility) }
-class SubmoduleManager { +add(path, url, ref); +update(path, ref) }
-class ReleaseManager { +plan(repoType); +tagAndRelease(repoType, version, notes) }
+class SubmoduleManager {
+  +add(path, url, ref)
+  +update(path, ref)
+}
+class ReleaseManager {
+  +plan(repoType)
+  +tagAndRelease(repoType, version, notes)
+}
 class RecoveryManager { +summarize() }
 
 GitScrumProject o-- DefaultCLI
 DefaultCLI o-- ParameterParser
+DefaultCLI ..|> CLI
 GitScrumProject o-- GitHubApi
 GitScrumProject o-- SubmoduleManager
 GitScrumProject o-- ReleaseManager

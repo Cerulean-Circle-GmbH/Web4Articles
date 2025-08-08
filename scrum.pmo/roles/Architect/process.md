@@ -16,9 +16,28 @@ The Architect is responsible for designing the system architecture, specifying s
 - Maintain and update PlantUML diagrams for all major components and workflows.
 - Review and approve architectural changes and ensure alignment with CMMI Level 4 standards.
 - Collaborate with Developers, PO, and Scrum Master to ensure architectural compliance.
+- Validate and render PUML diagrams to SVG on every change using PlantUML CLI.
+- Ensure the diagrams compile without warnings/errors locally and in CI.
 
 ## Task Reference
 - See sprint-0, task-5.1 for PlantUML specification and architectural documentation.
+
+## PlantUML Rendering Procedure (Architect)
+
+1. Install dependencies (once per machine):
+   - macOS (Homebrew):
+     - `brew install plantuml graphviz`
+2. Render all PUMLs to SVG:
+   - From the project root:
+     - `plantuml -tsvg src/puml/*.puml`
+3. Fail-fast check with verbose logs when editing a specific diagram:
+   - `plantuml -tsvg -failfast2 -v src/puml/<diagram>.puml`
+4. Verify outputs:
+   - Ensure corresponding `.svg` files are created next to `.puml` files under `src/puml/`.
+5. Commit artifacts:
+   - Include updated `.puml` and generated `.svg` files in the same commit for traceability.
+6. CI note:
+   - Add a CI step to render PUML (`plantuml -tsvg src/puml/*.puml`) to catch syntax regressions.
 
 ---
 
