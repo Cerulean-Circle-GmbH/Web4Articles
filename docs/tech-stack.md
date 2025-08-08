@@ -35,3 +35,12 @@ describe('my feature', () => {
 
 ## See also
 - [Vitest Docs](https://vitest.dev/)
+
+---
+
+## Tooling & Environment
+
+- Docker: standardize local and CI environments using a devcontainer.
+- Devcontainer (VS Code or compatible): project will provide a cross-platform environment under `sprint-4`.
+- PlantUML + Graphviz: render architecture diagrams from `src/puml` to SVG.
+- GitHub CLI (`gh`): used for repository automation tasks where applicable.

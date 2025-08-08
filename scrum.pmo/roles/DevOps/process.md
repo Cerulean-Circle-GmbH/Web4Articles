@@ -13,6 +13,16 @@
 - The devcontainer must mount the project at the git root and set the working directory accordingly.
 - Ensure `node_modules/.bin` is in the `PATH` for all automation and shell scripts.
 
+## Environment Verification Checklist (run before any work)
+- Docker engine installed and running:
+  - `docker version` returns client and server info
+- Devcontainer tooling available:
+  - VS Code Dev Containers extension or `devcontainer` CLI
+- Node.js version satisfies engines of all devDependencies (see `npm ci` warnings)
+- PlantUML and Graphviz installed (for rendering PUML locally) or plan to render inside devcontainer
+- Git configured with correct user/email and access to required remotes
+- `gh` GitHub CLI installed if repository automation is needed
+
 ## Structure & Automation
 - Use `tree` and project structure analysis to verify and document dependencies.
 - Automate release, tagging, and QA steps for reproducibility.
@@ -33,6 +43,9 @@
   - Ensure `node_modules/.bin` is in the `PATH`.
   - Install all devDependencies from `package.json` (notably `ts-node`, `typescript`, `@types/node`).
   - Provide bash and coreutils (for `tree`, `git`, etc.).
+  - Include PlantUML and Graphviz for diagram rendering.
+  - Provide Docker-in-Docker or `docker` socket access for workflows that interact with Docker (optional based on security policy).
+  - Include `gh` CLI where GitHub automation is part of the sprint tasks.
 
 ## Example: PATH Setup in DevContainer
 ```bash
