@@ -19,6 +19,10 @@ Deliver a ranger-like interactive shell (TS Ranger) that leverages `TSCompletion
   **Priority:** 3
 - [ ] [Task 7: Developer - Refactor TSRanger to one class per TS file](./task-1.6-developer-refactor-tsranger.md)
   **Priority:** 2
+- [ ] [Task 8: Developer - Blue/White footer and colorized command preview](./task-1.7-developer-footer-and-color-preview.md)
+  **Priority:** 2
+- [ ] [Task 9: Developer - Sequential parameter entry and auto-execute](./task-1.8-developer-parameter-entry.md)
+  **Priority:** 1
 
 ---
 

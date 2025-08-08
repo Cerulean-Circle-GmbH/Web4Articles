@@ -60,3 +60,15 @@
 
 **Next Steps:**
 - Run tests and ensure no regressions. Address any issues if they arise.
+
+## 2025-08-08 (footer/params)
+
+**Summary:**
+- Recovered from README and implemented requested UI/logic updates:
+  - Bottom key usage line styled blue with white text
+  - Colorized shell-like command preview above the footer
+  - Sequential parameter entry: type values on the last line; Space/Enter progresses; auto-exec when complete
+- Added Sprint 2 tasks 1.7 and 1.8 and updated planning.
+
+**Next Steps:**
+- Validate TUI behavior manually and via smoke tests; ensure no regressions in non-interactive tests.
