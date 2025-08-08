@@ -32,17 +32,17 @@ describe('TSCompletion CLI Integration', () => {
     expect(await runCompletion('insta')).toBe('llCompletion');
   });
 
-  it('completes GitScrumProject cre to create and createProject', async () => {
+  it('completes GitScrumProject cre to create, createProject, and createTemplateRepo', async () => {
     const result = (await runCompletion('GitScrumProject cre')).split(/\s+/).sort();
-    expect(result).toEqual(['create', 'createProject'].sort());
+    expect(result).toEqual(['create', 'createProject', 'createTemplateRepo'].sort());
   });
 
   it('completes GitScrumProject createP to roject', async () => {
     expect(await runCompletion('GitScrumProject createP')).toBe('roject');
   });
 
-  it('completes GitScrumProject create to create and createProject', async () => {
+  it('completes GitScrumProject create to create, createProject, and createTemplateRepo', async () => {
     const result = (await runCompletion('GitScrumProject create')).split(/\s+/).sort();
-    expect(result).toEqual(['create', 'createProject'].sort());
+    expect(result).toEqual(['create', 'createProject', 'createTemplateRepo'].sort());
   });
 });

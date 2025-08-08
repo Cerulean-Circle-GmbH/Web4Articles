@@ -33,6 +33,27 @@ export class GitScrumProject implements Project {
 
   // Project interface method
   public create(args: string[]): void {
+    const parser = new ParameterParser(args);
+    const parsed = parser.parse();
+    const command = parsed.command || 'createProject';
+
+    if (command === 'createTemplateRepo') {
+      const [org, newRepo, sourceRepoUrl, submodulePath] = parsed.restArgs || [];
+      return this.createTemplateRepo(org, newRepo, sourceRepoUrl, submodulePath);
+    }
+    if (command === 'linkSource') {
+      const [submodulePath, sourceRepoUrl, ref] = parsed.restArgs || [];
+      return this.linkSource(submodulePath, sourceRepoUrl, ref);
+    }
+    if (command === 'overlayRun') {
+      const [entryClass, method, ...rest] = parsed.restArgs || [];
+      return this.overlayRun(entryClass, method, ...rest);
+    }
+    if (command === 'releasePlan') {
+      const [repoType] = parsed.restArgs || [];
+      return this.releasePlan(repoType);
+    }
+
     const projectName = args[0] || 'Web4Scrum';
     this.createProject(projectName);
   }
@@ -62,5 +83,22 @@ export class GitScrumProject implements Project {
     execSync(`git submodule add ${repoUrl} ${projectName}`);
 
     console.log(`Subproject ${projectName} created as a submodule. Please push the new repo to GitHub manually if needed.`);
+  }
+
+  // New commands (stubs)
+  private createTemplateRepo(org?: string, newRepo?: string, sourceRepoUrl?: string, submodulePath?: string): void {
+    console.log('createTemplateRepo stub:', { org, newRepo, sourceRepoUrl, submodulePath });
+  }
+
+  private linkSource(submodulePath?: string, sourceRepoUrl?: string, ref?: string): void {
+    console.log('linkSource stub:', { submodulePath, sourceRepoUrl, ref });
+  }
+
+  private overlayRun(entryClass?: string, method?: string, ...args: string[]): void {
+    console.log('overlayRun stub:', { entryClass, method, args });
+  }
+
+  private releasePlan(repoType?: string): void {
+    console.log('releasePlan stub:', { repoType });
   }
 }
