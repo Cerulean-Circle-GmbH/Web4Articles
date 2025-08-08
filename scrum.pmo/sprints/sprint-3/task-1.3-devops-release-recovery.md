@@ -22,12 +22,16 @@ Provide concise, auditable release and recovery processes for the wrapper repo a
 - Update `recovery.md` to include dual-repo recovery hooks and checklists.
 
 ## Artifacts
-- Code: `src/ts/layer4/TSCompletion.ts` (if leveraged by release steps)
+- Code: [src/ts/layer4/TSCompletion.ts](../../../src/ts/layer4/TSCompletion.ts) (if leveraged by release steps)
 - Docs: `.github/workflows/ci.yml` and `.github/workflows/release.yml` (generated into new repo)
-- Docs: `recovery.md` with updated dual-repo hooks
+- Docs: [recovery.md](../../../recovery.md) with updated dual-repo hooks
 
 ## Acceptance Criteria
 - One-command dry-run release plan for both repos
 - GH Actions templates are generated into new wrapper repo
 - Recovery log updates include submodule status and integrity checks
 - This task references all created artifact file paths
+
+---
+
+[Back to Planning](./planning.md)
