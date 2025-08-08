@@ -1,0 +1,31 @@
+# Task 1.1 — Developer: Interactive TUI (Core Navigation)
+
+## Goal
+Implement the core TUI for TS Ranger with keyboard navigation and column rendering.
+
+## Steps
+1. Create `src/ts/layer4/TSRanger.ts` exporting `class TSRanger` with `static start()`; it wires controller/model/view.
+2. Implement `RangerModel` in the same file (or split later) to hold:
+   - `classes`, `methods`, `params`
+   - `selectedColumn`, `selectedIndexPerColumn`
+   - `filters` per column, and derived filtered lists
+3. Implement `RangerView` minimal terminal renderer using ANSI:
+   - Clear screen, draw four columns, highlight selection
+   - Render footer with key help and preview command
+4. Implement `RangerController`:
+   - Read raw key input from `process.stdin`
+   - Map arrows, enter, letters, backspace, esc/q
+   - Update model, refresh view
+5. Initialize lists from `TSCompletion` and refresh on selection/filter changes.
+6. Keep rendering decoupled and pure (stateless functions where possible).
+
+## Constraints
+- ESM only; no external TUI deps.
+- No options-style flags; positional args only for execution.
+- Keep file under 400 SLOC initially; split if needed.
+
+## Acceptance Criteria
+- Binary starts with `node --loader ts-node/esm src/ts/layer4/TSRanger.ts`.
+- Four columns render; navigation and filtering work as specified.
+- Preview updates as selection/params change.
+- Exits cleanly on `q`/`Esc` without leaving terminal in raw mode.
