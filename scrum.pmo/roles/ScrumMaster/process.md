@@ -12,6 +12,15 @@
 - All scripts and tools (e.g., `oosh`) must be robustly callable from their own directory, from the PATH, or from the project root. Always resolve the project root dynamically to ensure correct CLI and environment behavior regardless of invocation location.
 - **DO NOT REPEAT YOURSELF (DRY):** Never duplicate logic, documentation, or code. If you find repetition, always suggest and implement consolidation. Refactor or centralize repeated logic, scripts, or documentation to a single canonical location. This applies to all roles and all artifacts (code, scripts, docs, process).
 
+## Markdown Backlink Policy (Mandatory)
+- Every markdown document must begin with a single backlink on the very first line to its parent artifact.
+  - Tasks under a sprint must link to that sprint's `planning.md` using a relative path: `[Back to Planning](./planning.md)`.
+  - Subtasks must link to their main task file.
+  - A sprint `planning.md` should link to the sprints index: `[Back to Sprints](../)`.
+  - Role process docs should link to their role root index if present.
+- Backlinks go at line 1, then one blank line, then the document title (`# ...`).
+- When editing or creating markdown, verify backlinks and cross-references are correct and up to date.
+
 # Commit & Push Best Practices
 
 As Scrum Master, ensure the following best practices for committing and pushing changes:

@@ -1,3 +1,5 @@
+[Back to Planning](./planning.md)
+
 # Task 1.6: Docs - Embed Generated SVG Diagrams in Markdown
 
 ## Goal
