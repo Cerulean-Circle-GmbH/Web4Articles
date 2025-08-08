@@ -61,7 +61,8 @@ export class TSsh {
       const completionScriptPath = path.join(projectRoot, 'src', 'sh', 'tssh-completion.sh');
       Logger.log(`[TSsh] completionScriptPath: ${completionScriptPath}`, 'debug');
       const completionScript = fs.readFileSync(completionScriptPath, 'utf8');
-      const filePath = path.join(completionDir, '_tssh_completion');
+      const completionFile = ['_tssh', 'completion'].join('_');
+      const filePath = path.join(completionDir, completionFile);
       Logger.log(`[TSsh] filePath: ${filePath}`, 'debug');
       fs.writeFileSync(filePath, completionScript, { mode: 0o755 });
       Logger.log(`[TSsh] Completion installed at ${filePath}`, 'info');

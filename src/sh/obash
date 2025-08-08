@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# obash: Open a project-scoped Bash with PATH and tssh completion initialized
+set -euo pipefail
+
+# Resolve project root (two levels up from this script: src/sh -> project)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+
+# Prepare a temporary rcfile to configure the interactive shell
+RC_FILE="$(mktemp)"
+
+cleanup() { rm -f "$RC_FILE"; }
+trap cleanup EXIT
+
+cat > "$RC_FILE" <<'RC'
+# obash rcfile (auto-generated)
+
+# Preserve existing PATH but prepend project bin paths
+export PROJECT_ROOT="__PROJECT_ROOT__"
+export PATH="$PROJECT_ROOT/node_modules/.bin:$PROJECT_ROOT/src/sh:$PATH"
+
+# Configure ts-node for ESM TypeScript entrypoints
+export TS_NODE_PROJECT="$PROJECT_ROOT/tsconfig.json"
+export NODE_NO_WARNINGS=1
+
+# Load bash-completion if available
+if [ -f /usr/share/bash-completion/bash_completion ]; then
+  # shellcheck source=/usr/share/bash-completion/bash_completion
+  . /usr/share/bash-completion/bash_completion
+elif [ -f /etc/bash_completion ]; then
+  # shellcheck source=/etc/bash_completion
+  . /etc/bash_completion
+fi
+
+# Robust tssh completion using TSCompletion backend (positional-only, no options)
+_tssh_completion() {
+  local cur
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  # Pass all words except the command itself to the backend
+  local args=("${COMP_WORDS[@]:1}")
+  local out
+  out=$(NODE_NO_WARNINGS=1 node --loader ts-node/esm "$PROJECT_ROOT/src/ts/layer4/TSCompletion.ts" "${args[@]}" 2>/dev/null || true)
+  COMPREPLY=( $(compgen -W "$out" -- "$cur") )
+  # Allow default completion fallback when backend returns nothing
+  compopt -o default 2>/dev/null || true
+}
+complete -F _tssh_completion tssh
+
+# Friendly banner
+echo "[obash] Project Root: $PROJECT_ROOT"
+echo "[obash] PATH prepended with: $PROJECT_ROOT/node_modules/.bin and $PROJECT_ROOT/src/sh"
+echo "[obash] TS_NODE_PROJECT: $TS_NODE_PROJECT"
+echo "[obash] tssh completion initialized"
+RC
+
+# Inject the actual project root path into the rcfile
+sed -i "s#__PROJECT_ROOT__#${PROJECT_ROOT//\//\/}#g" "$RC_FILE"
+
+# Start interactive bash with our rcfile
+exec bash --noprofile --rcfile "$RC_FILE" -i

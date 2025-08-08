@@ -105,3 +105,10 @@ oosh GitScrumProject create sprint [Tab] # completes: parameters of createSprint
 - If a parameter is chosen, complete its default value if available.
 
 This specification is implemented by a shell script for bash completion and a TypeScript backend for dynamic completions.
+
+### Implementation Update (2025-08-06)
+- Updated `src/sh/oosh-completion.sh` to support both completion function usage and standalone execution:
+  - When executed directly, the script now prints completions by invoking the TS backend.
+  - Supports `COMP_WORDS`/`COMP_CWORD` to emulate Bash completion for automated tests.
+  - Uses `node --loader ts-node/esm` with `TS_NODE_PROJECT` to ensure clean ESM execution.
+- Result: CLI-based completion tests pass; shell-script invocation tests now consume actual backend output.
