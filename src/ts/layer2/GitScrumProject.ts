@@ -38,7 +38,10 @@ export class GitScrumProject implements Project {
     const command = parsed.command || 'createProject';
 
     if (command === 'createTemplateRepo') {
-      const [org, newRepo, sourceRepoUrl, submodulePath] = parsed.restArgs || [];
+      const argList = [parsed.type, parsed.projectName, ...(parsed.restArgs || [])].filter(
+        (v) => typeof v === 'string' && v.length > 0
+      ) as string[];
+      const [org, newRepo, sourceRepoUrl, submodulePath] = argList;
       return this.createTemplateRepo(org, newRepo, sourceRepoUrl, submodulePath);
     }
     if (command === 'linkSource') {
@@ -87,6 +90,12 @@ export class GitScrumProject implements Project {
 
   // New commands (stubs)
   private createTemplateRepo(org?: string, newRepo?: string, sourceRepoUrl?: string, submodulePath?: string): void {
+    if (process.env.DRY_RUN === '1') {
+      console.log(
+        `DRY RUN: createTemplateRepo org=${org} newRepo=${newRepo} sourceRepoUrl=${sourceRepoUrl} submodulePath=${submodulePath}`
+      );
+      return;
+    }
     console.log('createTemplateRepo stub:', { org, newRepo, sourceRepoUrl, submodulePath });
   }
 

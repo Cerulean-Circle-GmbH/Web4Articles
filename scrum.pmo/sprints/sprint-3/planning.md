@@ -19,6 +19,8 @@ Deliver a comprehensive `GitScrumProject` tool that can create new GitHub reposi
   **Priority:** 6
 - [ ] [Task 1.6: Docs - Embed Generated SVG Diagrams in Markdown](./task-1.6-docs-embed-svgs.md)
   **Priority:** 7
+- [ ] [Task 1.7: PO — Plan Sprint 1 for TLA.scrum.pmo (wrapper project)](./task-1.7-po-plan-tla-sprint-1.md)
+  **Priority:** 8
 
 ---
 
