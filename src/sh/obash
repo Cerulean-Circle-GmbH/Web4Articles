@@ -23,13 +23,21 @@ export PATH="$PROJECT_ROOT/node_modules/.bin:$PROJECT_ROOT/src/sh:$PATH"
 export TS_NODE_PROJECT="$PROJECT_ROOT/tsconfig.json"
 export NODE_NO_WARNINGS=1
 
-# Load bash-completion if available
+# Load bash-completion if available (Linux and macOS/Homebrew locations)
 if [ -f /usr/share/bash-completion/bash_completion ]; then
   # shellcheck source=/usr/share/bash-completion/bash_completion
   . /usr/share/bash-completion/bash_completion
 elif [ -f /etc/bash_completion ]; then
   # shellcheck source=/etc/bash_completion
   . /etc/bash_completion
+elif [ -f /opt/homebrew/etc/profile.d/bash_completion.sh ]; then
+  # Homebrew bash-completion@2 (Apple Silicon)
+  # shellcheck source=/opt/homebrew/etc/profile.d/bash_completion.sh
+  . /opt/homebrew/etc/profile.d/bash_completion.sh
+elif [ -f /usr/local/etc/bash_completion ]; then
+  # Homebrew bash-completion (Intel macs)
+  # shellcheck source=/usr/local/etc/bash_completion
+  . /usr/local/etc/bash_completion
 fi
 
 # Robust tssh completion using TSCompletion backend (positional-only, no options)
@@ -46,15 +54,30 @@ _tssh_completion() {
 }
 complete -F _tssh_completion tssh
 
-# Friendly banner
-echo "[obash] Project Root: $PROJECT_ROOT"
-echo "[obash] PATH prepended with: $PROJECT_ROOT/node_modules/.bin and $PROJECT_ROOT/src/sh"
-echo "[obash] TS_NODE_PROJECT: $TS_NODE_PROJECT"
-echo "[obash] tssh completion initialized"
+# Friendly banner only for interactive shells
+case $- in
+  *i*)
+    echo "[obash] Project Root: $PROJECT_ROOT"
+    echo "[obash] PATH prepended with: $PROJECT_ROOT/node_modules/.bin and $PROJECT_ROOT/src/sh"
+    echo "[obash] TS_NODE_PROJECT: $TS_NODE_PROJECT"
+    echo "[obash] tssh completion initialized"
+    ;;
+esac
 RC
 
-# Inject the actual project root path into the rcfile
-sed -i "s#__PROJECT_ROOT__#${PROJECT_ROOT//\//\/}#g" "$RC_FILE"
+# Inject the actual project root path into the rcfile (portable sed -i)
+SED_SAFE_ROOT="${PROJECT_ROOT//\//\/}"
+if [[ "$OSTYPE" == darwin* ]]; then
+  sed -i '' -e "s#__PROJECT_ROOT__#${SED_SAFE_ROOT}#g" "$RC_FILE"
+else
+  sed -i -e "s#__PROJECT_ROOT__#${SED_SAFE_ROOT}#g" "$RC_FILE"
+fi
 
-# Start interactive bash with our rcfile
-exec bash --noprofile --rcfile "$RC_FILE" -i
+# Start bash with our rcfile
+if [[ $# -gt 0 ]]; then
+  # Non-interactive command mode: ensure rc is sourced via BASH_ENV
+  exec env BASH_ENV="$RC_FILE" bash --noprofile -c "$*"
+else
+  # Interactive shell
+  exec bash --noprofile --rcfile "$RC_FILE" -i
+fi
