@@ -35,7 +35,19 @@ export class DefaultCLI {
         Logger.log(`[DefaultCLI] ClassRef resolved: ${!!ClassRef}`, 'debug');
       } catch (e) {
         Logger.log(`[DefaultCLI] Could not import class: ${className} (${e})`, 'error');
-        // fallback to OOSH
+        // fallback: if className is TSsh, show TSsh help, else fallback to OOSH
+        if (className && className.toLowerCase() === 'tssh') {
+          try {
+            const TSshModule = await import('../layer1/TSsh.ts');
+            const TSsh = TSshModule.TSsh;
+            Logger.log('[DefaultCLI] Fallback to TSsh.help()', 'warn');
+            TSsh.help();
+            process.exit(0);
+            return;
+          } catch (e) {
+            Logger.log('[DefaultCLI] Could not import TSsh for help fallback: ' + e, 'error');
+          }
+        }
         const OOSHModule = await import('../layer1/OOSH.ts');
         const OOSH = OOSHModule.OOSH;
         Logger.log('[DefaultCLI] Fallback to OOSH.help()', 'warn');

@@ -1,9 +1,19 @@
+# CMMI Level 4 Task Preparation
+See [Canonical CMMI Level 4 Task Preparation](../../../docs/canonical-cmmi4-task-preparation.md)
 # Product Owner (PO) Role Process
 
 ## CMMI Level 4 Feedback & Learning
+
+### 2025-08-05: tssh CLI fallback bug (shows OOSH help)
+- **Problem:** When running `tssh` with invalid or missing arguments, the CLI showed OOSH help output instead of tssh help, causing confusion.
+- **Root Cause:** The shared DefaultCLI fallback always called OOSH.help() if the class could not be resolved, even for tssh.
+- **Fix:** DefaultCLI now checks if the class is TSsh and calls TSsh.help() instead. Only falls back to OOSH for unrelated classes.
+- **Lesson:** Always ensure CLI fallback logic is context-aware and does not leak help or branding from other tools. Add explicit tests for help output in all CLI entrypoints.
 - All process improvements, debugging lessons, and cross-role feedback must be documented in this file for traceability and continuous improvement.
 - After any significant requirements change, debugging, or integration session, summarize what was learned and how it will change future requirements or documentation.
+For naming and numbering conventions, see [Canonical Task Naming Conventions](../../../docs/canonical-task-naming-conventions.md).
 
+**PO tasks are always main tasks (e.g., `task-2-po-...`). Only PO documentation or requirement breakdowns are subtasks. See canonical conventions for details.**
 ## Logger & Verification Principles
 - All requirements, documentation, and automation must reference the canonical Logger and verification principles where applicable. Logging must be environment-aware, non-intrusive in production, and support traceability for debugging and process improvement.
 - After any automated or scripted action, always verify the intended effect (e.g., file creation, output, or state change) and document any discrepancies for process improvement.
