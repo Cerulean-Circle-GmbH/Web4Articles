@@ -110,7 +110,9 @@ src/sh/obash 'tssh TSsh help'
 - UI:
   - Four columns (Classes, Methods, Params, Preview)
   - Bottom key usage line is blue with white text (legacy styling)
-  - Above the footer, a colorized shell-like command preview shows: `tssh <Class> <Method> <Params...>`
+  - Layout uses as many terminal rows as available and keeps the key usage footer on the last line, even on resize.
+  - Above the footer, a single empty spacer line is rendered.
+  - Above the spacer, a colorized shell-like command preview shows: `tssh <Class> <Method> <Params...>`
     - `tssh` in green, Class in cyan, Method in yellow, Param values in magenta
 - Parameter entry:
   - Press Enter on Preview to begin entering parameter values in order

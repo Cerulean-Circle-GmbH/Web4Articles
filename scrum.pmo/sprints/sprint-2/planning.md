@@ -19,7 +19,7 @@ Deliver a ranger-like interactive shell (TS Ranger) that leverages `TSCompletion
   **Priority:** 3
 - [ ] [Task 7: Developer - Refactor TSRanger to one class per TS file](./task-1.6-developer-refactor-tsranger.md)
   **Priority:** 2
-- [ ] [Task 8: Developer - Blue/White footer and colorized command preview](./task-1.7-developer-footer-and-color-preview.md)
+- [ ] [Task 8: Developer - Blue/White footer, blank spacer, and colorized command preview](./task-1.7-developer-footer-and-color-preview.md)
   **Priority:** 2
 - [ ] [Task 9: Developer - Sequential parameter entry and auto-execute](./task-1.8-developer-parameter-entry.md)
   **Priority:** 1
@@ -27,7 +27,7 @@ Deliver a ranger-like interactive shell (TS Ranger) that leverages `TSCompletion
 ---
 
 **Process Update (2025-08-08):**
-Introduced Sprint 2 to deliver a ranger-like interactive shell on top of the current CLI/TSCompletion foundation. Tasks are sequenced to avoid blockers: specification first, core TUI, completion integration, execution bridge, tests, then documentation.
+Introduced Sprint 2 to deliver a ranger-like interactive shell on top of the current CLI/TSCompletion foundation. Tasks are sequenced to avoid blockers: specification first, core TUI, completion integration, execution bridge, tests, then documentation. Footer must remain anchored to the last terminal line (with a blank spacer above), the command preview is above that spacer, and the layout re-renders on terminal resize to use as many lines as available.
 
 ---
 
