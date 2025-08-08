@@ -77,6 +77,19 @@ Enable robust, testable, and extensible CLI integration for shell-based workflow
     - Add and run test cases for Bash completion scripts.
     - Document test results and feedback.
 
+## Progress Log (2025-08-06)
+- Implemented `src/sh/tssh` behaviors per acceptance criteria:
+  - On no arguments: prints project info
+    - `Project Root: <absolute path>`
+    - `Unit Path: <relative script path>`
+  - Rejects shell-style options (e.g., `--install-completion`) with a clear error message and exit code 0.
+  - Handles invalid commands (`notACommand`) by printing an error and exiting with code 0.
+  - Standardized backend invocation to ESM: `node --loader ts-node/esm` with `TS_NODE_PROJECT` exported.
+- Verified that `TSsh.installCompletion` writes to `~/.local/share/bash-completion/completions/_tssh_completion` and references external script content.
+
+## Verification
+- Ran automated tests; remaining failures now focus on shell completion script output and parameter/default completion edge cases tracked in related tasks.
+
 ---
 
 [Back to Planning](./planning.md)
