@@ -17,6 +17,8 @@ Deliver a comprehensive `GitScrumProject` tool that can create new GitHub reposi
   **Priority:** 5
 - [ ] [Task 1.5: PO - User Guide and Acceptance](./task-1.5-po-user-guide.md)
   **Priority:** 6
+- [ ] [Task 1.6: Docs - Embed Generated SVG Diagrams in Markdown](./task-1.6-docs-embed-svgs.md)
+  **Priority:** 7
 
 ---
 
