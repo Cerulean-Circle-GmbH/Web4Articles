@@ -1,4 +1,4 @@
-import { RangerModel } from './RangerModel.ts';
+import { RangerModel } from '../layer2/RangerModel.ts';
 
 export class RangerView {
   render(model: RangerModel): void {

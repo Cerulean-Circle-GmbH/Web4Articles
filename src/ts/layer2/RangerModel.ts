@@ -1,4 +1,4 @@
-import { TSCompletion } from './TSCompletion.ts';
+import { TSCompletion } from '../layer4/TSCompletion.ts';
 
 export class RangerModel {
   classes: string[] = [];
