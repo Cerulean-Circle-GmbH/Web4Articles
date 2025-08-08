@@ -36,16 +36,33 @@ export class RangerView {
   }
 
   private formatColumn(title: string, items: string[], selectedIndex: number, width: number, filter: string): string[] {
-    const header = `[${title}] ${filter ? '(' + filter + ')' : ''}`;
-    const rendered = [this.bold(header)];
+    const headerRaw = `[${title}] ${filter ? '(' + filter + ')' : ''}`;
+    const colorCode = this.colorCodeForTitle(title);
+    const rendered: string[] = [this.style(headerRaw, { bold: true, colorCode })];
     for (let i = 0; i < Math.max(items.length, 1); i++) {
       const label = items[i] ?? '';
-      const line = i === selectedIndex ? this.inverse(label || ' ') : (label || ' ');
-      rendered.push(line);
+      const isSelected = i === selectedIndex;
+      const styled = this.style(label || ' ', { colorCode, inverse: isSelected });
+      rendered.push(styled);
     }
     return rendered.map(s => s.length > width ? s.slice(0, width - 1) : s);
   }
 
-  private bold(s: string): string { return `\x1b[1m${s}\x1b[0m`; }
-  private inverse(s: string): string { return `\x1b[7m${s}\x1b[0m`; }
+  private colorCodeForTitle(title: string): number | undefined {
+    switch (title) {
+      case 'Classes': return 36; // cyan
+      case 'Methods': return 32; // green
+      case 'Params': return 33; // yellow
+      default: return undefined;
+    }
+  }
+
+  private style(text: string, opts: { colorCode?: number; bold?: boolean; inverse?: boolean }): string {
+    let open = '';
+    if (opts.inverse) open += '\x1b[7m';
+    if (opts.bold) open += '\x1b[1m';
+    if (typeof opts.colorCode === 'number') open += `\x1b[${opts.colorCode}m`;
+    const close = '\x1b[0m';
+    return `${open}${text}${close}`;
+  }
 }
