@@ -9,7 +9,7 @@ describe('oosh bash completion integration (clean ESM)', () => {
   const shDir = path.join(projectRoot, 'src/sh');
 
   function runCompletion(args: string[] = [], cwd = projectRoot) {
-    const result = spawnSync('ts-node', [tsCompletion, ...args], {
+    const result = spawnSync('node', ['--loader','ts-node/esm', tsCompletion, ...args], {
       cwd,
       env: { ...process.env, TS_NODE_PROJECT: path.join(projectRoot, 'tsconfig.json') },
       encoding: 'utf-8',
@@ -42,7 +42,7 @@ describe('oosh bash completion integration (clean ESM)', () => {
 
   it('works from src/sh directory like the shell script', () => {
     const relCompletion = path.relative(shDir, tsCompletion);
-    const result = spawnSync('ts-node', [relCompletion], {
+    const result = spawnSync('node', ['--loader','ts-node/esm', relCompletion], {
       cwd: shDir,
       env: { ...process.env, TS_NODE_PROJECT: path.join(projectRoot, 'tsconfig.json') },
       encoding: 'utf-8',

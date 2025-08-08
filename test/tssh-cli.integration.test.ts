@@ -47,7 +47,7 @@ describe('tssh CLI integration (realistic scenarios)', () => {
   });
 
   it('directly calls the backend with installCompletion and prints expected output', () => {
-    const result = spawnSync('ts-node', ['--esm', backendPath, 'TSsh', 'installCompletion'], {
+    const result = spawnSync('node', ['--loader','ts-node/esm', backendPath, 'TSsh', 'installCompletion'], {
       env: {
         ...process.env,
         TSSH_PROJECT_ROOT: '/mock/project/root',
