@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# obash: Open a project-scoped Bash with PATH and tssh completion initialized
+# obash: Open a project-scoped Bash with PATH and tssh/tsranger completion initialized
 set -euo pipefail
 
 # Resolve project root (two levels up from this script: src/sh -> project)
@@ -54,13 +54,22 @@ _tssh_completion() {
 }
 complete -F _tssh_completion tssh
 
+# Minimal tsranger completion (tsranger is a TUI and does not accept positional args)
+_tsranger_completion() {
+  local cur
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  COMPREPLY=( $(compgen -W "" -- "$cur") )
+  compopt -o default 2>/dev/null || true
+}
+complete -F _tsranger_completion tsranger
+
 # Friendly banner only for interactive shells
 case $- in
   *i*)
     echo "[obash] Project Root: $PROJECT_ROOT"
     echo "[obash] PATH prepended with: $PROJECT_ROOT/node_modules/.bin and $PROJECT_ROOT/src/sh"
     echo "[obash] TS_NODE_PROJECT: $TS_NODE_PROJECT"
-    echo "[obash] tssh completion initialized"
+    echo "[obash] tssh and tsranger completion initialized"
     ;;
 esac
 RC
