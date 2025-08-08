@@ -63,9 +63,11 @@ _tsranger_completion() {
 }
 complete -F _tsranger_completion tsranger
 
-# Friendly banner only for interactive shells
+# Friendly prompt and banner only for interactive shells
 case $- in
   *i*)
+    PS1='[obash \h] \u@\w > '
+    export PS1
     echo "[obash] Project Root: $PROJECT_ROOT"
     echo "[obash] PATH prepended with: $PROJECT_ROOT/node_modules/.bin and $PROJECT_ROOT/src/sh"
     echo "[obash] TS_NODE_PROJECT: $TS_NODE_PROJECT"
