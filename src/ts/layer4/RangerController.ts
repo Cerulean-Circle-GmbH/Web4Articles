@@ -1,7 +1,7 @@
 import { Logger } from '../layer1/Logger.ts';
-import { TSCompletion } from './TSCompletion.ts';
-import { RangerModel } from './RangerModel.ts';
-import { RangerView } from './RangerView.ts';
+import { TSCompletion } from '../layer4/TSCompletion.ts';
+import { RangerModel } from '../layer2/RangerModel.ts';
+import { RangerView } from '../layer5/RangerView.ts';
 
 export class RangerController {
   constructor(private model: RangerModel, private view: RangerView) {}
