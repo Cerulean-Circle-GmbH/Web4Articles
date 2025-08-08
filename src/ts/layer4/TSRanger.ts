@@ -13,5 +13,10 @@ export class TSRanger {
 
 // CLI entry point
 if (import.meta.url === `file://${process.argv[1]}` || (process.argv[1] && process.argv[1].endsWith('TSRanger.ts'))) {
-  TSRanger.start();
+  // Ensure any async errors are surfaced clearly rather than as opaque ESM loader objects
+  TSRanger.start().catch((error: unknown) => {
+    const message = error instanceof Error ? error.stack || error.message : String(error);
+    console.error(`[TSRanger] Fatal error: ${message}`);
+    process.exitCode = 1;
+  });
 }
