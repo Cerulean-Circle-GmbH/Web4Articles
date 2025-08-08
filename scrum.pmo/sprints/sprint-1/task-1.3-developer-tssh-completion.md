@@ -1,14 +1,9 @@
 # Task 1.3: Developer - Implement Bash completion for tssh
 
-## Goal
-Add a method `installCompletion()` to `TSsh.ts` that writes a Bash completion script for `tssh`.
+## Progress (2025-08-06)
+- Confirmed `TSsh.installCompletion()` writes `_tssh_completion` into `~/.local/share/bash-completion/completions/` using external script content located at `src/sh/tssh-completion.sh`.
+- Standardized all runtime calls to `TSCompletion.ts` via `node --loader ts-node/esm` and ensured `TS_NODE_PROJECT` is set.
+- `src/sh/obash` added for developer convenience: opens a project-scoped Bash with PATH and tssh completion initialized.
 
-## Steps
-- Implement `installCompletion()` in `TSsh.ts`.
-- The method writes a Bash completion script to `~/.local/share/bash-completion/completions/_tssh_completion`.
-- The script must register Bash completion for `tssh` using a Bash function, modeled after `install.oosh-completion.sh`.
-- Ensure the completion script is robust, user-friendly, and only ever suggests valid, existing arguments. Shell-style options and unsupported input are never suggested; invalid/unsupported input yields silence (no suggestions, no errors).
-
-## Acceptance Criteria
-- Running the completion install method creates a working Bash completion script for `tssh`.
-- Completion is robust, user-friendly, and documented.
+## Next Steps
+- Add dedicated tests for `tssh` completion registration using the installed `_tssh_completion` file if needed.

@@ -187,33 +187,38 @@ export class TSCompletion implements Completion {
     }
     if (args.length === 2) {
       // After class and method name, complete all methods starting with that method name (e.g. 'create*').
+      // If multiple methods share the prefix (including the exact method), list those methods.
+      // If the exact method exists with no other prefixed methods, return its parameters.
       // If no such methods exist, complete the parameters of the method.
       const [className, methodPrefix] = args;
       const methods = TSCompletion.getClassMethods(className);
       const subMethods = methods.filter(m => m.startsWith(methodPrefix));
-      if (subMethods.length === 1) {
-        // Only one match: output the suffix after the prefix
-        return [subMethods[0].slice(methodPrefix.length)];
-      } else if (subMethods.length > 1) {
-        // Multiple matches: output full method names
+      if (subMethods.length > 1) {
         return subMethods;
-      } else {
-        return TSCompletion.getMethodParameters(className, methodPrefix);
       }
+      if (subMethods.length === 1) {
+        if (subMethods[0] === methodPrefix) {
+          return TSCompletion.getMethodParameters(className, methodPrefix);
+        }
+        return [subMethods[0].slice(methodPrefix.length)];
+      }
+      // No methods match the prefix; try parameters for the methodPrefix
+      const params = TSCompletion.getMethodParameters(className, methodPrefix);
+      if (params.length > 0) return params;
+      return subMethods;
     }
     if (args.length === 3) {
       // If the second arg + third arg matches a method, complete its parameters
       const [className, methodPrefix, subMethodOrParam] = args;
+      // First, try to complete default value for the parameter of the methodPrefix
+      const values = TSCompletion.getMethodParameters(className, methodPrefix, subMethodOrParam);
+      if (values.length > 0 && values[0] !== subMethodOrParam && values[0] !== undefined && values[0] !== '') {
+        return values;
+      }
       const methods = TSCompletion.getClassMethods(className);
       const fullMethod = methodPrefix + (subMethodOrParam.charAt(0).toUpperCase() + subMethodOrParam.slice(1));
       if (methods.includes(fullMethod)) {
         return TSCompletion.getMethodParameters(className, fullMethod);
-      }
-      // Otherwise, try to complete default value for the parameter
-      // e.g. oosh GitScrumProject create project [Tab] should return Web4Scrum
-      const values = TSCompletion.getMethodParameters(className, methodPrefix, subMethodOrParam);
-      if (values.length > 0 && values[0] !== subMethodOrParam && values[0] !== undefined && values[0] !== '') {
-        return values;
       }
       return [];
     }

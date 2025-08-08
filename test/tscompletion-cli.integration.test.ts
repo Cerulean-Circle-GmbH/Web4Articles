@@ -1,7 +1,7 @@
 import { execa } from 'execa';
 import { describe, it, expect } from 'vitest';
 
-const CLI = ['npx', 'ts-node', '--esm', 'src/ts/layer4/TSCompletion.ts'];
+const CLI = ['node', '--loader', 'ts-node/esm', 'src/ts/layer4/TSCompletion.ts'];
 
 async function runCompletion(args: string) {
   const argv = args.trim().split(/\s+/).filter(Boolean);
