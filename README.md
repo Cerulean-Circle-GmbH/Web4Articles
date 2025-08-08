@@ -103,3 +103,17 @@ src/sh/obash
 # run a one-off command with the project env
 src/sh/obash 'tssh TSsh help'
 ```
+
+### TSRanger (Sprint 2)
+
+- Start with: `npm run tsranger` or `node --loader ts-node/esm src/ts/layer4/TSRanger.ts`
+- UI:
+  - Four columns (Classes, Methods, Params, Preview)
+  - Bottom key usage line is blue with white text (legacy styling)
+  - Above the footer, a colorized shell-like command preview shows: `tssh <Class> <Method> <Params...>`
+    - `tssh` in green, Class in cyan, Method in yellow, Param values in magenta
+- Parameter entry:
+  - Press Enter on Preview to begin entering parameter values in order
+  - Type the value; press Space or Enter to commit and advance
+  - When all values are provided, the method executes immediately
+  - `q`/`Esc` quits; navigation is disabled while entering a parameter value

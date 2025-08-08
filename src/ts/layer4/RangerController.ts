@@ -24,6 +24,38 @@ export class RangerController {
           this.cleanup();
           return;
         }
+
+        // When entering parameter values, only process typing, backspace, space and enter
+        if (this.model.paramEntryActive) {
+          if (key === '\r' || key === ' ') {
+            // Commit current buffer to current parameter and advance
+            this.commitParamBuffer();
+            if (this.model.allParamsFilled()) {
+              // Execute immediately when all params are filled
+              const parts = this.model.buildCommandParts();
+              await this.execute(parts);
+              // After execution, reset param entry
+              this.model.paramEntryActive = false;
+            }
+            this.view.render(this.model);
+            return;
+          }
+          if (key === '\x7f') {
+            // Backspace in buffer
+            this.model.paramEntryBuffer = this.model.paramEntryBuffer.slice(0, -1);
+            this.view.render(this.model);
+            return;
+          }
+          if (key.length === 1 && key >= ' ' && key <= '~') {
+            // Append printable to buffer
+            this.model.paramEntryBuffer += key;
+            this.view.render(this.model);
+            return;
+          }
+          // Ignore navigation while in param entry
+          return;
+        }
+
         if (key === '\r') { // Enter
           await this.onEnter();
           this.view.render(this.model);
@@ -49,14 +81,14 @@ export class RangerController {
           this.view.render(this.model);
           return;
         }
-        if (key === '\x7f') { // Backspace
+        if (key === '\x7f') { // Backspace (filter editing)
           const col = this.model.selectedColumn;
           this.model.filters[col] = this.model.filters[col].slice(0, -1);
           this.onFilterChange();
           this.view.render(this.model);
           return;
         }
-        if (key.length === 1 && key >= ' ' && key <= '~') { // Printable
+        if (key.length === 1 && key >= ' ' && key <= '~') { // Printable -> filter typing
           const col = this.model.selectedColumn;
           this.model.filters[col] += key;
           this.onFilterChange();
@@ -84,8 +116,7 @@ export class RangerController {
       this.model.selectedIndexPerColumn[1] = 0;
       this.model.updateParams();
     } else if (col === 2) {
-      // Params filter; attempt default value mapping in preview only
-      // No list mutation here
+      // Params filter is no longer used for entering values; keep as list filter only
     }
   }
 
@@ -111,9 +142,42 @@ export class RangerController {
       this.changeColumn(1);
       return;
     }
+    // On Preview column: start param entry or execute
+    const c = this.model.selectedClass;
+    const m = this.model.selectedMethod;
+    if (!c || !m) return;
+    if (this.model.params.length > 0 && !this.model.allParamsFilled()) {
+      this.startParamEntry();
+      return;
+    }
     // Execute preview command
     const parts = this.model.buildCommandParts();
     await this.execute(parts);
+  }
+
+  private startParamEntry(): void {
+    this.model.paramEntryActive = true;
+    // Find first empty parameter slot
+    const firstEmpty = this.model.paramValues.findIndex(v => v === '');
+    this.model.paramEntryIndex = firstEmpty >= 0 ? firstEmpty : 0;
+    this.model.paramEntryBuffer = '';
+  }
+
+  private commitParamBuffer(): void {
+    const idx = this.model.paramEntryIndex;
+    if (idx >= 0 && idx < this.model.paramValues.length) {
+      this.model.paramValues[idx] = this.model.paramEntryBuffer;
+    }
+    // Advance to next param
+    const nextIdx = idx + 1;
+    if (nextIdx < this.model.paramValues.length) {
+      this.model.paramEntryIndex = nextIdx;
+      this.model.paramEntryBuffer = '';
+    } else {
+      // Completed all params
+      this.model.paramEntryActive = false;
+      this.model.paramEntryBuffer = '';
+    }
   }
 
   private async execute(parts: string[]): Promise<void> {

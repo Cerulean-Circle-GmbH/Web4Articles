@@ -9,6 +9,10 @@ export class RangerModel {
   selectedIndexPerColumn: number[] = [0, 0, 0, 0];
 
   filters: string[] = ['', '', '', ''];
+  paramValues: string[] = [];
+  paramEntryActive: boolean = false;
+  paramEntryIndex: number = 0;
+  paramEntryBuffer: string = '';
 
   get selectedClass(): string | undefined {
     return this.filteredClasses()[this.selectedIndexPerColumn[0]];
@@ -46,20 +50,15 @@ export class RangerModel {
     const m = this.selectedMethod;
     if (c) parts.push(c);
     if (m) parts.push(m);
-    // Params: use filter as current token if present, else selected item
-    const currentParamToken = this.filters[2];
-    if (c && m) {
-      if (currentParamToken) {
-        // Try default value completion for token
-        const defaultVals = TSCompletion.getMethodParameters(c, m, currentParamToken);
-        if (defaultVals.length > 0) {
-          parts.push(defaultVals[0]);
-        } else {
-          parts.push(currentParamToken);
-        }
-      } else {
-        const p = this.selectedParam;
-        if (p) parts.push(p);
+    // Use entered parameter values (progressively) for preview/execution
+    if (c && m && this.paramValues.length > 0) {
+      for (let i = 0; i < this.paramValues.length; i++) {
+        const val = this.paramValues[i] ?? '';
+        if (val && val.length > 0) parts.push(val);
+      }
+      // While actively entering a value, show the buffer as the next token
+      if (this.paramEntryActive && this.paramEntryBuffer.length > 0) {
+        parts.push(this.paramEntryBuffer);
       }
     }
     return parts;
@@ -70,6 +69,12 @@ export class RangerModel {
     this.methods = c ? TSCompletion.getClassMethods(c) : [];
     this.selectedIndexPerColumn[1] = 0;
     this.filters[1] = '';
+    // Method list changed; params will be recomputed, so clear param state
+    this.params = [];
+    this.paramValues = [];
+    this.paramEntryActive = false;
+    this.paramEntryIndex = 0;
+    this.paramEntryBuffer = '';
   }
 
   updateParams(): void {
@@ -78,5 +83,15 @@ export class RangerModel {
     this.params = c && m ? TSCompletion.getMethodParameters(c, m) : [];
     this.selectedIndexPerColumn[2] = 0;
     this.filters[2] = '';
+    // Prepare param values for sequential entry according to discovered params
+    this.paramValues = new Array(this.params.length).fill('');
+    this.paramEntryActive = false;
+    this.paramEntryIndex = 0;
+    this.paramEntryBuffer = '';
+  }
+
+  allParamsFilled(): boolean {
+    if (!this.params || this.params.length === 0) return true;
+    return this.paramValues.length === this.params.length && this.paramValues.every(v => v !== '');
   }
 }
