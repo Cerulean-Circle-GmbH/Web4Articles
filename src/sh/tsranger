@@ -27,10 +27,11 @@ TSRANGER_ENTRY="$PROJECT_ROOT/src/ts/layer4/TSRanger.ts"
 
 export NODE_NO_WARNINGS=1
 export TS_NODE_PROJECT
+export TS_NODE_TRANSPILE_ONLY=1
 
 # Start TSRanger TUI (pass through any args)
 if [[ -n "${LOG_LEVEL:-}" && "$LOG_LEVEL" =~ ^[0-9]+$ && "$LOG_LEVEL" -gt 3 ]]; then
-  echo "[tsranger debug] Running: NODE_NO_WARNINGS=1 node --loader ts-node/esm \"$TSRANGER_ENTRY\" $*"
+  echo "[tsranger debug] Running: TS_NODE_TRANSPILE_ONLY=1 NODE_NO_WARNINGS=1 node --loader ts-node/esm \"$TSRANGER_ENTRY\" $*"
 fi
 exec node --loader ts-node/esm "$TSRANGER_ENTRY" "$@"
 

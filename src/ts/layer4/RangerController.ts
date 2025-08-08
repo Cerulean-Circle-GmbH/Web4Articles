@@ -101,7 +101,7 @@ export class RangerController {
 
   private changeColumn(delta: number): void {
     const next = Math.min(3, Math.max(0, this.model.selectedColumn + delta));
-    this.model.selectedColumn = next;
+    this.model.selectedColumn = (next as 0 | 1 | 2 | 3);
   }
 
   private async onEnter(): Promise<void> {
