@@ -3,11 +3,32 @@
 ## Goal
 Define the architecture and CLI contracts for creating a new GitHub repo from this project as a template, where the new repo references the application sources via a git submodule. The wrapper repo hosts Scrum/Docs/CI and runs on top of the submodule sources.
 
+## Status
+- [ ] Planned
+- [ ] In Progress
+  - [ ] refinement
+  - [ ] implementing
+  - [ ] testing
+- [ ] QA Review
+- [ ] Done
+
 ## Deliverables
 - PlantUML spec describing classes, flows, and repo relationships
 - CLI contract for `GitScrumProject`
 - Submodule layout and runtime overlay rules
 - Recovery and Release plan outline
+
+## Artifacts
+- PUML: `src/puml/GitScrumProject_CLI_Architecture.puml`
+- PUML: `src/puml/GitScrumProject_TemplateAndRelease.puml`
+- SVG: `src/puml/GitScrumProject_CLI_Architecture.svg`
+- SVG: `src/puml/GitScrumProject_TemplateAndRelease.svg`
+
+### Embedded Diagrams
+
+![GitScrumProject CLI Architecture](../../../src/puml/GitScrumProject_CLI_Architecture.svg)
+
+![GitScrumProject Template and Release](../../../src/puml/GitScrumProject_TemplateAndRelease.svg)
 
 ## CLI Contract (positional only)
 - `GitScrumProject createTemplateRepo <org> <newRepo> <sourceRepoUrl> <submodulePath>`
@@ -39,3 +60,5 @@ Define the architecture and CLI contracts for creating a new GitHub repo from th
 - CLI spec is unambiguous and adheres to positional invocation rules
 - Submodule-first layout eliminates source duplication
 - Clear release/recovery story for both repos
+- PUMLs compile without errors and corresponding SVGs are embedded above
+- This task references all created artifact file paths
