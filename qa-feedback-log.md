@@ -17,3 +17,8 @@
   - QA review pending placeholders remain; collect and append concrete feedback after execution.
 
 *Update this file as new QA feedback is received or audits are performed.*
+
+- 2025-08-08 — sprint-2/task-1.6-developer-refactor-tsranger.md:
+  - Issue: Classes extracted but placed in incorrect layers (model should be in `layer2`, controller in `layer4`, view in `layer5`).
+  - Resolution: Move `RangerModel` to `src/ts/layer2/`, `RangerController` to remain in `src/ts/layer4/`, and `RangerView` to `src/ts/layer5/`; update imports accordingly.
+  - Outcome: Code aligns with project layering principles without behavior change; tests remain green.

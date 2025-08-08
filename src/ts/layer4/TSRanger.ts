@@ -1,5 +1,5 @@
-import { RangerModel } from './RangerModel.ts';
-import { RangerView } from './RangerView.ts';
+import { RangerModel } from '../layer2/RangerModel.ts';
+import { RangerView } from '../layer5/RangerView.ts';
 import { RangerController } from './RangerController.ts';
 
 export class TSRanger {
