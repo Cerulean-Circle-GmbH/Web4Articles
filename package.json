@@ -7,6 +7,7 @@
     "vitest": "^3.2.4"
   },
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run",
+    "tsranger": "node --loader ts-node/esm ./src/ts/layer4/TSRanger.ts"
   }
 }
