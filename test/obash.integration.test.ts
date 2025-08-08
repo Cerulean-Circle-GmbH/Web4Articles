@@ -13,7 +13,8 @@ describe('obash integration', () => {
   it('sets PROJECT_ROOT and prepends PATH in rc for non-interactive', () => {
     const out = run(`${obashScript} 'printf "%s\n" "$PROJECT_ROOT" "$PATH"'`);
     const lines = out.trim().split(/\n+/);
-    expect(lines[0]).toMatch(/Web4Articles/);
+    const expectedRoot = path.resolve(__dirname, '..');
+    expect(lines[0]).toBe(expectedRoot);
     expect(lines.join('\n')).toMatch(/src\/sh/);
   });
 
