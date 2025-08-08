@@ -1,11 +1,16 @@
 @startuml
+skinparam classAttributeIconSize 0
 title GitScrumProject Templating, Submodule, Release Architecture
 
 interface CLI {
   +start()
 }
-class DefaultCLI { +start() }
-class ParameterParser { +parse(): ParseArgs }
+class DefaultCLI {
+  +start()
+}
+class ParameterParser {
+  +parse(): ParseArgs
+}
 class ParseArgs {
   +className
   +command
@@ -21,7 +26,9 @@ class GitScrumProject {
   +releasePlan(repoType)
 }
 
-class GitHubApi { +createRepo(org, name, visibility) }
+class GitHubApi {
+  +createRepo(org, name, visibility)
+}
 class SubmoduleManager {
   +add(path, url, ref)
   +update(path, ref)
@@ -30,7 +37,9 @@ class ReleaseManager {
   +plan(repoType)
   +tagAndRelease(repoType, version, notes)
 }
-class RecoveryManager { +summarize() }
+class RecoveryManager {
+  +summarize()
+}
 
 GitScrumProject o-- DefaultCLI
 DefaultCLI o-- ParameterParser
