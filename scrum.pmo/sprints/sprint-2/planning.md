@@ -17,6 +17,8 @@ Deliver a ranger-like interactive shell (TS Ranger) that leverages `TSCompletion
   **Priority:** 3
 - [ ] [Task 6: PO - User guide and demo scenarios](./task-1.5-po-user-guide.md)
   **Priority:** 3
+- [ ] [Task 7: Developer - Refactor TSRanger to one class per TS file](./task-1.6-developer-refactor-tsranger.md)
+  **Priority:** 2
 
 ---
 
