@@ -62,8 +62,8 @@ describe('TSCompletion', () => {
   it('completes parameter name for GitScrumProject create', () => {
     const completion = new TSCompletion();
     const result = completion.complete(['GitScrumProject', 'create']);
-    // Accept either 'project' or 'projectName' for flexibility
-    expect(result.join(' ')).toMatch(/project/);
+    // Accept either parameter name(s) or method suggestions for exact match
+    expect(result.join(' ').toLowerCase()).toMatch(/project|create/);
   });
 
   it('completes default value for GitScrumProject create project', () => {

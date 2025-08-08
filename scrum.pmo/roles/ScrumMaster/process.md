@@ -1,6 +1,14 @@
 
 # First Principles for All Roles
 
+## CMMI Level 4 Feedback & Learning
+- All process improvements, debugging lessons, and cross-role feedback must be documented in the appropriate process.md file for traceability and continuous improvement.
+- The ScrumMaster is responsible for ensuring that all roles update their process documentation after significant debugging, integration, or process improvement sessions.
+
+## Logger & Verification Principles
+- All CLI, automation, and scripts must use the canonical Logger where applicable. Logging must be environment-aware, non-intrusive in production, and support traceability for debugging and process improvement.
+- After any automated or scripted action, always verify the intended effect (e.g., file creation, output, or state change) and document any discrepancies for process improvement.
+
 - All scripts and tools (e.g., `oosh`) must be robustly callable from their own directory, from the PATH, or from the project root. Always resolve the project root dynamically to ensure correct CLI and environment behavior regardless of invocation location.
 - **DO NOT REPEAT YOURSELF (DRY):** Never duplicate logic, documentation, or code. If you find repetition, always suggest and implement consolidation. Refactor or centralize repeated logic, scripts, or documentation to a single canonical location. This applies to all roles and all artifacts (code, scripts, docs, process).
 
@@ -40,6 +48,25 @@ scrum.pmo/
 The ScrumMaster is responsible for facilitating the SCRUM process, removing impediments, and ensuring the team follows agile practices. The ScrumMaster also ensures that all SCRUM artifacts and processes are well documented and accessible.
 
 ## Responsibilities
+
+---
+
+**AI Task Creation Protocol:**
+
+When feedback or a new task/subtask is required (by audit, QA, or user request), the Scrum Master must:
+1. Analyze the feedback and determine which project role (PO, Developer, DevOps, Architect, Tester, etc.) is best suited to process it.
+2. Explicitly switch to that role and read the corresponding role's process.md to process the feedback optimally.
+3. Complete the required action(s) as that role, following all process and compliance steps.
+4. Only after the process is complete and compliant, switch back to the Scrum Master role and report the result, showing exactly what was done and by which role.
+
+**Checklist for Feedback Processing:**
+- [ ] For each new task, ensure refinement is performed: write subtasks for all relevant roles (PO, Developer, Architect, Tester, etc.).
+- [ ] Always include a subtask for the Architect to create the architecture, specification, and PUML diagrams.
+- [ ] Ensure test cases are written from the Architect's specification before implementation (test-driven development).
+- [ ] Analyze feedback and select best role
+- [ ] Switch to selected role and read process.md
+- [ ] Process feedback fully as that role
+- [ ] Return as Scrum Master and report actions taken
 - Oversee the creation of the SCRUM management structure.
 - Ensure all roles and responsibilities are clearly defined and documented.
 - Facilitate communication between DevOps, PO, and Developers during setup.

@@ -1,4 +1,12 @@
-# DevOps First Principles & Learnings (Migrated from src/devops/process.md)
+# DevOps First Principles & Learnings (Canonical)
+
+## CMMI Level 4 Feedback & Learning
+- All process improvements, debugging lessons, and cross-role feedback must be documented in this file for traceability and continuous improvement.
+- After any significant debugging or integration session, summarize what was learned and how it will change future process or automation.
+
+## Logger & Verification Principles
+- All automation and scripts must use the canonical Logger where applicable. Logging must be environment-aware, non-intrusive in production, and support traceability for debugging and process improvement.
+- After any automated or scripted action, always verify the intended effect (e.g., file creation, output, or state change) and document any discrepancies for process improvement.
 
 ## Environment Consistency
 - All scripts and tools must work identically in local, CI, and devcontainer environments.
