@@ -84,3 +84,22 @@ If the AI loses context or receives the prompt "recover" from the QA user, it wi
   4. What the next project task is
 
 This process is fully autonomous and designed for rapid, reliable project context recovery and onboarding.
+
+### obash
+
+`src/sh/obash` opens a project-scoped Bash environment:
+
+- Prepends `node_modules/.bin` and `src/sh` to `PATH`
+- Exports `TS_NODE_PROJECT` to point to `tsconfig.json`
+- Loads `bash-completion` (Linux) and Homebrew locations (macOS)
+- Registers `tssh` tab completion via the TypeScript backend
+
+Usage:
+
+```bash
+# interactive shell with project env and completion
+src/sh/obash
+
+# run a one-off command with the project env
+src/sh/obash 'tssh TSsh help'
+```
