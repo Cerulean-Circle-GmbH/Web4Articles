@@ -1,0 +1,19 @@
+# Task 1.5 — PO: User Guide and Demo Scenarios
+
+## Goal
+Document how to run and use the TS Ranger shell, with copy-pasteable examples.
+
+## Contents
+- Quickstart:
+  - Prereq: Node 18+, repo cloned, dev deps installed
+  - Run: `node --loader ts-node/esm src/ts/layer4/TSRanger.ts`
+- Concepts: Columns, filters, preview, execution
+- Keyboard reference: arrows, enter, backspace, esc/q
+- Examples:
+  - Navigate to `GitScrumProject` → `create` → type `project` → select `Web4Scrum` → execute
+  - `TSsh` → `installCompletion` to install completion
+- Troubleshooting: ESM loader, TTY issues, logging via `LOG_LEVEL`
+
+## Acceptance Criteria
+- A single page guide under `docs/tsranger-user-guide.md` with screenshots or ASCII diagrams
+- Linked from `README.md` (optional short blurb)

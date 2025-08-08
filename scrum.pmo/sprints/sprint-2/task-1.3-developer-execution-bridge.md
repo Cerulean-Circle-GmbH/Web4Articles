@@ -1,0 +1,19 @@
+# Task 1.3 — Developer: Command Execution Bridge to DefaultCLI
+
+## Goal
+Execute the selected Class/Method/Params via the existing CLI machinery, preserving the positional-args-only contract.
+
+## Steps
+1. Build a command array: `[className, methodName, ...params]` from current model state.
+2. Import the module dynamically as `DefaultCLI` does, or call `DefaultCLI` programmatically:
+   - Try `../layer1/<Class>.ts`, fallback to `../layer2/<Class>.ts`.
+   - Resolve class reference by name.
+   - If method exists, call `ClassRef[methodName](...params)`; await if Promise.
+   - Else, if `help()` exists, call it.
+3. Handle errors with `Logger` and show a non-blocking toast/footer message in TUI.
+4. Do not spawn subprocesses unless strictly necessary; prefer in-process calls for speed.
+
+## Acceptance Criteria
+- Pressing Enter on the Preview column executes the current command in-process.
+- Errors are logged and shown in the footer; TUI remains responsive.
+- No shell-style flags are introduced anywhere.

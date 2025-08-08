@@ -47,5 +47,12 @@
 | scrum.pmo/sprints/sprint-1/task-1.3-developer-tssh-completion.md | Sprint task | 2025-08-06 |
 | scrum.pmo/sprints/sprint-1/task-1.4-po-document-tssh.md | Sprint task | 2025-08-06 |
 | scrum.pmo/sprints/sprint-1/task-1.5-tester-completion-tests.md | Sprint task | 2025-08-06 |
+| scrum.pmo/sprints/sprint-2/planning.md | Sprint planning | 2025-08-08 |
+| scrum.pmo/sprints/sprint-2/task-1.0-architect-ranger-spec.md | Sprint task | 2025-08-08 |
+| scrum.pmo/sprints/sprint-2/task-1.1-developer-ranger-tui.md | Sprint task | 2025-08-08 |
+| scrum.pmo/sprints/sprint-2/task-1.2-developer-completion-integration.md | Sprint task | 2025-08-08 |
+| scrum.pmo/sprints/sprint-2/task-1.3-developer-execution-bridge.md | Sprint task | 2025-08-08 |
+| scrum.pmo/sprints/sprint-2/task-1.4-tester-e2e-tests.md | Sprint task | 2025-08-08 |
+| scrum.pmo/sprints/sprint-2/task-1.5-po-user-guide.md | Sprint task | 2025-08-08 |
 
 *This index is auto-generated for recovery and onboarding. Update as new markdown files are added.*
