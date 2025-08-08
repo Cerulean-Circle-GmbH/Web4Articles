@@ -54,5 +54,12 @@
 | scrum.pmo/sprints/sprint-2/task-1.3-developer-execution-bridge.md | Sprint task | 2025-08-08 |
 | scrum.pmo/sprints/sprint-2/task-1.4-tester-e2e-tests.md | Sprint task | 2025-08-08 |
 | scrum.pmo/sprints/sprint-2/task-1.5-po-user-guide.md | Sprint task | 2025-08-08 |
+| scrum.pmo/sprints/sprint-3/planning.md | Sprint planning | 2025-08-08 |
+| scrum.pmo/sprints/sprint-3/task-1.0-architect-gitscrumproject-spec.md | Sprint task | 2025-08-08 |
+| scrum.pmo/sprints/sprint-3/task-1.1-developer-repo-scaffold.md | Sprint task | 2025-08-08 |
+| scrum.pmo/sprints/sprint-3/task-1.2-developer-submodule-runtime.md | Sprint task | 2025-08-08 |
+| scrum.pmo/sprints/sprint-3/task-1.3-devops-release-recovery.md | Sprint task | 2025-08-08 |
+| scrum.pmo/sprints/sprint-3/task-1.4-tester-e2e-tests.md | Sprint task | 2025-08-08 |
+| scrum.pmo/sprints/sprint-3/task-1.5-po-user-guide.md | Sprint task | 2025-08-08 |
 
 *This index is auto-generated for recovery and onboarding. Update as new markdown files are added.*

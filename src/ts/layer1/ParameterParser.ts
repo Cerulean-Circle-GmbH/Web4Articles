@@ -5,9 +5,9 @@ export class ParameterParser {
     this.args = args;
   }
 
-  public parse(): { className: string; command: string; type: string; projectName?: string } {
+  public parse(): { className: string; command: string; type: string; projectName?: string; restArgs: string[] } {
     // Example: GitScrumProject create project Web4Scrum
-    const [className, command, type, projectName] = this.args;
-    return { className, command, type, projectName };
+    const [className, command, type, projectName, ...rest] = this.args;
+    return { className, command, type, projectName, restArgs: rest };
   }
 }
