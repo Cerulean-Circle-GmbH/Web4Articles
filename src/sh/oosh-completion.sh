@@ -14,5 +14,5 @@ fi
 while [ "${#args[@]}" -gt 0 ] && [ "${args[0]}" = "" ]; do
   args=("${args[@]:1}")
 done
-COMPREPLY=$(NODE_NO_WARNINGS=1 ts-node "$DIR/src/ts/layer4/TSCompletion.ts" "${args[@]}")
+COMPREPLY=$(NODE_NO_WARNINGS=1 node --loader ts-node/esm "$DIR/src/ts/layer4/TSCompletion.ts" "${args[@]}")
 #echo "$COMPLETIONS"
