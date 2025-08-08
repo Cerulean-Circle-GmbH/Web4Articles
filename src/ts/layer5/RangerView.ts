@@ -23,7 +23,7 @@ export class RangerView {
     process.stdout.write('\x1b[2J\x1b[H');
 
     const maxRows = Math.max(...lines.map(col => col.length));
-    for (let r = 0; r < Math.min(maxRows, height - 2); r++) {
+    for (let r = 0; r < Math.min(maxRows, height - 3); r++) {
       let row = '';
       for (let c = 0; c < 4; c++) {
         row += (lines[c][r] || '').padEnd(colWidth);
@@ -31,8 +31,14 @@ export class RangerView {
       process.stdout.write(row + '\n');
     }
 
-    const footer = '←/→: column  ↑/↓: move  Type: filter  Backspace: clear  Enter: select/exec  q/Esc: quit';
-    process.stdout.write('\n' + footer.slice(0, width - 1));
+    // Colorized command preview above the footer
+    const colored = this.buildColoredCommand(model);
+    process.stdout.write(colored.slice(0, width - 1) + '\n');
+
+    // Blue background with white text footer (key usage line)
+    const footerText = '←/→: column  ↑/↓: move  Type: filter  Backspace: clear  Enter: select/next param/exec  Space: next param  q/Esc: quit';
+    const footer = this.bgBlue(this.whiteBoldPadded(footerText, width - 1));
+    process.stdout.write(footer);
   }
 
   private formatColumn(title: string, items: string[], selectedIndex: number, width: number, filter: string): string[] {
