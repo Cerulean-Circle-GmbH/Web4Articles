@@ -10,6 +10,10 @@
 - [x] QA Review
 - [ ] Done
 
+## Traceability
+- up
+  - [task:uuid:0e2f5b1a-3c7d-4f91-9ab2-7d3a6e8c5f90](./task-1.md)
+
 ## Task Description
 Produce the architected design and specification for TS Ranger, including navigation model, data/completion integration, view/controller separation, and execution bridge.
 

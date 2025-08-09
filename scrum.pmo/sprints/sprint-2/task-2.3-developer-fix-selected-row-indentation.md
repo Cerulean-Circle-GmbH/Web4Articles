@@ -12,6 +12,11 @@
 - [ ] QA Review
 - [ ] Done
 
+## Traceability
+- up
+  - [requirement:uuid:a2f4c3d0-9b8a-4f1e-8c3b-5e7a2f9d6c1b](./requiremnents.md)
+  - [task:uuid:81a2b3c4-d5e6-4718-9823-5c6d7e8f9012](./task-2.md)
+
 ## Task Description
 The selected row in each column is misaligned (indentation off). The output shows the selected item overwriting the column title area (e.g., `GitScrumProjectoverlayRun`). Fix rendering so the selected item always aligns in its column width, with proper spacing before/after.
 
