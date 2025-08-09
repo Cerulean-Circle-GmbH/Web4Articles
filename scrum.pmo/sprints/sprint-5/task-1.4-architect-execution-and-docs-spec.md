@@ -35,7 +35,7 @@ Define how TS Ranger v2 surfaces documentation and executes commands.
 
 ## Docs Retrieval Pseudocode
 ```ts
-function getSelectedDocs(model: RangerModelV2): string {
+function getSelectedDocs(model: RangerModel): string {
   const c = model.selectedClass, m = model.selectedMethod, p = model.selectedParam;
   switch (model.selectedColumn) {
     case 2: return p? TSCompletion.getParamDoc(c!, m!, p) : (m? TSCompletion.getMethodDoc(c!, m) : (c? TSCompletion.getClassDoc(c) : ''));
