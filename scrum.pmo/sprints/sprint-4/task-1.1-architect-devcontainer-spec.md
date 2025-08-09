@@ -5,7 +5,7 @@
 
 ## Status
 - [ ] Planned
-- [ ] In Progress
+- [x] In Progress
 - [ ] QA Review
 - [ ] Done
 
@@ -16,6 +16,20 @@
 
 ## Task Description
 Produce a precise devcontainer specification covering base image, Node.js version, required tools (bash/coreutils, PlantUML, Graphviz), project mount at git root, environment variables, and PATH. Define validation commands (tests, PUML render).
+
+## Spec
+- Base image: `mcr.microsoft.com/devcontainers/typescript-node:18`
+- Node.js: `18.x` inside the container (aligns with `ts-node@10.9.2` and ESM)
+- Packages/tools: `bash`, `coreutils` (in base), `graphviz`, `default-jre-headless`, `plantuml` (CLI via wrapper around `plantuml.jar`)
+- Workspace mount: project root mounted to `/workspaces/${localWorkspaceFolderBasename}`
+- Workspace folder: `/workspaces/${localWorkspaceFolderBasename}`
+- PATH: ensure `node_modules/.bin` is first in PATH for integrated terminals
+  - In VS Code terminal: set `terminal.integrated.env.linux.PATH` to `/workspaces/${localWorkspaceFolderBasename}/node_modules/.bin:${env:PATH}`
+- Environment:
+  - `TS_NODE_PROJECT=/workspaces/${localWorkspaceFolderBasename}/tsconfig.json`
+- Validation commands:
+  - `npm ci && npm test`
+  - `plantuml -checkonly src/puml/*.puml` (or `plantuml -tsvg src/puml/*.puml` to generate SVGs)
 
 ## Steps
 - Select minimal base image and Node version

@@ -130,3 +130,20 @@
 
 **Next Steps:**
 - Start Task 1.1 (Architect spec), then proceed through DevOps, Tester, PO, and ScrumMaster subtasks.
+
+## 2025-08-09 (DevContainer work)
+
+**Summary:**
+- Performed recovery per README. Switched to `feat/sprint-4-devcontainer-planning-pr` and reviewed Sprint 4 tasks and requirements.
+- Created `.devcontainer/devcontainer.json` and `Dockerfile` with Node 18, Graphviz, and PlantUML CLI; set `TS_NODE_PROJECT` and PATH for terminals.
+- Added CI workflow `.github/workflows/devcontainer-validate.yml` to build the devcontainer and run `npm test` and `plantuml -checkonly`.
+- Updated `README.md` with DevContainer usage; added PlantUML scripts to `package.json`.
+- Marked Sprint 4 Task 1 and subtasks 1.1/1.2 as In Progress.
+
+**Current Project State:**
+- Local environment lacks Docker/Graphviz/PlantUML; devcontainer and CI will provide standardized environment.
+- Test suite currently has 4 failing tests in `test/tsranger.promptline.behavior.test.ts`; these failures are unrelated to containerization and will persist inside the container until addressed by Sprint 2/3 scope.
+
+**Next Steps:**
+- Complete Task 1.1 review of the spec; proceed with Task 1.3 PlantUML/Graphviz validation inside the container and update artifacts.
+- Run the CI workflow on PR to validate the devcontainer.
