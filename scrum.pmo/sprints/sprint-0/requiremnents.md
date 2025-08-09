@@ -70,3 +70,37 @@ Use these as the canonical baseline for PO planning. Each new requirement must:
 - Receive a UUID, be added here with a short problem/fix quote, and be realized as a MAIN task with role-specific SUBTASKS as needed.
 - Be linked bidirectionally (this file ↔ tasks) per PO process.
 
+---
+
+## Additional requirements derived from recent commits
+
+- [x] Avoid duplicate subtask lists in planning; list subtasks only under their MAIN task  
+  [requirement:uuid:af2d9c54-5f2a-4782-9e2d-6f1a2b3c4d5e]
+  > Problem (commit eac8c3d): Planning showed a redundant standalone “Task 1.*” list in addition to the SUBTASKS beneath MAIN Task 1.  
+  > Fix: Removed the duplicate list; kept a single SUBTASKS block under MAIN Task 1.
+
+- [x] Consistent Task 1 subtask numbering (1.1..1.7) with updated links  
+  [requirement:uuid:b3c8d9ea-1f24-4a56-9b7c-0d1e2f3a4c5b]
+  > Problem (commit e497525): Subtask numbers conflicted and did not align with filenames.  
+  > Fix: Renamed files and headers to 1.1..1.7 and updated planning links accordingly.
+
+- [x] MAIN Task 1 promotion and regrouping of related work under appropriate MAIN tasks  
+  [requirement:uuid:c4d5e6f7-2a3b-4c5d-9e0f-1a2b3c4d5e6f]
+  > Problem (commit ca02bde): Architect spec was not clearly a MAIN task; an issue fix lived outside the right group.  
+  > Fix: Promoted architect spec to `task-1.md` and grouped the indentation fix under MAIN Task 2 as subtask 2.3; refreshed planning and requirements links.
+
+- [x] Ensure each MAIN task has a dedicated file with full template and subtasks referenced  
+  [requirement:uuid:d5e6f7a8-3b4c-4d5e-9f01-2a3b4c5d6e7f]
+  > Problem (commit 7be8bfb): Some MAIN tasks existed only implicitly via subtasks.  
+  > Fix: Added `task-2.md` with full status/template and linked from planning; listed its subtasks beneath it.
+
+- [x] PO process must define and enforce MAIN/SUBTASK numbering; filenames and headers must match labels  
+  [requirement:uuid:e6f7a8b9-4c5d-4e6f-9012-3a4b5c6d7e8f]
+  > Problem (commit 3c79f29, 2128395, 4f60b98, da2cbaf): Planning and filenames used mixed schemes (e.g., “Task 8” vs `task-1.7`), tasks lacked template sections/status.  
+  > Fix: Clarified PO process; reconciled numbering with filenames and normalized all tasks to the PO template with accurate statuses.
+
+- [x] Bidirectional traceability via UUIDs must be updated when tasks are renamed or regrouped  
+  [requirement:uuid:f7a8b9c0-5d6e-4f90-8123-4b5c6d7e8f90]
+  > Problem (commits 4720825, 9533498): Renames/regrouping can desync links between requirements and tasks.  
+  > Fix: Enforced appending UUID and task links in `requiremnents.md` and task files; updated PO process to require atomic link updates with structural edits.
+
