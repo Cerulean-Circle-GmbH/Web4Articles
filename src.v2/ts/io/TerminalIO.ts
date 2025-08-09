@@ -36,6 +36,13 @@ export class DeterministicTestIO implements TerminalIO {
   get rows(): number { return this.rws; }
   onResize(): void { /* no-op for tests */ }
   write(text: string): void { this.buffer.push(text); }
-  clear(): void { this.buffer.push('\x1b[2J\x1b[H'); }
+  clear(): void {
+    const finalOnly = (process.env.TS_RANGER_TEST_FINAL_ONLY || '').toLowerCase() === '1';
+    if (finalOnly) {
+      this.buffer = [];
+    } else {
+      this.buffer.push('\x1b[2J\x1b[H');
+    }
+  }
   toString(): string { return this.buffer.join(''); }
 }

@@ -7,3 +7,5 @@
 - Act: Apply mitigations found in Check; commit and push after run.
 \n## 2025-08-09T17:59:22Z
 - Do: Keep Methods filter/selection when class unchanged; updated deriveFiltersFromPrompt to avoid resetting on each prompt recompute.
+\n## 2025-08-09T18:03:32Z
+- Do: DeterministicTestIO.clear drops earlier frames when TS_RANGER_TEST_FINAL_ONLY=1 for stable final frame assertions.
