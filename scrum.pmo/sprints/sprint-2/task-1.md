@@ -77,4 +77,4 @@ Design a ranger-like, keyboard-first interactive shell (TS Ranger) that lists di
 - [ ] QA review pending.
 
 ## Subtasks
-- None (atomic task for this sprint).
+- [x] [Task 1.1 — Architect: TS Ranger Shell Specification (role-specific)](./task-1.1-architect-ranger-spec.md)
