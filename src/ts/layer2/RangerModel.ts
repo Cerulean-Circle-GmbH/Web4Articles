@@ -19,6 +19,8 @@ export class RangerModel {
   promptEditActive: boolean = true;
   promptBuffer: string = '';
   promptCursorIndex: number = 0;
+  // When true, do not derive Methods filter from prompt's method token (e.g., after auto-inserting first method)
+  suppressMethodFilter: boolean = false;
 
   get selectedClass(): string | undefined {
     return this.filteredClasses()[this.selectedIndexPerColumn[0]];
@@ -135,7 +137,7 @@ export class RangerModel {
     const filteredClasses = this.filteredClasses();
     // If exact match exists at index 0, keep; else remain 0
     this.updateMethods();
-    this.filters[1] = methodToken;
+    this.filters[1] = this.suppressMethodFilter ? '' : methodToken;
     this.selectedIndexPerColumn[1] = 0;
     this.updateParams();
   }

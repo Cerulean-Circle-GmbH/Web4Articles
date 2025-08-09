@@ -37,6 +37,7 @@ Refactor TS Ranger input so that typing happens only in the prompt line with a v
   - [x] Feedback: After typing `t`, only `TSsh` and `TestClass` shall be listed, with `TSsh` selected and methods highlighted (yellow). The prompt line must show `TSsh` with the cursor on `S` (no `tssh` prefix). After `[tab]`, show `TSsh start` with the cursor on the `s` in `start`.
   - [x] Feedback: `tsranger test "t[right]"` must reflect the same prompt-line update as `[tab]` completion: `TSsh start` with cursor on `s`.
   - [x] Feedback: Refactor Backspace behavior in prompt editing so token boundaries are preserved (do not merge tokens). Maintain both the prompt line and grid filters correctly. Add cases for streaming sequences: `g[tab]`, `[down][down][down][down][down][down][tab]`, `t[tab]`, and `t[tab][backspace]`.
+  - [x] Feedback: After `[tab]` or `[right]` on a class token, write the first method into the prompt and position the cursor on its first character, but do not set the Methods filter yet. The Methods column must still allow choosing a different method without being constrained by a pre-applied filter. Only user typing should set the Methods filter.
 
 ### Test Evidence
 - Scripted tests added and passing:

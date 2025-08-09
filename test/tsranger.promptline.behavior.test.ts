@@ -10,6 +10,15 @@ function runScripted(keys: string): string {
   return res.stdout || '';
 }
 
+function getPromptLine(out: string): string {
+  const lines = out.split(/\r?\n/);
+  const footerIdx = lines.findIndex(l => l.includes('column') && l.includes('Enter: select'));
+  if (footerIdx > 1) {
+    return lines[footerIdx - 2] || '';
+  }
+  return '';
+}
+
 describe('Prompt-line behavior for t, t[right], t[tab]', () => {
   it('t filters to TSsh/TestClass and shows TSsh with cursor on S', () => {
     const out = runScripted('t');
@@ -35,11 +44,35 @@ describe('Prompt-line behavior for t, t[right], t[tab]', () => {
     expect(/\x1b\[7m[\s\S]*?\x1b\[0m/.test(out)).toBe(true);
   });
 
-  it('g[tab] completes to GitScrumProject and positions cursor at space before method', () => {
+  it('t[tab][backspace] removes the first method char and keeps tokens intact (filters reflect tart)', () => {
+    const out = runScripted('t[tab][backspace]');
+    const clean = out.replace(/\x1B\[[0-9;]*m/g, '');
+    // Classes filter should be TSsh
+    expect(/\[Classes\]\s+\(TSsh\)/.test(clean)).toBe(true);
+    // Methods filter should be tart
+    expect(/\[Methods\]\s+\(tart\)/.test(clean)).toBe(true);
+  });
+
+  it('t[tab] with multiple backspaces erases method then leaves only class filter', () => {
+    const out = runScripted('t[tab][backspace][backspace][backspace][backspace][backspace][backspace]');
+    const clean = out.replace(/\x1B\[[0-9;]*m/g, '');
+    // Classes filter remains TSsh
+    expect(/\[Classes\]\s+\(TSsh\)/.test(clean)).toBe(true);
+    // Methods filter absent (no parentheses after Methods)
+    expect(/\[Methods\]\s+\(.*?\)/.test(clean)).toBe(false);
+  });
+
+  it('t[tab] with seven backspaces reduces class filter to TSs', () => {
+    const out = runScripted('t[tab][backspace][backspace][backspace][backspace][backspace][backspace][backspace]');
+    const clean = out.replace(/\x1B\[[0-9;]*m/g, '');
+    expect(/\[Classes\]\s+\(TSs\)/.test(clean)).toBe(true);
+  });
+
+  it('g[tab] completes Class to GitScrumProject and sets Methods filter to start', () => {
     const out = runScripted('g[tab]');
-    expect(/GitScrumProject/.test(out)).toBe(true);
-    // Cursor inverse exists after class token
-    expect(/GitScrumProject\s+\x1b\[7m.\x1b\[0m/.test(out)).toBe(true);
+    const clean = out.replace(/\x1B\[[0-9;]*m/g, '');
+    expect(/\[Classes\]\s+\(GitScrumProject\)/.test(clean)).toBe(true);
+    expect(/\[Methods\]\s+\(start\)/.test(clean)).toBe(true);
   });
 
   it('[down]x6[tab] does not crash and moves forward', () => {
