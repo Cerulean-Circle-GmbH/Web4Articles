@@ -21,8 +21,10 @@ export class RangerView {
     // Clear screen and move cursor to top-left
     process.stdout.write('\x1b[2J\x1b[H');
 
-    const maxRows = Math.max(...lines.map(col => col.length));
-    for (let r = 0; r < Math.min(maxRows, height - 4); r++) {
+    // Compute grid rows: leave 3 lines (blank, command, blank) plus 1 footer = 4
+    const maxRows = Math.max(...gridColumns.map(col => col.length));
+    const gridRows = Math.min(maxRows, Math.max(0, height - 4));
+    for (let r = 0; r < gridRows; r++) {
       let row = '';
       for (let c = 0; c < 4; c++) {
         const cell = gridColumns[c][r] ?? this.makeCell('', colWidth);
@@ -41,6 +43,14 @@ export class RangerView {
     // One empty line between preview and footer
     process.stdout.write('\n');
 
+    // Fill remaining lines so that footer is on the last terminal row
+    // Lines printed so far: gridRows + 1 (blank) + 1 (command) + 1 (blank)
+    const linesPrinted = gridRows + 3;
+    const filler = Math.max(0, (height - 1) - linesPrinted);
+    if (filler > 0) {
+      process.stdout.write('\n'.repeat(filler));
+    }
+
     // Blue background with white text footer (key usage line)
     const footerText = '←/→: column  ↑/↓: move  Type: filter  Backspace: clear  Enter: select/next param/exec  Space: next param  q/Esc: quit';
     const footer = this.bgBlue(this.whiteBoldPadded(footerText, Math.max(0, width - 1)));
@@ -53,19 +63,19 @@ export class RangerView {
 
   private buildColoredCommand(model: RangerModel): string {
     const parts = model.buildCommandParts();
-    const [cls, method, ...params] = parts;
-
-    const prompt = this.buildPrompt();
-
     const tokens: string[] = [];
-    if (prompt) tokens.push(prompt);
-    // tssh in green
-    tokens.push(this.style('tssh', { bold: true, colorCode: 32 }));
-    if (cls) tokens.push(this.style(cls, { bold: true, colorCode: this.colorCodeForTitle('Classes') }));
-    if (method) tokens.push(this.style(method, { bold: true, colorCode: this.colorCodeForTitle('Methods') }));
-    for (let i = 0; i < params.length; i++) {
-      const inverse = model.paramEntryActive && i === model.paramEntryIndex;
-      tokens.push(this.style(params[i], { colorCode: this.colorCodeForTitle('Params'), inverse }));
+    // Prompt
+    tokens.push(this.prompt());
+    // Always show tssh upfront per UX
+    tokens.push(this.style('tssh', { colorCode: 32, bold: true })); // green
+    if (parts.length > 0) {
+      const [cls, method, ...params] = parts;
+      if (cls) tokens.push(this.style(cls, { bold: true, colorCode: this.colorCodeForTitle('Classes') }));
+      if (method) tokens.push(this.style(method, { bold: true, colorCode: this.colorCodeForTitle('Methods') }));
+      for (let i = 0; i < params.length; i++) {
+        const inverse = model.paramEntryActive && i === model.paramEntryIndex;
+        tokens.push(this.style(params[i], { colorCode: this.colorCodeForTitle('Params'), inverse }));
+      }
     }
     return tokens.join(' ');
   }
@@ -150,19 +160,5 @@ export class RangerView {
     return `${open}${text}${close}`;
   }
 
-  private buildPrompt(): string {
-    const ps1 = process.env.PS1 || '';
-    if (ps1.trim()) {
-      const oneLine = ps1.replace(/\n|\r/g, ' ');
-      const stripBracketed = oneLine.replace(/\[[^\]]*\]/g, '');
-      const stripAnsi = stripBracketed.replace(/\x1B\[[0-9;]*m/g, '');
-      const compact = stripAnsi.replace(/\s+/g, ' ').trim();
-      return compact;
-    }
-    const host = os.hostname();
-    const user = (() => { try { return os.userInfo().username; } catch { return 'user'; } })();
-    const pwdParts = (process.cwd() || '').split(/[\\/]/);
-    const pwdBase = pwdParts[pwdParts.length - 1] || '/';
-    return `[${host}] ${user}@${pwdBase}$`;
-  }
+  // buildPrompt was unused; prompt() handles PS1/fallback
 }

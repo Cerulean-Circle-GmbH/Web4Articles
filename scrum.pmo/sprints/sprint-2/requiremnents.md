@@ -44,3 +44,5 @@ GitScrumProject start
 - [x] let the command line have a prompt before the command.  [requirement:uuid:3c2b5a8e-9d1f-4a2f-8b6e-7c1d5f2a4b93] ([task-3](./task-3.1-developer-command-prompt-ps1.md))
 - [x] match the behaviour of the bash prompt and read the bash $PS1 to set it. [requirement:uuid:3c2b5a8e-9d1f-4a2f-8b6e-7c1d5f2a4b93] ([task-3](./task-3.1-developer-command-prompt-ps1.md))
 - [x] set the prompt to ```[hostname] [user]@[pwd]``` [requirement:uuid:3c2b5a8e-9d1f-4a2f-8b6e-7c1d5f2a4b93] ([task-3](./task-3.1-developer-command-prompt-ps1.md))
+- [ ] the prompt shall be always only one empty line above the command line.
+   
