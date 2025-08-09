@@ -1,4 +1,5 @@
 import os from 'node:os';
+import path from 'node:path';
 import { RangerModel } from '../layer2/RangerModel.ts';
 
 export class RangerView {
@@ -45,7 +46,7 @@ export class RangerView {
 
     // Colorized command preview above the footer, prefixed by prompt
     const colored = this.buildColoredCommand(model);
-    process.stdout.write(colored.slice(0, width - 1) + '\n');
+    process.stdout.write(colored + '\n');
 
     // One empty line between preview and footer
     process.stdout.write('\n');
@@ -66,7 +67,7 @@ export class RangerView {
     tokens.push(this.prompt());
 
     // Suggestion-aware rendering for prompt buffer
-    const buffer = model.promptBuffer || '';
+    let buffer = model.promptBuffer || '';
     const cursor = Math.max(0, Math.min(buffer.length, model.promptCursorIndex || 0));
     const parts = buffer.split(/\s+/);
     const tokenIdx = (buffer.slice(0, cursor).split(/\s+/).length - 1);
@@ -78,10 +79,34 @@ export class RangerView {
       if (suggestion && prefix && suggestion.toLowerCase().startsWith(prefix.toLowerCase())) {
         display = suggestion + (parts.length > 1 ? (' ' + parts.slice(1).join(' ')) : '');
       }
+    } else if (tokenIdx === 1) {
+      // For method token, suggest selected method name if any
+      const selectedMethod = model.selectedMethod || '';
+      // When suppressing method filter (navigation/completion), show the full selected method
+      const forceSuggestion = model.suppressMethodFilter === true;
+      const typedRaw = parts[1] || '';
+      const typed = forceSuggestion ? '' : typedRaw;
+      if (selectedMethod) {
+        const before = parts[0] ? parts[0] + ' ' : '';
+        const combined = typed.length > 0
+          ? typed + selectedMethod.slice(typed.length)
+          : selectedMethod;
+        display = before + combined;
+        buffer = display;
+      }
     }
 
-    const before = display.slice(0, cursor);
-    const after = display.slice(cursor);
+    // Recompute cursor position when suggesting method so it lands on the next letter after typed prefix
+    let effectiveCursor = cursor;
+    if (tokenIdx === 1) {
+      const cls = model.selectedClass || '';
+      const typedRaw = (parts[1] || '');
+      const typedLen = model.suppressMethodFilter ? 0 : typedRaw.length;
+      const methodStart = (cls ? cls.length + 1 : 0);
+      effectiveCursor = methodStart + typedLen;
+    }
+    const before = display.slice(0, effectiveCursor);
+    const after = display.slice(effectiveCursor);
     const renderedCursor = this.style(after.length > 0 ? after.charAt(0) : ' ', { inverse: true });
     tokens.push(`${before}${renderedCursor}${(after.length > 0 ? after.slice(1) : '')}`);
 
@@ -94,7 +119,8 @@ export class RangerView {
     if (ps1) {
       const host = this.safeHostname();
       const user = this.safeUsername();
-      const pwd = process.cwd();
+      // Abbreviate working directory to its basename to keep command tokens visible
+      const pwd = path.basename(process.cwd() || '.');
       const isRoot = (typeof process.getuid === 'function' && process.getuid() === 0) || user === 'root';
       const userColored = this.style(user, { colorCode: isRoot ? 31 : 36 }); // red if root else cyan
       const pwdColored = this.style(pwd, { colorCode: 33 }); // yellow

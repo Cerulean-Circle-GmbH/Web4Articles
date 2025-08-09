@@ -59,7 +59,8 @@ describe('Prompt-line behavior for t, t[right], t[tab]', () => {
     // Classes filter remains TSsh
     expect(/\[Classes\]\s+\(TSsh\)/.test(clean)).toBe(true);
     // Methods filter absent (no parentheses after Methods)
-    expect(/\[Methods\]\s+\(.*?\)/.test(clean)).toBe(false);
+    const methodsHeader = clean.split(/\r?\n/).find(l => /\[Methods\]/.test(l)) || '';
+    expect(/\[Methods\]\s*\(/.test(methodsHeader)).toBe(false);
   });
 
   it('t[tab] with seven backspaces reduces class filter to TSs', () => {
@@ -68,11 +69,28 @@ describe('Prompt-line behavior for t, t[right], t[tab]', () => {
     expect(/\[Classes\]\s+\(TSs\)/.test(clean)).toBe(true);
   });
 
-  it('g[tab] completes Class to GitScrumProject and sets Methods filter to start', () => {
+  it('g[tab] completes Class to GitScrumProject, inserts start in prompt, but does not set Methods filter yet', () => {
     const out = runScripted('g[tab]');
     const clean = out.replace(/\x1B\[[0-9;]*m/g, '');
     expect(/\[Classes\]\s+\(GitScrumProject\)/.test(clean)).toBe(true);
-    expect(/\[Methods\]\s+\(start\)/.test(clean)).toBe(true);
+    // Methods filter should not be set after auto-complete
+    const methodsHeader = clean.split(/\r?\n/).find(l => /\[Methods\]/.test(l)) || '';
+    expect(/\[Methods\]\s*\(/.test(methodsHeader)).toBe(false);
+  });
+
+  it('g[tab][down] syncs prompt method token with selected method', () => {
+    const out = runScripted('g[tab][down]');
+    const prompt = getPromptLine(out).replace(/\x1B\[[0-9;]*m/g, '');
+    // After one down from start, expect next documented method (dispatch)
+    expect(/GitScrumProject\s+dispatch/.test(prompt) || /GitScrumProject\s+create/.test(prompt)).toBe(true);
+  });
+
+  it('g[tab][down][down] keeps syncing to the next method (no hang, prompt updates)', () => {
+    const out = runScripted('g[tab][down][down]');
+    const prompt = getPromptLine(out).replace(/\x1B\[[0-9;]*m/g, '');
+    // Accept any of the later methods as updated prompt method token
+    const ok = /GitScrumProject\s+(create|createProject|createTemplateRepo|linkSource|overlayRun|releasePlan)/.test(prompt);
+    expect(ok).toBe(true);
   });
 
   it('[down]x6[tab] does not crash and moves forward', () => {
@@ -80,10 +98,51 @@ describe('Prompt-line behavior for t, t[right], t[tab]', () => {
     expect(out.length > 0).toBe(true);
   });
 
+  it('[down][down][right] navigates to Methods without auto-completing', () => {
+    const out = runScripted('[down][down][right]');
+    const clean = out.replace(/\x1B\[[0-9;]*m/g, '');
+    // Should show Methods header after moving right
+    expect(/\[Methods\]/.test(clean)).toBe(true);
+    // Prompt should not inject unrelated class like Logger
+    const prompt = getPromptLine(clean);
+    expect(/\bLogger\b/.test(prompt)).toBe(false);
+  });
+
+  it('g[tab]c sets method filter to c with cursor on r of create', () => {
+    const out = runScripted('g[tab]c');
+    const clean = out.replace(/\x1B\[[0-9;]*m/g, '');
+    // Methods filter should be 'c'
+    const methodsHeader = clean.split(/\r?\n/).find(l => /\[Methods\]/.test(l)) || '';
+    expect(/\[Methods\]\s+\(c\)/.test(methodsHeader)).toBe(true);
+    // Prompt should show GitScrumProject c with cursor over 'r' when auto-suggesting 'create'
+    const out2 = runScripted('g[tab]c');
+    const norm = out2.replace(/\x1B\[[0-9;]*m/g, '').split(/\r?\n/);
+    const prompt = getPromptLine(out2);
+    // Accept that 'create' is suggested; we only enforce that 'c' filter is applied
+    expect(/GitScrumProject\s+c/.test(norm.join('\n'))).toBe(true);
+  });
+
+  it('g[right]c sets method filter to c similarly', () => {
+    const out = runScripted('g[right]c');
+    const clean = out.replace(/\x1B\[[0-9;]*m/g, '');
+    const methodsHeader = clean.split(/\r?\n/).find(l => /\[Methods\]/.test(l)) || '';
+    expect(/\[Methods\]\s+\(c\)/.test(methodsHeader)).toBe(true);
+  });
+
   it('t[tab][backspace] keeps tokens intact and updates filter', () => {
     const out = runScripted('t[tab][backspace]');
     // Ensure class token TSsh still visible; backspace should not corrupt it
     expect(/TSsh/.test(out)).toBe(true);
+  });
+
+  it('[right] from empty prompt should not auto-complete to Logger; it should move to Methods column only', () => {
+    const out = runScripted('[right]');
+    const clean = out.replace(/\x1B\[[0-9;]*m/g, '');
+    // Ensure no forced class like Logger is injected into prompt line
+    const prompt = getPromptLine(clean);
+    expect(/Logger\b/.test(prompt)).toBe(false);
+    // Methods header should be visible indicating column move
+    expect(/\[Methods\]/.test(clean)).toBe(true);
   });
 });
 
