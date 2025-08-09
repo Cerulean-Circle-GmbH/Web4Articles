@@ -5,6 +5,9 @@ import { NodeProcessIO, DeterministicTestIO } from '../io/TerminalIO.ts';
 
 export class TSRanger {
   static async start(): Promise<void> {
+    if ((process.env.TSRANGER_V2_LOG || '').toLowerCase() === '1') {
+      console.error('[TSRanger v2] active');
+    }
     const isTest = (process.env.TSRANGER_TEST_MODE || '').toLowerCase() === '1';
     const io = isTest ? new DeterministicTestIO() : new NodeProcessIO();
     const model = new RangerModel();

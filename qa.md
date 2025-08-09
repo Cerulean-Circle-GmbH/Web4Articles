@@ -16,3 +16,5 @@
 - Do: DeterministicTestIO.clear drops earlier frames when TS_RANGER_TEST_FINAL_ONLY=1 for stable final frame assertions.
 \n## 2025-08-09T18:03:58Z
 - Do: Sync prompt on Methods Down after g[tab]; show Methods header filter on typing method token; refine final-only frame clearing.
+\n## 2025-08-09T18:36:47Z
+- Do: Add optional v2 activation log (stderr) gated by TSRANGER_V2_LOG=1 to confirm src.v2 is executed during tests without altering assertions.
