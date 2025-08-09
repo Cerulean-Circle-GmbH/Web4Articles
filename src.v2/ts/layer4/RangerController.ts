@@ -127,15 +127,18 @@ export class RangerController {
             tokens[1] = key;
             this.model.promptBuffer = (tokens[0] ? tokens[0] + ' ' : '') + (tokens[1] || '');
             this.model.promptCursorIndex = methodStartIndex + 1;
+            // User typed into method token: show Methods header filter immediately
+            this.model.filters[1] = tokens[1];
+            this.model.suppressMethodFilter = false;
           } else {
             this.model.promptBuffer = this.model.promptBuffer.slice(0, this.model.promptCursorIndex) + key + this.model.promptBuffer.slice(this.model.promptCursorIndex);
             this.model.promptCursorIndex++;
-          }
-          this.model.suppressMethodFilter = false;
-          if (tokenIdx === 1) {
-            const parts = this.model.promptBuffer.split(/\s+/);
-            const methodTok = parts[1] || '';
-            this.model.filters[1] = methodTok;
+            if (tokenIdx === 1) {
+              const parts = this.model.promptBuffer.split(/\s+/);
+              const methodTok = parts[1] || '';
+              this.model.filters[1] = methodTok;
+              this.model.suppressMethodFilter = false;
+            }
           }
           this.model.deriveFiltersFromPrompt();
           this.view.render(this.model, this.io);
@@ -212,14 +215,16 @@ export class RangerController {
   private commitParamBuffer(): void { const idx = this.model.paramEntryIndex; if (idx >= 0 && idx < this.model.paramValues.length) { this.model.paramValues[idx] = this.model.paramEntryBuffer; } const nextIdx = idx + 1; if (nextIdx < this.model.paramValues.length) { this.model.paramEntryIndex = nextIdx; this.model.paramEntryBuffer = ''; } else { this.model.paramEntryActive = false; this.model.paramEntryBuffer = ''; } }
 
   private syncPromptOnMethodNav(): void {
-    if (this.model.promptEditActive && this.model.selectedColumn === 1) {
+    if (this.model.selectedColumn === 1) {
       const cls = this.model.selectedClass || '';
       const m = this.model.selectedMethod || '';
-      const tokens = this.model.promptBuffer.split(/\s+/);
-      tokens[0] = cls; tokens[1] = m;
+      // Prompt must always reflect current selected method during Methods navigation
       this.model.promptBuffer = (cls + (m ? ' ' + m : '')).trim();
-      this.model.promptCursorIndex = Math.min(this.model.promptBuffer.length, cls.length + 1);
-      this.model.suppressMethodFilter = true; this.model.filters[1] = '';
+      // Cursor at start of method token
+      this.model.promptCursorIndex = Math.min(this.model.promptBuffer.length, (cls ? cls.length + 1 : 0));
+      // Keep list unconstrained during navigation
+      this.model.suppressMethodFilter = true;
+      this.model.filters[1] = '';
     }
   }
 

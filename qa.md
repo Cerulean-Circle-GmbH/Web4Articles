@@ -9,3 +9,5 @@
 - Do: Keep Methods filter/selection when class unchanged; updated deriveFiltersFromPrompt to avoid resetting on each prompt recompute.
 \n## 2025-08-09T18:03:32Z
 - Do: DeterministicTestIO.clear drops earlier frames when TS_RANGER_TEST_FINAL_ONLY=1 for stable final frame assertions.
+\n## 2025-08-09T18:03:58Z
+- Do: Sync prompt on Methods Down after g[tab]; show Methods header filter on typing method token; refine final-only frame clearing.
