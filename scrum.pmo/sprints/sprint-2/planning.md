@@ -23,6 +23,12 @@ Deliver a ranger-like interactive shell (TS Ranger) that leverages `TSCompletion
   **Priority:** 2
 - [ ] [Task 9: Developer - Sequential parameter entry and auto-execute](./task-1.8-developer-parameter-entry.md)
   **Priority:** 1
+- [ ] [Task 10: Developer - Fix selected row indentation across columns](./task-1.9-developer-fix-selected-row-indentation.md)
+  **Priority:** 2
+- [ ] [Task 11: Developer - Footer height/spacing adjustments](./task-2.0-developer-footer-height-and-spacing.md)
+  **Priority:** 2
+- [ ] [Task 12: Developer - Command prompt from $PS1 or hostname/user/pwd](./task-2.1-developer-command-prompt-ps1.md)
+  **Priority:** 2
 
 ---
 
