@@ -18,7 +18,7 @@ jobs:
       - name: Build and run in Dev Container
         uses: devcontainers/ci@v0.3
         with:
-          imageName: web4articles-devcontainer:latest
+          imageName: web4articles-devcontainer
           configFile: .devcontainer/devcontainer.json
           push: never
           runCmd: |
