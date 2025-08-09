@@ -14,4 +14,4 @@ Propose the directory structure and migration approach for implementing v2 in `s
 
 ## Acceptance Criteria
 - A tree layout for `src.v2` including `layer2/Model`, `layer4/Controller`, `layer5/View`, `io/TerminalIO`, and an entry `layer4/TSRanger.ts`.
-- A routing plan for `src/sh/tsranger` to execute v2 when `TSRANGER_V2=1` (spec only; no code changes this sprint).
+- A routing plan for `src/sh/tsranger` to execute v2 when `TSRANGER_V2=1`.

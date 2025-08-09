@@ -1,7 +1,7 @@
 # Sprint 5 Planning
 
 ## Sprint Goal
-Deliver a complete architect specification for TS Ranger v2 under `src.v2`, consolidating Sprint 2 learnings, QA feedback, and existing tests. No implementation in this sprint. Ensure the spec enables reusing current tests unchanged to validate v2.
+Deliver TS Ranger v2 under `src.v2`, consolidating Sprint 2 learnings, QA feedback, and existing tests. Implement the architecture, integrate it behind an environment toggle, and validate by running the existing test suite unchanged.
 
 ## Task List (Sprint 5)
 
@@ -28,8 +28,13 @@ Deliver a complete architect specification for TS Ranger v2 under `src.v2`, cons
   - [ ] [Task 4.2 — Architect: Structure/Component Diagram (PUML)](./task-4.2-architect-puml-structure.md)
   - [ ] [Task 4.3 — Architect: Render SVGs and Link in Docs](./task-4.3-architect-svg-render.md)
 
+- [ ] [Task 5: Developer — Implement TS Ranger v2 in `src.v2`](./task-5-developer-implement-v2.md)
+  **Priority:** 1
+
+- [ ] [Task 6: Tester — Run existing tests against v2 via toggle](./task-6-tester-validate-v2-with-existing-tests.md)
+  **Priority:** 1
+
 ---
 
 **Process Notes (2025-08-09):**
-- This sprint delivers specifications only; implementation is deferred to the next sprint. Specs must be sufficient for Developers/Testers to implement and validate v2 with zero changes to the current tests.
 - Maintain backlinks and traceability with UUID requirements in `requiremnents.md` per PO/ScrumMaster process.
