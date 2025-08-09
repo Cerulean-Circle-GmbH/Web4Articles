@@ -27,7 +27,7 @@ export class DeterministicTestIO implements TerminalIO {
   private cols: number;
   private rws: number;
   constructor(columns?: number, rows?: number) {
-    const envCols = Number(process.env.TSRANGER_TEST_COLUMNS || process.env.COLUMNS || 160);
+    const envCols = Number(process.env.TSRANGER_TEST_COLUMNS || process.env.COLUMNS || 240);
     const envRows = Number(process.env.TSRANGER_TEST_ROWS || process.env.LINES || 30);
     this.cols = columns || envCols;
     this.rws = rows || envRows;
