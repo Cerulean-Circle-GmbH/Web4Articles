@@ -23,7 +23,7 @@ Deliver a ranger-like interactive shell (TS Ranger) that leverages `TSCompletion
   - [ ] [Task 2.2: Developer - Blue/White footer and colorized command preview](./task-2.2-developer-footer-and-color-preview.md)
   - [ ] [Task 2.3: Developer - Fix selected row indentation across columns](./task-2.3-developer-fix-selected-row-indentation.md)
   **Priority:** 2
-- [ ] [Task 3: Command prompt from $PS1 or hostname/user/pwd](./task-3.1-developer-command-prompt-ps1.md)  
+- [ ] [Task 3: Command prompt from $PS1 or hostname/user/pwd](./task-3.md)  
   SUBTASKS:
   - [ ] [Task 3.1: Developer - Command prompt from $PS1 or hostname/user/pwd](./task-3.1-developer-command-prompt-ps1.md)
   **Priority:** 2
