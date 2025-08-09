@@ -108,3 +108,35 @@ Use these as the canonical baseline for PO planning. Each new requirement must:
   > Problem (commits 4720825, 9533498): Renames/regrouping can desync links between requirements and tasks.  
   > Fix: Enforced appending UUID and task links in `requiremnents.md` and task files; updated PO process to require atomic link updates with structural edits.
 
+---
+
+- [x] Subtasks use only top-level Status items (no sub-states under In Progress)  
+  [requirement:uuid:1f3a7b8c-9d2e-4a5b-8c1d-2e3f4a5b6c7d]
+  > Problem: Subtasks listed nested sub-states (refinement/implementing/testing) under "In Progress", creating confusion and violating the PO template.  
+  > Fix: Removed sub-states from all Sprint 2 subtasks; kept only Planned/In Progress/QA Review/Done. Examples: [task-1.2](../sprint-2/task-1.2-developer-ranger-tui.md), [task-1.3](../sprint-2/task-1.3-developer-completion-integration.md).
+
+- [x] Subtasks must not contain a "## Subtasks" section  
+  [requirement:uuid:2a5b7c8d-0e1f-4a2b-9c3d-5e6f7a8b9c0d]
+  > Problem: Some subtasks contained their own "## Subtasks" section.  
+  > Fix: Removed "## Subtasks" from all Sprint 2 subtasks; this section is reserved for MAIN tasks only. Examples: [task-1.4](../sprint-2/task-1.4-developer-execution-bridge.md), [task-1.5](../sprint-2/task-1.5-tester-e2e-tests.md).
+
+- [x] Place Traceability immediately after Status  
+  [requirement:uuid:3b6c8d9e-1f20-4b3a-8c4d-5e6f7a8b9c0d]
+  > Problem: Traceability sections were inconsistently placed, reducing readability.  
+  > Fix: Moved Traceability directly below Status across subtasks. Example: [task-3.1](../sprint-2/task-3.1-developer-command-prompt-ps1.md).
+
+- [x] Normalize spelling: "Traceability" (not "Tracability")  
+  [requirement:uuid:4c7d9e0f-2a31-4c5b-9d6e-7f8a9b0c1d2e]
+  > Problem: Misspelled heading reduced consistency/searchability.  
+  > Fix: Standardized to "Traceability". Example fix: [task-2.1](../sprint-2/task-2.1-developer-footer-height-and-spacing.md).
+
+- [x] Planning format: remove "SUBTASKS:" label; place Priority under MAIN task  
+  [requirement:uuid:5d8e0f1a-3b42-4d6c-8e9f-0a1b2c3d4e5f]
+  > Problem: `planning.md` used a literal "SUBTASKS:" label and misplaced Priority lines.  
+  > Fix: Removed the label and placed `**Priority:**` directly under each MAIN task entry. File updated: [Sprint 2 planning](../sprint-2/planning.md).
+
+- [x] Subtask first-line combined backlink  
+  [requirement:uuid:6e9f102a-4c53-4e7d-9f01-2a3b4c5d6e7f]
+  > Problem: Subtasks didn’t always link back to both the sprint planning and the parent MAIN task on the first line.  
+  > Fix: Standardized to `[Back to Planning] | [Back to Task N]` as the first line. Example: [task-3.1](../sprint-2/task-3.1-developer-command-prompt-ps1.md).
+
