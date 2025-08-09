@@ -1,6 +1,6 @@
 [Back to Planning](./planning.md)
 
-# Task 2.1: Developer — Command prompt for preview using $PS1 (hostname user@pwd)
+# Task 3.1: Developer — Command prompt for preview using $PS1 (hostname user@pwd)
 
 [requirement:uuid:3c2b5a8e-9d1f-4a2f-8b6e-7c1d5f2a4b93](./requiremnents.md)
 
