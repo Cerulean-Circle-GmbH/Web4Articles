@@ -1,4 +1,15 @@
+[Back to Planning](./planning.md)
+
 # Task 1.0 — Architect: TS Ranger Shell Specification
+
+## Status
+- [ ] Planned
+- [ ] In Progress
+  - [ ] refinement
+  - [ ] implementing
+  - [ ] testing
+- [ ] QA Review
+- [x] Done
 
 ## Goal
 Design a ranger-like, keyboard-first interactive shell (TS Ranger) that lists discoverable targets from TypeScript classes and methods, powered by `TSCompletion`. The shell must integrate with the existing `DefaultCLI` to execute selected actions.
@@ -50,3 +61,9 @@ Design a ranger-like, keyboard-first interactive shell (TS Ranger) that lists di
 - Minimal unit tests for model/filtering (non-TTY)
 - E2E smoke test that renders and quits (skipped in CI if TTY unavailable)
 - Docs and demo in PO task
+
+## QA Audit & User Feedback
+- [ ] QA review pending.
+
+## Subtasks
+- None (atomic task for this sprint).

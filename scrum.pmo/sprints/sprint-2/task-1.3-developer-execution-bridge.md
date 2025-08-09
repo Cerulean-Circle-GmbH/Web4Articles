@@ -1,4 +1,14 @@
+[Back to Planning](./planning.md)
+
 # Task 1.3 — Developer: Command Execution Bridge to DefaultCLI
+
+## Status
+- [ ] Planned
+- [ ] In Progress
+  - [x] implementing
+  - [x] testing
+- [ ] QA Review
+- [x] Done
 
 ## Goal
 Execute the selected Class/Method/Params via the existing CLI machinery, preserving the positional-args-only contract.
@@ -17,3 +27,9 @@ Execute the selected Class/Method/Params via the existing CLI machinery, preserv
 - Pressing Enter on the Preview column executes the current command in-process.
 - Errors are logged and shown in the footer; TUI remains responsive.
 - No shell-style flags are introduced anywhere.
+
+## QA Audit & User Feedback
+- [ ] QA review pending.
+
+## Subtasks
+- None (atomic task for this sprint).

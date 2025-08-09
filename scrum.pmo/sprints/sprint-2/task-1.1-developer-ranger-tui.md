@@ -1,4 +1,15 @@
+[Back to Planning](./planning.md)
+
 # Task 1.1 — Developer: Interactive TUI (Core Navigation)
+
+## Status
+- [ ] Planned
+- [ ] In Progress
+  - [ ] refinement
+  - [x] implementing
+  - [x] testing
+- [ ] QA Review
+- [x] Done
 
 ## Goal
 Implement the core TUI for TS Ranger with keyboard navigation and column rendering.
@@ -29,3 +40,9 @@ Implement the core TUI for TS Ranger with keyboard navigation and column renderi
 - Four columns render; navigation and filtering work as specified.
 - Preview updates as selection/params change.
 - Exits cleanly on `q`/`Esc` without leaving terminal in raw mode.
+
+## QA Audit & User Feedback
+- [ ] QA review pending.
+
+## Subtasks
+- None (atomic task for this sprint).

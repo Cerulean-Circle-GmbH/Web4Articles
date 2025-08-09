@@ -1,4 +1,14 @@
+[Back to Planning](./planning.md)
+
 # Task 1.2 — Developer: Integrate TSCompletion for Live Suggestions
+
+## Status
+- [ ] Planned
+- [ ] In Progress
+  - [x] implementing
+  - [x] testing
+- [ ] QA Review
+- [x] Done
 
 ## Goal
 Wire `TSCompletion` into TS Ranger to populate and filter Classes, Methods, and Params columns. Support default value resolution in Params.
@@ -15,3 +25,9 @@ Wire `TSCompletion` into TS Ranger to populate and filter Classes, Methods, and 
 - Filtering the Classes column narrows to prefixes, same for Methods/Params.
 - Enter on Params with a token that maps to a default value replaces the token with the suggested default.
 - Behavior matches existing tests in `test/TSCompletion.test.ts` and `test/tscompletion-cli.integration.test.ts` for defaults and prefixes.
+
+## QA Audit & User Feedback
+- [ ] QA review pending.
+
+## Subtasks
+- None (atomic task for this sprint).

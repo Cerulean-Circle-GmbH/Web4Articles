@@ -1,4 +1,13 @@
+[Back to Planning](./planning.md)
+
 # Task 1.5 — PO: User Guide and Demo Scenarios
+
+## Status
+- [ ] Planned
+- [ ] In Progress
+  - [ ] drafting
+- [ ] QA Review
+- [ ] Done
 
 ## Goal
 Document how to run and use the TS Ranger shell, with copy-pasteable examples.
@@ -17,3 +26,9 @@ Document how to run and use the TS Ranger shell, with copy-pasteable examples.
 ## Acceptance Criteria
 - A single page guide under `docs/tsranger-user-guide.md` with screenshots or ASCII diagrams
 - Linked from `README.md` (optional short blurb)
+
+## QA Audit & User Feedback
+- [ ] QA review pending.
+
+## Subtasks
+- None (atomic task for this sprint).
