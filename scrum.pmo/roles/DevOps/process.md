@@ -24,6 +24,7 @@
 - `gh` GitHub CLI installed if repository automation is needed
 
 ## Structure & Automation
+- Prefer agent-native file edits and repository operations over shell commands. Use shell only when no agent capability exists.
 - Use `tree` and project structure analysis to verify and document dependencies.
 - Automate release, tagging, and QA steps for reproducibility.
 
