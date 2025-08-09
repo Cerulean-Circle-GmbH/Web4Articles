@@ -8,6 +8,8 @@ Deliver a ranger-like interactive shell (TS Ranger) that leverages `TSCompletion
 > Note: MAIN tasks are numbered 1..N and SUBTASKS use 1.M. Only MAIN tasks may be in refinement; SUBTASKS are role-specific and skip refinement.
 
 - [x] [Task 1: Architect - TS Ranger shell specification](./task-1.md)  
+  SUBTASKS:
+  - [x] [Task 1.1 — Architect: TS Ranger Shell Specification (role-specific)](./task-1.1-architect-ranger-spec.md)
   **Priority:** 1
 - [x] [Task 1.1: Developer - Interactive TUI shell (core navigation)](./task-1.1-developer-ranger-tui.md)  
   **Priority:** 1
