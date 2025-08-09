@@ -10,9 +10,9 @@
 
 ## Deliverables
 - Interface definitions for:
-  - `RangerModelV2`: lists, filters, selection, params, docs, prompt buffer, cursor index, flags (e.g., `suppressMethodFilter`).
-  - `RangerViewV2`: pure renderer from `Model` to text frames; no direct process I/O.
-  - `RangerControllerV2`: input handler state machine that mutates `Model` and requests renders.
+  - `RangerModel`: lists, filters, selection, params, docs, prompt buffer, cursor index, flags (e.g., `suppressMethodFilter`).
+  - `RangerView`: pure renderer from `Model` to text frames; no direct process I/O.
+  - `RangerController`: input handler state machine that mutates `Model` and requests renders.
   - `TerminalIO`: abstraction for stdin/stdout, width/height, resize events; provide a `DeterministicTestIO` adapter for tests.
 - State machine specs:
   - Navigation across columns; selection updates; column change rules.
@@ -41,7 +41,7 @@ export interface TerminalIO {
   clear(): void; // optional convenience for \x1b[2J\x1b[H
 }
 
-export interface RangerModelV2 {
+export interface RangerModel {
   classes: string[];
   methods: string[];
   params: string[];
@@ -79,11 +79,11 @@ export interface RangerModelV2 {
   allParamsFilled(): boolean;
 }
 
-export interface RangerViewV2 {
-  render(model: RangerModelV2, io: TerminalIO): void;
+export interface RangerView {
+  render(model: RangerModel, io: TerminalIO): void;
 }
 
-export interface RangerControllerV2 {
+export interface RangerController {
   run(): Promise<void>;
 }
 ```
