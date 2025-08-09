@@ -109,6 +109,11 @@ export class RangerController {
     };
 
     stdin.on('data', onData);
+    // On terminal resize, re-render to respect new dimensions
+    const onResize = () => {
+      try { this.view.render(this.model); } catch {}
+    };
+    process.stdout.on('resize', onResize);
     // Initial render
     this.view.render(this.model);
 
@@ -271,6 +276,7 @@ export class RangerController {
       const { stdin } = process;
       stdin.setRawMode?.(false);
       stdin.pause();
+      try { process.stdout.removeAllListeners('resize'); } catch {}
     } catch {}
   }
 }
