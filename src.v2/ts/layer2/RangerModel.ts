@@ -118,6 +118,8 @@ export class RangerModel {
     const tokens = this.promptBuffer.split(/\s+/);
     const classToken = tokens[0] ?? '';
     const methodToken = tokens[1] ?? '';
+    // Capture previous selected class to decide if methods need refresh
+    const previousSelectedClass = this.selectedClass;
     this.filters[0] = classToken;
     this.selectedIndexPerColumn[0] = 0;
     this.classes = TSCompletion.getClasses();
@@ -126,16 +128,27 @@ export class RangerModel {
     if (exactClassIdx >= 0) {
       this.selectedIndexPerColumn[0] = exactClassIdx;
     }
-    this.updateMethods();
+    const newSelectedClass = filteredClasses[this.selectedIndexPerColumn[0]];
+    // Only refresh methods/params when class actually changes to avoid clearing filters needlessly
+    if (newSelectedClass !== previousSelectedClass) {
+      this.updateMethods();
+    }
+    // Apply method filter only when not suppressed
     this.filters[1] = this.suppressMethodFilter ? '' : methodToken;
     const methodsNow = this.filteredMethods();
     if (!this.suppressMethodFilter && methodToken) {
       const exactMethodIdx = methodsNow.findIndex(m => m === methodToken);
       this.selectedIndexPerColumn[1] = exactMethodIdx >= 0 ? exactMethodIdx : 0;
     } else {
-      this.selectedIndexPerColumn[1] = 0;
+      // If class did not change and we didn't set a new method token, keep existing selection
+      if (newSelectedClass !== previousSelectedClass) {
+        this.selectedIndexPerColumn[1] = 0;
+      }
     }
-    this.updateParams();
+    // Refresh params only when method list or selection changed due to class change
+    if (newSelectedClass !== previousSelectedClass) {
+      this.updateParams();
+    }
   }
 
   getCurrentPromptTokenIndex(): number {
