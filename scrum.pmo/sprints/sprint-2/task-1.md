@@ -1,6 +1,17 @@
 [Back to Planning](./planning.md)
 
-# Task 1.0 — Architect: TS Ranger Shell Specification
+[Back to Planning](./planning.md)
+
+# Task 1 — Architect: TS Ranger Shell Specification
+
+## Status
+- [x] Planned
+- [x] In Progress
+  - [x] refinement
+  - [x] implementing
+  - [x] testing
+- [x] QA Review
+- [ ] Done
 
 ## Status
 - [ ] Planned
