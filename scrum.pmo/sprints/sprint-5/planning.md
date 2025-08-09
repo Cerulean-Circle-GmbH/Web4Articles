@@ -58,3 +58,9 @@ We learned from Sprint 2 and QA that TS Ranger must provide stable, predictable 
 
 **Process Notes (2025-08-09):**
 - Maintain backlinks and traceability with UUID requirements in `requiremnents.md` per PO/ScrumMaster process.
+
+## QA Feedback (Verbatim)
+
+### 2025-08-09T00:00:00Z
+> create a tsranger shell script like in /Users/Shared/Workspaces/2cuGitHub/Web4Articles/src
+> to make it easy to start /Users/Shared/Workspaces/2cuGitHub/Web4Articles/src.v2/ts/layer4/TSRanger.ts
