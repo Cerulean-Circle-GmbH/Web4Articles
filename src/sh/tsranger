@@ -23,7 +23,12 @@ if [[ -z "$PROJECT_ROOT" ]]; then
 fi
 
 TS_NODE_PROJECT="$PROJECT_ROOT/tsconfig.json"
+# Default entry: v1
 TSRANGER_ENTRY="$PROJECT_ROOT/src/ts/layer4/TSRanger.ts"
+# If v2 requested, switch entry
+if [[ "${TSRANGER_V2:-}" == "1" || "${TSRANGER_V2:-}" == "true" ]]; then
+  TSRANGER_ENTRY="$PROJECT_ROOT/src.v2/ts/layer4/TSRanger.ts"
+fi
 
 export NODE_NO_WARNINGS=1
 export TS_NODE_PROJECT
