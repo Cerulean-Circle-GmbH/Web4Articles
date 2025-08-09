@@ -25,7 +25,7 @@ Deliver a ranger-like interactive shell (TS Ranger) that leverages `TSCompletion
   SUBTASKS:
   - [ ] [Task 1.1: Developer - Fix selected row indentation across columns](./task-1.1-developer-fix-selected-row-indentation.md)
   **Priority:** 2
-- [ ] [Task 2: Footer height/spacing and colorized command preview](./task-2.1-developer-footer-height-and-spacing.md)  
+- [ ] [Task 2: Footer height/spacing and colorized command preview](./task-2.md)  
   SUBTASKS:
   - [ ] [Task 2.1: Developer - Footer height/spacing adjustments](./task-2.1-developer-footer-height-and-spacing.md)
   - [ ] [Task 2.2: Developer - Blue/White footer and colorized command preview](./task-2.2-developer-footer-and-color-preview.md)
