@@ -1,6 +1,6 @@
 [Back to Planning](./planning.md)
 
-# Task 1.3 — Developer: Command Execution Bridge to DefaultCLI
+# Task 1.4 — Developer: Command Execution Bridge to DefaultCLI
 
 ## Status
 - [ ] Planned

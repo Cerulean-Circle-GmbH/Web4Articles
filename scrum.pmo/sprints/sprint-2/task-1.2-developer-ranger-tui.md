@@ -1,6 +1,6 @@
 [Back to Planning](./planning.md)
 
-# Task 1.1 — Developer: Interactive TUI (Core Navigation)
+# Task 1.2 — Developer: Interactive TUI (Core Navigation)
 
 ## Status
 - [ ] Planned

@@ -1,6 +1,6 @@
 [Back to Planning](./planning.md)
 
-# Task 1.5 — PO: User Guide and Demo Scenarios
+# Task 1.6 — PO: User Guide and Demo Scenarios
 
 ## Status
 - [ ] Planned

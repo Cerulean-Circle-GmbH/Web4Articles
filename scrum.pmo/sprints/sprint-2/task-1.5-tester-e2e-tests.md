@@ -1,6 +1,6 @@
 [Back to Planning](./planning.md)
 
-# Task 1.4 — Tester: E2E Keyboard Navigation and Execution Tests
+# Task 1.5 — Tester: E2E Keyboard Navigation and Execution Tests
 
 ## Status
 - [ ] Planned
