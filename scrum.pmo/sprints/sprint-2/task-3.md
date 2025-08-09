@@ -6,9 +6,9 @@
 
 ## Status
 - [x] Planned
-- [ ] In Progress
-  - [ ] refinement
-  - [ ] implementing
+- [x] In Progress
+  - [x] refinement
+  - [x] implementing
   - [ ] testing
 - [ ] QA Review
 - [ ] Done

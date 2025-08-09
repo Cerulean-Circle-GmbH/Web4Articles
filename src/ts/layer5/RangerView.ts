@@ -1,3 +1,4 @@
+import os from 'node:os';
 import { RangerModel } from '../layer2/RangerModel.ts';
 
 export class RangerView {
@@ -23,7 +24,7 @@ export class RangerView {
     process.stdout.write('\x1b[2J\x1b[H');
 
     const maxRows = Math.max(...lines.map(col => col.length));
-    for (let r = 0; r < Math.min(maxRows, height - 3); r++) {
+    for (let r = 0; r < Math.min(maxRows, height - 4); r++) {
       let row = '';
       for (let c = 0; c < 4; c++) {
         row += (lines[c][r] || '').padEnd(colWidth);
@@ -31,9 +32,15 @@ export class RangerView {
       process.stdout.write(row + '\n');
     }
 
-    // Colorized command preview above the footer
+    // One empty line above preview
+    process.stdout.write('\n');
+
+    // Colorized command preview above the footer, prefixed by prompt
     const colored = this.buildColoredCommand(model);
     process.stdout.write(colored.slice(0, width - 1) + '\n');
+
+    // One empty line between preview and footer
+    process.stdout.write('\n');
 
     // Blue background with white text footer (key usage line)
     const footerText = '←/→: column  ↑/↓: move  Type: filter  Backspace: clear  Enter: select/next param/exec  Space: next param  q/Esc: quit';
@@ -43,9 +50,14 @@ export class RangerView {
 
   private buildColoredCommand(model: RangerModel): string {
     const parts = model.buildCommandParts();
-    if (parts.length === 0) return '';
     const [cls, method, ...params] = parts;
+
+    const prompt = this.buildPrompt();
+
     const tokens: string[] = [];
+    if (prompt) tokens.push(prompt);
+    // tssh in green
+    tokens.push(this.style('tssh', { bold: true, colorCode: 32 }));
     if (cls) tokens.push(this.style(cls, { bold: true, colorCode: this.colorCodeForTitle('Classes') }));
     if (method) tokens.push(this.style(method, { bold: true, colorCode: this.colorCodeForTitle('Methods') }));
     for (let i = 0; i < params.length; i++) {
@@ -82,8 +94,8 @@ export class RangerView {
   private colorCodeForTitle(title: string): number | undefined {
     switch (title) {
       case 'Classes': return 36; // cyan
-      case 'Methods': return 32; // green
-      case 'Params': return 33; // yellow
+      case 'Methods': return 33; // yellow
+      case 'Params': return 35; // magenta
       default: return undefined;
     }
   }
@@ -95,5 +107,21 @@ export class RangerView {
     if (typeof opts.colorCode === 'number') open += `\x1b[${opts.colorCode}m`;
     const close = '\x1b[0m';
     return `${open}${text}${close}`;
+  }
+
+  private buildPrompt(): string {
+    const ps1 = process.env.PS1 || '';
+    if (ps1.trim()) {
+      const oneLine = ps1.replace(/\n|\r/g, ' ');
+      const stripBracketed = oneLine.replace(/\[[^\]]*\]/g, '');
+      const stripAnsi = stripBracketed.replace(/\x1B\[[0-9;]*m/g, '');
+      const compact = stripAnsi.replace(/\s+/g, ' ').trim();
+      return compact;
+    }
+    const host = os.hostname();
+    const user = (() => { try { return os.userInfo().username; } catch { return 'user'; } })();
+    const pwdParts = (process.cwd() || '').split(/[\\/]/);
+    const pwdBase = pwdParts[pwdParts.length - 1] || '/';
+    return `[${host}] ${user}@${pwdBase}$`;
   }
 }
