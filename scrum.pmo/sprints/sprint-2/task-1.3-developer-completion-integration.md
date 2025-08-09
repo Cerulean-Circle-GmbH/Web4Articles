@@ -1,6 +1,6 @@
 [Back to Planning](./planning.md)
 
-# Task 1.2 — Developer: Integrate TSCompletion for Live Suggestions
+# Task 1.3 — Developer: Integrate TSCompletion for Live Suggestions
 
 ## Status
 - [ ] Planned

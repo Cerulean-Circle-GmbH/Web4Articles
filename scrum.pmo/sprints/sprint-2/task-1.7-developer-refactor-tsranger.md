@@ -1,6 +1,6 @@
 [Back to Planning](./planning.md)
 
-# Task 1.6: Developer - Refactor TSRanger to one class per TS file
+# Task 1.7: Developer - Refactor TSRanger to one class per TS file
 
 ## Status
 - [ ] Planned
