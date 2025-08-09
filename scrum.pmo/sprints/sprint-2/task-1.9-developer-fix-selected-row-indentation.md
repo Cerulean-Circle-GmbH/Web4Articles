@@ -2,7 +2,7 @@
 
 # Task 1.9: Developer — Fix selected row indentation across columns in TSRanger
 
-[requirement:uuid:a2f4c3d0-9b8a-4f1e-8c3b-5e7a2f9d6c1b]
+[requirement:uuid:a2f4c3d0-9b8a-4f1e-8c3b-5e7a2f9d6c1b](./requiremnents.md)
 
 ## Status
 - [ ] Planned
