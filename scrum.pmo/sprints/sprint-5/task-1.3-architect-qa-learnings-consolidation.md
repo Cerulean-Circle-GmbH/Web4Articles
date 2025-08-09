@@ -21,3 +21,30 @@
 
 ## Acceptance Criteria
 - Each example includes pre/post state tables and ties to an existing test assertion.
+
+## Examples (Pre/Post State)
+
+### Sequence: `t`
+- Pre: prompt `""`, filters `['', '', '', '']`, column 0, indices [0,0,0,0]
+- Post: prompt `"t"`, filters `["t", '', '', '']`, Classes show `TSsh`, `TestClass`; inverse cursor present.
+
+### Sequence: `t[right]`
+- Post: prompt shows `TSsh start` (if `start` exists); cursor index at method start; selectedColumn becomes 1 (Methods); `suppressMethodFilter=true`.
+
+### Sequence: `t[tab]`
+- Mirrors `right` completion when a prefix exists.
+
+### Sequence: `t[tab][backspace]`
+- Post: Class token `TSsh` preserved; Methods filter becomes `tart`; tokens do not merge.
+
+### Sequence: `g[tab]`
+- Post: Class completes to `GitScrumProject`; prompt inserts `start`; Methods filter remains empty (suppressed) until user types; cursor at method start.
+
+### Sequence: `g[tab][down]` and `g[tab][down][down]`
+- Post: Prompt method token updates to the newly selected method each time; no hang; cursor stays at method start.
+
+### Sequence: `[down][down][right]`
+- Post: Navigates to Methods; prompt does not insert unrelated classes (e.g., `Logger`).
+
+### Sequence: `[right]` from empty prompt
+- Post: Moves to Methods column; no auto-completion is performed.
