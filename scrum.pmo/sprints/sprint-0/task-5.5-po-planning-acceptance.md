@@ -1,5 +1,5 @@
-# [Back to Sprint 0 Planning](./planning.md)
-# [Back to Main Task 5](./task-5-template-new-subproject.md)
+[Back to Sprint 0 Planning](./planning.md) | [Back to Main Task 5](./task-5-template-new-subproject.md)
+
 # Task 5.5: PO - Planning & Acceptance
 
 ## Status
