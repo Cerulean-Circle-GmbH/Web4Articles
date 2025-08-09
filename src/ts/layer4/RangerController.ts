@@ -111,6 +111,52 @@ export class RangerController {
     stdin.on('data', onData);
     // Initial render
     this.view.render(this.model);
+
+    // Optional test mode: feed scripted keys then exit keeping screen
+    if ((process.env.TSRANGER_TEST_MODE || '').toLowerCase() === '1') {
+      const script = process.env.TSRANGER_TEST_INPUT || '';
+      const keys = this.parseTestScript(script);
+      for (const k of keys) {
+        await onData(k);
+      }
+      this.cleanup();
+      process.exit(0);
+    }
+  }
+
+  private parseTestScript(script: string): string[] {
+    // Tokens like [down][right][tab]abc[left][q]
+    const result: string[] = [];
+    let i = 0;
+    while (i < script.length) {
+      if (script[i] === '[') {
+        const j = script.indexOf(']', i + 1);
+        if (j > i) {
+          const token = script.slice(i + 1, j).toLowerCase();
+          switch (token) {
+            case 'up': result.push('\u001b[A'); break;
+            case 'down': result.push('\u001b[B'); break;
+            case 'left': result.push('\u001b[D'); break;
+            case 'right': result.push('\u001b[C'); break;
+            case 'tab': result.push('\t'); break;
+            case 'enter': result.push('\r'); break;
+            case 'space': result.push(' '); break;
+            case 'backspace': result.push('\x7f'); break;
+            case 'esc': result.push('\u001b'); break;
+            case 'q': result.push('q'); break;
+            default:
+              // treat unknown as literal sequence
+              result.push(script.slice(i, j + 1));
+          }
+          i = j + 1;
+          continue;
+        }
+      }
+      // literal characters until next bracket
+      result.push(script[i]);
+      i++;
+    }
+    return result;
   }
 
   private onFilterChange(): void {
