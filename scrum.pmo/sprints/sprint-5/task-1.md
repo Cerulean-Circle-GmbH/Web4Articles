@@ -19,4 +19,3 @@ Author a complete architecture and behavior specification for TS Ranger v2 to be
   - Lists all normative rules extracted from Sprint 2 README, tasks, QA feedback, and tests.
   - Includes examples referencing exact key sequences used in tests (e.g., `"g[tab]"`, `"[down][down][right]"`).
   - Calls out determinism requirements for test mode and terminal-dependent rendering.
-- No code changes in this sprint; documents only.
