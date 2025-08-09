@@ -20,3 +20,29 @@ Define how the current tests under `test/tsranger.*.test.ts` invoke v2 without c
 ## Acceptance Criteria
 - A clear routing proposal that requires only setting an environment variable in CI/local to run v2 against existing tests.
 - A mapping table of each test file to the v2 components they validate (see Task 3.1).
+
+## Specification
+
+### Invocation Contract
+- Tests call: `src/sh/tsranger test "<keys>"` with env:
+  - `TSRANGER_TEST_MODE=1`
+  - `TSRANGER_TEST_INPUT="<keys>"`
+  - `TS_RANGER_TEST_FINAL_ONLY=1`
+  - `PS1='\\u@\\h \\w$'`
+
+### Version Toggle
+- Add environment switch `TSRANGER_V2=1` to route the shell wrapper or the TS entry to `src.v2/ts/layer4/TSRanger.ts`.
+- CLI syntax remains unchanged; no positional args added.
+
+### IO Determinism
+- Respect fixed terminal size via one of:
+  - Env: `TSRANGER_TEST_COLUMNS`/`TSRANGER_TEST_ROWS` consumed by `DeterministicTestIO`.
+  - Or use `COLUMNS`/`LINES` if already provided.
+- Capture only the final frame when `TS_RANGER_TEST_FINAL_ONLY=1`.
+
+### ANSI and Output Stability
+- Keep ANSI for prompt/footer colors; tests primarily strip or pattern-match.
+- Ensure grid + prompt spacing is stable independent of OS.
+
+### Acceptance Evidence
+- Show a matrix linking test files to expected states (see Task 3.1). No edits to `test/*.ts` are required; only set `TSRANGER_V2=1` in CI/local to validate v2.
