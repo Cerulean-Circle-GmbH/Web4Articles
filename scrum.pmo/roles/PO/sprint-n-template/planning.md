@@ -12,6 +12,8 @@ Describe the overall goal for this sprint.
   **Priority:** 1
 - [ ] [Task 1: Example Task Title](./task-1-example-task.md)  
   **Priority:** 2
+  - [ ] [Task 1.1: Architect — TS Ranger Shell Specification (role-specific)](./task-1.1-architect-ranger-spec.md)
+  - [ ] [Task 1.2: Developer - Interactive TUI shell (core navigation)](./task-1.2-developer-ranger-tui.md)
 - [ ] [Task 2: Example Task Title](./task-2-example-task.md)  
   **Priority:** 3
 

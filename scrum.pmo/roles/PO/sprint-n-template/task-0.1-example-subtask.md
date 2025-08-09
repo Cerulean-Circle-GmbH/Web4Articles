@@ -1,5 +1,7 @@
+[Back to Planning Sprint n](./planning.md) | [Back to Task 0](./task-0-example-task.md)
 
 # Task 0.1: Example Subtask
+[task:uuid:<uuidv4>]
 
 ## Naming Conventions
 - Subtasks: `task-<number>.<subnumber>-<role>-<short-description>.md` (e.g., `task-1.1-developer-setup.md`)
@@ -9,10 +11,6 @@
 ## Status
 - [ ] Planned
 - [ ] In Progress
-  - [ ] refinement
-  - [ ] creating test cases
-  - [ ] implementing
-  - [ ] testing
 - [ ] QA Review
 - [ ] Done
 
@@ -35,12 +33,11 @@ Clarify the intent and expected outcome.
 - List the acceptance criteria for this subtask.
 
 ## QA Audit & User Feedback
-- [ ] QA review pending.
-- [ ] Feedback to be collected after subtask completion.
-
-## Subtasks
-- None (atomic subtask for this sprint).
-
----
-
-[Back to Main Task](./task-0-example-task.md)
+- [ ] [UTC timestamp] QA review pending.
+  - [ ] Issue
+  - [ ] Resolution
+  - [ ] Examble
+- [ ] [UTC timestamp] Feedback to be collected after subtask completion.
+  - [ ] Issue
+  - [ ] Resolution
+  - [ ] Examble
