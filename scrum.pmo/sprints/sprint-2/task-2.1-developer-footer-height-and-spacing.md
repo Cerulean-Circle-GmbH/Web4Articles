@@ -1,19 +1,18 @@
-[Back to Planning](./planning.md)
+[Back to Planning](./planning.md) | [Back to Task2](./task-2.md)
 
 # Task 2.1: Developer — Footer height, spacing, and empty lines around command preview
-
-[subtask:uuid:92b3c4d5-e6f7-4819-a934-6d7e8f9012bc]
-
-[requirement:uuid:7f6e1b84-3c19-4d7a-9a56-5f4a7c9b2d31](./requiremnents.md)
+[subtask:uuid:92b3c4d5-e6f7-4819-a934-6d7e8f9012bc] 
 
 ## Status
 - [ ] Planned
 - [ ] In Progress
-  - [ ] refinement
-  - [ ] implementing
-  - [ ] testing
 - [ ] QA Review
 - [ ] Done
+
+## Tracability
+- up
+  - [requirement:uuid:7f6e1b84-3c19-4d7a-9a56-5f4a7c9b2d31](./requiremnents.md)
+  - [task:uuid:81a2b3c4-d5e6-4718-9823-5c6d7e8f9012](./task-2.md)
 
 ## Task Description
 Make the help/footer line use the full terminal width and remain anchored at the bottom even when terminal height changes. Add one empty line between command line and help line, and always keep an empty line above the command line.

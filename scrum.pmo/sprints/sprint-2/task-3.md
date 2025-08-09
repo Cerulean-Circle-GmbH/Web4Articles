@@ -53,7 +53,5 @@ Increase familiarity and clarity of the preview line by prefacing the command wi
   - [ ] Resolution
   - [ ] Example
 
-## Subtasks
-- [ ] [Task 3.1: Developer — Command prompt for preview using $PS1 (hostname user@pwd)](./task-3.1-developer-command-prompt-ps1.md)
 
 

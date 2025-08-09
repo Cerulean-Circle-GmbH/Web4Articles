@@ -12,9 +12,6 @@
 ## Status
 - [ ] Planned
 - [ ] In Progress
-  - [ ] refinement
-  - [ ] implementing
-  - [ ] testing
 - [ ] QA Review
 - [ ] Done
 
@@ -43,6 +40,5 @@ Increase familiarity by mirroring common bash prompts in the preview line.
 ## QA Audit & User Feedback
 - [ ] QA review pending.
 
-## Subtasks
-- None (atomic subtask for this sprint).
+
 

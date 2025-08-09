@@ -1,7 +1,5 @@
 [Back to Planning](./planning.md)
 
-[Back to Planning](./planning.md)
-
 # Task 1 — Architect: TS Ranger Shell Specification
 
 [task:uuid:0e2f5b1a-3c7d-4f91-9ab2-7d3a6e8c5f90]
@@ -15,14 +13,7 @@
 - [x] QA Review
 - [ ] Done
 
-## Status
-- [ ] Planned
-- [ ] In Progress
-  - [ ] refinement
-  - [ ] implementing
-  - [ ] testing
-- [ ] QA Review
-- [x] Done
+
 
 ## Goal
 Design a ranger-like, keyboard-first interactive shell (TS Ranger) that lists discoverable targets from TypeScript classes and methods, powered by `TSCompletion`. The shell must integrate with the existing `DefaultCLI` to execute selected actions.

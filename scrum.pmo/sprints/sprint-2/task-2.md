@@ -1,9 +1,6 @@
-[Back to Planning](./planning.md)
+[Back to Planning Sprint 2](./planning.md)
 
 # Task 2: Footer height/spacing and colorized command preview
-
-[requirement:uuid:7f6e1b84-3c19-4d7a-9a56-5f4a7c9b2d31](./requiremnents.md)
-
 [task:uuid:81a2b3c4-d5e6-4718-9823-5c6d7e8f9012]
 
 ## Status
@@ -14,6 +11,13 @@
   - [ ] testing
 - [ ] QA Review
 - [ ] Done
+
+## Tracability
+- up
+  - [requirement:uuid:7f6e1b84-3c19-4d7a-9a56-5f4a7c9b2d31](./requiremnents.md)
+- down
+  - [Task 2.1: Developer — Footer height, spacing, and empty lines around command preview](./task-2.1-developer-footer-height-and-spacing.md)
+  - [Task 2.2: Developer — Blue/White Key Usage Footer and Colorized Command Preview](./task-2.2-developer-footer-and-color-preview.md)
 
 ## Task Description
 Improve TSRanger UI layout and readability:
@@ -46,7 +50,4 @@ Provide a stable, legible layout regardless of terminal size, and make the execu
 ## QA Audit & User Feedback
 - [ ] QA review pending.
 
-## Subtasks
-- [ ] [Task 2.1: Developer — Footer height, spacing, and empty lines around command preview](./task-2.1-developer-footer-height-and-spacing.md)
-- [ ] [Task 2.2: Developer — Blue/White Key Usage Footer and Colorized Command Preview](./task-2.2-developer-footer-and-color-preview.md)
 
