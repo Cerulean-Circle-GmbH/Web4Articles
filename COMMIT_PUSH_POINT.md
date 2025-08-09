@@ -8,15 +8,19 @@
   - Prompt colorization: username cyan (red if root), path yellow
   - Resize-aware re-render to maintain layout
 - Added scripted tests for spacing and ANSI colors; full suite green
+- Replaced grid Preview column with Docs column and added JSDoc extraction in `TSCompletion`
+- Enriched `TestClass` with JSDoc and added scripted tests asserting Docs rendering
 
 ## Commit Message Suggestion
 ```
-feat(tsranger): footer anchoring, prompt spacing/colors, and alignment fixes
+feat(tsranger): Docs column, JSDoc extraction, footer anchoring, and prompt spacing/colors
 
 - RangerView: pad cells pre-style; keep 1 blank line above preview and 1 before footer; anchor footer
 - Prompt: support $PS1 (\h, \u, \w) with colors (user cyan/red if root; path yellow); fallback format
 - Controller: resize re-render; scripted test mode final-frame support
-- Tests: add TUI scripted tests for spacing and color; all tests green
+- Docs: replace Preview column with Docs; wrap text and show contextual docs
+- Completion: add getClassDoc/getMethodDoc/getParamDoc using TS AST JSDoc
+- Tests: add TUI scripted tests for spacing, color, and Docs; all tests green
 ```
 
 ## Next Steps

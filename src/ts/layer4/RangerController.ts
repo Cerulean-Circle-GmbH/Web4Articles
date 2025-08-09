@@ -183,7 +183,7 @@ export class RangerController {
   }
 
   private moveSelection(delta: number): void {
-    const lists = [this.model.filteredClasses(), this.model.filteredMethods(), this.model.filteredParams(), [this.model.buildCommandParts().join(' ')]];
+    const lists = [this.model.filteredClasses(), this.model.filteredMethods(), this.model.filteredParams(), [this.model.getSelectedDocs()]];
     const col = this.model.selectedColumn;
     const max = Math.max(0, lists[col].length - 1);
     const next = Math.min(max, Math.max(0, this.model.selectedIndexPerColumn[col] + delta));
