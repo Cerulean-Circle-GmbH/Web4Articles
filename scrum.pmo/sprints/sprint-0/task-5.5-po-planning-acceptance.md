@@ -28,12 +28,13 @@ The Product Owner (PO) defines requirements and acceptance criteria for subproje
 - Validate artifacts and diagrams are embedded (e.g., PlantUML → SVG) and rendering commands are documented for the Architect.
 - Verify environment prerequisites (Docker/devcontainer, Node engines, PlantUML/Graphviz, gh) are captured and linked to DevOps tasks.
 - Normalize planning labels to match filenames; avoid duplicate subtask listings outside MAIN task blocks.
+- Add explicit Traceability section to MAIN tasks (Up: requirement UUID; Down: subtask links) and to SUBTASKS (Up: requirement + parent task; Down: none or deeper subtasks).
 - Run a merge-health test pass (`npm test`) and record outcomes in `recovery.md`.
 
 ## Requirements
 - Requirements must exist in `sprint-0/requiremnents.md` with UUIDs and short problem→fix notes.
 - Each MAIN task references its originating requirement via a UUID backlink; `requiremnents.md` links to the MAIN task.
-- Planning reflects consistent numbering and no duplicate entries.
+- Planning reflects consistent numbering and no duplicate entries; every MAIN task shows a SUBTASKS list rather than repeating subtasks as separate top-level entries.
 - Tasks embed artifacts (e.g., SVGs) where applicable.
 
 ## Acceptance Criteria

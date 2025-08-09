@@ -70,6 +70,9 @@ Use these as the canonical baseline for PO planning. Each new requirement must:
 - Receive a UUID, be added here with a short problem/fix quote, and be realized as a MAIN task with role-specific SUBTASKS as needed.
 - Be linked bidirectionally (this file ↔ tasks) per PO process.
 - Each MAIN task and SUBTASK must include a UUID tag on its own first lines using `[task:uuid:<uuidv4>]` (for MAIN) or `[subtask:uuid:<uuidv4>]` (for SUBTASKS).
+- Each task must include a Traceability section:
+  - MAIN tasks: Up (requirement UUID entry), Down (links to SUBTASKS)
+  - SUBTASKS: Up (requirement UUID + parent MAIN task), Down (optional deeper items only)
 
 ---
 
