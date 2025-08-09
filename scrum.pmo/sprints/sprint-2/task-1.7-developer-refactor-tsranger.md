@@ -2,6 +2,8 @@
 
 # Task 1.7: Developer - Refactor TSRanger to one class per TS file
 
+[subtask:uuid:709132e5-f640-4716-9345-6d7e8f9012ab]
+
 ## Status
 - [ ] Planned
 - [ ] In Progress

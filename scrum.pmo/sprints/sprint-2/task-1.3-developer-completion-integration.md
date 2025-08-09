@@ -2,6 +2,8 @@
 
 # Task 1.3 — Developer: Integrate TSCompletion for Live Suggestions
 
+[subtask:uuid:3c5e7f91-b2c3-4d5e-8f01-2a3b4c5d6e7f]
+
 ## Status
 - [ ] Planned
 - [ ] In Progress

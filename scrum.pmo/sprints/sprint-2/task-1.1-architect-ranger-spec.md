@@ -2,6 +2,8 @@
 
 # Task 1.1 — Architect: TS Ranger Shell Specification (role-specific)
 
+[subtask:uuid:1a3c5e7f-9b2d-4c6f-8a1b-2c3d4e5f6a7b]
+
 ## Status
 - [x] Planned
 - [x] In Progress

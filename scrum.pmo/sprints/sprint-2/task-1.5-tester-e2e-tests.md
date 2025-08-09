@@ -2,6 +2,8 @@
 
 # Task 1.5 — Tester: E2E Keyboard Navigation and Execution Tests
 
+[subtask:uuid:5e7f9012-d4e5-4f60-8123-4b5c6d7e8f90]
+
 ## Status
 - [ ] Planned
 - [ ] In Progress
