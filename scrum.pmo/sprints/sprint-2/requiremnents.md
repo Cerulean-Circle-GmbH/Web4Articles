@@ -127,6 +127,8 @@ TestClass
 - [ ] refactor the ranger navigaiton. remove the preview column. instead creat a column, that shows the typescript comment documentation of the selected element Class, method or parameter. improve tscompletion to find the documentation comments for the elements and display them in the free space. [requirement:uuid:c0f7a2d4-3e9b-4a51-8c6d-1f2e3a4b5c6d] ([task-4](./task-4.md))
 
 - [ ] all relevant classes and methods must be documented with JSDoc/TSdoc so that TSCompletion can extract and show docs in the Docs column. [requirement:uuid:5d3c9a7e-8b12-4a6f-9d2e-1c3b5a7d9e2f] ([task-5](./task-5.md))
+- [ ] make the [tab] key act the same way as the right arrow. [requirement:uuid:f1a2b3c4-5d6e-7f89-a0b1-c2d3e4f5a6b7] ([task-6](./task-6.md))
+- [ ] refactor the typing model. always only type in the prompt line. have a cursor in the prompt line to see the typing position. while typing a class or method behave like the current filter. always complete the current selected/filtered name behind the cursor. use [tab] as you would expect it from a shell with completion. synchronize the ranger navigation always.  [requirement:uuid:a7b6c5d4-e3f2-1a0b-9c8d-7e6f5a4b3c2d] ([task-7](./task-7.md))  
   
   
    

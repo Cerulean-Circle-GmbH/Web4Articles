@@ -84,7 +84,7 @@ export class RangerController {
           this.view.render(this.model);
           return;
         }
-        if (key === '\u001b[C') { // Right
+        if (key === '\u001b[C' || (key === '\t' && !this.model.promptEditActive)) { // Right or Tab when not editing prompt
           this.changeColumn(1);
           this.view.render(this.model);
           return;
@@ -96,10 +96,64 @@ export class RangerController {
           this.view.render(this.model);
           return;
         }
-        if (key.length === 1 && key >= ' ' && key <= '~') { // Printable -> filter typing
-          const col = this.model.selectedColumn;
-          this.model.filters[col] += key;
-          this.onFilterChange();
+        // Prompt-line editing model (Task 7)
+        if (key === '\u001b[D') { // handled above for column nav
+          return;
+        }
+        if (key === '\u001b[C') {
+          return;
+        }
+        if (key === '\u001b[B' || key === '\u001b[A') {
+          // ignore vertical arrows in prompt edit
+          return;
+        }
+        if (key === '\x7f') { // Backspace in prompt
+          if (this.model.promptCursorIndex > 0) {
+            this.model.promptBuffer = this.model.promptBuffer.slice(0, this.model.promptCursorIndex - 1) + this.model.promptBuffer.slice(this.model.promptCursorIndex);
+            this.model.promptCursorIndex--;
+            this.model.deriveFiltersFromPrompt();
+            this.view.render(this.model);
+          }
+          return;
+        }
+        if (key === '\t') {
+          // Shell-like completion for current token
+          const tokenIdx = this.model.getCurrentPromptTokenIndex();
+          const tokens = this.model.promptBuffer.split(/\s+/);
+          const current = tokens[tokenIdx] ?? '';
+          if (tokenIdx === 0) {
+            const classes = TSCompletion.getClasses().filter(c => c.startsWith(current));
+            if (classes.length > 0) {
+              tokens[tokenIdx] = classes[0];
+              this.model.promptBuffer = tokens.join(' ').trim();
+              this.model.promptCursorIndex = this.model.promptBuffer.length;
+              this.model.deriveFiltersFromPrompt();
+              this.view.render(this.model);
+              return;
+            }
+          } else if (tokenIdx === 1) {
+            const cls = this.model.filteredClasses()[this.model.selectedIndexPerColumn[0]];
+            if (cls) {
+              const methods = TSCompletion.getClassMethods(cls).filter(m => m.startsWith(current));
+              if (methods.length > 0) {
+                tokens[tokenIdx] = methods[0];
+                this.model.promptBuffer = tokens.join(' ').trim();
+                this.model.promptCursorIndex = this.model.promptBuffer.length;
+                this.model.deriveFiltersFromPrompt();
+                this.view.render(this.model);
+                return;
+              }
+            }
+          }
+          // If no completion, fall through to column advance behavior handled above
+          this.view.render(this.model);
+          return;
+        }
+        if (key.length === 1 && key >= ' ' && key <= '~') {
+          // Insert printable at cursor into prompt buffer
+          this.model.promptBuffer = this.model.promptBuffer.slice(0, this.model.promptCursorIndex) + key + this.model.promptBuffer.slice(this.model.promptCursorIndex);
+          this.model.promptCursorIndex++;
+          this.model.deriveFiltersFromPrompt();
           this.view.render(this.model);
           return;
         }

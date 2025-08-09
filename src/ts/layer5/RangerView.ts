@@ -61,21 +61,22 @@ export class RangerView {
   }
 
   private buildColoredCommand(model: RangerModel): string {
-    const parts = model.buildCommandParts();
     const tokens: string[] = [];
     // Prompt
     tokens.push(this.prompt());
     // Always show tssh upfront per UX
     tokens.push(this.style('tssh', { colorCode: 32, bold: true })); // green
-    if (parts.length > 0) {
-      const [cls, method, ...params] = parts;
-      if (cls) tokens.push(this.style(cls, { bold: true, colorCode: this.colorCodeForTitle('Classes') }));
-      if (method) tokens.push(this.style(method, { bold: true, colorCode: this.colorCodeForTitle('Methods') }));
-      for (let i = 0; i < params.length; i++) {
-        const inverse = model.paramEntryActive && i === model.paramEntryIndex;
-        tokens.push(this.style(params[i], { colorCode: this.colorCodeForTitle('Params'), inverse }));
-      }
-    }
+
+    // Render prompt buffer with a visible cursor (inverse space at cursor)
+    const buffer = model.promptBuffer || '';
+    const cursor = Math.max(0, Math.min(buffer.length, model.promptCursorIndex || 0));
+    const before = buffer.slice(0, cursor);
+    const after = buffer.slice(cursor);
+    const renderedBefore = before;
+    const renderedCursor = this.style(after.length > 0 ? after.charAt(0) : ' ', { inverse: true });
+    const renderedAfter = after.length > 0 ? after.slice(1) : '';
+    tokens.push(`${renderedBefore}${renderedCursor}${renderedAfter}`);
+
     return tokens.join(' ');
   }
 

@@ -15,6 +15,11 @@ export class RangerModel {
   paramEntryIndex: number = 0;
   paramEntryBuffer: string = '';
 
+  // Prompt editor state (Task 7)
+  promptEditActive: boolean = true;
+  promptBuffer: string = '';
+  promptCursorIndex: number = 0;
+
   get selectedClass(): string | undefined {
     return this.filteredClasses()[this.selectedIndexPerColumn[0]];
   }
@@ -116,6 +121,29 @@ export class RangerModel {
         if (c) return TSCompletion.getClassDoc(c);
         return '';
     }
+  }
+
+  deriveFiltersFromPrompt(): void {
+    // Tokens: [classToken, methodToken, ...ignored]
+    const tokens = this.promptBuffer.split(/\s+/);
+    const classToken = tokens[0] ?? '';
+    const methodToken = tokens[1] ?? '';
+    this.filters[0] = classToken;
+    this.selectedIndexPerColumn[0] = 0;
+    // Update methods based on class filter impact
+    this.classes = TSCompletion.getClasses();
+    const filteredClasses = this.filteredClasses();
+    // If exact match exists at index 0, keep; else remain 0
+    this.updateMethods();
+    this.filters[1] = methodToken;
+    this.selectedIndexPerColumn[1] = 0;
+    this.updateParams();
+  }
+
+  getCurrentPromptTokenIndex(): number {
+    // Determine which token the cursor is currently editing
+    const left = this.promptBuffer.slice(0, this.promptCursorIndex);
+    return left.split(/\s+/).length - 1;
   }
 
   allParamsFilled(): boolean {

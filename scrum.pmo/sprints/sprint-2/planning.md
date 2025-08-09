@@ -42,6 +42,12 @@ Deliver a ranger-like interactive shell (TS Ranger) that leverages `TSCompletion
   - [x] [Task 5.1 — Developer: Enrich class JSDoc across layer1/layer2 targets](./task-5.1-developer-enrich-jsdoc.md)
   - [x] [Task 5.2 — Tester: Add scripted tests asserting Docs column shows JSDoc for TestClass](./task-5.2-tester-docs-column-tests.md)
 
+- [ ] [Task 6: Make [Tab] behave like Right Arrow in TS Ranger](./task-6.md)  
+  **Priority:** 3
+
+- [ ] [Task 7: Refactor typing model to prompt-line editing with cursor and shell-like completion](./task-7.md)  
+  **Priority:** 3
+
 ---
 
 **Process Update (2025-08-08):**
