@@ -28,6 +28,3 @@ Wire `TSCompletion` into TS Ranger to populate and filter Classes, Methods, and 
 
 ## QA Audit & User Feedback
 - [ ] QA review pending.
-
-## Subtasks
-- None (atomic task for this sprint).

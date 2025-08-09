@@ -30,6 +30,3 @@ Execute the selected Class/Method/Params via the existing CLI machinery, preserv
 
 ## QA Audit & User Feedback
 - [ ] QA review pending.
-
-## Subtasks
-- None (atomic task for this sprint).

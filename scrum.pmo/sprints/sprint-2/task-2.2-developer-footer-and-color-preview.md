@@ -31,6 +31,3 @@ Render a key usage line at the bottom with a blue background and white text, and
 
 ## QA Audit & User Feedback
 - [ ] QA review pending.
-
-## Subtasks
-- None (atomic task for this sprint).

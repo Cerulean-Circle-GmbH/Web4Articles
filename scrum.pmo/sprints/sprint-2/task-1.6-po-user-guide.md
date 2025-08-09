@@ -30,6 +30,3 @@ Document how to run and use the TS Ranger shell, with copy-pasteable examples.
 
 ## QA Audit & User Feedback
 - [ ] QA review pending.
-
-## Subtasks
-- None (atomic task for this sprint).

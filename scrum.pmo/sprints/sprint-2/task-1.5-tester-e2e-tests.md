@@ -33,6 +33,3 @@ Verify TS Ranger supports navigation, filtering, preview correctness, and execut
 
 ## QA Audit & User Feedback
 - [ ] QA review pending.
-
-## Subtasks
-- None (atomic task for this sprint).

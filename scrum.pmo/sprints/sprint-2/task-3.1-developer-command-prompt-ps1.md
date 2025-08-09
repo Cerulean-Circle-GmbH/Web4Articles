@@ -4,16 +4,16 @@
 
 [subtask:uuid:c5e6f708-19a2-4b3c-c567-9012bc3d4e5f]
 
-## Traceability
-- up
-  - [requirement:uuid:3c2b5a8e-9d1f-4a2f-8b6e-7c1d5f2a4b93](./requiremnents.md)
-  - [Task 3: Command prompt from $PS1 or hostname user@pwd](./task-3.md)
-
 ## Status
 - [ ] Planned
 - [ ] In Progress
 - [ ] QA Review
 - [ ] Done
+
+## Traceability
+- up
+  - [requirement:uuid:3c2b5a8e-9d1f-4a2f-8b6e-7c1d5f2a4b93](./requiremnents.md)
+  - [Task 3: Command prompt from $PS1 or hostname user@pwd](./task-3.md)
 
 ## Task Description
 Let the command preview render with a prompt prefix. Prefer reading `$PS1`; if undefined, synthesize `[hostname] user@pwd`.

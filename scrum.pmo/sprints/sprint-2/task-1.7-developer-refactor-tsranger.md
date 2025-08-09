@@ -41,6 +41,3 @@ Align with project first principles: Separation of Concerns and Radical OOP. Eac
 
 ## QA Audit & User Feedback
 - [ ] QA review pending.
-
-## Subtasks
-- None (atomic task for this sprint).
