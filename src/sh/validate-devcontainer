@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+log() { printf "[%s] %s\n" "$1" "$2"; }
+info() { log INFO "$1"; }
+warn() { log WARN "$1"; }
+err()  { log ERROR "$1"; }
+
+# --- Preconditions ---
+if ! command -v docker >/dev/null 2>&1; then
+  err "Docker is not installed or not in PATH. Devcontainer cannot be validated locally."
+  exit 2
+fi
+
+if ! docker buildx version >/dev/null 2>&1; then
+  warn "docker buildx not available; attempting to enable it via 'docker buildx create --use'"
+  if ! docker buildx create --use >/dev/null 2>&1; then
+    err "docker buildx is required; please install/enable Docker Buildx."
+    exit 2
+  fi
+fi
+
+# --- Config ---
+IMAGE_BASE=${IMAGE_BASE:-web4articles-devcontainer}
+IMAGE_TAG=${IMAGE_TAG:-ci}
+NODE_VERSION_ARG=${NODE_VERSION:-18}
+DOCKERFILE_PATH=${DOCKERFILE_PATH:-.devcontainer/Dockerfile}
+BUILD_CONTEXT=${BUILD_CONTEXT:-.}
+WORKDIR_MOUNT=${WORKDIR_MOUNT:-/workspaces/repo}
+
+# Sanitize image base if it already contains a tag
+if [[ "$IMAGE_BASE" == *:* ]]; then
+  warn "IMAGE_BASE contains a tag; stripping to avoid double tag: $IMAGE_BASE"
+  IMAGE_BASE="${IMAGE_BASE%%:*}"
+fi
+FULL_TAG="${IMAGE_BASE}:${IMAGE_TAG}"
+
+info "Building devcontainer image: $FULL_TAG"
+info "Using Dockerfile: $DOCKERFILE_PATH (NODE_VERSION=$NODE_VERSION_ARG)"
+
+BUILD_LOG=$(mktemp)
+if ! docker buildx build \
+  --load \
+  -t "$FULL_TAG" \
+  -f "$DOCKERFILE_PATH" \
+  --build-arg NODE_VERSION="$NODE_VERSION_ARG" \
+  "$BUILD_CONTEXT" 2>"$BUILD_LOG"; then
+  err "Initial build failed. Inspecting error and applying heuristics..."
+  if grep -qi "requires exactly 1 argument" "$BUILD_LOG"; then
+    err "Docker reported missing build context. Ensure BUILD_CONTEXT is correct (current: '$BUILD_CONTEXT')."
+  fi
+  if grep -qi ":latest:latest" "$BUILD_LOG"; then
+    err "Detected double-tag ':latest:latest'. Ensure IMAGE_BASE has no tag (current: '$IMAGE_BASE')."
+  fi
+  if grep -qi "undefined:latest" "$BUILD_LOG"; then
+    err "Detected undefined image tag. Provide IMAGE_BASE and IMAGE_TAG."
+  fi
+  err "Raw error log:\n$(sed 's/^/  /' "$BUILD_LOG")"
+  rm -f "$BUILD_LOG"
+  exit 1
+fi
+rm -f "$BUILD_LOG"
+info "Image built successfully. Running validation inside container..."
+
+RUN_CMD='set -Eeuo pipefail; \
+  node -v; \
+  npm ci; \
+  npm test; \
+  if command -v plantuml >/dev/null 2>&1; then plantuml -checkonly src/puml/*.puml; else echo "plantuml not found in container"; exit 3; fi'
+
+if ! docker run --rm \
+  -v "$PWD":"$WORKDIR_MOUNT" \
+  -w "$WORKDIR_MOUNT" \
+  -e TS_NODE_PROJECT="$WORKDIR_MOUNT/tsconfig.json" \
+  "$FULL_TAG" bash -lc "$RUN_CMD"; then
+  err "Validation inside container failed. See output above for details."
+  exit 1
+fi
+
+info "Devcontainer validation succeeded: tests passed and PlantUML check completed."
