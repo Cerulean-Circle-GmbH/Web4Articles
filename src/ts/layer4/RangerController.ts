@@ -18,8 +18,16 @@ export class RangerController {
     stdin.resume();
     stdin.setEncoding('utf8');
 
+    const exitOnAltQ = (process.env.TSRANGER_ALTQ_EXIT || '').toLowerCase() === '1' ||
+      (process.env.TSRANGER_ALTQ_EXIT || '').toLowerCase() === 'true';
+
     const onData = async (key: string) => {
       try {
+        if (exitOnAltQ && (key === '\u001bq' || key === '\u001bQ')) { // Alt+Q often arrives as ESC + 'q'
+          this.cleanup();
+          process.exit(0);
+          return;
+        }
         if (key === '\u0003' /* Ctrl-C */ || key === '\u001b' /* Esc */ || key === 'q') {
           this.cleanup();
           return;
