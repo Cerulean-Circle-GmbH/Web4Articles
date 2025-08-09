@@ -44,12 +44,15 @@ We learned from Sprint 2 and QA that TS Ranger must provide stable, predictable 
   - [ ] [Task 5.5 — Developer: Entry (`layer4/TSRanger.ts`) and routing](./task-5.5-developer-entry-routing.md)
   - [ ] [Task 5.6 — DevOps: Shell wrapper toggle in `src/sh/tsranger`](./task-5.6-devops-shell-toggle.md)
   - [ ] [Task 5.7 — Developer: Non-interactive smoke run validation](./task-5.7-developer-integration-smoke.md)
+  - [ ] [Task 5.8 — Developer: KeyboardController abstraction (`layer4/KeyboardController.ts`)](./task-5.8-developer-keyboard-controller.md)
+  - [ ] [Task 5.9 — Developer: Integrate KeyboardController into RangerController](./task-5.9-developer-integrate-keyboard-controller.md)
 
 - [ ] [Task 6: Tester — Run existing tests against v2 via toggle](./task-6-tester-validate-v2-with-existing-tests.md)
   **Priority:** 1
   - [ ] [Task 6.1 — Tester: Execute suite with `TSRANGER_V2=1`](./task-6.1-tester-run-with-toggle.md)
   - [ ] [Task 6.2 — Tester: Triage any diffs; file fix tasks; re-run](./task-6.2-tester-triage-and-fix-loop.md)
   - [ ] [Task 6.3 — Tester: Final green report and sign-off](./task-6.3-tester-final-green-report.md)
+  - [ ] [Task 6.4 — Tester: KeyboardController unit tests for key mapping and sequences](./task-6.4-tester-keyboard-controller-tests.md)
 
 ---
 
