@@ -1,6 +1,6 @@
 [Back to Planning](./planning.md)
 
-# Task 1.1: Developer — Fix selected row indentation across columns in TSRanger
+# Task 2.3: Developer — Fix selected row indentation across columns in TSRanger
 
 [requirement:uuid:a2f4c3d0-9b8a-4f1e-8c3b-5e7a2f9d6c1b](./requiremnents.md)
 
