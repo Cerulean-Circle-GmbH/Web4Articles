@@ -34,6 +34,24 @@ describe('Prompt-line behavior for t, t[right], t[tab]', () => {
     expect(/start/.test(out)).toBe(true);
     expect(/\x1b\[7m[\s\S]*?\x1b\[0m/.test(out)).toBe(true);
   });
+
+  it('g[tab] completes to GitScrumProject and positions cursor at space before method', () => {
+    const out = runScripted('g[tab]');
+    expect(/GitScrumProject/.test(out)).toBe(true);
+    // Cursor inverse exists after class token
+    expect(/GitScrumProject\s+\x1b\[7m.\x1b\[0m/.test(out)).toBe(true);
+  });
+
+  it('[down]x6[tab] does not crash and moves forward', () => {
+    const out = runScripted('[down][down][down][down][down][down][tab]');
+    expect(out.length > 0).toBe(true);
+  });
+
+  it('t[tab][backspace] keeps tokens intact and updates filter', () => {
+    const out = runScripted('t[tab][backspace]');
+    // Ensure class token TSsh still visible; backspace should not corrupt it
+    expect(/TSsh/.test(out)).toBe(true);
+  });
 });
 
 

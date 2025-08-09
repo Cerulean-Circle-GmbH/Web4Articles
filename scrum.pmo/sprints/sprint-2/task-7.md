@@ -36,6 +36,7 @@ Refactor TS Ranger input so that typing happens only in the prompt line with a v
   - [x] Feedback: Verify cursor rendering and prompt editing using: `tsranger test "te[tab]w"`. Ensure inverse cursor is visible at the correct position after completion and typing.
   - [x] Feedback: After typing `t`, only `TSsh` and `TestClass` shall be listed, with `TSsh` selected and methods highlighted (yellow). The prompt line must show `TSsh` with the cursor on `S` (no `tssh` prefix). After `[tab]`, show `TSsh start` with the cursor on the `s` in `start`.
   - [x] Feedback: `tsranger test "t[right]"` must reflect the same prompt-line update as `[tab]` completion: `TSsh start` with cursor on `s`.
+  - [x] Feedback: Refactor Backspace behavior in prompt editing so token boundaries are preserved (do not merge tokens). Maintain both the prompt line and grid filters correctly. Add cases for streaming sequences: `g[tab]`, `[down][down][down][down][down][down][tab]`, `t[tab]`, and `t[tab][backspace]`.
 
 ### Test Evidence
 - Scripted tests added and passing:

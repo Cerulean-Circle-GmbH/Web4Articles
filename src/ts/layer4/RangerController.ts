@@ -84,7 +84,7 @@ export class RangerController {
           this.view.render(this.model);
           return;
         }
-        if (key === '\u001b[C' || (key === '\t' && !this.model.promptEditActive)) { // Right or Tab when not editing prompt
+        if ((key === '\u001b[C' || key === '\t') && !this.model.promptEditActive) { // Right or Tab when not editing prompt
           this.changeColumn(1);
           this.view.render(this.model);
           return;
@@ -97,10 +97,12 @@ export class RangerController {
           return;
         }
         // Prompt-line editing model (Task 7)
-        if (key === '\u001b[D') { // handled above for column nav
-          return;
-        }
-        if (key === '\u001b[C') {
+        if (key === '\u001b[D') {
+          // Move cursor left in prompt
+          if (this.model.promptCursorIndex > 0) {
+            this.model.promptCursorIndex--;
+            this.view.render(this.model);
+          }
           return;
         }
         if (key === '\u001b[B' || key === '\u001b[A') {
@@ -108,21 +110,36 @@ export class RangerController {
           return;
         }
         if (key === '\x7f') { // Backspace in prompt
-          if (this.model.promptCursorIndex > 0) {
-            this.model.promptBuffer = this.model.promptBuffer.slice(0, this.model.promptCursorIndex - 1) + this.model.promptBuffer.slice(this.model.promptCursorIndex);
-            this.model.promptCursorIndex--;
+          const cursor = this.model.promptCursorIndex;
+          if (cursor > 0) {
+            const prevChar = this.model.promptBuffer.charAt(cursor - 1);
+            if (prevChar === ' ') {
+              // At token boundary: delete current char instead of space to avoid merging tokens
+              if (cursor < this.model.promptBuffer.length) {
+                this.model.promptBuffer = this.model.promptBuffer.slice(0, cursor) + this.model.promptBuffer.slice(cursor + 1);
+                // Cursor stays at same logical position
+              } else {
+                // No char to delete after; fallback to normal backspace
+                this.model.promptBuffer = this.model.promptBuffer.slice(0, cursor - 1) + this.model.promptBuffer.slice(cursor);
+                this.model.promptCursorIndex--;
+              }
+            } else {
+              // Normal backspace: remove char before cursor
+              this.model.promptBuffer = this.model.promptBuffer.slice(0, cursor - 1) + this.model.promptBuffer.slice(cursor);
+              this.model.promptCursorIndex--;
+            }
             this.model.deriveFiltersFromPrompt();
             this.view.render(this.model);
           }
           return;
         }
-        if (key === '\t') {
+        if (key === '\t' || key === '\u001b[C') {
           // Shell-like completion for current token
           const tokenIdx = this.model.getCurrentPromptTokenIndex();
           const tokens = this.model.promptBuffer.split(/\s+/);
           const current = tokens[tokenIdx] ?? '';
           if (tokenIdx === 0) {
-            const classes = TSCompletion.getClasses().filter(c => c.startsWith(current));
+            const classes = TSCompletion.getClasses().filter(c => c.toLowerCase().startsWith(current.toLowerCase()));
             if (classes.length > 0) {
               const chosenClass = classes[0];
               tokens[0] = chosenClass;
@@ -133,9 +150,12 @@ export class RangerController {
                 // Cursor positioned at 's' of start
                 this.model.promptBuffer = tokens.join(' ').trim();
                 this.model.promptCursorIndex = chosenClass.length + 1; // space after class
+                // Move selection context to Methods column
+                this.model.selectedColumn = 1;
               } else {
                 this.model.promptBuffer = tokens.join(' ').trim();
                 this.model.promptCursorIndex = this.model.promptBuffer.length;
+                this.model.selectedColumn = 1;
               }
               this.model.deriveFiltersFromPrompt();
               this.view.render(this.model);
@@ -144,12 +164,14 @@ export class RangerController {
           } else if (tokenIdx === 1) {
             const cls = this.model.filteredClasses()[this.model.selectedIndexPerColumn[0]];
             if (cls) {
-              const methods = TSCompletion.getClassMethods(cls).filter(m => m.startsWith(current));
+              const methods = TSCompletion.getClassMethods(cls).filter(m => m.toLowerCase().startsWith(current.toLowerCase()));
               if (methods.length > 0) {
                 tokens[tokenIdx] = methods[0];
                 this.model.promptBuffer = tokens.join(' ').trim();
                 // Cursor at start of method token
                 this.model.promptCursorIndex = cls.length + 1;
+                // Move selection context to Params column after method completion
+                this.model.selectedColumn = 2;
                 this.model.deriveFiltersFromPrompt();
                 this.view.render(this.model);
                 return;
