@@ -1,6 +1,6 @@
 [Back to Planning](./planning.md)
 
-# Task 1.7 — Developer: Blue/White Key Usage Footer and Colorized Command Preview
+# Task 2.2 — Developer: Blue/White Key Usage Footer and Colorized Command Preview
 
 ## Status
 - [ ] Planned

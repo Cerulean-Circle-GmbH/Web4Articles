@@ -99,13 +99,11 @@ When the Scrum Master requests a new task or task update, the AI must:
 
 ## Managing Sprint Requirements (requiremnents.md)
 - Each sprint may contain a `requiremnents.md` listing unchecked requirements.
-- For every new requirement:
-  - Generate a UUID v4 and include it in the task in the form `[requirement:uuid:<uuidv4>]` on a dedicated line near the top.
-  - Enrich the original requirement entry in `requiremnents.md` by appending the same UUID tag (e.g., `- [ ] <requirement text> [requirement:uuid:<uuidv4>]`) for traceability.
-  - Make the task-side UUID a backlink to `requiremnents.md` (e.g., `[requirement:uuid:<uuidv4>](./requiremnents.md)`).
-  - In `requiremnents.md`, append a markdown link to the created task next to the UUID (e.g., `([task-<n>](./task-<n>-<name>.md))`).
-  - Create a new task file using the templates and name it with the next sequential task number.
-  - Reference the requirement inline and link back to `requiremnents.md`.
-  - Update the sprint `planning.md` to include the new task with priority.
+- For every new requirement, create a MAIN task and optional SUBTASKS:
+  - Generate a UUID v4 and include it in the MAIN task in the form `[requirement:uuid:<uuidv4>]` on a dedicated line near the top. Make it a backlink to `requiremnents.md`.
+  - Enrich the original requirement entry in `requiremnents.md` by appending the same UUID tag and a markdown link to the MAIN task for traceability.
+  - MAIN task naming scheme: `task-<N>-<short-name>.md` where `<N>` is the next integer starting at 1. MAIN tasks can have Status: Planned, In Progress (refinement/implementing/testing), QA Review, Done.
+  - If the MAIN task is in refinement, create role-specific SUBTASKS: `task-<N>.<M>-<role>-<short-name>.md` where `<M>` starts at 1. SUBTASKS do not have a refinement phase; they use Planned/In Progress/QA Review/Done only.
+  - Update `planning.md` to list the MAIN tasks. Optionally list SUBTASKS indented under their MAIN task.
   - After implementation and verification, check off the corresponding requirement in `requiremnents.md`.
 - Ensure backlinks: the task must start with `[Back to Planning](./planning.md)` as the first line.
