@@ -1,4 +1,13 @@
+[Back to Planning](./planning.md)
+
 # Task 1.4 — Tester: E2E Keyboard Navigation and Execution Tests
+
+## Status
+- [ ] Planned
+- [ ] In Progress
+  - [x] creating test cases
+- [ ] QA Review
+- [ ] Done
 
 ## Goal
 Verify TS Ranger supports navigation, filtering, preview correctness, and execution via DefaultCLI.
@@ -20,3 +29,9 @@ Verify TS Ranger supports navigation, filtering, preview correctness, and execut
 - Tests live under `test/tsranger.*.test.ts`.
 - Non-TTY unit tests pass in CI.
 - TTY smoke test is conditionally skipped without failing CI.
+
+## QA Audit & User Feedback
+- [ ] QA review pending.
+
+## Subtasks
+- None (atomic task for this sprint).

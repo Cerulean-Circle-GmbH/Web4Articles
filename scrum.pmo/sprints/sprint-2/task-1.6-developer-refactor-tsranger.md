@@ -1,4 +1,14 @@
+[Back to Planning](./planning.md)
+
 # Task 1.6: Developer - Refactor TSRanger to one class per TS file
+
+## Status
+- [ ] Planned
+- [ ] In Progress
+  - [x] implementing
+  - [x] testing
+- [ ] QA Review
+- [x] Done
 
 ## Goal
 Refactor `src/ts/layer4/TSRanger.ts` by extracting `RangerModel`, `RangerView`, and `RangerController` into their own files, preserving all current functionality and CLI behavior.
@@ -28,3 +38,9 @@ Align with project first principles: Separation of Concerns and Radical OOP. Eac
 - Code compiles and tests pass.
 - New files committed and planning updated in `scrum.pmo/sprints/sprint-2/planning.md`.
 - Brief note added to `recovery.md` summarizing the change.
+
+## QA Audit & User Feedback
+- [ ] QA review pending.
+
+## Subtasks
+- None (atomic task for this sprint).
