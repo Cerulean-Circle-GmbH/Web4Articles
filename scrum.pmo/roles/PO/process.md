@@ -96,3 +96,13 @@ When the Scrum Master requests a new task or task update, the AI must:
 - Use clear, concise language and actionable steps.
 - Keep all documentation up-to-date and reviewed by the team.
 - Capture QA feedback and audit learnings in each task's QA section.
+
+## Managing Sprint Requirements (requiremnents.md)
+- Each sprint may contain a `requiremnents.md` listing unchecked requirements.
+- For every new requirement:
+  - Generate a UUID v4 and include it in the task in the form `[requirement:uuid:<uuidv4>]` on a dedicated line near the top.
+  - Create a new task file using the templates and name it with the next sequential task number.
+  - Reference the requirement inline and link back to `requiremnents.md`.
+  - Update the sprint `planning.md` to include the new task with priority.
+  - After implementation and verification, check off the corresponding requirement in `requiremnents.md`.
+- Ensure backlinks: the task must start with `[Back to Planning](./planning.md)` as the first line.
