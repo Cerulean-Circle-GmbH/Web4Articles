@@ -9,7 +9,7 @@ Deliver a ranger-like interactive shell (TS Ranger) that leverages `TSCompletion
 
 - [x] [Task 1: Architect - TS Ranger shell specification](./task-1.md)  
   SUBTASKS:
-  - [x] [Task 1.1 — Architect: TS Ranger Shell Specification (role-specific)](./task-1.1-architect-ranger-spec.md)
+  - [x] [Task 1.1: Architect — TS Ranger Shell Specification (role-specific)](./task-1.1-architect-ranger-spec.md)
   - [x] [Task 1.2: Developer - Interactive TUI shell (core navigation)](./task-1.2-developer-ranger-tui.md)
   - [x] [Task 1.3: Developer - Integrate `TSCompletion` for live suggestions](./task-1.3-developer-completion-integration.md)
   - [x] [Task 1.4: Developer - Command execution bridge to `DefaultCLI`](./task-1.4-developer-execution-bridge.md)

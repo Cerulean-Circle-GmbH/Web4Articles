@@ -2,6 +2,8 @@
 
 # Task 2.2 — Developer: Blue/White Key Usage Footer and Colorized Command Preview
 
+[subtask:uuid:a3c4d5e6-f781-492a-b345-7e8f9012bc3d]
+
 ## Status
 - [ ] Planned
 - [ ] In Progress

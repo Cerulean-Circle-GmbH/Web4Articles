@@ -2,6 +2,8 @@
 
 # Task 1.2 — Developer: Interactive TUI (Core Navigation)
 
+[subtask:uuid:2b4d6f80-a1b2-4c3d-9e0f-1a2b3c4d5e6f]
+
 ## Status
 - [ ] Planned
 - [ ] In Progress

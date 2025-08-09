@@ -4,6 +4,8 @@
 
 # Task 1 — Architect: TS Ranger Shell Specification
 
+[task:uuid:0e2f5b1a-3c7d-4f91-9ab2-7d3a6e8c5f90]
+
 ## Status
 - [x] Planned
 - [x] In Progress

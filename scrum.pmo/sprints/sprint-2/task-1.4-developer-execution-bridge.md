@@ -2,6 +2,8 @@
 
 # Task 1.4 — Developer: Command Execution Bridge to DefaultCLI
 
+[subtask:uuid:4d6f8091-c3d4-4e5f-9012-3a4b5c6d7e8f]
+
 ## Status
 - [ ] Planned
 - [ ] In Progress
