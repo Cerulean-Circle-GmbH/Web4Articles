@@ -115,3 +115,15 @@
 
 **Next Steps:**
 - Proceed to QA review for Task 7, then mark Done upon approval.
+
+## 2025-08-09 (recovery + task state machine)
+
+**Summary:**
+- Followed README.md recovery steps (env verified, docs scanned).
+- Implemented `parseTaskFile()` in `src/domain/TaskStateMachine.ts` to read title, status, and steps from task markdown.
+- Added focused tests: `test/TaskStateMachine.parse.test.ts` and `test/SimpleTaskStateMachine.test.ts`.
+- Ran focused tests: both green.
+- Full suite currently has unrelated TSRanger prompt-line failures (4 failing in `test/tsranger.promptline.behavior.test.ts`).
+
+**Next Steps:**
+- Address TSRanger prompt-line sync issues separately; keep task state machine stable.
