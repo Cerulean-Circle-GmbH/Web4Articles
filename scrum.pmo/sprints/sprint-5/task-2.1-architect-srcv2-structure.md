@@ -31,3 +31,11 @@ src.v2/
 
 ## Acceptance Criteria
 - Structure and dependencies documented; import paths resolved; no circular references.
+
+## tsconfig Guidance
+- Keep v1 and v2 compiled by the same config; prefer source execution with ts-node in dev.
+- Optional: add path alias `@srcv2/*` -> `src.v2/*` for implementation sprint (not required now).
+
+## Routing Plan (Spec)
+- `src/sh/tsranger` detects `TSRANGER_V2=1` and invokes `node --loader ts-node/esm src.v2/ts/layer4/TSRanger.ts test "..."` in test mode; otherwise uses v1 path.
+- No changes required to tests; only set the env switch.
