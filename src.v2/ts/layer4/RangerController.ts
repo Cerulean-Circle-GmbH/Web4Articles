@@ -88,7 +88,8 @@ export class RangerController {
                 this.model.selectedColumn = 1;
                 this.model.suppressMethodFilter = true;
               } else {
-                this.model.promptBuffer = tokens.join(' ').trim();
+                // Insert a space to begin method token typing at the correct position
+                this.model.promptBuffer = (tokens[0] || '') + ' ';
                 this.model.promptCursorIndex = this.model.promptBuffer.length;
                 this.model.selectedColumn = 1;
                 this.model.suppressMethodFilter = false;
