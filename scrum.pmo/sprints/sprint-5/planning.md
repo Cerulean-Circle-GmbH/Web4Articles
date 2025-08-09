@@ -22,6 +22,12 @@ Deliver a complete architect specification for TS Ranger v2 under `src.v2`, cons
   **Priority:** 2
   - [x] [Task 3.1 — Architect: Map existing `test/tsranger.*.test.ts` to v2 behaviors](./task-3.1-architect-test-matrix.md)
 
+- [ ] [Task 4: Architect — PUML Diagrams and SVG Artifacts for TS Ranger v2](./task-4.md)
+  **Priority:** 2
+  - [ ] [Task 4.1 — Architect: Sequence/Flow Diagram (PUML)](./task-4.1-architect-puml-sequence.md)
+  - [ ] [Task 4.2 — Architect: Structure/Component Diagram (PUML)](./task-4.2-architect-puml-structure.md)
+  - [ ] [Task 4.3 — Architect: Render SVGs and Link in Docs](./task-4.3-architect-svg-render.md)
+
 ---
 
 **Process Notes (2025-08-09):**
