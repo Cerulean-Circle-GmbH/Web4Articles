@@ -89,7 +89,7 @@ export class RangerController {
           this.view.render(this.model);
           return;
         }
-        if (key === '\x7f') { // Backspace (filter editing)
+        if (key === '\x7f' && !this.model.promptEditActive) { // Backspace (filter editing when not in prompt)
           const col = this.model.selectedColumn;
           this.model.filters[col] = this.model.filters[col].slice(0, -1);
           this.onFilterChange();
@@ -128,6 +128,8 @@ export class RangerController {
               this.model.promptBuffer = this.model.promptBuffer.slice(0, cursor - 1) + this.model.promptBuffer.slice(cursor);
               this.model.promptCursorIndex--;
             }
+            // User edited; allow method filter to reflect current token
+            this.model.suppressMethodFilter = false;
             this.model.deriveFiltersFromPrompt();
             this.view.render(this.model);
           }
@@ -152,10 +154,13 @@ export class RangerController {
                 this.model.promptCursorIndex = chosenClass.length + 1; // space after class
                 // Move selection context to Methods column
                 this.model.selectedColumn = 1;
+                // Do not set method filter yet; allow user to choose alternatives
+                this.model.suppressMethodFilter = true;
               } else {
                 this.model.promptBuffer = tokens.join(' ').trim();
                 this.model.promptCursorIndex = this.model.promptBuffer.length;
                 this.model.selectedColumn = 1;
+                this.model.suppressMethodFilter = false;
               }
               this.model.deriveFiltersFromPrompt();
               this.view.render(this.model);
@@ -172,6 +177,8 @@ export class RangerController {
                 this.model.promptCursorIndex = cls.length + 1;
                 // Move selection context to Params column after method completion
                 this.model.selectedColumn = 2;
+                // Keep method filter suppressed while user may navigate
+                this.model.suppressMethodFilter = true;
                 this.model.deriveFiltersFromPrompt();
                 this.view.render(this.model);
                 return;
@@ -179,6 +186,7 @@ export class RangerController {
             }
           }
           // If no completion, fall through to column advance behavior handled above
+          this.model.suppressMethodFilter = false;
           this.view.render(this.model);
           return;
         }
@@ -186,6 +194,8 @@ export class RangerController {
           // Insert printable at cursor into prompt buffer
           this.model.promptBuffer = this.model.promptBuffer.slice(0, this.model.promptCursorIndex) + key + this.model.promptBuffer.slice(this.model.promptCursorIndex);
           this.model.promptCursorIndex++;
+          // User typed; allow method filter to reflect current token
+          this.model.suppressMethodFilter = false;
           this.model.deriveFiltersFromPrompt();
           this.view.render(this.model);
           return;
