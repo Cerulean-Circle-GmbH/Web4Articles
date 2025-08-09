@@ -86,6 +86,15 @@ If the AI loses context or receives the prompt "recover" from the QA user, it wi
 - Requirements will be defined under `scrum.pmo/sprints/sprint-4/` and built in that sprint.
 - Until the devcontainer is available, ensure local environment matches the "DevOps Environment Verification" list above.
 
+**Usage:**
+- Prerequisites: Docker engine running, VS Code with Dev Containers extension.
+- Open this repository folder in VS Code.
+- When prompted, select "Reopen in Container". Or run: Command Palette → "Dev Containers: Reopen in Container".
+- The container will build using `.devcontainer/Dockerfile`, install dependencies (`npm ci`), and set `TS_NODE_PROJECT` automatically.
+- Validate:
+  - Run tests: `npm test`
+  - Check PlantUML: `plantuml -checkonly src/puml/*.puml` (or render SVGs with `npm run puml:render`)
+
 **Important:**
 
 - During recovery, the AI must **not ask the user for confirmation or next steps**. Instead, it must only return when it has fully understood:

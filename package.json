@@ -8,6 +8,8 @@
   },
   "scripts": {
     "test": "vitest run",
-    "tsranger": "node --loader ts-node/esm ./src/ts/layer4/TSRanger.ts"
+    "tsranger": "node --loader ts-node/esm ./src/ts/layer4/TSRanger.ts",
+    "puml:check": "plantuml -checkonly src/puml/*.puml",
+    "puml:render": "plantuml -tsvg src/puml/*.puml"
   }
 }

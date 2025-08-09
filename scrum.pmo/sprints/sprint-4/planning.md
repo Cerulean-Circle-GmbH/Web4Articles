@@ -5,12 +5,14 @@ Deliver a cross-platform devcontainer that standardizes local and CI environment
 
 ## Task List (Sprint 4)
 
-- [ ] Task 1.0: Architect — Devcontainer Spec (Requirements, Tooling, PATH & Mounts)
-- [ ] Task 1.1: DevOps — Create Devcontainer Files (`.devcontainer/devcontainer.json`, `Dockerfile`)
-- [ ] Task 1.2: DevOps — Integrate PlantUML/Graphviz and Validate Rendering in Container
-- [ ] Task 1.3: Tester — Verify Tests and CLI Commands Run Equally in Devcontainer
-- [ ] Task 1.4: PO — Update README and User Guide for Devcontainer Usage
-- [ ] Task 1.5: ScrumMaster — Add CI Step to Build/Use Devcontainer for Validation (No release yet)
+- [ ] [Task 1: Devcontainer Definition and Validation](./task-1.md)
+  **Priority:** 1
+  - [ ] [Task 1.1: Architect — Devcontainer Spec (Requirements, Tooling, PATH & Mounts)](./task-1.1-architect-devcontainer-spec.md)
+  - [ ] [Task 1.2: DevOps — Create Devcontainer Files (`.devcontainer/devcontainer.json`, `Dockerfile`)](./task-1.2-devops-create-devcontainer-files.md)
+  - [ ] [Task 1.3: DevOps — Integrate PlantUML/Graphviz and Validate Rendering](./task-1.3-devops-plantuml-graphviz.md)
+  - [ ] [Task 1.4: Tester — Verify Tests and CLI Commands Run Equally in Devcontainer](./task-1.4-tester-validate-in-container.md)
+  - [ ] [Task 1.5: PO — Update README and User Guide for Devcontainer Usage](./task-1.5-po-update-readme-user-guide.md)
+  - [ ] [Task 1.6: ScrumMaster — Add CI Step to Build/Use Devcontainer for Validation](./task-1.6-scrummaster-ci-validate-devcontainer.md)
 
 ## Notes
 - Do not build/publish images in this sprint; only define and validate locally.

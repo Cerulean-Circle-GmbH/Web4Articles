@@ -1,4 +1,4 @@
-# Web4Articles Markdown File Index (2025-08-06)
+# Web4Articles Markdown File Index (2025-08-09)
 
 | File | Role/Type | Last Modified |
 |------|-----------|--------------|
@@ -61,5 +61,14 @@
 | scrum.pmo/sprints/sprint-3/task-1.3-devops-release-recovery.md | Sprint task | 2025-08-08 |
 | scrum.pmo/sprints/sprint-3/task-1.4-tester-e2e-tests.md | Sprint task | 2025-08-08 |
 | scrum.pmo/sprints/sprint-3/task-1.5-po-user-guide.md | Sprint task | 2025-08-08 |
+| scrum.pmo/sprints/sprint-4/planning.md | Sprint planning | 2025-08-09 |
+| scrum.pmo/sprints/sprint-4/requiremnents.md | Sprint requirements | 2025-08-09 |
+| scrum.pmo/sprints/sprint-4/task-1.md | Sprint task | 2025-08-09 |
+| scrum.pmo/sprints/sprint-4/task-1.1-architect-devcontainer-spec.md | Sprint subtask | 2025-08-09 |
+| scrum.pmo/sprints/sprint-4/task-1.2-devops-create-devcontainer-files.md | Sprint subtask | 2025-08-09 |
+| scrum.pmo/sprints/sprint-4/task-1.3-devops-plantuml-graphviz.md | Sprint subtask | 2025-08-09 |
+| scrum.pmo/sprints/sprint-4/task-1.4-tester-validate-in-container.md | Sprint subtask | 2025-08-09 |
+| scrum.pmo/sprints/sprint-4/task-1.5-po-update-readme-user-guide.md | Sprint subtask | 2025-08-09 |
+| scrum.pmo/sprints/sprint-4/task-1.6-scrummaster-ci-validate-devcontainer.md | Sprint subtask | 2025-08-09 |
 
 *This index is auto-generated for recovery and onboarding. Update as new markdown files are added.*

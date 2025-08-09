@@ -1,0 +1,32 @@
+{
+  "name": "Web4Articles DevContainer",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "..",
+    "args": {
+      "NODE_VERSION": "18"
+    }
+  },
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "remoteUser": "node",
+  "updateRemoteUserUID": true,
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind"
+  ],
+  "containerEnv": {
+    "TS_NODE_PROJECT": "/workspaces/${localWorkspaceFolderBasename}/tsconfig.json"
+  },
+  "postCreateCommand": "npm ci",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-typescript-next"
+      ],
+      "settings": {
+        "terminal.integrated.env.linux": {
+          "PATH": "/workspaces/${localWorkspaceFolderBasename}/node_modules/.bin:${env:PATH}"
+        }
+      }
+    }
+  }
+}
