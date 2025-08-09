@@ -42,6 +42,3 @@ Implement the core TUI for TS Ranger with keyboard navigation and column renderi
 
 ## QA Audit & User Feedback
 - [ ] QA review pending.
-
-## Subtasks
-- None (atomic task for this sprint).

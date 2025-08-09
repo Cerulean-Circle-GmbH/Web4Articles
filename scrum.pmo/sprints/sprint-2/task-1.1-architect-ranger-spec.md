@@ -28,6 +28,3 @@ This subtask corresponds to the MAIN Task 1. The detailed specification content 
 ## QA Audit & User Feedback
 - [ ] QA review pending completion sign-off.
 
-## Subtasks
-- None (atomic role-specific subtask).
-

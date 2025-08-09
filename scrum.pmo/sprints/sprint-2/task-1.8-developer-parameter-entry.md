@@ -28,6 +28,3 @@ Change parameter logic to sequential entry: the ranger selects parameters in ord
 
 ## QA Audit & User Feedback
 - [ ] QA review pending.
-
-## Subtasks
-- None (atomic task for this sprint).

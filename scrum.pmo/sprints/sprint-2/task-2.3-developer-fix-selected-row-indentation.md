@@ -9,9 +9,6 @@
 ## Status
 - [ ] Planned
 - [ ] In Progress
-  - [ ] refinement
-  - [ ] implementing
-  - [ ] testing
 - [ ] QA Review
 - [ ] Done
 
@@ -41,7 +38,4 @@ Ensure consistent column rendering: header row, then items, with selection highl
 
 ## QA Audit & User Feedback
 - [ ] QA review pending.
-
-## Subtasks
-- None (atomic subtask for this sprint).
 
