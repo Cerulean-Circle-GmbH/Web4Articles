@@ -101,3 +101,17 @@
 
 **Next Steps:**
 - Add/adjust tests for scripted preview spacing and prompt logic; run full test suite and collect QA feedback.
+
+## 2025-08-09 (later)
+
+**Summary:**
+- Performed recovery from README and verified Sprint 2 Task 7 (prompt-line editing with cursor and shell-like completion).
+- Implemented controller prompt editing, tab completion, and view cursor rendering; synchronized filters via model.
+- Added/updated tests: `test/tsranger.promptline.behavior.test.ts`, `test/tsranger.cursor.test.ts`, `test/tsranger.prompt.test.ts`.
+- Ran full test suite: all tests passing.
+
+**Current Project State:**
+- Task 7 implementation complete and under QA review.
+
+**Next Steps:**
+- Proceed to QA review for Task 7, then mark Done upon approval.

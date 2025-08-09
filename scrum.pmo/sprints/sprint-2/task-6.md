@@ -21,9 +21,10 @@
 Map the [Tab] key to the same behavior as Right Arrow: move to the next column while preserving selection and filters.
 
 ## Steps
-1. Update input handling in `RangerController` to treat `\t` as right.
+1. Update input handling in `RangerController` to treat `\t` as right when not editing the prompt; otherwise apply token completion.
 2. Ensure behavior is disabled during parameter entry mode.
 3. Add a scripted test to press [tab] and assert the selected column advances.
+4. Add cursor tests for `te[tab]w` sequence.
 
 ## Acceptance Criteria
 - Pressing [tab] has the same effect as Right Arrow in normal navigation.
