@@ -131,14 +131,27 @@ export class RangerModel {
     const classToken = tokens[0] ?? '';
     const methodToken = tokens[1] ?? '';
     this.filters[0] = classToken;
+    // Prefer exact match class selection if present
     this.selectedIndexPerColumn[0] = 0;
     // Update methods based on class filter impact
     this.classes = TSCompletion.getClasses();
     const filteredClasses = this.filteredClasses();
-    // If exact match exists at index 0, keep; else remain 0
+    // Snap selection to exact class match if unique
+    const exactClassIdx = filteredClasses.findIndex(c => c === classToken);
+    if (exactClassIdx >= 0) {
+      this.selectedIndexPerColumn[0] = exactClassIdx;
+    }
     this.updateMethods();
+    // Apply method filter only when not suppressed
     this.filters[1] = this.suppressMethodFilter ? '' : methodToken;
-    this.selectedIndexPerColumn[1] = 0;
+    // If a method token exists and corresponds to an available method, snap selection to it
+    const methodsNow = this.filteredMethods();
+    if (!this.suppressMethodFilter && methodToken) {
+      const exactMethodIdx = methodsNow.findIndex(m => m === methodToken);
+      this.selectedIndexPerColumn[1] = exactMethodIdx >= 0 ? exactMethodIdx : 0;
+    } else {
+      this.selectedIndexPerColumn[1] = 0;
+    }
     this.updateParams();
   }
 

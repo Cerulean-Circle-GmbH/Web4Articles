@@ -38,6 +38,11 @@ Refactor TS Ranger input so that typing happens only in the prompt line with a v
   - [x] Feedback: `tsranger test "t[right]"` must reflect the same prompt-line update as `[tab]` completion: `TSsh start` with cursor on `s`.
   - [x] Feedback: Refactor Backspace behavior in prompt editing so token boundaries are preserved (do not merge tokens). Maintain both the prompt line and grid filters correctly. Add cases for streaming sequences: `g[tab]`, `[down][down][down][down][down][down][tab]`, `t[tab]`, and `t[tab][backspace]`.
   - [x] Feedback: After `[tab]` or `[right]` on a class token, write the first method into the prompt and position the cursor on its first character, but do not set the Methods filter yet. The Methods column must still allow choosing a different method without being constrained by a pre-applied filter. Only user typing should set the Methods filter.
+  - [x] Feedback: After `g[tab][down]` and `g[tab][down][down]`, the prompt command must stay synchronized with the selected method while navigating the Methods column. Navigation should not hang, and multiple downs must update the prompt accordingly.
+  - [x] Feedback: All automated tests must use non-interactive mode via `tsranger test "<keys>"` with `TSRANGER_TEST_MODE=1`. Interactive mode is forbidden in tests to prevent hangs.
+  - [x] Feedback: Pressing `[right]` from an empty prompt must not auto-complete or inject unrelated classes (e.g., `Logger`). It should only move the selection to the next column. Auto-completion is allowed only when a token prefix exists or when explicitly pressing `[tab]`.
+  - [x] Feedback: `[down][down][tab]` and `[down][down][right]` must navigate from Classes to Methods without auto-completing the prompt and must work reliably (no no-op). Methods list should reflect the selected class.
+  - [x] Feedback: After `g[tab]c` or `g[right]c`, the Methods filter must be set to `c`. The prompt may suggest `create`, but the typed filter remains `c` and the cursor logically sits on the next character (rendered inverse on the method token).
 
 ### Test Evidence
 - Scripted tests added and passing:

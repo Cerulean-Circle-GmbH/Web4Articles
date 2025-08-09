@@ -12,11 +12,7 @@ export class RangerController {
     this.model.updateMethods();
     this.model.updateParams();
 
-    // Setup TTY
-    const { stdin } = process;
-    stdin.setRawMode?.(true);
-    stdin.resume();
-    stdin.setEncoding('utf8');
+    // Normal interactive setup (tests may use non-interactive path below)
 
     const exitOnAltQ = (process.env.TSRANGER_ALTQ_EXIT || '').toLowerCase() === '1' ||
       (process.env.TSRANGER_ALTQ_EXIT || '').toLowerCase() === 'true';
@@ -71,11 +67,36 @@ export class RangerController {
         }
         if (key === '\u001b[A') { // Up
           this.moveSelection(-1);
+          // Sync prompt with selection when navigating Methods column
+          if (this.model.promptEditActive && this.model.selectedColumn === 1) {
+            const cls = this.model.selectedClass || '';
+            const m = this.model.selectedMethod || '';
+            const tokens = this.model.promptBuffer.split(/\s+/);
+            tokens[0] = cls;
+            tokens[1] = m;
+            this.model.promptBuffer = (cls + (m ? ' ' + m : '')).trim();
+            // While navigating methods, keep cursor at the beginning of the method token
+            this.model.promptCursorIndex = Math.min(this.model.promptBuffer.length, cls.length + 1);
+            // Keep method filter suppressed during navigation; do not re-derive to avoid resetting selection
+            this.model.suppressMethodFilter = true;
+            this.model.filters[1] = '';
+          }
           this.view.render(this.model);
           return;
         }
         if (key === '\u001b[B') { // Down
           this.moveSelection(1);
+          if (this.model.promptEditActive && this.model.selectedColumn === 1) {
+            const cls = this.model.selectedClass || '';
+            const m = this.model.selectedMethod || '';
+            const tokens = this.model.promptBuffer.split(/\s+/);
+            tokens[0] = cls;
+            tokens[1] = m;
+            this.model.promptBuffer = (cls + (m ? ' ' + m : '')).trim();
+            this.model.promptCursorIndex = Math.min(this.model.promptBuffer.length, cls.length + 1);
+            this.model.suppressMethodFilter = true;
+            this.model.filters[1] = '';
+          }
           this.view.render(this.model);
           return;
         }
@@ -135,11 +156,28 @@ export class RangerController {
           }
           return;
         }
+        // In prompt editing, Right arrow should move to next column when current token is empty
+        if (key === '\u001b[C' && this.model.promptEditActive) {
+          const tokenIdx = this.model.getCurrentPromptTokenIndex();
+          const tokens = this.model.promptBuffer.split(/\s+/);
+          const current = tokens[tokenIdx] ?? '';
+          if (current.trim().length === 0) {
+            this.changeColumn(1);
+            this.view.render(this.model);
+            return;
+          }
+        }
         if (key === '\t' || key === '\u001b[C') {
           // Shell-like completion for current token
           const tokenIdx = this.model.getCurrentPromptTokenIndex();
           const tokens = this.model.promptBuffer.split(/\s+/);
           const current = tokens[tokenIdx] ?? '';
+          if (current.trim().length === 0) {
+            // For empty token, treat Tab/Right as navigation to next column
+            this.changeColumn(1);
+            this.view.render(this.model);
+            return;
+          }
           if (tokenIdx === 0) {
             const classes = TSCompletion.getClasses().filter(c => c.toLowerCase().startsWith(current.toLowerCase()));
             if (classes.length > 0) {
@@ -174,7 +212,7 @@ export class RangerController {
                 tokens[tokenIdx] = methods[0];
                 this.model.promptBuffer = tokens.join(' ').trim();
                 // Cursor at start of method token
-                this.model.promptCursorIndex = cls.length + 1;
+                this.model.promptCursorIndex = cls.length + 1; // position at start of method token
                 // Move selection context to Params column after method completion
                 this.model.selectedColumn = 2;
                 // Keep method filter suppressed while user may navigate
@@ -191,11 +229,29 @@ export class RangerController {
           return;
         }
         if (key.length === 1 && key >= ' ' && key <= '~') {
-          // Insert printable at cursor into prompt buffer
-          this.model.promptBuffer = this.model.promptBuffer.slice(0, this.model.promptCursorIndex) + key + this.model.promptBuffer.slice(this.model.promptCursorIndex);
-          this.model.promptCursorIndex++;
-          // User typed; allow method filter to reflect current token
+          // Insert printable at cursor into prompt buffer with special handling for method token start
+          const tokenIdx = this.model.getCurrentPromptTokenIndex();
+          const tokens = this.model.promptBuffer.split(/\s+/);
+          // Detect start position of current token
+          const classToken = tokens[0] ?? '';
+          const methodStartIndex = classToken.length + (classToken.length > 0 ? 1 : 0);
+          if (tokenIdx === 1 && this.model.promptCursorIndex === methodStartIndex) {
+            // Replace existing method token with the typed character to avoid prefix like 'cstart'
+            tokens[1] = key;
+            // Preserve any tokens beyond method
+            this.model.promptBuffer = (tokens[0] ? tokens[0] + ' ' : '') + (tokens[1] || '');
+            this.model.promptCursorIndex = methodStartIndex + 1;
+          } else {
+            this.model.promptBuffer = this.model.promptBuffer.slice(0, this.model.promptCursorIndex) + key + this.model.promptBuffer.slice(this.model.promptCursorIndex);
+            this.model.promptCursorIndex++;
+          }
           this.model.suppressMethodFilter = false;
+          // Explicitly reflect typed method prefix into Methods filter when editing method token
+          if (tokenIdx === 1) {
+            const parts = this.model.promptBuffer.split(/\s+/);
+            const methodTok = parts[1] || '';
+            this.model.filters[1] = methodTok;
+          }
           this.model.deriveFiltersFromPrompt();
           this.view.render(this.model);
           return;
@@ -204,6 +260,25 @@ export class RangerController {
         Logger.log(`[TSRanger] Input error: ${e?.stack || e}`, 'error');
       }
     };
+
+    // Non-interactive test mode: feed scripted keys and exit without attaching listeners
+    if ((process.env.TSRANGER_TEST_MODE || '').toLowerCase() === '1' || (process.env.TSRANGER_TEST_INPUT || '').length > 0) {
+      // Initial render
+      this.view.render(this.model);
+      const script = process.env.TSRANGER_TEST_INPUT || '';
+      const keys = this.parseTestScript(script);
+      for (const k of keys) {
+        await onData(k);
+      }
+      this.cleanup();
+      return;
+    }
+
+    // Interactive TTY setup
+    const { stdin } = process;
+    stdin.setRawMode?.(true);
+    stdin.resume();
+    stdin.setEncoding('utf8');
 
     stdin.on('data', onData);
     // On terminal resize, re-render to respect new dimensions
