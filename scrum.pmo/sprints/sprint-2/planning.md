@@ -26,6 +26,8 @@ Deliver a ranger-like interactive shell (TS Ranger) that leverages `TSCompletion
 - [x] [Task 3: Command prompt from $PS1 or hostname/user/pwd](./task-3.md)  
   **Priority:** 2
   - [x] [Task 3.1: Developer - Command prompt from $PS1 or hostname/user/pwd](./task-3.1-developer-command-prompt-ps1.md)
+  - [x] [Task 3.2: Developer - Prompt spacing (exactly one empty line above command)](./task-3.2-developer-prompt-spacing.md)
+  - [x] [Task 3.3: Developer - Prompt colors (user cyan, root red, path yellow)](./task-3.3-developer-prompt-colors.md)
 
 ---
 

@@ -124,6 +124,9 @@ export class RangerController {
       for (const k of keys) {
         await onData(k);
       }
+      if ((process.env.TS_RANGER_TEST_FINAL_ONLY || '').toLowerCase() === '1') {
+        // Leave final frame only; rely on current screen
+      }
       this.cleanup();
       process.exit(0);
     }
