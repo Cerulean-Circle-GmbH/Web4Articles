@@ -1,8 +1,7 @@
 
-[Back to Planning](./planning.md)
+[Back to Planning Sprint n](./planning.md)
 
 # Task 0: Example Task Title
-
 [task:uuid:<uuidv4>]
 
 ## Naming Conventions
@@ -21,6 +20,22 @@
 - [ ] QA Review
 - [ ] Done
 
+## Traceability
+- Add `[task:uuid:<uuidv4>]` to this task.
+- If the task is requirement-driven, add `[requirement:uuid:<uuidv4>]` and backlink to `requiremnents.md`.
+```
+  - up
+    - [requirement:uuid:<uuidv4>](./requiremnents.md)
+```
+- In `requiremnents.md`, append the same UUID and a link back to this task (`([task-<n>](./task-<n>-<name>.md))`).
+- For each subtask, add `[subtask:uuid:<uuidv4>]`.
+- add 
+```
+  - down
+    - [Task 0.1: Example Subtask](./task-0.1-example-subtask.md)
+```
+
+  
 ## Task Description
 Describe the purpose and scope of this task.
 
@@ -42,20 +57,13 @@ Clarify the intent and expected outcome.
 - List the acceptance criteria for this task.
 
 ## QA Audit & User Feedback
-- [ ] QA review pending.
-- [ ] Feedback to be collected after task completion.
+- [ ] [UTC timestamp] QA review pending.
+  - [ ] Issue
+  - [ ] Resolution
+  - [ ] Examble
+- [ ] [UTC timestamp] Feedback to be collected after subtask completion.
+  - [ ] Issue
+  - [ ] Resolution
+  - [ ] Examble
 
-## Subtasks
-- [ ] [Task 0.1: Example Subtask](./task-0.1-example-subtask.md)
 
----
-
-## Traceability
-- Add `[task:uuid:<uuidv4>]` to this task.
-- For each subtask, add `[subtask:uuid:<uuidv4>]`.
-- If the task is requirement-driven, add `[requirement:uuid:<uuidv4>]` and backlink to `requiremnents.md`.
-- In `requiremnents.md`, append the same UUID and a link back to this task (`([task-<n>](./task-<n>-<name>.md))`).
-
----
-
-[Back to Planning](./planning.md)

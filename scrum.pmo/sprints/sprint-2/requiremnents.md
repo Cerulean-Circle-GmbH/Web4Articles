@@ -43,4 +43,4 @@ GitScrumProject start
 - [ ] keep always an empty line above the command line. [requirement:uuid:7f6e1b84-3c19-4d7a-9a56-5f4a7c9b2d31] ([task-2](./task-2.1-developer-footer-height-and-spacing.md))
 - [ ] let the command line have a prompt before the command.  [requirement:uuid:3c2b5a8e-9d1f-4a2f-8b6e-7c1d5f2a4b93] ([task-3](./task-3.1-developer-command-prompt-ps1.md))
 - [ ] match the behaviour of the bash prompt and read the bash $PS1 to set it. [requirement:uuid:3c2b5a8e-9d1f-4a2f-8b6e-7c1d5f2a4b93] ([task-3](./task-3.1-developer-command-prompt-ps1.md))
-- [ ] ste the prompt to ```[hostname] [user]@[pwd]``` [requirement:uuid:3c2b5a8e-9d1f-4a2f-8b6e-7c1d5f2a4b93] ([task-3](./task-3.1-developer-command-prompt-ps1.md))
+- [ ] set the prompt to ```[hostname] [user]@[pwd]``` [requirement:uuid:3c2b5a8e-9d1f-4a2f-8b6e-7c1d5f2a4b93] ([task-3](./task-3.1-developer-command-prompt-ps1.md))
