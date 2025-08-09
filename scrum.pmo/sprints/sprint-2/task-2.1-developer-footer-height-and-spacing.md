@@ -4,8 +4,8 @@
 [subtask:uuid:92b3c4d5-e6f7-4819-a934-6d7e8f9012bc] 
 
 ## Status
-- [ ] Planned
-- [ ] In Progress
+- [x] Planned
+- [x] In Progress
 - [ ] QA Review
 - [ ] Done
 

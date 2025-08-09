@@ -17,15 +17,15 @@ Deliver a ranger-like interactive shell (TS Ranger) that leverages `TSCompletion
   - [ ] [Task 1.6: PO - User guide and demo scenarios](./task-1.6-po-user-guide.md)
   - [x] [Task 1.7: Developer - Refactor TSRanger to one class per TS file](./task-1.7-developer-refactor-tsranger.md)
   
-- [ ] [Task 2: Footer height/spacing and colorized command preview](./task-2.md)  
+- [x] [Task 2: Footer height/spacing and colorized command preview](./task-2.md)  
   **Priority:** 2
-  - [ ] [Task 2.1: Developer - Footer height/spacing adjustments](./task-2.1-developer-footer-height-and-spacing.md)
-  - [ ] [Task 2.2: Developer - Blue/White footer and colorized command preview](./task-2.2-developer-footer-and-color-preview.md)
-  - [ ] [Task 2.3: Developer - Fix selected row indentation across columns](./task-2.3-developer-fix-selected-row-indentation.md)
+  - [x] [Task 2.1: Developer - Footer height/spacing adjustments](./task-2.1-developer-footer-height-and-spacing.md)
+  - [x] [Task 2.2: Developer - Blue/White footer and colorized command preview](./task-2.2-developer-footer-and-color-preview.md)
+  - [x] [Task 2.3: Developer - Fix selected row indentation across columns](./task-2.3-developer-fix-selected-row-indentation.md)
   
-- [ ] [Task 3: Command prompt from $PS1 or hostname/user/pwd](./task-3.md)  
+- [x] [Task 3: Command prompt from $PS1 or hostname/user/pwd](./task-3.md)  
   **Priority:** 2
-  - [ ] [Task 3.1: Developer - Command prompt from $PS1 or hostname/user/pwd](./task-3.1-developer-command-prompt-ps1.md)
+  - [x] [Task 3.1: Developer - Command prompt from $PS1 or hostname/user/pwd](./task-3.1-developer-command-prompt-ps1.md)
 
 ---
 

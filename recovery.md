@@ -62,6 +62,17 @@
 - Run tests and ensure no regressions. Address any issues if they arise.
 
 ## 2025-08-08 (merge verification and Sprint 3 QA review)
+## 2025-08-09
+
+**Summary:**
+- Implemented Sprint 2 Task 2 (footer spacing and colorized preview) and Task 3 (prompt from $PS1 / fallback `[hostname] user@pwd`).
+- Fixed selected-row alignment across all columns by padding before applying ANSI styles.
+- Added resize-aware rendering to keep footer anchored at the bottom with required blank lines.
+- Verified via scripted `tsranger` test sequences.
+
+**Next Steps:**
+- Write E2E tests per `task-1.5` and PO user guide per `task-1.6`.
+
 
 **Summary:**
 - Performed recovery per README procedure and validated merge health.

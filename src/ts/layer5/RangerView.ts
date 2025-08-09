@@ -5,19 +5,17 @@ export class RangerView {
   render(model: RangerModel): void {
     const width = process.stdout.columns || 120;
     const height = process.stdout.rows || 30;
-    const colWidth = Math.max(20, Math.floor(width / 4) - 2);
+    const colWidth = Math.max(16, Math.floor(width / 4));
 
     const classes = model.filteredClasses();
     const methods = model.filteredMethods();
     const params = model.filteredParams();
 
-    const preview = model.buildCommandParts().join(' ');
-
-    const lines: string[][] = [
+    const gridColumns: string[][] = [
       this.formatColumn('Classes', classes, model.selectedColumn === 0 ? model.selectedIndexPerColumn[0] : -1, colWidth, model.filters[0]),
       this.formatColumn('Methods', methods, model.selectedColumn === 1 ? model.selectedIndexPerColumn[1] : -1, colWidth, model.filters[1]),
       this.formatColumn('Params', params, model.selectedColumn === 2 ? model.selectedIndexPerColumn[2] : -1, colWidth, model.filters[2]),
-      this.formatColumn('Preview', [preview], model.selectedColumn === 3 ? 0 : -1, colWidth, model.filters[3])
+      this.formatColumn('Preview', [this.buildPlainPreview(model)], model.selectedColumn === 3 ? 0 : -1, colWidth, model.filters[3])
     ];
 
     // Clear screen and move cursor to top-left
@@ -27,7 +25,8 @@ export class RangerView {
     for (let r = 0; r < Math.min(maxRows, height - 4); r++) {
       let row = '';
       for (let c = 0; c < 4; c++) {
-        row += (lines[c][r] || '').padEnd(colWidth);
+        const cell = gridColumns[c][r] ?? this.makeCell('', colWidth);
+        row += cell;
       }
       process.stdout.write(row + '\n');
     }
@@ -44,8 +43,12 @@ export class RangerView {
 
     // Blue background with white text footer (key usage line)
     const footerText = '←/→: column  ↑/↓: move  Type: filter  Backspace: clear  Enter: select/next param/exec  Space: next param  q/Esc: quit';
-    const footer = this.bgBlue(this.whiteBoldPadded(footerText, width - 1));
+    const footer = this.bgBlue(this.whiteBoldPadded(footerText, Math.max(0, width - 1)));
     process.stdout.write(footer);
+  }
+
+  private buildPlainPreview(model: RangerModel): string {
+    return model.buildCommandParts().join(' ');
   }
 
   private buildColoredCommand(model: RangerModel): string {
@@ -67,6 +70,35 @@ export class RangerView {
     return tokens.join(' ');
   }
 
+  private prompt(): string {
+    // Prefer $PS1 if present; support common \h, \u, \w escapes
+    const ps1 = process.env.PS1 || '';
+    if (ps1) {
+      const host = this.safeHostname();
+      const user = this.safeUsername();
+      const pwd = process.cwd();
+      const replaced = ps1
+        .replace(/\\h/g, host)
+        .replace(/\\u/g, user)
+        .replace(/\\w/g, pwd)
+        .replace(/\n/g, '')
+        .replace(/\r/g, '');
+      return replaced.trim();
+    }
+    // Fallback to explicit format
+    const host = this.safeHostname();
+    const user = this.safeUsername();
+    const pwd = process.cwd();
+    return `[${host}] ${user}@${pwd}`;
+  }
+
+  private safeHostname(): string {
+    try { return os.hostname(); } catch { return 'host'; }
+  }
+  private safeUsername(): string {
+    try { return (os.userInfo?.().username) || process.env.USER || 'user'; } catch { return 'user'; }
+  }
+
   // Footer helpers
   private whiteBoldPadded(text: string, width: number): string {
     const padded = (text || '').slice(0, Math.max(0, width)).padEnd(Math.max(0, width));
@@ -79,16 +111,25 @@ export class RangerView {
   }
 
   private formatColumn(title: string, items: string[], selectedIndex: number, width: number, filter: string): string[] {
-    const headerRaw = `[${title}] ${filter ? '(' + filter + ')' : ''}`;
+    const headerRaw = `[${title}]${filter ? ' (' + filter + ')' : ''}`;
     const colorCode = this.colorCodeForTitle(title);
-    const rendered: string[] = [this.style(headerRaw, { bold: true, colorCode })];
-    for (let i = 0; i < Math.max(items.length, 1); i++) {
+    const rendered: string[] = [];
+    // Header cell: size first, then style entire cell
+    rendered.push(this.style(this.makeCell(headerRaw, width), { bold: true, colorCode }));
+    const rows = Math.max(items.length, 1);
+    for (let i = 0; i < rows; i++) {
       const label = items[i] ?? '';
       const isSelected = i === selectedIndex;
-      const styled = this.style(label || ' ', { colorCode, inverse: isSelected });
+      const cell = this.makeCell(label, width);
+      const styled = this.style(cell, { colorCode, inverse: isSelected });
       rendered.push(styled);
     }
-    return rendered.map(s => s.length > width ? s.slice(0, width - 1) : s);
+    return rendered;
+  }
+
+  private makeCell(text: string, width: number): string {
+    const raw = (text ?? '').slice(0, Math.max(0, width));
+    return raw.padEnd(Math.max(0, width), ' ');
   }
 
   private colorCodeForTitle(title: string): number | undefined {
