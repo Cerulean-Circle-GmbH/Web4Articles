@@ -108,3 +108,6 @@ When the Scrum Master requests a new task or task update, the AI must:
   - Update `planning.md` to list the MAIN tasks. Optionally list SUBTASKS indented under their MAIN task.
   - After implementation and verification, check off the corresponding requirement in `requiremnents.md`.
 - Ensure backlinks: the task must start with `[Back to Planning](./planning.md)` as the first line.
+ - Add a "Traceability" section to each task per Sprint 2 pattern:
+   - MAIN tasks: include an Up item linking to `[requirement:uuid:<uuidv4>]` in `requiremnents.md` and a Down list linking to each subtask.
+   - SUBTASKS: include an Up list linking to the requirement UUID and the parent MAIN task; Down may be omitted unless deeper subtasks exist.

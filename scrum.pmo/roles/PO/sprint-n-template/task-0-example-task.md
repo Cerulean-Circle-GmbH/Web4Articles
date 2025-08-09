@@ -1,5 +1,9 @@
 
+[Back to Planning](./planning.md)
+
 # Task 0: Example Task Title
+
+[task:uuid:<uuidv4>]
 
 ## Naming Conventions
 - Tasks: `task-<number>-<short-description>.md`
@@ -31,6 +35,8 @@ Clarify the intent and expected outcome.
 
 ## Requirements
 - List the requirements for this task.
+ - Include `[requirement:uuid:<uuidv4>]` backlink to `requiremnents.md` if derived from a requirement.
+ - Ensure bidirectional links: task → requirements and requirements → task.
 
 ## Acceptance Criteria
 - List the acceptance criteria for this task.
@@ -41,6 +47,14 @@ Clarify the intent and expected outcome.
 
 ## Subtasks
 - [ ] [Task 0.1: Example Subtask](./task-0.1-example-subtask.md)
+
+---
+
+## Traceability
+- Add `[task:uuid:<uuidv4>]` to this task.
+- For each subtask, add `[subtask:uuid:<uuidv4>]`.
+- If the task is requirement-driven, add `[requirement:uuid:<uuidv4>]` and backlink to `requiremnents.md`.
+- In `requiremnents.md`, append the same UUID and a link back to this task (`([task-<n>](./task-<n>-<name>.md))`).
 
 ---
 
