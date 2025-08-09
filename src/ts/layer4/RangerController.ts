@@ -124,9 +124,19 @@ export class RangerController {
           if (tokenIdx === 0) {
             const classes = TSCompletion.getClasses().filter(c => c.startsWith(current));
             if (classes.length > 0) {
-              tokens[tokenIdx] = classes[0];
-              this.model.promptBuffer = tokens.join(' ').trim();
-              this.model.promptCursorIndex = this.model.promptBuffer.length;
+              const chosenClass = classes[0];
+              tokens[0] = chosenClass;
+              // Auto-suggest default method 'start' if it exists
+              const methods = TSCompletion.getClassMethods(chosenClass);
+              if (methods.includes('start')) {
+                tokens[1] = 'start';
+                // Cursor positioned at 's' of start
+                this.model.promptBuffer = tokens.join(' ').trim();
+                this.model.promptCursorIndex = chosenClass.length + 1; // space after class
+              } else {
+                this.model.promptBuffer = tokens.join(' ').trim();
+                this.model.promptCursorIndex = this.model.promptBuffer.length;
+              }
               this.model.deriveFiltersFromPrompt();
               this.view.render(this.model);
               return;
@@ -138,7 +148,8 @@ export class RangerController {
               if (methods.length > 0) {
                 tokens[tokenIdx] = methods[0];
                 this.model.promptBuffer = tokens.join(' ').trim();
-                this.model.promptCursorIndex = this.model.promptBuffer.length;
+                // Cursor at start of method token
+                this.model.promptCursorIndex = cls.length + 1;
                 this.model.deriveFiltersFromPrompt();
                 this.view.render(this.model);
                 return;

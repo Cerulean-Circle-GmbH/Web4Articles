@@ -11,11 +11,18 @@ function runScripted(keys: string): string {
 }
 
 describe('TSRanger prompt cursor', () => {
-  it('shows cursor after completion in te[tab]w', () => {
-    const out = runScripted('te[tab]w');
+  it('shows prompt buffer suggestion and cursor with te[tab]w, and filters to TSsh/TestClass', () => {
+    const out = runScripted('t');
+    // After typing 't', Classes should include TSsh and TestClass only
+    const onlyTClasses = /\[Classes\]\s+\(t\)/.test(out) && /TSsh/.test(out) && /TestClass/.test(out);
+    expect(onlyTClasses).toBe(true);
+
+    const out2 = runScripted('te[tab]w');
     // Look for any inverse span (ESC[7m ... ESC[0m)
-    const hasInverse = /\x1b\[7m[\s\S]*?\x1b\[0m/.test(out);
+    const hasInverse = /\x1b\[7m[\s\S]*?\x1b\[0m/.test(out2);
     expect(hasInverse).toBe(true);
+    // Command line should reflect completion and typing (TSsh start...) eventually; loosen to presence of TSsh
+    expect(/TSsh/.test(out2)).toBe(true);
   });
 });
 

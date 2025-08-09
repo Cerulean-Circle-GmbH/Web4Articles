@@ -64,18 +64,26 @@ export class RangerView {
     const tokens: string[] = [];
     // Prompt
     tokens.push(this.prompt());
-    // Always show tssh upfront per UX
-    tokens.push(this.style('tssh', { colorCode: 32, bold: true })); // green
 
-    // Render prompt buffer with a visible cursor (inverse space at cursor)
+    // Suggestion-aware rendering for prompt buffer
     const buffer = model.promptBuffer || '';
     const cursor = Math.max(0, Math.min(buffer.length, model.promptCursorIndex || 0));
-    const before = buffer.slice(0, cursor);
-    const after = buffer.slice(cursor);
-    const renderedBefore = before;
+    const parts = buffer.split(/\s+/);
+    const tokenIdx = (buffer.slice(0, cursor).split(/\s+/).length - 1);
+
+    let display = buffer;
+    if (tokenIdx === 0) {
+      const prefix = parts[0] || '';
+      const suggestion = (model.filteredClasses()[0] || '');
+      if (suggestion && prefix && suggestion.toLowerCase().startsWith(prefix.toLowerCase())) {
+        display = suggestion + (parts.length > 1 ? (' ' + parts.slice(1).join(' ')) : '');
+      }
+    }
+
+    const before = display.slice(0, cursor);
+    const after = display.slice(cursor);
     const renderedCursor = this.style(after.length > 0 ? after.charAt(0) : ' ', { inverse: true });
-    const renderedAfter = after.length > 0 ? after.slice(1) : '';
-    tokens.push(`${renderedBefore}${renderedCursor}${renderedAfter}`);
+    tokens.push(`${before}${renderedCursor}${(after.length > 0 ? after.slice(1) : '')}`);
 
     return tokens.join(' ');
   }
