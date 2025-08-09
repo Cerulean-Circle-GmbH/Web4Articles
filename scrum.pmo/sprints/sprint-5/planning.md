@@ -3,6 +3,13 @@
 ## Sprint Goal
 Deliver TS Ranger v2 under `src.v2`, consolidating Sprint 2 learnings, QA feedback, and existing tests. Implement the architecture, integrate it behind an environment toggle, and validate by running the existing test suite unchanged.
 
+## Extended Sprint Intent
+We learned from Sprint 2 and QA that TS Ranger must provide stable, predictable TUI UX (exact spacing and footer anchoring), shell-like prompt editing with correct colors and PS1 handling, deterministic non-interactive test mode, and a Docs column backed by TSCompletion. This sprint extends the goal to deliver a production-ready v2 in `src.v2` with:
+- The same behaviors and outputs that current tests assert (zero test changes)
+- Clear separation of IO vs rendering via a `TerminalIO` abstraction for determinism
+- A simple toggle (`TSRANGER_V2=1`) to run v2 end-to-end from the existing shell wrapper and tests
+- Execution bridge parity and robust error handling
+
 ## Task List (Sprint 5)
 
 > Note: MAIN tasks are numbered 1..N and SUBTASKS use 1.M. Only MAIN tasks may be in refinement; SUBTASKS are role-specific and skip refinement.
@@ -30,9 +37,19 @@ Deliver TS Ranger v2 under `src.v2`, consolidating Sprint 2 learnings, QA feedba
 
 - [ ] [Task 5: Developer — Implement TS Ranger v2 in `src.v2`](./task-5-developer-implement-v2.md)
   **Priority:** 1
+  - [ ] [Task 5.1 — Developer: IO Abstraction (`TerminalIO`, NodeProcessIO, DeterministicTestIO`)](./task-5.1-developer-io-terminalio.md)
+  - [ ] [Task 5.2 — Developer: Model (`layer2/RangerModel.ts`)](./task-5.2-developer-model.md)
+  - [ ] [Task 5.3 — Developer: View (`layer5/RangerView.ts`)](./task-5.3-developer-view.md)
+  - [ ] [Task 5.4 — Developer: Controller (`layer4/RangerController.ts`)](./task-5.4-developer-controller.md)
+  - [ ] [Task 5.5 — Developer: Entry (`layer4/TSRanger.ts`) and routing](./task-5.5-developer-entry-routing.md)
+  - [ ] [Task 5.6 — DevOps: Shell wrapper toggle in `src/sh/tsranger`](./task-5.6-devops-shell-toggle.md)
+  - [ ] [Task 5.7 — Developer: Non-interactive smoke run validation](./task-5.7-developer-integration-smoke.md)
 
 - [ ] [Task 6: Tester — Run existing tests against v2 via toggle](./task-6-tester-validate-v2-with-existing-tests.md)
   **Priority:** 1
+  - [ ] [Task 6.1 — Tester: Execute suite with `TSRANGER_V2=1`](./task-6.1-tester-run-with-toggle.md)
+  - [ ] [Task 6.2 — Tester: Triage any diffs; file fix tasks; re-run](./task-6.2-tester-triage-and-fix-loop.md)
+  - [ ] [Task 6.3 — Tester: Final green report and sign-off](./task-6.3-tester-final-green-report.md)
 
 ---
 
