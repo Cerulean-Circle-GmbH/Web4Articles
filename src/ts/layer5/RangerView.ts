@@ -41,6 +41,31 @@ export class RangerView {
     process.stdout.write(footer);
   }
 
+  private buildColoredCommand(model: RangerModel): string {
+    const parts = model.buildCommandParts();
+    if (parts.length === 0) return '';
+    const [cls, method, ...params] = parts;
+    const tokens: string[] = [];
+    if (cls) tokens.push(this.style(cls, { bold: true, colorCode: this.colorCodeForTitle('Classes') }));
+    if (method) tokens.push(this.style(method, { bold: true, colorCode: this.colorCodeForTitle('Methods') }));
+    for (let i = 0; i < params.length; i++) {
+      const inverse = model.paramEntryActive && i === model.paramEntryIndex;
+      tokens.push(this.style(params[i], { colorCode: this.colorCodeForTitle('Params'), inverse }));
+    }
+    return tokens.join(' ');
+  }
+
+  // Footer helpers
+  private whiteBoldPadded(text: string, width: number): string {
+    const padded = (text || '').slice(0, Math.max(0, width)).padEnd(Math.max(0, width));
+    return padded;
+  }
+
+  private bgBlue(text: string): string {
+    // Blue background + white bold foreground for footer
+    return `\x1b[44m\x1b[1m\x1b[37m${text}\x1b[0m`;
+  }
+
   private formatColumn(title: string, items: string[], selectedIndex: number, width: number, filter: string): string[] {
     const headerRaw = `[${title}] ${filter ? '(' + filter + ')' : ''}`;
     const colorCode = this.colorCodeForTitle(title);
