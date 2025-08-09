@@ -1,0 +1,25 @@
+name: DevContainer Validate
+
+on:
+  pull_request:
+  push:
+    branches: [ main, feat/*, cursor/* ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and run in Dev Container
+        uses: devcontainers/ci@v0.3
+        with:
+          configFile: .devcontainer/devcontainer.json
+          runCmd: |
+            npm ci
+            npm test
+            plantuml -checkonly src/puml/*.puml
