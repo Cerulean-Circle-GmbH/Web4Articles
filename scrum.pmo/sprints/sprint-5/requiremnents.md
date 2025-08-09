@@ -43,3 +43,7 @@
 - [ ] Backlinks and traceability  
   [requirement:uuid:a4b5c6d7-e8f9-405e-7f80-91a2b3c4d5e6]
   > All tasks start with a backlink to planning; each task lists traceability Up to requirement UUIDs and Down to subtasks per Sprint 2 process rules.
+
+- [ ] Keyboard input routing and insertion semantics  
+  [requirement:uuid:b5c6d7e8-f9a0-41b2-83c4-d5e6f7a8091b]
+  > Printable input must always be applied to the correct token based on the selected column and cursor position: Classes column edits the class token; Methods column edits the method token at its start offset (`len(class)+1`), replacing suggestions as needed; Params column enters param-entry mode and appends the buffer as the next token in `Class Method Param...`. Backspace respects token boundaries; tokens are separated by single spaces; filters reflect typed prefixes only for the active column.
