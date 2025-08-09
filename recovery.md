@@ -76,3 +76,17 @@
 **Next Steps:**
 - Begin Sprint 3 Task 1.0 (Architect spec) then proceed to scaffold and submodule integration tasks.
 - Consider upgrading Node to >= v20.19.0 (or 22.12+) to satisfy `execa`/`vite` engine ranges and silence warnings.
+
+## 2025-08-09
+
+**Summary:**
+- Executed README.md recovery focused on Sprint 2 work.
+- Implemented Sprint 2 Task 2 (footer spacing and colorized command preview) and Task 3 (prompt from $PS1 or hostname/user/pwd) in `src/ts/layer5/RangerView.ts`.
+- Updated Sprint 2 task statuses (`scrum.pmo/sprints/sprint-2/task-2.md`, `scrum.pmo/sprints/sprint-2/task-3.md`).
+
+**Current Project State:**
+- TSRanger now renders with one empty line above preview and one between preview and footer; footer uses blue background with white text and fills width.
+- Preview line is prefixed by prompt derived from `$PS1` or synthesized `[hostname] user@pwd`.
+
+**Next Steps:**
+- Add/adjust tests for scripted preview spacing and prompt logic; run full test suite and collect QA feedback.
