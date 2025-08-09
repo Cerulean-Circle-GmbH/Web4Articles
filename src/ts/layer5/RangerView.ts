@@ -11,11 +11,12 @@ export class RangerView {
     const methods = model.filteredMethods();
     const params = model.filteredParams();
 
+    const docsText = this.wrapText(model.getSelectedDocs(), colWidth);
     const gridColumns: string[][] = [
       this.formatColumn('Classes', classes, model.selectedColumn === 0 ? model.selectedIndexPerColumn[0] : -1, colWidth, model.filters[0]),
       this.formatColumn('Methods', methods, model.selectedColumn === 1 ? model.selectedIndexPerColumn[1] : -1, colWidth, model.filters[1]),
       this.formatColumn('Params', params, model.selectedColumn === 2 ? model.selectedIndexPerColumn[2] : -1, colWidth, model.filters[2]),
-      this.formatColumn('Preview', [this.buildPlainPreview(model)], model.selectedColumn === 3 ? 0 : -1, colWidth, model.filters[3])
+      this.formatColumn('Docs', docsText, model.selectedColumn === 3 ? 0 : -1, colWidth, model.filters[3])
     ];
 
     // Clear screen and move cursor to top-left
@@ -151,6 +152,7 @@ export class RangerView {
       case 'Classes': return 36; // cyan
       case 'Methods': return 33; // yellow
       case 'Params': return 35; // magenta
+      case 'Docs': return 34; // blue
       default: return undefined;
     }
   }
@@ -162,6 +164,31 @@ export class RangerView {
     if (typeof opts.colorCode === 'number') open += `\x1b[${opts.colorCode}m`;
     const close = '\x1b[0m';
     return `${open}${text}${close}`;
+  }
+
+  private wrapText(text: string, width: number): string[] {
+    const lines: string[] = [];
+    const words = (text || '').split(/\s+/);
+    let current = '';
+    for (const w of words) {
+      if (!w) continue;
+      if ((current + (current ? ' ' : '') + w).length <= width) {
+        current = current ? current + ' ' + w : w;
+      } else {
+        if (current) lines.push(current);
+        // If a single word exceeds width, hard-slice
+        if (w.length > width) {
+          for (let i = 0; i < w.length; i += width) {
+            lines.push(w.slice(i, i + width));
+          }
+          current = '';
+        } else {
+          current = w;
+        }
+      }
+    }
+    if (current) lines.push(current);
+    return lines.length > 0 ? lines : [''];
   }
 
   // buildPrompt was unused; prompt() handles PS1/fallback

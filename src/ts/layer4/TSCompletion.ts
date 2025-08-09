@@ -9,6 +9,40 @@ import * as path from 'node:path';
 import * as ts from 'typescript';
 
 export class TSCompletion implements Completion {
+  private static extractJsDocText(node: ts.Node): string {
+    const anyNode: any = node as any;
+    if (anyNode && Array.isArray(anyNode.jsDoc) && anyNode.jsDoc.length > 0) {
+      const parts: string[] = [];
+      for (const jd of anyNode.jsDoc) {
+        if (typeof jd.comment === 'string' && jd.comment.trim().length > 0) {
+          parts.push(jd.comment.trim());
+        }
+      }
+      return parts.join('\n').trim();
+    }
+    return '';
+  }
+
+  private static extractParamJsDoc(node: ts.Node, paramName: string): string {
+    const anyNode: any = node as any;
+    if (anyNode && Array.isArray(anyNode.jsDoc) && anyNode.jsDoc.length > 0) {
+      for (const jd of anyNode.jsDoc) {
+        if (Array.isArray(jd.tags)) {
+          for (const tag of jd.tags) {
+            // ts.JSDocParameterTag often has .name.getText() or .name.getText on newer TS
+            try {
+              const tName = (typeof tag.name?.getText === 'function') ? tag.name.getText() : (tag.name?.escapedText || tag.name?.text);
+              if (String(tName) === paramName) {
+                const comment = typeof tag.comment === 'string' ? tag.comment : '';
+                if (comment && comment.trim().length > 0) return comment.trim();
+              }
+            } catch {}
+          }
+        }
+      }
+    }
+    return '';
+  }
   static getProjectSourceFiles(): string[] {
     const __dirname = path.dirname(new URL(import.meta.url).pathname);
     const dirs = [
@@ -138,6 +172,73 @@ export class TSCompletion implements Completion {
     }
     if (params.length > 0) return params;
     return [];
+  }
+
+  static getClassDoc(className: string): string {
+    const files = TSCompletion.getProjectSourceFiles();
+    for (const file of files) {
+      const src = readFileSync(file, 'utf8');
+      const sourceFile = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true);
+      let doc = '';
+      ts.forEachChild(sourceFile, node => {
+        if (ts.isClassDeclaration(node) && node.name && node.name.text === className) {
+          doc = TSCompletion.extractJsDocText(node);
+        }
+      });
+      if (doc) return doc;
+    }
+    return '';
+  }
+
+  static getMethodDoc(className: string, methodName: string): string {
+    const files = TSCompletion.getProjectSourceFiles();
+    for (const file of files) {
+      const src = readFileSync(file, 'utf8');
+      const sourceFile = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true);
+      let doc = '';
+      ts.forEachChild(sourceFile, node => {
+        if (ts.isClassDeclaration(node) && node.name && node.name.text === className) {
+          for (const m of node.members) {
+            if (ts.isMethodDeclaration(m) && m.name && ts.isIdentifier(m.name) && m.name.text === methodName) {
+              doc = TSCompletion.extractJsDocText(m);
+            }
+          }
+        }
+      });
+      if (doc) return doc;
+    }
+    return '';
+  }
+
+  static getParamDoc(className: string, methodName: string, paramName: string): string {
+    const files = TSCompletion.getProjectSourceFiles();
+    for (const file of files) {
+      const src = readFileSync(file, 'utf8');
+      const sourceFile = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true);
+      let doc = '';
+      ts.forEachChild(sourceFile, node => {
+        if (ts.isClassDeclaration(node) && node.name && node.name.text === className) {
+          for (const m of node.members) {
+            if (ts.isMethodDeclaration(m) && m.name && ts.isIdentifier(m.name) && m.name.text === methodName) {
+              // Prefer @param tag matching
+              doc = TSCompletion.extractParamJsDoc(m, paramName);
+              if (!doc) {
+                // Fallback: look for param jsDoc on the parameter declaration
+                for (const p of m.parameters) {
+                  const pName = p.name.getText();
+                  if (pName === paramName) {
+                    doc = TSCompletion.extractJsDocText(p);
+                    break;
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+      if (doc) return doc;
+    }
+    return '';
   }
 
   complete(args: string[]): string[] {

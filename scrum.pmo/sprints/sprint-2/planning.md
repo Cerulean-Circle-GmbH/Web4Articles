@@ -29,6 +29,19 @@ Deliver a ranger-like interactive shell (TS Ranger) that leverages `TSCompletion
   - [x] [Task 3.2: Developer - Prompt spacing (exactly one empty line above command)](./task-3.2-developer-prompt-spacing.md)
   - [x] [Task 3.3: Developer - Prompt colors (user cyan, root red, path yellow)](./task-3.3-developer-prompt-colors.md)
 
+- [x] [Task 4: Replace Preview with Documentation Column and Extend TSCompletion for Docstrings](./task-4.md)  
+  **Priority:** 2
+  - [x] [Task 4.1 — Architect: Documentation Column and Docstring Extraction Spec](./task-4.1-architect-docs-spec.md)
+  - [x] [Task 4.2 — Developer: Extend TSCompletion to expose TypeScript JSDoc for Class/Method/Params](./task-4.2-developer-tscompletion-docs.md)
+  - [x] [Task 4.3 — Developer: Replace Preview with Docs column (selected element docstring)](./task-4.3-developer-docs-column.md)
+  - [x] [Task 4.4 — Tester: E2E scripted checks for Docs column](./task-4.4-tester-e2e-docs.md)
+  - [x] [Task 4.5 — PO: Update user guide for Docs column](./task-4.5-po-user-guide-update.md)
+
+- [x] [Task 5: Document Classes for TSCompletion and Add Ranger Doc Rendering Tests](./task-5.md)  
+  **Priority:** 2
+  - [x] [Task 5.1 — Developer: Enrich class JSDoc across layer1/layer2 targets](./task-5.1-developer-enrich-jsdoc.md)
+  - [x] [Task 5.2 — Tester: Add scripted tests asserting Docs column shows JSDoc for TestClass](./task-5.2-tester-docs-column-tests.md)
+
 ---
 
 **Process Update (2025-08-08):**

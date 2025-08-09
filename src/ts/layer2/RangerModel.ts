@@ -4,6 +4,7 @@ export class RangerModel {
   classes: string[] = [];
   methods: string[] = [];
   params: string[] = [];
+  docs: string[] = [];
 
   selectedColumn: 0 | 1 | 2 | 3 = 0; // 0: Classes, 1: Methods, 2: Params, 3: Preview
   selectedIndexPerColumn: number[] = [0, 0, 0, 0];
@@ -71,6 +72,7 @@ export class RangerModel {
     this.filters[1] = '';
     // Method list changed; params will be recomputed, so clear param state
     this.params = [];
+    this.docs = [];
     this.paramValues = [];
     this.paramEntryActive = false;
     this.paramEntryIndex = 0;
@@ -88,6 +90,32 @@ export class RangerModel {
     this.paramEntryActive = false;
     this.paramEntryIndex = 0;
     this.paramEntryBuffer = '';
+  }
+
+  getSelectedDocs(): string {
+    const c = this.selectedClass;
+    const m = this.selectedMethod;
+    const p = this.selectedParam;
+    switch (this.selectedColumn) {
+      case 2:
+        if (c && m && p) return TSCompletion.getParamDoc(c, m, p);
+        // fallback to method
+        if (c && m) return TSCompletion.getMethodDoc(c, m);
+        if (c) return TSCompletion.getClassDoc(c);
+        return '';
+      case 1:
+        if (c && m) return TSCompletion.getMethodDoc(c, m);
+        if (c) return TSCompletion.getClassDoc(c);
+        return '';
+      case 0:
+        if (c) return TSCompletion.getClassDoc(c);
+        return '';
+      default:
+        if (c && m && p) return TSCompletion.getParamDoc(c, m, p);
+        if (c && m) return TSCompletion.getMethodDoc(c, m);
+        if (c) return TSCompletion.getClassDoc(c);
+        return '';
+    }
   }
 
   allParamsFilled(): boolean {
