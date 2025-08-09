@@ -1,14 +1,13 @@
 
-[Back to Planning](../planning.md)
+[Back to Planning](./planning.md)
 
 # Task 3: Create Ontology Page
 
 ## Status
 - [x] Planned
-- [ ] In Progress
-  - [ ] refinement
-  - [ ] creating test cases
-  - [ ] implementing
+- [x] In Progress
+  - [x] refinement
+  - [x] implementing
   - [ ] testing
 - [ ] QA Review
 - [ ] Done

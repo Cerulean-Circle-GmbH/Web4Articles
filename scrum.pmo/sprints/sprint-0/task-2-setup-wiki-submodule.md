@@ -1,14 +1,13 @@
 
-[Back to Planning](../planning.md)
+[Back to Planning](./planning.md)
 
 # Task 2: Set Up Project Wiki as Submodule
 
 ## Status
 - [x] Planned
-- [ ] In Progress
-  - [ ] refinement
-  - [ ] creating test cases
-  - [ ] implementing
+- [x] In Progress
+  - [x] refinement
+  - [x] implementing
   - [ ] testing
 - [ ] QA Review
 - [ ] Done
@@ -26,6 +25,7 @@
 - [x] Add the wiki as a git submodule.
 - [x] Pull the latest content from the wiki repository.
 - [x] Check for the presence of `Home.md` and `Ontology.md`.
+- [ ] Add a `[task:uuid:<uuidv4>]` to this file; ensure `sprint-0/requiremnents.md` links back with the same UUID.
 
 ## Requirements
 - The wiki submodule must be present and up to date.
