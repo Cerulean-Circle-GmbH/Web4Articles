@@ -2,7 +2,7 @@
 
 # Task 2.0: Developer — Footer height, spacing, and empty lines around command preview
 
-[requirement:uuid:7f6e1b84-3c19-4d7a-9a56-5f4a7c9b2d31]
+[requirement:uuid:7f6e1b84-3c19-4d7a-9a56-5f4a7c9b2d31](./requiremnents.md)
 
 ## Status
 - [ ] Planned

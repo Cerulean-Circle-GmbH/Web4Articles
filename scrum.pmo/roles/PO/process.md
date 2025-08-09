@@ -102,6 +102,8 @@ When the Scrum Master requests a new task or task update, the AI must:
 - For every new requirement:
   - Generate a UUID v4 and include it in the task in the form `[requirement:uuid:<uuidv4>]` on a dedicated line near the top.
   - Enrich the original requirement entry in `requiremnents.md` by appending the same UUID tag (e.g., `- [ ] <requirement text> [requirement:uuid:<uuidv4>]`) for traceability.
+  - Make the task-side UUID a backlink to `requiremnents.md` (e.g., `[requirement:uuid:<uuidv4>](./requiremnents.md)`).
+  - In `requiremnents.md`, append a markdown link to the created task next to the UUID (e.g., `([task-<n>](./task-<n>-<name>.md))`).
   - Create a new task file using the templates and name it with the next sequential task number.
   - Reference the requirement inline and link back to `requiremnents.md`.
   - Update the sprint `planning.md` to include the new task with priority.
