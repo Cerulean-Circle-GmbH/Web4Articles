@@ -10,6 +10,10 @@
 - [ ] QA Review
 - [x] Done
 
+## Traceability
+- up
+  - [task:uuid:0e2f5b1a-3c7d-4f91-9ab2-7d3a6e8c5f90](./task-1.md)
+
 ## Goal
 Implement the core TUI for TS Ranger with keyboard navigation and column rendering.
 

@@ -11,6 +11,10 @@
 - [ ] QA Review
 - [ ] Done
 
+## Traceability
+- up
+  - [task:uuid:81a2b3c4-d5e6-4718-9823-5c6d7e8f9012](./task-2.md)
+
 ## Goal
 Render a key usage line at the bottom with a blue background and white text, and render the final shell-like command above it using distinct colors for tokens.
 

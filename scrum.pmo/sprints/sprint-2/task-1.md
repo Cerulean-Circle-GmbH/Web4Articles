@@ -13,6 +13,18 @@
 - [x] QA Review
 - [ ] Done
 
+## Traceability
+- up
+  - [requirement:uuid:d4e5f6a7-b8c9-0123-4567-890abcdef012](../sprint-0/requiremnents.md)
+- down
+  - [Task 1.1 — Architect: TS Ranger Shell Specification (role-specific)](./task-1.1-architect-ranger-spec.md)
+  - [Task 1.2 — Developer: Interactive TUI (Core Navigation)](./task-1.2-developer-ranger-tui.md)
+  - [Task 1.3 — Developer: Integrate TSCompletion for Live Suggestions](./task-1.3-developer-completion-integration.md)
+  - [Task 1.4 — Developer: Command Execution Bridge to DefaultCLI](./task-1.4-developer-execution-bridge.md)
+  - [Task 1.5 — Tester: E2E Keyboard Navigation and Execution Tests](./task-1.5-tester-e2e-tests.md)
+  - [Task 1.6 — PO: User Guide and Demo Scenarios](./task-1.6-po-user-guide.md)
+  - [Task 1.7 — Developer: Refactor TSRanger to one class per TS file](./task-1.7-developer-refactor-tsranger.md)
+
 
 
 ## Goal

@@ -10,6 +10,10 @@
 - [ ] QA Review
 - [x] Done
 
+## Traceability
+- up
+  - [task:uuid:0e2f5b1a-3c7d-4f91-9ab2-7d3a6e8c5f90](./task-1.md)
+
 ## Goal
 Refactor `src/ts/layer4/TSRanger.ts` by extracting `RangerModel`, `RangerView`, and `RangerController` into their own files, preserving all current functionality and CLI behavior.
 
