@@ -17,18 +17,6 @@ Deliver a ranger-like interactive shell (TS Ranger) that leverages `TSCompletion
   - [ ] [Task 1.6: PO - User guide and demo scenarios](./task-1.6-po-user-guide.md)
   - [x] [Task 1.7: Developer - Refactor TSRanger to one class per TS file](./task-1.7-developer-refactor-tsranger.md)
   **Priority:** 1
-- [x] [Task 1.1: Developer - Interactive TUI shell (core navigation)](./task-1.1-developer-ranger-tui.md)  
-  **Priority:** 1
-- [x] [Task 1.2: Developer - Integrate `TSCompletion` for live suggestions](./task-1.2-developer-completion-integration.md)  
-  **Priority:** 2
-- [x] [Task 1.3: Developer - Command execution bridge to `DefaultCLI`](./task-1.3-developer-execution-bridge.md)  
-  **Priority:** 2
-- [ ] [Task 1.4: Tester - E2E keyboard navigation and execution tests](./task-1.4-tester-e2e-tests.md)  
-  **Priority:** 3
-- [ ] [Task 1.5: PO - User guide and demo scenarios](./task-1.5-po-user-guide.md)  
-  **Priority:** 3
-- [x] [Task 1.6: Developer - Refactor TSRanger to one class per TS file](./task-1.6-developer-refactor-tsranger.md)  
-  **Priority:** 2
 - [ ] [Task 2: Footer height/spacing and colorized command preview](./task-2.md)  
   SUBTASKS:
   - [ ] [Task 2.1: Developer - Footer height/spacing adjustments](./task-2.1-developer-footer-height-and-spacing.md)
