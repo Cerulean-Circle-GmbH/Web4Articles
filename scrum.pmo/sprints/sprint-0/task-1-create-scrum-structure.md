@@ -1,14 +1,14 @@
 
-[Back to Planning](../planning.md)
+[Back to Planning](./planning.md)
 
 # Task 1: Create SCRUM Management Structure
 
 ## Status
 - [x] Planned
-- [ ] In Progress
-  - [ ] refinement
+- [x] In Progress
+  - [x] refinement
   - [ ] creating test cases
-  - [ ] implementing
+  - [x] implementing
   - [ ] testing
 - [ ] QA Review
 - [ ] Done
@@ -26,14 +26,18 @@
 - [x] Create the `scrum.pmo` directory.
 - [x] Add `roles` and `sprints` subfolders.
 - [x] Document the structure and naming conventions in `process.md`.
+- [ ] Add `[task:uuid]` and `[subtask:uuid]` policies to PO process; ensure all tasks carry UUID tags.
+- [ ] Ensure first-line backlinks are present and unique in all sprint tasks.
 
 ## Requirements
 - The directory structure must match the SCRUM conventions.
 - `process.md` must clearly document the conventions.
+- UUID, backlink, and MAIN/SUBTASK numbering policies must be captured.
 
 ## Acceptance Criteria
 - Directory structure exists as specified.
 - `process.md` documents the conventions clearly.
+- All Sprint 0 tasks comply with backlink and UUID policies.
 
 ## QA Audit & User Feedback
 - All feedback and audit entries must be timestamped (UTC) and documented in this section.
