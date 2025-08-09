@@ -111,3 +111,10 @@ When the Scrum Master requests a new task or task update, the AI must:
  - Add a "Traceability" section to each task per Sprint 2 pattern:
    - MAIN tasks: include an Up item linking to `[requirement:uuid:<uuidv4>]` in `requiremnents.md` and a Down list linking to each subtask.
    - SUBTASKS: include an Up list linking to the requirement UUID and the parent MAIN task; Down may be omitted unless deeper subtasks exist.
+
+### PO Cross-Reference Checklist (DO NOT SKIP)
+- [ ] When adding or modifying tasks in planning, immediately update `requiremnents.md` to include:
+  - The requirement entry with `[requirement:uuid:<uuidv4>]` and a link to the MAIN task
+  - The status checkbox (unchecked until delivered)
+- [ ] Ensure every new MAIN task contains a backlink to `requiremnents.md` with the same UUID.
+- [ ] Re-run a quick link check: planning ↔ tasks ↔ subtasks ↔ requiremnents.md.

@@ -21,7 +21,7 @@ export class RangerView {
     // Clear screen and move cursor to top-left
     process.stdout.write('\x1b[2J\x1b[H');
 
-    // Compute grid rows: leave 3 lines (blank, command, blank) plus 1 footer = 4
+    // Compute grid rows: reserve 3 lines (blank, command, blank) + 1 footer = 4
     const maxRows = Math.max(...gridColumns.map(col => col.length));
     const gridRows = Math.min(maxRows, Math.max(0, height - 4));
     for (let r = 0; r < gridRows; r++) {
@@ -33,6 +33,12 @@ export class RangerView {
       process.stdout.write(row + '\n');
     }
 
+    // Top padding to keep footer at last line while preserving exactly one blank line above preview
+    const topPad = Math.max(0, (height - 4) - gridRows);
+    if (topPad > 0) {
+      process.stdout.write('\n'.repeat(topPad));
+    }
+
     // One empty line above preview
     process.stdout.write('\n');
 
@@ -42,14 +48,6 @@ export class RangerView {
 
     // One empty line between preview and footer
     process.stdout.write('\n');
-
-    // Fill remaining lines so that footer is on the last terminal row
-    // Lines printed so far: gridRows + 1 (blank) + 1 (command) + 1 (blank)
-    const linesPrinted = gridRows + 3;
-    const filler = Math.max(0, (height - 1) - linesPrinted);
-    if (filler > 0) {
-      process.stdout.write('\n'.repeat(filler));
-    }
 
     // Blue background with white text footer (key usage line)
     const footerText = '←/→: column  ↑/↓: move  Type: filter  Backspace: clear  Enter: select/next param/exec  Space: next param  q/Esc: quit';
@@ -87,10 +85,13 @@ export class RangerView {
       const host = this.safeHostname();
       const user = this.safeUsername();
       const pwd = process.cwd();
+      const isRoot = (typeof process.getuid === 'function' && process.getuid() === 0) || user === 'root';
+      const userColored = this.style(user, { colorCode: isRoot ? 31 : 36 }); // red if root else cyan
+      const pwdColored = this.style(pwd, { colorCode: 33 }); // yellow
       const replaced = ps1
         .replace(/\\h/g, host)
-        .replace(/\\u/g, user)
-        .replace(/\\w/g, pwd)
+        .replace(/\\u/g, userColored)
+        .replace(/\\w/g, pwdColored)
         .replace(/\n/g, '')
         .replace(/\r/g, '');
       return replaced.trim();
@@ -99,7 +100,10 @@ export class RangerView {
     const host = this.safeHostname();
     const user = this.safeUsername();
     const pwd = process.cwd();
-    return `[${host}] ${user}@${pwd}`;
+    const isRoot = (typeof process.getuid === 'function' && process.getuid() === 0) || user === 'root';
+    const userColored = this.style(user, { colorCode: isRoot ? 31 : 36 });
+    const pwdColored = this.style(pwd, { colorCode: 33 });
+    return `[${host}] ${userColored}@${pwdColored}`;
   }
 
   private safeHostname(): string {
