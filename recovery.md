@@ -1,4 +1,18 @@
+[Back to Index](./index.md)
+
 # Recovery Log
+
+## Default Recovery Policy — Recover from README
+
+- The canonical recovery entry point is the README's "Optimized Recovery Procedure". Always start by reading `README.md` and follow its recovery steps verbatim.
+- Checklist (do in order):
+  - Read README first principles and the Optimized Recovery Procedure section
+  - Scan markdown under `scrum.pmo/`, `wiki/`, and QA logs
+  - Regenerate/update `index.md` and `qa-feedback-log.md` as needed
+  - Summarize sprint/task status and consistency findings
+  - Append a timestamped entry to this file (`recovery.md`) and notify QA
+
+---
 
 ## 2025-08-04
 
@@ -115,3 +129,24 @@
 
 **Next Steps:**
 - Proceed to QA review for Task 7, then mark Done upon approval.
+
+## 2025-08-10
+
+**Summary:**
+- Performed recovery using the default policy (Recover from README). Validated alignment with README's Optimized Recovery Procedure.
+- Reviewed sprint plans and QA logs; consolidated current project state below.
+
+**Current Project State:**
+- Branch: local behind remote by 2 commits (fast-forward available).
+- Sprint 1: Task 1 (tssh wrapper/backend) open.
+- Sprint 2: Core tasks delivered (navigation, completion, docs column, footer/prompt). Planning shows 1.5, 1.6, 6, 7 open; code/logs indicate 7 implemented and tests passing; planning needs sync.
+- Sprint 3: All tasks open (not started).
+- Sprint 4: Devcontainer tasks open (not started).
+- Sprint 5: Architecture tasks (1–3) complete; implementation/testing tasks (4–6) pending under src.v2.
+- Sprint 6: Versioned folder migration plan defined; all tasks open.
+- QA Feedback: Logged in qa-feedback-log.md; no unresolved critical blockers captured.
+
+**Next Steps:**
+- Sync Sprint 2 planning checkboxes for Task 7 status and tests.
+- Proceed with Sprint 5 implementation tasks (v2) and validate via non-interactive tests (`tsranger test`).
+- Fast-forward local branch to remote if appropriate.
