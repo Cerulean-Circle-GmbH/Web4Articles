@@ -2,6 +2,9 @@
 
 # Project Retrospective — OntologyWeaver
 
+- [ ] Read by QA
+- [ ] implemented all measures
+
 **Agent Role**: OntologyWeaver  
 **Repository Origin**: [EAMD.ucp](https://github.com/user/EAMD.ucp) (working on local repository)  
 **Branch**: retro/2025-08-10-agent-retro (after working on dev/cursor-1)
