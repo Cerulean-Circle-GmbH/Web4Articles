@@ -143,3 +143,12 @@
 
 **Next:**
 - Add cross-links to source files and implement pre-commit link checks for ontology files.
+
+## 2025-08-10 (PDCA cycle 2)
+
+**Summary:**
+- Added initial definitions and cross-links in wiki submodule; updated ontology status timestamp.
+
+**Artifacts:**
+- `scrum.pmo/roles/OntologyArchitect/PDCA/2025-08-10b.md`
+- `wiki/ontology/definitions/Article.md`, `wiki/ontology/definitions/TSRanger.md`
