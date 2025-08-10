@@ -1,3 +1,5 @@
+[Back to Roles](../)
+
 
 # First Principles for All Roles
 
@@ -30,6 +32,12 @@ As Scrum Master, ensure the following best practices for committing and pushing 
 - Commit and push after incorporating QA feedback or audit learnings.
 - Always document the reason for each commit in the commit message for traceability.
 - TRON Operational Rule: After each TRON prompt that results in changes, immediately commit and push.
+
+## Pre-Commit Spellcheck & Cross-Reference Check (Mandatory)
+- Before any commit that modifies markdown or code, run:
+  - Spellcheck: review changed files for obvious typos; normalize agreed project terms.
+  - Cross-reference check: verify backlinks on line 1 for markdown; ensure referenced relative links resolve; update or add links as needed.
+- For retro artifacts, convert placeholder markers like `[Detailed](Settiles)` to self-links `[Detailed](./currentFile.md#typo:Settiles)` to preserve audit context.
 # Subtask Dependency Management
 
 Subtasks must always be ordered to avoid blocking dependencies. If a blocking dependency is unavoidable, the Scrum Master is responsible for removing the impediment by reordering or splitting tasks. The Scrum Master should review all subtasks for dependency issues during sprint planning and execution.

@@ -1,3 +1,5 @@
+[Back to Roles](../)
+
 # DevOps First Principles & Learnings (Canonical)
 
 ## CMMI Level 4 Feedback & Learning
@@ -29,6 +31,11 @@
 
 ## CI/CD Discipline
 - Require all tests to pass and documentation to be up-to-date before release.
+
+## Pre-Commit Spellcheck & Cross-Reference Check (Mandatory)
+- For infra/docs changes:
+  - Spellcheck modified markdown; correct obvious typos.
+  - Validate all relative links in changed files (including devcontainer docs) resolve.
 
 # DevOps: Tree Dependencies & DevContainer Requirements
 

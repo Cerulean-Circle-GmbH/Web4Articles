@@ -1,3 +1,5 @@
+[Back to Docs](../)
+
 # 2025-08-03 (DevContainer & Task File Migration)
 
 **Issue:** DevContainer requirements and ts-completion-sprint0 task were misplaced in the project root and sprints/iteration-0.
