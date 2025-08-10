@@ -54,6 +54,12 @@ We learned from Sprint 2 and QA that TS Ranger must provide stable, predictable 
   - [ ] [Task 6.3 — Tester: Final green report and sign-off](./task-6.3-tester-final-green-report.md)
   - [ ] [Task 6.4 — Tester: KeyboardController unit tests for key mapping and sequences](./task-6.4-tester-keyboard-controller-tests.md)
 
+- [ ] [Task 7: Column-based Architecture Refactor (Columns + Filters)](./task-7.md)
+  **Priority:** 1
+  - [ ] [Task 7.1 — Architect: Column/Filter Interfaces Spec + PUML + SVGs](./task-7.1-architect-columns-spec.md)
+  - [ ] [Task 7.2 — Developer: Implement Column/Filter and Concrete Columns](./task-7.2-developer-columns-impl.md)
+  - [ ] [Task 7.3 — Tester: Column Navigation/Filter Tests](./task-7.3-tester-columns-tests.md)
+
 ---
 
 **Process Notes (2025-08-09):**
