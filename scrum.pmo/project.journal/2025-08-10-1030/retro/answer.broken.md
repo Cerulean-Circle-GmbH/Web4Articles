@@ -2,6 +2,9 @@
 
 # Project Retrospective — GPT-5
 
+- [ ] Read by QA
+- [ ] implemented all measures
+
 ## 1. Role Description After Recovery (as ScrumMaster)
 ### [Detailed](Settiles) Role Description
 - Ensure recovery from `README.md` is executed cleanly (strict TS, ESM, Radical OOP, no Jest).
