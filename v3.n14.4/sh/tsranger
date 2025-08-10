@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# v3.n14.4/sh/tsranger — Run TSRanger on legacy Node 14.21.3 without Docker
+# - Compiles TS sources with v3.n14.4/tsconfig.n14.json into dist.n14/
+# - Executes compiled JS via node 14 (ESM)
+set -euo pipefail
+
+# Locate project root (with package.json)
+find_project_root() {
+  local dir="$PWD"
+  while [[ "$dir" != "/" ]]; do
+    if [[ -f "$dir/package.json" ]]; then
+      echo "$dir"
+      return 0
+    fi
+    dir="$(dirname "$dir")"
+  done
+  return 1
+}
+
+PROJECT_ROOT="$(find_project_root)"
+if [[ -z "${PROJECT_ROOT:-}" ]]; then
+  echo "Error: Could not find project root (missing package.json)." >&2
+  exit 1
+fi
+
+cd "$PROJECT_ROOT"
+
+# Ensure TypeScript is available (on Node 14)
+if ! npx --yes tsc -v >/dev/null 2>&1; then
+  echo "TypeScript compiler not found. Install with: npm i -D typescript@5" >&2
+  exit 1
+fi
+
+# Build to Node14-compatible output
+npx tsc -p v3.n14.4/tsconfig.n14.json
+
+# Determine entry (v1 default, v2 when TSRANGER_V2=1)
+ENTRY="dist.n14/src/ts/layer4/TSRanger.js"
+if [[ "${TSRANGER_V2:-0}" == "1" ]]; then
+  if [[ -f "dist.n14/v2/src/ts/layer4/TSRanger.js" ]]; then
+    ENTRY="dist.n14/v2/src/ts/layer4/TSRanger.js"
+  fi
+fi
+
+# Test mode compatibility: tsranger test "[keys]"
+if [[ "${1:-}" == "test" ]]; then
+  shift || true
+  export TSRANGER_TEST_MODE=1
+  export TSRANGER_TEST_INPUT="${1:-}"
+fi
+
+# Run compiled entry on Node 14
+exec node "$ENTRY" "$@"
