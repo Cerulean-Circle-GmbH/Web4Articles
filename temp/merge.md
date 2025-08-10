@@ -48,3 +48,16 @@ Expected outcomes:
 | README.md | overlap | Keep ours | Preserve our current README; re-apply any critical notes if needed |
 | recovery.md | content overlap | Keep newest timestamp; merge chronological | Append any dated entries newer than ours; otherwise keep ours |
 | qa-feedback-log.md | overlap | Keep ours | Entries retained; add only if strictly newer and non-duplicate |
+
+### Planned next merges (confirmed)
+
+- origin/feat/sprint-4-devcontainer-planning-pr
+  - Conflicts expected: `index.md`, `recovery.md`, `scrum.pmo/sprints/sprint-4/planning.md`
+  - Resolution:
+    - `index.md`: Keep ours
+    - `recovery.md`: Merge dated entries chronologically; keep newest
+    - `scrum.pmo/sprints/sprint-4/planning.md`: Keep ours
+
+- origin/test/wentAstray
+  - Conflicts expected: `README.md`, `docs/tech-stack.md`, multiple `scrum.pmo/roles/*/process.md`, and sprint-1 task docs
+  - Resolution: Keep ours for all; if dated log sections appear, merge chronologically and keep newest
