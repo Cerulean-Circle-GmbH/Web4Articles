@@ -1,6 +1,9 @@
-[Back to Retro Instructions](./retro-instructions.md)
+[Back to Retro Instructions](./01.retro-instructions.what.md)
 
 # Retro Agent Answer — PromptlineConductor (GPT-5 ScrumMaster)
+
+- [x] Read by QA
+- [ ] implemented all measures
 
 ### Role Description After Recovery (as ScrumMaster)
 After recovering from `README.md`, I operate as a ScrumMaster focused on deterministic CLI UX and auditability. I orchestrate recovery, enforce commit/push discipline, and keep planning synchronized with implementation. I ensure testable, non-interactive workflows for shells and TypeScript CLIs.
