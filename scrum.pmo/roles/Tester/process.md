@@ -1,4 +1,4 @@
-[Back to Roles](../)
+[Back to Versioned Units Policy](../../../docs/versioned-units.md)
 
 # AI Feedback Processing Protocol
 
@@ -11,6 +11,7 @@ When the AI is acting as Tester to process feedback or a new task:
 ## CMMI Level 4 Feedback & Learning
 - All QA process improvements, debugging lessons, and cross-role feedback must be documented in this file for traceability and continuous improvement.
 - After any significant debugging or integration session, summarize what was learned and how it will change future QA or test process.
+ - QA feedback recording: Do not summarize stakeholder/PO feedback. Capture it verbatim as a blockquote with an explicit UTC timestamp (ISO-8601). Include backlinks to the relevant sprint/task.
 
 ## Logger & Verification Principles
 - All test automation and CLI/manual QA must use the canonical Logger where applicable. Logging must be environment-aware, non-intrusive in production, and support traceability for debugging and process improvement.
@@ -33,6 +34,14 @@ When the AI is acting as Tester to process feedback or a new task:
 - For the tssh CLI, see the canonical integration test: `test/tssh-cli.integration.test.ts`.
 - Perform manual QA and document findings in process markdown files.
 - Sign off on releases only when all acceptance criteria are met.
+
+## Versioned Units Policy for QA
+
+- Always execute and validate the active version only (e.g., `TSRANGER_V2=1` for v2). The shell wrapper must route to the version’s entry point under its folder (e.g., `src.v2/ts/layer4/TSRanger.ts`).
+- Tests must not import or rely on files outside the active version; if behavior depends on older units, request migration of those units into the active version before testing.
+- Each file is a unit and units are version-dependent. When verifying fixes, ensure changes were made within the version folder and no cross-version imports exist.
+- DRY within the version: If the same behavior appears in multiple places, coordinate with Developer to consolidate into a single unit inside the version folder.
+- Non-interactive runs: Always run with deterministic settings and the version toggle when applicable (e.g., `TSRANGER_V2=1 TSRANGER_TEST_MODE=1`).
 
 ---
 

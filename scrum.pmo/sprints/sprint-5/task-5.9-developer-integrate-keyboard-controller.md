@@ -14,3 +14,11 @@ Inject `KeyboardController` into `RangerController` and refactor the internal ke
 ## Acceptance Criteria
 - `RangerController` consumes actions from `KeyboardController.toAction(key)` and uses `KeyboardController.parse` for test mode.
 - All existing tests still pass with `TSRANGER_V2=1`.
+
+## QA Feedback (Verbatim)
+
+### 2025-08-09T00:10:00Z
+> v2 wrapper without test args renders once and exits; it is not interactive yet.
+
+## Actions
+- Integrate stdin loop to keep the app running interactively; exit on `q`/Esc/Ctrl-C.

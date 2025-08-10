@@ -17,3 +17,11 @@ Create a `KeyboardController` that translates raw key sequences into semantic ac
 ## Acceptance Criteria
 - New file `src.v2/ts/layer4/KeyboardController.ts` exports action enum/types and functions.
 - Unit-tested by mapping representative keys and script tokens.
+
+## QA Feedback (Verbatim)
+
+### 2025-08-09T00:10:00Z
+> v2 wrapper without test args renders once and exits; it is not interactive yet.
+
+## Actions
+- Provide a `readFromStdin(io: TerminalIO, onKey: (k:string)=>Promise<void>|void)` helper that sets raw mode and feeds keys to the controller.

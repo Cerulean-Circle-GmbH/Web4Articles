@@ -18,3 +18,11 @@ Implement key handling per Task 1.1 pseudocode, including:
 ## Acceptance Criteria
 - Drives the model/view to produce outputs matching existing tests.
 - Non-interactive test loop obeys `TSRANGER_TEST_MODE`, `TSRANGER_TEST_INPUT`, `TS_RANGER_TEST_FINAL_ONLY`.
+
+## QA Feedback (Verbatim)
+
+### 2025-08-09T00:10:00Z
+> v2 wrapper without test args renders once and exits; it is not interactive yet.
+
+### Actions
+- Wire stdin raw key-read loop to feed the controller, gated behind interactive mode (no `TSRANGER_TEST_MODE`).
