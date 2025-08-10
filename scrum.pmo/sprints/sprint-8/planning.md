@@ -1,4 +1,4 @@
-# Sprint 5 Planning
+# Sprint 8 Planning
 
 ## PR
 - Title: analyze ranger
@@ -12,7 +12,7 @@ Analyze and formalize TSRanger TUI behavior from README and code, derive compreh
 - `ranger.keyinput.testcases.md`: Derived key input test cases for ranger
 - `tsranger.tui.behavior.analyzed.md`: Current TSRanger behavior (for contrast)
 
-## Task List (Sprint 5)
+## Task List (Sprint 8)
 - [ ] Task 1.0: Architect — Ranger (Python) TUI Behavior Spec (`ranger.tui.behavior.md`)
 - [ ] Task 1.1: PO — Ranger Requirements (`ranger.requirements.md`)
 - [ ] Task 1.2: Tester — Ranger Key Input Test Cases (`ranger.keyinput.testcases.md`)
