@@ -3,7 +3,7 @@
 # Project Retrospective — GPT-5
 
 ## 1. Role Description After Recovery (as ScrumMaster)
-### Settiles Role Description
+### [Detailed](Settiles) Role Description
 - Ensure recovery from `README.md` is executed cleanly (strict TS, ESM, Radical OOP, no Jest).
 - Maintain SCRUM cadence and enforce PO cross-reference checklist in `scrum.pmo/roles/PO/process.md`.
 - Orchestrate Sprint 2 delivery (TSRanger): prompt model, docs column, footer/prompt spacing/colors, tab behavior, cursor rendering.
