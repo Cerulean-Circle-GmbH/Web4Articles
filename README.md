@@ -62,6 +62,7 @@ If the AI loses context or receives the prompt "recover" from the QA user, it wi
      - PlantUML and Graphviz installed (or plan to use devcontainer)
    - If any prerequisite is missing, open a DevOps task to resolve locally, or prefer using the project devcontainer once available.
 1. **Read the canonical Project First Principles section in this README.md** for project purpose, tech stack, and management principles. Only scan other sections as needed for context or updates.
+   - If a file named `handover.backend.agent.md` exists at the repository root, load it first and use its instructions to bootstrap the backend agent workflow before proceeding.
 2. **Scan all markdown files** in the project, prioritizing:
    - `scrum.pmo/` (roles, sprints, tasks, process docs)
    - `wiki/` (ontology, Home.md, definitions)
