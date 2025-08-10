@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "vitest run",
-    "tsranger": "node --loader ts-node/esm ./src/ts/layer4/TSRanger.ts"
+    "tsranger": "node --loader ts-node/esm ./src/ts/layer4/TSRanger.ts",
+    "build:n14": "tsc -p v3.n14.4/tsconfig.n14.json"
   }
 }
