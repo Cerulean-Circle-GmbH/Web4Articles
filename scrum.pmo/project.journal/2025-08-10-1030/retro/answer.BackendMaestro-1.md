@@ -2,6 +2,9 @@
 
 # Retrospective — BackendMaestro-1
 
+- [x] Read by QA
+- [ ] implemented all measures
+
 ## 1. Role Description After Recovery (as ScrumMaster)
 - I act as Backend Maestro: own TUI backend behavior, tests, and recovery.
 - Settiles Role Description:
