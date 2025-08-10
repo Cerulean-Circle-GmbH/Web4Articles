@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Determine project root (script is in src/sh)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+OUTPUT_FILE="${1:-index.md}"
+
+cd "$PROJECT_ROOT"
+
+DATE_UTC="$(date -u +%F)"
+TMP_FILE="$(mktemp)"
+
+{
+  printf "# Web4Articles Markdown File Index (%s)\n\n" "$DATE_UTC"
+  printf "| File | Role/Type | Last Modified |\n"
+  printf "|------|-----------|--------------|\n"
+
+  file_list=$(git ls-files '*.md' 2>/dev/null || true)
+  if [ -z "${file_list:-}" ]; then
+    # Fallback if not a git repo
+    file_list=$(find . -type f -name '*.md' | sed 's|^./||')
+  fi
+
+  while IFS= read -r f; do
+    [ -z "$f" ] && continue
+    role="Other"
+    case "$f" in
+      README.md) role="Project root, tech stack, recovery";;
+      COMMIT_PUSH_POINT.md) role="Commit guide";;
+      index.md) role="Index";;
+      qa-feedback-log.md) role="QA feedback";;
+      recovery.md) role="Recovery log";;
+      docs/domain/*) role="Domain doc";;
+      docs/*) role="Docs";;
+      .github/chatmodes/*) role="Chatmode";;
+      scrum.pmo/roles/*/process.md) role="$(basename "$(dirname "$(dirname "$f")")") process";;
+      scrum.pmo/roles/PO/sprint-n-template/*) role="PO template";;
+      scrum.pmo/sprints/*/planning.md) role="Sprint planning";;
+      scrum.pmo/sprints/*/task-*.md) role="Sprint task";;
+      scrum.pmo/project.journal/*/project.state.md) role="Project journal entry";;
+      scrum.pmo/project.journal/_template/*) role="Project journal template";;
+    esac
+    last_mod="$(git log -1 --format=%cs -- "$f" 2>/dev/null || stat -f %Sm -t %F "$f" 2>/dev/null || date -u +%F)"
+    base_name="$(basename "$f")"
+    printf "| [%s](%s) | %s | %s |\n" "$base_name" "$f" "$role" "$last_mod"
+  done <<< "$file_list"
+
+  printf "\n*This index is auto-generated for recovery and onboarding. Update as new markdown files are added.*\n"
+} > "$TMP_FILE"
+
+mv "$TMP_FILE" "$OUTPUT_FILE"
+echo "Wrote $OUTPUT_FILE"
+
+

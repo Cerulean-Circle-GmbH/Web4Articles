@@ -18,3 +18,5 @@
 - Do: Sync prompt on Methods Down after g[tab]; show Methods header filter on typing method token; refine final-only frame clearing.
 \n## 2025-08-09T18:36:47Z
 - Do: Add optional v2 activation log (stderr) gated by TSRANGER_V2_LOG=1 to confirm src.v2 is executed during tests without altering assertions.
+\n## 2025-08-10T09:00:00Z
+> you created some quite sophisticated shell tools to achive your goals in this chat. why do you not add them to src/sh  and make them more generic so that you yourself can reuse them. add this this to the qa.md feedback of sprint 2 literally and do it.
