@@ -61,6 +61,7 @@ After recovering from `README.md`, I operate as ScrumMaster across roles, ensuri
 - Recovery Journal Automation: command to scaffold dated journal entry from template automatically.
 - Where to document: `README.md` (principles), `scrum.pmo/roles/ScrumMaster/process.md`, `recovery.md`, sprint templates, CI docs.
 - auto correct spelling issues like [Detailed](Settiles) even it it is not an executable link one can see that something was chnaged and see still what was the original misspelled word. this helps tracking the needed interpretations.
+ - Crosslinking Hygiene: convert referenced filenames to explicit Markdown links across retro docs (instructions, prompt, overview, answers) and core docs where relevant; add a lint/check to flag bare filenames without links.
 
 ### QA “Elephant in the Room” Analysis
 - Undiscussed-but-Blocking Topic: prompt-line method-token sync and cursor semantics grew into a major obstacle but wasn’t highlighted early.
