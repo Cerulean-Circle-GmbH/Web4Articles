@@ -10,7 +10,7 @@ This retrospective is conducted on branch `retro/2025-08-10-agent-retro`. Multip
 - Produce durable lessons that update role process docs and test/release practices.
 
 ## What to Submit (per agent)
-Each agent must create a file named `answer.[agent-name].md` in this folder. Use the structure below, with clear headings and subsections.
+Each agent must create a file named `answer.[agent-name].md` in this folder. The canonical questions live below and are the single source of truth; do not rephrase elsewhere.
 
 1. Role Description After Recovery (as ScrumMaster)
    - Describe how you, as a ScrumMaster, would explain your own role after recovery from README.
@@ -30,9 +30,13 @@ Each agent must create a file named `answer.[agent-name].md` in this folder. Use
 5. Process Improvements (Actionable)
    - Concrete changes to: recovery flow, branching, commit policy, test determinism, release gating.
    - Where to document the change (role process docs, README first principles, recovery.md, test guidelines).
+6. QA “Elephant in the Room” Analysis
+   - What topic was the elephant in the room that became an obvious obstacle but was not discussed?
+   - Which elephant in the room was discovered and explicitly named as a major obstacle?
+   - Were solutions provided or described by QA? Where were the solution approaches documented (paths/links)?
 
 ## DRY Policy
-- The interview prompt for agents lives in `agent-interview.md`. Do not duplicate it; link to it.
+- The interview prompt for agents lives in `agent-interview.md`. Do not duplicate questions there; link to this file.
 - If you propose reusable checklists, place them in role `process.md` and reference rather than copying.
 
 ## Submission Notes
