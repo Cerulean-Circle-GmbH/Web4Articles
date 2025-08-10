@@ -13,7 +13,7 @@
 
 As ScrumMaster, I facilitated the recovery process by establishing comprehensive research documentation practices and implementing structured knowledge management following the WODA principle (What, Overview, Details, Actions). I ensured that research tasks were properly documented, organized, and made accessible for future reference.
 
-### [Detailed](Settiles) Role Description
+### [Detailed](./answer.ResearchArchitect.md#typo:Settiles) Role Description
 
 **ResearchArchitect** specializes in:
 - **Research Methodology**: Implementing WODA principle (What, Overview, Details, Actions) for structured research

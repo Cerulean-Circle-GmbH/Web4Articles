@@ -6,7 +6,7 @@
 - [ ] implemented all measures
 
 ## 1. Role Description After Recovery (as ScrumMaster)
-### [Detailed](Settiles) Role Description
+### [Detailed](./answer.assistant.md#typo:Settiles) Role Description
 As ScrumMaster, I ensured recovery from `README.md` established the core principles: ESM-only, positional-args-only CLI, traceable documentation, and reproducible environment. I facilitated:
 - Enforcing first-line backlinks across markdown
 - UUID-based traceability for MAIN/SUBTASK tasks

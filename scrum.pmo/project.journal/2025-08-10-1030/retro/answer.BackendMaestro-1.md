@@ -7,7 +7,7 @@
 
 ## 1. Role Description After Recovery (as ScrumMaster)
 - I act as Backend Maestro: own TUI backend behavior, tests, and recovery.
-- [Detailed](Settiles) Role Description:
+- [Detailed](./answer.BackendMaestro-1.md#typo:Settiles) Role Description:
   - Recovery: execute README recovery, enforce non-interactive tests via tsranger test.
   - TUI: prompt editing (cursor, backspace), Tab/Right policies, filter sync.
   - Testing: add scripted cases, avoid hangs.
