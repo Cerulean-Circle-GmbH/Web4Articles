@@ -1,3 +1,5 @@
+[Back to Index](./index.md)
+
 # QA Feedback Log (2025-08-06)
 
 - 2025-08-04 — sprint-1/task-1.0-architect-tssh-spec.md:

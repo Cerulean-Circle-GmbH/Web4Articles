@@ -1,3 +1,5 @@
+[Back to Docs](../)
+
 # UpDown Reference Removal Fix Log
 
 ## 2025-08-03
