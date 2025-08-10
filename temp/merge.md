@@ -61,3 +61,12 @@ Expected outcomes:
 - origin/test/wentAstray
   - Conflicts expected: `README.md`, `docs/tech-stack.md`, multiple `scrum.pmo/roles/*/process.md`, and sprint-1 task docs
   - Resolution: Keep ours for all; if dated log sections appear, merge chronologically and keep newest
+
+### Sprint 5 and 6 import
+
+- Imported from `origin/cursor/plan-new-sprint-with-tsranger-v2-ef48`:
+  - `scrum.pmo/sprints/sprint-5/**`
+  - `scrum.pmo/sprints/sprint-6/**`
+  - `src.v2/sh/tsranger`
+- Conflicts: none (additions)
+- Action: added, committed, and will push
