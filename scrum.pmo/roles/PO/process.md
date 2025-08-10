@@ -97,6 +97,11 @@ When the Scrum Master requests a new task or task update, the AI must:
 - Keep all documentation up-to-date and reviewed by the team.
 - Capture QA feedback and audit learnings in each task's QA section.
 
+## Pre-Commit Spellcheck & Cross-Reference Check (Mandatory)
+- Before committing planning/tasks/subtasks edits:
+  - Spellcheck changed markdown text; correct obvious typos.
+  - Verify first-line backlinks and all cross-references (planning ↔ tasks ↔ subtasks ↔ `requiremnents.md`) resolve.
+
 ## Managing Sprint Requirements (requiremnents.md)
 - Each sprint may contain a `requiremnents.md` listing unchecked requirements.
 - For every new requirement, create a MAIN task and optional SUBTASKS:
