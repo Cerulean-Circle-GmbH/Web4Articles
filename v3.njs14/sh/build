@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+cd "$ROOT"
+
+if [[ -x ./node_modules/.bin/tsc ]]; then
+  ./node_modules/.bin/tsc -p v3.njs14/tsconfig.njs14.json
+elif command -v tsc >/dev/null 2>&1; then
+  tsc -p v3.njs14/tsconfig.njs14.json
+else
+  echo "TypeScript compiler not found. Install with: npm i -D typescript@4.9.5" >&2
+  exit 1
+fi
+
+node v3.njs14/postprocess.mjs
