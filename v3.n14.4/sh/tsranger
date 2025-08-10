@@ -5,6 +5,13 @@
 # - Executes compiled JS via node 14 (ESM)
 set -euo pipefail
 
+DEBUG_FLAG=0
+if [[ "${1:-}" == "--debug" ]]; then
+  DEBUG_FLAG=1
+  shift || true
+  set -x
+fi
+
 # Locate project root (with package.json)
 find_project_root() {
   local dir="$PWD"
@@ -26,14 +33,45 @@ fi
 
 cd "$PROJECT_ROOT"
 
-# Ensure TypeScript is available (on Node 14)
-if ! npx --yes tsc -v >/dev/null 2>&1; then
+# Self-test mode: quick Node 14 sanity and tsc detection
+if [[ "${1:-}" == "--self-test" ]]; then
+  echo "[node] $(node -v || echo 'node not found')"
+  echo "[npm]  $(npm -v || echo 'npm not found')"
+  if [[ -x ./node_modules/.bin/tsc ]]; then
+    echo "[tsc]  ./node_modules/.bin/tsc version: $(./node_modules/.bin/tsc -v || true)"
+  elif command -v tsc >/dev/null 2>&1; then
+    echo "[tsc]  $(command -v tsc) version: $(tsc -v || true)"
+  elif command -v npx >/dev/null 2>&1; then
+    echo "[npx]  available; will use npx tsc when building"
+    echo "[tsc]  version (via npx): $(npx --yes tsc -v || true)"
+  else
+    echo "[tsc]  not found"
+  fi
+  exit 0
+fi
+
+# Determine TSC command without relying solely on npx (avoid segfaults)
+TSC_CMD=()
+if [[ -x ./node_modules/.bin/tsc ]]; then
+  TSC_CMD=("./node_modules/.bin/tsc")
+elif command -v tsc >/dev/null 2>&1; then
+  TSC_CMD=("$(command -v tsc)")
+elif command -v npx >/dev/null 2>&1; then
+  TSC_CMD=("npx" "--yes" "tsc")
+else
   echo "TypeScript compiler not found. Install with: npm i -D typescript@5" >&2
   exit 1
 fi
 
+if [[ $DEBUG_FLAG -eq 1 ]]; then
+  echo "[debug] PROJECT_ROOT=$PROJECT_ROOT"
+  echo "[debug] NODE=$(node -v || echo 'missing')"
+  echo "[debug] NPM=$(npm -v || echo 'missing')"
+  echo "[debug] TSC_CMD=${TSC_CMD[*]}"
+fi
+
 # Build to Node14-compatible output
-npx tsc -p v3.n14.4/tsconfig.n14.json
+"${TSC_CMD[@]}" -p v3.n14.4/tsconfig.n14.json
 
 # Determine entry (v1 default, v2 when TSRANGER_V2=1)
 ENTRY="dist.n14/src/ts/layer4/TSRanger.js"
