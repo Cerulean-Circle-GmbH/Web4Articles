@@ -130,3 +130,16 @@
 **Next Steps:**
 - Expand ontology indexes from broader repository scan and link terms back to source files.
 - Add automated link validation in pre-commit for ontology files.
+
+## 2025-08-10 (PDCA)
+
+**Summary:**
+- Ran PDCA as Ontology Architect: expanded ontology indexes, updated status, and recorded PDCA.
+- Files updated: `wiki/ontology/nouns.index.md`, `verbs.index.md`, `ambiguities.index.md`, `ontology.status.md`.
+- Added PDCA log: `scrum.pmo/roles/OntologyArchitect/PDCA/2025-08-10.md`.
+
+**Metrics:**
+- Nouns: 44; Verbs: 24; Ambiguities: 15.
+
+**Next:**
+- Add cross-links to source files and implement pre-commit link checks for ontology files.
