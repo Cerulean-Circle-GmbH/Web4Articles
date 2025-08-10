@@ -3,12 +3,18 @@
 
 _tsranger_complete()
 {
-  local cur prev words cword
-  _init_completion -n : || return
+  local cur prev
+  # If bash-completion's _init_completion exists, use it; else fall back
+  if declare -F _init_completion >/dev/null 2>&1; then
+    _init_completion -n : || return
+  else
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+  fi
 
   local opts="debug selftest test"
 
-  case ${COMP_WORDS[COMP_CWORD-1]} in
+  case "$prev" in
     test)
       # After 'test', suggest bracketed key tokens
       COMPREPLY=( $( compgen -W "[up] [down] [left] [right] [tab] [enter] [space] [backspace] [esc] q" -- "$cur" ) )
