@@ -1,3 +1,5 @@
+[Back to Sprints](../)
+
 # Sprint 1 Planning
 
 ## Sprint Goal

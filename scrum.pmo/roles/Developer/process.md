@@ -1,4 +1,6 @@
-[Back to Versioned Units Policy](../../../docs/versioned-units.md)
+
+[Back to Versioned Units Policy](../../../docs/versioned-units.md) | [Back to Roles](../)
+
 
 # AI Feedback Processing Protocol
 
@@ -61,6 +63,11 @@ When the AI is acting as Developer to process feedback:
 ## Documentation
 - Document all process, QA, and architectural learnings in markdown for onboarding and future reference.
 - Always reference the canonical project first principles at the top of this file for any new or updated process.
+
+## Pre-Commit Spellcheck & Cross-Reference Check (Mandatory)
+- Before committing changes:
+  - Spellcheck modified markdown and code comments; fix obvious typos and normalize agreed terms.
+  - Verify first-line backlinks and relative links in changed markdown resolve correctly.
 
 
 # tssh CLI: Test-Driven Development & Feedback Integration (2025-08-04)

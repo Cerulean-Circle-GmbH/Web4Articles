@@ -1,3 +1,5 @@
+[Back to Planning](./planning.md)
+
 # Task 1.3: Developer - Implement Bash completion for tssh
 
 ## Progress (2025-08-06)
