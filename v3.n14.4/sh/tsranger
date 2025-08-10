@@ -6,11 +6,6 @@
 set -euo pipefail
 
 DEBUG_FLAG=0
-if [[ "${1:-}" == "--debug" ]]; then
-  DEBUG_FLAG=1
-  shift || true
-  set -x
-fi
 
 # Locate project root (with package.json)
 find_project_root() {
@@ -33,22 +28,31 @@ fi
 
 cd "$PROJECT_ROOT"
 
-# Self-test mode: quick Node 14 sanity and tsc detection
-if [[ "${1:-}" == "--self-test" ]]; then
-  echo "[node] $(node -v || echo 'node not found')"
-  echo "[npm]  $(npm -v || echo 'npm not found')"
-  if [[ -x ./node_modules/.bin/tsc ]]; then
-    echo "[tsc]  ./node_modules/.bin/tsc version: $(./node_modules/.bin/tsc -v || true)"
-  elif command -v tsc >/dev/null 2>&1; then
-    echo "[tsc]  $(command -v tsc) version: $(tsc -v || true)"
-  elif command -v npx >/dev/null 2>&1; then
-    echo "[npx]  available; will use npx tsc when building"
-    echo "[tsc]  version (via npx): $(npx --yes tsc -v || true)"
-  else
-    echo "[tsc]  not found"
-  fi
-  exit 0
-fi
+# Positional control args: debug | selftest | test
+case "${1:-}" in
+  debug)
+    DEBUG_FLAG=1
+    shift || true
+    set -x
+    ;;
+  selftest)
+    echo "[node] $(node -v || echo 'node not found')"
+    echo "[npm]  $(npm -v || echo 'npm not found')"
+    if [[ -x ./node_modules/.bin/tsc ]]; then
+      echo "[tsc]  ./node_modules/.bin/tsc version: $(./node_modules/.bin/tsc -v || true)"
+    elif command -v tsc >/dev/null 2>&1; then
+      echo "[tsc]  $(command -v tsc) version: $(tsc -v || true)"
+    elif command -v npx >/dev/null 2>&1; then
+      echo "[npx]  available; will use npx tsc when building"
+      echo "[tsc]  version (via npx): $(npx --yes tsc -v || true)"
+    else
+      echo "[tsc]  not found"
+    fi
+    exit 0
+    ;;
+  *)
+    ;;
+esac
 
 # Determine TSC command without relying solely on npx (avoid segfaults)
 TSC_CMD=()
