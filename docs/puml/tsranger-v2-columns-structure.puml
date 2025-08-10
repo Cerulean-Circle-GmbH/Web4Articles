@@ -1,0 +1,20 @@
+@startuml
+package "src.v2" {
+  package interfaces {
+    interface RangerFilter
+    interface RangerColumn
+  }
+  package columns {
+    class RangerClassColumn
+    class RangerMethodColumn
+    class RangerParamColumn
+    class RangerDocsColumn
+  }
+}
+
+interfaces.RangerColumn <|.. columns.RangerClassColumn
+interfaces.RangerColumn <|.. columns.RangerMethodColumn
+interfaces.RangerColumn <|.. columns.RangerParamColumn
+interfaces.RangerColumn <|.. columns.RangerDocsColumn
+
+@enduml

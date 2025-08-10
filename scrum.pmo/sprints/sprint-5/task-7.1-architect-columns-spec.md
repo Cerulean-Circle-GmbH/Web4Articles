@@ -23,3 +23,30 @@ Produce a detailed specification for a column-based architecture:
 ## Acceptance Criteria
 - Spec and diagrams reviewed and approved
 - Diagrams compile and SVGs are checked in under `docs/`
+
+## Detailed Specification (Outline)
+- RangerFilter
+  - Methods: `apply(prefix: string)`, `reset()`, `current(): string`
+  - Behavior: prefix match (case-insensitive), single source of truth for header `(prefix)`
+- RangerColumn<T>
+  - Properties: `items: T[]`, `filter: RangerFilter`, `selectedIndex: number`
+  - Methods: `setItems(T[])`, `applyFilter(prefix: string)`, `clearFilter()`, `moveSelection(delta: number)`, `getVisible(): T[]`
+  - Hooks: `onSelect?(item: T)`: optional prompt-sync behavior
+- Concrete Columns
+  - ClassColumn: provides class names from TSCompletion
+  - MethodColumn: methods for selected class; filter reflects typed method token
+  - ParamColumn: parameter names; no prompt token editing
+  - DocsColumn: read-only text wrapping; no filter
+- Controller Integration
+  - Left/Right switches current column; Up/Down uses column.moveSelection
+  - Typing routes to active column.filter; prompt sync per column rules
+
+## PUML Diagrams (placeholders)
+- Sequence: `docs/puml/tsranger-v2-columns-sequence.puml`
+- Structure: `docs/puml/tsranger-v2-columns-structure.puml`
+
+## SVG Generation
+- Use PlantUML to render:
+  - `tsranger-v2-columns-sequence.svg`
+  - `tsranger-v2-columns-structure.svg`
+- Place SVGs in `docs/`

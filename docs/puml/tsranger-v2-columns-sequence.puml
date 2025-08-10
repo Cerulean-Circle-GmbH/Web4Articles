@@ -1,0 +1,16 @@
+@startuml
+actor User
+participant Controller
+participant ClassColumn
+participant MethodColumn
+participant ParamColumn
+participant DocsColumn
+participant View
+
+User -> Controller: key events
+Controller -> ClassColumn: applyFilter/moveSelection
+Controller -> MethodColumn: applyFilter/moveSelection
+Controller -> ParamColumn: applyFilter/moveSelection
+Controller -> DocsColumn: getVisible()
+Controller -> View: render(columns)
+@enduml
