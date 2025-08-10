@@ -151,3 +151,13 @@
 - Sync Sprint 2 planning checkboxes for Task 7 status and tests.
 - Proceed with Sprint 5 implementation tasks (v2) and validate via non-interactive tests (`tsranger test`).
 - Fast-forward local branch to remote if appropriate.
+
+## 2025-08-10T08:54:29Z
+**Summary:**
+- Recovered from branch README; journal entry created at scrum.pmo/project.journal/2025-08-10-0854.
+- Environment: Docker OK; Node v24.5.0; npm 11.5.2; devcontainer/PlantUML/Graphviz not installed.
+- Tests: 7 failing (oosh-completion.shell:3, tsranger.promptline.behavior:4); others passing.
+- Sprint counts: s0=13, s1=8, s2=28, s3=8, s4=0.
+
+**Next Steps:**
+- Fix oosh-completion.sh POSIX issues; sync TSRanger prompt method token; consider devcontainer tooling.
