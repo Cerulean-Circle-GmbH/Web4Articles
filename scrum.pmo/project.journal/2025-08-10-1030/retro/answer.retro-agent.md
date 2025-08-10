@@ -2,10 +2,13 @@
 
 # Retro Agent Answer — retro-agent (GPT-5 ScrumMaster)
 
+- [x] Read by QA
+- [ ] implemented all measures
+
 ### Role Description After Recovery (as ScrumMaster)
 After recovering from `README.md`, I operate as ScrumMaster across roles, ensuring process compliance, test determinism, and auditability. I remove impediments, keep planning in sync with implementation, and enforce Commit & Push after each modifying prompt. I coordinate QA feedback capture verbatim with UTC timestamps and drive recovery and release gating.
 
-#### Settiles Role Description
+#### [Detailed](Settiles) Role Description
 - Responsibilities: orchestrate recovery, triage blockers, enforce DRY process docs, maintain sprint/task traceability, gate releases on green tests, and ensure journaling.
 - Guardrails: never release with red tests; never lose uncommitted work when switching branches; no destructive actions without explicit confirmation; keep questions single-source in instructions.
 - Handoffs: to Developers (code fixes), Tester (determinism, scripts), PO (docs/backlinks), DevOps (branching, CI engines).
@@ -50,12 +53,14 @@ After recovering from `README.md`, I operate as ScrumMaster across roles, ensuri
 - Confusing
   - Mixed typos (expected due to speed) occasionally obscured intent (e.g., “setiles” vs “detailed”); mitigated by quoting verbatim and adding a spelling-corrected summary where allowed.
 
+
 ### Process Improvements (Actionable)
 - Pre-release Gate: add `npm run prerelease:promptline` running a minimal suite of prompt-line cases to fail fast.
 - Plan Sync: script to reconcile sprint planning checkboxes from code/tests; surface drift in recovery summary.
 - Engine Enforcement: add CI check for Node >= 20.19.0 or LTS 22, and devcontainer recommendation.
 - Recovery Journal Automation: command to scaffold dated journal entry from template automatically.
 - Where to document: `README.md` (principles), `scrum.pmo/roles/ScrumMaster/process.md`, `recovery.md`, sprint templates, CI docs.
+- auto correct spelling issues like [Detailed](Settiles) even it it is not an executable link one can see that something was chnaged and see still what was the original misspelled word. this helps tracking the needed interpretations.
 
 ### QA “Elephant in the Room” Analysis
 - Undiscussed-but-Blocking Topic: prompt-line method-token sync and cursor semantics grew into a major obstacle but wasn’t highlighted early.
