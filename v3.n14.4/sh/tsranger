@@ -74,8 +74,24 @@ if [[ $DEBUG_FLAG -eq 1 ]]; then
   echo "[debug] TSC_CMD=${TSC_CMD[*]}"
 fi
 
-# Build to Node14-compatible output
+# Build to Node14-compatible output, with fallback install on failure
+TS14_TYPESCRIPT_VERSION="${TS14_TYPESCRIPT_VERSION:-4.9.5}"
+set +e
 "${TSC_CMD[@]}" -p v3.n14.4/tsconfig.n14.json
+stat=$?
+set -e
+if [[ $stat -ne 0 ]]; then
+  echo "[warn] tsc failed (exit $stat). Attempting fallback TypeScript@$TS14_TYPESCRIPT_VERSION..." >&2
+  if ! npm i -D "typescript@${TS14_TYPESCRIPT_VERSION}" >/dev/null 2>&1; then
+    echo "[error] Unable to install typescript@${TS14_TYPESCRIPT_VERSION}. Please install manually and retry." >&2
+    exit $stat
+  fi
+  TSC_CMD=("./node_modules/.bin/tsc")
+  if [[ $DEBUG_FLAG -eq 1 ]]; then
+    echo "[debug] Retrying with $(./node_modules/.bin/tsc -v || true)"
+  fi
+  "${TSC_CMD[@]}" -p v3.n14.4/tsconfig.n14.json
+fi
 
 # Determine entry (v1 default, v2 when TSRANGER_V2=1)
 ENTRY="dist.n14/src/ts/layer4/TSRanger.js"
