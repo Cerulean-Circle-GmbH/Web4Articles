@@ -28,11 +28,13 @@
 - [x] Document the structure and naming conventions in `process.md`.
 - [ ] Add `[task:uuid]` and `[subtask:uuid]` policies to PO process; ensure all tasks carry UUID tags.
 - [ ] Ensure first-line backlinks are present and unique in all sprint tasks.
+- [ ] Add `project.journal/_template/project.state.md` and document the policy to create a dated journal entry after each recovery under `scrum.pmo/project.journal/<YYYY-MM-DD-HHMM>/`.
 
 ## Requirements
 - The directory structure must match the SCRUM conventions.
 - `process.md` must clearly document the conventions.
 - UUID, backlink, and MAIN/SUBTASK numbering policies must be captured.
+- Journal template and recovery journaling policy must be present under `scrum.pmo/project.journal` and referenced in recovery docs.
 
 ## Acceptance Criteria
 - Directory structure exists as specified.

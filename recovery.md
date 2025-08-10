@@ -10,6 +10,7 @@
   - Scan markdown under `scrum.pmo/`, `wiki/`, and QA logs
   - Regenerate/update `index.md` and `qa-feedback-log.md` as needed
   - Summarize sprint/task status and consistency findings
+  - Create a dated journal entry under `scrum.pmo/project.journal/<YYYY-MM-DD-HHMM>/project.state.md` using `scrum.pmo/project.journal/_template/project.state.md` as the template; include the exact formatted status answer after recovery
   - Append a timestamped entry to this file (`recovery.md`) and notify QA
 
 ---
