@@ -2,8 +2,11 @@
 
 # Assistant Retrospective — 2025-08-10
 
+- [x] Read by QA
+- [ ] implemented all measures
+
 ## 1. Role Description After Recovery (as ScrumMaster)
-### Settiles Role Description
+### [Detailed](Settiles) Role Description
 As ScrumMaster, I ensured recovery from `README.md` established the core principles: ESM-only, positional-args-only CLI, traceable documentation, and reproducible environment. I facilitated:
 - Enforcing first-line backlinks across markdown
 - UUID-based traceability for MAIN/SUBTASK tasks
