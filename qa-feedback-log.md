@@ -49,3 +49,8 @@
 
 ## 2025-08-10T09:40:00Z
 > add this projects github origin into the Agent Interview Prompt  as we are also using it in a multi submodule governance project with multiple repositories.
+- 2025-08-10T09:33:46Z — Project Retro Scheduling:
+  > not bad. add  qa questions. what topic was the elephant in the room, that became an obvious obstacle but was not chatted about. which elephant in the room was discovered and named as a major obstacle. where solutions provided or described by qa. where where the solution aproaches documented.
+  > 
+  > the existing questions in the interview file are perfect, but they ahsll be in the retro instuction file, that every agent should read. the instruction file shall not repead the questions rephreased but have them as the single source of truth for each agent. the interview file shall be a promt as short as possible just telling the agent what to read to understand. it needs to make clear that the agent has to comit his answer to the banch and the location unmisunderstandably. the angent needs to make sure he hacn swith to that branch without loosing uncommited parts in his current branch or state. add this to the project qa feedback and rewrite both files.
+  - Spelling-corrected summary (post-quote): Add QA questions on "elephant in the room" obstacles, solutions, and documentation references. Consolidate all interview questions in `retro-instructions.md` as the source of truth; keep `agent-interview.md` a minimal prompt that directs agents to read instructions and commit answers (ensuring safe branch switch) to the specified retro folder/branch.
