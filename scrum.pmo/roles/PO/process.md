@@ -1,3 +1,5 @@
+[Back to Roles](../)
+
 # Product Owner (PO) Role Process
 
 ## CMMI Level 4 Feedback & Learning
@@ -96,6 +98,11 @@ When the Scrum Master requests a new task or task update, the AI must:
 - Use clear, concise language and actionable steps.
 - Keep all documentation up-to-date and reviewed by the team.
 - Capture QA feedback and audit learnings in each task's QA section.
+
+## Pre-Commit Spellcheck & Cross-Reference Check (Mandatory)
+- Before committing planning/tasks/subtasks edits:
+  - Spellcheck changed markdown text; correct obvious typos.
+  - Verify first-line backlinks and all cross-references (planning ↔ tasks ↔ subtasks ↔ `requiremnents.md`) resolve.
 
 ## Managing Sprint Requirements (requiremnents.md)
 - Each sprint may contain a `requiremnents.md` listing unchecked requirements.

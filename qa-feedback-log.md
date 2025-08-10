@@ -1,3 +1,5 @@
+[Back to Index](./index.md)
+
 # QA Feedback Log (2025-08-06)
 
 - 2025-08-04 — sprint-1/task-1.0-architect-tssh-spec.md:
@@ -23,6 +25,13 @@
   - Resolution: Move `RangerModel` to `src/ts/layer2/`, `RangerController` to remain in `src/ts/layer4/`, and `RangerView` to `src/ts/layer5/`; update imports accordingly.
   - Outcome: Code aligns with project layering principles without behavior change; tests remain green.
 
+
+- 2025-08-10T09:33:46Z — Project Retro Scheduling:
+  > not bad. add  qa questions. what topic was the elephant in the room, that became an obvious obstacle but was not chatted about. which elephant in the room was discovered and named as a major obstacle. where solutions provided or described by qa. where where the solution approaches documented.
+  > 
+  > the existing questions in the interview file are perfect, but they shall be in the retro instruction file, that every agent should read. the instruction file shall not repeat the questions rephrased but have them as the single source of truth for each agent. the interview file shall be a prompt as short as possible just telling the agent what to read to understand. it needs to make clear that the agent has to commit his answer to the branch and the location unambiguously. the agent needs to make sure he can switch to that branch without losing uncommitted parts in his current branch or state. add this to the project qa feedback and rewrite both files.
+  - Spelling-corrected summary (post-quote): Add QA questions on "elephant in the room" obstacles, solutions, and documentation references. Consolidate all interview questions in `retro-instructions.md` as the source of truth; keep `agent-interview.md` a minimal prompt that directs agents to read instructions and commit answers (ensuring safe branch switch) to the specified retro folder/branch.
+  
 ## 2025-08-10T09:05:19Z
 > mark this release as a beta release. you did very well to prvent the release and it si the good default behaviour. but we will do a project retro after this release to figure out how we came in this state where you are endlessly trying to fix this test and then teach the process improvements to you to prevent such situations. add this to the sprint 2 qa.feedback as text copy from my ppompt. always copy my feedback 1:1 from the promt into the qa.md with utc timestamp. after you quoted my you can fix spelling errors only, because you can type faster than me and if i type fast i sometimes hit the wrong keys...
 
