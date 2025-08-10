@@ -1,0 +1,27 @@
+# bash completion for v3.n14.4/sh/tsranger
+# Source this file or install into your bash-completion.d
+
+_tsranger_complete()
+{
+  local cur prev words cword
+  _init_completion -n : || return
+
+  local opts="debug selftest test"
+
+  case ${COMP_WORDS[COMP_CWORD-1]} in
+    test)
+      # After 'test', suggest bracketed key tokens
+      COMPREPLY=( $( compgen -W "[up] [down] [left] [right] [tab] [enter] [space] [backspace] [esc] q" -- "$cur" ) )
+      return
+      ;;
+  esac
+
+  if [[ $COMP_CWORD -eq 1 ]]; then
+    COMPREPLY=( $( compgen -W "$opts" -- "$cur" ) )
+    return
+  fi
+
+  COMPREPLY=()
+}
+
+complete -F _tsranger_complete tsranger
