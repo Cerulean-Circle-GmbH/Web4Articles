@@ -1,19 +1,18 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
     "target": "ES2015",
-    "module": "ES2015",
+    "module": "Node16",
     "moduleResolution": "node16",
     "outDir": "../dist.njs14",
     "declaration": false,
+    "declarationMap": false,
     "sourceMap": false,
     "noEmit": false,
-    "allowImportingTsExtensions": true,
     "skipLibCheck": true
   },
   "include": [
-    "../src/**/*.ts",
-    "../v2/src/**/*.ts"
+    "./src.mut/ts/**/*.ts",
+    "./v2.src.mut/ts/**/*.ts"
   ],
   "exclude": [
     "../node_modules",
