@@ -23,10 +23,12 @@ This project follows a continuous integration branching strategy with automated 
 - Never push directly to this branch
 
 ### 3. **release/dev** (Continuous Integration)
-- **Automatically updated** after PR merge to main
-- Always in sync with production after PR approval
-- Used for continuous integration and development
-- May contain merge commits from auto-merge process
+- **Automatically updated** on:
+  - Every push to any feature branch (immediate CI testing)
+  - After PR merge to main (production sync)
+- Used for continuous integration and early testing
+- May contain experimental code from feature branches
+- May have merge conflicts that don't block PR to main
 
 ### 4. **release/testing** 
 - Pre-production testing branch
@@ -69,11 +71,17 @@ The project uses **Pull Request-based automatic merging** because:
 
 ## GitHub Actions Workflows
 
+### feature-to-dev.yml
+- **Triggers on every push to any feature branch**
+- Automatically merges feature branches into release/dev
+- Provides immediate CI feedback
+- Creates issues only for significant conflicts
+
 ### auto-merge-release-dev.yml
 - **Triggers on PR merge to main** (NOT on push)
 - Automatically merges main into release/dev
+- Ensures release/dev includes production code
 - Creates issues on merge conflicts
-- Provides merge reports with PR details
 
 ### sync-production.yml
 - **Triggers on PR merge to main** (NOT on push)
@@ -121,21 +129,47 @@ If auto-merge fails due to conflicts after PR merge:
 ## Branch Flow
 
 ```
-feature/* → PR → main (production) → release/dev → release/testing
-           ↑     ↑                  ↑              ↑
-           Review & Approval       Auto-merge     Manual promotion
-                                   on PR merge
+feature/* → release/dev (on every push for CI)
+    ↓
+    PR → main (production) → release/dev → release/testing
+    ↑     ↑                  ↑           ↑
+    Review & Approval       Re-sync     Manual promotion
+                           with prod
            
-           main ≡ release/production (kept in sync)
+    main ≡ release/production (kept in sync)
 ```
+
+### Continuous Integration Flow
+1. Push to feature branch → Auto-merge to release/dev (immediate CI)
+2. Create PR to main → Code review process
+3. PR approved & merged → main updated (production)
+4. Main merged to release/dev → Ensures dev has production code
+5. Manual promotion to release/testing when ready
 
 ## Key Points
 
 - **main = production**: Every PR merge to main is a production deployment
 - **No Direct Push**: Main branch is protected, PR-only
 - **release/production**: Mirror of main for deployment compatibility
-- **release/dev**: Continuous integration, automatically synced after PR merge
+- **release/dev**: Continuous integration from ALL feature branches
 - **release/testing**: Stable testing environment, manually updated
+
+## Benefits of This CI Approach
+
+### Early Integration Testing
+- Every push to a feature branch is immediately tested in release/dev
+- Integration issues discovered early, not at PR time
+- Developers get immediate feedback on compatibility
+
+### Non-Blocking Development
+- Conflicts in release/dev don't block PR to main
+- Feature branches can be developed independently
+- release/dev serves as a "canary" environment
+
+### Clear Separation of Concerns
+- **release/dev**: Wild west - all features mixed for early testing
+- **main**: Clean, reviewed, production-ready code only
+- **release/testing**: Stable, curated subset for QA
 
 ## Common Mistakes to Avoid
 
