@@ -29,11 +29,11 @@ jobs:
         
     - name: Merge main into release/dev
       run: |
-        echo "Merging main into release/dev..."
-        git merge origin/main --no-ff -m "chore: Auto-merge main into release/dev
+        echo "Merging main (production) into release/dev..."
+        git merge origin/main --no-ff -m "chore: Auto-merge main (production) into release/dev
         
-        Continuous integration merge to keep release/dev in sync with main
-        Commit: ${{ github.sha }}
+        Continuous integration merge to keep release/dev in sync with production
+        Production commit: ${{ github.sha }}
         Triggered by: ${{ github.actor }}
         
         [skip ci]"

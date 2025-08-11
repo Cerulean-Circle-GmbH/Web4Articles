@@ -8,30 +8,36 @@ This project follows a continuous integration branching strategy with automated 
 
 ## Branch Types
 
-### 1. **main** (Protected)
-- Production-ready code
+### 1. **main** (Production)
+- **Production-ready code** (identical to release/production)
 - All changes via reviewed Pull Requests
 - Automatically triggers merge to release/dev
+- This IS the production branch
 
-### 2. **release/dev** (Continuous Integration)
+### 2. **release/production** (Mirror of main)
+- **Identical to main** - exists for deployment compatibility
+- May be used by deployment systems expecting a "release" prefix
+- Always in sync with main
+
+### 3. **release/dev** (Continuous Integration)
 - **Automatically updated** on every push to main
 - Always in sync with main branch
 - Used for continuous integration and development
 - May contain merge commits from auto-merge process
 
-### 3. **release/testing** 
+### 4. **release/testing** 
 - Pre-production testing branch
 - Manually updated from release/dev when ready for testing
 - More stable than release/dev
 - Used for QA and staging deployments
 
-### 4. **Feature Branches**
+### 5. **Feature Branches**
 - **cursor/*** - AI-generated feature branches
 - **feat/*** - Human-initiated features
 - **chore/*** - Maintenance and housekeeping
 - **docs/*** - Documentation updates
 
-### 5. **Special Purpose**
+### 6. **Special Purpose**
 - **handover/*** - Knowledge transfer branches
 - **test/*** - Experimental branches
 - **retro/*** - Retrospective documentation
@@ -42,7 +48,7 @@ This project follows a continuous integration branching strategy with automated 
 
 The project uses **automatic merging** from main to release/dev because:
 
-1. **Continuous Integration**: Ensures release/dev always has latest approved changes
+1. **Continuous Integration**: Ensures release/dev always has latest production code
 2. **Early Conflict Detection**: Identifies integration issues immediately
 3. **Simplified Workflow**: Reduces manual merge overhead
 4. **Testing Isolation**: release/testing branch provides stable testing environment
@@ -52,9 +58,9 @@ The project uses **automatic merging** from main to release/dev because:
 1. **Feature Development**: Work on feature branches
 2. **Pull Request**: Create PR to main when ready
 3. **Code Review**: Team reviews and approves
-4. **Merge to main**: PR merged after approval
+4. **Merge to main**: PR merged after approval (this is production!)
 5. **Auto-merge**: GitHub Action automatically merges main → release/dev
-6. **Testing**: When ready, manually promote release/dev → release/testing
+6. **Testing**: When ready, manually promote to release/testing for QA
 
 ## GitHub Actions Workflows
 
@@ -83,7 +89,7 @@ If auto-merge fails due to conflicts:
 
 ## Best Practices
 
-1. **Never push directly to main or release/***
+1. **Never push directly to main** - it's production!
 2. **Always use Pull Requests for main**
 3. **Keep feature branches small to minimize conflicts**
 4. **Delete branches after merge**
@@ -93,17 +99,26 @@ If auto-merge fails due to conflicts:
 ## Branch Flow
 
 ```
-feature/* → main → release/dev → release/testing → production
-           ↑       ↑              ↑
-           PR     Auto-merge     Manual promotion
+feature/* → main (production) → release/dev → release/testing
+           ↑                  ↑              ↑
+           PR                Auto-merge     Manual promotion
+           
+           main ≡ release/production (identical)
 ```
 
-## Benefits of Auto-merge
+## Key Points
 
-- **Always Current**: release/dev reflects latest approved code
-- **Fast Feedback**: Integration issues detected immediately
-- **Clear Separation**: Testing happens in release/testing, not release/dev
-- **Reduced Overhead**: No manual merge process needed
-- **Audit Trail**: All merges tracked in Git history
+- **main = production**: Every merge to main is a production deployment
+- **release/production**: Mirror of main for deployment compatibility
+- **release/dev**: Continuous integration, always synced with production
+- **release/testing**: Stable testing environment, manually updated
+
+## Benefits of This Approach
+
+- **Clear Production Branch**: main is always production-ready
+- **Fast Feedback**: Integration issues detected in release/dev
+- **Testing Isolation**: release/testing for QA without affecting CI
+- **Simple Mental Model**: main = production, always
+- **Deployment Flexibility**: release/production alias for systems that need it
 
 [Back to Docs](../)
