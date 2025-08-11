@@ -134,6 +134,13 @@
     ".DS_Store",
     "Thumbs.db"
   ],
-  "ignoreWords": [],
+  "ignoreWords": [
+    "Settiles",
+    "chnaged",
+    "ppompt",
+    "promt",
+    "si",
+    "prvent"
+  ],
   "import": []
 }

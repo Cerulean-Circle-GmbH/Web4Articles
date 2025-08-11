@@ -22,11 +22,12 @@ jobs:
       with:
         node-version: '18'
         
-    - name: Install spell checker
+    - name: Install spell checker and dependencies
       run: |
         npm install -g cspell
+        sudo apt-get update && sudo apt-get install -y jq
         
-    - name: Run spell check
+    - name: Run spell check with typo tracking
       run: |
         echo "## Spell Check Report" >> $GITHUB_STEP_SUMMARY
         echo "Checking markdown files for spelling errors..." >> $GITHUB_STEP_SUMMARY
@@ -54,8 +55,61 @@ jobs:
           }' > .cspell.json
         fi
         
+        # Check for typo tracking pattern
+        echo "### Checking typo tracking format" >> $GITHUB_STEP_SUMMARY
+        typo_format_issues=0
+        
+        # Find all instances of #typo: links
+        grep -r "#typo:" --include="*.md" . | while IFS=: read -r file line_num content; do
+          # Extract the typo link pattern
+          if [[ "$content" =~ \[([^\]]+)\]\(([^)]+)#typo:([^)]+)\) ]]; then
+            corrected="${BASH_REMATCH[1]}"
+            path="${BASH_REMATCH[2]}"
+            original="${BASH_REMATCH[3]}"
+            
+            # Verify it points to current file
+            filename=$(basename "$file")
+            if [[ "$path" != "./$filename" ]]; then
+              echo "::warning file=$file,line=$line_num::Typo link should point to current file: expected './$filename', got '$path'"
+              echo "- ⚠️ \`$file:$line_num\`: Incorrect typo link path" >> $GITHUB_STEP_SUMMARY
+              ((typo_format_issues++))
+            else
+              echo "- ✅ \`$file:$line_num\`: Valid typo tracking for '$original' → '$corrected'" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
+        done
+        
+        # Run spell check, excluding properly tracked typos
+        echo "### Running spell check" >> $GITHUB_STEP_SUMMARY
+        
+        # Create temporary ignore patterns for tracked typos
+        TYPO_WORDS=$(grep -r "#typo:" --include="*.md" . | grep -Eo "#typo:[^)]+\)" | sed 's/#typo://;s/)$//' | sort -u)
+        
+        # Update cspell config with tracked typos
+        if [ -n "$TYPO_WORDS" ]; then
+          echo "Found tracked typos to ignore: $TYPO_WORDS" >> $GITHUB_STEP_SUMMARY
+          # Add typos to ignore list temporarily
+          jq --arg typos "$TYPO_WORDS" '.ignoreWords = ($typos | split("\n"))' .cspell.json > .cspell.json.tmp
+          mv .cspell.json.tmp .cspell.json
+        fi
+        
         # Run spell check
-        cspell "**/*.md" --no-progress --no-summary || echo "::warning::Spelling errors found"
+        cspell "**/*.md" --no-progress --no-summary 2>&1 | while read -r line; do
+          if [[ "$line" =~ ([^:]+):([0-9]+):([0-9]+).*Unknown\ word\ \(([^)]+)\) ]]; then
+            file="${BASH_REMATCH[1]}"
+            line_num="${BASH_REMATCH[2]}"
+            col="${BASH_REMATCH[3]}"
+            word="${BASH_REMATCH[4]}"
+            
+            echo "::warning file=$file,line=$line_num,col=$col::Typo '$word' should be tracked as [CorrectedWord](./${file##*/}#typo:$word)"
+            echo "- ⚠️ \`$file:$line_num\`: Untracked typo '$word'" >> $GITHUB_STEP_SUMMARY
+            echo "  - Suggestion: Replace with \`[CorrectedWord](./${file##*/}#typo:$word)\`" >> $GITHUB_STEP_SUMMARY
+          fi
+        done || echo "Spell check completed"
+        
+        if [ "$typo_format_issues" -gt 0 ]; then
+          echo "::warning::$typo_format_issues typo tracking format issues found"
+        fi
         
     - name: Upload spell check config
       if: failure()
