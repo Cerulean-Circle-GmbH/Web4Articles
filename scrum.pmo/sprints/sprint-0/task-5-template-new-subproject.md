@@ -32,6 +32,7 @@
 - [x] Ensure all scripts and classes are in the correct folders, with imports updated for the new structure.
 - [x] Remove old/duplicate files and commit the cleaned-up state.
 - [x] Document all steps, requirements, and QA feedback in this task for traceability and CMMI Level 4 compliance.
+- [ ] Include `scrum.pmo/project.journal/_template/project.state.md` in the template and require creating a dated journal entry (`scrum.pmo/project.journal/<YYYY-MM-DD-HHMM>/project.state.md`) on first recovery in new projects.
 
 ## Requirements
 
@@ -60,6 +61,7 @@ All steps, requirements, and QA feedback must be documented in this task for fut
 ## Acceptance Criteria
 - New subproject is initialized with the correct structure and documentation.
 - All steps are clearly documented for future use.
+- Journal template exists and first recovery in the new project produces a `project.state.md` based on the template.
 
 
 ## QA Audit & User Feedback

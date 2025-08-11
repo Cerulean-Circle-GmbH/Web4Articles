@@ -1,3 +1,4 @@
+
 [Back to Index](./index.md)
 
 # Web4Articles
@@ -27,6 +28,8 @@ This Project will create a md-file based WIKI for CIRAS Project articles
 - Each article/tool is a separate git submodule.
 - Project is managed by an AI (LLM) and follows CMMI Level 4 SCRUM.
 - **Separation of Concerns:** Each unit (e.g., shell script, TypeScript backend) must be in its own file/module. Do not embed shell scripts in TypeScript files or vice versa.
+
+- **Commit & Push Guarantee:** After each assistant prompt that modifies files, immediately commit and push the changes with a clear, auditable message. Prefer small, atomic commits per prompt to maximize revision safety.
 
 - Do not use shell-style options (e.g., --install-completion) for CLI commands. All actions must be invoked as positional arguments (e.g., `tssh TSsh installCompletion`). This prevents ambiguity and enforces a clean, discoverable CLI interface. This is a core project principle.
 - All shell scripts, completion scripts, and TypeScript backends must be in separate files/units. Never embed shell code in TypeScript or vice versa. Always reference or import as needed.

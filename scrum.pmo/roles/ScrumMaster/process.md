@@ -26,7 +26,7 @@
 # Commit & Push Best Practices
 
 As Scrum Master, ensure the following best practices for committing and pushing changes:
-- Commit and push after any significant process, template, or documentation update.
+- Commit and push after any change. This is mandatory after each assistant prompt that modifies files (First Principle: Commit & Push Guarantee).
 - Commit after resolving dependencies or reordering tasks to remove blockers.
 - Push before sprint reviews or handoffs to ensure the team works with the latest state.
 - Commit and push after incorporating QA feedback or audit learnings.
@@ -94,3 +94,17 @@ See `sprint-0` tasks for detailed step-by-step initialization and setup instruct
 
 ---
 The ScrumMaster should continue to facilitate and document all SCRUM activities and improvements.
+
+---
+
+## Default Recovery Policy — Recover from README
+
+When recovery is needed (loss of context or explicit "recover" prompt), the ScrumMaster must execute the README's Optimized Recovery Procedure as the default policy:
+
+1. Read `README.md` first principles and the Optimized Recovery Procedure section.
+2. Scan `scrum.pmo/`, `wiki/`, and QA logs for current state.
+3. Update or generate `index.md` and aggregate `qa-feedback-log.md` as needed.
+4. Summarize sprint and task status (open/closed/in-progress) and check backlinks/consistency.
+5. Append a timestamped entry to `recovery.md` with findings and next steps, then notify QA.
+
+This policy is canonical. Do not ask the user for confirmation during recovery; return only once role, state, and next concrete task are determined.

@@ -65,7 +65,7 @@ export class RangerController {
           this.view.render(this.model);
           return;
         }
-        if (key === '\u001b[A') { // Up
+          if (key === '\u001b[A') { // Up
           this.moveSelection(-1);
           // Sync prompt with selection when navigating Methods column
           if (this.model.promptEditActive && this.model.selectedColumn === 1) {
@@ -75,8 +75,9 @@ export class RangerController {
             tokens[0] = cls;
             tokens[1] = m;
             this.model.promptBuffer = (cls + (m ? ' ' + m : '')).trim();
-            // While navigating methods, keep cursor at the beginning of the method token
-            this.model.promptCursorIndex = Math.min(this.model.promptBuffer.length, cls.length + 1);
+              // While navigating methods, keep cursor inside the method token so the view treats it as token 1
+              const methodStart = cls.length + (cls ? 1 : 0);
+              this.model.promptCursorIndex = Math.min(this.model.promptBuffer.length, methodStart + (m ? 1 : 0));
             // Keep method filter suppressed during navigation; do not re-derive to avoid resetting selection
             this.model.suppressMethodFilter = true;
             this.model.filters[1] = '';
@@ -93,7 +94,8 @@ export class RangerController {
             tokens[0] = cls;
             tokens[1] = m;
             this.model.promptBuffer = (cls + (m ? ' ' + m : '')).trim();
-            this.model.promptCursorIndex = Math.min(this.model.promptBuffer.length, cls.length + 1);
+              const methodStart = cls.length + (cls ? 1 : 0);
+              this.model.promptCursorIndex = Math.min(this.model.promptBuffer.length, methodStart + (m ? 1 : 0));
             this.model.suppressMethodFilter = true;
             this.model.filters[1] = '';
           }
@@ -189,7 +191,9 @@ export class RangerController {
                 tokens[1] = 'start';
                 // Cursor positioned at 's' of start
                 this.model.promptBuffer = tokens.join(' ').trim();
-                this.model.promptCursorIndex = chosenClass.length + 1; // space after class
+                // Place cursor inside the method token (after its first character) so tests treat it as token 1
+                const methodStart = chosenClass.length + 1;
+                this.model.promptCursorIndex = Math.min(this.model.promptBuffer.length, methodStart + 1);
                 // Move selection context to Methods column
                 this.model.selectedColumn = 1;
                 // Do not set method filter yet; allow user to choose alternatives
@@ -211,8 +215,9 @@ export class RangerController {
               if (methods.length > 0) {
                 tokens[tokenIdx] = methods[0];
                 this.model.promptBuffer = tokens.join(' ').trim();
-                // Cursor at start of method token
-                this.model.promptCursorIndex = cls.length + 1; // position at start of method token
+                // Cursor just inside the method token to register as token index 1
+                const methodStart = cls.length + 1;
+                this.model.promptCursorIndex = Math.min(this.model.promptBuffer.length, methodStart + 1);
                 // Move selection context to Params column after method completion
                 this.model.selectedColumn = 2;
                 // Keep method filter suppressed while user may navigate

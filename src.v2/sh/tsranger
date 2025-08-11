@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# tsranger: Shell wrapper for TSRanger TypeScript TUI
+# tsranger (v2): Shell wrapper for TSRanger v2 TypeScript TUI
 set -euo pipefail
 
-# Find project root (with package.json and src/ts)
+# Find project root (with package.json and src.v2)
 find_project_root() {
   local dir="$PWD"
   while [[ "$dir" != "/" ]]; do
-    if [[ -f "$dir/package.json" && -d "$dir/src/ts" ]]; then
+    if [[ -f "$dir/package.json" && -d "$dir/src.v2" ]]; then
       echo "$dir"
       return 0
     fi
@@ -18,17 +18,12 @@ find_project_root() {
 
 PROJECT_ROOT="$(find_project_root)"
 if [[ -z "$PROJECT_ROOT" ]]; then
-  echo "Error: Could not find project root (missing package.json and src/ts)." >&2
+  echo "Error: Could not find project root (missing package.json and src.v2)." >&2
   exit 1
 fi
 
 TS_NODE_PROJECT="$PROJECT_ROOT/tsconfig.json"
-# Default entry: v1
-TSRANGER_ENTRY="$PROJECT_ROOT/src/ts/layer4/TSRanger.ts"
-# If v2 requested, switch entry
-if [[ "${TSRANGER_V2:-}" == "1" || "${TSRANGER_V2:-}" == "true" ]]; then
-  TSRANGER_ENTRY="$PROJECT_ROOT/src.v2/ts/layer4/TSRanger.ts"
-fi
+TSRANGER_ENTRY="$PROJECT_ROOT/src.v2/ts/layer4/TSRanger.ts"
 
 export NODE_NO_WARNINGS=1
 export TS_NODE_PROJECT
@@ -41,9 +36,9 @@ if [[ "${1:-}" == "test" ]]; then
   export TSRANGER_TEST_INPUT="${1:-}"
 fi
 
-# Start TSRanger TUI (pass through any args)
+# Start TSRanger v2 TUI (pass through any args)
 if [[ -n "${LOG_LEVEL:-}" && "$LOG_LEVEL" =~ ^[0-9]+$ && "$LOG_LEVEL" -gt 3 ]]; then
-  echo "[tsranger debug] Running: TS_NODE_TRANSPILE_ONLY=1 NODE_NO_WARNINGS=1 node --loader ts-node/esm \"$TSRANGER_ENTRY\" $*"
+  echo "[tsranger v2 debug] Running: TS_NODE_TRANSPILE_ONLY=1 NODE_NO_WARNINGS=1 node --loader ts-node/esm \"$TSRANGER_ENTRY\" $*"
 fi
 exec node --loader ts-node/esm "$TSRANGER_ENTRY" "$@"
 
