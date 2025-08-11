@@ -4,24 +4,26 @@
 
 ## Overview
 
-This project follows a controlled branching strategy aligned with CMMI Level 4 principles, ensuring quality and traceability.
+This project follows a continuous integration branching strategy with automated merging to keep integration branches in sync.
 
 ## Branch Types
 
 ### 1. **main** (Protected)
 - Production-ready code
 - All changes via reviewed Pull Requests
-- Triggers documentation updates on merge
+- Automatically triggers merge to release/dev
 
-### 2. **release/dev** (Integration)
-- Integration branch for feature testing
-- Receives selective merges from approved branches
-- **NOT** automatically updated on every push
-- Used for integration testing before main
+### 2. **release/dev** (Continuous Integration)
+- **Automatically updated** on every push to main
+- Always in sync with main branch
+- Used for continuous integration and development
+- May contain merge commits from auto-merge process
 
 ### 3. **release/testing** 
 - Pre-production testing branch
-- Staging environment deployments
+- Manually updated from release/dev when ready for testing
+- More stable than release/dev
+- Used for QA and staging deployments
 
 ### 4. **Feature Branches**
 - **cursor/*** - AI-generated feature branches
@@ -36,54 +38,72 @@ This project follows a controlled branching strategy aligned with CMMI Level 4 p
 
 ## Merge Strategy
 
-### Why NOT Auto-merge on Every Push
+### Auto-merge to release/dev
 
-1. **Quality Control**: Every merge to release/dev should be intentional and reviewed
-2. **CMMI Compliance**: Level 4 requires measured, controlled processes
-3. **Branch Stability**: Prevents work-in-progress from breaking integration
-4. **Clear History**: Avoids cluttering with incomplete commits
+The project uses **automatic merging** from main to release/dev because:
 
-### Recommended Approach
+1. **Continuous Integration**: Ensures release/dev always has latest approved changes
+2. **Early Conflict Detection**: Identifies integration issues immediately
+3. **Simplified Workflow**: Reduces manual merge overhead
+4. **Testing Isolation**: release/testing branch provides stable testing environment
+
+### Workflow
 
 1. **Feature Development**: Work on feature branches
 2. **Pull Request**: Create PR to main when ready
 3. **Code Review**: Team reviews and approves
 4. **Merge to main**: PR merged after approval
-5. **Selective Integration**: Either:
-   - Automatic merge to release/dev after PR approval
-   - Manual trigger via workflow dispatch
-   - Scheduled batch merges
+5. **Auto-merge**: GitHub Action automatically merges main → release/dev
+6. **Testing**: When ready, manually promote release/dev → release/testing
 
 ## GitHub Actions Workflows
+
+### auto-merge-release-dev.yml
+- Triggers on every push to main
+- Automatically merges main into release/dev
+- Creates issues on merge conflicts
+- Provides merge reports
 
 ### eod-merge.yml
 - Daily documentation snapshots
 - Captures branch states and project status
 
-### selective-merge.yml
-- Triggered on PR merge to main
-- Manual trigger option
-- Merges approved code to release/dev
-- Runs tests before pushing
+## Handling Merge Conflicts
+
+If auto-merge fails due to conflicts:
+
+1. An issue is automatically created
+2. Manual intervention required:
+   ```bash
+   git checkout release/dev
+   git merge main
+   # Resolve conflicts
+   git push origin release/dev
+   ```
 
 ## Best Practices
 
 1. **Never push directly to main or release/***
 2. **Always use Pull Requests for main**
-3. **Keep feature branches small and focused**
+3. **Keep feature branches small to minimize conflicts**
 4. **Delete branches after merge**
-5. **Use descriptive branch names**
-6. **Regular EOD documentation**
+5. **Monitor auto-merge status**
+6. **Resolve conflicts promptly**
 
-## Decision: No Auto-merge on Push
+## Branch Flow
 
-After analysis, automatic merging on every push is **not recommended** because:
+```
+feature/* → main → release/dev → release/testing → production
+           ↑       ↑              ↑
+           PR     Auto-merge     Manual promotion
+```
 
-- It bypasses quality gates
-- It conflicts with CMMI Level 4 requirements
-- It risks breaking the integration branch
-- It removes human oversight from the process
+## Benefits of Auto-merge
 
-Instead, use the selective merge workflow that runs after PR approval or can be manually triggered for specific branches.
+- **Always Current**: release/dev reflects latest approved code
+- **Fast Feedback**: Integration issues detected immediately
+- **Clear Separation**: Testing happens in release/testing, not release/dev
+- **Reduced Overhead**: No manual merge process needed
+- **Audit Trail**: All merges tracked in Git history
 
 [Back to Docs](../)
