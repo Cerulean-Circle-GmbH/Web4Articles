@@ -1,6 +1,4 @@
-
-[Back to Versioned Units Policy](../../../docs/versioned-units.md) | [Back to Roles](../)
-
+[Back to Roles](../)
 
 # AI Feedback Processing Protocol
 
@@ -13,7 +11,6 @@ When the AI is acting as Developer to process feedback:
 ## CMMI Level 4 Feedback & Learning
 - All process improvements, debugging lessons, and cross-role feedback must be documented in this file for traceability and continuous improvement.
 - After any significant debugging or integration session, summarize what was learned and how it will change future process or code.
- - QA feedback recording: Do not summarize stakeholder/PO feedback. Capture it verbatim as a blockquote with an explicit UTC timestamp (ISO-8601). Include backlinks to the relevant sprint/task.
 
 ## Logger & Verification Principles
 - All CLI and backend code must use the canonical Logger. Logging must be environment-aware (see Logger.ts), non-intrusive in production, and support traceability for debugging and process improvement.
@@ -27,18 +24,6 @@ When the AI is acting as Developer to process feedback:
 - All shell wrappers and completion scripts must resolve the project root and invoke ESM TypeScript entry points.
 - Never use `main.ts` as a CLI entry point. Always use a static `start()` method in a dedicated entry class.
 - DRY Principle: Do not repeat logic, code, or documentation. Always consolidate and refactor to a single canonical location if repetition is found.
- - DRY Principle: Do not repeat logic, code, or documentation. Always consolidate and refactor to a single canonical location if repetition is found.
-
-## Versioned Units Policy (Applies to src.v2 and beyond)
-
-- Only use code from the active version folder (e.g., `src.v2/`). Do not import from previous versions (e.g., `src/ts/...`) or sibling version folders.
-- If a needed unit (file) is missing in the new version, migrate it into the version folder first, then reference it. Do not reference outside the version folder.
-- Each file is a unit and units are version-dependent. Keep one class/interface per file. Within a version, factor shared logic into new units under that version to preserve DRY.
-- Prefer migration over duplication. If logic exists only in an older version, move it into the new version as the canonical implementation for that version. Update imports accordingly.
-- Prohibit cross-version imports. Add a pre-commit/check step to grep for `../../src/ts`-style imports inside `src.v2` and fix by migrating the referenced unit.
-- Entry points and wrappers must route to the correct version (e.g., `TSRANGER_V2=1` selects `src.v2/...`). Implementation code must not fall back to older version modules at runtime.
-- Documentation and tasks must link the versioned units explicitly (e.g., reference `src.v2/ts/layer4/TSRanger.ts` rather than generic paths) to avoid ambiguity.
-
 - Node.js 18+ (LTS recommended)
 - Bash for shell integration
 - Vitest for testing (ESM compatible)
@@ -58,7 +43,6 @@ When the AI is acting as Developer to process feedback:
 - Automated tests must simulate real shell usage, not just backend logic.
 - Manual QA must validate that completions are visible and correct in the shell. Completion must only ever suggest valid, existing arguments. Shell-style options and unsupported input are never suggested. Invalid/unsupported input yields silence (no suggestions, no errors).
 - All warnings and extraneous output must be suppressed in completions.
- - Folders define context: do not mix artifacts across folders. Sprint QA feedback belongs under the corresponding sprint folder; versioned code/tests must reside under their version root (e.g., `src.v2/` and `test.v2/`).
 
 ## Documentation
 - Document all process, QA, and architectural learnings in markdown for onboarding and future reference.

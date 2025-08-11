@@ -5,7 +5,6 @@
 ## CMMI Level 4 Feedback & Learning
 - All process improvements, debugging lessons, and cross-role feedback must be documented in this file for traceability and continuous improvement.
 - After any significant requirements change, debugging, or integration session, summarize what was learned and how it will change future requirements or documentation.
- - QA feedback recording: Do not summarize stakeholder/PO feedback. Capture it verbatim as a blockquote with an explicit UTC timestamp (ISO-8601). Include backlinks to the relevant sprint/task.
 
 ## Logger & Verification Principles
 - All requirements, documentation, and automation must reference the canonical Logger and verification principles where applicable. Logging must be environment-aware, non-intrusive in production, and support traceability for debugging and process improvement.
