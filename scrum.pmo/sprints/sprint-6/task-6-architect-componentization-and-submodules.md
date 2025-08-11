@@ -4,7 +4,7 @@
 
 ## Status
 - Planned
-- In Progress
+- Done
 
 ## Goal
 Define a component-oriented structure where each major unit (e.g., `TSRanger`, `GitScrumProject`) is developed in its own folder and promoted to a dedicated GitHub repository as a submodule. Versions are maintained as dedicated branches per component (e.g., `njs14`, `n14.4`, `main`).
