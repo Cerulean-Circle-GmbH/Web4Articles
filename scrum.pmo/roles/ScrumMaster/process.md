@@ -100,5 +100,12 @@ When feedback or a new task/subtask is required (by audit, QA, or user request),
 ## Task Reference
 See `sprint-0` tasks for detailed step-by-step initialization and setup instructions. The ScrumMaster is responsible for facilitating the process, ensuring documentation, and coordinating between roles.
 
+## Recovery Process
+See [recovery-process.md](./recovery-process.md) for the mandatory recovery procedure. Key points:
+- Always start from `release/dev` branch
+- Create background agent branch `cursor/recovery-YYYY-MM-DD-HHMM`
+- Complete recovery with project status report before any implementation
+- No testing or implementation during recovery phase
+
 ---
 The ScrumMaster should continue to facilitate and document all SCRUM activities and improvements.
