@@ -77,6 +77,16 @@ The project uses **Pull Request-based automatic merging** because:
 - Provides immediate CI feedback
 - Creates issues only for significant conflicts
 
+### quality-checks.yml
+- **Triggers on every push to feature branches and PRs to main**
+- Runs comprehensive quality checks:
+  - **Spell Check**: Validates spelling in markdown files
+  - **Cross-Link Check**: Ensures internal links are valid
+  - **Ontology Check**: Validates term definitions and usage
+  - **License Check**: Ensures proper license headers
+  - **Backlink Check**: Verifies markdown files have proper backlinks
+- Reports issues as warnings/errors in GitHub Actions
+
 ### auto-merge-release-dev.yml
 - **Triggers on PR merge to main** (NOT on push)
 - Automatically merges main into release/dev

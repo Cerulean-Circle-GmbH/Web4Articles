@@ -1,0 +1,274 @@
+name: Quality Checks
+
+on:
+  push:
+    branches:
+      - '**'
+      - '!main'
+      - '!release/**'
+  pull_request:
+    branches: [main]
+
+jobs:
+  spell-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install spell checker
+      run: |
+        npm install -g cspell
+        
+    - name: Run spell check
+      run: |
+        echo "## Spell Check Report" >> $GITHUB_STEP_SUMMARY
+        echo "Checking markdown files for spelling errors..." >> $GITHUB_STEP_SUMMARY
+        
+        # Create cspell config if not exists
+        if [ ! -f .cspell.json ]; then
+          echo '{
+            "version": "0.2",
+            "language": "en",
+            "words": [
+              "CMMI", "SCRUM", "tssh", "tsranger", "obash", "oosh",
+              "vitest", "puml", "PlantUML", "DevOps", "devcontainer",
+              "submodule", "GitScrumProject", "CIRAS", "backlink",
+              "ESM", "CommonJS", "instanceof", "typeof", "readonly",
+              "namespace", "enum", "const", "async", "await",
+              "TODO", "FIXME", "HACK", "NOTE", "AGPL", "GPL"
+            ],
+            "ignorePaths": [
+              "node_modules/**",
+              ".git/**",
+              "dist/**",
+              "*.min.js",
+              "package-lock.json"
+            ]
+          }' > .cspell.json
+        fi
+        
+        # Run spell check
+        cspell "**/*.md" --no-progress --no-summary || echo "::warning::Spelling errors found"
+        
+    - name: Upload spell check config
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: cspell-config
+        path: .cspell.json
+
+  cross-link-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Check markdown cross-links
+      run: |
+        echo "## Cross-Link Check Report" >> $GITHUB_STEP_SUMMARY
+        echo "Validating internal markdown links..." >> $GITHUB_STEP_SUMMARY
+        
+        # Find all markdown files
+        find . -name "*.md" -not -path "./node_modules/*" -not -path "./.git/*" | while read -r file; do
+          # Extract links from the file
+          grep -Eo '\[([^]]+)\]\(([^)]+)\)' "$file" | grep -Eo '\]\([^)]+\)' | sed 's/](\(.*\))/\1/' | while read -r link; do
+            # Skip external links
+            if [[ "$link" =~ ^https?:// ]] || [[ "$link" =~ ^mailto: ]]; then
+              continue
+            fi
+            
+            # Skip anchors
+            if [[ "$link" =~ ^# ]]; then
+              continue
+            fi
+            
+            # Get the directory of the current file
+            dir=$(dirname "$file")
+            
+            # Resolve the link path
+            if [[ "$link" =~ ^/ ]]; then
+              # Absolute path from repo root
+              target_path=".${link}"
+            else
+              # Relative path
+              target_path="${dir}/${link}"
+            fi
+            
+            # Remove anchor if present
+            target_path="${target_path%%#*}"
+            
+            # Check if target exists
+            if [ ! -e "$target_path" ]; then
+              echo "::error file=$file::Broken link: $link -> $target_path"
+              echo "- ❌ \`$file\`: Broken link to \`$link\`" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+        done
+        
+        echo "Cross-link validation completed." >> $GITHUB_STEP_SUMMARY
+
+  ontology-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Check ontology consistency
+      run: |
+        echo "## Ontology Check Report" >> $GITHUB_STEP_SUMMARY
+        echo "Validating ontology definitions and usage..." >> $GITHUB_STEP_SUMMARY
+        
+        # Check if ontology file exists
+        ONTOLOGY_FILE="wiki/Ontology.md"
+        if [ ! -f "$ONTOLOGY_FILE" ]; then
+          echo "::warning::Ontology file not found at $ONTOLOGY_FILE"
+          echo "- ⚠️ Ontology file missing" >> $GITHUB_STEP_SUMMARY
+          exit 0
+        fi
+        
+        # Extract defined terms from ontology
+        echo "### Defined Terms:" >> $GITHUB_STEP_SUMMARY
+        grep -E "^### " "$ONTOLOGY_FILE" | sed 's/### //' | while read -r term; do
+          echo "- \`$term\`" >> $GITHUB_STEP_SUMMARY
+          
+          # Check if term is used in other files
+          count=$(grep -r "$term" --include="*.md" --exclude-dir=node_modules --exclude-dir=.git --exclude="$ONTOLOGY_FILE" . | wc -l)
+          if [ "$count" -eq 0 ]; then
+            echo "  - ⚠️ Term not used in any other files" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "  - ✅ Used in $count locations" >> $GITHUB_STEP_SUMMARY
+          fi
+        done
+        
+        # Check for undefined terms (common project terms that should be in ontology)
+        echo "### Checking for undefined terms..." >> $GITHUB_STEP_SUMMARY
+        for term in "SCRUM" "Sprint" "Backlog" "Story" "Epic" "Velocity" "Burndown"; do
+          if ! grep -q "### $term" "$ONTOLOGY_FILE"; then
+            # Check if term is used in project
+            usage_count=$(grep -r "\b$term\b" --include="*.md" --exclude-dir=node_modules --exclude-dir=.git . | wc -l)
+            if [ "$usage_count" -gt 5 ]; then
+              echo "::warning::Term '$term' used $usage_count times but not defined in ontology"
+              echo "- ⚠️ \`$term\` - Used $usage_count times but not defined" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
+        done
+
+  license-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Check license headers
+      run: |
+        echo "## License Check Report" >> $GITHUB_STEP_SUMMARY
+        echo "Checking for license headers and compliance..." >> $GITHUB_STEP_SUMMARY
+        
+        # Check if LicenseTool exists and run it
+        if [ -f "src/ts/layer2/LicenseTool.ts" ]; then
+          echo "Running LicenseTool check..." >> $GITHUB_STEP_SUMMARY
+          npm run license:check || {
+            echo "::error::License headers missing or incorrect"
+            echo "- ❌ License check failed - run 'npm run license:apply' to fix" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          }
+          echo "- ✅ All license headers present and correct" >> $GITHUB_STEP_SUMMARY
+        else
+          # Fallback: Basic license header check
+          echo "LicenseTool not found, performing basic check..." >> $GITHUB_STEP_SUMMARY
+          
+          # Check source files for license headers
+          missing_headers=0
+          for ext in ts js tsx jsx; do
+            find src test -name "*.$ext" -type f 2>/dev/null | while read -r file; do
+              if ! head -n 10 "$file" | grep -q "Copyright\|License\|SPDX"; then
+                echo "::warning file=$file::Missing license header"
+                echo "- ⚠️ \`$file\` - Missing license header" >> $GITHUB_STEP_SUMMARY
+                ((missing_headers++))
+              fi
+            done
+          done
+          
+          if [ "$missing_headers" -gt 0 ]; then
+            echo "::warning::$missing_headers files missing license headers"
+          fi
+        fi
+        
+        # Check for LICENSE file
+        if [ ! -f "LICENSE" ]; then
+          echo "::error::LICENSE file not found in repository root"
+          echo "- ❌ LICENSE file missing" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "- ✅ LICENSE file present" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        # Check for AI-GPL if mentioned
+        if [ -f "AI-GPL.md" ]; then
+          echo "- ✅ AI-GPL.md addendum present" >> $GITHUB_STEP_SUMMARY
+        fi
+
+  backlink-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Check backlinks
+      run: |
+        echo "## Backlink Check Report" >> $GITHUB_STEP_SUMMARY
+        echo "Checking that markdown files have backlinks..." >> $GITHUB_STEP_SUMMARY
+        
+        # Check all markdown files for backlinks (first line should be a link)
+        find . -name "*.md" -not -path "./node_modules/*" -not -path "./.git/*" -not -name "README.md" -not -name "LICENSE*" | while read -r file; do
+          first_line=$(head -n 1 "$file")
+          
+          # Check if first line contains a markdown link
+          if [[ ! "$first_line" =~ \[.*\]\(.*\) ]]; then
+            # Check second line as some files have blank first line
+            second_line=$(head -n 2 "$file" | tail -n 1)
+            if [[ ! "$second_line" =~ \[.*\]\(.*\) ]]; then
+              echo "::warning file=$file::Missing backlink on first line"
+              echo "- ⚠️ \`$file\` - No backlink found" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "- ✅ \`$file\` - Has backlink" >> $GITHUB_STEP_SUMMARY
+          fi
+        done
+        
+  summary:
+    needs: [spell-check, cross-link-check, ontology-check, license-check, backlink-check]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Quality check summary
+      run: |
+        echo "## 📋 Quality Checks Complete" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "All quality checks have completed. Review any warnings or errors above." >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Required Checks:" >> $GITHUB_STEP_SUMMARY
+        echo "- Spell Check" >> $GITHUB_STEP_SUMMARY
+        echo "- Cross-Link Validation" >> $GITHUB_STEP_SUMMARY
+        echo "- Ontology Consistency" >> $GITHUB_STEP_SUMMARY
+        echo "- License Headers" >> $GITHUB_STEP_SUMMARY
+        echo "- Backlink Presence" >> $GITHUB_STEP_SUMMARY
