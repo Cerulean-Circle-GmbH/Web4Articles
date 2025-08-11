@@ -4,10 +4,13 @@
     "@types/node": "^24.1.0",
     "execa": "^9.6.0",
     "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
     "vitest": "^3.2.4"
   },
   "scripts": {
     "test": "vitest run",
-    "tsranger": "node --loader ts-node/esm ./src/ts/layer4/TSRanger.ts"
+    "tsranger": "node --loader ts-node/esm ./src/ts/layer4/TSRanger.ts",
+    "license:check": "node --loader ts-node/esm ./src/ts/layer1/TSsh.ts LicenseTool check",
+    "license:apply": "node --loader ts-node/esm ./src/ts/layer1/TSsh.ts LicenseTool apply"
   }
 }
