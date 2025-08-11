@@ -8,9 +8,9 @@
   - [x] origin/cursor/review-readme-and-sprint-2-work-5861
   - [x] origin/docs/sprint-3-embed-svgs
   - [x] origin/feat/ts.ranger.good
-  - [x] origin/feat/tsranger-colors
-  - [x] origin/main
-  - [x] origin/retro/2025-08-10-agent-retro
+  - [x] origin/feat/tsranger-
+  - [ ]
+
 
 - **Not merged into main**:
   - [ ] origin/chore/sprint-4-devcontainer
