@@ -13,8 +13,10 @@ These branches have not been merged into main and may contain active work:
 
 **Note:** Some branches show PRs as "merged to main" but the branch itself remains unmerged, indicating the PR was likely merged but the branch wasn't deleted.
 
-- [ ] `origin/chore/branch-review-checklist` - No PR found
-- [ ] `origin/chore/sprint-4-devcontainer` - Contains [PR #8](https://github.com/Cerulean-Circle-GmbH/Web4Articles/pull/8) (merged to this branch)
+- [ ] `origin/chore/branch-review-checklist` 
+    - [ ] - No PR found
+- [ ] `origin/chore/sprint-4-devcontainer` 
+  - [ ] - Contains [PR #8](https://github.com/Cerulean-Circle-GmbH/Web4Articles/pull/8) (merged to this branch)
 - [ ] `origin/cursor/enhance-terminal-help-and-preview-9502` - No PR found
 - [ ] `origin/cursor/execute-role-from-readme-and-add-to-project-4f37` - No PR found
 - [ ] `origin/cursor/implement-ranger-like-command-execution-with-custom-styling-65fc` - [PR #10](https://github.com/Cerulean-Circle-GmbH/Web4Articles/pull/10) (merged to main)
