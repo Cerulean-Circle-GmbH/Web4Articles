@@ -1,10 +1,11 @@
 [Back to Index](./index.md)
 
-# Web4Articles Markdown File Index (2025-08-06)
+# Web4Articles Markdown File Index (2025-08-11)
 
 | File | Role/Type | Last Modified |
 |------|-----------|--------------|
 | .github/chatmodes/ScrumMaster2QA.chatmode.md | Chatmode | 2025-08-06 |
+| branch-overview.md | Branch analysis | 2025-08-11 |
 | COMMIT_PUSH_POINT.md | Commit guide | 2025-08-06 |
 | README.md | Project root, tech stack, recovery | 2025-08-06 |
 | docs/domain/SimpleTaskStateMachine.md | Domain doc | 2025-08-06 |
@@ -64,5 +65,6 @@
 | scrum.pmo/sprints/sprint-3/task-1.4-tester-e2e-tests.md | Sprint task | 2025-08-08 |
 | scrum.pmo/sprints/sprint-3/task-1.5-po-user-guide.md | Sprint task | 2025-08-08 |
 | scrum.pmo/project.journal/2025-08-10-1030/retro/answer.ResearchArchitect.md | Retro | 2025-08-10 |
+| scrum.pmo/project.journal/2025-08-11-0957/project.state.md | Project state | 2025-08-11 |
 
 *This index is auto-generated for recovery and onboarding. Update as new markdown files are added.*
