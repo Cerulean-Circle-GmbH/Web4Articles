@@ -4,24 +4,27 @@
 
 ## Overview
 
-This project follows a continuous integration branching strategy with automated merging to keep integration branches in sync.
+This project follows a continuous integration branching strategy with automated merging triggered by Pull Request approvals. **Direct pushes to main are strictly forbidden.**
 
 ## Branch Types
 
-### 1. **main** (Production)
+### 1. **main** (Production - Protected)
 - **Production-ready code** (identical to release/production)
-- All changes via reviewed Pull Requests
-- Automatically triggers merge to release/dev
-- This IS the production branch
+- **NO DIRECT PUSHES ALLOWED** - main is protected
+- All changes MUST go through Pull Requests
+- PR merges automatically trigger:
+  - Merge to release/dev
+  - Sync to release/production
 
 ### 2. **release/production** (Mirror of main)
 - **Identical to main** - exists for deployment compatibility
+- Automatically synced after PR merge to main
 - May be used by deployment systems expecting a "release" prefix
-- Always in sync with main
+- Never push directly to this branch
 
 ### 3. **release/dev** (Continuous Integration)
-- **Automatically updated** on every push to main
-- Always in sync with main branch
+- **Automatically updated** after PR merge to main
+- Always in sync with production after PR approval
 - Used for continuous integration and development
 - May contain merge commits from auto-merge process
 
@@ -44,41 +47,60 @@ This project follows a continuous integration branching strategy with automated 
 
 ## Merge Strategy
 
-### Auto-merge to release/dev
+### PR-Based Auto-merge
 
-The project uses **automatic merging** from main to release/dev because:
+The project uses **Pull Request-based automatic merging** because:
 
-1. **Continuous Integration**: Ensures release/dev always has latest production code
-2. **Early Conflict Detection**: Identifies integration issues immediately
-3. **Simplified Workflow**: Reduces manual merge overhead
-4. **Testing Isolation**: release/testing branch provides stable testing environment
+1. **Production Safety**: No one can accidentally push to production (main)
+2. **Code Review**: All changes are reviewed before reaching production
+3. **Automated Integration**: After PR approval, automation handles the rest
+4. **Audit Trail**: Every change to production is tracked through PRs
 
 ### Workflow
 
 1. **Feature Development**: Work on feature branches
-2. **Pull Request**: Create PR to main when ready
-3. **Code Review**: Team reviews and approves
-4. **Merge to main**: PR merged after approval (this is production!)
-5. **Auto-merge**: GitHub Action automatically merges main → release/dev
+2. **Create Pull Request**: Open PR from feature branch to main
+3. **Code Review**: Team reviews and approves PR
+4. **PR Merge**: Approved PR is merged to main (this deploys to production!)
+5. **Automatic Actions**: GitHub Actions automatically:
+   - Merges main → release/dev
+   - Syncs main → release/production
 6. **Testing**: When ready, manually promote to release/testing for QA
 
 ## GitHub Actions Workflows
 
 ### auto-merge-release-dev.yml
-- Triggers on every push to main
+- **Triggers on PR merge to main** (NOT on push)
 - Automatically merges main into release/dev
 - Creates issues on merge conflicts
-- Provides merge reports
+- Provides merge reports with PR details
+
+### sync-production.yml
+- **Triggers on PR merge to main** (NOT on push)
+- Keeps release/production identical to main
+- Uses force push to ensure exact match
 
 ### eod-merge.yml
 - Daily documentation snapshots
 - Captures branch states and project status
 
+## Branch Protection Rules
+
+### main Branch Protection (REQUIRED)
+```yaml
+- Require pull request reviews before merging
+- Dismiss stale pull request approvals when new commits are pushed
+- Require status checks to pass before merging
+- Require branches to be up to date before merging
+- Include administrators in restrictions
+- Restrict who can push to matching branches: NOBODY
+```
+
 ## Handling Merge Conflicts
 
-If auto-merge fails due to conflicts:
+If auto-merge fails due to conflicts after PR merge:
 
-1. An issue is automatically created
+1. An issue is automatically created with PR details
 2. Manual intervention required:
    ```bash
    git checkout release/dev
@@ -89,36 +111,42 @@ If auto-merge fails due to conflicts:
 
 ## Best Practices
 
-1. **Never push directly to main** - it's production!
-2. **Always use Pull Requests for main**
+1. **NEVER attempt to push directly to main** - it will be rejected
+2. **ALWAYS use Pull Requests for all changes**
 3. **Keep feature branches small to minimize conflicts**
-4. **Delete branches after merge**
-5. **Monitor auto-merge status**
+4. **Delete branches after PR merge**
+5. **Monitor auto-merge status after PR approval**
 6. **Resolve conflicts promptly**
 
 ## Branch Flow
 
 ```
-feature/* → main (production) → release/dev → release/testing
-           ↑                  ↑              ↑
-           PR                Auto-merge     Manual promotion
+feature/* → PR → main (production) → release/dev → release/testing
+           ↑     ↑                  ↑              ↑
+           Review & Approval       Auto-merge     Manual promotion
+                                   on PR merge
            
-           main ≡ release/production (identical)
+           main ≡ release/production (kept in sync)
 ```
 
 ## Key Points
 
-- **main = production**: Every merge to main is a production deployment
+- **main = production**: Every PR merge to main is a production deployment
+- **No Direct Push**: Main branch is protected, PR-only
 - **release/production**: Mirror of main for deployment compatibility
-- **release/dev**: Continuous integration, always synced with production
+- **release/dev**: Continuous integration, automatically synced after PR merge
 - **release/testing**: Stable testing environment, manually updated
 
-## Benefits of This Approach
+## Common Mistakes to Avoid
 
-- **Clear Production Branch**: main is always production-ready
-- **Fast Feedback**: Integration issues detected in release/dev
-- **Testing Isolation**: release/testing for QA without affecting CI
-- **Simple Mental Model**: main = production, always
-- **Deployment Flexibility**: release/production alias for systems that need it
+❌ **DON'T** try to push directly to main  
+❌ **DON'T** work directly on main branch  
+❌ **DON'T** bypass PR process  
+❌ **DON'T** merge PRs without review  
+
+✅ **DO** create feature branches  
+✅ **DO** open PRs for all changes  
+✅ **DO** wait for reviews  
+✅ **DO** let automation handle the rest  
 
 [Back to Docs](../)
