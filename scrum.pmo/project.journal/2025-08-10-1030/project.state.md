@@ -5,8 +5,11 @@
 **Status:** I recovered context from README.md, scanned sprints and QA logs, then updated recovery.md and scrum.pmo/roles/ScrumMaster/process.md to make “Recover from README” the default recovery policy with backlinks at line 1.
 
 ### Project status (ScrumMaster)
-- **Role**: ScrumMaster coordinating across sprints and ensuring policy compliance.
-- **Branch**: Local branch is behind remote by 2 commits (fast-forward available).
+- **Role**:
+  - ScrumMaster coordinating across sprints and ensuring policy compliance.
+- **Branch**:
+  - [cursor/plan-new-sprint-with-tsranger-v2-ef48](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/plan-new-sprint-with-tsranger-v2-ef48)
+  - Local branch is behind remote by 2 commits (fast-forward available).
 
 #### Sprint 1
 - **Open**: task-1-tssh-wrapper.md (tssh wrapper/backend).
