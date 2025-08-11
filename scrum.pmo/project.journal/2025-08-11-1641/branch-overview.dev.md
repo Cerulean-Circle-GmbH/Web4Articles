@@ -17,6 +17,12 @@ The release/dev branch serves as the continuous integration environment where al
   - Commit: `bd5e9de` - Add continuous integration for all feature branches
   - Commit: `6b45f9a` - Change all workflows to PR-based triggers
 
+### Recently Merged (manual intervention)
+- [x] `origin/cursor/automate-license-header-and-backlink-enforcement-3dd3` - AI-GPL licensing
+  - Commit: `0ffc0b2` - Add AI-GPL license addendum, headers, and LicenseTool
+  - Background Agent: https://cursor.sh/conversations/01935f6f-1eb9-7340-84cf-1e27de4f3dd3
+  - Merged manually as it predated the auto-merge workflow
+
 ### Previously Merged (manual merges from Sprint 9)
 - [x] `origin/cursor/recover-readme-and-test-state-machine-a372`
 - [x] `origin/chore/branch-review-checklist`
@@ -51,6 +57,8 @@ The release/dev branch serves as the continuous integration environment where al
 - ✅ Sprint 9 branch integration work
 - ✅ Task state machine implementation
 - ✅ Various architectural improvements
+- ✅ **AI-GPL licensing** - All source files now have license headers
+- ✅ **LicenseTool** - New tool for license management (check/apply)
 
 ## Experimental/Legacy Content
 
