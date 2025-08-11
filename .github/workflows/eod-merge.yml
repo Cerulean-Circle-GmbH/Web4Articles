@@ -1,0 +1,75 @@
+name: EOD Merge Documentation
+
+on:
+  schedule:
+    # Run at 23:59 UTC every day (end of day)
+    - cron: '59 23 * * *'
+  workflow_dispatch:
+    inputs:
+      manual_trigger:
+        description: 'Manual EOD merge trigger'
+        required: false
+        default: 'true'
+
+jobs:
+  eod-documentation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Create EOD documentation
+      run: |
+        # Create timestamp
+        TIMESTAMP=$(date -u +"%Y-%m-%d-%H%M")
+        DATE_ONLY=$(date -u +"%Y-%m-%d")
+        TIME_UTC=$(date -u +"%Y-%m-%d %H:%M:%S")
+        
+        # Create journal directory
+        mkdir -p scrum.pmo/project.journal/${TIMESTAMP}
+        
+        # Generate project.state.md from template
+        cp scrum.pmo/templates/project.state.template.md scrum.pmo/project.journal/${TIMESTAMP}/project.state.md
+        
+        # Replace placeholders in project.state.md
+        sed -i "s/{{TIMESTAMP}}/${DATE_ONLY} $(date -u +%H:%M)/g" scrum.pmo/project.journal/${TIMESTAMP}/project.state.md
+        sed -i "s/{{CURRENT_STATUS}}/EOD Automated Merge - ${DATE_ONLY}/g" scrum.pmo/project.journal/${TIMESTAMP}/project.state.md
+        sed -i "s/{{TRIGGER_DESCRIPTION}}/Scheduled EOD merge workflow/g" scrum.pmo/project.journal/${TIMESTAMP}/project.state.md
+        sed -i "s/{{BRANCH_NAME}}/$(git branch --show-current)/g" scrum.pmo/project.journal/${TIMESTAMP}/project.state.md
+        sed -i "s/{{ACTION_DESCRIPTION}}/Automated end-of-day documentation and branch status capture/g" scrum.pmo/project.journal/${TIMESTAMP}/project.state.md
+        
+        # Generate branch-overview.md from template
+        cp scrum.pmo/templates/branch-overview.template.md scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        
+        # Update branch overview with current data
+        sed -i "s/{{TIMESTAMP}}/${DATE_ONLY} $(date -u +%H:%M)/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        
+        # Get branch statistics
+        TOTAL_BRANCHES=$(git branch -r | grep -v HEAD | wc -l)
+        MERGED_COUNT=$(git branch -r --merged origin/main | grep -v HEAD | grep -v main | wc -l)
+        UNMERGED_COUNT=$(git branch -r --no-merged origin/main | grep -v HEAD | wc -l)
+        
+        sed -i "s/{{TOTAL_BRANCHES}}/${TOTAL_BRANCHES}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        sed -i "s/{{MERGED_COUNT}}/${MERGED_COUNT}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        sed -i "s/{{UNMERGED_COUNT}}/${UNMERGED_COUNT}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        
+    - name: Commit EOD documentation
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add scrum.pmo/project.journal/
+        git commit -m "docs: EOD merge documentation for $(date -u +%Y-%m-%d)" || echo "No changes to commit"
+        
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}

@@ -1,0 +1,90 @@
+name: Auto-merge to release/dev
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Configure Git
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+    - name: Fetch all branches
+      run: git fetch --all
+        
+    - name: Checkout release/dev
+      run: |
+        git checkout release/dev || git checkout -b release/dev origin/release/dev
+        
+    - name: Merge main into release/dev
+      run: |
+        echo "Merging main (production) into release/dev..."
+        git merge origin/main --no-ff -m "chore: Auto-merge main (production) into release/dev
+        
+        Continuous integration merge to keep release/dev in sync with production
+        Production commit: ${{ github.sha }}
+        Triggered by: ${{ github.actor }}
+        
+        [skip ci]"
+        
+    - name: Push to release/dev
+      run: |
+        git push origin release/dev || echo "Push failed - may need manual intervention"
+      
+    - name: Create merge report
+      if: always()
+      run: |
+        echo "## Auto-merge Report" >> $GITHUB_STEP_SUMMARY
+        echo "- Source: main" >> $GITHUB_STEP_SUMMARY
+        echo "- Target: release/dev" >> $GITHUB_STEP_SUMMARY
+        echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Triggered by: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Time: $(date -u +%Y-%m-%d' '%H:%M:%S' UTC')" >> $GITHUB_STEP_SUMMARY
+        
+        if [ $? -eq 0 ]; then
+          echo "- Status: Success ✅" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "- Status: Failed ❌ - Manual intervention may be required" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+    - name: Handle merge conflicts
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.name,
+            title: 'Auto-merge conflict: main → release/dev',
+            body: `## Auto-merge Failed
+            
+            The automatic merge from main to release/dev has failed, likely due to merge conflicts.
+            
+            **Details:**
+            - Commit: ${context.sha}
+            - Actor: ${context.actor}
+            - Time: ${new Date().toISOString()}
+            
+            **Action Required:**
+            Please manually resolve the conflicts and merge main into release/dev.
+            
+            \`\`\`bash
+            git checkout release/dev
+            git merge main
+            # Resolve conflicts
+            git push origin release/dev
+            \`\`\`
+            `,
+            labels: ['auto-merge', 'merge-conflict', 'release/dev']
+          })
