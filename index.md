@@ -63,5 +63,6 @@
 | scrum.pmo/sprints/sprint-3/task-1.3-devops-release-recovery.md | Sprint task | 2025-08-08 |
 | scrum.pmo/sprints/sprint-3/task-1.4-tester-e2e-tests.md | Sprint task | 2025-08-08 |
 | scrum.pmo/sprints/sprint-3/task-1.5-po-user-guide.md | Sprint task | 2025-08-08 |
+| scrum.pmo/project.journal/2025-08-10-1030/retro/answer.ResearchArchitect.md | Retro | 2025-08-10 |
 
 *This index is auto-generated for recovery and onboarding. Update as new markdown files are added.*

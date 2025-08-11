@@ -1,5 +1,20 @@
 # Recovery Log
 
+## 2025-08-11
+
+**Summary:**
+- Performed autonomous recovery per README procedure.
+- Read the ResearchArchitect retrospective and prepared ResearchAgent integration.
+- Added a CLI-accessible `ResearchAgent` with `incorporateAfterRecovery` to acknowledge and wire in post-recovery research incorporation.
+
+**Artifacts:**
+- `src/ts/layer2/ResearchAgent.ts`
+- Retro source: `scrum.pmo/project.journal/2025-08-10-1030/retro/answer.ResearchArchitect.md`
+
+**Next Steps:**
+- Extend `ResearchAgent.incorporateAfterRecovery` to update indices and backlinks automatically.
+- Link research artifacts into `index.md` and QA logs, ensuring DRY references.
+
 ## 2025-08-04
 
 **Summary:**
