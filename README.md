@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only + AI-GPL-Addendum
+Copyright (c) 2025 The Web4Articles Authors
+Copyleft: See AGPLv3 (./LICENSE) and AI-GPL Addendum (./AI-GPL.md)
+Backlinks: /LICENSE , /AI-GPL.md
+Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unless dual-licensed.
+-->
+
 [Back to Index](./index.md)
 
 # Web4Articles
@@ -135,3 +143,13 @@ src/sh/obash 'tssh TSsh help'
   - Type the value; press Space or Enter to commit and advance
   - When all values are provided, the method executes immediately
   - `q`/`Esc` quits; navigation is disabled while entering a parameter value
+
+### License enforcement (Sprint 10)
+
+- Base license: AGPL-3.0 (see `LICENSE`)
+- Addendum: AI-GPL (see `AI-GPL.md`) — DYR draft clarifying AI usage and `scrum.pmo` copyleft
+- Tooling:
+  - Check: `node --loader ts-node/esm src/ts/layer1/TSsh.ts LicenseTool check`
+  - Apply: `node --loader ts-node/esm src/ts/layer1/TSsh.ts LicenseTool apply`
+- CI: GitHub Action `license-headers.yml` blocks PRs that add files without headers.
+- Dual licensing available; contact maintainers.

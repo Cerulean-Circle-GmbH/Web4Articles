@@ -4,12 +4,15 @@
     "@types/node": "^24.1.0",
     "execa": "^9.6.0",
     "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
     "vitest": "^3.2.4"
   },
   "scripts": {
     "test": "vitest run",
     "tsranger": "node --loader ts-node/esm ./src/ts/layer4/TSRanger.ts",
     "build:n14": "tsc -p v3.n14.4/tsconfig.n14.json",
-    "build:njs14": "tsc -p v3.njs14/tsconfig.njs14.json"
+    "build:njs14": "tsc -p v3.njs14/tsconfig.njs14.json",
+    "license:check": "node --loader ts-node/esm ./src/ts/layer1/TSsh.ts LicenseTool check",
+    "license:apply": "node --loader ts-node/esm ./src/ts/layer1/TSsh.ts LicenseTool apply"
   }
 }
