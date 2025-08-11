@@ -1,11 +1,13 @@
 name: Sync release/production with main
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches: [main]
 
 jobs:
   sync-production:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     
     steps:
@@ -38,6 +40,7 @@ jobs:
       if: always()
       run: |
         echo "## Production Sync Report" >> $GITHUB_STEP_SUMMARY
+        echo "- PR: #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}" >> $GITHUB_STEP_SUMMARY
         echo "- main commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
         echo "- release/production synced to: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
         echo "- Time: $(date -u +%Y-%m-%d' '%H:%M:%S' UTC')" >> $GITHUB_STEP_SUMMARY
