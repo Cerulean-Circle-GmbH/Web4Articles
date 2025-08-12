@@ -85,7 +85,7 @@ Before ANY implementation work, create and deliver the status report using the c
 - Canonical template: [`scrum.pmo/templates/project.state.template.md`](../templates/project.state.template.md)
 - Recent example: [`scrum.pmo/project.journal/2025-08-12-0900/project.state.md`](../project.journal/2025-08-12-0900/project.state.md)
 
-Ensure the journal includes GitHub Quick Links and navigation-friendly markdown links throughout.
+Ensure the journal includes GitHub Quick Links and navigation-friendly markdown links throughout. In the Sprints Overview section, include relative links to each sprint's planning.md file for complete navigation (e.g., [sprint-0 planning](../../sprints/sprint-0/planning.md)).
 
 ## Post-Recovery Actions
 

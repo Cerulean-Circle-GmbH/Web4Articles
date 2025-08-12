@@ -34,10 +34,10 @@
   - {{RECOMMENDATION_2}}
 
 ## Sprints Overview
-- Existing: sprints 0–4 on [main](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/main)
-- Discovered/Merged: {{DISCOVERED_SPRINTS}}
+- Existing: {{EXISTING_SPRINTS}} on [main](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/main) (with links to planning.md)
+- Discovered/Merged: {{DISCOVERED_SPRINTS}} (with links to planning.md)
 - Missing: {{MISSING_SPRINTS}}
-- Created: {{CREATED_SPRINTS}}
+- Created: {{CREATED_SPRINTS}} (with links if created)
 - Upcoming: {{UPCOMING_SPRINTS}}
 
 ## Recent Activity
