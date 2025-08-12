@@ -41,3 +41,77 @@ Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unle
 
 ## 6. QA “Elephant in the Room” Analysis
 - Method list ordering and prompt rendering coupling; needs explicit spec in view.
+
+## 7. Detailed Struggle Examples (tree-style)
+
+```text
+$ tree -L 2 -I 'node_modules|dist' src/ts/layer4 src/ts/layer5 test src/sh
+src/sh
+├── tsranger                 # test entrypoint uses non-interactive mode
+└── tssh                     
+src/ts/layer4
+├── Completion.ts
+├── RangerController.ts      # input handling, prompt buffer, filters
+├── TSCompletion.ts          # completion provider glue
+└── TSRanger.ts              # app wiring, run() entry
+src/ts/layer5
+└── RangerView.ts            # prompt/grid rendering
+test
+├── tsranger.promptline.behavior.test.ts
+└── tsranger.cursor.test.ts
+```
+
+- Right/Tab inconsistent completion state
+  - Symptom: `t[tab]` vs `t[right]` produced different visual states (`T[S[sh` vs `TSsh [s]tart`).
+  - Files involved: `src/ts/layer4/RangerController.ts`, `src/ts/layer5/RangerView.ts`.
+  - Fix: unify Tab/Right branches to one completion path; move cursor to start of suggested method; ensure view renders `[s]tart` correctly.
+
+- Backspace merged tokens and desynced filters
+  - Symptom: backspacing over space joined class and method; filters not updated.
+  - Files involved: `RangerController.ts` (backspace logic), `RangerModel` token/filters, `RangerView.ts` prompt rendering.
+  - Fix: guard for space-before-cursor → delete at-cursor to keep token boundary; re-derive filters; never auto-apply method filter when `suppressMethodFilter` is true.
+
+- `g[tab][down]` did not sync selected method into command line
+  - Symptom: grid moved, prompt stayed on `start` or only first letter changed; two downs failed.
+  - Files involved: `RangerController.ts` (Up/Down handlers), `RangerView.ts` (full token rendering).
+  - Fix: on Up/Down in Methods column, write `selectedMethod` into prompt buffer and place cursor at method start; keep `suppressMethodFilter=true` while navigating.
+
+- Non-interactive tests hanging
+  - Symptom: `vitest` sessions waited for TTY input.
+  - Files involved: `src/sh/tsranger` (test entry), `TSRanger.ts` (`run()` early test-mode path), `test/tsranger.*.test.ts`.
+  - Fix: enforce `tsranger test "<keys>"`; add `TSRANGER_TEST_MODE`/`TSRANGER_TEST_INPUT` fast path that bypasses TTY setup.
+
+- Accidental completion to `Logger` on Right from empty prompt
+  - Symptom: `[right]` navigated and completed to `Logger` instead of just moving column.
+  - Files involved: `RangerController.ts`.
+  - Fix: when current token is empty, treat Tab/Right as column navigation (`changeColumn(1)`) and avoid completion.
+
+## 8. What the layer folders meant (my mental model)
+
+- layer1 — Foundations and OS bridges
+  - Purpose: low-level utilities and shell/OS glue used everywhere.
+  - Examples: `src/ts/layer1/Logger.ts`, `OOSH.ts`, `ParameterParser.ts`, `TSsh.ts`.
+
+- layer2 — State and core models (app domain wiring)
+  - Purpose: app state containers and defaults; data that controllers mutate and views render.
+  - Examples: `RangerModel.ts`, `DefaultCLI.ts`, `GitScrumProject.ts`.
+
+- layer3 — High-level composition (CLI surface)
+  - Purpose: cohesive CLI API surface and completion/project coordination without raw input handling.
+  - Examples: `CLI.ts`, `Completion.ts`, `Project.ts`.
+
+- layer4 — Controllers and orchestration
+  - Purpose: translate key events into state transitions; run loops; boundary with completion provider.
+  - Examples: `RangerController.ts`, `TSCompletion.ts`, `TSRanger.ts`.
+  - In practice: where prompt buffer, cursor index, filters, and column navigation live.
+
+- layer5 — Views
+  - Purpose: render terminal UI from model state; no business logic.
+  - Example: `RangerView.ts` builds prompt string and grid and positions cursor.
+
+- Flow I used (happy path)
+  1. `TSRanger.run()` (layer4) decides test-vs-interactive; feeds scripted keys.
+  2. Keys → `RangerController` (layer4) mutate `RangerModel` (layer2).
+  3. `RangerView` (layer5) renders prompt/grid from `RangerModel`.
+  4. `TSCompletion` (layer4) provides candidates; `RangerController` applies them.
+
