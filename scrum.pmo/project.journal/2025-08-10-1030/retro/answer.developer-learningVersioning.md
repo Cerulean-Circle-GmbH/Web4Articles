@@ -135,4 +135,29 @@ Reflection and mapping (repo-specific):
 - Version boundaries: units/components/packages are version-scoped (e.g., `src.v2` or planned `v2/src`). No cross-version sharing; migrate the necessary units/components per version.
 - Testing lens: unit tests (file-level invariants), component tests (feature behavior across units), package tests (end-to-end via wrapper and environment toggles).
 
+## 11. Proposed Sprint 2 Backport Tasks (template-style)
+
+- [ ] Task 8 — Versioning & Context Discipline
+  - [ ] Task 8.1 — Architect: Backport Versioned Units Policy to Sprint 2
+    - Describe Units (files), Components (composed of units), Packages (composed of components)
+    - Forbid cross-version imports; folders are contexts
+    - Add compliant/non-compliant examples
+  - [ ] Task 8.2 — Developer: Remove cross-version imports and migrate units
+    - Grep `src.v2` for `../../../src/ts` references; migrate required units into v2; update imports
+    - Ensure tests run with `TSRANGER_V2=1` without referencing v1 modules
+
+## 12. Build a New Version from Scratch vs. Incremental Migration
+
+- Starting fresh (new version folder) is preferable when:
+  - Cross-version coupling is pervasive and costly to unpick
+  - Architectural boundaries (L1..L5, IO) changed significantly
+  - Test parity can be maintained via env toggles and deterministic outputs
+- Incremental migration suits cases where:
+  - Existing structure already matches the layered model
+  - Only isolated units need migration to remove cross-version references
+- For this repo:
+  - v2 is already isolated under `src.v2`; wrapper toggles exist
+  - A clean `v2/src` + `v2/test` move (Sprint 6 plan) will keep history coherent and reduce coupling
+  - Therefore, creating a new version folder and migrating units there is the safer path than retrofitting v1, while preserving test parity via toggles
+
 
