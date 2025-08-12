@@ -98,6 +98,7 @@ When the Scrum Master requests a new task or task update, the AI must:
 - Use clear, concise language and actionable steps.
 - Keep all documentation up-to-date and reviewed by the team.
 - Capture QA feedback and audit learnings in each task's QA section.
+- When referencing project status, releases, or reviews, include GitHub links to the repo, target branch, and any relevant PRs for quick navigation.
 
 ## Pre-Commit Spellcheck & Cross-Reference Check (Mandatory)
 - Before committing planning/tasks/subtasks edits:

@@ -80,6 +80,11 @@ cat > "$JOURNAL_DIR/project.state.md" << 'EOF'
 
 # Project State - ${TIMESTAMP}
 
+### GitHub Quick Links
+- **Repo**: [<org>/<repo>](https://github.com/<org>/<repo>)
+- **Branches**: [main](https://github.com/<org>/<repo>/tree/main) · [release/dev](https://github.com/<org>/<repo>/tree/release/dev) · [release/testing](https://github.com/<org>/<repo>/tree/release/testing) · [release/production](https://github.com/<org>/<repo>/tree/release/production)
+- **PRs**: [Open PRs](https://github.com/<org>/<repo>/pulls) · [All branches](https://github.com/<org>/<repo>/branches)
+
 ## Recovery Context
 - **Recovery Branch**: ${BRANCH_NAME}
 - **Base Branch**: release/dev
@@ -176,7 +181,7 @@ Document in journal but continue recovery:
 - [ ] Started from release/dev branch
 - [ ] Created background agent branch
 - [ ] Read all core documents
-- [ ] Created journal entry
+- [ ] Created journal entry with GitHub repo/branch/PR links
 - [ ] Pushed recovery branch
 - [ ] Delivered status report
 - [ ] NO implementation during recovery

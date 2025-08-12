@@ -31,6 +31,7 @@
 
 ## CI/CD Discipline
 - Require all tests to pass and documentation to be up-to-date before release.
+- Ensure project status artifacts contain accurate GitHub links to repo, branches, and relevant PRs for quick navigation.
 
 ## Pre-Commit Spellcheck & Cross-Reference Check (Mandatory)
 - For infra/docs changes:
