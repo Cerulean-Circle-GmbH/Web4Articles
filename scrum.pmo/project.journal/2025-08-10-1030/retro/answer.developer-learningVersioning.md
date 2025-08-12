@@ -90,3 +90,15 @@ Notes:
 - All imports inside a version resolve relative to that version’s `src/`.
 
 
+## 8. What the Layers Mean (understanding)
+
+- Layer 1 (Foundations): Low-level primitives and utilities used everywhere. In v1 this includes `Logger`, `OOSH`, `ParameterParser`, `TSsh`. No dependency on higher layers.
+- Layer 2 (Domain/Models): Core domain logic and state. Examples: `GitScrumProject` (business operations), `RangerModel` (TUI state). Minimal UI/IO; no process coupling.
+- Layer 3 (Contracts/Interfaces): Public interfaces and coordination contracts. Examples: `CLI`, `Completion`, `Project`. Higher layers depend on these abstractions.
+- Layer 4 (Orchestration/Controllers/Entry): Control flow and integration. Examples: `RangerController`, `TSCompletion` (bridge), `TSRanger` (entry). Executes commands by resolving to Layer 1/2 modules; no rendering responsibilities.
+- Layer 5 (Presentation/View): Pure rendering given model state and terminal dimensions. Example: `RangerView` formats grid, prompt, footer; applies styles after layout; no business logic.
+- IO (v2): `io/TerminalIO` abstracts terminal width/height, resize, and output. Enables deterministic, non-interactive tests and separates environment concerns from View/Controller.
+
+Dependency direction: higher layers may depend on lower ones (e.g., 4 → 2/1, 5 → 2/IO), never the reverse. Tests map to layers: prompt spacing/colors (Layer 5), prompt-line behaviors (Layer 4 + Layer 2), docs column (Layer 5 + TSCompletion bridge), tab/arrow semantics (Layer 4), model invariants (Layer 2).
+
+
