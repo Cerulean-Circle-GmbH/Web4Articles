@@ -149,3 +149,24 @@ export interface RangerColumn<T> {
 
 - io/
   - IO boundary. `NodeProcessIO` bridges to real terminal; `DeterministicTestIO` guarantees stable width/height and final-frame capture for tests. No business rules here—only input/output mechanics.
+
+## Units and UCP (Unit Change Policy)
+
+- What are “Units”?
+  - Cohesive, versioned building blocks (files, modules, or small packages) that deliver a single responsibility and can be evolved independently. In this repo, a unit is typically a TypeScript module or a minimal set of modules under a versioned root (e.g., `src.v2/ts/layer4/TSRanger.ts`).
+  - Units carry clear boundaries and contracts (interfaces), making them testable in isolation and safe to compose.
+
+- UCP — Unit Change Policy (intent)
+  - Versioned-units policy: do not share files across versions; never import from old-version paths inside new-version units.
+  - Routing over importing: select the correct version at the boundary (wrapper/entry), never at runtime by falling back to older modules.
+  - Traceability: documentation/tasks must explicitly link the versioned unit path to eliminate ambiguity.
+  - CI/Pre-commit enforcement: grep for cross-version imports (e.g., `../../../src/ts` inside `src.v2`) and block them.
+
+- Why UCP matters
+  - Prevents “version bleed” where behavior mixes across versions and makes tests flaky/non-deterministic.
+  - Keeps refactors incremental: you can introduce a new unit version without destabilizing the existing one.
+  - Enables reliable routing (e.g., `TSRANGER_V2=1`) and consistent test execution.
+
+- Practical application in this sprint
+  - v2 units live under `src.v2/ts/**`; wrappers route via env toggle. No v2 file imports from `src/ts/**` implementation modules.
+  - Documentation and PDCA logs reference exact v2 paths to make review and audits straightforward.
