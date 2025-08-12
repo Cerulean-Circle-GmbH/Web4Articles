@@ -1,27 +1,4 @@
-<!--
-SPDX-License-Identifier: AGPL-3.0-only + AI-GPL-Addendum
-Copyright (c) 2025 The Web4Articles Authors
-Copyleft: See AGPLv3 (./LICENSE) and AI-GPL Addendum (./AI-GPL.md)
-Backlinks: /LICENSE , /AI-GPL.md
-Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unless dual-licensed.
--->
-
 # Recovery Log
-
-## 2025-08-11
-
-**Summary:**
-- Performed autonomous recovery per README procedure.
-- Read the ResearchArchitect retrospective and prepared ResearchAgent integration.
-- Added a CLI-accessible `ResearchAgent` with `incorporateAfterRecovery` to acknowledge and wire in post-recovery research incorporation.
-
-**Artifacts:**
-- `src/ts/layer2/ResearchAgent.ts`
-- Retro source: `scrum.pmo/project.journal/2025-08-10-1030/retro/answer.ResearchArchitect.md`
-
-**Next Steps:**
-- Extend `ResearchAgent.incorporateAfterRecovery` to update indices and backlinks automatically.
-- Link research artifacts into `index.md` and QA logs, ensuring DRY references.
 
 ## 2025-08-04
 
@@ -139,82 +116,15 @@ Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unle
 **Next Steps:**
 - Proceed to QA review for Task 7, then mark Done upon approval.
 
-## 2025-08-11
+## 2025-08-10
 
 **Summary:**
-- Performed autonomous recovery from README.md on main branch per standard procedure.
-- Verified DevOps environment: Docker not installed, Node v22.16.0, npm 10.9.2, PlantUML/Graphviz not available locally.
-- Scanned project structure: found 5 sprints (0-4), with Sprint 4 empty of tasks.
-- Created branch overview documenting 21 remote branches: 13 unmerged, 6 merged (deletion candidates), 2 protected.
-- Created structured journal entry at `scrum.pmo/project.journal/2025-08-11-0957/project.state.md`.
-
-**Current Project State:**
-- Working on main branch with all Sprint 2 work merged.
-- Sprint 2 Task 7 completed and under QA review per previous recovery.
-- Project retro scheduled with agent interview process defined.
-
-**Artifacts:**
-- `branch-overview.md` - Complete remote branch analysis with merge status
-- `scrum.pmo/project.journal/2025-08-11-0957/project.state.md` - Current state documentation
+- Performed recovery per README; analyzed TSRanger behavior across model/view/controller and tests.
+- Created Sprint 5 with planning, behavior spec, key input test cases, and requirements.
 
 **Next Steps:**
-- Review unmerged branches to identify active work streams.
-- Consider cleanup of 6 merged branches (after verification).
-- Run full test suite to verify main branch health.
-- Proceed with Sprint 3 or 4 work based on priority.
+- Validate test coverage against derived key input cases; implement any missing tests in a follow-up.
 
-**Role:** ScrumMaster (autonomous), coordinating sprint activities and maintaining project governance.
-
-## 2025-08-11 09:55 UTC - Recovery from Main Branch README
-
-**Trigger:** User requested "recover from readme on branch main" and branch overview creation
-
-**Actions Taken:**
-1. Switched to main branch and synced with origin (51 commits fast-forwarded)
-2. Read and analyzed README.md for project principles and structure
-3. Created structured journal entry at `scrum.pmo/project.journal/2025-08-11-0955/project.state.md`
-4. Fetched all remote branches and categorized them
-5. Created comprehensive `branch-overview.md` with three categories:
-   - Unmerged branches (11)
-   - Already merged branches (7)
-   - Branches not to touch (3)
-
-**Key Findings:**
-- Project follows strict TypeScript/ESM, radical OOP, and CMMI Level 4 SCRUM
-- Jest is forbidden; Vitest is the test framework
-- DRY principle is paramount
-- Multiple feature branches exist with TSRanger-related work
-- Sprint 4 devcontainer work appears in multiple branches
-
-**Current State:**
-- On main branch, fully synced with origin
-- Branch overview created with merge status recommendations
-- Ready for next sprint or task assignment
-
-**Next Steps:**
-1. Review unmerged feature branches for integration priority
-2. Consider cleanup of already-merged branches
-3. Evaluate Sprint 4 devcontainer branches for consolidation
-
----
-
-*This log is auto-generated for traceability and audit.*
-
-## 2025-08-12
-
-**Summary:**
-- Performed autonomous recovery from README.md
-- Reviewed branching strategy and current CI/CD governance
-- Created detailed journal entry at `scrum.pmo/project.journal/2025-08-12-0900/project.state.md`
-- No code changes performed in this routine
-
-**Current Project State:**
-- Branching scaffold in place (`main`, `release/production`, `release/testing`, `release/dev`); promotion automation pending
-- Integration backlog per sprint-9 merge report; QA recognized 100% branch coverage in `release/dev` (2025-08-11)
-
-**Next Steps:**
-- Run full test suite on `main` and `release/dev`
-- Resolve conflicts for remaining branches; prioritize v2 merge tooling
-- Finalize GitHub Actions wiring and weekly promotion
-
-**Role:** ScrumMaster (autonomous)
+## 2025-08-10 (merged from chore/branch-review-checklist)
+- Generated branch checklist.
+- Pushed branch. Next: open PR titled 'cleanup branches'.

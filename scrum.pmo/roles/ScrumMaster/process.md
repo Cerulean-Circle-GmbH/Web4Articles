@@ -1,11 +1,3 @@
-<!--
-SPDX-License-Identifier: AGPL-3.0-only + AI-GPL-Addendum
-Copyright (c) 2025 The Web4Articles Authors
-Copyleft: See AGPLv3 (./LICENSE) and AI-GPL Addendum (./AI-GPL.md)
-Backlinks: /LICENSE , /AI-GPL.md
-Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unless dual-licensed.
--->
-
 [Back to Roles](../)
 
 
@@ -99,13 +91,6 @@ When feedback or a new task/subtask is required (by audit, QA, or user request),
 
 ## Task Reference
 See `sprint-0` tasks for detailed step-by-step initialization and setup instructions. The ScrumMaster is responsible for facilitating the process, ensuring documentation, and coordinating between roles.
-
-## Recovery Process
-See [recovery-process.md](./recovery-process.md) for the mandatory recovery procedure. Key points:
-- Always start from `release/dev` branch
-- Create background agent branch `cursor/recovery-YYYY-MM-DD-HHMM`
-- Complete recovery with project status report before any implementation
-- No testing or implementation during recovery phase
 
 ---
 The ScrumMaster should continue to facilitate and document all SCRUM activities and improvements.

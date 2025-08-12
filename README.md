@@ -1,11 +1,3 @@
-<!--
-SPDX-License-Identifier: AGPL-3.0-only + AI-GPL-Addendum
-Copyright (c) 2025 The Web4Articles Authors
-Copyleft: See AGPLv3 (./LICENSE) and AI-GPL Addendum (./AI-GPL.md)
-Backlinks: /LICENSE , /AI-GPL.md
-Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unless dual-licensed.
--->
-
 [Back to Index](./index.md)
 
 # Web4Articles
@@ -53,33 +45,43 @@ The scrum master fixes the impediments and hires the rest of the SCRUM team.
 Each QA feddback fromthe user will dilligently recorded as well as the scrum masters answers and measure. All of this will be done in md/files.
 Each role will be dilligently onboarded and everything will be fully tracable documented.
 
+## Recovery
+
+
+
 ## Optimized Recovery Procedure
 
 
 **Autonomous Recovery Process**
 
-If the AI loses context or receives the prompt "recover" from the QA user, it will autonomously follow the canonical recovery process defined in [scrum.pmo/roles/ScrumMaster/recovery-process.md](./scrum.pmo/roles/ScrumMaster/recovery-process.md).
+If the AI loses context or receives the prompt "recover" from the QA user, it will autonomously:
 
-**Critical Requirements:**
-- **ALWAYS start from `release/dev` branch** (contains all integrated changes)
-- Create a background agent branch: `cursor/recovery-YYYY-MM-DD-HHMM`
-- Complete recovery with project status report BEFORE any implementation
-- NO testing or implementation during recovery phase
-
-**Recovery Steps Summary:**
-0. **Checkout release/dev and create recovery branch**
-1. **DevOps Environment Verification** - Docker, Node.js, PlantUML
-2. **Read Project First Principles** - This README.md and handover files
-3. **Scan All Markdown Files** - Prioritize scrum.pmo/, wiki/, QA files
-4. **Automated Indexing** - Update index.md with all files
-5. **QA Feedback Aggregation** - Consolidate in qa-feedback-log.md
-6. **Role-Specific Recovery Hooks** - Check each role's process.md
-7. **Sprint & Task Status Summary** - Current sprint and task states
-8. **Automated Consistency Checks** - Verify links and backlinks
-9. **Create Journal Entry** - Document recovery in project.journal
-10. **Deliver Project Status Report** - Complete before implementation
-
-See [scrum.pmo/roles/ScrumMaster/recovery-process.md](./scrum.pmo/roles/ScrumMaster/recovery-process.md) for full detailed procedure.
+0. **DevOps Environment Verification (blocking, do first):**
+   - Check local environment and fix before proceeding:
+     - Docker engine is installed and running (`docker version` works)
+     - Devcontainer tooling available (VS Code Dev Containers or equivalent)
+     - Node.js satisfies engine ranges in `package.json`
+     - PlantUML and Graphviz installed (or plan to use devcontainer)
+   - If any prerequisite is missing, open a DevOps task to resolve locally, or prefer using the project devcontainer once available.
+1. **Read the canonical Project First Principles section in this README.md** for project purpose, tech stack, and management principles. Only scan other sections as needed for context or updates.
+   - If a file named `handover.backend.agent.md` exists at the repository root, load it first and use its instructions to bootstrap the backend agent workflow before proceeding.
+2. **Scan all markdown files** in the project, prioritizing:
+   - `scrum.pmo/` (roles, sprints, tasks, process docs)
+   - `wiki/` (ontology, Home.md, definitions)
+   - Any onboarding, process, or QA feedback files
+3. **Automated Indexing:**  
+   - Update or generate an index (e.g., `index.md` or `structure.json`) listing all markdown files, their roles, and last modified dates.
+4. **QA Feedback Aggregation:**  
+   - Aggregate all QA feedback and audit findings from task QA sections and sprint audit files into a single `qa-feedback-log.md`.
+5. **Role-Specific Recovery Hooks:**  
+   - Reference each role’s `process.md` “Recovery Checklist” for role-specific context and recent actions.
+6. **Sprint & Task Status Summary:**  
+   - Generate a summary table of all sprints, tasks, and their statuses (open/closed/in-progress), linking to their markdown files.
+7. **Automated Consistency Checks:**  
+   - Check for broken links, missing backlinks, and outdated templates in all markdown files, reporting issues in the recovery summary.
+8. **Document findings:**  
+   - Append a timestamped entry to `recovery.md` summarizing findings, gaps, and actions taken.
+   - Notify the QA user with the summary and next steps.
 
 ### DevContainer (cross-platform)
 
@@ -133,13 +135,3 @@ src/sh/obash 'tssh TSsh help'
   - Type the value; press Space or Enter to commit and advance
   - When all values are provided, the method executes immediately
   - `q`/`Esc` quits; navigation is disabled while entering a parameter value
-
-### License enforcement (Sprint 10)
-
-- Base license: AGPL-3.0 (see `LICENSE`)
-- Addendum: AI-GPL (see `AI-GPL.md`) — DYR draft clarifying AI usage and `scrum.pmo` copyleft
-- Tooling:
-  - Check: `node --loader ts-node/esm src/ts/layer1/TSsh.ts LicenseTool check`
-  - Apply: `node --loader ts-node/esm src/ts/layer1/TSsh.ts LicenseTool apply`
-- CI: GitHub Action `license-headers.yml` blocks PRs that add files without headers.
-- Dual licensing available; contact maintainers.

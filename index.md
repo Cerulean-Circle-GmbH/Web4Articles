@@ -1,19 +1,10 @@
-<!--
-SPDX-License-Identifier: AGPL-3.0-only + AI-GPL-Addendum
-Copyright (c) 2025 The Web4Articles Authors
-Copyleft: See AGPLv3 (./LICENSE) and AI-GPL Addendum (./AI-GPL.md)
-Backlinks: /LICENSE , /AI-GPL.md
-Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unless dual-licensed.
--->
-
 [Back to Index](./index.md)
 
-# Web4Articles Markdown File Index (2025-08-11)
+# Web4Articles Markdown File Index (2025-08-06)
 
 | File | Role/Type | Last Modified |
 |------|-----------|--------------|
 | .github/chatmodes/ScrumMaster2QA.chatmode.md | Chatmode | 2025-08-06 |
-| branch-overview.md | Branch analysis | 2025-08-11 |
 | COMMIT_PUSH_POINT.md | Commit guide | 2025-08-06 |
 | README.md | Project root, tech stack, recovery | 2025-08-06 |
 | docs/domain/SimpleTaskStateMachine.md | Domain doc | 2025-08-06 |
@@ -72,8 +63,5 @@ Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unle
 | scrum.pmo/sprints/sprint-3/task-1.3-devops-release-recovery.md | Sprint task | 2025-08-08 |
 | scrum.pmo/sprints/sprint-3/task-1.4-tester-e2e-tests.md | Sprint task | 2025-08-08 |
 | scrum.pmo/sprints/sprint-3/task-1.5-po-user-guide.md | Sprint task | 2025-08-08 |
-| scrum.pmo/project.journal/2025-08-10-1030/retro/answer.ResearchArchitect.md | Retro | 2025-08-10 |
-| scrum.pmo/project.journal/2025-08-11-0957/project.state.md | Project state | 2025-08-11 |
-| scrum.pmo/project.journal/2025-08-12-0900/project.state.md | Project state | 2025-08-12 |
 
 *This index is auto-generated for recovery and onboarding. Update as new markdown files are added.*

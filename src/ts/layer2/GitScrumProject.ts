@@ -1,11 +1,3 @@
-/**
- * SPDX-License-Identifier: AGPL-3.0-only + AI-GPL-Addendum
- * Copyright (c) 2025 The Web4Articles Authors
- * Copyleft: See AGPLv3 (./LICENSE) and AI-GPL Addendum (./AI-GPL.md)
- * Backlinks: /LICENSE , /AI-GPL.md
- * Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unless dual-licensed.
- */
-
 import { execSync } from 'child_process';
 import path from 'path';
 import * as fs from 'fs';
@@ -117,5 +109,64 @@ export class GitScrumProject implements Project {
 
   private releasePlan(repoType?: string): void {
     console.log('releasePlan stub:', { repoType });
+  }
+
+  // New helper-tool commands exposed as static for DefaultCLI invocation
+  static help(): void {
+    console.log(`GitScrumProject CLI:
+  GitScrumProject checkoutSubmodulesBranch <branch>
+  GitScrumProject addSubmodule <repoUrl> <targetPath>
+  GitScrumProject updateSubmodules
+  GitScrumProject createTemplateRepo <org> <newRepo> <sourceRepoUrl> <submodulePath>
+  GitScrumProject linkSource <submodulePath> <sourceRepoUrl> [ref]
+  GitScrumProject overlayRun <entryClass> <method> [...args]
+  GitScrumProject releasePlan <repoType>
+`);
+  }
+
+  static checkoutSubmodulesBranch(branch: string = 'main'): void {
+    const root = process.env.GIT_ROOT || process.cwd();
+    const componentsDir = path.join(root, 'components');
+    if (!fs.existsSync(componentsDir)) {
+      console.error(`[GitScrumProject] components directory not found at ${componentsDir}`);
+      process.exit(1);
+    }
+    const entries = fs.readdirSync(componentsDir, { withFileTypes: true });
+    for (const e of entries) {
+      if (!e.isDirectory()) continue;
+      const compPath = path.join(componentsDir, e.name);
+      if (!fs.existsSync(path.join(compPath, '.git'))) {
+        console.warn(`[GitScrumProject] skip ${compPath} (not a git repo)`);
+        continue;
+      }
+      try {
+        console.log(`[GitScrumProject] checkout ${e.name} -> ${branch}`);
+        execSync('git fetch', { cwd: compPath, stdio: 'inherit' });
+        execSync(`git checkout ${branch}`, { cwd: compPath, stdio: 'inherit' });
+        execSync('git pull --ff-only', { cwd: compPath, stdio: 'inherit' });
+      } catch (err) {
+        console.error(`[GitScrumProject] failed to checkout ${branch} in ${e.name}: ${err}`);
+      }
+    }
+  }
+
+  static addSubmodule(repoUrl: string, targetPath: string): void {
+    if (!repoUrl || !targetPath) {
+      console.error('[GitScrumProject] addSubmodule requires <repoUrl> <targetPath>');
+      process.exit(1);
+    }
+    const root = process.env.GIT_ROOT || process.cwd();
+    const fullTarget = path.isAbsolute(targetPath) ? targetPath : path.join(root, targetPath);
+    const parentDir = path.dirname(fullTarget);
+    fs.mkdirSync(parentDir, { recursive: true });
+    console.log(`[GitScrumProject] Adding submodule: ${repoUrl} -> ${targetPath}`);
+    execSync(`git submodule add ${repoUrl} ${targetPath}`, { cwd: root, stdio: 'inherit' });
+  }
+
+  static updateSubmodules(): void {
+    const root = process.env.GIT_ROOT || process.cwd();
+    console.log('[GitScrumProject] Updating submodules (remote, recursive)');
+    execSync('git submodule init', { cwd: root, stdio: 'inherit' });
+    execSync('git submodule update --remote --recursive', { cwd: root, stdio: 'inherit' });
   }
 }
