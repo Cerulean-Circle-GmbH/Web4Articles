@@ -97,3 +97,11 @@ Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unle
 **Action**: Log updated; ready for incorporation into next sprint planning.
 
 ---
+
+## 2025-08-12T14:15:57Z — Sprint 2 / Task 7
+
+> last qa feedback for you. well done, well learned. nobody is perfect. write it down where you tink it fits.
+
+Backlink: [sprint-2/task-7.md](./scrum.pmo/sprints/sprint-2/task-7.md)
+
+---
