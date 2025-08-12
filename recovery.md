@@ -206,14 +206,14 @@ Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unle
 - Performed autonomous recovery from README.md
 - Reviewed branching strategy and current CI/CD governance
 - Created detailed journal entry at `scrum.pmo/project.journal/2025-08-12-0900/project.state.md`
-- No code changes performed in this routine
+- Repo: [Cerulean-Circle-GmbH/Web4Articles](https://github.com/Cerulean-Circle-GmbH/Web4Articles)
 
 **Current Project State:**
-- Branching scaffold in place (`main`, `release/production`, `release/testing`, `release/dev`); promotion automation pending
-- Integration backlog per sprint-9 merge report; QA recognized 100% branch coverage in `release/dev` (2025-08-11)
+- Branching scaffold in place ([main](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/main), [release/production](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/production), [release/testing](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/testing), [release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)); promotion automation pending
+- Integration backlog per sprint-9 merge report; QA recognized 100% branch coverage in [release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev) (2025-08-11)
 
 **Next Steps:**
-- Run full test suite on `main` and `release/dev`
+- Run full test suite on [main](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/main) and [release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
 - Resolve conflicts for remaining branches; prioritize v2 merge tooling
 - Finalize GitHub Actions wiring and weekly promotion
 

@@ -72,6 +72,7 @@ The Architect is responsible for designing the system architecture, specifying s
 
 ## Release Discipline
 - Require full QA (manual and automated) and documentation before tagging a release.
+- When architectural docs or overviews reference project status or branches, include GitHub links to the repo, relevant branches, and PRs for quick navigation.
 
 ---
 

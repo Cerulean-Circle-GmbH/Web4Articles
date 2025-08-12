@@ -31,6 +31,17 @@ Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unle
 - Backlinks go at line 1, then one blank line, then the document title (`# ...`).
 - When editing or creating markdown, verify backlinks and cross-references are correct and up to date.
 
+## Project Status Reporting Requirements (Mandatory)
+- Every project status/journal entry MUST clearly state the exact GitHub repository and current working branch with clickable links.
+- Include a "GitHub Quick Links" block containing at least:
+  - Repo: `[org/repo](https://github.com/<org>/<repo>)`
+  - Branches: `[main](https://github.com/<org>/<repo>/tree/main)`, `[release/dev](https://github.com/<org>/<repo>/tree/release/dev)`, `[release/testing](https://github.com/<org>/<repo>/tree/release/testing)`, `[release/production](https://github.com/<org>/<repo>/tree/release/production)`
+  - PRs: `[Open PRs](https://github.com/<org>/<repo>/pulls)` and link specific PRs as `[#123](https://github.com/<org>/<repo>/pull/123)` when referenced
+  - Branches overview: `[All branches](https://github.com/<org>/<repo>/branches)`
+- Use relative markdown links for intra-repo files (e.g., `../../qa-feedback-log.md`) and absolute GitHub links for branches/PRs.
+- In multi-submodule projects, list each submodule’s repo and branch in the status (one line per module) with the same link pattern.
+- Add links to any mentioned local artifacts (e.g., merge reports, QA logs) to support quick navigation.
+
 # Commit & Push Best Practices
 
 As Scrum Master, ensure the following best practices for committing and pushing changes:
