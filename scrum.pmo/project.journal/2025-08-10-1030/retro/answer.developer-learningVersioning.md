@@ -1,9 +1,9 @@
-[Back to Retro Instructions](./retro-instructions.md)
+[Back to Retro Instructions](/scrum.pmo/project.journal/2025-08-10-1030/retro/retro-instructions.md)
 
-# [Developer learning Versioning](./answer.developer-learningVersioning.md#typo:Settiles_Scribe) — Retrospective (2025-08-10)
+# [Developer learning Versioning](/scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md#typo:Settiles_Scribe) — Retrospective (2025-08-10)
 
 ## 1. Role Description After Recovery (as ScrumMaster)
-### [Detailed](./answer.developer-learningVersioning.md#typo:Settiles) Role Description
+### [Detailed](/scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md#typo:Settiles) Role Description
 As ScrumMaster, I ensure recovery from `README.md` initializes first principles and project guardrails (ESM-only, deterministic tests, versioned units, backlinks/traceability). I coordinate roles, keep the board updated, and enforce commit/push after each step.
 
 ## 2. Achievements
