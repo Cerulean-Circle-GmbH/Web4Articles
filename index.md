@@ -74,5 +74,6 @@ Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unle
 | scrum.pmo/sprints/sprint-3/task-1.5-po-user-guide.md | Sprint task | 2025-08-08 |
 | scrum.pmo/project.journal/2025-08-10-1030/retro/answer.ResearchArchitect.md | Retro | 2025-08-10 |
 | scrum.pmo/project.journal/2025-08-11-0957/project.state.md | Project state | 2025-08-11 |
+| scrum.pmo/project.journal/2025-08-12-0900/project.state.md | Project state | 2025-08-12 |
 
 *This index is auto-generated for recovery and onboarding. Update as new markdown files are added.*
