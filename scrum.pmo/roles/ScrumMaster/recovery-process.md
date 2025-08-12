@@ -52,22 +52,13 @@ npm --version
    - `/workspace/wiki/Ontology.md` - Key terminology
    - `/workspace/scrum.pmo/project.journal/*/project.state.md` - Latest state
 
-2. **Index Documentation**
-   - Create/update `index.md` with all markdown files
-   - Verify backlinks on first line of each file
-   - Check cross-references are valid
 
-3. **Aggregate QA Feedback**
-   - Review `/workspace/qa-feedback-log.md`
-   - Check recent sprint QA sections
-   - Note any pending actions
-
-4. **Check Role Processes**
+2. **Check Role Processes**
    - Review all `/workspace/scrum.pmo/roles/*/process.md`
    - Note role-specific recovery steps
    - Identify active roles and responsibilities
 
-5. **Sprint & Task Status**
+3. **Sprint & Task Status**
    - Review `/workspace/scrum.pmo/sprints/*`
    - Identify current sprint and active tasks
    - Check task completion status
@@ -78,38 +69,9 @@ npm --version
 JOURNAL_DIR="/workspace/scrum.pmo/project.journal/${TIMESTAMP}"
 mkdir -p "$JOURNAL_DIR"
 
-# Create project.state.md
-cat > "$JOURNAL_DIR/project.state.md" << 'EOF'
-[Back to Journal](../)
-
-# Project State - ${TIMESTAMP}
-
-### GitHub Quick Links
-- **Repo**: [<org>/<repo>](https://github.com/<org>/<repo>)
-- **Branches**: [main](https://github.com/<org>/<repo>/tree/main) · [release/dev](https://github.com/<org>/<repo>/tree/release/dev) · [release/testing](https://github.com/<org>/<repo>/tree/release/testing) · [release/production](https://github.com/<org>/<repo>/tree/release/production)
-- **PRs**: [Open PRs](https://github.com/<org>/<repo>/pulls) · [All branches](https://github.com/<org>/<repo>/branches)
-
-## Recovery Context
-- **Recovery Branch**: ${BRANCH_NAME}
-- **Base Branch**: release/dev
-- **Recovery Type**: [Manual/Automatic]
-- **Triggered By**: [User request/Context loss]
-
-## Project Understanding
-[Document understanding of project purpose, tech stack, principles]
-
-## Current State
-[Document current sprint, active tasks, blockers]
-
-## Environment Status
-[Document environment checks, versions, issues]
-
-## Next Steps
-[List concrete next actions WITHOUT implementation]
-
-## QA Feedback Summary
-[Summarize any pending QA items]
-EOF
+# Create project.state.md from canonical template
+TEMPLATE="/workspace/scrum.pmo/templates/project.state.template.md"
+sed "s/{{TIMESTAMP}}/${TIMESTAMP} UTC/g" "$TEMPLATE" > "$JOURNAL_DIR/project.state.md"
 
 # Commit journal entry
 git add "$JOURNAL_DIR/project.state.md"
@@ -118,37 +80,12 @@ git push origin "$BRANCH_NAME"
 ```
 
 ### Phase 4: Project Status Report
-Before ANY implementation work, create and deliver the status report:
+Before ANY implementation work, create and deliver the status report using the canonical journal template and example:
 
-```markdown
-## Recovery Complete
+- Canonical template: [`scrum.pmo/templates/project.state.template.md`](../templates/project.state.template.md)
+- Recent example: [`scrum.pmo/project.journal/2025-08-12-0900/project.state.md`](../project.journal/2025-08-12-0900/project.state.md)
 
-**Role**: ScrumMaster (Recovery Agent)
-**Branch**: cursor/recovery-YYYY-MM-DD-HHMM
-**Base**: release/dev (all changes included)
-
-### Project State Summary
-- Current Sprint: [Sprint X]
-- Active Tasks: [List]
-- Blockers: [List or None]
-- Environment: [Status]
-
-### Recovery Actions Taken
-- ✅ Checked out release/dev base
-- ✅ Created recovery branch
-- ✅ Verified environment
-- ✅ Read project documentation
-- ✅ Created journal entry
-- ✅ Prepared status report
-
-### Next Project Task
-[Specific task to execute AFTER recovery]
-
-### Handoff Notes
-- Recovery branch pushed to origin
-- Ready for implementation work
-- No uncommitted changes
-```
+Ensure the journal includes GitHub Quick Links and navigation-friendly markdown links throughout.
 
 ## Post-Recovery Actions
 
