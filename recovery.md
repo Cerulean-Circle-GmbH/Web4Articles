@@ -128,3 +128,15 @@
 ## 2025-08-10 (merged from chore/branch-review-checklist)
 - Generated branch checklist.
 - Pushed branch. Next: open PR titled 'cleanup branches'.
+
+## 2025-08-12-0922
+- Recovery initiated from README.md
+- Branch: cursor/recovery-2025-08-12-0922
+- Base: release/dev
+- Env: Docker=Docker OK, Node=v16.20.2, npm=8.19.4
+
+## 2025-08-12-0923
+- Recovery initiated from README.md
+- Branch: cursor/recovery-2025-08-12-0923
+- Base: release/dev
+- Env: Docker=Docker OK, Node=v16.20.2, npm=8.19.4
