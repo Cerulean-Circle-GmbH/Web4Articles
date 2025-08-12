@@ -40,3 +40,92 @@
 
 ## Notes
 - This is a second agent entry to preserve the original `answer.agent-SprintRanger-01.md`.
+
+## Refactor Plan and Rationale (with tree examples)
+
+Below is the target structure for a column-based TSRanger v2. This layout simplifies responsibilities, isolates concerns, and makes navigation/filter behavior reusable.
+
+```text
+src.v2/
+  ts/
+    interfaces/
+      RangerFilter.ts           # apply(prefix), reset(), current(); single source of filter truth
+      RangerColumn.ts           # setItems, applyFilter, clearFilter, moveSelection, getVisible, onSelect?
+    columns/
+      RangerClassColumn.ts      # lists classes via TSCompletion.getClasses(); onSelect -> sync prompt class
+      RangerMethodColumn.ts     # lists methods for selected class; filter reflects typed method token
+      RangerParamColumn.ts      # lists params for selected class+method; no prompt token editing
+      RangerDocsColumn.ts       # wraps text for selected item; read-only column (no filter)
+    layer2/
+      RangerModel.ts            # holds selection state and prompt; delegates data to columns
+    layer4/
+      KeyboardController.ts     # raw key -> semantic actions; reusable parser for test scripts
+      RangerController.ts       # wires columns, updates model, coordinates prompt sync
+      TSRanger.ts               # entrypoint; chooses IO, instantiates controller
+    layer5/
+      RangerView.ts             # renders a 4-column grid using column.getVisible() and headers (with (filter))
+    io/
+      TerminalIO.ts             # NodeProcessIO + DeterministicTestIO for test-mode final frames
+```
+
+Why this change (lessons learned):
+- Columns are conceptually the same control with different data sources. Unifying them cuts duplication and makes behavior consistent.
+- Filters must be first-class, single-source-of-truth objects so headers reliably show `(prefix)` and tests remain deterministic.
+- Controller logic shrinks: it consumes actions, forwards to the active column (`applyFilter`, `moveSelection`), and keeps prompt-in-sync on column `onSelect`.
+- Testing is easier: columns can be unit-tested in isolation; controller/view integration remains stable.
+
+Before (implicit coupling inside controller/model):
+
+```text
+src/ts/
+  layer4/
+    RangerController.ts   # mixes: key parsing, selection logic, filtering logic, prompt sync, data fetch
+  layer5/
+    RangerView.ts         # partially responsible for suggesting/mirroring tokens
+```
+
+After (explicit composition; clear boundaries):
+
+```text
+src.v2/ts/
+  interfaces/             # contracts for columns/filters
+  columns/                # pluggable columns for each domain (classes/methods/params/docs)
+  layer4/                 # controller consumes actions + columns; keyboard parsing isolated
+  layer5/                 # view renders columns; zero business logic
+  io/                     # IO and test-mode frame handling
+```
+
+Example flows (tree + steps):
+
+```text
+Flow: g[tab][down]
+1) KeyboardController -> Action.Tab
+2) Controller completes ClassColumn to GitScrumProject; MethodColumn selected = start; suppress method filter
+3) View renders headers: [Classes] (GitScrumProject), [Methods]
+4) Down -> MethodColumn.moveSelection(+1) => 'create'
+5) MethodColumn.onSelect('create') -> Controller syncs prompt: "GitScrumProject create"; cursor at method start
+```
+
+```text
+Flow: g[tab]c
+1) Tab: ClassColumn selects GitScrumProject; MethodColumn suggests start; suppress filter
+2) typing 'c' -> MethodColumn.applyFilter('c'); header shows [Methods] (c)
+3) View shows filtered methods: create, createProject, createTemplateRepo
+```
+
+Refactor acceptance hooks in code (sketch):
+
+```ts
+// RangerColumn<T>
+export interface RangerColumn<T> {
+  items: T[];
+  filter: RangerFilter;
+  selectedIndex: number;
+  setItems(items: T[]): void;
+  applyFilter(prefix: string): void;
+  clearFilter(): void;
+  moveSelection(delta: number): void;
+  getVisible(): T[];
+  onSelect?(item: T): void; // e.g., sync prompt on method selection
+}
+```
