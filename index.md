@@ -66,5 +66,6 @@
 | scrum.pmo/roles/OntologyAgent/templates/README.md | OntologyAgent templates | 2025-08-10 |
 | scrum.pmo/roles/OntologyAgent/PDCA/2025-08-10-cycle1.md | PDCA | 2025-08-10 |
 | scrum.pmo/roles/OntologyAgent/PDCA/2025-08-10-cycle2.md | PDCA | 2025-08-10 |
+| scrum.pmo/roles/OntologyAgent/PDCA/2025-08-10-cycle3.md | PDCA | 2025-08-10 |
 
 *This index is auto-generated for recovery and onboarding. Update as new markdown files are added.*

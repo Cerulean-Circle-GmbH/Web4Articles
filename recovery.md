@@ -124,3 +124,11 @@
 
 **Next Steps:**
 - Continue ontology work per OntologyAgent process using provided templates.
+
+## 2025-08-10 (PDCA cycle 3)
+
+**Summary:**
+- Aligned ontology test to support OntologyAgent table formats and to skip when indexes absent.
+
+**Next:**
+- Create `Documentation/Ontology.md` with table-based indexes and migrate existing entries; add glossary scaffolding.
