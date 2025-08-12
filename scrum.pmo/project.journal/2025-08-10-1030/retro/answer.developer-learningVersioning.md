@@ -101,4 +101,21 @@ Notes:
 
 Dependency direction: higher layers may depend on lower ones (e.g., 4 → 2/1, 5 → 2/IO), never the reverse. Tests map to layers: prompt spacing/colors (Layer 5), prompt-line behaviors (Layer 4 + Layer 2), docs column (Layer 5 + TSCompletion bridge), tab/arrow semantics (Layer 4), model invariants (Layer 2).
 
+## 9. What I understand from UCP (Use Case Points)
+
+- Purpose: UCP estimates software size/effort from functional scope (use cases) adjusted by technical and environmental factors.
+- Core formula: UCP = (UAW + UUCW) × TCF × ECF, then effort = UCP × PF
+  - UAW (Unadjusted Actor Weight): sum of actors by complexity weights
+    - Simple (API/system) = 1, Average (text protocol/CLI) = 2, Complex (GUI/human) = 3
+  - UUCW (Unadjusted Use Case Weight): sum of use cases by transaction count
+    - Simple (≤3 tx) = 5, Average (4–7) = 10, Complex (≥8) = 15
+  - TCF (Technical Complexity Factor): 13 factors (0–5) with weights; TCF = 0.6 + 0.01 × Σ(Ti × Wi)
+  - ECF (Environmental Complexity Factor): 8 factors (0–5) with weights; ECF = 1.4 + (−0.03) × Σ(Ei × Wi)
+  - PF (Productivity Factor): team/productivity constant (e.g., 20 person-hours/UCP), calibrated from history
+- Application to this repo (example):
+  - Actors: shell user (Complex, GUI-like TUI=3), CI runner (Simple=1), developer (Average=2)
+  - Use cases: “Navigate and execute TS Ranger command” (Complex), “Install completion” (Average), “Docs lookup” (Simple)
+  - Technical/environmental: determinism, ESM, CI automation, versioned units, team experience
+  - Outcome: quantify sprint scope for v2 TUI (navigation, docs, execution) and compare estimate vs. actual commit/test cycles to calibrate PF
+
 
