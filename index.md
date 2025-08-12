@@ -61,5 +61,10 @@
 | scrum.pmo/sprints/sprint-3/task-1.3-devops-release-recovery.md | Sprint task | 2025-08-08 |
 | scrum.pmo/sprints/sprint-3/task-1.4-tester-e2e-tests.md | Sprint task | 2025-08-08 |
 | scrum.pmo/sprints/sprint-3/task-1.5-po-user-guide.md | Sprint task | 2025-08-08 |
+| scrum.pmo/roles/OntologyAgent/process.md | OntologyAgent process | 2025-08-10 |
+| scrum.pmo/roles/OntologyAgent/quick-reference.md | OntologyAgent reference | 2025-08-10 |
+| scrum.pmo/roles/OntologyAgent/templates/README.md | OntologyAgent templates | 2025-08-10 |
+| scrum.pmo/roles/OntologyAgent/PDCA/2025-08-10-cycle1.md | PDCA | 2025-08-10 |
+| scrum.pmo/roles/OntologyAgent/PDCA/2025-08-10-cycle2.md | PDCA | 2025-08-10 |
 
 *This index is auto-generated for recovery and onboarding. Update as new markdown files are added.*
