@@ -129,3 +129,23 @@ export interface RangerColumn<T> {
   onSelect?(item: T): void; // e.g., sync prompt on method selection
 }
 ```
+
+## Layer Responsibilities (what the layers mean)
+
+- interfaces/
+  - Defines stable contracts (`RangerColumn`, `RangerFilter`) that decouple controller/view from data specifics. Enables mocking and unit testing of behavior without UI/IO dependencies.
+
+- columns/
+  - Implements concrete column logic (Classes/Methods/Params/Docs) behind the common interfaces. Each column owns its data sourcing, filter application, selection rules, and optional `onSelect` prompt-sync hook.
+
+- layer2/ (Model)
+  - Holds application state: selected column/indexes, filters, prompt buffer/cursor, and param entry state. Emits derived views of state (e.g., `buildCommandParts`) but does not perform IO or rendering.
+
+- layer4/ (Controller)
+  - Orchestrates behavior. Consumes semantic key actions (via `KeyboardController`), delegates to the active column for filtering/selection, updates the model, and triggers prompt sync rules. Contains no rendering and no low-level IO.
+
+- layer5/ (View)
+  - Pure rendering. Given the model and columns’ `getVisible()` output, renders a deterministic 4-column grid with headers showing `(filter)` and a colorized prompt/footer. Contains no business logic.
+
+- io/
+  - IO boundary. `NodeProcessIO` bridges to real terminal; `DeterministicTestIO` guarantees stable width/height and final-frame capture for tests. No business rules here—only input/output mechanics.
