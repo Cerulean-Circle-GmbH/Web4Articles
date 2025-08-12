@@ -118,4 +118,21 @@ Dependency direction: higher layers may depend on lower ones (e.g., 4 → 2/1, 5
   - Technical/environmental: determinism, ESM, CI automation, versioned units, team experience
   - Outcome: quantify sprint scope for v2 TUI (navigation, docs, execution) and compare estimate vs. actual commit/test cycles to calibrate PF
 
+## 10. UCP in Web4 (Units, Components, Packages)
+
+> ok. i understand from it the 1969 componentn definition.
+> we use it in Web4. 
+> UCP abreviates Unit,Components, Packages.
+> everything is a unit, unless its a component.
+> packages are components that are not composed from fundametal units but from components.
+> 
+> thats why we called the files, units. add a section to reflect on this.
+
+Reflection and mapping (repo-specific):
+- Unit: the fundamental file-level artifact (one class/interface per `.ts` file). Our “files as units” convention aligns with this.
+- Component: a cohesive module composed of units. Example: the TS Ranger TUI feature composed of `RangerModel` (unit), `RangerView` (unit), `RangerController` (unit), and `TSRanger` entry (unit).
+- Package: a higher-level component-of-components. Example: the entire `v2/src` TUI stack (multiple components) or a distributable CLI bundle that aggregates multiple components.
+- Version boundaries: units/components/packages are version-scoped (e.g., `src.v2` or planned `v2/src`). No cross-version sharing; migrate the necessary units/components per version.
+- Testing lens: unit tests (file-level invariants), component tests (feature behavior across units), package tests (end-to-end via wrapper and environment toggles).
+
 
