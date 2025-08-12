@@ -115,3 +115,32 @@ test
   3. `RangerView` (layer5) renders prompt/grid from `RangerModel`.
   4. `TSCompletion` (layer4) provides candidates; `RangerController` applies them.
 
+## 9. Perspective on the test chain mismatch (tssh → TSRanger → RangerController → RangerView)
+
+- Your point is valid: several of my fixes initially targeted code paths that the tests never executed. The real chain during `tsranger test "<keys>"` is:
+  - `src/sh/tsranger` → spawns Node entry with test mode env
+  - `src/ts/layer4/TSRanger.ts` → `run()` fast-path for test mode
+  - `src/ts/layer4/RangerController.ts` → handles scripted key events and updates `RangerModel`
+  - `src/ts/layer5/RangerView.ts` → renders prompt and grid to stdout (what tests assert)
+
+- Where I went wrong at times
+  - Adjusted `TSCompletion` and unrelated completion heuristics when tests asserted only prompt rendering; completion wasn’t consulted for those specific scripted paths.
+  - Tweaked low-level helpers (e.g., layer1) not on the execution path for test mode.
+  - Modified view styling expecting behavior changes, while behavior lived in `RangerController`.
+
+- Concrete example symptoms vs. effective fix locus
+  - Symptom: `g[tab][down]` prompt not syncing to selected method.
+    - Ineffective: changing list ordering in completion provider.
+    - Effective: updating `RangerController` Up/Down handlers to write `selectedMethod` into `promptBuffer` and set `promptCursorIndex` accordingly; keeping `suppressMethodFilter` true while navigating; ensuring `RangerView` reads the full token.
+  - Symptom: `t[tab]` vs `t[right]` differing visuals.
+    - Ineffective: adjusting ANSI styling in view only.
+    - Effective: unifying Tab/Right logic in `RangerController` and then letting the view reflect `[s]tart` with correct cursor.
+
+- My takeaways to prevent this
+  - Codify the test entry contract: a short doc and a guard test proving `tsranger test` hits `TSRanger.run` test-path, not the interactive path.
+  - Trace the active code path in tests: optional `TRACE_EXEC_PATH=1` env to print a one-line breadcrumb (`tsranger→TSRanger.run(test)→RangerController→RangerView`).
+  - Add coverage focus: ensure statements in `RangerController` branches for Tab/Right/Backspace/Up/Down are covered by the scripted suite.
+  - Prefer minimal, targeted edits to files proven (by trace/coverage) to be executed by the failing test.
+  - Use “contract tests” for `RangerView` output with explicit cursor markers so behavior vs. styling don’t get conflated.
+
+
