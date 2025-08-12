@@ -143,4 +143,39 @@ test
   - Prefer minimal, targeted edits to files proven (by trace/coverage) to be executed by the failing test.
   - Use “contract tests” for `RangerView` output with explicit cursor markers so behavior vs. styling don’t get conflated.
 
+## 10. ENV variable config management elephant — and how Web4 “scenarios” fix it
+
+- Why this is an elephant
+  - Ad-hoc environment variables (from shell, CI, and Node `process.env`) leaked into behavior: `TSRANGER_TEST_MODE`, `TSRANGER_TEST_INPUT`, `COLUMNS`, `LINES`, `TERM`, `PS1`, repo paths, branch names.
+  - Without a schema and load-order, tests become non-deterministic and production drift is inevitable.
+  - Security and provenance concerns: unclear origin of values and lack of allowlist when exporting to subprocesses.
+
+- Web4 “Scenario” concept (my understanding and proposal)
+  - A scenario is a declarative, versioned configuration bundle describing the exact runtime context (role, OS, UI constraints, repos, env vars), stored in-repo and referenced by name.
+  - Representation: JSON or YAML with a strict schema, e.g. `config/scenarios/ci.vitest.json`, `config/scenarios/local.dev.json`, `config/scenarios/tui.noninteractive.json`.
+  - Contents:
+    - metadata: `name`, `version`, `origin` (sprint/task), `createdAt`.
+    - env: explicit map of allowed env vars (only these are applied), including `TSRANGER_TEST_MODE`, `TSRANGER_TEST_INPUT`, `COLUMNS`, `LINES`, `PS1`.
+    - secrets: references to CI secret names (never raw values in repo), with injection policy.
+    - repos/paths: working dir expectations, branch pinning.
+  - Load order and precedence:
+    1) scenario file → 2) role overrides → 3) command-line overrides → 4) minimal host passthrough (allowlist only).
+
+- How this integrates here
+  - Add `src/ts/layer1/Scenario.ts`: loads `TSRANGER_SCENARIO` file, validates against JSON Schema, applies env allowlist to `process.env` before anything else runs.
+  - Update `src/ts/layer4/TSRanger.ts` (`run()`): detect `TSRANGER_SCENARIO` early, call `Scenario.apply()` prior to TTY/test-mode branching.
+  - Test harness: set `TSRANGER_SCENARIO=config/scenarios/ci.vitest.json` and remove implicit reliance on the host env; keep `tsranger test "<keys>"` as the single entry.
+  - Document scenarios in `README.md` recovery: choose a scenario first; fail fast if missing.
+
+- Minimal example files to add
+  - `config/scenarios/ci.vitest.json` (locked `COLUMNS`, `LINES`, `PS1`, `TSRANGER_TEST_MODE=1`).
+  - `config/scenarios/tui.noninteractive.json` (adds `TSRANGER_TEST_INPUT` for scripted runs).
+  - JSON Schema: `config/scenarios/schema.json` for validation in `Scenario.ts`.
+
+- Migration plan (safe, incremental)
+  1. Introduce loader and schema; wire into `TSRanger.run()` behind feature flag `TSRANGER_SCENARIO_OPT_IN=1`.
+  2. Add CI scenario and update tests to set `TSRANGER_SCENARIO` in `npm test` env.
+  3. Replace ad-hoc env reads with scenario-backed values; add allowlist for passthrough.
+  4. Remove the feature flag once tests are green and docs updated.
+
 
