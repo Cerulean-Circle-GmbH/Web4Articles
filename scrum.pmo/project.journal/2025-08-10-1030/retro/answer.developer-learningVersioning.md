@@ -1,6 +1,6 @@
 [Back to Retro Instructions](./retro-instructions.md)
 
-# Settiles Scribe — Retrospective (2025-08-10)
+# [Developer learning Versioning](./answer.developer-learningVersioning.md#typo:Settiles_Scribe) — Retrospective (2025-08-10)
 
 ## 1. Role Description After Recovery (as ScrumMaster)
 ### [Detailed](./answer.developer-learningVersioning.md#typo:Settiles) Role Description
@@ -35,4 +35,58 @@ As ScrumMaster, I ensure recovery from `README.md` initializes first principles 
 ## 6. QA “Elephant in the Room” Analysis
 - The elephant: cross-version coupling and context leakage. Solution: strict versioned units and context discipline; wrapper toggles; sprint-scoped QA logs.
 
-#### typo:Settiles
+
+## 7. Source/Version Folder Evolution (tree examples)
+
+### A. Before v2 introduction
+```text
+Web4Articles/
+  src/
+    ts/
+      layer1/
+      layer2/
+      layer3/
+      layer4/
+      layer5/
+    sh/
+  test/
+```
+
+### B. Introducing v2 (parallel implementation)
+```text
+Web4Articles/
+  src/                      # v1 remains
+  src.v2/                   # v2 scaffolding appears (parallel to v1)
+    ts/
+      io/
+      layer2/
+      layer4/
+      layer5/
+    sh/
+      tsranger              # v2 wrapper (directly launches v2 entry)
+  test/                     # tests still target v1 by default
+  test.v2/                  # (scaffold) version-scoped tests for v2 (toggle-driven)
+```
+
+### C. Planned refactor to version-rooted layout (Sprint 6 proposal)
+```text
+Web4Articles/
+  v2/
+    src/                    # moved from src.v2/ts → v2/src
+      io/
+      layer2/
+      layer4/
+      layer5/
+    test/                   # moved from test.v2 → v2/test
+    sh/
+      tsranger              # launches v2/src entry
+  src/                      # legacy v1 remains isolated
+  test/                     # legacy v1 tests remain
+```
+
+Notes:
+- No shared files across versions; migrate units into the active version.
+- Wrapper routes by version; tests use env toggles to select v2.
+- All imports inside a version resolve relative to that version’s `src/`.
+
+
