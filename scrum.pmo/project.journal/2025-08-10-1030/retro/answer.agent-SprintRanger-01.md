@@ -5,7 +5,7 @@
 
 ## Branch and scope
 - Retro branch: `retro/2025-08-10-agent-retro`
-- Working sprint: Sprint 5 (v2 of TS Ranger)
+- Working sprint: Sprint 7 (v2.5 of TS Ranger)
 
 ## What went well
 - v2 architecture implemented in `src.v2` with clear IO/Model/View/Controller boundaries.
@@ -24,14 +24,14 @@
 
 ## Action items
 - Finalize KeyboardController abstraction and integrate to simplify key handling.
-- Keep PDCA entries per sprint under `scrum.pmo/sprints/sprint-5/qa.md`.
+- Keep PDCA entries per sprint under `scrum.pmo/sprints/sprint-7/qa.md`.
 - Ensure tests assert against final frames only when appropriate (`TS_RANGER_TEST_FINAL_ONLY=1`).
 
 ## Evidence and links
 - v2 sources: `src.v2/ts/**` (IO/Model/View/Controller/TSRanger)
 - Toggle wrapper: `src/sh/tsranger`
-- Sprint 5 planning and tasks: `scrum.pmo/sprints/sprint-5/`
-- PDCA logs: `/scrum.pmo/sprints/sprint-5/qa.md`
+- Sprint 7 planning and tasks: `scrum.pmo/sprints/sprint-7/`
+- PDCA logs: `/scrum.pmo/sprints/sprint-7/qa.md`
 - Background agent policy: `/background.agent.md`
 
 ## Notes

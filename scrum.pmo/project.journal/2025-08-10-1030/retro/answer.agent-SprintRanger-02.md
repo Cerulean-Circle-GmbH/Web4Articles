@@ -46,7 +46,7 @@
 Below is the target structure for a column-based TSRanger v2. This layout simplifies responsibilities, isolates concerns, and makes navigation/filter behavior reusable.
 
 ```text
-src.v2/
+src.v2.5/
   ts/
     interfaces/
       RangerFilter.ts           # apply(prefix), reset(), current(); single source of filter truth
