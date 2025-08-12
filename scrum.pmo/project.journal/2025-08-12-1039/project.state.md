@@ -34,8 +34,8 @@
   - Implement weekly promotion and finalize CI wiring.
 
 ## Sprints Overview
-- Existing: sprints 0–4 on main
-- Discovered/Merged: sprints 5–6 (TSRanger v2), sprint 8 (Ranger analysis), sprint 9 (CI/CD pipeline)
+- Existing: [sprint-0 planning](../../sprints/sprint-0/planning.md), [sprint-1 planning](../../sprints/sprint-1/planning.md), [sprint-2 planning](../../sprints/sprint-2/planning.md), [sprint-3 planning](../../sprints/sprint-3/planning.md), [sprint-4 planning](../../sprints/sprint-4/planning.md) on [main](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/main)
+- Discovered/Merged: [sprint-5 planning](../../sprints/sprint-5/planning.md), [sprint-6 planning](../../sprints/sprint-6/planning.md) (TSRanger v2), [sprint-8 planning](../../sprints/sprint-8/planning.md) (Ranger analysis), [sprint-9 planning](../../sprints/sprint-9/planning.md) (CI/CD pipeline)
 - Missing: sprint 7
 - Created: none during recovery
 - Upcoming: sprint 10 (License enforcement tooling via `TSsh LicenseTool`)
