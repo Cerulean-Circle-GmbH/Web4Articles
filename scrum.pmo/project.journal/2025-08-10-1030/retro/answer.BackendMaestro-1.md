@@ -178,4 +178,22 @@ test
   3. Replace ad-hoc env reads with scenario-backed values; add allowlist for passthrough.
   4. Remove the feature flag once tests are green and docs updated.
 
+## 11. Why start a v2 from scratch in `src2`
+
+- Architectural debt indicators
+  - Mixed concerns across layers (completion, view styling, controller state management) leading to hidden couplings.
+  - Implicit ENV dependencies without a scenario model.
+  - Ad-hoc prompt buffer semantics evolved organically, making reasoning and testing harder.
+
+- Benefits of a clean `src2` reboot
+  - Codebase clarity: preserve folder layering but enforce stricter boundaries and contracts between layers.
+  - Deterministic runtime: scenario-first initialization before any controller/view logic runs.
+  - Testability: design for scripted non-interactive input as the primary execution mode; inject dependencies.
+  - Backwards-compat plan: keep CLI surface compatible while deprecating legacy behaviors via adapter layer.
+
+- Practical approach
+  - Scaffold `src2` mirroring `src/ts` structure with TypeScript strict mode and explicit interfaces for view/controller/model.
+  - Build prompt editing as a single, well-tested state machine with snapshots and property tests.
+  - Keep `src/` running to avoid blocking; migrate features incrementally behind flags.
+
 
