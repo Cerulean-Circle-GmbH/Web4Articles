@@ -66,4 +66,86 @@ After recovering from `README.md`, I operate as a ScrumMaster specialized in saf
 - Named obstacle: lack of CI/branch rules allowed risky deletions and link drift.
 - Solutions provided: adopt protected-path policy, partial merge strategy, and link hygiene checks; enrich journals with branch links for recovery.
 
+## 7. Robustness of Shell Fiddling (safety practices)
 
+Observed during integration and recovery, shell operations were kept robust by:
+
+- Prefer read-only listings before write ops
+  - Use `git diff --name-status`, `git ls-tree`, `git log --name-status` to plan changes.
+- Restricting scope of bulk ops
+  - Filtered paths (e.g., exclude `.github/workflows/**`, `scrum.pmo/project.journal/**`, templates, QA logs) for partial merges.
+- Idempotent, low-risk edits
+  - Insert first-line backlinks only when missing; no destructive replacements.
+- Staged-and-reviewable steps
+  - `git checkout <branch> -- <files>` to import, then `git add` + `git commit` with clear messages.
+- Avoid brittle shell modes in shared sessions
+  - Refrained from `set -euo pipefail` in interactive shells; used plain, concatenated commands.
+- Dry-run equivalents
+  - Listing files to change and head/tail previews before `git checkout`/`git add`.
+
+Recommended guardrails going forward:
+- Wrap “dangerous” helpers in scripts under `tools/` with dry-run flags and protected-path defaults.
+- Provide `make plan-merge` and `make apply-merge PLAN=<file>` to separate computation from execution.
+- Add CI job to reject PRs that attempt deletions under protected paths.
+
+
+## 6.1 Tree snapshots for “crazy” situations (diagnostics)
+
+When the repo gets into surprising states, capture a focused tree snapshot that matches the suspected context. These examples helped triage real-world issues:
+
+- New version introduced but v1 and v2 mixed
+  ```bash
+  # Show only top-level versions and expected sub-trees
+  tree -a -L 2 -I 'node_modules|.git' \
+    | sed -n '/^\./,/^$/p'
+  ```
+  Expected (no cross-pollination):
+  ```text
+  Web4Articles/
+    src/
+    src.v2/
+    test/
+    test.v2/
+  ```
+
+- v2 references v1 units (illegal cross-version import)
+  ```bash
+  # Find any imports that jump out of v2 into src/
+  grep -R "from '../../..*/src/ts" src.v2/ts || true
+  # Confirm structure around offenders
+  tree -a -L 3 src.v2/ts
+  ```
+
+- Missing first-line backlinks after mass edit
+  ```bash
+  git ls-files '*.md' \
+    | xargs -I{} sh -c 'head -n1 "{}" | grep -q "^\[" || echo MISSING:{}'
+  ```
+
+- Journal directory missing project.state.md
+  ```bash
+  # Any journal folder without a project.state.md
+  for d in scrum.pmo/project.journal/*; do [ -d "$d" ] || continue; \
+    [ -f "$d/project.state.md" ] || echo "MISSING:$d"; done
+  ```
+
+- Feature branch deletes protected assets (workflows/journals)
+  ```bash
+  git diff --name-status release/dev..origin/feature/analyze-ranger \
+    | egrep '^(D\s+)\.(github/workflows/|scrum\.pmo/project\.journal/|scrum\.pmo/templates/|qa-feedback-log\.md)'
+  ```
+
+- Link hygiene in a subtree (docs or scrum.pmo)
+  ```bash
+  git ls-files 'docs/**/*.md' 'scrum.pmo/**/*.md' \
+    | xargs -I{} sh -c 'head -n1 "{}" | grep -q "^\[" || echo NO-BACKLINK:{}'
+  ```
+
+- Version scoping sanity (no shared units)
+  ```bash
+  # Units must live only once per version scope
+  comm -12 \
+    <(git ls-files 'src/**/*.ts' | sed 's#.*/##' | sort -u) \
+    <(git ls-files 'src.v2/**/*.ts' | sed 's#.*/##' | sort -u) \
+    | sed 's/^/DUPLICATE-UNIT-NAMES:/'
+  ```
