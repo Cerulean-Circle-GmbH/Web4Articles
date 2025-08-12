@@ -88,6 +88,32 @@ Recommended guardrails going forward:
 - Provide `make plan-merge` and `make apply-merge PLAN=<file>` to separate computation from execution.
 - Add CI job to reject PRs that attempt deletions under protected paths.
 
+## 8. Recovery Process and Experiences
+
+What worked well:
+- Recover-from-README default gave a reliable starting point; no guesswork.
+- Immediate journal creation (`project.state.md`) with explicit branch links made later recovery trivial.
+- Backlink/cross-link hygiene after each batch prevented navigation rot.
+- Partial merge strategy (A/M only, protected-path filter) enabled progress without regressions.
+
+What broke and how we fixed it:
+- Missing journals on some branches → restored from source branches; enriched Branch section with remote links for reproducibility.
+- Feature branch deletions of workflows/journals → avoided importing deletions; proposed CI protections.
+- Link drift post-merge → added pre-commit spellcheck + cross-ref checks to role processes; ran automated backlink insertion.
+
+Quick recovery checklist (applied):
+- Read README Optimized Recovery; verify env/tools.
+- Scan `scrum.pmo/` and `qa-feedback-log.md`; aggregate gaps.
+- Ensure `scrum.pmo/project.journal/<date>/project.state.md` exists with:
+  - Explicit branch link(s)
+  - Cross-linked artifacts (files/PRs)
+- Enforce first-line backlinks in changed markdown.
+- Prefer non-interactive test modes; record status in journal.
+
+Improvements to bake in:
+- CI: protected-path deletions blocked; backlinks/link checks required.
+- Templates: journal `project.state.md` with Branch link placeholder; role process pre-commit checks required.
+
 
 ## 6.1 Tree snapshots for “crazy” situations (diagnostics)
 
