@@ -5,6 +5,10 @@
 ## Overview
 This document defines the canonical recovery process for AI agents when context is lost or when explicitly asked to "recover". The process ensures consistency, completeness, and proper branch management.
 
+## Project Status Reporting Requirements (Canonical)
+- This document is the canonical source for the structure and content of project status/journal entries.
+- Follow "Phase 3: Journal Entry Creation" and "Phase 4: Project Status Report" below for the required sections, including the GitHub Quick Links and verification checklist.
+
 ## Critical Requirements
 
 ### 1. Always Start from release/dev

@@ -7,12 +7,9 @@
 - All process improvements, debugging lessons, and cross-role feedback must be documented in the appropriate process.md file for traceability and continuous improvement.
 - The ScrumMaster is responsible for ensuring that all roles update their process documentation after significant debugging, integration, or process improvement sessions.
 
-## Logger & Verification Principles
-- All CLI, automation, and scripts must use the canonical Logger where applicable. Logging must be environment-aware, non-intrusive in production, and support traceability for debugging and process improvement.
-- After any automated or scripted action, always verify the intended effect (e.g., file creation, output, or state change) and document any discrepancies for process improvement.
 
-- All scripts and tools (e.g., `oosh`) must be robustly callable from their own directory, from the PATH, or from the project root. Always resolve the project root dynamically to ensure correct CLI and environment behavior regardless of invocation location.
-- **DO NOT REPEAT YOURSELF (DRY):** Never duplicate logic, documentation, or code. If you find repetition, always suggest and implement consolidation. Refactor or centralize repeated logic, scripts, or documentation to a single canonical location. This applies to all roles and all artifacts (code, scripts, docs, process).
+## **DO NOT REPEAT YOURSELF (DRY):** 
+Never duplicate logic, documentation, or code. If you find repetition, always suggest and implement consolidation. Refactor or centralize repeated logic, scripts, or documentation to a single canonical location. This applies to all roles and all artifacts (code, scripts, docs, process).
 
 ## Markdown Backlink Policy (Mandatory)
 - Every markdown document must begin with a single backlink on the very first line to its parent artifact.
@@ -24,15 +21,13 @@
 - When editing or creating markdown, verify backlinks and cross-references are correct and up to date.
 
 ## Project Status Reporting Requirements (Mandatory)
-- Every project status/journal entry MUST clearly state the exact GitHub repository and current working branch with clickable links.
-- Include a "GitHub Quick Links" block containing at least:
-  - Repo: `[org/repo](https://github.com/<org>/<repo>)`
-  - Branches: `[main](https://github.com/<org>/<repo>/tree/main)`, `[release/dev](https://github.com/<org>/<repo>/tree/release/dev)`, `[release/testing](https://github.com/<org>/<repo>/tree/release/testing)`, `[release/production](https://github.com/<org>/<repo>/tree/release/production)`
-  - PRs: `[Open PRs](https://github.com/<org>/<repo>/pulls)` and link specific PRs as `[#123](https://github.com/<org>/<repo>/pull/123)` when referenced
-  - Branches overview: `[All branches](https://github.com/<org>/<repo>/branches)`
-- Use relative markdown links for intra-repo files (e.g., `../../qa-feedback-log.md`) and absolute GitHub links for branches/PRs.
-- In multi-submodule projects, list each submodule’s repo and branch in the status (one line per module) with the same link pattern.
-- Add links to any mentioned local artifacts (e.g., merge reports, QA logs) to support quick navigation.
+The canonical, up-to-date instructions for status/journal reporting live in:
+
+`/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scrum.pmo/roles/ScrumMaster/recovery-process.md`
+
+- On recovery from `README.md`, read and execute that document.
+- Specifically follow its sections "Phase 3: Journal Entry Creation" and "Phase 4: Project Status Report" for required content and formatting.
+- Do not duplicate guidance here; keep this section as a pointer to the canonical document to preserve DRY.
 
 # Commit & Push Best Practices
 
