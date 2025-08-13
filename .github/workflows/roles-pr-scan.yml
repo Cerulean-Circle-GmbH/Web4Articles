@@ -1,0 +1,76 @@
+name: Scan branches for unmerged role changes → Auto PR to release/dev
+
+on:
+  schedule:
+    - cron: '17 * * * *'  # hourly
+  workflow_dispatch: {}
+
+jobs:
+  scan-and-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan remote branches for role changes not in release/dev
+        id: scan
+        run: |
+          set -e
+          echo "## Roles PR Scan" >> $GITHUB_STEP_SUMMARY
+          echo "Time: $(date -u +%Y-%m-%d' '%H:%M:%S' UTC)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          git fetch --all --prune
+
+          PR_CANDIDATES=""
+          while IFS= read -r ref; do
+            branch="${ref#refs/remotes/origin/}"
+            # Skip protected and HEAD
+            if [[ "$branch" == "HEAD" ]] || [[ "$branch" == "main" ]] || [[ "$branch" == release/* ]]; then
+              continue
+            fi
+            # Diff against release/dev for roles changes
+            if git diff --name-only origin/release/dev..origin/"$branch" | grep -q '^scrum\.pmo/roles/'; then
+              echo "- Candidate: $branch" >> $GITHUB_STEP_SUMMARY
+              PR_CANDIDATES+="$branch\n"
+            fi
+          done < <(git for-each-ref --format='%(refname)' refs/remotes/origin)
+
+          echo "candidates<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$PR_CANDIDATES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Open PRs for candidates
+        if: steps.scan.outputs.candidates != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const candidates = `"${{ steps.scan.outputs.candidates }}`.trim().split('\n').filter(Boolean);
+
+            // Load existing open PRs to release/dev once
+            const openPRs = await github.paginate(github.rest.pulls.list, { owner, repo, state: 'open', base: 'release/dev' });
+
+            for (const branch of candidates) {
+              const exists = openPRs.find(pr => pr.head && pr.head.ref === branch);
+              if (exists) {
+                core.info(`PR already open for ${branch}`);
+                continue;
+              }
+              const title = `Auto-PR (roles): ${branch} → release/dev`;
+              const body = `Automated scan detected changes under \`scrum.pmo/roles/**\` not present in \`release/dev\`.\n\nThis PR tracks those changes for review and integration.`;
+              await github.rest.pulls.create({ owner, repo, head: branch, base: 'release/dev', title, body });
+              core.info(`Opened PR for ${branch}`);
+            }
+
+      - name: Summary note when no candidates
+        if: steps.scan.outputs.candidates == ''
+        run: echo "No branches with unmerged role changes found." >> $GITHUB_STEP_SUMMARY
+
+
