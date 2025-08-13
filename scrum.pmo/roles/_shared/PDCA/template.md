@@ -3,21 +3,25 @@
 Note: Name files `YYYY-MM-DD-UTC-HHMM.md` in each role’s `PDCA/` directory.
 
 ## Plan
-- Objective: 
-- Scope: 
-- Targets (metrics): 
-- Inputs (files/dirs): 
+- **Objective:** 
+  - 
+- **Scope:** 
+  - 
+- **Targets (metrics):** 
+  - 
+- **Inputs (files/dirs):** 
+  - 
 - **Acceptance Criteria:**
   - 
-- Assumptions:
+- **Assumptions:**
   - 
-- Constraints:
+- **Constraints:**
   - 
-- Options Considered (with pros/cons):
+- **Options Considered (with pros/cons):**
   - 
-- Rationale for Selected Option:
+- **Rationale for Selected Option:**
   - 
-- Risks and Mitigations:
+- **Risks and Mitigations:**
   - 
 
 ## Do
