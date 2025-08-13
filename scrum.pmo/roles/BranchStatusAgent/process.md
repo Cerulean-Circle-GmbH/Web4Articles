@@ -17,14 +17,14 @@ Maintain accurate, auditable visibility into repository branches, enforce protec
 - `index.md` for discovery of related role/process docs
 
 ## Outputs
-- Branch checklist MD with checkmarks and protected list
+- Branch checklist MD with protected list, unmerged-to-main and unmerged-to-release/dev sections, and merged-to-main list
 - Recovery and retro notes referencing checklist and policies
 - PRs for cleanup named like: `cleanup branches`
 
 ## Workflow
 1. Fetch and enumerate branches.
 2. Compute merged/not-merged relative to `origin/main`.
-3. Update journal checklist. Include protected branches at top.
+3. Update journal checklist. Include protected branches at top, then sections: Unmerged into main, Unmerged into release/dev, Merged into main.
 4. Commit on a feature/chore branch and push; open PR.
 5. Coordinate with QA for deletions/archives.
 
