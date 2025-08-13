@@ -10,6 +10,9 @@ on:
 jobs:
   merge-to-dev:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     
     steps:
     - name: Checkout repository
@@ -35,18 +38,11 @@ jobs:
         BRANCH_NAME="${GITHUB_REF#refs/heads/}"
         echo "Merging feature branch $BRANCH_NAME into release/dev..."
         
-        git merge origin/$BRANCH_NAME --no-ff -m "chore: Auto-merge $BRANCH_NAME into release/dev
-        
-        Continuous integration merge for feature branch testing
-        Branch: $BRANCH_NAME
-        Commit: ${{ github.sha }}
-        Author: ${{ github.actor }}
-        
-        [skip ci]" || echo "Merge failed - conflicts may exist"
+        git merge origin/$BRANCH_NAME --no-ff -m "chore: Auto-merge $BRANCH_NAME into release/dev\n\nContinuous integration merge for feature branch testing\nBranch: $BRANCH_NAME\nCommit: ${{ github.sha }}\nAuthor: ${{ github.actor }}\n\n[skip ci]"
         
     - name: Push to release/dev
       run: |
-        git push origin release/dev || echo "Push failed - may have conflicts"
+        git push origin release/dev
       
     - name: Create merge report
       if: always()
@@ -69,53 +65,28 @@ jobs:
           echo "Please check for merge conflicts with release/dev" >> $GITHUB_STEP_SUMMARY
         fi
         
-    - name: Handle merge conflicts
+    - name: Open PR to release/dev on failure
       if: failure()
       uses: actions/github-script@v7
       with:
         script: |
           const branchName = context.ref.replace('refs/heads/', '');
-          
-          // Only create issue for non-trivial branches
-          if (branchName.includes('feature/') || branchName.includes('feat/') || 
-              branchName.includes('fix/') || branchName.includes('chore/')) {
-            
-            github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.name,
-              title: `Merge conflict: ${branchName} → release/dev`,
-              body: `## Auto-merge Failed
-              
-              The automatic merge from ${branchName} to release/dev has failed due to conflicts.
-              
-              **Details:**
-              - Branch: ${branchName}
-              - Commit: ${context.sha}
-              - Author: ${context.actor}
-              - Time: ${new Date().toISOString()}
-              
-              **Options:**
-              
-              1. **Fix conflicts locally:**
-              \`\`\`bash
-              git checkout release/dev
-              git pull origin release/dev
-              git merge origin/${branchName}
-              # Resolve conflicts
-              git push origin release/dev
-              \`\`\`
-              
-              2. **Rebase your branch:**
-              \`\`\`bash
-              git checkout ${branchName}
-              git pull origin release/dev
-              git rebase release/dev
-              # Resolve conflicts
-              git push --force-with-lease origin ${branchName}
-              \`\`\`
-              
-              **Note:** This is for continuous integration testing. Your branch can still be merged to main via PR even if it conflicts with release/dev.
-              `,
-              labels: ['auto-merge', 'merge-conflict', 'release/dev', 'ci']
-            });
+          const owner = context.repo.owner;
+          const repo = context.repo.repo;
+
+          // Check if there is already an open PR from this branch to release/dev
+          const { data: prs } = await github.rest.pulls.list({ owner, repo, state: 'open', base: 'release/dev' });
+          const existing = prs.find(pr => pr.head && pr.head.ref === branchName);
+
+          if (!existing) {
+            const title = `Auto-PR: ${branchName} → release/dev`;
+            const body = `CI could not push to release/dev (protected) or the merge conflicted.\n\nThis PR tracks the changes for review and merge.\n\n- Source: ${branchName}\n- Target: release/dev`;
+            await github.rest.pulls.create({ owner, repo, head: branchName, base: 'release/dev', title, body });
           }
+
+          await github.rest.issues.create({
+            owner, repo,
+            title: `Auto-merge failed: ${branchName} → release/dev`,
+            body: `Automatic merge/push to release/dev failed. An auto PR has been opened or updated.\n\n- Branch: ${branchName}\n- Commit: ${context.sha}\n- Actor: ${context.actor}\n- Time: ${new Date().toISOString()}`,
+            labels: ['auto-merge', 'merge-conflict', 'release/dev', 'ci']
+          });
