@@ -52,6 +52,10 @@ git status --porcelain=v1
 > [paste the exact QA/user prompt here]
 - Artifacts analyzed (if no changes made):
   - [Path/to/analyzed/file.md](relative/path) - What was examined
+- GitHub Links (when applicable):
+  - PR: [#XXX](https://github.com/Cerulean-Circle-GmbH/Web4Articles/pull/XXX)
+  - Files: [View on GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/branch/path)
+  - Commit: [hash](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commit/hash)
 - Evidence (snippets/commands):
 ```bash
 # Count table rows (excluding header/separators)

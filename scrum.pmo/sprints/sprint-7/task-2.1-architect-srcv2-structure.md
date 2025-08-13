@@ -3,7 +3,7 @@
 # Task 2.1 — Architect: Module Boundaries and File Layout for TSRanger v2.5
 
 ## Status
-- Planned
+- In Progress → Completed
 
 ## Traceability
 - Up: [requirement:uuid:93a4b5c6-d7e8-4f5d-6e7f-8091a2b3c4d5]
@@ -50,3 +50,34 @@ components/
 ## Routing Plan (Spec)
 - `src/sh/tsranger` detects `TSRANGER_V2=1` and invokes `node --loader ts-node/esm components/TSRanger/v2.5/src/ts/layer4/TSRanger.ts test "..."` in test mode; otherwise uses v1 path.
 - No changes required to tests; only set the env switch.
+
+## Implementation (Completed)
+The folder structure has been implemented using git mv for traceability:
+
+### Git Commands Used
+```bash
+# Created component directory structure
+mkdir -p components/TSRanger/v2.5
+
+# Moved entire src.v2.5 to correct location preserving history
+git mv src.v2.5 components/TSRanger/v2.5/src
+
+# This moved all files with git history:
+# src.v2.5/ts/io/TerminalIO.ts → components/TSRanger/v2.5/src/ts/io/TerminalIO.ts
+# src.v2.5/ts/layer2/RangerModel.ts → components/TSRanger/v2.5/src/ts/layer2/RangerModel.ts
+# src.v2.5/ts/layer4/RangerController.ts → components/TSRanger/v2.5/src/ts/layer4/RangerController.ts
+# src.v2.5/ts/layer4/TSRanger.ts → components/TSRanger/v2.5/src/ts/layer4/TSRanger.ts
+# src.v2.5/ts/layer5/RangerView.ts → components/TSRanger/v2.5/src/ts/layer5/RangerView.ts
+```
+
+### Verification
+```bash
+# Verify git history preserved
+git log --follow components/TSRanger/v2.5/src/ts/layer4/TSRanger.ts
+
+# Check all renames
+git status --porcelain | grep "^R"
+```
+
+### Result
+The structure now matches the specification with full git history preserved.
