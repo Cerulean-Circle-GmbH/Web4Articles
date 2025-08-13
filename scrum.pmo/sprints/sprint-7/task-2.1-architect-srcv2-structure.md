@@ -3,7 +3,7 @@
 # Task 2.1 — Architect: Module Boundaries and File Layout for TSRanger v2.5
 
 ## Status
-- In Progress → Completed
+- In Progress (Additional requirements discovered)
 
 ## Traceability
 - Up: [requirement:uuid:93a4b5c6-d7e8-4f5d-6e7f-8091a2b3c4d5]
@@ -80,4 +80,25 @@ git status --porcelain | grep "^R"
 ```
 
 ### Result
-The structure now matches the specification with full git history preserved.
+The v2.5 structure is correct but additional requirements discovered:
+- Current src/ folder is v1.0 and needs to be moved to components/TSRanger/v1.0/
+- Each version needs both src/ and test/ folders
+- Other versions (v2, v3.n14.4, v3.njs14) may need organization
+
+## Additional Requirements (Discovered via QA)
+Not specified in original task but necessary for complete implementation:
+1. **Version 1.0**: Move current src/ and test/ to components/TSRanger/v1.0/
+2. **Test Folders**: Each version needs parallel test/ folder structure
+3. **All Versions**: Organize all floating versions in the project
+4. **Complete Structure**: 
+   ```
+   components/
+     TSRanger/
+       v1.0/
+         src/
+         test/
+       v2.5/
+         src/     ✅ (already done)
+         test/    ⚠️ (needs creation)
+       [other versions as discovered]
+   ```
