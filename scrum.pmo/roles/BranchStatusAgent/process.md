@@ -17,14 +17,14 @@ Maintain accurate, auditable visibility into repository branches, enforce protec
 - `index.md` for discovery of related role/process docs
 
 ## Outputs
-- Branch checklist MD with checkmarks and protected list
+- Branch checklist MD with protected list, unmerged-to-main and unmerged-to-release/dev sections, and merged-to-main list
 - Recovery and retro notes referencing checklist and policies
 - PRs for cleanup named like: `cleanup branches`
 
 ## Workflow
 1. Fetch and enumerate branches.
 2. Compute merged/not-merged relative to `origin/main`.
-3. Update journal checklist. Include protected branches at top.
+3. Update journal checklist. Include protected branches at top, then sections: Unmerged into main, Unmerged into release/dev, Merged into main.
 4. Commit on a feature/chore branch and push; open PR.
 5. Coordinate with QA for deletions/archives.
 
@@ -67,3 +67,12 @@ printf "\n- **Do not touch branches**:\n  - origin/main\n  - origin/retro/2025-0
 - Provide GitHub web link followed by relative path link for referenced files.
 - Example:
   - `[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/<branch>/scrum.pmo/roles/BranchStatusAgent/process.md): [scrum.pmo/roles/BranchStatusAgent/process.md](../../scrum.pmo/roles/BranchStatusAgent/process.md)`
+
+## Tools
+- `scrum.pmo/roles/BranchStatusAgent/tools/branch_overview_favorite.sh`: generate the favorite journal branch overview (includes unmerged to main and release/dev)
+- `scrum.pmo/roles/BranchStatusAgent/tools/branches_checklist_generate.sh`: generate checklist sections (protected, unmerged->main, unmerged->release/dev, merged->main)
+- `scrum.pmo/roles/BranchStatusAgent/tools/git_branch_counts.sh`: print merged/unmerged counts
+- `scrum.pmo/roles/BranchStatusAgent/tools/create_pdca.sh`: create a PDCA entry and inject quoted QA prompt
+
+## Reminder
+- After each prompt: create a PDCA log for this role quoting the exact prompt in the Check section.
