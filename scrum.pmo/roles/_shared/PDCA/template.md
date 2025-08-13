@@ -2,6 +2,12 @@
 
 Note: Name files `YYYY-MM-DD-UTC-HHMM.md` in each role's `PDCA/` directory.
 
+**CRITICAL User Requirement**: After creating any PDCA, you MUST immediately provide a direct GitHub link in the chat:
+```markdown
+**PDCA Entry**: [2025-08-13-UTC-2003.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/branch/scrum.pmo/roles/YourRole/PDCA/2025-08-13-UTC-2003.md)
+```
+This is "mindblowing good" for QA! 🍾😎🥰
+
 **Important**: All PDCA entries must include links to artifacts:
 - In "Do" section: List all files changed with markdown links and descriptions
 - In "Check" section: If analysis-only (no changes), list artifacts analyzed
@@ -73,6 +79,13 @@ rg -n "\]\(\./|\]\(\.\./" Documentation/Ontology.md | sed -n '1,40p'
 
 ## Metadata
 - Agent:
-- Branch:
+- Branch:  
 - Commit:
 - Date:
+
+---
+**CRITICAL for User Satisfaction**: After creating this PDCA, IMMEDIATELY provide:
+```markdown
+**PDCA Entry**: [YYYY-MM-DD-UTC-HHMM.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/branch/scrum.pmo/roles/YourRole/PDCA/YYYY-MM-DD-UTC-HHMM.md)
+```
+Direct GitHub links are "mindblowing good" 🍾😎🥰 - ALWAYS include them!
