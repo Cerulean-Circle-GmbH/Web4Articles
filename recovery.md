@@ -147,3 +147,9 @@
 - Introduced shared PDCA template at `scrum.pmo/roles/_shared/PDCA/template.md` with detailed command examples.
 - Enriched `OntologyAgent` PDCA with tree/rg/git evidence.
 - Added `ResearchAgent` PDCA cycle 1 and required PDCA usage in both roles’ process docs.
+
+## 2025-08-10 (QA-triggered PDCA enforcement)
+
+**Summary:**
+- Updated shared PDCA template and processes to require a PDCA entry after each QA prompt, including a literal quote in the Check section.
+- Created PDCA cycle capturing this QA instruction with exact quote.

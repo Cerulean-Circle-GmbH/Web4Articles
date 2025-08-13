@@ -338,3 +338,8 @@ All index files must follow consistent table format:
   - A relative markdown link (e.g., `[README.md](../../README.md)`)
   - A second link named `[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/<branch>/path/to/file)`
 - Apply this consistently in indexes, PDCA logs, and process docs.
+
+## QA-Triggered PDCA Policy
+- After each QA/user prompt, create a new PDCA entry under `scrum.pmo/roles/OntologyAgent/PDCA/`.
+- In the Check section, include a verbatim quote of the QA prompt.
+- Use the shared template and add evidence snippets.

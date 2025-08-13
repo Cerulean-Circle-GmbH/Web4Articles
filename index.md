@@ -67,6 +67,7 @@
 | scrum.pmo/roles/OntologyAgent/PDCA/2025-08-10-cycle1.md | PDCA | 2025-08-10 |
 | scrum.pmo/roles/OntologyAgent/PDCA/2025-08-10-cycle2.md | PDCA | 2025-08-10 |
 | scrum.pmo/roles/OntologyAgent/PDCA/2025-08-10-cycle3.md | PDCA | 2025-08-10 |
+| scrum.pmo/roles/OntologyAgent/PDCA/2025-08-10-cycle6.md | PDCA | 2025-08-10 |
 | Documentation/Ontology.md/nouns.index.md | Ontology | 2025-08-10 |
 | Documentation/Ontology.md/verbs.index.md | Ontology | 2025-08-10 |
 | Documentation/Ontology.md/ambiguities.index.md | Ontology | 2025-08-10 |

@@ -23,6 +23,8 @@ git status --porcelain=v1
 
 ## Check
 - Verifications performed:
+- QA Feedback (quote literally):
+> [paste the exact QA/user prompt here]
 - Evidence (snippets/commands):
 ```bash
 # Count table rows (excluding header/separators)

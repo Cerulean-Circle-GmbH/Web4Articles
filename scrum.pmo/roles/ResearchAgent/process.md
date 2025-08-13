@@ -313,3 +313,8 @@ All templates are stored in `scrum.pmo/roles/ResearchAgent/templates/`
 ## Linking Policy
 - Include both relative markdown links and a second `[GitHub]` web link for each source reference.
 - Use the repository branch name in the GitHub URL and keep paths accurate.
+
+## QA-Triggered PDCA Policy
+- After each QA/user prompt, create a PDCA entry under `scrum.pmo/roles/ResearchAgent/PDCA/`.
+- Quote the QA prompt literally in the Check section.
+- Use the shared PDCA template with evidence.
