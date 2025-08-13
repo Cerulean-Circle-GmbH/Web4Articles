@@ -175,3 +175,77 @@ When the repo gets into surprising states, capture a focused tree snapshot that 
     <(git ls-files 'src.v2/**/*.ts' | sed 's#.*/##' | sort -u) \
     | sed 's/^/DUPLICATE-UNIT-NAMES:/'
   ```
+
+## 9. Case Study — Finding and Merging OntologyAgent Role (end-to-end)
+
+This captures the exact, reproducible sequence used to locate, verify, and merge the missing `OntologyAgent` role into `release/dev` without conflicts.
+
+### 9.1 Detect where the role exists and why it’s missing
+
+```bash
+# Always start fresh
+git fetch --all
+
+# Confirm the commit exists and which branch contains it
+git cat-file -t 1f68fde42078fbdec30ccc57ce1aa295f693e037   # expect: commit
+git branch -r --contains 1f68fde42078fbdec30ccc57ce1aa295f693e037
+
+# Inspect the commit header and files it added
+git show --no-patch --pretty=fuller 1f68fde42078fbdec30ccc57ce1aa295f693e037 | sed -n '1,20p'
+git show --name-status --oneline 1f68fde42078fbdec30ccc57ce1aa295f693e037 | tail -n +2
+
+# Prove it was never merged into release/dev
+git branch -r --merged origin/release/dev | grep origin/feature/ontology-agent || echo "NOT MERGED"
+
+# Optional: show history of the role file on the feature branch
+git log --pretty=oneline --name-status origin/feature/ontology-agent -- \
+  scrum.pmo/roles/OntologyAgent/process.md | head -n 20
+```
+
+Expected files added by the commit:
+
+- `scrum.pmo/roles/OntologyAgent/process.md`
+- `scrum.pmo/roles/OntologyAgent/quick-reference.md`
+- `scrum.pmo/roles/OntologyAgent/templates/{README.md, ambiguity-resolution.md, cmm-level4-integration.md, index-update-template.md, ontology-assessment.md}`
+
+### 9.2 Safe import into release/dev (add-only, no deletions)
+
+```bash
+# Ensure we are on release/dev
+git checkout release/dev
+git pull --ff-only origin release/dev
+
+# Import the role folder as a non-conflicting addition
+git checkout origin/feature/ontology-agent -- scrum.pmo/roles/OntologyAgent
+
+# Stage and commit clearly
+git add scrum.pmo/roles/OntologyAgent
+git commit -m "docs(roles): import OntologyAgent role from feature/ontology-agent (commit 1f68fde)"
+git push origin release/dev
+```
+
+### 9.3 Verify presence with tree and cross-checks
+
+```bash
+# Directory structure overview (requires `tree`; if missing, use find)
+tree -a scrum.pmo/roles/OntologyAgent || find scrum.pmo/roles/OntologyAgent -type f | sort
+
+# Show the files tracked on the current branch
+git ls-tree -r --name-only HEAD | grep '^scrum\.pmo/roles/OntologyAgent/' | sort
+
+# Sanity: render short preview of the process doc
+sed -n '1,40p' scrum.pmo/roles/OntologyAgent/process.md
+```
+
+### 9.4 Journal and status updates (for recoverability)
+
+- Link the imported role in the journal and status pages:
+  - [`OntologyAgent/process.md`](../../roles/OntologyAgent/process.md)
+- Ensure `branch-overview.md` (generated per journal) lists unresolved PRs into `release/dev` as tasks:
+  - `- [ ] [#123 Title](https://github.com/Cerulean-Circle-GmbH/Web4Articles/pull/123)` when action is required
+  - `- [x] No open PRs targeting release/dev` when clean
+
+### 9.5 Prevention guardrails configured
+
+- CI now fails on feature→dev auto-merge errors and auto-opens a PR to `release/dev` on failure.
+- Role-path changes under `scrum.pmo/roles/**` automatically open a PR to `release/dev`.
