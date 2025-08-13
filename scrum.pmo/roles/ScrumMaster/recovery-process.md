@@ -73,8 +73,34 @@ mkdir -p "$JOURNAL_DIR"
 TEMPLATE="/workspace/scrum.pmo/templates/project.state.template.md"
 sed "s/{{TIMESTAMP}}/${TIMESTAMP} UTC/g" "$TEMPLATE" > "$JOURNAL_DIR/project.state.md"
 
+# Create branch-overview.md from template and populate unresolved PRs to release/dev
+BRANCH_TEMPLATE="/workspace/scrum.pmo/templates/branch-overview.template.md"
+cp "$BRANCH_TEMPLATE" "$JOURNAL_DIR/branch-overview.md"
+
+# Fill timestamp
+sed -i "s/{{TIMESTAMP}}/${TIMESTAMP}/g" "$JOURNAL_DIR/branch-overview.md"
+
+# Build unresolved PRs section (requires gh api or curl+jq on CI; locally optional)
+if command -v gh >/dev/null 2>&1; then
+  PRS=$(gh pr list --base release/dev --state open --json number,title,headRefName,url,author --jq '.[] | "- [ ] [#\(.number) \(.title)](\(.url)) from `\(.headRefName)` by @\(.author.login)"' || true)
+elif command -v curl >/dev/null 2>&1 && command -v jq >/dev/null 2>&1 && [ -n "$GITHUB_TOKEN" ]; then
+  REPO="https://api.github.com/repos/${GITHUB_REPOSITORY:-Cerulean-Circle-GmbH/Web4Articles}"
+  PRS=$(curl -s -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_TOKEN" "$REPO/pulls?state=open&base=release/dev&per_page=100" | jq -r '.[] | "- [ ] [#\(.number) \(.title)](\(.html_url)) from `\(.head.ref)` by @\(.user.login)"' || true)
+else
+  PRS="- [ ] Unable to fetch PRs (install gh CLI or set GITHUB_TOKEN for curl+jq)"
+fi
+
+if [ -z "$PRS" ]; then
+  PRS='- [x] No open PRs targeting release/dev'
+fi
+
+# Escape newlines for in-place sed
+PRS_ESCAPED=$(echo "$PRS" | sed ':a;N;$!ba;s/\n/\\n/g')
+sed -i "s/{{UNRESOLVED_RELEASE_DEV_PRS}}/${PRS_ESCAPED}/g" "$JOURNAL_DIR/branch-overview.md"
+
 # Commit journal entry
 git add "$JOURNAL_DIR/project.state.md"
+git add "$JOURNAL_DIR/branch-overview.md"
 git commit -m "docs: Create recovery journal entry ${TIMESTAMP}"
 git push origin "$BRANCH_NAME"
 ```

@@ -101,6 +101,21 @@ jobs:
         sed -i "s/{{UNMERGED_COUNT}}/${UNMERGED_COUNT}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
         sed -i "s/{{SPECIAL_COUNT}}/${SPECIAL_COUNT}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
         
+        # Build unresolved PRs targeting release/dev
+        echo "Collecting unresolved PRs to release/dev..."
+        PR_LIST=""
+        GH_API="https://api.github.com/repos/${{ github.repository }}"
+        # Fetch open PRs with base release/dev
+        curl -s -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "$GH_API/pulls?state=open&base=release/dev&per_page=100" | \
+          jq -r '.[] | "- [ ] [#\(.number) \(.title)](\(.html_url)) from `\(.head.ref)` by @\(.user.login)"' > /tmp/prs.txt || true
+        if [ -s /tmp/prs.txt ]; then
+          PR_LIST=$(cat /tmp/prs.txt | sed ':a;N;$!ba;s/\n/\\n/g')
+        else
+          PR_LIST='- [x] No open PRs targeting release/dev'
+        fi
+        sed -i "s/{{UNRESOLVED_RELEASE_DEV_PRS}}/${PR_LIST}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+
         # Replace branch lists (escape newlines for sed)
         UNMERGED_LIST=$(echo -e "$UNMERGED_LIST" | sed ':a;N;$!ba;s/\n/\\n/g')
         MERGED_LIST=$(echo -e "$MERGED_LIST" | sed ':a;N;$!ba;s/\n/\\n/g')

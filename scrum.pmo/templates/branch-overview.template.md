@@ -7,6 +7,12 @@
 
 ## Branch Categorization
 
+## Unresolved PRs targeting release/dev
+
+The following pull requests target `release/dev` and require attention. Tasks are open when action is required, and checked when there is nothing to merge.
+
+{{UNRESOLVED_RELEASE_DEV_PRS}}
+
 ### Unmerged Branches
 
 These branches have not been merged into main and may contain active work:
