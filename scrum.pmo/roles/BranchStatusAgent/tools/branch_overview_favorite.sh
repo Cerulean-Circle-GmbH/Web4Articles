@@ -18,25 +18,35 @@ repo_url="https://github.com/${owner_repo}"
 now_utc="$(date -u +'%F %H:%M UTC')"
 
 api() { # path
-  curl -sS -H "Accept: application/vnd.github+json" -H "Authorization: token ${token}" "https://api.github.com/$1"
+  if [[ -z "${token}" ]]; then
+    echo "" # no token: skip API
+  else
+    curl -sS -H "Accept: application/vnd.github+json" -H "Authorization: token ${token}" "https://api.github.com/$1"
+  fi
 }
 
 print_branch_with_details() { # branch_ref like origin/foo/bar
   local full_ref="$1"; local branch="${full_ref#origin/}"
   printf "%s\n" "- [ ] \`$full_ref\`"
   # PR lookup (latest matching head)
-  local prs_json; prs_json="$(api "repos/${owner_repo}/pulls?state=all&head=${owner}:${branch}")"
-  local pr_number; pr_number="$(printf "%s" "$prs_json" | sed -n 's/.*"number": \([0-9]\+\).*/\1/p' | head -1)"
+  local prs_json pr_number
+  prs_json="$(api "repos/${owner_repo}/pulls?state=all&head=${owner}:${branch}")"
+  pr_number="$(printf "%s" "$prs_json" | sed -n 's/.*"number": \([0-9]\+\).*/\1/p' | head -1)"
   if [[ -n "${pr_number}" ]]; then
-    local pr_json; pr_json="$(api "repos/${owner_repo}/pulls/${pr_number}")"
-    local pr_state; pr_state="$(printf "%s" "$pr_json" | sed -n 's/.*"state": "\([^"]\+\)".*/\1/p' | head -1)"
-    local pr_base; pr_base="$(printf "%s" "$pr_json" | sed -n 's/.*"base": {[^}]*"ref": "\([^"]\+\)".*/\1/p' | head -1)"
-    local merged; merged="$(printf "%s" "$pr_json" | sed -n 's/.*"merged": \(true\|false\).*/\1/p' | head -1)"
-    local merged_note=""
+    local pr_json pr_state pr_base merged merged_note
+    pr_json="$(api "repos/${owner_repo}/pulls/${pr_number}")"
+    pr_state="$(printf "%s" "$pr_json" | sed -n 's/.*"state": "\([^"]\+\)".*/\1/p' | head -1)"
+    pr_base="$(printf "%s" "$pr_json" | sed -n 's/.*"base": {[^}]*"ref": "\([^"]\+\)".*/\1/p' | head -1)"
+    merged="$(printf "%s" "$pr_json" | sed -n 's/.*"merged": \(true\|false\).*/\1/p' | head -1)"
+    merged_note=""
     if [[ "$merged" == "true" ]]; then merged_note="merged to ${pr_base}"; else merged_note="state: ${pr_state} to ${pr_base}"; fi
     printf "%s\n" "  - [ ] Contains [PR #$pr_number]($repo_url/pull/$pr_number) ($merged_note)"
   else
-    printf "%s\n" "  - [ ] No PR found"
+    if [[ -z "${token}" ]]; then
+      printf "%s\n" "  - [ ] No PR lookup (no token)"
+    else
+      printf "%s\n" "  - [ ] No PR found"
+    fi
   fi
   # Background agent placeholder (unknown mapping)
   if [[ "$branch" == cursor/* ]]; then
