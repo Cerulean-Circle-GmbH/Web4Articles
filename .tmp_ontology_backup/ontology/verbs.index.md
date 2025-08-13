@@ -1,0 +1,26 @@
+# Ontology — Verbs Index
+
+- define
+- describe
+- recover
+- index
+- link
+- validate
+- render
+- commit
+- refactor
+- test
+- scan
+- cross-reference
+- weave
+- resolve
+- integrate
+- update
+- generate
+- verify
+- enforce
+- document
+- measure
+- automate
+- track
+- normalize

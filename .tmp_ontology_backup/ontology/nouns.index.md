@@ -1,0 +1,46 @@
+# Ontology — Nouns Index
+
+- Article
+- Sprint
+- Task
+- Role
+- Repository
+- Index
+- Recovery
+- Ontology
+- Glossary
+- Agent
+- TSRanger
+- tssh
+- DevContainer
+- PlantUML
+- Graphviz
+- CMM
+- Submodule
+- Completion
+- Prompt
+- CLI
+- QA
+- DevOps
+- Architect
+- Developer
+- Tester
+- PO
+- Scrum
+- TypeScript
+- ES Modules
+- ts-node
+- Vitest
+- Node.js
+- Bash
+- RangerModel
+- RangerView
+- RangerController
+- DefaultCLI
+- TSCompletion
+- DevContainer Requirements
+- Project Journal
+- Retrospective
+- PDCA
+- OntologyWeaver
+- Background Agent
