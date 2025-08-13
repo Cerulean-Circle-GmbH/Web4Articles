@@ -14,6 +14,8 @@
   - [x] origin/feat/ts.ranger.good
   - [x] origin/feat/tsranger-colors
 
+
+
 - **Not merged into main**:
   - [ ] origin/chore/sprint-4-devcontainer
   - [ ] origin/cursor/enhance-terminal-help-and-preview-9502
