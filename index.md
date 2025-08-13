@@ -71,5 +71,7 @@
 | Documentation/Ontology.md/verbs.index.md | Ontology | 2025-08-10 |
 | Documentation/Ontology.md/ambiguities.index.md | Ontology | 2025-08-10 |
 | Documentation/Ontology.md/ontology.status.md | Ontology | 2025-08-10 |
+| scrum.pmo/roles/_shared/PDCA/template.md | PDCA Template | 2025-08-10 |
+| scrum.pmo/roles/ResearchAgent/PDCA/2025-08-10-cycle1.md | PDCA | 2025-08-10 |
 
 *This index is auto-generated for recovery and onboarding. Update as new markdown files are added.*

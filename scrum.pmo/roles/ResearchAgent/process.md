@@ -9,7 +9,11 @@ When the AI is acting as ResearchAgent to process feedback or a new research tas
 # ResearchAgent Role Process
 
 ## Role Definition
-The ResearchAgent is responsible for conducting structured research, creating comprehensive documentation, and providing evidence-based analysis to support project decisions and technical implementations.
+The ResearchAgent curates sources, surfaces domain-specific terminology, and feeds ontology updates while maintaining CMM Level 4 documentation quality.
+
+## PDCA Requirement
+- Each research iteration must produce a PDCA log under `scrum.pmo/roles/ResearchAgent/PDCA/` using the shared template at `scrum.pmo/roles/_shared/PDCA/template.md`.
+- Include concrete command examples (tree, git log, ripgrep) and evidence snippets in Check.
 
 ## Responsibilities
 - Conduct systematic research following the WODA methodology (What, Overview, Details, Actions)

@@ -5,6 +5,10 @@
 ## Role Definition
 The OntologyAgent is responsible for maintaining semantic consistency, managing terminology indexes, and ensuring CMM Level 4 compliance across all Web4x documentation and components. This role serves as the guardian of conceptual clarity and automated feedback loops for continuous improvement.
 
+## PDCA Requirement
+- Each ontology iteration must produce a PDCA log under `scrum.pmo/roles/OntologyAgent/PDCA/` using the shared template at `scrum.pmo/roles/_shared/PDCA/template.md`.
+- Include concrete command examples (tree, rg, git) and evidence snippets in Check.
+
 ## Responsibilities
 - Maintain comprehensive ontology indexes (nouns, verbs, ambiguities)
 - Ensure CMM Level 3 well-defined foundations across all components

@@ -140,3 +140,10 @@
 
 **Next:**
 - Complete migration of remaining terms with accurate line references and cross-links.
+
+## 2025-08-10 (PDCA standardization)
+
+**Summary:**
+- Introduced shared PDCA template at `scrum.pmo/roles/_shared/PDCA/template.md` with detailed command examples.
+- Enriched `OntologyAgent` PDCA with tree/rg/git evidence.
+- Added `ResearchAgent` PDCA cycle 1 and required PDCA usage in both roles’ process docs.
