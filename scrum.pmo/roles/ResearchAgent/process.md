@@ -14,6 +14,7 @@ The ResearchAgent curates sources, surfaces domain-specific terminology, and fee
 ## PDCA Requirement
 - Each research iteration must produce a PDCA log under `scrum.pmo/roles/ResearchAgent/PDCA/` using the shared template at `scrum.pmo/roles/_shared/PDCA/template.md`.
 - Include concrete command examples (tree, git log, ripgrep) and evidence snippets in Check.
+- PDCA entries must include an enhanced Plan (assumptions, constraints, options, rationale, risks/mitigations).
 
 ## Responsibilities
 - Conduct systematic research following the WODA methodology (What, Overview, Details, Actions)

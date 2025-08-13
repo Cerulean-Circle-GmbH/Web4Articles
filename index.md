@@ -73,5 +73,6 @@
 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/feature/ontology-agent/scrum.pmo/roles/_shared/PDCA/template.md): [scrum.pmo/roles/_shared/PDCA/template.md](scrum.pmo/roles/_shared/PDCA/template.md) | PDCA Template | 2025-08-10 |
 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/feature/ontology-agent/scrum.pmo/roles/ResearchAgent/PDCA/2025-08-10-cycle1.md): [scrum.pmo/roles/ResearchAgent/PDCA/2025-08-10-cycle1.md](scrum.pmo/roles/ResearchAgent/PDCA/2025-08-10-cycle1.md) | PDCA | 2025-08-10 |
 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/feature/ontology-agent/scrum.pmo/roles/OntologyAgent/PDCA/2025-08-13-UTC-0908.md): [scrum.pmo/roles/OntologyAgent/PDCA/2025-08-13-UTC-0908.md](scrum.pmo/roles/OntologyAgent/PDCA/2025-08-13-UTC-0908.md) | PDCA | 2025-08-13 |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/feature/ontology-agent/scrum.pmo/roles/OntologyAgent/PDCA/2025-08-13-UTC-0912.md): [scrum.pmo/roles/OntologyAgent/PDCA/2025-08-13-UTC-0912.md](scrum.pmo/roles/OntologyAgent/PDCA/2025-08-13-UTC-0912.md) | PDCA | 2025-08-13 |
 
 *This index is auto-generated for recovery and onboarding. Update as new markdown files are added.*
