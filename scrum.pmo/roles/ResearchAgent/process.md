@@ -318,3 +318,7 @@ All templates are stored in `scrum.pmo/roles/ResearchAgent/templates/`
 - After each QA/user prompt, create a PDCA entry under `scrum.pmo/roles/ResearchAgent/PDCA/`.
 - Quote the QA prompt literally in the Check section.
 - Use the shared PDCA template with evidence.
+
+## Recovery → PDCA → Commit & Push (Default QA Management)
+- After any recovery or QA prompt, create a UTC-named PDCA entry quoting QA feedback in Check and listing changed artifacts in Actions, then commit and push.
+- Follow the shared PDCA template and OntologyAgent policies for consistency.

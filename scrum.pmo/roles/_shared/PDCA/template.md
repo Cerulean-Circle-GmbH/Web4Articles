@@ -40,6 +40,7 @@ rg -n "\]\(\./|\]\(\.\./" Documentation/Ontology.md | sed -n '1,40p'
 - Improvements for next cycle:
 - Automation to add:
 - Follow-ups:
+- After completing this PDCA entry, execute: commit and push to current branch.
 
 ## Metadata
 - Agent:

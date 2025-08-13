@@ -348,3 +348,10 @@ All index files must follow consistent table format:
 - After each QA/user prompt, create a new PDCA entry under `scrum.pmo/roles/OntologyAgent/PDCA/`.
 - In the Check section, include a verbatim quote of the QA prompt.
 - Use the shared template and add evidence snippets.
+
+## Recovery → PDCA → Commit & Push (Default QA Management)
+- After any recovery or QA prompt:
+  1) Perform recovery as per README.
+  2) Create a PDCA entry (UTC-named) quoting the QA feedback in Check and listing changed artifacts in Actions.
+  3) Immediately commit and push the changes.
+- This flow is mandatory for all background agents; OntologyAgent must enforce it when acting as coordinator.
