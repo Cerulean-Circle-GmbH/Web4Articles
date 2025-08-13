@@ -44,14 +44,15 @@ These branches serve special purposes and should be handled with care:
 
 ## Summary Statistics
 
-- **Total Remote Branches:** {{TOTAL_BRANCHES}}
-- **Unmerged Branches:** {{UNMERGED_COUNT}}
-- **Merged Branches:** {{MERGED_COUNT}}
-- **Special Purpose Branches:** {{SPECIAL_COUNT}}
+- **Total Remote Branches:** 36
+- **Unmerged Branches:** 27
+- **Merged Branches:** 8
+- **Special Purpose Branches:** 4
 
 ## Notes
 
-{{NOTES_SECTION}}
+- Generated on demand to reflect current remotes
+- Unmerged list is relative to main; dev merges listed separately
 
 ## Recommendations
 
