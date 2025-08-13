@@ -1,6 +1,6 @@
-[Back to Planning Sprint 5](./planning.md)
+[Back to Planning Sprint 7](./planning.md)
 
-# Task 2: Architect — src.v2 Structure and Migration Plan
+# Task 2: Architect — src.v2.5 Structure and Migration Plan
 
 ## Status
 - Planned

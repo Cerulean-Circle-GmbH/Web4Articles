@@ -1,6 +1,6 @@
-[Back to Planning Sprint 5](./planning.md)
+[Back to Planning Sprint 7](./planning.md)
 
-# Task 1: Architect — TS Ranger v2 End-to-End Specification
+# Task 1: Architect — TS Ranger v2.5 End-to-End Specification
 [task:uuid:f0e1d2c3-b4a5-4c6d-8e9f-0a1b2c3d4e5f]
 
 ## Status
