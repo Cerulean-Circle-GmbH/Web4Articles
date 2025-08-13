@@ -38,14 +38,19 @@ This document provides a comprehensive overview of all sprints in the Web4Articl
 
 ### **Sprint 6** - Versioned Folder Structure
 - **Planning**: [sprint-6/planning.md](./sprint-6/planning.md)
-- **Goal**: Refactor to a versioned top-level structure (v2/src/ and v2/test/) with dependencies referenced relative to v2/src, migrating src.v2 → v2/src and test.v2 → v2/test while preserving DRY principles.
+- **Goal**: Refactor to a versioned top-level structure (v2/src/ and v2/test/) with dependencies referenced relative to v2/src (path aliases/baseUrl). Migrate src.v2 → v2/src and test.v2 → v2/test, update wrappers, configs, and docs, preserving DRY and the versioned-units policy.
+- **Key Changes**:
+  - Top-level versioned directories: `v2/src/` and `v2/test/`
+  - Path aliases and baseUrl configuration for clean imports
+  - Component directory organization within versioned structure
+  - Wrapper routing based on environment variables
 - **Status**: Completed
 
 ### **Sprint 7** - TSRanger v2 Continuation
 - **Planning**: [sprint-7/planning.md](./sprint-7/planning.md)
-- **Goal**: Continue TSRanger v2 development (appears to be continuation of Sprint 5 work)
+- **Goal**: Continue TSRanger v2 development under the new versioned structure from Sprint 6
 - **Status**: Completed
-- **Note**: Planning document appears to be duplicate of Sprint 5
+- **Note**: Planning document header incorrectly shows "Sprint 5 Planning" but contains Sprint 7 tasks continuing the TSRanger v2 implementation in the new versioned folder structure
 
 ### **Sprint 8** - Ranger Analysis
 - **Planning**: [sprint-8/planning.md](./sprint-8/planning.md)
