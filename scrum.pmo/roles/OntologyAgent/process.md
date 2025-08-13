@@ -9,6 +9,10 @@ The OntologyAgent is responsible for maintaining semantic consistency, managing 
 - Each ontology iteration must produce a PDCA log under `scrum.pmo/roles/OntologyAgent/PDCA/` using the shared template at `scrum.pmo/roles/_shared/PDCA/template.md`.
 - Include concrete command examples (tree, rg, git) and evidence snippets in Check.
 
+## PDCA Filename Convention
+- Name PDCA files with UTC date and time: `YYYY-MM-DD-UTC-HHMM.md` under `scrum.pmo/roles/OntologyAgent/PDCA/`.
+- Example: `2025-08-13-UTC-0846.md`.
+
 ## Responsibilities
 - Maintain comprehensive ontology indexes (nouns, verbs, ambiguities)
 - Ensure CMM Level 3 well-defined foundations across all components

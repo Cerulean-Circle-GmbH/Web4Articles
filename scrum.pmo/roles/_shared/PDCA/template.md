@@ -1,5 +1,7 @@
 # PDCA Template (Background Agents)
 
+Note: Name files `YYYY-MM-DD-UTC-HHMM.md` in each role’s `PDCA/` directory.
+
 ## Plan
 - Objective:
 - Scope:
