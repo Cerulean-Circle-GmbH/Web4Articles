@@ -50,7 +50,7 @@
 
 **Next Steps:**
 - Implement Sprint 1 Task 1: tssh shell wrapper and `TSsh.ts` backend, including `installCompletion()`.
-- Fix ts-node ESM invocation for completion backend in shell and tests (use `--esm` and TS_NODE_PROJECT consistently).
+- Fix ts-node ESM invocation for completion backend in shell and tests (use `--esm` and TS_NODE_PROJECT` consistently).
 - Ensure tests in `/test` pass and update docs if interfaces change.
 
 **Role:** Scrum Master (autonomous). Will coordinate Developer/Tester tasks to address the above.
@@ -130,6 +130,10 @@
 
 **Next Steps:**
 - Proceed to QA review for Task 7, then mark Done upon approval.
+
+## 2025-08-10: Branch review recovery
+- Generated branch checklist at `scrum.pmo/project.journal/2025-08-10-1030/branches.checklist.md`.
+- Pushed branch `chore/branch-review-checklist`. Next: open PR titled 'cleanup branches'.
 
 ## 2025-08-11 09:55 UTC - Recovery from Main Branch README
 
