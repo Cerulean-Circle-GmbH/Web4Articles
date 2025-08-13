@@ -183,3 +183,11 @@
 **Summary:**
 - Updated shared PDCA template and processes to require a PDCA entry after each QA prompt, including a literal quote in the Check section.
 - Created PDCA cycle capturing this QA instruction with exact quote.
+
+## 2025-08-13-1557
+
+- Recovery initiated from README.md
+- Branch: cursor/recovery-2025-08-13-1557
+- Base: release/dev
+- Env: Docker version 28.3.2, build 578ccf6, v20.4.0, npm 9.7.2
+- Status: Complete
