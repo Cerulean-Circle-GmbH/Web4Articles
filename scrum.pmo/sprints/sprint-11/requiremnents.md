@@ -6,7 +6,24 @@
 
 Design and plan a suite of small, semantically optimized TypeScript tools (strict ESM, radical OOP) that replace brittle shell one-liners in recovery, journaling, and CI flows. Tools should integrate with `TSRanger` and `TSsh` orchestration.
 
-## Reading list (required context)
+## Task List
+
+- [ ] TS PR Reporter: list open PRs to `release/dev` as MD tasks with links and authors
+- [ ] Journal Generator: render `project.state.md` from template with variables; ensure backlinks
+- [ ] Branch Overview Renderer: render `branch-overview.md` including unresolved PRs section
+- [ ] Protected-Path Diff Scanner: detect deletions under protected paths and fail/report
+- [ ] Backlink/Cross-link Validator: verify backlinks and internal links; autofix backlink
+- [ ] Role Importer: import `scrum.pmo/roles/<RoleName>` from source branch safely (A/M only)
+- [ ] Versioned-Units Guard: detect shared unit names across `src/` and `src.v2*` versions
+- [ ] Test Runner Wrapper: run non-interactive sequences; summarize for journal
+- [ ] Integrate tools with CI: replace inline shell in workflows with tools
+- [ ] Update recovery-process.md to call tools (no shell one-liners)
+- [ ] Read all retro answers and reflect lessons in tool UX (determinism, DRY, links)
+- [ ] Align with Sprint 2/5/6/7 lessons: UX parity, zero test changes, versioning discipline, v2.5 structure
+
+## Details
+
+### Reading list (required context)
 
 - Recovery process: [`scrum.pmo/roles/ScrumMaster/recovery-process.md`](../roles/ScrumMaster/recovery-process.md)
 - Retro instructions and answers:  
@@ -22,7 +39,7 @@ Design and plan a suite of small, semantically optimized TypeScript tools (stric
   - `.github/workflows/eod-merge.yml`  
   - `.github/workflows/quality-checks.yml`
 
-## Requirements (use cases)
+### Requirements (use cases)
 
 - PR listing to release/dev as MD task list  
   - Input: base branch (default `release/dev`)  
@@ -49,7 +66,7 @@ Design and plan a suite of small, semantically optimized TypeScript tools (stric
   - Input: sequence (non-interactive)  
   - Output: summarized status for journal injection
 
-## Non-functional
+### Non-functional
 
 - Strict ESM TypeScript; no functions outside classes; layered architecture  
 - Deterministic CLI contracts; JSON/MD outputs  
@@ -57,7 +74,7 @@ Design and plan a suite of small, semantically optimized TypeScript tools (stric
 - Unit tests with Vitest; fixtures for edge cases  
 - Documentation with examples and backlinks
 
-## Acceptance criteria
+### Acceptance criteria
 
 - Tools run locally and in CI  
 - Reproduce journal + branch overview without shell one-liners  
