@@ -47,14 +47,14 @@ Each role will be dilligently onboarded and everything will be fully tracable do
 
 ## Recovery
 
+Recovery is owned by the ScrumMaster only. Always recover into branch `release/dev`. Follow `scrum.pmo/roles/ScrumMaster/recovery-process.md`.
+
+## Optimized Recovery Procedure (ScrumMaster)
 
 
-## Optimized Recovery Procedure
+**Autonomous Recovery Process (ScrumMaster)**
 
-
-**Autonomous Recovery Process**
-
-If the AI loses context or receives the prompt "recover" from the QA user, it will autonomously:
+If the AI loses context or receives the prompt "recover" from the QA user, it will autonomously (as ScrumMaster):
 
 0. **DevOps Environment Verification (blocking, do first):**
    - Check `scrum.pmo/sprints/sprint-4/planning.md` if the sprint has been completed. If not skip this step.
@@ -72,7 +72,7 @@ If the AI loses context or receives the prompt "recover" from the QA user, it wi
 3. **QA Feedback Aggregation:**  
    - Aggregate all QA feedback and audit findings from task QA sections and sprint audit files into a single `qa-feedback-log.md`.
 4. **Sprint & Task Status Summary:**  
-   - follow strictly the ScrumMasters `scrum.pmo/roles/ScrumMaster/process.md` and `scrum.pmo/roles/ScrumMaster/recovery-process.md` to report a final project status.
+   - Follow strictly the ScrumMaster’s `scrum.pmo/roles/ScrumMaster/process.md` and `scrum.pmo/roles/ScrumMaster/recovery-process.md` to report a final project status.
 
 
 ### DevContainer (cross-platform)

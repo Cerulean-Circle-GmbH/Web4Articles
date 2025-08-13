@@ -8,7 +8,8 @@ Ensure safe, auditable, and timely integration of feature/retro branches into `r
 
 ## Principles
 
-- Start from `release/dev`; create a recovery/integration branch
+- Start from `release/dev`; create an integration branch
+- Recovery ownership: Recovery is performed only by the ScrumMaster. This role must not initiate or document recovery flows.
 - Protect paths: `.github/workflows/**`, `scrum.pmo/project.journal/**`, `scrum.pmo/templates/**`, `qa-feedback-log.md`
 - Prefer add/modify-only merges; avoid deletions unless explicitly approved
 - Always journal: add `project.state.md` and `branch-overview.md`
@@ -22,7 +23,7 @@ Ensure safe, auditable, and timely integration of feature/retro branches into `r
 
 ## Procedure
 
-1) Recovery & Branch Setup
+1) Integration Branch Setup
 ```bash
 git fetch origin
 git checkout release/dev && git pull --ff-only origin release/dev
