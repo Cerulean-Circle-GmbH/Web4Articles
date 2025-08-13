@@ -1,6 +1,11 @@
 # PDCA Template (Background Agents)
 
-Note: Name files `YYYY-MM-DD-UTC-HHMM.md` in each role’s `PDCA/` directory.
+Note: Name files `YYYY-MM-DD-UTC-HHMM.md` in each role's `PDCA/` directory.
+
+**Important**: All PDCA entries must include links to artifacts:
+- In "Do" section: List all files changed with markdown links and descriptions
+- In "Check" section: If analysis-only (no changes), list artifacts analyzed
+- Use relative paths from the PDCA file location (e.g., `../../../sprints/...`)
 
 ## Plan
 - **Objective:** 
@@ -26,6 +31,9 @@ Note: Name files `YYYY-MM-DD-UTC-HHMM.md` in each role’s `PDCA/` directory.
 
 ## Do
 - Actions executed:
+- Artifacts changed (with links and descriptions):
+  - [Path/to/file.md](relative/path/to/file.md) - Brief description of changes
+  - [Another/file.ts](relative/path/to/file.ts) - What was modified
 - Commands run (examples):
 ```bash
 # Show current role tree and PDCA directory
@@ -42,6 +50,8 @@ git status --porcelain=v1
 - Verifications performed:
 - QA Feedback (quote literally):
 > [paste the exact QA/user prompt here]
+- Artifacts analyzed (if no changes made):
+  - [Path/to/analyzed/file.md](relative/path) - What was examined
 - Evidence (snippets/commands):
 ```bash
 # Count table rows (excluding header/separators)
