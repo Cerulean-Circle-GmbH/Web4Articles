@@ -9,7 +9,13 @@ When the AI is acting as ResearchAgent to process feedback or a new research tas
 # ResearchAgent Role Process
 
 ## Role Definition
-The ResearchAgent is responsible for conducting structured research, creating comprehensive documentation, and providing evidence-based analysis to support project decisions and technical implementations.
+The ResearchAgent curates sources, surfaces domain-specific terminology, and feeds ontology updates while maintaining CMM Level 4 documentation quality.
+
+## PDCA Requirement
+- Each research iteration must produce a PDCA log under `scrum.pmo/roles/ResearchAgent/PDCA/` using the shared template at `scrum.pmo/roles/_shared/PDCA/template.md`.
+- Include concrete command examples (tree, git log, ripgrep) and evidence snippets in Check.
+- PDCA entries must include an enhanced Plan (assumptions, constraints, options, rationale, risks/mitigations).
+- PDCA Plan must be formatted as a hierarchical list; use bold labels (e.g., **Objective**, **Scope**, **Targets (metrics)**, **Inputs**, **Acceptance Criteria**, **Assumptions**, **Constraints**, **Options Considered**, **Rationale for Selected Option**, **Risks and Mitigations**) with nested bullet points.
 
 ## Responsibilities
 - Conduct systematic research following the WODA methodology (What, Overview, Details, Actions)
@@ -305,3 +311,16 @@ All templates are stored in `scrum.pmo/roles/ResearchAgent/templates/`
 ---
 
 **Note:** This file contains all ResearchAgent process and methodology content. All research documentation must follow these standards for consistency and quality.
+
+## Linking Policy
+- Use GitHub-first dual-linking: `[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/<branch>/path/to/file): [path](../../relative/path)`.
+- Apply consistently in indexes, PDCA logs, and research artifacts.
+
+## QA-Triggered PDCA Policy
+- After each QA/user prompt, create a PDCA entry under `scrum.pmo/roles/ResearchAgent/PDCA/`.
+- Quote the QA prompt literally in the Check section.
+- Use the shared PDCA template with evidence.
+
+## Recovery → PDCA → Commit & Push (Default QA Management)
+- After any recovery or QA prompt, create a UTC-named PDCA entry quoting QA feedback in Check and listing changed artifacts in Actions, then commit and push.
+- Follow the shared PDCA template and OntologyAgent policies for consistency.

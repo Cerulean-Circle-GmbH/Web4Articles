@@ -78,3 +78,17 @@ See `sprint-0` tasks for detailed step-by-step initialization and setup instruct
 
 ---
 DevOps should continue to maintain and automate these processes as the project evolves.
+
+## PDCA Requirement (Shared)
+- Use the shared PDCA template at `scrum.pmo/roles/_shared/PDCA/template.md`.
+- After each QA/user prompt or significant infra change, create a UTC-named PDCA entry under `scrum.pmo/roles/DevOps/PDCA/`.
+- In Check, include concrete evidence (tree, CI logs, git) and a verbatim QA quote.
+- Plan must include bold-labelled subsections (Objective, Scope, Targets, Inputs, Acceptance Criteria, Assumptions, Constraints, Options, Rationale, Risks/Mitigations).
+
+## Recovery → PDCA → Commit & Push (Enforced)
+- After recovery or any QA prompt: perform recovery, write PDCA (UTC, QA quote, Actions with artifact links), then commit and push immediately.
+
+## Linking Policy (GitHub-first dual-linking)
+- Provide GitHub web link followed by relative path link for referenced files.
+- Example:
+  - `[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/<branch>/scrum.pmo/roles/DevOps/process.md): [scrum.pmo/roles/DevOps/process.md](../../scrum.pmo/roles/DevOps/process.md)`

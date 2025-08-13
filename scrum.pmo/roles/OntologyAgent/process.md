@@ -5,6 +5,16 @@
 ## Role Definition
 The OntologyAgent is responsible for maintaining semantic consistency, managing terminology indexes, and ensuring CMM Level 4 compliance across all Web4x documentation and components. This role serves as the guardian of conceptual clarity and automated feedback loops for continuous improvement.
 
+## PDCA Requirement
+- Each ontology iteration must produce a PDCA log under `scrum.pmo/roles/OntologyAgent/PDCA/` using the shared template at `scrum.pmo/roles/_shared/PDCA/template.md`.
+- Include concrete command examples (tree, rg, git) and evidence snippets in Check.
+- PDCA entries must include an enhanced Plan detailing assumptions, constraints, considered options with pros/cons, rationale, and risks with mitigations.
+- PDCA Plan must be a hierarchical list with bold labels for all subsections (e.g., **Objective**, **Scope**, **Targets (metrics)**, **Inputs**, **Acceptance Criteria**, **Assumptions**, **Constraints**, **Options Considered**, **Rationale for Selected Option**, **Risks and Mitigations**) and nested bullets for items.
+
+## PDCA Filename Convention
+- Name PDCA files with UTC date and time: `YYYY-MM-DD-UTC-HHMM.md` under `scrum.pmo/roles/OntologyAgent/PDCA/`.
+- Example: `2025-08-13-UTC-0846.md`.
+
 ## Responsibilities
 - Maintain comprehensive ontology indexes (nouns, verbs, ambiguities)
 - Ensure CMM Level 3 well-defined foundations across all components
@@ -328,3 +338,22 @@ All index files must follow consistent table format:
 ---
 
 **Note:** This file contains all OntologyAgent process and methodology content. All ontology management must follow these standards for CMM Level 4 compliance and semantic consistency.
+
+## Linking Policy
+- For every source file reference, include both links in this order:
+  - GitHub web link first: `[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/<branch>/path/to/file)`
+  - Followed by relative markdown link: `: [path/to/file](../../relative/path)`
+- Example: `[GitHub](.../process.md): [scrum.pmo/roles/OntologyAgent/process.md](../../scrum.pmo/roles/OntologyAgent/process.md)`
+- Apply this consistently in indexes, PDCA logs, and process docs.
+
+## QA-Triggered PDCA Policy
+- After each QA/user prompt, create a new PDCA entry under `scrum.pmo/roles/OntologyAgent/PDCA/`.
+- In the Check section, include a verbatim quote of the QA prompt.
+- Use the shared template and add evidence snippets.
+
+## Recovery → PDCA → Commit & Push (Default QA Management)
+- After any recovery or QA prompt:
+  1) Perform recovery as per README.
+  2) Create a PDCA entry (UTC-named) quoting the QA feedback in Check and listing changed artifacts in Actions.
+  3) Immediately commit and push the changes.
+- This flow is mandatory for all background agents; OntologyAgent must enforce it when acting as coordinator.
