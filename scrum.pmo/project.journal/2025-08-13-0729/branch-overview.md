@@ -30,6 +30,12 @@ These branches have been successfully merged into main:
 
 {{MERGED_BRANCHES_LIST}}
 
+### Already Merged into release/dev
+
+These branches have been successfully merged into release/dev:
+
+{{MERGED_DEV_BRANCHES_LIST}}
+
 ### Branches Not to Touch
 
 These branches serve special purposes and should be handled with care:
