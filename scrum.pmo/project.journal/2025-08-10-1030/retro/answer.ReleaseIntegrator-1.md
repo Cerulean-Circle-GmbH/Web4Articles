@@ -249,3 +249,38 @@ sed -n '1,40p' scrum.pmo/roles/OntologyAgent/process.md
 
 - CI now fails on feature→dev auto-merge errors and auto-opens a PR to `release/dev` on failure.
 - Role-path changes under `scrum.pmo/roles/**` automatically open a PR to `release/dev`.
+
+## 10. Shell fiddling pitfalls and why TS tooling is needed
+
+During journal creation, inlined shell + Node one-liners caused brittle quoting/substitution errors:
+
+```bash
+# Symptoms observed
+zsh: bad substitution
+SyntaxError: Unexpected token ')'
+
+# Root causes
+- Mixing zsh parameter expansion with complex inline Node `-e` scripts
+- Hard-to-escape newlines/backticks/backslashes inside `sed` and JSON
+- Relying on ephemeral temp files and positional chaining
+```
+
+Safer approach: move semantics into small TypeScript tools and call them with simple, predictable CLI contracts. Examples:
+
+```bash
+# Instead of inline Node -e with curl+jq pipelines
+npx ts-node --esm tools/gh-list-prs.ts --base release/dev --format tasks-md \
+  > scrum.pmo/project.journal/${TS}/branch-overview.prs.md
+
+# Instead of multi-sed template mutation
+npx ts-node --esm tools/render-template.ts \
+  --template scrum.pmo/templates/branch-overview.template.md \
+  --out scrum.pmo/project.journal/${TS}/branch-overview.md \
+  --var TIMESTAMP="${TS}" \
+  --var UNRESOLVED_RELEASE_DEV_PRS@file=scrum.pmo/project.journal/${TS}/branch-overview.prs.md
+```
+
+Benefits:
+- Deterministic quoting/escaping handled in TS, not shell
+- Reusable, testable units with clear inputs/outputs (aligns with radical OOP and strict ESM)
+- Easier CI integration and local reproduction
