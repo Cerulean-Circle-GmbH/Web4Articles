@@ -2,10 +2,30 @@
 
 # Branch Overview
 
-**Generated:** 2025-08-13 10:40 UTC  
+**Generated:** 2025-08-13 10:42 UTC  
 **Repository:** [Web4Articles](https://github.com/Cerulean-Circle-GmbH/Web4Articles)
 
 ## Branch Categorization
+
+### Unmerged Branches to release/dev
+
+These branches have not been merged into release/dev and may contain pending release work:
+
+- [ ] `origin/cursor/execute-role-from-readme-and-add-to-project-4f37`
+  - [ ] No PR found
+  - [ ] Background Agent: not linked
+- [ ] `origin/cursor/recover-from-readme-file-ef6b`
+  - [ ] No PR found
+  - [ ] Background Agent: not linked
+- [ ] `origin/feature/TSRangerColumns`
+  - [ ] No PR found
+  - [ ] No background agent found
+- [ ] `origin/feature/branchStatusAgent`
+  - [ ] No PR found
+  - [ ] No background agent found
+- [ ] `origin/fix/v2.5`
+  - [ ] No PR found
+  - [ ] No background agent found
 
 ### Unmerged Branches to main
 
@@ -99,26 +119,6 @@ These branches have not been merged into main and may contain active work:
   - [ ] No PR found
   - [ ] No background agent found
 
-### Unmerged Branches to release/dev
-
-These branches have not been merged into release/dev and may contain pending release work:
-
-- [ ] `origin/cursor/execute-role-from-readme-and-add-to-project-4f37`
-  - [ ] No PR found
-  - [ ] Background Agent: not linked
-- [ ] `origin/cursor/recover-from-readme-file-ef6b`
-  - [ ] No PR found
-  - [ ] Background Agent: not linked
-- [ ] `origin/feature/TSRangerColumns`
-  - [ ] No PR found
-  - [ ] No background agent found
-- [ ] `origin/feature/branchStatusAgent`
-  - [ ] No PR found
-  - [ ] No background agent found
-- [ ] `origin/fix/v2.5`
-  - [ ] No PR found
-  - [ ] No background agent found
-
 ### Already Merged Branches (to main)
 
 - [x] `origin/cursor/automate-gitscrum-project-setup-and-management-3bc8`
@@ -134,8 +134,8 @@ These branches have not been merged into release/dev and may contain pending rel
 
 These branches serve special purposes and should be handled with care:
 
--  - Primary branch (protected)
--  - Retro branch (protected)
+- `origin/main` - Primary branch (protected)
+- `origin/retro/2025-08-10-agent-retro` - Retro branch (protected)
 
 ## Summary Statistics
 
