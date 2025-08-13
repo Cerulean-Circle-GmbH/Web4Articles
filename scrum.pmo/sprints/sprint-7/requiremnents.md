@@ -1,9 +1,9 @@
-# Sprint 5 Requirements
+# Sprint 7 Requirements
 
-- [ ] TS Ranger v2 must preserve Sprint 2 UX layout and spacing rules  migrate all references in sprint 7 to src.v2.5
-- [ ] this file states sprint 5 but it is sprint 7.... all sprint 5 references in this sprint folder must be renamed to sprint 7
+- [x] TS Ranger v2.5 must preserve Sprint 2 UX layout and spacing rules and migrate all references to src.v2.5
+- [x] All Sprint 5 references in this sprint folder have been renamed to Sprint 7
   
-- [ ] TS Ranger v2 must preserve Sprint 2 UX layout and spacing rules  
+- [ ] TS Ranger v2.5 must preserve Sprint 2 UX layout and spacing rules  
   [requirement:uuid:9a1f2b3c-4d5e-4f60-8a9b-0c1d2e3f4a5b]
   > Four columns (Classes, Methods, Params, Docs), exactly one blank line above the preview and one between preview and footer; blue background with white, bold footer text that fills the terminal width and stays anchored at the bottom.
 ****

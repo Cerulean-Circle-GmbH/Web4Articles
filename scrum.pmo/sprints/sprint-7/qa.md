@@ -1,10 +1,10 @@
 [Back to Planning](./planning.md)
 
-# Sprint 5 — QA PDCA Log
+# Sprint 7 — QA PDCA Log
 
 ## Scope Note
-- This sprint-specific log consolidates PDCA entries relevant to Sprint 5.
-- A previous global file `/workspace/qa.md` was used; entries have been mirrored here to maintain sprint-local traceability. Going forward, Sprint 5 PDCA notes will be recorded in this file.
+- This sprint-specific log consolidates PDCA entries relevant to Sprint 7.
+- A previous global file `/workspace/qa.md` was used; entries have been mirrored here to maintain sprint-local traceability. Going forward, Sprint 7 PDCA notes will be recorded in this file.
 
 ## 2025-08-09T00:00:00Z
 > never share any file between versions. 

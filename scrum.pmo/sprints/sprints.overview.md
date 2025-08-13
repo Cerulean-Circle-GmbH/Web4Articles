@@ -46,11 +46,16 @@ This document provides a comprehensive overview of all sprints in the Web4Articl
   - Wrapper routing based on environment variables
 - **Status**: Completed
 
-### **Sprint 7** - TSRanger v2 Continuation
+### **Sprint 7** - TSRanger v2.5 with Component Architecture
 - **Planning**: [sprint-7/planning.md](./sprint-7/planning.md)
-- **Goal**: Continue TSRanger v2 development under the new versioned structure from Sprint 6
+- **Goal**: Deliver TS Ranger v2.5 under `src.v2.5`, building upon Sprint 5's v2 implementation and Sprint 6's versioned folder structure. Implement a component-based directory organization that supports better modularity and maintainability.
+- **Key Changes**:
+  - Component-based directory structure: `src.v2.5/components/`
+  - Organized by functional components: `io/`, `model/`, `controller/`, `view/`
+  - Replaced layer-based organization with semantic component directories
+  - Maintains the same test compatibility and toggle-based routing
 - **Status**: Completed
-- **Note**: Planning document header incorrectly shows "Sprint 5 Planning" but contains Sprint 7 tasks continuing the TSRanger v2 implementation in the new versioned folder structure
+- **Note**: Previously had incorrect "Sprint 5 Planning" headers which have been fixed
 
 ### **Sprint 8** - Ranger Analysis
 - **Planning**: [sprint-8/planning.md](./sprint-8/planning.md)

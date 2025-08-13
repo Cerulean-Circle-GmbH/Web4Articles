@@ -1,29 +1,30 @@
-# Sprint 5 Planning
+# Sprint 7 Planning
 
 ## Sprint Goal
-Deliver TS Ranger v2 under `src.v2`, consolidating Sprint 2 learnings, QA feedback, and existing tests. Implement the architecture, integrate it behind an environment toggle, and validate by running the existing test suite unchanged.
+Deliver TS Ranger v2.5 under `src.v2.5`, building upon Sprint 5's v2 implementation and Sprint 6's versioned folder structure. Implement a component-based directory organization that supports better modularity and maintainability.
 
 ## Extended Sprint Intent
-We learned from Sprint 2 and QA that TS Ranger must provide stable, predictable TUI UX (exact spacing and footer anchoring), shell-like prompt editing with correct colors and PS1 handling, deterministic non-interactive test mode, and a Docs column backed by TSCompletion. This sprint extends the goal to deliver a production-ready v2 in `src.v2` with:
+Building on Sprint 5's TSRanger v2 and Sprint 6's versioned folder refactoring, Sprint 7 delivers TSRanger v2.5 with a refined component-based architecture under `src.v2.5`. This sprint focuses on:
 - The same behaviors and outputs that current tests assert (zero test changes)
 - Clear separation of IO vs rendering via a `TerminalIO` abstraction for determinism
-- A simple toggle (`TSRANGER_V2=1`) to run v2 end-to-end from the existing shell wrapper and tests
+- A simple toggle (`TSRANGER_V2=1`) to run v2.5 end-to-end from the existing shell wrapper and tests
 - Execution bridge parity and robust error handling
+- Component-based directory structure for better organization
 
-## Task List (Sprint 5)
+## Task List (Sprint 7)
 
 > Note: MAIN tasks are numbered 1..N and SUBTASKS use 1.M. Only MAIN tasks may be in refinement; SUBTASKS are role-specific and skip refinement.
 
-- [x] [Task 1: Architect — TS Ranger v2 End-to-End Specification](./task-1.md)
+- [x] [Task 1: Architect — TS Ranger v2.5 End-to-End Specification](./task-1.md)
   **Priority:** 1
   - [x] [Task 1.1 — Architect: MVC, IO Abstractions, and State Model](./task-1.1-architect-tsranger-v2-spec.md)
   - [x] [Task 1.2 — Architect: Test-Binding Spec to Reuse Existing Tests](./task-1.2-architect-test-binding-spec.md)
   - [x] [Task 1.3 — Architect: Consolidate QA Learnings into Normative Behaviors](./task-1.3-architect-qa-learnings-consolidation.md)
   - [x] [Task 1.4 — Architect: Docs Column, TSCompletion Integration, and Execution Bridge](./task-1.4-architect-execution-and-docs-spec.md)
 
-- [x] [Task 2: Architect — src.v2 Structure and Migration Plan](./task-2.md)
+- [x] [Task 2: Architect — src.v2.5 Structure and Migration Plan](./task-2.md)
   **Priority:** 2
-  - [x] [Task 2.1 — Architect: Module Boundaries and File Layout in `src.v2`](./task-2.1-architect-srcv2-structure.md)
+  - [x] [Task 2.1 — Architect: Module Boundaries and File Layout in `src.v2.5`](./task-2.1-architect-srcv2-structure.md)
 
 - [x] [Task 3: Architect — Acceptance Criteria and Test Matrix Mapping](./task-3.md)
   **Priority:** 2
