@@ -57,6 +57,7 @@ Each role will be dilligently onboarded and everything will be fully tracable do
 If the AI loses context or receives the prompt "recover" from the QA user, it will autonomously:
 
 0. **DevOps Environment Verification (blocking, do first):**
+   - Check `scrum.pmo/sprints/sprint-4/planning.md` if the sprint has been completed. If not skip this step.
    - Check local environment and fix before proceeding:
      - Docker engine is installed and running (`docker version` works)
      - Devcontainer tooling available (VS Code Dev Containers or equivalent)
@@ -64,23 +65,15 @@ If the AI loses context or receives the prompt "recover" from the QA user, it wi
      - PlantUML and Graphviz installed (or plan to use devcontainer)
    - If any prerequisite is missing, open a DevOps task to resolve locally, or prefer using the project devcontainer once available.
 1. **Read the canonical Project First Principles section in this README.md** for project purpose, tech stack, and management principles. Only scan other sections as needed for context or updates.
-2. **Scan all markdown files** in the project, prioritizing:
-   - `scrum.pmo/` (roles, sprints, tasks, process docs)
-   - `wiki/` (ontology, Home.md, definitions)
-   - Any onboarding, process, or QA feedback files
-3. **Automated Indexing:**  
-   - Update or generate an index (e.g., `index.md` or `structure.json`) listing all markdown files, their roles, and last modified dates.
-4. **QA Feedback Aggregation:**  
+   - If a file named `handover.backend.agent.md` exists at the repository root, load it first and use its instructions to bootstrap the backend agent workflow before proceeding.
+2. **Scan markdown files** in the project:
+   - `scrum.pmo/` 
+     - roles and process descriptions.
+3. **QA Feedback Aggregation:**  
    - Aggregate all QA feedback and audit findings from task QA sections and sprint audit files into a single `qa-feedback-log.md`.
-5. **Role-Specific Recovery Hooks:**  
-   - Reference each role’s `process.md` “Recovery Checklist” for role-specific context and recent actions.
-6. **Sprint & Task Status Summary:**  
-   - Generate a summary table of all sprints, tasks, and their statuses (open/closed/in-progress), linking to their markdown files.
-7. **Automated Consistency Checks:**  
-   - Check for broken links, missing backlinks, and outdated templates in all markdown files, reporting issues in the recovery summary.
-8. **Document findings:**  
-   - Append a timestamped entry to `recovery.md` summarizing findings, gaps, and actions taken.
-   - Notify the QA user with the summary and next steps.
+4. **Sprint & Task Status Summary:**  
+   - follow strictly the ScrumMasters `scrum.pmo/roles/ScrumMaster/process.md` and `scrum.pmo/roles/ScrumMaster/recovery-process.md` to report a final project status.
+
 
 ### DevContainer (cross-platform)
 

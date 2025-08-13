@@ -70,5 +70,7 @@
 | wiki/ontology/ontology.status.md | Ontology | 2025-08-10 |
 | scrum.pmo/roles/OntologyArchitect/PDCA/2025-08-10.md | PDCA | 2025-08-10 |
 | scrum.pmo/roles/OntologyArchitect/PDCA/2025-08-10b.md | PDCA | 2025-08-10 |
+| scrum.pmo/project.journal/2025-08-10-1030/retro/answer.ResearchArchitect.md | Retro | 2025-08-10 |
+
 
 *This index is auto-generated for recovery and onboarding. Update as new markdown files are added.*
