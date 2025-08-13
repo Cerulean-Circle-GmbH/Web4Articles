@@ -65,6 +65,7 @@ jobs:
         # Generate merged branches list with deletion markers
         echo "Generating merged branches for deletion..."
         MERGED_LIST=""
+        MERGED_DEV_LIST=""
         while IFS= read -r branch; do
           branch_name=$(echo "$branch" | sed 's/origin\///')
           if [[ ! -z "$branch_name" ]] && [[ "$branch_name" != "main" ]] && [[ ! "$branch_name" =~ ^release/ ]]; then
@@ -82,6 +83,15 @@ jobs:
             fi
           fi
         done < <(git branch -r --merged origin/main | grep -v HEAD | grep -v main | sed 's/^[[:space:]]*//')
+
+        # Generate merged-into-release/dev list
+        echo "Generating branches merged into release/dev..."
+        while IFS= read -r branch; do
+          branch_name=$(echo "$branch" | sed 's/origin\///')
+          if [[ ! -z "$branch_name" ]] && [[ "$branch_name" != "release/dev" ]]; then
+            MERGED_DEV_LIST+="- [x] ${branch_name} (merged into release/dev)\n"
+          fi
+        done < <(git branch -r --merged origin/release/dev | grep -v HEAD | grep -v 'release/dev' | sed 's/^[[:space:]]*//')
         
         # Special branches
         SPECIAL_LIST="- [ ] main - Production branch (protected)\n"
@@ -123,6 +133,7 @@ jobs:
         
         sed -i "s/{{UNMERGED_BRANCHES_LIST}}/${UNMERGED_LIST}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
         sed -i "s/{{MERGED_BRANCHES_LIST}}/${MERGED_LIST}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        sed -i "s/{{MERGED_DEV_BRANCHES_LIST}}/${MERGED_DEV_LIST}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
         sed -i "s/{{SPECIAL_BRANCHES_LIST}}/${SPECIAL_LIST}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
         
         # Add notes about deletion

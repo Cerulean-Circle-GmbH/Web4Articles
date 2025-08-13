@@ -326,3 +326,19 @@ jobs:
         echo "- Ontology Consistency" >> $GITHUB_STEP_SUMMARY
         echo "- License Headers" >> $GITHUB_STEP_SUMMARY
         echo "- Backlink Presence" >> $GITHUB_STEP_SUMMARY
+
+  pdca-template-vars-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Fail on leftover PDCA template variables
+      run: |
+        echo "## PDCA Template Variable Check" >> $GITHUB_STEP_SUMMARY
+        # Search PDCA markdown files for ${VARS}
+        if grep -R "\${[A-Z_][A-Z0-9_]*}" --include="*.md" scrum.pmo/roles/**/PDCA 2>/dev/null; then
+          echo "::error::Leftover template variables found in PDCA entries";
+          exit 1;
+        else
+          echo "No leftover template variables found in PDCA entries." >> $GITHUB_STEP_SUMMARY
+        fi

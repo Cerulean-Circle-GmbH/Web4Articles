@@ -67,4 +67,28 @@ Minimal references to resume quickly:
 - BranchStatusAgent tool (favorite overview): `scrum.pmo/roles/BranchStatusAgent/tools/branch_overview_favorite.sh`
 - CI guardrails: `.github/workflows/quality-checks.yml` (PDCA placeholders), `feature-to-dev.yml`, `roles-auto-pr.yml`, `roles-pr-scan.yml`, `eod-merge.yml`
 
+CI/CD, DevOps, and Branchflow understanding (current project):
+- Branches
+  - `main`: production; protected
+  - `release/dev`: integration branch; continuous PR target for features and roles
+  - `retro/*`, `feature/*`, `cursor/*`: working branches; merged via PR into `release/dev` (or `main` when appropriate)
+- Automations added
+  - Feature-to-dev auto-merge with PR fallback: `.github/workflows/feature-to-dev.yml`
+    - On push to non-main/non-release branches, attempt merge into `release/dev`
+    - If push/merge fails (protection/conflicts), auto-open a PR to `release/dev` and add an issue
+  - Roles change auto-PR: `.github/workflows/roles-auto-pr.yml`
+    - On any change under `scrum.pmo/roles/**` in a feature branch, open/maintain a PR to `release/dev`
+  - Hourly roles PR scan: `.github/workflows/roles-pr-scan.yml`
+    - Hourly diff against `release/dev`; if `scrum.pmo/roles/**` differs, open a PR to `release/dev`
+  - EOD documentation generator: `.github/workflows/eod-merge.yml`
+    - Nightly create a journal folder with `project.state.md` and `branch-overview.md` including:
+      - Unmerged→main; merged→main; merged→release/dev; unresolved PRs→`release/dev`
+  - Quality checks: `.github/workflows/quality-checks.yml`
+    - Spell check with typo tracking, cross-link validation, ontology, license, backlinks
+    - PDCA placeholder guard: fail if `${...}` remains in `scrum.pmo/roles/**/PDCA/*.md`
+- Policy
+  - Protected paths: no deletions imported for `.github/workflows/**`, `scrum.pmo/project.journal/**`, `scrum.pmo/templates/**`, `qa-feedback-log.md`
+  - Add/modify-only for role imports unless explicitly approved
+  - Commit-and-push after each modifying step; PRs for destructive operations
+
 End of handover. Kill this agent. On restart, follow “Next recovery — do this exactly”.

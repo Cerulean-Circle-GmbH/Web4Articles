@@ -98,6 +98,11 @@ fi
 PRS_ESCAPED=$(echo "$PRS" | sed ':a;N;$!ba;s/\n/\\n/g')
 sed -i "s/{{UNRESOLVED_RELEASE_DEV_PRS}}/${PRS_ESCAPED}/g" "$JOURNAL_DIR/branch-overview.md"
 
+# Populate merged-into-release/dev list (informational)
+MERGED_DEV_LIST=$(git branch -r --merged origin/release/dev | grep -v HEAD | grep -v 'release/dev' | sed 's#origin/##;s#^#- [x] #')
+MERGED_DEV_LIST_ESCAPED=$(echo "$MERGED_DEV_LIST" | sed ':a;N;$!ba;s/\n/\\n/g')
+sed -i "s/{{MERGED_DEV_BRANCHES_LIST}}/${MERGED_DEV_LIST_ESCAPED}/g" "$JOURNAL_DIR/branch-overview.md"
+
 # Commit journal entry
 git add "$JOURNAL_DIR/project.state.md"
 git add "$JOURNAL_DIR/branch-overview.md"
