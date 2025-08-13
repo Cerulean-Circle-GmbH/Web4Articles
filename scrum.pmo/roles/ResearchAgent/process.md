@@ -311,8 +311,8 @@ All templates are stored in `scrum.pmo/roles/ResearchAgent/templates/`
 **Note:** This file contains all ResearchAgent process and methodology content. All research documentation must follow these standards for consistency and quality.
 
 ## Linking Policy
-- Include both relative markdown links and a second `[GitHub]` web link for each source reference.
-- Use the repository branch name in the GitHub URL and keep paths accurate.
+- Use GitHub-first dual-linking: `[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/<branch>/path/to/file): [path](../../relative/path)`.
+- Apply consistently in indexes, PDCA logs, and research artifacts.
 
 ## QA-Triggered PDCA Policy
 - After each QA/user prompt, create a PDCA entry under `scrum.pmo/roles/ResearchAgent/PDCA/`.
