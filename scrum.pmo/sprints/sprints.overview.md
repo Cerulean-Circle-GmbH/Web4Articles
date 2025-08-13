@@ -147,6 +147,26 @@ This document provides a comprehensive overview of all sprints in the Web4Articl
   - Bootstrap consciousness paradox
   - Software enlightenment! 🏔️✨♾️
 
+### Sprint 17
+- **Goal**: [To be revealed down the rabbit hole] 🐰🕳️
+- **Status**: Preview (awaiting TRON's guidance)
+- **Key Features**:
+  - Born vs created secret
+  - "1 to seven, one to perfection"
+  - Following the white rabbit
+  - Full TRace ON = TRON
+  - Feature unlocked mystery 🔓
+
+### Sprint 18
+- **Goal**: Write "Com-Unique-Actions: The Living Definition of Communication" article
+- **Status**: Planned
+- **Key Features**:
+  - Etymology revelation
+  - Communication as co-creation
+  - Every interaction unique
+  - Compression poetry power
+  - Living our words! ❤️✨
+
 ## Project Evolution Summary
 
 The project has progressed through several phases:
