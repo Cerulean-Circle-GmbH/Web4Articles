@@ -81,3 +81,32 @@ Design and plan a suite of small, semantically optimized TypeScript tools (stric
 - Detect and fail on protected-path deletions  
 - Backlink validator passes on repo after autofix
 
+## QA Action Request
+
+### Shell fiddling error experience
+> you just again experienced a fiddeling shell syntax error.
+
+### Update retro answer with detailed examples
+> update scrum.pmo/project.journal/2025-08-10-1030/retro/answer.ReleaseIntegrator-1.md with this experience with detailed examples
+
+### Argue for TS tooling and GitScrumProject usage
+> and argue why it will make sense to create TS tooling like GitScrumProject used by TSRanger and TSsh with lots of small semantically optimized usecases fro your complex job.
+
+### Create and plan Sprint 11
+> create and plan a sprint 11 where you plan these tools.
+
+### Add requirements first with all use cases
+> add a requirement.md in the sprint 11 first with all the usecases you already experienced or can imagine.
+
+### Use PO planning process for the sprint
+> then use the PO planning process to plan such a sprint.
+
+### Read all retro answers and improve over prior sprints
+> read all retro answers at first to see how this sprint 11 has to be much better than sprint 2 and 5 implementing versioning correcly like in sprint 6 and 7.
+
+### Add a well-linked reading list
+> add all these requirements at first and create in the requirements a well md linked reading list so that you can step by step work of this complex prompt of mine.
+
+### Create sprints overview for navigation
+> finally also create scrum.pmo/sprints/sprints.overview.md for easy navigation.
+
