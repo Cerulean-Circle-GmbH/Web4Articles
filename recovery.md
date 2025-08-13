@@ -161,3 +161,40 @@
 - Continue with any pending user requests
 
 **Recovery Status:** Complete
+## 2025-08-10 (align OntologyAgent)
+
+**Summary:**
+- Pulled and merged `feature/ontology-agent`; adopted OntologyAgent role and templates.
+- Added PDCA logs under `scrum.pmo/roles/OntologyAgent/PDCA/` and updated `index.md`.
+
+**Next Steps:**
+- Continue ontology work per OntologyAgent process using provided templates.
+
+## 2025-08-10 (PDCA cycle 3)
+
+**Summary:**
+- Aligned ontology test to support OntologyAgent table formats and to skip when indexes absent.
+
+**Next:**
+- Create `Documentation/Ontology.md` with table-based indexes and migrate existing entries; add glossary scaffolding.
+
+## 2025-08-10 (PDCA cycle 4)
+
+**Summary:**
+- Created `Documentation/Ontology.md/` with table-based `nouns.index.md`, `verbs.index.md`, `ambiguities.index.md`, and `ontology.status.md` per OntologyAgent templates. Migrated representative terms.
+
+**Next:**
+- Complete migration of remaining terms with accurate line references and cross-links.
+
+## 2025-08-10 (PDCA standardization)
+
+**Summary:**
+- Introduced shared PDCA template at `scrum.pmo/roles/_shared/PDCA/template.md` with detailed command examples.
+- Enriched `OntologyAgent` PDCA with tree/rg/git evidence.
+- Added `ResearchAgent` PDCA cycle 1 and required PDCA usage in both roles’ process docs.
+
+## 2025-08-10 (QA-triggered PDCA enforcement)
+
+**Summary:**
+- Updated shared PDCA template and processes to require a PDCA entry after each QA prompt, including a literal quote in the Check section.
+- Created PDCA cycle capturing this QA instruction with exact quote.

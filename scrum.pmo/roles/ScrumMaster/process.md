@@ -100,3 +100,7 @@ See `sprint-0` tasks for detailed step-by-step initialization and setup instruct
 
 ---
 The ScrumMaster should continue to facilitate and document all SCRUM activities and improvements.
+
+## PDCA Enforcement (Cross-Role)
+- ScrumMaster ensures all agents follow: Recovery → PDCA (UTC, QA quote, Actions with artifact links) → Commit & Push.
+- Reject changes that do not include a corresponding PDCA entry.
