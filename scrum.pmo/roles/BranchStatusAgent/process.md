@@ -53,3 +53,17 @@ printf "\n- **Do not touch branches**:\n  - origin/main\n  - origin/retro/2025-0
 - `pull.rebase=false` for shared branches.
 - No force pushes to protected branches.
 - Checklist is canonical during cleanup; deviations require justification.
+
+## PDCA Requirement (Shared)
+- Use the shared PDCA template at `scrum.pmo/roles/_shared/PDCA/template.md`.
+- After each QA/user prompt or significant branch hygiene action, create a UTC-named PDCA entry under `scrum.pmo/roles/BranchStatusAgent/PDCA/`.
+- In Check, include concrete evidence (git branch lists, tree, links to checklist) and a verbatim QA quote.
+- Plan must include bold-labelled subsections (Objective, Scope, Targets, Inputs, Acceptance Criteria, Assumptions, Constraints, Options, Rationale, Risks/Mitigations).
+
+## Recovery → PDCA → Commit & Push (Enforced)
+- After recovery or any QA prompt: perform recovery, write PDCA (UTC, QA quote, Actions with artifact links), then commit and push immediately.
+
+## Linking Policy (GitHub-first dual-linking)
+- Provide GitHub web link followed by relative path link for referenced files.
+- Example:
+  - `[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/<branch>/scrum.pmo/roles/BranchStatusAgent/process.md): [scrum.pmo/roles/BranchStatusAgent/process.md](../../scrum.pmo/roles/BranchStatusAgent/process.md)`

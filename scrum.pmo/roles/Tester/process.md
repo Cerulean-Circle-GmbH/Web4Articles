@@ -54,3 +54,17 @@ When the AI is acting as Tester to process feedback or a new task:
 
 ## [Moved] tssh CLI: Tester Process Update (2025-08-04)
 The detailed test case design, coverage requirements, and lessons learned for the tssh CLI have been moved to the relevant sprint or task documentation for traceability. See the current sprint/task file for specifics.
+
+## PDCA Requirement (Shared)
+- Use the shared PDCA template at `scrum.pmo/roles/_shared/PDCA/template.md`.
+- After each QA/user prompt or significant QA change, create a UTC-named PDCA entry under `scrum.pmo/roles/Tester/PDCA/`.
+- In Check, include concrete evidence (test logs, tree, git) and a verbatim QA quote.
+- Plan must include bold-labelled subsections (Objective, Scope, Targets, Inputs, Acceptance Criteria, Assumptions, Constraints, Options, Rationale, Risks/Mitigations).
+
+## Recovery → PDCA → Commit & Push (Enforced)
+- After recovery or any QA prompt: perform recovery, write PDCA (UTC, QA quote, Actions with artifact links), then commit and push immediately.
+
+## Linking Policy (GitHub-first dual-linking)
+- Provide GitHub web link followed by relative path link for referenced files.
+- Example:
+  - `[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/<branch>/scrum.pmo/roles/Tester/process.md): [scrum.pmo/roles/Tester/process.md](../../scrum.pmo/roles/Tester/process.md)`
