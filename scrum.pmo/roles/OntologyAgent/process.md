@@ -332,3 +332,9 @@ All index files must follow consistent table format:
 ---
 
 **Note:** This file contains all OntologyAgent process and methodology content. All ontology management must follow these standards for CMM Level 4 compliance and semantic consistency.
+
+## Linking Policy
+- For every source file reference, include both:
+  - A relative markdown link (e.g., `[README.md](../../README.md)`)
+  - A second link named `[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/<branch>/path/to/file)`
+- Apply this consistently in indexes, PDCA logs, and process docs.

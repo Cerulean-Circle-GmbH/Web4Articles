@@ -309,3 +309,7 @@ All templates are stored in `scrum.pmo/roles/ResearchAgent/templates/`
 ---
 
 **Note:** This file contains all ResearchAgent process and methodology content. All research documentation must follow these standards for consistency and quality.
+
+## Linking Policy
+- Include both relative markdown links and a second `[GitHub]` web link for each source reference.
+- Use the repository branch name in the GitHub URL and keep paths accurate.
