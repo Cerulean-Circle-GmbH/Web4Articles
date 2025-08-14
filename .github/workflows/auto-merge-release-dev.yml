@@ -1,11 +1,13 @@
 name: Auto-merge to release/dev
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches: [main]
 
 jobs:
   auto-merge:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     
     steps:
@@ -29,12 +31,12 @@ jobs:
         
     - name: Merge main into release/dev
       run: |
-        echo "Merging main (production) into release/dev..."
+        echo "Merging main (production) into release/dev after PR merge..."
         git merge origin/main --no-ff -m "chore: Auto-merge main (production) into release/dev
         
-        Continuous integration merge to keep release/dev in sync with production
-        Production commit: ${{ github.sha }}
-        Triggered by: ${{ github.actor }}
+        Continuous integration merge after PR #${{ github.event.pull_request.number }} merged
+        PR Title: ${{ github.event.pull_request.title }}
+        Merged by: ${{ github.event.pull_request.merged_by.login }}
         
         [skip ci]"
         
@@ -46,10 +48,11 @@ jobs:
       if: always()
       run: |
         echo "## Auto-merge Report" >> $GITHUB_STEP_SUMMARY
-        echo "- Source: main" >> $GITHUB_STEP_SUMMARY
+        echo "- PR: #${{ github.event.pull_request.number }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Title: ${{ github.event.pull_request.title }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Source: main (production)" >> $GITHUB_STEP_SUMMARY
         echo "- Target: release/dev" >> $GITHUB_STEP_SUMMARY
-        echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-        echo "- Triggered by: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Merged by: ${{ github.event.pull_request.merged_by.login }}" >> $GITHUB_STEP_SUMMARY
         echo "- Time: $(date -u +%Y-%m-%d' '%H:%M:%S' UTC')" >> $GITHUB_STEP_SUMMARY
         
         if [ $? -eq 0 ]; then
@@ -69,11 +72,11 @@ jobs:
             title: 'Auto-merge conflict: main → release/dev',
             body: `## Auto-merge Failed
             
-            The automatic merge from main to release/dev has failed, likely due to merge conflicts.
+            The automatic merge from main to release/dev has failed after PR #${{ github.event.pull_request.number }} was merged.
             
             **Details:**
-            - Commit: ${context.sha}
-            - Actor: ${context.actor}
+            - PR: #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}
+            - Merged by: ${{ github.event.pull_request.merged_by.login }}
             - Time: ${new Date().toISOString()}
             
             **Action Required:**

@@ -104,3 +104,13 @@ The ScrumMaster should continue to facilitate and document all SCRUM activities 
 ## PDCA Enforcement (Cross-Role)
 - ScrumMaster ensures all agents follow: Recovery → PDCA (UTC, QA quote, Actions with artifact links) → Commit & Push.
 - Reject changes that do not include a corresponding PDCA entry.
+- **Artifact Links Requirement**: All PDCA entries MUST include links to changed artifacts in the Do section:
+  - List all files modified with markdown links using relative paths
+  - Include brief description of what changed in each file
+  - For analysis-only PDCAs, list artifacts analyzed in a separate section
+  - Example format: `- [Sprint 7 Task 2.1](../../../sprints/sprint-7/task-2.1.md) - Updated structure`
+- **GitHub Links Requirement**: PDCAs should include direct GitHub links where applicable:
+  - Link to PR when changes are in a PR
+  - Link to specific files on GitHub for easy QA verification
+  - Link to commit hashes for traceability
+  - Example: `[View on GitHub](https://github.com/org/repo/blob/branch/path/to/file.md)`

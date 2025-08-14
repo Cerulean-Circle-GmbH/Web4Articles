@@ -1,20 +1,5 @@
 # Recovery Log
 
-## 2025-08-11
-
-**Summary:**
-- Performed autonomous recovery per README procedure.
-- Read the ResearchArchitect retrospective and prepared ResearchAgent integration.
-- Added a CLI-accessible `ResearchAgent` with `incorporateAfterRecovery` to acknowledge and wire in post-recovery research incorporation.
-
-**Artifacts:**
-- `src/ts/layer2/ResearchAgent.ts`
-- Retro source: `scrum.pmo/project.journal/2025-08-10-1030/retro/answer.ResearchArchitect.md`
-
-**Next Steps:**
-- Extend `ResearchAgent.incorporateAfterRecovery` to update indices and backlinks automatically.
-- Link research artifacts into `index.md` and QA logs, ensuring DRY references.
-
 ## 2025-08-04
 
 **Summary:**
@@ -131,35 +116,35 @@
 **Next Steps:**
 - Proceed to QA review for Task 7, then mark Done upon approval.
 
+## 2025-08-10
 ## 2025-08-10: Branch review recovery
 - Generated branch checklist at `scrum.pmo/project.journal/2025-08-10-1030/branches.checklist.md`.
 - Pushed branch `chore/branch-review-checklist`. Next: open PR titled 'cleanup branches'.
 
 ## 2025-08-11 09:55 UTC - Recovery from Main Branch README
 
-**Trigger:** User requested "recover from readme on branch main" and branch overview creation
-
-**Actions Taken:**
-1. Switched to main branch and synced with origin (51 commits fast-forwarded)
-2. Read and analyzed README.md for project principles and structure
-3. Created structured journal entry at `scrum.pmo/project.journal/2025-08-11-0955/project.state.md`
-4. Fetched all remote branches and categorized them
-5. Created comprehensive `branch-overview.md` with three categories:
-   - Unmerged branches (11)
-   - Already merged branches (7)
-   - Branches not to touch (3)
-
-**Key Findings:**
-- Project follows strict TypeScript/ESM, radical OOP, and CMMI Level 4 SCRUM
-- Multiple TSRanger-related branches indicate active development
-- Sprint 4 devcontainer work appears in multiple branches
-- 7 branches can be cleaned up as they're already merged
+**Summary:**
+- Performed recovery per README; analyzed TSRanger behavior across model/view/controller and tests.
+- Created Sprint 5 with planning, behavior spec, key input test cases, and requirements.
 
 **Next Steps:**
-- Review Sprint 4 devcontainer branches for alignment
-- Consider cleanup of merged branches
-- Continue with any pending user requests
+- Validate test coverage against derived key input cases; implement any missing tests in a follow-up.
 
+## 2025-08-10 (merged from chore/branch-review-checklist)
+- Generated branch checklist.
+- Pushed branch. Next: open PR titled 'cleanup branches'.
+
+## 2025-08-12-0922
+- Recovery initiated from README.md
+- Branch: cursor/recovery-2025-08-12-0922
+- Base: release/dev
+- Env: Docker=Docker OK, Node=v16.20.2, npm=8.19.4
+
+## 2025-08-12-0923
+- Recovery initiated from README.md
+- Branch: cursor/recovery-2025-08-12-0923
+- Base: release/dev
+- Env: Docker=Docker OK, Node=v16.20.2, npm=8.19.4
 **Recovery Status:** Complete
 ## 2025-08-10 (align OntologyAgent)
 
@@ -198,3 +183,11 @@
 **Summary:**
 - Updated shared PDCA template and processes to require a PDCA entry after each QA prompt, including a literal quote in the Check section.
 - Created PDCA cycle capturing this QA instruction with exact quote.
+
+## 2025-08-13-1557
+
+- Recovery initiated from README.md
+- Branch: cursor/recovery-2025-08-13-1557
+- Base: release/dev
+- Env: Docker version 28.3.2, build 578ccf6, v20.4.0, npm 9.7.2
+- Status: Complete

@@ -73,8 +73,39 @@ mkdir -p "$JOURNAL_DIR"
 TEMPLATE="/workspace/scrum.pmo/templates/project.state.template.md"
 sed "s/{{TIMESTAMP}}/${TIMESTAMP} UTC/g" "$TEMPLATE" > "$JOURNAL_DIR/project.state.md"
 
+# Create branch-overview.md from template and populate unresolved PRs to release/dev
+BRANCH_TEMPLATE="/workspace/scrum.pmo/templates/branch-overview.template.md"
+cp "$BRANCH_TEMPLATE" "$JOURNAL_DIR/branch-overview.md"
+
+# Fill timestamp
+sed -i "s/{{TIMESTAMP}}/${TIMESTAMP}/g" "$JOURNAL_DIR/branch-overview.md"
+
+# Build unresolved PRs section (requires gh api or curl+jq on CI; locally optional)
+if command -v gh >/dev/null 2>&1; then
+  PRS=$(gh pr list --base release/dev --state open --json number,title,headRefName,url,author --jq '.[] | "- [ ] [#\(.number) \(.title)](\(.url)) from `\(.headRefName)` by @\(.author.login)"' || true)
+elif command -v curl >/dev/null 2>&1 && command -v jq >/dev/null 2>&1 && [ -n "$GITHUB_TOKEN" ]; then
+  REPO="https://api.github.com/repos/${GITHUB_REPOSITORY:-Cerulean-Circle-GmbH/Web4Articles}"
+  PRS=$(curl -s -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_TOKEN" "$REPO/pulls?state=open&base=release/dev&per_page=100" | jq -r '.[] | "- [ ] [#\(.number) \(.title)](\(.html_url)) from `\(.head.ref)` by @\(.user.login)"' || true)
+else
+  PRS="- [ ] Unable to fetch PRs (install gh CLI or set GITHUB_TOKEN for curl+jq)"
+fi
+
+if [ -z "$PRS" ]; then
+  PRS='- [x] No open PRs targeting release/dev'
+fi
+
+# Escape newlines for in-place sed
+PRS_ESCAPED=$(echo "$PRS" | sed ':a;N;$!ba;s/\n/\\n/g')
+sed -i "s/{{UNRESOLVED_RELEASE_DEV_PRS}}/${PRS_ESCAPED}/g" "$JOURNAL_DIR/branch-overview.md"
+
+# Populate merged-into-release/dev list (informational)
+MERGED_DEV_LIST=$(git branch -r --merged origin/release/dev | grep -v HEAD | grep -v 'release/dev' | sed 's#origin/##;s#^#- [x] #')
+MERGED_DEV_LIST_ESCAPED=$(echo "$MERGED_DEV_LIST" | sed ':a;N;$!ba;s/\n/\\n/g')
+sed -i "s/{{MERGED_DEV_BRANCHES_LIST}}/${MERGED_DEV_LIST_ESCAPED}/g" "$JOURNAL_DIR/branch-overview.md"
+
 # Commit journal entry
 git add "$JOURNAL_DIR/project.state.md"
+git add "$JOURNAL_DIR/branch-overview.md"
 git commit -m "docs: Create recovery journal entry ${TIMESTAMP}"
 git push origin "$BRANCH_NAME"
 ```
@@ -85,7 +116,7 @@ Before ANY implementation work, create and deliver the status report using the c
 - Canonical template: [`scrum.pmo/templates/project.state.template.md`](../templates/project.state.template.md)
 - Recent example: [`scrum.pmo/project.journal/2025-08-12-0900/project.state.md`](../project.journal/2025-08-12-0900/project.state.md)
 
-Ensure the journal includes GitHub Quick Links and navigation-friendly markdown links throughout.
+Ensure the journal includes GitHub Quick Links and navigation-friendly markdown links throughout. In the Sprints Overview section, include relative links to each sprint's planning.md file for complete navigation (e.g., [sprint-0 planning](../../sprints/sprint-0/planning.md)).
 
 ## Post-Recovery Actions
 
