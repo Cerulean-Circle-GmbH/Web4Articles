@@ -24,6 +24,15 @@ Deliver a comprehensive `GitScrumProject` tool that can create new GitHub reposi
 - [ ] [Task 1.7: PO — Plan Sprint 1 for TLA.scrum.pmo (wrapper project)](./task-1.7-po-plan-tla-sprint-1.md)
   **Priority:** 8
 
+- [ ] [Task 1.8: Developer - GitHub Auth & Org Repo Creation (CLI)](./task-1.8-developer-gh-auth-and-repo-create.md)
+  **Priority:** 9
+- [ ] [Task 1.9: Developer - LFS Detection, Migration, and Initial Push](./task-1.9-developer-lfs-migration-and-push.md)
+  **Priority:** 10
+- [ ] [Task 1.10: Developer - HTTPS→SSH Push Fallback and Remote Wiring](./task-1.10-developer-https-to-ssh-fallback.md)
+  **Priority:** 11
+- [ ] [Task 1.11: Tester - E2E: Large Files with LFS and SSH Fallback](./task-1.11-tester-e2e-lfs-ssh.md)
+  **Priority:** 12
+
 ---
 
 Process notes:
