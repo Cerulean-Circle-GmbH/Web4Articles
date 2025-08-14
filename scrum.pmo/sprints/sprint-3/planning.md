@@ -32,6 +32,10 @@ Deliver a comprehensive `GitScrumProject` tool that can create new GitHub reposi
   **Priority:** 11
 - [ ] [Task 1.11: Tester - E2E: Large Files with LFS and SSH Fallback](./task-1.11-tester-e2e-lfs-ssh.md)
   **Priority:** 12
+ - [ ] [Task 1.12: Developer - Workspaces MountPoint Manager (symlink org/repo)](./task-1.12-developer-workspaces-mountpoint-manager.md)
+   **Priority:** 13
+ - [ ] [Task 1.13: Tester - E2E: Workspaces MountPoint flows](./task-1.13-tester-e2e-workspaces-mountpoint.md)
+   **Priority:** 14
 
 ---
 
