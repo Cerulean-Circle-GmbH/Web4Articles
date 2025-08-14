@@ -36,6 +36,10 @@ Deliver a comprehensive `GitScrumProject` tool that can create new GitHub reposi
    **Priority:** 13
  - [ ] [Task 1.13: Tester - E2E: Workspaces MountPoint flows](./task-1.13-tester-e2e-workspaces-mountpoint.md)
    **Priority:** 14
+ - [ ] [Task 1.14: Developer - Projects Submodule Manager (mountpoint → projects/)](./task-1.14-developer-projects-submodule-manager.md)
+   **Priority:** 15
+ - [ ] [Task 1.15: Tester - E2E: Projects Submodule add/update/safeRemove](./task-1.15-tester-e2e-projects-submodule.md)
+   **Priority:** 16
 
 ---
 
