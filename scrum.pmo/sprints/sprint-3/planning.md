@@ -17,11 +17,11 @@ Deliver a comprehensive `GitScrumProject` tool that can create new GitHub reposi
   **Priority:** 4
 - [ ] [Task 1.4: Tester - E2E and Unit Tests](./task-1.4-tester-e2e-tests.md)
   **Priority:** 5
-- [ ] [Task 1.5: PO - User Guide and Acceptance](./task-1.5-po-user-guide.md)
+- [x] [Task 1.5: PO - User Guide and Acceptance](./task-1.5-po-user-guide.md)
   **Priority:** 6
 - [ ] [Task 1.6: Docs - Embed Generated SVG Diagrams in Markdown](./task-1.6-docs-embed-svgs.md)
   **Priority:** 7
-- [ ] [Task 1.7: PO — Plan Sprint 1 for TLA.scrum.pmo (wrapper project)](./task-1.7-po-plan-tla-sprint-1.md)
+- [x] [Task 1.7: PO — Plan Sprint 1 for TLA.scrum.pmo (wrapper project)](./task-1.7-po-plan-tla-sprint-1.md)
   **Priority:** 8
 
 - [ ] [Task 1.8: Developer - GitHub Auth & Org Repo Creation (CLI)](./task-1.8-developer-gh-auth-and-repo-create.md)
