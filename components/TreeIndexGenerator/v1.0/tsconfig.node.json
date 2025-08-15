@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ES2022",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node"
+  }
+}
