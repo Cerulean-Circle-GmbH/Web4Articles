@@ -113,10 +113,11 @@ This template provides a comprehensive framework for creating recovery procedure
 ```markdown
 ## Post-Recovery Protocol
 
-### Documentation Requirements
-- [ ] Update recovery status in {{STATUS_LOCATION}}
-- [ ] Log recovery completion with timestamp
-- [ ] Document any issues or improvements needed
+### Session-Based Documentation Requirements
+- [ ] Create recovery completion PDCA in current session `pdca/tasks/`
+- [ ] Update session project state with recovery status
+- [ ] Log recovery completion with timestamp and session reference
+- [ ] Document any issues or improvements needed in PDCA
 
 ### Role-Specific Setup
 - [ ] {{ROLE_SETUP_1}}
@@ -124,9 +125,37 @@ This template provides a comprehensive framework for creating recovery procedure
 - [ ] {{ROLE_SETUP_3}}
 
 ### Next Steps Identification
-- [ ] Identify current role priorities
-- [ ] Review pending tasks and responsibilities
-- [ ] Coordinate with other active roles if needed
+- [ ] Identify current role priorities and document in session PDCA
+- [ ] Review pending tasks and responsibilities within session context
+- [ ] Coordinate with other active roles and document in role transition PDCAs if needed
+
+### Session PDCA Creation
+```bash
+# Create recovery completion PDCA
+UTC_TIMESTAMP=$(date -u +"%Y-%m-%d-UTC-%H%M")
+SESSION_DIR="$(find scrum.pmo/project.journal -name "*$(date +%Y-%m-%d)*" -type d | tail -1)"
+cat > "$SESSION_DIR/pdca/tasks/${UTC_TIMESTAMP}-{{ROLE_NAME}}-recovery-completion.md" << EOF
+# PDCA Cycle: {{ROLE_NAME}} Recovery Completion - ${UTC_TIMESTAMP}
+
+## Plan
+**Objective:** Complete {{ROLE_NAME}} recovery and role initialization
+**Session Reference:** [Project State](../../project.state.md)
+
+## Do
+**Recovery Actions Completed:**
+- [List all recovery steps completed]
+- [Document any role-specific setup]
+
+## Check
+**Validation Results:**
+- [Document validation outcomes]
+- [Confirm role operational status]
+
+## Act
+**Role Status:** {{ROLE_NAME}} fully operational and ready for tasks
+**Next Actions:** [List immediate priorities]
+EOF
+```
 ```
 
 ### 6. Emergency Procedures

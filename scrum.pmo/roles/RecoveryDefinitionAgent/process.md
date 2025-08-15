@@ -120,13 +120,25 @@ The Recovery Definition Agent is responsible for creating, maintaining, and evol
 - **Cross-References**: Link to related templates and processes
 - **Version Control**: Track template evolution and improvement history
 
-## PDCA Requirement (Mandatory)
+## PDCA Requirement (Mandatory) - Session-Based Structure
 
 After creating, updating, or executing recovery definitions:
-- Create UTC-timestamped PDCA entry under `scrum.pmo/roles/RecoveryDefinitionAgent/PDCA/`
+- Create UTC-timestamped PDCA entry within current project journal session under `pdca/tasks/`
+- Use naming convention: `{TIMESTAMP}-RecoveryDefinitionAgent-{TASK_DESCRIPTION}.md`
 - Document template creation process and validation results
 - Include lessons learned from template usage and improvement opportunities
 - Reference all created templates and examples with direct links
+
+**Session Integration:**
+- All Recovery Definition Agent PDCAs should be created within the current project journal session
+- Use `pdca/tasks/` for template creation and update activities
+- Use `pdca/role-transitions/` when switching to/from Recovery Definition Agent role
+- Maintain session context and link back to session project state
+
+**Legacy PDCA Support:**
+- Existing PDCAs in `scrum.pmo/roles/RecoveryDefinitionAgent/PDCA/` remain valid
+- New PDCAs should use session-based structure
+- Migration to session structure will occur gradually
 
 ## Template Portfolio
 
