@@ -22,45 +22,53 @@ This document provides an overview of all git repositories accessible through th
 
 ### Framework and Infrastructure
 
-| Repository | Role | Description |
-|------------|------|-------------|
-| once.sh | Shell Environment | Unified shell environment for UCP components |
-| WODA.2023 | Development Framework | Current WODA development framework |
-| Once.2023 | Legacy Framework | Legacy ONCE development framework |
-| experimental | Research | Experimental features and research projects |
+| Repository | Role | GitHub Link | Description |
+|------------|------|-------------|-------------|
+| once.sh | Shell Environment | [GitHub](https://github.com/Cerulean-Circle-GmbH/once.sh) | Unified shell environment for UCP components |
+| WODA.2023 | Development Framework | [GitHub](https://github.com/Cerulean-Circle-GmbH/WODA.2023) | Current WODA development framework |
+| Once.2023 | Legacy Framework | [GitHub](https://github.com/Cerulean-Circle-GmbH/Once.2023) | Legacy ONCE development framework |
+| experimental | Research | [GitHub](https://github.com/Cerulean-Circle-GmbH/experimental) | Experimental features and research projects |
 
 ### Static Website Templates
 
-| Repository | Description |
-|------------|-------------|
-| cerulean-static | Template for static websites without JS frameworks |
-| soundcurrency-static | Static website template for SoundCurrency |
-| tech4people-static | Static website template for Tech4People |
+| Repository | Role | GitHub Link | Description |
+|------------|------|-------------|-------------|
+| cerulean-static | Static Template | [GitHub](https://github.com/Cerulean-Circle-GmbH/cerulean-static) | Template for static websites without JS frameworks |
+| soundcurrency-static | Static Template | [GitHub](https://github.com/Cerulean-Circle-GmbH/soundcurrency-static) | Static website template for SoundCurrency |
+| tech4people-static | Static Template | [GitHub](https://github.com/Cerulean-Circle-GmbH/tech4people-static) | Static website template for Tech4People |
 
 ### Specialized Development
 
-| Repository | Area | Description |
-|------------|------|-------------|
-| EAMD.ucp | Enterprise Architecture | Enterprise Architecture Model Development (Web4Branches) |
+| Repository | Role | GitHub Link | Description |
+|------------|------|-------------|-------------|
+| EAMD.ucp | Enterprise Architecture | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Branches) | Enterprise Architecture Model Development (Web4Branches) |
 
 ## Specialized Development Areas
 
 ### AI and Machine Learning
-- **taffy** - AI development and research projects
+| Repository | Role | GitHub Link | Description |
+|------------|------|-------------|-------------|
+| taffy | AI Development | [GitHub](https://github.com/Cerulean-Circle-GmbH/taffy) | AI development and research projects |
 
-### Docker and Containerization  
-- **Docker-OSX** - Docker development for macOS
-- **docker-eclipse** - Docker integration with Eclipse
+### Docker and Containerization
+| Repository | Role | GitHub Link | Description |
+|------------|------|-------------|-------------|
+| Docker-OSX | Docker Development | [GitHub](https://github.com/Cerulean-Circle-GmbH/Docker-OSX) | Docker development for macOS |
+| docker-eclipse | Docker Integration | [GitHub](https://github.com/Cerulean-Circle-GmbH/docker-eclipse) | Docker integration with Eclipse |
 
 ### Cavrnus Development
-- **cavrnus-examplewebintegration** - Cavrnus web integration examples
-- **research-webpack-cavrnus-lib** - Webpack research for Cavrnus (multiple variants)
+| Repository | Role | GitHub Link | Description |
+|------------|------|-------------|-------------|
+| cavrnus-examplewebintegration | Web Integration | [GitHub](https://github.com/Cerulean-Circle-GmbH/cavrnus-examplewebintegration) | Cavrnus web integration examples |
+| research-webpack-cavrnus-lib | Research | [GitHub](https://github.com/Cerulean-Circle-GmbH/research-webpack-cavrnus-lib) | Webpack research for Cavrnus (multiple variants) |
 
 ### Documentation and Tools
-- **WodaBrowser** - Browser development by Hannes Nortje
-- **plantuml-core** - PlantUML core development  
-- **codingWeb4.wiki** - Web4 documentation wiki
-- **internal-material** - Internal documentation and materials
+| Repository | Role | GitHub Link | Description |
+|------------|------|-------------|-------------|
+| WodaBrowser | Browser Development | [GitHub](https://github.com/hannesnortje/WodaBrowser) | Browser development by Hannes Nortje |
+| plantuml-core | Documentation Tool | [GitHub](https://github.com/plantuml/plantuml-core) | PlantUML core development |
+| codingWeb4.wiki | Documentation | [GitHub](https://github.com/Cerulean-Circle-GmbH/codingWeb4.wiki) | Web4 documentation wiki |
+| internal-material | Internal Docs | [GitHub](https://github.com/Cerulean-Circle-GmbH/internal-material) | Internal documentation and materials |
 
 ## Development Environment Components
 
