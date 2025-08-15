@@ -28,6 +28,15 @@ This document defines the canonical recovery process for AI agents when context 
 
 ## Recovery Process Steps
 
+### Phase 0: Role Selection (New)
+```bash
+# Optional: Specify target role for recovery
+# If not specified, defaults to ScrumMaster
+# Valid roles: ScrumMaster, Developer, PO, Architect, Tester, DevOps, OntologyAgent, etc.
+TARGET_ROLE="${1:-ScrumMaster}"
+echo "Recovery will proceed as: $TARGET_ROLE"
+```
+
 ### Phase 1: Environment Setup
 ```bash
 # 1. Ensure on release/dev
@@ -44,6 +53,9 @@ git checkout -b "$BRANCH_NAME"
 docker version
 node --version
 npm --version
+
+# 4. Generate repository tree (not following symbolic links)
+tree -I 'node_modules|.git' -a --charset ascii --noreport > repo.tree.txt
 ```
 
 ### Phase 2: Context Recovery
@@ -51,17 +63,19 @@ npm --version
    - `/workspace/README.md` - Project overview and principles
    - `/workspace/wiki/Ontology.md` - Key terminology
    - `/workspace/scrum.pmo/project.journal/*/project.state.md` - Latest state
-
+   - **Role-Specific**: `/workspace/scrum.pmo/roles/${TARGET_ROLE}/process.md` - Target role process
 
 2. **Check Role Processes**
    - Review all `/workspace/scrum.pmo/roles/*/process.md`
    - Note role-specific recovery steps
    - Identify active roles and responsibilities
+   - **Load Target Role Context**: Read specific responsibilities and current tasks for `$TARGET_ROLE`
 
 3. **Sprint & Task Status**
    - Review `/workspace/scrum.pmo/sprints/*`
    - Identify current sprint and active tasks
    - Check task completion status
+   - **Role-Specific Tasks**: Filter tasks assigned to `$TARGET_ROLE`
 
 ### Phase 3: Journal Entry Creation
 ```bash
@@ -72,6 +86,24 @@ mkdir -p "$JOURNAL_DIR"
 # Create project.state.md from canonical template
 TEMPLATE="/workspace/scrum.pmo/templates/project.state.template.md"
 sed "s/{{TIMESTAMP}}/${TIMESTAMP} UTC/g" "$TEMPLATE" > "$JOURNAL_DIR/project.state.md"
+
+# Update project state with role-specific information
+sed -i "s/ScrumMaster (autonomous)/${TARGET_ROLE} (autonomous)/g" "$JOURNAL_DIR/project.state.md"
+
+# Create tree.index.md next to project state
+tree -I 'node_modules|.git' -a --charset ascii --noreport > "$JOURNAL_DIR/tree.index.md"
+# Add markdown formatting to tree output
+{
+  echo "[Back to Project State](./project.state.md)"
+  echo ""
+  echo "# Repository Tree Index — ${TIMESTAMP} UTC"
+  echo ""
+  echo "\`\`\`"
+  cat "$JOURNAL_DIR/tree.index.md"
+  echo "\`\`\`"
+  echo ""
+  echo "*Generated automatically. Not following symbolic links.*"
+} > "$JOURNAL_DIR/tree.index.tmp" && mv "$JOURNAL_DIR/tree.index.tmp" "$JOURNAL_DIR/tree.index.md"
 
 # Create branch-overview.md from template and populate unresolved PRs to release/dev
 BRANCH_TEMPLATE="/workspace/scrum.pmo/templates/branch-overview.template.md"
@@ -103,10 +135,49 @@ MERGED_DEV_LIST=$(git branch -r --merged origin/release/dev | grep -v HEAD | gre
 MERGED_DEV_LIST_ESCAPED=$(echo "$MERGED_DEV_LIST" | sed ':a;N;$!ba;s/\n/\\n/g')
 sed -i "s/{{MERGED_DEV_BRANCHES_LIST}}/${MERGED_DEV_LIST_ESCAPED}/g" "$JOURNAL_DIR/branch-overview.md"
 
-# Commit journal entry
-git add "$JOURNAL_DIR/project.state.md"
-git add "$JOURNAL_DIR/branch-overview.md"
-git commit -m "docs: Create recovery journal entry ${TIMESTAMP}"
+# Analyze markdown files for symbolic links and create tree.index.md in linked directories
+find /workspace -name "*.md" -type f -exec grep -l '\[.*\](.*/' {} \; | while read -r md_file; do
+  # Extract directory links from markdown files
+  grep -oE '\[.*\]\([^)]*\/[^)]*\)' "$md_file" | grep -oE '\([^)]+\)' | tr -d '()' | while read -r link_path; do
+    if [[ "$link_path" =~ ^/ ]]; then
+      # Absolute path
+      target_dir="$link_path"
+    else
+      # Relative path - resolve from md_file location
+      target_dir="$(dirname "$md_file")/$link_path"
+      target_dir="$(realpath "$target_dir" 2>/dev/null || echo "$target_dir")"
+    fi
+    
+    # Check if target is a directory and exists
+    if [[ -d "$target_dir" ]]; then
+      tree_index_file="$target_dir/tree.index.md"
+      
+      # Create tree.index.md if it doesn't exist or is older than 1 day
+      if [[ ! -f "$tree_index_file" ]] || [[ $(find "$tree_index_file" -mtime +1 2>/dev/null) ]]; then
+        echo "Creating/updating tree.index.md in: $target_dir"
+        {
+          echo "[Back to Parent](../)"
+          echo ""
+          echo "# Directory Tree Index — $(date -u +"%Y-%m-%d-%H%M") UTC"
+          echo ""
+          echo "\`\`\`"
+          tree "$target_dir" -I 'node_modules|.git' -a --charset ascii --noreport
+          echo "\`\`\`"
+          echo ""
+          echo "*Generated automatically. Not following symbolic links.*"
+        } > "$tree_index_file"
+      fi
+    fi
+  done
+done
+
+# Update project index (index.md) with enhanced links
+/workspace/scripts/update-project-index.sh "$JOURNAL_DIR"
+
+# Commit journal entry and generated files
+git add "$JOURNAL_DIR/"
+git add -A  # Add any generated tree.index.md files
+git commit -m "docs: Create recovery journal entry ${TIMESTAMP} with tree indexes and role ${TARGET_ROLE}"
 git push origin "$BRANCH_NAME"
 ```
 
@@ -115,6 +186,12 @@ Before ANY implementation work, create and deliver the status report using the c
 
 - Canonical template: [`scrum.pmo/templates/project.state.template.md`](../templates/project.state.template.md)
 - Recent example: [`scrum.pmo/project.journal/2025-08-12-0900/project.state.md`](../project.journal/2025-08-12-0900/project.state.md)
+
+**Role-Specific Status Report:**
+- The status report will be customized for the specified `$TARGET_ROLE`
+- Project status section will show: **Role**: `${TARGET_ROLE} (autonomous)` instead of ScrumMaster
+- Role-specific responsibilities and next steps will be highlighted
+- Links to role-specific process documentation will be included
 
 Ensure the journal includes GitHub Quick Links and navigation-friendly markdown links throughout. In the Sprints Overview section, include relative links to each sprint's planning.md file for complete navigation (e.g., [sprint-0 planning](../../sprints/sprint-0/planning.md)).
 

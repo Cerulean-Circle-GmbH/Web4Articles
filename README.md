@@ -47,14 +47,13 @@ Each role will be dilligently onboarded and everything will be fully tracable do
 
 ## Recovery
 
-Recovery is owned by the ScrumMaster only. Always recover into branch `release/dev`. Follow `scrum.pmo/roles/ScrumMaster/recovery-process.md`.
+Recovery supports role flexibility while maintaining project status consistency. Always recover into branch `release/dev`. Follow `scrum.pmo/roles/ScrumMaster/recovery-process.md`.
 
-## Optimized Recovery Procedure (ScrumMaster)
+## Enhanced Recovery Procedure (Role-Flexible)
 
+**Autonomous Recovery Process (Role-Flexible)**
 
-**Autonomous Recovery Process (ScrumMaster)**
-
-If the AI loses context or receives the prompt "recover" from the QA user, it will autonomously (as ScrumMaster):
+If the AI loses context or receives the prompt "recover [ROLE]" from the QA user, it will autonomously recover as the specified role (defaults to ScrumMaster if no role specified):
 
 0. **DevOps Environment Verification (blocking, do first):**
    - Check `scrum.pmo/sprints/sprint-4/planning.md` if the sprint has been completed. If not skip this step.
@@ -85,13 +84,26 @@ If the AI loses context or receives the prompt "recover" from the QA user, it wi
 
 - During recovery, the AI must **not ask the user for confirmation or next steps**. Instead, it must only return when it has fully understood:
   - The project purpose and state
-  - Its own role and responsibilities
-  - The next concrete project task to execute
+  - Its own role and responsibilities (for the specified role)
+  - The next concrete project task to execute (role-specific)
 - After recovery, the AI must send a message to the QA user stating:
   1. That recovery is complete
-  2. Who it is (its role)
+  2. Who it is (its specified role)
   3. The current project state
-  4. What the next project task is
+  4. What the next project task is (role-specific)
+  5. Links to generated tree.index.md and updated project index
+
+**Role Options:**
+- ScrumMaster (default)
+- Developer, PO, Architect, Tester, DevOps
+- OntologyAgent, ResearchAgent, BranchStatusAgent
+- Any role with a process.md in `scrum.pmo/roles/`
+
+**Enhanced Features:**
+- Automatic tree.index.md generation in project journal
+- Symbolic link analysis and directory tree indexing
+- Enhanced project index with GitHub links
+- Role-specific project status reporting
 
 This process is fully autonomous and designed for rapid, reliable project context recovery and onboarding.
 
