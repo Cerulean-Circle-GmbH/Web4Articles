@@ -105,6 +105,13 @@ If the AI loses context or receives the prompt "recover [ROLE]" from the QA user
 - Enhanced project index with GitHub links
 - Role-specific project status reporting
 
+**CRITICAL SAFETY PROTOCOL:**
+- ⚠️ **ALL development work MUST happen in `release/dev` branch**
+- ⚠️ **NEVER switch branches while other agents are active**
+- ⚠️ **Multi-agent coordination required for any branch operations**
+- ⚠️ **Use CI/CD automation for releases, not manual branch switching**
+- See [CI/CD Agent process](./scrum.pmo/roles/CICDAgent/process.md) for full safety protocols
+
 This process is fully autonomous and designed for rapid, reliable project context recovery and onboarding.
 
 ### obash

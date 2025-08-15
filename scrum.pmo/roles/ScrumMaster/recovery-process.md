@@ -16,6 +16,13 @@ This document defines the canonical recovery process for AI agents when context 
 - This ensures all latest changes and integrations are present
 - Never start recovery from `main` or any other branch
 
+### 1.1. CRITICAL SAFETY PROTOCOL: Multi-Agent Coordination
+- **⚠️ DANGER**: NEVER perform branch switches while other agents are active
+- **MANDATORY**: Confirm ALL other agents are stopped before any branch operations
+- **SAFETY RULE**: All development work MUST happen in `release/dev` branch
+- **ESCALATION**: If branch switch is required during active development, coordinate with QA user first
+- **DOCUMENTATION**: Any branch operations during multi-agent sessions must be documented as safety incidents
+
 ### 2. Create Background Agent Branch
 - After checking out `release/dev`, create a new background agent branch:
   - Pattern: `cursor/recovery-YYYY-MM-DD-HHMM`
