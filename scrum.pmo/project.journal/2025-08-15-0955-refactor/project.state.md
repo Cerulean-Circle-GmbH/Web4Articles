@@ -49,10 +49,7 @@ Refactor PDCA documentation from agent-based to session-based organization for b
 - [x] Integrate workspace documentation in recovery process
 
 ## Session Documentation
-- **Session Start**: [2025-08-15-UTC-0955-session-start.md](./pdca/session/2025-08-15-UTC-0955-session-start.md)
-- **Session Completion**: [2025-08-15-UTC-1002-session-completion.md](./pdca/session/2025-08-15-UTC-1002-session-completion.md)
-- **Task PDCAs**: [./pdca/tasks/](./pdca/tasks/)
-- **Role Transitions**: [./pdca/role-transitions/](./pdca/role-transitions/)
+- **PDCA Entries**: [./pdca/role/scrum-master/](./pdca/role/scrum-master/)
 - **Workspace Documentation**: [workspacesMountPoint.md](./workspacesMountPoint.md)
 - **Repository Tree**: [workspacesMountPoint-tree.index.md](./workspacesMountPoint-tree.index.md)
 

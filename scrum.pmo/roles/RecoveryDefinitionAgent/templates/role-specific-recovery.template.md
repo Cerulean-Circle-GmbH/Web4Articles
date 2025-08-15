@@ -114,7 +114,7 @@ This template provides a comprehensive framework for creating recovery procedure
 ## Post-Recovery Protocol
 
 ### Session-Based Documentation Requirements
-- [ ] Create recovery completion PDCA in current session `pdca/tasks/`
+- [ ] Create recovery completion PDCA in current session `pdca/role/{{ROLE_NAME,,}}/`
 - [ ] Update session project state with recovery status
 - [ ] Log recovery completion with timestamp and session reference
 - [ ] Document any issues or improvements needed in PDCA
@@ -125,21 +125,23 @@ This template provides a comprehensive framework for creating recovery procedure
 - [ ] {{ROLE_SETUP_3}}
 
 ### Next Steps Identification
-- [ ] Identify current role priorities and document in session PDCA
+- [ ] Identify current role priorities and document in role PDCA
 - [ ] Review pending tasks and responsibilities within session context
-- [ ] Coordinate with other active roles and document in role transition PDCAs if needed
+- [ ] Coordinate with other active roles and document in respective role PDCAs if needed
 
 ### Session PDCA Creation
 ```bash
 # Create recovery completion PDCA
 UTC_TIMESTAMP=$(date -u +"%Y-%m-%d-UTC-%H%M")
 SESSION_DIR="$(find scrum.pmo/project.journal -name "*$(date +%Y-%m-%d)*" -type d | tail -1)"
-cat > "$SESSION_DIR/pdca/tasks/${UTC_TIMESTAMP}-{{ROLE_NAME}}-recovery-completion.md" << EOF
+ROLE_PDCA_DIR="$SESSION_DIR/pdca/role/{{ROLE_NAME,,}}"
+mkdir -p "$ROLE_PDCA_DIR"
+cat > "$ROLE_PDCA_DIR/${UTC_TIMESTAMP}.md" << EOF
 # PDCA Cycle: {{ROLE_NAME}} Recovery Completion - ${UTC_TIMESTAMP}
 
 ## Plan
 **Objective:** Complete {{ROLE_NAME}} recovery and role initialization
-**Session Reference:** [Project State](../../project.state.md)
+**Session Reference:** [Project State](../../../project.state.md)
 
 ## Do
 **Recovery Actions Completed:**

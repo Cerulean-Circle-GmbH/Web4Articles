@@ -89,7 +89,7 @@ tree -I 'node_modules|.git' -a --charset ascii --noreport > repo.tree.txt
 # Create new journal session with PDCA structure
 SESSION_TYPE="${SESSION_TYPE:-recovery}"
 JOURNAL_DIR="/workspace/scrum.pmo/project.journal/${TIMESTAMP}-${SESSION_TYPE}"
-mkdir -p "$JOURNAL_DIR/pdca/"{role-transitions,tasks,session}
+mkdir -p "$JOURNAL_DIR/pdca/role"
 
 # Create project.state.md from canonical template
 TEMPLATE="/workspace/scrum.pmo/templates/project.state.template.md"
@@ -99,23 +99,24 @@ sed "s/{{TIMESTAMP}}/${TIMESTAMP} UTC/g" "$TEMPLATE" > "$JOURNAL_DIR/project.sta
 sed -i "s/ScrumMaster (autonomous)/${TARGET_ROLE} (recovery session)/g" "$JOURNAL_DIR/project.state.md"
 sed -i "s/Status:** Active/Status:** Recovery in Progress - Session: ${SESSION_TYPE}/g" "$JOURNAL_DIR/project.state.md"
 
-# Create session start PDCA
+# Create role-based PDCA entry
 UTC_TIMESTAMP=$(date -u +"%Y-%m-%d-UTC-%H%M")
-cat > "$JOURNAL_DIR/pdca/session/${UTC_TIMESTAMP}-session-start.md" << EOF
-[Back to Session](../../project.state.md)
+ROLE_PDCA_DIR="$JOURNAL_DIR/pdca/role/${TARGET_ROLE,,}"
+mkdir -p "$ROLE_PDCA_DIR"
+cat > "$ROLE_PDCA_DIR/${UTC_TIMESTAMP}.md" << EOF
+[Back to Session](../../../project.state.md)
 
 # PDCA Cycle: Recovery Session Start - ${UTC_TIMESTAMP}
 
 ## Plan
 **Objective:** Recover as ${TARGET_ROLE} from README context
 **Scope:** Complete recovery and role initialization
-**Session Type:** ${SESSION_TYPE}
-**Session Directory:** ${JOURNAL_DIR}
+**Session:** ${JOURNAL_DIR}
 
 ## Do
 **Actions Taken:**
 - Recovery initiated from README context
-- Session structure created with PDCA organization
+- Session structure created
 - Role context loading in progress
 
 ## Check
@@ -123,15 +124,16 @@ cat > "$JOURNAL_DIR/pdca/session/${UTC_TIMESTAMP}-session-start.md" << EOF
 
 ## Act
 **Next Steps:** Complete recovery process and role initialization
-**Session PDCAs:** Will be created in pdca/ subdirectories
 
-[Back to Session](../../project.state.md)
+[Back to Session](../../../project.state.md)
 EOF
 
 # Create role transition PDCA if applicable
 if [ ! -z "$PREVIOUS_ROLE" ] && [ "$PREVIOUS_ROLE" != "$TARGET_ROLE" ]; then
-  cat > "$JOURNAL_DIR/pdca/role-transitions/${UTC_TIMESTAMP}-${PREVIOUS_ROLE}-to-${TARGET_ROLE}.md" << EOF
-[Back to Session](../../project.state.md)
+  PREV_ROLE_DIR="$JOURNAL_DIR/pdca/role/${PREVIOUS_ROLE,,}"
+  mkdir -p "$PREV_ROLE_DIR"
+  cat > "$PREV_ROLE_DIR/${UTC_TIMESTAMP}.md" << EOF
+[Back to Session](../../../project.state.md)
 
 # PDCA Cycle: Role Transition - ${PREVIOUS_ROLE} to ${TARGET_ROLE} - ${UTC_TIMESTAMP}
 
@@ -151,7 +153,7 @@ if [ ! -z "$PREVIOUS_ROLE" ] && [ "$PREVIOUS_ROLE" != "$TARGET_ROLE" ]; then
 ## Act
 **New Role Status:** ${TARGET_ROLE} context loaded and operational
 
-[Back to Session](../../project.state.md)
+[Back to Session](../../../project.state.md)
 EOF
 fi
 
@@ -169,10 +171,8 @@ tree -I 'node_modules|.git' -a --charset ascii --noreport > "$JOURNAL_DIR/tree.i
   echo ""
   echo "*Generated automatically. Not following symbolic links.*"
   echo ""
-  echo "## Session PDCA Structure"
-  echo "- **Session Management:** [pdca/session/](./pdca/session/)"
-  echo "- **Role Transitions:** [pdca/role-transitions/](./pdca/role-transitions/)"
-  echo "- **Task Documentation:** [pdca/tasks/](./pdca/tasks/)"
+  echo "## PDCA Structure"
+  echo "- **Role-based PDCAs:** [pdca/role/](./pdca/role/)"
 } > "$JOURNAL_DIR/tree.index.tmp" && mv "$JOURNAL_DIR/tree.index.tmp" "$JOURNAL_DIR/tree.index.md"
 
 # Create workspace mount point documentation in session
