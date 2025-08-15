@@ -22,9 +22,9 @@ Role transition process from {{PREVIOUS_ROLE}} to {{TARGET_ROLE}} with complete 
 
 ### **⚖️ QA Decisions Required**
 
-1. **Handoff Completeness**: Verify all {{PREVIOUS_ROLE}} responsibilities are documented
-2. **Context Transfer**: Ensure {{TARGET_ROLE}} has sufficient context to proceed
-3. **Process Continuity**: Confirm smooth transition without disruption
+- [ ] **Handoff Completeness**: Verify all {{PREVIOUS_ROLE}} responsibilities are documented
+- [ ] **Context Transfer**: Ensure {{TARGET_ROLE}} has sufficient context to proceed
+- [ ] **Process Continuity**: Confirm smooth transition without disruption
 
 ---
 

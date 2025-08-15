@@ -21,8 +21,9 @@
 
 ### **⚖️ QA Decisions Required**
 
-1. **{{QA_DECISION_1}}**: {{QA_DECISION_1_DESCRIPTION}}
-2. **{{QA_DECISION_2}}**: {{QA_DECISION_2_DESCRIPTION}}
+- [ ] **{{QA_DECISION_1}}**: {{QA_DECISION_1_DESCRIPTION}}
+- [ ] **{{QA_DECISION_2}}**: {{QA_DECISION_2_DESCRIPTION}}
+- [ ] **{{QA_DECISION_3}}**: {{QA_DECISION_3_DESCRIPTION}}
 
 ---
 

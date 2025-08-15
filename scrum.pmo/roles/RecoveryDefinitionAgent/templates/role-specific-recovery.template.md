@@ -160,8 +160,9 @@ cat > "$ROLE_PDCA_DIR/${UTC_TIMESTAMP}.md" << EOF
 
 ### **⚖️ QA Decisions Required**
 
-1. **{{QA_DECISION_1}}**: {{QA_DECISION_1_DESCRIPTION}}
-2. **{{QA_DECISION_2}}**: {{QA_DECISION_2_DESCRIPTION}}
+- [ ] **{{QA_DECISION_1}}**: {{QA_DECISION_1_DESCRIPTION}}
+- [ ] **{{QA_DECISION_2}}**: {{QA_DECISION_2_DESCRIPTION}}
+- [ ] **Recovery Validation**: Confirm {{ROLE_NAME}} context restoration completeness
 
 ---
 
