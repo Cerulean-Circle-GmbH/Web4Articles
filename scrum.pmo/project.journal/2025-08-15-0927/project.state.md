@@ -1,4 +1,4 @@
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)
 
 # Project State — 2025-08-15-0927 UTC
 
@@ -69,4 +69,4 @@
 - **Tester**: Ready for Sprint 11 test planning
 - **PO**: Requirements documented in Sprint 11 planning
 
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)

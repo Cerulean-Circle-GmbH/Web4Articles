@@ -1,4 +1,4 @@
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)
 
 # Project State — 2025-08-12-1102 UTC
 
@@ -59,4 +59,4 @@
 - Resolve remaining sprint 9 merge conflicts
 - Export chat history to CeruleanCircle/AI.Agent.setup/chat_history.md [[memory:5453222]]
 
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)

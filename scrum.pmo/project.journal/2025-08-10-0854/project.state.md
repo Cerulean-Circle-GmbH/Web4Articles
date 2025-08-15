@@ -6,7 +6,7 @@ Backlinks: /LICENSE , /AI-GPL.md
 Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unless dual-licensed.
 -->
 
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)
 
 # Project State — 2025-08-10 08:54 UTC
 
@@ -36,7 +36,7 @@ Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unle
 - Sync prompt method token on selection changes in TSRanger controller; update tests.
 - Use devcontainer in Sprint 4 or install devcontainer CLI, PlantUML, Graphviz locally.
 
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)
 
 # Project State — 2025-08-10 08:54 UTC
 

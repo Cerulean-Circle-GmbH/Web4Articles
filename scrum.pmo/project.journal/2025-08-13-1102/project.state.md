@@ -1,4 +1,4 @@
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)
 
 # Project State — 2025-08-13-1102 UTC UTC
 
@@ -53,4 +53,4 @@
 - Open PR to main after checks
 - Run tests with tsranger
 
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)

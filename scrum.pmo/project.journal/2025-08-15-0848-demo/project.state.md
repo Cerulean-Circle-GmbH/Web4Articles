@@ -1,4 +1,4 @@
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)
 
 # Project State — 2025-08-15-0848-demo UTC
 
@@ -71,4 +71,4 @@ This project state demonstrates the enhanced recovery system with:
 - Enhanced GitHub link integration
 - Critical safety protocol enforcement
 
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)

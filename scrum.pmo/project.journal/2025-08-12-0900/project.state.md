@@ -1,4 +1,4 @@
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)
 
 # Project State — 2025-08-12 09:00 UTC
 
@@ -58,4 +58,4 @@
 - Update `index.md` and cross-links post-merge
 - Document outcomes in `recovery.md` and `qa-feedback-log.md`
 
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)

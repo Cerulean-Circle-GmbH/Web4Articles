@@ -6,7 +6,7 @@ Backlinks: /LICENSE , /AI-GPL.md
 Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unless dual-licensed.
 -->
 
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)
 
 # Project State — 2025-08-11 09:55 UTC
 
@@ -62,4 +62,4 @@ Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unle
 ### Artifacts Created
 - [Branch Overview with PR States](./branch-overview.md)
 
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)

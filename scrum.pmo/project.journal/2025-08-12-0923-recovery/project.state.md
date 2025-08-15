@@ -1,4 +1,4 @@
-[Back to Journal](../)
+[Back to Journal](../) | [Journal Overview](../../project.journal.overview.md)
 
 # Project State — 2025-08-12-0923 UTC
 

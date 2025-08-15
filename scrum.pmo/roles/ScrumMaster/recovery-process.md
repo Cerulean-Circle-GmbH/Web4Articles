@@ -104,7 +104,7 @@ UTC_TIMESTAMP=$(date -u +"%Y-%m-%d-UTC-%H%M")
 ROLE_PDCA_DIR="$JOURNAL_DIR/pdca/role/${TARGET_ROLE,,}"
 mkdir -p "$ROLE_PDCA_DIR"
 cat > "$ROLE_PDCA_DIR/${UTC_TIMESTAMP}.md" << EOF
-[Back to Session](../../../project.state.md)
+[Back to Session](../../../project.state.md) | [Journal Overview](../../../../../project.journal.overview.md)
 
 # PDCA Cycle: Recovery Session Start - ${UTC_TIMESTAMP}
 
@@ -133,7 +133,7 @@ if [ ! -z "$PREVIOUS_ROLE" ] && [ "$PREVIOUS_ROLE" != "$TARGET_ROLE" ]; then
   PREV_ROLE_DIR="$JOURNAL_DIR/pdca/role/${PREVIOUS_ROLE,,}"
   mkdir -p "$PREV_ROLE_DIR"
   cat > "$PREV_ROLE_DIR/${UTC_TIMESTAMP}.md" << EOF
-[Back to Session](../../../project.state.md)
+[Back to Session](../../../project.state.md) | [Journal Overview](../../../../../project.journal.overview.md)
 
 # PDCA Cycle: Role Transition - ${PREVIOUS_ROLE} to ${TARGET_ROLE} - ${UTC_TIMESTAMP}
 

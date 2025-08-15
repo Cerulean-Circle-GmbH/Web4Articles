@@ -1,4 +1,4 @@
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)
 
 # Project State — 2025-08-15-0955-refactor UTC
 
@@ -66,4 +66,4 @@ Refactor PDCA documentation from agent-based to session-based organization for b
 - Test new structure thoroughly before widespread adoption
 - Document migration path for existing agent-based PDCAs
 
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)

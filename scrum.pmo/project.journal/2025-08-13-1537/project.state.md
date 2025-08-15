@@ -1,4 +1,4 @@
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)
 
 # Project State — 2025-08-13-1537 UTC UTC
 
@@ -53,4 +53,4 @@
 - {{NEXT_STEP_1}}
 - {{NEXT_STEP_2}}
 
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)
