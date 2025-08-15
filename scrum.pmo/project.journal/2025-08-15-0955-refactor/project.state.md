@@ -41,15 +41,20 @@ Refactor PDCA documentation from agent-based to session-based organization for b
 - [x] Design new PDCA folder organization
 - [x] Create project journal session template
 - [x] Create demonstration session with new structure
-- [ ] Update recovery process documentation
-- [ ] Update Recovery Definition Agent templates
-- [ ] Release safely to release/testing
-- [ ] Document refactoring completion
+- [x] Update recovery process documentation
+- [x] Update Recovery Definition Agent templates
+- [x] Release safely to release/testing
+- [x] Document refactoring completion
+- [x] Create workspace mount point documentation
+- [x] Integrate workspace documentation in recovery process
 
-## Session PDCAs
+## Session Documentation
 - **Session Start**: [2025-08-15-UTC-0955-session-start.md](./pdca/session/2025-08-15-UTC-0955-session-start.md)
+- **Session Completion**: [2025-08-15-UTC-1002-session-completion.md](./pdca/session/2025-08-15-UTC-1002-session-completion.md)
 - **Task PDCAs**: [./pdca/tasks/](./pdca/tasks/)
 - **Role Transitions**: [./pdca/role-transitions/](./pdca/role-transitions/)
+- **Workspace Documentation**: [workspacesMountPoint.md](./workspacesMountPoint.md)
+- **Repository Tree**: [workspacesMountPoint-tree.index.md](./workspacesMountPoint-tree.index.md)
 
 ## Next Steps
 1. Complete recovery process documentation updates

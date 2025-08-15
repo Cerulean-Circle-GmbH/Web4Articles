@@ -1,4 +1,4 @@
-[Back to Index](../index.md)
+[Back to Session](./project.state.md)
 
 # Workspace Mount Point — Accessible Git Repositories
 
@@ -137,4 +137,4 @@ This document provides an overview of all git repositories accessible through th
 
 **The workspace mount point provides comprehensive access to the entire Cerulean-Circle-GmbH development ecosystem, enabling background agents to leverage cross-project knowledge, templates, and resources for enhanced development capabilities.**
 
-[Back to Index](../index.md)
+[Back to Session](./project.state.md)

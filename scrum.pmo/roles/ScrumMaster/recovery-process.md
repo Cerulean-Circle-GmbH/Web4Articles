@@ -175,6 +175,67 @@ tree -I 'node_modules|.git' -a --charset ascii --noreport > "$JOURNAL_DIR/tree.i
   echo "- **Task Documentation:** [pdca/tasks/](./pdca/tasks/)"
 } > "$JOURNAL_DIR/tree.index.tmp" && mv "$JOURNAL_DIR/tree.index.tmp" "$JOURNAL_DIR/tree.index.md"
 
+# Create workspace mount point documentation in session
+if [ -L "/workspace/workspacesMountPoint" ]; then
+  echo "Creating workspace mount point documentation..."
+  
+  # Generate workspace tree structure
+  tree /workspace/workspacesMountPoint -I 'node_modules|.git' -a --charset ascii --noreport > "$JOURNAL_DIR/workspaces.tree.txt"
+  
+  # Create workspacesMountPoint-tree.index.md
+  {
+    echo "[Back to Session](./project.state.md)"
+    echo ""
+    echo "# Workspace Mount Point Tree Index — ${TIMESTAMP} UTC"
+    echo ""
+    echo "\`\`\`"
+    cat "$JOURNAL_DIR/workspaces.tree.txt"
+    echo "\`\`\`"
+    echo ""
+    echo "*Generated automatically from workspacesMountPoint/. Git repositories identified and marked.*"
+    echo ""
+    echo "## Repository Statistics"
+    echo "- **Total Git Repositories**: $(find /workspace/workspacesMountPoint -name ".git" -type d | wc -l | tr -d ' ')"
+    echo "- **Primary Development Hub**: 2cuGitHub/"
+    echo "- **Active Project**: Web4Articles (current session)"
+  } > "$JOURNAL_DIR/workspacesMountPoint-tree.index.md"
+  
+  # Create comprehensive workspacesMountPoint.md
+  {
+    echo "[Back to Session](./project.state.md)"
+    echo ""
+    echo "# Workspace Mount Point — Accessible Git Repositories"
+    echo ""
+    echo "This document provides an overview of all git repositories accessible through the workspace mount point for this recovery session."
+    echo ""
+    echo "## Recovery Session Context"
+    echo "- **Session**: ${JOURNAL_DIR}"
+    echo "- **Role**: ${TARGET_ROLE}"
+    echo "- **Timestamp**: ${TIMESTAMP} UTC"
+    echo ""
+    echo "## Accessible Repository Summary"
+    find /workspace/workspacesMountPoint -name ".git" -type d | while read -r repo_git; do
+      repo_dir=$(dirname "$repo_git")
+      repo_name=$(basename "$repo_dir")
+      repo_path=$(echo "$repo_dir" | sed 's|/workspace/workspacesMountPoint/||')
+      echo "- **$repo_name** - [$repo_path]($repo_dir)"
+    done
+    echo ""
+    echo "## Background Agent Advantages"
+    echo "- Access to broader development ecosystem beyond current project"
+    echo "- Cross-repository integration and template reuse capabilities"
+    echo "- Historical perspective and learning from related projects"
+    echo "- Comprehensive documentation and best practices"
+    echo ""
+    echo "[Back to Session](./project.state.md)"
+  } > "$JOURNAL_DIR/workspacesMountPoint.md"
+  
+  rm -f "$JOURNAL_DIR/workspaces.tree.txt"
+  echo "✅ Workspace mount point documentation created"
+else
+  echo "ℹ️  No workspace mount point available in this environment"
+fi
+
 # Create branch-overview.md from template and populate unresolved PRs to release/dev
 BRANCH_TEMPLATE="/workspace/scrum.pmo/templates/branch-overview.template.md"
 cp "$BRANCH_TEMPLATE" "$JOURNAL_DIR/branch-overview.md"

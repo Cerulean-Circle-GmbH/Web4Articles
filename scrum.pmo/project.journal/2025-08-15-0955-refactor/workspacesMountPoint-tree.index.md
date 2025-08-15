@@ -1,4 +1,4 @@
-[Back to Index](../index.md)
+[Back to Session](./project.state.md)
 
 # Workspace Mount Point Tree Index — 2025-08-15-1504 UTC
 
@@ -79,4 +79,4 @@ The main collection of Cerulean-Circle-GmbH repositories including:
 - **System Development** - DAL.os, qemu configurations
 - **Tooling** - plantUML, .vscode settings
 
-[Back to Index](../index.md)
+[Back to Session](./project.state.md)
