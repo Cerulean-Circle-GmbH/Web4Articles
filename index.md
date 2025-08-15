@@ -136,6 +136,8 @@
 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1557/branch-overview.md): [scrum.pmo/project.journal/2025-08-13-1557/branch-overview.md](scrum.pmo/project.journal/2025-08-13-1557/branch-overview.md) | Document | 2025-08-15 |
 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1557/project.state.md): [scrum.pmo/project.journal/2025-08-13-1557/project.state.md](scrum.pmo/project.journal/2025-08-13-1557/project.state.md) | Project state | 2025-08-15 |
 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-14-1617/branch-overview.md): [scrum.pmo/project.journal/2025-08-14-1617/branch-overview.md](scrum.pmo/project.journal/2025-08-14-1617/branch-overview.md) | Document | 2025-08-15 |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0848-demo/project.state.md): [scrum.pmo/project.journal/2025-08-15-0848-demo/project.state.md](scrum.pmo/project.journal/2025-08-15-0848-demo/project.state.md) | Project state | 2025-08-15 |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0848-demo/tree.index.md): [scrum.pmo/project.journal/2025-08-15-0848-demo/tree.index.md](scrum.pmo/project.journal/2025-08-15-0848-demo/tree.index.md) | Tree index | 2025-08-15 |
 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/roles/Architect/PDCA/2025-08-13-UTC-1004.md): [scrum.pmo/roles/Architect/PDCA/2025-08-13-UTC-1004.md](scrum.pmo/roles/Architect/PDCA/2025-08-13-UTC-1004.md) | PDCA | 2025-08-15 |
 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/roles/Architect/process.md): [scrum.pmo/roles/Architect/process.md](scrum.pmo/roles/Architect/process.md) | Architect process | 2025-08-15 |
 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/roles/AuthenticIntegerExperiencialistStoryteller/PDCA/2025-08-13-UTC-2219.md): [scrum.pmo/roles/AuthenticIntegerExperiencialistStoryteller/PDCA/2025-08-13-UTC-2219.md](scrum.pmo/roles/AuthenticIntegerExperiencialistStoryteller/PDCA/2025-08-13-UTC-2219.md) | PDCA | 2025-08-15 |
@@ -436,6 +438,7 @@
 ## Quick Links
 
 ### Project Structure
+- [Latest Repository Tree](scrum.pmo/project.journal/2025-08-15-0848-demo/tree.index.md)
 - [Project Journal](./scrum.pmo/project.journal/)
 - [Roles](./scrum.pmo/roles/)
 - [Sprints](./scrum.pmo/sprints/)
