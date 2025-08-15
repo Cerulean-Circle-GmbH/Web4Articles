@@ -278,3 +278,4 @@ This template provides comprehensive frameworks for coordinating recovery operat
 **This template ensures effective multi-agent coordination with clear communication, defined responsibilities, and robust conflict resolution capabilities.**
 
 [Back to Recovery Definition Agent](../)
+

@@ -38,3 +38,4 @@ Extend `GitScrumProject` to authenticate with GitHub and create a new repository
 [Back to Planning](./planning.md)
 
 
+
