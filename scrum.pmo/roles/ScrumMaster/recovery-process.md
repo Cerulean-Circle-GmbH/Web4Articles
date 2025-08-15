@@ -418,10 +418,20 @@ done
 # Update project index (index.md) with enhanced links
 /workspace/scripts/update-project-index.sh "$JOURNAL_DIR"
 
+# Update project journal overview with new session
+echo "Updating project journal overview..."
+/workspace/scripts/update-journal-overview.sh
+echo "✅ Journal overview updated"
+
 # Commit journal entry and generated files
 git add "$JOURNAL_DIR/"
+git add "$JOURNAL_DIR/../project.journal.overview.md"  # Add updated overview
 git add -A  # Add any generated tree.index.md files
-git commit -m "docs: Create recovery journal entry ${TIMESTAMP} with tree indexes and role ${TARGET_ROLE}"
+git commit -m "docs: Create recovery journal entry ${TIMESTAMP} with tree indexes and role ${TARGET_ROLE}
+
+- Session type: ${SESSION_TYPE}
+- Updated journal overview with current session
+- Complete PDCA documentation structure"
 git push origin "$BRANCH_NAME"
 ```
 
@@ -430,6 +440,11 @@ Before ANY implementation work, create and deliver the status report using the c
 
 - Canonical template: [`scrum.pmo/templates/project.state.template.md`](../templates/project.state.template.md)
 - Recent example: [`scrum.pmo/project.journal/2025-08-12-0900/project.state.md`](../project.journal/2025-08-12-0900/project.state.md)
+
+**Journal Overview Update (Automatic):**
+- The recovery process now automatically updates [`project.journal.overview.md`](../project.journal.overview.md)
+- This maintains a chronological index of all sessions with their roles, status, and PDCA counts
+- The overview serves as a central navigation hub for all project journal entries
 
 **Role-Specific Status Report:**
 - The status report will be customized for the specified `$TARGET_ROLE`

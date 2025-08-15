@@ -17,7 +17,7 @@ The project journal system tracks:
 - **[2025-08-15-0955-refactor](./project.journal/2025-08-15-0955-refactor/project.state.md)** ⭐ *Active*
   - **Status**: Unknown
   - **Role**: 
-  - **PDCA Entries**: [7 entries](./project.journal/2025-08-15-0955-refactor/pdca/)
+  - **PDCA Entries**: [11 entries](./project.journal/2025-08-15-0955-refactor/pdca/)
 
 ## All Sessions (Chronological)
 
@@ -25,8 +25,15 @@ The project journal system tracks:
 - **[Session Link](./project.journal/2025-08-15-0955-refactor/project.state.md)**
 - **Role**: 
 - **Status**: 
-- **PDCA Entries**: [7 entries](./project.journal/2025-08-15-0955-refactor/pdca/)
+- **PDCA Entries**: [11 entries](./project.journal/2025-08-15-0955-refactor/pdca/)
 - **Workspace Documentation**: [Available](./project.journal/2025-08-15-0955-refactor/workspacesMountPoint.md)
+
+### 2025-08-15-0947-article-writing
+- **[Session Link](./project.journal/2025-08-15-0947-article-writing/project.state.md)**
+- **Role**: 
+- **Status**: 
+- **PDCA Entries**: [1 entries](./project.journal/2025-08-15-0947-article-writing/pdca/)
+- **Tree Index**: [Available](./project.journal/2025-08-15-0947-article-writing/tree.index.md)
 
 ### 2025-08-15-0927
 - **[Session Link](./project.journal/2025-08-15-0927/project.state.md)**
@@ -137,10 +144,10 @@ ScrumMaster
 
 ## Statistics
 
-- **Total Sessions**: 23
-- **Total PDCA Entries**: 7
+- **Total Sessions**: 24
+- **Total PDCA Entries**: 12
 - **Latest Session**: 2025-08-15-0955-refactor
-- **Overview Last Updated**: 2025-08-15 UTC-2015
+- **Overview Last Updated**: 2025-08-15 UTC-2115
 
 ## PDCA Structure (Current Standard)
 
