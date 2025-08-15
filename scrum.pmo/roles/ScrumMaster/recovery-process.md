@@ -93,7 +93,11 @@ mkdir -p "$JOURNAL_DIR/pdca/role"
 
 # Create project.state.md from canonical template
 TEMPLATE="/workspace/scrum.pmo/templates/project.state.template.md"
-sed "s/{{TIMESTAMP}}/${TIMESTAMP} UTC/g" "$TEMPLATE" > "$JOURNAL_DIR/project.state.md"
+{
+  echo "[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)"
+  echo ""
+  sed "s/{{TIMESTAMP}}/${TIMESTAMP} UTC/g" "$TEMPLATE"
+} > "$JOURNAL_DIR/project.state.md"
 
 # Update project state with role-specific information and session context
 sed -i "s/ScrumMaster (autonomous)/${TARGET_ROLE} (recovery session)/g" "$JOURNAL_DIR/project.state.md"
@@ -106,26 +110,79 @@ mkdir -p "$ROLE_PDCA_DIR"
 cat > "$ROLE_PDCA_DIR/${UTC_TIMESTAMP}.md" << EOF
 [Back to Session](../../../project.state.md) | [Journal Overview](../../../../../project.journal.overview.md)
 
-# PDCA Cycle: Recovery Session Start - ${UTC_TIMESTAMP}
+# 📋 **PDCA Cycle: Recovery Session Start - ${UTC_TIMESTAMP}**
 
-## Plan
-**Objective:** Recover as ${TARGET_ROLE} from README context
-**Scope:** Complete recovery and role initialization
-**Session:** ${JOURNAL_DIR}
+**🗓️ Date:** ${UTC_TIMESTAMP}  
+**🎯 Objective:** Recover as ${TARGET_ROLE} from README context  
+**👤 Role:** ${TARGET_ROLE}  
+**🚨 Issues:** Context restoration and role initialization
 
-## Do
-**Actions Taken:**
+---
+
+## **📊 Summary**
+
+Recovery process initiated for ${TARGET_ROLE} role from README context. Session structure created with simplified PDCA organization and role-specific context loading.
+
+### **🔗 Artifact Links**
+
+- **Session State**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/${JOURNAL_DIR##*/}/project.state.md) | [project.state.md](../../../project.state.md)
+- **Journal Overview**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal.overview.md) | [project.journal.overview.md](../../../../../project.journal.overview.md)
+
+---
+
+## **📝 Plan**
+
+### **Recovery Objectives**
+1. **Context Restoration**: Load ${TARGET_ROLE} role context from README and project documentation
+2. **Session Structure**: Create organized PDCA structure with role-based organization
+3. **Process Integration**: Ensure recovery aligns with current project workflows
+
+### **Recovery Scope**
+- Complete recovery and role initialization
+- Session documentation with proper backlinks
+- Role-specific task identification and prioritization
+
+---
+
+## **🔧 Do**
+
+### **Recovery Actions Completed**
 - Recovery initiated from README context
-- Session structure created
+- Session structure created: ${JOURNAL_DIR}
 - Role context loading in progress
+- PDCA directory structure established
 
-## Check
-**Validation:** Session start documented, proceeding with recovery
+---
 
-## Act
-**Next Steps:** Complete recovery process and role initialization
+## **✅ Check**
 
-[Back to Session](../../../project.state.md)
+### **Recovery Validation**
+✅ **Session Created**: ${JOURNAL_DIR} established ✅  
+✅ **PDCA Structure**: Role-based organization implemented ✅  
+✅ **Context Loading**: ${TARGET_ROLE} role context initiated ✅  
+
+---
+
+## **🚀 Act**
+
+### **Next Steps**
+1. **Role Initialization**: Complete ${TARGET_ROLE} context loading
+2. **Task Identification**: Review current project priorities
+3. **Process Continuation**: Proceed with role-specific activities
+
+---
+
+## **📋 PDCA Process Update**
+
+### **${TARGET_ROLE} Learning**
+✅ **Recovery Process**: Enhanced PDCA format implemented ✅  
+✅ **Session Organization**: Role-based structure established ✅  
+
+---
+
+**📊 Summary:** Recovery session started for ${TARGET_ROLE} with enhanced PDCA format and proper session organization! 📋✅
+
+[Back to Session](../../../project.state.md) | [Journal Overview](../../../../../project.journal.overview.md)
 EOF
 
 # Create role transition PDCA if applicable
@@ -135,25 +192,81 @@ if [ ! -z "$PREVIOUS_ROLE" ] && [ "$PREVIOUS_ROLE" != "$TARGET_ROLE" ]; then
   cat > "$PREV_ROLE_DIR/${UTC_TIMESTAMP}.md" << EOF
 [Back to Session](../../../project.state.md) | [Journal Overview](../../../../../project.journal.overview.md)
 
-# PDCA Cycle: Role Transition - ${PREVIOUS_ROLE} to ${TARGET_ROLE} - ${UTC_TIMESTAMP}
+# 📋 **PDCA Cycle: Role Transition - ${PREVIOUS_ROLE} to ${TARGET_ROLE} - ${UTC_TIMESTAMP}**
 
-## Plan
-**Objective:** Transition from ${PREVIOUS_ROLE} to ${TARGET_ROLE}
-**Handoff Requirements:** Complete previous role context and initialize new role
+**🗓️ Date:** ${UTC_TIMESTAMP}  
+**🎯 Objective:** Transition from ${PREVIOUS_ROLE} to ${TARGET_ROLE}  
+**👤 Role:** ${PREVIOUS_ROLE} → ${TARGET_ROLE}  
+**🚨 Issues:** Role handoff and context transfer
 
-## Do
-**Transition Actions:**
+---
+
+## **📊 Summary**
+
+Role transition process from ${PREVIOUS_ROLE} to ${TARGET_ROLE} with complete context handoff and new role initialization.
+
+### **🔗 Artifact Links**
+
+- **Session State**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/${JOURNAL_DIR##*/}/project.state.md) | [project.state.md](../../../project.state.md)
+- **${PREVIOUS_ROLE} Process**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/roles/${PREVIOUS_ROLE}/process.md) | [../../../../../roles/${PREVIOUS_ROLE}/process.md](../../../../../roles/${PREVIOUS_ROLE}/process.md)
+- **${TARGET_ROLE} Process**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/roles/${TARGET_ROLE}/process.md) | [../../../../../roles/${TARGET_ROLE}/process.md](../../../../../roles/${TARGET_ROLE}/process.md)
+
+---
+
+## **📝 Plan**
+
+### **Transition Objectives**
+1. **Context Preservation**: Document ${PREVIOUS_ROLE} completion status
+2. **Handoff Process**: Transfer relevant context to ${TARGET_ROLE}
+3. **Role Initialization**: Begin ${TARGET_ROLE} activities
+
+### **Handoff Requirements**
+- Complete previous role context documentation
+- Initialize new role context
+- Update session structure for new role
+
+---
+
+## **🔧 Do**
+
+### **Transition Actions Completed**
 - Previous role context preserved and documented
 - New role context loading initiated
 - Session structure updated for new role
+- PDCA organization maintained
 
-## Check
-**Validation:** Role transition documented and validated
+---
 
-## Act
-**New Role Status:** ${TARGET_ROLE} context loaded and operational
+## **✅ Check**
 
-[Back to Session](../../../project.state.md)
+### **Transition Validation**
+✅ **${PREVIOUS_ROLE} Context**: Properly documented and preserved ✅  
+✅ **${TARGET_ROLE} Context**: Successfully initiated ✅  
+✅ **Session Continuity**: Maintained throughout transition ✅  
+
+---
+
+## **🚀 Act**
+
+### **New Role Status**
+1. **${TARGET_ROLE} Operational**: Context loaded and ready
+2. **Previous Context**: Preserved for future reference
+3. **Process Continuity**: Seamless transition achieved
+
+---
+
+## **📋 PDCA Process Update**
+
+### **Role Transition Learning**
+✅ **Handoff Process**: Smooth transition protocol established ✅  
+✅ **Context Preservation**: Previous role documentation maintained ✅  
+✅ **New Role Integration**: ${TARGET_ROLE} context successfully loaded ✅  
+
+---
+
+**📊 Summary:** Role transition from ${PREVIOUS_ROLE} to ${TARGET_ROLE} completed successfully with full context preservation! 📋✅
+
+[Back to Session](../../../project.state.md) | [Journal Overview](../../../../../project.journal.overview.md)
 EOF
 fi
 

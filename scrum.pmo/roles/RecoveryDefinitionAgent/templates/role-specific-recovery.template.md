@@ -137,11 +137,40 @@ SESSION_DIR="$(find scrum.pmo/project.journal -name "*$(date +%Y-%m-%d)*" -type 
 ROLE_PDCA_DIR="$SESSION_DIR/pdca/role/{{ROLE_NAME,,}}"
 mkdir -p "$ROLE_PDCA_DIR"
 cat > "$ROLE_PDCA_DIR/${UTC_TIMESTAMP}.md" << EOF
-# PDCA Cycle: {{ROLE_NAME}} Recovery Completion - ${UTC_TIMESTAMP}
+[Back to Session](../../../project.state.md) | [Journal Overview](../../../../../project.journal.overview.md)
 
-## Plan
-**Objective:** Complete {{ROLE_NAME}} recovery and role initialization
-**Session Reference:** [Project State](../../../project.state.md)
+# 📋 **PDCA Cycle: {{ROLE_NAME}} Recovery Completion - ${UTC_TIMESTAMP}**
+
+**🗓️ Date:** ${UTC_TIMESTAMP}  
+**🎯 Objective:** Complete {{ROLE_NAME}} recovery and role initialization  
+**👤 Role:** {{ROLE_NAME}}  
+**🚨 Issues:** {{RECOVERY_ISSUES}}
+
+---
+
+## **📊 Summary**
+
+{{RECOVERY_SUMMARY_DESCRIPTION}}
+
+### **🔗 Artifact Links**
+
+- **Session State**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/\${SESSION_DIR##*/}/project.state.md) | [project.state.md](../../../project.state.md)
+- **{{ROLE_NAME}} Process**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/roles/{{ROLE_NAME}}/process.md) | [../../../../../roles/{{ROLE_NAME}}/process.md](../../../../../roles/{{ROLE_NAME}}/process.md)
+- **Journal Overview**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal.overview.md) | [project.journal.overview.md](../../../../../project.journal.overview.md)
+
+### **⚖️ QA Decisions Required**
+
+1. **{{QA_DECISION_1}}**: {{QA_DECISION_1_DESCRIPTION}}
+2. **{{QA_DECISION_2}}**: {{QA_DECISION_2_DESCRIPTION}}
+
+---
+
+## **📝 Plan**
+
+### **Recovery Objectives**
+1. **{{RECOVERY_OBJECTIVE_1}}**: {{RECOVERY_OBJECTIVE_1_DESCRIPTION}}
+2. **{{RECOVERY_OBJECTIVE_2}}**: {{RECOVERY_OBJECTIVE_2_DESCRIPTION}}
+3. **{{RECOVERY_OBJECTIVE_3}}**: {{RECOVERY_OBJECTIVE_3_DESCRIPTION}}
 
 ## Do
 **Recovery Actions Completed:**

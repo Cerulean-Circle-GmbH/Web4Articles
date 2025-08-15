@@ -124,7 +124,12 @@ The Recovery Definition Agent is responsible for creating, maintaining, and evol
 
 After creating, updating, or executing recovery definitions:
 - Create UTC-timestamped PDCA entry within current project journal session under `pdca/role/recovery-definition-agent/`
-- Use naming convention: `{UTC-TIMESTAMP}.md`
+- Use naming convention: `{UTC-TIMESTAMP}.md` 
+- Follow enhanced PDCA format with:
+  - 📋 Visual header with emojis and structured metadata
+  - 🔗 Artifact Links section with dual GitHub/local format
+  - ⚖️ QA Decisions Required for escalations
+  - Clear section separation with horizontal rules
 - Document template creation process and validation results
 - Include lessons learned from template usage and improvement opportunities
 - Reference all created templates and examples with direct links
