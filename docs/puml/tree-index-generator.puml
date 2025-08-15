@@ -1,0 +1,121 @@
+@startuml tree-index-generator
+!define RECTANGLE class
+
+title Tree Index Generator - Component Architecture
+
+package "Tree Index System" {
+  package "Core Components" {
+    RECTANGLE TreeIndexGenerator {
+      - config: TreeIndexConfig
+      - traverser: DirectoryTraverser
+      - formatter: TreeFormatter
+      - renderer: MarkdownRenderer
+      + constructor(config: TreeIndexConfig)
+      + generate(path: string): Promise<string>
+      + generateToFile(path: string, output: string): Promise<void>
+    }
+    
+    RECTANGLE DirectoryTraverser {
+      - config: TraverserConfig
+      - filters: FilterChain
+      + traverse(path: string): Promise<TreeNode>
+      + shouldInclude(path: string): boolean
+      - handleSymlink(path: string): Promise<void>
+    }
+    
+    RECTANGLE TreeFormatter {
+      - config: FormatterConfig
+      - charset: CharacterSet
+      + format(node: TreeNode): string[]
+      + calculateSizes(node: TreeNode): void
+      - renderBranch(node: TreeNode, prefix: string): string[]
+    }
+    
+    RECTANGLE MarkdownRenderer {
+      - template: MarkdownTemplate
+      + render(tree: string[], metadata: TreeMetadata): string
+      + escapeSpecialChars(text: string): string
+      - generateHeader(metadata: TreeMetadata): string
+    }
+  }
+  
+  package "Support Components" {
+    RECTANGLE FilterChain {
+      - filters: Filter[]
+      + addFilter(filter: Filter): void
+      + apply(path: string): boolean
+    }
+    
+    RECTANGLE GitignoreFilter {
+      + isExcluded(path: string): boolean
+      - loadGitignore(): string[]
+    }
+    
+    RECTANGLE PatternFilter {
+      - patterns: string[]
+      + matches(path: string): boolean
+    }
+    
+    RECTANGLE Logger {
+      + debug(message: string): void
+      + info(message: string): void
+      + error(message: string): void
+    }
+  }
+  
+  package "Integration Layer" {
+    RECTANGLE TSRangerCommand {
+      + execute(args: string[]): Promise<void>
+      - parseArguments(args: string[]): TreeIndexConfig
+    }
+    
+    RECTANGLE CLIWrapper {
+      + main(argv: string[]): Promise<void>
+      - showHelp(): void
+      - showVersion(): void
+    }
+  }
+}
+
+package "Data Models" {
+  RECTANGLE TreeNode {
+    + name: string
+    + path: string
+    + type: 'file' | 'directory'
+    + size?: number
+    + modified?: Date
+    + children?: TreeNode[]
+  }
+  
+  RECTANGLE TreeIndexConfig {
+    + maxDepth: number
+    + excludePatterns: string[]
+    + includeFiles: boolean
+    + showSizes: boolean
+    + format: FormatType
+  }
+  
+  RECTANGLE TreeMetadata {
+    + generatedAt: Date
+    + directory: string
+    + totalFiles: number
+    + totalDirectories: number
+    + totalSize: number
+  }
+}
+
+' Relationships
+TreeIndexGenerator --> DirectoryTraverser
+TreeIndexGenerator --> TreeFormatter
+TreeIndexGenerator --> MarkdownRenderer
+DirectoryTraverser --> FilterChain
+DirectoryTraverser --> TreeNode
+FilterChain --> GitignoreFilter
+FilterChain --> PatternFilter
+TreeFormatter --> TreeNode
+MarkdownRenderer --> TreeMetadata
+TSRangerCommand --> TreeIndexGenerator
+CLIWrapper --> TreeIndexGenerator
+TreeIndexGenerator --> Logger
+
+@enduml
