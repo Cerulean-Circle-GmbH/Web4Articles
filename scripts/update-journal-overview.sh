@@ -18,7 +18,7 @@ get_session_info() {
     
     # Extract role and status if project.state.md exists
     if [ -f "$project_state" ]; then
-        local role=$(grep -o "Project status (\w*)" "$project_state" 2>/dev/null | sed 's/Project status (\(.*\))/\1/' || echo "Unknown")
+        local role=$(grep -E "Role:|Project Status" "$project_state" 2>/dev/null | head -1 | sed 's/.*Role: *\([^)]*\).*/\1/' | sed 's/.*Status.* - \([^)]*\).*/\1/' || echo "Unknown")
         local status=$(grep "Status:" "$project_state" 2>/dev/null | head -1 | sed 's/.*Status:** *//' || echo "Unknown")
         echo "$session_name|$role|$status"
     else
@@ -77,10 +77,10 @@ for session_dir in $(ls -1r "$JOURNAL_DIR"); do
         echo "### $session_dir" >> "$OVERVIEW_FILE"
         
         if [ -f "$session_path/project.state.md" ]; then
-            echo "- **[Session Link](./project.journal/$session_dir/project.state.md)**" >> "$OVERVIEW_FILE"
+            echo "- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/$session_dir/project.state.md) [./project.journal/$session_dir/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/$session_dir/project.state.md)" >> "$OVERVIEW_FILE"
             
             # Try to extract role and status
-            role=$(grep -o "Project status (\w*)" "$session_path/project.state.md" 2>/dev/null | sed 's/Project status (\(.*\))/\1/' || echo "Unknown")
+            role=$(grep -E "Role:|Project Status" "$session_path/project.state.md" 2>/dev/null | head -1 | sed 's/.*Role: *\([^()]*\).*/\1/' | sed 's/.*Status.* - \([^()]*\).*/\1/' | tr -d '\n' || echo "Unknown")
             status=$(grep "Status:" "$session_path/project.state.md" 2>/dev/null | head -1 | sed 's/.*Status:** *//' | sed 's/<[^>]*>//g' || echo "Unknown")
             
             echo "- **Role**: $role" >> "$OVERVIEW_FILE"

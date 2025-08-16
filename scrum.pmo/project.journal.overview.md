@@ -17,44 +17,44 @@ The project journal system tracks:
 - **[2025-08-16-1201-cleanup](./project.journal/2025-08-16-1201-cleanup/project.state.md)** ⭐ *Active*
   - **Status**: Unknown
   - **Role**: 
-  - **PDCA Entries**: [2 entries](./project.journal/2025-08-16-1201-cleanup/pdca/)
+  - **PDCA Entries**: [3 entries](./project.journal/2025-08-16-1201-cleanup/pdca/)
 
 ## All Sessions (Chronological)
 
 ### 2025-08-16-1201-cleanup
-- **[Session Link](./project.journal/2025-08-16-1201-cleanup/project.state.md)**
-- **Role**: 
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-16-1201-cleanup/project.state.md) [./project.journal/2025-08-16-1201-cleanup/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-16-1201-cleanup/project.state.md)
+- **Role**: ## Project Status
 - **Status**: 
-- **PDCA Entries**: [2 entries](./project.journal/2025-08-16-1201-cleanup/pdca/)
+- **PDCA Entries**: [3 entries](./project.journal/2025-08-16-1201-cleanup/pdca/)
 - **Tree Index**: [Available](./project.journal/2025-08-16-1201-cleanup/tree.index.md)
 
 ### 2025-08-15-0955-refactor
-- **[Session Link](./project.journal/2025-08-15-0955-refactor/project.state.md)**
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0955-refactor/project.state.md) [./project.journal/2025-08-15-0955-refactor/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0955-refactor/project.state.md)
 - **Role**: 
 - **Status**: 
 - **PDCA Entries**: [11 entries](./project.journal/2025-08-15-0955-refactor/pdca/)
 - **Workspace Documentation**: [Available](./project.journal/2025-08-15-0955-refactor/workspacesMountPoint.md)
 
 ### 2025-08-15-0947-article-writing
-- **[Session Link](./project.journal/2025-08-15-0947-article-writing/project.state.md)**
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0947-article-writing/project.state.md) [./project.journal/2025-08-15-0947-article-writing/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0947-article-writing/project.state.md)
 - **Role**: 
 - **Status**: 
 - **PDCA Entries**: [17 entries](./project.journal/2025-08-15-0947-article-writing/pdca/)
 - **Tree Index**: [Available](./project.journal/2025-08-15-0947-article-writing/tree.index.md)
 
 ### 2025-08-15-0927
-- **[Session Link](./project.journal/2025-08-15-0927/project.state.md)**
-- **Role**: ScrumMaster
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0927/project.state.md) [./project.journal/2025-08-15-0927/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0927/project.state.md)
+- **Role**: 
 - **Status**: 
 
 ### 2025-08-15-0848-demo
-- **[Session Link](./project.journal/2025-08-15-0848-demo/project.state.md)**
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0848-demo/project.state.md) [./project.journal/2025-08-15-0848-demo/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0848-demo/project.state.md)
 - **Role**: 
 - **Status**: 
 - **Tree Index**: [Available](./project.journal/2025-08-15-0848-demo/tree.index.md)
 
 ### 2025-08-15-0847-demo
-- **[Session Link](./project.journal/2025-08-15-0847-demo/project.state.md)**
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0847-demo/project.state.md) [./project.journal/2025-08-15-0847-demo/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0847-demo/project.state.md)
 - **Role**: 
 - **Status**: 
 
@@ -62,23 +62,23 @@ The project journal system tracks:
 - **Session**: 2025-08-14-1617 (No project.state.md)
 
 ### 2025-08-13-1557
-- **[Session Link](./project.journal/2025-08-13-1557/project.state.md)**
-- **Role**: ScrumMaster
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1557/project.state.md) [./project.journal/2025-08-13-1557/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1557/project.state.md)
+- **Role**: 
 - **Status**: 
 
 ### 2025-08-13-1537
-- **[Session Link](./project.journal/2025-08-13-1537/project.state.md)**
-- **Role**: ScrumMaster
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1537/project.state.md) [./project.journal/2025-08-13-1537/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1537/project.state.md)
+- **Role**: 
 - **Status**: 
 
 ### 2025-08-13-1526
-- **[Session Link](./project.journal/2025-08-13-1526/project.state.md)**
-- **Role**: ScrumMaster
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1526/project.state.md) [./project.journal/2025-08-13-1526/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1526/project.state.md)
+- **Role**: 
 - **Status**: 
 
 ### 2025-08-13-1102
-- **[Session Link](./project.journal/2025-08-13-1102/project.state.md)**
-- **Role**: ScrumMaster
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1102/project.state.md) [./project.journal/2025-08-13-1102/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1102/project.state.md)
+- **Role**: 
 - **Status**: 
 
 ### 2025-08-13-1023
@@ -88,73 +88,72 @@ The project journal system tracks:
 - **Session**: 2025-08-13-1022 (No project.state.md)
 
 ### 2025-08-13-0729
-- **[Session Link](./project.journal/2025-08-13-0729/project.state.md)**
-- **Role**: ScrumMaster
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-0729/project.state.md) [./project.journal/2025-08-13-0729/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-0729/project.state.md)
+- **Role**: 
 - **Status**: 
 
 ### 2025-08-13-0118
-- **[Session Link](./project.journal/2025-08-13-0118/project.state.md)**
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-0118/project.state.md) [./project.journal/2025-08-13-0118/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-0118/project.state.md)
 - **Role**: 
 - **Status**: 
 
 ### 2025-08-12-1102
-- **[Session Link](./project.journal/2025-08-12-1102/project.state.md)**
-- **Role**: ScrumMaster
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-1102/project.state.md) [./project.journal/2025-08-12-1102/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-1102/project.state.md)
+- **Role**: 
 - **Status**: 
 
 ### 2025-08-12-1039
-- **[Session Link](./project.journal/2025-08-12-1039/project.state.md)**
-- **Role**: ScrumMaster
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-1039/project.state.md) [./project.journal/2025-08-12-1039/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-1039/project.state.md)
+- **Role**: 
 - **Status**: 
 
 ### 2025-08-12-0923-recovery
-- **[Session Link](./project.journal/2025-08-12-0923-recovery/project.state.md)**
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-0923-recovery/project.state.md) [./project.journal/2025-08-12-0923-recovery/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-0923-recovery/project.state.md)
 - **Role**: 
 - **Status**: 
 
 ### 2025-08-12-0900
-- **[Session Link](./project.journal/2025-08-12-0900/project.state.md)**
-- **Role**: ScrumMaster
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-0900/project.state.md) [./project.journal/2025-08-12-0900/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-0900/project.state.md)
+- **Role**: 
 - **Status**: 
 
 ### 2025-08-12-0117
-- **[Session Link](./project.journal/2025-08-12-0117/project.state.md)**
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-0117/project.state.md) [./project.journal/2025-08-12-0117/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-0117/project.state.md)
 - **Role**: 
 - **Status**: 
 
 ### 2025-08-11-1641
-- **[Session Link](./project.journal/2025-08-11-1641/project.state.md)**
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-11-1641/project.state.md) [./project.journal/2025-08-11-1641/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-11-1641/project.state.md)
 - **Role**: 
 - **Status**: 
 
 ### 2025-08-11-0957
-- **[Session Link](./project.journal/2025-08-11-0957/project.state.md)**
-- **Role**: ScrumMaster
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-11-0957/project.state.md) [./project.journal/2025-08-11-0957/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-11-0957/project.state.md)
+- **Role**: 
 - **Status**: 
 
 ### 2025-08-11-0955
-- **[Session Link](./project.journal/2025-08-11-0955/project.state.md)**
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-11-0955/project.state.md) [./project.journal/2025-08-11-0955/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-11-0955/project.state.md)
 - **Role**: 
 - **Status**: 
 
 ### 2025-08-10-1030
-- **[Session Link](./project.journal/2025-08-10-1030/project.state.md)**
-- **Role**: ScrumMaster
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-10-1030/project.state.md) [./project.journal/2025-08-10-1030/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-10-1030/project.state.md)
+- **Role**: 
 - **Status**: 
 
 ### 2025-08-10-0854
-- **[Session Link](./project.journal/2025-08-10-0854/project.state.md)**
-- **Role**: ScrumMaster
-ScrumMaster
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-10-0854/project.state.md) [./project.journal/2025-08-10-0854/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-10-0854/project.state.md)
+- **Role**: 
 - **Status**: 
 
 
 ## Statistics
 
 - **Total Sessions**: 25
-- **Total PDCA Entries**: 30
+- **Total PDCA Entries**: 31
 - **Latest Session**: 2025-08-16-1201-cleanup
-- **Overview Last Updated**: 2025-08-16 UTC-1212
+- **Overview Last Updated**: 2025-08-16 UTC-1237
 
 ## PDCA Structure (Current Standard)
 
