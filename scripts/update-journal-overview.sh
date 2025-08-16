@@ -33,8 +33,8 @@ UTC_TIMESTAMP=$(date -u +"%Y-%m-%d UTC-%H%M")
 TOTAL_SESSIONS=$(find "$JOURNAL_DIR" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')
 PDCA_COUNT=$(find "$JOURNAL_DIR" -name "*.md" -path "*/pdca/*" | wc -l | tr -d ' ')
 
-# Get latest session
-LATEST_SESSION=$(ls -1 "$JOURNAL_DIR" | tail -1)
+# Get latest session (chronologically, filtering directories only)
+LATEST_SESSION=$(ls -1 "$JOURNAL_DIR" | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{4}' | sort -r | head -1)
 LATEST_SESSION_PATH="$JOURNAL_DIR/$LATEST_SESSION"
 
 # Create updated overview
@@ -57,8 +57,10 @@ The project journal system tracks:
 
 - **[$LATEST_SESSION](./project.journal/$LATEST_SESSION/project.state.md)** ⭐ *Active*
 $(if [ -f "$LATEST_SESSION_PATH/project.state.md" ]; then
-    echo "  - **Status**: $(grep "Status:" "$LATEST_SESSION_PATH/project.state.md" 2>/dev/null | head -1 | sed 's/.*Status:** *//' || echo "Unknown")"
-    echo "  - **Role**: $(grep -o "Project status (\w*)" "$LATEST_SESSION_PATH/project.state.md" 2>/dev/null | sed 's/Project status (\(.*\))/\1/' || echo "Unknown")"
+    echo "  - **Role**: $(grep -E "^\- \*\*Role\*\*:" "$LATEST_SESSION_PATH/project.state.md" 2>/dev/null | head -1 | sed 's/.*Role\*\*: *//' | tr -d '\n' || echo "Unknown")"
+    echo "  - **Status**: $(grep -E "^\- \*\*Status\*\*:" "$LATEST_SESSION_PATH/project.state.md" 2>/dev/null | head -1 | sed 's/.*Status\*\*: *//' | tr -d '\n' || echo "Unknown")"
+    echo "  - **Branch**: $(grep -E "^\- \*\*Branch\*\*:" "$LATEST_SESSION_PATH/project.state.md" 2>/dev/null | head -1 | sed 's/.*Branch\*\*: *//' | tr -d '\n' || echo "release/dev")"
+    echo "  - **Agent**: 🟢 Active (Background Agent)"
     if [ -d "$LATEST_SESSION_PATH/pdca" ]; then
         PDCA_SESSION_COUNT=$(find "$LATEST_SESSION_PATH/pdca" -name "*.md" | wc -l | tr -d ' ')
         echo "  - **PDCA Entries**: [$PDCA_SESSION_COUNT entries](./project.journal/$LATEST_SESSION/pdca/)"
@@ -79,12 +81,23 @@ for session_dir in $(ls -1r "$JOURNAL_DIR"); do
         if [ -f "$session_path/project.state.md" ]; then
             echo "- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/$session_dir/project.state.md) [./project.journal/$session_dir/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/$session_dir/project.state.md)" >> "$OVERVIEW_FILE"
             
-            # Try to extract role and status
+            # Try to extract role, status, and branch
             role=$(grep -E "^\- \*\*Role\*\*:" "$session_path/project.state.md" 2>/dev/null | head -1 | sed 's/.*Role\*\*: *//' | tr -d '\n' || echo "Unknown")
             status=$(grep -E "^\- \*\*Status\*\*:" "$session_path/project.state.md" 2>/dev/null | head -1 | sed 's/.*Status\*\*: *//' | tr -d '\n' || echo "Unknown")
+            branch=$(grep -E "^\- \*\*Branch\*\*:" "$session_path/project.state.md" 2>/dev/null | head -1 | sed 's/.*Branch\*\*: *//' | tr -d '\n' || echo "Unknown")
             
             echo "- **Role**: $role" >> "$OVERVIEW_FILE"
             echo "- **Status**: $status" >> "$OVERVIEW_FILE"
+            echo "- **Branch**: $branch" >> "$OVERVIEW_FILE"
+            
+            # Determine agent status
+            if [ "$session_dir" = "2025-08-16-1201-cleanup" ]; then
+                echo "- **Agent**: 🟢 Active (Background Agent - THIS SESSION)" >> "$OVERVIEW_FILE"
+            elif [ "$session_dir" = "$(basename "$LATEST_SESSION")" ]; then
+                echo "- **Agent**: 🟢 Active (Background Agent)" >> "$OVERVIEW_FILE"
+            else
+                echo "- **Agent**: ⚫ Expired" >> "$OVERVIEW_FILE"
+            fi
             
             # PDCA entries (always show)
             if [ -d "$session_path/pdca" ]; then
