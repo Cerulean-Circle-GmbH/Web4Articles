@@ -32,6 +32,17 @@ Write the FIRST article in a series that guides developers through our journey, 
 - **12.1.4 (Developer)**: `task-12.1.4-developer-fix-journal-script.md` - Script fixes ⚠️
 - **12.1.5 (QA)**: `task-12.1.5-qa-validation-checklist.md` - Validation process ✅
 
+### Task 12.2: Comprehensive Sprint Cleanup
+- **Status**: Planned
+- **Location**: `task-12.2-comprehensive-sprint-cleanup.md`
+- **Purpose**: Fix structural issues across all sprints
+
+#### Planned Subtasks:
+- **12.2.1 (ScrumMaster)**: Fix Sprint 0-3 structures
+- **12.2.2 (ScrumMaster)**: Fix Sprint 5-9 structures
+- **12.2.3 (Developer)**: Create validation script
+- **12.2.4 (QA)**: Validate all changes
+
 ## Key Insights from Sprint 12
 
 ### User Wisdom Captured
