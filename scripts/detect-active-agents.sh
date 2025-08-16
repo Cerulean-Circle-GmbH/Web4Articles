@@ -195,9 +195,9 @@ while IFS='|' read -r days agent_name; do
     
     # Format session link
     if [ -n "$session" ]; then
-        session_link="[GitHub](https://github.com/yourusername/yourrepo/blob/$branch/scrum.pmo/project.journal/$session/project.state.md) [./$session/project.state.md](file:///workspace/scrum.pmo/project.journal/$session/project.state.md)"
+        session_link="[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/$branch/scrum.pmo/project.journal/$session/project.state.md) [./$session/project.state.md](file:///workspace/scrum.pmo/project.journal/$session/project.state.md)"
     else
-        session_link="[View Branch](https://github.com/yourusername/yourrepo/tree/$branch)"
+        session_link="[View Branch](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/$branch)"
     fi
     
     echo "| **${agent_name}** | ${role} | \`${branch}\` | ${status} | ${last_activity} | ${session_link} |" >> "$AGENT_REGISTRY"
@@ -235,7 +235,7 @@ cat >> "$AGENT_REGISTRY" << 'EOF'
 
 ## 🔒 Branch Ownership Rules
 
-**CRITICAL**: One Agent = One Branch Policy (See [GitHub](https://github.com/yourusername/yourrepo/blob/release/dev/scrum.pmo/sprints/sprint-0/agent-branch-assignments.md) [./sprints/sprint-0/agent-branch-assignments.md](file:///workspace/scrum.pmo/sprints/sprint-0/agent-branch-assignments.md))
+**CRITICAL**: One Agent = One Branch Policy (See [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/sprints/sprint-0/agent-branch-assignments.md) [./sprints/sprint-0/agent-branch-assignments.md](file:///workspace/scrum.pmo/sprints/sprint-0/agent-branch-assignments.md))
 
 | Branch | Owner | Lock Status |
 |--------|-------|-------------|

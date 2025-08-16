@@ -38,7 +38,7 @@ The project journal system tracks:
 - **Status**: In Progress
 - **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev) [`release/dev`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
 - **Agent**: 🟢 Active ([THE ScrumMaster](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits?author=cursor-ai) Background Agent - THIS SESSION)
-- **PDCA Entries**: [23 entries](./project.journal/2025-08-16-1201-cleanup/pdca/) | [Last: 2025-08-16-UTC-1635.md](./project.journal/2025-08-16-1201-cleanup/pdca/role/scrummaster/2025-08-16-UTC-1635.md)
+- **PDCA Entries**: [24 entries](./project.journal/2025-08-16-1201-cleanup/pdca/) | [Last: 2025-08-16-UTC-1645.md](./project.journal/2025-08-16-1201-cleanup/pdca/role/scrummaster/2025-08-16-UTC-1645.md)
 - **Tree Index**: [Available](./project.journal/2025-08-16-1201-cleanup/tree.index.md)
 - **Workspace Documentation**: Not available
 
@@ -265,9 +265,9 @@ The project journal system tracks:
 ## Statistics
 
 - **Total Sessions**: 26
-- **Total PDCA Entries**: 57
+- **Total PDCA Entries**: 58
 - **Latest Session**: 2025-08-16-1854
-- **Overview Last Updated**: 2025-08-16 UTC-1937
+- **Overview Last Updated**: 2025-08-16 UTC-1944
 
 ## PDCA Structure (Current Standard)
 
@@ -298,19 +298,19 @@ pdca/
 
 ## 🤖 Active Agents
 
-**Live Agent Status**: [GitHub](https://github.com/yourusername/yourrepo/blob/release/dev/scrum.pmo/project.journal/active-agents.md) [./active-agents.md](file:///workspace/scrum.pmo/project.journal/active-agents.md)
+**Live Agent Status**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/active-agents.md) [./active-agents.md](file:///workspace/scrum.pmo/project.journal/active-agents.md)
 
 ### Quick Stats
 - **Active Agents**: 4 (🟢 Working now or recently)
 - **Semi-Active**: 2 (🔵 Recent activity)
 - **Dormant**: 3 (⚫ No recent activity)
-- **Branch Policy**: One Agent = One Branch ([Details](https://github.com/yourusername/yourrepo/blob/release/dev/scrum.pmo/sprints/sprint-0/agent-branch-assignments.md))
+- **Branch Policy**: One Agent = One Branch ([Details](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/sprints/sprint-0/agent-branch-assignments.md))
 
 ### Active Sessions by Agent
-| **Recovery Agent** | Recovery | `feature/recovery-agent` | 🟢 Active | Today | [View Branch](https://github.com/yourusername/yourrepo/tree/feature/recovery-agent) |
-| **THE ScrumMaster** | ScrumMaster | `release/dev` | 🟢 Active NOW | Today | [GitHub](https://github.com/yourusername/yourrepo/blob/release/dev/scrum.pmo/project.journal/2025-08-16-1854/project.state.md) [./2025-08-16-1854/project.state.md](file:///workspace/scrum.pmo/project.journal/2025-08-16-1854/project.state.md) |
-| **Branch Status Agent** | DevOps | `feature/branchStatusAgent` | 🟢 Active | Yesterday | [View Branch](https://github.com/yourusername/yourrepo/tree/feature/branchStatusAgent) |
-| **Ontology Agent** | Research | `feature/ontology-agent` | 🔵 Semi-active | 3 days ago | [View Branch](https://github.com/yourusername/yourrepo/tree/feature/ontology-agent) |
+| **Recovery Agent** | Recovery | `feature/recovery-agent` | 🟢 Active | Today | [View Branch](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/feature/recovery-agent) |
+| **THE ScrumMaster** | ScrumMaster | `release/dev` | 🟢 Active NOW | Today | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-16-1854/project.state.md) [./2025-08-16-1854/project.state.md](file:///workspace/scrum.pmo/project.journal/2025-08-16-1854/project.state.md) |
+| **Branch Status Agent** | DevOps | `feature/branchStatusAgent` | 🟢 Active | Yesterday | [View Branch](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/feature/branchStatusAgent) |
+| **Ontology Agent** | Research | `feature/ontology-agent` | 🔵 Semi-active | 3 days ago | [View Branch](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/feature/ontology-agent) |
 | Terminal Session | Shell | 1 | 🟢 Active (THE ScrumMaster) |
 
 ## Maintenance

@@ -181,7 +181,7 @@ pdca/
 
 ## 🤖 Active Agents
 
-**Live Agent Status**: [GitHub](https://github.com/yourusername/yourrepo/blob/release/dev/scrum.pmo/project.journal/active-agents.md) [./active-agents.md](file:///workspace/scrum.pmo/project.journal/active-agents.md)
+**Live Agent Status**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/active-agents.md) [./active-agents.md](file:///workspace/scrum.pmo/project.journal/active-agents.md)
 
 EOF
 
@@ -197,7 +197,7 @@ if [ -f "$JOURNAL_DIR/active-agents.md" ]; then
 - **Active Agents**: $ACTIVE_COUNT (🟢 Working now or recently)
 - **Semi-Active**: $SEMI_ACTIVE_COUNT (🔵 Recent activity)
 - **Dormant**: $DORMANT_COUNT (⚫ No recent activity)
-- **Branch Policy**: One Agent = One Branch ([Details](https://github.com/yourusername/yourrepo/blob/release/dev/scrum.pmo/sprints/sprint-0/agent-branch-assignments.md))
+- **Branch Policy**: One Agent = One Branch ([Details](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/sprints/sprint-0/agent-branch-assignments.md))
 
 ### Active Sessions by Agent
 EOF
