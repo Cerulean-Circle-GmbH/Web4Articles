@@ -1,5 +1,5 @@
-import { Logger } from '../../../src/ts/layer1/Logger.ts';
-import { TSCompletion } from '../../../src/ts/layer4/TSCompletion.ts';
+import { Logger } from '../layer1/Logger.ts';
+import { TSCompletion } from '../layer4/TSCompletion.ts';
 import { RangerModel } from '../layer2/RangerModel.ts';
 import { RangerView } from '../layer5/RangerView.ts';
 import type { TerminalIO } from '../io/TerminalIO.ts';
