@@ -179,6 +179,38 @@ pdca/
 - Session links provide direct access to project states
 - PDCA links provide access to process documentation
 
+## 🤖 Active Agents
+
+**Live Agent Status**: [GitHub](https://github.com/yourusername/yourrepo/blob/release/dev/scrum.pmo/project.journal/active-agents.md) [./active-agents.md](file:///workspace/scrum.pmo/project.journal/active-agents.md)
+
+EOF
+
+# Include active agents summary if file exists
+if [ -f "$JOURNAL_DIR/active-agents.md" ]; then
+    # Extract summary statistics
+    ACTIVE_COUNT=$(grep -c "🟢 Active" "$JOURNAL_DIR/active-agents.md" || echo "0")
+    SEMI_ACTIVE_COUNT=$(grep -c "🔵 Semi-active" "$JOURNAL_DIR/active-agents.md" || echo "0")
+    DORMANT_COUNT=$(grep -c "⚫ Dormant" "$JOURNAL_DIR/active-agents.md" || echo "0")
+    
+    cat >> "$OVERVIEW_FILE" << EOF
+### Quick Stats
+- **Active Agents**: $ACTIVE_COUNT (🟢 Working now or recently)
+- **Semi-Active**: $SEMI_ACTIVE_COUNT (🔵 Recent activity)
+- **Dormant**: $DORMANT_COUNT (⚫ No recent activity)
+- **Branch Policy**: One Agent = One Branch ([Details](https://github.com/yourusername/yourrepo/blob/release/dev/scrum.pmo/sprints/sprint-0/agent-branch-assignments.md))
+
+### Active Sessions by Agent
+EOF
+
+    # Extract active agent sessions
+    grep -A1 "🟢 Active" "$JOURNAL_DIR/active-agents.md" | grep -E "^\|" | while read -r line; do
+        echo "$line" >> "$OVERVIEW_FILE"
+    done || true
+    
+    echo "" >> "$OVERVIEW_FILE"
+fi
+
+cat >> "$OVERVIEW_FILE" << EOF
 ## Maintenance
 
 This overview is automatically updated by:
