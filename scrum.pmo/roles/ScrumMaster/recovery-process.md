@@ -135,8 +135,14 @@ Recovery process initiated for ${TARGET_ROLE} role from README context. Session 
 
 ### **Recovery Objectives**
 1. **Context Restoration**: Load ${TARGET_ROLE} role context from README and project documentation
-2. **Session Structure**: Create organized PDCA structure with role-based organization
+2. **Session Structure**: Create organized PDCA structure with role and sprint-based organization
 3. **Process Integration**: Ensure recovery aligns with current project workflows
+
+### Sprint Context Organization
+PDCAs are organized by sprint context within role directories:
+- **Sprint-specific**: \`pdca/role/scrummaster/sprint7/\` for Sprint 7 work
+- **General**: \`pdca/role/scrummaster/general/\` for non-sprint activities
+- **Cross-sprint**: Multiple sprint subdirectories as needed
 
 ### **Recovery Scope**
 - Complete recovery and role initialization
