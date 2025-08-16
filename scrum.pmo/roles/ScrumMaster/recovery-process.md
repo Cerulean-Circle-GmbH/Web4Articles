@@ -103,12 +103,13 @@ TEMPLATE="/workspace/scrum.pmo/templates/project.state.template.md"
 sed -i "s/ScrumMaster (autonomous)/${TARGET_ROLE} (recovery session)/g" "$JOURNAL_DIR/project.state.md"
 sed -i "s/Status:** Active/Status:** Recovery in Progress - Session: ${SESSION_TYPE}/g" "$JOURNAL_DIR/project.state.md"
 
-# Create role-based PDCA entry
+# Create role-based PDCA entry with optional sprint organization
 UTC_TIMESTAMP=$(date -u +"%Y-%m-%d-UTC-%H%M")
-ROLE_PDCA_DIR="$JOURNAL_DIR/pdca/role/${TARGET_ROLE,,}"
+SPRINT_CONTEXT="${SPRINT_CONTEXT:-general}"
+ROLE_PDCA_DIR="$JOURNAL_DIR/pdca/role/${TARGET_ROLE,,}/${SPRINT_CONTEXT}"
 mkdir -p "$ROLE_PDCA_DIR"
 cat > "$ROLE_PDCA_DIR/${UTC_TIMESTAMP}.md" << EOF
-[Back to Session](../../../project.state.md) | [Journal Overview](../../../../../project.journal.overview.md)
+[Back to Session](../../../../project.state.md) | [Journal Overview](../../../../../../project.journal.overview.md)
 
 # 📋 **PDCA Cycle: Recovery Session Start - ${UTC_TIMESTAMP}**
 
