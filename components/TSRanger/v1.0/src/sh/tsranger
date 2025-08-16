@@ -3,11 +3,11 @@
 # tsranger: Shell wrapper for TSRanger TypeScript TUI
 set -euo pipefail
 
-# Find project root (with package.json and src/ts)
+# Find project root (with package.json and components/TSRanger)
 find_project_root() {
   local dir="$PWD"
   while [[ "$dir" != "/" ]]; do
-    if [[ -f "$dir/package.json" && -d "$dir/src/ts" ]]; then
+    if [[ -f "$dir/package.json" && -d "$dir/components/TSRanger" ]]; then
       echo "$dir"
       return 0
     fi
@@ -18,12 +18,12 @@ find_project_root() {
 
 PROJECT_ROOT="$(find_project_root)"
 if [[ -z "$PROJECT_ROOT" ]]; then
-  echo "Error: Could not find project root (missing package.json and src/ts)." >&2
+  echo "Error: Could not find project root (missing package.json and components/TSRanger)." >&2
   exit 1
 fi
 
 TS_NODE_PROJECT="$PROJECT_ROOT/tsconfig.json"
-TSRANGER_ENTRY="$PROJECT_ROOT/src/ts/layer4/TSRanger.ts"
+TSRANGER_ENTRY="$PROJECT_ROOT/components/TSRanger/v1.0/src/ts/layer4/TSRanger.ts"
 if [[ "${TSRANGER_V2:-0}" == "1" ]]; then
   if [[ -f "$PROJECT_ROOT/v2/src/ts/layer4/TSRanger.ts" ]]; then
     TSRANGER_ENTRY="$PROJECT_ROOT/v2/src/ts/layer4/TSRanger.ts"
