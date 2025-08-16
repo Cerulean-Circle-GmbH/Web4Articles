@@ -20,15 +20,17 @@ Write the FIRST article in a series that guides developers through our journey, 
 
 ## Current Sprint Tasks
 
-### Task 12.1: Restructure Sprint 12 Files
-- **Status**: In Progress
-- **Location**: `tasks/task-12.1-restructure-sprint-files.md`
-- **Purpose**: Clean up structural drift from article writing focus
+### Task 12.1: Write Article Series Opener
+- **Status**: Complete ✅
+- **Location**: `task-12.1-write-article-series-opener.md`
+- **Purpose**: First article targeting developers in test hell
 
-### Task 12.2: Plan Automated Cleanup Agent
-- **Status**: Planned
-- **Location**: `tasks/task-12.2-cleanup-agent-cicd.md`
-- **Purpose**: Implement EOD automated structure compliance
+#### Refinement Tasks:
+- **12.1.1 (ScrumMaster)**: `task-12.1.1-scrummaster-restructure-sprint-files.md` - Cleanup drift ✅
+- **12.1.2 (DevOps)**: `task-12.1.2-devops-cleanup-automation.md` - CI/CD automation
+- **12.1.3 (ScrumMaster)**: `task-12.1.3-scrummaster-fix-pdca-naming.md` - PDCA timestamps ✅
+- **12.1.4 (Developer)**: `task-12.1.4-developer-fix-journal-script.md` - Script fixes ⚠️
+- **12.1.5 (QA)**: `task-12.1.5-qa-validation-checklist.md` - Validation process ✅
 
 ## Key Insights from Sprint 12
 
