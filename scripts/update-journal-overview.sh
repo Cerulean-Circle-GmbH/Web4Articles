@@ -18,8 +18,8 @@ get_session_info() {
     
     # Extract role and status if project.state.md exists
     if [ -f "$project_state" ]; then
-        local role=$(grep -E "Role:|Project Status" "$project_state" 2>/dev/null | head -1 | sed 's/.*Role: *\([^)]*\).*/\1/' | sed 's/.*Status.* - \([^)]*\).*/\1/' || echo "Unknown")
-        local status=$(grep "Status:" "$project_state" 2>/dev/null | head -1 | sed 's/.*Status:** *//' || echo "Unknown")
+        local role=$(grep -E "^\- \*\*Role\*\*:" "$project_state" 2>/dev/null | head -1 | sed 's/.*Role\*\*: *//' | tr -d '\n' || echo "Unknown")
+        local status=$(grep -E "^\- \*\*Status\*\*:" "$project_state" 2>/dev/null | head -1 | sed 's/.*Status\*\*: *//' | tr -d '\n' || echo "Unknown")
         echo "$session_name|$role|$status"
     else
         echo "$session_name|Unknown|No project.state.md"
@@ -80,8 +80,8 @@ for session_dir in $(ls -1r "$JOURNAL_DIR"); do
             echo "- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/$session_dir/project.state.md) [./project.journal/$session_dir/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/$session_dir/project.state.md)" >> "$OVERVIEW_FILE"
             
             # Try to extract role and status
-            role=$(grep -E "Role:|Project Status" "$session_path/project.state.md" 2>/dev/null | head -1 | sed 's/.*Role: *\([^()]*\).*/\1/' | sed 's/.*Status.* - \([^()]*\).*/\1/' | tr -d '\n' || echo "Unknown")
-            status=$(grep "Status:" "$session_path/project.state.md" 2>/dev/null | head -1 | sed 's/.*Status:** *//' | sed 's/<[^>]*>//g' || echo "Unknown")
+            role=$(grep -E "^\- \*\*Role\*\*:" "$session_path/project.state.md" 2>/dev/null | head -1 | sed 's/.*Role\*\*: *//' | tr -d '\n' || echo "Unknown")
+            status=$(grep -E "^\- \*\*Status\*\*:" "$session_path/project.state.md" 2>/dev/null | head -1 | sed 's/.*Status\*\*: *//' | tr -d '\n' || echo "Unknown")
             
             echo "- **Role**: $role" >> "$OVERVIEW_FILE"
             echo "- **Status**: $status" >> "$OVERVIEW_FILE"
