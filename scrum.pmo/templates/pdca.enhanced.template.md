@@ -20,7 +20,7 @@
 ### **⚖️ QA Decisions Required**
 
 {{#each QA_DECISIONS}}
-{{INDEX}}. **{{DECISION_TITLE}}**: {{DECISION_DESCRIPTION}}
+- [{{STATUS}}] **{{DECISION_TITLE}}**: {{DECISION_DESCRIPTION}}
 {{/each}}
 
 ---

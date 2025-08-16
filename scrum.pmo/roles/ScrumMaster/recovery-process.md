@@ -111,26 +111,82 @@ mkdir -p "$ROLE_PDCA_DIR"
 cat > "$ROLE_PDCA_DIR/${UTC_TIMESTAMP}.md" << EOF
 [Back to Session](../../../../project.state.md) | [Journal Overview](../../../../../../project.journal.overview.md)
 
-# CRITICAL REMINDERS FOR PDCA CREATION:
-# 1. ALWAYS quote user feedback verbatim with UTC timestamp in Check section
-# 2. ALWAYS include ⚖️ QA Decisions Required section after QA Feedback
-# 3. ALWAYS provide GitHub and local PDCA links in chat responses  
-# 4. NEVER summarize user feedback - quote exactly as provided
-# 5. End all responses with clickable artifact links
-# 6. MANDATORY SECTIONS: QA Feedback, QA Decisions Required, Artifact Links
-
 # 📋 **PDCA Cycle: Recovery Session Start - ${UTC_TIMESTAMP}**
 
 **🗓️ Date:** ${UTC_TIMESTAMP}  
 **🎯 Objective:** Recover as ${TARGET_ROLE} from README context  
-**👤 Role:** ${TARGET_ROLE}  
+**👤 Role:** ${TARGET_ROLE} → Context Recovery  
 **🚨 Issues:** Context restoration and role initialization
 
 ---
 
 ## **📊 Summary**
 
-Recovery process initiated for ${TARGET_ROLE} role from README context. Session structure created with simplified PDCA organization and role-specific context loading.
+Recovery session initiated for ${TARGET_ROLE} role. Reading core documentation, assessing sprint status, and establishing proper project context per canonical recovery process.
+
+### **🔗 Artifact Links**
+
+- **Recovery Process**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/roles/ScrumMaster/recovery-process.md) | [../../../../../../roles/ScrumMaster/recovery-process.md](../../../../../../roles/ScrumMaster/recovery-process.md)
+- **Project State**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/${TIMESTAMP}-${SESSION_TYPE}/project.state.md) | [../../../../project.state.md](../../../../project.state.md)
+
+### **⚖️ QA Decisions Required**
+
+- [ ] **Context Assessment**: Review current sprint and active tasks
+- [ ] **Role Alignment**: Confirm ${TARGET_ROLE} responsibilities and priorities  
+- [ ] **Status Report**: Generate comprehensive project status documentation
+
+## **📝 Plan**
+
+### **Recovery Process Steps**
+
+1. **Environment Setup**: Ensure proper branch and tool availability
+2. **Context Reading**: Review core documentation and sprint status  
+3. **Role Alignment**: Understand ${TARGET_ROLE} specific responsibilities
+4. **Status Assessment**: Generate comprehensive project status report
+
+---
+
+## **🔧 Do**
+
+### **Context Recovery Execution**
+
+[Recovery actions will be documented here during execution]
+
+---
+
+## **✅ Check**
+
+### **QA Feedback**
+**Timestamp:** ${UTC_TIMESTAMP}  
+**User Feedback:** "recover from readme"
+
+### **Recovery Validation**
+
+[Verification steps will be documented here]
+
+---
+
+## **🚀 Act**
+
+### **Immediate Actions**
+
+[Action items will be documented based on recovery findings]
+
+---
+
+## **📋 PDCA Process Update**
+
+### **${TARGET_ROLE} Learning**
+
+[Role-specific learning will be documented here]
+
+### **Process Learning**
+
+[Process improvements will be documented here]
+
+---
+
+**📊 Summary:** Recovery session initiated for ${TARGET_ROLE} role! ✅📋🔄
 
 ### **🔗 Artifact Links**
 
@@ -196,6 +252,16 @@ PDCAs are organized by sprint context within role directories:
 ---
 
 **📊 Summary:** Recovery session started for ${TARGET_ROLE} with enhanced PDCA format and proper session organization! 📋✅
+
+# CRITICAL REMINDERS FOR PDCA CREATION:
+# 1. ALWAYS quote user feedback verbatim with UTC timestamp in Check section
+# 2. ALWAYS include ⚖️ QA Decisions Required section in Summary with checkboxes
+# 3. ALWAYS provide GitHub and local PDCA links in chat responses
+# 4. NEVER summarize user feedback - quote exactly as provided
+# 5. End all responses with clickable artifact links
+# 6. MANDATORY SECTIONS: Summary with Artifact Links, QA Decisions, QA Feedback, PDCA Process Update
+# 7. Use horizontal separators (---) between all major sections
+# 8. Checkbox format: [x] completed, [ ] pending
 
 [Back to Session](../../../project.state.md) | [Journal Overview](../../../../../project.journal.overview.md)
 EOF
@@ -437,6 +503,13 @@ done
 echo "Updating project journal overview..."
 /workspace/scripts/update-journal-overview.sh
 echo "✅ Journal overview updated"
+
+echo "📋 PDCA Format Reminders:"
+echo "1. Always quote user feedback verbatim with timestamp"
+echo "2. Include QA Decisions with checkboxes in Summary section"
+echo "3. Provide GitHub and local links in responses"
+echo "4. Use horizontal separators between sections"
+echo "5. End responses with artifact links"
 
 # Commit journal entry and generated files
 git add "$JOURNAL_DIR/"
