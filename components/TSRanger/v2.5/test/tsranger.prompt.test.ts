@@ -4,7 +4,7 @@ import path from 'node:path';
 
 function runScripted(keys: string): string {
   const projectRoot = process.cwd();
-  const bin = path.join(projectRoot, 'components/TSRanger/v1.0/src/sh/tsranger');
+  const bin = path.join(projectRoot, 'components/TSRanger/v2.5/src/sh/tsranger');
   const env = { 
     ...process.env, 
     TSRANGER_TEST_MODE: '1', 

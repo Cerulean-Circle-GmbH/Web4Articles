@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { TaskStateMachine } from '@src/domain/TaskStateMachine.ts';
+import { TaskStateMachine } from '../src/domain/TaskStateMachine.ts';
 
 function writeTemp(content: string): string {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w4a-'));

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { SimpleTaskStateMachine } from '@src/domain/SimpleTaskStateMachine.ts';
+import { SimpleTaskStateMachine } from '../src/domain/SimpleTaskStateMachine.ts';
 
 describe('SimpleTaskStateMachine', () => {
   it('transitions open -> in-progress -> qa-review -> done', () => {
