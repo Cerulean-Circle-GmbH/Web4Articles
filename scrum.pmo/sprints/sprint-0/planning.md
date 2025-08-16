@@ -38,6 +38,17 @@ The goal for Sprint 0 is to establish the foundational project structure, docume
 
 ---
 
+## Task 8: Sprint Structure Enforcement (Priority: Critical)
+**Status**: Planned  
+**Description**: Establish and enforce standard sprint folder structure for all future sprints.  
+**Subtasks**:
+- [Task 8.1 (PO): Update sprint templates](./task-8.1-po-update-templates.md)
+- Task 8.2 (ScrumMaster): Add to recovery validation
+- Task 8.3 (Developer): Create structure validation script
+
+**Process Update (2025-08-16):**
+Added Task 8 for sprint structure enforcement after Sprint 12 cleanup revealed structural drift. This critical task ensures all future sprints follow the standard flat structure with proper major task vs role-based refinement naming.
+
 **Process Update (2025-08-15):**
 Added Task 7 for tree.index.md documentation and process establishment. This task includes architectural specification, implementation of a tree index generator, testing, and process documentation to standardize how project structure is documented across all components and directories.
 
