@@ -113,9 +113,11 @@ cat > "$ROLE_PDCA_DIR/${UTC_TIMESTAMP}.md" << EOF
 
 # CRITICAL REMINDERS FOR PDCA CREATION:
 # 1. ALWAYS quote user feedback verbatim with UTC timestamp in Check section
-# 2. ALWAYS provide GitHub and local PDCA links in chat responses
-# 3. NEVER summarize user feedback - quote exactly as provided
-# 4. End all responses with clickable artifact links
+# 2. ALWAYS include ⚖️ QA Decisions Required section after QA Feedback
+# 3. ALWAYS provide GitHub and local PDCA links in chat responses  
+# 4. NEVER summarize user feedback - quote exactly as provided
+# 5. End all responses with clickable artifact links
+# 6. MANDATORY SECTIONS: QA Feedback, QA Decisions Required, Artifact Links
 
 # 📋 **PDCA Cycle: Recovery Session Start - ${UTC_TIMESTAMP}**
 
