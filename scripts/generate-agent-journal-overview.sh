@@ -17,8 +17,10 @@ AGENT_ROLE=""
 # Determine agent based on branch
 case "$CURRENT_BRANCH" in
     "release/dev")
-        AGENT_NAME="THE ScrumMaster"
-        AGENT_ROLE="ScrumMaster"
+        echo "⚠️  THE ScrumMaster works on the MAIN project.journal.overview.md"
+        echo "   Other agents use branch-specific overviews."
+        echo "   Run: ./scripts/update-journal-overview.sh instead"
+        exit 0
         ;;
     "feature/recovery-agent")
         AGENT_NAME="Recovery Agent"
