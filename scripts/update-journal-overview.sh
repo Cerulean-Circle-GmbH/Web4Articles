@@ -86,20 +86,26 @@ for session_dir in $(ls -1r "$JOURNAL_DIR"); do
             echo "- **Role**: $role" >> "$OVERVIEW_FILE"
             echo "- **Status**: $status" >> "$OVERVIEW_FILE"
             
-            # Check for PDCA entries
+            # PDCA entries (always show)
             if [ -d "$session_path/pdca" ]; then
                 pdca_count=$(find "$session_path/pdca" -name "*.md" | wc -l | tr -d ' ')
-                if [ "$pdca_count" -gt 0 ]; then
-                    echo "- **PDCA Entries**: [$pdca_count entries](./project.journal/$session_dir/pdca/)" >> "$OVERVIEW_FILE"
-                fi
+                echo "- **PDCA Entries**: [$pdca_count entries](./project.journal/$session_dir/pdca/)" >> "$OVERVIEW_FILE"
+            else
+                echo "- **PDCA Entries**: None" >> "$OVERVIEW_FILE"
             fi
             
-            # Check for special files
+            # Tree Index (always show)
             if [ -f "$session_path/tree.index.md" ]; then
                 echo "- **Tree Index**: [Available](./project.journal/$session_dir/tree.index.md)" >> "$OVERVIEW_FILE"
+            else
+                echo "- **Tree Index**: Not available" >> "$OVERVIEW_FILE"
             fi
+            
+            # Workspace Documentation (always show)
             if [ -f "$session_path/workspacesMountPoint.md" ]; then
                 echo "- **Workspace Documentation**: [Available](./project.journal/$session_dir/workspacesMountPoint.md)" >> "$OVERVIEW_FILE"
+            else
+                echo "- **Workspace Documentation**: Not available" >> "$OVERVIEW_FILE"
             fi
         else
             echo "- **Session**: $session_dir (No project.state.md)" >> "$OVERVIEW_FILE"

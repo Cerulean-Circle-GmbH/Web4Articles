@@ -10,14 +10,15 @@
 - **PRs**: [Open PRs](https://github.com/Cerulean-Circle-GmbH/Web4Articles/pulls) · [All branches](https://github.com/Cerulean-Circle-GmbH/Web4Articles/branches)
 
 ## Project status (ScrumMaster - Article Author)
-- **Role**: ScrumMaster (article writing and sprint execution)
+- **Role**: ScrumMaster
+- **Status**: Done
 - **Branch**: [release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
 - **Session Type**: article-writing - Sprint 12 Medium.com article development
 - **Previous Activity**: Pulled latest changes including new TreeIndexGenerator and PDCA refactoring
 
 ## Sprint 12 Completion Summary
 ### Article: "From Chaos to Component Order: A Developer's Mount Everest"
-- **Status**: COMPLETE 🏔️✨
+- **Article Status**: COMPLETE 🏔️✨
 - **Location**: [articles/medium.com/from-chaos-to-component-order.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/articles/medium.com/from-chaos-to-component-order.md)
 - **Target Audience**: TypeScript developers
 - **Length**: ~3000 words (8-12 minute read)
