@@ -16,6 +16,9 @@ WORKSPACE_ROOT="$(git rev-parse --show-toplevel)"
 INDEX_FILE="$WORKSPACE_ROOT/index.md"
 TEMP_INDEX="$WORKSPACE_ROOT/index.md.tmp"
 
+# Set GitHub base URL for recovery integrity
+GITHUB_BASE_URL="https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev"
+
 # Backup existing index
 cp "$INDEX_FILE" "$INDEX_FILE.backup"
 
