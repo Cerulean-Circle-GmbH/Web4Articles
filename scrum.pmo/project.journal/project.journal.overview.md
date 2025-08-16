@@ -19,7 +19,7 @@ The project journal system tracks:
   - **Status**: In Progress
   - **Branch**: release/dev (🔒 EXCLUSIVE OWNERSHIP)
   - **Agent**: 🟢 Active (Background Agent)
-  - **PDCA Entries**: [20 entries](./project.journal/2025-08-16-1201-cleanup/pdca/)
+  - **PDCA Entries**: [21 entries](./project.journal/2025-08-16-1201-cleanup/pdca/)
 
 ## All Sessions (Chronological)
 
@@ -27,9 +27,9 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-16-1201-cleanup/project.state.md) [./project.journal/2025-08-16-1201-cleanup/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-16-1201-cleanup/project.state.md)
 - **Role**: ScrumMaster (THE ScrumMaster Background Agent)
 - **Status**: In Progress
-- **Branch**: release/dev (🔒 EXCLUSIVE OWNERSHIP)
-- **Agent**: 🟢 Active (THE ScrumMaster Background Agent - THIS SESSION)
-- **PDCA Entries**: [20 entries](./project.journal/2025-08-16-1201-cleanup/pdca/)
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev (🔒 EXCLUSIVE OWNERSHIP)) [`release/dev (🔒 EXCLUSIVE OWNERSHIP)`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev (🔒 EXCLUSIVE OWNERSHIP))
+- **Agent**: 🟢 Active ([THE ScrumMaster](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits?author=cursor-ai) Background Agent - THIS SESSION)
+- **PDCA Entries**: [21 entries](./project.journal/2025-08-16-1201-cleanup/pdca/) | [Last: 2025-08-16-UTC-1615.md](./project.journal/2025-08-16-1201-cleanup/pdca/role/scrummaster/2025-08-16-UTC-1615.md)
 - **Tree Index**: [Available](./project.journal/2025-08-16-1201-cleanup/tree.index.md)
 - **Workspace Documentation**: Not available
 
@@ -37,9 +37,9 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0955-refactor/project.state.md) [./project.journal/2025-08-15-0955-refactor/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0955-refactor/project.state.md)
 - **Role**: ScrumMaster
 - **Status**: Done
-- **Branch**: [release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
-- **Agent**: ⚫ Expired
-- **PDCA Entries**: [13 entries](./project.journal/2025-08-15-0955-refactor/pdca/)
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)) [`[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev))
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)))
+- **PDCA Entries**: [17 entries](./project.journal/2025-08-15-0955-refactor/pdca/) | [Last: 2025-08-16-UTC-1550.md](./project.journal/2025-08-15-0955-refactor/pdca/role/scrum-master/2025-08-16-UTC-1550.md)
 - **Tree Index**: Not available
 - **Workspace Documentation**: [Available](./project.journal/2025-08-15-0955-refactor/workspacesMountPoint.md)
 
@@ -47,9 +47,9 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0947-article-writing/project.state.md) [./project.journal/2025-08-15-0947-article-writing/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0947-article-writing/project.state.md)
 - **Role**: ScrumMaster
 - **Status**: Done
-- **Branch**: [release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
-- **Agent**: ⚫ Expired
-- **PDCA Entries**: [17 entries](./project.journal/2025-08-15-0947-article-writing/pdca/)
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)) [`[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev))
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)))
+- **PDCA Entries**: [17 entries](./project.journal/2025-08-15-0947-article-writing/pdca/) | [Last: 2025-08-15-UTC-1055.md](./project.journal/2025-08-15-0947-article-writing/pdca/role/scrummaster/sprint-12-work/2025-08-15-UTC-1055.md)
 - **Tree Index**: [Available](./project.journal/2025-08-15-0947-article-writing/tree.index.md)
 - **Workspace Documentation**: Not available
 
@@ -57,8 +57,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0927/project.state.md) [./project.journal/2025-08-15-0927/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0927/project.state.md)
 - **Role**: ScrumMaster (active), coordinating all project roles and ensuring CMMI Level 4 compliance
 - **Status**: 
-- **Branch**: [cursor/recover-from-readme-file-0c0e](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recover-from-readme-file-0c0e)
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[cursor/recover-from-readme-file-0c0e](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recover-from-readme-file-0c0e)) [`[cursor/recover-from-readme-file-0c0e](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recover-from-readme-file-0c0e)`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[cursor/recover-from-readme-file-0c0e](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recover-from-readme-file-0c0e))
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/[cursor/recover-from-readme-file-0c0e](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recover-from-readme-file-0c0e)))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -67,8 +67,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0848-demo/project.state.md) [./project.journal/2025-08-15-0848-demo/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0848-demo/project.state.md)
 - **Role**: CI/CD Agent (demonstration), showcasing enhanced recovery system with tree indexing
 - **Status**: 
-- **Branch**: [release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)) [`[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev))
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)))
 - **PDCA Entries**: None
 - **Tree Index**: [Available](./project.journal/2025-08-15-0848-demo/tree.index.md)
 - **Workspace Documentation**: Not available
@@ -77,8 +77,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0847-demo/project.state.md) [./project.journal/2025-08-15-0847-demo/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0847-demo/project.state.md)
 - **Role**: CI/CD Agent (demonstration), showcasing enhanced recovery system with tree indexing
 - **Status**: 
-- **Branch**: [release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)) [`[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev))
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -90,8 +90,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1557/project.state.md) [./project.journal/2025-08-13-1557/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1557/project.state.md)
 - **Role**: ScrumMaster (autonomous), coordinating Developers/Testers and enforcing DRY, strict ESM TS, and radical OOP
 - **Status**: 
-- **Branch**: [release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)) [`[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev))
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -100,8 +100,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1537/project.state.md) [./project.journal/2025-08-13-1537/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1537/project.state.md)
 - **Role**: ScrumMaster (autonomous), coordinating Developers/Testers and enforcing DRY, strict ESM TS, and radical OOP
 - **Status**: 
-- **Branch**: [release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)) [`[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev))
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -110,8 +110,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1526/project.state.md) [./project.journal/2025-08-13-1526/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1526/project.state.md)
 - **Role**: ScrumMaster (autonomous), coordinating Developers/Testers and enforcing DRY, strict ESM TS, and radical OOP
 - **Status**: 
-- **Branch**: [release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)) [`[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev))
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -120,8 +120,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1102/project.state.md) [./project.journal/2025-08-13-1102/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1102/project.state.md)
 - **Role**: ScrumMaster (autonomous), coordinating Developers/Testers and enforcing DRY, strict ESM TS, and radical OOP
 - **Status**: 
-- **Branch**: [release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)) [`[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev))
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -136,8 +136,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-0729/project.state.md) [./project.journal/2025-08-13-0729/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-0729/project.state.md)
 - **Role**: ScrumMaster (autonomous), coordinating Developers/Testers and enforcing DRY, strict ESM TS, and radical OOP
 - **Status**: 
-- **Branch**: [release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)) [`[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev))
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/[release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -146,8 +146,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-0118/project.state.md) [./project.journal/2025-08-13-0118/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-0118/project.state.md)
 - **Role**: 
 - **Status**: 
-- **Branch**: 
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/) [``](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/)
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -156,8 +156,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-1102/project.state.md) [./project.journal/2025-08-12-1102/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-1102/project.state.md)
 - **Role**: ScrumMaster (autonomous), coordinating all roles and enforcing project principles
 - **Status**: 
-- **Branch**: [cursor/recovery-2025-08-12-1102](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recovery-2025-08-12-1102)
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[cursor/recovery-2025-08-12-1102](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recovery-2025-08-12-1102)) [`[cursor/recovery-2025-08-12-1102](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recovery-2025-08-12-1102)`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[cursor/recovery-2025-08-12-1102](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recovery-2025-08-12-1102))
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/[cursor/recovery-2025-08-12-1102](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recovery-2025-08-12-1102)))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -166,8 +166,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-1039/project.state.md) [./project.journal/2025-08-12-1039/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-1039/project.state.md)
 - **Role**: ScrumMaster (autonomous), coordinating all roles and enforcing project principles.
 - **Status**: 
-- **Branch**: [cursor/recovery-2025-08-12-1038](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recovery-2025-08-12-1038)
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[cursor/recovery-2025-08-12-1038](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recovery-2025-08-12-1038)) [`[cursor/recovery-2025-08-12-1038](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recovery-2025-08-12-1038)`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[cursor/recovery-2025-08-12-1038](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recovery-2025-08-12-1038))
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/[cursor/recovery-2025-08-12-1038](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recovery-2025-08-12-1038)))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -176,8 +176,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-0923-recovery/project.state.md) [./project.journal/2025-08-12-0923-recovery/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-0923-recovery/project.state.md)
 - **Role**: 
 - **Status**: 
-- **Branch**: 
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/) [``](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/)
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -186,8 +186,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-0900/project.state.md) [./project.journal/2025-08-12-0900/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-0900/project.state.md)
 - **Role**: ScrumMaster (autonomous), coordinating Developers/Testers and enforcing DRY, strict ESM TS, and radical OOP
 - **Status**: 
-- **Branch**: [main](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/main)
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[main](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/main)) [`[main](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/main)`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/[main](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/main))
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/[main](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/main)))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -196,8 +196,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-0117/project.state.md) [./project.journal/2025-08-12-0117/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-12-0117/project.state.md)
 - **Role**: 
 - **Status**: 
-- **Branch**: 
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/) [``](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/)
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -206,8 +206,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-11-1641/project.state.md) [./project.journal/2025-08-11-1641/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-11-1641/project.state.md)
 - **Role**: 
 - **Status**: WELL DONE!👍 - Successfully brought release/dev to complete branch coverage
-- **Branch**: 
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/) [``](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/)
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -216,8 +216,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-11-0957/project.state.md) [./project.journal/2025-08-11-0957/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-11-0957/project.state.md)
 - **Role**: ScrumMaster coordinating across sprints and ensuring policy compliance.
 - **Status**: 
-- **Branch**: main
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/main) [`main`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/main)
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/main))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -226,8 +226,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-11-0955/project.state.md) [./project.journal/2025-08-11-0955/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-11-0955/project.state.md)
 - **Role**: 
 - **Status**: 
-- **Branch**: 
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/) [``](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/)
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -236,8 +236,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-10-1030/project.state.md) [./project.journal/2025-08-10-1030/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-10-1030/project.state.md)
 - **Role**: 
 - **Status**: 
-- **Branch**: 
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/) [``](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/)
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -246,8 +246,8 @@ The project journal system tracks:
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-10-0854/project.state.md) [./project.journal/2025-08-10-0854/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-10-0854/project.state.md)
 - **Role**: 
 - **Status**: 
-- **Branch**: 
-- **Agent**: ⚫ Expired
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/) [``](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/)
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -256,9 +256,9 @@ The project journal system tracks:
 ## Statistics
 
 - **Total Sessions**: 25
-- **Total PDCA Entries**: 50
+- **Total PDCA Entries**: 55
 - **Latest Session**: 2025-08-16-1201-cleanup
-- **Overview Last Updated**: 2025-08-16 UTC-1847
+- **Overview Last Updated**: 2025-08-16 UTC-1855
 
 ## PDCA Structure (Current Standard)
 

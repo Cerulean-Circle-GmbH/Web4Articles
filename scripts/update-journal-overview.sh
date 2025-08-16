@@ -84,25 +84,39 @@ for session_dir in $(ls -1r "$JOURNAL_DIR"); do
             # Try to extract role, status, and branch
             role=$(grep -E "^\- \*\*Role\*\*:" "$session_path/project.state.md" 2>/dev/null | head -1 | sed 's/.*Role\*\*: *//' | tr -d '\n' || echo "Unknown")
             status=$(grep -E "^\- \*\*Status\*\*:" "$session_path/project.state.md" 2>/dev/null | head -1 | sed 's/.*Status\*\*: *//' | tr -d '\n' || echo "Unknown")
-            branch=$(grep -E "^\- \*\*Branch\*\*:" "$session_path/project.state.md" 2>/dev/null | head -1 | sed 's/.*Branch\*\*: *//' | tr -d '\n' || echo "Unknown")
+            branch=$(grep -E "^\- \*\*Branch\*\*:" "$session_path/project.state.md" 2>/dev/null | head -1 | sed 's/.*Branch\*\*: *//' | sed 's/ *(.*//' | sed 's/\[//g' | sed 's/\]//g' | tr -d '\n' || echo "Unknown")
             
             echo "- **Role**: $role" >> "$OVERVIEW_FILE"
             echo "- **Status**: $status" >> "$OVERVIEW_FILE"
-            echo "- **Branch**: $branch" >> "$OVERVIEW_FILE"
             
-            # Determine agent status and identity
-            if [ "$session_dir" = "2025-08-16-1201-cleanup" ]; then
-                echo "- **Agent**: 🟢 Active (THE ScrumMaster Background Agent - THIS SESSION)" >> "$OVERVIEW_FILE"
-            elif [ "$session_dir" = "$(basename "$LATEST_SESSION")" ]; then
-                echo "- **Agent**: 🟢 Active (Background Agent)" >> "$OVERVIEW_FILE"
+            # Branch with clickable link
+            if [ "$branch" != "Unknown" ]; then
+                echo "- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/$branch) [\`$branch\`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/$branch)" >> "$OVERVIEW_FILE"
             else
-                echo "- **Agent**: ⚫ Expired" >> "$OVERVIEW_FILE"
+                echo "- **Branch**: Unknown" >> "$OVERVIEW_FILE"
             fi
             
-            # PDCA entries (always show)
+            # Determine agent status and identity with link
+            if [ "$session_dir" = "2025-08-16-1201-cleanup" ]; then
+                echo "- **Agent**: 🟢 Active ([THE ScrumMaster](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits?author=cursor-ai) Background Agent - THIS SESSION)" >> "$OVERVIEW_FILE"
+            elif [ "$session_dir" = "$(basename "$LATEST_SESSION")" ]; then
+                echo "- **Agent**: 🟢 Active ([Background Agent](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits?author=cursor-ai))" >> "$OVERVIEW_FILE"
+            else
+                echo "- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/$branch))" >> "$OVERVIEW_FILE"
+            fi
+            
+            # PDCA entries (always show) with last PDCA link
             if [ -d "$session_path/pdca" ]; then
                 pdca_count=$(find "$session_path/pdca" -name "*.md" | wc -l | tr -d ' ')
-                echo "- **PDCA Entries**: [$pdca_count entries](./project.journal/$session_dir/pdca/)" >> "$OVERVIEW_FILE"
+                # Find last PDCA
+                last_pdca=$(find "$session_path/pdca" -name "*.md" -type f | sort | tail -1)
+                if [ -n "$last_pdca" ]; then
+                    last_pdca_name=$(basename "$last_pdca")
+                    last_pdca_rel=$(echo "$last_pdca" | sed "s|$JOURNAL_DIR/||")
+                    echo "- **PDCA Entries**: [$pdca_count entries](./project.journal/$session_dir/pdca/) | [Last: $last_pdca_name](./project.journal/$last_pdca_rel)" >> "$OVERVIEW_FILE"
+                else
+                    echo "- **PDCA Entries**: [$pdca_count entries](./project.journal/$session_dir/pdca/)" >> "$OVERVIEW_FILE"
+                fi
             else
                 echo "- **PDCA Entries**: None" >> "$OVERVIEW_FILE"
             fi
