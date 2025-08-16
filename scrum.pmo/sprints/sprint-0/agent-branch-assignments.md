@@ -33,6 +33,7 @@ Violations will result in:
 | **Article Agent** | `feature/article-writing` | Writer | ✅ Available |
 | **QA Agent** | `feature/qa-validation` | QA Lead | ✅ Available |
 | **Developer Agent** | `feature/dev-[task]` | Developer | ✅ Available |
+| **Recovery Agent** | `feature/recovery-agent` | Recovery Lead | ⚠️ MUST MOVE HERE |
 
 ---
 
