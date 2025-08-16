@@ -8,7 +8,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 JOURNAL_DIR="$PROJECT_ROOT/scrum.pmo/project.journal"
-OVERVIEW_FILE="$PROJECT_ROOT/scrum.pmo/project.journal.overview.md"
+OVERVIEW_FILE="$PROJECT_ROOT/scrum.pmo/project.journal/project.journal.overview.md"
 
 # Function to get session info
 get_session_info() {
