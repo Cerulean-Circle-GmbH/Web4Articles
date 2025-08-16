@@ -17,7 +17,7 @@ The project journal system tracks:
 - **[2025-08-16-1201-cleanup](./project.journal/2025-08-16-1201-cleanup/project.state.md)** ⭐ *Active*
   - **Status**: Unknown
   - **Role**: 
-  - **PDCA Entries**: [1 entries](./project.journal/2025-08-16-1201-cleanup/pdca/)
+  - **PDCA Entries**: [2 entries](./project.journal/2025-08-16-1201-cleanup/pdca/)
 
 ## All Sessions (Chronological)
 
@@ -25,7 +25,8 @@ The project journal system tracks:
 - **[Session Link](./project.journal/2025-08-16-1201-cleanup/project.state.md)**
 - **Role**: 
 - **Status**: 
-- **PDCA Entries**: [1 entries](./project.journal/2025-08-16-1201-cleanup/pdca/)
+- **PDCA Entries**: [2 entries](./project.journal/2025-08-16-1201-cleanup/pdca/)
+- **Tree Index**: [Available](./project.journal/2025-08-16-1201-cleanup/tree.index.md)
 
 ### 2025-08-15-0955-refactor
 - **[Session Link](./project.journal/2025-08-15-0955-refactor/project.state.md)**
@@ -151,9 +152,9 @@ ScrumMaster
 ## Statistics
 
 - **Total Sessions**: 25
-- **Total PDCA Entries**: 29
+- **Total PDCA Entries**: 30
 - **Latest Session**: 2025-08-16-1201-cleanup
-- **Overview Last Updated**: 2025-08-16 UTC-1204
+- **Overview Last Updated**: 2025-08-16 UTC-1212
 
 ## PDCA Structure (Current Standard)
 
