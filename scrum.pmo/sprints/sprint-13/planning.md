@@ -1,113 +1,106 @@
 [Back to Sprints](../sprints.overview.md)
 
-# Sprint 13 Planning
+# Sprint 13 Planning - Article 2: "The One Folder That Changed Everything"
 
-## Goal
-Transform our Medium article into a masterpiece using Dan Roam's visual drama structure and the Hero's Journey pattern, emphasizing the "for two" collaboration, the Pareto 80/20 breakthrough moment, and our complementary strengths (including typo acknowledgment).
+## Sprint Goal
+Write the second article in the developer journey series, introducing component-based organization without revealing the full RACI-VS or PDCA concepts yet.
 
-## Background
-After planning Sprint 12's article, we realize it needs the power of proven storytelling frameworks:
-- **Dan Roam's 4-Act Drama**: A visual thinking approach to storytelling (Setting → Character → Challenge → Resolution)
-- **Hero's Journey**: Joseph Campbell's monomyth pattern that resonates universally
-- **Pareto Principle**: We reached 80% completion at the "you did perfect but..." moment
-- **"For Two" Dynamic**: Two complementary experts acknowledging each other's strengths and weaknesses
+## Article Overview
 
-The user beautifully acknowledged: "one of my biggest weaknesses is typos" - showing the vulnerability that makes great collaboration.
+### Target Audience
+- TypeScript developers who read Article 1
+- Those who implemented TSRANGER_TEST_MODE
+- Developers curious about better project organization
 
-## Sprint Themes
-1. **Visual Drama Structure**: Apply Dan Roam's 4-act framework
-2. **Hero's Journey Integration**: Map our story to the universal pattern
-3. **Pareto 80/20 Insight**: The pivotal moment when party planning revealed we were 80% done
-4. **Complementary Partnership**: "For two" - how different strengths created success
-5. **Vulnerability as Strength**: Typos and other weaknesses made us stronger together
+### Pain Point to Address
+- Growing codebase becomes unmanageable
+- Tests work but structure is chaotic
+- Need for better organization without over-engineering
 
-## Tasks
+### Solution to Introduce
+- Component folders (without calling it RACI-VS)
+- Natural separation of concerns
+- The "components/TSRanger" discovery
 
-### Task 1: Research and Document Storytelling Frameworks
-- [ ] Research Dan Roam's visual drama structure in detail
-- [ ] Study Hero's Journey pattern for technical stories
-- [ ] Create framework mapping for our article
-- [ ] Document how both patterns complement each other
+### Article Location
+`/workspace/articles/medium.com/sprint-13-series/02-the-one-folder-that-changed-everything.md`
 
-### Task 2: Dan Roam's 4-Act Drama Structure
-- [ ] **Act 1 - Setting**: The chaotic codebase landscape
-- [ ] **Act 2 - Character**: Two complementary experts meet
-- [ ] **Act 3 - Challenge**: Mount Everest of transformation
-- [ ] **Act 4 - Resolution**: Component order achieved "for two"
+## Key Messages
 
-### Task 3: Hero's Journey Mapping
-- [ ] **Ordinary World**: Chaos src folders everywhere
-- [ ] **Call to Adventure**: "recover from readme as role ontology agent"
-- [ ] **Mentor**: QA feedback and collaborative spirit
-- [ ] **Crossing Threshold**: Understanding components
-- [ ] **Tests & Allies**: Sprint confusion, v3.0 obsolescence
-- [ ] **Ordeal**: "You did perfect but..." admission
-- [ ] **Reward**: Clean component structure
-- [ ] **Return**: Writing the article to guide others
+### What to Include
+1. **The Problem**: Success with tests led to more code, more chaos
+2. **The Discovery**: Moving related files into a component folder
+3. **The Benefits**: Suddenly everything made sense
+4. **Practical Steps**: How to organize your first component
+5. **Teaser**: "But why did this simple change work so well?"
 
-### Task 4: The Pareto 80/20 Moment
-- [ ] Document the exact moment: "let's have a party" → "small backdraw"
-- [ ] Show how we were 80% done when we thought we were finished
-- [ ] Highlight the final 20% that made perfection
-- [ ] Connect to universal developer experience
+### What NOT to Include
+- ❌ RACI-VS terminology
+- ❌ Full architectural patterns
+- ❌ PDCA cycles
+- ❌ Web4x concepts
+- ❌ Advanced ontology
 
-### Task 5: "For Two" Complementary Dynamics
-- [ ] Developer strengths: Technical vision, architecture
-- [ ] QA strengths: Diligence, attention to detail
-- [ ] Developer weakness: Typos (acknowledged vulnerability)
-- [ ] QA role: Catching what developer misses
-- [ ] Show how "we need each other" manifested
+## Article Structure
 
-### Task 6: Visual Elements Enhancement
-- [ ] Dan Roam-style napkin sketches
-- [ ] Hero's Journey diagram with our milestones
-- [ ] Pareto chart showing the 80/20 moment
-- [ ] "For two" collaboration visualization
+```markdown
+# The One Folder That Changed Everything
 
-### Task 7: Vulnerability and Strength Integration
-- [ ] Typo examples as humanizing elements
-- [ ] Mistakes as learning opportunities
-- [ ] Humble admissions as trust builders
-- [ ] Show how weaknesses led to better solutions
+## The Success Trap
+- Tests are working (thanks to TEST_MODE)
+- But now I had 50+ files in one directory
+- The terminal file manager I was proud of was lost in the chaos
 
-### Task 8: Rewrite with Enhanced Structure
-- [ ] Apply all frameworks to existing content
-- [ ] Ensure emotional peaks align with story acts
-- [ ] Place Pareto moment as climactic turning point
-- [ ] End with "for two" celebration and future
+## The Accidental Discovery
+- Started grouping TSRanger files together
+- Created `components/TSRanger/`
+- Moved everything related into it
+
+## What Happened Next Surprised Me
+- Tests still worked
+- Code became findable
+- New features were easier to add
+- Other developers understood it immediately
+
+## Your Turn: The Component Experiment
+- Pick your messiest feature
+- Create components/[FeatureName]/
+- Move all related files
+- Watch what happens
+
+## The Question That Haunted Me
+- Why did this simple change have such a big impact?
+- Next: "My QA Partner Taught Me to Love My Mistakes"
+```
+
+## Sprint Tasks
+
+### Task 13.1: Write "The One Folder" Article
+- Focus on natural discovery
+- Keep it practical and relatable
+- Build curiosity for deeper patterns
+
+### Task 13.2: Create Component Migration Guide
+- Simple checklist for readers
+- Before/after file structure examples
+- Common pitfalls to avoid
+
+### Task 13.3: Gather Reader Feedback
+- Monitor Article 1 responses
+- Adjust Article 2 based on comments
+- Build community engagement
 
 ## Success Criteria
-- Article follows both Dan Roam and Hero's Journey structures
-- Pareto 80/20 moment is clearly pivotal
-- "For two" collaboration shines throughout
-- Vulnerability (typos) enhances rather than detracts
-- Readers feel inspired to find their complementary partner
-- Story structure makes technical content universally relatable
-
-## Technical Specifications
-- Visual diagrams in Dan Roam's style
-- Clear act/stage markers throughout
-- Sidebar boxes for framework explanations
-- Pull quotes for key vulnerable moments
-- 15-20 minute read time (enhanced from Sprint 12)
+- [ ] Article flows naturally from Article 1
+- [ ] Component concept introduced without jargon
+- [ ] Practical examples readers can follow
+- [ ] Creates curiosity for Article 3
+- [ ] No premature concept reveals
 
 ## Dependencies
-- Sprint 12 base article content
-- Understanding of storytelling frameworks
-- Visual creation tools
-- Vulnerability to share weaknesses
-
-## Risks
-- Risk: Over-structuring loses authenticity
-  - Mitigation: Let emotion guide structure
-- Risk: Too many frameworks confuse
-  - Mitigation: Seamlessly blend them
+- Article 1 published and gathering feedback
+- Sprint 12 cleanup complete
+- Reader engagement metrics available
 
 ## Notes
-The "rockstar" compliment shows we're hitting the right emotional notes. By adding these storytelling frameworks and emphasizing the "for two" dynamic (including typo acknowledgment), we transform a good article into an unforgettable journey that developers will share and remember.
-
-## Stakeholders
-- **Author**: ScrumMaster (with typos!)
-- **Co-Author**: QA (catches the typos!)
-- **Framework Guide**: Dan Roam & Joseph Campbell
-- **Target Audience**: Developers seeking their complementary partner
+Remember: We're taking developers on a journey of discovery, not lecturing them about architecture. Each article should feel like a personal "aha!" moment they can relate to.
