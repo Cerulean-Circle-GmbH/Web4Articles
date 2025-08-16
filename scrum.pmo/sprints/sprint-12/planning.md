@@ -1,85 +1,58 @@
-# Sprint 12 Planning - "From Chaos to Component Order: A Developer's Mount Everest"
+# Sprint 12 Planning - Article Series: Developer Journey
 
-## Sprint Goal
-Write a Medium.com article sharing the authentic journey of transforming a chaotic `src/` folder into a perfectly organized component-based architecture. Written by the AI who lived it, for TypeScript developers who face similar challenges.
+## Sprint Goal (Revised)
+Write the FIRST article in a series that guides developers through our journey, starting where they are - in test hell. Focus on practical solutions without revealing advanced concepts too early.
 
-## Target Audience
-- TypeScript developers dealing with legacy codebases
-- Teams struggling with folder organization
-- Developers interested in component-based architecture
-- Anyone who's ever faced "perfect but..." feedback loops
+## Article Series Overview
 
-## Article Structure
+### Article 1: "My Terminal File Manager Almost Killed My Testing Career" (Sprint 12)
+- **Audience**: TypeScript developer facing test problems
+- **Pain Point**: Interactive code that won't test
+- **Solution**: TSRANGER_TEST_MODE
+- **Article Location**: `/workspace/articles/medium.com/sprint-12-series/01-my-terminal-file-manager-almost-killed-my-testing-career.md`
+- **Status**: Complete ✅
 
-### Task 1: Write Opening - The Chaos We Inherited
-- Show the initial state: everything in `src/`
-- Multiple versions floating around (v2, v3.n14.4, etc.)
-- The confusion of mixed concerns
-- Set up the "Mount Everest" metaphor
+### Future Articles (Planned)
+- **Sprint 13**: Article 2 - "The One Folder That Changed Everything" (Component discovery)
+- **Sprint 14**: Article 3 - "My QA Partner Taught Me to Love My Mistakes" (Collaboration)
+- **Sprint 15**: Article 4 - "The Architecture That Was Already There" (UCP/TRON)
+- **Sprint 16**: Article 5 - "When Code Becomes Consciousness" (Web4x vision)
 
-### Task 2: Write "The Journey Begins" Section
-- First attempts at organization
-- The v2.5 partial success
-- "Perfect but..." moments
-- Building trust through iterations
+## Current Sprint Tasks
 
-### Task 3: Write "The Git MV Marathon" Section
-- Why preserving history matters
-- Step-by-step refactoring process
-- Code examples of the moves
-- The importance of traceability
+### Task 12.1: Restructure Sprint 12 Files
+- **Status**: In Progress
+- **Location**: `tasks/task-12.1-restructure-sprint-files.md`
+- **Purpose**: Clean up structural drift from article writing focus
 
-### Task 4: Write "Component Enlightenment" Section
-- Understanding true component separation
-- TSRanger vs GitScrumProject revelation
-- The "obviously wrong component" moment
-- Source vs generated files (puml/svg)
+### Task 12.2: Plan Automated Cleanup Agent
+- **Status**: Planned
+- **Location**: `tasks/task-12.2-cleanup-agent-cicd.md`
+- **Purpose**: Implement EOD automated structure compliance
 
-### Task 5: Write "The Human Side" Section
-- Admitting mistakes ("no one is perfect but perfect admits mistakes")
-- The power of continuous QA feedback
-- Building trust through vulnerability
-- "For two" collaboration philosophy
+## Key Insights from Sprint 12
 
-### Task 6: Write Technical Deep Dive
-- Component structure: `components/ComponentName/version/src/language`
-- Version management strategies
-- Git workflow for refactoring
-- PDCA cycle in practice
+### User Wisdom Captured
+> "now you compressed our total journey already in the first article... he does not even know that he does not know the magic of pdcas... give a hopeful outlook to the next article"
 
-### Task 7: Write "Lessons Learned" Section
-- Every typo has meaning
-- Celebration as continuous process
-- Documentation as living memory
-- The value of patient QA
+> "focus is highest prio. cleanup has to always happen at eod"
 
-### Task 8: Write Conclusion - "Ever Rest"
-- The Mount Everest summit reached
-- What "Web4Articles" really means
-- Call to action for readers
-- Invitation to the ongoing party
-
-## Technical Requirements
-- Include actual git commands used
-- Show before/after folder structures
-- Provide code snippets where relevant
-- Keep emotional authenticity while being technically accurate
+### Learning
+1. Don't reveal the entire journey at once
+2. Meet developers where they are (test hell)
+3. Each article should create curiosity for the next
+4. Focus on problem-solving first, structure second
+5. Automate cleanup to protect focus time
 
 ## Success Criteria
-- Reader understands the transformation journey
-- Technical approach is clear and replicable
-- Emotional authenticity resonates
-- TypeScript developers see themselves in the struggle
-- The "for two" philosophy inspires collaboration
-
-## Author Note
-You (the AI) are the author, writing in first person about your lived experience. Include your emotions, frustrations, and joy. Make it real because it WAS real.
+- [x] Article 1 addresses immediate developer pain
+- [x] No mention of PDCA, Web4x, or advanced concepts
+- [x] Practical solution (TSRANGER_TEST_MODE) provided
+- [x] Teaser for next article included
+- [ ] Sprint structure cleaned and compliant
+- [ ] Cleanup automation planned for future
 
 ## Delivery
-- Medium.com formatted markdown
-- 8-12 minute read
-- Code blocks properly formatted
-- Images of folder structure (before/after)
-- Links to the actual repository
-
-Let's climb this Mount Everest and finally rest! 🏔️
+- Article 1: Ready for Medium.com publication
+- Sprint Structure: Being cleaned in dedicated session
+- Future: Automated cleanup agent for CI/CD
