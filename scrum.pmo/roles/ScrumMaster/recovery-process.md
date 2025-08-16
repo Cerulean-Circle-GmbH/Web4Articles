@@ -111,6 +111,12 @@ mkdir -p "$ROLE_PDCA_DIR"
 cat > "$ROLE_PDCA_DIR/${UTC_TIMESTAMP}.md" << EOF
 [Back to Session](../../../../project.state.md) | [Journal Overview](../../../../../../project.journal.overview.md)
 
+# CRITICAL REMINDERS FOR PDCA CREATION:
+# 1. ALWAYS quote user feedback verbatim with UTC timestamp in Check section
+# 2. ALWAYS provide GitHub and local PDCA links in chat responses
+# 3. NEVER summarize user feedback - quote exactly as provided
+# 4. End all responses with clickable artifact links
+
 # 📋 **PDCA Cycle: Recovery Session Start - ${UTC_TIMESTAMP}**
 
 **🗓️ Date:** ${UTC_TIMESTAMP}  
