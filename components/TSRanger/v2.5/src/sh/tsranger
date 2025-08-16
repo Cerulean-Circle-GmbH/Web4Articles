@@ -3,11 +3,24 @@
 # tsranger (v2): Shell wrapper for TSRanger v2 TypeScript TUI
 set -euo pipefail
 
-# Find project root (with package.json and src.v2)
+# Find component root (self-contained v2.5 directory)
+find_component_root() {
+  local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  # Go up from src/sh to v2.5 root
+  echo "$(dirname "$(dirname "$script_dir")")"
+}
+
+COMPONENT_ROOT="$(find_component_root)"
+if [[ ! -d "$COMPONENT_ROOT/src/ts" ]]; then
+  echo "Error: Could not find v2.5 component root (missing src/ts)." >&2
+  exit 1
+fi
+
+# Find project root for tsconfig.json only
 find_project_root() {
-  local dir="$PWD"
+  local dir="$COMPONENT_ROOT"
   while [[ "$dir" != "/" ]]; do
-    if [[ -f "$dir/package.json" && -d "$dir/components/TSRanger" ]]; then
+    if [[ -f "$dir/tsconfig.json" ]]; then
       echo "$dir"
       return 0
     fi
@@ -18,12 +31,12 @@ find_project_root() {
 
 PROJECT_ROOT="$(find_project_root)"
 if [[ -z "$PROJECT_ROOT" ]]; then
-  echo "Error: Could not find project root (missing package.json and src.v2)." >&2
+  echo "Error: Could not find project root with tsconfig.json." >&2
   exit 1
 fi
 
 TS_NODE_PROJECT="$PROJECT_ROOT/tsconfig.json"
-TSRANGER_ENTRY="$PROJECT_ROOT/components/TSRanger/v2.5/src/ts/layer4/TSRanger.ts"
+TSRANGER_ENTRY="$COMPONENT_ROOT/src/ts/layer4/TSRanger.ts"
 
 export NODE_NO_WARNINGS=1
 export TS_NODE_PROJECT
