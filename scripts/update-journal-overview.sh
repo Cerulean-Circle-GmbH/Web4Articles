@@ -180,3 +180,7 @@ EOF
 echo "✅ Project journal overview updated: $OVERVIEW_FILE"
 echo "📊 Statistics: $TOTAL_SESSIONS sessions, $PDCA_COUNT PDCA entries"
 echo "🔗 Latest session: $LATEST_SESSION"
+echo ""
+echo "⚠️  NOTICE: Each agent should generate their own overview!"
+echo "   Run: ./scripts/generate-agent-journal-overview.sh"
+echo "   This creates: project.journal.overview.[your-branch].md"
