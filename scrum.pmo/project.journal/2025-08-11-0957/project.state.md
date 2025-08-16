@@ -1,4 +1,4 @@
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)
 
 # Project State — 2025-08-11 09:57 UTC
 
@@ -35,4 +35,4 @@
 - Document recovery findings in recovery.md
 - Prepare for potential Sprint 3 or 4 work based on branch analysis
 
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)

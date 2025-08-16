@@ -1,4 +1,4 @@
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)
 
 # Project State — 2025-08-11 16:41 UTC
 
@@ -66,4 +66,4 @@
 - **Response**: Documented 100% branch coverage achievement in project state
 - **Status**: WELL DONE!👍 - Successfully brought release/dev to complete branch coverage
 
-[Back to Project Journal](../)
+[Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)
