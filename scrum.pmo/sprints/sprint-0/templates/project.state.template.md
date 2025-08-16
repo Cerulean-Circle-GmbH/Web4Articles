@@ -54,9 +54,12 @@
 - **DevOps**: Infrastructure and automation
 
 ### Status Values
-- **In Progress**: Actively working
-- **Done**: Completed successfully
+- **In Progress**: Actively working (ONLY valid status for current agent session)
+- **Done**: Completed successfully (only set by QA or when session expires)
 - **Blocked**: Waiting on dependencies
+
+**IMPORTANT**: Active agent sessions must ALWAYS be "In Progress". 
+Only QA or session expiry can mark as "Done".
 
 ---
 
