@@ -14,20 +14,41 @@ The project journal system tracks:
 
 ## Current Active Session
 
-- **[2025-08-16-1854](./project.journal/2025-08-16-1854/project.state.md)** ⭐ *Active*
-  - **Role**: OntologyAgent (autonomous), maintaining ontology indexes and semantic consistency
+- **[2025-08-16-2135-recovery](./project.journal/2025-08-16-2135-recovery/project.state.md)** ⭐ *Active*
+  - **Role**: ScrumMaster (recovery session), coordinating Developers/Testers and enforcing DRY, strict ESM TS, and radical OOP
   - **Status**: 
   - **Branch**: [release/dev](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
   - **Agent**: 🟢 Active (Background Agent)
+  - **PDCA Entries**: [1 entries](./project.journal/2025-08-16-2135-recovery/pdca/)
 
 ## All Sessions (Chronological)
+
+### 2025-08-16-2135-recovery
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-16-2135-recovery/project.state.md) [./project.journal/2025-08-16-2135-recovery/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-16-2135-recovery/project.state.md)
+- **Role**: ScrumMaster (recovery session), coordinating Developers/Testers and enforcing DRY, strict ESM TS, and radical OOP
+- **Status**: 
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev) [`release/dev`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
+- **Agent**: 🟢 Active ([Background Agent](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits?author=cursor-ai))
+- **PDCA Entries**: [1 entries](./project.journal/2025-08-16-2135-recovery/pdca/) | [Last: 2025-08-16-UTC-2136.md](./project.journal/2025-08-16-2135-recovery/pdca/role/scrummaster/2025-08-16-UTC-2136.md)
+- **Tree Index**: [Available](./project.journal/2025-08-16-2135-recovery/tree.index.md)
+- **Workspace Documentation**: Not available
+
+### 2025-08-16-2052-recovery
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-16-2052-recovery/project.state.md) [./project.journal/2025-08-16-2052-recovery/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-16-2052-recovery/project.state.md)
+- **Role**: 
+- **Status**: In Progress
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/`cursor/recover-from-readme-for-sprint-3-po-2719`) [``cursor/recover-from-readme-for-sprint-3-po-2719``](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/`cursor/recover-from-readme-for-sprint-3-po-2719`)
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/`cursor/recover-from-readme-for-sprint-3-po-2719`))
+- **PDCA Entries**: [4 entries](./project.journal/2025-08-16-2052-recovery/pdca/) | [Last: 2025-08-16-UTC-2100-ontologyagent-comprehensive-status-report.md](./project.journal/2025-08-16-2052-recovery/pdca/tasks/2025-08-16-UTC-2100-ontologyagent-comprehensive-status-report.md)
+- **Tree Index**: [Available](./project.journal/2025-08-16-2052-recovery/tree.index.md)
+- **Workspace Documentation**: Not available
 
 ### 2025-08-16-1854
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-16-1854/project.state.md) [./project.journal/2025-08-16-1854/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-16-1854/project.state.md)
 - **Role**: OntologyAgent (autonomous), maintaining ontology indexes and semantic consistency
 - **Status**: 
 - **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev) [`release/dev`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
-- **Agent**: 🟢 Active ([Background Agent](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits?author=cursor-ai))
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/release/dev))
 - **PDCA Entries**: None
 - **Tree Index**: Not available
 - **Workspace Documentation**: Not available
@@ -38,7 +59,7 @@ The project journal system tracks:
 - **Status**: In Progress
 - **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev) [`release/dev`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
 - **Agent**: 🟢 Active ([THE ScrumMaster](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits?author=cursor-ai) Background Agent - THIS SESSION)
-- **PDCA Entries**: [25 entries](./project.journal/2025-08-16-1201-cleanup/pdca/) | [Last: 2025-08-16-UTC-1655.md](./project.journal/2025-08-16-1201-cleanup/pdca/role/scrummaster/2025-08-16-UTC-1655.md)
+- **PDCA Entries**: [30 entries](./project.journal/2025-08-16-1201-cleanup/pdca/) | [Last: 2025-08-16-UTC-2100.md](./project.journal/2025-08-16-1201-cleanup/pdca/role/scrummaster/2025-08-16-UTC-2100.md)
 - **Tree Index**: [Available](./project.journal/2025-08-16-1201-cleanup/tree.index.md)
 - **Workspace Documentation**: Not available
 - **Agent Snapshot**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-16-1201-cleanup/active-agents.md) [📸 4 active agents](./project.journal/2025-08-16-1201-cleanup/active-agents.md)
@@ -49,7 +70,7 @@ The project journal system tracks:
 - **Status**: Done
 - **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev) [`release/dev`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
 - **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/release/dev))
-- **PDCA Entries**: [18 entries](./project.journal/2025-08-15-0955-refactor/pdca/) | [Last: 2025-08-16-UTC-1550.md](./project.journal/2025-08-15-0955-refactor/pdca/role/scrum-master/2025-08-16-UTC-1550.md)
+- **PDCA Entries**: [20 entries](./project.journal/2025-08-15-0955-refactor/pdca/) | [Last: 2025-08-16-UTC-1550.md](./project.journal/2025-08-15-0955-refactor/pdca/role/scrum-master/2025-08-16-UTC-1550.md)
 - **Tree Index**: Not available
 - **Workspace Documentation**: [Available](./project.journal/2025-08-15-0955-refactor/workspacesMountPoint.md)
 
@@ -95,6 +116,16 @@ The project journal system tracks:
 
 ### 2025-08-14-1617
 - **Session**: 2025-08-14-1617 (No project.state.md)
+
+### 2025-08-14-1040
+- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-14-1040/project.state.md) [./project.journal/2025-08-14-1040/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-14-1040/project.state.md)
+- **Role**: 
+- **Status**: In Progress
+- **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/`cursor/recover-from-readme-for-sprint-3-po-2719`) [``cursor/recover-from-readme-for-sprint-3-po-2719``](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/`cursor/recover-from-readme-for-sprint-3-po-2719`)
+- **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/`cursor/recover-from-readme-for-sprint-3-po-2719`))
+- **PDCA Entries**: None
+- **Tree Index**: Not available
+- **Workspace Documentation**: Not available
 
 ### 2025-08-13-1557
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1557/project.state.md) [./project.journal/2025-08-13-1557/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-13-1557/project.state.md)
@@ -265,10 +296,10 @@ The project journal system tracks:
 
 ## Statistics
 
-- **Total Sessions**: 26
-- **Total PDCA Entries**: 60
-- **Latest Session**: 2025-08-16-1854
-- **Overview Last Updated**: 2025-08-16 UTC-1957
+- **Total Sessions**: 29
+- **Total PDCA Entries**: 72
+- **Latest Session**: 2025-08-16-2135-recovery
+- **Overview Last Updated**: 2025-08-16 UTC-2137
 
 ## PDCA Structure (Current Standard)
 
