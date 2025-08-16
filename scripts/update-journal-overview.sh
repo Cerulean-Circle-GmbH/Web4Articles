@@ -79,7 +79,7 @@ for session_dir in $(ls -1r "$JOURNAL_DIR"); do
         echo "### $session_dir" >> "$OVERVIEW_FILE"
         
         if [ -f "$session_path/project.state.md" ]; then
-            echo "- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/$session_dir/project.state.md) [./project.journal/$session_dir/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/$session_dir/project.state.md)" >> "$OVERVIEW_FILE"
+            echo "- **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/$session_dir/project.state.md) | [./$session_dir/project.state.md](./$session_dir/project.state.md)" >> "$OVERVIEW_FILE"
             
             # Try to extract role, status, and branch
             role=$(grep -E "^\- \*\*Role\*\*:" "$session_path/project.state.md" 2>/dev/null | head -1 | sed 's/.*Role\*\*: *//' | tr -d '\n' || echo "Unknown")
