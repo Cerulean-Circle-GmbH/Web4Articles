@@ -90,9 +90,9 @@ for session_dir in $(ls -1r "$JOURNAL_DIR"); do
             echo "- **Status**: $status" >> "$OVERVIEW_FILE"
             echo "- **Branch**: $branch" >> "$OVERVIEW_FILE"
             
-            # Determine agent status
+            # Determine agent status and identity
             if [ "$session_dir" = "2025-08-16-1201-cleanup" ]; then
-                echo "- **Agent**: 🟢 Active (Background Agent - THIS SESSION)" >> "$OVERVIEW_FILE"
+                echo "- **Agent**: 🟢 Active (THE ScrumMaster Background Agent - THIS SESSION)" >> "$OVERVIEW_FILE"
             elif [ "$session_dir" = "$(basename "$LATEST_SESSION")" ]; then
                 echo "- **Agent**: 🟢 Active (Background Agent)" >> "$OVERVIEW_FILE"
             else
