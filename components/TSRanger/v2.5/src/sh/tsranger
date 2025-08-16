@@ -7,7 +7,7 @@ set -euo pipefail
 find_project_root() {
   local dir="$PWD"
   while [[ "$dir" != "/" ]]; do
-    if [[ -f "$dir/package.json" && -d "$dir/src.v2" ]]; then
+    if [[ -f "$dir/package.json" && -d "$dir/components/TSRanger" ]]; then
       echo "$dir"
       return 0
     fi
@@ -23,7 +23,7 @@ if [[ -z "$PROJECT_ROOT" ]]; then
 fi
 
 TS_NODE_PROJECT="$PROJECT_ROOT/tsconfig.json"
-TSRANGER_ENTRY="$PROJECT_ROOT/src.v2/ts/layer4/TSRanger.ts"
+TSRANGER_ENTRY="$PROJECT_ROOT/components/TSRanger/v2.5/src/ts/layer4/TSRanger.ts"
 
 export NODE_NO_WARNINGS=1
 export TS_NODE_PROJECT
