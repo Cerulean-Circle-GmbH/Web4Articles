@@ -38,9 +38,10 @@ The project journal system tracks:
 - **Status**: In Progress
 - **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev) [`release/dev`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
 - **Agent**: 🟢 Active ([THE ScrumMaster](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits?author=cursor-ai) Background Agent - THIS SESSION)
-- **PDCA Entries**: [24 entries](./project.journal/2025-08-16-1201-cleanup/pdca/) | [Last: 2025-08-16-UTC-1645.md](./project.journal/2025-08-16-1201-cleanup/pdca/role/scrummaster/2025-08-16-UTC-1645.md)
+- **PDCA Entries**: [25 entries](./project.journal/2025-08-16-1201-cleanup/pdca/) | [Last: 2025-08-16-UTC-1655.md](./project.journal/2025-08-16-1201-cleanup/pdca/role/scrummaster/2025-08-16-UTC-1655.md)
 - **Tree Index**: [Available](./project.journal/2025-08-16-1201-cleanup/tree.index.md)
 - **Workspace Documentation**: Not available
+- **Agent Snapshot**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-16-1201-cleanup/active-agents.md) [📸 4 active agents](./project.journal/2025-08-16-1201-cleanup/active-agents.md)
 
 ### 2025-08-15-0955-refactor
 - **Session**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0955-refactor/project.state.md) [./project.journal/2025-08-15-0955-refactor/project.state.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0955-refactor/project.state.md)
@@ -48,7 +49,7 @@ The project journal system tracks:
 - **Status**: Done
 - **Branch**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev) [`release/dev`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev)
 - **Agent**: ⚫ Expired ([View Commits](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commits/release/dev))
-- **PDCA Entries**: [17 entries](./project.journal/2025-08-15-0955-refactor/pdca/) | [Last: 2025-08-16-UTC-1550.md](./project.journal/2025-08-15-0955-refactor/pdca/role/scrum-master/2025-08-16-UTC-1550.md)
+- **PDCA Entries**: [18 entries](./project.journal/2025-08-15-0955-refactor/pdca/) | [Last: 2025-08-16-UTC-1550.md](./project.journal/2025-08-15-0955-refactor/pdca/role/scrum-master/2025-08-16-UTC-1550.md)
 - **Tree Index**: Not available
 - **Workspace Documentation**: [Available](./project.journal/2025-08-15-0955-refactor/workspacesMountPoint.md)
 
@@ -265,9 +266,9 @@ The project journal system tracks:
 ## Statistics
 
 - **Total Sessions**: 26
-- **Total PDCA Entries**: 58
+- **Total PDCA Entries**: 60
 - **Latest Session**: 2025-08-16-1854
-- **Overview Last Updated**: 2025-08-16 UTC-1944
+- **Overview Last Updated**: 2025-08-16 UTC-1957
 
 ## PDCA Structure (Current Standard)
 
@@ -298,7 +299,7 @@ pdca/
 
 ## 🤖 Active Agents
 
-**Live Agent Status**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/active-agents.md) [./active-agents.md](file:///workspace/scrum.pmo/project.journal/active-agents.md)
+**Latest Agent Snapshot**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-16-1201-cleanup/active-agents.md) [./2025-08-16-1201-cleanup/active-agents.md](file:///workspace/scrum.pmo/project.journal/2025-08-16-1201-cleanup/active-agents.md)
 
 ### Quick Stats
 - **Active Agents**: 4 (🟢 Working now or recently)

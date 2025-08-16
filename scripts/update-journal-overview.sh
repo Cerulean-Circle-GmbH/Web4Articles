@@ -134,6 +134,12 @@ for session_dir in $(ls -1r "$JOURNAL_DIR"); do
             else
                 echo "- **Workspace Documentation**: Not available" >> "$OVERVIEW_FILE"
             fi
+            
+            # Agent Snapshot (show if available)
+            if [ -f "$session_path/active-agents.md" ]; then
+                active_count=$(grep -c "🟢 Active" "$session_path/active-agents.md" 2>/dev/null || echo "0")
+                echo "- **Agent Snapshot**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/$session_dir/active-agents.md) [📸 $active_count active agents](./project.journal/$session_dir/active-agents.md)" >> "$OVERVIEW_FILE"
+            fi
         else
             echo "- **Session**: $session_dir (No project.state.md)" >> "$OVERVIEW_FILE"
         fi
@@ -181,16 +187,26 @@ pdca/
 
 ## 🤖 Active Agents
 
-**Live Agent Status**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/active-agents.md) [./active-agents.md](file:///workspace/scrum.pmo/project.journal/active-agents.md)
-
 EOF
 
-# Include active agents summary if file exists
-if [ -f "$JOURNAL_DIR/active-agents.md" ]; then
-    # Extract summary statistics
-    ACTIVE_COUNT=$(grep -c "🟢 Active" "$JOURNAL_DIR/active-agents.md" || echo "0")
-    SEMI_ACTIVE_COUNT=$(grep -c "🔵 Semi-active" "$JOURNAL_DIR/active-agents.md" || echo "0")
-    DORMANT_COUNT=$(grep -c "⚫ Dormant" "$JOURNAL_DIR/active-agents.md" || echo "0")
+# Find the latest session with an agent snapshot
+LATEST_AGENT_SNAPSHOT=""
+for session in $(ls -d "$JOURNAL_DIR"/2025-* 2>/dev/null | sort -r); do
+    if [ -f "$session/active-agents.md" ]; then
+        LATEST_AGENT_SNAPSHOT="$session/active-agents.md"
+        LATEST_SNAPSHOT_SESSION=$(basename "$session")
+        break
+    fi
+done
+
+if [ -n "$LATEST_AGENT_SNAPSHOT" ]; then
+    echo "**Latest Agent Snapshot**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/$LATEST_SNAPSHOT_SESSION/active-agents.md) [./$LATEST_SNAPSHOT_SESSION/active-agents.md](file:///workspace/scrum.pmo/project.journal/$LATEST_SNAPSHOT_SESSION/active-agents.md)" >> "$OVERVIEW_FILE"
+    echo "" >> "$OVERVIEW_FILE"
+    
+    # Extract summary statistics from latest snapshot
+    ACTIVE_COUNT=$(grep -c "🟢 Active" "$LATEST_AGENT_SNAPSHOT" || echo "0")
+    SEMI_ACTIVE_COUNT=$(grep -c "🔵 Semi-active" "$LATEST_AGENT_SNAPSHOT" || echo "0")
+    DORMANT_COUNT=$(grep -c "⚫ Dormant" "$LATEST_AGENT_SNAPSHOT" || echo "0")
     
     cat >> "$OVERVIEW_FILE" << EOF
 ### Quick Stats
@@ -203,10 +219,13 @@ if [ -f "$JOURNAL_DIR/active-agents.md" ]; then
 EOF
 
     # Extract active agent sessions
-    grep -A1 "🟢 Active" "$JOURNAL_DIR/active-agents.md" | grep -E "^\|" | while read -r line; do
+    grep -A1 "🟢 Active" "$LATEST_AGENT_SNAPSHOT" | grep -E "^\|" | while read -r line; do
         echo "$line" >> "$OVERVIEW_FILE"
     done || true
     
+    echo "" >> "$OVERVIEW_FILE"
+else
+    echo "**No agent snapshots found** - Run \`./scripts/detect-active-agents.sh\` to create one" >> "$OVERVIEW_FILE"
     echo "" >> "$OVERVIEW_FILE"
 fi
 

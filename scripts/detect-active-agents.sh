@@ -6,7 +6,6 @@ set -euo pipefail
 
 # Configuration
 PROJECT_ROOT="/workspace"
-AGENT_REGISTRY="$PROJECT_ROOT/scrum.pmo/project.journal/active-agents.md"
 JOURNAL_DIR="$PROJECT_ROOT/scrum.pmo/project.journal"
 DAYS_ACTIVE=1        # Days to consider "active"
 DAYS_SEMI_ACTIVE=7   # Days to consider "semi-active"
@@ -17,6 +16,20 @@ YELLOW='\033[0;33m'
 RED='\033[0;31m'
 BLUE='\033[0;34m'
 NC='\033[0m'
+
+# Detect current session or use provided session
+if [ -n "${CURRENT_SESSION:-}" ]; then
+    SESSION_DIR="$JOURNAL_DIR/$CURRENT_SESSION"
+else
+    # Find the latest session directory
+    CURRENT_SESSION=$(ls -d "$JOURNAL_DIR"/2025-* 2>/dev/null | sort -r | head -1 | xargs basename)
+    SESSION_DIR="$JOURNAL_DIR/$CURRENT_SESSION"
+fi
+
+# Set output file in session directory
+AGENT_REGISTRY="$SESSION_DIR/active-agents.md"
+
+echo -e "${BLUE}📁 Session: $CURRENT_SESSION${NC}"
 
 # Agent branch mappings
 declare -A AGENT_BRANCHES=(
