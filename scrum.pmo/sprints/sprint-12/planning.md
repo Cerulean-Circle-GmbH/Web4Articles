@@ -3,6 +3,10 @@
 ## Sprint Goal (Revised)
 Write the FIRST article in a series that guides developers through our journey, starting where they are - in test hell. Focus on practical solutions without revealing advanced concepts too early.
 
+### Latest Sprint 12 PDCA Entries
+- **Structure Discovery**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0947-article-writing/pdca/role/scrummaster/sprint-12-work/2025-08-15-UTC-1055.md) | [2025-08-15-UTC-1055.md](../../project.journal/2025-08-15-0947-article-writing/pdca/role/scrummaster/sprint-12-work/2025-08-15-UTC-1055.md)
+- **Completion & Cleanup**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-16-1201-cleanup/pdca/role/scrummaster/2025-08-16-UTC-2030.md) | [2025-08-16-UTC-2030.md](../../project.journal/2025-08-16-1201-cleanup/pdca/role/scrummaster/2025-08-16-UTC-2030.md)
+
 ## Article Series Overview
 
 ### Article 1: "My Terminal File Manager Almost Killed My Testing Career" (Sprint 12)
