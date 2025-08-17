@@ -1,5 +1,5 @@
 # PDCA - TSRanger Prompt Line Navigation Inconsistency Discovery
-[Back to PDCA Index](../)
+[Back to Session](../../../../project.state.md) | [Journal Overview](../../../../../../project.journal.overview.md)
 
 **Date**: 2025-08-17 UTC 12:46  
 **Objective**: Document critical inconsistency in prompt line behavior between filter mode and navigation mode  

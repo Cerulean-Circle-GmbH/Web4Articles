@@ -1,5 +1,5 @@
 # PDCA - TSRanger v1.0 vs v2.0 TUI Comparison Analysis
-[Back to PDCA Index](../)
+[Back to Session](../../../../project.state.md) | [Journal Overview](../../../../../../project.journal.overview.md)
 
 **Date**: 2025-08-17 UTC 12:14  
 **Objective**: Comparative analysis of TSRanger v1.0 and v2.0 TUI implementations with navigation testing  
