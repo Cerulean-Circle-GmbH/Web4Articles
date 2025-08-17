@@ -1,4 +1,4 @@
-[Back to ScrumMaster Role](../) | [PDCA Overview](./README.md)
+[Back to Session](../../../../project.state.md) | [Journal Overview](../../../../../../project.journal.overview.md)
 
 # 📋 **PDCA Cycle: GitHub Actions Strange Behavior Emergency Response - 2025-08-17-UTC-1309**
 

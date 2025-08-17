@@ -1,5 +1,5 @@
 # PDCA - TSRanger Footer Positioning Requirement Update
-[Back to PDCA Index](../)
+[Back to Session](../../../../project.state.md) | [Journal Overview](../../../../../../project.journal.overview.md)
 
 **Date**: 2025-08-17 UTC 12:31  
 **Objective**: Update Sprint 5 requirements to reflect footer positioning change from bottom-anchored to 2-lines-up  
