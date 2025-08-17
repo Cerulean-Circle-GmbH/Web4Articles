@@ -4,6 +4,14 @@
   [requirement:uuid:9a1f2b3c-4d5e-4f60-8a9b-0c1d2e3f4a5b]
   > Four columns (Classes, Methods, Params, Docs), exactly one blank line above the preview and one between preview and footer; blue background with white, bold footer text that fills the terminal width and positioned 2 lines up from the bottom.
 
+- [x] Prompt line positioned at top with clean separation from column indicators
+  [requirement:uuid:a1b2c3d4-5e6f-4789-0abc-def123456789]
+  > Clean prompt line at top of screen showing [hostname] user@path format, completely separated from column background indicators below it.
+
+- [x] Column-colored background indicator line below prompt  
+  [requirement:uuid:b2c3d4e5-6f70-4890-1bcd-ef2345678901]
+  > Empty colored line below prompt line showing column backgrounds (Classes: cyan, Methods: yellow, Params: magenta, Docs: blue) with active column highlighted, providing visual column separation without interfering with prompt display.
+
 - [ ] Prompt rendering and colors derived from `$PS1` with fallbacks  
   [requirement:uuid:1b2c3d4e-5f60-4a7b-8c9d-0e1f2a3b4c5d]
   > Support `\u`, `\h`, `\w` in `$PS1`; color `user` cyan and `root` red; working directory yellow; no newlines; fallback `[host] user@pwd` when `$PS1` is absent.
