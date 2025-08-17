@@ -118,28 +118,9 @@ export class RangerController {
           return;
         }
         // Prompt-line editing model (Task 7)
-        if (key === '\u001b[D') {
-          // DEVELOPER FIX: Handle retreat from method back to class
-          const tokenIdx = this.model.getCurrentPromptTokenIndex();
-          if (tokenIdx === 1) {
-            const tokens = this.model.promptBuffer.split(/\s+/);
-            if (tokens.length >= 2 && tokens[0] && tokens[1]) {
-              // Remove method, keep only class
-              this.model.promptBuffer = tokens[0];
-              // Position cursor at first character of class
-              this.model.promptCursorIndex = 0;
-              this.model.selectedColumn = 0;
-              this.model.suppressMethodFilter = false;
-              this.model.deriveFiltersFromPrompt();
-              this.view.render(this.model);
-              return;
-            }
-          }
-          // Move cursor left in prompt
-          if (this.model.promptCursorIndex > 0) {
-            this.model.promptCursorIndex--;
-            this.view.render(this.model);
-          }
+        if (key === '\u001b[D' || key === '\u001b[Z') {
+          // DRY PRINCIPLE: Both [left] and [ShiftTab] use same retreat method
+          this.handleLeftShiftTabRetreat();
           return;
         }
         if (key === '\u001b[B' || key === '\u001b[A') {
@@ -440,5 +421,41 @@ export class RangerController {
     // FALLBACK: Use existing advancement behavior (move to next column)
     this.changeColumn(1);
     this.view.render(this.model);
+  }
+
+  /**
+   * RADICAL OOP: Shared retreat method for [left] and [ShiftTab] keys
+   * DRY PRINCIPLE: Both keys use identical logic for retreat operations
+   * 
+   * Handles retreat from class+method back to class-only:
+   * Logger log → Logger (with cursor at [L]ogger)
+   */
+  private handleLeftShiftTabRetreat(): void {
+    const tokenIdx = this.model.getCurrentPromptTokenIndex();
+    
+    // RETREAT FROM METHOD: If we're at method position, remove method and go back to class
+    if (tokenIdx === 1) {
+      const tokens = this.model.promptBuffer.split(/\s+/);
+      if (tokens.length >= 2 && tokens[0] && tokens[1]) {
+        // Remove method, keep only class: "Logger log" → "Logger"
+        this.model.promptBuffer = tokens[0];
+        
+        // Position cursor at first character of class: [L]ogger
+        this.model.promptCursorIndex = 0;
+        
+        // Update model state
+        this.model.selectedColumn = 0; // Move back to Classes column
+        this.model.suppressMethodFilter = false;
+        this.model.deriveFiltersFromPrompt();
+        this.view.render(this.model);
+        return;
+      }
+    }
+    
+    // FALLBACK: Move cursor left in prompt (normal cursor movement)
+    if (this.model.promptCursorIndex > 0) {
+      this.model.promptCursorIndex--;
+      this.view.render(this.model);
+    }
   }
 }
