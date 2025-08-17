@@ -313,5 +313,106 @@ describe('TSRanger DRY Key Combinations - Regression Prevention', () => {
       expect(out.length).toBeGreaterThan(100);
       expect(cleanOutput).toMatch(/Classes|Methods|Params|Docs/);
     });
+
+    it('BROKEN: g[tab] advancement fails - no method in prompt (USER REPORTED BUG)', () => {
+      // User issue: "tsranger test 'g[tab]' is still broken. no method set. only on tsranger test 'g[tab][down]'"
+      const gTabOut = runScripted('g[tab]');
+      const gTabClean = stripAnsi(gTabOut);
+      const gTabLines = gTabClean.split(/\r?\n/);
+      
+      // Find prompt line that should show "GitScrumProject start"
+      const promptLines = gTabLines.filter(l => l.includes('GitScrumProject'));
+      const finalPromptLine = promptLines[promptLines.length - 1] || '';
+      
+      // 🚫 BUG: g[tab] should show "GitScrumProject start" but only shows "GitScrumProject"
+      expect(finalPromptLine).toMatch(/GitScrumProject\s+start/); // Currently FAILS - missing method
+      
+      // Verify the issue: g[tab][down] DOES work
+      const gTabDownOut = runScripted('g[tab][down]');
+      const gTabDownClean = stripAnsi(gTabDownOut);
+      const gTabDownLines = gTabDownClean.split(/\r?\n/);
+      const gTabDownPromptLines = gTabDownLines.filter(l => l.includes('Logger'));
+      const gTabDownFinalLine = gTabDownPromptLines[gTabDownPromptLines.length - 1] || '';
+      
+      // ✅ This DOES work: g[tab][down] correctly shows "Logger log"
+      expect(gTabDownFinalLine).toMatch(/Logger\s+log/); // Should PASS - method is shown
+    });
+  });
+
+  describe('🧪 COMPREHENSIVE TEST MATRIX - Key Combination Behavior', () => {
+    const testMatrix = [
+      // Basic advancement tests
+      { sequence: '[tab]', description: 'Tab advancement', expected: 'Logger log', shouldPass: true },
+      { sequence: '[right]', description: 'Right advancement', expected: 'Logger log', shouldPass: true },
+      
+      // Filter + advancement tests - THESE ARE BROKEN
+      { sequence: 'g[tab]', description: 'Filter+Tab advancement', expected: 'GitScrumProject start', shouldPass: false },
+      { sequence: 'g[right]', description: 'Filter+Right advancement', expected: 'GitScrumProject start', shouldPass: false },
+      
+      // Navigation tests (should only show class)
+      { sequence: '[down]', description: 'Down navigation', expected: 'Logger', shouldPass: false }, // BROKEN: shows methods
+      { sequence: 'g[down]', description: 'Filter+Down navigation', expected: 'GitScrumProject', shouldPass: true },
+      
+      // Complex sequences that work
+      { sequence: 'g[tab][down]', description: 'Filter+Tab then navigate', expected: 'Logger log', shouldPass: true },
+      { sequence: 'g[right][down]', description: 'Filter+Right then navigate', expected: 'Logger log', shouldPass: true },
+      
+      // Retreat tests
+      { sequence: 'g[tab][left]', description: 'Filter+Tab then retreat', expected: 'GitScrumProject', shouldPass: true },
+      { sequence: 'g[right][left]', description: 'Filter+Right then retreat', expected: 'GitScrumProject', shouldPass: true },
+    ];
+
+    testMatrix.forEach(({ sequence, description, expected, shouldPass }) => {
+      const testType = shouldPass ? 'should work' : 'BROKEN - should be fixed';
+      it(`${testType}: ${sequence} - ${description}`, () => {
+        const out = runScripted(sequence);
+        const cleanOutput = stripAnsi(out);
+        const lines = cleanOutput.split(/\r?\n/);
+        
+        // Find the appropriate prompt line
+        let promptLine = '';
+        if (expected.includes('Logger')) {
+          const loggerLines = lines.filter(l => l.includes('Logger'));
+          promptLine = loggerLines[loggerLines.length - 1] || '';
+        } else if (expected.includes('GitScrumProject')) {
+          const gitLines = lines.filter(l => l.includes('GitScrumProject'));
+          promptLine = gitLines[gitLines.length - 1] || '';
+        }
+        
+        // Matrix validation based on expected behavior
+        if (expected.includes(' ')) {
+          // Should show class + method
+          const [className, methodName] = expected.split(' ');
+          if (shouldPass) {
+            expect(promptLine).toMatch(new RegExp(`${className}\\s+${methodName}`));
+          } else {
+            // Test should fail but we document the issue
+            try {
+              expect(promptLine).toMatch(new RegExp(`${className}\\s+${methodName}`));
+            } catch (e) {
+              // Expected to fail - log the issue
+              console.log(`❌ CONFIRMED BUG: ${sequence} shows "${promptLine.trim()}" instead of "${expected}"`);
+              throw e; // Still fail the test to track the issue
+            }
+          }
+        } else {
+          // Should show only class (no method)
+          if (shouldPass) {
+            expect(promptLine).toMatch(new RegExp(`${expected}(?!\\s+\\w)`));
+          } else {
+            // Document navigation bugs where methods appear when they shouldn't
+            try {
+              expect(promptLine).not.toMatch(new RegExp(`${expected}\\s+\\w+`));
+            } catch (e) {
+              console.log(`❌ CONFIRMED BUG: ${sequence} shows method when should only show class: "${promptLine.trim()}"`);
+              throw e;
+            }
+          }
+        }
+        
+        // UI structure integrity check (all should pass this)
+        expect(cleanOutput).toMatch(/Classes|Methods|Params|Docs/);
+      });
+    });
   });
 });
