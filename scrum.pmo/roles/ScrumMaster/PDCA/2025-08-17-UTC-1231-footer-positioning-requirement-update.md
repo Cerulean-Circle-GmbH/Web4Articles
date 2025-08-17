@@ -24,9 +24,10 @@
 
 ### **Requirements Update Strategy**
 1. **Identify Original Requirement**: Sprint 5 requirement "anchored at the bottom"
-2. **Document Change**: Footer now positioned 2 lines up from bottom  
-3. **Update Specification**: Modify requirement text to reflect implementation
-4. **Maintain Traceability**: Keep requirement UUID for backward compatibility
+2. **Document Changes**: Footer, prompt line positioning, and colored columns implementation  
+3. **Add New Requirements**: Prompt line separation and column indicator specifications
+4. **Update Specification**: Modify requirement text to reflect implementation
+5. **Maintain Traceability**: Keep requirement UUIDs for backward compatibility
 
 ### **Implementation Details**
 - **Before**: `remainingLines = height - usedLines - 1` (bottom-anchored)
@@ -37,11 +38,24 @@
 
 ## **⚙️ Do**
 
-### **Requirement Update Applied**
-```markdown
-OLD: > Four columns (Classes, Methods, Params, Docs), exactly one blank line above the preview and one between preview and footer; blue background with white, bold footer text that fills the terminal width and stays anchored at the bottom.
+### **Requirements Updates Applied**
 
-NEW: > Four columns (Classes, Methods, Params, Docs), exactly one blank line above the preview and one between preview and footer; blue background with white, bold footer text that fills the terminal width and positioned 2 lines up from the bottom.
+**1. Footer Positioning (Modified)**
+```markdown
+OLD: stays anchored at the bottom
+NEW: positioned 2 lines up from the bottom
+```
+
+**2. Prompt Line Positioning (New)**
+```markdown
+NEW: Clean prompt line at top of screen showing [hostname] user@path format, completely separated from column background indicators below it.
+[requirement:uuid:a1b2c3d4-5e6f-4789-0abc-def123456789]
+```
+
+**3. Column-Colored Background Indicator (New)**
+```markdown  
+NEW: Empty colored line below prompt line showing column backgrounds (Classes: cyan, Methods: yellow, Params: magenta, Docs: blue) with active column highlighted, providing visual column separation without interfering with prompt display.
+[requirement:uuid:b2c3d4e5-6f70-4890-1bcd-ef2345678901]
 ```
 
 ### **Technical Implementation**
@@ -69,9 +83,11 @@ NEW: > Four columns (Classes, Methods, Params, Docs), exactly one blank line abo
 ## **🚀 Act**
 
 ### **Action Items**
-- [x] **Requirements Update**: Modified Sprint 5 requirement to reflect 2-lines-up positioning
-- [x] **PDCA Creation**: Documented requirement change process
-- [x] **Traceability**: Maintained requirement UUID for continuity
+- [x] **Footer Requirement Update**: Modified Sprint 5 requirement to reflect 2-lines-up positioning
+- [x] **Prompt Line Requirement**: Added new requirement for top-positioned clean prompt line
+- [x] **Column Indicator Requirement**: Added new requirement for colored column background indicators
+- [x] **PDCA Creation**: Documented complete requirement change process
+- [x] **Traceability**: Maintained existing UUIDs and assigned new UUIDs for new requirements
 
 ### **PDCA Process Update**
 - **Plan**: ✅ Requirements alignment strategy executed
@@ -81,4 +97,4 @@ NEW: > Four columns (Classes, Methods, Params, Docs), exactly one blank line abo
 
 ---
 
-## **💡 Sprint 5 requirements successfully updated to match TSRanger v2.0 footer positioning! 📊**
+## **💡 Sprint 5 requirements successfully updated with TSRanger v2.0 layout changes: footer positioning, prompt line separation, and colored column indicators! 📊**
