@@ -45,7 +45,7 @@ export class RangerView {
 
     // Calculate remaining space for footer positioning
     const usedLines = 2 + gridRows; // prompt line + column backgrounds + grid rows
-    const remainingLines = height - usedLines - 1; // -1 for footer itself
+    const remainingLines = height - usedLines - 3; // -1 for footer itself, -2 to pull footer up by 2 lines
     if (remainingLines > 0) {
       process.stdout.write('\n'.repeat(remainingLines));
     }
