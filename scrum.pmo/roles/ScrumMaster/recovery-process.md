@@ -35,41 +35,39 @@ This document defines the canonical recovery process for AI agents when context 
 
 ## Recovery Process Steps
 
-### Phase 0: Role Selection (New)
+### Standard Recovery Process (Full)
+For comprehensive recovery sessions, use the existing full process with all verification steps.
+
+### Save Recovery Process (Streamlined)
+When user says "recover save from readme", use this streamlined process:
+
+### Phase 0: Role Selection
 ```bash
 # Optional: Specify target role for recovery
 # If not specified, defaults to ScrumMaster
-# Valid roles: ScrumMaster, Developer, PO, Architect, Tester, DevOps, OntologyAgent, etc.
 TARGET_ROLE="${1:-ScrumMaster}"
-echo "Recovery will proceed as: $TARGET_ROLE"
+echo "Save recovery will proceed as: $TARGET_ROLE"
 ```
 
-### Phase 1: Environment Setup
+### Phase 1: Branch Setup and Merge
 ```bash
-# 1. Ensure on release/dev
+# 1. Fetch latest changes
 git fetch origin
-git checkout release/dev
-git pull origin release/dev
 
-# 2. Create recovery branch
+# 2. Switch to feature/recovery-agent branch
+git checkout origin/feature/recovery-agent
+git checkout -b feature/recovery-agent
+
+# 3. Merge release/dev into recovery-agent
+git merge origin/release/dev
+
+# 4. Generate timestamp for session
 TIMESTAMP=$(date -u +"%Y-%m-%d-%H%M")
-BRANCH_NAME="cursor/recovery-${TIMESTAMP}"
-git checkout -b "$BRANCH_NAME"
-
-# 3. Verify environment
-docker version
-node --version
-npm --version
-
-# 4. Generate repository tree (not following symbolic links)
-tree -L 3 -I 'node_modules|.git' -a --charset ascii --noreport > repo.tree.txt
 ```
 
-### Phase 2: Context Recovery
+### Phase 2: Streamlined Context Recovery (Save Recovery Only)
 1. **Read Core Documents**
    - `/workspace/README.md` - Project overview and principles
-   - `/workspace/wiki/Ontology.md` - Key terminology
-   - `/workspace/scrum.pmo/project.journal/*/project.state.md` - Latest state
    - **Role-Specific**: `/workspace/scrum.pmo/roles/${TARGET_ROLE}/process.md` - Target role process
 
 2. **Check Role Processes**
@@ -78,11 +76,12 @@ tree -L 3 -I 'node_modules|.git' -a --charset ascii --noreport > repo.tree.txt
    - Identify active roles and responsibilities
    - **Load Target Role Context**: Read specific responsibilities and current tasks for `$TARGET_ROLE`
 
-3. **Sprint & Task Status**
-   - Review `/workspace/scrum.pmo/sprints/*`
-   - Identify current sprint and active tasks
-   - Check task completion status
-   - **Role-Specific Tasks**: Filter tasks assigned to `$TARGET_ROLE`
+### Phase 3: Status Report with Clickable Links
+Generate status report with:
+- GitHub links to current branch and key files
+- Local file links for easy navigation
+- Current project state summary
+- Next steps and priorities
 
 ### Phase 3: Session-Based Journal Entry Creation
 ```bash
