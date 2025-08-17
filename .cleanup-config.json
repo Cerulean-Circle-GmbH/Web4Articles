@@ -1,0 +1,28 @@
+{
+  "rules": {
+    "sprintFolder": ["planning.md", "requirements.md", "tasks/", "README.md"],
+    "pdcaLocation": "scrum.pmo/project.journal/{session}/pdca/role/{role}/",
+    "articleLocation": "articles/{platform}/{series}/",
+    "allowedPatterns": {
+      "sprint": ["^task-\\d+.*\\.md$", "^planning\\.md$", "^requirements\\.md$", "^README\\.md$"],
+      "journal": ["^project\\.state\\.md$", "^active-agents\\.md$", "^tree\\.index\\.md$", "^workspace.*\\.md$"],
+      "pdca": ["^\\d{4}-\\d{2}-\\d{2}-UTC-\\d{4}\\.md$"]
+    }
+  },
+  "exceptions": [
+    "scrum.pmo/sprints/sprint-0/**",
+    "*.tmp.md",
+    "*.draft.md",
+    "scrum.pmo/project.journal/*/pdca/**"
+  ],
+  "autoFix": {
+    "enabled": true,
+    "preserveGitHistory": true,
+    "createBackup": false
+  },
+  "reporting": {
+    "saveReports": true,
+    "reportLocation": "cleanup-reports/",
+    "maxReportsKept": 30
+  }
+}

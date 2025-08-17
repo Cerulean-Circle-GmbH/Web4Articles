@@ -142,3 +142,17 @@ See `sprint-0` tasks for detailed step-by-step initialization and setup instruct
 
 ---
 Developers should continue to maintain and expand the documentation and ontology as the project grows.
+
+## PDCA Requirement (Shared)
+- Use the shared PDCA template at `scrum.pmo/roles/_shared/PDCA/template.md`.
+- After each QA/user prompt or significant development change, create a UTC-named PDCA entry under `scrum.pmo/roles/Developer/PDCA/`.
+- In Check, include concrete evidence (tree, test logs, git) and a verbatim QA quote.
+- Plan must include bold-labelled subsections (Objective, Scope, Targets, Inputs, Acceptance Criteria, Assumptions, Constraints, Options, Rationale, Risks/Mitigations).
+
+## Recovery → PDCA → Commit & Push (Enforced)
+- After recovery or any QA prompt: perform recovery, write PDCA (UTC, QA quote, Actions with artifact links), then commit and push immediately.
+
+## Linking Policy (GitHub-first dual-linking)
+- Provide GitHub web link followed by relative path link for referenced files.
+- Example:
+  - `[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/<branch>/scrum.pmo/roles/Developer/process.md): [scrum.pmo/roles/Developer/process.md](../../scrum.pmo/roles/Developer/process.md)`
