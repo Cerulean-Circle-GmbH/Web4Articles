@@ -119,6 +119,22 @@ export class RangerController {
         }
         // Prompt-line editing model (Task 7)
         if (key === '\u001b[D') {
+          // DEVELOPER FIX: Handle retreat from method back to class
+          const tokenIdx = this.model.getCurrentPromptTokenIndex();
+          if (tokenIdx === 1) {
+            const tokens = this.model.promptBuffer.split(/\s+/);
+            if (tokens.length >= 2 && tokens[0] && tokens[1]) {
+              // Remove method, keep only class
+              this.model.promptBuffer = tokens[0];
+              // Position cursor at first character of class
+              this.model.promptCursorIndex = 0;
+              this.model.selectedColumn = 0;
+              this.model.suppressMethodFilter = false;
+              this.model.deriveFiltersFromPrompt();
+              this.view.render(this.model);
+              return;
+            }
+          }
           // Move cursor left in prompt
           if (this.model.promptCursorIndex > 0) {
             this.model.promptCursorIndex--;
@@ -173,6 +189,25 @@ export class RangerController {
           const tokens = this.model.promptBuffer.split(/\s+/);
           const current = tokens[tokenIdx] ?? '';
           if (current.trim().length === 0) {
+            // DEVELOPER FIX: Handle advancement from selected class to method
+            if (tokenIdx === 0 && this.model.selectedClass) {
+              const selectedClass = this.model.selectedClass;
+              const methods = TSCompletion.getClassMethods(selectedClass);
+              if (methods.length > 0) {
+                const firstMethod = methods[0];
+                // Add method to buffer
+                tokens[0] = selectedClass;
+                tokens[1] = firstMethod;
+                this.model.promptBuffer = tokens.join(' ').trim();
+                // Position cursor at start of method
+                this.model.promptCursorIndex = selectedClass.length + 1;
+                this.model.selectedColumn = 1;
+                this.model.suppressMethodFilter = true;
+                this.model.deriveFiltersFromPrompt();
+                this.view.render(this.model);
+                return;
+              }
+            }
             // For empty token, treat Tab/Right as navigation to next column
             this.changeColumn(1);
             this.view.render(this.model);
