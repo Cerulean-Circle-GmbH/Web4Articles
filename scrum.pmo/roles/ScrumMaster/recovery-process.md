@@ -62,7 +62,7 @@ node --version
 npm --version
 
 # 4. Generate repository tree (not following symbolic links)
-tree -I 'node_modules|.git' -a --charset ascii --noreport > repo.tree.txt
+tree -L 3 -I 'node_modules|.git' -a --charset ascii --noreport > repo.tree.txt
 ```
 
 ### Phase 2: Context Recovery
@@ -352,7 +352,7 @@ EOF
 fi
 
 # Create tree.index.md next to project state
-tree -I 'node_modules|.git' -a --charset ascii --noreport > "$JOURNAL_DIR/tree.index.md"
+tree -L 3 -I 'node_modules|.git' -a --charset ascii --noreport > "$JOURNAL_DIR/tree.index.md"
 # Add markdown formatting to tree output
 {
   echo "[Back to Project State](./project.state.md)"
@@ -374,7 +374,7 @@ if [ -L "/workspace/workspacesMountPoint" ]; then
   echo "Creating workspace mount point documentation..."
   
   # Generate workspace tree structure
-  tree /workspace/workspacesMountPoint -I 'node_modules|.git' -a --charset ascii --noreport > "$JOURNAL_DIR/workspaces.tree.txt"
+  tree -L 3 /workspace/workspacesMountPoint -I 'node_modules|.git' -a --charset ascii --noreport > "$JOURNAL_DIR/workspaces.tree.txt"
   
   # Create workspacesMountPoint-tree.index.md
   {
@@ -486,7 +486,7 @@ find /workspace -name "*.md" -type f -exec grep -l '\[.*\](.*/' {} \; | while re
           echo "# Directory Tree Index — $(date -u +"%Y-%m-%d-%H%M") UTC"
           echo ""
           echo "\`\`\`"
-          tree "$target_dir" -I 'node_modules|.git' -a --charset ascii --noreport
+          tree -L 3 "$target_dir" -I 'node_modules|.git' -a --charset ascii --noreport
           echo "\`\`\`"
           echo ""
           echo "*Generated automatically. Not following symbolic links.*"
