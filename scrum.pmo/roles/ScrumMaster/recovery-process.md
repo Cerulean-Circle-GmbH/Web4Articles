@@ -62,7 +62,7 @@ node --version
 npm --version
 
 # 4. Generate repository tree (not following symbolic links)
-tree -L 3 -I 'node_modules|.git' -a --charset ascii --noreport > repo.tree.txt
+tree  -a -L 3 -s -h -D --timefmt "%Y-%m-%d %H:%M:%S" --charset ascii --noreport > repo.tree.txt
 ```
 
 ### Phase 2: Context Recovery
@@ -374,7 +374,7 @@ if [ -L "/workspace/workspacesMountPoint" ]; then
   echo "Creating workspace mount point documentation..."
   
   # Generate workspace tree structure
-  tree -L 3 /workspace/workspacesMountPoint -I 'node_modules|.git' -a --charset ascii --noreport > "$JOURNAL_DIR/workspaces.tree.txt"
+  tree -a -L 3 -s -h -D --timefmt "%Y-%m-%d %H:%M:%S" /workspace/workspacesMountPoint --charset ascii --noreport > "$JOURNAL_DIR/workspaces.tree.txt"
   
   # Create workspacesMountPoint-tree.index.md
   {
