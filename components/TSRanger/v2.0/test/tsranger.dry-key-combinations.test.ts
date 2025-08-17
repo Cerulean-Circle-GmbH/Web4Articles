@@ -294,5 +294,24 @@ describe('TSRanger DRY Key Combinations - Regression Prevention', () => {
       expect(out.length).toBeGreaterThan(100);
       expect(cleanOutput).toMatch(/Classes|Methods|Params|Docs/); // UI structure intact
     });
+
+    it('Navigation filter prevention: g[down][down][tab] - should not set any filter', () => {
+      // User issue: "tsranger test 'g[down]...' down to GitScrumProject [tab] setd filter, but it should not"
+      const out = runScripted('g[down][down][tab]');
+      const cleanOutput = stripAnsi(out);
+      const lines = cleanOutput.split(/\r?\n/);
+      
+      // Get final state classes header (last occurrence)
+      const classesLines = lines.filter(l => l.includes('[Classes]'));
+      const finalClassesHeader = classesLines[classesLines.length - 1] || '';
+      
+      // User requirement: Navigation should NOT set filters - should show [Classes] without filter parentheses
+      expect(finalClassesHeader).not.toMatch(/\[Classes\]\s+\([^)]+\)/); // NO filter like (GitScrumProject)
+      expect(finalClassesHeader).toMatch(/^\[Classes\]\s+\[Methods\]/); // Clean header format
+      
+      // Verify UI structure remains intact and sequence completed
+      expect(out.length).toBeGreaterThan(100);
+      expect(cleanOutput).toMatch(/Classes|Methods|Params|Docs/);
+    });
   });
 });
