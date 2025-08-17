@@ -116,6 +116,13 @@ export class RangerView {
         // Navigation mode: ONLY show selected class, never methods
         display = selectedClass;
       }
+      
+      // ADVANCEMENT: If we have both class and method selected, show "Class Method" format
+      // This handles [tab] advancement from class to method
+      if (selectedClass && selectedMethod && !prefix) {
+        display = `${selectedClass} ${selectedMethod}`;
+        buffer = display;
+      }
     } else if (tokenIdx === 1) {
       // Method token: only show when explicitly advanced via [tab] or [right]
       // When suppressing method filter (navigation/completion), show the full selected method
@@ -140,6 +147,9 @@ export class RangerView {
       const typedLen = model.suppressMethodFilter ? 0 : typedRaw.length;
       const methodStart = (cls ? cls.length + 1 : 0);
       effectiveCursor = methodStart + typedLen;
+    } else if (tokenIdx === 0 && selectedClass && selectedMethod && !parts[0]) {
+      // ADVANCEMENT: Position cursor at start of method when showing "Class Method"
+      effectiveCursor = selectedClass.length + 1; // +1 for the space
     }
     const before = display.slice(0, effectiveCursor);
     const after = display.slice(effectiveCursor);
