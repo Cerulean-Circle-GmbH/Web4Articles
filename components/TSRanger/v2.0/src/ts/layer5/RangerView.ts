@@ -104,8 +104,14 @@ export class RangerView {
     if (tokenIdx === 0) {
       const prefix = parts[0] || '';
       const suggestion = (model.filteredClasses()[0] || '');
+      const selectedClass = model.selectedClass || '';
+      
       if (suggestion && prefix && suggestion.toLowerCase().startsWith(prefix.toLowerCase())) {
+        // Filter mode: show suggestion based on typed prefix
         display = suggestion + (parts.length > 1 ? (' ' + parts.slice(1).join(' ')) : '');
+      } else if (selectedClass && !prefix) {
+        // Navigation mode: show selected class when no typed prefix
+        display = selectedClass + (parts.length > 1 ? (' ' + parts.slice(1).join(' ')) : '');
       }
     } else if (tokenIdx === 1) {
       // For method token, suggest selected method name if any
