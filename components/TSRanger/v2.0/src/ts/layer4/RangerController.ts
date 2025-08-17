@@ -100,7 +100,7 @@ export class RangerController {
           this.view.render(this.model);
           return;
         }
-        if (key === '\u001b[D') { // Left
+        if (key === '\u001b[D' && !this.model.promptEditActive) { // Left - column navigation only when not editing prompt
           this.changeColumn(-1);
           this.view.render(this.model);
           return;
