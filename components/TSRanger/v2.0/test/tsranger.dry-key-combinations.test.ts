@@ -347,10 +347,8 @@ describe('TSRanger DRY Key Combinations - Regression Prevention', () => {
       expect(cleanOutput).not.toMatch(/g\s*:/); // Must NOT show filter residue
       
       // Should show clean class name only (no filter, no method)
-      const lines = cleanOutput.split(/\r?\n/);
-      const classLines = lines.filter(l => l.includes('GitScrumProject'));
-      const finalLine = classLines[classLines.length - 1] || '';
-      expect(finalLine).toMatch(/GitScrumProject(?!\s+\w)/); // Class only, no method
+      const promptLine = getPromptLine(cleanOutput);
+      expect(promptLine).toMatch(/GitScrumProject(?!\s+\w)/); // Class only, no method
     });
 
     it('CRITICAL: Navigation to GitScrumProject then [tab] fails to add method', () => {
@@ -380,6 +378,84 @@ describe('TSRanger DRY Key Combinations - Regression Prevention', () => {
       
       // Should maintain class + method format after [down] navigation
       expect(finalPromptLine).toMatch(/\w+\s+\w+/); // Should show class + method format
+    });
+  });
+
+  describe('🎯 CLUEDO INVESTIGATION - User-Reported Evidence Matrix', () => {
+    // User feedback: "its like the board game cluedo. solve it."
+    
+    it('EVIDENCE: [down] navigation violates specification - shows method when should show class only', () => {
+      // User issue: "tsranger test '[down]' every time shows method. is acceptable but wrong according to specification."
+      // Specification: "[down] navigation should show class only, method should be added on [tab] or [right]"
+      const out = runScripted('[down]');
+      const cleanOutput = stripAnsi(out);
+      const lines = cleanOutput.split(/\r?\n/);
+      
+      // Find prompt line
+      const promptLines = lines.filter(l => l.includes('Logger') || l.includes('OOSH'));
+      const finalPromptLine = promptLines[promptLines.length - 1] || '';
+      
+      // According to spec: should show ONLY class name, NO method
+      expect(finalPromptLine).toMatch(/^[A-Za-z]+\s*$/); // Only class name, no method
+      expect(finalPromptLine).not.toMatch(/\w+\s+\w+/); // Should NOT show class + method format
+    });
+
+    it('✅ EVIDENCE: g filter works correctly (user confirmed)', () => {
+      // User feedback: "tsranger test 'g' is correct."
+      const out = runScripted('g');
+      const cleanOutput = stripAnsi(out);
+      
+      // Should show filter in UI and proper class filtering
+      expect(cleanOutput).toMatch(/\[Classes\]\s*\(g\)/); // Filter should be visible
+      expect(cleanOutput).toMatch(/GitScrumProject/); // Should filter to GitScrumProject
+    });
+
+    it('❌ EVIDENCE: g[right] fails to add method to prompt', () => {
+      // User issue: "tsranger test 'g[right]' does not add method to prompt."
+      const out = runScripted('g[right]');
+      const cleanOutput = stripAnsi(out);
+      const lines = cleanOutput.split(/\r?\n/);
+      
+      // Find prompt line
+      const promptLines = lines.filter(l => l.includes('GitScrumProject'));
+      const finalPromptLine = promptLines[promptLines.length - 1] || '';
+      
+      // Should show GitScrumProject + method (like GitScrumProject start)
+      expect(finalPromptLine).toMatch(/GitScrumProject\s+\w+/); // Should show class + method
+    });
+
+    it('❌ EVIDENCE: g[right][left] fails to clear prompt correctly', () => {
+      // User issue: "pressing the [left] does not clear the prompt or set it correctly to 'Logger' with no filters set."
+      const out = runScripted('g[right][left]');
+      const cleanOutput = stripAnsi(out);
+      const lines = cleanOutput.split(/\r?\n/);
+      
+      // Should clear back to Logger (first class) with no filters
+      expect(cleanOutput).toMatch(/\[Classes\]\s*$/); // No filter should be shown
+      expect(cleanOutput).not.toMatch(/\[Classes\]\s*\([^)]+\)/); // Should NOT show any filter
+      
+      // Find prompt line
+      const promptLines = lines.filter(l => l.includes('Logger'));
+      const finalPromptLine = promptLines[promptLines.length - 1] || '';
+      
+      // Should show clean "Logger" with no method, no filter
+      expect(finalPromptLine).toMatch(/^Logger\s*$/); // Only "Logger", nothing else
+    });
+
+    it('❌ EVIDENCE: [down][up] navigation fails to update prompt after operations', () => {
+      // User issue: "moving [down] and [up] then does not update the prompt anymore."
+      // Test: after g[right][left], try navigation and see if prompt updates
+      const out = runScripted('g[right][left][down][up]');
+      const cleanOutput = stripAnsi(out);
+      const lines = cleanOutput.split(/\r?\n/);
+      
+      // Navigation should update prompt to reflect selected class
+      const promptLines = lines.filter(l => l.includes('Logger') || l.includes('OOSH'));
+      const finalPromptLine = promptLines[promptLines.length - 1] || '';
+      
+      // Should show the class name based on navigation
+      expect(finalPromptLine).toMatch(/\w+/); // Should show some class name
+      expect(finalPromptLine.trim()).toBeTruthy(); // Should not be empty
     });
   });
 
@@ -436,6 +512,41 @@ describe('TSRanger DRY Key Combinations - Regression Prevention', () => {
         // UI structure integrity check (all should pass this)
         expect(cleanOutput).toMatch(/Classes|Methods|Params|Docs/);
       });
+    });
+  });
+
+  describe('🧪 MATRIX COMPLETION - Missing Test Cases', () => {
+    it('MATRIX: [down]5x navigation - should show class only (user equivalence)', () => {
+      // User expectation: "[down]5x is alternative to g should behave the same"
+      const out = runScripted('[down][down][down][down][down]');
+      const cleanOutput = stripAnsi(out);
+      const promptLine = getPromptLine(cleanOutput);
+      
+      // Should show GitScrumProject (class only, no method) - navigation rule
+      expect(promptLine).toMatch(/GitScrumProject(?!\s+\w)/);
+      
+      // Should NOT show method (user: "[down] multiple times should have no method")
+      expect(promptLine).not.toMatch(/GitScrumProject\s+\w+/);
+    });
+
+    it('MATRIX: [down]5x[tab][left] retreat equivalence - should match g[tab][left]', () => {
+      // User expectation: "[down]5x[tab] or g[tab] should behave the same"
+      const navigationRetreat = runScripted('[down][down][down][down][down][tab][left]');
+      const filterRetreat = runScripted('g[tab][left]');
+      
+      const navClean = stripAnsi(navigationRetreat);
+      const filterClean = stripAnsi(filterRetreat);
+      
+      const navPrompt = getPromptLine(navClean);
+      const filterPrompt = getPromptLine(filterClean);
+      
+      // Both should produce identical results (user equivalence expectation)
+      // Both should show clean GitScrumProject with no filter residue
+      expect(navPrompt).toMatch(/GitScrumProject(?!\s+\w)/);
+      expect(filterPrompt).toMatch(/GitScrumProject(?!\s+\w)/);
+      
+      // Should have same behavior (equivalence test)
+      expect(navPrompt.includes('GitScrumProject')).toBe(filterPrompt.includes('GitScrumProject'));
     });
   });
 });
