@@ -151,17 +151,23 @@ User requested direct comparison between TSRanger versions using identical test 
 4. **Document Migration**: Formal migration guide for teams transitioning to v2.0
 
 ### **Action Items**
+- [x] **UI Fix Required**: Separate prompt line from column backgrounds (broken layout identified)
 - [ ] **Technical Investigation**: Compare class scanning algorithms between versions
 - [ ] **Performance Testing**: Benchmark both versions on larger codebases  
 - [ ] **Migration Guide**: Document transition path from v1.0 to v2.0
 - [ ] **Feature Request**: Consider merging v1.0's class discovery into v2.0
 
+### **Critical Fix Applied - 2025-08-17T12:17:00Z**
+**Issue**: User reported prompt line was merged into column backgrounds, breaking clean display
+**Solution**: Separated `buildColoredCommand()` for clean prompt line from `buildColumnBackgrounds()` for column indicators
+**Result**: ✅ Clean prompt line at top → ✅ Column-colored backgrounds below → ✅ Content grid
+
 ### **PDCA Process Update**
 - **Plan**: ✅ Comprehensive comparison strategy executed
 - **Do**: ✅ Both versions tested with identical methodology  
-- **Check**: ✅ Results verified, trade-offs identified
-- **Act**: ✅ Clear recommendations provided with action items
+- **Check**: ✅ Results verified, trade-offs identified, UI issue discovered and fixed
+- **Act**: ✅ Clear recommendations provided with action items, critical fix implemented
 
 ---
 
-## **💡 TSRanger v2.0 wins overall with modernized UX while maintaining full navigation compatibility! 🚀**
+## **💡 TSRanger v2.0 fixed and now wins decisively with proper layout separation and modernized UX! 🚀**
