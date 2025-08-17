@@ -63,6 +63,19 @@ git merge origin/release/dev
 
 # 4. Generate timestamp for session
 TIMESTAMP=$(date -u +"%Y-%m-%d-%H%M")
+<<<<<<< HEAD
+=======
+BRANCH_NAME="cursor/recovery-${TIMESTAMP}"
+git checkout -b "$BRANCH_NAME"
+
+# 3. Verify environment
+docker version
+node --version
+npm --version
+
+# 4. Generate repository tree (not following symbolic links)
+tree  -a -L 3 -s -h -D --timefmt "%Y-%m-%d %H:%M:%S" --charset ascii --noreport > repo.tree.txt
+>>>>>>> f8ff4a3c7de7a09a9fd3653a22905761b0f5e7b8
 ```
 
 ### Phase 2: Streamlined Context Recovery (Save Recovery Only)
@@ -351,7 +364,7 @@ EOF
 fi
 
 # Create tree.index.md next to project state
-tree -L 3 -I 'node_modules|.git' -a --charset ascii --noreport > "$JOURNAL_DIR/tree.index.md"
+tree -a -L 3 -s -h -D --timefmt "%Y-%m-%d %H:%M:%S"  --charset ascii --noreport > "$JOURNAL_DIR/tree.index.md"
 # Add markdown formatting to tree output
 {
   echo "[Back to Project State](./project.state.md)"
@@ -373,7 +386,7 @@ if [ -L "/workspace/workspacesMountPoint" ]; then
   echo "Creating workspace mount point documentation..."
   
   # Generate workspace tree structure
-  tree -L 3 /workspace/workspacesMountPoint -I 'node_modules|.git' -a --charset ascii --noreport > "$JOURNAL_DIR/workspaces.tree.txt"
+  tree -a -L 3 -s -h -D --timefmt "%Y-%m-%d %H:%M:%S" /workspace/workspacesMountPoint --charset ascii --noreport > "$JOURNAL_DIR/workspaces.tree.txt"
   
   # Create workspacesMountPoint-tree.index.md
   {
