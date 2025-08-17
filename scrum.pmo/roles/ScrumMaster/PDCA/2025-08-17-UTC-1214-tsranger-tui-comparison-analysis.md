@@ -11,7 +11,7 @@
 ## **📝 Summary**
 
 ### **Artifact Links**
-- **GitHub**: [2025-08-17-UTC-1214-tsranger-tui-comparison-analysis.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/feature/recovery-agent/scrum.pmo/roles/ScrumMaster/PDCA/2025-08-17-UTC-1214-tsranger-tui-comparison-analysis.md) | **Local**: [2025-08-17-UTC-1214-tsranger-tui-comparison-analysis.md](./2025-08-17-UTC-1214-tsranger-tui-comparison-analysis.md)
+- **GitHub**: [2025-08-17-UTC-1214-tsranger-tui-comparison-analysis.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/feature/recovery-agent/scrum.pmo/roles/ScrumMaster/PDCA/2025-08-17-UTC-1214-tsranger-tui-comparison-analysis.md) | **Local**: [./2025-08-17-UTC-1214-tsranger-tui-comparison-analysis.md](./2025-08-17-UTC-1214-tsranger-tui-comparison-analysis.md)
 
 ### **QA Decisions**
 - [x] v2.0 navigation compatibility verified with test `"[down]"`
