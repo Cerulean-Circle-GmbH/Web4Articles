@@ -100,7 +100,7 @@ export class RangerView {
     const parts = buffer.split(/\s+/);
     const tokenIdx = (buffer.slice(0, cursor).split(/\s+/).length - 1);
 
-    // Get current model state (prioritize over buffer history)
+    // Get current model state
     const selectedClass = model.selectedClass || '';
     const selectedMethod = model.selectedMethod || '';
     
@@ -113,11 +113,11 @@ export class RangerView {
         // Filter mode: show suggestion based on typed prefix
         display = suggestion + (parts.length > 1 ? (' ' + parts.slice(1).join(' ')) : '');
       } else if (selectedClass && !prefix) {
-        // Navigation mode: show selected class when no typed prefix
-        display = selectedClass + (parts.length > 1 ? (' ' + parts.slice(1).join(' ')) : '');
+        // Navigation mode: ONLY show selected class, never methods
+        display = selectedClass;
       }
     } else if (tokenIdx === 1) {
-      // For method token, suggest selected method name if any
+      // Method token: only show when explicitly advanced via [tab] or [right]
       // When suppressing method filter (navigation/completion), show the full selected method
       const forceSuggestion = model.suppressMethodFilter === true;
       const typedRaw = parts[1] || '';
@@ -130,13 +130,6 @@ export class RangerView {
         display = before + combined;
         buffer = display;
       }
-    }
-    
-    // DEVELOPER FIX: Ensure consistent display regardless of navigation history
-    // Always reflect current model state for complete command
-    if (selectedClass && selectedMethod && tokenIdx <= 1) {
-      display = `${selectedClass} ${selectedMethod}`;
-      buffer = display;
     }
 
     // Recompute cursor position when suggesting method so it lands on the next letter after typed prefix
