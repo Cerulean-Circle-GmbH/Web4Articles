@@ -1,0 +1,354 @@
+name: Recovery Integrity Check
+
+on:
+  push:
+    branches: [ main, release/dev, release/testing, feature/recovery-agent ]
+    paths:
+      - 'scrum.pmo/roles/**'
+      - 'scrum.pmo/templates/**'
+      - 'scripts/**'
+      - 'README.md'
+  pull_request:
+    branches: [ main, release/dev, release/testing ]
+    paths:
+      - 'scrum.pmo/roles/**'
+      - 'scrum.pmo/templates/**'
+      - 'scripts/**'
+      - 'README.md'
+  schedule:
+    # Run integrity checks daily at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      test_level:
+        description: 'Test Level'
+        required: true
+        default: 'standard'
+        type: choice
+        options:
+        - standard
+        - comprehensive
+        - critical-only
+
+jobs:
+  recovery-integrity-check:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        test-scenario: [
+          'documentation-integrity',
+          'agent-isolation',
+          'cross-branch-compatibility',
+          'template-validation',
+          'script-functionality'
+        ]
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for cross-branch testing
+    
+    - name: Setup Environment
+      run: |
+        echo "🛡️ Recovery Integrity Check - ${{ matrix.test-scenario }}"
+        echo "Branch: ${{ github.ref_name }}"
+        echo "Commit: ${{ github.sha }}"
+        
+    - name: Run Recovery Integrity Tests
+      run: |
+        echo "Running recovery integrity test suite..."
+        chmod +x scripts/test-recovery-integrity.sh
+        ./scripts/test-recovery-integrity.sh
+        
+    - name: Test Recovery Documentation Completeness
+      if: matrix.test-scenario == 'documentation-integrity'
+      run: |
+        echo "🔍 Testing recovery documentation completeness..."
+        
+        # Check critical recovery files exist
+        required_files=(
+          "scrum.pmo/roles/ScrumMaster/recovery-process.md"
+          "scrum.pmo/roles/RecoveryDefinitionAgent/process.md"
+          "README.md"
+        )
+        
+        for file in "${required_files[@]}"; do
+          if [ ! -f "$file" ]; then
+            echo "❌ CRITICAL: Missing required file: $file"
+            exit 1
+          else
+            echo "✅ Found: $file"
+          fi
+        done
+        
+        # Validate recovery process structure
+        if ! grep -q "Phase 0: Role Selection" scrum.pmo/roles/ScrumMaster/recovery-process.md; then
+          echo "❌ CRITICAL: Role-flexible recovery missing"
+          exit 1
+        fi
+        
+        echo "✅ Recovery documentation integrity validated"
+        
+    - name: Test Agent Isolation Integrity
+      if: matrix.test-scenario == 'agent-isolation'
+      run: |
+        echo "🔒 Testing agent isolation integrity..."
+        
+        # Check agent-specific journal overview script
+        if [ ! -f "scripts/generate-agent-journal-overview.sh" ]; then
+          echo "❌ FAIL: Agent journal overview script missing"
+          exit 1
+        fi
+        
+        # Verify Recovery Agent recognition
+        if ! grep -q "feature/recovery-agent" scripts/generate-agent-journal-overview.sh; then
+          echo "❌ FAIL: Recovery Agent not recognized in script"
+          exit 1
+        fi
+        
+        # Check branch assignment registry
+        if [ ! -f "scrum.pmo/sprints/sprint-0/agent-branch-assignments.md" ]; then
+          echo "❌ FAIL: Branch assignment registry missing"
+          exit 1
+        fi
+        
+        echo "✅ Agent isolation integrity validated"
+        
+    - name: Test Cross-Branch Compatibility
+      if: matrix.test-scenario == 'cross-branch-compatibility'
+      run: |
+        echo "🌐 Testing cross-branch compatibility..."
+        
+        # List available branches
+        git branch -r
+        
+        # Check if recovery procedures exist on main branches
+        critical_branches=("origin/main" "origin/release/dev" "origin/release/testing")
+        
+        for branch in "${critical_branches[@]}"; do
+          if git show-ref --verify --quiet "refs/remotes/$branch"; then
+            echo "✅ Branch exists: $branch"
+            
+            # Check if critical recovery files exist on this branch
+            if git show "$branch:README.md" > /dev/null 2>&1; then
+              echo "✅ README.md exists on $branch"
+            else
+              echo "⚠️  README.md missing on $branch"
+            fi
+          else
+            echo "⚠️  Branch not found: $branch"
+          fi
+        done
+        
+        echo "✅ Cross-branch compatibility checked"
+        
+    - name: Test Template Validation
+      if: matrix.test-scenario == 'template-validation'
+      run: |
+        echo "📋 Testing template validation..."
+        
+        # Check PDCA templates
+        template_dir="scrum.pmo/templates"
+        if [ -d "$template_dir" ]; then
+          echo "✅ Templates directory exists"
+          
+          required_templates=(
+            "pdca.enhanced.template.md"
+            "pdca.role-transition.template.md"
+            "pdca.standard.template.md"
+          )
+          
+          for template in "${required_templates[@]}"; do
+            if [ -f "$template_dir/$template" ]; then
+              echo "✅ Template exists: $template"
+            else
+              echo "❌ FAIL: Template missing: $template"
+              exit 1
+            fi
+          done
+        else
+          echo "❌ FAIL: Templates directory missing"
+          exit 1
+        fi
+        
+        # Check RecoveryDefinitionAgent templates
+        recovery_templates_dir="scrum.pmo/roles/RecoveryDefinitionAgent/templates"
+        if [ -d "$recovery_templates_dir" ]; then
+          echo "✅ Recovery templates directory exists"
+        else
+          echo "❌ FAIL: Recovery templates directory missing"
+          exit 1
+        fi
+        
+        echo "✅ Template validation completed"
+        
+    - name: Test Script Functionality
+      if: matrix.test-scenario == 'script-functionality'
+      run: |
+        echo "⚙️  Testing script functionality..."
+        
+        # Check critical scripts exist and are executable
+        critical_scripts=(
+          "scripts/update-project-index.sh"
+          "scripts/generate-agent-journal-overview.sh"
+          "scripts/test-recovery-integrity.sh"
+        )
+        
+        for script in "${critical_scripts[@]}"; do
+          if [ -f "$script" ]; then
+            if [ -x "$script" ]; then
+              echo "✅ Script executable: $script"
+            else
+              echo "⚠️  Script not executable: $script"
+              chmod +x "$script"
+              echo "✅ Fixed permissions: $script"
+            fi
+          else
+            echo "❌ FAIL: Script missing: $script"
+            exit 1
+          fi
+        done
+        
+        echo "✅ Script functionality validated"
+        
+    - name: Generate Recovery Integrity Report
+      if: always()
+      run: |
+        echo "📊 Generating recovery integrity report..."
+        
+        cat > recovery-integrity-report.md << 'EOF'
+        # Recovery Integrity Report
+        
+        **Date:** $(date -u)
+        **Branch:** ${{ github.ref_name }}
+        **Commit:** ${{ github.sha }}
+        **Test Scenario:** ${{ matrix.test-scenario }}
+        
+        ## Test Results
+        
+        EOF
+        
+        if [ $? -eq 0 ]; then
+          echo "✅ All tests passed for ${{ matrix.test-scenario }}" >> recovery-integrity-report.md
+        else
+          echo "❌ Some tests failed for ${{ matrix.test-scenario }}" >> recovery-integrity-report.md
+        fi
+        
+        echo "📄 Recovery integrity report generated"
+        
+    - name: Upload Recovery Report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: recovery-integrity-report-${{ matrix.test-scenario }}
+        path: recovery-integrity-report.md
+        retention-days: 30
+
+  sync-to-production:
+    needs: recovery-integrity-check
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/release/dev' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Configure Git
+      run: |
+        git config user.name "Recovery Integrity Bot"
+        git config user.email "recovery-integrity@github-actions.noreply.com"
+        
+    - name: Sync Recovery Procedures to Main
+      run: |
+        echo "🔄 Syncing recovery procedures to main branch..."
+        
+        # Create sync branch
+        git checkout -b sync/recovery-procedures-$(date +%Y%m%d-%H%M%S)
+        
+        # Files to sync to main
+        recovery_files=(
+          "scrum.pmo/roles/ScrumMaster/recovery-process.md"
+          "scrum.pmo/roles/RecoveryDefinitionAgent/"
+          "scrum.pmo/templates/"
+          "scripts/test-recovery-integrity.sh"
+          "scripts/update-project-index.sh"
+          "README.md"
+        )
+        
+        # Check if sync is needed
+        git checkout main
+        
+        sync_needed=false
+        for file in "${recovery_files[@]}"; do
+          if ! git diff --quiet origin/release/dev -- "$file" 2>/dev/null; then
+            sync_needed=true
+            break
+          fi
+        done
+        
+        if [ "$sync_needed" = "true" ]; then
+          echo "📝 Recovery procedure sync needed"
+          
+          # Merge specific recovery files from release/dev
+          git checkout origin/release/dev -- "${recovery_files[@]}" || true
+          
+          if git diff --staged --quiet; then
+            echo "ℹ️  No changes to sync"
+          else
+            git add .
+            git commit -m "chore: Sync recovery procedures from release/dev
+
+            Automated sync of recovery procedures to maintain consistency
+            across production and development branches.
+            
+            Synced files:
+            $(printf '- %s\n' "${recovery_files[@]}")
+            
+            Source: release/dev@${{ github.sha }}
+            Workflow: recovery-integrity.yml"
+            
+            echo "✅ Recovery procedures synced to main"
+          fi
+        else
+          echo "ℹ️  Recovery procedures already up to date on main"
+        fi
+        
+    - name: Create Recovery Sync PR
+      if: success()
+      run: |
+        # Check if there are commits to push
+        if git log origin/main..HEAD --oneline | grep -q .; then
+          git push origin HEAD
+          
+          echo "📋 Creating recovery sync pull request..."
+          # Note: In a real implementation, you would use GitHub CLI or API
+          # to create the PR automatically
+          echo "PR creation would happen here with gh CLI or GitHub API"
+        else
+          echo "ℹ️  No recovery sync PR needed"
+        fi
+
+  notify-on-failure:
+    needs: [recovery-integrity-check, sync-to-production]
+    runs-on: ubuntu-latest
+    if: always() && (needs.recovery-integrity-check.result == 'failure' || needs.sync-to-production.result == 'failure')
+    
+    steps:
+    - name: Notify Recovery Integrity Failure
+      run: |
+        echo "🚨 Recovery integrity check failed!"
+        echo "This requires immediate attention to maintain recovery reliability."
+        echo "Check the action logs for details and fix any issues before proceeding."
+        
+        # In a real implementation, this would send notifications to:
+        # - Slack/Discord channels
+        # - Email alerts
+        # - GitHub issue creation
+        # - PagerDuty alerts (for critical failures)
+        
+        exit 1

@@ -1,0 +1,47 @@
+name: Sync release/production with main
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  sync-production:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Configure Git
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+    - name: Sync release/production with main
+      run: |
+        # Fetch all branches
+        git fetch --all
+        
+        # Create or checkout release/production
+        git checkout release/production 2>/dev/null || git checkout -b release/production
+        
+        # Reset release/production to match main exactly
+        git reset --hard origin/main
+        
+        # Force push to ensure release/production matches main
+        git push --force origin release/production
+        
+    - name: Create sync report
+      if: always()
+      run: |
+        echo "## Production Sync Report" >> $GITHUB_STEP_SUMMARY
+        echo "- PR: #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}" >> $GITHUB_STEP_SUMMARY
+        echo "- main commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        echo "- release/production synced to: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Time: $(date -u +%Y-%m-%d' '%H:%M:%S' UTC')" >> $GITHUB_STEP_SUMMARY
+        echo "- Status: release/production is identical to main ✅" >> $GITHUB_STEP_SUMMARY

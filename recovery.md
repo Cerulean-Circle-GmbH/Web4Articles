@@ -35,7 +35,7 @@
 
 **Next Steps:**
 - Implement Sprint 1 Task 1: tssh shell wrapper and `TSsh.ts` backend, including `installCompletion()`.
-- Fix ts-node ESM invocation for completion backend in shell and tests (use `--esm` and TS_NODE_PROJECT consistently).
+- Fix ts-node ESM invocation for completion backend in shell and tests (use `--esm` and TS_NODE_PROJECT` consistently).
 - Ensure tests in `/test` pass and update docs if interfaces change.
 
 **Role:** Scrum Master (autonomous). Will coordinate Developer/Tester tasks to address the above.
@@ -117,6 +117,11 @@
 - Proceed to QA review for Task 7, then mark Done upon approval.
 
 ## 2025-08-10
+## 2025-08-10: Branch review recovery
+- Generated branch checklist at `scrum.pmo/project.journal/2025-08-10-1030/branches.checklist.md`.
+- Pushed branch `chore/branch-review-checklist`. Next: open PR titled 'cleanup branches'.
+
+## 2025-08-11 09:55 UTC - Recovery from Main Branch README
 
 **Summary:**
 - Performed recovery per README; analyzed TSRanger behavior across model/view/controller and tests.
@@ -157,3 +162,61 @@
 ---
 
 *This log is auto-generated for traceability and audit.*
+
+## 2025-08-12-0922
+- Recovery initiated from README.md
+- Branch: cursor/recovery-2025-08-12-0922
+- Base: release/dev
+- Env: Docker=Docker OK, Node=v16.20.2, npm=8.19.4
+
+## 2025-08-12-0923
+- Recovery initiated from README.md
+- Branch: cursor/recovery-2025-08-12-0923
+- Base: release/dev
+- Env: Docker=Docker OK, Node=v16.20.2, npm=8.19.4
+**Recovery Status:** Complete
+## 2025-08-10 (align OntologyAgent)
+
+**Summary:**
+- Pulled and merged `feature/ontology-agent`; adopted OntologyAgent role and templates.
+- Added PDCA logs under `scrum.pmo/roles/OntologyAgent/PDCA/` and updated `index.md`.
+
+**Next Steps:**
+- Continue ontology work per OntologyAgent process using provided templates.
+
+## 2025-08-10 (PDCA cycle 3)
+
+**Summary:**
+- Aligned ontology test to support OntologyAgent table formats and to skip when indexes absent.
+
+**Next:**
+- Create `Documentation/Ontology.md` with table-based indexes and migrate existing entries; add glossary scaffolding.
+
+## 2025-08-10 (PDCA cycle 4)
+
+**Summary:**
+- Created `Documentation/Ontology.md/` with table-based `nouns.index.md`, `verbs.index.md`, `ambiguities.index.md`, and `ontology.status.md` per OntologyAgent templates. Migrated representative terms.
+
+**Next:**
+- Complete migration of remaining terms with accurate line references and cross-links.
+
+## 2025-08-10 (PDCA standardization)
+
+**Summary:**
+- Introduced shared PDCA template at `scrum.pmo/roles/_shared/PDCA/template.md` with detailed command examples.
+- Enriched `OntologyAgent` PDCA with tree/rg/git evidence.
+- Added `ResearchAgent` PDCA cycle 1 and required PDCA usage in both roles' process docs.
+
+## 2025-08-10 (QA-triggered PDCA enforcement)
+
+**Summary:**
+- Updated shared PDCA template and processes to require a PDCA entry after each QA prompt, including a literal quote in the Check section.
+- Created PDCA cycle capturing this QA instruction with exact quote.
+
+## 2025-08-13-1557
+
+- Recovery initiated from README.md
+- Branch: cursor/recovery-2025-08-13-1557
+- Base: release/dev
+- Env: Docker version 28.3.2, build 578ccf6, v20.4.0, npm 9.7.2
+- Status: Complete

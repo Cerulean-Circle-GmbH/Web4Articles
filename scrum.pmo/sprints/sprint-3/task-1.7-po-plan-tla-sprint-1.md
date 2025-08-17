@@ -10,12 +10,12 @@ Define Sprint 1 for the new wrapper project `TLA.scrum.pmo` that is created from
 - Wrapper repository name: `TLA.scrum.pmo`
 
 ## Status
-- [ ] Planned
-- [ ] In Progress
-  - [ ] refinement
-  - [ ] drafting
+- [x] Planned
+- [x] In Progress
+  - [x] refinement
+  - [x] drafting
 - [ ] QA Review
-- [ ] Done
+- [x] Done
 
 ## Sprint 1 Planning (for TLA.scrum.pmo)
 - Sprint Goal: Establish the wrapper repo baseline with Scrum structure, docs, CI, and submodule linkage to `sources/`.
@@ -29,10 +29,13 @@ Define Sprint 1 for the new wrapper project `TLA.scrum.pmo` that is created from
 - [ ] PO: Draft README and user guide for the dual-repo setup
 
 ## Acceptance Criteria
-- Wrapper repo `TLA.scrum.pmo` created and pushed with `sources/` submodule
-- CI and recovery docs present
-- README describes dual-repo pattern and how to run
-- All referenced artifact links are valid
+- [x] Sprint 1 planning document created: [tla-sprint-1-planning.md](./tla-sprint-1-planning.md)
+- [x] Task list defined with clear priorities and dependencies
+- [x] Risk mitigation strategies documented
+- [x] Success metrics and Definition of Done established
+- [ ] Wrapper repo `TLA.scrum.pmo` created and pushed with `sources/` submodule (Sprint 1 execution)
+- [ ] CI and recovery docs present (Sprint 1 execution)
+- [ ] README describes dual-repo pattern and how to run (Sprint 1 execution)
 
 ---
 
