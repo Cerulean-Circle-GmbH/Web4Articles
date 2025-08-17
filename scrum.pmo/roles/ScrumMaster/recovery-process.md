@@ -352,7 +352,7 @@ EOF
 fi
 
 # Create tree.index.md next to project state
-tree -L 3 -I 'node_modules|.git' -a --charset ascii --noreport > "$JOURNAL_DIR/tree.index.md"
+tree -a -L 3 -s -h -D --timefmt "%Y-%m-%d %H:%M:%S"  --charset ascii --noreport > "$JOURNAL_DIR/tree.index.md"
 # Add markdown formatting to tree output
 {
   echo "[Back to Project State](./project.state.md)"
