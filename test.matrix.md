@@ -92,23 +92,40 @@
 - `[down]5x[tab][left]`: ❌ FAILS - produces empty prompt 
 - `g`: ✅ WORKS - shows GitScrumProject
 
-### **SPECIFICATION QUESTIONS FOR USER:**
+### **SPECIFICATION CLARIFIED BY USER:**
 
-1. **Navigation Bounds**: Does `[down]5x` exceed valid navigation range?
-   - Current TSRanger may only have 4 classes, making 5th [down] invalid
-   - User assumption of equivalence may be incorrect
+> **"only the one that ends up on GitScrumProject should work like the other. its based on the current test set of classes"**
 
-2. **User Equivalence Assumption**: Is `[down]5x` ≡ `g` actually correct?
-   - If there are only 4 classes total, `[down]5x` = out of bounds
-   - If `g` = filter to "g*" classes, totally different operation
+**CORRECTED UNDERSTANDING:**
+- Equivalence is **POSITIONAL**: Navigate to GitScrumProject vs Filter to GitScrumProject
+- `[down]Nx` where N = however many steps to reach GitScrumProject
+- `g` filter = direct selection of GitScrumProject
+- These should behave identically because both result in GitScrumProject selected
 
-3. **Implementation vs Expectation**: Which is wrong?
-   - User expectation: `[down]5x` should work like `g`
-   - Implementation: `[down]5x` produces empty result
-   - Reality: May be specification misunderstanding
+### **🎯 USER CONFIRMED CORRECT MAPPING:**
 
-### **AMBIGUITY RESOLUTION NEEDED:**
-**User must clarify**: Should `[down]5x` actually work, or is user assumption wrong about equivalence?
+**ACTUAL CLASS LIST FROM UI:** ✅ **CONFIRMED BY USER**
+```
+[Classes]
+Logger         ← Start position
+OOSH           ← [down]1 
+ParameterParser ← [down]2
+TSsh           ← [down]3  
+DefaultCLI     ← [down]4
+GitScrumProject ← [down]5  🎯 TARGET
+RangerModel    ← [down]6
+TestClass      ← [down]7
+```
+
+**🚨 REAL BUG IDENTIFIED:**
+User's equivalence expectation is **100% CORRECT**:
+- `[down]5` → **SHOULD** navigate to GitScrumProject (position 5)
+- `g` → **DOES** filter to GitScrumProject ✅  
+- These **SHOULD** behave identically: both land on GitScrumProject
+
+**❌ NAVIGATION LOGIC BROKEN:**
+`[down]5` produces empty output instead of reaching GitScrumProject at position 5.
+The bug is in the navigation implementation, not user specification.
 
 ## **🚨 OTHER CRITICAL ISSUES**
 

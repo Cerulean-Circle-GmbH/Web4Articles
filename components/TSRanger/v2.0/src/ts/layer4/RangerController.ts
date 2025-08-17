@@ -66,13 +66,16 @@ export class RangerController {
           return;
         }
         if (key === '\u001b[A') { // Up
+          // NAVIGATION BUG FIX: Always clear class filter during navigation to enable full class list access
+          if (this.model.selectedColumn === 0) {
+            this.clearClassFilter();
+          }
           this.moveSelection(-1);
           if (this.model.promptEditActive && this.model.selectedColumn === 0) {
             // Navigation in Classes column: clear prompt to exit filter mode
             this.model.promptBuffer = '';
             this.model.promptCursorIndex = 0;
             this.model.promptEditActive = false;
-            this.clearClassFilter();
           } else if (this.model.promptEditActive && this.model.selectedColumn === 1) {
             // Sync prompt with selection when navigating Methods column
             const cls = this.model.selectedClass || '';
@@ -91,13 +94,16 @@ export class RangerController {
           return;
         }
         if (key === '\u001b[B') { // Down
+          // NAVIGATION BUG FIX: Always clear class filter during navigation to enable full class list access
+          if (this.model.selectedColumn === 0) {
+            this.clearClassFilter();
+          }
           this.moveSelection(1);
           if (this.model.promptEditActive && this.model.selectedColumn === 0) {
             // Navigation in Classes column: clear prompt to exit filter mode
             this.model.promptBuffer = '';
             this.model.promptCursorIndex = 0;
             this.model.promptEditActive = false;
-            this.clearClassFilter();
           } else if (this.model.promptEditActive && this.model.selectedColumn === 1) {
             const cls = this.model.selectedClass || '';
             const m = this.model.selectedMethod || '';
@@ -468,7 +474,11 @@ export class RangerController {
         // Update model state
         this.model.selectedColumn = 0; // Move back to Classes column
         this.model.suppressMethodFilter = false;
-        this.model.deriveFiltersFromPrompt();
+        this.model.selectedMethod = null; // Clear selected method
+        
+        // CRITICAL FIX: Don't call deriveFiltersFromPrompt() - it would set filter incorrectly
+        // Instead, clear filters to ensure clean retreat state
+        this.clearClassFilter();
         this.view.render(this.model);
         return;
       }
