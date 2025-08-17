@@ -221,7 +221,7 @@ export class RangerView {
       case 'Classes': return 36; // cyan
       case 'Methods': return 33; // yellow
       case 'Params': return 35; // magenta
-      case 'Docs': return 34; // blue
+      case 'Docs': return 32; // green
       default: return undefined;
     }
   }
