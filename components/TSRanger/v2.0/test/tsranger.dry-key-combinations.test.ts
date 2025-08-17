@@ -276,5 +276,23 @@ describe('TSRanger DRY Key Combinations - Regression Prevention', () => {
       // Document current behavior for future reference
       expect(cleanOutput).toMatch(/Classes|Methods|Params|Docs/); // UI structure intact
     });
+
+    it('Filter clearing sequence: g[right][down][left] - should clear class filter', () => {
+      // User requirement: "no filter should be set on class"
+      const out = runScripted('g[right][down][left]');
+      const cleanOutput = stripAnsi(out);
+      const lines = cleanOutput.split(/\r?\n/);
+      
+      // Check column headers to verify filter state - get the LAST occurrence (final state)
+      const classesLines = lines.filter(l => l.includes('[Classes]'));
+      const classesHeader = classesLines[classesLines.length - 1] || '';
+      
+      // User requirement: "no filter should be set on class" - should show [Classes] without any filter
+      expect(classesHeader).not.toMatch(/\[Classes\]\s+\([^)]+\)/); // Should NOT have filter parentheses like (GitScrumProject)
+      
+      // Verify sequence completed successfully (no crash/hang)
+      expect(out.length).toBeGreaterThan(100);
+      expect(cleanOutput).toMatch(/Classes|Methods|Params|Docs/); // UI structure intact
+    });
   });
 });
