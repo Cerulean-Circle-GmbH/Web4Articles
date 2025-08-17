@@ -341,29 +341,29 @@ describe('TSRanger DRY Key Combinations - Regression Prevention', () => {
 
   describe('🧪 COMPREHENSIVE TEST MATRIX - Key Combination Behavior', () => {
     const testMatrix = [
-      // Basic advancement tests
+      // Basic advancement tests - USER SATISFIED IN PDCA UTC-1535
       { sequence: '[tab]', description: 'Tab advancement', expected: 'Logger log', shouldPass: true },
       { sequence: '[right]', description: 'Right advancement', expected: 'Logger log', shouldPass: true },
       
-      // Filter + advancement tests - THESE ARE BROKEN
-      { sequence: 'g[tab]', description: 'Filter+Tab advancement', expected: 'GitScrumProject start', shouldPass: false },
-      { sequence: 'g[right]', description: 'Filter+Right advancement', expected: 'GitScrumProject start', shouldPass: false },
+      // Filter + advancement tests - WERE WORKING CORRECTLY IN PDCA UTC-1515 (FALSE NEGATIVES CORRECTED)
+      { sequence: 'g[tab]', description: 'Filter+Tab advancement', expected: 'GitScrumProject start', shouldPass: true }, // ✅ CORRECTED: was working
+      { sequence: 'g[right]', description: 'Filter+Right advancement', expected: 'GitScrumProject start', shouldPass: true }, // ✅ CORRECTED: should be DRY
       
-      // Navigation tests (should only show class)
-      { sequence: '[down]', description: 'Down navigation', expected: 'Logger', shouldPass: false }, // BROKEN: shows methods
+      // Navigation tests (should only show class) - USER SATISFIED IN PDCA UTC-1530
+      { sequence: '[down]', description: 'Down navigation', expected: 'Logger', shouldPass: true }, // ✅ CORRECTED: user wanted class-only
       { sequence: 'g[down]', description: 'Filter+Down navigation', expected: 'GitScrumProject', shouldPass: true },
       
-      // Complex sequences that work
+      // Complex sequences - ASSUMING SHOULD WORK BASED ON COMPONENT WORKING
       { sequence: 'g[tab][down]', description: 'Filter+Tab then navigate', expected: 'Logger log', shouldPass: true },
       { sequence: 'g[right][down]', description: 'Filter+Right then navigate', expected: 'Logger log', shouldPass: true },
       
-      // Retreat tests
+      // Retreat tests - ASSUMING SHOULD WORK BASED ON COMPONENT WORKING  
       { sequence: 'g[tab][left]', description: 'Filter+Tab then retreat', expected: 'GitScrumProject', shouldPass: true },
       { sequence: 'g[right][left]', description: 'Filter+Right then retreat', expected: 'GitScrumProject', shouldPass: true },
     ];
 
     testMatrix.forEach(({ sequence, description, expected, shouldPass }) => {
-      const testType = shouldPass ? 'should work' : 'BROKEN - should be fixed';
+      const testType = shouldPass ? '✅ should work' : '❌ REGRESSION detected';
       it(`${testType}: ${sequence} - ${description}`, () => {
         const out = runScripted(sequence);
         const cleanOutput = stripAnsi(out);
@@ -379,35 +379,14 @@ describe('TSRanger DRY Key Combinations - Regression Prevention', () => {
           promptLine = gitLines[gitLines.length - 1] || '';
         }
         
-        // Matrix validation based on expected behavior
+        // Matrix validation based on expected behavior (all tests corrected to shouldPass: true)
         if (expected.includes(' ')) {
           // Should show class + method
           const [className, methodName] = expected.split(' ');
-          if (shouldPass) {
-            expect(promptLine).toMatch(new RegExp(`${className}\\s+${methodName}`));
-          } else {
-            // Test should fail but we document the issue
-            try {
-              expect(promptLine).toMatch(new RegExp(`${className}\\s+${methodName}`));
-            } catch (e) {
-              // Expected to fail - log the issue
-              console.log(`❌ CONFIRMED BUG: ${sequence} shows "${promptLine.trim()}" instead of "${expected}"`);
-              throw e; // Still fail the test to track the issue
-            }
-          }
+          expect(promptLine).toMatch(new RegExp(`${className}\\s+${methodName}`));
         } else {
           // Should show only class (no method)
-          if (shouldPass) {
-            expect(promptLine).toMatch(new RegExp(`${expected}(?!\\s+\\w)`));
-          } else {
-            // Document navigation bugs where methods appear when they shouldn't
-            try {
-              expect(promptLine).not.toMatch(new RegExp(`${expected}\\s+\\w+`));
-            } catch (e) {
-              console.log(`❌ CONFIRMED BUG: ${sequence} shows method when should only show class: "${promptLine.trim()}"`);
-              throw e;
-            }
-          }
+          expect(promptLine).toMatch(new RegExp(`${expected}(?!\\s+\\w)`));
         }
         
         // UI structure integrity check (all should pass this)
