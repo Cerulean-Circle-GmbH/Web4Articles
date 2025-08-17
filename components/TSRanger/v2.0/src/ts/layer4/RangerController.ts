@@ -79,7 +79,7 @@ export class RangerController {
             this.model.promptCursorIndex = Math.min(this.model.promptBuffer.length, cls.length + 1);
             // Keep method filter suppressed during navigation; do not re-derive to avoid resetting selection
             this.model.suppressMethodFilter = true;
-            this.model.filters[1] = '';
+            this.clearMethodFilter();
           }
           this.view.render(this.model);
           return;
@@ -95,7 +95,7 @@ export class RangerController {
             this.model.promptBuffer = (cls + (m ? ' ' + m : '')).trim();
             this.model.promptCursorIndex = Math.min(this.model.promptBuffer.length, cls.length + 1);
             this.model.suppressMethodFilter = true;
-            this.model.filters[1] = '';
+            this.clearMethodFilter();
           }
           this.view.render(this.model);
           return;
@@ -111,10 +111,7 @@ export class RangerController {
           return;
         }
         if (key === '\x7f' && !this.model.promptEditActive) { // Backspace (filter editing when not in prompt)
-          const col = this.model.selectedColumn;
-          this.model.filters[col] = this.model.filters[col].slice(0, -1);
-          this.onFilterChange();
-          this.view.render(this.model);
+          this.handleBackspaceFilter();
           return;
         }
         // Prompt-line editing model (Task 7)
@@ -180,7 +177,7 @@ export class RangerController {
           if (tokenIdx === 1) {
             const parts = this.model.promptBuffer.split(/\s+/);
             const methodTok = parts[1] || '';
-            this.model.filters[1] = methodTok;
+            this.setMethodFilter(methodTok);
           }
           this.model.deriveFiltersFromPrompt();
           this.view.render(this.model);
@@ -295,7 +292,14 @@ export class RangerController {
   }
 
   private changeColumn(delta: number): void {
-    const next = Math.min(3, Math.max(0, this.model.selectedColumn + delta));
+    const currentColumn = this.model.selectedColumn;
+    const next = Math.min(3, Math.max(0, currentColumn + delta));
+    
+    // Clear Classes filter when moving left from Methods to Classes
+    if (currentColumn === 1 && next === 0 && delta < 0) {
+      this.clearClassFilter();
+    }
+    
     this.model.selectedColumn = (next as 0 | 1 | 2 | 3);
   }
 
@@ -452,10 +456,68 @@ export class RangerController {
       }
     }
     
+    // COLUMN NAVIGATION RETREAT: If we're in Methods column, move back to Classes and clear filter
+    if (this.model.selectedColumn === 1) {
+      this.model.selectedColumn = 0; // Move back to Classes column
+      this.clearClassFilter();
+      this.view.render(this.model);
+      return;
+    }
+    
     // FALLBACK: Move cursor left in prompt (normal cursor movement)
     if (this.model.promptCursorIndex > 0) {
       this.model.promptCursorIndex--;
       this.view.render(this.model);
     }
+  }
+
+  /**
+   * RADICAL OOP: Filter clearing methods - centralized filter management
+   * DRY PRINCIPLE: Eliminates repeated filter manipulation patterns
+   */
+
+  /**
+   * Clear Classes filter and trigger appropriate updates
+   * DRY: Consolidates `filters[0] = ''; onFilterChange();` pattern
+   */
+  private clearClassFilter(): void {
+    this.model.filters[0] = '';
+    this.onFilterChange();
+  }
+
+  /**
+   * Clear Methods filter without triggering full filter change processing
+   * DRY: Consolidates `filters[1] = '';` pattern used during navigation
+   */
+  private clearMethodFilter(): void {
+    this.model.filters[1] = '';
+  }
+
+  /**
+   * Set Methods filter to specific value
+   * DRY: Consolidates `filters[1] = value;` pattern
+   */
+  private setMethodFilter(value: string): void {
+    this.model.filters[1] = value;
+  }
+
+  /**
+   * Clear filter for specific column and trigger updates
+   * DRY: Consolidates column-specific filter clearing logic
+   */
+  private clearColumnFilter(columnIndex: number): void {
+    this.model.filters[columnIndex] = '';
+    this.onFilterChange();
+  }
+
+  /**
+   * Handle backspace filter editing - reduces current column filter by one character
+   * DRY: Consolidates backspace filter editing pattern
+   */
+  private handleBackspaceFilter(): void {
+    const col = this.model.selectedColumn;
+    this.model.filters[col] = this.model.filters[col].slice(0, -1);
+    this.onFilterChange();
+    this.view.render(this.model);
   }
 }
