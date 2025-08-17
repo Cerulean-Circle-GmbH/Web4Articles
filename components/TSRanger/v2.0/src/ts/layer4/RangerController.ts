@@ -172,95 +172,9 @@ export class RangerController {
           }
           return;
         }
-        // In prompt editing, Right arrow should move to next column when current token is empty
-        if (key === '\u001b[C' && this.model.promptEditActive) {
-          const tokenIdx = this.model.getCurrentPromptTokenIndex();
-          const tokens = this.model.promptBuffer.split(/\s+/);
-          const current = tokens[tokenIdx] ?? '';
-          if (current.trim().length === 0) {
-            this.changeColumn(1);
-            this.view.render(this.model);
-            return;
-          }
-        }
         if (key === '\t' || key === '\u001b[C') {
-          // Shell-like completion for current token
-          const tokenIdx = this.model.getCurrentPromptTokenIndex();
-          const tokens = this.model.promptBuffer.split(/\s+/);
-          const current = tokens[tokenIdx] ?? '';
-          if (current.trim().length === 0) {
-            // DEVELOPER FIX: Handle advancement from selected class to method
-            if (tokenIdx === 0 && this.model.selectedClass) {
-              const selectedClass = this.model.selectedClass;
-              const methods = TSCompletion.getClassMethods(selectedClass);
-              if (methods.length > 0) {
-                const firstMethod = methods[0];
-                // Add method to buffer
-                tokens[0] = selectedClass;
-                tokens[1] = firstMethod;
-                this.model.promptBuffer = tokens.join(' ').trim();
-                // Position cursor at start of method
-                this.model.promptCursorIndex = selectedClass.length + 1;
-                this.model.selectedColumn = 1;
-                this.model.suppressMethodFilter = true;
-                this.model.deriveFiltersFromPrompt();
-                this.view.render(this.model);
-                return;
-              }
-            }
-            // For empty token, treat Tab/Right as navigation to next column
-            this.changeColumn(1);
-            this.view.render(this.model);
-            return;
-          }
-          if (tokenIdx === 0) {
-            const classes = TSCompletion.getClasses().filter(c => c.toLowerCase().startsWith(current.toLowerCase()));
-            if (classes.length > 0) {
-              const chosenClass = classes[0];
-              tokens[0] = chosenClass;
-              // Auto-suggest default method 'start' if it exists
-              const methods = TSCompletion.getClassMethods(chosenClass);
-              if (methods.includes('start')) {
-                tokens[1] = 'start';
-                // Cursor positioned at 's' of start
-                this.model.promptBuffer = tokens.join(' ').trim();
-                this.model.promptCursorIndex = chosenClass.length + 1; // space after class
-                // Move selection context to Methods column
-                this.model.selectedColumn = 1;
-                // Do not set method filter yet; allow user to choose alternatives
-                this.model.suppressMethodFilter = true;
-              } else {
-                this.model.promptBuffer = tokens.join(' ').trim();
-                this.model.promptCursorIndex = this.model.promptBuffer.length;
-                this.model.selectedColumn = 1;
-                this.model.suppressMethodFilter = false;
-              }
-              this.model.deriveFiltersFromPrompt();
-              this.view.render(this.model);
-              return;
-            }
-          } else if (tokenIdx === 1) {
-            const cls = this.model.filteredClasses()[this.model.selectedIndexPerColumn[0]];
-            if (cls) {
-              const methods = TSCompletion.getClassMethods(cls).filter(m => m.toLowerCase().startsWith(current.toLowerCase()));
-              if (methods.length > 0) {
-                tokens[tokenIdx] = methods[0];
-                this.model.promptBuffer = tokens.join(' ').trim();
-                // Cursor at start of method token
-                this.model.promptCursorIndex = cls.length + 1; // position at start of method token
-                // Move selection context to Params column after method completion
-                this.model.selectedColumn = 2;
-                // Keep method filter suppressed while user may navigate
-                this.model.suppressMethodFilter = true;
-                this.model.deriveFiltersFromPrompt();
-                this.view.render(this.model);
-                return;
-              }
-            }
-          }
-          // If no completion, fall through to column advance behavior handled above
-          this.model.suppressMethodFilter = false;
-          this.view.render(this.model);
+          // DRY PRINCIPLE: Both Tab and Right use same advancement method  
+          this.handleTabRightAdvancement();
           return;
         }
         if (key.length === 1 && key >= ' ' && key <= '~') {
@@ -488,5 +402,43 @@ export class RangerController {
       stdin.pause();
       try { process.stdout.removeAllListeners('resize'); } catch {}
     } catch {}
+  }
+
+  /**
+   * RADICAL OOP: Simple shared advancement method for [tab] and [right] keys
+   * DRY PRINCIPLE: Both keys use identical logic
+   * User requirement: Logger → Logger log with cursor at [l]og
+   */
+  private handleTabRightAdvancement(): void {
+    const tokenIdx = this.model.getCurrentPromptTokenIndex();
+    const tokens = this.model.promptBuffer.split(/\s+/);
+    const current = tokens[tokenIdx] ?? '';
+
+    // SIMPLE ADVANCEMENT: If no text typed and we have a selected class, add first method
+    if (current.trim().length === 0 && tokenIdx === 0 && this.model.selectedClass) {
+      const selectedClass = this.model.selectedClass;
+      const methods = TSCompletion.getClassMethods(selectedClass);
+      
+      if (methods.length > 0) {
+        const firstMethod = methods[0];
+        
+        // Create "Logger log" format
+        this.model.promptBuffer = `${selectedClass} ${firstMethod}`;
+        
+        // Position cursor at first character of method: Logger [l]og
+        this.model.promptCursorIndex = selectedClass.length + 1;
+        
+        // Update model state
+        this.model.selectedColumn = 1; // Move to Methods column  
+        this.model.suppressMethodFilter = true;
+        this.model.deriveFiltersFromPrompt();
+        this.view.render(this.model);
+        return;
+      }
+    }
+    
+    // FALLBACK: Use existing advancement behavior (move to next column)
+    this.changeColumn(1);
+    this.view.render(this.model);
   }
 }
