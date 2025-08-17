@@ -16,6 +16,10 @@
   [requirement:uuid:c3d4e5f6-7080-4901-2cde-f3456789abcd]
   > Navigation ([down][up]) shows ONLY selected class in prompt line with cursor at first character. Advancement ([tab][right]) shows class + method with cursor at method position. Clear behavioral separation between selection navigation and command advancement.
 
+- [x] Complete advancement and retreat navigation system
+  [requirement:uuid:d4e5f6g7-8091-5012-3def-g4567890bcde]
+  > Advancement: [tab] and [right] work identically to add first method to selected class (Logger → Logger log) with cursor positioned at [l]og. Retreat: [left] removes method and repositions cursor at first character of class name (Logger log → Logger with cursor at [L]ogger). Navigation: [down]/[up] shows only class without methods.
+
 - [ ] Prompt rendering and colors derived from `$PS1` with fallbacks  
   [requirement:uuid:1b2c3d4e-5f60-4a7b-8c9d-0e1f2a3b4c5d]
   > Support `\u`, `\h`, `\w` in `$PS1`; color `user` cyan and `root` red; working directory yellow; no newlines; fallback `[host] user@pwd` when `$PS1` is absent.
