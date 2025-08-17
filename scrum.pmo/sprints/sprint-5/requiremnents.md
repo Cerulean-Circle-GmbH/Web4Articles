@@ -1,8 +1,8 @@
 # Sprint 5 Requirements
 
-- [ ] TS Ranger v2 must preserve Sprint 2 UX layout and spacing rules  
+- [x] TS Ranger v2 must preserve Sprint 2 UX layout and spacing rules  
   [requirement:uuid:9a1f2b3c-4d5e-4f60-8a9b-0c1d2e3f4a5b]
-  > Four columns (Classes, Methods, Params, Docs), exactly one blank line above the preview and one between preview and footer; blue background with white, bold footer text that fills the terminal width and stays anchored at the bottom.
+  > Four columns (Classes, Methods, Params, Docs), exactly one blank line above the preview and one between preview and footer; blue background with white, bold footer text that fills the terminal width and positioned 2 lines up from the bottom.
 
 - [ ] Prompt rendering and colors derived from `$PS1` with fallbacks  
   [requirement:uuid:1b2c3d4e-5f60-4a7b-8c9d-0e1f2a3b4c5d]
