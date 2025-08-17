@@ -337,6 +337,50 @@ describe('TSRanger DRY Key Combinations - Regression Prevention', () => {
       // ✅ This DOES work: g[tab][down] correctly shows "Logger log"
       expect(gTabDownFinalLine).toMatch(/Logger\s+log/); // Should PASS - method is shown
     });
+
+    it('CRITICAL: g[tab][left] filter residue bug - wrongly shows "g:" in prompt', () => {
+      // User issue: "then [left] deletes the filter correctly but the prompt is still having 'g:' wrongly"
+      const out = runScripted('g[tab][left]');
+      const cleanOutput = stripAnsi(out);
+      
+      // Should NOT show "g:" anywhere in the prompt after [left] retreat
+      expect(cleanOutput).not.toMatch(/g\s*:/); // Must NOT show filter residue
+      
+      // Should show clean class name only (no filter, no method)
+      const lines = cleanOutput.split(/\r?\n/);
+      const classLines = lines.filter(l => l.includes('GitScrumProject'));
+      const finalLine = classLines[classLines.length - 1] || '';
+      expect(finalLine).toMatch(/GitScrumProject(?!\s+\w)/); // Class only, no method
+    });
+
+    it('CRITICAL: Navigation to GitScrumProject then [tab] fails to add method', () => {
+      // User issue: "tsranger test '[down]5x[tab]' to GitScrumProject then [tab] does not add method in the prompt. this is wrong."
+      const out = runScripted('[down][down][down][down][down][tab]');
+      const cleanOutput = stripAnsi(out);
+      const lines = cleanOutput.split(/\r?\n/);
+      
+      // Find final prompt line
+      const promptLines = lines.filter(l => l.includes('GitScrumProject') || l.includes('DefaultCLI'));
+      const finalPromptLine = promptLines[promptLines.length - 1] || '';
+      
+      // Should show method after [tab] advancement from navigation
+      expect(finalPromptLine).toMatch(/\w+\s+\w+/); // Should show class + method format
+    });
+
+    it('CRITICAL: [down] after navigation should add method but does not', () => {
+      // User issue: "then [down] also does not add method. this is wrong."
+      // This is testing the continuation after the previous sequence
+      const out = runScripted('[down][down][down][down][down][tab][down]');
+      const cleanOutput = stripAnsi(out);
+      const lines = cleanOutput.split(/\r?\n/);
+      
+      // After [tab] advancement and then [down], should still show method
+      const promptLines = lines.filter(l => l.includes('Logger') || l.includes('GitScrumProject'));
+      const finalPromptLine = promptLines[promptLines.length - 1] || '';
+      
+      // Should maintain class + method format after [down] navigation
+      expect(finalPromptLine).toMatch(/\w+\s+\w+/); // Should show class + method format
+    });
   });
 
   describe('🧪 COMPREHENSIVE TEST MATRIX - Key Combination Behavior', () => {
