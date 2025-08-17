@@ -23,13 +23,17 @@ export class RangerView {
     // Clear screen and move cursor to top-left
     process.stdout.write('\x1b[2J\x1b[H');
 
-    // NEW RANGER-LIKE LAYOUT: Prompt line at top with column-colored background
-    const topPromptLine = this.buildTopPromptLine(model, colWidth, width);
-    process.stdout.write(topPromptLine + '\n');
+    // NEW RANGER-LIKE LAYOUT: Clean prompt line at top, then column-colored backgrounds
+    const cleanPromptLine = this.buildColoredCommand(model);
+    process.stdout.write(cleanPromptLine + '\n');
+    
+    // Column-colored backgrounds below the prompt
+    const columnBackgrounds = this.buildColumnBackgrounds(model, colWidth, width);
+    process.stdout.write(columnBackgrounds + '\n');
 
-    // Compute grid rows: reserve 1 line (prompt at top) + 1 footer = 2 total reserved
+    // Compute grid rows: reserve 2 lines (prompt + column backgrounds) + 1 footer = 3 total reserved
     const maxRows = Math.max(...gridColumns.map(col => col.length));
-    const gridRows = Math.min(maxRows, Math.max(0, height - 2));
+    const gridRows = Math.min(maxRows, Math.max(0, height - 3));
     for (let r = 0; r < gridRows; r++) {
       let row = '';
       for (let c = 0; c < 4; c++) {
@@ -40,7 +44,7 @@ export class RangerView {
     }
 
     // Calculate remaining space for footer positioning
-    const usedLines = 1 + gridRows; // prompt line + grid rows
+    const usedLines = 2 + gridRows; // prompt line + column backgrounds + grid rows
     const remainingLines = height - usedLines - 1; // -1 for footer itself
     if (remainingLines > 0) {
       process.stdout.write('\n'.repeat(remainingLines));
@@ -52,11 +56,8 @@ export class RangerView {
     process.stdout.write(footer);
   }
 
-  private buildTopPromptLine(model: RangerModel, colWidth: number, screenWidth: number): string {
-    // Build the ranger-like top line with column backgrounds and command prompt
-    const colored = this.buildColoredCommand(model);
-    
-    // Create column-colored background sections
+  private buildColumnBackgrounds(model: RangerModel, colWidth: number, screenWidth: number): string {
+    // Create clean column-colored background sections (no command prompt mixed in)
     const sections: string[] = [];
     const columnTitles = ['Classes', 'Methods', 'Params', 'Docs'];
     
@@ -64,36 +65,24 @@ export class RangerView {
       const colorCode = this.colorCodeForTitle(columnTitles[i]);
       const isActive = model.selectedColumn === i;
       
-      // Get content for this column section
-      let content = '';
-      if (i === 0) {
-        // Show command in the Classes section (strip existing ANSI codes for cleaner display)
-        content = this.stripAnsi(colored);
-      }
-      
-      // Create background colored section - use brighter background colors
-      const cellContent = this.makeCell(content, colWidth);
+      // Empty content - just colored backgrounds to indicate columns
+      const cellContent = this.makeCell('', colWidth);
       let styledCell = '';
       
       if (isActive) {
-        // Active column: bright background with black text
+        // Active column: bright background
         const bgColorCode = colorCode ? colorCode + 10 : 47; // Convert to background or default to white
-        styledCell = `\x1b[${bgColorCode}m\x1b[30m\x1b[1m${cellContent}\x1b[0m`;
+        styledCell = `\x1b[${bgColorCode}m${cellContent}\x1b[0m`;
       } else {
-        // Inactive column: darker background with appropriate text
+        // Inactive column: darker background
         const bgColorCode = colorCode ? colorCode + 10 : 40; // Convert to background or default to black  
-        const textColor = colorCode === 33 ? '\x1b[30m' : '\x1b[37m'; // black text on yellow, white on others
-        styledCell = `\x1b[${bgColorCode}m${textColor}${cellContent}\x1b[0m`;
+        styledCell = `\x1b[${bgColorCode}m${cellContent}\x1b[0m`;
       }
       
       sections.push(styledCell);
     }
     
     return sections.join('');
-  }
-
-  private stripAnsi(text: string): string {
-    return text.replace(/\x1b\[[0-9;]*m/g, '');
   }
 
   private buildPlainPreview(model: RangerModel): string {
