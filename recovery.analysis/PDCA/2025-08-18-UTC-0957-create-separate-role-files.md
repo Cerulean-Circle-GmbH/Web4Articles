@@ -30,6 +30,25 @@
 5. Create recovery-process-analysis-tester.md
 6. Create recovery-process-analysis-devops.md
 
+### **Created Files with Links**
+1. **Developer Recovery Analysis:**  
+   [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/test/recovery/recovery.analysis/recovery-process-analysis-developer.md) | [recovery.analysis/recovery-process-analysis-developer.md](../recovery-process-analysis-developer.md)
+
+2. **ScrumMaster Recovery Analysis:**  
+   [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/test/recovery/recovery.analysis/recovery-process-analysis-scrummaster.md) | [recovery.analysis/recovery-process-analysis-scrummaster.md](../recovery-process-analysis-scrummaster.md)
+
+3. **Product Owner Recovery Analysis:**  
+   [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/test/recovery/recovery.analysis/recovery-process-analysis-po.md) | [recovery.analysis/recovery-process-analysis-po.md](../recovery-process-analysis-po.md)
+
+4. **Architect Recovery Analysis:**  
+   [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/test/recovery/recovery.analysis/recovery-process-analysis-architect.md) | [recovery.analysis/recovery-process-analysis-architect.md](../recovery-process-analysis-architect.md)
+
+5. **Tester Recovery Analysis:**  
+   [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/test/recovery/recovery.analysis/recovery-process-analysis-tester.md) | [recovery.analysis/recovery-process-analysis-tester.md](../recovery-process-analysis-tester.md)
+
+6. **DevOps Recovery Analysis:**  
+   [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/test/recovery/recovery.analysis/recovery-process-analysis-devops.md) | [recovery.analysis/recovery-process-analysis-devops.md](../recovery-process-analysis-devops.md)
+
 Each following exact structure of original.
 
 ---
