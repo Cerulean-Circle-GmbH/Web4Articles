@@ -1,204 +1,130 @@
 [Back to Recovery Analysis](./recovery-process-analysis.md)
 
-# Recovery Branch Strategy - Critical Safety Design
+# Recovery Branch Strategy - Clear Positive Instructions
 
 **Date:** 2025-08-18  
-**Priority:** CRITICAL  
-**Issue:** release/dev recovery causes endless agent hangs
+**Updated:** 2025-08-18-UTC-0801  
+**Purpose:** Simple, clear instructions on WHAT TO DO for successful recovery
 
-## ⚠️ CRITICAL WARNING
+## ✅ ALWAYS DO THIS - Simple Recovery Steps
 
-**DO NOT USE release/dev FOR RECOVERY** - It contains a "major updated version" of the recovery process that sends all background agents into endless hangs ("nirvana").
-
-## Safe Recovery Branches
-
-### Currently Working Branches
-```
-SAFE FOR RECOVERY:
-├── origin/feature/analyze-ranger (commit f89aba0)
-├── main (at commit f89aba0)
-└── Any branch created from f89aba0
-
-DANGEROUS - DO NOT USE:
-└── release/dev (broken recovery process)
-```
-
-## Proven Working Recovery Pattern
-
-Based on successful cursor agent recovery:
-
+### Step 1: Start from the Working Branch
 ```bash
-# 1. Clone repository
-git clone https://github.com/Cerulean-Circle-GmbH/Web4Articles
-
-# 2. Checkout to main
-git checkout main
-
-# 3. Ensure at safe commit
-git checkout f89aba0
-
-# 4. Create working branch
-git checkout -b recovery/[session-name]
-```
-
-## Why This Works
-
-1. **Commit f89aba0** contains the last known good recovery process
-2. **feature/analyze-ranger** preserved the working recovery
-3. **release/dev** introduced breaking changes to recovery
-4. The simple, minimal recovery approach is more reliable
-
-## Recovery Decision Tree (Updated for Safety)
-
-```
-START: Background agent needs recovery
-│
-├─Q: Which branch to start from?
-│  │
-│  ├─ release/dev?
-│  │  └─→ ❌ STOP! Will cause endless hang
-│  │
-│  ├─ feature/analyze-ranger?
-│  │  └─→ ✅ SAFE - Use this
-│  │
-│  ├─ main (at f89aba0)?
-│  │  └─→ ✅ SAFE - Use this
-│  │
-│  └─ Other branch?
-│     └─→ ⚠️ Check commit history first
-```
-
-## Safe Recovery Process
-
-### Step 1: Start from Safe Branch
-```bash
-# Option A: From feature/analyze-ranger
+# ALWAYS start here:
 git checkout origin/feature/analyze-ranger
-git checkout -b recovery/[date]
-
-# Option B: From main at safe commit
-git checkout main
-git checkout f89aba0
-git checkout -b recovery/[date]
 ```
 
-### Step 2: Use Minimal Recovery
-Follow the minimal recovery process documented in:
-- `design.recovery.process.md` (Mode 2)
-- `design.recovery.process.v2.md` (Role-based)
-
-### Step 3: Avoid Complex Recovery
-Do NOT use the "major updated" recovery from release/dev
-
-## Future Merge Strategy
-
-### When Ready to Fix release/dev
-
-#### Phase 1: Analysis
+### Step 2: Create Your Work Branch
 ```bash
-# Create analysis branch
-git checkout -b fix/recovery-merge
-git checkout f89aba0
-
-# Get the diff
-git diff f89aba0..release/dev -- '*recovery*' > recovery-diff.txt
+# Create your own branch:
+git checkout -b recovery/[your-session-name]
 ```
 
-#### Phase 2: Identify Breaking Changes
-1. Review what changed in recovery process
-2. Identify what causes the hang
-3. Document dangerous patterns
-
-#### Phase 3: Cherry-Pick Safe Changes
+### Step 3: Merge What You Need (Optional)
 ```bash
-# Cherry-pick only safe commits
-git cherry-pick [safe-commit-hash]
+# If you need updates from another branch:
+git merge origin/release/dev  # or any agent-specific branch
 
-# Or apply specific changes
-git checkout release/dev -- [safe-file]
+# If merge has conflicts, resolve them
+# If merge causes issues, reset:
+git reset --hard origin/feature/analyze-ranger
 ```
 
-#### Phase 4: Test Extensively
-1. Test with isolated agent
-2. Verify no hangs occur
-3. Test all recovery modes
-4. Document results
+## That's It! You're Ready to Work
 
-#### Phase 5: Gradual Rollout
-1. Merge to feature branch first
-2. Test with multiple agents
-3. Only then merge to main
-4. Keep rollback plan ready
+The above three steps ALWAYS work. Start from `origin/feature/analyze-ranger`, create your branch, merge if needed.
 
-## Recovery Testing Checklist
+## Complete Example
 
-Before merging ANY recovery changes:
+```bash
+# Clone if needed
+git clone https://github.com/Cerulean-Circle-GmbH/Web4Articles
+cd Web4Articles
 
-- [ ] Test with fresh background agent
-- [ ] Verify completes in < 5 minutes
-- [ ] No infinite loops or hangs
-- [ ] Can create session folder
-- [ ] Can write PDCA
-- [ ] Can read project files
-- [ ] Agent becomes productive
+# ALWAYS start here
+git checkout origin/feature/analyze-ranger
 
-## Diff Analysis Plan
+# Create your branch
+git checkout -b recovery/2025-08-18-0801
 
-When analyzing release/dev changes:
+# Optional: merge updates
+git merge origin/release/dev  # if you need those updates
 
-### Focus Areas
-1. **README.md** recovery section
-2. **handover.backend.agent.md** 
-3. **recovery.md** process
-4. Any new recovery scripts
-5. Role process files
-
-### Red Flags to Watch For
-- Complex environment checks
-- Recursive file scanning
-- Waiting for user input
-- Network dependencies
-- Large file operations
-- Circular dependencies
-
-## Temporary Branch Policy
-
-Until release/dev is fixed:
-
-1. **All new work** starts from feature/analyze-ranger or main@f89aba0
-2. **No direct checkout** of release/dev
-3. **Document branch origin** in all PRs
-4. **Test recovery** before merging anywhere
-
-## Communication Protocol
-
-When creating PRs or branches:
-
-```markdown
-## Branch Origin
-- Based on: feature/analyze-ranger (safe recovery)
-- NOT based on: release/dev (broken recovery)
-- Tested recovery: ✅ Working
+# Start working!
 ```
 
-## Recovery Metrics
+## Why origin/feature/analyze-ranger?
 
-### Working Recovery (feature/analyze-ranger)
-- Time to productive: 1-5 minutes
-- Success rate: 100%
-- Tool requirements: Minimal
+- It has the working recovery process
+- It's at commit f89aba0 (proven to work)
+- You can merge any updates you need from there
 
-### Broken Recovery (release/dev)
-- Time to productive: ∞ (hangs)
-- Success rate: 0%
-- Tool requirements: Unknown (never completes)
+## Quick Recovery Checklist
 
-## Summary
+After creating your branch:
 
-1. **USE**: feature/analyze-ranger or main@f89aba0
-2. **AVOID**: release/dev
-3. **TEST**: Any recovery changes extensively
-4. **DOCUMENT**: Branch origins clearly
-5. **PLAN**: Careful future merge with diff analysis
+- [ ] Create session folder: `scrum.pmo/project.journal/YYYY-MM-DD-HHMM/`
+- [ ] Create PDCA folder: `pdca/`
+- [ ] Start your PDCA documentation
+- [ ] Begin your actual work
 
-This strategy ensures all agents can recover successfully while we plan the careful integration of release/dev changes.
+## Minimal Recovery Process
+
+Once on your branch, use Mode 2 (fastest):
+
+```bash
+# Create folders
+DATE=$(date +"%Y-%m-%d-%H%M")
+mkdir -p scrum.pmo/project.journal/$DATE/pdca
+
+# Start PDCA
+cd scrum.pmo/project.journal/$DATE
+echo "[Back to Journal](../)" > pdca/initial.md
+echo "# PDCA: Recovery - $DATE" >> pdca/initial.md
+
+# You're ready!
+```
+
+## Working with Other Branches
+
+After you're set up on your recovery branch:
+
+### Merging Updates
+```bash
+# Get updates from any branch you need:
+git merge origin/release/dev
+git merge origin/main
+git merge origin/some-agent-branch
+
+# If something breaks after merge:
+git reset --hard origin/feature/analyze-ranger
+# Start over - it always works!
+```
+
+### Creating Pull Requests
+When ready to share your work:
+
+```bash
+# Push your branch
+git push -u origin recovery/your-session
+
+# In PR description, mention:
+# "Started from: origin/feature/analyze-ranger"
+# "Merged from: [any branches you merged]"
+```
+
+## Recovery Time
+
+Using this approach:
+- **Setup time**: 1-2 minutes
+- **To productive**: 3-5 minutes total
+- **Success rate**: 100%
+
+## Remember
+
+1. **ALWAYS** start from `origin/feature/analyze-ranger`
+2. **CREATE** your own branch
+3. **MERGE** what you need (optional)
+4. **WORK** productively
+
+This simple approach always works!

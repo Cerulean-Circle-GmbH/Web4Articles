@@ -6,11 +6,11 @@
 **Version:** 2.0  
 **Objective:** Design role-specific recovery paths that postpone hard steps until actually needed
 
-## ⚠️ CRITICAL: Branch Safety Warning
+## ✅ Always Start Here
 
-**SAFE BRANCHES**: feature/analyze-ranger, main@f89aba0  
-**DANGEROUS**: release/dev (causes endless hang)  
-See [Branch Strategy](./design.recovery.branch-strategy.md) for details
+**ALWAYS USE**: `git checkout origin/feature/analyze-ranger`  
+**THEN**: Create your branch and merge what you need  
+See [Branch Strategy](./design.recovery.branch-strategy.md) for simple steps
 
 ## Core Principle: Just-In-Time Environment Setup
 
