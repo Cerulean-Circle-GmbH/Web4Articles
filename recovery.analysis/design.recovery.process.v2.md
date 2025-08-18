@@ -6,6 +6,12 @@
 **Version:** 2.0  
 **Objective:** Design role-specific recovery paths that postpone hard steps until actually needed
 
+## ⚠️ CRITICAL: Branch Safety Warning
+
+**SAFE BRANCHES**: feature/analyze-ranger, main@f89aba0  
+**DANGEROUS**: release/dev (causes endless hang)  
+See [Branch Strategy](./design.recovery.branch-strategy.md) for details
+
 ## Core Principle: Just-In-Time Environment Setup
 
 Only setup what you need, when you need it. Most roles can start working immediately with just markdown files.
