@@ -47,7 +47,16 @@ Each role will be dilligently onboarded and everything will be fully tracable do
 
 ## Recovery
 
-Recovery supports role flexibility while maintaining project status consistency. Always recover into branch `release/dev`. Follow `scrum.pmo/roles/ScrumMaster/recovery-process.md`.
+**⚠️ IMPORTANT: For fast, safe recovery (3-6 minutes), use the V4 procedure:**
+
+```bash
+# Safe recovery - DO NOT use release/dev directly
+git checkout origin/test/recovery
+cat recovery.analysis/agent.recovery.v4.md
+# Follow the 3-minute quick start
+```
+
+For detailed recovery analysis, see the `test/recovery` branch. The old `release/dev` recovery is deprecated due to hanging issues.
 
 ## Enhanced Recovery Procedure (Role-Flexible)
 
