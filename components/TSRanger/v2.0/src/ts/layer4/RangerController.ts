@@ -67,8 +67,14 @@ export class RangerController {
         }
         if (key === '\u001b[A') { // Up
           this.moveSelection(-1);
-          // Sync prompt with selection when navigating Methods column
-          if (this.model.promptEditActive && this.model.selectedColumn === 1) {
+          if (this.model.promptEditActive && this.model.selectedColumn === 0) {
+            // Navigation in Classes column: clear prompt to exit filter mode
+            this.model.promptBuffer = '';
+            this.model.promptCursorIndex = 0;
+            this.model.promptEditActive = false;
+            this.clearClassFilter();
+          } else if (this.model.promptEditActive && this.model.selectedColumn === 1) {
+            // Sync prompt with selection when navigating Methods column
             const cls = this.model.selectedClass || '';
             const m = this.model.selectedMethod || '';
             const tokens = this.model.promptBuffer.split(/\s+/);
@@ -79,14 +85,20 @@ export class RangerController {
             this.model.promptCursorIndex = Math.min(this.model.promptBuffer.length, cls.length + 1);
             // Keep method filter suppressed during navigation; do not re-derive to avoid resetting selection
             this.model.suppressMethodFilter = true;
-            this.model.filters[1] = '';
+            this.clearMethodFilter();
           }
           this.view.render(this.model);
           return;
         }
         if (key === '\u001b[B') { // Down
           this.moveSelection(1);
-          if (this.model.promptEditActive && this.model.selectedColumn === 1) {
+          if (this.model.promptEditActive && this.model.selectedColumn === 0) {
+            // Navigation in Classes column: clear prompt to exit filter mode
+            this.model.promptBuffer = '';
+            this.model.promptCursorIndex = 0;
+            this.model.promptEditActive = false;
+            this.clearClassFilter();
+          } else if (this.model.promptEditActive && this.model.selectedColumn === 1) {
             const cls = this.model.selectedClass || '';
             const m = this.model.selectedMethod || '';
             const tokens = this.model.promptBuffer.split(/\s+/);
@@ -95,12 +107,12 @@ export class RangerController {
             this.model.promptBuffer = (cls + (m ? ' ' + m : '')).trim();
             this.model.promptCursorIndex = Math.min(this.model.promptBuffer.length, cls.length + 1);
             this.model.suppressMethodFilter = true;
-            this.model.filters[1] = '';
+            this.clearMethodFilter();
           }
           this.view.render(this.model);
           return;
         }
-        if (key === '\u001b[D') { // Left
+        if (key === '\u001b[D' && !this.model.promptEditActive) { // Left - column navigation only when not editing prompt
           this.changeColumn(-1);
           this.view.render(this.model);
           return;
@@ -111,19 +123,13 @@ export class RangerController {
           return;
         }
         if (key === '\x7f' && !this.model.promptEditActive) { // Backspace (filter editing when not in prompt)
-          const col = this.model.selectedColumn;
-          this.model.filters[col] = this.model.filters[col].slice(0, -1);
-          this.onFilterChange();
-          this.view.render(this.model);
+          this.handleBackspaceFilter();
           return;
         }
         // Prompt-line editing model (Task 7)
-        if (key === '\u001b[D') {
-          // Move cursor left in prompt
-          if (this.model.promptCursorIndex > 0) {
-            this.model.promptCursorIndex--;
-            this.view.render(this.model);
-          }
+        if (key === '\u001b[D' || key === '\u001b[Z') {
+          // DRY PRINCIPLE: Both [left] and [ShiftTab] use same retreat method
+          this.handleLeftShiftTabRetreat();
           return;
         }
         if (key === '\u001b[B' || key === '\u001b[A') {
@@ -156,76 +162,9 @@ export class RangerController {
           }
           return;
         }
-        // In prompt editing, Right arrow should move to next column when current token is empty
-        if (key === '\u001b[C' && this.model.promptEditActive) {
-          const tokenIdx = this.model.getCurrentPromptTokenIndex();
-          const tokens = this.model.promptBuffer.split(/\s+/);
-          const current = tokens[tokenIdx] ?? '';
-          if (current.trim().length === 0) {
-            this.changeColumn(1);
-            this.view.render(this.model);
-            return;
-          }
-        }
         if (key === '\t' || key === '\u001b[C') {
-          // Shell-like completion for current token
-          const tokenIdx = this.model.getCurrentPromptTokenIndex();
-          const tokens = this.model.promptBuffer.split(/\s+/);
-          const current = tokens[tokenIdx] ?? '';
-          if (current.trim().length === 0) {
-            // For empty token, treat Tab/Right as navigation to next column
-            this.changeColumn(1);
-            this.view.render(this.model);
-            return;
-          }
-          if (tokenIdx === 0) {
-            const classes = TSCompletion.getClasses().filter(c => c.toLowerCase().startsWith(current.toLowerCase()));
-            if (classes.length > 0) {
-              const chosenClass = classes[0];
-              tokens[0] = chosenClass;
-              // Auto-suggest default method 'start' if it exists
-              const methods = TSCompletion.getClassMethods(chosenClass);
-              if (methods.includes('start')) {
-                tokens[1] = 'start';
-                // Cursor positioned at 's' of start
-                this.model.promptBuffer = tokens.join(' ').trim();
-                this.model.promptCursorIndex = chosenClass.length + 1; // space after class
-                // Move selection context to Methods column
-                this.model.selectedColumn = 1;
-                // Do not set method filter yet; allow user to choose alternatives
-                this.model.suppressMethodFilter = true;
-              } else {
-                this.model.promptBuffer = tokens.join(' ').trim();
-                this.model.promptCursorIndex = this.model.promptBuffer.length;
-                this.model.selectedColumn = 1;
-                this.model.suppressMethodFilter = false;
-              }
-              this.model.deriveFiltersFromPrompt();
-              this.view.render(this.model);
-              return;
-            }
-          } else if (tokenIdx === 1) {
-            const cls = this.model.filteredClasses()[this.model.selectedIndexPerColumn[0]];
-            if (cls) {
-              const methods = TSCompletion.getClassMethods(cls).filter(m => m.toLowerCase().startsWith(current.toLowerCase()));
-              if (methods.length > 0) {
-                tokens[tokenIdx] = methods[0];
-                this.model.promptBuffer = tokens.join(' ').trim();
-                // Cursor at start of method token
-                this.model.promptCursorIndex = cls.length + 1; // position at start of method token
-                // Move selection context to Params column after method completion
-                this.model.selectedColumn = 2;
-                // Keep method filter suppressed while user may navigate
-                this.model.suppressMethodFilter = true;
-                this.model.deriveFiltersFromPrompt();
-                this.view.render(this.model);
-                return;
-              }
-            }
-          }
-          // If no completion, fall through to column advance behavior handled above
-          this.model.suppressMethodFilter = false;
-          this.view.render(this.model);
+          // DRY PRINCIPLE: Both Tab and Right use same advancement method  
+          this.handleTabRightAdvancement();
           return;
         }
         if (key.length === 1 && key >= ' ' && key <= '~') {
@@ -250,7 +189,7 @@ export class RangerController {
           if (tokenIdx === 1) {
             const parts = this.model.promptBuffer.split(/\s+/);
             const methodTok = parts[1] || '';
-            this.model.filters[1] = methodTok;
+            this.setMethodFilter(methodTok);
           }
           this.model.deriveFiltersFromPrompt();
           this.view.render(this.model);
@@ -365,7 +304,14 @@ export class RangerController {
   }
 
   private changeColumn(delta: number): void {
-    const next = Math.min(3, Math.max(0, this.model.selectedColumn + delta));
+    const currentColumn = this.model.selectedColumn;
+    const next = Math.min(3, Math.max(0, currentColumn + delta));
+    
+    // Clear Classes filter when moving left from Methods to Classes
+    if (currentColumn === 1 && next === 0 && delta < 0) {
+      this.clearClassFilter();
+    }
+    
     this.model.selectedColumn = (next as 0 | 1 | 2 | 3);
   }
 
@@ -453,5 +399,137 @@ export class RangerController {
       stdin.pause();
       try { process.stdout.removeAllListeners('resize'); } catch {}
     } catch {}
+  }
+
+  /**
+   * RADICAL OOP: Simple shared advancement method for [tab] and [right] keys
+   * DRY PRINCIPLE: Both keys use identical logic
+   * User requirement: Logger → Logger log with cursor at [l]og
+   */
+  private handleTabRightAdvancement(): void {
+    const tokenIdx = this.model.getCurrentPromptTokenIndex();
+    const tokens = this.model.promptBuffer.split(/\s+/);
+    const current = tokens[tokenIdx] ?? '';
+
+    // SIMPLE ADVANCEMENT: If no text typed and we have a selected class, add first method
+    if (current.trim().length === 0 && tokenIdx === 0 && this.model.selectedClass) {
+      const selectedClass = this.model.selectedClass;
+      const methods = TSCompletion.getClassMethods(selectedClass);
+      
+      if (methods.length > 0) {
+        const firstMethod = methods[0];
+        
+        // Create "Logger log" format
+        this.model.promptBuffer = `${selectedClass} ${firstMethod}`;
+        
+        // Position cursor at first character of method: Logger [l]og
+        this.model.promptCursorIndex = selectedClass.length + 1;
+        
+        // Update model state
+        this.model.selectedColumn = 1; // Move to Methods column  
+        this.model.suppressMethodFilter = true;
+        this.model.deriveFiltersFromPrompt();
+        this.view.render(this.model);
+        return;
+      }
+    }
+    
+    // FALLBACK: Use existing advancement behavior (move to next column)
+    this.changeColumn(1);
+    this.view.render(this.model);
+  }
+
+  /**
+   * RADICAL OOP: Shared retreat method for [left] and [ShiftTab] keys
+   * DRY PRINCIPLE: Both keys use identical logic for retreat operations
+   * 
+   * Handles retreat from class+method back to class-only:
+   * Logger log → Logger (with cursor at [L]ogger)
+   */
+  private handleLeftShiftTabRetreat(): void {
+    const tokenIdx = this.model.getCurrentPromptTokenIndex();
+    
+    // RETREAT FROM METHOD: If we're at method position, remove method and go back to class
+    if (tokenIdx === 1) {
+      const tokens = this.model.promptBuffer.split(/\s+/);
+      if (tokens.length >= 2 && tokens[0] && tokens[1]) {
+        // Remove method, keep only class: "Logger log" → "Logger"
+        this.model.promptBuffer = tokens[0];
+        
+        // Position cursor at first character of class: [L]ogger
+        this.model.promptCursorIndex = 0;
+        
+        // Update model state
+        this.model.selectedColumn = 0; // Move back to Classes column
+        this.model.suppressMethodFilter = false;
+        this.model.deriveFiltersFromPrompt();
+        this.view.render(this.model);
+        return;
+      }
+    }
+    
+    // COLUMN NAVIGATION RETREAT: If we're in Methods column, move back to Classes and clear filter
+    if (this.model.selectedColumn === 1) {
+      this.model.selectedColumn = 0; // Move back to Classes column
+      this.clearClassFilter();
+      this.view.render(this.model);
+      return;
+    }
+    
+    // FALLBACK: Move cursor left in prompt (normal cursor movement)
+    if (this.model.promptCursorIndex > 0) {
+      this.model.promptCursorIndex--;
+      this.view.render(this.model);
+    }
+  }
+
+  /**
+   * RADICAL OOP: Filter clearing methods - centralized filter management
+   * DRY PRINCIPLE: Eliminates repeated filter manipulation patterns
+   */
+
+  /**
+   * Clear Classes filter and trigger appropriate updates
+   * DRY: Consolidates `filters[0] = ''; onFilterChange();` pattern
+   */
+  private clearClassFilter(): void {
+    this.model.filters[0] = '';
+    this.onFilterChange();
+  }
+
+  /**
+   * Clear Methods filter without triggering full filter change processing
+   * DRY: Consolidates `filters[1] = '';` pattern used during navigation
+   */
+  private clearMethodFilter(): void {
+    this.model.filters[1] = '';
+  }
+
+  /**
+   * Set Methods filter to specific value
+   * DRY: Consolidates `filters[1] = value;` pattern
+   */
+  private setMethodFilter(value: string): void {
+    this.model.filters[1] = value;
+  }
+
+  /**
+   * Clear filter for specific column and trigger updates
+   * DRY: Consolidates column-specific filter clearing logic
+   */
+  private clearColumnFilter(columnIndex: number): void {
+    this.model.filters[columnIndex] = '';
+    this.onFilterChange();
+  }
+
+  /**
+   * Handle backspace filter editing - reduces current column filter by one character
+   * DRY: Consolidates backspace filter editing pattern
+   */
+  private handleBackspaceFilter(): void {
+    const col = this.model.selectedColumn;
+    this.model.filters[col] = this.model.filters[col].slice(0, -1);
+    this.onFilterChange();
+    this.view.render(this.model);
   }
 }
