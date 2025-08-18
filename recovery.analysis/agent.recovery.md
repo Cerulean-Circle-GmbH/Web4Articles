@@ -12,6 +12,36 @@ After recovery, you work in one of these roles:
 - **Tester**: Write/run tests, QA validation
 - **DevOps**: Maintain infrastructure
 
+## Role-Specific Recovery
+If recovering as a specific role:
+
+```bash
+# Find your role details:
+cat scrum.pmo/roles/Developer/process.md
+cat scrum.pmo/roles/ScrumMaster/process.md
+cat scrum.pmo/roles/PO/process.md
+cat scrum.pmo/roles/Architect/process.md
+cat scrum.pmo/roles/Tester/process.md
+cat scrum.pmo/roles/DevOps/process.md
+```
+
+### AI Task Creation Protocol
+When switching roles (from ScrumMaster process.md):
+1. Analyze feedback to determine best role
+2. Switch to that role and read its process.md
+3. Complete action as that role
+4. Return to ScrumMaster and report
+
+### Quick Role Reference
+| Role | Main Focus | Key Files |
+|------|------------|-----------|
+| Developer | Code, features | src/, test/ |
+| ScrumMaster | Process, PDCAs | scrum.pmo/ |
+| PO | Requirements | planning.md |
+| Architect | Design, PUML | docs/puml/ |
+| Tester | Tests, QA | test/, qa.md |
+| DevOps | Infrastructure | .devcontainer/ |
+
 ## Recovery Steps
 ```bash
 # 1. Setup branch
