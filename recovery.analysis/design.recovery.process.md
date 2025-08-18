@@ -5,11 +5,13 @@
 **Date:** 2025-08-18  
 **Objective:** Design minimal recovery process that always succeeds by postponing complexity
 
-## ✅ Always Start Here
+## ✅ For Agents
 
-**ALWAYS USE**: `git checkout origin/feature/analyze-ranger`  
-**THEN**: Create your branch and merge what you need  
-See [Branch Strategy](./design.recovery.branch-strategy.md) for simple steps
+**Use**: [agent.recovery.md](./agent.recovery.md) - Concise instructions for agents
+
+## For Humans
+
+See [human.onboarding/](./human.onboarding/) for detailed explanations
 
 ## Recovery Modes Decision Tree
 
