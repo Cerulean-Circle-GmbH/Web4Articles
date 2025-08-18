@@ -1,195 +1,174 @@
 # Recovery Process Analysis - Mode 1: Recover from README
 
+<!-- For DRY version with UUID step references, see design.input.md -->
+
 **Date:** 2025-08-17  
 **Mode:** Recovery from README (Mode 1)  
 **Starting Branch:** test/recovery (from feature/analyze-ranger)  
 **Objective:** Analyze and document the recovery process to minimize effort and ensure success
 
-## Step Definitions
-
-### Environment Steps
-- `[step:uuid:001-env-dkr-001]` **Check Docker**: Run `docker version` to verify Docker installation
-- `[step:uuid:001-env-nod-002]` **Check Node.js**: Run `node --version` to verify Node.js version
-- `[step:uuid:001-env-plt-003]` **Check PlantUML**: Run `which plantuml` to verify PlantUML installation
-- `[step:uuid:001-env-vsc-004]` **Check VS Code**: Verify VS Code Dev Containers extension
-
-### Reading Steps  
-- `[step:uuid:002-rdm-prn-001]` **Read First Principles**: Extract principles from README.md lines 11-33
-- `[step:uuid:002-rdm-hnd-002]` **Check Handover**: Read handover.backend.agent.md if exists
-
-### Scanning Steps
-- `[step:uuid:003-scn-dir-001]` **Scan Directories**: List scrum.pmo/ structure (roles/, sprints/, journal/)
-- `[step:uuid:003-scn-spr-002]` **Scan Sprints**: Find latest sprint in scrum.pmo/sprints/
-- `[step:uuid:003-scn-rol-003]` **Scan Roles**: Check role process.md files
-
-### Indexing Steps
-- `[step:uuid:004-idx-chk-001]` **Check Index**: Verify if index.md exists and check date
-- `[step:uuid:004-idx-gen-002]` **Generate Index**: Create/update index.md with all .md files
-
-### Aggregation Steps
-- `[step:uuid:005-agg-qaf-001]` **Check QA Log**: Read qa-feedback-log.md for existing feedback
-- `[step:uuid:005-agg-upd-002]` **Update QA Log**: Add new QA feedback to log
-
-### Recovery Steps
-- `[step:uuid:006-rec-chk-001]` **Check Recovery Hooks**: Look for "Recovery Checklist" in role process.md
-- `[step:uuid:007-spr-sum-001]` **Sprint Summary**: Generate status table of all sprints
-- `[step:uuid:008-con-chk-001]` **Consistency Check**: Verify links and templates
-- `[step:uuid:009-doc-rec-001]` **Document Recovery**: Update recovery.md with findings
-
 ## Recovery Process Steps - Summary Table
 
-| Step | Reference | Overview | Result |
-|------|-----------|----------|---------|
-| **0** | `[step:uuid:002-rdm-hnd-002]` | Check handover.backend.agent.md | ✅ Found (minimal) |
-| **1** | `[step:uuid:001-env-dkr-001]`<br>`[step:uuid:001-env-nod-002]`<br>`[step:uuid:001-env-plt-003]` | DevOps environment verification | ❌ Docker<br>✅ Node v22.16.0<br>❌ PlantUML |
-| **2** | `[step:uuid:002-rdm-prn-001]` | Read first principles from README | ✅ Extracted |
-| **3** | `[step:uuid:003-scn-dir-001]`<br>`[step:uuid:003-scn-spr-002]` | Scan markdown file structure | ✅ Well-organized |
-| **4** | `[step:uuid:004-idx-chk-001]` | Check/update index.md | ⚠️ 11 days old |
-| **5** | `[step:uuid:005-agg-qaf-001]` | Aggregate QA feedback | ✅ Already exists |
-| **6** | `[step:uuid:006-rec-chk-001]` | Check role recovery hooks | ❌ Not found |
-| **7** | `[step:uuid:007-spr-sum-001]` | Generate sprint status | ⚠️ Status unclear |
-| **8** | `[step:uuid:008-con-chk-001]` | Consistency checks | ❌ Not automated |
-| **9** | `[step:uuid:009-doc-rec-001]` | Document findings | ✅ Pattern exists |
+| What | Overview | Details | Actions |
+|------|----------|---------|---------|
+| **Step 0: Check Prerequisites** | Verify handover.backend.agent.md exists | If exists, load first for backend workflow | `cat handover.backend.agent.md`<br>Result: ✅ Found (minimal content) |
+| **Step 1: DevOps Environment** | Check prerequisites from [README.md](../README.md#L59-L65) | Docker, Node.js, PlantUML, Graphviz | `docker version` → ❌ Not found<br>`node --version` → ✅ v22.16.0<br>`which plantuml` → ❌ Not found |
+| **Step 2: Read First Principles** | Extract project principles from [README.md](../README.md#L11-L33) | No Jest, ESM only, Radical OOP, CMMI L4 | Read README → ✅ Extracted<br>Easy: Clear list<br>Hard: Limited context |
+| **Step 3: Scan Markdown Files** | Explore [scrum.pmo/](../scrum.pmo/) structure | roles/, sprints/, project.journal/ | `ls scrum.pmo/` → ✅ Well-organized<br>Easy: Clear structure<br>Hard: No active sprint marker |
+| **Step 4: Automated Indexing** | Update/generate [index.md](../index.md) | List all .md files with dates | Found index.md → ⚠️ 11 days old<br>Easy: Exists<br>Hard: Stale content |
+| **Step 5: QA Feedback** | Aggregate to [qa-feedback-log.md](../qa-feedback-log.md) | Collect all QA feedback | Found qa-feedback-log.md → ✅<br>Easy: Already aggregated<br>Hard: No current sprint link |
+| **Step 6: Role Recovery** | Check role process.md files | Look for "Recovery Checklist" | Checked all roles → ❌ No checklists<br>Easy: Consistent structure<br>Hard: Missing recovery sections |
+| **Step 7: Sprint Status** | Generate sprint/task summary | List all sprints and status | Found 8 sprints → ⚠️ Status unclear<br>Easy: Consistent format<br>Hard: No completion markers |
+| **Step 8: Consistency Check** | Verify links and templates | Check for broken links | Not performed → ❌ No automation<br>Easy: N/A<br>Hard: Manual process |
+| **Step 9: Document Findings** | Update [recovery.md](../recovery.md) | Add timestamped entry | Found 5 entries → ✅ Established<br>Easy: Pattern exists<br>Hard: Manual process |
 
 ## Recovery Log
 
 ### Step 1: DevOps Environment Verification
-**Time:** 2025-08-17 UTC  
-**References:** `[step:uuid:001-env-dkr-001]`, `[step:uuid:001-env-nod-002]`, `[step:uuid:001-env-plt-003]`
+**Time:** 2025-08-17 UTC
 
-#### Results:
-| Check | Command | Result |
-|-------|---------|--------|
-| Docker | `docker version` | ❌ Not found |
-| Node.js | `node --version` | ✅ v22.16.0 |
-| PlantUML | `which plantuml` | ❌ Not found |
+#### Findings:
+- ❌ **Docker**: Not installed in current environment
+- ✅ **Node.js**: v22.16.0 (no specific version requirement found in package.json)
+- ❌ **PlantUML/Graphviz**: Not installed
+- **Impact**: Can't use devcontainer, but Node.js sufficient for basic recovery
 
-**Easy:** Node version check  
-**Hard:** No Docker fallback documented
+**What was easy:** Node version check was straightforward
+**What was hard:** No clear fallback when Docker is missing
 
 ### Step 2: Read First Principles
-**Time:** 2025-08-17 UTC  
-**References:** `[step:uuid:002-rdm-prn-001]`, `[step:uuid:002-rdm-hnd-002]`
+**Time:** 2025-08-17 UTC
 
-#### Results:
-- ✅ README principles extracted
-- ✅ handover.backend.agent.md found
-- **Purpose**: "Create md-file based WIKI for CIRAS Project articles"
+#### Findings:
+- ✅ Found and extracted all key principles from README.md
+- ✅ Found handover.backend.agent.md (minimal content)
+- **Project Purpose**: "Create md-file based WIKI for CIRAS Project articles"
+- **Management**: AI-managed CMMI Level 4 SCRUM with QA auditor user
 
-**Easy:** Clear principle list  
-**Hard:** Missing CIRAS context
+**What was easy:** Principles clearly listed in README
+**What was hard:** Limited context about actual project state or what CIRAS is
 
 ### Step 3: Scan Markdown Files
-**Time:** 2025-08-17 UTC  
-**References:** `[step:uuid:003-scn-dir-001]`, `[step:uuid:003-scn-spr-002]`
+**Time:** 2025-08-17 UTC
 
-#### Structure:
+#### Structure Found:
 ```
 scrum.pmo/
-├── roles/ (6 roles)
-├── sprints/ (0-8)
+├── roles/ (Architect, DevOps, Developer, PO, ScrumMaster, Tester)
+├── sprints/ (sprint-0 through sprint-8)
 └── project.journal/
 ```
 
-**Latest:** Sprint 8 "Analyze ranger"  
-**Easy:** Well-organized structure  
-**Hard:** No active sprint marker
+#### Current Status:
+- **Latest Sprint**: Sprint 8 - "Analyze ranger"
+- **Sprint Goal**: Analyze TSRanger TUI behavior
+- **Sprint Status**: Tasks appear incomplete ([ ] checkboxes)
+
+**What was easy:** Directory structure is well-organized
+**What was hard:** No clear indication of which sprint is actually active
 
 ### Step 4: Automated Indexing
-**Time:** 2025-08-17 UTC  
-**Reference:** `[step:uuid:004-idx-chk-001]`
+**Time:** 2025-08-17 UTC
 
-#### Results:
-- ✅ index.md exists (2025-08-06)
-- ⚠️ 11 days old
+#### Findings:
+- ✅ **index.md exists**: Last updated 2025-08-06 (11 days old)
+- **Content**: Lists 68 markdown files with roles and types
+- **Issue**: Outdated - doesn't reflect current project state
 
-**Easy:** Found existing index  
-**Hard:** Stale content
+**What was easy:** Found existing index file
+**What was hard:** Index is stale and needs updating
 
 ### Step 5: QA Feedback Aggregation
-**Time:** 2025-08-17 UTC  
-**Reference:** `[step:uuid:005-agg-qaf-001]`
+**Time:** 2025-08-17 UTC
 
-#### Results:
-- ✅ qa-feedback-log.md exists
-- **Latest**: 2025-08-10
+#### Findings:
+- ✅ **qa-feedback-log.md exists**: Contains historical QA feedback
+- **Latest Entry**: 2025-08-10 about project retro scheduling
+- **Content**: Mix of technical issues and process improvements
 
-**Easy:** Already aggregated  
-**Hard:** No sprint links
+**What was easy:** QA feedback already aggregated in one file
+**What was hard:** No clear link to current sprint or active issues
 
 ### Step 6: Role-Specific Recovery Hooks
-**Time:** 2025-08-17 UTC  
-**Reference:** `[step:uuid:006-rec-chk-001]`
+**Time:** 2025-08-17 UTC
 
-#### Results:
-- ✅ All roles have process.md
-- ❌ No "Recovery Checklist" sections
+#### Findings:
+- ✅ All roles have process.md files
+- ❌ No "Recovery Checklist" section found in ScrumMaster process.md
+- **Process Content**: Detailed CMMI Level 4 principles, commit practices
 
-**Easy:** Consistent structure  
-**Hard:** Missing checklists
+**What was easy:** Role structure is consistent
+**What was hard:** No explicit recovery checklists as mentioned in README
 
 ### Step 7: Sprint & Task Status Summary
-**Time:** 2025-08-17 UTC  
-**Reference:** `[step:uuid:007-spr-sum-001]`
+**Time:** 2025-08-17 UTC
 
-#### Sprints Found:
-- Sprint 0-8 (missing Sprint 7)
-- Latest: Sprint 8 "Analyze ranger"
+#### Sprint Overview:
+| Sprint | Goal | Status |
+|--------|------|--------|
+| Sprint 0 | Foundation & structure | Unknown |
+| Sprint 1 | tssh CLI tool | Unknown |
+| Sprint 2 | TS Ranger interactive shell | Unknown |
+| Sprint 3 | GitScrumProject tool | Unknown |
+| Sprint 4 | Cross-platform devcontainer | Unknown |
+| Sprint 5 | TS Ranger v2 | Unknown |
+| Sprint 6 | Versioned folder refactor | Unknown |
+| Sprint 8 | Analyze ranger behavior | In Progress? |
 
-**Easy:** Consistent format  
-**Hard:** No status markers
+**What was easy:** Sprint planning files follow consistent structure
+**What was hard:** No clear indication of completion status or current sprint
 
 ### Step 8: Automated Consistency Checks
-**Time:** 2025-08-17 UTC  
-**Reference:** `[step:uuid:008-con-chk-001]`
+**Time:** 2025-08-17 UTC
 
-#### Results:
-- ❌ Not performed
-- No automation available
+#### Findings:
+- ❌ **Broken Links**: Not systematically checked
+- ❌ **Missing Backlinks**: Not verified
+- ❌ **Outdated Templates**: Not checked
 
-**Easy:** N/A  
-**Hard:** Manual process
+**What was easy:** N/A - step not fully automated
+**What was hard:** No tooling for automated link checking
 
 ### Step 9: Document Findings
-**Time:** 2025-08-17 UTC  
-**Reference:** `[step:uuid:009-doc-rec-001]`
+**Time:** 2025-08-17 UTC
 
-#### Results:
-- ✅ recovery.md exists (5 entries)
-- **Latest**: 2025-08-10
+#### Recovery Summary:
+- ✅ **recovery.md exists**: Contains 5 recovery entries (2025-08-04 to 2025-08-10)
+- **Latest Recovery**: 2025-08-10 - Sprint 2 retro planning
+- **Pattern**: Each recovery documents state and next steps
 
-**Easy:** Established pattern  
-**Hard:** Not automated
+**What was easy:** Recovery log already established
+**What was hard:** Recovery process not fully automated
 
 ## Overall Recovery Analysis
 
-### Easy (Existing Assets)
-1. Well-organized scrum.pmo/ → `[step:uuid:003-scn-dir-001]`
-2. README recovery procedure → `[step:uuid:002-rdm-prn-001]`
-3. Aggregated QA feedback → `[step:uuid:005-agg-qaf-001]`
-4. Consistent templates → `[step:uuid:003-scn-spr-002]`
-5. Recovery history → `[step:uuid:009-doc-rec-001]`
+### What Made Recovery Easy:
+1. **Clear Project Structure**: Well-organized scrum.pmo/ directory
+2. **Existing Documentation**: README has recovery procedure, index.md exists
+3. **QA Feedback Log**: Already aggregated in one place
+4. **Consistent Templates**: Sprint planning follows patterns
+5. **Recovery History**: recovery.md tracks past recoveries
 
-### Hard (Missing/Manual)
-1. Prerequisites unavailable → `[step:uuid:001-env-dkr-001]`, `[step:uuid:001-env-plt-003]`
-2. Stale index (11 days) → `[step:uuid:004-idx-chk-001]`
-3. No recovery checklists → `[step:uuid:006-rec-chk-001]`
-4. Sprint status unclear → `[step:uuid:007-spr-sum-001]`
-5. No automation → `[step:uuid:008-con-chk-001]`
-6. Limited CIRAS context → `[step:uuid:002-rdm-prn-001]`
+### What Made Recovery Hard:
+1. **Missing Prerequisites**: Docker/PlantUML not available
+2. **Stale Index**: index.md is 11 days old
+3. **No Recovery Checklists**: Role process.md files lack recovery sections
+4. **Sprint Status Unclear**: No clear way to identify active sprint
+5. **No Automation**: Most recovery steps are manual
+6. **Limited Context**: Project purpose/CIRAS not well explained
+7. **No Consistency Checks**: Link validation not automated
 
-### Improvements Needed
-| ID | Improvement | Addresses |
-|----|-------------|-----------|
-| 1 | Auto-generate index.md | `[step:uuid:004-idx-gen-002]` |
-| 2 | Sprint status tracker | `[step:uuid:007-spr-sum-001]` |
-| 3 | Role recovery checklists | `[step:uuid:006-rec-chk-001]` |
-| 4 | Docker fallback docs | `[step:uuid:001-env-dkr-001]` |
-| 5 | Automated link checker | `[step:uuid:008-con-chk-001]` |
-| 6 | CIRAS context doc | `[step:uuid:002-rdm-prn-001]` |
-| 7 | Recovery automation script | All steps |
+### Recovery Process Improvements Needed:
+1. **Auto-generate index.md** on recovery
+2. **Add sprint status tracker** (active/completed/planned)
+3. **Create role recovery checklists** as mentioned in README
+4. **Add fallback for missing Docker** (use local Node.js)
+5. **Automate link checking** for consistency
+6. **Add project context summary** (what is CIRAS, current objectives)
+7. **Create recovery script** to automate steps 1-9
 
-### Metrics
-- **Time**: ~15 minutes
-- **Automation**: 0/9 steps
-- **Success Rate**: 70% (missing prerequisites)
+### Time Analysis:
+- **Total Recovery Time**: ~15 minutes for basic understanding
+- **Missing Information**: Current sprint, active tasks, project objectives
+- **Manual Steps**: All steps required manual execution
+- **Documentation Quality**: Good structure, but outdated content
