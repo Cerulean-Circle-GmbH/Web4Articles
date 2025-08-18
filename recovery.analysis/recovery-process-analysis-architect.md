@@ -7,19 +7,19 @@
 **Starting Branch:** test/recovery (from feature/analyze-ranger)  
 **Objective:** Analyze recovery process when starting as Architect role
 
-## Recovery Process Steps - Summary Table
+## Recovery Process Steps - WODA Table
 
-| Step | Reference | Overview | Result |
-|------|-----------|----------|---------|
-| **0** | Check role identity | Read Architect process.md | ✅ Role understood |
-| **1** | Environment check | PlantUML verification | ⚠️ Can defer |
-| **2** | Read principles | Design patterns, PUML | ✅ Extracted |
-| **3** | Architecture docs | Find existing designs | ✅ docs/architecture/ |
-| **4** | PUML diagrams | Check diagram sources | ✅ docs/puml/ found |
-| **5** | Current designs | Sprint 8 architecture | ✅ Ranger analysis |
-| **6** | PlantUML setup | Install if rendering | ❌ Deferred |
-| **7** | Start Arch PDCA | Design-focused PDCA | ✅ Template ready |
-| **8** | Begin design | Create specifications | ✅ Can proceed |
+| What | Overview | Details | Actions |
+|------|----------|---------|---------|
+| `[step:uuid:arch-000-role-001]` **Confirm Role** | Read Architect process.md | Understand design responsibilities | `cat scrum.pmo/roles/Architect/process.md` |
+| `[step:uuid:arch-001-env-001]` **Check PlantUML** | Verify if installed | Can defer until rendering | `plantuml -version` → Defer if missing |
+| `[step:uuid:arch-002-read-001]` **Read Principles** | Architecture patterns | OOP, layers, PUML specs | `grep -A20 "Role Definition" scrum.pmo/roles/Architect/process.md` |
+| `[step:uuid:arch-003-docs-001]` **Find Arch Docs** | Existing architecture | Check documentation | `ls -la docs/architecture/` |
+| `[step:uuid:arch-004-puml-001]` **Check PUMLs** | Diagram sources | Find existing diagrams | `ls -la docs/puml/*.puml` |
+| `[step:uuid:arch-005-task-001]` **Current Tasks** | Sprint 8 architecture | Ranger behavior spec | `grep -r "Architect" scrum.pmo/sprints/sprint-8/` |
+| `[step:uuid:arch-006-setup-001]` **PlantUML Install** | Setup if needed | Defer until rendering | `brew install plantuml graphviz` → Only when needed |
+| `[step:uuid:arch-007-pdca-001]` **Create PDCA** | Start Arch documentation | Design focus | `mkdir -p scrum.pmo/project.journal/$(date +%Y-%m-%d-%H%M)/pdca` |
+| `[step:uuid:arch-008-work-001]` **Design Work** | Create specifications | Write PUML and docs | Start architecture design |
 
 ## Recovery Log
 
