@@ -23,15 +23,7 @@ export class RangerModel {
   suppressMethodFilter: boolean = false;
 
   get selectedClass(): string | undefined {
-    const filtered = this.filteredClasses();
-    const index = this.selectedIndexPerColumn[0];
-    // NAVIGATION BUG FIX: Bounds check to prevent undefined when navigation exceeds available classes
-    if (index >= filtered.length) {
-      // Reset to last valid index if out of bounds
-      this.selectedIndexPerColumn[0] = Math.max(0, filtered.length - 1);
-      return filtered[this.selectedIndexPerColumn[0]];
-    }
-    return filtered[index];
+    return this.filteredClasses()[this.selectedIndexPerColumn[0]];
   }
 
   get selectedMethod(): string | undefined {
