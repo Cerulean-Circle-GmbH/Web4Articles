@@ -113,15 +113,9 @@ export class RangerView {
         // Filter mode: show suggestion based on typed prefix
         display = suggestion + (parts.length > 1 ? (' ' + parts.slice(1).join(' ')) : '');
       } else if (selectedClass && !prefix) {
-        // FIXED: Check if we have advanced to show method (selectedMethod exists)
-        if (selectedMethod) {
-          // Advancement mode: Show class + method format (e.g., "GitScrumProject start")
-          display = `${selectedClass} ${selectedMethod}`;
-        } else {
-          // Pure navigation mode: Only show selected class, no methods
-          // This ensures [down][up] navigation shows only class name
-          display = selectedClass;
-        }
+        // Navigation mode: ONLY show selected class, NEVER methods
+        // This ensures [down][up] navigation shows only class name
+        display = selectedClass;
       }
     } else if (tokenIdx === 1) {
       // Method token: only show when explicitly advanced via [tab] or [right]
