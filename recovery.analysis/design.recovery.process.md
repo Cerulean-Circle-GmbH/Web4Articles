@@ -5,6 +5,12 @@
 **Date:** 2025-08-18  
 **Objective:** Design minimal recovery process that always succeeds by postponing complexity
 
+## ⚠️ CRITICAL: Branch Safety Warning
+
+**SAFE BRANCHES**: feature/analyze-ranger, main@f89aba0  
+**DANGEROUS**: release/dev (causes endless hang)  
+See [Branch Strategy](./design.recovery.branch-strategy.md) for details
+
 ## Recovery Modes Decision Tree
 
 ```
