@@ -20,14 +20,6 @@
 | **Step 8: Consistency Check** | Verify links and templates | Check for broken links | Not performed → ❌ No automation<br>Easy: N/A<br>Hard: Manual process |
 | **Step 9: Document Findings** | Update [recovery.md](../recovery.md) | Add timestamped entry | Found 5 entries → ✅ Established<br>Easy: Pattern exists<br>Hard: Manual process |
 
-## Detailed Recovery Process Steps
-
-| What | Overview | Details | Actions |
-|------|----------|---------|---------|
-| **Step 1: DevOps Environment Verification** | Check prerequisites from [README.md](../README.md#L59-L65) | **DevOps Environment Verification (blocking, do first):**<br>- Check local environment and fix before proceeding:<br>  - Docker engine is installed and running<br>  - Devcontainer tooling available<br>  - Node.js satisfies engine ranges<br>  - PlantUML and Graphviz installed | **Actions:**<br>1. `docker version` → ❌ Not found<br>2. VS Code Dev Containers → N/A (remote env)<br>3. `node --version` → ✅ v22.16.0<br>4. PlantUML → ❌ Not found<br><br>**Issue:** Missing Docker & PlantUML |
-| **Step 2: Read First Principles** | Read canonical project principles from [README.md](../README.md#L11-L33) | **Key Principles:**<br>- No Jest, only Vitest<br>- Strict TypeScript & ESM only<br>- No CommonJS patterns<br>- CLI via static start() methods<br>- DRY principle<br>- Radical OOP<br>- Git submodules for tools<br>- AI-managed CMMI Level 4 SCRUM | **Actions:**<br>1. Read README.md lines 11-33<br>2. Check handover.backend.agent.md<br>3. Extract core principles<br><br>**Results:** ✅ Principles extracted<br>**Easy:** Clear list format<br>**Issue:** No project purpose detail |
-| **Step 3: Scan Markdown Files** | Scan all markdown files prioritizing [scrum.pmo/](../scrum.pmo/) | **Priority Directories:**<br>- scrum.pmo/ (roles, sprints, tasks)<br>- wiki/ (ontology, definitions)<br>- Onboarding/process files<br>- QA feedback files | **Actions:**<br>1. List scrum.pmo/ structure<br>2. Identify key process docs<br>3. Find recent sprint/task status<br><br>**Results:** See findings below |
-
 ## Recovery Log
 
 ### Step 1: DevOps Environment Verification
