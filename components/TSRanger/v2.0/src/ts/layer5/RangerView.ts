@@ -112,20 +112,15 @@ export class RangerView {
       if (suggestion && prefix && suggestion.toLowerCase().startsWith(prefix.toLowerCase())) {
         // Filter mode: show suggestion based on typed prefix
         display = suggestion + (parts.length > 1 ? (' ' + parts.slice(1).join(' ')) : '');
-      } else if (selectedClass && !prefix) {
-        // FIXED: Check if we have advanced to show method (selectedMethod exists)
-        if (selectedMethod) {
-          // Advancement mode: Show class + method format (e.g., "GitScrumProject start")
-          display = `${selectedClass} ${selectedMethod}`;
-        } else {
-          // Pure navigation mode: Only show selected class, no methods
-          // This ensures [down][up] navigation shows only class name
-          display = selectedClass;
-        }
+      } else if (selectedClass) {
+        // TOKEN 0 (Class position): ALWAYS show only class, NEVER methods
+        // User specification: "[down] navigation shows only class, never methods"
+        // This is the simplest and most direct fix
+        display = selectedClass;
       }
-    } else if (tokenIdx === 1) {
-      // Method token: only show when explicitly advanced via [tab] or [right]
-      // When suppressing method filter (navigation/completion), show the full selected method
+    } else if (tokenIdx === 1 && model.promptEditActive) {
+      // Method token: only show when explicitly advanced via [tab] or [right] AND in edit mode
+      // Navigation mode (promptEditActive=false) should NEVER show methods
       const forceSuggestion = model.suppressMethodFilter === true;
       const typedRaw = parts[1] || '';
       const typed = forceSuggestion ? '' : typedRaw;
