@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only + AI-GPL-Addendum
+Copyright (c) 2025 The Web4Articles Authors
+Copyleft: See AGPLv3 (./LICENSE) and AI-GPL Addendum (./AI-GPL.md)
+Backlinks: /LICENSE , /AI-GPL.md
+Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unless dual-licensed.
+-->
+
 [Back to Journal Entry](../)
 
 # Project Retrospective — GPT-5
@@ -6,7 +14,7 @@
 - [ ] implemented all measures
 
 ## 1. Role Description After Recovery (as ScrumMaster)
-### [Detailed](Settiles) Role Description
+### [Detailed](./answer.broken.md#typo:Settiles) Role Description
 - Ensure recovery from `README.md` is executed cleanly (strict TS, ESM, Radical OOP, no Jest).
 - Maintain SCRUM cadence and enforce PO cross-reference checklist in `scrum.pmo/roles/PO/process.md`.
 - Orchestrate Sprint 2 delivery (TSRanger): prompt model, docs column, footer/prompt spacing/colors, tab behavior, cursor rendering.

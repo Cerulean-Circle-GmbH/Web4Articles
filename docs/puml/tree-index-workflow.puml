@@ -1,0 +1,129 @@
+@startuml tree-index-workflow
+
+title Tree Index Generation Workflow
+
+start
+
+:User initiates tree index generation;
+note right
+  Via TSRanger: tsranger tree index generate
+  Via CLI: ts-node TreeIndexGenerator.ts
+  Via API: new TreeIndexGenerator().generate()
+end note
+
+:Parse configuration;
+if (Valid configuration?) then (yes)
+  :Initialize components;
+  note right
+    - DirectoryTraverser
+    - TreeFormatter
+    - MarkdownRenderer
+  end note
+else (no)
+  :Show error message;
+  stop
+endif
+
+:Start directory traversal;
+
+partition "Directory Traversal" {
+  :Read directory contents;
+  
+  while (More entries?) is (yes)
+    :Get entry info;
+    
+    if (Is symbolic link?) then (yes)
+      if (Follow symlinks enabled?) then (yes)
+        if (Not circular reference?) then (yes)
+          :Resolve link target;
+        else (no)
+          :Log warning;
+          :Skip entry;
+        endif
+      else (no)
+        :Skip symlink;
+      endif
+    endif
+    
+    :Apply filters;
+    note right
+      1. Gitignore patterns
+      2. Exclude patterns
+      3. Include patterns
+    end note
+    
+    if (Should include?) then (yes)
+      if (Is directory?) then (yes)
+        if (Current depth < max depth?) then (yes)
+          :Recurse into directory;
+        else (no)
+          :Add continuation marker;
+        endif
+      else (no)
+        :Add file to tree;
+        if (Collect file info?) then (yes)
+          :Get size and date;
+        endif
+      endif
+    else (no)
+      :Skip entry;
+    endif
+  endwhile (no)
+}
+
+:Build tree structure;
+
+partition "Tree Formatting" {
+  :Calculate tree layout;
+  :Apply sorting;
+  note right
+    - By name
+    - By size
+    - By date
+  end note
+  
+  :Generate tree lines;
+  :Add box-drawing characters;
+  
+  if (Show sizes?) then (yes)
+    :Format file sizes;
+  endif
+  
+  if (Show dates?) then (yes)
+    :Format timestamps;
+  endif
+}
+
+partition "Markdown Generation" {
+  :Generate header;
+  note right
+    # Tree Index - Generated YYYY-MM-DD HH:MM UTC
+  end note
+  
+  if (Include configuration?) then (yes)
+    :Add configuration section;
+  endif
+  
+  :Add tree structure section;
+  :Escape special characters;
+  
+  if (Include summary?) then (yes)
+    :Calculate statistics;
+    :Add summary section;
+  endif
+  
+  if (Errors occurred?) then (yes)
+    :Add errors section;
+  endif
+}
+
+if (Output to file?) then (yes)
+  :Write to tree.index.md;
+  :Log success message;
+else (no)
+  :Return markdown string;
+endif
+
+stop
+
+@enduml

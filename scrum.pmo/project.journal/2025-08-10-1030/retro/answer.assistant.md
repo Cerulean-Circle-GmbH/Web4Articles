@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only + AI-GPL-Addendum
+Copyright (c) 2025 The Web4Articles Authors
+Copyleft: See AGPLv3 (./LICENSE) and AI-GPL Addendum (./AI-GPL.md)
+Backlinks: /LICENSE , /AI-GPL.md
+Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unless dual-licensed.
+-->
+
 [Back to Retro Instructions](./retro-instructions.md)
 
 # Assistant Retrospective — 2025-08-10
@@ -6,7 +14,7 @@
 - [ ] implemented all measures
 
 ## 1. Role Description After Recovery (as ScrumMaster)
-### [Detailed](Settiles) Role Description
+### [Detailed](./answer.assistant.md#typo:Settiles) Role Description
 As ScrumMaster, I ensured recovery from `README.md` established the core principles: ESM-only, positional-args-only CLI, traceable documentation, and reproducible environment. I facilitated:
 - Enforcing first-line backlinks across markdown
 - UUID-based traceability for MAIN/SUBTASK tasks

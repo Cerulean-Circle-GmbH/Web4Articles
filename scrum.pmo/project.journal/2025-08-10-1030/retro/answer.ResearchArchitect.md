@@ -1,6 +1,17 @@
-[Back to Retro Instructions](./retro-instructions.md)
+<!--
+SPDX-License-Identifier: AGPL-3.0-only + AI-GPL-Addendum
+Copyright (c) 2025 The Web4Articles Authors
+Copyleft: See AGPLv3 (./LICENSE) and AI-GPL Addendum (./AI-GPL.md)
+Backlinks: /LICENSE , /AI-GPL.md
+Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unless dual-licensed.
+-->
+
+[Back to Retro Instructions](./01.retro-instructions.what.md)
 
 # ResearchArchitect Retrospective — 2025-08-10
+
+- [ ] Read by QA
+- [ ] implemented all measures
 
 **Repository Origin**: `2cuBitbucket:donges/eamd.ucp.git` (Note: User mentioned GitHub [Web4Articles](https://github.com/Cerulean-Circle-GmbH/Web4Articles) but actual origin differs)  
 **Working Branch**: `retro/2025-08-10-agent-retro`  
@@ -10,7 +21,7 @@
 
 As ScrumMaster, I facilitated the recovery process by establishing comprehensive research documentation practices and implementing structured knowledge management following the WODA principle (What, Overview, Details, Actions). I ensured that research tasks were properly documented, organized, and made accessible for future reference.
 
-### Settiles Role Description
+### [Detailed](./answer.ResearchArchitect.md#typo:Settiles) Role Description
 
 **ResearchArchitect** specializes in:
 - **Research Methodology**: Implementing WODA principle (What, Overview, Details, Actions) for structured research

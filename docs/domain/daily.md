@@ -1,3 +1,5 @@
+[Back to Docs](../)
+
 # Daily Log (Migrated)
 
 Migrated from UpDown/temp/daily.md

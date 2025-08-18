@@ -1,3 +1,5 @@
+[Back to Sprints](../)
+
 # Sprint 2 Planning
 
 ## Sprint Goal
@@ -47,6 +49,10 @@ Deliver a ranger-like interactive shell (TS Ranger) that leverages `TSCompletion
 
 - [ ] [Task 7: Refactor typing model to prompt-line editing with cursor and shell-like completion](./task-7.md)  
   **Priority:** 3
+  - [ ] [Task 7.1 — Developer: Prompt-line sync and navigation fixes](./task-7.1-developer-promptline-sync.md)
+  - [ ] [Task 7.2 — Tester: Scripted non-interactive coverage and contracts](./task-7.2-tester-scripted-noninteractive.md)
+  - [ ] [Task 7.3 — Developer: Scenario-driven ENV configuration](./task-7.3-developer-env-scenarios.md)
+  - [ ] [Task 7.4 — Developer: KeyboardController extraction and delegation](./task-7.4-developer-keyboard-controller.md)
 
 ---
 

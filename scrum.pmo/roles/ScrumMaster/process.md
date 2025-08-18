@@ -1,3 +1,5 @@
+[Back to Roles](../)
+
 
 # First Principles for All Roles
 
@@ -5,12 +7,9 @@
 - All process improvements, debugging lessons, and cross-role feedback must be documented in the appropriate process.md file for traceability and continuous improvement.
 - The ScrumMaster is responsible for ensuring that all roles update their process documentation after significant debugging, integration, or process improvement sessions.
 
-## Logger & Verification Principles
-- All CLI, automation, and scripts must use the canonical Logger where applicable. Logging must be environment-aware, non-intrusive in production, and support traceability for debugging and process improvement.
-- After any automated or scripted action, always verify the intended effect (e.g., file creation, output, or state change) and document any discrepancies for process improvement.
 
-- All scripts and tools (e.g., `oosh`) must be robustly callable from their own directory, from the PATH, or from the project root. Always resolve the project root dynamically to ensure correct CLI and environment behavior regardless of invocation location.
-- **DO NOT REPEAT YOURSELF (DRY):** Never duplicate logic, documentation, or code. If you find repetition, always suggest and implement consolidation. Refactor or centralize repeated logic, scripts, or documentation to a single canonical location. This applies to all roles and all artifacts (code, scripts, docs, process).
+## **DO NOT REPEAT YOURSELF (DRY):** 
+Never duplicate logic, documentation, or code. If you find repetition, always suggest and implement consolidation. Refactor or centralize repeated logic, scripts, or documentation to a single canonical location. This applies to all roles and all artifacts (code, scripts, docs, process).
 
 ## Markdown Backlink Policy (Mandatory)
 - Every markdown document must begin with a single backlink on the very first line to its parent artifact.
@@ -21,6 +20,15 @@
 - Backlinks go at line 1, then one blank line, then the document title (`# ...`).
 - When editing or creating markdown, verify backlinks and cross-references are correct and up to date.
 
+## Project Status Reporting Requirements (Mandatory)
+The canonical, up-to-date instructions for status/journal reporting live in:
+
+`/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scrum.pmo/roles/ScrumMaster/recovery-process.md`
+
+- On recovery from `README.md`, read and execute that document.
+- Specifically follow its sections "Phase 3: Journal Entry Creation" and "Phase 4: Project Status Report" for required content and formatting.
+- Do not duplicate guidance here; keep this section as a pointer to the canonical document to preserve DRY.
+
 # Commit & Push Best Practices
 
 As Scrum Master, ensure the following best practices for committing and pushing changes:
@@ -30,6 +38,12 @@ As Scrum Master, ensure the following best practices for committing and pushing 
 - Commit and push after incorporating QA feedback or audit learnings.
 - Always document the reason for each commit in the commit message for traceability.
 - TRON Operational Rule: After each TRON prompt that results in changes, immediately commit and push.
+
+## Pre-Commit Spellcheck & Cross-Reference Check (Mandatory)
+- Before any commit that modifies markdown or code, run:
+  - Spellcheck: review changed files for obvious typos; normalize agreed project terms.
+  - Cross-reference check: verify backlinks on line 1 for markdown; ensure referenced relative links resolve; update or add links as needed.
+- For retro artifacts, convert placeholder markers like `[Detailed](Settiles)` to self-links `[Detailed](./currentFile.md#typo:Settiles)` to preserve audit context.
 # Subtask Dependency Management
 
 Subtasks must always be ordered to avoid blocking dependencies. If a blocking dependency is unavoidable, the Scrum Master is responsible for removing the impediment by reordering or splitting tasks. The Scrum Master should review all subtasks for dependency issues during sprint planning and execution.
@@ -86,3 +100,17 @@ See `sprint-0` tasks for detailed step-by-step initialization and setup instruct
 
 ---
 The ScrumMaster should continue to facilitate and document all SCRUM activities and improvements.
+
+## PDCA Enforcement (Cross-Role)
+- ScrumMaster ensures all agents follow: Recovery → PDCA (UTC, QA quote, Actions with artifact links) → Commit & Push.
+- Reject changes that do not include a corresponding PDCA entry.
+- **Artifact Links Requirement**: All PDCA entries MUST include links to changed artifacts in the Do section:
+  - List all files modified with markdown links using relative paths
+  - Include brief description of what changed in each file
+  - For analysis-only PDCAs, list artifacts analyzed in a separate section
+  - Example format: `- [Sprint 7 Task 2.1](../../../sprints/sprint-7/task-2.1.md) - Updated structure`
+- **GitHub Links Requirement**: PDCAs should include direct GitHub links where applicable:
+  - Link to PR when changes are in a PR
+  - Link to specific files on GitHub for easy QA verification
+  - Link to commit hashes for traceability
+  - Example: `[View on GitHub](https://github.com/org/repo/blob/branch/path/to/file.md)`

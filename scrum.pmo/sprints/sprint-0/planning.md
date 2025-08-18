@@ -1,7 +1,9 @@
+[Back to Sprints](../)
+
 # Sprint 0 Planning
 
 ## Sprint Goal
-The goal for Sprint 0 is to establish the foundational project structure, documentation, and onboarding workflow. This includes setting up the SCRUM management directories, adding the project wiki as a submodule, creating the ontology page, documenting role responsibilities, and providing a template for new subprojects. All tasks must follow the agreed template and naming conventions to ensure clarity, traceability, and rapid onboarding for all roles.
+The goal for Sprint 0 is to establish the foundational project structure, documentation, and onboarding workflow. This includes setting up the SCRUM management directories, adding the project wiki as a submodule, creating the ontology page, documenting role responsibilities, providing a template for new subprojects, and establishing tree.index.md documentation standards. All tasks must follow the agreed template and naming conventions to ensure clarity, traceability, and rapid onboarding for all roles.
 
 ## Task List (Sprint 0)
 
@@ -27,7 +29,28 @@ The goal for Sprint 0 is to establish the foundational project structure, docume
 - [ ] [Task 6: DevContainer Requirements](./task-6-devcontainer-requirements.md)  
   **Priority:** 7
 
+- [ ] [Task 7: Tree Index Documentation Process](./task-7-tree-index-documentation.md)  
+  **Priority:** 8
+    - [ ] [Task 7.1: Architect - Tree Index Specification](./task-7.1-architect-tree-index-spec.md)
+    - [ ] [Task 7.2: Developer - Tree Index Generator Implementation](./task-7.2-developer-tree-index-implementation.md)
+    - [ ] [Task 7.3: Developer - Tree Index Tests](./task-7.3-developer-tree-index-tests.md)
+    - [ ] [Task 7.4: PO - Tree Index Process Documentation](./task-7.4-po-tree-index-process.md)
+
 ---
+
+## Task 8: Sprint Structure Enforcement (Priority: Critical)
+**Status**: Planned  
+**Description**: Establish and enforce standard sprint folder structure for all future sprints.  
+**Subtasks**:
+- [Task 8.1 (PO): Update sprint templates](./task-8.1-po-update-templates.md)
+- Task 8.2 (ScrumMaster): Add to recovery validation
+- Task 8.3 (Developer): Create structure validation script
+
+**Process Update (2025-08-16):**
+Added Task 8 for sprint structure enforcement after Sprint 12 cleanup revealed structural drift. This critical task ensures all future sprints follow the standard flat structure with proper major task vs role-based refinement naming.
+
+**Process Update (2025-08-15):**
+Added Task 7 for tree.index.md documentation and process establishment. This task includes architectural specification, implementation of a tree index generator, testing, and process documentation to standardize how project structure is documented across all components and directories.
 
 **Process Update (2025-08-03):**
 Sprint 0 tasks are now listed, priorities are set, and all links/numbering are correct. All tasks follow the new template format and are ready for execution. QA feedback and audit learnings will be captured in each task's QA section and in the sprint audit file.

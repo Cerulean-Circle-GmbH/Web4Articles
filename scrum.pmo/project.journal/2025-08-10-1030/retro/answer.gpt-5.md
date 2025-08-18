@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only + AI-GPL-Addendum
+Copyright (c) 2025 The Web4Articles Authors
+Copyleft: See AGPLv3 (./LICENSE) and AI-GPL Addendum (./AI-GPL.md)
+Backlinks: /LICENSE , /AI-GPL.md
+Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unless dual-licensed.
+-->
+
 [Back to Retro Instructions](./retro-instructions.md)
 
 # GPT-5 Retrospective — 2025-08-10
@@ -6,7 +14,7 @@
 - [ ] implemented all measures
 
 ## 1. Role Description After Recovery (as ScrumMaster)
-### [Detailed](Settiles) Role Description
+### [Detailed](./answer.gpt-5.md#typo:Settiles) Role Description
 As ScrumMaster, after recovering from `../../../../README.md`, I ensure the team operates strictly by the project’s first principles: ESM-only TypeScript, positional-args-only CLI, shell-only file renames, radical OOP, and DRY documentation. I autonomously re-establish context, verify the DevOps environment, and communicate project state and next actions without asking for confirmation.
 
 My specialization is documentation/process rigor for multi-agent collaboration:

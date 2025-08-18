@@ -1,3 +1,5 @@
+[Back to Sprints](../)
+
 # Sprint 3 Planning
 
 ## Sprint Goal
@@ -15,12 +17,29 @@ Deliver a comprehensive `GitScrumProject` tool that can create new GitHub reposi
   **Priority:** 4
 - [ ] [Task 1.4: Tester - E2E and Unit Tests](./task-1.4-tester-e2e-tests.md)
   **Priority:** 5
-- [ ] [Task 1.5: PO - User Guide and Acceptance](./task-1.5-po-user-guide.md)
+- [x] [Task 1.5: PO - User Guide and Acceptance](./task-1.5-po-user-guide.md)
   **Priority:** 6
 - [ ] [Task 1.6: Docs - Embed Generated SVG Diagrams in Markdown](./task-1.6-docs-embed-svgs.md)
   **Priority:** 7
-- [ ] [Task 1.7: PO — Plan Sprint 1 for TLA.scrum.pmo (wrapper project)](./task-1.7-po-plan-tla-sprint-1.md)
+- [x] [Task 1.7: PO — Plan Sprint 1 for TLA.scrum.pmo (wrapper project)](./task-1.7-po-plan-tla-sprint-1.md)
   **Priority:** 8
+
+- [ ] [Task 1.8: Developer - GitHub Auth & Org Repo Creation (CLI)](./task-1.8-developer-gh-auth-and-repo-create.md)
+  **Priority:** 9
+- [ ] [Task 1.9: Developer - LFS Detection, Migration, and Initial Push](./task-1.9-developer-lfs-migration-and-push.md)
+  **Priority:** 10
+- [ ] [Task 1.10: Developer - HTTPS→SSH Push Fallback and Remote Wiring](./task-1.10-developer-https-to-ssh-fallback.md)
+  **Priority:** 11
+- [ ] [Task 1.11: Tester - E2E: Large Files with LFS and SSH Fallback](./task-1.11-tester-e2e-lfs-ssh.md)
+  **Priority:** 12
+ - [ ] [Task 1.12: Developer - Workspaces MountPoint Manager (symlink org/repo)](./task-1.12-developer-workspaces-mountpoint-manager.md)
+   **Priority:** 13
+ - [ ] [Task 1.13: Tester - E2E: Workspaces MountPoint flows](./task-1.13-tester-e2e-workspaces-mountpoint.md)
+   **Priority:** 14
+ - [ ] [Task 1.14: Developer - Projects Submodule Manager (mountpoint → projects/)](./task-1.14-developer-projects-submodule-manager.md)
+   **Priority:** 15
+ - [ ] [Task 1.15: Tester - E2E: Projects Submodule add/update/safeRemove](./task-1.15-tester-e2e-projects-submodule.md)
+   **Priority:** 16
 
 ---
 
