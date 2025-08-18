@@ -1,10 +1,17 @@
 [Back to Recovery Analysis](./recovery-process-analysis.md)
 
-# Recovery Branch Strategy - Clear Positive Instructions
+# Recovery Branch Strategy
+
+**For Agents:** See [agent.recovery.md](./agent.recovery.md)  
+**For Humans:** Continue reading for explanations
+
+---
+
+# Human-Oriented Branch Strategy
 
 **Date:** 2025-08-18  
 **Updated:** 2025-08-18-UTC-0801  
-**Purpose:** Simple, clear instructions on WHAT TO DO for successful recovery
+**Purpose:** Detailed instructions with explanations for humans
 
 ## ✅ ALWAYS DO THIS - Simple Recovery Steps
 
