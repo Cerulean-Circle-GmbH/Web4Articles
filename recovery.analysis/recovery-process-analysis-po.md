@@ -7,19 +7,19 @@
 **Starting Branch:** test/recovery (from feature/analyze-ranger)  
 **Objective:** Analyze recovery process when starting as Product Owner role
 
-## Recovery Process Steps - Summary Table
+## Recovery Process Steps - WODA Table
 
-| Step | Reference | Overview | Result |
-|------|-----------|----------|---------|
-| **0** | Check role identity | Read PO process.md | ✅ Role understood |
-| **1** | Environment check | Only markdown needed | ✅ No tools |
-| **2** | Read principles | Requirements focus | ✅ Extracted |
-| **3** | Backlog structure | Find requirements docs | ⚠️ No central backlog |
-| **4** | Sprint planning | Current sprint goals | ✅ Sprint 8 found |
-| **5** | Templates | PO sprint templates | ✅ Templates exist |
-| **6** | User stories | Find existing stories | ⚠️ Scattered |
-| **7** | Start PO PDCA | Requirements PDCA | ✅ Template ready |
-| **8** | Begin PO work | Write requirements | ✅ Can proceed |
+| What | Overview | Details | Actions |
+|------|----------|---------|---------|
+| `[step:uuid:po-000-role-001]` **Confirm Role** | Read PO process.md | Understand product ownership responsibilities | `cat scrum.pmo/roles/PO/process.md` |
+| `[step:uuid:po-001-env-001]` **Check Tools** | Verify markdown editor | Any text editor works | `echo "No special tools needed"` |
+| `[step:uuid:po-002-read-001]` **Read Principles** | PO responsibilities | Vision, backlog, priorities | `grep -A15 "Responsibilities" scrum.pmo/roles/PO/process.md` |
+| `[step:uuid:po-003-backlog-001]` **Find Backlog** | Search requirements | Look for central backlog | `find . -name "requirements.md" -o -name "backlog.md" 2>/dev/null` |
+| `[step:uuid:po-004-sprint-001]` **Current Sprint** | Sprint 8 goals | Understand current focus | `cat scrum.pmo/sprints/sprint-8/planning.md` |
+| `[step:uuid:po-005-template-001]` **Check Templates** | PO templates | Sprint and task templates | `ls -la scrum.pmo/roles/PO/sprint-n-template/` |
+| `[step:uuid:po-006-stories-001]` **Find Stories** | User story search | Existing story patterns | `grep -r "As a\|User story\|Acceptance" scrum.pmo/ \| head -20` |
+| `[step:uuid:po-007-pdca-001]` **Create PDCA** | Start PO documentation | Requirements focus | `mkdir -p scrum.pmo/project.journal/$(date +%Y-%m-%d-%H%M)/pdca` |
+| `[step:uuid:po-008-work-001]` **Write Requirements** | Begin PO work | Start defining features | Create user stories and acceptance criteria |
 
 ## Recovery Log
 

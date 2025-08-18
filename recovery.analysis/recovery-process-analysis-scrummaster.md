@@ -7,19 +7,20 @@
 **Starting Branch:** test/recovery (from feature/analyze-ranger)  
 **Objective:** Analyze recovery process when starting as ScrumMaster role
 
-## Recovery Process Steps - Summary Table
+## Recovery Process Steps - WODA Table
 
-| Step | Reference | Overview | Result |
-|------|-----------|----------|---------|
-| **0** | Check role identity | Read ScrumMaster process.md | ✅ Role understood |
-| **1** | Environment check | Only Git needed | ✅ Minimal setup |
-| **2** | Read principles | CMMI Level 4, AI protocol | ✅ Extracted |
-| **3** | Sprint structure | Check all sprints status | ✅ Sprint 0-8 found |
-| **4** | Find impediments | Search for blockers | ✅ Search ready |
-| **5** | Check team PDCAs | Recent team activity | ✅ Journal found |
-| **6** | Role processes | Understand all 6 roles | ✅ Can switch |
-| **7** | Start SM PDCA | Process-focused PDCA | ✅ Template ready |
-| **8** | Begin management | Start removing impediments | ✅ Can proceed |
+| What | Overview | Details | Actions |
+|------|----------|---------|---------|
+| `[step:uuid:sm-000-role-001]` **Confirm Role** | Read ScrumMaster process.md | Understand facilitation and impediment removal | `cat scrum.pmo/roles/ScrumMaster/process.md` |
+| `[step:uuid:sm-001-env-001]` **Check Git** | Verify Git available | Only tool needed for SM | `git --version` |
+| `[step:uuid:sm-002-read-001]` **AI Protocol** | Read task creation protocol | Role switching responsibilities | `grep -A10 "AI Task Creation" scrum.pmo/roles/ScrumMaster/process.md` |
+| `[step:uuid:sm-003-sprint-001]` **List Sprints** | Check all sprints | Find current sprint status | `ls -la scrum.pmo/sprints/` |
+| `[step:uuid:sm-003-sprint-002]` **Current Sprint** | Read sprint planning | Understand sprint 8 goals | `cat scrum.pmo/sprints/sprint-8/planning.md` |
+| `[step:uuid:sm-004-block-001]` **Find Blockers** | Search impediments | Team blockers and waiting | `grep -r "blocked\|impediment\|waiting" scrum.pmo/sprints/sprint-8/` |
+| `[step:uuid:sm-005-team-001]` **Team Activity** | Recent PDCAs | Who's doing what | `ls -lat scrum.pmo/project.journal/*/pdca/*.md \| head -10` |
+| `[step:uuid:sm-006-roles-001]` **All Roles** | Understand 6 roles | For role switching | `for r in Developer PO Architect Tester DevOps; do echo "=== $r ==="; head -20 scrum.pmo/roles/$r/process.md; done` |
+| `[step:uuid:sm-007-pdca-001]` **Create PDCA** | Start SM documentation | Process management focus | `mkdir -p scrum.pmo/project.journal/$(date +%Y-%m-%d-%H%M)/pdca` |
+| `[step:uuid:sm-008-work-001]` **Facilitate** | Remove impediments | Start management work | Begin impediment removal |
 
 ## Recovery Log
 

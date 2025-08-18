@@ -7,24 +7,28 @@
 **Starting Branch:** test/recovery (from feature/analyze-ranger)  
 **Objective:** Analyze recovery process when starting as Developer role
 
-## Recovery Process Steps - Summary Table
+## Recovery Process Steps - WODA Table
 
-| Step | Reference | Overview | Result |
-|------|-----------|----------|---------|
-| **0** | Check role identity | Read Developer process.md | ✅ Role understood |
-| **1** | Environment check | Node.js, Git verification | ✅ Node v22.16.0 |
-| **2** | Read principles | Developer first principles | ✅ Extracted |
-| **3** | Code structure | Explore src/, test/ | ✅ Well-organized |
-| **4** | Find dev tasks | Check current sprint | ✅ Sprint 8 tasks |
-| **5** | Setup workspace | Install dependencies | ⚠️ Defer if reviewing |
-| **6** | Read recent code | Check recent commits | ✅ Pattern found |
-| **7** | Start PDCA | Developer-specific PDCA | ✅ Template ready |
-| **8** | Begin coding | Start development work | ✅ Can proceed |
+| What | Overview | Details | Actions |
+|------|----------|---------|---------|
+| `[step:uuid:dev-000-role-001]` **Confirm Role** | Read Developer process.md | Understand Developer responsibilities and principles | `cat scrum.pmo/roles/Developer/process.md` |
+| `[step:uuid:dev-001-env-001]` **Check Git** | Verify Git available | Essential for version control | `git --version` |
+| `[step:uuid:dev-001-env-002]` **Check Node.js** | Verify Node.js v18+ | Required for TypeScript/ESM | `node --version` → Expect v18+ |
+| `[step:uuid:dev-001-env-003]` **Check Docker** | Docker for devcontainer | Can defer until needed | `docker version` → Defer if missing |
+| `[step:uuid:dev-002-read-001]` **Read Principles** | Extract dev principles | Radical OOP, ESM, no Jest | `grep -A20 "First Principles" scrum.pmo/roles/Developer/process.md` |
+| `[step:uuid:dev-003-code-001]` **Explore Source** | Check code structure | Understand layers 2/4/5 | `tree src/ts -L 2` |
+| `[step:uuid:dev-003-code-002]` **Check Tests** | Find test patterns | Vitest examples | `ls -la test/*.test.ts` |
+| `[step:uuid:dev-004-task-001]` **Find Tasks** | Current sprint tasks | Developer assignments | `grep -r "Developer" scrum.pmo/sprints/sprint-8/` |
+| `[step:uuid:dev-005-setup-001]` **Install Deps** | npm dependencies | Can defer if reviewing | `npm ci` → Defer if just reading |
+| `[step:uuid:dev-006-hist-001]` **Git History** | Recent development | Understand patterns | `git log --oneline -10 -- src/` |
+| `[step:uuid:dev-007-pdca-001]` **Create PDCA** | Start documentation | Use Developer template | `mkdir -p scrum.pmo/project.journal/$(date +%Y-%m-%d-%H%M)/pdca` |
+| `[step:uuid:dev-008-work-001]` **Begin Work** | Start development | Ready to code | Start task implementation |
 
 ## Recovery Log
 
 ### Step 0: Confirm Developer Role
 **Time:** 2025-08-18 UTC  
+**Reference:** `[step:uuid:dev-000-role-001]`  
 **Action:** `cat scrum.pmo/roles/Developer/process.md`
 
 #### Key Learnings:
