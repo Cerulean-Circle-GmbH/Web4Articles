@@ -23,17 +23,9 @@ export class RangerView {
     // Clear screen and move cursor to top-left
     process.stdout.write('\x1b[2J\x1b[H');
 
-    // NEW RANGER-LIKE LAYOUT: Clean prompt line at top, then column-colored backgrounds
-    const cleanPromptLine = this.buildColoredCommand(model);
-    process.stdout.write(cleanPromptLine + '\n');
-    
-    // Column-colored backgrounds below the prompt
-    const columnBackgrounds = this.buildColumnBackgrounds(model, colWidth, width);
-    process.stdout.write(columnBackgrounds + '\n');
-
-    // Compute grid rows: reserve 2 lines (prompt + column backgrounds) + 1 footer = 3 total reserved
+    // Compute grid rows: reserve 3 lines (blank, command, blank) + 1 footer = 4
     const maxRows = Math.max(...gridColumns.map(col => col.length));
-    const gridRows = Math.min(maxRows, Math.max(0, height - 3));
+    const gridRows = Math.min(maxRows, Math.max(0, height - 4));
     for (let r = 0; r < gridRows; r++) {
       let row = '';
       for (let c = 0; c < 4; c++) {
@@ -43,46 +35,26 @@ export class RangerView {
       process.stdout.write(row + '\n');
     }
 
-    // Calculate remaining space for footer positioning
-    const usedLines = 2 + gridRows; // prompt line + column backgrounds + grid rows
-    const remainingLines = height - usedLines - 3; // -1 for footer itself, -2 to pull footer up by 2 lines
-    if (remainingLines > 0) {
-      process.stdout.write('\n'.repeat(remainingLines));
+    // Top padding to keep footer at last line while preserving exactly one blank line above preview
+    const topPad = Math.max(0, (height - 4) - gridRows);
+    if (topPad > 0) {
+      process.stdout.write('\n'.repeat(topPad));
     }
+
+    // One empty line above preview
+    process.stdout.write('\n');
+
+    // Colorized command preview above the footer, prefixed by prompt
+    const colored = this.buildColoredCommand(model);
+    process.stdout.write(colored + '\n');
+
+    // One empty line between preview and footer
+    process.stdout.write('\n');
 
     // Blue background with white text footer (key usage line)
     const footerText = '←/→: column  ↑/↓: move  Type: filter  Backspace: clear  Enter: select/next param/exec  Space: next param  q/Esc: quit';
     const footer = this.bgBlue(this.whiteBoldPadded(footerText, Math.max(0, width - 1)));
     process.stdout.write(footer);
-  }
-
-  private buildColumnBackgrounds(model: RangerModel, colWidth: number, screenWidth: number): string {
-    // Create clean column-colored background sections (no command prompt mixed in)
-    const sections: string[] = [];
-    const columnTitles = ['Classes', 'Methods', 'Params', 'Docs'];
-    
-    for (let i = 0; i < 4; i++) {
-      const colorCode = this.colorCodeForTitle(columnTitles[i]);
-      const isActive = model.selectedColumn === i;
-      
-      // Empty content - just colored backgrounds to indicate columns
-      const cellContent = this.makeCell('', colWidth);
-      let styledCell = '';
-      
-      if (isActive) {
-        // Active column: bright background
-        const bgColorCode = colorCode ? colorCode + 10 : 47; // Convert to background or default to white
-        styledCell = `\x1b[${bgColorCode}m${cellContent}\x1b[0m`;
-      } else {
-        // Inactive column: darker background
-        const bgColorCode = colorCode ? colorCode + 10 : 40; // Convert to background or default to black  
-        styledCell = `\x1b[${bgColorCode}m${cellContent}\x1b[0m`;
-      }
-      
-      sections.push(styledCell);
-    }
-    
-    return sections.join('');
   }
 
   private buildPlainPreview(model: RangerModel): string {
@@ -100,31 +72,16 @@ export class RangerView {
     const parts = buffer.split(/\s+/);
     const tokenIdx = (buffer.slice(0, cursor).split(/\s+/).length - 1);
 
-    // Get current model state
-    const selectedClass = model.selectedClass || '';
-    const selectedMethod = model.selectedMethod || '';
-    
     let display = buffer;
     if (tokenIdx === 0) {
       const prefix = parts[0] || '';
       const suggestion = (model.filteredClasses()[0] || '');
-      
       if (suggestion && prefix && suggestion.toLowerCase().startsWith(prefix.toLowerCase())) {
-        // Filter mode: show suggestion based on typed prefix
         display = suggestion + (parts.length > 1 ? (' ' + parts.slice(1).join(' ')) : '');
-      } else if (selectedClass && !prefix) {
-        // FIXED: Check if we have advanced to show method (selectedMethod exists)
-        if (selectedMethod) {
-          // Advancement mode: Show class + method format (e.g., "GitScrumProject start")
-          display = `${selectedClass} ${selectedMethod}`;
-        } else {
-          // Pure navigation mode: Only show selected class, no methods
-          // This ensures [down][up] navigation shows only class name
-          display = selectedClass;
-        }
       }
     } else if (tokenIdx === 1) {
-      // Method token: only show when explicitly advanced via [tab] or [right]
+      // For method token, suggest selected method name if any
+      const selectedMethod = model.selectedMethod || '';
       // When suppressing method filter (navigation/completion), show the full selected method
       const forceSuggestion = model.suppressMethodFilter === true;
       const typedRaw = parts[1] || '';
@@ -148,7 +105,6 @@ export class RangerView {
       const methodStart = (cls ? cls.length + 1 : 0);
       effectiveCursor = methodStart + typedLen;
     }
-    // Navigation mode (tokenIdx === 0): cursor stays at first character of class
     const before = display.slice(0, effectiveCursor);
     const after = display.slice(effectiveCursor);
     const renderedCursor = this.style(after.length > 0 ? after.charAt(0) : ' ', { inverse: true });
@@ -231,7 +187,7 @@ export class RangerView {
       case 'Classes': return 36; // cyan
       case 'Methods': return 33; // yellow
       case 'Params': return 35; // magenta
-      case 'Docs': return 32; // green
+      case 'Docs': return 34; // blue
       default: return undefined;
     }
   }
