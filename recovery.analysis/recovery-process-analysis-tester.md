@@ -7,19 +7,19 @@
 **Starting Branch:** test/recovery (from feature/analyze-ranger)  
 **Objective:** Analyze recovery process when starting as Tester role
 
-## Recovery Process Steps - Summary Table
+## Recovery Process Steps - WODA Table
 
-| Step | Reference | Overview | Result |
-|------|-----------|----------|---------|
-| **0** | Check role identity | Read Tester process.md | ✅ Role understood |
-| **1** | Environment check | Node.js for tests | ⚠️ Can defer |
-| **2** | Read principles | Test-driven, Vitest | ✅ Extracted |
-| **3** | Test structure | Find test files | ✅ test/ directory |
-| **4** | Test patterns | Existing test examples | ✅ Patterns found |
-| **5** | Current specs | From Architect specs | ✅ Need specs |
-| **6** | Test planning | Write test cases | ✅ Can plan |
-| **7** | Start Test PDCA | QA-focused PDCA | ✅ Template ready |
-| **8** | Begin testing | Plan before execute | ✅ Can proceed |
+| What | Overview | Details | Actions |
+|------|----------|---------|---------|
+| `[step:uuid:test-000-role-001]` **Confirm Role** | Read Tester process.md | Understand QA responsibilities | `cat scrum.pmo/roles/Tester/process.md` |
+| `[step:uuid:test-001-env-001]` **Check Node.js** | Verify for test runs | Can defer until execution | `node --version` → Defer if planning only |
+| `[step:uuid:test-002-read-001]` **Read Principles** | TDD, Vitest framework | No Jest, use Vitest | `grep -A15 "Test Framework" scrum.pmo/roles/Tester/process.md` |
+| `[step:uuid:test-003-struct-001]` **Test Structure** | Find test directory | Test organization | `ls -la test/` |
+| `[step:uuid:test-004-pattern-001]` **Test Examples** | Existing patterns | Learn test style | `find test/ -name "*.test.ts" -exec head -20 {} \; | head -100` |
+| `[step:uuid:test-005-spec-001]` **Find Specs** | Architect specifications | Test requirements | `find docs/ -name "*spec*.md" -o -name "*behavior*.md"` |
+| `[step:uuid:test-006-plan-001]` **Plan Tests** | Write test cases | Before implementation | Create test plan in markdown |
+| `[step:uuid:test-007-pdca-001]` **Create PDCA** | Start QA documentation | Testing focus | `mkdir -p scrum.pmo/project.journal/$(date +%Y-%m-%d-%H%M)/pdca` |
+| `[step:uuid:test-008-work-001]` **Begin Testing** | Start QA work | Plan then execute | Write test cases and validation |
 
 ## Recovery Log
 

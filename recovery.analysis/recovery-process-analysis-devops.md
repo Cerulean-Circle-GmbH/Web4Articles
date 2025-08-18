@@ -7,19 +7,21 @@
 **Starting Branch:** test/recovery (from feature/analyze-ranger)  
 **Objective:** Analyze recovery process when starting as DevOps role
 
-## Recovery Process Steps - Summary Table
+## Recovery Process Steps - WODA Table
 
-| Step | Reference | Overview | Result |
-|------|-----------|----------|---------|
-| **0** | Check role identity | Read DevOps process.md | ✅ Role understood |
-| **1** | Full environment | Docker, Node, PlantUML | ❌ Many missing |
-| **2** | Read principles | Environment consistency | ✅ Extracted |
-| **3** | Infrastructure | Check devcontainer | ✅ Config found |
-| **4** | CI/CD setup | GitHub Actions check | ✅ Workflows exist |
-| **5** | Tool verification | All tools needed | ❌ Setup required |
-| **6** | Container build | Devcontainer ready | ❌ Docker needed |
-| **7** | Start DevOps PDCA | Infrastructure PDCA | ✅ Template ready |
-| **8** | Begin DevOps work | Environment setup | ⚠️ Heavy process |
+| What | Overview | Details | Actions |
+|------|----------|---------|---------|
+| `[step:uuid:dops-000-role-001]` **Confirm Role** | Read DevOps process.md | Understand infrastructure duties | `cat scrum.pmo/roles/DevOps/process.md` |
+| `[step:uuid:dops-001-env-001]` **Check Docker** | Verify Docker installed | Essential for containers | `docker --version` → Required |
+| `[step:uuid:dops-001-env-002]` **Check Node.js** | Verify Node v18+ | For build processes | `node --version` → Required |
+| `[step:uuid:dops-001-env-003]` **Check PlantUML** | For architecture diagrams | Documentation tools | `plantuml -version` → Required |
+| `[step:uuid:dops-002-read-001]` **Read Principles** | Environment consistency | DevOps philosophy | `grep -A20 "Environment" scrum.pmo/roles/DevOps/process.md` |
+| `[step:uuid:dops-003-infra-001]` **Check Config** | Devcontainer setup | Container configuration | `cat .devcontainer/devcontainer.json` |
+| `[step:uuid:dops-004-cicd-001]` **CI/CD Review** | GitHub Actions | Automation pipelines | `ls -la .github/workflows/` |
+| `[step:uuid:dops-005-setup-001]` **Install Tools** | Setup all prerequisites | Docker, Node, PlantUML | `brew install docker node plantuml graphviz` |
+| `[step:uuid:dops-006-build-001]` **Build Container** | Devcontainer build | Environment ready | `docker build -t web4articles-dev .devcontainer/` |
+| `[step:uuid:dops-007-pdca-001]` **Create PDCA** | Start DevOps docs | Infrastructure focus | `mkdir -p scrum.pmo/project.journal/$(date +%Y-%m-%d-%H%M)/pdca` |
+| `[step:uuid:dops-008-work-001]` **Begin DevOps** | Infrastructure work | Maintain environments | Start environment management |
 
 ## Recovery Log
 
