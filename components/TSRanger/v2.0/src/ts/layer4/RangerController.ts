@@ -405,33 +405,27 @@ export class RangerController {
    * RADICAL OOP: Simple shared advancement method for [tab] and [right] keys
    * DRY PRINCIPLE: Both keys use identical logic
    * User requirement: Logger → Logger log with cursor at [l]og
-   * FIXED: Works after filter operations (g[tab]) and navigation ([down]5x[tab])
    */
   private handleTabRightAdvancement(): void {
     const tokenIdx = this.model.getCurrentPromptTokenIndex();
     const tokens = this.model.promptBuffer.split(/\s+/);
     const current = tokens[tokenIdx] ?? '';
 
-    // FIXED CONDITION: Advance if we have a selected class and no method yet
-    // This works for:
-    // 1. Pure navigation: Logger (no text) → Logger log
-    // 2. Filter operations: g[tab] → GitScrumProject → GitScrumProject start  
-    // 3. Navigation sequences: [down]5x[tab] → GitScrumProject → GitScrumProject start
-    if (tokenIdx === 0 && this.model.selectedClass && !this.model.selectedMethod) {
+    // SIMPLE ADVANCEMENT: If no text typed and we have a selected class, add first method
+    if (current.trim().length === 0 && tokenIdx === 0 && this.model.selectedClass) {
       const selectedClass = this.model.selectedClass;
       const methods = TSCompletion.getClassMethods(selectedClass);
       
       if (methods.length > 0) {
         const firstMethod = methods[0];
         
-        // Create "Class Method" format (e.g., "GitScrumProject start")
+        // Create "Logger log" format
         this.model.promptBuffer = `${selectedClass} ${firstMethod}`;
         
-        // Position cursor at first character of method: GitScrumProject [s]tart
+        // Position cursor at first character of method: Logger [l]og
         this.model.promptCursorIndex = selectedClass.length + 1;
         
         // Update model state
-        this.model.selectedMethod = firstMethod; // CRITICAL: Set selected method
         this.model.selectedColumn = 1; // Move to Methods column  
         this.model.suppressMethodFilter = true;
         this.model.deriveFiltersFromPrompt();
