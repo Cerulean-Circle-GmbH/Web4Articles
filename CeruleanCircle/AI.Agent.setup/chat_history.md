@@ -78,3 +78,26 @@ REMEMBER: The goal is to get to a working state on release/dev, not to fix the b
 
 ## Next Steps
 Continue development work on the fresh `cursor/recovery-from-readme-20250819-0949` branch, which is properly synced with origin/release/dev.
+
+## Follow-up: PDCA Process Improvement
+
+### User Request
+> i am missing the user quote. refresh your memory on the PDCA process. read all relevant files and learn from past PDCAs of the past days, in fact read everything and learn what is missing and update the current pdca with the original user prompt and then a new pdca with this one. you need to then also update the recover process so that the pdca process works immidiatly after the "recovery from readme" initial prompt after wakeup
+
+### Actions Taken
+1. **Read PDCA Template**: Reviewed `/workspace/scrum.pmo/roles/_shared/PDCA/template.md` to understand requirements
+2. **Updated Original PDCA**: Added missing user quote, artifacts section, and metadata to `2025-08-19-UTC-0949-terminal-hang-recovery-successful.md`
+3. **Created New PDCA**: Documented this improvement in `2025-08-19-UTC-0954-pdca-process-improvement-recovery.md`
+
+### Key Learnings for Recovery Process
+- **Always include user quote**: In "QA Feedback (quote literally)" section
+- **List artifacts**: Even if no files changed during recovery
+- **Complete metadata**: Agent, branch, commit, date
+- **Follow template exactly**: All sections must be present
+
+### Recovery Process Enhancement
+For future "recovery from readme" prompts:
+1. Create PDCA immediately after recovery
+2. Include FULL user prompt in QA Feedback section
+3. Use shared PDCA template structure
+4. Export chat history as per user preference [[memory:5453222]]
