@@ -104,46 +104,71 @@ Think as a brand new agent with only:
 
 ## **⚡ Act**
 
-### **Improved Wake-Up Prompt**
+### **TRON's Actual Prompt**
+
+> **User Quote**: "simulate the recovery process. My current prompts will be: 
+> 
+> 'Recover from readme
+> + 
+> CONTEXT: Previous agent (me) experienced terminal hang during git merge operation. Terminal is non-responsive but important learning captured.
+> 
+> CRITICAL PDCA TO READ FIRST:
+> /workspace/scrum.pmo/project.journal/2025-08-19-0825-sprint8-scrummaster/pdca/2025-08-19-UTC-0850-terminal-hang-analysis-handover.md
+> 
+> SITUATION:
+> 1. I started recovery from old test/recovery branch
+> 2. Attempted to merge release/dev (current) into old branch
+> 3. Terminal hung due to branch divergence complexity
+> 4. Created backup at recovery.analysis.backup before hang
+> 
+> YOUR MISSION:
+> 1. Read the handover PDCA above FIRST
+> 2. Follow "SAFE RECOVERY STEPS" section exactly
+> 3. Do NOT attempt to complete the merge
+> 4. Create fresh branch from release/dev instead
+> 5. Document your recovery in new PDCA
+> 
+> REMEMBER: The goal is to get to a working state on release/dev, not to fix the broken merge.'
+> 
+> Imagine you are a new agent and have no context at all but the starting branch test/release
+> 
+> do you need any SHA ids to the files you mentioned? be dilligant. your current thinking will have impact on the waking up process of your next self"
+
+### **Improved Wake-Up Prompt (Based on Simulation)**
 
 ```
-CONTEXT: Previous agent experienced terminal hang during git merge. You're waking up in potentially unstable state.
+Recover from readme
 
-STEP 1 - VERIFY YOUR STATE:
-echo "Terminal test" && pwd && git branch --show-current
-# Expected: Terminal responds, you're in /workspace, branch shows
+URGENT: Check /workspace/EMERGENCY_HANDOVER.md FIRST if you have any issues.
 
-STEP 2 - READ CRITICAL HANDOVER:
-cat /workspace/scrum.pmo/project.journal/2025-08-19-0825-sprint8-scrummaster/pdca/2025-08-19-UTC-0850-terminal-hang-analysis-handover.md
+CONTEXT: Previous agent experienced terminal hang during git merge operation. Terminal is non-responsive but important learning captured.
 
-If terminal hangs on any command, you're in bad state - skip to EMERGENCY RECOVERY below.
+CRITICAL PDCA TO READ FIRST:
+/workspace/scrum.pmo/project.journal/2025-08-19-0825-sprint8-scrummaster/pdca/2025-08-19-UTC-0850-terminal-hang-analysis-handover.md
+
+VERIFY YOUR STATE:
+1. Test terminal: echo "Terminal responsive - $(date)"
+2. If no response in 5 seconds, terminal is hung - use file tools only
+3. Check current branch: git branch --show-current
 
 SITUATION:
-- Previous agent on branch: cursor/recover-scrum-session-from-readme-53bc  
-- Attempted merge: origin/release/dev (hung terminal)
-- Backup exists: /workspace/recovery.analysis.backup
-- Hung during: git merge origin/release/dev --strategy-option=theirs
+1. Previous agent on branch: cursor/recover-scrum-session-from-readme-53bc
+2. Attempted to merge origin/release/dev into this old branch  
+3. Terminal hung due to massive branch divergence
+4. Backup exists at: /workspace/recovery.analysis.backup
+5. Possible partial merge state in .git/
 
 YOUR MISSION:
-1. Verify terminal is responsive (echo test)
-2. Read handover PDCA for full context
-3. Check/abort any partial merge:
-   ls .git/MERGE_* 2>/dev/null
-   # If files exist, run:
-   rm -f .git/MERGE_HEAD .git/index.lock
-   git reset --hard HEAD
-4. Create fresh branch:
-   git checkout origin/release/dev
-   git checkout -b recovery/post-hang-$(date +%Y-%m-%d-%H%M)
-5. Document in new PDCA
+1. Read handover PDCA above FIRST (full path provided)
+2. Follow "SAFE RECOVERY STEPS" section exactly
+3. Do NOT attempt to complete the merge
+4. Create fresh branch from release/dev instead
+5. Document your recovery in new PDCA
 
-EMERGENCY RECOVERY (if terminal hung):
-- Use file tools only (no terminal)
-- Read files directly
-- Document state for next agent
-- Request human intervention
+EMERGENCY FALLBACK:
+If terminal is completely unresponsive, read /workspace/EMERGENCY_HANDOVER.md using file tools.
 
-REMEMBER: Goal is working state on release/dev, not fixing the merge.
+REMEMBER: The goal is to get to a working state on release/dev, not to fix the broken merge. Route around the problem.
 ```
 
 ### **Additional Context Needed**
