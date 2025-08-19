@@ -17,7 +17,7 @@ import path from 'node:path';
 
 function runScripted(keys: string): string {
   const projectRoot = process.cwd();
-  const bin = path.join(projectRoot, 'components/TSRanger/v2.0/sh/tsranger');
+  const bin = path.join(projectRoot, 'sh/tsranger');
   const env = { 
     ...process.env, 
     TSRANGER_TEST_MODE: '1', 
@@ -37,7 +37,10 @@ function getPromptLine(out: string): string {
   const lines = out.split(/\r?\n/);
   const footerIdx = lines.findIndex(l => l.includes('column') && l.includes('Enter: select'));
   if (footerIdx > 1) {
-    return lines[footerIdx - 2] || '';
+    const promptLine = lines[footerIdx - 2] || '';
+    // Extract just the class/method part from the end of the prompt line
+    const parts = promptLine.split(' ');
+    return parts[parts.length - 1] || '';
   }
   return '';
 }
