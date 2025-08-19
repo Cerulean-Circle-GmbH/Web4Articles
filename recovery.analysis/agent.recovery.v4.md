@@ -99,8 +99,11 @@ cat .devcontainer/devcontainer.json
 # Build and maintain
 ```
 
-## 📋 Create Your PDCA
+## 📋 MANDATORY: Create Your PDCA (Minimum Achievement)
 
+**⚠️ RECOVERY IS NOT COMPLETE WITHOUT A PDCA!**
+
+### Step 1: Create PDCA File
 ```bash
 cat > pdca/$(date +"%Y-%m-%d-%H%M")-recovery.md << 'EOF'
 # PDCA: Recovery - $(date +"%Y-%m-%d")
@@ -118,12 +121,27 @@ cat > pdca/$(date +"%Y-%m-%d-%H%M")-recovery.md << 'EOF'
 - [Document your work here]
 
 ## Check
-> [User feedback quoted here]
+> [User feedback quoted here literally]
 
 ## Act
 - [Next steps]
 EOF
 ```
+
+### Step 2: Report to User (CRITICAL!)
+When user asks about your recovery or for a PDCA, respond with:
+1. Brief status (1-2 lines max)
+2. Dual format links ONLY:
+   ```
+   [GitHub](https://github.com/.../pdca/filename.md) | [pdca/filename.md](pdca/filename.md)
+   ```
+3. NO lengthy content in chat - it goes in the PDCA file!
+
+### Why This Matters
+- PDCA = Proof of successful recovery
+- Shows you can document and communicate
+- User needs links, not walls of text
+- This is THE minimum bar for recovery success
 
 ## 🚨 If Something Fails
 
@@ -152,4 +170,9 @@ EOF
 
 ---
 
-**Success Metric**: If you created a PDCA, you recovered successfully!
+**Success Metrics**: 
+1. ✅ Created working session in under 10 minutes
+2. ✅ Created and saved PDCA file  
+3. ✅ Reported PDCA with dual links (not inline content)
+
+**Remember**: No PDCA = No Recovery! The PDCA proves you can work AND communicate.
