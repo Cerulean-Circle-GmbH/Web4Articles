@@ -1,6 +1,6 @@
 [Back to Index](./index.md)
 
-# Web4Articles Markdown File Index (2025-08-06)
+# Web4Articles Markdown File Index (2025-08-19)
 
 | File | Role/Type | Last Modified |
 |------|-----------|--------------|
@@ -63,5 +63,35 @@
 | scrum.pmo/sprints/sprint-3/task-1.3-devops-release-recovery.md | Sprint task | 2025-08-08 |
 | scrum.pmo/sprints/sprint-3/task-1.4-tester-e2e-tests.md | Sprint task | 2025-08-08 |
 | scrum.pmo/sprints/sprint-3/task-1.5-po-user-guide.md | Sprint task | 2025-08-08 |
+| recovery.analysis/agent.recovery.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/agent.recovery.test-strategy.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/agent.recovery.v4.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/design.input.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/design.recovery.branch-strategy.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/design.recovery.process.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/design.recovery.process.v2.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/design.recovery.process.v3.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/design.recovery.process.v4.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/recovery-process-analysis.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/recovery-process-analysis-architect.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/recovery-process-analysis-developer.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/recovery-process-analysis-devops.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/recovery-process-analysis-po.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/recovery-process-analysis-scrummaster.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/recovery-process-analysis-tester.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/woda-update-summary.md | Recovery docs | 2025-08-18 |
+| recovery.analysis/PDCA/2025-08-17-UTC-1945-recovery-analysis-mode1.md | PDCA | 2025-08-17 |
+| recovery.analysis/PDCA/2025-08-18-UTC-0657-design-recovery-process.md | PDCA | 2025-08-18 |
+| recovery.analysis/PDCA/2025-08-18-UTC-0719-preserve-original-create-design.md | PDCA | 2025-08-18 |
+| recovery.analysis/PDCA/2025-08-18-UTC-0822-agent-specific-recovery.md | PDCA | 2025-08-18 |
+| recovery.analysis/PDCA/2025-08-18-UTC-0848-agent-recovery-insufficient.md | PDCA | 2025-08-18 |
+| recovery.analysis/PDCA/2025-08-18-UTC-0922-complete-recovery-tree-v3.md | PDCA | 2025-08-18 |
+| recovery.analysis/PDCA/2025-08-18-UTC-0957-create-separate-role-files.md | PDCA | 2025-08-18 |
+| recovery.analysis/PDCA/2025-08-18-UTC-1023-add-woda-and-uuids.md | PDCA | 2025-08-18 |
+| recovery.analysis/PDCA/2025-08-18-UTC-1057-agent-recovery-v4-main-integration.md | PDCA | 2025-08-18 |
+| recovery.analysis/PDCA/2025-08-18-UTC-1115-agent-recovery-test-results.md | PDCA | 2025-08-18 |
+| scrum.pmo/project.journal/2025-08-10-1030/retro/answer.OntologyWeaver.md | Retro answer | 2025-08-10 |
+| scrum.pmo/project.journal/2025-08-19-0825-sprint8-scrummaster/pdca/2025-08-19-UTC-0832-pdca-reporting-clarification.md | PDCA | 2025-08-19 |
+| handover.backend.agent.md | Handover doc | 2025-08-19 |
 
 *This index is auto-generated for recovery and onboarding. Update as new markdown files are added.*
