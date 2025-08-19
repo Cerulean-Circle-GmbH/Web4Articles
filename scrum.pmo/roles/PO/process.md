@@ -98,6 +98,7 @@ When the Scrum Master requests a new task or task update, the AI must:
 - Use clear, concise language and actionable steps.
 - Keep all documentation up-to-date and reviewed by the team.
 - Capture QA feedback and audit learnings in each task's QA section.
+- When referencing project status, releases, or reviews, include GitHub links to the repo, target branch, and any relevant PRs for quick navigation.
 
 ## Pre-Commit Spellcheck & Cross-Reference Check (Mandatory)
 - Before committing planning/tasks/subtasks edits:
@@ -125,3 +126,17 @@ When the Scrum Master requests a new task or task update, the AI must:
   - The status checkbox (unchecked until delivered)
 - [ ] Ensure every new MAIN task contains a backlink to `requiremnents.md` with the same UUID.
 - [ ] Re-run a quick link check: planning ↔ tasks ↔ subtasks ↔ requiremnents.md.
+
+## PDCA Requirement (Shared)
+- Use the shared PDCA template at `scrum.pmo/roles/_shared/PDCA/template.md`.
+- After each QA/user prompt or significant product change, create a UTC-named PDCA entry under `scrum.pmo/roles/PO/PDCA/`.
+- In Check, include concrete evidence (tree of docs, git, planning diffs) and a verbatim QA quote.
+- Plan must include bold-labelled subsections (Objective, Scope, Targets, Inputs, Acceptance Criteria, Assumptions, Constraints, Options, Rationale, Risks/Mitigations).
+
+## Recovery → PDCA → Commit & Push (Enforced)
+- After recovery or any QA prompt: perform recovery, write PDCA (UTC, QA quote, Actions with artifact links), then commit and push immediately.
+
+## Linking Policy (GitHub-first dual-linking)
+- Provide GitHub web link followed by relative path link for referenced files.
+- Example:
+  - `[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/<branch>/scrum.pmo/roles/PO/process.md): [scrum.pmo/roles/PO/process.md](../../scrum.pmo/roles/PO/process.md)`

@@ -1,0 +1,35 @@
+
+  - number: 5
+    name: "TSRanger v2 Architecture and Implementation"
+    branch: "cursor/plan-new-sprint-with-tsranger-v2-ef48"
+    created: "2025-08-10"
+    status: "merged"
+    notes: "Complete TSRanger v2 rewrite with proper architecture"
+  - number: 6
+    name: "Versioned Structure Migration"
+    branch: "cursor/plan-new-sprint-with-tsranger-v2-ef48"
+    created: "2025-08-10"
+    status: "merged"
+    notes: "Migrate to versioned folder structure (v1/v2)"
+  - number: 7
+    name: "Not Created Yet"
+    branch: "unknown"
+    created: "N/A"
+    status: "not_found"
+    notes: "Sprint 7 was not found in any branch"
+  - number: 8
+    name: "Ranger Analysis"
+    branch: "feature/analyze-ranger"
+    created: "2025-08-10"
+    status: "merged"
+    notes: "Analysis and documentation of Ranger architecture"
+
+next_sprint: 10
+last_updated: "2025-08-11"
+
+# Rules:
+# 1. Always check this file before creating a new sprint
+# 2. Update immediately after creating a sprint
+# 3. Include branch name where sprint was created
+# 4. Mark status as "discovered" for sprints found in branches
+# 5. Update status to "merged" when branch is merged to release/dev

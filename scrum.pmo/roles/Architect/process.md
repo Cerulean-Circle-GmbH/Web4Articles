@@ -64,7 +64,23 @@ The Architect is responsible for designing the system architecture, specifying s
 
 ## Release Discipline
 - Require full QA (manual and automated) and documentation before tagging a release.
+- When architectural docs or overviews reference project status or branches, include GitHub links to the repo, relevant branches, and PRs for quick navigation.
 
 ---
 
 **Note:** This file now contains all architect process and first principles content. The duplicate in `src/architect/process.md` has been removed to prevent future confusion. All architect process documentation must reside here.
+
+## PDCA Requirement (Shared)
+- Use the shared PDCA template at `scrum.pmo/roles/_shared/PDCA/template.md`.
+- After each QA/user prompt or significant architectural action, create a UTC-named PDCA entry under `scrum.pmo/roles/Architect/PDCA/`.
+- In Check, include concrete evidence (tree, rg, git logs) and a verbatim quote of the QA prompt.
+- Plan must include bold-labelled subsections: Objective, Scope, Targets (metrics), Inputs, Acceptance Criteria, Assumptions, Constraints, Options Considered, Rationale for Selected Option, Risks and Mitigations.
+
+## Recovery → PDCA → Commit & Push (Enforced)
+- After recovery or any QA prompt: perform recovery, write PDCA (UTC, QA quote, Actions with artifact links), then commit and push immediately.
+
+## Linking Policy (GitHub-first dual-linking)
+- Always provide both links in this order where applicable:
+  - GitHub web link first, then the relative path link.
+- Example:
+  - `[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/<branch>/scrum.pmo/roles/Architect/process.md): [scrum.pmo/roles/Architect/process.md](../../scrum.pmo/roles/Architect/process.md)`

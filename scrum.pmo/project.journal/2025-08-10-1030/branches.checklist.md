@@ -2,6 +2,10 @@
 
 - **Reference branch**: main
 
+- **Do not touch branches**:
+  - origin/main
+  - origin/retro/2025-08-10-agent-retro
+
 - **Merged into main**:
   - [x] origin/cursor/automate-gitscrum-project-setup-and-management-3bc8
   - [x] origin/cursor/get-workspace-tree-eff5
@@ -9,8 +13,8 @@
   - [x] origin/docs/sprint-3-embed-svgs
   - [x] origin/feat/ts.ranger.good
   - [x] origin/feat/tsranger-colors
-  - [x] origin/main
-  - [x] origin/retro/2025-08-10-agent-retro
+
+
 
 - **Not merged into main**:
   - [ ] origin/chore/sprint-4-devcontainer
