@@ -171,6 +171,23 @@ This protocol defines the systematic approach to multi-agent coordination that e
 - **Feedback Integration:** Continuous improvement based on TRON guidance
 - **Revolutionary Results:** Combined intelligence produces breakthrough outcomes
 
+## Communication Protocol Enhancement
+
+### Chat vs. File Content Strategy
+**Key Learning (2025-08-19):** Always answer much in files and just provide relevant links and decisions in the chat.
+
+**Implementation:**
+- **Detailed Analysis:** Comprehensive content goes in PDCA files, process documentation, task files
+- **Chat Response:** Concise summary with relevant links and key decisions only
+- **Content Preservation:** Ensure all insights are captured in permanent documentation
+- **Navigation Efficiency:** Users can access detailed content via links, chat remains scannable
+
+**Benefits:**
+- **Reduced Chat Clutter:** Essential information accessible without scrolling
+- **Permanent Documentation:** All insights preserved in searchable, linkable files
+- **Efficient Navigation:** Quick decisions in chat, deep content in dedicated files
+- **Better Traceability:** Content linked to specific files with GitHub integration
+
 ## Process Evolution
 
 This protocol will evolve based on:
@@ -178,6 +195,7 @@ This protocol will evolve based on:
 - **TRON Guidance:** Continuous improvement based on collaboration feedback
 - **Role Development:** Enhanced understanding of role-specific excellence
 - **Template Enhancement:** Systematic improvement of role processes and templates
+- **Communication Optimization:** Chat vs. file content strategy refinement
 
 ## Related Processes
 
