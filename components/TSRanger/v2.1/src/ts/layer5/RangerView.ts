@@ -3,6 +3,36 @@ import path from 'node:path';
 import { RangerModel } from '../layer2/RangerModel.ts';
 
 export class RangerView {
+  private safeWrite(data: string): void {
+    try {
+      // Set up error handler for EPIPE before writing
+      const originalErrorHandler = process.stdout.listeners('error');
+      
+      process.stdout.once('error', (error: any) => {
+        if (error.code === 'EPIPE') {
+          // Silently ignore EPIPE errors during testing/pipe closure
+          return;
+        }
+        console.error('RangerView output error:', error);
+      });
+
+      const result = process.stdout.write(data);
+      
+      // If write returns false (buffer full), don't wait for drain in test mode
+      if (!result && process.env.TSRANGER_TEST_MODE === '1') {
+        // Test mode: don't wait for drain, continue silently
+        return;
+      }
+      
+    } catch (error) {
+      // Gracefully handle synchronous stdout errors
+      if ((error as any).code !== 'EPIPE') {
+        console.error('RangerView sync output error:', error);
+      }
+      // Continue execution - don't crash on output errors
+    }
+  }
+
   render(model: RangerModel): void {
     const width = process.stdout.columns || 120;
     const height = process.stdout.rows || 30;
@@ -21,15 +51,15 @@ export class RangerView {
     ];
 
     // Clear screen and move cursor to top-left
-    process.stdout.write('\x1b[2J\x1b[H');
+    this.safeWrite('\x1b[2J\x1b[H');
 
     // NEW RANGER-LIKE LAYOUT: Clean prompt line at top, then column-colored backgrounds
     const cleanPromptLine = this.buildColoredCommand(model);
-    process.stdout.write(cleanPromptLine + '\n');
+    this.safeWrite(cleanPromptLine + '\n');
     
     // Column-colored backgrounds below the prompt
     const columnBackgrounds = this.buildColumnBackgrounds(model, colWidth, width);
-    process.stdout.write(columnBackgrounds + '\n');
+    this.safeWrite(columnBackgrounds + '\n');
 
     // Compute grid rows: reserve 2 lines (prompt + column backgrounds) + 1 footer = 3 total reserved
     const maxRows = Math.max(...gridColumns.map(col => col.length));
@@ -40,20 +70,20 @@ export class RangerView {
         const cell = gridColumns[c][r] ?? this.makeCell('', colWidth);
         row += cell;
       }
-      process.stdout.write(row + '\n');
+      this.safeWrite(row + '\n');
     }
 
     // Calculate remaining space for footer positioning
     const usedLines = 2 + gridRows; // prompt line + column backgrounds + grid rows
     const remainingLines = height - usedLines - 3; // -1 for footer itself, -2 to pull footer up by 2 lines
     if (remainingLines > 0) {
-      process.stdout.write('\n'.repeat(remainingLines));
+      this.safeWrite('\n'.repeat(remainingLines));
     }
 
     // Blue background with white text footer (key usage line)
     const footerText = '←/→: column  ↑/↓: move  Type: filter  Backspace: clear  Enter: select/next param/exec  Space: next param  q/Esc: quit';
     const footer = this.bgBlue(this.whiteBoldPadded(footerText, Math.max(0, width - 1)));
-    process.stdout.write(footer);
+    this.safeWrite(footer);
   }
 
   private buildColumnBackgrounds(model: RangerModel, colWidth: number, screenWidth: number): string {
