@@ -137,3 +137,6 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Ignore cloned repositories in projects
+projects/cerulean-circle-unlimited-2cu/

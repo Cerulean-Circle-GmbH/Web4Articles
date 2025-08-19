@@ -1,8 +1,24 @@
 # Sprint 5 Requirements
 
-- [ ] TS Ranger v2 must preserve Sprint 2 UX layout and spacing rules  
+- [x] TS Ranger v2 must preserve Sprint 2 UX layout and spacing rules  
   [requirement:uuid:9a1f2b3c-4d5e-4f60-8a9b-0c1d2e3f4a5b]
-  > Four columns (Classes, Methods, Params, Docs), exactly one blank line above the preview and one between preview and footer; blue background with white, bold footer text that fills the terminal width and stays anchored at the bottom.
+  > Four columns (Classes, Methods, Params, Docs), exactly one blank line above the preview and one between preview and footer; blue background with white, bold footer text that fills the terminal width and positioned 2 lines up from the bottom.
+
+- [x] Prompt line positioned at top with clean separation from column indicators
+  [requirement:uuid:a1b2c3d4-5e6f-4789-0abc-def123456789]
+  > Clean prompt line at top of screen showing [hostname] user@path format, completely separated from column background indicators below it.
+
+- [x] Column-colored background indicator line below prompt  
+  [requirement:uuid:b2c3d4e5-6f70-4890-1bcd-ef2345678901]
+  > Empty colored line below prompt line showing column backgrounds (Classes: cyan, Methods: yellow, Params: magenta, Docs: blue) with active column highlighted, providing visual column separation without interfering with prompt display.
+
+- [x] Navigation vs Advancement mode distinction
+  [requirement:uuid:c3d4e5f6-7080-4901-2cde-f3456789abcd]
+  > Navigation ([down][up]) shows ONLY selected class in prompt line with cursor at first character. Advancement ([tab][right]) shows class + method with cursor at method position. Clear behavioral separation between selection navigation and command advancement.
+
+- [x] Complete advancement and retreat navigation system
+  [requirement:uuid:d4e5f6g7-8091-5012-3def-g4567890bcde]
+  > Advancement: [tab] and [right] work identically to add first method to selected class (Logger → Logger log) with cursor positioned at [l]og. Retreat: [left] removes method and repositions cursor at first character of class name (Logger log → Logger with cursor at [L]ogger). Navigation: [down]/[up] shows only class without methods.
 
 - [ ] Prompt rendering and colors derived from `$PS1` with fallbacks  
   [requirement:uuid:1b2c3d4e-5f60-4a7b-8c9d-0e1f2a3b4c5d]

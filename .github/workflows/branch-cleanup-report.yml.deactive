@@ -1,0 +1,131 @@
+name: Branch Cleanup Report
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Generate report only (no deletions)'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      age_threshold_days:
+        description: 'Mark branches older than X days for deletion'
+        required: true
+        default: '7'
+        type: string
+
+jobs:
+  cleanup-report:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Generate cleanup report
+      id: report
+      run: |
+        echo "# Branch Cleanup Report" >> $GITHUB_STEP_SUMMARY
+        echo "Generated: $(date -u +"%Y-%m-%d %H:%M:%S") UTC" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        AGE_THRESHOLD=${{ inputs.age_threshold_days }}
+        
+        echo "## Criteria" >> $GITHUB_STEP_SUMMARY
+        echo "- Branches merged to main" >> $GITHUB_STEP_SUMMARY
+        echo "- Last activity older than ${AGE_THRESHOLD} days" >> $GITHUB_STEP_SUMMARY
+        echo "- Not protected branches (main, release/*)" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Get merged branches
+        echo "## Branches Marked for Deletion" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        DELETION_COUNT=0
+        DELETION_LIST=""
+        
+        while IFS= read -r branch; do
+          branch_name=$(echo "$branch" | sed 's/origin\///')
+          
+          # Skip protected branches
+          if [[ "$branch_name" == "main" ]] || [[ "$branch_name" =~ ^release/ ]]; then
+            continue
+          fi
+          
+          # Get last commit date
+          last_commit_date=$(git log -1 --format=%ci "origin/${branch_name}" 2>/dev/null || echo "")
+          
+          if [[ ! -z "$last_commit_date" ]]; then
+            days_old=$(( ($(date +%s) - $(date -d "$last_commit_date" +%s)) / 86400 ))
+            
+            if [[ $days_old -ge $AGE_THRESHOLD ]]; then
+              echo "- **${branch_name}** - Last activity: ${days_old} days ago" >> $GITHUB_STEP_SUMMARY
+              
+              # Get merge info
+              merge_commit=$(git log --merges --grep="Merge.*${branch_name}" --format="%h %s" -n 1 origin/main)
+              if [[ ! -z "$merge_commit" ]]; then
+                echo "  - Merged via: ${merge_commit}" >> $GITHUB_STEP_SUMMARY
+              fi
+              
+              DELETION_LIST="${DELETION_LIST}${branch_name}\n"
+              ((DELETION_COUNT++))
+            fi
+          fi
+        done < <(git branch -r --merged origin/main | grep -v HEAD | grep -v main | sed 's/^[[:space:]]*//')
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- Total branches marked for deletion: **${DELETION_COUNT}**" >> $GITHUB_STEP_SUMMARY
+        
+        # Set output for potential deletion step
+        echo "deletion_list<<EOF" >> $GITHUB_OUTPUT
+        echo -e "$DELETION_LIST" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+        echo "deletion_count=${DELETION_COUNT}" >> $GITHUB_OUTPUT
+        
+    - name: Delete branches
+      if: inputs.dry_run == 'false' && steps.report.outputs.deletion_count > 0
+      run: |
+        echo "## Deletion Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        DELETED=0
+        FAILED=0
+        
+        while IFS= read -r branch; do
+          if [[ -z "$branch" ]]; then
+            continue
+          fi
+          
+          echo -n "Deleting ${branch}... "
+          
+          if git push origin --delete "$branch" 2>/dev/null; then
+            echo "✅ Deleted" >> $GITHUB_STEP_SUMMARY
+            ((DELETED++))
+          else
+            echo "❌ Failed to delete ${branch}" >> $GITHUB_STEP_SUMMARY
+            ((FAILED++))
+          fi
+        done <<< "${{ steps.report.outputs.deletion_list }}"
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Results" >> $GITHUB_STEP_SUMMARY
+        echo "- Successfully deleted: **${DELETED}**" >> $GITHUB_STEP_SUMMARY
+        echo "- Failed to delete: **${FAILED}**" >> $GITHUB_STEP_SUMMARY
+        
+    - name: Final summary
+      run: |
+        if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "**This was a dry run. No branches were deleted.**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "To delete these branches, run the workflow again with:" >> $GITHUB_STEP_SUMMARY
+          echo "- Dry run: **false**" >> $GITHUB_STEP_SUMMARY
+        fi

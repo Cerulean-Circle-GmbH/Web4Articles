@@ -1,0 +1,165 @@
+name: EOD Merge Documentation
+
+on:
+  schedule:
+    # Run at 23:59 UTC every day (end of day)
+    - cron: '59 23 * * *'
+  workflow_dispatch:
+    inputs:
+      manual_trigger:
+        description: 'Manual EOD merge trigger'
+        required: false
+        default: 'true'
+
+jobs:
+  eod-documentation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Create EOD documentation
+      run: |
+        # Create timestamp
+        TIMESTAMP=$(date -u +"%Y-%m-%d-%H%M")
+        DATE_ONLY=$(date -u +"%Y-%m-%d")
+        TIME_UTC=$(date -u +"%Y-%m-%d %H:%M:%S")
+        
+        # Create journal directory
+        mkdir -p scrum.pmo/project.journal/${TIMESTAMP}
+        
+        # Generate project.state.md from template
+        cp scrum.pmo/templates/project.state.template.md scrum.pmo/project.journal/${TIMESTAMP}/project.state.md
+        
+        # Replace placeholders in project.state.md
+        sed -i "s/{{TIMESTAMP}}/${DATE_ONLY} $(date -u +%H:%M)/g" scrum.pmo/project.journal/${TIMESTAMP}/project.state.md
+        sed -i "s/{{CURRENT_STATUS}}/EOD Automated Merge - ${DATE_ONLY}/g" scrum.pmo/project.journal/${TIMESTAMP}/project.state.md
+        sed -i "s/{{TRIGGER_DESCRIPTION}}/Scheduled EOD merge workflow/g" scrum.pmo/project.journal/${TIMESTAMP}/project.state.md
+        sed -i "s/{{BRANCH_NAME}}/$(git branch --show-current)/g" scrum.pmo/project.journal/${TIMESTAMP}/project.state.md
+        sed -i "s/{{ACTION_DESCRIPTION}}/Automated end-of-day documentation and branch status capture/g" scrum.pmo/project.journal/${TIMESTAMP}/project.state.md
+        
+        # Generate branch-overview.md from template
+        cp scrum.pmo/templates/branch-overview.template.md scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        
+        # Update branch overview with current data
+        sed -i "s/{{TIMESTAMP}}/${DATE_ONLY} $(date -u +%H:%M)/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        
+        # Generate unmerged branches list
+        echo "Generating unmerged branches..."
+        UNMERGED_LIST=""
+        while IFS= read -r branch; do
+          branch_name=$(echo "$branch" | sed 's/origin\///')
+          if [[ ! -z "$branch_name" ]]; then
+            UNMERGED_LIST="${UNMERGED_LIST}- [ ] ${branch_name}\n"
+          fi
+        done < <(git branch -r --no-merged origin/main | grep -v HEAD | sed 's/^[[:space:]]*//')
+        
+        # Generate merged branches list with deletion markers
+        echo "Generating merged branches for deletion..."
+        MERGED_LIST=""
+        MERGED_DEV_LIST=""
+        while IFS= read -r branch; do
+          branch_name=$(echo "$branch" | sed 's/origin\///')
+          if [[ ! -z "$branch_name" ]] && [[ "$branch_name" != "main" ]] && [[ ! "$branch_name" =~ ^release/ ]]; then
+            # Check if branch was merged in the last 24 hours
+            last_commit_date=$(git log -1 --format=%ci "origin/${branch_name}" 2>/dev/null || echo "")
+            if [[ ! -z "$last_commit_date" ]]; then
+              days_old=$(( ($(date +%s) - $(date -d "$last_commit_date" +%s)) / 86400 ))
+              if [[ $days_old -lt 7 ]]; then
+                MERGED_LIST="${MERGED_LIST}- [x] ${branch_name} **[SAFE TO DELETE - Merged ${days_old} days ago]**\n"
+              else
+                MERGED_LIST="${MERGED_LIST}- [x] ${branch_name} **[MARKED FOR DELETION - Merged ${days_old} days ago]**\n"
+              fi
+            else
+              MERGED_LIST="${MERGED_LIST}- [x] ${branch_name} **[MARKED FOR DELETION]**\n"
+            fi
+          fi
+        done < <(git branch -r --merged origin/main | grep -v HEAD | grep -v main | sed 's/^[[:space:]]*//')
+
+        # Generate merged-into-release/dev list
+        echo "Generating branches merged into release/dev..."
+        while IFS= read -r branch; do
+          branch_name=$(echo "$branch" | sed 's/origin\///')
+          if [[ ! -z "$branch_name" ]] && [[ "$branch_name" != "release/dev" ]]; then
+            MERGED_DEV_LIST+="- [x] ${branch_name} (merged into release/dev)\n"
+          fi
+        done < <(git branch -r --merged origin/release/dev | grep -v HEAD | grep -v 'release/dev' | sed 's/^[[:space:]]*//')
+        
+        # Special branches
+        SPECIAL_LIST="- [ ] main - Production branch (protected)\n"
+        SPECIAL_LIST="${SPECIAL_LIST}- [ ] release/dev - CI/CD integration branch\n"
+        SPECIAL_LIST="${SPECIAL_LIST}- [ ] release/testing - Testing branch\n"
+        SPECIAL_LIST="${SPECIAL_LIST}- [ ] release/production - Production mirror\n"
+        
+        # Get branch statistics
+        TOTAL_BRANCHES=$(git branch -r | grep -v HEAD | wc -l)
+        MERGED_COUNT=$(git branch -r --merged origin/main | grep -v HEAD | grep -v main | wc -l)
+        UNMERGED_COUNT=$(git branch -r --no-merged origin/main | grep -v HEAD | wc -l)
+        SPECIAL_COUNT=4
+        
+        # Replace placeholders
+        sed -i "s/{{TOTAL_BRANCHES}}/${TOTAL_BRANCHES}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        sed -i "s/{{MERGED_COUNT}}/${MERGED_COUNT}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        sed -i "s/{{UNMERGED_COUNT}}/${UNMERGED_COUNT}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        sed -i "s/{{SPECIAL_COUNT}}/${SPECIAL_COUNT}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        
+        # Build unresolved PRs targeting release/dev
+        echo "Collecting unresolved PRs to release/dev..."
+        PR_LIST=""
+        GH_API="https://api.github.com/repos/${{ github.repository }}"
+        # Fetch open PRs with base release/dev
+        curl -s -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "$GH_API/pulls?state=open&base=release/dev&per_page=100" | \
+          jq -r '.[] | "- [ ] [#\(.number) \(.title)](\(.html_url)) from `\(.head.ref)` by @\(.user.login)"' > /tmp/prs.txt || true
+        if [ -s /tmp/prs.txt ]; then
+          PR_LIST=$(cat /tmp/prs.txt | sed ':a;N;$!ba;s/\n/\\n/g')
+        else
+          PR_LIST='- [x] No open PRs targeting release/dev'
+        fi
+        sed -i "s/{{UNRESOLVED_RELEASE_DEV_PRS}}/${PR_LIST}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+
+        # Replace branch lists (escape newlines for sed)
+        UNMERGED_LIST=$(echo -e "$UNMERGED_LIST" | sed ':a;N;$!ba;s/\n/\\n/g')
+        MERGED_LIST=$(echo -e "$MERGED_LIST" | sed ':a;N;$!ba;s/\n/\\n/g')
+        SPECIAL_LIST=$(echo -e "$SPECIAL_LIST" | sed ':a;N;$!ba;s/\n/\\n/g')
+        
+        sed -i "s/{{UNMERGED_BRANCHES_LIST}}/${UNMERGED_LIST}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        sed -i "s/{{MERGED_BRANCHES_LIST}}/${MERGED_LIST}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        sed -i "s/{{MERGED_DEV_BRANCHES_LIST}}/${MERGED_DEV_LIST}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        sed -i "s/{{SPECIAL_BRANCHES_LIST}}/${SPECIAL_LIST}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        
+        # Add notes about deletion
+        NOTES="- Branches marked **[MARKED FOR DELETION]** have been merged for 7+ days\n"
+        NOTES="${NOTES}- Branches marked **[SAFE TO DELETE]** were merged within the last week\n"
+        NOTES="${NOTES}- Review deletion markers before cleanup\n"
+        NOTES="${NOTES}- Generated at EOD ${TIME_UTC} UTC"
+        NOTES=$(echo -e "$NOTES" | sed ':a;N;$!ba;s/\n/\\n/g')
+        sed -i "s/{{NOTES_SECTION}}/${NOTES}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        
+        # Add recommendations
+        RECS="- Review and delete branches marked for deletion\n"
+        RECS="${RECS}- Use \`git push origin --delete branch-name\` to remove remote branches\n"
+        RECS="${RECS}- Consider archiving branches with historical significance before deletion"
+        RECS=$(echo -e "$RECS" | sed ':a;N;$!ba;s/\n/\\n/g')
+        sed -i "s/{{RECOMMENDATIONS_LIST}}/${RECS}/g" scrum.pmo/project.journal/${TIMESTAMP}/branch-overview.md
+        
+    - name: Commit EOD documentation
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add scrum.pmo/project.journal/
+        git commit -m "docs: EOD merge documentation for $(date -u +%Y-%m-%d)" || echo "No changes to commit"
+        
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
