@@ -17,7 +17,7 @@ import path from 'node:path';
 
 function runScripted(keys: string): string {
   const projectRoot = process.cwd();
-  const bin = path.join(projectRoot, 'sh/tsranger');
+  const bin = path.join(projectRoot, 'components/TSRanger/v2.2/sh/tsranger');
   const env = { 
     ...process.env, 
     TSRANGER_TEST_MODE: '1', 
@@ -35,13 +35,23 @@ function stripAnsi(s: string): string {
 
 function getPromptLine(out: string): string {
   const lines = out.split(/\r?\n/);
-  const footerIdx = lines.findIndex(l => l.includes('column') && l.includes('Enter: select'));
-  if (footerIdx > 1) {
-    const promptLine = lines[footerIdx - 2] || '';
-    // Extract just the class/method part from the end of the prompt line
-    const parts = promptLine.split(' ');
-    return parts[parts.length - 1] || '';
+  
+  // TSRanger v2.2 shows selected class in the first line (hostname line)
+  // Format: [hostname] user@path SelectedClass
+  const firstLine = stripAnsi(lines[0] || '');
+  
+  const hostnameMatch = firstLine.match(/\]\s+\S+@\S+\s+([A-Z][a-zA-Z]*)\s*$/);
+  if (hostnameMatch) {
+    return hostnameMatch[1];
   }
+  
+  // Alternative: Look for class+method format in hostname line
+  // Format: [hostname] user@path ClassName methodName  
+  const classMethodMatch = firstLine.match(/\]\s+\S+@\S+\s+([A-Z][a-zA-Z]*)\s+([a-z][a-zA-Z]*)\s*$/);
+  if (classMethodMatch) {
+    return classMethodMatch[1] + ' ' + classMethodMatch[2];
+  }
+  
   return '';
 }
 
