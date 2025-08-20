@@ -360,48 +360,52 @@ function executeTest(testCase) {
     const endTime = Date.now();
     const duration = endTime - startTime;
 
-    // Extract prompt line from output (strip ANSI codes first)
+    // Extract prompt line from output - TSRanger shows selected class at end of command prompt
     let promptLine = '';
     if (result.stdout) {
       // Strip ANSI escape codes
       const cleanOutput = result.stdout.replace(/\x1b\[[0-9;]*[mGKHJ]/g, '');
       const lines = cleanOutput.split(/\r?\n/);
       
-      // Look for the line containing the prompt (has class/method info)
-      // Usually appears before footer or as a standalone line with class names
-      for (let i = 0; i < lines.length; i++) {
+      // Look for command prompt lines ending with class names (TSRanger pattern)
+      // Format: [McDonges.fritz.box] donges@/path ClassName
+      const classNames = ['Logger', 'OOSH', 'ParameterParser', 'TSsh', 'DefaultCLI', 'GitScrumProject', 'FilterResult', 'FilterStateEngine', 'PromptResult', 'PromptStateManager', 'RangerModel', 'TestClass'];
+      
+      // Find the last command prompt line that ends with a class name
+      for (let i = lines.length - 1; i >= 0; i--) {
         const line = lines[i].trim();
-        // Look for lines that contain class names but not footer elements
-        if (line && 
-            !line.includes('[Classes]') && 
-            !line.includes('[Methods]') &&
-            !line.includes('[Params]') &&
-            !line.includes('[Docs]') &&
-            !line.includes('column') &&
-            !line.includes('Enter: select') &&
-            !line.includes('donges@') &&
-            line.length > 0) {
+        // Look for lines that contain the command prompt pattern
+        if (line.includes('donges@') && line.includes('Web4Articles')) {
+          // Extract the last word from the prompt line
+          const words = line.split(/\s+/);
+          const lastWord = words[words.length - 1];
           
-          // Check if this looks like a class name or class method
-          if (line.match(/^[A-Z][a-zA-Z0-9]*(\s+[a-zA-Z0-9]+)?$/)) {
-            promptLine = line;
+          // Check if the last word is a known class name
+          if (classNames.includes(lastWord)) {
+            promptLine = lastWord;
             break;
           }
         }
       }
       
-      // Fallback: look for specific patterns in the output
+      // Fallback: look for any class name in a command prompt context
       if (!promptLine) {
-        const classNames = ['Logger', 'OOSH', 'ParameterParser', 'TSsh', 'DefaultCLI', 'GitScrumProject', 'FilterResult', 'FilterStateEngine', 'PromptResult', 'PromptStateManager', 'RangerModel', 'TestClass'];
+        for (const className of classNames) {
+          // Look for pattern: "Web4Articles ClassName"
+          const promptPattern = new RegExp(`Web4Articles\\s+${className}(?:\\s|$)`, 'i');
+          if (cleanOutput.match(promptPattern)) {
+            promptLine = className;
+            break;
+          }
+        }
+      }
+      
+      // Final fallback: extract class name from any context if nothing found
+      if (!promptLine) {
         for (const className of classNames) {
           if (cleanOutput.includes(className)) {
-            // Try to extract the class and potential method
-            const regex = new RegExp(`(${className}(?:\\s+\\w+)?)`, 'i');
-            const match = cleanOutput.match(regex);
-            if (match) {
-              promptLine = match[1].trim();
-              break;
-            }
+            promptLine = className;
+            break;
           }
         }
       }
