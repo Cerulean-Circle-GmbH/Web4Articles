@@ -464,6 +464,7 @@ export class RangerController {
         if (methods.length > 0) {
           // Set up for method filtering - show class + first method
           const firstMethod = methods[0];
+          console.log(`[DEBUG-TAB] firstMethod=${firstMethod}, setting promptBuffer to: '${selectedClass} ${firstMethod}'`);
           this.model.promptBuffer = `${selectedClass} ${firstMethod}`;  // Class + method
           this.model.promptCursorIndex = selectedClass.length + 1; // Cursor after class name + space
           this.model.selectedColumn = 1; // Move to Methods column

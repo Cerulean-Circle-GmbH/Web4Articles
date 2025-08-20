@@ -142,9 +142,9 @@ export class RangerView {
       if (suggestion && prefix && suggestion.toLowerCase().startsWith(prefix.toLowerCase())) {
         // Filter mode: show suggestion based on typed prefix
         display = suggestion + (parts.length > 1 ? (' ' + parts.slice(1).join(' ')) : '');
-      } else if (selectedClass && !prefix) {
+      } else if (selectedClass && !prefix && model.selectedColumn === 0) {
         // Navigation mode: ONLY show selected class, NEVER methods
-        // This ensures [down][up] navigation shows only class name
+        // This ensures [down][up] navigation shows only class name IN CLASSES COLUMN
         display = selectedClass;
       }
     } else if (tokenIdx === 1) {
