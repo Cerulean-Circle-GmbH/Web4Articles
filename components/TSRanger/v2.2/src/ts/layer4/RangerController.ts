@@ -310,10 +310,11 @@ export class RangerController {
     const currentColumn = this.model.selectedColumn;
     const next = Math.min(3, Math.max(0, currentColumn + delta));
     
-    // Clear Classes filter when moving left from Methods to Classes
-    if (currentColumn === 1 && next === 0 && delta < 0) {
-      this.clearClassFilter();
-    }
+    // COLUMN STATE TRANSITION FIX: Do NOT clear class filter on column transitions
+    // The filtering context should switch between columns while preserving filter state
+    // - Classes column: filter applies to class names  
+    // - Methods column: filter applies to method names
+    // - Transition back: filter context switches back to classes
     
     this.model.selectedColumn = (next as 0 | 1 | 2 | 3);
   }
@@ -414,8 +415,12 @@ export class RangerController {
     const tokens = this.model.promptBuffer.split(/\s+/);
     const current = tokens[tokenIdx] ?? '';
 
-    // EQUIVALENCE FIX: Get selected class consistently for both filter and navigation approaches
-    const selectedClass = this.model.selectedClass;
+    // CRITICAL FIX: Get selected class reliably for both filter and navigation approaches
+    // The issue: model.selectedClass uses filteredClasses()[selectedIndex] which can be wrong 
+    // when filter state and navigation state are out of sync
+    const selectedIndex = this.model.selectedIndexPerColumn[0];
+    const allClasses = this.model.classes; // Use full class list, not filtered
+    const selectedClass = selectedIndex < allClasses.length ? allClasses[selectedIndex] : this.model.selectedClass;
     
     // TAB ADVANCEMENT: Works identically whether class reached via filter or navigation
     if (tokenIdx === 0 && selectedClass) {
@@ -424,15 +429,16 @@ export class RangerController {
       if (methods.length > 0) {
         const firstMethod = methods[0];
         
-        // Create "GitScrumProject start" format
+        // METHOD FILTERING MODE: Set up for continued typing to filter methods
+        // Shows full method name but allows typing to filter 
         this.model.promptBuffer = `${selectedClass} ${firstMethod}`;
         
-        // Position cursor at first character of method: GitScrumProject [s]tart
+        // Position cursor at START of method for filtering: GitScrumProject |start
         this.model.promptCursorIndex = selectedClass.length + 1;
         
         // Update model state
         this.model.selectedColumn = 1; // Move to Methods column  
-        this.model.suppressMethodFilter = true;
+        this.model.suppressMethodFilter = false; // ENABLE method filtering after tab advancement
         this.model.deriveFiltersFromPrompt();
         this.view.render(this.model);
         return;
@@ -473,10 +479,10 @@ export class RangerController {
       }
     }
     
-    // COLUMN NAVIGATION RETREAT: If we're in Methods column, move back to Classes and clear filter
+    // COLUMN NAVIGATION RETREAT: If we're in Methods column, move back to Classes column
+    // COLUMN STATE TRANSITION FIX: Do NOT clear class filter - preserve filter state for proper column context switching
     if (this.model.selectedColumn === 1) {
       this.model.selectedColumn = 0; // Move back to Classes column
-      this.clearClassFilter();
       this.view.render(this.model);
       return;
     }
