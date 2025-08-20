@@ -124,6 +124,9 @@ export class RangerView {
     // Prompt
     tokens.push(this.prompt());
 
+    // DEBUGGING: Add temporary debug logs
+    console.log(`[DEBUG] buildColoredCommand - selectedColumn=${model.selectedColumn}, promptBuffer='${model.promptBuffer}', selectedClass='${model.selectedClass}', selectedMethod='${model.selectedMethod}'`);
+
     // Suggestion-aware rendering for prompt buffer
     let buffer = model.promptBuffer || '';
     const cursor = Math.max(0, Math.min(buffer.length, model.promptCursorIndex || 0));
@@ -135,6 +138,8 @@ export class RangerView {
     const selectedMethod = model.selectedMethod || '';
     
     let display = buffer;
+    console.log(`[DEBUG] Initial display='${display}', tokenIdx=${tokenIdx}, parts=[${parts.join(', ')}]`);
+    
     if (tokenIdx === 0) {
       const prefix = parts[0] || '';
       const suggestion = (model.filteredClasses()[0] || '');
@@ -142,10 +147,14 @@ export class RangerView {
       if (suggestion && prefix && suggestion.toLowerCase().startsWith(prefix.toLowerCase())) {
         // Filter mode: show suggestion based on typed prefix
         display = suggestion + (parts.length > 1 ? (' ' + parts.slice(1).join(' ')) : '');
+        console.log(`[DEBUG] Filter mode: display='${display}'`);
       } else if (selectedClass && !prefix && model.selectedColumn === 0) {
         // Navigation mode: ONLY show selected class, NEVER methods
         // This ensures [down][up] navigation shows only class name IN CLASSES COLUMN
         display = selectedClass;
+        console.log(`[DEBUG] Navigation mode (classes column): display='${display}'`);
+      } else {
+        console.log(`[DEBUG] No condition matched - display remains: '${display}'`);
       }
     } else if (tokenIdx === 1) {
       // Method token: only show when explicitly advanced via [tab] or [right]
@@ -153,6 +162,7 @@ export class RangerView {
       const forceSuggestion = model.suppressMethodFilter === true;
       const typedRaw = parts[1] || '';
       const typed = forceSuggestion ? '' : typedRaw;
+      console.log(`[DEBUG] tokenIdx=1 branch - forceSuggestion=${forceSuggestion}, typedRaw='${typedRaw}', typed='${typed}', selectedMethod='${selectedMethod}'`);
       if (selectedMethod) {
         const before = parts[0] ? parts[0] + ' ' : '';
         const combined = typed.length > 0
@@ -160,6 +170,7 @@ export class RangerView {
           : selectedMethod;
         display = before + combined;
         buffer = display;
+        console.log(`[DEBUG] tokenIdx=1 MODIFIED display='${display}'`);
       }
     }
 
@@ -171,6 +182,7 @@ export class RangerView {
       const typedLen = model.suppressMethodFilter ? 0 : typedRaw.length;
       const methodStart = (cls ? cls.length + 1 : 0);
       effectiveCursor = methodStart + typedLen;
+      console.log(`[DEBUG] CURSOR CALC - suppressMethodFilter=${model.suppressMethodFilter}, typedRaw='${typedRaw}', typedLen=${typedLen}, methodStart=${methodStart}, effectiveCursor=${effectiveCursor}`);
     }
     // Navigation mode (tokenIdx === 0): cursor stays at first character of class
     const before = display.slice(0, effectiveCursor);
