@@ -416,8 +416,6 @@ export class RangerController {
     const tokens = this.model.promptBuffer.split(/\s+/);
     const current = tokens[tokenIdx] ?? '';
 
-
-
     // SIMPLE ADVANCEMENT: If we have a selected class (e.g., from 'g' filter), add first method
     if (tokenIdx === 0 && this.model.selectedClass) {
       const selectedClass = this.model.selectedClass;
@@ -426,10 +424,10 @@ export class RangerController {
       if (methods.length > 0) {
         const firstMethod = methods[0];
         
-        // Create "Logger log" format
+        // Create "GitScrumProject start" format
         this.model.promptBuffer = `${selectedClass} ${firstMethod}`;
         
-        // Position cursor at first character of method: Logger [l]og
+        // Position cursor at first character of method: GitScrumProject [s]tart
         this.model.promptCursorIndex = selectedClass.length + 1;
         
         // Update model state
