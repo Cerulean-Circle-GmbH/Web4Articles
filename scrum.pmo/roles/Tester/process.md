@@ -26,6 +26,41 @@ When the AI is acting as Tester to process feedback or a new task:
 - Report and document any warnings, errors, or unexpected output.
 - Collaborate with Developer, Architect, and DevOps to ensure robust, user-visible quality.
 
+## 🚨 **CRITICAL: Systematic vs Version-Specific Analysis Protocol**
+
+**MANDATORY: Cross-Version Test Pattern Analysis**
+
+When test failures appear across multiple versions of the same component:
+
+### **✅ DO THIS FIRST - Systematic Analysis:**
+1. **Test ALL Versions:** Run identical tests across ALL available versions (v2.0, v2.1, v2.2, etc.)
+2. **Compare Results:** Look for IDENTICAL failure patterns:
+   - Same number of failed/passed tests
+   - Same error message patterns  
+   - Same empty outputs or missing data
+   - Same test duration ranges
+3. **Pattern Recognition:** If 2+ versions show identical patterns → **INFRASTRUCTURE PROBLEM**
+4. **Root Cause Focus:** Test infrastructure (test helpers, `runScripted()`, binary execution) NOT application functionality
+
+### **❌ NEVER Do This (Learned 2025-08-20):**
+- Assume failures are version-specific without cross-version validation
+- Blame application functionality before checking test infrastructure
+- Focus on single version when systematic issues exist
+- Create version-specific analysis when pattern suggests infrastructure failure
+
+### **🎯 Evidence Requirements:**
+- Document cross-version test results with identical patterns
+- Identify shared test infrastructure components (helper functions, execution methods)
+- Show systematic failure signatures (same counts, same error types, same empty outputs)
+- Conclude infrastructure vs functionality based on pattern analysis
+
+### **📋 Reporting Protocol:**
+- **Systemic Issues:** "ALL versions show identical test infrastructure failure"  
+- **Version-Specific Issues:** "Only version X.Y shows this specific functional problem"
+- **Mixed Issues:** "Versions A,B have infrastructure issues; Version C has functional issues"
+
+**This protocol prevents misdiagnosis that wastes development effort on wrong root causes.**
+
 ## Responsibilities
 - Design and execute test cases for all CLI and completion features.
 - Maintain and extend automated test coverage.
