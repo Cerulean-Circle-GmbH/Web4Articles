@@ -571,6 +571,13 @@ export class RangerController {
       // METHODS → CLASSES: Move back to Classes column, restore class filter context
       this.model.selectedColumn = 0;
       
+      // CRITICAL FIX: Clear method from promptBuffer - keep only class
+      const selectedClass = this.model.selectedClass;
+      if (selectedClass) {
+        this.model.promptBuffer = selectedClass;
+        this.model.promptCursorIndex = selectedClass.length;
+      }
+      
       // Restore class filter context - preserve existing class filter in promptBuffer
       this.model.filters[1] = ''; // Clear method filter
       this.model.filters[2] = ''; // Clear parameter filter
