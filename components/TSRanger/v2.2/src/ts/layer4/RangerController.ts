@@ -568,19 +568,18 @@ export class RangerController {
       }
       
     } else if (currentColumn === 1) {
-      // METHODS → CLASSES: Move back to Classes column, restore class filter context
+      // METHODS → CLASSES: Move back to Classes column, CLEAR ALL FILTERS (fresh start)
       this.model.selectedColumn = 0;
       
-      // CRITICAL FIX: Clear method from promptBuffer - keep only class
-      const selectedClass = this.model.selectedClass;
-      if (selectedClass) {
-        this.model.promptBuffer = selectedClass;
-        this.model.promptCursorIndex = selectedClass.length;
-      }
+      // USER REQUIREMENT: Class filter should be EMPTY after retreat
+      this.model.promptBuffer = ''; // EMPTY - no class filter active
+      this.model.promptCursorIndex = 0;
       
-      // Restore class filter context - preserve existing class filter in promptBuffer
+      // Clear all filter context for fresh start
+      this.model.filters[0] = ''; // Clear class filter  
       this.model.filters[1] = ''; // Clear method filter
       this.model.filters[2] = ''; // Clear parameter filter
+      this.model.deriveFiltersFromPrompt(); // Ensure model consistency
       this.view.render(this.model);
       return;
     }

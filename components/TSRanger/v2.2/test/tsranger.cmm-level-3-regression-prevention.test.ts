@@ -109,30 +109,27 @@ describe('CMM Level 3: Core Regression Prevention', () => {
    */
   describe('Retreat Logic Consistency', () => {
     
-    test('g[tab][down][left] retreat clears method properly', () => {
+    test('g[tab][down][left] retreat clears ALL filters (fresh start)', () => {
       const result = executeRegressionTest('g[tab][down][left]');
       
-      // PROOF-BY-PROOF: Method must be cleared from promptBuffer
+      // USER REQUIREMENT: Class filter should be EMPTY after retreat
       expect(result.selectedColumn).toBe(0); // Back to Classes column
-      expect(result.promptBuffer).toBe('GitScrumProject'); // NO METHOD REMNANT
-      expect(result.selectedClass).toBe('GitScrumProject'); // Class preserved
-      // selectedMethod can be anything - we only care that it's not in promptBuffer
+      expect(result.promptBuffer).toBe(''); // EMPTY - fresh start, no filter active
+      // selectedClass can be anything - we only care promptBuffer is empty
     });
 
-    test('t[tab][down][left] retreat clears method properly', () => {
+    test('t[tab][down][left] retreat clears ALL filters (fresh start)', () => {
       const result = executeRegressionTest('t[tab][down][left]');
       
       expect(result.selectedColumn).toBe(0);
-      expect(result.promptBuffer).toBe('TSsh'); // NO METHOD REMNANT
-      expect(result.selectedClass).toBe('TSsh');
+      expect(result.promptBuffer).toBe(''); // EMPTY - fresh start, no filter active
     });
 
-    test('g[tab][left] immediate retreat works', () => {
+    test('g[tab][left] immediate retreat clears ALL filters', () => {
       const result = executeRegressionTest('g[tab][left]');
       
       expect(result.selectedColumn).toBe(0);
-      expect(result.promptBuffer).toBe('GitScrumProject'); // NO METHOD REMNANT
-      expect(result.selectedClass).toBe('GitScrumProject');
+      expect(result.promptBuffer).toBe(''); // EMPTY - fresh start, no filter active
     });
   });
 
@@ -237,8 +234,8 @@ describe('CMM Agile 4: Quantitative Process Control', () => {
   test('All golden states maintain expected values', () => {
     const goldenStates = [
       { input: 'g[tab]', expectedPrompt: 'GitScrumProject start', expectedColumn: 1 }, // CORRECTED: first method is 'start'
-      { input: 'g[tab][left]', expectedPrompt: 'GitScrumProject', expectedColumn: 0 },
-      { input: 't[tab][down][left]', expectedPrompt: 'TSsh', expectedColumn: 0 },
+      { input: 'g[tab][left]', expectedPrompt: '', expectedColumn: 0 }, // NEW: Empty filter after retreat
+      { input: 't[tab][down][left]', expectedPrompt: '', expectedColumn: 0 }, // NEW: Empty filter after retreat
       { input: 't[tab][down][backspace]', expectedPrompt: 'TSsh', expectedColumn: 1 },
       { input: '[tab]', expectedPrompt: 'Logger log', expectedColumn: 1 }
     ];
