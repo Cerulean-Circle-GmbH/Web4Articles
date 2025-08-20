@@ -140,3 +140,6 @@ vite.config.ts.timestamp-*
 
 # Ignore cloned repositories in projects
 projects/cerulean-circle-unlimited-2cu/
+
+# Temporary AI agent directory
+temp_ai_agent/

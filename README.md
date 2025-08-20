@@ -2,9 +2,7 @@
 
 # Web4Articles
 
-[CIRAS Project Planning](https://www.ciras.org/)
-
-This Project will create a md-file based WIKI for CIRAS Project articles
+This Project will create a md-file based WIKI for any web4 related articles
 
 
 
