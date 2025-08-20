@@ -144,11 +144,8 @@ export class RangerController {
           return;
         }
         if ((key === '\u001b[C' || key === '\t') && !this.model.promptEditActive) { // Right or Tab when not editing prompt
-          console.log(`[DEBUG] CLEAN [tab] advancement - BEFORE changeColumn: selectedColumn=${this.model.selectedColumn}, promptBuffer='${this.model.promptBuffer}'`);
           this.changeColumn(1);
-          console.log(`[DEBUG] CLEAN [tab] advancement - AFTER changeColumn: selectedColumn=${this.model.selectedColumn}, promptBuffer='${this.model.promptBuffer}'`);
           this.view.render(this.model);
-          console.log(`[DEBUG] CLEAN [tab] advancement - AFTER render: selectedColumn=${this.model.selectedColumn}, promptBuffer='${this.model.promptBuffer}'`);
           return;
         }
         if (key === '\x7f' && !this.model.promptEditActive) { // Backspace (filter editing when not in prompt)
@@ -209,7 +206,7 @@ export class RangerController {
         }
         if (key === '\t' || key === '\u001b[C') {
           // DRY PRINCIPLE: Both Tab and Right use same advancement method  
-          console.log(`[DEBUG] Second tab condition triggered - calling handleTabRightAdvancement()`);
+
           this.handleTabRightAdvancement();
           return;
         }
@@ -473,7 +470,7 @@ export class RangerController {
           this.model.promptCursorIndex = selectedClass.length + 1; // Cursor at FIRST CHARACTER of method (TRON requirement)
           this.model.selectedColumn = 1; // Move to Methods column
           this.model.suppressMethodFilter = true;  // TRON FIX: Cursor at first char of method, not after
-          console.log(`[DEBUG] handleTabRightAdvancement AFTER SET - selectedColumn=${this.model.selectedColumn}, promptBuffer='${this.model.promptBuffer}', promptCursorIndex=${this.model.promptCursorIndex}`);
+
           
           // Manual filter control: class filter set, method filter empty
           this.model.filters[0] = selectedClass;
