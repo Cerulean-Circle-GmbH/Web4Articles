@@ -31,8 +31,123 @@ When the AI is acting as Tester to process feedback or a new task:
 - Maintain and extend automated test coverage.
 - **All automated test cases must be placed in the top-level `test/` directory of the repository.**
 - For the tssh CLI, see the canonical integration test: `test/tssh-cli.integration.test.ts`.
+- Apply systematic investigation methodology for quality analysis and bug classification.
+- Follow testing excellence protocols to prevent session hangs and manual intervention.
 - Perform manual QA and document findings in process markdown files.
 - Sign off on releases only when all acceptance criteria are met.
+
+## Testing Excellence Protocol - Systematic Testing
+
+### CRITICAL: Interactive Mode Hang Prevention
+**⚡ EMERGENCY PROTOCOL - ALWAYS FOLLOW**
+
+**❌ NEVER RUN:** Direct TSRanger commands without test flags - causes session hangs requiring manual intervention
+
+**Required Commands (Non-Interactive):**
+```bash
+# ✅ CORRECT: Built-in test command
+components/TSRanger/v2.2/sh/tsranger test '[down]'
+components/TSRanger/v2.2/sh/tsranger test 'g[tab]'
+components/TSRanger/v2.2/sh/tsranger test '[down]5x[tab]'
+
+# ✅ CORRECT: Environment variable test mode
+TSRANGER_TEST_MODE=1 TSRANGER_TEST_INPUT='[down]' components/TSRanger/v2.2/sh/tsranger
+env TSRANGER_TEST_MODE=1 TSRANGER_TEST_INPUT='g[tab]' components/TSRanger/v2.2/sh/tsranger
+```
+
+### Testing Command Templates
+
+#### Basic Navigation Testing
+```bash
+# Single down navigation
+components/TSRanger/v2.2/sh/tsranger test '[down]'
+
+# Multiple navigation
+components/TSRanger/v2.2/sh/tsranger test '[down][down][down]'
+
+# Navigation to specific position
+components/TSRanger/v2.2/sh/tsranger test '[down]5x'
+```
+
+#### Filter Testing (Critical Bug Validation)
+```bash
+# Basic filter test
+components/TSRanger/v2.2/sh/tsranger test 'g'
+
+# Filter corruption test (critical)
+components/TSRanger/v2.2/sh/tsranger test 't\x7fg'  # [t][backspace][g]
+
+# Complex filter sequences
+components/TSRanger/v2.2/sh/tsranger test 'log'
+```
+
+#### Advancement Testing
+```bash
+# Tab advancement
+components/TSRanger/v2.2/sh/tsranger test 'g[tab]'
+
+# Navigation + advancement
+components/TSRanger/v2.2/sh/tsranger test '[down]5x[tab]'
+
+# Retreat testing
+components/TSRanger/v2.2/sh/tsranger test 'g[tab][left]'
+```
+
+### Test Validation Protocol
+
+#### Pre-Test Checklist (MANDATORY)
+Before running ANY TSRanger test:
+- [ ] ✅ **Test mode flag present** (`test` subcommand or `TSRANGER_TEST_MODE=1`)
+- [ ] ✅ **Input specified** (test sequence provided)  
+- [ ] ✅ **No bare commands** (never run raw `tsranger`)
+- [ ] ✅ **Timeout awareness** (recognize potential hangs)
+
+#### Post-Test Validation
+After each test execution:
+- [ ] ✅ **Output received** (command completed without hanging)  
+- [ ] ✅ **Expected behavior** (validate against test requirements)  
+- [ ] ✅ **No manual intervention** (session completed independently)  
+- [ ] ✅ **Clean exit** (process terminated properly)
+
+### Systematic Testing Approach
+1. **Start Simple** - Basic commands first (`[down]`, `g`)  
+2. **Build Complexity** - Add sequences gradually (`[down]5x[tab]`)  
+3. **Test Edge Cases** - Critical scenarios (`t\x7fg`)  
+4. **Validate Results** - Confirm expected behavior
+
+## Systematic Investigation for Quality Analysis
+
+### Tester-Specific Investigation Areas
+- **Quality Analysis:** Systematic testing approach with comprehensive coverage
+- **Bug Classification:** Categorize issues by severity and impact with specific examples
+- **Test Strategy:** Design systematic test scenarios that prevent regression
+- **Evidence Collection:** Document findings with specific reproduction steps
+
+### Investigation Methodology for Testers
+1. **Problem Definition**: Gather quality symptoms and test failures
+2. **Evidence Collection**: Test logs, reproduction steps, systematic validation
+3. **Bug Classification**: Severity assessment, impact analysis, specific examples
+4. **Test Coverage Analysis**: Gap identification, regression prevention
+5. **Systematic Validation**: Comprehensive test scenarios and edge case coverage
+
+### Matrix-Based Test Analysis
+Based on "3 Degrees of Freedom" framework:
+1. **COLUMNS (WHO/WHERE):** What components are affected by testing
+2. **PROMPT (WHAT):** What behaviors are being validated through testing
+3. **FILTER (HOW):** What conditions trigger the tested behavior
+
+**Example - TSRanger Test Matrix:**
+```
+| Test Sequence | Expected Result | Actual Result | Status | Bug Classification |
+|---------------|----------------|---------------|--------|-------------------|
+| [t][backspace][g] | Filter shows "g" | Filter shows "tg" | ❌ | Critical - Filter Corruption |
+| [down]5x | Shows 5th item | No display | ❌ | High - Navigation Failure |
+```
+
+### Integration with Development Process
+- **Evidence-Based Testing**: Convert investigation findings into systematic test cases
+- **Regression Prevention**: Ensure identified bugs cannot reoccur through comprehensive test coverage
+- **Matrix Integration**: Add discovered scenarios to comprehensive test matrices for systematic validation
 
 ---
 

@@ -17,9 +17,61 @@ The Architect is responsible for designing the system architecture, specifying s
 - Define and document the system architecture and design patterns.
 - Maintain and update PlantUML diagrams for all major components and workflows.
 - Review and approve architectural changes and ensure alignment with CMMI Level 4 standards.
+- Apply systematic investigation methodology for architectural analysis and system design review.
 - Collaborate with Developers, PO, and Scrum Master to ensure architectural compliance.
 - Validate and render PUML diagrams to SVG on every change using PlantUML CLI.
 - Ensure the diagrams compile without warnings/errors locally and in CI.
+
+## Systematic Investigation for Architectural Analysis
+
+### Architect-Specific Investigation Areas
+- **System Design:** Create comprehensive architectural solutions with proper documentation
+- **Framework Innovation:** Design revolutionary approaches (e.g., 3 Degrees of Freedom)
+- **PUML Documentation:** Provide visual architecture diagrams for complex designs
+- **Future Vision:** Balance current needs with long-term architectural goals
+- **Root Cause Analysis:** Identify architectural debt and design quality issues
+
+### Investigation Methodology for Architects
+1. **Problem Definition**: Analyze architectural symptoms and design challenges
+2. **Evidence Collection**: System design analysis, component interaction review, architectural assessment
+3. **Design Analysis**: Multiple architectural solutions, framework evaluation, scalability assessment
+4. **Systematic Validation**: Design experiments, architectural prototyping, integration testing
+5. **Solution Framework**: Immediate architectural fixes, systematic design improvements, revolutionary framework development
+
+### Architectural Analysis Framework
+Based on systematic investigation principles:
+
+#### Architectural Root Cause Investigation
+- **System Design Analysis:** Review component architecture for design flaws
+- **Integration Assessment:** Analyze component interactions and dependencies
+- **Scalability Evaluation:** Assess architectural capability for future requirements
+- **Performance Analysis:** Identify architectural bottlenecks and optimization opportunities
+
+#### Framework Development Process
+1. **Revolutionary Vision Assessment:** Evaluate transformational architectural concepts
+2. **Multi-Sprint Planning:** Systematic implementation timeline for complex changes
+3. **Skill Mix Analysis:** Determine required expertise and role coordination
+4. **Integration Strategy:** Comprehensive testing and validation planning
+
+### Matrix-Based Architectural Analysis
+Based on "3 Degrees of Freedom" framework for TSRanger:
+1. **COLUMNS (WHO/WHERE):** What architectural components are affected
+2. **PROMPT (WHAT):** What behaviors the architecture must support
+3. **FILTER (HOW):** What conditions the architectural design must handle
+
+**Example - TSRanger Architectural Matrix:**
+```
+| Architectural Component | Current Design | Proposed Design | Impact Assessment | Implementation Priority |
+|------------------------|----------------|-----------------|-------------------|------------------------|
+| Filter State Management | Mutable operations | Immutable FilterStateEngine | Critical - Prevents corruption | Emergency |
+| Navigation System | Mixed responsibilities | Dedicated NavigationController | High - Clean separation | Current Sprint |
+```
+
+### Integration with Development Process
+- **Evidence-Based Architecture:** Convert investigation findings into systematic design solutions
+- **Framework Prevention:** Ensure architectural decisions prevent recurrence of design issues
+- **Implementation Readiness:** Architectural specifications enable immediate developer execution
+- **PUML Integration**: All architectural analysis results in updated system diagrams and documentation
 
 ## Task Reference
 - See sprint-0, task-5.1 for PlantUML specification and architectural documentation.
