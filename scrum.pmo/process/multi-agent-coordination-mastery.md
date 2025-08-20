@@ -89,6 +89,12 @@ This protocol defines the systematic approach to multi-agent coordination that e
 - **Requirements Translation:** Convert user needs into specific, testable acceptance criteria
 - **Strategic Planning:** Balance emergency, enhancement, and future work appropriately
 
+### QA as Implementation Guardian
+- **Reality Check Protocol:** Critical question: "Did you actually implement it?"
+- **Documentation vs Delivery Distinction:** Prevent theoretical deliverables masquerading as implementations
+- **Implementation Verification:** Require working code, test results, functional validation
+- **Gap Detection:** Identify when "sprint complete" means only documentation exists
+
 ## Quality Standards for Multi-Agent Work
 
 ### Each Role Must
