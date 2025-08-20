@@ -149,20 +149,34 @@ export class RangerController {
           return;
         }
         if (key === '\x7f' && !this.model.promptEditActive) { // Backspace (filter editing when not in prompt)
-          // COLUMN-AWARE BACKSPACE: Target correct column filter after advancement
-          if (this.model.selectedColumn === 1) {
-            // METHODS COLUMN: Clear method filter, not class filter
+          // COMPLETE 3-COLUMN BACKSPACE: Target correct column filter
+          if (this.model.selectedColumn === 0) {
+            // CLASSES COLUMN (0): Clear class filter via prompt buffer
+            if (this.model.promptBuffer.length > 0) {
+              this.model.promptBuffer = this.model.promptBuffer.slice(0, -1);
+              this.model.promptCursorIndex = Math.max(0, this.model.promptBuffer.length);
+              this.model.deriveFiltersFromPrompt();
+              this.view.render(this.model);
+            }
+          } else if (this.model.selectedColumn === 1) {
+            // METHODS COLUMN (1): Clear method filter directly
             if (this.model.filters[1].length > 0) {
               this.model.filters[1] = this.model.filters[1].slice(0, -1);
               this.model.updateMethods();
               this.view.render(this.model);
             }
+          } else if (this.model.selectedColumn === 2) {
+            // PARAMETERS COLUMN (2): Clear parameter filter directly
+            if (this.model.filters[2].length > 0) {
+              this.model.filters[2] = this.model.filters[2].slice(0, -1);
+              // Update parameter display (if implemented)
+              this.view.render(this.model);
+            }
           } else {
-            // CLASSES COLUMN: Use original prompt buffer approach
+            // DOCS COLUMN (3): Fallback to prompt buffer
             if (this.model.promptBuffer.length > 0) {
               this.model.promptBuffer = this.model.promptBuffer.slice(0, -1);
               this.model.promptCursorIndex = Math.max(0, this.model.promptBuffer.length);
-              this.model.deriveFiltersFromPrompt();
               this.view.render(this.model);
             }
           }
@@ -196,17 +210,27 @@ export class RangerController {
           return;
         }
         if (key.length === 1 && key >= ' ' && key <= '~') {
-          // COLUMN-AWARE KEYSTROKE ROUTING: Target correct column filter after advancement
-          if (this.model.selectedColumn === 1) {
-            // METHODS COLUMN: Route typing to method filter, not class filter
-            this.model.filters[1] += key;
-            this.model.updateMethods();
-            this.view.render(this.model);
-          } else {
-            // CLASSES COLUMN: Use original prompt buffer approach  
+          // COMPLETE 3-COLUMN FILTER ARCHITECTURE: Route keystroke to current column's filter
+          if (this.model.selectedColumn === 0) {
+            // CLASSES COLUMN (0): Route to class filter via prompt buffer
             this.model.promptBuffer = this.model.promptBuffer.slice(0, this.model.promptCursorIndex) + key + this.model.promptBuffer.slice(this.model.promptCursorIndex);
             this.model.promptCursorIndex++;
             this.model.deriveFiltersFromPrompt();
+            this.view.render(this.model);
+          } else if (this.model.selectedColumn === 1) {
+            // METHODS COLUMN (1): Route to method filter directly
+            this.model.filters[1] += key;
+            this.model.updateMethods();
+            this.view.render(this.model);
+          } else if (this.model.selectedColumn === 2) {
+            // PARAMETERS COLUMN (2): Route to parameter filter directly
+            this.model.filters[2] += key;
+            // Update parameter display (if implemented)
+            this.view.render(this.model);
+          } else {
+            // DOCS COLUMN (3): No filtering, fallback to prompt buffer
+            this.model.promptBuffer = this.model.promptBuffer.slice(0, this.model.promptCursorIndex) + key + this.model.promptBuffer.slice(this.model.promptCursorIndex);
+            this.model.promptCursorIndex++;
             this.view.render(this.model);
           }
           return;
@@ -425,46 +449,61 @@ export class RangerController {
    * User requirement: Logger → Logger log with cursor at [l]og
    */
   private handleTabRightAdvancement(): void {
-    const tokenIdx = this.model.getCurrentPromptTokenIndex();
-    const tokens = this.model.promptBuffer.split(/\s+/);
-    const current = tokens[tokenIdx] ?? '';
-
-    // CRITICAL FIX: Get selected class reliably for both filter and navigation approaches
-    // The issue: model.selectedClass uses filteredClasses()[selectedIndex] which can be wrong 
-    // when filter state and navigation state are out of sync
-    const selectedIndex = this.model.selectedIndexPerColumn[0];
-    const allClasses = this.model.classes; // Use full class list, not filtered
-    const selectedClass = selectedIndex < allClasses.length ? allClasses[selectedIndex] : this.model.selectedClass;
+    const currentColumn = this.model.selectedColumn;
     
-    // TAB ADVANCEMENT: Works identically whether class reached via filter or navigation
-    if (tokenIdx === 0 && selectedClass) {
-      const methods = TSCompletion.getClassMethods(selectedClass);
+    // COMPLETE 3-COLUMN PROGRESSION: Classes → Methods → Parameters
+    if (currentColumn === 0) {
+      // CLASSES → METHODS: Get selected class and advance to Methods column
+      const selectedIndex = this.model.selectedIndexPerColumn[0];
+      const allClasses = this.model.classes;
+      const selectedClass = selectedIndex < allClasses.length ? allClasses[selectedIndex] : this.model.selectedClass;
       
-      if (methods.length > 0) {
-        const firstMethod = methods[0];
+      if (selectedClass) {
+        const methods = TSCompletion.getClassMethods(selectedClass);
         
-        // SURGICAL FIX: METHOD FILTERING SETUP - Method filter should be EMPTY, not set to firstMethod
-        // User wants: Logger [l]og (cursor on first char, method filter empty)  
-        // Not: Logger log[ ] (cursor after, method filter set to "log")
-        this.model.promptBuffer = `${selectedClass} `;  // Only class name + space, no method name
+        if (methods.length > 0) {
+          // Set up for method filtering - empty method filter, ready for typing
+          this.model.promptBuffer = `${selectedClass} `;  // Class name + space only
+          this.model.promptCursorIndex = selectedClass.length + 1;
+          this.model.selectedColumn = 1; // Move to Methods column
+          this.model.suppressMethodFilter = false;
+          
+          // Manual filter control: class filter set, method filter empty
+          this.model.filters[0] = selectedClass;
+          this.model.filters[1] = ''; // Empty for typing
+          this.model.updateMethods();
+          this.view.render(this.model);
+          return;
+        }
+      }
+      
+    } else if (currentColumn === 1) {
+      // METHODS → PARAMETERS: Get selected method and advance to Parameters column
+      const selectedClass = this.model.selectedClass;
+      const selectedMethod = this.model.selectedMethod;
+      
+      if (selectedClass && selectedMethod) {
+        // Set up for parameter filtering
+        this.model.promptBuffer = `${selectedClass} ${selectedMethod} `;
+        this.model.promptCursorIndex = this.model.promptBuffer.length;
+        this.model.selectedColumn = 2; // Move to Parameters column
         
-        // Position cursor at END ready for typing method filters
-        this.model.promptCursorIndex = selectedClass.length + 1;
-        
-        // Update model state
-        this.model.selectedColumn = 1; // Move to Methods column  
-        this.model.suppressMethodFilter = false; // ENABLE method filtering after tab advancement
-        
-        // SURGICAL FIX: Don't call deriveFiltersFromPrompt() - it would set method filter automatically
-        // Instead, manually set filters: class filter set, method filter EMPTY for typing
-        this.model.filters[0] = selectedClass; // Set class filter 
-        this.model.filters[1] = ''; // Keep method filter EMPTY for typing
+        // Manual filter control: preserve class and method filters, empty parameter filter
+        this.model.filters[0] = selectedClass;
+        this.model.filters[1] = selectedMethod;
+        this.model.filters[2] = ''; // Empty for typing
         this.view.render(this.model);
         return;
       }
+      
+    } else if (currentColumn === 2) {
+      // PARAMETERS → DOCS: Move to final column
+      this.model.selectedColumn = 3;
+      this.view.render(this.model);
+      return;
     }
     
-    // FALLBACK: Use existing advancement behavior (move to next column)
+    // FALLBACK: Use generic column advancement
     this.changeColumn(1);
     this.view.render(this.model);
   }
@@ -477,39 +516,51 @@ export class RangerController {
    * Logger log → Logger (with cursor at [L]ogger)
    */
   private handleLeftShiftTabRetreat(): void {
-    const tokenIdx = this.model.getCurrentPromptTokenIndex();
+    const currentColumn = this.model.selectedColumn;
     
-    // RETREAT FROM METHOD: If we're at method position, remove method and go back to class
-    if (tokenIdx === 1) {
-      const tokens = this.model.promptBuffer.split(/\s+/);
-      if (tokens.length >= 2 && tokens[0] && tokens[1]) {
-        // Remove method, keep only class: "Logger log" → "Logger"
-        this.model.promptBuffer = tokens[0];
+    // COMPLETE 3-COLUMN RETREAT: Parameters ← Methods ← Classes
+    if (currentColumn === 3) {
+      // DOCS → PARAMETERS: Move back to Parameters column
+      this.model.selectedColumn = 2;
+      this.view.render(this.model);
+      return;
+      
+    } else if (currentColumn === 2) {
+      // PARAMETERS → METHODS: Move back to Methods column, restore method filter context
+      const selectedClass = this.model.selectedClass;
+      const selectedMethod = this.model.selectedMethod;
+      
+      if (selectedClass) {
+        this.model.promptBuffer = selectedMethod ? `${selectedClass} ${selectedMethod}` : `${selectedClass} `;
+        this.model.promptCursorIndex = this.model.promptBuffer.length;
+        this.model.selectedColumn = 1;
         
-        // Position cursor at first character of class: [L]ogger
-        this.model.promptCursorIndex = 0;
-        
-        // Update model state
-        this.model.selectedColumn = 0; // Move back to Classes column
-        this.model.suppressMethodFilter = false;
-        this.model.deriveFiltersFromPrompt();
+        // Restore filter context
+        this.model.filters[0] = selectedClass;
+        this.model.filters[1] = selectedMethod || '';
+        this.model.filters[2] = ''; // Clear parameter filter
+        this.model.updateMethods();
         this.view.render(this.model);
         return;
       }
-    }
-    
-    // COLUMN NAVIGATION RETREAT: If we're in Methods column, move back to Classes column
-    // COLUMN STATE TRANSITION FIX: Do NOT clear class filter - preserve filter state for proper column context switching
-    if (this.model.selectedColumn === 1) {
-      this.model.selectedColumn = 0; // Move back to Classes column
+      
+    } else if (currentColumn === 1) {
+      // METHODS → CLASSES: Move back to Classes column, restore class filter context
+      this.model.selectedColumn = 0;
+      
+      // Restore class filter context - preserve existing class filter in promptBuffer
+      this.model.filters[1] = ''; // Clear method filter
+      this.model.filters[2] = ''; // Clear parameter filter
       this.view.render(this.model);
       return;
     }
     
-    // FALLBACK: Move cursor left in prompt (normal cursor movement)
-    if (this.model.promptCursorIndex > 0) {
-      this.model.promptCursorIndex--;
-      this.view.render(this.model);
+    // FALLBACK: If in Classes column (0) or editing mode, handle cursor movement
+    if (currentColumn === 0) {
+      if (this.model.promptCursorIndex > 0) {
+        this.model.promptCursorIndex--;
+        this.view.render(this.model);
+      }
     }
   }
 
