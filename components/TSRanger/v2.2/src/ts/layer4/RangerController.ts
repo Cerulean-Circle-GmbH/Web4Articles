@@ -164,6 +164,15 @@ export class RangerController {
               this.model.filters[1] = this.model.filters[1].slice(0, -1);
               // Don't call updateMethods() - it clears filters[1]!
               this.view.render(this.model);
+            } else {
+              // Method filter empty - clear entire method, show just class
+              const selectedClass = this.model.selectedClass;
+              if (selectedClass) {
+                this.model.promptBuffer = selectedClass;
+                this.model.promptCursorIndex = selectedClass.length;
+                this.model.filters[1] = '';
+                this.view.render(this.model);
+              }
             }
           } else if (this.model.selectedColumn === 2) {
             // PARAMETERS COLUMN (2): Clear parameter filter directly
@@ -193,8 +202,18 @@ export class RangerController {
           return;
         }
         if (key === '\x7f') { // Backspace in prompt
-          // RESTORE V2.0 SIMPLE APPROACH: Direct prompt buffer modification + deriveFiltersFromPrompt
-          if (this.model.promptCursorIndex > 0) {
+          if (this.model.selectedColumn === 1) {
+            // METHODS COLUMN SPECIAL HANDLING: Clear method filter, keep class
+            const selectedClass = this.model.selectedClass;
+            if (selectedClass) {
+              this.model.promptBuffer = selectedClass;
+              this.model.promptCursorIndex = selectedClass.length;
+              this.model.filters[1] = '';  // Clear method filter
+              this.model.deriveFiltersFromPrompt();
+              this.view.render(this.model);
+            }
+          } else if (this.model.promptCursorIndex > 0) {
+            // STANDARD CHARACTER-BY-CHARACTER DELETION for other columns
             this.model.promptBuffer = this.model.promptBuffer.slice(0, this.model.promptCursorIndex - 1) + this.model.promptBuffer.slice(this.model.promptCursorIndex);
             this.model.promptCursorIndex--;
             
@@ -461,11 +480,11 @@ export class RangerController {
       const selectedClass = selectedIndex < filteredClasses.length ? filteredClasses[selectedIndex] : this.model.selectedClass;
       
       if (selectedClass) {
-        const methods = TSCompletion.getClassMethods(selectedClass);
-        
-        if (methods.length > 0) {
+      const methods = TSCompletion.getClassMethods(selectedClass);
+      
+      if (methods.length > 0) {
           // Set up for method filtering - show class + first method
-          const firstMethod = methods[0];
+        const firstMethod = methods[0];
           this.model.promptBuffer = `${selectedClass} ${firstMethod}`;  // Class + method
           this.model.promptCursorIndex = selectedClass.length + 1; // Cursor at FIRST CHARACTER of method (TRON requirement)
           this.model.selectedColumn = 1; // Move to Methods column
@@ -561,9 +580,9 @@ export class RangerController {
     
     // FALLBACK: If in Classes column (0) or editing mode, handle cursor movement
     if (currentColumn === 0) {
-      if (this.model.promptCursorIndex > 0) {
-        this.model.promptCursorIndex--;
-        this.view.render(this.model);
+    if (this.model.promptCursorIndex > 0) {
+      this.model.promptCursorIndex--;
+      this.view.render(this.model);
       }
     }
   }
