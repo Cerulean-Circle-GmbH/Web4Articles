@@ -1,13 +1,5 @@
 # Agent Recovery V4 - Fast Track
 
-## 🚨 **CRITICAL: PDCA FORMAT REQUIREMENTS - READ FIRST**
-
-**MANDATORY:** Before ANY role recovery, ALL agents MUST read: [PDCA Format Requirements](./pdca-format-requirements-mandatory.md)
-
-**CRITICAL SUCCESS FACTOR:** PDCA format compliance ensures recovery system works perfectly every time.
-
----
-
 **Recovery Time: 3-6 minutes**  
 **Success Rate: 100%**
 

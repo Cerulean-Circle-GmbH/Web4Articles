@@ -1,20 +1,5 @@
 # Recovery Process Analysis - Tester Role
 
-## 🚨 **CRITICAL: PDCA FORMAT REQUIREMENTS - READ FIRST**
-
-**MANDATORY:** Before creating ANY PDCA, read and apply: [PDCA Format Requirements](./pdca-format-requirements-mandatory.md)
-
-**Key Requirements:**
-- ✅ **Exact verbatim quotes** from TRON's QA feedback with UTC timestamps
-- ✅ **Dual links format** with working GitHub links (push first!)
-- ✅ **6 mandatory sections:** Header, Summary, Plan, Do, Check, Act
-- ✅ **Test results must distinguish** automation vs. actual functionality
-- ✅ **Always commit and push** immediately after PDCA creation
-
-**TESTER SPECIFIC:** QA findings must quote TRON's exact feedback verbatim - never paraphrase test issues.
-
----
-
 <!-- For DRY version with UUID step references, see design.input.md -->
 
 **Date:** 2025-08-18  

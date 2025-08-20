@@ -1,20 +1,5 @@
 # Recovery Process Analysis - Developer Role
 
-## 🚨 **CRITICAL: PDCA FORMAT REQUIREMENTS - READ FIRST**
-
-**MANDATORY:** Before creating ANY PDCA, read and apply: [PDCA Format Requirements](./pdca-format-requirements-mandatory.md)
-
-**Key Requirements:**
-- ✅ **Exact verbatim quotes** from TRON's feedback with UTC timestamps
-- ✅ **Dual links format** with working GitHub links (push first!)
-- ✅ **6 mandatory sections:** Header, Summary, Plan, Do, Check, Act
-- ✅ **Chat protocol:** "Much in files, relevant links in chat" - TRON's instruction
-- ✅ **Always commit and push** immediately after PDCA creation
-
-**NEVER FORGET:** Format compliance is NON-NEGOTIABLE for recovery system success.
-
----
-
 <!-- For DRY version with UUID step references, see design.input.md -->
 
 **Date:** 2025-08-18  

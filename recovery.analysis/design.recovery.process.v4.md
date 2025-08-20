@@ -1,13 +1,5 @@
 # Recovery Process Design V4 - Comprehensive Role-Based Tree
 
-## 🚨 **CRITICAL: PDCA FORMAT REQUIREMENTS - READ FIRST**
-
-**MANDATORY:** All recovery processes MUST embed: [PDCA Format Requirements](./pdca-format-requirements-mandatory.md)
-
-**NEVER FORGET:** Every role recovery MUST apply PDCA format requirements to ALL PDCAs created during recovery.
-
----
-
 **Date:** 2025-08-18  
 **Version:** 4.0  
 **Objective:** Complete recovery decision tree with all role paths and deferred prerequisites
