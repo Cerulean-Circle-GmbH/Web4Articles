@@ -45,6 +45,11 @@ export class RangerController {
 
     const onData = async (key: string) => {
       try {
+        // DEBUG: Log all incoming keystrokes
+        if (process.env.NODE_ENV === 'test') {
+          console.log(`DEBUG onData: key='${key}' (${key.charCodeAt(0)}) length=${key.length}`);
+        }
+        
         if (exitOnAltQ && (key === '\u001bq' || key === '\u001bQ')) { // Alt+Q often arrives as ESC + 'q'
           this.cleanup();
           process.exit(0);
@@ -173,6 +178,10 @@ export class RangerController {
           return;
         }
         if (key.length === 1 && key >= ' ' && key <= '~') {
+          // DEBUG: Log character input detection
+          if (process.env.NODE_ENV === 'test') {
+            console.log(`DEBUG: Character input detected: '${key}' - calling handleCharacterInput`);
+          }
           // TSRANGER v2.1: Use FilterStateEngine for character input to prevent corruption
           this.handleCharacterInput(key);
           return;
@@ -187,8 +196,22 @@ export class RangerController {
       // Initial render
       this.view.render(this.model);
       const script = process.env.TSRANGER_TEST_INPUT || '';
+      
+      // DEBUG: Log test execution
+      if (process.env.NODE_ENV === 'test') {
+        console.log(`DEBUG: Test mode activated. Script: '${script}'`);
+      }
+      
       const keys = this.parseTestScript(script);
+      
+      if (process.env.NODE_ENV === 'test') {
+        console.log(`DEBUG: Parsed keys:`, keys);
+      }
+      
       for (const k of keys) {
+        if (process.env.NODE_ENV === 'test') {
+          console.log(`DEBUG: Feeding key to onData: '${k}'`);
+        }
         await onData(k);
       }
       this.cleanup();
