@@ -151,7 +151,15 @@ export class RangerController {
           return;
         }
         if (key === '\x7f' && !this.model.promptEditActive) { // Backspace (filter editing when not in prompt)
-          this.handleBackspaceFilter();
+          // RESTORE V2.0 SIMPLE APPROACH: Direct prompt buffer modification + deriveFiltersFromPrompt
+          if (this.model.promptBuffer.length > 0) {
+            this.model.promptBuffer = this.model.promptBuffer.slice(0, -1);
+            this.model.promptCursorIndex = Math.max(0, this.model.promptBuffer.length);
+            
+            // CRITICAL FIX: This was missing in v2.2 - enables proper filter clearing
+            this.model.deriveFiltersFromPrompt();
+            this.view.render(this.model);
+          }
           return;
         }
         // Prompt-line editing model (Task 7)
@@ -165,8 +173,15 @@ export class RangerController {
           return;
         }
         if (key === '\x7f') { // Backspace in prompt
-          // TSRANGER v2.1: Use FilterStateEngine for backspace to prevent corruption
-          this.handleBackspace();
+          // RESTORE V2.0 SIMPLE APPROACH: Direct prompt buffer modification + deriveFiltersFromPrompt
+          if (this.model.promptCursorIndex > 0) {
+            this.model.promptBuffer = this.model.promptBuffer.slice(0, this.model.promptCursorIndex - 1) + this.model.promptBuffer.slice(this.model.promptCursorIndex);
+            this.model.promptCursorIndex--;
+            
+            // CRITICAL FIX: This was missing in v2.2 - enables proper filter clearing
+            this.model.deriveFiltersFromPrompt();
+            this.view.render(this.model);
+          }
           return;
         }
         if (key === '\t' || key === '\u001b[C') {

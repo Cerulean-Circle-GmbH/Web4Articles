@@ -203,6 +203,46 @@ describe('🎯 TSRanger Unambiguous Requirements - Matrix v4 Based', () => {
     });
   });
 
+  describe('📊 REQUIREMENT 6: Filter Clearing Cycle', () => {
+    it('CRITICAL: Backspace should clear filters properly without accumulation', () => {
+      // Test the critical sequence that was broken: g[backspace]t[backspace]l[backspace]p[backspace]
+      const output = runScripted('g[backspace]t[backspace]l[backspace]p[backspace]');
+      const promptLine = getPromptLine(output);
+      
+      // After all backspaces, should show default first class (Logger)
+      // NOT accumulated "tlpGitScrumProject" or partial strings
+      expect(promptLine).toBe('Logger');
+      
+      // Verify NO character accumulation occurred
+      expect(promptLine).not.toContain('tlpGitScrumProject');
+      expect(promptLine).not.toContain('GitScrumProject'); 
+      expect(promptLine).not.toContain('TestClass');
+      
+      // Should be clean default state with all classes shown
+      expect(output).toContain('[Classes]');
+      expect(output).toContain('Logger');  // Should show all classes including Logger
+      expect(output).toContain('GitScrumProject');  // Should show all classes
+      expect(output).toContain('TestClass');  // Should show all classes
+      
+      // CRITICAL: The final prompt line should NOT have accumulated characters  
+      // This is the key test - no character accumulation occurred
+    });
+
+    it('CRITICAL: Single character filter + backspace cycle works', () => {
+      // Test simple g[backspace] cycle  
+      const output = runScripted('g[backspace]');
+      const promptLine = getPromptLine(output);
+      
+      // Should return to clean state showing first class (Logger) 
+      expect(promptLine).toBe('Logger');
+      
+      // Should show all classes in final state (not filtered)
+      expect(output).toContain('Logger');
+      expect(output).toContain('GitScrumProject');  
+      expect(output).toContain('TestClass'); 
+    });
+  });
+
   describe('📊 METADATA: Current State Documentation', () => {
     
     it('DOCUMENTATION: Current TSRanger version and commit info', () => {
