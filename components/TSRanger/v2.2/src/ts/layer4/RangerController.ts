@@ -462,9 +462,10 @@ export class RangerController {
         const methods = TSCompletion.getClassMethods(selectedClass);
         
         if (methods.length > 0) {
-          // Set up for method filtering - empty method filter, ready for typing
-          this.model.promptBuffer = `${selectedClass} `;  // Class name + space only
-          this.model.promptCursorIndex = selectedClass.length + 1;
+          // Set up for method filtering - show class + first method
+          const firstMethod = methods[0];
+          this.model.promptBuffer = `${selectedClass} ${firstMethod}`;  // Class + method
+          this.model.promptCursorIndex = selectedClass.length + 1; // Cursor after class name + space
           this.model.selectedColumn = 1; // Move to Methods column
           this.model.suppressMethodFilter = false;
           
