@@ -525,11 +525,27 @@ export class RangerController {
     try {
       const filterResult = this.filterEngine.addCharacter(char);
       
+      // DEBUG: Log filter results
+      if (process.env.NODE_ENV === 'test') {
+        console.log(`DEBUG Filter: char='${char}', suggestion='${filterResult.filteredItems[0]}', filter='${filterResult.state.filter}'`);
+      }
+      
       // Update prompt through PromptStateManager for filter mode
       const suggestion = filterResult.filteredItems[0];
       if (suggestion) {
         const promptResult = this.promptManager.updateForFilter(filterResult.state.filter, suggestion);
+        
+        // DEBUG: Log prompt result
+        if (process.env.NODE_ENV === 'test') {
+          console.log(`DEBUG Prompt: displayContent='${promptResult.displayContent}', selectedClass before='${this.model.selectedClass}'`);
+        }
+        
         this.updateModelFromPromptResult(promptResult);
+        
+        // DEBUG: Log model state after update
+        if (process.env.NODE_ENV === 'test') {
+          console.log(`DEBUG Model: selectedClass after='${this.model.selectedClass}'`);
+        }
       }
       
       this.view.render(this.model);
@@ -583,6 +599,16 @@ export class RangerController {
         this.model.promptEditActive = false;
         break;
       case 'FILTER':
+        this.model.promptEditActive = true;
+        // CRITICAL FIX: Update selectedClass to show filtered result
+        // Extract class name from the prompt content
+        if (result.displayContent) {
+          const classMatch = result.displayContent.match(/([A-Z][a-zA-Z]*)/);
+          if (classMatch) {
+            this.model.selectedClass = classMatch[1];
+          }
+        }
+        break;
       case 'ADVANCEMENT':
         this.model.promptEditActive = true;
         break;
