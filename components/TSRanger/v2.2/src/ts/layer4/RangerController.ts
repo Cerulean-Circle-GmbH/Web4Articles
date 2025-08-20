@@ -416,9 +416,11 @@ export class RangerController {
     const tokens = this.model.promptBuffer.split(/\s+/);
     const current = tokens[tokenIdx] ?? '';
 
-    // SIMPLE ADVANCEMENT: If we have a selected class (e.g., from 'g' filter), add first method
-    if (tokenIdx === 0 && this.model.selectedClass) {
-      const selectedClass = this.model.selectedClass;
+    // EQUIVALENCE FIX: Get selected class consistently for both filter and navigation approaches
+    const selectedClass = this.model.selectedClass;
+    
+    // TAB ADVANCEMENT: Works identically whether class reached via filter or navigation
+    if (tokenIdx === 0 && selectedClass) {
       const methods = TSCompletion.getClassMethods(selectedClass);
       
       if (methods.length > 0) {
