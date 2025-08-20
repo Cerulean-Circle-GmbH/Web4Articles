@@ -175,9 +175,13 @@ export class RangerController {
           return;
         }
         if (key.length === 1 && key >= ' ' && key <= '~') {
-
-          // TSRANGER v2.1: Use FilterStateEngine for character input to prevent corruption
-          this.handleCharacterInput(key);
+          // RESTORE V2.0 SIMPLE APPROACH: Direct prompt buffer modification + deriveFiltersFromPrompt
+          this.model.promptBuffer = this.model.promptBuffer.slice(0, this.model.promptCursorIndex) + key + this.model.promptBuffer.slice(this.model.promptCursorIndex);
+          this.model.promptCursorIndex++;
+          
+          // CRITICAL FIX: This was missing in v2.2 - enables general filtering for all characters
+          this.model.deriveFiltersFromPrompt();
+          this.view.render(this.model);
           return;
         }
       } catch (e: any) {
