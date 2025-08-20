@@ -416,8 +416,10 @@ export class RangerController {
     const tokens = this.model.promptBuffer.split(/\s+/);
     const current = tokens[tokenIdx] ?? '';
 
-    // SIMPLE ADVANCEMENT: If no text typed and we have a selected class, add first method
-    if (current.trim().length === 0 && tokenIdx === 0 && this.model.selectedClass) {
+
+
+    // SIMPLE ADVANCEMENT: If we have a selected class (e.g., from 'g' filter), add first method
+    if (tokenIdx === 0 && this.model.selectedClass) {
       const selectedClass = this.model.selectedClass;
       const methods = TSCompletion.getClassMethods(selectedClass);
       
