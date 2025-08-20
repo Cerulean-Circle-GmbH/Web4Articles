@@ -149,14 +149,22 @@ export class RangerController {
           return;
         }
         if (key === '\x7f' && !this.model.promptEditActive) { // Backspace (filter editing when not in prompt)
-          // RESTORE V2.0 SIMPLE APPROACH: Direct prompt buffer modification + deriveFiltersFromPrompt
-          if (this.model.promptBuffer.length > 0) {
-            this.model.promptBuffer = this.model.promptBuffer.slice(0, -1);
-            this.model.promptCursorIndex = Math.max(0, this.model.promptBuffer.length);
-            
-            // CRITICAL FIX: This was missing in v2.2 - enables proper filter clearing
-            this.model.deriveFiltersFromPrompt();
-            this.view.render(this.model);
+          // COLUMN-AWARE BACKSPACE: Target correct column filter after advancement
+          if (this.model.selectedColumn === 1) {
+            // METHODS COLUMN: Clear method filter, not class filter
+            if (this.model.filters[1].length > 0) {
+              this.model.filters[1] = this.model.filters[1].slice(0, -1);
+              this.model.updateMethods();
+              this.view.render(this.model);
+            }
+          } else {
+            // CLASSES COLUMN: Use original prompt buffer approach
+            if (this.model.promptBuffer.length > 0) {
+              this.model.promptBuffer = this.model.promptBuffer.slice(0, -1);
+              this.model.promptCursorIndex = Math.max(0, this.model.promptBuffer.length);
+              this.model.deriveFiltersFromPrompt();
+              this.view.render(this.model);
+            }
           }
           return;
         }
@@ -188,13 +196,19 @@ export class RangerController {
           return;
         }
         if (key.length === 1 && key >= ' ' && key <= '~') {
-          // RESTORE V2.0 SIMPLE APPROACH: Direct prompt buffer modification + deriveFiltersFromPrompt
-          this.model.promptBuffer = this.model.promptBuffer.slice(0, this.model.promptCursorIndex) + key + this.model.promptBuffer.slice(this.model.promptCursorIndex);
-          this.model.promptCursorIndex++;
-          
-          // CRITICAL FIX: This was missing in v2.2 - enables general filtering for all characters
-          this.model.deriveFiltersFromPrompt();
-          this.view.render(this.model);
+          // COLUMN-AWARE KEYSTROKE ROUTING: Target correct column filter after advancement
+          if (this.model.selectedColumn === 1) {
+            // METHODS COLUMN: Route typing to method filter, not class filter
+            this.model.filters[1] += key;
+            this.model.updateMethods();
+            this.view.render(this.model);
+          } else {
+            // CLASSES COLUMN: Use original prompt buffer approach  
+            this.model.promptBuffer = this.model.promptBuffer.slice(0, this.model.promptCursorIndex) + key + this.model.promptBuffer.slice(this.model.promptCursorIndex);
+            this.model.promptCursorIndex++;
+            this.model.deriveFiltersFromPrompt();
+            this.view.render(this.model);
+          }
           return;
         }
       } catch (e: any) {
