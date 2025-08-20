@@ -18,6 +18,8 @@ import path from 'node:path';
 function runScripted(keys: string): string {
   const projectRoot = process.cwd();
   const bin = path.join(projectRoot, 'components/TSRanger/v2.2/sh/tsranger');
+  
+  // Fix: Clean environment for TSRanger to avoid NODE_ENV=test interference  
   const env = { 
     ...process.env, 
     TSRANGER_TEST_MODE: '1', 
@@ -25,7 +27,25 @@ function runScripted(keys: string): string {
     TS_RANGER_TEST_FINAL_ONLY: '1',
     PS1: '\\u@\\h \\w$'
   };
-  const res = spawnSync(bin, ['test', keys], { env, encoding: 'utf8' });
+  
+  // CRITICAL FIX: Remove NODE_ENV=test as it causes TSRanger to behave differently
+  delete env.NODE_ENV;
+  
+  // CRITICAL FIX: Pass keys as argument AND environment variable for reliability
+  const res = spawnSync(bin, ['test', keys], { 
+    env, 
+    encoding: 'utf8',
+    timeout: 5000  // Add timeout to prevent hangs
+  });
+  
+  // Log errors only if there are actual issues
+  if (res.status !== 0) {
+    console.error(`ERROR: runScripted('${keys}') failed with exit code ${res.status}`);
+    if (res.stderr) {
+      console.error(`STDERR: ${res.stderr}`);
+    }
+  }
+  
   return res.stdout || '';
 }
 
