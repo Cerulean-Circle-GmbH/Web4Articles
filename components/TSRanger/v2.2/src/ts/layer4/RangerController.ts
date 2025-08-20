@@ -45,10 +45,7 @@ export class RangerController {
 
     const onData = async (key: string) => {
       try {
-        // DEBUG: Log all incoming keystrokes
-        if (process.env.NODE_ENV === 'test') {
-          console.log(`DEBUG onData: key='${key}' (${key.charCodeAt(0)}) length=${key.length}`);
-        }
+
         
         if (exitOnAltQ && (key === '\u001bq' || key === '\u001bQ')) { // Alt+Q often arrives as ESC + 'q'
           this.cleanup();
@@ -178,10 +175,6 @@ export class RangerController {
           return;
         }
         if (key.length === 1 && key >= ' ' && key <= '~') {
-          // DEBUG: Log character input detection
-          if (process.env.NODE_ENV === 'test') {
-            console.log(`DEBUG: Character input detected: '${key}' - calling handleCharacterInput`);
-          }
           // TSRANGER v2.1: Use FilterStateEngine for character input to prevent corruption
           this.handleCharacterInput(key);
           return;
@@ -196,22 +189,9 @@ export class RangerController {
       // Initial render
       this.view.render(this.model);
       const script = process.env.TSRANGER_TEST_INPUT || '';
-      
-      // DEBUG: Log test execution
-      if (process.env.NODE_ENV === 'test') {
-        console.log(`DEBUG: Test mode activated. Script: '${script}'`);
-      }
-      
       const keys = this.parseTestScript(script);
       
-      if (process.env.NODE_ENV === 'test') {
-        console.log(`DEBUG: Parsed keys:`, keys);
-      }
-      
       for (const k of keys) {
-        if (process.env.NODE_ENV === 'test') {
-          console.log(`DEBUG: Feeding key to onData: '${k}'`);
-        }
         await onData(k);
       }
       this.cleanup();
@@ -548,27 +528,11 @@ export class RangerController {
     try {
       const filterResult = this.filterEngine.addCharacter(char);
       
-      // DEBUG: Log filter results
-      if (process.env.NODE_ENV === 'test') {
-        console.log(`DEBUG Filter: char='${char}', suggestion='${filterResult.filteredItems[0]}', filter='${filterResult.state.filter}'`);
-      }
-      
       // Update prompt through PromptStateManager for filter mode
       const suggestion = filterResult.filteredItems[0];
       if (suggestion) {
         const promptResult = this.promptManager.updateForFilter(filterResult.state.filter, suggestion);
-        
-        // DEBUG: Log prompt result
-        if (process.env.NODE_ENV === 'test') {
-          console.log(`DEBUG Prompt: displayContent='${promptResult.displayContent}', selectedClass before='${this.model.selectedClass}'`);
-        }
-        
         this.updateModelFromPromptResult(promptResult);
-        
-        // DEBUG: Log model state after update
-        if (process.env.NODE_ENV === 'test') {
-          console.log(`DEBUG Model: selectedClass after='${this.model.selectedClass}'`);
-        }
       }
       
       this.view.render(this.model);
@@ -623,13 +587,17 @@ export class RangerController {
         break;
       case 'FILTER':
         this.model.promptEditActive = true;
-        // CRITICAL FIX: Update selectedClass to show filtered result
-        // Extract class name from the prompt content
-        if (result.displayContent) {
-          const classMatch = result.displayContent.match(/([A-Z][a-zA-Z]*)/);
-          if (classMatch) {
-            this.model.selectedClass = classMatch[1];
-          }
+        // CRITICAL FIX: Update model filter to show filtered results
+        // Get the actual filter string from FilterStateEngine
+        const currentFilter = this.filterEngine.getCurrentState().filter;
+        this.model.filters[0] = currentFilter;
+        
+        // Auto-select first filtered result
+        const filteredClasses = this.model.filteredClasses();
+        if (filteredClasses.length > 0) {
+          this.model.selectedIndexPerColumn[0] = 0;
+          // Update methods for the filtered class
+          this.model.updateMethods();
         }
         break;
       case 'ADVANCEMENT':

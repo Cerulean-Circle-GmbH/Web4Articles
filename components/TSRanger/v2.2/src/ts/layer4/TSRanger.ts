@@ -4,11 +4,6 @@ import { RangerController } from './RangerController.ts';
 
 export class TSRanger {
   static async start(): Promise<void> {
-    // DEBUG: Log entry point
-    if (process.env.NODE_ENV === 'test' || process.env.TSRANGER_TEST_MODE === '1') {
-      console.log(`DEBUG TSRanger.start(): TSRANGER_TEST_MODE=${process.env.TSRANGER_TEST_MODE}, TSRANGER_TEST_INPUT=${process.env.TSRANGER_TEST_INPUT}, NODE_ENV=${process.env.NODE_ENV}`);
-    }
-    
     // Handle EPIPE errors gracefully in test mode
     if (process.env.TSRANGER_TEST_MODE === '1') {
       process.stdout.on('error', (error: any) => {
