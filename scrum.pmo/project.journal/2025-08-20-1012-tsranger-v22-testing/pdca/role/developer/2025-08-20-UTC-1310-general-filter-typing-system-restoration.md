@@ -86,10 +86,25 @@ Replaced the complex `handleCharacterInput(key)` call with the simple v2.0 appro
 - 'f' filter: ❌ Shows all classes, not filtered
 - General filtering: ❌ Only worked for specific test cases
 
-### **After Fix - Simple System (EXPECTED):**
-- All character filters should work: 'f', 't', 'l', 'p', 'g', etc.
-- Direct connection: Character → promptBuffer → deriveFiltersFromPrompt() → model.filters[0] → filteredClasses()
-- General filtering system restored like v2.0
+### **After Fix - Simple System (WORKING):**
+✅ **All character filters now work perfectly:**
+- 'f' filter: Shows only "FilterResult" and "FilterStateEngine"
+- 't' filter: Shows only "TestClass"  
+- 'g' filter: Shows only "GitScrumProject"
+- 'l' filter: Shows only "Logger"
+- 'p' filter: Shows only "ParameterParser" and "PromptResult", etc.
+
+✅ **Direct connection restored:**
+Character → promptBuffer → deriveFiltersFromPrompt() → model.filters[0] → filteredClasses()
+
+✅ **Visual confirmation:**
+```bash
+[McDonges.fritz.box] donges@/path FilterResult
+                                                                                                                                
+[Classes] (f)                   [Methods]                       [Params]                        [Docs]                          
+FilterResult                                                                                                                    
+FilterStateEngine                                                                                                               
+```
 
 ## **Act**
 
