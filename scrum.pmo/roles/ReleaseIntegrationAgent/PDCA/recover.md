@@ -1,0 +1,1 @@
+This file documented a one-time recovery handover for ReleaseIntegrationAgent and is now deprecated. Recovery is solely owned by the ScrumMaster process. ReleaseIntegrationAgent must not initiate or document recovery flows. Start all integration work from `release/dev` and follow the role's process.md.
