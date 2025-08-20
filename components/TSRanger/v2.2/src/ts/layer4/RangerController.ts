@@ -443,17 +443,22 @@ export class RangerController {
       if (methods.length > 0) {
         const firstMethod = methods[0];
         
-        // METHOD FILTERING MODE: Set up for continued typing to filter methods
-        // Shows full method name but allows typing to filter 
-        this.model.promptBuffer = `${selectedClass} ${firstMethod}`;
+        // SURGICAL FIX: METHOD FILTERING SETUP - Method filter should be EMPTY, not set to firstMethod
+        // User wants: Logger [l]og (cursor on first char, method filter empty)  
+        // Not: Logger log[ ] (cursor after, method filter set to "log")
+        this.model.promptBuffer = `${selectedClass} `;  // Only class name + space, no method name
         
-        // Position cursor at START of method for filtering: GitScrumProject |start
+        // Position cursor at END ready for typing method filters
         this.model.promptCursorIndex = selectedClass.length + 1;
         
         // Update model state
         this.model.selectedColumn = 1; // Move to Methods column  
         this.model.suppressMethodFilter = false; // ENABLE method filtering after tab advancement
-        this.model.deriveFiltersFromPrompt();
+        
+        // SURGICAL FIX: Don't call deriveFiltersFromPrompt() - it would set method filter automatically
+        // Instead, manually set filters: class filter set, method filter EMPTY for typing
+        this.model.filters[0] = selectedClass; // Set class filter 
+        this.model.filters[1] = ''; // Keep method filter EMPTY for typing
         this.view.render(this.model);
         return;
       }
