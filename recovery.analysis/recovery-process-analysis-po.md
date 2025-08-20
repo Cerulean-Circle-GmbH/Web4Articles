@@ -1,5 +1,20 @@
 # Recovery Process Analysis - Product Owner Role
 
+## 🚨 **CRITICAL: PDCA FORMAT REQUIREMENTS - READ FIRST**
+
+**MANDATORY:** Before creating ANY PDCA, read and apply: [PDCA Format Requirements](./pdca-format-requirements-mandatory.md)
+
+**Key Requirements:**
+- ✅ **UUID mapping and traceability** for all requirements and tasks
+- ✅ **Exact verbatim quotes** from TRON's requirements feedback with UTC timestamps
+- ✅ **Template compliance** - follow exact PO task creation format
+- ✅ **Dual links format** with working GitHub links (push first!)
+- ✅ **6 mandatory sections:** Header, Summary, Plan, Do, Check, Act
+
+**PO SPECIFIC:** Distinguish "WHAT" vs "HOW" correctly. Requirements PDCAs must include UUID mapping and exact template compliance.
+
+---
+
 <!-- For DRY version with UUID step references, see design.input.md -->
 
 **Date:** 2025-08-18  

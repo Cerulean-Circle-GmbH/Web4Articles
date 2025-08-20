@@ -1,5 +1,20 @@
 # Recovery Process Analysis - Architect Role
 
+## 🚨 **CRITICAL: PDCA FORMAT REQUIREMENTS - READ FIRST**
+
+**MANDATORY:** Before creating ANY PDCA, read and apply: [PDCA Format Requirements](./pdca-format-requirements-mandatory.md)
+
+**Key Requirements:**
+- ✅ **PUML diagrams and architectural evidence** in every design PDCA
+- ✅ **Exact verbatim quotes** from TRON's architectural feedback with UTC timestamps
+- ✅ **Dual links format** with working GitHub links (push first!)
+- ✅ **6 mandatory sections:** Header, Summary, Plan, Do, Check, Act
+- ✅ **Always commit and push** immediately after PDCA creation
+
+**ARCHITECT SPECIFIC:** Design PDCAs must show before/after architecture with working examples and evidence.
+
+---
+
 <!-- For DRY version with UUID step references, see design.input.md -->
 
 **Date:** 2025-08-18  

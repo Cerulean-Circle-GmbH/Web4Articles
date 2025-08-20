@@ -1,5 +1,20 @@
 # Recovery Process Analysis - ScrumMaster Role
 
+## 🚨 **CRITICAL: PDCA FORMAT REQUIREMENTS - READ FIRST**
+
+**MANDATORY:** Before creating ANY PDCA, read and apply: [PDCA Format Requirements](./pdca-format-requirements-mandatory.md)
+
+**Key Requirements:**
+- ✅ **Track all role interactions** and coordination PDCAs
+- ✅ **Exact verbatim quotes** from TRON's process feedback with UTC timestamps
+- ✅ **Dual links format** with working GitHub links (push first!)
+- ✅ **6 mandatory sections:** Header, Summary, Plan, Do, Check, Act
+- ✅ **Always commit and push** immediately after PDCA creation
+
+**SCRUMMASTER SPECIFIC:** Process PDCAs must include all task creation, status updates, and role coordination with complete traceability.
+
+---
+
 <!-- For DRY version with UUID step references, see design.input.md -->
 
 **Date:** 2025-08-18  
