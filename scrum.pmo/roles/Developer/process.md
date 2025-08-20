@@ -48,10 +48,67 @@ When the AI is acting as Developer to process feedback:
 - Document all process, QA, and architectural learnings in markdown for onboarding and future reference.
 - Always reference the canonical project first principles at the top of this file for any new or updated process.
 
+## Systematic Investigation Protocol
+
+### Evidence-Based Problem Solving
+The Developer role applies systematic investigation methodology for technical problems through evidence-based analysis and comprehensive validation.
+
+#### Core Investigation Principles
+1. **Work from clear evidence, not assumptions** - Create sequences from findings to understand behavior
+2. **Systematic approach prevents chaotic debugging** - Evidence-based protocol enables reproducible results
+3. **Multi-perspective analysis** - Coordinate with other roles to prevent perspective bias
+4. **Comprehensive coverage** through specialization in technical analysis
+
+#### Developer-Specific Investigation Areas
+- **Code Analysis:** Implementation review, architectural assessment, technical debt analysis
+- **Debugging:** Systematic reproduction, error analysis, root cause identification
+- **Integration:** Component interaction analysis, system behavior validation
+- **Performance:** Bottleneck identification, optimization opportunities, resource usage analysis
+
+#### Investigation Methodology
+1. **Problem Definition**: Gather technical symptoms and error reports
+2. **Evidence Collection**: Code review, log analysis, systematic reproduction
+3. **Hypothesis Development**: Multiple potential technical root causes
+4. **Systematic Testing**: Design experiments to validate/eliminate hypotheses
+5. **Solution Framework**: Immediate fixes, systematic solutions, architectural improvements
+
+### Testing Excellence Protocol - Non-Interactive Mode
+
+#### CRITICAL: Interactive Mode Hang Prevention
+**❌ NEVER RUN:** Direct TSRanger commands without test flags - causes session hangs requiring manual intervention
+
+**Required Commands (Non-Interactive):**
+```bash
+# ✅ CORRECT: Built-in test command
+components/TSRanger/v2.2/sh/tsranger test '[down]'
+components/TSRanger/v2.2/sh/tsranger test 'g[tab]'
+
+# ✅ CORRECT: Environment variable test mode  
+TSRANGER_TEST_MODE=1 TSRANGER_TEST_INPUT='[down]' components/TSRanger/v2.2/sh/tsranger
+```
+
+#### Testing Best Practices for Developers
+1. **Start Simple** - Basic commands first (`[down]`, `g`)
+2. **Build Complexity** - Add sequences gradually (`[down]5x[tab]`)
+3. **Test Edge Cases** - Critical scenarios (filter corruption: `t\x7fg`)
+4. **Validate Results** - Confirm expected behavior matches implementation
+
+#### Pre-Test Checklist (Always Follow)
+- [ ] ✅ **Test mode flag present** (`test` subcommand or `TSRANGER_TEST_MODE=1`)
+- [ ] ✅ **Input specified** (test sequence provided)
+- [ ] ✅ **No bare commands** (never run raw `tsranger`)
+- [ ] ✅ **Timeout awareness** (recognize potential hangs)
+
+#### Integration with Systematic Investigation
+- **Evidence-Based Testing**: Convert investigation findings into systematic test cases
+- **Regression Prevention**: Ensure identified bugs cannot reoccur through comprehensive test coverage
+- **Matrix Integration**: Add discovered scenarios to test matrices for systematic validation
+
 ## Pre-Commit Spellcheck & Cross-Reference Check (Mandatory)
 - Before committing changes:
   - Spellcheck modified markdown and code comments; fix obvious typos and normalize agreed terms.
   - Verify first-line backlinks and relative links in changed markdown resolve correctly.
+  - Ensure all testing follows non-interactive protocols to prevent session hangs
 
 
 # tssh CLI: Test-Driven Development & Feedback Integration (2025-08-04)
