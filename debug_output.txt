@@ -1,0 +1,60 @@
+DEBUG: Test mode activated. TSRANGER_TEST_INPUT='g' NODE_ENV='test'
+[2J[H[McDonges.fritz.box] [36mdonges[0m@[33m/Users/Shared/Workspaces/2cuGitHub/Web4Articles[0m [7mL[0mogger
+[46m                              [0m[43m                              [0m[45m                              [0m[42m                              [0m
+[1m[36m[Classes]                     [0m[1m[33m[Methods]                     [0m[1m[35m[Params]                      [0m[1m[32m[Docs]                        [0m
+[7m[36mLogger                        [0m[33mlog                           [0m[35mmsg                           [0m[32mLogger: Minimal,              [0m
+[36mOOSH                          [0m                              [35mlevel                         [0m[32menvironment-aware logger for  [0m
+[36mParameterParser               [0m                                                            [32mdebugging and traceability. - [0m
+[36mTSsh                          [0m                                                            [32mLOG_LEVEL=0 (default): Silent [0m
+[36mDefaultCLI                    [0m                                                            [32m(production mode) -           [0m
+[36mFilterResult                  [0m                                                            [32mLOG_LEVEL=1: Errors only -    [0m
+[36mFilterStateEngine             [0m                                                            [32mLOG_LEVEL=2: Warnings and     [0m
+[36mGitScrumProject               [0m                                                            [32merrors - LOG_LEVEL=3: Info,   [0m
+[36mPromptResult                  [0m                                                            [32mwarnings, errors -            [0m
+[36mPromptStateManager            [0m                                                            [32mLOG_LEVEL=4+: Debug, info,    [0m
+[36mRangerModel                   [0m                                                            [32mwarnings, errors Usage:       [0m
+[36mTestClass                     [0m                                                            [32mLogger.log('msg', 'debug');   [0m
+                                                                                          [32mFirst principle: Logging must [0m
+                                                                                          [32mnever affect production       [0m
+                                                                                          [32mbehavior or output unless     [0m
+                                                                                          [32mexplicitly enabled.           [0m
+
+
+
+
+
+
+
+
+[44m[1m[37m←/→: column  ↑/↓: move  Type: filter  Backspace: clear  Enter: select/next param/exec  Space: next param  q/Esc: quit  [0mDEBUG: Parsed keys: ['g'(103)]
+DEBUG: About to process key: 'g'
+DEBUG onData: key='g' charCodes=[103] length=1 promptEditActive=true paramEntryActive=false
+DEBUG: Character input condition matched! key='g' length=1 charCode=103 calling handleCharacterInput
+[2J[H[McDonges.fritz.box] [36mdonges[0m@[33m/Users/Shared/Workspaces/2cuGitHub/Web4Articles[0m G[7mi[0mtScrumProject
+[46m                              [0m[43m                              [0m[45m                              [0m[42m                              [0m
+[1m[36m[Classes] (g)                 [0m[1m[33m[Methods]                     [0m[1m[35m[Params]                      [0m[1m[32m[Docs]                        [0m
+[7m[36mGitScrumProject               [0m[33mstart                         [0m[35m                              [0m[32m                              [0m
+                              [33mcreate                        [0m                                                            
+                              [33mcreateProject                 [0m                                                            
+                              [33mcreateTemplateRepo            [0m                                                            
+                              [33mlinkSource                    [0m                                                            
+                              [33moverlayRun                    [0m                                                            
+                              [33mreleasePlan                   [0m                                                            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[44m[1m[37m←/→: column  ↑/↓: move  Type: filter  Backspace: clear  Enter: select/next param/exec  Space: next param  q/Esc: quit  [0mDEBUG: Finished processing key: 'g'
