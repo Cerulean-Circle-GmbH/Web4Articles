@@ -96,9 +96,11 @@ export class RangerController {
         if (key === '\u001b[A') { // Up
           this.moveSelection(-1);
           if (this.model.promptEditActive && this.model.selectedColumn === 0) {
-            // Navigation in Classes column: preserve filter state for equivalence
-            // Remove inappropriate clearClassFilter() that breaks filter/navigation equivalence
+            // Navigation in Classes column: clear prompt but preserve filter state for equivalence
+            this.model.promptBuffer = '';
+            this.model.promptCursorIndex = 0;
             this.model.promptEditActive = false;
+            // CRITICAL: Do NOT call clearClassFilter() - preserve filter state for navigation equivalence
           } else if (this.model.promptEditActive && this.model.selectedColumn === 1) {
             // Sync prompt with selection when navigating Methods column
             const cls = this.model.selectedClass || '';
@@ -119,9 +121,11 @@ export class RangerController {
         if (key === '\u001b[B') { // Down
           this.moveSelection(1);
           if (this.model.promptEditActive && this.model.selectedColumn === 0) {
-            // Navigation in Classes column: preserve filter state for equivalence
-            // Remove inappropriate clearClassFilter() that breaks filter/navigation equivalence
+            // Navigation in Classes column: clear prompt but preserve filter state for equivalence
+            this.model.promptBuffer = '';
+            this.model.promptCursorIndex = 0;
             this.model.promptEditActive = false;
+            // CRITICAL: Do NOT call clearClassFilter() - preserve filter state for navigation equivalence
           } else if (this.model.promptEditActive && this.model.selectedColumn === 1) {
             const cls = this.model.selectedClass || '';
             const m = this.model.selectedMethod || '';
