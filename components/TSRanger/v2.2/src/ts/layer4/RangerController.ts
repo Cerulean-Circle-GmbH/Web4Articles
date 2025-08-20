@@ -162,7 +162,7 @@ export class RangerController {
             // METHODS COLUMN (1): Clear method filter directly
             if (this.model.filters[1].length > 0) {
               this.model.filters[1] = this.model.filters[1].slice(0, -1);
-              this.model.updateMethods();
+              // Don't call updateMethods() - it clears filters[1]!
               this.view.render(this.model);
             }
           } else if (this.model.selectedColumn === 2) {
@@ -220,7 +220,7 @@ export class RangerController {
           } else if (this.model.selectedColumn === 1) {
             // METHODS COLUMN (1): Route to method filter directly
             this.model.filters[1] += key;
-            this.model.updateMethods();
+            // Don't call updateMethods() - it clears filters[1]!
             this.view.render(this.model);
           } else if (this.model.selectedColumn === 2) {
             // PARAMETERS COLUMN (2): Route to parameter filter directly
