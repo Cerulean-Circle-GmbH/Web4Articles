@@ -6,3 +6,6 @@
 	path = wiki
 	url = git@github.com:Cerulean-Circle-GmbH/Web4Articles.wiki.git
 	branch = master
+[submodule "projects/AI.Agent.setup"]
+	path = projects/AI.Agent.setup
+	url = https://github.com/Cerulean-Circle-GmbH/AI.Agent.setup

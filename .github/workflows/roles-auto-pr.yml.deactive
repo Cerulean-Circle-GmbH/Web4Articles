@@ -1,0 +1,53 @@
+name: Roles Changes → Auto PR to release/dev
+
+on:
+  push:
+    branches:
+      - '**'
+      - '!main'
+      - '!release/**'
+    paths:
+      - 'scrum.pmo/roles/**'
+
+jobs:
+  open-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Open PR to release/dev when roles change
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branchName = context.ref.replace('refs/heads/', '');
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            // Skip if branch is main or a release branch
+            if (branchName === 'main' || branchName.startsWith('release/')) {
+              core.info('Skipping PR creation for main/release branches.');
+              return;
+            }
+
+            // Ensure release/dev exists
+            try {
+              await github.rest.repos.getBranch({ owner, repo, branch: 'release/dev' });
+            } catch (e) {
+              core.setFailed('Target branch release/dev not found');
+              return;
+            }
+
+            // Find existing PR
+            const { data: prs } = await github.rest.pulls.list({ owner, repo, state: 'open', base: 'release/dev' });
+            const existing = prs.find(pr => pr.head && pr.head.ref === branchName);
+
+            const title = `Roles update: ${branchName} → release/dev`;
+            const body = `Changes detected under \`scrum.pmo/roles/**\`.\n\nThis PR ensures role documentation changes are reviewed and merged into \`release/dev\`.\n\n- Source: ${branchName}\n- Target: release/dev`;
+
+            if (!existing) {
+              await github.rest.pulls.create({ owner, repo, head: branchName, base: 'release/dev', title, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number: existing.number, body: 'Roles changed again; keeping PR open for tracking.' });
+            }
+
