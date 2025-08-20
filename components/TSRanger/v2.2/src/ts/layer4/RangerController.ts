@@ -455,8 +455,8 @@ export class RangerController {
     if (currentColumn === 0) {
       // CLASSES → METHODS: Get selected class and advance to Methods column
       const selectedIndex = this.model.selectedIndexPerColumn[0];
-      const allClasses = this.model.classes;
-      const selectedClass = selectedIndex < allClasses.length ? allClasses[selectedIndex] : this.model.selectedClass;
+      const filteredClasses = this.model.filteredClasses(); // FIX: Use filtered list, not unfiltered
+      const selectedClass = selectedIndex < filteredClasses.length ? filteredClasses[selectedIndex] : this.model.selectedClass;
       
       if (selectedClass) {
         const methods = TSCompletion.getClassMethods(selectedClass);
