@@ -144,8 +144,8 @@ export class RangerController {
           return;
         }
         if ((key === '\u001b[C' || key === '\t') && !this.model.promptEditActive) { // Right or Tab when not editing prompt
-          this.changeColumn(1);
-          this.view.render(this.model);
+
+          this.handleTabRightAdvancement();  // TRON FIX: Use same logic as filtering path
           return;
         }
         if (key === '\x7f' && !this.model.promptEditActive) { // Backspace (filter editing when not in prompt)
