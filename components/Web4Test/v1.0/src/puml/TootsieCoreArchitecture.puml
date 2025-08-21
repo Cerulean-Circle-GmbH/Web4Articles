@@ -1,0 +1,218 @@
+@startuml TootsieCoreArchitecture
+!define COMPONENT_COLOR #E1F5FE
+!define INTERFACE_COLOR #F3E5F5  
+!define IMPLEMENTATION_COLOR #E8F5E8
+!define CONTROLLER_COLOR #FFF3E0
+!define VIEW_COLOR #FCE4EC
+
+title Tootsie - Total Object-Oriented Testing Suite Architecture
+
+package "Web4 Test Framework" {
+  
+  package "Layer 5: Views" <<VIEW_COLOR>> {
+    class TestResultRenderer {
+      +constructor()
+      +init(scenario: TestResultViewScenario): this
+      +renderResults(results: TestResultScenario[]): string
+      +renderEvidence(evidence: TestEvidence): string
+      +toScenario(): TestResultViewScenario
+    }
+    
+    class RequirementOverviewRenderer {
+      +constructor()
+      +init(scenario: RequirementViewScenario): this  
+      +renderOverview(requirements: Requirement[]): string
+      +renderCheckboxList(): string
+      +toScenario(): RequirementViewScenario
+    }
+  }
+  
+  package "Layer 4: Controllers" <<CONTROLLER_COLOR>> {
+    class TestOrchestrator {
+      +constructor()
+      +init(scenario: TestOrchestratorScenario): this
+      +orchestrateTestSuite(suite: Test): Promise<TestSuiteResult>
+      +manageTestLifecycle(): Promise<void>
+      +aggregateResults(): TestSuiteResult
+      +toScenario(): TestOrchestratorScenario
+    }
+    
+    class RequirementController {
+      +constructor()
+      +init(scenario: RequirementControllerScenario): this
+      +updateRequirementStatus(uuid: string, status: RequirementStatus): void
+      +generateOverview(): string
+      +trackTraceability(): void
+      +toScenario(): RequirementControllerScenario
+    }
+  }
+  
+  package "Layer 3: Interfaces" <<INTERFACE_COLOR>> {
+    interface TestCase {
+      +init(scenario: TestCaseScenario): this
+      +execute(): Promise<TestResultScenario>
+      +getMetadata(): TestCaseMetadata
+      +setup(): Promise<void>
+      +teardown(): Promise<void>
+      +toScenario(): TestCaseScenario
+    }
+    
+    interface Test {
+      +init(scenario: TestScenario): this
+      +addTestCase(testCase: TestCase): void
+      +execute(): Promise<TestSuiteResult>
+      +getTestCases(): TestCase[]
+      +toScenario(): TestScenario
+    }
+    
+    interface TestSuite {
+      +executeTests(tests: TestCase[]): Promise<TestResultScenario[]>
+      +getImplementationName(): string
+      +isAvailable(): boolean
+    }
+    
+    interface Requirement {
+      +init(scenario: RequirementScenario): this
+      +getMetadata(): RequirementMetadata
+      +updateStatus(status: RequirementStatus): void
+      +addTestReference(testIOR: IOR): void
+      +generateMDView(): string
+      +toScenario(): RequirementScenario
+    }
+  }
+  
+  package "Layer 2: Implementations" <<IMPLEMENTATION_COLOR>> {
+    class DefaultTestCase {
+      +constructor()
+      +init(scenario: TestCaseScenario): this
+      +execute(): Promise<TestResultScenario>
+      -executeTestLogic(): Promise<TestEvidence>
+      -evaluateAssertions(): Promise<AssertionResult[]>
+    }
+    
+    class DefaultTest {
+      +constructor()
+      +init(scenario: TestScenario): this
+      +addTestCase(testCase: TestCase): void
+      +execute(): Promise<TestSuiteResult>
+    }
+    
+    class VitestTestSuite {
+      +constructor()
+      +executeTests(tests: TestCase[]): Promise<TestResultScenario[]>
+      +getImplementationName(): string
+      -executeVitestTest(testCase: TestCase): Promise<TestResultScenario>
+    }
+    
+    class TSRangerTestAdapter {
+      +constructor()
+      +convertToTestCaseScenario(input: TSRangerTestInput): TestCaseScenario
+      +createTestCasesFromInput(inputString: string): TestCaseScenario[]
+      -parseTSRangerInput(inputString: string): TSRangerTestInput[]
+      -generateTSRangerTestFunction(input: TSRangerTestInput): string
+    }
+    
+    class DefaultRequirement {
+      +constructor()
+      +init(scenario: RequirementScenario): this
+      +updateStatus(status: RequirementStatus): void
+      +generateMDView(): string
+      -getStatusIcon(status: RequirementStatus): string
+    }
+    
+    class RequirementOverviewGenerator {
+      +constructor()
+      +init(scenario: RequirementOverviewScenario): this
+      +addRequirement(requirement: Requirement): void
+      +generateOverviewMD(): string
+      +getOverview(): RequirementOverview
+    }
+  }
+  
+  package "Layer 1: Infrastructure" <<COMPONENT_COLOR>> {
+    class VitestInfrastructure {
+      +constructor()
+      +configureVitest(): Promise<void>
+      +executeVitestCommand(testFile: string): Promise<VitestResult>
+      +captureVitestOutput(): Promise<string>
+    }
+    
+    class TestFileManager {
+      +constructor()
+      +saveTestScenario(scenario: TestCaseScenario): Promise<string>
+      +loadTestScenario(filePath: string): Promise<TestCaseScenario>
+      +generateTestFile(testCase: TestCase): Promise<string>
+    }
+    
+    class UUIDGenerator {
+      +constructor()
+      +generateTestUUID(): string
+      +generateRequirementUUID(): string
+      +validateUUID(uuid: string): boolean
+    }
+  }
+}
+
+package "External Integrations" {
+  class Vitest <<external>> {
+    +test(name: string, fn: Function): void
+    +describe(name: string, fn: Function): void
+    +expect(value: any): Expectation
+  }
+  
+  class TSRanger22 <<external>> {
+    +testMode: boolean
+    +testInput: string
+    +execute(input: string): Promise<string>
+  }
+}
+
+' Relationships
+TestCase <|-- DefaultTestCase
+Test <|-- DefaultTest  
+TestSuite <|-- VitestTestSuite
+Requirement <|-- DefaultRequirement
+
+DefaultTestCase --> TestOrchestrator : orchestrated by
+DefaultTest --> TestOrchestrator : managed by
+RequirementController --> DefaultRequirement : manages
+TestOrchestrator --> VitestTestSuite : uses
+VitestTestSuite --> VitestInfrastructure : uses
+VitestInfrastructure --> Vitest : integrates
+
+TSRangerTestAdapter --> DefaultTestCase : creates
+TSRangerTestAdapter --> TSRanger22 : adapts
+
+TestResultRenderer --> TestOrchestrator : renders results from
+RequirementOverviewRenderer --> RequirementController : renders overview from
+
+DefaultRequirement --> RequirementOverviewGenerator : feeds into
+RequirementOverviewGenerator --> RequirementOverviewRenderer : generates for
+
+note top of Tootsie
+  **Web4 First Principles:**
+  • Empty constructors: constructor() {}
+  • Scenario initialization: init(scenario): this  
+  • Hibernation capable: toScenario(): Scenario
+  • IOR references: No direct object references
+  • 5-layer architecture compliance
+  
+  **Bootstrap Capability:**
+  Tootsie can test ONCE before ONCE exists!
+end note
+
+note bottom of VitestTestSuite
+  **Vitest Integration Strategy:**
+  Web4 objects feed Vitest with OOP tests,
+  Vitest does execution heavy lifting,
+  Results captured back into Web4 scenarios
+end note
+
+note bottom of TSRangerTestAdapter
+  **TSRanger Compatibility:**
+  Seamless integration of TSRanger v2.2 
+  test inputs via TSRANGER_TEST_INPUT
+  format without modification
+end note
+
+@enduml
