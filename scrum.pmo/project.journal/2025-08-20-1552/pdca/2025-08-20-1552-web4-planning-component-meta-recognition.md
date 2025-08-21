@@ -48,6 +48,17 @@ Layer 2: Implementation - DefaultPlan, DefaultTask, DefaultSubtask
 Layer 1: Units - Individual planning files as Web4 objects
 ```
 
+```
+Web4 Ecosystem (Complete):
+├── ONCE Kernel (Web4ORB) - P2P foundation for all objects
+├── TSRanger v3.0 - Component navigation built on ONCE  
+├── Web4Planning - Sprint planning as Web4 components
+├── Web4Components - All application logic as components
+├── Web4Tasks/Subtasks - Development tasks as scenario objects
+├── IOR Network - Distributed object references across network
+└── Scenario Management - Object hibernation/restoration via ONCE
+```
+
 ### **🏗️ Web4Planning Component Architecture**
 
 #### **Planning Document as MDView**
