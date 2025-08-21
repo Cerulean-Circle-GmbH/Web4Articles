@@ -1,8 +1,7 @@
 # PDCA: Tab Advancement Equivalence Fix
 
-**Previous PDCA:** [2025-08-20-UTC-1620-false-negative-test-elimination-critical-lesson.md]  
-**Commit SHA:** 3b4ee83  
-**Cross-Reference:** [TSRanger v2.2 Tab Advancement Bug](../../../../../components/TSRanger/v2.2/test/comprehensive-testing-matrix.md#REQ-FLT-ADV-001)
+**📎 Previous Commit:** `3b4ee83` (lesson: eliminate false negative tests - bad tests most expensive technical debt)  
+**🔗 Previous PDCA:** [GitHub](https://github.com/2cuGitHub/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/project.journal/2025-08-20-1012-tsranger-v22-testing/pdca/role/developer/2025-08-20-UTC-1620-false-negative-test-elimination-critical-lesson.md) | [./2025-08-20-UTC-1620-false-negative-test-elimination-critical-lesson.md](./2025-08-20-UTC-1620-false-negative-test-elimination-critical-lesson.md)
 
 ## Plan
 ### Problem Statement
