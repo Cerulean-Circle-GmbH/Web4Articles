@@ -35,7 +35,7 @@
 
 ### **🎯 Web4 Complete Layer Architecture**
 
-**UPDATED 7-LAYER SEMANTIC ARCHITECTURE**:
+**CORRECTED 6-LAYER SEMANTIC ARCHITECTURE**:
 ```typescript
 interface Web4CompleteArchitecture {
   // Layer 7: Human Understanding
@@ -54,31 +54,23 @@ interface Web4CompleteArchitecture {
     artifacts: ["Requirement scenarios", "Acceptance criteria", "Test mappings"]
   };
   
-  // Layer 5: Business Process Orchestration (NEW INSIGHT)
-  businessProcess: {
-    layer: 5,
-    purpose: "Orchestrate scenarios by calling component interfaces",
-    semantics: "Business workflow coordination through service contracts",
-    artifacts: ["Process definitions", "Workflow orchestrations", "Business rules"]
+  // Layer 4: Business Process & Transaction Management (CORRECTED)
+  businessProcessAndTransaction: {
+    layer: 4,
+    purpose: "Business processes as transaction chains with Git-based rollback",
+    semantics: "Atomic reversible process steps and transaction chains",
+    artifacts: ["Transaction scripts", "Business process chains", "Git rollback strategies"]
   };
   
-  // Layer 4: Atomic Transaction Management (NEW INSIGHT)
-  transaction: {
-    layer: 4, 
-    purpose: "Atomic reversible process steps",
-    semantics: "TRANS-Actions involving multiple components with rollback capability",
-    artifacts: ["Transaction scripts", "Compensation handlers", "State checkpoints"]
-  };
-  
-  // Layer 3: Service Contract Interfaces (REFINED INSIGHT)
+  // Layer 3: Service Contract Interfaces (CORRECTED LAYER)
   serviceContract: {
     layer: 3,
     purpose: "Specify WHAT they deliver with QoS and SLA",
-    semantics: "Component interface contracts defining delivery guarantees",
+    semantics: "Component interface contracts defining delivery guarantees", 
     artifacts: ["Service interfaces", "QoS specifications", "SLA agreements"]
   };
   
-  // Layer 2: Component Implementation
+  // Layer 2: Component Implementation (CORRECTED LAYER)
   component: {
     layer: 2,
     purpose: "Black-box implementations behind service contracts",
@@ -86,13 +78,15 @@ interface Web4CompleteArchitecture {
     artifacts: ["Component classes", "Service implementations", "Interface adapters"]
   };
   
-  // Layer 1: Unit Files
+  // Layer 1: Unit Files (CORRECTED LAYER)
   unit: {
     layer: 1,
     purpose: "Single files with radical separation of concern",
     semantics: "Atomic implementation units with UUIDv4 and serializable scenarios",
     artifacts: ["Source files", "Scenario definitions", "Object implementations"]
   };
+  
+
 }
 ```
 
@@ -264,32 +258,32 @@ class UserManagementServiceContract extends ServiceContract {
 }
 ```
 
-#### **Layer 5: Business Process Orchestration**
+#### **Layer 4: Business Process Transaction Chains**
 ```typescript
-// Business processes orchestrate scenarios by calling component interfaces
-abstract class BusinessProcessOrchestrator implements Web4Object {
-  protected processDefinition: ProcessDefinition;
+// Business processes are transaction chains with Git-based rollback
+abstract class BusinessProcessTransactionChain implements Web4Object {
+  protected transactionChain: TransactionChainDefinition;
+  protected gitRollbackManager: GitRollbackManager;
   protected serviceRegistry: ServiceContractRegistry;
-  protected transactionManager: TransactionManager;
   
   constructor() {} // Empty constructor
   
-  init(orchestratorScenario: BusinessProcessOrchestratorScenario): BusinessProcessOrchestrator {
-    this.processDefinition = orchestratorScenario.getProcessDefinition();
-    this.serviceRegistry = orchestratorScenario.getServiceRegistry();
-    this.transactionManager = orchestratorScenario.getTransactionManager();
+  init(businessProcessScenario: BusinessProcessTransactionScenario): BusinessProcessTransactionChain {
+    this.transactionChain = businessProcessScenario.getTransactionChain();
+    this.gitRollbackManager = businessProcessScenario.getGitRollbackManager();
+    this.serviceRegistry = businessProcessScenario.getServiceRegistry();
     return this;
   }
   
-  // Core orchestration semantics: Coordinate scenarios through service contracts
-  abstract async orchestrateProcess(processInput: ProcessInput): Promise<ProcessOutput>;
+  // Core semantics: Execute transaction chains with Git-based rollback
+  abstract async executeTransactionChain(processInput: ProcessInput): Promise<ProcessOutput>;
   abstract async getProcessState(): Promise<ProcessState>;
   abstract async handleProcessFailure(failure: ProcessFailure): Promise<ProcessRecovery>;
 }
 
-// Example: Customer Onboarding Business Process
-class CustomerOnboardingProcess extends BusinessProcessOrchestrator {
-  async orchestrateProcess(onboardingInput: CustomerOnboardingInput): Promise<CustomerOnboardingOutput> {
+// Example: Customer Onboarding Business Process Transaction Chain
+class CustomerOnboardingProcessChain extends BusinessProcessTransactionChain {
+  async executeTransactionChain(onboardingInput: CustomerOnboardingInput): Promise<CustomerOnboardingOutput> {
     // Step 1: Orchestrate scenarios through service contracts
     const userMgmtContract = await this.serviceRegistry.getContract("UserManagementService");
     const emailContract = await this.serviceRegistry.getContract("EmailNotificationService");
@@ -428,19 +422,16 @@ class TransActionCoordinator implements Web4Object {
 **Updated Web4 7-Layer Architecture:**
 ```typescript
 enum Web4ArchitectureLayer {
-  // Layer 7: Human Understanding
-  PROSA = 7,           // WHY, WHAT, HOW documentation
+  // Layer 6: Human Understanding  
+  PROSA = 6,           // WHY, WHAT, HOW documentation
   
-  // Layer 6: Formal Requirements
-  REQUIREMENT = 6,     // Structured specifications with UUIDs
+  // Layer 5: Formal Requirements
+  REQUIREMENT = 5,     // Structured specifications with UUIDs
   
-  // Layer 5: Business Process Orchestration (NEW)
-  BUSINESS_PROCESS = 5, // Scenario orchestration via service contracts
+  // Layer 4: Business Process & Transaction Management (CORRECTED)
+  BUSINESS_PROCESS_TRANSACTION = 4, // Transaction chains with Git-based rollback
   
-  // Layer 4: Atomic Transactions (NEW) 
-  TRANSACTION = 4,     // Atomic reversible process steps (Trans-Actions)
-  
-  // Layer 3: Service Contracts (REFINED)
+  // Layer 3: Service Contracts 
   SERVICE_CONTRACT = 3, // WHAT delivery with QoS and SLA specifications
   
   // Layer 2: Component Implementation
@@ -461,17 +452,14 @@ class Web4CompleteArchitectureFramework implements Web4Object {
   
   // Generate complete system from prosa to units
   async generateCompleteSystem(prosaSeed: string): Promise<CompleteSystemScenario> {
-    // Layer 7 → 6: Prosa to Requirements
+    // Layer 6 → 5: Prosa to Requirements
     const requirements = await this.layerManagers.prosaTorequirements.generate(prosaSeed);
     
-    // Layer 6 → 5: Requirements to Business Processes
-    const businessProcesses = await this.layerManagers.requirementToBusinessProcess.generate(requirements);
+    // Layer 5 → 4: Requirements to Business Process Transaction Chains
+    const businessProcessTransactions = await this.layerManagers.requirementToBusinessProcessTransaction.generate(requirements);
     
-    // Layer 5 → 4: Business Processes to Transactions
-    const transactions = await this.layerManagers.businessProcessToTransaction.generate(businessProcesses);
-    
-    // Layer 4 → 3: Transactions to Service Contracts
-    const serviceContracts = await this.layerManagers.transactionToServiceContract.generate(transactions);
+    // Layer 4 → 3: Business Process Transactions to Service Contracts
+    const serviceContracts = await this.layerManagers.businessProcessTransactionToServiceContract.generate(businessProcessTransactions);
     
     // Layer 3 → 2: Service Contracts to Components
     const components = await this.layerManagers.serviceContractToComponent.generate(serviceContracts);
@@ -482,8 +470,7 @@ class Web4CompleteArchitectureFramework implements Web4Object {
     return new CompleteSystemScenario({
       prosa: prosaSeed,
       requirements: requirements,
-      businessProcesses: businessProcesses,
-      transactions: transactions,
+      businessProcessTransactions: businessProcessTransactions,
       serviceContracts: serviceContracts,
       components: components,
       units: units
@@ -499,7 +486,7 @@ class Web4CompleteArchitectureFramework implements Web4Object {
 // Example: E-commerce Order Processing Complete Flow
 class ECommerceOrderProcessingExample {
   
-  // Layer 5: Business Process Orchestration
+  // Layer 4: Business Process Transaction Chain  
   async orchestrateOrderProcess(orderRequest: OrderRequest): Promise<OrderResult> {
     const orderProcess = new OrderProcessOrchestrator();
     orderProcess.init(new OrderProcessScenario({
@@ -512,7 +499,7 @@ class ECommerceOrderProcessingExample {
     return await orderProcess.orchestrateProcess(orderRequest);
   }
   
-  // Layer 4: Atomic Transaction Management
+  // Layer 4: Individual Transaction within Business Process Chain
   async executeOrderTransaction(orderDetails: OrderDetails): Promise<TransactionResult> {
     const orderTransaction = new OrderProcessingTransaction();
     orderTransaction.init(new TransactionScenario({
@@ -570,15 +557,15 @@ class ECommerceOrderProcessingExample {
       paymentMethod: "credit-card:****1234"
     });
     
-    console.log("🎯 Layer 5: Business Process Orchestration Starting...");
+    console.log("🎯 Layer 4: Business Process Transaction Chain Starting...");
     const orchestrationResult = await this.orchestrateOrderProcess(orderRequest);
     
-    console.log("⚡ Layer 4: Transaction Execution Result:", orchestrationResult.transactionResult);
+    console.log("⚡ Layer 4: Transaction Chain Result:", orchestrationResult.transactionResult);
     
     console.log("📋 Layer 3: Service Contract Compliance:", 
       orchestrationResult.serviceContractCompliance);
     
-    console.log("🔗 Complete Web4 Architecture: Prosa → Requirements → Process → Transaction → Contract → Component → Unit");
+    console.log("🔗 Complete Web4 Architecture: Prosa → Requirements → ProcessTransactions → Contract → Component → Unit");
   }
 }
 ```
