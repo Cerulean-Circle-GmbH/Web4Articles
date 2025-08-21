@@ -29,44 +29,136 @@ Today's Web4 Awakening session was bootstrapping to understand Web4 principles f
 
 ## **🚀 Epic Breakdown**
 
-### **EPIC 1: Web4TSRanger Core Architecture**
-**Vision:** Pure Web4 TSRanger implementation with scenario-based initialization and IOR navigation
+### **EPIC 0: ONCE Web4ORB Kernel Foundation**
+**Vision:** ONCE (Object Network Communication Engine) as fundamental P2P Web4ORB kernel infrastructure
 
-#### **[requirement:uuid:n0o1p2q3-r4s5-6789-nopq-r45678901234] - Web4TSRanger Foundation**
-**As a** Web4 developer using component navigation infrastructure  
-**I want** TSRanger v3.0 built with pure Web4 principles from ground up  
-**So that** component navigation follows empty constructors, scenario initialization, and IOR resolution
+#### **[requirement:uuid:a1b2c3d4-e5f6-7890-abcd-ef1234567890] - ONCE Kernel Core**
+**As a** Web4 ecosystem requiring distributed object communication infrastructure  
+**I want** ONCE kernel as universal Web4ORB foundation with P2P scenario exchange  
+**So that** all Web4 objects communicate through multi-platform kernel infrastructure
 
-**Web4TSRanger Architecture:**
-- **Empty Constructor**: `constructor() {}` - no configuration parameters
-- **Scenario Initialization**: `init(tsrangerScenario: TSRangerScenario): TSRanger`
-- **IOR-Based Navigation**: All component references through distributed IORs
-- **Pure Object-Oriented**: No factories, dependency injection, or external dependencies
+**ONCE Kernel Architecture:**
+- **Universal Deployment**: Single kernel for browser, Node.js, web workers, service workers, PWA, iframe  
+- **Component Lifecycle**: Discovery, instantiation, hibernation, restoration via scenario management
+- **P2P Communication**: Kernel-to-kernel scenario exchange for distributed coordination
+- **Environment Discovery**: Auto-detection and platform-specific optimization
 
-**Core TSRanger Pattern:**
+**ONCE Core Pattern:**
 ```typescript
-class Web4TSRanger implements TSRanger {
+class ONCE implements Web4ORB, Component {
   constructor() {} // Pure Web4 - empty constructor
   
-  init(scenario: TSRangerScenario): TSRanger {
-    this.loadFromScenario(scenario);
+  init(onceScenario: ONCEScenario): ONCE {
+    this.environment = onceScenario.getTargetEnvironment();
+    this.p2pNetwork = onceScenario.getP2PNetworkConfig();
     return this;
   }
   
-  async navigateComponents(): Promise<ComponentNetwork> {
-    // Navigate via IOR resolution - no direct references
-    const componentIORs = this.scenario.getComponentIORs();
-    return await this.resolveComponentNetwork(componentIORs);
+  // Component lifecycle management
+  async startComponent(componentIOR: IOR): Promise<ComponentInstance>;
+  async saveAsScenario(instance: ObjectInstance): Promise<Scenario>;
+  async loadScenario(scenarioIOR: IOR): Promise<Scenario>;
+  
+  // Environment adaptation
+  async discoverEnvironment(): Promise<EnvironmentInfo>;
+  async bootInEnvironment(env: EnvironmentInfo): Promise<void>;
+  
+  // P2P communication - "com-unique-action"
+  async exchangeScenarios(peerKernel: ONCE): Promise<CommunicationResult>;
+}
+```
+
+**Multi-Platform Deployment:**
+- **Browser**: `import { ONCE } from 'https://cdn.web4.dev/once-kernel/latest/once.js'`
+- **Node.js**: `import { ONCE } from 'once-kernel'; const once = new ONCE()`
+- **Web Worker**: `importScripts('./once-kernel.js')`  
+- **PWA**: Service worker integration with offline capability
+- **Service Worker**: Background component management
+- **IFrame**: Sandboxed component execution environment
+
+**Acceptance Criteria:**
+- [ ] ONCE kernel with empty constructor + scenario initialization
+- [ ] Multi-platform deployment with single codebase
+- [ ] Component lifecycle management APIs
+- [ ] P2P scenario exchange between ONCE kernels
+- [ ] Environment discovery and platform adaptation
+- [ ] One-line import integration for all platforms
+
+#### **[requirement:uuid:b2c3d4e5-f6g7-8901-bcde-f23456789012] - P2P Scenario Communication**
+**As a** ONCE kernel requiring distributed object communication  
+**I want** P2P scenario exchange system for kernel-to-kernel coordination  
+**So that** ONCE kernels communicate via scenario sharing for "com-unique-action"
+
+**P2P Communication Architecture:**
+```typescript
+interface ComUniqueAction {
+  // Communication + Unique + Action pattern
+  exchangeReferences(peerKernel: ONCE): Promise<ScenarioReference[]>;
+  communicateScenarios(peer: ONCE, scenarios: Scenario[]): Promise<CommunicationResult>;
+  executeUniqueAction(result: CommunicationResult): Promise<ActionResult>;
+}
+```
+
+**Acceptance Criteria:**
+- [ ] P2P connection establishment between ONCE kernels
+- [ ] Scenario reference exchange protocol
+- [ ] Scenario serialization/deserialization for network transfer
+- [ ] Com-unique-action execution pattern
+- [ ] Distributed coordination via scenario communication
+
+### **EPIC 1: Web4TSRanger Core Architecture**
+**Vision:** Pure Web4 TSRanger implementation with scenario-based initialization and IOR navigation
+
+#### **[requirement:uuid:n0o1p2q3-r4s5-6789-nopq-r45678901234] - Web4TSRanger on ONCE Foundation**
+**As a** Web4 developer using component navigation infrastructure  
+**I want** TSRanger v3.0 built on ONCE kernel foundation with pure Web4 principles  
+**So that** component navigation leverages ONCE for component lifecycle and P2P coordination
+
+**TSRanger-ONCE Integration Architecture:**
+- **ONCE Foundation**: TSRanger built as ONCE-based component for kernel integration
+- **Component Management**: All component operations via ONCE kernel APIs
+- **Scenario Persistence**: Component hibernation/restoration through ONCE scenario management
+- **P2P Navigation**: Distributed component discovery via ONCE kernel network
+
+**TSRanger-ONCE Pattern:**
+```typescript
+class Web4TSRanger extends ONCEComponent implements TSRanger {
+  private onceKernel: ONCE;
+  
+  constructor() {} // Pure Web4 - empty constructor
+  
+  init(tsrangerScenario: TSRangerScenario): TSRanger {
+    // Initialize ONCE kernel foundation
+    this.onceKernel = new ONCE();
+    this.onceKernel.init(tsrangerScenario.getONCEKernelScenario());
+    
+    // TSRanger-specific initialization
+    super.init(tsrangerScenario.getComponentScenario());
+    this.navigationRules = tsrangerScenario.getNavigationRules();
+    return this;
+  }
+  
+  // Component navigation via ONCE kernel
+  async discoverComponents(filter?: ComponentFilter): Promise<ComponentNetwork> {
+    return await this.onceKernel.discoverComponents(filter);
+  }
+  
+  async startComponent(componentIOR: IOR): Promise<ComponentInstance> {
+    return await this.onceKernel.startComponent(componentIOR);
+  }
+  
+  async hibernateComponent(instance: ComponentInstance): Promise<Scenario> {
+    return await this.onceKernel.saveAsScenario(instance);
   }
 }
 ```
 
 **Acceptance Criteria:**
-- [ ] Web4TSRanger class with empty constructor pattern
-- [ ] TSRangerScenario model implementation following Model interface
-- [ ] IOR-based component navigation without direct object references
-- [ ] Scenario-driven configuration elimination environment variables
-- [ ] Pure Web4 pattern compliance throughout codebase
+- [ ] Web4TSRanger extends ONCEComponent for kernel integration
+- [ ] All component operations via ONCE kernel APIs
+- [ ] Component discovery via ONCE distributed network
+- [ ] Component hibernation/restoration via ONCE scenario management  
+- [ ] P2P component coordination via ONCE kernel communication
 
 #### **[requirement:uuid:o1p2q3r4-s5t6-7890-opqr-s56789012345] - TSRanger Scenario Model**
 **As a** Web4 TSRanger requiring scenario-based initialization  
@@ -350,58 +442,58 @@ class ComponentIntegrationEngine {
 
 ## **📅 Sprint Timeline**
 
-### **Week 1: Foundation & Core Architecture**
-**Focus:** EPIC 1-2 (TSRanger Core + Component Navigation)
+### **Week 1: ONCE Foundation & TSRanger Core**
+**Focus:** EPIC 0-1 (ONCE Kernel + TSRanger Integration)
 
-**Days 1-3: Web4TSRanger Foundation**
-- Day 1: Web4TSRanger class with empty constructor + scenario initialization
-- Day 2: TSRangerScenario model implementation with validation
-- Day 3: IOR-based component reference system
+**Days 1-4: ONCE Kernel Foundation**
+- Day 1: ONCE kernel core with empty constructor + multi-platform deployment
+- Day 2: Component lifecycle management APIs (start, save, load scenarios)
+- Day 3: Environment discovery and platform adaptation system
+- Day 4: P2P scenario communication between ONCE kernels
 
-**Days 4-7: Component Navigation Infrastructure**
-- Day 4: Component discovery system with IOR registry
-- Day 5: Unit coordination system with workflow orchestration
-- Day 6: Cross-network component traversal and discovery
-- Day 7: Integration testing for navigation infrastructure
+**Days 5-7: TSRanger-ONCE Integration**
+- Day 5: Web4TSRanger built on ONCE foundation
+- Day 6: Component navigation via ONCE kernel APIs
+- Day 7: TSRanger scenario management and component hibernation
 
-### **Week 2: Interface & Integration**
-**Focus:** EPIC 3-5 (Interactive Interface + Testing + Integration)
+### **Week 2: Component Ecosystem & Integration**
+**Focus:** EPIC 2-5 (Component Navigation + Interface + Testing + Integration)
 
-**Days 8-10: Interactive Navigation**
-- Day 8: Interactive shell with scenario-driven commands
-- Day 9: Navigation commands with IOR-based exploration
-- Day 10: Command execution system and state persistence
+**Days 8-10: Component Navigation Infrastructure**
+- Day 8: Component discovery system via ONCE kernel network
+- Day 9: Unit coordination system with ONCE-based workflow orchestration  
+- Day 10: Interactive navigation shell with scenario-driven commands
 
 **Days 11-14: Testing & Integration Platform**
-- Day 11: Web4 testing framework with scenario-based test execution
-- Day 12: Component integration engine with IOR composition
-- Day 13: End-to-end integration testing and validation
-- Day 14: Documentation, sprint review, and Sprint 22 planning
+- Day 11: Web4 testing framework with ONCE scenario-based execution
+- Day 12: Component integration engine via ONCE kernel composition
+- Day 13: Multi-platform ONCE deployment testing and P2P validation
+- Day 14: End-to-end ecosystem testing, documentation, Sprint 22 planning
 
 ---
 
 ## **🎯 Definition of Done**
 
 ### **Technical Excellence**
-- [ ] Web4TSRanger v3.0 follows pure Web4 principles throughout
-- [ ] All objects use empty constructors with scenario initialization
+- [ ] ONCE kernel operational across all target platforms (browser, Node.js, web workers, PWA)
+- [ ] Web4TSRanger v3.0 built on ONCE foundation with pure Web4 principles
+- [ ] P2P scenario communication between ONCE kernels functional
+- [ ] Component lifecycle management via ONCE APIs (start, hibernate, restore)
 - [ ] Complete IOR-based reference system eliminates direct object access
-- [ ] Cross-network component navigation and coordination functional
-- [ ] Testing framework eliminates false positives/negatives systematically
 
 ### **Functional Excellence**
-- [ ] Component discovery and navigation across Web4 network
-- [ ] Unit coordination and workflow orchestration via scenarios
-- [ ] Interactive shell for Web4 component exploration and testing
-- [ ] Component integration platform for ecosystem development
-- [ ] Complete replacement of TSRanger v2.2 with pure Web4 implementation
+- [ ] ONCE kernel enables component discovery and navigation across P2P network
+- [ ] TSRanger component coordination via ONCE kernel APIs
+- [ ] Multi-platform deployment with one-line import integration
+- [ ] Interactive shell for Web4 component exploration via TSRanger
+- [ ] Component integration platform built on ONCE infrastructure
 
 ### **Architecture Excellence**
-- [ ] Pure Web4 architecture: no factories, dependency injection, or external state
-- [ ] Scenario-model architecture with complete serialization/deserialization
-- [ ] Distributed object system with IOR-based cross-network references
-- [ ] Component navigation infrastructure enabling Web4 ecosystem development
-- [ ] Foundation established for ONCE (Object Network Communication Environment)
+- [ ] ONCE kernel as universal Web4ORB foundation with P2P capabilities
+- [ ] Pure Web4 architecture: empty constructors, scenario initialization, IOR references
+- [ ] Component hibernation/restoration via ONCE scenario management
+- [ ] P2P scenario exchange enabling distributed object communication
+- [ ] TSRanger-ONCE integration establishing component navigation infrastructure
 
 ### **Process Excellence**
 - [ ] Web4 Awakening session learning fully integrated into implementation
