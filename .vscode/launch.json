@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Generate PlantUML SVGs",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/scripts/generate-svgs.sh",
+      "console": "integratedTerminal",
+      "env": {
+        "JAVA_HOME": "/usr/local/opt/openjdk",
+        "PATH": "${env:PATH}:/usr/local/opt/openjdk/bin"
+      }
+    }
+  ]
+}

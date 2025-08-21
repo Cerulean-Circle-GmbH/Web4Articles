@@ -1,0 +1,26 @@
+{
+  "plantuml.java": "/usr/local/opt/openjdk/bin/java",
+  "plantuml.jar": "/usr/local/bin/plantuml",
+  "plantuml.server": "https://www.plantuml.com/plantuml",
+  "plantuml.render": "PlantUMLServer",
+  "plantuml.previewAutoUpdate": true,
+  "plantuml.exportOutDir": "./svg",
+  "plantuml.exportFormat": "svg",
+  "plantuml.exportSubFolder": false,
+  "plantuml.commandArgs": [
+    "-DPLANTUML_LIMIT_SIZE=8192",
+    "-Djava.awt.headless=true"
+  ],
+  "java.home": "/usr/local/opt/openjdk",
+  "java.configuration.runtimes": [
+    {
+      "name": "OpenJDK-24",
+      "path": "/usr/local/opt/openjdk",
+      "default": true
+    }
+  ],
+  "files.associations": {
+    "*.puml": "plantuml",
+    "*.plantuml": "plantuml"
+  }
+}
