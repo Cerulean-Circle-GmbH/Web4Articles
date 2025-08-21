@@ -3,6 +3,52 @@ import path from 'node:path';
 import { RangerModel } from '../layer2/RangerModel.ts';
 
 export class RangerView {
+  private debugMode: boolean;
+  private debugMessages: string[] = [];
+  private controller?: any; // Reference to controller for input sequence
+
+  constructor(debugMode: boolean = false) {
+    this.debugMode = debugMode;
+  }
+
+  setController(controller: any): void {
+    this.controller = controller;
+  }
+
+  private debugLog(message: string): void {
+    if (this.debugMode) {
+      // Store debug messages instead of printing immediately
+      this.debugMessages.push(message);
+      // Keep only last 10 debug messages to prevent memory buildup
+      if (this.debugMessages.length > 10) {
+        this.debugMessages.shift();
+      }
+    }
+  }
+
+  private renderDebugSection(controller?: any): void {
+    if (this.debugMode) {
+      // Add a separator line
+      this.safeWrite('\n' + '─'.repeat(Math.min(80, process.stdout.columns || 80)) + '\n');
+      
+      // Output current debug messages (they overwrite each render)
+      if (this.debugMessages.length > 0) {
+        for (const msg of this.debugMessages) {
+          this.safeWrite(msg + '\n');
+        }
+        // Clear messages after rendering so they don't accumulate
+        this.debugMessages = [];
+      }
+      
+      // Show INPUT_SEQUENCE only in interactive debug mode (NOT in test mode)
+      if (controller && controller.getCurrentInputSequence && process.env.TSRANGER_TEST_MODE !== '1') {
+        const inputSeq = controller.getCurrentInputSequence();
+        const aggregationLine = `INPUT_SEQUENCE: "${inputSeq}"`;
+        this.safeWrite(aggregationLine + '\n');
+      }
+    }
+  }
+
   private safeWrite(data: string): void {
     try {
       // Set up error handler for EPIPE before writing
@@ -53,6 +99,12 @@ export class RangerView {
     // Clear screen and move cursor to top-left
     this.safeWrite('\x1b[2J\x1b[H');
 
+    // Test mode: Show debug at TOP for easier regression testing
+    if (this.debugMode && process.env.TSRANGER_TEST_MODE === '1') {
+      this.renderDebugSection(this.controller);
+      this.safeWrite('\n');
+    }
+
     // NEW RANGER-LIKE LAYOUT: Clean prompt line at top, then column-colored backgrounds
     const cleanPromptLine = this.buildColoredCommand(model);
     this.safeWrite(cleanPromptLine + '\n');
@@ -75,15 +127,35 @@ export class RangerView {
 
     // Calculate remaining space for footer positioning
     const usedLines = 2 + gridRows; // prompt line + column backgrounds + grid rows
-    const remainingLines = height - usedLines - 3; // -1 for footer itself, -2 to pull footer up by 2 lines
-    if (remainingLines > 0) {
-      this.safeWrite('\n'.repeat(remainingLines));
+    
+    // Normal mode: Place help line 2 lines from bottom, use full width
+    if (!this.debugMode) {
+      const remainingLines = height - usedLines - 2; // 2 lines from bottom
+      if (remainingLines > 0) {
+        this.safeWrite('\n'.repeat(remainingLines));
+      }
+      
+      // Blue background with white text footer (full width)
+      const footerText = '←/→: column  ↑/↓: move  Type: filter  Backspace: clear  Enter: select/next param/exec  Space: next param  q/Esc: quit';
+      const footer = this.bgBlue(this.whiteBoldPadded(footerText, width));
+      this.safeWrite(footer);
+    } else {
+      // Debug mode: Reduced space above help line  
+      const remainingLines = height - usedLines - 5; 
+      if (remainingLines > 0) {
+        this.safeWrite('\n'.repeat(Math.min(remainingLines, 2))); // Max 2 lines padding
+      }
+      
+      // Blue background with white text footer
+      const footerText = '←/→: column  ↑/↓: move  Type: filter  Backspace: clear  Enter: select/next param/exec  Space: next param  q/Esc: quit';
+      const footer = this.bgBlue(this.whiteBoldPadded(footerText, Math.max(0, width - 1)));
+      this.safeWrite(footer);
     }
 
-    // Blue background with white text footer (key usage line)
-    const footerText = '←/→: column  ↑/↓: move  Type: filter  Backspace: clear  Enter: select/next param/exec  Space: next param  q/Esc: quit';
-    const footer = this.bgBlue(this.whiteBoldPadded(footerText, Math.max(0, width - 1)));
-    this.safeWrite(footer);
+    // Render debug section BELOW the help line (interactive debug mode only)
+    if (this.debugMode && process.env.TSRANGER_TEST_MODE !== '1') {
+      this.renderDebugSection(this.controller);
+    }
   }
 
   private buildColumnBackgrounds(model: RangerModel, colWidth: number, screenWidth: number): string {
@@ -124,8 +196,8 @@ export class RangerView {
     // Prompt
     tokens.push(this.prompt());
 
-    // DEBUGGING: Add temporary debug logs
-    console.log(`[DEBUG] buildColoredCommand - selectedColumn=${model.selectedColumn}, promptBuffer='${model.promptBuffer}', selectedClass='${model.selectedClass}', selectedMethod='${model.selectedMethod}'`);
+    // DEBUGGING: Add debug logs (conditional on debug mode)
+    this.debugLog(`[DEBUG] buildColoredCommand - selectedColumn=${model.selectedColumn}, promptBuffer='${model.promptBuffer}', selectedClass='${model.selectedClass}', selectedMethod='${model.selectedMethod}'`);
 
     // Suggestion-aware rendering for prompt buffer
     let buffer = model.promptBuffer || '';
@@ -138,7 +210,7 @@ export class RangerView {
     const selectedMethod = model.selectedMethod || '';
     
     let display = buffer;
-    console.log(`[DEBUG] Initial display='${display}', tokenIdx=${tokenIdx}, parts=[${parts.join(', ')}]`);
+    this.debugLog(`[DEBUG] Initial display='${display}', tokenIdx=${tokenIdx}, parts=[${parts.join(', ')}]`);
     
     if (tokenIdx === 0) {
       const prefix = parts[0] || '';
@@ -147,12 +219,12 @@ export class RangerView {
       if (suggestion && prefix && suggestion.toLowerCase().startsWith(prefix.toLowerCase())) {
         // Filter mode: show suggestion based on typed prefix
         display = suggestion + (parts.length > 1 ? (' ' + parts.slice(1).join(' ')) : '');
-        console.log(`[DEBUG] Filter mode: display='${display}'`);
+        this.debugLog(`[DEBUG] Filter mode: display='${display}'`);
       } else if (selectedClass && !prefix && model.selectedColumn === 0) {
         // Navigation mode: ONLY show selected class, NEVER methods
         // This ensures [down][up] navigation shows only class name IN CLASSES COLUMN
         display = selectedClass;
-        console.log(`[DEBUG] Navigation mode (classes column): display='${display}'`);
+        this.debugLog(`[DEBUG] Navigation mode (classes column): display='${display}'`);
       } else {
   
       }

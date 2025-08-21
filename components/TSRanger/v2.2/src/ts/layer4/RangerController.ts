@@ -10,12 +10,58 @@ export class RangerController {
   private filterEngine: FilterStateEngine;
   private promptManager: PromptStateManager;
   private keyOperations: Map<string, any>;
+  private debugMode: boolean;
+  private inputSequence: string[] = [];
 
-  constructor(private model: RangerModel, private view: RangerView) {
+  constructor(private model: RangerModel, private view: RangerView, debugMode: boolean = false) {
+    this.debugMode = debugMode;
     // Initialize TSRanger v2.1 architecture components
     this.filterEngine = new FilterStateEngine();
     this.promptManager = new PromptStateManager();
     this.initializeKeyOperations();
+    
+    // Set controller reference in view for debug output
+    this.view.setController(this);
+  }
+
+  getCurrentInputSequence(): string {
+    return this.inputSequence.join('');
+  }
+
+  private debugLog(message: string): void {
+    if (this.debugMode) {
+      console.log(message);
+    }
+  }
+
+  private trackInput(key: string): void {
+    // Convert key to readable format for input sequence
+    let readableKey = '';
+    if (key === '\u001b[A') readableKey = '[up]';
+    else if (key === '\u001b[B') readableKey = '[down]';
+    else if (key === '\u001b[D') readableKey = '[left]';
+    else if (key === '\u001b[C') readableKey = '[right]';
+    else if (key === '\t') readableKey = '[tab]';
+    else if (key === '\u001b[Z') readableKey = '[shift+tab]';
+    else if (key === '\r' || key === '\n' || key === '\r\n') readableKey = '[enter]';
+    else if (key === '\x7f') readableKey = '[backspace]';
+    else if (key === '\u0003') readableKey = '[ctrl+c]';
+    else if (key === '\u001b') readableKey = '[esc]';
+    else if (key === 'q') readableKey = 'q'; // Special case: preserve q for quit
+    else if (key.length === 1 && key >= ' ' && key <= '~') readableKey = key;
+    else {
+      // Handle multi-character sequences - extract first printable character if available
+      const firstChar = key.charAt(0);
+      if (firstChar >= ' ' && firstChar <= '~') {
+        readableKey = firstChar;
+      } else {
+        readableKey = `[${key.charCodeAt(0)}]`; // fallback
+      }
+    }
+
+    this.inputSequence.push(readableKey);
+
+    // Input sequence is now shown persistently in the debug section below help line
   }
   
   private initializeKeyOperations(): void {
@@ -45,6 +91,8 @@ export class RangerController {
 
     const onData = async (key: string) => {
       try {
+        // Input aggregation for debugging and testing
+        this.trackInput(key);
 
         
         if (exitOnAltQ && (key === '\u001bq' || key === '\u001bQ')) { // Alt+Q often arrives as ESC + 'q'
@@ -165,12 +213,15 @@ export class RangerController {
               // Don't call updateMethods() - it clears filters[1]!
               this.view.render(this.model);
             } else {
-              // Method filter empty - clear entire method, show just class
+              // Method filter empty - EDGE CASE: retreat to Classes column
+              this.model.selectedColumn = 0; // Switch back to Classes column
+              
               const selectedClass = this.model.selectedClass;
               if (selectedClass) {
                 this.model.promptBuffer = selectedClass;
                 this.model.promptCursorIndex = selectedClass.length;
-                this.model.filters[1] = '';
+                this.model.filters[1] = ''; // Clear method filter
+                this.model.deriveFiltersFromPrompt();
                 this.view.render(this.model);
               }
             }
@@ -203,9 +254,18 @@ export class RangerController {
         }
         if (key === '\x7f') { // Backspace in prompt
           if (this.model.selectedColumn === 1) {
-            // METHODS COLUMN SPECIAL HANDLING: Clear method filter, keep class
+            // METHODS COLUMN SPECIAL HANDLING: Check if we should retreat to Classes column
             const selectedClass = this.model.selectedClass;
-            if (selectedClass) {
+            if (selectedClass && this.model.promptBuffer === selectedClass) {
+              // EDGE CASE: Already showing just class name, retreat to Classes column
+              this.model.selectedColumn = 0; // Switch back to Classes column  
+              this.model.promptBuffer = selectedClass;
+              this.model.promptCursorIndex = selectedClass.length;
+              this.model.filters[1] = '';  // Clear method filter
+              this.model.deriveFiltersFromPrompt();
+              this.view.render(this.model);
+            } else if (selectedClass) {
+              // Normal case: Clear method filter, keep class
               this.model.promptBuffer = selectedClass;
               this.model.promptCursorIndex = selectedClass.length;
               this.model.filters[1] = '';  // Clear method filter
@@ -483,20 +543,23 @@ export class RangerController {
       const methods = TSCompletion.getClassMethods(selectedClass);
       
       if (methods.length > 0) {
-          // Set up for method filtering - show class + first method
+        // Set up for method filtering - show class + first method
         const firstMethod = methods[0];
-          this.model.promptBuffer = `${selectedClass} ${firstMethod}`;  // Class + method
-          this.model.promptCursorIndex = selectedClass.length + 1; // Cursor at FIRST CHARACTER of method (TRON requirement)
-          this.model.selectedColumn = 1; // Move to Methods column
-          this.model.suppressMethodFilter = true;  // TRON FIX: Cursor at first char of method, not after
+        this.model.promptBuffer = `${selectedClass} ${firstMethod}`;  // Class + method
+        this.model.promptCursorIndex = selectedClass.length + 1; // Cursor at FIRST CHARACTER of method (TRON requirement)
+        this.model.selectedColumn = 1; // Move to Methods column
+        this.model.suppressMethodFilter = true;  // TRON FIX: Cursor at first char of method, not after
 
-          
-          // Manual filter control: class filter set, method filter empty
-          this.model.filters[0] = selectedClass;
-          this.model.filters[1] = ''; // Empty for typing
-          this.model.updateMethods();
-          this.view.render(this.model);
-          return;
+        // Manual filter control: class filter set, method filter empty
+        this.model.filters[0] = selectedClass;
+        this.model.filters[1] = ''; // Empty for typing
+        
+        // CRITICAL FIX: Directly set methods array to ensure they're available for view
+        this.model.methods = methods;
+        this.model.selectedIndexPerColumn[1] = 0; // Reset method selection
+        
+        this.view.render(this.model);
+        return;
         }
       }
       
@@ -584,11 +647,24 @@ export class RangerController {
       return;
     }
     
-    // FALLBACK: If in Classes column (0) or editing mode, handle cursor movement
+    // CLASSES COLUMN (0) RETREAT LOGIC: Clear all filters for fresh start
     if (currentColumn === 0) {
     if (this.model.promptCursorIndex > 0) {
+        // Move cursor left within current filter
       this.model.promptCursorIndex--;
       this.view.render(this.model);
+      } else if (this.model.promptBuffer.length > 0) {
+        // EDGE CASE FIX: When cursor at start and filter exists, clear ALL filters (fresh start)
+        // USER REQUIREMENT: Class filter should be EMPTY after Classes column retreat
+        this.model.promptBuffer = ''; // EMPTY - no class filter active
+        this.model.promptCursorIndex = 0;
+        
+        // Clear all filter context for fresh start (same as Methods→Classes retreat)
+        this.model.filters[0] = ''; // Clear class filter
+        this.model.filters[1] = ''; // Clear method filter  
+        this.model.filters[2] = ''; // Clear parameter filter
+        this.model.deriveFiltersFromPrompt(); // Ensure model consistency
+        this.view.render(this.model);
       }
     }
   }

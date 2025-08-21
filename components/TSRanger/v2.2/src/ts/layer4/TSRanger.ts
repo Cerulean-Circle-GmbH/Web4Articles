@@ -24,10 +24,19 @@ export class TSRanger {
       });
     }
     
+    // Determine debug mode: active in debug mode OR test mode
+    const debugMode = process.env.TSRANGER_DEBUG_MODE === '1' || process.env.TSRANGER_TEST_MODE === '1';
+    
     const model = new RangerModel();
-    const view = new RangerView();
-    const controller = new RangerController(model, view);
+    const view = new RangerView(debugMode);
+    const controller = new RangerController(model, view, debugMode);
     await controller.run();
+  }
+
+  static async debug(): Promise<void> {
+    // CLI method for 'tsranger debug' command
+    process.env.TSRANGER_DEBUG_MODE = '1';
+    await this.start();
   }
 }
 

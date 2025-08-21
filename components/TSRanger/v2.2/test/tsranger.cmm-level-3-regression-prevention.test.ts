@@ -131,6 +131,15 @@ describe('CMM Level 3: Core Regression Prevention', () => {
       expect(result.selectedColumn).toBe(0);
       expect(result.promptBuffer).toBe(''); // EMPTY - fresh start, no filter active
     });
+
+    test('g[left][down]x3[left] edge case: Classes column retreat clears filter', () => {
+      const result = executeRegressionTest('g[left][down][down][down][left]');
+      
+      // EDGE CASE: Classes column [left] retreat should also clear all filters
+      expect(result.selectedColumn).toBe(0); // Stay in Classes column
+      expect(result.promptBuffer).toBe(''); // EMPTY - class filter must be deleted (user requirement)
+      // Note: This tests the different retreat path from Classes column itself
+    });
   });
 
   /**

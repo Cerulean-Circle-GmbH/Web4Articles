@@ -49,6 +49,12 @@ if [[ "${1:-}" == "test" ]]; then
   export TSRANGER_TEST_INPUT="${1:-}"
 fi
 
+# Debug mode: tsranger debug (interactive with debug output)
+if [[ "${1:-}" == "debug" ]]; then
+  shift
+  export TSRANGER_DEBUG_MODE=1
+fi
+
 # Start TSRanger v2 TUI (pass through any args)
 if [[ -n "${LOG_LEVEL:-}" && "$LOG_LEVEL" =~ ^[0-9]+$ && "$LOG_LEVEL" -gt 3 ]]; then
   echo "[tsranger v2 debug] Running: TS_NODE_TRANSPILE_ONLY=1 NODE_NO_WARNINGS=1 node --loader ts-node/esm \"$TSRANGER_ENTRY\" $*"
