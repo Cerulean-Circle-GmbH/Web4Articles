@@ -6,6 +6,8 @@
 
 ## Component Architecture
 
+![Requirement Traceability Architecture](v1.0/src/puml/RequirementTraceabilityArchitecture.svg)
+
 ### Layer Structure (Web4 5-Layer)
 - **Layer 1**: Infrastructure - File system, Git integration, UUID generation
 - **Layer 2**: Implementation - Requirement logic, status management, MDView generation  
@@ -20,6 +22,12 @@
 - **IOR References**: Network-addressable requirement and test references
 
 ## Usage
+
+### Overview Generation Process
+
+![Requirement Overview Generation](v1.0/src/puml/RequirementOverviewGeneration.svg)
+
+### Basic Usage
 
 ```typescript
 import { Web4Requirement } from '@web4x/components/Web4Requirement';
