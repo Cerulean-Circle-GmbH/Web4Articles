@@ -289,35 +289,45 @@
 - [ ] Hibernation/restoration capability for complete PDCA scenarios
 - [ ] Integration with requirement/test/artifact object references
 
-#### **[requirement:uuid:j6k7l8m9-n0o1-2345-jklm-n01234567890] - PDCA Component Dependencies**
-**As a** Web4 PDCA developer implementing structured object lifecycle  
-**I want** PDCA objects integrated with GitScrumProject component for git operations  
-**So that** PDCA creation/update automatically maintains traceability through structured components
+#### **[requirement:uuid:k7l8m9n0-o1p2-3456-klmn-o12345678901] - Web4 Constructor Pattern**
+**As a** Web4 developer implementing pure object-oriented architecture  
+**I want** empty constructors with scenario-based initialization instead of dependency injection  
+**So that** objects are pure, hibernatable, and free from external dependencies
 
-**Component Integration Architecture:**
-- **GitScrumProject Dependency**: PDCA objects use GitScrumProject for all git operations
-- **Dependency Injection**: Components injected through constructor or factory pattern
-- **Lifecycle Integration**: PDCA save/load operations use component interfaces
-- **Manual Operation Elimination**: No more manual `git add/commit/push` commands
+**Web4 Constructor Pattern:**
+- **Empty Constructors**: All objects construct without dependencies or configuration
+- **Scenario Initialization**: Objects initialize from serialized scenarios (JSON)
+- **No External Dependencies**: No environment variables, config files, or global state
+- **State Serialization**: Complete object state hibernatable in scenarios
+- **Object Networks**: References between objects through scenario UUIDs
 
-**Component Composition Pattern:**
+**Web4 Standard Implementation:**
 ```typescript
-const pdcaFactory = new PDCAFactory({
-  gitComponent: new GitScrumProject(config),
-  ontologyAgent: new DefaultOntologyAgent(),
-  templateEngine: new MarkdownTemplateEngine()
-});
+class DefaultPDCA implements PDCA {
+  constructor() {}  // Empty constructor - no dependencies
+  
+  init(scenario: Scenario): PDCA {
+    this.loadFromScenario(scenario);
+    return this;
+  }
+  
+  toScenario(): Scenario {
+    return this.serializeState();
+  }
+}
 
-const pdca = await pdcaFactory.createPDCA(config);
-await pdca.save(); // Uses GitScrumProject internally
+// Usage Pattern
+let pdca = new DefaultPDCA();
+pdca.init(pdcaScenario);
+await pdca.save();
 ```
 
 **Acceptance Criteria:**
-- [ ] PDCA objects receive GitScrumProject component through dependency injection
-- [ ] All manual git commands replaced with GitScrumProject component usage
-- [ ] PDCA save() method uses component.addCommitPush() operations
-- [ ] Component dependencies mockable for unit testing
-- [ ] Error handling through structured component interface responses
+- [ ] All Web4 objects use empty constructors
+- [ ] Initialization through `init(scenario: Scenario)` method
+- [ ] No environment variables or external configuration dependencies  
+- [ ] Complete object state serializable to scenarios
+- [ ] Object networks formed through scenario references
 
 #### **[requirement:uuid:i5j6k7l8-m9n0-1234-ijkl-m90123456789] - Process Object Framework Extension**
 **As a** Web4 process architect extending object recognition  
