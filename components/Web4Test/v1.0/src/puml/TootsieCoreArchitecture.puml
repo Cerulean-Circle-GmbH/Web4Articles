@@ -189,7 +189,7 @@ RequirementOverviewRenderer --> RequirementController : renders overview from
 DefaultRequirement --> RequirementOverviewGenerator : feeds into
 RequirementOverviewGenerator --> RequirementOverviewRenderer : generates for
 
-note top of Tootsie
+note top of DefaultTestCase
   **Web4 First Principles:**
   • Empty constructors: constructor() {}
   • Scenario initialization: init(scenario): this  

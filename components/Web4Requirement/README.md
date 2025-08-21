@@ -6,7 +6,7 @@
 
 ## Component Architecture
 
-![Requirement Traceability Architecture](v1.0/src/puml/RequirementTraceabilityArchitecture.svg)
+![Requirement Traceability Architecture](v1.0/src/svg/RequirementTraceabilityArchitecture.svg)
 
 ### Layer Structure (Web4 5-Layer)
 - **Layer 1**: Infrastructure - File system, Git integration, UUID generation
@@ -25,7 +25,7 @@
 
 ### Overview Generation Process
 
-![Requirement Overview Generation](v1.0/src/puml/RequirementOverviewGeneration.svg)
+![Requirement Overview Generation](v1.0/src/svg/RequirementOverviewGeneration.svg)
 
 ### Basic Usage
 

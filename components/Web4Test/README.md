@@ -6,6 +6,8 @@
 
 ## Component Architecture
 
+![Tootsie Core Architecture](v1.0/src/svg/TootsieCoreArchitecture.svg)
+
 ### Layer Structure (Web4 5-Layer)
 - **Layer 1**: Infrastructure - Test runner integration (Vitest), result capture
 - **Layer 2**: Implementation - Test execution logic, result aggregation, scenario management  
@@ -20,6 +22,12 @@
 - **IOR References**: Network-addressable test case and requirement references
 
 ## Usage
+
+### Vitest Integration Process
+
+![Vitest Integration Sequence](v1.0/src/svg/VitestIntegrationSequence.svg)
+
+### Basic Usage
 
 ```typescript
 import { Web4Test } from '@web4x/components/Web4Test';
