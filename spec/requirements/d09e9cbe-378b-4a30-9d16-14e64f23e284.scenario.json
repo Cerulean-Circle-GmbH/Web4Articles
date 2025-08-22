@@ -9,6 +9,9 @@
     "uuid": "d09e9cbe-378b-4a30-9d16-14e64f23e284",
     "name": "Add Move Command for Inter-Component File Migration",
     "title": "Add Move Command for Inter-Component File Migration",
-    "description": "Add 'requirement.sh mv <uuid> <target-component-path>' command to move requirement files between components using git mv, including both scenario JSON and MD files, plus updating both source and target overviews automatically."
+    "description": "Add 'requirement.sh mv <uuid> <target-component-path>' command to move requirement files between components using git mv, including both scenario JSON and MD files, plus updating both source and target overviews automatically.",
+    "implemented": true,
+    "updatedAt": "2025-08-22T10:58:45.228Z",
+    "implementationStatus": "completed"
   }
 }

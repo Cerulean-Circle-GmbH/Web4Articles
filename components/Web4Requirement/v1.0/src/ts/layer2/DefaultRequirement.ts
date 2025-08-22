@@ -151,9 +151,21 @@ export class DefaultRequirement implements Requirement {
       const sourceScenarioFile = path.join(sourceRequirementsDir, `${uuid}.scenario.json`);
       const sourceMDFile = path.join(sourceMDDir, `${uuid}.requirement.md`);
       
-      // Target paths
-      const targetRequirementsDir = path.join(targetComponentPath, 'spec', 'requirements');
-      const targetMDDir = path.join(targetComponentPath, 'spec', 'requirements.md');
+      // Target paths (resolve relative to project root if needed)
+      let resolvedTargetPath = targetComponentPath;
+      if (!path.isAbsolute(targetComponentPath)) {
+        // Find project root by looking for a components directory in parent dirs
+        let projectRoot = process.cwd();
+        while (!await fs.promises.access(path.join(projectRoot, 'components')).then(() => true).catch(() => false)) {
+          const parent = path.dirname(projectRoot);
+          if (parent === projectRoot) break; // reached filesystem root
+          projectRoot = parent;
+        }
+        resolvedTargetPath = path.join(projectRoot, targetComponentPath);
+      }
+      
+      const targetRequirementsDir = path.join(resolvedTargetPath, 'spec', 'requirements');
+      const targetMDDir = path.join(resolvedTargetPath, 'spec', 'requirements.md');
       const targetScenarioFile = path.join(targetRequirementsDir, `${uuid}.scenario.json`);
       const targetMDFile = path.join(targetMDDir, `${uuid}.requirement.md`);
       
