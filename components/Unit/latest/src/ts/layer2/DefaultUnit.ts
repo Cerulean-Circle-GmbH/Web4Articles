@@ -9,8 +9,7 @@
  */
 
 import { Unit, UnitScenario, UnitInput, UnitOutput, UnitCapability, UnitInterface, UnitMetadata, UnitMessage, CoordinationResult, UnitState, UnitLifecyclePhase, ExecutionEvidence } from '../layer3/Unit.js';
-import { IOR } from '@web4/ior';
-import { Scenario } from '@web4/scenario';
+import { IOR, Scenario } from '../layer3/SimpleTypes.js';
 
 /**
  * DefaultUnit - Reference Web4 Unit implementation
@@ -161,7 +160,7 @@ export class DefaultUnit implements Unit {
           participants: [targetUnit],
           coordinationProtocol: 'default-coordination',
           coordinationSteps: [],
-          finalState: { error: error.message }
+          finalState: { error: (error as Error).message }
         }
       };
     }
@@ -232,21 +231,22 @@ export class DefaultUnit implements Unit {
       throw new Error('Unit not initialized');
     }
 
-    // Create scenario with current state
+    // Create scenario with current state - simplified
+    const baseScenario = this.unitScenario;
     return {
-      ...this.unitScenario,
+      ...baseScenario,
       getCurrentState: () => this.currentState,
-      // Additional scenario serialization logic would go here
+      // Use interface methods
       serialize: () => JSON.stringify({
-        unitId: this.unitScenario!.getUnitId(),
-        unitName: this.unitScenario!.getUnitName(),
+        unitId: baseScenario!.getUnitId(),
+        unitName: baseScenario!.getUnitName(),
         currentState: this.currentState,
         executionHistory: this.executionHistory,
         timestamp: new Date().toISOString()
       }),
       validate: () => true,
-      getReferences: () => this.unitScenario!.getDependencies()
-    };
+      getReferences: () => baseScenario!.getDependencies()
+    } as UnitScenario;
   }
 
   /**
