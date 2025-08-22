@@ -1,110 +1,41 @@
-@startuml Template Logic Independence Architecture
+@startuml
+title Template Logic Independence Architecture
 
-!theme aws-orange
-skinparam backgroundColor #FAFAFA
-skinparam defaultFontSize 11
-skinparam defaultFontName "Arial"
-
-title Template Logic Independence Architecture\n**Web4Requirement Component v1.0**
-
-package "Layer 3: Interfaces" as layer3 {
+package "Interfaces" {
   interface View {
-    +render(context: ViewContext): Promise<ViewResult>
-    +getTemplatePath?(): string | undefined  
-    +setTemplatePath?(path: string): void
+    +render(context): Promise<ViewResult>
   }
   
-  interface MDView extends View {
-    +renderMD(context: ViewContext): Promise<ViewResult>
-    +formatMD(content: string, context: ViewContext): string
+  interface MDView {
+    +renderMD(context): Promise<ViewResult>
   }
   
   interface TemplateProcessor {
-    +processTemplate(template: string, context: ViewContext): string
-    +loadTemplate(templatePath: string): Promise<string>
-  }
-  
-  class ViewContext {
-    +[key: string]: any
-  }
-  
-  class ViewResult {
-    +success: boolean
-    +content?: string
-    +message?: string
-    +error?: string
+    +processTemplate(template, context): string
   }
 }
 
-package "Layer 2: Implementations" as layer2 {
+package "Implementations" {
   class DefaultTemplateProcessor {
-    +processTemplate(template: string, context: ViewContext): string
-    +loadTemplate(templatePath: string): Promise<string>
-    -convertToString(value: any): string
+    +processTemplate(template, context): string
+    +loadTemplate(path): Promise<string>
   }
   
   class DefaultMDView {
-    #templateProcessor: TemplateProcessor
-    #templatePath?: string
-    +constructor(templatePath?: string)
-    +render(context: ViewContext): Promise<ViewResult>
-    +renderMD(context: ViewContext): Promise<ViewResult>
-    +formatMD(content: string, context: ViewContext): string
-    +getTemplatePath(): string | undefined
-    +setTemplatePath(path: string): void
-    #resolveTemplatePath(relativePath: string): string
+    -templateProcessor: TemplateProcessor
+    +renderMD(context): Promise<ViewResult>
   }
   
-  class MDOverview extends DefaultMDView {
-    -itemTemplatePath?: string
-    +constructor(overviewTemplatePath?: string, itemTemplatePath?: string)
-    +renderMD(context: ViewContext): Promise<ViewResult>
-    -processItems(itemTemplate: string, context: ViewContext): Promise<string>
-    -getItemCount(context: ViewContext): number
-    +setItemTemplatePath(path: string): void
-    +getItemTemplatePath(): string | undefined
-  }
-  
-  class DefaultRequirement {
-    -uuid: string
-    -_name: string
-    -description: string
-    -status: RequirementStatus
-    +generateMDView(): string
-    -generateRequirementsOverview(files: string[], path: string): Promise<string>
-    +saveMDView(outputPath?: string): Promise<RequirementResult>
+  class MDOverview {
+    -itemTemplatePath: string
+    +renderMD(context): Promise<ViewResult>
   }
 }
 
-package "Templates" as templates {
-  component "default.view.md" as defaultTemplate
-  component "over.view.md" as overviewTemplate  
-  component "item.view.md" as itemTemplate
-}
-
-' Interface relationships
-TemplateProcessor ||..|| DefaultTemplateProcessor : implements
-MDView ||..|| DefaultMDView : implements
-View ||..|| MDView : extends
-
-' Class relationships
-DefaultMDView ||--|| DefaultTemplateProcessor : uses
-MDOverview ||--|| DefaultMDView : extends
-DefaultRequirement ||--|| DefaultMDView : creates
-DefaultRequirement ||--|| MDOverview : creates
-
-' Template usage
-DefaultMDView ..> defaultTemplate : loads
-MDOverview ..> overviewTemplate : loads  
-MDOverview ..> itemTemplate : loads
-
-' Data flow
-ViewContext ||..|| View : input
-ViewResult ||..|| View : output
-
-note top of View : **Maximum Template Independence**\nLogic completely separated\nfrom template content
-note right of DefaultTemplateProcessor : **Generic Processing**\nWorks with any {{variable}} syntax\nZero template knowledge
-note bottom of MDOverview : **Specialized Only When Needed**\nExtends DefaultMDView because\noverview requires dual templates
-note left of templates : **Template Content**\nIndependent from logic\nUsers can modify freely
+TemplateProcessor ||..|| DefaultTemplateProcessor
+View ||..|| MDView
+MDView ||..|| DefaultMDView
+DefaultMDView ||--|| MDOverview
+DefaultMDView ||--|| DefaultTemplateProcessor
 
 @enduml
