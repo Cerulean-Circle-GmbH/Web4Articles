@@ -8,7 +8,7 @@ title Web4 Requirement Overview Generation Process
 
 participant "Product Owner" as PO
 participant "Web4Requirement" as Req <<REQUIREMENT_COLOR>>
-participant "RequirementOverviewGenerator" as Generator <<GENERATOR_COLOR>>
+participant "RequirementOverview" as Generator <<GENERATOR_COLOR>>
 participant "RequirementMDView" as MDView <<VIEW_COLOR>>
 participant "requirements.md" as Output <<OUTPUT_COLOR>>
 

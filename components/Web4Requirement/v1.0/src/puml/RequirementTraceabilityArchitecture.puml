@@ -121,7 +121,7 @@ package "Traceability Network" {
 }
 
 package "Web4 Requirements MDView Generation" {
-  class RequirementOverviewGenerator {
+  class RequirementOverview {
     +constructor()
     +init(overviewScenario): this
     +addRequirement(requirement): void
@@ -159,8 +159,8 @@ Web4Version --> IORNetwork : referenced via
 Web4Unit --> IORNetwork : referenced via
 
 ' MDView Generation
-Web4Requirement --> RequirementOverviewGenerator : feeds into
-RequirementOverviewGenerator --> RequirementMDView : uses
+Web4Requirement --> RequirementOverview : feeds into
+RequirementOverview --> RequirementMDView : uses
 RequirementMDView --> RequirementOverviewRenderer : generates
 
 ' Network Resolution
@@ -174,7 +174,7 @@ note top of IORNetwork
   distributed object references
 end note
 
-note bottom of RequirementOverviewGenerator
+note bottom of RequirementOverview
   **Overview Generation:**
   requirements.md files are MDViews
   generated from Web4Requirement
