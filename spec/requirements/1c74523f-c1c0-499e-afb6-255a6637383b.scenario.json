@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "1c74523f-c1c0-499e-afb6-255a6637383b",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDA1OjQ4OjM4Ljc0NloiLCJ1dWlkIjoiYmZmMzQ1ZDUtN2I2Ni00NTM3LTgxYjAtMTQ0ODk1Nzk1NTBmIn0=",
+  "model": {
+    "uuid": "1c74523f-c1c0-499e-afb6-255a6637383b",
+    "name": "Organize SVG Files in Dedicated SVG Folder",
+    "title": "Organize SVG Files in Dedicated SVG Folder",
+    "description": "Git move the new SVGs to a dedicated svg folder for better organization and separation of PlantUML source files from generated SVG outputs."
+  }
+}
