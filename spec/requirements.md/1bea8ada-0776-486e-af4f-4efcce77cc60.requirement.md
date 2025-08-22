@@ -1,10 +1,14 @@
 # Test New View Architecture
 
+## Task Status
+- [ ] **Test New View Architecture** [requirement:uuid:1bea8ada-0776-486e-af4f-4efcce77cc60]
+
 ## Requirement Details
 
 - **UUID:** `1bea8ada-0776-486e-af4f-4efcce77cc60`
 - **Name:** Test New View Architecture
 - **Status:** created
+- **Implementation:** pending
 
 ## Description
 

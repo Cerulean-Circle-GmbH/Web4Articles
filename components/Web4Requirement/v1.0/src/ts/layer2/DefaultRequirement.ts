@@ -360,25 +360,59 @@ export class DefaultRequirement implements Requirement {
 
   async updateOverview(): Promise<RequirementResult> {
     try {
-      // Use the same directory context detection as the main component
-      const requirementsDir = this.getRequirementsMDDirectory();
-      const overviewPath = path.join(requirementsDir, '00_requirements.overview.md');
+      // Get scenario files from the requirements directory  
+      const scenarioDir = this.getRequirementsDirectory();
+      const mdDir = this.getRequirementsMDDirectory();
       
-      // Ensure the requirements.md directory exists
-      await fs.mkdir(requirementsDir, { recursive: true });
+      // Ensure both directories exist
+      await fs.mkdir(scenarioDir, { recursive: true });
+      await fs.mkdir(mdDir, { recursive: true });
       
-      // Get requirement files from the requirements.md directory
-      const requirementFiles = await this.getRequirementFiles(requirementsDir);
+      // Find all scenario files
+      const scenarioFiles = await fs.readdir(scenarioDir);
+      const scenarios = scenarioFiles.filter(file => file.endsWith('.scenario.json'));
+      
+      console.log(`🔄 Regenerating ${scenarios.length} requirement files...`);
+      
+      // Regenerate each requirement MD file from its scenario
+      for (const scenarioFile of scenarios) {
+        const uuid = scenarioFile.replace('.scenario.json', '');
+        const scenarioPath = path.join(scenarioDir, scenarioFile);
+        
+        try {
+          // Load scenario and create temporary requirement instance
+          const scenarioContent = await fs.readFile(scenarioPath, 'utf-8');
+          const scenarioData = JSON.parse(scenarioContent);
+          
+          // Create a temporary requirement instance for this UUID
+          const tempReq = new DefaultRequirement();
+          await tempReq.loadFromScenario(scenarioPath);
+          
+          // Generate MD view and save it
+          const mdContent = tempReq.generateMDView();
+          const mdPath = path.join(mdDir, `${uuid}.requirement.md`);
+          await fs.writeFile(mdPath, mdContent, 'utf-8');
+          
+          console.log(`✅ Generated ${uuid}.requirement.md`);
+          
+        } catch (error) {
+          console.warn(`⚠️  Failed to regenerate ${scenarioFile}: ${(error as Error).message}`);
+        }
+      }
+      
+      // Get all requirement files (now freshly regenerated)
+      const requirementFiles = await this.getRequirementFiles(mdDir);
       
       // Generate new overview content
-      const overviewContent = await this.generateRequirementsOverview(requirementFiles, requirementsDir);
+      const overviewContent = await this.generateRequirementsOverview(requirementFiles, mdDir);
       
       // Write the overview file
+      const overviewPath = path.join(mdDir, '00_requirements.overview.md');
       await fs.writeFile(overviewPath, overviewContent, 'utf-8');
       
       return {
         success: true,
-        message: `Requirements overview regenerated successfully at ${overviewPath}`,
+        message: `Regenerated ${scenarios.length} requirement files and overview at ${overviewPath}`,
         requirementId: 'overview'
       };
       
