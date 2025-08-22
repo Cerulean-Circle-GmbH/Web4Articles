@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "5db19d4e-982f-453e-9a47-0dd578baa327",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDA3OjQwOjMwLjA0M1oiLCJ1dWlkIjoiM2M2NzFlNTMtZTk2ZC00YjUzLWEzM2ItNWViNzNmMTJlN2JjIn0=",
+  "model": {
+    "uuid": "5db19d4e-982f-453e-9a47-0dd578baa327",
+    "name": "Test Overview Rendering Integration",
+    "title": "Test Overview Rendering Integration",
+    "description": "Test that the overview now properly renders using the new RequirementOverview class from layer5 with proper item view templates showing titles, UUIDs, and formatted links."
+  }
+}
