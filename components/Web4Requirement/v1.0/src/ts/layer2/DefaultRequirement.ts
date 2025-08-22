@@ -136,8 +136,13 @@ export class DefaultRequirement implements Requirement {
   }
 
   private getRequirementsDirectory(): string {
-    // Always create spec/requirements structure
-    return path.join(process.cwd(), 'spec', 'requirements');
+    const cwd = process.cwd();
+    // If already in spec/requirements directory, use it directly
+    if (cwd.endsWith(path.join('spec', 'requirements'))) {
+      return cwd;
+    }
+    // Otherwise add spec/requirements structure
+    return path.join(cwd, 'spec', 'requirements');
   }
 
   async moveToComponent(uuid: string, targetComponentPath: string): Promise<RequirementResult> {
@@ -239,8 +244,13 @@ export class DefaultRequirement implements Requirement {
   }
 
   private getRequirementsMDDirectory(): string {
-    // Always create spec/requirements.md structure  
-    return path.join(process.cwd(), 'spec', 'requirements.md');
+    const cwd = process.cwd();
+    // If in spec/requirements, go up and add requirements.md
+    if (cwd.endsWith(path.join('spec', 'requirements'))) {
+      return path.join(path.dirname(cwd), 'requirements.md');
+    }
+    // Otherwise add spec/requirements.md structure
+    return path.join(cwd, 'spec', 'requirements.md');
   }
 
   async loadFromScenario(scenarioPath: string): Promise<RequirementResult> {
