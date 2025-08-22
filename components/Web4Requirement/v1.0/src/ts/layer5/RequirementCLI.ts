@@ -59,7 +59,7 @@ export class RequirementCLI {
         await this.saveScenario(result.requirementId || 'unknown', result.scenario);
         console.log(`💾 Scenario saved: ${result.requirementId}.scenario.json`);
         
-        // Auto-generate MD view in requirements.md directory
+        // Auto-generate MD view in requirements.md directory (relative to current working directory)
         const requirementId = result.requirementId || 'unknown';
         const mdDirectory = '../requirements.md';
         const mdResult = await this.requirement.saveMDView(mdDirectory);
@@ -120,6 +120,7 @@ export class RequirementCLI {
     const scenarioJSON = JSON.stringify(scenario, null, 2);
     
     try {
+      // Save in current working directory
       await fs.writeFile(filename, scenarioJSON, 'utf-8');
     } catch (error) {
       console.error(`Failed to save scenario file: ${(error as Error).message}`);
