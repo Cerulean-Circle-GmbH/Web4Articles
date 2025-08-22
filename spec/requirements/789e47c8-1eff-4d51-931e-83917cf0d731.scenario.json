@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "789e47c8-1eff-4d51-931e-83917cf0d731",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDExOjE4OjIxLjM1M1oiLCJ1dWlkIjoiMmFkMzA5OTUtNTRhMi00NTI4LWExNmUtZTZkZGVkOWMzZjBkIn0=",
+  "model": {
+    "uuid": "789e47c8-1eff-4d51-931e-83917cf0d731",
+    "name": "Test Latest Version",
+    "title": "Test Latest Version",
+    "description": "This requirement tests that the latest version is working correctly"
+  }
+}
