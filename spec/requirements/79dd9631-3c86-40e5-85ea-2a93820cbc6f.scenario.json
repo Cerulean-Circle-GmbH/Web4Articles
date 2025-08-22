@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "79dd9631-3c86-40e5-85ea-2a93820cbc6f",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDA3OjUzOjM1LjQ4N1oiLCJ1dWlkIjoiNDI5YzhkY2QtODFjZC00Njg1LTljMGEtZmNjNDg4NjM4MzliIn0=",
+  "model": {
+    "uuid": "79dd9631-3c86-40e5-85ea-2a93820cbc6f",
+    "name": "Verify Scenario JSON Status Reading",
+    "title": "Verify Scenario JSON Status Reading",
+    "description": "Test that the updated loadRequirementsFromFiles method correctly reads implementation status from scenario JSON files and reflects it in overview checkboxes."
+  }
+}

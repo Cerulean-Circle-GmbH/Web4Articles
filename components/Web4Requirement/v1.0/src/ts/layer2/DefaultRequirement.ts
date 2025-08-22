@@ -349,10 +349,25 @@ export class DefaultRequirement implements Requirement {
         // Extract UUID from filename
         const uuid = filename.replace('.requirement.md', '');
         
-        // Extract implementation status from content if available
-        const implementedMatch = content.match(/\*\*Implementation:\*\*\s+(.+)$/m);
-        const implementationStatus = implementedMatch ? implementedMatch[1].toLowerCase() : 'pending';
-        const implemented = implementationStatus === 'completed';
+        // Try to load implementation status from scenario JSON file
+        let implemented = false;
+        let implementationStatus = 'pending';
+        
+        try {
+          const scenarioPath = path.join(this.getRequirementsDirectory(), `${uuid}.scenario.json`);
+          const scenarioContent = await fs.readFile(scenarioPath, 'utf-8');
+          const scenario = JSON.parse(scenarioContent);
+          
+          if (scenario.model) {
+            implemented = scenario.model.implemented || false;
+            implementationStatus = scenario.model.implementationStatus || 'pending';
+          }
+        } catch (scenarioError) {
+          // Fall back to extracting from MD content if scenario read fails
+          const implementedMatch = content.match(/\*\*Implementation:\*\*\s+(.+)$/m);
+          implementationStatus = implementedMatch ? implementedMatch[1].toLowerCase() : 'pending';
+          implemented = implementationStatus === 'completed';
+        }
 
         // Create requirement scenario object
         requirements.push({
