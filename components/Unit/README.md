@@ -2,7 +2,7 @@
 
 **🎯 Purpose:** Web4 specification and management component for Units - the atomic executable elements within Web4 components
 
-**📦 Version:** latestt  
+**📦 Version:** latest  
 **🏗️ Architecture:** Web4 Component (5-layer architecture)  
 **🔗 Dependencies:** Web4 Core, IOR System, Scenario Management  
 

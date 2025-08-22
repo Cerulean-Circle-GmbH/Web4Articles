@@ -1,7 +1,7 @@
 {
-  "name": "@web4/unit-latestt",
+  "name": "@web4/unit-latest",
   "version": "0.1.0",
-  "description": "Web4 Unit specification and management component - latestt version",
+  "description": "Web4 Unit specification and management component - latest version",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -43,12 +43,12 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Cerulean-Circle-GmbH/Web4Articles.git",
-    "directory": "components/Unit/latestt"
+    "directory": "components/Unit/latest"
   },
   "web4": {
     "component": {
       "name": "Unit",
-      "version": "latestt",
+      "version": "latest",
       "type": "specification",
       "architecture": "5-layer",
       "patterns": [
