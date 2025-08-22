@@ -60,7 +60,6 @@ package "Layer 2: Implementations" as layer2 {
     +constructor(overviewTemplatePath?: string, itemTemplatePath?: string)
     +renderMD(context: ViewContext): Promise<ViewResult>
     -processItems(itemTemplate: string, context: ViewContext): Promise<string>
-    -extractItemContextFromFilename(filename: string, context: ViewContext): Promise<ViewContext>
     -getItemCount(context: ViewContext): number
     +setItemTemplatePath(path: string): void
     +getItemTemplatePath(): string | undefined
@@ -72,36 +71,15 @@ package "Layer 2: Implementations" as layer2 {
     -description: string
     -status: RequirementStatus
     +generateMDView(): string
-    -generateRequirementsOverview(requirementFiles: string[], outputPath: string): Promise<string>
+    -generateRequirementsOverview(files: string[], path: string): Promise<string>
     +saveMDView(outputPath?: string): Promise<RequirementResult>
-    -updateRequirementsOverview(outputPath: string): Promise<void>
   }
 }
 
-package "Template Files" as templates {
-  file "default.view.md" as defaultTemplate {
-    # {{name}}
-    ## Requirement Details
-    - **UUID:** `{{uuid}}`
-    - **Name:** {{name}}
-    - **Status:** {{status}}
-    ## Description
-    {{description}}
-  }
-  
-  file "over.view.md" as overviewTemplate {
-    # Requirements Overview
-    **Last Updated:** {{timestamp}}
-    **Total Requirements:** {{totalCount}}
-    ## Requirements List
-    {{itemsList}}
-  }
-  
-  file "item.view.md" as itemTemplate {
-    1. [{{title}}](./{{filename}}) 
-    [requirement:uuid:{{uuid}}] 
-    [`{{filename}}`](./{{filename}})
-  }
+package "Templates" as templates {
+  component "default.view.md" as defaultTemplate
+  component "over.view.md" as overviewTemplate  
+  component "item.view.md" as itemTemplate
 }
 
 ' Interface relationships
@@ -123,20 +101,10 @@ MDOverview ..> itemTemplate : loads
 ' Data flow
 ViewContext ||..|| View : input
 ViewResult ||..|| View : output
-ViewContext ||..|| TemplateProcessor : input
 
-note top of View : **Maximum Template Independence**\nLogic is completely separated\nfrom template content
-note right of DefaultTemplateProcessor : **Generic Processing**\nWorks with any {{variable}} syntax\nZero template content knowledge
-note bottom of MDOverview : **Specialized Only When Needed**\nExtends DefaultMDView only because\noverview requires dual templates
-note left of templates : **Template Content**\nCompletely independent from logic\nUsers can modify freely
-
-legend right
-  |= Pattern |= Description |
-  | Interface Segregation | Clear separation of concerns |
-  | Template Independence | Zero coupling to content |
-  | Generic Processing | Works with any template |
-  | Extensible Design | Easy to add new view types |
-  | Backward Compatible | Existing templates unchanged |
-endlegend
+note top of View : **Maximum Template Independence**\nLogic completely separated\nfrom template content
+note right of DefaultTemplateProcessor : **Generic Processing**\nWorks with any {{variable}} syntax\nZero template knowledge
+note bottom of MDOverview : **Specialized Only When Needed**\nExtends DefaultMDView because\noverview requires dual templates
+note left of templates : **Template Content**\nIndependent from logic\nUsers can modify freely
 
 @enduml
