@@ -11,6 +11,8 @@ export interface RequirementScenario {
   metadata: RequirementMetadata;
   createdAt: string;
   updatedAt: string;
+  implemented?: boolean;
+  implementationStatus?: 'pending' | 'in-progress' | 'completed' | 'cancelled';
 }
 
 export interface RequirementMetadata {
