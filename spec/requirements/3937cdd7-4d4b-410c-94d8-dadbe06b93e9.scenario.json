@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "3937cdd7-4d4b-410c-94d8-dadbe06b93e9",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDA3OjU3OjEwLjA1N1oiLCJ1dWlkIjoiNDUyZWViZjEtYTg2ZC00OGNiLTk5ZmQtNmRiMDY2ZWI4NGNjIn0=",
+  "model": {
+    "uuid": "3937cdd7-4d4b-410c-94d8-dadbe06b93e9",
+    "name": "Add Set Method for Attribute Updates",
+    "title": "Add Set Method for Attribute Updates",
+    "description": "Add a set(attribute: string, value: string) method to Web4Requirement interface and implementation, plus CLI support for 'requirement.sh set implemented true' to programmatically update requirement attributes instead of manual JSON editing. This enables TSRanger integration."
+  }
+}
