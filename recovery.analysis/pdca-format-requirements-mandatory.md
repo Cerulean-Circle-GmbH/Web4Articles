@@ -25,8 +25,11 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- [GitHub](GITHUB_URL) | [../relative/path/to/file](../relative/path/to/file)
-- [Related Artifact](GITHUB_URL) | [../path/to/artifact](../path/to/artifact)
+- **PDCA Document:** [GitHub](GITHUB_URL) | [../relative/path/to/pdca](../relative/path/to/pdca)
+- **Changed Files:** [GitHub](GITHUB_URL) | [../path/to/changed/file](../path/to/changed/file)
+- **New Components:** [GitHub](GITHUB_URL) | [../path/to/new/component](../path/to/new/component)
+- **Requirements Created:** [GitHub](GITHUB_URL) | [../path/to/requirement.md](../path/to/requirement.md)
+- **Related Artifacts:** [GitHub](GITHUB_URL) | [../path/to/artifact](../path/to/artifact)
 
 ### **QA Decisions**
 - [ ] Pending decision: [Specific decision with checkbox]

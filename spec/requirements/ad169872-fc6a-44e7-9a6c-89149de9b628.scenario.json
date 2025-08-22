@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "ad169872-fc6a-44e7-9a6c-89149de9b628",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDA3OjMyOjIxLjQ2OFoiLCJ1dWlkIjoiNDkyNTM3MzgtMGJiMC00MDRhLWJhYjAtYjBlNTU3MTY5ZDZjIn0=",
+  "model": {
+    "uuid": "ad169872-fc6a-44e7-9a6c-89149de9b628",
+    "name": "Add Artifact Links to PDCA and Update Protocol",
+    "title": "Add Artifact Links to PDCA and Update Protocol",
+    "description": "Under Artifact Links section of PDCAs, add double links to all changed files and newly created requirements. Update the PDCA prompt protocol to mandate this requirement for all future PDCAs."
+  }
+}

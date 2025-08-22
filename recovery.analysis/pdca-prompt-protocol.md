@@ -42,7 +42,11 @@ The user is requesting a **PDCA Cycle document** about your current work, recove
    ## **📊 SUMMARY**
    
    ### **Artifact Links**
-   - [GitHub](URL) | [local/path](local/path)
+   - **PDCA Document:** [GitHub](URL) | [local/path](local/path)
+   - **Changed Files:** [GitHub](URL) | [local/path](local/path)
+   - **New Components:** [GitHub](URL) | [local/path](local/path)  
+   - **Requirements Created:** [GitHub](URL) | [local/path](local/path)
+   - **Related Artifacts:** [GitHub](URL) | [local/path](local/path)
    
    ### **QA Decisions**
    - [ ] [Specific decision with checkbox]
@@ -104,8 +108,9 @@ Brief status (1-2 lines maximum)
 2. **QA Decisions checkboxes** in Summary section
 3. **Verbatim user feedback** with UTC timestamp in Check section
 4. **Dual-link format** for all artifact references
-5. **PDCA Process Update section** for continuous improvement
-6. **Commit and push** before providing GitHub links
+5. **Complete Artifact Links** including all changed files, new components, and created requirements
+6. **PDCA Process Update section** for continuous improvement
+7. **Commit and push** before providing GitHub links
 
 ---
 
