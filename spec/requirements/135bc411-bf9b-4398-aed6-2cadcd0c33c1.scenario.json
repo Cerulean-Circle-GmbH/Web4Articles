@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "135bc411-bf9b-4398-aed6-2cadcd0c33c1",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDA3OjQ1OjQ3Ljk3OVoiLCJ1dWlkIjoiMGYzYmQ2NTQtMzA1YS00NDQwLWI5MjItMmYyNDk2MmMwNzJmIn0=",
+  "model": {
+    "uuid": "135bc411-bf9b-4398-aed6-2cadcd0c33c1",
+    "name": "Final Status Checkbox Test",
+    "title": "Final Status Checkbox Test",
+    "description": "Final test to verify status checkbox functionality works correctly in both overview and individual requirement views with proper checkbox state based on implementation status."
+  }
+}

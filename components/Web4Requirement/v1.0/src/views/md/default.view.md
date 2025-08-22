@@ -1,11 +1,15 @@
 # {{name}}
 
+## Task Status
+- [{{statusCheckbox}}] **{{title}}** [requirement:uuid:{{uuid}}]
+
 ## Requirement Details
 
 - **UUID:** `{{uuid}}`
 - **Name:** {{name}}
 - **Title:** {{title}}
 - **Status:** {{status}}
+- **Implementation:** {{implementationStatus}}
 
 ## Description
 

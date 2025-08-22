@@ -98,19 +98,50 @@ export class RequirementOverview extends DefaultMDView {
       const itemTemplate = await fs.readFile(itemTemplatePath, 'utf-8');
       
       const filename = `${requirement.uuid}.requirement.md`;
+      const implementationStatus = this.getImplementationStatus(requirement);
+      const statusCheckbox = implementationStatus === 'completed' ? 'x' : ' ';
       
       return itemTemplate
         .replace(/{{title}}/g, requirement.title || requirement.name || 'Untitled')
         .replace(/{{filename}}/g, filename)
-        .replace(/{{uuid}}/g, requirement.uuid || '');
+        .replace(/{{uuid}}/g, requirement.uuid || '')
+        .replace(/{{statusCheckbox}}/g, statusCheckbox)
+        .replace(/{{implementationStatus}}/g, implementationStatus);
         
     } catch (error) {
       // Fallback format if template fails
       const title = requirement.title || requirement.name || 'Untitled';
       const uuid = requirement.uuid || '';
       const filename = `${uuid}.requirement.md`;
+      const statusCheckbox = requirement.implemented ? 'x' : ' ';
       
-      return `1. [${title}](./requirements/${filename}) [requirement:uuid:${uuid}] [\`${filename}\`](./requirements/${filename})`;
+      return `- [${statusCheckbox}] ${title} [requirement:uuid:${uuid}] ${filename}`;
+    }
+  }
+
+  /**
+   * Get implementation status from requirement
+   */
+  private getImplementationStatus(requirement: RequirementScenario): string {
+    // Use explicit implementationStatus if available
+    if (requirement.implementationStatus) {
+      return requirement.implementationStatus;
+    }
+    
+    // Map status to implementation status
+    const status = requirement.status?.toString().toLowerCase();
+    switch (status) {
+      case 'completed':
+        return 'completed';
+      case 'in-progress':
+      case 'in_progress':
+        return 'in-progress';
+      case 'cancelled':
+        return 'cancelled';
+      case 'pending':
+      case 'created':
+      default:
+        return 'pending';
     }
   }
   

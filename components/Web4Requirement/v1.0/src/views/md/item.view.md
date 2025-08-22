@@ -1,1 +1,1 @@
-1. [{{title}}](./{{filename}}) [requirement:uuid:{{uuid}}] [`{{filename}}`](./{{filename}})
+- [{{statusCheckbox}}] {{title}} [requirement:uuid:{{uuid}}] {{filename}}
