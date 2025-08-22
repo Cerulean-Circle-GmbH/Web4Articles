@@ -159,8 +159,8 @@ export class RequirementCLI {
     try {
       const requirement = new DefaultRequirement();
       
-      // Try to load from existing scenario
-      const scenarioPath = `${uuid}.scenario.json`;
+      // Try to load from existing scenario  
+      const scenarioPath = `spec/requirements/${uuid}.scenario.json`;
       const loadResult = await requirement.loadFromScenario(scenarioPath);
       
       if (!loadResult.success) {
