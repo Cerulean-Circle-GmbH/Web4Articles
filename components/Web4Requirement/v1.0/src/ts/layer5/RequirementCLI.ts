@@ -132,10 +132,12 @@ export class RequirementCLI {
     console.log('Commands:');
     console.log('  create     Create a new requirement with title and description');
     console.log('  md         Load requirement from scenario and generate MD view');
+    console.log('  set        Set attribute value for existing requirement');
     console.log('');
     console.log('Examples:');
     console.log('  requirement create "Unit Architecture Fix" "workflows are user role specific screen transitions"');
     console.log('  requirement md 394d5b56-51f0-4ff8-8213-88853f387dfc.scenario.json');
+    console.log('  requirement set 12345678-1234-1234-1234-123456789abc implemented true');
     console.log('');
     console.log('TSRanger Compatible Format:');
     console.log('  Requirement create "description:your requirement text here"');
