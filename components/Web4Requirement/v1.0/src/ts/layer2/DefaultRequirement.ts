@@ -195,8 +195,13 @@ ${this.description}
     try {
       const filename = `${this.uuid}.requirement.md`;
       const filePath = outputPath ? path.join(outputPath, filename) : filename;
-      const mdContent = this.generateMDView();
       
+      // Ensure output directory exists
+      if (outputPath) {
+        await fs.mkdir(outputPath, { recursive: true });
+      }
+      
+      const mdContent = this.generateMDView();
       await fs.writeFile(filePath, mdContent, 'utf-8');
       
       return {

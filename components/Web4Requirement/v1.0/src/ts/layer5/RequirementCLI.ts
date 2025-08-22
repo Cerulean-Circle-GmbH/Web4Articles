@@ -58,6 +58,17 @@ export class RequirementCLI {
         // Save scenario JSON to file
         await this.saveScenario(result.requirementId || 'unknown', result.scenario);
         console.log(`💾 Scenario saved: ${result.requirementId}.scenario.json`);
+        
+        // Auto-generate MD view in requirements.md directory
+        const requirementId = result.requirementId || 'unknown';
+        const mdDirectory = '../requirements.md';
+        const mdResult = await this.requirement.saveMDView(mdDirectory);
+        
+        if (mdResult.success) {
+          console.log(`📄 MD view auto-generated: ${mdResult.message}`);
+        } else {
+          console.error(`⚠️ MD view generation failed: ${mdResult.message}`);
+        }
       } else {
         console.error('❌ Failed to create requirement');
       }
