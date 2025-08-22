@@ -190,6 +190,85 @@ export class DefaultRequirement implements Requirement {
     }
   }
 
+  async set(attribute: string, value: string): Promise<RequirementResult> {
+    try {
+      switch (attribute.toLowerCase()) {
+        case 'implemented':
+          const implemented = value.toLowerCase() === 'true';
+          await this.updateScenarioAttribute('implemented', implemented);
+          if (implemented) {
+            await this.updateScenarioAttribute('implementationStatus', 'completed');
+          }
+          break;
+          
+        case 'implementationstatus':
+          await this.updateScenarioAttribute('implementationStatus', value);
+          await this.updateScenarioAttribute('implemented', value === 'completed');
+          break;
+          
+        case 'status':
+          if (Object.values(RequirementStatus).includes(value as RequirementStatus)) {
+            this.status = value as RequirementStatus;
+            await this.updateScenarioAttribute('status', value);
+          } else {
+            throw new Error(`Invalid status value: ${value}. Must be one of: ${Object.values(RequirementStatus).join(', ')}`);
+          }
+          break;
+          
+        case 'title':
+        case 'name':
+          this._name = value;
+          await this.updateScenarioAttribute('title', value);
+          await this.updateScenarioAttribute('name', value);
+          break;
+          
+        case 'description':
+          this.description = value;
+          await this.updateScenarioAttribute('description', value);
+          break;
+          
+        default:
+          await this.updateScenarioAttribute(attribute, value);
+          break;
+      }
+      
+      await this.saveMDView();
+      
+      return {
+        success: true,
+        message: `Requirement ${this.uuid}: ${attribute} set to ${value}`,
+        requirementId: this.uuid
+      };
+      
+    } catch (error) {
+      return {
+        success: false,
+        message: `Failed to set ${attribute}: ${(error as Error).message}`,
+        issues: [(error as Error).message]
+      };
+    }
+  }
+
+  private async updateScenarioAttribute(attribute: string, value: any): Promise<void> {
+    try {
+      const scenarioPath = path.join(this.getRequirementsDirectory(), `${this.uuid}.scenario.json`);
+      const scenarioContent = await fs.readFile(scenarioPath, 'utf-8');
+      const scenario = JSON.parse(scenarioContent);
+      
+      if (!scenario.model) {
+        scenario.model = {};
+      }
+      
+      scenario.model[attribute] = value;
+      scenario.model.updatedAt = new Date().toISOString();
+      
+      await fs.writeFile(scenarioPath, JSON.stringify(scenario, null, 2), 'utf-8');
+      
+    } catch (error) {
+      throw new Error(`Failed to update scenario attribute ${attribute}: ${(error as Error).message}`);
+    }
+  }
+
   async saveScenario(uuid: string, scenario: any): Promise<void> {
     // Ensure spec/requirements directory exists
     const requirementsDir = this.getRequirementsDirectory();

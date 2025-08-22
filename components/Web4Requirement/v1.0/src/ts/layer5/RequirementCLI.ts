@@ -140,6 +140,44 @@ export class RequirementCLI {
     console.log('TSRanger Compatible Format:');
     console.log('  Requirement create "description:your requirement text here"');
   }
+
+  private async handleSet(args: string[]): Promise<void> {
+    if (args.length < 3) {
+      console.error('❌ UUID, attribute, and value required for set command');
+      console.error('Usage: set <uuid> <attribute> <value>');
+      console.error('Example: set 12345678-1234-1234-1234-123456789abc implemented true');
+      return;
+    }
+
+    const [uuid, attribute, value] = args;
+    
+    try {
+      const requirement = new DefaultRequirement();
+      
+      // Try to load from existing scenario
+      const scenarioPath = `${uuid}.scenario.json`;
+      const loadResult = await requirement.loadFromScenario(scenarioPath);
+      
+      if (!loadResult.success) {
+        console.error(`❌ Failed to load requirement ${uuid}: ${loadResult.message}`);
+        return;
+      }
+      
+      // Set the attribute
+      const setResult = await requirement.set(attribute, value);
+      
+      if (setResult.success) {
+        console.log(`✅ ${setResult.message}`);
+      } else {
+        console.error(`❌ ${setResult.message}`);
+        if (setResult.issues) {
+          setResult.issues.forEach(issue => console.error(`   - ${issue}`));
+        }
+      }
+    } catch (error) {
+      console.error(`❌ Failed to set attribute: ${(error as Error).message}`);
+    }
+  }
 }
 
 // CLI entry point
