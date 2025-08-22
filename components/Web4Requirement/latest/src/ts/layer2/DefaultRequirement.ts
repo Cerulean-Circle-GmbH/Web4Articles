@@ -2,6 +2,7 @@ import { Requirement, RequirementScenario, RequirementResult, RequirementStatus,
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
+import { UnitIndexStorage } from '../../../../../Unit/latest/dist/ts/layer2/UnitIndexStorage.js';
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -18,6 +19,25 @@ export class DefaultRequirement implements Requirement {
   private contextPath: string = '';
   
   constructor() { // Web4 empty constructor
+  }
+
+  /**
+   * Find project root by looking for scenarios directory
+   */
+  private findProjectRoot(): string {
+    let currentDir = process.cwd();
+    while (currentDir !== path.dirname(currentDir)) {
+      const scenariosPath = path.join(currentDir, 'scenarios');
+      try {
+        // Check if scenarios directory exists (sync check for simplicity)
+        require('fs').accessSync(scenariosPath);
+        return currentDir;
+      } catch {
+        currentDir = path.dirname(currentDir);
+      }
+    }
+    // Fallback to current working directory if not found
+    return process.cwd();
   }
   
   init(scenario: RequirementScenario): this {
@@ -459,18 +479,25 @@ export class DefaultRequirement implements Requirement {
   }
 
   async saveScenario(uuid: string, scenario: any): Promise<void> {
-    // Ensure spec/requirements directory exists
+    // NEW: Use Unit Index Storage instead of direct file operations
+    const projectRoot = this.findProjectRoot();
+    const unitStorage = new UnitIndexStorage().init(projectRoot);
+    
+    // Create symbolic link at Web4Requirement spec location
     const requirementsDir = this.getRequirementsDirectory();
     await fs.mkdir(requirementsDir, { recursive: true });
-    
-    const filename = path.join(requirementsDir, `${uuid}.scenario.json`);
-    const scenarioJSON = JSON.stringify(scenario, null, 2);
+    const symlinkPath = path.join(requirementsDir, `${uuid}.scenario.json`);
     
     try {
-      await fs.writeFile(filename, scenarioJSON, 'utf-8');
+      // Save via Unit storage with symbolic link
+      const saveResult = await unitStorage.saveScenario(uuid, scenario, [symlinkPath]);
+      if (!saveResult.success) {
+        throw new Error(`Unit storage failed: ${saveResult.message}`);
+      }
       console.log(`📁 Directory: ${requirementsDir}`);
+      console.log(`🔗 Central Index: ${saveResult.scenarioPath}`);
     } catch (error) {
-      console.error(`Failed to save scenario file: ${(error as Error).message}`);
+      console.error(`Failed to save scenario via Unit storage: ${(error as Error).message}`);
       throw error;
     }
   }
