@@ -257,8 +257,11 @@ export class DefaultRequirement implements Requirement {
       // Ensure the requirements.md directory exists
       await fs.mkdir(requirementsDir, { recursive: true });
       
+      // Get requirement files from the requirements.md directory
+      const requirementFiles = await this.getRequirementFiles(requirementsDir);
+      
       // Generate new overview content
-      const overviewContent = await this.generateRequirementsOverview();
+      const overviewContent = await this.generateRequirementsOverview(requirementFiles, requirementsDir);
       
       // Write the overview file
       await fs.writeFile(overviewPath, overviewContent, 'utf-8');
@@ -275,6 +278,19 @@ export class DefaultRequirement implements Requirement {
         message: `Failed to update overview: ${(error as Error).message}`,
         issues: [(error as Error).message]
       };
+    }
+  }
+
+  private async getRequirementFiles(requirementsDir: string): Promise<string[]> {
+    try {
+      const files = await fs.readdir(requirementsDir);
+      return files.filter(file => 
+        file.endsWith('.requirement.md') && 
+        !file.startsWith('00_requirements.overview.md')
+      );
+    } catch (error) {
+      console.warn(`Could not read requirements directory ${requirementsDir}: ${(error as Error).message}`);
+      return [];
     }
   }
 
