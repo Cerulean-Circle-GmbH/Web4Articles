@@ -72,6 +72,11 @@ export interface Requirement {
   set title(value: string);
 
   /**
+   * Set attribute value programmatically
+   */
+  set(attribute: string, value: string): Promise<RequirementResult>;
+  
+  /**
    * Serialize requirement state to scenario
    */
   toScenario(): RequirementScenario;
