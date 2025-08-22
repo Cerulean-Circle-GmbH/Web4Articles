@@ -33,6 +33,9 @@ export class RequirementCLI {
       case 'md':
         await this.handleMDView(args.slice(1));
         break;
+      case 'set':
+        await this.handleSet(args.slice(1));
+        break;
       default:
         console.error(`Unknown command: ${command}`);
         this.showUsage();
