@@ -239,10 +239,24 @@ export class RequirementCLI {
       console.error('❌ UUID and target component path required');
       console.error('Usage: mv <uuid> <target-component-path>');
       console.error('Example: mv 37be4307-8b77-4a68-a92f-da203ff8244e ../../../../Web4Requirement/v1.0');
+      console.error('Example: mv 37be4307-8b77-4a68-a92f-da203ff8244e.scenario.json Web4Requirement');
       return;
     }
 
-    const [uuid, targetPath] = args;
+    let [uuidOrFilename, targetPath] = args;
+    
+    // Extract UUID from filename if needed
+    let uuid = uuidOrFilename;
+    if (uuid.endsWith('.scenario.json')) {
+      uuid = uuid.replace('.scenario.json', '');
+    }
+    
+    // Resolve target path shortcuts
+    if (targetPath === 'Web4Requirement') {
+      targetPath = 'components/Web4Requirement/v1.0';
+    } else if (targetPath === 'Unit') {
+      targetPath = 'components/Unit/latest';
+    }
 
     try {
       const requirement = new DefaultRequirement();

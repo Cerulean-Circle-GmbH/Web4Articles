@@ -142,8 +142,8 @@ export class DefaultRequirement implements Requirement {
 
   async moveToComponent(uuid: string, targetComponentPath: string): Promise<RequirementResult> {
     try {
-      const fs = require('fs').promises;
-      const { execSync } = require('child_process');
+      const fs = await import('fs');
+      const { execSync } = await import('child_process');
       
       // Source paths (current directory context)
       const sourceRequirementsDir = this.getRequirementsDirectory();
@@ -158,12 +158,12 @@ export class DefaultRequirement implements Requirement {
       const targetMDFile = path.join(targetMDDir, `${uuid}.requirement.md`);
       
       // Ensure target directories exist
-      await fs.mkdir(targetRequirementsDir, { recursive: true });
-      await fs.mkdir(targetMDDir, { recursive: true });
+      await fs.promises.mkdir(targetRequirementsDir, { recursive: true });
+      await fs.promises.mkdir(targetMDDir, { recursive: true });
       
       // Check if files exist before moving
-      const scenarioExists = await fs.access(sourceScenarioFile).then(() => true).catch(() => false);
-      const mdExists = await fs.access(sourceMDFile).then(() => true).catch(() => false);
+      const scenarioExists = await fs.promises.access(sourceScenarioFile).then(() => true).catch(() => false);
+      const mdExists = await fs.promises.access(sourceMDFile).then(() => true).catch(() => false);
       
       if (!scenarioExists) {
         return {
