@@ -1,7 +1,1 @@
-### [{{title}}](./{{filename}})
-
-- **UUID:** `{{uuid}}`
-- **Created:** {{createdDate}}
-- **File:** [`{{filename}}`](./{{filename}})
-
----
+1. [{{title}}](./{{filename}}) [requirement:uuid:{{uuid}}] [`{{filename}}`](./{{filename}})

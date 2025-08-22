@@ -106,6 +106,7 @@ cat .devcontainer/devcontainer.json
 ### Step 0: Review PDCA Format Requirements (CRITICAL!)
 **Before creating your PDCA, you MUST review the mandatory format requirements:**
 - **Read:** [PDCA Format Requirements](./pdca-format-requirements-mandatory.md)
+- **Protocol:** [PDCA Prompt Protocol](./pdca-prompt-protocol.md) - What to do when user prompts `pdca`
 - **All 6 sections required:** Header with metadata, Summary with QA decisions, Plan, Do, Check, Act
 - **QA Decisions checkboxes** required in Summary section
 - **Verbatim user feedback** with UTC timestamp required in Check section
@@ -218,13 +219,15 @@ EOF
 ```
 
 ### Step 2: Report to User (CRITICAL!)
-When user asks about your recovery or for a PDCA, respond with:
+When user asks about your recovery or prompts with `pdca`, respond with:
 1. Brief status (1-2 lines max)
 2. Dual format links ONLY:
    ```
    [GitHub](https://github.com/.../pdca/filename.md) | [pdca/filename.md](pdca/filename.md)
    ```
 3. NO lengthy content in chat - it goes in the PDCA file!
+
+**📋 For complete `pdca` prompt protocol:** [PDCA Prompt Protocol](./pdca-prompt-protocol.md)
 
 ### Why This Matters
 - PDCA = Proof of successful recovery
