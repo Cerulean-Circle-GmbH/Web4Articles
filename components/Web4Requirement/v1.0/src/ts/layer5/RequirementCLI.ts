@@ -39,6 +39,9 @@ export class RequirementCLI {
       case 'update':
         await this.handleUpdate(args.slice(1));
         break;
+      case 'mv':
+        await this.handleMove(args.slice(1));
+        break;
       default:
         console.error(`Unknown command: ${command}`);
         this.showUsage();
@@ -140,12 +143,14 @@ export class RequirementCLI {
     console.log('  md         Load requirement from scenario and generate MD view');
     console.log('  set        Set attribute value for existing requirement');
     console.log('  update     Update and regenerate components (overview)');
+    console.log('  mv         Move requirement files to another component');
     console.log('');
     console.log('Examples:');
     console.log('  requirement create "Unit Architecture Fix" "workflows are user role specific screen transitions"');
     console.log('  requirement md 394d5b56-51f0-4ff8-8213-88853f387dfc.scenario.json');
     console.log('  requirement set 12345678-1234-1234-1234-123456789abc implemented true');
     console.log('  requirement update overview');
+    console.log('  requirement mv 37be4307-8b77-4a68-a92f-da203ff8244e ../../../../Web4Requirement/v1.0');
     console.log('');
     console.log('TSRanger Compatible Format:');
     console.log('  Requirement create "description:your requirement text here"');
@@ -226,6 +231,34 @@ export class RequirementCLI {
       }
     } catch (error) {
       console.error(`❌ Failed to update overview: ${(error as Error).message}`);
+    }
+  }
+
+  private async handleMove(args: string[]): Promise<void> {
+    if (args.length < 2) {
+      console.error('❌ UUID and target component path required');
+      console.error('Usage: mv <uuid> <target-component-path>');
+      console.error('Example: mv 37be4307-8b77-4a68-a92f-da203ff8244e ../../../../Web4Requirement/v1.0');
+      return;
+    }
+
+    const [uuid, targetPath] = args;
+
+    try {
+      const requirement = new DefaultRequirement();
+      const result = await requirement.moveToComponent(uuid, targetPath);
+      
+      if (result.success) {
+        console.log(`✅ ${result.message}`);
+        console.log('📋 Both source and target overviews updated');
+      } else {
+        console.error(`❌ ${result.message}`);
+        if (result.issues) {
+          result.issues.forEach(issue => console.error(`   - ${issue}`));
+        }
+      }
+    } catch (error) {
+      console.error(`❌ Failed to move requirement: ${(error as Error).message}`);
     }
   }
 }

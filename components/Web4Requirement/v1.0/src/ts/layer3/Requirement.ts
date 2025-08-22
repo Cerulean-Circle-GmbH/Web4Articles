@@ -84,6 +84,11 @@ export interface Requirement {
   updateOverview(): Promise<RequirementResult>;
   
   /**
+   * Move requirement files to another component
+   */
+  moveToComponent(uuid: string, targetComponentPath: string): Promise<RequirementResult>;
+  
+  /**
    * Serialize requirement state to scenario
    */
   toScenario(): RequirementScenario;
