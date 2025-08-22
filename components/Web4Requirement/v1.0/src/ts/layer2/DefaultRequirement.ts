@@ -251,7 +251,8 @@ export class DefaultRequirement implements Requirement {
 
   async updateOverview(): Promise<RequirementResult> {
     try {
-      const requirementsDir = path.join(process.cwd(), 'spec', 'requirements.md');
+      // Use the same directory context detection as the main component
+      const requirementsDir = this.getRequirementsMDDirectory();
       const overviewPath = path.join(requirementsDir, '00_requirements.overview.md');
       
       // Ensure the requirements.md directory exists
