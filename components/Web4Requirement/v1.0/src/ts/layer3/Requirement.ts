@@ -4,6 +4,7 @@
 
 export interface RequirementScenario {
   uuid: string;
+  name: string;
   title: string;
   description: string;
   status: RequirementStatus;
@@ -61,9 +62,32 @@ export interface Requirement {
   getUuid(): string;
   getTitle(): string;
   getDescription(): string;
+  
+  /**
+   * Name and title accessors
+   */
+  get name(): string;
+  set name(value: string);
+  get title(): string;
+  set title(value: string);
 
   /**
    * Serialize requirement state to scenario
    */
   toScenario(): RequirementScenario;
+  
+  /**
+   * Load requirement from scenario file
+   */
+  loadFromScenario(scenarioPath: string): Promise<RequirementResult>;
+  
+  /**
+   * Generate MD view for requirement
+   */
+  generateMDView(): string;
+  
+  /**
+   * Save MD view to file
+   */
+  saveMDView(outputPath?: string): Promise<RequirementResult>;
 }

@@ -1,0 +1,12 @@
+{
+  "IOR": {
+    "uuid": "30342e7e-9efd-4b70-a46b-9c5bcb363da0",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDAzOjQ1OjQzLjIxOFoiLCJ1dWlkIjoiYTJhZjdmMzgtM2E0Yi00MTUzLWE2M2MtYjU2ZDIxMmZlMGIwIn0=",
+  "model": {
+    "uuid": "30342e7e-9efd-4b70-a46b-9c5bcb363da0",
+    "description": "Testing the Web4Requirement CLI after properly adding ES module support to package.json configuration."
+  }
+}

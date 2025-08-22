@@ -11,10 +11,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # @TODO @CRITICAL: PROJECT_ROOT should be replaced with proper Web4 IOR-based component resolution
 if [ -n "$PROJECT_ROOT" ]; then
     # Use PROJECT_ROOT if available (temporary fix)
-    CLI_PATH="$PROJECT_ROOT/components/Web4Requirement/v1.0/dist/layer5/RequirementCLI.js"
+                CLI_PATH="$PROJECT_ROOT/components/Web4Requirement/v1.0/dist/ts/layer5/RequirementCLI.js"
 else
     # Fallback to script directory (original behavior)
-    CLI_PATH="$SCRIPT_DIR/dist/layer5/RequirementCLI.js"
+                CLI_PATH="$SCRIPT_DIR/dist/ts/layer5/RequirementCLI.js"
 fi
 
 # Check if TypeScript is compiled

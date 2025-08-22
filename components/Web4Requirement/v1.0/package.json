@@ -1,6 +1,7 @@
 {
   "name": "@web4x/web4-requirement",
   "version": "1.0.0",
+  "type": "module",
   "description": "Web4-native requirement tracking and overview generation component",
   "main": "src/ts/layer5/RequirementCLI.ts",
   "scripts": {

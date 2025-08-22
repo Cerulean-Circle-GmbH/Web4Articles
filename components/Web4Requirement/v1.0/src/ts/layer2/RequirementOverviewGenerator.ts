@@ -3,6 +3,9 @@
  * Requirement Overview Generator for requirements.md files
  */
 
+// @TODO @INCOMPLETE: RequirementOverviewGenerator interfaces not yet implemented
+// Commenting out until full architecture is ready
+/*
 import { 
   RequirementOverviewGenerator,
   RequirementOverviewScenario, 
@@ -10,7 +13,11 @@ import {
   RequirementOverview,
   RequirementStatus
 } from '../layer3/Requirement';
+*/
+import { RequirementScenario } from '../layer3/Requirement';
 
+// @TODO @INCOMPLETE: Commenting out until RequirementOverviewGenerator interface is implemented
+/*
 export class DefaultRequirementOverviewGenerator implements RequirementOverviewGenerator {
   private scenario!: RequirementOverviewScenario;
   private requirements: Requirement[] = [];
@@ -112,5 +119,16 @@ export class DefaultRequirementOverviewGenerator implements RequirementOverviewG
     });
     
     return groups;
+  }
+}
+*/
+
+// Minimal stub for future implementation
+export class DefaultRequirementOverviewGenerator {
+  constructor() {}
+  
+  // @TODO @INCOMPLETE: Implement full overview generation
+  generatePlaceholder(): string {
+    return '# Requirements Overview\n\n@TODO: Full implementation pending\n';
   }
 }
