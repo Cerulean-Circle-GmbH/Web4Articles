@@ -9,6 +9,8 @@
     "uuid": "abb91049-fb86-4e13-bf18-1bd3a7e355e8",
     "name": "Fix Overview Item Views Rendering",
     "title": "Fix Overview Item Views Rendering",
-    "description": "The overview does not render the item views of each requirement in the list properly. Double check and fix the overview generation to ensure each requirement is displayed with proper item view templates."
+    "description": "The overview does not render the item views of each requirement in the list properly. Double check and fix the overview generation to ensure each requirement is displayed with proper item view templates.",
+    "implemented": true,
+    "implementationStatus": "completed"
   }
 }

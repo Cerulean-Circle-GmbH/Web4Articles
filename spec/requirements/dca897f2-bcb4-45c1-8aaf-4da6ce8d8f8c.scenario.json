@@ -9,6 +9,8 @@
     "uuid": "dca897f2-bcb4-45c1-8aaf-4da6ce8d8f8c",
     "name": "Fix PDCA Relative File Path Links",
     "title": "Fix PDCA Relative File Path Links",
-    "description": "Double check and fix the relative file links in PDCAs - they need to go one more level up in the directory structure to reach the project root correctly."
+    "description": "Double check and fix the relative file links in PDCAs - they need to go one more level up in the directory structure to reach the project root correctly.",
+    "implemented": true,
+    "implementationStatus": "completed"
   }
 }

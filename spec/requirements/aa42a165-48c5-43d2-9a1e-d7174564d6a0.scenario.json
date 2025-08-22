@@ -9,6 +9,8 @@
     "uuid": "aa42a165-48c5-43d2-9a1e-d7174564d6a0",
     "name": "Missing PDCA for Status Checkbox Implementation",
     "title": "Missing PDCA for Status Checkbox Implementation",
-    "description": "Create PDCA document for the status checkbox functionality implementation that was completed but missing proper PDCA documentation as per established protocol."
+    "description": "Create PDCA document for the status checkbox functionality implementation that was completed but missing proper PDCA documentation as per established protocol.",
+    "implemented": true,
+    "implementationStatus": "completed"
   }
 }

@@ -9,6 +9,8 @@
     "uuid": "7129c033-8564-4550-947a-24c246575c2e",
     "name": "Add Status Checkboxes to Item and Default Views",
     "title": "Add Status Checkboxes to Item and Default Views",
-    "description": "Add status markdown task checkboxes to the item view showing implementation status like '- [ ] Title [requirement:uuid:xxx] filename.md' and add the same task status to the default requirement view. Fill checkbox from requirement implementation status attribute."
+    "description": "Add status markdown task checkboxes to the item view showing implementation status like '- [ ] Title [requirement:uuid:xxx] filename.md' and add the same task status to the default requirement view. Fill checkbox from requirement implementation status attribute.",
+    "implemented": true,
+    "implementationStatus": "completed"
   }
 }

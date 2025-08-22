@@ -9,6 +9,8 @@
     "uuid": "1c74523f-c1c0-499e-afb6-255a6637383b",
     "name": "Organize SVG Files in Dedicated SVG Folder",
     "title": "Organize SVG Files in Dedicated SVG Folder",
-    "description": "Git move the new SVGs to a dedicated svg folder for better organization and separation of PlantUML source files from generated SVG outputs."
+    "description": "Git move the new SVGs to a dedicated svg folder for better organization and separation of PlantUML source files from generated SVG outputs.",
+    "implemented": true,
+    "implementationStatus": "completed"
   }
 }
