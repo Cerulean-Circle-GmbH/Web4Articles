@@ -79,6 +79,11 @@ export interface Requirement {
   set(attribute: string, value: string): Promise<RequirementResult>;
   
   /**
+   * Regenerate requirements overview from scratch
+   */
+  updateOverview(): Promise<RequirementResult>;
+  
+  /**
    * Serialize requirement state to scenario
    */
   toScenario(): RequirementScenario;

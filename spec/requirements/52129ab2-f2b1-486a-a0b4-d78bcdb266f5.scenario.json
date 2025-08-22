@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "52129ab2-f2b1-486a-a0b4-d78bcdb266f5",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDA5OjUyOjE1Ljc2NVoiLCJ1dWlkIjoiMDVjM2RjODYtMmEwMS00OWYzLThjZGMtYmFjMGE5MGU2MTYyIn0=",
+  "model": {
+    "uuid": "52129ab2-f2b1-486a-a0b4-d78bcdb266f5",
+    "name": "Add Update Overview Method",
+    "title": "Add Update Overview Method",
+    "description": "Add updateOverview() method and CLI support for 'requirement.sh update overview' to regenerate requirements overview from scratch, ensuring it reflects the latest status of all requirements."
+  }
+}

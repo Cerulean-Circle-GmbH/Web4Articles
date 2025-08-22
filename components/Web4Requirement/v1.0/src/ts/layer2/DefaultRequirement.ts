@@ -249,6 +249,35 @@ export class DefaultRequirement implements Requirement {
     }
   }
 
+  async updateOverview(): Promise<RequirementResult> {
+    try {
+      const requirementsDir = path.join(process.cwd(), 'spec', 'requirements.md');
+      const overviewPath = path.join(requirementsDir, '00_requirements.overview.md');
+      
+      // Ensure the requirements.md directory exists
+      await fs.mkdir(requirementsDir, { recursive: true });
+      
+      // Generate new overview content
+      const overviewContent = await this.generateRequirementsOverview();
+      
+      // Write the overview file
+      await fs.writeFile(overviewPath, overviewContent, 'utf-8');
+      
+      return {
+        success: true,
+        message: `Requirements overview regenerated successfully at ${overviewPath}`,
+        requirementId: 'overview'
+      };
+      
+    } catch (error) {
+      return {
+        success: false,
+        message: `Failed to update overview: ${(error as Error).message}`,
+        issues: [(error as Error).message]
+      };
+    }
+  }
+
   private async updateScenarioAttribute(attribute: string, value: any): Promise<void> {
     try {
       const scenarioPath = path.join(this.getRequirementsDirectory(), `${this.uuid}.scenario.json`);
