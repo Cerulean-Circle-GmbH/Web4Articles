@@ -12,7 +12,10 @@ export class RequirementCLI {
   private requirement: DefaultRequirement;
 
   constructor() {
+    // Get directory context from environment variable set by shell script
+    const directoryContext = process.env.DIRECTORY_CONTEXT || 'arbitrary:' + process.cwd();
     this.requirement = new DefaultRequirement();
+    (this.requirement as any).setDirectoryContext(directoryContext);
   }
 
   async handleCommand(args: string[]): Promise<void> {
@@ -59,10 +62,9 @@ export class RequirementCLI {
         await this.saveScenario(result.requirementId || 'unknown', result.scenario);
         console.log(`💾 Scenario saved: ${result.requirementId}.scenario.json`);
         
-        // Auto-generate MD view in requirements.md directory (relative to current working directory)
+        // Auto-generate MD view - let DefaultRequirement handle directory structure
         const requirementId = result.requirementId || 'unknown';
-        const mdDirectory = '../requirements.md';
-        const mdResult = await this.requirement.saveMDView(mdDirectory);
+        const mdResult = await this.requirement.saveMDView();
         
         if (mdResult.success) {
           console.log(`📄 MD view auto-generated: ${mdResult.message}`);
@@ -116,15 +118,8 @@ export class RequirementCLI {
   }
 
   private async saveScenario(uuid: string, scenario: any): Promise<void> {
-    const filename = `${uuid}.scenario.json`;
-    const scenarioJSON = JSON.stringify(scenario, null, 2);
-    
-    try {
-      // Save in current working directory
-      await fs.writeFile(filename, scenarioJSON, 'utf-8');
-    } catch (error) {
-      console.error(`Failed to save scenario file: ${(error as Error).message}`);
-    }
+    // Let DefaultRequirement handle the proper directory structure
+    await (this.requirement as any).saveScenario(uuid, scenario);
   }
 
   private showUsage(): void {

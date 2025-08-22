@@ -13,6 +13,9 @@ export class DefaultRequirement implements Requirement {
   private _name: string = '';
   private description: string = '';
   private status: RequirementStatus = RequirementStatus.PENDING;
+  private directoryContext: string = '';
+  private contextType: 'component' | 'arbitrary' = 'arbitrary';
+  private contextPath: string = '';
   
   constructor() { // Web4 empty constructor
   }
@@ -116,12 +119,30 @@ export class DefaultRequirement implements Requirement {
     this._name = value;
   }
   
-  get title(): string {
+    get title(): string {
     return this._name; // Title is an alias for name
   }
-  
+
   set title(value: string) {
     this._name = value; // Setting title updates name
+  }
+
+  // Directory context management
+  setDirectoryContext(context: string): void {
+    this.directoryContext = context;
+    const [type, path] = context.split(':', 2);
+    this.contextType = (type === 'component') ? 'component' : 'arbitrary';
+    this.contextPath = path;
+  }
+
+  private getRequirementsDirectory(): string {
+    // Always create spec/requirements structure
+    return path.join(process.cwd(), 'spec', 'requirements');
+  }
+
+  private getRequirementsMDDirectory(): string {
+    // Always create spec/requirements.md structure  
+    return path.join(process.cwd(), 'spec', 'requirements.md');
   }
 
   async loadFromScenario(scenarioPath: string): Promise<RequirementResult> {
@@ -169,6 +190,23 @@ export class DefaultRequirement implements Requirement {
     }
   }
 
+  async saveScenario(uuid: string, scenario: any): Promise<void> {
+    // Ensure spec/requirements directory exists
+    const requirementsDir = this.getRequirementsDirectory();
+    await fs.mkdir(requirementsDir, { recursive: true });
+    
+    const filename = path.join(requirementsDir, `${uuid}.scenario.json`);
+    const scenarioJSON = JSON.stringify(scenario, null, 2);
+    
+    try {
+      await fs.writeFile(filename, scenarioJSON, 'utf-8');
+      console.log(`📁 Directory: ${requirementsDir}`);
+    } catch (error) {
+      console.error(`Failed to save scenario file: ${(error as Error).message}`);
+      throw error;
+    }
+  }
+
   generateMDView(): string {
     const templatePath = path.join(__dirname, '../../../views/md/default.view.md');
     
@@ -191,30 +229,27 @@ export class DefaultRequirement implements Requirement {
 
   async saveMDView(outputPath?: string): Promise<RequirementResult> {
     try {
-      const filename = `${this.uuid}.requirement.md`;
-      const filePath = outputPath ? path.join(outputPath, filename) : filename;
-      
-      // Ensure output directory exists
-      if (outputPath) {
-        await fs.mkdir(outputPath, { recursive: true });
-      }
-      
       const mdContent = this.generateMDView();
-      await fs.writeFile(filePath, mdContent, 'utf-8');
+      const filename = `${this.uuid}.requirement.md`;
       
-      // Update requirements overview
-      if (outputPath) {
-        await this.updateRequirementsOverview(outputPath);
-      }
+      // Use spec/requirements.md directory structure
+      const mdDirectory = this.getRequirementsMDDirectory();
+      await fs.mkdir(mdDirectory, { recursive: true });
       
-      return {
-        success: true,
-        message: `MD view saved: ${filePath}`,
+      const finalOutputPath = path.join(mdDirectory, filename);
+      await fs.writeFile(finalOutputPath, mdContent, 'utf-8');
+      
+      // Always update requirements overview in spec structure
+      await this.updateRequirementsOverview(mdDirectory);
+      
+      return { 
+        success: true, 
+        message: `MD view saved: ${finalOutputPath}`,
         requirementId: this.uuid
       };
     } catch (error) {
-      return {
-        success: false,
+      return { 
+        success: false, 
         message: `Failed to save MD view: ${(error as Error).message}`,
         issues: [(error as Error).message]
       };

@@ -90,4 +90,6 @@ export interface Requirement {
    * Save MD view to file
    */
   saveMDView(outputPath?: string): Promise<RequirementResult>;
+  setDirectoryContext(context: string): void;
+  saveScenario(uuid: string, scenario: any): Promise<void>;
 }
