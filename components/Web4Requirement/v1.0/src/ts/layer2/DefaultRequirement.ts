@@ -156,7 +156,7 @@ export class DefaultRequirement implements Requirement {
       const sourceScenarioFile = path.join(sourceRequirementsDir, `${uuid}.scenario.json`);
       const sourceMDFile = path.join(sourceMDDir, `${uuid}.requirement.md`);
       
-      // Target paths (resolve relative to project root if needed)
+      // Target paths (resolve relative to project root)
       let resolvedTargetPath = targetComponentPath;
       if (!path.isAbsolute(targetComponentPath)) {
         // Find project root by looking for a components directory in parent dirs
@@ -166,6 +166,7 @@ export class DefaultRequirement implements Requirement {
           if (parent === projectRoot) break; // reached filesystem root
           projectRoot = parent;
         }
+        // Use absolute path from project root
         resolvedTargetPath = path.join(projectRoot, targetComponentPath);
       }
       
