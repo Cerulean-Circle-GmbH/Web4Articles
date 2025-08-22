@@ -1,68 +1,37 @@
 /**
- * Layer 3: Interface Definition
- * Web4 Requirement interface contracts
+ * Web4Requirement Interface - Layer 3 (Interface/Contract)
  */
 
-export enum RequirementStatus {
-  PENDING = 'pending',
-  IN_PROGRESS = 'in_progress', 
-  COMPLETED = 'completed',
-  CANCELLED = 'cancelled'
-}
-
-export enum RequirementPriority {
-  CRITICAL = 'critical',
-  HIGH = 'high',
-  MEDIUM = 'medium',
-  LOW = 'low'
-}
-
-export interface RequirementMetadata {
+export interface RequirementScenario {
   uuid: string;
   title: string;
   description: string;
   status: RequirementStatus;
-  priority: RequirementPriority;
+  metadata: RequirementMetadata;
   createdAt: string;
   updatedAt: string;
-  assignedTo?: string;
-  epic?: string;
-  sprint?: string;
 }
 
-export interface RequirementTraceability {
-  testIORs: IOR[];
-  featureIORs: IOR[];
-  componentIORs: IOR[];
-  versionIORs: IOR[];
-  unitIORs: IOR[];
-  dependencyIORs: IOR[];
+export interface RequirementMetadata {
+  priority: 'high' | 'medium' | 'low';
+  complexity: 'simple' | 'moderate' | 'complex';
+  tags: string[];
 }
 
-export interface RequirementScenario {
-  metadata: RequirementMetadata;
-  traceability: RequirementTraceability;
-  acceptanceCriteria: string[];
-  businessRules: string[];
-  constraints: string[];
-  assumptions: string[];
+export interface RequirementResult {
+  success: boolean;
+  message: string;
+  requirementId?: string;
+  scenario?: any;
+  issues?: string[];
 }
 
-export interface RequirementOverview {
-  requirements: RequirementMetadata[];
-  completionStats: {
-    total: number;
-    completed: number;
-    inProgress: number;
-    pending: number;
-    percentage: number;
-  };
-  priorityBreakdown: {
-    critical: number;
-    high: number;
-    medium: number;
-    low: number;
-  };
+export enum RequirementStatus {
+  PENDING = 'pending',
+  CREATED = 'created', 
+  IN_PROGRESS = 'in-progress',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled'
 }
 
 export interface Requirement {
@@ -70,81 +39,31 @@ export interface Requirement {
    * Web4 scenario initialization
    */
   init(scenario: RequirementScenario): this;
-  
+
   /**
-   * Get requirement metadata
+   * Create new requirement from title and description
    */
-  getMetadata(): RequirementMetadata;
-  
+  create(title: string, description: string): Promise<RequirementResult>;
+
   /**
-   * Update requirement status
+   * Execute requirement processing
    */
-  updateStatus(status: RequirementStatus): void;
-  
+  process(): Promise<RequirementResult>;
+
   /**
-   * Add test traceability
+   * Get requirement status
    */
-  addTestReference(testIOR: IOR): void;
-  
+  getStatus(): RequirementStatus;
+
   /**
-   * Get all traceability references
+   * Get requirement attributes
    */
-  getTraceability(): RequirementTraceability;
-  
+  getUuid(): string;
+  getTitle(): string;
+  getDescription(): string;
+
   /**
-   * Generate MDView representation
-   */
-  generateMDView(): string;
-  
-  /**
-   * Serialize component state to scenario
+   * Serialize requirement state to scenario
    */
   toScenario(): RequirementScenario;
-}
-
-export interface RequirementOverviewGenerator {
-  /**
-   * Web4 scenario initialization
-   */
-  init(scenario: RequirementOverviewScenario): this;
-  
-  /**
-   * Add requirement to overview
-   */
-  addRequirement(requirement: Requirement): void;
-  
-  /**
-   * Generate complete requirements.md overview
-   */
-  generateOverviewMD(): string;
-  
-  /**
-   * Get overview statistics
-   */
-  getOverview(): RequirementOverview;
-  
-  /**
-   * Serialize component state to scenario
-   */
-  toScenario(): RequirementOverviewScenario;
-}
-
-export interface RequirementOverviewScenario {
-  title: string;
-  description: string;
-  requirementIORs: IOR[];
-  template: string;
-  formatOptions: {
-    includeCheckboxes: boolean;
-    includeUUIDs: boolean;
-    includePriority: boolean;
-    includeStatus: boolean;
-  };
-}
-
-export interface IOR {
-  uuid: string;
-  type: string;
-  location: string;
-  resolve(): Promise<any>;
 }

@@ -1,19 +1,11 @@
-/**
- * Layer 2: Implementation
- * Default implementation of Web4 Requirement
- */
-
-import { 
-  Requirement, 
-  RequirementScenario, 
-  RequirementMetadata, 
-  RequirementTraceability,
-  RequirementStatus,
-  IOR 
-} from '../layer3/Requirement';
+import { Requirement, RequirementScenario, RequirementResult, RequirementStatus, RequirementMetadata } from '../layer3/Requirement.js';
 
 export class DefaultRequirement implements Requirement {
   private scenario!: RequirementScenario;
+  private uuid: string = '';
+  private title: string = '';
+  private description: string = '';
+  private status: RequirementStatus = RequirementStatus.PENDING;
   
   constructor() { // Web4 empty constructor
   }
@@ -22,68 +14,87 @@ export class DefaultRequirement implements Requirement {
     this.scenario = scenario;
     return this;
   }
+
+  async create(title: string, description: string): Promise<RequirementResult> {
+    this.uuid = this.generateUUID();
+    this.title = title;
+    this.description = description;
+    this.status = RequirementStatus.CREATED;
+
+    const scenario = this.createScenarioJSON();
+    
+    return {
+      success: true,
+      requirementId: this.uuid,
+      scenario: scenario,
+      message: 'Requirement created successfully'
+    };
+  }
+
+  getUuid(): string {
+    return this.uuid;
+  }
+
+  getTitle(): string {
+    return this.title;
+  }
+
+  getDescription(): string {
+    return this.description;
+  }
   
   getMetadata(): RequirementMetadata {
     return { ...this.scenario.metadata };
   }
   
-  updateStatus(status: RequirementStatus): void {
-    this.scenario.metadata.status = status;
-    this.scenario.metadata.updatedAt = new Date().toISOString();
+  async process(): Promise<RequirementResult> {
+    return {
+      success: true,
+      message: 'Requirement processed successfully',
+      requirementId: this.uuid
+    };
   }
   
-  addTestReference(testIOR: IOR): void {
-    if (!this.scenario.traceability.testIORs) {
-      this.scenario.traceability.testIORs = [];
-    }
-    this.scenario.traceability.testIORs.push(testIOR);
-  }
-  
-  getTraceability(): RequirementTraceability {
-    return { ...this.scenario.traceability };
-  }
-  
-  generateMDView(): string {
-    const { metadata } = this.scenario;
-    const statusIcon = this.getStatusIcon(metadata.status);
-    const priorityLabel = metadata.priority.toUpperCase();
-    
-    let mdView = `- [${statusIcon}] **${metadata.title}**  \n`;
-    mdView += `  [requirement:uuid:${metadata.uuid}]\n`;
-    
-    if (metadata.epic) {
-      mdView += `  ([${metadata.epic}](./${metadata.epic}.md))\n`;
-    }
-    
-    mdView += `  > ${metadata.description}\n`;
-    
-    if (this.scenario.acceptanceCriteria.length > 0) {
-      mdView += `\n  **Acceptance Criteria:**\n`;
-      this.scenario.acceptanceCriteria.forEach(criteria => {
-        mdView += `  - [ ] ${criteria}\n`;
-      });
-    }
-    
-    if (this.scenario.traceability.testIORs.length > 0) {
-      mdView += `\n  **Test Coverage:**\n`;
-      this.scenario.traceability.testIORs.forEach(testIOR => {
-        mdView += `  - [test:uuid:${testIOR.uuid}](${testIOR.location})\n`;
-      });
-    }
-    
-    return mdView;
+  getStatus(): RequirementStatus {
+    return this.status;
   }
   
   toScenario(): RequirementScenario {
-    return JSON.parse(JSON.stringify(this.scenario));
+    return this.scenario;
   }
-  
-  private getStatusIcon(status: RequirementStatus): string {
-    switch (status) {
-      case RequirementStatus.COMPLETED: return 'x';
-      case RequirementStatus.IN_PROGRESS: return '~';
-      case RequirementStatus.CANCELLED: return '-';
-      default: return ' ';
-    }
+
+  private generateUUID(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0;
+      const v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+  private createScenarioJSON(): any {
+    const hostname = process.env.HOSTNAME || 'localhost';
+    const user = process.env.USER || 'unknown';
+    const utcTimestamp = new Date().toISOString();
+    const ownerUuid = this.generateUUID();
+
+    const owner = {
+      user,
+      hostname,
+      utcTimestamp,
+      uuid: ownerUuid
+    };
+
+    return {
+      IOR: {
+        uuid: this.uuid,
+        component: 'Web4Requirement',
+        version: 'v1.0'
+      },
+      owner: Buffer.from(JSON.stringify(owner)).toString('base64'),
+      model: {
+        uuid: this.uuid,
+        description: this.description
+      }
+    };
   }
 }
