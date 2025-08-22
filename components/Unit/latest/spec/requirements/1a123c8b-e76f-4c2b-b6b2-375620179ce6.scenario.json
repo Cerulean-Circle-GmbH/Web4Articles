@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "1a123c8b-e76f-4c2b-b6b2-375620179ce6",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDA0OjAzOjA2Ljk2OVoiLCJ1dWlkIjoiZjJlNmUzYjctNzRlNi00YmEzLWI2ZTUtNzc4NGZjNjljOTBkIn0=",
+  "model": {
+    "uuid": "1a123c8b-e76f-4c2b-b6b2-375620179ce6",
+    "name": "Git Commit After Every PDCA",
+    "title": "Git Commit After Every PDCA",
+    "description": "Add, commit and push after every PDCA to ensure proper version control and traceability, enabling Web4 business process rollback capabilities."
+  }
+}

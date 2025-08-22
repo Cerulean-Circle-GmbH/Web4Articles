@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "828df0b6-28cf-4628-8abc-fd4d46ce994e",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDA0OjAyOjM4LjE2MFoiLCJ1dWlkIjoiZjViNWM3ZTYtY2M5ZC00ZTg5LTk5YzAtYWFhMTVjMTNmZGUwIn0=",
+  "model": {
+    "uuid": "828df0b6-28cf-4628-8abc-fd4d46ce994e",
+    "name": "Web4Requirement CLI Enhancement",
+    "title": "Web4Requirement CLI Enhancement",
+    "description": "Improve the Web4Requirement component in a way that you can create a Web4Requirement from calling the sh file requirement.sh that starts Web4Requirement component and takes the prosaRequirement-value as CLI input."
+  }
+}
