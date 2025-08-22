@@ -140,6 +140,92 @@ export class DefaultRequirement implements Requirement {
     return path.join(process.cwd(), 'spec', 'requirements');
   }
 
+  async moveToComponent(uuid: string, targetComponentPath: string): Promise<RequirementResult> {
+    try {
+      const fs = require('fs').promises;
+      const { execSync } = require('child_process');
+      
+      // Source paths (current directory context)
+      const sourceRequirementsDir = this.getRequirementsDirectory();
+      const sourceMDDir = this.getRequirementsMDDirectory();
+      const sourceScenarioFile = path.join(sourceRequirementsDir, `${uuid}.scenario.json`);
+      const sourceMDFile = path.join(sourceMDDir, `${uuid}.requirement.md`);
+      
+      // Target paths
+      const targetRequirementsDir = path.join(targetComponentPath, 'spec', 'requirements');
+      const targetMDDir = path.join(targetComponentPath, 'spec', 'requirements.md');
+      const targetScenarioFile = path.join(targetRequirementsDir, `${uuid}.scenario.json`);
+      const targetMDFile = path.join(targetMDDir, `${uuid}.requirement.md`);
+      
+      // Ensure target directories exist
+      await fs.mkdir(targetRequirementsDir, { recursive: true });
+      await fs.mkdir(targetMDDir, { recursive: true });
+      
+      // Check if files exist before moving
+      const scenarioExists = await fs.access(sourceScenarioFile).then(() => true).catch(() => false);
+      const mdExists = await fs.access(sourceMDFile).then(() => true).catch(() => false);
+      
+      if (!scenarioExists) {
+        return {
+          success: false,
+          message: `Scenario file not found: ${sourceScenarioFile}`,
+          issues: [`File ${uuid}.scenario.json does not exist in source location`]
+        };
+      }
+      
+      // Use git mv to move files (preserves history)
+      try {
+        execSync(`git mv "${sourceScenarioFile}" "${targetScenarioFile}"`, { stdio: 'pipe' });
+        
+        if (mdExists) {
+          execSync(`git mv "${sourceMDFile}" "${targetMDFile}"`, { stdio: 'pipe' });
+        }
+      } catch (gitError) {
+        return {
+          success: false,
+          message: `Git mv failed: ${(gitError as Error).message}`,
+          issues: [`Failed to move files with git mv`]
+        };
+      }
+      
+      // Update both overviews
+      try {
+        // Update source overview (current location)
+        await this.updateOverview();
+        
+        // Update target overview by setting DIRECTORY_CONTEXT
+        const originalContext = process.env.DIRECTORY_CONTEXT;
+        process.env.DIRECTORY_CONTEXT = targetComponentPath;
+        
+        const targetRequirement = new DefaultRequirement();
+        await targetRequirement.updateOverview();
+        
+        // Restore original context
+        if (originalContext) {
+          process.env.DIRECTORY_CONTEXT = originalContext;
+        } else {
+          delete process.env.DIRECTORY_CONTEXT;
+        }
+        
+      } catch (overviewError) {
+        console.warn(`Failed to update overviews: ${(overviewError as Error).message}`);
+      }
+      
+      return {
+        success: true,
+        message: `Requirement ${uuid} moved successfully to ${targetComponentPath}`,
+        requirementId: uuid
+      };
+      
+    } catch (error) {
+      return {
+        success: false,
+        message: `Failed to move requirement: ${(error as Error).message}`,
+        issues: [(error as Error).message]
+      };
+    }
+  }
+
   private getRequirementsMDDirectory(): string {
     // Always create spec/requirements.md structure  
     return path.join(process.cwd(), 'spec', 'requirements.md');
