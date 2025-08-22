@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "b5750c77-adc1-4e08-aa6f-2b2d1f869530",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDA3OjUyOjExLjEzMFoiLCJ1dWlkIjoiOTQ3NTcwMmUtOTY5YS00M2E5LWE3NmQtMmRjZjMzZGRlNWRlIn0=",
+  "model": {
+    "uuid": "b5750c77-adc1-4e08-aa6f-2b2d1f869530",
+    "name": "Test Overview Regeneration After Status Updates",
+    "title": "Test Overview Regeneration After Status Updates",
+    "description": "Trigger overview regeneration to test if updated implementation status correctly shows checked checkboxes for completed requirements."
+  }
+}
