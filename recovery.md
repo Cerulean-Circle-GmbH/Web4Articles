@@ -1,5 +1,24 @@
 # Recovery Log
 
+## PDCA-Based Recovery Cycles
+
+For complex recovery scenarios, detailed PDCA cycles provide comprehensive documentation:
+
+### When to Use PDCA Recovery:
+- Multi-role coordination failures
+- Major merge conflicts requiring analysis
+- Sprint recovery after significant disruption
+- Architecture-level recovery decisions
+
+### Recent PDCA Recovery Cycles:
+- [2025-08-24 Merge Integration](temp/2025-08-24-UTC-1845-merge-retrospective-analysis.md)
+- See role-specific PDCA folders: `scrum.pmo/roles/*/PDCA/`
+
+### Quick Recovery (Original Format):
+For simple context recovery, continue using the log entries below.
+
+---
+
 ## 2025-08-04
 
 **Summary:**
