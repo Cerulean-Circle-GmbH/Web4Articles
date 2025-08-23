@@ -45,7 +45,10 @@
 - [ ] Follow-up required: [Another pending decision]
 
 ### **TRON Feedback (YYYY-MM-DD-UTC-HHMM)**
-> **"[EXACT VERBATIM QUOTE FROM TRON - NEVER PARAPHRASE]"**
+```quote
+[EXACT VERBATIM QUOTE FROM TRON - NEVER PARAPHRASE]
+[PRESERVES LINE BREAKS, SPACING, NUMBERING EXACTLY]
+```
 
 **Learning Applied:** [Key insight from TRON's guidance]
 ```
@@ -170,9 +173,11 @@
 - **Never skip dual links** in chat responses - critical for user navigation
 
 ### **User Feedback Integration (CRITICAL):**
+- **Use markdown code block format** ```quote``` for all TRON quotes to preserve formatting
 - **Copy feedback verbatim** with UTC ISO-8601 timestamp [[memory:5704634]]
 - **Never summarize or paraphrase** user feedback [[memory:5702525]]
 - **Quote word by word what user prompted** - never reformulate or summarize
+- **Preserve line breaks, spacing, numbering** exactly as TRON provided
 - **Include literal QA feedback quote** at top of Check section [[memory:5702525]]
 - **Single TRON session** in header is sufficient - don't repeat throughout document
 
@@ -270,22 +275,46 @@
 ## **AMBIGUITIES & QA DECISIONS REQUIRED**
 
 ### **Outstanding Questions:**
-- [ ] **Template Standardization:** Should all roles use identical PDCA format or allow role-specific variations?
-- [ ] **Emotional Section Scope:** Required for all PDCAs or only complex/significant ones?
-- [ ] **Link Validation:** Automated checking vs manual verification for GitHub links?
-- [ ] **Version Integration:** How to integrate component versioning with PDCA process?
-- [ ] **Recovery Integration:** PDCA format requirements integration with recovery processes?
+- [ ] **Template Standardization:** 
+  a) All roles use identical PDCA format
+  b) Allow role-specific variations
+- [ ] **Emotional Section Scope:** 
+  a) Required for all PDCAs
+  b) Only for complex/significant ones
+- [ ] **Link Validation:** 
+  a) Automated checking for GitHub links
+  b) Manual verification approach
+- [ ] **Version Integration:** 
+  a) Integrate component versioning with PDCA process
+  b) Keep versioning separate from PDCA
+- [ ] **Recovery Integration:** 
+  a) Full PDCA format requirements in recovery
+  b) Simplified format for recovery scenarios
 
 ### **Format Evolution Decisions:**
-- [ ] **Template Updates:** Should template.md reflect latest format requirements?
-- [ ] **Process Documentation:** Integration level between howto and mandatory requirements?
-- [ ] **Role Training:** How to ensure all roles understand latest format requirements?
-- [ ] **Quality Assurance:** Automated validation vs manual review processes?
+- [ ] **Template Updates:** 
+  a) Template.md should reflect latest format requirements
+  b) Keep template basic with separate detailed guidelines
+- [ ] **Process Documentation:** 
+  a) Full integration between howto and mandatory requirements
+  b) Separate documents for different complexity levels
+- [ ] **Role Training:** 
+  a) Mandatory format training for all roles
+  b) Role-specific format adaptations allowed
+- [ ] **Quality Assurance:** 
+  a) Automated validation processes
+  b) Manual review processes
 
 ### **Communication Protocol:**
-- [ ] **Chat Response Length:** Optimal balance between brevity and completeness?
-- [ ] **Link Presentation:** Standard format for presenting multiple dual links?
-- [ ] **Feedback Integration:** Best practices for handling complex user feedback?
+- [ ] **Chat Response Length:** 
+  a) Brief responses with links and decisions only
+  b) Moderate responses with key context included
+- [ ] **Link Presentation:** 
+  a) Standard dual-link format for all artifacts
+  b) Abbreviated format for multiple links
+- [ ] **Feedback Integration:** 
+  a) Code block format for all user quotes
+  b) Traditional quote format for simple feedback
 
 ---
 
