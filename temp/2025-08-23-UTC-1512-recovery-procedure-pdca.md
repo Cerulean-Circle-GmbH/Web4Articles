@@ -15,10 +15,10 @@
 
 ### **QA Decisions**
 - [x] Completed decision: Document recovery procedure for "start" command
-- [ ] **Decision 1: Recovery Procedure Location**
+- [x] **Decision 1: Recovery Procedure Location** → **Selected: c**
   - a) Keep in BackendAgent role directory for agent-specific recovery
   - b) Move to _shared directory for all agents to access
-  - c) Create dedicated recovery directory for all recovery procedures
+  - c) Create dedicated recovery directory for all recovery procedures ✅
 
 ### **TRON Feedback (2025-08-23-UTC-1510)**
 ```quote

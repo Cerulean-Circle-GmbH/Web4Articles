@@ -6,6 +6,20 @@
 
 This Project will create a md-file based WIKI for CIRAS Project articles
 
+## 🔄 Quick Start Recovery
+
+When starting with the command "start", agents should:
+
+1. **Check PDCA Setup**: `ls -la scrum.pmo/roles/_shared/PDCA/howto.PDCA.md`
+2. **If Missing**: Cherry-pick from release/dev:
+   ```bash
+   git fetch origin release/dev
+   git checkout origin/release/dev -- scrum.pmo/roles/_shared/PDCA/
+   ```
+3. **Follow Recovery Procedure**: See [recovery/start-command.md](recovery/start-command.md)
+
+For detailed recovery procedures, check the `/recovery` directory.
+
 
 
 - Jest is strictly forbidden in this project. Do not add, configure, or use Jest or any related files. Remove any Jest config or code immediately if found.

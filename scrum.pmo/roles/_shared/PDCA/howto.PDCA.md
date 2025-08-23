@@ -169,6 +169,12 @@
 1. **Immediate commit and push** after every PDCA creation [[memory:6902297]]
 2. **Git add, commit, and push operations** ensure proper version control [[memory:6902297]]
 3. **One-liner commit messages** with `git commit -m "..."` [[memory:6713745]]
+4. **Auto-merge to release/dev** after each PDCA commit (use pdca-auto-merge.sh)
+5. **File not found?** Always check release/dev and cherry-pick if missing:
+   ```bash
+   git fetch origin release/dev
+   git checkout origin/release/dev -- path/to/missing/file
+   ```
 
 ---
 
