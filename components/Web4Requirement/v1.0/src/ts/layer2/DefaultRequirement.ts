@@ -1,7 +1,7 @@
 import { Requirement, RequirementScenario, RequirementResult, RequirementStatus, RequirementMetadata } from '../layer3/Requirement.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { DefaultUser } from '../../../../User/latest/src/ts/layer2/DefaultUser.js';
+// import { DefaultUser } from '../../../../User/latest/src/ts/layer2/DefaultUser.js';
 
 export class DefaultRequirement implements Requirement {
   private scenario!: RequirementScenario;
@@ -75,7 +75,18 @@ export class DefaultRequirement implements Requirement {
   }
 
   private createScenarioJSON(): any {
-    const ownerObject = DefaultUser.getOwnerObject();
+    // const ownerObject = DefaultUser.getOwnerObject();
+    const hostname = process.env.HOSTNAME || 'localhost';
+    const user = process.env.USER || 'unknown';
+    const utcTimestamp = new Date().toISOString();
+    const ownerUuid = this.generateUUID();
+
+    const ownerObject = {
+      user,
+      hostname,
+      utcTimestamp,
+      uuid: ownerUuid
+    };
     
     return {
       IOR: {
