@@ -191,6 +191,8 @@
 - **"Much in files, relevant links in chat"** - TRON's explicit instruction
 - **Never skip dual links** in chat responses - critical for user navigation
 - **Always number decisions** with a) b) options for easy user response
+- **CRITICAL:** Use EXACT same link format as in PDCA: `[GitHub](URL) | [path](path)`
+- **NO summaries or explanations** in chat - just links and decisions!
 
 ### **User Feedback Integration (CRITICAL):**
 - **Use markdown code block format** ```quote``` for all TRON quotes to preserve formatting
