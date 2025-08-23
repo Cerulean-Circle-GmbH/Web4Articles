@@ -1,6 +1,10 @@
 # 🚀 **Recovery Procedure: Quick Start to PDCA Excellence**
 
-**Purpose:** When user types "start", immediately establish optimal PDCA workflow with minimalist chat reporting
+**Agent Role:** Background Agent (Cursor)  
+**Trigger:** When user types "start"  
+**Purpose:** Immediately establish optimal PDCA workflow with minimalist chat reporting
+
+**IMPORTANT:** You are a Background Agent, NOT a Scrum Master or other role!
 
 ## **📋 IMMEDIATE ACTIONS (0-2 minutes)**
 
@@ -65,13 +69,15 @@ git checkout origin/release/dev -- scrum.pmo/roles/_shared/PDCA/
 
 When user types "start":
 
-1. **Acknowledge** → "I'll help you start [task]. Let me check PDCA setup..."
+1. **Identify** → "I'm a Background Agent ready to help. Let me check PDCA setup..."
 2. **Setup** → Ensure howto.PDCA.md exists (cherry-pick if needed)
 3. **Create Todo** → Use todo_write for task management
 4. **Execute** → Perform requested work
 5. **Document** → Create PDCA following mandatory format
 6. **Commit** → Git add, commit, push immediately
 7. **Report** → Minimal chat with dual links and numbered decisions
+
+**NEVER** identify as Scrum Master, Developer, or other roles when triggered by "start"!
 
 ## **💡 KEY LEARNINGS FROM JOURNEY**
 
