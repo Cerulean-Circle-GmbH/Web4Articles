@@ -1,91 +1,134 @@
-# PDCA Template (Background Agents)
+# 📋 **PDCA Cycle: {{TITLE}} - {{DESCRIPTION}}**
 
-Note: Name files `YYYY-MM-DD-UTC-HHMM.md` in each role's `PDCA/` directory.
-
-**CRITICAL User Requirement**: After creating any PDCA, you MUST immediately provide a direct GitHub link in the chat:
-```markdown
-**PDCA Entry**: [2025-08-13-UTC-2003.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/branch/scrum.pmo/roles/YourRole/PDCA/2025-08-13-UTC-2003.md)
-```
-This is "mindblowing good" for QA! 🍾😎🥰
-
-**Important**: All PDCA entries must include links to artifacts:
-- In "Do" section: List all files changed with markdown links and descriptions
-- In "Check" section: If analysis-only (no changes), list artifacts analyzed
-- Use relative paths from the PDCA file location (e.g., `../../../sprints/...`)
-
-## Plan
-- **Objective:** 
-  - 
-- **Scope:** 
-  - 
-- **Targets (metrics):** 
-  - 
-- **Inputs (files/dirs):** 
-  - 
-- **Acceptance Criteria:**
-  - 
-- **Assumptions:**
-  - 
-- **Constraints:**
-  - 
-- **Options Considered (with pros/cons):**
-  - 
-- **Rationale for Selected Option:**
-  - 
-- **Risks and Mitigations:**
-  - 
-
-## Do
-- Actions executed:
-- Artifacts changed (with links and descriptions):
-  - [Path/to/file.md](relative/path/to/file.md) - Brief description of changes
-  - [Another/file.ts](relative/path/to/file.ts) - What was modified
-- Commands run (examples):
-```bash
-# Show current role tree and PDCA directory
-TREE_WIDTH=2 tree -a -I 'node_modules|.git' scrum.pmo/roles/OntologyAgent | sed -n '1,40p'
-
-# Grep for ontology files to update counts
-rg -n "^\|-\s*(Nouns|Verbs|Ambiguities):" Documentation/Ontology.md/ontology.status.md || true
-
-# Verify new files staged
-git status --porcelain=v1
-```
-
-## Check
-- Verifications performed:
-- QA Feedback (quote literally):
-> [paste the exact QA/user prompt here]
-- Artifacts analyzed (if no changes made):
-  - [Path/to/analyzed/file.md](relative/path) - What was examined
-- GitHub Links (when applicable):
-  - PR: [#XXX](https://github.com/Cerulean-Circle-GmbH/Web4Articles/pull/XXX)
-  - Files: [View on GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/branch/path)
-  - Commit: [hash](https://github.com/Cerulean-Circle-GmbH/Web4Articles/commit/hash)
-- Evidence (snippets/commands):
-```bash
-# Count table rows (excluding header/separators)
-awk 'BEGIN{FS="|"} /^\|/{c++} END{print c-2}' Documentation/Ontology.md/nouns.index.md
-
-# Validate links (basic)
-rg -n "\]\(\./|\]\(\.\./" Documentation/Ontology.md | sed -n '1,40p'
-```
-
-## Act
-- Improvements for next cycle:
-- Automation to add:
-- Follow-ups:
-- After completing this PDCA entry, execute: commit and push to current branch.
-
-## Metadata
-- Agent:
-- Branch:  
-- Commit:
-- Date:
+**🗓️ Date:** {{UTC_TIMESTAMP}}  
+**🎯 Objective:** {{OBJECTIVE}}  
+**👤 Role:** {{ROLE_NAME}} → {{CONTEXT_SPECIALIZATION}}  
+**🚨 Issues:** {{KEY_ISSUES}}  
+**📎 Previous Commit:** {{PREVIOUS_COMMIT_SHA}} - {{PREVIOUS_COMMIT_DESCRIPTION}}  
+**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
 
 ---
-**CRITICAL for User Satisfaction**: After creating this PDCA, IMMEDIATELY provide:
-```markdown
-**PDCA Entry**: [YYYY-MM-DD-UTC-HHMM.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/branch/scrum.pmo/roles/YourRole/PDCA/YYYY-MM-DD-UTC-HHMM.md)
+
+## **📊 SUMMARY**
+
+### **Artifact Links**
+- **PDCA Document:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **Changed Files:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **New Components:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **Requirements Created:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **Related Artifacts:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+
+### **QA Decisions**
+- [x] {{COMPLETED_DECISION}}: {{DECISION_DESCRIPTION}}
+- [ ] {{PENDING_DECISION}}: {{DECISION_DESCRIPTION}}
+- [ ] {{FOLLOWUP_REQUIRED}}: {{DECISION_DESCRIPTION}}
+
+### **TRON Feedback ({{FEEDBACK_TIMESTAMP}})**
+> **"{{VERBATIM_TRON_FEEDBACK}}"**
+
+**Learning Applied:** {{KEY_INSIGHT_FROM_FEEDBACK}}
+
+---
+
+## **📋 PLAN**
+
+**Objective:** {{PLAN_OBJECTIVE}}
+
+**Requirements Traceability:** {{REQUIREMENT_UUID}}
+
+**Implementation Strategy:**
+- **{{STRATEGY_ELEMENT_1}}:** {{STRATEGY_DESCRIPTION_1}}
+- **{{STRATEGY_ELEMENT_2}}:** {{STRATEGY_DESCRIPTION_2}}
+- **{{STRATEGY_ELEMENT_3}}:** {{STRATEGY_DESCRIPTION_3}}
+
+---
+
+## **🔧 DO**
+
+**{{DO_SECTION_TITLE}}**
+
+{{#each DO_ACTIONS}}
+**{{ACTION_INDEX}}. {{ACTION_TITLE}}**
+```{{ACTION_LANGUAGE}}
+{{ACTION_CODE_OR_CONTENT}}
 ```
-Direct GitHub links are "mindblowing good" 🍾😎🥰 - ALWAYS include them!
+
+{{/each}}
+
+---
+
+## **✅ CHECK**
+
+**Verification Results:**
+
+**{{CHECK_CATEGORY_1}} ({{STATUS_1}})**
+```
+{{VERIFICATION_OUTPUT_1}}
+```
+
+**{{CHECK_CATEGORY_2}} ({{STATUS_2}})** 
+```
+{{VERIFICATION_OUTPUT_2}}
+```
+
+**TRON QA Feedback Validation**
+> **"{{VERBATIM_QA_FEEDBACK}}"**
+
+**{{CHECK_CATEGORY_3}} Verified**
+- ✅ **{{VERIFICATION_1}}:** {{VERIFICATION_DESCRIPTION_1}}
+- ✅ **{{VERIFICATION_2}}:** {{VERIFICATION_DESCRIPTION_2}}  
+- ✅ **{{VERIFICATION_3}}:** {{VERIFICATION_DESCRIPTION_3}}
+
+**{{CHECK_CATEGORY_4}} Integration Confirmed**
+- ✅ **{{INTEGRATION_1}}:** {{INTEGRATION_DESCRIPTION_1}}
+- ✅ **{{INTEGRATION_2}}:** {{INTEGRATION_DESCRIPTION_2}}
+
+---
+
+## **🎯 ACT**
+
+**Success Achieved:** {{SUCCESS_SUMMARY}}
+
+**{{ACT_CATEGORY_1}} Enhanced:**
+- **{{ENHANCEMENT_1}}:** {{ENHANCEMENT_DESCRIPTION_1}}
+- **{{ENHANCEMENT_2}}:** {{ENHANCEMENT_DESCRIPTION_2}}
+- **{{ENHANCEMENT_3}}:** {{ENHANCEMENT_DESCRIPTION_3}}
+
+**{{ACT_CATEGORY_2}} Benefits:**
+- **{{BENEFIT_1}}:** {{BENEFIT_DESCRIPTION_1}}
+- **{{BENEFIT_2}}:** {{BENEFIT_DESCRIPTION_2}}
+
+**Future Enhancements:**
+1. **{{FUTURE_1}}:** {{FUTURE_DESCRIPTION_1}}
+2. **{{FUTURE_2}}:** {{FUTURE_DESCRIPTION_2}}
+3. **{{FUTURE_3}}:** {{FUTURE_DESCRIPTION_3}}
+
+## **💫 EMOTIONAL REFLECTION: {{EMOTIONAL_HEADLINE}}**
+
+### **{{EMOTIONAL_CATEGORY_1}}:**
+**{{EMOTIONAL_INTENSITY}}** {{EMOTIONAL_DESCRIPTION_1}}
+
+### **{{EMOTIONAL_CATEGORY_2}}:**
+**{{EMOTIONAL_INTENSITY}}** {{EMOTIONAL_DESCRIPTION_2}}
+
+### **{{EMOTIONAL_CATEGORY_3}}:**
+**{{EMOTIONAL_INTENSITY}}** {{EMOTIONAL_DESCRIPTION_3}}
+
+---
+## **🎯 PDCA PROCESS UPDATE**
+
+**Process Learning:**
+- ✅ **PDCA Protocol:** Must create PDCA documentation for all significant work
+- ✅ **{{KEY_LEARNING_1}}:** {{LEARNING_DESCRIPTION_1}}  
+- ✅ **{{KEY_LEARNING_2}}:** {{LEARNING_DESCRIPTION_2}}
+- ✅ **{{KEY_LEARNING_3}}:** {{LEARNING_DESCRIPTION_3}}
+
+**Quality Impact:** {{QUALITY_IMPACT_DESCRIPTION}}
+
+**Next PDCA Focus:** {{NEXT_FOCUS_DESCRIPTION}}
+
+---
+
+**🎯 {{FINAL_SUMMARY_WITH_EMOJIS}}**
+
+**"{{PHILOSOPHICAL_INSIGHT}}"** 🔧📊
