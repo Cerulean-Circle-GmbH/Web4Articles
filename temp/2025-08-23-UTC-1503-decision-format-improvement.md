@@ -15,12 +15,12 @@
 
 ### **QA Decisions**
 - [x] Completed decision: Implement numbered decisions with a) b) format
-- [ ] **Decision 1: Decision Format Standardization**
+- [x] **Decision 1: Decision Format Standardization** → **Selected: b**
   - a) Require all decisions to have exactly 2 options (a and b)
-  - b) Allow flexible number of options (a, b, c, etc.) based on context
-- [ ] **Decision 2: Rationale Requirements**
+  - b) Allow flexible number of options (a, b, c, etc.) based on context ✅
+- [x] **Decision 2: Rationale Requirements** → **Selected: b**
   - a) Mandate brief rationale for each option to aid decision-making
-  - b) Keep options concise without mandatory rationales for simplicity
+  - b) Keep options concise without mandatory rationales for simplicity ✅
 
 ### **TRON Feedback (2025-08-23-UTC-1501)**
 ```quote
