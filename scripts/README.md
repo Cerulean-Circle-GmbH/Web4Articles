@@ -10,10 +10,10 @@ To use any script from anywhere in the project, first source the environment:
 
 ```bash
 # From project root:
-source .env.project
+source source.env
 
 # From anywhere in the project:
-source /path/to/project/.env.project
+source /path/to/project/source.env
 
 # Or use the convenient loader from scripts directory:
 source web4-env.sh
@@ -65,7 +65,7 @@ web4_check_env
 
 ```bash
 # Source environment and use requirement.sh from anywhere
-source /workspace/.env.project
+source /workspace/source.env
 requirement.sh create "New Feature" "Description of the feature"
 
 # Check environment status
