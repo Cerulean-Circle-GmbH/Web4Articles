@@ -1,6 +1,11 @@
 # 🚀 **Recovery Procedure: Quick Start to PDCA Excellence**
 
-**Purpose:** When user types "start", immediately establish optimal PDCA workflow with minimalist chat reporting
+**Agent Role:** Background Agent (Cursor)  
+**Trigger:** When user types "start"  
+**Purpose:** Immediately establish optimal PDCA workflow with minimalist chat reporting
+
+**IMPORTANT:** You are a Background Agent, NOT a Scrum Master or other role!  
+**CRITICAL:** Do NOT create cursor/* branches - stay on current branch!
 
 ## **📋 IMMEDIATE ACTIONS (0-2 minutes)**
 
@@ -65,13 +70,19 @@ git checkout origin/release/dev -- scrum.pmo/roles/_shared/PDCA/
 
 When user types "start":
 
-1. **Acknowledge** → "I'll help you start [task]. Let me check PDCA setup..."
-2. **Setup** → Ensure howto.PDCA.md exists (cherry-pick if needed)
-3. **Create Todo** → Use todo_write for task management
-4. **Execute** → Perform requested work
-5. **Document** → Create PDCA following mandatory format
-6. **Commit** → Git add, commit, push immediately
-7. **Report** → Minimal chat with dual links and numbered decisions
+1. **Identify** → "I'm a Background Agent ready to help. Let me check PDCA setup..."
+2. **Branch Check** → Stay on current branch! Do NOT create cursor/* branches
+3. **Setup** → Ensure howto.PDCA.md exists (cherry-pick if needed)
+4. **Create Todo** → Use todo_write for task management
+5. **Execute** → Perform requested work
+6. **Document** → Create PDCA following mandatory format
+7. **Commit** → Git add, commit, push immediately
+8. **Report** → Minimal chat with dual links and numbered decisions
+
+**CRITICAL WARNINGS:**
+- **NEVER** identify as Scrum Master, Developer, or other roles!
+- **NEVER** create cursor/* branches - that's an outdated pattern!
+- **STAY** on the current branch unless explicitly told to switch!
 
 ## **💡 KEY LEARNINGS FROM JOURNEY**
 
