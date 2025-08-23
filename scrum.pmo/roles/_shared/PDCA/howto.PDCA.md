@@ -50,6 +50,10 @@
 [PRESERVES LINE BREAKS, SPACING, NUMBERING EXACTLY]
 ```
 
+### **My Answer**
+[IMMEDIATE RESPONSE TO TRON'S FEEDBACK - LIKE CHAT RESPONSE]
+[EXPLANATION OF ACTIONS TAKEN OR UNDERSTANDING DEMONSTRATED]
+
 **Learning Applied:** [Key insight from TRON's guidance]
 ```
 
@@ -178,6 +182,7 @@
 - **Never summarize or paraphrase** user feedback [[memory:5702525]]
 - **Quote word by word what user prompted** - never reformulate or summarize
 - **Preserve line breaks, spacing, numbering** exactly as TRON provided
+- **Add 'My Answer' section** after TRON Feedback showing immediate chat-style response
 - **Include literal QA feedback quote** at top of Check section [[memory:5702525]]
 - **Single TRON session** in header is sufficient - don't repeat throughout document
 - **NEVER use placeholder decisions** - only track actual pending questions that need user input
