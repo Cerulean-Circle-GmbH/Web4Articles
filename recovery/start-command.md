@@ -29,7 +29,7 @@ git checkout origin/release/dev -- scrum.pmo/roles/_shared/PDCA/
 
 ### **Chat Response Format (MINIMAL)**
 ```markdown
-**PDCA Entry**: [YYYY-MM-DD-UTC-HHMM-title.md](GitHub_URL) | [local/path](local/path)
+**PDCA Entry**: [YYYY-MM-DD-UTC-HHMM-title.md](GitHub_URL) | [local/path/to/pdca.md](local/path/to/pdca.md)
 
 ### **QA Decisions Required:**
 
@@ -40,12 +40,9 @@ git checkout origin/release/dev -- scrum.pmo/roles/_shared/PDCA/
 **Decision 2: [Clear Title]**
 - a) [Option A]
 - b) [Option B]
-
-### **Artifacts Created/Modified:**
-- **[File Type]**: [GitHub](URL) | [local/path](path)
-
-**🎯 [One-line summary with emojis]**
 ```
+
+**CRITICAL:** That's it! No summaries, no explanations in chat - everything else goes in the PDCA!
 
 ## **📊 PDCA FILE REQUIREMENTS**
 
