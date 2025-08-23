@@ -156,7 +156,7 @@
 
 ### **Format Standard (CRITICAL)**
 ```markdown
-[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/path/to/file) | relative/path/to/file
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/path/to/file) | [relative/path/to/file](relative/path/to/file)
 ```
 
 ### **Link Requirements:**
