@@ -41,8 +41,12 @@
 
 ### **QA Decisions**
 - [x] Completed decision: [Specific decision already made]
-- [ ] Pending decision: [Decision requiring user input]
-- [ ] Follow-up required: [Another pending decision]
+- [ ] **Decision 1:** [Clear decision title]
+  - a) [First option with rationale]
+  - b) [Second option with rationale]
+- [ ] **Decision 2:** [Another decision title]
+  - a) [First option]
+  - b) [Second option]
 
 ### **TRON Feedback (YYYY-MM-DD-UTC-HHMM)**
 ```quote
@@ -172,9 +176,10 @@
 
 ### **Chat Response Format:**
 - **Detailed content goes in PDCA files** - NOT in chat [[memory:6896499]]
-- **Chat responses:** Dual-format links and decisions ONLY [[memory:6896476]]
+- **Chat responses:** Dual-format links and NUMBERED decisions ONLY [[memory:6896476]]
 - **"Much in files, relevant links in chat"** - TRON's explicit instruction
 - **Never skip dual links** in chat responses - critical for user navigation
+- **Always number decisions** with a) b) options for easy user response
 
 ### **User Feedback Integration (CRITICAL):**
 - **Use markdown code block format** ```quote``` for all TRON quotes to preserve formatting
@@ -282,15 +287,15 @@
 ## **AMBIGUITIES & QA DECISIONS REQUIRED**
 
 ### **Outstanding Questions (Actual Pending Decisions):**
-- [ ] **Link Validation:** 
-  a) Automated checking for GitHub links
-  b) Manual verification approach
-- [ ] **Version Integration:** 
-  a) Integrate component versioning with PDCA process
-  b) Keep versioning separate from PDCA
-- [ ] **Recovery Integration:** 
-  a) Full PDCA format requirements in recovery
-  b) Simplified format for recovery scenarios
+- [ ] **Decision 1: Link Validation Approach**
+  - a) Implement automated checking for GitHub links before submission
+  - b) Continue with manual verification approach for flexibility
+- [ ] **Decision 2: Version Integration Strategy**
+  - a) Integrate component versioning directly with PDCA process
+  - b) Keep versioning separate from PDCA for cleaner separation of concerns
+- [ ] **Decision 3: Recovery Format Requirements**
+  - a) Require full PDCA format compliance in recovery scenarios
+  - b) Allow simplified format for recovery scenarios to enable faster response
 
 ### **Format Evolution Decisions:**
 - [ ] **Template Updates:** 
