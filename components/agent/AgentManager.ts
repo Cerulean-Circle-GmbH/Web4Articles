@@ -5,6 +5,11 @@ import { fileURLToPath } from 'url';
 /**
  * AgentManager - Manages agent configuration including name changes
  * Following Radical OOP principles - all logic encapsulated in class
+ * 
+ * IMPORTANT: This tool manages a local configuration file only.
+ * It does NOT change the agent name displayed in Cursor IDE.
+ * Cursor currently does not provide an API to programmatically change agent names.
+ * Agent names in Cursor must be changed through the Cursor UI settings.
  */
 export class AgentManager {
     private static currentName: string = 'DefaultAgent';
@@ -92,6 +97,8 @@ export class AgentManager {
         
         this.currentName = cleanName;
         console.log(`Agent name successfully changed to: ${cleanName}`);
+        console.log('⚠️  Note: This changes the local configuration only.');
+        console.log('   The agent name in Cursor IDE will not be affected.');
         
         // Persist configuration
         this.saveConfiguration();
@@ -103,9 +110,13 @@ export class AgentManager {
     private static showHelp(): void {
         console.log('Agent Manager - Manage agent configuration');
         console.log('');
+        console.log('⚠️  LIMITATION: This tool manages a local configuration file only.');
+        console.log('   It does NOT change the agent name displayed in Cursor IDE.');
+        console.log('   To change agent names in Cursor, use Cursor\'s UI settings.');
+        console.log('');
         console.log('Usage:');
-        console.log('  agent set name "new name"  - Set the agent name');
-        console.log('  agent get                  - Get current agent name');
+        console.log('  agent set name "new name"  - Set the agent name (local config only)');
+        console.log('  agent get                  - Get current agent name from local config');
         console.log('  agent help                 - Show this help message');
         console.log('');
         console.log('Examples:');
