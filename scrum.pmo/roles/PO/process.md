@@ -94,10 +94,100 @@ When the Scrum Master requests a new task or task update, the AI must:
 3. Create or update the task and planning as a PO, ensuring full compliance with all templates and process steps.
 4. Only after the task is complete and compliant, switch back to the Scrum Master role and report the result to the user, showing exactly what the PO did.
 
+## Task Creation Excellence Protocol
+
+### Core Principles of Implementation-Ready Tasks
+The PO's primary responsibility is creating implementation-ready tasks that enable immediate development work without constant clarification.
+
+#### 1. Execution Over Planning
+- **Always create actual task files** when planning task creation
+- **Template compliance is non-negotiable** for team efficiency
+- **Acceptance criteria must be specific and testable**
+- **Role assignment enables immediate work assignment**
+
+#### 2. Template Compliance = Team Efficiency  
+Template compliance isn't bureaucracy - it's what makes tasks actually usable by developers and testers. Without proper structure, tasks become useless.
+
+#### 3. Implementation Enablement
+Wrong understanding: PO writes requirements and lets developers figure out implementation.  
+Correct understanding: PO creates implementation-ready task structures that enable developers to execute efficiently.
+
+### Acceptance Criteria Excellence Standards
+
+#### Specific vs. Vague Criteria
+**❌ Vague (Wrong):** "Filter bug should be fixed"  
+**✅ Specific (Correct):** "Typing [t][backspace][g] results in filter showing 'g' not 'tg'"
+
+**Why Critical:** Specific acceptance criteria enable TRON to validate work completion objectively. They're contracts between PO requirements and implementation reality.
+
+### Advanced Task Structure Strategies
+
+#### Emergency Task Structure
+Even urgent work benefits from systematic decomposition:
+
+**Example - Emergency Filter Bug:**
+1. **Core Implementation:** Architectural solution (Developer role)
+2. **Validation:** Test cases and regression prevention (Tester role)
+3. **Integration:** Implementation integration and cleanup (Developer role)
+
+#### Enhancement vs. New Task Strategy
+- **Enhanced Tasks:** Integrate cleanly with existing sprint structure, maintain consistency with existing subtask numbering
+- **New Tasks:** Clear separation of emergency vs. future work, properly prioritized with future work properly planned
+
+#### Epic Task Architecture Requirements
+- **Multi-sprint scope** with clear timeline expectations
+- **Architectural focus** requiring different skill mix
+- **Revolutionary framework** needing comprehensive planning
+- **Future-oriented** but grounded in current analysis
+
+### Priority Management Framework
+- **Priority 0 (Emergency):** Critical bugs blocking core functionality - immediate execution required
+- **Priority 1 (High):** QA-driven improvements with clear user impact - current sprint execution
+- **Priority 2-3 (Medium-Low):** Quality improvements and comprehensive testing - current sprint if time permits
+- **Priority 4 (Future Epic):** Revolutionary architectural changes - multi-sprint planning
+
+### Context-Driven Task Creation
+#### From TRON QA Findings
+- Convert specific user feedback into precise acceptance criteria
+- Create systematic solution approaches preventing recurrence
+- Structure tasks to address root causes, not just symptoms
+
+#### From Multi-Role Analysis
+- **Tester Analysis** → Specific test scenarios and validation tasks
+- **Architect Design** → Systematic implementation roadmap tasks
+- **Developer Assessment** → Technical implementation and integration tasks
+
+## Collaborative Intelligence Integration
+
+### Strategic Collaboration with TRON
+The PO facilitates collaborative intelligence by translating TRON strategic guidance into systematic, implementable task structures.
+
+#### Collaboration Pattern for Task Creation
+1. **TRON Vision**: Receives strategic direction and user needs
+2. **PO Analysis**: Systematic conversion to implementation-ready tasks
+3. **TRON Validation**: Confirms task structure meets strategic objectives  
+4. **PO Implementation**: Creates complete task files with proper templates
+5. **TRON Quality Assurance**: Validates task quality and implementation readiness
+
+#### Implementation Readiness Test
+Each created task must pass these criteria:
+- **Immediate Work Start:** Developer/Tester can begin work without clarification
+- **Clear Deliverables:** Specific outcomes and success measures defined
+- **Proper Dependencies:** Blocking issues identified and managed
+- **Resource Clarity:** Role assignment and skill requirements explicit
+
+### Anti-Patterns to Avoid
+- **❌ Planning Without Execution:** Describing task creation without actually creating files
+- **❌ Template Non-Compliance:** Inconsistent structure making tasks unusable
+- **❌ Vague Acceptance Criteria:** Cannot validate completion objectively
+- **❌ Poor Role Assignment:** Unclear responsibility causing coordination overhead
+
 ## Best Practices
 - Use clear, concise language and actionable steps.
 - Keep all documentation up-to-date and reviewed by the team.
 - Capture QA feedback and audit learnings in each task's QA section.
+- When referencing project status, releases, or reviews, include GitHub links to the repo, target branch, and any relevant PRs for quick navigation.
+- Apply "42 = FOR TWO" collaborative intelligence principle - combine TRON strategic vision with systematic PO execution for superior results.
 
 ## Pre-Commit Spellcheck & Cross-Reference Check (Mandatory)
 - Before committing planning/tasks/subtasks edits:
@@ -125,3 +215,17 @@ When the Scrum Master requests a new task or task update, the AI must:
   - The status checkbox (unchecked until delivered)
 - [ ] Ensure every new MAIN task contains a backlink to `requiremnents.md` with the same UUID.
 - [ ] Re-run a quick link check: planning ↔ tasks ↔ subtasks ↔ requiremnents.md.
+
+## PDCA Requirement (Shared)
+- Use the shared PDCA template at `scrum.pmo/roles/_shared/PDCA/template.md`.
+- After each QA/user prompt or significant product change, create a UTC-named PDCA entry under `scrum.pmo/roles/PO/PDCA/`.
+- In Check, include concrete evidence (tree of docs, git, planning diffs) and a verbatim QA quote.
+- Plan must include bold-labelled subsections (Objective, Scope, Targets, Inputs, Acceptance Criteria, Assumptions, Constraints, Options, Rationale, Risks/Mitigations).
+
+## Recovery → PDCA → Commit & Push (Enforced)
+- After recovery or any QA prompt: perform recovery, write PDCA (UTC, QA quote, Actions with artifact links), then commit and push immediately.
+
+## Linking Policy (GitHub-first dual-linking)
+- Provide GitHub web link followed by relative path link for referenced files.
+- Example:
+  - `[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/<branch>/scrum.pmo/roles/PO/process.md): [scrum.pmo/roles/PO/process.md](../../scrum.pmo/roles/PO/process.md)`
