@@ -19,8 +19,8 @@
 ### **QA Decisions**
 - [x] Completed decision: Create dedicated recovery directory (Decision 1c from previous PDCA)
 - [x] Completed decision: Implement all requested workflow enhancements
-- [ ] **Decision 1: Auto-merge Frequency**
-  - a) Merge to release/dev after every single PDCA commit
+- [x] **Decision 1: Auto-merge Frequency** → **Selected: a**
+  - a) Merge to release/dev after every single PDCA commit ✅
   - b) Batch merge PDCAs at end of session
   - c) Manual trigger with automatic option available
 
