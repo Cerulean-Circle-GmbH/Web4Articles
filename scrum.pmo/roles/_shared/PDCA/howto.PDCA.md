@@ -180,6 +180,8 @@
 - **Preserve line breaks, spacing, numbering** exactly as TRON provided
 - **Include literal QA feedback quote** at top of Check section [[memory:5702525]]
 - **Single TRON session** in header is sufficient - don't repeat throughout document
+- **NEVER use placeholder decisions** - only track actual pending questions that need user input
+- **Keep real pending decisions** from previous sessions until user provides answers
 
 ---
 
@@ -274,13 +276,7 @@
 
 ## **AMBIGUITIES & QA DECISIONS REQUIRED**
 
-### **Outstanding Questions:**
-- [ ] **Template Standardization:** 
-  a) All roles use identical PDCA format
-  b) Allow role-specific variations
-- [ ] **Emotional Section Scope:** 
-  a) Required for all PDCAs
-  b) Only for complex/significant ones
+### **Outstanding Questions (Actual Pending Decisions):**
 - [ ] **Link Validation:** 
   a) Automated checking for GitHub links
   b) Manual verification approach
