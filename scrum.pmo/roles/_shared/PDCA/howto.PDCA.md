@@ -34,10 +34,10 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](GITHUB_URL) | [relative/path/to/pdca.md](relative/path/to/pdca.md)
-- **Changed Files:** [GitHub](GITHUB_URL) | [relative/path/to/file.ext](relative/path/to/file.ext)
-- **New Components:** [GitHub](GITHUB_URL) | [relative/path/to/component](relative/path/to/component)
-- **Requirements Created:** [GitHub](GITHUB_URL) | [spec/requirements.md/uuid.requirement.md](spec/requirements.md/uuid.requirement.md)
+- **PDCA Document:** [GitHub](GITHUB_URL) | relative/path/to/pdca.md
+- **Changed Files:** [GitHub](GITHUB_URL) | relative/path/to/file.ext
+- **New Components:** [GitHub](GITHUB_URL) | relative/path/to/component
+- **Requirements Created:** [GitHub](GITHUB_URL) | spec/requirements.md/uuid.requirement.md
 
 ### **QA Decisions**
 - [x] Completed decision: [Specific decision already made]
@@ -156,7 +156,7 @@
 
 ### **Format Standard (CRITICAL)**
 ```markdown
-[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/path/to/file) | [relative/path/to/file](relative/path/to/file)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/path/to/file) | relative/path/to/file
 ```
 
 ### **Link Requirements:**
