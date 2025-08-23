@@ -23,8 +23,8 @@
   - a) Apply new PDCA format to all retrospective documents retroactively
   - b) Keep retrospective documents in original format, apply new format going forward ✓
 - [x] **Decision 2:** Recovery process alignment
-  - a) Update recovery.md to include PDCA-based recovery cycles
-  - b) Keep recovery.md focused on simple recovery logs, PDCA cycles separate ✓
+  - a) Update recovery.md to include PDCA-based recovery cycles ✓
+  - b) Keep recovery.md focused on simple recovery logs, PDCA cycles separate
 
 ### **TRON Feedback (2025-08-24-UTC-1840)**
 ```quote
