@@ -12,8 +12,8 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/temp/2025-08-24-UTC-1925-cmm4-feedback-second-test.md) | temp/2025-08-24-UTC-1925-cmm4-feedback-second-test.md
-- **Start Command:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/recovery/start-command.md) | recovery/start-command.md
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/temp/2025-08-24-UTC-1925-cmm4-feedback-second-test.md) | [temp/2025-08-24-UTC-1925-cmm4-feedback-second-test.md](./2025-08-24-UTC-1925-cmm4-feedback-second-test.md)
+- **Start Command:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/recovery/start-command.md) | [recovery/start-command.md](../recovery/start-command.md)
 
 ### **QA Decisions**
 - [x] **Decision 1:** How to ensure agents read updated documentation

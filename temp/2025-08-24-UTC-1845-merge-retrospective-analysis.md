@@ -12,10 +12,10 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/temp/2025-08-24-UTC-1845-merge-retrospective-analysis.md) | temp/2025-08-24-UTC-1845-merge-retrospective-analysis.md
-- **Changed Files:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/recovery.md) | recovery.md
-- **PDCA Guidelines:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | scrum.pmo/roles/_shared/PDCA/howto.PDCA.md
-- **Merge Resolution:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/scrum.pmo/roles/ScrumMaster/process.md) | scrum.pmo/roles/ScrumMaster/process.md
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/temp/2025-08-24-UTC-1845-merge-retrospective-analysis.md) | [temp/2025-08-24-UTC-1845-merge-retrospective-analysis.md](./2025-08-24-UTC-1845-merge-retrospective-analysis.md)
+- **Changed Files:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/recovery.md) | [recovery.md](../recovery.md)
+- **PDCA Guidelines:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)
+- **Merge Resolution:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/scrum.pmo/roles/ScrumMaster/process.md) | [scrum.pmo/roles/ScrumMaster/process.md](../scrum.pmo/roles/ScrumMaster/process.md)
 
 ### **QA Decisions**
 - [x] Completed decision: Accepted all changes from save/start branch for conflict resolution

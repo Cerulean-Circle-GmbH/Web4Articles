@@ -12,9 +12,9 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/temp/2025-08-24-UTC-1855-recovery-pdca-integration.md) | temp/2025-08-24-UTC-1855-recovery-pdca-integration.md
-- **Updated File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/recovery.md) | recovery.md
-- **PDCA Template:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/scrum.pmo/roles/_shared/PDCA/template.md) | scrum.pmo/roles/_shared/PDCA/template.md
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/temp/2025-08-24-UTC-1855-recovery-pdca-integration.md) | [temp/2025-08-24-UTC-1855-recovery-pdca-integration.md](./2025-08-24-UTC-1855-recovery-pdca-integration.md)
+- **Updated File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/recovery.md) | [recovery.md](../recovery.md)
+- **PDCA Template:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/scrum.pmo/roles/_shared/PDCA/template.md) | [scrum.pmo/roles/_shared/PDCA/template.md](../scrum.pmo/roles/_shared/PDCA/template.md)
 
 ### **QA Decisions**
 - [x] All decisions made - mission accomplished!

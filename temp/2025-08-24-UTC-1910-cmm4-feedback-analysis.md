@@ -12,9 +12,9 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/temp/2025-08-24-UTC-1910-cmm4-feedback-analysis.md) | temp/2025-08-24-UTC-1910-cmm4-feedback-analysis.md
-- **Start Command:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/recovery/start-command.md) | recovery/start-command.md
-- **Recovery.md:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/recovery.md) | recovery.md
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/temp/2025-08-24-UTC-1910-cmm4-feedback-analysis.md) | [temp/2025-08-24-UTC-1910-cmm4-feedback-analysis.md](./2025-08-24-UTC-1910-cmm4-feedback-analysis.md)
+- **Start Command:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/recovery/start-command.md) | [recovery/start-command.md](../recovery/start-command.md)
+- **Recovery.md:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/recovery.md) | [recovery.md](../recovery.md)
 
 ### **QA Decisions**
 - [x] **Decision 1:** How should agents handle cursor/* branches
