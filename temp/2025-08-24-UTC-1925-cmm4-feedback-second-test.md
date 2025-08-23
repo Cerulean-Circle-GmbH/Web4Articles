@@ -16,9 +16,9 @@
 - **Start Command:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/recovery/start-command.md) | recovery/start-command.md
 
 ### **QA Decisions**
-- [ ] **Decision 1:** How to ensure agents read updated documentation
+- [x] **Decision 1:** How to ensure agents read updated documentation
   - a) Add version check to start-command.md to verify latest version
-  - b) Have agents cherry-pick start-command.md from save/start always
+  - b) Have agents cherry-pick start-command.md from save/start always ✓
 
 ### **TRON Feedback (2025-08-24-UTC-1923)**
 ```quote

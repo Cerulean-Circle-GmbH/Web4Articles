@@ -19,15 +19,23 @@ A DAPP for collective intelligence in article writing.
    git checkout origin/release/dev -- scrum.pmo/roles/_shared/PDCA/
    ```
 
-3. **Read Recovery Guide**: [recovery/start-command.md](recovery/start-command.md)
+3. **CRITICAL - Get Latest Start Command**:
+   ```bash
+   git fetch origin save/start
+   git checkout origin/save/start -- recovery/start-command.md
+   ```
+
+4. **Read Recovery Guide**: [recovery/start-command.md](recovery/start-command.md)
 
 ## 📋 Key Rules
 
-- **Stay on current branch** - Never create cursor/* branches
+- **Switch to save/start immediately** if on cursor/* branch
+- **Stay on save/start** for all work
 - **Create PDCAs** for all work
 - **Use numbered decisions** (1a, 1b format)
 - **Provide dual links** (GitHub | local)
 - **Keep chat minimal** - details go in PDCA files
+- **End session**: Create dev/UTC-timestamp branch
 
 ## 🔧 Quick Commands
 
