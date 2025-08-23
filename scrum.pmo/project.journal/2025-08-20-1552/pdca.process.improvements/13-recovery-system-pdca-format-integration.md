@@ -1,0 +1,1 @@
+../../2025-08-20-0630-tsranger-v22-sprint/pdca/role/developer/2025-08-20-UTC-0715-recovery-system-pdca-format-integration.md
