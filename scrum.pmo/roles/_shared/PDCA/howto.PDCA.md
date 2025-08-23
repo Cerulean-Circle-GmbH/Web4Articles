@@ -169,10 +169,12 @@
 - **"Much in files, relevant links in chat"** - TRON's explicit instruction
 - **Never skip dual links** in chat responses - critical for user navigation
 
-### **User Feedback Integration:**
+### **User Feedback Integration (CRITICAL):**
 - **Copy feedback verbatim** with UTC ISO-8601 timestamp [[memory:5704634]]
 - **Never summarize or paraphrase** user feedback [[memory:5702525]]
+- **Quote word by word what user prompted** - never reformulate or summarize
 - **Include literal QA feedback quote** at top of Check section [[memory:5702525]]
+- **Single TRON session** in header is sufficient - don't repeat throughout document
 
 ---
 
