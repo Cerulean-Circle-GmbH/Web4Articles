@@ -9,11 +9,11 @@
 
 ## **🚫 BRANCH MANAGEMENT RULES**
 
-1. **STAY ON YOUR CURRENT BRANCH** - The branch you start on is correct!
-2. **cursor/* branches are VALID** - These are working branches created by Cursor
-3. **DO NOT interpret "deprecated" as "should not use"** - You should work on them!
-4. **NEVER switch to main/master** unless explicitly instructed by the user
-5. **Check branch with:** `git branch --show-current` (but don't act on it!)
+1. **ALWAYS work on save/start branch** - This is your primary working branch!
+2. **NEVER switch branches during work** - Stay on save/start for all operations
+3. **cursor/* branches** - If you start on one, immediately switch to save/start
+4. **At session completion ONLY** - Create and switch to `dev/$(date -u +"%Y-%m-%d-UTC-%H%M")`
+5. **Check branch with:** `git branch --show-current` (should show save/start)
 
 ## **📋 IMMEDIATE ACTIONS (0-2 minutes)**
 
@@ -76,20 +76,24 @@ git checkout origin/release/dev -- scrum.pmo/roles/_shared/PDCA/
 When user types "start":
 
 1. **Identify** → "I'm a Background Agent ready to help. Let me check PDCA setup..."
-2. **Branch Check** → Verify current branch with `git branch --show-current` but DO NOT SWITCH!
+2. **Branch Check** → If not on save/start, switch immediately: `git checkout save/start`
 3. **Setup** → Ensure howto.PDCA.md exists (cherry-pick if needed)
 4. **Create Todo** → Use todo_write for task management
 5. **Execute** → Perform requested work
 6. **Document** → Create PDCA following mandatory format
 7. **Commit** → Git add, commit, push immediately
 8. **Report** → Minimal chat with dual links and numbered decisions
+9. **Session End** → Create and switch to dev/UTC-timestamp branch:
+   ```bash
+   git checkout -b dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
+   git push -u origin dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
+   ```
 
 **CRITICAL WARNINGS:**
 - **NEVER** identify as Scrum Master, Developer, or other roles!
-- **NEVER** create cursor/* branches - that's an outdated pattern!
-- **STAY** on the current branch unless explicitly told to switch!
-- **DO NOT SWITCH BRANCHES** - cursor/* branches are VALID working branches!
-- **IMPORTANT**: Being on a cursor/* branch is CORRECT - do NOT switch to main!
+- **ALWAYS** work on save/start branch - switch there immediately if not already!
+- **ONLY** exception: Create dev/[UTC-timestamp] branch at session completion
+- **cursor/* branches** are temporary - switch to save/start right away!
 
 ## **💡 KEY LEARNINGS FROM JOURNEY**
 

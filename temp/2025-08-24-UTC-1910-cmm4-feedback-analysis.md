@@ -17,12 +17,12 @@
 - **Recovery.md:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/retro/2025-08-10-agent-retro/recovery.md) | recovery.md
 
 ### **QA Decisions**
-- [ ] **Decision 1:** How should agents handle cursor/* branches
-  - a) Stay on cursor/* branch and work from there
+- [x] **Decision 1:** How should agents handle cursor/* branches
+  - a) Stay on cursor/* branch and work from there ✓ (Modified: Stay on save/start always!)
   - b) Update start-command.md to clarify cursor/* branches are valid working branches
-- [ ] **Decision 2:** Branch switching protocol for agents
+- [x] **Decision 2:** Branch switching protocol for agents
   - a) Agents should never switch branches unless explicitly instructed
-  - b) Agents can switch to appropriate working branches based on context
+  - b) Agents can switch to appropriate working branches based on context ✓ (Modified: Finally switch to dev/[UTC timestamp])
 
 ### **TRON Feedback (2025-08-24-UTC-1905)**
 ```quote
