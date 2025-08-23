@@ -29,7 +29,7 @@ git checkout origin/release/dev -- scrum.pmo/roles/_shared/PDCA/
 
 ### **Chat Response Format (MINIMAL)**
 ```markdown
-**PDCA Entry**: [YYYY-MM-DD-UTC-HHMM-title.md](GitHub_URL) | [local/path/to/pdca.md](local/path/to/pdca.md)
+**PDCA Entry**: [YYYY-MM-DD-UTC-HHMM-title.md](GitHub_URL) | local/path/to/pdca.md
 
 ### **QA Decisions Required:**
 
