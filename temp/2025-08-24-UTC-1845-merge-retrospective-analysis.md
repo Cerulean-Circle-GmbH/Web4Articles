@@ -19,12 +19,12 @@
 
 ### **QA Decisions**
 - [x] Completed decision: Accepted all changes from save/start branch for conflict resolution
-- [ ] **Decision 1:** Integration strategy for PDCA format updates
+- [x] **Decision 1:** Integration strategy for PDCA format updates
   - a) Apply new PDCA format to all retrospective documents retroactively
-  - b) Keep retrospective documents in original format, apply new format going forward
-- [ ] **Decision 2:** Recovery process alignment
+  - b) Keep retrospective documents in original format, apply new format going forward ✓
+- [x] **Decision 2:** Recovery process alignment
   - a) Update recovery.md to include PDCA-based recovery cycles
-  - b) Keep recovery.md focused on simple recovery logs, PDCA cycles separate
+  - b) Keep recovery.md focused on simple recovery logs, PDCA cycles separate ✓
 
 ### **TRON Feedback (2025-08-24-UTC-1840)**
 ```quote
