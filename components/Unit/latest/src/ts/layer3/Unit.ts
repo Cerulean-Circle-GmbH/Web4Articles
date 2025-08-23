@@ -5,8 +5,7 @@
  * Units represent the smallest granular business logic operations in Web4 architecture.
  */
 
-import { IOR } from '@web4/ior';
-import { Scenario } from '@web4/scenario';
+import { IOR, Scenario } from './SimpleTypes.js';
 
 /**
  * Unit Scenario - Contains complete unit state for hibernation/restoration

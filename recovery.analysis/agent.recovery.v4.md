@@ -103,39 +103,131 @@ cat .devcontainer/devcontainer.json
 
 **⚠️ RECOVERY IS NOT COMPLETE WITHOUT A PDCA!**
 
+### Step 0: Review PDCA Format Requirements (CRITICAL!)
+**Before creating your PDCA, you MUST review the mandatory format requirements:**
+- **Read:** [PDCA Format Requirements](./pdca-format-requirements-mandatory.md)
+- **Protocol:** [PDCA Prompt Protocol](./pdca-prompt-protocol.md) - What to do when user prompts `pdca`
+- **All 6 sections required:** Header with metadata, Summary with QA decisions, Plan, Do, Check, Act
+- **QA Decisions checkboxes** required in Summary section
+- **Verbatim user feedback** with UTC timestamp required in Check section
+- **Dual-link format** for all artifact references
+- **Horizontal separators (---)**  between all major sections
+
+**⚠️ Format non-compliance causes recovery failures and process breakdown!**
+
 ### Step 1: Create PDCA File
 ```bash
 cat > pdca/$(date +"%Y-%m-%d-%H%M")-recovery.md << 'EOF'
-# PDCA: Recovery - $(date +"%Y-%m-%d")
+# 📋 **PDCA Cycle: Recovery - [ROLE] - $(date +"%Y-%m-%d")**
 
-**Date:** $(date -u +"%Y-%m-%d-UTC-%H%M")  
-**Objective:** Recover and continue work  
-**Role:** [Identified above]
+**🗓️ Date:** $(date -u +"%Y-%m-%d-UTC-%H%M")  
+**🎯 Objective:** Agent recovery via V4 fast track process  
+**👤 Role:** [IDENTIFIED_ROLE] → Recovery & Context Restoration  
+**🚨 Issues:** Context loss, role identification, work continuity  
+**🔗 Last Commit SHA:** [CURRENT_COMMIT_SHA]  
+**🔗 Previous PDCA:** [Link if applicable]
 
-## Plan
-- Recovered via V4 fast track
+---
+
+## **📊 SUMMARY**
+
+### **Artifact Links**
+- [Recovery Process](./agent.recovery.v4.md) | [agent.recovery.v4.md](./agent.recovery.v4.md)
+- [PDCA Format Requirements](./pdca-format-requirements-mandatory.md) | [pdca-format-requirements-mandatory.md](./pdca-format-requirements-mandatory.md)
+
+### **QA Decisions**
+- [ ] **Recovery Complete**: All steps executed successfully
+- [ ] **Role Identified**: Proper role context established
+- [ ] **Work Continuity**: Ready to resume productive work
+- [ ] **Format Compliance**: PDCA meets mandatory requirements
+
+### **TRON Feedback ($(date -u +"%Y-%m-%d-UTC-%H%M"))**
+> **"[EXACT VERBATIM QUOTE FROM USER REQUEST]"**
+
+**Learning Applied:** Agent recovery requires systematic PDCA documentation per mandatory format
+
+---
+
+## **📋 PLAN**
+
+### **Recovery Objectives**
+- Execute V4 fast track recovery process
+- Identify proper role context: [ROLE]
+- Create compliant PDCA documentation
+- Establish work continuity
+
+### **Recovery Steps**
+1. Safe branch creation and environment setup
+2. Role identification and context loading  
+3. PDCA creation with full format compliance
+4. Dual-link reporting to user
+
+---
+
+## **🔧 DO**
+
+### **Recovery Actions Completed**
+- [Document specific recovery actions taken]
 - Identified role: [ROLE]
-- Current task: [Check sprint-8]
+- Current task analysis: [TASK_CONTEXT]
+- PDCA created with mandatory format
 
-## Do
-- [Document your work here]
+---
 
-## Check
-> [User feedback quoted here literally]
+## **✅ CHECK**
 
-## Act
-- [Next steps]
+### **TRON QA Feedback Validation**
+> **"[LITERAL QUOTE FROM USER WITH UTC TIMESTAMP]"**
+
+**Verification Results:**
+- ✅ **Recovery Process**: V4 fast track executed successfully
+- ✅ **PDCA Format**: All 6 mandatory sections included
+- ✅ **Role Context**: [ROLE] context established
+- ✅ **Work Readiness**: Ready to continue productive work
+
+---
+
+## **🎯 ACT**
+
+### **Immediate Actions**
+- Resume work as [ROLE]
+- Follow role-specific process guidelines
+- Maintain PDCA documentation standards
+- Continue with identified current tasks
+
+### **Next Steps**
+- [Specific next actions based on role and current sprint]
+
+---
+
+## **🎯 PDCA PROCESS UPDATE**
+
+**Key Learning:** V4 fast track recovery with mandatory PDCA format ensures reliable agent restoration and work continuity
+
+**Process Enhancement:** Recovery process includes format compliance verification preventing documentation failures
+
+**Quality Impact:** Complete PDCA documentation maintains traceability and enables future recovery operations
+
+**Next PDCA Focus:** Continue role-specific work with proper PDCA maintenance
+
+---
+
+**📊 V4 Recovery completed with full PDCA format compliance - ready for productive work continuation!** 🔧📊
+
+**"Always 4 2 (FOR TWO) - systematic recovery with complete documentation."**
 EOF
 ```
 
 ### Step 2: Report to User (CRITICAL!)
-When user asks about your recovery or for a PDCA, respond with:
+When user asks about your recovery or prompts with `pdca`, respond with:
 1. Brief status (1-2 lines max)
 2. Dual format links ONLY:
    ```
    [GitHub](https://github.com/.../pdca/filename.md) | [pdca/filename.md](pdca/filename.md)
    ```
 3. NO lengthy content in chat - it goes in the PDCA file!
+
+**📋 For complete `pdca` prompt protocol:** [PDCA Prompt Protocol](./pdca-prompt-protocol.md)
 
 ### Why This Matters
 - PDCA = Proof of successful recovery
@@ -170,9 +262,51 @@ When user asks about your recovery or for a PDCA, respond with:
 
 ---
 
+## 🔍 PDCA Format Compliance Checklist
+
+**⚠️ MANDATORY VERIFICATION BEFORE SUBMITTING PDCA:**
+
+### **Header Section (REQUIRED)**
+- [ ] **Title Format**: 📋 **PDCA Cycle: [Title] - [Description]**
+- [ ] **UTC Date**: 🗓️ Date: YYYY-MM-DD-UTC-HHMM format
+- [ ] **Clear Objective**: 🎯 Objective with specific goal
+- [ ] **Role Definition**: 👤 Role: [Role] → [Context]
+- [ ] **Issues Identified**: 🚨 Issues being addressed
+- [ ] **Commit SHA**: 🔗 Last Commit SHA included
+- [ ] **Previous PDCA**: 🔗 Link if applicable
+
+### **Summary Section (REQUIRED)**
+- [ ] **Artifact Links**: Dual format [GitHub](URL) | [local/path](path)
+- [ ] **QA Decisions**: ⚖️ Checkbox list with pending decisions
+- [ ] **TRON Feedback**: Verbatim quote with UTC timestamp
+- [ ] **Learning Applied**: Key insight documented
+
+### **PDCA Sections (ALL REQUIRED)**
+- [ ] **Plan Section**: 📋 **PLAN** with horizontal separator
+- [ ] **Do Section**: 🔧 **DO** with horizontal separator  
+- [ ] **Check Section**: ✅ **CHECK** with horizontal separator
+- [ ] **Act Section**: 🎯 **ACT** with horizontal separator
+
+### **Process Update (REQUIRED)**
+- [ ] **PDCA Process Update**: 📋 **PDCA PROCESS UPDATE** section
+- [ ] **Key Learning**: Primary insight documented
+- [ ] **Process Enhancement**: How PDCA improved process
+- [ ] **Quality Impact**: Effect on overall quality
+- [ ] **Next PDCA Focus**: Next cycle planning
+
+### **Final Summary (REQUIRED)**
+- [ ] **One-line Summary**: Concise outcome with emojis
+- [ ] **Philosophical Insight**: "Never 2 1, Always 4 2" if applicable
+
+### **Communication Compliance**
+- [ ] **Chat Response**: Only dual links and decisions
+- [ ] **GitHub Links**: Working and pushed before providing
+- [ ] **Local Links**: Correct relative paths
+
 **Success Metrics**: 
 1. ✅ Created working session in under 10 minutes
-2. ✅ Created and saved PDCA file  
-3. ✅ Reported PDCA with dual links (not inline content)
+2. ✅ Created and saved PDCA file with ALL mandatory sections
+3. ✅ Verified PDCA format compliance using checklist above
+4. ✅ Reported PDCA with dual links (not inline content)
 
-**Remember**: No PDCA = No Recovery! The PDCA proves you can work AND communicate.
+**Remember**: No PDCA = No Recovery! Format compliance = Reliable recovery system!
