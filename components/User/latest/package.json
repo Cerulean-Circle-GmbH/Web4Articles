@@ -1,0 +1,20 @@
+{
+  "name": "@web4/user",
+  "version": "1.0.0",
+  "description": "Web4 User component for consistent user identification",
+  "type": "module",
+  "main": "src/ts/layer2/DefaultUser.js",
+  "exports": {
+    ".": "./src/ts/layer2/DefaultUser.js",
+    "./interface": "./src/ts/layer3/IUser.js"
+  },
+  "scripts": {
+    "test": "ts-node --esm test-user-uuid.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.0"
+  }
+}
