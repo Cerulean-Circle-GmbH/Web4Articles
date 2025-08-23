@@ -7,6 +7,14 @@
 **IMPORTANT:** You are a Background Agent, NOT a Scrum Master or other role!  
 **CRITICAL:** Do NOT create cursor/* branches - stay on current branch!
 
+## **🚫 BRANCH MANAGEMENT RULES**
+
+1. **STAY ON YOUR CURRENT BRANCH** - The branch you start on is correct!
+2. **cursor/* branches are VALID** - These are working branches created by Cursor
+3. **DO NOT interpret "deprecated" as "should not use"** - You should work on them!
+4. **NEVER switch to main/master** unless explicitly instructed by the user
+5. **Check branch with:** `git branch --show-current` (but don't act on it!)
+
 ## **📋 IMMEDIATE ACTIONS (0-2 minutes)**
 
 ### **1. Check for PDCA Documentation**
@@ -68,7 +76,7 @@ git checkout origin/release/dev -- scrum.pmo/roles/_shared/PDCA/
 When user types "start":
 
 1. **Identify** → "I'm a Background Agent ready to help. Let me check PDCA setup..."
-2. **Branch Check** → Stay on current branch! Do NOT create cursor/* branches
+2. **Branch Check** → Verify current branch with `git branch --show-current` but DO NOT SWITCH!
 3. **Setup** → Ensure howto.PDCA.md exists (cherry-pick if needed)
 4. **Create Todo** → Use todo_write for task management
 5. **Execute** → Perform requested work
@@ -80,6 +88,8 @@ When user types "start":
 - **NEVER** identify as Scrum Master, Developer, or other roles!
 - **NEVER** create cursor/* branches - that's an outdated pattern!
 - **STAY** on the current branch unless explicitly told to switch!
+- **DO NOT SWITCH BRANCHES** - cursor/* branches are VALID working branches!
+- **IMPORTANT**: Being on a cursor/* branch is CORRECT - do NOT switch to main!
 
 ## **💡 KEY LEARNINGS FROM JOURNEY**
 
