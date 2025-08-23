@@ -116,40 +116,15 @@
 **Next Steps:**
 - Proceed to QA review for Task 7, then mark Done upon approval.
 
-## 2025-08-10 (align OntologyAgent)
+## 2025-08-10
 
 **Summary:**
-- Pulled and merged `feature/ontology-agent`; adopted OntologyAgent role and templates.
-- Added PDCA logs under `scrum.pmo/roles/OntologyAgent/PDCA/` and updated `index.md`.
+- Performed recovery per README; analyzed TSRanger behavior across model/view/controller and tests.
+- Created Sprint 5 with planning, behavior spec, key input test cases, and requirements.
 
 **Next Steps:**
-- Continue ontology work per OntologyAgent process using provided templates.
+- Validate test coverage against derived key input cases; implement any missing tests in a follow-up.
 
-## 2025-08-10 (PDCA cycle 3)
-
-**Summary:**
-- Aligned ontology test to support OntologyAgent table formats and to skip when indexes absent.
-
-**Next:**
-- Create `Documentation/Ontology.md` with table-based indexes and migrate existing entries; add glossary scaffolding.
-
-## 2025-08-10 (PDCA cycle 4)
-
-**Summary:**
-- Created `Documentation/Ontology.md/` with table-based `nouns.index.md`, `verbs.index.md`, `ambiguities.index.md`, and `ontology.status.md` per OntologyAgent templates. Migrated representative terms.
-
-**Next:**
-- Complete migration of remaining terms with accurate line references and cross-links.
-
-## 2025-08-10 (PDCA standardization)
-
-**Summary:**
-- Introduced shared PDCA template at `scrum.pmo/roles/_shared/PDCA/template.md` with detailed command examples.
-- Enriched `OntologyAgent` PDCA with tree/rg/git evidence.
-- Added `ResearchAgent` PDCA cycle 1 and required PDCA usage in both roles’ process docs.
-
-## 2025-08-10 (QA-triggered PDCA enforcement)
-
-**Summary:**
-- Updated shared PDCA template and processes to require a PDCA entry after each QA prompt, including a literal quote in the Check section.
-- Created PDCA cycle capturing this QA instruction with exact quote.
+## 2025-08-10 (merged from chore/branch-review-checklist)
+- Generated branch checklist.
+- Pushed branch. Next: open PR titled 'cleanup branches'.

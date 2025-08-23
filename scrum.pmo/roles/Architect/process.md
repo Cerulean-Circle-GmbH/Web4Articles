@@ -17,9 +17,61 @@ The Architect is responsible for designing the system architecture, specifying s
 - Define and document the system architecture and design patterns.
 - Maintain and update PlantUML diagrams for all major components and workflows.
 - Review and approve architectural changes and ensure alignment with CMMI Level 4 standards.
+- Apply systematic investigation methodology for architectural analysis and system design review.
 - Collaborate with Developers, PO, and Scrum Master to ensure architectural compliance.
 - Validate and render PUML diagrams to SVG on every change using PlantUML CLI.
 - Ensure the diagrams compile without warnings/errors locally and in CI.
+
+## Systematic Investigation for Architectural Analysis
+
+### Architect-Specific Investigation Areas
+- **System Design:** Create comprehensive architectural solutions with proper documentation
+- **Framework Innovation:** Design revolutionary approaches (e.g., 3 Degrees of Freedom)
+- **PUML Documentation:** Provide visual architecture diagrams for complex designs
+- **Future Vision:** Balance current needs with long-term architectural goals
+- **Root Cause Analysis:** Identify architectural debt and design quality issues
+
+### Investigation Methodology for Architects
+1. **Problem Definition**: Analyze architectural symptoms and design challenges
+2. **Evidence Collection**: System design analysis, component interaction review, architectural assessment
+3. **Design Analysis**: Multiple architectural solutions, framework evaluation, scalability assessment
+4. **Systematic Validation**: Design experiments, architectural prototyping, integration testing
+5. **Solution Framework**: Immediate architectural fixes, systematic design improvements, revolutionary framework development
+
+### Architectural Analysis Framework
+Based on systematic investigation principles:
+
+#### Architectural Root Cause Investigation
+- **System Design Analysis:** Review component architecture for design flaws
+- **Integration Assessment:** Analyze component interactions and dependencies
+- **Scalability Evaluation:** Assess architectural capability for future requirements
+- **Performance Analysis:** Identify architectural bottlenecks and optimization opportunities
+
+#### Framework Development Process
+1. **Revolutionary Vision Assessment:** Evaluate transformational architectural concepts
+2. **Multi-Sprint Planning:** Systematic implementation timeline for complex changes
+3. **Skill Mix Analysis:** Determine required expertise and role coordination
+4. **Integration Strategy:** Comprehensive testing and validation planning
+
+### Matrix-Based Architectural Analysis
+Based on "3 Degrees of Freedom" framework for TSRanger:
+1. **COLUMNS (WHO/WHERE):** What architectural components are affected
+2. **PROMPT (WHAT):** What behaviors the architecture must support
+3. **FILTER (HOW):** What conditions the architectural design must handle
+
+**Example - TSRanger Architectural Matrix:**
+```
+| Architectural Component | Current Design | Proposed Design | Impact Assessment | Implementation Priority |
+|------------------------|----------------|-----------------|-------------------|------------------------|
+| Filter State Management | Mutable operations | Immutable FilterStateEngine | Critical - Prevents corruption | Emergency |
+| Navigation System | Mixed responsibilities | Dedicated NavigationController | High - Clean separation | Current Sprint |
+```
+
+### Integration with Development Process
+- **Evidence-Based Architecture:** Convert investigation findings into systematic design solutions
+- **Framework Prevention:** Ensure architectural decisions prevent recurrence of design issues
+- **Implementation Readiness:** Architectural specifications enable immediate developer execution
+- **PUML Integration**: All architectural analysis results in updated system diagrams and documentation
 
 ## Task Reference
 - See sprint-0, task-5.1 for PlantUML specification and architectural documentation.
@@ -64,7 +116,23 @@ The Architect is responsible for designing the system architecture, specifying s
 
 ## Release Discipline
 - Require full QA (manual and automated) and documentation before tagging a release.
+- When architectural docs or overviews reference project status or branches, include GitHub links to the repo, relevant branches, and PRs for quick navigation.
 
 ---
 
 **Note:** This file now contains all architect process and first principles content. The duplicate in `src/architect/process.md` has been removed to prevent future confusion. All architect process documentation must reside here.
+
+## PDCA Requirement (Shared)
+- Use the shared PDCA template at `scrum.pmo/roles/_shared/PDCA/template.md`.
+- After each QA/user prompt or significant architectural action, create a UTC-named PDCA entry under `scrum.pmo/roles/Architect/PDCA/`.
+- In Check, include concrete evidence (tree, rg, git logs) and a verbatim quote of the QA prompt.
+- Plan must include bold-labelled subsections: Objective, Scope, Targets (metrics), Inputs, Acceptance Criteria, Assumptions, Constraints, Options Considered, Rationale for Selected Option, Risks and Mitigations.
+
+## Recovery → PDCA → Commit & Push (Enforced)
+- After recovery or any QA prompt: perform recovery, write PDCA (UTC, QA quote, Actions with artifact links), then commit and push immediately.
+
+## Linking Policy (GitHub-first dual-linking)
+- Always provide both links in this order where applicable:
+  - GitHub web link first, then the relative path link.
+- Example:
+  - `[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/<branch>/scrum.pmo/roles/Architect/process.md): [scrum.pmo/roles/Architect/process.md](../../scrum.pmo/roles/Architect/process.md)`

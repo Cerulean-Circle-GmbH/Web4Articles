@@ -24,6 +24,13 @@ fi
 
 TS_NODE_PROJECT="$PROJECT_ROOT/tsconfig.json"
 TSRANGER_ENTRY="$PROJECT_ROOT/src/ts/layer4/TSRanger.ts"
+if [[ "${TSRANGER_V2:-0}" == "1" ]]; then
+  if [[ -f "$PROJECT_ROOT/v2/src/ts/layer4/TSRanger.ts" ]]; then
+    TSRANGER_ENTRY="$PROJECT_ROOT/v2/src/ts/layer4/TSRanger.ts"
+  elif [[ -f "$PROJECT_ROOT/src.v2/ts/layer4/TSRanger.ts" ]]; then
+    TSRANGER_ENTRY="$PROJECT_ROOT/src.v2/ts/layer4/TSRanger.ts"
+  fi
+fi
 
 export NODE_NO_WARNINGS=1
 export TS_NODE_PROJECT

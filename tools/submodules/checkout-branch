@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+BRANCH="${1:-main}"
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+cd "$ROOT"
+
+if [[ ! -d components ]]; then
+  echo "No components directory present." >&2
+  exit 1
+fi
+
+for m in components/*; do
+  [[ -d "$m/.git" ]] || { echo "[skip] $m (not a git repo/submodule)"; continue; }
+  echo "[checkout] $m -> $BRANCH"
+  (cd "$m" && git fetch && git checkout "$BRANCH" && git pull --ff-only) || {
+    echo "[warn] failed to checkout $BRANCH in $m" >&2
+  }
+done
