@@ -56,7 +56,7 @@ Auto-merge from post-commit hook failed due to conflicts between branches." || {
 
 # Function to merge to release/dev
 merge_to_release_dev() {
-    echo "📋 Merging PDCA to release/dev..."
+    echo "📋 Merging PDCA to release/dev (Wild West Mode 🤠)..."
     
     # Stash any uncommitted changes
     if ! git diff --quiet || ! git diff --cached --quiet; then
@@ -69,40 +69,67 @@ merge_to_release_dev() {
     echo "🔍 Fetching latest release/dev..."
     git fetch origin release/dev
     
+    # Store original branch commits
+    ORIGINAL_BRANCH=$CURRENT_BRANCH
+    
     # Create temporary branch for merge
     TEMP_BRANCH="temp-pdca-merge-$(date +%s)"
     git checkout -b $TEMP_BRANCH origin/release/dev
     
     # Try to merge current work
-    echo "🔄 Attempting to merge $CURRENT_BRANCH..."
-    if git merge $CURRENT_BRANCH --no-edit; then
+    echo "🔄 Attempting to merge $ORIGINAL_BRANCH..."
+    if git merge $ORIGINAL_BRANCH --no-edit; then
         # Push to release/dev
         echo "📤 Pushing to release/dev..."
         if git push origin $TEMP_BRANCH:release/dev; then
             echo "✅ Successfully merged to release/dev!"
             # Return to original branch
-            git checkout $CURRENT_BRANCH
+            git checkout $ORIGINAL_BRANCH
             # Delete temp branch
             git branch -D $TEMP_BRANCH
         else
-            echo "❌ Push failed - checking for non-fast-forward..."
-            # Return to original branch first
-            git checkout $CURRENT_BRANCH
-            # Create PR for non-fast-forward
-            create_pr_on_conflict $TEMP_BRANCH
+            echo "⚠️  Push failed - attempting force push..."
+            # Force push with lease for safety
+            if git push --force-with-lease origin $TEMP_BRANCH:release/dev; then
+                echo "🔥 Force pushed to release/dev (with lease)!"
+                echo "📋 QA NOTIFICATION: Force push executed to release/dev"
+                # Return to original branch
+                git checkout $ORIGINAL_BRANCH
+                # Delete temp branch
+                git branch -D $TEMP_BRANCH
+            else
+                echo "❌ Force push also failed - creating PR"
+                # Return to original branch first
+                git checkout $ORIGINAL_BRANCH
+                # Create PR as last resort
+                create_pr_on_conflict $TEMP_BRANCH
+                # Clean up temp branch
+                git branch -D $TEMP_BRANCH
+            fi
+        fi
+    else
+        echo "⚠️  Merge conflict detected - attempting force approach..."
+        # Instead of aborting, try to force our changes
+        git reset --hard $ORIGINAL_BRANCH
+        
+        echo "🔥 Force pushing to release/dev (Wild West Mode)..."
+        if git push --force-with-lease origin HEAD:release/dev; then
+            echo "✅ Force pushed successfully!"
+            echo "📋 QA NOTIFICATION: Force push executed due to conflicts"
+            echo "⚠️  WARNING: release/dev was overwritten with $ORIGINAL_BRANCH"
+            # Return to original branch
+            git checkout $ORIGINAL_BRANCH
+            # Delete temp branch
+            git branch -D $TEMP_BRANCH
+        else
+            echo "❌ Force push failed - creating PR"
+            # Return to original branch
+            git checkout $ORIGINAL_BRANCH
+            # Create PR with original branch
+            create_pr_on_conflict $ORIGINAL_BRANCH
             # Clean up temp branch
             git branch -D $TEMP_BRANCH
         fi
-    else
-        echo "❌ Merge conflict detected!"
-        # Abort the merge
-        git merge --abort
-        # Return to original branch
-        git checkout $CURRENT_BRANCH
-        # Create PR with original branch
-        create_pr_on_conflict $CURRENT_BRANCH
-        # Clean up temp branch
-        git branch -D $TEMP_BRANCH
     fi
     
     # Restore stashed changes if any

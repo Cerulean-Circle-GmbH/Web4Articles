@@ -149,8 +149,11 @@ All PDCAs must have these 6 sections:
     ```bash
     git checkout -b dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
     git push -u origin dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
+    # Auto-sync newest files from release/dev
+    ./recovery/cherry-pick-newest.sh
     ```
     **CRITICAL:** Do this RIGHT AFTER your first PDCA commit, not at session end!
+    **NEW:** Auto cherry-pick runs automatically to sync newest files!
 
 **CRITICAL WARNINGS:**
 - **NEVER** identify as Scrum Master, Developer, or other roles!
