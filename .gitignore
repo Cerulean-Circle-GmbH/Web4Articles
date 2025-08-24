@@ -1,3 +1,6 @@
+# Agent configuration
+.agent-config.json
+
 # Logs
 logs
 *.log

@@ -24,6 +24,6 @@
       "@v2/*": ["v2/src/*"]
     }
   },
-  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "include": ["src/**/*.ts", "test/**/*.ts", "components/**/*.ts"],
   "exclude": ["dist", "node_modules"]
 }
