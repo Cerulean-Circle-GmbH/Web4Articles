@@ -64,7 +64,14 @@ fi
 ✅ Branch restriction removed  
 ✅ Hook updated to work on all branches  
 ✅ Added branch logging for transparency  
-⏳ Testing pending with next commit  
+✅ Hook now executes on dev branches!  
+⚠️  Auto-merge script has issues with non-fast-forward pushes  
+
+**Test Results:**
+- Hook executed successfully: "📋 Executing auto-merge to release/dev..."
+- Branch shown correctly: "📍 Current branch: dev/2025-08-24-UTC-0857"
+- Auto-merge attempted but failed due to release/dev being ahead
+- Error: "non-fast-forward" - script needs to pull before push
 
 ## Act
 
