@@ -14,9 +14,10 @@
 
 ### **2. Process Documentation**
 - Update `recovery/start-command.md` based on learnings
-- Maintain `howto.PDCA.md` with latest standards
+- **Maintain `howto.PDCA.md` with EVERY learning** - continuous improvement
 - Document decision patterns and philosophy
 - Keep README.md radically simple for new agents
+- Update howto.PDCA.md immediately when criticized or learning occurs
 
 ### **3. Auto-Merge Maintenance**
 - Ensure post-commit hooks work correctly
