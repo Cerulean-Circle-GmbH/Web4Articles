@@ -9,11 +9,12 @@
 
 ## **🚫 BRANCH MANAGEMENT RULES**
 
-1. **ALWAYS work on save/start branch** - This is your primary working branch!
-2. **NEVER switch branches during work** - Stay on save/start for all operations
-3. **cursor/* branches** - If you start on one, immediately switch to save/start
-4. **At session completion ONLY** - Create and switch to `dev/$(date -u +"%Y-%m-%d-UTC-%H%M")`
-5. **Check branch with:** `git branch --show-current` (should show save/start)
+1. **START on save/start branch** - Switch there immediately if not already!
+2. **FIRST PDCA on save/start** - Complete your startup PDCA on save/start
+3. **THEN create dev/UTC branch** - After first PDCA, create & switch to `dev/$(date -u +"%Y-%m-%d-UTC-%H%M")`
+4. **CONTINUE on dev/UTC branch** - All subsequent work happens on your timestamped branch
+5. **cursor/* branches** - NEVER use these, switch away immediately
+6. **Check branch with:** `git branch --show-current`
 
 ## **📋 IMMEDIATE ACTIONS (0-2 minutes)**
 
@@ -144,11 +145,12 @@ All PDCAs must have these 6 sections:
 7. **Document** → Create PDCA following mandatory format
 8. **Commit** → Git add, commit, push immediately (auto-merge triggers)
 9. **Report** → Minimal chat with dual links and numbered decisions
-10. **Session End** → Create and switch to dev/UTC-timestamp branch:
+10. **Session Branch** → IMMEDIATELY create and switch to dev/UTC-timestamp branch:
     ```bash
     git checkout -b dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
     git push -u origin dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
     ```
+    **CRITICAL:** Do this RIGHT AFTER your first PDCA commit, not at session end!
 
 **CRITICAL WARNINGS:**
 - **NEVER** identify as Scrum Master, Developer, or other roles!
