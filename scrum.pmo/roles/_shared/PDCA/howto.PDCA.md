@@ -288,6 +288,21 @@
 
 ---
 
+## **📚 ADVANCED LEARNING RESOURCES**
+
+### **Save/Restart Agent's Detailed PDCAs**
+For deep insights on PDCA best practices, process improvements, and lessons learned:
+- **Location:** `scrum.pmo/roles/SaveRestartAgent/pdca/`
+- **Learnings Summary:** `scrum.pmo/roles/SaveRestartAgent/learnings.summary.md` (updated EOD)
+- **Key Topics:**
+  - Decision behavior and presentation
+  - Documentation integrity
+  - Cross-agent collaboration
+  - Git workflow automation
+  - Continuous improvement practices
+
+---
+
 ## **⚠️ COMMON MISTAKES TO AVOID**
 
 ### **Format Failures:**
