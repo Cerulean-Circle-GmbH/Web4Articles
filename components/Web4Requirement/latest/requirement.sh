@@ -1,97 +1,98 @@
 #!/bin/bash
 
-# Web4Requirement CLI Tool - Latest Version
-# Usage: ./requirement.sh <command> [arguments]
-# This script runs the TypeScript CLI directly using ts-node
+# Web4Requirement CLI Tool - Location Resilient Version
+# Works from any directory, finds project root via git
 
-# Get the directory where this script is located (resolve symlinks)
-SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" 2>/dev/null || echo "${BASH_SOURCE[0]}")")" && pwd)"
-
-# Set PROJECT_ROOT if not already set
-if [ -z "$PROJECT_ROOT" ]; then
-  # First try to find project root from current working directory
-  PROJECT_ROOT="$(pwd)"
-  
-  # Walk up directories from current location to find project root
-  while [ "$PROJECT_ROOT" != "/" ]; do
-    if [ -f "$PROJECT_ROOT/package.json" ] || [ -d "$PROJECT_ROOT/.git" ] || [ -f "$PROJECT_ROOT/source.env" ]; then
-      break
+# Function to find project root using git
+find_project_root() {
+    # Try git first (most reliable)
+    local git_root=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [ -n "$git_root" ] && [ -d "$git_root" ]; then
+        # Verify it's Web4Articles project by checking for key files
+        if [ -f "$git_root/package.json" ] || [ -f "$git_root/README.md" ]; then
+            echo "$git_root"
+            return 0
+        fi
     fi
-    PROJECT_ROOT="$(dirname "$PROJECT_ROOT")"
-  done
-  
-  # If not found from current directory, try from script location
-  if [ "$PROJECT_ROOT" = "/" ]; then
-    PROJECT_ROOT="$SCRIPT_DIR"
-    while [ "$PROJECT_ROOT" != "/" ]; do
-      if [ -f "$PROJECT_ROOT/package.json" ] || [ -d "$PROJECT_ROOT/.git" ] || [ -f "$PROJECT_ROOT/source.env" ]; then
-        break
-      fi
-      PROJECT_ROOT="$(dirname "$PROJECT_ROOT")"
+    
+    # Fallback: walk up looking for .git and package.json
+    local current_dir="$PWD"
+    while [ "$current_dir" != "/" ]; do
+        if [ -d "$current_dir/.git" ] && [ -f "$current_dir/package.json" ]; then
+            echo "$current_dir"
+            return 0
+        fi
+        current_dir="$(dirname "$current_dir")"
     done
-  fi
-  
-  # Final fallback: if still not found, exit with error
-  if [ "$PROJECT_ROOT" = "/" ]; then
-    echo "❌ Error: Could not find Web4Articles project root"
-    echo "   Searched for package.json, .git, or source.env"
-    echo "   Current directory: $(pwd)"
-    echo "   Script location: $SCRIPT_DIR"
+    
+    return 1
+}
+
+# Find project root
+PROJECT_ROOT=$(find_project_root)
+if [ -z "$PROJECT_ROOT" ]; then
+    echo "❌ Error: Not in a Web4Articles project directory"
+    echo "💡 Please run from within the Web4Articles git repository"
     exit 1
-  fi
-  
-  export PROJECT_ROOT
 fi
 
-# Detect current working directory context
+export PROJECT_ROOT
+
+# Detect context for the CLI
 CURRENT_DIR="$(pwd)"
 CONTEXT_INFO=""
 
-# Check if we're in a component directory structure
-# Pattern: components/[componentName]/[version]/ or similar
+# Check if we're in a component directory
 if [[ "$CURRENT_DIR" == *"/components/"*"/"*"/"* ]]; then
-  # Extract component info
-  COMPONENT_PATH=$(echo "$CURRENT_DIR" | grep -o '.*/components/[^/]*/[^/]*')
-  if [ -n "$COMPONENT_PATH" ]; then
-    CONTEXT_INFO="component:$COMPONENT_PATH"
-  fi
+    COMPONENT_PATH=$(echo "$CURRENT_DIR" | grep -o '.*/components/[^/]*/[^/]*')
+    if [ -n "$COMPONENT_PATH" ]; then
+        CONTEXT_INFO="component:$COMPONENT_PATH"
+    fi
 fi
 
-# If no component context detected, use arbitrary directory context
+# Default context if none detected
 if [ -z "$CONTEXT_INFO" ]; then
-  CONTEXT_INFO="arbitrary:$CURRENT_DIR"
+    CONTEXT_INFO="arbitrary:$CURRENT_DIR"
 fi
 
-# Path to the TypeScript CLI source
-CLI_PATH="$SCRIPT_DIR/src/ts/layer5/RequirementCLI.ts"
+# Try multiple locations for the CLI
+CLI_LOCATIONS=(
+    "$PROJECT_ROOT/scripts/dist/ts/layer5/RequirementCLI.js"
+    "$PROJECT_ROOT/components/Web4Requirement/latest/dist/ts/layer5/RequirementCLI.js"
+    "$PROJECT_ROOT/dist/ts/layer5/RequirementCLI.js"
+)
 
-# Check if CLI source exists
-if [ ! -f "$CLI_PATH" ]; then
-  echo "❌ CLI source not found at: $CLI_PATH"
-  echo "🔧 Please ensure the Web4Requirement latest version is properly set up"
-  exit 1
+CLI_PATH=""
+for location in "${CLI_LOCATIONS[@]}"; do
+    if [ -f "$location" ]; then
+        CLI_PATH="$location"
+        break
+    fi
+done
+
+if [ -z "$CLI_PATH" ]; then
+    echo "❌ Requirement CLI not found in any expected location"
+    echo "🔍 Searched locations:"
+    for location in "${CLI_LOCATIONS[@]}"; do
+        echo "   - $location"
+    done
+    echo ""
+    echo "🔧 To fix this, from project root ($PROJECT_ROOT):"
+    echo "   1. cd components/Web4Requirement/latest"
+    echo "   2. npm install"
+    echo "   3. npm run build"
+    echo ""
+    echo "📍 Current directory: $CURRENT_DIR"
+    echo "📂 Project root: $PROJECT_ROOT"
+    exit 1
 fi
 
-# Check for ts-node availability with absolute paths
-TS_NODE_PATH=""
-if [ -f "$PROJECT_ROOT/node_modules/.bin/ts-node" ]; then
-  TS_NODE_PATH="$PROJECT_ROOT/node_modules/.bin/ts-node"
-elif command -v ts-node >/dev/null 2>&1; then
-  TS_NODE_PATH="$(command -v ts-node)"
-else
-  echo "❌ ts-node not found. Please install ts-node:"
-  echo "   cd $PROJECT_ROOT && npm install --save-dev ts-node"
-  echo "   or globally: npm install -g ts-node"
-  exit 1
+# Check for Node.js
+if ! command -v node >/dev/null 2>&1; then
+    echo "❌ Error: Node.js is required but not installed"
+    exit 1
 fi
 
-# Check for TypeScript configuration
-TSCONFIG_PATH="$PROJECT_ROOT/tsconfig.json"
-if [ ! -f "$TSCONFIG_PATH" ]; then
-  echo "⚠️  Warning: tsconfig.json not found at $TSCONFIG_PATH"
-fi
-
-# Execute the CLI with context info and all arguments using proper ts-node compilation
-# Use absolute paths and proper working directory
-cd "$PROJECT_ROOT"
-NODE_OPTIONS="--loader=ts-node/esm --no-experimental-strip-types" DIRECTORY_CONTEXT="$CONTEXT_INFO" node "$CLI_PATH" "$@"
+# Execute the CLI with context info and all arguments
+export DIRECTORY_CONTEXT="$CONTEXT_INFO"
+node "$CLI_PATH" "$@"
