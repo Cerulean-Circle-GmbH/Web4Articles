@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# obash: Open a project-scoped Bash with PATH and tssh/tsranger completion initialized
+set -euo pipefail
+
+# Resolve project root (two levels up from this script: src/sh -> project)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+
+# Prepare a temporary rcfile to configure the interactive shell
+RC_FILE="$(mktemp)"
+
+cleanup() { rm -f "$RC_FILE"; }
+trap cleanup EXIT
+
+cat > "$RC_FILE" <<'RC'
+# obash rcfile (auto-generated)
+
+# Preserve existing PATH but prepend project bin paths
+export PROJECT_ROOT="__PROJECT_ROOT__"
+export PATH="$PROJECT_ROOT/node_modules/.bin:$PROJECT_ROOT/src/sh:$PATH"
+
+# Configure ts-node for ESM TypeScript entrypoints
+export TS_NODE_PROJECT="$PROJECT_ROOT/tsconfig.json"
+export NODE_NO_WARNINGS=1
+
+# Load bash-completion if available (Linux and macOS/Homebrew locations)
+if [ -f /usr/share/bash-completion/bash_completion ]; then
+  # shellcheck source=/usr/share/bash-completion/bash_completion
+  . /usr/share/bash-completion/bash_completion
+elif [ -f /etc/bash_completion ]; then
+  # shellcheck source=/etc/bash_completion
+  . /etc/bash_completion
+elif [ -f /opt/homebrew/etc/profile.d/bash_completion.sh ]; then
+  # Homebrew bash-completion@2 (Apple Silicon)
+  # shellcheck source=/opt/homebrew/etc/profile.d/bash_completion.sh
+  . /opt/homebrew/etc/profile.d/bash_completion.sh
+elif [ -f /usr/local/etc/bash_completion ]; then
+  # Homebrew bash-completion (Intel macs)
+  # shellcheck source=/usr/local/etc/bash_completion
+  . /usr/local/etc/bash_completion
+fi
+
+# Robust tssh completion using TSCompletion backend (positional-only, no options)
+_tssh_completion() {
+  local cur
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  # Pass all words except the command itself to the backend
+  local args=("${COMP_WORDS[@]:1}")
+  local out
+  out=$(NODE_NO_WARNINGS=1 node --loader ts-node/esm "$PROJECT_ROOT/src/ts/layer4/TSCompletion.ts" "${args[@]}" 2>/dev/null || true)
+  COMPREPLY=( $(compgen -W "$out" -- "$cur") )
+  # Allow default completion fallback when backend returns nothing
+  compopt -o default 2>/dev/null || true
+}
+complete -F _tssh_completion tssh
+
+# Minimal tsranger completion (tsranger is a TUI and does not accept positional args)
+_tsranger_completion() {
+  local cur
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  COMPREPLY=( $(compgen -W "" -- "$cur") )
+  compopt -o default 2>/dev/null || true
+}
+complete -F _tsranger_completion tsranger
+
+# Friendly prompt and banner only for interactive shells
+case $- in
+  *i*)
+    # Colors for prompt
+    BLUE='\[\e[34m\]'
+    YELLOW='\[\e[33m\]'
+    RED='\[\e[31m\]'
+    RESET='\[\e[0m\]'
+    if [ "${EUID:-$(id -u)}" -eq 0 ]; then
+      USER_COLOR="$RED"
+    else
+      USER_COLOR="$BLUE"
+    fi
+    PS1='[obash \h] '"${USER_COLOR}"'\u'"${RESET}"'@'"${YELLOW}"'\w'"${RESET}"' > '
+    export PS1
+    echo "[obash] Project Root: $PROJECT_ROOT"
+    echo "[obash] PATH prepended with: $PROJECT_ROOT/node_modules/.bin and $PROJECT_ROOT/src/sh"
+    echo "[obash] TS_NODE_PROJECT: $TS_NODE_PROJECT"
+    echo "[obash] tssh and tsranger completion initialized"
+    ;;
+esac
+RC
+
+# Inject the actual project root path into the rcfile (portable sed -i)
+SED_SAFE_ROOT="${PROJECT_ROOT//\//\/}"
+if [[ "$OSTYPE" == darwin* ]]; then
+  sed -i '' -e "s#__PROJECT_ROOT__#${SED_SAFE_ROOT}#g" "$RC_FILE"
+else
+  sed -i -e "s#__PROJECT_ROOT__#${SED_SAFE_ROOT}#g" "$RC_FILE"
+fi
+
+# Start bash with our rcfile
+if [[ $# -gt 0 ]]; then
+  # Non-interactive command mode: ensure rc is sourced via BASH_ENV
+  exec env BASH_ENV="$RC_FILE" bash --noprofile -c "$*"
+else
+  # Interactive shell
+  exec bash --noprofile --rcfile "$RC_FILE" -i
+fi

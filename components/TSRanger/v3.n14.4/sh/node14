@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+# node14: Run commands in a legacy Node 14 container (default 14.21.3)
+set -euo pipefail
+
+# Resolve project root (contains package.json)
+find_project_root() {
+  local dir="$PWD"
+  while [[ "$dir" != "/" ]]; do
+    if [[ -f "$dir/package.json" ]]; then
+      echo "$dir"
+      return 0
+    fi
+    dir="$(dirname "$dir")"
+  done
+  return 1
+}
+
+PROJECT_ROOT="$(find_project_root)"
+if [[ -z "${PROJECT_ROOT:-}" ]]; then
+  echo "Error: Could not find project root (missing package.json)." >&2
+  exit 1
+fi
+
+# Choose Node 14 version (override with NODE14_VERSION)
+NODE14_VERSION="${NODE14_VERSION:-14.21.3}"
+IMAGE="node:${NODE14_VERSION}"
+
+# Prefer non-interactive by default in CI; detect TTY for interactive runs
+DOCKER_IT=""
+if [[ -t 0 && -t 1 ]]; then
+  DOCKER_IT="-it"
+fi
+
+# Map current UID/GID for file ownership consistency
+USER_FLAG=""
+if command -v id >/dev/null 2>&1; then
+  USER_FLAG="--user $(id -u):$(id -g)"
+fi
+
+# Ensure docker exists
+if ! command -v docker >/dev/null 2>&1; then
+  echo "Error: docker is required to run Node 14 container." >&2
+  exit 1
+fi
+
+# Pull image if missing (non-blocking best effort)
+if ! docker image inspect "$IMAGE" >/dev/null 2>&1; then
+  docker pull "$IMAGE" >/dev/null 2>&1 || true
+fi
+
+# Build command
+WORKDIR="$PWD"
+CMD=("bash" "-lc")
+if [[ $# -gt 0 ]]; then
+  # Run provided command
+  CMD+=("$*")
+else
+  # Default: print node version
+  CMD+=("node -v")
+fi
+
+exec docker run --rm ${DOCKER_IT} \
+  -v "$PROJECT_ROOT":"$PROJECT_ROOT" \
+  -w "$WORKDIR" \
+  $USER_FLAG \
+  -e CI="${CI:-}" \
+  -e LOG_LEVEL="${LOG_LEVEL:-}" \
+  "$IMAGE" \
+  "${CMD[@]}"
