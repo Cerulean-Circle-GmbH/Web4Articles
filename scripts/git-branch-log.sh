@@ -4,7 +4,7 @@
 UTC_TIMESTAMP=$(date -u +"%Y%m%d-%H%M%S")
 
 # Create filename with UTC timestamp
-FILENAME="git.${UTC_TIMESTAMP}.branch.log.ansi.txt"
+FILENAME="git.${UTC_TIMESTAMP}.branch.log.ansi"
 
 # Create temp directory if it doesn't exist
 mkdir -p temp
