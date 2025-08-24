@@ -175,10 +175,18 @@
    git fetch origin release/dev
    git checkout origin/release/dev -- path/to/missing/file
    ```
-6. **Session Completion:** Create timestamped dev branch:
+6. **ALWAYS ask before git operations** (Decision 2a) - pull, merge, rebase, reset
+7. **NEVER truncate user quotes** - they are documentation!
+
+### **Branch Strategy (Decision 1d):**
+1. **Start on save/start** - Always begin here
+2. **Create dev/UTC immediately** - Right after successful start
+3. **Work on dev/UTC** - All session work happens there
    ```bash
-   git checkout -b dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
-   git push -u origin dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
+   # At session start (after recovery):
+   TIMESTAMP=$(date -u +"%Y-%m-%d-UTC-%H%M")
+   git checkout -b dev/$TIMESTAMP
+   git push -u origin dev/$TIMESTAMP
    ```
 
 ---
