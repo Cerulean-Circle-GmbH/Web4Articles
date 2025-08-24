@@ -34,15 +34,19 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](GITHUB_URL) | [relative/path/to/pdca.md](relative/path/to/pdca.md)
-- **Changed Files:** [GitHub](GITHUB_URL) | [relative/path/to/file.ext](relative/path/to/file.ext)
-- **New Components:** [GitHub](GITHUB_URL) | [relative/path/to/component](relative/path/to/component)
-- **Requirements Created:** [GitHub](GITHUB_URL) | [spec/requirements.md/uuid.requirement.md](spec/requirements.md/uuid.requirement.md)
+- **PDCA Document:** [GitHub](GITHUB_URL) | relative/path/to/pdca.md
+- **Changed Files:** [GitHub](GITHUB_URL) | relative/path/to/file.ext
+- **New Components:** [GitHub](GITHUB_URL) | relative/path/to/component
+- **Requirements Created:** [GitHub](GITHUB_URL) | spec/requirements.md/uuid.requirement.md
 
 ### **QA Decisions**
 - [x] Completed decision: [Specific decision already made]
-- [ ] Pending decision: [Decision requiring user input]
-- [ ] Follow-up required: [Another pending decision]
+- [ ] **Decision 1:** [Clear decision title]
+  - a) [First option with rationale]
+  - b) [Second option with rationale]
+- [ ] **Decision 2:** [Another decision title]
+  - a) [First option]
+  - b) [Second option]
 
 ### **TRON Feedback (YYYY-MM-DD-UTC-HHMM)**
 ```quote
@@ -165,6 +169,25 @@
 1. **Immediate commit and push** after every PDCA creation [[memory:6902297]]
 2. **Git add, commit, and push operations** ensure proper version control [[memory:6902297]]
 3. **One-liner commit messages** with `git commit -m "..."` [[memory:6713745]]
+4. **Auto-merge to release/dev** after EVERY commit (Decision 1a - automatic)
+5. **File not found?** Always check release/dev and cherry-pick if missing:
+   ```bash
+   git fetch origin release/dev
+   git checkout origin/release/dev -- path/to/missing/file
+   ```
+6. **ALWAYS ask before git operations** (Decision 2a) - pull, merge, rebase, reset
+7. **NEVER truncate user quotes** - they are documentation!
+
+### **Branch Strategy (Decision 1d):**
+1. **Start on save/start** - Always begin here
+2. **Create dev/UTC immediately** - Right after successful start
+3. **Work on dev/UTC** - All session work happens there
+   ```bash
+   # At session start (after recovery):
+   TIMESTAMP=$(date -u +"%Y-%m-%d-UTC-%H%M")
+   git checkout -b dev/$TIMESTAMP
+   git push -u origin dev/$TIMESTAMP
+   ```
 
 ---
 
@@ -172,9 +195,12 @@
 
 ### **Chat Response Format:**
 - **Detailed content goes in PDCA files** - NOT in chat [[memory:6896499]]
-- **Chat responses:** Dual-format links and decisions ONLY [[memory:6896476]]
+- **Chat responses:** Dual-format links and NUMBERED decisions ONLY [[memory:6896476]]
 - **"Much in files, relevant links in chat"** - TRON's explicit instruction
 - **Never skip dual links** in chat responses - critical for user navigation
+- **Always number decisions** with a) b) options for easy user response
+- **CRITICAL:** Use EXACT same link format as in PDCA: `[GitHub](URL) | [path](path)`
+- **NO summaries or explanations** in chat - just links and decisions!
 
 ### **User Feedback Integration (CRITICAL):**
 - **Use markdown code block format** ```quote``` for all TRON quotes to preserve formatting
@@ -282,15 +308,15 @@
 ## **AMBIGUITIES & QA DECISIONS REQUIRED**
 
 ### **Outstanding Questions (Actual Pending Decisions):**
-- [ ] **Link Validation:** 
-  a) Automated checking for GitHub links
-  b) Manual verification approach
-- [ ] **Version Integration:** 
-  a) Integrate component versioning with PDCA process
-  b) Keep versioning separate from PDCA
-- [ ] **Recovery Integration:** 
-  a) Full PDCA format requirements in recovery
-  b) Simplified format for recovery scenarios
+- [ ] **Decision 1: Link Validation Approach**
+  - a) Implement automated checking for GitHub links before submission
+  - b) Continue with manual verification approach for flexibility
+- [ ] **Decision 2: Version Integration Strategy**
+  - a) Integrate component versioning directly with PDCA process
+  - b) Keep versioning separate from PDCA for cleaner separation of concerns
+- [ ] **Decision 3: Recovery Format Requirements**
+  - a) Require full PDCA format compliance in recovery scenarios
+  - b) Allow simplified format for recovery scenarios to enable faster response
 
 ### **Format Evolution Decisions:**
 - [ ] **Template Updates:** 
