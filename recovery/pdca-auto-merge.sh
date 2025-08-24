@@ -56,7 +56,8 @@ Auto-merge from post-commit hook failed due to conflicts between branches." || {
 
 # Function to merge to release/dev
 merge_to_release_dev() {
-    echo "📋 Merging PDCA to release/dev (Wild West Mode 🤠)..."
+    echo "📋 Merging to release/dev (Safe Additive Mode 🛡️)..."
+    echo "ℹ️  Only newer files will be added, older content preserved"
     
     # Stash any uncommitted changes
     if ! git diff --quiet || ! git diff --cached --quiet; then
@@ -69,68 +70,101 @@ merge_to_release_dev() {
     echo "🔍 Fetching latest release/dev..."
     git fetch origin release/dev
     
-    # Store original branch commits
+    # Store original branch
     ORIGINAL_BRANCH=$CURRENT_BRANCH
     
-    # Create temporary branch for merge
+    # Create temporary branch from release/dev
     TEMP_BRANCH="temp-pdca-merge-$(date +%s)"
     git checkout -b $TEMP_BRANCH origin/release/dev
     
-    # Try to merge current work
-    echo "🔄 Attempting to merge $ORIGINAL_BRANCH..."
-    if git merge $ORIGINAL_BRANCH --no-edit; then
-        # Push to release/dev
-        echo "📤 Pushing to release/dev..."
-        if git push origin $TEMP_BRANCH:release/dev; then
-            echo "✅ Successfully merged to release/dev!"
-            # Return to original branch
-            git checkout $ORIGINAL_BRANCH
-            # Delete temp branch
-            git branch -D $TEMP_BRANCH
+    echo "🔄 Analyzing files for safe merge..."
+    
+    # Get list of changed files in original branch
+    CHANGED_FILES=$(git diff --name-only origin/release/dev..$ORIGINAL_BRANCH)
+    
+    # Arrays to track what we're doing
+    declare -a NEWER_FILES
+    declare -a NEW_FILES
+    declare -a SKIPPED_FILES
+    
+    # Check each file
+    while IFS= read -r file; do
+        if [ -z "$file" ]; then
+            continue
+        fi
+        
+        # Get modification time in current branch
+        CURRENT_TIME=$(git log -1 --format=%ct $ORIGINAL_BRANCH -- "$file" 2>/dev/null)
+        
+        if [ -z "$CURRENT_TIME" ]; then
+            continue
+        fi
+        
+        # Get modification time in release/dev
+        DEV_TIME=$(git log -1 --format=%ct origin/release/dev -- "$file" 2>/dev/null)
+        
+        if [ -z "$DEV_TIME" ]; then
+            # File doesn't exist in release/dev - it's new
+            echo "✨ New file: $file"
+            git checkout $ORIGINAL_BRANCH -- "$file"
+            NEW_FILES+=("$file")
+        elif [ "$CURRENT_TIME" -gt "$DEV_TIME" ]; then
+            # File is newer in current branch
+            echo "🔄 Newer file: $file"
+            git checkout $ORIGINAL_BRANCH -- "$file"
+            NEWER_FILES+=("$file")
         else
-            echo "⚠️  Push failed - attempting force push..."
-            # Force push with lease for safety
-            if git push --force-with-lease origin $TEMP_BRANCH:release/dev; then
-                echo "🔥 Force pushed to release/dev (with lease)!"
-                echo "📋 QA NOTIFICATION: Force push executed to release/dev"
-                # Return to original branch
-                git checkout $ORIGINAL_BRANCH
-                # Delete temp branch
-                git branch -D $TEMP_BRANCH
+            # File is older or same - skip it
+            echo "⏭️  Skipping older/same file: $file"
+            SKIPPED_FILES+=("$file")
+        fi
+    done <<< "$CHANGED_FILES"
+    
+    # Summary
+    echo ""
+    echo "📊 Merge Summary:"
+    echo "━━━━━━━━━━━━━━━"
+    echo "✨ New files to add: ${#NEW_FILES[@]}"
+    echo "🔄 Newer files to update: ${#NEWER_FILES[@]}"
+    echo "⏭️  Older files skipped: ${#SKIPPED_FILES[@]}"
+    
+    # Only proceed if we have something to add
+    if [ ${#NEW_FILES[@]} -gt 0 ] || [ ${#NEWER_FILES[@]} -gt 0 ]; then
+        # Stage the files
+        git add .
+        
+        # Commit if there are changes
+        if ! git diff --cached --quiet; then
+            COMMIT_MSG="Safe merge: Add newer content from $ORIGINAL_BRANCH
+
+New files: ${#NEW_FILES[@]}
+Updated files: ${#NEWER_FILES[@]}
+Skipped older files: ${#SKIPPED_FILES[@]}
+
+This merge only adds newer content, preserving existing newer files in release/dev"
+            
+            git commit -m "$COMMIT_MSG"
+            
+            # Try to push (no force!)
+            echo "📤 Pushing to release/dev (no force)..."
+            if git push origin $TEMP_BRANCH:release/dev; then
+                echo "✅ Successfully merged newer content to release/dev!"
             else
-                echo "❌ Force push also failed - creating PR"
-                # Return to original branch first
-                git checkout $ORIGINAL_BRANCH
-                # Create PR as last resort
+                echo "❌ Push failed - creating PR for manual review"
                 create_pr_on_conflict $TEMP_BRANCH
-                # Clean up temp branch
-                git branch -D $TEMP_BRANCH
             fi
+        else
+            echo "ℹ️  No newer files to merge"
         fi
     else
-        echo "⚠️  Merge conflict detected - attempting force approach..."
-        # Instead of aborting, try to force our changes
-        git reset --hard $ORIGINAL_BRANCH
-        
-        echo "🔥 Force pushing to release/dev (Wild West Mode)..."
-        if git push --force-with-lease origin HEAD:release/dev; then
-            echo "✅ Force pushed successfully!"
-            echo "📋 QA NOTIFICATION: Force push executed due to conflicts"
-            echo "⚠️  WARNING: release/dev was overwritten with $ORIGINAL_BRANCH"
-            # Return to original branch
-            git checkout $ORIGINAL_BRANCH
-            # Delete temp branch
-            git branch -D $TEMP_BRANCH
-        else
-            echo "❌ Force push failed - creating PR"
-            # Return to original branch
-            git checkout $ORIGINAL_BRANCH
-            # Create PR with original branch
-            create_pr_on_conflict $ORIGINAL_BRANCH
-            # Clean up temp branch
-            git branch -D $TEMP_BRANCH
-        fi
+        echo "✅ All files in release/dev are already up-to-date or newer!"
     fi
+    
+    # Return to original branch
+    git checkout $ORIGINAL_BRANCH
+    
+    # Delete temp branch
+    git branch -D $TEMP_BRANCH
     
     # Restore stashed changes if any
     if [ "$STASHED" = true ]; then
