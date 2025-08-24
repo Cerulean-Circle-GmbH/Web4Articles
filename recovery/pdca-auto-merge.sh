@@ -3,12 +3,56 @@
 # PDCA Auto-Merge to release/dev
 # This script automatically merges PDCA commits to release/dev branch
 
-set -e
+# Don't exit on errors - we handle them gracefully
+set +e
 
 echo "🔄 PDCA Auto-Merge Script"
 
 # Get current branch
 CURRENT_BRANCH=$(git branch --show-current)
+
+# Function to create PR on conflicts
+create_pr_on_conflict() {
+    local SOURCE_BRANCH="$1"
+    local TARGET_BRANCH="release/dev"
+    
+    echo "⚠️  Merge conflict detected! Creating PR for QA review..."
+    echo "📋 QA NOTIFICATION: Merge conflict requires manual resolution"
+    echo "🔗 Creating PR from $SOURCE_BRANCH to $TARGET_BRANCH"
+    
+    # Push the source branch if not already pushed
+    git push origin $SOURCE_BRANCH 2>/dev/null || true
+    
+    # Create PR using GitHub CLI if available, otherwise show manual instructions
+    if command -v gh &> /dev/null; then
+        gh pr create --base $TARGET_BRANCH --head $SOURCE_BRANCH \
+            --title "🔄 Auto-merge conflict: $SOURCE_BRANCH → $TARGET_BRANCH" \
+            --body "## ⚠️ Merge Conflict Detected
+
+This PR was automatically created because the auto-merge script encountered conflicts.
+
+**Source Branch:** $SOURCE_BRANCH
+**Target Branch:** $TARGET_BRANCH
+**Timestamp:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+
+### QA Action Required:
+1. Review the conflicts
+2. Resolve them appropriately
+3. Merge this PR
+
+### Context:
+Auto-merge from post-commit hook failed due to conflicts between branches." || {
+            echo "❌ Failed to create PR automatically"
+            echo "📝 Please create PR manually at:"
+            echo "   https://github.com/Cerulean-Circle-GmbH/Web4Articles/pull/new/$SOURCE_BRANCH"
+        }
+    else
+        echo "📝 GitHub CLI not found. Please create PR manually:"
+        echo "   https://github.com/Cerulean-Circle-GmbH/Web4Articles/pull/new/$SOURCE_BRANCH"
+        echo "   Base: $TARGET_BRANCH"
+        echo "   Compare: $SOURCE_BRANCH"
+    fi
+}
 
 # Function to merge to release/dev
 merge_to_release_dev() {
@@ -27,28 +71,45 @@ merge_to_release_dev() {
     
     # Create temporary branch for merge
     TEMP_BRANCH="temp-pdca-merge-$(date +%s)"
-    git checkout -b $TEMP_BRANCH
+    git checkout -b $TEMP_BRANCH origin/release/dev
     
-    # Merge current work
-    git merge $CURRENT_BRANCH --no-edit
-    
-    # Push to release/dev
-    echo "📤 Pushing to release/dev..."
-    git push origin $TEMP_BRANCH:release/dev
-    
-    # Return to original branch
-    git checkout $CURRENT_BRANCH
-    
-    # Delete temp branch
-    git branch -D $TEMP_BRANCH
+    # Try to merge current work
+    echo "🔄 Attempting to merge $CURRENT_BRANCH..."
+    if git merge $CURRENT_BRANCH --no-edit; then
+        # Push to release/dev
+        echo "📤 Pushing to release/dev..."
+        if git push origin $TEMP_BRANCH:release/dev; then
+            echo "✅ Successfully merged to release/dev!"
+            # Return to original branch
+            git checkout $CURRENT_BRANCH
+            # Delete temp branch
+            git branch -D $TEMP_BRANCH
+        else
+            echo "❌ Push failed - checking for non-fast-forward..."
+            # Return to original branch first
+            git checkout $CURRENT_BRANCH
+            # Create PR for non-fast-forward
+            create_pr_on_conflict $TEMP_BRANCH
+            # Clean up temp branch
+            git branch -D $TEMP_BRANCH
+        fi
+    else
+        echo "❌ Merge conflict detected!"
+        # Abort the merge
+        git merge --abort
+        # Return to original branch
+        git checkout $CURRENT_BRANCH
+        # Create PR with original branch
+        create_pr_on_conflict $CURRENT_BRANCH
+        # Clean up temp branch
+        git branch -D $TEMP_BRANCH
+    fi
     
     # Restore stashed changes if any
     if [ "$STASHED" = true ]; then
         echo "📥 Restoring stashed changes..."
         git stash pop
     fi
-    
-    echo "✅ Successfully merged to release/dev!"
 }
 
 # Function for PDCA workflow (ALWAYS merges to release/dev per Decision 1a)
