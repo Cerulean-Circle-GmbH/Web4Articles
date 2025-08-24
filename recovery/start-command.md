@@ -1,6 +1,7 @@
 # 🚀 **Recovery Procedure: Quick Start to PDCA Excellence**
 
-**Agent Role:** Background Agent (Cursor)  
+**Agent Role:** Background Agent (Cursor) - Regular agents work on dev/* branches  
+**Special Exception:** Save/Restart Agent ALWAYS works on save/start branch  
 **Trigger:** When user types "start"  
 **Purpose:** Immediately establish optimal PDCA workflow with minimalist chat reporting
 
