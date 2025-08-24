@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+# tsranger (v2): Shell wrapper for TSRanger v2 TypeScript TUI
+set -euo pipefail
+
+# Find component root (self-contained v2.0 directory)
+find_component_root() {
+  local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  # Go up from sh to v2.0 root
+  echo "$(dirname "$script_dir")"
+}
+
+COMPONENT_ROOT="$(find_component_root)"
+if [[ ! -d "$COMPONENT_ROOT/src/ts" ]]; then
+  echo "Error: Could not find v2.0 component root (missing src/ts)." >&2
+  exit 1
+fi
+
+# Find project root for tsconfig.json only
+find_project_root() {
+  local dir="$COMPONENT_ROOT"
+  while [[ "$dir" != "/" ]]; do
+    if [[ -f "$dir/tsconfig.json" ]]; then
+      echo "$dir"
+      return 0
+    fi
+    dir="$(dirname "$dir")"
+  done
+  return 1
+}
+
+PROJECT_ROOT="$(find_project_root)"
+if [[ -z "$PROJECT_ROOT" ]]; then
+  echo "Error: Could not find project root with tsconfig.json." >&2
+  exit 1
+fi
+
+TS_NODE_PROJECT="$PROJECT_ROOT/tsconfig.json"
+TSRANGER_ENTRY="$COMPONENT_ROOT/src/ts/layer4/TSRanger.ts"
+
+export NODE_NO_WARNINGS=1
+export TS_NODE_PROJECT
+export TS_NODE_TRANSPILE_ONLY=1
+
+# Test mode: tsranger test "[down][right]..."
+if [[ "${1:-}" == "test" ]]; then
+  shift
+  export TSRANGER_TEST_MODE=1
+  export TSRANGER_TEST_INPUT="${1:-}"
+fi
+
+# Debug mode: tsranger debug (interactive with debug output)
+if [[ "${1:-}" == "debug" ]]; then
+  shift
+  export TSRANGER_DEBUG_MODE=1
+fi
+
+# Start TSRanger v2 TUI (pass through any args)
+if [[ -n "${LOG_LEVEL:-}" && "$LOG_LEVEL" =~ ^[0-9]+$ && "$LOG_LEVEL" -gt 3 ]]; then
+  echo "[tsranger v2 debug] Running: TS_NODE_TRANSPILE_ONLY=1 NODE_NO_WARNINGS=1 node --loader ts-node/esm \"$TSRANGER_ENTRY\" $*"
+fi
+exec node --loader ts-node/esm "$TSRANGER_ENTRY" "$@"
+
+
