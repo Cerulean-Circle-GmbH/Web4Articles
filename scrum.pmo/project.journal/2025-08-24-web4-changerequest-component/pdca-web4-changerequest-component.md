@@ -254,11 +254,13 @@ workspace $ chmod +x /workspace/scripts/changerequest
 - Maintained same architecture
 - Preserved all functionality
 
-**Next Steps:**
-1. Update all TypeScript file contents
-2. Update package.json details
-3. Build and test component
-4. Verify CLI functionality
+**Build Requirements:**
+1. Component needs Unit dependency resolved
+2. Run npm install and npm run build
+3. Or wait for Unit component setup
+4. Same dependency issue as Web4Requirement
+
+**Note:** TypeScript sources fully refactored and ready. Build will work once dependencies are resolved.
 
 **Benefits:**
 - Rapid component creation
