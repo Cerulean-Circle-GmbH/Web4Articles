@@ -175,18 +175,10 @@
    git fetch origin release/dev
    git checkout origin/release/dev -- path/to/missing/file
    ```
-6. **ALWAYS ask before git operations** (Decision 2a) - pull, merge, rebase, reset
-7. **NEVER truncate user quotes** - they are documentation!
-
-### **Branch Strategy (Decision 1d):**
-1. **Start on save/start** - Always begin here
-2. **Create dev/UTC immediately** - Right after successful start
-3. **Work on dev/UTC** - All session work happens there
+6. **Session Completion:** Create timestamped dev branch:
    ```bash
-   # At session start (after recovery):
-   TIMESTAMP=$(date -u +"%Y-%m-%d-UTC-%H%M")
-   git checkout -b dev/$TIMESTAMP
-   git push -u origin dev/$TIMESTAMP
+   git checkout -b dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
+   git push -u origin dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
    ```
 
 ---
@@ -268,7 +260,8 @@
 2. **Test all links** work correctly
 3. **Commit and push immediately** [[memory:6902297]]
 4. **Provide dual links** in chat response [[memory:6291031]]
-5. **Verify GitHub links** actually accessible
+5. **Copy QA Decisions EXACTLY from PDCA to chat** - NEVER create different ones!
+6. **Verify GitHub links** actually accessible
 
 ### **Validation Checklist:**
 - [ ] UTC timestamp in correct format
@@ -283,6 +276,20 @@
 - [ ] GitHub links working
 
 ---
+
+## **🚨 CRITICAL: CHAT REPORTING ACCURACY**
+
+**NEVER CREATE DIFFERENT QA DECISIONS IN CHAT!**
+- The QA Decisions shown in chat MUST be EXACTLY what's in the PDCA
+- Copy-paste the exact decisions from the PDCA Summary section
+- If PDCA says "All clear, no decisions to make" - say that in chat
+- If PDCA has specific decisions - copy them VERBATIM to chat
+- Creating different decisions in chat vs PDCA is a CRITICAL ERROR
+
+**Example of WRONG behavior:**
+- PDCA: "Decision 1: Auto-Merge Strategy" with options a/b/c
+- Chat: "Decision 1: Cherry-Pick Strategy" with different options
+- THIS IS UNACCEPTABLE!
 
 ## **⚠️ COMMON MISTAKES TO AVOID**
 

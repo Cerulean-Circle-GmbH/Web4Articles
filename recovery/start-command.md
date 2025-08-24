@@ -1,20 +1,20 @@
 # 🚀 **Recovery Procedure: Quick Start to PDCA Excellence**
 
-**Agent Role:** Background Agent (Cursor) - Regular agents work on dev/* branches  
-**Special Exception:** Save/Restart Agent ALWAYS works on save/start branch  
+**Agent Role:** Background Agent (Cursor)  
 **Trigger:** When user types "start"  
 **Purpose:** Immediately establish optimal PDCA workflow with minimalist chat reporting
 
 **IMPORTANT:** You are a Background Agent, NOT a Scrum Master or other role!  
 **CRITICAL:** Do NOT create cursor/* branches - stay on current branch!
 
-## **🚫 BRANCH MANAGEMENT RULES (Decision 1d)**
+## **🚫 BRANCH MANAGEMENT RULES**
 
-1. **START on save/start branch** - Always begin recovery here!
-2. **IMMEDIATELY create dev/[UTC timestamp]** - Switch to it after successful start
-3. **WORK on dev/[UTC timestamp]** - All session work happens here
-4. **cursor/* branches** - If you start on one, switch to save/start first
-5. **Check branch with:** `git branch --show-current` (should show dev/timestamp during work)
+1. **START on save/start branch** - Switch there immediately if not already!
+2. **FIRST PDCA on save/start** - Complete your startup PDCA on save/start
+3. **THEN create dev/UTC branch** - After first PDCA, create & switch to `dev/$(date -u +"%Y-%m-%d-UTC-%H%M")`
+4. **CONTINUE on dev/UTC branch** - All subsequent work happens on your timestamped branch
+5. **cursor/* branches** - NEVER use these, switch away immediately
+6. **Check branch with:** `git branch --show-current`
 
 ## **📋 IMMEDIATE ACTIONS (0-2 minutes)**
 
@@ -30,20 +30,11 @@ git fetch origin release/dev
 git checkout origin/release/dev -- scrum.pmo/roles/_shared/PDCA/
 ```
 
-### **3. Create dev/[UTC timestamp] branch NOW (Decision 1d)**
-```bash
-# Create timestamped branch for session work
-TIMESTAMP=$(date -u +"%Y-%m-%d-UTC-%H%M")
-git checkout -b dev/$TIMESTAMP
-git push -u origin dev/$TIMESTAMP
-echo "✅ Working on dev/$TIMESTAMP for this session"
-```
-
-### **4. Read Key PDCA Guidelines**
+### **3. Read Key PDCA Guidelines**
 - Read: `scrum.pmo/roles/_shared/PDCA/howto.PDCA.md` (focus on sections 1-2)
 - Note: 6 mandatory sections, dual links, numbered decisions
 
-### **5. Install Git Automation (CRITICAL)**
+### **4. Install Git Automation (CRITICAL)**
 ```bash
 # Create post-commit hook for auto-merge
 cat > .git/hooks/post-commit << 'EOF'
@@ -148,13 +139,21 @@ All PDCAs must have these 6 sections:
 1. **Identify** → "I am a Background Agent" (NEVER other roles!)
 2. **Branch** → Switch to save/start if not already there
 3. **Setup** → Ensure howto.PDCA.md exists (cherry-pick if needed)
-4. **Create dev/UTC** → Create dev/[timestamp] branch and switch to it (Decision 1d)
-5. **Automate** → Install git post-commit hook
-6. **Create Todo** → Use todo_write for task management
-7. **Execute** → Perform requested work
-8. **Document** → Create PDCA following mandatory format
-9. **Commit** → Git add, commit, push immediately (auto-merge triggers)
-10. **Report** → Minimal chat with dual links and numbered decisions
+4. **Automate** → Install git post-commit hook
+5. **Create Todo** → Use todo_write for task management
+6. **Execute** → Perform requested work
+7. **Document** → Create PDCA following mandatory format
+8. **Commit** → Git add, commit, push immediately (auto-merge triggers)
+9. **Report** → Minimal chat with dual links and numbered decisions
+10. **Session Branch** → IMMEDIATELY create and switch to dev/UTC-timestamp branch:
+    ```bash
+    git checkout -b dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
+    git push -u origin dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
+    # Auto-sync newest files from release/dev
+    ./recovery/cherry-pick-newest.sh
+    ```
+    **CRITICAL:** Do this RIGHT AFTER your first PDCA commit, not at session end!
+    **NEW:** Auto cherry-pick runs automatically to sync newest files!
 
 **CRITICAL WARNINGS:**
 - **NEVER** identify as Scrum Master, Developer, or other roles!
