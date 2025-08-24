@@ -1,0 +1,56 @@
+* eb65571 - (HEAD -> dev/2025-08-24-UTC-0857, origin/dev/2025-08-24-UTC-0857) Implement: Merge conflict handling with PR creation and QA notification (33 minutes ago) <Cursor Agent>
+* 87bcd8f - Update: PDCA with test results - hook fixed but auto-merge script needs improvement (36 minutes ago) <Cursor Agent>
+* d7aa28a - Fix: Post-commit hook now executes auto-merge on ALL branches (37 minutes ago) <Cursor Agent>
+* 062c38b - Update: PDCA with test results - auto-merge correctly only works on save/start branch (52 minutes ago) <Cursor Agent>
+* 53357d6 - Test: Git hook auto-merge functionality with dummy file (53 minutes ago) <Cursor Agent>
+* f3ca0da - PDCA: Branch management correction - updated docs and created dev/2025-08-24-UTC-0857 branch (58 minutes ago) <Cursor Agent>
+| * 69101e6 - (origin/save/start, origin/release/dev) Implement: Decision 1d (dev/UTC workflow) & 2a (git ops authorization) (38 minutes ago) <Cursor Agent>
+| * 4be3501 - Learn: Never truncate quotes, always ask for git ops, present ambiguities (45 minutes ago) <Cursor Agent>
+| * 256b8f4 - Analyze: CMM4 test revealed dev branch creation timing issue (54 minutes ago) <Cursor Agent>
+|/  
+* 64b3d43 - (save/start) PDCA: Background Agent startup procedure - verified role, switched to save/start branch, installed git hooks (63 minutes ago) <Cursor Agent>
+* d340197 - (cursor/start-background-process-3884) Update: Complete start documentation with decision philosophy and git automation (68 minutes ago) <Cursor Agent>
+* e91c60d - Review: Start process gaps - missing decision philosophy and git hooks (73 minutes ago) <Cursor Agent>
+* a3e0e4e - Fix: Implement real auto-merge via git post-commit hook (80 minutes ago) <Cursor Agent>
+* 0c4fae0 - Critical analysis: release/dev damage and auto-merge failure (2 hours ago) <Cursor Agent>
+* 6360a4d - Cherry-pick: Project journal and sprints from feature/user (2 hours ago) <Cursor Agent>
+* ef87d00 - Cherry-pick: Complete components folder from feature/user (2 hours ago) <Cursor Agent>
+* 1251c10 - Verify: Components already synced with release/dev (3 hours ago) <Cursor Agent>
+* acc6f16 - Document: Component sync verification (3 hours ago) <Cursor Agent>
+* c501620 - Update: Sync components folder from release/dev (3 hours ago) <Cursor Agent>
+* fa28aba - Deep cleanup: Remove dist*, src, test, mini* folders (4 hours ago) <Cursor Agent>
+* a668b8a - Cleanup: Remove all v* folders from save/start (4 hours ago) <Cursor Agent>
+* e6fa3e6 - Document force merge strategy for release/dev (16 hours ago) <Cursor Agent>
+* b5c3ace - Update start-command.md with save/start branch management rules (16 hours ago) <Cursor Agent>
+* 1805504 - Document PR for save/start to release/dev merge conflicts (17 hours ago) <Cursor Agent>
+| * 06a1a69 - (origin/retro/2025-08-10-agent-retro) Document branch journey in detailed PDCA (16 hours ago) <Cursor Agent>
+| * c47c368 - Fix local links in PDCA files to be clickable (16 hours ago) <Cursor Agent>
+| * cb3f4b7 - Update README and PDCA with cherry-pick requirement (16 hours ago) <Cursor Agent>
+| * b3c7b77 - Add PDCA for second CMM4 test - agent reading outdated docs (16 hours ago) <Cursor Agent>
+| * fba1574 - Update branch management: Always work on save/start, finish on dev/UTC (17 hours ago) <Cursor Agent>
+| * 0868cbf - Fix start-command.md to prevent agents from switching branches (17 hours ago) <Cursor Agent>
+| * 7af7d7a - Update recovery.md with PDCA-based recovery cycles section (17 hours ago) <Cursor Agent>
+| * 2795138 - Correct QA decision: Change to 2a - Update recovery.md to include PDCA-based recovery cycles (17 hours ago) <Cursor Agent>
+| * 07fb5d8 - Update PDCA with QA decisions: 1b and 2b selected (17 hours ago) <Cursor Agent>
+| * 7a7af1d - Add PDCA for save/start merge with retrospective integration analysis (17 hours ago) <Cursor Agent>
+| *   de1126b - Merge from save/start branch - resolve conflicts by accepting all changes (17 hours ago) <Cursor Agent>
+| |\  
+| |/  
+|/|   
+* | ec2a4ab - Document branch strategy: save/start eternal + merge to release/dev (18 hours ago) <Cursor Agent>
+* | 0680b45 - Fix: Make local paths clickable with [path](path) format (18 hours ago) <Cursor Agent>
+* | c70675f - Fix: Use exact PDCA format in chat responses (18 hours ago) <Cursor Agent>
+* | 8a37b42 - Standardize link format: [GitHub](...) | simple/path (18 hours ago) <Cursor Agent>
+* | e2e16e0 - Fix chat format: true minimalism with consistent dual-link format (18 hours ago) <Cursor Agent>
+* | c1c80b8 - Radical cleanup: 70% README reduction for crystal clear starts (18 hours ago) <Cursor Agent>
+* | ad05d7a - Critical fix: Prevent cursor/* branch creation in recovery (18 hours ago) <Cursor Agent>
+| * d0cb629 - Add PDCA retrospective analysis with dual links (18 hours ago) <Cursor Agent>
+| * 355d124 - Update retro status and synthesize common themes (19 hours ago) <Cursor Agent>
+| * 92c3bb5 - Add ScrumOrchestratorPrime retrospective answer (19 hours ago) <Cursor Agent>
+| | * 02e11db - (origin/dev/2025-08-23-UTC-1529) Fix recovery role identification - Background Agent not Scrum Master (18 hours ago) <Cursor Agent>
+| | * 4bc44a9 - Test: Delete v* folders and validate auto-merge workflow (18 hours ago) <Cursor Agent>
+| |/  
+|/|   
+* | c9f7e47 - Implement Decision 1a: mandatory auto-merge and session-end branches (18 hours ago) <Cursor Agent>
+* | 70ababe - (origin/cursor/start-minimalist-process-5289) Implement workflow automation: recovery directory, auto-merge script, and enhanced PDCA process (19 hours ago) <Cursor Agent>
+* | a5f65ef - Create recovery procedure for quick start to PDCA excellence (19 hours ago) <Cursor Agent>
