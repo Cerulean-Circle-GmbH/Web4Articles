@@ -12,7 +12,7 @@
 ## Summary
 
 **Artifact Links:**
-- [GitHub Scripts](https://github.com/mcdonges/Web4Articles/blob/release/dev/scripts/git-branch-log.sh) | [../scripts/git-branch-log.sh](../scripts/git-branch-log.sh)
+- [GitHub Scripts](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scripts/git-branch-log.sh) | [../scripts/git-branch-log.sh](../scripts/git-branch-log.sh)
 
 **QA Decisions:**
 - [x] Create script with UTC timestamp naming pattern

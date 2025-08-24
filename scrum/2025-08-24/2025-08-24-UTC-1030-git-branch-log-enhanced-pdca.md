@@ -7,14 +7,14 @@
 **👤 Role:** Developer → Script Enhancement & Process Compliance  
 **🚨 Issues:** File extension change required, enhanced PDCA format adoption  
 **📎 Previous Commit:** a617809 - Merge conflicts resolved manually  
-**🔗 Previous PDCA:** [GitHub](https://github.com/mcdonges/Web4Articles/blob/release/dev/scrum/2025-08-24/pdca.git-branch-log-script.md) | [scrum/2025-08-24/pdca.git-branch-log-script.md](scrum/2025-08-24/pdca.git-branch-log-script.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum/2025-08-24/pdca.git-branch-log-script.md) | [scrum/2025-08-24/pdca.git-branch-log-script.md](scrum/2025-08-24/pdca.git-branch-log-script.md)
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/mcdonges/Web4Articles/blob/release/dev/scrum/2025-08-24/2025-08-24-UTC-1030-git-branch-log-enhanced-pdca.md) | [scrum/2025-08-24/2025-08-24-UTC-1030-git-branch-log-enhanced-pdca.md](scrum/2025-08-24/2025-08-24-UTC-1030-git-branch-log-enhanced-pdca.md)
-- **Enhanced Script:** [GitHub](https://github.com/mcdonges/Web4Articles/blob/release/dev/scripts/git-branch-log.sh) | [scripts/git-branch-log.sh](scripts/git-branch-log.sh)
-- **Enhanced PDCA Guidelines:** [GitHub](https://github.com/mcdonges/Web4Articles/blob/release/dev/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum/2025-08-24/2025-08-24-UTC-1030-git-branch-log-enhanced-pdca.md) | [scrum/2025-08-24/2025-08-24-UTC-1030-git-branch-log-enhanced-pdca.md](scrum/2025-08-24/2025-08-24-UTC-1030-git-branch-log-enhanced-pdca.md)
+- **Enhanced Script:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scripts/git-branch-log.sh) | [scripts/git-branch-log.sh](scripts/git-branch-log.sh)
+- **Enhanced PDCA Guidelines:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)
 
 ### **QA Decisions**
 - [x] Updated file extension from .ansi.txt to .ansi for Cursor recognition
