@@ -177,6 +177,9 @@
    ```
 6. **ALWAYS ask before git operations** (Decision 2a) - pull, merge, rebase, reset
 7. **NEVER truncate user quotes** - they are documentation!
+8. **Document ALL git operations in PDCAs** - especially branch switches
+9. **Cross-agent learning** - Cherry-pick improvements from other agents' branches
+10. **Test conflict handling** - Script now creates PRs on merge conflicts
 
 ### **Branch Strategy (Decision 1d):**
 1. **Start on save/start** - Always begin here
@@ -188,6 +191,7 @@
    git checkout -b dev/$TIMESTAMP
    git push -u origin dev/$TIMESTAMP
    ```
+4. **Exception: Save/Restart Agent** - ALWAYS works on save/start branch
 
 ---
 
@@ -302,6 +306,9 @@
 - **Creating multiple roles** without coordination [[memory:6917891]]
 - **Using non-interactive tests** that hang [[memory:5680815]]
 - **Not asking for critical decisions** [[memory:6917891]]
+- **Truncating user documentation** - NEVER truncate quotes/logs [[memory:0944]]
+- **Not documenting git operations** - Always show branch switches [[memory:0931]]
+- **Missing cross-agent improvements** - Review other agents' work [[memory:0935]]
 
 ---
 
