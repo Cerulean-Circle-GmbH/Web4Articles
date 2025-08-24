@@ -1,0 +1,1 @@
+../../2025-08-20-1552/pdca/2025-08-21-UTC-0811-pdca-object-architecture-recognition.md

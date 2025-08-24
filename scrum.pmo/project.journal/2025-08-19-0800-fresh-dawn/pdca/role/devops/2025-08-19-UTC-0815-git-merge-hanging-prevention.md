@@ -1,0 +1,1 @@
+../developer/2025-08-19-UTC-0815-git-merge-hanging-prevention.md

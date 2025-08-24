@@ -1,7 +1,7 @@
 # Sprint 5 Planning
 
 ## Sprint Goal
-Deliver TS Ranger v2 under `src.v2`, consolidating Sprint 2 learnings, QA feedback, and existing tests. Implement the architecture, integrate it behind an environment toggle, and validate by running the existing test suite unchanged.
+Deliver TS Ranger v2 under `src.v2`, consolidating Sprint 2 learnings, QA feedback, and existing tests. Implement the architecture, integrate it behind an environment toggle, and validate by running the existing test suite unchanged. **ENHANCED with TRON QA critical discoveries:** Address critical filter corruption bug and implement QA-driven quality improvements.
 
 ## Extended Sprint Intent
 We learned from Sprint 2 and QA that TS Ranger must provide stable, predictable TUI UX (exact spacing and footer anchoring), shell-like prompt editing with correct colors and PS1 handling, deterministic non-interactive test mode, and a Docs column backed by TSCompletion. This sprint extends the goal to deliver a production-ready v2 in `src.v2` with:
@@ -9,6 +9,7 @@ We learned from Sprint 2 and QA that TS Ranger must provide stable, predictable 
 - Clear separation of IO vs rendering via a `TerminalIO` abstraction for determinism
 - A simple toggle (`TSRANGER_V2=1`) to run v2 end-to-end from the existing shell wrapper and tests
 - Execution bridge parity and robust error handling
+- **NEW:** Critical filter corruption bug fix and comprehensive QA improvements
 
 ## Task List (Sprint 5)
 
@@ -35,8 +36,14 @@ We learned from Sprint 2 and QA that TS Ranger must provide stable, predictable 
   - [ ] [Task 4.2 — Architect: Structure/Component Diagram (PUML)](./task-4.2-architect-puml-structure.md)
   - [ ] [Task 4.3 — Architect: Render SVGs and Link in Docs](./task-4.3-architect-svg-render.md)
 
+- [ ] [Task 7: Emergency — TSRanger Critical Filter Bug Fix](./task-7-emergency-filter-bug-fix.md)
+  **Priority:** 0 (EMERGENCY - blocking all other work)
+  - [ ] [Task 7.1 — Developer: FilterStateEngine Implementation](./task-7.1-developer-filter-state-engine.md)
+  - [ ] [Task 7.2 — Tester: Filter Corruption Test Cases](./task-7.2-tester-filter-corruption-tests.md)
+  - [ ] [Task 7.3 — Developer: Filter Logic Replacement](./task-7.3-developer-filter-logic-replacement.md)
+
 - [ ] [Task 5: Developer — Implement TS Ranger v2 in `src.v2`](./task-5-developer-implement-v2.md)
-  **Priority:** 1
+  **Priority:** 1 (ENHANCED with QA improvements)
   - [ ] [Task 5.1 — Developer: IO Abstraction (`TerminalIO`, NodeProcessIO, DeterministicTestIO`)](./task-5.1-developer-io-terminalio.md)
   - [ ] [Task 5.2 — Developer: Model (`layer2/RangerModel.ts`)](./task-5.2-developer-model.md)
   - [ ] [Task 5.3 — Developer: View (`layer5/RangerView.ts`)](./task-5.3-developer-view.md)
@@ -46,17 +53,31 @@ We learned from Sprint 2 and QA that TS Ranger must provide stable, predictable 
   - [ ] [Task 5.7 — Developer: Non-interactive smoke run validation](./task-5.7-developer-integration-smoke.md)
   - [ ] [Task 5.8 — Developer: KeyboardController abstraction (`layer4/KeyboardController.ts`)](./task-5.8-developer-keyboard-controller.md)
   - [ ] [Task 5.9 — Developer: Integrate KeyboardController into RangerController](./task-5.9-developer-integrate-keyboard-controller.md)
+  - [ ] [Task 5.10 — Developer: Prompt Update Architecture Fix](./task-5.10-developer-prompt-update-architecture.md)
+  - [ ] [Task 5.11 — Developer: DRY/OOP Compliance for Paired Keys](./task-5.11-developer-dry-oop-paired-keys.md)
 
 - [ ] [Task 6: Tester — Run existing tests against v2 via toggle](./task-6-tester-validate-v2-with-existing-tests.md)
-  **Priority:** 1
+  **Priority:** 1 (ENHANCED with comprehensive QA validation)
   - [ ] [Task 6.1 — Tester: Execute suite with `TSRANGER_V2=1`](./task-6.1-tester-run-with-toggle.md)
   - [ ] [Task 6.2 — Tester: Triage any diffs; file fix tasks; re-run](./task-6.2-tester-triage-and-fix-loop.md)
   - [ ] [Task 6.3 — Tester: Final green report and sign-off](./task-6.3-tester-final-green-report.md)
   - [ ] [Task 6.4 — Tester: KeyboardController unit tests for key mapping and sequences](./task-6.4-tester-keyboard-controller-tests.md)
+  - [ ] [Task 6.5 — Tester: Matrix v4 Gap Analysis and Test Enhancement](./task-6.5-tester-matrix-v4-enhancement.md)
+  - [ ] [Task 6.6 — Tester: Multi-step Filter Operation Testing](./task-6.6-tester-multi-step-filter-testing.md)
+  - [ ] [Task 6.7 — Tester: Navigation Prompt Consistency Validation](./task-6.7-tester-navigation-prompt-validation.md)
+
+- [ ] [Task 8: Epic — 3 Degrees of Freedom Architecture Implementation](./task-8-epic-3-degrees-freedom.md)
+  **Priority:** 3 (Future Epic - Sprint 6-7)
+  - [ ] [Task 8.1 — Architect: ColumnNavigator Interface Design](./task-8.1-architect-column-navigator.md)
+  - [ ] [Task 8.2 — Developer: TSRangerOrchestrator Implementation](./task-8.2-developer-orchestrator.md)
+  - [ ] [Task 8.3 — Developer: Complete Architecture Migration](./task-8.3-developer-architecture-migration.md)
 
 ---
 
-**Process Notes (2025-08-09):**
+**Process Notes (2025-08-19):**
+- **TRON QA Integration:** Added critical filter bug fix as emergency Task 7 based on manual testing discoveries
+- **Quality Enhancement:** Enhanced existing tasks with QA-driven improvements (Tasks 5.10-5.11, 6.5-6.7)
+- **Future Architecture:** Planned 3 Degrees of Freedom epic as Task 8 for Sprint 6-7
 - Maintain backlinks and traceability with UUID requirements in `requiremnents.md` per PO/ScrumMaster process.
 
 ## QA Feedback (Verbatim)
@@ -64,3 +85,12 @@ We learned from Sprint 2 and QA that TS Ranger must provide stable, predictable 
 ### 2025-08-09T00:00:00Z
 > create a tsranger shell script like in /Users/Shared/Workspaces/2cuGitHub/Web4Articles/src
 > to make it easy to start /Users/Shared/Workspaces/2cuGitHub/Web4Articles/src.v2/ts/layer4/TSRanger.ts
+
+### 2025-08-19T09:25:00Z
+> "we need to validate the v4 matrix from my basic QA testing today and let the tester deveop correct tests. later we consolidate the code as learned with DYR/OOP based on the tests."
+> 
+> **Critical QA Findings:**
+> - Filter corruption bug: typing [t][backspace][g] results wrongly in a "tg" filter and prompt while "g" would be naturally right
+> - Prompt line is not always updated as expected after each navigation
+> - ShiftTab/Tab should work identically and use the same OOP methods
+> - Navigation works correctly but needs comprehensive testing for edge cases
