@@ -5,18 +5,18 @@
 **👤 Role:** Scrum Master → Backend Development  
 **🚨 Issues:** Need ability to change agent names via CLI command  
 **📎 Previous Commit:** Initial state on cursor/start-background-process-dcf6 branch  
-**🔗 Previous PDCA:** [GitHub](https://github.com/ciras-org/web4articles/blob/main/scrum.pmo/project.journal/2025-08-19-0825-sprint8-scrummaster/pdca/2025-08-19-UTC-0840-recovery-pdca-minimum-achievement.md) | [scrum.pmo/project.journal/2025-08-19-0825-sprint8-scrummaster/pdca/2025-08-19-UTC-0840-recovery-pdca-minimum-achievement.md](scrum.pmo/project.journal/2025-08-19-0825-sprint8-scrummaster/pdca/2025-08-19-UTC-0840-recovery-pdca-minimum-achievement.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-08-19-0825-sprint8-scrummaster/pdca/2025-08-19-UTC-0840-recovery-pdca-minimum-achievement.md) | [scrum.pmo/project.journal/2025-08-19-0825-sprint8-scrummaster/pdca/2025-08-19-UTC-0840-recovery-pdca-minimum-achievement.md](scrum.pmo/project.journal/2025-08-19-0825-sprint8-scrummaster/pdca/2025-08-19-UTC-0840-recovery-pdca-minimum-achievement.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/ciras-org/web4articles/blob/cursor/start-background-process-dcf6/scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1730-agent-name-management.md) | [scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1730-agent-name-management.md](scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1730-agent-name-management.md)
-- **AgentManager Class:** [GitHub](https://github.com/ciras-org/web4articles/blob/cursor/start-background-process-dcf6/components/agent/AgentManager.ts) | [components/agent/AgentManager.ts](components/agent/AgentManager.ts)
-- **Agent Shell Script:** [GitHub](https://github.com/ciras-org/web4articles/blob/cursor/start-background-process-dcf6/scripts/agent) | [scripts/agent](scripts/agent)
-- **Updated tsconfig.json:** [GitHub](https://github.com/ciras-org/web4articles/blob/cursor/start-background-process-dcf6/tsconfig.json) | [tsconfig.json](tsconfig.json)
-- **Updated .gitignore:** [GitHub](https://github.com/ciras-org/web4articles/blob/cursor/start-background-process-dcf6/.gitignore) | [.gitignore](.gitignore)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/start-background-process-dcf6/scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1730-agent-name-management.md) | [scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1730-agent-name-management.md](scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1730-agent-name-management.md)
+- **AgentManager Class:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/start-background-process-dcf6/components/agent/AgentManager.ts) | [components/agent/AgentManager.ts](components/agent/AgentManager.ts)
+- **Agent Shell Script:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/start-background-process-dcf6/scripts/agent) | [scripts/agent](scripts/agent)
+- **Updated tsconfig.json:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/start-background-process-dcf6/tsconfig.json) | [tsconfig.json](tsconfig.json)
+- **Updated .gitignore:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/start-background-process-dcf6/.gitignore) | [.gitignore](.gitignore)
 
 ### **QA Decisions**
 - [x] Completed decision: Use TypeScript class with static methods following Radical OOP

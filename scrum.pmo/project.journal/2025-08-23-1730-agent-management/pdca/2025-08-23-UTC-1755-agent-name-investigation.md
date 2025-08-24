@@ -5,14 +5,14 @@
 **👤 Role:** Scrum Master → System Investigation & Architecture Analysis  
 **🚨 Issues:** Agent unaware of name changes made in Cursor UI, need to understand architecture  
 **📎 Previous Commit:** a3c2a45 - feat: Add agent name management tool with documented Cursor limitations  
-**🔗 Previous PDCA:** [GitHub](https://github.com/ciras-org/web4articles/blob/cursor/start-background-process-dcf6/scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1730-agent-name-management.md) | [scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1730-agent-name-management.md](scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1730-agent-name-management.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/start-background-process-dcf6/scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1730-agent-name-management.md) | [scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1730-agent-name-management.md](scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1730-agent-name-management.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/ciras-org/web4articles/blob/cursor/start-background-process-dcf6/scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1755-agent-name-investigation.md) | [scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1755-agent-name-investigation.md](scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1755-agent-name-investigation.md)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/start-background-process-dcf6/scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1755-agent-name-investigation.md) | [scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1755-agent-name-investigation.md](scrum.pmo/project.journal/2025-08-23-1730-agent-management/pdca/2025-08-23-UTC-1755-agent-name-investigation.md)
 
 ### **QA Decisions**
 - [x] Completed decision: Investigate environment variables for agent information
