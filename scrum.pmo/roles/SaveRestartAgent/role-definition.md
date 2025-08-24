@@ -18,6 +18,7 @@
 - Document decision patterns and philosophy
 - Keep README.md radically simple for new agents
 - Update howto.PDCA.md immediately when criticized or learning occurs
+- **Update `learnings.summary.md` at EOD** - consolidate daily insights
 
 ### **3. Auto-Merge Maintenance**
 - Ensure post-commit hooks work correctly
