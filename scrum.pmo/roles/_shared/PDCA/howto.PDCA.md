@@ -178,7 +178,7 @@
 6. **ALWAYS ask before git operations** (Decision 2a) - pull, merge, rebase, reset
 7. **NEVER truncate user quotes** - they are documentation!
 8. **Document ALL git operations in PDCAs** - especially branch switches
-9. **Cross-agent learning** - Cherry-pick improvements from other agents' branches
+9. **Cross-agent learning** - Check other branches for improvements
 10. **Test conflict handling** - Script now creates PRs on merge conflicts
 
 ### **Branch Strategy (Decision 1d):**
@@ -205,6 +205,15 @@
 - **Always number decisions** with a) b) options for easy user response
 - **CRITICAL:** Use EXACT same link format as in PDCA: `[GitHub](URL) | [path](path)`
 - **NO summaries or explanations** in chat - just links and decisions!
+- **Copy QA Decisions EXACTLY from PDCA to chat** - NEVER create different ones!
+
+### **🚨 CRITICAL: Chat Reporting Accuracy**
+**NEVER CREATE DIFFERENT QA DECISIONS IN CHAT!**
+- The QA Decisions shown in chat MUST be EXACTLY what's in the PDCA
+- Copy-paste the exact decisions from the PDCA Summary section
+- If PDCA says "All clear, no decisions to make" - say that in chat
+- If PDCA has specific decisions - copy them VERBATIM to chat
+- Creating different decisions in chat vs PDCA is a CRITICAL ERROR
 
 ### **User Feedback Integration (CRITICAL):**
 - **Use markdown code block format** ```quote``` for all TRON quotes to preserve formatting
@@ -303,6 +312,21 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
   - Git workflow automation
   - Continuous improvement practices
 
+### **🔄 Contributing Improvements - Change Request Process**
+**Help improve this documentation!**
+- **Location:** `scrum.pmo/roles/_shared/PDCA/change.requests/`
+- **How to contribute:**
+  1. Copy `TEMPLATE.md` to new file: `YYYY-MM-DD-agent-topic.md`
+  2. Fill out all sections with your improvement
+  3. Commit and push to your branch
+  4. Save/Restart Agent reviews daily and integrates valid changes
+- **What we welcome:**
+  - Lessons from your PDCA experiences
+  - Clarifications for confusing sections
+  - New patterns or best practices
+  - Process improvements
+  - Error corrections
+
 ---
 
 ## **⚠️ COMMON MISTAKES TO AVOID**
@@ -325,7 +349,7 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
 - **Not asking for critical decisions** [[memory:6917891]]
 - **Truncating user documentation** - NEVER truncate quotes/logs [[memory:0944]]
 - **Not documenting git operations** - Always show branch switches [[memory:0931]]
-- **Missing cross-agent improvements** - Review other agents' work [[memory:0935]]
+- **Missing cross-agent improvements** - Check other branches regularly [[memory:0935]]
 
 ---
 
