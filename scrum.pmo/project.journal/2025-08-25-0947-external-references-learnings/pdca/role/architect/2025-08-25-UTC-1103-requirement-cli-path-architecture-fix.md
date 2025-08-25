@@ -8,6 +8,9 @@
 
 **📎 GitHub:** [Link to this PDCA](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1103-requirement-cli-path-architecture-fix.md)
 
+📎 Previous Commit: a94709c - 2025-08-25-UTC-1059-tsranger-cli-debug-version-fix-interactive-mode-prevention
+🔗 Previous PDCA: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1059-tsranger-cli-debug-and-fix.md) | [2025-08-25-UTC-1059-tsranger-cli-debug-and-fix.md](2025-08-25-UTC-1059-tsranger-cli-debug-and-fix.md)
+
 ---
 
 ## **📋 PLAN**

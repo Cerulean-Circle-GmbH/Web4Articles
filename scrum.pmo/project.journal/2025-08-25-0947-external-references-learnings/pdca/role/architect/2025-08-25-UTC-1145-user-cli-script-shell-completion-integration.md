@@ -8,6 +8,9 @@
 
 **📎 GitHub:** [Link to this PDCA](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1145-user-cli-script-shell-completion-integration.md)
 
+📎 Previous Commit: 7f28f97 - 2025-08-25-UTC-1135-user-scenario-owner-uuid-retroactive-fix-methods-complete
+🔗 Previous PDCA: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1135-user-scenario-owner-uuid-retroactive-fix.md) | [2025-08-25-UTC-1135-user-scenario-owner-uuid-retroactive-fix.md](2025-08-25-UTC-1135-user-scenario-owner-uuid-retroactive-fix.md)
+
 ---
 
 ## **📋 PLAN**

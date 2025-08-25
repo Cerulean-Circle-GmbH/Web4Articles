@@ -8,6 +8,9 @@
 
 **📎 GitHub:** [Link to this PDCA](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1135-user-scenario-owner-uuid-retroactive-fix.md)
 
+📎 Previous Commit: 406939a - 2025-08-25-UTC-1120-scenario-owner-uuid-consistency-fix-implementation-complete
+🔗 Previous PDCA: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1120-scenario-owner-uuid-consistency-issue.md) | [2025-08-25-UTC-1120-scenario-owner-uuid-consistency-issue.md](2025-08-25-UTC-1120-scenario-owner-uuid-consistency-issue.md)
+
 ---
 
 ## **📋 PLAN**

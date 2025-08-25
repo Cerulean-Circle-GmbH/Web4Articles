@@ -8,6 +8,9 @@
 
 **📎 GitHub:** [Link to this PDCA](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1115-scenario-owner-architecture-analysis.md)
 
+📎 Previous Commit: eef8d28 - 2025-08-25-UTC-1103-requirement-cli-ucp-path-architecture-fix
+🔗 Previous PDCA: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1103-requirement-cli-path-architecture-fix.md) | [2025-08-25-UTC-1103-requirement-cli-path-architecture-fix.md](2025-08-25-UTC-1103-requirement-cli-path-architecture-fix.md)
+
 ---
 
 ## **📋 PLAN**
