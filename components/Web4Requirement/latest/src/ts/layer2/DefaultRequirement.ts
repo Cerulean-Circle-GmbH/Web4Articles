@@ -18,6 +18,9 @@ export class DefaultRequirement implements Requirement {
   private directoryContext: string = '';
   private contextType: 'component' | 'arbitrary' = 'arbitrary';
   private contextPath: string = '';
+  private explicitComponentRoot: string = '';
+  private explicitComponent: string = '';
+  private explicitVersion: string = '';
   
   constructor() { // Web4 empty constructor
   }
@@ -150,6 +153,42 @@ export class DefaultRequirement implements Requirement {
   }
 
   /**
+   * Set explicit component context for all subsequent operations
+   * Usage: requirement.on("User", "latest").create("title", "desc")
+   */
+  on(component: string, version: string): this {
+    this.explicitComponent = component;
+    this.explicitVersion = version;
+    
+    // Construct component root path
+    const projectRoot = process.env.WEB4_PROJECT_ROOT || this.findProjectRoot();
+    this.explicitComponentRoot = path.join(projectRoot, 'components', component, version);
+    
+    // Set context type to component
+    this.contextType = 'component';
+    this.contextPath = this.explicitComponentRoot;
+    
+    console.log(`🎯 Component context set: ${component}/${version}`);
+    console.log(`📁 Component root: ${this.explicitComponentRoot}`);
+    
+    return this;
+  }
+
+  /**
+   * Get the current component context information
+   */
+  getComponentContext(): { component: string, version: string, root: string } | null {
+    if (this.explicitComponent && this.explicitVersion) {
+      return {
+        component: this.explicitComponent,
+        version: this.explicitVersion,
+        root: this.explicitComponentRoot
+      };
+    }
+    return null;
+  }
+
+  /**
    * Find component root from current directory
    * Walks up directory tree looking for component structure
    */
@@ -179,20 +218,25 @@ export class DefaultRequirement implements Requirement {
   private getRequirementsDirectory(): string {
     const cwd = process.cwd();
     
-    // Check for source.env component context variables first
+    // Priority 1: Explicit component context set via on() method
+    if (this.explicitComponentRoot) {
+      return path.join(this.explicitComponentRoot, 'spec', 'requirements');
+    }
+    
+    // Priority 2: Check for source.env component context variables
     if (process.env.WEB4_COMPONENT_CONTEXT === 'true' && process.env.WEB4_COMPONENT_ROOT) {
       // Use component root from source.env
       return path.join(process.env.WEB4_COMPONENT_ROOT, 'spec', 'requirements');
     }
     
-    // Fallback: Check if we're in a component context via directory detection
+    // Priority 3: Check if we're in a component context via directory detection
     const componentRoot = this.findComponentRoot(cwd);
     if (componentRoot) {
       // Use component's spec directory
       return path.join(componentRoot, 'spec', 'requirements');
     }
     
-    // If already in spec/requirements directory, use it directly
+    // Priority 4: Legacy behavior for non-component contexts
     if (cwd.endsWith(path.join('spec', 'requirements'))) {
       return cwd;
     }
@@ -302,20 +346,25 @@ export class DefaultRequirement implements Requirement {
   private getRequirementsMDDirectory(): string {
     const cwd = process.cwd();
     
-    // Check for source.env component context variables first
+    // Priority 1: Explicit component context set via on() method
+    if (this.explicitComponentRoot) {
+      return path.join(this.explicitComponentRoot, 'spec', 'requirements.md');
+    }
+    
+    // Priority 2: Check for source.env component context variables
     if (process.env.WEB4_COMPONENT_CONTEXT === 'true' && process.env.WEB4_COMPONENT_ROOT) {
       // Use component root from source.env
       return path.join(process.env.WEB4_COMPONENT_ROOT, 'spec', 'requirements.md');
     }
     
-    // Fallback: Check if we're in a component context via directory detection
+    // Priority 3: Check if we're in a component context via directory detection
     const componentRoot = this.findComponentRoot(cwd);
     if (componentRoot) {
       // Use component's spec/requirements.md directory
       return path.join(componentRoot, 'spec', 'requirements.md');
     }
     
-    // If in spec/requirements, go up and add requirements.md
+    // Priority 4: Legacy behavior
     if (cwd.endsWith(path.join('spec', 'requirements'))) {
       return path.join(path.dirname(cwd), 'requirements.md');
     }

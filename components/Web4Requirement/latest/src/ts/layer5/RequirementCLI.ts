@@ -19,13 +19,53 @@ export class RequirementCLI {
   }
 
   async handleCommand(args: string[]): Promise<void> {
-    if (args.length < 2) {
+    if (args.length < 1) {
       this.showUsage();
       return;
     }
 
     const command = args[0];
     
+    // Check for 'on' command with component context
+    if (command === 'on' && args.length >= 4) {
+      const component = args[1];
+      const version = args[2]; 
+      const actualCommand = args[3];
+      const actualArgs = args.slice(4);
+      
+      // Set component context
+      this.requirement.on(component, version);
+      
+      // Execute the actual command with component context
+      switch (actualCommand) {
+        case 'create':
+          await this.handleCreate(actualArgs);
+          break;
+        case 'md':
+          await this.handleMDView(actualArgs);
+          break;
+        case 'set':
+          await this.handleSet(actualArgs);
+          break;
+        case 'update':
+          await this.handleUpdate(actualArgs);
+          break;
+        case 'mv':
+          await this.handleMove(actualArgs);
+          break;
+        default:
+          console.error(`Unknown command after 'on': ${actualCommand}`);
+          this.showUsage();
+      }
+      return;
+    }
+    
+    // Handle regular commands (without 'on')
+    if (args.length < 2 && command !== 'on') {
+      this.showUsage();
+      return;
+    }
+
     switch (command) {
       case 'create':
         await this.handleCreate(args.slice(1));
@@ -41,6 +81,10 @@ export class RequirementCLI {
         break;
       case 'mv':
         await this.handleMove(args.slice(1));
+        break;
+      case 'on':
+        console.error('❌ "on" command requires: on <component> <version> <command> [args...]');
+        this.showUsage();
         break;
       default:
         console.error(`Unknown command: ${command}`);
@@ -136,10 +180,12 @@ export class RequirementCLI {
     console.log('');
     console.log('Usage:');
     console.log('  requirement create "title" "description"');
+    console.log('  requirement on <component> <version> create "title" "description"');
     console.log('  requirement md <scenario-file.json> [output-directory]');
     console.log('');
     console.log('Commands:');
     console.log('  create     Create a new requirement with title and description');
+    console.log('  on         Set component context for subsequent command');
     console.log('  md         Load requirement from scenario and generate MD view');
     console.log('  set        Set attribute value for existing requirement');
     console.log('  update     Update and regenerate components (overview)');
@@ -147,11 +193,11 @@ export class RequirementCLI {
     console.log('');
     console.log('Examples:');
     console.log('  requirement create "Unit Architecture Fix" "workflows are user role specific screen transitions"');
+    console.log('  requirement on User latest create "User Component Fix" "Fix user authentication logic"');
+    console.log('  requirement on Unit v1.0 update overview');
     console.log('  requirement md 394d5b56-51f0-4ff8-8213-88853f387dfc.scenario.json');
     console.log('  requirement set 12345678-1234-1234-1234-123456789abc implemented true');
-    console.log('  requirement update overview');
     console.log('  requirement mv 21ce7e72 User latest');
-    console.log('  requirement mv 37be4307 Web4Requirement v1.0');
     console.log('');
     console.log('TSRanger Compatible Format:');
     console.log('  Requirement create "description:your requirement text here"');
