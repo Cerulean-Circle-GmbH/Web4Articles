@@ -1,4 +1,4 @@
-export interface IUser {
+export interface User {
   readonly uuid: string;
   readonly username: string;
   readonly hostname: string;
