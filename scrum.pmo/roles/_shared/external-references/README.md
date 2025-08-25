@@ -35,7 +35,7 @@
 
 ### **Link Format:**
 ```markdown
-**External Reference:** [GitHub](GITHUB_URL) | scrum.pmo/roles/_shared/external-references/reference-name
+**External Reference:** [GitHub](GITHUB_URL) | [scrum.pmo/roles/_shared/external-references/reference-name](scrum.pmo/roles/_shared/external-references/reference-name)
 ```
 
 ---

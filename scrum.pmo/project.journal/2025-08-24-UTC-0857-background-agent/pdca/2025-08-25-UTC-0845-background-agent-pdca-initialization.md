@@ -12,11 +12,11 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-25-UTC-0845/scrum.pmo/project.journal/2025-08-24-UTC-0857-background-agent/pdca/2025-08-25-UTC-0845-background-agent-pdca-initialization.md) | scrum.pmo/project.journal/2025-08-24-UTC-0857-background-agent/pdca/2025-08-25-UTC-0845-background-agent-pdca-initialization.md
-- **Project Journal Session:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-25-UTC-0845/scrum.pmo/project.journal/2025-08-24-UTC-0857-background-agent) | scrum.pmo/project.journal/2025-08-24-UTC-0857-background-agent
-- **New Branch:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-25-UTC-0845) | dev/2025-08-25-UTC-0845
-- **External References Hub:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-25-UTC-0845/scrum.pmo/roles/_shared/external-references) | scrum.pmo/roles/_shared/external-references
-- **PDCA Howto Guide:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-25-UTC-0845/scrum.pmo/roles/_shared/external-references/pdca-howto-guide.md) | scrum.pmo/roles/_shared/external-references/pdca-howto-guide.md
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-25-UTC-0845/scrum.pmo/project.journal/2025-08-24-UTC-0857-background-agent/pdca/2025-08-25-UTC-0845-background-agent-pdca-initialization.md) | [scrum.pmo/project.journal/2025-08-24-UTC-0857-background-agent/pdca/2025-08-25-UTC-0845-background-agent-pdca-initialization.md](scrum.pmo/project.journal/2025-08-24-UTC-0857-background-agent/pdca/2025-08-25-UTC-0845-background-agent-pdca-initialization.md)
+- **Project Journal Session:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-25-UTC-0845/scrum.pmo/project.journal/2025-08-24-UTC-0857-background-agent) | [scrum.pmo/project.journal/2025-08-24-UTC-0857-background-agent](scrum.pmo/project.journal/2025-08-24-UTC-0857-background-agent)
+- **New Branch:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-25-UTC-0845) | [dev/2025-08-25-UTC-0845](dev/2025-08-25-UTC-0845)
+- **External References Hub:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-25-UTC-0845/scrum.pmo/roles/_shared/external-references) | [scrum.pmo/roles/_shared/external-references](scrum.pmo/roles/_shared/external-references)
+- **PDCA Howto Guide:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-25-UTC-0845/scrum.pmo/roles/_shared/external-references/pdca-howto-guide.md) | [scrum.pmo/roles/_shared/external-references/pdca-howto-guide.md](scrum.pmo/roles/_shared/external-references/pdca-howto-guide.md)
 
 ### **QA Decisions**
 - [x] **Completed Decision:** Created new dev/UTC branch with timestamp format dev/2025-08-25-UTC-0845
