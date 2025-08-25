@@ -8,15 +8,15 @@
 **👤 Role:** Implementation Specialist → DevOps  
 **🚨 Issues:** Node warnings disrupting clean user experience in requirement CLI execution  
 **🔗 Last Commit SHA:** 05ddab6  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/project.journal/2025-08-21-1613-sprint21-tootsie-architecture/pdca/role/architect/2025-08-22-UTC-1415-unit-web4requirement-integration-implementation.md) | [2025-08-22-UTC-1415-unit-web4requirement-integration-implementation.md](2025-08-22-UTC-1415-unit-web4requirement-integration-implementation.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-21-1613-sprint21-tootsie-architecture/pdca/role/architect/2025-08-22-UTC-1415-unit-web4requirement-integration-implementation.md) | [2025-08-22-UTC-1415-unit-web4requirement-integration-implementation.md](2025-08-22-UTC-1415-unit-web4requirement-integration-implementation.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/project.journal/2025-08-21-1613-sprint21-tootsie-architecture/pdca/role/architect/2025-08-22-UTC-1418-requirement-cli-warnings-suppressed.md) | [2025-08-22-UTC-1418-requirement-cli-warnings-suppressed.md](2025-08-22-UTC-1418-requirement-cli-warnings-suppressed.md)
-- **Shell Script Fixed:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/components/Web4Requirement/latest/requirement.sh) | [../../../../../../components/Web4Requirement/latest/requirement.sh](../../../../../../components/Web4Requirement/latest/requirement.sh)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-21-1613-sprint21-tootsie-architecture/pdca/role/architect/2025-08-22-UTC-1418-requirement-cli-warnings-suppressed.md) | [2025-08-22-UTC-1418-requirement-cli-warnings-suppressed.md](2025-08-22-UTC-1418-requirement-cli-warnings-suppressed.md)
+- **Shell Script Fixed:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Web4Requirement/latest/requirement.sh) | [../../../../../../components/Web4Requirement/latest/requirement.sh](../../../../../../components/Web4Requirement/latest/requirement.sh)
 - **Test Output:** Clean execution without warnings verified
 
 ### **QA Decisions**
