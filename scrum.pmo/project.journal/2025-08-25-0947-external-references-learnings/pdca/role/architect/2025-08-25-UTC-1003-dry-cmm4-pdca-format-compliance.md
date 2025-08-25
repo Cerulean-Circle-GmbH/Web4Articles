@@ -19,8 +19,8 @@
 - [x] **Confirmed:** DRY principle violated by duplicate commit and PDCA references in headers
 - [x] **Validated:** CMM4 strict process requires single authoritative information source
 - [x] **Verified:** Metadata section contains definitive commit and PDCA references with dual links
-- [ ] **Decision 1: PDCA Format Correction Strategy**  
-  - a) Update existing PDCAs to eliminate duplicate header information
+- [x] **Decision 1: PDCA Format Correction Strategy** → **1a Selected**  
+  - a) Update existing PDCAs to eliminate duplicate header information ✅
   - b) Apply DRY format to future PDCAs only, leave existing ones unchanged
 
 ### **TRON Feedback (2025-08-25-UTC-1003)**
@@ -35,6 +35,13 @@ keep the correct ones in the metadata section
 🔗 Previous PDCA: GitHub | 2025-08-25-UTC-0947-external-references-self-contained-script-learnings.md
 
 web4x is about strict CMM4 and DRY
+```
+
+### **TRON Decision Feedback (2025-08-25-UTC-1008)**
+```quote
+1a
+
+well askes, well done. i love it
 ```
 
 ### **My Answer**
