@@ -150,7 +150,8 @@ export class RequirementCLI {
     console.log('  requirement md 394d5b56-51f0-4ff8-8213-88853f387dfc.scenario.json');
     console.log('  requirement set 12345678-1234-1234-1234-123456789abc implemented true');
     console.log('  requirement update overview');
-    console.log('  requirement mv 37be4307-8b77-4a68-a92f-da203ff8244e ../../../../Web4Requirement/v1.0');
+    console.log('  requirement mv 21ce7e72 User latest');
+    console.log('  requirement mv 37be4307 Web4Requirement v1.0');
     console.log('');
     console.log('TSRanger Compatible Format:');
     console.log('  Requirement create "description:your requirement text here"');
@@ -235,15 +236,19 @@ export class RequirementCLI {
   }
 
   private async handleMove(args: string[]): Promise<void> {
+    // Support both old format (2 args) and new format (3 args)
     if (args.length < 2) {
-      console.error('❌ UUID and target component path required');
-      console.error('Usage: mv <uuid> <target-component-path>');
-      console.error('Example: mv 37be4307-8b77-4a68-a92f-da203ff8244e ../../../../Web4Requirement/v1.0');
-      console.error('Example: mv 37be4307-8b77-4a68-a92f-da203ff8244e.scenario.json Web4Requirement');
+      console.error('❌ UUID and target required');
+      console.error('Usage (new): mv <uuid> <component> <version>');
+      console.error('Usage (old): mv <uuid> <target-component-path>');
+      console.error('Examples:');
+      console.error('  requirement mv 21ce7e72 User latest');
+      console.error('  requirement mv 37be4307 Web4Requirement v1.0');
+      console.error('  requirement mv 37be4307-8b77-4a68-a92f-da203ff8244e.scenario.json Web4Requirement');
       return;
     }
 
-    let [uuidOrFilename, targetPath] = args;
+    let [uuidOrFilename, componentOrPath, version] = args;
     
     // Extract UUID from filename if needed
     let uuid = uuidOrFilename;
@@ -251,11 +256,27 @@ export class RequirementCLI {
       uuid = uuid.replace('.scenario.json', '');
     }
     
-    // Resolve target path shortcuts
-    if (targetPath === 'Web4Requirement') {
-      targetPath = 'components/Web4Requirement/v1.0';
-    } else if (targetPath === 'Unit') {
-      targetPath = 'components/Unit/latest';
+    let targetPath: string;
+    
+    // Determine if using new 3-parameter format or old 2-parameter format
+    if (args.length >= 3 && version) {
+      // New format: mv <uuid> <component> <version>
+      targetPath = `components/${componentOrPath}/${version}`;
+      console.log(`🔄 Moving requirement ${uuid} to ${componentOrPath}/${version}`);
+    } else {
+      // Old format: mv <uuid> <target-path> (backward compatibility)
+      targetPath = componentOrPath;
+      
+      // Resolve target path shortcuts for backward compatibility
+      if (targetPath === 'Web4Requirement') {
+        targetPath = 'components/Web4Requirement/v1.0';
+      } else if (targetPath === 'Unit') {
+        targetPath = 'components/Unit/latest';
+      } else if (targetPath === 'User') {
+        targetPath = 'components/User/latest';
+      }
+      
+      console.log(`🔄 Moving requirement ${uuid} to ${targetPath}`);
     }
 
     try {
