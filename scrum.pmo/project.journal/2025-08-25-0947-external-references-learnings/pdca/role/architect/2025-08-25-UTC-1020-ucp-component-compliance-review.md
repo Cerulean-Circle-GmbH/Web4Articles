@@ -5,30 +5,30 @@
 **👤 Role:** CMM4 Process Compliance Specialist → UCP Architecture Auditor  
 **🚨 Issues:** Components may violate UCP principles (self-contained, blackbox, interface, self-description) and lack location-independent startup capabilities  
 **📎 Previous Commit:** d34158b - 2025-08-25-UTC-1008-decision-1a-update-existing-pdcas  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1003-dry-cmm4-pdca-format-compliance.md) | [2025-08-25-UTC-1003-dry-cmm4-pdca-format-compliance.md](2025-08-25-UTC-1003-dry-cmm4-pdca-format-compliance.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1003-dry-cmm4-pdca-format-compliance.md) | [scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1003-dry-cmm4-pdca-format-compliance.md](2025-08-25-UTC-1003-dry-cmm4-pdca-format-compliance.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1020-ucp-component-compliance-review.md) | [2025-08-25-UTC-1020-ucp-component-compliance-review.md](2025-08-25-UTC-1020-ucp-component-compliance-review.md)
-- **UCP Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/workspacesMountPoint/2cuGitHub/cerulean-circle-unlimited-2cu/cerulean-circle-unlimited-2cu/product/development/coast/eamducp-repository/UCP.md) | [../../../roles/_shared/external-references/ucp-component-definition.md](../../../roles/_shared/external-references/ucp-component-definition.md)
-- **Source Environment:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/source.env) | [../../../../source.env](../../../../source.env)
-- **Components Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/) | [../../../../components/](../../../../components/)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1020-ucp-component-compliance-review.md) | [scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1020-ucp-component-compliance-review.md](scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1020-ucp-component-compliance-review.md)
+- **UCP Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/workspacesMountPoint/2cuGitHub/cerulean-circle-unlimited-2cu/cerulean-circle-unlimited-2cu/product/development/coast/eamducp-repository/UCP.md) | [scrum.pmo/roles/_shared/external-references/ucp-component-definition.md](../../../roles/_shared/external-references/ucp-component-definition.md)
+- **Source Environment:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/source.env) | [source.env](../../../../source.env)
+- **Components Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/) | [components/](../../../../components/)
 
 ### **QA Decisions**
 - [x] **Confirmed:** Multiple UCP compliance violations across component ecosystem
 - [x] **Validated:** Only 3 components have startup scripts, 9 components lack independent execution capability
 - [x] **Verified:** No components reference or use source.env for location independence
-- [ ] **Decision 1: UCP Compliance Strategy**
-  - a) Implement standardized startup scripts for all components with source.env integration
+- [x] **Decision 1: UCP Compliance Strategy** → **1a Selected**
+  - a) Implement standardized startup scripts for all components with source.env integration ✅
   - b) Create component-specific solutions based on individual component needs
-- [ ] **Decision 2: Interface Standardization**
-  - a) Mandate README.md and package.json machine-readable interfaces for all components
+- [x] **Decision 2: Interface Standardization** → **2a Selected**
+  - a) Mandate README.md and package.json machine-readable interfaces for all components ✅
   - b) Allow flexible documentation approaches but require minimum UCP compliance markers
-- [ ] **Decision 3: Self-Containedness Enforcement**
-  - a) Restructure components to be fully self-contained with embedded dependencies
+- [x] **Decision 3: Self-Containedness Enforcement** → **3a Selected**
+  - a) Restructure components to be fully self-contained with embedded dependencies ✅
   - b) Create dependency resolution system while maintaining component boundaries
 
 ### **TRON Feedback (2025-08-25-UTC-1020)**
@@ -36,6 +36,13 @@
 now review alll components for UCP selfcontainedness and integrity to start it via their sh scripts location independendly using the /source.env
 
 report the problems you find dilligently inside the new pdca with good code quotes. let me decide how to fix them.
+```
+
+### **TRON Decision Feedback (2025-08-25-UTC-1025)**
+```quote
+1,2,3 all a
+
+please improve also the dual link format. the clickable local file link should have the whole local path.
 ```
 
 ### **My Answer**
