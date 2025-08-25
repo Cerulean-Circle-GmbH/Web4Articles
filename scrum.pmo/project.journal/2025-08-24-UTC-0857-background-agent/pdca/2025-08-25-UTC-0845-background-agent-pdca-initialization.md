@@ -15,17 +15,18 @@
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-25-UTC-0845/scrum.pmo/project.journal/2025-08-24-UTC-0857-background-agent/pdca/2025-08-25-UTC-0845-background-agent-pdca-initialization.md) | scrum.pmo/project.journal/2025-08-24-UTC-0857-background-agent/pdca/2025-08-25-UTC-0845-background-agent-pdca-initialization.md
 - **Project Journal Session:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-25-UTC-0845/scrum.pmo/project.journal/2025-08-24-UTC-0857-background-agent) | scrum.pmo/project.journal/2025-08-24-UTC-0857-background-agent
 - **New Branch:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-25-UTC-0845) | dev/2025-08-25-UTC-0845
-- **PDCA Howto Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-25-UTC-0845/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | scrum.pmo/roles/_shared/PDCA/howto.PDCA.md
+- **External References Hub:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-25-UTC-0845/scrum.pmo/roles/_shared/external-references) | scrum.pmo/roles/_shared/external-references
+- **PDCA Howto Guide:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-25-UTC-0845/scrum.pmo/roles/_shared/external-references/pdca-howto-guide.md) | scrum.pmo/roles/_shared/external-references/pdca-howto-guide.md
 
 ### **QA Decisions**
 - [x] **Completed Decision:** Created new dev/UTC branch with timestamp format dev/2025-08-25-UTC-0845
 - [x] **Completed Decision:** Used project journal path format: 2025-08-24-UTC-0857-background-agent as specified
+- [x] **Decision 2b - COMPLETED:** Focus on essential documentation with links to external references
+  - Created centralized external references hub at `/workspace/scrum.pmo/roles/_shared/external-references/`
+  - All external references collected in ONE location using symbolic links for easy access
 - [ ] **Decision 1: PDCA Content Focus**
   - a) Focus on technical process setup and branch management aspects
   - b) Focus on collaborative process improvement and methodology adherence
-- [ ] **Decision 2: Session Documentation Strategy**
-  - a) Create comprehensive documentation of all PDCA steps within session
-  - b) Focus on essential documentation with links to external references
 
 ### **TRON Feedback (2025-08-25-UTC-0845)**
 ```quote
@@ -36,10 +37,15 @@ then create a new dev/utc
 create a corresponding session in e.g.
 scrum.pmo/project.journal/2025-08-24-UTC-0857-background-agent/pdca
 where you store your new pdca and report it.
+
+1b
+1b but make sure the external references is in ONE location and easy to find.
+if you would need to create such a location 
+create it here /workspace/scrum.pmo/roles/_shared and ln command the external references you need and collect them here.
 ```
 
 ### **My Answer**
-I've read the PDCA howto.PDCA.md thoroughly and am following all 6 mandatory sections diligently. Created new dev/UTC branch (dev/2025-08-25-UTC-0845) and corresponding session structure as requested. Following UTC timestamp format and dual-link system requirements exactly as specified in the guidelines.
+I've read the PDCA howto.PDCA.md thoroughly and am following all 6 mandatory sections diligently. Created new dev/UTC branch (dev/2025-08-25-UTC-0845) and corresponding session structure as requested. For Decision 2b, I created a centralized external references hub at `/workspace/scrum.pmo/roles/_shared/external-references/` with symbolic links to all key PDCA documentation, making external references easy to find in ONE location.
 
 **Learning Applied:** Strict adherence to PDCA format requirements ensures systematic process improvement and maintains excellent traceability across all project phases.
 
