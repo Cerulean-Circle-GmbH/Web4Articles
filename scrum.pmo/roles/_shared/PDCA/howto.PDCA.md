@@ -175,7 +175,6 @@
    git fetch origin release/dev
    git checkout origin/release/dev -- path/to/missing/file
    ```
-<<<<<<< HEAD
 6. **ALWAYS ask before git operations** (Decision 2a) - pull, merge, rebase, reset
 7. **NEVER truncate user quotes** - they are documentation!
 8. **Document ALL git operations in PDCAs** - especially branch switches
@@ -186,9 +185,7 @@
 1. **Start on save/start** - Always begin here
 2. **Create dev/UTC immediately** - Right after successful start
 3. **Work on dev/UTC** - All session work happens there
-=======
 6. **Session Completion:** Create timestamped dev branch:
->>>>>>> 959c3684f94046297176fbce33dee08a3fd71d1c
    ```bash
    git checkout -b dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
    git push -u origin dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
