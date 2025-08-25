@@ -13,22 +13,17 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1032-ucp-compliance-implementation-start.md) | [scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/architect/2025-08-25-UTC-1032-ucp-compliance-implementation-start.md](2025-08-25-UTC-1032-ucp-compliance-implementation-start.md)
-- **Unit Component Fixed:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Unit/latest/package.json) | [components/Unit/latest/package.json](../../../../components/Unit/latest/package.json)
-- **User Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/User/latest/package.json) | [components/User/latest/package.json](../../../../components/User/latest/package.json)
-- **Source Environment:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/source.env) | [source.env](../../../../source.env)
+- **Unit CLI Created:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Unit/latest/unit.sh) | [components/Unit/latest/unit.sh](../../../../components/Unit/latest/unit.sh)
+- **Unit README Generated:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Unit/latest/README.md) | [components/Unit/latest/README.md](../../../../components/Unit/latest/README.md)
+- **TSRanger README Updated:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/TSRanger/README.md) | [components/TSRanger/README.md](../../../../components/TSRanger/README.md)
+- **Unit Package Fixed:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Unit/latest/package.json) | [components/Unit/latest/package.json](../../../../components/Unit/latest/package.json)
 
 ### **QA Decisions**
 - [x] **Confirmed:** Unit component future dependencies commented out with @TODO @FUTURE @BUG annotations
 - [x] **Validated:** User component already self-contained, no @web4/* dependencies
-- [ ] **Decision 1: Startup Script Standardization**
-  - a) Create startup.sh template for all components using source.env pattern
-  - b) Extend existing requirement.sh pattern to other components
-- [ ] **Decision 2: Component Self-Containedness Priority**
-  - a) Fix highest-impact components first (Unit, Web4Requirement, TSRanger)
-  - b) Systematic alphabetical implementation across all 12 components
-- [ ] **Decision 3: Interface Documentation Strategy**
-  - a) Generate missing README.md files using component metadata
-  - b) Create minimal interface documentation templates
+- [x] **Decision 1b:** Extend existing requirement.sh pattern to other components (standardize CLI interfaces)
+- [x] **Decision 2a:** Fix highest-impact components first (Unit, Web4Requirement, TSRanger)
+- [x] **Decision 3a:** Generate missing README.md files using component metadata
 
 ### **TRON Feedback (2025-08-25-UTC-1032)**
 ```quote
