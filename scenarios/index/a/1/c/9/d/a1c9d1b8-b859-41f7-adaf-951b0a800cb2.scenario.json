@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "a1c9d1b8-b859-41f7-adaf-951b0a800cb2",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI1VDExOjI0OjAxLjc0NFoiLCJ1dWlkIjoiODhiY2NjNGEtMjY4NC00NGRhLWE2MzQtYjUxMDVkNjA0YjJiIn0=",
+  "model": {
+    "uuid": "a1c9d1b8-b859-41f7-adaf-951b0a800cb2",
+    "name": "TEST UCP Path Fix",
+    "title": "TEST UCP Path Fix",
+    "description": "Testing that scenarios/index goes to project root while spec stays local"
+  },
+  "unitIndex": {
+    "uuid": "a1c9d1b8-b859-41f7-adaf-951b0a800cb2",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/a/1/c/9/d/a1c9d1b8-b859-41f7-adaf-951b0a800cb2.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/temp/spec/requirements/a1c9d1b8-b859-41f7-adaf-951b0a800cb2.scenario.json"
+    ],
+    "createdAt": "2025-08-25T11:24:01.758Z",
+    "updatedAt": "2025-08-25T11:24:01.758Z"
+  }
+}

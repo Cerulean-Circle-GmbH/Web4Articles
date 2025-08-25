@@ -480,7 +480,8 @@ export class DefaultRequirement implements Requirement {
 
   async saveScenario(uuid: string, scenario: any): Promise<void> {
     // NEW: Use Unit Index Storage instead of direct file operations
-    const projectRoot = this.findProjectRoot();
+    // FIXED: Use PROJECT_ROOT from shell script environment (UCP architecture fix)
+    const projectRoot = process.env.PROJECT_ROOT || this.findProjectRoot();
     const unitStorage = new UnitIndexStorage().init(projectRoot);
     
     // Create symbolic link at Web4Requirement spec location

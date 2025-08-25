@@ -1,7 +1,0 @@
-=== Branch Divergence Analysis ===
-
-Current branch vs release/dev:
-6
-commits ahead
-3
-commits behind
