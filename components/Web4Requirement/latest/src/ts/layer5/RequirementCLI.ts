@@ -53,6 +53,9 @@ export class RequirementCLI {
         case 'mv':
           await this.handleMove(actualArgs);
           break;
+        case 'delete':
+          await this.handleDelete(actualArgs);
+          break;
         default:
           console.error(`Unknown command after 'on': ${actualCommand}`);
           this.showUsage();
@@ -82,6 +85,9 @@ export class RequirementCLI {
       case 'mv':
         await this.handleMove(args.slice(1));
         break;
+      case 'delete':
+        await this.handleDelete(args.slice(1));
+        break;
       case 'on':
         console.error('❌ "on" command requires: on <component> <version> <command> [args...]');
         this.showUsage();
@@ -89,6 +95,36 @@ export class RequirementCLI {
       default:
         console.error(`Unknown command: ${command}`);
         this.showUsage();
+    }
+  }
+
+  private async handleDelete(args: string[]): Promise<void> {
+    if (args.length < 1) {
+      console.error('Error: delete command requires identifier (UUID, scenario file, or MD file)');
+      console.log('Usage: requirement delete <uuid|scenario.json|requirement.md>');
+      console.log('Examples:');
+      console.log('  requirement delete 12345678-1234-1234-1234-123456789abc');
+      console.log('  requirement delete path/to/scenario.json');
+      console.log('  requirement delete path/to/requirement.md');
+      return;
+    }
+
+    const identifier = args[0];
+    console.log(`🗑️  Attempting to delete requirement: ${identifier}`);
+
+    const result = await this.requirement.deleteRequirement(identifier);
+    
+    if (result.success) {
+      console.log(`✅ ${result.message}`);
+      if (result.deletedFiles) {
+        console.log(`📁 Deleted files: ${result.deletedFiles.length}`);
+        result.deletedFiles.forEach(file => console.log(`   - ${file}`));
+      }
+    } else {
+      console.error(`❌ ${result.message}`);
+      if (result.issues) {
+        result.issues.forEach(issue => console.error(`   - ${issue}`));
+      }
     }
   }
 
@@ -190,6 +226,7 @@ export class RequirementCLI {
     console.log('  set        Set attribute value for existing requirement');
     console.log('  update     Update and regenerate components (overview)');
     console.log('  mv         Move requirement files to another component');
+    console.log('  delete     Delete requirement by UUID, scenario file, or MD file');
     console.log('');
     console.log('Examples:');
     console.log('  requirement create "Unit Architecture Fix" "workflows are user role specific screen transitions"');
@@ -198,6 +235,9 @@ export class RequirementCLI {
     console.log('  requirement md 394d5b56-51f0-4ff8-8213-88853f387dfc.scenario.json');
     console.log('  requirement set 12345678-1234-1234-1234-123456789abc implemented true');
     console.log('  requirement mv 21ce7e72 User latest');
+    console.log('  requirement delete 12345678-1234-1234-1234-123456789abc');
+    console.log('  requirement delete path/to/scenario.json');
+    console.log('  requirement delete path/to/requirement.md');
     console.log('');
     console.log('TSRanger Compatible Format:');
     console.log('  Requirement create "description:your requirement text here"');

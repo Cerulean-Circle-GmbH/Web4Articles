@@ -190,6 +190,134 @@ export class DefaultRequirement implements Requirement {
   }
 
   /**
+   * Delete requirement by UUID, scenario file path, or MD file path
+   */
+  async deleteRequirement(identifier: string): Promise<RequirementResult> {
+    try {
+      let uuid: string;
+      let requirementsDir: string;
+      let mdDir: string;
+
+      // Determine if identifier is UUID, scenario file, or MD file
+      if (identifier.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+        // Direct UUID
+        uuid = identifier;
+        requirementsDir = this.getRequirementsDirectory();
+        mdDir = this.getRequirementsMDDirectory();
+      } else if (identifier.endsWith('.scenario.json')) {
+        // Scenario file path - extract UUID from filename
+        const filename = path.basename(identifier);
+        const match = filename.match(/^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\.scenario\.json$/i);
+        if (!match) {
+          return {
+            success: false,
+            message: `Invalid scenario file format: ${filename}`
+          };
+        }
+        uuid = match[1];
+        requirementsDir = path.dirname(identifier);
+        mdDir = path.join(path.dirname(requirementsDir), 'requirements.md');
+      } else if (identifier.endsWith('.requirement.md')) {
+        // MD file path - extract UUID from filename
+        const filename = path.basename(identifier);
+        const match = filename.match(/^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\.requirement\.md$/i);
+        if (!match) {
+          return {
+            success: false,
+            message: `Invalid MD file format: ${filename}`
+          };
+        }
+        uuid = match[1];
+        mdDir = path.dirname(identifier);
+        requirementsDir = path.join(path.dirname(mdDir), 'requirements');
+      } else {
+        return {
+          success: false,
+          message: `Invalid identifier format. Expected UUID, .scenario.json file, or .requirement.md file: ${identifier}`
+        };
+      }
+
+      console.log(`🗑️  Deleting requirement: ${uuid}`);
+      console.log(`📁 Requirements dir: ${requirementsDir}`);
+      console.log(`📄 MD dir: ${mdDir}`);
+
+      const deletedFiles: string[] = [];
+      const errors: string[] = [];
+
+      // Delete scenario file (symlink) in requirements directory
+      const scenarioPath = path.join(requirementsDir, `${uuid}.scenario.json`);
+      try {
+        await fs.unlink(scenarioPath);
+        deletedFiles.push(scenarioPath);
+        console.log(`✅ Deleted scenario symlink: ${scenarioPath}`);
+      } catch (error) {
+        if ((error as any).code !== 'ENOENT') {
+          errors.push(`Failed to delete scenario symlink ${scenarioPath}: ${(error as Error).message}`);
+        }
+      }
+
+      // Delete MD file
+      const mdPath = path.join(mdDir, `${uuid}.requirement.md`);
+      try {
+        await fs.unlink(mdPath);
+        deletedFiles.push(mdPath);
+        console.log(`✅ Deleted MD file: ${mdPath}`);
+      } catch (error) {
+        if ((error as any).code !== 'ENOENT') {
+          errors.push(`Failed to delete MD file ${mdPath}: ${(error as Error).message}`);
+        }
+      }
+
+      // Delete from central scenarios/index (this is the master file)
+      try {
+        const projectRoot = process.env.PROJECT_ROOT || this.findProjectRoot();
+        const unitStorage = new UnitIndexStorage().init(projectRoot);
+        const loadResult = await unitStorage.loadScenario(uuid);
+        if (loadResult.success) {
+          // Get the scenario path manually from the storage structure
+          const firstChar = uuid[0];
+          const secondChar = uuid[1]; 
+          const thirdChar = uuid[2];
+          const fourthChar = uuid[3];
+          const fifthChar = uuid[4];
+          const indexPath = path.join(projectRoot, 'scenarios', 'index', firstChar, secondChar, thirdChar, fourthChar, fifthChar, `${uuid}.scenario.json`);
+        
+          if (await fs.access(indexPath).then(() => true).catch(() => false)) {
+            await fs.unlink(indexPath);
+            deletedFiles.push(indexPath);
+            console.log(`✅ Deleted master scenario: ${indexPath}`);
+          }
+        }
+      } catch (error) {
+        errors.push(`Failed to delete master scenario: ${(error as Error).message}`);
+      }
+
+      if (errors.length > 0) {
+        return {
+          success: false,
+          message: `Requirement deletion partially failed for ${uuid}`,
+          issues: errors,
+          requirementId: uuid
+        };
+      }
+
+      return {
+        success: true,
+        message: `Requirement ${uuid} deleted successfully`,
+        requirementId: uuid,
+        deletedFiles
+      };
+
+    } catch (error) {
+      return {
+        success: false,
+        message: `Failed to delete requirement: ${(error as Error).message}`,
+        issues: [(error as Error).message]
+      };
+    }
+  }
+
+  /**
    * Find component root from current directory
    * Walks up directory tree looking for component structure
    */

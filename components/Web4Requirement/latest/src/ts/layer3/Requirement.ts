@@ -27,6 +27,7 @@ export interface RequirementResult {
   requirementId?: string;
   scenario?: any;
   issues?: string[];
+  deletedFiles?: string[];
 }
 
 export enum RequirementStatus {
