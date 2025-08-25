@@ -1,4 +1,4 @@
-import { TemplateProcessor, ViewContext } from '../layer3/View.ts';
+import { TemplateProcessor, ViewContext } from '../layer3/View.js';
 import * as fs from 'fs/promises';
 
 /**

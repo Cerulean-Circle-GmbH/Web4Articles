@@ -1,5 +1,5 @@
-import { ViewContext, ViewResult } from '../layer3/View.ts';
-import { DefaultMDView } from './DefaultMDView.ts';
+import { ViewContext, ViewResult } from '../layer3/View.js';
+import { DefaultMDView } from './DefaultMDView.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 

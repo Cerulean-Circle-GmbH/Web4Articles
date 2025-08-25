@@ -1,8 +1,8 @@
-import { Requirement, RequirementScenario, RequirementResult, RequirementStatus, RequirementMetadata } from '../layer3/Requirement.ts';
+import { Requirement, RequirementScenario, RequirementResult, RequirementStatus, RequirementMetadata } from '../layer3/Requirement.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import { UnitIndexStorage } from '../../../../../Unit/latest/src/ts/layer2/UnitIndexStorage.ts';
+import { UnitIndexStorage } from '../../../../../Unit/latest/dist/ts/layer2/UnitIndexStorage.js';
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -606,7 +606,7 @@ export class DefaultRequirement implements Requirement {
   private async generateRequirementsOverview(requirementFiles: string[], outputPath: string): Promise<string> {
     try {
       // Use new RequirementOverview from layer5 for proper architectural layering
-      const { RequirementOverview } = await import('../layer5/RequirementOverview.ts');
+              const { RequirementOverview } = await import('../layer5/RequirementOverview.js');
       
       const requirementOverview = new RequirementOverview();
       requirementOverview.init(); // Initialize with default template

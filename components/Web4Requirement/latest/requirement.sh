@@ -95,4 +95,4 @@ fi
 
 # Execute the CLI with context info and all arguments
 export DIRECTORY_CONTEXT="$CONTEXT_INFO"
-node --no-warnings --no-deprecation "$CLI_PATH" "$@" 2>/dev/null || node "$CLI_PATH" "$@"
+node "$CLI_PATH" "$@"

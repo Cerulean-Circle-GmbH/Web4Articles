@@ -3,9 +3,9 @@
  * Generates overview views for collections of requirements
  */
 
-import { DefaultMDView } from '../layer2/DefaultMDView.ts';
-import { ViewContext, ViewResult } from '../layer3/View.ts';
-import { RequirementScenario } from '../layer3/Requirement.ts';
+import { DefaultMDView } from '../layer2/DefaultMDView.js';
+import { ViewContext, ViewResult } from '../layer3/View.js';
+import { RequirementScenario } from '../layer3/Requirement.js';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 

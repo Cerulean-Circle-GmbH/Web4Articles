@@ -4,7 +4,7 @@
  * Provides CLI interface for Web4Requirement component operations
  */
 
-import { DefaultRequirement } from '../layer2/DefaultRequirement.ts';
+import { DefaultRequirement } from '../layer2/DefaultRequirement.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 

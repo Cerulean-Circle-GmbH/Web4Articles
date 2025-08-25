@@ -1,5 +1,5 @@
-import { MDView, ViewContext, ViewResult, TemplateProcessor } from '../layer3/View.ts';
-import { DefaultTemplateProcessor } from './DefaultTemplateProcessor.ts';
+import { MDView, ViewContext, ViewResult, TemplateProcessor } from '../layer3/View.js';
+import { DefaultTemplateProcessor } from './DefaultTemplateProcessor.js';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 
