@@ -16,8 +16,8 @@
 - **Howto Guide Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md#branch-strategy-decision-1d) | [scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)
 
 ### **QA Decisions**
-- [ ] **Decision 1: Background Agent Branch Policy**
-  - a) Background Agents should follow standard dev/UTC branch pattern
+- [x] **Decision 1: Background Agent Branch Policy** → **1a Selected**
+  - a) Background Agents should follow standard dev/UTC branch pattern ✅
   - b) Background Agents operate on cursor branches as special exception (like Save/Restart Agent)
   - c) Background Agents should create their own dev/background-UTC branches
 
@@ -26,8 +26,15 @@
 id you create the required dev/utc branch and switched to it?
 ```
 
+### **TRON Decision Feedback (2025-08-25-UTC-1308)**
+```quote
+1a
+```
+
 ### **My Answer**
 No, I did not create a dev/UTC branch. I'm currently on cursor/start-background-process-10df branch. Checking the howto guide now to understand if Background Agents should follow the same branch pattern or have an exception like Save/Restart Agent.
+
+Decision 1a received - Background Agents should follow standard dev/UTC branch pattern. Creating dev/2025-08-25-UTC-1308 branch now.
 
 **Learning Applied:** Branch procedures may have role-specific exceptions that need clarification for proper compliance.
 
@@ -104,17 +111,25 @@ cursor/start-background-process-10df
 
 ## **🎯 ACT**
 
-**Branch Procedure Clarification Needed:** Background Agent currently operating on cursor branch, requiring TRON decision on proper branch policy.
+**Branch Procedure Clarified:** Background Agents must follow standard dev/UTC branch pattern per Decision 1a.
 
-**Current Status:**
-- **Branch:** cursor/start-background-process-10df
-- **Commits:** Multiple successful commits and pushes
-- **Work:** Fully functional and committed
+**Actions Taken:**
+- **Created Branch:** dev/2025-08-25-UTC-1308
+- **Switched:** From cursor/start-background-process-10df to dev/UTC branch
+- **Pushed:** New branch to origin with tracking
+- **Policy Clear:** No special exception for Background Agents
 
-**Options for Resolution:**
-1. **Create dev/UTC now:** Can branch from current point
-2. **Continue on cursor:** If Background Agents have exception
-3. **Document policy:** Add to howto guide once decided
+**Implementation:**
+```bash
+$ git checkout -b dev/2025-08-25-UTC-1308
+Switched to a new branch 'dev/2025-08-25-UTC-1308'
+$ git push -u origin dev/2025-08-25-UTC-1308
+```
+
+**Next Steps:**
+1. **Continue work on dev/UTC branch:** All future commits on proper branch
+2. **Update documentation:** Clarify that Background Agents follow standard pattern
+3. **Learn from experience:** Initial work on cursor branch should be avoided
 
 ---
 
