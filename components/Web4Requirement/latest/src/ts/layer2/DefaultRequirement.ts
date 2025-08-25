@@ -149,8 +149,49 @@ export class DefaultRequirement implements Requirement {
     this.contextPath = path;
   }
 
+  /**
+   * Find component root from current directory
+   * Walks up directory tree looking for component structure
+   */
+  private findComponentRoot(currentPath: string): string | null {
+    let dir = currentPath;
+    
+    while (dir !== path.dirname(dir)) {
+      // Check if this directory contains package.json (component marker)
+      const packageJsonPath = path.join(dir, 'package.json');
+      try {
+        require('fs').accessSync(packageJsonPath);
+        
+        // Check if this is within components/ directory structure
+        if (dir.includes('/components/') && dir.match(/\/components\/[^\/]+\/[^\/]+$/)) {
+          return dir;
+        }
+      } catch {
+        // Continue searching up
+      }
+      
+      dir = path.dirname(dir);
+    }
+    
+    return null;
+  }
+
   private getRequirementsDirectory(): string {
     const cwd = process.cwd();
+    
+    // Check for source.env component context variables first
+    if (process.env.WEB4_COMPONENT_CONTEXT === 'true' && process.env.WEB4_COMPONENT_ROOT) {
+      // Use component root from source.env
+      return path.join(process.env.WEB4_COMPONENT_ROOT, 'spec', 'requirements');
+    }
+    
+    // Fallback: Check if we're in a component context via directory detection
+    const componentRoot = this.findComponentRoot(cwd);
+    if (componentRoot) {
+      // Use component's spec directory
+      return path.join(componentRoot, 'spec', 'requirements');
+    }
+    
     // If already in spec/requirements directory, use it directly
     if (cwd.endsWith(path.join('spec', 'requirements'))) {
       return cwd;
@@ -260,6 +301,20 @@ export class DefaultRequirement implements Requirement {
 
   private getRequirementsMDDirectory(): string {
     const cwd = process.cwd();
+    
+    // Check for source.env component context variables first
+    if (process.env.WEB4_COMPONENT_CONTEXT === 'true' && process.env.WEB4_COMPONENT_ROOT) {
+      // Use component root from source.env
+      return path.join(process.env.WEB4_COMPONENT_ROOT, 'spec', 'requirements.md');
+    }
+    
+    // Fallback: Check if we're in a component context via directory detection
+    const componentRoot = this.findComponentRoot(cwd);
+    if (componentRoot) {
+      // Use component's spec/requirements.md directory
+      return path.join(componentRoot, 'spec', 'requirements.md');
+    }
+    
     // If in spec/requirements, go up and add requirements.md
     if (cwd.endsWith(path.join('spec', 'requirements'))) {
       return path.join(path.dirname(cwd), 'requirements.md');

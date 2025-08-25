@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "805df9ac-9677-4bfc-a1d5-bf447d931f11",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI1VDEzOjU3OjI3LjM0OVoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "805df9ac-9677-4bfc-a1d5-bf447d931f11",
+    "name": "Requirement CLI Component Context Awareness",
+    "title": "Requirement CLI Component Context Awareness",
+    "description": "When requirement CLI is run from within a component directory structure, it should detect the component root and use the component's spec/requirements.md directory instead of creating spec directories in arbitrary subdirectories. Enable proper component-scoped requirement management."
+  },
+  "unitIndex": {
+    "uuid": "805df9ac-9677-4bfc-a1d5-bf447d931f11",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/8/0/5/d/f/805df9ac-9677-4bfc-a1d5-bf447d931f11.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/805df9ac-9677-4bfc-a1d5-bf447d931f11.scenario.json"
+    ],
+    "createdAt": "2025-08-25T13:57:27.368Z",
+    "updatedAt": "2025-08-25T13:57:27.368Z"
+  }
+}
