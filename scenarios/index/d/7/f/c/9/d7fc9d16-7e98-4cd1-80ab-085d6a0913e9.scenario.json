@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "d7fc9d16-7e98-4cd1-80ab-085d6a0913e9",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI1VDEyOjIyOjU2LjIzNFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "d7fc9d16-7e98-4cd1-80ab-085d6a0913e9",
+    "name": "TEST User UUID Consistency FIXED",
+    "title": "TEST User UUID Consistency FIXED",
+    "description": "Testing that owner UUID is now consistent for user donges - should be 7e65139d-38cf-4f34-b769-0a86dd3a94e3"
+  },
+  "unitIndex": {
+    "uuid": "d7fc9d16-7e98-4cd1-80ab-085d6a0913e9",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/d/7/f/c/9/d7fc9d16-7e98-4cd1-80ab-085d6a0913e9.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/d7fc9d16-7e98-4cd1-80ab-085d6a0913e9.scenario.json"
+    ],
+    "createdAt": "2025-08-25T12:22:56.258Z",
+    "updatedAt": "2025-08-25T12:22:56.258Z"
+  }
+}

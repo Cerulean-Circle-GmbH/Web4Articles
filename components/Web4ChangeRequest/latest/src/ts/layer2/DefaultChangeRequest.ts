@@ -3,6 +3,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { UnitIndexStorage } from '../../../../../Unit/latest/dist/ts/layer2/UnitIndexStorage.js';
+import { DefaultUser } from '../../../../../User/latest/dist/layer2/DefaultUser.js';
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -102,17 +103,10 @@ export class DefaultChangeRequest implements ChangeRequest {
   }
 
   private createScenarioJSON(): any {
-    const hostname = process.env.HOSTNAME || 'localhost';
+    // FIXED: Use consistent User UUID instead of random UUID for owner
     const user = process.env.USER || 'unknown';
-    const utcTimestamp = new Date().toISOString();
-    const ownerUuid = this.generateUUID();
-
-    const owner = {
-      user,
-      hostname,
-      utcTimestamp,
-      uuid: ownerUuid
-    };
+    const hostname = process.env.HOSTNAME || 'localhost';
+    const owner = DefaultUser.getOwnerObject(user, hostname);
 
     return {
       IOR: {
