@@ -177,6 +177,9 @@
    ```
 6. **ALWAYS ask before git operations** (Decision 2a) - pull, merge, rebase, reset
 7. **NEVER truncate user quotes** - they are documentation!
+8. **Document ALL git operations in PDCAs** - especially branch switches
+9. **Cross-agent learning** - Cherry-pick improvements from other agents' branches
+10. **Test conflict handling** - Script now creates PRs on merge conflicts
 
 ### **Branch Strategy (Decision 1d):**
 1. **Start on save/start** - Always begin here
@@ -188,6 +191,7 @@
    git checkout -b dev/$TIMESTAMP
    git push -u origin dev/$TIMESTAMP
    ```
+4. **Exception: Save/Restart Agent** - ALWAYS works on save/start branch
 
 ---
 
@@ -227,6 +231,8 @@
 ### **Directory Structure:**
 - **Role-based organization:** `pdca/role/[role_name]/`
 - **Session-based grouping:** Within project journal sessions
+- **First PDCA location:** `scrum.pmo/project.journal/YYYY-MM-DD-HHMM-descriptive/pdca/` (NOT session-journal)
+- **Example:** `scrum.pmo/project.journal/2025-08-24-1248-recovery-start/pdca/2025-08-24-UTC-1248-recovery-start.pdca.md`
 
 ---
 
@@ -284,6 +290,21 @@
 
 ---
 
+## **📚 ADVANCED LEARNING RESOURCES**
+
+### **Save/Restart Agent's Detailed PDCAs**
+For deep insights on PDCA best practices, process improvements, and lessons learned:
+- **Location:** `scrum.pmo/roles/SaveRestartAgent/pdca/`
+- **Learnings Summary:** `scrum.pmo/roles/SaveRestartAgent/learnings.summary.md` (updated EOD)
+- **Key Topics:**
+  - Decision behavior and presentation
+  - Documentation integrity
+  - Cross-agent collaboration
+  - Git workflow automation
+  - Continuous improvement practices
+
+---
+
 ## **⚠️ COMMON MISTAKES TO AVOID**
 
 ### **Format Failures:**
@@ -302,6 +323,9 @@
 - **Creating multiple roles** without coordination [[memory:6917891]]
 - **Using non-interactive tests** that hang [[memory:5680815]]
 - **Not asking for critical decisions** [[memory:6917891]]
+- **Truncating user documentation** - NEVER truncate quotes/logs [[memory:0944]]
+- **Not documenting git operations** - Always show branch switches [[memory:0931]]
+- **Missing cross-agent improvements** - Review other agents' work [[memory:0935]]
 
 ---
 
