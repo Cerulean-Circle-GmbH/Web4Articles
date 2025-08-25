@@ -18,7 +18,7 @@
 **All clear, no decisions to make** - Process correction using established git best practices
 
 ### **User Feedback**
-```quote
+```quoteext
 did you copy all the agents pdcas?
 ok now they are on one location, but copying always creates room for inconsistencies.
 rework it in a way that the result looks the same but all original files where correcty moved with git mv.
