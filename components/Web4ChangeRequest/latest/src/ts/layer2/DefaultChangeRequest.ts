@@ -1,4 +1,4 @@
-import { Requirement, RequirementScenario, RequirementResult, RequirementStatus, RequirementMetadata } from '../layer3/Requirement.js';
+import { ChangeRequest, ChangeRequestScenario, ChangeRequestResult, ChangeRequestStatus, ChangeRequestMetadata } from '../layer3/ChangeRequest.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
@@ -9,12 +9,12 @@ import { DefaultUser } from '../../../../../User/latest/dist/layer2/DefaultUser.
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export class DefaultRequirement implements Requirement {
-  private scenario!: RequirementScenario;
+export class DefaultChangeRequest implements ChangeRequest {
+  private scenario!: ChangeRequestScenario;
   private uuid: string = '';
   private _name: string = '';
   private description: string = '';
-  private status: RequirementStatus = RequirementStatus.PENDING;
+  private status: ChangeRequestStatus = ChangeRequestStatus.PENDING;
   private directoryContext: string = '';
   private contextType: 'component' | 'arbitrary' = 'arbitrary';
   private contextPath: string = '';
@@ -41,24 +41,24 @@ export class DefaultRequirement implements Requirement {
     return process.cwd();
   }
   
-  init(scenario: RequirementScenario): this {
+  init(scenario: ChangeRequestScenario): this {
     this.scenario = scenario;
     return this;
   }
 
-  async create(title: string, description: string): Promise<RequirementResult> {
+  async create(title: string, description: string): Promise<ChangeRequestResult> {
     this.uuid = this.generateUUID();
     this._name = title;
     this.description = description;
-    this.status = RequirementStatus.CREATED;
+    this.status = ChangeRequestStatus.CREATED;
 
     const scenario = this.createScenarioJSON();
     
     return {
       success: true,
-      requirementId: this.uuid,
+      changeRequestId: this.uuid,
       scenario: scenario,
-      message: 'Requirement created successfully'
+      message: 'ChangeRequest created successfully'
     };
   }
 
@@ -74,23 +74,23 @@ export class DefaultRequirement implements Requirement {
     return this.description;
   }
   
-  getMetadata(): RequirementMetadata {
+  getMetadata(): ChangeRequestMetadata {
     return { ...this.scenario.metadata };
   }
   
-  async process(): Promise<RequirementResult> {
+  async process(): Promise<ChangeRequestResult> {
     return {
       success: true,
-      message: 'Requirement processed successfully',
-      requirementId: this.uuid
+      message: 'ChangeRequest processed successfully',
+      changeRequestId: this.uuid
     };
   }
   
-  getStatus(): RequirementStatus {
+  getStatus(): ChangeRequestStatus {
     return this.status;
   }
   
-  toScenario(): RequirementScenario {
+  toScenario(): ChangeRequestScenario {
     return this.scenario;
   }
 
@@ -111,7 +111,7 @@ export class DefaultRequirement implements Requirement {
     return {
       IOR: {
         uuid: this.uuid,
-        component: 'Web4Requirement',
+        component: 'Web4ChangeRequest',
         version: 'v1.0'
       },
       owner: Buffer.from(JSON.stringify(owner)).toString('base64'),
@@ -149,26 +149,26 @@ export class DefaultRequirement implements Requirement {
     this.contextPath = path;
   }
 
-  private getRequirementsDirectory(): string {
+  private getChangeRequestsDirectory(): string {
     const cwd = process.cwd();
-    // If already in spec/requirements directory, use it directly
-    if (cwd.endsWith(path.join('spec', 'requirements'))) {
+    // If already in spec/changeRequests directory, use it directly
+    if (cwd.endsWith(path.join('spec', 'changeRequests'))) {
       return cwd;
     }
-    // Otherwise add spec/requirements structure
-    return path.join(cwd, 'spec', 'requirements');
+    // Otherwise add spec/changeRequests structure
+    return path.join(cwd, 'spec', 'changeRequests');
   }
 
-  async moveToComponent(uuid: string, targetComponentPath: string): Promise<RequirementResult> {
+  async moveToComponent(uuid: string, targetComponentPath: string): Promise<ChangeRequestResult> {
     try {
       const fs = await import('fs');
       const { execSync } = await import('child_process');
       
       // Source paths (current directory context)
-      const sourceRequirementsDir = this.getRequirementsDirectory();
-      const sourceMDDir = this.getRequirementsMDDirectory();
-      const sourceScenarioFile = path.join(sourceRequirementsDir, `${uuid}.scenario.json`);
-      const sourceMDFile = path.join(sourceMDDir, `${uuid}.requirement.md`);
+      const sourceChangeRequestsDir = this.getChangeRequestsDirectory();
+      const sourceMDDir = this.getChangeRequestsMDDirectory();
+      const sourceScenarioFile = path.join(sourceChangeRequestsDir, `${uuid}.scenario.json`);
+      const sourceMDFile = path.join(sourceMDDir, `${uuid}.changeRequest.md`);
       
       // Target paths (resolve relative to project root)
       let resolvedTargetPath = targetComponentPath;
@@ -184,13 +184,13 @@ export class DefaultRequirement implements Requirement {
         resolvedTargetPath = path.join(projectRoot, targetComponentPath);
       }
       
-      const targetRequirementsDir = path.join(resolvedTargetPath, 'spec', 'requirements');
-      const targetMDDir = path.join(resolvedTargetPath, 'spec', 'requirements.md');
-      const targetScenarioFile = path.join(targetRequirementsDir, `${uuid}.scenario.json`);
-      const targetMDFile = path.join(targetMDDir, `${uuid}.requirement.md`);
+      const targetChangeRequestsDir = path.join(resolvedTargetPath, 'spec', 'changeRequests');
+      const targetMDDir = path.join(resolvedTargetPath, 'spec', 'changeRequests.md');
+      const targetScenarioFile = path.join(targetChangeRequestsDir, `${uuid}.scenario.json`);
+      const targetMDFile = path.join(targetMDDir, `${uuid}.changeRequest.md`);
       
       // Ensure target directories exist
-      await fs.promises.mkdir(targetRequirementsDir, { recursive: true });
+      await fs.promises.mkdir(targetChangeRequestsDir, { recursive: true });
       await fs.promises.mkdir(targetMDDir, { recursive: true });
       
       // Check if files exist before moving
@@ -229,8 +229,8 @@ export class DefaultRequirement implements Requirement {
         const originalContext = process.env.DIRECTORY_CONTEXT;
         process.env.DIRECTORY_CONTEXT = targetComponentPath;
         
-        const targetRequirement = new DefaultRequirement();
-        await targetRequirement.updateOverview();
+        const targetChangeRequest = new DefaultChangeRequest();
+        await targetChangeRequest.updateOverview();
         
         // Restore original context
         if (originalContext) {
@@ -245,30 +245,30 @@ export class DefaultRequirement implements Requirement {
       
       return {
         success: true,
-        message: `Requirement ${uuid} moved successfully to ${targetComponentPath}`,
-        requirementId: uuid
+        message: `ChangeRequest ${uuid} moved successfully to ${targetComponentPath}`,
+        changeRequestId: uuid
       };
       
     } catch (error) {
       return {
         success: false,
-        message: `Failed to move requirement: ${(error as Error).message}`,
+        message: `Failed to move changeRequest: ${(error as Error).message}`,
         issues: [(error as Error).message]
       };
     }
   }
 
-  private getRequirementsMDDirectory(): string {
+  private getChangeRequestsMDDirectory(): string {
     const cwd = process.cwd();
-    // If in spec/requirements, go up and add requirements.md
-    if (cwd.endsWith(path.join('spec', 'requirements'))) {
-      return path.join(path.dirname(cwd), 'requirements.md');
+    // If in spec/changeRequests, go up and add changeRequests.md
+    if (cwd.endsWith(path.join('spec', 'changeRequests'))) {
+      return path.join(path.dirname(cwd), 'changeRequests.md');
     }
-    // Otherwise add spec/requirements.md structure
-    return path.join(cwd, 'spec', 'requirements.md');
+    // Otherwise add spec/changeRequests.md structure
+    return path.join(cwd, 'spec', 'changeRequests.md');
   }
 
-  async loadFromScenario(scenarioPath: string): Promise<RequirementResult> {
+  async loadFromScenario(scenarioPath: string): Promise<ChangeRequestResult> {
     try {
       const scenarioContent = await fs.readFile(scenarioPath, 'utf-8');
       const scenarioData = JSON.parse(scenarioContent);
@@ -278,7 +278,7 @@ export class DefaultRequirement implements Requirement {
         this.uuid = scenarioData.IOR.uuid;
         this._name = scenarioData.model.name || scenarioData.model.title || '';
         this.description = scenarioData.model.description || '';
-        this.status = RequirementStatus.CREATED; // Assume loaded requirements are created
+        this.status = ChangeRequestStatus.CREATED; // Assume loaded changeRequests are created
         
         // Reconstruct minimal scenario for compatibility
         this.scenario = {
@@ -294,8 +294,8 @@ export class DefaultRequirement implements Requirement {
         
         return {
           success: true,
-          message: `Requirement loaded from scenario: ${scenarioPath}`,
-          requirementId: this.uuid
+          message: `ChangeRequest loaded from scenario: ${scenarioPath}`,
+          changeRequestId: this.uuid
         };
       } else {
         return {
@@ -313,7 +313,7 @@ export class DefaultRequirement implements Requirement {
     }
   }
 
-  async set(attribute: string, value: string): Promise<RequirementResult> {
+  async set(attribute: string, value: string): Promise<ChangeRequestResult> {
     try {
       switch (attribute.toLowerCase()) {
         case 'implemented':
@@ -330,11 +330,11 @@ export class DefaultRequirement implements Requirement {
           break;
           
         case 'status':
-          if (Object.values(RequirementStatus).includes(value as RequirementStatus)) {
-            this.status = value as RequirementStatus;
+          if (Object.values(ChangeRequestStatus).includes(value as ChangeRequestStatus)) {
+            this.status = value as ChangeRequestStatus;
             await this.updateScenarioAttribute('status', value);
           } else {
-            throw new Error(`Invalid status value: ${value}. Must be one of: ${Object.values(RequirementStatus).join(', ')}`);
+            throw new Error(`Invalid status value: ${value}. Must be one of: ${Object.values(ChangeRequestStatus).join(', ')}`);
           }
           break;
           
@@ -359,8 +359,8 @@ export class DefaultRequirement implements Requirement {
       
       return {
         success: true,
-        message: `Requirement ${this.uuid}: ${attribute} set to ${value}`,
-        requirementId: this.uuid
+        message: `ChangeRequest ${this.uuid}: ${attribute} set to ${value}`,
+        changeRequestId: this.uuid
       };
       
     } catch (error) {
@@ -372,11 +372,11 @@ export class DefaultRequirement implements Requirement {
     }
   }
 
-  async updateOverview(): Promise<RequirementResult> {
+  async updateOverview(): Promise<ChangeRequestResult> {
     try {
-      // Get scenario files from the requirements directory  
-      const scenarioDir = this.getRequirementsDirectory();
-      const mdDir = this.getRequirementsMDDirectory();
+      // Get scenario files from the changeRequests directory  
+      const scenarioDir = this.getChangeRequestsDirectory();
+      const mdDir = this.getChangeRequestsMDDirectory();
       
       // Ensure both directories exist
       await fs.mkdir(scenarioDir, { recursive: true });
@@ -386,48 +386,48 @@ export class DefaultRequirement implements Requirement {
       const scenarioFiles = await fs.readdir(scenarioDir);
       const scenarios = scenarioFiles.filter(file => file.endsWith('.scenario.json'));
       
-      console.log(`🔄 Regenerating ${scenarios.length} requirement files...`);
+      console.log(`🔄 Regenerating ${scenarios.length} changeRequest files...`);
       
-      // Regenerate each requirement MD file from its scenario
+      // Regenerate each changeRequest MD file from its scenario
       for (const scenarioFile of scenarios) {
         const uuid = scenarioFile.replace('.scenario.json', '');
         const scenarioPath = path.join(scenarioDir, scenarioFile);
         
         try {
-          // Load scenario and create temporary requirement instance
+          // Load scenario and create temporary changeRequest instance
           const scenarioContent = await fs.readFile(scenarioPath, 'utf-8');
           const scenarioData = JSON.parse(scenarioContent);
           
-          // Create a temporary requirement instance for this UUID
-          const tempReq = new DefaultRequirement();
+          // Create a temporary changeRequest instance for this UUID
+          const tempReq = new DefaultChangeRequest();
           await tempReq.loadFromScenario(scenarioPath);
           
           // Generate MD view and save it
           const mdContent = tempReq.generateMDView();
-          const mdPath = path.join(mdDir, `${uuid}.requirement.md`);
+          const mdPath = path.join(mdDir, `${uuid}.changeRequest.md`);
           await fs.writeFile(mdPath, mdContent, 'utf-8');
           
-          console.log(`✅ Generated ${uuid}.requirement.md`);
+          console.log(`✅ Generated ${uuid}.changeRequest.md`);
           
         } catch (error) {
           console.warn(`⚠️  Failed to regenerate ${scenarioFile}: ${(error as Error).message}`);
         }
       }
       
-      // Get all requirement files (now freshly regenerated)
-      const requirementFiles = await this.getRequirementFiles(mdDir);
+      // Get all changeRequest files (now freshly regenerated)
+      const changeRequestFiles = await this.getChangeRequestFiles(mdDir);
       
       // Generate new overview content
-      const overviewContent = await this.generateRequirementsOverview(requirementFiles, mdDir);
+      const overviewContent = await this.generateChangeRequestsOverview(changeRequestFiles, mdDir);
       
       // Write the overview file
-      const overviewPath = path.join(mdDir, '00_requirements.overview.md');
+      const overviewPath = path.join(mdDir, '00_changeRequests.overview.md');
       await fs.writeFile(overviewPath, overviewContent, 'utf-8');
       
       return {
         success: true,
-        message: `Regenerated ${scenarios.length} requirement files and overview at ${overviewPath}`,
-        requirementId: 'overview'
+        message: `Regenerated ${scenarios.length} changeRequest files and overview at ${overviewPath}`,
+        changeRequestId: 'overview'
       };
       
     } catch (error) {
@@ -439,22 +439,22 @@ export class DefaultRequirement implements Requirement {
     }
   }
 
-  private async getRequirementFiles(requirementsDir: string): Promise<string[]> {
+  private async getChangeRequestFiles(changeRequestsDir: string): Promise<string[]> {
     try {
-      const files = await fs.readdir(requirementsDir);
+      const files = await fs.readdir(changeRequestsDir);
       return files.filter(file => 
-        file.endsWith('.requirement.md') && 
-        !file.startsWith('00_requirements.overview.md')
+        file.endsWith('.changeRequest.md') && 
+        !file.startsWith('00_changeRequests.overview.md')
       );
     } catch (error) {
-      console.warn(`Could not read requirements directory ${requirementsDir}: ${(error as Error).message}`);
+      console.warn(`Could not read changeRequests directory ${changeRequestsDir}: ${(error as Error).message}`);
       return [];
     }
   }
 
   private async updateScenarioAttribute(attribute: string, value: any): Promise<void> {
     try {
-      const scenarioPath = path.join(this.getRequirementsDirectory(), `${this.uuid}.scenario.json`);
+      const scenarioPath = path.join(this.getChangeRequestsDirectory(), `${this.uuid}.scenario.json`);
       const scenarioContent = await fs.readFile(scenarioPath, 'utf-8');
       const scenario = JSON.parse(scenarioContent);
       
@@ -474,14 +474,13 @@ export class DefaultRequirement implements Requirement {
 
   async saveScenario(uuid: string, scenario: any): Promise<void> {
     // NEW: Use Unit Index Storage instead of direct file operations
-    // FIXED: Use PROJECT_ROOT from shell script environment (UCP architecture fix)
-    const projectRoot = process.env.PROJECT_ROOT || this.findProjectRoot();
+    const projectRoot = this.findProjectRoot();
     const unitStorage = new UnitIndexStorage().init(projectRoot);
     
-    // Create symbolic link at Web4Requirement spec location
-    const requirementsDir = this.getRequirementsDirectory();
-    await fs.mkdir(requirementsDir, { recursive: true });
-    const symlinkPath = path.join(requirementsDir, `${uuid}.scenario.json`);
+    // Create symbolic link at Web4ChangeRequest spec location
+    const changeRequestsDir = this.getChangeRequestsDirectory();
+    await fs.mkdir(changeRequestsDir, { recursive: true });
+    const symlinkPath = path.join(changeRequestsDir, `${uuid}.scenario.json`);
     
     try {
       // Save via Unit storage with symbolic link
@@ -489,7 +488,7 @@ export class DefaultRequirement implements Requirement {
       if (!saveResult.success) {
         throw new Error(`Unit storage failed: ${saveResult.message}`);
       }
-      console.log(`📁 Directory: ${requirementsDir}`);
+      console.log(`📁 Directory: ${changeRequestsDir}`);
       console.log(`🔗 Central Index: ${saveResult.scenarioPath}`);
     } catch (error) {
       console.error(`Failed to save scenario via Unit storage: ${(error as Error).message}`);
@@ -520,45 +519,45 @@ export class DefaultRequirement implements Requirement {
       const implementationStatus = this.getImplementationStatus();
       const statusCheckbox = implementationStatus === 'completed' ? 'x' : ' ';
       
-      return `# ${this._name}\n\n## Task Status\n- [${statusCheckbox}] **${this._name}** [requirement:uuid:${this.uuid}]\n\n## Requirement Details\n\n- **UUID:** \`${this.uuid}\`\n- **Name:** ${this._name}\n- **Status:** ${this.status}\n- **Implementation:** ${implementationStatus}\n\n## Description\n\n${this.description}\n\n---\n\n*Generated by Web4Requirement Component v1.0*`;
+      return `# ${this._name}\n\n## Task Status\n- [${statusCheckbox}] **${this._name}** [changeRequest:uuid:${this.uuid}]\n\n## ChangeRequest Details\n\n- **UUID:** \`${this.uuid}\`\n- **Name:** ${this._name}\n- **Status:** ${this.status}\n- **Implementation:** ${implementationStatus}\n\n## Description\n\n${this.description}\n\n---\n\n*Generated by Web4ChangeRequest Component v1.0*`;
     }
   }
 
   private getImplementationStatus(): string {
-    // Map requirement status to implementation status
+    // Map changeRequest status to implementation status
     switch (this.status) {
-      case RequirementStatus.COMPLETED:
+      case ChangeRequestStatus.COMPLETED:
         return 'completed';
-      case RequirementStatus.IN_PROGRESS:
+      case ChangeRequestStatus.IN_PROGRESS:
         return 'in-progress';
-      case RequirementStatus.CANCELLED:
+      case ChangeRequestStatus.CANCELLED:
         return 'cancelled';
-      case RequirementStatus.PENDING:
-      case RequirementStatus.CREATED:
+      case ChangeRequestStatus.PENDING:
+      case ChangeRequestStatus.CREATED:
       default:
         return 'pending';
     }
   }
 
-  async saveMDView(outputPath?: string): Promise<RequirementResult> {
+  async saveMDView(outputPath?: string): Promise<ChangeRequestResult> {
     try {
       const mdContent = this.generateMDView();
-      const filename = `${this.uuid}.requirement.md`;
+      const filename = `${this.uuid}.changeRequest.md`;
       
-      // Use spec/requirements.md directory structure
-      const mdDirectory = this.getRequirementsMDDirectory();
+      // Use spec/changeRequests.md directory structure
+      const mdDirectory = this.getChangeRequestsMDDirectory();
       await fs.mkdir(mdDirectory, { recursive: true });
       
       const finalOutputPath = path.join(mdDirectory, filename);
       await fs.writeFile(finalOutputPath, mdContent, 'utf-8');
       
-      // Always update requirements overview in spec structure
-      await this.updateRequirementsOverview(mdDirectory);
+      // Always update changeRequests overview in spec structure
+      await this.updateChangeRequestsOverview(mdDirectory);
       
       return { 
         success: true, 
         message: `MD view saved: ${finalOutputPath}`,
-        requirementId: this.uuid
+        changeRequestId: this.uuid
       };
     } catch (error) {
       return { 
@@ -569,14 +568,14 @@ export class DefaultRequirement implements Requirement {
     }
   }
 
-  private async updateRequirementsOverview(outputPath: string): Promise<void> {
+  private async updateChangeRequestsOverview(outputPath: string): Promise<void> {
     try {
-      const overviewPath = path.join(outputPath, '00_requirements.overview.md');
+      const overviewPath = path.join(outputPath, '00_changeRequests.overview.md');
       
-      // Read all existing requirement MD files
+      // Read all existing changeRequest MD files
       const files = await fs.readdir(outputPath);
-      const requirementFiles = files
-        .filter(file => file.endsWith('.requirement.md'))
+      const changeRequestFiles = files
+        .filter(file => file.endsWith('.changeRequest.md'))
         .sort((a, b) => {
           // Sort by creation time (newest first) - extract timestamp from UUID
           try {
@@ -589,29 +588,29 @@ export class DefaultRequirement implements Requirement {
         });
 
       // Generate overview content
-      const overviewContent = await this.generateRequirementsOverview(requirementFiles, outputPath);
+      const overviewContent = await this.generateChangeRequestsOverview(changeRequestFiles, outputPath);
       
       // Write overview file
       await fs.writeFile(overviewPath, overviewContent, 'utf-8');
     } catch (error) {
-      console.warn(`Failed to update requirements overview: ${(error as Error).message}`);
+      console.warn(`Failed to update changeRequests overview: ${(error as Error).message}`);
     }
   }
 
-  private async generateRequirementsOverview(requirementFiles: string[], outputPath: string): Promise<string> {
+  private async generateChangeRequestsOverview(changeRequestFiles: string[], outputPath: string): Promise<string> {
     try {
-      // Use new RequirementOverview from layer5 for proper architectural layering
-              const { RequirementOverview } = await import('../layer5/RequirementOverview.js');
+      // Use new ChangeRequestOverview from layer5 for proper architectural layering
+      const { ChangeRequestOverview } = await import('../layer5/ChangeRequestOverview.js');
       
-      const requirementOverview = new RequirementOverview();
-      requirementOverview.init(); // Initialize with default template
+      const changeRequestOverview = new ChangeRequestOverview();
+      changeRequestOverview.init(); // Initialize with default template
       
-      // Load requirement scenarios from files
-      const requirements = await this.loadRequirementsFromFiles(requirementFiles, outputPath);
-      requirementOverview.setRequirements(requirements);
+      // Load changeRequest scenarios from files
+      const changeRequests = await this.loadChangeRequestsFromFiles(changeRequestFiles, outputPath);
+      changeRequestOverview.setChangeRequests(changeRequests);
       
       // Generate overview using the layer5 view component
-      const result = await requirementOverview.generateOverview();
+      const result = await changeRequestOverview.generateOverview();
       
       if (result.success && result.content) {
         return result.content;
@@ -620,31 +619,31 @@ export class DefaultRequirement implements Requirement {
       }
     } catch (error) {
       // Fallback to simple overview if layer5 component fails
-      return this.generateSimpleOverview(requirementFiles);
+      return this.generateSimpleOverview(changeRequestFiles);
     }
   }
 
-  private async loadRequirementsFromFiles(requirementFiles: string[], outputPath: string): Promise<any[]> {
-    const requirements = [];
+  private async loadChangeRequestsFromFiles(changeRequestFiles: string[], outputPath: string): Promise<any[]> {
+    const changeRequests = [];
     
-    for (const filename of requirementFiles) {
+    for (const filename of changeRequestFiles) {
       try {
         const filePath = path.join(outputPath, filename);
         const content = await fs.readFile(filePath, 'utf-8');
         
         // Extract title from markdown content
         const titleMatch = content.match(/^#\s+(.+)$/m);
-        const title = titleMatch ? titleMatch[1] : filename.replace('.requirement.md', '');
+        const title = titleMatch ? titleMatch[1] : filename.replace('.changeRequest.md', '');
         
         // Extract UUID from filename
-        const uuid = filename.replace('.requirement.md', '');
+        const uuid = filename.replace('.changeRequest.md', '');
         
         // Try to load implementation status from scenario JSON file
         let implemented = false;
         let implementationStatus = 'pending';
         
         try {
-          const scenarioPath = path.join(this.getRequirementsDirectory(), `${uuid}.scenario.json`);
+          const scenarioPath = path.join(this.getChangeRequestsDirectory(), `${uuid}.scenario.json`);
           const scenarioContent = await fs.readFile(scenarioPath, 'utf-8');
           const scenario = JSON.parse(scenarioContent);
           
@@ -659,8 +658,8 @@ export class DefaultRequirement implements Requirement {
           implemented = implementationStatus === 'completed';
         }
 
-        // Create requirement scenario object
-        requirements.push({
+        // Create changeRequest scenario object
+        changeRequests.push({
           uuid,
           title,
           name: title,
@@ -670,35 +669,35 @@ export class DefaultRequirement implements Requirement {
           implementationStatus
         });
       } catch (error) {
-        console.warn(`Failed to load requirement ${filename}: ${error}`);
+        console.warn(`Failed to load changeRequest ${filename}: ${error}`);
       }
     }
     
-    return requirements;
+    return changeRequests;
   }
 
-  private generateSimpleOverview(requirementFiles: string[]): string {
+  private generateSimpleOverview(changeRequestFiles: string[]): string {
     const timestamp = new Date().toISOString();
-    const totalCount = requirementFiles.length;
+    const totalCount = changeRequestFiles.length;
     
-    const itemsList = requirementFiles.map(filename => `- [${filename}](./${filename})`).join('\n');
+    const itemsList = changeRequestFiles.map(filename => `- [${filename}](./${filename})`).join('\n');
     
-    return `# Requirements Overview
+    return `# ChangeRequests Overview
 
 **Last Updated:** ${timestamp}
-**Total Requirements:** ${totalCount}
+**Total ChangeRequests:** ${totalCount}
 
-## Requirements List
+## ChangeRequests List
 
 ${itemsList}
 
 ---
 
-*Generated by Web4Requirement Component v1.0*`;
+*Generated by Web4ChangeRequest Component v1.0*`;
   }
 
   // Legacy method for backwards compatibility - now redirects to new implementation
-  private async generateRequirementsOverviewLegacy(requirementFiles: string[], outputPath: string): Promise<string> {
+  private async generateChangeRequestsOverviewLegacy(changeRequestFiles: string[], outputPath: string): Promise<string> {
     try {
       // Use new MDOverview for maximum template independence
       const { MDOverview } = require('./MDOverview.js');
@@ -709,10 +708,10 @@ ${itemsList}
       const mdOverview = new MDOverview(overviewTemplatePath, itemTemplatePath);
       
       const context = {
-        requirementFiles,
+        changeRequestFiles,
         outputPath,
         timestamp: new Date().toISOString(),
-        totalCount: requirementFiles.length
+        totalCount: changeRequestFiles.length
       };
       
       const result = await mdOverview.renderMD(context);
@@ -729,7 +728,7 @@ ${itemsList}
       
       // Fallback to simple overview if new architecture fails
       const timestamp = new Date().toISOString();
-      return `# Requirements Overview\n\n**Last Updated:** ${timestamp}\n**Total Requirements:** ${requirementFiles.length}\n\n## Requirements List\n\n${requirementFiles.map(f => `- [${f}](./${f})`).join('\n')}\n\n---\n\n*Generated by Web4Requirement Component v1.0*`;
+      return `# ChangeRequests Overview\n\n**Last Updated:** ${timestamp}\n**Total ChangeRequests:** ${changeRequestFiles.length}\n\n## ChangeRequests List\n\n${changeRequestFiles.map(f => `- [${f}](./${f})`).join('\n')}\n\n---\n\n*Generated by Web4ChangeRequest Component v1.0*`;
     }
   }
 }

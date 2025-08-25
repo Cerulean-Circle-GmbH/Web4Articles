@@ -1,7 +1,7 @@
 import { createHash } from 'crypto';
-import { IUser } from '../layer3/IUser';
+import { User } from '../layer3/User';
 
-export class DefaultUser implements IUser {
+export class DefaultUser implements User {
   public readonly uuid: string;
   public readonly username: string;
   public readonly hostname: string;
@@ -69,5 +69,245 @@ export class DefaultUser implements IUser {
       utcTimestamp,
       uuid: user.uuid // This will be consistent for the same username
     };
+  }
+
+  /**
+   * Fix scenario owner UUID in existing scenario files
+   * Takes arbitrary scenario file path and corrects owner UUID to consistent user UUID
+   */
+  static async fixScenarioOwnerUUID(scenarioFilePath: string): Promise<{success: boolean, message: string, oldUUID?: string, newUUID?: string}> {
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      
+      // Check if file exists
+      if (!await fs.access(scenarioFilePath).then(() => true).catch(() => false)) {
+        return {
+          success: false,
+          message: `Scenario file not found: ${scenarioFilePath}`
+        };
+      }
+
+      // Read and parse scenario file
+      const scenarioContent = await fs.readFile(scenarioFilePath, 'utf-8');
+      let scenario;
+      try {
+        scenario = JSON.parse(scenarioContent);
+      } catch (parseError) {
+        return {
+          success: false,
+          message: `Invalid JSON in scenario file: ${scenarioFilePath}`
+        };
+      }
+
+      // Check if scenario has owner field
+      if (!scenario.owner) {
+        return {
+          success: false,
+          message: `No owner field found in scenario: ${scenarioFilePath}`
+        };
+      }
+
+      // Decode owner field
+      let ownerObject;
+      try {
+        const ownerDecoded = Buffer.from(scenario.owner, 'base64').toString('utf-8');
+        ownerObject = JSON.parse(ownerDecoded);
+      } catch (decodeError) {
+        return {
+          success: false,
+          message: `Failed to decode owner field in scenario: ${scenarioFilePath}`
+        };
+      }
+
+      // Get the username from the owner object
+      const username = ownerObject.user || 'unknown';
+      const hostname = ownerObject.hostname || 'localhost';
+      
+      // Generate consistent UUID for this user
+      const consistentUser = new DefaultUser(username, hostname);
+      const oldUUID = ownerObject.uuid;
+      const newUUID = consistentUser.uuid;
+
+      // Check if already fixed
+      if (oldUUID === newUUID) {
+        return {
+          success: true,
+          message: `Scenario owner UUID already consistent: ${scenarioFilePath}`,
+          oldUUID,
+          newUUID
+        };
+      }
+
+      // Update owner object with consistent UUID
+      ownerObject.uuid = newUUID;
+      ownerObject.utcTimestamp = new Date().toISOString(); // Update timestamp for fix audit
+
+      // Re-encode owner field
+      const updatedOwnerEncoded = Buffer.from(JSON.stringify(ownerObject)).toString('base64');
+      scenario.owner = updatedOwnerEncoded;
+
+      // Write updated scenario back to file
+      await fs.writeFile(scenarioFilePath, JSON.stringify(scenario, null, 2), 'utf-8');
+
+      return {
+        success: true,
+        message: `Successfully fixed owner UUID in scenario: ${scenarioFilePath}`,
+        oldUUID,
+        newUUID
+      };
+
+    } catch (error) {
+      return {
+        success: false,
+        message: `Error fixing scenario owner UUID: ${(error as Error).message}`
+      };
+    }
+  }
+
+  /**
+   * Batch fix multiple scenario files
+   * Takes array of scenario file paths and fixes all owner UUIDs
+   */
+  static async batchFixScenarioOwnerUUIDs(scenarioFilePaths: string[]): Promise<{
+    totalFiles: number,
+    successfulFixes: number,
+    alreadyFixed: number,
+    errors: number,
+    results: Array<{filePath: string, success: boolean, message: string, oldUUID?: string, newUUID?: string}>
+  }> {
+    const results = [];
+    let successfulFixes = 0;
+    let alreadyFixed = 0;
+    let errors = 0;
+
+    for (const filePath of scenarioFilePaths) {
+      const result = await this.fixScenarioOwnerUUID(filePath);
+      results.push({
+        filePath,
+        ...result
+      });
+
+      if (result.success) {
+        if (result.oldUUID === result.newUUID) {
+          alreadyFixed++;
+        } else {
+          successfulFixes++;
+        }
+      } else {
+        errors++;
+      }
+    }
+
+    return {
+      totalFiles: scenarioFilePaths.length,
+      successfulFixes,
+      alreadyFixed,
+      errors,
+      results
+    };
+  }
+
+  /**
+   * CLI method for fixing scenario UUIDs - integrated from standalone script
+   * Usage: DefaultUser.fixScenariosCLI(process.argv.slice(2))
+   */
+  static async fixScenariosCLI(args: string[]): Promise<void> {
+    if (args.length === 0) {
+      console.log('🔧 User Scenario Owner UUID Fix Tool');
+      console.log('');
+      console.log('Usage:');
+      console.log('  DefaultUser.fixScenariosCLI(["<scenario-file-path>"])  # Fix single file');
+      console.log('  DefaultUser.fixScenariosCLI(["--all"])                # Fix all scenarios');
+      console.log('');
+      console.log('Examples:');
+      console.log('  DefaultUser.fixScenariosCLI(["../../../scenarios/index/a/b/c/d/e/file.scenario.json"])');
+      console.log('  DefaultUser.fixScenariosCLI(["--all"])');
+      return;
+    }
+
+    try {
+      if (args[0] === '--all') {
+        console.log('🔍 Finding all scenario files...');
+        
+        // Dynamic import for Node.js modules
+        const { glob } = await import('glob');
+        const path = await import('path');
+        const { fileURLToPath } = await import('url');
+        
+        // Find project root (3 levels up from current file location)
+        const currentFilePath = import.meta.url ? fileURLToPath(import.meta.url) : __filename;
+        const projectRoot = path.resolve(path.dirname(currentFilePath), '../../../..');
+        const scenarioFiles = await glob('scenarios/index/**/*.scenario.json', { cwd: projectRoot });
+        
+        if (scenarioFiles.length === 0) {
+          console.log('❌ No scenario files found');
+          return;
+        }
+
+        console.log(`📁 Found ${scenarioFiles.length} scenario files`);
+        console.log('🔧 Starting batch fix...\n');
+
+        // Convert to absolute paths
+        const absolutePaths = scenarioFiles.map(file => path.resolve(projectRoot, file));
+        
+        const batchResult = await DefaultUser.batchFixScenarioOwnerUUIDs(absolutePaths);
+        
+        console.log('📊 Batch Fix Results:');
+        console.log(`📁 Total Files: ${batchResult.totalFiles}`);
+        console.log(`✅ Successful Fixes: ${batchResult.successfulFixes}`);
+        console.log(`🔄 Already Fixed: ${batchResult.alreadyFixed}`);
+        console.log(`❌ Errors: ${batchResult.errors}`);
+        
+        if (batchResult.successfulFixes > 0) {
+          console.log('\n🔧 Fixed Files:');
+          for (const fileResult of batchResult.results) {
+            if (fileResult.success && fileResult.oldUUID !== fileResult.newUUID) {
+              const path = await import('path');
+              const fileName = path.basename(fileResult.filePath);
+              console.log(`✅ ${fileName}`);
+              console.log(`   🔄 ${fileResult.oldUUID} → ${fileResult.newUUID}`);
+            }
+          }
+        }
+
+        if (batchResult.errors > 0) {
+          console.log('\n❌ Errors:');
+          for (const fileResult of batchResult.results) {
+            if (!fileResult.success) {
+              const path = await import('path');
+              const fileName = path.basename(fileResult.filePath);
+              console.log(`❌ ${fileName}: ${fileResult.message}`);
+            }
+          }
+        }
+
+      } else {
+        // Single file fix
+        const path = await import('path');
+        const scenarioFile = path.resolve(args[0]);
+        console.log(`🔧 Fixing scenario: ${path.basename(scenarioFile)}`);
+        
+        const result = await DefaultUser.fixScenarioOwnerUUID(scenarioFile);
+        
+        if (result.success) {
+          console.log(`✅ ${result.message}`);
+          if (result.oldUUID && result.newUUID) {
+            if (result.oldUUID !== result.newUUID) {
+              console.log(`🔄 ${result.oldUUID} → ${result.newUUID}`);
+            } else {
+              console.log(`🔄 UUID already consistent: ${result.newUUID}`);
+            }
+          }
+        } else {
+          console.log(`❌ ${result.message}`);
+          throw new Error(result.message);
+        }
+      }
+
+    } catch (error) {
+      console.error('❌ Error:', (error as Error).message);
+      throw error;
+    }
   }
 }

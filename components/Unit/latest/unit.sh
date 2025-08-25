@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Web4Requirement CLI Tool - Location Resilient Version
+# Web4 Unit CLI Tool - Location Resilient Version
 # Works from any directory, finds project root via git
 
 # Function to find project root using git
@@ -55,11 +55,11 @@ if [ -z "$CONTEXT_INFO" ]; then
     CONTEXT_INFO="arbitrary:$CURRENT_DIR"
 fi
 
-# Try multiple locations for the CLI
+# Try multiple locations for the Unit CLI
 CLI_LOCATIONS=(
-    "$PROJECT_ROOT/scripts/dist/ts/layer5/RequirementCLI.js"
-    "$PROJECT_ROOT/components/Web4Requirement/latest/dist/ts/layer5/RequirementCLI.js"
-    "$PROJECT_ROOT/dist/ts/layer5/RequirementCLI.js"
+    "$PROJECT_ROOT/components/Unit/latest/dist/ts/layer5/UnitCLI.js"
+    "$PROJECT_ROOT/scripts/dist/ts/layer5/UnitCLI.js"
+    "$PROJECT_ROOT/dist/ts/layer5/UnitCLI.js"
 )
 
 CLI_PATH=""
@@ -71,19 +71,22 @@ for location in "${CLI_LOCATIONS[@]}"; do
 done
 
 if [ -z "$CLI_PATH" ]; then
-    echo "❌ Requirement CLI not found in any expected location"
+    echo "❌ Unit CLI not found in any expected location"
     echo "🔍 Searched locations:"
     for location in "${CLI_LOCATIONS[@]}"; do
         echo "   - $location"
     done
     echo ""
     echo "🔧 To fix this, from project root ($PROJECT_ROOT):"
-    echo "   1. cd components/Web4Requirement/latest"
+    echo "   1. cd components/Unit/latest"
     echo "   2. npm install"
     echo "   3. npm run build"
     echo ""
     echo "📍 Current directory: $CURRENT_DIR"
     echo "📂 Project root: $PROJECT_ROOT"
+    echo "💡 Note: Unit CLI implementation is planned but not yet built"
+    echo "    This component currently provides storage and indexing services"
+    echo "    via UnitIndexStorage class importable from other components"
     exit 1
 fi
 
