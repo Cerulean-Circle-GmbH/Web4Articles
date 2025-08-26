@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "a52bbf0e-39fd-4194-b375-d683c15ce196",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDIxOjEyOjA3LjAyNVoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "a52bbf0e-39fd-4194-b375-d683c15ce196",
+    "name": "Consistent Tool Usage Messages",
+    "title": "Consistent Tool Usage Messages",
+    "description": "All Web4 tools must display consistent, helpful usage messages when called without parameters. The standard format includes: Tool Title, Usage syntax, Description, Commands list, Examples, and optional Notes. This follows CMM3 principles where effective tools include effective help. Reference implementation: requirement and user tools."
+  },
+  "unitIndex": {
+    "uuid": "a52bbf0e-39fd-4194-b375-d683c15ce196",
+    "indexPath": "/workspace/scenarios/index/a/5/2/b/b/a52bbf0e-39fd-4194-b375-d683c15ce196.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/a52bbf0e-39fd-4194-b375-d683c15ce196.scenario.json"
+    ],
+    "createdAt": "2025-08-26T21:12:07.031Z",
+    "updatedAt": "2025-08-26T21:12:07.031Z"
+  }
+}
