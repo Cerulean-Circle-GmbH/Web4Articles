@@ -1,9 +1,9 @@
 {
-  "name": "@web4x/web4-requirement",
+  "name": "@web4x/web4-changerequest",
   "version": "1.1.0",
   "type": "module",
-  "description": "Web4-native requirement tracking and overview generation component",
-  "main": "src/ts/layer5/RequirementCLI.ts",
+  "description": "Web4-native change request tracking and management component",
+  "main": "src/ts/layer5/ChangeRequestCLI.ts",
   "scripts": {
     "build": "tsc",
     "start": "node -r ts-node/register src/ts/layer5/RequirementCLI.ts",
