@@ -52,7 +52,7 @@ REQUIRED_SECTIONS=(
     "## **🔧 DO**"
     "## **✅ CHECK**"
     "## **🎯 ACT**"
-    "## **💫 EMOTIONAL REFLECTION:"
+    "## **💫 EMOTIONAL REFLECTION"
     "## **🎯 PDCA PROCESS UPDATE**"
 )
 
