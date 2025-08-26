@@ -25,14 +25,14 @@
   - Current storage foundation
 - **Unit EnHanced Architecture:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev/components/Unit/latest/src/puml) | [§/components/Unit/latest/src/puml/UnitEnhancedArchitecture.puml](../../../../../../components/Unit/latest/src/puml/UnitEnhancedArchitecture.puml)
   - Proposed service architecture
-- **DRY Analysis Diagram:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Web4ChangeRequest/latest/src/puml/DuplicationAnalysis.puml) | [§/components/Web4ChangeRequest/latest/src/puml/DuplicationAnalysis.puml](../../../../../../../components/Web4ChangeRequest/latest/src/puml/DuplicationAnalysis.puml)
+- **DRY Analysis Diagram:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Web4ChangeRequest/latest/src/puml/DuplicationAnalysis.puml) | [§/components/Web4ChangeRequest/latest/src/puml/DuplicationAnalysis.puml](../../../../../../components/Web4ChangeRequest/latest/src/puml/DuplicationAnalysis.puml)
   - 800+ lines quantified impact
-- **Service Extraction Strategy:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/src/puml/ScenarioComponentExtraction.puml) | [§/src/puml/ScenarioComponentExtraction.puml](../../../../../../../src/puml/ScenarioComponentExtraction.puml)
+- **Service Extraction Strategy:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/src/puml/ScenarioComponentExtraction.puml) | [§/src/puml/ScenarioComponentExtraction.puml](../../../../../../src/puml/ScenarioComponentExtraction.puml)
   - Overall refactoring strategy
-- **Web4ChangeRequest Restructuring:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev/components/Web4ChangeRequest) | [§/components/Web4ChangeRequest/](../../../../../../../components/Web4ChangeRequest/)
-- **Chat Response Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/857ff118-a4df-46b3-88b6-c6dc77c082b6.requirement.md) | [§/spec/requirements.md/857ff118-a4df-46b3-88b6-c6dc77c082b6.requirement.md](../../../../../../../spec/requirements.md/857ff118-a4df-46b3-88b6-c6dc77c082b6.requirement.md)
+- **Web4ChangeRequest Restructuring:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev/components/Web4ChangeRequest) | [§/components/Web4ChangeRequest/](../../../../../../components/Web4ChangeRequest/)
+- **Chat Response Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/857ff118-a4df-46b3-88b6-c6dc77c082b6.requirement.md) | [§/spec/requirements.md/857ff118-a4df-46b3-88b6-c6dc77c082b6.requirement.md](../../../../../../spec/requirements.md/857ff118-a4df-46b3-88b6-c6dc77c082b6.requirement.md)
   - PDCA chat output standard
-- **Dual Link Standard Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/e8535c4e-591d-4955-9874-6a853545e970.requirement.md) | [§/spec/requirements.md/e8535c4e-591d-4955-9874-6a853545e970.requirement.md](../../../../../../../spec/requirements.md/e8535c4e-591d-4955-9874-6a853545e970.requirement.md)
+- **Dual Link Standard Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/e8535c4e-591d-4955-9874-6a853545e970.requirement.md) | [§/spec/requirements.md/e8535c4e-591d-4955-9874-6a853545e970.requirement.md](../../../../../../spec/requirements.md/e8535c4e-591d-4955-9874-6a853545e970.requirement.md)
   - Local paths relative to project root from document location
 
 ### **QA Decisions**
@@ -143,35 +143,35 @@ cp -r components/Web4Requirement/latest components/Web4ChangeRequest/latest
 ```
 
 **Component Directories:**
-- **Web4ChangeRequest 0.1.0.0:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev/components/Web4ChangeRequest/0.1.0.0) | [§/components/Web4ChangeRequest/0.1.0.0/](../../../../../../../components/Web4ChangeRequest/0.1.0.0/)
-- **Web4ChangeRequest Latest:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev/components/Web4ChangeRequest/latest) | [§/components/Web4ChangeRequest/latest/](../../../../../../../components/Web4ChangeRequest/latest/)
-- **Web4Requirement Latest:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev/components/Web4Requirement/latest) | [§/components/Web4Requirement/latest/](../../../../../../../components/Web4Requirement/latest/)
+- **Web4ChangeRequest 0.1.0.0:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev/components/Web4ChangeRequest/0.1.0.0) | [§/components/Web4ChangeRequest/0.1.0.0/](../../../../../../components/Web4ChangeRequest/0.1.0.0/)
+- **Web4ChangeRequest Latest:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev/components/Web4ChangeRequest/latest) | [§/components/Web4ChangeRequest/latest/](../../../../../../components/Web4ChangeRequest/latest/)
+- **Web4Requirement Latest:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev/components/Web4Requirement/latest) | [§/components/Web4Requirement/latest/](../../../../../../components/Web4Requirement/latest/)
 
 **Result:** Clean separation between Web4ChangeRequest versions with fresh baseline for comparison.
 
 ### **✅ 2. Architecture Visualization - Current State**
 
 **Web4Requirement Architecture Analysis:**
-- **File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Web4Requirement/latest/src/puml/RequirementArchitecture.puml) | [§/components/Web4Requirement/latest/src/puml/RequirementArchitecture.puml](../../../../../../../components/Web4Requirement/latest/src/puml/RequirementArchitecture.puml)
+- **File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Web4Requirement/latest/src/puml/RequirementArchitecture.puml) | [§/components/Web4Requirement/latest/src/puml/RequirementArchitecture.puml](../../../../../../components/Web4Requirement/latest/src/puml/RequirementArchitecture.puml)
 - **Highlights:** Mature implementation with extensive functionality
 - **Core Services:** Component context API, delete command, owner details decoding
-- **Dependencies:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev/components/Unit/latest/src/ts/layer2) | [§/components/Unit/latest/src/ts/layer2/](../../../../../../../components/Unit/latest/src/ts/layer2/) UnitIndexStorage, [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev/components/User/latest/src/ts/layer2) | [§/components/User/latest/src/ts/layer2/](../../../../../../../components/User/latest/src/ts/layer2/) DefaultUser, template system
+- **Dependencies:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev/components/Unit/latest/src/ts/layer2) | [§/components/Unit/latest/src/ts/layer2/](../../../../../../components/Unit/latest/src/ts/layer2/) UnitIndexStorage, [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev/components/User/latest/src/ts/layer2) | [§/components/User/latest/src/ts/layer2/](../../../../../../components/User/latest/src/ts/layer2/) DefaultUser, template system
 
 **Web4ChangeRequest Architecture Analysis:**
-- **File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Web4ChangeRequest/latest/src/puml/ChangeRequestArchitecture.puml) | [§/components/Web4ChangeRequest/latest/src/puml/ChangeRequestArchitecture.puml](../../../../../../../components/Web4ChangeRequest/latest/src/puml/ChangeRequestArchitecture.puml)
+- **File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Web4ChangeRequest/latest/src/puml/ChangeRequestArchitecture.puml) | [§/components/Web4ChangeRequest/latest/src/puml/ChangeRequestArchitecture.puml](../../../../../../components/Web4ChangeRequest/latest/src/puml/ChangeRequestArchitecture.puml)
 - **Highlights:** Exact duplication of Web4Requirement structure
 - **Duplication Markers:** ⚠️ indicators on all duplicated methods
 - **Architecture Debt:** Complete service layer duplication
 
 **Unit Component Current State Analysis:**
-- **File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Unit/latest/src/puml/UnitCurrentArchitecture.puml) | [§/components/Unit/latest/src/puml/UnitCurrentArchitecture.puml](../../../../../../../components/Unit/latest/src/puml/UnitCurrentArchitecture.puml)
+- **File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Unit/latest/src/puml/UnitCurrentArchitecture.puml) | [§/components/Unit/latest/src/puml/UnitCurrentArchitecture.puml](../../../../../../components/Unit/latest/src/puml/UnitCurrentArchitecture.puml)
 - **Assessment:** Solid storage foundation with enhancement potential
 - **Missing:** Business logic services, view generation utilities, CLI patterns
 
 ### **✅ 3. Code Duplication Impact Analysis**
 
 **Comprehensive Duplication Assessment:**
-- **File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Web4ChangeRequest/latest/src/puml/DuplicationAnalysis.puml) | [§/components/Web4ChangeRequest/latest/src/puml/DuplicationAnalysis.puml](../../../../../../../components/Web4ChangeRequest/latest/src/puml/DuplicationAnalysis.puml)
+- **File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Web4ChangeRequest/latest/src/puml/DuplicationAnalysis.puml) | [§/components/Web4ChangeRequest/latest/src/puml/DuplicationAnalysis.puml](../../../../../../components/Web4ChangeRequest/latest/src/puml/DuplicationAnalysis.puml)
 
 **Quantified Duplication Impact:**
 ```
@@ -194,10 +194,10 @@ cp -r components/Web4Requirement/latest components/Web4ChangeRequest/latest
 ### **✅ 4. Proposed DRY Architecture Design**
 
 **Scenario Component Extraction Strategy:**
-- **File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/src/puml/ScenarioComponentExtraction.puml) | [§/src/puml/ScenarioComponentExtraction.puml](../../../../../../../src/puml/ScenarioComponentExtraction.puml)
+- **File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/src/puml/ScenarioComponentExtraction.puml) | [§/src/puml/ScenarioComponentExtraction.puml](../../../../../../src/puml/ScenarioComponentExtraction.puml)
 
 **Enhanced Unit Component Design:**
-- **File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Unit/latest/src/puml/UnitEnhancedArchitecture.puml) | [§/components/Unit/latest/src/puml/UnitEnhancedArchitecture.puml](../../../../../../../components/Unit/latest/src/puml/UnitEnhancedArchitecture.puml)
+- **File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Unit/latest/src/puml/UnitEnhancedArchitecture.puml) | [§/components/Unit/latest/src/puml/UnitEnhancedArchitecture.puml](../../../../../../components/Unit/latest/src/puml/UnitEnhancedArchitecture.puml)
 
 **Service Layer Architecture:**
 ```
@@ -218,9 +218,9 @@ Layer 2 - Enhanced Storage:
 ```
 
 **Referenced Components:**
-- **Unit Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev/components/Unit/latest) | [§/components/Unit/latest/](../../../../../../../components/Unit/latest/)
-- **UnitIndexStorage:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Unit/latest/src/ts/layer2/UnitIndexStorage.ts) | [§/components/Unit/latest/src/ts/layer2/UnitIndexStorage.ts](../../../../../../../components/Unit/latest/src/ts/layer2/UnitIndexStorage.ts)
-- **DefaultUser:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/User/latest/src/ts/layer2/DefaultUser.ts) | [§/components/User/latest/src/ts/layer2/DefaultUser.ts](../../../../../../../components/User/latest/src/ts/layer2/DefaultUser.ts)
+- **Unit Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev/components/Unit/latest) | [§/components/Unit/latest/](../../../../../../components/Unit/latest/)
+- **UnitIndexStorage:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Unit/latest/src/ts/layer2/UnitIndexStorage.ts) | [§/components/Unit/latest/src/ts/layer2/UnitIndexStorage.ts](../../../../../../components/Unit/latest/src/ts/layer2/UnitIndexStorage.ts)
+- **DefaultUser:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/User/latest/src/ts/layer2/DefaultUser.ts) | [§/components/User/latest/src/ts/layer2/DefaultUser.ts](../../../../../../components/User/latest/src/ts/layer2/DefaultUser.ts)
 
 **Client Component Simplification:**
 ```
@@ -238,9 +238,9 @@ Web4TestCase (NEW):
 ```
 
 **Current Implementation Files:**
-- **DefaultRequirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Web4Requirement/latest/src/ts/layer2/DefaultRequirement.ts) | [§/components/Web4Requirement/latest/src/ts/layer2/DefaultRequirement.ts](../../../../../../../components/Web4Requirement/latest/src/ts/layer2/DefaultRequirement.ts)
-- **DefaultChangeRequest:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Web4ChangeRequest/0.1.0.0/src/ts/layer2/DefaultChangeRequest.ts) | [§/components/Web4ChangeRequest/0.1.0.0/src/ts/layer2/DefaultChangeRequest.ts](../../../../../../../components/Web4ChangeRequest/0.1.0.0/src/ts/layer2/DefaultChangeRequest.ts)
-- **RequirementCLI:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Web4Requirement/latest/src/ts/layer5/RequirementCLI.ts) | [§/components/Web4Requirement/latest/src/ts/layer5/RequirementCLI.ts](../../../../../../../components/Web4Requirement/latest/src/ts/layer5/RequirementCLI.ts)
+- **DefaultRequirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Web4Requirement/latest/src/ts/layer2/DefaultRequirement.ts) | [§/components/Web4Requirement/latest/src/ts/layer2/DefaultRequirement.ts](../../../../../../components/Web4Requirement/latest/src/ts/layer2/DefaultRequirement.ts)
+- **DefaultChangeRequest:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Web4ChangeRequest/0.1.0.0/src/ts/layer2/DefaultChangeRequest.ts) | [§/components/Web4ChangeRequest/0.1.0.0/src/ts/layer2/DefaultChangeRequest.ts](../../../../../../components/Web4ChangeRequest/0.1.0.0/src/ts/layer2/DefaultChangeRequest.ts)
+- **RequirementCLI:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/components/Web4Requirement/latest/src/ts/layer5/RequirementCLI.ts) | [§/components/Web4Requirement/latest/src/ts/layer5/RequirementCLI.ts](../../../../../../components/Web4Requirement/latest/src/ts/layer5/RequirementCLI.ts)
 
 ---
 

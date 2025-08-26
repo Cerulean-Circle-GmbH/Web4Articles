@@ -39,14 +39,26 @@ calculate_relative_path() {
     local doc_dir="$(dirname "$doc_path")"
     local rel_path=""
     
-    # Count directory depth from project root
+    # Get absolute path to document directory
+    doc_dir="$(realpath "$doc_dir")"
+    
+    # Count directory depth from project root by counting path components
     local relative_to_root="${doc_dir#$PROJECT_ROOT/}"
-    local depth=$(echo "$relative_to_root" | tr '/' '\n' | wc -l)
     
     # Handle case where document is in project root
     if [[ "$relative_to_root" == "$doc_dir" ]] || [[ -z "$relative_to_root" ]]; then
-        depth=0
+        echo "."
+        return
     fi
+    
+    # Count actual directory levels (non-empty components only)
+    local depth=0
+    IFS='/' read -ra ADDR <<< "$relative_to_root"
+    for component in "${ADDR[@]}"; do
+        if [[ -n "$component" ]]; then
+            depth=$((depth + 1))
+        fi
+    done
     
     # Build relative path with correct number of ../
     for ((i=0; i<depth; i++)); do
@@ -89,7 +101,7 @@ fix_pdca_file() {
             local local_path="${BASH_REMATCH[2]}"
             
             # Skip if already using § notation
-            if [[ "$display_text" == §/* ]]; then
+            if [[ "$display_text" == "§"/* ]]; then
                 echo "$line" >> "$temp_file"
                 continue
             fi
