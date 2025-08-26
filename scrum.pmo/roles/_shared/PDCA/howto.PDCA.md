@@ -73,6 +73,13 @@ These PDCAs represent fundamental revelations and must be reviewed by all agents
   - a) [First option]
   - b) [Second option]
 
+### **Decisions 42 Principle (MANDATORY):**
+- **Binary Choice:** Either ASK meaningful questions OR declare "All Clear"
+- **ASK:** Present real decisions requiring TRON input (as shown above)
+- **ALL CLEAR:** When no decisions needed: `- [x] **All Clear!** No decisions needed - [description]`
+- **NO PLACEHOLDERS:** Never create fake decisions just to have something
+- **Reference:** [Decisions 42 PDCA](../../project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-2053-decisions-42-ask-or-all-clear.md)
+
 ### **TRON Feedback (YYYY-MM-DD-UTC-HHMM)**
 ```quote
 [EXACT VERBATIM QUOTE FROM TRON - NEVER PARAPHRASE]
