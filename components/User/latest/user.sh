@@ -187,62 +187,22 @@ case "$1" in
 esac
 
 if [ -z "$CLI_PATH" ]; then
-    echo "🔄 User CLI not found, attempting to build..."
-    
-    # Check if User component exists
-    if [ ! -d "$PROJECT_ROOT/components/User/latest" ]; then
-        echo "❌ User component directory not found"
-        exit 1
-    fi
-    
-    # Auto-build attempt
-    cd "$PROJECT_ROOT/components/User/latest" || exit 1
-    
-    echo "📦 Installing dependencies..."
-    if ! npm install --silent > /dev/null 2>&1; then
-        echo "❌ npm install failed"
-        exit 1
-    fi
-    
-    echo "🔨 Building User component..."
-    if ! npm run build --silent > /dev/null 2>&1; then
-        echo "❌ Build failed - User CLI implementation not available yet"
-        echo ""
-        echo "💡 The User component currently provides:"
-        echo "   - Direct user commands: get, list, fix-scenario"
-        echo "   - Deterministic UUID generation"
-        echo "   - Scenario fixing functionality"
-        echo ""
-        echo "🔧 Available CLI tools:"
-        echo "   - requirement  (requirement management)"
-        echo "   - unit        (unit management)"
-        exit 1
-    fi
-    
-    # Try to find CLI again after build
+    echo "❌ User CLI not found in any expected location"
+    echo "🔍 Searched locations:"
     for location in "${CLI_LOCATIONS[@]}"; do
-        if [ -f "$location" ]; then
-            CLI_PATH="$location"
-            break
-        fi
+        echo "   - $location"
     done
-    
-    if [ -z "$CLI_PATH" ]; then
-        echo "✅ Build completed successfully"
-        echo "💡 User component built but UserCLI.js interface not implemented yet"
-        echo ""
-        echo "📋 Available direct commands working:"
-        echo "   - user get \"username\"     (get user UUID)"
-        echo "   - user list                (list scenarios)"  
-        echo "   - user fix-scenario <file> (fix owner UUIDs)"
-        echo ""
-        echo "🔧 Available CLI tools:"
-        echo "   - requirement  (requirement management)"
-        echo "   - unit        (unit management)"
-        exit 0
-    fi
-    
-    echo "✅ User CLI built successfully"
+    echo ""
+    echo "🔧 To fix this, from project root ($PROJECT_ROOT):"
+    echo "   1. cd components/User/latest"
+    echo "   2. npm install"
+    echo "   3. npm run build"
+    echo ""
+    echo "📍 Current directory: $CURRENT_DIR"
+    echo "📂 Project root: $PROJECT_ROOT"
+    echo "💡 Note: User component provides deterministic UUID generation and scenario fixing"
+    echo "    Available methods: create user scenarios, fix owner UUIDs, get user info"
+    exit 1
 fi
 
 # Check for Node.js

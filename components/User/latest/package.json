@@ -3,21 +3,21 @@
   "version": "1.0.0",
   "description": "Web4 User component for consistent user identification",
   "type": "module",
-  "main": "dist/ts/layer2/DefaultUser.js",
+  "main": "src/ts/layer2/DefaultUser.js",
   "exports": {
-    ".": "./dist/ts/layer2/DefaultUser.js",
-    "./interface": "./dist/ts/layer3/User.js"
+    ".": "./src/ts/layer2/DefaultUser.js",
+    "./interface": "./src/ts/layer3/IUser.js"
   },
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch", 
-    "clean": "rm -rf dist/",
-    "test": "ts-node --esm test-user-uuid.ts"
+    "test": "ts-node --esm test-user-uuid.ts",
+    "start": "node -r ts-node/register src/ts/layer5/UserCLI.ts"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@types/glob": "^8.1.0",
     "@types/node": "^20.0.0",
-    "typescript": "^5.0.0",
-    "ts-node": "^10.9.0"
+    "glob": "^11.0.3",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
   }
 }
