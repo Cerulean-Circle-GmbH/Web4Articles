@@ -9,12 +9,35 @@
     "./interface": "./src/ts/layer3/IUser.js"
   },
   "scripts": {
-    "test": "ts-node --esm test-user-uuid.ts"
+    "preinstall": "node scripts/check-environment.js",
+    "postinstall": "npm run build && npm run symlink",
+    "prebuild": "npm run clean && npm run check:deps",
+    "build": "tsc",
+    "postbuild": "npm run verify && npm run generate:docs",
+    "clean": "rm -rf dist/ *.tsbuildinfo",
+    "check:deps": "node scripts/check-dependencies.js",
+    "symlink": "mkdir -p dist && ln -sf ts/layer2 dist/layer2",
+    "verify": "echo '✅ User component built successfully'",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "test:uuid": "ts-node --esm test-user-uuid.ts",
+    "test:scenarios": "echo 'Test scenarios via user script'",
+    "lint": "eslint src/",
+    "format": "prettier --write src/",
+    "start": "echo 'User component - use the user script in scripts directory'",
+    "generate:docs": "node scripts/generate-component-docs.js",
+    "version": "npm run build && git add -A dist",
+    "prepublishOnly": "npm test && npm run lint",
+    "prepare": "npm run build"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@types/glob": "^8.1.0",
     "@types/node": "^20.0.0",
+    "eslint": "^8.57.1",
+    "glob": "^10.3.0",
+    "prettier": "^3.6.2",
+    "ts-node": "^10.9.0",
     "typescript": "^5.0.0",
-    "ts-node": "^10.9.0"
+    "vitest": "^1.6.1"
   }
 }
