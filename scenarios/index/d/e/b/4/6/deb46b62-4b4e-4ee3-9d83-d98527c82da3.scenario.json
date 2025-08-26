@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "deb46b62-4b4e-4ee3-9d83-d98527c82da3",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDA5OjA3OjMyLjg0NloiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "deb46b62-4b4e-4ee3-9d83-d98527c82da3",
+    "name": "UCP Component Dependency Build Integrity",
+    "title": "UCP Component Dependency Build Integrity",
+    "description": "Ensure all Web4 components with external dependencies have their dependent components properly built and distributed. Components must be self-contained with all required dist files available at runtime to prevent ERR_MODULE_NOT_FOUND errors. Includes automated build verification for component dependency chains."
+  },
+  "unitIndex": {
+    "uuid": "deb46b62-4b4e-4ee3-9d83-d98527c82da3",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/d/e/b/4/6/deb46b62-4b4e-4ee3-9d83-d98527c82da3.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/deb46b62-4b4e-4ee3-9d83-d98527c82da3.scenario.json"
+    ],
+    "createdAt": "2025-08-26T09:07:32.869Z",
+    "updatedAt": "2025-08-26T09:07:32.869Z"
+  }
+}
