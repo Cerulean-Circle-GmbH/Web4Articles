@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "e8e688d4-bcf3-4823-ad7d-d4e360553c80",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDIxOjE4OjM2LjkyNFoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "e8e688d4-bcf3-4823-ad7d-d4e360553c80",
+    "name": "Scenario as Source of Truth - Never Edit Views",
+    "title": "Scenario as Source of Truth - Never Edit Views",
+    "description": "In Web4 architecture, scenarios are the single source of truth (model), while MD views are generated outputs. Never edit .requirement.md or other view files directly - they will be overwritten on update. Only tools are responsible for updating the private scenario JSON files. Views are ephemeral and regenerated from scenarios. This is fundamental to maintaining data integrity and enabling automated updates."
+  },
+  "unitIndex": {
+    "uuid": "e8e688d4-bcf3-4823-ad7d-d4e360553c80",
+    "indexPath": "/workspace/scenarios/index/e/8/e/6/8/e8e688d4-bcf3-4823-ad7d-d4e360553c80.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/e8e688d4-bcf3-4823-ad7d-d4e360553c80.scenario.json"
+    ],
+    "createdAt": "2025-08-26T21:18:36.929Z",
+    "updatedAt": "2025-08-26T21:18:36.929Z"
+  }
+}

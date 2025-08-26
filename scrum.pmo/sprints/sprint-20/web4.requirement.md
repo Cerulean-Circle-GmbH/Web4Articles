@@ -75,6 +75,13 @@ Document the revolutionary Web4 methodology principles that fundamentally differ
   - **Why:** Reduces errors, increases productivity, embodies true automation
   - **PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-25-UTC-1308/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-1825-occams-razor-web4-simplicity.md) | [Local](../../project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-1825-occams-razor-web4-simplicity.md)
 
+### 12. Scenario as Source of Truth - Never Edit Views
+- [ ] **[requirement:uuid:e8e688d4-bcf3-4823-ad7d-d4e360553c80]** Scenarios are the model, views are ephemeral generated outputs
+  - **Mainstream:** Direct editing of any file, treating all files as equal sources
+  - **Web4:** Scenarios (JSON) are the single source of truth, MD views are regenerated
+  - **Why:** Maintains data integrity, enables automated updates, prevents inconsistency
+  - **Critical:** Never edit .requirement.md or other view files - only tools update scenarios
+
 ## Revolutionary Insights
 
 ### Finite Information Science
