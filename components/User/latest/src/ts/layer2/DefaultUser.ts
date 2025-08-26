@@ -249,7 +249,7 @@ export class DefaultUser implements User {
         console.log('🔧 Starting batch fix...\n');
 
         // Convert to absolute paths
-        const absolutePaths = scenarioFiles.map((file: string) => path.resolve(projectRoot, file));
+        const absolutePaths = scenarioFiles.map(file => path.resolve(projectRoot, file));
         
         const batchResult = await DefaultUser.batchFixScenarioOwnerUUIDs(absolutePaths);
         
