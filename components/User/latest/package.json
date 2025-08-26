@@ -9,12 +9,15 @@
     "./interface": "./src/ts/layer3/IUser.js"
   },
   "scripts": {
-    "test": "ts-node --esm test-user-uuid.ts"
+    "build": "tsc",
+    "test": "ts-node --esm test-user-uuid.ts",
+    "start": "node -r ts-node/register src/ts/layer5/UserCLI.ts"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@types/glob": "^8.1.0",
     "@types/node": "^20.0.0",
-    "typescript": "^5.0.0",
-    "ts-node": "^10.9.0"
+    "glob": "^11.0.3",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
   }
 }
