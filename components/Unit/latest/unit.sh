@@ -71,22 +71,47 @@ for location in "${CLI_LOCATIONS[@]}"; do
 done
 
 if [ -z "$CLI_PATH" ]; then
-    echo "❌ Unit CLI not found in any expected location"
-    echo "🔍 Searched locations:"
-    for location in "${CLI_LOCATIONS[@]}"; do
-        echo "   - $location"
-    done
-    echo ""
-    echo "🔧 To fix this, from project root ($PROJECT_ROOT):"
-    echo "   1. cd components/Unit/latest"
-    echo "   2. npm install"
-    echo "   3. npm run build"
-    echo ""
-    echo "📍 Current directory: $CURRENT_DIR"
-    echo "📂 Project root: $PROJECT_ROOT"
-    echo "💡 Note: Unit CLI implementation is planned but not yet built"
-    echo "    This component currently provides storage and indexing services"
-    echo "    via UnitIndexStorage class importable from other components"
+    # If no parameters provided, show usage instead of error
+    if [ $# -eq 0 ]; then
+        cat << EOF
+Web4 Unit CLI Tool
+
+Usage:
+  unit index <uuid>                      # Get index path for UUID
+  unit store <uuid> <data>              # Store data for UUID
+  unit list                             # List all stored scenarios
+  unit validate <uuid>                  # Validate UUID format
+
+Commands:
+  index      Get the index storage path for a UUID
+  store      Store scenario data with a UUID
+  list       List all stored scenarios in the index
+  validate   Check if a UUID is valid format
+
+Examples:
+  unit index 7e65139d-38cf-4f34-b769-0a86dd3a94e3
+  unit store 7e65139d-38cf-4f34-b769-0a86dd3a94e3 '{"title":"Example"}'
+  unit list
+  unit validate abc-def-not-valid
+
+Note: Unit CLI implementation is planned but not yet built
+      Component currently provides UnitIndexStorage class for imports
+
+📍 Current directory: $CURRENT_DIR
+📂 Project root: $PROJECT_ROOT
+EOF
+    else
+        echo "❌ Unit CLI not found in any expected location"
+        echo "🔍 Searched locations:"
+        for location in "${CLI_LOCATIONS[@]}"; do
+            echo "   - $location"
+        done
+        echo ""
+        echo "🔧 To fix this, from project root ($PROJECT_ROOT):"
+        echo "   1. cd components/Unit/latest"
+        echo "   2. npm install"
+        echo "   3. npm run build"
+    fi
     exit 1
 fi
 
