@@ -32,6 +32,8 @@
 - **Web4ChangeRequest Restructuring:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/dev/components/Web4ChangeRequest) | [../../../../../../../components/Web4ChangeRequest/](../../../../../../../components/Web4ChangeRequest/)
 - **Chat Response Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/857ff118-a4df-46b3-88b6-c6dc77c082b6.requirement.md) | [../../../../../../../spec/requirements.md/857ff118-a4df-46b3-88b6-c6dc77c082b6.requirement.md](../../../../../../../spec/requirements.md/857ff118-a4df-46b3-88b6-c6dc77c082b6.requirement.md)
   - PDCA chat output standard
+- **Dual Link Standard Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/e8535c4e-591d-4955-9874-6a853545e970.requirement.md) | [../../../../../../../spec/requirements.md/e8535c4e-591d-4955-9874-6a853545e970.requirement.md](../../../../../../../spec/requirements.md/e8535c4e-591d-4955-9874-6a853545e970.requirement.md)
+  - Local paths relative to project root from document location
 
 ### **QA Decisions**
 - [x] **Version Management:** Renamed Web4ChangeRequest latest to 0.1.0.0, created fresh latest
