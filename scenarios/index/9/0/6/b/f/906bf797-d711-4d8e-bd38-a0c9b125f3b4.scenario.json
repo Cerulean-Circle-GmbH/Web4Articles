@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "906bf797-d711-4d8e-bd38-a0c9b125f3b4",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDA4OjMwOjAyLjQwOVoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "906bf797-d711-4d8e-bd38-a0c9b125f3b4",
+    "name": "DevOps Web4 Component Version Management Automation",
+    "title": "DevOps Web4 Component Version Management Automation",
+    "description": "Automate Web4 component version management workflow with CI/CD pipeline integration: automated semantic versioning, git tagging, directory restructuring, and deployment coordination for Web4 components following the established latest->X.Y.Z.W->latest pattern."
+  },
+  "unitIndex": {
+    "uuid": "906bf797-d711-4d8e-bd38-a0c9b125f3b4",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/9/0/6/b/f/906bf797-d711-4d8e-bd38-a0c9b125f3b4.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/906bf797-d711-4d8e-bd38-a0c9b125f3b4.scenario.json"
+    ],
+    "createdAt": "2025-08-26T08:30:02.421Z",
+    "updatedAt": "2025-08-26T08:30:02.421Z"
+  }
+}
