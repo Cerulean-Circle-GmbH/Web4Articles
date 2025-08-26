@@ -1,0 +1,91 @@
+@startuml ChangeRequestArchitecture
+!theme toy
+title Web4ChangeRequest Architecture (Latest - Before Refactoring)
+
+package "Web4ChangeRequest Component" <<Rectangle>> {
+  package "Layer 5 - CLI" <<Cloud>> {
+    class ChangeRequestCLI {
+      +handleCommand()
+      +handleCreate()
+      +handleDelete()
+      +handleUpdate()
+      +handleMove()
+      +showUsage()
+    }
+  }
+  
+  package "Layer 3 - Interfaces" <<Cloud>> {
+    interface ChangeRequest {
+      +create()
+      +delete()
+      +update()
+      +move()
+      +saveScenario()
+      +loadFromScenario()
+    }
+    
+    interface ChangeRequestResult {
+      +success: boolean
+      +message: string
+      +requirementId?: string
+      +deletedFiles?: string[]
+    }
+  }
+  
+  package "Layer 2 - Implementation" <<Cloud>> {
+    class DefaultChangeRequest {
+      -uuid: string
+      -name: string
+      -description: string
+      -status: ChangeRequestStatus
+      -scenario: ChangeRequestScenario
+      -fullScenarioData: any
+      
+      +create(title, description)
+      +delete(identifier)
+      +saveScenario(uuid, scenario) ⚠️ DUPLICATE
+      +loadFromScenario(path) ⚠️ DUPLICATE
+      +generateMDView() ⚠️ DUPLICATE
+      +updateOverview() ⚠️ DUPLICATE
+      +findProjectRoot() ⚠️ DUPLICATE
+      +getRequirementsDirectory() ⚠️ DUPLICATE
+      +decodeOwnerDetails() ⚠️ DUPLICATE
+    }
+    
+    class DefaultMDView {
+      +render()
+      +renderMD()
+      +formatMD() ⚠️ DUPLICATE
+    }
+    
+    class DefaultTemplateProcessor {
+      +processTemplate() ⚠️ DUPLICATE
+      +loadTemplate() ⚠️ DUPLICATE
+    }
+  }
+  
+  package "Storage Dependencies" <<Rectangle>> {
+    class UnitIndexStorage {
+      +saveScenario() ⚠️ DUPLICATE USAGE
+      +loadScenario() ⚠️ DUPLICATE USAGE
+    }
+    
+    class DefaultUser {
+      +getOwnerObject() ⚠️ DUPLICATE USAGE
+    }
+  }
+}
+
+' Dependencies
+DefaultChangeRequest --> UnitIndexStorage : uses
+DefaultChangeRequest --> DefaultUser : uses
+DefaultChangeRequest --> DefaultMDView : uses
+DefaultMDView --> DefaultTemplateProcessor : uses
+ChangeRequestCLI --> DefaultChangeRequest : uses
+
+' Duplicate code indicators
+note top of DefaultChangeRequest : ⚠️ SCENARIO MANAGEMENT\nDuplicated from Web4Requirement\n- saveScenario()\n- loadFromScenario()\n- UUID index storage logic
+note right of DefaultMDView : ⚠️ VIEW GENERATION\nDuplicated from Web4Requirement\n- Template processing\n- MD rendering logic
+note bottom of UnitIndexStorage : ⚠️ STORAGE LOGIC\nShared dependency used identically\nin both components
+
+@enduml

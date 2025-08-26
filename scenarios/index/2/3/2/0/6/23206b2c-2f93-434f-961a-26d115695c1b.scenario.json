@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "23206b2c-2f93-434f-961a-26d115695c1b",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI0VDExOjA5OjQxLjU1M1oiLCJ1dWlkIjoiNjE0OWUxYTktMzkzYy00MjE2LTg5NTgtYzg5YTIzMDU0NWU2In0=",
+  "model": {
+    "uuid": "23206b2c-2f93-434f-961a-26d115695c1b",
+    "name": "Global Test",
+    "title": "Global Test",
+    "description": "Testing requirement command from /Users directory"
+  },
+  "unitIndex": {
+    "uuid": "23206b2c-2f93-434f-961a-26d115695c1b",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/2/3/2/0/6/23206b2c-2f93-434f-961a-26d115695c1b.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/23206b2c-2f93-434f-961a-26d115695c1b.scenario.json"
+    ],
+    "createdAt": "2025-08-24T11:09:41.569Z",
+    "updatedAt": "2025-08-24T11:09:41.569Z"
+  }
+}
