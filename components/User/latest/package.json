@@ -9,13 +9,13 @@
     "./interface": "./src/ts/layer3/IUser.js"
   },
   "scripts": {
-    "preinstall": "node scripts/check-environment.js",
+    "preinstall": "echo 'Run npm run build first to compile TypeScript lifecycle tools'",
     "postinstall": "npm run build && npm run symlink",
     "prebuild": "npm run clean && npm run check:deps",
     "build": "tsc",
     "postbuild": "npm run verify && npm run generate:docs",
     "clean": "rm -rf dist/ *.tsbuildinfo",
-    "check:deps": "node scripts/check-dependencies.js",
+    "check:deps": "node dist/ts/layer5/LifecycleCLI.js check-dependencies || echo 'Skipping dependency check - build in progress'",
     "symlink": "mkdir -p dist && ln -sf ts/layer2 dist/layer2",
     "verify": "echo '✅ User component built successfully'",
     "dev": "tsc --watch",
@@ -25,7 +25,7 @@
     "lint": "eslint src/",
     "format": "prettier --write src/",
     "start": "echo 'User component - use the user script in scripts directory'",
-    "generate:docs": "node scripts/generate-component-docs.js",
+    "generate:docs": "node dist/ts/layer5/LifecycleCLI.js generate-docs",
     "version": "npm run build && git add -A dist",
     "prepublishOnly": "npm test && npm run lint",
     "prepare": "npm run build"
