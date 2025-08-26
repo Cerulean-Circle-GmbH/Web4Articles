@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "c11dc297-da75-48ac-a2d8-bbf18e33690f",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDIwOjEzOjQ3LjMxMVoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "c11dc297-da75-48ac-a2d8-bbf18e33690f",
+    "name": "No Hungarian Notation - Ban Interface and Type Prefixes",
+    "title": "No Hungarian Notation - Ban Interface and Type Prefixes",
+    "description": "Never use 'I' prefix for interfaces or 'T' prefix for types in TypeScript. Use clean names: User not IUser, EnvironmentCheck not IEnvironmentCheck. Modern TypeScript provides type information without Hungarian notation. Clean, readable names without prefixes. See PDCA: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-25-UTC-1308/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-2012-no-interface-type-prefixes.md) | [Local](scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-2012-no-interface-type-prefixes.md)"
+  },
+  "unitIndex": {
+    "uuid": "c11dc297-da75-48ac-a2d8-bbf18e33690f",
+    "indexPath": "/workspace/scenarios/index/c/1/1/d/c/c11dc297-da75-48ac-a2d8-bbf18e33690f.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/c11dc297-da75-48ac-a2d8-bbf18e33690f.scenario.json"
+    ],
+    "createdAt": "2025-08-26T20:13:47.316Z",
+    "updatedAt": "2025-08-26T20:13:47.316Z"
+  }
+}
