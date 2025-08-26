@@ -3,8 +3,8 @@
 **Component:** @web4/user  
 **Version:** 1.0.0  
 **Description:** Web4 User component for consistent user identification  
-**Generated:** 2025-08-26T18:09:02.636Z  
-**Git Commit:** 88121d1  
+**Generated:** 2025-08-26T18:12:43.307Z  
+**Git Commit:** c7946e6  
 **Git Branch:** dev/2025-08-25-UTC-1308
 
 ## Overview

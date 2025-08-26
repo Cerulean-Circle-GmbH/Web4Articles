@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "dd37fbd2-2eff-4a56-9e2b-2c9a03ce44ea",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDE4OjEyOjU1LjAxMFoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "dd37fbd2-2eff-4a56-9e2b-2c9a03ce44ea",
+    "name": "Radical OOP TypeScript Only Policy",
+    "title": "Radical OOP TypeScript Only Policy",
+    "description": "All component lifecycle and helper code must be implemented as TypeScript classes following radical OOP principles. Only .ts files for code and .sh files for shell scripts are allowed. No JavaScript .js helper files permitted."
+  },
+  "unitIndex": {
+    "uuid": "dd37fbd2-2eff-4a56-9e2b-2c9a03ce44ea",
+    "indexPath": "/workspace/scenarios/index/d/d/3/7/f/dd37fbd2-2eff-4a56-9e2b-2c9a03ce44ea.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/dd37fbd2-2eff-4a56-9e2b-2c9a03ce44ea.scenario.json"
+    ],
+    "createdAt": "2025-08-26T18:12:55.015Z",
+    "updatedAt": "2025-08-26T18:12:55.015Z"
+  }
+}
