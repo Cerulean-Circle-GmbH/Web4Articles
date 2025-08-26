@@ -1,0 +1,25 @@
+{
+  "IOR": {
+    "uuid": "e8535c4e-591d-4955-9874-6a853545e970",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDA3OjE5OjA2LjY0OVoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "e8535c4e-591d-4955-9874-6a853545e970",
+    "name": "Dual Link Standard - Local Paths Relative to Project Root",
+    "title": "Dual Link Standard - Local Paths Relative to Project Root",
+    "description": "
+    All dual links in PDCAs must use local paths that are relative to project root from the document location, ensuring clickable local links work correctly from any PDCA location
+    "
+  },
+  "unitIndex": {
+    "uuid": "e8535c4e-591d-4955-9874-6a853545e970",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/e/8/5/3/5/e8535c4e-591d-4955-9874-6a853545e970.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/e8535c4e-591d-4955-9874-6a853545e970.scenario.json"
+    ],
+    "createdAt": "2025-08-26T07:19:06.672Z",
+    "updatedAt": "2025-08-26T07:19:06.672Z"
+  }
+}
