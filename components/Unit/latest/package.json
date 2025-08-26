@@ -10,7 +10,8 @@
     "dev": "tsc --watch",
     "clean": "rm -rf dist/",
     "test": "vitest",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "validate:naming": "node -e \"import('./dist/ts/layer4/NamingValidator.js').then(m => new m.NamingValidator())\""
   },
   "keywords": [
     "web4",
