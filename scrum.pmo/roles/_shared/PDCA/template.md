@@ -2,8 +2,14 @@
 
 **🗓️ Date:** {{UTC_TIMESTAMP}}  
 **🎯 Objective:** {{OBJECTIVE}}  
-**👤 Role:** {{ROLE_NAME}} → {{CONTEXT_SPECIALIZATION}}  
+
+**👤 Agent Role:** {{ROLE_NAME}} → {{CONTEXT_SPECIALIZATION}}  
+**👤 Branch:** {{ROLE_NAME}} → {{CONTEXT_SPECIALIZATION}}  
+**🎯 Project Journal Session:** {{SESSION_NAME}} → {{CONTEXT_SPECIALIZATION}}
+**🎯 Sprint:** {{SPRINT_NAME}} → {{CONTEXT_SPECIALIZATION}}
+**✅ Task:** {{TASK_NAME}}  
 **🚨 Issues:** {{KEY_ISSUES}}  
+
 **📎 Previous Commit:** {{PREVIOUS_COMMIT_SHA}} - {{PREVIOUS_COMMIT_DESCRIPTION}}  
 **🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
 
