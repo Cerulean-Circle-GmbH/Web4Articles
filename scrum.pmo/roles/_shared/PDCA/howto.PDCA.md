@@ -240,6 +240,8 @@
 ### **Directory Structure:**
 - **Role-based organization:** `pdca/role/[role_name]/`
 - **Session-based grouping:** Within project journal sessions
+- **First PDCA location:** `scrum.pmo/project.journal/YYYY-MM-DD-HHMM-descriptive/pdca/` (NOT session-journal)
+- **Example:** `scrum.pmo/project.journal/2025-08-24-1248-recovery-start/pdca/2025-08-24-UTC-1248-recovery-start.pdca.md`
 
 ---
 
