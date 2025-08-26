@@ -5,17 +5,17 @@
 **👤 Role:** Background Agent → DevOps Safety Analyst  
 **🚨 Issues:** Need to combine "wild west" collection approach with multi-agent safety requirements  
 **📎 Previous Commit:** b5be44b - Merge remote-tracking branch 'origin/dev/2025-08-24-UTC-1248' into dev/2025-08-25-UTC-1308  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1525-branch-merging-cicd-strategies-research.md) | [§/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1525-branch-merging-cicd-strategies-research.md](../../../../../../scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1525-branch-merging-cicd-strategies-research.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1525-branch-merging-cicd-strategies-research.md) | [scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1525-branch-merging-cicd-strategies-research.md](../../../../../../scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1525-branch-merging-cicd-strategies-research.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **This PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1540-wild-west-safe-merge-synthesis.md) | [§/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1540-wild-west-safe-merge-synthesis.md](../../../../../../scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1540-wild-west-safe-merge-synthesis.md)
-- **Wild West Workflow:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-08-24-consolidated-learning/pdca-wild-west-workflow.md) | [§/scrum.pmo/project.journal/2025-08-24-consolidated-learning/pdca-wild-west-workflow.md](../../../../../../scrum.pmo/project.journal/2025-08-24-consolidated-learning/pdca-wild-west-workflow.md)
-- **CI/CD Safety Protocol:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/roles/CICDAgent/PDCA/2025-08-15-UTC-0824.md) | [§/scrum.pmo/roles/CICDAgent/PDCA/2025-08-15-UTC-0824.md](../../../../../../scrum.pmo/roles/CICDAgent/PDCA/2025-08-15-UTC-0824.md)
-- **Branch Merging Research:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1525-branch-merging-cicd-strategies-research.md) | [§/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1525-branch-merging-cicd-strategies-research.md](../../../../../../scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1525-branch-merging-cicd-strategies-research.md)
+- **This PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1540-wild-west-safe-merge-synthesis.md) | [scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1540-wild-west-safe-merge-synthesis.md](../../../../../../scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1540-wild-west-safe-merge-synthesis.md)
+- **Wild West Workflow:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-08-24-consolidated-learning/pdca-wild-west-workflow.md) | [scrum.pmo/project.journal/2025-08-24-consolidated-learning/pdca-wild-west-workflow.md](../../../../../../scrum.pmo/project.journal/2025-08-24-consolidated-learning/pdca-wild-west-workflow.md)
+- **CI/CD Safety Protocol:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/roles/CICDAgent/PDCA/2025-08-15-UTC-0824.md) | [scrum.pmo/roles/CICDAgent/PDCA/2025-08-15-UTC-0824.md](../../../../../../scrum.pmo/roles/CICDAgent/PDCA/2025-08-15-UTC-0824.md)
+- **Branch Merging Research:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1525-branch-merging-cicd-strategies-research.md) | [scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1525-branch-merging-cicd-strategies-research.md](../../../../../../scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-25-UTC-1525-branch-merging-cicd-strategies-research.md)
 
 ### **QA Decisions**
 - [x] **Identified Key Agents:** Background Agent (wild west design) + CICDAgent (safety protocols)
@@ -55,7 +55,7 @@ Found both agents: Background Agent designed the "wild west release/dev workflow
 ## **1. Agent Discovery Results**
 
 ### **1.1 Background Agent - Wild West Workflow Designer**
-**Location:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-08-24-consolidated-learning/pdca-wild-west-workflow.md) | [§/scrum.pmo/project.journal/2025-08-24-consolidated-learning/pdca-wild-west-workflow.md](../../../../../../scrum.pmo/project.journal/2025-08-24-consolidated-learning/pdca-wild-west-workflow.md)
+**Location:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-08-24-consolidated-learning/pdca-wild-west-workflow.md) | [scrum.pmo/project.journal/2025-08-24-consolidated-learning/pdca-wild-west-workflow.md](../../../../../../scrum.pmo/project.journal/2025-08-24-consolidated-learning/pdca-wild-west-workflow.md)
 
 **Key Insights:**
 - **"Wild West" Philosophy:** release/dev collects ALL commits from ALL branches
@@ -68,7 +68,7 @@ Found both agents: Background Agent designed the "wild west release/dev workflow
 > "The current auto-merge script is too conservative. It should be aggressive about getting commits to release/dev, even if it means creating multiple PRs or partial merges."
 
 ### **1.2 CICDAgent - Safety Protocol Author**
-**Location:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/roles/CICDAgent/PDCA/2025-08-15-UTC-0824.md) | [§/scrum.pmo/roles/CICDAgent/PDCA/2025-08-15-UTC-0824.md](../../../../../../scrum.pmo/roles/CICDAgent/PDCA/2025-08-15-UTC-0824.md)
+**Location:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/roles/CICDAgent/PDCA/2025-08-15-UTC-0824.md) | [scrum.pmo/roles/CICDAgent/PDCA/2025-08-15-UTC-0824.md](../../../../../../scrum.pmo/roles/CICDAgent/PDCA/2025-08-15-UTC-0824.md)
 
 **Critical Safety Rules:**
 1. **NEVER switch branches during multi-agent sessions**
