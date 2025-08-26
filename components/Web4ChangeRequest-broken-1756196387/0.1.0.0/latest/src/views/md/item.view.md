@@ -1,1 +1,0 @@
-- [{{statusCheckbox}}] {{title}} [[requirement:uuid:{{uuid}}]]({{filename}})
