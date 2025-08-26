@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "Web4 User component for consistent user identification",
   "type": "module",
-  "main": "src/ts/layer2/DefaultUser.js",
+  "main": "dist/ts/layer2/DefaultUser.js",
   "exports": {
-    ".": "./src/ts/layer2/DefaultUser.js",
-    "./interface": "./src/ts/layer3/IUser.js"
+    ".": "./dist/ts/layer2/DefaultUser.js",
+    "./interface": "./dist/ts/layer3/User.js"
   },
   "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch", 
+    "clean": "rm -rf dist/",
     "test": "ts-node --esm test-user-uuid.ts"
   },
   "dependencies": {},

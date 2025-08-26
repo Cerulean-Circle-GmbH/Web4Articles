@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "d44be137-267a-4ea0-90b4-97ba4a4a2cbb",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDEwOjMyOjIxLjA2OVoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "d44be137-267a-4ea0-90b4-97ba4a4a2cbb",
+    "name": "Web4 TLA The Last Architecture Formula",
+    "title": "Web4 TLA The Last Architecture Formula",
+    "description": "TLA = MDAv4 + EAMv4 + SOAv4 based on Web4. The Last Architecture - finite science of all possible information systems. Architectural singularity achieved - no more architectural evolution needed. Replaces endless architectural evolution and framework churn."
+  },
+  "unitIndex": {
+    "uuid": "d44be137-267a-4ea0-90b4-97ba4a4a2cbb",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/d/4/4/b/e/d44be137-267a-4ea0-90b4-97ba4a4a2cbb.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/d44be137-267a-4ea0-90b4-97ba4a4a2cbb.scenario.json"
+    ],
+    "createdAt": "2025-08-26T10:32:21.080Z",
+    "updatedAt": "2025-08-26T10:32:21.080Z"
+  }
+}

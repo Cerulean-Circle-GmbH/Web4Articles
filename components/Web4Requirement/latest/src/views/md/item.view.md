@@ -1,1 +1,1 @@
-- [{{statusCheckbox}}] {{title}} [[requirement:uuid:{{uuid}}]]({{filename}})
+- [{{statusCheckbox}}] {{ownerTimestamp}} [[requirement:uuid:{{uuid}}]]({{filename}}) {{title}} 

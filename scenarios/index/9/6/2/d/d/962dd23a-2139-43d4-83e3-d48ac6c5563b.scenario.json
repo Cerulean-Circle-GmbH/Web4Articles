@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "962dd23a-2139-43d4-83e3-d48ac6c5563b",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDEwOjMzOjI4LjI3MFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "962dd23a-2139-43d4-83e3-d48ac6c5563b",
+    "name": "Web4 Git-Based Transaction Chain Manager",
+    "title": "Web4 Git-Based Transaction Chain Manager",
+    "description": "Git-based transaction chain manager for business processes. Implements atomic rollback per step OR overall transaction rollback with complete audit trail, time travel debugging, and granular rollback capability using Git versioning."
+  },
+  "unitIndex": {
+    "uuid": "962dd23a-2139-43d4-83e3-d48ac6c5563b",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/9/6/2/d/d/962dd23a-2139-43d4-83e3-d48ac6c5563b.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/962dd23a-2139-43d4-83e3-d48ac6c5563b.scenario.json"
+    ],
+    "createdAt": "2025-08-26T10:33:28.281Z",
+    "updatedAt": "2025-08-26T10:33:28.281Z"
+  }
+}
