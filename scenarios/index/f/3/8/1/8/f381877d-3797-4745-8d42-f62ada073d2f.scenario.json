@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "f381877d-3797-4745-8d42-f62ada073d2f",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDE4OjI2OjU0LjM1MVoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "f381877d-3797-4745-8d42-f62ada073d2f",
+    "name": "Occam's Razor - Web4 Simplicity Principle",
+    "title": "Occam's Razor - Web4 Simplicity Principle",
+    "description": "The simplest complete solution is the best solution. Web4 tools embody this by handling full lifecycle in single commands. No unnecessary manual steps. See PDCA: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-25-UTC-1308/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-1825-occams-razor-web4-simplicity.md) | [Local](scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-1825-occams-razor-web4-simplicity.md)"
+  },
+  "unitIndex": {
+    "uuid": "f381877d-3797-4745-8d42-f62ada073d2f",
+    "indexPath": "/workspace/scenarios/index/f/3/8/1/8/f381877d-3797-4745-8d42-f62ada073d2f.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/f381877d-3797-4745-8d42-f62ada073d2f.scenario.json"
+    ],
+    "createdAt": "2025-08-26T18:26:54.356Z",
+    "updatedAt": "2025-08-26T18:26:54.356Z"
+  }
+}
