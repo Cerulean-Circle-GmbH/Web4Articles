@@ -1,0 +1,11 @@
+{
+  "IOR": {
+    "uuid": "example-unit-uuid",
+    "component": "Unit",
+    "version": "0.1.3.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI3VDAwOjAwOjAwLjAwMFoiLCJ1dWlkIjoiZXhhbXBsZS11dWlkIn0=",
+  "model": {
+    "unitIndex": "scenarios/index/e/x/a/m/p/example-unit-uuid.scenario.json"
+  }
+}

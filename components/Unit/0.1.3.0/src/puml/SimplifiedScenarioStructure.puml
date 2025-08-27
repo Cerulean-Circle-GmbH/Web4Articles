@@ -1,0 +1,41 @@
+@startuml SimplifiedScenarioStructure
+!define RECTANGLE class
+
+title Occam's Razor - Simplified Scenario Structure
+
+package "Scenario Structure" {
+  RECTANGLE "Unit Scenario" {
+    + IOR: Object
+    + owner: String
+    + model: {unitIndex: String}
+  }
+  
+  RECTANGLE "Requirement Scenario" {
+    + IOR: Object
+    + owner: String
+    + model: Object
+    .. model properties ..
+    + uuid: String
+    + name: String
+    + title: String
+    + description: String
+    + unit: String (path)
+  }
+}
+
+"Requirement Scenario" ..> "Unit Scenario" : references via\nmodel.unit
+
+note right of "Unit Scenario"
+  Minimal structure
+  Only essential fields
+  unitIndex points to
+  relative scenario path
+end note
+
+note left of "Requirement Scenario"
+  Simple reference
+  No embedded data
+  Just path to unit
+end note
+
+@enduml

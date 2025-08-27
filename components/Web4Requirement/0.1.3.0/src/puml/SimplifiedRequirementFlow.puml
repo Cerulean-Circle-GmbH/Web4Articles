@@ -1,0 +1,45 @@
+@startuml SimplifiedRequirementFlow
+!define RECTANGLE class
+
+title Occam's Razor - Simplified Requirement Flow
+
+actor User
+participant "RequirementCLI" as CLI
+participant "DefaultRequirement" as DR
+participant "Scenario" as S
+database "File System" as FS
+
+User -> CLI: create requirement
+CLI -> DR: create(title, description)
+DR -> S: generate scenario
+note right: Simple structure\nIOR + owner + model
+
+alt Has Unit Context
+  DR -> S: add unit reference
+  note right: model.unit = "path/to/unit.scenario.json"
+end
+
+S -> FS: save scenario.json
+note over FS: No unitIndex\nNo absolute paths\nNo timestamps
+
+== Simplified Scenario Structure ==
+
+note over S
+{
+  "IOR": {
+    "uuid": "...",
+    "component": "Web4Requirement",
+    "version": "0.1.3.0"
+  },
+  "owner": "base64-encoded",
+  "model": {
+    "uuid": "...",
+    "name": "...",
+    "title": "...",
+    "description": "...",
+    "unit": "components/Unit/0.1.3.0/units/uuid.scenario.json"
+  }
+}
+end note
+
+@enduml

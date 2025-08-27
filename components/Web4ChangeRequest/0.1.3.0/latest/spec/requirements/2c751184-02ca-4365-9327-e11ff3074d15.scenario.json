@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "2c751184-02ca-4365-9327-e11ff3074d15",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDA0OjAyOjQ4LjQzOFoiLCJ1dWlkIjoiMjIyZTMxZDgtZDhmYi00YjM5LTliZWItNDQzMzQ0YTRmOGY4In0=",
+  "model": {
+    "uuid": "2c751184-02ca-4365-9327-e11ff3074d15",
+    "name": "Requirements Scenario Structure Creation",
+    "title": "Requirements Scenario Structure Creation",
+    "description": "Create a spec folder next to src. in it a folder storing the requirements as scenarios. I write prose requirements and you convert them into scenarios and store these in a requirement folder in the spec folder using the Web4Requirement component."
+  }
+}
