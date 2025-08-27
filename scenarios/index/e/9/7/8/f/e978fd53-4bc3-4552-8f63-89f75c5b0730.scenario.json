@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "e978fd53-4bc3-4552-8f63-89f75c5b0730",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI3VDIxOjUyOjIwLjUyNFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "e978fd53-4bc3-4552-8f63-89f75c5b0730",
+    "name": "UnitCLI Implementation",
+    "title": "UnitCLI Implementation",
+    "description": "Implement full UnitCLI.js with command interface matching requirement/user patterns. Must follow auto-build CLI standard specification and provide meaningful Unit component management functionality beyond current library-only role."
+  },
+  "unitIndex": {
+    "uuid": "e978fd53-4bc3-4552-8f63-89f75c5b0730",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/e/9/7/8/f/e978fd53-4bc3-4552-8f63-89f75c5b0730.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/e978fd53-4bc3-4552-8f63-89f75c5b0730.scenario.json"
+    ],
+    "createdAt": "2025-08-27T21:52:20.537Z",
+    "updatedAt": "2025-08-27T21:52:20.537Z"
+  }
+}
