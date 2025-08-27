@@ -6,16 +6,29 @@
 
 import { DefaultRequirement } from '../layer2/DefaultRequirement.js';
 import * as fs from 'fs/promises';
+import { readFileSync, existsSync } from 'fs';
 import * as path from 'path';
 
 export class RequirementCLI {
   private requirement: DefaultRequirement;
+  private projectRoot: string;
 
   constructor() {
     // Get directory context from environment variable set by shell script
     const directoryContext = process.env.DIRECTORY_CONTEXT || 'arbitrary:' + process.cwd();
     this.requirement = new DefaultRequirement();
     (this.requirement as any).setDirectoryContext(directoryContext);
+    
+    // Find project root by looking for .git directory
+    this.projectRoot = process.cwd();
+    let dir = process.cwd();
+    while (dir !== '/') {
+      if (existsSync(path.join(dir, '.git'))) {
+        this.projectRoot = dir;
+        break;
+      }
+      dir = path.dirname(dir);
+    }
   }
 
   async handleCommand(args: string[]): Promise<void> {
@@ -68,7 +81,7 @@ export class RequirementCLI {
       this.showUsage();
       return;
     }
-    
+
     switch (command) {
       case 'create':
         await this.handleCreate(args.slice(1));
@@ -88,11 +101,8 @@ export class RequirementCLI {
       case 'delete':
         await this.handleDelete(args.slice(1));
         break;
-      case 'replace':
-        await this.handleReplace(args.slice(1));
-        break;
-      case 'process-file':
-        await this.handleProcessFile(args.slice(1));
+      case 'find':
+        await this.handleFind(args.slice(1));
         break;
       case 'on':
         console.error('❌ "on" command requires: on <component> <version> <command> [args...]');
@@ -218,92 +228,38 @@ export class RequirementCLI {
   }
 
   private showUsage(): void {
-    const cyan = '\x1b[36m';
-    const yellow = '\x1b[33m';
-    const green = '\x1b[32m';
-    const bold = '\x1b[1m';
-    const reset = '\x1b[0m';
-    
-    console.log(`${bold}${cyan}Web4Requirement CLI Tool${reset} ${green}- Component-Context Aware Requirements Management${reset}`);
+    console.log('Web4Requirement CLI Tool');
     console.log('');
-    console.log(`${bold}Usage:${reset}`);
-    console.log(`  ${cyan}requirement${reset} create ${yellow}"title"${reset} ${yellow}"description"${reset}                    ${green}# Create new requirement${reset}`);
-    console.log(`  ${cyan}requirement${reset} on ${yellow}<component>${reset} ${yellow}<version>${reset} create ${yellow}"title"${reset} ${yellow}"description"${reset} ${green}# Create in component context${reset}`);
-    console.log(`  ${cyan}requirement${reset} md ${yellow}<scenario-file.json>${reset} [${yellow}output-directory${reset}]           ${green}# Generate markdown view${reset}`);
-    console.log(`  ${cyan}requirement${reset} set ${yellow}<uuid>${reset} ${yellow}<key>${reset} ${yellow}<value>${reset}                        ${green}# Set requirement property${reset}`);
-    console.log(`  ${cyan}requirement${reset} update overview                                   ${green}# Generate requirements overview${reset}`);
-    console.log(`  ${cyan}requirement${reset} mv ${yellow}<uuid>${reset} ${yellow}<component>${reset} ${yellow}<version>${reset}                  ${green}# Move requirement to component${reset}`);
-    console.log(`  ${cyan}requirement${reset} delete ${yellow}<uuid|scenario-file|md-file>${reset}             ${green}# Delete requirement${reset}`);
-    console.log(`  ${cyan}requirement${reset} replace ${yellow}"pattern"${reset} ${yellow}<file-path>${reset}                   ${green}# Create req and replace pattern${reset}`);
-    console.log(`  ${cyan}requirement${reset} replace ${yellow}"pattern"${reset} ${yellow}<uuid>${reset} ${yellow}<file-path>${reset}           ${green}# Replace pattern with UUID${reset}`);
-    console.log(`  ${cyan}requirement${reset} process-file ${yellow}<file-path>${reset}                        ${green}# Batch process all patterns${reset}`);
+    console.log('Usage:');
+    console.log('  requirement create "title" "description"');
+    console.log('  requirement on <component> <version> create "title" "description"');
+    console.log('  requirement md <scenario-file.json> [output-directory]');
     console.log('');
-    console.log(`${bold}Commands:${reset}`);
-    console.log(`  ${bold}create${reset}       Create a new requirement with title and description`);
-    console.log(`  ${bold}on${reset}           Set component context for subsequent command`);
-    console.log(`  ${bold}md${reset}           Load requirement from scenario and generate MD view`);
-    console.log(`  ${bold}set${reset}          Set attribute value for existing requirement`);
-    console.log(`  ${bold}update${reset}       Update and regenerate components (overview)`);
-    console.log(`  ${bold}mv${reset}           Move requirement files to another component`);
-    console.log(`  ${bold}delete${reset}       Delete requirement by UUID, scenario file, or MD file`);
-    console.log(`  ${bold}replace${reset}      Replace requirement pattern with dual link`);
-    console.log(`  ${bold}process-file${reset} Batch process all requirement patterns in file`);
+    console.log('Commands:');
+    console.log('  create     Create a new requirement with title and description');
+    console.log('  on         Set component context for subsequent command');
+    console.log('  md         Load requirement from scenario and generate MD view');
+    console.log('  set        Set attribute value for existing requirement');
+    console.log('  update     Update and regenerate components (overview)');
+    console.log('  mv         Move requirement files to another component');
+    console.log('  delete     Delete requirement by UUID, scenario file, or MD file');
+    console.log('  find       Search for requirements by content');
     console.log('');
-    console.log(`${bold}Parameters:${reset}`);
-    console.log(`  ${yellow}<uuid>${reset}           36-character UUID (e.g., 12345678-1234-1234-1234-123456789abc)`);
-    console.log(`  ${yellow}<component>${reset}      Component name (e.g., User, Unit, Web4Requirement)`);
-    console.log(`  ${yellow}<version>${reset}        Version string (e.g., latest, v1.0, 0.1.0.0)`);
-    console.log(`  ${yellow}<key>${reset}            Property key (e.g., implemented, status, priority)`);
-    console.log(`  ${yellow}<value>${reset}          Property value (e.g., true, completed, high)`);
-    console.log(`  ${yellow}<file-path>${reset}      Relative path from project root (e.g., scrum.pmo/sprints/...)`);
-    console.log(`  ${yellow}<pattern>${reset}        Requirement pattern (e.g., "requirement:uuid:web4-impl-001")`);
-    console.log(`  ${yellow}"title"${reset}          Requirement title in quotes`);
-    console.log(`  ${yellow}"description"${reset}    Detailed requirement description in quotes`);
+    console.log('Examples:');
+    console.log('  requirement create "Unit Architecture Fix" "workflows are user role specific screen transitions"');
+    console.log('  requirement on User latest create "User Component Fix" "Fix user authentication logic"');
+    console.log('  requirement on Unit v1.0 update overview');
+    console.log('  requirement md 394d5b56-51f0-4ff8-8213-88853f387dfc.scenario.json');
+    console.log('  requirement set 12345678-1234-1234-1234-123456789abc implemented true');
+    console.log('  requirement mv 21ce7e72 User latest');
+    console.log('  requirement delete 12345678-1234-1234-1234-123456789abc');
+    console.log('  requirement delete path/to/scenario.json');
+    console.log('  requirement delete path/to/requirement.md');
+    console.log('  requirement find "empty constructor"');
+    console.log('  requirement find scenario');
     console.log('');
-    console.log(`${bold}Examples:${reset}`);
-    console.log(`  ${green}# Basic requirement creation${reset}`);
-    console.log(`  ${cyan}requirement${reset} create ${yellow}"Unit Architecture Fix"${reset} ${yellow}"workflows are user role specific screen transitions"${reset}`);
-    console.log('');
-    console.log(`  ${green}# Component context creation${reset}`);
-    console.log(`  ${cyan}requirement${reset} on ${yellow}User${reset} ${yellow}latest${reset} create ${yellow}"User Component Fix"${reset} ${yellow}"Fix user authentication logic"${reset}`);
-    console.log(`  ${cyan}requirement${reset} on ${yellow}Unit${reset} ${yellow}v1.0${reset} update overview`);
-    console.log('');
-    console.log(`  ${green}# Generate markdown views${reset}`);
-    console.log(`  ${cyan}requirement${reset} md ${yellow}394d5b56-51f0-4ff8-8213-88853f387dfc.scenario.json${reset}`);
-    console.log(`  ${cyan}requirement${reset} md ${yellow}394d5b56-51f0-4ff8-8213-88853f387dfc.scenario.json${reset} ${yellow}./output${reset}`);
-    console.log('');
-    console.log(`  ${green}# Set requirement properties${reset}`);
-    console.log(`  ${cyan}requirement${reset} set ${yellow}12345678-1234-1234-1234-123456789abc${reset} ${yellow}implemented${reset} ${yellow}true${reset}`);
-    console.log(`  ${cyan}requirement${reset} set ${yellow}12345678-1234-1234-1234-123456789abc${reset} ${yellow}status${reset} ${yellow}completed${reset}`);
-    console.log(`  ${cyan}requirement${reset} set ${yellow}12345678-1234-1234-1234-123456789abc${reset} ${yellow}priority${reset} ${yellow}high${reset}`);
-    console.log('');
-    console.log(`  ${green}# Move requirements between components${reset}`);
-    console.log(`  ${cyan}requirement${reset} mv ${yellow}21ce7e72${reset} ${yellow}User${reset} ${yellow}latest${reset}`);
-    console.log(`  ${cyan}requirement${reset} mv ${yellow}12345678-1234-1234-1234-123456789abc${reset} ${yellow}Unit${reset} ${yellow}v2.0${reset}`);
-    console.log('');
-    console.log(`  ${green}# Delete requirements${reset}`);
-    console.log(`  ${cyan}requirement${reset} delete ${yellow}12345678-1234-1234-1234-123456789abc${reset}`);
-    console.log(`  ${cyan}requirement${reset} delete ${yellow}path/to/scenario.json${reset}`);
-    console.log(`  ${cyan}requirement${reset} delete ${yellow}path/to/requirement.md${reset}`);
-    console.log('');
-    console.log(`  ${green}# Pattern replacement (new feature)${reset}`);
-    console.log(`  ${cyan}requirement${reset} replace ${yellow}"requirement:uuid:web4-impl-001"${reset} ${yellow}scrum.pmo/sprints/sprint-20/web4.requirement.md${reset}`);
-    console.log(`  ${cyan}requirement${reset} replace ${yellow}"requirement:uuid:web4-impl-001"${reset} ${yellow}15685fae-ff10-45ba-ae26-ad6b8f215d8e${reset} ${yellow}scrum.pmo/sprints/sprint-20/web4.requirement.md${reset}`);
-    console.log('');
-    console.log(`  ${green}# Batch processing (new feature)${reset}`);
-    console.log(`  ${cyan}requirement${reset} process-file ${yellow}scrum.pmo/sprints/sprint-20/web4.requirement.md${reset}`);
-    console.log(`  ${cyan}requirement${reset} process-file ${yellow}components/Web4Requirement/latest/spec/requirements.md${reset}`);
-    console.log('');
-    console.log(`${bold}Context Detection:${reset}`);
-    console.log(`  ${green}• Automatically detects if you're in a component directory${reset}`);
-    console.log(`  ${green}• Requirements saved to detected component's spec/ directory${reset}`);
-    console.log(`  ${green}• Use "on" command to override auto-detection${reset}`);
-    console.log(`  ${green}• Supports both project-root and component-relative operations${reset}`);
-    console.log('');
-    console.log(`${bold}TSRanger Compatible Format:${reset}`);
-    console.log(`  ${cyan}Requirement${reset} create ${yellow}"description:your requirement text here"${reset}`);
-    console.log('');
-    console.log(`${green}For more information, visit: https://github.com/Cerulean-Circle-GmbH/Web4Articles${reset}`);
+    console.log('TSRanger Compatible Format:');
+    console.log('  Requirement create "description:your requirement text here"');
   }
 
   private async handleSet(args: string[]): Promise<void> {
@@ -417,10 +373,10 @@ export class RequirementCLI {
       targetPath = componentOrPath;
       
       // Resolve target path shortcuts for backward compatibility
-    if (targetPath === 'Web4Requirement') {
-      targetPath = 'components/Web4Requirement/v1.0';
-    } else if (targetPath === 'Unit') {
-      targetPath = 'components/Unit/latest';
+      if (targetPath === 'Web4Requirement') {
+        targetPath = 'components/Web4Requirement/v1.0';
+      } else if (targetPath === 'Unit') {
+        targetPath = 'components/Unit/latest';
       } else if (targetPath === 'User') {
         targetPath = 'components/User/latest';
       }
@@ -446,97 +402,78 @@ export class RequirementCLI {
     }
   }
 
-  private async handleReplace(args: string[]): Promise<void> {
-    if (args.length < 2) {
-      console.error('Error: replace command requires placeholder pattern and file path');
-      console.log('Usage: requirement replace "requirement:uuid:web4-xxx-name" <file-path>');
-      console.log('   or: requirement replace "requirement:uuid:web4-xxx-name" <uuid> <file-path>');
+  private async handleFind(args: string[]): Promise<void> {
+    if (args.length < 1) {
+      console.error('❌ Usage: requirement find <search-term>');
       console.log('Examples:');
-      console.log('  requirement replace "requirement:uuid:web4-impl-001" scrum.pmo/sprints/sprint-20/web4.requirement.md');
-      console.log('  requirement replace "requirement:uuid:web4-impl-001" 15685fae-ff10-45ba-ae26-ad6b8f215d8e scrum.pmo/sprints/sprint-20/web4.requirement.md');
+      console.log('  requirement find "empty constructor"');
+      console.log('  requirement find scenario');
+      console.log('  requirement find IOR');
       return;
     }
 
-    const pattern = args[0];
-    let targetUuid = '';
-    let filePath = '';
-    
-    if (args.length === 2) {
-      // Auto-create requirement and replace
-      filePath = args[1];
-      console.log(`🔍 Pattern: ${pattern}`);
-      console.log(`📄 File: ${filePath}`);
-      console.log('🆕 Creating new requirement for pattern...');
+    const searchTerm = args.join(' ');
+    console.log(`🔍 Searching for: "${searchTerm}"`);
+
+    try {
+      const { execSync } = await import('child_process');
       
-      // Extract title from pattern for requirement creation
-      const title = pattern.replace(/^requirement:uuid:/, '').replace(/-/g, ' ')
-                           .replace(/\b\w/g, l => l.toUpperCase());
-      const description = `Web4 requirement for ${title}`;
+      // Search in all spec/requirements.md directories
+      const searchPaths = [
+        path.join(this.projectRoot, 'spec/requirements.md'),
+        path.join(this.projectRoot, 'components/*/latest/spec/requirements.md'),
+        path.join(this.projectRoot, 'components/*/v*/spec/requirements.md')
+      ];
       
-      const result = await this.requirement.create(title, description);
-      if (result.success && result.requirementId) {
-        targetUuid = result.requirementId;
-        console.log(`✅ Created requirement: ${targetUuid}`);
-      } else {
-        console.error('❌ Failed to create requirement');
+      // Use grep to search efficiently
+      const grepCmd = `find ${this.projectRoot} -path "*/spec/requirements.md/*.requirement.md" -type f 2>/dev/null | xargs grep -l -i "${searchTerm}" 2>/dev/null || true`;
+      
+      const stdout = execSync(grepCmd, { encoding: 'utf8' });
+      const files = stdout.trim().split('\n').filter(Boolean);
+      
+      if (files.length === 0) {
+        console.log('No requirements found matching the search term.');
         return;
       }
-    } else {
-      // Use provided UUID
-      targetUuid = args[1];
-      filePath = args[2];
-      console.log(`🔍 Pattern: ${pattern}`);
-      console.log(`🎯 Target UUID: ${targetUuid}`);
-      console.log(`📄 File: ${filePath}`);
-    }
-
-    try {
-      const result = await this.requirement.replaceInFile(pattern, targetUuid, filePath);
       
-      if (result.success) {
-        console.log(`✅ ${result.message}`);
-        console.log('🔗 File updated with proper dual link');
-      } else {
-        console.error(`❌ ${result.message}`);
+      const uuids = new Map<string, string>();
+      
+      // Extract UUIDs and load names from matching files
+      for (const file of files) {
+        const match = file.match(/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})\.requirement\.md/);
+        if (match) {
+          const uuid = match[1];
+          try {
+            // Try to load the scenario to get the name
+            const scenarioPath = path.join(this.projectRoot, 'scenarios/index', uuid.substring(0, 2), uuid.substring(2, 4), `${uuid}.scenario.json`);
+            if (existsSync(scenarioPath)) {
+              const scenario = JSON.parse(readFileSync(scenarioPath, 'utf8'));
+              uuids.set(uuid, scenario.name || 'Unnamed');
+            } else {
+              // If scenario not found, try to extract title from MD file
+              const mdContent = readFileSync(file, 'utf8');
+              const titleMatch = mdContent.match(/^#\s+(.+)$/m);
+              uuids.set(uuid, titleMatch ? titleMatch[1] : 'Unnamed');
+            }
+          } catch (e) {
+            uuids.set(uuid, 'Error loading name');
+          }
+        }
       }
-    } catch (error: any) {
-      console.error(`❌ Error replacing pattern: ${error.message}`);
+      
+      console.log(`\n📋 Found ${uuids.size} requirements matching "${searchTerm}":\n`);
+      
+      // Display results
+      for (const [uuid, name] of uuids) {
+        console.log(`  ${uuid} - ${name}`);
+      }
+      
+      console.log('\n💡 Use "requirement delete <uuid>" to remove duplicates');
+      
+    } catch (error) {
+      console.error(`❌ Error searching requirements: ${(error as Error).message}`);
     }
   }
-
-  private async handleProcessFile(args: string[]): Promise<void> {
-    if (args.length < 1) {
-      console.error('Error: process-file command requires a file path');
-      console.log('Usage: requirement process-file <file-path>');
-      console.log('Example: requirement process-file scrum.pmo/sprints/sprint-20/web4.requirement.md');
-      console.log('');
-      console.log('This command will:');
-      console.log('  1. Scan file for requirement patterns like [requirement:uuid:web4-xxx-name]');
-      console.log('  2. Create requirements for patterns that don\'t exist');
-      console.log('  3. Replace all patterns with proper dual links');
-      return;
-    }
-
-    const filePath = args[0];
-    console.log(`📄 Processing file: ${filePath}`);
-    console.log('🔍 Scanning for requirement patterns...');
-
-    try {
-      const result = await this.requirement.processFile(filePath);
-      
-      if (result.success) {
-        console.log(`✅ ${result.message}`);
-        console.log('🔗 File has been updated with proper dual links to the requirements');
-        console.log('📁 Requirements saved to scenarios/index/ and spec/requirements/');
-      } else {
-        console.error(`❌ ${result.message}`);
-      }
-    } catch (error: any) {
-      console.error(`❌ Error processing file: ${error.message}`);
-    }
-  }
-
-
 }
 
 // CLI entry point

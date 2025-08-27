@@ -3,7 +3,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { UnitIndexStorage } from '../../../../../Unit/latest/dist/ts/layer2/UnitIndexStorage.js';
-import { DefaultUser } from '../../../../../User/latest/dist/ts/layer2/DefaultUser.js';
+import { DefaultUser } from '../../../../../User/latest/dist/layer2/DefaultUser.js';
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -82,179 +82,14 @@ export class DefaultRequirement implements Requirement {
     return { ...this.scenario.metadata };
   }
   
-    async process(): Promise<RequirementResult> {
+  async process(): Promise<RequirementResult> {
     return {
       success: true,
       message: 'Requirement processed successfully',
       requirementId: this.uuid
     };
   }
-
-  /**
-   * Replace a requirement pattern in a file with proper dual link
-   */
-  async replaceInFile(pattern: string, targetUuid: string, filePath: string): Promise<RequirementResult> {
-    try {
-      const projectRoot = this.findProjectRoot();
-      const fullPath = path.resolve(projectRoot, filePath);
-      
-      // Read file content
-      const content = await fs.readFile(fullPath, 'utf8');
-      
-      // Check if pattern exists
-      const placeholder = `[${pattern}]`;
-      if (!content.includes(placeholder)) {
-        return {
-          success: false,
-          message: `Pattern ${placeholder} not found in file`,
-          requirementId: targetUuid
-        };
-      }
-
-      // Generate dual link
-      const relativeDepth = filePath.split('/').length - 1;
-      const relativePath = '../'.repeat(relativeDepth) + `spec/requirements.md/${targetUuid}.requirement.md`;
-      const dualLink = `[[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/${targetUuid}.requirement.md) | [§/spec/requirements.md/${targetUuid}.requirement.md](${relativePath})]`;
-      
-      // Replace pattern with dual link
-      const updatedContent = content.replace(placeholder, dualLink);
-      
-      // Write updated content back to file
-      await fs.writeFile(fullPath, updatedContent, 'utf8');
-      
-      return {
-        success: true,
-        message: `Replaced ${placeholder} with dual link for ${targetUuid}`,
-        requirementId: targetUuid
-      };
-      
-    } catch (error: any) {
-      return {
-        success: false,
-        message: `Error replacing pattern: ${error.message}`,
-        requirementId: targetUuid
-      };
-    }
-  }
-
-  /**
-   * Process a markdown file: find requirement patterns, create requirements, and replace with dual links
-   */
-  async processFile(filePath: string): Promise<RequirementResult> {
-    try {
-      const projectRoot = this.findProjectRoot();
-      const fullPath = path.resolve(projectRoot, filePath);
-      
-      // Read file content
-      const content = await fs.readFile(fullPath, 'utf8');
-      
-      // Pattern to match requirement placeholders: [requirement:uuid:web4-xxx-name]
-      const requirementPattern = /\[requirement:uuid:([^\]]+)\]/g;
-      const patterns: Array<{placeholder: string, key: string, line: string, title: string, description: string}> = [];
-      
-      const lines = content.split('\n');
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        const matches = [...line.matchAll(requirementPattern)];
-        
-        for (const reqMatch of matches) {
-          const placeholder = reqMatch[0];
-          const key = reqMatch[1];
-          
-          // Extract title and description from the line and following context
-          let title = '';
-          let description = '';
-          
-          // Look for **title** pattern in the same line
-          const titleMatch = line.match(/\*\*(.+?)\*\*/);
-          if (titleMatch) {
-            title = titleMatch[1].replace(/\[requirement:[^\]]+\]\s*/, '').trim();
-          }
-          
-          // Extract description from following lines (bullet points)
-          let descLines = [];
-          for (let j = i + 1; j < Math.min(i + 10, lines.length); j++) {
-            const nextLine = lines[j].trim();
-            if (nextLine.startsWith('- **')) {
-              descLines.push(nextLine.replace(/^- \*\*(Mainstream|Web4|Why):\*\*\s*/, ''));
-            } else if (nextLine.startsWith('###') || nextLine === '') {
-              break;
-            }
-          }
-          description = descLines.join(' ').trim();
-          
-          // If no structured description, try to extract from the line itself
-          if (!description) {
-            const afterPlaceholder = line.split(placeholder)[1];
-            if (afterPlaceholder) {
-              description = afterPlaceholder.replace(/^\*\*\s*/, '').replace(/\s*\*\*$/, '').trim();
-            }
-          }
-          
-          patterns.push({
-            placeholder,
-            key,
-            line,
-            title: title || `Web4 ${key.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}`,
-            description: description || `Web4 requirement for ${key}`
-          });
-        }
-      }
-      
-      if (patterns.length === 0) {
-        return {
-          success: false,
-          message: 'No requirement patterns found in file',
-          requirementId: ''
-        };
-      }
-      
-      let updatedContent = content;
-      const createdRequirements: string[] = [];
-      
-      // Process each pattern
-      for (const pattern of patterns) {
-        // Create the requirement
-        const result = await this.create(pattern.title, pattern.description);
-        if (result.success) {
-          createdRequirements.push(`${pattern.title} (${result.requirementId})`);
-          
-          // Generate dual link
-          const relativeDepth = filePath.split('/').length - 1;
-          const relativePath = '../'.repeat(relativeDepth) + `spec/requirements.md/${result.requirementId}.requirement.md`;
-          const dualLink = `[[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/${result.requirementId}.requirement.md) | [§/spec/requirements.md/${result.requirementId}.requirement.md](${relativePath})]`;
-          
-          // Replace placeholder with dual link in content
-          updatedContent = updatedContent.replace(pattern.placeholder, dualLink);
-          
-          // Save the requirement (calls existing save methods)
-          if (result.requirementId && result.scenario) {
-            await this.saveScenario(result.requirementId, result.scenario);
-            const mdContent = this.generateMDView();
-            const mdPath = path.join(this.getRequirementsMDDirectory(), `${result.requirementId}.requirement.md`);
-            await fs.writeFile(mdPath, mdContent, 'utf-8');
-          }
-        }
-      }
-      
-      // Write updated content back to file
-      await fs.writeFile(fullPath, updatedContent, 'utf8');
-      
-      return {
-        success: true,
-        message: `Processed ${patterns.length} requirements and updated file: ${createdRequirements.join(', ')}`,
-        requirementId: createdRequirements.length > 0 ? createdRequirements[0].split('(')[1].split(')')[0] : ''
-      };
-      
-    } catch (error: any) {
-      return {
-        success: false,
-        message: `Error processing file: ${error.message}`,
-        requirementId: ''
-      };
-    }
-  }
-   
+  
   getStatus(): RequirementStatus {
     return this.status;
   }
@@ -909,7 +744,7 @@ export class DefaultRequirement implements Requirement {
       // Decode owner details from scenario
       const ownerDetails = this.decodeOwnerDetails();
       
-      let processedTemplate = template
+      return template
         .replace(/{{name}}/g, this._name)
         .replace(/{{uuid}}/g, this.uuid)
         .replace(/{{title}}/g, this._name)
@@ -918,12 +753,11 @@ export class DefaultRequirement implements Requirement {
         .replace(/{{createdAt}}/g, new Date().toISOString())
         .replace(/{{updatedAt}}/g, new Date().toISOString())
         .replace(/{{implementationStatus}}/g, implementationStatus)
-        .replace(/{{statusCheckbox}}/g, statusCheckbox);
-      
-      // Apply owner template replacements using DRY utility method
-      processedTemplate = DefaultRequirement.applyOwnerTemplateReplacements(processedTemplate, ownerDetails);
-      
-      return processedTemplate;
+        .replace(/{{statusCheckbox}}/g, statusCheckbox)
+        .replace(/{{ownerUser}}/g, ownerDetails.user)
+        .replace(/{{ownerHostname}}/g, ownerDetails.hostname)
+        .replace(/{{ownerTimestamp}}/g, ownerDetails.timestamp)
+        .replace(/{{ownerUUID}}/g, ownerDetails.uuid);
     } catch (error) {
       // Fallback to hardcoded template if file read fails
       const implementationStatus = this.getImplementationStatus();
@@ -934,10 +768,6 @@ export class DefaultRequirement implements Requirement {
     }
   }
 
-  /**
-   * Decode owner details from base64-encoded owner data
-   * This is a shared utility method for DRY template processing
-   */
   private decodeOwnerDetails(): { user: string, hostname: string, timestamp: string, uuid: string } {
     try {
       // Access owner from the full scenario JSON, not just the model part
@@ -964,49 +794,6 @@ export class DefaultRequirement implements Requirement {
       timestamp: 'unknown', 
       uuid: 'unknown'
     };
-  }
-
-  /**
-   * Static utility method to decode owner details from scenario data
-   * Shared utility for DRY template processing across views
-   */
-  public static decodeOwnerDetailsFromScenario(scenarioData: any): { user: string, hostname: string, timestamp: string, uuid: string } {
-    try {
-      if (scenarioData?.owner) {
-        // Decode base64 owner string
-        const ownerJson = Buffer.from(scenarioData.owner, 'base64').toString('utf-8');
-        const ownerObject = JSON.parse(ownerJson);
-        
-        return {
-          user: ownerObject.user || 'unknown',
-          hostname: ownerObject.hostname || 'unknown', 
-          timestamp: ownerObject.utcTimestamp || 'unknown',
-          uuid: ownerObject.uuid || 'unknown'
-        };
-      }
-    } catch (error) {
-      console.warn(`Failed to decode owner details: ${(error as Error).message}`);
-    }
-    
-    // Fallback values if decoding fails
-    return {
-      user: 'unknown',
-      hostname: 'unknown',
-      timestamp: 'unknown', 
-      uuid: 'unknown'
-    };
-  }
-
-  /**
-   * Static utility method to apply owner template replacements
-   * Shared utility for DRY template processing across views
-   */
-  public static applyOwnerTemplateReplacements(template: string, ownerDetails: { user: string, hostname: string, timestamp: string, uuid: string }): string {
-    return template
-      .replace(/{{ownerUser}}/g, ownerDetails.user)
-      .replace(/{{ownerHostname}}/g, ownerDetails.hostname)
-      .replace(/{{ownerTimestamp}}/g, ownerDetails.timestamp)
-      .replace(/{{ownerUUID}}/g, ownerDetails.uuid);
   }
 
   private getImplementationStatus(): string {
@@ -1128,12 +915,10 @@ export class DefaultRequirement implements Requirement {
         let implemented = false;
         let implementationStatus = 'pending';
         
-        let fullScenarioData = null;
         try {
           const scenarioPath = path.join(this.getRequirementsDirectory(), `${uuid}.scenario.json`);
           const scenarioContent = await fs.readFile(scenarioPath, 'utf-8');
           const scenario = JSON.parse(scenarioContent);
-          fullScenarioData = scenario; // Store the full scenario data including owner
           
           if (scenario.model) {
             implemented = scenario.model.implemented || false;
@@ -1146,8 +931,8 @@ export class DefaultRequirement implements Requirement {
           implemented = implementationStatus === 'completed';
         }
 
-        // Create requirement scenario object with full scenario data for DRY owner processing
-        const requirementObj: any = {
+        // Create requirement scenario object
+        requirements.push({
           uuid,
           title,
           name: title,
@@ -1155,16 +940,7 @@ export class DefaultRequirement implements Requirement {
           createdAt: new Date().toISOString(), // Fallback timestamp
           implemented,
           implementationStatus
-        };
-        
-        // Include full scenario data (including owner) for DRY template processing
-        if (fullScenarioData) {
-          requirementObj.owner = fullScenarioData.owner;
-          requirementObj.IOR = fullScenarioData.IOR;
-          requirementObj.model = fullScenarioData.model;
-        }
-        
-        requirements.push(requirementObj);
+        });
       } catch (error) {
         console.warn(`Failed to load requirement ${filename}: ${error}`);
       }
