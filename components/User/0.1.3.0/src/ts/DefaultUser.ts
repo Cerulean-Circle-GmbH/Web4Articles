@@ -57,7 +57,7 @@ export class DefaultUser implements User {
    * Convert to scenario for hibernation
    */
   toScenario(): Scenario {
-    return new Scenario({
+    return Scenario.from({
       IOR: {
         uuid: this.model.uuid || crypto.randomUUID(),
         component: 'User',

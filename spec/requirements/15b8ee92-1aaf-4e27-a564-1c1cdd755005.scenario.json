@@ -1,0 +1,21 @@
+{
+  "IOR": {
+    "uuid": "15b8ee92-1aaf-4e27-a564-1c1cdd755005",
+    "component": "Web4Requirement",
+    "version": "0.1.3.0"
+  },
+  "owner": "",
+  "model": {
+    "uuid": "15b8ee92-1aaf-4e27-a564-1c1cdd755005",
+    "name": "scenario-must-have-empty-constructor-and-init-method",
+    "title": "Scenario Must Have Empty Constructor and Init Method",
+    "description": "All Web4 components, including Scenario, must have an empty constructor and an init(scenario: Scenario) method. This enables consistent component lifecycle management and supports nested scenarios (scenarios containing hibernated scenarios). The empty constructor allows object creation without parameters, while init() handles initialization from scenario data.",
+    "status": "pending",
+    "priority": "medium",
+    "createdAt": "2025-08-27T21:00:06.823Z",
+    "updatedAt": "2025-08-27T21:00:06.823Z",
+    "completedAt": null,
+    "links": [],
+    "tags": []
+  }
+}
