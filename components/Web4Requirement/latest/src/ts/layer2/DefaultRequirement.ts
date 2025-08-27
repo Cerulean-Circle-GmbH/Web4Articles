@@ -3,7 +3,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { UnitIndexStorage } from '../../../../../Unit/latest/dist/ts/layer2/UnitIndexStorage.js';
-import { DefaultUser } from '../../../../../User/latest/dist/layer2/DefaultUser.js';
+import { DefaultUser } from '../../../../../User/latest/dist/ts/layer2/DefaultUser.js';
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
