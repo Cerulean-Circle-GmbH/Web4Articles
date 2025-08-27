@@ -7,9 +7,10 @@
 // @ts-ignore - Cross-component import
 import { Scenario } from '../../../../Scenario/0.1.3.0/dist/ts/Scenario.js';
 import { Unit } from './Unit.interface.js';
+import { UnitModel, UnitInput, UnitOutput, ExecutionRecord } from './UnitModel.interface.js';
 
 export class DefaultUnit implements Unit {
-  private model: any = {
+  private model: UnitModel = {
     uuid: '',
     name: '',
     description: '',
@@ -40,17 +41,17 @@ export class DefaultUnit implements Unit {
   /**
    * Execute unit logic
    */
-  async execute(input: any): Promise<any> {
+  async execute(input: UnitInput): Promise<UnitOutput> {
     if (this.model.state === 'uninitialized') {
       throw new Error('Unit not initialized');
     }
 
     // Record execution
-    const execution = {
+    const execution: ExecutionRecord = {
       timestamp: new Date().toISOString(),
       input: input,
-      output: null,
-      status: 'success'
+      output: null as unknown,
+      status: 'success' as const
     };
 
     try {
@@ -59,7 +60,7 @@ export class DefaultUnit implements Unit {
         unitName: this.model.name,
         processed: input,
         timestamp: execution.timestamp
-      } as any;
+      };
 
       this.model.executionHistory.push(execution);
       this.model.state = 'executed';
@@ -67,7 +68,7 @@ export class DefaultUnit implements Unit {
       return execution.output;
     } catch (error) {
       execution.status = 'failed';
-      execution.output = { error: (error as Error).message } as any;
+      execution.output = { error: (error as Error).message };
       this.model.executionHistory.push(execution);
       throw error;
     }
@@ -113,7 +114,7 @@ export class DefaultUnit implements Unit {
     return this.model.state;
   }
 
-  getExecutionHistory(): any[] {
+  getExecutionHistory(): ExecutionRecord[] {
     return [...this.model.executionHistory];
   }
 }

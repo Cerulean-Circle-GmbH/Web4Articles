@@ -1,0 +1,21 @@
+{
+  "IOR": {
+    "uuid": "c60001b7-aa3a-44ba-97f6-22cd1e148636",
+    "component": "Web4Requirement",
+    "version": "0.1.3.0"
+  },
+  "owner": "",
+  "model": {
+    "uuid": "c60001b7-aa3a-44ba-97f6-22cd1e148636",
+    "name": "prevent-any-type---use-proper-typescript-types",
+    "title": "Prevent Any Type - Use Proper TypeScript Types",
+    "description": "The 'any' type must be avoided wherever possible. All data should have proper TypeScript interfaces or types. For example, 'model: any' should be 'model: Model' with a defined Model interface. Use 'unknown' when type is truly unknown and add type guards. Exceptions only with documented justification.",
+    "status": "pending",
+    "priority": "medium",
+    "createdAt": "2025-08-27T20:47:12.731Z",
+    "updatedAt": "2025-08-27T20:47:12.732Z",
+    "completedAt": null,
+    "links": [],
+    "tags": []
+  }
+}

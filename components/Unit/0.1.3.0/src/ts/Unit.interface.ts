@@ -6,9 +6,10 @@
 
 // @ts-ignore - Cross-component import
 import { Scenario } from '../../../../Scenario/0.1.3.0/dist/ts/Scenario.js';
+import { UnitInput, UnitOutput } from './UnitModel.interface.js';
 
 export interface Unit {
   init(scenario: Scenario): this;
-  execute(input: any): Promise<any>;
+  execute(input: UnitInput): Promise<UnitOutput>;
   toScenario(): Scenario;
 }

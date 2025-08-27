@@ -7,9 +7,10 @@
 // @ts-ignore - Cross-component import
 import { Scenario } from '../../../../Scenario/0.1.3.0/dist/ts/Scenario.js';
 import { User } from './User.interface.js';
+import { UserModel, AuthCredentials, UserProfile, UserSettings } from './UserModel.interface.js';
 
 export class DefaultUser implements User {
-  private model: any = {
+  private model: UserModel = {
     uuid: '',
     username: '',
     email: '',
@@ -43,7 +44,7 @@ export class DefaultUser implements User {
   /**
    * Authenticate user
    */
-  async authenticate(credentials: any): Promise<boolean> {
+  async authenticate(credentials: AuthCredentials): Promise<boolean> {
     // Simple authentication logic
     if (credentials.username === this.model.username) {
       this.model.lastLogin = new Date().toISOString();
@@ -104,12 +105,12 @@ export class DefaultUser implements User {
     return this.model.permissions.includes(permission);
   }
 
-  updateProfile(updates: any): this {
+  updateProfile(updates: Partial<UserProfile>): this {
     this.model.profile = { ...this.model.profile, ...updates };
     return this;
   }
 
-  updateSettings(settings: any): this {
+  updateSettings(settings: Partial<UserSettings>): this {
     this.model.settings = { ...this.model.settings, ...settings };
     return this;
   }
@@ -128,7 +129,7 @@ export class DefaultUser implements User {
     return this;
   }
 
-  getInfo(): any {
+  getInfo(): Partial<UserModel> {
     return {
       uuid: this.model.uuid,
       username: this.model.username,

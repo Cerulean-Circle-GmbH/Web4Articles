@@ -5,8 +5,9 @@
  * All Web4 components use this for hibernation/resurrection.
  */
 
-import { ObjectIdentifier } from './ObjectIdentifier.interface.js';
-import { ScenarioData } from './ScenarioData.interface.js';
+import { ObjectIdentifier } from '../layer3/ObjectIdentifier.interface.js';
+import { ScenarioData } from '../layer3/ScenarioData.interface.js';
+import { ScenarioModel } from '../layer3/Model.interface.js';
 
 // For backward compatibility
 export type IOR = ObjectIdentifier;
@@ -14,7 +15,7 @@ export type IOR = ObjectIdentifier;
 export class Scenario {
   public readonly IOR: IOR;
   public readonly owner: string;
-  public readonly model: any;
+  public readonly model: ScenarioModel;
 
   constructor(data?: Partial<ScenarioData>) {
     if (data) {
@@ -65,7 +66,7 @@ export class Scenario {
   /**
    * Clone scenario with optional model updates
    */
-  clone(modelUpdates?: any): Scenario {
+  clone(modelUpdates?: Partial<ScenarioModel>): Scenario {
     return new Scenario({
       IOR: { ...this.IOR },
       owner: this.owner,
