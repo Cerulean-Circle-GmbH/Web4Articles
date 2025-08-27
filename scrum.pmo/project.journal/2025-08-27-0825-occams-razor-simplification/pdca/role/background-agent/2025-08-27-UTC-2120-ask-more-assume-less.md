@@ -1,13 +1,13 @@
-# 📋 **PDCA Cycle: Ask More, Assume Less - CMM4 Precision**
+# 📋 **PDCA Cycle: Occam's Razor is CMM4 Applied**
 
 **🗓️ Date:** 2025-08-27-UTC-2120  
-**🎯 Objective:** Establish "Ask More, Assume Less" as core CMM4 principle  
+**🎯 Objective:** Define CMM4 as questioning CMM3 with simpler solutions  
 
 **👤 Agent Role:** Background Agent → Process Improvement  
-**🚨 Issue:** Too many assumptions leading to implementation-fix cycles  
+**🚨 Issue:** Misunderstood CMM4 - it's about simplifying CMM3  
 
 **📎 Previous Commit:** c9da875 - 🧹 Remove JS files from src  
-**🔗 Web4 Requirement:** [Ask More Assume Less](../../../../spec/requirements.md/1c5c7aa3-418d-41a5-8e1d-40e2ad993326.requirement.md)
+**🔗 Web4 Requirement:** [Occam's Razor is CMM4](../../../../spec/requirements.md/1c5c7aa3-418d-41a5-8e1d-40e2ad993326.requirement.md)
 
 ---
 
@@ -20,40 +20,42 @@
 - [x] **All Clear!** Creating principle requirement
 
 ### **Requirement Created**
-- **1c5c7aa3-418d-41a5-8e1d-40e2ad993326**: Ask More Assume Less - Occam's Razor on CMM4
+- **1c5c7aa3-418d-41a5-8e1d-40e2ad993326**: Occam's Razor is CMM4 Applied
 
 ### **My Answer**
-Created requirement mandating clarifying questions over assumptions. Fixed RequirementCLI to use lowercase 'ior' attribute.
+CMM4 is about questioning CMM3 definitions with simpler ones. It's not just about asking questions - it's about challenging complexity with simplicity. Updated requirement to reflect this understanding.
 
-**Learning Applied:** Questions prevent wrong implementations.
+**Learning Applied:** CMM4 = Applying Occam's Razor to CMM3.
 
 ---
 
 ## **📋 PLAN**
 
-### **Problem Pattern**
+### **CMM4 Definition**
 
-**Recent Examples:**
-1. **Scenario Simplification**
-   - Assumed: Remove unitIndex completely
-   - Reality: Rename unitIndex to model
-   - Result: Had to fix PDCA and implementation
+**CMM4 = Occam's Razor Applied to CMM3:**
+- Question every CMM3 definition
+- Find simpler, shorter alternatives
+- Challenge existing complexity
+- Continuous improvement through simplification
 
-2. **Scenario as Unit**
-   - Assumed: Complex nested scenario handling
-   - Reality: Simple IOR references
-   - Result: Overcomplicated then simplified
+### **Examples of CMM4 in Action**
 
-3. **Type Safety**
-   - Assumed: Where to apply types
-   - Could have asked: Which specific types needed?
+1. **Scenario Structure**
+   - CMM3: Complex nested objects
+   - CMM4: Simple IOR references
 
-### **CMM4 Precision**
+2. **Component Lifecycle**
+   - CMM3: Various initialization patterns
+   - CMM4: Empty constructor + init() everywhere
 
-At CMM4 level:
-- ❌ Assumptions multiply errors
-- ✅ Questions clarify intent
-- ✅ Precision reduces rework
+3. **Type Definitions**
+   - CMM3: Many specific types
+   - CMM4: Model interface with unknown
+
+### **The Shift**
+
+From assuming complexity to questioning for simplicity.
 
 ---
 
@@ -61,42 +63,39 @@ At CMM4 level:
 
 ### **1. Core Principle**
 
-**"Ask More, Assume Less"**
-- When unclear → Ask
-- When ambiguous → Clarify
-- When choosing → Present options
+**"CMM4 = Question CMM3 with Simplicity"**
+- See complexity → Find simplicity
+- See lengthy → Make concise
+- See convoluted → Make elegant
 
-### **2. Implementation Pattern**
+### **2. CMM4 Process**
 
 ```markdown
-## Clarification Needed:
-
-1. **Interpretation A:** [Description]
-2. **Interpretation B:** [Description]
-
-Which approach should I take?
+1. Identify CMM3 definition/pattern
+2. Question: "Can this be simpler?"
+3. Apply Occam's Razor
+4. Propose simpler alternative
+5. Test if it still works
 ```
 
-### **3. Decision Points**
+### **3. Asking as CMM4**
 
-Present clear options:
+When implementing:
 ```markdown
-### Decision Required:
+CMM3 Understanding: [Complex interpretation]
+CMM4 Question: Is there a simpler way?
 
-**Option 1:** Simple approach
-- Pros: Quick, minimal
-- Cons: May need extension
+Option A: [Simple approach]
+Option B: [Keep complexity]
 
-**Option 2:** Complete approach
-- Pros: Handles all cases
-- Cons: More complex
-
-Please choose: 1 or 2?
+Which aligns with Occam's Razor?
 ```
 
-### **4. Applied Occam's Razor**
+### **4. The Meta-Application**
 
-The simplest solution to uncertainty is asking, not guessing.
+Even "Ask More, Assume Less" can be simplified:
+- CMM3: Long explanations about asking
+- CMM4: "Question complexity"
 
 ---
 
@@ -165,6 +164,6 @@ The simplest solution to uncertainty is asking, not guessing.
 
 ---
 
-**🎯 Ask More, Assume Less - The path to CMM4! 🤔✨**
+**🎯 CMM4: Question CMM3 with Occam's Razor! 🪒✨**
 
-**"The wisest implementation begins with the best questions."** 🎯✨
+**"The best improvement questions the need for complexity."** 🎯✨
