@@ -1,0 +1,50 @@
+{
+  "generated": "2025-08-27T22:31:53.3NZ",
+  "cmm_level": {
+    "current": 2,
+    "target": 4,
+    "description": "CMM Level 2 (Managed) - NEEDS IMPROVEMENT"
+  },
+  "summary": {
+    "total_tests": 9,
+    "passed_tests": 6,
+    "success_rate": 66,
+    "components_tested": 3,
+    "avg_build_time": 2.3,
+    "avg_install_time": 2.0
+  },
+  "components": [
+    {
+      "name": "Unit",
+      "auto_build": "FAIL",
+      "performance": "PASS", 
+      "compliance": 75,
+      "overall": "PARTIAL"
+    },
+    {
+      "name": "User",
+      "auto_build": "FAIL",
+      "performance": "PASS",
+      "compliance": 75, 
+      "overall": "PARTIAL"
+    },
+    {
+      "name": "Requirement", 
+      "auto_build": "FAIL",
+      "performance": "PASS",
+      "compliance": 75,
+      "overall": "PARTIAL"
+    }
+  ],
+  "improvement_areas": [
+    "Auto-build timeout issues",
+    "Help command detection",
+    "Cross-directory execution testing",
+    "Error message formatting validation"
+  ],
+  "files": {
+    "build_log": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/metrics/auto-build.log",
+    "validation_log": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/metrics/build-validation.log",
+    "dashboard": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/metrics/dashboard/index.html"
+  }
+}
