@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "d3190ece-605e-45a4-b78f-93ab5be2fa60",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDEwOjMwOjIxLjA2OVoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "d3190ece-605e-45a4-b78f-93ab5be2fa60",
+    "name": "Web4 Empty Constructor Principle",
+    "title": "Web4 Empty Constructor Principle",
+    "description": "All objects MUST have empty constructors with NO initialization parameters. Objects created empty, then configured via setters. Enables universal serialization, scenario-based testing, and object hibernation. Revolutionary departure from mainstream constructor parameter initialization."
+  },
+  "unitIndex": {
+    "uuid": "d3190ece-605e-45a4-b78f-93ab5be2fa60",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/d/3/1/9/0/d3190ece-605e-45a4-b78f-93ab5be2fa60.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/d3190ece-605e-45a4-b78f-93ab5be2fa60.scenario.json"
+    ],
+    "createdAt": "2025-08-26T10:30:21.090Z",
+    "updatedAt": "2025-08-26T10:30:21.090Z"
+  }
+}

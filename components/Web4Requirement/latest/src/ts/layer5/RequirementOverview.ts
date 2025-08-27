@@ -6,6 +6,7 @@
 import { DefaultMDView } from '../layer2/DefaultMDView.js';
 import { ViewContext, ViewResult } from '../layer3/View.js';
 import { RequirementScenario } from '../layer3/Requirement.js';
+import { DefaultRequirement } from '../layer2/DefaultRequirement.js';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -101,21 +102,33 @@ export class RequirementOverview extends DefaultMDView {
       const implementationStatus = this.getImplementationStatus(requirement);
       const statusCheckbox = implementationStatus === 'completed' ? 'x' : ' ';
       
-      return itemTemplate
+      // Decode owner details using shared utility method (DRY principle)
+      const ownerDetails = DefaultRequirement.decodeOwnerDetailsFromScenario(requirement);
+      
+      let processedTemplate = itemTemplate
         .replace(/{{title}}/g, requirement.title || requirement.name || 'Untitled')
         .replace(/{{filename}}/g, filename)
         .replace(/{{uuid}}/g, requirement.uuid || '')
         .replace(/{{statusCheckbox}}/g, statusCheckbox)
         .replace(/{{implementationStatus}}/g, implementationStatus);
+      
+      // Apply owner template replacements using shared utility method (DRY principle)
+      processedTemplate = DefaultRequirement.applyOwnerTemplateReplacements(processedTemplate, ownerDetails);
+      
+      return processedTemplate;
         
     } catch (error) {
-      // Fallback format if template fails
+      // Fallback format if template fails  
       const title = requirement.title || requirement.name || 'Untitled';
       const uuid = requirement.uuid || '';
       const filename = `${uuid}.requirement.md`;
       const statusCheckbox = requirement.implemented ? 'x' : ' ';
       
-      return `- [${statusCheckbox}] ${title} [requirement:uuid:${uuid}] ${filename}`;
+      // For fallback, try to include ownerTimestamp if available
+      const ownerDetails = DefaultRequirement.decodeOwnerDetailsFromScenario(requirement);
+      const ownerTimestamp = ownerDetails.timestamp !== 'unknown' ? ` ${ownerDetails.timestamp}` : '';
+      
+      return `- [${statusCheckbox}]${ownerTimestamp} ${title} [requirement:uuid:${uuid}] ${filename}`;
     }
   }
 

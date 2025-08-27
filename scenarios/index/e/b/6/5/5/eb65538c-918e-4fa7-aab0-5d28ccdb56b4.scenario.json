@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "eb65538c-918e-4fa7-aab0-5d28ccdb56b4",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDEwOjMxOjA4LjIxM1oiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "eb65538c-918e-4fa7-aab0-5d28ccdb56b4",
+    "name": "Web4 MDA Sphere Architecture",
+    "title": "Web4 MDA Sphere Architecture",
+    "description": "Architecture forms a bounded sphere, not layered planes. Spherical MDA with poles (onion star, service domain) and equator (format diversity). Service contracts create curvature until complete semantic consolidation. Replaces flat layered architectures."
+  },
+  "unitIndex": {
+    "uuid": "eb65538c-918e-4fa7-aab0-5d28ccdb56b4",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/e/b/6/5/5/eb65538c-918e-4fa7-aab0-5d28ccdb56b4.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/eb65538c-918e-4fa7-aab0-5d28ccdb56b4.scenario.json"
+    ],
+    "createdAt": "2025-08-26T10:31:08.225Z",
+    "updatedAt": "2025-08-26T10:31:08.225Z"
+  }
+}

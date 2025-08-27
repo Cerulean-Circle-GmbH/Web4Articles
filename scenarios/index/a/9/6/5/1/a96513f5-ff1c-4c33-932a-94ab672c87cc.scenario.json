@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "a96513f5-ff1c-4c33-932a-94ab672c87cc",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDE0OjExOjMxLjE5NloiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "a96513f5-ff1c-4c33-932a-94ab672c87cc",
+    "name": "Component Build Chain Recovery After Release/Dev Overwrite",
+    "title": "Component Build Chain Recovery After Release/Dev Overwrite",
+    "description": "After overwriting components from release/dev branch, fix missing TypeScript build configurations and restore the Unit → User → Web4Requirement dependency chain. User component was missing build script and tsconfig.json, blocking Web4Requirement tool execution."
+  },
+  "unitIndex": {
+    "uuid": "a96513f5-ff1c-4c33-932a-94ab672c87cc",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/a/9/6/5/1/a96513f5-ff1c-4c33-932a-94ab672c87cc.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/a96513f5-ff1c-4c33-932a-94ab672c87cc.scenario.json"
+    ],
+    "createdAt": "2025-08-26T14:11:31.210Z",
+    "updatedAt": "2025-08-26T14:11:31.210Z"
+  }
+}

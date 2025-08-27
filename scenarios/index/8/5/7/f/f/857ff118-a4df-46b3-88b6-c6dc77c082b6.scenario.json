@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "857ff118-a4df-46b3-88b6-c6dc77c082b6",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI1VDEzOjEwOjQwLjUzNFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "857ff118-a4df-46b3-88b6-c6dc77c082b6",
+    "name": "PDCA Documentation Standard - Complete Details in PDCA, Concise Chat with Links Only",
+    "title": "PDCA Documentation Standard - Complete Details in PDCA, Concise Chat with Links Only",
+    "description": "Chat output should be short and diligent with double links and decision only. All detailed implementation results, testing output, and comprehensive documentation must be in the PDCA document itself, not in chat responses."
+  },
+  "unitIndex": {
+    "uuid": "857ff118-a4df-46b3-88b6-c6dc77c082b6",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/8/5/7/f/f/857ff118-a4df-46b3-88b6-c6dc77c082b6.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/857ff118-a4df-46b3-88b6-c6dc77c082b6.scenario.json"
+    ],
+    "createdAt": "2025-08-25T13:10:40.550Z",
+    "updatedAt": "2025-08-25T13:10:40.550Z"
+  }
+}

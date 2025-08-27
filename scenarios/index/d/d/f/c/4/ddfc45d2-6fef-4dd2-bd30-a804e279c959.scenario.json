@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "ddfc45d2-6fef-4dd2-bd30-a804e279c959",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDEwOjMyOjA3Ljk2N1oiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "ddfc45d2-6fef-4dd2-bd30-a804e279c959",
+    "name": "Web4 Radical OOP Without Functions",
+    "title": "Web4 Radical OOP Without Functions",
+    "description": "NO functions outside classes - everything is a method. Pure OOP where every operation belongs to a class. Complete encapsulation and semantic clarity. Replaces mainstream mix of functions, classes, and procedures."
+  },
+  "unitIndex": {
+    "uuid": "ddfc45d2-6fef-4dd2-bd30-a804e279c959",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/d/d/f/c/4/ddfc45d2-6fef-4dd2-bd30-a804e279c959.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/ddfc45d2-6fef-4dd2-bd30-a804e279c959.scenario.json"
+    ],
+    "createdAt": "2025-08-26T10:32:07.993Z",
+    "updatedAt": "2025-08-26T10:32:07.993Z"
+  }
+}
