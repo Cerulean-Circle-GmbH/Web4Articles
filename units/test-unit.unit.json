@@ -1,0 +1,94 @@
+{
+  "unitId": "test-unit",
+  "unitName": "Test Unit",
+  "unitDescription": "A test unit for validation",
+  "unitVersion": "1.0.0",
+  "currentState": "initialized",
+  "lifecyclePhase": "implementation",
+  "businessLogic": {
+    "operationType": "compute",
+    "algorithmDescription": "Default compute algorithm",
+    "businessRules": [],
+    "validationRules": [],
+    "transformationRules": []
+  },
+  "capabilities": [
+    {
+      "name": "compute-capability",
+      "description": "Capability for compute operations",
+      "inputTypes": [
+        "any"
+      ],
+      "outputTypes": [
+        "any"
+      ],
+      "dependencies": [],
+      "qualityOfService": {
+        "maxExecutionTime": 5000,
+        "maxMemoryUsage": 100,
+        "reliability": 0.95,
+        "availability": 0.99,
+        "consistency": "strong"
+      }
+    }
+  ],
+  "inputInterface": {
+    "name": "default-input",
+    "version": "1.0.0",
+    "parameters": [
+      {
+        "name": "data",
+        "type": {
+          "name": "any",
+          "schema": {},
+          "constraints": []
+        },
+        "required": true,
+        "description": "Input data for processing",
+        "validation": []
+      }
+    ],
+    "returnType": {
+      "name": "any",
+      "schema": {},
+      "constraints": []
+    },
+    "errorTypes": []
+  },
+  "outputInterface": {
+    "name": "default-output",
+    "version": "1.0.0",
+    "parameters": [],
+    "returnType": {
+      "name": "any",
+      "schema": {},
+      "constraints": []
+    },
+    "errorTypes": []
+  },
+  "executionContext": {
+    "environmentType": "nodejs",
+    "resourceLimits": {
+      "maxMemoryMB": 100,
+      "maxExecutionTimeMs": 5000,
+      "maxNetworkCallsPerSecond": 10,
+      "maxDiskUsageMB": 10
+    },
+    "securityContext": {
+      "permissions": [
+        "read",
+        "write"
+      ],
+      "securityLevel": "internal",
+      "encryptionRequired": false
+    },
+    "networkContext": {
+      "allowedHosts": [
+        "*"
+      ],
+      "networkZone": "internal",
+      "timeoutMs": 3000
+    }
+  },
+  "timestamp": "2025-08-27T22:00:42.992Z"
+}

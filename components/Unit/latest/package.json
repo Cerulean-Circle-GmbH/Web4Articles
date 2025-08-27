@@ -5,6 +5,15 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./cli": "./dist/ts/layer5/UnitCLI.js",
+    "./interface": "./dist/ts/layer3/Unit.js",
+    "./types": "./dist/ts/layer3/SimpleTypes.js"
+  },
+  "bin": {
+    "unit-cli": "./dist/ts/layer5/UnitCLI.js"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
