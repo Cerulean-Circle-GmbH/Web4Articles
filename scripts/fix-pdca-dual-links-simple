@@ -1,0 +1,139 @@
+#!/bin/bash
+# Simple PDCA Dual Link Fixer - Fixed Version
+
+set -e
+
+# Find project root
+find_project_root() {
+    local current_dir="$(pwd)"
+    while [[ "$current_dir" != "/" ]]; do
+        if [[ -f "$current_dir/.git/config" ]] || [[ -d "$current_dir/.git" ]]; then
+            echo "$current_dir"
+            return 0
+        fi
+        current_dir="$(dirname "$current_dir")"
+    done
+    echo "Error: Not in a git repository" >&2
+    exit 1
+}
+
+PROJECT_ROOT=$(find_project_root)
+
+echo "🔧 Web4Articles PDCA Dual Link Fixer"
+echo "🎯 Project Root: $PROJECT_ROOT"
+
+# Function to calculate relative path from document to project root
+calculate_relative_path() {
+    local doc_path="$1"
+    local doc_dir="$(dirname "$doc_path")"
+    
+    # Get absolute path to document directory
+    doc_dir="$(realpath "$doc_dir")"
+    
+    # Count directory depth from project root
+    local relative_to_root="${doc_dir#$PROJECT_ROOT/}"
+    
+    # Handle case where document is in project root
+    if [[ "$relative_to_root" == "$doc_dir" ]] || [[ -z "$relative_to_root" ]]; then
+        echo "."
+        return
+    fi
+    
+    # Count actual directory levels
+    local depth=0
+    IFS='/' read -ra ADDR <<< "$relative_to_root"
+    for component in "${ADDR[@]}"; do
+        if [[ -n "$component" ]]; then
+            depth=$((depth + 1))
+        fi
+    done
+    
+    # Build relative path
+    local rel_path=""
+    for ((i=0; i<depth; i++)); do
+        rel_path="../$rel_path"
+    done
+    
+    # Remove trailing slash
+    rel_path="${rel_path%/}"
+    echo "$rel_path"
+}
+
+# Fix a single PDCA file
+fix_pdca_file() {
+    local pdca_file="$1"
+    local backup_file="${pdca_file}.bak"
+    
+    echo "📄 Processing: $pdca_file"
+    
+    # Create backup
+    cp "$pdca_file" "$backup_file"
+    
+    # Calculate relative path
+    local rel_path=$(calculate_relative_path "$pdca_file")
+    if [[ -z "$rel_path" ]]; then
+        rel_path="."
+    fi
+    
+    echo "   📍 Relative path to project root: $rel_path"
+    
+    # Create temporary file
+    local temp_file=$(mktemp)
+    local changes_made=0
+    
+    # Process line by line - simple approach
+    while IFS= read -r line; do
+        # Look for dual link pattern with simple grep/sed
+        if echo "$line" | grep -q '\[GitHub\].*| \[.*\](\.\.'; then
+            # Extract the path part after the last ](
+            local new_line="$line"
+            
+            # Replace paths that have too many ../
+            if echo "$line" | grep -q '../../../../../../../'; then
+                new_line=$(echo "$line" | sed "s|../../../../../../../|$rel_path/|g")
+                changes_made=$((changes_made + 1))
+                echo "   ✅ Fixed path: 7 levels → $rel_path"
+            fi
+            
+            echo "$new_line" >> "$temp_file"
+        else
+            echo "$line" >> "$temp_file"
+        fi
+    done < "$pdca_file"
+    
+    # Replace file if changes made
+    if [[ $changes_made -gt 0 ]]; then
+        mv "$temp_file" "$pdca_file"
+        echo "   ✅ Fixed $changes_made dual links"
+        rm "$backup_file"
+        return 0
+    else
+        rm "$temp_file" "$backup_file"
+        echo "   ℹ️  No dual links found to fix"
+        return 1
+    fi
+}
+
+# Main execution
+main() {
+    local target="${1:-}"
+    
+    if [[ -z "$target" ]]; then
+        echo "Usage: $0 <pdca-file>"
+        echo "Example: $0 path/to/file.md"
+        exit 1
+    fi
+    
+    if [[ ! -f "$target" ]]; then
+        echo "❌ File not found: $target"
+        exit 1
+    fi
+    
+    if fix_pdca_file "$target"; then
+        echo "✅ Successfully fixed dual links in: $target"
+    else
+        echo "ℹ️  No changes needed in: $target"
+    fi
+}
+
+main "$@"

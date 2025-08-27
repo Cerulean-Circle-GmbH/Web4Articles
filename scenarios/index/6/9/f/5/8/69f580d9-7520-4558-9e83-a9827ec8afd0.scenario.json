@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "69f580d9-7520-4558-9e83-a9827ec8afd0",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDEwOjMwOjQzLjAxM1oiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "69f580d9-7520-4558-9e83-a9827ec8afd0",
+    "name": "Web4 IOR Interoperable Object Reference Architecture",
+    "title": "Web4 IOR Interoperable Object Reference Architecture",
+    "description": "Objects referenced by IORs, not direct memory pointers. IOR-based references enabling distributed object networks with true location transparency and universal object addressing. Replaces mainstream direct object references and dependency injection."
+  },
+  "unitIndex": {
+    "uuid": "69f580d9-7520-4558-9e83-a9827ec8afd0",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/6/9/f/5/8/69f580d9-7520-4558-9e83-a9827ec8afd0.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/69f580d9-7520-4558-9e83-a9827ec8afd0.scenario.json"
+    ],
+    "createdAt": "2025-08-26T10:30:43.026Z",
+    "updatedAt": "2025-08-26T10:30:43.026Z"
+  }
+}

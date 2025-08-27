@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "21ce7e72-9b0a-428d-8875-bc2720f35386",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI1VDEzOjI4OjQ3LjA1M1oiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "21ce7e72-9b0a-428d-8875-bc2720f35386",
+    "name": "User Component Build Process Cleanup",
+    "title": "User Component Build Process Cleanup",
+    "description": "Fix build process to ensure JS files only exist in dist folder, never in src/ts. Remove any JS files from src/ts directories and fix TypeScript compilation."
+  },
+  "unitIndex": {
+    "uuid": "21ce7e72-9b0a-428d-8875-bc2720f35386",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/2/1/c/e/7/21ce7e72-9b0a-428d-8875-bc2720f35386.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/21ce7e72-9b0a-428d-8875-bc2720f35386.scenario.json"
+    ],
+    "createdAt": "2025-08-25T13:28:47.066Z",
+    "updatedAt": "2025-08-25T13:28:47.066Z"
+  }
+}

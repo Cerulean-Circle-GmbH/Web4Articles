@@ -24,9 +24,6 @@
   "author": "Web4 Architecture Team",
   "license": "MIT",
   "dependencies": {
-    "@web4/core": "^0.1.0",
-    "@web4/ior": "^0.1.0",
-    "@web4/scenario": "^0.1.0"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
