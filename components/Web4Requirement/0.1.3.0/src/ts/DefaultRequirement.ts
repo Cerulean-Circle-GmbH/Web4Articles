@@ -48,7 +48,7 @@ export class DefaultRequirement implements Requirement {
    */
   toScenario(): Scenario {
     return Scenario.from({
-      IOR: {
+      ior: {
         uuid: this.model.uuid || crypto.randomUUID(),
         component: 'Web4Requirement',
         version: '0.1.3.0'

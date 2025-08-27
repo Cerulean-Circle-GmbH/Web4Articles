@@ -58,7 +58,7 @@ export class DefaultUser implements User {
    */
   toScenario(): Scenario {
     return Scenario.from({
-      IOR: {
+      ior: {
         uuid: this.model.uuid || crypto.randomUUID(),
         component: 'User',
         version: '0.1.3.0'

@@ -3,23 +3,26 @@
  * 
  * The simplest possible structure for object state persistence.
  * All Web4 components use this for hibernation/resurrection.
+ * Scenarios are themselves Units that can be executed.
  */
 
 import { ObjectIdentifier } from '../layer3/ObjectIdentifier.interface.js';
 import { ScenarioData } from '../layer3/ScenarioData.interface.js';
 import { ScenarioModel } from '../layer3/Model.interface.js';
+// @ts-ignore - Cross-component import
+import { Unit, UnitInput, UnitOutput } from '../../../../../Unit/0.1.3.0/dist/ts/index.js';
 
 // For backward compatibility
 export type IOR = ObjectIdentifier;
 
-export class Scenario {
-  public IOR: IOR;
+export class Scenario implements Unit {
+  public ior: IOR;  // lowercase attribute, uppercase type
   public owner: string;
   public model: ScenarioModel;
 
   constructor() {
     // Empty constructor - minimal initialization
-    this.IOR = { uuid: '', component: '', version: '' };
+    this.ior = { uuid: '', component: 'Scenario', version: '0.1.3.0' };
     this.owner = '';
     this.model = {};
   }
@@ -29,48 +32,35 @@ export class Scenario {
    */
   init(scenario: Scenario | ScenarioData): this {
     // Initialize from scenario or data
-    this.IOR = scenario.IOR || { uuid: '', component: '', version: '' };
+    this.ior = scenario.ior || { uuid: '', component: 'Scenario', version: '0.1.3.0' };
     this.owner = scenario.owner || '';
     this.model = scenario.model || {};
     
-    // Process nested scenarios
-    this.processNestedScenarios(this.model);
+    // No special processing - IORs in model are just references
     
     return this;
   }
 
   /**
-   * Process nested scenarios recursively
+   * Execute scenario - validates and returns state
    */
-  private processNestedScenarios(model: ScenarioModel): void {
-    for (const key in model) {
-      const value = model[key];
-      if (this.isScenarioData(value)) {
-        // Create and init nested scenario
-        const nested = new Scenario();
-        nested.init(value as ScenarioData);
-        model[key] = nested;
-      } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-        // Recurse into objects (but not arrays)
-        this.processNestedScenarios(value as ScenarioModel);
-      }
-    }
+  async execute(input: UnitInput): Promise<UnitOutput> {
+    const validation = this.validate();
+    
+    return {
+      valid: validation,
+      ior: this.ior,
+      owner: this.owner,
+      modelKeys: Object.keys(this.model),
+      input: input
+    };
   }
 
   /**
-   * Check if object looks like scenario data
+   * Convert to scenario (self-reference as scenarios are scenarios)
    */
-  private isScenarioData(obj: unknown): boolean {
-    if (typeof obj !== 'object' || obj === null) return false;
-    const data = obj as any;
-    return (
-      data.IOR && 
-      typeof data.IOR === 'object' &&
-      'uuid' in data.IOR &&
-      'component' in data.IOR &&
-      'owner' in data &&
-      'model' in data
-    );
+  toScenario(): Scenario {
+    return this;
   }
 
   /**
@@ -79,10 +69,9 @@ export class Scenario {
   static from(data?: Partial<ScenarioData>): Scenario {
     const scenario = new Scenario();
     if (data) {
-      scenario.IOR = data.IOR || scenario.IOR;
+      scenario.ior = data.ior || scenario.ior;
       scenario.owner = data.owner || scenario.owner;
       scenario.model = data.model || scenario.model;
-      scenario.processNestedScenarios(scenario.model);
     }
     return scenario;
   }
@@ -107,38 +96,14 @@ export class Scenario {
   }
 
   /**
-   * Get scenario as plain object (converting nested scenarios)
+   * Get scenario as plain object
    */
   toObject(): ScenarioData {
-    const obj: ScenarioData = {
-      IOR: this.IOR,
+    return {
+      ior: this.ior,
       owner: this.owner,
-      model: this.flattenModel(this.model)
+      model: this.model
     };
-    return obj;
-  }
-
-  /**
-   * Flatten model by converting nested Scenario instances to data
-   */
-  private flattenModel(model: ScenarioModel): ScenarioModel {
-    const flattened: ScenarioModel = {};
-    
-    for (const key in model) {
-      const value = model[key];
-      if (value instanceof Scenario) {
-        // Convert nested scenario to data
-        flattened[key] = value.toObject();
-      } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-        // Recurse into objects
-        flattened[key] = this.flattenModel(value as ScenarioModel);
-      } else {
-        // Copy primitive values and arrays as-is
-        flattened[key] = value;
-      }
-    }
-    
-    return flattened;
   }
 
   /**
@@ -147,7 +112,7 @@ export class Scenario {
   clone(modelUpdates?: Partial<ScenarioModel>): Scenario {
     const cloned = new Scenario();
     cloned.init({
-      IOR: { ...this.IOR },
+      ior: { ...this.ior },
       owner: this.owner,
       model: modelUpdates ? { ...this.model, ...modelUpdates } : { ...this.model }
     });
@@ -159,10 +124,10 @@ export class Scenario {
    */
   validate(): boolean {
     return !!(
-      this.IOR && 
-      this.IOR.uuid && 
-      this.IOR.component && 
-      this.IOR.version &&
+      this.ior && 
+      this.ior.uuid && 
+      this.ior.component && 
+      this.ior.version &&
       this.owner
     );
   }
@@ -171,6 +136,6 @@ export class Scenario {
    * Get scenario summary for debugging
    */
   toString(): string {
-    return `Scenario(${this.IOR.component}:${this.IOR.version}:${this.IOR.uuid})`;
+    return `Scenario(${this.ior.component}:${this.ior.version}:${this.ior.uuid})`;
   }
 }

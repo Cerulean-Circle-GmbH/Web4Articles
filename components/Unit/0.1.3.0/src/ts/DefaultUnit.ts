@@ -32,7 +32,7 @@ export class DefaultUnit implements Unit {
     }
     
     // Restore complete model from scenario
-    this.model = { ...scenario.model };
+    this.model = scenario.model as unknown as UnitModel;
     this.model.state = 'initialized';
     
     return this;
@@ -65,7 +65,7 @@ export class DefaultUnit implements Unit {
       this.model.executionHistory.push(execution);
       this.model.state = 'executed';
 
-      return execution.output;
+      return execution.output as UnitOutput;
     } catch (error) {
       execution.status = 'failed';
       execution.output = { error: (error as Error).message };
@@ -79,7 +79,7 @@ export class DefaultUnit implements Unit {
    */
   toScenario(): Scenario {
     return Scenario.from({
-      IOR: {
+      ior: {
         uuid: this.model.uuid || crypto.randomUUID(),
         component: 'Unit',
         version: '0.1.3.0'

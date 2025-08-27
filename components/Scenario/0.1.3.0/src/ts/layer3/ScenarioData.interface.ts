@@ -8,7 +8,7 @@ import { ObjectIdentifier } from './ObjectIdentifier.interface.js';
 import { ScenarioModel } from './Model.interface.js';
 
 export interface ScenarioData {
-  IOR: ObjectIdentifier;
+  ior: ObjectIdentifier;  // lowercase attribute name
   owner: string;
   model: ScenarioModel;
 }
