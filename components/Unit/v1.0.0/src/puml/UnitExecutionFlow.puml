@@ -1,0 +1,80 @@
+@startuml UnitExecutionFlow
+!theme plain
+skinparam backgroundColor White
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 10
+
+title Web4 Unit Execution Flow with Evidence Collection
+
+participant "Client" as Client
+participant "Unit" as Unit
+participant "Business Logic" as BL
+participant "Evidence Collector" as Evidence
+participant "Scenario Manager" as Scenario
+
+== Unit Initialization (Web4 Pattern) ==
+Client -> Unit: new Unit()
+note right: Empty constructor - Web4 pattern
+Client -> Unit: init(unitScenario)
+Unit -> Scenario: loadFromScenario(scenario)
+Unit -> Unit: setState(INITIALIZED)
+
+== Unit Execution ==
+Client -> Unit: execute(input)
+Unit -> Unit: setState(EXECUTING)
+Unit -> Evidence: startExecutionTrace(executionId)
+
+Unit -> BL: executeBusinessLogic(input)
+BL -> BL: determineOperationType()
+
+alt Transform Operation
+  BL -> BL: executeTransformation(input)
+else Validate Operation  
+  BL -> BL: executeValidation(input)
+else Compute Operation
+  BL -> BL: executeComputation(input)
+else Coordinate Operation
+  BL -> BL: executeCoordination(input)
+end
+
+BL -> Unit: return result
+Unit -> Evidence: captureExecutionEvidence(result)
+Unit -> Unit: setState(COMPLETED)
+
+Unit -> Client: return UnitOutput{result, metadata, evidence}
+
+== Unit Hibernation (Web4 Pattern) ==
+Client -> Unit: hibernate()
+Unit -> Scenario: toScenario()
+Scenario -> Unit: return UnitScenario
+Unit -> Unit: setState(HIBERNATED)
+Unit -> Client: return UnitScenario
+
+== Unit Coordination ==
+Client -> Unit: coordinate(targetIOR, coordinationScenario)
+Unit -> targetIOR: resolve()
+targetIOR -> Unit: return targetUnit
+Unit -> targetUnit: executeCoordinationProtocol()
+targetUnit -> Unit: return coordinationSteps
+Unit -> Evidence: captureCoordinationEvidence()
+Unit -> Client: return CoordinationResult
+
+note over Unit, Evidence
+  **Evidence Collection:**
+  - Complete execution trace
+  - Resource usage metrics  
+  - Input/Output hashes
+  - Coordination evidence
+  - Error recovery traces
+end note
+
+note over Unit, Scenario
+  **Web4 Compliance:**
+  - Empty constructor pattern
+  - Scenario-based initialization
+  - Complete state hibernation
+  - IOR-based references
+  - Evidence-based execution
+end note
+
+@enduml
