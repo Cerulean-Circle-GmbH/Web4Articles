@@ -1,4 +1,4 @@
-[Back to PDCA Process Improvements](./pdca.process.improvements/) | [CMMI Understanding](./understanding.CMMI.md)
+[Back to PDCA Process Improvements](./pdca.process.improvements/) | [CMMI Understanding](./PDCA.understanding.CMMI.md) | [How to Decide](./PDCA.howto.decide.md) | [Template](./template.md)
 
 # 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.5**
 
