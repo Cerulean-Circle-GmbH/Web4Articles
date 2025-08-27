@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "33f39ed0-76f3-4940-9013-fb389990f776",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI3VDA2OjM0OjIyLjY4MloiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "33f39ed0-76f3-4940-9013-fb389990f776",
+    "name": "ONCE Kernel Foundation",
+    "title": "ONCE Kernel Foundation",
+    "description": "Universal Object Network Communication Engine as foundation. Single ONCE kernel handling all object communication ('ONCE and FOR ALL'). This eliminates integration complexity with one universal communication mechanism, replacing mainstream multiple messaging/communication frameworks."
+  },
+  "unitIndex": {
+    "uuid": "33f39ed0-76f3-4940-9013-fb389990f776",
+    "indexPath": "/workspace/scenarios/index/3/3/f/3/9/33f39ed0-76f3-4940-9013-fb389990f776.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/33f39ed0-76f3-4940-9013-fb389990f776.scenario.json"
+    ],
+    "createdAt": "2025-08-27T06:34:22.687Z",
+    "updatedAt": "2025-08-27T06:34:22.687Z"
+  }
+}

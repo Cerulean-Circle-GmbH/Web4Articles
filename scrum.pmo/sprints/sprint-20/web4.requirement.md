@@ -9,61 +9,61 @@ Document the revolutionary Web4 methodology principles that fundamentally differ
 ## Core Paradigm Shifts
 
 ### 1. Empty Constructor Principle
-- [ ] **[requirement:uuid:web4-001-empty-constructors]** All objects MUST have empty constructors - NO initialization parameters
+- [ ] **[requirement:uuid:fe093f35-f143-4c54-8c64-b11f9f04443d]** All objects MUST have empty constructors - NO initialization parameters
   - **Mainstream:** Objects initialized with constructor parameters
   - **Web4:** Objects created empty, then configured via setters
   - **Why:** Enables universal serialization, scenario-based testing, and object hibernation
 
 ### 2. Scenario-First Development
-- [ ] **[requirement:uuid:web4-002-scenario-objects]** Every object instance is a scenario that can be hibernated/resurrected
+- [ ] **[requirement:uuid:c3c960a6-5686-4658-8a55-6e2296eb419e]** Every object instance is a scenario that can be hibernated/resurrected
   - **Mainstream:** Objects as runtime entities with transient state
   - **Web4:** Objects as persistent scenarios with complete state preservation
   - **Why:** All formats (CSV/JSON/XML/Database) become semantically identical hibernation mechanisms
 
 ### 3. IOR (Interoperable Object Reference) Architecture
-- [ ] **[requirement:uuid:web4-003-ior-references]** Objects referenced by IORs, not direct memory pointers
+- [ ] **[requirement:uuid:7733f8b8-d12f-4cbb-b1d7-6f42ed0a540b]** Objects referenced by IORs, not direct memory pointers
   - **Mainstream:** Direct object references and dependency injection
   - **Web4:** IOR-based references enabling distributed object networks
   - **Why:** True location transparency and universal object addressing
 
 ### 4. Semantic Invariants Over Format Wars
-- [ ] **[requirement:uuid:web4-004-semantic-invariants]** Semantic equivalence resolves all format debates
+- [ ] **[requirement:uuid:51ccc6fd-2438-47a3-9f6f-dd897694525d]** Semantic equivalence resolves all format debates
   - **Mainstream:** Endless format wars (JSON vs XML vs YAML vs...)
   - **Web4:** Recognition that all formats hibernate object instances - format becomes irrelevant
   - **Why:** Ends Babylon problem - semantic invariants make formats interchangeable
 
 ### 5. MDA Sphere Architecture
-- [ ] **[requirement:uuid:web4-005-mda-sphere]** Architecture forms a bounded sphere, not layered planes
+- [ ] **[requirement:uuid:765036e9-d3f9-410a-9cb8-3c36d030782c]** Architecture forms a bounded sphere, not layered planes
   - **Mainstream:** Flat layered architectures (presentation, business, data)
   - **Web4:** Spherical MDA with poles (onion star, service domain) and equator (format diversity)
   - **Why:** Service contracts create curvature until complete semantic consolidation
 
 ### 6. Business Processes as Git Transactions
-- [ ] **[requirement:uuid:web4-006-git-transactions]** Business processes implemented as Git-versioned transaction chains
+- [ ] **[requirement:uuid:5a5fecd1-3507-4501-a362-b9640e88e18c]** Business processes implemented as Git-versioned transaction chains
   - **Mainstream:** Database transactions with ACID properties
   - **Web4:** Git-based transaction chains with atomic rollback per step OR overall
   - **Why:** Complete audit trail, time travel debugging, and granular rollback capability
 
 ### 7. ONCE Kernel Foundation
-- [ ] **[requirement:uuid:web4-007-once-kernel]** Universal Object Network Communication Engine as foundation
+- [ ] **[requirement:uuid:33f39ed0-76f3-4940-9013-fb389990f776]** Universal Object Network Communication Engine as foundation
   - **Mainstream:** Multiple messaging/communication frameworks
   - **Web4:** Single ONCE kernel handling all object communication ("ONCE and FOR ALL")
   - **Why:** Eliminates integration complexity - one universal communication mechanism
 
 ### 8. 6-Hop Traceability Graph
-- [ ] **[requirement:uuid:web4-008-traceability-graph]** Fixed 6-hop traceability from prose to units
+- [ ] **[requirement:uuid:c6fc2fce-babb-410d-be7e-3e39d362bb28]** Fixed 6-hop traceability from prose to units
   - **Mainstream:** Variable-depth traceability with gaps
   - **Web4:** Prose → Requirements → Tests → Features → Components → Versions → Units
   - **Why:** Complete semantic closure and guaranteed requirement coverage
 
 ### 9. Radical OOP Without Functions
-- [ ] **[requirement:uuid:web4-009-no-functions]** NO functions outside classes - everything is a method
+- [ ] **[requirement:uuid:ec4234b0-2615-4b6a-a8b1-64d4c2e5208d]** NO functions outside classes - everything is a method
   - **Mainstream:** Mix of functions, classes, and procedures
   - **Web4:** Pure OOP where every operation belongs to a class
   - **Why:** Complete encapsulation and semantic clarity
 
 ### 10. The 42 Architectural Answer
-- [ ] **[requirement:uuid:web4-010-tla-formula]** TLA = MDAv4 + EAMv4 + SOAv4 based on Web4
+- [ ] **[requirement:uuid:153aa736-f519-48c5-95ef-19e0ba9c372e]** TLA = MDAv4 + EAMv4 + SOAv4 based on Web4
   - **Mainstream:** Endless architectural evolution and framework churn
   - **Web4:** The Last Architecture - finite science of all possible information systems
   - **Why:** Architectural singularity achieved - no more architectural evolution needed
@@ -102,12 +102,12 @@ Document the revolutionary Web4 methodology principles that fundamentally differ
 ## Implementation Requirements
 
 ### Essential Components
-- [ ] **[requirement:uuid:web4-impl-001]** ONCE kernel implementation with IOR support
-- [ ] **[requirement:uuid:web4-impl-002]** Universal hibernation engine for all formats
-- [ ] **[requirement:uuid:web4-impl-003]** MDA sphere geometry engine with curvature calculation
-- [ ] **[requirement:uuid:web4-impl-004]** Git-based transaction chain manager
-- [ ] **[requirement:uuid:web4-impl-005]** Semantic invariant validator
-- [ ] **[requirement:uuid:web4-impl-006]** 6-hop traceability graph implementation
+- [ ] **[requirement:uuid:7e3a05c7-ff51-4219-8053-c4dc986e0093]** ONCE kernel implementation with IOR support
+- [ ] **[requirement:uuid:1d02823d-3078-4916-a417-27e34e470701]** Universal hibernation engine for all formats
+- [ ] **[requirement:uuid:c4d31c74-cdcf-49e0-b648-5efd8154e454]** MDA sphere geometry engine with curvature calculation
+- [ ] **[requirement:uuid:ea8c1982-a6bd-4a5a-854e-ed28fe22329e]** Git-based transaction chain manager
+- [ ] **[requirement:uuid:cad23aef-2630-4ae0-986f-375564368c7a]** Semantic invariant validator
+- [ ] **[requirement:uuid:0872a216-b6ab-4a0d-b572-3e70a07323d0]** 6-hop traceability graph implementation
 
 ### Acceptance Criteria
 - Empty constructors enforced by framework

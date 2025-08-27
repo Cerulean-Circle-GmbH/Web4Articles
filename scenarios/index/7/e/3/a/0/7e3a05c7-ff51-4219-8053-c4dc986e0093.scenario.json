@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "7e3a05c7-ff51-4219-8053-c4dc986e0093",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI3VDA2OjM0OjUyLjc0NVoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "7e3a05c7-ff51-4219-8053-c4dc986e0093",
+    "name": "ONCE Kernel Implementation",
+    "title": "ONCE Kernel Implementation",
+    "description": "ONCE kernel implementation with IOR support. Essential component for Web4 architecture providing universal object communication and interoperable object references."
+  },
+  "unitIndex": {
+    "uuid": "7e3a05c7-ff51-4219-8053-c4dc986e0093",
+    "indexPath": "/workspace/scenarios/index/7/e/3/a/0/7e3a05c7-ff51-4219-8053-c4dc986e0093.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/7e3a05c7-ff51-4219-8053-c4dc986e0093.scenario.json"
+    ],
+    "createdAt": "2025-08-27T06:34:52.750Z",
+    "updatedAt": "2025-08-27T06:34:52.750Z"
+  }
+}

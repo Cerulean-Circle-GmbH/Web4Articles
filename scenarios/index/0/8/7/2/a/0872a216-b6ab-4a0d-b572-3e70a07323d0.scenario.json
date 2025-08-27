@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "0872a216-b6ab-4a0d-b572-3e70a07323d0",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI3VDA2OjM1OjA5LjQ1NVoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "0872a216-b6ab-4a0d-b572-3e70a07323d0",
+    "name": "Traceability Graph Implementation",
+    "title": "Traceability Graph Implementation",
+    "description": "6-hop traceability graph implementation. Implements the complete traceability chain from prose to units with verification of semantic closure and requirement coverage at each hop."
+  },
+  "unitIndex": {
+    "uuid": "0872a216-b6ab-4a0d-b572-3e70a07323d0",
+    "indexPath": "/workspace/scenarios/index/0/8/7/2/a/0872a216-b6ab-4a0d-b572-3e70a07323d0.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/0872a216-b6ab-4a0d-b572-3e70a07323d0.scenario.json"
+    ],
+    "createdAt": "2025-08-27T06:35:09.459Z",
+    "updatedAt": "2025-08-27T06:35:09.459Z"
+  }
+}

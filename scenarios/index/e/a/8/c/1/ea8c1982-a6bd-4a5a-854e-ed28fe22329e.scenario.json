@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "ea8c1982-a6bd-4a5a-854e-ed28fe22329e",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI3VDA2OjM1OjA5LjMzMloiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "ea8c1982-a6bd-4a5a-854e-ed28fe22329e",
+    "name": "Git Transaction Chain Manager",
+    "title": "Git Transaction Chain Manager",
+    "description": "Git-based transaction chain manager. Implements business processes as Git-versioned transactions with compensation handlers, supporting step-by-step or complete transaction rollback."
+  },
+  "unitIndex": {
+    "uuid": "ea8c1982-a6bd-4a5a-854e-ed28fe22329e",
+    "indexPath": "/workspace/scenarios/index/e/a/8/c/1/ea8c1982-a6bd-4a5a-854e-ed28fe22329e.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/ea8c1982-a6bd-4a5a-854e-ed28fe22329e.scenario.json"
+    ],
+    "createdAt": "2025-08-27T06:35:09.337Z",
+    "updatedAt": "2025-08-27T06:35:09.337Z"
+  }
+}
