@@ -78,7 +78,7 @@ Examples:
 
     try {
       const requirement = DefaultRequirement.create(title, description);
-      const uuid = requirement.toScenario().IOR.uuid;
+      const uuid = requirement.toScenario().ior.uuid;
       
       // Create directories
       const specDir = path.join(this.projectRoot, 'spec', 'requirements');
