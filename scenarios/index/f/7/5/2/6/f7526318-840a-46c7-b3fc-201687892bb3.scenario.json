@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "f7526318-840a-46c7-b3fc-201687892bb3",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI3VDE2OjA3OjI5Ljg1OVoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "f7526318-840a-46c7-b3fc-201687892bb3",
+    "name": "Radical Model Simplification Pattern",
+    "title": "Radical Model Simplification Pattern",
+    "description": "Each Web4 component should have one private attribute 'model' that holds its complete state as simple JSON. This model is directly serialized to scenario on hibernation and restored on load. No special adapters like UnitScenario needed - all components just use a generic Scenario component. This radically simplifies code while keeping all functionality."
+  },
+  "unitIndex": {
+    "uuid": "f7526318-840a-46c7-b3fc-201687892bb3",
+    "indexPath": "/workspace/scenarios/index/f/7/5/2/6/f7526318-840a-46c7-b3fc-201687892bb3.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/f7526318-840a-46c7-b3fc-201687892bb3.scenario.json"
+    ],
+    "createdAt": "2025-08-27T16:07:29.864Z",
+    "updatedAt": "2025-08-27T16:07:29.864Z"
+  }
+}

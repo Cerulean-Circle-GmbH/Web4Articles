@@ -1,5 +1,5 @@
 {
-  "name": "@web4/unit-latest",
+  "name": "@web4/unit",
   "version": "0.1.3.0",
   "description": "Web4 Unit specification and management component - latest version",
   "type": "module",

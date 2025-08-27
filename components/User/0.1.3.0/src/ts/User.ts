@@ -1,0 +1,146 @@
+/**
+ * Web4 User - Radically Simplified
+ * 
+ * Uses single model attribute pattern with generic Scenario
+ */
+
+// @ts-ignore - Cross-component import
+import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/Scenario.js';
+
+export interface User {
+  init(scenario: Scenario): this;
+  authenticate(credentials: any): Promise<boolean>;
+  toScenario(): Scenario;
+}
+
+export class DefaultUser implements User {
+  private model: any = {
+    uuid: '',
+    username: '',
+    email: '',
+    roles: [],
+    permissions: [],
+    profile: {},
+    settings: {},
+    lastLogin: null,
+    created: new Date().toISOString(),
+    active: true
+  };
+
+  constructor() {
+    // Empty constructor - Web4 pattern
+  }
+
+  /**
+   * Initialize from scenario
+   */
+  init(scenario: Scenario): this {
+    if (!scenario.validate()) {
+      throw new Error('Invalid scenario');
+    }
+    
+    // Restore complete model from scenario
+    this.model = { ...scenario.model };
+    
+    return this;
+  }
+
+  /**
+   * Authenticate user
+   */
+  async authenticate(credentials: any): Promise<boolean> {
+    // Simple authentication logic
+    if (credentials.username === this.model.username) {
+      this.model.lastLogin = new Date().toISOString();
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Convert to scenario for hibernation
+   */
+  toScenario(): Scenario {
+    return new Scenario({
+      IOR: {
+        uuid: this.model.uuid || crypto.randomUUID(),
+        component: 'User',
+        version: '0.1.3.0'
+      },
+      owner: this.model.uuid || '',
+      model: { ...this.model }
+    });
+  }
+
+  /**
+   * Helper methods for user management
+   */
+  
+  setUsername(username: string): this {
+    this.model.username = username;
+    return this;
+  }
+
+  setEmail(email: string): this {
+    this.model.email = email;
+    return this;
+  }
+
+  addRole(role: string): this {
+    if (!this.model.roles.includes(role)) {
+      this.model.roles.push(role);
+    }
+    return this;
+  }
+
+  removeRole(role: string): this {
+    this.model.roles = this.model.roles.filter((r: string) => r !== role);
+    return this;
+  }
+
+  addPermission(permission: string): this {
+    if (!this.model.permissions.includes(permission)) {
+      this.model.permissions.push(permission);
+    }
+    return this;
+  }
+
+  hasPermission(permission: string): boolean {
+    return this.model.permissions.includes(permission);
+  }
+
+  updateProfile(updates: any): this {
+    this.model.profile = { ...this.model.profile, ...updates };
+    return this;
+  }
+
+  updateSettings(settings: any): this {
+    this.model.settings = { ...this.model.settings, ...settings };
+    return this;
+  }
+
+  isActive(): boolean {
+    return this.model.active;
+  }
+
+  deactivate(): this {
+    this.model.active = false;
+    return this;
+  }
+
+  activate(): this {
+    this.model.active = true;
+    return this;
+  }
+
+  getInfo(): any {
+    return {
+      uuid: this.model.uuid,
+      username: this.model.username,
+      email: this.model.email,
+      roles: [...this.model.roles],
+      active: this.model.active,
+      lastLogin: this.model.lastLogin
+    };
+  }
+}
