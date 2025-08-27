@@ -43,6 +43,9 @@ export class RequirementCLI {
       case 'find':
         await this.handleFind(args.slice(1));
         break;
+      case 'update':
+        await this.handleUpdate(args.slice(1));
+        break;
       default:
         console.error(`Unknown command: ${command}`);
         this.showUsage();
@@ -59,11 +62,16 @@ Commands:
   create <title> <description>  Create a new requirement
   list                         List all requirements
   find <search-term>          Find requirements by content
+  update <uuid> <field> <value> Update an existing requirement
+
+Fields for update: title, description, status, priority
 
 Examples:
   requirement create "User Login" "Users must be able to log in"
   requirement list
   requirement find "authentication"
+  requirement update abc-123 title "New Title"
+  requirement update abc-123 status completed
 `);
   }
 
@@ -198,6 +206,28 @@ Examples:
 
     } catch (error) {
       console.error(`❌ Error searching requirements: ${(error as Error).message}`);
+    }
+  }
+
+  private async handleUpdate(args: string[]): Promise<void> {
+    if (args.length < 3) {
+      console.error('❌ Usage: requirement update <uuid> <field> <value>');
+      console.error('Fields: title, description, status, priority');
+      return;
+    }
+
+    const [uuid, field, ...valueParts] = args;
+    const value = valueParts.join(' ');
+
+    try {
+      const requirement = await DefaultRequirement.update(
+        uuid, field, value, this.projectRoot
+      );
+      
+      console.log(`✅ Requirement ${uuid} updated`);
+      console.log(`📋 ${field}: ${value}`);
+    } catch (error) {
+      console.error(`❌ Error updating requirement: ${(error as Error).message}`);
     }
   }
 }

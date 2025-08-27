@@ -33,10 +33,6 @@ export class DefaultRequirement implements Requirement {
    * Initialize from scenario
    */
   init(scenario: Scenario): this {
-    if (!scenario.validate()) {
-      throw new Error('Invalid scenario');
-    }
-    
     // Restore complete model from scenario
     this.model = { ...scenario.model };
     
@@ -82,6 +78,53 @@ export class DefaultRequirement implements Requirement {
     requirement.model.name = title.toLowerCase().replace(/\s+/g, '-');
     requirement.model.title = title;
     requirement.model.description = description;
+    return requirement;
+  }
+
+  static async update(
+    uuid: string,
+    field: string,
+    value: string,
+    projectRoot: string
+  ): Promise<DefaultRequirement> {
+    // Load existing requirement
+    const filePath = path.join(projectRoot, 'spec', 'requirements', `${uuid}.scenario.json`);
+    const requirement = await DefaultRequirement.loadFromFile(filePath);
+    
+    // Update field
+    switch(field) {
+      case 'title':
+        requirement.model.title = value;
+        requirement.model.name = value.toLowerCase().replace(/\s+/g, '-');
+        break;
+      case 'description':
+        requirement.model.description = value;
+        break;
+      case 'status':
+        if (!['pending', 'in-progress', 'completed', 'cancelled'].includes(value)) {
+          throw new Error(`Invalid status: ${value}`);
+        }
+        requirement.setStatus(value as any);
+        break;
+      case 'priority':
+        if (!['low', 'medium', 'high', 'critical'].includes(value)) {
+          throw new Error(`Invalid priority: ${value}`);
+        }
+        requirement.setPriority(value as any);
+        break;
+      default:
+        throw new Error(`Unknown field: ${field}`);
+    }
+    
+    requirement.model.updatedAt = new Date().toISOString();
+    
+    // Save JSON
+    await requirement.saveToFile(filePath);
+    
+    // Regenerate markdown
+    const mdPath = path.join(projectRoot, 'spec', 'requirements.md', `${uuid}.requirement.md`);
+    await fs.writeFile(mdPath, requirement.toMarkdown(), 'utf-8');
+    
     return requirement;
   }
 
