@@ -2,9 +2,9 @@
  * Web4 Requirement CLI - Simplified
  */
 
-import { DefaultRequirement } from './Requirement.js';
+import { DefaultRequirement } from './DefaultRequirement.js';
 // @ts-ignore - Cross-component import
-import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/Scenario.js';
+import { Scenario } from '../../../../Scenario/0.1.3.0/dist/ts/Scenario.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { existsSync } from 'fs';

@@ -1,19 +1,14 @@
 /**
- * Web4 Requirement - Radically Simplified
+ * Web4 DefaultRequirement - Radically Simplified Implementation
  * 
  * Uses single model attribute pattern with generic Scenario
  */
 
 // @ts-ignore - Cross-component import
-import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/Scenario.js';
+import { Scenario } from '../../../../Scenario/0.1.3.0/dist/ts/Scenario.js';
+import { Requirement } from './Requirement.interface.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
-
-export interface Requirement {
-  init(scenario: Scenario): this;
-  toScenario(): Scenario;
-  saveToFile(filePath: string): Promise<void>;
-}
 
 export class DefaultRequirement implements Requirement {
   private model: any = {

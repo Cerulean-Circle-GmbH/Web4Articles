@@ -5,17 +5,8 @@
  * All Web4 components use this for hibernation/resurrection.
  */
 
-export interface IOR {
-  uuid: string;
-  component: string;
-  version: string;
-}
-
-export interface ScenarioData {
-  IOR: IOR;
-  owner: string;
-  model: any;
-}
+import { IOR } from './IOR.interface.js';
+import { ScenarioData } from './ScenarioData.interface.js';
 
 export class Scenario {
   public readonly IOR: IOR;

@@ -5,9 +5,6 @@
  * All Web4 components use this for hibernation/resurrection.
  */
 export class Scenario {
-    IOR;
-    owner;
-    model;
     constructor(data) {
         if (data) {
             this.IOR = data.IOR || { uuid: '', component: '', version: '' };

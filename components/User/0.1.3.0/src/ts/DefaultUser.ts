@@ -1,17 +1,12 @@
 /**
- * Web4 User - Radically Simplified
+ * Web4 DefaultUser - Radically Simplified Implementation
  * 
  * Uses single model attribute pattern with generic Scenario
  */
 
 // @ts-ignore - Cross-component import
-import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/Scenario.js';
-
-export interface User {
-  init(scenario: Scenario): this;
-  authenticate(credentials: any): Promise<boolean>;
-  toScenario(): Scenario;
-}
+import { Scenario } from '../../../../Scenario/0.1.3.0/dist/ts/Scenario.js';
+import { User } from './User.interface.js';
 
 export class DefaultUser implements User {
   private model: any = {

@@ -4,16 +4,8 @@
  * The simplest possible structure for object state persistence.
  * All Web4 components use this for hibernation/resurrection.
  */
-export interface IOR {
-    uuid: string;
-    component: string;
-    version: string;
-}
-export interface ScenarioData {
-    IOR: IOR;
-    owner: string;
-    model: any;
-}
+import { IOR } from './IOR.interface.js';
+import { ScenarioData } from './ScenarioData.interface.js';
 export declare class Scenario {
     readonly IOR: IOR;
     readonly owner: string;
@@ -40,4 +32,3 @@ export declare class Scenario {
      */
     validate(): boolean;
 }
-//# sourceMappingURL=Scenario.d.ts.map

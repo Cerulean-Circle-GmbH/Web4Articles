@@ -1,17 +1,12 @@
 /**
- * Web4 Unit - Radically Simplified
+ * Web4 DefaultUnit - Radically Simplified Implementation
  * 
  * Uses single model attribute pattern with generic Scenario
  */
 
 // @ts-ignore - Cross-component import
-import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/Scenario.js';
-
-export interface Unit {
-  init(scenario: Scenario): this;
-  execute(input: any): Promise<any>;
-  toScenario(): Scenario;
-}
+import { Scenario } from '../../../../Scenario/0.1.3.0/dist/ts/Scenario.js';
+import { Unit } from './Unit.interface.js';
 
 export class DefaultUnit implements Unit {
   private model: any = {
