@@ -477,8 +477,6 @@ export class RequirementCLI {
 }
 
 // CLI entry point
-if (import.meta.url === `file://${process.argv[1]}`) {
-  const cli = new RequirementCLI();
-  const args = process.argv.slice(2);
-  cli.handleCommand(args).catch(console.error);
-}
+const cli = new RequirementCLI();
+const args = process.argv.slice(2);
+cli.handleCommand(args).catch(console.error);
