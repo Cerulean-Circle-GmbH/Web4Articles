@@ -5,8 +5,11 @@
  * All Web4 components use this for hibernation/resurrection.
  */
 
-import { IOR } from './IOR.interface.js';
+import { ObjectIdentifier } from './ObjectIdentifier.interface.js';
 import { ScenarioData } from './ScenarioData.interface.js';
+
+// For backward compatibility
+export type IOR = ObjectIdentifier;
 
 export class Scenario {
   public readonly IOR: IOR;

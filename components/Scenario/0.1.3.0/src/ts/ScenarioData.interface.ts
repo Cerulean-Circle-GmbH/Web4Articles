@@ -4,10 +4,10 @@
  * Structure for scenario data objects
  */
 
-import { IOR } from './IOR.interface.js';
+import { ObjectIdentifier } from './ObjectIdentifier.interface.js';
 
 export interface ScenarioData {
-  IOR: IOR;
+  IOR: ObjectIdentifier;
   owner: string;
   model: any;
 }
