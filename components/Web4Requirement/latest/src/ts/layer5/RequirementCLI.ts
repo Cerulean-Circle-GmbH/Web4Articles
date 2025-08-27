@@ -6,16 +6,31 @@
 
 import { DefaultRequirement } from '../layer2/DefaultRequirement.js';
 import * as fs from 'fs/promises';
+import { readFileSync, existsSync } from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 export class RequirementCLI {
   private requirement: DefaultRequirement;
+  private projectRoot: string;
 
   constructor() {
     // Get directory context from environment variable set by shell script
     const directoryContext = process.env.DIRECTORY_CONTEXT || 'arbitrary:' + process.cwd();
     this.requirement = new DefaultRequirement();
     (this.requirement as any).setDirectoryContext(directoryContext);
+    
+    // Find project root by looking for .git directory
+    this.projectRoot = process.cwd();
+    let dir = process.cwd();
+    while (dir !== '/') {
+      if (existsSync(path.join(dir, '.git'))) {
+        this.projectRoot = dir;
+        break;
+      }
+      dir = path.dirname(dir);
+    }
   }
 
   async handleCommand(args: string[]): Promise<void> {
@@ -87,6 +102,9 @@ export class RequirementCLI {
         break;
       case 'delete':
         await this.handleDelete(args.slice(1));
+        break;
+      case 'find':
+        await this.handleFind(args.slice(1));
         break;
       case 'on':
         console.error('❌ "on" command requires: on <component> <version> <command> [args...]');
@@ -227,6 +245,7 @@ export class RequirementCLI {
     console.log('  update     Update and regenerate components (overview)');
     console.log('  mv         Move requirement files to another component');
     console.log('  delete     Delete requirement by UUID, scenario file, or MD file');
+    console.log('  find       Search for requirements by content');
     console.log('');
     console.log('Examples:');
     console.log('  requirement create "Unit Architecture Fix" "workflows are user role specific screen transitions"');
@@ -238,6 +257,8 @@ export class RequirementCLI {
     console.log('  requirement delete 12345678-1234-1234-1234-123456789abc');
     console.log('  requirement delete path/to/scenario.json');
     console.log('  requirement delete path/to/requirement.md');
+    console.log('  requirement find "empty constructor"');
+    console.log('  requirement find scenario');
     console.log('');
     console.log('TSRanger Compatible Format:');
     console.log('  Requirement create "description:your requirement text here"');
@@ -380,6 +401,79 @@ export class RequirementCLI {
       }
     } catch (error) {
       console.error(`❌ Failed to move requirement: ${(error as Error).message}`);
+    }
+  }
+
+  private async handleFind(args: string[]): Promise<void> {
+    if (args.length < 1) {
+      console.error('❌ Usage: requirement find <search-term>');
+      console.log('Examples:');
+      console.log('  requirement find "empty constructor"');
+      console.log('  requirement find scenario');
+      console.log('  requirement find IOR');
+      return;
+    }
+
+    const searchTerm = args.join(' ');
+    console.log(`🔍 Searching for: "${searchTerm}"`);
+
+    try {
+      const { execSync } = await import('child_process');
+      
+      // Search in all spec/requirements.md directories
+      const searchPaths = [
+        path.join(this.projectRoot, 'spec/requirements.md'),
+        path.join(this.projectRoot, 'components/*/latest/spec/requirements.md'),
+        path.join(this.projectRoot, 'components/*/v*/spec/requirements.md')
+      ];
+      
+      // Use grep to search efficiently
+      const grepCmd = `find ${this.projectRoot} -path "*/spec/requirements.md/*.requirement.md" -type f 2>/dev/null | xargs grep -l -i "${searchTerm}" 2>/dev/null || true`;
+      
+      const stdout = execSync(grepCmd, { encoding: 'utf8' });
+      const files = stdout.trim().split('\n').filter(Boolean);
+      
+      if (files.length === 0) {
+        console.log('No requirements found matching the search term.');
+        return;
+      }
+      
+      const uuids = new Map<string, string>();
+      
+      // Extract UUIDs and load names from matching files
+      for (const file of files) {
+        const match = file.match(/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})\.requirement\.md/);
+        if (match) {
+          const uuid = match[1];
+          try {
+            // Try to load the scenario to get the name
+            const scenarioPath = path.join(this.projectRoot, 'scenarios/index', uuid.substring(0, 2), uuid.substring(2, 4), `${uuid}.scenario.json`);
+            if (existsSync(scenarioPath)) {
+              const scenario = JSON.parse(readFileSync(scenarioPath, 'utf8'));
+              uuids.set(uuid, scenario.name || 'Unnamed');
+            } else {
+              // If scenario not found, try to extract title from MD file
+              const mdContent = readFileSync(file, 'utf8');
+              const titleMatch = mdContent.match(/^#\s+(.+)$/m);
+              uuids.set(uuid, titleMatch ? titleMatch[1] : 'Unnamed');
+            }
+          } catch (e) {
+            uuids.set(uuid, 'Error loading name');
+          }
+        }
+      }
+      
+      console.log(`\n📋 Found ${uuids.size} requirements matching "${searchTerm}":\n`);
+      
+      // Display results
+      for (const [uuid, name] of uuids) {
+        console.log(`  ${uuid} - ${name}`);
+      }
+      
+      console.log('\n💡 Use "requirement delete <uuid>" to remove duplicates');
+      
+    } catch (error) {
+      console.error(`❌ Error searching requirements: ${(error as Error).message}`);
     }
   }
 }

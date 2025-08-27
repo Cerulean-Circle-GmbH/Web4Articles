@@ -16,15 +16,15 @@ Fixed 6-hop traceability from prose to units: Prose → Requirements → Tests �
 
 ## Metadata
 
-- **Created:** 2025-08-27T06:34:22.747Z
-- **Updated:** 2025-08-27T06:34:22.747Z
+- **Created:** 2025-08-27T07:06:36.671Z
+- **Updated:** 2025-08-27T07:06:36.671Z
 
 ## Owner Details
 
-- **User:** unknown
-- **Hostname:** unknown
-- **Created UTC:** unknown
-- **Owner UUID:** unknown
+- **User:** ubuntu
+- **Hostname:** cursor
+- **Created UTC:** 2025-08-27T06:34:22.740Z
+- **Owner UUID:** a1f4c91f-0f6a-4d46-8081-619d3368a812
 
 ---
 
