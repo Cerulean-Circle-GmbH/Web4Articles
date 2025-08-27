@@ -7,7 +7,13 @@ package "Scenario Structure" {
   RECTANGLE "Unit Scenario" {
     + IOR: Object
     + owner: String
-    + model: {unitIndex: String}
+    + model: Object
+    .. model properties ..
+    + uuid: String
+    + indexPath: String
+    + symlinkPaths: String[]
+    + createdAt: String
+    + updatedAt: String
   }
   
   RECTANGLE "Requirement Scenario" {
@@ -28,8 +34,8 @@ package "Scenario Structure" {
 note right of "Unit Scenario"
   Minimal structure
   Only essential fields
-  unitIndex points to
-  relative scenario path
+  model contains what was
+  previously unitIndex
 end note
 
 note left of "Requirement Scenario"
