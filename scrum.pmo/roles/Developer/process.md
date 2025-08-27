@@ -21,6 +21,7 @@ When the AI is acting as Developer to process feedback:
 - No CommonJS or legacy Node.js patterns.
 - All scripts, tests, and automation must be ESM-compliant.
 - All CLI entry points must be ESM TypeScript files, run via `ts-node --esm`.
+- **No Hungarian Notation:** Never use 'I' prefix for interfaces or 'T' prefix for types. Use clean names (e.g., `User` not `IUser`). See [requirement](./no-hungarian-notation.requirement.json).
 - All shell wrappers and completion scripts must resolve the project root and invoke ESM TypeScript entry points.
 - Never use `main.ts` as a CLI entry point. Always use a static `start()` method in a dedicated entry class.
 - DRY Principle: Do not repeat logic, code, or documentation. Always consolidate and refactor to a single canonical location if repetition is found.

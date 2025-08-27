@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "bcbf004b-3ca8-454a-9caf-4ecb1cb559cd",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI3VDE1OjIxOjU2LjA1OFoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "bcbf004b-3ca8-454a-9caf-4ecb1cb559cd",
+    "name": "Occam's Razor Scenario Simplification",
+    "title": "Occam's Razor Scenario Simplification",
+    "description": "Simplify scenario JSON structure to only contain IOR, owner, and model fields. Remove unitIndex complexity, absolute paths, and timestamps. Requirements should reference units via simple model.unit property containing relative path."
+  },
+  "unitIndex": {
+    "uuid": "bcbf004b-3ca8-454a-9caf-4ecb1cb559cd",
+    "indexPath": "/workspace/scenarios/index/b/c/b/f/0/bcbf004b-3ca8-454a-9caf-4ecb1cb559cd.scenario.json",
+    "symlinkPaths": [
+      "/workspace/components/Unit/latest/spec/requirements/bcbf004b-3ca8-454a-9caf-4ecb1cb559cd.scenario.json"
+    ],
+    "createdAt": "2025-08-27T15:21:56.060Z",
+    "updatedAt": "2025-08-27T15:21:56.060Z"
+  }
+}

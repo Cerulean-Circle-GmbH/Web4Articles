@@ -477,8 +477,14 @@ export class RequirementCLI {
 }
 
 // CLI entry point
+<<<<<<< HEAD
 if (import.meta.url === `file://${process.argv[1]}`) {
   const cli = new RequirementCLI();
   const args = process.argv.slice(2);
   cli.handleCommand(args).catch(console.error);
 }
+=======
+const cli = new RequirementCLI();
+const args = process.argv.slice(2);
+cli.handleCommand(args).catch(console.error);
+>>>>>>> origin/dev/2025-08-25-UTC-1308

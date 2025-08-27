@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "c4d31c74-cdcf-49e0-b648-5efd8154e454",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI3VDA2OjM0OjUyLjg2OVoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "c4d31c74-cdcf-49e0-b648-5efd8154e454",
+    "name": "MDA Sphere Geometry Engine",
+    "title": "MDA Sphere Geometry Engine",
+    "description": "MDA sphere geometry engine with curvature calculation. Implements the spherical architecture model with poles and equator, calculating service contract curvature leading to semantic closure."
+  },
+  "unitIndex": {
+    "uuid": "c4d31c74-cdcf-49e0-b648-5efd8154e454",
+    "indexPath": "/workspace/scenarios/index/c/4/d/3/1/c4d31c74-cdcf-49e0-b648-5efd8154e454.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/c4d31c74-cdcf-49e0-b648-5efd8154e454.scenario.json"
+    ],
+    "createdAt": "2025-08-27T06:34:52.874Z",
+    "updatedAt": "2025-08-27T06:34:52.874Z"
+  }
+}

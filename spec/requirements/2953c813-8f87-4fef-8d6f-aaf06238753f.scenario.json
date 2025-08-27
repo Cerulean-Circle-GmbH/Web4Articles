@@ -1,0 +1,21 @@
+{
+  "IOR": {
+    "uuid": "2953c813-8f87-4fef-8d6f-aaf06238753f",
+    "component": "Web4Requirement",
+    "version": "0.1.3.0"
+  },
+  "owner": "",
+  "model": {
+    "uuid": "2953c813-8f87-4fef-8d6f-aaf06238753f",
+    "name": "dry---reusable-code-must-be-components",
+    "title": "DRY - Reusable Code Must Be Components",
+    "description": "If code needs to be reused across multiple places, it must be extracted into its own component. For example, IOR interface is used across all components, so it belongs in the Scenario component. No code duplication allowed. Each piece of functionality should have a single, authoritative implementation.",
+    "status": "pending",
+    "priority": "medium",
+    "createdAt": "2025-08-27T20:01:02.910Z",
+    "updatedAt": "2025-08-27T20:01:02.910Z",
+    "completedAt": null,
+    "links": [],
+    "tags": []
+  }
+}

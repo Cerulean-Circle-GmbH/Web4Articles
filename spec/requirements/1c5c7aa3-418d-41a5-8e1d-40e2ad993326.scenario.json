@@ -1,0 +1,21 @@
+{
+  "ior": {
+    "uuid": "1c5c7aa3-418d-41a5-8e1d-40e2ad993326",
+    "component": "Web4Requirement",
+    "version": "0.1.3.0"
+  },
+  "owner": "",
+  "model": {
+    "uuid": "1c5c7aa3-418d-41a5-8e1d-40e2ad993326",
+    "name": "occams-razor-is-cmm4-applied",
+    "title": "Occam's Razor is CMM4 Applied",
+    "description": "CMM4 means questioning CMM3 definitions by finding simpler and shorter ones. Apply Occam's Razor: challenge existing complexity with elegant simplicity. When implementing, ask clarifying questions to find the simplest solution rather than assuming complexity. This is CMM4 - continuously improving by simplification.",
+    "status": "pending",
+    "priority": "medium",
+    "createdAt": "2025-08-27T21:20:41.730Z",
+    "updatedAt": "2025-08-27T21:38:40.340Z",
+    "completedAt": null,
+    "links": [],
+    "tags": []
+  }
+}

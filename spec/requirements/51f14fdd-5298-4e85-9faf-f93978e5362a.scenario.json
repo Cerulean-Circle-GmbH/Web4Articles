@@ -1,0 +1,21 @@
+{
+  "IOR": {
+    "uuid": "51f14fdd-5298-4e85-9faf-f93978e5362a",
+    "component": "Web4Requirement",
+    "version": "0.1.3.0"
+  },
+  "owner": "",
+  "model": {
+    "uuid": "51f14fdd-5298-4e85-9faf-f93978e5362a",
+    "name": "one-interface-per-typescript-file",
+    "title": "One Interface Per TypeScript File",
+    "description": "Each TypeScript interface must be defined in its own dedicated file. No file should contain multiple interface definitions. This improves code organization, reusability, and makes the codebase easier to navigate.",
+    "status": "pending",
+    "priority": "medium",
+    "createdAt": "2025-08-27T19:47:01.062Z",
+    "updatedAt": "2025-08-27T19:47:01.062Z",
+    "completedAt": null,
+    "links": [],
+    "tags": []
+  }
+}

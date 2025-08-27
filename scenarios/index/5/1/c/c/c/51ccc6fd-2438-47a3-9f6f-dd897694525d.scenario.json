@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "51ccc6fd-2438-47a3-9f6f-dd897694525d",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI3VDA2OjM0OjA1Ljk5N1oiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "51ccc6fd-2438-47a3-9f6f-dd897694525d",
+    "name": "Semantic Invariants Over Format Wars",
+    "title": "Semantic Invariants Over Format Wars",
+    "description": "Semantic equivalence resolves all format debates. Recognition that all formats (JSON/XML/YAML/etc) hibernate object instances - format becomes irrelevant. This ends the Babylon problem as semantic invariants make formats interchangeable, unlike mainstream endless format wars."
+  },
+  "unitIndex": {
+    "uuid": "51ccc6fd-2438-47a3-9f6f-dd897694525d",
+    "indexPath": "/workspace/scenarios/index/5/1/c/c/c/51ccc6fd-2438-47a3-9f6f-dd897694525d.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/51ccc6fd-2438-47a3-9f6f-dd897694525d.scenario.json"
+    ],
+    "createdAt": "2025-08-27T06:34:06.003Z",
+    "updatedAt": "2025-08-27T06:34:06.003Z"
+  }
+}

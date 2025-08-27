@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "153aa736-f519-48c5-95ef-19e0ba9c372e",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI3VDA2OjM0OjM3LjkyNFoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "153aa736-f519-48c5-95ef-19e0ba9c372e",
+    "name": "The 42 Architectural Answer",
+    "title": "The 42 Architectural Answer",
+    "description": "TLA = MDAv4 + EAMv4 + SOAv4 based on Web4. The Last Architecture - finite science of all possible information systems. Architectural singularity achieved - no more architectural evolution needed. This ends mainstream endless architectural evolution and framework churn."
+  },
+  "unitIndex": {
+    "uuid": "153aa736-f519-48c5-95ef-19e0ba9c372e",
+    "indexPath": "/workspace/scenarios/index/1/5/3/a/a/153aa736-f519-48c5-95ef-19e0ba9c372e.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/153aa736-f519-48c5-95ef-19e0ba9c372e.scenario.json"
+    ],
+    "createdAt": "2025-08-27T06:34:37.929Z",
+    "updatedAt": "2025-08-27T06:34:37.929Z"
+  }
+}

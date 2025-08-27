@@ -1,0 +1,21 @@
+{
+  "IOR": {
+    "uuid": "2f0205c2-d367-4ad2-8dc8-a7939c721fd0",
+    "component": "Web4Requirement",
+    "version": "0.1.3.0"
+  },
+  "owner": "",
+  "model": {
+    "uuid": "2f0205c2-d367-4ad2-8dc8-a7939c721fd0",
+    "name": "dist-folder-is-build-output-only",
+    "title": "Dist Folder is Build Output Only",
+    "description": "The dist folder must contain only TypeScript compiler output. It should never be committed to version control. All dist folders must be in .gitignore. The dist folder structure must mirror the src folder structure. Clean dist before each build to ensure no stale files.",
+    "status": "pending",
+    "priority": "medium",
+    "createdAt": "2025-08-27T20:00:53.942Z",
+    "updatedAt": "2025-08-27T20:00:53.942Z",
+    "completedAt": null,
+    "links": [],
+    "tags": []
+  }
+}

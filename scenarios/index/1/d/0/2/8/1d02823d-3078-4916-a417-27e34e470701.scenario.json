@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "1d02823d-3078-4916-a417-27e34e470701",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI3VDA2OjM0OjUyLjgwNloiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "1d02823d-3078-4916-a417-27e34e470701",
+    "name": "Universal Hibernation Engine",
+    "title": "Universal Hibernation Engine",
+    "description": "Universal hibernation engine for all formats. Enables objects to be serialized/deserialized to any format (JSON/XML/CSV/Database) without loss of semantic information."
+  },
+  "unitIndex": {
+    "uuid": "1d02823d-3078-4916-a417-27e34e470701",
+    "indexPath": "/workspace/scenarios/index/1/d/0/2/8/1d02823d-3078-4916-a417-27e34e470701.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/1d02823d-3078-4916-a417-27e34e470701.scenario.json"
+    ],
+    "createdAt": "2025-08-27T06:34:52.810Z",
+    "updatedAt": "2025-08-27T06:34:52.810Z"
+  }
+}

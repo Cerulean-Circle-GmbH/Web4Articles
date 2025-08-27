@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "9eb65d4b-4ffc-4486-a1d5-18795210351f",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDE4OjQ0OjQyLjY3NVoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "9eb65d4b-4ffc-4486-a1d5-18795210351f",
+    "name": "CMM4 - Disprove CMM3 and Make Change Requests",
+    "title": "CMM4 - Disprove CMM3 and Make Change Requests",
+    "description": "CMM4 means actively challenging CMM3 processes, finding their limitations, and creating change requests for improvement. Question everything, test assumptions, prove what doesn't work, then fix it. Evolution through constructive criticism."
+  },
+  "unitIndex": {
+    "uuid": "9eb65d4b-4ffc-4486-a1d5-18795210351f",
+    "indexPath": "/workspace/scenarios/index/9/e/b/6/5/9eb65d4b-4ffc-4486-a1d5-18795210351f.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/9eb65d4b-4ffc-4486-a1d5-18795210351f.scenario.json"
+    ],
+    "createdAt": "2025-08-26T18:44:42.681Z",
+    "updatedAt": "2025-08-26T18:44:42.681Z"
+  }
+}

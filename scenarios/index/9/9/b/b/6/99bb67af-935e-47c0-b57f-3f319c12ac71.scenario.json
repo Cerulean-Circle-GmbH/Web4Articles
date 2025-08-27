@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "99bb67af-935e-47c0-b57f-3f319c12ac71",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDE4OjUzOjE4LjEzMVoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "99bb67af-935e-47c0-b57f-3f319c12ac71",
+    "name": "Bootstrapping - Self-Initialization and Self-Improvement",
+    "title": "Bootstrapping - Self-Initialization and Self-Improvement",
+    "description": "Web4 components must be capable of bootstrapping: self-initialization from zero configuration, self-configuration based on environment, self-repair when broken, and self-improvement through usage. True autonomy requires zero-touch deployment. See PDCA: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-25-UTC-1308/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-1851-bootstrapping-self-initialization.md) | [Local](scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-1851-bootstrapping-self-initialization.md)"
+  },
+  "unitIndex": {
+    "uuid": "99bb67af-935e-47c0-b57f-3f319c12ac71",
+    "indexPath": "/workspace/scenarios/index/9/9/b/b/6/99bb67af-935e-47c0-b57f-3f319c12ac71.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/99bb67af-935e-47c0-b57f-3f319c12ac71.scenario.json"
+    ],
+    "createdAt": "2025-08-26T18:53:18.137Z",
+    "updatedAt": "2025-08-26T18:53:18.137Z"
+  }
+}

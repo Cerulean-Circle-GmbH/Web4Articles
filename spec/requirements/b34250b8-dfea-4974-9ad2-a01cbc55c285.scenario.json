@@ -1,0 +1,21 @@
+{
+  "IOR": {
+    "uuid": "b34250b8-dfea-4974-9ad2-a01cbc55c285",
+    "component": "Web4Requirement",
+    "version": "0.1.3.0"
+  },
+  "owner": "",
+  "model": {
+    "uuid": "b34250b8-dfea-4974-9ad2-a01cbc55c285",
+    "name": "one-class-per-typescript-file",
+    "title": "One Class Per TypeScript File",
+    "description": "Each TypeScript class must be defined in its own dedicated file. No file should contain multiple class definitions. This enforces single responsibility principle and improves maintainability.",
+    "status": "pending",
+    "priority": "medium",
+    "createdAt": "2025-08-27T19:47:12.547Z",
+    "updatedAt": "2025-08-27T19:47:12.547Z",
+    "completedAt": null,
+    "links": [],
+    "tags": []
+  }
+}

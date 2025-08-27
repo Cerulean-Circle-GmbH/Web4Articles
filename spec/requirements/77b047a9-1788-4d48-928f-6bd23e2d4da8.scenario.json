@@ -1,0 +1,21 @@
+{
+  "IOR": {
+    "uuid": "77b047a9-1788-4d48-928f-6bd23e2d4da8",
+    "component": "Web4Requirement",
+    "version": "0.1.3.0"
+  },
+  "owner": "",
+  "model": {
+    "uuid": "77b047a9-1788-4d48-928f-6bd23e2d4da8",
+    "name": "no-javascript-in-typescript-source-folders",
+    "title": "No JavaScript in TypeScript Source Folders",
+    "description": "JavaScript files must never exist in src/ts folders. All TypeScript compiler output must go to dist folder, not src. The src folder is exclusively for TypeScript source files.",
+    "status": "pending",
+    "priority": "medium",
+    "createdAt": "2025-08-27T19:56:24.846Z",
+    "updatedAt": "2025-08-27T19:56:24.846Z",
+    "completedAt": null,
+    "links": [],
+    "tags": []
+  }
+}

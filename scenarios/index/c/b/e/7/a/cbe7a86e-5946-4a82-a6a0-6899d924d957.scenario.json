@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "cbe7a86e-5946-4a82-a6a0-6899d924d957",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDIwOjQ2OjMyLjk1OVoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "cbe7a86e-5946-4a82-a6a0-6899d924d957",
+    "name": "ScenarioExtractor Bootstrapping Component",
+    "title": "ScenarioExtractor Bootstrapping Component",
+    "description": "A component in bootstrapping mode that proposes extracting and centralizing scenario management logic from all Web4 components into the Unit component. This follows DRY principles by eliminating duplicated code across Web4Requirement, Web4ChangeRequest, and future scenario-based components. The component starts with architectural diagrams and will self-initialize into implementation based on requirements."
+  },
+  "unitIndex": {
+    "uuid": "cbe7a86e-5946-4a82-a6a0-6899d924d957",
+    "indexPath": "/workspace/scenarios/index/c/b/e/7/a/cbe7a86e-5946-4a82-a6a0-6899d924d957.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/cbe7a86e-5946-4a82-a6a0-6899d924d957.scenario.json"
+    ],
+    "createdAt": "2025-08-26T20:46:32.965Z",
+    "updatedAt": "2025-08-26T20:46:32.965Z"
+  }
+}

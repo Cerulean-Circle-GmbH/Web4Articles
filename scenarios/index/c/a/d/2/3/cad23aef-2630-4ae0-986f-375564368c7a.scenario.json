@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "cad23aef-2630-4ae0-986f-375564368c7a",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI3VDA2OjM1OjA5LjM5M1oiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "cad23aef-2630-4ae0-986f-375564368c7a",
+    "name": "Semantic Invariant Validator",
+    "title": "Semantic Invariant Validator",
+    "description": "Semantic invariant validator. Ensures semantic equivalence across different formats and validates that object state remains consistent regardless of serialization format used."
+  },
+  "unitIndex": {
+    "uuid": "cad23aef-2630-4ae0-986f-375564368c7a",
+    "indexPath": "/workspace/scenarios/index/c/a/d/2/3/cad23aef-2630-4ae0-986f-375564368c7a.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/cad23aef-2630-4ae0-986f-375564368c7a.scenario.json"
+    ],
+    "createdAt": "2025-08-27T06:35:09.398Z",
+    "updatedAt": "2025-08-27T06:35:09.398Z"
+  }
+}
