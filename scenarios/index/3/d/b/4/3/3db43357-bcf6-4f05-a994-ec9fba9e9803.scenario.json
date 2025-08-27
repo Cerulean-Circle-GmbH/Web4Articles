@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "3db43357-bcf6-4f05-a994-ec9fba9e9803",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDA4OjMwOjEzLjc3N1oiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "3db43357-bcf6-4f05-a994-ec9fba9e9803",
+    "name": "Post-Refactoring Cleanup Automation",
+    "title": "Post-Refactoring Cleanup Automation",
+    "description": "Implement automated cleanup process for post-refactoring artifacts: remove backup directories, broken symlinks, temporary files, and obsolete component structures created during major refactoring operations. Includes safety checks and git history preservation protocols."
+  },
+  "unitIndex": {
+    "uuid": "3db43357-bcf6-4f05-a994-ec9fba9e9803",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/3/d/b/4/3/3db43357-bcf6-4f05-a994-ec9fba9e9803.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/3db43357-bcf6-4f05-a994-ec9fba9e9803.scenario.json"
+    ],
+    "createdAt": "2025-08-26T08:30:13.788Z",
+    "updatedAt": "2025-08-26T08:30:13.788Z"
+  }
+}

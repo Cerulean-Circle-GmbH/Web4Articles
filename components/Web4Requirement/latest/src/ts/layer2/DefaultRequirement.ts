@@ -3,6 +3,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { UnitIndexStorage } from '../../../../../Unit/latest/dist/ts/layer2/UnitIndexStorage.js';
+import { DefaultUser } from '../../../../../User/latest/dist/ts/layer2/DefaultUser.js';
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -17,6 +18,10 @@ export class DefaultRequirement implements Requirement {
   private directoryContext: string = '';
   private contextType: 'component' | 'arbitrary' = 'arbitrary';
   private contextPath: string = '';
+  private explicitComponentRoot: string = '';
+  private explicitComponent: string = '';
+  private explicitVersion: string = '';
+  private fullScenarioData: any = null;
   
   constructor() { // Web4 empty constructor
   }
@@ -77,14 +82,179 @@ export class DefaultRequirement implements Requirement {
     return { ...this.scenario.metadata };
   }
   
-  async process(): Promise<RequirementResult> {
+    async process(): Promise<RequirementResult> {
     return {
       success: true,
       message: 'Requirement processed successfully',
       requirementId: this.uuid
     };
   }
-  
+
+  /**
+   * Replace a requirement pattern in a file with proper dual link
+   */
+  async replaceInFile(pattern: string, targetUuid: string, filePath: string): Promise<RequirementResult> {
+    try {
+      const projectRoot = this.findProjectRoot();
+      const fullPath = path.resolve(projectRoot, filePath);
+      
+      // Read file content
+      const content = await fs.readFile(fullPath, 'utf8');
+      
+      // Check if pattern exists
+      const placeholder = `[${pattern}]`;
+      if (!content.includes(placeholder)) {
+        return {
+          success: false,
+          message: `Pattern ${placeholder} not found in file`,
+          requirementId: targetUuid
+        };
+      }
+
+      // Generate dual link
+      const relativeDepth = filePath.split('/').length - 1;
+      const relativePath = '../'.repeat(relativeDepth) + `spec/requirements.md/${targetUuid}.requirement.md`;
+      const dualLink = `[[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/${targetUuid}.requirement.md) | [§/spec/requirements.md/${targetUuid}.requirement.md](${relativePath})]`;
+      
+      // Replace pattern with dual link
+      const updatedContent = content.replace(placeholder, dualLink);
+      
+      // Write updated content back to file
+      await fs.writeFile(fullPath, updatedContent, 'utf8');
+      
+      return {
+        success: true,
+        message: `Replaced ${placeholder} with dual link for ${targetUuid}`,
+        requirementId: targetUuid
+      };
+      
+    } catch (error: any) {
+      return {
+        success: false,
+        message: `Error replacing pattern: ${error.message}`,
+        requirementId: targetUuid
+      };
+    }
+  }
+
+  /**
+   * Process a markdown file: find requirement patterns, create requirements, and replace with dual links
+   */
+  async processFile(filePath: string): Promise<RequirementResult> {
+    try {
+      const projectRoot = this.findProjectRoot();
+      const fullPath = path.resolve(projectRoot, filePath);
+      
+      // Read file content
+      const content = await fs.readFile(fullPath, 'utf8');
+      
+      // Pattern to match requirement placeholders: [requirement:uuid:web4-xxx-name]
+      const requirementPattern = /\[requirement:uuid:([^\]]+)\]/g;
+      const patterns: Array<{placeholder: string, key: string, line: string, title: string, description: string}> = [];
+      
+      const lines = content.split('\n');
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const matches = [...line.matchAll(requirementPattern)];
+        
+        for (const reqMatch of matches) {
+          const placeholder = reqMatch[0];
+          const key = reqMatch[1];
+          
+          // Extract title and description from the line and following context
+          let title = '';
+          let description = '';
+          
+          // Look for **title** pattern in the same line
+          const titleMatch = line.match(/\*\*(.+?)\*\*/);
+          if (titleMatch) {
+            title = titleMatch[1].replace(/\[requirement:[^\]]+\]\s*/, '').trim();
+          }
+          
+          // Extract description from following lines (bullet points)
+          let descLines = [];
+          for (let j = i + 1; j < Math.min(i + 10, lines.length); j++) {
+            const nextLine = lines[j].trim();
+            if (nextLine.startsWith('- **')) {
+              descLines.push(nextLine.replace(/^- \*\*(Mainstream|Web4|Why):\*\*\s*/, ''));
+            } else if (nextLine.startsWith('###') || nextLine === '') {
+              break;
+            }
+          }
+          description = descLines.join(' ').trim();
+          
+          // If no structured description, try to extract from the line itself
+          if (!description) {
+            const afterPlaceholder = line.split(placeholder)[1];
+            if (afterPlaceholder) {
+              description = afterPlaceholder.replace(/^\*\*\s*/, '').replace(/\s*\*\*$/, '').trim();
+            }
+          }
+          
+          patterns.push({
+            placeholder,
+            key,
+            line,
+            title: title || `Web4 ${key.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}`,
+            description: description || `Web4 requirement for ${key}`
+          });
+        }
+      }
+      
+      if (patterns.length === 0) {
+        return {
+          success: false,
+          message: 'No requirement patterns found in file',
+          requirementId: ''
+        };
+      }
+      
+      let updatedContent = content;
+      const createdRequirements: string[] = [];
+      
+      // Process each pattern
+      for (const pattern of patterns) {
+        // Create the requirement
+        const result = await this.create(pattern.title, pattern.description);
+        if (result.success) {
+          createdRequirements.push(`${pattern.title} (${result.requirementId})`);
+          
+          // Generate dual link
+          const relativeDepth = filePath.split('/').length - 1;
+          const relativePath = '../'.repeat(relativeDepth) + `spec/requirements.md/${result.requirementId}.requirement.md`;
+          const dualLink = `[[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/${result.requirementId}.requirement.md) | [§/spec/requirements.md/${result.requirementId}.requirement.md](${relativePath})]`;
+          
+          // Replace placeholder with dual link in content
+          updatedContent = updatedContent.replace(pattern.placeholder, dualLink);
+          
+          // Save the requirement (calls existing save methods)
+          if (result.requirementId && result.scenario) {
+            await this.saveScenario(result.requirementId, result.scenario);
+            const mdContent = this.generateMDView();
+            const mdPath = path.join(this.getRequirementsMDDirectory(), `${result.requirementId}.requirement.md`);
+            await fs.writeFile(mdPath, mdContent, 'utf-8');
+          }
+        }
+      }
+      
+      // Write updated content back to file
+      await fs.writeFile(fullPath, updatedContent, 'utf8');
+      
+      return {
+        success: true,
+        message: `Processed ${patterns.length} requirements and updated file: ${createdRequirements.join(', ')}`,
+        requirementId: createdRequirements.length > 0 ? createdRequirements[0].split('(')[1].split(')')[0] : ''
+      };
+      
+    } catch (error: any) {
+      return {
+        success: false,
+        message: `Error processing file: ${error.message}`,
+        requirementId: ''
+      };
+    }
+  }
+   
   getStatus(): RequirementStatus {
     return this.status;
   }
@@ -102,17 +272,10 @@ export class DefaultRequirement implements Requirement {
   }
 
   private createScenarioJSON(): any {
-    const hostname = process.env.HOSTNAME || 'localhost';
+    // FIXED: Use consistent User UUID instead of random UUID for owner
     const user = process.env.USER || 'unknown';
-    const utcTimestamp = new Date().toISOString();
-    const ownerUuid = this.generateUUID();
-
-    const owner = {
-      user,
-      hostname,
-      utcTimestamp,
-      uuid: ownerUuid
-    };
+    const hostname = process.env.HOSTNAME || 'localhost';
+    const owner = DefaultUser.getOwnerObject(user, hostname);
 
     return {
       IOR: {
@@ -155,9 +318,219 @@ export class DefaultRequirement implements Requirement {
     this.contextPath = path;
   }
 
+  /**
+   * Set explicit component context for all subsequent operations
+   * Usage: requirement.on("User", "latest").create("title", "desc")
+   */
+  on(component: string, version: string): this {
+    this.explicitComponent = component;
+    this.explicitVersion = version;
+    
+    // Construct component root path
+    const projectRoot = process.env.WEB4_PROJECT_ROOT || this.findProjectRoot();
+    this.explicitComponentRoot = path.join(projectRoot, 'components', component, version);
+    
+    // Set context type to component
+    this.contextType = 'component';
+    this.contextPath = this.explicitComponentRoot;
+    
+    console.log(`🎯 Component context set: ${component}/${version}`);
+    console.log(`📁 Component root: ${this.explicitComponentRoot}`);
+    
+    return this;
+  }
+
+  /**
+   * Get the current component context information
+   */
+  getComponentContext(): { component: string, version: string, root: string } | null {
+    if (this.explicitComponent && this.explicitVersion) {
+      return {
+        component: this.explicitComponent,
+        version: this.explicitVersion,
+        root: this.explicitComponentRoot
+      };
+    }
+    return null;
+  }
+
+  /**
+   * Delete requirement by UUID, scenario file path, or MD file path
+   */
+  async deleteRequirement(identifier: string): Promise<RequirementResult> {
+    try {
+      let uuid: string;
+      let requirementsDir: string;
+      let mdDir: string;
+
+      // Determine if identifier is UUID, scenario file, or MD file
+      if (identifier.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+        // Direct UUID
+        uuid = identifier;
+        requirementsDir = this.getRequirementsDirectory();
+        mdDir = this.getRequirementsMDDirectory();
+      } else if (identifier.endsWith('.scenario.json')) {
+        // Scenario file path - extract UUID from filename
+        const filename = path.basename(identifier);
+        const match = filename.match(/^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\.scenario\.json$/i);
+        if (!match) {
+          return {
+            success: false,
+            message: `Invalid scenario file format: ${filename}`
+          };
+        }
+        uuid = match[1];
+        requirementsDir = path.dirname(identifier);
+        mdDir = path.join(path.dirname(requirementsDir), 'requirements.md');
+      } else if (identifier.endsWith('.requirement.md')) {
+        // MD file path - extract UUID from filename
+        const filename = path.basename(identifier);
+        const match = filename.match(/^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\.requirement\.md$/i);
+        if (!match) {
+          return {
+            success: false,
+            message: `Invalid MD file format: ${filename}`
+          };
+        }
+        uuid = match[1];
+        mdDir = path.dirname(identifier);
+        requirementsDir = path.join(path.dirname(mdDir), 'requirements');
+      } else {
+        return {
+          success: false,
+          message: `Invalid identifier format. Expected UUID, .scenario.json file, or .requirement.md file: ${identifier}`
+        };
+      }
+
+      console.log(`🗑️  Deleting requirement: ${uuid}`);
+      console.log(`📁 Requirements dir: ${requirementsDir}`);
+      console.log(`📄 MD dir: ${mdDir}`);
+
+      const deletedFiles: string[] = [];
+      const errors: string[] = [];
+
+      // Delete scenario file (symlink) in requirements directory
+      const scenarioPath = path.join(requirementsDir, `${uuid}.scenario.json`);
+      try {
+        await fs.unlink(scenarioPath);
+        deletedFiles.push(scenarioPath);
+        console.log(`✅ Deleted scenario symlink: ${scenarioPath}`);
+      } catch (error) {
+        if ((error as any).code !== 'ENOENT') {
+          errors.push(`Failed to delete scenario symlink ${scenarioPath}: ${(error as Error).message}`);
+        }
+      }
+
+      // Delete MD file
+      const mdPath = path.join(mdDir, `${uuid}.requirement.md`);
+      try {
+        await fs.unlink(mdPath);
+        deletedFiles.push(mdPath);
+        console.log(`✅ Deleted MD file: ${mdPath}`);
+      } catch (error) {
+        if ((error as any).code !== 'ENOENT') {
+          errors.push(`Failed to delete MD file ${mdPath}: ${(error as Error).message}`);
+        }
+      }
+
+      // Delete from central scenarios/index (this is the master file)
+      try {
+        const projectRoot = process.env.PROJECT_ROOT || this.findProjectRoot();
+        const unitStorage = new UnitIndexStorage().init(projectRoot);
+        const loadResult = await unitStorage.loadScenario(uuid);
+        if (loadResult.success) {
+          // Get the scenario path manually from the storage structure
+          const firstChar = uuid[0];
+          const secondChar = uuid[1]; 
+          const thirdChar = uuid[2];
+          const fourthChar = uuid[3];
+          const fifthChar = uuid[4];
+          const indexPath = path.join(projectRoot, 'scenarios', 'index', firstChar, secondChar, thirdChar, fourthChar, fifthChar, `${uuid}.scenario.json`);
+        
+          if (await fs.access(indexPath).then(() => true).catch(() => false)) {
+            await fs.unlink(indexPath);
+            deletedFiles.push(indexPath);
+            console.log(`✅ Deleted master scenario: ${indexPath}`);
+          }
+        }
+      } catch (error) {
+        errors.push(`Failed to delete master scenario: ${(error as Error).message}`);
+      }
+
+      if (errors.length > 0) {
+        return {
+          success: false,
+          message: `Requirement deletion partially failed for ${uuid}`,
+          issues: errors,
+          requirementId: uuid
+        };
+      }
+
+      return {
+        success: true,
+        message: `Requirement ${uuid} deleted successfully`,
+        requirementId: uuid,
+        deletedFiles
+      };
+
+    } catch (error) {
+      return {
+        success: false,
+        message: `Failed to delete requirement: ${(error as Error).message}`,
+        issues: [(error as Error).message]
+      };
+    }
+  }
+
+  /**
+   * Find component root from current directory
+   * Walks up directory tree looking for component structure
+   */
+  private findComponentRoot(currentPath: string): string | null {
+    let dir = currentPath;
+    
+    while (dir !== path.dirname(dir)) {
+      // Check if this directory contains package.json (component marker)
+      const packageJsonPath = path.join(dir, 'package.json');
+      try {
+        require('fs').accessSync(packageJsonPath);
+        
+        // Check if this is within components/ directory structure
+        if (dir.includes('/components/') && dir.match(/\/components\/[^\/]+\/[^\/]+$/)) {
+          return dir;
+        }
+      } catch {
+        // Continue searching up
+      }
+      
+      dir = path.dirname(dir);
+    }
+    
+    return null;
+  }
+
   private getRequirementsDirectory(): string {
     const cwd = process.cwd();
-    // If already in spec/requirements directory, use it directly
+    
+    // Priority 1: Explicit component context set via on() method
+    if (this.explicitComponentRoot) {
+      return path.join(this.explicitComponentRoot, 'spec', 'requirements');
+    }
+    
+    // Priority 2: Check for source.env component context variables
+    if (process.env.WEB4_COMPONENT_CONTEXT === 'true' && process.env.WEB4_COMPONENT_ROOT) {
+      // Use component root from source.env
+      return path.join(process.env.WEB4_COMPONENT_ROOT, 'spec', 'requirements');
+    }
+    
+    // Priority 3: Check if we're in a component context via directory detection
+    const componentRoot = this.findComponentRoot(cwd);
+    if (componentRoot) {
+      // Use component's spec directory
+      return path.join(componentRoot, 'spec', 'requirements');
+    }
+    
+    // Priority 4: Legacy behavior for non-component contexts
     if (cwd.endsWith(path.join('spec', 'requirements'))) {
       return cwd;
     }
@@ -266,7 +639,26 @@ export class DefaultRequirement implements Requirement {
 
   private getRequirementsMDDirectory(): string {
     const cwd = process.cwd();
-    // If in spec/requirements, go up and add requirements.md
+    
+    // Priority 1: Explicit component context set via on() method
+    if (this.explicitComponentRoot) {
+      return path.join(this.explicitComponentRoot, 'spec', 'requirements.md');
+    }
+    
+    // Priority 2: Check for source.env component context variables
+    if (process.env.WEB4_COMPONENT_CONTEXT === 'true' && process.env.WEB4_COMPONENT_ROOT) {
+      // Use component root from source.env
+      return path.join(process.env.WEB4_COMPONENT_ROOT, 'spec', 'requirements.md');
+    }
+    
+    // Priority 3: Check if we're in a component context via directory detection
+    const componentRoot = this.findComponentRoot(cwd);
+    if (componentRoot) {
+      // Use component's spec/requirements.md directory
+      return path.join(componentRoot, 'spec', 'requirements.md');
+    }
+    
+    // Priority 4: Legacy behavior
     if (cwd.endsWith(path.join('spec', 'requirements'))) {
       return path.join(path.dirname(cwd), 'requirements.md');
     }
@@ -278,6 +670,9 @@ export class DefaultRequirement implements Requirement {
     try {
       const scenarioContent = await fs.readFile(scenarioPath, 'utf-8');
       const scenarioData = JSON.parse(scenarioContent);
+      
+      // Store the full scenario data for owner decoding
+      this.fullScenarioData = scenarioData;
       
       // Load from IOR-based scenario structure
       if (scenarioData.IOR && scenarioData.model) {
@@ -480,7 +875,8 @@ export class DefaultRequirement implements Requirement {
 
   async saveScenario(uuid: string, scenario: any): Promise<void> {
     // NEW: Use Unit Index Storage instead of direct file operations
-    const projectRoot = this.findProjectRoot();
+    // FIXED: Use PROJECT_ROOT from shell script environment (UCP architecture fix)
+    const projectRoot = process.env.PROJECT_ROOT || this.findProjectRoot();
     const unitStorage = new UnitIndexStorage().init(projectRoot);
     
     // Create symbolic link at Web4Requirement spec location
@@ -510,7 +906,10 @@ export class DefaultRequirement implements Requirement {
       const implementationStatus = this.getImplementationStatus();
       const statusCheckbox = implementationStatus === 'completed' ? 'x' : ' ';
       
-      return template
+      // Decode owner details from scenario
+      const ownerDetails = this.decodeOwnerDetails();
+      
+      let processedTemplate = template
         .replace(/{{name}}/g, this._name)
         .replace(/{{uuid}}/g, this.uuid)
         .replace(/{{title}}/g, this._name)
@@ -520,13 +919,94 @@ export class DefaultRequirement implements Requirement {
         .replace(/{{updatedAt}}/g, new Date().toISOString())
         .replace(/{{implementationStatus}}/g, implementationStatus)
         .replace(/{{statusCheckbox}}/g, statusCheckbox);
+      
+      // Apply owner template replacements using DRY utility method
+      processedTemplate = DefaultRequirement.applyOwnerTemplateReplacements(processedTemplate, ownerDetails);
+      
+      return processedTemplate;
     } catch (error) {
       // Fallback to hardcoded template if file read fails
       const implementationStatus = this.getImplementationStatus();
       const statusCheckbox = implementationStatus === 'completed' ? 'x' : ' ';
+      const ownerDetails = this.decodeOwnerDetails();
       
-      return `# ${this._name}\n\n## Task Status\n- [${statusCheckbox}] **${this._name}** [requirement:uuid:${this.uuid}]\n\n## Requirement Details\n\n- **UUID:** \`${this.uuid}\`\n- **Name:** ${this._name}\n- **Status:** ${this.status}\n- **Implementation:** ${implementationStatus}\n\n## Description\n\n${this.description}\n\n---\n\n*Generated by Web4Requirement Component v1.0*`;
+      return `# ${this._name}\n\n## Task Status\n- [${statusCheckbox}] **${this._name}** [requirement:uuid:${this.uuid}]\n\n## Requirement Details\n\n- **UUID:** \`${this.uuid}\`\n- **Name:** ${this._name}\n- **Status:** ${this.status}\n- **Implementation:** ${implementationStatus}\n\n## Description\n\n${this.description}\n\n## Metadata\n\n- **Created:** ${new Date().toISOString()}\n- **Updated:** ${new Date().toISOString()}\n\n## Owner Details\n\n- **User:** ${ownerDetails.user}\n- **Hostname:** ${ownerDetails.hostname}\n- **Created UTC:** ${ownerDetails.timestamp}\n- **Owner UUID:** ${ownerDetails.uuid}\n\n---\n\n*Generated by Web4Requirement Component v1.1*`;
     }
+  }
+
+  /**
+   * Decode owner details from base64-encoded owner data
+   * This is a shared utility method for DRY template processing
+   */
+  private decodeOwnerDetails(): { user: string, hostname: string, timestamp: string, uuid: string } {
+    try {
+      // Access owner from the full scenario JSON, not just the model part
+      if (this.fullScenarioData?.owner) {
+        // Decode base64 owner string
+        const ownerJson = Buffer.from(this.fullScenarioData.owner, 'base64').toString('utf-8');
+        const ownerObject = JSON.parse(ownerJson);
+        
+        return {
+          user: ownerObject.user || 'unknown',
+          hostname: ownerObject.hostname || 'unknown', 
+          timestamp: ownerObject.utcTimestamp || 'unknown',
+          uuid: ownerObject.uuid || 'unknown'
+        };
+      }
+    } catch (error) {
+      console.warn(`Failed to decode owner details: ${(error as Error).message}`);
+    }
+    
+    // Fallback values if decoding fails
+    return {
+      user: 'unknown',
+      hostname: 'unknown',
+      timestamp: 'unknown', 
+      uuid: 'unknown'
+    };
+  }
+
+  /**
+   * Static utility method to decode owner details from scenario data
+   * Shared utility for DRY template processing across views
+   */
+  public static decodeOwnerDetailsFromScenario(scenarioData: any): { user: string, hostname: string, timestamp: string, uuid: string } {
+    try {
+      if (scenarioData?.owner) {
+        // Decode base64 owner string
+        const ownerJson = Buffer.from(scenarioData.owner, 'base64').toString('utf-8');
+        const ownerObject = JSON.parse(ownerJson);
+        
+        return {
+          user: ownerObject.user || 'unknown',
+          hostname: ownerObject.hostname || 'unknown', 
+          timestamp: ownerObject.utcTimestamp || 'unknown',
+          uuid: ownerObject.uuid || 'unknown'
+        };
+      }
+    } catch (error) {
+      console.warn(`Failed to decode owner details: ${(error as Error).message}`);
+    }
+    
+    // Fallback values if decoding fails
+    return {
+      user: 'unknown',
+      hostname: 'unknown',
+      timestamp: 'unknown', 
+      uuid: 'unknown'
+    };
+  }
+
+  /**
+   * Static utility method to apply owner template replacements
+   * Shared utility for DRY template processing across views
+   */
+  public static applyOwnerTemplateReplacements(template: string, ownerDetails: { user: string, hostname: string, timestamp: string, uuid: string }): string {
+    return template
+      .replace(/{{ownerUser}}/g, ownerDetails.user)
+      .replace(/{{ownerHostname}}/g, ownerDetails.hostname)
+      .replace(/{{ownerTimestamp}}/g, ownerDetails.timestamp)
+      .replace(/{{ownerUUID}}/g, ownerDetails.uuid);
   }
 
   private getImplementationStatus(): string {
@@ -606,7 +1086,7 @@ export class DefaultRequirement implements Requirement {
   private async generateRequirementsOverview(requirementFiles: string[], outputPath: string): Promise<string> {
     try {
       // Use new RequirementOverview from layer5 for proper architectural layering
-      const { RequirementOverview } = await import('../layer5/RequirementOverview.js');
+              const { RequirementOverview } = await import('../layer5/RequirementOverview.js');
       
       const requirementOverview = new RequirementOverview();
       requirementOverview.init(); // Initialize with default template
@@ -648,10 +1128,12 @@ export class DefaultRequirement implements Requirement {
         let implemented = false;
         let implementationStatus = 'pending';
         
+        let fullScenarioData = null;
         try {
           const scenarioPath = path.join(this.getRequirementsDirectory(), `${uuid}.scenario.json`);
           const scenarioContent = await fs.readFile(scenarioPath, 'utf-8');
           const scenario = JSON.parse(scenarioContent);
+          fullScenarioData = scenario; // Store the full scenario data including owner
           
           if (scenario.model) {
             implemented = scenario.model.implemented || false;
@@ -664,8 +1146,8 @@ export class DefaultRequirement implements Requirement {
           implemented = implementationStatus === 'completed';
         }
 
-        // Create requirement scenario object
-        requirements.push({
+        // Create requirement scenario object with full scenario data for DRY owner processing
+        const requirementObj: any = {
           uuid,
           title,
           name: title,
@@ -673,7 +1155,16 @@ export class DefaultRequirement implements Requirement {
           createdAt: new Date().toISOString(), // Fallback timestamp
           implemented,
           implementationStatus
-        });
+        };
+        
+        // Include full scenario data (including owner) for DRY template processing
+        if (fullScenarioData) {
+          requirementObj.owner = fullScenarioData.owner;
+          requirementObj.IOR = fullScenarioData.IOR;
+          requirementObj.model = fullScenarioData.model;
+        }
+        
+        requirements.push(requirementObj);
       } catch (error) {
         console.warn(`Failed to load requirement ${filename}: ${error}`);
       }

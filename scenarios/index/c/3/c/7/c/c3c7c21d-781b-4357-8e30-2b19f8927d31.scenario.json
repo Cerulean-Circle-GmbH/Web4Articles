@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "c3c7c21d-781b-4357-8e30-2b19f8927d31",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDEwOjMxOjU0LjA3M1oiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "c3c7c21d-781b-4357-8e30-2b19f8927d31",
+    "name": "Web4 6-Hop Traceability Graph",
+    "title": "Web4 6-Hop Traceability Graph",
+    "description": "Fixed 6-hop traceability from prose to units: Prose → Requirements → Tests → Features → Components → Versions → Units. Complete semantic closure and guaranteed requirement coverage. Replaces variable-depth traceability with gaps."
+  },
+  "unitIndex": {
+    "uuid": "c3c7c21d-781b-4357-8e30-2b19f8927d31",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/c/3/c/7/c/c3c7c21d-781b-4357-8e30-2b19f8927d31.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/c3c7c21d-781b-4357-8e30-2b19f8927d31.scenario.json"
+    ],
+    "createdAt": "2025-08-26T10:31:54.087Z",
+    "updatedAt": "2025-08-26T10:31:54.087Z"
+  }
+}

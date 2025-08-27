@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "6b8918d1-c74e-462a-84ec-fa9d20b2371b",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDEwOjMzOjEzLjQyM1oiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "6b8918d1-c74e-462a-84ec-fa9d20b2371b",
+    "name": "Web4 MDA Sphere Geometry Engine with Curvature Calculation",
+    "title": "Web4 MDA Sphere Geometry Engine with Curvature Calculation",
+    "description": "MDA sphere geometry engine with curvature calculation capabilities. Implements spherical MDA architecture with poles (onion star, service domain), equator (format diversity), and service contract curvature leading to semantic consolidation."
+  },
+  "unitIndex": {
+    "uuid": "6b8918d1-c74e-462a-84ec-fa9d20b2371b",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/6/b/8/9/1/6b8918d1-c74e-462a-84ec-fa9d20b2371b.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/6b8918d1-c74e-462a-84ec-fa9d20b2371b.scenario.json"
+    ],
+    "createdAt": "2025-08-26T10:33:13.440Z",
+    "updatedAt": "2025-08-26T10:33:13.440Z"
+  }
+}

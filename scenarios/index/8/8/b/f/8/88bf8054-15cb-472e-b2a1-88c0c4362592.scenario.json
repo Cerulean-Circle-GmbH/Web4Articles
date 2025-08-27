@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "88bf8054-15cb-472e-b2a1-88c0c4362592",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDEwOjMzOjQwLjQzMVoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "88bf8054-15cb-472e-b2a1-88c0c4362592",
+    "name": "Web4 Semantic Invariant Validator",
+    "title": "Web4 Semantic Invariant Validator",
+    "description": "Semantic invariant validator ensuring format equivalence and semantic consistency. Validates that object representations across different formats (JSON/XML/YAML/CSV/Database) maintain semantic invariance and interchangeability without data loss."
+  },
+  "unitIndex": {
+    "uuid": "88bf8054-15cb-472e-b2a1-88c0c4362592",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/8/8/b/f/8/88bf8054-15cb-472e-b2a1-88c0c4362592.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/88bf8054-15cb-472e-b2a1-88c0c4362592.scenario.json"
+    ],
+    "createdAt": "2025-08-26T10:33:40.441Z",
+    "updatedAt": "2025-08-26T10:33:40.441Z"
+  }
+}

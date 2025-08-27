@@ -3,7 +3,7 @@
 # tsranger (v2): Shell wrapper for TSRanger v2 TypeScript TUI
 set -euo pipefail
 
-# Find component root (self-contained v2.0 directory)
+# Find component root (self-contained v2.2 directory)
 find_component_root() {
   local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   # Go up from sh to v2.0 root
@@ -12,7 +12,7 @@ find_component_root() {
 
 COMPONENT_ROOT="$(find_component_root)"
 if [[ ! -d "$COMPONENT_ROOT/src/ts" ]]; then
-  echo "Error: Could not find v2.0 component root (missing src/ts)." >&2
+  echo "Error: Could not find v2.2 component root (missing src/ts)." >&2
   exit 1
 fi
 

@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "571814f6-1493-4384-8104-edb3d6eb38fd",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDEwOjMwOjMyLjIzMloiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "571814f6-1493-4384-8104-edb3d6eb38fd",
+    "name": "Web4 Scenario-First Development",
+    "title": "Web4 Scenario-First Development",
+    "description": "Every object instance is a scenario that can be hibernated/resurrected. Objects as persistent scenarios with complete state preservation rather than transient runtime entities. All formats (CSV/JSON/XML/Database) become semantically identical hibernation mechanisms."
+  },
+  "unitIndex": {
+    "uuid": "571814f6-1493-4384-8104-edb3d6eb38fd",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/5/7/1/8/1/571814f6-1493-4384-8104-edb3d6eb38fd.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/571814f6-1493-4384-8104-edb3d6eb38fd.scenario.json"
+    ],
+    "createdAt": "2025-08-26T10:30:32.249Z",
+    "updatedAt": "2025-08-26T10:30:32.249Z"
+  }
+}
