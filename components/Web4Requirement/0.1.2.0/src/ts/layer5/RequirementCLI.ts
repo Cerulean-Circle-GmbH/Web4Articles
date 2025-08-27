@@ -8,8 +8,6 @@ import { DefaultRequirement } from '../layer2/DefaultRequirement.js';
 import * as fs from 'fs/promises';
 import { readFileSync, existsSync } from 'fs';
 import * as path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 
 export class RequirementCLI {
   private requirement: DefaultRequirement;
