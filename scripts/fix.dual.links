@@ -5,6 +5,11 @@
 
 set -e
 
+# Ensure non-interactive mode
+export DEBIAN_FRONTEND=noninteractive
+export GIT_PAGER=cat
+export PAGER=cat
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -27,16 +32,18 @@ find_project_root() {
 }
 
 PROJECT_ROOT=$(find_project_root)
-source "$PROJECT_ROOT/source.env" >/dev/null 2>&1 || true
+# Source environment with non-interactive settings
+if [[ -f "$PROJECT_ROOT/source.env" ]]; then
+    source "$PROJECT_ROOT/source.env" >/dev/null 2>&1 || true
+fi
 
-echo -e "${BLUE}🔧 Web4Articles Dual Link Fixer${NC}"
-echo -e "${BLUE}📋 Requirement: e8535c4e-591d-4955-9874-6a853545e970${NC}"
-echo -e "${BLUE}🎯 Project Root: $PROJECT_ROOT${NC}"
-echo ""
-echo -e "${YELLOW}📌 Dual Link Standard:${NC}"
-echo -e "   ${GREEN}[GitHub](URL) | [§/path/from/root](../../../relative/path)${NC}"
-echo -e "   ${GREEN}[GitHub](URL) | [local/path](local/path)${NC} (for simple relative paths)"
-echo ""
+# Output header information without buffering
+printf "%b" "${BLUE}🔧 Web4Articles Dual Link Fixer${NC}\n"
+printf "%b" "${BLUE}📋 Requirement: e8535c4e-591d-4955-9874-6a853545e970${NC}\n"
+printf "%b" "${BLUE}🎯 Project Root: $PROJECT_ROOT${NC}\n\n"
+printf "%b" "${YELLOW}📌 Dual Link Standard:${NC}\n"
+printf "%b" "   ${GREEN}[GitHub](URL) | [§/path/from/root](../../../relative/path)${NC}\n"
+printf "%b" "   ${GREEN}[GitHub](URL) | [local/path](local/path)${NC} (for simple relative paths)\n\n"
 
 # Function to calculate relative path from document to target
 calculate_relative_path() {
@@ -47,8 +54,8 @@ calculate_relative_path() {
     local doc_dir="$(dirname "$(realpath "$doc_path")")"
     local target_abs="$(realpath "$target_path" 2>/dev/null || echo "$PROJECT_ROOT/$target_path")"
     
-    # Calculate relative path using Python for accuracy
-    python3 -c "
+    # Calculate relative path using Python for accuracy (non-interactive)
+    python3 -u -c "
 import os.path
 doc_dir = '$doc_dir'
 target = '$target_abs'
@@ -206,7 +213,7 @@ process_directory() {
                 fixed_files=$((fixed_files + 1))
             fi
         fi
-    done < <(find "$dir" -type f -name "*.md" -print0)
+    done < <(find "$dir" -type f -name "*.md" -print0 2>/dev/null)
     
     echo ""
     echo -e "${GREEN}📊 Summary: Processed $total_files files, fixed $fixed_files files${NC}"
@@ -242,7 +249,7 @@ verify_dual_links() {
                 fi
             done < "$file"
         fi
-    done < <(find "$target" -type f -name "*.md" -print0)
+    done < <(find "$target" -type f -name "*.md" -print0 2>/dev/null)
     
     if [[ $issues_found -eq 0 ]]; then
         echo -e "${GREEN}✅ All dual links comply with the standard!${NC}"

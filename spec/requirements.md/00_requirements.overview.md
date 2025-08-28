@@ -90,6 +90,8 @@
 
 - [ ] 2025-08-26T07:50:22.140Z [[requirement:uuid:ff0eb28c-de09-4b4e-9307-6254d42f356f]](ff0eb28c-de09-4b4e-9307-6254d42f356f.requirement.md) PDCA Dual Link Automation Script 
 
+- [ ] 2025-08-28T12:15:00.000Z [[requirement:uuid:f8a3b4c2-7d9e-4a12-b3f5-8c2e9d1a6f43]](non-interactive-script-execution.requirement.md) Non-Interactive Script Execution (@scripts/tool v1.2.2.0)
+
 
 ## Usage
 
