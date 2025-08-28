@@ -20,49 +20,49 @@
 - [ ] **Branch Update Selection**
   Please check the branches you want to update with save/start.v1 changes:
   
-  - [ ] dev/2025-08-25-UTC-1308
+  - [x] dev/2025-08-25-UTC-1308
         Component focused, oldest PDCA standards (3 days old)
         Latest: "feat(cli): Upgrade Web4TSComponent usage format + add standard script links"
         Focus: Component improvements and script links
         Has older howto.PDCA.md version
     
-  - [ ] dev/2025-08-26-UTC-2036
+  - [x] dev/2025-08-26-UTC-2036
         Already has some cherry-picks from save/start.v2 (2 days old)
         Latest: "Cherry-pick source.env from release/dev"
         Focus: Selective merge from save/start.v2
         Missing latest save/start.v1 updates
     
-  - [ ] dev/2025-08-28-UTC-0850
+  - [x] dev/2025-08-28-UTC-0850
         Has v2.5 PDCA but missing your specific updates (today - morning)
         Latest: "PDCA: Fast forward documentation to release/dev v2.5"
         Focus: Recovery session with agent registry
         Needs save/start.v1 specific enhancements
     
-  - [ ] dev/2025-08-28-UTC-0950
+  - [x] dev/2025-08-28-UTC-0950
         Basic recovery, would benefit from enhancements (today - morning)
         Latest: "Recovery startup: Initialize session"
         Focus: Standard recovery session
         Has basic tools cherry-pick but missing latest
     
-  - [ ] dev/2025-08-28-UTC-1125
+  - [x] dev/2025-08-28-UTC-1125
         Working on dual links but missing the automated tool (today - late morning)
         Latest: "Fix: Make local paths in dual links clickable"
         Focus: ScrumMaster main branch analysis
         Already working on dual links but needs fix.dual.links script
     
-  - [ ] dev/2025-08-28-UTC-1154
+  - [x] dev/2025-08-28-UTC-1154
         Background Agent, could use PDCA improvements (today - current session)
         Latest: "Recovery: Background Agent standard startup"
         Focus: Background Agent recovery
         Basic startup, would benefit from latest PDCA enhancements
     
-  - [ ] dev/2025-08-28-UTC-1225
+  - [x] dev/2025-08-28-UTC-1225
         Testing Agent, needs non-interactive script standards (today - afternoon)
         Latest: "Testing Agent role definition"
         Focus: Testing landscape analysis
         Would benefit from DevOps script standards
     
-  - [ ] dev/2025-08-28-UTC-1341
+  - [x] dev/2025-08-28-UTC-1341
         Critical testing work (48% failure rate), needs standards (today - afternoon)
         Latest: "Update tester role PDCA with decisions"
         Focus: Quality assessment with high failure rate
