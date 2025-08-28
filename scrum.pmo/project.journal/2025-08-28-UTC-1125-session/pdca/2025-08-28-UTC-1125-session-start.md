@@ -18,8 +18,8 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1125-session-start.md) | scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1125-session-start.md
-- **Project Status:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/project.status.md) | scrum.pmo/project.journal/2025-08-28-UTC-1125-session/project.status.md
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1125-session-start.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1125-session-start.md](scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1125-session-start.md)
+- **Project Status:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/project.status.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1125-session/project.status.md](scrum.pmo/project.journal/2025-08-28-UTC-1125-session/project.status.md)
 
 ### **QA Decisions**
 - [x] Completed: Reset main branch to save/start as per workflow convention

@@ -11,18 +11,18 @@
 **🚨 Issues:** Need to import updated tools and reset release/testing branch  
 
 **📎 Previous Commit:** 9593921 - ScrumMaster: Document main branch manual update process and analyze current divergence  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1130-main-branch-testing.md) | scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1130-main-branch-testing.md
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1130-main-branch-testing.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1130-main-branch-testing.md](scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1130-main-branch-testing.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1135-cherry-pick-release-test.md) | scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1135-cherry-pick-release-test.md
-- **Source.env:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/source.env) | source.env
-- **Components Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-1125/components) | components/
-- **Scripts Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-1125/scripts) | scripts/
-- **PDCA Documentation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-1125/scrum.pmo/roles/_shared/PDCA) | scrum.pmo/roles/_shared/PDCA/
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1135-cherry-pick-release-test.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1135-cherry-pick-release-test.md](scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1135-cherry-pick-release-test.md)
+- **Source.env:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/source.env) | [source.env](source.env)
+- **Components Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-1125/components) | [components/](components/)
+- **Scripts Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-1125/scripts) | [scripts/](scripts/)
+- **PDCA Documentation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-1125/scrum.pmo/roles/_shared/PDCA) | [scrum.pmo/roles/_shared/PDCA/](scrum.pmo/roles/_shared/PDCA/)
 
 ### **QA Decisions**
 - [x] Cherry-picked source.env from release/dev

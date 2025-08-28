@@ -11,15 +11,15 @@
 **🚨 Issues:** Need to validate manual main branch update workflow and document process  
 
 **📎 Previous Commit:** 7f6339d02dc4c1f563736b683d68e8eb043d050a - Session initialization: Create PDCA framework and startup decisions for 2025-08-28-UTC-1125 session  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1125-session-start.md) | scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1125-session-start.md
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1125-session-start.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1125-session-start.md](scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1125-session-start.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1130-main-branch-testing.md) | scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1130-main-branch-testing.md
-- **Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1125-session-start.md) | scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1125-session-start.md
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1130-main-branch-testing.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1130-main-branch-testing.md](scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1130-main-branch-testing.md)
+- **Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1125-session-start.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1125-session-start.md](scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1125-session-start.md)
 
 ### **QA Decisions**
 - [x] Decision 1d selected: Other - Testing and updating main branch manually
