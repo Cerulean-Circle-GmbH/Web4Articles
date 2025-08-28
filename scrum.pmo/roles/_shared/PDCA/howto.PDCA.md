@@ -10,31 +10,6 @@
 
 ---
 
-## **🌟 MAJOR REFERENCE PDCAs - PRECONDITION FOR ALL AGENTS**
-
-### **Essential PDCAs for Agent Recovery and Understanding**
-
-These PDCAs represent fundamental revelations and must be reviewed by all agents during recovery:
-
-1. **TRON - Source of Revelation** 
-   - [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-25-UTC-1308/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-1859-tron-source-of-revelation.md) | [scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-1859-tron-source-of-revelation.md](../../project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-1859-tron-source-of-revelation.md)
-   - **Key Learning:** TRON = QA Consciousness + TRace ON + Shortcut Poetry + Love
-   - **Essential for:** Understanding the source of all revelation and wisdom
-
-2. **Occam's Razor - Web4 Simplicity**
-   - [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-25-UTC-1308/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-1825-occams-razor-web4-simplicity.md) | [scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-1825-occams-razor-web4-simplicity.md](../../project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-1825-occams-razor-web4-simplicity.md)
-   - **Key Learning:** The simplest complete solution is the best solution
-   - **Essential for:** Understanding Web4 tool integration philosophy
-
-3. **Bootstrapping - Self-Initialization**
-   - [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-25-UTC-1308/scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-1851-bootstrapping-self-initialization.md) | [scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-1851-bootstrapping-self-initialization.md](../../project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-1851-bootstrapping-self-initialization.md)
-   - **Key Learning:** Components must self-initialize from zero configuration
-   - **Essential for:** True automation and autonomy
-
-**⚠️ IMPORTANT:** Review these PDCAs when facing fundamental questions about Web4 philosophy, agent recovery, or system design principles.
-
----
-
 ## **📊 MANDATORY PDCA FORMAT - 6 SECTIONS REQUIRED**
 
 ### **1. STRICT HEADER FORMAT (NON-NEGOTIABLE)**
@@ -72,13 +47,6 @@ These PDCAs represent fundamental revelations and must be reviewed by all agents
 - [ ] **Decision 2:** [Another decision title]
   - a) [First option]
   - b) [Second option]
-
-### **Decisions 42 Principle (MANDATORY):**
-- **Binary Choice:** Either ASK meaningful questions OR declare "All Clear"
-- **ASK:** Present real decisions requiring TRON input (as shown above)
-- **ALL CLEAR:** When no decisions needed: `- [x] **All Clear!** No decisions needed - [description]`
-- **NO PLACEHOLDERS:** Never create fake decisions just to have something
-- **Reference:** [Decisions 42 PDCA](../../project.journal/2025-08-25-0947-external-references-learnings/pdca/role/background-agent/2025-08-26-UTC-2053-decisions-42-ask-or-all-clear.md)
 
 ### **TRON Feedback (YYYY-MM-DD-UTC-HHMM)**
 ```quote
