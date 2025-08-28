@@ -16,19 +16,19 @@
 - **Changed Files:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/start-background-process-78bf/scrum.pmo/project.journal/2025-08-28-UTC-1846-session/project.status.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1846-session/project.status.md](scrum.pmo/project.journal/2025-08-28-UTC-1846-session/project.status.md)
 
 ### **QA Decisions**
-- [ ] **Decision 1: Primary Work Focus Area**
+- [x] **Decision 1: Primary Work Focus Area** → d) Quality/Testing focus (strategies/validation/compliance)
   - a) Technical Development focus (components/features/bug fixes)
   - b) Architecture focus (design/process/integration)
   - c) Documentation focus (requirements/automation/workflows)
   - d) Quality/Testing focus (strategies/validation/compliance)
 
-- [ ] **Decision 2: Role Selection for Session**
+- [x] **Decision 2: Role Selection for Session** → a) Stay Background Agent for session setup and coordination
   - a) Stay Background Agent for session setup and coordination
   - b) Switch to Developer for implementation tasks
   - c) Switch to Architect for system/process improvements
   - d) Switch to Tester for QA and validation
 
-- [ ] **Decision 3: Session Duration and Sprint Planning**
+- [x] **Decision 3: Session Duration and Sprint Planning** → c) Quick analysis session
   - a) Full day with multiple cycles
   - b) Half-day focused session
   - c) Quick analysis session
