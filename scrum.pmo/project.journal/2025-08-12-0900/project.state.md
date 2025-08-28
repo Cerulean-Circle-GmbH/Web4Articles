@@ -43,7 +43,7 @@
 
 ## Recent Activity
 - Branch overview and merge logs added; backend handover note present ([handover](../../handover.backend.agent.md))
-- QA log updated with achievement recognition (2025-08-11) ([QA log](../../qa-feedback-log.md))
+- QA feedback captured in PDCA with achievement recognition (2025-08-11)
 - ResearchAgent integration noted in recovery log ([recovery](../../recovery.md))
 
 ## Risks/Blockers
@@ -56,6 +56,6 @@
 - Resolve conflicts for pending branches; prioritize v2 merge tooling branch
 - Wire GitHub Actions as per branching strategy; verify protection rules
 - Update `index.md` and cross-links post-merge
-- Document outcomes in `recovery.md` and `qa-feedback-log.md`
+- Document outcomes in `recovery.md` and PDCA entries with QA feedback
 
 [Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)
