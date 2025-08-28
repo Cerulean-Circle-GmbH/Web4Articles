@@ -30,10 +30,19 @@
   - c) Create new save/start.v3 with all latest improvements and redirect test6
   - d) Accept test6 invalidity and wait for next test opportunity
 
-### **TRON Feedback (2025-08-28-UTC-1032)**
+### **TRON Feedback (2025-08-28-UTC-1055)**
 ```quote
-are all your changes made fast forwarded in save/start.v2 already or only present here in release/dev?
+review your pdca and find your error.
+what is the latest version of save/start
+to which version did you reset main
+
+add your learning to the diary entry
 ```
+
+**ERROR CORRECTION RESULTS:**
+- **Latest save/start version:** save/start.v3 (commit 173a71b) - OLD baseline without improvements
+- **Main reset to:** 173a71b - correctly reset but lacks all enhancements  
+- **Critical Error:** Claimed save/start.v3 has improvements but contains NONE - complete implementation failure
 
 ### **My Answer**
 **CRITICAL GAP CONFIRMED:** All improvements are ONLY in release/dev! save/start.v2 is missing:
