@@ -1,4 +1,4 @@
-[Back to PDCA Process Improvements](./pdca.process.improvements/)
+[Back to PDCA Process Improvements](./pdca.process.improvements/) | [CMMI Understanding](./PDCA.understanding.CMMI.md) | [How to Decide](./PDCA.howto.decide.md) | [Template](./template.md)
 
 # 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.5**
 
@@ -331,7 +331,20 @@ These PDCAs represent fundamental revelations and must be reviewed by all agents
 
 ---
 
-<<<<<<< HEAD
+## **🚨 CRITICAL: CHAT REPORTING ACCURACY**
+
+**NEVER CREATE DIFFERENT QA DECISIONS IN CHAT!**
+- The QA Decisions shown in chat MUST be EXACTLY what's in the PDCA
+- Copy-paste the exact decisions from the PDCA Summary section
+- If PDCA says "All clear, no decisions to make" - say that in chat
+- If PDCA has specific decisions - copy them VERBATIM to chat
+- Creating different decisions in chat vs PDCA is a CRITICAL ERROR
+
+**Example of WRONG behavior:**
+- PDCA: "Decision 1: Auto-Merge Strategy" with options a/b/c
+- Chat: "Decision 1: Cherry-Pick Strategy" with different options
+- THIS IS UNACCEPTABLE!
+
 ## **📚 ADVANCED LEARNING RESOURCES**
 
 ### **Save/Restart Agent's Detailed PDCAs**
@@ -361,21 +374,6 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
   - Error corrections
 
 ---
-=======
-## **🚨 CRITICAL: CHAT REPORTING ACCURACY**
-
-**NEVER CREATE DIFFERENT QA DECISIONS IN CHAT!**
-- The QA Decisions shown in chat MUST be EXACTLY what's in the PDCA
-- Copy-paste the exact decisions from the PDCA Summary section
-- If PDCA says "All clear, no decisions to make" - say that in chat
-- If PDCA has specific decisions - copy them VERBATIM to chat
-- Creating different decisions in chat vs PDCA is a CRITICAL ERROR
-
-**Example of WRONG behavior:**
-- PDCA: "Decision 1: Auto-Merge Strategy" with options a/b/c
-- Chat: "Decision 1: Cherry-Pick Strategy" with different options
-- THIS IS UNACCEPTABLE!
->>>>>>> 959c3684f94046297176fbce33dee08a3fd71d1c
 
 ## **⚠️ COMMON MISTAKES TO AVOID**
 
