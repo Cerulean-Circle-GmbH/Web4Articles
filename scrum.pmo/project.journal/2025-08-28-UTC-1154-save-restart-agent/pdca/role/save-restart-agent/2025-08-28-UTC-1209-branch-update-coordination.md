@@ -67,6 +67,11 @@
         Latest: "Update tester role PDCA with decisions"
         Focus: Quality assessment with high failure rate
         Critical testing work that needs latest standards
+        
+  - [x] release/dev (ADDED BY USER REQUEST)
+        Main development branch
+        Needs save/start.v1 specific enhancements
+        Interactive decision patterns and non-interactive scripts
 
 ### **Critical Updates to Apply**
 The following changes from save/start.v1 need to be propagated:
@@ -164,6 +169,7 @@ done
 ✅ Updated dev/2025-08-28-UTC-1154
 ✅ Updated dev/2025-08-28-UTC-1225
 ✅ Updated dev/2025-08-28-UTC-1341
+⏳ Updating release/dev (in progress)
 ```
 
 **Files Successfully Applied:**
