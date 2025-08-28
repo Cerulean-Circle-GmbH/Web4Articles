@@ -4,7 +4,12 @@
 
 **🗓️ Date:** 2025-08-28-UTC-1212  
 **🎯 Objective:** Update all 17 PDCAs to full v2.5 template compliance without losing information  
-**👤 Role:** Save/Restart Agent → PDCA Compliance Lead  
+
+**👤 Agent Role:** Save/Restart Agent → PDCA Compliance Lead  
+**👤 Branch:** save/start.v1 → Permanent Clean Reference
+**🎯 Project Journal Session:** 2025-08-28-UTC-1154-save-restart-agent → Recovery & Compliance Session
+**🎯 Sprint:** Sprint-21 → Process Standardization
+**✅ Task:** PDCA Documentation & Process Maintenance
 **🚨 Issues:** Setting bad example for other agents with non-compliant PDCAs  
 **📎 Previous Commit:** 90241e6 - PDCA: Fixed template compliance - corrected icons and section format  
 **🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1211-pdca-template-compliance-fix.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1211-pdca-template-compliance-fix.md](2025-08-28-UTC-1211-pdca-template-compliance-fix.md)
