@@ -295,6 +295,62 @@
 
 ---
 
+## **🚀 STARTUP DECISION FRAMEWORK**
+
+### **Session Initialization Standard Questions**
+
+When starting a new work session, always present these three categories of decisions to establish clear work direction and user alignment:
+
+**Template Structure:**
+```markdown
+### **QA Decisions**
+- [ ] **Decision 1: Primary Work Focus Area**
+  - a) [Technical Development Focus - e.g., component enhancement, bug fixes, feature development]
+  - b) [Architecture Focus - e.g., system design, process improvements, integration work]  
+  - c) [Documentation Focus - e.g., requirement processing, automation, workflow optimization]
+  - d) [Quality/Testing Focus - e.g., testing strategies, validation, compliance checks]
+
+- [ ] **Decision 2: Role Selection for Session**
+  - a) [Current Role] for [coordination/management focus]
+  - b) Switch to Developer for [implementation tasks]
+  - c) Switch to Architect for [system design and process improvements]
+  - d) Switch to Tester for [quality assurance and testing]
+  - e) Switch to [Other Relevant Role] for [specific capability]
+
+- [ ] **Decision 3: Session Duration and Sprint Planning**
+  - a) Full day session with multiple sprint cycles
+  - b) Half-day focused session on specific component
+  - c) Quick analysis session for current project state review
+  - d) Extended multi-day session for major feature development
+```
+
+### **Adaptation Guidelines:**
+
+**Focus Area Customization:**
+- Replace bracketed examples with current project priorities
+- Base options on recent work, component status, and project needs
+- Always include at least 4 distinct focus areas covering technical, architectural, process, and quality aspects
+
+**Role Selection Customization:**
+- Start with current session role as option (a)
+- Include roles relevant to identified focus areas
+- Consider specialized roles available in the project (e.g., TSRanger focus → include testing specialist)
+- Match role capabilities to focus area requirements
+
+**Session Planning Customization:**
+- Adjust duration options based on work complexity
+- Consider project timeline and sprint boundaries
+- Match session intensity to focus area requirements
+- Include both focused and comprehensive session options
+
+### **Usage Pattern:**
+1. **Present at Session Start:** Always include these three decision categories when initializing work sessions
+2. **Keep Open Until Answered:** Don't make assumptions about user priorities 
+3. **Build Context:** Use current project state to inform option descriptions
+4. **Maintain Quality:** Ensure each option represents a genuinely different approach with distinct outcomes
+
+---
+
 ## **✅ DECISION-MAKING CHECKLIST**
 
 Before finalizing any PDCA:
