@@ -43,7 +43,7 @@
 ## Recent Activity
 - Recovery process executed; journal created.
 - QA log updated with aggregation summary.
-- See [qa-feedback-log.md](../../qa-feedback-log.md)
+- QA feedback: Follow PDCA process as per [howto.PDCA.md](../../roles/_shared/PDCA/howto.PDCA.md)
 - Recovery log: [recovery.md](../../recovery.md)
 
 ## Risks/Blockers
@@ -56,6 +56,6 @@
 - Resolve conflicts for pending branches; prioritize v2 merge tooling.
 - Wire GitHub Actions as per strategy.
 - Update `index.md` post-merge.
-- Document outcomes in `recovery.md` and `qa-feedback-log.md`.
+- Document outcomes in `recovery.md` and PDCA entries with QA feedback.
 
 [Back to Project Journal](../) | [Journal Overview](../../project.journal.overview.md)

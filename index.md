@@ -15,7 +15,7 @@
 | docs/tech-stack.md | Docs | 2025-08-06 |
 | docs/updown-removal-fix-log.md | Docs | 2025-08-06 |
 | index.md | Index | 2025-08-06 |
-| qa-feedback-log.md | QA feedback | 2025-08-06 |
+| scrum.pmo/roles/_shared/PDCA/howto.PDCA.md | QA feedback process | 2025-08-06 |
 | recovery.md | Recovery log | 2025-08-06 |
 | scrum.pmo/roles/Architect/process.md | Architect process | 2025-08-06 |
 | scrum.pmo/roles/Developer/process.md | Developer process | 2025-08-06 |
