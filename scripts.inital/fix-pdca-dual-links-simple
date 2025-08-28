@@ -119,23 +119,8 @@ main() {
     local target="${1:-}"
     
     if [[ -z "$target" ]]; then
-        cat << EOF
-Web4 PDCA Dual Link Fixer (Simple)
-
-Usage:
-  $(basename $0) <pdca-file>
-
-Description:
-  Automatically fixes dual links in PDCA files to comply with standard format
-  Uses § notation for readable display and correct relative paths
-
-Examples:
-  $(basename $0) scrum.pmo/roles/Developer/PDCA/2025-08-26-UTC-1234.md
-  $(basename $0) project.journal/session/pdca/role/agent/file.md
-
-Note: This is the simple version that processes individual files
-      For batch processing, use fix-pdca-dual-links
-EOF
+        echo "Usage: $0 <pdca-file>"
+        echo "Example: $0 path/to/file.md"
         exit 1
     fi
     
