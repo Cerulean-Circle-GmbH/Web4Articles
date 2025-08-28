@@ -1,4 +1,4 @@
-[Back to PDCA Process Improvements](./pdca.process.improvements/)
+[Back to PDCA Process Improvements](./pdca.process.improvements/) | [CMMI Understanding](./PDCA.understanding.CMMI.md) | [How to Decide](./PDCA.howto.decide.md) | [Template](./template.md)
 
 # 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.5**
 
@@ -168,22 +168,20 @@
 ### **Git Protocol (MANDATORY)**
 1. **Immediate commit and push** after every PDCA creation [[memory:6902297]]
 2. **Git add, commit, and push operations** ensure proper version control [[memory:6902297]]
-3. **One-liner commit messages** with `git commit -m "..."` [[memory:6713745]]
+3. **One-liner commit messages** with PDCA name: `git commit -m "PDCA: [Title from PDCA header]"` [[memory:6713745]]
+   - Example: `git commit -m "PDCA: Branch update coordination - cherry-pick strategy"`
+   - Include the PDCA title for traceability and robustness
 4. **Auto-merge to release/dev** after EVERY commit (Decision 1a - automatic)
 5. **File not found?** Always check release/dev and cherry-pick if missing:
    ```bash
    git fetch origin release/dev
    git checkout origin/release/dev -- path/to/missing/file
    ```
-6. **Tool synchronization** - Cherry-pick development tools when needed:
-   ```bash
-   git checkout origin/release/dev -- source.env components/ scenarios/ scripts/
-   ```
-7. **ALWAYS ask before git operations** (Decision 2a) - pull, merge, rebase, reset
-8. **NEVER truncate user quotes** - they are documentation!
-9. **Document ALL git operations in PDCAs** - especially branch switches
-10. **Cross-agent learning** - Check other branches for improvements
-11. **Test conflict handling** - Script now creates PRs on merge conflicts
+6. **ALWAYS ask before git operations** (Decision 2a) - pull, merge, rebase, reset
+7. **NEVER truncate user quotes** - they are documentation!
+8. **Document ALL git operations in PDCAs** - especially branch switches
+9. **Cross-agent learning** - Check other branches for improvements
+10. **Test conflict handling** - Script now creates PRs on merge conflicts
 
 ### **Branch Strategy (Decision 1d):**
 1. **Start on save/start** - Always begin here
@@ -303,7 +301,70 @@
 
 ---
 
-<<<<<<< HEAD
+## **🔄 RESPONDING TO 'PDCA' PROMPT - COMPLIANCE REVIEW**
+
+When a user types just `pdca` as a prompt, this is a **compliance check request**. The agent MUST:
+
+### **1. Review Previous PDCA**
+- **Immediately read** the most recent PDCA created
+- **Check compliance** against ALL sections in this howto.PDCA.md
+- **Identify violations** of the mandatory 6-section format
+
+### **2. Re-read Key Documents**
+1. **This howto.PDCA.md** - Full review of all requirements
+2. **[PDCA Reporting Requirement](./PDCA.reporting.requirement.md)** - Official standard
+3. **[Dual Link Format Requirement](./PDCA.dual.link.format.requirement.md)** - Link standards
+4. **[CMMI Understanding](./PDCA.understanding.CMMI.md)** - CMM Level 3 compliance
+
+### **3. Actions Based on Compliance Status**
+
+#### **If PDCA is Non-Compliant:**
+1. **Create a new PDCA** documenting the fixes needed
+2. **Fix the previous PDCA** to meet all requirements
+3. **Document learnings** about what was missed
+4. **Update the fixed PDCA** with correction notice
+
+#### **If PDCA is Compliant:**
+1. **Acknowledge compliance** - "Previous PDCA meets all requirements ✅"
+2. **Refresh memory** after long tasks that may have caused forgetting
+3. **Return to CMM3 compliance** mindset
+4. **Continue with next task** maintaining standards
+
+### **4. Response Format for 'pdca' Prompt**
+```markdown
+## PDCA Compliance Check Result
+
+**Previous PDCA:** [GitHub](URL) | [local/path](path)
+**Compliance Status:** ✅ Compliant / ❌ Non-Compliant
+
+### Issues Found (if any):
+- Missing section: [section name]
+- Incorrect format: [issue description]
+- Dual link errors: [specific problems]
+
+### Actions Taken:
+- [x] Re-read howto.PDCA.md
+- [x] Reviewed reporting requirements
+- [x] Checked dual link standards
+- [x] Validated CMM3 compliance
+- [ ] Fixed previous PDCA (if needed)
+- [ ] Created correction PDCA (if needed)
+
+### Next Steps:
+[Continue with current task maintaining standards]
+```
+
+### **5. Purpose of 'pdca' Prompt**
+- **Quality gate** for long sessions
+- **Memory refresh** after complex tasks
+- **Compliance enforcement** for standards
+- **Learning opportunity** from mistakes
+- **CMM3 maturity** maintenance
+
+**Remember:** The 'pdca' prompt is a self-correction mechanism to ensure consistent quality throughout the session!
+
+---
+
 ## **📚 ADVANCED LEARNING RESOURCES**
 
 ### **Save/Restart Agent's Detailed PDCAs**
