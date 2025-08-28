@@ -19,8 +19,8 @@
 ### **QA Decisions**
 **Please select which broken links to fix:**
 - [ ] **Fix Group 1:** External references (2 broken links)
-- [ ] **Fix Group 2:** Project journal 2025-08-18-0833-recovery (1 broken link)
-- [ ] **Fix Group 3:** Project journal 2025-08-20-1552 (3 broken links)
+- [x] **Fix Group 2:** Project journal 2025-08-18-0833-recovery (1 broken link)
+- [x] **Fix Group 3:** Project journal 2025-08-20-1552 (3 broken links)
 
 ### **TRON Feedback (2025-08-28-UTC-1203)**
 ```quote
