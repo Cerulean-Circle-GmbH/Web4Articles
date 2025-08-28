@@ -74,101 +74,105 @@ export class Web4TSComponentCLI {
   }
 
   private showUsage(): void {
-    console.log(`
-🚀 Web4TSComponent CLI - TypeScript Component Standards Enforcement & Architecture Compliance
-
-Usage:
-  web4tscomponent <command> [options]                        # Execute Web4 standard operations
-  web4tscomponent generate-cli <component-name> <version>    # Generate location-resilient CLI script
-  web4tscomponent validate-standard <script-path>            # Validate CLI against Web4 standard
-  web4tscomponent scaffold-component <name> <version> [opts] # Create Web4-compliant component
-  web4tscomponent audit-compliance <component-path>          # Audit component for Web4 compliance
-  web4tscomponent generate-report <component-dir>           # Generate compliance report
-  web4tscomponent show-standard                             # Display location-resilient CLI standard
-  web4tscomponent show-guidelines                           # Display Web4 architecture guidelines
-
-Commands:
-  generate-cli     Generate location-resilient CLI script following Web4 standard
-  validate-standard Validate existing CLI script against Web4 location-resilient standard
-  scaffold-component Create complete Web4-compliant component with layered architecture
-  audit-compliance  Audit existing component for Web4 architectural compliance
-  generate-report   Generate comprehensive compliance report for component directory
-  show-standard     Display complete location-resilient CLI implementation standard
-  show-guidelines   Display Web4 architectural principles and guidelines
-
-Parameters:
-  <component-name>  Component name (e.g., Web4Example, MyNewComponent, UserManager)
-  <version>         Semantic version (e.g., 0.1.0.0, 1.0.0.0, 0.2.1.3)
-  <script-path>     Path to CLI script file (e.g., scripts/versions/requirement0.1.3.0)
-  <component-path>  Path to component directory (e.g., components/Web4Requirement/0.1.3.0)
-  <component-dir>   Directory containing components (e.g., components/, ./components)
-  [options]         Scaffold options: --cli --spec --vitest --layers
-
-Examples:
-  # Location-Resilient CLI Generation
-  web4tscomponent generate-cli Web4Example 0.1.0.0
-  web4tscomponent generate-cli UserManager 1.2.3.4
-  web4tscomponent generate-cli MyComponent 0.2.0.0
-
-  # CLI Standard Validation
-  web4tscomponent validate-standard scripts/versions/requirement0.1.3.0
-  web4tscomponent validate-standard /workspace/scripts/versions/user0.1.0.0
-  web4tscomponent validate-standard ./my-custom-cli.sh
-
-  # Component Scaffolding (Web4 Architecture)
-  web4tscomponent scaffold-component MyNewComponent 0.1.0.0 --cli --spec --vitest --layers
-  web4tscomponent scaffold-component DataProcessor 1.0.0.0 --cli --spec
-  web4tscomponent scaffold-component WebService 0.3.0.0 --layers --vitest
-
-  # Compliance Auditing
-  web4tscomponent audit-compliance components/Web4Requirement/0.1.3.0
-  web4tscomponent audit-compliance components/User/0.1.0.0
-  web4tscomponent audit-compliance ./my-component/
-
-  # Compliance Reporting
-  web4tscomponent generate-report components/
-  web4tscomponent generate-report ./project-components/
-  web4tscomponent generate-report /workspace/components
-
-  # Documentation & Standards
-  web4tscomponent show-standard
-  web4tscomponent show-guidelines
-
-Scaffold Options:
-  --cli              Include location-resilient CLI script (follows Web4 standard)
-  --spec             Include spec/requirements and spec/requirements.md folders
-  --vitest           Include Vitest configuration (Web4 testing standard)
-  --layers           Include full layer architecture (layer2, layer3, layer5)
-
-Web4 Architecture Principles Applied:
-  • Empty Constructor Principle: All generated classes use empty constructors
-  • Scenario-First Development: Components support hibernation/restoration
-  • IOR Architecture: Version-specific component path resolution
-  • Semantic Invariants: Location-resilient operation from any directory
-  • Layered Architecture: Clear separation of concerns across layers
-  • Location-Resilient CLIs: All generated scripts work from any directory
-
-Context Detection:
-  • Automatically detects Web4 project root using git and package.json
-  • Validates component directory structure and naming conventions
-  • Supports execution from any directory within the project tree
-  • Preserves original execution context after operations
-
-Standard Compliance:
-  • All generated components follow Web4 architectural principles
-  • Location-resilient CLI scripts use standard project root detection
-  • TypeScript configuration follows Web4 ESM-native patterns
-  • Component structure follows Web4 layered architecture
-
-Quality Assurance:
-  • Validation ensures compliance with Web4 standards before creation
-  • Audit functionality provides ongoing compliance monitoring
-  • Reporting generates comprehensive compliance overviews
-  • Standards enforcement prevents architectural drift
-
-For detailed documentation: https://github.com/Cerulean-Circle-GmbH/Web4Articles
-Web4 Architecture: Semantic invariants, location independence, universal patterns
-`);
+    const cyan = '\x1b[36m';
+    const yellow = '\x1b[33m';
+    const green = '\x1b[32m';
+    const bold = '\x1b[1m';
+    const reset = '\x1b[0m';
+    
+    console.log(`🚀 ${bold}${cyan}Web4TSComponent CLI${reset} ${green}- TypeScript Component Standards Enforcement & Architecture Compliance${reset}`);
+    console.log('');
+    console.log(`${bold}Usage:${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} ${yellow}<command>${reset} ${yellow}[options]${reset}                        ${green}# Execute Web4 standard operations${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} generate-cli ${yellow}<component-name>${reset} ${yellow}<version>${reset}    ${green}# Generate location-resilient CLI script${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} validate-standard ${yellow}<script-path>${reset}            ${green}# Validate CLI against Web4 standard${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} scaffold-component ${yellow}<name>${reset} ${yellow}<version>${reset} ${yellow}[opts]${reset} ${green}# Create Web4-compliant component${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} audit-compliance ${yellow}<component-path>${reset}          ${green}# Audit component for Web4 compliance${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} generate-report ${yellow}<component-dir>${reset}           ${green}# Generate compliance report${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} show-standard                             ${green}# Display location-resilient CLI standard${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} show-guidelines                           ${green}# Display Web4 architecture guidelines${reset}`);
+    console.log('');
+    console.log(`${bold}Commands:${reset}`);
+    console.log(`  ${cyan}generate-cli${reset}     Generate location-resilient CLI script following Web4 standard`);
+    console.log(`  ${cyan}validate-standard${reset} Validate existing CLI script against Web4 location-resilient standard`);
+    console.log(`  ${cyan}scaffold-component${reset} Create complete Web4-compliant component with layered architecture`);
+    console.log(`  ${cyan}audit-compliance${reset}  Audit existing component for Web4 architectural compliance`);
+    console.log(`  ${cyan}generate-report${reset}   Generate comprehensive compliance report for component directory`);
+    console.log(`  ${cyan}show-standard${reset}     Display complete location-resilient CLI implementation standard`);
+    console.log(`  ${cyan}show-guidelines${reset}   Display Web4 architectural principles and guidelines`);
+    console.log('');
+    console.log(`${bold}Parameters:${reset}`);
+    console.log(`  ${yellow}<component-name>${reset}  Component name (e.g., ${yellow}Web4Example${reset}, ${yellow}MyNewComponent${reset}, ${yellow}UserManager${reset})`);
+    console.log(`  ${yellow}<version>${reset}         Semantic version (e.g., ${yellow}0.1.0.0${reset}, ${yellow}1.0.0.0${reset}, ${yellow}0.2.1.3${reset})`);
+    console.log(`  ${yellow}<script-path>${reset}     Path to CLI script file (e.g., ${yellow}scripts/versions/requirement0.1.3.0${reset})`);
+    console.log(`  ${yellow}<component-path>${reset}  Path to component directory (e.g., ${yellow}components/Web4Requirement/0.1.3.0${reset})`);
+    console.log(`  ${yellow}<component-dir>${reset}   Directory containing components (e.g., ${yellow}components/${reset}, ${yellow}./components${reset})`);
+    console.log(`  ${yellow}[options]${reset}         Scaffold options: ${yellow}--cli${reset} ${yellow}--spec${reset} ${yellow}--vitest${reset} ${yellow}--layers${reset}`);
+    console.log('');
+    console.log(`${bold}Examples:${reset}`);
+    console.log(`  ${green}# Location-Resilient CLI Generation${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} generate-cli ${yellow}Web4Example${reset} ${yellow}0.1.0.0${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} generate-cli ${yellow}UserManager${reset} ${yellow}1.2.3.4${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} generate-cli ${yellow}MyComponent${reset} ${yellow}0.2.0.0${reset}`);
+    console.log('');
+    console.log(`  ${green}# CLI Standard Validation${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} validate-standard ${yellow}scripts/versions/requirement0.1.3.0${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} validate-standard ${yellow}/workspace/scripts/versions/user0.1.0.0${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} validate-standard ${yellow}./my-custom-cli.sh${reset}`);
+    console.log('');
+    console.log(`  ${green}# Component Scaffolding (Web4 Architecture)${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} scaffold-component ${yellow}MyNewComponent${reset} ${yellow}0.1.0.0${reset} ${yellow}--cli${reset} ${yellow}--spec${reset} ${yellow}--vitest${reset} ${yellow}--layers${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} scaffold-component ${yellow}DataProcessor${reset} ${yellow}1.0.0.0${reset} ${yellow}--cli${reset} ${yellow}--spec${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} scaffold-component ${yellow}WebService${reset} ${yellow}0.3.0.0${reset} ${yellow}--layers${reset} ${yellow}--vitest${reset}`);
+    console.log('');
+    console.log(`  ${green}# Compliance Auditing${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} audit-compliance ${yellow}components/Web4Requirement/0.1.3.0${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} audit-compliance ${yellow}components/User/0.1.0.0${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} audit-compliance ${yellow}./my-component/${reset}`);
+    console.log('');
+    console.log(`  ${green}# Compliance Reporting${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} generate-report ${yellow}components/${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} generate-report ${yellow}./project-components/${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} generate-report ${yellow}/workspace/components${reset}`);
+    console.log('');
+    console.log(`  ${green}# Documentation & Standards${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} show-standard`);
+    console.log(`  ${cyan}web4tscomponent${reset} show-guidelines`);
+    console.log('');
+    console.log(`${bold}Scaffold Options:${reset}`);
+    console.log(`  ${yellow}--cli${reset}              Include location-resilient CLI script (follows Web4 standard)`);
+    console.log(`  ${yellow}--spec${reset}             Include spec/requirements and spec/requirements.md folders`);
+    console.log(`  ${yellow}--vitest${reset}           Include Vitest configuration (Web4 testing standard)`);
+    console.log(`  ${yellow}--layers${reset}           Include full layer architecture (layer2, layer3, layer5)`);
+    console.log('');
+    console.log(`${bold}Web4 Architecture Principles Applied:${reset}`);
+    console.log(`  ${green}•${reset} Empty Constructor Principle: All generated classes use empty constructors`);
+    console.log(`  ${green}•${reset} Scenario-First Development: Components support hibernation/restoration`);
+    console.log(`  ${green}•${reset} IOR Architecture: Version-specific component path resolution`);
+    console.log(`  ${green}•${reset} Semantic Invariants: Location-resilient operation from any directory`);
+    console.log(`  ${green}•${reset} Layered Architecture: Clear separation of concerns across layers`);
+    console.log(`  ${green}•${reset} Location-Resilient CLIs: All generated scripts work from any directory`);
+    console.log('');
+    console.log(`${bold}Context Detection:${reset}`);
+    console.log(`  ${green}•${reset} Automatically detects Web4 project root using git and package.json`);
+    console.log(`  ${green}•${reset} Validates component directory structure and naming conventions`);
+    console.log(`  ${green}•${reset} Supports execution from any directory within the project tree`);
+    console.log(`  ${green}•${reset} Preserves original execution context after operations`);
+    console.log('');
+    console.log(`${bold}Standard Compliance:${reset}`);
+    console.log(`  ${green}•${reset} All generated components follow Web4 architectural principles`);
+    console.log(`  ${green}•${reset} Location-resilient CLI scripts use standard project root detection`);
+    console.log(`  ${green}•${reset} TypeScript configuration follows Web4 ESM-native patterns`);
+    console.log(`  ${green}•${reset} Component structure follows Web4 layered architecture`);
+    console.log('');
+    console.log(`${bold}Quality Assurance:${reset}`);
+    console.log(`  ${green}•${reset} Validation ensures compliance with Web4 standards before creation`);
+    console.log(`  ${green}•${reset} Audit functionality provides ongoing compliance monitoring`);
+    console.log(`  ${green}•${reset} Reporting generates comprehensive compliance overviews`);
+    console.log(`  ${green}•${reset} Standards enforcement prevents architectural drift`);
+    console.log('');
+    console.log(`For detailed documentation: ${cyan}https://github.com/Cerulean-Circle-GmbH/Web4Articles${reset}`);
+    console.log(`${bold}Web4 Architecture:${reset} ${green}Semantic invariants, location independence, universal patterns${reset}`);
   }
 
   private async handleGenerateCLI(args: string[]): Promise<void> {
