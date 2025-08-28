@@ -24,11 +24,11 @@
 - **Startup Decision Framework:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | Decisions agent should have presented
 
 ### **QA Decisions**
-- [ ] **Decision 1: Process Adoption Strategy**
+- [x] **Decision 1: Process Adoption Strategy** → **SELECTED: 1c + 1d**
   - a) Accept partial compliance (PDCA creation) and work on incremental format improvements
   - b) Focus on decision framework enforcement as higher priority than template format
-  - c) Recognize fundamental agent behavior patterns and design processes that work with them
-  - d) Implement post-creation correction protocols for format and decision compliance
+  - c) ✅ **SELECTED** - Recognize fundamental agent behavior patterns and design processes that work with them
+  - d) ✅ **SELECTED** - Implement post-creation correction protocols for format and decision compliance
 
 ### **TRON Feedback (2025-08-28-UTC-1020)**
 ```quote
