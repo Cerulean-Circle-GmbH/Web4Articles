@@ -23,7 +23,7 @@
 - **Sprint 20 Requirements:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2227/scrum.pmo/sprints/sprint-20/planning.md) | [scrum.pmo/sprints/sprint-20/planning.md](scrum.pmo/sprints/sprint-20/planning.md)
 
 ### **QA Decisions**
-- [ ] **Decision 1: ONCE Singleton Pattern Implementation**
+- [x] **Decision 1: ONCE Singleton Pattern Implementation** → b) Use Web4 empty constructor with lazy initialization on first use
   - a) Implement as pure singleton with static getInstance() method
   - b) Use Web4 empty constructor with lazy initialization on first use
   - c) Create factory pattern with scenario-based instantiation
