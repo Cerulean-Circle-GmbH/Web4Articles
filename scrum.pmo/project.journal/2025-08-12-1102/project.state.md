@@ -43,7 +43,7 @@
 ## Recent Activity
 - Recovery process executed from release/dev
 - Previous recovery at 2025-08-12-1039 completed sprint 9 integration work
-- See [qa-feedback-log.md](../../qa-feedback-log.md)
+- QA feedback: Follow PDCA process as per [howto.PDCA.md](../../roles/_shared/PDCA/howto.PDCA.md)
 - See [recovery.md](../../recovery.md)
 
 ## Risks/Blockers

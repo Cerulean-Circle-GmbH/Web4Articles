@@ -51,7 +51,7 @@
 
 ## Recent Activity
 - See [handover.backend.agent.md](../../handover.backend.agent.md)
-- QA log updates: [qa-feedback-log.md](../../qa-feedback-log.md)
+- QA feedback: Follow PDCA process as per [howto.PDCA.md](../../roles/_shared/PDCA/howto.PDCA.md)
 - Recovery log: [recovery.md](../../recovery.md)
 
 ## Risks/Blockers
