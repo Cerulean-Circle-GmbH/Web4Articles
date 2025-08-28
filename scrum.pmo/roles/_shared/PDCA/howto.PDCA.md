@@ -168,7 +168,9 @@
 ### **Git Protocol (MANDATORY)**
 1. **Immediate commit and push** after every PDCA creation [[memory:6902297]]
 2. **Git add, commit, and push operations** ensure proper version control [[memory:6902297]]
-3. **One-liner commit messages** with `git commit -m "..."` [[memory:6713745]]
+3. **One-liner commit messages** with PDCA name: `git commit -m "PDCA: [Title from PDCA header]"` [[memory:6713745]]
+   - Example: `git commit -m "PDCA: Branch update coordination - cherry-pick strategy"`
+   - Include the PDCA title for traceability and robustness
 4. **Auto-merge to release/dev** after EVERY commit (Decision 1a - automatic)
 5. **File not found?** Always check release/dev and cherry-pick if missing:
    ```bash
