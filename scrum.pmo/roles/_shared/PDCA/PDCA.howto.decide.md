@@ -135,6 +135,50 @@
 
 ---
 
+## **🎯 SOPHISTICATED INTERACTIVE DECISIONS**
+
+### **Branch Update Coordination Pattern**
+When coordinating updates across multiple branches, use an interactive checkbox pattern:
+
+```markdown
+### **QA Decisions**
+- [ ] **Branch Update Selection**
+  Please check the branches you want to update with [source] changes:
+  
+  - [ ] branch-name
+        Key characteristic, age
+        Latest: "commit message"
+        Focus: what this branch does
+        What it needs from source branch
+```
+
+**Key Features:**
+1. **Indented Metadata** - Each option has descriptive metadata indented underneath
+2. **Clear Context** - Shows branch age, latest commit, focus area, and what's missing
+3. **Interactive Process** - User checks boxes, then responds "done"
+4. **Agent Action** - Agent reads PDCA to see selections and executes
+
+### **Implementation Steps**
+1. Present branches with clear, indented metadata
+2. **REMIND USER TO SAVE** - "Please save the file after checking boxes"
+3. User marks checkboxes in the PDCA file
+4. User saves the file (Ctrl+S / Cmd+S)
+5. User responds "done" in chat
+6. Agent reads PDCA and executes cherry-picks
+
+**Example from 2025-08-28-UTC-1209:**
+- User appreciated formatting: "well done, after your update it was a pleasure"
+- User forgot to save after checking boxes (common mistake!)
+- Solution: Always remind to save before saying "done"
+
+**Benefits:**
+- User maintains full control over selections
+- Clear visibility of what each option entails
+- Audit trail in PDCA of what was selected
+- Reusable pattern for similar multi-selection scenarios
+
+---
+
 ## **💡 EXAMPLES OF GOOD VS BAD DECISIONS**
 
 ### **✅ GOOD Decision Examples:**
