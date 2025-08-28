@@ -323,12 +323,23 @@ When a user types just `pdca` as a prompt, this is a **compliance check request*
 2. **Fix the previous PDCA** to meet all requirements
 3. **Document learnings** about what was missed
 4. **Update the fixed PDCA** with correction notice
+5. **Act and report** CMM3 compliant in your response
 
 #### **If PDCA is Compliant:**
 1. **Acknowledge compliance** - "Previous PDCA meets all requirements ✅"
 2. **Refresh memory** after long tasks that may have caused forgetting
 3. **Return to CMM3 compliance** mindset
 4. **Continue with next task** maintaining standards
+5. **Act and report** CMM3 compliant in your response
+
+### **4. MANDATORY RESPONSE FORMAT**
+After completing the compliance review, the agent MUST:
+- **Report findings** in a structured, CMM3 compliant format
+- **Take action** if needed (fixes or acknowledgment)
+- **Maintain PDCA standards** in all subsequent responses
+- **Create PDCAs** for any new work that follows
+
+**WARNING:** Simply checking compliance without acting and reporting properly will trigger another `pdca` prompt from the user!
 
 ### **4. Response Format for 'pdca' Prompt**
 ```markdown
