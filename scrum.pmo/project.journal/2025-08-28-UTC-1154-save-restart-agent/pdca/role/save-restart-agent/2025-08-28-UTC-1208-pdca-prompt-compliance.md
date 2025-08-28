@@ -4,7 +4,12 @@
 
 **🗓️ Date:** 2025-08-28-UTC-1208  
 **🎯 Objective:** Add 'pdca' prompt handling to howto.PDCA.md for compliance checking  
-**👤 Role:** Save/Restart Agent → Process Documentation Enhancement  
+
+**👤 Agent Role:** Save/Restart Agent → Process Documentation Enhancement  
+**👤 Branch:** save/start.v1 → Permanent Clean Reference
+**🎯 Project Journal Session:** 2025-08-28-UTC-1154-save-restart-agent → Recovery & Compliance Session
+**🎯 Sprint:** Sprint-21 → Process Standardization
+**✅ Task:** PDCA Documentation & Process Maintenance
 **🚨 Issues:** Missing guidance for 'pdca' prompt compliance checks  
 **📎 Previous Commit:** cf6053a - DevOps: Non-interactive script standards - requirement f8a3b4c2 @scripts/tool v1.2.2.0  
 **🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1207-non-interactive-scripts.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1207-non-interactive-scripts.md](2025-08-28-UTC-1207-non-interactive-scripts.md)

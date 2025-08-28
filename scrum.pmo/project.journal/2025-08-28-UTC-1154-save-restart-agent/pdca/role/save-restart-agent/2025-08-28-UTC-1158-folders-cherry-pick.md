@@ -4,7 +4,12 @@
 
 **🗓️ Date:** 2025-08-28-UTC-1158  
 **🎯 Objective:** Cherry-pick components, scenarios, and scripts folders from release/dev  
-**👤 Role:** Save/Restart Agent → Process Enhancement  
+
+**👤 Agent Role:** Save/Restart Agent → Process Enhancement  
+**👤 Branch:** save/start.v1 → Permanent Clean Reference
+**🎯 Project Journal Session:** 2025-08-28-UTC-1154-save-restart-agent → Recovery & Compliance Session
+**🎯 Sprint:** Sprint-21 → Process Standardization
+**✅ Task:** PDCA Documentation & Process Maintenance
 **🚨 Issues:** Need to synchronize major project folders with release/dev  
 **📎 Previous Commit:** e3a843a - Cherry-pick: Updated source.env with ll alias and versions PATH  
 [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1157-source-env-update.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1157-source-env-update.md](2025-08-28-UTC-1157-source-env-update.md)

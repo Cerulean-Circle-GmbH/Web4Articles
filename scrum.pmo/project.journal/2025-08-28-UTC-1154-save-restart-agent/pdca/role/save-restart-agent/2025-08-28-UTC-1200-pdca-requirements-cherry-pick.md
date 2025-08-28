@@ -4,7 +4,12 @@
 
 **🗓️ Date:** 2025-08-28-UTC-1200  
 **🎯 Objective:** Cherry-pick PDCA dual link format requirement and related files to fix dead links  
-**👤 Role:** Save/Restart Agent → Process Enhancement  
+
+**👤 Agent Role:** Save/Restart Agent → Process Enhancement  
+**👤 Branch:** save/start.v1 → Permanent Clean Reference
+**🎯 Project Journal Session:** 2025-08-28-UTC-1154-save-restart-agent → Recovery & Compliance Session
+**🎯 Sprint:** Sprint-21 → Process Standardization
+**✅ Task:** PDCA Documentation & Process Maintenance
 **🚨 Issues:** PDCA.dual.link.format.requirement.md was a dead link due to missing files  
 **📎 Previous Commit:** 68f323b - Checkpoint before follow-up message  
 [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1158-folders-cherry-pick.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1158-folders-cherry-pick.md](2025-08-28-UTC-1158-folders-cherry-pick.md)

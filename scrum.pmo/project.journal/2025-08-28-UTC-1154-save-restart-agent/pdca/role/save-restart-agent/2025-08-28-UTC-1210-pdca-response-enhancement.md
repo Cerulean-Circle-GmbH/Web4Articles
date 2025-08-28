@@ -4,7 +4,12 @@
 
 **🗓️ Date:** 2025-08-28-UTC-1210  
 **🎯 Objective:** Update howto.PDCA.md to require action and CMM3 compliant reporting after pdca prompt  
-**👤 Role:** Save/Restart Agent → Process Documentation Enhancement  
+
+**👤 Agent Role:** Save/Restart Agent → Process Documentation Enhancement  
+**👤 Branch:** save/start.v1 → Permanent Clean Reference
+**🎯 Project Journal Session:** 2025-08-28-UTC-1154-save-restart-agent → Recovery & Compliance Session
+**🎯 Sprint:** Sprint-21 → Process Standardization
+**✅ Task:** PDCA Documentation & Process Maintenance
 **🚨 Issues:** Agents only checking compliance without proper action/reporting triggers repeat pdca prompts  
 **📎 Previous Commit:** df0a0fc - PDCA: Updated to reflect main branch update completion  
 **🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1209-branch-update-coordination.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1209-branch-update-coordination.md](2025-08-28-UTC-1209-branch-update-coordination.md)
