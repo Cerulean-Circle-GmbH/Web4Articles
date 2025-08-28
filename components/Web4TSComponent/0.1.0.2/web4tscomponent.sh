@@ -29,12 +29,19 @@ find_project_root() {
     return 1
 }
 
-# Find project root
-PROJECT_ROOT=$(find_project_root)
-if [ -z "$PROJECT_ROOT" ]; then
-    echo "❌ Error: Not in a Web4Articles project directory"
-    echo "💡 Please run from within the Web4Articles git repository"
-    exit 1
+# Check if this is test mode (first argument is 'test')
+if [ "${1:-}" = "test" ]; then
+    # In test mode, bypass project directory validation
+    echo "🧪 [TEST MODE] Bypassing project directory validation"
+    PROJECT_ROOT="$PWD"
+else
+    # Find project root
+    PROJECT_ROOT=$(find_project_root)
+    if [ -z "$PROJECT_ROOT" ]; then
+        echo "❌ Error: Not in a Web4Articles project directory"
+        echo "💡 Please run from within the Web4Articles git repository"
+        exit 1
+    fi
 fi
 
 export PROJECT_ROOT
@@ -58,7 +65,16 @@ fi
 
 # Find the CLI in the components directory structure
 COMPONENT_VERSION="0.1.0.2"
-COMPONENT_DIR="$PROJECT_ROOT/components/Web4TSComponent/$COMPONENT_VERSION"
+
+# In test mode, use the original Web4Articles project for CLI execution
+if [ "${1:-}" = "test" ]; then
+    # Find the actual Web4Articles project root for CLI binaries
+    WEB4_ROOT=$(find_project_root 2>/dev/null || echo "/Users/Shared/Workspaces/2cuGitHub/Web4Articles")
+    COMPONENT_DIR="$WEB4_ROOT/components/Web4TSComponent/$COMPONENT_VERSION"
+else
+    COMPONENT_DIR="$PROJECT_ROOT/components/Web4TSComponent/$COMPONENT_VERSION"
+fi
+
 CLI_SOURCE_PATH="$COMPONENT_DIR/src/ts/layer5/Web4TSComponentCLI.ts"
 CLI_PATH="$COMPONENT_DIR/dist/ts/layer5/Web4TSComponentCLI.js"
 

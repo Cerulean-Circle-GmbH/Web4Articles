@@ -16,17 +16,43 @@ export interface SemanticVersion {
   build: number;
 }
 
+export interface VersionManagerOptions {
+  isTestMode?: boolean;
+  debugMode?: boolean;
+  testComponentName?: string;
+}
+
 export class VersionManager {
   private projectRoot: string;
   private componentName: string;
   private componentsDir: string;
   private scriptsDir: string;
+  private isTestMode: boolean;
+  private debugMode: boolean;
 
-  constructor(projectRoot: string, componentName: string = 'Web4TSComponent') {
+  constructor(projectRoot: string, componentName: string = 'Web4TSComponent', options: VersionManagerOptions = {}) {
     this.projectRoot = projectRoot;
     this.componentName = componentName;
-    this.componentsDir = path.join(projectRoot, 'components', componentName);
-    this.scriptsDir = path.join(projectRoot, 'scripts/versions');
+    this.isTestMode = options.isTestMode || false;
+    this.debugMode = options.debugMode || false;
+    
+    if (this.isTestMode) {
+      // In test mode, use current directory for components
+      this.componentsDir = path.join(process.cwd(), options.testComponentName || componentName);
+      this.scriptsDir = path.join(process.cwd(), 'test-scripts');
+      this.debug(`🧪 TEST MODE: Using current directory for components`);
+      this.debug(`🧪 Components directory: ${this.componentsDir}`);
+      this.debug(`🧪 Scripts directory: ${this.scriptsDir}`);
+    } else {
+      this.componentsDir = path.join(projectRoot, 'components', componentName);
+      this.scriptsDir = path.join(projectRoot, 'scripts/versions');
+    }
+  }
+
+  private debug(message: string): void {
+    if (this.debugMode) {
+      console.log(`🐛 [DEBUG] ${message}`);
+    }
   }
 
   /**
@@ -60,14 +86,25 @@ export class VersionManager {
    * Get all existing versions for this component
    */
   private async getExistingVersions(): Promise<string[]> {
+    this.debug(`Checking for existing versions in: ${this.componentsDir}`);
+    
     if (!existsSync(this.componentsDir)) {
+      this.debug(`Components directory does not exist: ${this.componentsDir}`);
       return [];
     }
 
     try {
       const entries = await fs.readdir(this.componentsDir, { withFileTypes: true });
-      return entries
-        .filter(entry => entry.isDirectory() && entry.name.match(/^\d+\.\d+\.\d+\.\d+$/))
+      this.debug(`Found ${entries.length} entries in components directory`);
+      
+      const versions = entries
+        .filter(entry => {
+          const isVersionDir = entry.isDirectory() && entry.name.match(/^\d+\.\d+\.\d+\.\d+$/);
+          if (isVersionDir) {
+            this.debug(`Found version directory: ${entry.name}`);
+          }
+          return isVersionDir;
+        })
         .map(entry => entry.name)
         .sort((a, b) => {
           const aVer = this.parseVersion(a);
@@ -78,7 +115,11 @@ export class VersionManager {
           if (aVer.patch !== bVer.patch) return aVer.patch - bVer.patch;
           return aVer.build - bVer.build;
         });
+        
+      this.debug(`Sorted versions: ${versions.join(', ')}`);
+      return versions;
     } catch (error) {
+      this.debug(`Error reading components directory: ${error}`);
       return [];
     }
   }
@@ -168,27 +209,43 @@ export class VersionManager {
    */
   async setLatest(version: string): Promise<boolean> {
     try {
+      this.debug(`Setting latest version to: ${version}`);
+      
       // Validate version exists
       if (!(await this.validateVersionExists(version))) {
         throw new Error(`Version ${version} does not exist`);
       }
+      this.debug(`Version ${version} validation passed`);
 
       const latestPath = path.join(this.componentsDir, 'latest');
       const versionPath = path.join(this.componentsDir, version);
       
+      this.debug(`Latest symlink path: ${latestPath}`);
+      this.debug(`Target version path: ${versionPath}`);
+      
       // Remove existing latest symlink if it exists
       if (existsSync(latestPath)) {
+        this.debug(`Removing existing latest symlink`);
         await fs.unlink(latestPath);
       }
 
       // Create new latest symlink
-      await fs.symlink(path.relative(this.componentsDir, versionPath), latestPath);
+      const relativePath = path.relative(this.componentsDir, versionPath);
+      this.debug(`Creating latest symlink: ${latestPath} -> ${relativePath}`);
+      await fs.symlink(relativePath, latestPath);
 
-      // Update main script symlink in scripts/versions/
-      await this.updateMainScriptSymlink(version);
+      // Update main script symlink in scripts/versions/ (skip in test mode)
+      if (!this.isTestMode) {
+        this.debug(`Updating main script symlink`);
+        await this.updateMainScriptSymlink(version);
+      } else {
+        this.debug(`Skipping main script symlink update in test mode`);
+      }
 
+      this.debug(`Successfully set ${version} as latest`);
       return true;
     } catch (error) {
+      this.debug(`Error setting latest to ${version}: ${error}`);
       console.error(`Error setting latest to ${version}:`, error);
       return false;
     }
@@ -223,24 +280,33 @@ export class VersionManager {
    */
   async createVersionScriptSymlink(version: string): Promise<void> {
     const componentLower = this.componentName.toLowerCase();
-    const scriptName = `${componentLower}-v${version}`;
+    const scriptName = this.isTestMode ? `test-${componentLower}-v${version}` : `${componentLower}-v${version}`;
     const scriptPath = path.join(this.scriptsDir, scriptName);
     const targetScript = path.join(this.componentsDir, version, `${componentLower}.sh`);
 
-    // Create scripts/versions directory if it doesn't exist
+    this.debug(`Creating version script symlink: ${scriptName}`);
+    this.debug(`Script path: ${scriptPath}`);
+    this.debug(`Target script: ${targetScript}`);
+
+    // Create scripts directory if it doesn't exist
     if (!existsSync(this.scriptsDir)) {
+      this.debug(`Creating scripts directory: ${this.scriptsDir}`);
       await fs.mkdir(this.scriptsDir, { recursive: true });
     }
 
     // Remove existing symlink if it exists
     if (existsSync(scriptPath)) {
+      this.debug(`Removing existing script symlink`);
       await fs.unlink(scriptPath);
     }
 
     // Create symlink if target script exists
     if (existsSync(targetScript)) {
       const relativePath = path.relative(this.scriptsDir, targetScript);
+      this.debug(`Creating script symlink: ${scriptPath} -> ${relativePath}`);
       await fs.symlink(relativePath, scriptPath);
+    } else {
+      this.debug(`Target script does not exist: ${targetScript}`);
     }
   }
 
@@ -248,6 +314,34 @@ export class VersionManager {
    * Cherry-pick component from another branch
    */
   async cherryPickFromBranch(branch: string, targetVersion?: string): Promise<string> {
+    if (this.isTestMode) {
+      // In test mode, simulate cherry-pick by copying from latest version
+      this.debug(`Test mode: Simulating cherry-pick by copying from latest version`);
+      
+      const latest = await this.getLatestVersion();
+      if (!latest) {
+        throw new Error('No versions available to copy from in test mode');
+      }
+      
+      const version = targetVersion || await this.getNextAvailableVersion();
+      this.debug(`Test mode: Copying ${latest} to ${version}`);
+      
+      const sourceDir = path.join(this.componentsDir, latest);
+      const targetDir = path.join(this.componentsDir, version);
+      
+      // Copy directory recursively
+      await this.copyDirectory(sourceDir, targetDir);
+      
+      // Update version-specific files
+      await this.updateVersionInFiles(version);
+      
+      // Create script symlink
+      await this.createVersionScriptSymlink(version);
+      
+      this.debug(`Test mode: Successfully simulated cherry-pick as ${version}`);
+      return version;
+    }
+
     try {
       // Get current branch
       const currentBranch = execSync('git rev-parse --abbrev-ref HEAD', { 
@@ -350,6 +444,29 @@ export class VersionManager {
         // Ignore checkout errors during cleanup
       }
       throw error;
+    }
+  }
+
+  /**
+   * Copy directory recursively (for test mode)
+   */
+  private async copyDirectory(source: string, target: string): Promise<void> {
+    this.debug(`Copying directory: ${source} -> ${target}`);
+    
+    await fs.mkdir(target, { recursive: true });
+    
+    const entries = await fs.readdir(source, { withFileTypes: true });
+    
+    for (const entry of entries) {
+      const sourcePath = path.join(source, entry.name);
+      const targetPath = path.join(target, entry.name);
+      
+      if (entry.isDirectory()) {
+        await this.copyDirectory(sourcePath, targetPath);
+      } else {
+        this.debug(`Copying file: ${sourcePath} -> ${targetPath}`);
+        await fs.copyFile(sourcePath, targetPath);
+      }
     }
   }
 

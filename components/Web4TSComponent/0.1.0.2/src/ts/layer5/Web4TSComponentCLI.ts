@@ -14,6 +14,7 @@ export class Web4TSComponentCLI {
   private component: DefaultWeb4TSComponent;
   private versionManager: VersionManager | null = null;
   private projectRoot: string | null = null;
+  private isTestMode: boolean = false;
 
   constructor() {
     this.component = new DefaultWeb4TSComponent();
@@ -43,6 +44,21 @@ export class Web4TSComponentCLI {
     }
 
     const command = args[0];
+
+    // Check if this is a test command
+    if (command === 'test') {
+      if (args.length < 2) {
+        this.showTestUsage();
+        return;
+      }
+      
+      this.isTestMode = true;
+      console.log(`🧪 [TEST MODE] Web4TSComponent CLI - Current Directory: ${process.cwd()}`);
+      
+      // Handle test subcommand
+      await this.handleTestCommand(args.slice(1));
+      return;
+    }
 
     try {
       switch (command) {
@@ -103,6 +119,8 @@ export class Web4TSComponentCLI {
     console.log(`  ${cyan}web4tscomponent${reset} version next major|minor|patch|build       # Create next version`);
     console.log(`  ${cyan}web4tscomponent${reset} version latest set ${yellow}"X.X.X.X"${reset}                # Set latest version`);
     console.log(`  ${cyan}web4tscomponent${reset} version cherry-pick ${yellow}"branch"${reset} latest as ${yellow}"X.X.X.X"${reset} # Cherry-pick from branch`);
+    console.log(`  ${cyan}web4tscomponent${reset} test new ${yellow}"component-name"${reset} ${yellow}"version"${reset} [options]    # Create test component in current directory`);
+    console.log(`  ${cyan}web4tscomponent${reset} test version next major               # Test version management on local component`);
     console.log('');
     console.log(`${bold}Commands:${reset}`);
     console.log(`  new          Create complete Web4-compliant component with layered architecture`);
@@ -113,6 +131,7 @@ export class Web4TSComponentCLI {
     console.log(`  standard     Display complete location-resilient CLI implementation standard`);
     console.log(`  guide        Display Web4 architectural principles and guidelines`);
     console.log(`  version      Manage component versions (next, latest, cherry-pick)`);
+    console.log(`  test         Test mode - work with components in current directory with debug output`);
     console.log('');
     console.log(`${bold}Parameters:${reset}`);
     console.log(`  ${yellow}"component-name"${reset}  Component name (e.g., "Web4Example", "MyNewComponent", "UserManager")`);
@@ -148,6 +167,11 @@ export class Web4TSComponentCLI {
     console.log(`  ${cyan}web4tscomponent${reset} version next build             ${green}# Create next build version (0.1.0.3)${reset}`);
     console.log(`  ${cyan}web4tscomponent${reset} version latest set ${yellow}"0.1.0.2"${reset}      ${green}# Set specific version as latest${reset}`);
     console.log(`  ${cyan}web4tscomponent${reset} version cherry-pick ${yellow}"dev/branch"${reset} latest as ${yellow}"0.1.0.4"${reset} ${green}# Cherry-pick from branch${reset}`);
+    console.log('');
+    console.log(`  ${green}# Test mode (current directory, verbose debug)${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} test new ${yellow}"TestComponent"${reset} ${yellow}"0.1.0.0"${reset} --cli ${green}# Create test component here${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} test version next major        ${green}# Test version management locally${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} test version latest set ${yellow}"0.1.0.1"${reset} ${green}# Test latest management${reset}`);
     console.log('');
     console.log(`${bold}Scaffold Options:${reset}`);
     console.log(`  --cli              Include location-resilient CLI script (follows Web4 standard)`);
@@ -511,6 +535,345 @@ export class Web4TSComponentCLI {
       console.log(`  Create your first version:`);
       console.log(`  ${cyan}web4tscomponent${reset} new ${yellow}"Web4TSComponent"${reset} ${yellow}"0.1.0.0"${reset} --cli --layers`);
     }
+  }
+
+  private async handleTestCommand(args: string[]): Promise<void> {
+    const subCommand = args[0];
+    
+    console.log(`🐛 [DEBUG] Test subcommand: ${subCommand}`);
+    console.log(`🐛 [DEBUG] Test args: ${args.join(' ')}`);
+
+    try {
+      switch (subCommand) {
+        case 'new':
+          await this.handleTestNew(args.slice(1));
+          break;
+        case 'version':
+          await this.handleTestVersion(args.slice(1));
+          break;
+        case 'cli':
+        case 'generate':
+          await this.handleTestGenerateCLI(args.slice(1));
+          break;
+        case 'validate':
+          await this.handleTestValidateStandard(args.slice(1));
+          break;
+        case 'audit':
+          await this.handleTestAuditCompliance(args.slice(1));
+          break;
+        default:
+          console.log(`❌ Unknown test command: ${subCommand}`);
+          this.showTestUsage();
+          break;
+      }
+    } catch (error) {
+      console.error(`❌ Test command failed: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  private showTestUsage(): void {
+    const cyan = '\x1b[36m';
+    const yellow = '\x1b[33m';
+    const green = '\x1b[32m';
+    const bold = '\x1b[1m';
+    const reset = '\x1b[0m';
+    
+    console.log(`${bold}${cyan}Web4TSComponent Test Mode${reset} - Development & Testing in Current Directory`);
+    console.log('');
+    console.log(`${bold}Usage:${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} test new ${yellow}"component-name"${reset} ${yellow}"version"${reset} [options]   ${green}# Create component in current directory${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} test version next major|minor|patch|build    ${green}# Test version management${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} test version latest set ${yellow}"X.X.X.X"${reset}           ${green}# Test latest management${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} test cli ${yellow}"component-name"${reset} ${yellow}"version"${reset}            ${green}# Generate test CLI${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} test validate ${yellow}"script-path"${reset}                   ${green}# Validate test CLI${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} test audit ${yellow}"component-path"${reset}                  ${green}# Audit test component${reset}`);
+    console.log('');
+    console.log(`${bold}Test Mode Features:${reset}`);
+    console.log(`  • Works in current directory instead of project components/`);
+    console.log(`  • Verbose debug output for all operations`);
+    console.log(`  • Isolated test-scripts/ directory for symlinks`);
+    console.log(`  • Perfect for component development and testing workflows`);
+    console.log('');
+    console.log(`${bold}Examples:${reset}`);
+    console.log(`  ${green}# Create test component and work with it${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} test new ${yellow}"TestComponent"${reset} ${yellow}"0.1.0.0"${reset} --cli --layers`);
+    console.log(`  ${cyan}web4tscomponent${reset} test version next build`);
+    console.log(`  ${cyan}web4tscomponent${reset} test version latest set ${yellow}"0.1.0.1"${reset}`);
+    console.log('');
+    console.log(`  ${green}# Test specific functionality${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} test validate ./TestComponent/0.1.0.0/testcomponent.sh`);
+    console.log(`  ${cyan}web4tscomponent${reset} test audit ./TestComponent/0.1.0.0/`);
+  }
+
+  private async handleTestNew(args: string[]): Promise<void> {
+    if (args.length < 2) {
+      console.log(`❌ Missing arguments. Usage: web4tscomponent test new "component-name" "version" [options]`);
+      return;
+    }
+
+    const componentName = args[0];
+    const version = args[1];
+    const options = args.slice(2);
+
+    console.log(`🧪 [TEST MODE] Creating Web4-compliant component ${componentName} v${version} in current directory...`);
+    console.log(`🐛 [DEBUG] Current directory: ${process.cwd()}`);
+    console.log(`🐛 [DEBUG] Component name: ${componentName}`);
+    console.log(`🐛 [DEBUG] Version: ${version}`);
+    console.log(`🐛 [DEBUG] Options: ${options.join(', ')}`);
+
+    // Parse scaffold options
+    const includeSpecs = options.includes('--spec');
+    const includeVitest = options.includes('--vitest');
+    const includeCLI = options.includes('--cli');
+    const includeLayers = options.includes('--layers');
+
+    console.log(`🐛 [DEBUG] Include specs: ${includeSpecs}`);
+    console.log(`🐛 [DEBUG] Include Vitest: ${includeVitest}`);
+    console.log(`🐛 [DEBUG] Include CLI: ${includeCLI}`);
+    console.log(`🐛 [DEBUG] Include layers: ${includeLayers}`);
+
+    try {
+      // Create test component in current directory
+      const testTargetDir = path.join(process.cwd(), componentName, version);
+      console.log(`🐛 [DEBUG] Creating component directory: ${testTargetDir}`);
+      
+      await fs.mkdir(testTargetDir, { recursive: true });
+      
+      // Set up temporary component instance for test mode
+      const testComponent = new DefaultWeb4TSComponent();
+      testComponent.setTargetDirectory(process.cwd());
+
+      const metadata = await testComponent.scaffoldComponent({
+        componentName,
+        version,
+        includeLayerArchitecture: includeLayers,
+        includeCLI,
+        includeSpecFolder: includeSpecs,
+        includeVitest
+      });
+      
+      console.log(`✅ Successfully created test component ${componentName} v${version}`);
+      console.log(`📁 Location: ./${componentName}/${version}/`);
+      
+      if (includeCLI) {
+        console.log(`🔗 CLI script: ${componentName.toLowerCase()}.sh`);
+      }
+      
+      // Initialize test version manager
+      this.initializeTestVersionManager(componentName);
+      
+    } catch (error) {
+      console.error(`❌ Failed to create test component: ${error instanceof Error ? error.message : String(error)}`);
+      console.log(`🐛 [DEBUG] Error details:`, error);
+    }
+  }
+
+  private async handleTestVersion(args: string[]): Promise<void> {
+    console.log(`🐛 [DEBUG] Test version command args: ${args.join(' ')}`);
+    
+    // Find test component in current directory
+    const testComponent = await this.findTestComponent();
+    if (!testComponent) {
+      console.log(`❌ No test component found in current directory.`);
+      console.log(`💡 Create one first: web4tscomponent test new "TestComponent" "0.1.0.0" --cli`);
+      return;
+    }
+    
+    console.log(`🐛 [DEBUG] Found test component: ${testComponent}`);
+    this.initializeTestVersionManager(testComponent);
+    
+    if (!this.versionManager) {
+      console.error('❌ Version manager not initialized for test mode.');
+      return;
+    }
+
+    if (args.length === 0) {
+      await this.showVersionInfo();
+      return;
+    }
+
+    const subCommand = args[0];
+    console.log(`🐛 [DEBUG] Version subcommand: ${subCommand}`);
+
+    try {
+      switch (subCommand) {
+        case 'next':
+          await this.handleVersionNext(args.slice(1));
+          break;
+        case 'latest':
+          await this.handleVersionLatest(args.slice(1));
+          break;
+        case 'cherry-pick':
+          console.log(`🧪 [TEST MODE] Cherry-pick not available in test mode (requires git integration)`);
+          break;
+        case 'info':
+          await this.showVersionInfo();
+          break;
+        default:
+          console.log(`❌ Unknown version command: ${subCommand}`);
+          console.log('Available commands: next, latest, info');
+          break;
+      }
+    } catch (error) {
+      console.error(`❌ Test version command failed: ${error instanceof Error ? error.message : String(error)}`);
+      console.log(`🐛 [DEBUG] Error details:`, error);
+    }
+  }
+
+  private async handleTestGenerateCLI(args: string[]): Promise<void> {
+    console.log(`🐛 [DEBUG] Test generate CLI args: ${args.join(' ')}`);
+    
+    if (args.length < 2) {
+      console.log(`❌ Missing arguments. Usage: web4tscomponent test cli "component-name" "version"`);
+      return;
+    }
+
+    const componentName = args[0];
+    const version = args[1];
+
+    console.log(`🧪 [TEST MODE] Generating location-resilient CLI for ${componentName} v${version} in current directory...`);
+
+    try {
+      const testComponent = new DefaultWeb4TSComponent();
+      testComponent.setTargetDirectory(process.cwd());
+      
+      const cliScript = await testComponent.generateLocationResilientCLI(componentName, version);
+      console.log(`✅ Generated test CLI script: ${componentName.toLowerCase()}.sh`);
+      console.log(`📋 Script follows Web4 location-resilient standard`);
+      console.log(`🚀 Usage: ./${componentName}/${version}/${componentName.toLowerCase()}.sh [command] [options]`);
+    } catch (error) {
+      console.error(`❌ Failed to generate test CLI: ${error instanceof Error ? error.message : String(error)}`);
+      console.log(`🐛 [DEBUG] Error details:`, error);
+    }
+  }
+
+  private async handleTestValidateStandard(args: string[]): Promise<void> {
+    console.log(`🐛 [DEBUG] Test validate args: ${args.join(' ')}`);
+    
+    if (args.length < 1) {
+      console.log(`❌ Missing arguments. Usage: web4tscomponent test validate "script-path"`);
+      return;
+    }
+
+    const scriptPath = args[0];
+    console.log(`🧪 [TEST MODE] Validating CLI script: ${scriptPath}`);
+
+    try {
+      const testComponent = new DefaultWeb4TSComponent();
+      testComponent.setTargetDirectory(process.cwd());
+      
+      const validation = await testComponent.validateLocationResilientCLI(scriptPath);
+      if (validation.isCompliant) {
+        console.log(`✅ Test CLI script is Web4 location-resilient compliant`);
+        console.log(`📋 All required features detected`);
+      } else {
+        console.log(`❌ Test CLI script does not meet Web4 standards`);
+        console.log(`📋 Issues found:`);
+        validation.issues.forEach((issue, index) => {
+          console.log(`   ${index + 1}. ${issue}`);
+        });
+      }
+    } catch (error) {
+      console.error(`❌ Test validation failed: ${error instanceof Error ? error.message : String(error)}`);
+      console.log(`🐛 [DEBUG] Error details:`, error);
+    }
+  }
+
+  private async handleTestAuditCompliance(args: string[]): Promise<void> {
+    console.log(`🐛 [DEBUG] Test audit args: ${args.join(' ')}`);
+    
+    if (args.length < 1) {
+      console.log(`❌ Missing arguments. Usage: web4tscomponent test audit "component-path"`);
+      return;
+    }
+
+    const componentPath = args[0];
+    console.log(`🧪 [TEST MODE] Auditing component compliance: ${componentPath}`);
+
+    try {
+      const testComponent = new DefaultWeb4TSComponent();
+      testComponent.setTargetDirectory(process.cwd());
+      
+      const auditResult = await testComponent.auditComponentCompliance(componentPath);
+      
+      console.log(`📊 Test Component Metadata:`);
+      console.log(`   Name: ${auditResult.name}`);
+      console.log(`   Version: ${auditResult.version}`);
+      console.log(`   Type: ${auditResult.type}`);
+      console.log(`   Location-Resilient CLI: ${auditResult.hasLocationResilientCLI ? '✅' : '❌'}`);
+      console.log(`   Empty Constructors: ${auditResult.hasEmptyConstructors ? '✅' : '❌'}`);
+      console.log(`   Scenario Support: ${auditResult.hasScenarioSupport ? '✅' : '❌'}`);
+      console.log(`   Layered Architecture: ${auditResult.hasLayeredArchitecture ? '✅' : '❌'}`);
+      
+      const compliantFeatures = [
+        auditResult.hasLocationResilientCLI,
+        auditResult.hasEmptyConstructors,
+        auditResult.hasScenarioSupport,
+        auditResult.hasLayeredArchitecture
+      ].filter(Boolean).length;
+      
+      const totalFeatures = 4;
+      const complianceScore = Math.round((compliantFeatures / totalFeatures) * 100);
+      
+      console.log(`📊 Test Compliance Score: ${complianceScore}%`);
+      
+    } catch (error) {
+      console.error(`❌ Test audit failed: ${error instanceof Error ? error.message : String(error)}`);
+      console.log(`🐛 [DEBUG] Error details:`, error);
+    }
+  }
+
+  private async findTestComponent(): Promise<string | null> {
+    console.log(`🐛 [DEBUG] Looking for test components in: ${process.cwd()}`);
+    
+    try {
+      const entries = await fs.readdir(process.cwd(), { withFileTypes: true });
+      const componentDirs = entries.filter(entry => entry.isDirectory() && !entry.name.startsWith('.'));
+      
+      console.log(`🐛 [DEBUG] Found directories: ${componentDirs.map(d => d.name).join(', ')}`);
+      
+      for (const dir of componentDirs) {
+        const dirPath = path.join(process.cwd(), dir.name);
+        try {
+          const versionEntries = await fs.readdir(dirPath, { withFileTypes: true });
+          const hasVersions = versionEntries.some(entry => 
+            entry.isDirectory() && entry.name.match(/^\d+\.\d+\.\d+\.\d+$/)
+          );
+          
+          if (hasVersions) {
+            console.log(`🐛 [DEBUG] Found test component with versions: ${dir.name}`);
+            return dir.name;
+          }
+        } catch {
+          // Ignore errors reading subdirectories
+        }
+      }
+      
+      console.log(`🐛 [DEBUG] No test components found`);
+      return null;
+    } catch (error) {
+      console.log(`🐛 [DEBUG] Error finding test components: ${error}`);
+      return null;
+    }
+  }
+
+  private initializeTestVersionManager(componentName: string): void {
+    console.log(`🐛 [DEBUG] Initializing test version manager for: ${componentName}`);
+    
+    // For test mode, always use current directory as project root
+    const testProjectRoot = process.cwd();
+    
+    this.versionManager = new VersionManager(
+      testProjectRoot, 
+      componentName,
+      { 
+        isTestMode: true, 
+        debugMode: true, 
+        testComponentName: componentName 
+      }
+    );
+    
+    console.log(`🐛 [DEBUG] Test version manager initialized with root: ${testProjectRoot}`);
   }
 }
 
