@@ -72,6 +72,11 @@
         Main development branch
         Needs save/start.v1 specific enhancements
         Interactive decision patterns and non-interactive scripts
+        
+  - [x] main (ADDED BY USER REQUEST)
+        Production branch
+        Needs latest standards and improvements
+        Critical for production readiness
 
 ### **Critical Updates to Apply**
 The following changes from save/start.v1 need to be propagated:
@@ -170,6 +175,7 @@ done
 ✅ Updated dev/2025-08-28-UTC-1225
 ✅ Updated dev/2025-08-28-UTC-1341
 ✅ Updated release/dev
+⏳ Updating main (in progress)
 ```
 
 **Files Successfully Applied:**
