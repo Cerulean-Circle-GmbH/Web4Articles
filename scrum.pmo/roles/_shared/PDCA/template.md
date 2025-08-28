@@ -2,6 +2,7 @@
 
 **🗓️ Date:** {{UTC_TIMESTAMP}}  
 **🎯 Objective:** {{OBJECTIVE}}  
+**🎯 Template Version:** 3.0  
 
 **👤 Agent Role:** {{ROLE_NAME}} → {{CONTEXT_SPECIALIZATION}}  
 **👤 Branch:** {{ROLE_NAME}} → {{CONTEXT_SPECIALIZATION}}  
