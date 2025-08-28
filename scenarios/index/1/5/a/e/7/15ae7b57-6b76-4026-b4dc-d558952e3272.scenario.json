@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "15ae7b57-6b76-4026-b4dc-d558952e3272",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI3VDIxOjQwOjIxLjc2MFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "15ae7b57-6b76-4026-b4dc-d558952e3272",
+    "name": "test",
+    "title": "test",
+    "description": "should be in temp/spec"
+  },
+  "unitIndex": {
+    "uuid": "15ae7b57-6b76-4026-b4dc-d558952e3272",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/1/5/a/e/7/15ae7b57-6b76-4026-b4dc-d558952e3272.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/temp/spec/requirements/15ae7b57-6b76-4026-b4dc-d558952e3272.scenario.json"
+    ],
+    "createdAt": "2025-08-27T21:40:21.771Z",
+    "updatedAt": "2025-08-27T21:40:21.771Z"
+  }
+}
