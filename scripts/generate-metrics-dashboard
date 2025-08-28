@@ -235,18 +235,24 @@ process_metrics_data() {
     # Get current timestamp
     local timestamp=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
     
-    # Replace placeholders in HTML
-    sed -i '' "s/__TIMESTAMP__/$timestamp/g" "$dashboard_file"
-    sed -i '' "s/__SUCCESS_RATE__/$success_rate/g" "$dashboard_file"
-    sed -i '' "s/__SUCCESS_RATE_CLASS__/$success_class/g" "$dashboard_file"
-    sed -i '' "s/__SUCCESS_COLOR__/$success_color/g" "$dashboard_file"
-    sed -i '' "s/__PASSED_TESTS__/$passed_tests/g" "$dashboard_file"
-    sed -i '' "s/__TOTAL_TESTS__/$total_tests/g" "$dashboard_file"
-    sed -i '' "s/__AVG_BUILD_TIME__/$avg_build_time/g" "$dashboard_file"
-    sed -i '' "s/__AVG_INSTALL_TIME__/$avg_install_time/g" "$dashboard_file"
-    sed -i '' "s/__COMPONENT_COUNT__/$component_count/g" "$dashboard_file"
-    sed -i '' "s/__CMM_LEVEL_CLASS__/$cmm_level_class/g" "$dashboard_file"
-    sed -i '' "s/__CMM_LEVEL_TEXT__/$cmm_level_text/g" "$dashboard_file"
+    # Replace placeholders in HTML using a more compatible method
+    # Create a temporary file for processing
+    local temp_file="$dashboard_file.tmp"
+    
+    # Use perl for more reliable string replacement (works on both macOS and Linux)
+    perl -pe "
+        s/__TIMESTAMP__/$timestamp/g;
+        s/__SUCCESS_RATE__/$success_rate/g;
+        s/__SUCCESS_RATE_CLASS__/$success_class/g;
+        s/__SUCCESS_COLOR__/${success_color//\#/\\#}/g;
+        s/__PASSED_TESTS__/$passed_tests/g;
+        s/__TOTAL_TESTS__/$total_tests/g;
+        s/__AVG_BUILD_TIME__/$avg_build_time/g;
+        s/__AVG_INSTALL_TIME__/$avg_install_time/g;
+        s/__COMPONENT_COUNT__/$component_count/g;
+        s/__CMM_LEVEL_CLASS__/$cmm_level_class/g;
+        s/__CMM_LEVEL_TEXT__/$cmm_level_text/g;
+    " "$dashboard_file" > "$temp_file" && mv "$temp_file" "$dashboard_file"
 }
 
 # Generate text summary report  
