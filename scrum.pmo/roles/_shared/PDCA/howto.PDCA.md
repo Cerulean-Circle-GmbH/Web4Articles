@@ -1,4 +1,4 @@
-[Back to PDCA Process Improvements](./pdca.process.improvements/)
+[Back to PDCA Process Improvements](./pdca.process.improvements/) | [CMMI Understanding](./PDCA.understanding.CMMI.md) | [How to Decide](./PDCA.howto.decide.md) | [Template](./template.md)
 
 # 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.5**
 
@@ -175,15 +175,11 @@
    git fetch origin release/dev
    git checkout origin/release/dev -- path/to/missing/file
    ```
-6. **Tool synchronization** - Cherry-pick development tools when needed:
-   ```bash
-   git checkout origin/release/dev -- source.env components/ scenarios/ scripts/
-   ```
-7. **ALWAYS ask before git operations** (Decision 2a) - pull, merge, rebase, reset
-8. **NEVER truncate user quotes** - they are documentation!
-9. **Document ALL git operations in PDCAs** - especially branch switches
-10. **Cross-agent learning** - Check other branches for improvements
-11. **Test conflict handling** - Script now creates PRs on merge conflicts
+6. **ALWAYS ask before git operations** (Decision 2a) - pull, merge, rebase, reset
+7. **NEVER truncate user quotes** - they are documentation!
+8. **Document ALL git operations in PDCAs** - especially branch switches
+9. **Cross-agent learning** - Check other branches for improvements
+10. **Test conflict handling** - Script now creates PRs on merge conflicts
 
 ### **Branch Strategy (Decision 1d):**
 1. **Start on save/start** - Always begin here

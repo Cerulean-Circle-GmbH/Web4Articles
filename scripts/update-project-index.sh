@@ -7,8 +7,23 @@ set -euo pipefail
 
 JOURNAL_DIR="${1:-}"
 if [[ -z "$JOURNAL_DIR" ]]; then
-    echo "Usage: $0 <journal_dir>"
-    echo "Example: $0 /workspace/scrum.pmo/project.journal/2025-01-27-1300"
+    cat << EOF
+Web4 Project Journal Index Updater
+
+Usage:
+  $(basename $0) <journal_dir>
+
+Description:
+  Updates the project.state.md file with current Git status and file listings
+  Maintains project journal documentation consistency
+
+Examples:
+  $(basename $0) /workspace/scrum.pmo/project.journal/2025-01-27-1300
+  $(basename $0) scrum.pmo/project.journal/current-session
+
+Note: Creates project.state.md if it doesn't exist
+      Updates existing content between markers if present
+EOF
     exit 1
 fi
 

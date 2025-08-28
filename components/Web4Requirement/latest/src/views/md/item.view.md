@@ -1,1 +1,0 @@
-- [{{statusCheckbox}}] {{ownerTimestamp}} [[requirement:uuid:{{uuid}}]]({{filename}}) {{title}} 
