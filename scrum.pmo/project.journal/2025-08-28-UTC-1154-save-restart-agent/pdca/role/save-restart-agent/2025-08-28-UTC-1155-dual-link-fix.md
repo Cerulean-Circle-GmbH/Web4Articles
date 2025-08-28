@@ -7,16 +7,16 @@
 **👤 Role:** Save/Restart Agent → Process Enhancement  
 **🚨 Issues:** Local links not clickable due to incorrect markdown syntax  
 **📎 Previous Commit:** ac9a3e1 - Save/Restart Agent: Fresh start on save/start.v1 branch  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1154-fresh-start.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1154-fresh-start.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1154-fresh-start.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1154-fresh-start.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1154-fresh-start.md](2025-08-28-UTC-1154-fresh-start.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1155-dual-link-fix.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1155-dual-link-fix.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1155-dual-link-fix.md)
-- **Fixed PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1154-fresh-start.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1154-fresh-start.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1154-fresh-start.md)
-- **Updated Template:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/PDCA/template.md) | [scrum.pmo/roles/_shared/PDCA/template.md](scrum.pmo/roles/_shared/PDCA/template.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1155-dual-link-fix.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1155-dual-link-fix.md](2025-08-28-UTC-1155-dual-link-fix.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1154-fresh-start.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1154-fresh-start.md](2025-08-28-UTC-1154-fresh-start.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](../../../../../roles/_shared/PDCA/template.md)
 
 ### **QA Decisions**
 - [x] Discovered issue: Local links were plain text, not markdown links
@@ -129,4 +129,3 @@ Updated previous PDCA with correct dual link format:
 
 ---
 
-**One-line Summary:** 🔗 Fixed dual link format - local links now properly clickable using `[path](path)` syntax! 📋✅

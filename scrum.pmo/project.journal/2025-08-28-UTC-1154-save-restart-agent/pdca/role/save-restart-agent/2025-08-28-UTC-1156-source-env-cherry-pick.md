@@ -7,15 +7,15 @@
 **👤 Role:** Save/Restart Agent → Process Enhancement  
 **🚨 Issues:** Need to ensure source.env is current with release/dev  
 **📎 Previous Commit:** 1df6d6d - Fix: Dual link format - local links now properly clickable  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1155-dual-link-fix.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1155-dual-link-fix.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1155-dual-link-fix.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1155-dual-link-fix.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1155-dual-link-fix.md](2025-08-28-UTC-1155-dual-link-fix.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1156-source-env-cherry-pick.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1156-source-env-cherry-pick.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1156-source-env-cherry-pick.md)
-- **Source.env File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/source.env) | [source.env](source.env)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1156-source-env-cherry-pick.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1156-source-env-cherry-pick.md](2025-08-28-UTC-1156-source-env-cherry-pick.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/source.env) | [§/source.env](../../../../../../source.env)
 
 ### **QA Decisions**
 - [x] Cherry-pick requested: source.env from release/dev
@@ -125,4 +125,3 @@ Key features:
 
 ---
 
-**One-line Summary:** 📁 source.env already synchronized between save/start.v1 and release/dev - no cherry-pick changes needed! ✅🔄

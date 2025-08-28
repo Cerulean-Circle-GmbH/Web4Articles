@@ -7,15 +7,15 @@
 **👤 Role:** Save/Restart Agent → Process Enhancement  
 **🚨 Issues:** Release/dev agent pushed new source.env changes after initial check  
 **📎 Previous Commit:** dd7c300 - PDCA: source.env cherry-pick verification - already synchronized  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1156-source-env-cherry-pick.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1156-source-env-cherry-pick.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1156-source-env-cherry-pick.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1156-source-env-cherry-pick.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1156-source-env-cherry-pick.md](2025-08-28-UTC-1156-source-env-cherry-pick.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1157-source-env-update.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1157-source-env-update.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1157-source-env-update.md)
-- **Updated source.env:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/source.env) | [source.env](source.env)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1157-source-env-update.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1157-source-env-update.md](2025-08-28-UTC-1157-source-env-update.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/source.env) | [§/source.env](../../../../../../source.env)
 
 ### **QA Decisions**
 - [x] Cherry-pick successful: New changes found and applied
@@ -123,4 +123,3 @@ git checkout origin/release/dev -- source.env
 
 ---
 
-**One-line Summary:** 🔄 Successfully cherry-picked updated source.env with ll alias, versions PATH, and proper EOF! 📁✅

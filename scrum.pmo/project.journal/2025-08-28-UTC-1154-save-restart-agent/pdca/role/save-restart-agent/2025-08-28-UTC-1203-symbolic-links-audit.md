@@ -7,14 +7,14 @@
 **👤 Role:** Save/Restart Agent → Process Enhancement  
 **🚨 Issues:** Need comprehensive view of all symbolic links and their status  
 **📎 Previous Commit:** 5acc16b - Fix: Remaining symbolic links - added process/ and templates/ directories  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1202-remaining-links-fix.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1202-remaining-links-fix.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1202-remaining-links-fix.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1202-remaining-links-fix.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1202-remaining-links-fix.md](2025-08-28-UTC-1202-remaining-links-fix.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1203-symbolic-links-audit.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1203-symbolic-links-audit.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1203-symbolic-links-audit.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1203-symbolic-links-audit.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1203-symbolic-links-audit.md](2025-08-28-UTC-1203-symbolic-links-audit.md)
 
 ### **QA Decisions**
 **Please select which broken links to fix:**
@@ -172,4 +172,3 @@ Would require:
 
 ---
 
-**One-line Summary:** 🔍 Comprehensive symbolic link audit complete - 6 broken links found in 3 groups, awaiting fix decisions! 📋✅

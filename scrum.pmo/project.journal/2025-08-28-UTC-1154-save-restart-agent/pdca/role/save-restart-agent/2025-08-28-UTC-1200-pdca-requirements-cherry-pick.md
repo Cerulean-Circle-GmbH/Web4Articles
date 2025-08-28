@@ -7,16 +7,16 @@
 **👤 Role:** Save/Restart Agent → Process Enhancement  
 **🚨 Issues:** PDCA.dual.link.format.requirement.md was a dead link due to missing files  
 **📎 Previous Commit:** 68f323b - Checkpoint before follow-up message  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1158-folders-cherry-pick.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1158-folders-cherry-pick.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1158-folders-cherry-pick.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1158-folders-cherry-pick.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1158-folders-cherry-pick.md](2025-08-28-UTC-1158-folders-cherry-pick.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1200-pdca-requirements-cherry-pick.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1200-pdca-requirements-cherry-pick.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1200-pdca-requirements-cherry-pick.md)
-- **Dual Link Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/spec/requirements.md/e8535c4e-591d-4955-9874-6a853545e970.requirement.md) | [spec/requirements.md/e8535c4e-591d-4955-9874-6a853545e970.requirement.md](spec/requirements.md/e8535c4e-591d-4955-9874-6a853545e970.requirement.md)
-- **PDCA Reporting Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/spec/requirements.md/857ff118-a4df-46b3-88b6-c6dc77c082b6.requirement.md) | [spec/requirements.md/857ff118-a4df-46b3-88b6-c6dc77c082b6.requirement.md](spec/requirements.md/857ff118-a4df-46b3-88b6-c6dc77c082b6.requirement.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1200-pdca-requirements-cherry-pick.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1200-pdca-requirements-cherry-pick.md](2025-08-28-UTC-1200-pdca-requirements-cherry-pick.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/spec/requirements.md/e8535c4e-591d-4955-9874-6a853545e970.requirement.md) | [§/spec/requirements.md/e8535c4e-591d-4955-9874-6a853545e970.requirement.md](../../../../../../spec/requirements.md/e8535c4e-591d-4955-9874-6a853545e970.requirement.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/spec/requirements.md/857ff118-a4df-46b3-88b6-c6dc77c082b6.requirement.md) | [§/spec/requirements.md/857ff118-a4df-46b3-88b6-c6dc77c082b6.requirement.md](../../../../../../spec/requirements.md/857ff118-a4df-46b3-88b6-c6dc77c082b6.requirement.md)
 
 ### **QA Decisions**
 - [x] Found and fixed dead link issue
@@ -139,4 +139,3 @@ git checkout origin/release/dev -- spec/
 
 ---
 
-**One-line Summary:** 🔗 Fixed dead PDCA requirement links by cherry-picking 86 files from spec directory - dual link format now documented! 📋✅
