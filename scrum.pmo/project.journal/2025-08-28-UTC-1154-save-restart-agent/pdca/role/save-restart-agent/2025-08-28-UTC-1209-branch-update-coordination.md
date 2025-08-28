@@ -20,14 +20,45 @@
 - [ ] **Branch Update Selection**
   Please check the branches you want to update with save/start.v1 changes:
   
-  - [ ] dev/2025-08-25-UTC-1308 (3 days old)
-  - [ ] dev/2025-08-26-UTC-2036 (2 days old)
-  - [ ] dev/2025-08-28-UTC-0850 (today - morning)
-  - [ ] dev/2025-08-28-UTC-0950 (today - morning)
-  - [ ] dev/2025-08-28-UTC-1125 (today - late morning)
-  - [ ] dev/2025-08-28-UTC-1154 (today - current session)
-  - [ ] dev/2025-08-28-UTC-1225 (today - afternoon)
-  - [ ] dev/2025-08-28-UTC-1341 (today - afternoon)
+  - [ ] **dev/2025-08-25-UTC-1308** (3 days old)
+    - Latest: "feat(cli): Upgrade Web4TSComponent usage format + add standard script links"
+    - Focus: Component improvements and script links
+    - Has older howto.PDCA.md version
+    
+  - [ ] **dev/2025-08-26-UTC-2036** (2 days old)
+    - Latest: "Cherry-pick source.env from release/dev"
+    - Focus: Selective merge from save/start.v2
+    - Already has some cherry-picks but missing latest updates
+    
+  - [ ] **dev/2025-08-28-UTC-0850** (today - morning)
+    - Latest: "PDCA: Fast forward documentation to release/dev v2.5"
+    - Focus: Recovery session with agent registry
+    - Has v2.5 PDCA but missing save/start.v1 specific updates
+    
+  - [ ] **dev/2025-08-28-UTC-0950** (today - morning)
+    - Latest: "Recovery startup: Initialize session"
+    - Focus: Standard recovery session
+    - Has basic tools cherry-pick but missing latest enhancements
+    
+  - [ ] **dev/2025-08-28-UTC-1125** (today - late morning)
+    - Latest: "Fix: Make local paths in dual links clickable"
+    - Focus: ScrumMaster main branch analysis
+    - Already working on dual links but missing the fix.dual.links tool
+    
+  - [ ] **dev/2025-08-28-UTC-1154** (today - current session)
+    - Latest: "Recovery: Background Agent standard startup"
+    - Focus: Background Agent recovery
+    - Basic startup, would benefit from latest PDCA enhancements
+    
+  - [ ] **dev/2025-08-28-UTC-1225** (today - afternoon)
+    - Latest: "Testing Agent role definition"
+    - Focus: Testing landscape analysis
+    - Would benefit from non-interactive script standards
+    
+  - [ ] **dev/2025-08-28-UTC-1341** (today - afternoon)
+    - Latest: "Update tester role PDCA with decisions"
+    - Focus: Quality assessment (48% test failure rate)
+    - Critical testing work that needs latest standards
 
 ### **Critical Updates to Apply**
 The following changes from save/start.v1 need to be propagated:
