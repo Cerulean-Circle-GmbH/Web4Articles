@@ -6,7 +6,8 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { existsSync, readFileSync } from 'fs';
-import { View } from '../layer3/View.js';
+import { View, ViewContext } from '../layer3/View.js';
+import { DefaultMDView } from '../layer2/DefaultMDView.js';
 import { Requirement } from '../layer3/Requirement.js';
 import { DefaultRequirement } from '../layer2/DefaultRequirement.js';
 import { RequirementOverview } from './RequirementOverview.js';
@@ -122,9 +123,9 @@ Examples:
     try {
       // Create new requirement using DefaultRequirement
       const requirement = new DefaultRequirement();
-      await requirement.initializeFromTitleAndDescription(title, description);
+      const result = await requirement.create(title, description);
       
-      const uuid = requirement.getIor().uuid;
+      const uuid = requirement.getUuid();
       
       // Create directories relative to project root
       const specDir = path.join(this.projectRoot, 'spec', 'requirements');
@@ -134,11 +135,13 @@ Examples:
 
       // Save scenario file
       const scenarioPath = path.join(specDir, `${uuid}.scenario.json`);
-      await requirement.saveToFile(scenarioPath);
+      await requirement.saveMDView(scenarioPath);
 
       // Generate and save markdown view
-      const view = new View();
-      const mdContent = await view.generateRequirementMarkdown(requirement);
+      const view = new DefaultMDView();
+      const context = { requirement };
+      const viewResult = await view.render(context);
+      const mdContent = viewResult.content || '';
       const mdPath = path.join(mdDir, `${uuid}.requirement.md`);
       await fs.writeFile(mdPath, mdContent, 'utf-8');
 
@@ -180,8 +183,16 @@ Examples:
           const filePath = path.join(specDir, file);
           try {
             const requirement = new DefaultRequirement();
-            await requirement.loadFromFile(filePath);
-            const info = requirement.getInfo();
+            // Use loadFromScenario instead of loadFromFile
+            await requirement.loadFromScenario(filePath);
+            const info = {
+              uuid: requirement.getUuid(),
+              title: requirement.getTitle(),
+              description: requirement.getDescription(),
+              status: requirement.getStatus(),
+              priority: 'medium', // Default priority
+              tags: [] // Default empty tags
+            };
             
             // Apply filter if specified
             if (filterField && filterValue) {
@@ -212,9 +223,9 @@ Examples:
       
       for (const req of requirements) {
         console.log(`${req.uuid} - ${req.title}`);
-        console.log(`  Status: ${req.status} | Priority: ${req.priority}`);
-        if (req.tags && req.tags.length > 0) {
-          console.log(`  Tags: ${req.tags.join(', ')}`);
+        console.log(`  Status: ${req.status} | Priority: ${(req as any).priority || 'medium'}`);
+        if ((req as any).tags && (req as any).tags.length > 0) {
+          console.log(`  Tags: ${(req as any).tags.join(', ')}`);
         }
         console.log();
       }
@@ -252,8 +263,13 @@ Examples:
           if (content.toLowerCase().includes(searchTerm)) {
             try {
               const requirement = new DefaultRequirement();
-              await requirement.loadFromFile(filePath);
-              matches.push(requirement.getInfo());
+              await requirement.loadFromScenario(filePath);
+              matches.push({
+                uuid: requirement.getUuid(),
+                title: requirement.getTitle(),
+                description: requirement.getDescription(),
+                status: requirement.getStatus()
+              });
             } catch (e) {
               // Skip invalid files
             }
@@ -270,7 +286,7 @@ Examples:
       
       for (const req of matches) {
         console.log(`${req.uuid} - ${req.title}`);
-        console.log(`  Status: ${req.status} | Priority: ${req.priority}`);
+        console.log(`  Status: ${req.status} | Priority: ${(req as any).priority || 'medium'}`);
       }
 
     } catch (error) {
@@ -298,17 +314,19 @@ Examples:
       }
 
       const requirement = new DefaultRequirement();
-      await requirement.loadFromFile(filePath);
+      await requirement.loadFromScenario(filePath);
       
-      // Update the field
-      await requirement.updateField(field, value);
+      // Update the field using set method
+      await requirement.set(field, value);
       
       // Save back to file
-      await requirement.saveToFile(filePath);
+      await requirement.saveMDView(filePath);
       
       // Update markdown view
-      const view = new View();
-      const mdContent = await view.generateRequirementMarkdown(requirement);
+      const view = new DefaultMDView();
+      const context = { requirement };
+      const viewResult = await view.render(context);
+      const mdContent = viewResult.content || '';
       const mdDir = path.join(this.projectRoot, 'spec', 'requirements.md');
       const mdPath = path.join(mdDir, `${uuid}.requirement.md`);
       await fs.writeFile(mdPath, mdContent, 'utf-8');
@@ -326,11 +344,16 @@ Examples:
       const outputDir = args.length > 0 ? args[0] : path.join(this.projectRoot, 'spec', 'requirements.md');
       
       const overview = new RequirementOverview();
-      const result = await overview.generateOverview(this.projectRoot, outputDir);
+      const result = await overview.generateOverview();
       
-      console.log('✅ Requirements overview generated');
-      console.log(`📄 Output: ${result.outputPath}`);
-      console.log(`📊 Statistics: ${result.stats.total} requirements, ${result.stats.completed} completed`);
+      if (result.success) {
+        console.log(`✅ Generated requirements overview successfully`);
+        if (result.content) {
+          console.log(`📄 Content length: ${result.content.length} characters`);
+        }
+      } else {
+        console.log(`❌ Failed to generate overview: ${result.message || result.error}`);
+      }
 
     } catch (error) {
       console.error(`❌ Error generating overview: ${(error as Error).message}`);
@@ -356,27 +379,35 @@ Examples:
       }
 
       const requirement = new DefaultRequirement();
-      await requirement.loadFromFile(filePath);
+      await requirement.loadFromScenario(filePath);
       
-      const view = new View();
+      const view = new DefaultMDView();
       
       switch (format.toLowerCase()) {
         case 'json':
-          console.log(JSON.stringify(requirement.toJson(), null, 2));
+          // Use toScenario instead of toJson
+          console.log(JSON.stringify(requirement.toScenario(), null, 2));
           break;
         case 'markdown':
-          const mdContent = await view.generateRequirementMarkdown(requirement);
+          const context = { requirement };
+      const viewResult = await view.render(context);
+      const mdContent = viewResult.content || '';
           console.log(mdContent);
           break;
         default:
-          const info = requirement.getInfo();
+          const info = {
+            uuid: requirement.getUuid(),
+            title: requirement.getTitle(),
+            description: requirement.getDescription(),
+            status: requirement.getStatus()
+          };
           console.log(`\n📋 Requirement: ${info.title}`);
           console.log(`🆔 UUID: ${info.uuid}`);
           console.log(`📝 Description: ${info.description}`);
           console.log(`📊 Status: ${info.status}`);
-          console.log(`⚡ Priority: ${info.priority}`);
-          if (info.tags && info.tags.length > 0) {
-            console.log(`🏷️  Tags: ${info.tags.join(', ')}`);
+          console.log(`⚡ Priority: ${(info as any).priority || 'medium'}`);
+          if ((info as any).tags && (info as any).tags.length > 0) {
+            console.log(`🏷️  Tags: ${(info as any).tags.join(', ')}`);
           }
           console.log();
           break;
