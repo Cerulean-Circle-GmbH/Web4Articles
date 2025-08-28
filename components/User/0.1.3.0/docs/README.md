@@ -3,8 +3,8 @@
 **Component:** @web4/user  
 **Version:** 0.1.3.0  
 **Description:** Web4 User component for consistent user identification  
-**Generated:** 2025-08-28T15:50:46.573Z  
-**Git Commit:** b444644  
+**Generated:** 2025-08-28T16:14:41.304Z  
+**Git Commit:** ebf5e76  
 **Git Branch:** release/dev
 
 ## Overview
@@ -70,10 +70,13 @@ const uuid = user.getUuid(); // Deterministic based on username
 
 - **preinstall**: `echo 'Run npm run build first to compile TypeScript lifecycle tools'`
 - **postinstall**: `npm run build && npm run symlink`
-- **prebuild**: `npm run clean && npm run check:deps`
+- **prebuild**: `npm run clean-dist`
 - **build**: `tsc`
-- **postbuild**: `npm run verify && npm run generate:docs`
 - **clean**: `rm -rf dist/ *.tsbuildinfo`
+- **clean-dist**: `rm -rf dist/`
+- **install-and-build**: `npm install && npm run build`
+- **fresh-build**: `npm run clean && npm run install-and-build`
+- **postbuild**: `npm run verify && npm run generate:docs`
 - **check:deps**: `node dist/ts/layer5/LifecycleCLI.js check-dependencies || echo 'Skipping dependency check - build in progress'`
 - **symlink**: `mkdir -p dist && ln -sf ts/layer2 dist/layer2`
 - **verify**: `echo '✅ User component built successfully'`
