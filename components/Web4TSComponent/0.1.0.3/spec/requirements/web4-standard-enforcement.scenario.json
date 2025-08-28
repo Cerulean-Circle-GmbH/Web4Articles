@@ -1,0 +1,53 @@
+{
+  "ior": {
+    "uuid": "web4ts-component-standard-001",
+    "type": "Requirement",
+    "version": "0.1.0.0",
+    "created": "2025-01-27T15:00:00.000Z",
+    "updated": "2025-01-27T15:00:00.000Z"
+  },
+  "model": {
+    "title": "Web4TSComponent Must Enforce Location-Resilient CLI Standard",
+    "description": "The Web4TSComponent must provide tools to generate, validate, and enforce the location-resilient CLI standard across all Web4 components to ensure semantic location invariance.",
+    "status": "implemented",
+    "priority": "critical",
+    "category": "Architecture",
+    "tags": ["web4", "cli", "standard", "location-resilient", "architecture"],
+    "owner": {
+      "uuid": "7e65139d-38cf-4f34-b769-0a86dd3a94e3",
+      "username": "background-agent",
+      "hostname": "cursor"
+    },
+    "acceptance_criteria": [
+      "generateLocationResilientCLI() creates standard-compliant scripts",
+      "validateLocationResilientCLI() verifies compliance with Web4 standard",
+      "scaffoldComponent() creates Web4-compliant component structure",
+      "auditComponentCompliance() checks existing components for compliance",
+      "All generated CLIs work from any directory within project",
+      "CLI scripts include project root detection, auto-build, and context preservation",
+      "Standard documentation is complete and accessible"
+    ],
+    "implementation_notes": [
+      "Follows Web4 Empty Constructor Principle - component initialized empty",
+      "Implements Scenario-First Development - component state is hibernatable",
+      "Uses IOR Architecture - references components by version paths",
+      "Applies Semantic Invariants - location becomes irrelevant",
+      "Embodies Occam's Razor - single pattern solves all location issues"
+    ],
+    "dependencies": [
+      "Node.js and npm for building components",
+      "Git for project root detection",
+      "TypeScript for component compilation"
+    ],
+    "test_scenarios": [
+      "Generate CLI script and verify it works from workspace root",
+      "Generate CLI script and verify it works from nested directories",
+      "Validate existing compliant CLI scripts",
+      "Validate non-compliant CLI scripts and verify issues are reported",
+      "Scaffold new component and verify all Web4 standards are applied"
+    ]
+  }
+}
+
+
+
