@@ -7,17 +7,17 @@
 **👤 Role:** Save/Restart Agent → Process Enhancement  
 **🚨 Issues:** Need to synchronize major project folders with release/dev  
 **📎 Previous Commit:** e3a843a - Cherry-pick: Updated source.env with ll alias and versions PATH  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1157-source-env-update.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1157-source-env-update.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1157-source-env-update.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1157-source-env-update.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1157-source-env-update.md](2025-08-28-UTC-1157-source-env-update.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1158-folders-cherry-pick.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1158-folders-cherry-pick.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1158-folders-cherry-pick.md)
-- **Components Folder:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1/components) | [components/](components/)
-- **Scenarios Folder:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1/scenarios) | [scenarios/](scenarios/)
-- **Scripts Folder:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1/scripts) | [scripts/](scripts/)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1158-folders-cherry-pick.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1158-folders-cherry-pick.md](2025-08-28-UTC-1158-folders-cherry-pick.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1/components) | [§/components/](../../../../../../components)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1/scenarios) | [§/scenarios/](../../../../../../scenarios)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1/scripts) | [§/scripts/](../../../../../../scripts)
 
 ### **QA Decisions**
 - [ ] **Decision 1:** Handle 764 file changes
@@ -145,4 +145,3 @@ Need QA decision on how to handle 764 file changes:
 
 ---
 
-**One-line Summary:** 📁 Massive cherry-pick success - 764 files updated with proper versioning structure across components, scenarios, and scripts! 🚀✅

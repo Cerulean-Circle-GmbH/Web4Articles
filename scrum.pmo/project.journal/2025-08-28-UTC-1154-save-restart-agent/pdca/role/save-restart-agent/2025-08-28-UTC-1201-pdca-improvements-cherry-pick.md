@@ -7,16 +7,16 @@
 **👤 Role:** Save/Restart Agent → Process Enhancement  
 **🚨 Issues:** Multiple symbolic links pointing to non-existent files  
 **📎 Previous Commit:** 5f1cc84 - Cherry-pick: PDCA requirements and spec directory - fixed dead links (86 files)  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1200-pdca-requirements-cherry-pick.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1200-pdca-requirements-cherry-pick.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1200-pdca-requirements-cherry-pick.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1200-pdca-requirements-cherry-pick.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1200-pdca-requirements-cherry-pick.md](2025-08-28-UTC-1200-pdca-requirements-cherry-pick.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1201-pdca-improvements-cherry-pick.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1201-pdca-improvements-cherry-pick.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1201-pdca-improvements-cherry-pick.md)
-- **PDCA Format Requirements:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/recovery.analysis/pdca-format-requirements-mandatory.md) | [recovery.analysis/pdca-format-requirements-mandatory.md](recovery.analysis/pdca-format-requirements-mandatory.md)
-- **PDCA Process Improvements:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1/scrum.pmo/roles/_shared/PDCA/pdca.process.improvements) | [scrum.pmo/roles/_shared/PDCA/pdca.process.improvements/](scrum.pmo/roles/_shared/PDCA/pdca.process.improvements/)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1201-pdca-improvements-cherry-pick.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1201-pdca-improvements-cherry-pick.md](2025-08-28-UTC-1201-pdca-improvements-cherry-pick.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/recovery.analysis/pdca-format-requirements-mandatory.md) | [§/recovery.analysis/pdca-format-requirements-mandatory.md](../../../../../../recovery.analysis/pdca-format-requirements-mandatory.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1/scrum.pmo/roles/_shared/PDCA/pdca.process.improvements) | [§/scrum.pmo/roles/_shared/PDCA/pdca.process.improvements/](../../../../2025-08-20-1552/pdca.process.improvements)
 
 ### **QA Decisions**
 - [x] Fixed all dead symbolic links in pdca.process.improvements
@@ -141,4 +141,3 @@ Link now resolves correctly!
 
 ---
 
-**One-line Summary:** 🔗 Fixed all symbolic links in pdca.process.improvements by cherry-picking recovery.analysis and project journals! 📋✅

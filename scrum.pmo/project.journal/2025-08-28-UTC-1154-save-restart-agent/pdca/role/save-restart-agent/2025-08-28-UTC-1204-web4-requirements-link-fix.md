@@ -7,16 +7,16 @@
 **👤 Role:** Save/Restart Agent → Process Enhancement  
 **🚨 Issues:** Symbolic link pointing to missing sprint-20/web4.requirement.md  
 **📎 Previous Commit:** 7171e16 - Audit: Complete symbolic links inventory - 6 broken links found  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1203-symbolic-links-audit.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1203-symbolic-links-audit.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1203-symbolic-links-audit.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1203-symbolic-links-audit.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1203-symbolic-links-audit.md](2025-08-28-UTC-1203-symbolic-links-audit.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1204-web4-requirements-link-fix.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1204-web4-requirements-link-fix.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1204-web4-requirements-link-fix.md)
-- **Fixed File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/sprints/sprint-20/web4.requirement.md) | [scrum.pmo/sprints/sprint-20/web4.requirement.md](scrum.pmo/sprints/sprint-20/web4.requirement.md)
-- **Working Link:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/external-references/web4-requirements-paradigm-shifts.md) | [scrum.pmo/roles/_shared/external-references/web4-requirements-paradigm-shifts.md](scrum.pmo/roles/_shared/external-references/web4-requirements-paradigm-shifts.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1204-web4-requirements-link-fix.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1204-web4-requirements-link-fix.md](2025-08-28-UTC-1204-web4-requirements-link-fix.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/sprints/sprint-20/web4.requirement.md) | [§/scrum.pmo/sprints/sprint-20/web4.requirement.md](../../../../../sprints/sprint-20/web4.requirement.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/external-references/web4-requirements-paradigm-shifts.md) | [§/scrum.pmo/roles/_shared/external-references/web4-requirements-paradigm-shifts.md](../../../../../sprints/sprint-20/web4.requirement.md)
 
 ### **QA Decisions**
 - [x] Fixed web4-requirements-paradigm-shifts.md link
@@ -126,4 +126,3 @@ Success! Link now resolves correctly.
 
 ---
 
-**One-line Summary:** 🔗 Fixed web4-requirements-paradigm-shifts.md by cherry-picking sprint-20/web4.requirement.md - link name was misleading! 📋✅

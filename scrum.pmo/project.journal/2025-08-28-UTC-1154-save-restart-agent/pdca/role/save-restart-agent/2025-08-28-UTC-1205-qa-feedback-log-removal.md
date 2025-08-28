@@ -7,15 +7,15 @@
 **👤 Role:** Save/Restart Agent → Process Enhancement  
 **🚨 Issues:** Obsolete qa-feedback-log.md replaced by PDCA QA feedback process  
 **📎 Previous Commit:** f1f2755 - Fix: web4-requirements-paradigm-shifts.md link - added sprint-20/web4.requirement.md  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1204-web4-requirements-link-fix.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1204-web4-requirements-link-fix.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1204-web4-requirements-link-fix.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1204-web4-requirements-link-fix.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1204-web4-requirements-link-fix.md](2025-08-28-UTC-1204-web4-requirements-link-fix.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1205-qa-feedback-log-removal.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1205-qa-feedback-log-removal.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1205-qa-feedback-log-removal.md)
-- **PDCA Process Guide:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1205-qa-feedback-log-removal.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1205-qa-feedback-log-removal.md](2025-08-28-UTC-1205-qa-feedback-log-removal.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../../../../roles/_shared/PDCA/howto.PDCA.md)
 - **Modified Files:** Multiple project.state.md files, recovery.md, index.md, update-project-index.sh
 
 ### **QA Decisions**
@@ -138,4 +138,3 @@ grep -r "qa-feedback-log\.md" /workspace --include="*.md" | grep -v "pdca/" | wc
 
 ---
 
-**One-line Summary:** 🗑️ Successfully removed qa-feedback-log.md and migrated all 53 references to PDCA process - cleaner, more integrated QA feedback! 📋✅
