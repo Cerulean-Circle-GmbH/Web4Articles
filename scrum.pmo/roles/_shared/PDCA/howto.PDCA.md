@@ -4,8 +4,14 @@
 
 **🗓️ Date:** 2025-08-22-UTC-1330  
 **🎯 Objective:** Consolidated PDCA writing guidelines based on latest process improvements  
-**👤 Role:** Process Documentation → Knowledge Management Enhancement  
-**📋 Status:** Latest consolidated format based on UTC timestamps analysis  
+**🎯 Template Version:** 3.0  
+
+**👤 Agent Role:** Process Documentation → Knowledge Management Enhancement  
+**👤 Branch:** save/start.v1 → Template Evolution  
+**🎯 Project Journal Session:** Template Documentation → Version 3.0  
+**🎯 Sprint:** Sprint-21 → Process Standardization  
+**✅ Task:** PDCA Writing Guidelines  
+**🚨 Issues:** Version tracking needed for compliance  
 **🔗 Based on:** [Status Checkbox Implementation PDCA](../project.journal/2025-08-21-1613-sprint21-tootsie-architecture/pdca/role/developer/2025-08-22-UTC-0745-status-checkbox-implementation.md)
 
 ---
@@ -18,7 +24,13 @@
 
 **🗓️ Date:** YYYY-MM-DD-UTC-HHMM  
 **🎯 Objective:** [CLEAR, SPECIFIC OBJECTIVE STATEMENT]  
-**👤 Role:** [ROLE NAME] → [CONTEXT/SPECIALIZATION]  
+**🎯 Template Version:** 3.0  
+
+**👤 Agent Role:** [ROLE NAME] → [CONTEXT/SPECIALIZATION]  
+**👤 Branch:** [BRANCH NAME] → [BRANCH PURPOSE]  
+**🎯 Project Journal Session:** [SESSION NAME] → [SESSION FOCUS]  
+**🎯 Sprint:** [SPRINT NAME] → [SPRINT GOAL]  
+**✅ Task:** [TASK NAME]  
 **🚨 Issues:** [KEY ISSUES BEING ADDRESSED]  
 **📎 Previous Commit:** [COMMIT_SHA] - [COMMIT_DESCRIPTION]  
 **🔗 Previous PDCA:** [GitHub](GITHUB_URL) | [Local Path](LOCAL_PATH)
