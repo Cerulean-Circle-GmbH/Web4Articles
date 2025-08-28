@@ -14,9 +14,9 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1154-fresh-start.md) | scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1154-fresh-start.md
-- **Session Entry:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/session-start.md) | scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/session-start.md
-- **Branch:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1) | save/start.v1 (ALWAYS)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1154-fresh-start.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1154-fresh-start.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1154-fresh-start.md)
+- **Session Entry:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/session-start.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/session-start.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/session-start.md)
+- **Branch:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1) | [save/start.v1](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1) (ALWAYS)
 
 ### **QA Decisions**
 - [ ] **Decision 1:** Post-commit hook update for save/start.v1
