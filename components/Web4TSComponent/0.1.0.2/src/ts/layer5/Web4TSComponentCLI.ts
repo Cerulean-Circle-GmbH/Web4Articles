@@ -5,24 +5,27 @@
  */
 
 import { DefaultWeb4TSComponent } from '../layer2/DefaultWeb4TSComponent.js';
+import { VersionManager } from '../layer2/VersionManager.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { existsSync } from 'fs';
 
 export class Web4TSComponentCLI {
   private component: DefaultWeb4TSComponent;
+  private versionManager: VersionManager | null = null;
+  private projectRoot: string | null = null;
 
   constructor() {
     this.component = new DefaultWeb4TSComponent();
-    // Find project root automatically
-    this.findProjectRoot().then(root => {
-      if (root) {
-        this.component.setTargetDirectory(root);
-      }
-    });
+    // Find project root synchronously
+    this.projectRoot = this.findProjectRoot();
+    if (this.projectRoot) {
+      this.component.setTargetDirectory(this.projectRoot);
+      this.versionManager = new VersionManager(this.projectRoot);
+    }
   }
 
-  private async findProjectRoot(): Promise<string | null> {
+  private findProjectRoot(): string | null {
     let dir = process.cwd();
     while (dir !== '/') {
       if (existsSync(path.join(dir, '.git')) && existsSync(path.join(dir, 'package.json'))) {
@@ -66,6 +69,9 @@ export class Web4TSComponentCLI {
         case 'guidelines':
           this.handleShowGuidelines();
           break;
+        case 'version':
+          await this.handleVersion(args.slice(1));
+          break;
         default:
           console.log(`❌ Unknown command: ${command}`);
           this.showUsage();
@@ -94,6 +100,9 @@ export class Web4TSComponentCLI {
     console.log(`  ${cyan}web4tscomponent${reset} report "component-dir"                     # Generate compliance report`);
     console.log(`  ${cyan}web4tscomponent${reset} standard                                   # Display location-resilient CLI standard`);
     console.log(`  ${cyan}web4tscomponent${reset} guide                                      # Display Web4 architecture guidelines`);
+    console.log(`  ${cyan}web4tscomponent${reset} version next major|minor|patch|build       # Create next version`);
+    console.log(`  ${cyan}web4tscomponent${reset} version latest set ${yellow}"X.X.X.X"${reset}                # Set latest version`);
+    console.log(`  ${cyan}web4tscomponent${reset} version cherry-pick ${yellow}"branch"${reset} latest as ${yellow}"X.X.X.X"${reset} # Cherry-pick from branch`);
     console.log('');
     console.log(`${bold}Commands:${reset}`);
     console.log(`  new          Create complete Web4-compliant component with layered architecture`);
@@ -103,6 +112,7 @@ export class Web4TSComponentCLI {
     console.log(`  report       Generate comprehensive compliance report for component directory`);
     console.log(`  standard     Display complete location-resilient CLI implementation standard`);
     console.log(`  guide        Display Web4 architectural principles and guidelines`);
+    console.log(`  version      Manage component versions (next, latest, cherry-pick)`);
     console.log('');
     console.log(`${bold}Parameters:${reset}`);
     console.log(`  ${yellow}"component-name"${reset}  Component name (e.g., "Web4Example", "MyNewComponent", "UserManager")`);
@@ -130,6 +140,14 @@ export class Web4TSComponentCLI {
     console.log(`  ${green}# Documentation${reset}`);
     console.log(`  ${cyan}web4tscomponent${reset} standard`);
     console.log(`  ${cyan}web4tscomponent${reset} guide`);
+    console.log('');
+    console.log(`  ${green}# Version management${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} version next major             ${green}# Create next major version (1.0.0.0)${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} version next minor             ${green}# Create next minor version (0.2.0.0)${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} version next patch             ${green}# Create next patch version (0.1.1.0)${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} version next build             ${green}# Create next build version (0.1.0.3)${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} version latest set ${yellow}"0.1.0.2"${reset}      ${green}# Set specific version as latest${reset}`);
+    console.log(`  ${cyan}web4tscomponent${reset} version cherry-pick ${yellow}"dev/branch"${reset} latest as ${yellow}"0.1.0.4"${reset} ${green}# Cherry-pick from branch${reset}`);
     console.log('');
     console.log(`${bold}Scaffold Options:${reset}`);
     console.log(`  --cli              Include location-resilient CLI script (follows Web4 standard)`);
@@ -338,6 +356,160 @@ export class Web4TSComponentCLI {
     console.log(guidelines);
     } catch (error) {
       console.error(`❌ Failed to display guidelines: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  private async handleVersion(args: string[]): Promise<void> {
+    if (!this.versionManager) {
+      console.error('❌ Version manager not initialized. Make sure you are in a valid project directory.');
+      return;
+    }
+
+    if (args.length === 0) {
+      await this.showVersionInfo();
+      return;
+    }
+
+    const subCommand = args[0];
+
+    try {
+      switch (subCommand) {
+        case 'next':
+          await this.handleVersionNext(args.slice(1));
+          break;
+        case 'latest':
+          await this.handleVersionLatest(args.slice(1));
+          break;
+        case 'cherry-pick':
+          await this.handleVersionCherryPick(args.slice(1));
+          break;
+        case 'info':
+          await this.showVersionInfo();
+          break;
+        default:
+          console.log(`❌ Unknown version command: ${subCommand}`);
+          console.log('Available commands: next, latest, cherry-pick, info');
+          break;
+      }
+    } catch (error) {
+      console.error(`❌ Version command failed: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  private async handleVersionNext(args: string[]): Promise<void> {
+    if (args.length === 0) {
+      console.log('❌ Missing version type. Usage: web4tscomponent version next major|minor|patch|build');
+      return;
+    }
+
+    const versionType = args[0];
+    const info = await this.versionManager!.getVersionInfo();
+
+    if (!info.latest) {
+      console.log('❌ No existing versions found. Create an initial version first.');
+      return;
+    }
+
+    let nextVersion: string;
+    switch (versionType) {
+      case 'major':
+        nextVersion = this.versionManager!.nextMajor(info.latest);
+        break;
+      case 'minor':
+        nextVersion = this.versionManager!.nextMinor(info.latest);
+        break;
+      case 'patch':
+        nextVersion = this.versionManager!.nextPatch(info.latest);
+        break;
+      case 'build':
+        nextVersion = this.versionManager!.nextBuild(info.latest);
+        break;
+      default:
+        console.log(`❌ Invalid version type: ${versionType}. Use: major, minor, patch, or build`);
+        return;
+    }
+
+    console.log(`🔄 Creating ${versionType} version: ${info.latest} → ${nextVersion}`);
+    
+    // Copy current latest to next version
+    const result = await this.versionManager!.cherryPickFromBranch('HEAD', nextVersion);
+    
+    console.log(`✅ Successfully created version ${nextVersion}`);
+    console.log(`📁 Location: components/Web4TSComponent/${nextVersion}/`);
+  }
+
+  private async handleVersionLatest(args: string[]): Promise<void> {
+    if (args.length < 2 || args[0] !== 'set') {
+      console.log('❌ Usage: web4tscomponent version latest set "X.X.X.X"');
+      return;
+    }
+
+    const version = args[1];
+    console.log(`🔄 Setting latest version to ${version}...`);
+
+    const success = await this.versionManager!.setLatest(version);
+    if (success) {
+      console.log(`✅ Successfully set ${version} as latest`);
+      console.log(`🔗 Updated symlinks: latest → ${version}`);
+      console.log(`🔗 Updated main script: web4tscomponent → web4tscomponent-v${version}`);
+    } else {
+      console.log(`❌ Failed to set ${version} as latest`);
+    }
+  }
+
+  private async handleVersionCherryPick(args: string[]): Promise<void> {
+    // Expected format: cherry-pick "branch" latest as "X.X.X.X"
+    if (args.length < 4 || args[1] !== 'latest' || args[2] !== 'as') {
+      console.log('❌ Usage: web4tscomponent version cherry-pick "branch" latest as "X.X.X.X"');
+      return;
+    }
+
+    const branch = args[0];
+    const targetVersion = args[3];
+
+    console.log(`🔄 Cherry-picking from branch ${branch} as version ${targetVersion}...`);
+
+    try {
+      const result = await this.versionManager!.cherryPickFromBranch(branch, targetVersion);
+      console.log(`✅ Successfully cherry-picked from ${branch} as ${result}`);
+      console.log(`📁 Location: components/Web4TSComponent/${result}/`);
+      console.log(`🔗 Script: scripts/versions/web4tscomponent-v${result}`);
+    } catch (error) {
+      console.error(`❌ Cherry-pick failed: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  private async showVersionInfo(): Promise<void> {
+    const cyan = '\x1b[36m';
+    const yellow = '\x1b[33m';
+    const green = '\x1b[32m';
+    const bold = '\x1b[1m';
+    const reset = '\x1b[0m';
+
+    const info = await this.versionManager!.getVersionInfo();
+
+    console.log(`${bold}${cyan}Web4TSComponent Version Info${reset}`);
+    console.log('');
+    console.log(`${bold}Current State:${reset}`);
+    console.log(`  Latest Version: ${info.latest || 'None'}`);
+    console.log(`  Available Versions: ${info.available.length === 0 ? 'None' : info.available.join(', ')}`);
+    console.log('');
+
+    if (info.latest) {
+      console.log(`${bold}Next Available Versions:${reset}`);
+      console.log(`  Next Major: ${yellow}${info.nextMajor}${reset} ${green}(resets minor, patch, build to 0)${reset}`);
+      console.log(`  Next Minor: ${yellow}${info.nextMinor}${reset} ${green}(resets patch, build to 0)${reset}`);
+      console.log(`  Next Patch: ${yellow}${info.nextPatch}${reset} ${green}(resets build to 0)${reset}`);
+      console.log(`  Next Build: ${yellow}${info.nextBuild}${reset} ${green}(increments build)${reset}`);
+      console.log('');
+      console.log(`${bold}Examples:${reset}`);
+      console.log(`  ${cyan}web4tscomponent${reset} version next major    ${green}# Create ${info.nextMajor}${reset}`);
+      console.log(`  ${cyan}web4tscomponent${reset} version next minor    ${green}# Create ${info.nextMinor}${reset}`);
+      console.log(`  ${cyan}web4tscomponent${reset} version next build    ${green}# Create ${info.nextBuild}${reset}`);
+    } else {
+      console.log(`${bold}Getting Started:${reset}`);
+      console.log(`  Create your first version:`);
+      console.log(`  ${cyan}web4tscomponent${reset} new ${yellow}"Web4TSComponent"${reset} ${yellow}"0.1.0.0"${reset} --cli --layers`);
     }
   }
 }
