@@ -1,4 +1,4 @@
-# Web4TSComponent - TypeScript Component Standards Enforcement
+# Web4TSComponent v0.1.0.1 - TypeScript Component Standards Enforcement
 
 ## Overview
 
