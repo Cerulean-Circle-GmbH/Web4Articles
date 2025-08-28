@@ -7,6 +7,7 @@
 import { Scenario } from './Scenario.js';
 import { Component } from './Component.js';
 import { IOR } from './IOR.js';
+import { LifecycleEventType, LifecycleEventHandler, LifecycleHooks } from './LifecycleEvents.js';
 
 /**
  * ONCE interface - Universal Object Network Communication Engine
@@ -92,6 +93,45 @@ export interface ONCE {
      * Get performance metrics
      */
     getMetrics(): PerformanceMetrics;
+
+    /**
+     * Register lifecycle event handler
+     * @param eventType - Type of lifecycle event
+     * @param handler - Event handler function
+     */
+    on(eventType: LifecycleEventType, handler: LifecycleEventHandler): void;
+
+    /**
+     * Remove lifecycle event handler
+     * @param eventType - Type of lifecycle event
+     * @param handler - Event handler function to remove
+     */
+    off(eventType: LifecycleEventType, handler: LifecycleEventHandler): void;
+
+    /**
+     * Register lifecycle hooks for a component
+     * @param component - Component to register hooks for
+     * @param hooks - Lifecycle hooks
+     */
+    registerLifecycleHooks(component: Component, hooks: LifecycleHooks): void;
+
+    /**
+     * Pause a running component
+     * @param component - Component to pause
+     */
+    pauseComponent(component: Component): Promise<void>;
+
+    /**
+     * Resume a paused component
+     * @param component - Component to resume
+     */
+    resumeComponent(component: Component): Promise<void>;
+
+    /**
+     * Stop a component
+     * @param component - Component to stop
+     */
+    stopComponent(component: Component): Promise<void>;
 }
 
 /**

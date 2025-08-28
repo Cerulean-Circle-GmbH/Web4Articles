@@ -7,11 +7,14 @@ import { ONCE, EnvironmentInfo, ComponentQuery, PerformanceMetrics } from '../la
 import { Scenario } from '../layer3/Scenario.js';
 import { Component } from '../layer3/Component.js';
 import { IOR } from '../layer3/IOR.js';
+import { LifecycleEventType, LifecycleEvent, LifecycleEventHandler, LifecycleHooks, LifecycleState } from '../layer3/LifecycleEvents.js';
 import { ComponentRegistry } from './ComponentRegistry.js';
 import { EnvironmentDetector } from './EnvironmentDetector.js';
 import { ScenarioManager } from './ScenarioManager.js';
 import { PeerManager } from './PeerManager.js';
 import { DefaultIOR } from './DefaultIOR.js';
+import { EventEmitter } from './EventEmitter.js';
+import { ComponentLifecycleManager } from './ComponentLifecycleManager.js';
 
 /**
  * Default implementation of ONCE kernel
@@ -28,6 +31,8 @@ export class DefaultONCE implements ONCE {
     private environmentDetector?: EnvironmentDetector;
     private scenarioManager?: ScenarioManager;
     private peerManager?: PeerManager;
+    private eventEmitter?: EventEmitter;
+    private lifecycleManager?: ComponentLifecycleManager;
 
     /**
      * Web4 Empty Constructor - no dependencies, no initialization
@@ -87,12 +92,15 @@ export class DefaultONCE implements ONCE {
         this.environmentDetector = new EnvironmentDetector();
         this.scenarioManager = new ScenarioManager();
         this.peerManager = new PeerManager();
+        this.eventEmitter = new EventEmitter();
+        this.lifecycleManager = new ComponentLifecycleManager(this.eventEmitter);
 
         // Initialize each component
         await this.componentRegistry.init();
         await this.environmentDetector.init();
         await this.scenarioManager.init();
         await this.peerManager.init();
+        await this.lifecycleManager.init();
     }
 
     /**
@@ -127,6 +135,13 @@ export class DefaultONCE implements ONCE {
     async startComponent(componentIOR: IOR, scenario?: Scenario): Promise<Component> {
         this.ensureInitialized();
 
+        // Emit before init event
+        await this.eventEmitter!.emit(LifecycleEventType.BEFORE_INIT, {
+            type: LifecycleEventType.BEFORE_INIT,
+            timestamp: new Date().toISOString(),
+            scenario
+        });
+
         // Resolve component from IOR
         const ComponentClass = await componentIOR.resolve();
         
@@ -136,8 +151,18 @@ export class DefaultONCE implements ONCE {
         // Initialize with scenario
         await component.init(scenario);
 
+        // Emit after init event
+        await this.eventEmitter!.emit(LifecycleEventType.AFTER_INIT, {
+            type: LifecycleEventType.AFTER_INIT,
+            timestamp: new Date().toISOString(),
+            component
+        });
+
         // Register component
         await this.componentRegistry!.register(component, componentIOR);
+
+        // Start the component
+        await this.lifecycleManager!.startComponent(component);
 
         return component;
     }
@@ -257,6 +282,54 @@ export class DefaultONCE implements ONCE {
         if (!this.initialized) {
             throw new Error('ONCE not initialized. Call init() first.');
         }
+    }
+
+    /**
+     * Register lifecycle event handler
+     */
+    on(eventType: LifecycleEventType, handler: LifecycleEventHandler): void {
+        this.ensureInitialized();
+        this.eventEmitter!.on(eventType, handler);
+    }
+
+    /**
+     * Remove lifecycle event handler
+     */
+    off(eventType: LifecycleEventType, handler: LifecycleEventHandler): void {
+        this.ensureInitialized();
+        this.eventEmitter!.off(eventType, handler);
+    }
+
+    /**
+     * Register lifecycle hooks for a component
+     */
+    registerLifecycleHooks(component: Component, hooks: LifecycleHooks): void {
+        this.ensureInitialized();
+        this.lifecycleManager!.registerHooks(component, hooks);
+    }
+
+    /**
+     * Pause a running component
+     */
+    async pauseComponent(component: Component): Promise<void> {
+        this.ensureInitialized();
+        await this.lifecycleManager!.pauseComponent(component);
+    }
+
+    /**
+     * Resume a paused component
+     */
+    async resumeComponent(component: Component): Promise<void> {
+        this.ensureInitialized();
+        await this.lifecycleManager!.resumeComponent(component);
+    }
+
+    /**
+     * Stop a component
+     */
+    async stopComponent(component: Component): Promise<void> {
+        this.ensureInitialized();
+        await this.lifecycleManager!.stopComponent(component);
     }
 
     /**

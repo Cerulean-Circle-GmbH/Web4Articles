@@ -28,17 +28,17 @@
   - b) Use Web4 empty constructor with lazy initialization on first use
   - c) Create factory pattern with scenario-based instantiation
 
-- [ ] **Decision 2: Component Lifecycle Management API Design**
+- [x] **Decision 2: Component Lifecycle Management API Design** → c) Use event-driven lifecycle with hooks for each state transition
   - a) Implement startComponent(), saveAsScenario(), loadScenario() as specified
   - b) Add additional lifecycle methods like pauseComponent(), resumeComponent()
   - c) Use event-driven lifecycle with hooks for each state transition
 
-- [ ] **Decision 3: Multi-Platform Deployment Strategy**
+- [x] **Decision 3: Multi-Platform Deployment Strategy** → a) Single codebase with runtime detection and adaptation
   - a) Single codebase with runtime detection and adaptation
   - b) Platform-specific builds with shared core
   - c) Progressive enhancement starting with Node.js, adding platforms incrementally
 
-- [ ] **Decision 4: P2P Communication Architecture**
+- [x] **Decision 4: P2P Communication Architecture** → a) WebRTC-based peer discovery and communication (adapted for scenarios)
   - a) WebRTC-based peer discovery and communication
   - b) Custom protocol over WebSockets with fallback options
   - c) Hybrid approach using multiple transports based on availability
