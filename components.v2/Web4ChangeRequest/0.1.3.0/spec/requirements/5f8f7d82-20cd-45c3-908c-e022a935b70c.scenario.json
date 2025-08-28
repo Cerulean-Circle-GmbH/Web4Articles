@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "5f8f7d82-20cd-45c3-908c-e022a935b70c",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI1VDE1OjA1OjE3LjczOVoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "5f8f7d82-20cd-45c3-908c-e022a935b70c",
+    "name": "Requirement CLI Delete Command",
+    "title": "Requirement CLI Delete Command",
+    "description": "Add delete command to requirement CLI supporting UUID, scenario file path, or MD file path parameters. Enable cleanup of misplaced requirements from components."
+  },
+  "unitIndex": {
+    "uuid": "5f8f7d82-20cd-45c3-908c-e022a935b70c",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/5/f/8/f/7/5f8f7d82-20cd-45c3-908c-e022a935b70c.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/components/Web4Requirement/latest/spec/requirements/5f8f7d82-20cd-45c3-908c-e022a935b70c.scenario.json"
+    ],
+    "createdAt": "2025-08-25T15:05:17.743Z",
+    "updatedAt": "2025-08-25T15:05:17.743Z"
+  }
+}

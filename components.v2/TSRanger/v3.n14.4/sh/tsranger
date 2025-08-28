@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+
+# v3.n14.4/sh/tsranger — Run TSRanger on legacy Node 14.21.3 without Docker
+# - Compiles TS sources with v3.n14.4/tsconfig.n14.json into dist.n14/
+# - Executes compiled JS via node 14 (ESM)
+set -euo pipefail
+
+DEBUG_FLAG=0
+
+# Locate project root (with package.json)
+find_project_root() {
+  local dir="$PWD"
+  while [[ "$dir" != "/" ]]; do
+    if [[ -f "$dir/package.json" ]]; then
+      echo "$dir"
+      return 0
+    fi
+    dir="$(dirname "$dir")"
+  done
+  return 1
+}
+
+PROJECT_ROOT="$(find_project_root)"
+if [[ -z "${PROJECT_ROOT:-}" ]]; then
+  echo "Error: Could not find project root (missing package.json)." >&2
+  exit 1
+fi
+
+cd "$PROJECT_ROOT"
+
+# Positional control args: debug | selftest | test
+case "${1:-}" in
+  debug)
+    DEBUG_FLAG=1
+    shift || true
+    set -x
+    ;;
+  selftest)
+    echo "[node] $(node -v || echo 'node not found')"
+    echo "[npm]  $(npm -v || echo 'npm not found')"
+    if [[ -x ./node_modules/.bin/tsc ]]; then
+      echo "[tsc]  ./node_modules/.bin/tsc version: $(./node_modules/.bin/tsc -v || true)"
+    elif command -v tsc >/dev/null 2>&1; then
+      echo "[tsc]  $(command -v tsc) version: $(tsc -v || true)"
+    elif command -v npx >/dev/null 2>&1; then
+      echo "[npx]  available; will use npx tsc when building"
+      echo "[tsc]  version (via npx): $(npx --yes tsc -v || true)"
+    else
+      echo "[tsc]  not found"
+    fi
+    exit 0
+    ;;
+  *)
+    ;;
+esac
+
+# Determine TSC command without relying solely on npx (avoid segfaults)
+TSC_CMD=()
+if [[ -x ./node_modules/.bin/tsc ]]; then
+  TSC_CMD=("./node_modules/.bin/tsc")
+elif command -v tsc >/dev/null 2>&1; then
+  TSC_CMD=("$(command -v tsc)")
+elif command -v npx >/dev/null 2>&1; then
+  TSC_CMD=("npx" "--yes" "tsc")
+else
+  echo "TypeScript compiler not found. Install with: npm i -D typescript@5" >&2
+  exit 1
+fi
+
+if [[ $DEBUG_FLAG -eq 1 ]]; then
+  echo "[debug] PROJECT_ROOT=$PROJECT_ROOT"
+  echo "[debug] NODE=$(node -v || echo 'missing')"
+  echo "[debug] NPM=$(npm -v || echo 'missing')"
+  echo "[debug] TSC_CMD=${TSC_CMD[*]}"
+fi
+
+# Build to Node14-compatible output, with fallback install on failure
+TS14_TYPESCRIPT_VERSION="${TS14_TYPESCRIPT_VERSION:-4.9.5}"
+set +e
+"${TSC_CMD[@]}" -p v3.n14.4/tsconfig.n14.json
+stat=$?
+set -e
+if [[ $stat -ne 0 ]]; then
+  echo "[warn] tsc failed (exit $stat). Attempting fallback TypeScript@$TS14_TYPESCRIPT_VERSION..." >&2
+  if ! npm i -D "typescript@${TS14_TYPESCRIPT_VERSION}" >/dev/null 2>&1; then
+    echo "[error] Unable to install typescript@${TS14_TYPESCRIPT_VERSION}. Please install manually and retry." >&2
+    exit $stat
+  fi
+  TSC_CMD=("./node_modules/.bin/tsc")
+  if [[ $DEBUG_FLAG -eq 1 ]]; then
+    echo "[debug] Retrying with $(./node_modules/.bin/tsc -v || true)"
+  fi
+  "${TSC_CMD[@]}" -p v3.n14.4/tsconfig.n14.json
+fi
+
+# Determine entry (v1 default, v2 when TSRANGER_V2=1)
+ENTRY="dist.n14/src/ts/layer4/TSRanger.js"
+if [[ "${TSRANGER_V2:-0}" == "1" ]]; then
+  if [[ -f "dist.n14/v2/src/ts/layer4/TSRanger.js" ]]; then
+    ENTRY="dist.n14/v2/src/ts/layer4/TSRanger.js"
+  fi
+fi
+
+# Test mode compatibility: tsranger test "[keys]"
+if [[ "${1:-}" == "test" ]]; then
+  shift || true
+  export TSRANGER_TEST_MODE=1
+  export TSRANGER_TEST_INPUT="${1:-}"
+fi
+
+# Run compiled entry on Node 14
+exec node "$ENTRY" "$@"

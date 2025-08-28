@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+cd "$ROOT"
+
+# Ensure tsc is available
+if [[ ! -x ./node_modules/.bin/tsc ]] && ! command -v tsc >/dev/null 2>&1; then
+  echo "[test] TypeScript compiler not found. Install with: npm i -D typescript@4.9.5" >&2
+  exit 1
+fi
+
+# Build
+v3.njs14/sh/build
+
+# Test v1 compiled entry
+export PS1='\u@\h \w$'
+export TSRANGER_TEST_MODE=1
+export TSRANGER_TEST_INPUT='[down]'
+node dist.njs14/src/ts/layer4/TSRanger.js > /tmp/tsranger.v1.out 2>/tmp/tsranger.v1.err || {
+  echo "[test] v1 runner failed" >&2
+  exit 1
+}
+# Sanity: should contain Classes header
+if ! grep -q "\[Classes\]" /tmp/tsranger.v1.out; then
+  echo "[test] v1 output missing [Classes] header" >&2
+  exit 1
+fi
+
+# Test v2 compiled entry if present
+if [[ -f dist.njs14/v2/src/ts/layer4/TSRanger.js ]]; then
+  export TSRANGER_V2=1
+  export TSRANGER_TEST_MODE=1
+  export TSRANGER_TEST_INPUT='[down]'
+  node dist.njs14/v2/src/ts/layer4/TSRanger.js > /tmp/tsranger.v2.out 2>/tmp/tsranger.v2.err || {
+    echo "[test] v2 runner failed" >&2
+    exit 1
+  }
+  if ! grep -q "\[Classes\]" /tmp/tsranger.v2.out; then
+    echo "[test] v2 output missing [Classes] header" >&2
+    exit 1
+  fi
+fi
+
+echo "[test] OK: njs14 build and run passed"
