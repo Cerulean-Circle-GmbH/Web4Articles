@@ -175,7 +175,7 @@ done
 ✅ Updated dev/2025-08-28-UTC-1225
 ✅ Updated dev/2025-08-28-UTC-1341
 ✅ Updated release/dev
-⏳ Updating main (in progress)
+✅ Updated main
 ```
 
 **Files Successfully Applied:**
@@ -192,7 +192,7 @@ done
 
 ### **Actions Completed**
 1. **Documented interactive pattern** in PDCA.howto.decide.md
-2. **Updated all 9 branches** (8 dev + release/dev) with essential save/start.v1 files
+2. **Updated all 10 branches** (8 dev + release/dev + main) with essential save/start.v1 files
 3. **Avoided conflicts** by cherry-picking specific files
 4. **Pushed all updates** to remote branches
 
@@ -230,4 +230,4 @@ All active development branches now have:
 
 ---
 
-**One-line Summary:** 🚀 Updated all 9 branches (including release/dev) with essential save/start.v1 improvements - interactive decisions work! ✅🎯
+**One-line Summary:** 🚀 Updated all 10 branches (including release/dev + main) with essential save/start.v1 improvements - interactive decisions work! ✅🎯
