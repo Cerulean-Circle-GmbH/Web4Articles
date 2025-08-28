@@ -55,11 +55,11 @@ if [ -z "$CONTEXT_INFO" ]; then
     CONTEXT_INFO="arbitrary:$CURRENT_DIR"
 fi
 
-# Try multiple locations for the CLI
+# Try multiple locations for the ChangeRequest CLI
 CLI_LOCATIONS=(
-    "$PROJECT_ROOT/scripts/dist/ts/layer5/RequirementCLI.js"
-    "$PROJECT_ROOT/components/Web4Requirement/latest/dist/ts/layer5/RequirementCLI.js"
-    "$PROJECT_ROOT/dist/ts/layer5/RequirementCLI.js"
+    "$PROJECT_ROOT/components/Web4ChangeRequest/0.1.3.0/dist/ts/layer5/RequirementCLI.js"
+    "$PROJECT_ROOT/components/Web4ChangeRequest/latest/dist/ts/layer5/RequirementCLI.js"
+    "$PROJECT_ROOT/components/Web4ChangeRequest/0.1.3.0/dist/ts/RequirementCLI.js"
 )
 
 CLI_PATH=""
@@ -78,7 +78,7 @@ if [ -z "$CLI_PATH" ]; then
     done
     echo ""
     echo "🔧 To fix this, from project root ($PROJECT_ROOT):"
-    echo "   1. cd components/Web4Requirement/latest"
+    echo "   1. cd components/Web4ChangeRequest/0.1.3.0"
     echo "   2. npm install"
     echo "   3. npm run build"
     echo ""

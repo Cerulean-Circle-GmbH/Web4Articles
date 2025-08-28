@@ -1,9 +1,9 @@
-import { ChangeRequest, ChangeRequestScenario, ChangeRequestResult, ChangeRequestStatus, ChangeRequestMetadata } from '../layer3/ChangeRequest.js';
+import { Requirement as ChangeRequest, RequirementScenario as ChangeRequestScenario, RequirementResult as ChangeRequestResult, RequirementStatus as ChangeRequestStatus, RequirementMetadata as ChangeRequestMetadata } from '../layer3/Requirement.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { UnitIndexStorage } from '../../../../../Unit/latest/dist/ts/layer2/UnitIndexStorage.js';
-import { DefaultUser } from '../../../../../User/latest/dist/layer2/DefaultUser.js';
+import { DefaultUser } from '../../../../../User/0.1.3.0/dist/layer2/DefaultUser.js';
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -600,7 +600,7 @@ export class DefaultChangeRequest implements ChangeRequest {
   private async generateChangeRequestsOverview(changeRequestFiles: string[], outputPath: string): Promise<string> {
     try {
       // Use new ChangeRequestOverview from layer5 for proper architectural layering
-      const { ChangeRequestOverview } = await import('../layer5/ChangeRequestOverview.js');
+      const { RequirementOverview: ChangeRequestOverview } = await import('../layer5/RequirementOverview.js');
       
       const changeRequestOverview = new ChangeRequestOverview();
       changeRequestOverview.init(); // Initialize with default template

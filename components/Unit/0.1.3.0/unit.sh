@@ -57,9 +57,9 @@ fi
 
 # Try multiple locations for the Unit CLI
 CLI_LOCATIONS=(
+    "$PROJECT_ROOT/components/Unit/0.1.3.0/dist/ts/layer5/UnitCLI.js"
     "$PROJECT_ROOT/components/Unit/latest/dist/ts/layer5/UnitCLI.js"
-    "$PROJECT_ROOT/scripts/dist/ts/layer5/UnitCLI.js"
-    "$PROJECT_ROOT/dist/ts/layer5/UnitCLI.js"
+    "$PROJECT_ROOT/components/Unit/0.1.3.0/dist/ts/UnitCLI.js"
 )
 
 CLI_PATH=""
@@ -108,7 +108,7 @@ EOF
         done
         echo ""
         echo "🔧 To fix this, from project root ($PROJECT_ROOT):"
-        echo "   1. cd components/Unit/latest"
+        echo "   1. cd components/Unit/0.1.3.0"
         echo "   2. npm install"
         echo "   3. npm run build"
     fi

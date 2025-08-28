@@ -55,36 +55,38 @@ if [ -z "$CONTEXT_INFO" ]; then
     CONTEXT_INFO="arbitrary:$CURRENT_DIR"
 fi
 
-# Try multiple locations for the CLI
-CLI_LOCATIONS=(
-    "$PROJECT_ROOT/scripts/dist/ts/layer5/RequirementCLI.js"
-    "$PROJECT_ROOT/components/Web4Requirement/latest/dist/ts/layer5/RequirementCLI.js"
-    "$PROJECT_ROOT/dist/ts/layer5/RequirementCLI.js"
-)
+# Find the CLI in the components directory structure
+COMPONENT_VERSION="0.1.2.0"
+COMPONENT_DIR="$PROJECT_ROOT/components/Web4Requirement/$COMPONENT_VERSION"
+CLI_SOURCE_PATH="$COMPONENT_DIR/src/ts/layer5/RequirementCLI.ts"
+CLI_PATH="$COMPONENT_DIR/dist/ts/layer5/RequirementCLI.js"
 
-CLI_PATH=""
-for location in "${CLI_LOCATIONS[@]}"; do
-    if [ -f "$location" ]; then
-        CLI_PATH="$location"
-        break
-    fi
-done
-
-if [ -z "$CLI_PATH" ]; then
-    echo "❌ Requirement CLI not found in any expected location"
-    echo "🔍 Searched locations:"
-    for location in "${CLI_LOCATIONS[@]}"; do
-        echo "   - $location"
-    done
-    echo ""
-    echo "🔧 To fix this, from project root ($PROJECT_ROOT):"
-    echo "   1. cd components/Web4Requirement/latest"
-    echo "   2. npm install"
-    echo "   3. npm run build"
-    echo ""
-    echo "📍 Current directory: $CURRENT_DIR"
-    echo "📂 Project root: $PROJECT_ROOT"
+# Check if compiled CLI exists, if not try to build
+if [ ! -f "$CLI_PATH" ]; then
+  if [ ! -f "$CLI_SOURCE_PATH" ]; then
+    echo "❌ CLI source not found at: $CLI_SOURCE_PATH"
+    echo "📁 Component directory: $COMPONENT_DIR"
     exit 1
+  fi
+  
+  echo "🔨 Building Web4Requirement CLI v$COMPONENT_VERSION..."
+  cd "$COMPONENT_DIR"
+  
+  # Install dependencies if needed
+  if [ ! -d "node_modules" ]; then
+    npm install
+  fi
+  
+  # Build the project
+  if ! npm run build; then
+    echo "❌ Build failed for Web4Requirement v$COMPONENT_VERSION"
+    exit 1
+  fi
+  
+  if [ ! -f "$CLI_PATH" ]; then
+    echo "❌ CLI still not found at: $CLI_PATH after build"
+    exit 1
+  fi
 fi
 
 # Check for Node.js
@@ -94,5 +96,5 @@ if ! command -v node >/dev/null 2>&1; then
 fi
 
 # Execute the CLI with context info and all arguments
-export DIRECTORY_CONTEXT="$CONTEXT_INFO"
-node "$CLI_PATH" "$@"
+cd "$CURRENT_DIR"
+DIRECTORY_CONTEXT="$CONTEXT_INFO" node "$CLI_PATH" "$@"

@@ -117,7 +117,7 @@ case "$1" in
         
         # Use Node.js to get user UUID directly
         node -e "
-        import { DefaultUser } from '$PROJECT_ROOT/components/User/latest/dist/layer2/DefaultUser.js';
+        import { DefaultUser } from '$PROJECT_ROOT/components/User/0.1.0.0/dist/ts/layer2/DefaultUser.js';
         const user = new DefaultUser('$USERNAME');
         console.log('✅ User Information:');
         console.log('👤 Username:', user.username);
@@ -139,13 +139,13 @@ case "$1" in
         echo "🔧 Fixing owner UUID in scenario: $(basename "$SCENARIO_FILE")"
         
         # Use the CLI tool
-        node "$PROJECT_ROOT/components/User/latest/fix-scenario-uuids.js" "$SCENARIO_FILE"
+        node "$PROJECT_ROOT/components/User/0.1.0.0/fix-scenario-uuids.js" "$SCENARIO_FILE"
         exit $?
         ;;
     "fix-scenarios")
         if [ "$2" == "--all" ]; then
             echo "🔧 Fixing owner UUIDs in all scenario files"
-            node "$PROJECT_ROOT/components/User/latest/fix-scenario-uuids.js" --all
+            node "$PROJECT_ROOT/components/User/0.1.0.0/fix-scenario-uuids.js" --all
             exit $?
         else
             echo "❌ Error: fix-scenarios requires --all flag"
@@ -155,8 +155,8 @@ case "$1" in
         ;;
     "list")
         echo "📋 Listing user scenarios:"
-        if [ -d "$PROJECT_ROOT/components/User/latest/scenarios" ]; then
-            find "$PROJECT_ROOT/components/User/latest/scenarios" -name "*.scenario.json" -type f | while read scenario_file; do
+        if [ -d "$PROJECT_ROOT/components/User/0.1.0.0/scenarios" ]; then
+            find "$PROJECT_ROOT/components/User/0.1.0.0/scenarios" -name "*.scenario.json" -type f | while read scenario_file; do
                 if [ -f "$scenario_file" ]; then
                     filename=$(basename "$scenario_file" .scenario.json)
                     echo "👤 User scenario: $filename"
@@ -194,7 +194,7 @@ if [ -z "$CLI_PATH" ]; then
     done
     echo ""
     echo "🔧 To fix this, from project root ($PROJECT_ROOT):"
-    echo "   1. cd components/User/latest"
+    echo "   1. cd components/User/0.1.0.0"
     echo "   2. npm install"
     echo "   3. npm run build"
     echo ""

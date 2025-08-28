@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Web4Requirement CLI Tool - Location Resilient Version
+# Web4TSComponent CLI Tool - Location Resilient Version
+# Web4 Architecture Standard - Self-Implementing Reference
 # Works from any directory, finds project root via git
 
 # Function to find project root using git
@@ -56,10 +57,10 @@ if [ -z "$CONTEXT_INFO" ]; then
 fi
 
 # Find the CLI in the components directory structure
-COMPONENT_VERSION="0.1.0.1"
-COMPONENT_DIR="$PROJECT_ROOT/components/Web4Requirement/$COMPONENT_VERSION"
-CLI_SOURCE_PATH="$COMPONENT_DIR/src/ts/layer5/RequirementCLI.ts"
-CLI_PATH="$COMPONENT_DIR/dist/ts/layer5/RequirementCLI.js"
+COMPONENT_VERSION="0.1.0.0"
+COMPONENT_DIR="$PROJECT_ROOT/components/Web4TSComponent/$COMPONENT_VERSION"
+CLI_SOURCE_PATH="$COMPONENT_DIR/src/ts/layer5/Web4TSComponentCLI.ts"
+CLI_PATH="$COMPONENT_DIR/dist/ts/layer5/Web4TSComponentCLI.js"
 
 # Check if compiled CLI exists, if not try to build
 if [ ! -f "$CLI_PATH" ]; then
@@ -69,7 +70,7 @@ if [ ! -f "$CLI_PATH" ]; then
     exit 1
   fi
   
-  echo "🔨 Building Web4Requirement CLI v$COMPONENT_VERSION..."
+  echo "🔨 Building Web4TSComponent CLI v$COMPONENT_VERSION..."
   cd "$COMPONENT_DIR"
   
   # Install dependencies if needed
@@ -79,7 +80,7 @@ if [ ! -f "$CLI_PATH" ]; then
   
   # Build the project
   if ! npm run build; then
-    echo "❌ Build failed for Web4Requirement v$COMPONENT_VERSION"
+    echo "❌ Build failed for Web4TSComponent v$COMPONENT_VERSION"
     exit 1
   fi
   
@@ -98,3 +99,5 @@ fi
 # Execute the CLI with context info and all arguments
 cd "$CURRENT_DIR"
 DIRECTORY_CONTEXT="$CONTEXT_INFO" node "$CLI_PATH" "$@"
+
+
