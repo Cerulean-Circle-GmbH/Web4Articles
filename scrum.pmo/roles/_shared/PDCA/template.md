@@ -4,8 +4,7 @@
 **🎯 Objective:** {{OBJECTIVE}}  
 
 **👤 Agent Role:** {{ROLE_NAME}} → {{CONTEXT_SPECIALIZATION}}  
-**👤 Original Cursor Branch:** {{ORIGINAL_CURSOR_BRANCH}} → {{DOCUMENT_BEFORE_SWITCH}}  
-**👤 Working Branch:** {{WORKING_BRANCH}} → {{CURRENT_ENVIRONMENT}}  
+**👤 Branch:** {{ROLE_NAME}} → {{CONTEXT_SPECIALIZATION}}  
 **🎯 Project Journal Session:** {{SESSION_NAME}} → {{CONTEXT_SPECIALIZATION}}
 **🎯 Sprint:** {{SPRINT_NAME}} → {{CONTEXT_SPECIALIZATION}}
 **✅ Task:** {{TASK_NAME}}  
