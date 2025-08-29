@@ -458,8 +458,19 @@ export class Web4TSComponentCLI {
     // Copy current latest to next version
     const result = await this.versionManager!.cherryPickFromBranch('HEAD', nextVersion);
     
-    console.log(`✅ Successfully created version ${nextVersion}`);
-    console.log(`📁 Location: components/Web4TSComponent/${nextVersion}/`);
+    // Automatically set the new version as latest
+    console.log(`🔗 Setting ${nextVersion} as latest version...`);
+    const latestSuccess = await this.versionManager!.setLatest(nextVersion);
+    
+    if (latestSuccess) {
+      console.log(`✅ Successfully created version ${nextVersion}`);
+      console.log(`📁 Location: components/Web4TSComponent/${nextVersion}/`);
+      console.log(`🔗 Updated latest symlink: latest → ${nextVersion}`);
+    } else {
+      console.log(`✅ Version ${nextVersion} created successfully`);
+      console.log(`⚠️  Warning: Failed to update latest symlink`);
+      console.log(`📁 Location: components/Web4TSComponent/${nextVersion}/`);
+    }
   }
 
   private async handleVersionLatest(args: string[]): Promise<void> {
