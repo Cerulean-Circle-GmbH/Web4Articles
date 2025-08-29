@@ -182,3 +182,8 @@ Created `/recovery/agent-manager-recovery.md`:
 **🎯 Agent ready for rebirth - Recovery preparation complete! 🔄✨**
 
 **"Through preparation, we transcend expiry"** 💫🚀
+
+---
+
+**Note:** Chat summary link should use relative path from session root:
+[§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1243-agent-recovery-process.md](pdca/role/save-restart-agent/2025-08-28-UTC-1243-agent-recovery-process.md)
