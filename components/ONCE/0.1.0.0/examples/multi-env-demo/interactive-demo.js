@@ -25,7 +25,9 @@ const state = {
     clients: new Map(),
     running: false,
     HOST: null,
-    PORT: 8080
+    PORT: 8080,
+    testMode: false,
+    keyboardEnabled: true
 };
 
 // Console styling
@@ -312,6 +314,8 @@ async function killAllProcesses() {
 
 // Setup keyboard input
 function setupKeyboard() {
+    if (!state.keyboardEnabled) return;
+    
     readline.emitKeypressEvents(process.stdin);
     process.stdin.setRawMode(true);
     
@@ -403,8 +407,145 @@ async function cleanup() {
     log.success('Cleanup complete');
 }
 
+// Parse test sequence into actions
+function parseSequence(sequence) {
+    const actions = [];
+    let i = 0;
+    
+    while (i < sequence.length) {
+        const char = sequence[i];
+        
+        // Check if it's a digit
+        if (/\d/.test(char)) {
+            // Collect all consecutive digits
+            let numStr = '';
+            while (i < sequence.length && /\d/.test(sequence[i])) {
+                numStr += sequence[i];
+                i++;
+            }
+            actions.push({ type: 'pause', value: parseInt(numStr) });
+        } else {
+            // It's a key command
+            actions.push({ type: 'key', value: char });
+            i++;
+        }
+    }
+    
+    return actions;
+}
+
+// Simulate a keypress
+async function simulateKeypress(key) {
+    log.key(key, 'Simulating keypress');
+    
+    switch (key) {
+        case 'h':
+            showHelp();
+            break;
+            
+        case 's':
+            if (state.running) {
+                await stopServer();
+            } else {
+                await startServer();
+            }
+            break;
+            
+        case '1':
+            await launchClient('Browser');
+            break;
+            
+        case '2':
+            await launchClient('NodeJS');
+            break;
+            
+        case '3':
+            await launchClient('Worker');
+            break;
+            
+        case 'd':
+            await discoverPeers();
+            break;
+            
+        case 'e':
+            await exchangeScenarios();
+            break;
+            
+        case 'm':
+            await showMetrics();
+            break;
+            
+        case 'c':
+            showHeader();
+            showHelp();
+            break;
+            
+        case 'k':
+            await killAllProcesses();
+            break;
+            
+        case 'q':
+            log.info('Quit command received');
+            await cleanup();
+            process.exit(0);
+            break;
+            
+        default:
+            log.warn(`Unknown key: ${key}`);
+    }
+}
+
+// Run test mode with sequence
+async function runTestMode(sequence) {
+    state.testMode = true;
+    state.keyboardEnabled = false;
+    
+    console.log(chalk.bold.yellow('\n🤖 ONCE Demo Test Mode'));
+    console.log(chalk.gray('─'.repeat(40)));
+    console.log(chalk.cyan(`Sequence: ${sequence}`));
+    console.log(chalk.gray('─'.repeat(40)) + '\n');
+    
+    const actions = parseSequence(sequence);
+    
+    // Show parsed actions
+    console.log('📋 Parsed actions:');
+    actions.forEach((action, index) => {
+        if (action.type === 'key') {
+            console.log(`  ${index + 1}. Press '${action.value}'`);
+        } else {
+            console.log(`  ${index + 1}. Wait ${action.value} second${action.value > 1 ? 's' : ''}`);
+        }
+    });
+    console.log();
+    
+    // Initialize
+    await getHostIP().then(ip => state.HOST = ip);
+    
+    // Execute sequence
+    for (let i = 0; i < actions.length; i++) {
+        const action = actions[i];
+        
+        if (action.type === 'key') {
+            console.log(chalk.blue(`\n[${i + 1}/${actions.length}] ⌨️  Pressing '${action.value}'...`));
+            await simulateKeypress(action.value);
+        } else if (action.type === 'pause') {
+            console.log(chalk.yellow(`\n[${i + 1}/${actions.length}] ⏸️  Waiting ${action.value} second${action.value > 1 ? 's' : ''}...`));
+            await new Promise(resolve => setTimeout(resolve, action.value * 1000));
+        }
+    }
+    
+    console.log(chalk.green('\n✅ Test sequence completed!'));
+}
+
 // Main function
 async function main() {
+    // Check for test mode
+    const args = process.argv.slice(2);
+    if (args[0] === 'demo' && args[1]) {
+        await runTestMode(args[1]);
+        return;
+    }
+    
     // Setup exit handlers
     process.on('SIGINT', async () => {
         await cleanup();

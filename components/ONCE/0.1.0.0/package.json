@@ -6,7 +6,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "once": "./dist/ts/layer5/ONCECLI.js"
+    "once": "./bin/once",
+    "once-cli": "./dist/ts/layer5/ONCECLI.js"
   },
   "scripts": {
     "build": "tsc",
