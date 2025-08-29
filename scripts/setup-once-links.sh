@@ -49,51 +49,59 @@ if [ ! -f "$DEMO_SCRIPT" ]; then
     exit 1
 fi
 
+# Color codes following Web4 CLI color standards
+CYAN='\x1b[36m'
+YELLOW='\x1b[33m'
+BLUE='\x1b[34m'
+MAGENTA='\x1b[35m'
+BOLD='\x1b[1m'
+RESET='\x1b[0m'
+
 CURRENT_DIR="$PWD"
 cd "$DEMO_PATH"
 
 # Handle command line arguments
 if [ $# -eq 0 ]; then
-    echo "🎭 Starting ONCE Interactive Demo v$ONCE_VERSION..."
-    echo "📁 Demo path: $DEMO_PATH"
-    echo "🌐 Browser auto-opening enabled"
+    echo -e "${CYAN}🎭 Starting ONCE Interactive Demo ${YELLOW}v$ONCE_VERSION${RESET}${CYAN}...${RESET}"
+    echo -e "${BOLD}📁 Demo path:${RESET} ${YELLOW}$DEMO_PATH${RESET}"
+    echo -e "${CYAN}🌐 Browser auto-opening enabled${RESET}"
     node interactive-demo.js
 elif [ "$1" = "--headless" ]; then
-    echo "🎭 Starting ONCE Demo v$ONCE_VERSION (headless mode)..."
-    echo "📁 Demo path: $DEMO_PATH"
-    echo "🖥️  Server-only mode (no browser auto-opening)"
+    echo -e "${CYAN}🎭 Starting ONCE Demo ${YELLOW}v$ONCE_VERSION${RESET} ${MAGENTA}(headless mode)${RESET}${CYAN}...${RESET}"
+    echo -e "${BOLD}📁 Demo path:${RESET} ${YELLOW}$DEMO_PATH${RESET}"
+    echo -e "${MAGENTA}🖥️  Server-only mode (no browser auto-opening)${RESET}"
     node interactive-demo.js --headless
 elif [ "$1" = "--help" ] || [ "$1" = "help" ]; then
     echo ""
-    echo "🎭 ONCE Interactive Demo v$ONCE_VERSION"
-    echo "Web4 Universal P2P Communication Engine"
+    echo -e "${CYAN}${BOLD}🎭 ONCE Interactive Demo${RESET} ${YELLOW}v$ONCE_VERSION${RESET}"
+    echo -e "${BOLD}Web4 Universal P2P Communication Engine${RESET}"
     echo ""
-    echo "Usage:"
-    echo "  once0.1.0.0                  # Start interactive demo with browser"
-    echo "  once0.1.0.0 --headless       # Start demo without browser"
-    echo "  once0.1.0.0 --help           # Show this help"
+    echo -e "${BOLD}Usage:${RESET}"
+    echo -e "  ${CYAN}once0.1.0.0${RESET}                  # Start interactive demo with browser"
+    echo -e "  ${CYAN}once0.1.0.0 --headless${RESET}       # Start demo without browser"
+    echo -e "  ${CYAN}once0.1.0.0 --help${RESET}           # Show this help"
     echo ""
-    echo "Demo Controls (interactive mode):"
-    echo "  [s] Start/Stop ONCE server"
-    echo "  [1] Launch Browser Client"
-    echo "  [2] Launch Node.js Client" 
-    echo "  [3] Launch Web Worker Client"
-    echo "  [d] Discover peers"
-    echo "  [e] Exchange scenarios"
-    echo "  [q] Quit demo"
+    echo -e "${BOLD}Demo Controls (interactive mode):${RESET}"
+    echo -e "  ${YELLOW}[s]${RESET} Start/Stop ONCE server"
+    echo -e "  ${YELLOW}[1]${RESET} Launch Browser Client"
+    echo -e "  ${YELLOW}[2]${RESET} Launch Node.js Client" 
+    echo -e "  ${YELLOW}[3]${RESET} Launch Web Worker Client"
+    echo -e "  ${YELLOW}[d]${RESET} Discover peers"
+    echo -e "  ${YELLOW}[e]${RESET} Exchange scenarios"
+    echo -e "  ${YELLOW}[q]${RESET} Quit demo"
     echo ""
-    echo "Features:"
-    echo "  • Cross-platform browser auto-opening"
-    echo "  • Web4 Message component integration"
-    echo "  • P2P scenario acknowledgments"
-    echo "  • Interactive demo controls"
+    echo -e "${BOLD}Features:${RESET}"
+    echo -e "  ${BLUE}•${RESET} Cross-platform browser auto-opening"
+    echo -e "  ${BLUE}•${RESET} Web4 Message component integration"
+    echo -e "  ${BLUE}•${RESET} P2P scenario acknowledgments"
+    echo -e "  ${BLUE}•${RESET} Interactive demo controls"
     echo ""
     cd "$CURRENT_DIR"
     exit 0
 else
-    echo "🎭 Starting ONCE Interactive Demo v$ONCE_VERSION..."
-    echo "📁 Demo path: $DEMO_PATH"
-    echo "🌐 Browser auto-opening enabled"
+    echo -e "${CYAN}🎭 Starting ONCE Interactive Demo ${YELLOW}v$ONCE_VERSION${RESET}${CYAN}...${RESET}"
+    echo -e "${BOLD}📁 Demo path:${RESET} ${YELLOW}$DEMO_PATH${RESET}"
+    echo -e "${CYAN}🌐 Browser auto-opening enabled${RESET}"
     node interactive-demo.js "$@"
 fi
 
@@ -140,31 +148,38 @@ if [ ! -f "$VERSIONED_SCRIPT" ]; then
     exit 1
 fi
 
+# Color codes following Web4 CLI color standards
+CYAN='\x1b[36m'
+YELLOW='\x1b[33m'
+BLUE='\x1b[34m'
+BOLD='\x1b[1m'
+RESET='\x1b[0m'
+
 # Show usage if no parameters provided
 if [ $# -eq 0 ]; then
     echo ""
-    echo "🎭 ONCE Interactive Demo - Web4 Universal P2P Communication Engine"
+    echo -e "${CYAN}${BOLD}🎭 ONCE Interactive Demo${RESET} - Web4 Universal P2P Communication Engine"
     echo ""
-    echo "Usage:"
-    echo "  once demo                    # Start interactive demo with browser auto-opening"
-    echo "  once demo --headless         # Start demo without browser (server only)"
-    echo "  once demo --help             # Show demo-specific help"
-    echo "  once help                    # Show this help message"
-    echo "  once version                 # Show ONCE version information"
+    echo -e "${BOLD}Usage:${RESET}"
+    echo -e "  ${CYAN}once demo${RESET}                    # Start interactive demo with browser auto-opening"
+    echo -e "  ${CYAN}once demo --headless${RESET}         # Start demo without browser (server only)"
+    echo -e "  ${CYAN}once demo --help${RESET}             # Show demo-specific help"
+    echo -e "  ${CYAN}once help${RESET}                    # Show this help message"
+    echo -e "  ${CYAN}once version${RESET}                 # Show ONCE version information"
     echo ""
-    echo "Demo Features:"
-    echo "  • Cross-platform browser auto-opening"
-    echo "  • Web4 Message component integration"
-    echo "  • P2P scenario acknowledgments"
-    echo "  • Interactive demo controls"
-    echo "  • TTY-aware keyboard input"
+    echo -e "${BOLD}Demo Features:${RESET}"
+    echo -e "  ${BLUE}•${RESET} Cross-platform browser auto-opening"
+    echo -e "  ${BLUE}•${RESET} Web4 Message component integration"
+    echo -e "  ${BLUE}•${RESET} P2P scenario acknowledgments"
+    echo -e "  ${BLUE}•${RESET} Interactive demo controls"
+    echo -e "  ${BLUE}•${RESET} TTY-aware keyboard input"
     echo ""
-    echo "Examples:"
-    echo "  once demo                    # Launch full interactive demo"
-    echo "  once demo --headless         # Server-only mode for testing"
+    echo -e "${BOLD}Examples:${RESET}"
+    echo -e "  ${CYAN}once demo${RESET}                    # Launch full interactive demo"
+    echo -e "  ${CYAN}once demo --headless${RESET}         # Server-only mode for testing"
     echo ""
-    echo "Location: Latest version (v$LATEST_VERSION)"
-    echo "Path: scripts/versions/once$LATEST_VERSION"
+    echo -e "${BOLD}Location:${RESET} Latest version (${YELLOW}v$LATEST_VERSION${RESET})"
+    echo -e "${BOLD}Path:${RESET} ${YELLOW}scripts/versions/once$LATEST_VERSION${RESET}"
     exit 0
 fi
 
@@ -172,31 +187,31 @@ fi
 case "$1" in
     "help"|"--help"|"-h")
         echo ""
-        echo "🎭 ONCE Interactive Demo - Web4 Universal P2P Communication Engine"
+        echo -e "${CYAN}${BOLD}🎭 ONCE Interactive Demo${RESET} - Web4 Universal P2P Communication Engine"
         echo ""
-        echo "Usage:"
-        echo "  once demo                    # Start interactive demo"
-        echo "  once demo --headless         # Start demo without browser"
-        echo "  once demo --help             # Show demo help"
-        echo "  once help                    # Show this help"
-        echo "  once version                 # Show version info"
+        echo -e "${BOLD}Usage:${RESET}"
+        echo -e "  ${CYAN}once demo${RESET}                    # Start interactive demo"
+        echo -e "  ${CYAN}once demo --headless${RESET}         # Start demo without browser"
+        echo -e "  ${CYAN}once demo --help${RESET}             # Show demo help"
+        echo -e "  ${CYAN}once help${RESET}                    # Show this help"
+        echo -e "  ${CYAN}once version${RESET}                 # Show version info"
         echo ""
         exit 0
         ;;
     "version"|"--version"|"-v")
-        echo "ONCE Interactive Demo v$LATEST_VERSION"
-        echo "Web4 Universal P2P Communication Engine"
-        echo "Path: $VERSIONED_SCRIPT"
+        echo -e "${BOLD}ONCE Interactive Demo${RESET} ${YELLOW}v$LATEST_VERSION${RESET}"
+        echo -e "${BOLD}Web4 Universal P2P Communication Engine${RESET}"
+        echo -e "${BOLD}Path:${RESET} ${YELLOW}$VERSIONED_SCRIPT${RESET}"
         exit 0
         ;;
     "demo")
-        echo "🚀 Launching ONCE Demo (latest: v$LATEST_VERSION)..."
+        echo -e "${CYAN}🚀 Launching ONCE Demo (latest: ${YELLOW}v$LATEST_VERSION${RESET}${CYAN})...${RESET}"
         shift  # Remove 'demo' from arguments
         exec "$VERSIONED_SCRIPT" "$@"
         ;;
     *)
-        echo "❌ Unknown command: $1"
-        echo "Run 'once help' for usage information"
+        echo -e "${BOLD}❌ Unknown command:${RESET} ${YELLOW}$1${RESET}"
+        echo -e "Run '${CYAN}once help${RESET}' for usage information"
         exit 1
         ;;
 esac
