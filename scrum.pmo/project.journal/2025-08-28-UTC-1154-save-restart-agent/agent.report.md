@@ -10,8 +10,8 @@
 
 ## **Agent Status Table**
 
-| Agent Branch | Name | Role | Template | Session | Status Merge | Sync | Lifecycle |
-|--------------|------|------|----------|---------|--------------|------|-----------|
+| Agent Branch | Name | RequestID | Role | Template | Session | Status Merge | Sync | Lifecycle |
+|--------------|------|-----------|------|----------|---------|--------------|------|-----------|
 | save/start.v1 | SaveRestartAgent | Save/Restart Agent | v3.1 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/session-start.md) \| [§/session-start.md](session-start.md) | ✅ Active<br>⚠️ Unmerged: 37 PDCAs<br>📝 Modified: howto.PDCA.md, template.md<br>🔧 New: fix.dual.links script | release/dev (wild west)<br>save/start.v1 (clean home)<br>save/start.v2 (for others)<br>main (agent startup) | 🟢 Healthy<br>⏱️ Runtime: 90min<br>💾 Memory: Normal |
 | dev/2025-08-28-UTC-2140 | BackgroundAgent | Background Agent | v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-session-start.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-session-start.md](../../2025-08-28-UTC-2140-session/PDCA-session-start.md) | ✅ Active<br>✅ Merged: Initial PDCA<br>🆕 Fresh session | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 10min<br>💾 Memory: Normal |
 | dev/2025-08-28-UTC-2140 | test 3 main | Background Agent | v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-requirements-management.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-requirements-management.md](../../2025-08-28-UTC-2140-session/PDCA-requirements-management.md) | ✅ Active<br>📝 Requirements work<br>✅ Using latest template | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 20min<br>💾 Memory: Normal |
