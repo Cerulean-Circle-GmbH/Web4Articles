@@ -72,9 +72,27 @@ export class RequirementOverview extends DefaultMDView {
     const totalCount = this.requirements.length;
     const timestamp = new Date().toISOString();
     
-    // Generate items list using item template
+    // Generate items list using item template - sort by newest date first
     const sortedRequirements = this.requirements
-      .sort((a, b) => new Date(b.createdAt || '').getTime() - new Date(a.createdAt || '').getTime()); // Newest first
+      .sort((a, b) => {
+        // Try multiple date fields to ensure proper sorting
+        const getDate = (req: any) => {
+          // First try unitIndex.updatedAt (most recent update)
+          if (req.unitIndex?.updatedAt) return new Date(req.unitIndex.updatedAt);
+          // Then try unitIndex.createdAt (creation date)
+          if (req.unitIndex?.createdAt) return new Date(req.unitIndex.createdAt);
+          // Fallback to model dates
+          if (req.model?.updatedAt) return new Date(req.model.updatedAt);
+          if (req.model?.createdAt) return new Date(req.model.createdAt);
+          // Legacy fallback
+          if (req.createdAt) return new Date(req.createdAt);
+          if (req.updatedAt) return new Date(req.updatedAt);
+          // Ultimate fallback
+          return new Date(0);
+        };
+        
+        return getDate(b).getTime() - getDate(a).getTime(); // Newest first
+      });
     
     const itemsListPromises = sortedRequirements.map(req => this.generateItemEntry(req));
     const itemsListArray = await Promise.all(itemsListPromises);
