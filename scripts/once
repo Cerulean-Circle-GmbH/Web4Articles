@@ -71,6 +71,6 @@ if ! command -v node >/dev/null 2>&1; then
     exit 1
 fi
 
-# Execute the TypeScript CLI with all arguments
+# Execute the TypeScript CLI with all arguments via bin/once entry point  
 cd "$PROJECT_ROOT"
-node "$CLI_PATH" "$@"
+node "$COMPONENT_DIR/bin/once" "$@"
