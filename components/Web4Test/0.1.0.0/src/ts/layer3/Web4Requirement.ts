@@ -14,10 +14,6 @@ export type RequirementStatus = 'pending' | 'in-progress' | 'completed' | 'cance
  * Web4Requirement interface - requirement as Web4 object with test traceability
  */
 export interface Web4Requirement {
-  /**
-   * Web4 empty constructor principle
-   */
-  constructor(): void;
 
   /**
    * Initialize requirement from scenario

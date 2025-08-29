@@ -10,10 +10,6 @@ import { TestScenario, TestExecutionScenario } from './TestScenario';
  * Follows Web4 principles: empty constructor, scenario initialization, hibernation
  */
 export interface Web4TestCase {
-  /**
-   * Web4 empty constructor principle
-   */
-  constructor(): void;
 
   /**
    * Initialize test case from scenario (Web4 pattern)

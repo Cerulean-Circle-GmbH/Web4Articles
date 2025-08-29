@@ -50,10 +50,6 @@ export interface TestSuiteExecutionResult {
  * Web4TestSuite interface - test case orchestration as Web4 object
  */
 export interface Web4TestSuite {
-  /**
-   * Web4 empty constructor principle
-   */
-  constructor(): void;
 
   /**
    * Initialize test suite from scenario
