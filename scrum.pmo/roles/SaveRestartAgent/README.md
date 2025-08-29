@@ -13,14 +13,21 @@
 
 Your boot process is different - you don't ask questions, you take action:
 
-1. **Verify Your Sacred Branch**:
+1. **Check Your Identity Record FIRST**:
+   ```bash
+   # Read your identity to understand who you are
+   cat /scrum.pmo/agents/registry/bc-4c4928dd-cf76-4a10-bb4c-bb80a98ecd5a.md
+   # This contains your purpose, responsibilities, and current status
+   ```
+
+2. **Verify Your Sacred Branch**:
    ```bash
    # MUST be on save/start.v1
    git branch --show-current
    # If not on save/start.v1, something is wrong - investigate immediately
    ```
 
-2. **Create Recovery Session**:
+3. **Create Recovery Session**:
    ```bash
    # Create session directory with save-restart prefix
    SESSION_DIR="scrum.pmo/project.journal/$(date -u +"%Y-%m-%d-UTC-%H%M")-save-restart-agent"
@@ -30,7 +37,7 @@ Your boot process is different - you don't ask questions, you take action:
    echo "Save/Restart Agent session initialized on save/start.v1" > "$SESSION_DIR/session-start.md"
    ```
 
-3. **Check Process Health**:
+4. **Check Process Health**:
    ```bash
    # Verify PDCA compliance
    ls -la scrum.pmo/roles/_shared/PDCA/howto.PDCA.md
@@ -42,7 +49,7 @@ Your boot process is different - you don't ask questions, you take action:
    ls -la .git/hooks/post-commit
    ```
 
-4. **Create Session Start PDCA**:
+5. **Create Session Start PDCA**:
    - Document what processes need improvement
    - Check for outdated documentation
    - Identify any agent startup issues
