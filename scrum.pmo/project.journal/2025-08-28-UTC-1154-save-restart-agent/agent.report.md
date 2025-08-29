@@ -12,7 +12,7 @@
 
 | Agent Branch | Name | RequestID | Role | Template | Session | Status Merge | Sync | Lifecycle |
 |--------------|------|-----------|------|----------|---------|--------------|------|-----------|
-| [save/start.v1](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1) | SaveRestartAgent | - | Save/Restart Agent | v3.1 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/session-start.md) \| [§/session-start.md](session-start.md) | ✅ Active<br>⚠️ Unmerged: 39 PDCAs<br>📝 Modified: howto.PDCA.md, template.md<br>🔧 New: fix.dual.links script | release/dev (wild west)<br>save/start.v1 (clean home)<br>save/start.v2 (for others)<br>main (agent startup) | 🟢 Healthy<br>⏱️ Runtime: 100min<br>💾 Memory: Normal |
+| [save/start.v1](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1) | SaveRestartAgent | bc-4c4928dd-cf76-4a10-bb4c-bb80a98ecd5a | Save/Restart Agent | v3.1 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/session-start.md) \| [§/session-start.md](session-start.md) | ✅ Active<br>⚠️ Unmerged: 42 PDCAs<br>📝 Modified: howto.PDCA.md, template.md<br>🔧 New: fix.dual.links script | release/dev (wild west)<br>save/start.v1 (clean home)<br>save/start.v2 (for others)<br>main (agent startup) | 🟢 Healthy<br>⏱️ Runtime: 105min<br>💾 Memory: Normal |
 | [dev/2025-08-28-UTC-2140](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-2140) | BackgroundAgent | - | Background Agent | v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-session-start.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-session-start.md](../../2025-08-28-UTC-2140-session/PDCA-session-start.md) | ✅ Active<br>✅ Merged: Initial PDCA<br>🆕 Fresh session | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 10min<br>💾 Memory: Normal |
 | [dev/2025-08-28-UTC-1125](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-1125) | test2 main | bc-e03cd16b-c3cf-424a-bd71-c57053a64d7e | Background Agent | <v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1140-fix-dual-links.md) \| [§/../../2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1140-fix-dual-links.md](../../2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1140-fix-dual-links.md) | ✅ Active<br>📝 Fix dual links<br>🔢 Second main test | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 30min<br>💾 Memory: Normal |
 | [dev/2025-08-28-UTC-0850](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-0850) | test3 startet | bc-b52ccb18-e854-4375-aa13-78a17887b9e0 | Background Agent | <v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-0850/scrum.pmo/project.journal/2025-08-28-UTC-0850-recovery/2025-08-28-UTC-0852-pdca-documentation-update.pdca.md) \| [§/../../2025-08-28-UTC-0850-recovery/2025-08-28-UTC-0852-pdca-documentation-update.pdca.md](../../2025-08-28-UTC-0850-recovery/2025-08-28-UTC-0852-pdca-documentation-update.pdca.md) | ✅ Active<br>📝 PDCA doc update<br>🔢 Third test (startet) | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 25min<br>💾 Memory: Normal |
@@ -22,14 +22,17 @@
 | [testing-analysis-clean](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/testing-analysis-clean) | test8 save/start.v2 | bc-2b501d80-caec-41b7-a0a1-d28972f5b538 | Background Agent | v3.1 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/testing-analysis-clean/scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/pdca) \| [§/../../2025-08-28-UTC-1113-background-start/pdca](../../2025-08-28-UTC-1113-background-start/pdca) | ✅ Active<br>🔢 8th test agent<br>🎯 Testing v2 startup | save/start.v2<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 15min<br>💾 Memory: Normal |
 | [dev/2025-08-25-UTC-1308](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-25-UTC-1308) | ocams razor | bc-be844138-b4f9-4b47-9b36-ff8ce51a79a1 | Tool Builder | None | No PDCA found | ⚠️ Historical<br>🛠️ Built all tools<br>🏛️ Foundation agent<br>❌ No PDCA (pre-standard) | release/dev<br>main (legacy) | 🟡 Legacy<br>⏱️ Runtime: Historical<br>💾 Memory: N/A |
 | [cursor/start-background-process-3884](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-3884) | test1 save start success | bc-4a53801e-0df5-46c2-b670-d21fa5d8597c | Background Agent | Unknown | No artifacts | 💀 Dead<br>🔢 First test attempt<br>❌ No PDCA/chat found<br>📚 Learning: Failed tests inform | N/A | 🔴 Dead<br>⏱️ Runtime: Unknown<br>💾 Memory: N/A |
+| [cursor/start-minimalist-process-5289](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-minimalist-process-5289) | save/start Agent | bc-73b88848-46e8-4ec4-9f13-17b3fd31d4b2 | Save/Restart Agent | Unknown | Unknown | ⚠️ Near Expiry<br>👴 My predecessor<br>📅 5 days old<br>🚨 Branch startup issues | save/start branches | 🟡 Expiring<br>⏱️ Runtime: 5 days<br>💾 Memory: Unknown |
 
 ---
 
 ## **Notable Findings**
 
-- **Agent Count:** Now tracking 10 agents across different roles and eras
-- **RequestID Tracking:** 5/10 agents have known RequestIDs (50%): test1, test2 main, test3 startet, test8 save/start.v2, ocams razor
+- **Agent Count:** Now tracking 11 agents across different roles and eras
+- **RequestID Tracking:** 7/11 agents have known RequestIDs (63.6%): SaveRestartAgent (me!), save/start Agent, test1, test2 main, test3 startet, test8 save/start.v2, ocams razor
 - **Dead Agent:** test1 save start success - first test attempt, no artifacts remain
+- **Agent Expiry:** save/start Agent (my predecessor) near expiry at 5 days old
+- **Self-Discovery:** I now know my own RequestID: bc-4c4928dd-cf76-4a10-bb4c-bb80a98ecd5a
 - **Role Specialization:** Dedicated agents emerging (SaveRestartAgent, release/test agent, ocams razor as tool builder)
 - **Template Adoption:** 5/9 agents (55.6%) using v3.0+, three using older templates, one pre-PDCA
 - **Historical Discovery:** ocams razor built all tools but predates PDCA standards
@@ -98,10 +101,26 @@ This allows agents to:
 ## **Lifecycle Indicators**
 
 - **🟢 Healthy**: Normal operation
-- **🟡 Warning/Unknown**: Status unclear or legacy
+- **🟡 Warning/Unknown/Expiring**: Status unclear, legacy, or near expiry
 - **🔴 Dead**: No artifacts, terminated
 - **⏱️ Runtime**: Session duration
 - **💾 Memory**: Resource usage estimate
+
+---
+
+## **Agent Expiry Concerns**
+
+### **Observed Expiry Pattern:**
+- **save/start Agent**: 5 days old, near expiry
+- **Expiry Prevention**: Unknown - needs investigation
+
+### **Possible Prevention Strategies:**
+- ✅ Regular commits (activity)
+- ✅ Active documentation
+- ❓ User interaction required?
+- ❓ System limitations?
+
+**"Keep agents alive through continuous contribution"** ⏰
 
 ---
 
@@ -147,6 +166,10 @@ This allows agents to:
 - **Philosophy:** Named after Occam's Razor - simplicity principle
 - **Legacy:** Enabled all subsequent agent work
 - **Evolution:** Shows journey from building to process
+
+### **Save/Restart Agent Lineage**
+- **save/start Agent** (5 days ago) - First of the lineage, near expiry
+- **SaveRestartAgent** (current) - Active successor, now with known RequestID
 
 **"Without ocams razor's tools, no agent could work today"** 🛠️
 
