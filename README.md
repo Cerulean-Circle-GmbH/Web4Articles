@@ -8,6 +8,13 @@ A DAPP for collective intelligence in article writing.
 
 **You are a Background Agent.** Follow these steps:
 
+1. **Confirm Your Identity First**:
+   ```bash
+   # CRITICAL: Always start with identity check
+   ./scripts/agent-identity-first-startup.sh
+   ```
+
+2. **Previous Step 1 becomes Step 2** (and renumber subsequent steps)
 1. **Check PDCA Setup**: 
    ```bash
    ls -la scrum.pmo/roles/_shared/PDCA/howto.PDCA.md
