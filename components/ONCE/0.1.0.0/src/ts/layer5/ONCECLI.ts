@@ -46,7 +46,7 @@ export class OnceCLI {
   private showUsage(): void {
     const cyan = '\x1b[36m';
     const yellow = '\x1b[33m';
-    const blue = '\x1b[34m';
+    const green = '\x1b[32m';
     const bold = '\x1b[1m';
     const reset = '\x1b[0m';
 
@@ -61,11 +61,11 @@ export class OnceCLI {
     console.log(`  ${cyan}once version${reset}                 # Show ONCE version information`);
     console.log('');
     console.log(`${bold}Demo Features:${reset}`);
-    console.log(`  ${blue}•${reset} Cross-platform browser auto-opening`);
-    console.log(`  ${blue}•${reset} Web4 Message component integration`);
-    console.log(`  ${blue}•${reset} P2P scenario acknowledgments`);
-    console.log(`  ${blue}•${reset} Interactive demo controls`);
-    console.log(`  ${blue}•${reset} TTY-aware keyboard input`);
+    console.log(`  ${green}•${reset} Cross-platform browser auto-opening`);
+    console.log(`  ${green}•${reset} Web4 Message component integration`);
+    console.log(`  ${green}•${reset} P2P scenario acknowledgments`);
+    console.log(`  ${green}•${reset} Interactive demo controls`);
+    console.log(`  ${green}•${reset} TTY-aware keyboard input`);
     console.log('');
     console.log(`${bold}Examples:${reset}`);
     console.log(`  ${cyan}once demo${reset}                    # Launch full interactive demo`);
@@ -169,7 +169,7 @@ export class OnceCLI {
   private showDemoHelp(): void {
     const cyan = '\x1b[36m';
     const yellow = '\x1b[33m';
-    const blue = '\x1b[34m';
+    const green = '\x1b[32m';
     const bold = '\x1b[1m';
     const reset = '\x1b[0m';
 
@@ -192,10 +192,10 @@ export class OnceCLI {
     console.log(`  ${yellow}[q]${reset} Quit demo`);
     console.log('');
     console.log(`${bold}Features:${reset}`);
-    console.log(`  ${blue}•${reset} Cross-platform browser auto-opening`);
-    console.log(`  ${blue}•${reset} Web4 Message component integration`);
-    console.log(`  ${blue}•${reset} P2P scenario acknowledgments`);
-    console.log(`  ${blue}•${reset} Interactive demo controls`);
+    console.log(`  ${green}•${reset} Cross-platform browser auto-opening`);
+    console.log(`  ${green}•${reset} Web4 Message component integration`);
+    console.log(`  ${green}•${reset} P2P scenario acknowledgments`);
+    console.log(`  ${green}•${reset} Interactive demo controls`);
     console.log('');
   }
 }

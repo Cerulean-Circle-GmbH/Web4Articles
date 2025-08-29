@@ -58,9 +58,9 @@ export class EnvironmentDetector {
         }
 
         // Worker detection
-        if (typeof WorkerGlobalScope !== 'undefined' && typeof importScripts === 'function') {
+        if (typeof self !== 'undefined' && 'importScripts' in self) {
             // Service Worker detection
-            if (typeof ServiceWorkerGlobalScope !== 'undefined') {
+            if ('serviceWorker' in navigator || typeof (self as any).registration !== 'undefined') {
                 return 'service-worker';
             }
             return 'worker';

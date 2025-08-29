@@ -8,7 +8,7 @@
  */
 
 // Layer 3 - Interfaces
-export { ONCE, EnvironmentInfo, ComponentQuery, PerformanceMetrics } from './ts/layer3/ONCE.js';
+export { EnvironmentInfo, ComponentQuery, PerformanceMetrics } from './ts/layer3/ONCE.js';
 export { Component } from './ts/layer3/Component.js';
 export { Scenario, ScenarioReference, ScenarioMetadata } from './ts/layer3/Scenario.js';
 export { IOR, NetworkLocation } from './ts/layer3/IOR.js';

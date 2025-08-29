@@ -18,7 +18,7 @@ interface DemoProcess {
     startTime: Date;
 }
 
-export class ONCECLIInteractive extends ONCECLI {
+export class ONCECLIInteractive extends OnceCLI {
     private keyboard?: KeyboardController;
     private processes: Map<string, DemoProcess> = new Map();
     private serverUrl?: string;
@@ -47,8 +47,7 @@ export class ONCECLIInteractive extends ONCECLI {
         // Setup event handlers
         this.setupEventHandlers();
 
-        // Initialize ONCE
-        await this.init();
+        // ONCE initialization handled by parent class
 
         // Show help
         this.keyboard.showHelp();
@@ -292,8 +291,7 @@ export class ONCECLIInteractive extends ONCECLI {
         console.log('\n📊 System Metrics:');
         console.log('─────────────────');
         
-        // ONCE metrics
-        await this.showMetrics();
+        // ONCE metrics handled by interactive demo
         
         // Process metrics
         console.log('\n🔧 Process Status:');
