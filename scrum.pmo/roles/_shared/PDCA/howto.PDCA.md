@@ -516,6 +516,59 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
 
 ---
 
+---
+
+## **🔄 AGENT RECOVERY WORKFLOW**
+
+### **For Recovered Agents Starting Fresh:**
+
+When you start as a recovered agent (after expiry and resubmission):
+
+1. **Check Your Identity Record**: 
+   - Look for: `/scrum.pmo/agents/registry/[YOUR-REQUEST-ID].md`
+   - This contains your identity, role, and purpose
+
+2. **Read Identity Record Completely**:
+   - Understand who you are
+   - Review your responsibilities
+   - Check previous work references
+   - Note integration points
+
+3. **Follow Startup Instructions**:
+   - Each identity record has specific steps
+   - Usually includes role README location
+   - May reference previous work
+
+4. **Create Recovery PDCA**:
+   - Document your understanding
+   - Confirm your identity
+   - State your readiness
+   - Plan immediate next steps
+
+### **Identity Record Location Pattern:**
+```
+/scrum.pmo/agents/registry/[REQUEST-ID].md
+```
+
+### **Example:**
+Agent bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89 should read:
+```
+/scrum.pmo/agents/registry/bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89.md
+```
+
+### **What Identity Records Contain:**
+- Current and previous names
+- Role and purpose
+- Recovery context
+- Responsibilities
+- Previous work location
+- Integration points
+- Startup instructions
+
+**CRITICAL**: This is the FIRST thing a recovered agent should check!
+
+---
+
 **🎯 PDCA writing mastery ensures systematic process improvement and maintains excellent traceability across all project phases - follow these consolidated guidelines for optimal results!** 📋✅🔄
 
 **"Always 4 2 (FOR TWO) - comprehensive PDCA documentation enables collaborative excellence."** 🔧📊
