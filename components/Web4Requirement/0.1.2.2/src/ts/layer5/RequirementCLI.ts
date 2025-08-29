@@ -104,6 +104,9 @@ export class RequirementCLI {
       case 'find':
         await this.handleFind(args.slice(1));
         break;
+      case 'show':
+        await this.handleShow(args.slice(1));
+        break;
       case 'replace':
         await this.handleReplace(args.slice(1));
         break;
@@ -539,6 +542,46 @@ export class RequirementCLI {
       
     } catch (error) {
       console.error(`❌ Error searching requirements: ${(error as Error).message}`);
+    }
+  }
+
+  private async handleShow(args: string[]): Promise<void> {
+    if (args.length < 1) {
+      console.error('❌ Usage: requirement show <uuid>');
+      console.log('Examples:');
+      console.log('  requirement show 71223733-75d1-4002-bee1-e004d5ccd76c');
+      console.log('  requirement show a1b2c3d4-5e6f-4789-0abc-def123456789');
+      return;
+    }
+
+    const uuid = args[0];
+    
+    // Validate UUID format (basic check)
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuid)) {
+      console.error(`❌ Invalid UUID format: ${uuid}`);
+      console.log('💡 UUID should be in format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');
+      return;
+    }
+
+    // Construct the markdown file path
+    const requirementFile = path.join(this.projectRoot, 'spec/requirements.md', `${uuid}.requirement.md`);
+    
+    try {
+      // Check if file exists
+      if (!existsSync(requirementFile)) {
+        console.error(`❌ Requirement not found: ${uuid}`);
+        console.log(`📁 Expected file: ${requirementFile}`);
+        console.log('💡 Use "requirement find <search-term>" to find requirements');
+        return;
+      }
+
+      // Read and display the file contents
+      const content = readFileSync(requirementFile, 'utf8');
+      console.log(content);
+      
+    } catch (error) {
+      console.error(`❌ Error reading requirement file: ${(error as Error).message}`);
+      console.log(`📁 File path: ${requirementFile}`);
     }
   }
 
