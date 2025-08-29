@@ -92,12 +92,12 @@ export class OnceCLI {
     console.log(`  ${cyan}once${reset} stop                    ${green}# Stop the running npm server${reset}`);
     console.log('');
     console.log(`${bold}ONCE Features:${reset}`);
-    console.log(`  ${green}•${reset} Cross-platform browser auto-opening`);
-    console.log(`  ${green}•${reset} Web4 Message component integration`);
-    console.log(`  ${green}•${reset} P2P scenario acknowledgments`);
-    console.log(`  ${green}•${reset} Interactive demo controls`);
-    console.log(`  ${green}•${reset} TTY-aware keyboard input`);
-    console.log(`  ${green}•${reset} Graceful server lifecycle management`);
+    console.log(`  ${green}• Cross-platform browser auto-opening${reset}`);
+    console.log(`  ${green}• Web4 Message component integration${reset}`);
+    console.log(`  ${green}• P2P scenario acknowledgments${reset}`);
+    console.log(`  ${green}• Interactive demo controls${reset}`);
+    console.log(`  ${green}• TTY-aware keyboard input${reset}`);
+    console.log(`  ${green}• Graceful server lifecycle management${reset}`);
     console.log('');
     console.log(`${bold}For more information, visit:${reset} ${cyan}https://github.com/Cerulean-Circle-GmbH/Web4Articles${reset}`);
   }
