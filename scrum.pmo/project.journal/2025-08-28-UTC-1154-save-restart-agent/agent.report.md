@@ -23,15 +23,16 @@
 | [dev/2025-08-25-UTC-1308](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-25-UTC-1308) | ocams razor | bc-be844138-b4f9-4b47-9b36-ff8ce51a79a1 | Tool Builder | None | No PDCA found | ⚠️ Historical<br>🛠️ Built all tools<br>🏛️ Foundation agent<br>❌ No PDCA (pre-standard) | release/dev<br>main (legacy) | 🟡 Legacy<br>⏱️ Runtime: Historical<br>💾 Memory: N/A |
 | [cursor/start-background-process-3884](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-3884) | test1 save start success | bc-4a53801e-0df5-46c2-b670-d21fa5d8597c | Background Agent | Unknown | No artifacts | 💀 Dead<br>🔢 First test attempt<br>❌ No PDCA/chat found<br>📚 Learning: Failed tests inform | N/A | 🔴 Dead<br>⏱️ Runtime: Unknown<br>💾 Memory: N/A |
 | [cursor/start-minimalist-process-5289](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-minimalist-process-5289) | save/start Agent | bc-73b88848-46e8-4ec4-9f13-17b3fd31d4b2 | Save/Restart Agent | Unknown | Unknown | ⚠️ Near Expiry<br>👴 My predecessor<br>📅 5 days old<br>🚨 Branch startup issues | save/start branches | 🟡 Expiring<br>⏱️ Runtime: 5 days<br>💾 Memory: Unknown |
+| [cursor/start-background-process-dcf6](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-dcf6) | agent renaming → Agent Manager | bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89 | Agent Manager | Unknown | [Previous work](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-dcf6/scrum.pmo/project.journal/2025-08-23-1730-agent-management) | 💀 Expired<br>🔄 Ready for recovery<br>📊 Will manage agents<br>✅ Branch prepared | release/dev<br>agent tracking | 🔴 Expired<br>⏱️ Runtime: Expired<br>💾 Memory: N/A |
 
 ---
 
 ## **Notable Findings**
 
-- **Agent Count:** Now tracking 11 agents across different roles and eras
-- **RequestID Tracking:** 7/11 agents have known RequestIDs (63.6%): SaveRestartAgent (me!), save/start Agent, test1, test2 main, test3 startet, test8 save/start.v2, ocams razor
-- **Dead Agent:** test1 save start success - first test attempt, no artifacts remain
-- **Agent Expiry:** save/start Agent (my predecessor) near expiry at 5 days old
+- **Agent Count:** Now tracking 12 agents across different roles and eras
+- **RequestID Tracking:** 8/12 agents have known RequestIDs (66.7%): SaveRestartAgent (me!), save/start Agent, agent renaming, test1, test2 main, test3 startet, test8 save/start.v2, ocams razor
+- **Dead Agents:** test1 (no artifacts), agent renaming (expired but recoverable)
+- **Agent Expiry:** save/start Agent near expiry (5 days), agent renaming expired but prepared for recovery
 - **Self-Discovery:** I now know my own RequestID: bc-4c4928dd-cf76-4a10-bb4c-bb80a98ecd5a
 - **Role Specialization:** Dedicated agents emerging (SaveRestartAgent, release/test agent, ocams razor as tool builder)
 - **Template Adoption:** 5/9 agents (55.6%) using v3.0+, three using older templates, one pre-PDCA
@@ -43,6 +44,7 @@
 - **Branch Testing:** test8 specifically testing save/start.v2 startup
 - **Navigation Enhancement:** All branches now clickable GitHub links
 - **Process Evolution:** From tool building (ocams razor) to process standardization (current agents)
+- **Recovery Process:** Expired agents can be prepared for rebirth through branch updates
 
 ---
 
@@ -155,6 +157,8 @@ This allows agents to:
 9. **test3 startet**: Unique spelling preserved - recovery session documented
 10. **ocams razor**: Foundation agent honored - built all tools pre-PDCA era
 11. **test1 save start success**: Dead agent documented - shows testing evolution
+12. **save/start Agent**: Monitor closely - near expiry at 5 days
+13. **agent renaming → Agent Manager**: Ready for recovery - branch prepared with latest standards
 
 ---
 
