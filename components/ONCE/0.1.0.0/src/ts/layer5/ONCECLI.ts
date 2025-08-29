@@ -28,8 +28,11 @@ export class OnceCLI {
       case 'demo':
         await this.runDemo(args.slice(1));
         break;
-      case 'star':
-        await this.runStar(args.slice(1));
+      case 'start':
+        await this.runStart(args.slice(1));
+        break;
+      case 'stop':
+        await this.runStop(args.slice(1));
         break;
       case 'help':
       case '--help':
@@ -60,9 +63,11 @@ export class OnceCLI {
     console.log('');
     console.log(`${bold}Usage:${reset}`);
     console.log(`  ${cyan}once${reset} ${white}demo${reset}                    # Start interactive demo with browser auto-opening`);
-    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--headless${reset}         # Start demo without browser (server only)`);
-    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--help${reset}             # Show demo-specific help`);
-    console.log(`  ${cyan}once${reset} ${white}star${reset}                    # Start npm server interactively (quit with ${yellow}q${reset})`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}<headless>${reset}         # Start demo without browser (server only)`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}<help>${reset}             # Show demo-specific help`);
+    console.log(`  ${cyan}once${reset} ${white}start${reset}                   # Start npm server interactively (quit with ${yellow}q${reset})`);
+    console.log(`  ${cyan}once${reset} ${white}start${reset} ${yellow}<headless>${reset}        # Start npm server without interaction`);
+    console.log(`  ${cyan}once${reset} ${white}stop${reset}                    # Stop running npm server gracefully`);
     console.log(`  ${cyan}once${reset} ${white}help${reset}                    # Show this help message`);
     console.log(`  ${cyan}once${reset} ${white}version${reset}                 # Show ONCE version information`);
     console.log('');
@@ -75,8 +80,10 @@ export class OnceCLI {
     console.log('');
     console.log(`${bold}Examples:${reset}`);
     console.log(`  ${cyan}once${reset} ${white}demo${reset}                    # Launch full interactive demo`);
-    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--headless${reset}         # Server-only mode for testing`);
-    console.log(`  ${cyan}once${reset} ${white}star${reset}                    # Start npm server with interactive control`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}headless${reset}           # Server-only mode for testing`);
+    console.log(`  ${cyan}once${reset} ${white}start${reset}                   # Start npm server with interactive control`);
+    console.log(`  ${cyan}once${reset} ${white}start${reset} ${yellow}headless${reset}          # Start npm server non-interactively`);
+    console.log(`  ${cyan}once${reset} ${white}stop${reset}                    # Stop the running npm server`);
     console.log('');
     console.log(`${bold}Location:${reset} Latest version (${yellow}v${this.onceVersion}${reset})`);
     console.log(`${bold}Path:${reset} ${yellow}scripts/versions/once${this.onceVersion}${reset}`);
@@ -94,9 +101,11 @@ export class OnceCLI {
     console.log('');
     console.log(`${bold}Usage:${reset}`);
     console.log(`  ${cyan}once${reset} ${white}demo${reset}                    # Start interactive demo`);
-    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--headless${reset}         # Start demo without browser`);
-    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--help${reset}             # Show demo help`);
-    console.log(`  ${cyan}once${reset} ${white}star${reset}                    # Start npm server interactively`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}<headless>${reset}         # Start demo without browser`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}<help>${reset}             # Show demo help`);
+    console.log(`  ${cyan}once${reset} ${white}start${reset}                   # Start npm server interactively`);
+    console.log(`  ${cyan}once${reset} ${white}start${reset} ${yellow}<headless>${reset}        # Start npm server non-interactively`);
+    console.log(`  ${cyan}once${reset} ${white}stop${reset}                    # Stop running npm server`);
     console.log(`  ${cyan}once${reset} ${white}help${reset}                    # Show this help`);
     console.log(`  ${cyan}once${reset} ${white}version${reset}                 # Show version info`);
     console.log('');
@@ -142,8 +151,8 @@ export class OnceCLI {
     const reset = '\x1b[0m';
 
     // Handle demo arguments
-    const isHeadless = args.includes('--headless');
-    const showHelp = args.includes('--help') || args.includes('help');
+    const isHeadless = args.includes('headless');
+    const showHelp = args.includes('help');
 
     if (showHelp) {
       this.showDemoHelp();
@@ -190,8 +199,8 @@ export class OnceCLI {
     console.log('');
     console.log(`${bold}Usage:${reset}`);
     console.log(`  ${cyan}once${reset} ${white}demo${reset}                    # Start interactive demo with browser`);
-    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--headless${reset}         # Start demo without browser`);
-    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--help${reset}             # Show this help`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}<headless>${reset}         # Start demo without browser`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}<help>${reset}             # Show this help`);
     console.log('');
     console.log(`${bold}Demo Controls (interactive mode):${reset}`);
     console.log(`  ${yellow}[s]${reset} Start/Stop ONCE server`);
@@ -210,7 +219,7 @@ export class OnceCLI {
     console.log('');
   }
 
-  private async runStar(args: string[]): Promise<void> {
+  private async runStart(args: string[]): Promise<void> {
     const cyan = '\x1b[36m';
     const yellow = '\x1b[33m';
     const magenta = '\x1b[35m';
@@ -220,9 +229,17 @@ export class OnceCLI {
     // Find the ONCE component directory
     const oncePath = path.join(this.projectRoot, 'components', 'ONCE', this.onceVersion);
     
-    console.log(`${cyan}⭐ Starting ONCE npm server ${yellow}v${this.onceVersion}${reset}${cyan}...${reset}`);
+    // Handle start arguments
+    const isHeadless = args.includes('headless');
+    
+    console.log(`${cyan}🚀 Starting ONCE npm server ${yellow}v${this.onceVersion}${reset}${cyan}...${reset}`);
     console.log(`${bold}📁 Server path:${reset} ${yellow}${oncePath}${reset}`);
-    console.log(`${magenta}🎮 Press ${yellow}q${reset}${magenta} to quit${reset}`);
+    
+    if (!isHeadless) {
+      console.log(`${magenta}🎮 Press ${yellow}q${reset}${magenta} to quit${reset}`);
+    } else {
+      console.log(`${magenta}🖥️  Headless mode - use ${yellow}once stop${reset}${magenta} to quit${reset}`);
+    }
     console.log('');
 
     // Check if package.json exists
@@ -242,6 +259,14 @@ export class OnceCLI {
       stdio: ['pipe', 'inherit', 'inherit']
     });
 
+    // Save PID for stop command
+    const pidFile = path.join(oncePath, '.once-server.pid');
+    try {
+      await import('fs').then(fs => fs.promises.writeFile(pidFile, npmProcess.pid?.toString() || ''));
+    } catch (error) {
+      // PID file write failed, continue anyway
+    }
+
     // Handle npm process errors
     npmProcess.on('error', (error) => {
       console.error(`❌ Failed to start npm server: ${error.message}`);
@@ -250,12 +275,15 @@ export class OnceCLI {
 
     // Handle npm process exit
     npmProcess.on('close', (code) => {
-      console.log(`${magenta}⭐ npm server stopped${reset}`);
+      console.log(`${magenta}🚀 npm server stopped${reset}`);
+      // Clean up PID file
+      const pidFile = path.join(oncePath, '.once-server.pid');
+      import('fs').then(fs => fs.promises.unlink(pidFile).catch(() => {}));
       process.exit(code || 0);
     });
 
-    // Setup keyboard input handling
-    if (process.stdin.isTTY) {
+    // Setup keyboard input handling (only in interactive mode)
+    if (!isHeadless && process.stdin.isTTY) {
       process.stdin.setRawMode(true);
       process.stdin.resume();
       process.stdin.setEncoding('utf8');
@@ -296,6 +324,71 @@ export class OnceCLI {
         }, 2000);
       });
     });
+  }
+
+  private async runStop(args: string[]): Promise<void> {
+    const cyan = '\x1b[36m';
+    const yellow = '\x1b[33m';
+    const magenta = '\x1b[35m';
+    const bold = '\x1b[1m';
+    const reset = '\x1b[0m';
+
+    // Find the ONCE component directory
+    const oncePath = path.join(this.projectRoot, 'components', 'ONCE', this.onceVersion);
+    const pidFile = path.join(oncePath, '.once-server.pid');
+    
+    console.log(`${cyan}🛑 Stopping ONCE npm server ${yellow}v${this.onceVersion}${reset}${cyan}...${reset}`);
+
+    try {
+      // Try to read PID file
+      const pidContent = await import('fs').then(fs => fs.promises.readFile(pidFile, 'utf8'));
+      const pid = parseInt(pidContent.trim());
+      
+      if (isNaN(pid)) {
+        console.log(`❌ Invalid PID in file: ${pidFile}`);
+        return;
+      }
+
+      console.log(`${bold}📋 Found server PID:${reset} ${yellow}${pid}${reset}`);
+
+      // Check if process exists and kill it
+      try {
+        process.kill(pid, 'SIGTERM');
+        console.log(`${magenta}✅ Sent SIGTERM to process ${pid}${reset}`);
+        
+        // Wait a bit then force kill if needed
+        setTimeout(() => {
+          try {
+            process.kill(pid, 'SIGKILL');
+            console.log(`${magenta}🔥 Sent SIGKILL to process ${pid}${reset}`);
+          } catch (error) {
+            // Process already terminated
+          }
+        }, 2000);
+        
+        // Clean up PID file
+        await import('fs').then(fs => fs.promises.unlink(pidFile));
+        console.log(`${cyan}🧹 Cleaned up PID file${reset}`);
+        
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === 'ESRCH') {
+          console.log(`${yellow}⚠️  Process ${pid} not found (already stopped)${reset}`);
+          // Clean up stale PID file
+          await import('fs').then(fs => fs.promises.unlink(pidFile));
+          console.log(`${cyan}🧹 Cleaned up stale PID file${reset}`);
+        } else {
+          console.log(`❌ Failed to stop process ${pid}: ${(error as Error).message}`);
+        }
+      }
+      
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+        console.log(`${yellow}⚠️  No server PID file found at: ${pidFile}${reset}`);
+        console.log(`${magenta}💡 Server might not be running or was started differently${reset}`);
+      } else {
+        console.log(`❌ Failed to read PID file: ${(error as Error).message}`);
+      }
+    }
   }
 }
 
