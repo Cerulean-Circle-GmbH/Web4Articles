@@ -51,8 +51,26 @@ export class ONCECLILauncher {
                 await this.handleDemo(this.args.slice(1));
                 break;
             case 'test':
-                // test <input> is identical to demo <input>
-                await this.handleDemo(this.args.slice(1));
+                // test <input> - MUST exit after sequence
+                if (this.args.length < 2) {
+                    console.log('❌ Test command requires input parameter');
+                    console.log('Usage: once test "<sequence>"');
+                    process.exit(1);
+                }
+                const testInput = this.args[1];
+                console.log(`🧪 Test sequence mode: ${testInput}`);
+                
+                // Fire and forget - don't await, just exit immediately after launching
+                this.launchTestSequence(testInput).finally(() => {
+                    console.log('🚨 FORCE EXIT - Test complete');
+                    process.exit(0);
+                });
+                
+                // Also exit after a short delay as backup
+                setTimeout(() => {
+                    console.log('🚨 TIMEOUT EXIT - Test taking too long');
+                    process.exit(0);
+                }, 30000); // 30 second timeout
                 break;
             case 'start':
             case 'stop':

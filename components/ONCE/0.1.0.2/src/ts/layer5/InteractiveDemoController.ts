@@ -155,8 +155,12 @@ export class InteractiveDemoController {
             });
         });
 
-        // Setup cleanup on exit
-        process.on('SIGINT', () => this.handleExit());
+        // Setup cleanup on exit and Ctrl+C handling
+        process.on('SIGINT', async () => {
+            this.logger.info('Ctrl+C received - quitting demo');
+            await this.handleExit();
+            process.exit(0);
+        });
         process.on('SIGTERM', () => this.handleExit());
         process.on('exit', () => this.handleExit());
     }
@@ -172,15 +176,15 @@ export class InteractiveDemoController {
                 await this.serverManager.toggleServer(networkAddress);
                 break;
 
-            case '1':
+            case 'b':
                 await this.clientManager.launchBrowserClient();
                 break;
 
-            case '2':
+            case 'c':
                 await this.clientManager.launchNodeClient();
                 break;
 
-            case '3':
+            case 'w':
                 await this.clientManager.launchWorkerClient();
                 break;
 
@@ -196,7 +200,12 @@ export class InteractiveDemoController {
                 await this.operationsManager.showMetrics();
                 break;
 
-            case 'c':
+            case '\u0008': // backspace key
+            case '\u007f': // delete key (also often backspace)
+                this.operationsManager.clearScreen();
+                break;
+
+            case 'l': // alternative clear key for test sequences
                 this.operationsManager.clearScreen();
                 break;
 

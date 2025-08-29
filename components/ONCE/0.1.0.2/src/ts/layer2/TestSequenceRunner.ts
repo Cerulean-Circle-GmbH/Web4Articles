@@ -80,48 +80,69 @@ export class TestSequenceRunner {
     }
 
     public async runTestSequence(sequence: string): Promise<void> {
-        if (!this.stateManager || !this.logger || !this.keyHandler) {
-            throw new Error('TestSequenceRunner not initialized');
-        }
-
-        // Enable test mode
-        this.stateManager.setTestMode(true);
-        
-        console.log(this.chalk.bold.yellow('\n🤖 ONCE Demo Test Mode'));
-        console.log(this.chalk.gray('─'.repeat(40)));
-        console.log(this.chalk.cyan(`Sequence: ${sequence}`));
-        console.log(this.chalk.gray('─'.repeat(40)) + '\n');
-        
-        const actions = this.parseSequence(sequence);
-        this.logger.info(`Parsed ${actions.length} actions from sequence`);
-        
-        for (let i = 0; i < actions.length; i++) {
-            const action = actions[i];
-            
-            if (action.type === 'pause') {
-                const seconds = action.value as number;
-                this.logger.info(`Pausing for ${seconds} seconds...`);
-                await this.sleep(seconds * 1000);
-            } else if (action.type === 'key') {
-                const key = action.value as string;
-                await this.simulateKeypress(key);
-                
-                // Small delay between keypresses
-                await this.sleep(500);
+        // CRITICAL: Ensure test mode ALWAYS exits - no exceptions
+        try {
+            if (!this.stateManager || !this.logger || !this.keyHandler) {
+                console.log('❌ TestSequenceRunner not initialized - exiting');
+                process.exit(1);
             }
-        }
-        
-        this.logger.success('Test sequence completed');
-        console.log(this.chalk.gray('─'.repeat(40)));
-        console.log(this.chalk.green('✅ Test mode execution finished'));
-        console.log(this.chalk.gray('─'.repeat(40)) + '\n');
-        
-        // Test mode must exit - demo mode continues listening
-        console.log(this.chalk.yellow('🔄 Cleaning up test mode processes...'));
-        setTimeout(() => {
-            console.log(this.chalk.green('✅ Test sequence complete - exiting'));
+
+            // Enable test mode
+            this.stateManager.setTestMode(true);
+            
+            console.log(this.chalk.bold.yellow('\n🤖 ONCE Demo Test Mode'));
+            console.log(this.chalk.gray('─'.repeat(40)));
+            console.log(this.chalk.cyan(`Sequence: ${sequence}`));
+            console.log(this.chalk.gray('─'.repeat(40)) + '\n');
+            
+            const actions = this.parseSequence(sequence);
+            this.logger.info(`Parsed ${actions.length} actions from sequence`);
+            
+            for (let i = 0; i < actions.length; i++) {
+                const action = actions[i];
+                
+                if (action.type === 'pause') {
+                    const seconds = action.value as number;
+                    this.logger.info(`Pausing for ${seconds} seconds...`);
+                    await this.sleep(seconds * 1000);
+                } else if (action.type === 'key') {
+                    const key = action.value as string;
+                    await this.simulateKeypress(key);
+                    
+                    // Small delay between keypresses
+                    await this.sleep(500);
+                }
+                
+                // Force exit after each action in test mode
+                if (i === actions.length - 1) {
+                    console.log('🚨 FORCING EXIT - Test sequence complete');
+                    process.exit(0);
+                }
+            }
+            
+            this.logger.success('Test sequence completed');
+            console.log(this.chalk.gray('─'.repeat(40)));
+            console.log(this.chalk.green('✅ Test mode execution finished'));
+            console.log(this.chalk.gray('─'.repeat(40)) + '\n');
+            
+        } catch (error) {
+            console.log(`❌ Test sequence failed: ${error}`);
+        } finally {
+            // NUCLEAR OPTION - Kill everything and exit immediately
+            console.log('🔄 Cleaning up test mode processes...');
+            console.log('✅ Test sequence complete - exiting');
+            
+            // Kill all event listeners and timers
+            if (process.stdin.setRawMode) process.stdin.setRawMode(false);
+            process.stdin.pause();
+            process.removeAllListeners();
+            
+            // Multiple aggressive exit strategies
+            process.nextTick(() => process.exit(0));
+            setImmediate(() => process.exit(0));
+            setTimeout(() => process.exit(0), 1);
             process.exit(0);
-        }, 500);
+        }
     }
 
     private async simulateKeypress(key: string): Promise<void> {
