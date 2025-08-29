@@ -138,4 +138,93 @@ export class EnvironmentDetector {
         // Assume online in Node.js
         return true;
     }
+
+    /**
+     * Get network address with localhost fallback
+     * Implements robust network discovery for ONCE P2P communication
+     */
+    getNetworkAddress(): string {
+        try {
+            // Platform-specific network address detection
+            const platform = this.getEnvironment().platform;
+            
+            switch (platform) {
+                case 'node':
+                    return this.detectNodeNetworkAddress();
+                case 'browser':
+                case 'pwa':
+                case 'iframe':
+                    return this.detectBrowserNetworkAddress();
+                case 'worker':
+                case 'service-worker':
+                    return this.detectWorkerNetworkAddress();
+                default:
+                    console.warn('Unknown platform for network detection:', platform);
+                    break;
+            }
+        } catch (error) {
+            console.warn('Network address detection failed:', error.message);
+        }
+        
+        // Final fallback to localhost
+        console.info('Using localhost fallback for network address');
+        return 'localhost';
+    }
+
+    private detectNodeNetworkAddress(): string {
+        try {
+            if (typeof require !== 'undefined') {
+                const os = require('os');
+                const interfaces = os.networkInterfaces();
+                
+                // Look for first non-internal IPv4 address
+                for (const [name, nets] of Object.entries(interfaces)) {
+                    if (nets) {
+                        for (const net of nets) {
+                            if (net.family === 'IPv4' && !net.internal) {
+                                console.info(`Detected network address: ${net.address} (${name})`);
+                                return net.address;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn('Node.js network interface detection failed:', error.message);
+        }
+        throw new Error('No Node.js network interfaces detected');
+    }
+
+    private detectBrowserNetworkAddress(): string {
+        try {
+            // Browser environment - try WebRTC for local IP detection
+            if (typeof RTCPeerConnection !== 'undefined') {
+                return this.detectWebRTCLocalAddress();
+            }
+            
+            // Fallback to window.location if available
+            if (typeof window !== 'undefined' && window.location) {
+                const hostname = window.location.hostname;
+                if (hostname && hostname !== 'localhost' && hostname !== '127.0.0.1') {
+                    console.info(`Using window.location hostname: ${hostname}`);
+                    return hostname;
+                }
+            }
+        } catch (error) {
+            console.warn('Browser network detection failed:', error.message);
+        }
+        throw new Error('No browser network address detected');
+    }
+
+    private detectWebRTCLocalAddress(): string {
+        // Note: This is a simplified version - real implementation would be async
+        // For now, we throw to trigger localhost fallback
+        throw new Error('WebRTC local address detection not implemented (async required)');
+    }
+
+    private detectWorkerNetworkAddress(): string {
+        // Worker environments have limited network detection capabilities
+        console.info('Worker environment - limited network detection');
+        throw new Error('Worker network detection limited');
+    }
 }

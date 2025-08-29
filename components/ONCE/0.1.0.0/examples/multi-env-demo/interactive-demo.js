@@ -40,15 +40,81 @@ const log = {
     key: (key, desc) => console.log(chalk.blue(`  [${key}]`) + ' ' + desc)
 };
 
-// Get host IP
+// Get host IP with enhanced fallback logic
 async function getHostIP() {
-    try {
-        const { stdout } = await execAsync("hostname -I | awk '{print $1}'");
-        return stdout.trim();
-    } catch (error) {
-        log.warn('Could not detect host IP, using localhost');
-        return 'localhost';
+    // Environment variable override (highest priority)
+    if (process.env.ONCE_SERVER_HOST) {
+        log.info(`Using ONCE_SERVER_HOST: ${process.env.ONCE_SERVER_HOST}`);
+        return process.env.ONCE_SERVER_HOST;
     }
+
+    // Try multiple network detection methods
+    const detectionMethods = [
+        () => detectLinuxIP(),
+        () => detectMacIP(), 
+        () => detectWindowsIP(),
+        () => detectNodeNetworkInterfaces(),
+        () => Promise.resolve('127.0.0.1'), // IPv4 localhost
+        () => Promise.resolve('localhost')   // Final fallback
+    ];
+
+    for (const method of detectionMethods) {
+        try {
+            const ip = await method();
+            if (ip && ip.trim() && ip !== '127.0.0.1') {
+                log.info(`Network address detected: ${ip.trim()}`);
+                return ip.trim();
+            }
+        } catch (error) {
+            // Continue to next method
+            continue;
+        }
+    }
+
+    // Final guaranteed fallback
+    log.warn('All network detection methods failed, using localhost fallback');
+    return 'localhost';
+}
+
+// Platform-specific IP detection methods
+async function detectLinuxIP() {
+    const { stdout } = await execAsync("hostname -I | awk '{print $1}'");
+    return stdout.trim();
+}
+
+async function detectMacIP() {
+    const { stdout } = await execAsync("ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | head -1");
+    return stdout.trim();
+}
+
+async function detectWindowsIP() {
+    const { stdout } = await execAsync("ipconfig | findstr IPv4 | findstr /v 127.0.0.1");
+    // Parse Windows ipconfig output
+    const match = stdout.match(/IPv4.*?:\s*(\d+\.\d+\.\d+\.\d+)/);
+    return match ? match[1] : null;
+}
+
+// Node.js os.networkInterfaces() method
+async function detectNodeNetworkInterfaces() {
+    try {
+        const os = await import('os');
+        const interfaces = os.networkInterfaces();
+        
+        // Look for first non-internal IPv4 address
+        for (const [name, nets] of Object.entries(interfaces)) {
+            if (nets) {
+                for (const net of nets) {
+                    if (net.family === 'IPv4' && !net.internal) {
+                        log.info(`Network interface found: ${net.address} (${name})`);
+                        return net.address;
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        throw new Error('Node.js network interface detection failed');
+    }
+    throw new Error('No network interfaces found');
 }
 
 // Clear screen and show header
