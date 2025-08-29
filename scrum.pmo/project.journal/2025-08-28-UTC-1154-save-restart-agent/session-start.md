@@ -59,6 +59,15 @@ As defined in the role documentation:
 3. Update any outdated process documentation
 4. Maintain clean state for future recoveries
 
+## RequestID Reality
+Background agents CANNOT access:
+- ❌ Their own RequestID
+- ❌ Cursor metadata
+- ❌ System information
+Only YOU can provide RequestIDs from the Cursor UI!
+"Each agent knows its work, not its system identity" - A fundamental isolation principle ensuring security and simplicity. 🚧✨
+
+
 ---
 
 **Remember:** "Save/start is my home, process clarity is my mission." 🔄📋✅
