@@ -1,0 +1,62 @@
+{
+  "name": "web4tsc-testing",
+  "version": "0.1.0.0",
+  "description": "Web4TSComponent Testing & Validation Suite - Comprehensive testing infrastructure for Web4 TypeScript component standards enforcement",
+  "type": "module",
+  "main": "dist/ts/layer2/DefaultWeb4TSCTesting.js",
+  "bin": {
+    "web4tsctesting": "dist/ts/layer5/Web4TSCTestingCLI.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rm -rf dist",
+    "pretest": "npm run build"
+  },
+  "keywords": [
+    "web4",
+    "typescript",
+    "testing",
+    "validation",
+    "component",
+    "standards",
+    "cli",
+    "architecture"
+  ],
+  "author": "Web4 Development Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "typescript": "^4.9.0",
+    "vitest": "^0.34.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cerulean-Circle-GmbH/Web4Articles.git",
+    "directory": "temp/web4tscTesting/0.1.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/Cerulean-Circle-GmbH/Web4Articles/issues"
+  },
+  "homepage": "https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/main/temp/web4tscTesting/0.1.0.0",
+  "web4": {
+    "component": true,
+    "version": "0.1.0.0",
+    "architecture": {
+      "layers": ["layer2", "layer3", "layer5"],
+      "hasEmptyConstructors": true,
+      "hasScenarioSupport": true,
+      "hasLocationResilientCLI": true
+    },
+    "purpose": "Testing and validation infrastructure for Web4TSComponent standards enforcement",
+    "compliance": {
+      "cmmi": "Level 3",
+      "web4Principles": true,
+      "nonInteractiveTesting": true
+    }
+  }
+}
