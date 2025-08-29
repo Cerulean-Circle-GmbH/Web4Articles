@@ -7,8 +7,23 @@ set -euo pipefail
 
 JOURNAL_DIR="${1:-}"
 if [[ -z "$JOURNAL_DIR" ]]; then
-    echo "Usage: $0 <journal_dir>"
-    echo "Example: $0 /workspace/scrum.pmo/project.journal/2025-01-27-1300"
+    cat << EOF
+Web4 Project Journal Index Updater
+
+Usage:
+  $(basename $0) <journal_dir>
+
+Description:
+  Updates the project.state.md file with current Git status and file listings
+  Maintains project journal documentation consistency
+
+Examples:
+  $(basename $0) /workspace/scrum.pmo/project.journal/2025-01-27-1300
+  $(basename $0) scrum.pmo/project.journal/current-session
+
+Note: Creates project.state.md if it doesn't exist
+      Updates existing content between markers if present
+EOF
     exit 1
 fi
 
@@ -71,7 +86,7 @@ CURRENT_BRANCH=$(git branch --show-current)
             Documentation/Ontology.md/*) role_type="Ontology" ;;
             README.md) role_type="Project root, tech stack, recovery" ;;
             recovery.md) role_type="Recovery log" ;;
-            qa-feedback-log.md) role_type="QA feedback" ;;
+            # qa-feedback-log.md removed - use PDCA process instead
             index.md) role_type="Index" ;;
             COMMIT_PUSH_POINT.md) role_type="Commit guide" ;;
             *) role_type="Document" ;;
@@ -101,7 +116,7 @@ CURRENT_BRANCH=$(git branch --show-current)
     echo "### Recovery & Process"
     echo "- [Recovery Process](./scrum.pmo/roles/ScrumMaster/recovery-process.md)"
     echo "- [README](./README.md)"
-    echo "- [QA Feedback Log](./qa-feedback-log.md)"
+    echo "- [QA Feedback Process](./scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)"
     echo ""
     echo "### Development"
     echo "- [Documentation](./Documentation/)"

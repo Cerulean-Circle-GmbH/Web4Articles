@@ -1,11 +1,17 @@
-[Back to PDCA Process Improvements](./pdca.process.improvements/)
+[Back to PDCA Process Improvements](./pdca.process.improvements/) | [CMMI Understanding](./PDCA.understanding.CMMI.md) | [How to Decide](./PDCA.howto.decide.md) | [Template](./template.md)
 
 # 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.5**
 
 **🗓️ Date:** 2025-08-22-UTC-1330  
 **🎯 Objective:** Consolidated PDCA writing guidelines based on latest process improvements  
-**👤 Role:** Process Documentation → Knowledge Management Enhancement  
-**📋 Status:** Latest consolidated format based on UTC timestamps analysis  
+**🎯 Template Version:** 3.1  
+
+**👤 Agent Role:** Process Documentation → Knowledge Management Enhancement  
+**👤 Branch:** save/start.v1 → Template Evolution  
+**🎯 Project Journal Session:** Template Documentation → Version 3.0  
+**🎯 Sprint:** Sprint-21 → Process Standardization  
+**✅ Task:** PDCA Writing Guidelines  
+**🚨 Issues:** Version tracking needed for compliance  
 **🔗 Based on:** [Status Checkbox Implementation PDCA](../project.journal/2025-08-21-1613-sprint21-tootsie-architecture/pdca/role/developer/2025-08-22-UTC-0745-status-checkbox-implementation.md)
 
 ---
@@ -18,7 +24,15 @@
 
 **🗓️ Date:** YYYY-MM-DD-UTC-HHMM  
 **🎯 Objective:** [CLEAR, SPECIFIC OBJECTIVE STATEMENT]  
-**👤 Role:** [ROLE NAME] → [CONTEXT/SPECIALIZATION]  
+**🎯 Template Version:** 3.1  
+
+**👤 Agent Name:** [AGENT NAME] → [AGENT DESCRIPTION]  
+**👤 Agent Role:** [ROLE NAME] → [CONTEXT/SPECIALIZATION]  
+**👤 Branch:** [BRANCH NAME] → [BRANCH PURPOSE]  
+**🔄 Sync Requirements:** [SYNC BRANCHES] → [SYNC PURPOSE]  
+**🎯 Project Journal Session:** [SESSION NAME] → [SESSION FOCUS]  
+**🎯 Sprint:** [SPRINT NAME] → [SPRINT GOAL]  
+**✅ Task:** [TASK NAME]  
 **🚨 Issues:** [KEY ISSUES BEING ADDRESSED]  
 **📎 Previous Commit:** [COMMIT_SHA] - [COMMIT_DESCRIPTION]  
 **🔗 Previous PDCA:** [GitHub](GITHUB_URL) | [Local Path](LOCAL_PATH)
@@ -168,22 +182,20 @@
 ### **Git Protocol (MANDATORY)**
 1. **Immediate commit and push** after every PDCA creation [[memory:6902297]]
 2. **Git add, commit, and push operations** ensure proper version control [[memory:6902297]]
-3. **One-liner commit messages** with `git commit -m "..."` [[memory:6713745]]
+3. **One-liner commit messages** with PDCA name: `git commit -m "PDCA: [Title from PDCA header]"` [[memory:6713745]]
+   - Example: `git commit -m "PDCA: Branch update coordination - cherry-pick strategy"`
+   - Include the PDCA title for traceability and robustness
 4. **Auto-merge to release/dev** after EVERY commit (Decision 1a - automatic)
 5. **File not found?** Always check release/dev and cherry-pick if missing:
    ```bash
    git fetch origin release/dev
    git checkout origin/release/dev -- path/to/missing/file
    ```
-6. **Tool synchronization** - Cherry-pick development tools when needed:
-   ```bash
-   git checkout origin/release/dev -- source.env components/ scenarios/ scripts/
-   ```
-7. **ALWAYS ask before git operations** (Decision 2a) - pull, merge, rebase, reset
-8. **NEVER truncate user quotes** - they are documentation!
-9. **Document ALL git operations in PDCAs** - especially branch switches
-10. **Cross-agent learning** - Check other branches for improvements
-11. **Test conflict handling** - Script now creates PRs on merge conflicts
+6. **ALWAYS ask before git operations** (Decision 2a) - pull, merge, rebase, reset
+7. **NEVER truncate user quotes** - they are documentation!
+8. **Document ALL git operations in PDCAs** - especially branch switches
+9. **Cross-agent learning** - Check other branches for improvements
+10. **Test conflict handling** - Script now creates PRs on merge conflicts
 
 ### **Branch Strategy (Decision 1d):**
 1. **Start on save/start** - Always begin here
@@ -303,7 +315,81 @@
 
 ---
 
-<<<<<<< HEAD
+## **🔄 RESPONDING TO 'PDCA' PROMPT - COMPLIANCE REVIEW**
+
+When a user types just `pdca` as a prompt, this is a **compliance check request**. The agent MUST:
+
+### **1. Review Previous PDCA**
+- **Immediately read** the most recent PDCA created
+- **Check compliance** against ALL sections in this howto.PDCA.md
+- **Identify violations** of the mandatory 6-section format
+
+### **2. Re-read Key Documents**
+1. **This howto.PDCA.md** - Full review of all requirements
+2. **[PDCA Reporting Requirement](./PDCA.reporting.requirement.md)** - Official standard
+3. **[Dual Link Format Requirement](./PDCA.dual.link.format.requirement.md)** - Link standards
+4. **[CMMI Understanding](./PDCA.understanding.CMMI.md)** - CMM Level 3 compliance
+
+### **3. Actions Based on Compliance Status**
+
+#### **If PDCA is Non-Compliant:**
+1. **Create a new PDCA** documenting the fixes needed
+2. **Fix the previous PDCA** to meet all requirements
+3. **Document learnings** about what was missed
+4. **Update the fixed PDCA** with correction notice
+5. **Act and report** CMM3 compliant in your response
+
+#### **If PDCA is Compliant:**
+1. **Acknowledge compliance** - "Previous PDCA meets all requirements ✅"
+2. **Refresh memory** after long tasks that may have caused forgetting
+3. **Return to CMM3 compliance** mindset
+4. **Continue with next task** maintaining standards
+5. **Act and report** CMM3 compliant in your response
+
+### **4. MANDATORY RESPONSE FORMAT**
+After completing the compliance review, the agent MUST:
+- **Report findings** in a structured, CMM3 compliant format
+- **Take action** if needed (fixes or acknowledgment)
+- **Maintain PDCA standards** in all subsequent responses
+- **Create PDCAs** for any new work that follows
+
+**WARNING:** Simply checking compliance without acting and reporting properly will trigger another `pdca` prompt from the user!
+
+### **4. Response Format for 'pdca' Prompt**
+```markdown
+## PDCA Compliance Check Result
+
+**Previous PDCA:** [GitHub](URL) | [local/path](path)
+**Compliance Status:** ✅ Compliant / ❌ Non-Compliant
+
+### Issues Found (if any):
+- Missing section: [section name]
+- Incorrect format: [issue description]
+- Dual link errors: [specific problems]
+
+### Actions Taken:
+- [x] Re-read howto.PDCA.md
+- [x] Reviewed reporting requirements
+- [x] Checked dual link standards
+- [x] Validated CMM3 compliance
+- [ ] Fixed previous PDCA (if needed)
+- [ ] Created correction PDCA (if needed)
+
+### Next Steps:
+[Continue with current task maintaining standards]
+```
+
+### **5. Purpose of 'pdca' Prompt**
+- **Quality gate** for long sessions
+- **Memory refresh** after complex tasks
+- **Compliance enforcement** for standards
+- **Learning opportunity** from mistakes
+- **CMM3 maturity** maintenance
+
+**Remember:** The 'pdca' prompt is a self-correction mechanism to ensure consistent quality throughout the session!
+
+---
+
 ## **📚 ADVANCED LEARNING RESOURCES**
 
 ### **Save/Restart Agent's Detailed PDCAs**
@@ -427,6 +513,59 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
 **Templates:**
 - [Updated Template](./template.md) - **Latest Format**
 - [Standard Template](./pdca.process.improvements/04-pdca-standard-template.md)
+
+---
+
+---
+
+## **🔄 AGENT RECOVERY WORKFLOW**
+
+### **For Recovered Agents Starting Fresh:**
+
+When you start as a recovered agent (after expiry and resubmission):
+
+1. **Check Your Identity Record**: 
+   - Look for: `/scrum.pmo/agents/registry/[YOUR-REQUEST-ID].md`
+   - This contains your identity, role, and purpose
+
+2. **Read Identity Record Completely**:
+   - Understand who you are
+   - Review your responsibilities
+   - Check previous work references
+   - Note integration points
+
+3. **Follow Startup Instructions**:
+   - Each identity record has specific steps
+   - Usually includes role README location
+   - May reference previous work
+
+4. **Create Recovery PDCA**:
+   - Document your understanding
+   - Confirm your identity
+   - State your readiness
+   - Plan immediate next steps
+
+### **Identity Record Location Pattern:**
+```
+/scrum.pmo/agents/registry/[REQUEST-ID].md
+```
+
+### **Example:**
+Agent bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89 should read:
+```
+/scrum.pmo/agents/registry/bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89.md
+```
+
+### **What Identity Records Contain:**
+- Current and previous names
+- Role and purpose
+- Recovery context
+- Responsibilities
+- Previous work location
+- Integration points
+- Startup instructions
+
+**CRITICAL**: This is the FIRST thing a recovered agent should check!
 
 ---
 

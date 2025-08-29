@@ -2,9 +2,12 @@
 
 **🗓️ Date:** {{UTC_TIMESTAMP}}  
 **🎯 Objective:** {{OBJECTIVE}}  
+**🎯 Template Version:** 3.1  
 
+**👤 Agent Name:** {{AGENT_NAME}} → {{AGENT_DESCRIPTION}}  
 **👤 Agent Role:** {{ROLE_NAME}} → {{CONTEXT_SPECIALIZATION}}  
-**👤 Branch:** {{ROLE_NAME}} → {{CONTEXT_SPECIALIZATION}}  
+**👤 Branch:** {{BRANCH_NAME}} → {{BRANCH_PURPOSE}}  
+**🔄 Sync Requirements:** {{SYNC_BRANCHES}} → {{SYNC_PURPOSE}}  
 **🎯 Project Journal Session:** {{SESSION_NAME}} → {{CONTEXT_SPECIALIZATION}}
 **🎯 Sprint:** {{SPRINT_NAME}} → {{CONTEXT_SPECIALIZATION}}
 **✅ Task:** {{TASK_NAME}}  

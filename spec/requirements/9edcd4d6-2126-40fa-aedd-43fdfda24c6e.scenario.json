@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "9edcd4d6-2126-40fa-aedd-43fdfda24c6e",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDEzOjI2OjQ0LjczNloiLCJ1dWlkIjoiN2FlMWU4ODUtNTg3NS00MTM2LWFmZWEtMjcxMGNkMWEzNmRkIn0=",
+  "model": {
+    "uuid": "9edcd4d6-2126-40fa-aedd-43fdfda24c6e",
+    "name": "Unit UUID Index System",
+    "title": "Unit UUID Index System",
+    "description": "Units are linux files that are unique and terminal identified via a uuid. They are created in a Units Index with scenarios stored in project root scenarios/index/ using UUID-based folder structure (5 levels deep). Storage locations use symbolic links to the index, and the unit model tracks all backlink paths for lifecycle management."
+  }
+}
