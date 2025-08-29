@@ -30,13 +30,13 @@ const ONCE = {
     })
 };
 
-// Import sample scenarios
-import { 
+// Import sample scenarios - using the JavaScript version we created
+const { 
     userScenario, 
     articleScenario, 
     componentScenario,
     createCounterScenario 
-} from '../shared/sample-scenarios.js';
+} = await import('../shared/sample-scenarios.js');
 
 // Server configuration
 const PORT = process.env.PORT || 8080;

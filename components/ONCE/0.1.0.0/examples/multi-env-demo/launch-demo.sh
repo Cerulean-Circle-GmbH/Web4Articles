@@ -37,7 +37,7 @@ fi
 
 # Start server in background
 echo "🌐 Starting server on http://localhost:8080"
-node --loader ts-node/esm server.ts &
+node server.mjs &
 SERVER_PID=$!
 echo "✅ Server started (PID: $SERVER_PID)"
 
