@@ -31,14 +31,15 @@
 ### **QA Decisions**
 - [x] Completed decision: Analyze previous learning PDCA for pending decisions
 - [x] Completed decision: Identify ONCE demo execution as next practical application task
-- [ ] **Decision 1: Demo Execution Strategy (From Previous PDCA)**
-  - a) Focus on browser client demo with visual showcase
-  - b) Prepare command-line demo with server status validation  
-  - c) Create comprehensive multi-environment demonstration
-- [ ] **Decision 2: Demo Documentation Approach**
-  - a) Create separate demo execution report with screenshots
-  - b) Document demo results directly in this PDCA
-  - c) Focus on technical validation and architecture compliance verification
+- [x] Completed decision: Adopt 5 standardized demo options as default testing routine
+- [ ] **Decision 1: Demo Execution Sequence**
+  - a) Execute all 5 demo options in sequence (1→2→3→4→5) for comprehensive validation
+  - b) Start with Demo 1 (Quick Test) and proceed based on results
+  - c) Focus on specific demo option based on validation needs
+- [ ] **Decision 2: Demo Results Documentation**
+  - a) Document each demo execution with results in this PDCA
+  - b) Create separate demo execution log with detailed technical output
+  - c) Focus on Web4 architecture compliance verification through demo validation
 
 ### **TRON Feedback (2025-08-29-UTC-1643)**
 ```quote
@@ -47,12 +48,46 @@ tell me what project we are in and what is your next task
 wite a new pdca about it.
 ```
 
+### **TRON Feedback (2025-08-29-UTC-1650)**
+```quote
+ONCE Demo Test Mode - Ready to Show!
+Available Keyboard Commands:
+Key	Action
+s	Start/Stop server
+1	Launch Browser client
+2	Launch Node.js client
+3	Launch Worker client
+d	Discover peers
+e	Exchange scenarios
+m	Show metrics
+c	Clear screen
+k	Kill all processes
+h	Show help
+q	Quit gracefully
+Demo Options:
+🚀 Quick Test - s3q
+Start server → Wait 3s → Quit
+👤 Single Client - s21q
+Server → Wait 2s → Browser client → Quit
+🔍 Peer Discovery - s312d3q
+Server → Clients 1&2 → Discover → Wait → Quit
+✨ Full Demo - s312d2e2m3q
+Server → Clients → Discover → Exchange → Metrics → Quit
+💪 Stress Test - s1112223d1e1m2k2q
+Server → 6 clients → Full test → Kill all → Quit
+📝 Custom - Create your own sequence!
+
+TRON sais:
+i love the options. make them your default testing routine from 1 to 5.
+pdca and start with 1
+```
+
 ### **My Answer**
 **Project:** Web4Articles - A DAPP for collective intelligence in article writing with Web4 architecture and ONCE kernel P2P communication
 
-**Next Task:** Execute ONCE component demo locally based on comprehensive learning completion and pending QA decisions from previous PDCA. The next task is practical demonstration of learned Web4 patterns through ONCE multi-environment deployment.
+**Next Task:** Execute ONCE component demo locally with 5 standardized demo options as default testing routine, starting with Demo 1 (Quick Test - s3q).
 
-**Learning Applied:** PDCA reporting requires systematic task identification from previous work and creating structured documentation for practical application phases
+**Learning Applied:** Systematic demo testing with pre-configured sequences ensures comprehensive ONCE architecture validation and creates reproducible testing routine
 
 ---
 
@@ -79,35 +114,42 @@ From previous session preparation:
 - ✅ Demo examples available: browser-client, multi-env-demo, test-client, demo-showcase
 - ✅ Server components prepared at components/ONCE/0.1.0.0/
 
-**2. Multi-Environment Demo Execution Strategy**
+**2. Standardized Demo Testing Routine (5 Options)**
 
-Based on learned Web4 patterns, execute comprehensive demonstration:
+Based on TRON feedback, establish default testing routine with 5 standardized demo options:
 
-### **Phase 1: Server Initialization**
+### **Demo Option 1: 🚀 Quick Test (s3q)**
+- **Sequence:** Start server → Wait 3s → Quit
+- **Purpose:** Basic server initialization and shutdown validation
+- **Web4 Validation:** ONCE kernel startup and clean termination
+
+### **Demo Option 2: 👤 Single Client (s21q)**  
+- **Sequence:** Server → Wait 2s → Browser client → Quit
+- **Purpose:** Single-client connection validation
+- **Web4 Validation:** Browser environment deployment and WebSocket communication
+
+### **Demo Option 3: 🔍 Peer Discovery (s312d3q)**
+- **Sequence:** Server → Clients 1&2 → Discover → Wait → Quit  
+- **Purpose:** P2P peer discovery mechanism validation
+- **Web4 Validation:** Multi-client environment and peer discovery protocols
+
+### **Demo Option 4: ✨ Full Demo (s312d2e2m3q)**
+- **Sequence:** Server → Clients → Discover → Exchange → Metrics → Quit
+- **Purpose:** Complete ONCE ecosystem demonstration
+- **Web4 Validation:** Scenario exchange, metrics collection, full lifecycle
+
+### **Demo Option 5: 💪 Stress Test (s1112223d1e1m2k2q)**
+- **Sequence:** Server → 6 clients → Full test → Kill all → Quit
+- **Purpose:** Performance and stability under load
+- **Web4 Validation:** Multi-client scalability and resource management
+
+### **Execution Strategy:**
 ```bash
-# Navigate to ONCE component directory
+# Navigate to demo directory
 cd components/ONCE/0.1.0.0/examples/multi-env-demo
 
-# Launch ONCE server with P2P capabilities  
-./launch-demo.sh
-```
-
-### **Phase 2: Browser Client Connection**
-- Open browser client at: `components/ONCE/0.1.0.0/examples/browser-client/index.html`
-- Test P2P discovery and scenario exchange
-- Validate WebSocket communication
-
-### **Phase 3: Node.js Client Testing**
-```bash
-# Test Node.js client connection
-cd components/ONCE/0.1.0.0/examples/
-node test-client.js
-```
-
-### **Phase 4: Visual Showcase Execution**
-```bash
-# Run comprehensive showcase demo
-node demo-showcase.js
+# Execute demo with interactive keyboard commands
+# Start with Demo 1: s3q (Quick Test)
 ```
 
 **3. Web4 Architecture Validation Points**
