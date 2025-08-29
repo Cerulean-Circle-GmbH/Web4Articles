@@ -10,7 +10,7 @@
 ## **📋 Summary**
 
 ### **Artifact Links**
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/feature/recovery-agent/scrum.pmo/sprints/sprint-19/pdca/role/po/2025-08-18-UTC-1300-implicit-po-role-switch-mastery.md) | [scrum.pmo/sprints/sprint-19/pdca/role/po/2025-08-18-UTC-1300-implicit-po-role-switch-mastery.md](scrum.pmo/sprints/sprint-19/pdca/role/po/2025-08-18-UTC-1300-implicit-po-role-switch-mastery.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/feature/recovery-agent/scrum.pmo/sprints/sprint-19/pdca/role/po/2025-08-18-UTC-1300-implicit-po-role-switch-mastery.md) | [§/scrum.pmo/sprints/sprint-19/pdca/role/po/2025-08-18-UTC-1300-implicit-po-role-switch-mastery.md](2025-08-18-UTC-1300-implicit-po-role-switch-mastery.md)
 
 ### **QA Decisions**
 - [x] **IMPLICIT ROLE SWITCH RECOGNIZED**: Developer → PO during Sprint 19 planning

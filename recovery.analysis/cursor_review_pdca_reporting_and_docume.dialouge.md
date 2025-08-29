@@ -227,7 +227,7 @@ Before creating your PDCA, review the mandatory format requirements:
 - [ ] **Template Enhancement:** Upgrade recovery PDCA template to include all 6 mandatory sections
 - [ ] **Format Validation:** Add compliance checklist to recovery process
 
-[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/project.journal/2025-08-21-1613-sprint21-tootsie-architecture/pdca/role/scrummaster/2025-08-22-UTC-0915-pdca-writing-mastery-analysis.md) | [scrum.pmo/project.journal/2025-08-21-1613-sprint21-tootsie-architecture/pdca/role/scrummaster/2025-08-22-UTC-0915-pdca-writing-mastery-analysis.md](scrum.pmo/project.journal/2025-08-21-1613-sprint21-tootsie-architecture/pdca/role/scrummaster/2025-08-22-UTC-0915-pdca-writing-mastery-analysis.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/project.journal/2025-08-21-1613-sprint21-tootsie-architecture/pdca/role/scrummaster/2025-08-22-UTC-0915-pdca-writing-mastery-analysis.md) | [§/scrum.pmo/project.journal/2025-08-21-1613-sprint21-tootsie-architecture/pdca/role/scrummaster/2025-08-22-UTC-0915-pdca-writing-mastery-analysis.md](../scrum.pmo/project.journal/2025-08-21-1613-sprint21-tootsie-architecture/pdca/role/scrummaster/2025-08-22-UTC-0915-pdca-writing-mastery-analysis.md)
 
 ---
 

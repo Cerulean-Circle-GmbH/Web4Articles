@@ -14,7 +14,7 @@
 ### **🔗 Artifact Links**
 
 {{#each ARTIFACTS}}
-- **{{TITLE}}**: [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+[GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
 {{/each}}
 
 ### **⚖️ QA Decisions Required**

@@ -2581,7 +2581,7 @@ I've successfully transformed yesterday's testing chaos into structured Web4 met
 
 **Developer Understanding:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/project.journal/2025-08-20-1552/pdca/2025-08-20-1552-web4-methodology-breakthrough-understanding.md) | [pdca/2025-08-20-1552-web4-methodology-breakthrough-understanding.md](scrum.pmo/project.journal/2025-08-20-1552/pdca/2025-08-20-1552-web4-methodology-breakthrough-understanding.md)
 
-**PO Sprint 20 Planning:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/sprints/sprint-20/planning.md) | [scrum.pmo/sprints/sprint-20/planning.md](scrum.pmo/sprints/sprint-20/planning.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/sprints/sprint-20/planning.md) | [§/scrum.pmo/sprints/sprint-20/planning.md](planning.md)
 
 ## **💡 Key Breakthrough Connections**
 
@@ -3775,7 +3775,7 @@ Web4 methodology now has concrete implementation path through object instance ar
 ### **🔗 Created PDCAs**
 **Object Recognition:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/project.journal/2025-08-20-1552/pdca/2025-08-20-1552-object-instance-recognition-breakthrough.md) | [pdca/2025-08-20-1552-object-instance-recognition-breakthrough.md](scrum.pmo/project.journal/2025-08-20-1552/pdca/2025-08-20-1552-object-instance-recognition-breakthrough.md)
 
-**Updated Sprint 20:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/sprints/sprint-20/planning.md) | [scrum.pmo/sprints/sprint-20/planning.md](scrum.pmo/sprints/sprint-20/planning.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/sprints/sprint-20/planning.md) | [§/scrum.pmo/sprints/sprint-20/planning.md](planning.md)
 
 ### **⚡ Key Decisions**
 - ✅ **Behavior Updated**: Chat responses limited to dual links + decisions only
@@ -4581,7 +4581,7 @@ With PDCAs as objects, the entire Web4 system becomes a network of interconnecte
 ### **🔗 Created Documentation**
 **PDCA Object Recognition:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/project.journal/2025-08-20-1552/pdca/2025-08-20-1552-pdca-object-architecture-recognition.md) | [pdca/2025-08-20-1552-pdca-object-architecture-recognition.md](scrum.pmo/project.journal/2025-08-20-1552/pdca/2025-08-20-1552-pdca-object-architecture-recognition.md)
 
-**Updated Sprint 20:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/sprints/sprint-20/planning.md) | [scrum.pmo/sprints/sprint-20/planning.md](scrum.pmo/sprints/sprint-20/planning.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/sprints/sprint-20/planning.md) | [§/scrum.pmo/sprints/sprint-20/planning.md](planning.md)
 
 ### **⚡ Key Decision**
 - ✅ **Complete Web4 Architecture**: PDCAs as MDView of object instances with Plan/Do/Check/Act scenario trees
@@ -5435,7 +5435,7 @@ await pdca.save(); // Uses GitScrumProject internally
 ### **🔗 PDCA Created**
 **Component Integration:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/project.journal/2025-08-20-1552/pdca/2025-08-20-1552-pdca-git-component-integration.md) | [pdca/2025-08-20-1552-pdca-git-component-integration.md](scrum.pmo/project.journal/2025-08-20-1552/pdca/2025-08-20-1552-pdca-git-component-integration.md)
 
-**Updated Sprint 20:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/sprints/sprint-20/planning.md) | [scrum.pmo/sprints/sprint-20/planning.md](scrum.pmo/sprints/sprint-20/planning.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/sprints/sprint-20/planning.md) | [§/scrum.pmo/sprints/sprint-20/planning.md](planning.md)
 
 ### **⚡ Key Decision**
 ✅ **Web4 Component Architecture**: PDCA objects use GitScrumProject component dependency injection instead of manual git operations - proper component composition with structured interfaces.
