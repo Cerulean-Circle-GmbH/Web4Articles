@@ -457,6 +457,16 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
 - **Not documenting git operations** - Always show branch switches [[memory:0931]]
 - **Missing cross-agent improvements** - Check other branches regularly [[memory:0935]]
 
+### **🚨 CRITICAL: NO INTERACTIVE COMMANDS**
+- **NEVER use commands that require user input** (e.g., `git cherry-pick` without `--no-commit`)
+- **ALWAYS use non-interactive flags**: `--yes`, `--force`, `-y`, `--no-input`
+- **Examples of FORBIDDEN commands:**
+  - `git cherry-pick` (use `git cherry-pick --no-commit` or copy files directly)
+  - `npm install` (use `npm install --yes`)
+  - `apt-get install` (use `apt-get install -y`)
+- **Background agents CANNOT interact** - we run autonomously!
+- **If a command hangs**, it's likely waiting for input - CTRL+C and fix!
+
 ---
 
 ## **AMBIGUITIES & QA DECISIONS REQUIRED**
