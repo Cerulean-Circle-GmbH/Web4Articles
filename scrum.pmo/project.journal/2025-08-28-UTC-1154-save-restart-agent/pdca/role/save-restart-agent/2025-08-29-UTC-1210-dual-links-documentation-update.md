@@ -14,18 +14,18 @@
 **🚨 Issues:** Agents confusing relative paths in different contexts  
 
 **📎 Previous Commit:** b21d6225 - PDCA: Dual Links Final Correction - Always from project root in chat  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1205-dual-links-final-correction.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1205-dual-links-final-correction.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1205-dual-links-final-correction.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1205-dual-links-final-correction.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1205-dual-links-final-correction.md](2025-08-29-UTC-1205-dual-links-final-correction.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1210-dual-links-documentation-update.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1210-dual-links-documentation-update.md](scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1210-dual-links-documentation-update.md)
-- **Updated Dual Link Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md](scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md)
-- **Updated Reporting Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/PDCA/PDCA.reporting.requirement.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.reporting.requirement.md](scrum.pmo/roles/_shared/PDCA/PDCA.reporting.requirement.md)
-- **Updated howto.PDCA.md:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)
-- **Updated Recovery Pattern:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/SaveRestartAgent/recovery-pattern.md) | [§/scrum.pmo/roles/SaveRestartAgent/recovery-pattern.md](scrum.pmo/roles/SaveRestartAgent/recovery-pattern.md)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1210-dual-links-documentation-update.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1210-dual-links-documentation-update.md](2025-08-29-UTC-1210-dual-links-documentation-update.md)
+- **Updated Dual Link Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md](../../../../roles/_shared/PDCA/PDCA.dual.link.format.requirement.md)
+- **Updated Reporting Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/PDCA/PDCA.reporting.requirement.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.reporting.requirement.md](../../../../roles/_shared/PDCA/PDCA.reporting.requirement.md)
+- **Updated howto.PDCA.md:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../../../roles/_shared/PDCA/howto.PDCA.md)
+- **Updated Recovery Pattern:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/SaveRestartAgent/recovery-pattern.md) | [§/scrum.pmo/roles/SaveRestartAgent/recovery-pattern.md](../../../../roles/SaveRestartAgent/recovery-pattern.md)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Documentation updates completed as directed
