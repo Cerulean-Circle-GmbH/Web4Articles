@@ -21,10 +21,10 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1150-identity-flow-implementation.md) | scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1150-identity-flow-implementation.md
-- **Identity Flow Script:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scripts/agent-identity-flow.sh) | scripts/agent-identity-flow.sh
-- **Pending Template:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/agents/registry/TEMPLATE-pending.md) | scrum.pmo/agents/registry/TEMPLATE-pending.md
-- **Updated Agent Report:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/agent.report.md) | scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/agent.report.md
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1150-identity-flow-implementation.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1150-identity-flow-implementation.md](2025-08-29-UTC-1150-identity-flow-implementation.md)
+- **Identity Flow Script:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scripts/agent-identity-flow.sh) | [§/scripts/agent-identity-flow.sh](../../../../../scripts/agent-identity-flow.sh)
+- **Pending Template:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/agents/registry/TEMPLATE-pending.md) | [§/scrum.pmo/agents/registry/TEMPLATE-pending.md](../../../agents/registry/TEMPLATE-pending.md)
+- **Updated Agent Report:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/agent.report.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/agent.report.md](../../agent.report.md)
 
 ### **QA Decisions**
 ✅ **All decisions resolved:**

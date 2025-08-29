@@ -21,10 +21,10 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1145-identity-flow-refinement.md) | scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1145-identity-flow-refinement.md
-- **Refined Identity Script:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scripts/agent-identity-flow.sh) | scripts/agent-identity-flow.sh
-- **Self-Registration Template:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/agents/registry/TEMPLATE-pending-identification.md) | scrum.pmo/agents/registry/TEMPLATE-pending-identification.md
-- **Updated Agent Report:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/agent.report.md) | scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/agent.report.md
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1145-identity-flow-refinement.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1145-identity-flow-refinement.md](2025-08-29-UTC-1145-identity-flow-refinement.md)
+- **Refined Identity Script:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scripts/agent-identity-flow.sh) | [§/scripts/agent-identity-flow.sh](../../../../../scripts/agent-identity-flow.sh)
+- **Self-Registration Template:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/agents/registry/TEMPLATE-pending-identification.md) | [§/scrum.pmo/agents/registry/TEMPLATE-pending-identification.md](../../../agents/registry/TEMPLATE-pending-identification.md)
+- **Updated Agent Report:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/agent.report.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/agent.report.md](../../agent.report.md)
 
 ### **QA Decisions**
 - [ ] **Decision 1: Registry Update Method for Unknown Agents**

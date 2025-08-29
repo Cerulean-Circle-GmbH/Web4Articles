@@ -21,10 +21,10 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1130-recovery-process-documentation.md) | scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1130-recovery-process-documentation.md
-- **Updated README:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/README.md) | README.md
-- **Registry Check Script:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scripts/check-agent-identity.sh) | scripts/check-agent-identity.sh
-- **Startup Improvement Guide:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/startup-identity-first.md) | scrum.pmo/roles/_shared/startup-identity-first.md
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1130-recovery-process-documentation.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1130-recovery-process-documentation.md](2025-08-29-UTC-1130-recovery-process-documentation.md)
+- **Updated README:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/README.md) | [§/README.md](../../../../../README.md)
+- **Registry Check Script:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scripts/check-agent-identity.sh) | [§/scripts/check-agent-identity.sh](../../../../../scripts/check-agent-identity.sh)
+- **Startup Improvement Guide:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/startup-identity-first.md) | [§/scrum.pmo/roles/_shared/startup-identity-first.md](../../../../roles/_shared/startup-identity-first.md)
 
 ### **QA Decisions**
 - [ ] **Decision 1: Startup Process Enhancement**
