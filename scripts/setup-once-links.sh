@@ -52,11 +52,51 @@ fi
 CURRENT_DIR="$PWD"
 cd "$DEMO_PATH"
 
-echo "🎭 Starting ONCE Interactive Demo v$ONCE_VERSION..."
-echo "📁 Demo path: $DEMO_PATH"
-echo "🌐 Browser auto-opening enabled"
+# Handle command line arguments
+if [ $# -eq 0 ]; then
+    echo "🎭 Starting ONCE Interactive Demo v$ONCE_VERSION..."
+    echo "📁 Demo path: $DEMO_PATH"
+    echo "🌐 Browser auto-opening enabled"
+    node interactive-demo.js
+elif [ "$1" = "--headless" ]; then
+    echo "🎭 Starting ONCE Demo v$ONCE_VERSION (headless mode)..."
+    echo "📁 Demo path: $DEMO_PATH"
+    echo "🖥️  Server-only mode (no browser auto-opening)"
+    node interactive-demo.js --headless
+elif [ "$1" = "--help" ] || [ "$1" = "help" ]; then
+    echo ""
+    echo "🎭 ONCE Interactive Demo v$ONCE_VERSION"
+    echo "Web4 Universal P2P Communication Engine"
+    echo ""
+    echo "Usage:"
+    echo "  once0.1.0.0                  # Start interactive demo with browser"
+    echo "  once0.1.0.0 --headless       # Start demo without browser"
+    echo "  once0.1.0.0 --help           # Show this help"
+    echo ""
+    echo "Demo Controls (interactive mode):"
+    echo "  [s] Start/Stop ONCE server"
+    echo "  [1] Launch Browser Client"
+    echo "  [2] Launch Node.js Client" 
+    echo "  [3] Launch Web Worker Client"
+    echo "  [d] Discover peers"
+    echo "  [e] Exchange scenarios"
+    echo "  [q] Quit demo"
+    echo ""
+    echo "Features:"
+    echo "  • Cross-platform browser auto-opening"
+    echo "  • Web4 Message component integration"
+    echo "  • P2P scenario acknowledgments"
+    echo "  • Interactive demo controls"
+    echo ""
+    cd "$CURRENT_DIR"
+    exit 0
+else
+    echo "🎭 Starting ONCE Interactive Demo v$ONCE_VERSION..."
+    echo "📁 Demo path: $DEMO_PATH"
+    echo "🌐 Browser auto-opening enabled"
+    node interactive-demo.js "$@"
+fi
 
-node interactive-demo.js "$@"
 cd "$CURRENT_DIR"
 EOF
 
@@ -100,8 +140,66 @@ if [ ! -f "$VERSIONED_SCRIPT" ]; then
     exit 1
 fi
 
-echo "🚀 Launching ONCE Demo (latest: v$LATEST_VERSION)..."
-exec "$VERSIONED_SCRIPT" "$@"
+# Show usage if no parameters provided
+if [ $# -eq 0 ]; then
+    echo ""
+    echo "🎭 ONCE Interactive Demo - Web4 Universal P2P Communication Engine"
+    echo ""
+    echo "Usage:"
+    echo "  once demo                    # Start interactive demo with browser auto-opening"
+    echo "  once demo --headless         # Start demo without browser (server only)"
+    echo "  once demo --help             # Show demo-specific help"
+    echo "  once help                    # Show this help message"
+    echo "  once version                 # Show ONCE version information"
+    echo ""
+    echo "Demo Features:"
+    echo "  • Cross-platform browser auto-opening"
+    echo "  • Web4 Message component integration"
+    echo "  • P2P scenario acknowledgments"
+    echo "  • Interactive demo controls"
+    echo "  • TTY-aware keyboard input"
+    echo ""
+    echo "Examples:"
+    echo "  once demo                    # Launch full interactive demo"
+    echo "  once demo --headless         # Server-only mode for testing"
+    echo ""
+    echo "Location: Latest version (v$LATEST_VERSION)"
+    echo "Path: scripts/versions/once$LATEST_VERSION"
+    exit 0
+fi
+
+# Handle specific commands
+case "$1" in
+    "help"|"--help"|"-h")
+        echo ""
+        echo "🎭 ONCE Interactive Demo - Web4 Universal P2P Communication Engine"
+        echo ""
+        echo "Usage:"
+        echo "  once demo                    # Start interactive demo"
+        echo "  once demo --headless         # Start demo without browser"
+        echo "  once demo --help             # Show demo help"
+        echo "  once help                    # Show this help"
+        echo "  once version                 # Show version info"
+        echo ""
+        exit 0
+        ;;
+    "version"|"--version"|"-v")
+        echo "ONCE Interactive Demo v$LATEST_VERSION"
+        echo "Web4 Universal P2P Communication Engine"
+        echo "Path: $VERSIONED_SCRIPT"
+        exit 0
+        ;;
+    "demo")
+        echo "🚀 Launching ONCE Demo (latest: v$LATEST_VERSION)..."
+        shift  # Remove 'demo' from arguments
+        exec "$VERSIONED_SCRIPT" "$@"
+        ;;
+    *)
+        echo "❌ Unknown command: $1"
+        echo "Run 'once help' for usage information"
+        exit 1
+        ;;
+esac
 EOF
 
 # Make latest script executable
