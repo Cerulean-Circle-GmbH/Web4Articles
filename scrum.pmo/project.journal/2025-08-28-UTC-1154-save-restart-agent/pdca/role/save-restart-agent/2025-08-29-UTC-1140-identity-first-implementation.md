@@ -21,10 +21,10 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1140-identity-first-implementation.md) | scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1140-identity-first-implementation.md
-- **Identity Detection Script:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scripts/startup-identity-check.sh) | scripts/startup-identity-check.sh
-- **Updated Main README:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/README.md) | README.md
-- **Merge Strategy Guide:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/merge-to-save-start-first.md) | scrum.pmo/roles/_shared/merge-to-save-start-first.md
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1140-identity-first-implementation.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1140-identity-first-implementation.md](2025-08-29-UTC-1140-identity-first-implementation.md)
+- **Identity Detection Script:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scripts/startup-identity-check.sh) | [§/scripts/startup-identity-check.sh](../../../../../scripts/startup-identity-check.sh)
+- **Updated Main README:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/README.md) | [§/README.md](../../../../../README.md)
+- **Merge Strategy Guide:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/merge-to-save-start-first.md) | [§/scrum.pmo/roles/_shared/merge-to-save-start-first.md](../../../../roles/_shared/merge-to-save-start-first.md)
 
 ### **QA Decisions**
 - [ ] **Decision 1: Identity Detection Scope**
