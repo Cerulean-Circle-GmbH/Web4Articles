@@ -24,14 +24,15 @@
 | [cursor/start-background-process-3884](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-3884) | test1 save start success | bc-4a53801e-0df5-46c2-b670-d21fa5d8597c | Background Agent | Unknown | No artifacts | 💀 Dead<br>🔢 First test attempt<br>❌ No PDCA/chat found<br>📚 Learning: Failed tests inform | N/A | 🔴 Dead<br>⏱️ Runtime: Unknown<br>💾 Memory: N/A |
 | [cursor/start-minimalist-process-5289](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-minimalist-process-5289) | save/start Agent | bc-73b88848-46e8-4ec4-9f13-17b3fd31d4b2 | Save/Restart Agent | Unknown | Unknown | ⚠️ Near Expiry<br>👴 My predecessor<br>📅 5 days old<br>🚨 Branch startup issues | save/start branches | 🟡 Expiring<br>⏱️ Runtime: 5 days<br>💾 Memory: Unknown |
 | [cursor/start-background-process-dcf6](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-dcf6) | agent renaming → Agent Manager | bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89 | Agent Manager | Unknown | [Previous work](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-dcf6/scrum.pmo/project.journal/2025-08-23-1730-agent-management) | 💀 Expired<br>🔄 Ready for recovery<br>📊 Will manage agents<br>✅ Branch prepared | release/dev<br>agent tracking | 🔴 Expired<br>⏱️ Runtime: Expired<br>💾 Memory: N/A |
+| [cursor/recover-from-readme-file-76e5](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recover-from-readme-file-76e5) | dev/sprint5 1st pdca → TSRanger Developer | bc-85a7dcaf-502f-494a-98d5-4ab612cecc39 | TSRanger Developer | v2.2 | [TSRanger work](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recover-from-readme-file-76e5/src/ts/layer4) | 💀 Expired<br>🔄 Ready for recovery<br>🛠️ Created TSRanger v2.2<br>✅ Branch prepared | release/dev<br>tool development | 🔴 Expired<br>⏱️ Runtime: Expired<br>💾 Memory: N/A |
 
 ---
 
 ## **Notable Findings**
 
-- **Agent Count:** Now tracking 12 agents across different roles and eras
-- **RequestID Tracking:** 8/12 agents have known RequestIDs (66.7%): SaveRestartAgent (me!), save/start Agent, agent renaming, test1, test2 main, test3 startet, test8 save/start.v2, ocams razor
-- **Dead Agents:** test1 (no artifacts), agent renaming (expired but recoverable)
+- **Agent Count:** Now tracking 13 agents across different roles and eras
+- **RequestID Tracking:** 9/13 agents have known RequestIDs (69.2%): SaveRestartAgent (me!), save/start Agent, agent renaming, TSRanger Developer, test1, test2 main, test3 startet, test8 save/start.v2, ocams razor
+- **Dead/Expired Agents:** test1 (dead), agent renaming (expired/recoverable), TSRanger Developer (expired/recoverable)
 - **Agent Expiry:** save/start Agent near expiry (5 days), agent renaming expired but prepared for recovery
 - **Self-Discovery:** I now know my own RequestID: bc-4c4928dd-cf76-4a10-bb4c-bb80a98ecd5a
 - **Role Specialization:** Dedicated agents emerging (SaveRestartAgent, release/test agent, ocams razor as tool builder)
@@ -45,6 +46,7 @@
 - **Navigation Enhancement:** All branches now clickable GitHub links
 - **Process Evolution:** From tool building (ocams razor) to process standardization (current agents)
 - **Recovery Process:** Expired agents can be prepared for rebirth through branch updates
+- **Tool Development:** ocams razor (foundation tools) and TSRanger Developer (TSRanger v2.2) show tool evolution
 
 ---
 
@@ -159,6 +161,7 @@ This allows agents to:
 11. **test1 save start success**: Dead agent documented - shows testing evolution
 12. **save/start Agent**: Monitor closely - near expiry at 5 days
 13. **agent renaming → Agent Manager**: Ready for recovery - branch prepared with latest standards
+14. **TSRanger Developer**: Ready for recovery - will continue TSRanger v2.3 development
 
 ---
 
