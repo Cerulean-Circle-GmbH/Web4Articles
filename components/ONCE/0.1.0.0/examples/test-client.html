@@ -24,6 +24,15 @@
 
     <script>
         let ws = null;
+        // Try to detect the server IP from URL parameters or use default
+        const urlParams = new URLSearchParams(window.location.search);
+        const HOST = urlParams.get('host') || window.location.hostname || 'localhost';
+        const PORT = urlParams.get('port') || '8080';
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            log(`Server configured as: ${HOST}:${PORT}`, 'info');
+            log('Tip: Use ?host=YOUR_IP&port=YOUR_PORT in URL to change', 'info');
+        });
         
         function log(message, type = 'info') {
             const results = document.getElementById('results');
@@ -35,7 +44,7 @@
 
         async function testHealth() {
             try {
-                const response = await fetch('http://localhost:8080/health');
+                const response = await fetch(`http://${HOST}:${PORT}/health`);
                 const data = await response.json();
                 log('Health check successful:', 'success');
                 log(JSON.stringify(data, null, 2), 'info');
@@ -51,7 +60,7 @@
                     return;
                 }
 
-                ws = new WebSocket('ws://localhost:8080');
+                ws = new WebSocket(`ws://${HOST}:${PORT}`);
                 
                 ws.onopen = () => {
                     log('WebSocket connected!', 'success');

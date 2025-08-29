@@ -2,9 +2,14 @@ import WebSocket from 'ws';
 
 console.log('🔗 ONCE Test Client - Testing server connection...\n');
 
+const HOST = process.env.HOST || 'localhost';
+const PORT = process.env.PORT || 8080;
+
+console.log(`🌐 Using server: ${HOST}:${PORT}`);
+
 // Test health endpoint first
 try {
-    const healthResponse = await fetch('http://localhost:8080/health');
+    const healthResponse = await fetch(`http://${HOST}:${PORT}/health`);
     const health = await healthResponse.json();
     console.log('✅ Health check passed:', health);
 } catch (error) {
@@ -13,7 +18,7 @@ try {
 }
 
 // Connect via WebSocket
-const ws = new WebSocket('ws://localhost:8080');
+const ws = new WebSocket(`ws://${HOST}:${PORT}`);
 
 ws.on('open', () => {
     console.log('\n✅ WebSocket connected!');

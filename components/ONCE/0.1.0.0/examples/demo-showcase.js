@@ -38,12 +38,16 @@ async function sleep(ms) {
 
 // Main demo
 async function runShowcase() {
+    const HOST = process.env.HOST || 'localhost';
+    const PORT = process.env.PORT || 8080;
+    
     log('🎭', 'ONCE Multi-Environment Demo Showcase', COLORS.bright);
     log('📅', `Date: ${new Date().toLocaleString()}`, COLORS.cyan);
+    log('🌐', `Server: ${HOST}:${PORT}`, COLORS.blue);
     
     // Check server health
     try {
-        const response = await fetch('http://localhost:8080/health');
+        const response = await fetch(`http://${HOST}:${PORT}/health`);
         const health = await response.json();
         
         box('🏥 Server Health Check', [
@@ -64,7 +68,7 @@ async function runShowcase() {
     await sleep(1000);
 
     // Client 1: Browser simulation
-    const client1 = new WebSocket('ws://localhost:8080');
+    const client1 = new WebSocket(`ws://${HOST}:${PORT}`);
     await new Promise(resolve => {
         client1.on('open', () => {
             log('🌐', 'Browser Client connected (Client 1)', COLORS.green);
@@ -73,7 +77,7 @@ async function runShowcase() {
     });
 
     // Client 2: Node.js app
-    const client2 = new WebSocket('ws://localhost:8080');
+    const client2 = new WebSocket(`ws://${HOST}:${PORT}`);
     await new Promise(resolve => {
         client2.on('open', () => {
             log('🖥️', 'Node.js Application connected (Client 2)', COLORS.green);
@@ -82,7 +86,7 @@ async function runShowcase() {
     });
 
     // Client 3: Web Worker simulation
-    const client3 = new WebSocket('ws://localhost:8080');
+    const client3 = new WebSocket(`ws://${HOST}:${PORT}`);
     await new Promise(resolve => {
         client3.on('open', () => {
             log('⚡', 'Web Worker connected (Client 3)', COLORS.green);

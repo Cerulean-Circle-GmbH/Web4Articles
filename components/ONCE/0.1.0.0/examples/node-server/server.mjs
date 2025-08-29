@@ -35,7 +35,21 @@ const ONCE = {
 
 // Server configuration
 const PORT = process.env.PORT || 8080;
-const HOST = process.env.HOST || 'localhost';
+const HOST = process.env.HOST || (await getHostIP()) || 'localhost';
+
+// Get host IP address
+async function getHostIP() {
+    try {
+        const { exec } = await import('child_process');
+        const { promisify } = await import('util');
+        const execAsync = promisify(exec);
+        const { stdout } = await execAsync("hostname -I | awk '{print $1}'");
+        return stdout.trim();
+    } catch (error) {
+        console.warn('Could not detect host IP, using localhost');
+        return 'localhost';
+    }
+}
 
 // In-memory storage
 const peers = new Map();
