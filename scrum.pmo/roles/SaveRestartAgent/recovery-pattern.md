@@ -1,5 +1,21 @@
 # Universal Agent Recovery Pattern
 
+## **🔗 Critical: Dual Links Format for Recovery Documentation**
+
+When documenting recovery or providing links in recovery contexts:
+
+**In Recovery PDCAs (file context):**
+```markdown
+[GitHub](URL) | [§/path/from/root](../../relative/path/to/target)
+```
+
+**In Chat Responses (no file context):**
+```markdown
+[GitHub](URL) | [§/path/from/root](path/from/root)
+```
+
+**Key Rule:** Chat has no relative context - always use full paths from project root!
+
 ## Discovery: Every Agent Can Be Recovered
 
 ### The Pattern

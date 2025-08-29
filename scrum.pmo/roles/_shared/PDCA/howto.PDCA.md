@@ -169,15 +169,29 @@
 ## **🔄 DUAL LINK SYSTEM REQUIREMENTS**
 
 ### **Format Standard (CRITICAL)**
+
+**In PDCA Files:**
 ```markdown
-[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/path/to/file) | [relative/path/to/file](relative/path/to/file)
+[GitHub](https://github.com/.../blob/branch/path/to/file) | [§/path/from/root](../../../relative/path)
+```
+
+**In Chat Responses:**
+```markdown
+[GitHub](https://github.com/.../blob/branch/path/to/file) | [§/path/from/root](path/from/root)
 ```
 
 ### **Link Requirements:**
-- **Local link text MUST display the actual relative path** 
+- **§ notation for display** when showing paths from project root
+- **In PDCAs:** Relative path FROM document TO target
+- **In Chat:** Full path from project root (NO relative paths)
 - **GitHub links MUST work** (require git push before providing) [[memory:6291031]]
 - **Both links on same line** separated by ` | `
 - **Always end chat responses with current artifact links** [[memory:6291031]]
+
+### **Critical Chat Rule:**
+- Chat has NO document context - you're not "in" any file
+- ALWAYS use project root paths in chat responses
+- The link path equals the display path (minus §)
 
 ### **Git Protocol (MANDATORY)**
 1. **Immediate commit and push** after every PDCA creation [[memory:6902297]]
