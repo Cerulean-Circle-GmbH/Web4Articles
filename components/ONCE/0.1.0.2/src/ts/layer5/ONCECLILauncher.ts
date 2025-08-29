@@ -94,6 +94,7 @@ export class ONCECLILauncher {
             // For test sequences, use 'once test <input>' instead
             console.log(`ℹ️  Demo mode is interactive only - ignoring parameter "${args[0]}"`);
             console.log(`💡 For test sequences, use: once test "${args[0]}"`);
+            console.log(`🎮 Launching interactive demo...`);
             await this.launchInteractiveDemo();
         }
     }
