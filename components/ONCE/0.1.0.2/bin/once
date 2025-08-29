@@ -1,75 +1,26 @@
 #!/usr/bin/env node
 
 /**
- * ONCE CLI - Web4 TypeScript Direct Execution
- * No shell scripts, no spawn calls - pure TypeScript execution
+ * ONCE CLI - Web4 Radical OOP Entry Point
+ * Layer 5: Everything is an object, no standalone functions
+ * Follows Web4 principles: class-based, loadable from Scenario
  */
 
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { ONCECLILauncher } from '../dist/ts/layer5/ONCECLILauncher.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
+// Web4 Radical OOP: Everything is an object
 const args = process.argv.slice(2);
 
-// Direct TypeScript execution - main function
-async function main() {
-    if (args.length === 0) {
-        // Show usage when no arguments
-        const { OnceCLI } = await import('../dist/ts/layer5/ONCECLI.js');
-        const cli = new OnceCLI();
-        await cli.handleCommand([]);
-        return;
+// Create launcher object from Scenario pattern
+const launcher = ONCECLILauncher.fromScenario({
+    state: {
+        args: args,
+        projectRoot: process.cwd()
     }
+});
 
-    const command = args[0];
-    
-    switch (command) {
-        case 'demo':
-            await handleDemo(args.slice(1));
-            break;
-        case 'test':
-            // test <input> is identical to demo <input>
-            await handleDemo(args.slice(1));
-            break;
-        case 'start':
-        case 'stop':
-        case 'help':
-        case 'version':
-        default:
-            // Route all other commands to ONCECLI
-            const { OnceCLI } = await import('../dist/ts/layer5/ONCECLI.js');
-            const cli = new OnceCLI();
-            await cli.handleCommand(args);
-            break;
-    }
-}
-
-async function handleDemo(args) {
-    if (args.length === 0) {
-        // once demo (no args) - interactive mode
-        const { main: demoMain } = await import('../examples/multi-env-demo/interactive-demo-web4.mjs');
-        await demoMain([]);
-    } else if (args[0] === 'headless') {
-        // once demo headless - same as once start headless
-        const { OnceCLI } = await import('../dist/ts/layer5/ONCECLI.js');
-        const cli = new OnceCLI();
-        await cli.handleCommand(['start', 'headless']);
-    } else if (args[0] === 'help') {
-        // once demo help
-        const { OnceCLI } = await import('../dist/ts/layer5/ONCECLI.js');
-        const cli = new OnceCLI();
-        await cli.handleCommand(['demo', 'help']);
-    } else {
-        // once demo <input> - test sequence mode
-        const { main: demoMain } = await import('../examples/multi-env-demo/interactive-demo-web4.mjs');
-        await demoMain(['test:' + args[0]]);
-    }
-}
-
-// Execute with error handling
-main().catch(error => {
-    console.error('❌ ONCE CLI Error:', error.message);
-    process.exit(1);
+// Initialize and execute - pure OOP approach
+launcher.initialize(args);
+launcher.execute().catch(error => {
+    launcher.handleError(error);
 });
