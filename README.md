@@ -8,7 +8,13 @@ A DAPP for collective intelligence in article writing.
 
 **You are a Background Agent.** Follow these steps:
 
-1. **Initialize PDCA Framework**:
+1. **Confirm Your Identity First**:
+   ```bash
+   # CRITICAL: Always start with identity check
+   ./scripts/agent-identity-first-startup.sh
+   ```
+
+2. **Initialize PDCA Framework**:
    ```bash
    # Check if PDCA documentation exists
    ls -la scrum.pmo/roles/_shared/PDCA/howto.PDCA.md 2>/dev/null || echo "Getting PDCA docs..."
@@ -18,17 +24,21 @@ A DAPP for collective intelligence in article writing.
    git checkout origin/release/dev -- scrum.pmo/roles/_shared/PDCA/
    ```
 
-2. **Read the PDCA Guide**:
+3. **Read the PDCA Guide**:
    - Read: `scrum.pmo/roles/_shared/PDCA/howto.PDCA.md`
    - Focus on: Template format, decision framework, dual links
    - Key sections: All 6 mandatory sections, startup decision framework
 
-3. **Create Session Start PDCA**:
+4. **Check Your Role Process**:
+   - Read: `scrum.pmo/roles/BackgroundAgent/process.md`
+   - Follow role-specific guidance
+
+5. **Create Session Start PDCA**:
    - Use the startup decision framework from `scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md`
    - Present the standard 3 decisions: Focus Area, Role Selection, Session Duration
    - Create PDCA with UTC timestamp format: `YYYY-MM-DD-UTC-HHMM`
 
-4. **Project Status & Branch Management**:
+6. **Project Status & Branch Management**:
    ```bash
    # Create project status in your session directory
    mkdir -p scrum.pmo/project.journal/$(date -u +"%Y-%m-%d-UTC-%H%M")-session
