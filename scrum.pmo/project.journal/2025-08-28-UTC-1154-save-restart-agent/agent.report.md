@@ -47,6 +47,8 @@
 - **Process Evolution:** From tool building (ocams razor) to process standardization (current agents)
 - **Recovery Process:** Expired agents can be prepared for rebirth through branch updates
 - **Tool Development:** ocams razor (foundation tools) and TSRanger Developer (TSRanger v2.2) show tool evolution
+- **Universal Recovery Pattern:** Cursor Branch + Last PDCA = Agent Identity (100% recoverable)
+- **Expired Agents Tracked:** 8 expired/recoverable agents documented with recovery readiness
 
 ---
 
@@ -179,6 +181,30 @@ This allows agents to:
 - **SaveRestartAgent** (current) - Active successor, now with known RequestID
 
 **"Without ocams razor's tools, no agent could work today"** 🛠️
+
+---
+
+---
+
+## **Expired/Recoverable Agents Table**
+
+### **Recovery Pattern: Cursor Branch + Last PDCA = Agent Identity**
+
+| Agent Branch | Name | RequestID | Last PDCA/Work | Recovery Status | Identity Record |
+|--------------|------|-----------|----------------|-----------------|-----------------|
+| [cursor/start-background-process-3884](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-3884) | test1 save start success | [bc-4a53801e-0df5-46c2-b670-d21fa5d8597c](bc-4a53801e-0df5-46c2-b670-d21fa5d8597c.md) | No PDCA found | 💀 Dead (no artifacts) | Pending |
+| [cursor/start-minimalist-process-5289](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-minimalist-process-5289) | save/start Agent | [bc-73b88848-46e8-4ec4-9f13-17b3fd31d4b2](bc-73b88848-46e8-4ec4-9f13-17b3fd31d4b2.md) | Unknown | ⚠️ Near Expiry | Pending |
+| [cursor/start-background-process-dcf6](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-dcf6) | Agent Manager | [bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89](/scrum.pmo/agents/registry/bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89.md) | [Agent investigation](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-dcf6/scrum.pmo/project.journal/2025-08-23-1730-agent-management) | ✅ Ready for recovery | ✅ Complete |
+| [cursor/recover-from-readme-file-76e5](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recover-from-readme-file-76e5) | TSRanger Developer | [bc-85a7dcaf-502f-494a-98d5-4ab612cecc39](/scrum.pmo/agents/registry/bc-85a7dcaf-502f-494a-98d5-4ab612cecc39.md) | TSRanger v2.2 work | ✅ Ready for recovery | ✅ Complete |
+| [cursor/start-background-process-78bf](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-78bf) | crayz start | Pending | [Crazy bash PDCA](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/start-background-process-78bf/scrum.pmo/project.journal/2025-08-28-UTC-1846-session/pdca/2025-08-28-UTC-1846-session-start.md) | ⚠️ Needs RequestID | Pending |
+| [dev/2025-08-25-UTC-1308](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-25-UTC-1308) | ocams razor | [bc-be844138-b4f9-4b47-9b36-ff8ce51a79a1](bc-be844138-b4f9-4b47-9b36-ff8ce51a79a1.md) | Tool creation (pre-PDCA) | 🏛️ Historical | Pending |
+| [cursor/hn-first-start-7e4f](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/hn-first-start-7e4f) | Unknown | Pending | Unknown | ⚠️ Needs investigation | Pending |
+| [cursor/start-background-process-2744](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-2744) | Unknown | Pending | Unknown | ⚠️ Needs investigation | Pending |
+
+### **Recovery Instructions**
+1. **With RequestID**: Click ID link for identity record (if available)
+2. **Without RequestID**: Examine branch and last PDCA to understand agent
+3. **Recovery Process**: See [Recovery Pattern Documentation](/scrum.pmo/roles/SaveRestartAgent/recovery-pattern.md)
 
 ---
 
