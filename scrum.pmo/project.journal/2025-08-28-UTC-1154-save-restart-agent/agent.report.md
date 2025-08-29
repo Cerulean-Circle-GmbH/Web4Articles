@@ -14,7 +14,16 @@
 |--------------|------|------|---------|--------------|------|-----------|
 | save/start.v1 | SaveRestartAgent | Save/Restart Agent | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/session-start.md) \| [§/session-start.md](session-start.md) | ✅ Active<br>⚠️ Unmerged: 35 PDCAs<br>📝 Modified: howto.PDCA.md, template.md<br>🔧 New: fix.dual.links script | release/dev (wild west)<br>save/start.v1 (clean home)<br>save/start.v2 (for others)<br>main (agent startup) | 🟢 Healthy<br>⏱️ Runtime: 80min<br>💾 Memory: Normal |
 | dev/2025-08-28-UTC-2140 | BackgroundAgent | Background Agent | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-session-start.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-session-start.md](../../2025-08-28-UTC-2140-session/PDCA-session-start.md) | ✅ Active<br>✅ Merged: Initial PDCA<br>🆕 Fresh session | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 10min<br>💾 Memory: Normal |
+| dev/2025-08-28-UTC-2140 | test 3 main | Background Agent | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-requirements-management.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-requirements-management.md](../../2025-08-28-UTC-2140-session/PDCA-requirements-management.md) | ✅ Active<br>📝 Requirements work<br>✅ Template v3.0+ | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 20min<br>💾 Memory: Normal |
 | cursor/start-background-process-78bf | ONCE Developer | Developer | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/start-background-process-78bf/scrum.pmo/project.journal/2025-08-28-UTC-1846-session/pdca/2025-08-28-UTC-1846-session-start.md) \| [§/../../2025-08-28-UTC-1846-session/pdca/2025-08-28-UTC-1846-session-start.md](../../2025-08-28-UTC-1846-session/pdca/2025-08-28-UTC-1846-session-start.md) | ⚠️ Inactive<br>📝 Test session<br>❌ Complex bash commands | release/dev<br>main (updates) | 🟡 Unknown<br>⏱️ Runtime: ?<br>💾 Memory: ? |
+
+---
+
+## **Notable Findings**
+
+- **Shared Branch Discovery:** dev/2025-08-28-UTC-2140 contains both BackgroundAgent and test 3 main, showing agent evolution within a single session
+- **Test Success Rate:** 2/3 test agents successfully used template v3.0+
+- **Web4 Naming Adoption:** All newer agents using meaningful names
 
 ---
 
@@ -84,8 +93,9 @@ This allows agents to:
 
 1. **SaveRestartAgent**: Continue maintaining clean processes on v1
 2. **BackgroundAgent**: Good startup using template v3.0
-3. **ONCE Developer**: Example of Web4 naming done right
-3. **All Agents**: Adopt naming convention in next session
+3. **test 3 main**: Perfect Web4 naming - simple and descriptive
+4. **ONCE Developer**: Another example of Web4 naming done right
+5. **All Agents**: Success! 3/4 agents used proper templates
 
 ---
 
