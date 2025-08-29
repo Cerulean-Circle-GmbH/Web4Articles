@@ -125,6 +125,54 @@ export class VersionManager {
   }
 
   /**
+   * Get latest version with actual content (not empty directory)
+   */
+  private async getLatestVersionWithContent(branch?: string): Promise<string | null> {
+    try {
+      const versions = await this.getExistingVersions();
+      // Check versions from latest to oldest
+      const sortedVersions = [...versions].reverse();
+      
+      // Find the first version that has actual content
+      for (const version of sortedVersions) {
+        if (branch) {
+          // Check if version has files in git on specified branch
+          try {
+            const gitFiles = execSync(
+              `git ls-tree -r --name-only ${branch} -- components/${this.componentName}/${version}`,
+              { cwd: this.projectRoot, encoding: 'utf8' }
+            ).trim();
+            
+            if (gitFiles.length > 0) {
+              this.debug(`Found version with content on branch ${branch}: ${version}`);
+              return version;
+            }
+          } catch (error) {
+            this.debug(`Version ${version} not found on branch ${branch}: ${error}`);
+          }
+        } else {
+          // Check if version has files in filesystem
+          const versionDir = path.join(this.componentsDir, version);
+          if (existsSync(versionDir)) {
+            const entries = await fs.readdir(versionDir);
+            // Consider directory has content if it has more than just "." and ".." entries
+            if (entries.length > 0) {
+              this.debug(`Found version with content: ${version}`);
+              return version;
+            }
+          }
+        }
+      }
+      
+      this.debug('No versions with content found');
+      return null;
+    } catch (error) {
+      this.debug(`Error getting latest version with content: ${error}`);
+      return null;
+    }
+  }
+
+  /**
    * Get the latest version (highest semantic version)
    */
   private async getLatestVersion(): Promise<string | null> {
@@ -318,9 +366,9 @@ export class VersionManager {
       // In test mode, simulate cherry-pick by copying from latest version
       this.debug(`Test mode: Simulating cherry-pick by copying from latest version`);
       
-      const latest = await this.getLatestVersion();
+      const latest = await this.getLatestVersionWithContent();
       if (!latest) {
-        throw new Error('No versions available to copy from in test mode');
+        throw new Error('No versions with content available to copy from in test mode');
       }
       
       const version = targetVersion || await this.getNextAvailableVersion();
@@ -363,10 +411,10 @@ export class VersionManager {
       console.log(`🔄 Checking out branch: ${branch}`);
       execSync(`git checkout ${branch}`, { cwd: this.projectRoot });
 
-      // Get the latest version from the branch
-      const branchLatest = await this.getLatestVersion();
+      // Get the latest version with actual content from the branch
+      const branchLatest = await this.getLatestVersionWithContent(branch);
       if (!branchLatest) {
-        throw new Error(`No versions found on branch ${branch}`);
+        throw new Error(`No versions with content found on branch ${branch}`);
       }
 
       const sourceDir = path.join(this.componentsDir, branchLatest);
