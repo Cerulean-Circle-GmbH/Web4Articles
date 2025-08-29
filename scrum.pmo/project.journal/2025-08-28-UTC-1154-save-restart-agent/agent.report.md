@@ -21,18 +21,20 @@
 | [dev/2025-08-28-UTC-1225](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-1225) | release/test agent | - | Tester (Main) | v3.0+ | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1225/scrum.pmo/project.journal/2025-08-28-UTC-1225-session/pdca/2025-08-28-UTC-1233-tester-role-testing-landscape-summary.pdca.md) \| [§/../../2025-08-28-UTC-1225-session/pdca/2025-08-28-UTC-1233-tester-role-testing-landscape-summary.pdca.md](../../2025-08-28-UTC-1225-session/pdca/2025-08-28-UTC-1233-tester-role-testing-landscape-summary.pdca.md) | ✅ Active<br>🧪 Main test agent<br>📊 Testing landscape | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 12min<br>💾 Memory: Normal |
 | [testing-analysis-clean](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/testing-analysis-clean) | test8 save/start.v2 | bc-2b501d80-caec-41b7-a0a1-d28972f5b538 | Background Agent | v3.1 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/testing-analysis-clean/scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/pdca) \| [§/../../2025-08-28-UTC-1113-background-start/pdca](../../2025-08-28-UTC-1113-background-start/pdca) | ✅ Active<br>🔢 8th test agent<br>🎯 Testing v2 startup | save/start.v2<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 15min<br>💾 Memory: Normal |
 | [dev/2025-08-25-UTC-1308](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-25-UTC-1308) | ocams razor | bc-be844138-b4f9-4b47-9b36-ff8ce51a79a1 | Tool Builder | None | No PDCA found | ⚠️ Historical<br>🛠️ Built all tools<br>🏛️ Foundation agent<br>❌ No PDCA (pre-standard) | release/dev<br>main (legacy) | 🟡 Legacy<br>⏱️ Runtime: Historical<br>💾 Memory: N/A |
+| [cursor/start-background-process-3884](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-3884) | test1 save start success | bc-4a53801e-0df5-46c2-b670-d21fa5d8597c | Background Agent | Unknown | No artifacts | 💀 Dead<br>🔢 First test attempt<br>❌ No PDCA/chat found<br>📚 Learning: Failed tests inform | N/A | 🔴 Dead<br>⏱️ Runtime: Unknown<br>💾 Memory: N/A |
 
 ---
 
 ## **Notable Findings**
 
-- **Agent Count:** Now tracking 9 agents across different roles and eras
-- **RequestID Tracking:** 4/9 agents have known RequestIDs (44.4%): test2 main, test3 startet, test8 save/start.v2, ocams razor
+- **Agent Count:** Now tracking 10 agents across different roles and eras
+- **RequestID Tracking:** 5/10 agents have known RequestIDs (50%): test1, test2 main, test3 startet, test8 save/start.v2, ocams razor
+- **Dead Agent:** test1 save start success - first test attempt, no artifacts remain
 - **Role Specialization:** Dedicated agents emerging (SaveRestartAgent, release/test agent, ocams razor as tool builder)
 - **Template Adoption:** 5/9 agents (55.6%) using v3.0+, three using older templates, one pre-PDCA
 - **Historical Discovery:** ocams razor built all tools but predates PDCA standards
 - **Shared Branch Pattern:** dev/2025-08-28-UTC-2140 hosts multiple agent phases
-- **Testing Sequence:** test2 main (2nd) → test3 startet (3rd) → test 3 main (4th) → test8 save/start.v2 (8th)
+- **Testing Sequence:** test1 (dead) → test2 main → test3 startet → test 3 main → test8 save/start.v2
 - **Web4 Naming Success:** All agents have meaningful names (ocams razor = simplicity principle)
 - **Main Agents Emerging:** SaveRestartAgent (process), release/test agent (testing), ocams razor (foundation)
 - **Branch Testing:** test8 specifically testing save/start.v2 startup
@@ -96,10 +98,28 @@ This allows agents to:
 ## **Lifecycle Indicators**
 
 - **🟢 Healthy**: Normal operation
-- **🟡 Warning**: High memory or long runtime
-- **🔴 Critical**: Needs intervention
+- **🟡 Warning/Unknown**: Status unclear or legacy
+- **🔴 Dead**: No artifacts, terminated
 - **⏱️ Runtime**: Session duration
 - **💾 Memory**: Resource usage estimate
+
+---
+
+## **RequestID Limitations**
+
+### **What Background Agents CANNOT Access:**
+- ❌ Their own RequestID
+- ❌ Other agents' RequestIDs
+- ❌ Cursor metadata files
+- ❌ System process information
+
+### **RequestID Source:**
+- ✅ Only from user provision
+- ✅ Visible in Cursor UI
+- ✅ Part of system metadata
+- ✅ Unique per agent instance
+
+**"Each agent knows its work, not its system identity"** 🔍
 
 ---
 
@@ -115,6 +135,7 @@ This allows agents to:
 8. **test8 save/start.v2**: Successfully testing v2 startup with latest v3.1 template
 9. **test3 startet**: Unique spelling preserved - recovery session documented
 10. **ocams razor**: Foundation agent honored - built all tools pre-PDCA era
+11. **test1 save start success**: Dead agent documented - shows testing evolution
 
 ---
 
