@@ -15,16 +15,56 @@ const args = process.argv.slice(2);
 
 // Direct TypeScript execution - main function
 async function main() {
-    if (args[0] === 'demo') {
-        // Import and execute InteractiveDemoController directly
-        const { main: demoMain } = await import('../examples/multi-env-demo/interactive-demo-web4.mjs');
-        // Pass remaining arguments
-        await demoMain(args.slice(1));
-        } else {
-        // Import and execute ONCECLI directly
+    if (args.length === 0) {
+        // Show usage when no arguments
         const { OnceCLI } = await import('../dist/ts/layer5/ONCECLI.js');
         const cli = new OnceCLI();
-        await cli.handleCommand(args);
+        await cli.handleCommand([]);
+        return;
+    }
+
+    const command = args[0];
+    
+    switch (command) {
+        case 'demo':
+            await handleDemo(args.slice(1));
+            break;
+        case 'test':
+            // test <input> is identical to demo <input>
+            await handleDemo(args.slice(1));
+            break;
+        case 'start':
+        case 'stop':
+        case 'help':
+        case 'version':
+        default:
+            // Route all other commands to ONCECLI
+            const { OnceCLI } = await import('../dist/ts/layer5/ONCECLI.js');
+            const cli = new OnceCLI();
+            await cli.handleCommand(args);
+            break;
+    }
+}
+
+async function handleDemo(args) {
+    if (args.length === 0) {
+        // once demo (no args) - interactive mode
+        const { main: demoMain } = await import('../examples/multi-env-demo/interactive-demo-web4.mjs');
+        await demoMain([]);
+    } else if (args[0] === 'headless') {
+        // once demo headless - same as once start headless
+        const { OnceCLI } = await import('../dist/ts/layer5/ONCECLI.js');
+        const cli = new OnceCLI();
+        await cli.handleCommand(['start', 'headless']);
+    } else if (args[0] === 'help') {
+        // once demo help
+        const { OnceCLI } = await import('../dist/ts/layer5/ONCECLI.js');
+        const cli = new OnceCLI();
+        await cli.handleCommand(['demo', 'help']);
+    } else {
+        // once demo <input> - test sequence mode
+        const { main: demoMain } = await import('../examples/multi-env-demo/interactive-demo-web4.mjs');
+        await demoMain(['test:' + args[0]]);
     }
 }
 
