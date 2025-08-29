@@ -51,11 +51,13 @@ export class ServerLifecycleManager {
         this.logger.info('Starting ONCE server...');
         
         this.stateManager.setHost(host);
-        const serverPath = join(this.baseDir, '../../examples/node-server/server.mjs');
+        // Use PROJECT_ROOT to get absolute path to server
+        const projectRoot = process.env.PROJECT_ROOT || process.cwd();
+        const serverPath = join(projectRoot, 'components/ONCE/0.1.0.2/examples/node-server/server.mjs');
         
         const serverProcess = spawn('node', [serverPath], {
             env: { ...process.env, HOST: host, PORT: state.PORT.toString() },
-            cwd: join(this.baseDir, '../../examples/node-server')
+            cwd: join(projectRoot, 'components/ONCE/0.1.0.2/examples/node-server')
         });
         
         this.stateManager.updateServerProcess(serverProcess, serverProcess.pid || 0);
