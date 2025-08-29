@@ -39,12 +39,18 @@ export class Web4TestCLI {
             case 'run-compliance-tests':
       await this.runComplianceTests();
       break;
-    case 'run-once-tests':
-      await this.runONCETests();
-      break;
-    case 'run-all':
-      await this.runAllTests();
-      break;
+            case 'run-once-tests':
+          await this.runONCETests();
+          break;
+        case 'run-vitest-tests':
+          await this.runVitestTests();
+          break;
+        case 'run-real-tests':
+          await this.runRealComponentTests();
+          break;
+        case 'run-all':
+          await this.runAllTests();
+          break;
         case 'help':
         default:
           this.showHelp();
@@ -213,6 +219,58 @@ export class Web4TestCLI {
   }
 
   /**
+   * Run Vitest unit tests
+   */
+  async runVitestTests(): Promise<void> {
+    console.log('⚡ Running Vitest Unit Tests\n');
+    
+    const projectRoot = this.getProjectRoot();
+    const componentPath = path.join(projectRoot, 'components', 'Web4Test', '0.1.0.0');
+    
+    try {
+      const result = execSync('npm test', {
+        cwd: componentPath,
+        encoding: 'utf8',
+        stdio: 'pipe',
+        timeout: 60000
+      });
+      
+      console.log(result);
+    } catch (error: any) {
+      console.error('❌ Vitest tests failed:', error.stdout || error.message);
+      if (error.stderr) {
+        console.error('Error details:', error.stderr);
+      }
+    }
+  }
+
+  /**
+   * Run real component validation tests
+   */
+  async runRealComponentTests(): Promise<void> {
+    console.log('🔧 Running Real Component Validation Tests\n');
+    
+    const projectRoot = this.getProjectRoot();
+    const componentPath = path.join(projectRoot, 'components', 'Web4Test', '0.1.0.0');
+    
+    try {
+      const result = execSync('npm run test:real', {
+        cwd: componentPath,
+        encoding: 'utf8',
+        stdio: 'pipe',
+        timeout: 120000
+      });
+      
+      console.log(result);
+    } catch (error: any) {
+      console.error('❌ Real component tests failed:', error.stdout || error.message);
+      if (error.stderr) {
+        console.error('Error details:', error.stderr);
+      }
+    }
+  }
+
+  /**
    * Run all tests
    */
   async runAllTests(): Promise<void> {
@@ -220,6 +278,10 @@ export class Web4TestCLI {
     await this.runWeb4TSComponentTests();
     console.log('\n' + '═'.repeat(60) + '\n');
     await this.runONCETests();
+    console.log('\n' + '═'.repeat(60) + '\n');
+    await this.runVitestTests();
+    console.log('\n' + '═'.repeat(60) + '\n');
+    await this.runRealComponentTests();
   }
 
   /**
@@ -434,7 +496,9 @@ export class Web4TestCLI {
     console.log('  run-cli-tests             Run CLI generation tests only');
     console.log('  run-compliance-tests      Run Web4 compliance tests only');
     console.log('  run-once-tests            Run ONCE component tests');
-    console.log('  run-all                   Run all available tests (Web4TSComponent + ONCE)');
+    console.log('  run-vitest-tests          Run Vitest unit tests');
+    console.log('  run-real-tests            Run real component validation tests');
+    console.log('  run-all                   Run all available tests (Mock + Vitest + Real)');
     console.log('  help                      Show this help message');
     console.log('');
     console.log('EXAMPLES:');
