@@ -163,7 +163,7 @@ export class EnvironmentDetector {
                     break;
             }
         } catch (error) {
-            console.warn('Network address detection failed:', error.message);
+            console.warn('Network address detection failed:', error instanceof Error ? error.message : String(error));
         }
         
         // Final fallback to localhost
@@ -180,7 +180,7 @@ export class EnvironmentDetector {
                 // Look for first non-internal IPv4 address
                 for (const [name, nets] of Object.entries(interfaces)) {
                     if (nets) {
-                        for (const net of nets) {
+                        for (const net of Object.values(nets)) {
                             if (net.family === 'IPv4' && !net.internal) {
                                 console.info(`Detected network address: ${net.address} (${name})`);
                                 return net.address;
@@ -190,7 +190,7 @@ export class EnvironmentDetector {
                 }
             }
         } catch (error) {
-            console.warn('Node.js network interface detection failed:', error.message);
+            console.warn('Node.js network interface detection failed:', error instanceof Error ? error.message : String(error));
         }
         throw new Error('No Node.js network interfaces detected');
     }
@@ -211,7 +211,7 @@ export class EnvironmentDetector {
                 }
             }
         } catch (error) {
-            console.warn('Browser network detection failed:', error.message);
+            console.warn('Browser network detection failed:', error instanceof Error ? error.message : String(error));
         }
         throw new Error('No browser network address detected');
     }

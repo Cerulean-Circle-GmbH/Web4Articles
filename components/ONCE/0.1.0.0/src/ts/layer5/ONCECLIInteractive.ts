@@ -4,7 +4,7 @@
  * Provides interactive demo management with graceful lifecycle handling
  */
 
-import { ONCECLI } from './ONCECLI.js';
+import { OnceCLI } from './ONCECLI.js';
 import { KeyboardController } from './KeyboardController.js';
 import { DefaultONCE } from '../layer2/DefaultONCE.js';
 import { spawn, ChildProcess } from 'child_process';
