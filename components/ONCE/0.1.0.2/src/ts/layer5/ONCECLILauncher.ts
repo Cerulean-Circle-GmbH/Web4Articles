@@ -90,8 +90,11 @@ export class ONCECLILauncher {
             // once demo help
             await this.delegateToONCECLI(['demo', 'help']);
         } else {
-            // once demo <input> - test sequence mode
-            await this.launchTestSequence(args[0]);
+            // once demo <input> - ALWAYS interactive mode (ignore the parameter)
+            // For test sequences, use 'once test <input>' instead
+            console.log(`ℹ️  Demo mode is interactive only - ignoring parameter "${args[0]}"`);
+            console.log(`💡 For test sequences, use: once test "${args[0]}"`);
+            await this.launchInteractiveDemo();
         }
     }
 
