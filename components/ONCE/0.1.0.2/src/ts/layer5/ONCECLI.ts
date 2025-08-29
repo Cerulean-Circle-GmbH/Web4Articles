@@ -41,7 +41,7 @@ export class OnceCLI {
       case 'help':
       case '--help':
       case '-h':
-        this.showHelp();
+        this.showUsage();
         break;
       case 'version':
       case '--version':
@@ -63,17 +63,17 @@ export class OnceCLI {
 
     console.log(`${bold}${cyan}ONCE CLI Tool${reset} ${green}- Web4 Universal P2P Communication Engine${reset}`);
     console.log('');
-    console.log(`${bold}Usage:${reset}`);
-    console.log(`  ${cyan}once${reset} demo                    ${green}# Start interactive demo with browser auto-opening${reset}`);
-    console.log(`  ${cyan}once${reset} demo ${yellow}<input>${reset}           ${green}# Run demo test sequence (e.g., "s3q")${reset}`);
-    console.log(`  ${cyan}once${reset} demo ${yellow}headless${reset}           ${green}# Start demo without browser (same as start headless)${reset}`);
-    console.log(`  ${cyan}once${reset} demo ${yellow}help${reset}               ${green}# Show demo-specific help${reset}`);
-    console.log(`  ${cyan}once${reset} test ${yellow}<input>${reset}            ${green}# Run test sequence (identical to demo <input>)${reset}`);
-    console.log(`  ${cyan}once${reset} start                   ${green}# Start npm server interactively (quit with ${yellow}q${reset}${green})${reset}`);
-    console.log(`  ${cyan}once${reset} start ${yellow}headless${reset}          ${green}# Start npm server without interaction${reset}`);
-    console.log(`  ${cyan}once${reset} stop                    ${green}# Stop running npm server gracefully${reset}`);
-    console.log(`  ${cyan}once${reset} help                    ${green}# Show this help message${reset}`);
-    console.log(`  ${cyan}once${reset} version                 ${green}# Show ONCE version information${reset}`);
+            console.log(`${bold}Usage:${reset}`);
+        console.log(`  ${cyan}once${reset} demo                    ${green}# Start interactive demo with browser auto-opening${reset}`);
+        console.log(`  ${cyan}once${reset} demo ${yellow}<input>${reset}           ${green}# Run demo test sequence (e.g., "s3bq")${reset}`);
+        console.log(`  ${cyan}once${reset} demo ${yellow}headless${reset}           ${green}# Start demo without browser (same as start headless)${reset}`);
+        console.log(`  ${cyan}once${reset} demo ${yellow}help${reset}               ${green}# Show demo-specific help${reset}`);
+        console.log(`  ${cyan}once${reset} test ${yellow}<input>${reset}            ${green}# Run test sequence (identical to demo <input>)${reset}`);
+        console.log(`  ${cyan}once${reset} start                   ${green}# Start npm server interactively (quit with ${yellow}q${reset}${green})${reset}`);
+        console.log(`  ${cyan}once${reset} start ${yellow}headless${reset}          ${green}# Start npm server without interaction${reset}`);
+        console.log(`  ${cyan}once${reset} stop                    ${green}# Stop running npm server gracefully${reset}`);
+        console.log(`  ${cyan}once${reset} help                    ${green}# Show this help message${reset}`);
+        console.log(`  ${cyan}once${reset} version                 ${green}# Show ONCE version information${reset}`);
     console.log('');
     console.log(`${bold}Commands:${reset}`);
     console.log(`  ${bold}demo${reset}         Start interactive demo or run test sequences`);
@@ -84,20 +84,20 @@ export class OnceCLI {
     console.log(`  ${bold}version${reset}      Show ONCE version information`);
     console.log('');
     console.log(`${bold}Parameters:${reset}`);
-    console.log(`  ${yellow}<input>${reset}       Test sequence string (e.g., "s312d2e1q")`);
+    console.log(`  ${yellow}<input>${reset}       Test sequence string (e.g., "s3bcd2e1q")`);
     console.log(`  ${yellow}headless${reset}      Run without interactive controls or browser`);
     console.log(`  ${yellow}help${reset}          Show command-specific help information`);
     console.log(`  ${yellow}q${reset}             Quit interactive server (press during start)`);
     console.log('');
-    console.log(`${bold}Examples:${reset}`);
-    console.log(`  ${green}# Demo usage${reset}`);
-    console.log(`  ${cyan}once${reset} demo                    ${green}# Launch full interactive demo${reset}`);
-    console.log(`  ${cyan}once${reset} demo ${yellow}"s3q"${reset}              ${green}# Run test sequence: start server, wait 3s, quit${reset}`);
-    console.log(`  ${cyan}once${reset} demo ${yellow}headless${reset}           ${green}# Server-only mode (same as start headless)${reset}`);
-    console.log('');
-    console.log(`  ${green}# Test sequences${reset}`);
-    console.log(`  ${cyan}once${reset} test ${yellow}"s312d2e1q"${reset}         ${green}# Full demo sequence with clients${reset}`);
-    console.log(`  ${cyan}once${reset} test ${yellow}"s11123d1k2q"${reset}       ${green}# Stress test with multiple clients${reset}`);
+            console.log(`${bold}Examples:${reset}`);
+        console.log(`  ${green}# Demo usage${reset}`);
+        console.log(`  ${cyan}once${reset} demo                    ${green}# Launch full interactive demo${reset}`);
+        console.log(`  ${cyan}once${reset} demo ${yellow}"s3bq"${reset}              ${green}# Run test sequence: start server, wait 3s, browser, quit${reset}`);
+        console.log(`  ${cyan}once${reset} demo ${yellow}headless${reset}           ${green}# Server-only mode (same as start headless)${reset}`);
+        console.log('');
+        console.log(`  ${green}# Test sequences${reset}`);
+        console.log(`  ${cyan}once${reset} test ${yellow}"s3bcd2e1q"${reset}         ${green}# Full demo sequence with clients${reset}`);
+        console.log(`  ${cyan}once${reset} test ${yellow}"s1bbbccc1d1k2q"${reset}     ${green}# Stress test with multiple clients${reset}`);
     console.log('');
     console.log(`  ${green}# Server management${reset}`);
     console.log(`  ${cyan}once${reset} start                   ${green}# Start npm server with interactive control${reset}`);
