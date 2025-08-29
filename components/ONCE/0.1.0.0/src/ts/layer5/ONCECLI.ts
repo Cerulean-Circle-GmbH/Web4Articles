@@ -61,10 +61,10 @@ export class OnceCLI {
     console.log('');
     console.log(`${bold}Usage:${reset}`);
     console.log(`  ${cyan}once${reset} demo                    ${green}# Start interactive demo with browser auto-opening${reset}`);
-    console.log(`  ${cyan}once${reset} demo ${yellow}headless${reset}          ${green}# Start demo without browser (server only)${reset}`);
-    console.log(`  ${cyan}once${reset} demo ${yellow}help${reset}             ${green}# Show demo-specific help${reset}`);
+    console.log(`  ${cyan}once${reset} demo ${yellow}headless${reset}           ${green}# Start demo without browser (server only)${reset}`);
+    console.log(`  ${cyan}once${reset} demo ${yellow}help${reset}               ${green}# Show demo-specific help${reset}`);
     console.log(`  ${cyan}once${reset} start                   ${green}# Start npm server interactively (quit with ${yellow}q${reset}${green})${reset}`);
-    console.log(`  ${cyan}once${reset} start ${yellow}headless${reset}         ${green}# Start npm server without interaction${reset}`);
+    console.log(`  ${cyan}once${reset} start ${yellow}headless${reset}          ${green}# Start npm server without interaction${reset}`);
     console.log(`  ${cyan}once${reset} stop                    ${green}# Stop running npm server gracefully${reset}`);
     console.log(`  ${cyan}once${reset} help                    ${green}# Show this help message${reset}`);
     console.log(`  ${cyan}once${reset} version                 ${green}# Show ONCE version information${reset}`);
