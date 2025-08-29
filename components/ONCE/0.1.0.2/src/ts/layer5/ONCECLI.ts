@@ -9,7 +9,7 @@ import * as readline from 'readline';
 
 export class OnceCLI {
   private projectRoot: string;
-  private onceVersion: string = '0.1.0.0';
+  private onceVersion: string = '0.1.0.2';
 
   constructor() {
     // Get project root from environment variable set by shell script
@@ -159,7 +159,7 @@ export class OnceCLI {
 
   private async runDemo(args: string[]): Promise<void> {
     const demoPath = path.join(this.projectRoot, 'components', 'ONCE', this.onceVersion, 'examples', 'multi-env-demo');
-    const demoScript = path.join(demoPath, 'interactive-demo.js');
+    const demoScript = path.join(demoPath, 'interactive-demo-web4.mjs');
 
     // Check if demo script exists
     try {
@@ -167,6 +167,7 @@ export class OnceCLI {
     } catch (error) {
       console.log(`❌ ONCE Demo not found at: ${demoScript}`);
       console.log(`📁 Expected path: components/ONCE/${this.onceVersion}/examples/multi-env-demo/`);
+      console.log(`💡 Looking for: interactive-demo-web4.mjs (Web4 TypeScript refactored version)`);
       process.exit(1);
     }
 

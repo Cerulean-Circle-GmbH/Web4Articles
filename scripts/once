@@ -32,7 +32,7 @@ fi
 export PROJECT_ROOT
 
 # Find the CLI in the components directory structure
-ONCE_VERSION="0.1.0.0"
+ONCE_VERSION="0.1.0.2"
 COMPONENT_DIR="$PROJECT_ROOT/components/ONCE/$ONCE_VERSION"
 CLI_SOURCE_PATH="$COMPONENT_DIR/src/ts/layer5/OnceCLI.ts"
 CLI_PATH="$COMPONENT_DIR/dist/ts/layer5/OnceCLI.js"
