@@ -22,7 +22,7 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1231-agent-startup-readiness.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1231-agent-startup-readiness.md](2025-08-28-UTC-1231-agent-startup-readiness.md)
-- **Main README:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/README.md) | [§/README.md](../../../../../README.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/README.md) | [§/README.md](../../../../../../README.md)
 
 ### **QA Decisions**
 - [ ] **Startup Readiness:** Are we ready for new agent test?
@@ -174,4 +174,3 @@ New agent should:
 
 **🎯 Ready for new agent test - all systems improved! 🚀✅**
 
-**"Preparation is the key to successful execution"** 🔧📊
