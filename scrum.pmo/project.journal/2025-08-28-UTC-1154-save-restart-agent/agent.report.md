@@ -12,22 +12,27 @@
 
 | Agent Branch | Name | RequestID | Role | Template | Session | Status Merge | Sync | Lifecycle |
 |--------------|------|-----------|------|----------|---------|--------------|------|-----------|
-| save/start.v1 | SaveRestartAgent | Save/Restart Agent | v3.1 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/session-start.md) \| [§/session-start.md](session-start.md) | ✅ Active<br>⚠️ Unmerged: 37 PDCAs<br>📝 Modified: howto.PDCA.md, template.md<br>🔧 New: fix.dual.links script | release/dev (wild west)<br>save/start.v1 (clean home)<br>save/start.v2 (for others)<br>main (agent startup) | 🟢 Healthy<br>⏱️ Runtime: 90min<br>💾 Memory: Normal |
-| dev/2025-08-28-UTC-2140 | BackgroundAgent | Background Agent | v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-session-start.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-session-start.md](../../2025-08-28-UTC-2140-session/PDCA-session-start.md) | ✅ Active<br>✅ Merged: Initial PDCA<br>🆕 Fresh session | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 10min<br>💾 Memory: Normal |
-| dev/2025-08-28-UTC-2140 | test 3 main | Background Agent | v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-requirements-management.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-requirements-management.md](../../2025-08-28-UTC-2140-session/PDCA-requirements-management.md) | ✅ Active<br>📝 Requirements work<br>✅ Using latest template | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 20min<br>💾 Memory: Normal |
-| cursor/start-background-process-78bf | crayz start | Developer | <v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/start-background-process-78bf/scrum.pmo/project.journal/2025-08-28-UTC-1846-session/pdca/2025-08-28-UTC-1846-session-start.md) \| [§/../../2025-08-28-UTC-1846-session/pdca/2025-08-28-UTC-1846-session-start.md](../../2025-08-28-UTC-1846-session/pdca/2025-08-28-UTC-1846-session-start.md) | ⚠️ Inactive<br>📝 Test session<br>❌ Crazy bash commands! | release/dev<br>main (updates) | 🟡 Unknown<br>⏱️ Runtime: ?<br>💾 Memory: ? |
-| dev/2025-08-28-UTC-1225 | release/test agent | Tester (Main) | v3.0+ | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1225/scrum.pmo/project.journal/2025-08-28-UTC-1225-session/pdca/2025-08-28-UTC-1233-tester-role-testing-landscape-summary.pdca.md) \| [§/../../2025-08-28-UTC-1225-session/pdca/2025-08-28-UTC-1233-tester-role-testing-landscape-summary.pdca.md](../../2025-08-28-UTC-1225-session/pdca/2025-08-28-UTC-1233-tester-role-testing-landscape-summary.pdca.md) | ✅ Active<br>🧪 Main test agent<br>📊 Testing landscape | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 12min<br>💾 Memory: Normal |
+| save/start.v1 | SaveRestartAgent | - | Save/Restart Agent | v3.1 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/session-start.md) \| [§/session-start.md](session-start.md) | ✅ Active<br>⚠️ Unmerged: 38 PDCAs<br>📝 Modified: howto.PDCA.md, template.md<br>🔧 New: fix.dual.links script | release/dev (wild west)<br>save/start.v1 (clean home)<br>save/start.v2 (for others)<br>main (agent startup) | 🟢 Healthy<br>⏱️ Runtime: 95min<br>💾 Memory: Normal |
+| dev/2025-08-28-UTC-2140 | BackgroundAgent | - | Background Agent | v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-session-start.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-session-start.md](../../2025-08-28-UTC-2140-session/PDCA-session-start.md) | ✅ Active<br>✅ Merged: Initial PDCA<br>🆕 Fresh session | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 10min<br>💾 Memory: Normal |
+| dev/2025-08-28-UTC-1125 | test2 main | bc-e03cd16b-c3cf-424a-bd71-c57053a64d7e | Background Agent | <v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1140-fix-dual-links.md) \| [§/../../2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1140-fix-dual-links.md](../../2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1140-fix-dual-links.md) | ✅ Active<br>📝 Fix dual links<br>🔢 Second main test | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 30min<br>💾 Memory: Normal |
+| dev/2025-08-28-UTC-2140 | test 3 main | - | Background Agent | v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-requirements-management.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-requirements-management.md](../../2025-08-28-UTC-2140-session/PDCA-requirements-management.md) | ✅ Active<br>📝 Requirements work<br>✅ Using latest template | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 20min<br>💾 Memory: Normal |
+| cursor/start-background-process-78bf | crayz start | - | Developer | <v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/start-background-process-78bf/scrum.pmo/project.journal/2025-08-28-UTC-1846-session/pdca/2025-08-28-UTC-1846-session-start.md) \| [§/../../2025-08-28-UTC-1846-session/pdca/2025-08-28-UTC-1846-session-start.md](../../2025-08-28-UTC-1846-session/pdca/2025-08-28-UTC-1846-session-start.md) | ⚠️ Inactive<br>📝 Test session<br>❌ Crazy bash commands! | release/dev<br>main (updates) | 🟡 Unknown<br>⏱️ Runtime: ?<br>💾 Memory: ? |
+| dev/2025-08-28-UTC-1225 | release/test agent | - | Tester (Main) | v3.0+ | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1225/scrum.pmo/project.journal/2025-08-28-UTC-1225-session/pdca/2025-08-28-UTC-1233-tester-role-testing-landscape-summary.pdca.md) \| [§/../../2025-08-28-UTC-1225-session/pdca/2025-08-28-UTC-1233-tester-role-testing-landscape-summary.pdca.md](../../2025-08-28-UTC-1225-session/pdca/2025-08-28-UTC-1233-tester-role-testing-landscape-summary.pdca.md) | ✅ Active<br>🧪 Main test agent<br>📊 Testing landscape | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 12min<br>💾 Memory: Normal |
+| testing-analysis-clean | test8 save/start.v2 | bc-2b501d80-caec-41b7-a0a1-d28972f5b538 | Background Agent | v3.1 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/testing-analysis-clean/scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/pdca) \| [§/../../2025-08-28-UTC-1113-background-start/pdca](../../2025-08-28-UTC-1113-background-start/pdca) | ✅ Active<br>🔢 8th test agent<br>🎯 Testing v2 startup | save/start.v2<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 15min<br>💾 Memory: Normal |
 
 ---
 
 ## **Notable Findings**
 
-- **Agent Count:** Now tracking 5 agents across different roles
+- **Agent Count:** Now tracking 7 agents across different roles
+- **RequestID Tracking:** 2/7 agents have known RequestIDs (test2 main, test8 save/start.v2)
 - **Role Specialization:** Dedicated agents emerging (SaveRestartAgent, release/test agent)
-- **Template Adoption:** 4/5 agents (80%) using v3.0+, only crayz start using old template
+- **Template Adoption:** 5/7 agents (71%) using v3.0+, two using older templates
 - **Shared Branch Pattern:** dev/2025-08-28-UTC-2140 hosts multiple agent phases
+- **Testing Sequence:** test2 main (2nd) → test 3 main (3rd) → test8 save/start.v2 (8th test)
 - **Web4 Naming Success:** All agents have meaningful, descriptive names
 - **Main Agents Emerging:** SaveRestartAgent (process), release/test agent (testing)
+- **Branch Testing:** test8 specifically testing save/start.v2 startup
 
 ---
 
@@ -99,8 +104,10 @@ This allows agents to:
 2. **release/test agent**: Designated as main test agent - excellent role clarity
 3. **BackgroundAgent & test 3 main**: Successful v3.0 adoption and Web4 naming
 4. **crayz start**: Name warns of behavior - needs template update!
-5. **Template Success**: 80% adoption rate (4/5 agents) of v3.0+ templates
+5. **Template Success**: 71% adoption rate (5/7 agents) of v3.0+ templates
 6. **Role Specialization**: Clear main agents for key functions emerging
+7. **RequestID Collection**: Need user to provide RequestIDs for remaining 5 agents
+8. **test8 save/start.v2**: Successfully testing v2 startup with latest v3.1 template
 
 ---
 
