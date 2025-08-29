@@ -13,7 +13,7 @@ echo "🔧 Setting up ONCE CLI links (TypeScript-based)..."
 mkdir -p "$VERSIONS_DIR"
 
 # Create versioned ONCE script
-ONCE_VERSIONED="$VERSIONS_DIR/once$ONCE_VERSION"
+ONCE_VERSIONED="$VERSIONS_DIR/once-v$ONCE_VERSION"
 cat > "$ONCE_VERSIONED" << 'EOF'
 #!/bin/bash
 # ONCE CLI Tool v0.1.0.0 - Location Resilient Launcher  
@@ -248,8 +248,8 @@ echo "   📁 Versioned: $ONCE_VERSIONED"
 echo "   📁 Latest: $ONCE_LATEST"
 echo ""
 echo "🎭 Usage:"
-echo "   scripts/versions/once$ONCE_VERSION    # Specific version"
-echo "   scripts/once                          # Latest version"
+echo "   scripts/versions/once-v$ONCE_VERSION    # Specific version"
+echo "   scripts/once                            # Latest version"
 echo ""
 echo "🌐 Demo features:"
 echo "   • Cross-platform browser auto-opening"

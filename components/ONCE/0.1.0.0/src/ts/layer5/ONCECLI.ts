@@ -86,7 +86,7 @@ export class OnceCLI {
     console.log(`  ${cyan}once${reset} ${white}stop${reset}                    # Stop the running npm server`);
     console.log('');
     console.log(`${bold}Location:${reset} Latest version (${yellow}v${this.onceVersion}${reset})`);
-    console.log(`${bold}Path:${reset} ${yellow}scripts/versions/once${this.onceVersion}${reset}`);
+    console.log(`${bold}Path:${reset} ${yellow}scripts/versions/once-v${this.onceVersion}${reset}`);
   }
 
   private showHelp(): void {
@@ -118,7 +118,7 @@ export class OnceCLI {
 
     console.log(`${bold}ONCE Interactive Demo${reset} ${yellow}v${this.onceVersion}${reset}`);
     console.log(`${bold}Web4 Universal P2P Communication Engine${reset}`);
-    console.log(`${bold}Path:${reset} ${yellow}${this.projectRoot}/scripts/versions/once${this.onceVersion}${reset}`);
+    console.log(`${bold}Path:${reset} ${yellow}${this.projectRoot}/scripts/versions/once-v${this.onceVersion}${reset}`);
   }
 
   private showError(message: string): void {
