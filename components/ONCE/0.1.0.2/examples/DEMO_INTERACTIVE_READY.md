@@ -14,13 +14,13 @@
 ─────────────────────
   [h] Show help menu
   [s] Start/Stop ONCE server
-  [1] Launch Browser Client simulation
-  [2] Launch Node.js Client
-  [3] Launch Web Worker simulation
+  [b] Launch Browser Client simulation
+  [c] Launch Node.js Client
+  [w] Launch Web Worker simulation
   [d] Discover peers (from all clients)
   [e] Exchange scenarios between clients
   [m] Show metrics and status
-  [c] Clear screen
+  [backspace] Clear screen
   [k] Kill all demo processes gracefully
   [q] Quit demo (with cleanup)
 ```

@@ -71,7 +71,7 @@ export class ONCECLIInteractive extends OnceCLI {
         console.log('\n📋 Demo Controls:');
         console.log('─────────────────');
         console.log('  [s] Start/Stop server');
-        console.log('  [1-3] Launch demo clients');
+        console.log('  [b/c/w] Launch demo clients');
         console.log('  [d] Discover peers');
         console.log('  [e] Exchange scenarios');
         console.log('  [m] Show metrics');
@@ -93,15 +93,15 @@ export class ONCECLIInteractive extends OnceCLI {
         });
 
         // Client launches
-        this.keyboard.bind('1', 'Launch Browser Client', async () => {
+        this.keyboard.bind('b', 'Launch Browser Client', async () => {
             await this.launchClient('browser');
         });
 
-        this.keyboard.bind('2', 'Launch Node.js Client', async () => {
+        this.keyboard.bind('c', 'Launch Node.js Client', async () => {
             await this.launchClient('nodejs');
         });
 
-        this.keyboard.bind('3', 'Launch Worker Client', async () => {
+        this.keyboard.bind('w', 'Launch Worker Client', async () => {
             await this.launchClient('worker');
         });
 
@@ -131,7 +131,15 @@ export class ONCECLIInteractive extends OnceCLI {
             this.refreshStatus();
         });
 
-        this.keyboard.bind('c', 'Clear screen', () => {
+        // Clear screen - both backspace (interactive) and 'l' (test sequences)
+        this.keyboard.bind('\u0008', 'Clear screen', () => {
+            console.clear();
+            this.printHeader();
+            this.keyboard?.showHelp();
+            this.printCustomHelp();
+        });
+
+        this.keyboard.bind('l', 'Clear screen', () => {
             console.clear();
             this.printHeader();
             this.keyboard?.showHelp();

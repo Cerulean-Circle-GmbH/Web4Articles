@@ -12,7 +12,7 @@ once demo "s3q"
 
 ### 2. Single Client Test
 ```bash
-once demo "s21q"
+once demo "s2bq"
 ```
 - Start server
 - Wait 2 seconds
@@ -21,7 +21,7 @@ once demo "s21q"
 
 ### 3. Multi-Client Test
 ```bash
-once demo "s312315q"
+once demo "s3bc3w5q"
 ```
 - Start server
 - Wait 3 seconds
@@ -34,7 +34,7 @@ once demo "s312315q"
 
 ### 4. Discovery Demo
 ```bash
-once demo "s312d3q"
+once demo "s3bcd3q"
 ```
 - Start server
 - Wait 3 seconds
@@ -45,7 +45,7 @@ once demo "s312d3q"
 
 ### 5. Full Demo Sequence
 ```bash
-once demo "s312d2e2m3q"
+once demo "s3bcd2e2m3q"
 ```
 - Start server
 - Wait 3 seconds
@@ -60,11 +60,13 @@ once demo "s312d2e2m3q"
 
 ### 6. Stress Test
 ```bash
-once demo "s1112223d1e1m2k2q"
+once demo "s1bbbccc1d1e1m2k2q"
 ```
 - Start server
+- Wait 1 second
 - Launch 3 Browser clients
 - Launch 3 Node.js clients
+- Wait 1 second
 - Discover peers
 - Wait 1 second
 - Exchange scenarios
@@ -77,11 +79,12 @@ once demo "s1112223d1e1m2k2q"
 
 ### 7. Clear Screen Demo
 ```bash
-once demo "s2c12c23cq"
+once demo "s2l1b2lc3lq"
 ```
 - Start server
 - Wait 2 seconds
 - Clear screen
+- Wait 1 second
 - Launch Browser client
 - Wait 2 seconds
 - Clear screen
@@ -106,13 +109,13 @@ once demo "h5s2h3q"
 
 Create your own sequences using:
 - `s` - Start/Stop server
-- `1` - Launch Browser client
-- `2` - Launch Node.js client
-- `3` - Launch Worker client
+- `b` - Launch Browser client
+- `c` - Launch Node.js client
+- `w` - Launch Worker client
 - `d` - Discover peers
 - `e` - Exchange scenarios
 - `m` - Show metrics
-- `c` - Clear screen
+- `l` - Clear screen (was backspace in interactive mode)
 - `k` - Kill all processes
 - `h` - Show help
 - `q` - Quit

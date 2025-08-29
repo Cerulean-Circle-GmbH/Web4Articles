@@ -224,9 +224,9 @@ export class OnceCLI {
     console.log('');
     console.log(`${bold}Demo Controls (interactive mode):${reset}`);
     console.log(`  ${yellow}[s]${reset} Start/Stop ONCE server`);
-    console.log(`  ${yellow}[1]${reset} Launch Browser Client`);
-    console.log(`  ${yellow}[2]${reset} Launch Node.js Client`);
-    console.log(`  ${yellow}[3]${reset} Launch Web Worker Client`);
+    console.log(`  ${yellow}[b]${reset} Launch Browser Client`);
+    console.log(`  ${yellow}[c]${reset} Launch Node.js Client`);
+    console.log(`  ${yellow}[w]${reset} Launch Web Worker Client`);
     console.log(`  ${yellow}[d]${reset} Discover peers`);
     console.log(`  ${yellow}[e]${reset} Exchange scenarios`);
     console.log(`  ${yellow}[q]${reset} Quit demo`);

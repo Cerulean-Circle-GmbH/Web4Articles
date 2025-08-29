@@ -113,13 +113,13 @@ export class DemoLogger {
         
         this.key('h', 'Show this help menu');
         this.key('s', 'Start/Stop ONCE server');
-        this.key('1', 'Launch Browser Client simulation');
-        this.key('2', 'Launch Node.js Client');
-        this.key('3', 'Launch Web Worker simulation');
+        this.key('b', 'Launch Browser Client simulation');
+        this.key('c', 'Launch Node.js Client');
+        this.key('w', 'Launch Web Worker simulation');
         this.key('d', 'Discover peers (from all clients)');
         this.key('e', 'Exchange scenarios between clients');
         this.key('m', 'Show metrics and status');
-        this.key('c', 'Clear screen');
+        this.key('[backspace]', 'Clear screen');
         this.key('k', 'Kill all demo processes gracefully');
         this.key('q', 'Quit demo (with cleanup)');
         console.log();

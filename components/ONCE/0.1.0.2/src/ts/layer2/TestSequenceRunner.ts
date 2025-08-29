@@ -170,7 +170,7 @@ export class TestSequenceRunner {
 
     public validateSequence(sequence: string): { valid: boolean; errors: string[] } {
         const errors: string[] = [];
-        const validKeys = new Set(['h', 's', '1', '2', '3', 'd', 'e', 'm', 'c', 'k', 'q']);
+        const validKeys = new Set(['h', 's', 'b', 'c', 'w', 'd', 'e', 'm', 'l', 'k', 'q']);
         
         if (!sequence || sequence.length === 0) {
             errors.push('Sequence cannot be empty');
