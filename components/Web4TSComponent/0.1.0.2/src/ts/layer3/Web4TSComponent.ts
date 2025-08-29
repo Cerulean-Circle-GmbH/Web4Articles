@@ -54,7 +54,7 @@ export interface Web4TSComponent {
   getWeb4ArchitectureGuidelines(): string;
 
   // Scenario support (Web4 Scenario-First Development)
-  toScenario(): any;
+  toScenario(): Promise<any>;
   fromScenario(scenario: any): void;
 }
 

@@ -394,18 +394,57 @@ Use Web4TSComponent for scaffolding and validation.
 `;
   }
 
+  // Version discovery method
+  private async discoverOwnVersion(): Promise<string> {
+    try {
+      // Find the component's own package.json by walking up from current file
+      let currentDir = __dirname;
+      while (currentDir !== '/') {
+        const packagePath = path.join(currentDir, 'package.json');
+        try {
+          const packageContent = await fs.readFile(packagePath, 'utf8');
+          const packageJson = JSON.parse(packageContent);
+          
+          // Check if this is the Web4TSComponent package
+          if (packageJson.name === '@web4x/web4-tscomponent' || 
+              packageJson.description?.includes('Web4 TypeScript Component')) {
+            return packageJson.version || '0.1.0.0';
+          }
+        } catch {
+          // Continue searching
+        }
+        currentDir = path.dirname(currentDir);
+      }
+      
+      // Fallback: try to detect from directory structure
+      const componentPath = __dirname;
+      const versionMatch = componentPath.match(/\/(\d+\.\d+\.\d+\.\d+)\//);
+      if (versionMatch) {
+        return versionMatch[1];
+      }
+      
+      return '0.1.0.0'; // Ultimate fallback
+    } catch (error) {
+      console.warn('Warning: Could not discover own version, using fallback:', error);
+      return '0.1.0.0';
+    }
+  }
+
   // Scenario support (Web4 Scenario-First Development)
-  toScenario(): any {
+  async toScenario(): Promise<any> {
+    const ownVersion = await this.discoverOwnVersion();
+    
     return {
       ior: {
         uuid: 'web4tscomponent-' + Date.now(),
         type: 'Web4TSComponent',
-        version: '0.1.0.0'
+        version: ownVersion
       },
       model: {
         componentName: this.componentName,
         version: this.version,
         targetDirectory: this.targetDirectory,
+        componentOwnVersion: ownVersion,
         created: new Date().toISOString(),
         updated: new Date().toISOString()
       }
@@ -417,6 +456,11 @@ Use Web4TSComponent for scaffolding and validation.
       this.componentName = scenario.model.componentName || '';
       this.version = scenario.model.version || '';
       this.targetDirectory = scenario.model.targetDirectory || '';
+    }
+    
+    // Log version discovery for debugging
+    if (scenario.ior?.version && scenario.model?.componentOwnVersion) {
+      console.log(`🔍 Component Version Discovery: IOR=${scenario.ior.version}, Own=${scenario.model.componentOwnVersion}`);
     }
   }
 }
