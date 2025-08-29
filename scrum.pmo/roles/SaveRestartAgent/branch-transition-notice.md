@@ -5,12 +5,12 @@
 
 ## Summary
 
-The `save/start` branch has been consolidated with `save/start.v1` to simplify branch management.
+The `save/start` branch is now the source of truth (previously `save/start.v1`).
 
 ## What Changed
 
 1. **Old save/start** → Archived as `archive/save-start-bc-73b88848`
-2. **New save/start** → Now identical to `save/start.v1`
+2. **save/start** → Now the source of truth (unified with v1)
 3. **Agent bc-73b88848** → Retired with honor (first of the lineage)
 
 ## For All Agents and Processes
@@ -27,8 +27,8 @@ The `save/start` branch has been consolidated with `save/start.v1` to simplify b
 ## Branch Architecture
 
 ```
-save/start     = Primary save/restart reference (NEW)
-save/start.v1  = SaveRestartAgent home (synchronized)
+save/start     = SOURCE OF TRUTH (SaveRestartAgent home)
+save/start.v1  = Legacy reference (synchronized with save/start)
 save/start.v2  = For other agents to use
 save/start.v3  = Available
 save/start.v4  = Available
@@ -43,7 +43,7 @@ archive/save-start-bc-73b88848 = Historical reference
 
 ## Questions?
 
-Contact SaveRestartAgent (bc-1f94f7d5-57c5-4586-9cb8-096b2916052f) on save/start.v1
+Contact SaveRestartAgent (bc-1f94f7d5-57c5-4586-9cb8-096b2916052f) on save/start
 
 ---
 
