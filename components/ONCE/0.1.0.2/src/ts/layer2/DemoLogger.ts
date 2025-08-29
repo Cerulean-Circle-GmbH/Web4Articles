@@ -119,7 +119,7 @@ export class DemoLogger {
         this.key('d', 'Discover peers (from all clients)');
         this.key('e', 'Exchange scenarios between clients');
         this.key('m', 'Show metrics and status');
-        this.key('[backspace]', 'Clear screen');
+        this.key('backspace', 'Clear screen');
         this.key('k', 'Kill all demo processes gracefully');
         this.key('q', 'Quit demo (with cleanup)');
         console.log();
