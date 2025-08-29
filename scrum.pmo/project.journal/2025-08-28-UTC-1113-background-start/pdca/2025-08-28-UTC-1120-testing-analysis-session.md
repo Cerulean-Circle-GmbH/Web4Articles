@@ -18,9 +18,9 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/pdca/2025-08-28-UTC-1120-testing-analysis-session.md) | [2025-08-28-UTC-1120-testing-analysis-session.md](2025-08-28-UTC-1120-testing-analysis-session.md)
-- **Testing Analysis Report:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/testing-analysis-report.md) | [testing-analysis-report.md](../testing-analysis-report.md)
-- **Session Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/main/scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start) | [../](../)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/testing-analysis-2025-08-28/scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/pdca/2025-08-28-UTC-1120-testing-analysis-session.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/pdca/2025-08-28-UTC-1120-testing-analysis-session.md](./2025-08-28-UTC-1120-testing-analysis-session.md)
+- **Testing Analysis Report:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/testing-analysis-2025-08-28/scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/testing-analysis-report.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/testing-analysis-report.md](../testing-analysis-report.md)
+- **Session Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/testing-analysis-2025-08-28/scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start) | [scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/](../)
 
 ### **QA Decisions**
 - [x] **Decision 1d Selected:** Quality/Testing Focus - Test strategy development, validation frameworks, and compliance checking
@@ -159,7 +159,7 @@ components/TSRanger/
 - **Automation Failure:** TSRanger v2.2 test suite completely non-functional
 
 **Analysis Report Created:**
-- **Comprehensive Report:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/testing-analysis-report.md) | [testing-analysis-report.md](../testing-analysis-report.md)
+- **Comprehensive Report:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/testing-analysis-2025-08-28/scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/testing-analysis-report.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/testing-analysis-report.md](../testing-analysis-report.md)
 - **Executive Summary:** Mixed maturity with strong foundation but major gaps
 - **Detailed Findings:** Component-by-component test coverage analysis
 - **Actionable Recommendations:** Immediate, short-term, and long-term improvements
