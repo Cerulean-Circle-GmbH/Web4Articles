@@ -110,8 +110,8 @@ case "${1:-help}" in
         show_component_info
         echo "🎯 Running Web4TSComponent Test Suite..."
         cd "$PROJECT_ROOT"
-        if [ -f "$COMPONENT_PATH/dist/src/ts/layer5/Web4TestCLI.js" ]; then
-            node "$COMPONENT_PATH/dist/src/ts/layer5/Web4TestCLI.js" run-web4tscomponent-tests
+        if [ -f "$COMPONENT_PATH/dist/ts/layer5/Web4TestCLI.js" ]; then
+            node "$COMPONENT_PATH/dist/ts/layer5/Web4TestCLI.js" run-web4tscomponent-tests
         else
             echo "❌ Error: Compiled CLI not found. Try building the component first."
             exit 1
@@ -122,8 +122,8 @@ case "${1:-help}" in
         show_component_info
         echo "🎯 Running Version Management Tests..."
         cd "$PROJECT_ROOT"
-        if [ -f "$COMPONENT_PATH/dist/src/ts/layer5/Web4TestCLI.js" ]; then
-            node "$COMPONENT_PATH/dist/src/ts/layer5/Web4TestCLI.js" run-version-tests
+        if [ -f "$COMPONENT_PATH/dist/ts/layer5/Web4TestCLI.js" ]; then
+            node "$COMPONENT_PATH/dist/ts/layer5/Web4TestCLI.js" run-version-tests
         else
             echo "❌ Error: Compiled CLI not found. Try building the component first."
             exit 1
@@ -134,8 +134,8 @@ case "${1:-help}" in
         show_component_info
         echo "🎯 Running CLI Generation Tests..."
         cd "$PROJECT_ROOT"
-        if [ -f "$COMPONENT_PATH/dist/src/ts/layer5/Web4TestCLI.js" ]; then
-            node "$COMPONENT_PATH/dist/src/ts/layer5/Web4TestCLI.js" run-cli-tests
+        if [ -f "$COMPONENT_PATH/dist/ts/layer5/Web4TestCLI.js" ]; then
+            node "$COMPONENT_PATH/dist/ts/layer5/Web4TestCLI.js" run-cli-tests
         else
             echo "❌ Error: Compiled CLI not found. Try building the component first."
             exit 1
@@ -146,8 +146,20 @@ case "${1:-help}" in
         show_component_info
         echo "🎯 Running Web4 Compliance Tests..."
         cd "$PROJECT_ROOT"
-        if [ -f "$COMPONENT_PATH/dist/src/ts/layer5/Web4TestCLI.js" ]; then
-            node "$COMPONENT_PATH/dist/src/ts/layer5/Web4TestCLI.js" run-compliance-tests
+        if [ -f "$COMPONENT_PATH/dist/ts/layer5/Web4TestCLI.js" ]; then
+            node "$COMPONENT_PATH/dist/ts/layer5/Web4TestCLI.js" run-compliance-tests
+        else
+            echo "❌ Error: Compiled CLI not found. Try building the component first."
+            exit 1
+        fi
+        ;;
+        
+    "run-once-tests")
+        show_component_info
+        echo "🎯 Running ONCE Component Tests..."
+        cd "$PROJECT_ROOT"
+        if [ -f "$COMPONENT_PATH/dist/ts/layer5/Web4TestCLI.js" ]; then
+            node "$COMPONENT_PATH/dist/ts/layer5/Web4TestCLI.js" run-once-tests
         else
             echo "❌ Error: Compiled CLI not found. Try building the component first."
             exit 1
@@ -158,8 +170,8 @@ case "${1:-help}" in
         show_component_info
         echo "🎯 Running All Tests..."
         cd "$PROJECT_ROOT"
-        if [ -f "$COMPONENT_PATH/dist/src/ts/layer5/Web4TestCLI.js" ]; then
-            node "$COMPONENT_PATH/dist/src/ts/layer5/Web4TestCLI.js" run-all
+        if [ -f "$COMPONENT_PATH/dist/ts/layer5/Web4TestCLI.js" ]; then
+            node "$COMPONENT_PATH/dist/ts/layer5/Web4TestCLI.js" run-all
         else
             echo "❌ Error: Compiled CLI not found. Try building the component first."
             exit 1
@@ -193,7 +205,8 @@ case "${1:-help}" in
         echo "  run-version-tests          Run version management tests only"
         echo "  run-cli-tests             Run CLI generation tests only"
         echo "  run-compliance-tests      Run Web4 compliance tests only"
-        echo "  run-all                   Run all available tests"
+        echo "  run-once-tests            Run ONCE component tests"
+        echo "  run-all                   Run all available tests (Web4TSComponent + ONCE)"
         echo "  build                     Build the Web4Test component"
         echo "  info                      Show component information"
         echo "  help                      Show this help message"
@@ -201,6 +214,7 @@ case "${1:-help}" in
         echo "EXAMPLES:"
         echo "  ./web4test.sh run-all"
         echo "  ./web4test.sh run-version-tests"
+        echo "  ./web4test.sh run-once-tests"
         echo "  ./web4test.sh run-compliance-tests"
         echo ""
         echo "Web4 Principles Applied:"

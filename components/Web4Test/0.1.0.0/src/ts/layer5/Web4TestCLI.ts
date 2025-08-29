@@ -36,12 +36,15 @@ export class Web4TestCLI {
         case 'run-cli-tests':
           await this.runCLITests();
           break;
-        case 'run-compliance-tests':
-          await this.runComplianceTests();
-          break;
-        case 'run-all':
-          await this.runAllTests();
-          break;
+            case 'run-compliance-tests':
+      await this.runComplianceTests();
+      break;
+    case 'run-once-tests':
+      await this.runONCETests();
+      break;
+    case 'run-all':
+      await this.runAllTests();
+      break;
         case 'help':
         default:
           this.showHelp();
@@ -179,11 +182,44 @@ export class Web4TestCLI {
   }
 
   /**
+   * Run ONCE component tests
+   */
+  async runONCETests(): Promise<void> {
+    console.log('🧪 Running ONCE Component Tests\n');
+
+    await this.registerONCETests();
+
+    const suite = new DefaultWeb4TestSuite();
+    suite.init({
+      uuid: 'suite:uuid:once-tests',
+      name: 'ONCE Component Tests',
+      description: 'Tests for ONCE component lifecycle, environment detection, peer communication, and scenario management',
+      testCaseIORs: [
+        'test:uuid:once-component-lifecycle-001',
+        'test:uuid:once-environment-detection-001',
+        'test:uuid:once-peer-communication-001',
+        'test:uuid:once-scenario-management-001'
+      ],
+      parallelExecution: false,
+      stopOnFirstFailure: false,
+      timeout: 120000,
+      tags: ['once'],
+      createdAt: new Date().toISOString(),
+      modifiedAt: new Date().toISOString()
+    });
+
+    const results = await suite.executeAll();
+    this.displayTestResults(results);
+  }
+
+  /**
    * Run all tests
    */
   async runAllTests(): Promise<void> {
     console.log('🧪 Running Complete Tootsie Test Suite\n');
     await this.runWeb4TSComponentTests();
+    console.log('\n' + '═'.repeat(60) + '\n');
+    await this.runONCETests();
   }
 
   /**
@@ -193,6 +229,7 @@ export class Web4TestCLI {
     await this.registerVersionTests();
     await this.registerCLITests();
     await this.registerComplianceTests();
+    await this.registerONCETests();
   }
 
   /**
@@ -272,6 +309,75 @@ export class Web4TestCLI {
   }
 
   /**
+   * Register ONCE component test cases
+   */
+  private async registerONCETests(): Promise<void> {
+    // Component Lifecycle Test
+    const lifecycleTest = new DefaultWeb4TestCase();
+    lifecycleTest.init({
+      uuid: 'test:uuid:once-component-lifecycle-001',
+      name: 'ONCE Component Lifecycle Test',
+      description: 'Mock test for ONCE component lifecycle management',
+      requirementIORs: ['requirement:uuid:once-lifecycle-001'],
+      componentIORs: ['component:once:0.1.0.2'],
+      testDataScenario: { input: 'lifecycle', expected: 'success' },
+      executionContextScenario: {},
+      expectedResultScenario: {},
+      createdAt: new Date().toISOString(),
+      modifiedAt: new Date().toISOString()
+    });
+    this.iorResolver.registerLocalObject('test:uuid:once-component-lifecycle-001', lifecycleTest);
+
+    // Environment Detection Test
+    const envTest = new DefaultWeb4TestCase();
+    envTest.init({
+      uuid: 'test:uuid:once-environment-detection-001',
+      name: 'ONCE Environment Detection Test',
+      description: 'Mock test for ONCE multi-platform environment detection',
+      requirementIORs: ['requirement:uuid:once-environment-001'],
+      componentIORs: ['component:once:0.1.0.2'],
+      testDataScenario: { input: 'environment', expected: 'success' },
+      executionContextScenario: {},
+      expectedResultScenario: {},
+      createdAt: new Date().toISOString(),
+      modifiedAt: new Date().toISOString()
+    });
+    this.iorResolver.registerLocalObject('test:uuid:once-environment-detection-001', envTest);
+
+    // Peer Communication Test
+    const peerTest = new DefaultWeb4TestCase();
+    peerTest.init({
+      uuid: 'test:uuid:once-peer-communication-001',
+      name: 'ONCE Peer Communication Test',
+      description: 'Mock test for ONCE P2P communication capabilities',
+      requirementIORs: ['requirement:uuid:once-peer-comm-001'],
+      componentIORs: ['component:once:0.1.0.2'],
+      testDataScenario: { input: 'peer-comm', expected: 'success' },
+      executionContextScenario: {},
+      expectedResultScenario: {},
+      createdAt: new Date().toISOString(),
+      modifiedAt: new Date().toISOString()
+    });
+    this.iorResolver.registerLocalObject('test:uuid:once-peer-communication-001', peerTest);
+
+    // Scenario Management Test
+    const scenarioTest = new DefaultWeb4TestCase();
+    scenarioTest.init({
+      uuid: 'test:uuid:once-scenario-management-001',
+      name: 'ONCE Scenario Management Test',
+      description: 'Mock test for ONCE scenario hibernation and restoration',
+      requirementIORs: ['requirement:uuid:once-scenarios-001'],
+      componentIORs: ['component:once:0.1.0.2'],
+      testDataScenario: { input: 'scenarios', expected: 'success' },
+      executionContextScenario: {},
+      expectedResultScenario: {},
+      createdAt: new Date().toISOString(),
+      modifiedAt: new Date().toISOString()
+    });
+    this.iorResolver.registerLocalObject('test:uuid:once-scenario-management-001', scenarioTest);
+  }
+
+  /**
    * Display test results
    */
   private displayTestResults(results: any): void {
@@ -327,12 +433,14 @@ export class Web4TestCLI {
     console.log('  run-version-tests          Run version management tests only');
     console.log('  run-cli-tests             Run CLI generation tests only');
     console.log('  run-compliance-tests      Run Web4 compliance tests only');
-    console.log('  run-all                   Run all available tests');
+    console.log('  run-once-tests            Run ONCE component tests');
+    console.log('  run-all                   Run all available tests (Web4TSComponent + ONCE)');
     console.log('  help                      Show this help message');
     console.log('');
     console.log('EXAMPLES:');
     console.log('  web4test run-all');
     console.log('  web4test run-version-tests');
+    console.log('  web4test run-once-tests');
     console.log('  web4test run-compliance-tests');
     console.log('');
     console.log('Web4 Principles Applied:');
@@ -358,4 +466,12 @@ export async function main(): Promise<void> {
   }
   
   await cli.run(args);
+}
+
+// If this file is run directly, execute main
+if (require.main === module) {
+  main().catch(error => {
+    console.error('❌ CLI execution failed:', error);
+    process.exit(1);
+  });
 }

@@ -4,6 +4,9 @@
   "description": "Tootsie - Total Object-Oriented Testing Suite for Web4 ecosystem",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "web4test": "dist/ts/layer5/Web4TestCLI.js"
+  },
   "scripts": {
     "build": "npm run clean-dist && tsc",
     "prebuild": "npm run clean-dist",
