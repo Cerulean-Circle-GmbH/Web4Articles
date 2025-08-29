@@ -52,41 +52,54 @@ export class OnceCLI {
 
   private showUsage(): void {
     const cyan = '\x1b[36m';
-    const white = '\x1b[37m';
     const yellow = '\x1b[33m';
     const green = '\x1b[32m';
     const bold = '\x1b[1m';
     const reset = '\x1b[0m';
 
-    console.log('');
-    console.log(`${cyan}${bold}🎭 ONCE Interactive Demo${reset} - Web4 Universal P2P Communication Engine`);
+    console.log(`${bold}${cyan}ONCE CLI Tool${reset} ${green}- Web4 Universal P2P Communication Engine${reset}`);
     console.log('');
     console.log(`${bold}Usage:${reset}`);
-    console.log(`  ${cyan}once${reset} ${white}demo${reset}                    # Start interactive demo with browser auto-opening`);
-    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}<headless>${reset}         # Start demo without browser (server only)`);
-    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}<help>${reset}             # Show demo-specific help`);
-    console.log(`  ${cyan}once${reset} ${white}start${reset}                   # Start npm server interactively (quit with ${yellow}q${reset})`);
-    console.log(`  ${cyan}once${reset} ${white}start${reset} ${yellow}<headless>${reset}        # Start npm server without interaction`);
-    console.log(`  ${cyan}once${reset} ${white}stop${reset}                    # Stop running npm server gracefully`);
-    console.log(`  ${cyan}once${reset} ${white}help${reset}                    # Show this help message`);
-    console.log(`  ${cyan}once${reset} ${white}version${reset}                 # Show ONCE version information`);
+    console.log(`  ${cyan}once${reset} demo                    ${green}# Start interactive demo with browser auto-opening${reset}`);
+    console.log(`  ${cyan}once${reset} demo ${yellow}headless${reset}          ${green}# Start demo without browser (server only)${reset}`);
+    console.log(`  ${cyan}once${reset} demo ${yellow}help${reset}             ${green}# Show demo-specific help${reset}`);
+    console.log(`  ${cyan}once${reset} start                   ${green}# Start npm server interactively (quit with ${yellow}q${reset}${green})${reset}`);
+    console.log(`  ${cyan}once${reset} start ${yellow}headless${reset}         ${green}# Start npm server without interaction${reset}`);
+    console.log(`  ${cyan}once${reset} stop                    ${green}# Stop running npm server gracefully${reset}`);
+    console.log(`  ${cyan}once${reset} help                    ${green}# Show this help message${reset}`);
+    console.log(`  ${cyan}once${reset} version                 ${green}# Show ONCE version information${reset}`);
     console.log('');
-    console.log(`${bold}Demo Features:${reset}`);
+    console.log(`${bold}Commands:${reset}`);
+    console.log(`  ${bold}demo${reset}         Start interactive demo with browser auto-opening`);
+    console.log(`  ${bold}start${reset}        Start npm server interactively or headless`);
+    console.log(`  ${bold}stop${reset}         Stop running npm server gracefully`);
+    console.log(`  ${bold}help${reset}         Show this help message`);
+    console.log(`  ${bold}version${reset}      Show ONCE version information`);
+    console.log('');
+    console.log(`${bold}Parameters:${reset}`);
+    console.log(`  ${yellow}headless${reset}      Run without interactive controls or browser`);
+    console.log(`  ${yellow}help${reset}          Show command-specific help information`);
+    console.log(`  ${yellow}q${reset}             Quit interactive server (press during start)`);
+    console.log('');
+    console.log(`${bold}Examples:${reset}`);
+    console.log(`  ${green}# Basic demo usage${reset}`);
+    console.log(`  ${cyan}once${reset} demo                    ${green}# Launch full interactive demo${reset}`);
+    console.log(`  ${cyan}once${reset} demo ${yellow}headless${reset}           ${green}# Server-only mode for testing${reset}`);
+    console.log('');
+    console.log(`  ${green}# Server management${reset}`);
+    console.log(`  ${cyan}once${reset} start                   ${green}# Start npm server with interactive control${reset}`);
+    console.log(`  ${cyan}once${reset} start ${yellow}headless${reset}          ${green}# Start npm server non-interactively${reset}`);
+    console.log(`  ${cyan}once${reset} stop                    ${green}# Stop the running npm server${reset}`);
+    console.log('');
+    console.log(`${bold}ONCE Features:${reset}`);
     console.log(`  ${green}•${reset} Cross-platform browser auto-opening`);
     console.log(`  ${green}•${reset} Web4 Message component integration`);
     console.log(`  ${green}•${reset} P2P scenario acknowledgments`);
     console.log(`  ${green}•${reset} Interactive demo controls`);
     console.log(`  ${green}•${reset} TTY-aware keyboard input`);
+    console.log(`  ${green}•${reset} Graceful server lifecycle management`);
     console.log('');
-    console.log(`${bold}Examples:${reset}`);
-    console.log(`  ${cyan}once${reset} ${white}demo${reset}                    # Launch full interactive demo`);
-    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}headless${reset}           # Server-only mode for testing`);
-    console.log(`  ${cyan}once${reset} ${white}start${reset}                   # Start npm server with interactive control`);
-    console.log(`  ${cyan}once${reset} ${white}start${reset} ${yellow}headless${reset}          # Start npm server non-interactively`);
-    console.log(`  ${cyan}once${reset} ${white}stop${reset}                    # Stop the running npm server`);
-    console.log('');
-    console.log(`${bold}Location:${reset} Latest version (${yellow}v${this.onceVersion}${reset})`);
-    console.log(`${bold}Path:${reset} ${yellow}scripts/versions/once-v${this.onceVersion}${reset}`);
+    console.log(`${bold}For more information, visit:${reset} ${cyan}https://github.com/Cerulean-Circle-GmbH/Web4Articles${reset}`);
   }
 
   private showHelp(): void {

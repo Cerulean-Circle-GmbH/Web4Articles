@@ -178,66 +178,9 @@ fi
 cd "$PROJECT_ROOT"
 node "$CLI_PATH" "$@"
 
-# Show usage if no parameters provided
-if [ $# -eq 0 ]; then
-    echo ""
-    echo -e "${CYAN}${BOLD}🎭 ONCE Interactive Demo${RESET} - Web4 Universal P2P Communication Engine"
-    echo ""
-    echo -e "${BOLD}Usage:${RESET}"
-    echo -e "  ${CYAN}once demo${RESET}                    # Start interactive demo with browser auto-opening"
-    echo -e "  ${CYAN}once demo --headless${RESET}         # Start demo without browser (server only)"
-    echo -e "  ${CYAN}once demo --help${RESET}             # Show demo-specific help"
-    echo -e "  ${CYAN}once help${RESET}                    # Show this help message"
-    echo -e "  ${CYAN}once version${RESET}                 # Show ONCE version information"
-    echo ""
-    echo -e "${BOLD}Demo Features:${RESET}"
-    echo -e "  ${BLUE}•${RESET} Cross-platform browser auto-opening"
-    echo -e "  ${BLUE}•${RESET} Web4 Message component integration"
-    echo -e "  ${BLUE}•${RESET} P2P scenario acknowledgments"
-    echo -e "  ${BLUE}•${RESET} Interactive demo controls"
-    echo -e "  ${BLUE}•${RESET} TTY-aware keyboard input"
-    echo ""
-    echo -e "${BOLD}Examples:${RESET}"
-    echo -e "  ${CYAN}once demo${RESET}                    # Launch full interactive demo"
-    echo -e "  ${CYAN}once demo --headless${RESET}         # Server-only mode for testing"
-    echo ""
-    echo -e "${BOLD}Location:${RESET} Latest version (${YELLOW}v$LATEST_VERSION${RESET})"
-    echo -e "${BOLD}Path:${RESET} ${YELLOW}scripts/versions/once$LATEST_VERSION${RESET}"
-    exit 0
-fi
+# No usage in shell script - delegate to TypeScript CLI
 
-# Handle specific commands
-case "$1" in
-    "help"|"--help"|"-h")
-        echo ""
-        echo -e "${CYAN}${BOLD}🎭 ONCE Interactive Demo${RESET} - Web4 Universal P2P Communication Engine"
-        echo ""
-        echo -e "${BOLD}Usage:${RESET}"
-        echo -e "  ${CYAN}once demo${RESET}                    # Start interactive demo"
-        echo -e "  ${CYAN}once demo --headless${RESET}         # Start demo without browser"
-        echo -e "  ${CYAN}once demo --help${RESET}             # Show demo help"
-        echo -e "  ${CYAN}once help${RESET}                    # Show this help"
-        echo -e "  ${CYAN}once version${RESET}                 # Show version info"
-        echo ""
-        exit 0
-        ;;
-    "version"|"--version"|"-v")
-        echo -e "${BOLD}ONCE Interactive Demo${RESET} ${YELLOW}v$LATEST_VERSION${RESET}"
-        echo -e "${BOLD}Web4 Universal P2P Communication Engine${RESET}"
-        echo -e "${BOLD}Path:${RESET} ${YELLOW}$VERSIONED_SCRIPT${RESET}"
-        exit 0
-        ;;
-    "demo")
-        echo -e "${CYAN}🚀 Launching ONCE Demo (latest: ${YELLOW}v$LATEST_VERSION${RESET}${CYAN})...${RESET}"
-        shift  # Remove 'demo' from arguments
-        exec "$VERSIONED_SCRIPT" "$@"
-        ;;
-    *)
-        echo -e "${BOLD}❌ Unknown command:${RESET} ${YELLOW}$1${RESET}"
-        echo -e "Run '${CYAN}once help${RESET}' for usage information"
-        exit 1
-        ;;
-esac
+# No command handling in shell script - delegate everything to TypeScript CLI
 EOF
 
 # Make latest script executable
