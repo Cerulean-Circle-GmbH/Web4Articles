@@ -12,6 +12,13 @@ A DAPP for collective intelligence in article writing.
 
 Follow these steps:
 
+1. **Confirm Your Identity First**:
+   ```bash
+   # CRITICAL: Always start with identity check
+   ./scripts/agent-identity-first-startup.sh
+   ```
+
+2. **Previous Step 1 becomes Step 2** (and renumber subsequent steps)
 1. **Initialize PDCA Framework**:
    ```bash
    # Check if PDCA documentation exists
