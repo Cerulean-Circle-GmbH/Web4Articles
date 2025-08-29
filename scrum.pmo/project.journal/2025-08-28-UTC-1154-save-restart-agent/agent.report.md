@@ -12,8 +12,9 @@
 
 | Agent Branch | Name | Role | Session | Status Merge | Sync | Lifecycle |
 |--------------|------|------|---------|--------------|------|-----------|
-| save/start.v1 | SAVER-001 | Save/Restart Agent | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/session-start.md) \| [§/session-start.md](session-start.md) | ✅ Active<br>⚠️ Unmerged: 33 PDCAs<br>📝 Modified: howto.PDCA.md, template.md<br>🔧 New: fix.dual.links script | release/dev (wild west)<br>save/start.v1 (clean home)<br>save/start.v2 (for others)<br>main (agent startup) | 🟢 Healthy<br>⏱️ Runtime: 56min<br>💾 Memory: Normal |
-| dev/2025-08-28-UTC-2140 | BG-2140 | Background Agent | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-session-start.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-session-start.md](../../2025-08-28-UTC-2140-session/PDCA-session-start.md) | ✅ Active<br>✅ Merged: Initial PDCA<br>🆕 Fresh session | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 10min<br>💾 Memory: Normal |
+| save/start.v1 | SaveRestartAgent | Save/Restart Agent | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/session-start.md) \| [§/session-start.md](session-start.md) | ✅ Active<br>⚠️ Unmerged: 35 PDCAs<br>📝 Modified: howto.PDCA.md, template.md<br>🔧 New: fix.dual.links script | release/dev (wild west)<br>save/start.v1 (clean home)<br>save/start.v2 (for others)<br>main (agent startup) | 🟢 Healthy<br>⏱️ Runtime: 80min<br>💾 Memory: Normal |
+| dev/2025-08-28-UTC-2140 | BackgroundAgent | Background Agent | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-session-start.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-session-start.md](../../2025-08-28-UTC-2140-session/PDCA-session-start.md) | ✅ Active<br>✅ Merged: Initial PDCA<br>🆕 Fresh session | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 10min<br>💾 Memory: Normal |
+| cursor/start-background-process-78bf | ONCE Developer | Developer | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/start-background-process-78bf/scrum.pmo/project.journal/2025-08-28-UTC-1846-session/pdca/2025-08-28-UTC-1846-session-start.md) \| [§/../../2025-08-28-UTC-1846-session/pdca/2025-08-28-UTC-1846-session-start.md](../../2025-08-28-UTC-1846-session/pdca/2025-08-28-UTC-1846-session-start.md) | ⚠️ Inactive<br>📝 Test session<br>❌ Complex bash commands | release/dev<br>main (updates) | 🟡 Unknown<br>⏱️ Runtime: ?<br>💾 Memory: ? |
 
 ---
 
@@ -25,17 +26,17 @@ When an agent starts, present this decision:
 
 ```markdown
 ### **QA Decisions**
-- [ ] **Agent Identifier:** Choose your agent's unique name
-  - a) AUTO-[BRANCH]-[TIMESTAMP] (e.g., AUTO-DEV-2140)
-  - b) [ROLE_PREFIX]-[NUMBER] (e.g., DEV-001, ARCH-002)
-  - c) Custom name: _________ (must be unique, 8 chars max)
+- [ ] **Agent Name:** Choose your Web4 agent name
+  - a) [YourRole]Agent (e.g., DeveloperAgent, ArchitectAgent)
+  - b) [Purpose] [Role] (e.g., ONCE Developer, UI Designer)
+  - c) Custom meaningful name: _________ (must be speaky and clear)
   - **Decision:** [User selects]
 ```
 
 **Implementation in PDCA Header:**
 ```markdown
-**👤 Agent Name:** BG-2140 → Background Process Handler
-**👤 Agent Role:** Background Agent → Session Initialization
+**👤 Agent Name:** SaveRestartAgent → Process Guardian
+**👤 Agent Role:** Save/Restart Agent → Session Recovery
 ```
 
 This allows agents to:
@@ -57,7 +58,7 @@ This allows agents to:
 
 ## **Sync Requirements**
 
-### **Save/Restart Agent (SAVER-001)**
+### **SaveRestartAgent**
 - `release/dev`: Receives all process improvements (wild west)
 - `save/start.v1`: Home branch - NEVER leave
 - `save/start.v2`: Maintain for other agents
@@ -81,8 +82,9 @@ This allows agents to:
 
 ## **Recommendations**
 
-1. **SAVER-001**: Continue maintaining clean processes on v1
-2. **BG-2140**: Good startup using template v3.0
+1. **SaveRestartAgent**: Continue maintaining clean processes on v1
+2. **BackgroundAgent**: Good startup using template v3.0
+3. **ONCE Developer**: Example of Web4 naming done right
 3. **All Agents**: Adopt naming convention in next session
 
 ---
