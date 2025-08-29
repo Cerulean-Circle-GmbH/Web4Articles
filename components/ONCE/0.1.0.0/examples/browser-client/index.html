@@ -3,399 +3,305 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ONCE Browser Client Example</title>
+    <title>ONCE Web4 Browser Client - Demo Mode</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
+        body { 
+            font-family: 'Courier New', monospace; 
+            background: #1a1a1a; 
+            color: #0f0; 
+            margin: 0;
             padding: 20px;
-            background: #f5f5f5;
         }
-        .container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        .demo-header { 
+            border: 2px solid #0f0; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            text-align: center;
+            background: rgba(0, 255, 0, 0.1);
         }
-        .panel {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .connection-status {
+            font-size: 1.2em;
+            margin: 10px 0;
         }
-        h1, h2 {
-            margin-top: 0;
-        }
-        .status {
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-        .status.connected {
-            background: #d4edda;
-            color: #155724;
-        }
-        .status.disconnected {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        .scenario-item {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        .scenario-item h3 {
-            margin: 0 0 5px 0;
-            color: #495057;
-        }
-        pre {
-            background: #f1f3f5;
-            padding: 10px;
-            border-radius: 4px;
-            overflow-x: auto;
-            font-size: 12px;
-        }
-        button {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        button:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
-        }
-        .log-entry {
-            padding: 5px;
-            border-bottom: 1px solid #eee;
+        .message-log { 
+            background: #000; 
+            border: 1px solid #0f0; 
+            padding: 15px; 
+            height: 400px; 
+            overflow-y: scroll; 
             font-family: monospace;
-            font-size: 12px;
+            font-size: 14px;
+            line-height: 1.4;
         }
-        .log-entry.error {
-            color: #dc3545;
-        }
-        .log-entry.success {
-            color: #28a745;
-        }
-        #scenarioList, #peerList, #logList {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        .peer-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background: #f8f9fa;
-            margin-bottom: 5px;
-            border-radius: 4px;
-        }
+        .acknowledgment { color: #ff0; font-weight: bold; }
+        .connection { color: #0ff; }
+        .message { color: #0f0; }
+        .error { color: #f00; }
+        .timestamp { color: #999; font-size: 0.9em; }
+        
         .controls {
-            margin-bottom: 20px;
+            margin: 20px 0;
+            text-align: center;
         }
-        input[type="text"] {
-            padding: 8px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            width: 300px;
-            margin-right: 10px;
+        
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background: #ff0;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .stat-box {
+            border: 1px solid #0f0;
+            padding: 10px;
+            background: rgba(0, 255, 0, 0.05);
         }
     </style>
 </head>
 <body>
-    <h1>🌟 ONCE Browser Client Example</h1>
+    <div class="demo-header">
+        <h1>🎭 ONCE Interactive Demo - Browser Client</h1>
+        <p>Web4 P2P Communication with Message Component Integration</p>
+        <div class="connection-status" id="connectionStatus">🔴 Disconnected</div>
+    </div>
+    
+    <div class="stats">
+        <div class="stat-box">
+            <strong>Messages Sent:</strong> <span id="messagesSent">0</span>
+        </div>
+        <div class="stat-box">
+            <strong>Messages Received:</strong> <span id="messagesReceived">0</span>
+        </div>
+        <div class="stat-box">
+            <strong>Acknowledgments:</strong> <span id="acknowledgmentsSent">0</span>
+        </div>
+        <div class="stat-box">
+            <strong>Connection Time:</strong> <span id="connectionTime">--:--:--</span>
+        </div>
+    </div>
     
     <div class="controls">
-        <input type="text" id="serverUrl" placeholder="ws://localhost:8080" value="ws://localhost:8080">
-        <button id="connectBtn" onclick="connectToServer()">Connect to Server</button>
-        <button id="disconnectBtn" onclick="disconnect()" disabled>Disconnect</button>
-        <button id="discoverBtn" onclick="discoverPeers()" disabled>Discover Peers</button>
+        <button onclick="sendTestMessage()">Send Test Message</button>
+        <button onclick="sendAcknowledgment()">Send Acknowledgment</button>
+        <button onclick="clearLog()">Clear Log</button>
     </div>
-
-    <div id="connectionStatus" class="status disconnected">
-        Status: Disconnected
+    
+    <div class="message-log" id="messageLog">
+        <div class="connection">📡 Initializing ONCE Browser Client...</div>
     </div>
-
-    <div class="container">
-        <div class="panel">
-            <h2>📥 Received Scenarios</h2>
-            <div id="scenarioList"></div>
-        </div>
-
-        <div class="panel">
-            <h2>🔗 Connected Peers</h2>
-            <div id="peerList"></div>
-        </div>
-
-        <div class="panel">
-            <h2>🎯 Actions</h2>
-            <button onclick="requestScenario('user')" id="requestUserBtn" disabled>Request User Scenario</button>
-            <button onclick="requestScenario('article')" id="requestArticleBtn" disabled>Request Article Scenario</button>
-            <button onclick="requestScenario('counter')" id="requestCounterBtn" disabled>Request Counter Scenario</button>
-            <br><br>
-            <button onclick="createAndShareScenario()" id="shareBtn" disabled>Create & Share Scenario</button>
-            <br><br>
-            <h3>ONCE Metrics</h3>
-            <pre id="metricsDisplay">Not initialized</pre>
-        </div>
-
-        <div class="panel">
-            <h2>📋 Activity Log</h2>
-            <div id="logList"></div>
-        </div>
-    </div>
-
-    <script type="module">
-        // Import ONCE (in real app, this would be bundled)
-        // For demo, we'll use a simplified client implementation
+    
+    <script>
+        // Browser client with Message component integration
+        const urlParams = new URLSearchParams(window.location.search);
+        const serverHost = urlParams.get('server') || 'localhost:8080';
+        const isDemoMode = urlParams.get('demo') === 'true';
         
         let ws = null;
-        let onceInitialized = false;
-        const scenarios = new Map();
-        const peers = new Map();
-
-        // Make functions global for onclick handlers
-        window.connectToServer = connectToServer;
-        window.disconnect = disconnect;
-        window.discoverPeers = discoverPeers;
-        window.requestScenario = requestScenario;
-        window.createAndShareScenario = createAndShareScenario;
-
-        async function connectToServer() {
-            const url = document.getElementById('serverUrl').value;
-            log(`Connecting to ${url}...`);
-
+        let stats = {
+            messagesSent: 0,
+            messagesReceived: 0,
+            acknowledgmentsSent: 0,
+            connectionTime: null
+        };
+        
+        console.log('ONCE Browser Client - Demo Mode:', isDemoMode);
+        console.log('Connecting to server:', serverHost);
+        
+        addMessage('connection', '🎭 ONCE Browser Client started in demo mode');
+        addMessage('connection', `📡 Attempting connection to: ${serverHost}`);
+        
+        // WebSocket connection with Message acknowledgments
+        function connectToServer() {
             try {
-                ws = new WebSocket(url);
-
-                ws.onopen = () => {
-                    log('✅ Connected to server', 'success');
-                    updateConnectionStatus(true);
+                ws = new WebSocket(`ws://${serverHost}`);
+                
+                ws.onopen = function() {
+                    stats.connectionTime = new Date();
+                    updateConnectionStatus('🟢 Connected to ' + serverHost);
+                    addMessage('connection', '✅ Connected to ONCE server');
                     
-                    // Register with server
-                    ws.send(JSON.stringify({
-                        type: 'register',
-                        peerInfo: {
-                            name: 'Browser Client ' + Math.floor(Math.random() * 1000),
-                            platform: 'browser',
-                            capabilities: ['scenario-viewer', 'p2p-communication']
+                    // Send connection acknowledgment using Message component pattern
+                    const ackMessage = {
+                        type: 'message-component-ack',
+                        scenario: createMessageScenario(
+                            'Browser client connected and ready for P2P communication',
+                            'acknowledgment',
+                            'ServerConnection'
+                        )
+                    };
+                    
+                    ws.send(JSON.stringify(ackMessage));
+                    stats.acknowledgmentsSent++;
+                    updateStats();
+                    addMessage('acknowledgment', '📨 Sent connection acknowledgment via Message component');
+                };
+                
+                ws.onmessage = function(event) {
+                    try {
+                        const message = JSON.parse(event.data);
+                        stats.messagesReceived++;
+                        updateStats();
+                        
+                        addMessage('message', `📥 Received: ${message.type || 'unknown'}`);
+                        
+                        // Create acknowledgment for received messages
+                        if (message.type === 'scenario' || message.type === 'message-component-ack') {
+                            const ackMessage = {
+                                type: 'message-component-ack',
+                                scenario: createMessageScenario(
+                                    `Acknowledged receipt of ${message.type}`,
+                                    'acknowledgment',
+                                    message.type
+                                )
+                            };
+                            
+                            ws.send(JSON.stringify(ackMessage));
+                            stats.acknowledgmentsSent++;
+                            updateStats();
+                            addMessage('acknowledgment', '📨 Sent acknowledgment for received message');
                         }
-                    }));
-
-                    // Initialize ONCE-like functionality
-                    initializeOnce();
+                    } catch (error) {
+                        addMessage('error', `❌ Error parsing message: ${error.message}`);
+                    }
                 };
-
-                ws.onmessage = (event) => {
-                    const message = JSON.parse(event.data);
-                    handleMessage(message);
+                
+                ws.onclose = function() {
+                    updateConnectionStatus('🔴 Disconnected');
+                    addMessage('connection', '❌ Disconnected from ONCE server');
                 };
-
-                ws.onerror = (error) => {
-                    log('❌ WebSocket error', 'error');
-                    console.error(error);
+                
+                ws.onerror = function(error) {
+                    addMessage('error', `❌ WebSocket error: ${error.message || 'Connection failed'}`);
                 };
-
-                ws.onclose = () => {
-                    log('🔌 Disconnected from server');
-                    updateConnectionStatus(false);
-                    ws = null;
-                };
-
+                
             } catch (error) {
-                log(`❌ Failed to connect: ${error.message}`, 'error');
+                addMessage('error', `❌ Failed to connect: ${error.message}`);
             }
         }
-
-        function disconnect() {
-            if (ws) {
-                ws.close();
-                ws = null;
-            }
-        }
-
-        function handleMessage(message) {
-            switch (message.type) {
-                case 'server-info':
-                    log(`📡 Server info received. Available scenarios: ${message.availableScenarios.join(', ')}`);
-                    break;
-
-                case 'scenario-response':
-                    if (message.scenario) {
-                        scenarios.set(message.scenario.uuid, message.scenario);
-                        displayScenario(message.scenario);
-                        log(`📦 Received scenario: ${message.scenario.objectType}`, 'success');
-                    }
-                    break;
-
-                case 'scenario-broadcast':
-                    scenarios.set(message.scenario.uuid, message.scenario);
-                    displayScenario(message.scenario);
-                    log(`📢 Broadcast scenario from peer ${message.fromPeer}: ${message.scenario.objectType}`);
-                    break;
-
-                case 'peer-list':
-                    updatePeerList(message.peers);
-                    log(`👥 Discovered ${message.peers.length} peers`);
-                    break;
-            }
-        }
-
-        function requestScenario(type) {
-            if (!ws || ws.readyState !== WebSocket.OPEN) return;
-
-            const requestId = generateUUID();
-            ws.send(JSON.stringify({
-                type: 'request-scenario',
-                scenarioType: type,
-                requestId: requestId
-            }));
-            log(`📤 Requested ${type} scenario`);
-        }
-
-        function createAndShareScenario() {
-            if (!ws || ws.readyState !== WebSocket.OPEN) return;
-
-            const scenario = {
+        
+        // Message component scenario creation
+        function createMessageScenario(content, type = 'message', acknowledgedType = null) {
+            return {
                 uuid: generateUUID(),
-                objectType: 'BrowserNote',
+                component: 'Message',
                 version: '0.1.0.0',
-                state: {
-                    IOR: `note:${generateUUID()}`,
-                    owner: 'browser-client',
-                    model: {
-                        title: 'Note from Browser',
-                        content: `Created at ${new Date().toLocaleTimeString()}`,
-                        userAgent: navigator.userAgent
-                    }
-                },
-                metadata: {
-                    created: new Date().toISOString(),
-                    modified: new Date().toISOString(),
-                    description: 'Note created in browser'
+                data: {
+                    content: content,
+                    type: type,
+                    timestamp: new Date().toISOString(),
+                    sender: 'Browser-Client-' + Date.now(),
+                    acknowledgedType: acknowledgedType,
+                    status: type === 'acknowledgment' ? 'received' : 'sent'
                 }
             };
-
-            ws.send(JSON.stringify({
-                type: 'share-scenario',
-                scenario: scenario
-            }));
-
-            scenarios.set(scenario.uuid, scenario);
-            displayScenario(scenario);
-            log(`📤 Shared new scenario: ${scenario.objectType}`, 'success');
         }
-
-        function discoverPeers() {
-            if (!ws || ws.readyState !== WebSocket.OPEN) return;
-
-            ws.send(JSON.stringify({
-                type: 'discover-peers'
-            }));
-            log('🔍 Discovering peers...');
-        }
-
-        function displayScenario(scenario) {
-            const list = document.getElementById('scenarioList');
-            const item = document.createElement('div');
-            item.className = 'scenario-item';
-            item.innerHTML = `
-                <h3>${scenario.objectType} v${scenario.version}</h3>
-                <p><strong>UUID:</strong> ${scenario.uuid}</p>
-                <p><strong>Owner:</strong> ${scenario.state.owner}</p>
-                <details>
-                    <summary>View Details</summary>
-                    <pre>${JSON.stringify(scenario.state.model, null, 2)}</pre>
-                </details>
-            `;
-            list.insertBefore(item, list.firstChild);
-        }
-
-        function updatePeerList(peerData) {
-            const list = document.getElementById('peerList');
-            list.innerHTML = '';
+        
+        // UI Functions
+        function addMessage(type, text) {
+            const log = document.getElementById('messageLog');
+            const div = document.createElement('div');
+            div.className = type;
             
-            peerData.forEach(peer => {
-                const item = document.createElement('div');
-                item.className = 'peer-item';
-                item.innerHTML = `
-                    <div>
-                        <strong>${peer.info.name}</strong><br>
-                        <small>${peer.info.platform} - ${peer.info.capabilities?.join(', ') || 'No capabilities'}</small>
-                    </div>
-                `;
-                list.appendChild(item);
-            });
-        }
-
-        function updateConnectionStatus(connected) {
-            const status = document.getElementById('connectionStatus');
-            const buttons = ['requestUserBtn', 'requestArticleBtn', 'requestCounterBtn', 'shareBtn', 'discoverBtn'];
+            const timestamp = new Date().toLocaleTimeString();
+            div.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${text}`;
             
-            if (connected) {
-                status.className = 'status connected';
-                status.textContent = 'Status: Connected';
-                document.getElementById('connectBtn').disabled = true;
-                document.getElementById('disconnectBtn').disabled = false;
-                buttons.forEach(id => document.getElementById(id).disabled = false);
-            } else {
-                status.className = 'status disconnected';
-                status.textContent = 'Status: Disconnected';
-                document.getElementById('connectBtn').disabled = false;
-                document.getElementById('disconnectBtn').disabled = true;
-                buttons.forEach(id => document.getElementById(id).disabled = true);
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        function updateConnectionStatus(status) {
+            document.getElementById('connectionStatus').textContent = status;
+        }
+        
+        function updateStats() {
+            document.getElementById('messagesSent').textContent = stats.messagesSent;
+            document.getElementById('messagesReceived').textContent = stats.messagesReceived;
+            document.getElementById('acknowledgmentsSent').textContent = stats.acknowledgmentsSent;
+            
+            if (stats.connectionTime) {
+                const now = new Date();
+                const diff = now - stats.connectionTime;
+                const hours = Math.floor(diff / 3600000).toString().padStart(2, '0');
+                const minutes = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+                const seconds = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+                document.getElementById('connectionTime').textContent = `${hours}:${minutes}:${seconds}`;
             }
         }
-
-        function log(message, type = 'info') {
-            const list = document.getElementById('logList');
-            const entry = document.createElement('div');
-            entry.className = `log-entry ${type}`;
-            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-            list.insertBefore(entry, list.firstChild);
+        
+        // Control Functions
+        function sendTestMessage() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                const testMessage = {
+                    type: 'message-component-test',
+                    scenario: createMessageScenario('Test message from browser client', 'message')
+                };
+                
+                ws.send(JSON.stringify(testMessage));
+                stats.messagesSent++;
+                updateStats();
+                addMessage('message', '📤 Sent test message');
+            } else {
+                addMessage('error', '❌ Not connected to server');
+            }
         }
-
+        
+        function sendAcknowledgment() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                const ackMessage = {
+                    type: 'message-component-ack',
+                    scenario: createMessageScenario('Manual acknowledgment from browser', 'acknowledgment', 'ManualTest')
+                };
+                
+                ws.send(JSON.stringify(ackMessage));
+                stats.acknowledgmentsSent++;
+                updateStats();
+                addMessage('acknowledgment', '📨 Sent manual acknowledgment');
+            } else {
+                addMessage('error', '❌ Not connected to server');
+            }
+        }
+        
+        function clearLog() {
+            document.getElementById('messageLog').innerHTML = '';
+            addMessage('connection', '🧹 Log cleared');
+        }
+        
         function generateUUID() {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
                 const r = Math.random() * 16 | 0;
-                const v = c === 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
+                return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
             });
         }
-
-        // Simulate ONCE initialization in browser
-        async function initializeOnce() {
-            // In real implementation, would use actual ONCE
-            onceInitialized = true;
-            
-            // Simulate metrics
-            setInterval(() => {
-                const metrics = {
-                    platform: 'browser',
-                    scenariosLoaded: scenarios.size,
-                    peersConnected: peers.size,
-                    memoryUsage: performance.memory ? 
-                        (performance.memory.usedJSHeapSize / 1024 / 1024).toFixed(2) + ' MB' : 
-                        'N/A'
-                };
-                document.getElementById('metricsDisplay').textContent = JSON.stringify(metrics, null, 2);
-            }, 5000);
-            
-            log('✅ ONCE initialized in browser', 'success');
+        
+        // Update stats periodically
+        setInterval(updateStats, 1000);
+        
+        // Auto-connect when page loads
+        connectToServer();
+        
+        // Welcome message for demo mode
+        if (isDemoMode) {
+            setTimeout(() => {
+                addMessage('message', '🎭 Welcome to ONCE Interactive Demo!');
+                addMessage('message', '🌐 This browser client demonstrates Web4 P2P communication');
+                addMessage('message', '📨 Message component acknowledgments are enabled');
+            }, 1000);
         }
-
-        // Auto-connect on load for demo
-        window.addEventListener('load', () => {
-            // connectToServer();
-        });
     </script>
 </body>
 </html>

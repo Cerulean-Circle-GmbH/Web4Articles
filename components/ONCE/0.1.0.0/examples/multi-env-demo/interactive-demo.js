@@ -224,6 +224,14 @@ async function launchClient(type) {
     const clientId = `${type}-${Date.now()}`;
     log.info(`Launching ${type} client...`);
     
+    // Auto-open browser client if it's a Browser type
+    if (type === 'Browser') {
+        const browserOpened = autoOpenBrowserClient();
+        if (browserOpened) {
+            log.demo(`🌐 Browser window opened - connecting to ${state.HOST}:${state.PORT}`);
+        }
+    }
+    
     try {
         const ws = new WebSocket(`ws://${state.HOST}:${state.PORT}`);
         
