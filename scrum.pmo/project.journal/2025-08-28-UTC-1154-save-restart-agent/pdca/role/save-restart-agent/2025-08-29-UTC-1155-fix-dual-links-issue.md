@@ -64,7 +64,7 @@ CORRECT: [GitHub](URL) | [§/path/from/root](../relative/path)
 CORRECT: [GitHub](URL) | [local/file.md](local/file.md)
 
 WRONG: [GitHub](URL) | [path/from/root](path/from/root)
-WRONG: [GitHub](URL) | [/absolute/path](/absolute/path)
+[GitHub](URL) | [/absolute/path](/absolute/path)
 ```
 
 **2. My Common Mistakes**
@@ -167,4 +167,3 @@ Memorized: § = display, relative = function
 
 **🎯 Dual links issue fixed - § notation internalized! 🔗✨**
 
-**"Learn the format once, apply it forever."** 🔧📊
