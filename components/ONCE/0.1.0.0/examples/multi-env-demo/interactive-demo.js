@@ -378,12 +378,31 @@ async function killAllProcesses() {
     log.success('All processes terminated');
 }
 
-// Setup keyboard input
+// Setup keyboard input with TTY detection
 function setupKeyboard() {
     if (!state.keyboardEnabled) return;
     
-    readline.emitKeypressEvents(process.stdin);
-    process.stdin.setRawMode(true);
+    // Check if stdin is a TTY
+    if (!process.stdin.isTTY) {
+        log.warn('Not a TTY environment - keyboard input disabled');
+        state.keyboardEnabled = false;
+        return;
+    }
+    
+    try {
+        readline.emitKeypressEvents(process.stdin);
+        if (typeof process.stdin.setRawMode === 'function') {
+            process.stdin.setRawMode(true);
+        } else {
+            log.warn('setRawMode not available - using basic input mode');
+            state.keyboardEnabled = false;
+            return;
+        }
+    } catch (error) {
+        log.error(`Keyboard setup failed: ${error.message}`);
+        state.keyboardEnabled = false;
+        return;
+    }
     
     process.stdin.on('keypress', async (str, key) => {
         if (key.ctrl && key.name === 'c') {
