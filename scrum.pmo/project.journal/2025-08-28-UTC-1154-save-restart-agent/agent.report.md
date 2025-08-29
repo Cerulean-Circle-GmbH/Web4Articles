@@ -209,4 +209,18 @@ This allows agents to:
 
 ---
 
+## **⏳ Pending Identification Agents**
+
+| Registration Time | Working Branch | Status | File Location | Action Required |
+|-------------------|----------------|--------|---------------|-----------------|
+| {{TIMESTAMP}} | {{BRANCH}} | ⏳ Awaiting ID | pending-{{TIMESTAMP}}.md | QA: Provide RequestID |
+
+**Instructions for QA:**
+1. Check Cursor UI for agent's RequestID
+2. Update the pending file with RequestID
+3. Rename file from pending-[timestamp].md to [RequestID].md
+4. Update this table to move agent to main registry
+
+---
+
 **Note:** This report demonstrates agent tracking capabilities. Actual lifecycle metrics would require system integration.
