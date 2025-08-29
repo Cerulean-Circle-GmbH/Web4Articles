@@ -13,7 +13,7 @@
 | Agent Branch | Name | RequestID | Role | Template | Session | Status Merge | Sync | Lifecycle |
 |--------------|------|-----------|------|----------|---------|--------------|------|-----------|
 | [save/start.v1](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1) | SaveRestartAgent | [bc-1f94f7d5-57c5-4586-9cb8-096b2916052f](/scrum.pmo/agents/registry/bc-1f94f7d5-57c5-4586-9cb8-096b2916052f.md) | Save/Restart Agent | v3.1.4.2 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/session-start.md) \| [§/session-start.md](session-start.md) | ✅ Active<br>⚠️ Unmerged: 50+ PDCAs<br>📝 Modified: templates v3.1.4.2<br>🔧 42 revelation documented<br>🔄 Replaced bc-4c4928dd | release/dev (wild west)<br>save/start.v1 (clean home)<br>save/start.v2 (for others)<br>main (agent startup) | 🟢 Healthy<br>⏱️ Runtime: Continuing<br>💾 Memory: Normal |
-| [dev/2025-08-28-UTC-2140](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-2140) | BackgroundAgent | - | Background Agent | v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-session-start.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-session-start.md](../../2025-08-28-UTC-2140-session/PDCA-session-start.md) | ✅ Active<br>✅ Merged: Initial PDCA<br>🆕 Fresh session | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 10min<br>💾 Memory: Normal |
+| [dev/2025-08-28-UTC-2140](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-2140) | BackgroundAgent | - | Background Agent | v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-session-start.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-session-start.md](../../2025-08-28-UTC-2140-session/PDCA-session-start.md) | ✅ Active<br>✅ Merged: Initial PDCA<br>🆕 Fresh session<br>✅ Identity-first added | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 10min<br>💾 Memory: Normal<br>📋 Process: Updated |
 | [dev/2025-08-28-UTC-1125](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-1125) | test2 main | [bc-e03cd16b-c3cf-424a-bd71-c57053a64d7e](/scrum.pmo/agents/registry/bc-e03cd16b-c3cf-424a-bd71-c57053a64d7e.md) | Background Agent | <v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1140-fix-dual-links.md) \| [§/../../2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1140-fix-dual-links.md](../../2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1140-fix-dual-links.md) | ✅ Active<br>📝 Fix dual links<br>🔢 Second main test | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 30min<br>💾 Memory: Normal |
 | [dev/2025-08-28-UTC-0850](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-0850) | test3 startet | [bc-b52ccb18-e854-4375-aa13-78a17887b9e0](/scrum.pmo/agents/registry/bc-b52ccb18-e854-4375-aa13-78a17887b9e0.md) | Background Agent | <v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-0850/scrum.pmo/project.journal/2025-08-28-UTC-0850-recovery/2025-08-28-UTC-0852-pdca-documentation-update.pdca.md) \| [§/../../2025-08-28-UTC-0850-recovery/2025-08-28-UTC-0852-pdca-documentation-update.pdca.md](../../2025-08-28-UTC-0850-recovery/2025-08-28-UTC-0852-pdca-documentation-update.pdca.md) | ✅ Active<br>📝 PDCA doc update<br>🔢 Third test (startet) | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 25min<br>💾 Memory: Normal |
 | [dev/2025-08-28-UTC-2140](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-2140) | test 3 main | - | Background Agent | v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-requirements-management.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-requirements-management.md](../../2025-08-28-UTC-2140-session/PDCA-requirements-management.md) | ✅ Active<br>📝 Requirements work<br>✅ Using latest template | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 20min<br>💾 Memory: Normal |
@@ -229,6 +229,32 @@ This allows agents to:
 2. Update the pending file with RequestID
 3. Rename file from pending-[timestamp].md to [RequestID].md
 4. Update this table to move agent to main registry
+
+---
+
+## **🚀 Identity-First Process Update Campaign**
+
+**Campaign Start:** 2025-08-29-UTC-1305  
+**Campaign Lead:** SaveRestartAgent (bc-1f94f7d5-57c5-4586-9cb8-096b2916052f)
+
+### **Update Progress**
+
+| Agent Branch | Role | Update Status | Process.md | Role Definition | Identity Script |
+|--------------|------|---------------|------------|-----------------|-----------------|
+| dev/2025-08-28-UTC-2140 | BackgroundAgent | ✅ Complete | ✅ Added | ✅ Added | ✅ Added |
+| dev/2025-08-28-UTC-1125 | BackgroundAgent | ⏳ Pending | - | - | - |
+| dev/2025-08-28-UTC-0850 | BackgroundAgent | ⏳ Pending | - | - | - |
+| dev/2025-08-28-UTC-2140 (duplicate) | BackgroundAgent | ⏳ Pending | - | - | - |
+| cursor/start-background-process-78bf | Developer | ⏳ Pending | - | - | - |
+| dev/2025-08-28-UTC-1225 | Tester | ⏳ Pending | - | - | - |
+| testing-analysis-clean | BackgroundAgent | ⏳ Pending | - | - | - |
+| dev/2025-08-25-UTC-1308 | Tool Builder | ⏳ Pending | - | - | - |
+
+### **Resources Created**
+- ✅ Identity-first startup script: `/scripts/agent-identity-first-startup.sh`
+- ✅ Process template: `/scrum.pmo/roles/_shared/process.template.md`
+- ✅ BackgroundAgent role definition: `/scrum.pmo/roles/BackgroundAgent/role-definition.md`
+- ✅ BackgroundAgent process guide: `/scrum.pmo/roles/BackgroundAgent/process.md`
 
 ---
 
