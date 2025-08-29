@@ -4,7 +4,8 @@
  */
 
 import * as path from 'path';
-import { spawn } from 'child_process';
+import { spawn, ChildProcess } from 'child_process';
+import * as readline from 'readline';
 
 export class OnceCLI {
   private projectRoot: string;
@@ -26,6 +27,9 @@ export class OnceCLI {
     switch (command) {
       case 'demo':
         await this.runDemo(args.slice(1));
+        break;
+      case 'star':
+        await this.runStar(args.slice(1));
         break;
       case 'help':
       case '--help':
@@ -58,6 +62,7 @@ export class OnceCLI {
     console.log(`  ${cyan}once${reset} ${white}demo${reset}                    # Start interactive demo with browser auto-opening`);
     console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--headless${reset}         # Start demo without browser (server only)`);
     console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--help${reset}             # Show demo-specific help`);
+    console.log(`  ${cyan}once${reset} ${white}star${reset}                    # Start npm server interactively (quit with ${yellow}q${reset})`);
     console.log(`  ${cyan}once${reset} ${white}help${reset}                    # Show this help message`);
     console.log(`  ${cyan}once${reset} ${white}version${reset}                 # Show ONCE version information`);
     console.log('');
@@ -71,6 +76,7 @@ export class OnceCLI {
     console.log(`${bold}Examples:${reset}`);
     console.log(`  ${cyan}once${reset} ${white}demo${reset}                    # Launch full interactive demo`);
     console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--headless${reset}         # Server-only mode for testing`);
+    console.log(`  ${cyan}once${reset} ${white}star${reset}                    # Start npm server with interactive control`);
     console.log('');
     console.log(`${bold}Location:${reset} Latest version (${yellow}v${this.onceVersion}${reset})`);
     console.log(`${bold}Path:${reset} ${yellow}scripts/versions/once${this.onceVersion}${reset}`);
@@ -90,6 +96,7 @@ export class OnceCLI {
     console.log(`  ${cyan}once${reset} ${white}demo${reset}                    # Start interactive demo`);
     console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--headless${reset}         # Start demo without browser`);
     console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--help${reset}             # Show demo help`);
+    console.log(`  ${cyan}once${reset} ${white}star${reset}                    # Start npm server interactively`);
     console.log(`  ${cyan}once${reset} ${white}help${reset}                    # Show this help`);
     console.log(`  ${cyan}once${reset} ${white}version${reset}                 # Show version info`);
     console.log('');
@@ -201,6 +208,94 @@ export class OnceCLI {
     console.log(`  ${green}•${reset} P2P scenario acknowledgments`);
     console.log(`  ${green}•${reset} Interactive demo controls`);
     console.log('');
+  }
+
+  private async runStar(args: string[]): Promise<void> {
+    const cyan = '\x1b[36m';
+    const yellow = '\x1b[33m';
+    const magenta = '\x1b[35m';
+    const bold = '\x1b[1m';
+    const reset = '\x1b[0m';
+
+    // Find the ONCE component directory
+    const oncePath = path.join(this.projectRoot, 'components', 'ONCE', this.onceVersion);
+    
+    console.log(`${cyan}⭐ Starting ONCE npm server ${yellow}v${this.onceVersion}${reset}${cyan}...${reset}`);
+    console.log(`${bold}📁 Server path:${reset} ${yellow}${oncePath}${reset}`);
+    console.log(`${magenta}🎮 Press ${yellow}q${reset}${magenta} to quit${reset}`);
+    console.log('');
+
+    // Check if package.json exists
+    const packageJsonPath = path.join(oncePath, 'package.json');
+    try {
+      await import('fs').then(fs => fs.promises.access(packageJsonPath));
+    } catch (error) {
+      console.log(`❌ package.json not found at: ${packageJsonPath}`);
+      console.log(`📁 Expected ONCE component at: ${oncePath}`);
+      process.exit(1);
+    }
+
+    // Start npm start in the ONCE directory
+    console.log(`${cyan}🚀 Launching: ${yellow}npm start${reset}`);
+    const npmProcess: ChildProcess = spawn('npm', ['start'], {
+      cwd: oncePath,
+      stdio: ['pipe', 'inherit', 'inherit']
+    });
+
+    // Handle npm process errors
+    npmProcess.on('error', (error) => {
+      console.error(`❌ Failed to start npm server: ${error.message}`);
+      process.exit(1);
+    });
+
+    // Handle npm process exit
+    npmProcess.on('close', (code) => {
+      console.log(`${magenta}⭐ npm server stopped${reset}`);
+      process.exit(code || 0);
+    });
+
+    // Setup keyboard input handling
+    if (process.stdin.isTTY) {
+      process.stdin.setRawMode(true);
+      process.stdin.resume();
+      process.stdin.setEncoding('utf8');
+      
+      process.stdin.on('data', (key: string) => {
+        // Handle 'q' to quit
+        if (key === 'q' || key === 'Q') {
+          console.log(`\n${cyan}🛑 Stopping npm server...${reset}`);
+          npmProcess.kill('SIGTERM');
+          
+          // Ensure cleanup after a timeout
+          setTimeout(() => {
+            npmProcess.kill('SIGKILL');
+            process.exit(0);
+          }, 2000);
+        }
+        
+        // Handle Ctrl+C
+        if (key === '\u0003') {
+          console.log(`\n${cyan}🛑 Interrupted by Ctrl+C${reset}`);
+          npmProcess.kill('SIGTERM');
+          setTimeout(() => {
+            npmProcess.kill('SIGKILL');
+            process.exit(0);
+          }, 2000);
+        }
+      });
+    }
+
+    // Handle process termination signals
+    ['SIGINT', 'SIGTERM'].forEach((signal) => {
+      process.on(signal, () => {
+        console.log(`\n${cyan}🛑 Received ${signal}, stopping server...${reset}`);
+        npmProcess.kill('SIGTERM');
+        setTimeout(() => {
+          npmProcess.kill('SIGKILL');
+          process.exit(0);
+        }, 2000);
+      });
+    });
   }
 }
 
