@@ -115,6 +115,13 @@ export class TestSequenceRunner {
         console.log(this.chalk.gray('─'.repeat(40)));
         console.log(this.chalk.green('✅ Test mode execution finished'));
         console.log(this.chalk.gray('─'.repeat(40)) + '\n');
+        
+        // Test mode must exit - demo mode continues listening
+        console.log(this.chalk.yellow('🔄 Cleaning up test mode processes...'));
+        setTimeout(() => {
+            console.log(this.chalk.green('✅ Test sequence complete - exiting'));
+            process.exit(0);
+        }, 500);
     }
 
     private async simulateKeypress(key: string): Promise<void> {

@@ -99,7 +99,8 @@ export class ONCECLILauncher {
      * Launch interactive demo - Web4 OOP method
      */
     private async launchInteractiveDemo(): Promise<void> {
-        const demoModule = await import('../../../examples/multi-env-demo/interactive-demo-web4.mjs') as any;
+        // @ts-ignore - .mjs module import
+        const demoModule = await import('../../../examples/multi-env-demo/interactive-demo-web4.mjs');
         await demoModule.main([]);
     }
 
@@ -107,7 +108,9 @@ export class ONCECLILauncher {
      * Launch test sequence - Web4 OOP method
      */
     private async launchTestSequence(input: string): Promise<void> {
-        const demoModule = await import('../../../examples/multi-env-demo/interactive-demo-web4.mjs') as any;
+        console.log(`🧪 Test sequence mode: ${input}`);
+        // @ts-ignore - .mjs module import
+        const demoModule = await import('../../../examples/multi-env-demo/interactive-demo-web4.mjs');
         await demoModule.main(['test:' + input]);
     }
 
