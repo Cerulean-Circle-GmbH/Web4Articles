@@ -25,7 +25,7 @@ export const ONCE = {
      * @param scenario Optional scenario for initialization
      * @returns Initialized ONCE kernel
      */
-    async init(scenario?: Scenario): Promise<ONCE> {
+    async init(scenario?: Scenario): Promise<ONCEInterface> {
         const once = DefaultONCE.getInstance();
         return await once.init(scenario);
     },
@@ -34,7 +34,7 @@ export const ONCE = {
      * Get existing ONCE instance (must call init first)
      * @returns ONCE kernel instance
      */
-    getInstance(): ONCE {
+    getInstance(): ONCEInterface {
         return DefaultONCE.getInstance();
     }
 };

@@ -45,6 +45,7 @@ export class OnceCLI {
 
   private showUsage(): void {
     const cyan = '\x1b[36m';
+    const white = '\x1b[37m';
     const yellow = '\x1b[33m';
     const green = '\x1b[32m';
     const bold = '\x1b[1m';
@@ -54,11 +55,11 @@ export class OnceCLI {
     console.log(`${cyan}${bold}🎭 ONCE Interactive Demo${reset} - Web4 Universal P2P Communication Engine`);
     console.log('');
     console.log(`${bold}Usage:${reset}`);
-    console.log(`  ${cyan}once demo${reset}                    # Start interactive demo with browser auto-opening`);
-    console.log(`  ${cyan}once demo --headless${reset}         # Start demo without browser (server only)`);
-    console.log(`  ${cyan}once demo --help${reset}             # Show demo-specific help`);
-    console.log(`  ${cyan}once help${reset}                    # Show this help message`);
-    console.log(`  ${cyan}once version${reset}                 # Show ONCE version information`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset}                    # Start interactive demo with browser auto-opening`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--headless${reset}         # Start demo without browser (server only)`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--help${reset}             # Show demo-specific help`);
+    console.log(`  ${cyan}once${reset} ${white}help${reset}                    # Show this help message`);
+    console.log(`  ${cyan}once${reset} ${white}version${reset}                 # Show ONCE version information`);
     console.log('');
     console.log(`${bold}Demo Features:${reset}`);
     console.log(`  ${green}•${reset} Cross-platform browser auto-opening`);
@@ -68,8 +69,8 @@ export class OnceCLI {
     console.log(`  ${green}•${reset} TTY-aware keyboard input`);
     console.log('');
     console.log(`${bold}Examples:${reset}`);
-    console.log(`  ${cyan}once demo${reset}                    # Launch full interactive demo`);
-    console.log(`  ${cyan}once demo --headless${reset}         # Server-only mode for testing`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset}                    # Launch full interactive demo`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--headless${reset}         # Server-only mode for testing`);
     console.log('');
     console.log(`${bold}Location:${reset} Latest version (${yellow}v${this.onceVersion}${reset})`);
     console.log(`${bold}Path:${reset} ${yellow}scripts/versions/once${this.onceVersion}${reset}`);
@@ -77,6 +78,8 @@ export class OnceCLI {
 
   private showHelp(): void {
     const cyan = '\x1b[36m';
+    const white = '\x1b[37m';
+    const yellow = '\x1b[33m';
     const bold = '\x1b[1m';
     const reset = '\x1b[0m';
 
@@ -84,11 +87,11 @@ export class OnceCLI {
     console.log(`${cyan}${bold}🎭 ONCE Interactive Demo${reset} - Web4 Universal P2P Communication Engine`);
     console.log('');
     console.log(`${bold}Usage:${reset}`);
-    console.log(`  ${cyan}once demo${reset}                    # Start interactive demo`);
-    console.log(`  ${cyan}once demo --headless${reset}         # Start demo without browser`);
-    console.log(`  ${cyan}once demo --help${reset}             # Show demo help`);
-    console.log(`  ${cyan}once help${reset}                    # Show this help`);
-    console.log(`  ${cyan}once version${reset}                 # Show version info`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset}                    # Start interactive demo`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--headless${reset}         # Start demo without browser`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--help${reset}             # Show demo help`);
+    console.log(`  ${cyan}once${reset} ${white}help${reset}                    # Show this help`);
+    console.log(`  ${cyan}once${reset} ${white}version${reset}                 # Show version info`);
     console.log('');
   }
 
@@ -103,13 +106,13 @@ export class OnceCLI {
   }
 
   private showError(message: string): void {
-    const yellow = '\x1b[33m';
+    const white = '\x1b[37m';
     const cyan = '\x1b[36m';
     const bold = '\x1b[1m';
     const reset = '\x1b[0m';
 
-    console.log(`${bold}❌ Unknown command:${reset} ${yellow}${message}${reset}`);
-    console.log(`Run '${cyan}once help${reset}' for usage information`);
+    console.log(`${bold}❌ Unknown command:${reset} ${white}${message}${reset}`);
+    console.log(`Run '${cyan}once${reset} ${white}help${reset}' for usage information`);
   }
 
   private async runDemo(args: string[]): Promise<void> {
@@ -168,6 +171,7 @@ export class OnceCLI {
 
   private showDemoHelp(): void {
     const cyan = '\x1b[36m';
+    const white = '\x1b[37m';
     const yellow = '\x1b[33m';
     const green = '\x1b[32m';
     const bold = '\x1b[1m';
@@ -178,9 +182,9 @@ export class OnceCLI {
     console.log(`${bold}Web4 Universal P2P Communication Engine${reset}`);
     console.log('');
     console.log(`${bold}Usage:${reset}`);
-    console.log(`  ${cyan}once demo${reset}                    # Start interactive demo with browser`);
-    console.log(`  ${cyan}once demo --headless${reset}         # Start demo without browser`);
-    console.log(`  ${cyan}once demo --help${reset}             # Show this help`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset}                    # Start interactive demo with browser`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--headless${reset}         # Start demo without browser`);
+    console.log(`  ${cyan}once${reset} ${white}demo${reset} ${yellow}--help${reset}             # Show this help`);
     console.log('');
     console.log(`${bold}Demo Controls (interactive mode):${reset}`);
     console.log(`  ${yellow}[s]${reset} Start/Stop ONCE server`);
