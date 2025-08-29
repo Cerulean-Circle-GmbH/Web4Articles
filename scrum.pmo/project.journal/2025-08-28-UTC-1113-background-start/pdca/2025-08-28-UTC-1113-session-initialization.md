@@ -18,8 +18,8 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/testing-analysis-2025-08-28/scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/pdca/2025-08-28-UTC-1113-session-initialization.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/pdca/2025-08-28-UTC-1113-session-initialization.md](./2025-08-28-UTC-1113-session-initialization.md)
-- **Session Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/testing-analysis-2025-08-28/scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start) | [scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/](../)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/testing-analysis-clean/scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/pdca/2025-08-28-UTC-1113-session-initialization.md) | [scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/pdca/2025-08-28-UTC-1113-session-initialization.md](./2025-08-28-UTC-1113-session-initialization.md)
+- **Session Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/testing-analysis-clean/scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start) | [scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/](../)
 
 ### **QA Decisions**
 - [ ] **Decision 1: Primary Work Focus Area**
