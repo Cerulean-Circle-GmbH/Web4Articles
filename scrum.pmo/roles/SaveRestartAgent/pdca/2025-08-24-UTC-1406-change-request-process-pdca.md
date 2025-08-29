@@ -5,14 +5,14 @@
 **👤 Role:** Save/Restart Agent → Process Facilitator  
 **🚨 Issues:** Need collaborative improvement mechanism  
 **📎 Previous Commit:** 20690a06 - Enhance: Add learning resources section  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-24-UTC-1032-learning-resources-documentation.md) | [scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-24-UTC-1032-learning-resources-documentation.md](scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-24-UTC-1032-learning-resources-documentation.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-24-UTC-1032-learning-resources-documentation.md) | [§/scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-24-UTC-1032-learning-resources-documentation.md](2025-08-24-UTC-1032-learning-resources-documentation.md)
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-24-UTC-1406-change-request-process-pdca.md) | [scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-24-UTC-1406-change-request-process-pdca.md](scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-24-UTC-1406-change-request-process-pdca.md)
-- **Change Request Folder:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start/scrum.pmo/roles/_shared/PDCA/change.requests) | [scrum.pmo/roles/_shared/PDCA/change.requests/](scrum.pmo/roles/_shared/PDCA/change.requests/)
-- **Updated howto.PDCA.md:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-24-UTC-1406-change-request-process-pdca.md) | [§/scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-24-UTC-1406-change-request-process-pdca.md](2025-08-24-UTC-1406-change-request-process-pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start/scrum.pmo/roles/_shared/PDCA/change.requests) | [§/scrum.pmo/roles/_shared/PDCA/change.requests/](../../_shared/PDCA/change.requests)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../_shared/PDCA/howto.PDCA.md)
 
 ### **QA Decisions**
 All clear, no decisions to make - Implementing collaborative improvement process as requested.
@@ -172,4 +172,3 @@ My improvements had been removed from release/dev, so I re-added:
 
 **🤝 Collaboration enabled: Together we build better! 🚀📋✨**
 
-**"The best documentation is written by many, maintained by one."** 📝🎯
