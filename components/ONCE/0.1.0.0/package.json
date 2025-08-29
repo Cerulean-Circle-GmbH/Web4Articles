@@ -30,6 +30,7 @@
     "vitest": "^1.0.0"
   },
   "dependencies": {
-    "@types/webrtc": "^0.0.42"
+    "@types/webrtc": "^0.0.42",
+    "ws": "^8.18.3"
   }
 }
