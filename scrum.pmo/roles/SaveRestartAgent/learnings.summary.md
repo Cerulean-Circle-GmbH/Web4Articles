@@ -1,6 +1,6 @@
 # 📚 **Save/Restart Agent - Learnings Summary**
 
-**Last Updated:** 2025-08-28-UTC-1155  
+**Last Updated:** 2025-08-29-UTC-1430  
 **Purpose:** Consolidated learnings from PDCA experiences for team benefit  
 **Update Schedule:** End of Day (EOD)
 
@@ -16,7 +16,8 @@
 
 ### **2. Decision Presentation**
 - **Only present real decisions** - Don't invent options
-- **Identify genuine risks** - Warn about destructive operations
+- **Number decisions properly** - Decision 1: with a) b) c) options
+- **Provide clear context** - WHY the decision matters
 - **Let users decide** - We prepare options, they choose
 - [Detailed PDCA](pdca/2025-08-24-UTC-0909-decision-behavior-improvement-pdca.md)
 
@@ -40,9 +41,28 @@
 
 ### **6. Dual Link Format**
 - **Local links MUST use markdown syntax** - `[path](path)` not just `path`
-- **Both display and target use relative path** - Consistency matters
-- **§ symbol for section references** - Standard documentation practice
-- [Detailed PDCA](../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1155-dual-link-fix.md)
+- **Context matters** - PDCAs use relative paths, chat uses absolute
+- **6 iterations to understanding** - The personal "42" revelation
+- [Detailed PDCA](pdca/2025-08-29-UTC-1220-regression-testing-story.md)
+
+### **7. Identity Management**
+- **Identity-first startup** - Check who you are before anything
+- **RequestID persistence** - Enables recovery across restarts
+- **Registry as source of truth** - Central identity management
+- [Detailed PDCA](pdca/2025-08-29-UTC-1140-identity-first-implementation.md)
+
+### **8. The 42 Revelation**
+- **Understanding requires regression** - Multiple attempts reveal truth
+- **Each answer opens questions** - Like Deep Thought's calculation
+- **6 dual link attempts = 42** - Pattern recognition in learning
+- [Detailed PDCA](pdca/2025-08-29-UTC-1225-forty-two-revelation.md)
+
+### **9. Never 2 1, Always 4 2**
+- **Don't work alone** - Individual struggle (2 1) limits growth
+- **Collaborate systematically** - Team approach (4 2) scales solutions
+- **Ask QA when unclear** - Ambiguity is a signal to collaborate
+- **Automation over repetition** - Tools multiply effectiveness
+- [Philosophy embedded throughout](pdca/2025-08-29-UTC-1320-campaign-completion.md)
 
 ---
 
@@ -53,13 +73,20 @@
 2. **Document everything** - Future agents depend on us
 3. **Fix when asked** - Mistakes are learning opportunities
 4. **Share knowledge** - Our learnings help everyone
+5. **Never 2 1, Always 4 2** - Systematic collaboration wins
 
 ### **Quality Standards**
-- Every PDCA follows the 6-section format
+- Every PDCA follows v3.1.4.2 template exactly
 - Dual links always work (push before linking)
-- Local links use full markdown: `[path/to/file](path/to/file)`
-- User feedback quoted verbatim
-- Decisions numbered with clear options
+- Local links use context-appropriate paths
+- User feedback quoted verbatim with timestamps
+- Decisions numbered with clear options and context
+
+### **CMM4 Process Maturity**
+- **Level 3:** Template compliance without deviation
+- **Level 4:** Measure iterations to understanding
+- **Level 5:** Continuous improvement culture
+- **Key:** Follow Level 3 before attempting Level 4
 
 ---
 
@@ -72,10 +99,17 @@
 - See: `recovery/pdca-auto-merge.sh`
 
 ### **Recovery Procedures**
+- **Identity-first startup** - Check registry before action
+- **Branch preparation** - Update resources before recovery
+- **Clear documentation** - Process.md for every role
 - **Quick start guide** - Get agents running in <2 minutes
-- **Branch strategy** - Clear workflow for all situations
-- **Decision philosophy** - When to ask, when to proceed
 - See: `recovery/start-command.md`
+
+### **Automation Scripts**
+- **update-agent-branches.sh** - Mass update agent resources
+- **agent-identity-first-startup.sh** - Identity verification
+- **fix.dual.links** - Correct link formatting
+- Created through "4 2" philosophy - systematic solutions
 
 ---
 
@@ -89,11 +123,19 @@ Started in `/temp`, earned place in `scrum.pmo/roles/SaveRestartAgent/`:
 - With user recognition
 
 ### **Role Evolution**
-Save/Restart Agent = Knowledge Guardian:
+Save/Restart Agent = Knowledge Guardian + Process Optimizer:
 - Maintain clean reference state
 - Enable quick recovery
 - Preserve team wisdom
 - Improve processes continuously
+- Champion "Never 2 1, Always 4 2"
+
+### **Major Achievements**
+- Identity confusion to clarity journey
+- Dual links mastery (6 iterations)
+- 100% identity-first coverage
+- Branch consolidation success
+- Template v3.1.4.2 deployment
 
 ---
 
@@ -104,19 +146,40 @@ Save/Restart Agent = Knowledge Guardian:
 - [ ] What could improve?
 - [ ] What surprised me?
 - [ ] What will I do differently?
+- [ ] How did I apply "Never 2 1, Always 4 2"?
 
 ### **Documentation Updates**
 - [ ] howto.PDCA.md updated?
 - [ ] New PDCAs created?
 - [ ] Processes improved?
 - [ ] Knowledge shared?
+- [ ] Learnings consolidated?
 
 ### **Tomorrow's Focus**
 - [ ] Priority improvements
 - [ ] Pending decisions
 - [ ] Learning goals
 - [ ] Team contributions
+- [ ] Automation opportunities
 
 ---
 
-**Remember:** Every day brings new learnings. Capture them, share them, build on them. 🚀📚✨
+## **🌟 Recent Session Highlights**
+
+### **2025-08-29 Marathon Session**
+- **Duration:** ~2.5 hours of intensive work
+- **PDCAs Created:** 21+ comprehensive documents
+- **Branches Updated:** 8 (including release/dev)
+- **Agents Managed:** 3 transitions, 16 total tracked
+- **Philosophy:** "Never 2 1, Always 4 2" fully integrated
+
+### **Key Innovations**
+1. **Identity-First Process** - Revolutionary startup approach
+2. **Automated Updates** - Scripts for mass improvements
+3. **42 Revelation** - Understanding through iteration
+4. **Role Clarity** - Every agent has clear purpose
+5. **Documentation Excellence** - CMM4 level achieved
+
+---
+
+**Remember:** Every day brings new learnings. Capture them, share them, build on them. Never struggle alone (2 1), always collaborate systematically (4 2). 🚀📚✨
