@@ -1,41 +1,38 @@
 {
   "uuid": "a7c2e5f8-9b3d-4e6a-8f1b-2c9d3e4f5a6b",
-  "name": "Build Configuration Scenario",
-  "description": "Web4 component build dependency and configuration management",
-  "type": "BuildConfiguration",
+  "objectType": "BuildConfiguration",
   "version": "0.1.0.0",
+  "state": {
+    "dependencies": [],
+    "scripts": {
+      "prebuild": "npm run build-dependencies",
+      "build": "tsc",
+      "postbuild": "npm run verify-build",
+      "build-dependencies": "node -r ts-node/register src/ts/layer5/BuildCLI.ts build-deps",
+      "verify-build": "node -r ts-node/register src/ts/layer5/BuildCLI.ts verify",
+      "ensure-built": "node -r ts-node/register src/ts/layer5/BuildCLI.ts ensure-built"
+    },
+    "buildOrder": {
+      "strategy": "topological-sort",
+      "cache": true
+    },
+    "profiles": {
+      "development": {
+        "watch": true,
+        "sourceMaps": true,
+        "minify": false
+      },
+      "production": {
+        "watch": false,
+        "sourceMaps": false,
+        "minify": true
+      }
+    }
+  },
   "metadata": {
     "created": "2025-08-30T10:15:00.000Z",
-    "author": "Web4 Architecture Team",
-    "component": "Build"
-  },
-  "buildDependencies": {
-    "description": "Component dependencies that must be built in order",
-    "dependencies": []
-  },
-  "buildScripts": {
-    "prebuild": "npm run build-dependencies",
-    "build": "tsc",
-    "postbuild": "npm run verify-build",
-    "build-dependencies": "node -r ts-node/register src/ts/layer5/BuildCLI.ts build-deps",
-    "verify-build": "node -r ts-node/register src/ts/layer5/BuildCLI.ts verify",
-    "ensure-built": "node -r ts-node/register src/ts/layer5/BuildCLI.ts ensure-built"
-  },
-  "buildOrder": {
-    "description": "Dependency resolution order for multi-component builds",
-    "strategy": "topological-sort",
-    "cache": true
-  },
-  "scenarios": {
-    "development": {
-      "watch": true,
-      "sourceMaps": true,
-      "minify": false
-    },
-    "production": {
-      "watch": false,
-      "sourceMaps": false,
-      "minify": true
-    }
+    "modified": "2025-08-30T10:15:00.000Z",
+    "creator": "Web4 Architecture Team",
+    "description": "Build configuration for Web4 components"
   }
 }

@@ -22,7 +22,7 @@ export class DependencyResolver {
     this.resolvedOrder = [];
     this.visited = new Set();
     
-    const dependencies = scenario.buildDependencies?.dependencies || [];
+    const dependencies = scenario.state?.dependencies || [];
     
     // Topological sort for dependency resolution
     for (const dep of dependencies) {
@@ -58,8 +58,8 @@ export class DependencyResolver {
         process.chdir(originalCwd);
         
         // Recursively resolve subdependencies
-        if (depScenario.buildDependencies?.dependencies) {
-          for (const subDep of depScenario.buildDependencies.dependencies) {
+        if (depScenario.state?.dependencies) {
+          for (const subDep of depScenario.state.dependencies) {
             // Adjust path relative to current component
             const adjustedDep = {
               ...subDep,
@@ -79,7 +79,7 @@ export class DependencyResolver {
 
   async checkDependencyStatus(scenario: BuildScenario): Promise<Record<string, BuildStatus>> {
     const report: Record<string, BuildStatus> = {};
-    const dependencies = scenario.buildDependencies?.dependencies || [];
+    const dependencies = scenario.state?.dependencies || [];
     
     for (const dep of dependencies) {
       const depPath = resolve(this.componentRoot, dep.path);

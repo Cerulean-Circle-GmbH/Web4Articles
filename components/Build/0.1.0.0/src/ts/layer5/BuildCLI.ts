@@ -54,7 +54,7 @@ export class BuildCLI {
     
     // Load build scenario
     const scenario = await this.scenarioLoader.loadBuildScenario();
-    if (!scenario.buildDependencies?.dependencies) {
+    if (!scenario.state?.dependencies?.length) {
       console.log('✅ No dependencies to build');
       return;
     }
