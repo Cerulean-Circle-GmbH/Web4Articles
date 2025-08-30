@@ -8,8 +8,8 @@
 
 ## **Agent Details**
 
-- **Role:** Feature Developer (User features, Sprint 22)
-- **Purpose:** User feature development for Sprint 22
+- **Role:** Feature Developer
+- **Purpose:** Sprint 22 user feature implementation
 - **Branch:** cursor/recover-from-readme-file-4ac2
 - **Created:** Unknown
 - **Last Active:** Unknown
