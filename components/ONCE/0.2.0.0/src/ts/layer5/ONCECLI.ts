@@ -302,11 +302,11 @@ export class OnceCLI {
   }
 
   private showUsage(): void {
-    const cyan = '\\x1b[36m';
-    const yellow = '\\x1b[33m';
-    const green = '\\x1b[32m';
-    const bold = '\\x1b[1m';
-    const reset = '\\x1b[0m';
+    const cyan = '\x1b[36m';
+    const yellow = '\x1b[33m';
+    const green = '\x1b[32m';
+    const bold = '\x1b[1m';
+    const reset = '\x1b[0m';
 
     console.log(`${bold}${cyan}ONCE CLI v0.2.0.0${reset} ${green}- Enhanced Server Hierarchy & Scenario Support${reset}`);
     console.log('');
@@ -382,11 +382,11 @@ export class OnceCLI {
   }
 
   private showDemoHelp(): void {
-    const cyan = '\\x1b[36m';
-    const yellow = '\\x1b[33m';
-    const green = '\\x1b[32m';
-    const bold = '\\x1b[1m';
-    const reset = '\\x1b[0m';
+    const cyan = '\x1b[36m';
+    const yellow = '\x1b[33m';
+    const green = '\x1b[32m';
+    const bold = '\x1b[1m';
+    const reset = '\x1b[0m';
 
     console.log(`${bold}${cyan}ONCE Demo Help v0.2.0.0${reset}`);
     console.log('');
