@@ -108,8 +108,11 @@
     <script>
         // Browser client with Message component integration
         const urlParams = new URLSearchParams(window.location.search);
-        const serverHost = urlParams.get('server') || 'localhost:8080';
-        const isDemoMode = urlParams.get('demo') === 'true';
+        // Auto-detect server host from current page URL or use parameter
+        const defaultHost = window.location.host || 'localhost:8080';
+        const serverHost = urlParams.get('server') || defaultHost;
+        // Auto-enable demo mode when accessed via /once endpoint or with demo=true parameter
+        const isDemoMode = urlParams.get('demo') === 'true' || window.location.pathname === '/once';
         
         let ws = null;
         let stats = {
