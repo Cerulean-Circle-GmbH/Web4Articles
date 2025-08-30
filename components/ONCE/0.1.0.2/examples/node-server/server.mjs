@@ -5,6 +5,12 @@
 
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
+import { readFileSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 import { 
     userScenario, 
     articleScenario, 
@@ -83,8 +89,20 @@ async function startServer() {
 
     // Create HTTP server for WebSocket signaling
     const httpServer = createServer((req, res) => {
+        // Root path - serve index.html
+        if (req.url === '/' || req.url === '/index.html') {
+            try {
+                const indexPath = join(__dirname, '../../src/view/html/index.html');
+                const indexHTML = readFileSync(indexPath, 'utf8');
+                res.writeHead(200, { 'Content-Type': 'text/html' });
+                res.end(indexHTML);
+            } catch (error) {
+                console.error('❌ Failed to serve index.html:', error);
+                res.writeHead(500);
+                res.end('Internal Server Error');
+            }
         // Simple HTTP endpoint for health check
-        if (req.url === '/health') {
+        } else if (req.url === '/health') {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
                 status: 'healthy',
@@ -101,6 +119,22 @@ async function startServer() {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
                 scenarios: Array.from(scenarios.values())
+            }));
+        } else if (req.url === '/api/status') {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({
+                status: 'running',
+                version: once.getVersion(),
+                peers: peers.size,
+                uptime: process.uptime(),
+                memory: process.memoryUsage()
+            }));
+        } else if (req.url === '/api/version') {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({
+                version: once.getVersion(),
+                platform: once.getEnvironment().platform,
+                capabilities: once.getEnvironment().capabilities
             }));
         } else {
             res.writeHead(404);
