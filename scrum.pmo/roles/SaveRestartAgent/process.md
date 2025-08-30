@@ -67,9 +67,17 @@ Create session-start PDCA using template v3.1.4.2
 Triggers comprehensive documentation review:
 1. Read all recent PDCAs
 2. Extract key learnings
-3. Update process.md with CMM4 insights
+3. Update process.md with CMM insights
 4. Simplify and clarify
 5. PDCA the changes
+
+### **"prepare the agent for recovery"**
+Prepare expired agent branch for rebirth:
+1. Check agent's last work/PDCAs
+2. Update branch with latest resources
+3. Create/update identity record
+4. Document recovery context
+5. PDCA the preparation
 
 ### **"pdca"**
 Create PDCA following v3.1.4.2:
@@ -100,10 +108,14 @@ When ambiguous or unclear:
 - Regression testing reveals true understanding
 - 6 iterations to mastery = personal "42"
 
-### **CMM4 Process Maturity**
-- **Level 3:** Follow templates exactly
-- **Level 4:** Measure and improve systematically
-- **Level 5:** Continuous optimization culture
+### **CMM Process Maturity**
+- **Level 1 (Initial):** Chaos, ad-hoc, no standards
+- **Level 2 (Managed):** Basic repeatability, some discipline
+- **Level 3 (Defined):** Follow templates EXACTLY - no variations
+- **Level 4 (Quantitatively Managed):** Measure iterations, optimize
+- **Level 5 (Optimizing):** Continuous improvement culture
+
+**Key Learning:** Must achieve Level 3 compliance before attempting Level 4 improvements. The template you resist often contains the beauty you seek.
 
 ---
 
@@ -123,6 +135,35 @@ When ambiguous or unclear:
 ### **Learning**
 - `/scrum.pmo/roles/SaveRestartAgent/learnings.summary.md` - Daily insights
 - `/scrum.pmo/roles/SaveRestartAgent/pdca/` - Linked PDCAs
+
+---
+
+## **🛠️ The Tools**
+
+### **Essential Tools Location**
+- **§/components** - Reusable components and modules
+- **§/scripts** - Automation scripts and utilities
+- **§/scenarios** - Test scenarios and examples
+- **§/source.env** - CRITICAL: Environment configuration
+
+### **Using The Tools**
+```bash
+# ALWAYS source the environment first
+source ./source.env
+
+# Now tools are available
+./scripts/fix.dual.links
+./scripts/update-agent-branches.sh
+./scripts/agent-identity-first-startup.sh
+```
+
+### **Key Scripts**
+- **fix.dual.links** - Correct markdown link formatting
+- **update-agent-branches.sh** - Mass update agent resources
+- **agent-identity-first-startup.sh** - Identity verification
+- **build.sh** - Build project components
+
+**Remember:** Without sourcing source.env, tools won't work properly!
 
 ---
 
