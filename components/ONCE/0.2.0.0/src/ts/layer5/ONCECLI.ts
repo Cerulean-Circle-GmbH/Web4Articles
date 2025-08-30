@@ -13,6 +13,7 @@ export class OnceCLI {
   private once: DefaultONCE;
   private scenarioManager: ScenarioManager;
   private projectRoot: string;
+  private clientServers?: DefaultONCE[];
 
   constructor() {
     // No environment variables - detect project root automatically
@@ -549,7 +550,7 @@ export class OnceCLI {
           break;
           
         case 'c':
-          await this.launchNodejsClient();
+          await this.launchClientServer();
           break;
           
         case 'w':
@@ -615,7 +616,16 @@ export class OnceCLI {
         process.stdin.setRawMode(false);
       }
       
-      // Stop any running server
+      // Stop any running client servers
+      if (this.clientServers && this.clientServers.length > 0) {
+        console.log(`🔵 Stopping ${this.clientServers.length} client server(s)...`);
+        for (const clientServer of this.clientServers) {
+          await clientServer.stopServer().catch(() => {}); // Ignore errors during cleanup
+        }
+        this.clientServers = [];
+      }
+      
+      // Stop main server
       await this.once.stopServer().catch(() => {}); // Ignore errors during cleanup
       
       console.log('✅ Demo cleanup completed');
@@ -667,10 +677,10 @@ export class OnceCLI {
   }
 
   /**
-   * Launch browser client
+   * Launch browser client (dual routes)
    */
   private async launchBrowserClient(): Promise<void> {
-    console.log('🌐 Launching Browser Client...');
+    console.log('🌐 Launching Browser Client (dual routes)...');
     try {
       const serverModel = this.once.getServerModel();
       
@@ -681,16 +691,28 @@ export class OnceCLI {
       
       const httpCapability = serverModel.capabilities.find(c => c.capability === 'httpPort');
       if (httpCapability) {
-        const url = `http://localhost:${httpCapability.port}/once`;
-        console.log(`🔗 Opening browser to: ${url}`);
+        const baseUrl = `http://localhost:${httpCapability.port}`;
+        const statusUrl = baseUrl + '/';
+        const clientUrl = baseUrl + '/once';
+        
+        console.log(`🔗 Opening server status page: ${statusUrl}`);
+        console.log(`🔗 Opening ONCE client page: ${clientUrl}`);
         
         // Use cross-platform browser opening
         const { spawn } = await import('child_process');
         const command = process.platform === 'darwin' ? 'open' :
                        process.platform === 'win32' ? 'start' : 'xdg-open';
         
-        spawn(command, [url], { detached: true, stdio: 'ignore' }).unref();
-        console.log('✅ Browser client launched');
+        // Launch server status page
+        spawn(command, [statusUrl], { detached: true, stdio: 'ignore' }).unref();
+        
+        // Small delay to prevent browser conflicts
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Launch ONCE client page  
+        spawn(command, [clientUrl], { detached: true, stdio: 'ignore' }).unref();
+        
+        console.log('✅ Dual browser clients launched (status + client)');
       } else {
         console.log('❌ HTTP port not available');
       }
@@ -700,7 +722,55 @@ export class OnceCLI {
   }
 
   /**
-   * Launch Node.js client
+   * Launch client server (registers with primary)
+   */
+  private async launchClientServer(): Promise<void> {
+    console.log('🔵 Launching Client Server...');
+    try {
+      const primaryModel = this.once.getServerModel();
+      
+      if (!primaryModel || primaryModel.state !== 'running') {
+        console.log('⚠️ Primary server not running - start server first with [s]');
+        return;
+      }
+      
+      if (!primaryModel.isPrimaryServer) {
+        console.log('⚠️ Current server is not primary - client servers can only register with primary server');
+        return;
+      }
+      
+      console.log('🚀 Starting new ONCE client server instance...');
+      
+      // Create new ONCE instance for client server
+      const { DefaultONCE } = await import('../layer2/DefaultONCE.js');
+      const clientONCE = new DefaultONCE();
+      await clientONCE.init();
+      
+      // Start client server (will automatically register with primary)
+      await clientONCE.startServer();
+      
+      const clientModel = clientONCE.getServerModel();
+      const httpCapability = clientModel.capabilities.find(c => c.capability === 'httpPort');
+      
+      if (httpCapability) {
+        console.log(`✅ Client server started on port ${httpCapability.port}`);
+        console.log(`📋 Client UUID: ${clientModel.uuid}`);
+        console.log(`🏠 Domain: ${clientModel.domain}`);
+        console.log(`🔗 Registered with primary server on port 42777`);
+        
+        // Store reference for cleanup
+        if (!this.clientServers) {
+          this.clientServers = [];
+        }
+        this.clientServers.push(clientONCE);
+      }
+    } catch (error) {
+      console.log(`❌ Client server error: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  /**
+   * Launch Node.js client (moved to 'n' key)
    */
   private async launchNodejsClient(): Promise<void> {
     console.log('🔗 Launching Node.js Client...');

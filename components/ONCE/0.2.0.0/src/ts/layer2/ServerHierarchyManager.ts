@@ -91,8 +91,8 @@ export class ServerHierarchyManager {
 
             this.serverModel.state = LifecycleState.RUNNING;
             
-            // Auto-generate and save scenario
-            await this.saveScenario();
+            // Try to load existing scenario first, then save if needed
+            await this.loadOrCreateScenario();
             
         } catch (error) {
             this.serverModel.state = LifecycleState.ERROR;
@@ -606,33 +606,78 @@ export class ServerHierarchyManager {
     }
 
     /**
+     * Load existing scenario or create new one with organized directory structure
+     */
+    private async loadOrCreateScenario(): Promise<void> {
+        const httpCapability = this.serverModel.capabilities.find(c => c.capability === 'httpPort');
+        if (!httpCapability) return;
+
+        // Use organized folder structure: scenarios/local.once/ONCE/0.2.0.0/capability/httpPort/{port}/uuid.scenario.json
+        const scenarioDir = `scenarios/local.once/ONCE/0.2.0.0/capability/httpPort/${httpCapability.port}`;
+        const scenarioPath = `${scenarioDir}/${this.serverModel.uuid}.scenario.json`;
+        
+        try {
+            // Try to load existing scenario first
+            const fs = await import('fs');
+            const path = await import('path');
+            
+            if (fs.existsSync(scenarioPath)) {
+                console.log(`📂 Loading existing scenario: ${scenarioPath}`);
+                const scenarioData = JSON.parse(fs.readFileSync(scenarioPath, 'utf8'));
+                
+                // Restore configuration from scenario
+                if (scenarioData.state) {
+                    console.log(`✅ Scenario restored from ${scenarioPath}`);
+                    return;
+                }
+            }
+        } catch (error) {
+            console.log(`⚠️ Could not load existing scenario: ${error instanceof Error ? error.message : String(error)}`);
+        }
+
+        // Create new scenario if none exists or loading failed
+        await this.saveScenario(scenarioDir, scenarioPath);
+    }
+
+    /**
      * Save server scenario to organized directory structure
      */
-    private async saveScenario(): Promise<void> {
-        // Implement scenario saving according to requirement 9b768111-7a06-4266-9d71-0ef72e90c62b
-        // /scenarios/reverseDomain/component/version/uuid.scenario.json
-        
-        const scenarioPath = `scenarios/${this.serverModel.domain}/ONCE/0.2.0.0/${this.serverModel.uuid}.scenario.json`;
-        
-        const scenario = {
-            uuid: this.serverModel.uuid,
-            objectType: 'ONCE',
-            version: '0.2.0.0',
-            state: this.serverModel,
-            metadata: {
-                created: new Date().toISOString(),
-                modified: new Date().toISOString(),
-                creator: 'ONCE-v0.2.0.0',
-                description: 'Auto-generated ONCE server scenario',
-                domain: this.serverModel.domain,
-                host: this.serverModel.host,
-                port: this.serverModel.capabilities.find(c => c.capability === 'httpPort')?.port,
-                isPrimaryServer: this.serverModel.isPrimaryServer
-            }
-        };
+    private async saveScenario(scenarioDir: string, scenarioPath: string): Promise<void> {
+        try {
+            const fs = await import('fs');
+            const path = await import('path');
+            
+            // Ensure directory exists
+            fs.mkdirSync(scenarioDir, { recursive: true });
+            
+            const httpCapability = this.serverModel.capabilities.find(c => c.capability === 'httpPort');
+            
+            const scenario = {
+                uuid: this.serverModel.uuid,
+                objectType: 'ONCE',
+                version: '0.2.0.0',
+                state: {
+                    ...this.serverModel,
+                    created: new Date().toISOString()
+                },
+                metadata: {
+                    created: new Date().toISOString(),
+                    modified: new Date().toISOString(),
+                    creator: 'ONCE-v0.2.0.0',
+                    description: `ONCE server scenario - ${this.serverModel.isPrimaryServer ? 'Primary' : 'Client'} server`,
+                    domain: this.serverModel.domain,
+                    host: this.serverModel.host,
+                    port: httpCapability?.port,
+                    isPrimaryServer: this.serverModel.isPrimaryServer,
+                    capabilities: this.serverModel.capabilities
+                }
+            };
 
-        console.log(`💾 Scenario would be saved to: ${scenarioPath}`);
-        // TODO: Implement actual file saving
+            fs.writeFileSync(scenarioPath, JSON.stringify(scenario, null, 2));
+            console.log(`💾 Scenario saved to: ${scenarioPath}`);
+        } catch (error) {
+            console.error(`❌ Failed to save scenario: ${error instanceof Error ? error.message : String(error)}`);
+        }
     }
 
     /**
