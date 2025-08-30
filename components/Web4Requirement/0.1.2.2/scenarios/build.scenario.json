@@ -1,0 +1,32 @@
+{
+  "uuid": "b8d3f6a9-0c4e-5f7b-9012-3d4e5f6a7b8c",
+  "name": "Web4Requirement Build Configuration",
+  "description": "Build configuration for Web4Requirement component",
+  "type": "BuildConfiguration",
+  "version": "0.1.0.0",
+  "extends": "../../../Build/0.1.0.0/scenarios/build.scenario.json",
+  "metadata": {
+    "created": "2025-08-30T10:16:00.000Z",
+    "component": "Web4Requirement",
+    "componentVersion": "0.1.2.2"
+  },
+  "buildDependencies": {
+    "dependencies": [
+      {
+        "name": "@web4/unit",
+        "path": "../../Unit/latest",
+        "required": true
+      },
+      {
+        "name": "@web4/user", 
+        "path": "../../User/0.1.3.0",
+        "required": true
+      }
+    ]
+  },
+  "componentMetadata": {
+    "layer5CLI": "RequirementCLI",
+    "mainExport": "src/ts/layer5/RequirementCLI.ts",
+    "cliScript": "./requirement.sh"
+  }
+}

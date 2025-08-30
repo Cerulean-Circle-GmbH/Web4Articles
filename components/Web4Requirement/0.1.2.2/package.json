@@ -14,7 +14,7 @@
     "ensure-built": "npm run check-build || npm run build",
     "check-build": "test -d dist && echo '✅ Already built' || (echo '🔨 Build required' && false)",
     "prebuild": "npm run build-dependencies",
-    "build-dependencies": "node scripts/build-dependencies.js",
+    "build-dependencies": "node ../../Build/0.1.0.0/dist/ts/layer5/BuildCLI.js build-deps",
     "build": "tsc",
     "postbuild": "echo '✅ Web4Requirement built successfully'",
     "cli": "node dist/ts/layer5/RequirementCLI.js",
