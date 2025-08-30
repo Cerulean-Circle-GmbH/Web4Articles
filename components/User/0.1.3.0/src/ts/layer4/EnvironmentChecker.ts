@@ -7,12 +7,12 @@ import { existsSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
-export interface IEnvironmentCheck {
+export interface EnvironmentCheck {
     check(): Promise<boolean>;
     getErrors(): string[];
 }
 
-export class EnvironmentChecker implements IEnvironmentCheck {
+export class EnvironmentChecker implements EnvironmentCheck {
     private errors: string[] = [];
     private projectRoot: string;
     private componentRoot: string;
@@ -79,7 +79,7 @@ export class EnvironmentChecker implements IEnvironmentCheck {
     private async checkProjectStructure(): Promise<void> {
         const requiredPaths = [
             'src/ts/layer2/DefaultUser.ts',
-            'src/ts/layer3/IUser.ts',
+            'src/ts/layer3/User.ts',
             'tsconfig.json'
         ];
 

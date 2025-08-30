@@ -3,8 +3,8 @@
 **Component:** @web4/user  
 **Version:** 0.1.3.0  
 **Description:** Web4 User component for consistent user identification  
-**Generated:** 2025-08-28T16:14:41.304Z  
-**Git Commit:** ebf5e76  
+**Generated:** 2025-08-30T08:44:50.157Z  
+**Git Commit:** 301bf48  
 **Git Branch:** release/dev
 
 ## Overview
@@ -20,7 +20,7 @@ The Web4 User component provides consistent user identification across the Web4A
 
 ### Layer Structure
 - **Layer 2 (Default Implementation)**: `DefaultUser.ts`
-- **Layer 3 (Interface)**: `IUser.ts`
+- **Layer 3 (Interface)**: `User.ts`
 - **Layer 4 (Lifecycle Management)**: `EnvironmentChecker.ts`, `DependencyChecker.ts`, `ComponentDocumentationGenerator.ts`
 
 ### Key Features
