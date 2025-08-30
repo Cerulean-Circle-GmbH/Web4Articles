@@ -6,7 +6,7 @@
 
 import { DefaultRequirement } from '../layer2/DefaultRequirement.js';
 import * as fs from 'fs/promises';
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync, existsSync, lstatSync, readlinkSync } from 'fs';
 import * as path from 'path';
 
 export class RequirementCLI {
@@ -533,9 +533,22 @@ export class RequirementCLI {
       
       console.log(`\n📋 Found ${uuids.size} requirements matching "${searchTerm}":\n`);
       
-      // Display results
+      // Display results with full paths
       for (const [uuid, name] of uuids) {
+        // Find the actual file path for this UUID
+        const requirementFile = path.join(this.projectRoot, 'spec/requirements.md', `${uuid}.requirement.md`);
+        let realPath = 'Not found';
+        
+        if (existsSync(requirementFile)) {
+          if (lstatSync(requirementFile).isSymbolicLink()) {
+            realPath = 'Link: ' + readlinkSync(requirementFile);
+          } else {
+            realPath = requirementFile;
+          }
+        }
+        
         console.log(`  ${uuid} - ${name}`);
+        console.log(`    📁 ${realPath}`);
       }
       
       console.log('\n💡 Use "requirement delete <uuid>" to remove duplicates');
