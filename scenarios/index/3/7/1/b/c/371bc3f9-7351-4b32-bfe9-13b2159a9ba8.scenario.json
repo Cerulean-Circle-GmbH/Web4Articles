@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "371bc3f9-7351-4b32-bfe9-13b2159a9ba8",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTMwVDA4OjU0OjU1Ljg3MFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "371bc3f9-7351-4b32-bfe9-13b2159a9ba8",
+    "name": "Symbolic Links for Requirements Consistency",
+    "title": "Symbolic Links for Requirements Consistency",
+    "description": "Replace requirement file copies with symbolic links to prevent inconsistencies and maintain single source of truth. All requirements in spec/requirements.md/ should link to their original component locations using relative paths from project root, same as local file dual links pattern."
+  },
+  "unitIndex": {
+    "uuid": "371bc3f9-7351-4b32-bfe9-13b2159a9ba8",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/3/7/1/b/c/371bc3f9-7351-4b32-bfe9-13b2159a9ba8.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements.md/spec/requirements/371bc3f9-7351-4b32-bfe9-13b2159a9ba8.scenario.json"
+    ],
+    "createdAt": "2025-08-30T08:54:55.883Z",
+    "updatedAt": "2025-08-30T08:54:55.883Z"
+  }
+}

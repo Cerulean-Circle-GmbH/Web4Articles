@@ -136,6 +136,18 @@ async function startServer() {
                 platform: once.getEnvironment().platform,
                 capabilities: once.getEnvironment().capabilities
             }));
+        } else if (req.url === '/once' || req.url === '/once/') {
+            // Serve browser client at /once endpoint
+            try {
+                const browserClientPath = join(__dirname, '../browser-client/index.html');
+                const browserClientHTML = readFileSync(browserClientPath, 'utf8');
+                res.writeHead(200, { 'Content-Type': 'text/html' });
+                res.end(browserClientHTML);
+            } catch (error) {
+                console.error('❌ Failed to serve browser client:', error);
+                res.writeHead(500);
+                res.end('Internal Server Error');
+            }
         } else {
             res.writeHead(404);
             res.end('Not found');
