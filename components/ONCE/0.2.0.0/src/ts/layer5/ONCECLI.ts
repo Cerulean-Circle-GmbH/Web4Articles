@@ -209,11 +209,24 @@ export class OnceCLI {
   }
 
   /**
-   * Start interactive demo
+   * Start interactive demo with v0.1.0.2 style interface
    */
   private async startInteractiveDemo(): Promise<void> {
-    console.log('🎮 Interactive demo mode...');
-    await this.startDefaultServer();
+    // Show beautiful header like v0.1.0.2
+    this.showInteractiveDemoHeader();
+    this.showInteractiveDemoHelp();
+    
+    // Show initialization info with v0.2.0.0 enhancements
+    console.log('🏠 Project root detected:', this.projectRoot);
+    console.log('🚫 No environment variables required');
+    console.log('🌐 Server hierarchy: Port 42777 → 8080+ (enhanced v0.2.0.0)');
+    console.log('');
+    
+    console.log('ℹ️ Demo initialized - Enhanced v0.2.0.0 with server hierarchy');
+    console.log('ℹ️ Press [h] for help, [s] to start server, [q] to quit');
+    
+    // Setup keyboard input like v0.1.0.2
+    this.setupInteractiveKeyboard();
   }
 
   /**
@@ -428,5 +441,198 @@ export class OnceCLI {
   private showError(message: string): void {
     console.error(`❌ Error: ${message}`);
     console.error('Run "once help" for usage information');
+  }
+
+  /**
+   * Show v0.1.0.2 style interactive demo header
+   */
+  private showInteractiveDemoHeader(): void {
+    console.clear();
+    const cyan = '\x1b[36m';
+    const bold = '\x1b[1m';
+    const reset = '\x1b[0m';
+    
+    console.log(`${bold}${cyan}╔════════════════════════════════════════════════╗${reset}`);
+    console.log(`${bold}${cyan}║    ONCE Interactive Demo Controller v0.2.0.0   ║${reset}`);
+    console.log(`${bold}${cyan}║         Enhanced Server Hierarchy              ║${reset}`);
+    console.log(`${bold}${cyan}╚════════════════════════════════════════════════╝${reset}`);
+    console.log('');
+  }
+
+  /**
+   * Show v0.1.0.2 style interactive demo help
+   */
+  private showInteractiveDemoHelp(): void {
+    const bold = '\x1b[1m';
+    const blue = '\x1b[34m';
+    const gray = '\x1b[37m';
+    const reset = '\x1b[0m';
+    
+    console.log(`${bold}📋 Keyboard Controls:${reset}`);
+    console.log(`${gray}─────────────────────${reset}`);
+    
+    this.keyHelp('h', 'Show this help menu');
+    this.keyHelp('s', 'Start/Stop ONCE server (v0.2.0.0: port 42777 → 8080+)');
+    this.keyHelp('b', 'Launch Browser Client simulation');
+    this.keyHelp('c', 'Launch Node.js Client');
+    this.keyHelp('w', 'Launch Web Worker simulation');
+    this.keyHelp('d', 'Discover peers (from all clients)');
+    this.keyHelp('e', 'Exchange scenarios between clients');
+    this.keyHelp('m', 'Show metrics and status');
+    this.keyHelp('backspace', 'Clear screen');
+    this.keyHelp('k', 'Kill all demo processes gracefully');
+    this.keyHelp('q', 'Quit demo (with cleanup)');
+    console.log('');
+  }
+
+  /**
+   * Helper for keyboard help display
+   */
+  private keyHelp(key: string, description: string): void {
+    const blue = '\x1b[34m';
+    const reset = '\x1b[0m';
+    console.log(`  ${blue}[${key}]${reset} ${description}`);
+  }
+
+  /**
+   * Setup interactive keyboard input like v0.1.0.2
+   */
+  private setupInteractiveKeyboard(): void {
+    // Check TTY environment
+    if (!process.stdin.isTTY) {
+      console.log('⚠️ Not a TTY environment - keyboard input disabled');
+      return;
+    }
+
+    // Check for setRawMode availability
+    if (typeof process.stdin.setRawMode !== 'function') {
+      console.log('⚠️ Raw mode not available - keyboard input disabled');
+      return;
+    }
+
+    // Setup keyboard listening
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
+    process.stdin.setEncoding('utf8');
+    
+    process.stdin.on('data', async (data: Buffer | string) => {
+      const key = data.toString();
+      await this.handleInteractiveKeypress(key);
+    });
+
+    // Setup cleanup on exit and Ctrl+C handling
+    process.on('SIGINT', async () => {
+      console.log('\n🛑 Ctrl+C received - cleaning up...');
+      await this.cleanupInteractiveDemo();
+      process.exit(0);
+    });
+  }
+
+  /**
+   * Handle keypress in interactive demo (v0.1.0.2 style)
+   */
+  private async handleInteractiveKeypress(key: string): Promise<void> {
+    try {
+      switch (key.toLowerCase()) {
+        case 'h':
+          console.clear();
+          this.showInteractiveDemoHeader();
+          this.showInteractiveDemoHelp();
+          break;
+          
+        case 's':
+          console.log('🚀 Starting/Stopping ONCE server (v0.2.0.0 hierarchy)...');
+          // TODO: Implement server toggle with v0.2.0.0 hierarchy
+          console.log('ℹ️ Server management integration pending');
+          break;
+          
+        case 'b':
+          console.log('🌐 Launching Browser Client...');
+          // TODO: Implement browser client launch
+          console.log('ℹ️ Browser client integration pending');
+          break;
+          
+        case 'c':
+          console.log('🔗 Launching Node.js Client...');
+          // TODO: Implement Node.js client launch
+          console.log('ℹ️ Node.js client integration pending');
+          break;
+          
+        case 'w':
+          console.log('⚙️ Launching Web Worker...');
+          // TODO: Implement Web Worker launch
+          console.log('ℹ️ Web Worker integration pending');
+          break;
+          
+        case 'd':
+          console.log('🔍 Discovering peers...');
+          // TODO: Implement peer discovery
+          console.log('ℹ️ Peer discovery integration pending');
+          break;
+          
+        case 'e':
+          console.log('🔄 Exchanging scenarios...');
+          // TODO: Implement scenario exchange
+          console.log('ℹ️ Scenario exchange integration pending');
+          break;
+          
+        case 'm':
+          console.log('📊 Server Metrics & Status:');
+          console.log('📋 ONCE v0.2.0.0 - Enhanced Server Hierarchy');
+          console.log('🏠 Domain: local.once');
+          console.log('🔧 Status: Interactive demo active');
+          break;
+          
+        case '\u0008': // backspace
+        case '\u007f': // delete
+          console.clear();
+          this.showInteractiveDemoHeader();
+          this.showInteractiveDemoHelp();
+          break;
+          
+        case 'k':
+          console.log('🧹 Killing all demo processes...');
+          await this.cleanupInteractiveDemo();
+          break;
+          
+        case 'q':
+          console.log('👋 Quitting demo with cleanup...');
+          await this.cleanupInteractiveDemo();
+          process.exit(0);
+          break;
+          
+        case '\u0003': // Ctrl+C
+          console.log('\n🛑 Ctrl+C received - cleaning up...');
+          await this.cleanupInteractiveDemo();
+          process.exit(0);
+          break;
+          
+        default:
+          console.log(`⚠️ Unknown key: '${key.replace(/[\x00-\x1f\x7f]/g, char => '\\x' + char.charCodeAt(0).toString(16).padStart(2, '0'))}'`);
+          console.log('ℹ️ Press [h] for help, [q] to quit');
+          break;
+      }
+    } catch (error) {
+      console.log(`❌ Keypress error: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  /**
+   * Cleanup interactive demo
+   */
+  private async cleanupInteractiveDemo(): Promise<void> {
+    try {
+      // Restore stdin
+      if (process.stdin.setRawMode) {
+        process.stdin.setRawMode(false);
+      }
+      
+      // Stop any running server
+      await this.once.stopServer().catch(() => {}); // Ignore errors during cleanup
+      
+      console.log('✅ Demo cleanup completed');
+    } catch (error) {
+      console.log(`⚠️ Cleanup warning: ${error instanceof Error ? error.message : String(error)}`);
+    }
   }
 }
