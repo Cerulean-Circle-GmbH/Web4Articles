@@ -204,7 +204,7 @@ export class ServerHierarchyManager {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0891b2 0%, #06b6d4 50%, #0e7490 100%);
             color: white;
             min-height: 100vh;
         }
@@ -224,10 +224,19 @@ export class ServerHierarchyManager {
         .header h1 {
             margin: 0;
             font-size: 3em;
-            background: linear-gradient(45deg, #fff, #a8edea);
+            background: linear-gradient(45deg, #fff, #67e8f9);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+        .cerulean-logo {
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 8px rgba(8,145,178,0.3));
+        }
+        .cerulean-branding {
+            color: #67e8f9;
+            font-style: italic;
+            margin: 10px 0;
         }
         .header h2 {
             margin: 10px 0;
@@ -328,9 +337,16 @@ export class ServerHierarchyManager {
 <body>
     <div class="container">
         <div class="header">
+            <svg width="60" height="60" viewBox="0 0 100 100" class="cerulean-logo">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#0891b2" stroke-width="3"/>
+                <circle cx="50" cy="50" r="30" fill="#06b6d4" opacity="0.3"/>
+                <circle cx="50" cy="50" r="15" fill="#0891b2"/>
+                <text x="50" y="55" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">C</text>
+            </svg>
             <h1><span class="emoji">🚀</span> ONCE Server</h1>
             <h2>Object Network Communication Engine</h2>
             <p>Enhanced v0.2.0.0 with Server Hierarchy & Dynamic Port Management</p>
+            <p class="cerulean-branding">Powered by <strong>Cerulean Circle GmbH</strong></p>
             <span class="hierarchy-badge ${this.serverModel.isPrimaryServer ? 'primary-badge' : 'client-badge'}">
                 ${this.serverModel.isPrimaryServer ? '🟢 Primary Server' : '🔵 Client Server'}
             </span>
@@ -418,27 +434,21 @@ export class ServerHierarchyManager {
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
             margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 20px 0 0 0;
             background: #f8f9fa;
         }
-        .container {
+        .top-text {
             text-align: center;
-        }
-        h1 {
+            font-size: 14px;
+            font-weight: bold;
             color: #333;
-            font-weight: 300;
             margin: 0;
+            line-height: 1;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>ONCE 0.2.0.0 up and running</h1>
-    </div>
+    <div class="top-text">ONCE 0.2.0.0 up and running</div>
     <script type="module">
         import { ONCE } from './dist/js/layer3/ONCE.js';
     </script>
