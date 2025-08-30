@@ -30,8 +30,8 @@
 
 ## **Notable Findings**
 
-- **Agent Count:** Now tracking 15 agents across different roles and eras
-- **RequestID Tracking:** 11/15 agents have known RequestIDs (73.3%) - ALL now have registry entries with clickable links
+- **Agent Count:** Now tracking 16 agents across different roles and eras
+- **RequestID Tracking:** 12/16 agents have known RequestIDs (75.0%) - ALL now have registry entries with clickable links
 - **Dead/Expired Agents:** test1 (dead), BranchStatus Agent (expired), THE ScrumMaster (expired), Agent Manager (expired), TSRanger Developer (expired)
 - **Agent Expiry:** save/start Agent near expiry (5 days), agent renaming expired but prepared for recovery
 - **Self-Discovery:** I now know my own RequestID: bc-4c4928dd-cf76-4a10-bb4c-bb80a98ecd5a
@@ -202,6 +202,7 @@ This allows agents to:
 | [cursor/start-background-process-2744](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-2744) | Unknown | [Pending](/scrum.pmo/agents/registry/cursor.start-background-process-2744.pending.id.md) | Unknown | ⚠️ Needs investigation | 📝 Pending |
 | [cursor/review-and-document-all-branches-ba3a](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/review-and-document-all-branches-ba3a) | BranchStatus Agent | [bc-0c18a415-e282-46e7-bf6f-f4efa171eed4](/scrum.pmo/agents/registry/bc-0c18a415-e282-46e7-bf6f-f4efa171eed4.md) | Branch documentation | 🔴 Expired | ✅ Complete |
 | [cursor/recover-readme-for-pdca-entry-check-9aa0](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recover-readme-for-pdca-entry-check-9aa0) | THE ScrumMaster | [bc-0c3e9e83-0e79-47d7-bd01-23df1c590f82](/scrum.pmo/agents/registry/bc-0c3e9e83-0e79-47d7-bd01-23df1c590f82.md) | PDCA entry checking | 🔴 Expired | ✅ Complete |
+| [cursor/recover-from-readme-file-4ac2](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recover-from-readme-file-4ac2) | feature/user - sprint 22 | [bc-6dd83cc3-45e4-4bdf-bec7-c98ee311bff5](/scrum.pmo/agents/registry/bc-6dd83cc3-45e4-4bdf-bec7-c98ee311bff5.md) | Sprint 22 features | ⚠️ Needs investigation | ✅ Complete |
 
 ### **Recovery Instructions**
 1. **With RequestID**: Click ID link for identity record (if available)
