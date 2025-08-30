@@ -8,11 +8,11 @@
 ## Summary
 
 **📎 Previous Commit:** 68b7cf61 🔗 BROWSER CLIENT ENDPOINT: Complete ONCE demo platform with /once endpoint serving interactive browser client - seamless navigation from dashboard  
-**🔗 Previous PDCA:** [GitHub](https://github.com/charlpcronje/Web4Articles/blob/main/scrum.pmo/project.journal/2025-08-29-UTC-1925-component-development-session/pdca/2025-08-30-UTC-0355-once-browser-client-endpoint-implementation.md) | [Local](../2025-08-30-UTC-0355-once-browser-client-endpoint-implementation.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/charlpcronje/Web4Articles/blob/main/scrum.pmo/project.journal/2025-08-29-UTC-1925-component-development-session/pdca/2025-08-30-UTC-0355-once-browser-client-endpoint-implementation.md) | [2025-08-30-UTC-0355-once-browser-client-endpoint-implementation.md](2025-08-30-UTC-0355-once-browser-client-endpoint-implementation.md)
 
 ### Artifact Links
-- [components/ONCE/0.1.0.2/examples/browser-client/index.html](https://github.com/charlpcronje/Web4Articles/blob/main/components/ONCE/0.1.0.2/examples/browser-client/index.html) | [components/ONCE/0.1.0.2/examples/browser-client/index.html](../../../components/ONCE/0.1.0.2/examples/browser-client/index.html)
-- [components/ONCE/0.1.0.2/src/view/html/index.html](https://github.com/charlpcronje/Web4Articles/blob/main/components/ONCE/0.1.0.2/src/view/html/index.html) | [components/ONCE/0.1.0.2/src/view/html/index.html](../../../components/ONCE/0.1.0.2/src/view/html/index.html)
+- [GitHub](https://github.com/charlpcronje/Web4Articles/blob/main/components/ONCE/0.1.0.2/examples/browser-client/index.html) | [../../../../components/ONCE/0.1.0.2/examples/browser-client/index.html](../../../../components/ONCE/0.1.0.2/examples/browser-client/index.html)
+- [GitHub](https://github.com/charlpcronje/Web4Articles/blob/main/components/ONCE/0.1.0.2/src/view/html/index.html) | [../../../../components/ONCE/0.1.0.2/src/view/html/index.html](../../../../components/ONCE/0.1.0.2/src/view/html/index.html)
 
 ### QA Decisions
 - [x] Enable demo mode automatically when accessing `/once` endpoint
