@@ -3,9 +3,9 @@
 **Component:** @web4/user  
 **Version:** 0.1.3.0  
 **Description:** Web4 User component for consistent user identification  
-**Generated:** 2025-08-27T19:52:12.642Z  
-**Git Commit:** 93a3216  
-**Git Branch:** dev/2025-08-25-UTC-1308
+**Generated:** 2025-08-30T09:51:42.356Z  
+**Git Commit:** 433280f0  
+**Git Branch:** release/dev
 
 ## Overview
 
@@ -20,7 +20,7 @@ The Web4 User component provides consistent user identification across the Web4A
 
 ### Layer Structure
 - **Layer 2 (Default Implementation)**: `DefaultUser.ts`
-- **Layer 3 (Interface)**: `IUser.ts`
+- **Layer 3 (Interface)**: `User.ts`
 - **Layer 4 (Lifecycle Management)**: `EnvironmentChecker.ts`, `DependencyChecker.ts`, `ComponentDocumentationGenerator.ts`
 
 ### Key Features
@@ -70,10 +70,13 @@ const uuid = user.getUuid(); // Deterministic based on username
 
 - **preinstall**: `echo 'Run npm run build first to compile TypeScript lifecycle tools'`
 - **postinstall**: `npm run build && npm run symlink`
-- **prebuild**: `npm run clean && npm run check:deps`
+- **prebuild**: `npm run clean-dist`
 - **build**: `tsc`
-- **postbuild**: `npm run verify && npm run generate:docs`
 - **clean**: `rm -rf dist/ *.tsbuildinfo`
+- **clean-dist**: `rm -rf dist/`
+- **install-and-build**: `npm install && npm run build`
+- **fresh-build**: `npm run clean && npm run install-and-build`
+- **postbuild**: `npm run verify && npm run generate:docs`
 - **check:deps**: `node dist/ts/layer5/LifecycleCLI.js check-dependencies || echo 'Skipping dependency check - build in progress'`
 - **symlink**: `mkdir -p dist && ln -sf ts/layer2 dist/layer2`
 - **verify**: `echo '✅ User component built successfully'`

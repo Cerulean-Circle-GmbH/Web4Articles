@@ -3,7 +3,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { UnitIndexStorage } from '../../../../../Unit/latest/dist/ts/layer2/UnitIndexStorage.js';
-import { DefaultUser } from '../../../../../User/0.1.0.0/dist/ts/layer2/DefaultUser.js';
+import { DefaultUser } from '../../../../../User/0.1.3.0/dist/ts/layer2/DefaultUser.js';
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -1152,16 +1152,22 @@ export class DefaultRequirement implements Requirement {
           title,
           name: title,
           filename,
-          createdAt: new Date().toISOString(), // Fallback timestamp
           implemented,
           implementationStatus
         };
         
-        // Include full scenario data (including owner) for DRY template processing
+        // Include full scenario data (including owner and unitIndex) for DRY template processing
         if (fullScenarioData) {
           requirementObj.owner = fullScenarioData.owner;
           requirementObj.IOR = fullScenarioData.IOR;
           requirementObj.model = fullScenarioData.model;
+          requirementObj.unitIndex = fullScenarioData.unitIndex; // Include unitIndex for date sorting
+        }
+        
+        // Only add fallback createdAt if no date information is available
+        if (!requirementObj.unitIndex?.createdAt && !requirementObj.unitIndex?.updatedAt && 
+            !requirementObj.model?.createdAt && !requirementObj.model?.updatedAt) {
+          requirementObj.createdAt = new Date().toISOString(); // Last resort fallback
         }
         
         requirements.push(requirementObj);

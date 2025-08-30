@@ -8,12 +8,12 @@ import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
 
-export interface IDependencyCheck {
+export interface DependencyCheck {
     check(): Promise<boolean>;
     getErrors(): string[];
 }
 
-export class DependencyChecker implements IDependencyCheck {
+export class DependencyChecker implements DependencyCheck {
     private errors: string[] = [];
     private componentRoot: string;
     private requiredDevDeps: string[] = [

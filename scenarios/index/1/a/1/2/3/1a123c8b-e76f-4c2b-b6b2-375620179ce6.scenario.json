@@ -1,17 +1,1 @@
-{
-  "uuid": "1a123c8b-e76f-4c2b-b6b2-375620179ce6",
-  "name": "Test Unit",
-  "description": "Testing UUID storage system",
-  "createdAt": "2025-08-22T13:29:05.232Z",
-  "unitIndex": {
-    "uuid": "1a123c8b-e76f-4c2b-b6b2-375620179ce6",
-    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/1/a/1/2/3/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json",
-    "symlinkPaths": [
-      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/components/Unit/latest/spec/requirements/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json",
-      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/components/TestComponent/v1.0/units/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json",
-      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/additional-location/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json"
-    ],
-    "createdAt": "2025-08-22T13:29:05.232Z",
-    "updatedAt": "2025-08-22T13:29:05.249Z"
-  }
-}
+../../../../../scenarios/index/1/a/1/2/3/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json

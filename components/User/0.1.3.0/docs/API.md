@@ -2,9 +2,9 @@
 
 ## Interfaces
 
-### IUser
+### User
 ```typescript
-interface IUser {
+interface User {
   getUuid(): string;
   getUsername(): string;
   getHostname(): string;
@@ -13,25 +13,25 @@ interface IUser {
 }
 ```
 
-### IEnvironmentCheck
+### EnvironmentCheck
 ```typescript
-interface IEnvironmentCheck {
+interface EnvironmentCheck {
     check(): Promise<boolean>;
     getErrors(): string[];
 }
 ```
 
-### IDependencyCheck
+### DependencyCheck
 ```typescript
-interface IDependencyCheck {
+interface DependencyCheck {
     check(): Promise<boolean>;
     getErrors(): string[];
 }
 ```
 
-### IDocumentationGenerator
+### DocumentationGenerator
 ```typescript
-interface IDocumentationGenerator {
+interface DocumentationGenerator {
     generate(): Promise<void>;
     getGeneratedFiles(): string[];
 }
@@ -40,7 +40,7 @@ interface IDocumentationGenerator {
 ## Classes
 
 ### DefaultUser
-Implements the IUser interface with deterministic UUID generation.
+Implements the User interface with deterministic UUID generation.
 
 #### Methods
 - `constructor()`: Creates empty user instance

@@ -86,7 +86,7 @@ CURRENT_BRANCH=$(git branch --show-current)
             Documentation/Ontology.md/*) role_type="Ontology" ;;
             README.md) role_type="Project root, tech stack, recovery" ;;
             recovery.md) role_type="Recovery log" ;;
-            # qa-feedback-log.md removed - use PDCA process instead
+            qa-feedback-log.md) role_type="QA feedback" ;;
             index.md) role_type="Index" ;;
             COMMIT_PUSH_POINT.md) role_type="Commit guide" ;;
             *) role_type="Document" ;;
@@ -116,7 +116,7 @@ CURRENT_BRANCH=$(git branch --show-current)
     echo "### Recovery & Process"
     echo "- [Recovery Process](./scrum.pmo/roles/ScrumMaster/recovery-process.md)"
     echo "- [README](./README.md)"
-    echo "- [QA Feedback Process](./scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)"
+    echo "- [QA Feedback Log](./qa-feedback-log.md)"
     echo ""
     echo "### Development"
     echo "- [Documentation](./Documentation/)"
