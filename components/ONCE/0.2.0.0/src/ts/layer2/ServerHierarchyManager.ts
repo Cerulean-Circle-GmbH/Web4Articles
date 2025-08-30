@@ -153,15 +153,23 @@ export class ServerHierarchyManager {
     private handleHttpRequest(req: any, res: any): void {
         const url = new URL(req.url, `http://${req.headers.host}`);
         
-        if (url.pathname === '/health') {
+        if (url.pathname === '/' || url.pathname === '/health') {
+            // Root path and health endpoint - server health status
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
                 status: 'running',
                 uuid: this.serverModel.uuid,
                 isPrimaryServer: this.serverModel.isPrimaryServer,
                 state: this.serverModel.state,
-                capabilities: this.serverModel.capabilities
+                capabilities: this.serverModel.capabilities,
+                domain: this.serverModel.domain,
+                version: '0.2.0.0',
+                message: 'ONCE v0.2.0.0 Server - Enhanced Hierarchy'
             }));
+        } else if (url.pathname === '/once' || url.pathname === '/once/') {
+            // Browser client endpoint - serve HTML interface
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end(this.getBrowserClientHTML());
         } else if (url.pathname === '/servers' && this.serverModel.isPrimaryServer) {
             // Only primary server can list all servers
             res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -172,6 +180,207 @@ export class ServerHierarchyManager {
             res.writeHead(404, { 'Content-Type': 'text/plain' });
             res.end('Not Found');
         }
+    }
+
+    /**
+     * Get browser client HTML
+     */
+    private getBrowserClientHTML(): string {
+        const httpCapability = this.serverModel.capabilities.find(c => c.capability === 'httpPort');
+        const wsCapability = this.serverModel.capabilities.find(c => c.capability === 'wsPort');
+        
+        return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONCE Browser Client v0.2.0.0</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #fff, #a8edea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .status {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .status h3 {
+            margin-top: 0;
+            color: #4ade80;
+        }
+        .connection-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        #connectionStatus {
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .connected {
+            background-color: #10b981;
+        }
+        .disconnected {
+            background-color: #ef4444;
+        }
+        button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        #messages {
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            padding: 15px;
+            height: 200px;
+            overflow-y: auto;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .emoji {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><span class="emoji">🚀</span> ONCE Browser Client</h1>
+            <p>Enhanced v0.2.0.0 with Server Hierarchy</p>
+        </div>
+        
+        <div class="status">
+            <h3><span class="emoji">📊</span> Server Status</h3>
+            <p><strong>UUID:</strong> ${this.serverModel.uuid}</p>
+            <p><strong>Domain:</strong> ${this.serverModel.domain}</p>
+            <p><strong>Type:</strong> ${this.serverModel.isPrimaryServer ? '🟢 Primary Server (42777)' : '🔵 Client Server'}</p>
+            <p><strong>HTTP Port:</strong> ${httpCapability?.port || 'Unknown'}</p>
+            <p><strong>WebSocket Port:</strong> ${wsCapability?.port || 'Unknown'}</p>
+            <p><strong>State:</strong> ${this.serverModel.state}</p>
+        </div>
+
+        <div class="connection-box">
+            <h3><span class="emoji">🔗</span> Connection</h3>
+            <div id="connectionStatus" class="disconnected">Disconnected</div>
+            <button onclick="connect()">Connect to WebSocket</button>
+            <button onclick="disconnect()">Disconnect</button>
+            <button onclick="sendPing()">Send Ping</button>
+        </div>
+
+        <div class="connection-box">
+            <h3><span class="emoji">📡</span> Messages</h3>
+            <div id="messages"></div>
+            <button onclick="clearMessages()">Clear Messages</button>
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        const messages = document.getElementById('messages');
+        const status = document.getElementById('connectionStatus');
+
+        function addMessage(message) {
+            const time = new Date().toLocaleTimeString();
+            messages.innerHTML += \`<div>[\${time}] \${message}</div>\`;
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function connect() {
+            const wsUrl = \`ws://\${window.location.host}\`;
+            ws = new WebSocket(wsUrl);
+            
+            ws.onopen = function() {
+                status.textContent = 'Connected';
+                status.className = 'connected';
+                addMessage('✅ Connected to ONCE WebSocket server');
+            };
+            
+            ws.onmessage = function(event) {
+                addMessage(\`📨 Received: \${event.data}\`);
+            };
+            
+            ws.onclose = function() {
+                status.textContent = 'Disconnected';
+                status.className = 'disconnected';
+                addMessage('❌ WebSocket connection closed');
+            };
+            
+            ws.onerror = function(error) {
+                addMessage(\`❌ WebSocket error: \${error}\`);
+            };
+        }
+
+        function disconnect() {
+            if (ws) {
+                ws.close();
+                ws = null;
+            }
+        }
+
+        function sendPing() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                const pingMessage = {
+                    type: 'ping',
+                    timestamp: Date.now(),
+                    client: 'browser'
+                };
+                ws.send(JSON.stringify(pingMessage));
+                addMessage(\`🏓 Sent ping: \${JSON.stringify(pingMessage)}\`);
+            } else {
+                addMessage('❌ Not connected - cannot send ping');
+            }
+        }
+
+        function clearMessages() {
+            messages.innerHTML = '';
+        }
+
+        // Auto-connect on load
+        addMessage('🚀 ONCE Browser Client v0.2.0.0 initialized');
+        addMessage('🌐 Click "Connect to WebSocket" to establish connection');
+    </script>
+</body>
+</html>`;
     }
 
     /**
