@@ -88,3 +88,4 @@ describe('Simple Integration Tests - Success Cases', () => {
     expect(mockComponent.version).toMatch(/^\d+\.\d+\.\d+\.\d+$/)
   })
 })
+

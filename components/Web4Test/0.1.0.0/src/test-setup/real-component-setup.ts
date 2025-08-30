@@ -180,3 +180,4 @@ afterEach(() => {
 })
 
 console.log('🔧 Real Component Testing Setup Complete - Component validation utilities loaded')
+

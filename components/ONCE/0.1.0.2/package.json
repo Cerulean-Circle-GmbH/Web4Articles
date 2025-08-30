@@ -12,6 +12,8 @@
   "scripts": {
     "build": "tsc",
     "test": "vitest",
+    "test:server": "vitest --config vitest.config.ts test/server/",
+    "test:watch": "vitest --watch",
     "start": "node dist/ts/layer5/ONCECLI.js",
     "dev": "tsc --watch",
     "clean": "rm -rf dist",

@@ -81,3 +81,4 @@ describe('Web4Test Framework - Basic Tests', () => {
     expect(evidence[0].data.test).toBe(true)
   })
 })
+
