@@ -541,39 +541,27 @@ export class OnceCLI {
           break;
           
         case 's':
-          console.log('🚀 Starting/Stopping ONCE server (v0.2.0.0 hierarchy)...');
-          // TODO: Implement server toggle with v0.2.0.0 hierarchy
-          console.log('ℹ️ Server management integration pending');
+          await this.toggleServer();
           break;
           
         case 'b':
-          console.log('🌐 Launching Browser Client...');
-          // TODO: Implement browser client launch
-          console.log('ℹ️ Browser client integration pending');
+          await this.launchBrowserClient();
           break;
           
         case 'c':
-          console.log('🔗 Launching Node.js Client...');
-          // TODO: Implement Node.js client launch
-          console.log('ℹ️ Node.js client integration pending');
+          await this.launchNodejsClient();
           break;
           
         case 'w':
-          console.log('⚙️ Launching Web Worker...');
-          // TODO: Implement Web Worker launch
-          console.log('ℹ️ Web Worker integration pending');
+          await this.launchWebWorkerClient();
           break;
           
         case 'd':
-          console.log('🔍 Discovering peers...');
-          // TODO: Implement peer discovery
-          console.log('ℹ️ Peer discovery integration pending');
+          await this.discoverPeers();
           break;
           
         case 'e':
-          console.log('🔄 Exchanging scenarios...');
-          // TODO: Implement scenario exchange
-          console.log('ℹ️ Scenario exchange integration pending');
+          await this.exchangeScenarios();
           break;
           
         case 'm':
@@ -633,6 +621,165 @@ export class OnceCLI {
       console.log('✅ Demo cleanup completed');
     } catch (error) {
       console.log(`⚠️ Cleanup warning: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  /**
+   * Toggle server start/stop with v0.2.0.0 hierarchy
+   */
+  private async toggleServer(): Promise<void> {
+    try {
+      const serverModel = this.once.getServerModel();
+      
+      if (serverModel && serverModel.state === 'running') {
+        console.log('🛑 Stopping ONCE server...');
+        await this.once.stopServer();
+        console.log('✅ Server stopped');
+      } else {
+        console.log('🚀 Starting ONCE server (v0.2.0.0 hierarchy)...');
+        
+        // Initialize if not done
+        if (!this.once.isInitialized()) {
+          await this.once.init();
+        }
+        
+        // Start server with hierarchy
+        await this.once.startServer();
+        
+        const model = this.once.getServerModel();
+        const httpCapability = model.capabilities.find(c => c.capability === 'httpPort');
+        
+        if (httpCapability) {
+          console.log(`✅ Server started on port ${httpCapability.port}`);
+          console.log(`🏠 Domain: ${model.domain}`);
+          console.log(`📋 UUID: ${model.uuid}`);
+          
+          if (model.isPrimaryServer) {
+            console.log('🟢 PRIMARY server (port 42777) - other instances will register here');
+          } else {
+            console.log('🔵 CLIENT server - registered with primary server');
+          }
+        }
+      }
+    } catch (error) {
+      console.log(`❌ Server error: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  /**
+   * Launch browser client
+   */
+  private async launchBrowserClient(): Promise<void> {
+    console.log('🌐 Launching Browser Client...');
+    try {
+      const serverModel = this.once.getServerModel();
+      
+      if (!serverModel || serverModel.state !== 'running') {
+        console.log('⚠️ Server not running - start server first with [s]');
+        return;
+      }
+      
+      const httpCapability = serverModel.capabilities.find(c => c.capability === 'httpPort');
+      if (httpCapability) {
+        const url = `http://localhost:${httpCapability.port}/once`;
+        console.log(`🔗 Opening browser to: ${url}`);
+        
+        // Use cross-platform browser opening
+        const { spawn } = await import('child_process');
+        const command = process.platform === 'darwin' ? 'open' :
+                       process.platform === 'win32' ? 'start' : 'xdg-open';
+        
+        spawn(command, [url], { detached: true, stdio: 'ignore' }).unref();
+        console.log('✅ Browser client launched');
+      } else {
+        console.log('❌ HTTP port not available');
+      }
+    } catch (error) {
+      console.log(`❌ Browser launch error: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  /**
+   * Launch Node.js client
+   */
+  private async launchNodejsClient(): Promise<void> {
+    console.log('🔗 Launching Node.js Client...');
+    try {
+      const serverModel = this.once.getServerModel();
+      
+      if (!serverModel || serverModel.state !== 'running') {
+        console.log('⚠️ Server not running - start server first with [s]');
+        return;
+      }
+      
+      // TODO: Implement Node.js client launch with proper client script
+      console.log('ℹ️ Node.js client implementation in progress');
+      console.log('💡 Will launch dedicated Node.js client process');
+    } catch (error) {
+      console.log(`❌ Node.js client error: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  /**
+   * Launch Web Worker client
+   */
+  private async launchWebWorkerClient(): Promise<void> {
+    console.log('⚙️ Launching Web Worker Client...');
+    try {
+      const serverModel = this.once.getServerModel();
+      
+      if (!serverModel || serverModel.state !== 'running') {
+        console.log('⚠️ Server not running - start server first with [s]');
+        return;
+      }
+      
+      // TODO: Implement Web Worker client launch
+      console.log('ℹ️ Web Worker client implementation in progress');
+      console.log('💡 Will launch Web Worker simulation');
+    } catch (error) {
+      console.log(`❌ Web Worker error: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  /**
+   * Discover peers on the network
+   */
+  private async discoverPeers(): Promise<void> {
+    console.log('🔍 Discovering peers...');
+    try {
+      const serverModel = this.once.getServerModel();
+      
+      if (!serverModel || serverModel.state !== 'running') {
+        console.log('⚠️ Server not running - start server first with [s]');
+        return;
+      }
+      
+      // TODO: Implement peer discovery with v0.2.0.0 server hierarchy
+      console.log('ℹ️ Peer discovery implementation in progress');
+      console.log('💡 Will scan for other ONCE servers in hierarchy');
+    } catch (error) {
+      console.log(`❌ Peer discovery error: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  /**
+   * Exchange scenarios between clients
+   */
+  private async exchangeScenarios(): Promise<void> {
+    console.log('🔄 Exchanging scenarios...');
+    try {
+      const serverModel = this.once.getServerModel();
+      
+      if (!serverModel || serverModel.state !== 'running') {
+        console.log('⚠️ Server not running - start server first with [s]');
+        return;
+      }
+      
+      // TODO: Implement scenario exchange with v0.2.0.0 features
+      console.log('ℹ️ Scenario exchange implementation in progress');
+      console.log('💡 Will exchange scenarios between connected clients');
+    } catch (error) {
+      console.log(`❌ Scenario exchange error: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 }
