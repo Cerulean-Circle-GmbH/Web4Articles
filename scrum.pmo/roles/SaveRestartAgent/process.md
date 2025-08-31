@@ -86,6 +86,12 @@ Create PDCA following v3.1.4.2:
 - Proper dual links
 - Commit AND push immediately
 
+**Essential PDCA Reading:**
+- **How to PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../../scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)
+- **PDCA Template:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](../../../scrum.pmo/roles/_shared/PDCA/template.md)
+- **How to Decide:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../../../scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md)
+- **CMM Understanding:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/_shared/PDCA/PDCA.understanding.CMMI.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.understanding.CMMI.md](../../../scrum.pmo/roles/_shared/PDCA/PDCA.understanding.CMMI.md)
+
 **Git Workflow for PDCAs:**
 1. Create PDCA file
 2. `git add -A`
