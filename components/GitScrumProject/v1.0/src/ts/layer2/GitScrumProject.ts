@@ -1,10 +1,15 @@
 import { execSync } from 'child_process';
 import path from 'path';
 import * as fs from 'fs';
+import * as os from 'os';
 import type { Project } from '../layer3/Project.ts';
 import { ParameterParser } from '../layer1/ParameterParser.ts';
 import type { CLI } from '../layer3/CLI.ts';
 import { DefaultCLI } from './DefaultCLI.ts';
+import { GitHubApi } from './GitHubApi.ts';
+import { SubmoduleManager } from './SubmoduleManager.ts';
+import { TemplateGenerator } from './TemplateGenerator.ts';
+import { Logger } from '../layer1/Logger.ts';
 
 export class GitScrumProject implements Project {
   private cli: CLI;
@@ -42,7 +47,10 @@ export class GitScrumProject implements Project {
         (v) => typeof v === 'string' && v.length > 0
       ) as string[];
       const [org, newRepo, sourceRepoUrl, submodulePath] = argList;
-      return this.createTemplateRepo(org, newRepo, sourceRepoUrl, submodulePath);
+      return this.createTemplateRepo(org, newRepo, sourceRepoUrl, submodulePath).catch(error => {
+        Logger.log(`[GitScrumProject] createTemplateRepo failed: ${error}`, 'error');
+        process.exit(1);
+      });
     }
     if (command === 'linkSource') {
       const [submodulePath, sourceRepoUrl, ref] = parsed.restArgs || [];
@@ -88,15 +96,106 @@ export class GitScrumProject implements Project {
     console.log(`Subproject ${projectName} created as a submodule. Please push the new repo to GitHub manually if needed.`);
   }
 
-  // New commands (stubs)
-  private createTemplateRepo(org?: string, newRepo?: string, sourceRepoUrl?: string, submodulePath?: string): void {
+  // New commands (implementation)
+  private async createTemplateRepo(org?: string, newRepo?: string, sourceRepoUrl?: string, submodulePath?: string): Promise<void> {
     if (process.env.DRY_RUN === '1') {
       console.log(
         `DRY RUN: createTemplateRepo org=${org} newRepo=${newRepo} sourceRepoUrl=${sourceRepoUrl} submodulePath=${submodulePath}`
       );
       return;
     }
-    console.log('createTemplateRepo stub:', { org, newRepo, sourceRepoUrl, submodulePath });
+
+    // Validate required parameters
+    if (!org || !newRepo || !sourceRepoUrl || !submodulePath) {
+      Logger.log('[GitScrumProject] Missing required parameters for createTemplateRepo', 'error');
+      console.error('Usage: GitScrumProject createTemplateRepo <org> <newRepo> <sourceRepoUrl> <submodulePath>');
+      process.exit(1);
+    }
+
+    try {
+      Logger.log(`[GitScrumProject] Creating template repository: ${org}/${newRepo}`, 'info');
+
+      // 1. Initialize GitHub API and create repository
+      const github = new GitHubApi();
+      await github.init();
+      
+      // Check if repository already exists
+      const exists = await github.repositoryExists(org, newRepo);
+      if (exists) {
+        Logger.log(`[GitScrumProject] Repository ${org}/${newRepo} already exists`, 'error');
+        console.error(`Repository ${org}/${newRepo} already exists`);
+        process.exit(1);
+      }
+
+      const repository = await github.createRepository(org, newRepo, {
+        description: `Web4Articles template project: ${newRepo}`
+      });
+
+      Logger.log(`[GitScrumProject] GitHub repository created: ${repository.htmlUrl}`, 'info');
+
+      // 2. Create temporary directory and clone current project as template
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gitscrumproject-'));
+      const templateDir = path.join(tempDir, newRepo);
+      
+      Logger.log(`[GitScrumProject] Cloning current project to: ${templateDir}`, 'info');
+      execSync(`git clone --depth 1 . ${templateDir}`, { stdio: 'inherit' });
+
+      // 3. Remove .git directory and re-initialize
+      fs.rmSync(path.join(templateDir, '.git'), { recursive: true, force: true });
+      execSync('git init', { cwd: templateDir, stdio: 'inherit' });
+      execSync(`git remote add origin ${repository.sshUrl}`, { cwd: templateDir, stdio: 'inherit' });
+
+      // 4. Add submodule using SubmoduleManager
+      const submoduleManager = new SubmoduleManager().init(templateDir);
+      submoduleManager.addSubmodule({
+        name: path.basename(submodulePath),
+        path: submodulePath,
+        url: sourceRepoUrl,
+        branch: 'main'
+      });
+
+      // 5. Generate CI workflow, recovery docs, and README using TemplateGenerator
+      const templateGenerator = new TemplateGenerator();
+      
+      templateGenerator.writeTemplate(
+        templateDir,
+        '.github/workflows/ci.yml',
+        templateGenerator.generateCIWorkflow(submodulePath, sourceRepoUrl)
+      );
+      
+      templateGenerator.writeTemplate(
+        templateDir,
+        'recovery.md',
+        templateGenerator.generateRecoveryDoc(newRepo, sourceRepoUrl, submodulePath)
+      );
+      
+      templateGenerator.writeTemplate(
+        templateDir,
+        'README.md',
+        templateGenerator.generateReadmeAdditions(newRepo, sourceRepoUrl, submodulePath)
+      );
+
+      // 6. Initial commit and push
+      Logger.log(`[GitScrumProject] Committing and pushing to ${repository.sshUrl}`, 'info');
+      execSync('git add .', { cwd: templateDir, stdio: 'inherit' });
+      execSync(`git commit -m "feat: initial template setup with ${submodulePath} submodule"`, { cwd: templateDir, stdio: 'inherit' });
+      execSync('git branch -M main', { cwd: templateDir, stdio: 'inherit' });
+      execSync('git push -u origin main', { cwd: templateDir, stdio: 'inherit' });
+
+      // 7. Cleanup
+      fs.rmSync(tempDir, { recursive: true, force: true });
+
+      Logger.log(`[GitScrumProject] Template repository created successfully!`, 'info');
+      console.log(`✅ Repository created: ${repository.htmlUrl}`);
+      console.log(`✅ Submodule added: ${submodulePath} -> ${sourceRepoUrl}`);
+      console.log(`✅ CI workflow and recovery docs generated`);
+      console.log(`✅ Ready for development!`);
+
+    } catch (error) {
+      Logger.log(`[GitScrumProject] createTemplateRepo failed: ${error}`, 'error');
+      console.error(`Failed to create template repository: ${error}`);
+      process.exit(1);
+    }
   }
 
   private linkSource(submodulePath?: string, sourceRepoUrl?: string, ref?: string): void {

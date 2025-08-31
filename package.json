@@ -6,6 +6,9 @@
     "ts-node": "^10.9.2",
     "vitest": "^3.2.4"
   },
+  "dependencies": {
+    "@octokit/rest": "^21.0.2"
+  },
   "scripts": {
     "test": "vitest run",
     "tsranger": "node --loader ts-node/esm ./src/ts/layer4/TSRanger.ts",
