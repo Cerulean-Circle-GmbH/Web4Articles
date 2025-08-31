@@ -84,7 +84,13 @@ Create PDCA following v3.1.4.2:
 - Use exact template format
 - Include all 6 sections
 - Proper dual links
-- Push immediately
+- Commit AND push immediately
+
+**Git Workflow for PDCAs:**
+1. Create PDCA file
+2. `git add -A`
+3. `git commit -m "PDCA: [title]"`
+4. `git push` - ALWAYS push after commit
 
 ### **ASK QA**
 When ambiguous or unclear:
@@ -177,9 +183,10 @@ source ./source.env
 
 ### **During Session**
 1. Create PDCAs for significant work
-2. Update documentation immediately
-3. Ask QA when ambiguous
-4. Push changes frequently
+2. ALWAYS: git add, commit, push after PDCA
+3. Update documentation immediately
+4. Ask QA when ambiguous
+5. Push changes frequently
 
 ### **End of Day**
 1. Update learnings.summary.md
