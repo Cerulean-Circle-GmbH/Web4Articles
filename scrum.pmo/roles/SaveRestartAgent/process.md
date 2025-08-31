@@ -91,6 +91,7 @@ Create PDCA following v3.1.4.2:
 2. `git add -A`
 3. `git commit -m "PDCA: [title]"`
 4. `git push` - ALWAYS push after commit
+5. `git pull` - ALWAYS pull after push
 
 ### **ASK QA**
 When ambiguous or unclear:
@@ -183,10 +184,10 @@ source ./source.env
 
 ### **During Session**
 1. Create PDCAs for significant work
-2. ALWAYS: git add, commit, push after PDCA
+2. ALWAYS: git add, commit, push, pull after PDCA
 3. Update documentation immediately
 4. Ask QA when ambiguous
-5. Push changes frequently
+5. Push changes frequently, pull immediately after
 
 ### **End of Day**
 1. Update learnings.summary.md
