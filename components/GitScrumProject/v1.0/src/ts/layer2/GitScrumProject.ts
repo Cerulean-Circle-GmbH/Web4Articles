@@ -16,7 +16,7 @@ export class GitScrumProject implements Project {
 
   constructor(cli?: CLI) {
     // Compose CLI interface using DefaultCLI by default
-    this.cli = cli || new DefaultCLI((args: string[]) => this.create(args));
+    this.cli = cli || new DefaultCLI(async (args: string[]) => await this.create(args));
   }
 
   // Static entry point for CLI usage
@@ -37,7 +37,7 @@ export class GitScrumProject implements Project {
   }
 
   // Project interface method
-  public create(args: string[]): void {
+  public async create(args: string[]): Promise<void> {
     const parser = new ParameterParser(args);
     const parsed = parser.parse();
     const command = parsed.command || 'createProject';
@@ -47,10 +47,13 @@ export class GitScrumProject implements Project {
         (v) => typeof v === 'string' && v.length > 0
       ) as string[];
       const [org, newRepo, sourceRepoUrl, submodulePath] = argList;
-      return this.createTemplateRepo(org, newRepo, sourceRepoUrl, submodulePath).catch(error => {
+      try {
+        await this.createTemplateRepo(org, newRepo, sourceRepoUrl, submodulePath);
+        return;
+      } catch (error) {
         Logger.log(`[GitScrumProject] createTemplateRepo failed: ${error}`, 'error');
         process.exit(1);
-      });
+      }
     }
     if (command === 'linkSource') {
       const [submodulePath, sourceRepoUrl, ref] = parsed.restArgs || [];

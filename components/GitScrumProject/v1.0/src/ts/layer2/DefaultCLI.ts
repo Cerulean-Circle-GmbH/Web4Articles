@@ -1,9 +1,9 @@
 import { Logger } from '../layer1/Logger.ts';
 
 export class DefaultCLI {
-  private callback: (args: string[]) => void;
+  private callback: (args: string[]) => Promise<void>;
 
-  constructor(callback: (args: string[]) => void) {
+  constructor(callback: (args: string[]) => Promise<void>) {
     this.callback = callback;
   }
 
@@ -35,7 +35,7 @@ export class DefaultCLI {
       } catch (e) {
         Logger.log(`[DefaultCLI] Could not import class: ${className} (${e})`, 'error');
         // Use callback as fallback
-        this.callback(args);
+        await this.callback(args);
         return;
       }
       if (ClassRef && typeof ClassRef[method] === 'function') {
@@ -54,7 +54,7 @@ export class DefaultCLI {
       } else {
         Logger.log(`[DefaultCLI] No such method: ${method} on ${className}`, 'error');
         // Use callback as fallback
-        this.callback(args);
+        await this.callback(args);
       }
     })();
   }
