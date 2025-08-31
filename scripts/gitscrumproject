@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+# GitScrumProject CLI wrapper script
+# Usage: gitscrumproject <command> [args...]
+
+set -euo pipefail
+
+# Detect project root (location-resilient)
+if [ -n "${GIT_ROOT:-}" ]; then
+    PROJECT_ROOT="$GIT_ROOT"
+elif git rev-parse --show-toplevel &>/dev/null; then
+    PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+elif [ -f package.json ]; then
+    PROJECT_ROOT="$(pwd)"
+else
+    echo "ERROR: Cannot detect Web4Articles project root" >&2
+    echo "Please run from within the Web4Articles project or set GIT_ROOT" >&2
+    exit 1
+fi
+
+# Add node_modules/.bin to PATH for dependencies
+export PATH="$PROJECT_ROOT/node_modules/.bin:$PATH"
+
+# Set working directory
+cd "$PROJECT_ROOT"
+
+# CLI dispatch
+case "${1:-help}" in
+    "createTemplateRepo")
+        if [ $# -lt 5 ]; then
+            echo "Usage: gitscrumproject createTemplateRepo <org> <newRepo> <sourceRepoUrl> <submodulePath>" >&2
+            exit 1
+        fi
+        LOG_LEVEL="${LOG_LEVEL:-0}" node --loader ts-node/esm \
+            -e "import { GitScrumProject } from './components/GitScrumProject/v1.0/src/ts/layer2/GitScrumProject.ts';
+                const gsp = new GitScrumProject();
+                await gsp.create(['GitScrumProject', 'createTemplateRepo', '$2', '$3', '$4', '$5']);" 2>/dev/null
+        ;;
+    "help"|"-h"|"--help")
+        node --loader ts-node/esm \
+            -e "import { GitScrumProject } from './components/GitScrumProject/v1.0/src/ts/layer2/GitScrumProject.ts';
+                GitScrumProject.help();" 2>/dev/null
+        ;;
+    "checkoutSubmodulesBranch")
+        node --loader ts-node/esm \
+            -e "import { GitScrumProject } from './components/GitScrumProject/v1.0/src/ts/layer2/GitScrumProject.ts';
+                GitScrumProject.checkoutSubmodulesBranch('${2:-main}');" 2>/dev/null
+        ;;
+    "addSubmodule")
+        if [ $# -lt 3 ]; then
+            echo "Usage: gitscrumproject addSubmodule <repoUrl> <targetPath>" >&2
+            exit 1
+        fi
+        node --loader ts-node/esm \
+            -e "import { GitScrumProject } from './components/GitScrumProject/v1.0/src/ts/layer2/GitScrumProject.ts';
+                GitScrumProject.addSubmodule('$2', '$3');" 2>/dev/null
+        ;;
+    "updateSubmodules")
+        node --loader ts-node/esm \
+            -e "import { GitScrumProject } from './components/GitScrumProject/v1.0/src/ts/layer2/GitScrumProject.ts';
+                GitScrumProject.updateSubmodules();" 2>/dev/null
+        ;;
+    *)
+        echo "Unknown command: $1" >&2
+        echo "Use 'gitscrumproject help' for usage information" >&2
+        exit 1
+        ;;
+esac
