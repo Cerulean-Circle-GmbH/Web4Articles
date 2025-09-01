@@ -215,3 +215,4 @@ export interface NetworkTraffic {
     size: number;
     protocol: string;
 }
+

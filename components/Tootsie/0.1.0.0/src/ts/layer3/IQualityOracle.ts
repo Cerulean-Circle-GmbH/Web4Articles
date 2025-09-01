@@ -379,3 +379,4 @@ export enum AnalysisScope {
     ECOSYSTEM = 'ecosystem',
     UNIVERSAL = 'universal'
 }
+

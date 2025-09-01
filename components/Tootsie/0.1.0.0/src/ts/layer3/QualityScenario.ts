@@ -192,3 +192,4 @@ export enum StorageLocation {
     CLOUD = 'cloud',
     HYBRID = 'hybrid'
 }
+
