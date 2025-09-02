@@ -28,10 +28,7 @@
 ### **QA Decisions**
 - [x] **Decision 1: Branch Switch** - Successfully switched to stable/once2 branch  
 - [x] **Decision 2: Template Version Confirmed** - Template version 3.1.4.2 verified with Agent Name field
-- [ ] **Decision 3: Task Assignment Priority**
-  - a) Wait for specific task assignment from user
-  - b) Begin preliminary Sprint 3 analysis while waiting
-  - c) Focus on template compliance and process documentation
+- [x] **Decision 3: Task Assignment Priority** - Selected: a) Wait for specific task assignment from user
 
 ### **TRON Feedback (2025-09-02-UTC-1913)**
 ```quote
@@ -42,6 +39,8 @@ so i interrupted you correctly. did you do git fetch?
 branch shoud be available now. switch to it and tell me the pdca template version
 
 update the pdca template from save/start.v1 and the rest of the folder ... read it, the dual links and the reporting and. pdca
+
+ 1a ... here it is: read all files in sprint 20 and try ro run once demo. then pdca
 ```
 
 ### **My Answer**
