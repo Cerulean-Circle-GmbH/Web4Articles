@@ -30,21 +30,19 @@
 ### **QA Decisions**
 - [x] **Decision 1: Sprint 20 Analysis Complete** - Read planning files 01-06, web4.requirement.md, and TLA specification
 - [x] **Decision 2: ONCE Demo Execution** - Successfully ran test sequences "s3q" and "s21q" with clean server startup/shutdown
-- [ ] **Decision 3: TLA Implementation Priority**
-  - a) Focus on Web4 methodology infrastructure implementation
-  - b) Prioritize ONCE kernel foundation development
-  - c) Emphasize MDA sphere architecture and semantic consolidation
-  - d) Begin with empty constructor principle and scenario-first development
+- [x] **Decision 3: TLA Implementation Priority** - Selected: b) Prioritize ONCE kernel foundation development with testing focus
 
 ### **TRON Feedback (2025-09-02-UTC-1943)**
 ```quote
  1a ... here it is: read all files in sprint 20 and try ro run once demo. then pdca
+
+1b but on testing
 ```
 
 ### **My Answer**
-Completed Sprint 20 file analysis and successfully executed ONCE demo. Sprint 20 implements TLA (The Last Architecture) with Web4 methodology - revolutionary paradigm including empty constructors, scenario-first development, IOR architecture, and semantic invariants. ONCE demo shows functional server with clean startup/shutdown on network address 172.30.0.2:8080.
+Completed Sprint 20 analysis and ONCE demo execution. Selected 1b) Prioritize ONCE kernel foundation development with testing focus. Will proceed with comprehensive ONCE testing strategy including multi-client scenarios, stress tests, and black box validation per Web4 methodology.
 
-**Learning Applied:** Sprint 20 represents architectural singularity - TLA = MDAv4 + EAMv4 + SOAv4 based on Web4; ONCE provides universal communication foundation.
+**Learning Applied:** ONCE kernel provides universal communication foundation for TLA; testing focus ensures robust foundation before architecture implementation.
 
 ---
 
