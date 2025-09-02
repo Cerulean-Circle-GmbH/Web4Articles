@@ -37,12 +37,21 @@
  1a ... here it is: read all files in sprint 20 and try ro run once demo. then pdca
 
 1b but on testing
+
+once is one of the ?tools?. to use it you have to source source.env from the project root and then the script  folder and script/versions folder are in the path.
+
+run
+once start &
+and check with curl if a server is running on http 42777. 
+then run 
+once stop
+and  check if the process has gone.
 ```
 
 ### **My Answer**
-Completed Sprint 20 analysis and ONCE demo execution. Selected 1b) Prioritize ONCE kernel foundation development with testing focus. Will proceed with comprehensive ONCE testing strategy including multi-client scenarios, stress tests, and black box validation per Web4 methodology.
+Understood! ONCE is a tool accessible via source.env sourcing. Selected 1b) ONCE kernel foundation with testing focus. Will execute proper ONCE server testing using `once start &` with port 42777, validate with curl, then `once stop` and verify process termination.
 
-**Learning Applied:** ONCE kernel provides universal communication foundation for TLA; testing focus ensures robust foundation before architecture implementation.
+**Learning Applied:** ONCE tool requires proper environment setup via source.env; testing on port 42777 validates kernel foundation functionality.
 
 ---
 
