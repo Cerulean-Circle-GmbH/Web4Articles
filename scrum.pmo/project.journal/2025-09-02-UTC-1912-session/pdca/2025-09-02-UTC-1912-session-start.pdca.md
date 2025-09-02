@@ -23,12 +23,7 @@
 - **Project Status:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-02-UTC-1912/scrum.pmo/project.journal/2025-09-02-UTC-1912-session/project.status.md) | scrum.pmo/project.journal/2025-09-02-UTC-1912-session/project.status.md
 
 ### **QA Decisions**
-- [ ] **Decision 1: Primary Work Focus Area**
-  - a) Technical Development Focus - Complete Sprint 3 implementation tasks (GitScrumProject scaffold, submodule integration)
-  - b) Architecture Focus - Refine system design and process improvements for project templating
-  - c) Documentation Focus - Update requirements and automation workflow for Sprint 3 deliverables
-  - d) Quality/Testing Focus - Implement E2E tests and validation for Sprint 3 components
-
+- [x] **Decision 1: Primary Work Focus Area** - Selected: a) Technical Development Focus - Complete Sprint 3 implementation tasks (GitScrumProject scaffold, submodule integration) with urgency for merge
 - [ ] **Decision 2: Role Selection for Session**
   - a) Background Agent for autonomous session coordination and multi-role orchestration
   - b) Switch to Developer for Sprint 3 implementation tasks (repo scaffold, submodule runtime)
