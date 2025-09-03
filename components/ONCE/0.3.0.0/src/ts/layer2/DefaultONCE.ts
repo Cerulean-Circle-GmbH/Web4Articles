@@ -24,17 +24,17 @@ export class DefaultONCE implements ONCE {
    * Web4 Pattern: Empty constructor
    */
   constructor() {
-    // Initialize with minimal kernel data (not server data)
+    // Initialize with minimal kernel data (type-safe ONCEModel)
     this.data = {
       uuid: '',
       name: 'ONCE Kernel',
       description: 'Object Network Communication Engine - Environment Kernel',
-      state: 'booting',
-      environment: 'node', // Will be detected during boot
+      state: 'booting',      // ✅ Type-safe: 'booting' | 'ready' | 'loading' | 'error'
+      environment: 'node',   // ✅ Type-safe: 'node' | 'browser' | 'worker' | 'pwa' | 'iframe'
       domain: 'local.once',
       host: 'localhost',
-      capabilities: [], // IOR references to capability components
-      loadedComponents: [], // IOR references to loaded components
+      capabilities: [],      // ✅ Type-safe: IOR[] for capability components
+      loadedComponents: [],  // ✅ Type-safe: IOR[] for loaded components  
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
