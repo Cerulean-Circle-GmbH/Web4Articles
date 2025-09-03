@@ -43,7 +43,10 @@ export interface IOR {
 }
 
 /**
- * Type alias for backward compatibility
- * Components using ObjectIdentifier can continue unchanged
+ * Web4 Component Exports - Radical OOP Pattern
+ * Integrated exports following Decision 3b
  */
-export type ObjectIdentifier = IOR;
+
+export { DefaultIOR } from '../layer2/DefaultIOR.js';
+export { DefaultModel } from '../layer2/DefaultModel.js';
+export { Model } from './Model.interface.js';

@@ -8,56 +8,70 @@
 
 import { Model } from '../layer3/Model.interface.js';
 
-export class DefaultModel extends Proxy implements Model {
-  private _data: Model;
+export class DefaultModel implements Model {
+  private data: Model;
 
   /**
    * Web4 Pattern: Empty constructor
    */
   constructor() {
     // Initialize with minimal required data
-    const initialData: Model = {
+    this.data = {
       uuid: '',
       name: '',
       description: ''
     };
+    
+    // Radical OOP: Return proxy-wrapped class instance
+    return this.createProxy();
+  }
 
-    // Proxy handler for reactive controller onChange
-    const handler = {
-      set: (target: Model, property: string | symbol, value: any) => {
-        // Update the target
-        const result = Reflect.set(target, property, value);
-        
-        // Trigger onChange callback if controller is connected
-        this.onChange?.(property as string, value, target);
-        
-        return result;
-      },
-      get: (target: Model, property: string | symbol) => {
-        return Reflect.get(target, property);
-      }
-    };
+  /**
+   * Model getter/setter for proxy management (Decision 2a)
+   */
+  get model(): Model { 
+    return this.data; 
+  }
+  
+  set model(value: Model) { 
+    this.data = value;
+    this.onChange?.(this.data);
+  }
 
-    super(target => handler, initialData);
-    this._data = new Proxy(initialData, handler);
-
-    // Return proxy for transparent property access
+  /**
+   * Radical OOP: Class-based proxy with encapsulation (Decision 4c)
+   */
+  private createProxy(): DefaultModel {
     return new Proxy(this, {
-      get: (target, prop) => {
-        if (prop in target) {
-          return (target as any)[prop];
-        }
-        return this._data[prop as keyof Model];
-      },
-      set: (target, prop, value) => {
-        if (prop in this._data || typeof prop === 'string') {
-          (this._data as any)[prop] = value;
-          return true;
-        }
-        (target as any)[prop] = value;
-        return true;
-      }
+      set: (target, prop, value) => this.handlePropertySet(prop, value),
+      get: (target, prop) => this.handlePropertyGet(prop)
     });
+  }
+
+  /**
+   * Radical OOP: Class method handles property setting
+   */
+  private handlePropertySet(prop: string | symbol, value: any): boolean {
+    if (prop in this.data) {
+      (this.data as any)[prop] = value;
+      this.onChange?.(this.data);
+      return true;
+    }
+    if (prop in this) {
+      (this as any)[prop] = value;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Radical OOP: Class method handles property getting
+   */
+  private handlePropertyGet(prop: string | symbol): any {
+    if (prop in this.data) {
+      return (this.data as any)[prop];
+    }
+    return (this as any)[prop];
   }
 
   /**
@@ -66,33 +80,33 @@ export class DefaultModel extends Proxy implements Model {
    */
   init(modelData: Partial<Model>): this {
     // Copy all properties from scenario model
-    Object.assign(this._data, modelData);
+    Object.assign(this.data, modelData);
     return this;
   }
 
   /**
    * Get model properties (required interface compliance)
    */
-  get uuid(): string { return this._data.uuid; }
-  set uuid(value: string) { this._data.uuid = value; }
+  get uuid(): string { return this.data.uuid; }
+  set uuid(value: string) { this.data.uuid = value; }
 
-  get name(): string { return this._data.name; }
-  set name(value: string) { this._data.name = value; }
+  get name(): string { return this.data.name; }
+  set name(value: string) { this.data.name = value; }
 
-  get description(): string { return this._data.description; }
-  set description(value: string) { this._data.description = value; }
+  get description(): string { return this.data.description; }
+  set description(value: string) { this.data.description = value; }
 
   /**
    * Optional onChange callback for controller integration
-   * Called when any model property changes
+   * Radical OOP: Called with entire data object when changes occur
    */
-  onChange?: (property: string, value: any, model: Model) => void;
+  onChange?: (data: Model) => void;
 
   /**
    * Convert to plain object for scenario serialization
    */
   toJSON(): Model {
-    return { ...this._data };
+    return { ...this.data };
   }
 
   /**

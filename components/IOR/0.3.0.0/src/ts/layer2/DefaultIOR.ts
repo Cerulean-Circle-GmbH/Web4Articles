@@ -8,53 +8,70 @@
 
 import { IOR } from '../layer3/IOR.interface.js';
 
-export class DefaultIOR extends Proxy implements IOR {
-  private _data: IOR;
+export class DefaultIOR implements IOR {
+  private data: IOR;
 
   /**
    * Web4 Pattern: Empty constructor
    */
   constructor() {
     // Initialize with minimal data
-    const initialData: IOR = {
+    this.data = {
       uuid: '',
       component: '',
       version: ''
     };
-
-    // Proxy handler for reactive updates
-    const handler = {
-      set: (target: IOR, property: string | symbol, value: any) => {
-        // Trigger onChange when IOR properties change
-        const result = Reflect.set(target, property, value);
-        this.onChange?.(property as keyof IOR, value);
-        return result;
-      },
-      get: (target: IOR, property: string | symbol) => {
-        return Reflect.get(target, property);
-      }
-    };
-
-    super(target => handler, initialData);
-    this._data = new Proxy(initialData, handler);
     
-    // Return proxy instead of this for transparent property access
+    // Radical OOP: Return proxy-wrapped class instance
+    return this.createProxy();
+  }
+
+  /**
+   * Model getter/setter for proxy management (Decision 2a)
+   */
+  get model(): IOR { 
+    return this.data; 
+  }
+  
+  set model(value: IOR) { 
+    this.data = value;
+    this.onChange?.(this.data);
+  }
+
+  /**
+   * Radical OOP: Class-based proxy with encapsulation (Decision 4c)
+   */
+  private createProxy(): DefaultIOR {
     return new Proxy(this, {
-      get: (target, prop) => {
-        if (prop in target) {
-          return (target as any)[prop];
-        }
-        return this._data[prop as keyof IOR];
-      },
-      set: (target, prop, value) => {
-        if (prop in this._data) {
-          this._data[prop as keyof IOR] = value;
-          return true;
-        }
-        (target as any)[prop] = value;
-        return true;
-      }
+      set: (target, prop, value) => this.handlePropertySet(prop, value),
+      get: (target, prop) => this.handlePropertyGet(prop)
     });
+  }
+
+  /**
+   * Radical OOP: Class method handles property setting
+   */
+  private handlePropertySet(prop: string | symbol, value: any): boolean {
+    if (prop in this.data) {
+      this.data[prop as keyof IOR] = value;
+      this.onChange?.(this.data);
+      return true;
+    }
+    if (prop in this) {
+      (this as any)[prop] = value;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Radical OOP: Class method handles property getting  
+   */
+  private handlePropertyGet(prop: string | symbol): any {
+    if (prop in this.data) {
+      return this.data[prop as keyof IOR];
+    }
+    return (this as any)[prop];
   }
 
   /**
@@ -62,37 +79,37 @@ export class DefaultIOR extends Proxy implements IOR {
    * Web4 Pattern: Scenario-based initialization
    */
   init(iorData: Partial<IOR>): this {
-    this._data.uuid = iorData.uuid || '';
-    this._data.component = iorData.component || '';
-    this._data.version = iorData.version || '';
-    this._data.location = iorData.location;
-    this._data.endpoint = iorData.endpoint;
+    this.data.uuid = iorData.uuid || '';
+    this.data.component = iorData.component || '';
+    this.data.version = iorData.version || '';
+    this.data.location = iorData.location;
+    this.data.endpoint = iorData.endpoint;
     return this;
   }
 
   /**
    * Get IOR properties (for IOR interface compliance)
    */
-  get uuid(): string { return this._data.uuid; }
-  set uuid(value: string) { this._data.uuid = value; }
+  get uuid(): string { return this.data.uuid; }
+  set uuid(value: string) { this.data.uuid = value; }
 
-  get component(): string { return this._data.component; }
-  set component(value: string) { this._data.component = value; }
+  get component(): string { return this.data.component; }
+  set component(value: string) { this.data.component = value; }
 
-  get version(): string { return this._data.version; }
-  set version(value: string) { this._data.version = value; }
+  get version(): string { return this.data.version; }
+  set version(value: string) { this.data.version = value; }
 
-  get location(): string | undefined { return this._data.location; }
-  set location(value: string | undefined) { this._data.location = value; }
+  get location(): string | undefined { return this.data.location; }
+  set location(value: string | undefined) { this.data.location = value; }
 
-  get endpoint(): string | undefined { return this._data.endpoint; }
-  set endpoint(value: string | undefined) { this._data.endpoint = value; }
+  get endpoint(): string | undefined { return this.data.endpoint; }
+  set endpoint(value: string | undefined) { this.data.endpoint = value; }
 
   /**
    * Optional onChange callback for controller integration
-   * Called when any IOR property changes
+   * Radical OOP: Called with entire data object when changes occur
    */
-  onChange?: (property: keyof IOR, value: any) => void;
+  onChange?: (data: IOR) => void;
 
   /**
    * Convert to URL string (simplified from complex implementations)
@@ -115,13 +132,7 @@ export class DefaultIOR extends Proxy implements IOR {
    * Serialize to JSON for scenario storage
    */
   toJSON(): IOR {
-    return {
-      uuid: this.uuid,
-      component: this.component,
-      version: this.version,
-      location: this.location,
-      endpoint: this.endpoint
-    };
+    return { ...this.data };
   }
 
   /**
