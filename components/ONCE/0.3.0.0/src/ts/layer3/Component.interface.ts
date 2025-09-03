@@ -32,7 +32,7 @@ export interface Component {
 
   /**
    * Save component state as scenario
-   * Web4 Pattern: State hibernation using unified Scenario component
+   * Web4 Pattern: State hibernation returns actual Scenario component instance
    */
   toScenario(): Promise<Scenario>;
 

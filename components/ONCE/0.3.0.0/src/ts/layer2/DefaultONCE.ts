@@ -186,7 +186,7 @@ export class DefaultONCE implements ONCE {
 
   /**
    * Save kernel state as scenario
-   * Uses unified Scenario component (DRY compliance)
+   * Returns actual Scenario component instance (not data)
    */
   async saveAsScenario(): Promise<Scenario> {
     // Delegate hibernation to Scenario component (Decision 1a)
@@ -196,17 +196,18 @@ export class DefaultONCE implements ONCE {
       uuid: this.data.uuid
     });
 
-    const scenarioData = {
+    // ✅ Create actual Scenario component instance with type-safe model
+    const scenario = new Scenario().init({
       ior: {
         uuid: this.data.uuid,
         component: 'ONCE',
         version: '0.3.0.0'
       },
       owner: ownerData,
-      model: this.data
-    };
+      model: this.data as ONCEModel  // ✅ Type-safe model
+    });
 
-    return this.scenarioService.init(scenarioData);
+    return scenario;  // ✅ Return actual component, not data
   }
 
   /**
@@ -236,10 +237,11 @@ export class DefaultONCE implements ONCE {
   }
 
   static create(uuid: string, name: string, description: string): DefaultONCE {
+    // ✅ Create actual Scenario component instance (not data interface)
     const scenario = new Scenario().init({
       ior: { uuid, component: 'ONCE', version: '0.3.0.0' },
       owner: '',
-      model: { uuid, name, description }
+      model: { uuid, name, description } as ONCEModel
     });
     return new DefaultONCE().init(scenario);
   }

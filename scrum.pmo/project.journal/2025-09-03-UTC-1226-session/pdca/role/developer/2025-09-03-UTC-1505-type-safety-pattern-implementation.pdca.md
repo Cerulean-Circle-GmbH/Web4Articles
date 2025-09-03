@@ -169,21 +169,21 @@ Each component gets:
 
 **8. Scenario Usage Pattern with Type Safety**
 ```typescript
-// ✅ Type-safe scenario creation for each component:
+// ✅ Type-safe scenario creation using actual Scenario component:
 
 // ONCE scenario with type-safe model:
-const onceScenario: ScenarioData = {
+const onceScenario = new Scenario().init({
   ior: { uuid: '...', component: 'ONCE', version: '0.3.0.0' },
   owner: 'base64-encrypted-owner',
-  model: onceModelData as ONCEModel  // ✅ Type-safe model
-};
+  model: onceModelData as ONCEModel  // ✅ Type-safe model in Scenario component
+});
 
 // HttpServer scenario with type-safe model:
-const httpScenario: ScenarioData = {
+const httpScenario = new Scenario().init({
   ior: { uuid: '...', component: 'HttpServer', version: '0.3.0.0' },
   owner: 'base64-encrypted-owner', 
-  model: httpModelData as HttpServerModel  // ✅ Type-safe model
-};
+  model: httpModelData as HttpServerModel  // ✅ Type-safe model in Scenario component
+});
 ```
 
 ---
