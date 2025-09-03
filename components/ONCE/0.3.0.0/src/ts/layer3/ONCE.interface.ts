@@ -1,106 +1,59 @@
 /**
- * Web4 ONCE (Object Network Communication Engine) Interface - Unified Standard
+ * ONCE Interface - Object Network Communication Engine
  * 
- * Radically simplified yet resilient Object Network Communication
- * Following established IOR component pattern exactly
+ * Web4 principle: Single interface per file
+ * ONCE Role: Environment kernel that loads components from IORs
+ * NOT a server implementation - that belongs to capability components
  */
 
-import { Model } from '../../../../IOR/0.3.0.0/src/ts/layer3/Model.interface.js';
+import { IOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
+import { ComponentScenario } from './ComponentScenario.interface.js';
+import { ONCEScenario } from './ONCEScenario.interface.js';
+import { EnvironmentInfo } from './EnvironmentInfo.interface.js';
+import { Component } from './Component.interface.js';
 
 export interface ONCE {
   /**
-   * Start component with scenario initialization
-   * Web4 Pattern: Scenario-based component lifecycle
+   * Initialize ONCE kernel from scenario
+   * Web4 Pattern: Scenario-based initialization (NEVER 'any' type)
    */
-  startComponent(scenario: any): Promise<any>;
+  init(scenario: ONCEScenario): this;
 
   /**
-   * Stop component cleanly with state preservation
+   * Boot environment and prepare for component loading
+   * ONCE main feature: Boot in any environment  
    */
-  stopComponent(): Promise<void>;
+  bootEnvironment(): Promise<EnvironmentInfo>;
 
   /**
-   * Pause component execution
+   * Load component from IOR and scenario
+   * ONCE main feature: Choose components to load from IORs and scenarios
    */
-  pauseComponent(): Promise<void>;
+  loadComponent(componentIOR: IOR, scenario: ComponentScenario): Promise<Component>;
 
   /**
-   * Resume paused component
+   * Unload component by IOR reference
    */
-  resumeComponent(): Promise<void>;
+  unloadComponent(componentIOR: IOR): Promise<void>;
 
   /**
-   * Save current state as scenario
+   * Get currently loaded components
+   */
+  getLoadedComponents(): IOR[];
+
+  /**
+   * Get current environment information  
+   */
+  getEnvironment(): EnvironmentInfo;
+
+  /**
+   * Exchange scenarios with peer ONCE kernel
+   */
+  exchangeScenarios(peerONCE: IOR, scenarios: ComponentScenario[]): Promise<void>;
+
+  /**
+   * Save kernel state as scenario
    * Web4 Pattern: State hibernation
    */
-  saveAsScenario(): Promise<any>;
-
-  /**
-   * Get current environment information
-   */
-  getEnvironment(): any;
-
-  /**
-   * Connect to peer ONCE kernel
-   */
-  connectPeer(peerLocation: string): Promise<void>;
-
-  /**
-   * Exchange scenario with peer
-   */
-  exchangeScenario(peer: string, scenario: any): Promise<void>;
+  saveAsScenario(): Promise<ONCEScenario>;
 }
-
-export interface ONCEModel extends Model {
-  /**
-   * Server state
-   */
-  state: 'running' | 'stopped' | 'paused' | 'error';
-
-  /**
-   * Domain (e.g., "local.once")
-   */
-  domain: string;
-
-  /**
-   * Host address
-   */
-  host: string;
-
-  /**
-   * Primary port number
-   */
-  port: number;
-
-  /**
-   * Available capabilities
-   */
-  capabilities: string[];
-
-  /**
-   * Platform type
-   */
-  platform: string;
-
-  /**
-   * Primary server flag
-   */
-  isPrimary: boolean;
-
-  /**
-   * Creation timestamp
-   */
-  createdAt: string;
-
-  /**
-   * Last update timestamp
-   */
-  updatedAt: string;
-}
-
-/**
- * Web4 Component Exports - Following IOR Pattern (Decision 3b)
- */
-
-export { DefaultONCE } from '../layer2/DefaultONCE.js';
-export { DefaultModel } from '../../../../IOR/0.3.0.0/src/ts/layer2/DefaultModel.js';

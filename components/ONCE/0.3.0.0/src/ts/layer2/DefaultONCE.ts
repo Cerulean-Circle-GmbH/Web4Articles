@@ -1,50 +1,50 @@
 /**
- * DefaultONCE - Object Network Communication Engine implementation
+ * DefaultONCE - Object Network Communication Engine Kernel Implementation
  * 
  * Web4 pattern: Empty constructor + scenario initialization
- * Following established IOR component radical OOP pattern exactly
- * Radically simplified yet resilient self-managed component
+ * ONCE Role: Environment kernel that loads components from IORs
+ * NOT a server implementation - delegates to capability components
  */
 
-import { ONCE, ONCEModel } from '../layer3/ONCE.interface.js';
-import { DefaultModel, IOR, DefaultIOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
+import { ONCE } from '../layer3/ONCE.interface.js';
+import { ONCEModel } from '../layer3/ONCEModel.interface.js';
+import { ONCEScenario } from '../layer3/ONCEScenario.interface.js';
+import { ComponentScenario } from '../layer3/ComponentScenario.interface.js';
+import { EnvironmentInfo } from '../layer3/EnvironmentInfo.interface.js';
+import { Component } from '../layer3/Component.interface.js';
+import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
 import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
 import { DefaultUser } from '../../../../User/0.1.3.0/src/ts/DefaultUser.js';
-import { P2PCoordinator } from '../layer4/P2PCoordinator.js';
-import { P2PProtocol } from '../layer1/P2PProtocol.js';
 
 export class DefaultONCE implements ONCE {
   private data: ONCEModel;
-  private scenarioService: Scenario;     // ✅ DRY: Shared component composition (Decision 1a)
-  private userService: DefaultUser;      // ✅ DRY: Shared component composition (Decision 2b+d)
-  private iorComponent: DefaultIOR;      // ✅ DRY: Shared IOR component (Decision 4a+d)
-  private p2pCoordinator: P2PCoordinator; // ✅ DRY: Layer4 P2P coordination (Decision 3d)
-  private p2pProtocol: P2PProtocol;      // ✅ DRY: Layer1 P2P protocols (Decision 3d)
+  private scenarioService: Scenario;       // ✅ DRY: Shared component composition
+  private userService: DefaultUser;        // ✅ DRY: Shared component composition  
+  private loadedComponents: Map<string, Component>; // Component registry for kernel
 
   /**
    * Web4 Pattern: Empty constructor
    */
   constructor() {
-    // Initialize with minimal data
+    // Initialize with minimal kernel data (not server data)
     this.data = {
       uuid: '',
-      name: 'ONCE Server',
-      description: 'Object Network Communication Engine',
-      state: 'stopped',
+      name: 'ONCE Kernel',
+      description: 'Object Network Communication Engine - Environment Kernel',
+      state: 'booting',
+      environment: 'node', // Will be detected during boot
       domain: 'local.once',
       host: 'localhost',
-      port: 42777,
-      capabilities: ['httpPort', 'wsPort'],
-      platform: 'node',
-      isPrimary: true,
+      capabilities: [], // IOR references to capability components
+      loadedComponents: [], // IOR references to loaded components
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
     
-    // ✅ DRY: Compose shared services, never duplicate (Decisions 4a+d)
+    // ✅ Web4 DRY: Compose with shared components
     this.scenarioService = new Scenario();
-    this.userService = new User();
-    this.p2pCoordinator = new P2PCoordinator(); // ✅ DRY: Layer4 coordination composition
+    this.userService = new DefaultUser();
+    this.loadedComponents = new Map();
     
     // Radical OOP: Return proxy-wrapped class instance
     return this.createProxy();
@@ -63,7 +63,7 @@ export class DefaultONCE implements ONCE {
   }
 
   /**
-   * Radical OOP: Class-based proxy with encapsulation (Following IOR pattern)
+   * Radical OOP: Class-based proxy with encapsulation
    */
   private createProxy(): DefaultONCE {
     return new Proxy(this, {
@@ -72,9 +72,6 @@ export class DefaultONCE implements ONCE {
     });
   }
 
-  /**
-   * Radical OOP: Class method handles property setting
-   */
   private handlePropertySet(prop: string | symbol, value: any): boolean {
     if (prop in this.data) {
       (this.data as any)[prop] = value;
@@ -88,9 +85,6 @@ export class DefaultONCE implements ONCE {
     return false;
   }
 
-  /**
-   * Radical OOP: Class method handles property getting  
-   */
   private handlePropertyGet(prop: string | symbol): any {
     if (prop in this.data) {
       return (this.data as any)[prop];
@@ -99,10 +93,9 @@ export class DefaultONCE implements ONCE {
   }
 
   /**
-   * Initialize from scenario data
-   * Web4 Pattern: Scenario-based initialization
+   * Initialize from ONCE scenario (NEVER 'any' type)
    */
-  init(scenario: any): this {
+  init(scenario: ONCEScenario): this {
     if (scenario.model) {
       Object.assign(this.data, scenario.model);
     }
@@ -111,85 +104,123 @@ export class DefaultONCE implements ONCE {
 
   /**
    * Optional onChange callback for controller integration
-   * Following IOR pattern exactly
    */
   onChange?: (data: ONCEModel) => void;
 
   /**
-   * ONCE Interface Implementation - Core Features
+   * ONCE Kernel Interface Implementation
    */
 
-  async startComponent(scenario: any): Promise<any> {
-    this.data.state = 'running';
+  /**
+   * Boot environment and prepare for component loading
+   * ONCE main feature: Boot in any environment
+   */
+  async bootEnvironment(): Promise<EnvironmentInfo> {
+    this.data.state = 'ready';
     this.data.updatedAt = new Date().toISOString();
     
-    // QUESTION: Should this delegate to scenario component for hibernation?
-    return { started: true, scenario };
+    // Detect current environment
+    const environment = this.detectEnvironment();
+    this.data.environment = environment.platform;
+    
+    return environment;
   }
 
-  async stopComponent(): Promise<void> {
-    this.data.state = 'stopped';
+  /**
+   * Load component from IOR and scenario
+   * ONCE main feature: Choose components to load from IORs and scenarios
+   */
+  async loadComponent(componentIOR: IOR, scenario: ComponentScenario): Promise<Component> {
+    this.data.state = 'loading';
+    
+    // QUESTION: How should ONCE actually load a component from IOR?
+    // Should it use dynamic import? Component registry? Factory pattern?
+    
+    // For now, placeholder implementation
+    console.log(`ONCE Kernel: Loading component ${componentIOR.component}:${componentIOR.version}`);
+    
+    // Add to loaded components
+    this.data.loadedComponents.push(componentIOR);
+    this.data.updatedAt = new Date().toISOString();
+    
+    // Return mock component - QUESTION: How should this work?
+    return {} as Component;
+  }
+
+  /**
+   * Unload component by IOR reference
+   */
+  async unloadComponent(componentIOR: IOR): Promise<void> {
+    // Remove from loaded components
+    this.data.loadedComponents = this.data.loadedComponents.filter(
+      ior => ior.uuid !== componentIOR.uuid
+    );
+    
+    // Remove from registry
+    this.loadedComponents.delete(componentIOR.uuid);
+    
     this.data.updatedAt = new Date().toISOString();
   }
 
-  async pauseComponent(): Promise<void> {
-    this.data.state = 'paused';
-    this.data.updatedAt = new Date().toISOString();
+  /**
+   * Get currently loaded components
+   */
+  getLoadedComponents(): IOR[] {
+    return [...this.data.loadedComponents];
   }
 
-  async resumeComponent(): Promise<void> {
-    this.data.state = 'running';
-    this.data.updatedAt = new Date().toISOString();
+  /**
+   * Get current environment information
+   */
+  getEnvironment(): EnvironmentInfo {
+    return this.detectEnvironment();
   }
 
-  async saveAsScenario(): Promise<any> {
-    // ✅ DRY: Delegate hibernation to shared Scenario component (Decision 1a)
-    // ✅ Hybrid: Local state + Scenario persistence (Decision 1c)
+  /**
+   * Exchange scenarios with peer ONCE kernel
+   */
+  async exchangeScenarios(peerONCE: IOR, scenarios: ComponentScenario[]): Promise<void> {
+    // QUESTION: Should this delegate to a P2P component or implement directly?
+    console.log(`ONCE Kernel: Exchanging ${scenarios.length} scenarios with peer ${peerONCE.uuid}`);
+  }
+
+  /**
+   * Save kernel state as scenario
+   */
+  async saveAsScenario(): Promise<ONCEScenario> {
+    // Delegate hibernation to Scenario component (Decision 1a)
+    const ownerData = await this.userService.generateOwnerData({
+      user: 'system',
+      hostname: this.data.host,
+      uuid: this.data.uuid
+    });
+
     const scenarioData = {
       ior: {
         uuid: this.data.uuid,
         component: 'ONCE',
         version: '0.3.0.0'
       },
-      owner: await this.getOwnerData(), // ✅ DRY: Delegate to User service (Decision 2b+d)
-      model: this.data // ✅ Hybrid: Local state management + shared persistence
+      owner: ownerData,
+      model: this.data
     };
-    
-    // ✅ DRY: Use shared Scenario component for persistence
-    return this.scenarioService.init(scenarioData);
+
+    return this.scenarioService.init(scenarioData).toJSON() as ONCEScenario;
   }
 
   /**
-   * Get owner data using shared User component (Decisions 2b+d)
-   * NEVER environment variables - always delegate to shared services
+   * Private helper methods
    */
-  private async getOwnerData(): Promise<string> {
-    // ✅ DRY: Delegate owner generation to shared User component
-    // ✅ NEVER environment variables (explicit NEVER a decision)
-    return this.userService.generateOwnerData?.(this.data.uuid) || '';
-  }
-
-  getEnvironment(): any {
+  private detectEnvironment(): EnvironmentInfo {
+    // QUESTION: Should this delegate to an EnvironmentDetector component?
     return {
-      platform: this.data.platform,
-      host: this.data.host,
-      port: this.data.port,
-      capabilities: this.data.capabilities
+      platform: 'node',
+      version: process.version || 'unknown',
+      capabilities: ['server', 'filesystem', 'network'],
+      isOnline: true,
+      hostname: this.data.host,
+      ip: '127.0.0.1'
     };
-  }
-
-  async connectPeer(peerLocation: string): Promise<void> {
-    // ✅ DRY: P2P split implementation (Decision 3d)
-    // Layer1: Protocol handling, Layer2: Connection management, Layer4: Coordination
-    console.log(`ONCE: Connecting to peer ${peerLocation} using DRY P2P layer distribution`);
-    // TODO: Implement using Layer1 protocols + Layer2 management + Layer4 coordination
-  }
-
-  async exchangeScenario(peer: string, scenario: any): Promise<void> {
-    // ✅ DRY: Use shared Scenario component for exchange (Decision 1a)
-    const scenarioToSend = await this.scenarioService.init(scenario);
-    console.log(`ONCE: Exchanging scenario with peer ${peer} via shared Scenario component`);
-    // TODO: Implement using shared Scenario component for serialization/exchange
   }
 
   /**
@@ -205,7 +236,9 @@ export class DefaultONCE implements ONCE {
 
   static create(uuid: string, name: string, description: string): DefaultONCE {
     return new DefaultONCE().init({ 
-      model: { uuid, name, description } 
-    });
+      ior: { uuid, component: 'ONCE', version: '0.3.0.0' },
+      owner: '',
+      model: { uuid, name, description }
+    } as ONCEScenario);
   }
 }
