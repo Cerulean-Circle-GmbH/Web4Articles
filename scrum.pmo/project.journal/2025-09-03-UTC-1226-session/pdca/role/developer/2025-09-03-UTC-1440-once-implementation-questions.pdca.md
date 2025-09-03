@@ -25,29 +25,10 @@
 - **DefaultONCE Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts) | [components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts](components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts)
 
 ### **QA Decisions**
-- [ ] **Implementation Question 1: Scenario Component Delegation**
-  - a) ONCE delegates all hibernation operations to shared Scenario component
-  - b) ONCE implements scenario handling locally but follows Scenario component patterns
-  - c) ONCE uses hybrid approach: local state management + Scenario component for persistence
-  - d) ONCE extends Scenario component functionality with ONCE-specific features
-
-- [ ] **Implementation Question 2: Owner Data Management**
-  - a) ONCE gets owner data from environment variables (USER, HOSTNAME, etc.)
-  - b) ONCE uses shared User component to generate proper owner base64 encoding
-  - c) ONCE creates owner data using same pattern as existing scenario files
-  - d) ONCE delegates owner management to shared service/component
-
-- [ ] **Implementation Question 3: P2P Feature Layer Assignment**
-  - a) P2P communication in Layer1 (Infrastructure/Network protocols)
-  - b) P2P communication in Layer2 (Implementation/Core engine features)  
-  - c) P2P communication in Layer4 (Orchestration/Distributed system coordination)
-  - d) P2P split: protocols in Layer1, management in Layer2, coordination in Layer4
-
-- [ ] **Implementation Question 4: Component Integration Strategy**
-  - a) ONCE imports shared IOR and Model components as external dependencies
-  - b) ONCE copies IOR/Model patterns but implements independently
-  - c) ONCE creates local interfaces extending shared IOR/Model interfaces
-  - d) ONCE uses composition pattern with IOR/Model component instances
+- [x] **Implementation Question 1: Scenario Component Delegation** - Selected: a+c) ONCE delegates hibernation to shared Scenario component with hybrid local state management
+- [x] **Implementation Question 2: Owner Data Management** - Selected: b+d) ONCE uses shared User component and delegates owner management to shared service (NEVER environment variables)
+- [x] **Implementation Question 3: P2P Feature Layer Assignment** - Selected: d) P2P split: protocols in Layer1, management in Layer2, coordination in Layer4  
+- [x] **Implementation Question 4: Component Integration Strategy** - Selected: a+d) ONCE imports shared components as dependencies and uses composition pattern (NEVER independent copying)
 
 ### **TRON Feedback (2025-09-03-UTC-1440)**
 ```quote
@@ -58,12 +39,21 @@ Implementation questions:
 2. How should ONCE handle owner data generation for scenarios?
 3. Where should P2P communication features be assigned in EAM layers?
 4. How should ONCE integrate with shared IOR/Model components?
+
+Web4 is all about reusable self managed components wit UCP standard… so DRY.
+
+so 1a,c
+2b,d NEVER a
+
+3d
+
+4a, d NEVER b
 ```
 
 ### **My Answer**
-ONCE 0.3.0.0 foundation created following IOR pattern exactly! Radical OOP proxy implementation with ONCEModel extending Model interface. Need guidance on scenario delegation, owner data management, P2P layer assignment, and component integration strategy.
+Perfect! Web4 DRY principle understood - reusable self-managed components! Implementing: 1a+c) Scenario delegation + hybrid approach, 2b+d) User component + shared service (NEVER env vars), 3d) P2P split across layers, 4a+d) Import dependencies + composition (NEVER copying). 
 
-**Learning Applied:** Following established patterns enables rapid foundation creation while specific implementation details require architectural guidance.
+**Learning Applied:** Web4 DRY principle means maximum component reuse with proper delegation to shared services, eliminating duplication through composition patterns.
 
 ---
 
