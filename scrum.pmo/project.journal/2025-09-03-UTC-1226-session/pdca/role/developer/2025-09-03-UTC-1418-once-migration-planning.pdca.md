@@ -25,35 +25,11 @@
 - **Target 0.3.0.0 Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.3.0.0) | [components/ONCE/0.3.0.0](components/ONCE/0.3.0.0)
 
 ### **QA Decisions**
-- [ ] **Decision 1: DefaultIOR Implementation Location**
-  - a) Use existing DefaultIOR from components/Scenario/latest/src/ts/layer2/
-  - b) Create ONCE-specific DefaultIOR in components/ONCE/0.3.0.0/src/ts/layer2/
-  - c) Create shared DefaultIOR in components/IOR/latest/ for all components
-  - d) Extend Scenario component's DefaultIOR with ONCE-specific features
-
-- [ ] **Decision 2: 5-Layer Architecture Structure**
-  - a) Copy existing 5-layer pattern from TSRanger/Web4Requirement components
-  - b) Create ONCE-specific 5-layer structure: CLI, Controller, Interface, Implementation, Infrastructure
-  - c) Hybrid approach: Use Scenario component layers + ONCE-specific extensions
-  - d) Minimal 5-layer: Only essential layers with maximum simplification
-
-- [ ] **Decision 3: Version Progression Strategy (0.3.0.0 → 0.3.1.0)**
-  - a) 0.3.0.0 (core structure), 0.3.0.1 (bug fixes), 0.3.1.0 (feature complete + stable)
-  - b) Multiple 0.3.x.x builds for incremental feature testing and validation
-  - c) Single jump to 0.3.1.0 after complete implementation and testing
-  - d) User-defined version milestones based on functionality completion
-
-- [ ] **Decision 4: Scenario Component Integration Approach**
-  - a) Extend existing Scenario component to support Model interface delegation
-  - b) Create new ScenarioManager component handling all hibernation operations
-  - c) Modify all components to implement Model interface for Scenario delegation
-  - d) Gradual migration: Start with ONCE then extend to other components
-
-- [ ] **Decision 5: Model Interface Standardization Scope**
-  - a) Create unified Model interface for all Web4 components immediately  
-  - b) Start with ONCE Model interface, then generalize to other components
-  - c) Component-specific Model interfaces extending base Model interface
-  - d) Let each component define its own Model implementation
+- [x] **Decision 1: DefaultIOR Implementation Location** - Selected: c) Create shared DefaultIOR in components/IOR/latest/ keeping all ONCE 0.2.0.0 features with 5-layer + Web4 patterns, radically simplified yet resilient
+- [x] **Decision 2: 5-Layer Architecture Structure** - Selected: b) Web4 EAM layers semantically structured
+- [x] **Decision 3: Version Progression Strategy** - Selected: b+a) Multiple 0.3.x.x build versions with backward compatibility testing, ending with stable 0.3.1.0
+- [x] **Decision 4: Scenario Component Integration Approach** - Selected: c) Each modified component gets version 0.3.0.0 until feature parity, finish with 0.3.1.0
+- [x] **Decision 5: Model Interface Standardization Scope** - Selected: a) Simple unified Model interface + DefaultModel extending Proxy for controller onChange, no extra classes (Data/Factory/Manager)
 
 ### **TRON Feedback (2025-09-03-UTC-1418)**
 ```quote
@@ -62,12 +38,25 @@
 3c we will create vitest test cases to make sure the features stay stable. let me decide what to test before implementing 
 4. scanarios are itself web4 components to be used by all components to hibernate. the model attribut of a scenario is of type Model interface and each component implements a model:Model to delegate to the scenar component for hibernation. if a component references another component, the scenario will serialize an IOR to hibernate and reliad the component. 
 dilligent plan the migration in a pdca. ask wuestions and then start the planned migration pdca by pdca
+
+1c keeping al features from once 0.2.0.0 but with 5 layer usage and web4 patters.
+sorry for the typos it was radically but sure also resilient and self managed like all web4 components 
+
+2b semantically as the web4 eam layers
+
+3b and a so start with a end with 0.3.1.0 but have multiple steps in between as build versions 
+
+4c and make for each modified component a version 0.3.0.0 until feature equal to previous versions and finish with 0.3.1.0 as in decision 3
+
+5a and keep it simple ocam razor sharp. create a Model interface and a DefaultModel to work on the components model json interface e.g. Requirement. no RequirementData, RequirementModel, RequirementFactory or RequirementManager. just simple. the default model may extend proxy to interact with a default controler onChange…
+
+start migrating and keep asking. pdca
 ```
 
 ### **My Answer**
-Acknowledged comprehensive architecture requirements! Planning systematic migration with clarifying questions about DefaultIOR location, 5-layer structure, version progression, and Model interface standardization before beginning PDCA-by-PDCA implementation.
+Perfect clarifications! Implementing: 1c) shared DefaultIOR with all features + Web4 EAM layers, 2b) Web4 EAM semantic layers, 3b+a) multiple build versions with compatibility testing → 0.3.1.0, 4c) each component gets 0.3.0.0 to parity then 0.3.1.0, 5a) simple Model interface + DefaultModel proxy pattern. Starting migration PDCA-by-PDCA with questions as needed.
 
-**Learning Applied:** Complex architectural migrations require thorough questioning and planning to ensure all interdependent systems align correctly with Web4 standards.
+**Learning Applied:** Clear architectural guidance enables systematic migration with radically simplified yet resilient Web4 patterns, building incrementally to ensure stability.
 
 ---
 
