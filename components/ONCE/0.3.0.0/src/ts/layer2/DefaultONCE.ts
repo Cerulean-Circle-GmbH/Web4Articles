@@ -8,8 +8,6 @@
 
 import { ONCE } from '../layer3/ONCE.interface.js';
 import { ONCEModel } from '../layer3/ONCEModel.interface.js';
-import { ONCEScenario } from '../layer3/ONCEScenario.interface.js';
-import { ComponentScenario } from '../layer3/ComponentScenario.interface.js';
 import { EnvironmentInfo } from '../layer3/EnvironmentInfo.interface.js';
 import { Component } from '../layer3/Component.interface.js';
 import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
@@ -93,9 +91,9 @@ export class DefaultONCE implements ONCE {
   }
 
   /**
-   * Initialize from ONCE scenario (NEVER 'any' type)
+   * Initialize from unified scenario (DRY compliance - use Scenario component)
    */
-  init(scenario: ONCEScenario): this {
+  init(scenario: Scenario): this {
     if (scenario.model) {
       Object.assign(this.data, scenario.model);
     }
@@ -128,9 +126,10 @@ export class DefaultONCE implements ONCE {
 
   /**
    * Load component from IOR and scenario
-   * ONCE main feature: Choose components to load from IORs and scenarios
+   * ONCE main feature: Choose components to load from IORs and scenarios  
+   * Uses unified Scenario component (DRY compliance)
    */
-  async loadComponent(componentIOR: IOR, scenario: ComponentScenario): Promise<Component> {
+  async loadComponent(componentIOR: IOR, scenario: Scenario): Promise<Component> {
     this.data.state = 'loading';
     
     // QUESTION: How should ONCE actually load a component from IOR?
@@ -178,16 +177,18 @@ export class DefaultONCE implements ONCE {
 
   /**
    * Exchange scenarios with peer ONCE kernel
+   * Uses unified Scenario component (DRY compliance)
    */
-  async exchangeScenarios(peerONCE: IOR, scenarios: ComponentScenario[]): Promise<void> {
+  async exchangeScenarios(peerONCE: IOR, scenarios: Scenario[]): Promise<void> {
     // QUESTION: Should this delegate to a P2P component or implement directly?
     console.log(`ONCE Kernel: Exchanging ${scenarios.length} scenarios with peer ${peerONCE.uuid}`);
   }
 
   /**
    * Save kernel state as scenario
+   * Uses unified Scenario component (DRY compliance)
    */
-  async saveAsScenario(): Promise<ONCEScenario> {
+  async saveAsScenario(): Promise<Scenario> {
     // Delegate hibernation to Scenario component (Decision 1a)
     const ownerData = await this.userService.generateOwnerData({
       user: 'system',
@@ -205,7 +206,7 @@ export class DefaultONCE implements ONCE {
       model: this.data
     };
 
-    return this.scenarioService.init(scenarioData).toJSON() as ONCEScenario;
+    return this.scenarioService.init(scenarioData);
   }
 
   /**
@@ -235,10 +236,11 @@ export class DefaultONCE implements ONCE {
   }
 
   static create(uuid: string, name: string, description: string): DefaultONCE {
-    return new DefaultONCE().init({ 
+    const scenario = new Scenario().init({
       ior: { uuid, component: 'ONCE', version: '0.3.0.0' },
       owner: '',
       model: { uuid, name, description }
-    } as ONCEScenario);
+    });
+    return new DefaultONCE().init(scenario);
   }
 }

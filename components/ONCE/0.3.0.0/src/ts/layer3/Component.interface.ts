@@ -6,14 +6,14 @@
  */
 
 import { IOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
-import { ComponentScenario } from './ComponentScenario.interface.js';
+import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
 
 export interface Component {
   /**
    * Initialize component from scenario
-   * Web4 Pattern: Scenario-based initialization
+   * Web4 Pattern: Scenario-based initialization using unified Scenario component
    */
-  init(scenario: ComponentScenario): this;
+  init(scenario: Scenario): this;
 
   /**
    * Start component execution
@@ -32,9 +32,9 @@ export interface Component {
 
   /**
    * Save component state as scenario
-   * Web4 Pattern: State hibernation
+   * Web4 Pattern: State hibernation using unified Scenario component
    */
-  toScenario(): Promise<ComponentScenario>;
+  toScenario(): Promise<Scenario>;
 
   /**
    * Check if component is running

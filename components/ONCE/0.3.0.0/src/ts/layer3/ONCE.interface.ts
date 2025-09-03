@@ -7,17 +7,16 @@
  */
 
 import { IOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
-import { ComponentScenario } from './ComponentScenario.interface.js';
-import { ONCEScenario } from './ONCEScenario.interface.js';
+import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
 import { EnvironmentInfo } from './EnvironmentInfo.interface.js';
 import { Component } from './Component.interface.js';
 
 export interface ONCE {
   /**
    * Initialize ONCE kernel from scenario
-   * Web4 Pattern: Scenario-based initialization (NEVER 'any' type)
+   * Web4 Pattern: Scenario-based initialization using unified Scenario component
    */
-  init(scenario: ONCEScenario): this;
+  init(scenario: Scenario): this;
 
   /**
    * Boot environment and prepare for component loading
@@ -28,8 +27,9 @@ export interface ONCE {
   /**
    * Load component from IOR and scenario
    * ONCE main feature: Choose components to load from IORs and scenarios
+   * Uses unified Scenario component (DRY principle)
    */
-  loadComponent(componentIOR: IOR, scenario: ComponentScenario): Promise<Component>;
+  loadComponent(componentIOR: IOR, scenario: Scenario): Promise<Component>;
 
   /**
    * Unload component by IOR reference
@@ -48,12 +48,13 @@ export interface ONCE {
 
   /**
    * Exchange scenarios with peer ONCE kernel
+   * Uses unified Scenario component (DRY principle)
    */
-  exchangeScenarios(peerONCE: IOR, scenarios: ComponentScenario[]): Promise<void>;
+  exchangeScenarios(peerONCE: IOR, scenarios: Scenario[]): Promise<void>;
 
   /**
    * Save kernel state as scenario
-   * Web4 Pattern: State hibernation
+   * Web4 Pattern: State hibernation using unified Scenario component
    */
-  saveAsScenario(): Promise<ONCEScenario>;
+  saveAsScenario(): Promise<Scenario>;
 }
