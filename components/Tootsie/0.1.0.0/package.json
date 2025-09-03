@@ -1,0 +1,46 @@
+{
+  "name": "@web4x/tootsie",
+  "version": "0.1.0.0",
+  "type": "module",
+  "description": "Web4 Tootsie - Radical Object-Oriented Quality Consciousness Component",
+  "main": "dist/layer5/TootsieCLI.js",
+  "bin": {
+    "tootsie": "./dist/layer5/TootsieCLI.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "start": "npm run build && node dist/layer5/TootsieCLI.js",
+    "dev": "ts-node src/ts/layer5/TootsieCLI.ts",
+    "quality-oracle": "npm run build && node dist/layer5/TootsieCLI.js awaken-oracle",
+    "assess": "npm run build && node dist/layer5/TootsieCLI.js assess-quality",
+    "status": "npm run build && node dist/layer5/TootsieCLI.js status"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "dependencies": {},
+  "keywords": [
+    "web4",
+    "quality",
+    "testing",
+    "consciousness",
+    "radical-oop",
+    "quality-oracle",
+    "hibernation",
+    "distributed"
+  ],
+  "author": "Web4 Quality Consciousness Initiative",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cerulean-Circle-GmbH/Web4Articles.git",
+    "directory": "components/Tootsie/0.1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
