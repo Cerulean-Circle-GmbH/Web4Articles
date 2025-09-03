@@ -46,3 +46,13 @@ export interface HttpServer {
    */
   saveAsScenario(): Promise<Scenario>;
 }
+
+/**
+ * Web4 Component Exports - Following IOR Pattern
+ * Integrated exports in interface file - no separate exports.ts
+ */
+
+export { HttpServerModel } from './HttpServerModel.interface.js';
+export { DefaultHttpServer } from '../layer2/DefaultHttpServer.js';
+// DRY Compliance: Use unified Scenario component
+export { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
