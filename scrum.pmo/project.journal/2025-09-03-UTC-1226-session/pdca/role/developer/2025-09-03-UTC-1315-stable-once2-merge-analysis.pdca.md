@@ -26,33 +26,20 @@
 - **Scripts Version Management:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-03-UTC-1226/scripts/versions) | [scripts/versions](scripts/versions)
 
 ### **QA Decisions**
-- [ ] **Decision 1: ONCE Component Recovery Strategy**
-  - a) Cherry-pick ONCE component from stable/once2 to restore missing functionality
-  - b) Recreate ONCE component based on current architecture patterns
-  - c) Document ONCE as deprecated and continue without it
-  - d) Merge stable/once2 branch completely to restore all missing components
-
-- [ ] **Decision 2: Missing Component Resolution**
-  - a) Restore all missing components: agent/, Build/, Message/, Tootsie/ from stable/once2
-  - b) Selectively recover only essential components (ONCE, Message) 
-  - c) Document missing components as deprecated/obsolete
-  - d) Audit each missing component for current relevance
-
-- [ ] **Decision 3: Version Management Standardization**
-  - a) Keep current scripts/versions system as the standard
-  - b) Merge both version systems for comprehensive coverage
-  - c) Simplify to stable/once2 approach without versions subfolder
-  - d) Create unified version management combining best of both
+- [x] **Decision 1: ONCE Component Recovery Strategy** - Selected: a) Cherry-pick ONCE component from stable/once2 to restore missing functionality
+- [x] **Decision 2: Missing Component Resolution** - Selected: a) Restore all missing components: agent/, Build/, Message/, Tootsie/ from stable/once2
+- [x] **Decision 3: Version Management Standardization** - Selected: a) Keep current scripts/versions system as the standard
 
 ### **TRON Feedback (2025-09-03-UTC-1315)**
 ```quote
 great. check if stable/once2 is fully merged and report a diligent pdca with links and descriptions to the diff versions and their state in scripts and components folder. pdca
+1a 2a 3a
 ```
 
 ### **My Answer**
-**STABLE/ONCE2 NOT FULLY MERGED!** Found major divergence: 83 commits ahead, missing critical ONCE component and 4 other components. Comprehensive analysis with dual links provided for all version states and differences.
+**STABLE/ONCE2 NOT FULLY MERGED!** Found major divergence: 83 commits ahead, missing critical ONCE component and 4 other components. Now implementing complete component recovery: cherry-pick ONCE + restore all missing components + keep current version management.
 
-**Learning Applied:** Branch merge analysis reveals significant architectural components missing from current branch requiring strategic recovery decisions.
+**Learning Applied:** Clear user decisions enable immediate infrastructure recovery maintaining current advanced version management while restoring critical ONCE kernel and all missing components.
 
 ---
 
