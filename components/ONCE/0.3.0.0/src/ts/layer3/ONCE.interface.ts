@@ -58,3 +58,15 @@ export interface ONCE {
    */
   saveAsScenario(): Promise<Scenario>;
 }
+
+/**
+ * Web4 Component Exports - Following IOR Pattern (Decision 3b)
+ * Integrated exports in interface file - no separate exports.ts
+ */
+
+export { ONCEModel } from './ONCEModel.interface.js';
+export { EnvironmentInfo } from './EnvironmentInfo.interface.js';
+export { Component } from './Component.interface.js';
+export { DefaultONCE } from '../layer2/DefaultONCE.js';
+// DRY Compliance: Use unified Scenario component
+export { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';

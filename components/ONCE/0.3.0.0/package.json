@@ -3,8 +3,8 @@
   "version": "0.3.0.0",
   "description": "ONCE v0.3.0.0 - Object Network Communication Engine with radical OOP patterns and Web4 EAM architecture",
   "type": "module",
-  "main": "dist/ts/layer3/exports.js",
-  "types": "dist/ts/layer3/exports.d.ts",
+  "main": "dist/ts/layer3/ONCE.interface.js",
+  "types": "dist/ts/layer3/ONCE.interface.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "vitest",
