@@ -25,23 +25,7 @@
 - **ONCE 0.2.0.0 Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.2.0.0) | [components/ONCE/0.2.0.0](components/ONCE/0.2.0.0)
 
 ### **QA Decisions**
-- [ ] **ONCE EAM Layer Assignment Question: How should ONCE features map to Web4 EAM layers?**
-
-**Current ONCE 0.2.0.0 Features to Distribute:**
-- **Server Lifecycle Management:** start/stop/pause/resume components, auto-restart, cleanup
-- **P2P Communication:** WebRTC peer discovery, scenario exchange, distributed object network
-- **Platform Detection:** Browser/Node.js/Worker/PWA automatic environment adaptation
-- **Component Registry:** Component discovery, lifecycle hooks, coordination
-- **Interactive CLI:** Command-line interface, demos, server management
-- **Scenario Management:** Hibernation/restoration, state persistence, scenario exchange
-- **Network Infrastructure:** Port management (default 42777), HTTP/WebSocket servers
-- **Process Management:** PID tracking, server hierarchy, primary/secondary coordination
-
-**EAM Layer Options:**
-- a) Layer1: Network protocols + Platform detection, Layer2: DefaultONCE + Server lifecycle, Layer3: ONCE interface, Layer4: Component orchestration + P2P coordination, Layer5: CLI + Interactive demos
-- b) Layer1: Infrastructure (ports/sockets/processes), Layer2: Core engine implementation, Layer3: ONCE API contracts, Layer4: Business workflow coordination, Layer5: User experience + demos  
-- c) Layer1: Transport protocols + environment, Layer2: Object Network Communication engine, Layer3: Component interfaces, Layer4: Distributed system orchestration, Layer5: Developer tools + management
-- d) Custom semantic assignment based on Object Network Communication Engine purpose
+- [x] **ONCE EAM Layer Assignment** - Selected: Follow IOR component pattern (options a/b/c are equivalent, just different naming) - use established radical OOP patterns for all future migration
 
 ### **TRON Feedback (2025-09-03-UTC-1435)**
 ```quote
@@ -49,12 +33,15 @@ Phase 1 refinements implemented following radical OOP patterns.
 Ready for Phase 2 - ONCE component EAM layer assignment.
 
 QUESTION: How should ONCE Object Network Communication Engine features be distributed across Web4 EAM layers 1-5?
+
+ options a,b, c seem to be equivalent just different namings. keep the patters from ior and model for all future migration 
+pdca
 ```
 
 ### **My Answer**
-Phase 1 refinements complete with radical OOP patterns! Ready for Phase 2 ONCE component creation using shared IOR foundation. Need guidance on distributing ONCE features (server lifecycle, P2P communication, platform detection, component registry, CLI, etc.) across Web4 EAM layers 1-5.
+Perfect insight! You're absolutely right - the EAM layer options were equivalent with different naming. Standardizing on IOR and Model patterns for all future migration work. This establishes consistent architectural foundation across entire Web4 component ecosystem.
 
-**Learning Applied:** Proper EAM layer assignment ensures semantic clarity and architectural consistency for complex components like Object Network Communication Engine.
+**Learning Applied:** Pattern standardization eliminates architectural confusion and enables systematic component migration using unified radical OOP approach.
 
 ---
 
