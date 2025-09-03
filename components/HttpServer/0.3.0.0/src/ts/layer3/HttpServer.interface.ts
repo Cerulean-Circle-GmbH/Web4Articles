@@ -6,6 +6,7 @@
  */
 
 import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
+import { IOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
 
 export interface HttpServer {
   /**
@@ -25,9 +26,9 @@ export interface HttpServer {
   stopServer(): Promise<void>;
 
   /**
-   * Add route handler to server
+   * Add route component to server (Web4 principle: routes are components with IORs)
    */
-  addRoute(path: string, handler: RouteHandler): void;
+  addRoute(routeIOR: IOR): void;
 
   /**
    * Get current port number

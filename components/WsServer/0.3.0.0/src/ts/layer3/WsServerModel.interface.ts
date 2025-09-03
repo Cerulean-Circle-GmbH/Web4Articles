@@ -3,9 +3,11 @@
  * 
  * Web4 principle: Single interface per file
  * Pattern Decision: Component-specific model extending Model (type safety approach)
+ * Configuration: Scenarios ARE configs - no separate config interfaces
  */
 
 import { Model } from '../../../../IOR/0.3.0.0/src/ts/layer3/Model.interface.js';
+import { IOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
 
 export interface WsServerModel extends Model {
   /**
@@ -19,9 +21,10 @@ export interface WsServerModel extends Model {
   state: 'stopped' | 'starting' | 'running' | 'stopping' | 'error';
 
   /**
-   * Active WebSocket connections
+   * Connected client IOR references
+   * Web4 principle: Connections are components with IORs, not info objects
    */
-  connections: WsConnectionInfo[];
+  connections: IOR[];
 
   /**
    * WebSocket protocol version
@@ -29,9 +32,19 @@ export interface WsServerModel extends Model {
   protocol: string;
 
   /**
-   * Maximum allowed connections
+   * Maximum allowed connections (config in model - scenarios ARE configs)
    */
   maxConnections: number;
+
+  /**
+   * Heartbeat interval (config in model - scenarios ARE configs)  
+   */
+  heartbeatInterval: number;
+
+  /**
+   * Compression enabled (config in model - scenarios ARE configs)
+   */
+  compression: boolean;
 
   /**
    * Server start timestamp
@@ -42,22 +55,4 @@ export interface WsServerModel extends Model {
    * Server stop timestamp
    */
   stoppedAt?: string;
-
-  /**
-   * WebSocket server configuration
-   */
-  config: WsServerConfig;
-}
-
-export interface WsConnectionInfo {
-  id: string;
-  connectedAt: string;
-  lastActivity: string;
-  protocol?: string;
-}
-
-export interface WsServerConfig {
-  maxConnections: number;
-  heartbeatInterval: number;
-  compression: boolean;
 }

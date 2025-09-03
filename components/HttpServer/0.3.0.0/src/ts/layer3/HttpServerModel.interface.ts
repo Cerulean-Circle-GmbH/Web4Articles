@@ -2,10 +2,12 @@
  * HttpServerModel Interface - HTTP server capability component model
  * 
  * Web4 principle: Single interface per file
- * Pattern Decision: Component-specific model extending Model (type safety approach)
+ * Pattern Decision: Component-specific model extending Model (type safety approach) 
+ * Configuration: Scenarios ARE configs - no separate config interfaces
  */
 
 import { Model } from '../../../../IOR/0.3.0.0/src/ts/layer3/Model.interface.js';
+import { IOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
 
 export interface HttpServerModel extends Model {
   /**
@@ -19,14 +21,31 @@ export interface HttpServerModel extends Model {
   state: 'stopped' | 'starting' | 'running' | 'stopping' | 'error';
 
   /**
-   * Registered route information
+   * Registered route IOR references
+   * Web4 principle: Routes are components with IORs, not info objects
    */
-  routes: RouteInfo[];
+  routes: IOR[];
 
   /**
-   * Active connection count
+   * Connected client IOR references  
+   * Web4 principle: Connections are components with IORs
    */
-  connections: number;
+  connections: IOR[];
+
+  /**
+   * Maximum connections (config in model - scenarios ARE configs)
+   */
+  maxConnections: number;
+
+  /**
+   * Request timeout (config in model - scenarios ARE configs)
+   */
+  timeout: number;
+
+  /**
+   * Keep-alive enabled (config in model - scenarios ARE configs)  
+   */
+  keepAlive: boolean;
 
   /**
    * Server start timestamp
@@ -37,21 +56,4 @@ export interface HttpServerModel extends Model {
    * Server stop timestamp
    */
   stoppedAt?: string;
-
-  /**
-   * Server configuration options
-   */
-  config: HttpServerConfig;
-}
-
-export interface RouteInfo {
-  method: string;
-  path: string;
-  handler: string; // Handler function name/identifier
-}
-
-export interface HttpServerConfig {
-  maxConnections: number;
-  timeout: number;
-  keepAlive: boolean;
 }

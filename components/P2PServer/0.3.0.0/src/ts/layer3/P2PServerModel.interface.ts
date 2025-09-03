@@ -3,6 +3,7 @@
  * 
  * Web4 principle: Single interface per file
  * Pattern Decision: Component-specific model extending Model (type safety approach)
+ * Configuration: Scenarios ARE configs - no separate config interfaces
  */
 
 import { Model } from '../../../../IOR/0.3.0.0/src/ts/layer3/Model.interface.js';
@@ -25,14 +26,34 @@ export interface P2PServerModel extends Model {
   peers: IOR[];
 
   /**
-   * P2P network topology information
+   * Network role (config in model - scenarios ARE configs)
    */
-  topology: NetworkTopology;
+  role: 'primary' | 'secondary' | 'peer';
 
   /**
-   * P2P protocol configuration
+   * Network identifier (config in model - scenarios ARE configs)
    */
-  protocol: P2PProtocolConfig;
+  networkId: string;
+
+  /**
+   * WebRTC enabled (config in model - scenarios ARE configs)
+   */
+  webrtc: boolean;
+
+  /**
+   * Signaling enabled (config in model - scenarios ARE configs)
+   */
+  signaling: boolean;
+
+  /**
+   * Encryption enabled (config in model - scenarios ARE configs)
+   */
+  encryption: boolean;
+
+  /**
+   * Maximum peer connections (config in model - scenarios ARE configs)
+   */
+  maxPeers: number;
 
   /**
    * Server start timestamp
@@ -43,17 +64,4 @@ export interface P2PServerModel extends Model {
    * Server stop timestamp  
    */
   stoppedAt?: string;
-}
-
-export interface NetworkTopology {
-  role: 'primary' | 'secondary' | 'peer';
-  connectedPeers: number;
-  networkId: string;
-}
-
-export interface P2PProtocolConfig {
-  webrtc: boolean;
-  signaling: boolean;
-  encryption: boolean;
-  maxPeers: number;
 }
