@@ -26,41 +26,30 @@
 - **Prepared 0.3.0.0 Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.3.0.0) | [components/ONCE/0.3.0.0](components/ONCE/0.3.0.0)
 
 ### **QA Decisions**
-- [ ] **Decision 1: ONCE Scenario Structure Standardization**
-  - a) Convert to Web4 3-property standard: IOR + owner + model (Full Occam's razor)
-  - b) Hybrid approach: Keep some ONCE-specific properties + add Web4 structure
-  - c) Gradual migration: Maintain backward compatibility with both formats
-  - d) Create ONCE-specific schema while following Web4 principles
-
-- [ ] **Decision 2: Scenario Content Simplification Strategy**
-  - a) Minimal essential data: UUID, component, version, state, port (< 10 properties total)
-  - b) Core server data: Add platform detection and capability discovery
-  - c) Complete server model: Keep all current state + metadata for full functionality
-  - d) Staged reduction: Progressive simplification across multiple versions
-
-- [ ] **Decision 3: ONCE 0.3.0.0 Implementation Approach**
-  - a) Complete rewrite following pure Occam's razor 3-property pattern
-  - b) Structural migration with content preservation and simplification
-  - c) Feature-compatible simplification maintaining all current ONCE capabilities
-  - d) Minimal viable ONCE with only essential Object Network Communication features
-
-- [ ] **Decision 4: Scenario Integration Strategy**
-  - a) Integrate simplified ONCE scenarios into main scenarios/ directory using standard structure
-  - b) Keep component-local scenarios/ but standardize to Web4 3-property format
-  - c) Create hybrid system: main scenarios for discovery + component scenarios for detailed state
-  - d) Unified scenario management: All scenarios in main directory with component references
+- [x] **Decision 1: ONCE Scenario Structure Standardization** - Selected: a) Convert to Web4 3-property standard with lowercase "ior" attribute of type IOR using DefaultIOR implementation and 5-layer architecture
+- [x] **Decision 2: Scenario Content Simplification Strategy** - Selected: d) Staged reduction through progressive build versions up to stable 0.3.1.0
+- [x] **Decision 3: ONCE 0.3.0.0 Implementation Approach** - Selected: c) Feature-compatible simplification with Vitest test cases ensuring features stay stable (user decides test scope before implementation)
+- [x] **Decision 4: Scenario Integration Strategy** - Selected: Scenarios are Web4 components themselves with Model interface delegation pattern. Components use scenario component for hibernation with IOR serialization for component references
 
 ### **TRON Feedback (2025-09-03-UTC-1415)**
 ```quote
 create a new branch 
 dev/once from this branch. 
 check if you merged  the once 0.2.0.0 scenarios into here. read the scenarios and show me in detail how they should look like after ocams razor. prepare to create a version 0.3.0.0 with such simplified scenarios. create decisions for me. pdca
+
+1a the IOR attribute shall be lower case ior always and always be of type IOR. use rascally the web4 IOR interface DerfaultIOR implementation class pattern and the 5 layers consequently.
+2d as increasing build versions up to stable 0.3.1.0
+
+3c we will create vitest test cases to make sure the features stay stable. let me decide what to test before implementing 
+
+4. scanarios are itself web4 components to be used by all components to hibernate. the model attribut of a scenario is of type Model interface and each component implements a model:Model to delegate to the scenar component for hibernation. if a component references another component, the scenario will serialize an IOR to hibernate and reliad the component. 
+dilligent plan the migration in a pdca. ask wuestions and then start the planned migration pdca by pdca
 ```
 
 ### **My Answer**
-Created dev/once branch and analyzed ONCE scenarios. Found NON-STANDARD format violating Occam's razor 3-property rule! Current scenarios are complex nested structures. Designed simplified 0.3.0.0 version following IOR + owner + model pattern with strategic decisions for implementation.
+Created dev/once branch and analyzed ONCE scenarios. Implementing comprehensive migration plan: 1a) lowercase "ior" with DefaultIOR + 5-layers, 2d) staged versions to 0.3.1.0, 3c) Vitest testing with user-defined scope, 4) Scenario as Web4 component with Model interface delegation and IOR serialization. Planning migration systematically with questions then PDCA-by-PDCA implementation.
 
-**Learning Applied:** ONCE scenarios require standardization to Web4 3-property pattern for consistency with entire ecosystem simplification strategy.
+**Learning Applied:** Complex architectural migration requires systematic planning with clear questions before implementation to ensure all Web4 patterns are correctly applied with proper testing coverage.
 
 ---
 
