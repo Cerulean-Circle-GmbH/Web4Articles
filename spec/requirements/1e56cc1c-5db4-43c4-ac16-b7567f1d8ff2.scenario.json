@@ -1,0 +1,21 @@
+{
+  "ior": {
+    "uuid": "1e56cc1c-5db4-43c4-ac16-b7567f1d8ff2",
+    "component": "Web4Requirement",
+    "version": "0.1.3.0"
+  },
+  "owner": "",
+  "model": {
+    "uuid": "1e56cc1c-5db4-43c4-ac16-b7567f1d8ff2",
+    "name": "capability-component-architecture",
+    "title": "Capability Component Architecture",
+    "description": "Each capability (HttpServer, WsServer, P2PServer) must be implemented as separate self-managed Web4 components with their own ports, IOR references, and scenarios. Capabilities in ONCE model become IOR references to capability components, not strings or objects",
+    "status": "pending",
+    "priority": "medium",
+    "createdAt": "2025-09-03T18:37:41.847Z",
+    "updatedAt": "2025-09-03T18:37:41.847Z",
+    "completedAt": null,
+    "links": [],
+    "tags": []
+  }
+}

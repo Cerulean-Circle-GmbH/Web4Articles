@@ -1,0 +1,21 @@
+{
+  "ior": {
+    "uuid": "cec5b6a3-957b-4f20-b79c-2a207654ae2e",
+    "component": "Web4Requirement",
+    "version": "0.1.3.0"
+  },
+  "owner": "",
+  "model": {
+    "uuid": "cec5b6a3-957b-4f20-b79c-2a207654ae2e",
+    "name": "once-0.3.0.0-web4-architecture-compliance",
+    "title": "ONCE 0.3.0.0 Web4 Architecture Compliance",
+    "description": "ONCE component must follow Web4 fundamental principles: single interface per file, scenarios ARE configs forever, infos ARE model views, component-specific models extending Model, radical OOP patterns, and UCP Unit-Component-Package structure",
+    "status": "pending",
+    "priority": "medium",
+    "createdAt": "2025-09-03T18:37:00.504Z",
+    "updatedAt": "2025-09-03T18:37:00.504Z",
+    "completedAt": null,
+    "links": [],
+    "tags": []
+  }
+}
