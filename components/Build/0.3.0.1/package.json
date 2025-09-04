@@ -1,0 +1,15 @@
+{
+  "name": "@web4/build",
+  "version": "0.3.0.1",
+  "description": "Web4-Compliant Build Component - Eliminates StandaloneBuild DORY violation",
+  "type": "module",
+  "main": "dist/ts/layer2/DefaultBuild.js",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist/ *.tsbuildinfo node_modules/.cache",
+    "prebuild": "npm run clean"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
