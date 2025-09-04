@@ -19,10 +19,10 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1620-once-seamless-execution-breakthrough-success.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1620-once-seamless-execution-breakthrough-success.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1620-once-seamless-execution-breakthrough-success.pdca.md)
-- **MinimalONCE Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/MinimalONCE.ts) | [components/ONCE/0.3.0.0/src/ts/MinimalONCE.ts](components/ONCE/0.3.0.0/src/ts/MinimalONCE.ts)
-- **Critical Test Success:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/test/once/seamless-execution.test.ts) | [test/once/seamless-execution.test.ts](test/once/seamless-execution.test.ts)
-- **Working ONCE Script:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/once) | [components/ONCE/0.3.0.0/once](components/ONCE/0.3.0.0/once)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev%2Fonce/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1620-once-seamless-execution-breakthrough-success.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1620-once-seamless-execution-breakthrough-success.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1620-once-seamless-execution-breakthrough-success.pdca.md)
+- **MinimalONCE Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev%2Fonce/components/ONCE/0.3.0.0/src/ts/MinimalONCE.ts) | [components/ONCE/0.3.0.0/src/ts/MinimalONCE.ts](components/ONCE/0.3.0.0/src/ts/MinimalONCE.ts)
+- **Critical Test Success:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev%2Fonce/test/once/seamless-execution.test.ts) | [test/once/seamless-execution.test.ts](test/once/seamless-execution.test.ts)
+- **Working ONCE Script:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev%2Fonce/components/ONCE/0.3.0.0/once) | [components/ONCE/0.3.0.0/once](components/ONCE/0.3.0.0/once)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - ONCE seamless execution breakthrough achieved, git protocol compliance verified
