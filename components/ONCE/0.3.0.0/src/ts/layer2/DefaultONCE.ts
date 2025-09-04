@@ -13,6 +13,13 @@ import { Component } from '../layer3/Component.interface.js';
 import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
 import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
 import { DefaultUser } from '../../../../User/0.1.3.0/src/ts/DefaultUser.js';
+// Capability component imports for kernel integration
+import { DefaultHttpServer } from '../../../HttpServer/0.3.0.0/src/ts/layer2/DefaultHttpServer.js';
+import { DefaultWsServer } from '../../../WsServer/0.3.0.0/src/ts/layer2/DefaultWsServer.js';
+import { DefaultP2PServer } from '../../../P2PServer/0.3.0.0/src/ts/layer2/DefaultP2PServer.js';
+import { HttpServerModel } from '../../../HttpServer/0.3.0.0/src/ts/layer3/HttpServerModel.interface.js';
+import { WsServerModel } from '../../../WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.js';
+import { P2PServerModel } from '../../../P2PServer/0.3.0.0/src/ts/layer3/P2PServerModel.interface.js';
 
 export class DefaultONCE implements ONCE {
   private data: ONCEModel;
@@ -114,12 +121,30 @@ export class DefaultONCE implements ONCE {
    * ONCE main feature: Boot in any environment
    */
   async bootEnvironment(): Promise<EnvironmentInfo> {
+    this.data.state = 'booting';
+    
+    // 1. Detect current environment
+    const environment = this.detectEnvironment();
+    this.data.environment = environment.platform;
+    
+    console.log(`ONCE Kernel: Booting in ${environment.platform} environment`);
+    
+    // 2. Load default capabilities based on environment
+    if (environment.platform === 'node') {
+      // Node.js environment - load all server capabilities
+      await this.loadHttpServer(8080);
+      await this.loadWsServer(42777);
+      await this.loadP2PServer(42778);
+    } else if (environment.platform === 'browser') {
+      // Browser environment - load client-side capabilities
+      await this.loadWsServer(42777); // WebSocket client capability
+      await this.loadP2PServer(42778); // P2P client capability
+    }
+    
     this.data.state = 'ready';
     this.data.updatedAt = new Date().toISOString();
     
-    // Detect current environment
-    const environment = this.detectEnvironment();
-    this.data.environment = environment.platform;
+    console.log(`ONCE Kernel: Boot complete with ${this.data.capabilities.length} capabilities loaded`);
     
     return environment;
   }
@@ -132,18 +157,38 @@ export class DefaultONCE implements ONCE {
   async loadComponent(componentIOR: IOR, scenario: Scenario): Promise<Component> {
     this.data.state = 'loading';
     
-    // QUESTION: How should ONCE actually load a component from IOR?
-    // Should it use dynamic import? Component registry? Factory pattern?
+    let component: Component;
     
-    // For now, placeholder implementation
-    console.log(`ONCE Kernel: Loading component ${componentIOR.component}:${componentIOR.version}`);
+    // ✅ Dynamic component loading based on IOR.component (Web4 kernel pattern)
+    switch (componentIOR.component) {
+      case 'HttpServer':
+        component = new DefaultHttpServer().init(scenario);
+        console.log(`ONCE Kernel: Loaded HttpServer on port ${(scenario.model as HttpServerModel).port}`);
+        break;
+      
+      case 'WsServer': 
+        component = new DefaultWsServer().init(scenario);
+        console.log(`ONCE Kernel: Loaded WsServer on port ${(scenario.model as WsServerModel).port}`);
+        break;
+      
+      case 'P2PServer':
+        component = new DefaultP2PServer().init(scenario);
+        console.log(`ONCE Kernel: Loaded P2PServer on port ${(scenario.model as P2PServerModel).port}`);
+        break;
+      
+      default:
+        throw new Error(`ONCE Kernel: Unknown component type: ${componentIOR.component}`);
+    }
     
-    // Add to loaded components
+    // Register loaded component in kernel registry
+    this.loadedComponents.set(componentIOR.uuid, component);
     this.data.loadedComponents.push(componentIOR);
+    this.data.capabilities.push(componentIOR);
+    
+    this.data.state = 'ready';
     this.data.updatedAt = new Date().toISOString();
     
-    // Return mock component - QUESTION: How should this work?
-    return {} as Component;
+    return component;
   }
 
   /**
@@ -211,18 +256,143 @@ export class DefaultONCE implements ONCE {
   }
 
   /**
+   * Capability loading convenience methods
+   */
+  
+  async loadHttpServer(port: number = 8080): Promise<Component> {
+    const httpServerIOR = new DefaultIOR().init({
+      uuid: crypto.randomUUID(),
+      component: 'HttpServer',
+      version: '0.3.0.0'
+    });
+    
+    const ownerData = await this.userService.generateOwnerData({
+      user: 'system',
+      hostname: this.data.host,
+      uuid: httpServerIOR.uuid
+    });
+    
+    const scenario = new Scenario().init({
+      ior: httpServerIOR.toJSON(),
+      owner: ownerData,
+      model: {
+        uuid: httpServerIOR.uuid,
+        name: 'HTTP Server Capability',
+        description: 'HTTP server managed by ONCE kernel',
+        port: port,
+        state: 'stopped',
+        routes: [],
+        connections: [],
+        maxConnections: 100,
+        timeout: 30000,
+        keepAlive: true
+      } as HttpServerModel
+    });
+    
+    return this.loadComponent(httpServerIOR, scenario);
+  }
+
+  async loadWsServer(port: number = 42777): Promise<Component> {
+    const wsServerIOR = new DefaultIOR().init({
+      uuid: crypto.randomUUID(),
+      component: 'WsServer',
+      version: '0.3.0.0'
+    });
+    
+    const ownerData = await this.userService.generateOwnerData({
+      user: 'system',
+      hostname: this.data.host,
+      uuid: wsServerIOR.uuid
+    });
+    
+    const scenario = new Scenario().init({
+      ior: wsServerIOR.toJSON(),
+      owner: ownerData,
+      model: {
+        uuid: wsServerIOR.uuid,
+        name: 'WebSocket Server Capability',
+        description: 'WebSocket server managed by ONCE kernel',
+        port: port,
+        state: 'stopped',
+        connections: [],
+        protocol: 'ws',
+        maxConnections: 100,
+        heartbeatInterval: 30000,
+        compression: true
+      } as WsServerModel
+    });
+    
+    return this.loadComponent(wsServerIOR, scenario);
+  }
+
+  async loadP2PServer(port: number = 42778): Promise<Component> {
+    const p2pServerIOR = new DefaultIOR().init({
+      uuid: crypto.randomUUID(),
+      component: 'P2PServer',
+      version: '0.3.0.0'
+    });
+    
+    const ownerData = await this.userService.generateOwnerData({
+      user: 'system',
+      hostname: this.data.host,
+      uuid: p2pServerIOR.uuid
+    });
+    
+    const scenario = new Scenario().init({
+      ior: p2pServerIOR.toJSON(),
+      owner: ownerData,
+      model: {
+        uuid: p2pServerIOR.uuid,
+        name: 'P2P Server Capability',
+        description: 'P2P server managed by ONCE kernel',
+        port: port,
+        state: 'stopped',
+        peers: [],
+        role: 'peer',
+        networkId: `once-network-${this.data.uuid}`,
+        webrtc: true,
+        signaling: true,
+        encryption: true,
+        maxPeers: 50
+      } as P2PServerModel
+    });
+    
+    return this.loadComponent(p2pServerIOR, scenario);
+  }
+
+  /**
    * Private helper methods
    */
   private detectEnvironment(): EnvironmentInfo {
-    // QUESTION: Should this delegate to an EnvironmentDetector component?
-    return {
-      platform: 'node',
-      version: process.version || 'unknown',
-      capabilities: ['server', 'filesystem', 'network'],
-      isOnline: true,
-      hostname: this.data.host,
-      ip: '127.0.0.1'
-    };
+    // Detect actual environment (not just assume Node.js)
+    if (typeof window !== 'undefined') {
+      return {
+        platform: 'browser',
+        version: navigator.userAgent,
+        capabilities: ['websocket', 'p2p', 'dom'],
+        isOnline: navigator.onLine,
+        hostname: window.location.hostname,
+        ip: 'browser-detected'
+      };
+    } else if (typeof importScripts !== 'undefined') {
+      return {
+        platform: 'worker',
+        version: 'web-worker',
+        capabilities: ['websocket', 'p2p'],
+        isOnline: true,
+        hostname: 'worker-context',
+        ip: 'worker-detected'
+      };
+    } else {
+      return {
+        platform: 'node',
+        version: process.version || 'unknown',
+        capabilities: ['server', 'filesystem', 'network', 'websocket', 'p2p'],
+        isOnline: true,
+        hostname: this.data.host,
+        ip: '127.0.0.1'
+      };
+    }
   }
 
   /**
