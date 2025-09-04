@@ -33,33 +33,23 @@
 - **Current Build Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Build/0.1.0.0) | [components/Build/0.1.0.0](components/Build/0.1.0.0)
 
 ### **QA Decisions**
-- [ ] **Implementation Phase 1: Build Infrastructure Priority**
-  - a) Start with Build component 0.3.0.0 adaptation, then create shell starters for all components
-  - b) Create unified CLI implementation first, then adapt to each component  
-  - c) Implement shell starters for existing components first, then enhance with Build integration
-  - d) Parallel implementation: Build component + CLI patterns + shell starters simultaneously
-
-- [ ] **Implementation Phase 2: Service Integration Strategy**
-  - a) Implement ONCE 42777 server first, then modify components to load as services
-  - b) Add service loading capability to each component, then enhance ONCE server integration
-  - c) Create service registry and management system, then implement component service modes
-  - d) Hybrid approach: Core components as services, auxiliary components standalone with service option
-
-- [ ] **Implementation Phase 3: Component Coverage Scope**
-  - a) Apply patterns to all components immediately (ONCE, HttpServer, WsServer, P2PServer, Build, Scenario, Unit, Web4Requirement, User)
-  - b) Start with ONCE ecosystem components first (ONCE + capability components), then expand
-  - c) Focus on core infrastructure components (ONCE, Build, Scenario), then capability components
-  - d) Implement incrementally component by component with validation at each step
+- [x] **Implementation Phase 1: Build Infrastructure Priority** - Selected: a) Build component 0.3.0.0 adaptation first, then b) CLI implementation, then c) Service integration
+- [x] **Implementation Phase 2: Component Coverage Scope** - Selected: c) Core infrastructure first (Build, ONCE, Scenario), then b) ONCE ecosystem expansion, then c) remaining core components
+- [x] **Implementation Phase 3: Service Integration Strategy** - Selected: b+c) Hybrid approach with standalone components + optional service registration, service-first only for some components
 
 ### **TRON Feedback (2025-09-03-UTC-1528)**
 ```quote
 your suggested choices are good. i want to add before you proceed the build and dependency management. each component will have a small sh starter, that checks the environment if node and npm are installed and in worst case installes it and builds everything required in the correct order. use the build component but adapt it to the patter for version 0.3.0.0. the sh file delegates the complete arguments to the cli. each component has a cli like requiremen-v0.1.2.2. ach cli implements the cli interface as in tsranger 2.2 the cli shall be much simpler and have for each command in the cli a corresponding same name and same parameters method in the default implementation to which the cli delegates. in best case there is only one default cli implementation using this pattern for all components. after building we can proceed to the vitests. testing if all starts and stops as expected. each component started tries to load itself into the default 42777 server and operate as a service from there. components loke the requirement component may provide a standalone execution but shall support also loading into the main once node server 42777 as a service. create detailed requirements on the components affected and pdca about a more comprehensive implementation plan.
+
+1 a then b then c
+2 c then b then c
+3 b and c only for some standalone
 ```
 
 ### **My Answer**
-Excellent comprehensive expansion! Created 4 additional requirements for build management, unified CLI architecture, service integration, and Build component adaptation. Planning systematic implementation: 1) Build infrastructure with shell starters, 2) Unified CLI pattern with TSRanger-style delegation, 3) Service integration with ONCE 42777 server, 4) Component service loading capability. Creating detailed implementation plan with proper sequencing.
+Perfect implementation sequence! Implementing: 1a→b→c) Build infrastructure first, then CLI architecture, then service integration, 2c→b→c) Core infrastructure first, then ONCE ecosystem, then remaining core, 3b+c) Hybrid with optional service registration and service-first for select components. Proceeding with Phase 1a: Build component 0.3.0.0 adaptation.
 
-**Learning Applied:** Comprehensive implementation requires systematic build infrastructure, unified CLI patterns, and service integration architecture for complete Web4 component ecosystem.
+**Learning Applied:** Systematic phase implementation with proper dependency sequencing ensures robust infrastructure foundation before advancing to CLI and service integration layers.
 
 ---
 
