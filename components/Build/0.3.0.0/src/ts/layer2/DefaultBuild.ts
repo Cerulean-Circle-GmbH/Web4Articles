@@ -362,6 +362,42 @@ export class DefaultBuild implements Build {
   }
 
   /**
+   * CLI Command Methods - Same names as CLI commands for delegation
+   */
+
+  async start(args: string[]): Promise<void> {
+    console.log('Build: Starting build manager...');
+    await this.checkEnvironment();
+    console.log('Build: Manager started successfully');
+  }
+
+  async stop(args: string[]): Promise<void> {
+    console.log('Build: Stopping build manager...');
+    this.data.buildState = 'pending';
+    console.log('Build: Manager stopped');
+  }
+
+  async status(args: string[]): Promise<void> {
+    const state = this.getBuildState();
+    console.log(`Build Manager Status:`);
+    console.log(`  State: ${state.state}`);
+    console.log(`  Environment Ready: ${state.environmentReady}`);
+    console.log(`  Progress: ${state.progress}%`);
+    console.log(`  Completed: ${state.completedBuilds.length}`);
+    console.log(`  Failed: ${state.failedBuilds.length}`);
+    console.log(`  Queue: ${state.buildQueue.length}`);
+  }
+
+  async info(args: string[]): Promise<void> {
+    console.log(`Build - Component Build and Dependency Manager`);
+    console.log(`Version: 0.3.0.0`);
+    console.log(`Description: ${this.data.description}`);
+    console.log(`UUID: ${this.data.uuid}`);
+    console.log(`Environment: ${this.data.environment}`);
+    console.log(`Dependencies: ${this.data.dependencies.length}`);
+  }
+
+  /**
    * Utility methods following IOR pattern
    */
   toJSON(): BuildModel {

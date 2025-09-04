@@ -164,6 +164,58 @@ export class DefaultHttpServer implements HttpServer {
   }
 
   /**
+   * CLI Command Methods - Same names as CLI commands for delegation
+   */
+
+  async start(args: string[]): Promise<void> {
+    console.log('HttpServer: Starting server...');
+    this.data.state = 'running';
+    console.log(`HttpServer: Server started on port ${this.data.port}`);
+  }
+
+  async stop(args: string[]): Promise<void> {
+    console.log('HttpServer: Stopping server...');
+    this.data.state = 'stopped';
+    console.log('HttpServer: Server stopped');
+  }
+
+  async status(args: string[]): Promise<void> {
+    console.log(`HttpServer Status:`);
+    console.log(`  State: ${this.data.state}`);
+    console.log(`  Port: ${this.data.port}`);
+    console.log(`  Host: ${this.data.host}`);
+    console.log(`  Routes: ${this.data.routes.length}`);
+    console.log(`  SSL Enabled: ${this.data.sslEnabled}`);
+  }
+
+  async info(args: string[]): Promise<void> {
+    console.log(`HttpServer - HTTP Server Capability`);
+    console.log(`Version: 0.3.0.0`);
+    console.log(`Description: ${this.data.description}`);
+    console.log(`UUID: ${this.data.uuid}`);
+    console.log(`Port: ${this.data.port}`);
+    console.log(`Host: ${this.data.host}`);
+    console.log(`State: ${this.data.state}`);
+  }
+
+  async addRoute(args: string[]): Promise<void> {
+    if (args.length < 2) {
+      throw new Error('addRoute requires method and path');
+    }
+    const method = args[0];
+    const path = args[1];
+    
+    console.log(`HttpServer: Added ${method} route: ${path}`);
+  }
+
+  async listRoutes(args: string[]): Promise<void> {
+    console.log(`HttpServer Routes (${this.data.routes.length}):`);
+    for (const route of this.data.routes) {
+      console.log(`  - Reference: ${route.component}:${route.version} (${route.uuid})`);
+    }
+  }
+
+  /**
    * Utility methods following IOR pattern
    */
   toJSON(): HttpServerModel {

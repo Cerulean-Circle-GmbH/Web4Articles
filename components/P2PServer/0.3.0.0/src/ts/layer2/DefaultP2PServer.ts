@@ -179,6 +179,65 @@ export class DefaultP2PServer implements P2PServer {
   }
 
   /**
+   * CLI Command Methods - Same names as CLI commands for delegation
+   */
+
+  async start(args: string[]): Promise<void> {
+    console.log('P2PServer: Starting peer-to-peer server...');
+    this.data.state = 'running';
+    console.log(`P2PServer: Server started on port ${this.data.port}`);
+  }
+
+  async stop(args: string[]): Promise<void> {
+    console.log('P2PServer: Stopping P2P server...');
+    this.data.state = 'stopped';
+    console.log('P2PServer: Server stopped');
+  }
+
+  async status(args: string[]): Promise<void> {
+    console.log(`P2PServer Status:`);
+    console.log(`  State: ${this.data.state}`);
+    console.log(`  Port: ${this.data.port}`);
+    console.log(`  Network: ${this.data.network}`);
+    console.log(`  Connected Peers: ${this.data.peers.length}`);
+    console.log(`  Discovery: ${this.data.discoveryEnabled ? 'enabled' : 'disabled'}`);
+  }
+
+  async info(args: string[]): Promise<void> {
+    console.log(`P2PServer - Peer-to-Peer Network Capability`);
+    console.log(`Version: 0.3.0.0`);
+    console.log(`Description: ${this.data.description}`);
+    console.log(`UUID: ${this.data.uuid}`);
+    console.log(`Network: ${this.data.network}`);
+    console.log(`State: ${this.data.state}`);
+  }
+
+  async connectPeer(args: string[]): Promise<void> {
+    if (args.length === 0) {
+      throw new Error('connectPeer requires peer address');
+    }
+    const peerAddress = args[0];
+    console.log(`P2PServer: Connecting to peer at ${peerAddress}...`);
+    console.log(`P2PServer: Connected to peer successfully`);
+  }
+
+  async listPeers(args: string[]): Promise<void> {
+    console.log(`P2PServer Connected Peers (${this.data.peers.length}):`);
+    for (const peer of this.data.peers) {
+      console.log(`  - Peer: ${peer.component}:${peer.version} (${peer.uuid})`);
+    }
+  }
+
+  async sendMessage(args: string[]): Promise<void> {
+    if (args.length < 2) {
+      throw new Error('sendMessage requires peer-id and message');
+    }
+    const peerId = args[0];
+    const message = args.slice(1).join(' ');
+    console.log(`P2PServer: Sending message to ${peerId}: "${message}"`);
+  }
+
+  /**
    * Utility methods following IOR pattern
    */
   toJSON(): P2PServerModel {

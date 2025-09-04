@@ -172,6 +172,55 @@ export class DefaultWsServer implements WsServer {
   }
 
   /**
+   * CLI Command Methods - Same names as CLI commands for delegation
+   */
+
+  async start(args: string[]): Promise<void> {
+    console.log('WsServer: Starting WebSocket server...');
+    this.data.state = 'running';
+    console.log(`WsServer: Server started on port ${this.data.port}`);
+  }
+
+  async stop(args: string[]): Promise<void> {
+    console.log('WsServer: Stopping WebSocket server...');
+    this.data.state = 'stopped';
+    console.log('WsServer: Server stopped');
+  }
+
+  async status(args: string[]): Promise<void> {
+    console.log(`WsServer Status:`);
+    console.log(`  State: ${this.data.state}`);
+    console.log(`  Port: ${this.data.port}`);
+    console.log(`  Host: ${this.data.host}`);
+    console.log(`  Active Connections: ${this.data.connections.length}`);
+    console.log(`  SSL Enabled: ${this.data.sslEnabled}`);
+  }
+
+  async info(args: string[]): Promise<void> {
+    console.log(`WsServer - WebSocket Server Capability`);
+    console.log(`Version: 0.3.0.0`);
+    console.log(`Description: ${this.data.description}`);
+    console.log(`UUID: ${this.data.uuid}`);
+    console.log(`Port: ${this.data.port}`);
+    console.log(`State: ${this.data.state}`);
+  }
+
+  async listConnections(args: string[]): Promise<void> {
+    console.log(`WsServer Connections (${this.data.connections.length}):`);
+    for (const connection of this.data.connections) {
+      console.log(`  - Connection: ${connection.component}:${connection.version} (${connection.uuid})`);
+    }
+  }
+
+  async broadcast(args: string[]): Promise<void> {
+    if (args.length === 0) {
+      throw new Error('broadcast requires message');
+    }
+    const message = args.join(' ');
+    console.log(`WsServer: Broadcasting message to ${this.data.connections.length} connections: "${message}"`);
+  }
+
+  /**
    * Utility methods following IOR pattern
    */
   toJSON(): WsServerModel {

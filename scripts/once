@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Web4 ONCE Component Wrapper - v0.3.0.0
+# Location-resilient command wrapper following requirement pattern
+
+# Get the directory where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Set PROJECT_ROOT if not already set
+if [ -z "$PROJECT_ROOT" ]; then
+  # Try to find project root by looking for package.json or .git
+  PROJECT_ROOT="$SCRIPT_DIR"
+  
+  # Walk up directories to find project root
+  while [ "$PROJECT_ROOT" != "/" ]; do
+    if [ -f "$PROJECT_ROOT/package.json" ] || [ -d "$PROJECT_ROOT/.git" ]; then
+      break
+    fi
+    PROJECT_ROOT="$(dirname "$PROJECT_ROOT")"
+  done
+  
+  export PROJECT_ROOT
+fi
+
+# Store current directory to return to
+CURRENT_DIR="$(pwd)"
+
+# Find the shell starter in the components directory
+COMPONENT_VERSION="0.3.0.0"
+COMPONENT_DIR="$PROJECT_ROOT/components/ONCE/$COMPONENT_VERSION"
+SHELL_STARTER="$COMPONENT_DIR/once"
+
+# Check if shell starter exists
+if [ ! -x "$SHELL_STARTER" ]; then
+    echo "❌ ONCE shell starter not found at: $SHELL_STARTER"
+    echo "📁 Component directory: $COMPONENT_DIR"
+    exit 1
+fi
+
+# Execute the shell starter and return to original directory
+cd "$CURRENT_DIR"
+"$SHELL_STARTER" "$@"

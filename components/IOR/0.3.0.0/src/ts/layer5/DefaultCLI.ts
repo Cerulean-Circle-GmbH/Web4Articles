@@ -114,26 +114,49 @@ export class DefaultCLI implements CLI {
       return this.component.help(args);
     }
     
-    // Default help implementation
-    console.log(`${this.componentName} CLI Commands:`);
-    console.log('  start [args]  - Start component');
-    console.log('  stop [args]   - Stop component');
-    console.log('  status [args] - Show component status');
-    console.log('  info [args]   - Show component information');
-    console.log('  help [args]   - Show this help');
+    // Default colorful help implementation following requirement-v0.1.2.2 pattern
+    const cyan = '\x1b[36m';
+    const yellow = '\x1b[33m';
+    const green = '\x1b[32m';
+    const bold = '\x1b[1m';
+    const reset = '\x1b[0m';
+    
+    console.log(`${bold}${cyan}Web4 ${this.componentName} CLI Tool${reset} ${green}- Web4 Component Interface${reset}`);
+    console.log('');
+    console.log(`${bold}Usage:${reset}`);
+    console.log(`  ${cyan}${this.componentName.toLowerCase()}${reset} start                                       ${green}# Start component${reset}`);
+    console.log(`  ${cyan}${this.componentName.toLowerCase()}${reset} stop                                        ${green}# Stop component${reset}`);
+    console.log(`  ${cyan}${this.componentName.toLowerCase()}${reset} status                                      ${green}# Show component status${reset}`);
+    console.log(`  ${cyan}${this.componentName.toLowerCase()}${reset} info                                        ${green}# Show component information${reset}`);
+    console.log(`  ${cyan}${this.componentName.toLowerCase()}${reset} help                                        ${green}# Show this help${reset}`);
+    console.log('');
+    console.log(`${bold}Commands:${reset}`);
+    console.log(`  ${bold}start${reset}        Start component with initialization`);
+    console.log(`  ${bold}stop${reset}         Stop component gracefully`);
+    console.log(`  ${bold}status${reset}       Show current component state`);
+    console.log(`  ${bold}info${reset}         Show detailed component information`);
+    console.log(`  ${bold}help${reset}         Show this help message`);
     
     // Show component-specific commands if available
     if (this.component) {
-      console.log('\nComponent-specific commands:');
       const methods = Object.getOwnPropertyNames(Object.getPrototypeOf(this.component))
-        .filter(name => typeof this.component[name] === 'function' && !['constructor', 'init'].includes(name));
+        .filter(name => typeof this.component[name] === 'function' && 
+                       !['constructor', 'init', 'start', 'stop', 'status', 'info', 'help'].includes(name));
       
-      for (const method of methods) {
-        if (!['start', 'stop', 'status', 'info', 'help'].includes(method)) {
-          console.log(`  ${method} [args] - ${method} operation`);
+      if (methods.length > 0) {
+        console.log('');
+        console.log(`${bold}Component-Specific Commands:${reset}`);
+        for (const method of methods) {
+          console.log(`  ${bold}${method}${reset}         ${method} operation`);
         }
       }
     }
+    
+    console.log('');
+    console.log(`${bold}Web4 Integration:${reset}`);
+    console.log(`  ${this.componentName} follows Web4 UCP patterns with scenario-based configuration.`);
+    console.log(`  Can operate standalone or as service loaded by ONCE kernel.`);
+    console.log('');
   }
 
   /**
