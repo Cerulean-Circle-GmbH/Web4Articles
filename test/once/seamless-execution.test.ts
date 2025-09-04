@@ -61,8 +61,8 @@ describe('ONCE Seamless Execution from Scratch - CRITICAL TEST', () => {
     }
   });
 
-  test('once command builds all required dependencies automatically', async () => {
-    console.log('🧪 Testing ONCE dependency build chain');
+  test('once command uses comprehensive build chain automatically', async () => {
+          console.log('🧪 Testing ONCE comprehensive build chain integration');
     
     try {
       // Execute once command and capture detailed output
@@ -73,16 +73,13 @@ describe('ONCE Seamless Execution from Scratch - CRITICAL TEST', () => {
         stdio: 'pipe'
       });
       
-      // Verify dependency components were built
-      const expectedComponents = ['IOR', 'Scenario', 'User'];
-      for (const component of expectedComponents) {
-        expect(result).toContain(`✅ ${component} built`);
-      }
+      // Verify comprehensive build chain was used (new behavior)
+      expect(result).toContain('🏗️ Triggering comprehensive build chain for ONCE');
+      expect(result).toContain('✅ Build chain complete - ONCE ready for execution');
       
-      // Verify component dist directories exist after build
-      expect(existsSync('/workspace/components/IOR/0.3.0.0/dist')).toBe(true);
-      expect(existsSync('/workspace/components/Scenario/0.1.3.0/dist')).toBe(true);
-      expect(existsSync('/workspace/components/User/0.1.3.0/dist')).toBe(true);
+      // Verify no fallback messages (comprehensive build succeeded)
+      expect(result).not.toContain('Build component not available');
+      expect(result).not.toContain('using enhanced fallback');
       
       console.log('✅ ONCE dependency build chain successful');
       

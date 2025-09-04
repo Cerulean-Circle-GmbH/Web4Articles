@@ -20,7 +20,7 @@ echo "📂 Component: $COMPONENT_DIR"
 
 # Use Build component for environment and dependency management
 use_build_component() {
-    local BUILD_COMPONENT="$COMPONENT_DIR/../../../Build/latest"
+    local BUILD_COMPONENT="$COMPONENT_DIR/../../Build/latest"
     
     if [ -x "$BUILD_COMPONENT/build" ]; then
         echo "🏗️ Using Build component for environment setup..."
