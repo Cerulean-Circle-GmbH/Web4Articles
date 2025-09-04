@@ -8,7 +8,7 @@
  * Following TSRanger 2.2 pattern but simplified
  */
 
-import { DefaultCLI, CLIColors } from '../../../../IOR/0.3.0.0/dist/ts/layer5/DefaultCLI.js';
+import { DefaultCLI, CLIColors } from '../../../../IOR/0.3.0.0/src/ts/layer5/DefaultCLI.js';
 import { DefaultONCE } from '../layer2/DefaultONCE.js';
 
 export class ONCECLI {
