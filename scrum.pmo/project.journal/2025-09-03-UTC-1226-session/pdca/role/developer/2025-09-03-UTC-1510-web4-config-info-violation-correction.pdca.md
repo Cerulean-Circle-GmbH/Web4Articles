@@ -12,16 +12,16 @@
 **🚨 Issues:** Multiple interfaces in single file plus fundamental misunderstanding of Web4 config/info patterns  
 
 **📎 Previous Commit:** 53674a66 - Correct ScenarioData DRY violation: Use actual Scenario component instances everywhere, not data interfaces  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1508-scenario-data-dry-violation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1508-scenario-data-dry-violation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1508-scenario-data-dry-violation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1508-scenario-data-dry-violation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1508-scenario-data-dry-violation.pdca.md](2025-09-03-UTC-1508-scenario-data-dry-violation.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md)
-- **Violating File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) | [components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts](components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts)
-- **Pattern Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts) | [components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts](components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md](2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) | [§/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts](../../../../../../components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts) | [§/components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts](../../../../../../components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Critical violations identified requiring immediate correction following Web4 principles
@@ -250,4 +250,3 @@ git tag v0.3.0.0-build-003  # Config/Info corrections
 
 **🎯 Critical config/info violations identified - scenarios ARE configs forever, infos ARE model views! 🚨⚙️**
 
-**"Always 4 2 (FOR TWO) - fundamental architecture principles prevent format proliferation and interface confusion."** 🔧📊

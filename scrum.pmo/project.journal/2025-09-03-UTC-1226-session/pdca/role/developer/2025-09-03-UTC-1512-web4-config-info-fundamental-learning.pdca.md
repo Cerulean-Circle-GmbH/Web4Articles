@@ -12,20 +12,20 @@
 **🚨 Issues:** Fundamental Web4 principles require diligent documentation to prevent future violations  
 
 **📎 Previous Commit:** 9fea99fc - Correct Web4 config/info violations: Eliminate separate config interfaces, scenarios ARE configs forever, single interface per file  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md](2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md](2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md)
 
 ### **Critical Violation Corrections with Dual Links**
-- **WsServerModel Violations:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) | [components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts](components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts)
-- **HttpServerModel Corrections:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/HttpServer/0.3.0.0/src/ts/layer3/HttpServerModel.interface.ts) | [components/HttpServer/0.3.0.0/src/ts/layer3/HttpServerModel.interface.ts](components/HttpServer/0.3.0.0/src/ts/layer3/HttpServerModel.interface.ts)
-- **P2PServerModel Corrections:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/P2PServer/0.3.0.0/src/ts/layer3/P2PServerModel.interface.ts) | [components/P2PServer/0.3.0.0/src/ts/layer3/P2PServerModel.interface.ts](components/P2PServer/0.3.0.0/src/ts/layer3/P2PServerModel.interface.ts)
-- **HttpServer Interface Updates:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts) | [components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts](components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) | [§/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts](../../../../../../components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/HttpServer/0.3.0.0/src/ts/layer3/HttpServerModel.interface.ts) | [§/components/HttpServer/0.3.0.0/src/ts/layer3/HttpServerModel.interface.ts](../../../../../../components/HttpServer/0.3.0.0/src/ts/layer3/HttpServerModel.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/P2PServer/0.3.0.0/src/ts/layer3/P2PServerModel.interface.ts) | [§/components/P2PServer/0.3.0.0/src/ts/layer3/P2PServerModel.interface.ts](../../../../../../components/P2PServer/0.3.0.0/src/ts/layer3/P2PServerModel.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts) | [§/components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts](../../../../../../components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts)
 
 ### **Version Build Tag Reference**
 - **ONCE v0.3.0.0-build-003:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/releases/tag/v0.3.0.0-build-003) | [git tag v0.3.0.0-build-003](git tag v0.3.0.0-build-003)
@@ -77,12 +77,12 @@ Critical learnings captured diligently! Multiple violations corrected: 1) Single
 ### **🚨 Critical Violation #1: Multiple Interfaces Per File**
 
 **Violation Identified:**
-- **Source:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/9fea99fc/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) | [components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts](components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) (before correction)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/9fea99fc/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) | [§/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts](../../../../../../components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts)
 - **Problem:** File contained WsServerModel + WsConnectionInfo + WsServerConfig (3 interfaces)
 - **Web4 Principle:** Each class or interface in one single file (absolute requirement)
 
 **Correction Applied:**
-- **Fixed File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) | [components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts](components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) | [§/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts](../../../../../../components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts)
 - **Result:** Only WsServerModel interface in file, other interfaces eliminated or moved
 - **Learning:** **ONE INTERFACE PER FILE - NO EXCEPTIONS EVER**
 
@@ -104,7 +104,7 @@ export interface WsServerConfig {
 }
 ```
 
-- **After (CORRECT):** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) | [components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts](components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) | [§/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts](../../../../../../components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts)
 ```typescript
 // ✅ CORRECT: Config data directly in model
 export interface WsServerModel extends Model {
@@ -132,7 +132,7 @@ const config = new Scenario().init({
 
 **Correction Applied:**
 - **Before (WRONG):** Created WsConnectionInfo interface as separate data structure
-- **After (CORRECT):** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) | [components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts](components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) - Connections become IOR references
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) | [§/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts](../../../../../../components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts)
 
 ```typescript
 // ❌ VIOLATION: Separate info interface
@@ -170,7 +170,7 @@ function getConnectionInfo(connectionIOR: IOR): any {
 
 **Correction Applied:**
 - **Before (WRONG):** `addRoute(path: string, handler: RouteHandler): void`
-- **After (CORRECT):** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts) | [components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts](components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts) - `addRoute(routeIOR: IOR): void`
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts) | [§/components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts](../../../../../../components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts)
 
 **Learning:** **ROUTES ARE COMPONENTS WITH IORS - NOT HANDLER FUNCTIONS OR INFO OBJECTS**
 
@@ -194,7 +194,7 @@ git push --tags
 
 **Universal Configuration Truth:**
 - **Principle:** Scenarios ARE configs forever
-- **Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) | [components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts](components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) - Config properties directly in model
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts) | [§/components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts](../../../../../../components/WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.ts)
 - **Evidence:** All config interfaces deleted, configuration via scenario model data only
 - **Learning:** **NO OTHER CONFIG FORMATS EXIST IN WEB4 ARCHITECTURE - SCENARIOS PROVIDE UNIVERSAL CONFIGURATION**
 
@@ -206,7 +206,7 @@ git push --tags
 
 **Single Responsibility Truth:**
 - **Principle:** One interface per file (Web4 fundamental)
-- **Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0/src/ts/layer3) | [components/IOR/0.3.0.0/src/ts/layer3](components/IOR/0.3.0.0/src/ts/layer3) - Pattern established
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0/src/ts/layer3) | [§/components/IOR/0.3.0.0/src/ts/layer3](../../../../../../components/IOR/0.3.0.0/src/ts/layer3)
 - **Evidence:** All multiple-interface files corrected
 - **Learning:** **EACH CLASS OR INTERFACE ONE SINGLE FILE - ABSOLUTE WEB4 REQUIREMENT**
 
@@ -219,16 +219,16 @@ git push --tags
 - **Learning:** **COMPONENTS WITH IORS EVERYWHERE - NO SEPARATE DATA STRUCTURES**
 
 **Scenario Component Purpose Truth:**
-- **Purpose:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts) | [components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts](components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts) - Scenario component IS the scenario
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts) | [§/components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts](../../../../../../components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts)
 - **Usage:** Scenario instances, not ScenarioData interfaces
 - **Learning:** **SCENARIO COMPONENT EXISTS TO BE SCENARIOS - NOT TO DEFINE SCENARIO DATA TYPES**
 
 ### **🔄 DRY Principle Application**
 
 **Unified Component Usage:**
-- **Scenario:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Scenario/0.1.3.0) | [components/Scenario/0.1.3.0](components/Scenario/0.1.3.0) - Universal scenario component
-- **IOR:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0) | [components/IOR/0.3.0.0](components/IOR/0.3.0.0) - Universal object reference component
-- **Model:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer3/Model.interface.ts) | [components/IOR/0.3.0.0/src/ts/layer3/Model.interface.ts](components/IOR/0.3.0.0/src/ts/layer3/Model.interface.ts) - Universal model interface
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Scenario/0.1.3.0) | [§/components/Scenario/0.1.3.0](../../../../../../components/Scenario/0.1.3.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0) | [§/components/IOR/0.3.0.0](../../../../../../components/IOR/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer3/Model.interface.ts) | [§/components/IOR/0.3.0.0/src/ts/layer3/Model.interface.ts](../../../../../../components/IOR/0.3.0.0/src/ts/layer3/Model.interface.ts)
 - **Learning:** **MAXIMUM COMPONENT REUSE - NEVER DUPLICATE EXISTING FUNCTIONALITY**
 
 ---
@@ -310,4 +310,3 @@ git push --tags
 
 **🎯 Web4 fundamental principles captured diligently with dual links - ONCE v0.3.0.0-build-003 tagged! 📚🏷️**
 
-**"Always 4 2 (FOR TWO) - diligent learning documentation prevents architectural drift and enables principled excellence."** 🔧📊

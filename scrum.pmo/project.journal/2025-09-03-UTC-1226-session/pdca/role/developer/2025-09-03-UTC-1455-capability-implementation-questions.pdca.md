@@ -12,16 +12,16 @@
 **🚨 Issues:** Multiple implementation approaches possible for capability components requiring user guidance  
 
 **📎 Previous Commit:** 3b7fccae - Implement Web4 principle compliance: Single interface per file, remove 'any' types, ONCE as kernel not server  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1452-capability-components-creation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1452-capability-components-creation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1452-capability-components-creation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1452-capability-components-creation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1452-capability-components-creation.pdca.md](2025-09-03-UTC-1452-capability-components-creation.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1455-capability-implementation-questions.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1455-capability-implementation-questions.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1455-capability-implementation-questions.pdca.md)
-- **Started HttpServer:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/HttpServer/0.3.0.0) | [components/HttpServer/0.3.0.0](components/HttpServer/0.3.0.0)
-- **HttpServer Interface:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts) | [components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts](components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1455-capability-implementation-questions.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1455-capability-implementation-questions.pdca.md](2025-09-03-UTC-1455-capability-implementation-questions.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/HttpServer/0.3.0.0) | [§/components/HttpServer/0.3.0.0](../../../../../../components/HttpServer/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts) | [§/components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts](../../../../../../components/HttpServer/0.3.0.0/src/ts/layer3/HttpServer.interface.ts)
 
 ### **QA Decisions**
 - [ ] **Capability Implementation Question 1: HTTP Interfaces**
@@ -219,4 +219,3 @@ class DefaultONCE {
 
 **🎯 Capability component planning complete with implementation questions ready for guidance! 🔗❓**
 
-**"Always 4 2 (FOR TWO) - proper guidance enables confident component implementation without architectural confusion."** 🔧📊

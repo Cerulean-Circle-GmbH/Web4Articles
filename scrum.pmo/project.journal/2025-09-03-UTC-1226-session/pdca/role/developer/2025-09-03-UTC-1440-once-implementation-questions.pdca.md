@@ -12,17 +12,17 @@
 **🚨 Issues:** Multiple implementation approaches possible within established pattern framework  
 
 **📎 Previous Commit:** ccbbab67 - Implement ONCE 0.3.0.0 foundation following IOR pattern: interface, DefaultONCE, package config, latest symlink  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1438-pattern-standardization-migration-continuation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1438-pattern-standardization-migration-continuation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1438-pattern-standardization-migration-continuation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1438-pattern-standardization-migration-continuation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1438-pattern-standardization-migration-continuation.pdca.md](2025-09-03-UTC-1438-pattern-standardization-migration-continuation.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1440-once-implementation-questions.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1440-once-implementation-questions.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1440-once-implementation-questions.pdca.md)
-- **ONCE 0.3.0.0 Foundation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.3.0.0) | [components/ONCE/0.3.0.0](components/ONCE/0.3.0.0)
-- **ONCE Interface:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts) | [components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts](components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts)
-- **DefaultONCE Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts) | [components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts](components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1440-once-implementation-questions.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1440-once-implementation-questions.pdca.md](2025-09-03-UTC-1440-once-implementation-questions.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.3.0.0) | [§/components/ONCE/0.3.0.0](../../../../../../components/ONCE/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts) | [§/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts](../../../../../../components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts) | [§/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts](../../../../../../components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts)
 
 ### **QA Decisions**
 - [x] **Implementation Question 1: Scenario Component Delegation** - Selected: a+c) ONCE delegates hibernation to shared Scenario component with hybrid local state management
@@ -235,4 +235,3 @@ components/ONCE/
 
 **🎯 ONCE 0.3.0.0 foundation complete following IOR pattern! Implementation questions ready for guidance! 🎭🔧**
 
-**"Always 4 2 (FOR TWO) - standardized patterns enable rapid implementation with consistent quality."** 🔧📊

@@ -12,17 +12,17 @@
 **🚨 Issues:** Current ONCE implementation violates Web4 single-file principle and implements monolithic patterns  
 
 **📎 Previous Commit:** c488981c - PDCA: Web4 Architecture Learning - Critical violations identified, UCP Unit-Component-Package understood  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md](2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1448-once-architecture-redesign-phase1.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1448-once-architecture-redesign-phase1.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1448-once-architecture-redesign-phase1.pdca.md)
-- **Current Violated Interface:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts) | [components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts](components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts)
-- **New ONCE Interface:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts) | [components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts](components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts)
-- **New ONCEModel Interface:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ONCEModel.interface.ts) | [components/ONCE/0.3.0.0/src/ts/layer3/ONCEModel.interface.ts](components/ONCE/0.3.0.0/src/ts/layer3/ONCEModel.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1448-once-architecture-redesign-phase1.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1448-once-architecture-redesign-phase1.pdca.md](2025-09-03-UTC-1448-once-architecture-redesign-phase1.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts) | [§/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts](../../../../../../components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts) | [§/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts](../../../../../../components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ONCEModel.interface.ts) | [§/components/ONCE/0.3.0.0/src/ts/layer3/ONCEModel.interface.ts](../../../../../../components/ONCE/0.3.0.0/src/ts/layer3/ONCEModel.interface.ts)
 - **ONCEScenario Interface:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ONCEScenario.interface.ts) | [components/ONCE/0.3.0.0/src/ts/layer3/ONCEScenario.interface.ts](components/ONCE/0.3.0.0/src/ts/layer3/ONCEScenario.interface.ts)
 
 ### **QA Decisions**
@@ -237,4 +237,3 @@ Q4: For scenario structure - should capability components follow the same
 
 **🎯 ONCE architecture redesign plan ready - proceeding with Web4 principle compliance implementation! 🏗️🎯**
 
-**"Always 4 2 (FOR TWO) - architectural integrity through principle compliance enables component excellence."** 🔧📊

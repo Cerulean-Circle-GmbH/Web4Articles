@@ -12,24 +12,24 @@
 **🚨 Issues:** Migration learnings must be captured as formal requirements to guide ONCE 0.3.0.0 implementation  
 
 **📎 Previous Commit:** 323fa105 - PDCA: Diligent Web4 fundamental learning capture - scenarios ARE configs forever, infos ARE model views, one interface per file  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md](2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1515-once-requirements-creation-from-learnings.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1515-once-requirements-creation-from-learnings.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1515-once-requirements-creation-from-learnings.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1515-once-requirements-creation-from-learnings.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1515-once-requirements-creation-from-learnings.pdca.md](2025-09-03-UTC-1515-once-requirements-creation-from-learnings.pdca.md)
 
 ### **Created Requirements with Dual Links**
-- **Requirement 1:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json) | [spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json](spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json) - "ONCE 0.3.0.0 Web4 Architecture Compliance"
-- **Requirement 2:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json) | [spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json](spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json) - "ONCE Component Kernel Pattern"  
-- **Requirement 3:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json) | [spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json](spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json) - "Radical OOP Type Safety Pattern"
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json) | [§/spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json](../../../../../../spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json) | [§/spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json](../../../../../../spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json) | [§/spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json](../../../../../../spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json)
 
 ### **Learning Source PDCAs with Dual Links**
-- **Architecture Violations:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md)
-- **DRY Violation Corrections:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md)
-- **Config/Info Learning:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md](2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md](2025-09-03-UTC-1458-dry-violation-correction.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md](2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Requirements successfully created from migration learnings, ready for capability implementation continuation
@@ -86,20 +86,20 @@ cd components/Scenario/0.1.3.0 && npm install && npm run build
 
 **3. Requirement 1: Web4 Architecture Compliance**
 - **UUID:** cec5b6a3-957b-4f20-b79c-2a207654ae2e
-- **Source:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json) | [spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json](spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json)
-- **Learning Origin:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json) | [§/spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json](../../../../../../spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md](2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md)
 - **Captures:** Single interface per file, scenarios ARE configs forever, infos ARE model views, component-specific models, radical OOP patterns, UCP structure
 
 **4. Requirement 2: ONCE Component Kernel Pattern**
 - **UUID:** a9aaf585-938e-4a96-b69e-781bf0311217
-- **Source:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json) | [spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json](spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json)
-- **Learning Origin:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json) | [§/spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json](../../../../../../spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md](2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md)
 - **Captures:** ONCE as environment kernel, boots in any environment, loads components from IORs, NOT server implementation
 
 **5. Requirement 3: Radical OOP Type Safety Pattern** 
 - **UUID:** ea39ff5b-f871-47ed-880f-e19ff1daba6d
-- **Source:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json) | [spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json](spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json)
-- **Learning Origin:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json) | [§/spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json](../../../../../../spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md](2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md)
 - **Captures:** Component-specific models extending Model, private data, class-based proxy, never any type, proper Scenario usage
 
 ### **🎯 Requirement Analysis with Learning Traceability**
@@ -123,9 +123,9 @@ cd components/Scenario/0.1.3.0 && npm install && npm run build
 ```
 
 **Learning Sources Traced:**
-- **Single Interface Per File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md)
-- **Scenarios ARE Configs:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md)
-- **UCP Understanding:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md) | [scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md](scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md](2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md](2025-09-03-UTC-1510-web4-config-info-violation-correction.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md) | [§/scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md](../../../../2025-08-10-1030/retro/answer.developer-learningVersioning.md)
 
 **7. Component Kernel Pattern Requirement Analysis**
 ```json
@@ -139,9 +139,9 @@ cd components/Scenario/0.1.3.0 && npm install && npm run build
 ```
 
 **Learning Sources Traced:**
-- **ONCE Purpose:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.1.0.0/README.md) | [components/ONCE/0.1.0.0/README.md](components/ONCE/0.1.0.0/README.md) - "Universal kernel for all Web4 components"
-- **Monolithic Rejection:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts) | [components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts](components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts) - Shows monolithic pattern to avoid
-- **Capability Separation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/HttpServer/0.3.0.0) | [components/HttpServer/0.3.0.0](components/HttpServer/0.3.0.0) - Separate capability components
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.1.0.0/README.md) | [§/components/ONCE/0.1.0.0/README.md](../../../../../../components/ONCE/0.1.0.0/README.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts) | [§/components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts](../../../../../../components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/HttpServer/0.3.0.0) | [§/components/HttpServer/0.3.0.0](../../../../../../components/HttpServer/0.3.0.0)
 
 **8. Radical OOP Type Safety Requirement Analysis**
 ```json
@@ -155,14 +155,14 @@ cd components/Scenario/0.1.3.0 && npm install && npm run build
 ```
 
 **Learning Sources Traced:**
-- **Radical OOP Feedback:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md)
-- **Implementation Pattern:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts) | [components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts](components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts) - Radical OOP proxy implementation
-- **Type Safety Pattern:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1502-model-pattern-decision.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1502-model-pattern-decision.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1502-model-pattern-decision.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md](2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts) | [§/components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts](../../../../../../components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1502-model-pattern-decision.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1502-model-pattern-decision.pdca.md](2025-09-03-UTC-1502-model-pattern-decision.pdca.md)
 
 ### **🛠️ Tool Usage Learning Capture**
 
 **9. Requirement Tool Dependency Management**
-- **Tool Location:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scripts/versions/requirement-v0.1.3.0) | [scripts/versions/requirement-v0.1.3.0](scripts/versions/requirement-v0.1.3.0) - Working version after v0.1.2.2 failed
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scripts/versions/requirement-v0.1.3.0) | [§/scripts/versions/requirement-v0.1.3.0](../../../../../../components/Web4Requirement/0.1.3.0/requirement.sh)
 - **Dependency Issue:** Web4Requirement v0.1.2.2 failed build due to missing Unit/latest/dist files
 - **Resolution:** Built Scenario component dependency enabling requirement tool functionality
 - **Learning:** **Tool usage requires environment sourcing and dependency building for proper Web4 component interaction**
@@ -192,24 +192,24 @@ cd components/Scenario/0.1.3.0 && npm install && npm run build
 ### **📐 Migration Learning Synthesis Applied to Requirements**
 
 **11. Architecture Violation Learning → Requirements**
-- **Violation Source:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md) - Type safety violations, UCP misunderstanding, monolithic design
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md](2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md)
 - **Requirement Generated:** Web4 Architecture Compliance requirement captures all violation corrections
 - **Implementation Guidance:** Requirement provides systematic compliance checklist for ONCE 0.3.0.0
 
 **12. DRY Violation Learning → Requirements**
-- **Violation Source:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md) - ONCEScenario/ComponentScenario violations
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md](2025-09-03-UTC-1458-dry-violation-correction.pdca.md)
 - **Requirement Integration:** Component Kernel Pattern requirement emphasizes component reuse over duplication
 - **Implementation Guidance:** Requirement ensures component delegation patterns
 
 **13. Fundamental Principle Learning → Requirements**
-- **Learning Source:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md) - Config/Info violations
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md](2025-09-03-UTC-1512-web4-config-info-fundamental-learning.pdca.md)
 - **Requirements Integration:** All three requirements incorporate fundamental principle learnings
 - **Implementation Guidance:** Requirements provide systematic Web4 compliance framework
 
 ### **🏗️ Requirements Integration with ONCE Implementation**
 
 **14. Requirements Location and Access**
-- **Spec Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/spec/requirements) | [spec/requirements](spec/requirements) - ONCE requirements collection
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/spec/requirements) | [§/spec/requirements](../../../../../../spec/requirements)
 - **Integration Pattern:** Requirements guide ONCE 0.3.0.0 implementation ensuring learning application
 - **Traceability:** Each requirement traces back to specific learning PDCA with dual links
 - **Learning:** **Requirements capture architecture learning insights for systematic implementation guidance**
@@ -293,4 +293,3 @@ cd components/Scenario/0.1.3.0 && npm install && npm run build
 
 **🎯 ONCE 0.3.0.0 requirements created from migration learnings with comprehensive dual-link traceability! 📋🔗**
 
-**"Always 4 2 (FOR TWO) - systematic requirement creation ensures learning application and implementation excellence."** 🔧📊

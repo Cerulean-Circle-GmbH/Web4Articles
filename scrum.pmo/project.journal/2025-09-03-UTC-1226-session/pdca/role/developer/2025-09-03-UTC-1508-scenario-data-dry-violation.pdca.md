@@ -12,16 +12,16 @@
 **🚨 Issues:** Using ScenarioData interface instead of actual Scenario component violates DRY principle  
 
 **📎 Previous Commit:** e9aa4d52 - Implement type safety pattern everywhere: Component-specific models extending Model with latest symlinks  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1505-type-safety-pattern-implementation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1505-type-safety-pattern-implementation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1505-type-safety-pattern-implementation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1505-type-safety-pattern-implementation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1505-type-safety-pattern-implementation.pdca.md](2025-09-03-UTC-1505-type-safety-pattern-implementation.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1508-scenario-data-dry-violation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1508-scenario-data-dry-violation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1508-scenario-data-dry-violation.pdca.md)
-- **Actual Scenario Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Scenario/0.1.3.0) | [components/Scenario/0.1.3.0](components/Scenario/0.1.3.0)
-- **Scenario Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts) | [components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts](components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1508-scenario-data-dry-violation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1508-scenario-data-dry-violation.pdca.md](2025-09-03-UTC-1508-scenario-data-dry-violation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Scenario/0.1.3.0) | [§/components/Scenario/0.1.3.0](../../../../../../components/Scenario/0.1.3.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts) | [§/components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts](../../../../../../components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts)
 - **Violating Usage:** Referenced ScenarioData instead of Scenario component
 
 ### **QA Decisions**
@@ -196,4 +196,3 @@ SCENARIOS ARE NOT JUST DATA - THEY ARE COMPONENTS!
 
 **🎯 ScenarioData violation identified - Scenario component exists to BE the scenario! Correcting usage immediately! 🚨🔧**
 
-**"Always 4 2 (FOR TWO) - components exist to provide functionality, not to be abstracted into interface types."** 🔧📊

@@ -12,17 +12,17 @@
 **🚨 Issues:** Multiple conflicting IOR implementations across components requiring unified standard  
 
 **📎 Previous Commit:** 11b7774d - Update migration planning PDCA with user architecture clarifications  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1418-once-migration-planning.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1418-once-migration-planning.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1418-once-migration-planning.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1418-once-migration-planning.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1418-once-migration-planning.pdca.md](2025-09-03-UTC-1418-once-migration-planning.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1422-migration-phase1-ior-standardization.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1422-migration-phase1-ior-standardization.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1422-migration-phase1-ior-standardization.pdca.md)
-- **Shared IOR Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0) | [components/IOR/0.3.0.0](components/IOR/0.3.0.0)
-- **Current Simplified IOR:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/Scenario/0.1.3.0/src/ts/layer3/IOR.interface.ts) | [components/Scenario/0.1.3.0/src/ts/layer3/IOR.interface.ts](components/Scenario/0.1.3.0/src/ts/layer3/IOR.interface.ts)
-- **Complex ONCE IOR:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/src/ts/layer3/IOR.ts) | [components/ONCE/0.2.0.0/src/ts/layer3/IOR.ts](components/ONCE/0.2.0.0/src/ts/layer3/IOR.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1422-migration-phase1-ior-standardization.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1422-migration-phase1-ior-standardization.pdca.md](2025-09-03-UTC-1422-migration-phase1-ior-standardization.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0) | [§/components/IOR/0.3.0.0](../../../../../../components/IOR/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/Scenario/0.1.3.0/src/ts/layer3/IOR.interface.ts) | [§/components/Scenario/0.1.3.0/src/ts/layer3/IOR.interface.ts](../../../../../../components/Scenario/0.1.3.0/src/ts/layer3/IOR.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/src/ts/layer3/IOR.ts) | [§/components/ONCE/0.2.0.0/src/ts/layer3/IOR.ts](../../../../../../components/ONCE/0.2.0.0/src/ts/layer3/IOR.ts)
 
 ### **QA Decisions**
 - [ ] **Migration Question 1: IOR Interface Foundation**
@@ -229,4 +229,3 @@ Q3: Should DefaultIOR extend Proxy as suggested for Model pattern consistency
 
 **🎯 Migration Phase 1 foundation ready - IOR standardization planning complete with architecture questions! 🔗📐**
 
-**"Always 4 2 (FOR TWO) - unified foundations enable diverse components to communicate with elegant consistency."** 🔧📊

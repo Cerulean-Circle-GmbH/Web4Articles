@@ -12,16 +12,16 @@
 **🚨 Issues:** Phase 1 implementation uses patterns that violate user's radical OOP preferences  
 
 **📎 Previous Commit:** 5dcc1c34 - PDCA: Migration Phase 2 Questions - ONCE Component Architecture Decisions  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1425-migration-phase2-questions.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1425-migration-phase2-questions.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1425-migration-phase2-questions.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1425-migration-phase2-questions.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1425-migration-phase2-questions.pdca.md](2025-09-03-UTC-1425-migration-phase2-questions.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md)
-- **Current IOR Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts) | [components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts](components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts)
-- **Current IOR Interface:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts) | [components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts](components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md](2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts) | [§/components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts](../../../../../../components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts) | [§/components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts](../../../../../../components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts)
 - **Current Index File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/index.ts) | [components/IOR/0.3.0.0/src/index.ts](components/IOR/0.3.0.0/src/index.ts)
 
 ### **QA Decisions**
@@ -232,4 +232,3 @@ export class DefaultIOR implements IOR {
 
 **🎯 Implementation feedback processed - decisions needed for radical OOP pattern refinement before Phase 2! 🎭🔧**
 
-**"Always 4 2 (FOR TWO) - course correction prevents architectural drift and enables aligned implementation excellence."** 🔧📊

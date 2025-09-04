@@ -12,15 +12,15 @@
 **🚨 Issues:** Created duplicate scenario interfaces violating Web4 DRY principle and existing Scenario component  
 
 **📎 Previous Commit:** 73f65270 - Create capability component planning PDCAs and start HttpServer component structure  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1455-capability-implementation-questions.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1455-capability-implementation-questions.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1455-capability-implementation-questions.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1455-capability-implementation-questions.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1455-capability-implementation-questions.pdca.md](2025-09-03-UTC-1455-capability-implementation-questions.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md)
-- **Unified Scenario Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Scenario/0.1.3.0) | [components/Scenario/0.1.3.0](components/Scenario/0.1.3.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md](2025-09-03-UTC-1458-dry-violation-correction.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Scenario/0.1.3.0) | [§/components/Scenario/0.1.3.0](../../../../../../components/Scenario/0.1.3.0)
 - **Violating ONCEScenario:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ONCEScenario.interface.ts) | [components/ONCE/0.3.0.0/src/ts/layer3/ONCEScenario.interface.ts](components/ONCE/0.3.0.0/src/ts/layer3/ONCEScenario.interface.ts)
 - **Violating ComponentScenario:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ComponentScenario.interface.ts) | [components/ONCE/0.3.0.0/src/ts/layer3/ComponentScenario.interface.ts](components/ONCE/0.3.0.0/src/ts/layer3/ComponentScenario.interface.ts)
 
@@ -175,4 +175,3 @@ const componentScenario: ScenarioData = {
 
 **🎯 Critical DRY violations identified - eliminating duplicate scenario interfaces immediately! 🚨✂️**
 
-**"Always 4 2 (FOR TWO) - unified components eliminate duplication and architectural confusion."** 🔧📊

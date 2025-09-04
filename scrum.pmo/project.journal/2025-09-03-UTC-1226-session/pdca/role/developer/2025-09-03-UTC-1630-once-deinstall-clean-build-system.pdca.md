@@ -12,16 +12,16 @@
 **🚨 Issues:** Need comprehensive clean build system for forcing complete Web4 component ecosystem reset and rebuild  
 
 **📎 Previous Commit:** 70620db3 - PDCA: Fix MinimalONCE Web4 violations incrementally  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev%2Fonce/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1625-fix-minimal-once-web4-violations-incremental.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1625-fix-minimal-once-web4-violations-incremental.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1625-fix-minimal-once-web4-violations-incremental.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev%2Fonce/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1625-fix-minimal-once-web4-violations-incremental.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1625-fix-minimal-once-web4-violations-incremental.pdca.md](2025-09-03-UTC-1625-fix-minimal-once-web4-violations-incremental.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev%2Fonce/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1630-once-deinstall-clean-build-system.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1630-once-deinstall-clean-build-system.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1630-once-deinstall-clean-build-system.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev%2Fonce/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1630-once-deinstall-clean-build-system.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1630-once-deinstall-clean-build-system.pdca.md](2025-09-03-UTC-1630-once-deinstall-clean-build-system.pdca.md)
 - **Enhanced Web4CompliantONCE:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev%2Fonce/components/ONCE/0.3.0.0/src/ts/Web4CompliantONCE.ts) | [components/ONCE/0.3.0.0/src/ts/Web4CompliantONCE.ts](components/ONCE/0.3.0.0/src/ts/Web4CompliantONCE.ts)
-- **ONCE Shell Script:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev%2Fonce/components/ONCE/0.3.0.0/once) | [components/ONCE/0.3.0.0/once](components/ONCE/0.3.0.0/once)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev%2Fonce/components/ONCE/0.3.0.0/once) | [§/components/ONCE/0.3.0.0/once](../../../../../../components/ONCE/0.3.0.0/once)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Implementing once deinstall command for complete ecosystem clean build reset
@@ -267,4 +267,3 @@ private showUsage(): void {
 
 **🎯 ONCE deinstall clean build system planned - implementing comprehensive ecosystem reset capability! 🧹⚙️**
 
-**"Always 4 2 (FOR TWO) - comprehensive ecosystem reset capability enables reliable clean development cycles with systematic artifact management."** 🔧📊

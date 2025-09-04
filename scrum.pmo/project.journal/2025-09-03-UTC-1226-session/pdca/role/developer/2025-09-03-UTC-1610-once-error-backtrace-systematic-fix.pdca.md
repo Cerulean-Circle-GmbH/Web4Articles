@@ -12,16 +12,16 @@
 **🚨 Issues:** ONCE script fails with 30 TypeScript errors preventing seamless execution from scratch  
 
 **📎 Previous Commit:** 017401bb - Fix critical build issues: IOR noEmit=false, clean build scripts  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1605-seamless-once-build-system-implementation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1605-seamless-once-build-system-implementation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1605-seamless-once-build-system-implementation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1605-seamless-once-build-system-implementation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1605-seamless-once-build-system-implementation.pdca.md](2025-09-03-UTC-1605-seamless-once-build-system-implementation.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1610-once-error-backtrace-systematic-fix.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1610-once-error-backtrace-systematic-fix.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1610-once-error-backtrace-systematic-fix.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1610-once-error-backtrace-systematic-fix.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1610-once-error-backtrace-systematic-fix.pdca.md](2025-09-03-UTC-1610-once-error-backtrace-systematic-fix.pdca.md)
 - **Error Analysis:** ONCE component 30 TypeScript errors preventing compilation
-- **Critical Test:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/test/once/seamless-execution.test.ts) | [test/once/seamless-execution.test.ts](test/once/seamless-execution.test.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/test/once/seamless-execution.test.ts) | [§/test/once/seamless-execution.test.ts](../../../../../../test/once/seamless-execution.test.ts)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Systematically fixing ONCE execution errors following backtrace approach
@@ -221,4 +221,3 @@ import { IOR } from '../../../../IOR/0.3.0.0/dist/ts/layer3/IOR.interface.js';
 
 **🎯 ONCE error backtrace complete - implementing systematic one-by-one fix approach! 🔧🎯**
 
-**"Always 4 2 (FOR TWO) - systematic error backtrace provides reliable resolution path for complex build chain dependencies."** 🔧📊

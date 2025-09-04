@@ -12,17 +12,17 @@
 **🚨 Issues:** Multiple component migrations require consistent architectural patterns  
 
 **📎 Previous Commit:** d4f69d1e - PDCA: Migration Phase 2 - ONCE Web4 EAM Layer Assignment Question  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1435-migration-phase2-once-eam-question.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1435-migration-phase2-once-eam-question.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1435-migration-phase2-once-eam-question.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1435-migration-phase2-once-eam-question.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1435-migration-phase2-once-eam-question.pdca.md](2025-09-03-UTC-1435-migration-phase2-once-eam-question.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1438-pattern-standardization-migration-continuation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1438-pattern-standardization-migration-continuation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1438-pattern-standardization-migration-continuation.pdca.md)
-- **Standardized IOR Pattern:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0) | [components/IOR/0.3.0.0](components/IOR/0.3.0.0)
-- **Radical OOP Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts) | [components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts](components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts)
-- **Model Pattern Foundation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer2/DefaultModel.ts) | [components/IOR/0.3.0.0/src/ts/layer2/DefaultModel.ts](components/IOR/0.3.0.0/src/ts/layer2/DefaultModel.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1438-pattern-standardization-migration-continuation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1438-pattern-standardization-migration-continuation.pdca.md](2025-09-03-UTC-1438-pattern-standardization-migration-continuation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0) | [§/components/IOR/0.3.0.0](../../../../../../components/IOR/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts) | [§/components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts](../../../../../../components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer2/DefaultModel.ts) | [§/components/IOR/0.3.0.0/src/ts/layer2/DefaultModel.ts](../../../../../../components/IOR/0.3.0.0/src/ts/layer2/DefaultModel.ts)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Pattern standardization confirmed, migration continues with established IOR/Model radical OOP patterns
@@ -268,4 +268,3 @@ export class DefaultONCE implements ONCE {
 
 **🎯 Pattern standardization complete - IOR/Model foundation serves as universal template for all Web4 component migrations! 🎭🎯**
 
-**"Always 4 2 (FOR TWO) - unified patterns enable diverse components to share architectural excellence."** 🔧📊

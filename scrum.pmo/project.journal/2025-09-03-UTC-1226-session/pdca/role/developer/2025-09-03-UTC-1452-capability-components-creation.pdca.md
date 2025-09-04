@@ -12,17 +12,17 @@
 **🚨 Issues:** Capabilities must be separate self-managed components with IOR references instead of monolithic implementation  
 
 **📎 Previous Commit:** 3b7fccae - Implement Web4 principle compliance: Single interface per file, remove 'any' types, ONCE as kernel not server  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1448-once-architecture-redesign-phase1.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1448-once-architecture-redesign-phase1.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1448-once-architecture-redesign-phase1.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1448-once-architecture-redesign-phase1.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1448-once-architecture-redesign-phase1.pdca.md](2025-09-03-UTC-1448-once-architecture-redesign-phase1.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1452-capability-components-creation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1452-capability-components-creation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1452-capability-components-creation.pdca.md)
-- **HttpServer Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/HttpServer/0.3.0.0) | [components/HttpServer/0.3.0.0](components/HttpServer/0.3.0.0)
-- **WsServer Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/WsServer/0.3.0.0) | [components/WsServer/0.3.0.0](components/WsServer/0.3.0.0)
-- **P2PServer Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/P2PServer/0.3.0.0) | [components/P2PServer/0.3.0.0](components/P2PServer/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1452-capability-components-creation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1452-capability-components-creation.pdca.md](2025-09-03-UTC-1452-capability-components-creation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/HttpServer/0.3.0.0) | [§/components/HttpServer/0.3.0.0](../../../../../../components/HttpServer/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/WsServer/0.3.0.0) | [§/components/WsServer/0.3.0.0](../../../../../../components/WsServer/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/P2PServer/0.3.0.0) | [§/components/P2PServer/0.3.0.0](../../../../../../components/P2PServer/0.3.0.0)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Creating capability components as separate Web4 UCP entities with IOR references
@@ -214,4 +214,3 @@ this.data.capabilities.push(httpServerIOR);
 
 **🎯 Web4 principle compliance complete - capability components ready for implementation! 🏗️🔗**
 
-**"Always 4 2 (FOR TWO) - component separation enables orchestration excellence over monolithic implementation."** 🔧📊

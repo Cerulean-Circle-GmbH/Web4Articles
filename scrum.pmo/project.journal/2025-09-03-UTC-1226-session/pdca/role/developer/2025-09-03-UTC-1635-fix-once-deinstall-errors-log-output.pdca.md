@@ -12,16 +12,16 @@
 **🚨 Issues:** ONCE deinstall has errors with missing clean scripts and confusing log output that doesn't make sense  
 
 **📎 Previous Commit:** 60def97c - PDCA: ONCE deinstall clean build system  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev%2Fonce/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1630-once-deinstall-clean-build-system.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1630-once-deinstall-clean-build-system.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1630-once-deinstall-clean-build-system.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev%2Fonce/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1630-once-deinstall-clean-build-system.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1630-once-deinstall-clean-build-system.pdca.md](2025-09-03-UTC-1630-once-deinstall-clean-build-system.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/ac1efa33/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1635-fix-once-deinstall-errors-log-output.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1635-fix-once-deinstall-errors-log-output.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1635-fix-once-deinstall-errors-log-output.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/ac1efa33/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1635-fix-once-deinstall-errors-log-output.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1635-fix-once-deinstall-errors-log-output.pdca.md](2025-09-03-UTC-1635-fix-once-deinstall-errors-log-output.pdca.md)
 - **Web4CompliantONCE:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/ac1efa33/components/ONCE/0.3.0.0/src/ts/Web4CompliantONCE.ts) | [components/ONCE/0.3.0.0/src/ts/Web4CompliantONCE.ts](components/ONCE/0.3.0.0/src/ts/Web4CompliantONCE.ts)
-- **Deinstall Test:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/ac1efa33/test/once/deinstall-rebuild.test.ts) | [test/once/deinstall-rebuild.test.ts](test/once/deinstall-rebuild.test.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/ac1efa33/test/once/deinstall-rebuild.test.ts) | [§/test/once/deinstall-rebuild.test.ts](../../../../../../test/once/deinstall-rebuild.test.ts)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Fixing identified deinstall errors and improving log output clarity
@@ -224,4 +224,3 @@ private async cleanComponent(componentPath: string): Promise<void> {
 
 **🎯 ONCE deinstall errors identified from user testing - implementing error handling fixes and log output clarity! 🔧📋**
 
-**"Always 4 2 (FOR TWO) - user testing feedback reveals practical improvement opportunities requiring immediate error handling and logging enhancement."** 🔧📊

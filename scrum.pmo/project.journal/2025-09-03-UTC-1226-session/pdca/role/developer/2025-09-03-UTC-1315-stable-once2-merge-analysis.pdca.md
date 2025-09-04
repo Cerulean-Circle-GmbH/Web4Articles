@@ -12,18 +12,18 @@
 **🚨 Issues:** Potential incomplete merge with 83 commit divergence and missing ONCE component  
 
 **📎 Previous Commit:** 86bfa6ac - PDCA: Occam's Razor Scenario Simplification - Minimal Viable Pattern Standardization  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1305-occams-razor-scenario-simplification.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1305-occams-razor-scenario-simplification.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1305-occams-razor-scenario-simplification.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1305-occams-razor-scenario-simplification.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1305-occams-razor-scenario-simplification.pdca.md](2025-09-03-UTC-1305-occams-razor-scenario-simplification.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1315-stable-once2-merge-analysis.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1315-stable-once2-merge-analysis.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1315-stable-once2-merge-analysis.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1315-stable-once2-merge-analysis.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1315-stable-once2-merge-analysis.pdca.md](2025-09-03-UTC-1315-stable-once2-merge-analysis.pdca.md)
 - **Stable/ONCE2 Branch:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/stable/once2) | [origin/stable/once2](origin/stable/once2)
-- **Current Scripts Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-03-UTC-1226/scripts) | [scripts](scripts)
-- **Current Components Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-03-UTC-1226/components) | [components](components)
-- **Scripts Version Management:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-03-UTC-1226/scripts/versions) | [scripts/versions](scripts/versions)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-03-UTC-1226/scripts) | [§/scripts](../../../../../../scripts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-03-UTC-1226/components) | [§/components](../../../../../../components)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-03-UTC-1226/scripts/versions) | [§/scripts/versions](../../../../../../scripts/versions)
 
 ### **QA Decisions**
 - [x] **Decision 1: ONCE Component Recovery Strategy** - Selected: a) Cherry-pick ONCE component from stable/once2 to restore missing functionality
@@ -244,4 +244,3 @@ dbea3e77 - PDCA: Sprint 20 analysis and ONCE demo execution completed
 
 **🎯 STABLE/ONCE2 NOT FULLY MERGED - 83 commits diverged with critical ONCE component missing! 🚨🔍**
 
-**"Always 4 2 (FOR TWO) - comprehensive git archaeology reveals the infrastructure treasures we must not lose."** 🔧📊

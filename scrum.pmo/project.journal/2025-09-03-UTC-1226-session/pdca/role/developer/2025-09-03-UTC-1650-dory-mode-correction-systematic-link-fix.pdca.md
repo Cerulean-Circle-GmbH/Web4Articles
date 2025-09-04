@@ -12,16 +12,16 @@
 **🚨 Issues:** DORY mode causing broken GitHub links across ALL session PDCAs, missing session directory paths, non-working dual links  
 
 **📎 Previous Commit:** dbb02940 - Fix dual link format: Add proper GitHub links with commit hash  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dbb02940/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dbb02940/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md](2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dbb02940/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1650-dory-mode-correction-systematic-link-fix.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1650-dory-mode-correction-systematic-link-fix.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1650-dory-mode-correction-systematic-link-fix.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dbb02940/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1650-dory-mode-correction-systematic-link-fix.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1650-dory-mode-correction-systematic-link-fix.pdca.md](2025-09-03-UTC-1650-dory-mode-correction-systematic-link-fix.pdca.md)
 - **Session PDCAs:** 42 PDCA files requiring GitHub link correction
-- **Session Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dbb02940/scrum.pmo/project.journal/2025-09-03-UTC-1226-session) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session](scrum.pmo/project.journal/2025-09-03-UTC-1226-session)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dbb02940/scrum.pmo/project.journal/2025-09-03-UTC-1226-session) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session](../../..)
 
 ### **QA Decisions**
 - [ ] **GitHub Link Fix Strategy**
@@ -86,7 +86,7 @@ Absolutely in DORY mode! Broken GitHub links because I'm missing `/2025-09-03-UT
 [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dbb02940/scrum.pmo/project.journal/2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md)
 
 # CORRECT (CMM3 compliant):
-[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dbb02940/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dbb02940/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md](2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md)
 ```
 
 **Step 2: Systematic Session PDCA Fix**
@@ -192,4 +192,3 @@ Create systematic approach to fix all session PDCAs:
 
 **🎯 DORY mode identified - implementing systematic GitHub link correction for ALL session PDCAs! 🔗🔧**
 
-**"Always 4 2 (FOR TWO) - systematic chaos correction prevents DORY mode through proper dual link format adherence and path verification."** 🔧📊

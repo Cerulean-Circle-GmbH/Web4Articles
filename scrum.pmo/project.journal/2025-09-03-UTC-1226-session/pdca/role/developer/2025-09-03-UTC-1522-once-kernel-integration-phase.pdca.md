@@ -12,16 +12,16 @@
 **🚨 Issues:** ONCE kernel must actually load and manage capability components to fulfill its role as environment kernel  
 
 **📎 Previous Commit:** 21c793a3 - Complete P2PServer capability component implementation - all three capability components now follow Web4 patterns  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1520-capability-milestone-completion.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1520-capability-milestone-completion.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1520-capability-milestone-completion.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1520-capability-milestone-completion.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1520-capability-milestone-completion.pdca.md](2025-09-03-UTC-1520-capability-milestone-completion.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1522-once-kernel-integration-phase.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1522-once-kernel-integration-phase.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1522-once-kernel-integration-phase.pdca.md)
-- **ONCE Kernel Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts) | [components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts](components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts)
-- **Enhanced ONCE Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts) | [components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts](components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1522-once-kernel-integration-phase.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1522-once-kernel-integration-phase.pdca.md](2025-09-03-UTC-1522-once-kernel-integration-phase.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts) | [§/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts](../../../../../../components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts) | [§/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts](../../../../../../components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Implementing component loading mechanism following established Web4 patterns
@@ -217,4 +217,3 @@ async bootEnvironment(): Promise<EnvironmentInfo> {
 
 **🎯 Integration phase ready - implementing ONCE kernel component loading with capability management! 🔗⚙️**
 
-**"Always 4 2 (FOR TWO) - systematic integration transforms component foundations into functional architecture excellence."** 🔧📊

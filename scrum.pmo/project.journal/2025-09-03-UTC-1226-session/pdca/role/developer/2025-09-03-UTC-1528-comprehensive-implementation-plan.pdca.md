@@ -12,25 +12,25 @@
 **🚨 Issues:** Complex implementation plan requires systematic sequencing with dependency management and service integration architecture  
 
 **📎 Previous Commit:** ab31c253 - PDCA: ONCE next steps decision framework - 8 strategic implementation areas with options analysis  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1525-once-next-steps-decision-framework.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1525-once-next-steps-decision-framework.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1525-once-next-steps-decision-framework.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1525-once-next-steps-decision-framework.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1525-once-next-steps-decision-framework.pdca.md](2025-09-03-UTC-1525-once-next-steps-decision-framework.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1528-comprehensive-implementation-plan.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1528-comprehensive-implementation-plan.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1528-comprehensive-implementation-plan.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1528-comprehensive-implementation-plan.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1528-comprehensive-implementation-plan.pdca.md](2025-09-03-UTC-1528-comprehensive-implementation-plan.pdca.md)
 
 ### **Created Requirements for Comprehensive Implementation**
-- **Build Management:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/87d9f6f5-f0d9-4d9a-9566-f14c633c6260.scenario.json) | [spec/requirements/87d9f6f5-f0d9-4d9a-9566-f14c633c6260.scenario.json](spec/requirements/87d9f6f5-f0d9-4d9a-9566-f14c633c6260.scenario.json) - Component build & dependency management
-- **CLI Architecture:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json) | [spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json](spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json) - Unified CLI architecture pattern
-- **Service Integration:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json) | [spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json](spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json) - ONCE 42777 service integration
-- **Build Component Upgrade:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/547dace5-7552-45fd-ac52-c863321f1ef9.scenario.json) | [spec/requirements/547dace5-7552-45fd-ac52-c863321f1ef9.scenario.json](spec/requirements/547dace5-7552-45fd-ac52-c863321f1ef9.scenario.json) - Build component pattern adaptation
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/87d9f6f5-f0d9-4d9a-9566-f14c633c6260.scenario.json) | [§/spec/requirements/87d9f6f5-f0d9-4d9a-9566-f14c633c6260.scenario.json](../../../../../../spec/requirements/87d9f6f5-f0d9-4d9a-9566-f14c633c6260.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json) | [§/spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json](../../../../../../spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json) | [§/spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json](../../../../../../spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/547dace5-7552-45fd-ac52-c863321f1ef9.scenario.json) | [§/spec/requirements/547dace5-7552-45fd-ac52-c863321f1ef9.scenario.json](../../../../../../spec/requirements/547dace5-7552-45fd-ac52-c863321f1ef9.scenario.json)
 
 ### **Reference Architecture Components**
-- **TSRanger CLI Pattern:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/TSRanger/v2.2) | [components/TSRanger/v2.2](components/TSRanger/v2.2)
-- **Requirement CLI Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scripts/versions/requirement-v0.1.2.2) | [scripts/versions/requirement-v0.1.2.2](scripts/versions/requirement-v0.1.2.2)
-- **Current Build Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Build/0.1.0.0) | [components/Build/0.1.0.0](components/Build/0.1.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/TSRanger/v2.2) | [§/components/TSRanger/v2.2](../../../../../../components/TSRanger/v2.2)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scripts/versions/requirement-v0.1.2.2) | [§/scripts/versions/requirement-v0.1.2.2](../../../../../../components/Web4Requirement/0.1.2.2/requirement.sh)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Build/0.1.0.0) | [§/components/Build/0.1.0.0](../../../../../../components/Build/0.1.0.0)
 
 ### **QA Decisions**
 - [x] **Implementation Phase 1: Build Infrastructure Priority** - Selected: a) Build component 0.3.0.0 adaptation first, then b) CLI implementation, then c) Service integration
@@ -74,8 +74,8 @@ Perfect implementation sequence! Implementing: 1a→b→c) Build infrastructure 
 ### **🎯 Phase 1: Build Infrastructure & Dependency Management**
 
 **1.1 Build Component 0.3.0.0 Adaptation**
-- **Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/547dace5-7552-45fd-ac52-c863321f1ef9.scenario.json) | [spec/requirements/547dace5-7552-45fd-ac52-c863321f1ef9.scenario.json](spec/requirements/547dace5-7552-45fd-ac52-c863321f1ef9.scenario.json)
-- **Current Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Build/0.1.0.0) | [components/Build/0.1.0.0](components/Build/0.1.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/547dace5-7552-45fd-ac52-c863321f1ef9.scenario.json) | [§/spec/requirements/547dace5-7552-45fd-ac52-c863321f1ef9.scenario.json](../../../../../../spec/requirements/547dace5-7552-45fd-ac52-c863321f1ef9.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Build/0.1.0.0) | [§/components/Build/0.1.0.0](../../../../../../components/Build/0.1.0.0)
 - **Implementation:** Upgrade Build component to v0.3.0.0 following Web4 patterns:
   ```
   components/Build/0.3.0.0/
@@ -86,7 +86,7 @@ Perfect implementation sequence! Implementing: 1a→b→c) Build infrastructure 
   ```
 
 **1.2 Shell Starter Scripts for Each Component**
-- **Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/87d9f6f5-f0d9-4d9a-9566-f14c633c6260.scenario.json) | [spec/requirements/87d9f6f5-f0d9-4d9a-9566-f14c633c6260.scenario.json](spec/requirements/87d9f6f5-f0d9-4d9a-9566-f14c633c6260.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/87d9f6f5-f0d9-4d9a-9566-f14c633c6260.scenario.json) | [§/spec/requirements/87d9f6f5-f0d9-4d9a-9566-f14c633c6260.scenario.json](../../../../../../spec/requirements/87d9f6f5-f0d9-4d9a-9566-f14c633c6260.scenario.json)
 - **Pattern:** Each component gets shell starter:
   ```bash
   # components/ONCE/0.3.0.0/once
@@ -107,8 +107,8 @@ Perfect implementation sequence! Implementing: 1a→b→c) Build infrastructure 
 ### **🎯 Phase 2: Unified CLI Architecture**
 
 **2.1 CLI Interface Pattern (TSRanger 2.2 Inspired)**  
-- **Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json) | [spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json](spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json)
-- **Reference Pattern:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/TSRanger/v2.2) | [components/TSRanger/v2.2](components/TSRanger/v2.2)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json) | [§/spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json](../../../../../../spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/TSRanger/v2.2) | [§/components/TSRanger/v2.2](../../../../../../components/TSRanger/v2.2)
 - **Implementation:**
   ```typescript
   // Universal CLI interface:
@@ -139,7 +139,7 @@ Perfect implementation sequence! Implementing: 1a→b→c) Build infrastructure 
 ### **🎯 Phase 3: ONCE 42777 Service Integration**
 
 **3.1 ONCE Server as Service Registry**
-- **Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json) | [spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json](spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json) | [§/spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json](../../../../../../spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json)
 - **Implementation:**
   ```typescript
   // ONCE 42777 server becomes service registry:
@@ -404,4 +404,3 @@ class DefaultComponent implements Component {
 
 **🎯 Comprehensive ONCE implementation plan ready - build infrastructure, CLI architecture, service integration! 🏗️📋**
 
-**"Always 4 2 (FOR TWO) - comprehensive planning enables systematic ecosystem implementation with complete infrastructure integration."** 🔧📊

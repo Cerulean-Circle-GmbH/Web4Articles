@@ -12,19 +12,19 @@
 **🚨 Issues:** Multiple critical violations of Web4 principles requiring immediate correction and architectural redesign  
 
 **📎 Previous Commit:** ba319d06 - Implement P2P layer split: Layer1 protocols + Layer4 coordination following DRY principle  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1442-once-dry-implementation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1442-once-dry-implementation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1442-once-dry-implementation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1442-once-dry-implementation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1442-once-dry-implementation.pdca.md](2025-09-03-UTC-1442-once-dry-implementation.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md)
-- **Violated ONCE Interface:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts) | [components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts](components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts)
-- **UCP Definition Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md) | [scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md](scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md)
-- **ONCE 0.2.0.0 Structure:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.2.0.0) | [components/ONCE/0.2.0.0](components/ONCE/0.2.0.0)
-- **ServerHierarchyManager Analysis:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts) | [components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts](components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts)
-- **Capability Architecture Example:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/src/ts/layer3/ONCEServerModel.ts) | [components/ONCE/0.2.0.0/src/ts/layer3/ONCEServerModel.ts](components/ONCE/0.2.0.0/src/ts/layer3/ONCEServerModel.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md](2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts) | [§/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts](../../../../../../components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md) | [§/scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md](../../../../2025-08-10-1030/retro/answer.developer-learningVersioning.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.2.0.0) | [§/components/ONCE/0.2.0.0](../../../../../../components/ONCE/0.2.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts) | [§/components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts](../../../../../../components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/src/ts/layer3/ONCEServerModel.ts) | [§/components/ONCE/0.2.0.0/src/ts/layer3/ONCEServerModel.ts](../../../../../../components/ONCE/0.2.0.0/src/ts/layer3/ONCEServerModel.ts)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Critical violations identified requiring immediate architectural correction
@@ -293,4 +293,3 @@ interface ONCEModel extends Model {
 
 **🎯 Critical Web4 violations identified - UCP Unit-Component-Package architecture understood! Capability components with IOR references required! 🚨🏗️**
 
-**"Always 4 2 (FOR TWO) - architectural humility enables learning and proper component-based excellence."** 🔧📊

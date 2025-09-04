@@ -12,17 +12,17 @@
 **🚨 Issues:** ONCE component has multiple complex features requiring proper EAM layer distribution  
 
 **📎 Previous Commit:** a4c266ee - Implement Phase 1 refinements: Radical OOP proxy pattern, simplified naming, exports in interface, Occam's razor elimination  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1432-phase1-refinement-implementation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1432-phase1-refinement-implementation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1432-phase1-refinement-implementation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1432-phase1-refinement-implementation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1432-phase1-refinement-implementation.pdca.md](2025-09-03-UTC-1432-phase1-refinement-implementation.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1435-migration-phase2-once-eam-question.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1435-migration-phase2-once-eam-question.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1435-migration-phase2-once-eam-question.pdca.md)
-- **Refined IOR Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0) | [components/IOR/0.3.0.0](components/IOR/0.3.0.0)
-- **Current ONCE Features:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.1.0.0/README.md) | [components/ONCE/0.1.0.0/README.md](components/ONCE/0.1.0.0/README.md)
-- **ONCE 0.2.0.0 Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.2.0.0) | [components/ONCE/0.2.0.0](components/ONCE/0.2.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1435-migration-phase2-once-eam-question.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1435-migration-phase2-once-eam-question.pdca.md](2025-09-03-UTC-1435-migration-phase2-once-eam-question.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0) | [§/components/IOR/0.3.0.0](../../../../../../components/IOR/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.1.0.0/README.md) | [§/components/ONCE/0.1.0.0/README.md](../../../../../../components/ONCE/0.1.0.0/README.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.2.0.0) | [§/components/ONCE/0.2.0.0](../../../../../../components/ONCE/0.2.0.0)
 
 ### **QA Decisions**
 - [x] **ONCE EAM Layer Assignment** - Selected: Follow IOR component pattern (options a/b/c are equivalent, just different naming) - use established radical OOP patterns for all future migration
@@ -215,4 +215,3 @@ components/IOR/0.3.0.0/
 
 **🎯 Phase 1 refinement complete - radical OOP foundation perfected! Ready for ONCE EAM layer guidance! 🎭⚙️**
 
-**"Always 4 2 (FOR TWO) - radical simplicity with pure patterns creates the perfect architectural foundation."** 🔧📊

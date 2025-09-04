@@ -12,18 +12,18 @@
 **🚨 Issues:** Current ONCE scenarios don't follow Web4 3-property Occam's razor standard  
 
 **📎 Previous Commit:** c7f83154 - PDCA: Component Recovery Implementation - Stable/ONCE2 Infrastructure Restoration  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1320-component-recovery-implementation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1320-component-recovery-implementation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1320-component-recovery-implementation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1320-component-recovery-implementation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1320-component-recovery-implementation.pdca.md](2025-09-03-UTC-1320-component-recovery-implementation.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1415-once-scenario-occams-razor-analysis.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1415-once-scenario-occams-razor-analysis.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1415-once-scenario-occams-razor-analysis.pdca.md)
-- **Current ONCE Scenario:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/scenarios/local.once/ONCE/0.2.0.0/6dd45500-f679-4a13-b287-da0ee1f93a9c.scenario.json) | [components/ONCE/0.2.0.0/scenarios/local.once/ONCE/0.2.0.0/6dd45500-f679-4a13-b287-da0ee1f93a9c.scenario.json](components/ONCE/0.2.0.0/scenarios/local.once/ONCE/0.2.0.0/6dd45500-f679-4a13-b287-da0ee1f93a9c.scenario.json)
-- **ONCE Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/spec/requirements.md/471d2d0a-4914-4900-9aed-74b69e032679.requirement.md) | [components/ONCE/0.2.0.0/spec/requirements.md/471d2d0a-4914-4900-9aed-74b69e032679.requirement.md](components/ONCE/0.2.0.0/spec/requirements.md/471d2d0a-4914-4900-9aed-74b69e032679.requirement.md)
-- **ONCE Package Config:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/package.json) | [components/ONCE/0.2.0.0/package.json](components/ONCE/0.2.0.0/package.json)
-- **Prepared 0.3.0.0 Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.3.0.0) | [components/ONCE/0.3.0.0](components/ONCE/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1415-once-scenario-occams-razor-analysis.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1415-once-scenario-occams-razor-analysis.pdca.md](2025-09-03-UTC-1415-once-scenario-occams-razor-analysis.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/scenarios/local.once/ONCE/0.2.0.0/6dd45500-f679-4a13-b287-da0ee1f93a9c.scenario.json) | [§/components/ONCE/0.2.0.0/scenarios/local.once/ONCE/0.2.0.0/6dd45500-f679-4a13-b287-da0ee1f93a9c.scenario.json](../../../../../../components/ONCE/0.2.0.0/scenarios/local.once/ONCE/0.2.0.0/6dd45500-f679-4a13-b287-da0ee1f93a9c.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/spec/requirements.md/471d2d0a-4914-4900-9aed-74b69e032679.requirement.md) | [§/components/ONCE/0.2.0.0/spec/requirements.md/471d2d0a-4914-4900-9aed-74b69e032679.requirement.md](../../../../../../components/ONCE/0.2.0.0/spec/requirements.md/471d2d0a-4914-4900-9aed-74b69e032679.requirement.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/package.json) | [§/components/ONCE/0.2.0.0/package.json](../../../../../../components/ONCE/0.2.0.0/package.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.3.0.0) | [§/components/ONCE/0.3.0.0](../../../../../../components/ONCE/0.3.0.0)
 
 ### **QA Decisions**
 - [x] **Decision 1: ONCE Scenario Structure Standardization** - Selected: a) Convert to Web4 3-property standard with lowercase "ior" attribute of type IOR using DefaultIOR implementation and 5-layer architecture
@@ -298,4 +298,3 @@ components/ONCE/0.3.0.0/
 
 **🎯 ONCE scenarios analyzed - complex 0.2.0.0 format violates Occam's razor! 0.3.0.0 simplification strategy prepared! ✂️🔗**
 
-**"Always 4 2 (FOR TWO) - even the mightiest kernels must bow to the elegance of simplicity."** 🔧📊

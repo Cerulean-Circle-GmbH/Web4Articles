@@ -12,18 +12,18 @@
 **🚨 Issues:** Schema validation, data integrity, and quality assurance for 50 scenario files  
 
 **📎 Previous Commit:** 62d9d865 - Update session start PDCA with user decisions: Quality/Testing Focus + Developer Role + Extended Session  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/2025-09-03-UTC-1226-session-start.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/2025-09-03-UTC-1226-session-start.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/2025-09-03-UTC-1226-session-start.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/2025-09-03-UTC-1226-session-start.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/2025-09-03-UTC-1226-session-start.pdca.md](../../2025-09-03-UTC-1226-session-start.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1238-scenario-validation-framework.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1238-scenario-validation-framework.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1238-scenario-validation-framework.pdca.md)
-- **Schema Definition:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/src/ts/scenarios/ScenarioSchema.ts) | [src/ts/scenarios/ScenarioSchema.ts](src/ts/scenarios/ScenarioSchema.ts)
-- **Validation Tests:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/test/scenarios/scenario.validation.test.ts) | [test/scenarios/scenario.validation.test.ts](test/scenarios/scenario.validation.test.ts)
-- **CLI Validator:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/src/ts/scenarios/ScenarioValidatorCLI.ts) | [src/ts/scenarios/ScenarioValidatorCLI.ts](src/ts/scenarios/ScenarioValidatorCLI.ts)
-- **Fixed Scenario:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/scenarios/index/1/a/1/2/3/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json) | [scenarios/index/1/a/1/2/3/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json](scenarios/index/1/a/1/2/3/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1238-scenario-validation-framework.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1238-scenario-validation-framework.pdca.md](2025-09-03-UTC-1238-scenario-validation-framework.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/src/ts/scenarios/ScenarioSchema.ts) | [§/src/ts/scenarios/ScenarioSchema.ts](../../../../../../src/ts/scenarios/ScenarioSchema.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/test/scenarios/scenario.validation.test.ts) | [§/test/scenarios/scenario.validation.test.ts](../../../../../../test/scenarios/scenario.validation.test.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/src/ts/scenarios/ScenarioValidatorCLI.ts) | [§/src/ts/scenarios/ScenarioValidatorCLI.ts](../../../../../../src/ts/scenarios/ScenarioValidatorCLI.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-03-UTC-1226/scenarios/index/1/a/1/2/3/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json) | [§/scenarios/index/1/a/1/2/3/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json](../../../../../../scenarios/index/1/a/1/2/3/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Comprehensive validation framework implemented successfully with all tests passing
@@ -206,4 +206,3 @@ npm run scenario:validate
 
 **🎯 Quality framework established with 50/50 scenario files validated and comprehensive testing infrastructure deployed! 🧪✅**
 
-**"Always 4 2 (FOR TWO) - systematic quality assurance enables confident collaborative development."** 🔧📊

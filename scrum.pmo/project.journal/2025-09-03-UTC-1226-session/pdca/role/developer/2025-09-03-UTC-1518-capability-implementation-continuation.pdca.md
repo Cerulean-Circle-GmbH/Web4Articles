@@ -12,25 +12,25 @@
 **🚨 Issues:** Capability components must demonstrate proper Web4 UCP patterns with IOR references and scenario configuration  
 
 **📎 Previous Commit:** ec0dab75 - Create ONCE 0.3.0.0 requirements from migration learnings using requirement-v0.1.3.0 tool with comprehensive traceability  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1515-once-requirements-creation-from-learnings.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1515-once-requirements-creation-from-learnings.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1515-once-requirements-creation-from-learnings.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1515-once-requirements-creation-from-learnings.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1515-once-requirements-creation-from-learnings.pdca.md](2025-09-03-UTC-1515-once-requirements-creation-from-learnings.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1518-capability-implementation-continuation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1518-capability-implementation-continuation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1518-capability-implementation-continuation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1518-capability-implementation-continuation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1518-capability-implementation-continuation.pdca.md](2025-09-03-UTC-1518-capability-implementation-continuation.pdca.md)
 
 ### **Created Requirements Guiding Implementation**
-- **Web4 Architecture Compliance:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json) | [spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json](spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json)
-- **ONCE Component Kernel Pattern:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json) | [spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json](spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json)
-- **Radical OOP Type Safety:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json) | [spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json](spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json)
-- **Capability Component Architecture:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/1e56cc1c-5db4-43c4-ac16-b7567f1d8ff2.scenario.json) | [spec/requirements/1e56cc1c-5db4-43c4-ac16-b7567f1d8ff2.scenario.json](spec/requirements/1e56cc1c-5db4-43c4-ac16-b7567f1d8ff2.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json) | [§/spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json](../../../../../../spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json) | [§/spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json](../../../../../../spec/requirements/a9aaf585-938e-4a96-b69e-781bf0311217.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json) | [§/spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json](../../../../../../spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/1e56cc1c-5db4-43c4-ac16-b7567f1d8ff2.scenario.json) | [§/spec/requirements/1e56cc1c-5db4-43c4-ac16-b7567f1d8ff2.scenario.json](../../../../../../spec/requirements/1e56cc1c-5db4-43c4-ac16-b7567f1d8ff2.scenario.json)
 
 ### **Capability Component Foundations**
-- **HttpServer Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/HttpServer/0.3.0.0) | [components/HttpServer/0.3.0.0](components/HttpServer/0.3.0.0)
-- **WsServer Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/WsServer/0.3.0.0) | [components/WsServer/0.3.0.0](components/WsServer/0.3.0.0)
-- **P2PServer Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/P2PServer/0.3.0.0) | [components/P2PServer/0.3.0.0](components/P2PServer/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/HttpServer/0.3.0.0) | [§/components/HttpServer/0.3.0.0](../../../../../../components/HttpServer/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/WsServer/0.3.0.0) | [§/components/WsServer/0.3.0.0](../../../../../../components/WsServer/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/P2PServer/0.3.0.0) | [§/components/P2PServer/0.3.0.0](../../../../../../components/P2PServer/0.3.0.0)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Requirements created successfully, continuing with capability component implementation
@@ -216,4 +216,3 @@ Q3: Should capability components have their own scenarios in scenarios/
 
 **🎯 ONCE requirements created from migration learnings - capability implementation ready to continue! 📋🏗️**
 
-**"Always 4 2 (FOR TWO) - systematic requirement formalization enables confident implementation following proven patterns."** 🔧📊

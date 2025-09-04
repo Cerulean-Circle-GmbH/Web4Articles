@@ -12,24 +12,24 @@
 **🚨 Issues:** Multiple critical learnings require systematic documentation for future Web4 development  
 
 **📎 Previous Commit:** d1ab09ce - Fix massive DRY violations: Delete ONCEScenario/ComponentScenario, use unified Scenario component  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md](2025-09-03-UTC-1458-dry-violation-correction.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1500-comprehensive-web4-learning-synthesis.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1500-comprehensive-web4-learning-synthesis.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1500-comprehensive-web4-learning-synthesis.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1500-comprehensive-web4-learning-synthesis.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1500-comprehensive-web4-learning-synthesis.pdca.md](2025-09-03-UTC-1500-comprehensive-web4-learning-synthesis.pdca.md)
 
 ### **Critical Learning PDCAs:**
-- **Architecture Violations:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md)
-- **DRY Violation Correction:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md)
-- **Phase 1 Refinement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md](2025-09-03-UTC-1445-web4-architecture-learning-violations.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1458-dry-violation-correction.pdca.md](2025-09-03-UTC-1458-dry-violation-correction.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md](2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md)
 
 ### **Component Foundations:**
-- **Shared IOR Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0) | [components/IOR/0.3.0.0](components/IOR/0.3.0.0)
-- **Unified Scenario Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Scenario/0.1.3.0) | [components/Scenario/0.1.3.0](components/Scenario/0.1.3.0)
-- **Corrected ONCE Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.3.0.0) | [components/ONCE/0.3.0.0](components/ONCE/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0) | [§/components/IOR/0.3.0.0](../../../../../../components/IOR/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Scenario/0.1.3.0) | [§/components/Scenario/0.1.3.0](../../../../../../components/Scenario/0.1.3.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.3.0.0) | [§/components/ONCE/0.3.0.0](../../../../../../components/ONCE/0.3.0.0)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Comprehensive learning documentation with all violations corrected and proper patterns established
@@ -70,112 +70,112 @@ Absolutely correct on both violations! Deleted ONCEScenario/ComponentScenario (m
 ### **🚨 Critical Violations Discovered & Corrected**
 
 **1. Type Safety Violations**
-- **Violation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts) | [components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts](components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts) - Used `init(scenario: any): this`
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts) | [§/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts](../../../../../../components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts)
 - **Correction:** Replaced with `init(scenario: Scenario): this` using unified Scenario component
 - **Learning:** **NEVER use 'any' type - always ask for proper type definition**
 
 **2. Single File Principle Violations**
-- **Violation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts) | [components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts](components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts) - Multiple interfaces in one file
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts) | [§/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts](../../../../../../components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts)
 - **Correction:** Split into separate files: ONCE.interface.ts, ONCEModel.interface.ts, EnvironmentInfo.interface.ts, Component.interface.ts
 - **Learning:** **Each class or interface in one single file - Web4 fundamental principle**
 
 **3. DRY Principle Violations**
-- **Violation:** Created ONCEScenario and ComponentScenario interfaces duplicating [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/Scenario/0.1.3.0/src/ts/layer3/ScenarioData.interface.ts) | [components/Scenario/0.1.3.0/src/ts/layer3/ScenarioData.interface.ts](components/Scenario/0.1.3.0/src/ts/layer3/ScenarioData.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/Scenario/0.1.3.0/src/ts/layer3/ScenarioData.interface.ts) | [§/components/Scenario/0.1.3.0/src/ts/layer3/ScenarioData.interface.ts](../../../../../../components/Scenario/0.1.3.0/src/ts/layer3/ScenarioData.interface.ts)
 - **Correction:** Deleted duplicate interfaces, use unified Scenario component
 - **Learning:** **Web4 is all about reusable self-managed components with UCP standard - DRY principle**
 
 **4. Export Structure Violations**
 - **Violation:** Created separate exports.ts file violating established IOR pattern
-- **Correction:** Integrated exports into ONCE.interface.ts following [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts) | [components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts](components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts) pattern
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts) | [§/components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts](../../../../../../components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts)
 - **Learning:** **Follow established patterns consistently - no unnecessary file separation**
 
 ### **🎯 Correct Web4 UCP Architecture Understanding**
 
 **5. UCP Definition Correction**
 - **My Incorrect Assumption:** UCP = Universal Component Platform
-- **Correct Definition:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md#L122-L135) | [scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md](scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md) - **UCP = Unit-Component-Package**
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md#L122-L135) | [§/scrum.pmo/project.journal/2025-08-10-1030/retro/answer.developer-learningVersioning.md](../../../../2025-08-10-1030/retro/answer.developer-learningVersioning.md)
 - **Learning:** **Never assume definitions - always look up or ask for clarification**
 
 **6. Capability Component Architecture Understanding**
-- **Legacy Pattern Analysis:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/src/ts/layer3/ONCEServerModel.ts) | [components/ONCE/0.2.0.0/src/ts/layer3/ONCEServerModel.ts](components/ONCE/0.2.0.0/src/ts/layer3/ONCEServerModel.ts) shows monolithic capability approach
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/src/ts/layer3/ONCEServerModel.ts) | [§/components/ONCE/0.2.0.0/src/ts/layer3/ONCEServerModel.ts](../../../../../../components/ONCE/0.2.0.0/src/ts/layer3/ONCEServerModel.ts)
 - **Correct Architecture:** Each capability (WsServer, HttpServer, P2PServer) as separate self-managed component with IOR references
 - **Learning:** **Capabilities become component references with IORs - composition over monolithic implementation**
 
 **7. ONCE Role Clarification**
 - **My Incorrect Understanding:** ONCE as server implementation 
-- **Correct Role:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.1.0.0/README.md) | [components/ONCE/0.1.0.0/README.md](components/ONCE/0.1.0.0/README.md) - ONCE kernel boots in any environment and loads components from IORs
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.1.0.0/README.md) | [§/components/ONCE/0.1.0.0/README.md](../../../../../../components/ONCE/0.1.0.0/README.md)
 - **Learning:** **ONCE main feature: Boot in any environment and choose components to load via IORs and scenarios**
 
 ### **🔧 Implemented Corrections with Dual Links**
 
 **8. Radical OOP Pattern Refinement**
-- **Feedback Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1432-phase1-refinement-implementation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1432-phase1-refinement-implementation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1432-phase1-refinement-implementation.pdca.md)
-- **Pattern Standardization:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts) | [components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts](components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts) - Radical OOP proxy with class-based encapsulation
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1432-phase1-refinement-implementation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1432-phase1-refinement-implementation.pdca.md](2025-09-03-UTC-1432-phase1-refinement-implementation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts) | [§/components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts](../../../../../../components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts)
 - **Learning:** **Radical OOP means class-based patterns, not functional - private data (not _data), integrated exports**
 
 **9. Occam's Razor Application**
-- **Analysis:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1305-occams-razor-scenario-simplification.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1305-occams-razor-scenario-simplification.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1305-occams-razor-scenario-simplification.pdca.md)
-- **Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/Web4Requirement/0.1.0.0/spec/requirements/259427fa-e53c-4651-8d86-4598c2a6a233.scenario.json) | [components/Web4Requirement/0.1.0.0/spec/requirements/259427fa-e53c-4651-8d86-4598c2a6a233.scenario.json](components/Web4Requirement/0.1.0.0/spec/requirements/259427fa-e53c-4651-8d86-4598c2a6a233.scenario.json) - Perfect 3-property pattern example
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1305-occams-razor-scenario-simplification.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1305-occams-razor-scenario-simplification.pdca.md](2025-09-03-UTC-1305-occams-razor-scenario-simplification.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/Web4Requirement/0.1.0.0/spec/requirements/259427fa-e53c-4651-8d86-4598c2a6a233.scenario.json) | [§/components/Web4Requirement/0.1.0.0/spec/requirements/259427fa-e53c-4651-8d86-4598c2a6a233.scenario.json](../../../../../../components/Web4Requirement/0.1.0.0/spec/requirements/259427fa-e53c-4651-8d86-4598c2a6a233.scenario.json)
 - **Learning:** **Minimal viable pattern: ior + owner + model - maximum 5 properties total**
 
 **10. Component Recovery and Analysis**
-- **Recovery Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1320-component-recovery-implementation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1320-component-recovery-implementation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1320-component-recovery-implementation.pdca.md)
-- **ONCE Component Analysis:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE) | [components/ONCE](components/ONCE) - Complete version evolution from 0.1.0.0 to 0.3.0.0
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1320-component-recovery-implementation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1320-component-recovery-implementation.pdca.md](2025-09-03-UTC-1320-component-recovery-implementation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE) | [§/components/ONCE](../../../../../../components/ONCE)
 - **Learning:** **Cherry-pick operations enable surgical component restoration while maintaining architectural evolution**
 
 ### **📐 Established Correct Patterns with Dual Links**
 
 **11. Shared IOR Component Foundation**
-- **Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0) | [components/IOR/0.3.0.0](components/IOR/0.3.0.0)
-- **Interface:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts) | [components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts](components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts) - 5-property IOR standard
-- **Model:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer3/Model.interface.ts) | [components/IOR/0.3.0.0/src/ts/layer3/Model.interface.ts](components/IOR/0.3.0.0/src/ts/layer3/Model.interface.ts) - Unified Model interface
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0) | [§/components/IOR/0.3.0.0](../../../../../../components/IOR/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts) | [§/components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts](../../../../../../components/IOR/0.3.0.0/src/ts/layer3/IOR.interface.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer3/Model.interface.ts) | [§/components/IOR/0.3.0.0/src/ts/layer3/Model.interface.ts](../../../../../../components/IOR/0.3.0.0/src/ts/layer3/Model.interface.ts)
 - **Learning:** **Shared foundation components provide consistent patterns across entire Web4 ecosystem**
 
 **12. DefaultScenario Pattern Understanding**  
-- **Simplified Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts) | [components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts](components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts) - 3-property pattern perfection
-- **PUML Documentation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/Unit/0.1.3.0/src/puml/SimplifiedScenarioStructure.puml) | [components/Unit/0.1.3.0/src/puml/SimplifiedScenarioStructure.puml](components/Unit/0.1.3.0/src/puml/SimplifiedScenarioStructure.puml) - "Occam's Razor" documented
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts) | [§/components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts](../../../../../../components/Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/Unit/0.1.3.0/src/puml/SimplifiedScenarioStructure.puml) | [§/components/Unit/0.1.3.0/src/puml/SimplifiedScenarioStructure.puml](../../../../../../components/Unit/0.1.3.0/src/puml/SimplifiedScenarioStructure.puml)
 - **Learning:** **Scenario component provides universal hibernation pattern - never create component-specific scenario interfaces**
 
 **13. Testing and Validation Framework**
-- **Schema Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/src/ts/scenarios/ScenarioSchema.ts) | [src/ts/scenarios/ScenarioSchema.ts](src/ts/scenarios/ScenarioSchema.ts) - Comprehensive validation framework
-- **Test Suite:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/test/scenarios/scenario.validation.test.ts) | [test/scenarios/scenario.validation.test.ts](test/scenarios/scenario.validation.test.ts) - 50/50 scenarios validated
-- **CLI Tool:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/src/ts/scenarios/ScenarioValidatorCLI.ts) | [src/ts/scenarios/ScenarioValidatorCLI.ts](src/ts/scenarios/ScenarioValidatorCLI.ts) - Quality assurance tooling
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/src/ts/scenarios/ScenarioSchema.ts) | [§/src/ts/scenarios/ScenarioSchema.ts](../../../../../../src/ts/scenarios/ScenarioSchema.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/test/scenarios/scenario.validation.test.ts) | [§/test/scenarios/scenario.validation.test.ts](../../../../../../test/scenarios/scenario.validation.test.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/src/ts/scenarios/ScenarioValidatorCLI.ts) | [§/src/ts/scenarios/ScenarioValidatorCLI.ts](../../../../../../src/ts/scenarios/ScenarioValidatorCLI.ts)
 - **Learning:** **Quality-first development with comprehensive validation prevents architectural drift**
 
 ### **🎭 Radical OOP Pattern Establishment**
 
 **14. Property Naming Simplification**
-- **Feedback:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md) - "private _data → private data"
-- **Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts) | [components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts](components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts) - Simple naming throughout
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md](2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts) | [§/components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts](../../../../../../components/IOR/0.3.0.0/src/ts/layer2/DefaultIOR.ts)
 - **Learning:** **Occam's razor applies to naming - eliminate unnecessary complexity like underscore conventions**
 
 **15. Proxy Pattern Refinement**
-- **Functional Rejection:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md) - "functional approach conflicts with radical OOP"
-- **OOP Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer2/DefaultModel.ts) | [components/IOR/0.3.0.0/src/ts/layer2/DefaultModel.ts](components/IOR/0.3.0.0/src/ts/layer2/DefaultModel.ts) - Class-based proxy with encapsulation
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md](2025-09-03-UTC-1430-phase1-implementation-feedback.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer2/DefaultModel.ts) | [§/components/IOR/0.3.0.0/src/ts/layer2/DefaultModel.ts](../../../../../../components/IOR/0.3.0.0/src/ts/layer2/DefaultModel.ts)
 - **Learning:** **Radical OOP means class-based patterns with proper encapsulation, no functional constructs**
 
 ### **🏗️ Component Architecture Understanding**
 
 **16. Capability Component Separation**
-- **Monolithic Analysis:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts) | [components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts](components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts) - Shows current monolithic server implementation
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts) | [§/components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts](../../../../../../components/ONCE/0.2.0.0/src/ts/layer2/ServerHierarchyManager.ts)
 - **Correct Architecture:** Separate HttpServer, WsServer, P2PServer components with IOR references
 - **Learning:** **Each capability as separate self-managed component with own ports and IOR references**
 
 **17. ONCE Kernel Role Clarification** 
-- **Purpose Documentation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.1.0.0/README.md) | [components/ONCE/0.1.0.0/README.md](components/ONCE/0.1.0.0/README.md) - "Universal kernel for all Web4 components"
-- **Corrected Interface:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts) | [components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts](components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts) - Environment kernel that loads components
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.1.0.0/README.md) | [§/components/ONCE/0.1.0.0/README.md](../../../../../../components/ONCE/0.1.0.0/README.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts) | [§/components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts](../../../../../../components/ONCE/0.3.0.0/src/ts/layer3/ONCE.interface.ts)
 - **Learning:** **ONCE is component loader/kernel that boots environment and chooses components to load - NOT server implementation**
 
 ### **📊 Quality Framework Establishment**
 
 **18. Scenario Validation Infrastructure**
-- **Validation Schema:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/src/ts/scenarios/ScenarioSchema.ts) | [src/ts/scenarios/ScenarioSchema.ts](src/ts/scenarios/ScenarioSchema.ts) - Complete validation framework
-- **Fixed Scenario:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scenarios/index/1/a/1/2/3/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json) | [scenarios/index/1/a/1/2/3/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json](scenarios/index/1/a/1/2/3/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json) - Migrated from legacy format
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/src/ts/scenarios/ScenarioSchema.ts) | [§/src/ts/scenarios/ScenarioSchema.ts](../../../../../../src/ts/scenarios/ScenarioSchema.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scenarios/index/1/a/1/2/3/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json) | [§/scenarios/index/1/a/1/2/3/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json](../../../../../../scenarios/index/1/a/1/2/3/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json)
 - **Learning:** **50/50 scenario files validated with comprehensive testing ensuring data integrity**
 
 **19. Infrastructure Recovery and Integration**
-- **Stable/ONCE2 Analysis:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1315-stable-once2-merge-analysis.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1315-stable-once2-merge-analysis.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1315-stable-once2-merge-analysis.pdca.md) - 83 commit divergence identified
-- **Component Restoration:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components) | [components](components) - ONCE, agent, Build, Message, Tootsie restored
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1315-stable-once2-merge-analysis.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1315-stable-once2-merge-analysis.pdca.md](2025-09-03-UTC-1315-stable-once2-merge-analysis.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components) | [§/components](../../../../../../components)
 - **Learning:** **Critical infrastructure preserved through systematic git archaeology and strategic component recovery**
 
 ---
@@ -261,4 +261,3 @@ Absolutely correct on both violations! Deleted ONCEScenario/ComponentScenario (m
 
 **🎯 Web4 architecture learning synthesis complete with 19 major areas documented and dual-linked! Architectural foundation perfected! 🏗️📚**
 
-**"Always 4 2 (FOR TWO) - comprehensive learning documentation enables architectural excellence and prevents violation repetition."** 🔧📊

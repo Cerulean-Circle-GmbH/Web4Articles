@@ -12,16 +12,16 @@
 **🚨 Issues:** Missing shell script links in scripts/ and scripts/versions/ folders, CLIs need colorful usage display like requirement-v0.1.2.2  
 
 **📎 Previous Commit:** 2ca0629e - Implement shell script linking and colorful CLI usage requirements  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1535-phase1b-unified-cli-implementation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1535-phase1b-unified-cli-implementation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1535-phase1b-unified-cli-implementation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1535-phase1b-unified-cli-implementation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1535-phase1b-unified-cli-implementation.pdca.md](2025-09-03-UTC-1535-phase1b-unified-cli-implementation.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1540-shell-linking-cli-requirements-implementation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1540-shell-linking-cli-requirements-implementation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1540-shell-linking-cli-requirements-implementation.pdca.md)
-- **Shell Linking Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scenarios/index/a/0/7/d/5/a07d528a-dedc-4e11-af71-d83cb96bfd5e.scenario.json) | [scenarios/index/a/0/7/d/5/a07d528a-dedc-4e11-af71-d83cb96bfd5e.scenario.json](scenarios/index/a/0/7/d/5/a07d528a-dedc-4e11-af71-d83cb96bfd5e.scenario.json)
-- **CLI Usage Display Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scenarios/index/4/7/e/5/6/47e56d3d-7975-4a89-99ea-d51c4b7ef3a0.scenario.json) | [scenarios/index/4/7/e/5/6/47e56d3d-7975-4a89-99ea-d51c4b7ef3a0.scenario.json](scenarios/index/4/7/e/5/6/47e56d3d-7975-4a89-99ea-d51c4b7ef3a0.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1540-shell-linking-cli-requirements-implementation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1540-shell-linking-cli-requirements-implementation.pdca.md](2025-09-03-UTC-1540-shell-linking-cli-requirements-implementation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scenarios/index/a/0/7/d/5/a07d528a-dedc-4e11-af71-d83cb96bfd5e.scenario.json) | [§/scenarios/index/a/0/7/d/5/a07d528a-dedc-4e11-af71-d83cb96bfd5e.scenario.json](../../../../../../scenarios/index/a/0/7/d/5/a07d528a-dedc-4e11-af71-d83cb96bfd5e.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scenarios/index/4/7/e/5/6/47e56d3d-7975-4a89-99ea-d51c4b7ef3a0.scenario.json) | [§/scenarios/index/4/7/e/5/6/47e56d3d-7975-4a89-99ea-d51c4b7ef3a0.scenario.json](../../../../../../scenarios/index/4/7/e/5/6/47e56d3d-7975-4a89-99ea-d51c4b7ef3a0.scenario.json)
 - **Shell Scripts:** [scripts/once](scripts/once), [scripts/build](scripts/build), [scripts/httpserver](scripts/httpserver), [scripts/wsserver](scripts/wsserver), [scripts/p2pserver](scripts/p2pserver)
 - **Versioned CLIs:** [scripts/versions/once-v0.3.0.0](scripts/versions/once-v0.3.0.0), [scripts/versions/build-v0.3.0.0](scripts/versions/build-v0.3.0.0), [scripts/versions/httpserver-v0.3.0.0](scripts/versions/httpserver-v0.3.0.0)
 
@@ -210,4 +210,3 @@ async info(args: string[]): Promise<void>
 
 **🎯 Shell script linking and CLI requirements implemented - universal component access with colorful interface! 🖥️🔗**
 
-**"Always 4 2 (FOR TWO) - consistent interface patterns enable confident component interaction across diverse functionality ecosystems."** 🔧📊

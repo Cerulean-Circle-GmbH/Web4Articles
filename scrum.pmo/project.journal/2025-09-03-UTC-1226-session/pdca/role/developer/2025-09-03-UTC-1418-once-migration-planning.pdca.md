@@ -12,17 +12,17 @@
 **🚨 Issues:** Complex architectural migration requiring systematic planning with multiple interdependent decisions  
 
 **📎 Previous Commit:** 027c126f - Update ONCE analysis PDCA with comprehensive user architecture decisions  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1415-once-scenario-occams-razor-analysis.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1415-once-scenario-occams-razor-analysis.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1415-once-scenario-occams-razor-analysis.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1415-once-scenario-occams-razor-analysis.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1415-once-scenario-occams-razor-analysis.pdca.md](2025-09-03-UTC-1415-once-scenario-occams-razor-analysis.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1418-once-migration-planning.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1418-once-migration-planning.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1418-once-migration-planning.pdca.md)
-- **Current ONCE 0.2.0.0:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.2.0.0) | [components/ONCE/0.2.0.0](components/ONCE/0.2.0.0)
-- **Existing Scenario Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Scenario) | [components/Scenario](components/Scenario)
-- **Target 0.3.0.0 Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.3.0.0) | [components/ONCE/0.3.0.0](components/ONCE/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1418-once-migration-planning.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1418-once-migration-planning.pdca.md](2025-09-03-UTC-1418-once-migration-planning.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.2.0.0) | [§/components/ONCE/0.2.0.0](../../../../../../components/ONCE/0.2.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Scenario) | [§/components/Scenario](../../../../../../components/Scenario)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.3.0.0) | [§/components/ONCE/0.3.0.0](../../../../../../components/ONCE/0.3.0.0)
 
 ### **QA Decisions**
 - [x] **Decision 1: DefaultIOR Implementation Location** - Selected: c) Create shared DefaultIOR in components/IOR/latest/ keeping all ONCE 0.2.0.0 features with 5-layer + Web4 patterns, radically simplified yet resilient
@@ -202,4 +202,3 @@ PDCA 7: Component ecosystem integration
 
 **🎯 Migration planning complete with 18 critical questions and 7-phase PDCA sequence ready for systematic implementation! 🗺️✨**
 
-**"Always 4 2 (FOR TWO) - careful planning prevents architectural chaos and enables confident systematic migration."** 🔧📊

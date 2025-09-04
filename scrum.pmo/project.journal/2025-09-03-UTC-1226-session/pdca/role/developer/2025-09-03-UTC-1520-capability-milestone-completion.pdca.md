@@ -12,24 +12,24 @@
 **🚨 Issues:** ONCE kernel must integrate with capability components via IOR references for complete functionality  
 
 **📎 Previous Commit:** 21c793a3 - Complete P2PServer capability component implementation - all three capability components now follow Web4 patterns  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1518-capability-implementation-continuation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1518-capability-implementation-continuation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1518-capability-implementation-continuation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1518-capability-implementation-continuation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1518-capability-implementation-continuation.pdca.md](2025-09-03-UTC-1518-capability-implementation-continuation.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1520-capability-milestone-completion.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1520-capability-milestone-completion.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1520-capability-milestone-completion.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1520-capability-milestone-completion.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1520-capability-milestone-completion.pdca.md](2025-09-03-UTC-1520-capability-milestone-completion.pdca.md)
 
 ### **Completed Capability Components**
-- **HttpServer Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/HttpServer/0.3.0.0) | [components/HttpServer/0.3.0.0](components/HttpServer/0.3.0.0) - HTTP server capability with routing and connection management
-- **WsServer Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/WsServer/0.3.0.0) | [components/WsServer/0.3.0.0](components/WsServer/0.3.0.0) - WebSocket server capability with connection management
-- **P2PServer Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/P2PServer/0.3.0.0) | [components/P2PServer/0.3.0.0](components/P2PServer/0.3.0.0) - P2P server capability with peer coordination
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/HttpServer/0.3.0.0) | [§/components/HttpServer/0.3.0.0](../../../../../../components/HttpServer/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/WsServer/0.3.0.0) | [§/components/WsServer/0.3.0.0](../../../../../../components/WsServer/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/P2PServer/0.3.0.0) | [§/components/P2PServer/0.3.0.0](../../../../../../components/P2PServer/0.3.0.0)
 
 ### **Foundation Components**  
-- **ONCE Kernel:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.3.0.0) | [components/ONCE/0.3.0.0](components/ONCE/0.3.0.0) - Environment kernel ready for capability integration
-- **Shared IOR Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0) | [components/IOR/0.3.0.0](components/IOR/0.3.0.0) - Universal object reference system
-- **Unified Scenario Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Scenario/0.1.3.0) | [components/Scenario/0.1.3.0](components/Scenario/0.1.3.0) - Universal hibernation system
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.3.0.0) | [§/components/ONCE/0.3.0.0](../../../../../../components/ONCE/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0) | [§/components/IOR/0.3.0.0](../../../../../../components/IOR/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Scenario/0.1.3.0) | [§/components/Scenario/0.1.3.0](../../../../../../components/Scenario/0.1.3.0)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Milestone complete, transitioning to ONCE kernel integration phase
@@ -67,7 +67,7 @@ Capability implementation milestone complete! Created 4 requirements from migrat
 ### **✅ Requirements Achievement Summary**
 
 **1. Web4 Architecture Compliance Requirement Implementation**
-- **Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json) | [spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json](spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json) | [§/spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json](../../../../../../spec/requirements/cec5b6a3-957b-4f20-b79c-2a207654ae2e.scenario.json)
 - **Implementation Evidence:**
   - ✅ Single interface per file: All capability components follow strict separation
   - ✅ Scenarios ARE configs: All config data in model, no separate config interfaces
@@ -76,15 +76,15 @@ Capability implementation milestone complete! Created 4 requirements from migrat
   - ✅ Radical OOP patterns: Class-based proxy with encapsulation throughout
 
 **2. Capability Component Architecture Requirement Implementation**  
-- **Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/1e56cc1c-5db4-43c4-ac16-b7567f1d8ff2.scenario.json) | [spec/requirements/1e56cc1c-5db4-43c4-ac16-b7567f1d8ff2.scenario.json](spec/requirements/1e56cc1c-5db4-43c4-ac16-b7567f1d8ff2.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/1e56cc1c-5db4-43c4-ac16-b7567f1d8ff2.scenario.json) | [§/spec/requirements/1e56cc1c-5db4-43c4-ac16-b7567f1d8ff2.scenario.json](../../../../../../spec/requirements/1e56cc1c-5db4-43c4-ac16-b7567f1d8ff2.scenario.json)
 - **Implementation Evidence:**
-  - ✅ HttpServer: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/HttpServer/0.3.0.0/src/ts/layer2/DefaultHttpServer.ts) | [components/HttpServer/0.3.0.0/src/ts/layer2/DefaultHttpServer.ts](components/HttpServer/0.3.0.0/src/ts/layer2/DefaultHttpServer.ts) - Separate self-managed component
-  - ✅ WsServer: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/WsServer/0.3.0.0/src/ts/layer2/DefaultWsServer.ts) | [components/WsServer/0.3.0.0/src/ts/layer2/DefaultWsServer.ts](components/WsServer/0.3.0.0/src/ts/layer2/DefaultWsServer.ts) - Separate self-managed component
-  - ✅ P2PServer: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/P2PServer/0.3.0.0/src/ts/layer2/DefaultP2PServer.ts) | [components/P2PServer/0.3.0.0/src/ts/layer2/DefaultP2PServer.ts](components/P2PServer/0.3.0.0/src/ts/layer2/DefaultP2PServer.ts) - Separate self-managed component
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/HttpServer/0.3.0.0/src/ts/layer2/DefaultHttpServer.ts) | [§/components/HttpServer/0.3.0.0/src/ts/layer2/DefaultHttpServer.ts](../../../../../../components/HttpServer/0.3.0.0/src/ts/layer2/DefaultHttpServer.ts)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/WsServer/0.3.0.0/src/ts/layer2/DefaultWsServer.ts) | [§/components/WsServer/0.3.0.0/src/ts/layer2/DefaultWsServer.ts](../../../../../../components/WsServer/0.3.0.0/src/ts/layer2/DefaultWsServer.ts)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/P2PServer/0.3.0.0/src/ts/layer2/DefaultP2PServer.ts) | [§/components/P2PServer/0.3.0.0/src/ts/layer2/DefaultP2PServer.ts](../../../../../../components/P2PServer/0.3.0.0/src/ts/layer2/DefaultP2PServer.ts)
   - ✅ Each has own ports, IOR references, scenarios for configuration
 
 **3. Radical OOP Type Safety Requirement Implementation**
-- **Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json) | [spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json](spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json) | [§/spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json](../../../../../../spec/requirements/ea39ff5b-f871-47ed-880f-e19ff1daba6d.scenario.json)
 - **Implementation Evidence:**
   - ✅ Component-specific models: All capability components have type-safe models extending Model
   - ✅ Private data naming: All use `private data` (not `_data`) following feedback
@@ -223,4 +223,3 @@ class DefaultONCE implements ONCE {
 
 **🎯 Capability milestone complete - HttpServer, WsServer, P2PServer implemented! Starting ONCE kernel integration phase! 🏗️🔗**
 
-**"Always 4 2 (FOR TWO) - milestone achievement enables confident transition to component integration excellence."** 🔧📊

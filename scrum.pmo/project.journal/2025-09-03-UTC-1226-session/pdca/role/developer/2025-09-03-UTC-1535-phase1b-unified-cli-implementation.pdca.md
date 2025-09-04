@@ -12,16 +12,16 @@
 **🚨 Issues:** CLI architecture must provide consistent command interface across all Web4 components with delegation pattern  
 
 **📎 Previous Commit:** a34656c9 - Create shell starters for core components: ONCE, HttpServer, WsServer, P2PServer with Build component integration  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1530-phase1a-build-component-adaptation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1530-phase1a-build-component-adaptation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1530-phase1a-build-component-adaptation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1530-phase1a-build-component-adaptation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1530-phase1a-build-component-adaptation.pdca.md](2025-09-03-UTC-1530-phase1a-build-component-adaptation.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1535-phase1b-unified-cli-implementation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1535-phase1b-unified-cli-implementation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1535-phase1b-unified-cli-implementation.pdca.md)
-- **TSRanger CLI Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/TSRanger/v2.2) | [components/TSRanger/v2.2](components/TSRanger/v2.2)
-- **CLI Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json) | [spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json](spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1535-phase1b-unified-cli-implementation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1535-phase1b-unified-cli-implementation.pdca.md](2025-09-03-UTC-1535-phase1b-unified-cli-implementation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/TSRanger/v2.2) | [§/components/TSRanger/v2.2](../../../../../../components/TSRanger/v2.2)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json) | [§/spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json](../../../../../../spec/requirements/4970f791-f334-4c32-9062-5cdfa5260687.scenario.json)
 - **Universal CLI Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/IOR/0.3.0.0/src/ts/layer5/UniversalCLI.ts) | [components/IOR/0.3.0.0/src/ts/layer5/UniversalCLI.ts](components/IOR/0.3.0.0/src/ts/layer5/UniversalCLI.ts)
 
 ### **QA Decisions**
@@ -280,4 +280,3 @@ cli.run(process.argv.slice(2));
 
 **🎯 Phase 1b CLI architecture planned - implementing universal CLI with command delegation! 🖥️🔗**
 
-**"Always 4 2 (FOR TWO) - unified interface architecture enables consistent developer experience across diverse component functionality."** 🔧📊

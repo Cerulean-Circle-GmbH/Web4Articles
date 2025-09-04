@@ -12,16 +12,16 @@
 **🚨 Issues:** Components need both standalone and service operation modes with optional ONCE server registration for distributed Web4 architecture  
 
 **📎 Previous Commit:** 7abb4391 - Implement comprehensive build chain system  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1545-comprehensive-build-chain-implementation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1545-comprehensive-build-chain-implementation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1545-comprehensive-build-chain-implementation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1545-comprehensive-build-chain-implementation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1545-comprehensive-build-chain-implementation.pdca.md](2025-09-03-UTC-1545-comprehensive-build-chain-implementation.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1550-phase1c-service-integration-implementation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1550-phase1c-service-integration-implementation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1550-phase1c-service-integration-implementation.pdca.md)
-- **Service Integration Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json) | [spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json](spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json)
-- **ONCE Server Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.3.0.0) | [components/ONCE/0.3.0.0](components/ONCE/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1550-phase1c-service-integration-implementation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1550-phase1c-service-integration-implementation.pdca.md](2025-09-03-UTC-1550-phase1c-service-integration-implementation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json) | [§/spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json](../../../../../../spec/requirements/9990416c-77ec-4a83-b24c-b23825cbefa0.scenario.json)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.3.0.0) | [§/components/ONCE/0.3.0.0](../../../../../../components/ONCE/0.3.0.0)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Implementing Phase 1c service integration following user decision 3b+c hybrid approach
@@ -253,4 +253,3 @@ async loadComponent(componentIOR: IOR, scenario: Scenario): Promise<Component> {
 
 **🎯 Phase 1c service integration planned - implementing ONCE 42777 server registry and hybrid component architecture! 🌐🔗**
 
-**"Always 4 2 (FOR TWO) - service integration architecture enables distributed component ecosystem with flexible operation modes and centralized orchestration."** 🔧📊

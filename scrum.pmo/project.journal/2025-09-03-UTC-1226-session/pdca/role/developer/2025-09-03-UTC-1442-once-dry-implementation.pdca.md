@@ -12,18 +12,18 @@
 **🚨 Issues:** ONCE must demonstrate proper Web4 DRY principle through component reuse rather than reimplementation  
 
 **📎 Previous Commit:** 049a515c - PDCA: ONCE Implementation Questions - Architecture Detail Clarification  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1440-once-implementation-questions.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1440-once-implementation-questions.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1440-once-implementation-questions.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1440-once-implementation-questions.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1440-once-implementation-questions.pdca.md](2025-09-03-UTC-1440-once-implementation-questions.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1442-once-dry-implementation.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1442-once-dry-implementation.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1442-once-dry-implementation.pdca.md)
-- **ONCE 0.3.0.0 Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts) | [components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts](components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts)
-- **Shared Scenario Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Scenario/0.1.3.0) | [components/Scenario/0.1.3.0](components/Scenario/0.1.3.0)
-- **Shared User Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/User/0.1.3.0) | [components/User/0.1.3.0](components/User/0.1.3.0)
-- **Shared IOR Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0) | [components/IOR/0.3.0.0](components/IOR/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1442-once-dry-implementation.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1442-once-dry-implementation.pdca.md](2025-09-03-UTC-1442-once-dry-implementation.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts) | [§/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts](../../../../../../components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/Scenario/0.1.3.0) | [§/components/Scenario/0.1.3.0](../../../../../../components/Scenario/0.1.3.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/User/0.1.3.0) | [§/components/User/0.1.3.0](../../../../../../components/User/0.1.3.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/IOR/0.3.0.0) | [§/components/IOR/0.3.0.0](../../../../../../components/IOR/0.3.0.0)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Web4 DRY implementation strategy confirmed with component reuse and delegation
@@ -267,4 +267,3 @@ export class DefaultONCE implements ONCE {
 
 **🎯 Web4 DRY strategy defined - ONCE will demonstrate perfect component reuse with self-managed delegation! 🔄🎯**
 
-**"Always 4 2 (FOR TWO) - reusable components enable systematic excellence without duplication."** 🔧📊

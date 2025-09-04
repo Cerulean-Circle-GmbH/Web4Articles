@@ -12,17 +12,17 @@
 **🚨 Issues:** Multiple implementation paths possible requiring user guidance on priorities and sequence  
 
 **📎 Previous Commit:** 14698c22 - Implement ONCE kernel integration: Dynamic component loading, capability management, environment-based boot, IOR registry  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1522-once-kernel-integration-phase.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1522-once-kernel-integration-phase.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1522-once-kernel-integration-phase.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1522-once-kernel-integration-phase.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1522-once-kernel-integration-phase.pdca.md](2025-09-03-UTC-1522-once-kernel-integration-phase.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1525-once-next-steps-decision-framework.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1525-once-next-steps-decision-framework.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1525-once-next-steps-decision-framework.pdca.md)
-- **Current ONCE Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.3.0.0) | [components/ONCE/0.3.0.0](components/ONCE/0.3.0.0)
-- **Capability Components:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components) | [components](components) - HttpServer, WsServer, P2PServer
-- **Created Requirements:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/spec/requirements) | [spec/requirements](spec/requirements)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1525-once-next-steps-decision-framework.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1525-once-next-steps-decision-framework.pdca.md](2025-09-03-UTC-1525-once-next-steps-decision-framework.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components/ONCE/0.3.0.0) | [§/components/ONCE/0.3.0.0](../../../../../../components/ONCE/0.3.0.0)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/components) | [§/components](../../../../../../components)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once/spec/requirements) | [§/spec/requirements](../../../../../../spec/requirements)
 - **Version Build Tags:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/releases) | [v0.3.0.0-build-009](git tag -l "v0.3.0.0-build-*")
 
 ### **QA Decisions**
@@ -273,4 +273,3 @@ Next steps decision framework prepared! ONCE v0.3.0.0-build-009 achieved with ke
 
 **🎯 ONCE migration next steps decision framework ready - 8 strategic areas with implementation options! 📋🎯**
 
-**"Always 4 2 (FOR TWO) - comprehensive strategy analysis enables informed decision making and optimal resource allocation."** 🔧📊

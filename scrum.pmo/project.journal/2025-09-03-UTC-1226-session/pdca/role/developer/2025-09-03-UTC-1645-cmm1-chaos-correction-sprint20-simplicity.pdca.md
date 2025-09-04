@@ -12,16 +12,16 @@
 **🚨 Issues:** CMM1 chaos from creating separate implementations violating Web4 principles, must restore Sprint 20 simplicity with proper DefaultONCE  
 
 **📎 Previous Commit:** 8c28805d - PDCA: GitHub link fix & CMM3 compliance  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/77fcc433/scrum.pmo/project.journal/2025-09-03-UTC-1640-github-link-fix-cmm3-compliance.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1640-github-link-fix-cmm3-compliance.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1640-github-link-fix-cmm3-compliance.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/77fcc433/scrum.pmo/project.journal/2025-09-03-UTC-1640-github-link-fix-cmm3-compliance.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1640-github-link-fix-cmm3-compliance.pdca.md](2025-09-03-UTC-1640-github-link-fix-cmm3-compliance.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/77fcc433/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md)
-- **DefaultONCE Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/77fcc433/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts) | [components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts](components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts)
-- **Sprint 20 Planning:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/77fcc433/scrum.pmo/sprints/sprint-20/planning.md) | [scrum.pmo/sprints/sprint-20/planning.md](scrum.pmo/sprints/sprint-20/planning.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/77fcc433/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md) | [§/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md](2025-09-03-UTC-1645-cmm1-chaos-correction-sprint20-simplicity.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/77fcc433/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts) | [§/components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts](../../../../../../components/ONCE/0.3.0.0/src/ts/layer2/DefaultONCE.ts)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/77fcc433/scrum.pmo/sprints/sprint-20/planning.md) | [§/scrum.pmo/sprints/sprint-20/planning.md](../../../../../sprints/sprint-20/planning.md)
 
 ### **QA Decisions**
 - [ ] **DefaultONCE Deinstall Implementation Strategy**
@@ -201,4 +201,3 @@ async help(args: string[]): Promise<void> {
 
 **🎯 CMM1 chaos corrected by removing violating implementations - restoring Sprint 20 simplicity with single DefaultONCE! 🔧⚖️**
 
-**"Always 4 2 (FOR TWO) - simplicity restoration through chaos correction enables proper Web4 principle adherence and Sprint 20 compliance."** 🔧📊
