@@ -143,16 +143,23 @@ main() {
         check_npm || exit 1
     fi
     
-    echo "🏗️ Building component..."
-    build_dependencies
+    echo "🏗️ Building component (bootstrap mode)..."
     
-    echo "🚀 Delegating to Build CLI..."
+    # Build StandaloneBuild first (dependency-free bootstrap)
+    if [ ! -f "$COMPONENT_DIR/dist/ts/StandaloneBuild.js" ]; then
+        echo "🔧 Bootstrapping StandaloneBuild..."
+        cd "$COMPONENT_DIR"
+        npm install >/dev/null 2>&1
+        npx tsc src/ts/StandaloneBuild.ts --outDir dist/ts --module ES2022 --target ES2022 --moduleResolution node >/dev/null 2>&1
+    fi
     
-    # Delegate all arguments to CLI
-    if [ -f "$COMPONENT_DIR/dist/ts/layer5/BuildCLI.js" ]; then
-        node "$COMPONENT_DIR/dist/ts/layer5/BuildCLI.js" "$@"
+    echo "🚀 Delegating to StandaloneBuild CLI..."
+    
+    # Use dependency-free StandaloneBuild
+    if [ -f "$COMPONENT_DIR/dist/ts/StandaloneBuild.js" ]; then
+        node "$COMPONENT_DIR/dist/ts/StandaloneBuild.js" "$@"
     else
-        echo -e "${RED}❌ Build CLI not found. Run 'npm run build' first.${NC}"
+        echo -e "${RED}❌ StandaloneBuild bootstrap failed${NC}"
         exit 1
     fi
 }
