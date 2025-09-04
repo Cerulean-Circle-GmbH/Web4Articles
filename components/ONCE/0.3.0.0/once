@@ -80,11 +80,11 @@ enhanced_fallback_build() {
     
     # Build ONCE component
     if [ -f "$COMPONENT_DIR/package.json" ]; then
-        echo "🔧 Building Web4CompliantONCE directly..."
+        echo "🔧 Building ONCE component..."
         cd "$COMPONENT_DIR"
         npm install >/dev/null 2>&1
-        npx tsc src/ts/Web4CompliantONCE.ts --outDir dist --module ES2022 --target ES2022 --moduleResolution node
-        echo -e "${GREEN}✅ Web4CompliantONCE built${NC}"
+        npm run build >/dev/null 2>&1 || npx tsc >/dev/null 2>&1
+        echo -e "${GREEN}✅ ONCE built${NC}"
     fi
     
     echo -e "${GREEN}✅ Enhanced fallback build complete${NC}"
@@ -115,20 +115,13 @@ main() {
     
     echo "🚀 Delegating to ONCE CLI..."
     
-    # Delegate to Web4CompliantONCE (proper Web4 patterns)
-    if [ -f "$COMPONENT_DIR/dist/Web4CompliantONCE.js" ]; then
-        node "$COMPONENT_DIR/dist/Web4CompliantONCE.js" "$@"
+    # Delegate to ONCE CLI (proper Web4 patterns)
+    if [ -f "$COMPONENT_DIR/dist/ts/layer5/ONCECLI.js" ]; then
+        node "$COMPONENT_DIR/dist/ts/layer5/ONCECLI.js" "$@"
     else
-        echo "🔧 Building Web4CompliantONCE for seamless execution..."
-        cd "$COMPONENT_DIR"
-        npx tsc src/ts/Web4CompliantONCE.ts --outDir dist --module ES2022 --target ES2022 --moduleResolution node
-        
-        if [ -f "$COMPONENT_DIR/dist/Web4CompliantONCE.js" ]; then
-            node "$COMPONENT_DIR/dist/Web4CompliantONCE.js" "$@"
-        else
-            echo -e "${RED}❌ Web4CompliantONCE build failed${NC}"
-            exit 1
-        fi
+        echo -e "${RED}❌ ONCE CLI not found. Build may have failed.${NC}"
+        echo "Try running: npm run build"
+        exit 1
     fi
 }
 
