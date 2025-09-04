@@ -107,13 +107,164 @@ export class StandaloneONCE {
     console.log('  \x1b[36mstop\x1b[0m      Stop the ONCE kernel');
     console.log('  \x1b[36mstatus\x1b[0m    Show kernel status');
     console.log('  \x1b[36minfo\x1b[0m      Show kernel information');
+    console.log('  \x1b[36mdemo\x1b[0m      Start interactive demo');
+    console.log('  \x1b[36mtest\x1b[0m      Run test sequence');
     console.log('  \x1b[36mhelp\x1b[0m      Show this help message');
     console.log('  \x1b[36mdeinstall\x1b[0m Clean all components');
     console.log('\n\x1b[32mExamples:\x1b[0m');
     console.log('  once start    # Start ONCE kernel');
+    console.log('  once demo     # Interactive demo with capabilities');
+    console.log('  once test "s3bq" # Test sequence: start, 3s wait, browser, quit');
     console.log('  once status   # Check kernel status');
     console.log('  once deinstall # Clean all Web4 components and force rebuild');
     console.log('\n\x1b[90mWeb4 ONCE Component v0.3.0.0\x1b[0m\n');
+  }
+
+  async demo(args: string[] = []): Promise<void> {
+    console.log('🎭 ONCE v0.3.0.0 Interactive Demo Starting...');
+    
+    if (args.length === 0) {
+      // Interactive demo mode
+      await this.startInteractiveDemo();
+    } else {
+      const input = args[0];
+      
+      if (input === 'help') {
+        this.showDemoHelp();
+        return;
+      }
+      
+      if (input === 'headless') {
+        // Headless demo mode
+        console.log('🖥️ Starting headless demo (server-only)...');
+        await this.start(['headless']);
+      } else {
+        // Test sequence (same as test command)
+        await this.runTestSequence(input);
+      }
+    }
+  }
+
+  async test(args: string[] = []): Promise<void> {
+    console.log('🧪 ONCE v0.3.0.0 Test Sequence Starting...');
+    
+    if (args.length === 0) {
+      console.log('❌ Test command requires input sequence');
+      console.log('Examples: once test "s3bq" (start, 3s wait, browser, quit)');
+      return;
+    }
+    
+    const input = args[0];
+    await this.runTestSequence(input);
+  }
+
+  private async startInteractiveDemo(): Promise<void> {
+    console.log('🎭 Interactive Demo Mode');
+    console.log('📱 Starting ONCE kernel with interactive capabilities...');
+    
+    // Start the kernel
+    await this.start([]);
+    
+    console.log('🌐 Demo server available at: http://localhost:42777');
+    console.log('🎮 Interactive demo ready - press Ctrl+C to exit');
+    
+    // Keep alive for interactive use
+    process.on('SIGINT', async () => {
+      console.log('\n🛑 Stopping interactive demo...');
+      await this.stop([]);
+      process.exit(0);
+    });
+  }
+
+  private showDemoHelp(): void {
+    console.log('🎭 ONCE Demo Help');
+    console.log('');
+    console.log('📋 Demo Commands:');
+    console.log('  once demo           # Interactive demo with browser');
+    console.log('  once demo headless  # Server-only demo');
+    console.log('  once demo help      # Show this help');
+    console.log('');
+    console.log('📋 Test Sequences:');
+    console.log('  once test "s3bq"    # Start, 3s wait, browser, quit');
+    console.log('  once test "s5"      # Start, 5s wait');
+    console.log('  once test "sb"      # Start, browser');
+    console.log('');
+    console.log('🔤 Test Input Format:');
+    console.log('  s = start server');
+    console.log('  3 = wait 3 seconds');
+    console.log('  b = open browser');
+    console.log('  q = quit/stop');
+    console.log('');
+  }
+
+  private async runTestSequence(input: string): Promise<void> {
+    console.log(`🧪 Running test sequence: "${input}"`);
+    
+    for (let i = 0; i < input.length; i++) {
+      const command = input[i];
+      
+      switch (command) {
+        case 's':
+          console.log('🚀 Starting ONCE kernel...');
+          await this.start([]);
+          break;
+          
+        case 'b':
+          console.log('🌐 Opening browser...');
+          await this.openBrowser();
+          break;
+          
+        case 'q':
+          console.log('🛑 Stopping ONCE kernel...');
+          await this.stop([]);
+          break;
+          
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+          const seconds = parseInt(command);
+          console.log(`⏱️ Waiting ${seconds} seconds...`);
+          await this.sleep(seconds * 1000);
+          break;
+          
+        default:
+          console.log(`⚠️ Unknown test command: ${command}`);
+      }
+    }
+    
+    console.log('✅ Test sequence completed');
+  }
+
+  private async openBrowser(): Promise<void> {
+    try {
+      const { execSync } = await import('child_process');
+      const url = 'http://localhost:42777';
+      
+      // Platform-specific browser opening
+      const platform = process.platform;
+      if (platform === 'darwin') {
+        execSync(`open ${url}`);
+      } else if (platform === 'win32') {
+        execSync(`start ${url}`);
+      } else {
+        execSync(`xdg-open ${url}`);
+      }
+      
+      console.log(`🌐 Browser opened: ${url}`);
+    } catch (error) {
+      console.log(`⚠️ Could not open browser: ${error}`);
+      console.log('🌐 Manual access: http://localhost:42777');
+    }
+  }
+
+  private async sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   async deinstall(args: string[] = []): Promise<void> {
@@ -229,6 +380,12 @@ export class StandaloneONCE {
         break;
       case 'help':
         await once.help(args.slice(1));
+        break;
+      case 'demo':
+        await once.demo(args.slice(1));
+        break;
+      case 'test':
+        await once.test(args.slice(1));
         break;
       case 'deinstall':
         await once.deinstall(args.slice(1));

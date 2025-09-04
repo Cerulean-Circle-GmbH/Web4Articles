@@ -5,55 +5,19 @@
  * Universal service registration interface for hybrid component operation
  */
 
-// Forward declaration to avoid circular dependency
-export interface ServiceRegistration {
-  componentIOR: any; // IOR type
-  serviceEndpoint: string;
-  capabilities: string[];
-  status: 'registering' | 'active' | 'inactive' | 'error';
-  registeredAt: string;
-  lastHeartbeat?: string;
-  metadata?: { [key: string]: any; };
-}
+import { ServiceRegistration } from './ServiceRegistration.interface.js';
 
 export interface ServiceCapable {
   /**
-   * Register component as service with ONCE 42777 server
-   */
-  registerAsService(onceServerEndpoint?: string): Promise<void>;
-
-  /**
-   * Unregister component from ONCE service registry
-   */
-  unregisterFromService(): Promise<void>;
-
-  /**
-   * Check if component is registered as service
-   */
-  isRegisteredAsService(): boolean;
-
-  /**
-   * Get service registration information
-   */
-  getServiceRegistration(): ServiceRegistration | undefined;
-
-  /**
-   * Start component in service mode
-   */
-  startAsService(onceServerEndpoint: string): Promise<void>;
-
-  /**
-   * Start component in standalone mode
-   */
-  startStandalone(): Promise<void>;
-
-  /**
-   * Find ONCE server for service registration
-   */
-  findOnceServer(): string | undefined;
-
-  /**
-   * Get component capabilities for service registration
+   * Get component capabilities for ONCE kernel service integration
+   * When ONCE kernel loads component into 42777 server, these capabilities
+   * determine service availability - no additional endpoints required
    */
   getCapabilities(): string[];
+
+  /**
+   * Get service registration information for ONCE kernel
+   * Simple data structure for kernel-managed service integration
+   */
+  getServiceRegistration(): ServiceRegistration | undefined;
 }

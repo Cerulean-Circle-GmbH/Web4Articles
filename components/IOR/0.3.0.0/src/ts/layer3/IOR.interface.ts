@@ -56,3 +56,4 @@ export { DefaultCLI } from '../layer5/DefaultCLI.js';
 export { CLIColors } from '../layer5/CLIColors.js';
 // Service integration exports
 export type { ServiceCapable } from './ServiceCapable.interface.js';
+export type { ServiceRegistration } from './ServiceRegistration.interface.js';
