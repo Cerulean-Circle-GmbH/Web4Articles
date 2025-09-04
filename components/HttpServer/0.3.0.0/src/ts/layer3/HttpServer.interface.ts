@@ -6,9 +6,9 @@
  */
 
 import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
-import { IOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
+import { IOR, ServiceCapable } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
 
-export interface HttpServer {
+export interface HttpServer extends ServiceCapable {
   /**
    * Initialize from scenario (using unified Scenario component)
    * Web4 Pattern: Scenario-based initialization - DRY compliance

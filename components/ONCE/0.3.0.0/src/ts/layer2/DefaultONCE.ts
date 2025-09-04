@@ -10,6 +10,8 @@ import { ONCE } from '../layer3/ONCE.interface.js';
 import { ONCEModel } from '../layer3/ONCEModel.interface.js';
 import { EnvironmentInfo } from '../layer3/EnvironmentInfo.interface.js';
 import { Component } from '../layer3/Component.interface.js';
+import { ServiceRegistry, ServiceRegistration } from '../layer3/ServiceRegistry.interface.js';
+import { DefaultServiceRegistry } from './DefaultServiceRegistry.js';
 import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
 import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
 import { DefaultUser } from '../../../../User/0.1.3.0/src/ts/DefaultUser.js';
@@ -24,7 +26,8 @@ import { P2PServerModel } from '../../../P2PServer/0.3.0.0/src/ts/layer3/P2PServ
 export class DefaultONCE implements ONCE {
   private data: ONCEModel;
   private scenarioService: Scenario;       // ✅ DRY: Shared component composition
-  private userService: DefaultUser;        // ✅ DRY: Shared component composition  
+  private userService: DefaultUser;        // ✅ DRY: Shared component composition
+  private serviceRegistry: DefaultServiceRegistry; // ✅ Service integration (42777 server)
   private loadedComponents: Map<string, Component>; // Component registry for kernel
 
   /**
@@ -49,6 +52,7 @@ export class DefaultONCE implements ONCE {
     // ✅ Web4 DRY: Compose with shared components
     this.scenarioService = new Scenario();
     this.userService = new DefaultUser();
+    this.serviceRegistry = new DefaultServiceRegistry();
     this.loadedComponents = new Map();
     
     // Radical OOP: Return proxy-wrapped class instance
@@ -129,16 +133,19 @@ export class DefaultONCE implements ONCE {
     
     console.log(`ONCE Kernel: Booting in ${environment.platform} environment`);
     
-    // 2. Load default capabilities based on environment
+    // 2. Start ONCE 42777 service registry server
+    await this.startServiceRegistry();
+    
+    // 3. Load default capabilities as services based on environment
     if (environment.platform === 'node') {
-      // Node.js environment - load all server capabilities
-      await this.loadHttpServer(8080);
-      await this.loadWsServer(42777);
-      await this.loadP2PServer(42778);
+      // Node.js environment - load all server capabilities as services
+      await this.loadHttpServerAsService(8080);
+      await this.loadWsServerAsService(42777);
+      await this.loadP2PServerAsService(42778);
     } else if (environment.platform === 'browser') {
-      // Browser environment - load client-side capabilities
-      await this.loadWsServer(42777); // WebSocket client capability
-      await this.loadP2PServer(42778); // P2P client capability
+      // Browser environment - load client-side capabilities as services
+      await this.loadWsServerAsService(42777); // WebSocket client capability
+      await this.loadP2PServerAsService(42778); // P2P client capability
     }
     
     this.data.state = 'ready';
@@ -147,6 +154,141 @@ export class DefaultONCE implements ONCE {
     console.log(`ONCE Kernel: Boot complete with ${this.data.capabilities.length} capabilities loaded`);
     
     return environment;
+  }
+
+  /**
+   * Start ONCE 42777 service registry server
+   */
+  private async startServiceRegistry(): Promise<void> {
+    console.log('ONCE: Starting 42777 service registry server...');
+    
+    try {
+      await this.serviceRegistry.startServer();
+      
+      // Update model with service registry state
+      this.data.serviceRegistry = {
+        port: 42777,
+        host: '0.0.0.0',
+        running: true,
+        serviceCount: 0
+      };
+      
+      console.log('✅ ONCE: Service registry started - components can register as services');
+      
+    } catch (error) {
+      console.error(`❌ ONCE: Failed to start service registry - ${(error as Error).message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Load HttpServer as service with registration
+   */
+  private async loadHttpServerAsService(port: number): Promise<void> {
+    console.log(`ONCE: Loading HttpServer as service on port ${port}...`);
+    
+    const httpServerIOR = new DefaultIOR().init({
+      uuid: crypto.randomUUID(),
+      component: 'HttpServer',
+      version: '0.3.0.0'
+    });
+    
+    const scenario = new Scenario().init({
+      ior: httpServerIOR.toJSON(),
+      owner: '',
+      model: { 
+        uuid: httpServerIOR.uuid, 
+        name: 'HTTP Server Capability',
+        description: 'HTTP server capability component',
+        port: port,
+        host: '0.0.0.0',
+        state: 'stopped'
+      } as HttpServerModel
+    });
+    
+    // Load component and register as service
+    const component = await this.loadComponent(httpServerIOR, scenario);
+    await this.registerComponentAsService(component, httpServerIOR, ['http', 'web', 'api']);
+  }
+
+  /**
+   * Load WsServer as service with registration
+   */
+  private async loadWsServerAsService(port: number): Promise<void> {
+    console.log(`ONCE: Loading WsServer as service on port ${port}...`);
+    
+    const wsServerIOR = new DefaultIOR().init({
+      uuid: crypto.randomUUID(),
+      component: 'WsServer',
+      version: '0.3.0.0'
+    });
+    
+    const scenario = new Scenario().init({
+      ior: wsServerIOR.toJSON(),
+      owner: '',
+      model: {
+        uuid: wsServerIOR.uuid,
+        name: 'WebSocket Server Capability', 
+        description: 'WebSocket server capability component',
+        port: port,
+        host: '0.0.0.0',
+        state: 'stopped'
+      } as WsServerModel
+    });
+    
+    const component = await this.loadComponent(wsServerIOR, scenario);
+    await this.registerComponentAsService(component, wsServerIOR, ['websocket', 'realtime', 'streaming']);
+  }
+
+  /**
+   * Load P2PServer as service with registration
+   */
+  private async loadP2PServerAsService(port: number): Promise<void> {
+    console.log(`ONCE: Loading P2PServer as service on port ${port}...`);
+    
+    const p2pServerIOR = new DefaultIOR().init({
+      uuid: crypto.randomUUID(),
+      component: 'P2PServer',
+      version: '0.3.0.0'
+    });
+    
+    const scenario = new Scenario().init({
+      ior: p2pServerIOR.toJSON(),
+      owner: '',
+      model: {
+        uuid: p2pServerIOR.uuid,
+        name: 'P2P Server Capability',
+        description: 'Peer-to-peer server capability component', 
+        port: port,
+        network: 'web4',
+        state: 'stopped'
+      } as P2PServerModel
+    });
+    
+    const component = await this.loadComponent(p2pServerIOR, scenario);
+    await this.registerComponentAsService(component, p2pServerIOR, ['p2p', 'peer', 'network']);
+  }
+
+  /**
+   * Register component as service in registry
+   */
+  private async registerComponentAsService(component: Component, componentIOR: IOR, capabilities: string[]): Promise<void> {
+    const registration: ServiceRegistration = {
+      componentIOR: componentIOR,
+      serviceEndpoint: `http://localhost:42777/services/${componentIOR.uuid}`,
+      capabilities: capabilities,
+      status: 'registering',
+      registeredAt: new Date().toISOString()
+    };
+    
+    await this.serviceRegistry.registerService(registration);
+    
+    // Update service registry count in model
+    if (this.data.serviceRegistry) {
+      this.data.serviceRegistry.serviceCount = this.serviceRegistry.getServices().length;
+    }
+    
+    console.log(`✅ ONCE: ${componentIOR.component} registered as service with capabilities: ${capabilities.join(', ')}`);
   }
 
   /**
@@ -397,22 +539,30 @@ export class DefaultONCE implements ONCE {
 
   /**
    * CLI Command Methods - Same names as CLI commands for delegation
+   * Enhanced with service registry integration
    */
 
   /**
-   * Start ONCE kernel (CLI delegation target)
+   * Start ONCE kernel with service registry (CLI delegation target)
    */
   async start(args: string[]): Promise<void> {
-    console.log('ONCE: Starting kernel...');
+    console.log('ONCE: Starting kernel with service registry...');
     await this.bootEnvironment();
-    console.log('ONCE: Kernel started successfully');
+    console.log('ONCE: Kernel started successfully with 42777 service registry');
+    
+    // Show service registry status
+    const registryStatus = this.serviceRegistry.getStatus();
+    console.log(`✅ Service Registry: ${registryStatus.activeServices}/${registryStatus.serviceCount} services active`);
   }
 
   /**
-   * Stop ONCE kernel (CLI delegation target) 
+   * Stop ONCE kernel and service registry (CLI delegation target) 
    */
   async stop(args: string[]): Promise<void> {
-    console.log('ONCE: Stopping kernel...');
+    console.log('ONCE: Stopping kernel and service registry...');
+    
+    // Stop service registry server
+    await this.serviceRegistry.stopServer();
     
     // Stop all loaded components
     for (const [uuid, component] of this.loadedComponents) {
@@ -421,12 +571,18 @@ export class DefaultONCE implements ONCE {
       }
     }
     
+    // Update service registry state
+    if (this.data.serviceRegistry) {
+      this.data.serviceRegistry.running = false;
+      this.data.serviceRegistry.serviceCount = 0;
+    }
+    
     this.data.state = 'booting'; // Reset to initial state
-    console.log('ONCE: Kernel stopped');
+    console.log('ONCE: Kernel and service registry stopped');
   }
 
   /**
-   * Get ONCE status (CLI delegation target)
+   * Get ONCE status with service registry (CLI delegation target)
    */
   async status(args: string[]): Promise<void> {
     console.log(`ONCE Kernel Status:`);
@@ -436,6 +592,22 @@ export class DefaultONCE implements ONCE {
     console.log(`  Loaded Components: ${this.data.loadedComponents.length}`);
     console.log(`  Domain: ${this.data.domain}`);
     console.log(`  Host: ${this.data.host}`);
+    
+    // Service registry status
+    if (this.data.serviceRegistry) {
+      console.log(`\nService Registry Status:`);
+      console.log(`  Port: ${this.data.serviceRegistry.port}`);
+      console.log(`  Running: ${this.data.serviceRegistry.running}`);
+      console.log(`  Registered Services: ${this.data.serviceRegistry.serviceCount}`);
+      
+      const services = this.serviceRegistry.getServices();
+      if (services.length > 0) {
+        console.log(`\nRegistered Services:`);
+        for (const service of services) {
+          console.log(`  - ${service.componentIOR.component}: ${service.status} (${service.capabilities.join(', ')})`);
+        }
+      }
+    }
   }
 
   /**
@@ -458,21 +630,47 @@ export class DefaultONCE implements ONCE {
   }
 
   /**
-   * Show ONCE help (CLI delegation target)
+   * Show ONCE help with service integration (CLI delegation target)
    */
   async help(args: string[]): Promise<void> {
     console.log(`ONCE - Object Network Communication Engine CLI`);
     console.log(`\nCommands:`);
-    console.log(`  start           - Start ONCE kernel`);
-    console.log(`  stop            - Stop ONCE kernel`);
-    console.log(`  status          - Show kernel status`);
+    console.log(`  start           - Start ONCE kernel with 42777 service registry`);
+    console.log(`  stop            - Stop ONCE kernel and service registry`);
+    console.log(`  status          - Show kernel and service registry status`);
     console.log(`  info            - Show kernel information`);
     console.log(`  help            - Show this help`);
     console.log(`\nKernel Commands:`);
-    console.log(`  boot            - Boot environment`);
-    console.log(`  load <component> - Load component by name`);
-    console.log(`  unload <uuid>   - Unload component by UUID`);
-    console.log(`  list            - List loaded components`);
+    console.log(`  boot            - Boot environment and start service registry`);
+    console.log(`  load <component> - Load component by name as service`);
+    console.log(`  unload <uuid>   - Unload component service by UUID`);
+    console.log(`  list            - List loaded components and services`);
+    console.log(`  services        - Show service registry status`);
+  }
+
+  /**
+   * Show service registry status (ONCE-specific command)
+   */
+  async services(args: string[]): Promise<void> {
+    const registryStatus = this.serviceRegistry.getStatus();
+    
+    console.log(`ONCE Service Registry (Port ${registryStatus.port}):`);
+    console.log(`  Status: ${registryStatus.running ? 'Running' : 'Stopped'}`);
+    console.log(`  Services: ${registryStatus.activeServices}/${registryStatus.serviceCount} active`);
+    
+    if (registryStatus.services.length > 0) {
+      console.log(`\nRegistered Services:`);
+      for (const service of registryStatus.services) {
+        console.log(`  - ${service.componentIOR.component}:${service.componentIOR.version}`);
+        console.log(`    Status: ${service.status}`);
+        console.log(`    Endpoint: ${service.serviceEndpoint}`);
+        console.log(`    Capabilities: ${service.capabilities.join(', ')}`);
+        console.log(`    Registered: ${service.registeredAt}`);
+        console.log('');
+      }
+    } else {
+      console.log('\nNo services currently registered.');
+    }
   }
 
   /**

@@ -7,6 +7,7 @@
 
 import { Model } from '../../../../IOR/0.3.0.0/src/ts/layer3/Model.interface.js';
 import { IOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
+import { ServiceRegistration } from './ServiceRegistry.interface.js';
 
 export interface ONCEModel extends Model {
   /**
@@ -49,4 +50,14 @@ export interface ONCEModel extends Model {
    * Kernel last update timestamp
    */
   updatedAt: string;
+
+  /**
+   * Service registry configuration and state (42777 server)
+   */
+  serviceRegistry?: {
+    port: number;
+    host: string;
+    running: boolean;
+    serviceCount: number;
+  };
 }

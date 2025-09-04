@@ -64,9 +64,12 @@ export interface ONCE {
  * Integrated exports in interface file - no separate exports.ts
  */
 
-export { ONCEModel } from './ONCEModel.interface.js';
-export { EnvironmentInfo } from './EnvironmentInfo.interface.js';
-export { Component } from './Component.interface.js';
+export type { ONCEModel } from './ONCEModel.interface.js';
+export type { EnvironmentInfo } from './EnvironmentInfo.interface.js';
+export type { Component } from './Component.interface.js';
+// Service integration exports
+export type { ServiceRegistry, ServiceRegistration } from './ServiceRegistry.interface.js';
+export { DefaultServiceRegistry } from '../layer2/DefaultServiceRegistry.js';
 export { DefaultONCE } from '../layer2/DefaultONCE.js';
 // DRY Compliance: Use unified Scenario component
 export { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';

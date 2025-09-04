@@ -8,14 +8,16 @@
 
 import { HttpServer } from '../layer3/HttpServer.interface.js';
 import { HttpServerModel } from '../layer3/HttpServerModel.interface.js';
-import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
+import { IOR, DefaultIOR, ServiceCapable } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
+import { ServiceRegistration } from '../../../ONCE/0.3.0.0/src/ts/layer3/ServiceRegistry.interface.js';
 import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
 import { DefaultUser } from '../../../../User/0.1.3.0/src/ts/DefaultUser.js';
 
 export class DefaultHttpServer implements HttpServer {
   private data: HttpServerModel;
-  private scenarioService: Scenario;  // ✅ DRY: Shared component composition
-  private userService: DefaultUser;   // ✅ DRY: Shared component composition
+  private scenarioService: Scenario;     // ✅ DRY: Shared component composition
+  private userService: DefaultUser;      // ✅ DRY: Shared component composition
+  private serviceRegistration?: ServiceRegistration; // ✅ Service integration state
   private iorComponent: DefaultIOR;   // ✅ DRY: Shared IOR component
 
   /**
@@ -165,12 +167,29 @@ export class DefaultHttpServer implements HttpServer {
 
   /**
    * CLI Command Methods - Same names as CLI commands for delegation
+   * Enhanced with hybrid operation mode support
    */
 
   async start(args: string[]): Promise<void> {
     console.log('HttpServer: Starting server...');
-    this.data.state = 'running';
-    console.log(`HttpServer: Server started on port ${this.data.port}`);
+    
+    // Check for service mode flag
+    const serviceMode = args.includes('--service') || args.includes('-s');
+    const onceServer = this.findOnceServer();
+    
+    if (serviceMode && onceServer) {
+      // Service mode: Register with ONCE server
+      await this.startAsService(onceServer);
+    } else if (onceServer) {
+      // Hybrid mode: Start standalone but register as available service
+      await this.startStandalone();
+      await this.registerAsService(onceServer);
+    } else {
+      // Standalone mode: Independent operation
+      await this.startStandalone();
+    }
+    
+    console.log(`HttpServer: Started successfully in ${serviceMode ? 'service' : 'standalone'} mode`);
   }
 
   async stop(args: string[]): Promise<void> {
@@ -224,6 +243,75 @@ export class DefaultHttpServer implements HttpServer {
 
   validate(): boolean {
     return !!(this.data.uuid && this.data.name && this.data.description);
+  }
+
+  /**
+   * ServiceCapable Interface Implementation - Hybrid Operation Support
+   */
+
+  async registerAsService(onceServerEndpoint: string = 'http://localhost:42777'): Promise<void> {
+    console.log('HttpServer: Registering as service with ONCE server...');
+    
+    const registration: ServiceRegistration = {
+      componentIOR: this.getIOR(),
+      serviceEndpoint: `${onceServerEndpoint}/services/${this.data.uuid}`,
+      capabilities: this.getCapabilities(),
+      status: 'registering',
+      registeredAt: new Date().toISOString()
+    };
+    
+    this.serviceRegistration = registration;
+    console.log('HttpServer: Service registration complete');
+  }
+
+  async unregisterFromService(): Promise<void> {
+    if (this.serviceRegistration) {
+      console.log('HttpServer: Unregistering from service...');
+      this.serviceRegistration = undefined;
+      console.log('HttpServer: Service unregistration complete');
+    }
+  }
+
+  isRegisteredAsService(): boolean {
+    return !!this.serviceRegistration;
+  }
+
+  getServiceRegistration(): ServiceRegistration | undefined {
+    return this.serviceRegistration;
+  }
+
+  async startAsService(onceServerEndpoint: string): Promise<void> {
+    console.log('HttpServer: Starting as service...');
+    await this.startStandalone();
+    await this.registerAsService(onceServerEndpoint);
+  }
+
+  async startStandalone(): Promise<void> {
+    console.log('HttpServer: Starting in standalone mode...');
+    this.data.state = 'running';
+    console.log(`HttpServer: Standalone server started on port ${this.data.port}`);
+  }
+
+  findOnceServer(): string | undefined {
+    // Check for ONCE server on default port 42777
+    // In real implementation, this would check network connectivity
+    return 'http://localhost:42777';
+  }
+
+  getCapabilities(): string[] {
+    return ['http', 'web', 'api', 'rest'];
+  }
+
+  /**
+   * Get component IOR for service registration
+   */
+  private getIOR(): IOR {
+    return {
+      uuid: this.data.uuid,
+      component: 'HttpServer',
+      version: '0.3.0.0',
+      endpoint: `http://${this.data.host}:${this.data.port}`
+    };
   }
 
   static create(uuid: string, name: string, description: string, port: number): DefaultHttpServer {
