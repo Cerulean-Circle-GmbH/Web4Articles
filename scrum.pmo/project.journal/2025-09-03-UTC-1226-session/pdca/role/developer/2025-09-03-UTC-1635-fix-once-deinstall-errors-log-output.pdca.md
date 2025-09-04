@@ -19,9 +19,9 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev%2Fonce/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1635-fix-once-deinstall-errors-log-output.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1635-fix-once-deinstall-errors-log-output.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1635-fix-once-deinstall-errors-log-output.pdca.md)
-- **Web4CompliantONCE:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev%2Fonce/components/ONCE/0.3.0.0/src/ts/Web4CompliantONCE.ts) | [components/ONCE/0.3.0.0/src/ts/Web4CompliantONCE.ts](components/ONCE/0.3.0.0/src/ts/Web4CompliantONCE.ts)
-- **Deinstall Test:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev%2Fonce/test/once/deinstall-rebuild.test.ts) | [test/once/deinstall-rebuild.test.ts](test/once/deinstall-rebuild.test.ts)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/ac1efa33/scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1635-fix-once-deinstall-errors-log-output.pdca.md) | [scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1635-fix-once-deinstall-errors-log-output.pdca.md](scrum.pmo/project.journal/2025-09-03-UTC-1226-session/pdca/role/developer/2025-09-03-UTC-1635-fix-once-deinstall-errors-log-output.pdca.md)
+- **Web4CompliantONCE:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/ac1efa33/components/ONCE/0.3.0.0/src/ts/Web4CompliantONCE.ts) | [components/ONCE/0.3.0.0/src/ts/Web4CompliantONCE.ts](components/ONCE/0.3.0.0/src/ts/Web4CompliantONCE.ts)
+- **Deinstall Test:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/ac1efa33/test/once/deinstall-rebuild.test.ts) | [test/once/deinstall-rebuild.test.ts](test/once/deinstall-rebuild.test.ts)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Fixing identified deinstall errors and improving log output clarity
