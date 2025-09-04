@@ -53,5 +53,6 @@ export type { Model } from './Model.interface.js';
 // Universal CLI exports
 export type { CLI } from '../layer5/CLI.interface.js';
 export { DefaultCLI } from '../layer5/DefaultCLI.js';
+export { CLIColors } from '../layer5/CLIColors.js';
 // Service integration exports
 export type { ServiceCapable } from './ServiceCapable.interface.js';

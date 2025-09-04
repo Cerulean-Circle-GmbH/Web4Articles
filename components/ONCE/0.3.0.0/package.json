@@ -6,12 +6,13 @@
   "main": "dist/ts/layer3/ONCE.interface.js",
   "types": "dist/ts/layer3/ONCE.interface.d.ts",
   "scripts": {
+    "clean": "rm -rf dist/ *.tsbuildinfo node_modules/.cache",
+    "prebuild": "npm run clean",
     "build": "tsc",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "dev": "tsc --watch",
-    "clean": "rm -rf dist",
-    "prebuild": "npm run clean"
+    "clean:all": "npm run clean && rm -rf node_modules"
   },
   "keywords": [
     "web4",
