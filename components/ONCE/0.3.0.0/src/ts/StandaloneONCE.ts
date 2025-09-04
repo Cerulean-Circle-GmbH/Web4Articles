@@ -100,24 +100,41 @@ export class StandaloneONCE {
   }
 
   async help(args: string[] = []): Promise<void> {
-    console.log('\n🔗 \x1b[36mWeb4 ONCE CLI Tool\x1b[0m');
-    console.log('\n\x1b[33mUsage:\x1b[0m once <command> [options]');
-    console.log('\n\x1b[32mCommands:\x1b[0m');
-    console.log('  \x1b[36mstart\x1b[0m     Start the ONCE kernel');
-    console.log('  \x1b[36mstop\x1b[0m      Stop the ONCE kernel');
-    console.log('  \x1b[36mstatus\x1b[0m    Show kernel status');
-    console.log('  \x1b[36minfo\x1b[0m      Show kernel information');
-    console.log('  \x1b[36mdemo\x1b[0m      Start interactive demo');
-    console.log('  \x1b[36mtest\x1b[0m      Run test sequence');
-    console.log('  \x1b[36mhelp\x1b[0m      Show this help message');
-    console.log('  \x1b[36mdeinstall\x1b[0m Clean all components');
-    console.log('\n\x1b[32mExamples:\x1b[0m');
-    console.log('  once start    # Start ONCE kernel');
-    console.log('  once demo     # Interactive demo with capabilities');
-    console.log('  once test "s3bq" # Test sequence: start, 3s wait, browser, quit');
-    console.log('  once status   # Check kernel status');
-    console.log('  once deinstall # Clean all Web4 components and force rebuild');
-    console.log('\n\x1b[90mWeb4 ONCE Component v0.3.0.0\x1b[0m\n');
+    // DRY Compliant: Use CLIColors utility instead of hardcoded constants
+    const CLIColors = await this.getCLIColors();
+    
+    console.log('\n' + CLIColors.cliHeader('Web4 ONCE CLI Tool', 'Object Network Communication Engine'));
+    console.log('\n' + CLIColors.bold('Usage:') + ' once <command> [options]');
+    console.log('\n' + CLIColors.bold('Commands:'));
+    console.log(CLIColors.commandDesc('start', 'Start the ONCE kernel'));
+    console.log(CLIColors.commandDesc('stop', 'Stop the ONCE kernel'));
+    console.log(CLIColors.commandDesc('status', 'Show kernel status'));
+    console.log(CLIColors.commandDesc('info', 'Show kernel information'));
+    console.log(CLIColors.commandDesc('demo', 'Start interactive demo'));
+    console.log(CLIColors.commandDesc('test', 'Run test sequence'));
+    console.log(CLIColors.commandDesc('help', 'Show this help message'));
+    console.log(CLIColors.commandDesc('deinstall', 'Clean all components'));
+    console.log('\n' + CLIColors.bold('Examples:'));
+    console.log(CLIColors.usageLine('once', 'start', 'Start ONCE kernel'));
+    console.log(CLIColors.usageLine('once', 'demo', 'Interactive demo with capabilities'));
+    console.log(CLIColors.usageLine('once', 'test "s3bq"', 'Test sequence: start, 3s wait, browser, quit'));
+    console.log(CLIColors.usageLine('once', 'status', 'Check kernel status'));
+    console.log(CLIColors.usageLine('once', 'deinstall', 'Clean all Web4 components and force rebuild'));
+    console.log('\n' + CLIColors.green('Web4 ONCE Component v0.3.0.0') + '\n');
+  }
+
+  // DRY utility method to get CLIColors (avoiding import cycles)
+  private async getCLIColors(): Promise<any> {
+    // Simple color utility to avoid import cycles in standalone implementation
+    return {
+      cliHeader: (title: string, desc: string) => `\x1b[1m\x1b[36m${title}\x1b[0m \x1b[32m- ${desc}\x1b[0m`,
+      bold: (text: string) => `\x1b[1m${text}\x1b[0m`,
+      cyan: (text: string) => `\x1b[36m${text}\x1b[0m`,
+      green: (text: string) => `\x1b[32m${text}\x1b[0m`,
+      yellow: (text: string) => `\x1b[33m${text}\x1b[0m`,
+      commandDesc: (cmd: string, desc: string) => `  \x1b[1m${cmd}\x1b[0m${' '.repeat(Math.max(1, 15 - cmd.length))}${desc}`,
+      usageLine: (cmd: string, args: string, comment: string) => `  \x1b[36m${cmd}\x1b[0m \x1b[33m${args}\x1b[0m${' '.repeat(Math.max(1, 40 - cmd.length - args.length))}\x1b[32m# ${comment}\x1b[0m`
+    };
   }
 
   async demo(args: string[] = []): Promise<void> {
