@@ -16,57 +16,13 @@ class P2PServerCLI {
     this.cli = DefaultCLI.createForComponent(this.p2pServer, 'P2PServer');
   }
 
-  private showUsage(): void {
-    const cyan = '\x1b[36m';
-    const yellow = '\x1b[33m';
-    const green = '\x1b[32m';
-    const bold = '\x1b[1m';
-    const reset = '\x1b[0m';
-    
-    console.log(`${bold}${cyan}Web4 P2PServer CLI Tool${reset} ${green}- Peer-to-Peer Network Capability Component${reset}`);
-    console.log('');
-    console.log(`${bold}Usage:${reset}`);
-    console.log(`  ${cyan}p2pserver${reset} start                                   ${green}# Start P2P server${reset}`);
-    console.log(`  ${cyan}p2pserver${reset} stop                                    ${green}# Stop P2P server${reset}`);
-    console.log(`  ${cyan}p2pserver${reset} status                                  ${green}# Show server status${reset}`);
-    console.log(`  ${cyan}p2pserver${reset} info                                    ${green}# Show server information${reset}`);
-    console.log(`  ${cyan}p2pserver${reset} connectPeer ${yellow}<peer-address>${reset}              ${green}# Connect to peer${reset}`);
-    console.log(`  ${cyan}p2pserver${reset} disconnectPeer ${yellow}<peer-id>${reset}                ${green}# Disconnect from peer${reset}`);
-    console.log(`  ${cyan}p2pserver${reset} listPeers                               ${green}# List connected peers${reset}`);
-    console.log(`  ${cyan}p2pserver${reset} sendMessage ${yellow}<peer-id>${reset} ${yellow}<message>${reset}        ${green}# Send message to peer${reset}`);
-    console.log(`  ${cyan}p2pserver${reset} help                                    ${green}# Show this help${reset}`);
-    console.log('');
-    console.log(`${bold}Commands:${reset}`);
-    console.log(`  ${bold}start${reset}            Start P2P server and begin peer discovery`);
-    console.log(`  ${bold}stop${reset}             Stop P2P server and disconnect all peers`);
-    console.log(`  ${bold}status${reset}           Show current server state and peer connections`);
-    console.log(`  ${bold}info${reset}             Show detailed server configuration`);
-    console.log(`  ${bold}connectPeer${reset}      Establish connection to remote peer`);
-    console.log(`  ${bold}disconnectPeer${reset}   Disconnect from specific peer`);
-    console.log(`  ${bold}listPeers${reset}        Show all connected peers`);
-    console.log(`  ${bold}sendMessage${reset}      Send message to specific peer`);
-    console.log(`  ${bold}help${reset}             Show this help message`);
-    console.log('');
-    console.log(`${bold}Parameters:${reset}`);
-    console.log(`  ${yellow}<peer-address>${reset}  Peer network address (e.g., 192.168.1.100:8080)`);
-    console.log(`  ${yellow}<peer-id>${reset}       UUID of connected peer`);
-    console.log(`  ${yellow}<message>${reset}       Message text to send`);
-    console.log('');
-    console.log(`${bold}Examples:${reset}`);
-    console.log(`  ${cyan}p2pserver${reset} start                              ${green}# Start P2P server${reset}`);
-    console.log(`  ${cyan}p2pserver${reset} connectPeer 192.168.1.100:8080     ${green}# Connect to peer${reset}`);
-    console.log(`  ${cyan}p2pserver${reset} listPeers                           ${green}# See connected peers${reset}`);
-    console.log(`  ${cyan}p2pserver${reset} sendMessage abc-123 "Hello peer"   ${green}# Send message${reset}`);
-    console.log('');
-    console.log(`${bold}Web4 Integration:${reset}`);
-    console.log(`  P2PServer operates as capability component, loaded by ONCE kernel.`);
-    console.log(`  Provides peer-to-peer networking for distributed Web4 component communication.`);
-    console.log('');
-  }
+  // Removed: Custom showUsage() method - using DefaultCLI.help() instead  
+  // Decision 2a: Direct replacement with DefaultCLI methods for DRY compliance
 
   async run(args: string[]): Promise<void> {
     if (args.length === 0) {
-      this.showUsage();
+      // Decision 2a: Use DefaultCLI.help() instead of custom showUsage()
+      await this.cli.help([]);
       return;
     }
 
