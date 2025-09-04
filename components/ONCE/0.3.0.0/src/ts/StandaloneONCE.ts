@@ -176,6 +176,18 @@ export class StandaloneONCE {
   }
 
   private async startInteractiveDemo(): Promise<void> {
+    // Testing Safety: Detect test environment to prevent hanging
+    const isTestEnvironment = process.env.NODE_ENV === 'test' || 
+                             process.env.CI === 'true' || 
+                             process.argv.includes('--test') ||
+                             process.env.VITEST === 'true';
+    
+    if (isTestEnvironment) {
+      console.log('🧪 Test environment detected - using non-interactive demo');
+      await this.runNonInteractiveDemo();
+      return;
+    }
+    
     console.log('🎭 Interactive Demo Mode');
     console.log('📱 Starting ONCE kernel with interactive capabilities...');
     
@@ -184,13 +196,34 @@ export class StandaloneONCE {
     
     console.log('🌐 Demo server available at: http://localhost:42777');
     console.log('🎮 Interactive demo ready - press Ctrl+C to exit');
+    console.log('⏰ Auto-exit in 30 seconds for testing safety');
     
-    // Keep alive for interactive use
+    // Timeout protection for testing safety (CRITICAL)
+    const timeout = setTimeout(async () => {
+      console.log('\n⏰ Demo timeout - auto-exiting for testing safety');
+      await this.stop([]);
+      process.exit(0);
+    }, 30000); // 30 second timeout
+    
+    // Keep alive for interactive use with cleanup
     process.on('SIGINT', async () => {
       console.log('\n🛑 Stopping interactive demo...');
+      clearTimeout(timeout);
       await this.stop([]);
       process.exit(0);
     });
+  }
+
+  private async runNonInteractiveDemo(): Promise<void> {
+    console.log('🖥️ Non-Interactive Demo Mode (Testing Safe)');
+    console.log('🚀 Starting ONCE kernel...');
+    await this.start([]);
+    console.log('🌐 Demo server started at: http://localhost:42777');
+    console.log('⏱️ Running for 3 seconds...');
+    await this.sleep(3000);
+    console.log('🛑 Stopping demo...');
+    await this.stop([]);
+    console.log('✅ Non-interactive demo completed');
   }
 
   private showDemoHelp(): void {
