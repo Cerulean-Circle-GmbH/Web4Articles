@@ -7,6 +7,7 @@
  */
 
 import { CLI } from './CLI.interface.js';
+import { CLIColors } from './CLIColors.js';
 
 export class DefaultCLI implements CLI {
   private component: any;      // Component instance with delegated methods
@@ -114,28 +115,22 @@ export class DefaultCLI implements CLI {
       return this.component.help(args);
     }
     
-    // Default colorful help implementation following requirement-v0.1.2.2 pattern
-    const cyan = '\x1b[36m';
-    const yellow = '\x1b[33m';
-    const green = '\x1b[32m';
-    const bold = '\x1b[1m';
-    const reset = '\x1b[0m';
-    
-    console.log(`${bold}${cyan}Web4 ${this.componentName} CLI Tool${reset} ${green}- Web4 Component Interface${reset}`);
+    // Default colorful help implementation using DRY CLIColors utility
+    console.log(CLIColors.cliHeader(`Web4 ${this.componentName} CLI Tool`, 'Web4 Component Interface'));
     console.log('');
-    console.log(`${bold}Usage:${reset}`);
-    console.log(`  ${cyan}${this.componentName.toLowerCase()}${reset} start                                       ${green}# Start component${reset}`);
-    console.log(`  ${cyan}${this.componentName.toLowerCase()}${reset} stop                                        ${green}# Stop component${reset}`);
-    console.log(`  ${cyan}${this.componentName.toLowerCase()}${reset} status                                      ${green}# Show component status${reset}`);
-    console.log(`  ${cyan}${this.componentName.toLowerCase()}${reset} info                                        ${green}# Show component information${reset}`);
-    console.log(`  ${cyan}${this.componentName.toLowerCase()}${reset} help                                        ${green}# Show this help${reset}`);
+    console.log(CLIColors.bold('Usage:'));
+    console.log(CLIColors.usageLine(`${this.componentName.toLowerCase()}`, 'start', 'Start component'));
+    console.log(CLIColors.usageLine(`${this.componentName.toLowerCase()}`, 'stop', 'Stop component'));
+    console.log(CLIColors.usageLine(`${this.componentName.toLowerCase()}`, 'status', 'Show component status'));
+    console.log(CLIColors.usageLine(`${this.componentName.toLowerCase()}`, 'info', 'Show component information'));
+    console.log(CLIColors.usageLine(`${this.componentName.toLowerCase()}`, 'help', 'Show this help'));
     console.log('');
-    console.log(`${bold}Commands:${reset}`);
-    console.log(`  ${bold}start${reset}        Start component with initialization`);
-    console.log(`  ${bold}stop${reset}         Stop component gracefully`);
-    console.log(`  ${bold}status${reset}       Show current component state`);
-    console.log(`  ${bold}info${reset}         Show detailed component information`);
-    console.log(`  ${bold}help${reset}         Show this help message`);
+    console.log(CLIColors.bold('Commands:'));
+    console.log(CLIColors.commandDesc('start', 'Start component with initialization'));
+    console.log(CLIColors.commandDesc('stop', 'Stop component gracefully'));
+    console.log(CLIColors.commandDesc('status', 'Show current component state'));
+    console.log(CLIColors.commandDesc('info', 'Show detailed component information'));
+    console.log(CLIColors.commandDesc('help', 'Show this help message'));
     
     // Show component-specific commands if available
     if (this.component) {
@@ -145,15 +140,15 @@ export class DefaultCLI implements CLI {
       
       if (methods.length > 0) {
         console.log('');
-        console.log(`${bold}Component-Specific Commands:${reset}`);
+        console.log(CLIColors.bold('Component-Specific Commands:'));
         for (const method of methods) {
-          console.log(`  ${bold}${method}${reset}         ${method} operation`);
+          console.log(CLIColors.commandDesc(method, `${method} operation`));
         }
       }
     }
     
     console.log('');
-    console.log(`${bold}Web4 Integration:${reset}`);
+    console.log(CLIColors.bold('Web4 Integration:'));
     console.log(`  ${this.componentName} follows Web4 UCP patterns with scenario-based configuration.`);
     console.log(`  Can operate standalone or as service loaded by ONCE kernel.`);
     console.log('');

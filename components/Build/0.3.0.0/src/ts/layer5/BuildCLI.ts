@@ -86,20 +86,20 @@ class BuildCLI {
       process.exit(1);
     }
   }
-}
 
-// CLI entry point
-async function main() {
-  try {
-    const cli = new BuildCLI();
-    await cli.run(process.argv.slice(2));
-  } catch (error) {
-    console.error(`❌ Build CLI Fatal Error: ${(error as Error).message}`);
-    process.exit(1);
+  // Static entry point for CLI (Radical OOP pattern)
+  static async start(args: string[] = []): Promise<void> {
+    try {
+      const cli = new BuildCLI();
+      await cli.run(args);
+    } catch (error) {
+      console.error(`❌ Build CLI Fatal Error: ${(error as Error).message}`);
+      process.exit(1);
+    }
   }
 }
 
 // Execute if called directly
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main();
+  BuildCLI.start(process.argv.slice(2));
 }

@@ -80,18 +80,19 @@ class P2PServerCLI {
       process.exit(1);
     }
   }
-}
 
-async function main() {
-  try {
-    const cli = new P2PServerCLI();
-    await cli.run(process.argv.slice(2));
-  } catch (error) {
-    console.error(`❌ P2PServer CLI Fatal Error: ${(error as Error).message}`);
-    process.exit(1);
+  // Static entry point for CLI (Radical OOP pattern)
+  static async start(args: string[] = []): Promise<void> {
+    try {
+      const cli = new P2PServerCLI();
+      await cli.run(args);
+    } catch (error) {
+      console.error(`❌ P2PServer CLI Fatal Error: ${(error as Error).message}`);
+      process.exit(1);
+    }
   }
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main();
+  P2PServerCLI.start(process.argv.slice(2));
 }

@@ -80,18 +80,19 @@ class HttpServerCLI {
       process.exit(1);
     }
   }
-}
 
-async function main() {
-  try {
-    const cli = new HttpServerCLI();
-    await cli.run(process.argv.slice(2));
-  } catch (error) {
-    console.error(`❌ HttpServer CLI Fatal Error: ${(error as Error).message}`);
-    process.exit(1);
+  // Static entry point for CLI (Radical OOP pattern)
+  static async start(args: string[] = []): Promise<void> {
+    try {
+      const cli = new HttpServerCLI();
+      await cli.run(args);
+    } catch (error) {
+      console.error(`❌ HttpServer CLI Fatal Error: ${(error as Error).message}`);
+      process.exit(1);
+    }
   }
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main();
+  HttpServerCLI.start(process.argv.slice(2));
 }
