@@ -1,0 +1,21 @@
+{
+  "ior": {
+    "uuid": "87d9f6f5-f0d9-4d9a-9566-f14c633c6260",
+    "component": "Web4Requirement",
+    "version": "0.1.3.0"
+  },
+  "owner": "",
+  "model": {
+    "uuid": "87d9f6f5-f0d9-4d9a-9566-f14c633c6260",
+    "name": "web4-component-build-&-dependency-management",
+    "title": "Web4 Component Build & Dependency Management",
+    "description": "Each Web4 component must have a small shell starter script that checks environment (node, npm), installs dependencies if needed, builds everything in correct order using Build component v0.3.0.0 pattern, and delegates all arguments to component CLI",
+    "status": "pending",
+    "priority": "medium",
+    "createdAt": "2025-09-04T08:11:04.255Z",
+    "updatedAt": "2025-09-04T08:11:04.255Z",
+    "completedAt": null,
+    "links": [],
+    "tags": []
+  }
+}

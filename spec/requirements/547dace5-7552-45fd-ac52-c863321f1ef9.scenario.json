@@ -1,0 +1,21 @@
+{
+  "ior": {
+    "uuid": "547dace5-7552-45fd-ac52-c863321f1ef9",
+    "component": "Web4Requirement",
+    "version": "0.1.3.0"
+  },
+  "owner": "",
+  "model": {
+    "uuid": "547dace5-7552-45fd-ac52-c863321f1ef9",
+    "name": "build-component-0.3.0.0-pattern-adaptation",
+    "title": "Build Component 0.3.0.0 Pattern Adaptation",
+    "description": "Build component must be adapted to version 0.3.0.0 following established Web4 patterns: radical OOP, component-specific BuildModel extending Model, scenario-based configuration, IOR references, and proper dependency resolution for Web4 component build order management",
+    "status": "pending",
+    "priority": "medium",
+    "createdAt": "2025-09-04T08:11:43.538Z",
+    "updatedAt": "2025-09-04T08:11:43.538Z",
+    "completedAt": null,
+    "links": [],
+    "tags": []
+  }
+}
