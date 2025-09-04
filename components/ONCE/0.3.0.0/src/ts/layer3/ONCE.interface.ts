@@ -57,6 +57,16 @@ export interface ONCE {
    * Web4 Pattern: State hibernation using unified Scenario component
    */
   saveAsScenario(): Promise<Scenario>;
+
+  /**
+   * Interactive demo functionality (ONCE 0.2.0.0 feature parity)
+   */
+  demo(args: string[]): Promise<void>;
+
+  /**
+   * Non-interactive test sequence functionality
+   */
+  test(args: string[]): Promise<void>;
 }
 
 /**
@@ -67,6 +77,7 @@ export interface ONCE {
 export type { ONCEModel } from './ONCEModel.interface.js';
 export type { EnvironmentInfo } from './EnvironmentInfo.interface.js';
 export type { Component } from './Component.interface.js';
+export type { ONCEDemo } from './ONCEDemo.interface.js';
 // Service integration exports
 export type { ServiceRegistry, ServiceRegistration } from './ServiceRegistry.interface.js';
 export { DefaultServiceRegistry } from '../layer2/DefaultServiceRegistry.js';
