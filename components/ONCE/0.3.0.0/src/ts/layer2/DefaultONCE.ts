@@ -396,6 +396,86 @@ export class DefaultONCE implements ONCE {
   }
 
   /**
+   * CLI Command Methods - Same names as CLI commands for delegation
+   */
+
+  /**
+   * Start ONCE kernel (CLI delegation target)
+   */
+  async start(args: string[]): Promise<void> {
+    console.log('ONCE: Starting kernel...');
+    await this.bootEnvironment();
+    console.log('ONCE: Kernel started successfully');
+  }
+
+  /**
+   * Stop ONCE kernel (CLI delegation target) 
+   */
+  async stop(args: string[]): Promise<void> {
+    console.log('ONCE: Stopping kernel...');
+    
+    // Stop all loaded components
+    for (const [uuid, component] of this.loadedComponents) {
+      if (typeof component.stop === 'function') {
+        await component.stop([]);
+      }
+    }
+    
+    this.data.state = 'booting'; // Reset to initial state
+    console.log('ONCE: Kernel stopped');
+  }
+
+  /**
+   * Get ONCE status (CLI delegation target)
+   */
+  async status(args: string[]): Promise<void> {
+    console.log(`ONCE Kernel Status:`);
+    console.log(`  State: ${this.data.state}`);
+    console.log(`  Environment: ${this.data.environment}`);
+    console.log(`  Capabilities: ${this.data.capabilities.length}`);
+    console.log(`  Loaded Components: ${this.data.loadedComponents.length}`);
+    console.log(`  Domain: ${this.data.domain}`);
+    console.log(`  Host: ${this.data.host}`);
+  }
+
+  /**
+   * Get ONCE info (CLI delegation target)
+   */
+  async info(args: string[]): Promise<void> {
+    console.log(`ONCE - Object Network Communication Engine`);
+    console.log(`Version: 0.3.0.0`);
+    console.log(`Description: ${this.data.description}`);
+    console.log(`UUID: ${this.data.uuid}`);
+    console.log(`Domain: ${this.data.domain}`);
+    console.log(`Environment: ${this.data.environment}`);
+    
+    if (this.data.capabilities.length > 0) {
+      console.log(`\nLoaded Capabilities:`);
+      for (const capability of this.data.capabilities) {
+        console.log(`  - ${capability.component}:${capability.version} (${capability.uuid})`);
+      }
+    }
+  }
+
+  /**
+   * Show ONCE help (CLI delegation target)
+   */
+  async help(args: string[]): Promise<void> {
+    console.log(`ONCE - Object Network Communication Engine CLI`);
+    console.log(`\nCommands:`);
+    console.log(`  start           - Start ONCE kernel`);
+    console.log(`  stop            - Stop ONCE kernel`);
+    console.log(`  status          - Show kernel status`);
+    console.log(`  info            - Show kernel information`);
+    console.log(`  help            - Show this help`);
+    console.log(`\nKernel Commands:`);
+    console.log(`  boot            - Boot environment`);
+    console.log(`  load <component> - Load component by name`);
+    console.log(`  unload <uuid>   - Unload component by UUID`);
+    console.log(`  list            - List loaded components`);
+  }
+
+  /**
    * Utility methods following IOR pattern
    */
   toJSON(): ONCEModel {

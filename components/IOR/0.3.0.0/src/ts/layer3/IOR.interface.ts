@@ -50,3 +50,6 @@ export interface IOR {
 export { DefaultIOR } from '../layer2/DefaultIOR.js';
 export { DefaultModel } from '../layer2/DefaultModel.js';
 export { Model } from './Model.interface.js';
+// Universal CLI exports
+export { CLI } from '../layer5/CLI.interface.js';
+export { DefaultCLI } from '../layer5/DefaultCLI.js';
