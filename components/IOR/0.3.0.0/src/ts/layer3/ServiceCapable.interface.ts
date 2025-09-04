@@ -5,7 +5,16 @@
  * Universal service registration interface for hybrid component operation
  */
 
-import { ServiceRegistration } from '../../../ONCE/0.3.0.0/src/ts/layer3/ServiceRegistry.interface.js';
+// Forward declaration to avoid circular dependency
+export interface ServiceRegistration {
+  componentIOR: any; // IOR type
+  serviceEndpoint: string;
+  capabilities: string[];
+  status: 'registering' | 'active' | 'inactive' | 'error';
+  registeredAt: string;
+  lastHeartbeat?: string;
+  metadata?: { [key: string]: any; };
+}
 
 export interface ServiceCapable {
   /**
