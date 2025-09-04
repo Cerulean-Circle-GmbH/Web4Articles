@@ -251,6 +251,22 @@ export class Web4CompliantONCE {
     console.log(`✅ ONCE: Kernel started with service registry on port 42777`);
   }
 
+  /**
+   * Deinstall command - comprehensive ecosystem clean build reset
+   */
+  async deinstall(args: string[] = []): Promise<void> {
+    console.log('ONCE: Starting comprehensive ecosystem deinstall...');
+    
+    // Stop any running services first
+    await this.stop([]);
+    
+    // Clean all Web4 components
+    await this.cleanAllComponents();
+    
+    console.log('✅ ONCE: Complete ecosystem deinstall successful');
+    console.log('💡 Run "once start" to rebuild and restart the ecosystem');
+  }
+
   async stop(args: string[] = []): Promise<void> {
     console.log('ONCE: Stopping Web4-compliant kernel...');
     await this.serviceRegistry.stopServer();
@@ -329,6 +345,7 @@ export class Web4CompliantONCE {
     console.log(`  ${cyan}once${reset} stop                                         ${green}# Stop ONCE kernel${reset}`);
     console.log(`  ${cyan}once${reset} status                                       ${green}# Show kernel status${reset}`);
     console.log(`  ${cyan}once${reset} info                                         ${green}# Show kernel information${reset}`);
+    console.log(`  ${cyan}once${reset} deinstall                                    ${green}# Clean all components${reset}`);
     console.log(`  ${cyan}once${reset} help                                         ${green}# Show this help${reset}`);
     console.log('');
     console.log(`${bold}Commands:${reset}`);
@@ -336,12 +353,13 @@ export class Web4CompliantONCE {
     console.log(`  ${bold}stop${reset}         Stop ONCE kernel and service registry`);
     console.log(`  ${bold}status${reset}       Display kernel state and service registry status`);
     console.log(`  ${bold}info${reset}         Show detailed ONCE kernel information`);
+    console.log(`  ${bold}deinstall${reset}    Clean all Web4 components and force rebuild`);
     console.log(`  ${bold}help${reset}         Show this help message`);
     console.log('');
     console.log(`${bold}Examples:${reset}`);
     console.log(`  ${cyan}once${reset} start                    ${green}# Start ONCE kernel${reset}`);
+    console.log(`  ${cyan}once${reset} deinstall                ${green}# Clean ecosystem${reset}`);
     console.log(`  ${cyan}once${reset} status                   ${green}# Check kernel status${reset}`);
-    console.log(`  ${cyan}once${reset} info                     ${green}# Show kernel information${reset}`);
     console.log('');
     console.log(`${bold}Web4 Integration:${reset}`);
     console.log('  ONCE operates as Web4 component kernel with proper component composition.');
@@ -350,7 +368,69 @@ export class Web4CompliantONCE {
   }
 
   /**
-   * Execute CLI command
+   * Clean all Web4 component build artifacts
+   */
+  private async cleanAllComponents(): Promise<void> {
+    const componentPaths = [
+      '/workspace/components/IOR/0.3.0.0',
+      '/workspace/components/Scenario/0.1.3.0', 
+      '/workspace/components/User/0.1.3.0',
+      '/workspace/components/Build/0.3.0.0',
+      '/workspace/components/ONCE/0.3.0.0',
+      '/workspace/components/HttpServer/0.3.0.0',
+      '/workspace/components/WsServer/0.3.0.0',
+      '/workspace/components/P2PServer/0.3.0.0',
+      '/workspace/components/Web4Requirement/0.1.2.2',
+      '/workspace/components/Unit/0.1.3.0'
+    ];
+    
+    console.log('🧹 Cleaning all Web4 component build artifacts...');
+    
+    for (const componentPath of componentPaths) {
+      await this.cleanComponent(componentPath);
+    }
+    
+    console.log('✅ All Web4 components cleaned');
+  }
+
+  /**
+   * Clean individual component
+   */
+  private async cleanComponent(componentPath: string): Promise<void> {
+    const fs = await import('fs');
+    const { execSync } = await import('child_process');
+    
+    if (!fs.existsSync(componentPath)) {
+      return; // Skip non-existent components
+    }
+    
+    const componentName = componentPath.split('/').slice(-2).join('/');
+    console.log(`🧹 Cleaning ${componentName}...`);
+    
+    try {
+      // Run npm run clean if package.json exists
+      if (fs.existsSync(`${componentPath}/package.json`)) {
+        execSync('npm run clean', {
+          cwd: componentPath,
+          stdio: 'pipe' // Suppress output for cleaner display
+        });
+      }
+      
+      // Additional cleanup - remove any remaining artifacts
+      execSync('rm -rf dist/ *.tsbuildinfo node_modules/.cache', {
+        cwd: componentPath,
+        stdio: 'pipe'
+      });
+      
+      console.log(`✅ ${componentName} cleaned`);
+      
+    } catch (error) {
+      console.log(`⚠️ ${componentName} clean failed: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Execute CLI command (enhanced with deinstall)
    */
   async execute(command: string, args: string[]): Promise<void> {
     switch (command) {
@@ -359,6 +439,7 @@ export class Web4CompliantONCE {
       case 'status': return this.status(args);
       case 'info': return this.info(args);
       case 'help': return this.help(args);
+      case 'deinstall': return this.deinstall(args);
       default: throw new Error(`Unknown command: ${command}`);
     }
   }
