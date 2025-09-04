@@ -92,6 +92,22 @@ enhanced_fallback_build() {
 
 # Main execution
 main() {
+    # Check if this is a deinstall command - bypass environment setup
+    if [ "$1" = "deinstall" ]; then
+        echo "🧹 ONCE Deinstall - Direct execution"
+        
+        # Build Web4CompliantONCE if needed (minimal setup)
+        if [ ! -f "$COMPONENT_DIR/dist/Web4CompliantONCE.js" ]; then
+            echo "🔧 Building ONCE for deinstall..."
+            cd "$COMPONENT_DIR"
+            npx tsc src/ts/Web4CompliantONCE.ts --outDir dist --module ES2022 --target ES2022 --moduleResolution node >/dev/null 2>&1
+        fi
+        
+        # Execute deinstall directly
+        node "$COMPONENT_DIR/dist/Web4CompliantONCE.js" deinstall
+        return
+    fi
+    
     echo "🔍 Setting up ONCE environment..."
     
     # Use Build component for setup

@@ -5,6 +5,8 @@
   "description": "Web4-native requirement tracking and overview generation component",
   "main": "src/ts/layer5/RequirementCLI.ts",
   "scripts": {
+    "clean": "rm -rf dist/ *.tsbuildinfo node_modules/.cache",
+    "prebuild": "npm run clean",
     "build": "tsc",
     "start": "node -r ts-node/register src/ts/layer5/RequirementCLI.ts",
     "generate-overview": "node -r ts-node/register src/ts/layer5/RequirementCLI.ts --generate-overview",

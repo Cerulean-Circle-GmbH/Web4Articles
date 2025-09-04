@@ -394,7 +394,7 @@ export class Web4CompliantONCE {
   }
 
   /**
-   * Clean individual component
+   * Clean individual component with improved error handling
    */
   private async cleanComponent(componentPath: string): Promise<void> {
     const fs = await import('fs');
@@ -408,24 +408,50 @@ export class Web4CompliantONCE {
     console.log(`🧹 Cleaning ${componentName}...`);
     
     try {
-      // Run npm run clean if package.json exists
+      // Check if clean script exists in package.json
       if (fs.existsSync(`${componentPath}/package.json`)) {
-        execSync('npm run clean', {
+        const packageContent = fs.readFileSync(`${componentPath}/package.json`, 'utf8');
+        const packageJson = JSON.parse(packageContent);
+        
+        if (packageJson.scripts && packageJson.scripts.clean) {
+          // Use npm run clean if available
+          execSync('npm run clean', {
+            cwd: componentPath,
+            stdio: 'pipe'
+          });
+        } else {
+          // Fallback: manual cleanup if no clean script
+          console.log(`   📋 No clean script, using manual cleanup`);
+          execSync('rm -rf dist/ *.tsbuildinfo node_modules/.cache', {
+            cwd: componentPath,
+            stdio: 'pipe'
+          });
+        }
+      } else {
+        // No package.json: basic cleanup
+        execSync('rm -rf dist/ *.tsbuildinfo', {
           cwd: componentPath,
-          stdio: 'pipe' // Suppress output for cleaner display
+          stdio: 'pipe'
         });
       }
-      
-      // Additional cleanup - remove any remaining artifacts
-      execSync('rm -rf dist/ *.tsbuildinfo node_modules/.cache', {
-        cwd: componentPath,
-        stdio: 'pipe'
-      });
       
       console.log(`✅ ${componentName} cleaned`);
       
     } catch (error) {
-      console.log(`⚠️ ${componentName} clean failed: ${(error as Error).message}`);
+      // Improved error reporting - only show relevant error
+      const errorMsg = (error as Error).message.split('\n')[0];
+      console.log(`⚠️ ${componentName} partial clean (continuing...)`);
+      
+      // Try fallback manual cleanup
+      try {
+        execSync('rm -rf dist/ *.tsbuildinfo node_modules/.cache', {
+          cwd: componentPath,
+          stdio: 'pipe'
+        });
+        console.log(`✅ ${componentName} fallback cleanup successful`);
+      } catch {
+        console.log(`❌ ${componentName} cleanup failed completely`);
+      }
     }
   }
 
