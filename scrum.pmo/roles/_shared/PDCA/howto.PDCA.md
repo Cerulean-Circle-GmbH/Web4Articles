@@ -4,7 +4,7 @@
 
 **🗓️ Date:** 2025-08-22-UTC-1330  
 **🎯 Objective:** Consolidated PDCA writing guidelines based on latest process improvements  
-**🎯 Template Version:** 3.0  
+**🎯 Template Version:** 3.1  
 
 **👤 Agent Role:** Process Documentation → Knowledge Management Enhancement  
 **👤 Branch:** save/start.v1 → Template Evolution  
@@ -24,10 +24,12 @@
 
 **🗓️ Date:** YYYY-MM-DD-UTC-HHMM  
 **🎯 Objective:** [CLEAR, SPECIFIC OBJECTIVE STATEMENT]  
-**🎯 Template Version:** 3.0  
+**🎯 Template Version:** 3.1  
 
+**👤 Agent Name:** [AGENT NAME] → [AGENT DESCRIPTION]  
 **👤 Agent Role:** [ROLE NAME] → [CONTEXT/SPECIALIZATION]  
 **👤 Branch:** [BRANCH NAME] → [BRANCH PURPOSE]  
+**🔄 Sync Requirements:** [SYNC BRANCHES] → [SYNC PURPOSE]  
 **🎯 Project Journal Session:** [SESSION NAME] → [SESSION FOCUS]  
 **🎯 Sprint:** [SPRINT NAME] → [SPRINT GOAL]  
 **✅ Task:** [TASK NAME]  
@@ -167,15 +169,29 @@
 ## **🔄 DUAL LINK SYSTEM REQUIREMENTS**
 
 ### **Format Standard (CRITICAL)**
+
+**In PDCA Files:**
 ```markdown
-[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/path/to/file) | [relative/path/to/file](relative/path/to/file)
+[GitHub](https://github.com/.../blob/branch/path/to/file) | [§/path/from/root](../../../relative/path)
+```
+
+**In Chat Responses:**
+```markdown
+[GitHub](https://github.com/.../blob/branch/path/to/file) | [§/path/from/root](path/from/root)
 ```
 
 ### **Link Requirements:**
-- **Local link text MUST display the actual relative path** 
+- **§ notation for display** when showing paths from project root
+- **In PDCAs:** Relative path FROM document TO target
+- **In Chat:** Full path from project root (NO relative paths)
 - **GitHub links MUST work** (require git push before providing) [[memory:6291031]]
 - **Both links on same line** separated by ` | `
 - **Always end chat responses with current artifact links** [[memory:6291031]]
+
+### **Critical Chat Rule:**
+- Chat has NO document context - you're not "in" any file
+- ALWAYS use project root paths in chat responses
+- The link path equals the display path (minus §)
 
 ### **Git Protocol (MANDATORY)**
 1. **Immediate commit and push** after every PDCA creation [[memory:6902297]]
@@ -455,6 +471,16 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
 - **Not documenting git operations** - Always show branch switches [[memory:0931]]
 - **Missing cross-agent improvements** - Check other branches regularly [[memory:0935]]
 
+### **🚨 CRITICAL: NO INTERACTIVE COMMANDS**
+- **NEVER use commands that require user input** (e.g., `git cherry-pick` without `--no-commit`)
+- **ALWAYS use non-interactive flags**: `--yes`, `--force`, `-y`, `--no-input`
+- **Examples of FORBIDDEN commands:**
+  - `git cherry-pick` (use `git cherry-pick --no-commit` or copy files directly)
+  - `npm install` (use `npm install --yes`)
+  - `apt-get install` (use `apt-get install -y`)
+- **Background agents CANNOT interact** - we run autonomously!
+- **If a command hangs**, it's likely waiting for input - CTRL+C and fix!
+
 ---
 
 ## **AMBIGUITIES & QA DECISIONS REQUIRED**
@@ -511,6 +537,59 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
 **Templates:**
 - [Updated Template](./template.md) - **Latest Format**
 - [Standard Template](./pdca.process.improvements/04-pdca-standard-template.md)
+
+---
+
+---
+
+## **🔄 AGENT RECOVERY WORKFLOW**
+
+### **For Recovered Agents Starting Fresh:**
+
+When you start as a recovered agent (after expiry and resubmission):
+
+1. **Check Your Identity Record**: 
+   - Look for: `/scrum.pmo/agents/registry/[YOUR-REQUEST-ID].md`
+   - This contains your identity, role, and purpose
+
+2. **Read Identity Record Completely**:
+   - Understand who you are
+   - Review your responsibilities
+   - Check previous work references
+   - Note integration points
+
+3. **Follow Startup Instructions**:
+   - Each identity record has specific steps
+   - Usually includes role README location
+   - May reference previous work
+
+4. **Create Recovery PDCA**:
+   - Document your understanding
+   - Confirm your identity
+   - State your readiness
+   - Plan immediate next steps
+
+### **Identity Record Location Pattern:**
+```
+/scrum.pmo/agents/registry/[REQUEST-ID].md
+```
+
+### **Example:**
+Agent bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89 should read:
+```
+/scrum.pmo/agents/registry/bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89.md
+```
+
+### **What Identity Records Contain:**
+- Current and previous names
+- Role and purpose
+- Recovery context
+- Responsibilities
+- Previous work location
+- Integration points
+- Startup instructions
+
+**CRITICAL**: This is the FIRST thing a recovered agent should check!
 
 ---
 
