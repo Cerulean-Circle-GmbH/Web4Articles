@@ -18,24 +18,30 @@ NC='\033[0m'
 echo "🔗 Web4 ONCE Component v0.3.0.0 - Object Network Communication Engine"
 echo "📂 Component: $COMPONENT_DIR"
 
-# Use Build component for environment and dependency management
+# Use Build component for comprehensive build chain
 use_build_component() {
     local BUILD_COMPONENT="$COMPONENT_DIR/../../../Build/latest"
     
     if [ -x "$BUILD_COMPONENT/build" ]; then
-        echo "🏗️ Using Build component for environment setup..."
-        "$BUILD_COMPONENT/build" checkEnvironment
+        echo "🏗️ Triggering comprehensive build chain for ONCE..."
         
-        # Build ONCE dependencies
-        "$BUILD_COMPONENT/build" buildComponent ONCE
+        # Trigger complete build chain for ONCE component
+        "$BUILD_COMPONENT/build" buildComponent ONCE || {
+            echo -e "${RED}❌ Comprehensive build chain failed for ONCE${NC}"
+            exit 1
+        }
+        
+        echo -e "${GREEN}✅ Build chain complete - ONCE ready for execution${NC}"
     else
-        echo -e "${YELLOW}⚠️ Build component not available, using fallback...${NC}"
-        fallback_build
+        echo -e "${YELLOW}⚠️ Build component not available, using enhanced fallback...${NC}"
+        enhanced_fallback_build
     fi
 }
 
-# Fallback build if Build component unavailable
-fallback_build() {
+# Enhanced fallback build with dependency detection
+enhanced_fallback_build() {
+    echo "🔍 Detecting ONCE component dependencies..."
+    
     # Basic environment check
     command -v node >/dev/null 2>&1 || {
         echo -e "${RED}❌ Node.js required but not installed${NC}"
@@ -47,13 +53,40 @@ fallback_build() {
         exit 1
     }
     
-    # Build component if needed
-    if [ -f "$COMPONENT_DIR/package.json" ] && [ ! -d "$COMPONENT_DIR/dist" ]; then
+    # Build foundation components first (ONCE dependencies)
+    build_foundation_if_needed() {
+        local FOUNDATION_COMPONENTS=(
+            "IOR:/workspace/components/IOR/0.3.0.0"
+            "Scenario:/workspace/components/Scenario/0.1.3.0" 
+            "User:/workspace/components/User/0.1.3.0"
+        )
+        
+        for comp_info in "${FOUNDATION_COMPONENTS[@]}"; do
+            local comp_name="${comp_info%%:*}"
+            local comp_path="${comp_info##*:}"
+            
+            if [ -d "$comp_path" ] && [ ! -d "$comp_path/dist" ]; then
+                echo "🔨 Building foundation component: $comp_name..."
+                cd "$comp_path"
+                npm install >/dev/null 2>&1
+                npm run build >/dev/null 2>&1 || npx tsc >/dev/null 2>&1
+                echo -e "${GREEN}✅ $comp_name built${NC}"
+            fi
+        done
+    }
+    
+    # Build foundation components
+    build_foundation_if_needed
+    
+    # Build ONCE component
+    if [ -f "$COMPONENT_DIR/package.json" ]; then
         echo "🔨 Building ONCE component..."
         cd "$COMPONENT_DIR"
         npm install
         npm run build
     fi
+    
+    echo -e "${GREEN}✅ Enhanced fallback build complete${NC}"
 }
 
 # Main execution

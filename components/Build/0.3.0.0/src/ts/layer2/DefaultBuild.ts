@@ -14,12 +14,14 @@ import { BuildState } from '../layer3/BuildState.interface.js';
 import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
 import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
 import { DefaultUser } from '../../../../User/0.1.3.0/src/ts/DefaultUser.js';
+import { DependencyResolver, ComponentDependency } from '../layer1/DependencyResolver.js';
 
 export class DefaultBuild implements Build {
   private data: BuildModel;
-  private scenarioService: Scenario;  // ✅ DRY: Shared component composition
-  private userService: DefaultUser;   // ✅ DRY: Shared component composition
-  private iorComponent: DefaultIOR;   // ✅ DRY: Shared IOR component
+  private scenarioService: Scenario;     // ✅ DRY: Shared component composition
+  private userService: DefaultUser;      // ✅ DRY: Shared component composition
+  private iorComponent: DefaultIOR;      // ✅ DRY: Shared IOR component
+  private dependencyResolver: DependencyResolver; // ✅ Comprehensive dependency resolution
 
   /**
    * Web4 Pattern: Empty constructor
@@ -45,6 +47,7 @@ export class DefaultBuild implements Build {
     this.scenarioService = new Scenario();
     this.userService = new DefaultUser();
     this.iorComponent = new DefaultIOR();
+    this.dependencyResolver = new DependencyResolver();
     
     // Radical OOP: Return proxy-wrapped class instance
     return this.createProxy();
@@ -160,86 +163,132 @@ export class DefaultBuild implements Build {
   }
 
   /**
-   * Build single component with dependency resolution
+   * Build single component with comprehensive dependency resolution
    */
   async buildComponent(componentIOR: IOR): Promise<BuildResult> {
-    this.data.buildState = 'building';
-    const startTime = new Date();
+    console.log(`🏗️ Build: Starting comprehensive build chain for ${componentIOR.component}:${componentIOR.version}`);
     
-    console.log(`Build: Building component ${componentIOR.component}:${componentIOR.version}`);
-    
-    try {
-      // 1. Resolve dependencies
-      const dependencies = await this.resolveDependencies(componentIOR);
-      
-      // 2. Build dependencies first
-      for (const dep of dependencies) {
-        await this.buildComponent(dep);
-      }
-      
-      // 3. Build the component
-      const buildResult = await this.performComponentBuild(componentIOR);
-      
-      this.data.buildState = 'complete';
-      this.data.artifacts.push(...buildResult.artifacts);
-      
-      return buildResult;
-      
-    } catch (error) {
-      this.data.buildState = 'error';
-      this.data.errorDetails = (error as Error).message;
-      
-      throw error;
-    }
-  }
-
-  /**
-   * Build all components in correct dependency order
-   */
-  async buildAll(): Promise<BuildResult[]> {
-    console.log('Build: Building all components in dependency order...');
+    // Get complete build order including all dependencies
+    const buildOrder = this.dependencyResolver.resolveBuildOrder(componentIOR.component);
+    console.log(`📋 Build: Resolved build order: ${buildOrder.join(' → ')}`);
     
     const results: BuildResult[] = [];
     
-    for (const componentName of this.data.buildOrder) {
-      const componentIOR = this.createComponentIOR(componentName);
-      const result = await this.buildComponent(componentIOR);
-      results.push(result);
+    for (const componentName of buildOrder) {
+      // Skip if already built successfully
+      if (this.dependencyResolver.isComponentBuilt(componentName)) {
+        console.log(`⏭️ Build: ${componentName} already built, skipping...`);
+        continue;
+      }
+      
+      console.log(`🔨 Build: Building ${componentName}...`);
+      this.dependencyResolver.markBuilding(componentName);
+      
+      try {
+        const componentIORForBuild = this.dependencyResolver.createComponentIOR(componentName);
+        const result = await this.performComponentBuild(componentIORForBuild);
+        
+        this.dependencyResolver.markBuilt(componentName);
+        results.push(result);
+        
+        console.log(`✅ Build: ${componentName} built successfully`);
+        
+      } catch (error) {
+        const errorMessage = (error as Error).message;
+        this.dependencyResolver.markFailed(componentName, errorMessage);
+        console.log(`❌ Build: ${componentName} failed - ${errorMessage}`);
+        
+        throw new Error(`Build chain failed at ${componentName}: ${errorMessage}`);
+      }
     }
     
-    console.log(`Build: All components built successfully - ${results.length} components`);
+    console.log(`🎉 Build: Complete build chain successful for ${componentIOR.component}`);
+    
+    // Return result for the target component
+    return results.find(r => r.componentIOR.component === componentIOR.component) || results[results.length - 1];
+  }
+
+  /**
+   * Build all components in comprehensive dependency order
+   */
+  async buildAll(): Promise<BuildResult[]> {
+    console.log('🏗️ Build: Starting comprehensive Web4 ecosystem build...');
+    
+    // Get complete Web4 ecosystem build order
+    const completeBuildOrder = this.dependencyResolver.getCompleteBuildOrder();
+    console.log(`📋 Build: Complete ecosystem build order: ${completeBuildOrder.join(' → ')}`);
+    
+    const results: BuildResult[] = [];
+    
+    for (const componentName of completeBuildOrder) {
+      // Skip if already built
+      if (this.dependencyResolver.isComponentBuilt(componentName)) {
+        console.log(`⏭️ Build: ${componentName} already built, skipping...`);
+        continue;
+      }
+      
+      console.log(`🔨 Build: Building ${componentName}...`);
+      this.dependencyResolver.markBuilding(componentName);
+      
+      try {
+        const componentIOR = this.dependencyResolver.createComponentIOR(componentName);
+        const result = await this.performComponentBuild(componentIOR);
+        
+        this.dependencyResolver.markBuilt(componentName);
+        results.push(result);
+        
+        console.log(`✅ Build: ${componentName} built successfully`);
+        
+      } catch (error) {
+        const errorMessage = (error as Error).message;
+        this.dependencyResolver.markFailed(componentName, errorMessage);
+        console.log(`❌ Build: ${componentName} failed - ${errorMessage}`);
+        
+        // Continue with other components but log failure
+        console.log(`⚠️ Build: Continuing with remaining components despite ${componentName} failure...`);
+      }
+    }
+    
+    console.log(`🎉 Build: Comprehensive Web4 ecosystem build complete - ${results.length} components built`);
     return results;
   }
 
   /**
-   * Resolve component dependencies recursively
+   * Resolve component dependencies using comprehensive dependency resolver
    */
   async resolveDependencies(componentIOR: IOR): Promise<IOR[]> {
-    // Dependency resolution logic would analyze component imports
-    // For now, return default dependency order
-    const dependencies: IOR[] = [];
+    console.log(`🔍 Build: Resolving dependencies for ${componentIOR.component}...`);
     
-    if (componentIOR.component !== 'IOR') {
-      dependencies.push(this.createComponentIOR('IOR'));
-    }
+    // Use dependency resolver for comprehensive resolution
+    const buildOrder = this.dependencyResolver.resolveBuildOrder(componentIOR.component);
     
-    if (componentIOR.component !== 'Scenario') {
-      dependencies.push(this.createComponentIOR('Scenario'));
-    }
+    // Convert to IOR array (exclude the target component itself)
+    const dependencies = buildOrder
+      .filter(componentName => componentName !== componentIOR.component)
+      .map(componentName => this.dependencyResolver.createComponentIOR(componentName));
+    
+    console.log(`📋 Build: Dependencies for ${componentIOR.component}: ${dependencies.map(d => d.component).join(', ')}`);
     
     return dependencies;
   }
 
   /**
-   * Get build state information
+   * Get comprehensive build state information
    */
   getBuildState(): BuildState {
+    const allStatuses = this.dependencyResolver.getAllStatuses();
+    const completed = allStatuses.filter(s => s.built);
+    const failed = allStatuses.filter(s => s.failed);
+    const building = allStatuses.filter(s => s.building);
+    const pending = allStatuses.filter(s => !s.built && !s.failed && !s.building);
+    
     return {
       state: this.data.buildState,
-      completedBuilds: this.data.dependencies.filter(() => true), // Mock implementation
-      failedBuilds: [],
-      buildQueue: [],
-      progress: this.data.buildState === 'complete' ? 100 : 0,
+      currentlyBuilding: building.length > 0 ? this.dependencyResolver.createComponentIOR(building[0].component) : undefined,
+      completedBuilds: completed.map(s => this.dependencyResolver.createComponentIOR(s.component)),
+      failedBuilds: failed.map(s => this.dependencyResolver.createComponentIOR(s.component)),
+      buildQueue: pending.map(s => this.dependencyResolver.createComponentIOR(s.component)),
+      progress: Math.round((completed.length / allStatuses.length) * 100),
       environmentReady: true,
       lastBuildAt: this.data.buildCompleted
     };
@@ -306,20 +355,41 @@ export class DefaultBuild implements Build {
     const startTime = new Date();
     
     try {
-      // Simulate component build process
-      console.log(`Build: Performing build for ${componentIOR.component}`);
+      console.log(`🔨 Build: Performing comprehensive build for ${componentIOR.component}`);
       
-      // Build steps would go here:
-      // 1. npm install (if configured)
-      // 2. tsc build (if configured)  
-      // 3. validation
+      // Real component build implementation
+      const componentPath = this.getComponentPath(componentIOR);
+      
+      if (!componentPath) {
+        throw new Error(`Component path not found for ${componentIOR.component}`);
+      }
+      
+      console.log(`📂 Build: Component path: ${componentPath}`);
+      
+      // 1. Check if component exists
+      const { existsSync } = require('fs');
+      if (!existsSync(componentPath)) {
+        throw new Error(`Component directory not found: ${componentPath}`);
+      }
+      
+      // 2. Install npm dependencies (if configured and package.json exists)
+      if (this.data.npmInstall && existsSync(`${componentPath}/package.json`)) {
+        console.log(`📦 Build: Installing NPM dependencies for ${componentIOR.component}...`);
+        await this.runCommand('npm install', componentPath);
+      }
+      
+      // 3. Build TypeScript (if configured and tsconfig.json exists)
+      if (this.data.typeScriptBuild && existsSync(`${componentPath}/tsconfig.json`)) {
+        console.log(`📝 Build: Building TypeScript for ${componentIOR.component}...`);
+        await this.runCommand('npm run build', componentPath);
+      }
       
       const endTime = new Date();
       
       return {
         componentIOR,
         success: true,
-        artifacts: [`dist/${componentIOR.component}.js`],
+        artifacts: [`${componentPath}/dist`],
         duration: endTime.getTime() - startTime.getTime(),
         startedAt: startTime.toISOString(),
         completedAt: endTime.toISOString(),
@@ -327,7 +397,7 @@ export class DefaultBuild implements Build {
           stdout: `Build completed for ${componentIOR.component}`,
           stderr: ''
         },
-        builtDependencies: await this.resolveDependencies(componentIOR)
+        builtDependencies: []
       };
       
     } catch (error) {
@@ -350,6 +420,43 @@ export class DefaultBuild implements Build {
         },
         builtDependencies: []
       };
+    }
+  }
+
+  /**
+   * Get component directory path
+   */
+  private getComponentPath(componentIOR: IOR): string | null {
+    // Map component names to their directory paths
+    const componentPaths = {
+      'IOR': '/workspace/components/IOR/0.3.0.0',
+      'Scenario': '/workspace/components/Scenario/0.1.3.0',
+      'User': '/workspace/components/User/0.1.3.0',
+      'Build': '/workspace/components/Build/0.3.0.0',
+      'HttpServer': '/workspace/components/HttpServer/0.3.0.0',
+      'WsServer': '/workspace/components/WsServer/0.3.0.0',
+      'P2PServer': '/workspace/components/P2PServer/0.3.0.0',
+      'ONCE': '/workspace/components/ONCE/0.3.0.0',
+      'Web4Requirement': '/workspace/components/Web4Requirement/0.1.2.2',
+      'Unit': '/workspace/components/Unit/0.1.3.0'
+    };
+    
+    return componentPaths[componentIOR.component as keyof typeof componentPaths] || null;
+  }
+
+  /**
+   * Run shell command in specific directory
+   */
+  private async runCommand(command: string, workingDir: string): Promise<void> {
+    const { execSync } = require('child_process');
+    
+    try {
+      execSync(command, {
+        cwd: workingDir,
+        stdio: 'inherit'
+      });
+    } catch (error) {
+      throw new Error(`Command failed: ${command} in ${workingDir} - ${(error as Error).message}`);
     }
   }
 
