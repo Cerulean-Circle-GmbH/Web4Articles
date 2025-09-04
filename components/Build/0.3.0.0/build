@@ -1,0 +1,135 @@
+#!/bin/bash
+
+# Web4 Build Component Shell Starter
+# Checks environment, installs dependencies if needed, delegates to CLI
+# Following comprehensive implementation plan Phase 1a
+
+set -euo pipefail
+
+# Get script directory
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+COMPONENT_DIR="$SCRIPT_DIR"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+echo "🏗️ Web4 Build Component v0.3.0.0"
+echo "📂 Component: $COMPONENT_DIR"
+
+# Check if Node.js is available
+check_node() {
+    if command -v node >/dev/null 2>&1; then
+        NODE_VERSION=$(node --version)
+        echo -e "${GREEN}✅ Node.js found: $NODE_VERSION${NC}"
+        return 0
+    else
+        echo -e "${RED}❌ Node.js not found${NC}"
+        return 1
+    fi
+}
+
+# Check if NPM is available
+check_npm() {
+    if command -v npm >/dev/null 2>&1; then
+        NPM_VERSION=$(npm --version)
+        echo -e "${GREEN}✅ NPM found: $NPM_VERSION${NC}"
+        return 0
+    else
+        echo -e "${RED}❌ NPM not found${NC}"
+        return 1
+    fi
+}
+
+# Install Node.js (worst case scenario)
+install_node() {
+    echo -e "${YELLOW}📦 Installing Node.js...${NC}"
+    
+    # Platform-specific installation
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        # Linux installation
+        curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+        sudo apt-get install -y nodejs
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS installation
+        if command -v brew >/dev/null 2>&1; then
+            brew install node
+        else
+            echo -e "${RED}❌ Homebrew required for automatic Node.js installation on macOS${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${RED}❌ Automatic Node.js installation not supported on this platform${NC}"
+        echo "Please install Node.js manually: https://nodejs.org/"
+        exit 1
+    fi
+}
+
+# Install NPM (usually comes with Node.js)
+install_npm() {
+    echo -e "${YELLOW}📦 Installing NPM...${NC}"
+    
+    # NPM usually comes with Node.js, but can be installed separately
+    if command -v node >/dev/null 2>&1; then
+        npm install -g npm@latest
+    else
+        echo -e "${RED}❌ Node.js required for NPM installation${NC}"
+        exit 1
+    fi
+}
+
+# Build component dependencies
+build_dependencies() {
+    echo "🔨 Building component dependencies..."
+    
+    # Install NPM dependencies
+    if [ -f "$COMPONENT_DIR/package.json" ]; then
+        cd "$COMPONENT_DIR"
+        npm install
+    fi
+    
+    # Build TypeScript
+    if [ -f "$COMPONENT_DIR/tsconfig.json" ]; then
+        cd "$COMPONENT_DIR"
+        npm run build 2>/dev/null || npx tsc
+    fi
+    
+    echo -e "${GREEN}✅ Component build complete${NC}"
+}
+
+# Main execution flow
+main() {
+    echo "🔍 Checking environment..."
+    
+    # Check Node.js
+    if ! check_node; then
+        echo -e "${YELLOW}⚠️ Installing Node.js...${NC}"
+        install_node
+        check_node || exit 1
+    fi
+    
+    # Check NPM
+    if ! check_npm; then
+        echo -e "${YELLOW}⚠️ Installing NPM...${NC}"
+        install_npm
+        check_npm || exit 1
+    fi
+    
+    echo "🏗️ Building component..."
+    build_dependencies
+    
+    echo "🚀 Delegating to Build CLI..."
+    
+    # Delegate all arguments to CLI
+    if [ -f "$COMPONENT_DIR/dist/ts/layer5/BuildCLI.js" ]; then
+        node "$COMPONENT_DIR/dist/ts/layer5/BuildCLI.js" "$@"
+    else
+        echo -e "${RED}❌ Build CLI not found. Run 'npm run build' first.${NC}"
+        exit 1
+    fi
+}
+
+# Execute main function with all arguments
+main "$@"
