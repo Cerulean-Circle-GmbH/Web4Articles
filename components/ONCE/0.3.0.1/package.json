@@ -1,0 +1,29 @@
+{
+  "name": "@web4/once",
+  "version": "0.3.0.1",
+  "description": "ONCE v0.3.0.1 - Web4-Compliant Object Network Communication Engine",
+  "type": "module",
+  "main": "dist/ts/layer2/DefaultONCE.js",
+  "types": "dist/ts/layer2/DefaultONCE.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "start": "node dist/ts/layer5/ONCECLI.js",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist/ *.tsbuildinfo node_modules/.cache",
+    "prebuild": "npm run clean"
+  },
+  "keywords": [
+    "web4",
+    "once",
+    "kernel",
+    "communication",
+    "demo",
+    "test"
+  ],
+  "author": "Web4Articles",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
