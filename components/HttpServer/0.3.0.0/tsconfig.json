@@ -1,5 +1,4 @@
 {
-  "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
@@ -13,7 +12,8 @@
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "noEmit": false
   },
   "include": [
     "src/**/*"

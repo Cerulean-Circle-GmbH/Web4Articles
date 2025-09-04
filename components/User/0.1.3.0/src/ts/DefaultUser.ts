@@ -35,8 +35,19 @@ export class DefaultUser implements User {
       throw new Error('Invalid scenario');
     }
     
-    // Restore complete model from scenario
-    this.model = { ...scenario.model };
+    // Restore complete model from scenario with proper type casting
+    this.model = {
+      uuid: (scenario.model?.uuid as string) || '',
+      username: (scenario.model?.username as string) || '',
+      email: (scenario.model?.email as string) || '',
+      roles: (scenario.model?.roles as string[]) || [],
+      permissions: (scenario.model?.permissions as string[]) || [],
+      profile: (scenario.model?.profile as UserProfile) || {},
+      settings: (scenario.model?.settings as UserSettings) || {},
+      lastLogin: (scenario.model?.lastLogin as string | null) || null,
+      created: (scenario.model?.created as string) || new Date().toISOString(),
+      active: (scenario.model?.active as boolean) || true
+    };
     
     return this;
   }

@@ -7,7 +7,7 @@
  * Following requirement-v0.1.2.2 colorful usage display pattern
  */
 
-import { DefaultCLI } from '../../../../IOR/0.3.0.0/src/ts/layer5/DefaultCLI.js';
+import { DefaultCLI } from '../../../../IOR/0.3.0.0/dist/ts/layer5/DefaultCLI.js';
 import { DefaultHttpServer } from '../layer2/DefaultHttpServer.js';
 
 class HttpServerCLI {

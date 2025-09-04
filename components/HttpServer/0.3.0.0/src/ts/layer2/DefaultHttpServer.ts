@@ -8,10 +8,10 @@
 
 import { HttpServer } from '../layer3/HttpServer.interface.js';
 import { HttpServerModel } from '../layer3/HttpServerModel.interface.js';
-import { IOR, DefaultIOR, ServiceCapable } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
+import { IOR, DefaultIOR, ServiceCapable } from '../../../../IOR/0.3.0.0/dist/ts/layer3/IOR.interface.js';
 import { ServiceRegistration } from '../../../ONCE/0.3.0.0/src/ts/layer3/ServiceRegistry.interface.js';
-import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
-import { DefaultUser } from '../../../../User/0.1.3.0/src/ts/DefaultUser.js';
+import { Scenario } from '../../../../Scenario/0.1.3.0/dist/ts/layer2/DefaultScenario.js';
+import { DefaultUser } from '../../../../User/0.1.3.0/dist/ts/DefaultUser.js';
 
 export class DefaultHttpServer implements HttpServer {
   private data: HttpServerModel;
@@ -24,7 +24,7 @@ export class DefaultHttpServer implements HttpServer {
    * Web4 Pattern: Empty constructor
    */
   constructor() {
-    // Initialize with minimal HTTP server data
+    // Initialize with complete HTTP server data (Model interface compliance)
     this.data = {
       uuid: '',
       name: 'HTTP Server',
