@@ -12,9 +12,9 @@ import { EnvironmentInfo } from '../layer3/EnvironmentInfo.interface.js';
 import { Component } from '../layer3/Component.interface.js';
 import { ServiceRegistry, ServiceRegistration } from '../layer3/ServiceRegistry.interface.js';
 import { DefaultServiceRegistry } from './DefaultServiceRegistry.js';
-import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
-import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
-import { DefaultUser } from '../../../../User/0.1.3.0/src/ts/DefaultUser.js';
+import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.0/dist/ts/layer3/IOR.interface.js';
+import { Scenario } from '../../../../Scenario/0.1.3.0/dist/ts/layer2/DefaultScenario.js';
+import { DefaultUser } from '../../../../User/0.1.3.0/dist/ts/DefaultUser.js';
 // Capability component imports for kernel integration
 import { DefaultHttpServer } from '../../../HttpServer/0.3.0.0/src/ts/layer2/DefaultHttpServer.js';
 import { DefaultWsServer } from '../../../WsServer/0.3.0.0/src/ts/layer2/DefaultWsServer.js';

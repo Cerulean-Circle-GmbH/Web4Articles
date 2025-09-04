@@ -5,8 +5,8 @@
  * UCP Unit-Component-Package: Defines what constitutes a loadable component
  */
 
-import { IOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
-import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
+import { IOR } from '../../../../IOR/0.3.0.0/dist/ts/layer3/IOR.interface.js';
+import { Scenario } from '../../../../Scenario/0.1.3.0/dist/ts/layer2/DefaultScenario.js';
 
 export interface Component {
   /**

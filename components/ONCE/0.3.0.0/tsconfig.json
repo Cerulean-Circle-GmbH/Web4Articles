@@ -1,5 +1,4 @@
 {
-  "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
@@ -13,7 +12,14 @@
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "noEmit": false,
+    "baseUrl": ".",
+    "paths": {
+      "../../../../IOR/0.3.0.0/dist/*": ["../../../../IOR/0.3.0.0/dist/*"],
+      "../../../../Scenario/0.1.3.0/dist/*": ["../../../../Scenario/0.1.3.0/dist/*"],
+      "../../../../User/0.1.3.0/dist/*": ["../../../../User/0.1.3.0/dist/*"]
+    }
   },
   "include": [
     "src/**/*"
