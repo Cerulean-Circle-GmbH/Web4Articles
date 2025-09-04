@@ -262,7 +262,10 @@ export class StandaloneBuild {
 
     try {
       const components = this.discoverComponents(process.cwd().split('/components/')[0]);
-      const targetComponent = components.find(c => c.name === componentName);
+      // Prefer latest version when multiple versions exist
+      const targetComponent = components
+        .filter(c => c.name === componentName)
+        .sort((a, b) => b.version.localeCompare(a.version))[0]; // Latest version first
 
       if (!targetComponent) {
         throw new Error(`Component ${componentName} not found`);
