@@ -141,6 +141,40 @@ export class DefaultBuild implements Build {
   }
 
   /**
+   * Build component with dependencies in correct order
+   */
+  async buildWithDependencies(componentPath: string): Promise<boolean> {
+    console.log(`🔍 Build: Analyzing dependencies for ${componentPath}`);
+    
+    try {
+      // 1. Resolve all dependencies
+      const dependencies = await this.resolveDependencies(componentPath);
+      
+      // 2. Build each dependency first (recursive)
+      for (const depPath of dependencies) {
+        if (this.needsBuild(depPath)) {
+          console.log(`🔗 Build: Building dependency: ${depPath}`);
+          const depSuccess = await this.buildWithDependencies(depPath);
+          if (!depSuccess) {
+            console.log(`❌ Build: Dependency build failed: ${depPath}`);
+            return false;
+          }
+        } else {
+          console.log(`✅ Build: Dependency up-to-date: ${depPath}`);
+        }
+      }
+      
+      // 3. Build the target component
+      console.log(`🏗️ Build: Building target component: ${componentPath}`);
+      return await this.buildComponent(componentPath);
+      
+    } catch (error) {
+      console.log(`❌ Build: Dependency resolution failed for ${componentPath} - ${error}`);
+      return false;
+    }
+  }
+
+  /**
    * Deinstall component - comprehensive ecosystem clean build reset
    * Dependency-free implementation for Web4 compliance
    */

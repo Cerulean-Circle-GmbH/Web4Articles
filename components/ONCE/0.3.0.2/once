@@ -18,23 +18,45 @@ NC='\033[0m'
 echo "🔗 Web4 ONCE Component v0.3.0.2 - Object Network Communication Engine"
 echo "📂 Component: $COMPONENT_DIR"
 
-# Use Build component for comprehensive build chain
+# Use Build component for proper dependency resolution and build order
 use_build_component() {
-    local BUILD_COMPONENT="$COMPONENT_DIR/../../../Build/0.3.0.3"
+    local BUILD_COMPONENT="$COMPONENT_DIR/../../Build/0.3.0.3"
     
-    if [ -x "$BUILD_COMPONENT/build" ]; then
-        echo "🏗️ Triggering comprehensive build chain for ONCE..."
+    if [ -d "$BUILD_COMPONENT" ]; then
+        echo "🏗️ Using Build component for systematic dependency building..."
         
-        # Trigger complete build chain for ONCE component
-        "$BUILD_COMPONENT/build" buildComponent ONCE || {
-            echo -e "${RED}❌ Comprehensive build chain failed for ONCE${NC}"
+        # Use Build component buildWithDependencies for proper order
+        cd "$BUILD_COMPONENT"
+        npm install >/dev/null 2>&1 || true
+        npm run build >/dev/null 2>&1 || true
+        
+        # Use Build component to build ONCE with all dependencies
+        node -e "
+        const { DefaultBuild } = require('./dist/ts/layer2/DefaultBuild.js');
+        const build = new DefaultBuild();
+        build.buildWithDependencies('/workspace/components/ONCE/0.3.0.2')
+          .then(success => {
+            if (success) {
+              console.log('✅ Build: ONCE and all dependencies built successfully');
+              process.exit(0);
+            } else {
+              console.log('❌ Build: ONCE dependency building failed');
+              process.exit(1);
+            }
+          })
+          .catch(error => {
+            console.log('❌ Build: Error during dependency building:', error.message);
+            process.exit(1);
+          });
+        " || {
+            echo -e "${RED}❌ Build component dependency building failed${NC}"
             exit 1
         }
         
         echo -e "${GREEN}✅ Build chain complete - ONCE ready for execution${NC}"
     else
-        echo -e "${YELLOW}⚠️ Build component not available, using enhanced fallback...${NC}"
-        enhanced_fallback_build
+        echo -e "${RED}❌ Build component not available${NC}"
+        exit 1
     fi
 }
 
@@ -75,31 +97,8 @@ enhanced_fallback_build() {
         done
     }
     
-    # Build foundation components
-    build_foundation_if_needed
-    
-    # Build ONCE component using MinimalONCE approach
-    if [ -f "$COMPONENT_DIR/package.json" ]; then
-        echo "🔨 Building ONCE component..."
-        cd "$COMPONENT_DIR"
-        npm install
-        
-        # Build MinimalONCE implementation (Web4 compliant, no complex dependencies)
-        echo "🔧 Using MinimalONCE implementation for reliable functionality..."
-        
-        mkdir -p "$COMPONENT_DIR/dist/ts/layer5"
-        
-        # Compile MinimalONCE components
-        npx tsc src/ts/layer2/MinimalONCE.ts --outDir dist --target es2020 --module commonjs --skipLibCheck 2>/dev/null || true
-        npx tsc src/ts/layer5/MinimalONCECLI.ts --outDir dist --target es2020 --module commonjs --skipLibCheck 2>/dev/null || true
-        
-        # Move compiled CLI to expected location
-        if [ -f "dist/layer5/MinimalONCECLI.js" ]; then
-            mv dist/layer5/MinimalONCECLI.js dist/ts/layer5/ONCECLI.js
-        fi
-        
-        chmod +x "$COMPONENT_DIR/dist/ts/layer5/ONCECLI.js" 2>/dev/null || true
-    fi
+    # Use Build component for systematic dependency building - no fallback
+    use_build_component
     
     echo -e "${GREEN}✅ Enhanced fallback build complete${NC}"
 }
@@ -116,30 +115,13 @@ main() {
     
     echo "🚀 Delegating to ONCE CLI..."
     
-    # Delegate all arguments to CLI - use working CLI if TypeScript build fails
+    # Delegate all arguments to CLI - must exist after proper building
     if [ -f "$COMPONENT_DIR/dist/ts/layer5/ONCECLI.js" ]; then
         node "$COMPONENT_DIR/dist/ts/layer5/ONCECLI.js" "$@"
     else
-        echo -e "${YELLOW}⚠️ ONCE CLI not found, creating minimal working CLI...${NC}"
-        
-        # Create minimal working CLI directly
-        mkdir -p "$COMPONENT_DIR/dist/ts/layer5"
-        cat > "$COMPONENT_DIR/dist/ts/layer5/ONCECLI.js" << 'EOF'
-#!/usr/bin/env node
-console.log('🔗 Web4 ONCE CLI - Object Network Communication Engine');
-console.log('');
-console.log('Usage:');
-console.log('  once start                    # Start ONCE kernel');
-console.log('  once stop                     # Stop ONCE kernel'); 
-console.log('  once status                   # Show kernel status');
-console.log('  once deinstall                # Clean all components');
-console.log('  once help                     # Show this help');
-console.log('');
-console.log('Web4 Integration:');
-console.log('  ONCE operates as Web4 component kernel with Build component integration.');
-EOF
-        
-        node "$COMPONENT_DIR/dist/ts/layer5/ONCECLI.js" "$@"
+        echo -e "${RED}❌ ONCE CLI not found after build - dependency building failed${NC}"
+        echo "💡 All dependencies must build successfully for ONCE to work"
+        exit 1
     fi
 }
 

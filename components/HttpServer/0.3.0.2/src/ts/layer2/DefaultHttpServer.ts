@@ -8,10 +8,10 @@
 
 import { HttpServer } from '../layer3/HttpServer.interface.js';
 import { HttpServerModel } from '../layer3/HttpServerModel.interface.js';
-import { IOR, DefaultIOR, ServiceCapable } from '../../../../IOR/0.3.0.2/src/ts/layer3/IOR.interface.js';
+import { IOR, DefaultIOR, ServiceCapable } from '../../../../IOR/0.3.0.3/dist/ts/layer3/IOR.interface.js';
 import { ServiceRegistration } from '../../../ONCE/0.3.0.2/src/ts/layer3/ServiceRegistry.interface.js';
-import { Scenario } from '../../../../Scenario/0.3.0.2/src/ts/layer2/DefaultScenario.js';
-import { DefaultUser } from '../../../../User/0.3.0.2/src/ts/DefaultUser.js';
+import { Scenario } from '../../../../Scenario/0.3.0.2/dist/ts/layer2/DefaultScenario.js';
+import { DefaultUser } from '../../../../User/0.3.0.2/dist/ts/layer2/DefaultUser.js';
 
 export class DefaultHttpServer implements HttpServer {
   private data: HttpServerModel;
