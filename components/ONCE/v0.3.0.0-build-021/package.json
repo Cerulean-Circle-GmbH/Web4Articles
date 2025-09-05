@@ -1,0 +1,43 @@
+{
+  "name": "@web4/once",
+  "version": "0.3.0.0",
+  "description": "ONCE v0.3.0.0 - Object Network Communication Engine with radical OOP patterns and Web4 EAM architecture",
+  "type": "module",
+  "main": "dist/ts/layer3/ONCE.interface.js",
+  "types": "dist/ts/layer3/ONCE.interface.d.ts",
+  "scripts": {
+    "clean": "rm -rf dist/ *.tsbuildinfo node_modules/.cache",
+    "prebuild": "npm run clean",
+    "build": "tsc",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "dev": "tsc --watch",
+    "clean:all": "npm run clean && rm -rf node_modules"
+  },
+  "keywords": [
+    "web4",
+    "once",
+    "object-network-communication",
+    "radical-oop",
+    "eam-architecture"
+  ],
+  "author": "Web4Articles",
+  "license": "MIT",
+  "dependencies": {
+    "@types/uuid": "^10.0.0",
+    "uuid": "^11.1.0",
+    "ws": "^8.14.2",
+    "@web4/ior": "file:../../../IOR/0.3.0.0",
+    "@web4/scenario": "file:../../../Scenario/0.1.3.0", 
+    "@web4/user": "file:../../../User/0.1.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "@types/ws": "^8.5.8",
+    "typescript": "^5.2.2",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
