@@ -5,7 +5,7 @@
  * UCP Unit-Component-Package: This is a Unit (single interface definition)
  */
 
-import { IOR } from '../../IOR.interface.js';
+import { IOR } from '../../../../IOR/0.3.0.3/dist/index.js';
 // Model interface from IOR component
 interface Model {
   createdAt: string;
