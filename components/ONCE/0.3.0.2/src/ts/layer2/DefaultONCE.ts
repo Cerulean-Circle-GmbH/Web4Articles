@@ -12,7 +12,7 @@ import { EnvironmentInfo } from '../layer3/EnvironmentInfo.interface.js';
 import { Component } from '../layer3/Component.interface.js';
 import { ServiceRegistry, ServiceRegistration } from '../layer3/ServiceRegistry.interface.js';
 import { DefaultServiceRegistry } from './DefaultServiceRegistry.js';
-import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.2/src/ts/layer3/IOR.interface.js';
+import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.3/dist/index.js';
 import { Scenario } from '../../../../Scenario/0.3.0.2/src/ts/layer2/DefaultScenario.js';
 import { DefaultUser } from '../../../../User/0.3.0.2/src/ts/DefaultUser.js';
 // Capability component imports for kernel integration

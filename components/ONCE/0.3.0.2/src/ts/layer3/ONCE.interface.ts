@@ -6,7 +6,7 @@
  * NOT a server implementation - that belongs to capability components
  */
 
-import { IOR } from '../../../../IOR/0.3.0.2/src/ts/layer3/IOR.interface.js';
+import { IOR } from '../../../../IOR/0.3.0.3/dist/src/ts/layer3/IOR.interface.js';
 import { Scenario } from '../../../../Scenario/0.3.0.2/src/ts/layer2/DefaultScenario.js';
 import { EnvironmentInfo } from './EnvironmentInfo.interface.js';
 import { Component } from './Component.interface.js';

@@ -1,0 +1,14 @@
+{
+  "name": "@web4/build",
+  "version": "0.3.0.3",
+  "description": "Dependency-free build system for Web4 components",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "clean": "rm -rf dist node_modules package-lock.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
