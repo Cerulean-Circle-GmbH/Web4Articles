@@ -40,6 +40,7 @@ class ONCECLI {
     console.log(`  ${cyan}once${reset} stop                                         ${green}# Stop ONCE kernel${reset}`);
     console.log(`  ${cyan}once${reset} status                                       ${green}# Show kernel status${reset}`);
     console.log(`  ${cyan}once${reset} info                                         ${green}# Show kernel information${reset}`);
+    console.log(`  ${cyan}once${reset} deinstall                                    ${green}# Clean all components${reset}`);
     console.log(`  ${cyan}once${reset} boot                                         ${green}# Boot environment${reset}`);
     console.log(`  ${cyan}once${reset} load ${yellow}<component>${reset}                            ${green}# Load component by name${reset}`);
     console.log(`  ${cyan}once${reset} unload ${yellow}<uuid>${reset}                               ${green}# Unload component by UUID${reset}`);
@@ -51,6 +52,7 @@ class ONCECLI {
     console.log(`  ${bold}stop${reset}         Stop ONCE kernel and all loaded components`);
     console.log(`  ${bold}status${reset}       Display current kernel state and loaded components`);
     console.log(`  ${bold}info${reset}         Show detailed ONCE kernel information`);
+    console.log(`  ${bold}deinstall${reset}    Clean all Web4 components and force rebuild`);
     console.log(`  ${bold}boot${reset}         Boot environment and detect capabilities`);
     console.log(`  ${bold}load${reset}         Load and initialize component by name`);
     console.log(`  ${bold}unload${reset}       Unload component by UUID`);
@@ -67,6 +69,7 @@ class ONCECLI {
     console.log(`  ${cyan}once${reset} load WsServer            ${green}# Load WebSocket server capability${reset}`);
     console.log(`  ${cyan}once${reset} list                     ${green}# See all loaded components${reset}`);
     console.log(`  ${cyan}once${reset} status                   ${green}# Check kernel status${reset}`);
+    console.log(`  ${cyan}once${reset} deinstall                ${green}# Clean all components and reset${reset}`);
     console.log('');
     console.log(`${bold}Web4 Integration:${reset}`);
     console.log(`  ONCE operates as Web4 component kernel, loading capability components as services.`);

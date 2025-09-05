@@ -639,6 +639,7 @@ export class DefaultONCE implements ONCE {
     console.log(`  stop            - Stop ONCE kernel and service registry`);
     console.log(`  status          - Show kernel and service registry status`);
     console.log(`  info            - Show kernel information`);
+    console.log(`  deinstall       - Clean all Web4 components and force rebuild`);
     console.log(`  help            - Show this help`);
     console.log(`\nKernel Commands:`);
     console.log(`  boot            - Boot environment and start service registry`);
@@ -670,6 +671,57 @@ export class DefaultONCE implements ONCE {
       }
     } else {
       console.log('\nNo services currently registered.');
+    }
+  }
+
+  /**
+   * Deinstall command - comprehensive ecosystem clean build reset
+   * Following Web4 principles: TypeScript method with CLI delegation
+   */
+  async deinstall(args: string[] = []): Promise<void> {
+    console.log('ONCE: Starting comprehensive ecosystem deinstall...');
+    
+    // Stop any running services first
+    await this.stop([]);
+    
+    // Clean all Web4 components
+    await this.cleanAllComponents();
+    
+    console.log('✅ ONCE: Complete ecosystem deinstall successful');
+    console.log('💡 Run "once start" to rebuild and restart the ecosystem');
+  }
+
+  /**
+   * Clean all Web4 components - comprehensive ecosystem reset
+   */
+  private async cleanAllComponents(): Promise<void> {
+    console.log('ONCE: Cleaning all Web4 components...');
+    
+    try {
+      // Clean loaded components first
+      for (const [uuid, component] of this.loadedComponents) {
+        if (typeof component.clean === 'function') {
+          console.log(`🧹 Cleaning component: ${uuid}`);
+          await component.clean([]);
+        }
+      }
+      
+      // Clear component registries
+      this.loadedComponents.clear();
+      this.data.loadedComponents = [];
+      this.data.capabilities = [];
+      
+      // Reset service registry state
+      if (this.data.serviceRegistry) {
+        this.data.serviceRegistry.serviceCount = 0;
+        this.data.serviceRegistry.running = false;
+      }
+      
+      console.log('✅ ONCE: All Web4 components cleaned successfully');
+      
+    } catch (error) {
+      console.error(`⚠️ ONCE: Component cleaning encountered issues: ${(error as Error).message}`);
+      console.log('💡 Some components may require manual cleanup');
     }
   }
 

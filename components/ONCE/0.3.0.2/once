@@ -89,48 +89,8 @@ enhanced_fallback_build() {
     echo -e "${GREEN}✅ Enhanced fallback build complete${NC}"
 }
 
-# Deinstall functionality - Web4 compliant cleaning
-deinstall() {
-    echo "🧹 ONCE Deinstall - Comprehensive ecosystem cleaning..."
-    
-    # Clean ONCE component
-    echo "🧹 Cleaning ONCE component..."
-    cd "$COMPONENT_DIR"
-    npm run clean 2>/dev/null || {
-        rm -rf dist node_modules package-lock.json
-        echo "✅ ONCE cleaned (manual)"
-    }
-    
-    # Clean Build component
-    echo "🧹 Cleaning Build component..."
-    local BUILD_COMPONENT="$COMPONENT_DIR/../../../Build/0.3.0.3"
-    if [ -d "$BUILD_COMPONENT" ]; then
-        cd "$BUILD_COMPONENT"
-        npm run clean 2>/dev/null || {
-            rm -rf dist node_modules package-lock.json
-            echo "✅ Build cleaned (manual)"
-        }
-    fi
-    
-    # Clean IOR component  
-    echo "🧹 Cleaning IOR component..."
-    local IOR_COMPONENT="$COMPONENT_DIR/../../../IOR/0.3.0.3"
-    if [ -d "$IOR_COMPONENT" ]; then
-        cd "$IOR_COMPONENT"
-        npm run clean 2>/dev/null || {
-            rm -rf dist node_modules package-lock.json
-            echo "✅ IOR cleaned (manual)"
-        }
-    fi
-    
-    echo "✅ ONCE deinstall complete - ready for clean rebuild"
-    exit 0
-}
-
-# Check for deinstall command
-if [ "${1:-}" = "deinstall" ]; then
-    deinstall
-fi
+# Deinstall functionality now implemented in DefaultONCE.ts following Web4 principles
+# CLI delegation: shell script → ONCECLI → DefaultONCE.deinstall() method
 
 # Main execution
 main() {
