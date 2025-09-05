@@ -1,0 +1,49 @@
+{
+  "ior": {
+    "uuid": "f8d4c7a9-5e3b-4f2d-8a6c-9f7e2d4c8a9f",
+    "component": "Web4Requirement", 
+    "version": "0.1.2.2"
+  },
+  "owner": {
+    "user": "system",
+    "timestamp": "2025-09-05T10:20:00.000Z"
+  },
+  "model": {
+    "uuid": "f8d4c7a9-5e3b-4f2d-8a6c-9f7e2d4c8a9f",
+    "name": "DORY Symptom Recognition - PDCA Compliance Failure & Memory Refresh Protocol",
+    "description": "CRITICAL DORY SYMPTOM: Not remembering how to do decisions and reporting properly. 'pdca' prompt means refresh mind and reread howtos. Failed to follow PDCA compliance protocol when prompted.",
+    "type": "dory-symptom-recognition",
+    "priority": "critical",
+    "category": "cmm3-compliance",
+    "status": "approved",
+    "rationale": "TRON identified first DORY symptom: not remembering decision format and reporting standards. 'pdca' prompt is compliance check requiring immediate howto review and correction.",
+    "acceptance_criteria": [
+      "Recognize 'pdca' prompt as compliance check request",
+      "Immediately re-read howto.PDCA.md and CMMI understanding",
+      "Review previous PDCA for compliance violations",
+      "Document what was missed and why",
+      "Create correction PDCA if needed",
+      "Follow mandatory response format for 'pdca' prompt",
+      "Maintain CMM3 compliance going forward"
+    ],
+    "dory_symptom_analysis": {
+      "symptom": "Not remembering how to do decisions and reporting",
+      "trigger": "Table format failure despite clear requirements",
+      "root_cause": "Did not refresh memory with howto documents",
+      "prevention": "Always re-read howtos when prompted with 'pdca'"
+    },
+    "pdca_prompt_protocol": {
+      "purpose": "Quality gate for long sessions, memory refresh, compliance enforcement",
+      "required_actions": ["Re-read howto.PDCA.md", "Check compliance", "Report findings", "Take corrective action"],
+      "response_format": "Structured CMM3 compliant format with findings and actions"
+    },
+    "technical_details": {
+      "compliance_check": "Review against 6-section mandatory format",
+      "memory_refresh": "Re-read all key PDCA documents",
+      "correction_protocol": "Fix previous PDCA if non-compliant"
+    },
+    "implementation_notes": "This is a critical learning moment about PDCA compliance protocol and DORY symptom recognition.",
+    "created_at": "2025-09-05T10:20:00.000Z",
+    "updated_at": "2025-09-05T10:20:00.000Z"
+  }
+}
