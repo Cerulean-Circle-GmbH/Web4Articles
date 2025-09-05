@@ -5,7 +5,7 @@
  * Service integration pattern for distributed component architecture
  */
 
-import { IOR } from '../../../../IOR/0.3.0.3/dist/src/ts/layer3/IOR.interface.js';
+import { IOR } from '../../../../IOR/0.3.0.3/dist/index.js';
 
 export interface ServiceRegistration {
   /**

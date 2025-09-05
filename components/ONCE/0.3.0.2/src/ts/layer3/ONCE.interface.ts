@@ -6,8 +6,8 @@
  * NOT a server implementation - that belongs to capability components
  */
 
-import { IOR } from '../../../../IOR/0.3.0.3/dist/src/ts/layer3/IOR.interface.js';
-import { Scenario } from '../../../../Scenario/0.3.0.2/src/ts/layer2/DefaultScenario.js';
+import { IOR } from '../../../../IOR/0.3.0.3/dist/index.js';
+import { Scenario } from '../../../../Scenario/0.3.0.2/dist/ts/layer2/DefaultScenario.js';
 import { EnvironmentInfo } from './EnvironmentInfo.interface.js';
 import { Component } from './Component.interface.js';
 
@@ -72,4 +72,4 @@ export type { ServiceRegistry, ServiceRegistration } from './ServiceRegistry.int
 export { DefaultServiceRegistry } from '../layer2/DefaultServiceRegistry.js';
 export { DefaultONCE } from '../layer2/DefaultONCE.js';
 // DRY Compliance: Use unified Scenario component
-export { Scenario } from '../../../../Scenario/0.3.0.2/src/ts/layer2/DefaultScenario.js';
+export { Scenario } from '../../../../Scenario/0.3.0.2/dist/ts/layer2/DefaultScenario.js';
