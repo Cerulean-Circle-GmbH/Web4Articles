@@ -1,1 +1,0 @@
-../../../IOR/0.3.0.3/dist/ts/layer3/IOR.interface.js
