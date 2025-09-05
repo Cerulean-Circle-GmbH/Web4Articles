@@ -1,34 +1,44 @@
 /**
- * HttpServer Interface - HTTP server capability component
+ * P2PServer Interface - P2P server capability component
  * 
  * Web4 principle: Single interface per file
- * UCP Component: Self-managed HTTP server with port and routing capabilities
+ * UCP Component: Self-managed P2P server with peer coordination
  */
 
 import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
-import { IOR, ServiceCapable } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
+import { IOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
 
-export interface HttpServer extends ServiceCapable {
+export interface P2PServer {
   /**
    * Initialize from scenario (using unified Scenario component)
-   * Web4 Pattern: Scenario-based initialization - DRY compliance
+   * Web4 Pattern: Scenario-based initialization - scenarios ARE configs
    */
   init(scenario: Scenario): this;
 
   /**
-   * Start HTTP server on configured port
+   * Start P2P server with peer discovery
    */
   startServer(): Promise<void>;
 
   /**
-   * Stop HTTP server cleanly
+   * Stop P2P server cleanly
    */
   stopServer(): Promise<void>;
 
   /**
-   * Add route component to server (Web4 principle: routes are components with IORs)
+   * Connect to peer component (Web4 principle: peers are components with IORs)
    */
-  addRoute(routeIOR: IOR): void;
+  connectPeer(peerIOR: IOR): Promise<void>;
+
+  /**
+   * Disconnect from peer component
+   */
+  disconnectPeer(peerIOR: IOR): Promise<void>;
+
+  /**
+   * Exchange scenarios with peer
+   */
+  exchangeScenarios(peerIOR: IOR, scenarios: Scenario[]): Promise<void>;
 
   /**
    * Get current port number
@@ -52,7 +62,7 @@ export interface HttpServer extends ServiceCapable {
  * Integrated exports in interface file - no separate exports.ts
  */
 
-export { HttpServerModel } from './HttpServerModel.interface.js';
-export { DefaultHttpServer } from '../layer2/DefaultHttpServer.js';
+export { P2PServerModel } from './P2PServerModel.interface.js';
+export { DefaultP2PServer } from '../layer2/DefaultP2PServer.js';
 // DRY Compliance: Use unified Scenario component
 export { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';

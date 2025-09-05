@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Web4 P2PServer Component Shell Starter
+
+set -euo pipefail
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+COMPONENT_DIR="$SCRIPT_DIR"
+
+echo "🌐 Web4 P2PServer Component v0.3.0.0 - P2P Server Capability"
+
+# Use Build component for setup
+BUILD_COMPONENT="$COMPONENT_DIR/../../../Build/latest"
+if [ -x "$BUILD_COMPONENT/build" ]; then
+    "$BUILD_COMPONENT/build" buildComponent P2PServer
+fi
+
+# Delegate to CLI
+if [ -f "$COMPONENT_DIR/dist/ts/layer5/P2PServerCLI.js" ]; then
+    node "$COMPONENT_DIR/dist/ts/layer5/P2PServerCLI.js" "$@"
+else
+    echo "❌ P2PServer CLI not found"
+    exit 1
+fi
