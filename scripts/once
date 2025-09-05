@@ -26,7 +26,7 @@ fi
 CURRENT_DIR="$(pwd)"
 
 # Find the shell starter in the components directory
-COMPONENT_VERSION="0.3.0.2"
+COMPONENT_VERSION="0.3.0.4"
 COMPONENT_DIR="$PROJECT_ROOT/components/ONCE/$COMPONENT_VERSION"
 SHELL_STARTER="$COMPONENT_DIR/once"
 

@@ -1,0 +1,34 @@
+#!/bin/bash
+# ONCE CLI Tool v0.3.0.4 - Fresh start with working build
+# Target: 0.2.0.0 functionality + 0.3.0.2 structure
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+COMPONENT_DIR="$SCRIPT_DIR"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+echo "🔗 Web4 ONCE Component v0.3.0.4 - Object Network Communication Engine"
+echo "📂 Component: $COMPONENT_DIR"
+
+CLI_PATH="$COMPONENT_DIR/dist/ts/layer5/index.js"
+
+# Build if needed
+if [ ! -f "$CLI_PATH" ]; then
+    echo "🔨 Building ONCE v0.3.0.4..."
+    cd "$COMPONENT_DIR"
+    npm install
+    npm run build
+fi
+
+# Check if CLI exists after build
+if [ ! -f "$CLI_PATH" ]; then
+    echo -e "${RED}❌ ONCE CLI not found at: $CLI_PATH${NC}"
+    exit 1
+fi
+
+# Execute CLI
+node "$CLI_PATH" "$@"
