@@ -315,7 +315,7 @@ export class RequirementCLI {
     console.log('');
     console.log(`  ${green}# Batch processing (new feature)${reset}`);
     console.log(`  ${cyan}requirement${reset} process-file ${yellow}scrum.pmo/sprints/sprint-20/web4.requirement.md${reset}`);
-    console.log(`  ${cyan}requirement${reset} process-file ${yellow}components/Web4Requirement/latest/spec/requirements.md${reset}`);
+    console.log(`  ${cyan}requirement${reset} process-file ${yellow}components/Web4Requirement/0.3.0.2/spec/requirements.md${reset}`);
     console.log('');
     console.log(`${bold}Context Detection:${reset}`);
     console.log(`  ${green}• Automatically detects if you're in a component directory${reset}`);
@@ -488,7 +488,7 @@ export class RequirementCLI {
       // Search in all spec/requirements.md directories
       const searchPaths = [
         path.join(this.projectRoot, 'spec/requirements.md'),
-        path.join(this.projectRoot, 'components/*/latest/spec/requirements.md'),
+        path.join(this.projectRoot, 'components/*/0.3.0.2/spec/requirements.md'),
         path.join(this.projectRoot, 'components/*/v*/spec/requirements.md')
       ];
       

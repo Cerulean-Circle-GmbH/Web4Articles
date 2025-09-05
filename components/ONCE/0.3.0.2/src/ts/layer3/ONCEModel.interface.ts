@@ -5,8 +5,8 @@
  * UCP Unit-Component-Package: This is a Unit (single interface definition)
  */
 
-import { Model } from '../../../../IOR/0.3.0.0/src/ts/layer3/Model.interface.js';
-import { IOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
+import { Model } from '../../../../IOR/0.3.0.2/src/ts/layer3/Model.interface.js';
+import { IOR } from '../../../../IOR/0.3.0.2/src/ts/layer3/IOR.interface.js';
 import { ServiceRegistration } from './ServiceRegistry.interface.js';
 
 export interface ONCEModel extends Model {

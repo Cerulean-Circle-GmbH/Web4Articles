@@ -5,7 +5,7 @@
  * Provides intelligent dependency graph resolution with topological sorting
  */
 
-import { IOR } from '../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
+import { IOR } from '../../../IOR/0.3.0.2/src/ts/layer3/IOR.interface.js';
 
 export interface ComponentDependency {
   component: string;

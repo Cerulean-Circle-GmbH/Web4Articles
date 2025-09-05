@@ -4,7 +4,7 @@
  * P2PServerCLI - P2PServer component CLI implementation
  */
 
-import { DefaultCLI } from '../../../../IOR/0.3.0.0/src/ts/layer5/DefaultCLI.js';
+import { DefaultCLI } from '../../../../IOR/0.3.0.2/src/ts/layer5/DefaultCLI.js';
 import { DefaultP2PServer } from '../layer2/DefaultP2PServer.js';
 
 class P2PServerCLI {

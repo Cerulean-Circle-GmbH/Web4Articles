@@ -5,7 +5,7 @@
  * Used by Build component to return build operation results
  */
 
-import { IOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
+import { IOR } from '../../../../IOR/0.3.0.2/src/ts/layer3/IOR.interface.js';
 
 export interface BuildResult {
   /**

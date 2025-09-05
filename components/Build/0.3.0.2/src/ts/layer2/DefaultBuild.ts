@@ -11,9 +11,9 @@ import { BuildModel } from '../layer3/BuildModel.interface.js';
 import { EnvironmentCheckResult } from '../layer3/EnvironmentCheckResult.interface.js';
 import { BuildResult } from '../layer3/BuildResult.interface.js';
 import { BuildState } from '../layer3/BuildState.interface.js';
-import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
-import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
-import { DefaultUser } from '../../../../User/0.1.3.0/src/ts/DefaultUser.js';
+import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.2/src/ts/layer3/IOR.interface.js';
+import { Scenario } from '../../../../Scenario/0.3.0.2/src/ts/layer2/DefaultScenario.js';
+import { DefaultUser } from '../../../../User/0.3.0.2/src/ts/DefaultUser.js';
 import { DependencyResolver, ComponentDependency } from '../layer1/DependencyResolver.js';
 
 export class DefaultBuild implements Build {

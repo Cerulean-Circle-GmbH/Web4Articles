@@ -5,7 +5,7 @@
  */
 
 // @ts-ignore - Cross-component import
-import { Scenario } from '../../../../Scenario/0.1.3.0/dist/ts/Scenario.js';
+import { Scenario } from '../../../../Scenario/0.3.0.2/dist/ts/Scenario.js';
 import { Unit } from './Unit.interface.js';
 import { UnitModel, UnitInput, UnitOutput, ExecutionRecord } from './UnitModel.interface.js';
 

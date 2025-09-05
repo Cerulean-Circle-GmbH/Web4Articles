@@ -5,7 +5,7 @@
  */
 
 // @ts-ignore - Cross-component import
-import { Scenario } from '../../../../Scenario/0.1.3.0/dist/ts/Scenario.js';
+import { Scenario } from '../../../../Scenario/0.3.0.2/dist/ts/Scenario.js';
 import { User } from './User.interface.js';
 import { UserModel, AuthCredentials, UserProfile, UserSettings } from './UserModel.interface.js';
 

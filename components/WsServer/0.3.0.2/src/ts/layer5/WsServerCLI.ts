@@ -4,7 +4,7 @@
  * WsServerCLI - WsServer component CLI implementation
  */
 
-import { DefaultCLI } from '../../../../IOR/0.3.0.0/src/ts/layer5/DefaultCLI.js';
+import { DefaultCLI } from '../../../../IOR/0.3.0.2/src/ts/layer5/DefaultCLI.js';
 import { DefaultWsServer } from '../layer2/DefaultWsServer.js';
 
 class WsServerCLI {

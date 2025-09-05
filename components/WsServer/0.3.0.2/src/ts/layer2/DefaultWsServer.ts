@@ -8,9 +8,9 @@
 
 import { WsServer } from '../layer3/WsServer.interface.js';
 import { WsServerModel } from '../layer3/WsServerModel.interface.js';
-import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
-import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
-import { DefaultUser } from '../../../../User/0.1.3.0/src/ts/DefaultUser.js';
+import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.2/src/ts/layer3/IOR.interface.js';
+import { Scenario } from '../../../../Scenario/0.3.0.2/src/ts/layer2/DefaultScenario.js';
+import { DefaultUser } from '../../../../User/0.3.0.2/src/ts/DefaultUser.js';
 
 export class DefaultWsServer implements WsServer {
   private data: WsServerModel;

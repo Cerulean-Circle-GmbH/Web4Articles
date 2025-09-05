@@ -12,16 +12,16 @@ import { EnvironmentInfo } from '../layer3/EnvironmentInfo.interface.js';
 import { Component } from '../layer3/Component.interface.js';
 import { ServiceRegistry, ServiceRegistration } from '../layer3/ServiceRegistry.interface.js';
 import { DefaultServiceRegistry } from './DefaultServiceRegistry.js';
-import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
-import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
-import { DefaultUser } from '../../../../User/0.1.3.0/src/ts/DefaultUser.js';
+import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.2/src/ts/layer3/IOR.interface.js';
+import { Scenario } from '../../../../Scenario/0.3.0.2/src/ts/layer2/DefaultScenario.js';
+import { DefaultUser } from '../../../../User/0.3.0.2/src/ts/DefaultUser.js';
 // Capability component imports for kernel integration
-import { DefaultHttpServer } from '../../../HttpServer/0.3.0.0/src/ts/layer2/DefaultHttpServer.js';
-import { DefaultWsServer } from '../../../WsServer/0.3.0.0/src/ts/layer2/DefaultWsServer.js';
-import { DefaultP2PServer } from '../../../P2PServer/0.3.0.0/src/ts/layer2/DefaultP2PServer.js';
-import { HttpServerModel } from '../../../HttpServer/0.3.0.0/src/ts/layer3/HttpServerModel.interface.js';
-import { WsServerModel } from '../../../WsServer/0.3.0.0/src/ts/layer3/WsServerModel.interface.js';
-import { P2PServerModel } from '../../../P2PServer/0.3.0.0/src/ts/layer3/P2PServerModel.interface.js';
+import { DefaultHttpServer } from '../../../HttpServer/0.3.0.2/src/ts/layer2/DefaultHttpServer.js';
+import { DefaultWsServer } from '../../../WsServer/0.3.0.2/src/ts/layer2/DefaultWsServer.js';
+import { DefaultP2PServer } from '../../../P2PServer/0.3.0.2/src/ts/layer2/DefaultP2PServer.js';
+import { HttpServerModel } from '../../../HttpServer/0.3.0.2/src/ts/layer3/HttpServerModel.interface.js';
+import { WsServerModel } from '../../../WsServer/0.3.0.2/src/ts/layer3/WsServerModel.interface.js';
+import { P2PServerModel } from '../../../P2PServer/0.3.0.2/src/ts/layer3/P2PServerModel.interface.js';
 
 export class DefaultONCE implements ONCE {
   private data: ONCEModel;

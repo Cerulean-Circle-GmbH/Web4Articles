@@ -10,7 +10,7 @@ import { ObjectIdentifier } from '../layer3/ObjectIdentifier.interface.js';
 import { ScenarioData } from '../layer3/ScenarioData.interface.js';
 import { ScenarioModel } from '../layer3/Model.interface.js';
 // @ts-ignore - Cross-component import
-import { Unit, UnitInput, UnitOutput } from '../../../../../Unit/0.1.3.0/dist/ts/index.js';
+import { Unit, UnitInput, UnitOutput } from '../../../../../Unit/0.3.0.2/dist/ts/index.js';
 
 // For backward compatibility
 export type IOR = ObjectIdentifier;

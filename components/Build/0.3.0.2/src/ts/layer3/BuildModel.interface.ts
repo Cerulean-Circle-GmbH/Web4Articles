@@ -6,8 +6,8 @@
  * Configuration: Scenarios ARE configs - build configuration in model
  */
 
-import { Model } from '../../../../IOR/0.3.0.0/src/ts/layer3/Model.interface.js';
-import { IOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
+import { Model } from '../../../../IOR/0.3.0.2/src/ts/layer3/Model.interface.js';
+import { IOR } from '../../../../IOR/0.3.0.2/src/ts/layer3/IOR.interface.js';
 
 export interface BuildModel extends Model {
   /**

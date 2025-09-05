@@ -5,7 +5,7 @@
  * Universal service registration interface for hybrid component operation
  */
 
-import { ServiceRegistration } from '../../../ONCE/0.3.0.0/src/ts/layer3/ServiceRegistry.interface.js';
+// import { ServiceRegistration } from '../../../ONCE/0.3.0.2/src/ts/layer3/ServiceRegistry.interface.js';
 
 export interface ServiceCapable {
   /**
@@ -26,7 +26,7 @@ export interface ServiceCapable {
   /**
    * Get service registration information
    */
-  getServiceRegistration(): ServiceRegistration | undefined;
+  getServiceRegistration(): any; // ServiceRegistration | undefined;
 
   /**
    * Start component in service mode

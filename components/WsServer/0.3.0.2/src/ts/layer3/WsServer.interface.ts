@@ -5,8 +5,8 @@
  * UCP Component: Self-managed WebSocket server with connection management
  */
 
-import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
-import { IOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
+import { Scenario } from '../../../../Scenario/0.3.0.2/src/ts/layer2/DefaultScenario.js';
+import { IOR } from '../../../../IOR/0.3.0.2/src/ts/layer3/IOR.interface.js';
 
 export interface WsServer {
   /**
@@ -60,4 +60,4 @@ export interface WsServer {
 export { WsServerModel } from './WsServerModel.interface.js';
 export { DefaultWsServer } from '../layer2/DefaultWsServer.js';
 // DRY Compliance: Use unified Scenario component
-export { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
+export { Scenario } from '../../../../Scenario/0.3.0.2/src/ts/layer2/DefaultScenario.js';

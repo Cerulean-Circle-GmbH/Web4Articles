@@ -5,8 +5,8 @@
  * UCP Component: Self-managed P2P server with peer coordination
  */
 
-import { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
-import { IOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';
+import { Scenario } from '../../../../Scenario/0.3.0.2/src/ts/layer2/DefaultScenario.js';
+import { IOR } from '../../../../IOR/0.3.0.2/src/ts/layer3/IOR.interface.js';
 
 export interface P2PServer {
   /**
@@ -65,4 +65,4 @@ export interface P2PServer {
 export { P2PServerModel } from './P2PServerModel.interface.js';
 export { DefaultP2PServer } from '../layer2/DefaultP2PServer.js';
 // DRY Compliance: Use unified Scenario component
-export { Scenario } from '../../../../Scenario/0.1.3.0/src/ts/layer2/DefaultScenario.js';
+export { Scenario } from '../../../../Scenario/0.3.0.2/src/ts/layer2/DefaultScenario.js';
