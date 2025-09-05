@@ -8,4 +8,4 @@
 export { DefaultServiceRegistry } from '../layer2/DefaultServiceRegistry.js';
 export { DefaultONCE } from '../layer2/DefaultONCE.js';
 // DRY Compliance: Use unified Scenario component
-export { Scenario } from '../../../../Scenario/0.3.0.2/dist/ts/Scenario.js';
+export { Scenario } from '../../Scenario.js';

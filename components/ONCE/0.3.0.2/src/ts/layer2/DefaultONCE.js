@@ -6,9 +6,9 @@
  * NOT a server implementation - delegates to capability components
  */
 import { DefaultServiceRegistry } from './DefaultServiceRegistry.js';
-import { DefaultIOR } from '../../../../IOR/0.3.0.3/dist/ts/layer3/IOR.interface.js';
-import { Scenario } from '../../../../Scenario/0.3.0.2/dist/ts/Scenario.js';
-import { DefaultUser } from '../../../../User/0.3.0.2/dist/ts/DefaultUser.js';
+import { DefaultIOR } from '../../IOR.interface.js';
+import { Scenario } from '../../Scenario.js';
+import { DefaultUser } from '../../DefaultUser.js';
 export class DefaultONCE {
     /**
      * Web4 Pattern: Empty constructor

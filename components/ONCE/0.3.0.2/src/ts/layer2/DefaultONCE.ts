@@ -12,9 +12,9 @@ import { EnvironmentInfo } from '../layer3/EnvironmentInfo.interface.js';
 import { Component } from '../layer3/Component.interface.js';
 import { ServiceRegistry, ServiceRegistration } from '../layer3/ServiceRegistry.interface.js';
 import { DefaultServiceRegistry } from './DefaultServiceRegistry.js';
-import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.3/dist/ts/layer3/IOR.interface.js';
-import { Scenario, DefaultScenario } from '../../../../Scenario/0.3.0.2/dist/ts/Scenario.js';
-import { DefaultUser } from '../../../../User/0.3.0.2/dist/ts/DefaultUser.js';
+import { IOR, DefaultIOR } from '../../IOR.interface.js';
+import { Scenario, DefaultScenario } from '../../Scenario.js';
+import { DefaultUser } from '../../DefaultUser.js';
 // Capability component types for dynamic loading (optional)
 type HttpServerModel = any; // Dynamic loading - no static dependency
 type WsServerModel = any;   // Dynamic loading - no static dependency
