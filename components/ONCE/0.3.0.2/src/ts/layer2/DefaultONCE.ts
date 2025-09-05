@@ -12,9 +12,9 @@ import { EnvironmentInfo } from '../layer3/EnvironmentInfo.interface.js';
 import { Component } from '../layer3/Component.interface.js';
 import { ServiceRegistry, ServiceRegistration } from '../layer3/ServiceRegistry.interface.js';
 import { DefaultServiceRegistry } from './DefaultServiceRegistry.js';
-import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.3/dist/index.js';
-import { Scenario } from '../../../../Scenario/0.3.0.2/dist/index.js';
-import { DefaultUser } from '../../../../User/0.3.0.2/dist/index.js';
+import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.3/dist/ts/layer3/IOR.interface.js';
+import { Scenario, DefaultScenario } from '../../../../Scenario/0.3.0.2/dist/ts/Scenario.js';
+import { DefaultUser } from '../../../../User/0.3.0.2/dist/ts/DefaultUser.js';
 // Capability component types for dynamic loading (optional)
 type HttpServerModel = any; // Dynamic loading - no static dependency
 type WsServerModel = any;   // Dynamic loading - no static dependency
@@ -707,7 +707,7 @@ export class DefaultONCE implements ONCE {
   private async delegateToBuildComponent(): Promise<void> {
     try {
       // Dynamic import to avoid build-time dependencies
-      const { DefaultBuild } = await import('../../../Build/0.3.0.3/dist/index.js');
+      const { DefaultBuild } = await import('../../../Build/0.3.0.3/dist/ts/layer2/DefaultBuild.js');
       const buildComponent = new DefaultBuild();
       
       console.log('ONCE: Delegating to Build component for comprehensive cleaning...');
