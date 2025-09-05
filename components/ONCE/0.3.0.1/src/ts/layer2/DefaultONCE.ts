@@ -50,18 +50,29 @@ export class DefaultONCE implements ONCE {
   constructor() {
     // Initialize with minimal kernel data
     this.data = {
-      uuid: 'once-kernel-' + Date.now(),
+      uuid: this.generateUUID(),
       name: 'ONCE Kernel',
       description: 'Object Network Communication Engine - Web4 Compliant Kernel',
       state: 'booting',
       environment: 'node',
       domain: 'local.once',
-      host: 'localhost',
+      host: 'localhost', // Will be resolved to FQDN/IP in start()
       capabilities: [],
       loadedComponents: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
+  }
+
+  /**
+   * Generate UUID v4
+   */
+  private generateUUID(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
   }
 
   /**
@@ -75,6 +86,9 @@ export class DefaultONCE implements ONCE {
   }
 
   async start(args: string[] = []): Promise<void> {
+    // Resolve network host (FQDN/IP instead of localhost)
+    this.data.host = await this.getNetworkHost();
+    
     // Load existing scenario if present
     await this.loadExistingScenario();
     
@@ -84,12 +98,12 @@ export class DefaultONCE implements ONCE {
     // Start server in background (non-blocking)
     await this.startBackgroundServer();
     
-    // Save scenario to home directory
-    await this.saveScenarioToHome();
+    // Save scenario to project root
+    await this.saveScenarioToProjectRoot();
     
     console.log('🏠 Home directory: components/ONCE/0.3.0.1/');
     console.log('📋 Logs: components/ONCE/0.3.0.1/logs/once.log');
-    console.log('💾 Scenario: scenarios/local.once/ONCE/0.3.0.1/');
+    console.log('💾 Scenario: /workspace/scenarios/local.once/ONCE/0.3.0.1/');
   }
 
   private async loadExistingScenario(): Promise<void> {
@@ -97,8 +111,8 @@ export class DefaultONCE implements ONCE {
       const fs = await import('fs');
       const path = await import('path');
       
-      const homeDir = '/workspace/components/ONCE/0.3.0.1';
-      const scenarioDir = `${homeDir}/scenarios/local.once/ONCE/0.3.0.1`;
+      const projectRoot = '/workspace';
+      const scenarioDir = `${projectRoot}/scenarios/local.once/ONCE/0.3.0.1`;
       
       if (fs.existsSync(scenarioDir)) {
         const files = fs.readdirSync(scenarioDir).filter(f => f.endsWith('.scenario.json'));
@@ -109,7 +123,7 @@ export class DefaultONCE implements ONCE {
           
           if (scenario.model) {
             Object.assign(this.data, scenario.model);
-            console.log('📂 Loaded existing scenario from home directory');
+            console.log('📂 Loaded existing scenario from project root');
           }
         }
       }
@@ -133,27 +147,75 @@ export class DefaultONCE implements ONCE {
     fs.writeFileSync(`${homeDir}/once.pid`, process.pid.toString());
   }
 
-  private async saveScenarioToHome(): Promise<void> {
+  private async getNetworkHost(): Promise<string> {
+    try {
+      const os = await import('os');
+      const hostname = os.hostname();
+      
+      // Try to get FQDN or IP, fallback to hostname, worst case localhost
+      if (hostname && hostname !== 'localhost' && !hostname.startsWith('127.')) {
+        return hostname;
+      }
+      
+      // Try to get network interfaces for IP
+      const networkInterfaces = os.networkInterfaces();
+      for (const name of Object.keys(networkInterfaces)) {
+        const nets = networkInterfaces[name];
+        if (nets) {
+          for (const net of nets) {
+            if (net.family === 'IPv4' && !net.internal) {
+              return net.address;
+            }
+          }
+        }
+      }
+      
+      // Worst case fallback
+      return 'localhost';
+    } catch (error) {
+      return 'localhost';
+    }
+  }
+
+  private async getEncryptedOwner(): Promise<string> {
+    try {
+      // Use User component pattern for owner encryption
+      const ownerObject = {
+        user: 'system',
+        hostname: this.data.host,
+        timestamp: new Date().toISOString(),
+        uuid: this.generateUUID() // Each owner gets unique UUID
+      };
+      
+      // Base64 encode the owner object (following User component pattern)
+      return Buffer.from(JSON.stringify(ownerObject)).toString('base64');
+    } catch (error) {
+      // Fallback to simple base64 encoding
+      const fallback = { user: 'system', hostname: 'localhost', timestamp: new Date().toISOString() };
+      return Buffer.from(JSON.stringify(fallback)).toString('base64');
+    }
+  }
+
+  private async saveScenarioToProjectRoot(): Promise<void> {
     try {
       const fs = await import('fs');
-      const homeDir = '/workspace/components/ONCE/0.3.0.1';
-      const scenarioDir = `${homeDir}/scenarios/local.once/ONCE/0.3.0.1`;
+      const projectRoot = '/workspace';
+      const scenarioDir = `${projectRoot}/scenarios/local.once/ONCE/0.3.0.1`;
       const scenarioPath = `${scenarioDir}/${this.data.uuid}.scenario.json`;
       
-      // Web4 3-property scenario format
+      // Ensure project root scenario directory exists
+      fs.mkdirSync(scenarioDir, { recursive: true });
+      
+      // Web4 3-property scenario format with proper encryption
       const scenario = {
         ior: {
           uuid: this.data.uuid,
           component: 'ONCE',
           version: '0.3.0.1',
-          location: 'localhost',
-          endpoint: 'http://localhost:42777'
+          location: this.data.host,
+          endpoint: `http://${this.data.host}:42777`
         },
-        owner: {
-          user: 'system',
-          hostname: this.data.host,
-          timestamp: new Date().toISOString()
-        },
+        owner: await this.getEncryptedOwner(),
         model: this.data
       };
       

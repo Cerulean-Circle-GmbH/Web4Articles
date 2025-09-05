@@ -1,0 +1,29 @@
+{
+  "ior": {
+    "uuid": "74996821-187d-4e3f-b371-b93b5c03c89e",
+    "component": "ONCE",
+    "version": "0.3.0.1",
+    "location": "cursor",
+    "endpoint": "http://cursor:42777"
+  },
+  "owner": "eyJ1c2VyIjoic3lzdGVtIiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ0aW1lc3RhbXAiOiIyMDI1LTA5LTA1VDA4OjM0OjI5LjY4MVoiLCJ1dWlkIjoiNDIwYjk3ODUtMTVjMy00ZjI4LWI0M2EtM2U2NTU5MzdkMWFkIn0=",
+  "model": {
+    "uuid": "74996821-187d-4e3f-b371-b93b5c03c89e",
+    "name": "ONCE Kernel",
+    "description": "Object Network Communication Engine - Web4 Compliant Kernel",
+    "state": "ready",
+    "environment": "node",
+    "domain": "local.once",
+    "host": "cursor",
+    "capabilities": [],
+    "loadedComponents": [],
+    "createdAt": "2025-09-05T08:34:29.658Z",
+    "updatedAt": "2025-09-05T08:34:29.658Z",
+    "serviceRegistry": {
+      "port": 42777,
+      "host": "localhost",
+      "running": true,
+      "serviceCount": 0
+    }
+  }
+}
