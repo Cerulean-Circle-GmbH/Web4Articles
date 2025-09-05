@@ -5,8 +5,15 @@
  * UCP Component: Self-managed HTTP server with port and routing capabilities
  */
 
-import { Scenario } from '../../../../Scenario/0.3.0.2/src/ts/layer2/DefaultScenario.js';
-import { IOR, ServiceCapable } from '../../../../IOR/0.3.0.2/src/ts/layer3/IOR.interface.js';
+import { Scenario } from '../../../../Scenario/0.3.0.2/dist/ts/layer2/DefaultScenario.js';
+import { IOR } from '../../../../IOR/0.3.0.3/dist/index.js';
+
+// ServiceCapable interface for service integration
+interface ServiceCapable {
+  registerAsService(endpoint: string): Promise<void>;
+  unregisterFromService(): Promise<void>;
+  isRegisteredAsService(): boolean;
+}
 
 export interface HttpServer extends ServiceCapable {
   /**
@@ -55,4 +62,4 @@ export interface HttpServer extends ServiceCapable {
 export { HttpServerModel } from './HttpServerModel.interface.js';
 export { DefaultHttpServer } from '../layer2/DefaultHttpServer.js';
 // DRY Compliance: Use unified Scenario component
-export { Scenario } from '../../../../Scenario/0.3.0.2/src/ts/layer2/DefaultScenario.js';
+export { Scenario } from '../../../../Scenario/0.3.0.2/dist/ts/layer2/DefaultScenario.js';

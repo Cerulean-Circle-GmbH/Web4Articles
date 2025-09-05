@@ -8,7 +8,7 @@
 
 import { HttpServer } from '../layer3/HttpServer.interface.js';
 import { HttpServerModel } from '../layer3/HttpServerModel.interface.js';
-import { IOR, DefaultIOR, ServiceCapable } from '../../../../IOR/0.3.0.3/dist/ts/layer3/IOR.interface.js';
+import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.3/dist/index.js';
 import { ServiceRegistration } from '../../../ONCE/0.3.0.2/src/ts/layer3/ServiceRegistry.interface.js';
 import { Scenario } from '../../../../Scenario/0.3.0.2/dist/ts/layer2/DefaultScenario.js';
 import { DefaultUser } from '../../../../User/0.3.0.2/dist/ts/layer2/DefaultUser.js';
@@ -26,9 +26,11 @@ export class DefaultHttpServer implements HttpServer {
   constructor() {
     // Initialize with minimal HTTP server data
     this.data = {
-      uuid: '',
+      uuid: crypto.randomUUID(),
       name: 'HTTP Server',
       description: 'HTTP Server Capability Component',
+      host: 'localhost',
+      sslEnabled: false,
       port: 8080,
       state: 'stopped',
       routes: [],           // IOR references to route components
@@ -37,7 +39,9 @@ export class DefaultHttpServer implements HttpServer {
       timeout: 30000,       // ✅ Config in model (scenarios ARE configs)
       keepAlive: true,      // ✅ Config in model (scenarios ARE configs)
       startedAt: undefined,
-      stoppedAt: undefined
+      stoppedAt: undefined,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
     
     // ✅ Web4 DRY: Compose with shared components
@@ -318,7 +322,22 @@ export class DefaultHttpServer implements HttpServer {
     const scenario = new Scenario().init({
       ior: { uuid, component: 'HttpServer', version: '0.3.0.0' },
       owner: '',
-      model: { uuid, name, description, port } as HttpServerModel
+      model: { 
+        uuid, 
+        name, 
+        description, 
+        host: 'localhost',
+        sslEnabled: false,
+        port,
+        state: 'stopped',
+        routes: [],
+        connections: [],
+        maxConnections: 100,
+        timeout: 30000,
+        keepAlive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      } as HttpServerModel
     });
     return new DefaultHttpServer().init(scenario);
   }

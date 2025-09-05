@@ -6,10 +6,34 @@
  * Configuration: Scenarios ARE configs - no separate config interfaces
  */
 
-import { Model } from '../../../../IOR/0.3.0.2/src/ts/layer3/Model.interface.js';
-import { IOR } from '../../../../IOR/0.3.0.2/src/ts/layer3/IOR.interface.js';
+import { Model, IOR } from '../../../../IOR/0.3.0.3/dist/index.js';
 
 export interface HttpServerModel extends Model {
+  /**
+   * Component identifier
+   */
+  uuid: string;
+
+  /**
+   * Component name
+   */
+  name: string;
+
+  /**
+   * Component description
+   */
+  description: string;
+
+  /**
+   * Host address
+   */
+  host: string;
+
+  /**
+   * SSL enabled flag
+   */
+  sslEnabled: boolean;
+
   /**
    * HTTP server port number
    */
