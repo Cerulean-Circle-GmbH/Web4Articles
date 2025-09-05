@@ -701,7 +701,7 @@ export class DefaultONCE implements ONCE {
   private async delegateToBuildComponent(): Promise<void> {
     try {
       // Dynamic import to avoid build-time dependencies
-      const { DefaultBuild } = await import('../../../Build/0.3.0.3/src/ts/layer2/DefaultBuild.js');
+      const { DefaultBuild } = await import('../../../Build/0.3.0.3/dist/ts/layer2/DefaultBuild.js');
       const buildComponent = new DefaultBuild();
       
       console.log('ONCE: Delegating to Build component for comprehensive cleaning...');
