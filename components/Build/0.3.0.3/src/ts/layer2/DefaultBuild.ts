@@ -139,4 +139,123 @@ export class DefaultBuild implements Build {
       return true;
     }
   }
+
+  /**
+   * Deinstall component - comprehensive ecosystem clean build reset
+   * Dependency-free implementation for Web4 compliance
+   */
+  async deinstall(componentPath?: string): Promise<void> {
+    console.log('Build: Starting comprehensive component deinstall...');
+    
+    if (componentPath) {
+      // Clean specific component
+      await this.cleanComponent(componentPath);
+      console.log(`✅ Build: Component deinstalled: ${componentPath}`);
+    } else {
+      // Clean all Web4 components
+      await this.cleanAllComponents();
+      console.log('✅ Build: Complete ecosystem deinstall successful');
+    }
+    
+    console.log('💡 Run build commands to rebuild components as needed');
+  }
+
+  /**
+   * Clean all Web4 components - comprehensive ecosystem reset
+   * Dependency-free implementation using only filesystem operations
+   */
+  async cleanAllComponents(rootPath?: string): Promise<void> {
+    console.log('Build: Cleaning all Web4 components...');
+    
+    try {
+      const fs = await import('fs');
+      const path = await import('path');
+      
+      const workspaceRoot = rootPath || '/workspace';
+      const componentsPath = path.join(workspaceRoot, 'components');
+      
+      if (!fs.existsSync(componentsPath)) {
+        console.log('⚠️ Build: Components directory not found');
+        return;
+      }
+      
+      // Discover all component directories
+      const componentDirs = fs.readdirSync(componentsPath, { withFileTypes: true })
+        .filter(dirent => dirent.isDirectory())
+        .map(dirent => dirent.name);
+      
+      console.log(`Build: Found ${componentDirs.length} component directories`);
+      
+      // Clean each component directory
+      for (const componentDir of componentDirs) {
+        const componentPath = path.join(componentsPath, componentDir);
+        
+        // Find version directories or direct component structure
+        const entries = fs.readdirSync(componentPath, { withFileTypes: true });
+        const versionDirs = entries.filter(entry => 
+          entry.isDirectory() && 
+          (entry.name.match(/^\d+\.\d+\.\d+/) || entry.name === 'latest')
+        );
+        
+        if (versionDirs.length > 0) {
+          // Component has version directories
+          for (const versionDir of versionDirs) {
+            if (versionDir.name !== 'latest') { // Skip symlinks
+              const versionPath = path.join(componentPath, versionDir.name);
+              await this.cleanComponentDirectory(versionPath);
+            }
+          }
+        } else {
+          // Direct component structure
+          await this.cleanComponentDirectory(componentPath);
+        }
+      }
+      
+      console.log('✅ Build: All Web4 components cleaned successfully');
+      
+    } catch (error) {
+      console.error(`⚠️ Build: Component cleaning encountered issues: ${(error as Error).message}`);
+      console.log('💡 Some components may require manual cleanup');
+    }
+  }
+
+  /**
+   * Clean individual component directory (dependency-free helper)
+   */
+  private async cleanComponentDirectory(componentPath: string): Promise<void> {
+    try {
+      const fs = await import('fs');
+      const path = await import('path');
+      
+      // Check if this looks like a component directory
+      const packageJsonPath = path.join(componentPath, 'package.json');
+      if (!fs.existsSync(packageJsonPath)) {
+        return; // Not a component directory
+      }
+      
+      console.log(`🧹 Cleaning component: ${path.basename(componentPath)}`);
+      
+      // Clean standard build artifacts
+      const artifactPaths = [
+        path.join(componentPath, 'dist'),
+        path.join(componentPath, 'node_modules'),
+        path.join(componentPath, 'package-lock.json'),
+        path.join(componentPath, '.tsbuildinfo')
+      ];
+      
+      for (const artifactPath of artifactPaths) {
+        if (fs.existsSync(artifactPath)) {
+          const stat = fs.statSync(artifactPath);
+          if (stat.isDirectory()) {
+            fs.rmSync(artifactPath, { recursive: true, force: true });
+          } else {
+            fs.unlinkSync(artifactPath);
+          }
+        }
+      }
+      
+    } catch (error) {
+      console.error(`⚠️ Build: Failed to clean ${componentPath}: ${(error as Error).message}`);
+    }
+  }
 }

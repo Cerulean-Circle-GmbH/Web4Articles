@@ -677,6 +677,7 @@ export class DefaultONCE implements ONCE {
   /**
    * Deinstall command - comprehensive ecosystem clean build reset
    * Following Web4 principles: TypeScript method with CLI delegation
+   * Delegates to Build component for dependency-free implementation
    */
   async deinstall(args: string[] = []): Promise<void> {
     console.log('ONCE: Starting comprehensive ecosystem deinstall...');
@@ -684,43 +685,76 @@ export class DefaultONCE implements ONCE {
     // Stop any running services first
     await this.stop([]);
     
-    // Clean all Web4 components
-    await this.cleanAllComponents();
+    // Delegate to Build component for comprehensive cleaning
+    await this.delegateToBuildComponent();
+    
+    // Clear ONCE-specific state
+    this.clearONCEState();
     
     console.log('✅ ONCE: Complete ecosystem deinstall successful');
     console.log('💡 Run "once start" to rebuild and restart the ecosystem');
   }
 
   /**
-   * Clean all Web4 components - comprehensive ecosystem reset
+   * Delegate deinstall to Build component (dependency-free)
    */
-  private async cleanAllComponents(): Promise<void> {
-    console.log('ONCE: Cleaning all Web4 components...');
+  private async delegateToBuildComponent(): Promise<void> {
+    try {
+      // Dynamic import to avoid build-time dependencies
+      const { DefaultBuild } = await import('../../../Build/0.3.0.3/src/ts/layer2/DefaultBuild.js');
+      const buildComponent = new DefaultBuild();
+      
+      console.log('ONCE: Delegating to Build component for comprehensive cleaning...');
+      await buildComponent.cleanAllComponents();
+      
+    } catch (error) {
+      console.error(`⚠️ ONCE: Build component delegation failed: ${(error as Error).message}`);
+      console.log('💡 Falling back to basic component cleaning');
+      
+      // Fallback to basic cleaning if Build component unavailable
+      await this.basicComponentCleaning();
+    }
+  }
+
+  /**
+   * Clear ONCE-specific state after deinstall
+   */
+  private clearONCEState(): void {
+    // Clear component registries
+    this.loadedComponents.clear();
+    this.data.loadedComponents = [];
+    this.data.capabilities = [];
+    
+    // Reset service registry state
+    if (this.data.serviceRegistry) {
+      this.data.serviceRegistry.serviceCount = 0;
+      this.data.serviceRegistry.running = false;
+    }
+    
+    // Reset kernel state
+    this.data.state = 'booting';
+    this.data.updatedAt = new Date().toISOString();
+  }
+
+  /**
+   * Basic component cleaning fallback (if Build component unavailable)
+   */
+  private async basicComponentCleaning(): Promise<void> {
+    console.log('ONCE: Performing basic component cleaning...');
     
     try {
-      // Clean loaded components first
+      // Clean loaded components
       for (const [uuid, component] of this.loadedComponents) {
-        if (typeof component.clean === 'function') {
+        if (typeof (component as any).clean === 'function') {
           console.log(`🧹 Cleaning component: ${uuid}`);
-          await component.clean([]);
+          await (component as any).clean([]);
         }
       }
       
-      // Clear component registries
-      this.loadedComponents.clear();
-      this.data.loadedComponents = [];
-      this.data.capabilities = [];
-      
-      // Reset service registry state
-      if (this.data.serviceRegistry) {
-        this.data.serviceRegistry.serviceCount = 0;
-        this.data.serviceRegistry.running = false;
-      }
-      
-      console.log('✅ ONCE: All Web4 components cleaned successfully');
+      console.log('✅ ONCE: Basic component cleaning completed');
       
     } catch (error) {
-      console.error(`⚠️ ONCE: Component cleaning encountered issues: ${(error as Error).message}`);
+      console.error(`⚠️ ONCE: Basic cleaning encountered issues: ${(error as Error).message}`);
       console.log('💡 Some components may require manual cleanup');
     }
   }
