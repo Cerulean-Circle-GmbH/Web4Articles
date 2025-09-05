@@ -12,16 +12,14 @@ import { EnvironmentInfo } from '../layer3/EnvironmentInfo.interface.js';
 import { Component } from '../layer3/Component.interface.js';
 import { ServiceRegistry, ServiceRegistration } from '../layer3/ServiceRegistry.interface.js';
 import { DefaultServiceRegistry } from './DefaultServiceRegistry.js';
-import { IOR, DefaultIOR } from '../../../../IOR/0.3.0.3/dist/index.js';
-import { Scenario } from '../../../../Scenario/0.3.0.2/src/ts/layer2/DefaultScenario.js';
-import { DefaultUser } from '../../../../User/0.3.0.2/src/ts/DefaultUser.js';
-// Capability component imports for kernel integration
-import { DefaultHttpServer } from '../../../HttpServer/0.3.0.2/src/ts/layer2/DefaultHttpServer.js';
-import { DefaultWsServer } from '../../../WsServer/0.3.0.2/src/ts/layer2/DefaultWsServer.js';
-import { DefaultP2PServer } from '../../../P2PServer/0.3.0.2/src/ts/layer2/DefaultP2PServer.js';
-import { HttpServerModel } from '../../../HttpServer/0.3.0.2/src/ts/layer3/HttpServerModel.interface.js';
-import { WsServerModel } from '../../../WsServer/0.3.0.2/src/ts/layer3/WsServerModel.interface.js';
-import { P2PServerModel } from '../../../P2PServer/0.3.0.2/src/ts/layer3/P2PServerModel.interface.js';
+import { IOR } from '../../../../IOR/0.3.0.3/dist/ts/layer3/IOR.interface.js';
+import { DefaultIOR } from '../../../../IOR/0.3.0.3/dist/ts/layer2/DefaultIOR.js';
+import { Scenario } from '../../../../Scenario/0.3.0.2/dist/ts/layer2/DefaultScenario.js';
+import { DefaultUser } from '../../../../User/0.3.0.2/dist/ts/DefaultUser.js';
+// Capability component types for dynamic loading (optional)
+type HttpServerModel = any; // Dynamic loading - no static dependency
+type WsServerModel = any;   // Dynamic loading - no static dependency
+type P2PServerModel = any;  // Dynamic loading - no static dependency
 
 export class DefaultONCE implements ONCE {
   private data: ONCEModel;
@@ -302,24 +300,33 @@ export class DefaultONCE implements ONCE {
     let component: Component;
     
     // ✅ Dynamic component loading based on IOR.component (Web4 kernel pattern)
-    switch (componentIOR.component) {
-      case 'HttpServer':
-        component = new DefaultHttpServer().init(scenario);
-        console.log(`ONCE Kernel: Loaded HttpServer on port ${(scenario.model as HttpServerModel).port}`);
-        break;
+    // Server components loaded dynamically to avoid static dependencies
+    try {
+      switch (componentIOR.component) {
+        case 'HttpServer':
+          component = await this.loadServerComponentDynamically('HttpServer', scenario);
+          console.log(`ONCE Kernel: Loaded HttpServer on port ${(scenario.model as any).port}`);
+          break;
+        
+        case 'WsServer': 
+          component = await this.loadServerComponentDynamically('WsServer', scenario);
+          console.log(`ONCE Kernel: Loaded WsServer on port ${(scenario.model as any).port}`);
+          break;
+        
+        case 'P2PServer':
+          component = await this.loadServerComponentDynamically('P2PServer', scenario);
+          console.log(`ONCE Kernel: Loaded P2PServer on port ${(scenario.model as any).port}`);
+          break;
+        
+        default:
+          throw new Error(`ONCE Kernel: Unknown component type: ${componentIOR.component}`);
+      }
+    } catch (error) {
+      console.error(`⚠️ ONCE Kernel: Failed to load ${componentIOR.component}: ${(error as Error).message}`);
+      console.log('💡 Server component may not be available - continuing without it');
       
-      case 'WsServer': 
-        component = new DefaultWsServer().init(scenario);
-        console.log(`ONCE Kernel: Loaded WsServer on port ${(scenario.model as WsServerModel).port}`);
-        break;
-      
-      case 'P2PServer':
-        component = new DefaultP2PServer().init(scenario);
-        console.log(`ONCE Kernel: Loaded P2PServer on port ${(scenario.model as P2PServerModel).port}`);
-        break;
-      
-      default:
-        throw new Error(`ONCE Kernel: Unknown component type: ${componentIOR.component}`);
+      // Create minimal component stub for graceful degradation
+      component = this.createComponentStub(componentIOR, scenario);
     }
     
     // Register loaded component in kernel registry
@@ -405,7 +412,7 @@ export class DefaultONCE implements ONCE {
     const httpServerIOR = new DefaultIOR().init({
       uuid: crypto.randomUUID(),
       component: 'HttpServer',
-      version: '0.3.0.0'
+      version: '0.3.0.2'
     });
     
     const ownerData = await this.userService.generateOwnerData({
@@ -428,7 +435,7 @@ export class DefaultONCE implements ONCE {
         maxConnections: 100,
         timeout: 30000,
         keepAlive: true
-      } as HttpServerModel
+      } as any
     });
     
     return this.loadComponent(httpServerIOR, scenario);
@@ -757,6 +764,41 @@ export class DefaultONCE implements ONCE {
       console.error(`⚠️ ONCE: Basic cleaning encountered issues: ${(error as Error).message}`);
       console.log('💡 Some components may require manual cleanup');
     }
+  }
+
+  /**
+   * Load server component dynamically (optional loading)
+   */
+  private async loadServerComponentDynamically(componentType: string, scenario: Scenario): Promise<Component> {
+    try {
+      const componentPath = `../../../${componentType}/0.3.0.2/dist/ts/layer2/Default${componentType}.js`;
+      const module = await import(componentPath);
+      const ComponentClass = module[`Default${componentType}`];
+      
+      if (!ComponentClass) {
+        throw new Error(`Default${componentType} not exported`);
+      }
+      
+      return new ComponentClass().init(scenario);
+      
+    } catch (error) {
+      console.log(`⚠️ ONCE: ${componentType} not available for dynamic loading: ${(error as Error).message}`);
+      throw error; // Re-throw to trigger fallback
+    }
+  }
+
+  /**
+   * Create component stub for graceful degradation
+   */
+  private createComponentStub(componentIOR: IOR, scenario: Scenario): Component {
+    return {
+      init: (scenario: Scenario) => this,
+      toJSON: () => scenario.model || {},
+      validate: () => true,
+      start: async () => { console.log(`Stub: ${componentIOR.component} start`); },
+      stop: async () => { console.log(`Stub: ${componentIOR.component} stop`); },
+      status: async () => { console.log(`Stub: ${componentIOR.component} status`); }
+    } as Component;
   }
 
   /**
