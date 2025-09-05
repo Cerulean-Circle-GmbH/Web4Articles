@@ -6,9 +6,13 @@
  * NOT a server implementation - delegates to capability components
  */
 import { DefaultServiceRegistry } from './DefaultServiceRegistry.js';
-import { DefaultIOR } from '../../IOR.interface.js';
-import { Scenario } from '../../Scenario.js';
-import { DefaultUser } from '../../DefaultUser.js';
+import { DefaultIOR } from '../../../../IOR/0.3.0.3/dist/index.js';
+import { Scenario } from '../../../../Scenario/0.3.0.2/src/ts/layer2/DefaultScenario.js';
+import { DefaultUser } from '../../../../User/0.3.0.2/src/ts/DefaultUser.js';
+// Capability component imports for kernel integration
+import { DefaultHttpServer } from '../../../HttpServer/0.3.0.2/src/ts/layer2/DefaultHttpServer.js';
+import { DefaultWsServer } from '../../../WsServer/0.3.0.2/src/ts/layer2/DefaultWsServer.js';
+import { DefaultP2PServer } from '../../../P2PServer/0.3.0.2/src/ts/layer2/DefaultP2PServer.js';
 export class DefaultONCE {
     /**
      * Web4 Pattern: Empty constructor
@@ -16,7 +20,7 @@ export class DefaultONCE {
     constructor() {
         // Initialize with minimal kernel data (type-safe ONCEModel)
         this.data = {
-            uuid: crypto.randomUUID(),
+            uuid: '',
             name: 'ONCE Kernel',
             description: 'Object Network Communication Engine - Environment Kernel',
             state: 'booting', // ✅ Type-safe: 'booting' | 'ready' | 'loading' | 'error'
@@ -238,30 +242,21 @@ export class DefaultONCE {
         this.data.state = 'loading';
         let component;
         // ✅ Dynamic component loading based on IOR.component (Web4 kernel pattern)
-        // Server components loaded dynamically to avoid static dependencies
-        try {
-            switch (componentIOR.component) {
-                case 'HttpServer':
-                    component = await this.loadServerComponentDynamically('HttpServer', scenario);
-                    console.log(`ONCE Kernel: Loaded HttpServer on port ${scenario.model.port}`);
-                    break;
-                case 'WsServer':
-                    component = await this.loadServerComponentDynamically('WsServer', scenario);
-                    console.log(`ONCE Kernel: Loaded WsServer on port ${scenario.model.port}`);
-                    break;
-                case 'P2PServer':
-                    component = await this.loadServerComponentDynamically('P2PServer', scenario);
-                    console.log(`ONCE Kernel: Loaded P2PServer on port ${scenario.model.port}`);
-                    break;
-                default:
-                    throw new Error(`ONCE Kernel: Unknown component type: ${componentIOR.component}`);
-            }
-        }
-        catch (error) {
-            console.error(`⚠️ ONCE Kernel: Failed to load ${componentIOR.component}: ${error.message}`);
-            console.log('💡 Server component may not be available - continuing without it');
-            // Create minimal component stub for graceful degradation
-            component = this.createComponentStub(componentIOR, scenario);
+        switch (componentIOR.component) {
+            case 'HttpServer':
+                component = new DefaultHttpServer().init(scenario);
+                console.log(`ONCE Kernel: Loaded HttpServer on port ${scenario.model.port}`);
+                break;
+            case 'WsServer':
+                component = new DefaultWsServer().init(scenario);
+                console.log(`ONCE Kernel: Loaded WsServer on port ${scenario.model.port}`);
+                break;
+            case 'P2PServer':
+                component = new DefaultP2PServer().init(scenario);
+                console.log(`ONCE Kernel: Loaded P2PServer on port ${scenario.model.port}`);
+                break;
+            default:
+                throw new Error(`ONCE Kernel: Unknown component type: ${componentIOR.component}`);
         }
         // Register loaded component in kernel registry
         this.loadedComponents.set(componentIOR.uuid, component);
@@ -331,7 +326,7 @@ export class DefaultONCE {
         const httpServerIOR = new DefaultIOR().init({
             uuid: crypto.randomUUID(),
             component: 'HttpServer',
-            version: '0.3.0.2'
+            version: '0.3.0.0'
         });
         const ownerData = await this.userService.generateOwnerData({
             user: 'system',
@@ -477,7 +472,7 @@ export class DefaultONCE {
         // Stop all loaded components
         for (const [uuid, component] of this.loadedComponents) {
             if (typeof component.stop === 'function') {
-                await component.stop();
+                await component.stop([]);
             }
         }
         // Update service registry state
@@ -576,107 +571,44 @@ export class DefaultONCE {
     /**
      * Deinstall command - comprehensive ecosystem clean build reset
      * Following Web4 principles: TypeScript method with CLI delegation
-     * Delegates to Build component for dependency-free implementation
      */
     async deinstall(args = []) {
         console.log('ONCE: Starting comprehensive ecosystem deinstall...');
         // Stop any running services first
         await this.stop([]);
-        // Delegate to Build component for comprehensive cleaning
-        await this.delegateToBuildComponent();
-        // Clear ONCE-specific state
-        this.clearONCEState();
+        // Clean all Web4 components
+        await this.cleanAllComponents();
         console.log('✅ ONCE: Complete ecosystem deinstall successful');
         console.log('💡 Run "once start" to rebuild and restart the ecosystem');
     }
     /**
-     * Delegate deinstall to Build component (dependency-free)
+     * Clean all Web4 components - comprehensive ecosystem reset
      */
-    async delegateToBuildComponent() {
+    async cleanAllComponents() {
+        console.log('ONCE: Cleaning all Web4 components...');
         try {
-            // Dynamic import to avoid build-time dependencies
-            const { DefaultBuild } = await import('../../../Build/0.3.0.3/dist/ts/layer2/DefaultBuild.js');
-            const buildComponent = new DefaultBuild();
-            console.log('ONCE: Delegating to Build component for comprehensive cleaning...');
-            await buildComponent.cleanAllComponents();
-        }
-        catch (error) {
-            console.error(`⚠️ ONCE: Build component delegation failed: ${error.message}`);
-            console.log('💡 Falling back to basic component cleaning');
-            // Fallback to basic cleaning if Build component unavailable
-            await this.basicComponentCleaning();
-        }
-    }
-    /**
-     * Clear ONCE-specific state after deinstall
-     */
-    clearONCEState() {
-        // Clear component registries
-        this.loadedComponents.clear();
-        this.data.loadedComponents = [];
-        this.data.capabilities = [];
-        // Reset service registry state
-        if (this.data.serviceRegistry) {
-            this.data.serviceRegistry.serviceCount = 0;
-            this.data.serviceRegistry.running = false;
-        }
-        // Reset kernel state
-        this.data.state = 'booting';
-        this.data.updatedAt = new Date().toISOString();
-    }
-    /**
-     * Basic component cleaning fallback (if Build component unavailable)
-     */
-    async basicComponentCleaning() {
-        console.log('ONCE: Performing basic component cleaning...');
-        try {
-            // Clean loaded components
+            // Clean loaded components first
             for (const [uuid, component] of this.loadedComponents) {
                 if (typeof component.clean === 'function') {
                     console.log(`🧹 Cleaning component: ${uuid}`);
                     await component.clean([]);
                 }
             }
-            console.log('✅ ONCE: Basic component cleaning completed');
+            // Clear component registries
+            this.loadedComponents.clear();
+            this.data.loadedComponents = [];
+            this.data.capabilities = [];
+            // Reset service registry state
+            if (this.data.serviceRegistry) {
+                this.data.serviceRegistry.serviceCount = 0;
+                this.data.serviceRegistry.running = false;
+            }
+            console.log('✅ ONCE: All Web4 components cleaned successfully');
         }
         catch (error) {
-            console.error(`⚠️ ONCE: Basic cleaning encountered issues: ${error.message}`);
+            console.error(`⚠️ ONCE: Component cleaning encountered issues: ${error.message}`);
             console.log('💡 Some components may require manual cleanup');
         }
-    }
-    /**
-     * Load server component dynamically (optional loading)
-     */
-    async loadServerComponentDynamically(componentType, scenario) {
-        try {
-            const componentPath = `../../../${componentType}/0.3.0.2/dist/ts/layer2/Default${componentType}.js`;
-            const module = await import(componentPath);
-            const ComponentClass = module[`Default${componentType}`];
-            if (!ComponentClass) {
-                throw new Error(`Default${componentType} not exported`);
-            }
-            return new ComponentClass().init(scenario);
-        }
-        catch (error) {
-            console.log(`⚠️ ONCE: ${componentType} not available for dynamic loading: ${error.message}`);
-            throw error; // Re-throw to trigger fallback
-        }
-    }
-    /**
-     * Create component stub for graceful degradation
-     */
-    createComponentStub(componentIOR, scenario) {
-        return {
-            init: (scenario) => this,
-            getIOR: () => componentIOR,
-            toScenario: () => scenario,
-            toJSON: () => scenario.model || {},
-            validate: () => true,
-            isRunning: () => false,
-            start: async () => { console.log(`Stub: ${componentIOR.component} start`); },
-            stop: async () => { console.log(`Stub: ${componentIOR.component} stop`); },
-            status: async () => { console.log(`Stub: ${componentIOR.component} status`); }
-        };
     }
     /**
      * Utility methods following IOR pattern
@@ -690,21 +622,9 @@ export class DefaultONCE {
     static create(uuid, name, description) {
         // ✅ Create actual Scenario component instance (not data interface)
         const scenario = new Scenario().init({
-            ior: { uuid, component: 'ONCE', version: '0.3.0.2' },
+            ior: { uuid, component: 'ONCE', version: '0.3.0.0' },
             owner: '',
-            model: {
-                uuid,
-                name,
-                description,
-                state: 'booting',
-                environment: 'node',
-                domain: 'local.once',
-                host: 'localhost',
-                capabilities: [],
-                loadedComponents: [],
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            }
+            model: { uuid, name, description }
         });
         return new DefaultONCE().init(scenario);
     }
