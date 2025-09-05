@@ -1,0 +1,79 @@
+#!/bin/bash
+
+# Web4 ONCE Component Shell Starter
+# Checks environment, builds dependencies, delegates to CLI
+# Following Build component shell starter pattern
+
+set -euo pipefail
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+COMPONENT_DIR="$SCRIPT_DIR"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+echo "🔗 Web4 ONCE Component v0.3.0.0 - Object Network Communication Engine"
+echo "📂 Component: $COMPONENT_DIR"
+
+# Use Build component for environment and dependency management
+use_build_component() {
+    local BUILD_COMPONENT="$COMPONENT_DIR/../../../Build/latest"
+    
+    if [ -x "$BUILD_COMPONENT/build" ]; then
+        echo "🏗️ Using Build component for environment setup..."
+        "$BUILD_COMPONENT/build" checkEnvironment
+        
+        # Build ONCE dependencies
+        "$BUILD_COMPONENT/build" buildComponent ONCE
+    else
+        echo -e "${YELLOW}⚠️ Build component not available, using fallback...${NC}"
+        fallback_build
+    fi
+}
+
+# Fallback build if Build component unavailable
+fallback_build() {
+    # Basic environment check
+    command -v node >/dev/null 2>&1 || {
+        echo -e "${RED}❌ Node.js required but not installed${NC}"
+        exit 1
+    }
+    
+    command -v npm >/dev/null 2>&1 || {
+        echo -e "${RED}❌ NPM required but not installed${NC}"
+        exit 1
+    }
+    
+    # Build component if needed
+    if [ -f "$COMPONENT_DIR/package.json" ] && [ ! -d "$COMPONENT_DIR/dist" ]; then
+        echo "🔨 Building ONCE component..."
+        cd "$COMPONENT_DIR"
+        npm install
+        npm run build
+    fi
+}
+
+# Main execution
+main() {
+    echo "🔍 Setting up ONCE environment..."
+    
+    # Use Build component for setup
+    use_build_component
+    
+    echo "🚀 Delegating to ONCE CLI..."
+    
+    # Delegate all arguments to CLI
+    if [ -f "$COMPONENT_DIR/dist/ts/layer5/ONCECLI.js" ]; then
+        node "$COMPONENT_DIR/dist/ts/layer5/ONCECLI.js" "$@"
+    else
+        echo -e "${RED}❌ ONCE CLI not found. Build may have failed.${NC}"
+        echo "Try running: npm run build"
+        exit 1
+    fi
+}
+
+# Execute with all arguments
+main "$@"
