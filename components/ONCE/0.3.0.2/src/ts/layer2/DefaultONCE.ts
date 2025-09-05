@@ -14,9 +14,7 @@ import { ServiceRegistry, ServiceRegistration } from '../layer3/ServiceRegistry.
 import { DefaultServiceRegistry } from './DefaultServiceRegistry.js';
 import { IOR } from '../../../../IOR/0.3.0.3/dist/ts/layer3/IOR.interface.js';
 import { DefaultIOR } from '../../../../IOR/0.3.0.3/dist/ts/layer2/DefaultIOR.js';
-import { Scenario } from '../../../../Scenario/0.3.0.2/dist/ts/layer3/Scenario.interface.js';
-import { DefaultScenario } from '../../../../Scenario/0.3.0.2/dist/ts/layer2/DefaultScenario.js';
-import { User } from '../../../../User/0.3.0.2/dist/ts/layer3/User.interface.js';
+import { Scenario } from '../../../../Scenario/0.3.0.2/dist/ts/Scenario.js';
 import { DefaultUser } from '../../../../User/0.3.0.2/dist/ts/layer2/DefaultUser.js';
 // Capability component types for dynamic loading (optional)
 type HttpServerModel = any; // Dynamic loading - no static dependency
@@ -25,7 +23,7 @@ type P2PServerModel = any;  // Dynamic loading - no static dependency
 
 export class DefaultONCE implements ONCE {
   private data: ONCEModel;
-  private scenarioService: DefaultScenario;       // ✅ DRY: Shared component composition
+  private scenarioService: Scenario;       // ✅ DRY: Shared component composition
   private userService: DefaultUser;        // ✅ DRY: Shared component composition
   private serviceRegistry: DefaultServiceRegistry; // ✅ Service integration (42777 server)
   private loadedComponents: Map<string, Component>; // Component registry for kernel
@@ -50,7 +48,7 @@ export class DefaultONCE implements ONCE {
     };
     
     // ✅ Web4 DRY: Compose with shared components
-    this.scenarioService = new DefaultScenario();
+    this.scenarioService = new Scenario();
     this.userService = new DefaultUser();
     this.serviceRegistry = new DefaultServiceRegistry();
     this.loadedComponents = new Map();
@@ -193,7 +191,7 @@ export class DefaultONCE implements ONCE {
       version: '0.3.0.0'
     });
     
-    const scenario = new DefaultScenario().init({
+    const scenario = new Scenario().init({
       ior: httpServerIOR.toJSON(),
       owner: '',
       model: { 
@@ -223,7 +221,7 @@ export class DefaultONCE implements ONCE {
       version: '0.3.0.0'
     });
     
-    const scenario = new DefaultScenario().init({
+    const scenario = new Scenario().init({
       ior: wsServerIOR.toJSON(),
       owner: '',
       model: {
@@ -252,7 +250,7 @@ export class DefaultONCE implements ONCE {
       version: '0.3.0.0'
     });
     
-    const scenario = new DefaultScenario().init({
+    const scenario = new Scenario().init({
       ior: p2pServerIOR.toJSON(),
       owner: '',
       model: {
@@ -393,7 +391,7 @@ export class DefaultONCE implements ONCE {
     });
 
     // ✅ Create actual Scenario component instance with type-safe model
-    const scenario = new DefaultScenario().init({
+    const scenario = new Scenario().init({
       ior: {
         uuid: this.data.uuid,
         component: 'ONCE',
@@ -423,7 +421,7 @@ export class DefaultONCE implements ONCE {
       uuid: httpServerIOR.uuid
     });
     
-    const scenario = new DefaultScenario().init({
+    const scenario = new Scenario().init({
       ior: httpServerIOR.toJSON(),
       owner: ownerData,
       model: {
@@ -456,7 +454,7 @@ export class DefaultONCE implements ONCE {
       uuid: wsServerIOR.uuid
     });
     
-    const scenario = new DefaultScenario().init({
+    const scenario = new Scenario().init({
       ior: wsServerIOR.toJSON(),
       owner: ownerData,
       model: {
@@ -489,7 +487,7 @@ export class DefaultONCE implements ONCE {
       uuid: p2pServerIOR.uuid
     });
     
-    const scenario = new DefaultScenario().init({
+    const scenario = new Scenario().init({
       ior: p2pServerIOR.toJSON(),
       owner: ownerData,
       model: {
@@ -816,7 +814,7 @@ export class DefaultONCE implements ONCE {
 
   static create(uuid: string, name: string, description: string): DefaultONCE {
     // ✅ Create actual Scenario component instance (not data interface)
-    const scenario = new DefaultScenario().init({
+    const scenario = new Scenario().init({
       ior: { uuid, component: 'ONCE', version: '0.3.0.0' },
       owner: '',
       model: { uuid, name, description } as ONCEModel
