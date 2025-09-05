@@ -1,0 +1,46 @@
+{
+  "ior": {
+    "uuid": "e8f3b9d6-4a7c-4e2f-9b8d-7c5e1f3a9b6e",
+    "component": "Web4Requirement", 
+    "version": "0.1.2.2"
+  },
+  "owner": {
+    "user": "system",
+    "timestamp": "2025-09-03T19:20:00.000Z"
+  },
+  "model": {
+    "uuid": "e8f3b9d6-4a7c-4e2f-9b8d-7c5e1f3a9b6e",
+    "name": "DORY Recovery - Restore Original Scenario Component 0.1.3.0 Pattern",
+    "description": "I broke the working scenario format by only updating ONCE 0.3.0.1. All 0.3.x.x components were using the original Scenario/0.1.3.0 component with 3-property format (ior, owner, model) that was already working. Need to restore this pattern and fix my DORY violation of changing only one component.",
+    "type": "dory-recovery",
+    "priority": "critical",
+    "category": "architectural-restoration",
+    "status": "approved",
+    "rationale": "The original Scenario/0.1.3.0 component was already providing the correct 3-property format (ior, owner, model) that all 0.3.x.x components were using. My DORY moment was changing only ONCE 0.3.0.1 instead of understanding the existing working pattern.",
+    "acceptance_criteria": [
+      "Restore usage of Scenario/0.1.3.0 component across all 0.3.x.x versions",
+      "Use original ScenarioData interface: { ior: ObjectIdentifier, owner: string, model: ScenarioModel }",
+      "Maintain original 3-property format that was already working",
+      "Fix ONCE 0.3.0.1 to use original Scenario component pattern",
+      "Ensure all 0.3.x.x components use same Scenario/0.1.3.0 component",
+      "Remove my custom scenario implementation from ONCE 0.3.0.1",
+      "Restore consistency across entire 0.3.x.x ecosystem"
+    ],
+    "original_working_pattern": {
+      "scenario_component": "Scenario/0.1.3.0",
+      "interface": "ScenarioData",
+      "structure": "{ ior: ObjectIdentifier, owner: string, model: ScenarioModel }",
+      "ior_format": "{ uuid: string, component: string, version: string }",
+      "usage": "All 0.3.x.x components import from Scenario/0.1.3.0/dist"
+    },
+    "dory_violation_analysis": {
+      "what_was_working": "Scenario/0.1.3.0 component with 3-property format",
+      "what_i_broke": "Created custom scenario implementation only in ONCE 0.3.0.1",
+      "root_cause": "Did not check existing Scenario component pattern",
+      "fix_needed": "Restore original Scenario/0.1.3.0 usage everywhere"
+    },
+    "implementation_notes": "The User was already working with the correct pattern. I need to restore the original Scenario/0.1.3.0 component usage and remove my custom implementation.",
+    "created_at": "2025-09-03T19:20:00.000Z",
+    "updated_at": "2025-09-03T19:20:00.000Z"
+  }
+}
