@@ -8,8 +8,7 @@
  * Following TSRanger 2.2 pattern but simplified
  */
 
-import { CLI } from '../../../../IOR/0.3.0.3/dist/ts/layer3/CLI.interface.js';
-import { DefaultCLI } from '../../../../IOR/0.3.0.3/dist/ts/layer5/DefaultCLI.js';
+import { DefaultCLI } from '../../../../IOR/0.3.0.3/dist/index.js';
 import { DefaultONCE } from '../layer2/DefaultONCE.js';
 
 class ONCECLI {

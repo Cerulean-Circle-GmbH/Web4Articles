@@ -6,7 +6,7 @@
  */
 
 import { ServiceRegistry, ServiceRegistration } from '../layer3/ServiceRegistry.interface.js';
-import { IOR } from '../../../../IOR/0.3.0.3/dist/ts/layer3/IOR.interface.js';
+import { IOR } from '../../../../IOR/0.3.0.3/dist/index.js';
 
 export class DefaultServiceRegistry implements ServiceRegistry {
   private services: Map<string, ServiceRegistration>;
