@@ -1,0 +1,46 @@
+{
+  "ior": {
+    "uuid": "b9d6f3a8-5c7e-4f2b-8a9d-6e4b7c2f8a9d",
+    "component": "Web4Requirement", 
+    "version": "0.1.2.2"
+  },
+  "owner": {
+    "user": "system",
+    "timestamp": "2025-09-05T09:50:00.000Z"
+  },
+  "model": {
+    "uuid": "b9d6f3a8-5c7e-4f2b-8a9d-6e4b7c2f8a9d",
+    "name": "Additional Component Versions - Latest State as 0.3.0.2 with Requirement 0.1.2.2, User, Unit",
+    "description": "Add latest state of all other components as 0.3.0.2 versions, especially Web4Requirement 0.1.2.2 as 0.3.0.2, plus User and Unit components to complete the ecosystem restoration.",
+    "type": "component-ecosystem-completion",
+    "priority": "critical",
+    "category": "recovery-completion",
+    "status": "approved",
+    "rationale": "Complete ecosystem restoration requires all supporting components (Web4Requirement, User, Unit, Scenario, ChangeRequest) in consistent 0.3.0.2 versions for unified development environment.",
+    "acceptance_criteria": [
+      "Add Web4Requirement/0.1.2.2 as Web4Requirement/0.3.0.2",
+      "Add User/0.1.3.0 as User/0.3.0.2", 
+      "Add Unit/0.1.3.0 as Unit/0.3.0.2",
+      "Add Scenario/0.1.3.0 as Scenario/0.3.0.2",
+      "Add Web4ChangeRequest/0.1.3.0 as Web4ChangeRequest/0.3.0.2",
+      "Create scripts/versions links for all new 0.3.0.2 components",
+      "Ensure complete ecosystem consistency with 0.3.0.2 versions"
+    ],
+    "components_to_add": [
+      "Web4Requirement/0.1.2.2 -> Web4Requirement/0.3.0.2",
+      "User/0.1.3.0 -> User/0.3.0.2",
+      "Unit/0.1.3.0 -> Unit/0.3.0.2", 
+      "Scenario/0.1.3.0 -> Scenario/0.3.0.2",
+      "Web4ChangeRequest/0.1.3.0 -> Web4ChangeRequest/0.3.0.2"
+    ],
+    "technical_details": {
+      "source_versions": "Latest available versions (0.1.2.2, 0.1.3.0)",
+      "target_version": "0.3.0.2",
+      "ecosystem_completion": "All supporting components in consistent versions",
+      "scripts_linking": "Create scripts/versions/{component}-v0.3.0.2 links"
+    },
+    "implementation_notes": "This completes the ecosystem restoration with all supporting components in consistent 0.3.0.2 versions, providing a unified development environment.",
+    "created_at": "2025-09-05T09:50:00.000Z",
+    "updated_at": "2025-09-05T09:50:00.000Z"
+  }
+}
