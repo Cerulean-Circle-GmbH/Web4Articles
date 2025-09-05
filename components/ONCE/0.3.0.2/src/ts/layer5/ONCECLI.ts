@@ -111,6 +111,4 @@ async function main() {
 }
 
 // Execute if called directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  main();
-}
+// Radical OOP: Static start method only

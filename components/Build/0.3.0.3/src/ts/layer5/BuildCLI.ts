@@ -70,7 +70,4 @@ export class BuildCLI {
   }
 }
 
-// Radical OOP: Static start method entry point
-if (import.meta.url === `file://${process.argv[1]}`) {
-  BuildCLI.start(process.argv.slice(2));
-}
+// Radical OOP: Static start method only
