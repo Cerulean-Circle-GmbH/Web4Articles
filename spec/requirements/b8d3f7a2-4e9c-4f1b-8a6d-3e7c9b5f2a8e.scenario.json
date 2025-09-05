@@ -1,0 +1,52 @@
+{
+  "ior": {
+    "uuid": "b8d3f7a2-4e9c-4f1b-8a6d-3e7c9b5f2a8e",
+    "component": "Web4Requirement", 
+    "version": "0.1.2.2"
+  },
+  "owner": {
+    "user": "system",
+    "timestamp": "2025-09-03T18:50:00.000Z"
+  },
+  "model": {
+    "uuid": "b8d3f7a2-4e9c-4f1b-8a6d-3e7c9b5f2a8e",
+    "name": "ONCE Component Non-Blocking Server & Scenario Home Directory",
+    "description": "ONCE start command must be non-blocking, start server in background with logging to file. Server must save scenario in organized directory structure (scenarios/domain/component/version/) and load from this file on restart. This directory becomes server 'home' with log files.",
+    "type": "server-behavior",
+    "priority": "critical",
+    "category": "once-component",
+    "status": "approved",
+    "rationale": "ONCE server must run in background for service integration. Scenario persistence enables server state restoration. Home directory provides organized logging and state management.",
+    "acceptance_criteria": [
+      "once start command returns immediately (non-blocking)",
+      "Server runs in background with proper daemon behavior",
+      "Logs written to file in server home directory",
+      "Scenario saved in /scenarios/domain/component/version/ structure",
+      "Server loads from existing scenario file on startup",
+      "Home directory contains scenario and log files",
+      "Scenario format matches Web4 3-property standard (ior, owner, model)",
+      "Version directory uses 0.3.0.1 for current implementation"
+    ],
+    "technical_details": {
+      "scenario_structure": {
+        "path_format": "scenarios/{domain}/{component}/{version}/{uuid}.scenario.json",
+        "example_path": "scenarios/local.once/ONCE/0.3.0.1/uuid.scenario.json",
+        "home_directory": "components/ONCE/0.3.0.1/scenarios/"
+      },
+      "server_behavior": {
+        "non_blocking": true,
+        "background_process": true,
+        "log_file": "components/ONCE/0.3.0.1/logs/once.log",
+        "pid_file": "components/ONCE/0.3.0.1/once.pid"
+      },
+      "scenario_format": {
+        "ior": "component_identification",
+        "owner": "creation_metadata", 
+        "model": "server_state_data"
+      }
+    },
+    "implementation_notes": "Follow ONCE 0.2.0.0 scenario structure but use Web4 3-property format and 0.3.0.1 version directory. Server home directory provides organized state and logging management.",
+    "created_at": "2025-09-03T18:50:00.000Z",
+    "updated_at": "2025-09-03T18:50:00.000Z"
+  }
+}

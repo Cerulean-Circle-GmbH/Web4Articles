@@ -75,11 +75,94 @@ export class DefaultONCE implements ONCE {
   }
 
   async start(args: string[] = []): Promise<void> {
+    // Load existing scenario if present
+    await this.loadExistingScenario();
+    
     console.log('✅ ONCE: Web4-compliant kernel started successfully');
     this.data.state = 'ready';
     
-    // Phase B1: Start 42777 service registry
+    // Start server in background (non-blocking)
+    await this.startBackgroundServer();
+    
+    // Save scenario to home directory
+    await this.saveScenarioToHome();
+    
+    console.log('🏠 Home directory: components/ONCE/0.3.0.1/');
+    console.log('📋 Logs: components/ONCE/0.3.0.1/logs/once.log');
+    console.log('💾 Scenario: scenarios/local.once/ONCE/0.3.0.1/');
+  }
+
+  private async loadExistingScenario(): Promise<void> {
+    try {
+      const fs = await import('fs');
+      const path = await import('path');
+      
+      const homeDir = '/workspace/components/ONCE/0.3.0.1';
+      const scenarioDir = `${homeDir}/scenarios/local.once/ONCE/0.3.0.1`;
+      
+      if (fs.existsSync(scenarioDir)) {
+        const files = fs.readdirSync(scenarioDir).filter(f => f.endsWith('.scenario.json'));
+        if (files.length > 0) {
+          const scenarioPath = path.join(scenarioDir, files[0]);
+          const scenarioContent = fs.readFileSync(scenarioPath, 'utf8');
+          const scenario = JSON.parse(scenarioContent);
+          
+          if (scenario.model) {
+            Object.assign(this.data, scenario.model);
+            console.log('📂 Loaded existing scenario from home directory');
+          }
+        }
+      }
+    } catch (error) {
+      console.log('📂 No existing scenario found, using defaults');
+    }
+  }
+
+  private async startBackgroundServer(): Promise<void> {
+    const fs = await import('fs');
+    const homeDir = '/workspace/components/ONCE/0.3.0.1';
+    
+    // Create home directory structure
+    fs.mkdirSync(`${homeDir}/logs`, { recursive: true });
+    fs.mkdirSync(`${homeDir}/scenarios/local.once/ONCE/0.3.0.1`, { recursive: true });
+    
+    // Start 42777 service registry (detached for background)
     await this.startServiceRegistry();
+    
+    // Write PID file
+    fs.writeFileSync(`${homeDir}/once.pid`, process.pid.toString());
+  }
+
+  private async saveScenarioToHome(): Promise<void> {
+    try {
+      const fs = await import('fs');
+      const homeDir = '/workspace/components/ONCE/0.3.0.1';
+      const scenarioDir = `${homeDir}/scenarios/local.once/ONCE/0.3.0.1`;
+      const scenarioPath = `${scenarioDir}/${this.data.uuid}.scenario.json`;
+      
+      // Web4 3-property scenario format
+      const scenario = {
+        ior: {
+          uuid: this.data.uuid,
+          component: 'ONCE',
+          version: '0.3.0.1',
+          location: 'localhost',
+          endpoint: 'http://localhost:42777'
+        },
+        owner: {
+          user: 'system',
+          hostname: this.data.host,
+          timestamp: new Date().toISOString()
+        },
+        model: this.data
+      };
+      
+      fs.writeFileSync(scenarioPath, JSON.stringify(scenario, null, 2));
+      console.log(`💾 Scenario saved: ${scenarioPath}`);
+      
+    } catch (error) {
+      console.log(`❌ Scenario save failed: ${error}`);
+    }
   }
 
   // Phase B1: Real 42777 Service Integration
