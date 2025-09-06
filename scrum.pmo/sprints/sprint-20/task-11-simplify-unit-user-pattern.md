@@ -61,7 +61,39 @@ The Unit component exists to solve fundamental Web4 architecture problems and mu
 - **Architecture Problem:** Provides atomic foundation for UCP hierarchy implementation
 
 ### **How Unit Solves These Problems:**
-The current over-engineered Unit (335+ lines) VIOLATES these purposes by being complex instead of atomic. Unit must be the SIMPLEST component following User 0.3.0.4 pattern to solve these problems correctly. This simplification establishes foundation patterns that enable single source of truth implementation across the entire ecosystem.
+
+**5. Unit UUID Index System (Storage Foundation):**
+- **Challenge:** How to store and manage scenarios with UUID-based indexing
+- **Unit Solution:** Units provide UUID index system with 5-level deep folder structure in scenarios/index/
+- **Web4 Impact:** Enables systematic scenario storage and retrieval with backlink tracking
+- **Dual Links:** [Unit UUID Index Requirement](../../../../spec/requirements.md/9edcd4d6-2126-40fa-aedd-43fdfda24c6e.requirement.md) | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/destroyed-once/spec/requirements.md/9edcd4d6-2126-40fa-aedd-43fdfda24c6e.requirement.md)
+
+**6. Unit-Component Integration (Storage Integration):**
+- **Challenge:** How to integrate Unit storage with other components like Web4Requirement
+- **Unit Solution:** Unit provides storage integration patterns for cross-component scenario management
+- **Web4 Impact:** Enables unified storage system across entire ecosystem
+- **Dual Links:** [Unit-Web4Requirement Integration](../../../../spec/requirements.md/3b22e65c-d9e7-4910-8dda-9d96195035d5.requirement.md) | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/destroyed-once/spec/requirements.md/3b22e65c-d9e7-4910-8dda-9d96195035d5.requirement.md)
+
+**7. Unit CLI Management (Reference Implementation):**
+- **Challenge:** How to provide CLI interface for component management
+- **Unit Solution:** Unit serves as reference CLI implementation following auto-build standard
+- **Web4 Impact:** Provides template for all component CLI implementations
+- **Dual Links:** [UnitCLI Requirement](../../../../spec/requirements.md/e978fd53-4bc3-4552-8f63-89f75c5b0730.requirement.md) | [Auto-Build CLI Standard](../../../../spec/standards/auto-build-cli-standard.md)
+
+**8. Traceability Graph Foundation (6-Hop Traceability):**
+- **Challenge:** How to implement complete traceability from Prose to Units
+- **Unit Solution:** Units are the endpoint of 6-hop traceability: Prose → Requirements → Tests → Features → Components → Versions → Units
+- **Web4 Impact:** Enables complete semantic closure and requirement coverage validation
+- **Dual Links:** [Traceability Graph Requirement](../../../../spec/requirements.md/cb59e9b3-3872-43c9-b8b6-0b4b5e359ff3.requirement.md) | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/destroyed-once/spec/requirements.md/cb59e9b3-3872-43c9-b8b6-0b4b5e359ff3.requirement.md)
+
+**Complete Unit Purpose Understanding:**
+The current over-engineered Unit (335+ lines) VIOLATES these fundamental purposes by being complex instead of atomic. Unit must be the SIMPLEST component demonstrating these 8 critical capabilities while following User 0.3.0.4 pattern. Unit is not just a simple component - it's the FOUNDATION of the entire Web4 ecosystem providing:
+- Atomic execution with evidence
+- UUID index storage system  
+- Cross-component integration patterns
+- CLI reference implementation
+- Traceability graph endpoint
+- Pattern template for all components
 
 ## Steps
 1. Analyze User 0.3.0.4 simple pattern as template
