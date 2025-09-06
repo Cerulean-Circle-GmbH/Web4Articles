@@ -96,12 +96,18 @@ The current over-engineered Unit (335+ lines) VIOLATES these fundamental purpose
 - Pattern template for all components
 
 ## Steps
-1. Analyze User 0.3.0.4 simple pattern as template
-2. Replace complex Unit.ts with simple Unit.interface.ts
-3. Create simple UnitModel.interface.ts following UserModel pattern
-4. Implement simple DefaultUnit following DefaultUser pattern
-5. Remove all over-engineered interfaces and types
-6. Ensure Unit follows Web4 principles: empty constructor, scenario init, simple model
+1. Create dev/once0304 branch for clean Unit 0.3.0.4 development
+2. Analyze User 0.3.0.4 simple pattern as template
+3. Create components/Unit/0.3.0.4/ directory structure
+4. Implement simple Unit.interface.ts following User pattern
+5. Create simple UnitModel.interface.ts following UserModel pattern
+6. Implement DefaultUnit with UnitIndexStorage integration
+7. Create unit CLI script for testing
+8. **Incremental Validation at Each Step:**
+   - `npm run clean` - Clean build files
+   - `npm run build` - Build without errors
+   - `./unit` - Shows usage display
+   - `./unit create test-unit` - Test unit creation with parameters
 
 ## Requirements
 - Unit must be simplest component, not most complex
@@ -112,14 +118,19 @@ The current over-engineered Unit (335+ lines) VIOLATES these fundamental purpose
 - Apply Occam's razor principle throughout
 
 ## Acceptance Criteria
+- [ ] dev/once0304 branch created for Unit 0.3.0.4 development
 - [ ] Unit.ts (335 lines) replaced with simple Unit.interface.ts following User pattern
 - [ ] Simple UnitModel.interface.ts created following UserModel pattern
-- [ ] Single DefaultUnit.ts in layer2 following DefaultUser pattern
+- [ ] Single DefaultUnit.ts in layer2 with UnitIndexStorage integration
+- [ ] Unit CLI script created for testing (./unit command)
 - [ ] No over-engineered interfaces (UnitScenario, UnitCapability, etc.)
 - [ ] No 'any' types in Unit interfaces
-- [ ] Unit follows Web4 patterns: empty constructor, scenario initialization
-- [ ] Unit builds and functions with simple pattern
-- [ ] Unit demonstrates foundation pattern for all components
+- [ ] **Incremental Validation Success:**
+  - [ ] `npm run clean` cleans build files
+  - [ ] `npm run build` builds without errors
+  - [ ] `./unit` shows usage display
+  - [ ] `./unit create test-unit` creates unit with parameters
+- [ ] Unit demonstrates DRY foundation pattern for all components
 
 ## QA Audit & User Feedback
 - [ ] [2025-09-06-UTC-0750] QA review pending.

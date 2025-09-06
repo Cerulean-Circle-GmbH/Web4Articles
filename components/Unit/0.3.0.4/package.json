@@ -1,0 +1,20 @@
+{
+  "name": "@web4/unit",
+  "version": "0.3.0.4",
+  "description": "Web4 Unit component - atomic executable elements with storage integration",
+  "type": "module",
+  "main": "dist/ts/layer2/DefaultUnit.js",
+  "types": "dist/ts/layer2/DefaultUnit.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist/",
+    "test": "vitest"
+  },
+  "keywords": ["web4", "unit", "atomic", "storage"],
+  "author": "Web4 Architecture Team",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}
