@@ -255,8 +255,9 @@ Web4 Integration:
   ```
   - [ ] Issue: GitTextIOR URLs contain relative paths (../scrum.pmo/...) instead of absolute paths
   - [ ] Resolution: Fix GitTextIOR implementation to generate absolute GitHub URLs without relative path components
-  - [ ] Example: Should be `https://github.com/.../scrum.pmo/sprints/sprint-20/Web4TLA.Specification.dialogue.md#L2039:130-2039:134`
-  - [ ] Impact: Absolute links required for proper functionality in distributed environments
+  - [x] Example: Should be `https://github.com/.../scrum.pmo/sprints/sprint-20/Web4TLA.Specification.dialogue.md#L2039:130-2039:134`
+  - [x] Impact: Absolute links required for proper functionality in distributed environments
+  - [x] Resolution: Fixed GitTextIOR implementation to use absolute paths, added `unit origin <uuid>` command for dual links display
 
 ## Dependencies
 - Builds on Task 18 Unit Terminal Identity (uni-t) system

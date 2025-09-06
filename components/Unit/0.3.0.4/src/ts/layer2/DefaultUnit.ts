@@ -291,6 +291,38 @@ export class DefaultUnit implements Unit {
     }
   }
 
+  async origin(uuid: string): Promise<void> {
+    try {
+      // Display dual links to origin and definition as clickable URLs
+      const scenario = await this.storage.loadScenario(uuid);
+      
+      console.log(`Unit ${scenario.model.name || uuid} Source References:`);
+      console.log('');
+      
+      if (scenario.model.origin) {
+        const originUrl = scenario.model.origin.replace('ior:git:text:', '');
+        console.log(`Origin: ${originUrl}`);
+        console.log(`Local: scenarios/index/${uuid.slice(0, 5).split('').join('/')}/${uuid}.scenario.json`);
+      } else {
+        console.log('Origin: not specified');
+      }
+      
+      console.log('');
+      
+      if (scenario.model.definition) {
+        const definitionUrl = scenario.model.definition.replace('ior:git:text:', '');
+        console.log(`Definition: ${definitionUrl}`);
+        console.log(`Local: scenarios/index/${uuid.slice(0, 5).split('').join('/')}/${uuid}.scenario.json`);
+      } else {
+        console.log('Definition: not specified');
+      }
+      
+      console.log('');
+    } catch (error) {
+      console.error(`Failed to show origin: ${(error as Error).message}`);
+    }
+  }
+
   // Terminal Identity (uni-t) methods
   setTerminalIdentity(name: string, origin: string, definition: string): this {
     this.model.name = name;
