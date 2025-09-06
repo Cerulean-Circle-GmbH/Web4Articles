@@ -255,6 +255,8 @@
 - **Single TRON session** in header is sufficient - don't repeat throughout document
 - **NEVER use placeholder decisions** - only track actual pending questions that need user input
 - **Keep real pending decisions** from previous sessions until user provides answers
+- **CRITICAL: ALWAYS ASK FOR USER ACCEPTANCE** - Never assume task completion without explicit user validation
+- **NEVER MARK TASKS AS COMPLETE** without user QA approval - this violates "Never 2 1 (TO ONE), Always 4 2 (FOR TWO)" principle
 
 ---
 
@@ -467,6 +469,8 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
 - **Creating multiple roles** without coordination [[memory:6917891]]
 - **Using non-interactive tests** that hang [[memory:5680815]]
 - **Not asking for critical decisions** [[memory:6917891]]
+- **CRITICAL VIOLATION: Marking tasks complete without user approval** - Always ask "Do you accept this task as complete?"
+- **Assuming user acceptance** instead of explicitly requesting QA validation
 - **Truncating user documentation** - NEVER truncate quotes/logs [[memory:0944]]
 - **Not documenting git operations** - Always show branch switches [[memory:0931]]
 - **Missing cross-agent improvements** - Check other branches regularly [[memory:0935]]
