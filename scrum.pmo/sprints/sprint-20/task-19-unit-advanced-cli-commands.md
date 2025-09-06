@@ -45,12 +45,12 @@ Provide complete CLI toolset for unit management enabling link creation, listing
 ## Steps
 1. Create DefaultCLI 0.3.0.4 as dependency-free base component
 2. Implement Unit build dependency on DefaultCLI
-3. Add link management methods to DefaultUnit:
+3. Add link management methods to DefaultUnit (following CLI method naming convention v0.1.2.2):
    - `link(uuid: string, filename: string)` - Create new links to existing units
-   - `listLinks(uuid: string)` - List all LD links to specific UUID
-4. Add source integration methods to DefaultUnit:
-   - `createFromSource(filename: string, startPos: string, endPos: string)` - Create unit from file text
-   - `addDefinition(uuid: string, filename: string, startPos: string, endPos: string)` - Add definition source
+   - `list(uuid: string)` - List all LD links to specific UUID
+4. Add source integration methods to DefaultUnit (following CLI method naming convention v0.1.2.2):
+   - `from(filename: string, startPos: string, endPos: string)` - Create unit from file text
+   - `definition(uuid: string, filename: string, startPos: string, endPos: string)` - Add definition source
 5. Enhance UnitCLI with advanced commands:
    - `unit link <uuid> <filename>`
    - `unit list <uuid>`
@@ -62,6 +62,8 @@ Provide complete CLI toolset for unit management enabling link creation, listing
 ## Requirements
 - DefaultCLI 0.3.0.4 must be dependency-free base component
 - Unit must include DefaultCLI as build dependency
+- All CLI method names must match shell command names exactly (requirement-v0.1.2.2-cli-method-naming-convention)
+- No CLI mapping layer required - direct method invocation using command name
 - All CLI commands must use HTML bracket parameter format
 - Usage response must follow requirement-v0.1.2.2 format and structure
 - Link management must work with existing central storage and LD links system
@@ -69,6 +71,8 @@ Provide complete CLI toolset for unit management enabling link creation, listing
 - Position parameters must use `start:line,column` and `end:line,column` format
 - File text extraction must populate unit name from source content
 - All commands must integrate with Unit Terminal Identity (uni-t) system
+- Occam's Razor principle: Simplest solution with minimal complexity
+- TypeScript Stranger 2.2 compliance for advanced TypeScript patterns
 
 ## Acceptance Criteria
 - [ ] DefaultCLI 0.3.0.4 created as dependency-free base component
@@ -146,6 +150,24 @@ unit
   - [ ] Issue: Need advanced CLI commands for link management and source integration
   - [ ] Resolution: Create Task 19 with DefaultCLI base component and advanced command implementation
   - [ ] Example: `unit link <uuid> <filename>`, `unit from <filename> <start:line,column> <end:line,column>`
+
+- [ ] [2025-09-06-UTC-2020] TRON Decision - CLI Method Naming Convention
+  ```quote
+  if the method 
+  addDefinition(uuid: string, filename: string, startPos: string, endPos: string)
+
+  is called
+  definition(uuid: string, filename: string, startPos: string, endPos: string)
+
+
+  DefaultCLI needs no mapping and its better for ocams razor and tsranger 2.2.
+  make this a global web4 requirement wit requiremen-v0.1.2.2 and use this pattern in general. update the task accordingly
+  ```
+  - [ ] Issue: CLI method names should match shell command names exactly to eliminate mapping
+  - [ ] Resolution: Create global Web4 requirement v0.1.2.2-cli-method-naming-convention
+  - [ ] Pattern: `unit definition` → `definition()` method (not `addDefinition()`)
+  - [ ] Benefit: DefaultCLI needs no mapping, follows Occam's Razor and TypeScript Stranger 2.2
+  - [ ] Application: Global Web4 requirement for all components
 
 ## Dependencies
 - Builds on Task 18 Unit Terminal Identity (uni-t) system

@@ -41,10 +41,26 @@ plan a next task and implement it once i accepted it.
 pdca
 ```
 
-### **My Answer**
+### **TRON Feedback (2025-09-06-UTC-2020)**
+```quote
+if the method 
+addDefinition(uuid: string, filename: string, startPos: string, endPos: string)
+
+is called
+definition(uuid: string, filename: string, startPos: string, endPos: string)
+
+
+DefaultCLI needs no mapping and its better for ocams razor and tsranger 2.2.
+make this a global web4 requirement wit requiremen-v0.1.2.2 and use this pattern in general. update the task accordingly
+```
+
+### **My Answer (2025-09-06-UTC-2015)**
 Planning Task 19 for Unit Advanced CLI Commands with DefaultCLI base component integration. Will create comprehensive task specification for link management, source integration, and dependency-free DefaultCLI architecture following requirement-v0.1.2.2 format.
 
-**Learning Applied:** Advanced CLI commands enable complete unit link management and source integration with terminal identity system.
+### **My Answer (2025-09-06-UTC-2020)**
+Creating global Web4 requirement v0.1.2.2-cli-method-naming-convention: CLI method names must match shell command names exactly. `unit definition` → `definition()` method (not `addDefinition()`). This eliminates DefaultCLI mapping complexity, follows Occam's Razor and TypeScript Stranger 2.2. Task 19 updated accordingly.
+
+**Learning Applied:** Direct method naming eliminates CLI mapping complexity and improves maintainability following Occam's Razor principle.
 
 ---
 
@@ -129,8 +145,9 @@ Planning systematic implementation approach for advanced CLI features.
 - **Dependency-Free:** Must build itself without external dependencies
 - **Base Component:** Foundation for all CLI functionality
 - **Build Dependency:** Unit includes DefaultCLI as build dependency
-- **Command Mapping:** Shell command to method mapping system
+- **Direct Method Invocation:** No mapping layer - method names match command names exactly
 - **Parameter Handling:** HTML bracket parameter parsing and validation
+- **Occam's Razor:** Simplest solution following CLI method naming convention v0.1.2.2
 
 **Usage Format (requirement-v0.1.2.2 compliance):**
 - **Format Reference:** Follow requirement-v0.1.2.2 structure and presentation
