@@ -24,6 +24,7 @@
 - Source: UnitIndex Requirements Analysis - Central Storage Location Issues
 ```
   - up
+    - [requirement:uuid:9edcd4d6-2126-40fa-aedd-43fdfda24c6e](../requiremnents-2025-09-06-UTC-1132-po-dual-linking.md)
     - [UnitIndex Analysis](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-1005-unitindex-requirements-analysis-task-planning.pdca.md)
 ```
 ```
@@ -48,10 +49,23 @@ Ensure all unit scenarios are stored in the central scenarios/index/ location as
 4. Validate storage location consistency across all unit operations
 
 ## Requirements
+- Include `[requirement:uuid:9edcd4d6-2126-40fa-aedd-43fdfda24c6e]` backlink to `requiremnents.md` if derived from a requirement.
+- Ensure bidirectional links: task → requirements and requirements → task.
+
+### **Primary Requirement**
+- **[requirement:uuid:9edcd4d6-2126-40fa-aedd-43fdfda24c6e] - Unit UUID Index System**
+  - **GitHub:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/spec/requirements.md/9edcd4d6-2126-40fa-aedd-43fdfda24c6e.requirement.md) | [§/spec/requirements.md/9edcd4d6-2126-40fa-aedd-43fdfda24c6e.requirement.md](../../../spec/requirements.md/9edcd4d6-2126-40fa-aedd-43fdfda24c6e.requirement.md)
+  - **Description:** Units are linux files that are unique and terminal identified via a uuid. They are created in a Units Index with scenarios stored in project root scenarios/index/ using UUID-based folder structure (5 levels deep).
+  - **Implementation Status:** pending
+
+### **Specific Requirements**
 - All scenarios must be stored in project root scenarios/index/
-- LD links must point to central storage location
+- LD links must point to central storage location  
 - Project root detection must be reliable and consistent
 - No scenarios created in temp folders or other locations
+- UUID-based folder structure (5 levels deep) as per Unit UUID Index System
+- Storage locations use symbolic links to the index
+- Unit model tracks all backlink paths for lifecycle management
 
 ## Acceptance Criteria
 - [ ] Scenarios stored in /workspace/scenarios/index/1/7/e/e/1/ (not temp)
