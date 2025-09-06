@@ -6,6 +6,9 @@
 
 export interface UnitModel {
   uuid: string;                    // UUIDv4 format using crypto.randomUUID()
+  name: string;                    // Human-readable unit name for terminal identification (uni-t)
+  origin: string;                  // GitTextIOR format: ior:git:text:giturl with line/column positions
+  definition: string;              // GitTextIOR format: ior:git:text:giturl with character positions
   indexPath: string;               // scenarios/index/path to this unit
   symlinkPaths: string[];          // LD links tracking
   namedLinks: NamedLink[];         // Named links with location and filename

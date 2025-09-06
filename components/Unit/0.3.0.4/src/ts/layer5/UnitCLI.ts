@@ -19,6 +19,9 @@ class UnitCLI {
       owner: '',
       model: {
         uuid: crypto.randomUUID(),
+        name: '',
+        origin: '',
+        definition: '',
         indexPath: '',
         symlinkPaths: [],
         namedLinks: [],

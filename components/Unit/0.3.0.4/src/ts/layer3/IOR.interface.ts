@@ -1,7 +1,7 @@
 /**
- * IOR Interface - Simple IOR for Unit component
+ * IOR Interface - Interoperable Object Reference data structure
  * Web4 principle: Single interface per file
- * TODO: Use single source of truth when available
+ * Purpose: Standard IOR data format for scenario hibernation
  */
 
 export interface IOR {
