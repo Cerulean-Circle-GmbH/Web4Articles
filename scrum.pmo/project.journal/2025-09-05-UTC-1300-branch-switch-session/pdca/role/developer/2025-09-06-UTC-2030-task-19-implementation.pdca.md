@@ -141,6 +141,23 @@ Testing all advanced commands with source traceability validation.
 ✅ unit list: Listed all symlink paths and named links
 ```
 
+**TRON QA Feedback Implementation (✅ COMPLETE)**
+
+**QA Feedback (2025-09-06-UTC-2035):**
+```quote
+the iors MUST be ABSOLUTE links to really work later!
+```
+
+**Absolute URLs Fixed:**
+- ✅ **Origin Fixed:** `ior:git:text:https://github.com/.../scrum.pmo/sprints/sprint-20/Web4TLA.Specification.dialogue.md#L2039:130-2039:134`
+- ✅ **Definition Fixed:** `ior:git:text:https://github.com/.../scrum.pmo/sprints/sprint-20/Web4TLA.Specification.dialogue.md#L2035:1-2041:120`
+- ✅ **No Relative Paths:** Removed `../` components from GitTextIOR URLs
+- ✅ **Distributed Environment Ready:** Absolute links will work properly in all environments
+
+**Fixed ONCE Unit Result Files:**
+- **Fixed ONCE Scenario:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scenarios/index/8/e/1/0/3/8e103dc8-4664-40d0-9910-9942b132735a.scenario.json) | [scenarios/index/8/e/1/0/3/8e103dc8-4664-40d0-9910-9942b132735a.scenario.json](../../../../scenarios/index/8/e/1/0/3/8e103dc8-4664-40d0-9910-9942b132735a.scenario.json)
+- **Fixed ONCE LD Link:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/temp/ONCE.unit) | [temp/ONCE.unit](../../../../temp/ONCE.unit)
+
 **Additional Test Files:**
 - **Advanced Test Unit:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scenarios/index/d/f/e/b/8/dfeb893e-3d5d-4069-a262-61e27ccb3832.scenario.json) | [scenarios/index/d/f/e/b/8/dfeb893e-3d5d-4069-a262-61e27ccb3832.scenario.json](../../../../scenarios/index/d/f/e/b/8/dfeb893e-3d5d-4069-a262-61e27ccb3832.scenario.json)
 - **Test Link:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Test/advanced-reference.unit) | [components/Test/advanced-reference.unit](../../../../components/Test/advanced-reference.unit)

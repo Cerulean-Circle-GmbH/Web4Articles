@@ -238,6 +238,26 @@ Web4 Integration:
   - [ ] Learning: Always verify actual format instead of making assumptions
   - [ ] Method Naming: Add Task 19 Features section with direct method naming pattern
 
+- [ ] [2025-09-06-UTC-2035] TRON QA Feedback - Absolute Links Requirement
+  ```quote
+  nearly perfect 
+
+    "model": {
+      "uuid": "7bde3977-8867-44e7-90d5-a0dc149fbc56",
+      "name": "ONCE",
+      "origin": "ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/../scrum.pmo/sprints/sprint-20/Web4TLA.Specification.dialogue.md#L2039:130-2039:134",
+      "definition": "ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/../scrum.pmo/sprints/sprint-20/Web4TLA.Specification.dialogue.md#L2035:1-2041:120",
+
+
+  the iors MUST be ABSOLUTE links to really work later!
+
+  fix it and obviously add my qa feedback to the task
+  ```
+  - [ ] Issue: GitTextIOR URLs contain relative paths (../scrum.pmo/...) instead of absolute paths
+  - [ ] Resolution: Fix GitTextIOR implementation to generate absolute GitHub URLs without relative path components
+  - [ ] Example: Should be `https://github.com/.../scrum.pmo/sprints/sprint-20/Web4TLA.Specification.dialogue.md#L2039:130-2039:134`
+  - [ ] Impact: Absolute links required for proper functionality in distributed environments
+
 ## Dependencies
 - Builds on Task 18 Unit Terminal Identity (uni-t) system
 - Requires GitTextIOR implementation for source reference formatting

@@ -238,9 +238,12 @@ export class DefaultUnit implements Unit {
       const nameMatch = extractedText.match(/\b[A-Za-z][A-Za-z0-9_]*\b/);
       const unitName = nameMatch ? nameMatch[0] : 'ExtractedUnit';
       
-      // Create GitTextIOR for origin
+      // Create GitTextIOR for origin with absolute path
       const gitIOR = new GitTextIOR();
-      const gitUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${filename}#L${startPos}-${endPos}`;
+      const { resolve } = await import('path');
+      const absolutePath = resolve(filename);
+      const relativePath = absolutePath.replace('/workspace/', '');
+      const gitUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${relativePath}#L${startPos}-${endPos}`;
       const originIOR = gitIOR.parse(gitUrl);
       
       // Set terminal identity
@@ -263,9 +266,12 @@ export class DefaultUnit implements Unit {
       // Add definition source reference to existing unit
       const { GitTextIOR } = await import('./GitTextIOR.js');
       
-      // Create GitTextIOR for definition
+      // Create GitTextIOR for definition with absolute path
       const gitIOR = new GitTextIOR();
-      const gitUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${filename}#L${startPos}-${endPos}`;
+      const { resolve } = await import('path');
+      const absolutePath = resolve(filename);
+      const relativePath = absolutePath.replace('/workspace/', '');
+      const gitUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${relativePath}#L${startPos}-${endPos}`;
       const definitionIOR = gitIOR.parse(gitUrl);
       
       // Load existing unit
