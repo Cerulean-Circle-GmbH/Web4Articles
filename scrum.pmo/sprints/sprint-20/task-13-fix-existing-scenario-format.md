@@ -1,4 +1,4 @@
-[Back to Planning Sprint 20](./planning-2025-09-06-UTC-0730.md)
+[Back to Planning Sprint 20](./planning.md)
 
 # Task 13: Fix Existing Scenario Format to Web4 Standard
 [task:uuid:l2m3n4o5-p6q7-8901-lmno-p23456789012]
@@ -24,6 +24,7 @@
 - Source: Unit Version Analysis - Existing Storage Format Compliance
 ```
   - up
+    - [requirement:uuid:571814f6-1493-4384-8104-edb3d6eb38fd](../requiremnents-2025-09-06-UTC-1132-po-dual-linking.md)
     - [Unit Version Analysis](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-0830-unit-version-analysis-perfect-web4-implementation.pdca.md)
 ```
 ```
@@ -51,12 +52,24 @@ Make existing scenarios/index/ storage compatible with Web4 standard scenario fo
 6. Validate all scenarios follow Web4 standard after migration
 
 ## Requirements
+- Include `[requirement:uuid:571814f6-1493-4384-8104-edb3d6eb38fd]` backlink to `requiremnents.md` if derived from a requirement.
+- Ensure bidirectional links: task → requirements and requirements → task.
+
+### **Primary Requirement**
+- **[requirement:uuid:571814f6-1493-4384-8104-edb3d6eb38fd] - Web4 Scenario-First Development**
+  - **GitHub:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/spec/requirements.md/571814f6-1493-4384-8104-edb3d6eb38fd.requirement.md) | [§/spec/requirements.md/571814f6-1493-4384-8104-edb3d6eb38fd.requirement.md](../../../spec/requirements.md/571814f6-1493-4384-8104-edb3d6eb38fd.requirement.md)
+  - **Description:** Every object instance is a scenario that can be hibernated/resurrected. Objects as persistent scenarios with complete state preservation rather than transient runtime entities. All formats (CSV/JSON/XML/Database) become semantically identical hibernation mechanisms.
+  - **Implementation Status:** pending
+
+### **Specific Requirements**
 - All scenarios must use lowercase "ior" field
 - All scenarios must use semantic versioning format
 - All scenarios must use proper owner encryption (not base64)
 - unitIndex field and LD links must be preserved during migration
 - No breaking changes to existing symbolic links
 - All 100+ scenarios must be migrated consistently
+- Object instances as persistent scenarios per Web4 Scenario-First Development
+- Complete state preservation for hibernation/resurrection capability
 
 ## Acceptance Criteria
 - [ ] All scenarios in scenarios/index/ use lowercase "ior" field

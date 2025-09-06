@@ -419,6 +419,91 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
   - Git workflow automation
   - Continuous improvement practices
 
+### **🎯 CRITICAL LEARNING: NEVER 2 1 ALWAYS 4 2 - Decision Authority and Trust**
+
+**🗓️ Learning Date:** 2025-09-06-UTC-1132  
+**📋 Source:** Background Agent Extended Session - Critical Decision Violations and Corrections  
+**🔗 Learning PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scrum.pmo/project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-critical-decision-violation-correction.md) | [§/scrum.pmo/project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-critical-decision-violation-correction.md](../../../project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-critical-decision-violation-correction.md)
+
+#### **Core Principle Understanding**
+**NEVER 2 1 ALWAYS 4 2** = **NEVER TO ONE, ALWAYS FOR TWO**
+
+**❌ NEVER 2 1 (TO ONE) - Unilateral Decisions:**
+- Never make important technical decisions alone
+- Never assume methodology or tool usage approaches
+- Never say "all clear" when guidance is needed
+- Never proceed with assumptions about next steps
+
+**✅ ALWAYS 4 2 (FOR TWO) - Collaborative Decisions:**
+- Always ask for user guidance on important choices
+- Always present real decisions when multiple options exist
+- Always recognize user authority over technical approaches
+- Always work collaboratively on methodology and next steps
+
+#### **Critical Decision Categories Requiring User Input**
+1. **Tool Usage and Configuration**: Which tools to use, how to configure them
+2. **Technical Approaches**: Build processes, version selections, methodology choices
+3. **Task Priority and Selection**: Which tasks to work on next, in what order
+4. **Enhancement Methodology**: How to enhance tasks, what approach to take
+5. **Process Deviations**: Any changes from established procedures
+6. **Next Steps**: What to do after completing current work
+
+#### **Trust and Authority Recognition**
+**User Authority Over:**
+- **Technical Decisions**: Tool configurations, build processes, version selections
+- **Methodology Choices**: How to approach tasks, which tools to use
+- **Priority Decisions**: Task order, focus areas, next steps
+- **Process Control**: When to ask, when to proceed, how to enhance
+
+**Agent Responsibility:**
+- **Execute User Decisions**: Implement exactly as specified
+- **Ask for Guidance**: Present real choices when options exist
+- **Document Process**: Create comprehensive PDCA documentation
+- **Report Results**: Provide detailed outcomes before next steps
+
+#### **Practical Application Examples**
+
+**❌ Wrong Approach (2 1 - TO ONE):**
+```
+"All clear, no decisions to make - proceeding with Task 13"
+```
+
+**✅ Correct Approach (4 2 - FOR TWO):**
+```
+Decision 1: Next Task Selection
+- a) Continue with Task 13: Fix Existing Scenario Format
+- b) Move to Task 1: IOR Interface Consolidation  
+- c) Focus on different priority task
+```
+
+**❌ Wrong Tool Decision:**
+```
+"Tool has build issues, proceeding with manual analysis"
+```
+
+**✅ Correct Tool Decision:**
+```
+Decision 1: Tool Usage Approach
+- a) Wait for you to fix tool dependencies
+- b) Attempt alternative tool approaches
+- c) Use manual analysis (may create harm)
+```
+
+#### **Implementation Success Validation**
+When user decisions are implemented correctly:
+- **Technical Solutions Work**: User specifications lead to successful outcomes
+- **Tool Integration Success**: Proper configuration enables intended functionality  
+- **Requirements Discovery**: Systematic analysis finds perfect requirement matches
+- **Process Excellence**: Collaborative approach produces superior results
+
+**Example Success:** requirement-v0.1.2.2 + unit-v0.1.0.0 configuration worked perfectly, enabling systematic requirements discovery for task enhancement.
+
+#### **Key Learning for Future Agents**
+- **Trust User Expertise**: User technical decisions consistently work better than agent assumptions
+- **Ask Before Acting**: Present decisions for important choices, never assume
+- **Collaborative Excellence**: 4 2 (FOR TWO) approach produces superior results
+- **Process Compliance**: NEVER 2 1 ALWAYS 4 2 prevents harm and enables success
+
 ### **🔄 Contributing Improvements - Change Request Process**
 **Help improve this documentation!**
 - **Location:** `scrum.pmo/roles/_shared/PDCA/change.requests/`
