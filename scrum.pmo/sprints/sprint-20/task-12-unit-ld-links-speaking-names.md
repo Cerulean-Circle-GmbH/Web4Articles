@@ -81,3 +81,7 @@ Enable human-readable names (like "user-alice" or "server-main") to map to uniqu
   - [x] Issue: "i did not see a unit link in scripts nor a new version link"
   - [x] Resolution: Add unit link in scripts directory and version link in scripts/versions
   - [x] Example: scripts/unit and scripts/versions/unit-v0.3.0.4 created
+- [ ] [2025-09-06-UTC-0920] TRON QA Feedback collected.
+  - [ ] Issue: "i expect a ln link in the temp folder and a new unit in the index as uuid.scenario.json and the ln link pointing to it with the file name test-unit as you named it in your testcase. cannot see anything like that."
+  - [ ] Resolution: Implement proper LD links creation in temp folder pointing to scenarios/index/ storage
+  - [ ] Example: temp/test-unit -> scenarios/index/a/b/c/d/e/[uuid].scenario.json

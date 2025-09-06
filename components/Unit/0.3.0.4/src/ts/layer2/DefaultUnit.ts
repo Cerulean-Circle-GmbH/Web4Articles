@@ -24,6 +24,7 @@ export class DefaultUnit implements Unit {
       updatedAt: new Date().toISOString()
     };
     this.storage = new UnitIndexStorage();
+    this.storage.init(this.findProjectRoot());
   }
 
   init(scenario: Scenario): this {
@@ -31,7 +32,7 @@ export class DefaultUnit implements Unit {
       this.model = scenario.model;
       this.model.state = 'initialized';
     }
-    this.storage.init(this.findProjectRoot());
+    // Storage already initialized in constructor
     return this;
   }
 
@@ -77,9 +78,10 @@ export class DefaultUnit implements Unit {
       model: this.model
     };
 
-    // Save to central storage with LD links
-    const speakingNameLinks = [`components/Unit/0.3.0.4/${this.model.name}.unit`];
-    await this.storage.saveScenario(this.model.uuid, scenario, speakingNameLinks);
+    // Save to central storage with LD links - create speaking name link in current directory
+    const currentDir = process.cwd();
+    const speakingNameLink = `${currentDir}/${this.model.name}`;
+    await this.storage.saveScenario(this.model.uuid, scenario, [speakingNameLink]);
 
     return scenario;
   }
@@ -135,10 +137,10 @@ export class DefaultUnit implements Unit {
     let currentDir = process.cwd();
     while (currentDir !== '/') {
       try {
-        require('fs').accessSync(`${currentDir}/scenarios`);
+        import('fs').then(fs => fs.accessSync(`${currentDir}/scenarios`));
         return currentDir;
       } catch {
-        currentDir = require('path').dirname(currentDir);
+        currentDir = import('path').then(path => path.dirname(currentDir));
       }
     }
     return process.cwd();
