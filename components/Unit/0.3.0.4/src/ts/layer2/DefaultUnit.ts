@@ -90,11 +90,15 @@ export class DefaultUnit implements Unit {
     const speakingNameLink = `${currentDir}/unit-${this.model.uuid.slice(0, 8)}`;
     await this.storage.saveScenario(this.model.uuid, scenario, [speakingNameLink]);
     
-    // Update model with storage path
-    this.model.indexPath = `scenarios/index/${this.model.uuid.slice(0, 5).split('').join('/')}/${this.model.uuid}.scenario.json`;
-    this.model.symlinkPaths = [speakingNameLink];
-
-    return scenario;
+    // Load the saved scenario to get the updated model with correct storage paths
+    try {
+      const savedScenario = await this.storage.loadScenario(this.model.uuid);
+      this.model = savedScenario.model as any; // Update our model with storage-corrected paths
+      return savedScenario; // Return the complete saved scenario with correct paths
+    } catch (error) {
+      console.error('Failed to load saved scenario:', (error as Error).message);
+      return scenario; // Fallback to original scenario
+    }
   }
 
   // Helper methods for Unit model management

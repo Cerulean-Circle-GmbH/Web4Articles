@@ -13,6 +13,21 @@ class UnitCLI {
 
   constructor() {
     this.unit = new DefaultUnit();
+    // Initialize unit with empty scenario (Web4 pattern)
+    const emptyScenario = {
+      ior: { uuid: crypto.randomUUID(), component: 'Unit', version: '0.3.0.4' },
+      owner: '',
+      model: {
+        uuid: crypto.randomUUID(),
+        indexPath: '',
+        symlinkPaths: [],
+        executionCapabilities: ['transform', 'validate', 'process'],
+        storageCapabilities: ['scenarios', 'ld-links'],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    };
+    this.unit.init(emptyScenario);
   }
 
   private showUsage(): void {
