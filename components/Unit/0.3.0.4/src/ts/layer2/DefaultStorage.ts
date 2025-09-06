@@ -66,20 +66,19 @@ export class DefaultStorage implements Storage {
     // Create scenario file path
     const scenarioPath = join(folderPath, `${uuid}.scenario.json`);
 
-    // Add unitIndex tracking to scenario
-    const scenarioWithIndex = {
+    // Update scenario model with storage data - model IS the unitIndex
+    const scenarioWithStorage = {
       ...scenario,
-      unitIndex: {
-        uuid,
+      model: {
+        ...scenario.model,
         indexPath: scenarioPath,
         symlinkPaths,
-        createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       }
     };
 
     // Save scenario to index
-    await fs.writeFile(scenarioPath, JSON.stringify(scenarioWithIndex, null, 2), 'utf-8');
+    await fs.writeFile(scenarioPath, JSON.stringify(scenarioWithStorage, null, 2), 'utf-8');
 
     // Create symbolic links
     for (const linkPath of symlinkPaths) {
