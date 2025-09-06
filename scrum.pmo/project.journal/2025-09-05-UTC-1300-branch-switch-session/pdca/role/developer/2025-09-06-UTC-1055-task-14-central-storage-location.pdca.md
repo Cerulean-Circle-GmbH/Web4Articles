@@ -27,10 +27,10 @@
 - **Central Storage Index:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scenarios/index/) | [scenarios/index/](../../../../scenarios/index/)
 
 ### **QA Decisions**
-- [ ] **Storage Location Verification:** Verify Unit is using proper project root scenarios/index/
-- [ ] **Project Root Detection:** Ensure findProjectRoot correctly detects /workspace
-- [ ] **Central Storage Usage:** Confirm all scenarios go to central storage, not local temp
-- [ ] **All clear, no decisions to make** - Research and analysis required first
+- [ ] **Task 14 Acceptance:** Do you accept Task 14 as complete based on the clean temp folder test results?
+- [ ] **Central Storage Validation:** Do you validate that scenarios saving to `/workspace/scenarios/index/` meets your requirements?
+- [ ] **LD Links Verification:** Do you approve the LD link implementation pointing to central storage?
+- [ ] **Planning Status Update:** Should Task 14 be marked as complete in the Sprint 20 planning?
 
 ### **TRON Feedback (2025-09-06-UTC-1055)**
 ```quote
