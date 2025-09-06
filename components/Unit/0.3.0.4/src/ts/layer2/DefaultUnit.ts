@@ -3,7 +3,7 @@
  * Web4 pattern: Empty constructor + scenario initialization + UnitIndexStorage
  */
 
-import { Unit, UnitInput, UnitOutput } from '../layer3/Unit.interface.js';
+import { Unit } from '../layer3/Unit.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { UnitModel } from '../layer3/UnitModel.interface.js';
 import { DefaultStorage } from './DefaultStorage.js';
@@ -17,11 +17,11 @@ export class DefaultUnit implements Unit {
   constructor() {
     // Empty constructor - Web4 pattern
     this.model = {
-      uuid: crypto.randomUUID(),
-      name: 'default-unit',
-      description: 'Default unit implementation',
-      state: 'uninitialized',
-      capabilities: ['execute'],
+      uuid: crypto.randomUUID(),           // UUIDv4 using crypto.randomUUID() (Decision 1a)
+      indexPath: '',                       // Will be set when stored
+      symlinkPaths: [],                    // LD links tracking
+      executionCapabilities: ['transform', 'validate', 'process'],
+      storageCapabilities: ['scenarios', 'ld-links'],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -32,7 +32,7 @@ export class DefaultUnit implements Unit {
   init(scenario: Scenario): this {
     if (scenario.model) {
       this.model = scenario.model;
-      this.model.state = 'initialized';
+      // No state in UnitIndex model - state is requirement-like attribute
     }
     // Initialize storage with scenario - Web4 pattern
     const storageScenario = {
@@ -44,25 +44,24 @@ export class DefaultUnit implements Unit {
     return this;
   }
 
-  async execute(input: UnitInput): Promise<UnitOutput> {
-    if (this.model.state === 'uninitialized') {
-      throw new Error('Unit not initialized - call init() first');
-    }
-
-    this.model.state = 'executed';
+  // Protocol-less radical OOP methods - no Input/Output constructs
+  transform(data: unknown): unknown {
     this.model.updatedAt = new Date().toISOString();
-
     return {
-      result: {
-        unitName: this.model.name,
-        processed: input.data,
-        timestamp: new Date().toISOString()
-      },
-      metadata: {
-        executionId: crypto.randomUUID(),
-        unitUuid: this.model.uuid
-      }
+      transformed: data,
+      by: this.model.uuid,
+      timestamp: new Date().toISOString()
     };
+  }
+
+  validate(object: any): boolean {
+    this.model.updatedAt = new Date().toISOString();
+    return object !== null && object !== undefined;
+  }
+
+  process(): void {
+    this.model.updatedAt = new Date().toISOString();
+    console.log(`Unit ${this.model.uuid} processed`);
   }
 
   async toScenario(): Promise<Scenario> {
@@ -88,21 +87,29 @@ export class DefaultUnit implements Unit {
 
     // Save to central storage with LD links - create speaking name link in current directory
     const currentDir = process.cwd();
-    const speakingNameLink = `${currentDir}/${this.model.name}`;
+    const speakingNameLink = `${currentDir}/unit-${this.model.uuid.slice(0, 8)}`;
     await this.storage.saveScenario(this.model.uuid, scenario, [speakingNameLink]);
+    
+    // Update model with storage path
+    this.model.indexPath = `scenarios/index/${this.model.uuid.slice(0, 5).split('').join('/')}/${this.model.uuid}.scenario.json`;
+    this.model.symlinkPaths = [speakingNameLink];
 
     return scenario;
   }
 
-  // Helper methods
-  setName(name: string): this {
-    this.model.name = name;
+  // Helper methods for Unit model management
+  addExecutionCapability(capability: string): this {
+    if (!this.model.executionCapabilities.includes(capability)) {
+      this.model.executionCapabilities.push(capability);
+    }
     this.model.updatedAt = new Date().toISOString();
     return this;
   }
 
-  setDescription(description: string): this {
-    this.model.description = description;
+  addStorageCapability(capability: string): this {
+    if (!this.model.storageCapabilities.includes(capability)) {
+      this.model.storageCapabilities.push(capability);
+    }
     this.model.updatedAt = new Date().toISOString();
     return this;
   }

@@ -1,6 +1,7 @@
 /**
- * Unit Interface - Simple atomic execution element
+ * Unit Interface - Protocol-less radical OOP atomic element
  * Web4 principle: Single interface per file
+ * No Input/Output constructs - direct object methods only
  */
 
 import { Scenario } from './Scenario.interface.js';
@@ -12,22 +13,22 @@ export interface Unit {
   init(scenario: Scenario): this;
 
   /**
-   * Execute unit logic
+   * Transform data directly - no Input/Output protocol
    */
-  execute(input: UnitInput): Promise<UnitOutput>;
+  transform(data: unknown): unknown;
+
+  /**
+   * Validate object directly - no Input/Output protocol
+   */
+  validate(object: any): boolean;
+
+  /**
+   * Process unit logic directly - no Input/Output protocol
+   */
+  process(): void;
 
   /**
    * Convert to scenario for hibernation
    */
   toScenario(): Promise<Scenario>;
-}
-
-export interface UnitInput {
-  data: unknown;
-  metadata?: Record<string, unknown>;
-}
-
-export interface UnitOutput {
-  result: unknown;
-  metadata?: Record<string, unknown>;
 }

@@ -42,18 +42,19 @@ class UnitCLI {
   }
 
   private async createUnit(name: string, description: string = ''): Promise<void> {
-    this.unit.setName(name).setDescription(description);
+    // Add execution capability for the named unit
+    this.unit.addExecutionCapability(name);
     
     const scenario = await this.unit.toScenario();
     console.log(`✅ Unit created: ${name}`);
     console.log(`   UUID: ${scenario.ior.uuid}`);
-    console.log(`   Description: ${description}`);
+    console.log(`   Index Path: ${scenario.model.indexPath}`);
   }
 
   private async executeUnit(name: string, inputJson: string): Promise<void> {
     try {
       const input = JSON.parse(inputJson);
-      const result = await this.unit.execute({ data: input });
+      const result = this.unit.transform(input);
       
       console.log(`✅ Unit executed: ${name}`);
       console.log(`   Result:`, JSON.stringify(result, null, 2));
@@ -66,10 +67,11 @@ class UnitCLI {
     const scenario = await this.unit.toScenario();
     
     console.log(`${'\x1b[36m'}Current Unit Information:${'\x1b[0m'}`);
-    console.log(`  Name: ${scenario.model.name}`);
     console.log(`  UUID: ${scenario.ior.uuid}`);
-    console.log(`  State: ${scenario.model.state}`);
-    console.log(`  Capabilities: ${scenario.model.capabilities.join(', ')}`);
+    console.log(`  Index Path: ${scenario.model.indexPath}`);
+    console.log(`  Execution Capabilities: ${scenario.model.executionCapabilities.join(', ')}`);
+    console.log(`  Storage Capabilities: ${scenario.model.storageCapabilities.join(', ')}`);
+    console.log(`  Symlink Paths: ${scenario.model.symlinkPaths.length} links`);
     console.log(`  Created: ${scenario.model.createdAt}`);
     console.log(`  Updated: ${scenario.model.updatedAt}`);
   }
