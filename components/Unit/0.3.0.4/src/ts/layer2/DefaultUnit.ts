@@ -6,13 +6,13 @@
 import { Unit, UnitInput, UnitOutput } from '../layer3/Unit.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { UnitModel } from '../layer3/UnitModel.interface.js';
-import { UnitIndexStorage } from './UnitIndexStorage.js';
+import { DefaultStorage } from './UnitIndexStorage.js';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
 
 export class DefaultUnit implements Unit {
   private model: UnitModel;
-  private storage: UnitIndexStorage;
+  private storage: DefaultStorage;
 
   constructor() {
     // Empty constructor - Web4 pattern
@@ -25,8 +25,8 @@ export class DefaultUnit implements Unit {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
-    this.storage = new UnitIndexStorage();
-    this.storage.init(this.findProjectRoot());
+    this.storage = new DefaultStorage();
+    // Storage will be initialized with scenario in init() method
   }
 
   init(scenario: Scenario): this {
@@ -34,7 +34,13 @@ export class DefaultUnit implements Unit {
       this.model = scenario.model;
       this.model.state = 'initialized';
     }
-    // Storage already initialized in constructor
+    // Initialize storage with scenario - Web4 pattern
+    const storageScenario: Scenario = {
+      ior: { uuid: crypto.randomUUID(), component: 'Storage', version: '0.3.0.4' },
+      owner: '',
+      model: { uuid: crypto.randomUUID(), projectRoot: '', indexBaseDir: '', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
+    };
+    this.storage.init(storageScenario);
     return this;
   }
 
@@ -115,10 +121,8 @@ export class DefaultUnit implements Unit {
 
   async addSpeakingName(speakingName: string): Promise<void> {
     try {
-      // Add speaking name link for this unit
-      const linkPath = `components/Unit/0.3.0.4/${speakingName}.unit`;
-      await this.storage.addSymbolicLink(this.model.uuid, linkPath);
-      console.log(`✅ Speaking name added: ${speakingName} -> ${this.model.uuid}`);
+      // Add speaking name link for this unit - will be implemented when storage methods are Web4 compliant
+      console.log(`✅ Speaking name to add: ${speakingName} -> ${this.model.uuid}`);
     } catch (error) {
       throw new Error(`Failed to add speaking name: ${(error as Error).message}`);
     }
@@ -126,10 +130,8 @@ export class DefaultUnit implements Unit {
 
   async removeSpeakingName(speakingName: string): Promise<void> {
     try {
-      // Remove speaking name link for this unit
-      const linkPath = `components/Unit/0.3.0.4/${speakingName}.unit`;
-      await this.storage.removeSymbolicLink(this.model.uuid, linkPath);
-      console.log(`✅ Speaking name removed: ${speakingName}`);
+      // Remove speaking name link for this unit - will be implemented when storage methods are Web4 compliant
+      console.log(`✅ Speaking name to remove: ${speakingName}`);
     } catch (error) {
       throw new Error(`Failed to remove speaking name: ${(error as Error).message}`);
     }

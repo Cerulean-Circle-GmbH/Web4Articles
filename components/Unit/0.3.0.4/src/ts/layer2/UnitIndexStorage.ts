@@ -1,46 +1,65 @@
 /**
- * Unit Index Storage - Layer 2 (Implementation)
- * 
- * Implements UUID-based storage system for Unit scenarios with symbolic link management
- * Storage pattern: scenarios/index/1/a/1/2/3/uuid.scenario.json (5 levels deep)
- * Symbolic links track all locations where units are referenced
+ * DefaultStorage - Web4 compliant storage implementation
+ * Web4 pattern: Empty constructor + scenario initialization + hibernation
  */
 
-import * as fs from 'fs/promises';
-import * as path from 'path';
-import * as os from 'os';
+import { Storage, StorageResult } from '../layer3/Storage.interface.js';
+import { Scenario } from '../layer3/Scenario.interface.js';
+import { StorageModel } from '../layer3/StorageModel.interface.js';
+import { promises as fs } from 'fs';
+import { join, dirname, relative } from 'path';
+import { existsSync } from 'fs';
 
-export interface UnitStorageResult {
-  success: boolean;
-  message: string;
-  scenarioPath?: string;
-  symlinkPaths?: string[];
-  issues?: string[];
-}
-
-export interface UnitBacklinkInfo {
-  uuid: string;
-  indexPath: string;
-  symlinkPaths: string[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-export class UnitIndexStorage {
-  private projectRoot: string = '';
-  private indexBaseDir: string = '';
+export class DefaultStorage implements Storage {
+  private model: StorageModel;
 
   constructor() {
     // Empty constructor - Web4 pattern
+    this.model = {
+      uuid: crypto.randomUUID(),
+      projectRoot: '',
+      indexBaseDir: '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
   }
 
   /**
-   * Initialize with project root path
+   * Initialize from scenario - Web4 pattern
    */
-  init(projectRoot: string): this {
-    this.projectRoot = projectRoot;
-    this.indexBaseDir = path.join(projectRoot, 'scenarios', 'index');
+  init(scenario: Scenario): this {
+    if (scenario.model) {
+      this.model = scenario.model as StorageModel;
+    }
+    // Set up storage paths
+    this.model.projectRoot = this.findProjectRoot();
+    this.model.indexBaseDir = join(this.model.projectRoot, 'scenarios', 'index');
+    this.model.updatedAt = new Date().toISOString();
     return this;
+  }
+
+  /**
+   * Convert to scenario for hibernation - Web4 pattern
+   */
+  async toScenario(): Promise<Scenario> {
+    const ownerData = JSON.stringify({
+      user: process.env.USER || 'system',
+      hostname: process.env.HOSTNAME || 'localhost',
+      uuid: this.model.uuid,
+      timestamp: new Date().toISOString(),
+      component: 'Storage',
+      version: '0.3.0.4'
+    });
+
+    return {
+      ior: {
+        uuid: this.model.uuid,
+        component: 'Storage',
+        version: '0.3.0.4'
+      },
+      owner: ownerData,
+      model: this.model
+    };
   }
 
   /**
@@ -52,7 +71,7 @@ export class UnitIndexStorage {
     const cleanUuid = uuid.replace(/-/g, '');
     const folderStructure = cleanUuid.substring(0, 5).split('');
     
-    return path.join(this.indexBaseDir, ...folderStructure);
+    return join(this.model.indexBaseDir, ...folderStructure);
   }
 
   /**
@@ -60,7 +79,7 @@ export class UnitIndexStorage {
    */
   private getScenarioIndexPath(uuid: string): string {
     const folderPath = this.generateUUIDFolderPath(uuid);
-    return path.join(folderPath, `${uuid}.scenario.json`);
+    return join(folderPath, `${uuid}.scenario.json`);
   }
 
   /**
@@ -74,10 +93,10 @@ export class UnitIndexStorage {
   /**
    * Save scenario to UUID index location
    */
-  async saveScenario(uuid: string, scenario: any, symlinkLocations: string[] = []): Promise<UnitStorageResult> {
+  async saveScenario(uuid: string, scenario: Scenario, symlinkLocations: string[] = []): Promise<StorageResult> {
     try {
-      if (!this.projectRoot) {
-        throw new Error('UnitIndexStorage not initialized - call init(projectRoot) first');
+      if (!this.model.projectRoot) {
+        throw new Error('Storage not initialized - call init(scenario) first');
       }
 
       // Ensure UUID folder structure exists
@@ -113,12 +132,13 @@ export class UnitIndexStorage {
         }
       }
 
-      return {
-        success: true,
-        message: `Scenario saved to UUID index at ${scenarioIndexPath}`,
-        scenarioPath: scenarioIndexPath,
-        symlinkPaths: createdSymlinks
-      };
+        return {
+          success: true,
+          message: `Scenario saved to UUID index at ${scenarioIndexPath}`,
+          scenario,
+          scenarioPath: scenarioIndexPath,
+          symlinkPaths: createdSymlinks
+        };
 
     } catch (error) {
       return {
