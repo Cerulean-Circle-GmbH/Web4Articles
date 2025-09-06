@@ -61,7 +61,7 @@
 ### **Mistake 1: Missing Brackets on Local Path**
 **❌ Wrong:**
 ```markdown
-[GitHub](url) | path/to/file
+[GitHub](url) | [§/path/to/file](../../../workspace/path/to/file)
 ```
 
 **✅ Correct:**
@@ -88,8 +88,8 @@
 
 **❌ Before:**
 ```markdown
-- **PDCA Document:** [GitHub](url) | scrum.pmo/project.journal/path/to/file
-- **Session Directory:** [GitHub](url) | scrum.pmo/project.journal/path/to/dir/
+[GitHub](url) | [§/scrum.pmo/project.journal/path/to/file](../../../workspace/scrum.pmo/project.journal/path/to/file)
+[GitHub](url) | [§/scrum.pmo/project.journal/path/to/dir/](../../../workspace/scrum.pmo/project.journal/path/to/dir)
 ```
 
 **✅ After:**
@@ -176,4 +176,3 @@
 ---
 
 **📋 Status:** Learning Complete | **🎯 Next:** Apply dual link standard to all future documentation  
-**✅ Compliance:** Requirement e8535c4e-591d-4955-9874-6a853545e970 fully understood and implemented
