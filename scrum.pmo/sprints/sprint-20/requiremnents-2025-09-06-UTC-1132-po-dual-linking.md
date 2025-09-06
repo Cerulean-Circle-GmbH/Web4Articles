@@ -66,6 +66,29 @@ This document tracks the requirements mapping and implementation status for Spri
   - **Status:** ✅ UUID Replaced, Dual Links Validated
   - **Implementation:** Semantic version system with structured version objects
 
+#### Object Instance & Scenario Architecture Requirements
+
+- [ ] **Web4 Scenario-First Development** [requirement:uuid:571814f6-1493-4384-8104-edb3d6eb38fd]
+  - **GitHub:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/spec/requirements.md/571814f6-1493-4384-8104-edb3d6eb38fd.requirement.md) | [§/spec/requirements.md/571814f6-1493-4384-8104-edb3d6eb38fd.requirement.md](../../../spec/requirements.md/571814f6-1493-4384-8104-edb3d6eb38fd.requirement.md)
+  - **Linked to:** [Task 7.1: PO - Object Instance Framework Requirement Linking](./task-7.1-po-object-instance-framework-linking.md)
+  - **Sprint 20 EPIC:** 7-Layer EPIC 7 - Object Instance & Scenario Architecture
+  - **Status:** 🔄 NEWLY ADDED, Dual Links Validated
+  - **Implementation:** Object instances as hibernatable scenarios with complete state preservation
+
+- [ ] **Web4 Empty Constructor Principle** [requirement:uuid:d3190ece-605e-45a4-b78f-93ab5be2fa60]
+  - **GitHub:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/spec/requirements.md/d3190ece-605e-45a4-b78f-93ab5be2fa60.requirement.md) | [§/spec/requirements.md/d3190ece-605e-45a4-b78f-93ab5be2fa60.requirement.md](../../../spec/requirements.md/d3190ece-605e-45a4-b78f-93ab5be2fa60.requirement.md)
+  - **Linked to:** [Task 7.2: PO - Scenario System Implementation Requirement Linking](./task-7.2-po-scenario-system-implementation-linking.md)
+  - **Sprint 20 EPIC:** 7-Layer EPIC 7 - Object Instance & Scenario Architecture
+  - **Status:** 🔄 NEWLY ADDED, Dual Links Validated
+  - **Implementation:** Empty constructors enable universal serialization and scenario management
+
+- [ ] **Web4 IOR Interoperable Object Reference Architecture** [requirement:uuid:69f580d9-7520-4558-9e83-a9827ec8afd0]
+  - **GitHub:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/spec/requirements.md/69f580d9-7520-4558-9e83-a9827ec8afd0.requirement.md) | [§/spec/requirements.md/69f580d9-7520-4558-9e83-a9827ec8afd0.requirement.md](../../../spec/requirements.md/69f580d9-7520-4558-9e83-a9827ec8afd0.requirement.md)
+  - **Linked to:** [Task 7.3: PO - Web4 Object Integration Requirement Linking](./task-7.3-po-web4-object-integration-linking.md)
+  - **Sprint 20 EPIC:** 7-Layer EPIC 7 - Object Instance & Scenario Architecture
+  - **Status:** 🔄 NEWLY ADDED, Dual Links Validated
+  - **Implementation:** Interoperable object references for distributed object networking
+
 ### Remaining Requirements Scope
 
 #### Identified Placeholder UUIDs (~23 remaining)
