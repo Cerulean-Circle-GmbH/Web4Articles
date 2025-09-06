@@ -43,15 +43,21 @@ From TRON Decision: "anything can be a unit, that should be unique and terminall
 Enable any element in the Web4 ecosystem to be uniquely identified as a unit with complete traceability to its source code definition, establishing terminal identification (uni-t) as the foundation for all Web4 component operations.
 
 ## Steps
-1. Enhance UnitModel interface with name, origin, and definition attributes
-2. Implement git format URL source references with line/column positions
-3. Add origin reference pointing to source file with line number and column start/end
-4. Add definition attribute with URL source format and start/end character positions
-5. Implement backward compatibility for existing scenarios missing these attributes
-6. Add CLI warnings for missing name, origin, or definition information
-7. Plan migration strategy for next build version requiring complete model information
-8. Update Unit creation and initialization to handle new attributes
-9. Validate git format URL references and source tracking
+1. Create Web4 compliant interface files (one interface per file):
+   - `GitTextIOR.interface.ts` - Git Text IOR interface
+   - `GitPositioning.interface.ts` - Git positioning data interface  
+   - `GitTextIORScenario.interface.ts` - GitTextIOR scenario interface
+2. Create implementation class:
+   - `DefaultGitTextIOR.ts` - Implementation class for git URL handling
+3. Enhance UnitModel interface with name, origin, and definition attributes
+4. Implement git format URL source references with IOR text format: `ior:git:text:giturl`
+5. Add origin reference with line/column positioning (#L42:15-67:23)
+6. Add definition attribute with character positioning (#L1250-1890)
+7. Implement backward compatibility for existing scenarios missing these attributes
+8. Add CLI warnings for missing name, origin, or definition information
+9. Plan migration strategy for next build version requiring complete model information
+10. Update Unit creation and initialization to handle new attributes
+11. Validate git format URL references and source tracking
 
 ## Requirements
 - UnitModel must include name attribute for unit identification
@@ -168,6 +174,8 @@ Enable any element in the Web4 ecosystem to be uniquely identified as a unit wit
   - [ ] Format: `ior:git:text:giturl` with GitHub URL format
   - [ ] Example: `ior:git:text:http://github.com:port/user/repo/blob/branch/file.ts#L42:15-67:23`
   - [ ] Usage: GitTextIOR to be used in origin attribute for precise source tracking
+  - [ ] Web4 Compliance: Separate interface files (GitTextIOR.interface.ts, GitPositioning.interface.ts, GitTextIORScenario.interface.ts)
+  - [ ] Resolution: Create three separate interface files following "one interface per file" principle
 
 ## Dependencies
 - Must be implemented before continuing with any other planned tasks

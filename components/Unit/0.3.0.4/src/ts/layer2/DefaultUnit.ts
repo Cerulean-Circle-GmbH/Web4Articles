@@ -18,9 +18,6 @@ export class DefaultUnit implements Unit {
     // Empty constructor - Web4 pattern
     this.model = {
       uuid: crypto.randomUUID(),           // UUIDv4 using crypto.randomUUID() (Decision 1a)
-      name: '',                            // Unit name for terminal identification (uni-t)
-      origin: '',                          // Git Text IOR format with line/column positions
-      definition: '',                      // Git Text IOR format with character positions
       indexPath: '',                       // Will be set when stored
       symlinkPaths: [],                    // LD links tracking
       namedLinks: [],                      // Named links with location and filename
@@ -39,8 +36,7 @@ export class DefaultUnit implements Unit {
       // No state in UnitIndex model - state is requirement-like attribute
     }
     
-    // Check for missing terminal identity and show warnings (backward compatibility)
-    this.showTerminalIdentityWarning();
+    // Backward compatibility check will be implemented in Task 18
     
     // Initialize storage with scenario - Web4 pattern
     const storageScenario = {
@@ -156,46 +152,7 @@ export class DefaultUnit implements Unit {
     return this.model;
   }
 
-  // Terminal Identity (uni-t) methods
-  setTerminalIdentity(name: string, origin: string, definition: string): this {
-    this.model.name = name;
-    this.model.origin = origin;
-    this.model.definition = definition;
-    this.model.updatedAt = new Date().toISOString();
-    return this;
-  }
-
-  validateTerminalIdentity(): { isComplete: boolean; missing: string[] } {
-    const missing: string[] = [];
-    
-    if (!this.model.name || this.model.name.trim() === '') {
-      missing.push('name');
-    }
-    if (!this.model.origin || this.model.origin.trim() === '') {
-      missing.push('origin');
-    }
-    if (!this.model.definition || this.model.definition.trim() === '') {
-      missing.push('definition');
-    }
-
-    return {
-      isComplete: missing.length === 0,
-      missing
-    };
-  }
-
-  showTerminalIdentityWarning(): void {
-    const validation = this.validateTerminalIdentity();
-    if (!validation.isComplete) {
-      console.warn(`⚠️  Warning: Unit '${this.model.uuid}' missing terminal identity information:`);
-      validation.missing.forEach(field => {
-        console.warn(`   - ${field}: not specified`);
-      });
-      console.warn('');
-      console.warn('   Next build version will require migration method for missing model info.');
-      console.warn('   Please update unit with complete terminal identity (uni-t) attributes.');
-    }
-  }
+  // Terminal Identity (uni-t) methods will be implemented in Task 18
 
   addStorageCapability(capability: string): this {
     if (!this.model.storageCapabilities.includes(capability)) {
