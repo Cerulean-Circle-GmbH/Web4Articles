@@ -1,0 +1,28 @@
+{
+  "ior": {
+    "uuid": "17ee17ec-2a5d-4aca-ba8e-500d0ab38c39",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"17ee17ec-2a5d-4aca-ba8e-500d0ab38c39\",\"timestamp\":\"2025-09-06T12:03:45.826Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "17ee17ec-2a5d-4aca-ba8e-500d0ab38c39",
+    "name": "test-unit",
+    "description": "Test unit with Web4 compliant storage and LD links",
+    "state": "uninitialized",
+    "capabilities": [
+      "execute"
+    ],
+    "createdAt": "2025-09-06T12:03:45.825Z",
+    "updatedAt": "2025-09-06T12:03:45.826Z"
+  },
+  "unitIndex": {
+    "uuid": "17ee17ec-2a5d-4aca-ba8e-500d0ab38c39",
+    "indexPath": "1/7/e/e/1/17ee17ec-2a5d-4aca-ba8e-500d0ab38c39.scenario.json",
+    "symlinkPaths": [
+      "/workspace/temp/test-unit"
+    ],
+    "createdAt": "2025-09-06T12:03:45.828Z",
+    "updatedAt": "2025-09-06T12:03:45.828Z"
+  }
+}

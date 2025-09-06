@@ -6,7 +6,7 @@
 import { Unit, UnitInput, UnitOutput } from '../layer3/Unit.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { UnitModel } from '../layer3/UnitModel.interface.js';
-import { DefaultStorage } from './UnitIndexStorage.js';
+import { DefaultStorage } from './DefaultStorage.js';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
 
@@ -35,7 +35,7 @@ export class DefaultUnit implements Unit {
       this.model.state = 'initialized';
     }
     // Initialize storage with scenario - Web4 pattern
-    const storageScenario: Scenario = {
+    const storageScenario = {
       ior: { uuid: crypto.randomUUID(), component: 'Storage', version: '0.3.0.4' },
       owner: '',
       model: { uuid: crypto.randomUUID(), projectRoot: '', indexBaseDir: '', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
