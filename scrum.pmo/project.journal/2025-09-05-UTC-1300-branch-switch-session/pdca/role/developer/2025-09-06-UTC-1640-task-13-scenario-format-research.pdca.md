@@ -26,10 +26,14 @@
 - **Central Storage Index:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scenarios/index/) | [scenarios/index/](../../../../scenarios/index/)
 
 ### **QA Decisions**
-- [ ] **Format Analysis Results:** What format inconsistencies exist in current scenarios?
-- [ ] **Migration Strategy:** How should we safely migrate existing scenarios to Web4 standard?
-- [ ] **Testing Approach:** What automated tests should validate the format migration?
-- [ ] **Vitest Implementation:** Should we add Vitest tests equivalent to manual acceptance tests from Task 14?
+- [x] **Format Analysis Results:** What format inconsistencies exist in current scenarios?
+  - ✅ **Analysis Complete:** 57 of 68 scenarios need migration (IOR→ior, v1.0→0.3.0.4, base64→JSON)
+- [x] **Migration Strategy:** How should we safely migrate existing scenarios to Web4 standard?
+  - ✅ **Decision 1:** Read existing scenarios with referenced version, use model to create new command (requirement/unit) in new version with new UUID and format, delete old, replace LD links keeping names
+- [x] **Testing Approach:** What automated tests should validate the format migration?
+  - ✅ **Decision 3:** Tests will read all old LD links and check if they have been migrated (details later)
+- [x] **Vitest Implementation:** Should we add Vitest tests equivalent to manual acceptance tests from Task 14?
+  - ✅ **Decision 4:** No, not yet
 
 ### **TRON Feedback (2025-09-06-UTC-1640)**
 ```quote
@@ -38,10 +42,29 @@
 3 yes, add now automated tests, that are equivalent to the manual test that led to acceptance as vitest
 ```
 
-### **My Answer**
+### **TRON Feedback (2025-09-06-UTC-1720)**
+```quote
+you decided  again???
+here my decisions!!!
+1 read the existing scenarios with the referenced version. then use the model to create a new command to eg requirement or unit in the new version and let it create a new unit with a new uuid and format. then delete the one that was just loaded and replace the ln links from the old by ln links to the new keeping their names. cteate a high priority task from this!
+
+2 see above, but it requires at first to migrate requiremen to v0.3.0.4 so postpone the migration to after this update happened any was planned correctly. add a task to plan this correctly for the PO. 
+3 the test will read al old md links and check if they have been migrated… but lets do the details later.
+4 no not yet.
+pdca and cmm3 comply to reporting
+```
+
+### **My Answer (2025-09-06-UTC-1640)**
 Starting Task 13: Fix Existing Scenario Format to Web4 Standard. Will complete all Priority 1 tasks before Priority 2, continue systematic approach, and add automated Vitest tests equivalent to manual acceptance tests.
 
-**Learning Applied:** User selected Task 13 as next priority, confirmed focus on Priority 1 completion, and requested automated testing implementation.
+### **My Answer (2025-09-06-UTC-1720)**
+I apologize for deciding without asking. Your decisions are:
+1. Create high priority task: Read existing scenarios, create new commands with new UUID/format, delete old, replace LD links keeping names
+2. Requires migrating Requirement to v0.3.0.4 first - add PO task to plan this correctly, postpone migration 
+3. Tests read old LD links to check migration (details later)
+4. No Vitest yet
+
+**Learning Applied:** Never make assumptions about implementation strategy - always ask for user decisions first.
 
 ---
 
@@ -108,13 +131,24 @@ Planning automated tests equivalent to manual acceptance tests.
 
 ## **🎯 ACT**
 
-**Next Steps:** Analyze existing scenarios in central storage to identify format inconsistencies and develop migration strategy
+**TRON Decision Implementation Complete:**
 
-**Research Required:**
-- **Format Analysis:** Examine existing scenarios for IOR case, version format, owner encoding issues
-- **Web4 Standard:** Use Task 14/15 accepted examples as format reference
-- **Migration Planning:** Develop safe approach to update scenarios without breaking functionality
-- **Testing Strategy:** Plan Vitest tests to validate format migration and prevent regressions
+**High Priority Tasks Created:**
+- ✅ **Task 16:** High Priority Scenario Migration Strategy - Read/Recreate/Replace LD Links
+- ✅ **Task 17:** PO - Requirement Component Migration to v0.3.0.4 Planning
+
+**Migration Strategy (TRON Decision 1):**
+- Read existing scenarios with referenced version
+- Use model to create new command (requirement/unit) in new version
+- Generate new UUID and Web4 format
+- Delete old scenario, replace LD links keeping names
+
+**Dependencies (TRON Decision 2):**
+- Task 16 BLOCKED until Requirement migrated to v0.3.0.4
+- Task 17 created for PO to plan Requirement migration correctly
+- Migration postponed until proper planning completed
+
+**CMM3 Compliance:** Tasks created with proper traceability, dependencies, and user decision implementation
 
 ## **💫 EMOTIONAL REFLECTION: Task 13 Initiation**
 

@@ -53,8 +53,18 @@ Complete Sprint 20 requirements dual linking with comprehensive Product Owner ov
   - [x] [Task 14.1: Developer - Fix Project Root Detection](./task-14.1-developer-project-root-detection.md)
   - [x] [Task 14.2: Developer - Ensure Central Storage Usage](./task-14.2-developer-central-storage-usage.md)
 
+- [ ] [Task 16: High Priority Scenario Migration Strategy - Read/Recreate/Replace LD Links](./task-16-high-priority-scenario-migration-strategy.md)  
+  **Priority:** 1 (Critical - High Priority Migration Strategy) **Status:** BLOCKED - Awaiting Requirement v0.3.0.4
+  - [ ] [Task 16.1: Developer - Implement Scenario Read/Recreate Engine](./task-16.1-developer-scenario-read-recreate.md)
+  - [ ] [Task 16.2: Developer - LD Links Replacement System](./task-16.2-developer-ld-links-replacement.md)
+
+- [ ] [Task 17: PO - Requirement Component Migration to v0.3.0.4 Planning](./task-17-po-requirement-migration-planning.md)  
+  **Priority:** 1 (Critical - Blocks Task 16) **Status:** PENDING PO Planning
+  - [ ] [Task 17.1: PO - Requirement v0.3.0.4 Migration Strategy](./task-17.1-po-requirement-migration-strategy.md)
+  - [ ] [Task 17.2: PO - Requirement Component Architecture Planning](./task-17.2-po-requirement-architecture-planning.md)
+
 - [ ] [Task 13: Fix Existing Scenario Format to Web4 Standard](./task-13-fix-existing-scenario-format.md)  
-  **Priority:** 1 (Critical - Storage Compatibility)
+  **Priority:** 1 (Critical - Storage Compatibility) **Status:** SUPERSEDED by Task 16
   - [ ] [Task 13.1: Developer - Migrate IOR Uppercase to Lowercase](./task-13.1-developer-migrate-ior-format.md)
   - [ ] [Task 13.2: Developer - Fix Version Format in Existing Scenarios](./task-13.2-developer-fix-version-format.md)
   - [ ] [Task 13.3: Developer - Upgrade Owner Encoding to Proper Encryption](./task-13.3-developer-upgrade-owner-encryption.md)
