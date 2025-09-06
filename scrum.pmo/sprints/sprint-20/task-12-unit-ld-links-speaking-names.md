@@ -89,6 +89,10 @@ Enable human-readable names (like "user-alice" or "server-main") to map to uniqu
   - [ ] Issue: "we are in radical oop most modern typescript. read the tech stack again . there was never room for a js require() … add this feedback quoted to the task as my previous feedback."
   - [ ] Resolution: Fix require() usage with modern ESM imports, use dynamic imports and proper TypeScript patterns
   - [ ] Example: Replace require('fs') with import('fs') and fix all CJS violations
+- [ ] [2025-09-06-UTC-0930] TRON QA Feedback collected.
+  - [ ] Issue: "do not fix or bypass std esm modules with shit. just do proper modern typescript and nothing else!!!"
+  - [ ] Resolution: Use proper modern TypeScript ESM patterns only, no require(), no bypasses, no shit
+  - [ ] Example: Standard ESM imports and modern TypeScript patterns throughout
   
 ### **QA Section Response to TRON Feedback:**
 
