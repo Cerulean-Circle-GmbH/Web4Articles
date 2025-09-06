@@ -123,7 +123,47 @@ Verifying scenarios are saved to proper central location.
 - ✅ All unit operations use central storage consistently
 - ✅ No scenarios created outside central storage location
 
-**Final Test Scenario:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scenarios/index/a/a/0/1/f/aa01f2c2-5eba-4cf5-8f1e-e5847e55a6b4.scenario.json) | [scenarios/index/a/a/0/1/f/aa01f2c2-5eba-4cf5-8f1e-e5847e55a6b4.scenario.json](../../../../scenarios/index/a/a/0/1/f/aa01f2c2-5eba-4cf5-8f1e-e5847e55a6b4.scenario.json)
+**TRON QA Feedback Implementation (✅ COMPLETE)**
+
+**QA Feedback (2025-09-06-UTC-1540):**
+```quote
+the comnand
+unit create „name" „text" 
+should result in name being the link filename normalized to name.unit as filename. consequently you have to add to the array of links the link location and the filename as named linns json wit 2 attributes. fix that. add it to the tasks qa quotes and answer there
+```
+
+**Fixes Implemented:**
+- ✅ **LD Link Naming:** Changed from `unit-{uuid-prefix}` to `{name}.unit` format
+- ✅ **Named Links Array:** Added `namedLinks` with location and filename attributes
+- ✅ **Interface Updates:** Added `NamedLink` interface with proper TypeScript types
+- ✅ **CLI Integration:** Updated to pass name parameter and display named link
+
+**Final Test Results:**
+```
+✅ Unit created: final-test
+   UUID: bba6f0f1-a403-4f2c-b873-9d562324cdd1
+   Index Path: /workspace/scenarios/index/b/b/a/6/f/bba6f0f1-a403-4f2c-b873-9d562324cdd1.scenario.json
+   Named Link: final-test.unit
+```
+
+**Test Result Files:**
+- **LD Link Created:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/temp/final-test.unit) | [temp/final-test.unit](../../../../temp/final-test.unit)
+- **Final Test Scenario:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scenarios/index/b/b/a/6/f/bba6f0f1-a403-4f2c-b873-9d562324cdd1.scenario.json) | [scenarios/index/b/b/a/6/f/bba6f0f1-a403-4f2c-b873-9d562324cdd1.scenario.json](../../../../scenarios/index/b/b/a/6/f/bba6f0f1-a403-4f2c-b873-9d562324cdd1.scenario.json)
+
+**Named Links Array Validation:**
+```json
+"namedLinks": [
+  {
+    "location": "/workspace/temp/final-test.unit",
+    "filename": "final-test.unit"
+  }
+]
+```
+
+**Updated Implementation Files:**
+- **UnitModel Interface:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Unit/0.3.0.4/src/ts/layer3/UnitModel.interface.ts) | [components/Unit/0.3.0.4/src/ts/layer3/UnitModel.interface.ts](../../../../components/Unit/0.3.0.4/src/ts/layer3/UnitModel.interface.ts)
+- **DefaultUnit Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Unit/0.3.0.4/src/ts/layer2/DefaultUnit.ts) | [components/Unit/0.3.0.4/src/ts/layer2/DefaultUnit.ts](../../../../components/Unit/0.3.0.4/src/ts/layer2/DefaultUnit.ts)
+- **UnitCLI Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Unit/0.3.0.4/src/ts/layer5/UnitCLI.ts) | [components/Unit/0.3.0.4/src/ts/layer5/UnitCLI.ts](../../../../components/Unit/0.3.0.4/src/ts/layer5/UnitCLI.ts)
 
 ---
 
