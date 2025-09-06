@@ -7,6 +7,8 @@ import { Unit, UnitInput, UnitOutput } from '../layer3/Unit.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { UnitModel } from '../layer3/UnitModel.interface.js';
 import { UnitIndexStorage } from './UnitIndexStorage.js';
+import { existsSync } from 'fs';
+import { dirname } from 'path';
 
 export class DefaultUnit implements Unit {
   private model: UnitModel;
@@ -135,12 +137,16 @@ export class DefaultUnit implements Unit {
 
   private findProjectRoot(): string {
     let currentDir = process.cwd();
+    
     while (currentDir !== '/') {
       try {
-        import('fs').then(fs => fs.accessSync(`${currentDir}/scenarios`));
-        return currentDir;
+        // Modern ESM approach - use existsSync from fs import
+        if (existsSync(`${currentDir}/scenarios`)) {
+          return currentDir;
+        }
+        currentDir = dirname(currentDir);
       } catch {
-        currentDir = import('path').then(path => path.dirname(currentDir));
+        currentDir = dirname(currentDir);
       }
     }
     return process.cwd();
