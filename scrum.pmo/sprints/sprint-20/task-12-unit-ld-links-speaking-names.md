@@ -85,3 +85,30 @@ Enable human-readable names (like "user-alice" or "server-main") to map to uniqu
   - [ ] Issue: "i expect a ln link in the temp folder and a new unit in the index as uuid.scenario.json and the ln link pointing to it with the file name test-unit as you named it in your testcase. cannot see anything like that."
   - [ ] Resolution: Implement proper LD links creation in temp folder pointing to scenarios/index/ storage
   - [ ] Example: temp/test-unit -> scenarios/index/a/b/c/d/e/[uuid].scenario.json
+- [ ] [2025-09-06-UTC-0925] TRON QA Feedback collected.
+  - [ ] Issue: "we are in radical oop most modern typescript. read the tech stack again . there was never room for a js require() … add this feedback quoted to the task as my previous feedback."
+  - [ ] Resolution: Fix require() usage with modern ESM imports, use dynamic imports and proper TypeScript patterns
+  - [ ] Example: Replace require('fs') with import('fs') and fix all CJS violations
+  
+### **QA Section Response to TRON Feedback:**
+
+**Issue 1 - Missing LD Links and Storage Integration:**
+The Unit component is not properly creating LD links in temp folder or storing scenarios in index because:
+1. Storage integration incomplete - UnitIndexStorage not properly initialized
+2. Speaking name links not created in current directory (temp folder)
+3. Scenarios not saved to scenarios/index/ with proper UUID structure
+
+**Resolution with Dual Links:**
+- **Fix DefaultUnit.ts:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Unit/0.3.0.4/src/ts/layer2/DefaultUnit.ts) | [components/Unit/0.3.0.4/src/ts/layer2/DefaultUnit.ts](../../../../components/Unit/0.3.0.4/src/ts/layer2/DefaultUnit.ts)
+- **Implement proper scenario saving:** Create actual UUID-based storage in scenarios/index/
+- **Create LD links:** Generate symbolic links from temp/test-unit to scenarios/index/[uuid].scenario.json
+
+**Issue 2 - require() CJS Violation in Modern TypeScript:**
+The code uses require() which violates modern ESM TypeScript standards per tech stack:
+- **Tech Stack Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/docs/tech-stack.md) | [docs/tech-stack.md](../../../../docs/tech-stack.md)
+- **Violation:** "No legacy CJS baggage - Full support for import.meta.url, top-level await, and all modern JS features"
+
+**Resolution with Dual Links:**
+- **Fix findProjectRoot method:** Replace require() with dynamic import() or fs promises
+- **Use ESM patterns:** Modern TypeScript with proper import statements
+- **Remove CJS violations:** Eliminate all require() usage throughout implementation
