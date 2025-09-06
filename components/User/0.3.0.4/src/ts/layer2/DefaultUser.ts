@@ -3,7 +3,9 @@
  * Web4 pattern: Empty constructor + scenario initialization
  */
 
-import { User, OwnerParams, Scenario, UserModel } from '../layer3/User.interface.js';
+import { User, OwnerParams } from '../layer3/User.interface.js';
+import { Scenario } from '../layer3/Scenario.interface.js';
+import { UserModel } from '../layer3/UserModel.interface.js';
 
 export class DefaultUser implements User {
   private data: UserModel;
@@ -27,22 +29,32 @@ export class DefaultUser implements User {
   }
 
   async generateOwnerData(params: OwnerParams): Promise<string> {
-    // Generate simple owner data
+    // Generate owner data following ONCE pattern
     return JSON.stringify({
       user: params.user || 'system',
       hostname: params.hostname || 'localhost',
-      timestamp: new Date().toISOString()
+      uuid: params.uuid || this.data.uuid,
+      timestamp: new Date().toISOString(),
+      component: 'User',
+      version: '0.3.0.4'
     });
   }
 
-  toScenario(): Scenario {
+  async toScenario(): Promise<Scenario> {
+    // Generate proper owner data for scenario
+    const ownerData = await this.generateOwnerData({
+      user: this.data.username,
+      hostname: this.data.hostname,
+      uuid: this.data.uuid
+    });
+
     return {
       ior: {
         uuid: this.data.uuid,
         component: 'User',
         version: '0.3.0.4'
       },
-      owner: '',
+      owner: ownerData,
       model: this.data
     };
   }
