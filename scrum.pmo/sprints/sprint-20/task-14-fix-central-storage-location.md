@@ -1,0 +1,67 @@
+[Back to Planning Sprint 20](./planning-2025-09-06-UTC-0730.md)
+
+# Task 14: Fix UnitIndex Central Storage Location
+[task:uuid:m3n4o5p6-q7r8-9012-mnop-q34567890123]
+
+## Naming Conventions
+- Tasks: `task-<number>-<short-description>.md`
+- Subtasks: `task-<number>.<subnumber>-<role>-<short-description>.md` (e.g., `task-14.1-developer-central-storage-fix.md`)
+- Subtasks must always indicate the affected role in the filename.
+- Subtasks must be ordered to avoid blocking dependencies. If a blocking dependency is unavoidable, the Scrum Master is responsible for removing the impediment by reordering or splitting tasks.
+
+## Status
+- [ ] Planned
+- [ ] In Progress
+  - [ ] refinement
+  - [ ] creating test cases
+  - [ ] implementing
+  - [ ] testing
+- [ ] QA Review
+- [ ] Done
+
+## Traceability
+- Add `[task:uuid:m3n4o5p6-q7r8-9012-mnop-q34567890123]` to this task.
+- Source: UnitIndex Requirements Analysis - Central Storage Location Issues
+```
+  - up
+    - [UnitIndex Analysis](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-1005-unitindex-requirements-analysis-task-planning.pdca.md)
+```
+```
+  - down
+    - [Task 14.1: Developer - Fix Project Root Detection](./task-14.1-developer-project-root-detection.md)
+    - [Task 14.2: Developer - Ensure Central Storage Usage](./task-14.2-developer-central-storage-usage.md)
+```
+
+## Task Description
+Fix UnitIndex storage to use central project root scenarios/index/ location instead of creating scenarios in temp folders or other incorrect locations.
+
+## Context
+Current implementation creates scenarios in temp/1/7/e/e/1/ instead of central /workspace/scenarios/index/1/7/e/e/1/. This violates the unitIndex requirement for central storage with proper project root detection.
+
+## Intention
+Ensure all unit scenarios are stored in the central scenarios/index/ location as required by unitIndex specification, enabling proper ecosystem-wide storage consistency and LD links tracking.
+
+## Steps
+1. Fix project root detection in DefaultStorage
+2. Ensure scenarios always saved to /workspace/scenarios/index/
+3. Test that LD links point to central storage location
+4. Validate storage location consistency across all unit operations
+
+## Requirements
+- All scenarios must be stored in project root scenarios/index/
+- LD links must point to central storage location
+- Project root detection must be reliable and consistent
+- No scenarios created in temp folders or other locations
+
+## Acceptance Criteria
+- [ ] Scenarios stored in /workspace/scenarios/index/1/7/e/e/1/ (not temp)
+- [ ] LD links point to central storage location
+- [ ] Project root detection works reliably
+- [ ] All unit operations use central storage consistently
+- [ ] No scenarios created outside central storage location
+
+## QA Audit & User Feedback
+- [ ] [2025-09-06-UTC-1005] QA review pending.
+  - [ ] Issue: Scenarios created in wrong location violate central storage requirement
+  - [ ] Resolution: Fix project root detection and ensure central storage usage
+  - [ ] Example: All scenarios in /workspace/scenarios/index/ with proper LD links

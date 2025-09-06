@@ -16,8 +16,8 @@
   - [x] creating test cases
   - [x] implementing
   - [x] testing
-- [ ] QA Review
-- [ ] Done
+- [x] QA Review
+- [x] Done
 
 ## Traceability
 - Add `[task:uuid:k1l2m3n4-o5p6-7890-klmn-o12345678901]` to this task.
