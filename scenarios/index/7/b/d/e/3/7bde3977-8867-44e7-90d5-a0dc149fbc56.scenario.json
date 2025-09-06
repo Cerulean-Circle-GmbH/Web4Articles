@@ -9,7 +9,7 @@
     "uuid": "7bde3977-8867-44e7-90d5-a0dc149fbc56",
     "name": "ONCE",
     "origin": "ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/../scrum.pmo/sprints/sprint-20/Web4TLA.Specification.dialogue.md#L2039:130-2039:134",
-    "definition": "",
+    "definition": "ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/../scrum.pmo/sprints/sprint-20/Web4TLA.Specification.dialogue.md#L2035:1-2041:120",
     "indexPath": "/workspace/scenarios/index/7/b/d/e/3/7bde3977-8867-44e7-90d5-a0dc149fbc56.scenario.json",
     "symlinkPaths": [
       "/workspace/temp/ONCE.unit"
@@ -30,6 +30,6 @@
       "ld-links"
     ],
     "createdAt": "2025-09-06T21:15:40.349Z",
-    "updatedAt": "2025-09-06T21:15:40.369Z"
+    "updatedAt": "2025-09-06T21:23:03.778Z"
   }
 }
