@@ -30,5 +30,5 @@ export interface Unit {
   /**
    * Convert to scenario for hibernation
    */
-  toScenario(): Promise<Scenario>;
+  toScenario(name?: string): Promise<Scenario>;
 }

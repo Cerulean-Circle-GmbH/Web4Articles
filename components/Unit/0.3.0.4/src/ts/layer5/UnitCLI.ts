@@ -21,6 +21,7 @@ class UnitCLI {
         uuid: crypto.randomUUID(),
         indexPath: '',
         symlinkPaths: [],
+        namedLinks: [],
         executionCapabilities: ['transform', 'validate', 'process'],
         storageCapabilities: ['scenarios', 'ld-links'],
         createdAt: new Date().toISOString(),
@@ -60,10 +61,11 @@ class UnitCLI {
     // Add execution capability for the named unit
     this.unit.addExecutionCapability(name);
     
-    const scenario = await this.unit.toScenario();
+    const scenario = await this.unit.toScenario(name);
     console.log(`✅ Unit created: ${name}`);
     console.log(`   UUID: ${scenario.ior.uuid}`);
     console.log(`   Index Path: ${scenario.model.indexPath}`);
+    console.log(`   Named Link: ${name}.unit`);
   }
 
   private async executeUnit(name: string, inputJson: string): Promise<void> {

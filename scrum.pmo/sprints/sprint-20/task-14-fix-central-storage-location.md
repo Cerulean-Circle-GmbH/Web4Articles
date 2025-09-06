@@ -65,3 +65,16 @@ Ensure all unit scenarios are stored in the central scenarios/index/ location as
   - [ ] Issue: Scenarios created in wrong location violate central storage requirement
   - [ ] Resolution: Fix project root detection and ensure central storage usage
   - [ ] Example: All scenarios in /workspace/scenarios/index/ with proper LD links
+
+- [ ] [2025-09-06-UTC-1540] TRON QA Feedback - LD Link Naming Convention Issue
+  ```quote
+  the comnand
+  unit create „name" „text" 
+  should result in name being the link filename normalized to name.unit as filename. consequently you have to add to the array of links the link location and the filename as named linns json wit 2 attributes. fix that. add it to the tasks qa quotes and answer there
+  ```
+  - [x] Issue: LD link filename should be `name.unit` instead of `unit-{uuid-prefix}`
+  - [x] Issue: Need named links JSON with 2 attributes (location and filename)
+  - [x] Resolution: Updated DefaultUnit.toScenario() to use normalized name for link filename
+  - [x] Resolution: Added namedLinks array to scenario model with location and filename attributes
+  - [x] Example: `unit create final-test "description"` → link filename: `final-test.unit`
+  - [x] Validation: namedLinks array contains `{"location": "/workspace/temp/final-test.unit", "filename": "final-test.unit"}`

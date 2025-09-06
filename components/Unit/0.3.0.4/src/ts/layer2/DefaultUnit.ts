@@ -20,6 +20,7 @@ export class DefaultUnit implements Unit {
       uuid: crypto.randomUUID(),           // UUIDv4 using crypto.randomUUID() (Decision 1a)
       indexPath: '',                       // Will be set when stored
       symlinkPaths: [],                    // LD links tracking
+      namedLinks: [],                      // Named links with location and filename
       executionCapabilities: ['transform', 'validate', 'process'],
       storageCapabilities: ['scenarios', 'ld-links'],
       createdAt: new Date().toISOString(),
@@ -64,7 +65,7 @@ export class DefaultUnit implements Unit {
     console.log(`Unit ${this.model.uuid} processed`);
   }
 
-  async toScenario(): Promise<Scenario> {
+  async toScenario(name?: string): Promise<Scenario> {
     // Generate proper owner data
     const ownerData = JSON.stringify({
       user: process.env.USER || 'system',
@@ -85,10 +86,22 @@ export class DefaultUnit implements Unit {
       model: this.model
     };
 
-    // Save to central storage with LD links - create speaking name link in current directory
+    // Save to central storage with LD links - create named link in current directory
     const currentDir = process.cwd();
-    const speakingNameLink = `${currentDir}/unit-${this.model.uuid.slice(0, 8)}`;
-    await this.storage.saveScenario(this.model.uuid, scenario, [speakingNameLink]);
+    const linkFilename = name ? `${name}.unit` : `unit-${this.model.uuid.slice(0, 8)}`;
+    const namedLink = `${currentDir}/${linkFilename}`;
+    
+    // Add to namedLinks array if name provided
+    if (name) {
+      this.model.namedLinks.push({
+        location: namedLink,
+        filename: linkFilename
+      });
+      // Update scenario with namedLinks before saving
+      scenario.model = this.model;
+    }
+    
+    await this.storage.saveScenario(this.model.uuid, scenario, [namedLink]);
     
     // Load the saved scenario to get the updated model with correct storage paths
     try {

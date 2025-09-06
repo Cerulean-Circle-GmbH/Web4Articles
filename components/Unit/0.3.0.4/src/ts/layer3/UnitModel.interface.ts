@@ -8,8 +8,14 @@ export interface UnitModel {
   uuid: string;                    // UUIDv4 format using crypto.randomUUID()
   indexPath: string;               // scenarios/index/path to this unit
   symlinkPaths: string[];          // LD links tracking
+  namedLinks: NamedLink[];         // Named links with location and filename
   executionCapabilities: string[]; // What unit can execute
   storageCapabilities: string[];   // Storage features
   createdAt: string;
   updatedAt: string;
+}
+
+export interface NamedLink {
+  location: string;                // Full path to the link file
+  filename: string;                // Link filename (e.g., "test-unit.unit")
 }
