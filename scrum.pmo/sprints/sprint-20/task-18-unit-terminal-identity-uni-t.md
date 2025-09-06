@@ -44,11 +44,12 @@ Enable any element in the Web4 ecosystem to be uniquely identified as a unit wit
 
 ## Steps
 1. Create Web4 compliant interface files (one interface per file):
-   - `GitTextIOR.interface.ts` - Git Text IOR interface
+   - `IOR.interface.ts` - Base IOR interface (if not already exists)
+   - `GitTextIOR.interface.ts` - Git Text IOR interface (extends IOR)
    - `GitPositioning.interface.ts` - Git positioning data interface  
    - `GitTextIORScenario.interface.ts` - GitTextIOR scenario interface
 2. Create implementation class:
-   - `DefaultGitTextIOR.ts` - Implementation class for git URL handling
+   - `GitTextIOR.ts` - Implementation class for git URL handling (not DefaultGitTextIOR)
 3. Enhance UnitModel interface with name, origin, and definition attributes
 4. Implement git format URL source references with IOR text format: `ior:git:text:giturl`
 5. Add origin reference with line/column positioning (#L42:15-67:23)
@@ -169,13 +170,20 @@ Enable any element in the Web4 ecosystem to be uniquely identified as a unit wit
   ```quote
   very good. create extra class and interface in the unit layers for handling these urls. have IOR as the interface and GitTextIOR as the implementation class with ior text format: „ior:git:text:[giturl](http://github.com:port/…)" rhe brackets are placeholders no md text format. to be used innthe origin attribute.
   ```
+
+- [ ] [2025-09-06-UTC-1830] TRON Correction - GitTextIOR Architecture
+  ```quote
+  excellent. as it is already a specialized IOR. its not DefaultIOR nor DefaultGitTextIOR but  GitTextIOR extends IOR. fix that and the the spec is good and accepted.
+  ```
   - [ ] Issue: Need specialized interface and class for handling git URL references
-  - [ ] Resolution: Create IOR interface and GitTextIOR implementation class for git URL handling
+  - [ ] Resolution: Create base IOR interface and specialized GitTextIOR interface (extends IOR) with implementation class
+  - [ ] Architecture: GitTextIOR extends IOR (not DefaultGitTextIOR)
+  - [ ] Implementation Class: GitTextIOR.ts (not DefaultGitTextIOR.ts)
   - [ ] Format: `ior:git:text:giturl` with GitHub URL format
   - [ ] Example: `ior:git:text:http://github.com:port/user/repo/blob/branch/file.ts#L42:15-67:23`
   - [ ] Usage: GitTextIOR to be used in origin attribute for precise source tracking
-  - [ ] Web4 Compliance: Separate interface files (GitTextIOR.interface.ts, GitPositioning.interface.ts, GitTextIORScenario.interface.ts)
-  - [ ] Resolution: Create three separate interface files following "one interface per file" principle
+  - [ ] Web4 Compliance: Separate interface files (IOR.interface.ts, GitTextIOR.interface.ts, GitPositioning.interface.ts, GitTextIORScenario.interface.ts)
+  - [ ] Resolution: Create four separate interface files following "one interface per file" principle
 
 ## Dependencies
 - Must be implemented before continuing with any other planned tasks
