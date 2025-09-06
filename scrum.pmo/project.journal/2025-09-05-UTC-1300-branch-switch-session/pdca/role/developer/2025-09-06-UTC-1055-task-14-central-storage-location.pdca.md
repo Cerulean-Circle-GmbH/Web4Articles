@@ -27,10 +27,10 @@
 - **Central Storage Index:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scenarios/index/) | [scenarios/index/](../../../../scenarios/index/)
 
 ### **QA Decisions**
-- [ ] **Task 14 Final Acceptance:** Do you accept Task 14 as complete including the QA feedback implementation (LD link naming convention with namedLinks array)?
-- [ ] **Central Storage Validation:** Do you validate that scenarios saving to `/workspace/scenarios/index/` meets your requirements?
-- [ ] **LD Links Naming Verification:** Do you approve the `{name}.unit` filename format and namedLinks JSON array implementation?
-- [ ] **Planning Status Update:** Should Task 14 be marked as complete in the Sprint 20 planning?
+- [x] **Task 14 Final Acceptance:** Do you accept Task 14 as complete including the QA feedback implementation (LD link naming convention with namedLinks array)?
+- [x] **Central Storage Validation:** Do you validate that scenarios saving to `/workspace/scenarios/index/` meets your requirements?
+- [x] **LD Links Naming Verification:** Do you approve the `{name}.unit` filename format and namedLinks JSON array implementation?
+- [x] **Planning Status Update:** Should Task 14 be marked as complete in the Sprint 20 planning?
 - [ ] **Next Task Decision:** What should be the next priority task to work on?
 
 ### **TRON Feedback (2025-09-06-UTC-1055)**

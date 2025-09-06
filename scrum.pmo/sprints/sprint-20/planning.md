@@ -48,10 +48,10 @@ Complete Sprint 20 requirements dual linking with comprehensive Product Owner ov
 
 ### **PRIORITY 1: CRITICAL COMPLIANCE (PENDING 📋)**
 
-- [ ] [Task 14: Fix UnitIndex Central Storage Location](./task-14-fix-central-storage-location.md)  
-  **Priority:** 1 (Critical - UnitIndex Central Storage)
-  - [ ] [Task 14.1: Developer - Fix Project Root Detection](./task-14.1-developer-project-root-detection.md)
-  - [ ] [Task 14.2: Developer - Ensure Central Storage Usage](./task-14.2-developer-central-storage-usage.md)
+- [x] [Task 14: Fix UnitIndex Central Storage Location](./task-14-fix-central-storage-location.md)  
+  **Priority:** 1 (Critical - UnitIndex Central Storage) **Status:** ✅ DONE - QA Validated
+  - [x] [Task 14.1: Developer - Fix Project Root Detection](./task-14.1-developer-project-root-detection.md)
+  - [x] [Task 14.2: Developer - Ensure Central Storage Usage](./task-14.2-developer-central-storage-usage.md)
 
 - [ ] [Task 13: Fix Existing Scenario Format to Web4 Standard](./task-13-fix-existing-scenario-format.md)  
   **Priority:** 1 (Critical - Storage Compatibility)
