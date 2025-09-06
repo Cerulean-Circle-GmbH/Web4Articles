@@ -33,24 +33,45 @@
 ```
 
 ## Task Description
-Implement proper Unit model separation where unitIndex becomes the actual Unit model containing storage capabilities, and Requirement models reference Units via IOR or complete scenario with UUIDv4 compliance.
+Implement proper Unit model separation following accepted example where model field contains all unitIndex data (no separate unitIndex field), and Requirement models reference Units via IOR or complete scenario with UUIDv4 compliance.
 
 ## Context
-Current Unit model contains Requirement-like attributes (name, description) while unitIndex contains actual Unit capabilities (indexPath, symlinkPaths). This violates proper model separation where Unit model should focus on storage/execution capabilities and Requirement models should handle specification/tracking.
+Current implementation violates accepted example by having both "model" and "unitIndex" fields. Accepted example shows single "model" field containing indexPath, symlinkPaths, and capabilities. Current structure creates redundant data and non-compliance.
 
 ## Intention
-Establish clean model architecture separation where:
-1. **Unit Model (unitIndex):** Contains indexPath, symlinkPaths, executionCapabilities, storageCapabilities
-2. **Requirement Model:** Contains name, description, status, and references Unit via IOR or complete scenario
-3. **UUIDv4 Compliance:** All UUIDs follow proper UUIDv4 format standard
+Establish clean model architecture separation following accepted example exactly:
+
+**Accepted Example Structure:**
+```json
+{
+  "ior": { "uuid": "unit-123", "component": "Unit", "version": "0.3.0.4" },
+  "owner": "...",
+  "model": {
+    "uuid": "unit-123",
+    "indexPath": "/workspace/scenarios/index/u/n/i/t/1/unit-123.scenario.json",
+    "symlinkPaths": ["/workspace/components/SomeComponent/unit-reference"],
+    "createdAt": "2025-06-06T...",
+    "updatedAt": "2025-06-06T...",
+    "executionCapabilities": ["transform", "validate"],
+    "storageCapabilities": ["scenarios", "ld-links"]
+  }
+}
+```
+
+**Key Requirements:**
+1. **Single Model Field:** Remove separate unitIndex field completely
+2. **Model IS UnitIndex:** Model contains indexPath, symlinkPaths, capabilities
+3. **No Redundancy:** UUID only in IOR, storage data only in model
+4. **UUIDv4 Compliance:** crypto.randomUUID() for all UUID generation
 
 ## Steps
-1. Replace current UnitModel with proper UnitIndex model structure
-2. Update Unit component to use unitIndex as actual model
-3. Create Requirement model with Unit reference capability
-4. Implement UUIDv4 compliance for all UUID generation
-5. Test model separation with Unit and Requirement interaction
-6. Validate clean architecture separation
+1. **Remove unitIndex field:** Eliminate separate unitIndex field from scenarios completely
+2. **Update UnitModel interface:** Model contains indexPath, symlinkPaths, executionCapabilities, storageCapabilities
+3. **Fix DefaultStorage:** Remove unitIndex field creation, put all data in model
+4. **Update DefaultUnit:** Model IS the unitIndex, no separate unitIndex tracking
+5. **UUIDv4 Implementation:** Use crypto.randomUUID() for all UUID generation
+6. **Test compliance:** Validate scenario structure matches accepted example exactly
+7. **Central storage:** Ensure scenarios stored in /workspace/scenarios/index/ not temp folders
 
 ## Requirements
 - UnitIndex becomes the actual Unit model with storage capabilities
@@ -61,14 +82,15 @@ Establish clean model architecture separation where:
 - Web4 compliance maintained throughout model separation
 
 ## Acceptance Criteria
-- [ ] UnitModel replaced with proper UnitIndex model structure
-- [ ] Unit model contains: indexPath, symlinkPaths, executionCapabilities, storageCapabilities
-- [ ] Requirement model contains: name, description, status, unit reference (IOR or scenario)
-- [ ] All UUIDs generated using UUIDv4 format standard
-- [ ] Unit component uses unitIndex as actual model
-- [ ] Requirement components reference Units via IOR or complete scenario
-- [ ] Clean architecture separation between Unit and Requirement models
-- [ ] Web4 compliance maintained with scenario initialization and hibernation
+- [ ] **Scenario Structure Compliance:** Matches accepted example exactly with single model field
+- [ ] **No unitIndex field:** Separate unitIndex field completely removed from scenarios
+- [ ] **Model IS unitIndex:** Model contains indexPath, symlinkPaths, executionCapabilities, storageCapabilities
+- [ ] **UUIDv4 Compliance:** All UUIDs generated using crypto.randomUUID()
+- [ ] **No Redundancy:** UUID only in IOR, no duplication in model
+- [ ] **Central Storage:** All scenarios stored in /workspace/scenarios/index/ not temp folders
+- [ ] **LD Links Working:** Symbolic links point to central storage location
+- [ ] **Exact Structure Match:** Implementation produces scenarios identical to accepted example format
+- [ ] **Web4 Compliance:** Empty constructor, scenario initialization, toScenario() hibernation
 
 ## QA Audit & User Feedback
 - [ ] [2025-09-06-UTC-1015] QA review pending.
