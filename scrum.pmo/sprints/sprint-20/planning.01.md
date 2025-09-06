@@ -25,7 +25,7 @@
 **Priority:** CRITICAL  
 **Semantic Focus:** WHY/WHAT/HOW structured documentation  
 
-#### **[requirement:uuid:a1b2c3d4-e5f6-7890-abcd-ef1234567890] - Apobetic Prose System**
+#### **[requirement:uuid:11197f0f-c193-49af-98ee-d546595aed5c] - Apobetic Prose System**
 **As a** developer understanding requirements  
 **I want** structured prose with semantic indexing  
 **So that** the WHY behind every feature is traceable and ontologically clear
@@ -51,7 +51,7 @@
 **Priority:** CRITICAL  
 **Traceability Focus:** Requirement to implementation mapping  
 
-#### **[requirement:uuid:e5f6g7h8-i9j0-1234-efgh-i56789012345] - Requirement Object Framework**
+#### **[requirement:uuid:3b22e65c-d9e7-4910-8dda-9d96195035d5] - Requirement Object Framework**
 **As a** requirement manager  
 **I want** structured objects with precise source linking  
 **So that** every requirement traces to exact line/column in source documents
@@ -73,7 +73,7 @@
 **Priority:** CRITICAL  
 **Regression Focus:** Deterministic input→output validation  
 
-#### **[requirement:uuid:i9j0k1l2-m3n4-5678-ijkl-m90123456789] - Regression Test Object System**
+#### **[requirement:uuid:23206b2c-2f93-434f-961a-26d115695c1b] - Regression Test Object System**
 **As a** test engineer preventing regression hell  
 **I want** deterministic black box test cases  
 **So that** working features remain stable across versions without exposing implementation
@@ -112,7 +112,7 @@
 **Priority:** HIGH  
 **System Focus:** Semantic functionality with layer separation  
 
-#### **[requirement:uuid:n4o5p6q7-r8s9-0123-nopq-r45678901234] - 5-Layer Component Structure**
+#### **[requirement:uuid:1e56cc1c-5db4-43c4-ac16-b7567f1d8ff2] - 5-Layer Component Structure**
 **As a** system architect designing maintainable code  
 **I want** clear layer separation with defined responsibilities  
 **So that** components hide implementation while providing deterministic interfaces
@@ -147,7 +147,7 @@
 **Priority:** HIGH  
 **Evolution Focus:** CMM Level 4 iterative perfection  
 
-#### **[requirement:uuid:p6q7r8s9-t0u1-2345-pqrs-t67890123456] - Semantic Version System**
+#### **[requirement:uuid:642c1856-929a-483d-ada0-0b801e8dc2d0] - Semantic Version System**
 **As a** release manager tracking component evolution  
 **I want** structured version objects with regression test compliance  
 **So that** versions can be systematically promoted through testing to production

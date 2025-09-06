@@ -32,7 +32,7 @@
 **Priority:** CRITICAL - The Last Architecture Foundation  
 **Revolutionary Insight:** MDA plane curves through service contracts until complete sphere formation  
 
-#### **[requirement:uuid:a1a2a3a4-b5b6-7890-abcd-ef1234567890] - MDA Sphere Formation Engine**
+#### **[requirement:uuid:eb65538c-918e-4fa7-aab0-5d28ccdb56b4] - MDA Sphere Formation Engine**
 **As a** MDA architect implementing the last architecture  
 **I want** complete MDA sphere with lower pole (onion star), upper pole (service domain), and equator (format hell)  
 **So that** finite science of information is achieved with semantic consolidation
@@ -67,7 +67,7 @@
 **Priority:** CRITICAL - Layer Correction Implementation  
 **Revolutionary Correction:** Business processes = EAM Layer 4 (NOT Layer 5), with Git-based transaction chains  
 
-#### **[requirement:uuid:c3c4c5c6-d7d8-9012-cdef-g34567890123] - EAM 5-Layer Corrected Architecture**
+#### **[requirement:uuid:c2a30e29-3d03-49c8-86ba-500e81d8a390] - EAM 5-Layer Corrected Architecture**
 **As a** enterprise architect implementing correct EAM layers  
 **I want** proper 5-layer EAM with business processes in Layer 4  
 **So that** enterprise architecture aligns with correct architectural understanding
@@ -143,7 +143,7 @@ class DefaultPDCA implements PDCA {
 **Priority:** CRITICAL - Universal Communication Foundation  
 **Perfect Pun:** ONCE and FOR ALL - technical meaning + linguistic perfection  
 
-#### **[requirement:uuid:i9i0i1i2-d3d4-5678-ijkl-m90123456789] - ONCE Kernel Foundation**
+#### **[requirement:uuid:15685fae-ff10-45ba-ae26-ad6b8f215d8e] - ONCE Kernel Foundation**
 **As a** universal platform architect  
 **I want** ONCE (Object Network Communication Engine) as singleton Web4ORB  
 **So that** all systems can communicate through universal object network
