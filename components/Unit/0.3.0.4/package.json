@@ -8,13 +8,21 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist/",
-    "test": "vitest"
+    "test": "vitest",
+    "test:run": "vitest run"
   },
-  "keywords": ["web4", "unit", "atomic", "storage"],
+  "keywords": [
+    "web4",
+    "unit",
+    "atomic",
+    "storage"
+  ],
   "author": "Web4 Architecture Team",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vitest/ui": "^3.2.4",
     "typescript": "^5.0.0",
-    "@types/node": "^20.0.0"
+    "vitest": "^3.2.4"
   }
 }

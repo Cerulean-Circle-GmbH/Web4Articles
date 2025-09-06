@@ -26,12 +26,14 @@
 - **Task 14 Complete:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scrum.pmo/sprints/sprint-20/task-14-fix-central-storage-location.md) | [task-14-fix-central-storage-location.md](../../../sprints/sprint-20/task-14-fix-central-storage-location.md)
 
 ### **QA Decisions**
-- [ ] **Next Priority Task Selection:** Which Priority 1 task should be tackled next?
-  - a) Task 13: Fix Existing Scenario Format to Web4 Standard
+- [x] **Next Priority Task Selection:** Which Priority 1 task should be tackled next?
+  - a) ✅ Task 13: Fix Existing Scenario Format to Web4 Standard
   - b) Task 15.2: Update Requirement Model with Unit References (remaining subtask)
   - c) Different priority task based on current needs
-- [ ] **Task Focus Strategy:** Should we complete all Priority 1 tasks before moving to Priority 2?
-- [ ] **Implementation Approach:** Continue with same systematic approach (research → implement → test → validate)?
+- [x] **Task Focus Strategy:** Should we complete all Priority 1 tasks before moving to Priority 2?
+  - ✅ Yes - Complete all Priority 1 tasks before moving to Priority 2
+- [x] **Implementation Approach:** Continue with same systematic approach (research → implement → test → validate)?
+  - ✅ Yes, add automated tests equivalent to manual acceptance tests using Vitest
 
 ### **TRON Feedback (2025-09-06-UTC-1635)**
 ```quote

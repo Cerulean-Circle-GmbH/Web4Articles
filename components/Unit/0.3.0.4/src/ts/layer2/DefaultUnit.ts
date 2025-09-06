@@ -144,6 +144,11 @@ export class DefaultUnit implements Unit {
     return this;
   }
 
+  // Testing helper method
+  getModel(): UnitModel {
+    return this.model;
+  }
+
   addStorageCapability(capability: string): this {
     if (!this.model.storageCapabilities.includes(capability)) {
       this.model.storageCapabilities.push(capability);
