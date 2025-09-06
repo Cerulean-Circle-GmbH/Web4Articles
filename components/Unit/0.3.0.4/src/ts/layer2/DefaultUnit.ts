@@ -156,6 +156,135 @@ export class DefaultUnit implements Unit {
     return this.model;
   }
 
+  // Advanced CLI Commands (Task 19) - Direct method naming convention v0.1.2.2
+  async link(uuid: string, filename: string): Promise<void> {
+    try {
+      // Create new LD link to existing unit in different location
+      const currentDir = process.cwd();
+      const linkPath = `${currentDir}/${filename}.unit`;
+      
+      // Load existing unit scenario
+      const existingScenario = await this.storage.loadScenario(uuid);
+      
+      // Create new LD link pointing to existing scenario
+      const scenarioPath = existingScenario.model.indexPath;
+      await this.storage.saveScenario(uuid, existingScenario, [linkPath]);
+      
+      console.log(`✅ Link created: ${filename}.unit → ${uuid}`);
+      console.log(`   Target: ${scenarioPath}`);
+    } catch (error) {
+      console.error(`Failed to create link: ${(error as Error).message}`);
+    }
+  }
+
+  async list(uuid: string): Promise<void> {
+    try {
+      // Load unit scenario and list all LD links
+      const scenario = await this.storage.loadScenario(uuid);
+      
+      console.log(`LD Links for Unit ${uuid}:`);
+      if (scenario.model.symlinkPaths && scenario.model.symlinkPaths.length > 0) {
+        scenario.model.symlinkPaths.forEach(linkPath => {
+          console.log(`  - ${linkPath}`);
+        });
+      } else {
+        console.log('  No LD links found');
+      }
+      
+      if (scenario.model.namedLinks && scenario.model.namedLinks.length > 0) {
+        console.log(`Named Links:`);
+        scenario.model.namedLinks.forEach(namedLink => {
+          console.log(`  - ${namedLink.filename} (${namedLink.location})`);
+        });
+      }
+    } catch (error) {
+      console.error(`Failed to list links: ${(error as Error).message}`);
+    }
+  }
+
+  async from(filename: string, startPos: string, endPos: string): Promise<void> {
+    try {
+      // Create unit from file text with extracted name and origin
+      const { promises: fs } = await import('fs');
+      const { GitTextIOR } = await import('./GitTextIOR.js');
+      
+      // Read file content
+      const fileContent = await fs.readFile(filename, 'utf-8');
+      const lines = fileContent.split('\n');
+      
+      // Parse positions (line:column format)
+      const [startLine, startCol] = startPos.split(':').map(Number);
+      const [endLine, endCol] = endPos.split(':').map(Number);
+      
+      // Extract text from specified range
+      let extractedText = '';
+      for (let i = startLine - 1; i <= endLine - 1; i++) {
+        if (i === startLine - 1 && i === endLine - 1) {
+          // Same line
+          extractedText = lines[i].substring(startCol - 1, endCol);
+        } else if (i === startLine - 1) {
+          // Start line
+          extractedText += lines[i].substring(startCol - 1) + '\n';
+        } else if (i === endLine - 1) {
+          // End line
+          extractedText += lines[i].substring(0, endCol);
+        } else {
+          // Middle lines
+          extractedText += lines[i] + '\n';
+        }
+      }
+      
+      // Extract unit name from text (first word or identifier)
+      const nameMatch = extractedText.match(/\b[A-Za-z][A-Za-z0-9_]*\b/);
+      const unitName = nameMatch ? nameMatch[0] : 'ExtractedUnit';
+      
+      // Create GitTextIOR for origin
+      const gitIOR = new GitTextIOR();
+      const gitUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${filename}#L${startPos}-${endPos}`;
+      const originIOR = gitIOR.parse(gitUrl);
+      
+      // Set terminal identity
+      this.setTerminalIdentity(unitName, originIOR, '');
+      
+      // Create unit scenario
+      const scenario = await this.toScenario(unitName);
+      
+      console.log(`✅ Unit created from source: ${unitName}`);
+      console.log(`   UUID: ${scenario.ior.uuid}`);
+      console.log(`   Origin: ${originIOR}`);
+      console.log(`   Extracted from: ${filename} (${startPos}-${endPos})`);
+    } catch (error) {
+      console.error(`Failed to create unit from source: ${(error as Error).message}`);
+    }
+  }
+
+  async definition(uuid: string, filename: string, startPos: string, endPos: string): Promise<void> {
+    try {
+      // Add definition source reference to existing unit
+      const { GitTextIOR } = await import('./GitTextIOR.js');
+      
+      // Create GitTextIOR for definition
+      const gitIOR = new GitTextIOR();
+      const gitUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${filename}#L${startPos}-${endPos}`;
+      const definitionIOR = gitIOR.parse(gitUrl);
+      
+      // Load existing unit
+      const existingScenario = await this.storage.loadScenario(uuid);
+      
+      // Update definition
+      existingScenario.model.definition = definitionIOR;
+      
+      // Save updated scenario
+      await this.storage.saveScenario(uuid, existingScenario, existingScenario.model.symlinkPaths);
+      
+      console.log(`✅ Definition added to unit: ${uuid}`);
+      console.log(`   Definition: ${definitionIOR}`);
+      console.log(`   Source: ${filename} (${startPos}-${endPos})`);
+    } catch (error) {
+      console.error(`Failed to add definition: ${(error as Error).message}`);
+    }
+  }
+
   // Terminal Identity (uni-t) methods
   setTerminalIdentity(name: string, origin: string, definition: string): this {
     this.model.name = name;

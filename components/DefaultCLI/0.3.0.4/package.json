@@ -1,0 +1,23 @@
+{
+  "name": "@web4/defaultcli",
+  "version": "0.3.0.4",
+  "description": "Web4 DefaultCLI - Dependency-free base component for CLI functionality",
+  "type": "module",
+  "main": "dist/ts/layer2/DefaultCLI.js",
+  "types": "dist/ts/layer2/DefaultCLI.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist/"
+  },
+  "keywords": [
+    "web4",
+    "cli",
+    "base-component",
+    "dependency-free"
+  ],
+  "author": "Web4 Ecosystem",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

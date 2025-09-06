@@ -1,0 +1,35 @@
+{
+  "ior": {
+    "uuid": "98b8576e-d61d-4584-9c1f-d679ee1c70f2",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"98b8576e-d61d-4584-9c1f-d679ee1c70f2\",\"timestamp\":\"2025-09-06T21:09:00.626Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "98b8576e-d61d-4584-9c1f-d679ee1c70f2",
+    "name": "Advanced",
+    "origin": "ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/../components/Unit/0.3.0.4/src/ts/layer2/DefaultUnit.ts#L159:3-163:4",
+    "definition": "ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/../components/Unit/0.3.0.4/src/ts/layer2/DefaultUnit.ts#L1250-1890",
+    "indexPath": "/workspace/scenarios/index/9/8/b/8/5/98b8576e-d61d-4584-9c1f-d679ee1c70f2.scenario.json",
+    "symlinkPaths": [
+      "/workspace/components/Test/advanced-reference.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../scenarios/index/9/8/b/8/5/98b8576e-d61d-4584-9c1f-d679ee1c70f2.scenario.json",
+        "filename": "Advanced.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-06T21:09:00.620Z",
+    "updatedAt": "2025-09-06T21:09:30.380Z"
+  }
+}

@@ -35,28 +35,50 @@ class UnitCLI {
   }
 
   private showUsage(): void {
-    const cyan = '\x1b[36m';
-    const yellow = '\x1b[33m';
-    const green = '\x1b[32m';
-    const bold = '\x1b[1m';
-    const reset = '\x1b[0m';
-    
-    console.log(`${bold}${cyan}Web4 Unit CLI Tool v0.3.0.4${reset} ${green}- Atomic Execution Elements${reset}`);
+    console.log('Web4 Unit CLI Tool v0.3.0.4 - Atomic Execution Elements');
     console.log('');
-    console.log(`${bold}Usage:${reset}`);
-    console.log(`  ${cyan}unit${reset} create ${yellow}<name>${reset} [description]              ${green}# Create unit${reset}`);
-    console.log(`  ${cyan}unit${reset} execute ${yellow}<name>${reset} ${yellow}<input>${reset}                 ${green}# Execute unit${reset}`);
-    console.log(`  ${cyan}unit${reset} info                                    ${green}# Show unit info${reset}`);
-    console.log(`  ${cyan}unit${reset} help                                    ${green}# Show this help${reset}`);
+    console.log('Usage:');
+    console.log('  unit create <name> [description]                # Create unit');
+    console.log('  unit link <uuid> <filename>                     # Create link to existing unit');
+    console.log('  unit list <uuid>                                # List all links to unit');
+    console.log('  unit from <filename> <start:line,column> <end:line,column>  # Create unit from source');
+    console.log('  unit definition <uuid> <filename> <start:line,column> <end:line,column>  # Add definition');
+    console.log('  unit execute <name> <input>                     # Execute unit');
+    console.log('  unit info                                       # Show unit info');
+    console.log('  unit help                                       # Show this help');
     console.log('');
-    console.log(`${bold}Examples:${reset}`);
-    console.log(`  ${cyan}unit${reset} create test-unit "Test unit description"  ${green}# Create unit${reset}`);
-    console.log(`  ${cyan}unit${reset} execute test-unit '{"data": "test"}'     ${green}# Execute unit${reset}`);
-    console.log(`  ${cyan}unit${reset} info                                     ${green}# Show details${reset}`);
+    console.log('Commands:');
+    console.log('  create       Create new unit with name and optional description');
+    console.log('  link         Create new LD link to existing unit in different location');
+    console.log('  list         List all LD links pointing to specific unit UUID');
+    console.log('  from         Create unit from file text with extracted name and origin');
+    console.log('  definition   Add definition source reference to existing unit');
+    console.log('  execute      Execute unit with input data');
+    console.log('  info         Display current unit information and scenario');
+    console.log('  help         Show this help message');
     console.log('');
-    console.log(`${bold}Web4 Integration:${reset}`);
-    console.log(`  Unit operates as atomic Web4 element with scenario storage.`);
-    console.log(`  All units use central UUID storage with LD links tracking.`);
+    console.log('Parameters:');
+    console.log('  <name>        Unit name for identification (required for create)');
+    console.log('  <uuid>        Unit UUID for link operations (8+ characters accepted)');
+    console.log('  <filename>    File name for links or source references');
+    console.log('  <start:line,column>  Start position in file (line:column format)');
+    console.log('  <end:line,column>    End position in file (line:column format)');
+    console.log('  <description> Optional description for unit creation');
+    console.log('  <input>       JSON input data for unit execution');
+    console.log('');
+    console.log('Examples:');
+    console.log('  unit create test-unit "Test description"        # Create unit');
+    console.log('  unit link a1b2c3d4-e5f6 auth-validator         # Create link to existing unit');
+    console.log('  unit list a1b2c3d4-e5f6                        # List all links to unit');
+    console.log('  unit from UserValidator.ts 42:15 67:23         # Create from source');
+    console.log('  unit definition a1b2c3d4-e5f6 UserValidator.ts 1250 1890  # Add definition');
+    console.log('  unit execute test-unit \'{"data": "test"}\'      # Execute unit');
+    console.log('  unit info                                      # Show details');
+    console.log('');
+    console.log('Web4 Integration:');
+    console.log('  Unit operates as atomic Web4 element with terminal identification (uni-t).');
+    console.log('  All units use central UUID storage with LD links tracking and source traceability.');
+    console.log('  GitTextIOR format enables complete source reference with ior:git:text:giturl.');
     console.log('');
   }
 
@@ -123,6 +145,34 @@ class UnitCLI {
 
         case 'info':
           await this.showInfo();
+          break;
+
+        case 'link':
+          if (commandArgs.length < 2) {
+            throw new Error('UUID and filename required for link command');
+          }
+          await this.unit.link(commandArgs[0], commandArgs[1]);
+          break;
+
+        case 'list':
+          if (commandArgs.length < 1) {
+            throw new Error('UUID required for list command');
+          }
+          await this.unit.list(commandArgs[0]);
+          break;
+
+        case 'from':
+          if (commandArgs.length < 3) {
+            throw new Error('Filename, start position, and end position required for from command');
+          }
+          await this.unit.from(commandArgs[0], commandArgs[1], commandArgs[2]);
+          break;
+
+        case 'definition':
+          if (commandArgs.length < 4) {
+            throw new Error('UUID, filename, start position, and end position required for definition command');
+          }
+          await this.unit.definition(commandArgs[0], commandArgs[1], commandArgs[2], commandArgs[3]);
           break;
 
         case 'help':
