@@ -32,10 +32,12 @@
 **Priority:** CRITICAL - The Last Architecture Foundation  
 **Revolutionary Insight:** MDA plane curves through service contracts until complete sphere formation  
 
-#### **[requirement:uuid:a1a2a3a4-b5b6-7890-abcd-ef1234567890] - MDA Sphere Formation Engine**
+#### **[[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/eb65538c-918e-4fa7-aab0-5d28ccdb56b4.requirement.md) | [§/spec/requirements.md/eb65538c-918e-4fa7-aab0-5d28ccdb56b4.requirement.md](../../../spec/requirements.md/eb65538c-918e-4fa7-aab0-5d28ccdb56b4.requirement.md)] - MDA Sphere Formation Engine**
 **As a** MDA architect implementing the last architecture  
 **I want** complete MDA sphere with lower pole (onion star), upper pole (service domain), and equator (format hell)  
 **So that** finite science of information is achieved with semantic consolidation
+
+**Existing Requirement:** [requirement:uuid:eb65538c-918e-4fa7-aab0-5d28ccdb56b4] - Web4 MDA Sphere Architecture
 
 **MDA Sphere Structure:**
 - **Lower Pole**: MDA onion star center (MOF M0-M3 layers)  
@@ -50,10 +52,12 @@
 - [ ] Semantic consolidation at upper pole (true Web3 Internet of Services)
 - [ ] Complete finite information science within bounded sphere
 
-#### **[requirement:uuid:b2b3b4b5-c6c7-8901-bcde-f23456789012] - Universal Hibernation Semantic Engine** 
+#### **[[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/fb23015f-232e-47d8-bcbd-02e2277f03e9.requirement.md) | [§/spec/requirements.md/fb23015f-232e-47d8-bcbd-02e2277f03e9.requirement.md](../../../spec/requirements.md/fb23015f-232e-47d8-bcbd-02e2277f03e9.requirement.md)] - Universal Hibernation Semantic Engine** 
 **As a** developer ending format wars  
 **I want** CSV, JSON, XML, Database recognized as semantically identical hibernation formats  
 **So that** all data formats become interchangeable through semantic equivalence
+
+**Existing Requirement:** [requirement:uuid:fb23015f-232e-47d8-bcbd-02e2277f03e9] - Web4 Universal Hibernation Engine for All Formats
 
 **Hibernation Semantic Invariant:** "All formats hibernate object instances as scenarios"
 
@@ -67,7 +71,7 @@
 **Priority:** CRITICAL - Layer Correction Implementation  
 **Revolutionary Correction:** Business processes = EAM Layer 4 (NOT Layer 5), with Git-based transaction chains  
 
-#### **[requirement:uuid:c3c4c5c6-d7d8-9012-cdef-g34567890123] - EAM 5-Layer Corrected Architecture**
+#### **[requirement:uuid:c2a30e29-3d03-49c8-86ba-500e81d8a390] - EAM 5-Layer Corrected Architecture**
 **As a** enterprise architect implementing correct EAM layers  
 **I want** proper 5-layer EAM with business processes in Layer 4  
 **So that** enterprise architecture aligns with correct architectural understanding
@@ -81,7 +85,7 @@
 
 **Traceability Graph (NOT layers):** Prosa → Requirements → Tests → Features → Components → Versions → Units (6 hop-length)
 
-#### **[requirement:uuid:d4d5d6d7-e8e9-0123-defg-h45678901234] - Business Process Transaction Chains**
+#### **[requirement:uuid:962dd23a-2139-43d4-83e3-d48ac6c5563b] - Business Process Transaction Chains**
 **As a** business process architect implementing Layer 4  
 **I want** Git-based transaction chains with atomic rollback capability  
 **So that** business processes can rollback transaction-by-transaction OR with overall rollback
@@ -96,7 +100,7 @@
 **Priority:** CRITICAL - Babylon Resolution Implementation  
 **Revolutionary Solution:** Semantic invariants resolve format wars, service contracts create MDA curvature  
 
-#### **[requirement:uuid:e5e6e7e8-f9f0-1234-efgh-i56789012345] - Babylon Resolution Through Semantic Invariants**  
+#### **[requirement:uuid:e4f7f65b-2173-4226-a968-87c551d2e354] - Babylon Resolution Through Semantic Invariants**  
 **As a** service architect ending integration hell  
 **I want** semantic invariant service contracts (EventService, NotificationService, MessagingService)  
 **So that** services with same semantics but different QoS can be universally interchangeable
@@ -120,10 +124,12 @@
 **Priority:** CRITICAL - Core Architecture Foundation  
 **Revolutionary Patterns:** Empty constructors, scenario initialization, IOR distributed references  
 
-#### **[requirement:uuid:g7g8g9g0-b1b2-3456-ghij-k78901234567] - Web4 Constructor Pattern**
+#### **[[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/d3190ece-605e-45a4-b78f-93ab5be2fa60.requirement.md) | [§/spec/requirements.md/d3190ece-605e-45a4-b78f-93ab5be2fa60.requirement.md](../../../spec/requirements.md/d3190ece-605e-45a4-b78f-93ab5be2fa60.requirement.md)] - Web4 Constructor Pattern**
 **As a** Web4 developer implementing pure object architecture  
 **I want** empty constructors with scenario-based initialization  
 **So that** objects are hibernatable without external dependencies
+
+**Existing Requirement:** [requirement:uuid:d3190ece-605e-45a4-b78f-93ab5be2fa60] - Web4 Empty Constructor Principle
 
 **Web4 Pattern:**
 ```typescript
@@ -134,7 +140,7 @@ class DefaultPDCA implements PDCA {
 }
 ```
 
-#### **[requirement:uuid:h8h9h0h1-c2c3-4567-hijk-l89012345678] - IOR Distributed Object References**  
+#### **[requirement:uuid:69f580d9-7520-4558-9e83-a9827ec8afd0] - IOR Distributed Object References**  
 **As a** distributed system architect  
 **I want** IOR (Internet Object Reference) system replacing ModelReference  
 **So that** objects can be referenced across network boundaries
@@ -143,7 +149,7 @@ class DefaultPDCA implements PDCA {
 **Priority:** CRITICAL - Universal Communication Foundation  
 **Perfect Pun:** ONCE and FOR ALL - technical meaning + linguistic perfection  
 
-#### **[requirement:uuid:i9i0i1i2-d3d4-5678-ijkl-m90123456789] - ONCE Kernel Foundation**
+#### **[requirement:uuid:15685fae-ff10-45ba-ae26-ad6b8f215d8e] - ONCE Kernel Foundation**
 **As a** universal platform architect  
 **I want** ONCE (Object Network Communication Engine) as singleton Web4ORB  
 **So that** all systems can communicate through universal object network
@@ -168,7 +174,7 @@ class DefaultPDCA implements PDCA {
 **Priority:** HIGH - Complete Platform Implementation  
 **Ultimate Goal:** Web4x as reference implementation of TLA formula  
 
-#### **[requirement:uuid:k1k2k3k4-f5f6-7890-klmn-o12345678901] - Web4x TLA Platform**
+#### **[requirement:uuid:d44be137-267a-4ea0-90b4-97ba4a4a2cbb] - Web4x TLA Platform**
 **As a** platform user requiring complete architecture  
 **I want** Web4x implementing TLA = MDAv4 + EAMv4 + SOAv4 based on Web4  
 **So that** single platform provides all architectural capabilities
