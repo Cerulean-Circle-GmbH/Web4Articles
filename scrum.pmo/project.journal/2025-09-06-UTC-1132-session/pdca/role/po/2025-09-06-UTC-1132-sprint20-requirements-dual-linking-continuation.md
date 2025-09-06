@@ -18,8 +18,8 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scrum.pmo/project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-sprint20-requirements-dual-linking-continuation.md) | scrum.pmo/project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-sprint20-requirements-dual-linking-continuation.md
-- **Session Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once0304/scrum.pmo/project.journal/2025-09-06-UTC-1132-session) | scrum.pmo/project.journal/2025-09-06-UTC-1132-session/
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scrum.pmo/project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-sprint20-requirements-dual-linking-continuation.md) | [§/scrum.pmo/project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-sprint20-requirements-dual-linking-continuation.md](../../../../../../../scrum.pmo/project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-sprint20-requirements-dual-linking-continuation.md)
+- **Session Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once0304/scrum.pmo/project.journal/2025-09-06-UTC-1132-session) | [§/scrum.pmo/project.journal/2025-09-06-UTC-1132-session/](../../../../../../../scrum.pmo/project.journal/2025-09-06-UTC-1132-session/)
 
 ### **Previous Analysis Summary**
 The PM agent completed comprehensive Sprint 20 requirements dual linking analysis:
