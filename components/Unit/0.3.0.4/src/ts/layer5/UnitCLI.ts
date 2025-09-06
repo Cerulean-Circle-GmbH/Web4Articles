@@ -22,7 +22,7 @@ class UnitCLI {
     const bold = '\x1b[1m';
     const reset = '\x1b[0m';
     
-    console.log(`${bold}${cyan}Web4 Unit CLI Tool${reset} ${green}- Atomic Execution Elements${reset}`);
+    console.log(`${bold}${cyan}Web4 Unit CLI Tool v0.3.0.4${reset} ${green}- Atomic Execution Elements${reset}`);
     console.log('');
     console.log(`${bold}Usage:${reset}`);
     console.log(`  ${cyan}unit${reset} create ${yellow}<name>${reset} [description]              ${green}# Create unit${reset}`);
