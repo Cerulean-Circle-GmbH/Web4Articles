@@ -1,5 +1,0 @@
-This is a test file for merge conflict handling.
-Version: save/start MODIFIED
-Date: 2025-08-24
-Purpose: Test PR creation on conflicts
-Changed: Different change on save/start to create conflict
