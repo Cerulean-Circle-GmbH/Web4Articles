@@ -3,13 +3,20 @@
  * Web4 pattern: Empty constructor + scenario initialization
  */
 
-import { User, OwnerParams, Scenario } from '../layer3/User.interface.js';
+import { User, OwnerParams, Scenario, UserModel } from '../layer3/User.interface.js';
 
 export class DefaultUser implements User {
-  private data: any = {};
+  private data: UserModel;
 
   constructor() {
     // Empty constructor - Web4 pattern
+    this.data = {
+      uuid: crypto.randomUUID(),
+      username: 'system',
+      hostname: 'localhost',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
   }
 
   init(scenario: Scenario): this {
@@ -31,7 +38,7 @@ export class DefaultUser implements User {
   toScenario(): Scenario {
     return {
       ior: {
-        uuid: this.data.uuid || crypto.randomUUID(),
+        uuid: this.data.uuid,
         component: 'User',
         version: '0.3.0.4'
       },

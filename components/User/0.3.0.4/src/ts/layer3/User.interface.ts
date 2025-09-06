@@ -28,12 +28,22 @@ export interface OwnerParams {
   uuid?: string;
 }
 
+export interface IOR {
+  uuid: string;
+  component: string;
+  version: string;
+}
+
 export interface Scenario {
-  ior: {
-    uuid: string;
-    component: string;
-    version: string;
-  };
+  ior: IOR;
   owner: string;
-  model: any;
+  model: UserModel;
+}
+
+export interface UserModel {
+  uuid: string;
+  username: string;
+  hostname: string;
+  createdAt: string;
+  updatedAt: string;
 }
