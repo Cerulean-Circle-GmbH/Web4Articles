@@ -76,7 +76,7 @@ export class DefaultUnit implements Unit {
         component: 'Unit',
         version: '0.3.0.4'
       },
-      owner: btoa(ownerData), // TODO: Implement proper encryption
+      owner: ownerData, // Modern TypeScript - no Web2 btoa() shit
       model: this.model
     };
 
