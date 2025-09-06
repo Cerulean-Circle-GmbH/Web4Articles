@@ -26,20 +26,52 @@
 - **Current Unit Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Unit/0.3.0.4/) | [components/Unit/0.3.0.4/](../../../../components/Unit/0.3.0.4/)
 
 ### **QA Decisions**
-- [ ] **Feature Analysis:** What essential features does the Unit component need?
-- [ ] **Priority Assessment:** How should these features be prioritized against existing tasks?
-- [ ] **Task Creation:** Should these features become highest priority tasks over all other planned tasks?
-- [ ] **Implementation Strategy:** What approach should be used for implementing these essential features?
+- [x] **Feature Analysis:** What essential features does the Unit component need?
+  - ✅ **Unit Unique Terminal Identity (uni-t):** Anything can be a unit with unique terminal identification
+  - ✅ **Name and Origin:** Unit needs name attribute and origin reference to source file (URL with line/column in git format)
+  - ✅ **Definition Reference:** Definition attribute with URL source format (start/end characters in git format)
+  - ✅ **Model Enhancement:** Add name, origin, definition to UnitModel interface
+  - ✅ **Backward Compatibility:** Accept files with missing infos but warn in CLI
+  - ✅ **Migration Strategy:** Next build version will require migration method for missing model infos
+- [x] **Priority Assessment:** How should these features be prioritized against existing tasks?
+  - ✅ **Priority 1 Highest:** These features override all other planned tasks
+- [x] **Task Creation:** Should these features become highest priority tasks over all other planned tasks?
+  - ✅ **Yes:** Create highest priority tasks for essential Unit features
+- [x] **Implementation Strategy:** What approach should be used for implementing these essential features?
+  - ✅ **Will be decided when accepted as task:** Implementation approach to be determined after task acceptance
 
 ### **TRON Feedback (2025-09-06-UTC-1800)**
 ```quote
 before we continue with any planned task we need to add essential additional features to unit. pdca about the features i tell you in the next prompt and if i accept your understanding, add them as highest priority next tasks over all other tasks as you correctly identified the importance of units.
 ```
 
-### **My Answer**
+### **TRON Feedback (2025-09-06-UTC-1805)**
+```quote
+1 - [ ] anything can be a unit, that should be unique and terminally identified (uni-t). so we need to be able to give a unit a name and an origin. the origin is a reference to the sources file as url with line number and column start and end in git format. add this to the unit model. also add a definition attribute, with the same url source format with start and end characters urls in git format. on read and initialize accept files with missing infos about it but warn in the cli. in the next build version we will not accept missing scenario model infos without migration method.
+
+2 prio 1 highest
+3 yes
+4 will be decided when accepted as a task
+```
+
+### **My Answer (2025-09-06-UTC-1800)**
 Preparing for essential Unit component features analysis. Understanding that Unit is foundational and these features will become highest priority tasks over all other planned tasks. Awaiting feature requirements in next prompt for comprehensive analysis and task creation.
 
-**Learning Applied:** Unit component is foundational - essential features must be prioritized over all other tasks due to Unit's critical importance in Web4 ecosystem.
+### **My Answer (2025-09-06-UTC-1805)**
+Understanding essential Unit features for unique terminal identification (uni-t):
+
+**Feature Requirements:**
+1. **Unit Unique Terminal Identity (uni-t):** Anything can be a unit with unique terminal identification
+2. **Name Attribute:** Unit needs name for identification
+3. **Origin Reference:** Source file URL with line number and column start/end in git format
+4. **Definition Attribute:** URL source format with start/end characters in git format
+5. **Backward Compatibility:** Accept missing infos but warn in CLI
+6. **Migration Strategy:** Next build version requires migration method for missing model infos
+
+**Priority:** Priority 1 Highest - Override all other planned tasks
+**Task Creation:** Yes - Create highest priority tasks for Sprint 20
+
+**Learning Applied:** Unit terminal identification is foundational for Web4 ecosystem - enables anything to be uniquely identified as a unit with complete traceability to source.
 
 ---
 
@@ -109,15 +141,21 @@ Ready to plan systematic approach for essential feature implementation.
 
 ## **🎯 ACT**
 
-**Preparation Complete:** Framework ready for essential Unit features analysis and highest priority task creation
+**TRON Decision Implementation Complete:** Highest priority Task 18 created for Unit Terminal Identity (uni-t)
 
-**Next Steps:** Awaiting essential feature requirements to:
-1. **Analyze Features:** Comprehensive understanding of each requirement
-2. **Assess Priority:** Understand importance over existing planned tasks
-3. **Create Tasks:** Generate highest priority tasks for Sprint 20
-4. **Plan Implementation:** Systematic approach for feature development
+**Task 18 Created:**
+- ✅ **Unit Terminal Identity (uni-t):** Anything can be a unit with unique terminal identification
+- ✅ **Name, Origin, Definition:** Enhanced UnitModel with git format URL source references
+- ✅ **Backward Compatibility:** Accept missing infos but warn in CLI
+- ✅ **Migration Strategy:** Next build version requires migration method
+- ✅ **Highest Priority:** Blocks all other Sprint 20 tasks until complete
 
-**Unit Foundation Priority:** Acknowledged that Unit component is foundational and essential features must take precedence over all other tasks
+**Sprint 20 Planning Updated:**
+- **New Priority 1 Section:** CRITICAL UNIT FOUNDATION (HIGHEST PRIORITY ⚡)
+- **Task 18 Position:** Top priority, blocks all other tasks
+- **All Other Tasks:** Moved to BLOCKED - Awaiting Task 18 section
+
+**Foundation Established:** Unit Terminal Identity system will enable anything in Web4 ecosystem to be uniquely identified with complete source traceability
 
 ## **💫 EMOTIONAL REFLECTION: Unit Foundation Priority**
 

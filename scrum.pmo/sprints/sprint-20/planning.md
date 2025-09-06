@@ -46,7 +46,15 @@ Complete Sprint 20 requirements dual linking with comprehensive Product Owner ov
   - [x] [Task 3.2: PO - Local Links Functionality Validation](./task-3.2-po-local-links-validation.md)
   - [x] [Task 3.3: PO - End-to-End Traceability Validation](./task-3.3-po-end-to-end-traceability-validation.md)
 
-### **PRIORITY 1: CRITICAL COMPLIANCE (PENDING 📋)**
+### **PRIORITY 1: CRITICAL UNIT FOUNDATION (HIGHEST PRIORITY ⚡)**
+
+- [ ] [Task 18: Unit Terminal Identity (uni-t) - Name, Origin, and Definition Attributes](./task-18-unit-terminal-identity-uni-t.md)  
+  **Priority:** 1 (HIGHEST - Unit Terminal Identity Foundation) **Status:** PENDING - Blocks All Other Tasks
+  - [ ] [Task 18.1: Developer - Unit Model Enhancement with Name, Origin, Definition](./task-18.1-developer-unit-model-enhancement.md)
+  - [ ] [Task 18.2: Developer - Git Format URL Source References](./task-18.2-developer-git-format-url-references.md)
+  - [ ] [Task 18.3: Developer - Backward Compatibility and CLI Warnings](./task-18.3-developer-backward-compatibility-warnings.md)
+
+### **PRIORITY 1: CRITICAL COMPLIANCE (BLOCKED - Awaiting Task 18 📋)**
 
 - [x] [Task 14: Fix UnitIndex Central Storage Location](./task-14-fix-central-storage-location.md)  
   **Priority:** 1 (Critical - UnitIndex Central Storage) **Status:** ✅ DONE - QA Validated
