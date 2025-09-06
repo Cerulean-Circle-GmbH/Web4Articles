@@ -1,1 +1,34 @@
-../components/Unit/latest/unit.sh
+#!/bin/bash
+
+# Unit CLI Tool - Auto-Build Standard Compliant
+# Web4 pattern: Component shell wrapper with auto-build
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+COMPONENT_VERSION="0.3.0.4"
+COMPONENT_PATH="$PROJECT_ROOT/components/Unit/$COMPONENT_VERSION"
+CLI_PATH="$COMPONENT_PATH/dist/ts/layer5/UnitCLI.js"
+
+# Check if component exists
+if [ ! -d "$COMPONENT_PATH" ]; then
+    echo "❌ Unit $COMPONENT_VERSION not found at $COMPONENT_PATH"
+    exit 1
+fi
+
+# Auto-build if CLI not available
+if [ ! -f "$CLI_PATH" ]; then
+    echo "🔧 Building Unit $COMPONENT_VERSION..."
+    cd "$COMPONENT_PATH"
+    npm install --silent
+    npm run build --silent
+    cd "$PROJECT_ROOT"
+fi
+
+# Check if CLI is now available
+if [ ! -f "$CLI_PATH" ]; then
+    echo "❌ Unit CLI build failed"
+    exit 1
+fi
+
+# Execute CLI with all arguments
+node "$CLI_PATH" "$@"

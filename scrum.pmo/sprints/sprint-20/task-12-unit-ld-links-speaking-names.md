@@ -16,8 +16,8 @@
   - [x] creating test cases
   - [x] implementing
   - [x] testing
-- [x] QA Review
-- [x] Done
+- [ ] QA Review
+- [ ] Done
 
 ## Traceability
 - Add `[task:uuid:k1l2m3n4-o5p6-7890-klmn-o12345678901]` to this task.
@@ -68,13 +68,16 @@ Enable human-readable names (like "user-alice" or "server-main") to map to uniqu
 - [ ] Speaking name resolution works with existing scenarios/index/ system
 - [ ] No inconsistency or bad redundancy in name mapping
 - [ ] All speaking names resolve to unique identified units
+- [ ] **Scripts Integration (QA Feedback):**
+  - [ ] Unit link created in scripts directory
+  - [ ] Version link created in scripts/versions for Unit 0.3.0.4
 
 ## QA Audit & User Feedback
 - [ ] [2025-09-06-UTC-0830] QA review pending.
   - [ ] Issue: Speaking names must prevent inconsistency and redundancy
   - [ ] Resolution: Unique mapping to central UUID storage
   - [ ] Example: "user-alice" always maps to same UUID, prevents conflicts
-- [ ] [2025-09-06-UTC-0830] Feedback to be collected after subtask completion.
-  - [ ] Issue: LD links tracking and symbolic link management
-  - [ ] Resolution: Verify proper symbolic link lifecycle management
-  - [ ] Example: Speaking names maintain consistency across component references
+- [x] [2025-09-06-UTC-0910] TRON QA Feedback collected.
+  - [x] Issue: "i did not see a unit link in scripts nor a new version link"
+  - [x] Resolution: Add unit link in scripts directory and version link in scripts/versions
+  - [x] Example: scripts/unit and scripts/versions/unit-v0.3.0.4 created
