@@ -6,13 +6,11 @@
 import { Unit, UnitInput, UnitOutput } from '../layer3/Unit.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { UnitModel } from '../layer3/UnitModel.interface.js';
-// TODO: Import UnitIndexStorage when available
-// import { UnitIndexStorage } from '../../0.3.0.2/src/ts/layer2/UnitIndexStorage.js';
+import { UnitIndexStorage } from './UnitIndexStorage.js';
 
 export class DefaultUnit implements Unit {
   private model: UnitModel;
-  // TODO: Add storage when UnitIndexStorage available
-  // private storage: UnitIndexStorage;
+  private storage: UnitIndexStorage;
 
   constructor() {
     // Empty constructor - Web4 pattern
@@ -25,8 +23,7 @@ export class DefaultUnit implements Unit {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
-    // TODO: Initialize storage when available
-    // this.storage = new UnitIndexStorage();
+    this.storage = new UnitIndexStorage();
   }
 
   init(scenario: Scenario): this {
@@ -34,8 +31,7 @@ export class DefaultUnit implements Unit {
       this.model = scenario.model;
       this.model.state = 'initialized';
     }
-    // TODO: Initialize storage when available
-    // this.storage.init(this.findProjectRoot());
+    this.storage.init(this.findProjectRoot());
     return this;
   }
 
@@ -81,9 +77,9 @@ export class DefaultUnit implements Unit {
       model: this.model
     };
 
-    // TODO: Save to central storage when UnitIndexStorage available
-    // const speakingNameLinks = [`components/Unit/0.3.0.4/${this.model.name}.unit`];
-    // await this.storage.saveScenario(this.model.uuid, scenario, speakingNameLinks);
+    // Save to central storage with LD links
+    const speakingNameLinks = [`components/Unit/0.3.0.4/${this.model.name}.unit`];
+    await this.storage.saveScenario(this.model.uuid, scenario, speakingNameLinks);
 
     return scenario;
   }
@@ -99,6 +95,40 @@ export class DefaultUnit implements Unit {
     this.model.description = description;
     this.model.updatedAt = new Date().toISOString();
     return this;
+  }
+
+  // Speaking name resolution methods (Decision 2a - in DefaultUnit)
+  async resolveSpeakingName(speakingName: string): Promise<string | null> {
+    try {
+      // TODO: Implement speaking name to UUID resolution
+      // For now, return null - will be implemented with LD links system
+      return null;
+    } catch (error) {
+      console.warn(`Failed to resolve speaking name ${speakingName}: ${(error as Error).message}`);
+      return null;
+    }
+  }
+
+  async addSpeakingName(speakingName: string): Promise<void> {
+    try {
+      // Add speaking name link for this unit
+      const linkPath = `components/Unit/0.3.0.4/${speakingName}.unit`;
+      await this.storage.addSymbolicLink(this.model.uuid, linkPath);
+      console.log(`✅ Speaking name added: ${speakingName} -> ${this.model.uuid}`);
+    } catch (error) {
+      throw new Error(`Failed to add speaking name: ${(error as Error).message}`);
+    }
+  }
+
+  async removeSpeakingName(speakingName: string): Promise<void> {
+    try {
+      // Remove speaking name link for this unit
+      const linkPath = `components/Unit/0.3.0.4/${speakingName}.unit`;
+      await this.storage.removeSymbolicLink(this.model.uuid, linkPath);
+      console.log(`✅ Speaking name removed: ${speakingName}`);
+    } catch (error) {
+      throw new Error(`Failed to remove speaking name: ${(error as Error).message}`);
+    }
   }
 
   private findProjectRoot(): string {
