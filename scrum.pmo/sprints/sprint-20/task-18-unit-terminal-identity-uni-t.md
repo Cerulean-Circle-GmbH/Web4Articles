@@ -76,6 +76,78 @@ Enable any element in the Web4 ecosystem to be uniquely identified as a unit wit
 - [ ] Complete source traceability from unit to definition established
 - [ ] Terminal identification (uni-t) system functional for any Web4 element
 
+## Example Scenario
+
+### **Unit Terminal Identity (uni-t) Example:**
+
+```json
+{
+  "ior": {
+    "uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"developer\",\"hostname\":\"workstation\",\"uuid\":\"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\"timestamp\":\"2025-09-06T18:15:00.000Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "UserAuthenticationValidator",
+    "origin": "https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/components/Auth/src/validators/UserValidator.ts#L42:15-67:23",
+    "definition": "https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/components/Auth/src/validators/UserValidator.ts#L1250-1890",
+    "indexPath": "/workspace/scenarios/index/a/1/b/2/c/a1b2c3d4-e5f6-7890-abcd-ef1234567890.scenario.json",
+    "symlinkPaths": ["/workspace/temp/UserAuthenticationValidator.unit"],
+    "namedLinks": [
+      {
+        "location": "../scenarios/index/a/1/b/2/c/a1b2c3d4-e5f6-7890-abcd-ef1234567890.scenario.json",
+        "filename": "UserAuthenticationValidator.unit"
+      }
+    ],
+    "executionCapabilities": ["transform", "validate", "process", "UserAuthenticationValidator"],
+    "storageCapabilities": ["scenarios", "ld-links"],
+    "createdAt": "2025-09-06T18:15:00.000Z",
+    "updatedAt": "2025-09-06T18:15:00.000Z"
+  }
+}
+```
+
+### **Git Format URL Reference Examples:**
+
+**Origin Reference (Line-based):**
+- `origin`: `"https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/components/Auth/src/validators/UserValidator.ts#L42:15-67:23"`
+- **Meaning**: File `UserValidator.ts`, from line 42 column 15 to line 67 column 23
+- **Traceability**: Points to exact location where this unit was declared/instantiated
+
+**Definition Reference (Character-based):**
+- `definition`: `"https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/components/Auth/src/validators/UserValidator.ts#L1250-1890"`
+- **Meaning**: File `UserValidator.ts`, from character position 1250 to character position 1890
+- **Traceability**: Points to complete definition/implementation of this unit
+
+### **Backward Compatibility Example:**
+
+**Existing Unit (Missing Attributes):**
+```json
+{
+  "model": {
+    "uuid": "old-unit-uuid",
+    "indexPath": "...",
+    "symlinkPaths": [...],
+    "executionCapabilities": [...],
+    "storageCapabilities": [...]
+    // Missing: name, origin, definition
+  }
+}
+```
+
+**CLI Warning Output:**
+```
+⚠️  Warning: Unit 'old-unit-uuid' missing terminal identity information:
+   - name: not specified
+   - origin: not specified  
+   - definition: not specified
+   
+   Next build version will require migration method for missing model info.
+   Please update unit with complete terminal identity (uni-t) attributes.
+```
+
 ## QA Audit & User Feedback
 - [ ] [2025-09-06-UTC-1805] TRON Decision Implementation
   ```quote
@@ -83,7 +155,7 @@ Enable any element in the Web4 ecosystem to be uniquely identified as a unit wit
   ```
   - [ ] Issue: Unit needs terminal identification (uni-t) with name, origin, and definition
   - [ ] Resolution: Enhance UnitModel with git format URL source references and traceability
-  - [ ] Example: Unit with name, origin URL (line 42:15-67), definition URL (char 1250-1890)
+  - [ ] Example: Unit "UserAuthenticationValidator" with origin (L42:15-67:23) and definition (char 1250-1890)
 
 ## Dependencies
 - Must be implemented before continuing with any other planned tasks
