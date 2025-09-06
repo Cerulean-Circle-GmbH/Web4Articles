@@ -91,8 +91,8 @@ Enable any element in the Web4 ecosystem to be uniquely identified as a unit wit
   "model": {
     "uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     "name": "UserAuthenticationValidator",
-    "origin": "https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/components/Auth/src/validators/UserValidator.ts#L42:15-67:23",
-    "definition": "https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/components/Auth/src/validators/UserValidator.ts#L1250-1890",
+    "origin": "ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/components/Auth/src/validators/UserValidator.ts#L42:15-67:23",
+    "definition": "ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/components/Auth/src/validators/UserValidator.ts#L1250-1890",
     "indexPath": "/workspace/scenarios/index/a/1/b/2/c/a1b2c3d4-e5f6-7890-abcd-ef1234567890.scenario.json",
     "symlinkPaths": ["/workspace/temp/UserAuthenticationValidator.unit"],
     "namedLinks": [
@@ -111,13 +111,15 @@ Enable any element in the Web4 ecosystem to be uniquely identified as a unit wit
 
 ### **Git Format URL Reference Examples:**
 
-**Origin Reference (Line-based):**
-- `origin`: `"https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/components/Auth/src/validators/UserValidator.ts#L42:15-67:23"`
+**Origin Reference (Line-based with IOR format):**
+- `origin`: `"ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/components/Auth/src/validators/UserValidator.ts#L42:15-67:23"`
+- **IOR Format**: `ior:git:text:` prefix + GitHub URL with line/column positioning
 - **Meaning**: File `UserValidator.ts`, from line 42 column 15 to line 67 column 23
 - **Traceability**: Points to exact location where this unit was declared/instantiated
 
-**Definition Reference (Character-based):**
-- `definition`: `"https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/components/Auth/src/validators/UserValidator.ts#L1250-1890"`
+**Definition Reference (Character-based with IOR format):**
+- `definition`: `"ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/components/Auth/src/validators/UserValidator.ts#L1250-1890"`
+- **IOR Format**: `ior:git:text:` prefix + GitHub URL with character positioning
 - **Meaning**: File `UserValidator.ts`, from character position 1250 to character position 1890
 - **Traceability**: Points to complete definition/implementation of this unit
 
@@ -156,6 +158,16 @@ Enable any element in the Web4 ecosystem to be uniquely identified as a unit wit
   - [ ] Issue: Unit needs terminal identification (uni-t) with name, origin, and definition
   - [ ] Resolution: Enhance UnitModel with git format URL source references and traceability
   - [ ] Example: Unit "UserAuthenticationValidator" with origin (L42:15-67:23) and definition (char 1250-1890)
+
+- [ ] [2025-09-06-UTC-1820] TRON Enhancement - Git Text IOR Implementation
+  ```quote
+  very good. create extra class and interface in the unit layers for handling these urls. have IOR as the interface and GitTextIOR as the implementation class with ior text format: „ior:git:text:[giturl](http://github.com:port/…)" rhe brackets are placeholders no md text format. to be used innthe origin attribute.
+  ```
+  - [ ] Issue: Need specialized interface and class for handling git URL references
+  - [ ] Resolution: Create IOR interface and GitTextIOR implementation class for git URL handling
+  - [ ] Format: `ior:git:text:giturl` with GitHub URL format
+  - [ ] Example: `ior:git:text:http://github.com:port/user/repo/blob/branch/file.ts#L42:15-67:23`
+  - [ ] Usage: GitTextIOR to be used in origin attribute for precise source tracking
 
 ## Dependencies
 - Must be implemented before continuing with any other planned tasks
