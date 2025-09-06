@@ -78,3 +78,21 @@ Ensure all unit scenarios are stored in the central scenarios/index/ location as
   - [x] Resolution: Added namedLinks array to scenario model with location and filename attributes
   - [x] Example: `unit create final-test "description"` → link filename: `final-test.unit`
   - [x] Validation: namedLinks array contains `{"location": "/workspace/temp/final-test.unit", "filename": "final-test.unit"}`
+
+- [ ] [2025-09-06-UTC-1615] TRON QA Feedback - LD Link Location Issue  
+  ```quote
+  the 
+  namedLinks": [
+        {
+          "location": "/workspace/temp/final-test.unit",
+
+
+  does not make much sense. it should be the relative location for the ln link command to the scenario.
+
+  qa feedback to the task. answer and fix.
+  ```
+  - [x] Issue: `location` field contains absolute path to link file instead of relative path from link to scenario
+  - [x] Issue: Should contain the relative path used by `ln -s` command (e.g., `../scenarios/index/...`)
+  - [x] Resolution: Updated namedLinks to store actual relative path used by symlink creation
+  - [x] Example: `{"location": "../scenarios/index/a/a/a/1/4/aaa14a78-068e-4196-bfad-f346535a92d4.scenario.json", "filename": "fixed-test.unit"}`
+  - [x] Validation: Used `readlinkSync()` to get actual symlink target path and store in namedLinks

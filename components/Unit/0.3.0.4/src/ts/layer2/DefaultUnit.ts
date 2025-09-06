@@ -91,22 +91,43 @@ export class DefaultUnit implements Unit {
     const linkFilename = name ? `${name}.unit` : `unit-${this.model.uuid.slice(0, 8)}`;
     const namedLink = `${currentDir}/${linkFilename}`;
     
-    // Add to namedLinks array if name provided
-    if (name) {
-      this.model.namedLinks.push({
-        location: namedLink,
-        filename: linkFilename
-      });
-      // Update scenario with namedLinks before saving
-      scenario.model = this.model;
-    }
-    
     await this.storage.saveScenario(this.model.uuid, scenario, [namedLink]);
+    
+    // Add to namedLinks array if name provided - location should be relative path from link to scenario
+    if (name) {
+      // Get the actual relative path that was used to create the symlink
+      const { relative, dirname } = await import('path');
+      const { readlinkSync } = await import('fs');
+      
+      try {
+        const relativePath = readlinkSync(namedLink);
+        this.model.namedLinks.push({
+          location: relativePath,
+          filename: linkFilename
+        });
+      } catch (error) {
+        console.error('Failed to read symlink for namedLinks:', (error as Error).message);
+      }
+    }
     
     // Load the saved scenario to get the updated model with correct storage paths
     try {
       const savedScenario = await this.storage.loadScenario(this.model.uuid);
+      const originalNamedLinks = this.model.namedLinks; // Save namedLinks before overwriting
       this.model = savedScenario.model as any; // Update our model with storage-corrected paths
+      
+      // Restore namedLinks if we had them
+      if (originalNamedLinks && originalNamedLinks.length > 0) {
+        this.model.namedLinks = originalNamedLinks;
+        savedScenario.model = this.model;
+        // Save the updated scenario with correct namedLinks
+        await this.storage.saveScenario(this.model.uuid, savedScenario, [namedLink]);
+        // Load again to get the final updated scenario
+        const finalScenario = await this.storage.loadScenario(this.model.uuid);
+        this.model = finalScenario.model as any;
+        return finalScenario;
+      }
+      
       return savedScenario; // Return the complete saved scenario with correct paths
     } catch (error) {
       console.error('Failed to load saved scenario:', (error as Error).message);
