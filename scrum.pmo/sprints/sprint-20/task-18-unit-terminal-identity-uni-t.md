@@ -45,11 +45,11 @@ Enable any element in the Web4 ecosystem to be uniquely identified as a unit wit
 ## Steps
 1. Create Web4 compliant interface files (one interface per file):
    - `IOR.interface.ts` - Base IOR interface (if not already exists)
-   - `GitTextIOR.interface.ts` - Git Text IOR interface (extends IOR)
-   - `GitPositioning.interface.ts` - Git positioning data interface  
-   - `GitTextIORScenario.interface.ts` - GitTextIOR scenario interface
+   - `GitTextIOR.interface.ts` - Specialized IOR interface for git text references (extends IOR)
+   - `GitPositioning.interface.ts` - URL anchor positioning specialization (line/column and character ranges)
+   - `GitTextIORScenario.interface.ts` - Scenario format specialization for GitTextIOR hibernation
 2. Create implementation class:
-   - `GitTextIOR.ts` - Implementation class for git URL handling (not DefaultGitTextIOR)
+   - `GitTextIOR.ts` - Specialized IOR implementation class extending base IOR (not DefaultGitTextIOR)
 3. Enhance UnitModel interface with name, origin, and definition attributes
 4. Implement git format URL source references with IOR text format: `ior:git:text:giturl`
 5. Add origin reference with line/column positioning (#L42:15-67:23)
@@ -61,27 +61,35 @@ Enable any element in the Web4 ecosystem to be uniquely identified as a unit wit
 11. Validate git format URL references and source tracking
 
 ## Requirements
-- UnitModel must include name attribute for unit identification
-- Origin reference must use git format URL with line number and column start/end positions
-- Definition attribute must use git format URL with start/end character positions
+- Base IOR interface must provide foundation for all interoperable object references
+- GitTextIOR implementation must extend IOR for specialized git text reference handling
+- GitPositioning interface must handle URL anchor positioning specializations (line/column ranges, character ranges)
+- GitTextIORScenario interface must provide proper hibernation format for GitTextIOR instances
+- UnitModel must include name, origin, and definition attributes using GitTextIOR format
+- Origin reference must use IOR text format: `ior:git:text:giturl` with line/column positioning (#L42:15-67:23)
+- Definition attribute must use IOR text format: `ior:git:text:giturl` with character positioning (#L1250-1890)
 - Backward compatibility must accept files with missing information but warn in CLI
 - Next build version must require migration method for missing model information
-- Git format URL references must be properly validated and trackable
+- Git format URL references must be properly validated and trackable through GitTextIOR
 - CLI must provide clear warnings for incomplete unit model information
-- Source traceability must be maintained from unit to original definition
+- Source traceability must be maintained from unit to original definition via GitTextIOR
 
 ## Acceptance Criteria
-- [ ] UnitModel interface enhanced with name, origin, and definition attributes
-- [ ] Git format URL source references implemented with line/column positions
-- [ ] Origin reference tracks source file with precise line and column locations
-- [ ] Definition attribute provides complete source tracking with character positions
+- [ ] Base IOR interface created as foundation for all interoperable object references
+- [ ] GitTextIOR implementation class extends IOR for specialized git text reference handling
+- [ ] GitPositioning interface handles URL anchor positioning specializations (line/column and character ranges)
+- [ ] GitTextIORScenario interface provides proper hibernation format for GitTextIOR instances
+- [ ] UnitModel interface enhanced with name, origin, and definition attributes using GitTextIOR format
+- [ ] Origin reference uses IOR text format with line/column positioning (#L42:15-67:23)
+- [ ] Definition attribute uses IOR text format with character positioning (#L1250-1890)
 - [ ] Backward compatibility accepts existing scenarios with missing attributes
 - [ ] CLI warns when name, origin, or definition information is missing
 - [ ] Migration strategy planned for next build version requirements
-- [ ] Unit creation and initialization handle new attributes correctly
-- [ ] Git format URL references are validated and trackable
-- [ ] Complete source traceability from unit to definition established
+- [ ] Unit creation and initialization handle new GitTextIOR attributes correctly
+- [ ] Git format URL references are validated and trackable through GitTextIOR
+- [ ] Complete source traceability from unit to definition established via GitTextIOR
 - [ ] Terminal identification (uni-t) system functional for any Web4 element
+- [ ] All interfaces follow "one interface per file" Web4 principle
 
 ## Example Scenario
 
@@ -176,7 +184,7 @@ Enable any element in the Web4 ecosystem to be uniquely identified as a unit wit
   excellent. as it is already a specialized IOR. its not DefaultIOR nor DefaultGitTextIOR but  GitTextIOR extends IOR. fix that and the the spec is good and accepted.
   ```
   - [ ] Issue: Need specialized interface and class for handling git URL references
-  - [ ] Resolution: Create base IOR interface and specialized GitTextIOR interface (extends IOR) with implementation class
+  - [ ] Resolution: Create base IOR interface and specialized GitTextIOR implementation (extends IOR) as implementation class
   - [ ] Architecture: GitTextIOR extends IOR (not DefaultGitTextIOR)
   - [ ] Implementation Class: GitTextIOR.ts (not DefaultGitTextIOR.ts)
   - [ ] Format: `ior:git:text:giturl` with GitHub URL format
