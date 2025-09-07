@@ -17,9 +17,7 @@ export class DefaultCLI implements CLI {
     this.model = {
       uuid: crypto.randomUUID(),
       componentName: '',
-      componentVersion: '',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      componentVersion: ''
     };
     this.component = null;
   }
@@ -28,7 +26,6 @@ export class DefaultCLI implements CLI {
     if (scenario.model) {
       this.model = { ...this.model, ...scenario.model };
     }
-    this.model.updatedAt = new Date().toISOString();
     return this;
   }
 
@@ -58,7 +55,6 @@ export class DefaultCLI implements CLI {
     // Extract component info for usage display
     this.model.componentName = component.constructor.name.replace('Default', '');
     this.model.componentVersion = '0.3.0.4'; // Will be enhanced to read from package.json
-    this.model.updatedAt = new Date().toISOString();
     return this;
   }
 
@@ -144,9 +140,7 @@ export class DefaultCLI implements CLI {
       model: {
         uuid: crypto.randomUUID(),
         componentName: 'DefaultCLI',
-        componentVersion: '0.3.0.4',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        componentVersion: '0.3.0.4'
       }
     };
     cli.init(emptyScenario);
