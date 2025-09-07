@@ -9,29 +9,37 @@ import { DefaultUnit } from '../layer2/DefaultUnit.js';
 import { promises as fs } from 'fs';
 
 class UnitCLI {
-  private unit: DefaultUnit;
+  private unit: DefaultUnit | null;
 
   constructor() {
-    this.unit = new DefaultUnit();
-    // Initialize unit with empty scenario (Web4 pattern)
-    const emptyScenario = {
-      ior: { uuid: crypto.randomUUID(), component: 'Unit', version: '0.3.0.4' },
-      owner: '',
-      model: {
-        uuid: crypto.randomUUID(),
-        name: '',
-        origin: '',
-        definition: '',
-        indexPath: '',
-        symlinkPaths: [],
-        namedLinks: [],
-        executionCapabilities: ['transform', 'validate', 'process'],
-        storageCapabilities: ['scenarios', 'ld-links'],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    };
-    this.unit.init(emptyScenario);
+    // Don't instantiate unit for usage display - command-based instantiation only
+    this.unit = null;
+  }
+
+  private getOrCreateUnit(): DefaultUnit {
+    if (!this.unit) {
+      this.unit = new DefaultUnit();
+      // Initialize unit with empty scenario (Web4 pattern)
+      const emptyScenario = {
+        ior: { uuid: crypto.randomUUID(), component: 'Unit', version: '0.3.0.4' },
+        owner: '',
+        model: {
+          uuid: crypto.randomUUID(),
+          name: '',
+          origin: '',
+          definition: '',
+          indexPath: '',
+          symlinkPaths: [],
+          namedLinks: [],
+          executionCapabilities: ['transform', 'validate', 'process'],
+          storageCapabilities: ['scenarios', 'ld-links'],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }
+      };
+      this.unit.init(emptyScenario);
+    }
+    return this.unit;
   }
 
   private showUsage(): void {
@@ -86,10 +94,13 @@ class UnitCLI {
   }
 
   private async createUnit(name: string, description: string = ''): Promise<void> {
-    // Add execution capability for the named unit
-    this.unit.addExecutionCapability(name);
+    // Get or create unit instance (command-based instantiation)
+    const unit = this.getOrCreateUnit();
     
-    const scenario = await this.unit.toScenario(name);
+    // Add execution capability for the named unit
+    unit.addExecutionCapability(name);
+    
+    const scenario = await unit.toScenario(name);
     console.log(`✅ Unit created: ${name}`);
     console.log(`   UUID: ${scenario.ior.uuid}`);
     console.log(`   Index Path: ${scenario.model.indexPath}`);
@@ -99,7 +110,8 @@ class UnitCLI {
   private async executeUnit(name: string, inputJson: string): Promise<void> {
     try {
       const input = JSON.parse(inputJson);
-      const result = this.unit.transform(input);
+      const unit = this.getOrCreateUnit();
+      const result = unit.transform(input);
       
       console.log(`✅ Unit executed: ${name}`);
       console.log(`   Result:`, JSON.stringify(result, null, 2));
@@ -109,7 +121,8 @@ class UnitCLI {
   }
 
   private async showInfo(): Promise<void> {
-    const scenario = await this.unit.toScenario();
+    const unit = this.getOrCreateUnit();
+    const scenario = await unit.toScenario();
     
     console.log(`${'\x1b[36m'}Current Unit Information:${'\x1b[0m'}`);
     console.log(`  UUID: ${scenario.ior.uuid}`);
@@ -154,35 +167,35 @@ class UnitCLI {
           if (commandArgs.length < 2) {
             throw new Error('UUID and filename required for link command');
           }
-          await this.unit.link(commandArgs[0], commandArgs[1]);
+          await this.getOrCreateUnit().link(commandArgs[0], commandArgs[1]);
           break;
 
         case 'list':
           if (commandArgs.length < 1) {
             throw new Error('UUID required for list command');
           }
-          await this.unit.list(commandArgs[0]);
+          await this.getOrCreateUnit().list(commandArgs[0]);
           break;
 
         case 'from':
           if (commandArgs.length < 3) {
             throw new Error('Filename, start position, and end position required for from command');
           }
-          await this.unit.from(commandArgs[0], commandArgs[1], commandArgs[2]);
+          await this.getOrCreateUnit().from(commandArgs[0], commandArgs[1], commandArgs[2]);
           break;
 
         case 'origin':
           if (commandArgs.length < 1) {
             throw new Error('UUID required for origin command');
           }
-          await this.unit.origin(commandArgs[0]);
+          await this.getOrCreateUnit().origin(commandArgs[0]);
           break;
 
         case 'definition':
           if (commandArgs.length < 4) {
             throw new Error('UUID, filename, start position, and end position required for definition command');
           }
-          await this.unit.definition(commandArgs[0], commandArgs[1], commandArgs[2], commandArgs[3]);
+          await this.getOrCreateUnit().definition(commandArgs[0], commandArgs[1], commandArgs[2], commandArgs[3]);
           break;
 
         case 'help':

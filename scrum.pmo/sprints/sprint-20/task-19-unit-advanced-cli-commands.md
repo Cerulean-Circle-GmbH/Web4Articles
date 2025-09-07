@@ -259,6 +259,37 @@ Web4 Integration:
   - [x] Impact: Absolute links required for proper functionality in distributed environments
   - [x] Resolution: Fixed GitTextIOR implementation to use absolute paths, added `unit origin <uuid>` command for dual links display
 
+- [ ] [2025-09-06-UTC-2100] TRON QA Feedback - Unit Instantiation Issue  
+  ```quote
+  i am back testing the unit.
+
+  run
+  unit
+  with non parameters.
+
+  it will create a unit and warn about missing information 
+  and then
+  print the usage.
+
+  this is not correct. a unit will only be created when 
+  unit create …
+  was called 
+
+  check if the unit ended up in the index.
+  if not, its good. otherwise each call is creating garbage.
+
+  a call with no parameters should just show the usage and not instanciate a unit.
+  a unit will be instancieated only as a consequence of a command.
+
+  add this to the unit tasks qa feedback and pdca
+  ```
+  - [x] Issue: `unit` with no parameters creates unit instance and shows warning (incorrect behavior)
+  - [x] Issue: Unit should only be instantiated as consequence of commands, not for usage display
+  - [x] Resolution: Fixed UnitCLI to use lazy instantiation - DefaultUnit created only when commands require it
+  - [x] Validation: Unit UUID 34daeb25-c69f-48c6-a36f-3d5a9fff47f0 did NOT end up in central storage (good)
+  - [x] Example: `unit` → show usage only (no unit created), `unit create name` → create unit instance
+  - [x] Fix Applied: UnitCLI constructor sets this.unit = null, getOrCreateUnit() for command-based instantiation
+
 ## Dependencies
 - Builds on Task 18 Unit Terminal Identity (uni-t) system
 - Requires GitTextIOR implementation for source reference formatting
