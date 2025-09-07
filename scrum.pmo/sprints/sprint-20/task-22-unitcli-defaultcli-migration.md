@@ -22,16 +22,12 @@
 ## Traceability
 - Add `[task:uuid:v4w5x6y7-z8a9-0123-vwxy-z45678901234]` to this task.
 - Source: CLI Compliance Planning - UnitCLI Migration Requirements
-```
-  - up
-    - [CLI Compliance Planning PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/po/2025-09-06-UTC-2115-comprehensive-cli-compliance-task-planning.pdca.md)
-```
-```
-  - down
-    - [Task 22.1: Developer - UnitCLI Inheritance Migration](./task-22.1-developer-unitcli-inheritance-migration.md)
-    - [Task 22.2: Developer - Terminal View Migration](./task-22.2-developer-terminal-view-migration.md)
-    - [Task 22.3: Developer - Color Coding Standards Integration](./task-22.3-developer-color-coding-integration.md)
-```
+- up
+  - [CLI Compliance Planning PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/po/2025-09-06-UTC-2115-comprehensive-cli-compliance-task-planning.pdca.md)
+- down
+  - [Task 22.1: Developer - UnitCLI Inheritance Migration](./task-22.1-developer-unitcli-inheritance-migration.md)
+  - [Task 22.2: Developer - Terminal View Migration](./task-22.2-developer-terminal-view-migration.md)
+  - [Task 22.3: Developer - Color Coding Standards Integration](./task-22.3-developer-color-coding-integration.md)
 
 ## Task Description
 Migrate UnitCLI to extend DefaultCLI with proper inheritance, DRY terminal rendering, and requirement-v0.1.2.2 color coding standards for Web4 compliant CLI architecture.

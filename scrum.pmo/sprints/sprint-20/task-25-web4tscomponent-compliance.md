@@ -22,16 +22,12 @@
 ## Traceability
 - Add `[task:uuid:y7z8a9b0-c1d2-3456-yzab-c78901234567]` to this task.
 - Source: CLI Compliance Planning - Web4TSComponent Enhancement Requirements
-```
-  - up
-    - [CLI Compliance Planning PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/po/2025-09-06-UTC-2115-comprehensive-cli-compliance-task-planning.pdca.md)
-```
-```
-  - down
-    - [Task 25.1: Developer - Web4TSComponent Compliance Assessment](./task-25.1-developer-web4tscomponent-compliance-assessment.md)
-    - [Task 25.2: Developer - Dependency-Free Architecture Implementation](./task-25.2-developer-dependency-free-architecture.md)
-    - [Task 25.3: Developer - Component Generation Standards](./task-25.3-developer-component-generation-standards.md)
-```
+- up
+  - [CLI Compliance Planning PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/po/2025-09-06-UTC-2115-comprehensive-cli-compliance-task-planning.pdca.md)
+- down
+  - [Task 25.1: Developer - Web4TSComponent Compliance Assessment](./task-25.1-developer-web4tscomponent-compliance-assessment.md)
+  - [Task 25.2: Developer - Dependency-Free Architecture Implementation](./task-25.2-developer-dependency-free-architecture.md)
+  - [Task 25.3: Developer - Component Generation Standards](./task-25.3-developer-component-generation-standards.md)
 
 ## Task Description
 Assess Web4TSComponent for compliance violations and create clean dependency-free 0.3.0.4 version that builds itself while maintaining component folder creation, build standards, and tsconfig generation capabilities.

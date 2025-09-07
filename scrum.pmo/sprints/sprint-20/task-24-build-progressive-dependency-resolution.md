@@ -22,16 +22,12 @@
 ## Traceability
 - Add `[task:uuid:x6y7z8a9-b0c1-2345-xyza-b67890123456]` to this task.
 - Source: CLI Compliance Planning - Build System Enhancement Requirements
-```
-  - up
-    - [CLI Compliance Planning PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/po/2025-09-06-UTC-2115-comprehensive-cli-compliance-task-planning.pdca.md)
-```
-```
-  - down
-    - [Task 24.1: Developer - Progressive Dependency Resolution](./task-24.1-developer-progressive-dependency-resolution.md)
-    - [Task 24.2: Developer - CLI Ecosystem Dependency Management](./task-24.2-developer-cli-ecosystem-dependency.md)
-    - [Task 24.3: Developer - Lego-like Component Composition](./task-24.3-developer-lego-component-composition.md)
-```
+- up
+  - [CLI Compliance Planning PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/po/2025-09-06-UTC-2115-comprehensive-cli-compliance-task-planning.pdca.md)
+- down
+  - [Task 24.1: Developer - Progressive Dependency Resolution](./task-24.1-developer-progressive-dependency-resolution.md)
+  - [Task 24.2: Developer - CLI Ecosystem Dependency Management](./task-24.2-developer-cli-ecosystem-dependency.md)
+  - [Task 24.3: Developer - Lego-like Component Composition](./task-24.3-developer-lego-component-composition.md)
 
 ## Task Description
 Enhance Build system with progressive dependency resolution for CLI ecosystem growth, handling transition from dependency-free components to DefaultCLI dependent components with lego-like composition architecture.

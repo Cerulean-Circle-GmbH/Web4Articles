@@ -22,16 +22,12 @@
 ## Traceability
 - Add `[task:uuid:w5x6y7z8-a9b0-1234-wxyz-a56789012345]` to this task.
 - Source: CLI Compliance Planning - DRY Terminal Rendering Requirements
-```
-  - up
-    - [CLI Compliance Planning PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/po/2025-09-06-UTC-2115-comprehensive-cli-compliance-task-planning.pdca.md)
-```
-```
-  - down
-    - [Task 23.1: Developer - Terminal Rendering Centralization](./task-23.1-developer-terminal-rendering-centralization.md)
-    - [Task 23.2: Developer - Color Coding Standards Implementation](./task-23.2-developer-color-coding-standards.md)
-    - [Task 23.3: Developer - DRY Usage View Format System](./task-23.3-developer-dry-usage-format.md)
-```
+- up
+  - [CLI Compliance Planning PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/po/2025-09-06-UTC-2115-comprehensive-cli-compliance-task-planning.pdca.md)
+- down
+  - [Task 23.1: Developer - Terminal Rendering Centralization](./task-23.1-developer-terminal-rendering-centralization.md)
+  - [Task 23.2: Developer - Color Coding Standards Implementation](./task-23.2-developer-color-coding-standards.md)
+  - [Task 23.3: Developer - DRY Usage View Format System](./task-23.3-developer-dry-usage-format.md)
 
 ## Task Description
 Centralize terminal rendering system in DefaultCLI with requirement-v0.1.2.2 color coding standards, eliminating duplication across CLI components and establishing DRY terminal view rendering for Web4 ecosystem.

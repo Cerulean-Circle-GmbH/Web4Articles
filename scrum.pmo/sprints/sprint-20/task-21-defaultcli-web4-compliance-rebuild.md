@@ -22,16 +22,12 @@
 ## Traceability
 - Add `[task:uuid:u3v4w5x6-y7z8-9012-uvwx-y34567890123]` to this task.
 - Source: CLI Compliance Planning - DefaultCLI Foundation Requirements
-```
-  - up
-    - [CLI Compliance Planning PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/po/2025-09-06-UTC-2115-comprehensive-cli-compliance-task-planning.pdca.md)
-```
-```
-  - down
-    - [Task 21.1: Developer - DefaultCLI Compliance Assessment](./task-21.1-developer-defaultcli-compliance-assessment.md)
-    - [Task 21.2: Developer - DefaultCLI 0.3.0.4 Rebuild from Scratch](./task-21.2-developer-defaultcli-rebuild.md)
-    - [Task 21.3: Developer - Static Start Method and Shell Parameters](./task-21.3-developer-static-start-implementation.md)
-```
+- up
+  - [CLI Compliance Planning PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/po/2025-09-06-UTC-2115-comprehensive-cli-compliance-task-planning.pdca.md)
+- down
+  - [Task 21.1: Developer - DefaultCLI Compliance Assessment](./task-21.1-developer-defaultcli-compliance-assessment.md)
+  - [Task 21.2: Developer - DefaultCLI 0.3.0.4 Rebuild from Scratch](./task-21.2-developer-defaultcli-rebuild.md)
+  - [Task 21.3: Developer - Static Start Method and Shell Parameters](./task-21.3-developer-static-start-implementation.md)
 
 ## Task Description
 Assess current DefaultCLI for Web4 compliance violations and rebuild from scratch as dependency-free 0.3.0.4 version with static start method, proper build validation, and foundation for DRY terminal rendering system.
