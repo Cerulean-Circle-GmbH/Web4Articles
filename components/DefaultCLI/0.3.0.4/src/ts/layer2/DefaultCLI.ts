@@ -16,17 +16,9 @@ export class DefaultCLI implements CLI {
     // Empty constructor - Web4 pattern
     this.model = {
       uuid: crypto.randomUUID(),
-      name: '',
-      origin: '',
-      definition: '',
-      indexPath: '',
-      symlinkPaths: [],
-      namedLinks: [],
       componentName: '',
       componentVersion: '',
       componentDescription: '',
-      terminalCapabilities: ['usage-display', 'color-coding', 'terminal-rendering'],
-      cliCapabilities: ['command-routing', 'parameter-handling', 'static-start'],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -152,17 +144,9 @@ export class DefaultCLI implements CLI {
       owner: '',
       model: {
         uuid: crypto.randomUUID(),
-        name: '',
-        origin: '',
-        definition: '',
-        indexPath: '',
-        symlinkPaths: [],
-        namedLinks: [],
         componentName: 'DefaultCLI',
         componentVersion: '0.3.0.4',
         componentDescription: 'Dependency-free base component for CLI functionality',
-        terminalCapabilities: ['usage-display', 'color-coding', 'terminal-rendering'],
-        cliCapabilities: ['command-routing', 'parameter-handling', 'static-start'],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       }
