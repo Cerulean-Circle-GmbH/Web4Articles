@@ -61,6 +61,12 @@ Planning comprehensive CLI compliance tasks as PO: DefaultCLI Web4 compliance as
 - **Web4TSComponent Compliance:** Make Web4TSComponent dependency-free and compliant for 0.3.0.4
 - **Requirement Creation:** Create requirement-v0.1.2.2 format requirements for each component
 
+**CMM3 Compliance Violation Identified:**
+- ❌ **Manual Requirement Creation:** Created requirements manually instead of using Web4Requirement tool
+- ❌ **Tool Dependency Issues:** Web4Requirement 0.1.2.2 tool fails with dependency errors (same as Build system)
+- ✅ **Correction Required:** Must use proper Web4Requirement tool for CMM3 compliance
+- ✅ **Additional Task Needed:** Fix Web4Requirement component before creating requirements properly
+
 **Comprehensive Task Scope:**
 1. **Task 21:** DefaultCLI Web4 Compliance Assessment and Rebuild
 2. **Task 22:** UnitCLI Migration to Extend DefaultCLI with Terminal Rendering
