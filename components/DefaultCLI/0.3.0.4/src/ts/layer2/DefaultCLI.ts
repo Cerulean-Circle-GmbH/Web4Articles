@@ -18,7 +18,6 @@ export class DefaultCLI implements CLI {
       uuid: crypto.randomUUID(),
       componentName: '',
       componentVersion: '',
-      componentDescription: '',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -59,7 +58,6 @@ export class DefaultCLI implements CLI {
     // Extract component info for usage display
     this.model.componentName = component.constructor.name.replace('Default', '');
     this.model.componentVersion = '0.3.0.4'; // Will be enhanced to read from package.json
-    this.model.componentDescription = this.getComponentDescription();
     this.model.updatedAt = new Date().toISOString();
     return this;
   }
@@ -90,7 +88,8 @@ export class DefaultCLI implements CLI {
     // Terminal rendering with color coding (foundation for DRY system)
     const colors = this.getColors();
     
-    console.log(`${colors.bold}${colors.cyan}Web4 ${this.model.componentName} CLI Tool v${this.model.componentVersion}${colors.reset} ${colors.green}- ${this.model.componentDescription}${colors.reset}`);
+    const description = this.component ? this.getComponentDescription() : 'Base CLI Component';
+    console.log(`${colors.bold}${colors.cyan}Web4 ${this.model.componentName} CLI Tool v${this.model.componentVersion}${colors.reset} ${colors.green}- ${description}${colors.reset}`);
     console.log('');
     
     console.log(`${colors.bold}Usage:${colors.reset}`);
@@ -146,7 +145,6 @@ export class DefaultCLI implements CLI {
         uuid: crypto.randomUUID(),
         componentName: 'DefaultCLI',
         componentVersion: '0.3.0.4',
-        componentDescription: 'Dependency-free base component for CLI functionality',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       }

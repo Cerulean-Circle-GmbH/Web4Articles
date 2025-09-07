@@ -8,7 +8,6 @@ export interface CLIModel {
   uuid: string;                    // UUIDv4 format using crypto.randomUUID()
   componentName: string;           // Component name for CLI operations
   componentVersion: string;        // Component version
-  componentDescription: string;    // Component description
   createdAt: string;
   updatedAt: string;
 }
