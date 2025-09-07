@@ -26,25 +26,25 @@
 - **Web4Requirement Tool:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Web4Requirement/0.1.2.2/requirement.sh) | [components/Web4Requirement/0.1.2.2/requirement.sh](../../../../components/Web4Requirement/0.1.2.2/requirement.sh)
 
 ### **QA Decisions**
-**Decision 1: MDA v4 MOF Model Implementation Approach**
-1. a) Add typeM3 attribute to UnitModel with values: "class", "attribute", "relationship"
-2. b) Create separate MOF model interfaces for M3/M2/M1 hierarchy
-3. c) Implement MOF model as separate component integrated with Unit
+- [x] **Decision 1: MDA v4 MOF Model Implementation Approach**
+  1. a) ✅ Add typeM3 attribute to UnitModel with values: "class", "attribute", "relationship"
+  2. b) Create separate MOF model interfaces for M3/M2/M1 hierarchy
+  3. c) ✅ Implement MOF model as separate component (M3 impl will use unit as fundamental component, keep units infrastructure)
 
-**Decision 2: MOF Hierarchy Implementation Strategy**
-1. a) Bootstrap MOF model gradually with Unit typeM3 attribute first
-2. b) Implement complete MOF hierarchy before Unit integration
-3. c) Create MOF specification tasks first, then implement
+- [x] **Decision 2: MOF Hierarchy Implementation Strategy**
+  1. a) ✅ Bootstrap MOF model gradually with Unit typeM3 attribute first (after specification)
+  2. b) Implement complete MOF hierarchy before Unit integration
+  3. c) ✅ Create MOF specification tasks first, then implement
 
-**Decision 3: TypeM3 Value Mapping**
-1. a) Use exact values: "class", "attribute", "relationship" as specified
-2. b) Use enum values: "CLASS", "ATTRIBUTE", "RELATIONSHIP" for consistency
-3. c) Use numeric values: 1=class, 2=attribute, 3=relationship
+- [x] **Decision 3: TypeM3 Value Mapping**
+  1. a) Use exact values: "class", "attribute", "relationship" as specified
+  2. b) ✅ Use enum values: "CLASS", "ATTRIBUTE", "RELATIONSHIP" for consistency (very good question)
+  3. c) Use numeric values: 1=class, 2=attribute, 3=relationship
 
-**Decision 4: Requirement Creation Method**
-1. a) Use Web4Requirement tool for MOF model requirements (CMM3 compliant)
-2. b) Create requirements manually due to tool complexity
-3. c) Skip requirements and proceed with implementation
+- [x] **Decision 4: Requirement Creation Method**
+  1. a) ✅ Use Web4Requirement tool for MOF model requirements (CMM3 compliant)
+  2. b) Create requirements manually due to tool complexity
+  3. c) Skip requirements and proceed with implementation
 
 ### **TRON Feedback (2025-09-06-UTC-2130)**
 ```quote

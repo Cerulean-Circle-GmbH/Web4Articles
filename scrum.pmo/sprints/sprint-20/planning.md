@@ -98,6 +98,12 @@ Complete Sprint 20 requirements dual linking with comprehensive Product Owner ov
   - [ ] [Task 25.2: Developer - Dependency-Free Architecture Implementation](./task-25.2-developer-dependency-free-architecture.md)
   - [ ] [Task 25.3: Developer - Component Generation Standards](./task-25.3-developer-component-generation-standards.md)
 
+- [ ] [Task 26: MOF M3/M2/M1 Hierarchy Specification with Unit TypeM3 Attribute](./task-26-mof-m3-m2-m1-hierarchy-specification.md)  
+  **Priority:** 1 (HIGHEST - MDA v4 MOF Foundation) **Status:** PENDING - Specification First
+  - [ ] [Task 26.1: Developer - MOF Hierarchy Specification](./task-26.1-developer-mof-hierarchy-specification.md)
+  - [ ] [Task 26.2: Developer - Unit TypeM3 Attribute Implementation](./task-26.2-developer-unit-typem3-implementation.md)
+  - [ ] [Task 26.3: Developer - MOF Instance Classification System](./task-26.3-developer-mof-instance-classification.md)
+
 ### **PRIORITY 1: CRITICAL COMPLIANCE (UNBLOCKED - Task 18 Complete 📋)**
 
 - [x] [Task 14: Fix UnitIndex Central Storage Location](./task-14-fix-central-storage-location.md)  
