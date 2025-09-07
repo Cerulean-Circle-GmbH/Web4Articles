@@ -22,13 +22,11 @@
 ## Traceability
 - Add `[subtask:uuid:o5p6q7r8-s9t0-1234-opqr-s56789012345]` to this subtask.
 - Source: Unit Model Separation - Requirement Model Integration
-```
-  - up
-    - [requirement:uuid:69f580d9-7520-4558-9e83-a9827ec8afd0](../requiremnents-2025-09-06-UTC-1132-po-dual-linking.md)
-    - [requirement:uuid:9edcd4d6-2126-40fa-aedd-43fdfda24c6e](../requiremnents-2025-09-06-UTC-1132-po-dual-linking.md)
-    - [requirement:uuid:3b22e65c-d9e7-4910-8dda-9d96195035d5](../requiremnents-2025-09-06-UTC-1132-po-dual-linking.md)
-    - [Task 15: Unit Model Separation](./task-15-unit-model-separation.md)
-```
+**Up:**
+- [requirement:uuid:69f580d9-7520-4558-9e83-a9827ec8afd0](../requiremnents-2025-09-06-UTC-1132-po-dual-linking.md)
+- [requirement:uuid:9edcd4d6-2126-40fa-aedd-43fdfda24c6e](../requiremnents-2025-09-06-UTC-1132-po-dual-linking.md)
+- [requirement:uuid:3b22e65c-d9e7-4910-8dda-9d96195035d5](../requiremnents-2025-09-06-UTC-1132-po-dual-linking.md)
+- [Task 15: Unit Model Separation](./task-15-unit-model-separation.md)
 
 ## Task Description
 Update Requirement models to properly reference Units via IOR or complete scenario with UUIDv4 compliance, following the Unit model separation where model field contains all unitIndex data.
