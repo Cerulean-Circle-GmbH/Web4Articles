@@ -8,6 +8,7 @@ import { promises as fs } from 'fs';
 import { join } from 'path';
 import { existsSync } from 'fs';
 import { DefaultUnit } from '../ts/layer2/DefaultUnit.js';
+import { TypeM3 } from '../ts/layer3/UnitModel.interface.js';
 
 describe('Unit Component Acceptance Tests', () => {
   let testDir: string;
@@ -28,6 +29,7 @@ describe('Unit Component Acceptance Tests', () => {
         name: '',
         origin: '',
         definition: '',
+        typeM3: TypeM3.CLASS,
         indexPath: '',
         symlinkPaths: [],
         namedLinks: [],

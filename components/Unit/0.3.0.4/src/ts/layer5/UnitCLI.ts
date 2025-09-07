@@ -6,6 +6,7 @@
  */
 
 import { DefaultUnit } from '../layer2/DefaultUnit.js';
+import { TypeM3 } from '../layer3/UnitModel.interface.js';
 import { promises as fs } from 'fs';
 
 class UnitCLI {
@@ -28,6 +29,7 @@ class UnitCLI {
           name: '',
           origin: '',
           definition: '',
+          typeM3: TypeM3.CLASS,
           indexPath: '',
           symlinkPaths: [],
           namedLinks: [],

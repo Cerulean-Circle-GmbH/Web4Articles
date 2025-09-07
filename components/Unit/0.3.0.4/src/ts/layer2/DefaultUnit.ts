@@ -5,7 +5,7 @@
 
 import { Unit } from '../layer3/Unit.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
-import { UnitModel } from '../layer3/UnitModel.interface.js';
+import { UnitModel, TypeM3 } from '../layer3/UnitModel.interface.js';
 import { DefaultStorage } from './DefaultStorage.js';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
@@ -21,6 +21,7 @@ export class DefaultUnit implements Unit {
       name: '',                            // Unit name for terminal identification (uni-t)
       origin: '',                          // GitTextIOR format with line/column positions
       definition: '',                      // GitTextIOR format with character positions
+      typeM3: TypeM3.CLASS,                // Default MOF classification (can be changed)
       indexPath: '',                       // Will be set when stored
       symlinkPaths: [],                    // LD links tracking
       namedLinks: [],                      // Named links with location and filename
