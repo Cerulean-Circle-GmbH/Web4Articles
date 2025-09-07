@@ -75,6 +75,48 @@ Enable Build system to handle progressive dependency resolution as CLI ecosystem
 - [ ] Progressive dependency handling validated as ecosystem grows
 - [ ] Web4 compliance maintained throughout dependency resolution
 
+## Automated Dependency Resolution Example
+
+### **Manual Steps That Must Be Automated:**
+
+**Web4Requirement Tool Dependency Resolution (Currently Manual - VIOLATION):**
+```bash
+# Step 1: Build Unit 0.1.0.0 dependency
+cd components/Unit/0.1.0.0
+npm install
+npm run build
+# Result: UnitIndexStorage.js created
+
+# Step 2: Build User 0.1.0.0 dependency  
+cd components/User/0.1.0.0
+npm install
+npm run build
+# Result: DefaultUser.js created
+
+# Step 3: Use Web4Requirement tool (now works)
+components/Web4Requirement/0.1.2.2/requirement.sh create "CLI Color Coding Standards" "..."
+# Result: Requirements created using proper tool (CMM3 compliant)
+```
+
+**Automated Build System Implementation (Required):**
+```bash
+# Single command should handle all dependencies automatically
+components/Web4Requirement/0.1.2.2/requirement.sh create "CLI Color Coding Standards" "..."
+
+# Build system automatically:
+# 1. Detects Web4Requirement dependencies (Unit 0.1.0.0, User 0.1.0.0)
+# 2. Builds Unit 0.1.0.0 if not available
+# 3. Builds User 0.1.0.0 if not available  
+# 4. Enables Web4Requirement tool execution
+# 5. Creates requirement using proper tool (CMM3 compliant)
+```
+
+**Web4 Definition Compliance:**
+- **Self-Building Components:** All components must resolve dependencies automatically
+- **No Manual Intervention:** Tools should start without manual dependency building
+- **Build System Integration:** Automated dependency detection and resolution
+- **Broken Definition:** "When component is not doing it itself it is per Web4 definition not done or broken"
+
 ## QA Audit & User Feedback
 - [ ] [2025-09-06-UTC-2115] TRON Requirements - Progressive Dependency Resolution
   ```quote
@@ -84,6 +126,15 @@ Enable Build system to handle progressive dependency resolution as CLI ecosystem
   - [ ] Resolution: Enhance Build system for dependency-free to DefaultCLI dependent transition
   - [ ] Architecture: Lego-like component composition with proper dependency management
   - [ ] **QA Specification Request:** Will request detailed specifications during PDCA work for progressive dependency resolution
+
+- [ ] [2025-09-06-UTC-2120] TRON Feedback - Build System Automation Violation
+  ```quote
+  all what you just did manually has to happen on starting any tool automatically done by the component itself using the build system. add this example to the task about the build system. with all detailed steps that you just did manual. reference it also as dual link in the web4tscomponent task. when the component is not doing it itself it is percweb4 definition not done or broken! pdca. refresh your mind about the decision process and reporting that you missuse again since a while.
+  ```
+  - [ ] Issue: Manual dependency resolution violates Web4 definition of self-building components
+  - [ ] Resolution: Build system must automatically handle all dependency resolution steps
+  - [ ] Example: Web4Requirement tool dependency chain (Unit 0.1.0.0 → User 0.1.0.0 → Web4Requirement)
+  - [ ] Violation: Components not self-building are broken per Web4 definition
 
 ## Dependencies
 - Depends on Task 21 (DefaultCLI Compliance) and Task 22 (UnitCLI Migration)

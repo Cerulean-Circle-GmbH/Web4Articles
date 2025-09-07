@@ -78,6 +78,18 @@ Create Web4 compliant Web4TSComponent 0.3.0.4 that builds itself dependency-free
 - [ ] Clean 0.3.0.4 version tested and validated
 - [ ] Dependency-free build workflow functional
 
+## Build System Automation Reference
+
+**Manual Dependency Resolution Example (Must Be Automated):**
+- **Reference:** [Build System Automation Violation PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-2120-build-system-automation-violation.pdca.md) | [2025-09-06-UTC-2120-build-system-automation-violation.pdca.md](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-2120-build-system-automation-violation.pdca.md)
+- **Task 24 Integration:** [Build Progressive Dependency Resolution](./task-24-build-progressive-dependency-resolution.md) | [task-24-build-progressive-dependency-resolution.md](./task-24-build-progressive-dependency-resolution.md)
+
+**Web4TSComponent Automation Requirements:**
+- **Self-Building:** Must resolve its own dependencies automatically via Build system
+- **Component Generation:** Must work without manual dependency building
+- **Dependency Chain:** Automatically handle any component dependencies
+- **Web4 Definition:** "When component is not doing it itself it is per Web4 definition not done or broken"
+
 ## QA Audit & User Feedback
 - [ ] [2025-09-06-UTC-2115] TRON Requirements - Web4TSComponent Compliance
   ```quote
