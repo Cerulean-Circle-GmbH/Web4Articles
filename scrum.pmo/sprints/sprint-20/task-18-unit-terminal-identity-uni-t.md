@@ -22,16 +22,12 @@
 ## Traceability
 - Add `[task:uuid:r9s0t1u2-v3w4-5678-rstu-v90123456789]` to this task.
 - Source: Unit Essential Features Analysis - Terminal Identity Requirements
-```
-  - up
-    - [Unit Essential Features PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-1800-unit-essential-features-preparation.pdca.md)
-```
-```
-  - down
-    - [Task 18.1: Developer - Unit Model Enhancement with Name, Origin, Definition](./task-18.1-developer-unit-model-enhancement.md)
-    - [Task 18.2: Developer - Git Format URL Source References](./task-18.2-developer-git-format-url-references.md)
-    - [Task 18.3: Developer - Backward Compatibility and CLI Warnings](./task-18.3-developer-backward-compatibility-warnings.md)
-```
+- up
+  - [Unit Essential Features PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-1800-unit-essential-features-preparation.pdca.md)
+- down
+  - [Task 18.1: Developer - Unit Model Enhancement with Name, Origin, Definition](./task-18.1-developer-unit-model-enhancement.md)
+  - [Task 18.2: Developer - Git Format URL Source References](./task-18.2-developer-git-format-url-references.md)
+  - [Task 18.3: Developer - Backward Compatibility and CLI Warnings](./task-18.3-developer-backward-compatibility-warnings.md)
 
 ## Task Description
 Implement Unit Terminal Identity (uni-t) system enabling anything to be a unit with unique terminal identification. Add name, origin, and definition attributes to UnitModel with git format URL source references including line numbers and column positions.
