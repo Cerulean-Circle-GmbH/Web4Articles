@@ -7,8 +7,8 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { existsSync } from 'fs';
-import { DefaultUnit } from '../ts/layer2/DefaultUnit.js';
-import { TypeM3 } from '../ts/layer3/UnitModel.interface.js';
+import { DefaultUnit } from '../src/ts/layer2/DefaultUnit.js';
+import { TypeM3 } from '../src/ts/layer3/UnitModel.interface.js';
 
 describe('Unit Component Acceptance Tests', () => {
   let testDir: string;
