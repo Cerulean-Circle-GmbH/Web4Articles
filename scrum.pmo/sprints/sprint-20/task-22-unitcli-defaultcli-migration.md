@@ -76,7 +76,7 @@ Transform UnitCLI from standalone CLI to proper DefaultCLI extension with centra
 - [ ] [2025-09-06-UTC-2115] TRON Requirements - UnitCLI DefaultCLI Migration
   ```quote
   the unitcli should extend the defaultCli where the coloring is set. the info in the unitcli is basically a terminal view for the unit component. create a task to migrate that and give you the specification when we arrive working on that task. your console log is basically a terminal view rendering.
-  ```
+  
   - [ ] Issue: UnitCLI should extend DefaultCLI instead of standalone implementation
   - [ ] Resolution: Migrate UnitCLI to proper DefaultCLI inheritance with terminal view rendering
   - [ ] Specification: Terminal view for Unit component using DefaultCLI rendering system

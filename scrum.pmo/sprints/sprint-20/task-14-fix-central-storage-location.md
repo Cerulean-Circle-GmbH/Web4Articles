@@ -22,16 +22,16 @@
 ## Traceability
 - Add `[task:uuid:m3n4o5p6-q7r8-9012-mnop-q34567890123]` to this task.
 - Source: UnitIndex Requirements Analysis - Central Storage Location Issues
-```
+
   - up
     - [requirement:uuid:9edcd4d6-2126-40fa-aedd-43fdfda24c6e](../requiremnents-2025-09-06-UTC-1132-po-dual-linking.md)
     - [UnitIndex Analysis](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-1005-unitindex-requirements-analysis-task-planning.pdca.md)
-```
-```
+
+
   - down
     - [Task 14.1: Developer - Fix Project Root Detection](./task-14.1-developer-project-root-detection.md)
     - [Task 14.2: Developer - Ensure Central Storage Usage](./task-14.2-developer-central-storage-usage.md)
-```
+
 
 ## Task Description
 Fix UnitIndex storage to use central project root scenarios/index/ location instead of creating scenarios in temp folders or other incorrect locations.
@@ -85,7 +85,7 @@ Ensure all unit scenarios are stored in the central scenarios/index/ location as
   the comnand
   unit create „name" „text" 
   should result in name being the link filename normalized to name.unit as filename. consequently you have to add to the array of links the link location and the filename as named linns json wit 2 attributes. fix that. add it to the tasks qa quotes and answer there
-  ```
+  
   - [x] Issue: LD link filename should be `name.unit` instead of `unit-{uuid-prefix}`
   - [x] Issue: Need named links JSON with 2 attributes (location and filename)
   - [x] Resolution: Updated DefaultUnit.toScenario() to use normalized name for link filename
@@ -104,7 +104,7 @@ Ensure all unit scenarios are stored in the central scenarios/index/ location as
   does not make much sense. it should be the relative location for the ln link command to the scenario.
 
   qa feedback to the task. answer and fix.
-  ```
+  
   - [x] Issue: `location` field contains absolute path to link file instead of relative path from link to scenario
   - [x] Issue: Should contain the relative path used by `ln -s` command (e.g., `../scenarios/index/...`)
   - [x] Resolution: Updated namedLinks to store actual relative path used by symlink creation

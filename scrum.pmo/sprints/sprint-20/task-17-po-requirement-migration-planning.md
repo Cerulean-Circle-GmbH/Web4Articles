@@ -22,15 +22,15 @@
 ## Traceability
 - Add `[task:uuid:q8r9s0t1-u2v3-4567-qrst-u89012345678]` to this task.
 - Source: Task 13 Research - TRON Decision on Migration Dependencies
-```
+
   - up
     - [Task 13 Research PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-1640-task-13-scenario-format-research.pdca.md)
-```
-```
+
+
   - down
     - [Task 17.1: PO - Requirement v0.3.0.4 Migration Strategy](./task-17.1-po-requirement-migration-strategy.md)
     - [Task 17.2: PO - Requirement Component Architecture Planning](./task-17.2-po-requirement-architecture-planning.md)
-```
+
 
 ## Task Description
 Plan the migration of Requirement component to v0.3.0.4 following User/Unit patterns, as prerequisite for scenario format migration (Task 16).
@@ -72,7 +72,7 @@ Plan the systematic migration of Requirement component from current version to v
 - [ ] [2025-09-06-UTC-1720] TRON Decision Implementation
   ```quote
   2 see above, but it requires at first to migrate requiremen to v0.3.0.4 so postpone the migration to after this update happened any was planned correctly. add a task to plan this correctly for the PO.
-  ```
+  
   - [ ] Issue: Scenario migration requires Requirement v0.3.0.4 first
   - [ ] Resolution: Created PO task to plan Requirement migration correctly
   - [ ] Example: Plan Requirement v0.3.0.4 → then proceed with scenario migration

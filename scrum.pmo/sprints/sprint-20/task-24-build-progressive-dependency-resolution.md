@@ -92,7 +92,7 @@ npm run build
 # Step 3: Use Web4Requirement tool (now works)
 components/Web4Requirement/0.1.2.2/requirement.sh create "CLI Color Coding Standards" "..."
 # Result: Requirements created using proper tool (CMM3 compliant)
-```
+
 
 **Automated Build System Implementation (Required):**
 ```bash
@@ -105,7 +105,7 @@ components/Web4Requirement/0.1.2.2/requirement.sh create "CLI Color Coding Stand
 # 3. Builds User 0.1.0.0 if not available  
 # 4. Enables Web4Requirement tool execution
 # 5. Creates requirement using proper tool (CMM3 compliant)
-```
+
 
 **Web4 Definition Compliance:**
 - **Self-Building Components:** All components must resolve dependencies automatically
@@ -117,7 +117,7 @@ components/Web4Requirement/0.1.2.2/requirement.sh create "CLI Color Coding Stand
 - [ ] [2025-09-06-UTC-2115] TRON Requirements - Progressive Dependency Resolution
   ```quote
   as we are progressing we create more dependencies that the build component has to handle and resolve. from dependency free components to components using the defaultCLI.
-  ```
+  
   - [ ] Issue: Build component needs progressive dependency resolution for growing CLI ecosystem
   - [ ] Resolution: Enhance Build system for dependency-free to DefaultCLI dependent transition
   - [ ] Architecture: Lego-like component composition with proper dependency management
@@ -126,7 +126,7 @@ components/Web4Requirement/0.1.2.2/requirement.sh create "CLI Color Coding Stand
 - [ ] [2025-09-06-UTC-2120] TRON Feedback - Build System Automation Violation
   ```quote
   all what you just did manually has to happen on starting any tool automatically done by the component itself using the build system. add this example to the task about the build system. with all detailed steps that you just did manual. reference it also as dual link in the web4tscomponent task. when the component is not doing it itself it is percweb4 definition not done or broken! pdca. refresh your mind about the decision process and reporting that you missuse again since a while.
-  ```
+  
   - [ ] Issue: Manual dependency resolution violates Web4 definition of self-building components
   - [ ] Resolution: Build system must automatically handle all dependency resolution steps
   - [ ] Example: Web4Requirement tool dependency chain (Unit 0.1.0.0 → User 0.1.0.0 → Web4Requirement)

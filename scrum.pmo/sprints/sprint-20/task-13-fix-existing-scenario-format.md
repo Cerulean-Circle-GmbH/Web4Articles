@@ -22,17 +22,17 @@
 ## Traceability
 - Add `[task:uuid:l2m3n4o5-p6q7-8901-lmno-p23456789012]` to this task.
 - Source: Unit Version Analysis - Existing Storage Format Compliance
-```
+
   - up
     - [requirement:uuid:571814f6-1493-4384-8104-edb3d6eb38fd](../requiremnents-2025-09-06-UTC-1132-po-dual-linking.md)
     - [Unit Version Analysis](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-0830-unit-version-analysis-perfect-web4-implementation.pdca.md)
-```
-```
+
+
   - down
     - [Task 13.1: Developer - Migrate IOR Uppercase to Lowercase](./task-13.1-developer-migrate-ior-format.md)
     - [Task 13.2: Developer - Fix Version Format in Existing Scenarios](./task-13.2-developer-fix-version-format.md)
     - [Task 13.3: Developer - Upgrade Owner Encoding to Proper Encryption](./task-13.3-developer-upgrade-owner-encryption.md)
-```
+
 
 ## Task Description
 Fix existing 100+ scenarios in scenarios/index/ storage to use proper Web4 standard format (lowercase "ior", semantic versioning, proper encryption) while preserving unitIndex LD links tracking.

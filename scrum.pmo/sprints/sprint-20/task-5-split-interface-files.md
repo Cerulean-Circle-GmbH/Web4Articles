@@ -22,16 +22,16 @@
 ## Traceability
 - Add `[task:uuid:i9j0k1l2-m3n4-5678-ijkl-m90123456789]` to this task.
 - Source: Web4 Compliance Violation Analysis - Single Responsibility Violations
-```
+
   - up
     - [Web4 Compliance Analysis](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-0720-web4-compliance-violation-analysis-resolution-strategy.pdca.md)
-```
-```
+
+
   - down
     - [Task 5.1: Developer - Split User 0.3.0.2 Interfaces](./task-5.1-developer-split-user-interfaces.md)
     - [Task 5.2: Developer - Split ONCE ServiceRegistry Interfaces](./task-5.2-developer-split-once-interfaces.md)
     - [Task 5.3: Developer - Split HttpServer Interfaces](./task-5.3-developer-split-httpserver-interfaces.md)
-```
+
 
 ## Task Description
 Split multiple interface files that violate Web4 single responsibility principle into separate files, following User 0.3.0.4 pattern where each interface has its own file.

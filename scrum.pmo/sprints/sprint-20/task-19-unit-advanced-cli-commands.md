@@ -22,16 +22,16 @@
 ## Traceability
 - Add `[task:uuid:s0t1u2v3-w4x5-6789-stuv-w01234567890]` to this task.
 - Source: Task 18 Completion - Advanced CLI Commands Requirements
-```
+
   - up
     - [Task 18 Implementation PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-1835-task-18-implementation.pdca.md)
-```
-```
+
+
   - down
     - [Task 19.1: Developer - DefaultCLI Base Component Creation](./task-19.1-developer-defaultcli-base-component.md)
     - [Task 19.2: Developer - Advanced Unit CLI Commands Implementation](./task-19.2-developer-advanced-unit-cli-commands.md)
     - [Task 19.3: Developer - Source Integration Commands](./task-19.3-developer-source-integration-commands.md)
-```
+
 
 ## Task Description
 Implement advanced Unit CLI commands for link management and source integration, including DefaultCLI 0.3.0.4 as dependency-free base component with requirement-v0.1.2.2 format compliance.
@@ -118,7 +118,7 @@ unit list a1b2c3d4-e5f6-7890-abcd-ef1234567890
 #   - /workspace/temp/auth-validator.unit
 #   - /workspace/components/Auth/validator.unit
 #   - /workspace/test/unit-test.unit
-```
+
 
 ### **Source Integration Commands:**
 
@@ -130,7 +130,7 @@ unit from components/Auth/UserValidator.ts 42:15 67:23
 # Add definition source to existing unit  
 unit definition a1b2c3d4-e5f6-7890-abcd-ef1234567890 components/Auth/UserValidator.ts 1250 1890
 # Result: Adds definition reference using character positions 1250-1890
-```
+
 
 ### **Usage Format (following User CLI format structure):**
 
@@ -181,13 +181,13 @@ Web4 Integration:
   Unit operates as atomic Web4 element with terminal identification (uni-t).
   All units use central UUID storage with LD links tracking and source traceability.
   GitTextIOR format enables complete source reference with ior:git:text:giturl.
-```
+
 
 ## QA Audit & User Feedback
 - [ ] [2025-09-06-UTC-2015] TRON Requirements - Advanced CLI Commands
   ```quote
   - [ ] add a method to create new links to the same unit in different places. eg: unit link <uuid> <filename>. parameters in html brackets and method name "link". add it to DefaultUnit implementation. use DefaultCLI to map the shell command cli to "unit link <uuid> <filename>" and add it to the usage. add another method "unit list <uuid>"  the same way and then list all ln links to the uuid. for the usage response on no parameters use the same format and structure as requirement-v0.1.2.2. the DefaultCLI 0.3.0.4 therefore must build itself dependency free as a base component. unit must include DefaultCLI as a build dependency. add another method "unit from  <filename> <start:line,column> <end:line,column> to create a unit with the name from the text in the file as origin and another one "unit definition <uuid> <filename> <start:line,column> <end:line,column>" to add the definition source from a file text.
-  ```
+  
   - [ ] Issue: Need advanced CLI commands for link management and source integration
   - [ ] Resolution: Create Task 19 with DefaultCLI base component and advanced command implementation
   - [ ] Example: `unit link <uuid> <filename>`, `unit from <filename> <start:line,column> <end:line,column>`
@@ -203,7 +203,7 @@ Web4 Integration:
 
   DefaultCLI needs no mapping and its better for ocams razor and tsranger 2.2.
   make this a global web4 requirement wit requiremen-v0.1.2.2 and use this pattern in general. update the task accordingly
-  ```
+  
   - [ ] Issue: CLI method names should match shell command names exactly to eliminate mapping
   - [ ] Resolution: Create global Web4 requirement v0.1.2.2-cli-method-naming-convention
   - [ ] Pattern: `unit definition` → `definition()` method (not `addDefinition()`)
@@ -232,7 +232,7 @@ Web4 Integration:
   then fix it accordingly 
 
   thats the reason why we plan now upfront
-  ```
+  
   - [ ] Issue: Assumed wrong usage format instead of checking actual requirement-v0.1.2.2
   - [ ] Resolution: Check actual User CLI format and apply proper structure (Usage, Commands, Parameters, Examples, Web4 Integration)
   - [ ] Learning: Always verify actual format instead of making assumptions
@@ -252,7 +252,7 @@ Web4 Integration:
   the iors MUST be ABSOLUTE links to really work later!
 
   fix it and obviously add my qa feedback to the task
-  ```
+  
   - [ ] Issue: GitTextIOR URLs contain relative paths (../scrum.pmo/...) instead of absolute paths
   - [ ] Resolution: Fix GitTextIOR implementation to generate absolute GitHub URLs without relative path components
   - [x] Example: Should be `https://github.com/.../scrum.pmo/sprints/sprint-20/Web4TLA.Specification.dialogue.md#L2039:130-2039:134`
@@ -282,7 +282,7 @@ Web4 Integration:
   a unit will be instancieated only as a consequence of a command.
 
   add this to the unit tasks qa feedback and pdca
-  ```
+  
   - [x] Issue: `unit` with no parameters creates unit instance and shows warning (incorrect behavior)
   - [x] Issue: Unit should only be instantiated as consequence of commands, not for usage display
   - [x] Resolution: Fixed UnitCLI to use lazy instantiation - DefaultUnit created only when commands require it

@@ -22,16 +22,16 @@
 ## Traceability
 - Add `[task:uuid:f6g7h8i9-j0k1-2345-fghi-j67890123456]` to this task.
 - Source: TRON Feedback from Session Overview - Seamless Execution Requirements
-```
+
   - up
     - [Session Overview Analysis](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-0650-session-overview-analysis-decisions-understanding.pdca.md)
-```
-```
+
+
   - down
     - [Task 7.1: Developer - Implement Build Chain Automation](./task-7.1-developer-build-chain-automation.md)
     - [Task 7.2: Developer - Add npm run clean Command](./task-7.2-developer-npm-clean-command.md)
     - [Task 7.3: Developer - Implement Static Start Methods](./task-7.3-developer-static-start-methods.md)
-```
+
 
 ## Task Description
 Implement seamless ONCE build chain where typing "once" automatically builds all dependencies in correct order until CLI shows usage. This addresses TRON's requirement: "the core component that needs to build seamlessly from scratch in an empty background agent is once."

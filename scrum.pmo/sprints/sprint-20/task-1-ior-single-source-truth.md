@@ -22,15 +22,15 @@
 ## Traceability
 - Add `[task:uuid:a1b2c3d4-e5f6-7890-abcd-ef1234567890]` to this task.
 - Source: Web4 Compliance Violation Analysis - IOR Duplication Resolution
-```
+
   - up
     - [Web4 Compliance Analysis](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-0720-web4-compliance-violation-analysis-resolution-strategy.pdca.md)
-```
-```
+
+
   - down
     - [Task 1.1: Developer - IOR Interface Consolidation](./task-1.1-developer-ior-consolidation.md)
     - [Task 1.2: Developer - Update All IOR Import References](./task-1.2-developer-ior-import-updates.md)
-```
+
 
 ## Task Description
 Establish IOR/0.3.0.3 as the single source of truth for IOR interface definition and eliminate all duplicate IOR interfaces across components. This addresses the critical DRY violation where IOR is duplicated in User/0.3.0.4, Scenario/0.3.0.2, and Scenario/0.3.0.4 components.

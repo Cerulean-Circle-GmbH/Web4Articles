@@ -22,15 +22,15 @@
 ## Traceability
 - Add `[task:uuid:j0k1l2m3-n4o5-6789-jklm-n01234567890]` to this task.
 - Source: Unit Research Analysis - Over-Engineering Violation
-```
+
   - up
     - [Unit Research Analysis](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-0750-comprehensive-unit-research-analysis.pdca.md)
-```
-```
+
+
   - down
     - [Task 11.1: Developer - Replace Complex Unit with Simple Pattern](./task-11.1-developer-unit-simplification.md)
     - [Task 11.2: Developer - Apply User 0.3.0.4 Template to Unit](./task-11.2-developer-unit-template-application.md)
-```
+
 
 ## Task Description
 Replace over-engineered Unit component (335+ line complex interface) with simple pattern following User 0.3.0.4 template, applying Occam's razor principle to establish proper foundation pattern for all components.

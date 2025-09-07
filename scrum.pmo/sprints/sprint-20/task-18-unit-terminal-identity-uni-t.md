@@ -118,7 +118,7 @@ Enable any element in the Web4 ecosystem to be uniquely identified as a unit wit
     "updatedAt": "2025-09-06T18:15:00.000Z"
   }
 }
-```
+
 
 ### **Git Format URL Reference Examples:**
 
@@ -148,10 +148,10 @@ Enable any element in the Web4 ecosystem to be uniquely identified as a unit wit
     // Missing: name, origin, definition
   }
 }
-```
+
 
 **CLI Warning Output:**
-```
+
 ⚠️  Warning: Unit 'old-unit-uuid' missing terminal identity information:
    - name: not specified
    - origin: not specified  
@@ -159,13 +159,13 @@ Enable any element in the Web4 ecosystem to be uniquely identified as a unit wit
    
    Next build version will require migration method for missing model info.
    Please update unit with complete terminal identity (uni-t) attributes.
-```
+
 
 ## QA Audit & User Feedback
 - [ ] [2025-09-06-UTC-1805] TRON Decision Implementation
   ```quote
   1 - [ ] anything can be a unit, that should be unique and terminally identified (uni-t). so we need to be able to give a unit a name and an origin. the origin is a reference to the sources file as url with line number and column start and end in git format. add this to the unit model. also add a definition attribute, with the same url source format with start and end characters urls in git format. on read and initialize accept files with missing infos about it but warn in the cli. in the next build version we will not accept missing scenario model infos without migration method.
-  ```
+  
   - [ ] Issue: Unit needs terminal identification (uni-t) with name, origin, and definition
   - [ ] Resolution: Enhance UnitModel with git format URL source references and traceability
   - [ ] Example: Unit "UserAuthenticationValidator" with origin (L42:15-67:23) and definition (char 1250-1890)
@@ -173,12 +173,12 @@ Enable any element in the Web4 ecosystem to be uniquely identified as a unit wit
 - [ ] [2025-09-06-UTC-1820] TRON Enhancement - Git Text IOR Implementation
   ```quote
   very good. create extra class and interface in the unit layers for handling these urls. have IOR as the interface and GitTextIOR as the implementation class with ior text format: „ior:git:text:[giturl](http://github.com:port/…)" rhe brackets are placeholders no md text format. to be used innthe origin attribute.
-  ```
+  
 
 - [ ] [2025-09-06-UTC-1830] TRON Correction - GitTextIOR Architecture
   ```quote
   excellent. as it is already a specialized IOR. its not DefaultIOR nor DefaultGitTextIOR but  GitTextIOR extends IOR. fix that and the the spec is good and accepted.
-  ```
+  
   - [ ] Issue: Need specialized interface and class for handling git URL references
   - [ ] Resolution: Create base IOR interface and specialized GitTextIOR implementation (extends IOR) as implementation class
   - [ ] Architecture: GitTextIOR extends IOR (not DefaultGitTextIOR)

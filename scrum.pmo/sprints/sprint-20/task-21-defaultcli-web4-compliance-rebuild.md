@@ -79,7 +79,7 @@ Create Web4 compliant DefaultCLI 0.3.0.4 as foundation for entire CLI ecosystem,
 - [ ] [2025-09-06-UTC-2115] TRON Requirements - DefaultCLI Compliance Foundation
   ```quote
   at first we need again a web4 compliant dependency free DefaultCLI. assess the defaultCLI for compliance. in worst case create id from scratch as 0.3.0.4. check that it builds with npm run clean, npm run build. npm start just starts every component with no preconditions, it builds and just starts. starting in radical oop always means, no main functional entity point but a static start method getting the sh parameters.
-  ```
+  
   - [x] Issue: DefaultCLI needs Web4 compliance assessment and potential rebuild
   - [x] Resolution: Assessed compliance violations, rebuilt from scratch as 0.3.0.4
   - [x] Validation: npm run clean/build/start functionality with static start method working
@@ -88,6 +88,7 @@ Create Web4 compliant DefaultCLI 0.3.0.4 as foundation for entire CLI ecosystem,
 - [ ] [2025-09-06-UTC-2140] TRON QA Feedback - CLI Model Compliance and DRY Violations
   ```quote
   the cli model is incompliant ant has a lot of DRY violations. what is really needed. ocams razor. task qa feedback!
+<<<<<<< HEAD
   ```
   - [x] Issue: CLIModel interface has compliance violations and DRY violations
   - [x] Issue: Over-engineering with unnecessary attributes (Occam's Razor violation)
@@ -96,6 +97,14 @@ Create Web4 compliant DefaultCLI 0.3.0.4 as foundation for entire CLI ecosystem,
   - [x] Principle: Occam's Razor - simplest solution with minimal attributes applied
   - [x] Further Issue: IOR and Scenario interfaces must become units to eliminate duplicates
   - [x] Task Integration: Task 1 (Single Source of Truth for IOR Interface) addresses duplication issue
+=======
+  
+  - [ ] Issue: CLIModel interface has compliance violations and DRY violations
+  - [ ] Issue: Over-engineering with unnecessary attributes (Occam's Razor violation)
+  - [ ] Resolution: Simplify CLIModel to essential attributes only, eliminate DRY violations
+  - [ ] Analysis: What is really needed for CLI functionality vs unnecessary complexity
+  - [ ] Principle: Occam's Razor - simplest solution with minimal attributes
+>>>>>>> c1039144 (fix: Sprint 20 traceability links systematic fix - all task links now clickable)
 
 ## Dependencies
 - Foundation for all other CLI compliance tasks (Tasks 22-26)

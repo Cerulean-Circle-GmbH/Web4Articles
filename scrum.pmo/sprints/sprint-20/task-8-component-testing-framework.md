@@ -22,16 +22,16 @@
 ## Traceability
 - Add `[task:uuid:g7h8i9j0-k1l2-3456-ghij-k78901234567]` to this task.
 - Source: Historical PDCA Analysis - Component Testing Phases Never Executed
-```
+
   - up
     - [Historical PDCA Research](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-0740-historical-pdca-research-task-extraction.pdca.md)
-```
-```
+
+
   - down
     - [Task 8.1: Developer - Vitest Setup for All Components](./task-8.1-developer-vitest-setup.md)
     - [Task 8.2: Tester - Component Start/Build Test Cases](./task-8.2-tester-component-test-cases.md)
     - [Task 8.3: Developer - DRY CLI Color Externalization](./task-8.3-developer-dry-cli-colors.md)
-```
+
 
 ## Task Description
 Implement comprehensive testing framework for all components with Vitest, create test cases for component building and starting, and externalize repeated CLI patterns following DRY principle.

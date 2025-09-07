@@ -22,16 +22,16 @@
 ## Traceability
 - Add `[task:uuid:t2u3v4w5-x6y7-8901-tuvw-x23456789012]` to this task.
 - Source: Task 19 Success - Build Component Compliance Requirements
-```
+
   - up
     - [Task 19 Implementation PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-2030-task-19-implementation.pdca.md)
-```
-```
+
+
   - down
     - [Task 20.1: Developer - Build Component Compliance Assessment](./task-20.1-developer-build-compliance-assessment.md)
     - [Task 20.2: Developer - Build 0.3.0.4 Web4 Compliant Implementation](./task-20.2-developer-build-compliant-implementation.md)
     - [Task 20.3: Developer - DefaultCLI Integration and Dependency Resolution](./task-20.3-developer-defaultcli-integration.md)
-```
+
 
 ## Task Description
 Assess current Build component for Web4 compliance violations and create compliant Build 0.3.0.4 following Unit/DefaultCLI patterns with proper dependency resolution before usage display - no bypasses, shortcuts, or simpler approaches.
@@ -116,7 +116,7 @@ Examples:
   build resolve unit                              # Resolve Unit component dependencies
   build validate unit                             # Validate Unit component working state
   build clean unit                                # Clean Unit component build
-```
+
 
 ### **Dependency Resolution Flow:**
 1. **Pre-Usage Validation:** Build component validates its own dependencies first
@@ -129,7 +129,7 @@ Examples:
 - [ ] [2025-09-06-UTC-2045] TRON Requirements - Build Component Web4 Compliance
   ```quote
   - [ ] now you understood how to build DefaultCLI and use it in Unit. thats how the Build component should help to resolve dependencies on starting and building the too (e.g unit) before showing the usage as a proof that its working correctly. no bypass, no shortcut, no new simpler approach, just web4 compliance!!!! create a task for the build component to be assessed for web4 compliance and have a compliant version 0.3.0.4.
-  ```
+  
   - [ ] Issue: Build component needs Web4 compliance assessment and proper dependency resolution
   - [ ] Resolution: Create Task 20 for Build component compliance assessment and version 0.3.0.4
   - [ ] Pattern: Follow Unit/DefaultCLI patterns with dependency resolution before usage

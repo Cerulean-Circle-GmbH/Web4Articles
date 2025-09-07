@@ -82,21 +82,21 @@ enum TypeM3 {
   ATTRIBUTE = "ATTRIBUTE",   // Files, properties, data
   RELATIONSHIP = "RELATIONSHIP" // LD Links, associations, connections
 }
-```
+
 
 ### **M2 Level (Meta-Model):**
-```
+
 Web4Folder: M2 instance of Unit M3 with name="Folder" and typeM3="CLASS"
 Web4TSComponent: M2 instance of Unit M3 with name="TSComponent" and typeM3="CLASS"  
 Web4File: M2 instance of Unit M3 with name="File" and typeM3="ATTRIBUTE"
-```
+
 
 ### **M1 Level (Model):**
-```
+
 components/Unit/0.3.0.4/: M1 instance of M2 Web4Folder
 package.json: M1 instance of M2 Web4File (typeM3 ATTRIBUTE)
 temp/ONCE.unit: M1 instance of M2 Web4Link (typeM3 RELATIONSHIP)
-```
+
 
 ## QA Audit & User Feedback
 - [ ] [2025-09-06-UTC-2130] TRON Decisions - MOF Implementation Strategy
@@ -105,7 +105,7 @@ temp/ONCE.unit: M1 instance of M2 Web4Link (typeM3 RELATIONSHIP)
   2c then a 
   3b very good question 
   4 a
-  ```
+  
   - [x] Decision 1: Add typeM3 attribute (1a) and separate MOF component (1c) using Unit as fundamental
   - [x] Decision 2: Create specification tasks first (2c), then bootstrap gradually (2a)
   - [x] Decision 3: Use enum values CLASS, ATTRIBUTE, RELATIONSHIP for consistency (3b)

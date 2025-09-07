@@ -22,15 +22,15 @@
 ## Traceability
 - Add `[task:uuid:n4o5p6q7-r8s9-0123-nopq-r45678901234]` to this task.
 - Source: UnitIndex Model Research - Model Separation Architecture
-```
+
   - up
     - [UnitIndex Model Research](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-1010-unitindex-as-unit-model-research.pdca.md)
-```
-```
+
+
   - down
     - [Task 15.1: Developer - Replace Unit Model with UnitIndex Model](./task-15.1-developer-unitindex-model.md)
     - [Task 15.2: Developer - Update Requirement Model with Unit References](./task-15.2-developer-requirement-unit-references.md)
-```
+
 
 ## Task Description
 Implement proper Unit model separation following accepted example where model field contains all unitIndex data (no separate unitIndex field), and Requirement models reference Units via IOR or complete scenario with UUIDv4 compliance.
@@ -56,7 +56,7 @@ Establish clean model architecture separation following accepted example exactly
     "storageCapabilities": ["scenarios", "ld-links"]
   }
 }
-```
+
 
 **Key Requirements:**
 1. **Single Model Field:** Remove separate unitIndex field completely

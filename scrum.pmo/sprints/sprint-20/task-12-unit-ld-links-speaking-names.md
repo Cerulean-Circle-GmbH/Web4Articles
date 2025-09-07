@@ -22,15 +22,15 @@
 ## Traceability
 - Add `[task:uuid:k1l2m3n4-o5p6-7890-klmn-o12345678901]` to this task.
 - Source: Unit Bootstrapping Research - LD Links System Implementation
-```
+
   - up
     - [Unit Bootstrapping Research](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-0820-unit-bootstrapping-ld-links-storage-research.pdca.md)
-```
-```
+
+
   - down
     - [Task 12.1: Developer - Speaking Name Resolution Implementation](./task-12.1-developer-speaking-name-resolution.md)
     - [Task 12.2: Developer - LD Links Management System](./task-12.2-developer-ld-links-management.md)
-```
+
 
 ## Task Description
 Implement Unit LD Links system that enables speaking name resolution to UUID storage locations, preventing inconsistency and bad redundancy by mapping human-readable names to unique identified units in central storage.

@@ -22,15 +22,15 @@
 ## Traceability
 - Add `[task:uuid:e5f6g7h8-i9j0-1234-efgh-i56789012345]` to this task.
 - Source: Web4 Compliance Violation Analysis - Index File Architectural Violations
-```
+
   - up
     - [Web4 Compliance Analysis](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-0720-web4-compliance-violation-analysis-resolution-strategy.pdca.md)
-```
-```
+
+
   - down
     - [Task 3.1: Developer - Delete Index Files](./task-3.1-developer-delete-index-files.md)
     - [Task 3.2: Developer - Move Exports to Interface Files](./task-3.2-developer-move-exports.md)
-```
+
 
 ## Task Description
 Remove all 16 identified index.ts files that violate Web4 interface-first dependency principle. Index files create hidden dependencies and violate component isolation by aggregating functionality instead of exposing it through clean interfaces.

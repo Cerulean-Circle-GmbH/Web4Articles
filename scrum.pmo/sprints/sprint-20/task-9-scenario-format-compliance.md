@@ -22,16 +22,16 @@
 ## Traceability
 - Add `[task:uuid:h8i9j0k1-l2m3-4567-hijk-l89012345678]` to this task.
 - Source: Session Overview Analysis - Scenario Format Violations Never Fixed
-```
+
   - up
     - [Session Overview Analysis](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-0650-session-overview-analysis-decisions-understanding.pdca.md)
-```
-```
+
+
   - down
     - [Task 9.1: Developer - Implement UUIDv4 Compliance](./task-9.1-developer-uuidv4-compliance.md)
     - [Task 9.2: Developer - Fix Scenario Directory Location](./task-9.2-developer-scenario-directory.md)
     - [Task 9.3: Developer - Implement Encrypted Owner](./task-9.3-developer-encrypted-owner.md)
-```
+
 
 ## Task Description
 Fix scenario format compliance violations identified in session overview: UUIDv4 enforcement, correct scenario directory location, and encrypted owner implementation.

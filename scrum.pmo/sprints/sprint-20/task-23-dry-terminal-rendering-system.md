@@ -77,7 +77,7 @@ Create centralized terminal rendering system in DefaultCLI with proper color cod
 - [ ] [2025-09-06-UTC-2115] TRON Requirements - DRY Terminal Rendering System
   ```quote
   the unitcli does not maintain the correct color coding as in requirement 0.1.2.2 which is the default for usage views in format sections and color encoding. all these terminal rendering will be going into the defaultcli, so that the unitcli can pick from it and keep up the DRY.
-  ```
+  
   - [ ] Issue: UnitCLI has incorrect color coding and duplicate terminal rendering
   - [ ] Resolution: Centralize terminal rendering in DefaultCLI with requirement-v0.1.2.2 standards
   - [ ] DRY Implementation: All CLI components use DefaultCLI terminal rendering
