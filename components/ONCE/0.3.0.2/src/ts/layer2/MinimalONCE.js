@@ -62,7 +62,7 @@ export class MinimalONCE {
         await this.stop([]);
         try {
             // Use Build component for comprehensive cleaning
-            const DefaultBuild = require('../../../Build/0.3.0.3/dist/ts/layer2/DefaultBuild.js').DefaultBuild;
+            const { DefaultBuild } = await import('../../../Build/0.3.0.3/dist/ts/layer2/DefaultBuild.js');
             const build = new DefaultBuild();
             console.log('🔗 ONCE: Using Build component for comprehensive cleaning...');
             await build.cleanAllComponents();

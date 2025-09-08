@@ -29,13 +29,13 @@ export class DefaultRequirement implements Requirement {
   /**
    * Find project root by looking for scenarios directory
    */
-  private findProjectRoot(): string {
+  private async findProjectRoot(): Promise<string> {
     let currentDir = process.cwd();
     while (currentDir !== path.dirname(currentDir)) {
       const scenariosPath = path.join(currentDir, 'scenarios');
       try {
-        // Check if scenarios directory exists (sync check for simplicity)
-        require('fs').accessSync(scenariosPath);
+        // Check if scenarios directory exists (async check)
+        await fs.access(scenariosPath);
         return currentDir;
       } catch {
         currentDir = path.dirname(currentDir);
@@ -493,7 +493,7 @@ export class DefaultRequirement implements Requirement {
       // Check if this directory contains package.json (component marker)
       const packageJsonPath = path.join(dir, 'package.json');
       try {
-        require('fs').accessSync(packageJsonPath);
+        await fs.access(packageJsonPath);
         
         // Check if this is within components/ directory structure
         if (dir.includes('/components/') && dir.match(/\/components\/[^\/]+\/[^\/]+$/)) {
@@ -898,11 +898,11 @@ export class DefaultRequirement implements Requirement {
     }
   }
 
-  generateMDView(): string {
+  async generateMDView(): Promise<string> {
     const templatePath = path.join(__dirname, '../../../src/views/md/default.view.md');
     
     try {
-      const template = require('fs').readFileSync(templatePath, 'utf-8');
+      const template = await fs.readFile(templatePath, 'utf-8');
       const implementationStatus = this.getImplementationStatus();
       const statusCheckbox = implementationStatus === 'completed' ? 'x' : ' ';
       
@@ -1065,8 +1065,8 @@ export class DefaultRequirement implements Requirement {
         .sort((a, b) => {
           // Sort by creation time (newest first) - extract timestamp from UUID
           try {
-            const statsA = require('fs').statSync(path.join(outputPath, a));
-            const statsB = require('fs').statSync(path.join(outputPath, b));
+            const statsA = await fs.stat(path.join(outputPath, a));
+            const statsB = await fs.stat(path.join(outputPath, b));
             return statsB.mtime.getTime() - statsA.mtime.getTime();
           } catch {
             return b.localeCompare(a); // Fallback to alphabetical if stats fail
@@ -1197,7 +1197,7 @@ ${itemsList}
   private async generateRequirementsOverviewLegacy(requirementFiles: string[], outputPath: string): Promise<string> {
     try {
       // Use new MDOverview for maximum template independence
-      const { MDOverview } = require('./MDOverview.js');
+      const { MDOverview } = await import('./MDOverview.js');
       
       const overviewTemplatePath = path.join(__dirname, '../../../src/views/md/over.view.md');
       const itemTemplatePath = path.join(__dirname, '../../../src/views/md/item.view.md');

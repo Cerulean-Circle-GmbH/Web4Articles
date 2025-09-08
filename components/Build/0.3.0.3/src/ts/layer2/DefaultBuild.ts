@@ -118,10 +118,10 @@ export class DefaultBuild implements Build {
   /**
    * Check if component needs building
    */
-  needsBuild(componentPath: string): boolean {
+  async needsBuild(componentPath: string): Promise<boolean> {
     try {
-      const fs = require('fs');
-      const path = require('path');
+      const fs = await import('fs');
+      const path = await import('path');
       
       const distPath = path.join(componentPath, 'dist');
       const srcPath = path.join(componentPath, 'src');
