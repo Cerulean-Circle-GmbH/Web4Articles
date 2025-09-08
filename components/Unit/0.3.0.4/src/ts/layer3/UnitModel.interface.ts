@@ -1,8 +1,11 @@
 /**
- * UnitModel Interface - UnitIndex as actual Unit model (MOF M3/M2/M1 Hierarchy)
- * Web4 principle: Single interface per file
- * Purpose: Unit model contains storage capabilities and MOF classification
+ * UnitModel Interface - Unit component model extending minimal base Model
+ * Web4 principle: Single interface per file, extends minimal Model
+ * Purpose: Unit-specific model with MOF classification and terminal identity
  */
+
+import { Model } from './Model.interface.js';
+import { NamedLink } from './NamedLink.interface.js';
 
 export enum TypeM3 {
   CLASS = "CLASS",           // Components, classes, objects
@@ -10,8 +13,8 @@ export enum TypeM3 {
   RELATIONSHIP = "RELATIONSHIP" // LD Links, associations, connections
 }
 
-export interface UnitModel {
-  uuid: string;                    // UUIDv4 format using crypto.randomUUID()
+export interface UnitModel extends Model {
+  // Base Model property inherited: uuid
   name: string;                    // Human-readable unit name for terminal identification (uni-t)
   origin: string;                  // GitTextIOR format: ior:git:text:giturl with line/column positions
   definition: string;              // GitTextIOR format: ior:git:text:giturl with character positions
@@ -21,11 +24,6 @@ export interface UnitModel {
   namedLinks: NamedLink[];         // Named links with location and filename
   executionCapabilities: string[]; // What unit can execute
   storageCapabilities: string[];   // Storage features
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface NamedLink {
-  location: string;                // Full path to the link file
-  filename: string;                // Link filename (e.g., "test-unit.unit")
+  createdAt: string;               // UnitModel specific, NOT in base Model (TRON's Occam's Razor feedback)
+  updatedAt: string;               // UnitModel specific, NOT in base Model (TRON's Occam's Razor feedback)
 }

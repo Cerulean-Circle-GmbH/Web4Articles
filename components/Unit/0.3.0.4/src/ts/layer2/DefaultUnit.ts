@@ -6,6 +6,7 @@
 import { Unit } from '../layer3/Unit.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { UnitModel, TypeM3 } from '../layer3/UnitModel.interface.js';
+import { Model } from '../layer3/Model.interface.js';
 import { DefaultStorage } from './DefaultStorage.js';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
@@ -13,6 +14,11 @@ import { dirname } from 'path';
 export class DefaultUnit implements Unit {
   private model: UnitModel;
   private storage: DefaultStorage;
+
+  // Getter for CLI access to model
+  get unitModel(): UnitModel {
+    return this.model;
+  }
 
   constructor() {
     // Empty constructor - Web4 pattern
@@ -34,7 +40,7 @@ export class DefaultUnit implements Unit {
     // Storage will be initialized with scenario in init() method
   }
 
-  init(scenario: Scenario): this {
+  init(scenario: Scenario<UnitModel>): this {
     if (scenario.model) {
       this.model = scenario.model;
       // No state in UnitIndex model - state is requirement-like attribute
@@ -73,7 +79,36 @@ export class DefaultUnit implements Unit {
     console.log(`Unit ${this.model.uuid} processed`);
   }
 
-  async toScenario(name?: string): Promise<Scenario> {
+  async validateModel(): Promise<boolean> {
+    // Comprehensive UnitModel validation
+    try {
+      // Required string properties
+      if (!this.model.uuid || typeof this.model.uuid !== 'string') return false;
+      if (!this.model.name || typeof this.model.name !== 'string') return false;
+      if (!this.model.origin || typeof this.model.origin !== 'string') return false;
+      if (!this.model.definition || typeof this.model.definition !== 'string') return false;
+      if (!this.model.indexPath || typeof this.model.indexPath !== 'string') return false;
+      
+      // TypeM3 validation
+      if (!Object.values(TypeM3).includes(this.model.typeM3)) return false;
+      
+      // Array properties
+      if (!Array.isArray(this.model.symlinkPaths)) return false;
+      if (!Array.isArray(this.model.namedLinks)) return false;
+      if (!Array.isArray(this.model.executionCapabilities)) return false;
+      if (!Array.isArray(this.model.storageCapabilities)) return false;
+      
+      // Timestamp validation
+      if (!this.model.createdAt || isNaN(Date.parse(this.model.createdAt))) return false;
+      if (!this.model.updatedAt || isNaN(Date.parse(this.model.updatedAt))) return false;
+      
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async toScenario(name?: string): Promise<Scenario<UnitModel>> {
     // Generate proper owner data
     const ownerData = JSON.stringify({
       user: process.env.USER || 'system',
@@ -131,15 +166,15 @@ export class DefaultUnit implements Unit {
         // Save the updated scenario with correct namedLinks
         await this.storage.saveScenario(this.model.uuid, savedScenario, [namedLink]);
         // Load again to get the final updated scenario
-        const finalScenario = await this.storage.loadScenario(this.model.uuid);
-        this.model = finalScenario.model as any;
+        const finalScenario = await this.storage.loadScenario(this.model.uuid) as Scenario<UnitModel>;
+        this.model = finalScenario.model;
         return finalScenario;
       }
       
-      return savedScenario; // Return the complete saved scenario with correct paths
+      return savedScenario as Scenario<UnitModel>; // Return the complete saved scenario with correct paths
     } catch (error) {
       console.error('Failed to load saved scenario:', (error as Error).message);
-      return scenario; // Fallback to original scenario
+      return scenario as Scenario<UnitModel>; // Fallback to original scenario
     }
   }
 
@@ -165,7 +200,7 @@ export class DefaultUnit implements Unit {
       const linkPath = `${currentDir}/${filename}.unit`;
       
       // Load existing unit scenario
-      const existingScenario = await this.storage.loadScenario(uuid);
+      const existingScenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
       
       // Create new LD link pointing to existing scenario
       const scenarioPath = existingScenario.model.indexPath;
@@ -181,11 +216,11 @@ export class DefaultUnit implements Unit {
   async list(uuid: string): Promise<void> {
     try {
       // Load unit scenario and list all LD links
-      const scenario = await this.storage.loadScenario(uuid);
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
       
       console.log(`LD Links for Unit ${uuid}:`);
       if (scenario.model.symlinkPaths && scenario.model.symlinkPaths.length > 0) {
-        scenario.model.symlinkPaths.forEach(linkPath => {
+        scenario.model.symlinkPaths.forEach((linkPath: string) => {
           console.log(`  - ${linkPath}`);
         });
       } else {
@@ -194,7 +229,7 @@ export class DefaultUnit implements Unit {
       
       if (scenario.model.namedLinks && scenario.model.namedLinks.length > 0) {
         console.log(`Named Links:`);
-        scenario.model.namedLinks.forEach(namedLink => {
+        scenario.model.namedLinks.forEach((namedLink: any) => {
           console.log(`  - ${namedLink.filename} (${namedLink.location})`);
         });
       }
@@ -276,7 +311,7 @@ export class DefaultUnit implements Unit {
       const definitionIOR = gitIOR.parse(gitUrl);
       
       // Load existing unit
-      const existingScenario = await this.storage.loadScenario(uuid);
+      const existingScenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
       
       // Update definition
       existingScenario.model.definition = definitionIOR;
@@ -295,7 +330,7 @@ export class DefaultUnit implements Unit {
   async origin(uuid: string): Promise<void> {
     try {
       // Display dual links to origin and definition as clickable URLs
-      const scenario = await this.storage.loadScenario(uuid);
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
       
       console.log(`Unit ${scenario.model.name || uuid} Source References:`);
       console.log('');

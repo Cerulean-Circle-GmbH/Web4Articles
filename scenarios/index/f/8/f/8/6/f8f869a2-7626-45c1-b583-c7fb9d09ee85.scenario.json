@@ -1,0 +1,37 @@
+{
+  "ior": {
+    "uuid": "f8f869a2-7626-45c1-b583-c7fb9d09ee85",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"f8f869a2-7626-45c1-b583-c7fb9d09ee85\",\"timestamp\":\"2025-09-08T09:52:15.986Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "f8f869a2-7626-45c1-b583-c7fb9d09ee85",
+    "name": "UUID Indexing",
+    "origin": "",
+    "definition": "Hierarchical storage system using UUID segments for scenario organization",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/f/8/f/8/6/f8f869a2-7626-45c1-b583-c7fb9d09ee85.scenario.json",
+    "symlinkPaths": [
+      "/workspace/temp/UUID..Indexing.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../scenarios/index/f/8/f/8/6/f8f869a2-7626-45c1-b583-c7fb9d09ee85.scenario.json",
+        "filename": "UUID..Indexing.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process",
+      "UUID Indexing"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-08T09:52:15.984Z",
+    "updatedAt": "2025-09-08T09:52:15.990Z"
+  }
+}

@@ -99,14 +99,23 @@ class UnitCLI {
     // Get or create unit instance (command-based instantiation)
     const unit = this.getOrCreateUnit();
     
+    // Store name and definition immediately (TRON's correction)
+    unit.unitModel.name = name;
+    if (description) {
+      unit.unitModel.definition = description;  // ✅ Store description as definition immediately
+    }
+    
     // Add execution capability for the named unit
     unit.addExecutionCapability(name);
     
-    const scenario = await unit.toScenario(name);
+    // Convert multi-word names to filename (spaces → dots)
+    const filename = name.replace(/\s+/g, '..');
+    
+    const scenario = await unit.toScenario(filename);
     console.log(`✅ Unit created: ${name}`);
     console.log(`   UUID: ${scenario.ior.uuid}`);
     console.log(`   Index Path: ${scenario.model.indexPath}`);
-    console.log(`   Named Link: ${name}.unit`);
+    console.log(`\n   Named Link: ${filename}.unit`);
   }
 
   private async executeUnit(name: string, inputJson: string): Promise<void> {
