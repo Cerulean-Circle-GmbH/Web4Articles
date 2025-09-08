@@ -77,16 +77,224 @@ Create foundational Model interface that enables universal hibernation pattern, 
 - [ ] Backward compatibility validated with existing component usage
 
 ## TRON QA Feedback Integration
-### Original Issue
-- Scenario interface hardcoded to UnitModel instead of being general
-- Missing base Model interface for component generalization
-- toScenario() method should be in Model interface (excellent suggestion)
+### Original Issue Identified by TRON
+```quote
+"lets look at components/Unit/0.3.0.4/src/ts/layer3/Scenario.interface.ts
 
-### TRON QA Concerns Applied
+there has been a Model interface and Scenario model should be of type Model and UnitModel has to implement/extend Model. otherwise Scenarios are not general enough."
+```
+
+**Current Problem:**
+```typescript
+// CURRENT (Not general enough)
+export interface Scenario {
+  ior: IOR;
+  owner: string;
+  model: any;  // ❌ Should be typed Model, currently UnitModel-specific
+}
+```
+
+### TRON's Method Suggestion
+```quote
+"isn't the signature 
+  async toScenario(name?: string): Promise<Scenario> {
+method another good fit for the Model interface?"
+```
+
+**Analysis:** TRON correctly identified that toScenario() is fundamental model operation that should be in base Model interface for universal hibernation pattern.
+
+### TRON QA Concerns on Proposed Fix
+```quote
+"i disagree withe createdAt and updatedAt from ocams perspective. these attributes would be better in a change event object. i cannot forsee the upraising complexity of the template typed scenario. lets give it a try but note my qa feedback in the unit task."
+```
+
+**QA Feedback Applied:**
 - **Occam's Razor:** createdAt/updatedAt removed from base Model (better in change event object)
 - **Complexity Warning:** Cannot foresee complexity of template typed scenario - documented for monitoring
 - **Minimal Approach:** Model interface with uuid only, essential methods only
 - **Separate Concerns:** Change tracking as independent ChangeEvent interface
+
+## Complete Technical Specifications
+
+### Model Interface Implementation (Complete Code)
+```typescript
+/**
+ * Model Interface - Minimal base interface for all Web4 component models
+ * Web4 principle: Single interface per file, minimal essential structure
+ * Purpose: Universal identifier and fundamental model operations
+ * 
+ * TRON QA Feedback Applied:
+ * - Occam's Razor: Only uuid property (createdAt/updatedAt moved to ChangeEvent)
+ * - toScenario() method perfect fit for Model interface (TRON's suggestion)
+ * - Generic template complexity concerns documented for monitoring
+ */
+export interface Model {
+  uuid: string;                    // UUIDv4 format - universal identifier (ONLY essential property)
+
+  // Universal model methods
+  toScenario(name?: string): Promise<Scenario<this>>;  // TRON's excellent suggestion - hibernation pattern
+  init(scenario: Scenario<this>): this;                // Web4 standard pattern - empty constructor + scenario init
+  validate(): Promise<boolean>;                        // Model integrity validation - type safety
+}
+```
+
+### ChangeEvent Interface Implementation (Complete Code)
+```typescript
+/**
+ * ChangeEvent Interface - Separate concern for tracking model changes
+ * Web4 principle: Single responsibility, separate from model structure
+ * Purpose: Track creation and modification events independently
+ * 
+ * TRON Feedback: createdAt/updatedAt better in change event object (Occam's Razor)
+ */
+export interface ChangeEvent {
+  targetUuid: string;              // UUID of the model being tracked
+  eventType: 'created' | 'updated' | 'deleted';
+  timestamp: string;               // ISO 8601 timestamp
+  actor: string;                   // Who made the change
+  changes?: Record<string, any>;   // What changed (optional)
+}
+```
+
+### Updated UnitModel Implementation (Complete Code)
+```typescript
+/**
+ * UnitModel Interface - Unit component model extending minimal base Model
+ * Web4 principle: Single interface per file, extends minimal Model
+ * Purpose: Unit-specific model with MOF classification and terminal identity
+ */
+import { Model } from './Model.interface.js';
+import { TypeM3 } from './UnitModel.interface.js';
+
+export interface UnitModel extends Model {
+  // Base Model property inherited: uuid
+  name: string;                    // Human-readable unit name for terminal identification (uni-t)
+  origin: string;                  // GitTextIOR format: ior:git:text:giturl with line/column positions
+  definition: string;              // GitTextIOR format: ior:git:text:giturl with character positions
+  typeM3: TypeM3;                  // MOF M3/M2/M1 hierarchy classification
+  indexPath: string;               // scenarios/index/path to this unit
+  symlinkPaths: string[];          // LD links tracking
+  namedLinks: NamedLink[];         // Named links with location and filename
+  executionCapabilities: string[]; // What unit can execute
+  storageCapabilities: string[];   // Storage features
+  createdAt: string;               // ❌ UnitModel specific, NOT in base Model (TRON's Occam's Razor feedback)
+  updatedAt: string;               // ❌ UnitModel specific, NOT in base Model (TRON's Occam's Razor feedback)
+}
+
+export interface NamedLink {
+  location: string;                // Relative path from link to scenario
+  filename: string;                // Link filename (e.g., "test-unit.unit")
+}
+```
+
+### Generic Scenario Interface Implementation (Complete Code)
+```typescript
+/**
+ * Scenario Interface - Universal hibernation pattern with typed Model
+ * Web4 principle: Single interface per file, generic model support
+ * Purpose: Universal scenario structure supporting any Model-compliant component
+ * 
+ * ⚠️ TRON QA WARNING: Cannot foresee complexity of template typed scenario
+ * Future monitoring required for template complexity management
+ * Template complexity concerns documented for future assessment
+ */
+import { IOR } from './IOR.interface.js';
+import { Model } from './Model.interface.js';
+
+export interface Scenario<T extends Model = Model> {
+  ior: IOR;                        // Component identification and versioning
+  owner: string;                   // JSON string with ownership metadata
+  model: T;                        // Typed model extending minimal base Model interface
+}
+```
+
+### DefaultUnit Model Methods Implementation (Complete Code)
+```typescript
+export class DefaultUnit implements Unit {
+  private model: UnitModel;
+
+  // Implementing Model interface methods
+  async toScenario(name?: string): Promise<Scenario<UnitModel>> {
+    // Store unit name in execution capabilities if provided (TRON's suggestion integration)
+    if (name && !this.model.executionCapabilities.includes(name)) {
+      this.model.executionCapabilities.push(name);
+    }
+
+    // Create owner data
+    const ownerData = JSON.stringify({
+      user: process.env.USER || 'system',
+      hostname: process.env.HOSTNAME || 'localhost',
+      uuid: this.model.uuid,
+      timestamp: new Date().toISOString(),
+      component: 'Unit',
+      version: '0.3.0.4'
+    });
+
+    // Return typed scenario
+    return {
+      ior: {
+        uuid: this.model.uuid,
+        component: 'Unit',
+        version: '0.3.0.4'
+      },
+      owner: ownerData,
+      model: this.model
+    };
+  }
+
+  init(scenario: Scenario<UnitModel>): this {
+    if (scenario.model) {
+      this.model = scenario.model;
+    }
+    
+    // Check for missing terminal identity and show warnings (backward compatibility)
+    this.showTerminalIdentityWarning();
+    
+    return this;
+  }
+
+  async validate(): Promise<boolean> {
+    // Comprehensive UnitModel validation
+    try {
+      // Required string properties
+      if (!this.model.uuid || typeof this.model.uuid !== 'string') return false;
+      if (!this.model.name || typeof this.model.name !== 'string') return false;
+      if (!this.model.origin || typeof this.model.origin !== 'string') return false;
+      if (!this.model.definition || typeof this.model.definition !== 'string') return false;
+      if (!this.model.indexPath || typeof this.model.indexPath !== 'string') return false;
+      
+      // TypeM3 validation
+      if (!Object.values(TypeM3).includes(this.model.typeM3)) return false;
+      
+      // Array properties
+      if (!Array.isArray(this.model.symlinkPaths)) return false;
+      if (!Array.isArray(this.model.namedLinks)) return false;
+      if (!Array.isArray(this.model.executionCapabilities)) return false;
+      if (!Array.isArray(this.model.storageCapabilities)) return false;
+      
+      // Timestamp validation
+      if (!this.model.createdAt || isNaN(Date.parse(this.model.createdAt))) return false;
+      if (!this.model.updatedAt || isNaN(Date.parse(this.model.updatedAt))) return false;
+      
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  private showTerminalIdentityWarning(): void {
+    // Existing implementation for backward compatibility warnings
+    if (!this.model.name || !this.model.origin || !this.model.definition) {
+      console.warn(`⚠️  Warning: Unit '${this.model.uuid}' missing terminal identity information:\n`);
+      if (!this.model.name) console.warn('   - name: not specified');
+      if (!this.model.origin) console.warn('   - origin: not specified');
+      if (!this.model.definition) console.warn('   - definition: not specified');
+      console.warn('\n   Next build version will require migration method for missing model info.');
+      console.warn('   Please update unit with complete terminal identity (uni-t) attributes.');
+    }
+  }
+}
+```
 
 ### Implementation Approach
 - Minimal Model interface following Occam's Razor principle

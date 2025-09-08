@@ -60,40 +60,173 @@ Enhance Model interface with advanced methods that provide comprehensive model f
 - Integration with ChangeEvent system (separate concern per TRON feedback)
 - Maintain Occam's Razor principle - only add if demonstrable value
 
-## Proposed Additional Methods
+## Complete Technical Specifications for Additional Methods
 
-### clone() Method
+### clone() Method Implementation (Complete Code)
 ```typescript
-clone(): Promise<this>
+async clone(): Promise<UnitModel> {
+  // Deep clone of unit model with new UUID
+  const clonedModel: UnitModel = {
+    uuid: crypto.randomUUID(),  // New UUID for clone
+    name: this.model.name,
+    origin: this.model.origin,
+    definition: this.model.definition,
+    typeM3: this.model.typeM3,
+    indexPath: '',  // Will be set when stored
+    symlinkPaths: [...this.model.symlinkPaths],
+    namedLinks: this.model.namedLinks.map(link => ({ 
+      location: link.location,
+      filename: link.filename 
+    })),
+    executionCapabilities: [...this.model.executionCapabilities],
+    storageCapabilities: [...this.model.storageCapabilities],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  
+  return clonedModel;
+}
 ```
 **Purpose:** Create deep copy of model for immutable state management
 **Use Case:** State management, undo functionality, parallel processing
-**Complexity:** Medium - requires deep cloning logic
+**Complexity:** Medium - requires deep cloning logic with new UUID generation
 
-### equals() Method  
+### equals() Method Implementation (Complete Code)
 ```typescript
-equals(other: this): boolean
+equals(other: UnitModel): boolean {
+  // Structural comparison (excluding uuid, timestamps, paths)
+  try {
+    return (
+      this.model.name === other.name &&
+      this.model.origin === other.origin &&
+      this.model.definition === other.definition &&
+      this.model.typeM3 === other.typeM3 &&
+      JSON.stringify(this.model.executionCapabilities.sort()) === JSON.stringify(other.executionCapabilities.sort()) &&
+      JSON.stringify(this.model.storageCapabilities.sort()) === JSON.stringify(other.storageCapabilities.sort()) &&
+      this.model.namedLinks.length === other.namedLinks.length &&
+      this.model.namedLinks.every((link, index) => 
+        link.location === other.namedLinks[index]?.location &&
+        link.filename === other.namedLinks[index]?.filename
+      )
+    );
+  } catch (error) {
+    return false;
+  }
+}
 ```
-**Purpose:** Compare models for equality (structural comparison)
+**Purpose:** Compare models for equality (structural comparison, ignoring UUIDs and timestamps)
 **Use Case:** Change detection, state comparison, deduplication
-**Complexity:** Medium - varies by model structure complexity
+**Complexity:** Medium - varies by model structure complexity, requires careful property comparison
 
-### fromScenario() Static Method
+### fromScenario() Static Method Implementation (Complete Code)
 ```typescript
-static fromScenario<T extends Model>(scenario: Scenario<T>): Promise<T>
+static async fromScenario(scenario: Scenario<UnitModel>): Promise<DefaultUnit> {
+  // Create new unit instance
+  const unit = new DefaultUnit();
+  
+  // Initialize with scenario
+  unit.init(scenario);
+  
+  // Validate the loaded model
+  const isValid = await unit.validate();
+  if (!isValid) {
+    throw new Error(`Invalid UnitModel in scenario: ${scenario.ior.uuid}`);
+  }
+  
+  return unit;
+}
 ```
 **Purpose:** Complete hibernation cycle - resurrection from scenario
-**Use Case:** Component instantiation from stored scenarios
-**Complexity:** Medium - requires static method implementation pattern
+**Use Case:** Component instantiation from stored scenarios, loading units from storage
+**Complexity:** Medium - requires static method implementation pattern with validation
 
-### Change Events Integration
+### Change Events Integration Implementation (Complete Code)
 ```typescript
-getChangeEvents(): Promise<ChangeEvent[]>
-addChangeEvent(event: ChangeEvent): Promise<void>
+async getChangeEvents(): Promise<ChangeEvent[]> {
+  // Load change events for this model from change tracking storage
+  const changeTracker = new ChangeTracker();
+  return await changeTracker.getEvents(this.model.uuid);
+}
+
+async addChangeEvent(event: ChangeEvent): Promise<void> {
+  // Validate change event
+  if (event.targetUuid !== this.model.uuid) {
+    throw new Error(`ChangeEvent targetUuid ${event.targetUuid} does not match model uuid ${this.model.uuid}`);
+  }
+  
+  // Store change event
+  const changeTracker = new ChangeTracker();
+  await changeTracker.addEvent(event);
+  
+  // Update model updatedAt if this is an update event
+  if (event.eventType === 'updated') {
+    this.model.updatedAt = event.timestamp;
+  }
+}
+
+// Helper method to create change events
+private createChangeEvent(eventType: 'created' | 'updated' | 'deleted', changes?: Record<string, any>): ChangeEvent {
+  return {
+    targetUuid: this.model.uuid,
+    eventType,
+    timestamp: new Date().toISOString(),
+    actor: process.env.USER || 'system',
+    changes
+  };
+}
+```
+
+### ChangeTracker Implementation (Complete Code)
+```typescript
+/**
+ * ChangeTracker - Manages change events for models
+ * Web4 principle: Single responsibility for change tracking
+ * Purpose: Centralized change event storage and retrieval
+ */
+export class ChangeTracker {
+  private basePath: string;
+
+  constructor() {
+    this.basePath = '/workspace/scenarios/changes';
+  }
+
+  async getEvents(targetUuid: string): Promise<ChangeEvent[]> {
+    const eventPath = this.getEventPath(targetUuid);
+    
+    try {
+      const fs = await import('fs/promises');
+      const content = await fs.readFile(eventPath, 'utf-8');
+      return JSON.parse(content);
+    } catch (error) {
+      return []; // No events found
+    }
+  }
+
+  async addEvent(event: ChangeEvent): Promise<void> {
+    const eventPath = this.getEventPath(event.targetUuid);
+    
+    // Load existing events
+    const events = await this.getEvents(event.targetUuid);
+    
+    // Add new event
+    events.push(event);
+    
+    // Save updated events
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    await fs.mkdir(path.dirname(eventPath), { recursive: true });
+    await fs.writeFile(eventPath, JSON.stringify(events, null, 2));
+  }
+
+  private getEventPath(targetUuid: string): string {
+    // Use same 5-level structure as scenarios
+    return `${this.basePath}/${targetUuid[0]}/${targetUuid[1]}/${targetUuid[2]}/${targetUuid[3]}/${targetUuid[4]}/${targetUuid}.changes.json`;
+  }
+}
 ```
 **Purpose:** Integration with ChangeEvent system for audit trail
 **Use Case:** Audit logging, change tracking, compliance
-**Complexity:** High - requires change tracking infrastructure
+**Complexity:** High - requires change tracking infrastructure with storage system
 
 ## Acceptance Criteria
 - [ ] Task 27 (Essential Model Interface) completed and stable
