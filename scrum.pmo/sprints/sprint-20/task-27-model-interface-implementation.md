@@ -44,18 +44,24 @@ Create foundational Model interface that enables universal hibernation pattern, 
 1. Create minimal Model interface with uuid property only (Occam's Razor applied)
 2. Add essential methods: toScenario(), init(), validate() to Model interface
 3. Create separate ChangeEvent interface for change tracking (TRON's feedback)
-4. Update UnitModel to extend minimal Model interface
-5. Update Scenario interface to use generic template with QA warning
-6. Update DefaultUnit to implement Model interface methods
-7. Validate implementation with TypeScript compilation and testing
-8. Document generic template complexity concerns for future monitoring
+4. **NEW:** Create separate NamedLink interface (Web4 compliance - single interface per file)
+5. Update UnitModel to extend minimal Model interface
+6. Update Scenario interface to use generic template with QA warning
+7. **NEW:** Fix OntologyAgent File unit terminal identity (UUID: 7e4edfc3-f746-419f-ad31-e4b49bed9549)
+8. **NEW:** Enhance unit creation to preserve description in definition field
+9. Update DefaultUnit to implement Model interface methods
+10. Validate implementation with TypeScript compilation and testing
+11. Document generic template complexity concerns for future monitoring
 
 ## Requirements
 - Model interface with minimal essential properties (uuid only)
 - Essential methods: toScenario(), init(), validate() in Model interface
 - Separate ChangeEvent interface for audit trail (not in base Model)
+- **NEW:** Separate NamedLink interface (Web4 compliance - single interface per file)
 - UnitModel extends Model interface (inherits uuid, implements methods)
 - Generic Scenario interface: Scenario<T extends Model = Model>
+- **NEW:** OntologyAgent File unit terminal identity completed (definition field preservation)
+- **NEW:** Unit creation process enhanced to preserve description in definition field
 - DefaultUnit implements Model interface methods correctly
 - TypeScript compilation success with new interface structure
 - Backward compatibility maintained during transition
@@ -68,13 +74,17 @@ Create foundational Model interface that enables universal hibernation pattern, 
 - [ ] Model interface includes init(scenario: Scenario<this>): this
 - [ ] Model interface includes validate(): Promise<boolean>
 - [ ] ChangeEvent.interface.ts created for separate change tracking
-- [ ] UnitModel.interface.ts updated to extend Model interface
+- [ ] **NEW:** NamedLink.interface.ts created as separate file (Web4 compliance)
+- [ ] UnitModel.interface.ts updated to extend Model interface (single interface only)
 - [ ] Scenario.interface.ts updated to generic template with QA warning
+- [ ] **NEW:** OntologyAgent File unit (7e4edfc3) terminal identity completed
+- [ ] **NEW:** Unit creation enhanced to store description in definition field
 - [ ] DefaultUnit.ts implements all Model interface methods correctly
 - [ ] TypeScript compilation succeeds with new interface structure
 - [ ] All existing tests pass with updated interfaces
 - [ ] Generic template complexity warning documented in Scenario interface
 - [ ] Backward compatibility validated with existing component usage
+- [ ] **NEW:** All interface files contain single interface only (Web4 compliance validated)
 
 ## TRON QA Feedback Integration
 ### Original Issue Identified by TRON
@@ -180,7 +190,18 @@ export interface UnitModel extends Model {
   createdAt: string;               // ❌ UnitModel specific, NOT in base Model (TRON's Occam's Razor feedback)
   updatedAt: string;               // ❌ UnitModel specific, NOT in base Model (TRON's Occam's Razor feedback)
 }
+```
 
+### NamedLink Interface Implementation (Separate File - Web4 Compliance)
+```typescript
+/**
+ * NamedLink Interface - Named link structure for LD link management
+ * Web4 principle: Single interface per file
+ * Purpose: Bidirectional linking between workspace locations and central storage
+ * 
+ * TRON Feedback: Web4 compliance violation identified - multiple interfaces in single file
+ * Fixed: NamedLink moved to separate interface file
+ */
 export interface NamedLink {
   location: string;                // Relative path from link to scenario
   filename: string;                // Link filename (e.g., "test-unit.unit")
@@ -296,13 +317,75 @@ export class DefaultUnit implements Unit {
 }
 ```
 
-### Implementation Approach
+## OntologyAgent Unit Fix Integration
+
+### Issue Identified in OntologyAgent's File Unit
+**Created Unit:** UUID `7e4edfc3-f746-419f-ad31-e4b49bed9549` (File M2 Class)
+**Command Used:** `unit create File "M2 Class for M1 file instances"`
+
+**Problems Found:**
+```json
+{
+  "model": {
+    "name": "",        // ❌ Empty - should be "File"
+    "origin": "",      // ❌ Empty - missing source reference  
+    "definition": "",  // ❌ Empty - should contain "M2 Class for M1 file instances"
+    "typeM3": "CLASS"  // ✅ Correct M2 Class classification
+  }
+}
+```
+
+### TRON's Key Insight: Description = Definition
+```quote
+"the lost description is the definition and should be stored there"
+```
+
+**Fix Implementation:**
+```bash
+# Complete terminal identity for OntologyAgent's File unit
+cd scenarios/ontology
+echo "M2 Class for M1 file instances" > file-definition.txt
+../scripts/unit definition 7e4edfc3-f746-419f-ad31-e4b49bed9549 "file-definition.txt" "1:1" "1:30"
+```
+
+**Expected Result:**
+```json
+{
+  "model": {
+    "name": "File",
+    "origin": "ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scenarios/ontology/file-definition.txt#L1:1-L1:30",
+    "definition": "M2 Class for M1 file instances"  // ✅ TRON's insight: description preserved in definition
+  }
+}
+```
+
+### Enhanced Unit Creation Process
+**Current Issue:** Unit create command loses description
+**Improvement:** Enhance DefaultUnit to store description in definition field
+
+```typescript
+// Enhanced unit creation in DefaultUnit
+async create(name: string, description?: string): Promise<void> {
+  this.model.name = name;
+  
+  if (description) {
+    this.model.definition = description;  // ✅ TRON's insight: store description as definition
+  }
+  
+  // Continue with existing creation logic...
+}
+```
+
+## Implementation Approach
 - Minimal Model interface following Occam's Razor principle
 - Generic Scenario with documented complexity concerns
+- **NEW:** OntologyAgent unit fixes integrated for comprehensive execution
+- **NEW:** Web4 compliance restored with single interface per file
 - Progressive adoption across Web4 ecosystem
 - Future monitoring of template complexity impact
 
 ## Dependencies
 - Builds on Unit 0.3.0.4 foundation with TypeM3 attribute
+- **NEW:** Fixes OntologyAgent File unit (UUID: 7e4edfc3) terminal identity
 - Requires TypeScript compilation and interface resolution
 - Foundation for universal hibernation pattern across Web4 components
