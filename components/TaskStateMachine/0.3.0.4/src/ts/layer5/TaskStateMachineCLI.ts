@@ -1,16 +1,27 @@
+#!/usr/bin/env node
+
 /**
  * TaskStateMachineCLI - Web4 Compliant Task Status Automation CLI
  * Provides CMM3 systematic task status management and planning synchronization
+ * Simplified following Unit CLI pattern - no IOR in CLI (Occam's Razor)
  */
 
 import { DefaultTaskStateMachine } from '../layer2/DefaultTaskStateMachine.js';
-import { IOR } from '../../../../IOR/0.3.0.3/src/ts/layer3/IOR.interface.js';
+import { readFileSync, writeFileSync } from 'fs';
 
-export class TaskStateMachineCLI {
-  
+class TaskStateMachineCLI {
+  private taskMachine: DefaultTaskStateMachine | null;
+
   // Web4 Empty Constructor Principle
   constructor() {
-    // Empty constructor - configured via setters
+    this.taskMachine = null;
+  }
+
+  private getOrCreateTaskMachine(): DefaultTaskStateMachine {
+    if (!this.taskMachine) {
+      this.taskMachine = new DefaultTaskStateMachine();
+    }
+    return this.taskMachine;
   }
 
   // CMM3 Task Status Automation Commands
@@ -19,22 +30,22 @@ export class TaskStateMachineCLI {
    * Parse task file and extract status
    * Usage: taskstatemachine parse <task-file-path>
    */
-  static async parseTask(taskFilePath: string): Promise<void> {
-    const taskMachine = new DefaultTaskStateMachine();
-    
-    // TODO: Convert file path to IOR
-    const taskIOR: IOR = {
-      uuid: taskFilePath,  // Temporary - should be proper IOR
-      component: 'TaskStateMachine',
-      version: '0.3.0.4'
-    };
-    
-    taskMachine.parseTaskFile(taskIOR);
-    
-    console.log('Task Status:', taskMachine.taskModel.status);
-    console.log('Task Title:', taskMachine.taskModel.title);
-    console.log('Steps:', taskMachine.taskModel.steps.length);
-    console.log('Requirements:', taskMachine.taskModel.requirementReferences.length);
+  async parseTask(taskFilePath: string): Promise<void> {
+    try {
+      const content = readFileSync(taskFilePath, 'utf-8');
+      const taskMachine = this.getOrCreateTaskMachine();
+      
+      // Parse content directly (no IOR - Occam's Razor)
+      this.parseMarkdownContent(content, taskMachine);
+      
+      console.log('✅ Task Parsed Successfully:');
+      console.log('  Title:', taskMachine.taskModel.title);
+      console.log('  Status:', taskMachine.taskModel.status);
+      console.log('  Steps:', taskMachine.taskModel.steps.length);
+      console.log('  UUID:', taskMachine.taskModel.uuid);
+    } catch (error) {
+      console.error('❌ Parse Error:', (error as Error).message);
+    }
   }
 
   /**
@@ -80,71 +91,110 @@ export class TaskStateMachineCLI {
     console.log('Sprint validation not yet implemented');
   }
 
-  // CLI entry point
-  static async main(): Promise<void> {
-    const args = process.argv.slice(2);
-    const command = args[0];
+  // Add missing parsing method
+  private parseMarkdownContent(content: string, taskMachine: DefaultTaskStateMachine): void {
+    // Parse title
+    const titleMatch = content.match(/^# (.+)$/m);
+    if (titleMatch) {
+      taskMachine.setTitle(titleMatch[1].trim());
+    }
 
-    switch (command) {
-      case 'parse':
-        if (args[1]) {
-          await TaskStateMachineCLI.parseTask(args[1]);
-        } else {
-          console.error('Usage: taskstatemachine parse <task-file-path>');
+    // Parse status - simplified without IOR
+    const statusMatch = content.match(/## Status([\s\S]*?)(?=##|$)/);
+    if (statusMatch) {
+      const statusSection = statusMatch[1];
+      if (statusSection.includes('- [x] Done')) {
+        taskMachine.setStatus('done');
+      } else if (statusSection.includes('- [x] QA Review')) {
+        taskMachine.setStatus('qa-review');
+      } else if (statusSection.includes('- [x] In Progress')) {
+        taskMachine.setStatus('in-progress');
+      } else {
+        taskMachine.setStatus('planned');
+      }
+    }
+
+    // Parse steps
+    const stepsMatch = content.match(/## Steps([\s\S]*?)(?=##|$)/);
+    if (stepsMatch) {
+      const stepsSection = stepsMatch[1];
+      const stepLines = stepsSection.split('\n').filter(line => line.trim().startsWith('-'));
+      
+      stepLines.forEach(line => {
+        const isChecked = line.includes('[x]');
+        const stepName = line.replace(/^-\s*\[[x\s]\]\s*/, '').trim();
+        if (stepName) {
+          taskMachine.addStep({
+            name: stepName,
+            status: isChecked ? 'done' : 'open'
+          });
         }
-        break;
-        
-      case 'update':
-        if (args[1] && args[2]) {
-          await TaskStateMachineCLI.updateTaskStatus(args[1], args[2]);
-        } else {
-          console.error('Usage: taskstatemachine update <task-file-path> <status>');
-        }
-        break;
-        
-      case 'sync':
-        if (args[1]) {
-          await TaskStateMachineCLI.syncPlanning(args[1]);
-        } else {
-          console.error('Usage: taskstatemachine sync <planning-file-path>');
-        }
-        break;
-        
-      case 'validate':
-        if (args[1]) {
-          await TaskStateMachineCLI.validateSprint(args[1]);
-        } else {
-          console.error('Usage: taskstatemachine validate <sprint-directory>');
-        }
-        break;
-        
-      default:
-        console.log(`
+      });
+    }
+  }
+
+  async run(args: string[]): Promise<void> {
+    if (args.length === 0) {
+      this.showUsage();
+      return;
+    }
+
+    const command = args[0];
+    const commandArgs = args.slice(1);
+
+    try {
+      switch (command) {
+        case 'parse':
+          if (commandArgs.length === 0) {
+            throw new Error('Task file path required for parse command');
+          }
+          await this.parseTask(commandArgs[0]);
+          break;
+          
+        case 'help':
+          this.showUsage();
+          break;
+          
+        default:
+          throw new Error(`Unknown command: ${command}`);
+      }
+    } catch (error) {
+      console.error(`❌ TaskStateMachine CLI Error: ${(error as Error).message}`);
+      process.exit(1);
+    }
+  }
+
+  private showUsage(): void {
+    console.log(`
 TaskStateMachine CLI - Web4 Compliant Task Status Automation
 
 Usage:
   taskstatemachine parse <task-file-path>     # Parse task file and show status
-  taskstatemachine update <task-file> <status> # Update task status
-  taskstatemachine sync <planning-file>       # Sync planning with task files
-  taskstatemachine validate <sprint-dir>      # Validate sprint task consistency
+  taskstatemachine help                       # Show this help
 
 Commands:
   parse      Parse task file and extract status information
-  update     Update task status (planned, in-progress, qa-review, done, blocked)
-  sync       Synchronize planning.md with task file status
-  validate   Validate task status consistency across sprint
+  help       Show usage information
 
 Examples:
   taskstatemachine parse scrum.pmo/sprints/sprint-20/task-14-fix-central-storage-location.md
-  taskstatemachine update task-14-fix-central-storage-location.md in-progress
-  taskstatemachine sync scrum.pmo/sprints/sprint-20/planning.md
-  taskstatemachine validate scrum.pmo/sprints/sprint-20/
-        `);
-    }
+  taskstatemachine parse temp/demo-task-test.md
+    `);
+  }
+}
+
+// CLI entry point - standalone function following Unit pattern
+async function main() {
+  try {
+    const cli = new TaskStateMachineCLI();
+    await cli.run(process.argv.slice(2));
+  } catch (error) {
+    console.error(`❌ TaskStateMachine CLI Fatal Error: ${(error as Error).message}`);
+    process.exit(1);
   }
 }
 
 // Execute if run directly
 if (import.meta.url === `file://${process.argv[1]}`) {
-  TaskStateMachineCLI.main().catch(console.error);
+  main();
 }
