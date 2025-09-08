@@ -287,6 +287,88 @@ export class DefaultUnit implements Unit {
     }
   }
 
+  async deleteLink(linkFilename: string): Promise<void> {
+    try {
+      // Resolve link file to get target UUID
+      const { readlinkSync, unlinkSync } = await import('fs');
+      const currentDir = process.cwd();
+      const linkPath = `${currentDir}/${linkFilename}`;
+      
+      // Read the symlink to get scenario path
+      const scenarioPath = readlinkSync(linkPath);
+      const uuid = this.extractUuidFromPath(scenarioPath);
+      
+      // Load unit scenario
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      // Remove link from symlinkPaths
+      const linkIndex = scenario.model.symlinkPaths.indexOf(linkPath);
+      if (linkIndex > -1) {
+        scenario.model.symlinkPaths.splice(linkIndex, 1);
+      }
+      
+      // Remove from namedLinks
+      const namedLinkIndex = scenario.model.namedLinks.findIndex(
+        link => link.filename === linkFilename
+      );
+      if (namedLinkIndex > -1) {
+        scenario.model.namedLinks.splice(namedLinkIndex, 1);
+      }
+      
+      // Update scenario in storage
+      await this.storage.saveScenario(uuid, scenario, scenario.model.symlinkPaths);
+      
+      // Remove the actual link file
+      unlinkSync(linkPath);
+      
+      console.log(`✅ Link deleted: ${linkFilename}`);
+      console.log(`   Unit ${uuid} preserved in central storage`);
+      console.log(`   Remaining links: ${scenario.model.symlinkPaths.length}`);
+    } catch (error) {
+      console.error(`Failed to delete link: ${(error as Error).message}`);
+    }
+  }
+
+  async deleteUnit(linkFilename: string): Promise<void> {
+    try {
+      // Resolve link file to get target UUID
+      const { readlinkSync, unlinkSync } = await import('fs');
+      const { unlink } = await import('fs/promises');
+      const currentDir = process.cwd();
+      const linkPath = `${currentDir}/${linkFilename}`;
+      
+      // Read the symlink to get scenario path
+      const scenarioPath = readlinkSync(linkPath);
+      const uuid = this.extractUuidFromPath(scenarioPath);
+      
+      // Load unit scenario to get all links
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      // Delete all LD link files
+      let deletedLinks = 0;
+      for (const symlinkPath of scenario.model.symlinkPaths) {
+        try {
+          unlinkSync(symlinkPath);
+          deletedLinks++;
+          console.log(`   Deleted link: ${symlinkPath}`);
+        } catch (error) {
+          console.warn(`   Warning: Could not delete link ${symlinkPath}: ${(error as Error).message}`);
+        }
+      }
+      
+      // Delete the unit scenario from central storage
+      const scenarioFullPath = scenario.model.indexPath;
+      await unlink(scenarioFullPath);
+      
+      console.log(`✅ Unit deleted completely: ${uuid}`);
+      console.log(`   Scenario removed: ${scenarioFullPath}`);
+      console.log(`   Links deleted: ${deletedLinks}/${scenario.model.symlinkPaths.length}`);
+      console.log(`   Named links removed: ${scenario.model.namedLinks.length}`);
+    } catch (error) {
+      console.error(`Failed to delete unit: ${(error as Error).message}`);
+    }
+  }
+
   async list(uuid: string): Promise<void> {
     try {
       // Load unit scenario and list all LD links

@@ -10,14 +10,10 @@
 - Subtasks must be ordered to avoid blocking dependencies.
 
 ## Status
-- [ ] Planned
-- [ ] In Progress
-  - [ ] refinement
-  - [ ] creating test cases
-  - [ ] implementing
-  - [ ] testing
-- [ ] QA Review
-- [ ] Done
+- [x] Planned
+- [x] In Progress
+- [x] QA Review
+- [x] Done
 
 ## Traceability
 - Add `[task:uuid:31b2c3d4-e5f6-7890-1234-567890123456]` to this task.

@@ -239,8 +239,8 @@ See [requiremnents-2025-09-06-UTC-1132-po-dual-linking.md](./requiremnents-2025-
   - [ ] [Task 29.1: Developer - Unit Link Command Filename Fix](./task-29.1-developer-unit-link-filename-fix.md)
   - [ ] [Task 29.2: Developer - Filename Consistency Validation](./task-29.2-developer-filename-consistency-validation.md)
 
-- [ ] [Task 31: Unit Delete Commands Implementation](./task-31-unit-delete-commands-implementation.md)  
-  **Priority:** 2 (High - TRON Request) **Depends:** Task 29 Completion
+- [x] [Task 31: Unit Delete Commands Implementation](./task-31-unit-delete-commands-implementation.md)  
+  **Priority:** 2 (High - TRON Request) **Status:** ✅ DONE
   - [ ] [Task 31.1: Developer - Unit DeleteLink Command Implementation](./task-31.1-developer-unit-deletelink-command.md)
   - [ ] [Task 31.2: Developer - Unit DeleteUnit Command Implementation](./task-31.2-developer-unit-deleteunit-command.md)
   - [ ] [Task 31.3: Developer - Delete Commands CLI Integration](./task-31.3-developer-delete-commands-cli-integration.md)
