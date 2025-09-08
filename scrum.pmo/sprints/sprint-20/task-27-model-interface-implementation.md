@@ -11,8 +11,8 @@
 
 ## Status
 - [ ] Planned
-- [ ] In Progress
-  - [ ] refinement
+- [x] In Progress
+  - [x] refinement
   - [ ] creating test cases
   - [ ] implementing
   - [ ] testing
@@ -26,10 +26,10 @@
   - [Model Interface Methods Analysis PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-2320-model-interface-methods-analysis.pdca.md)
   - [Scenario Model Interface Generalization PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-2310-scenario-model-interface-generalization.pdca.md)
 - down
-  - [ ] [Task 27.1: Developer - Model Interface Creation](./task-27.1-developer-model-interface-creation.md)
-  - [ ] [Task 27.2: Developer - UnitModel Interface Update](./task-27.2-developer-unitmodel-interface-update.md)
-  - [ ] [Task 27.3: Developer - Scenario Interface Generalization](./task-27.3-developer-scenario-interface-generalization.md)
-  - [ ] [Task 27.4: Developer - DefaultUnit Model Methods Implementation](./task-27.4-developer-defaultunit-model-methods.md)
+  - [x] [Task 27.1: Developer - Base Interfaces Creation](./task-27.1-developer-base-interfaces-creation.md)
+  - [x] [Task 27.2: Developer - Extended Interfaces Implementation](./task-27.2-developer-extended-interfaces-implementation.md)
+  - [x] [Task 27.3: Developer - DefaultUnit Model Methods](./task-27.3-developer-defaultunit-model-methods.md)
+  - [x] [Task 27.4: Developer - Unit CLI Enhancement and Validation](./task-27.4-developer-unit-cli-enhancement-validation.md)
 
 ## Task Description
 Implement minimal Model interface with essential methods (uuid property + toScenario/init/validate methods) to enable scenario generalization and universal hibernation pattern across Web4 ecosystem. Apply TRON's QA feedback: minimal Model (uuid only), separate change tracking, generic Scenario with complexity monitoring.
