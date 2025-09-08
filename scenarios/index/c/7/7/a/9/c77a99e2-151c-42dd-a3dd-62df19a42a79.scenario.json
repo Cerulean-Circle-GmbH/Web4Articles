@@ -1,0 +1,37 @@
+{
+  "ior": {
+    "uuid": "c77a99e2-151c-42dd-a3dd-62df19a42a79",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"c77a99e2-151c-42dd-a3dd-62df19a42a79\",\"timestamp\":\"2025-09-08T13:44:44.811Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "c77a99e2-151c-42dd-a3dd-62df19a42a79",
+    "name": "Scenario Symlink",
+    "origin": "",
+    "definition": "Named symbolic link connecting ontological workspace to UUID-indexed storage",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/c/7/7/a/9/c77a99e2-151c-42dd-a3dd-62df19a42a79.scenario.json",
+    "symlinkPaths": [
+      "/workspace/scenarios/ontology/Scenario.Symlink.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../index/c/7/7/a/9/c77a99e2-151c-42dd-a3dd-62df19a42a79.scenario.json",
+        "filename": "Scenario.Symlink.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process",
+      "Scenario Symlink"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-08T13:44:44.808Z",
+    "updatedAt": "2025-09-08T13:44:44.814Z"
+  }
+}
