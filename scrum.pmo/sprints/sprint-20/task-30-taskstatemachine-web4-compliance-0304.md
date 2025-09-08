@@ -1,11 +1,11 @@
 [Back to Planning Sprint 20](./planning.md)
 
-# Task 27: Create Web4 Compliant TaskStateMachine 0.3.0.4
+# Task 30: Create Web4 Compliant TaskStateMachine 0.3.0.4
 [task:uuid:t1s2m3n4-a5b6-7890-task-s78901234567]
 
 ## Naming Conventions
 - Tasks: `task-<number>-<short-description>.md`
-- Subtasks: `task-<number>.<subnumber>-<role>-<short-description>.md` (e.g., `task-27.1-developer-web4-compliance-implementation.md`)
+- Subtasks: `task-<number>.<subnumber>-<role>-<short-description>.md` (e.g., `task-30.1-developer-web4-compliance-implementation.md`)
 - Subtasks must always indicate the affected role in the filename.
 - Subtasks must be ordered to avoid blocking dependencies. If a blocking dependency is unavoidable, the Scrum Master is responsible for removing the impediment by reordering or splitting tasks.
 
@@ -26,10 +26,10 @@
 - [TaskStateMachine Discovery PDCA](../../project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-src-domain-investigation.md)
 - [Web4 Compliance Analysis](../../project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-taskstatemachine-web4-compliance-analysis.md)
 **Down:**
-- [Task 27.1: Developer - Web4 Compliance Implementation](./task-27.1-developer-web4-compliance-implementation.md)
-- [Task 27.2: Developer - Empty Constructor Pattern Application](./task-27.2-developer-empty-constructor-pattern.md)
-- [Task 27.3: Developer - IOR Integration for Task References](./task-27.3-developer-ior-integration-task-references.md)
-- [Task 27.4: Developer - 0.3.0.4 Component Structure Creation](./task-27.4-developer-0304-component-structure.md)
+- [Task 30.1: Developer - Web4 Compliance Implementation](./task-30.1-developer-web4-compliance-implementation.md)
+- [Task 30.2: Developer - Empty Constructor Pattern Application](./task-30.2-developer-empty-constructor-pattern.md)
+- [Task 30.3: Developer - IOR Integration for Task References](./task-30.3-developer-ior-integration-task-references.md)
+- [Task 30.4: Developer - 0.3.0.4 Component Structure Creation](./task-30.4-developer-0304-component-structure.md)
 
 ## Task Description
 Create Web4 compliant version 0.3.0.4 of TaskStateMachine component, migrating from TSRanger v1.0 domain model to standalone Web4 component with proper Empty Constructor Principle, IOR integration, and CMM3 task status automation capabilities.

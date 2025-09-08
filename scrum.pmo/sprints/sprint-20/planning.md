@@ -234,6 +234,13 @@ See [requiremnents-2025-09-06-UTC-1132-po-dual-linking.md](./requiremnents-2025-
   - [ ] [Task 28.3: Developer - Model FromScenario Static Method](./task-28.3-developer-model-fromscenario-method.md)
   - [ ] [Task 28.4: Developer - Model Change Events Integration](./task-28.4-developer-model-change-events.md)
 
+- [ ] [Task 30: Create Web4 Compliant TaskStateMachine 0.3.0.4](./task-30-taskstatemachine-web4-compliance-0304.md)  
+  **Priority:** 4 (CMM3 Automation Tool) **Status:** 📋 PENDING
+  - [ ] [Task 30.1: Developer - Web4 Compliance Implementation](./task-30.1-developer-web4-compliance-implementation.md)
+  - [ ] [Task 30.2: Developer - Empty Constructor Pattern Application](./task-30.2-developer-empty-constructor-pattern.md)
+  - [ ] [Task 30.3: Developer - IOR Integration for Task References](./task-30.3-developer-ior-integration-task-references.md)
+  - [ ] [Task 30.4: Developer - 0.3.0.4 Component Structure Creation](./task-30.4-developer-0304-component-structure.md)
+
 ### Product Owner Oversight Established
 - **Requirements Ownership:** Complete ownership of Sprint 20 requirements traceability
 - **Quality Assurance:** Dual link validation and functional verification completed
