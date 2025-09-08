@@ -246,8 +246,8 @@ See [requiremnents-2025-09-06-UTC-1132-po-dual-linking.md](./requiremnents-2025-
   - [ ] [Task 31.3: Developer - Delete Commands CLI Integration](./task-31.3-developer-delete-commands-cli-integration.md)
   - [ ] [Task 31.4: Developer - Delete Commands Validation Testing](./task-31.4-developer-delete-commands-validation.md)
 
-- [ ] [Task 32: Unit Link Relink Command Implementation](./task-32-unit-link-relink-command-implementation.md)  
-  **Priority:** 2 (High - TRON Respecification) **Depends:** Task 29 Completion
+- [ ] [Task 32: Unit LinkInto Command Implementation](./task-32-unit-link-relink-command-implementation.md)  
+  **Priority:** 2 (High - TRON Clarification) **Depends:** Task 29 Completion
   - [ ] [Task 32.1: Developer - Link File Resolution Implementation](./task-32.1-developer-link-file-resolution.md)
   - [ ] [Task 32.2: Developer - Target Folder Link Creation](./task-32.2-developer-target-folder-link-creation.md)
   - [ ] [Task 32.3: Developer - Model Update for Multiple Links](./task-32.3-developer-model-update-multiple-links.md)

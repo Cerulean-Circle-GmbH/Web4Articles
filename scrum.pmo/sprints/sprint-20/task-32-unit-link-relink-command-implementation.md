@@ -1,6 +1,6 @@
 [Back to Planning Sprint 20](./planning.md)
 
-# Task 32: Unit Link Relink Command Implementation
+# Task 32: Unit LinkInto Command Implementation
 [task:uuid:32c1d2e3-f4g5-h6i7-j8k9-l0m1n2o3p4q5]
 
 ## Naming Conventions
@@ -27,45 +27,46 @@
   - [ ] [Task 32.4: Developer - Relink Command Testing and Validation](./task-32.4-developer-relink-command-testing.md)
 
 ## Task Description
-Implement unit link relink command with correct signature: `unit link <lnlinkfile.unit> <targetfolder>` to create additional links to the same unit in different locations. Command should read existing link file to get unit UUID, create new link in target folder, and update model to track multiple links correctly.
+Implement unit linkInto command with signature: `unit linkInto <lnlinkfile.unit> <targetfolder>` to create additional links to the same unit in different locations. Preserve existing `unit link <uuid> <filename>` command unchanged. LinkInto command should read existing link file to get unit UUID, create new link in target folder, and update model to track multiple links correctly.
 
 ## Context
-From TRON respecification: Current unit link command implementation doesn't match intended functionality. Required command should use existing link file as reference to create additional links to same unit in different target folders, enabling organized link management across multiple locations.
+From TRON clarification: Keep existing unit link command unchanged and add separate unit linkInto command for creating additional links to same unit in different locations. This provides clear functionality separation between initial link creation and additional link management.
 
-## TRON Request Respecification
-### Command Signature Clarification
+## TRON Request Clarification
+### Command Structure Clarification
 ```quote
-mmmh i do not find it myself.
-let me respecify:
-unit link <lnlinkfile.unit> <targetfolder> shall create another link to the same unit in another location and correctly update the model. create a task for this and pdca
+let me be more clear. keep the 
+unit link uuid…
+and add 
+unit linkInto for this new request. update the task. sorry for the confusion.
+pdca
 ```
 
-**Correct Command Specification:**
-- **Signature:** `unit link <lnlinkfile.unit> <targetfolder>`
-- **Input:** Existing link file (not UUID directly)
-- **Target:** Folder location for new link
-- **Functionality:** Create additional link to same unit
-- **Model Update:** Track multiple links correctly
+**Clarified Command Structure:**
+- **Preserve:** `unit link <uuid> <filename>` (creates initial link using UUID)
+- **Add New:** `unit linkInto <lnlinkfile.unit> <targetfolder>` (creates additional link using existing link)
 
-**Current vs. Required:**
-- **Current:** `unit link <uuid> <filename>` (creates link using UUID)
-- **Required:** `unit link <lnlinkfile.unit> <targetfolder>` (creates additional link using existing link)
+**Command Separation Benefits:**
+- **unit link:** Clear purpose for initial link creation from UUID
+- **unit linkInto:** Clear purpose for additional link creation from existing link
+- **Functionality:** Distinct commands for distinct use cases
+- **User Experience:** No overloaded command functionality
 
 ## Intention
 Enable creation of multiple links to same unit across different locations using existing links as reference, with proper model tracking and organized link management.
 
 ## Complete Technical Specifications
 
-### Unit Link Relink Implementation
+### Unit LinkInto Implementation
 
 **Command Signature:**
 ```bash
-unit link <lnlinkfile.unit> <targetfolder>
+unit linkInto <lnlinkfile.unit> <targetfolder>
 ```
 
-**DefaultUnit.ts relink() method:**
+**DefaultUnit.ts linkInto() method:**
 ```typescript
-async relink(linkFilename: string, targetFolder: string): Promise<void> {
+async linkInto(linkFilename: string, targetFolder: string): Promise<void> {
   try {
     // Read existing link to get target UUID
     const { readlinkSync } = await import('fs');
@@ -132,19 +133,28 @@ private calculateRelativePath(fromPath: string, toPath: string): string {
 
 **UnitCLI.ts command handling update:**
 ```typescript
-// Update run method to handle relink command
+// Keep existing link command unchanged
 case 'link':
   if (args.length >= 3) {
-    await this.relinkUnit(args[1], args[2]);  // <lnlinkfile.unit> <targetfolder>
+    await this.linkUnit(args[1], args[2]);  // <uuid> <filename>
   } else {
-    console.error('Usage: unit link <lnlinkfile.unit> <targetfolder>');
+    console.error('Usage: unit link <uuid> <filename>');
   }
   break;
 
-// Add relink method
-private async relinkUnit(linkFilename: string, targetFolder: string): Promise<void> {
+// Add new linkInto command
+case 'linkInto':
+  if (args.length >= 3) {
+    await this.linkIntoFolder(args[1], args[2]);  // <lnlinkfile.unit> <targetfolder>
+  } else {
+    console.error('Usage: unit linkInto <lnlinkfile.unit> <targetfolder>');
+  }
+  break;
+
+// Add linkInto method
+private async linkIntoFolder(linkFilename: string, targetFolder: string): Promise<void> {
   const unit = this.getOrCreateUnit();
-  await unit.relink(linkFilename, targetFolder);
+  await unit.linkInto(linkFilename, targetFolder);
 }
 ```
 
@@ -152,10 +162,14 @@ private async relinkUnit(linkFilename: string, targetFolder: string): Promise<vo
 
 **Updated usage display:**
 ```typescript
-console.log('  unit link <lnlinkfile.unit> <targetfolder>      # Create additional link to same unit');
-console.log('  link         Create additional LD link to same unit in different location');
+console.log('  unit link <uuid> <filename>                     # Create initial link to unit');
+console.log('  unit linkInto <lnlinkfile.unit> <targetfolder>  # Create additional link in different location');
+console.log('  link         Create initial LD link to existing unit using UUID');
+console.log('  linkInto     Create additional LD link to same unit in different location');
+console.log('  <uuid>             Unit UUID for initial link creation');
+console.log('  <filename>         Filename for initial link');
 console.log('  <lnlinkfile.unit>  Existing link file to use as reference');
-console.log('  <targetfolder>     Target folder for new link creation');
+console.log('  <targetfolder>     Target folder for additional link creation');
 ```
 
 ### Example Usage Scenarios
