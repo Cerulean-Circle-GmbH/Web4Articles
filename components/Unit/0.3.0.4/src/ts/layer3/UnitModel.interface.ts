@@ -6,12 +6,7 @@
 
 import { Model } from './Model.interface.js';
 import { NamedLink } from './NamedLink.interface.js';
-
-export enum TypeM3 {
-  CLASS = "CLASS",           // Components, classes, objects
-  ATTRIBUTE = "ATTRIBUTE",   // Files, properties, data  
-  RELATIONSHIP = "RELATIONSHIP" // LD Links, associations, connections
-}
+import { TypeM3 } from './TypeM3.enum.js';
 
 export interface UnitModel extends Model {
   // Base Model property inherited: uuid

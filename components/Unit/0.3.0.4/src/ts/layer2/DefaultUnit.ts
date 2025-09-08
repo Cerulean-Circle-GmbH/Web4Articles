@@ -5,7 +5,8 @@
 
 import { Unit } from '../layer3/Unit.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
-import { UnitModel, TypeM3 } from '../layer3/UnitModel.interface.js';
+import { UnitModel } from '../layer3/UnitModel.interface.js';
+import { TypeM3 } from '../layer3/TypeM3.enum.js';
 import { Model } from '../layer3/Model.interface.js';
 import { DefaultStorage } from './DefaultStorage.js';
 import { existsSync } from 'fs';

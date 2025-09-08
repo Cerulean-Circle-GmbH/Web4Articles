@@ -476,6 +476,29 @@ delete the ent unit from the index and all its ln link files.
 - **deleteLink:** Remove only specific link file, preserve unit in central storage
 - **deleteUnit:** Complete unit removal from index and all associated LD link files
 
+### TRON QA Feedback (2025-09-07-UTC-0015)
+#### Web4 Compliance Violation: Multiple Types in Single File
+```quote
+task 27: qa
+components/Unit/0.3.0.4/src/ts/layer3/UnitModel.interface.ts
+one type one file violation. create the enum as a file… ending with .enum.ts
+
+make it a requirement with v0.1.2.2
+```
+
+**Issue Identified:** TypeM3 enum in same file as UnitModel interface violates Web4 single type per file principle
+
+**Global Requirement Created:**
+- **UUID:** 82cfb0ac-f4cf-4893-8dcc-3ff5e84ba476
+- **Title:** Enum Single File Standard
+- **Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/spec/requirements.md/82cfb0ac-f4cf-4893-8dcc-3ff5e84ba476.requirement.md) | [spec/requirements.md/82cfb0ac-f4cf-4893-8dcc-3ff5e84ba476.requirement.md](../../../spec/requirements.md/82cfb0ac-f4cf-4893-8dcc-3ff5e84ba476.requirement.md)
+
+**Immediate Fix Applied:**
+✅ TypeM3 enum moved to separate TypeM3.enum.ts file
+✅ UnitModel.interface.ts now contains single interface only
+✅ All imports updated to reference separate enum file
+✅ TypeScript compilation successful with separated types
+
 ## Dependencies
 - Builds on Unit 0.3.0.4 foundation with TypeM3 attribute
 - **NEW:** Global CLI options prohibition requirement (v0.1.2.2)
