@@ -25,10 +25,10 @@
 - up
   - [Model Interface Methods Analysis PDCA](../../project.journal/2025-09-05-UTC-1300-branch-switch-session/pdca/role/developer/2025-09-06-UTC-2320-model-interface-methods-analysis.pdca.md)
 - down
-  - [Task 28.1: Developer - Model Clone Method Implementation](./task-28.1-developer-model-clone-method.md)
-  - [Task 28.2: Developer - Model Equals Method Implementation](./task-28.2-developer-model-equals-method.md)
-  - [Task 28.3: Developer - Model FromScenario Static Method](./task-28.3-developer-model-fromscenario-method.md)
-  - [Task 28.4: Developer - Model Change Events Integration](./task-28.4-developer-model-change-events.md)
+  - [ ] [Task 28.1: Developer - Model Clone Method Implementation](./task-28.1-developer-model-clone-method.md)
+  - [ ] [Task 28.2: Developer - Model Equals Method Implementation](./task-28.2-developer-model-equals-method.md)
+  - [ ] [Task 28.3: Developer - Model FromScenario Static Method](./task-28.3-developer-model-fromscenario-method.md)
+  - [ ] [Task 28.4: Developer - Model Change Events Integration](./task-28.4-developer-model-change-events.md)
 
 ## Task Description
 Future enhancement task for Model interface with additional methods that provide advanced model functionality: clone(), equals(), fromScenario() static method, and integration with ChangeEvent system. These methods are useful but not essential for minimal Model interface implementation.

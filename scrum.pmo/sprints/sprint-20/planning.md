@@ -221,14 +221,14 @@ See [requiremnents-2025-09-06-UTC-1132-po-dual-linking.md](./requiremnents-2025-
 ### **PRIORITY 2: MODEL INTERFACE FOUNDATION (NEW TASKS)**
 
 - [ ] [Task 27: Model Interface Implementation (Essential Methods)](./task-27-model-interface-implementation.md)  
-  **Priority:** 2 (High - Architecture Foundation) **Status:** PENDING - Awaiting TRON Review
+  **Priority:** 2 (High - Architecture Foundation)
   - [ ] [Task 27.1: Developer - Model Interface Creation](./task-27.1-developer-model-interface-creation.md)
   - [ ] [Task 27.2: Developer - UnitModel Interface Update](./task-27.2-developer-unitmodel-interface-update.md)
   - [ ] [Task 27.3: Developer - Scenario Interface Generalization](./task-27.3-developer-scenario-interface-generalization.md)
   - [ ] [Task 27.4: Developer - DefaultUnit Model Methods Implementation](./task-27.4-developer-defaultunit-model-methods.md)
 
 - [ ] [Task 28: Future Model Interface Enhancements (Additional Methods)](./task-28-future-model-interface-enhancements.md)  
-  **Priority:** 3 (Future Enhancement) **Status:** PLANNED - Depends on Task 27 Completion
+  **Priority:** 3 (Future Enhancement) **Depends:** Task 27 Completion
   - [ ] [Task 28.1: Developer - Model Clone Method Implementation](./task-28.1-developer-model-clone-method.md)
   - [ ] [Task 28.2: Developer - Model Equals Method Implementation](./task-28.2-developer-model-equals-method.md)
   - [ ] [Task 28.3: Developer - Model FromScenario Static Method](./task-28.3-developer-model-fromscenario-method.md)
