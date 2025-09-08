@@ -22,6 +22,11 @@ there has been a Model interface and Scenario model should be of type Model and 
 add that to the unit task as qa feedback and pdca how you would fix it. then ask me if its ok and then change it.
 ```
 
+### **TRON QA Feedback on Proposed Fix**
+```quote
+i disagree withe createdAt and updatedAt from ocams perspective. these attributes would be better in a change event object. i cannot forsee the upraising complexity of the template typed scenario. lets give it a try but note my qa feedback in the unit task. pdca how it would look like now before you do it.
+```
+
 ### **My Answer (2025-09-06-UTC-2310)**
 Critical Web4 compliance issue identified: Scenario interface lacks proper Model generalization. Current `model: any` violates type safety and component generalization principles. Need to create base Model interface and make UnitModel extend it for proper scenario generalization.
 
