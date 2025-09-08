@@ -11,9 +11,9 @@
 
 ## Status
 - [x] Planned
-- [ ] In Progress
-- [ ] QA Review
-- [ ] Done
+- [x] In Progress
+- [x] QA Review
+- [x] Done
 
 ## Traceability
 - Add `[task:uuid:32c1d2e3-f4g5-h6i7-j8k9-l0m1n2o3p4q5]` to this task.

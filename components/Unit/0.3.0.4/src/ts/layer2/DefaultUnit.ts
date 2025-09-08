@@ -193,6 +193,19 @@ export class DefaultUnit implements Unit {
     return this.model;
   }
 
+  // Helper methods for link management
+  private extractUuidFromPath(scenarioPath: string): string {
+    // Extract UUID from path like ../scenarios/index/a/b/c/d/e/uuid.scenario.json
+    const pathParts = scenarioPath.split('/');
+    const filename = pathParts[pathParts.length - 1];
+    return filename.replace('.scenario.json', '');
+  }
+
+  private async calculateRelativePath(fromPath: string, toPath: string): Promise<string> {
+    const { relative } = await import('path');
+    return relative(fromPath, toPath);
+  }
+
   // Advanced CLI Commands (Task 19) - Direct method naming convention v0.1.2.2
   async link(uuid: string, filename: string): Promise<void> {
     try {
@@ -221,6 +234,56 @@ export class DefaultUnit implements Unit {
       console.log(`   Target: ${scenarioPath}`);
     } catch (error) {
       console.error(`Failed to create link: ${(error as Error).message}`);
+    }
+  }
+
+  async linkInto(linkFilename: string, targetFolder: string): Promise<void> {
+    try {
+      // Read existing link to get target UUID
+      const { readlinkSync } = await import('fs');
+      const { resolve, basename } = await import('path');
+      
+      const currentDir = process.cwd();
+      const existingLinkPath = resolve(currentDir, linkFilename);
+      
+      // Extract UUID from existing link
+      const scenarioPath = readlinkSync(existingLinkPath);
+      const uuid = this.extractUuidFromPath(scenarioPath);
+      
+      // Load unit scenario
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      // Create new link in target folder
+      const targetPath = resolve(targetFolder);
+      const linkBasename = basename(linkFilename);
+      const newLinkPath = `${targetPath}/${linkBasename}`;
+      
+      // Create directory if it doesn't exist
+      const { mkdir } = await import('fs/promises');
+      await mkdir(targetPath, { recursive: true });
+      
+      // Create symbolic link to same scenario
+      const { symlink } = await import('fs/promises');
+      const relativePath = await this.calculateRelativePath(targetPath, scenario.model.indexPath);
+      await symlink(relativePath, newLinkPath);
+      
+      // Update scenario model with new link
+      scenario.model.symlinkPaths.push(newLinkPath);
+      scenario.model.namedLinks.push({
+        location: relativePath,
+        filename: linkBasename
+      });
+      
+      // Save updated scenario
+      await this.storage.saveScenario(uuid, scenario, scenario.model.symlinkPaths);
+      
+      console.log(`✅ Additional link created: ${linkBasename}`);
+      console.log(`   Source: ${existingLinkPath}`);
+      console.log(`   Target: ${newLinkPath}`);
+      console.log(`   Unit: ${uuid}`);
+      console.log(`   Total links: ${scenario.model.symlinkPaths.length}`);
+    } catch (error) {
+      console.error(`Failed to create additional link: ${(error as Error).message}`);
     }
   }
 

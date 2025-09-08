@@ -13,7 +13,8 @@
     "typeM3": "CLASS",
     "indexPath": "/workspace/scenarios/index/6/c/c/5/3/6cc53e59-7da8-46df-af7d-15f4eb32520e.scenario.json",
     "symlinkPaths": [
-      "/workspace/temp/Test.Link.Name.unit"
+      "/workspace/temp/Test.Link.Name.unit",
+      "/workspace/temp/test-target/Test.Implementation.unit"
     ],
     "namedLinks": [
       {
@@ -23,6 +24,10 @@
       {
         "location": "../scenarios/index/6/c/c/5/3/6cc53e59-7da8-46df-af7d-15f4eb32520e.scenario.json",
         "filename": "Test.Link.Name.unit"
+      },
+      {
+        "location": "../../scenarios/index/6/c/c/5/3/6cc53e59-7da8-46df-af7d-15f4eb32520e.scenario.json",
+        "filename": "Test.Implementation.unit"
       }
     ],
     "executionCapabilities": [
@@ -36,6 +41,6 @@
       "ld-links"
     ],
     "createdAt": "2025-09-08T11:57:06.431Z",
-    "updatedAt": "2025-09-08T11:57:27.001Z"
+    "updatedAt": "2025-09-08T12:37:58.623Z"
   }
 }
