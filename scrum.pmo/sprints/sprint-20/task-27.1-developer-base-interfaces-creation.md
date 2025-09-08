@@ -4,14 +4,10 @@
 [task:uuid:27a1b2c3-d4e5-f678-9012-345678901234]
 
 ## Status
-- [ ] Planned
+- [x] Planned
 - [x] In Progress
-  - [x] refinement
-  - [ ] creating test cases
-  - [ ] implementing
-  - [ ] testing
-- [ ] QA Review
-- [ ] Done
+- [x] QA Review
+- [x] Done
 
 ## Traceability
 - Add `[task:uuid:27a1b2c3-d4e5-f678-9012-345678901234]` to this task.

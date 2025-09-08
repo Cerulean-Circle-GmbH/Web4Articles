@@ -259,6 +259,13 @@
 - **CRITICAL: ALWAYS ASK FOR USER ACCEPTANCE** - Never assume task completion without explicit user validation
 - **NEVER MARK TASKS AS COMPLETE** without user QA approval - this violates "Never 2 1 (TO ONE), Always 4 2 (FOR TWO)" principle
 
+### **Task Status Management (PO Role Guidelines):**
+- **Status Format:** Simple checkboxes without refinement substatus: `- [x] Planned`, `- [x] In Progress`, `- [x] QA Review`, `- [x] Done`
+- **Refinement Elimination:** Subtasks should not have refinement status - they ARE the refinement
+- **Status Progression:** Planned → In Progress → QA Review → Done (linear progression)
+- **Planning Reflection:** Planning status reflects decisions status from inside task files
+- **Subtask File Existence:** Use checkboxes in traceability to show actual file existence vs planned
+
 ---
 
 ## **📋 NAMING CONVENTIONS**
