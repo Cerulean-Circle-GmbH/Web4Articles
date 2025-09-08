@@ -196,18 +196,28 @@ export class DefaultUnit implements Unit {
   // Advanced CLI Commands (Task 19) - Direct method naming convention v0.1.2.2
   async link(uuid: string, filename: string): Promise<void> {
     try {
+      // Convert multi-word filenames (spaces → single dots) for consistency
+      const convertedFilename = filename.replace(/\s+/g, '.');
+      
       // Create new LD link to existing unit in different location
       const currentDir = process.cwd();
-      const linkPath = `${currentDir}/${filename}.unit`;
+      const linkPath = `${currentDir}/${convertedFilename}.unit`;
       
       // Load existing unit scenario
       const existingScenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      // Update scenario with new link
+      existingScenario.model.symlinkPaths.push(linkPath);
+      existingScenario.model.namedLinks.push({
+        location: `../scenarios/index/${uuid.slice(0, 5).split('').join('/')}/${uuid}.scenario.json`,
+        filename: `${convertedFilename}.unit`
+      });
       
       // Create new LD link pointing to existing scenario
       const scenarioPath = existingScenario.model.indexPath;
       await this.storage.saveScenario(uuid, existingScenario, [linkPath]);
       
-      console.log(`✅ Link created: ${filename}.unit → ${uuid}`);
+      console.log(`✅ Link created: ${convertedFilename}.unit → ${uuid}`);
       console.log(`   Target: ${scenarioPath}`);
     } catch (error) {
       console.error(`Failed to create link: ${(error as Error).message}`);
