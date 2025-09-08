@@ -145,9 +145,22 @@ main() {
     
     echo "🏗️ Building component (bootstrap mode)..."
     
-    # Build StandaloneBuild first (dependency-free bootstrap)
-    if [ ! -f "$COMPONENT_DIR/dist/ts/StandaloneBuild.js" ]; then
-        echo "🔧 Bootstrapping StandaloneBuild..."
+    # Function to check if rebuild is needed for StandaloneBuild
+    needs_rebuild() {
+        local cli_path="$COMPONENT_DIR/dist/ts/StandaloneBuild.js"
+        
+        # If CLI doesn't exist, rebuild needed
+        [ ! -f "$cli_path" ] && return 0
+        
+        # Check if StandaloneBuild.ts source is newer than compiled CLI
+        [ "$COMPONENT_DIR/src/ts/StandaloneBuild.ts" -nt "$cli_path" ] && return 0
+        
+        return 1
+    }
+    
+    # Build StandaloneBuild if needed (dependency-free bootstrap with freshness check)
+    if needs_rebuild; then
+        echo "🔧 Building StandaloneBuild (source files updated)..."
         cd "$COMPONENT_DIR"
         npm install >/dev/null 2>&1
         npx tsc src/ts/StandaloneBuild.ts --outDir dist/ts --module ES2022 --target ES2022 --moduleResolution node >/dev/null 2>&1
