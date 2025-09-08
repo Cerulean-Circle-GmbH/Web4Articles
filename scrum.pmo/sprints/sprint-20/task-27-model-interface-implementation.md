@@ -47,8 +47,8 @@ Create foundational Model interface that enables universal hibernation pattern, 
 4. **NEW:** Create separate NamedLink interface (Web4 compliance - single interface per file)
 5. Update UnitModel to extend minimal Model interface
 6. Update Scenario interface to use generic template with QA warning
-7. **NEW:** Fix OntologyAgent File unit terminal identity (UUID: 7e4edfc3-f746-419f-ad31-e4b49bed9549)
-8. **NEW:** Enhance unit creation to preserve description in definition field
+7. **NEW:** Fix unit create command to store definition immediately (no complex workarounds)
+8. **NEW:** Enhance multi-word name handling (spaces in names, dots in filenames)
 9. Update DefaultUnit to implement Model interface methods
 10. Validate implementation with TypeScript compilation and testing
 11. Document generic template complexity concerns for future monitoring
@@ -60,8 +60,9 @@ Create foundational Model interface that enables universal hibernation pattern, 
 - **NEW:** Separate NamedLink interface (Web4 compliance - single interface per file)
 - UnitModel extends Model interface (inherits uuid, implements methods)
 - Generic Scenario interface: Scenario<T extends Model = Model>
-- **NEW:** OntologyAgent File unit terminal identity completed (definition field preservation)
-- **NEW:** Unit creation process enhanced to preserve description in definition field
+- **NEW:** Unit create command fixed to store definition immediately (TRON's correction)
+- **NEW:** Multi-word name handling with space-to-dot filename conversion
+- **NEW:** Global CLI options prohibition compliance (v0.1.2.2 requirement)
 - DefaultUnit implements Model interface methods correctly
 - TypeScript compilation success with new interface structure
 - Backward compatibility maintained during transition
@@ -77,8 +78,8 @@ Create foundational Model interface that enables universal hibernation pattern, 
 - [ ] **NEW:** NamedLink.interface.ts created as separate file (Web4 compliance)
 - [ ] UnitModel.interface.ts updated to extend Model interface (single interface only)
 - [ ] Scenario.interface.ts updated to generic template with QA warning
-- [ ] **NEW:** OntologyAgent File unit (7e4edfc3) terminal identity completed
-- [ ] **NEW:** Unit creation enhanced to store description in definition field
+- [ ] **NEW:** Unit create command fixed to store definition immediately
+- [ ] **NEW:** Multi-word name handling implemented (spaces in names, dots in filenames)
 - [ ] DefaultUnit.ts implements all Model interface methods correctly
 - [ ] TypeScript compilation succeeds with new interface structure
 - [ ] All existing tests pass with updated interfaces
@@ -340,52 +341,111 @@ export class DefaultUnit implements Unit {
 "the lost description is the definition and should be stored there"
 ```
 
-**Fix Implementation:**
-```bash
-# Complete terminal identity for OntologyAgent's File unit
-cd scenarios/ontology
-echo "M2 Class for M1 file instances" > file-definition.txt
-../scripts/unit definition 7e4edfc3-f746-419f-ad31-e4b49bed9549 "file-definition.txt" "1:1" "1:30"
-```
+**TRON's Correction Applied:**
+The OntologyAgent's File unit issue is actually a unit create command problem, not a terminal identity issue. The command `unit create File "M2 Class for M1 file instances"` should immediately store the definition, not require complex workarounds.
 
-**Expected Result:**
-```json
-{
-  "model": {
-    "name": "File",
-    "origin": "ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scenarios/ontology/file-definition.txt#L1:1-L1:30",
-    "definition": "M2 Class for M1 file instances"  // ✅ TRON's insight: description preserved in definition
-  }
+**Root Cause:** Unit create command doesn't store the description parameter in model.definition field.
+
+**Simple Fix:** Enhance UnitCLI create method to store description immediately:
+```typescript
+// Fix in UnitCLI create method
+async create(name: string, definition: string): Promise<void> {
+  const unit = this.getOrCreateUnit();
+  
+  // Store both name and definition immediately
+  unit.model.name = name;
+  unit.model.definition = definition;  // ✅ Store description as definition immediately
+  
+  // Continue with existing creation and storage logic...
 }
 ```
 
 ### Enhanced Unit Creation Process
-**Current Issue:** Unit create command loses description
-**Improvement:** Enhance DefaultUnit to store description in definition field
+**TRON's Critical Correction:** unit create command should store definition immediately
 
+**❌ WRONG Approach (Complex Workaround):**
+```bash
+unit create File ""
+echo "M2 Class for M1 file instances" > definition.txt
+unit definition 7e4edfc3 "definition.txt" "1:1" "1:50"
+# TRON: "this is total bullshit"
+```
+
+**✅ CORRECT Approach (TRON's Insight):**
+```bash
+unit create File "M2 Class for M1 file instances"
+# Should immediately store definition in model.definition field
+```
+
+**Fix Implementation in DefaultUnit:**
 ```typescript
-// Enhanced unit creation in DefaultUnit
-async create(name: string, description?: string): Promise<void> {
-  this.model.name = name;
+// Current UnitCLI create method enhancement
+async create(name: string, definition: string): Promise<void> {
+  const unit = this.getOrCreateUnit();
   
-  if (description) {
-    this.model.definition = description;  // ✅ TRON's insight: store description as definition
-  }
+  // Store name and definition immediately (TRON's correction)
+  unit.model.name = name;
+  unit.model.definition = definition;  // ✅ Store description as definition immediately
   
   // Continue with existing creation logic...
+  await unit.save();
 }
 ```
+
+### OntologyAgent Table Analysis for Automated Unit Creation
+
+**From OntologyAgent's Ontological Terminology Table:**
+
+| Term | Definition | Proposed Unit Creation |
+|------|------------|----------------------|
+| **M2 Class** | Meta-class level ontological construct that defines structure for M1 instances | `unit create "M2 Class" "Meta-class level ontological construct that defines structure for M1 instances"` |
+| **M1 File Instance** | Concrete file objects that instantiate M2 Class definitions | `unit create "M1 File Instance" "Concrete file objects that instantiate M2 Class definitions"` |
+| **Unit Tool 0.3.0.4** | Latest Web4 ontological modeling tool with UUID indexing and symlink management | `unit create "Unit Tool 0.3.0.4" "Latest Web4 ontological modeling tool with UUID indexing and symlink management"` |
+| **UUID Indexing** | Hierarchical storage system using UUID segments for scenario organization | `unit create "UUID Indexing" "Hierarchical storage system using UUID segments for scenario organization"` |
+
+**Multi-word Name Handling (TRON's Requirement):**
+- **Name:** "M2 Class" (spaces allowed in names)
+- **Filename:** "M2..Class.unit" (dots instead of spaces for filesystem)
+
+**Enhanced Unit Creation for Multi-word Names:**
+```typescript
+// Handle multi-word names with dot conversion for filenames
+async create(name: string, definition: string): Promise<void> {
+  const unit = this.getOrCreateUnit();
+  
+  // Store name with spaces (TRON's requirement)
+  unit.model.name = name;
+  unit.model.definition = definition;
+  
+  // Convert name to filename (spaces → dots)
+  const filename = name.replace(/\s+/g, '..') + '.unit';
+  
+  // Continue with creation using converted filename...
+}
+```
+
+## Global CLI Standards Applied
+
+### CLI Options Prohibition Requirement v0.1.2.2
+**Created:** UUID `9a17285e-d55b-4793-98a5-a5ba17a85089`
+**Requirement:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/spec/requirements.md/9a17285e-d55b-4793-98a5-a5ba17a85089.requirement.md) | [spec/requirements.md/9a17285e-d55b-4793-98a5-a5ba17a85089.requirement.md](../../../spec/requirements.md/9a17285e-d55b-4793-98a5-a5ba17a85089.requirement.md)
+
+**TRON's Insight:**
+> "NEVER use —options in web4 clis EVER. unix and shells where meant to be OOP but the introduction of options killed it all."
+
+**Standard:** Web4 CLI commands must use positional parameters only, never options (--flags)
 
 ## Implementation Approach
 - Minimal Model interface following Occam's Razor principle
 - Generic Scenario with documented complexity concerns
-- **NEW:** OntologyAgent unit fixes integrated for comprehensive execution
+- **NEW:** Unit create command simplified (immediate definition storage)
 - **NEW:** Web4 compliance restored with single interface per file
+- **NEW:** Global CLI options prohibition compliance
 - Progressive adoption across Web4 ecosystem
 - Future monitoring of template complexity impact
 
 ## Dependencies
 - Builds on Unit 0.3.0.4 foundation with TypeM3 attribute
-- **NEW:** Fixes OntologyAgent File unit (UUID: 7e4edfc3) terminal identity
+- **NEW:** Global CLI options prohibition requirement (v0.1.2.2)
 - Requires TypeScript compilation and interface resolution
 - Foundation for universal hibernation pattern across Web4 components
