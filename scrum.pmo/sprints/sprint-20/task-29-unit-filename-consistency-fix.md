@@ -73,8 +73,8 @@ const linkPath = `${currentDir}/${filename}.unit`;  // ❌ Uses filename as-is w
 ```typescript
 async link(uuid: string, filename: string): Promise<void> {
   try {
-    // Convert multi-word filenames (spaces → dots) for consistency
-    const convertedFilename = filename.replace(/\s+/g, '..');
+    // Convert multi-word filenames (spaces → single dots) for consistency
+    const convertedFilename = filename.replace(/\s+/g, '.');
     
     // Create new LD link to existing unit in different location
     const currentDir = process.cwd();
@@ -87,7 +87,7 @@ async link(uuid: string, filename: string): Promise<void> {
     existingScenario.model.symlinkPaths.push(linkPath);
     existingScenario.model.namedLinks.push({
       location: `../scenarios/index/${uuid.slice(0, 5).split('').join('/')}/${uuid}.scenario.json`,
-      filename: `${convertedFilename}.unit`  // ✅ Store converted filename
+      filename: `${convertedFilename}.unit`  // ✅ Store converted filename (single dots)
     });
     
     // Save updated scenario
@@ -105,8 +105,8 @@ async link(uuid: string, filename: string): Promise<void> {
 
 **Test Cases:**
 1. **Single Word:** `unit link uuid "Test"` → "Test.unit" ✅
-2. **Multi-word:** `unit link uuid "Test Link"` → "Test..Link.unit" ✅
-3. **Complex Multi-word:** `unit link uuid "UUID Indexing Test"` → "UUID..Indexing..Test.unit" ✅
+2. **Multi-word:** `unit link uuid "Test Link"` → "Test.Link.unit" ✅
+3. **Complex Multi-word:** `unit link uuid "UUID Indexing Test"` → "UUID.Indexing.Test.unit" ✅
 
 **Scenario Update Verification:**
 - Check that namedLinks array contains converted filename
@@ -141,6 +141,39 @@ async link(uuid: string, filename: string): Promise<void> {
 - [ ] Test validation confirms consistent filename handling
 - [ ] All existing functionality preserved
 
+## TRON QA Feedback (2025-09-07-UTC-0015)
+### Critical Correction: Double Dots Are Wrong
+```quote
+qa feedback for task 29:
+UUID..Indexing.unit is WRONG
+
+UUID.Indexing.unit is correct.
+
+where do the multiple .. come from. fix that immediately and answer in the tasks qa section.
+```
+
+**Issue Analysis:**
+- **Current Implementation:** `name.replace(/\s+/g, '..')` creates double dots
+- **TRON's Correction:** Single dots are correct format
+- **Root Cause:** Regex replacement uses `'..'` instead of `'.'`
+
+**Immediate Fix Required:**
+```typescript
+// WRONG (Current)
+const filename = name.replace(/\s+/g, '..');  // ❌ Creates double dots
+
+// CORRECT (TRON's Specification)
+const filename = name.replace(/\s+/g, '.');   // ✅ Single dots only
+```
+
+**Expected Results:**
+- **"UUID Indexing"** → **"UUID.Indexing.unit"** ✅ CORRECT
+- **"M2 Class"** → **"M2.Class.unit"** ✅ CORRECT
+- **"Storage Capabilities"** → **"Storage.Capabilities.unit"** ✅ CORRECT
+
+**Fix Location:** Both UnitCLI.ts createUnit method and DefaultUnit.ts link method
+
 ## Dependencies
 - Based on Task 27 Model Interface Implementation completion
 - Requires consistent filename handling across all unit commands
+- **URGENT:** Fix double dot issue immediately per TRON's correction

@@ -108,8 +108,8 @@ class UnitCLI {
     // Add execution capability for the named unit
     unit.addExecutionCapability(name);
     
-    // Convert multi-word names to filename (spaces → dots)
-    const filename = name.replace(/\s+/g, '..');
+    // Convert multi-word names to filename (spaces → single dots)
+    const filename = name.replace(/\s+/g, '.');
     
     const scenario = await unit.toScenario(filename);
     console.log(`✅ Unit created: ${name}`);
