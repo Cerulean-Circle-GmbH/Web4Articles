@@ -11,12 +11,12 @@
 
 ## Status
 - [ ] Planned
-- [x] In Progress
-  - [x] refinement
+- [ ] In Progress
+  - [ ] refinement
   - [ ] creating test cases
   - [ ] implementing
   - [ ] testing
-- [ ] QA Review
+- [x] QA Review
 - [ ] Done
 
 ## Traceability
@@ -444,8 +444,42 @@ async create(name: string, definition: string): Promise<void> {
 - Progressive adoption across Web4 ecosystem
 - Future monitoring of template complexity impact
 
+## TRON QA Feedback (2025-09-07-UTC-0010)
+### Issue Identified: Filename Consistency Problem
+```quote
+qa feedback for the corresponding task: the filenames still have spaces in them when they should have „." instead. test
+user link uuid filename 
+in folder scenario/ontology
+to see if the links are created and updated in the scenario correctly. if not create a task to fix that.
+```
+
+**Test Results:**
+- **unit create:** "UUID Indexing" → "UUID..Indexing.unit" ✅ CORRECT
+- **unit link:** "UUID Indexing Test" → "UUID Indexing Test.unit" ❌ INCORRECT (has spaces)
+
+**Root Cause:** Unit link command doesn't apply filename conversion like unit create command
+
+**Resolution:** Created Task 29 to fix unit link filename consistency and Task 30 for delete commands
+
+### Additional Commands Requested
+```quote
+add a task to add a
+unit deleteLink <lnfile.unit>
+unit deleteUnit <lnfile.unit>
+
+which delete only a link file from the model
+and
+delete the ent unit from the index and all its ln link files.
+```
+
+**Commands Specified:**
+- **deleteLink:** Remove only specific link file, preserve unit in central storage
+- **deleteUnit:** Complete unit removal from index and all associated LD link files
+
 ## Dependencies
 - Builds on Unit 0.3.0.4 foundation with TypeM3 attribute
 - **NEW:** Global CLI options prohibition requirement (v0.1.2.2)
 - Requires TypeScript compilation and interface resolution
 - Foundation for universal hibernation pattern across Web4 components
+- **QA Issue:** Task 29 created to fix filename consistency in unit link command
+- **Enhancement:** Task 30 created for delete commands implementation
