@@ -1,7 +1,7 @@
 [Back to Planning Sprint 20](./planning.md)
 
-# Task 30: Unit Delete Commands Implementation
-[task:uuid:30b2c3d4-e5f6-7890-1234-567890123456]
+# Task 31: Unit Delete Commands Implementation
+[task:uuid:31b2c3d4-e5f6-7890-1234-567890123456]
 
 ## Naming Conventions
 - Tasks: `task-<number>-<short-description>.md`
@@ -20,15 +20,15 @@
 - [ ] Done
 
 ## Traceability
-- Add `[task:uuid:30b2c3d4-e5f6-7890-1234-567890123456]` to this task.
+- Add `[task:uuid:31b2c3d4-e5f6-7890-1234-567890123456]` to this task.
 - Source: TRON Request for Unit Delete Commands
 - up
   - [Task 27: Model Interface Implementation](./task-27-model-interface-implementation.md)
 - down
-  - [ ] [Task 30.1: Developer - Unit DeleteLink Command Implementation](./task-30.1-developer-unit-deletelink-command.md)
-  - [ ] [Task 30.2: Developer - Unit DeleteUnit Command Implementation](./task-30.2-developer-unit-deleteunit-command.md)
-  - [ ] [Task 30.3: Developer - Delete Commands CLI Integration](./task-30.3-developer-delete-commands-cli-integration.md)
-  - [ ] [Task 30.4: Developer - Delete Commands Validation Testing](./task-30.4-developer-delete-commands-validation.md)
+  - [ ] [Task 31.1: Developer - Unit DeleteLink Command Implementation](./task-31.1-developer-unit-deletelink-command.md)
+  - [ ] [Task 31.2: Developer - Unit DeleteUnit Command Implementation](./task-31.2-developer-unit-deleteunit-command.md)
+  - [ ] [Task 31.3: Developer - Delete Commands CLI Integration](./task-31.3-developer-delete-commands-cli-integration.md)
+  - [ ] [Task 31.4: Developer - Delete Commands Validation Testing](./task-31.4-developer-delete-commands-validation.md)
 
 ## Task Description
 Implement unit delete commands: deleteLink to remove only a link file from the model while preserving the unit, and deleteUnit to delete the entire unit from index and all its LD link files. Provide granular deletion control for unit management.

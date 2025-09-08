@@ -239,19 +239,19 @@ See [requiremnents-2025-09-06-UTC-1132-po-dual-linking.md](./requiremnents-2025-
   - [ ] [Task 29.1: Developer - Unit Link Command Filename Fix](./task-29.1-developer-unit-link-filename-fix.md)
   - [ ] [Task 29.2: Developer - Filename Consistency Validation](./task-29.2-developer-filename-consistency-validation.md)
 
-- [ ] [Task 30: Unit Delete Commands Implementation](./task-30-unit-delete-commands-implementation.md)  
+- [ ] [Task 31: Unit Delete Commands Implementation](./task-31-unit-delete-commands-implementation.md)  
   **Priority:** 2 (High - TRON Request) **Depends:** Task 29 Completion
-  - [ ] [Task 30.1: Developer - Unit DeleteLink Command Implementation](./task-30.1-developer-unit-deletelink-command.md)
-  - [ ] [Task 30.2: Developer - Unit DeleteUnit Command Implementation](./task-30.2-developer-unit-deleteunit-command.md)
-  - [ ] [Task 30.3: Developer - Delete Commands CLI Integration](./task-30.3-developer-delete-commands-cli-integration.md)
-  - [ ] [Task 30.4: Developer - Delete Commands Validation Testing](./task-30.4-developer-delete-commands-validation.md)
+  - [ ] [Task 31.1: Developer - Unit DeleteLink Command Implementation](./task-31.1-developer-unit-deletelink-command.md)
+  - [ ] [Task 31.2: Developer - Unit DeleteUnit Command Implementation](./task-31.2-developer-unit-deleteunit-command.md)
+  - [ ] [Task 31.3: Developer - Delete Commands CLI Integration](./task-31.3-developer-delete-commands-cli-integration.md)
+  - [ ] [Task 31.4: Developer - Delete Commands Validation Testing](./task-31.4-developer-delete-commands-validation.md)
 
-- [ ] [Task 31: Create Web4 Compliant TaskStateMachine 0.3.0.4](./task-31-taskstatemachine-web4-compliance-0304.md)  
+- [ ] [Task 32: Create Web4 Compliant TaskStateMachine 0.3.0.4](./task-32-taskstatemachine-web4-compliance-0304.md)  
   **Priority:** 4 (CMM3 Automation Tool) **Status:** 📋 PENDING
-  - [ ] [Task 31.1: Developer - Web4 Compliance Implementation](./task-31.1-developer-web4-compliance-implementation.md)
-  - [ ] [Task 31.2: Developer - Empty Constructor Pattern Application](./task-31.2-developer-empty-constructor-pattern.md)
-  - [ ] [Task 31.3: Developer - IOR Integration for Task References](./task-31.3-developer-ior-integration-task-references.md)
-  - [ ] [Task 31.4: Developer - 0.3.0.4 Component Structure Creation](./task-31.4-developer-0304-component-structure.md)
+  - [ ] [Task 32.1: Developer - Web4 Compliance Implementation](./task-32.1-developer-web4-compliance-implementation.md)
+  - [ ] [Task 32.2: Developer - Empty Constructor Pattern Application](./task-32.2-developer-empty-constructor-pattern.md)
+  - [ ] [Task 32.3: Developer - IOR Integration for Task References](./task-32.3-developer-ior-integration-task-references.md)
+  - [ ] [Task 32.4: Developer - 0.3.0.4 Component Structure Creation](./task-32.4-developer-0304-component-structure.md)
 
 ### Product Owner Oversight Established
 - **Requirements Ownership:** Complete ownership of Sprint 20 requirements traceability
