@@ -1,0 +1,36 @@
+{
+  "ior": {
+    "uuid": "8b50bd7d-838f-4ee7-8693-05f3b89edb8b",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"8b50bd7d-838f-4ee7-8693-05f3b89edb8b\",\"timestamp\":\"2025-09-09T08:08:04.581Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "8b50bd7d-838f-4ee7-8693-05f3b89edb8b",
+    "name": "Scenario",
+    "origin": "ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/DefaultCLI/0.3.0.4/src/ts/layer3/Scenario.interface.ts#L1:1-10:1",
+    "definition": "",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/8/b/5/0/b/8b50bd7d-838f-4ee7-8693-05f3b89edb8b.scenario.json",
+    "symlinkPaths": [
+      "/workspace/temp/Scenario.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../scenarios/index/8/b/5/0/b/8b50bd7d-838f-4ee7-8693-05f3b89edb8b.scenario.json",
+        "filename": "Scenario.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-09T08:08:04.576Z",
+    "updatedAt": "2025-09-09T08:08:04.584Z"
+  }
+}
