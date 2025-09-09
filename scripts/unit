@@ -1,10 +1,12 @@
 #!/bin/bash
 
 # Unit CLI Tool - Auto-Build with Source Freshness Check
-# Web4 pattern: Component shell wrapper with stale prevention
+# Web4 pattern: Component shell wrapper with stale prevention using Web4 environment
 
+# Source Web4 environment (DRY principle)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$SCRIPT_DIR/web4-env.sh"
+
 COMPONENT_VERSION="0.3.0.5"
 COMPONENT_PATH="$PROJECT_ROOT/components/Unit/$COMPONENT_VERSION"
 CLI_PATH="$COMPONENT_PATH/dist/ts/layer5/UnitCLI.js"
