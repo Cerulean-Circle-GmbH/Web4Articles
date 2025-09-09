@@ -56,17 +56,26 @@ class TaskStateMachineCLI {
     const taskMachine = new DefaultTaskStateMachine();
     
     // TODO: Convert file path to IOR
-    const taskIOR: IOR = {
-      uuid: taskFilePath,
-      component: 'TaskStateMachine',
-      version: '0.3.0.4'
+    // IOR removed - Occam's Razor simplification
+    const taskScenario: TaskScenario = {
+      filePath: taskFilePath,
+      owner: 'system',
+      model: {
+        uuid: 'temp-uuid',
+        title: 'temp-title',
+        status: newStatus as TaskStatus,
+        steps: [],
+        planningReference: '',
+        requirementReferences: [],
+        subtaskReferences: []
+      }
     };
     
-    taskMachine.parseTaskFile(taskIOR);
+    taskMachine.parseTaskFile(taskScenario);
     
     if (['planned', 'in-progress', 'qa-review', 'done', 'blocked'].includes(newStatus)) {
       taskMachine.setStatus(newStatus as any);
-      taskMachine.updateTaskFile(taskIOR);
+      taskMachine.updateTaskFile(taskScenario);
       console.log(`Task status updated to: ${newStatus}`);
     } else {
       console.error('Invalid status. Use: planned, in-progress, qa-review, done, blocked');

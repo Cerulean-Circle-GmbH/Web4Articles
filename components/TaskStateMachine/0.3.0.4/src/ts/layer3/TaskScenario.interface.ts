@@ -3,11 +3,13 @@
  * Follows Web4 Scenario-First Development and IOR Architecture
  */
 
-import { IOR } from '../../../../IOR/0.3.0.3/src/ts/layer3/IOR.interface.js';
+// IOR removed - Occam's Razor simplification for CLI
+// import { IOR } from '../../../../IOR/0.3.0.3/src/ts/layer3/IOR.interface.js';
 import { TaskModel, TaskStatus, TaskStep } from './TaskStateMachine.interface.js';
 
 export interface TaskScenario {
-  ior: IOR;
+  // ior: IOR;  // IOR removed - Occam's Razor simplification
+  filePath: string;  // Direct file path instead of IOR
   owner: string;  // Encrypted owner information
   model: TaskModel;
   namedLinks?: Array<{

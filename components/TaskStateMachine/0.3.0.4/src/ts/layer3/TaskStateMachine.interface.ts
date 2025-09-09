@@ -3,8 +3,9 @@
  * Follows Web4 Empty Constructor Principle and IOR Architecture
  */
 
-import { IOR } from '../../../../IOR/0.3.0.3/src/ts/layer3/IOR.interface.js';
-import { Scenario } from './TaskScenario.interface.js';
+// IOR removed - Occam's Razor simplification for CLI
+// import { IOR } from '../../../../IOR/0.3.0.3/src/ts/layer3/IOR.interface.js';
+import { TaskScenario } from './TaskScenario.interface.js';
 
 export type TaskStatus = 'planned' | 'in-progress' | 'qa-review' | 'done' | 'blocked';
 export type StepStatus = 'open' | 'in-progress' | 'done';
@@ -47,11 +48,11 @@ export interface TaskStateMachine {
   block(reason: string): boolean;
   
   // Scenario-based persistence (Web4 Scenario-First Development)
-  toScenario(): Scenario;
-  fromScenario(scenario: Scenario): void;
+  toScenario(): TaskScenario;
+  fromScenario(scenario: TaskScenario): void;
   
   // File operations with IOR integration
-  parseTaskFile(taskFileIOR: IOR): void;
-  updateTaskFile(taskFileIOR: IOR): void;
-  syncWithPlanning(planningIOR: IOR): void;
+  parseTaskFile(taskScenario: TaskScenario): void;
+  updateTaskFile(taskScenario: TaskScenario): void;
+  syncWithPlanning(planningFilePath: string): void;
 }

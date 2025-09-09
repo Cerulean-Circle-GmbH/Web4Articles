@@ -5,7 +5,8 @@
 
 import { TaskStateMachine, TaskModel, TaskStatus, TaskStep } from '../layer3/TaskStateMachine.interface.js';
 import { TaskScenario } from '../layer3/TaskScenario.interface.js';
-import { IOR } from '../../../../IOR/0.3.0.3/src/ts/layer3/IOR.interface.js';
+// IOR removed - Occam's Razor simplification for CLI
+// import { IOR } from '../../../../IOR/0.3.0.3/src/ts/layer3/IOR.interface.js';
 import { readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 
@@ -93,11 +94,7 @@ export class DefaultTaskStateMachine implements TaskStateMachine {
   // Scenario-based persistence (Web4 Scenario-First Development)
   toScenario(): TaskScenario {
     return {
-      ior: {
-        uuid: this.model.uuid,
-        component: 'TaskStateMachine',
-        version: '0.3.0.4'
-      },
+      filePath: '',  // To be set by caller
       owner: 'encrypted-owner-placeholder', // TODO: Implement proper encryption
       model: this.model,
       metadata: {
@@ -113,10 +110,9 @@ export class DefaultTaskStateMachine implements TaskStateMachine {
   }
 
   // File operations with IOR integration
-  parseTaskFile(taskFileIOR: IOR): void {
-    // TODO: Implement IOR-based file reading
-    // For now, use direct file path (to be replaced with IOR resolution)
-    const filePath = `${taskFileIOR.component}/${taskFileIOR.version}/${taskFileIOR.uuid}`;
+  parseTaskFile(taskScenario: TaskScenario): void {
+    // Direct file path approach (IOR removed for Occam's Razor)
+    const filePath = taskScenario.filePath;
     
     try {
       const content = readFileSync(filePath, 'utf-8');
@@ -126,10 +122,9 @@ export class DefaultTaskStateMachine implements TaskStateMachine {
     }
   }
 
-  updateTaskFile(taskFileIOR: IOR): void {
-    // TODO: Implement IOR-based file writing
-    // For now, use direct file path (to be replaced with IOR resolution)
-    const filePath = `${taskFileIOR.component}/${taskFileIOR.version}/${taskFileIOR.uuid}`;
+  updateTaskFile(taskScenario: TaskScenario): void {
+    // Direct file path approach (IOR removed for Occam's Razor)
+    const filePath = taskScenario.filePath;
     
     try {
       const content = this.generateMarkdownContent();
@@ -139,7 +134,7 @@ export class DefaultTaskStateMachine implements TaskStateMachine {
     }
   }
 
-  syncWithPlanning(planningIOR: IOR): void {
+  syncWithPlanning(planningFilePath: string): void {
     // TODO: Implement planning.md synchronization
     // Read planning.md, update task status, write back
     console.log('Planning sync not yet implemented');
