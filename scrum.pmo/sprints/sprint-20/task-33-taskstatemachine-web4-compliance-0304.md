@@ -1,11 +1,11 @@
 [Back to Planning Sprint 20](./planning.md)
 
-# Task 30: Create Web4 Compliant TaskStateMachine 0.3.0.4
+# Task 33: Create Web4 Compliant TaskStateMachine 0.3.0.4
 [task:uuid:t1s2m3n4-a5b6-7890-task-s78901234567]
 
 ## Naming Conventions
 - Tasks: `task-<number>-<short-description>.md`
-- Subtasks: `task-<number>.<subnumber>-<role>-<short-description>.md` (e.g., `task-30.1-developer-web4-compliance-implementation.md`)
+- Subtasks: `task-<number>.<subnumber>-<role>-<short-description>.md` (e.g., `task-33.1-developer-web4-compliance-implementation.md`)
 - Subtasks must always indicate the affected role in the filename.
 - Subtasks must be ordered to avoid blocking dependencies. If a blocking dependency is unavoidable, the Scrum Master is responsible for removing the impediment by reordering or splitting tasks.
 
