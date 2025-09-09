@@ -6,23 +6,21 @@
 
 import { Model } from './Model.interface.js';
 import { TypeM3 } from './TypeM3.enum.js';
-import { IOR } from './IOR.interface.js';
 import { UnitReference } from './UnitReference.interface.js';
 
 export interface UnitModel extends Model {
   // Base Model property inherited: uuid
   name: string;                    // Human-readable unit name for terminal identification (uni-t)
-  origin: IOR;                     // ✅ IOR type - IS the master file reference
-  definition: string;              // MD formatted text
+  origin: string;                  // ✅ UNCHANGED: IOR string format from 0.3.0.4
+  definition: string;              // ✅ UNCHANGED: IOR string format from 0.3.0.4
   typeM3: TypeM3;                  // MOF M3/M2/M1 hierarchy classification
   indexPath: string;               // scenarios/index/path to this unit
   
-  // ❌ ELIMINATED: masterFile (origin IS the master reference)
+  // ✅ ENHANCED: Unified reference tracking (replaces symlinkPaths + namedLinks)
+  references: UnitReference[];     // Unified reference array with IOR strings
   
-  references: UnitReference[];     // ✅ Pure IOR-based reference tracking
+  createdAt: string;               // UnitModel specific
+  updatedAt: string;               // UnitModel specific
   
-  createdAt: string;               // UnitModel specific, NOT in base Model
-  updatedAt: string;               // UnitModel specific, NOT in base Model
-  
-  // ❌ OCCAM'D OUT: capabilities (not needed for MVP)
+  // ❌ REMOVED: symlinkPaths, namedLinks, executionCapabilities, storageCapabilities
 }

@@ -10,13 +10,9 @@ import { UnitModel } from '../layer3/UnitModel.interface.js';
 import { UnitReference, SyncStatus } from '../layer3/UnitReference.interface.js';
 import { TypeM3 } from '../layer3/TypeM3.enum.js';
 import { Model } from '../layer3/Model.interface.js';
-import { IOR } from '../layer3/IOR.interface.js';
 import { DefaultStorage } from './DefaultStorage.js';
-import { GitTextIOR } from './GitTextIOR.js';
-import { LocalLnIOR } from './LocalLnIOR.js';
-import { UnitIOR } from './UnitIOR.js';
 import { existsSync } from 'fs';
-import { dirname, basename } from 'path';
+import { dirname } from 'path';
 
 export class DefaultUnit implements Unit, Upgrade {
   private model: UnitModel;
@@ -30,13 +26,13 @@ export class DefaultUnit implements Unit, Upgrade {
   constructor() {
     // Empty constructor - Web4 pattern
     this.model = {
-      uuid: crypto.randomUUID(),           // UUIDv4 using crypto.randomUUID()
+      uuid: crypto.randomUUID(),           // UUIDv4 using crypto.randomUUID() (Decision 1a)
       name: '',                            // Unit name for terminal identification (uni-t)
-      origin: new UnitIOR(crypto.randomUUID()), // ✅ IOR type - default UnitIOR
-      definition: '',                      // MD formatted text
+      origin: '',                          // GitTextIOR format with line/column positions
+      definition: '',                      // GitTextIOR format with character positions
       typeM3: TypeM3.CLASS,                // Default MOF classification (can be changed)
       indexPath: '',                       // Will be set when stored
-      references: [],                      // ✅ Pure IOR-based reference tracking
+      references: [],                      // ✅ Enhanced: Unified reference tracking
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -634,117 +630,65 @@ export class DefaultUnit implements Unit, Upgrade {
 
   /**
    * Upgrade from 0.3.0.4 to 0.3.0.5 model
-   * Radical OOP: Private method for specific version upgrade logic
+   * Transforms symlinkPaths + namedLinks to unified references array
+   * Keeps existing IOR string format for compatibility
    */
   private async upgradeToVersion035(): Promise<boolean> {
-    // Current model (0.3.0.4 format)
     const currentModel = this.model as any; // Cast for 0.3.0.4 compatibility
     
-    // Transform to enhanced 0.3.0.5 model with pure IOR types
+    // Transform to enhanced 0.3.0.5 model
     const enhancedModel: UnitModel = {
       uuid: currentModel.uuid,
       name: currentModel.name,
-      
-      // Transform origin to IOR type
-      origin: this.createIORFromString(currentModel.origin) || this.createDefaultOriginIOR(),
-      
-      // Enhance definition with MD format
-      definition: currentModel.definition || this.generateDefaultMDDefinition(),
-      
+      origin: currentModel.origin || '',           // ✅ UNCHANGED: IOR string format
+      definition: currentModel.definition || '',   // ✅ UNCHANGED: IOR string format
       typeM3: currentModel.typeM3,
-      indexPath: currentModel.indexPath.replace('0.3.0.4', '0.3.0.5'),
+      indexPath: currentModel.indexPath,
       
-      // Transform arrays to IOR references
-      references: await this.transformArraysToIORReferences(currentModel),
+      // ✅ ENHANCED: Transform arrays to unified references
+      references: this.transformArraysToReferences(currentModel),
       
       createdAt: currentModel.createdAt,
       updatedAt: new Date().toISOString()
     };
     
-    // Create master file from origin IOR
-    await this.createMasterFileFromOrigin(enhancedModel);
-    
     // Update internal model
     this.model = enhancedModel;
     
-    // Save enhanced scenario
-    await this.storage.saveScenario(this.model.uuid, this.toScenario(), []);
+    // Save enhanced scenario with version update
+    const scenario = await this.toScenario();
+    scenario.ior.version = '0.3.0.5';
+    await this.storage.saveScenario(this.model.uuid, scenario, this.extractLinkPaths());
     
     console.log(`✅ Unit upgraded to 0.3.0.5: ${this.model.uuid}`);
     return true;
   }
 
   /**
-   * Create IOR from string value (radical OOP helper method)
+   * Transform old arrays to unified references (0.3.0.4 → 0.3.0.5)
+   * Uses existing IOR string format for compatibility
    */
-  private createIORFromString(iorString: string): IOR | null {
-    if (!iorString) return null;
-    
-    if (iorString.startsWith('ior:git:text:')) {
-      const gitUrl = iorString.replace('ior:git:text:', '');
-      return new GitTextIOR(gitUrl);
-    } else if (iorString.startsWith('ior:local:ln:')) {
-      const filePath = iorString.replace('ior:local:ln:', '');
-      return new LocalLnIOR(filePath);
-    } else if (iorString.startsWith('ior:unit:')) {
-      const uuid = iorString.replace('ior:unit:', '');
-      return new UnitIOR(uuid);
-    }
-    
-    return null;
-  }
-
-  /**
-   * Create default origin IOR for units without origin
-   */
-  private createDefaultOriginIOR(): IOR {
-    return new UnitIOR(this.model.uuid);
-  }
-
-  /**
-   * Generate default MD definition
-   */
-  private generateDefaultMDDefinition(): string {
-    return `# ${this.model.name}
-
-Enhanced Unit with IOR-based architecture following CORBA 2.3 principles.
-
-## Purpose
-Provides ${this.model.name} functionality with enhanced IOR model for radical unit traceability.
-
-## IOR Architecture
-- **Origin:** IOR type reference to master source
-- **References:** IOR-based link tracking with specialized types
-- **Type Safety:** All references use proper IOR interface implementations
-
-## Web4 Integration
-Follows radical OOP principles with modern TypeScript implementation.`;
-  }
-
-  /**
-   * Transform current arrays to IOR references
-   */
-  private async transformArraysToIORReferences(currentModel: any): Promise<UnitReference[]> {
+  private transformArraysToReferences(currentModel: any): UnitReference[] {
     const references: UnitReference[] = [];
     
-    // Convert symlinkPaths to IOR references
+    // Convert symlinkPaths to references
     if (currentModel.symlinkPaths) {
       for (const path of currentModel.symlinkPaths) {
         references.push({
-          linkLocation: new LocalLnIOR(path),
-          linkTarget: new UnitIOR(currentModel.uuid),
+          linkLocation: `ior:local:ln:file:${path}`,
+          linkTarget: `ior:unit:${currentModel.uuid}`,
           syncStatus: SyncStatus.SYNCED
         });
       }
     }
     
-    // Convert namedLinks to IOR references
+    // Convert namedLinks to references
     if (currentModel.namedLinks) {
       for (const link of currentModel.namedLinks) {
         const absolutePath = this.resolveLinkPath(link.location, link.filename);
         references.push({
-          linkLocation: new LocalLnIOR(absolutePath),
-          linkTarget: new UnitIOR(currentModel.uuid),
+          linkLocation: `ior:local:ln:file:${absolutePath}`,
+          linkTarget: `ior:unit:${currentModel.uuid}`,
           syncStatus: SyncStatus.SYNCED
         });
       }
@@ -754,33 +698,16 @@ Follows radical OOP principles with modern TypeScript implementation.`;
   }
 
   /**
-   * Create master file from origin IOR
+   * Extract link paths from references for storage compatibility
    */
-  private async createMasterFileFromOrigin(model: UnitModel): Promise<void> {
-    if (model.origin instanceof GitTextIOR) {
-      const masterFilePath = model.origin.getMasterFilePath(model.uuid);
-      const { mkdir, copyFile } = await import('fs/promises');
-      await mkdir(dirname(masterFilePath), { recursive: true });
-      
-      // Copy source to master file if source exists
-      const sourceFile = this.extractSourceFileFromOrigin(model.origin);
-      if (sourceFile && existsSync(sourceFile)) {
-        await copyFile(sourceFile, masterFilePath);
-      }
-    }
+  private extractLinkPaths(): string[] {
+    return this.model.references
+      .map(ref => ref.linkLocation.replace('ior:local:ln:file:', ''))
+      .filter(path => path.startsWith('/workspace/'));
   }
 
   /**
-   * Extract source file path from GitTextIOR
-   */
-  private extractSourceFileFromOrigin(origin: GitTextIOR): string | null {
-    const gitUrl = origin.getUrl();
-    const match = gitUrl.match(/\/blob\/[^\/]+\/(.+?)(?:#|$)/);
-    return match ? match[1] : null;
-  }
-
-  /**
-   * Resolve link path from location and filename
+   * Resolve link path from location and filename (0.3.0.4 compatibility)
    */
   private resolveLinkPath(location: string, filename: string): string {
     const baseDir = location.replace('../scenarios/', '/workspace/scenarios/');

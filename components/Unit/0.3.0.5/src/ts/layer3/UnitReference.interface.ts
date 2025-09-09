@@ -1,14 +1,12 @@
 /**
- * UnitReference Interface - IOR-based reference tracking
- * Web4 principle: Single interface per file, pure IOR types
- * Purpose: Track unit references with IOR types and sync status
+ * UnitReference Interface - IOR string-based reference tracking
+ * Web4 principle: Single interface per file, IOR 0.3.0.4 compatibility
+ * Purpose: Track unit references with IOR strings and sync status
  */
 
-import { IOR } from './IOR.interface.js';
-
 export interface UnitReference {
-  linkLocation: IOR;                // IOR type (LocalLnIOR, FileIOR, etc.)
-  linkTarget: IOR;                  // IOR type (UnitIOR, GitTextIOR, etc.)
+  linkLocation: string;            // IOR string (0.3.0.4 format): "ior:local:ln:file://..."
+  linkTarget: string;              // IOR string (0.3.0.4 format): "ior:unit:uuid"
   syncStatus: SyncStatus;
 }
 

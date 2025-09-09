@@ -7,7 +7,6 @@
 
 import { DefaultUnit } from '../layer2/DefaultUnit.js';
 import { TypeM3 } from '../layer3/TypeM3.enum.js';
-import { UnitIOR } from '../layer2/UnitIOR.js';
 import { promises as fs } from 'fs';
 
 class UnitCLI {
@@ -21,18 +20,21 @@ class UnitCLI {
   private getOrCreateUnit(): DefaultUnit {
     if (!this.unit) {
       this.unit = new DefaultUnit();
-      // Initialize unit with empty scenario (Web4 pattern - 0.3.0.5 format)
+      // Initialize unit with empty scenario (Web4 pattern)
       const emptyScenario = {
-        ior: { uuid: crypto.randomUUID(), component: 'Unit', version: '0.3.0.5' },
+        ior: { uuid: crypto.randomUUID(), component: 'Unit', version: '0.3.0.4' },
         owner: '',
         model: {
           uuid: crypto.randomUUID(),
           name: '',
-          origin: new UnitIOR(crypto.randomUUID()),
+          origin: '',
           definition: '',
           typeM3: TypeM3.CLASS,
           indexPath: '',
-          references: [],
+          symlinkPaths: [],
+          namedLinks: [],
+          executionCapabilities: ['transform', 'validate', 'process'],
+          storageCapabilities: ['scenarios', 'ld-links'],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         }
@@ -43,7 +45,7 @@ class UnitCLI {
   }
 
   private showUsage(): void {
-    console.log('Web4 Unit CLI Tool v0.3.0.5 - Enhanced IOR Model with Radical OOP');
+    console.log('Web4 Unit CLI Tool v0.3.0.4 - Atomic Execution Elements');
     console.log('');
     console.log('Usage:');
     console.log('  unit create <name> [description]                # Create unit');
@@ -55,7 +57,6 @@ class UnitCLI {
     console.log('  unit deleteUnit <lnfile.unit>                   # Delete entire unit and all links');
     console.log('  unit from <filename> <start:line,column> <end:line,column>  # Create unit from source');
     console.log('  unit definition <uuid> <filename> <start:line,column> <end:line,column>  # Add definition');
-    console.log('  unit upgrade <version>                          # Upgrade unit model to target version');
     console.log('  unit execute <name> <input>                     # Execute unit');
     console.log('  unit info                                       # Show unit info');
     console.log('  unit help                                       # Show this help');
@@ -70,7 +71,6 @@ class UnitCLI {
     console.log('  deleteUnit   Delete entire unit from central storage and all associated link files');
     console.log('  from         Create unit from file text with extracted name and origin');
     console.log('  definition   Add definition source reference to existing unit');
-    console.log('  upgrade      Upgrade unit model to target version (radical OOP method)');
     console.log('  execute      Execute unit with input data');
     console.log('  info         Display current unit information and scenario');
     console.log('  help         Show this help message');
@@ -237,18 +237,6 @@ class UnitCLI {
             throw new Error('UUID, filename, start position, and end position required for definition command');
           }
           await this.getOrCreateUnit().definition(commandArgs[0], commandArgs[1], commandArgs[2], commandArgs[3]);
-          break;
-
-        case 'upgrade':
-          if (commandArgs.length < 1) {
-            throw new Error('Target version required for upgrade command');
-          }
-          const success = await this.getOrCreateUnit().upgrade(commandArgs[0]);
-          if (success) {
-            console.log(`✅ Unit upgraded to version ${commandArgs[0]}`);
-          } else {
-            console.error(`❌ Upgrade to version ${commandArgs[0]} failed`);
-          }
           break;
 
         case 'help':
