@@ -42,6 +42,7 @@ Create Unit 0.3.0.5 as the foundation for radical unit traceability with enhance
 
 ### Enhanced UnitModel Interface
 ```typescript
+// File: UnitModel.interface.ts
 export interface UnitModel extends Model {
   uuid: string;
   name: string;
@@ -58,17 +59,21 @@ export interface UnitModel extends Model {
   
   // ❌ OCCAM'D OUT: executionCapabilities, storageCapabilities
 }
+```
 
-interface UnitReference {
+### UnitReference Interface  
+```typescript
+// File: UnitReference.interface.ts
+export interface UnitReference {
   linkLocation: IOR;                // IOR type (LocalLnIOR, FileIOR, etc.)
   linkTarget: IOR;                  // IOR type (UnitIOR, GitTextIOR, etc.)
   syncStatus: SyncStatus;
 }
 ```
 
-### Specialized IOR Classes
+### GitTextIOR Class
 ```typescript
-// GitTextIOR for git file references
+// File: GitTextIOR.ts
 export class GitTextIOR implements IOR {
   constructor(
     private gitUrl: string,
@@ -85,8 +90,11 @@ export class GitTextIOR implements IOR {
     return `/workspace/scenarios/index/${uuidPath}/${uuid}.master.file`;
   }
 }
+```
 
-// LocalLnIOR for local filesystem references
+### LocalLnIOR Class
+```typescript
+// File: LocalLnIOR.ts
 export class LocalLnIOR implements IOR {
   constructor(private filePath: string) {}
   
@@ -98,8 +106,11 @@ export class LocalLnIOR implements IOR {
     return this.filePath.replace('file:', '');
   }
 }
+```
 
-// UnitIOR for unit references
+### UnitIOR Class
+```typescript
+// File: UnitIOR.ts
 export class UnitIOR implements IOR {
   constructor(private uuid: string) {}
   
