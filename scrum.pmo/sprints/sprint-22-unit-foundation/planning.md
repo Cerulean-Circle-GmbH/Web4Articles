@@ -1,21 +1,27 @@
 # Sprint 22 Planning - Unit Foundation Sprint Implementation
 
 ## Sprint Goal
-Complete Unit foundation as Web4 deduplication and traceability cornerstone with scenario.interface.ts and IOR auto-synchronization capabilities, establishing Units as the foundational node of the Web4 model repository.
+Complete Unit foundation as Web4 deduplication and traceability cornerstone with IOR object handling for git file sources, establishing Units as the foundational node of the Web4 model repository with automatic synchronization capabilities.
 
 ## Sprint Overview
 **Duration:** 3 weeks  
-**Focus:** Dedicated Unit foundation implementation  
+**Focus:** IOR object handling with git file sources as primary use case  
 **Team Capacity:** Full sprint focus on Unit ecosystem  
-**Input Sources:** OntologyAgent PDCA analysis + Sprint-20 Unit foundation tasks  
+**Input Sources:** OntologyAgent PDCA analysis + Sprint-20 Unit foundation tasks + Developer experience integration  
+**MVP Focus:** IOR object handling for scenario.interface.ts and similar git files, not protocol abstraction
+
+## Sprint 20 Foundation Dependencies
+**Must Complete Before Sprint 22:**
+- Task 19: Unit Advanced CLI Commands (Status Discrepancy Resolution)
+- Task 21: DefaultCLI Web4 Compliance Rebuild 0.3.0.4  
+- Task 22: UnitCLI Migration to DefaultCLI
 
 ## Task List (Sprint 22 - Unit Foundation)
 
 > **Note:** Subtasks must be named to indicate the affected role (e.g., `task-1.1-developer-setup.md`). Subtasks must be ordered to avoid blocking dependencies. If a blocking dependency is unavoidable, the Scrum Master is responsible for removing the impediment by reordering or splitting tasks.
 
-### **WEEK 1: FOUNDATION & AUTO-SYNC (SPRINT GOAL ACHIEVEMENT)**
-
-#### **EPIC D: IOR UNIVERSAL ORIGIN (FOUNDATION PRIORITY ⭐)**
+- [ ] [Task D1: Universal IOR Origin Format Implementation](./task-d1-universal-ior-origin-format.md)  
+  **Status:** PLANNED **Focus:** Git file IOR object handling foundation
 
 - [ ] [Task D1: Universal IOR Origin Format Implementation](./task-d1-universal-ior-origin-format.md)  
   **Priority:** 1 (CRITICAL - Foundation for all auto-sync) **Status:** PLANNED
