@@ -49,9 +49,12 @@ class UnitCLI {
     console.log('');
     console.log('Usage:');
     console.log('  unit create <name> [description]                # Create unit');
-    console.log('  unit link <uuid> <filename>                     # Create link to existing unit');
+    console.log('  unit link <uuid> <filename>                     # Create initial link to unit');
+    console.log('  unit linkInto <lnlinkfile.unit> <targetfolder>  # Create additional link in different location');
     console.log('  unit list <uuid>                                # List all links to unit');
     console.log('  unit origin <uuid>                              # Show origin and definition links');
+    console.log('  unit deleteLink <lnfile.unit>                   # Delete specific link file only');
+    console.log('  unit deleteUnit <lnfile.unit>                   # Delete entire unit and all links');
     console.log('  unit from <filename> <start:line,column> <end:line,column>  # Create unit from source');
     console.log('  unit definition <uuid> <filename> <start:line,column> <end:line,column>  # Add definition');
     console.log('  unit execute <name> <input>                     # Execute unit');
@@ -60,9 +63,12 @@ class UnitCLI {
     console.log('');
     console.log('Commands:');
     console.log('  create       Create new unit with name and optional description');
-    console.log('  link         Create new LD link to existing unit in different location');
+    console.log('  link         Create initial LD link to existing unit using UUID');
+    console.log('  linkInto     Create additional LD link to same unit in different location');
     console.log('  list         List all LD links pointing to specific unit UUID');
     console.log('  origin       Show origin and definition source links as clickable URLs');
+    console.log('  deleteLink   Delete specific link file while preserving unit in central storage');
+    console.log('  deleteUnit   Delete entire unit from central storage and all associated link files');
     console.log('  from         Create unit from file text with extracted name and origin');
     console.log('  definition   Add definition source reference to existing unit');
     console.log('  execute      Execute unit with input data');
@@ -80,9 +86,12 @@ class UnitCLI {
     console.log('');
     console.log('Examples:');
     console.log('  unit create test-unit "Test description"        # Create unit');
-    console.log('  unit link a1b2c3d4-e5f6 auth-validator         # Create link to existing unit');
+    console.log('  unit link a1b2c3d4-e5f6 auth-validator         # Create initial link to unit');
+    console.log('  unit linkInto auth-validator.unit /workspace/project-a/  # Create additional link');
     console.log('  unit list a1b2c3d4-e5f6                        # List all links to unit');
     console.log('  unit origin a1b2c3d4-e5f6                      # Show source links');
+    console.log('  unit deleteLink auth-validator.unit            # Delete specific link only');
+    console.log('  unit deleteUnit auth-validator.unit            # Delete entire unit and all links');
     console.log('  unit from UserValidator.ts 42:15 67:23         # Create from source');
     console.log('  unit definition a1b2c3d4-e5f6 UserValidator.ts 1250 1890  # Add definition');
     console.log('  unit execute test-unit \'{"data": "test"}\'      # Execute unit');
@@ -179,6 +188,27 @@ class UnitCLI {
             throw new Error('UUID and filename required for link command');
           }
           await this.getOrCreateUnit().link(commandArgs[0], commandArgs[1]);
+          break;
+
+        case 'linkInto':
+          if (commandArgs.length < 2) {
+            throw new Error('Link file and target folder required for linkInto command');
+          }
+          await this.getOrCreateUnit().linkInto(commandArgs[0], commandArgs[1]);
+          break;
+
+        case 'deleteLink':
+          if (commandArgs.length < 1) {
+            throw new Error('Link filename required for deleteLink command');
+          }
+          await this.getOrCreateUnit().deleteLink(commandArgs[0]);
+          break;
+
+        case 'deleteUnit':
+          if (commandArgs.length < 1) {
+            throw new Error('Link filename required for deleteUnit command');
+          }
+          await this.getOrCreateUnit().deleteUnit(commandArgs[0]);
           break;
 
         case 'list':

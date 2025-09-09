@@ -16,12 +16,23 @@ echo "📂 Component: $COMPONENT_DIR"
 
 CLI_PATH="$COMPONENT_DIR/dist/ts/layer5/index.js"
 
-# Build if needed
-if [ ! -f "$CLI_PATH" ]; then
-    echo "🔨 Building ONCE v0.3.0.4..."
+# Function to check if rebuild is needed
+needs_rebuild() {
+    # If CLI doesn't exist, rebuild needed
+    [ ! -f "$CLI_PATH" ] && return 0
+    
+    # Check if any TypeScript file in src is newer than CLI
+    find "$COMPONENT_DIR/src" -name "*.ts" -newer "$CLI_PATH" 2>/dev/null | grep -q . && return 0
+    
+    return 1
+}
+
+# Build if needed (with source freshness check)
+if needs_rebuild; then
+    echo "🔨 Building ONCE v0.3.0.4 (source files updated)..."
     cd "$COMPONENT_DIR"
-    npm install
-    npm run build
+    npm install --silent 2>/dev/null || true
+    npm run build --silent
 fi
 
 # Check if CLI exists after build

@@ -193,6 +193,19 @@ export class DefaultUnit implements Unit {
     return this.model;
   }
 
+  // Helper methods for link management
+  private extractUuidFromPath(scenarioPath: string): string {
+    // Extract UUID from path like ../scenarios/index/a/b/c/d/e/uuid.scenario.json
+    const pathParts = scenarioPath.split('/');
+    const filename = pathParts[pathParts.length - 1];
+    return filename.replace('.scenario.json', '');
+  }
+
+  private async calculateRelativePath(fromPath: string, toPath: string): Promise<string> {
+    const { relative } = await import('path');
+    return relative(fromPath, toPath);
+  }
+
   // Advanced CLI Commands (Task 19) - Direct method naming convention v0.1.2.2
   async link(uuid: string, filename: string): Promise<void> {
     try {
@@ -221,6 +234,138 @@ export class DefaultUnit implements Unit {
       console.log(`   Target: ${scenarioPath}`);
     } catch (error) {
       console.error(`Failed to create link: ${(error as Error).message}`);
+    }
+  }
+
+  async linkInto(linkFilename: string, targetFolder: string): Promise<void> {
+    try {
+      // Read existing link to get target UUID
+      const { readlinkSync } = await import('fs');
+      const { resolve, basename } = await import('path');
+      
+      const currentDir = process.cwd();
+      const existingLinkPath = resolve(currentDir, linkFilename);
+      
+      // Extract UUID from existing link
+      const scenarioPath = readlinkSync(existingLinkPath);
+      const uuid = this.extractUuidFromPath(scenarioPath);
+      
+      // Load unit scenario
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      // Create new link in target folder
+      const targetPath = resolve(targetFolder);
+      const linkBasename = basename(linkFilename);
+      const newLinkPath = `${targetPath}/${linkBasename}`;
+      
+      // Create directory if it doesn't exist
+      const { mkdir } = await import('fs/promises');
+      await mkdir(targetPath, { recursive: true });
+      
+      // Create symbolic link to same scenario
+      const { symlink } = await import('fs/promises');
+      const relativePath = await this.calculateRelativePath(targetPath, scenario.model.indexPath);
+      await symlink(relativePath, newLinkPath);
+      
+      // Update scenario model with new link
+      scenario.model.symlinkPaths.push(newLinkPath);
+      scenario.model.namedLinks.push({
+        location: relativePath,
+        filename: linkBasename
+      });
+      
+      // Save updated scenario
+      await this.storage.saveScenario(uuid, scenario, scenario.model.symlinkPaths);
+      
+      console.log(`✅ Additional link created: ${linkBasename}`);
+      console.log(`   Source: ${existingLinkPath}`);
+      console.log(`   Target: ${newLinkPath}`);
+      console.log(`   Unit: ${uuid}`);
+      console.log(`   Total links: ${scenario.model.symlinkPaths.length}`);
+    } catch (error) {
+      console.error(`Failed to create additional link: ${(error as Error).message}`);
+    }
+  }
+
+  async deleteLink(linkFilename: string): Promise<void> {
+    try {
+      // Resolve link file to get target UUID
+      const { readlinkSync, unlinkSync } = await import('fs');
+      const currentDir = process.cwd();
+      const linkPath = `${currentDir}/${linkFilename}`;
+      
+      // Read the symlink to get scenario path
+      const scenarioPath = readlinkSync(linkPath);
+      const uuid = this.extractUuidFromPath(scenarioPath);
+      
+      // Load unit scenario
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      // Remove link from symlinkPaths
+      const linkIndex = scenario.model.symlinkPaths.indexOf(linkPath);
+      if (linkIndex > -1) {
+        scenario.model.symlinkPaths.splice(linkIndex, 1);
+      }
+      
+      // Remove from namedLinks
+      const namedLinkIndex = scenario.model.namedLinks.findIndex(
+        link => link.filename === linkFilename
+      );
+      if (namedLinkIndex > -1) {
+        scenario.model.namedLinks.splice(namedLinkIndex, 1);
+      }
+      
+      // Update scenario in storage
+      await this.storage.saveScenario(uuid, scenario, scenario.model.symlinkPaths);
+      
+      // Remove the actual link file
+      unlinkSync(linkPath);
+      
+      console.log(`✅ Link deleted: ${linkFilename}`);
+      console.log(`   Unit ${uuid} preserved in central storage`);
+      console.log(`   Remaining links: ${scenario.model.symlinkPaths.length}`);
+    } catch (error) {
+      console.error(`Failed to delete link: ${(error as Error).message}`);
+    }
+  }
+
+  async deleteUnit(linkFilename: string): Promise<void> {
+    try {
+      // Resolve link file to get target UUID
+      const { readlinkSync, unlinkSync } = await import('fs');
+      const { unlink } = await import('fs/promises');
+      const currentDir = process.cwd();
+      const linkPath = `${currentDir}/${linkFilename}`;
+      
+      // Read the symlink to get scenario path
+      const scenarioPath = readlinkSync(linkPath);
+      const uuid = this.extractUuidFromPath(scenarioPath);
+      
+      // Load unit scenario to get all links
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      // Delete all LD link files
+      let deletedLinks = 0;
+      for (const symlinkPath of scenario.model.symlinkPaths) {
+        try {
+          unlinkSync(symlinkPath);
+          deletedLinks++;
+          console.log(`   Deleted link: ${symlinkPath}`);
+        } catch (error) {
+          console.warn(`   Warning: Could not delete link ${symlinkPath}: ${(error as Error).message}`);
+        }
+      }
+      
+      // Delete the unit scenario from central storage
+      const scenarioFullPath = scenario.model.indexPath;
+      await unlink(scenarioFullPath);
+      
+      console.log(`✅ Unit deleted completely: ${uuid}`);
+      console.log(`   Scenario removed: ${scenarioFullPath}`);
+      console.log(`   Links deleted: ${deletedLinks}/${scenario.model.symlinkPaths.length}`);
+      console.log(`   Named links removed: ${scenario.model.namedLinks.length}`);
+    } catch (error) {
+      console.error(`Failed to delete unit: ${(error as Error).message}`);
     }
   }
 

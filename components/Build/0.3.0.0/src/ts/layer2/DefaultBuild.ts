@@ -337,7 +337,7 @@ export class DefaultBuild implements Build {
   private async checkNpmAvailability(): Promise<{ available: boolean; version?: string; path?: string }> {
     try {
       // Check if npm is available (simplified check)
-      const { execSync } = require('child_process');
+      const { execSync } = await import('child_process');
       const version = execSync('npm --version', { encoding: 'utf8' }).trim();
       const path = execSync('which npm', { encoding: 'utf8' }).trim();
       
@@ -367,7 +367,7 @@ export class DefaultBuild implements Build {
       console.log(`📂 Build: Component path: ${componentPath}`);
       
       // 1. Check if component exists
-      const { existsSync } = require('fs');
+      const { existsSync } = await import('fs');
       if (!existsSync(componentPath)) {
         throw new Error(`Component directory not found: ${componentPath}`);
       }
@@ -448,7 +448,7 @@ export class DefaultBuild implements Build {
    * Run shell command in specific directory
    */
   private async runCommand(command: string, workingDir: string): Promise<void> {
-    const { execSync } = require('child_process');
+    const { execSync } = await import('child_process');
     
     try {
       execSync(command, {

@@ -15,11 +15,22 @@ if [ ! -d "$COMPONENT_PATH" ]; then
     exit 1
 fi
 
-# Auto-build if CLI not available
-if [ ! -f "$CLI_PATH" ]; then
-    echo "🔧 Building Unit $COMPONENT_VERSION..."
+# Function to check if rebuild is needed
+needs_rebuild() {
+    # If CLI doesn't exist, rebuild needed
+    [ ! -f "$CLI_PATH" ] && return 0
+    
+    # Check if any TypeScript file in src is newer than CLI
+    find "$COMPONENT_PATH/src" -name "*.ts" -newer "$CLI_PATH" 2>/dev/null | grep -q . && return 0
+    
+    return 1
+}
+
+# Auto-build if CLI not available or source is newer
+if needs_rebuild; then
+    echo "🔧 Building Unit $COMPONENT_VERSION (source files updated)..."
     cd "$COMPONENT_PATH"
-    npm install --silent
+    npm install --silent 2>/dev/null || true
     npm run build --silent
     cd "$PROJECT_ROOT"
 fi

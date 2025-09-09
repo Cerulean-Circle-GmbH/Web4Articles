@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# {COMPONENT_NAME} CLI Tool - Auto-Build with Source Freshness Check
+# Web4 pattern: Component shell wrapper with stale prevention
+# Template version: v0.1.2.2-stale-prevention-standard
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+COMPONENT_VERSION="{COMPONENT_VERSION}"
+COMPONENT_PATH="$PROJECT_ROOT/components/{COMPONENT_NAME}/$COMPONENT_VERSION"
+CLI_PATH="$COMPONENT_PATH/dist/ts/layer5/{COMPONENT_NAME}CLI.js"
+
+# Check if component exists
+if [ ! -d "$COMPONENT_PATH" ]; then
+    echo "❌ {COMPONENT_NAME} $COMPONENT_VERSION not found at $COMPONENT_PATH"
+    exit 1
+fi
+
+# Function to check if rebuild is needed
+needs_rebuild() {
+    # If CLI doesn't exist, rebuild needed
+    [ ! -f "$CLI_PATH" ] && return 0
+    
+    # Check if any TypeScript file in src is newer than CLI
+    find "$COMPONENT_PATH/src" -name "*.ts" -newer "$CLI_PATH" 2>/dev/null | grep -q . && return 0
+    
+    return 1
+}
+
+# Auto-build if CLI not available or source is newer
+if needs_rebuild; then
+    echo "🔧 Building {COMPONENT_NAME} $COMPONENT_VERSION (source files updated)..."
+    cd "$COMPONENT_PATH"
+    npm install --silent 2>/dev/null || true
+    npm run build --silent
+    cd "$PROJECT_ROOT"
+fi
+
+# Check if CLI is now available
+if [ ! -f "$CLI_PATH" ]; then
+    echo "❌ {COMPONENT_NAME} CLI build failed"
+    exit 1
+fi
+
+# Execute CLI with all arguments
+node "$CLI_PATH" "$@"
