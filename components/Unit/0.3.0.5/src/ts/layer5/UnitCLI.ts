@@ -20,9 +20,9 @@ class UnitCLI {
   private getOrCreateUnit(): DefaultUnit {
     if (!this.unit) {
       this.unit = new DefaultUnit();
-      // Initialize unit with empty scenario (Web4 pattern)
+      // Initialize unit with empty scenario (Web4 pattern - 0.3.0.5 format)
       const emptyScenario = {
-        ior: { uuid: crypto.randomUUID(), component: 'Unit', version: '0.3.0.4' },
+        ior: { uuid: crypto.randomUUID(), component: 'Unit', version: '0.3.0.5' },
         owner: '',
         model: {
           uuid: crypto.randomUUID(),
@@ -31,10 +31,7 @@ class UnitCLI {
           definition: '',
           typeM3: TypeM3.CLASS,
           indexPath: '',
-          symlinkPaths: [],
-          namedLinks: [],
-          executionCapabilities: ['transform', 'validate', 'process'],
-          storageCapabilities: ['scenarios', 'ld-links'],
+          references: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         }
@@ -45,7 +42,7 @@ class UnitCLI {
   }
 
   private showUsage(): void {
-    console.log('Web4 Unit CLI Tool v0.3.0.4 - Atomic Execution Elements');
+    console.log('Web4 Unit CLI Tool v0.3.0.5 - Enhanced UnitModel with Radical OOP');
     console.log('');
     console.log('Usage:');
     console.log('  unit create <name> [description]                # Create unit');
@@ -147,9 +144,7 @@ class UnitCLI {
     console.log(`${'\x1b[36m'}Current Unit Information:${'\x1b[0m'}`);
     console.log(`  UUID: ${scenario.ior.uuid}`);
     console.log(`  Index Path: ${scenario.model.indexPath}`);
-    console.log(`  Execution Capabilities: ${scenario.model.executionCapabilities.join(', ')}`);
-    console.log(`  Storage Capabilities: ${scenario.model.storageCapabilities.join(', ')}`);
-    console.log(`  Symlink Paths: ${scenario.model.symlinkPaths.length} links`);
+    console.log(`  References: ${scenario.model.references.length} links`);
     console.log(`  Created: ${scenario.model.createdAt}`);
     console.log(`  Updated: ${scenario.model.updatedAt}`);
   }
@@ -237,6 +232,18 @@ class UnitCLI {
             throw new Error('UUID, filename, start position, and end position required for definition command');
           }
           await this.getOrCreateUnit().definition(commandArgs[0], commandArgs[1], commandArgs[2], commandArgs[3]);
+          break;
+
+        case 'upgrade':
+          if (commandArgs.length < 1) {
+            throw new Error('Target version required for upgrade command');
+          }
+          const success = await this.getOrCreateUnit().upgrade(commandArgs[0]);
+          if (success) {
+            console.log(`✅ Unit upgraded to version ${commandArgs[0]}`);
+          } else {
+            console.error(`❌ Upgrade to version ${commandArgs[0]} failed`);
+          }
           break;
 
         case 'help':

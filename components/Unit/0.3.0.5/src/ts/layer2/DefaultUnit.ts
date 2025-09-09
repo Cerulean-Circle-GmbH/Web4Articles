@@ -93,10 +93,7 @@ export class DefaultUnit implements Unit, Upgrade {
       if (!Object.values(TypeM3).includes(this.model.typeM3)) return false;
       
       // Array properties
-      if (!Array.isArray(this.model.symlinkPaths)) return false;
-      if (!Array.isArray(this.model.namedLinks)) return false;
-      if (!Array.isArray(this.model.executionCapabilities)) return false;
-      if (!Array.isArray(this.model.storageCapabilities)) return false;
+      if (!Array.isArray(this.model.references)) return false;
       
       // Timestamp validation
       if (!this.model.createdAt || isNaN(Date.parse(this.model.createdAt))) return false;
@@ -144,9 +141,10 @@ export class DefaultUnit implements Unit, Upgrade {
       
       try {
         const relativePath = readlinkSync(namedLink);
-        this.model.namedLinks.push({
-          location: relativePath,
-          filename: linkFilename
+        this.model.references.push({
+          linkLocation: `ior:local:ln:file:${namedLink}`,
+          linkTarget: `ior:unit:${this.model.uuid}`,
+          syncStatus: SyncStatus.SYNCED
         });
       } catch (error) {
         console.error('Failed to read symlink for namedLinks:', (error as Error).message);
@@ -156,12 +154,12 @@ export class DefaultUnit implements Unit, Upgrade {
     // Load the saved scenario to get the updated model with correct storage paths
     try {
       const savedScenario = await this.storage.loadScenario(this.model.uuid);
-      const originalNamedLinks = this.model.namedLinks; // Save namedLinks before overwriting
+      const originalReferences = this.model.references; // Save references before overwriting
       this.model = savedScenario.model as any; // Update our model with storage-corrected paths
       
-      // Restore namedLinks if we had them
-      if (originalNamedLinks && originalNamedLinks.length > 0) {
-        this.model.namedLinks = originalNamedLinks;
+      // Restore references if we had them
+      if (originalReferences && originalReferences.length > 0) {
+        this.model.references = originalReferences;
         savedScenario.model = this.model;
         // Save the updated scenario with correct namedLinks
         await this.storage.saveScenario(this.model.uuid, savedScenario, [namedLink]);
@@ -180,9 +178,8 @@ export class DefaultUnit implements Unit, Upgrade {
 
   // Helper methods for Unit model management
   addExecutionCapability(capability: string): this {
-    if (!this.model.executionCapabilities.includes(capability)) {
-      this.model.executionCapabilities.push(capability);
-    }
+    // Note: executionCapabilities removed in 0.3.0.5 (Occam's Razor)
+    console.log(`Note: Execution capability '${capability}' noted (capabilities removed in 0.3.0.5)`);
     this.model.updatedAt = new Date().toISOString();
     return this;
   }
@@ -219,10 +216,10 @@ export class DefaultUnit implements Unit, Upgrade {
       const existingScenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
       
       // Update scenario with new link
-      existingScenario.model.symlinkPaths.push(linkPath);
-      existingScenario.model.namedLinks.push({
-        location: `../scenarios/index/${uuid.slice(0, 5).split('').join('/')}/${uuid}.scenario.json`,
-        filename: `${convertedFilename}.unit`
+      existingScenario.model.references.push({
+        linkLocation: `ior:local:ln:file:${linkPath}`,
+        linkTarget: `ior:unit:${uuid}`,
+        syncStatus: SyncStatus.SYNCED
       });
       
       // Create new LD link pointing to existing scenario
@@ -267,20 +264,20 @@ export class DefaultUnit implements Unit, Upgrade {
       await symlink(relativePath, newLinkPath);
       
       // Update scenario model with new link
-      scenario.model.symlinkPaths.push(newLinkPath);
-      scenario.model.namedLinks.push({
-        location: relativePath,
-        filename: linkBasename
+      scenario.model.references.push({
+        linkLocation: `ior:local:ln:file:${newLinkPath}`,
+        linkTarget: `ior:unit:${uuid}`,
+        syncStatus: SyncStatus.SYNCED
       });
       
       // Save updated scenario
-      await this.storage.saveScenario(uuid, scenario, scenario.model.symlinkPaths);
+      await this.storage.saveScenario(uuid, scenario, this.extractLinkPaths());
       
       console.log(`✅ Additional link created: ${linkBasename}`);
       console.log(`   Source: ${existingLinkPath}`);
       console.log(`   Target: ${newLinkPath}`);
       console.log(`   Unit: ${uuid}`);
-      console.log(`   Total links: ${scenario.model.symlinkPaths.length}`);
+      console.log(`   Total links: ${this.extractLinkPaths().length}`);
     } catch (error) {
       console.error(`Failed to create additional link: ${(error as Error).message}`);
     }
@@ -301,28 +298,28 @@ export class DefaultUnit implements Unit, Upgrade {
       const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
       
       // Remove link from symlinkPaths
-      const linkIndex = scenario.model.symlinkPaths.indexOf(linkPath);
+      const linkIndex = this.extractLinkPaths().indexOf(linkPath);
       if (linkIndex > -1) {
-        scenario.model.symlinkPaths.splice(linkIndex, 1);
+        this.extractLinkPaths().splice(linkIndex, 1);
       }
       
-      // Remove from namedLinks
-      const namedLinkIndex = scenario.model.namedLinks.findIndex(
-        link => link.filename === linkFilename
+      // Remove from references
+      const referenceIndex = scenario.model.references.findIndex(
+        ref => ref.linkLocation.includes(linkFilename)
       );
-      if (namedLinkIndex > -1) {
-        scenario.model.namedLinks.splice(namedLinkIndex, 1);
+      if (referenceIndex > -1) {
+        scenario.model.references.splice(referenceIndex, 1);
       }
       
       // Update scenario in storage
-      await this.storage.saveScenario(uuid, scenario, scenario.model.symlinkPaths);
+      await this.storage.saveScenario(uuid, scenario, this.extractLinkPaths());
       
       // Remove the actual link file
       unlinkSync(linkPath);
       
       console.log(`✅ Link deleted: ${linkFilename}`);
       console.log(`   Unit ${uuid} preserved in central storage`);
-      console.log(`   Remaining links: ${scenario.model.symlinkPaths.length}`);
+      console.log(`   Remaining links: ${this.extractLinkPaths().length}`);
     } catch (error) {
       console.error(`Failed to delete link: ${(error as Error).message}`);
     }
@@ -345,7 +342,7 @@ export class DefaultUnit implements Unit, Upgrade {
       
       // Delete all LD link files
       let deletedLinks = 0;
-      for (const symlinkPath of scenario.model.symlinkPaths) {
+      for (const symlinkPath of this.extractLinkPaths()) {
         try {
           unlinkSync(symlinkPath);
           deletedLinks++;
@@ -361,8 +358,8 @@ export class DefaultUnit implements Unit, Upgrade {
       
       console.log(`✅ Unit deleted completely: ${uuid}`);
       console.log(`   Scenario removed: ${scenarioFullPath}`);
-      console.log(`   Links deleted: ${deletedLinks}/${scenario.model.symlinkPaths.length}`);
-      console.log(`   Named links removed: ${scenario.model.namedLinks.length}`);
+      console.log(`   Links deleted: ${deletedLinks}/${this.extractLinkPaths().length}`);
+      console.log(`   References removed: ${scenario.model.references.length}`);
     } catch (error) {
       console.error(`Failed to delete unit: ${(error as Error).message}`);
     }
@@ -374,18 +371,19 @@ export class DefaultUnit implements Unit, Upgrade {
       const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
       
       console.log(`LD Links for Unit ${uuid}:`);
-      if (scenario.model.symlinkPaths && scenario.model.symlinkPaths.length > 0) {
-        scenario.model.symlinkPaths.forEach((linkPath: string) => {
+      if (this.extractLinkPaths() && this.extractLinkPaths().length > 0) {
+        this.extractLinkPaths().forEach((linkPath: string) => {
           console.log(`  - ${linkPath}`);
         });
       } else {
         console.log('  No LD links found');
       }
       
-      if (scenario.model.namedLinks && scenario.model.namedLinks.length > 0) {
-        console.log(`Named Links:`);
-        scenario.model.namedLinks.forEach((namedLink: any) => {
-          console.log(`  - ${namedLink.filename} (${namedLink.location})`);
+      if (scenario.model.references && scenario.model.references.length > 0) {
+        console.log(`References:`);
+        scenario.model.references.forEach((ref: any) => {
+          const filename = ref.linkLocation.split('/').pop() || 'unknown';
+          console.log(`  - ${filename} → ${ref.linkTarget} (${ref.syncStatus})`);
         });
       }
     } catch (error) {
@@ -472,7 +470,7 @@ export class DefaultUnit implements Unit, Upgrade {
       existingScenario.model.definition = definitionIOR;
       
       // Save updated scenario
-      await this.storage.saveScenario(uuid, existingScenario, existingScenario.model.symlinkPaths);
+      await this.storage.saveScenario(uuid, existingScenario, this.extractLinkPathsFromModel(existingScenario.model));
       
       console.log(`✅ Definition added to unit: ${uuid}`);
       console.log(`   Definition: ${definitionIOR}`);
@@ -556,9 +554,8 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   addStorageCapability(capability: string): this {
-    if (!this.model.storageCapabilities.includes(capability)) {
-      this.model.storageCapabilities.push(capability);
-    }
+    // Note: storageCapabilities removed in 0.3.0.5 (Occam's Razor)
+    console.log(`Note: Storage capability '${capability}' noted (capabilities removed in 0.3.0.5)`);
     this.model.updatedAt = new Date().toISOString();
     return this;
   }
@@ -704,6 +701,18 @@ export class DefaultUnit implements Unit, Upgrade {
     return this.model.references
       .map(ref => ref.linkLocation.replace('ior:local:ln:file:', ''))
       .filter(path => path.startsWith('/workspace/'));
+  }
+
+  /**
+   * Extract link paths from any model (for compatibility)
+   */
+  private extractLinkPathsFromModel(model: any): string[] {
+    if (model.references) {
+      return model.references
+        .map((ref: any) => ref.linkLocation.replace('ior:local:ln:file:', ''))
+        .filter((path: string) => path.startsWith('/workspace/'));
+    }
+    return [];
   }
 
   /**
