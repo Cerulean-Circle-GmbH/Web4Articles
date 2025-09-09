@@ -1,0 +1,789 @@
+/**
+ * DefaultUnit - Simple unit implementation with storage integration
+ * Web4 pattern: Empty constructor + scenario initialization + UnitIndexStorage
+ */
+
+import { Unit } from '../layer3/Unit.interface.js';
+import { Upgrade } from '../layer3/Upgrade.interface.js';
+import { Scenario } from '../layer3/Scenario.interface.js';
+import { UnitModel } from '../layer3/UnitModel.interface.js';
+import { UnitReference, SyncStatus } from '../layer3/UnitReference.interface.js';
+import { TypeM3 } from '../layer3/TypeM3.enum.js';
+import { Model } from '../layer3/Model.interface.js';
+import { IOR } from '../layer3/IOR.interface.js';
+import { DefaultStorage } from './DefaultStorage.js';
+import { GitTextIOR } from './GitTextIOR.js';
+import { LocalLnIOR } from './LocalLnIOR.js';
+import { UnitIOR } from './UnitIOR.js';
+import { existsSync } from 'fs';
+import { dirname, basename } from 'path';
+
+export class DefaultUnit implements Unit, Upgrade {
+  private model: UnitModel;
+  private storage: DefaultStorage;
+
+  // Getter for CLI access to model
+  get unitModel(): UnitModel {
+    return this.model;
+  }
+
+  constructor() {
+    // Empty constructor - Web4 pattern
+    this.model = {
+      uuid: crypto.randomUUID(),           // UUIDv4 using crypto.randomUUID()
+      name: '',                            // Unit name for terminal identification (uni-t)
+      origin: new UnitIOR(crypto.randomUUID()), // ✅ IOR type - default UnitIOR
+      definition: '',                      // MD formatted text
+      typeM3: TypeM3.CLASS,                // Default MOF classification (can be changed)
+      indexPath: '',                       // Will be set when stored
+      references: [],                      // ✅ Pure IOR-based reference tracking
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    this.storage = new DefaultStorage();
+    // Storage will be initialized with scenario in init() method
+  }
+
+  init(scenario: Scenario<UnitModel>): this {
+    if (scenario.model) {
+      this.model = scenario.model;
+      // No state in UnitIndex model - state is requirement-like attribute
+    }
+    
+    // Check for missing terminal identity and show warnings (backward compatibility)
+    this.showTerminalIdentityWarning();
+    
+    // Initialize storage with scenario - Web4 pattern
+    const storageScenario = {
+      ior: { uuid: crypto.randomUUID(), component: 'Storage', version: '0.3.0.4' },
+      owner: '',
+      model: { uuid: crypto.randomUUID(), projectRoot: '', indexBaseDir: '', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
+    };
+    this.storage.init(storageScenario);
+    return this;
+  }
+
+  // Protocol-less radical OOP methods - no Input/Output constructs
+  transform(data: unknown): unknown {
+    this.model.updatedAt = new Date().toISOString();
+    return {
+      transformed: data,
+      by: this.model.uuid,
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  validate(object: any): boolean {
+    this.model.updatedAt = new Date().toISOString();
+    return object !== null && object !== undefined;
+  }
+
+  process(): void {
+    this.model.updatedAt = new Date().toISOString();
+    console.log(`Unit ${this.model.uuid} processed`);
+  }
+
+  async validateModel(): Promise<boolean> {
+    // Comprehensive UnitModel validation
+    try {
+      // Required string properties
+      if (!this.model.uuid || typeof this.model.uuid !== 'string') return false;
+      if (!this.model.name || typeof this.model.name !== 'string') return false;
+      if (!this.model.origin || typeof this.model.origin !== 'string') return false;
+      if (!this.model.definition || typeof this.model.definition !== 'string') return false;
+      if (!this.model.indexPath || typeof this.model.indexPath !== 'string') return false;
+      
+      // TypeM3 validation
+      if (!Object.values(TypeM3).includes(this.model.typeM3)) return false;
+      
+      // Array properties
+      if (!Array.isArray(this.model.symlinkPaths)) return false;
+      if (!Array.isArray(this.model.namedLinks)) return false;
+      if (!Array.isArray(this.model.executionCapabilities)) return false;
+      if (!Array.isArray(this.model.storageCapabilities)) return false;
+      
+      // Timestamp validation
+      if (!this.model.createdAt || isNaN(Date.parse(this.model.createdAt))) return false;
+      if (!this.model.updatedAt || isNaN(Date.parse(this.model.updatedAt))) return false;
+      
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async toScenario(name?: string): Promise<Scenario<UnitModel>> {
+    // Generate proper owner data
+    const ownerData = JSON.stringify({
+      user: process.env.USER || 'system',
+      hostname: process.env.HOSTNAME || 'localhost',
+      uuid: this.model.uuid,
+      timestamp: new Date().toISOString(),
+      component: 'Unit',
+      version: '0.3.0.4'
+    });
+
+    const scenario: Scenario = {
+      ior: {
+        uuid: this.model.uuid,
+        component: 'Unit',
+        version: '0.3.0.4'
+      },
+      owner: ownerData, // Modern TypeScript - no Web2 btoa() shit
+      model: this.model
+    };
+
+    // Save to central storage with LD links - create named link in current directory
+    const currentDir = process.cwd();
+    const linkFilename = name ? `${name}.unit` : `unit-${this.model.uuid.slice(0, 8)}`;
+    const namedLink = `${currentDir}/${linkFilename}`;
+    
+    await this.storage.saveScenario(this.model.uuid, scenario, [namedLink]);
+    
+    // Add to namedLinks array if name provided - location should be relative path from link to scenario
+    if (name) {
+      // Get the actual relative path that was used to create the symlink
+      const { relative, dirname } = await import('path');
+      const { readlinkSync } = await import('fs');
+      
+      try {
+        const relativePath = readlinkSync(namedLink);
+        this.model.namedLinks.push({
+          location: relativePath,
+          filename: linkFilename
+        });
+      } catch (error) {
+        console.error('Failed to read symlink for namedLinks:', (error as Error).message);
+      }
+    }
+    
+    // Load the saved scenario to get the updated model with correct storage paths
+    try {
+      const savedScenario = await this.storage.loadScenario(this.model.uuid);
+      const originalNamedLinks = this.model.namedLinks; // Save namedLinks before overwriting
+      this.model = savedScenario.model as any; // Update our model with storage-corrected paths
+      
+      // Restore namedLinks if we had them
+      if (originalNamedLinks && originalNamedLinks.length > 0) {
+        this.model.namedLinks = originalNamedLinks;
+        savedScenario.model = this.model;
+        // Save the updated scenario with correct namedLinks
+        await this.storage.saveScenario(this.model.uuid, savedScenario, [namedLink]);
+        // Load again to get the final updated scenario
+        const finalScenario = await this.storage.loadScenario(this.model.uuid) as Scenario<UnitModel>;
+        this.model = finalScenario.model;
+        return finalScenario;
+      }
+      
+      return savedScenario as Scenario<UnitModel>; // Return the complete saved scenario with correct paths
+    } catch (error) {
+      console.error('Failed to load saved scenario:', (error as Error).message);
+      return scenario as Scenario<UnitModel>; // Fallback to original scenario
+    }
+  }
+
+  // Helper methods for Unit model management
+  addExecutionCapability(capability: string): this {
+    if (!this.model.executionCapabilities.includes(capability)) {
+      this.model.executionCapabilities.push(capability);
+    }
+    this.model.updatedAt = new Date().toISOString();
+    return this;
+  }
+
+  // Testing helper method
+  getModel(): UnitModel {
+    return this.model;
+  }
+
+  // Helper methods for link management
+  private extractUuidFromPath(scenarioPath: string): string {
+    // Extract UUID from path like ../scenarios/index/a/b/c/d/e/uuid.scenario.json
+    const pathParts = scenarioPath.split('/');
+    const filename = pathParts[pathParts.length - 1];
+    return filename.replace('.scenario.json', '');
+  }
+
+  private async calculateRelativePath(fromPath: string, toPath: string): Promise<string> {
+    const { relative } = await import('path');
+    return relative(fromPath, toPath);
+  }
+
+  // Advanced CLI Commands (Task 19) - Direct method naming convention v0.1.2.2
+  async link(uuid: string, filename: string): Promise<void> {
+    try {
+      // Convert multi-word filenames (spaces → single dots) for consistency
+      const convertedFilename = filename.replace(/\s+/g, '.');
+      
+      // Create new LD link to existing unit in different location
+      const currentDir = process.cwd();
+      const linkPath = `${currentDir}/${convertedFilename}.unit`;
+      
+      // Load existing unit scenario
+      const existingScenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      // Update scenario with new link
+      existingScenario.model.symlinkPaths.push(linkPath);
+      existingScenario.model.namedLinks.push({
+        location: `../scenarios/index/${uuid.slice(0, 5).split('').join('/')}/${uuid}.scenario.json`,
+        filename: `${convertedFilename}.unit`
+      });
+      
+      // Create new LD link pointing to existing scenario
+      const scenarioPath = existingScenario.model.indexPath;
+      await this.storage.saveScenario(uuid, existingScenario, [linkPath]);
+      
+      console.log(`✅ Link created: ${convertedFilename}.unit → ${uuid}`);
+      console.log(`   Target: ${scenarioPath}`);
+    } catch (error) {
+      console.error(`Failed to create link: ${(error as Error).message}`);
+    }
+  }
+
+  async linkInto(linkFilename: string, targetFolder: string): Promise<void> {
+    try {
+      // Read existing link to get target UUID
+      const { readlinkSync } = await import('fs');
+      const { resolve, basename } = await import('path');
+      
+      const currentDir = process.cwd();
+      const existingLinkPath = resolve(currentDir, linkFilename);
+      
+      // Extract UUID from existing link
+      const scenarioPath = readlinkSync(existingLinkPath);
+      const uuid = this.extractUuidFromPath(scenarioPath);
+      
+      // Load unit scenario
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      // Create new link in target folder
+      const targetPath = resolve(targetFolder);
+      const linkBasename = basename(linkFilename);
+      const newLinkPath = `${targetPath}/${linkBasename}`;
+      
+      // Create directory if it doesn't exist
+      const { mkdir } = await import('fs/promises');
+      await mkdir(targetPath, { recursive: true });
+      
+      // Create symbolic link to same scenario
+      const { symlink } = await import('fs/promises');
+      const relativePath = await this.calculateRelativePath(targetPath, scenario.model.indexPath);
+      await symlink(relativePath, newLinkPath);
+      
+      // Update scenario model with new link
+      scenario.model.symlinkPaths.push(newLinkPath);
+      scenario.model.namedLinks.push({
+        location: relativePath,
+        filename: linkBasename
+      });
+      
+      // Save updated scenario
+      await this.storage.saveScenario(uuid, scenario, scenario.model.symlinkPaths);
+      
+      console.log(`✅ Additional link created: ${linkBasename}`);
+      console.log(`   Source: ${existingLinkPath}`);
+      console.log(`   Target: ${newLinkPath}`);
+      console.log(`   Unit: ${uuid}`);
+      console.log(`   Total links: ${scenario.model.symlinkPaths.length}`);
+    } catch (error) {
+      console.error(`Failed to create additional link: ${(error as Error).message}`);
+    }
+  }
+
+  async deleteLink(linkFilename: string): Promise<void> {
+    try {
+      // Resolve link file to get target UUID
+      const { readlinkSync, unlinkSync } = await import('fs');
+      const currentDir = process.cwd();
+      const linkPath = `${currentDir}/${linkFilename}`;
+      
+      // Read the symlink to get scenario path
+      const scenarioPath = readlinkSync(linkPath);
+      const uuid = this.extractUuidFromPath(scenarioPath);
+      
+      // Load unit scenario
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      // Remove link from symlinkPaths
+      const linkIndex = scenario.model.symlinkPaths.indexOf(linkPath);
+      if (linkIndex > -1) {
+        scenario.model.symlinkPaths.splice(linkIndex, 1);
+      }
+      
+      // Remove from namedLinks
+      const namedLinkIndex = scenario.model.namedLinks.findIndex(
+        link => link.filename === linkFilename
+      );
+      if (namedLinkIndex > -1) {
+        scenario.model.namedLinks.splice(namedLinkIndex, 1);
+      }
+      
+      // Update scenario in storage
+      await this.storage.saveScenario(uuid, scenario, scenario.model.symlinkPaths);
+      
+      // Remove the actual link file
+      unlinkSync(linkPath);
+      
+      console.log(`✅ Link deleted: ${linkFilename}`);
+      console.log(`   Unit ${uuid} preserved in central storage`);
+      console.log(`   Remaining links: ${scenario.model.symlinkPaths.length}`);
+    } catch (error) {
+      console.error(`Failed to delete link: ${(error as Error).message}`);
+    }
+  }
+
+  async deleteUnit(linkFilename: string): Promise<void> {
+    try {
+      // Resolve link file to get target UUID
+      const { readlinkSync, unlinkSync } = await import('fs');
+      const { unlink } = await import('fs/promises');
+      const currentDir = process.cwd();
+      const linkPath = `${currentDir}/${linkFilename}`;
+      
+      // Read the symlink to get scenario path
+      const scenarioPath = readlinkSync(linkPath);
+      const uuid = this.extractUuidFromPath(scenarioPath);
+      
+      // Load unit scenario to get all links
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      // Delete all LD link files
+      let deletedLinks = 0;
+      for (const symlinkPath of scenario.model.symlinkPaths) {
+        try {
+          unlinkSync(symlinkPath);
+          deletedLinks++;
+          console.log(`   Deleted link: ${symlinkPath}`);
+        } catch (error) {
+          console.warn(`   Warning: Could not delete link ${symlinkPath}: ${(error as Error).message}`);
+        }
+      }
+      
+      // Delete the unit scenario from central storage
+      const scenarioFullPath = scenario.model.indexPath;
+      await unlink(scenarioFullPath);
+      
+      console.log(`✅ Unit deleted completely: ${uuid}`);
+      console.log(`   Scenario removed: ${scenarioFullPath}`);
+      console.log(`   Links deleted: ${deletedLinks}/${scenario.model.symlinkPaths.length}`);
+      console.log(`   Named links removed: ${scenario.model.namedLinks.length}`);
+    } catch (error) {
+      console.error(`Failed to delete unit: ${(error as Error).message}`);
+    }
+  }
+
+  async list(uuid: string): Promise<void> {
+    try {
+      // Load unit scenario and list all LD links
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      console.log(`LD Links for Unit ${uuid}:`);
+      if (scenario.model.symlinkPaths && scenario.model.symlinkPaths.length > 0) {
+        scenario.model.symlinkPaths.forEach((linkPath: string) => {
+          console.log(`  - ${linkPath}`);
+        });
+      } else {
+        console.log('  No LD links found');
+      }
+      
+      if (scenario.model.namedLinks && scenario.model.namedLinks.length > 0) {
+        console.log(`Named Links:`);
+        scenario.model.namedLinks.forEach((namedLink: any) => {
+          console.log(`  - ${namedLink.filename} (${namedLink.location})`);
+        });
+      }
+    } catch (error) {
+      console.error(`Failed to list links: ${(error as Error).message}`);
+    }
+  }
+
+  async from(filename: string, startPos: string, endPos: string): Promise<void> {
+    try {
+      // Create unit from file text with extracted name and origin
+      const { promises: fs } = await import('fs');
+      const { GitTextIOR } = await import('./GitTextIOR.js');
+      
+      // Read file content
+      const fileContent = await fs.readFile(filename, 'utf-8');
+      const lines = fileContent.split('\n');
+      
+      // Parse positions (line:column format)
+      const [startLine, startCol] = startPos.split(':').map(Number);
+      const [endLine, endCol] = endPos.split(':').map(Number);
+      
+      // Extract text from specified range
+      let extractedText = '';
+      for (let i = startLine - 1; i <= endLine - 1; i++) {
+        if (i === startLine - 1 && i === endLine - 1) {
+          // Same line
+          extractedText = lines[i].substring(startCol - 1, endCol);
+        } else if (i === startLine - 1) {
+          // Start line
+          extractedText += lines[i].substring(startCol - 1) + '\n';
+        } else if (i === endLine - 1) {
+          // End line
+          extractedText += lines[i].substring(0, endCol);
+        } else {
+          // Middle lines
+          extractedText += lines[i] + '\n';
+        }
+      }
+      
+      // Extract unit name from text (first word or identifier)
+      const nameMatch = extractedText.match(/\b[A-Za-z][A-Za-z0-9_]*\b/);
+      const unitName = nameMatch ? nameMatch[0] : 'ExtractedUnit';
+      
+      // Create GitTextIOR for origin with absolute path
+      const gitIOR = new GitTextIOR();
+      const { resolve } = await import('path');
+      const absolutePath = resolve(filename);
+      const relativePath = absolutePath.replace('/workspace/', '');
+      const gitUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${relativePath}#L${startPos}-${endPos}`;
+      const originIOR = gitIOR.parse(gitUrl);
+      
+      // Set terminal identity
+      this.setTerminalIdentity(unitName, originIOR, '');
+      
+      // Create unit scenario
+      const scenario = await this.toScenario(unitName);
+      
+      console.log(`✅ Unit created from source: ${unitName}`);
+      console.log(`   UUID: ${scenario.ior.uuid}`);
+      console.log(`   Origin: ${originIOR}`);
+      console.log(`   Extracted from: ${filename} (${startPos}-${endPos})`);
+    } catch (error) {
+      console.error(`Failed to create unit from source: ${(error as Error).message}`);
+    }
+  }
+
+  async definition(uuid: string, filename: string, startPos: string, endPos: string): Promise<void> {
+    try {
+      // Add definition source reference to existing unit
+      const { GitTextIOR } = await import('./GitTextIOR.js');
+      
+      // Create GitTextIOR for definition with absolute path
+      const gitIOR = new GitTextIOR();
+      const { resolve } = await import('path');
+      const absolutePath = resolve(filename);
+      const relativePath = absolutePath.replace('/workspace/', '');
+      const gitUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${relativePath}#L${startPos}-${endPos}`;
+      const definitionIOR = gitIOR.parse(gitUrl);
+      
+      // Load existing unit
+      const existingScenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      // Update definition
+      existingScenario.model.definition = definitionIOR;
+      
+      // Save updated scenario
+      await this.storage.saveScenario(uuid, existingScenario, existingScenario.model.symlinkPaths);
+      
+      console.log(`✅ Definition added to unit: ${uuid}`);
+      console.log(`   Definition: ${definitionIOR}`);
+      console.log(`   Source: ${filename} (${startPos}-${endPos})`);
+    } catch (error) {
+      console.error(`Failed to add definition: ${(error as Error).message}`);
+    }
+  }
+
+  async origin(uuid: string): Promise<void> {
+    try {
+      // Display dual links to origin and definition as clickable URLs
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      console.log(`Unit ${scenario.model.name || uuid} Source References:`);
+      console.log('');
+      
+      if (scenario.model.origin) {
+        const originUrl = scenario.model.origin.replace('ior:git:text:', '');
+        console.log(`Origin: ${originUrl}`);
+        console.log(`Local: scenarios/index/${uuid.slice(0, 5).split('').join('/')}/${uuid}.scenario.json`);
+      } else {
+        console.log('Origin: not specified');
+      }
+      
+      console.log('');
+      
+      if (scenario.model.definition) {
+        const definitionUrl = scenario.model.definition.replace('ior:git:text:', '');
+        console.log(`Definition: ${definitionUrl}`);
+        console.log(`Local: scenarios/index/${uuid.slice(0, 5).split('').join('/')}/${uuid}.scenario.json`);
+      } else {
+        console.log('Definition: not specified');
+      }
+      
+      console.log('');
+    } catch (error) {
+      console.error(`Failed to show origin: ${(error as Error).message}`);
+    }
+  }
+
+  // Terminal Identity (uni-t) methods
+  setTerminalIdentity(name: string, origin: string, definition: string): this {
+    this.model.name = name;
+    this.model.origin = origin;
+    this.model.definition = definition;
+    this.model.updatedAt = new Date().toISOString();
+    return this;
+  }
+
+  validateTerminalIdentity(): { isComplete: boolean; missing: string[] } {
+    const missing: string[] = [];
+    
+    if (!this.model.name || this.model.name.trim() === '') {
+      missing.push('name');
+    }
+    if (!this.model.origin || this.model.origin.trim() === '') {
+      missing.push('origin');
+    }
+    if (!this.model.definition || this.model.definition.trim() === '') {
+      missing.push('definition');
+    }
+
+    return {
+      isComplete: missing.length === 0,
+      missing
+    };
+  }
+
+  showTerminalIdentityWarning(): void {
+    const validation = this.validateTerminalIdentity();
+    if (!validation.isComplete) {
+      console.warn(`⚠️  Warning: Unit '${this.model.uuid}' missing terminal identity information:`);
+      validation.missing.forEach(field => {
+        console.warn(`   - ${field}: not specified`);
+      });
+      console.warn('');
+      console.warn('   Next build version will require migration method for missing model info.');
+      console.warn('   Please update unit with complete terminal identity (uni-t) attributes.');
+    }
+  }
+
+  addStorageCapability(capability: string): this {
+    if (!this.model.storageCapabilities.includes(capability)) {
+      this.model.storageCapabilities.push(capability);
+    }
+    this.model.updatedAt = new Date().toISOString();
+    return this;
+  }
+
+  // Speaking name resolution methods (Decision 2a - in DefaultUnit)
+  async resolveSpeakingName(speakingName: string): Promise<string | null> {
+    try {
+      // TODO: Implement speaking name to UUID resolution
+      // For now, return null - will be implemented with LD links system
+      return null;
+    } catch (error) {
+      console.warn(`Failed to resolve speaking name ${speakingName}: ${(error as Error).message}`);
+      return null;
+    }
+  }
+
+  async addSpeakingName(speakingName: string): Promise<void> {
+    try {
+      // Add speaking name link for this unit - will be implemented when storage methods are Web4 compliant
+      console.log(`✅ Speaking name to add: ${speakingName} -> ${this.model.uuid}`);
+    } catch (error) {
+      throw new Error(`Failed to add speaking name: ${(error as Error).message}`);
+    }
+  }
+
+  async removeSpeakingName(speakingName: string): Promise<void> {
+    try {
+      // Remove speaking name link for this unit - will be implemented when storage methods are Web4 compliant
+      console.log(`✅ Speaking name to remove: ${speakingName}`);
+    } catch (error) {
+      throw new Error(`Failed to remove speaking name: ${(error as Error).message}`);
+    }
+  }
+
+  private findProjectRoot(): string {
+    let currentDir = process.cwd();
+    
+    while (currentDir !== '/') {
+      try {
+        // Modern ESM approach - use existsSync from fs import
+        if (existsSync(`${currentDir}/scenarios`)) {
+          return currentDir;
+        }
+        currentDir = dirname(currentDir);
+      } catch {
+        currentDir = dirname(currentDir);
+      }
+    }
+    return process.cwd();
+  }
+
+  /**
+   * Upgrade unit model to target version
+   * Radical OOP: Method implementation of Upgrade interface
+   * Modern TypeScript: ESM imports, type safety, class-based pattern
+   */
+  async upgrade(targetVersion: string): Promise<boolean> {
+    try {
+      if (targetVersion === '0.3.0.5') {
+        return await this.upgradeToVersion035();
+      }
+      
+      throw new Error(`Unsupported upgrade target version: ${targetVersion}`);
+    } catch (error) {
+      console.error(`Upgrade failed: ${(error as Error).message}`);
+      return false;
+    }
+  }
+
+  /**
+   * Upgrade from 0.3.0.4 to 0.3.0.5 model
+   * Radical OOP: Private method for specific version upgrade logic
+   */
+  private async upgradeToVersion035(): Promise<boolean> {
+    // Current model (0.3.0.4 format)
+    const currentModel = this.model as any; // Cast for 0.3.0.4 compatibility
+    
+    // Transform to enhanced 0.3.0.5 model with pure IOR types
+    const enhancedModel: UnitModel = {
+      uuid: currentModel.uuid,
+      name: currentModel.name,
+      
+      // Transform origin to IOR type
+      origin: this.createIORFromString(currentModel.origin) || this.createDefaultOriginIOR(),
+      
+      // Enhance definition with MD format
+      definition: currentModel.definition || this.generateDefaultMDDefinition(),
+      
+      typeM3: currentModel.typeM3,
+      indexPath: currentModel.indexPath.replace('0.3.0.4', '0.3.0.5'),
+      
+      // Transform arrays to IOR references
+      references: await this.transformArraysToIORReferences(currentModel),
+      
+      createdAt: currentModel.createdAt,
+      updatedAt: new Date().toISOString()
+    };
+    
+    // Create master file from origin IOR
+    await this.createMasterFileFromOrigin(enhancedModel);
+    
+    // Update internal model
+    this.model = enhancedModel;
+    
+    // Save enhanced scenario
+    await this.storage.saveScenario(this.model.uuid, this.toScenario(), []);
+    
+    console.log(`✅ Unit upgraded to 0.3.0.5: ${this.model.uuid}`);
+    return true;
+  }
+
+  /**
+   * Create IOR from string value (radical OOP helper method)
+   */
+  private createIORFromString(iorString: string): IOR | null {
+    if (!iorString) return null;
+    
+    if (iorString.startsWith('ior:git:text:')) {
+      const gitUrl = iorString.replace('ior:git:text:', '');
+      return new GitTextIOR(gitUrl);
+    } else if (iorString.startsWith('ior:local:ln:')) {
+      const filePath = iorString.replace('ior:local:ln:', '');
+      return new LocalLnIOR(filePath);
+    } else if (iorString.startsWith('ior:unit:')) {
+      const uuid = iorString.replace('ior:unit:', '');
+      return new UnitIOR(uuid);
+    }
+    
+    return null;
+  }
+
+  /**
+   * Create default origin IOR for units without origin
+   */
+  private createDefaultOriginIOR(): IOR {
+    return new UnitIOR(this.model.uuid);
+  }
+
+  /**
+   * Generate default MD definition
+   */
+  private generateDefaultMDDefinition(): string {
+    return `# ${this.model.name}
+
+Enhanced Unit with IOR-based architecture following CORBA 2.3 principles.
+
+## Purpose
+Provides ${this.model.name} functionality with enhanced IOR model for radical unit traceability.
+
+## IOR Architecture
+- **Origin:** IOR type reference to master source
+- **References:** IOR-based link tracking with specialized types
+- **Type Safety:** All references use proper IOR interface implementations
+
+## Web4 Integration
+Follows radical OOP principles with modern TypeScript implementation.`;
+  }
+
+  /**
+   * Transform current arrays to IOR references
+   */
+  private async transformArraysToIORReferences(currentModel: any): Promise<UnitReference[]> {
+    const references: UnitReference[] = [];
+    
+    // Convert symlinkPaths to IOR references
+    if (currentModel.symlinkPaths) {
+      for (const path of currentModel.symlinkPaths) {
+        references.push({
+          linkLocation: new LocalLnIOR(path),
+          linkTarget: new UnitIOR(currentModel.uuid),
+          syncStatus: SyncStatus.SYNCED
+        });
+      }
+    }
+    
+    // Convert namedLinks to IOR references
+    if (currentModel.namedLinks) {
+      for (const link of currentModel.namedLinks) {
+        const absolutePath = this.resolveLinkPath(link.location, link.filename);
+        references.push({
+          linkLocation: new LocalLnIOR(absolutePath),
+          linkTarget: new UnitIOR(currentModel.uuid),
+          syncStatus: SyncStatus.SYNCED
+        });
+      }
+    }
+    
+    return references;
+  }
+
+  /**
+   * Create master file from origin IOR
+   */
+  private async createMasterFileFromOrigin(model: UnitModel): Promise<void> {
+    if (model.origin instanceof GitTextIOR) {
+      const masterFilePath = model.origin.getMasterFilePath(model.uuid);
+      const { mkdir, copyFile } = await import('fs/promises');
+      await mkdir(dirname(masterFilePath), { recursive: true });
+      
+      // Copy source to master file if source exists
+      const sourceFile = this.extractSourceFileFromOrigin(model.origin);
+      if (sourceFile && existsSync(sourceFile)) {
+        await copyFile(sourceFile, masterFilePath);
+      }
+    }
+  }
+
+  /**
+   * Extract source file path from GitTextIOR
+   */
+  private extractSourceFileFromOrigin(origin: GitTextIOR): string | null {
+    const gitUrl = origin.getUrl();
+    const match = gitUrl.match(/\/blob\/[^\/]+\/(.+?)(?:#|$)/);
+    return match ? match[1] : null;
+  }
+
+  /**
+   * Resolve link path from location and filename
+   */
+  private resolveLinkPath(location: string, filename: string): string {
+    const baseDir = location.replace('../scenarios/', '/workspace/scenarios/');
+    return `${dirname(baseDir)}/${filename}`;
+  }
+}
