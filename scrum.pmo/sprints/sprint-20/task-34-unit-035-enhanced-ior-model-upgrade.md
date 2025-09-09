@@ -125,102 +125,209 @@ export class UnitIOR implements IOR {
 }
 ```
 
-## Model Upgrade Migration Function
+## Radical OOP Upgrade Method Implementation
 
-### Migration from Unit 0.3.0.4 to 0.3.0.5
+### Upgrade Interface
 ```typescript
-export async function modelUpgrade034to035(
-  scenario034Path: string,
-  sourceFilePath?: string
-): Promise<Scenario<UnitModel>> {
-  
-  // Read 0.3.0.4 scenario
-  const scenario034Content = await readFile(scenario034Path, 'utf8');
-  const scenario034 = JSON.parse(scenario034Content);
-  const model034 = scenario034.model;
-  
-  // Create enhanced 0.3.0.5 model
-  const model035: UnitModel = {
-    uuid: model034.uuid,
-    name: model034.name,
-    
-    // Transform origin to IOR type
-    origin: model034.origin 
-      ? IORFactory.createFromUrl(model034.origin)
-      : sourceFilePath 
-        ? new GitTextIOR(`https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${sourceFilePath}`)
-        : new UnitIOR(model034.uuid),
-    
-    // Enhance definition with MD format
-    definition: model034.definition || generateMDDefinition(model034.name, sourceFilePath),
-    
-    typeM3: model034.typeM3,
-    indexPath: model034.indexPath.replace('0.3.0.4', '0.3.0.5'),
-    
-    // Transform arrays to IOR references
-    references: [
-      // Convert symlinkPaths
-      ...(model034.symlinkPaths || []).map((path: string) => ({
-        linkLocation: new LocalLnIOR(path),
-        linkTarget: new UnitIOR(model034.uuid),
-        syncStatus: 'SYNCED' as SyncStatus
-      })),
-      
-      // Convert namedLinks
-      ...(model034.namedLinks || []).map((link: any) => ({
-        linkLocation: new LocalLnIOR(resolveLinkPath(link.location, link.filename)),
-        linkTarget: new UnitIOR(model034.uuid),
-        syncStatus: 'SYNCED' as SyncStatus
-      }))
-    ],
-    
-    createdAt: model034.createdAt,
-    updatedAt: new Date().toISOString()
-  };
-  
-  // Create 0.3.0.5 scenario
-  const scenario035: Scenario<UnitModel> = {
-    ior: {
-      uuid: model034.uuid,
-      component: 'Unit',
-      version: '0.3.0.5'
-    },
-    owner: scenario034.owner,
-    model: model035
-  };
-  
-  // Create master file if origin is GitTextIOR
-  if (model035.origin instanceof GitTextIOR && sourceFilePath) {
-    const masterFilePath = model035.origin.getMasterFilePath(model035.uuid);
-    await ensureDirectoryExists(dirname(masterFilePath));
-    await copyFile(sourceFilePath, masterFilePath);
-  }
-  
-  return scenario035;
+// File: Upgrade.interface.ts
+export interface Upgrade {
+  upgrade(targetVersion: string): Promise<boolean>;
 }
+```
 
-function generateMDDefinition(name: string, sourceFilePath?: string): string {
-  return `# ${name}
+### DefaultUnit Upgrade Method Implementation
+```typescript
+// File: DefaultUnit.ts (Enhanced)
+import { Upgrade } from '../layer3/Upgrade.interface.js';
+
+export class DefaultUnit implements Unit, Upgrade {
+  private model: UnitModel;
+  private storage: DefaultStorage;
+
+  // ... existing constructor and methods ...
+
+  /**
+   * Upgrade unit model to target version
+   * Radical OOP: Method implementation of Upgrade interface
+   * Modern TypeScript: ESM imports, type safety, class-based pattern
+   */
+  async upgrade(targetVersion: string): Promise<boolean> {
+    try {
+      if (targetVersion === '0.3.0.5') {
+        return await this.upgradeToVersion035();
+      }
+      
+      throw new Error(`Unsupported upgrade target version: ${targetVersion}`);
+    } catch (error) {
+      console.error(`Upgrade failed: ${(error as Error).message}`);
+      return false;
+    }
+  }
+
+  /**
+   * Upgrade from 0.3.0.4 to 0.3.0.5 model
+   * Radical OOP: Private method for specific version upgrade logic
+   */
+  private async upgradeToVersion035(): Promise<boolean> {
+    // Current model (0.3.0.4 format)
+    const currentModel = this.model;
+    
+    // Transform to enhanced 0.3.0.5 model with pure IOR types
+    const enhancedModel: UnitModel = {
+      uuid: currentModel.uuid,
+      name: currentModel.name,
+      
+      // Transform origin to IOR type
+      origin: this.createIORFromString(currentModel.origin) || this.createDefaultOriginIOR(),
+      
+      // Enhance definition with MD format
+      definition: currentModel.definition || this.generateDefaultMDDefinition(),
+      
+      typeM3: currentModel.typeM3,
+      indexPath: currentModel.indexPath.replace('0.3.0.4', '0.3.0.5'),
+      
+      // Transform arrays to IOR references
+      references: await this.transformArraysToIORReferences(currentModel),
+      
+      createdAt: currentModel.createdAt,
+      updatedAt: new Date().toISOString()
+    };
+    
+    // Create master file from origin IOR
+    await this.createMasterFileFromOrigin(enhancedModel);
+    
+    // Update internal model
+    this.model = enhancedModel;
+    
+    // Save enhanced scenario
+    await this.storage.saveScenario(this.model.uuid, this.toScenario(), []);
+    
+    console.log(`✅ Unit upgraded to 0.3.0.5: ${this.model.uuid}`);
+    return true;
+  }
+
+  /**
+   * Create IOR from string value (radical OOP helper method)
+   */
+  private createIORFromString(iorString: string): IOR | null {
+    if (!iorString) return null;
+    
+    if (iorString.startsWith('ior:git:text:')) {
+      const gitUrl = iorString.replace('ior:git:text:', '');
+      return new GitTextIOR(gitUrl);
+    } else if (iorString.startsWith('ior:local:ln:')) {
+      const filePath = iorString.replace('ior:local:ln:', '');
+      return new LocalLnIOR(filePath);
+    } else if (iorString.startsWith('ior:unit:')) {
+      const uuid = iorString.replace('ior:unit:', '');
+      return new UnitIOR(uuid);
+    }
+    
+    return null;
+  }
+
+  /**
+   * Create default origin IOR for units without origin
+   */
+  private createDefaultOriginIOR(): IOR {
+    return new UnitIOR(this.model.uuid);
+  }
+
+  /**
+   * Generate default MD definition
+   */
+  private generateDefaultMDDefinition(): string {
+    return `# ${this.model.name}
 
 Enhanced Unit with IOR-based architecture following CORBA 2.3 principles.
 
 ## Purpose
-Provides ${name} functionality with enhanced IOR model for radical unit traceability.
+Provides ${this.model.name} functionality with enhanced IOR model for radical unit traceability.
 
 ## IOR Architecture
 - **Origin:** IOR type reference to master source
 - **References:** IOR-based link tracking with specialized types
 - **Type Safety:** All references use proper IOR interface implementations
 
-## Source Reference
-${sourceFilePath ? `Original file: \`${basename(sourceFilePath)}\`` : 'Source: Unit creation'}
-Component: Unit/0.3.0.5
-Type: Enhanced IOR Model`;
-}
+## Web4 Integration
+Follows radical OOP principles with modern TypeScript implementation.`;
+  }
 
-function resolveLinkPath(location: string, filename: string): string {
-  const baseDir = location.replace('../scenarios/', '/workspace/scenarios/');
-  return `${dirname(baseDir)}/${filename}`;
+  /**
+   * Transform current arrays to IOR references
+   */
+  private async transformArraysToIORReferences(currentModel: any): Promise<UnitReference[]> {
+    const references: UnitReference[] = [];
+    
+    // Convert symlinkPaths to IOR references
+    if (currentModel.symlinkPaths) {
+      for (const path of currentModel.symlinkPaths) {
+        references.push({
+          linkLocation: new LocalLnIOR(path),
+          linkTarget: new UnitIOR(currentModel.uuid),
+          syncStatus: SyncStatus.SYNCED
+        });
+      }
+    }
+    
+    // Convert namedLinks to IOR references
+    if (currentModel.namedLinks) {
+      for (const link of currentModel.namedLinks) {
+        const absolutePath = this.resolveLinkPath(link.location, link.filename);
+        references.push({
+          linkLocation: new LocalLnIOR(absolutePath),
+          linkTarget: new UnitIOR(currentModel.uuid),
+          syncStatus: SyncStatus.SYNCED
+        });
+      }
+    }
+    
+    return references;
+  }
+
+  /**
+   * Create master file from origin IOR
+   */
+  private async createMasterFileFromOrigin(model: UnitModel): Promise<void> {
+    if (model.origin instanceof GitTextIOR) {
+      const masterFilePath = model.origin.getMasterFilePath(model.uuid);
+      const { mkdir } = await import('fs/promises');
+      await mkdir(dirname(masterFilePath), { recursive: true });
+      
+      // Copy source to master file if source exists
+      const sourceFile = this.extractSourceFileFromOrigin(model.origin);
+      if (sourceFile && existsSync(sourceFile)) {
+        const { copyFile } = await import('fs/promises');
+        await copyFile(sourceFile, masterFilePath);
+      }
+    }
+  }
+  }
+}
+```
+
+### CLI Integration
+```typescript
+// File: UnitCLI.ts (Enhanced with upgrade command)
+export class UnitCLI {
+  private unit: DefaultUnit | null = null;
+
+  // Add upgrade command to CLI
+  async handleUpgrade(args: string[]): Promise<void> {
+    if (args.length < 1) {
+      throw new Error('Target version required for upgrade command');
+    }
+    
+    const targetVersion = args[0];
+    const unit = this.getOrCreateUnit();
+    
+    const success = await unit.upgrade(targetVersion);
+    if (success) {
+      console.log(`✅ Unit upgraded to version ${targetVersion}`);
+    } else {
+      console.error(`❌ Upgrade to version ${targetVersion} failed`);
+    }
+  }
 }
 ```
 
@@ -229,7 +336,7 @@ function resolveLinkPath(location: string, filename: string): string {
 - [ ] All IOR fields use proper IOR types (origin, linkLocation, linkTarget)
 - [ ] masterFile field eliminated (origin IS the master reference)
 - [ ] Specialized IOR classes implemented (GitTextIOR, LocalLnIOR, UnitIOR)
-- [ ] modelUpgrade function provides seamless migration from 0.3.0.4
+- [ ] upgrade() method provides seamless migration from 0.3.0.4 (radical OOP)
 - [ ] All existing functionality preserved in 0.3.0.5
 - [ ] .master.file storage format implemented
 - [ ] IOR.md documentation created with CORBA principles and Web4 adaptations
@@ -264,9 +371,19 @@ now its perfect… still the corba iors have an internal model as you found out 
 - **MVP Scope:** Simple specialized IORs, defer complex protocol stack to future
 - **Architecture:** CORBA-inspired tagged profiles adapted for Web4 needs
 
-### Enhanced Model Requirements
+### Radical OOP Method Requirements
 ```quote
-i would make it like that but only in one point more simple. the masterFile is not needed when the origin IS an IOR to it. or a GitTextIOr or any other special ior as origin is of type IOR. so no string at all. as well as linkLocation and linkTarget are of type IOR
+the migration function NEEDS to be a method. of DefaultUnit eventually implementing interface Upgrade as method upgrade.
+```
+
+- **Issue:** Migration function not following radical OOP principles
+- **Resolution:** Implement upgrade() method in DefaultUnit class implementing Upgrade interface
+- **Radical OOP:** Class-based method implementation (not functional programming)
+- **Modern TypeScript:** ESM imports, type safety, class-based patterns only
+
+### Enhanced IOR Model Requirements  
+```quote
+the masterFile is not needed when the origin IS an IOR to it. or a GitTextIOr or any other special ior as origin is of type IOR. so no string at all. as well as linkLocation and linkTarget are of type IOR
 ```
 
 - **Issue:** masterFile field redundant when origin IS the IOR to master file
