@@ -1,0 +1,61 @@
+# 🚨 Bad Interactive Shell Commands - Agent Safety List
+
+**🗓️ Created:** 2025-09-10-UTC-2115  
+**🎯 Purpose:** Track shell commands that cause interactive hangs for background agents  
+**⚠️ Critical:** Background agents CANNOT handle interactive prompts - these commands will hang indefinitely
+
+---
+
+## **❌ CONFIRMED BAD COMMANDS**
+
+### **Git Operations**
+- `git pull origin branch` - Can hang on merge conflicts requiring interactive resolution
+- `git cherry-pick` - Hangs on conflicts without `--no-commit` flag
+- `git merge` - Interactive merge conflict resolution
+- `git rebase` - Interactive rebase prompts
+
+### **Package Managers**
+- `npm install` - Should use `npm install --yes` or `npm ci`
+- `apt-get install` - Should use `apt-get install -y`
+
+---
+
+## **✅ SAFE ALTERNATIVES**
+
+### **Git Operations**
+- `git pull --no-edit origin branch` - Prevents interactive merge messages
+- `git pull --rebase origin branch` - But requires `git config pull.rebase false` first
+- `git cherry-pick --no-commit` - Prevents interactive conflict resolution
+- `git status` - Always safe, read-only
+
+### **Package Managers**
+- `npm ci` - Non-interactive, uses package-lock.json
+- `npm install --yes` - Forces yes to all prompts
+- `apt-get install -y package` - Auto-confirms installation
+
+---
+
+## **🔧 RECOVERY COMMANDS**
+
+When stuck in interactive command:
+- Background agents cannot send Ctrl+C
+- Terminal session becomes unresponsive
+- Must start new terminal session
+- Previous work may be lost if not committed
+
+**Prevention:** Always use non-interactive flags for background agent safety!
+
+---
+
+## **📋 INCIDENT LOG**
+
+### **Incident 1: 2025-09-10-UTC-2115**
+- **Command:** `git pull origin dev/once0304 && git push origin dev/once0304`
+- **Issue:** Git pull hung on interactive merge/conflict resolution
+- **Impact:** Terminal session became unresponsive, 900s timeout
+- **Resolution:** Started fresh terminal session
+- **Prevention:** Use `git pull --no-edit` or configure `pull.rebase false`
+
+---
+
+**⚠️ CRITICAL REMINDER: Background agents run autonomously and CANNOT interact with prompts!**
