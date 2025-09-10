@@ -8,7 +8,16 @@ A DAPP for collective intelligence in article writing.
 
 **You are a Background Agent.** Follow these steps:
 
-1. **Initialize PDCA Framework**:
+1. **Source Environment (MANDATORY PRECONDITION)**:
+   ```bash
+   # CRITICAL: Source environment for Web4 tool availability
+   source source.env
+   ```
+   - Makes Web4 tools available in PATH via scripts/ and scripts/versions/
+   - Enables component self-build functionality
+   - Required before any tool usage or component interaction
+
+2. **Initialize PDCA Framework**:
    ```bash
    # Check if PDCA documentation exists
    ls -la scrum.pmo/roles/_shared/PDCA/howto.PDCA.md 2>/dev/null || echo "Getting PDCA docs..."
