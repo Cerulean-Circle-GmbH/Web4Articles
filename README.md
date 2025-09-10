@@ -17,12 +17,12 @@ A DAPP for collective intelligence in article writing.
    - Must be set before any git operations
    - Critical for collaborative branch management safety
 
-2. **Validation-First Principle (CMM4 FEEDBACK LEARNING)**:
-   **"Validate processes personally before creating guidance for others"**
-   - Validation sequence: Experience → Understanding → Documentation → Guidance
-   - Prevents backwards instruction creation and inaccurate documentation
-   - Ensures all guidance is based on proven, personal validation
-   - CMM4 feedback consequence of humbling experience learning
+2. **Golden Rule (CMM4 Process Feedback)**:
+   **"Don't teach others what you don't understand yourself"**
+   - Validation-first approach: Experience → Understanding → Documentation → Guidance
+   - Treat others as you'd want to be treated = Give them validated, accurate guidance
+   - CMM4 feedback loop prevents giving others what you wouldn't want to receive
+   - Process rule: Understanding must precede instruction to avoid harming others
 
 3. **Source Environment (MANDATORY PRECONDITION)**:
    ```bash
