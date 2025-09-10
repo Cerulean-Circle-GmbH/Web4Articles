@@ -14,14 +14,14 @@
 **🚨 Issues:** 7 failed tests, 191 scenario validation failures, ONCE component integration issues  
 
 **📎 Previous Commit:** d41e6997 - PDCA: Session Startup Recovery - User decisions implemented and PO role transition  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-1953-session-startup-recovery.md) | scrum.pmo/project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-1953-session-startup-recovery.md
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-1953-session-startup-recovery.md) | [§/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-1953-session-startup-recovery.md](./2025-09-10-UTC-1953-session-startup-recovery.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-1958-po-quality-testing-assessment.md) | scrum.pmo/project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-1958-po-quality-testing-assessment.md
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-1958-po-quality-testing-assessment.md) | [§/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-1958-po-quality-testing-assessment.md](./2025-09-10-UTC-1958-po-quality-testing-assessment.md)
 - **Test Results:** [Local] test output from `npm test` execution
 - **Vitest Config:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/vitest.config.ts) | vitest.config.ts
 - **Package.json:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/package.json) | package.json

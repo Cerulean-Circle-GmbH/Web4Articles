@@ -21,9 +21,9 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-1953-session-startup-recovery.md) | scrum.pmo/project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-1953-session-startup-recovery.md
-- **Project Status:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/project.status.md) | scrum.pmo/project.journal/2025-09-10-UTC-1953-session/project.status.md
-- **Session Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once0304/scrum.pmo/project.journal/2025-09-10-UTC-1953-session) | scrum.pmo/project.journal/2025-09-10-UTC-1953-session/
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-1953-session-startup-recovery.md) | [§/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-1953-session-startup-recovery.md](./2025-09-10-UTC-1953-session-startup-recovery.md)
+- **Project Status:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/project.status.md) | [§/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/project.status.md](./project.status.md)
+- **Session Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/once0304/scrum.pmo/project.journal/2025-09-10-UTC-1953-session) | [§/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/](./)
 
 ### **QA Decisions**
 - [x] **Decision 1: Primary Work Focus Area** → **1d) Quality/Testing Focus** - Testing strategies, validation, compliance checks
