@@ -1,0 +1,40 @@
+{
+  "ior": {
+    "uuid": "a9f6e3d8-7c4b-4e2f-9a6d-5f8c2e7a4d9f",
+    "component": "Web4Requirement", 
+    "version": "0.1.2.2"
+  },
+  "owner": {
+    "user": "system",
+    "timestamp": "2025-09-05T10:30:00.000Z"
+  },
+  "model": {
+    "uuid": "a9f6e3d8-7c4b-4e2f-9a6d-5f8c2e7a4d9f",
+    "name": "Learning Summary Creation - All Requirements Analysis with Sprint 20 Integration",
+    "description": "Create learning-summary.md with dual links to all requirements and PDCAs, following sprint 20 format. Link into sprint 20 with UTC timestamp for DORY mode recovery access.",
+    "type": "learning-documentation",
+    "priority": "high",
+    "category": "knowledge-management",
+    "status": "approved",
+    "rationale": "Learning summary provides consolidated knowledge from all requirements and PDCAs for team benefit and DORY mode recovery. Sprint 20 integration ensures easy access during future sessions.",
+    "acceptance_criteria": [
+      "Read all 70 requirements from spec/requirements/",
+      "Create learning-summary.md with dual links to PDCAs and requirements",
+      "Follow sprint 20 learnings.summary.md format structure",
+      "Include core learnings with dual link references",
+      "Create UTC timestamped link in sprint 20 directory",
+      "Ensure easy DORY mode recovery access",
+      "Document all session learnings and requirements"
+    ],
+    "technical_details": {
+      "requirements_count": "70 scenario.json files in spec/requirements/",
+      "format_reference": "scrum.pmo/roles/SaveRestartAgent/learnings.summary.md",
+      "target_location": "scrum.pmo/project.journal/2025-09-05-UTC-0930-recovery-session/learning-summary.md",
+      "sprint20_integration": "Link with UTC timestamp in sprint 20 directory",
+      "dory_recovery": "Easy access during future DORY moments"
+    },
+    "implementation_notes": "This consolidates all session learnings and requirements for future reference and DORY mode recovery.",
+    "created_at": "2025-09-05T10:30:00.000Z",
+    "updated_at": "2025-09-05T10:30:00.000Z"
+  }
+}
