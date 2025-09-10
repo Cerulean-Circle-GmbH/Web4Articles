@@ -271,13 +271,13 @@ export class DefaultUnit implements Unit, Upgrade {
       });
       
       // Save updated scenario
-      await this.storage.saveScenario(uuid, scenario, this.extractLinkPaths());
+      await this.storage.saveScenario(uuid, scenario, []);
       
       console.log(`✅ Additional link created: ${linkBasename}`);
       console.log(`   Source: ${existingLinkPath}`);
       console.log(`   Target: ${newLinkPath}`);
       console.log(`   Unit: ${uuid}`);
-      console.log(`   Total links: ${this.extractLinkPaths().length}`);
+      console.log(`   Total links: ${[].length}`);
     } catch (error) {
       console.error(`Failed to create additional link: ${(error as Error).message}`);
     }
@@ -297,11 +297,7 @@ export class DefaultUnit implements Unit, Upgrade {
       // Load unit scenario
       const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
       
-      // Remove link from symlinkPaths
-      const linkIndex = this.extractLinkPaths().indexOf(linkPath);
-      if (linkIndex > -1) {
-        this.extractLinkPaths().splice(linkIndex, 1);
-      }
+      // Note: Legacy symlinkPaths handling removed in 0.3.0.5
       
       // Remove from references
       const referenceIndex = scenario.model.references.findIndex(
@@ -312,14 +308,14 @@ export class DefaultUnit implements Unit, Upgrade {
       }
       
       // Update scenario in storage
-      await this.storage.saveScenario(uuid, scenario, this.extractLinkPaths());
+      await this.storage.saveScenario(uuid, scenario, []);
       
       // Remove the actual link file
       unlinkSync(linkPath);
       
       console.log(`✅ Link deleted: ${linkFilename}`);
       console.log(`   Unit ${uuid} preserved in central storage`);
-      console.log(`   Remaining links: ${this.extractLinkPaths().length}`);
+      console.log(`   Remaining links: ${[].length}`);
     } catch (error) {
       console.error(`Failed to delete link: ${(error as Error).message}`);
     }
@@ -342,7 +338,7 @@ export class DefaultUnit implements Unit, Upgrade {
       
       // Delete all LD link files
       let deletedLinks = 0;
-      for (const symlinkPath of this.extractLinkPaths()) {
+      for (const symlinkPath of []) {
         try {
           unlinkSync(symlinkPath);
           deletedLinks++;
@@ -358,7 +354,7 @@ export class DefaultUnit implements Unit, Upgrade {
       
       console.log(`✅ Unit deleted completely: ${uuid}`);
       console.log(`   Scenario removed: ${scenarioFullPath}`);
-      console.log(`   Links deleted: ${deletedLinks}/${this.extractLinkPaths().length}`);
+      console.log(`   Links deleted: ${deletedLinks}/${[].length}`);
       console.log(`   References removed: ${scenario.model.references.length}`);
     } catch (error) {
       console.error(`Failed to delete unit: ${(error as Error).message}`);
@@ -371,13 +367,7 @@ export class DefaultUnit implements Unit, Upgrade {
       const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
       
       console.log(`LD Links for Unit ${uuid}:`);
-      if (this.extractLinkPaths() && this.extractLinkPaths().length > 0) {
-        this.extractLinkPaths().forEach((linkPath: string) => {
-          console.log(`  - ${linkPath}`);
-        });
-      } else {
-        console.log('  No LD links found');
-      }
+      // Note: Legacy symlinkPaths display removed in 0.3.0.5 (pure references array)
       
       if (scenario.model.references && scenario.model.references.length > 0) {
         console.log(`References:`);
@@ -470,7 +460,7 @@ export class DefaultUnit implements Unit, Upgrade {
       existingScenario.model.definition = definitionIOR;
       
       // Save updated scenario
-      await this.storage.saveScenario(uuid, existingScenario, this.extractLinkPathsFromModel(existingScenario.model));
+      await this.storage.saveScenario(uuid, existingScenario, []);
       
       console.log(`✅ Definition added to unit: ${uuid}`);
       console.log(`   Definition: ${definitionIOR}`);
@@ -655,7 +645,7 @@ export class DefaultUnit implements Unit, Upgrade {
     // Save enhanced scenario with version update
     const scenario = await this.toScenario();
     scenario.ior.version = '0.3.0.5';
-    await this.storage.saveScenario(this.model.uuid, scenario, this.extractLinkPaths());
+    await this.storage.saveScenario(this.model.uuid, scenario, []);
     
     console.log(`✅ Unit upgraded to 0.3.0.5: ${this.model.uuid}`);
     return true;
@@ -694,26 +684,7 @@ export class DefaultUnit implements Unit, Upgrade {
     return references;
   }
 
-  /**
-   * Extract link paths from references for storage compatibility
-   */
-  private extractLinkPaths(): string[] {
-    return this.model.references
-      .map(ref => ref.linkLocation.replace('ior:local:ln:file:', ''))
-      .filter(path => path.startsWith('/workspace/'));
-  }
-
-  /**
-   * Extract link paths from any model (for compatibility)
-   */
-  private extractLinkPathsFromModel(model: any): string[] {
-    if (model.references) {
-      return model.references
-        .map((ref: any) => ref.linkLocation.replace('ior:local:ln:file:', ''))
-        .filter((path: string) => path.startsWith('/workspace/'));
-    }
-    return [];
-  }
+  // ❌ REMOVED: Legacy symlinks compatibility methods (migration successful)
 
   /**
    * Resolve link path from location and filename (0.3.0.4 compatibility)
