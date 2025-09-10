@@ -24,7 +24,22 @@ A DAPP for collective intelligence in article writing.
    - CMM4 feedback loop prevents giving others what you wouldn't want to receive
    - Process rule: Understanding must precede instruction to avoid harming others
 
-3. **Source Environment (MANDATORY PRECONDITION)**:
+3. **Read Agent Safety Guidelines (MANDATORY)**:
+   - Read: `scrum.pmo/sprints/sprint-20/bad.interactive.sh.commands.md`
+   - Critical: Understand commands that cause terminal hangs
+   - Background agents CANNOT handle interactive prompts
+   - Must use non-interactive flags for all commands
+
+4. **Git Process Cleanup (SYSTEM MAINTENANCE)**:
+   ```bash
+   # Wait 30 seconds then kill defunct git processes
+   sleep 30 && pkill -f "git" 2>/dev/null || true &
+   ```
+   - Cleans up defunct git processes from previous interactive failures
+   - Prevents system resource drain and process accumulation
+   - Runs in background, doesn't block startup continuation
+
+5. **Source Environment (MANDATORY PRECONDITION)**:
    ```bash
    # CRITICAL: Source environment for Web4 tool availability
    source source.env
