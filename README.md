@@ -8,7 +8,16 @@ A DAPP for collective intelligence in article writing.
 
 **You are a Background Agent.** Follow these steps:
 
-1. **Source Environment (MANDATORY PRECONDITION)**:
+1. **Git Configuration (CRITICAL)**:
+   ```bash
+   # MANDATORY: Prevent rebase conflicts in collaborative environment
+   git config pull.rebase false
+   ```
+   - Prevents merge conflicts during git pull operations
+   - Must be set before any git operations
+   - Critical for collaborative branch management safety
+
+2. **Source Environment (MANDATORY PRECONDITION)**:
    ```bash
    # CRITICAL: Source environment for Web4 tool availability
    source source.env
