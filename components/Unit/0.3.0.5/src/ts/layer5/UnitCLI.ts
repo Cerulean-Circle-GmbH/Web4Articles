@@ -5,16 +5,25 @@
  * Web4 pattern: Dependency-free CLI with unit creation and management
  */
 
+import { DefaultCLI } from '../layer2/DefaultCLI.js';
 import { DefaultUnit } from '../layer2/DefaultUnit.js';
 import { TypeM3 } from '../layer3/TypeM3.enum.js';
-import { promises as fs } from 'fs';
 
-class UnitCLI {
+export class UnitCLI extends DefaultCLI {
   private unit: DefaultUnit | null;
 
   constructor() {
+    super(); // Call DefaultCLI constructor
     // Don't instantiate unit for usage display - command-based instantiation only
     this.unit = null;
+  }
+
+  /**
+   * Static start method - Web4 radical OOP entry point
+   */
+  static async start(args: string[]): Promise<void> {
+    const cli = new UnitCLI();
+    await cli.execute(args);
   }
 
   private getOrCreateUnit(): DefaultUnit {
@@ -41,7 +50,7 @@ class UnitCLI {
     return this.unit;
   }
 
-  private showUsage(): void {
+  showUsage(): void {
     console.log('Web4 Unit CLI Tool v0.3.0.5 - Enhanced UnitModel with Radical OOP');
     console.log('');
     console.log('Usage:');
@@ -176,7 +185,10 @@ class UnitCLI {
     console.log(`${'\x1b[90m'}  Updated:    ${scenario.model.updatedAt}${'\x1b[0m'}`);
   }
 
-  async run(args: string[]): Promise<void> {
+  /**
+   * Unit-specific command execution implementation
+   */
+  async execute(args: string[]): Promise<void> {
     if (args.length === 0) {
       this.showUsage();
       return;
@@ -287,18 +299,7 @@ class UnitCLI {
   }
 }
 
-// CLI entry point
-async function main() {
-  try {
-    const cli = new UnitCLI();
-    await cli.run(process.argv.slice(2));
-  } catch (error) {
-    console.error(`❌ Unit CLI Fatal Error: ${(error as Error).message}`);
-    process.exit(1);
-  }
-}
-
-// Execute if called directly
+// Static entry point for shell execution - Web4 radical OOP pattern
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main();
+  UnitCLI.start(process.argv.slice(2));
 }
