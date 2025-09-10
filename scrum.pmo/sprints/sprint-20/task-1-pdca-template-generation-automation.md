@@ -73,20 +73,40 @@ Automate PDCA template instantiation to:
    - Verify integration with existing PDCA workflow
 
 ## Requirements
-- CLI tool compatible with Node.js/TypeScript environment
-- Support for template version 3.1.4.2 format
-- Automatic GitHub URL generation based on current branch/commit
-- Dual link format compliance: `[GitHub](URL) | [local/path](path)`
-- UTC timestamp formatting: YYYY-MM-DD-UTC-HHMM
-- Variable substitution for all template placeholders
-- Integration with existing git workflow (commit/push automation)
+
+### Web4 Compliance Requirements
+- **Empty Constructor Principle**: PDCAGenerator class with empty constructor, scenario-based initialization
+- **IOR Architecture**: Template references via IORs, not file paths
+- **Radical OOP**: NO functions outside classes - all operations as methods
+- **Scenario-First**: Generator state completely hibernatable as JSON scenario
+- **6-Hop Traceability**: Prose→Requirements→Tests→Features→Components→Versions→Units
+
+### Technical Requirements  
+- **Vitest ONLY**: All tests use Vitest with ESM imports (Jest is BANNED)
+- **ESM modules**: TypeScript-first with modern JS features
+- **CLI tool**: Compatible with Node.js/TypeScript environment
+- **Template version**: Support for 3.1.4.2 format
+- **GitHub automation**: Automatic URL generation via GitHub CLI
+- **Dual link format**: `[GitHub](URL) | [local/path](path)` compliance
+- **UTC timestamps**: YYYY-MM-DD-UTC-HHMM formatting
+- **Git integration**: Workflow automation (commit/push)
 
 ## Acceptance Criteria
+
+### Web4 Compliance Criteria
+- [ ] **Empty Constructor**: PDCAGenerator() constructor takes NO parameters
+- [ ] **Scenario-Based Init**: generator.init(scenario) for all configuration
+- [ ] **IOR References**: All template/file references via IOR objects
+- [ ] **Pure OOP**: NO standalone functions - all methods belong to classes
+- [ ] **Hibernatable State**: Complete generator state serializable to JSON
+- [ ] **Vitest Tests**: All tests use `import { describe, it, expect } from 'vitest'`
+
+### Functional Criteria
 - [ ] CLI tool generates complete PDCA documents from template 3.1.4.2
 - [ ] All {{VARIABLE}} placeholders automatically replaced with provided values
-- [ ] GitHub URLs automatically generated for current branch/commit context
+- [ ] GitHub URLs automatically generated via GitHub CLI integration
 - [ ] Local paths correctly calculated relative to PDCA document location
-- [ ] UTC timestamps properly formatted and current
+- [ ] UTC timestamps properly formatted and current (YYYY-MM-DD-UTC-HHMM)
 - [ ] Generated PDCAs pass existing format validation
 - [ ] Tool integrates with current git workflow (add/commit/push)
 - [ ] Documentation includes usage examples and parameter reference

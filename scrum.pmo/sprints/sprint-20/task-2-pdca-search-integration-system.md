@@ -73,17 +73,40 @@ Create comprehensive PDCA search system to:
    - Verify integration with existing PDCA workflow
 
 ## Requirements
-- Full-text search across all PDCA markdown files
-- Metadata search by date, role, agent, topic, process area
-- Cross-reference discovery (related PDCAs, improvement chains)
-- Integration with existing pdca.process.improvements/ symbolic links
-- CLI interface compatible with current development workflow
-- Search result ranking by relevance and recency
-- Support for semantic search (similar topics, related processes)
-- Performance optimized for 100+ PDCA documents
-- Integration with existing git-based PDCA workflow
+
+### Web4 Compliance Requirements
+- **Empty Constructor Principle**: PDCASearchEngine class with empty constructor, scenario-based initialization
+- **IOR Architecture**: PDCA document references via IORs, not file paths
+- **Radical OOP**: NO functions outside classes - all search operations as methods
+- **Scenario-First**: Search engine state completely hibernatable as JSON scenario
+- **Semantic Invariants**: Search across formats (MD/JSON/XML) with semantic equivalence
+- **6-Hop Traceability**: Search results trace through Prose→Requirements→Tests→Features→Components→Versions→Units
+
+### Technical Requirements
+- **Vitest ONLY**: All tests use Vitest with ESM imports (Jest is BANNED)
+- **ESM modules**: TypeScript-first with modern JS features
+- **Full-text search**: Across all PDCA markdown files
+- **Metadata search**: By date, role, agent, topic, process area
+- **Cross-reference discovery**: Related PDCAs, improvement chains
+- **Symbolic link integration**: With existing pdca.process.improvements/
+- **CLI interface**: Compatible with current development workflow
+- **Search ranking**: By relevance and recency
+- **Semantic search**: Similar topics, related processes
+- **Performance**: Optimized for 100+ PDCA documents
+- **Git integration**: With existing PDCA workflow
 
 ## Acceptance Criteria
+
+### Web4 Compliance Criteria
+- [ ] **Empty Constructor**: PDCASearchEngine() constructor takes NO parameters
+- [ ] **Scenario-Based Init**: searchEngine.init(scenario) for all configuration
+- [ ] **IOR References**: All PDCA document references via IOR objects
+- [ ] **Pure OOP**: NO standalone functions - all search methods belong to classes
+- [ ] **Hibernatable State**: Complete search engine state serializable to JSON
+- [ ] **Semantic Invariants**: Search works identically across MD/JSON/XML formats
+- [ ] **Vitest Tests**: All tests use `import { describe, it, expect } from 'vitest'`
+
+### Functional Criteria
 - [ ] Full-text search across all PDCA documents in project
 - [ ] Metadata filtering by date, role, agent, topic, process area
 - [ ] Cross-reference discovery showing related PDCA cycles
