@@ -2,7 +2,8 @@
 
 **🎯 Purpose:** Core requirements for correct PDCA creation and collaborative decision making  
 **📏 Length:** Essential information only - detailed examples in [appendix](./howto.PDCA.appendix.md)  
-**🔄 CMM3/CMM4:** Systematic feedback loops through decision framework and quality validation
+**🔄 CMM3/CMM4:** Systematic feedback loops through decision framework and quality validation  
+**⚙️ Tech Stack:** Read [docs/tech-stack.md](../../../docs/tech-stack.md) for technical constraints (Vitest mandatory, Jest BANNED)
 
 ---
 

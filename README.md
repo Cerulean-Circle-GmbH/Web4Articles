@@ -23,12 +23,18 @@ A DAPP for collective intelligence in article writing.
    - Focus on: 6 mandatory sections, dual links, startup framework
    - Essential only: Streamlined for optimal consumption (~150 lines)
 
-3. **Create Session Start PDCA**:
+3. **Read Tech Stack (MANDATORY)**:
+   - Read: `docs/tech-stack.md`
+   - Critical constraints: Vitest mandatory, Jest BANNED
+   - Technical foundation: ESM-native, TypeScript-first, Docker/Devcontainer
+   - Must understand before any development or testing work
+
+4. **Create Session Start PDCA**:
    - Use the startup decision framework from `scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md`
    - Present the standard 3 decisions: Focus Area, Role Selection, Session Duration
    - Create PDCA with UTC timestamp format: `YYYY-MM-DD-UTC-HHMM`
 
-4. **Project Status & Branch Management**:
+5. **Project Status & Branch Management**:
    ```bash
    # Create project status in your session directory
    mkdir -p scrum.pmo/project.journal/$(date -u +"%Y-%m-%d-UTC-%H%M")-session
