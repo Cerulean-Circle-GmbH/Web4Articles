@@ -89,8 +89,8 @@ export class DefaultUnit implements Unit, Upgrade {
       if (!this.model.definition || typeof this.model.definition !== 'string') return false;
       if (!this.model.indexPath || typeof this.model.indexPath !== 'string') return false;
       
-      // TypeM3 validation
-      if (!Object.values(TypeM3).includes(this.model.typeM3)) return false;
+      // TypeM3 validation (optional field)
+      if (this.model.typeM3 && !Object.values(TypeM3).includes(this.model.typeM3)) return false;
       
       // Array properties
       if (!Array.isArray(this.model.references)) return false;

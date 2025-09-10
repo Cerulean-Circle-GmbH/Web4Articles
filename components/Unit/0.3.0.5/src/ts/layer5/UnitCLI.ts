@@ -64,14 +64,27 @@ export class UnitCLI extends DefaultCLI {
     console.log(`${this.colors.dim}  Internal CLI architecture with DefaultCLI base class and dynamic method discovery.${this.colors.reset}`);
   }
 
-  private async createUnit(name: string, description: string = ''): Promise<void> {
+  private async createUnit(name: string, description: string = '', typeM3String?: string): Promise<void> {
     // Get or create unit instance (command-based instantiation)
     const unit = this.getOrCreateUnit();
     
-    // Store name and definition immediately (TRON's correction)
+    // Validate typeM3 if provided
+    let typeM3: TypeM3 | undefined;
+    if (typeM3String) {
+      if (Object.values(TypeM3).includes(typeM3String as TypeM3)) {
+        typeM3 = typeM3String as TypeM3;
+      } else {
+        throw new Error(`Invalid typeM3: ${typeM3String}. Valid values: CLASS, ATTRIBUTE, RELATIONSHIP`);
+      }
+    }
+    
+    // Store name, definition, and typeM3 immediately (TRON's correction)
     unit.unitModel.name = name;
     if (description) {
       unit.unitModel.definition = description;  // ✅ Store description as definition immediately
+    }
+    if (typeM3) {
+      unit.unitModel.typeM3 = typeM3;  // ✅ Set MOF classification if provided
     }
     
     // Add execution capability for the named unit
@@ -84,7 +97,24 @@ export class UnitCLI extends DefaultCLI {
     console.log(`✅ Unit created: ${name}`);
     console.log(`   UUID: ${scenario.ior.uuid}`);
     console.log(`   Index Path: ${scenario.model.indexPath}`);
+    if (typeM3) {
+      console.log(`   TypeM3: ${typeM3}`);
+    }
     console.log(`\n   Named Link: ${filename}.unit`);
+  }
+
+  private async classifyUnit(uuid: string, typeM3String: string): Promise<void> {
+    // Validate typeM3
+    if (!Object.values(TypeM3).includes(typeM3String as TypeM3)) {
+      throw new Error(`Invalid typeM3: ${typeM3String}. Valid values: CLASS, ATTRIBUTE, RELATIONSHIP`);
+    }
+
+    const typeM3 = typeM3String as TypeM3;
+    
+    // This would need to load existing unit from storage and update it
+    // For now, show what would be done
+    console.log(`✅ Unit ${uuid} would be classified as ${typeM3}`);
+    console.log(`   Note: Full implementation requires unit loading from storage`);
   }
 
   private async executeUnit(name: string, inputJson: string): Promise<void> {

@@ -1,14 +1,15 @@
 /**
- * TypeM3 Enum - MOF M3/M2/M1 hierarchy classification
- * Web4 principle: Single type per file, enum in separate .enum.ts file
- * Purpose: MOF meta-model level classification for units
+ * TypeM3 Enum - MOF Meta-Meta-Model Level Classification
+ * Web4 principle: Single enum per file for MOF M3 level types
+ * Purpose: Classify units at the M3 meta-meta-model level
  * 
- * TRON QA Feedback: Web4 compliance violation - enum must be in separate file
- * Fixed: TypeM3 moved from UnitModel.interface.ts to TypeM3.enum.ts
+ * Values:
+ * - CLASS: Components, classes, objects, types that can be instantiated
+ * - ATTRIBUTE: Files, properties, data, values that describe characteristics  
+ * - RELATIONSHIP: LD Links, associations, connections, references between entities
  */
-
 export enum TypeM3 {
-  CLASS = "CLASS",           // Components, classes, objects
-  ATTRIBUTE = "ATTRIBUTE",   // Files, properties, data  
-  RELATIONSHIP = "RELATIONSHIP" // LD Links, associations, connections
+  CLASS = "CLASS",
+  ATTRIBUTE = "ATTRIBUTE", 
+  RELATIONSHIP = "RELATIONSHIP"
 }
