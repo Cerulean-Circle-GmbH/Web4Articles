@@ -157,6 +157,146 @@
 
 ---
 
+## **📋 CHAT DECISION REPORTING PROTOCOL (CRITICAL)**
+
+### **🚨 MANDATORY: Copy QA Decisions Exactly**
+
+**✅ CORRECT Chat Format (Hybrid Approach):**
+```markdown
+### **QA Decisions**
+- [x] Completed: [Decision already made]
+- [ ] **Decision 1:** [Title]
+  - a) [Option with rationale]
+  - b) [Option with rationale]
+- [ ] **Decision 2:** [Title]
+  - a) [Option with rationale]
+  - b) [Option with rationale]
+```
+
+**❌ WRONG Chat Responses:**
+```markdown
+### **QA Decisions:**
+**All clear, no decisions to make** - Session objectives completed
+```
+
+### **🔍 Decision Reporting Rules**
+
+**1. EXACT COPY REQUIREMENT:**
+- Copy the entire QA Decisions section from PDCA to chat
+- Use identical checkbox format: `- [x]` and `- [ ]`
+- Keep exact decision titles and options
+- Never substitute your interpretation
+
+**2. "ALL CLEAR" USAGE CRITERIA:**
+- ONLY when PDCA literally contains no pending `- [ ]` decisions
+- ONLY when no user choices are required
+- NEVER as substitute for actual decisions
+- NEVER based on your work completion status
+
+**3. NUMBERED DECISION FORMAT:**
+- Users respond with format: "1a, 2b, 3c"
+- Each decision gets a number: Decision 1, Decision 2, etc.
+- Each option gets a letter: a, b, c
+- Mobile-friendly for quick responses
+
+### **🎯 Common Error Patterns to Avoid**
+
+**❌ WRONG Mental Model:**
+```
+"All clear" = I finished my work satisfactorily
+"No decisions" = My analysis is complete
+```
+
+**✅ CORRECT Mental Model:**
+```
+"All clear" = No decisions in PDCA require user response
+"Copy exact" = QA Decisions section copied exactly to chat
+```
+
+### **📊 Decision Reporting Examples**
+
+**Example 1 - Has Decisions:**
+```markdown
+### **QA Decisions**
+- [x] **Template Analysis**: Completed version alignment from 3.1 to 3.1.4.2
+- [ ] **Decision 1: Implementation Priority**
+  - a) **Immediate Implementation** - Start automation development now
+  - b) **Sprint Planning** - Add to next sprint backlog
+  - c) **Research Phase** - Investigate requirements further
+```
+
+**Example 2 - No Decisions:**
+```markdown
+### **QA Decisions**
+**All clear, no decisions to make** - Analysis complete with clear next steps
+```
+
+### **🔧 Troubleshooting Decision Reporting**
+
+**If you're unsure about decision reporting:**
+
+1. **Check PDCA QA Decisions section** - Are there any `- [ ]` items?
+2. **If YES** - Copy the entire section exactly to chat
+3. **If NO** - Use "All clear, no decisions to make"
+4. **Never editorialize** - Don't substitute your interpretation
+5. **When in doubt** - Copy the decisions exactly
+
+### **⚠️ CRITICAL WARNING**
+
+**NEVER substitute "All clear" when decisions exist in PDCA!**
+
+This creates confusion because:
+- User expects to make choices but sees "all clear"
+- Decision information is lost in chat response
+- Process compliance is broken
+- User authority over decisions is undermined
+
+### **📚 Decision Reporting Reference Guide**
+
+**For Complex Decision Scenarios:**
+
+**Multi-Stage Decisions:**
+```markdown
+- [x] **Phase 1 Complete**: Analysis finished with recommendations
+- [ ] **Decision 1: Approach Selection**
+  - a) **Option A** with detailed rationale
+  - b) **Option B** with detailed rationale
+- [ ] **Decision 2: Timeline**
+  - a) **Immediate** - Start within 24 hours
+  - b) **Scheduled** - Add to sprint planning
+```
+
+**Conditional Decisions:**
+```markdown
+- [ ] **Decision 1: Primary Approach**
+  - a) **Automated Solution** - If technical resources available
+  - b) **Manual Process** - If automation complexity too high
+  - c) **Hybrid Approach** - Combine automated and manual elements
+```
+
+**Follow-up Decisions:**
+```markdown
+- [x] **Initial Analysis**: Framework gaps identified
+- [ ] **Decision 1: Gap Resolution Priority**
+  - a) **Documentation First** - Update guides before implementation
+  - b) **Implementation First** - Fix issues then document
+  - c) **Parallel Approach** - Documentation and implementation together
+```
+
+---
+
+## **🆘 WHEN IN DOUBT ABOUT DECISION REPORTING**
+
+**If you are uncertain about:**
+- Whether decisions exist in your PDCA
+- How to format decisions in chat
+- Whether to use "All clear" or copy decisions
+- How to handle complex decision scenarios
+
+**ASK QA IN DOUBT**
+
+---
+
 ## **🎯 NEVER 2 1 ALWAYS 4 2 (CORE PRINCIPLE)**
 
 **NEVER 2 1 (TO ONE) - Avoid:**
