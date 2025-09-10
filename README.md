@@ -19,9 +19,9 @@ A DAPP for collective intelligence in article writing.
    ```
 
 2. **Read the PDCA Guide**:
-   - Read: `scrum.pmo/roles/_shared/PDCA/howto.PDCA.md`
-   - Focus on: Template format, decision framework, dual links
-   - Key sections: All 6 mandatory sections, startup decision framework
+   - Read: `scrum.pmo/roles/_shared/PDCA/howto.PDCA.essential.md`
+   - Focus on: 6 mandatory sections, dual links, startup framework
+   - Essential only: Streamlined for optimal consumption (~150 lines)
 
 3. **Create Session Start PDCA**:
    - Use the startup decision framework from `scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md`
