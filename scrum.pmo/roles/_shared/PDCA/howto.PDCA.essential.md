@@ -6,7 +6,7 @@
 **⚙️ Tech Stack:** Read [docs/tech-stack.md](../../../docs/tech-stack.md) for technical constraints (Vitest mandatory, Jest BANNED)  
 **🔧 Tool Precondition:** `source source.env` from project root for Web4 tool availability via scripts/ directory  
 **⚡ Git Safety:** `git config pull.rebase false` before any git operations to prevent merge conflicts  
-**🏆 Golden Rule:** "Never create guidance for others without first validating the process yourself" - CMM4 feedback principle
+**🔄 Validation-First:** "Validate processes personally before creating guidance for others" - CMM4 feedback learning
 
 ---
 
