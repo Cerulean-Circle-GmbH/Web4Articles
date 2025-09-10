@@ -17,7 +17,14 @@ A DAPP for collective intelligence in article writing.
    - Must be set before any git operations
    - Critical for collaborative branch management safety
 
-2. **Source Environment (MANDATORY PRECONDITION)**:
+2. **Golden Rule (CMM4 FEEDBACK PRINCIPLE)**:
+   **"Never create guidance for others without first validating the process yourself"**
+   - Validation-first approach: Experience → Understanding → Documentation → Guidance
+   - Prevents backwards instruction creation and inaccurate documentation
+   - Ensures all guidance is based on proven, personal validation
+   - CMM4 feedback consequence of humbling experience learning
+
+3. **Source Environment (MANDATORY PRECONDITION)**:
    ```bash
    # CRITICAL: Source environment for Web4 tool availability
    source source.env
