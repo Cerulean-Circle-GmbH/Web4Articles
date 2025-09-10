@@ -50,64 +50,18 @@ export class UnitCLI extends DefaultCLI {
     return this.unit;
   }
 
+  /**
+   * Unit-specific usage display using DefaultCLI dynamic generation
+   */
   showUsage(): void {
-    console.log('Web4 Unit CLI Tool v0.3.0.5 - Enhanced UnitModel with Radical OOP');
+    // Use DefaultCLI dynamic usage generation with TSCompletion colors
+    this.generateDynamicUsage('unit', '0.3.0.5');
+    
     console.log('');
-    console.log('Usage:');
-    console.log('  unit create <name> [description]                # Create unit');
-    console.log('  unit link <uuid> <filename>                     # Create initial link to unit');
-    console.log('  unit linkInto <lnlinkfile.unit> <targetfolder>  # Create additional link in different location');
-    console.log('  unit list <uuid>                                # List all links to unit');
-    console.log('  unit origin <uuid>                              # Show origin and definition links');
-    console.log('  unit deleteLink <lnfile.unit>                   # Delete specific link file only');
-    console.log('  unit deleteUnit <lnfile.unit>                   # Delete entire unit and all links');
-    console.log('  unit from <filename> <start:line,column> <end:line,column>  # Create unit from source');
-    console.log('  unit definition <uuid> <filename> <start:line,column> <end:line,column>  # Add definition');
-    console.log('  unit execute <name> <input>                     # Execute unit');
-    console.log('  unit info                                       # Show unit info');
-    console.log('  unit help                                       # Show this help');
-    console.log('');
-    console.log('Commands:');
-    console.log('  create       Create new unit with name and optional description');
-    console.log('  link         Create initial LD link to existing unit using UUID');
-    console.log('  linkInto     Create additional LD link to same unit in different location');
-    console.log('  list         List all LD links pointing to specific unit UUID');
-    console.log('  origin       Show origin and definition source links as clickable URLs');
-    console.log('  deleteLink   Delete specific link file while preserving unit in central storage');
-    console.log('  deleteUnit   Delete entire unit from central storage and all associated link files');
-    console.log('  from         Create unit from file text with extracted name and origin');
-    console.log('  definition   Add definition source reference to existing unit');
-    console.log('  execute      Execute unit with input data');
-    console.log('  info         Display current unit information and scenario');
-    console.log('  help         Show this help message');
-    console.log('');
-    console.log('Parameters:');
-    console.log('  <name>        Unit name for identification (required for create)');
-    console.log('  <uuid>        Unit UUID for link operations (8+ characters accepted)');
-    console.log('  <filename>    File name for links or source references');
-    console.log('  <start:line,column>  Start position in file (line:column format)');
-    console.log('  <end:line,column>    End position in file (line:column format)');
-    console.log('  <description> Optional description for unit creation');
-    console.log('  <input>       JSON input data for unit execution');
-    console.log('');
-    console.log('Examples:');
-    console.log('  unit create test-unit "Test description"        # Create unit');
-    console.log('  unit link a1b2c3d4-e5f6 auth-validator         # Create initial link to unit');
-    console.log('  unit linkInto auth-validator.unit /workspace/project-a/  # Create additional link');
-    console.log('  unit list a1b2c3d4-e5f6                        # List all links to unit');
-    console.log('  unit origin a1b2c3d4-e5f6                      # Show source links');
-    console.log('  unit deleteLink auth-validator.unit            # Delete specific link only');
-    console.log('  unit deleteUnit auth-validator.unit            # Delete entire unit and all links');
-    console.log('  unit from UserValidator.ts 42:15 67:23         # Create from source');
-    console.log('  unit definition a1b2c3d4-e5f6 UserValidator.ts 1250 1890  # Add definition');
-    console.log('  unit execute test-unit \'{"data": "test"}\'      # Execute unit');
-    console.log('  unit info                                      # Show details');
-    console.log('');
-    console.log('Web4 Integration:');
-    console.log('  Unit operates as atomic Web4 element with terminal identification (uni-t).');
-    console.log('  All units use central UUID storage with LD links tracking and source traceability.');
-    console.log('  GitTextIOR format enables complete source reference with ior:git:text:giturl.');
-    console.log('');
+    console.log(`${this.colors.bold}Web4 Integration:${this.colors.reset}`);
+    console.log(`${this.colors.dim}  Unit operates as atomic Web4 element with terminal identification (uni-t).${this.colors.reset}`);
+    console.log(`${this.colors.dim}  All units use central UUID storage with enhanced references array.${this.colors.reset}`);
+    console.log(`${this.colors.dim}  Internal CLI architecture with DefaultCLI base class and dynamic method discovery.${this.colors.reset}`);
   }
 
   private async createUnit(name: string, description: string = ''): Promise<void> {
@@ -186,7 +140,7 @@ export class UnitCLI extends DefaultCLI {
   }
 
   /**
-   * Unit-specific command execution implementation
+   * Unit-specific command execution implementation using DefaultCLI dynamic functionality
    */
   async execute(args: string[]): Promise<void> {
     if (args.length === 0) {
@@ -198,102 +152,32 @@ export class UnitCLI extends DefaultCLI {
     const commandArgs = args.slice(1);
 
     try {
+      // Initialize component for dynamic method discovery
+      if (!this.component) {
+        this.component = this.getOrCreateUnit();
+        this.discoverMethods(); // Rediscover with component
+      }
+
+      // Try dynamic command execution first (TSRanger 2.2 pattern)
+      if (await this.executeDynamicCommand(command, commandArgs)) {
+        return; // Command executed successfully
+      }
+
+      // Special cases (non-component methods)
       switch (command) {
-        case 'create':
-          if (commandArgs.length === 0) {
-            throw new Error('Unit name required for create command');
-          }
-          await this.createUnit(commandArgs[0], commandArgs[1]);
-          break;
-
-        case 'execute':
-          if (commandArgs.length < 2) {
-            throw new Error('Unit name and input JSON required for execute command');
-          }
-          await this.executeUnit(commandArgs[0], commandArgs[1]);
-          break;
-
         case 'info':
           await this.showInfo();
           break;
-
-        case 'link':
-          if (commandArgs.length < 2) {
-            throw new Error('UUID and filename required for link command');
-          }
-          await this.getOrCreateUnit().link(commandArgs[0], commandArgs[1]);
-          break;
-
-        case 'linkInto':
-          if (commandArgs.length < 2) {
-            throw new Error('Link file and target folder required for linkInto command');
-          }
-          await this.getOrCreateUnit().linkInto(commandArgs[0], commandArgs[1]);
-          break;
-
-        case 'deleteLink':
-          if (commandArgs.length < 1) {
-            throw new Error('Link filename required for deleteLink command');
-          }
-          await this.getOrCreateUnit().deleteLink(commandArgs[0]);
-          break;
-
-        case 'deleteUnit':
-          if (commandArgs.length < 1) {
-            throw new Error('Link filename required for deleteUnit command');
-          }
-          await this.getOrCreateUnit().deleteUnit(commandArgs[0]);
-          break;
-
-        case 'list':
-          if (commandArgs.length < 1) {
-            throw new Error('UUID required for list command');
-          }
-          await this.getOrCreateUnit().list(commandArgs[0]);
-          break;
-
-        case 'from':
-          if (commandArgs.length < 3) {
-            throw new Error('Filename, start position, and end position required for from command');
-          }
-          await this.getOrCreateUnit().from(commandArgs[0], commandArgs[1], commandArgs[2]);
-          break;
-
-        case 'origin':
-          if (commandArgs.length < 1) {
-            throw new Error('UUID required for origin command');
-          }
-          await this.getOrCreateUnit().origin(commandArgs[0]);
-          break;
-
-        case 'definition':
-          if (commandArgs.length < 4) {
-            throw new Error('UUID, filename, start position, and end position required for definition command');
-          }
-          await this.getOrCreateUnit().definition(commandArgs[0], commandArgs[1], commandArgs[2], commandArgs[3]);
-          break;
-
-        case 'upgrade':
-          if (commandArgs.length < 1) {
-            throw new Error('Target version required for upgrade command');
-          }
-          const success = await this.getOrCreateUnit().upgrade(commandArgs[0]);
-          if (success) {
-            console.log(`✅ Unit upgraded to version ${commandArgs[0]}`);
-          } else {
-            console.error(`❌ Upgrade to version ${commandArgs[0]} failed`);
-          }
-          break;
-
+          
         case 'help':
           this.showUsage();
           break;
-
+          
         default:
           throw new Error(`Unknown command: ${command}`);
       }
     } catch (error) {
-      console.error(`❌ Unit CLI Error: ${(error as Error).message}`);
+      console.error(this.formatError((error as Error).message));
       process.exit(1);
     }
   }
