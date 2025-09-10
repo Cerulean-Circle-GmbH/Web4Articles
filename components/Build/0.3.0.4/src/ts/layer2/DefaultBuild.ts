@@ -66,22 +66,27 @@ export class DefaultBuild implements Build {
       const path = await import('path');
       const { execSync } = await import('child_process');
 
-      if (!fs.existsSync(componentPath)) {
-        console.log(`❌ Component path not found: ${componentPath}`);
+      // Resolve component path from project root (compiled at dist/ts/layer2/DefaultBuild.js)
+      const currentDir = path.dirname(new URL(import.meta.url).pathname);
+      const projectRoot = path.resolve(currentDir, '../../../../../..');
+      const fullComponentPath = path.resolve(projectRoot, componentPath);
+
+      if (!fs.existsSync(fullComponentPath)) {
+        console.log(`❌ Component path not found: ${fullComponentPath}`);
         return false;
       }
 
-      const packageJsonPath = path.join(componentPath, 'package.json');
+      const packageJsonPath = path.join(fullComponentPath, 'package.json');
       if (!fs.existsSync(packageJsonPath)) {
-        console.log(`❌ No package.json found in: ${componentPath}`);
+        console.log(`❌ No package.json found in: ${fullComponentPath}`);
         return false;
       }
 
       // Resolve dependencies first
-      await this.resolve(componentPath);
+      await this.resolve(fullComponentPath);
 
       // Build with TypeScript
-      execSync('npx tsc', { cwd: componentPath, stdio: 'inherit' });
+      execSync('npx tsc', { cwd: fullComponentPath, stdio: 'inherit' });
       
       console.log(`✅ Component built successfully: ${componentPath}`);
       return true;
