@@ -1,0 +1,22 @@
+{
+  "ior": {
+    "uuid": "fc64c86c-920f-4b0a-b6ff-6c05f672c91e",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"fc64c86c-920f-4b0a-b6ff-6c05f672c91e\",\"timestamp\":\"2025-09-10T06:00:51.801Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "fc64c86c-920f-4b0a-b6ff-6c05f672c91e",
+    "name": "",
+    "origin": "",
+    "definition": "",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/f/c/6/4/c/fc64c86c-920f-4b0a-b6ff-6c05f672c91e.scenario.json",
+    "references": [],
+    "createdAt": "2025-09-10T06:00:51.799Z",
+    "updatedAt": "2025-09-10T06:00:51.803Z",
+    "symlinkPaths": [
+      "/workspace/unit-fc64c86c"
+    ]
+  }
+}

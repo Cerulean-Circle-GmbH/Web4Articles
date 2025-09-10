@@ -1,0 +1,28 @@
+{
+  "ior": {
+    "uuid": "3a45f805-655a-4e10-89f9-66749bd4093e",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"3a45f805-655a-4e10-89f9-66749bd4093e\",\"timestamp\":\"2025-09-10T06:01:42.333Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "3a45f805-655a-4e10-89f9-66749bd4093e",
+    "name": "Scenario",
+    "origin": "ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Unit/0.3.0.5/src/ts/layer3/Scenario.interface.ts#L1:1-18:1",
+    "definition": "",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/3/a/4/5/f/3a45f805-655a-4e10-89f9-66749bd4093e.scenario.json",
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/temp/Scenario.unit",
+        "linkTarget": "ior:unit:3a45f805-655a-4e10-89f9-66749bd4093e",
+        "syncStatus": "SYNCED"
+      }
+    ],
+    "createdAt": "2025-09-10T06:01:42.328Z",
+    "updatedAt": "2025-09-10T06:01:42.336Z",
+    "symlinkPaths": [
+      "/workspace/temp/Scenario.unit"
+    ]
+  }
+}
