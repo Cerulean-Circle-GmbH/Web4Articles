@@ -10,7 +10,7 @@
 
 ### **Git Operations**
 - `git pull origin branch` - Can hang on merge conflicts requiring interactive resolution
-- `git cherry-pick` - Hangs on conflicts without `--no-commit` flag
+- `git cherry-pick` - 🍒 DANGEROUS: Hangs on conflicts without `--no-commit` flag, use cherry picking as taking work exclusively and committing to another branch
 - `git merge` - Interactive merge conflict resolution
 - `git rebase` - Interactive rebase prompts
 
@@ -25,7 +25,7 @@
 ### **Git Operations**
 - `git pull --no-edit origin branch` - Prevents interactive merge messages
 - `git pull --rebase origin branch` - But requires `git config pull.rebase false` first
-- `git cherry-pick --no-commit` - Prevents interactive conflict resolution
+- `git cherry-pick --no-commit` - 🍒 SAFER: Prevents interactive conflict resolution, but cherry picking = taking work exclusively and committing to another branch
 - `git status` - Always safe, read-only
 
 ### **Package Managers**
