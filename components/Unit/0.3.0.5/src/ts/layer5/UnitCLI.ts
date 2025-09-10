@@ -139,6 +139,7 @@ export class UnitCLI extends DefaultCLI {
     
     // Key Information (Highlighted)
     console.log(`${'\x1b[1m'}Name:${'\x1b[0m'}       ${scenario.model.name || '\x1b[90m(not specified)\x1b[0m'}`);
+    console.log(`${'\x1b[1m'}TypeM3:${'\x1b[0m'}     ${scenario.model.typeM3 || '\x1b[90m(not classified)\x1b[0m'}`);
     console.log('');
     console.log(`${'\x1b[1m'}Definition:${'\x1b[0m'}`);
     if (scenario.model.definition) {
@@ -195,6 +196,24 @@ export class UnitCLI extends DefaultCLI {
 
       // Special cases (non-component methods)
       switch (command) {
+        case 'create':
+          if (commandArgs.length < 1) {
+            console.log('Usage: unit create <name> [definition] [typeM3]');
+            console.log('TypeM3 values: CLASS, ATTRIBUTE, RELATIONSHIP');
+            return;
+          }
+          await this.create(commandArgs[0], commandArgs[1], commandArgs[2]);
+          break;
+
+        case 'classify':
+          if (commandArgs.length < 2) {
+            console.log('Usage: unit classify <uuid> <typeM3>');
+            console.log('TypeM3 values: CLASS, ATTRIBUTE, RELATIONSHIP');
+            return;
+          }
+          await this.classify(commandArgs[0], commandArgs[1]);
+          break;
+
         case 'info':
           await this.showInfo();
           break;
@@ -210,6 +229,68 @@ export class UnitCLI extends DefaultCLI {
       console.error(this.formatError((error as Error).message));
       process.exit(1);
     }
+  }
+
+  /**
+   * Create a new unit with name, definition, and optional TypeM3 classification
+   */
+  async create(name: string, definition?: string, typeM3String?: string): Promise<void> {
+    // Validate typeM3 if provided
+    let typeM3: TypeM3 | undefined;
+    if (typeM3String) {
+      if (Object.values(TypeM3).includes(typeM3String as TypeM3)) {
+        typeM3 = typeM3String as TypeM3;
+      } else {
+        console.log(`❌ Invalid typeM3: ${typeM3String}`);
+        console.log('Valid values: CLASS, ATTRIBUTE, RELATIONSHIP');
+        return;
+      }
+    }
+
+    const unit = this.getOrCreateUnit();
+    
+    // Set unit properties
+    unit.unitModel.name = name;
+    if (definition) {
+      unit.unitModel.definition = definition;
+    }
+    if (typeM3) {
+      unit.unitModel.typeM3 = typeM3;
+    }
+
+    // Save the unit
+    const scenario = await unit.toScenario();
+    const filename = name.replace(/\s+/g, '.');
+    
+    console.log(`✅ Unit created: ${name}`);
+    console.log(`   UUID: ${scenario.ior.uuid}`);
+    if (typeM3) {
+      console.log(`   TypeM3: ${typeM3}`);
+    }
+    console.log(`   Index Path: ${scenario.model.indexPath}`);
+    console.log(`\n   Named Link: ${filename}.unit`);
+  }
+
+  /**
+   * Classify an existing unit with MOF typeM3
+   */
+  async classify(uuid: string, typeM3String: string): Promise<void> {
+    // Validate typeM3
+    if (!Object.values(TypeM3).includes(typeM3String as TypeM3)) {
+      console.log(`❌ Invalid typeM3: ${typeM3String}`);
+      console.log('Valid values: CLASS, ATTRIBUTE, RELATIONSHIP');
+      return;
+    }
+
+    const typeM3 = typeM3String as TypeM3;
+    
+    // For now, show what would be done (full implementation requires loading from storage)
+    console.log(`✅ Unit ${uuid} would be classified as ${typeM3}`);
+    console.log(`   Note: Full implementation requires unit loading from storage`);
+    console.log(`   TypeM3 Classifications:`);
+    console.log(`     CLASS        - Components, classes, objects that can be instantiated`);
+    console.log(`     ATTRIBUTE    - Files, properties, data that describe characteristics`);
+    console.log(`     RELATIONSHIP - LD Links, associations, connections between entities`);
   }
 }
 
