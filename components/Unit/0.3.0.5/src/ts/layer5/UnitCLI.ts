@@ -16,6 +16,8 @@ export class UnitCLI extends DefaultCLI {
     super(); // Call DefaultCLI constructor
     // Don't instantiate unit for usage display - command-based instantiation only
     this.unit = null;
+    // Initialize component reference for dynamic documentation
+    this.component = this.getOrCreateUnit();
   }
 
   /**
@@ -54,14 +56,8 @@ export class UnitCLI extends DefaultCLI {
    * Unit-specific usage display using DefaultCLI dynamic generation
    */
   showUsage(): void {
-    // Use DefaultCLI dynamic usage generation with TSCompletion colors
-    this.generateDynamicUsage('unit', '0.3.0.5');
-    
-    console.log('');
-    console.log(`${this.colors.bold}Web4 Integration:${this.colors.reset}`);
-    console.log(`${this.colors.dim}  Unit operates as atomic Web4 element with terminal identification (uni-t).${this.colors.reset}`);
-    console.log(`${this.colors.dim}  All units use central UUID storage with enhanced references array.${this.colors.reset}`);
-    console.log(`${this.colors.dim}  Internal CLI architecture with DefaultCLI base class and dynamic method discovery.${this.colors.reset}`);
+    // Use new structured usage generation like requirement-v0.1.2.2
+    console.log(this.generateStructuredUsage());
   }
 
   private async createUnit(name: string, description: string = '', typeM3String?: string): Promise<void> {
