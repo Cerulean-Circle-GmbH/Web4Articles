@@ -236,16 +236,21 @@ export class DefaultUnit implements Unit, Upgrade {
       console.log(`   Found ${foundReferences.length} potential references:`);
       
       if (foundReferences.length > 0) {
-        foundReferences.slice(0, 10).forEach((file, index) => {
-          console.log(`   ${index + 1}. ${file}`);
-        });
-        
-        if (foundReferences.length > 10) {
-          console.log(`   ... and ${foundReferences.length - 10} more files`);
+        // ✅ INTERACTIVE: Check if this is a standalone find (no chaining)
+        if (this.isStandaloneFindOperation()) {
+          await this.showInteractiveFindResults(foundReferences, name);
+        } else {
+          // Show summary for chaining
+          foundReferences.slice(0, 5).forEach((file, index) => {
+            console.log(`   ${index + 1}. ${file}`);
+          });
+          
+          if (foundReferences.length > 5) {
+            console.log(`   ... and ${foundReferences.length - 5} more files`);
+          }
+          
+          console.log(`\n   💡 Chain commands: unit.find('${name}').link('file.ts').execute()`);
         }
-        
-        console.log(`\n   💡 Use 'unit link <uuid|lnfile> <file>' to track specific references`);
-        console.log(`   💡 Chain commands: unit.find('${name}').link('file.ts').execute()`);
       } else {
         console.log(`   No references found in project directories`);
       }
@@ -256,6 +261,88 @@ export class DefaultUnit implements Unit, Upgrade {
     } catch (error) {
       console.error(`❌ Failed to search filesystem: ${error instanceof Error ? error.message : error}`);
       throw error;
+    }
+  }
+
+  /**
+   * Check if this is a standalone find operation (no chaining)
+   * @cliHide
+   */
+  private isStandaloneFindOperation(): boolean {
+    // ✅ HEURISTIC: Check if we're in a CLI context without chaining
+    // For now, assume standalone (can be enhanced with chaining detection)
+    return true;
+  }
+
+  /**
+   * Show interactive find results using less for browsing
+   * Web4 pattern: Interactive result browsing for large result sets
+   * @cliHide
+   */
+  private async showInteractiveFindResults(foundReferences: string[], searchTerm: string): Promise<void> {
+    try {
+      // ✅ INTERACTIVE: Use less for large result sets
+      if (foundReferences.length > 20) {
+        console.log(`\n   📄 Opening ${foundReferences.length} results in interactive viewer...`);
+        console.log(`   💡 Use 'q' to quit, '/' to search within results`);
+        
+        // Create temporary file with results
+        const { promises: fs } = await import('fs');
+        const { tmpdir } = await import('os');
+        const path = await import('path');
+        
+        const tempFile = path.join(tmpdir(), `unit-find-${searchTerm}-${Date.now()}.txt`);
+        
+        const content = [
+          `🔍 Filesystem Search Results for: "${searchTerm}"`,
+          `📊 Found ${foundReferences.length} potential references`,
+          `⏰ Search completed: ${new Date().toISOString()}`,
+          '',
+          '📁 Files containing references:',
+          '=' .repeat(50),
+          ...foundReferences.map((file, index) => `${(index + 1).toString().padStart(3)}: ${file}`),
+          '',
+          '💡 Usage Instructions:',
+          '=' .repeat(50),
+          `   unit link <uuid|lnfile> <file>              # Track specific reference`,
+          `   unit find('${searchTerm}').link('file.ts').execute()  # Chain commands`,
+          '',
+          '🔗 Example Commands:',
+          `   unit link 44443290-015c-4720-be80-c42caf842252 ${foundReferences[0] || 'file.ts'}`,
+          `   unit linkInto TSCompletion.ts.unit backup/`,
+          ''
+        ].join('\n');
+        
+        await fs.writeFile(tempFile, content, 'utf-8');
+        
+        // Open in less
+        const { spawn } = await import('child_process');
+        const less = spawn('less', ['+G', tempFile], { stdio: 'inherit' });
+        
+        await new Promise((resolve) => {
+          less.on('close', () => {
+            // Clean up temp file
+            fs.unlink(tempFile).catch(() => {});
+            resolve(void 0);
+          });
+        });
+        
+      } else {
+        // ✅ SIMPLE: Show all results for smaller sets
+        foundReferences.forEach((file, index) => {
+          console.log(`   ${index + 1}. ${file}`);
+        });
+        
+        console.log(`\n   💡 Use 'unit link <uuid|lnfile> <file>' to track specific references`);
+        console.log(`   💡 Chain commands: unit.find('${searchTerm}').link('file.ts').execute()`);
+      }
+      
+    } catch (error) {
+      // Fallback to simple display
+      console.log(`   📄 Interactive display failed, showing simple list:`);
+      foundReferences.slice(0, 20).forEach((file, index) => {
+        console.log(`   ${index + 1}. ${file}`);
+      });
     }
   }
 
