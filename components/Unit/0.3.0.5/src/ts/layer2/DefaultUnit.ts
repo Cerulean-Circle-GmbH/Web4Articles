@@ -283,6 +283,49 @@ export class DefaultUnit implements Unit, Upgrade {
     }
   }
 
+  /**
+   * Enhanced linkInto for tracking copy files as references
+   */
+  async linkIntoCopy(copyFile: string, targetFolder: string, originalUnitUUID?: string): Promise<void> {
+    try {
+      const { promises: fs } = await import('fs');
+      const path = await import('path');
+      
+      // Generate IOR for copy file
+      const copyIOR = this.generateSimpleIOR(copyFile);
+      
+      // If original unit UUID provided, add copy reference to existing unit
+      if (originalUnitUUID) {
+        const originalScenario = await this.storage.loadScenario(originalUnitUUID) as Scenario<UnitModel>;
+        
+        // Add copy reference to original unit (UnitReference format)
+        const copyReference = {
+          linkLocation: copyIOR,
+          linkTarget: `ior:unit:${originalUnitUUID}`,
+          syncStatus: 'SYNCED' as any
+        };
+        
+        originalScenario.model.references.push(copyReference);
+        originalScenario.model.updatedAt = new Date().toISOString();
+        
+        // Update original unit with copy reference
+        await this.storage.saveScenario(originalUnitUUID, originalScenario, []);
+        
+        console.log(`✅ Copy reference added to unit: ${originalUnitUUID}`);
+        console.log(`   Copy file: ${copyFile}`);
+        console.log(`   Copy IOR: ${copyIOR}`);
+        console.log(`   Reference type: copy`);
+        
+      } else {
+        // Create new unit for copy file
+        await this.createFrom(copyFile);
+      }
+      
+    } catch (error) {
+      console.error(`Failed to link copy: ${(error as Error).message}`);
+    }
+  }
+
   async deleteLink(linkFilename: string): Promise<void> {
     try {
       // Resolve link file to get target UUID
@@ -438,6 +481,105 @@ export class DefaultUnit implements Unit, Upgrade {
     } catch (error) {
       console.error(`Failed to create unit from source: ${(error as Error).message}`);
     }
+  }
+
+  /**
+   * Create unit from original file with automatic origin IOR generation
+   */
+  async createFrom(originalFile: string): Promise<void> {
+    try {
+      const { promises: fs } = await import('fs');
+      const path = await import('path');
+      
+      // Generate simple IOR from file
+      const originIOR = await this.generateSimpleIOR(originalFile);
+      
+      // Extract file name for unit name
+      const fileName = path.basename(originalFile, path.extname(originalFile));
+      
+      // Read file for analysis
+      const fileContent = await fs.readFile(originalFile, 'utf-8');
+      
+      // Create unit with origin data
+      this.model.name = fileName;
+      this.model.origin = originIOR;
+      this.model.definition = originIOR; // Same as origin for original files
+      
+      // Analyze file type for TypeM3 classification
+      const extension = path.extname(originalFile);
+      if (extension === '.ts' || extension === '.js') {
+        this.model.typeM3 = TypeM3.CLASS;
+      } else if (extension === '.md' || extension === '.txt') {
+        this.model.typeM3 = TypeM3.ATTRIBUTE;
+      } else {
+        this.model.typeM3 = TypeM3.ATTRIBUTE;
+      }
+      
+      // Store unit
+      await this.storage.saveScenario(this.model.uuid, await this.toScenario(), []);
+      
+      console.log(`✅ Unit created from original file: ${fileName}`);
+      console.log(`   UUID: ${this.model.uuid}`);
+      console.log(`   Origin IOR: ${originIOR}`);
+      console.log(`   File: ${originalFile}`);
+      console.log(`   TypeM3: ${this.model.typeM3}`);
+      
+    } catch (error) {
+      console.error(`Failed to create unit from original file: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Generate simple IOR format: ior:giturlFromFile
+   */
+  private async generateSimpleIOR(filePath: string): Promise<string> {
+    // Simple IOR format as requested
+    const projectRoot = this.findProjectRoot();
+    const path = await import('path');
+    const relativePath = path.relative(projectRoot, filePath);
+    
+    return `ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${relativePath}`;
+  }
+
+  /**
+   * Check if origin has changed and sync is needed
+   */
+  async checkOriginSync(): Promise<{ needsSync: boolean; changes: string[] }> {
+    try {
+      const { promises: fs } = await import('fs');
+      
+      if (!this.model.origin) {
+        return { needsSync: false, changes: [] };
+      }
+      
+      // Extract file path from IOR
+      const filePath = this.extractFilePathFromIOR(this.model.origin);
+      if (!filePath) {
+        return { needsSync: false, changes: ['Cannot extract file path from IOR'] };
+      }
+      
+      // Check if file exists and get modification time
+      const stats = await fs.stat(filePath);
+      const fileModTime = stats.mtime;
+      const unitModTime = new Date(this.model.updatedAt);
+      
+      const needsSync = fileModTime > unitModTime;
+      const changes = needsSync ? [`File modified: ${fileModTime.toISOString()} > Unit: ${unitModTime.toISOString()}`] : [];
+      
+      return { needsSync, changes };
+      
+    } catch (error) {
+      return { needsSync: false, changes: [`Error checking sync: ${(error as Error).message}`] };
+    }
+  }
+
+  /**
+   * Extract file path from IOR format
+   */
+  private extractFilePathFromIOR(ior: string): string | null {
+    // Parse ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/path
+    const match = ior.match(/ior:git:github\.com\/Cerulean-Circle-GmbH\/Web4Articles\/blob\/dev\/once0304\/(.+)/);
+    return match ? match[1] : null;
   }
 
   async definition(uuid: string, filename: string, startPos: string, endPos: string): Promise<void> {
