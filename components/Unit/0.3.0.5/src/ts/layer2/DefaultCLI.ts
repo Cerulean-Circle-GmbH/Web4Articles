@@ -130,9 +130,10 @@ export abstract class DefaultCLI implements CLI {
 
     const signature = this.methodSignatures.get(command)!;
     
-    // Dynamic argument validation
-    if (args.length < signature.paramCount) {
-      throw new Error(`${signature.paramCount} arguments required for ${command} command`);
+    // Dynamic argument validation with overload support
+    const minArgs = this.getMinimumArguments(command);
+    if (args.length < minArgs) {
+      throw new Error(`At least ${minArgs} arguments required for ${command} command`);
     }
 
     // Dynamic method invocation with lazy instantiation
@@ -215,6 +216,18 @@ export abstract class DefaultCLI implements CLI {
     }
     
     return methods;
+  }
+
+  /**
+   * Get minimum arguments for overloaded methods
+   */
+  private getMinimumArguments(command: string): number {
+    // Handle overloaded methods with different minimum arguments
+    const overloadedMethods: { [key: string]: number } = {
+      'from': 1,  // Can be called with 1 (file) or 3 (file, start, end) arguments
+    };
+    
+    return overloadedMethods[command] || this.methodSignatures.get(command)?.paramCount || 0;
   }
 
   /**

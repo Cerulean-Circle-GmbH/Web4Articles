@@ -292,7 +292,7 @@ export class DefaultUnit implements Unit, Upgrade {
       const path = await import('path');
       
       // Generate IOR for copy file
-      const copyIOR = this.generateSimpleIOR(copyFile);
+      const copyIOR = await this.generateSimpleIOR(copyFile);
       
       // If original unit UUID provided, add copy reference to existing unit
       if (originalUnitUUID) {
@@ -317,8 +317,8 @@ export class DefaultUnit implements Unit, Upgrade {
         console.log(`   Reference type: copy`);
         
       } else {
-        // Create new unit for copy file
-        await this.createFrom(copyFile);
+        // Create new unit for copy file using unified from method
+        await this.from(copyFile);
       }
       
     } catch (error) {
@@ -424,110 +424,117 @@ export class DefaultUnit implements Unit, Upgrade {
     }
   }
 
-  async from(filename: string, startPos: string, endPos: string): Promise<void> {
+  // Method overloads for different parameter sets (Decision 5b)
+  async from(filename: string): Promise<void>;
+  async from(filename: string, startPos: string, endPos: string): Promise<void>;
+  async from(filename: string, startPos?: string, endPos?: string): Promise<void> {
     try {
-      // Create unit from file text with extracted name and origin
-      const { promises: fs } = await import('fs');
-      const { GitTextIOR } = await import('./GitTextIOR.js');
-      
-      // Read file content
-      const fileContent = await fs.readFile(filename, 'utf-8');
-      const lines = fileContent.split('\n');
-      
-      // Parse positions (line:column format)
-      const [startLine, startCol] = startPos.split(':').map(Number);
-      const [endLine, endCol] = endPos.split(':').map(Number);
-      
-      // Extract text from specified range
-      let extractedText = '';
-      for (let i = startLine - 1; i <= endLine - 1; i++) {
-        if (i === startLine - 1 && i === endLine - 1) {
-          // Same line
-          extractedText = lines[i].substring(startCol - 1, endCol);
-        } else if (i === startLine - 1) {
-          // Start line
-          extractedText += lines[i].substring(startCol - 1) + '\n';
-        } else if (i === endLine - 1) {
-          // End line
-          extractedText += lines[i].substring(0, endCol);
-        } else {
-          // Middle lines
-          extractedText += lines[i] + '\n';
-        }
+      // Automatic detection based on parameters (Decision 4a)
+      if (startPos && endPos) {
+        // Word-in-file mode: GitTextIOR with positions
+        await this.createFromWordInFile(filename, startPos, endPos);
+      } else {
+        // Complete file mode: Simple ior:url reference
+        await this.createFromCompleteFile(filename);
       }
-      
-      // Extract unit name from text (first word or identifier)
-      const nameMatch = extractedText.match(/\b[A-Za-z][A-Za-z0-9_]*\b/);
-      const unitName = nameMatch ? nameMatch[0] : 'ExtractedUnit';
-      
-      // Create GitTextIOR for origin with absolute path
-      const gitIOR = new GitTextIOR();
-      const { resolve } = await import('path');
-      const absolutePath = resolve(filename);
-      const relativePath = absolutePath.replace('/workspace/', '');
-      const gitUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${relativePath}#L${startPos}-${endPos}`;
-      const originIOR = gitIOR.parse(gitUrl);
-      
-      // Set terminal identity
-      this.setTerminalIdentity(unitName, originIOR, '');
-      
-      // Create unit scenario
-      const scenario = await this.toScenario(unitName);
-      
-      console.log(`✅ Unit created from source: ${unitName}`);
-      console.log(`   UUID: ${scenario.ior.uuid}`);
-      console.log(`   Origin: ${originIOR}`);
-      console.log(`   Extracted from: ${filename} (${startPos}-${endPos})`);
     } catch (error) {
-      console.error(`Failed to create unit from source: ${(error as Error).message}`);
+      console.error(`Failed to create unit from file: ${(error as Error).message}`);
     }
   }
 
   /**
-   * Create unit from original file with automatic origin IOR generation
+   * Create unit from word-in-file with GitTextIOR (precise positioning)
    */
-  async createFrom(originalFile: string): Promise<void> {
-    try {
-      const { promises: fs } = await import('fs');
-      const path = await import('path');
-      
-      // Generate simple IOR from file
-      const originIOR = await this.generateSimpleIOR(originalFile);
-      
-      // Extract file name for unit name
-      const fileName = path.basename(originalFile, path.extname(originalFile));
-      
-      // Read file for analysis
-      const fileContent = await fs.readFile(originalFile, 'utf-8');
-      
-      // Create unit with origin data
-      this.model.name = fileName;
-      this.model.origin = originIOR;
-      this.model.definition = originIOR; // Same as origin for original files
-      
-      // Analyze file type for TypeM3 classification
-      const extension = path.extname(originalFile);
-      if (extension === '.ts' || extension === '.js') {
-        this.model.typeM3 = TypeM3.CLASS;
-      } else if (extension === '.md' || extension === '.txt') {
-        this.model.typeM3 = TypeM3.ATTRIBUTE;
+  private async createFromWordInFile(filename: string, startPos: string, endPos: string): Promise<void> {
+    const { promises: fs } = await import('fs');
+    const { GitTextIOR } = await import('./GitTextIOR.js');
+    
+    // Read file content
+    const fileContent = await fs.readFile(filename, 'utf-8');
+    const lines = fileContent.split('\n');
+    
+    // Parse positions (line:column format)
+    const [startLine, startCol] = startPos.split(':').map(Number);
+    const [endLine, endCol] = endPos.split(':').map(Number);
+    
+    // Extract text from specified range
+    let extractedText = '';
+    for (let i = startLine - 1; i <= endLine - 1; i++) {
+      if (i === startLine - 1 && i === endLine - 1) {
+        // Same line
+        extractedText = lines[i].substring(startCol - 1, endCol);
+      } else if (i === startLine - 1) {
+        // Start line
+        extractedText += lines[i].substring(startCol - 1) + '\n';
+      } else if (i === endLine - 1) {
+        // End line
+        extractedText += lines[i].substring(0, endCol);
       } else {
-        this.model.typeM3 = TypeM3.ATTRIBUTE;
+        // Middle lines
+        extractedText += lines[i] + '\n';
       }
-      
-      // Store unit
-      await this.storage.saveScenario(this.model.uuid, await this.toScenario(), []);
-      
-      console.log(`✅ Unit created from original file: ${fileName}`);
-      console.log(`   UUID: ${this.model.uuid}`);
-      console.log(`   Origin IOR: ${originIOR}`);
-      console.log(`   File: ${originalFile}`);
-      console.log(`   TypeM3: ${this.model.typeM3}`);
-      
-    } catch (error) {
-      console.error(`Failed to create unit from original file: ${(error as Error).message}`);
     }
+    
+    // Extract unit name from text (first word or identifier)
+    const nameMatch = extractedText.match(/\b[A-Za-z][A-Za-z0-9_]*\b/);
+    const unitName = nameMatch ? nameMatch[0] : 'ExtractedUnit';
+    
+    // Create GitTextIOR for origin with absolute path
+    const gitIOR = new GitTextIOR();
+    const { resolve } = await import('path');
+    const absolutePath = resolve(filename);
+    const relativePath = absolutePath.replace('/workspace/', '');
+    const gitUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${relativePath}#L${startPos}-${endPos}`;
+    const originIOR = gitIOR.parse(gitUrl);
+    
+    // Set terminal identity
+    this.setTerminalIdentity(unitName, originIOR, '');
+    
+    console.log(`✅ Unit created from word-in-file: ${unitName}`);
+    console.log(`   UUID: ${this.model.uuid}`);
+    console.log(`   Origin GitTextIOR: ${originIOR}`);
+    console.log(`   Extracted from: ${filename} (${startPos}-${endPos})`);
   }
+
+  /**
+   * Create unit from complete file with simple ior:url reference
+   */
+  private async createFromCompleteFile(filename: string): Promise<void> {
+    const { promises: fs } = await import('fs');
+    const path = await import('path');
+    
+    // Generate simple IOR from file (Decision 4a)
+    const originIOR = await this.generateSimpleIOR(filename);
+    
+    // Extract file name for unit name
+    const fileName = path.basename(filename, path.extname(filename));
+    
+    // Analyze file type for TypeM3 classification
+    const extension = path.extname(filename);
+    if (extension === '.ts' || extension === '.js') {
+      this.model.typeM3 = TypeM3.CLASS;
+    } else if (extension === '.md' || extension === '.txt') {
+      this.model.typeM3 = TypeM3.ATTRIBUTE;
+    } else {
+      this.model.typeM3 = TypeM3.ATTRIBUTE;
+    }
+    
+    // Update unit model
+    this.model.name = fileName;
+    this.model.origin = originIOR;
+    this.model.definition = originIOR; // Same as origin for complete files
+    this.model.updatedAt = new Date().toISOString();
+    
+    // Store unit
+    await this.storage.saveScenario(this.model.uuid, await this.toScenario(), []);
+    
+    console.log(`✅ Unit created from complete file: ${fileName}`);
+    console.log(`   UUID: ${this.model.uuid}`);
+    console.log(`   Origin IOR: ${originIOR}`);
+    console.log(`   File: ${filename}`);
+    console.log(`   TypeM3: ${this.model.typeM3}`);
+  }
+
 
   /**
    * Generate simple IOR format: ior:giturlFromFile
