@@ -233,96 +233,175 @@ export class DefaultUnit implements Unit, Upgrade {
     }
   }
 
-  async linkInto(linkFilename: string, targetFolder: string): Promise<void> {
+  /**
+   * Create link to unit in target folder with enhanced parameter support
+   * Web4 pattern: Unified interface supporting both UUID and ln file parameters
+   * 
+   * @param uuidOrLnFile - Unit UUID (36-character) or existing ln file path
+   * @param targetFolder - Target directory for link creation (relative to project root)
+   * @returns Promise<void> - Resolves when link creation completes
+   * @throws Error when UUID/file invalid or target folder inaccessible
+   * @example
+   * ```typescript
+   * await unit.linkInto('44443290-015c-4720-be80-c42caf842252', 'components/backup/');
+   * await unit.linkInto('TSCompletion.ts.unit', 'components/backup/');
+   * ```
+   */
+  async linkInto(uuidOrLnFile: string, targetFolder: string): Promise<void> {
     try {
-      // Read existing link to get target UUID
-      const { readlinkSync } = await import('fs');
+      const { promises: fs } = await import('fs');
       const { resolve, basename } = await import('path');
       
-      const currentDir = process.cwd();
-      const existingLinkPath = resolve(currentDir, linkFilename);
+      let uuid: string;
+      let linkFilename: string;
       
-      // Extract UUID from existing link
-      const scenarioPath = readlinkSync(existingLinkPath);
-      const uuid = this.extractUuidFromPath(scenarioPath);
+      // Determine if parameter is UUID or ln file
+      if (this.isUUID(uuidOrLnFile)) {
+        // Parameter is UUID - use unit name for filename
+        uuid = uuidOrLnFile;
+        const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+        linkFilename = this.convertNameToFilename(scenario.model.name) + '.unit';
+      } else {
+        // Parameter is ln file - extract UUID and preserve filename
+        const { readlinkSync } = await import('fs');
+        const currentDir = process.cwd();
+        const existingLinkPath = resolve(currentDir, uuidOrLnFile);
+        
+        // Extract UUID from existing link
+        const scenarioPath = readlinkSync(existingLinkPath);
+        uuid = this.extractUuidFromPath(scenarioPath);
+        linkFilename = basename(uuidOrLnFile);
+      }
       
       // Load unit scenario
       const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
       
       // Create new link in target folder
       const targetPath = resolve(targetFolder);
-      const linkBasename = basename(linkFilename);
-      const newLinkPath = `${targetPath}/${linkBasename}`;
+      const newLinkPath = `${targetPath}/${linkFilename}`;
       
       // Create directory if it doesn't exist
-      const { mkdir } = await import('fs/promises');
-      await mkdir(targetPath, { recursive: true });
+      await fs.mkdir(targetPath, { recursive: true });
       
-      // Create symbolic link to same scenario
-      const { symlink } = await import('fs/promises');
+      // Create symbolic link to scenario
       const relativePath = await this.calculateRelativePath(targetPath, scenario.model.indexPath);
-      await symlink(relativePath, newLinkPath);
+      await fs.symlink(relativePath, newLinkPath);
       
-      // Update scenario model with new link
+      // Update scenario model with new link reference
       scenario.model.references.push({
         linkLocation: `ior:local:ln:file:${newLinkPath}`,
         linkTarget: `ior:unit:${uuid}`,
         syncStatus: SyncStatus.SYNCED
       });
+      scenario.model.updatedAt = new Date().toISOString();
       
       // Save updated scenario
       await this.storage.saveScenario(uuid, scenario, []);
       
-      console.log(`✅ Additional link created: ${linkBasename}`);
-      console.log(`   Source: ${existingLinkPath}`);
+      console.log(`✅ Link created in target folder: ${linkFilename}`);
+      console.log(`   Unit: ${scenario.model.name} (${uuid})`);
       console.log(`   Target: ${newLinkPath}`);
-      console.log(`   Unit: ${uuid}`);
-      console.log(`   Total links: ${[].length}`);
+      console.log(`   References: ${scenario.model.references.length}`);
     } catch (error) {
-      console.error(`Failed to create additional link: ${(error as Error).message}`);
+      console.error(`❌ Failed to create link: ${error instanceof Error ? error.message : error}`);
+      throw error;
     }
   }
 
   /**
-   * Enhanced linkInto for tracking copy files as references
+   * Create link with copy tracking and enhanced parameter support
+   * Web4 pattern: Unified interface supporting both UUID and ln file parameters with copy tracking
+   * 
+   * @param uuidOrLnFile - Unit UUID (36-character) or existing ln file path
+   * @param targetFolder - Target directory for link creation (relative to project root)
+   * @param originalUnitUUID - Optional original unit UUID for copy reference tracking
+   * @returns Promise<void> - Resolves when link creation and copy tracking completes
+   * @throws Error when UUID/file invalid or target folder inaccessible
+   * @example
+   * ```typescript
+   * await unit.linkIntoCopy('44443290-015c-4720-be80-c42caf842252', 'components/backup/', 'original-uuid');
+   * await unit.linkIntoCopy('TSCompletion.ts.unit', 'components/backup/', 'original-uuid');
+   * ```
    */
-  async linkIntoCopy(copyFile: string, targetFolder: string, originalUnitUUID?: string): Promise<void> {
+  async linkIntoCopy(uuidOrLnFile: string, targetFolder: string, originalUnitUUID?: string): Promise<void> {
     try {
       const { promises: fs } = await import('fs');
-      const path = await import('path');
+      const { resolve, basename } = await import('path');
       
-      // Generate IOR for copy file
-      const copyIOR = await this.generateSimpleIOR(copyFile);
+      let uuid: string;
+      let linkFilename: string;
       
-      // If original unit UUID provided, add copy reference to existing unit
-      if (originalUnitUUID) {
-        const originalScenario = await this.storage.loadScenario(originalUnitUUID) as Scenario<UnitModel>;
-        
-        // Add copy reference to original unit (UnitReference format)
-        const copyReference = {
-          linkLocation: copyIOR,
-          linkTarget: `ior:unit:${originalUnitUUID}`,
-          syncStatus: 'SYNCED' as any
-        };
-        
-        originalScenario.model.references.push(copyReference);
-        originalScenario.model.updatedAt = new Date().toISOString();
-        
-        // Update original unit with copy reference
-        await this.storage.saveScenario(originalUnitUUID, originalScenario, []);
-        
-        console.log(`✅ Copy reference added to unit: ${originalUnitUUID}`);
-        console.log(`   Copy file: ${copyFile}`);
-        console.log(`   Copy IOR: ${copyIOR}`);
-        console.log(`   Reference type: copy`);
-        
+      // Determine if parameter is UUID or ln file
+      if (this.isUUID(uuidOrLnFile)) {
+        // Parameter is UUID - use unit name for filename
+        uuid = uuidOrLnFile;
+        const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+        linkFilename = this.convertNameToFilename(scenario.model.name) + '.unit';
       } else {
-        // Create new unit for copy file using unified from method
-        await this.from(copyFile);
+        // Parameter is ln file - extract UUID and preserve filename
+        const { readlinkSync } = await import('fs');
+        const currentDir = process.cwd();
+        const existingLinkPath = resolve(currentDir, uuidOrLnFile);
+        
+        // Extract UUID from existing link
+        const scenarioPath = readlinkSync(existingLinkPath);
+        uuid = this.extractUuidFromPath(scenarioPath);
+        linkFilename = basename(uuidOrLnFile);
       }
       
+      // Load unit scenario
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      // Create new link in target folder
+      const targetPath = resolve(targetFolder);
+      const newLinkPath = `${targetPath}/${linkFilename}`;
+      
+      // Create directory if it doesn't exist
+      await fs.mkdir(targetPath, { recursive: true });
+      
+      // Create symbolic link to scenario
+      const relativePath = await this.calculateRelativePath(targetPath, scenario.model.indexPath);
+      await fs.symlink(relativePath, newLinkPath);
+      
+      // Update scenario model with new link reference
+      scenario.model.references.push({
+        linkLocation: `ior:local:ln:file:${newLinkPath}`,
+        linkTarget: `ior:unit:${uuid}`,
+        syncStatus: SyncStatus.SYNCED
+      });
+      scenario.model.updatedAt = new Date().toISOString();
+      
+      // If original unit UUID provided, add copy reference tracking
+      if (originalUnitUUID) {
+        const copyIOR = await this.generateSimpleIOR(newLinkPath);
+        const originalScenario = await this.storage.loadScenario(originalUnitUUID) as Scenario<UnitModel>;
+        
+        // Add copy reference to original unit
+        originalScenario.model.references.push({
+          linkLocation: copyIOR,
+          linkTarget: `ior:unit:${originalUnitUUID}`,
+          syncStatus: SyncStatus.SYNCED
+        });
+        originalScenario.model.updatedAt = new Date().toISOString();
+        
+        // Save original unit with copy reference
+        await this.storage.saveScenario(originalUnitUUID, originalScenario, []);
+        
+        console.log(`✅ Copy reference added to original unit: ${originalUnitUUID}`);
+      }
+      
+      // Save updated scenario
+      await this.storage.saveScenario(uuid, scenario, []);
+      
+      console.log(`✅ Link with copy tracking created: ${linkFilename}`);
+      console.log(`   Unit: ${scenario.model.name} (${uuid})`);
+      console.log(`   Target: ${newLinkPath}`);
+      console.log(`   Copy tracking: ${originalUnitUUID ? 'enabled' : 'disabled'}`);
+      console.log(`   References: ${scenario.model.references.length}`);
+      
     } catch (error) {
-      console.error(`Failed to link copy: ${(error as Error).message}`);
+      console.error(`❌ Failed to create link with copy tracking: ${error instanceof Error ? error.message : error}`);
+      throw error;
     }
   }
 
@@ -1046,5 +1125,37 @@ export class DefaultUnit implements Unit, Upgrade {
       // Continue search even if some directories are inaccessible
       console.warn(`⚠️  Could not search directory: ${dirPath}`);
     }
+  }
+
+  /**
+   * Check if string is a valid UUID format
+   * Helper method for parameter type detection
+   */
+  private isUUID(str: string): boolean {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(str);
+  }
+
+  /**
+   * Convert unit name to filename with proper character replacement
+   * Web4 pattern: Spaces to dots, lowercase, safe filename characters
+   * 
+   * @param name - Unit name to convert
+   * @returns Filename-safe string with spaces converted to dots
+   * @example
+   * ```typescript
+   * convertNameToFilename("TS Completion") // returns "ts.completion"
+   * convertNameToFilename("User Manager") // returns "user.manager"
+   * ```
+   */
+  private convertNameToFilename(name: string): string {
+    if (!name) return 'unnamed';
+    
+    return name
+      .toLowerCase()                    // Convert to lowercase
+      .replace(/\s+/g, '.')            // Replace spaces with dots
+      .replace(/[^a-z0-9.-]/g, '')     // Remove non-alphanumeric chars except dots and dashes
+      .replace(/\.+/g, '.')            // Replace multiple dots with single dot
+      .replace(/^\.+|\.+$/g, '');      // Remove leading/trailing dots
   }
 }

@@ -406,8 +406,8 @@ export abstract class DefaultCLI implements CLI {
       'create': ['name', 'description', 'typeM3'],
       'classify': ['uuid', 'typeM3'],
       'link': ['uuid', 'filename'],
-      'linkInto': ['linkfile', 'targetfolder'],
-      'linkIntoCopy': ['uuid', 'filename', 'targetfolder'],
+      'linkInto': ['uuidOrLnFile', 'targetfolder'],
+      'linkIntoCopy': ['uuidOrLnFile', 'targetfolder', 'originalUnitUUID'],
       'list': ['uuid'],
       'origin': ['uuid'],
       'deleteLink': ['linkfile'],
@@ -482,6 +482,8 @@ export abstract class DefaultCLI implements CLI {
       'oldLinkPath': 'Current link file path (relative to project root, .unit/.link extension)',
       'newLinkPath': 'New link file path (relative to project root, .unit/.link extension)',
       'newName': 'New name for the unit (kebab-case preferred, will update all references)',
+      'uuidOrLnFile': 'Unit UUID (36-character) or existing ln file path (.unit/.link extension)',
+      'originalUnitUUID': 'Optional original unit UUID for copy reference tracking (36-character)',
       'arg1': 'First method argument (context-dependent parameter)',
       'arg2': 'Second method argument (context-dependent parameter)',
       'arg3': 'Third method argument (context-dependent parameter)'
@@ -560,7 +562,9 @@ export abstract class DefaultCLI implements CLI {
       'version': ['0.3.0.5', 'latest', '1.0.0'],
       'oldLinkPath': ['TSCompletion.unit', 'auth-validator.link', 'components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.unit'],
       'newLinkPath': ['TSCompletion.ts.unit', 'auth-validator-enhanced.link', 'components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.ts.unit'],
-      'newName': ['ts-completion-enhanced', 'auth-validator-v2', 'user-manager-pro']
+      'newName': ['ts-completion-enhanced', 'auth-validator-v2', 'user-manager-pro'],
+      'uuidOrLnFile': ['44443290-015c-4720-be80-c42caf842252', 'TSCompletion.ts.unit', 'auth-validator.link'],
+      'originalUnitUUID': ['12345678-1234-1234-1234-123456789abc', '98765432-4321-4321-4321-210987654321']
     };
     
     return examples[paramName] || [`${paramName}-example`];
