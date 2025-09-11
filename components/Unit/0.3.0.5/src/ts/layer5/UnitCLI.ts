@@ -170,15 +170,14 @@ export class UnitCLI extends DefaultCLI {
       // Component already initialized with class reference in constructor
       // No need to create instance for method discovery
 
-      // Try dynamic command execution first (TSRanger 2.2 pattern)
-      if (await this.executeDynamicCommand(command, commandArgs)) {
-        return; // Command executed successfully
+      // ✅ METHOD CHAINING: Check for chained commands FIRST
+      if (await this.executeMethodChain(command, commandArgs)) {
+        return; // Method chain executed successfully
       }
 
-      // ✅ SPECIAL: Handle compound commands like "find <name> list"
-      if (command === 'find' && commandArgs.length >= 2 && commandArgs[1] === 'list') {
-        await this.executeFindAndList(commandArgs[0]);
-        return;
+      // Try dynamic command execution (TSRanger 2.2 pattern)
+      if (await this.executeDynamicCommand(command, commandArgs)) {
+        return; // Command executed successfully
       }
 
       // Special cases (non-component methods)
@@ -215,6 +214,107 @@ export class UnitCLI extends DefaultCLI {
     } catch (error) {
       console.error(this.formatError((error as Error).message));
       process.exit(1);
+    }
+  }
+
+  /**
+   * Execute method chaining from CLI arguments
+   * Web4 pattern: CLI method chaining support for natural language commands
+   */
+  private async executeMethodChain(command: string, args: string[]): Promise<boolean> {
+    // ✅ CHAINING: Parse method chain from CLI arguments
+    // Example: "find Unit list" → unit.find("Unit").list()
+    
+    if (command === 'find' && args.length >= 2) {
+      const searchTerm = args[0];
+      const chainedMethods = args.slice(1);
+      
+      console.log(`🔗 Method chaining detected: find("${searchTerm}").${chainedMethods.join('.')}`);
+      
+      // Start with find
+      const unit = this.getOrCreateUnit();
+      let chainedUnit = await unit.find(searchTerm);
+      
+      // Execute chained methods
+      for (const methodName of chainedMethods) {
+        if (methodName === 'list') {
+          // ✅ INTERACTIVE: Execute list with less for interactive browsing
+          console.log(`📄 Executing interactive list for ${searchTerm} references...`);
+          await this.executeInteractiveList(chainedUnit);
+          return true;
+        }
+        // Add support for other chainable methods here
+      }
+      
+      return true;
+    }
+    
+    return false; // No method chain recognized
+  }
+
+  /**
+   * Execute interactive list with less for browsing found references
+   * Web4 pattern: Interactive reference browsing with less pager
+   */
+  private async executeInteractiveList(unit: DefaultUnit): Promise<void> {
+    try {
+      const extendedModel = (unit as any).unitModel;
+      const foundRefs = extendedModel.foundReferences;
+      
+      if (!foundRefs || !foundRefs.files || foundRefs.files.length === 0) {
+        console.log(`❌ No found references available`);
+        console.log(`   💡 Use 'unit find <name>' first to discover references`);
+        return;
+      }
+      
+      console.log(`📄 Opening ${foundRefs.count} references in interactive viewer...`);
+      console.log(`   💡 Use 'q' to quit, '/' to search, arrow keys to navigate\n`);
+      
+      // Create formatted content for less
+      const { promises: fs } = await import('fs');
+      const { tmpdir } = await import('os');
+      const path = await import('path');
+      
+      const tempFile = path.join(tmpdir(), `unit-find-${foundRefs.searchTerm}-${Date.now()}.txt`);
+      
+      const content = [
+        `🔍 Filesystem Search Results for: "${foundRefs.searchTerm}"`,
+        `📊 Found ${foundRefs.count} potential references`,
+        `⏰ Search completed: ${foundRefs.timestamp}`,
+        '',
+        '📁 Files containing references:',
+        '=' .repeat(80),
+        ...foundRefs.files.map((file: string, index: number) => 
+          `${(index + 1).toString().padStart(4)}: ${file}`
+        ),
+        '',
+        '💡 Usage Instructions:',
+        '=' .repeat(80),
+        `   unit link <uuid|lnfile> <file>              # Track specific reference`,
+        `   unit references <uuid|lnfile>               # Show existing unit references`,
+        '',
+        '🔗 Example Commands:',
+        `   unit link 44443290-015c-4720-be80-c42caf842252 ${foundRefs.files[0] || 'file.ts'}`,
+        `   unit linkInto TSCompletion.ts.unit backup/`,
+        ''
+      ].join('\n');
+      
+      await fs.writeFile(tempFile, content, 'utf-8');
+      
+      // ✅ INTERACTIVE: Open in less for paging
+      const { spawn } = await import('child_process');
+      const less = spawn('less', ['-R', tempFile], { stdio: 'inherit' });
+      
+      await new Promise((resolve) => {
+        less.on('close', () => {
+          // Clean up temp file
+          fs.unlink(tempFile).catch(() => {});
+          resolve(void 0);
+        });
+      });
+      
+    } catch (error) {
+      console.error(`❌ Failed to show interactive list: ${error instanceof Error ? error.message : error}`);
     }
   }
 
