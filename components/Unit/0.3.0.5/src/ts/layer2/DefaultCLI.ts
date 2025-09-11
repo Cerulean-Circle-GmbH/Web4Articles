@@ -405,14 +405,14 @@ export abstract class DefaultCLI implements CLI {
    */
   protected getTSCompletionColors(): ColorScheme {
     return {
-      toolName: '\x1b[1;36m',
-      version: '\x1b[1;33m',
-      commands: '\x1b[1;32m',
-      parameters: '\x1b[1;35m',
-      descriptions: '\x1b[0;37m',
-      examples: '\x1b[0;33m',
-      sections: '\x1b[1;34m',
-      reset: '\x1b[0m'
+      toolName: '\x1b[1;36m',      // Cyan for unit
+      version: '\x1b[1;36m',       // Cyan for version
+      commands: '\x1b[0;37m',      // White for commands
+      parameters: '\x1b[1;33m',    // Yellow for parameters
+      descriptions: '\x1b[0;32m',  // Green for documentation
+      examples: '\x1b[0;37m',      // White for examples (commands)
+      sections: '\x1b[1;37m',      // White bold for section headers
+      reset: '\x1b[0m'             // Reset
     };
   }
 
@@ -425,8 +425,12 @@ export abstract class DefaultCLI implements CLI {
     
     let output = `${colors.sections}Commands:${colors.reset}\n`;
     
+    // Calculate max command name length for alignment
+    const maxCommandLength = Math.max(...methods.map(m => m.name.length));
+    
     for (const method of methods) {
-      output += `  ${colors.commands}${method.name}${colors.reset}       ${colors.descriptions}${method.description}${colors.reset}\n`;
+      const padding = ' '.repeat(maxCommandLength - method.name.length + 3);
+      output += `  ${colors.commands}${method.name}${colors.reset}${padding}${colors.descriptions}${method.description}${colors.reset}\n`;
     }
     
     return output;
@@ -450,8 +454,13 @@ export abstract class DefaultCLI implements CLI {
     
     let output = `${colors.sections}Parameters:${colors.reset}\n`;
     
+    // Calculate max parameter name length for column alignment
+    const maxParamLength = Math.max(...Array.from(uniqueParams.keys()).map(name => name.length + 2)); // +2 for < >
+    
     for (const [name, param] of uniqueParams) {
-      output += `  ${colors.parameters}<${name}>${colors.reset}        ${colors.descriptions}${param.description}${colors.reset}\n`;
+      const paramDisplay = `<${name}>`;
+      const padding = ' '.repeat(maxParamLength - paramDisplay.length + 3);
+      output += `  ${colors.parameters}${paramDisplay}${colors.reset}${padding}${colors.descriptions}${param.description}${colors.reset}\n`;
     }
     
     return output;
@@ -474,8 +483,16 @@ export abstract class DefaultCLI implements CLI {
         output += `  ${colors.descriptions}# ${category.charAt(0).toUpperCase() + category.slice(1)} operations${colors.reset}\n`;
         
         for (const method of categoryMethods.slice(0, 2)) {
-          const paramList = method.parameters.map(p => `"${p.name}"`).join(' ');
-          output += `  ${colors.examples}${this.getComponentName().toLowerCase()} ${method.name} ${paramList}${colors.reset}  ${colors.descriptions}# ${method.description}${colors.reset}\n`;
+          const componentName = this.getComponentName().toLowerCase();
+          const exampleParams = method.parameters.map(p => {
+            const examples = this.generateParameterExamples(p.name);
+            return examples[0] || p.name;
+          }).join(' ');
+          
+          const exampleCommand = `${componentName} ${method.name} ${exampleParams}`;
+          const padding = ' '.repeat(Math.max(1, 50 - exampleCommand.length));
+          
+          output += `  ${colors.commands}${componentName}${colors.reset} ${colors.commands}${method.name}${colors.reset} ${colors.parameters}${exampleParams}${colors.reset}${padding}${colors.descriptions}# ${method.description}${colors.reset}\n`;
         }
         output += '\n';
       }
@@ -505,18 +522,26 @@ export abstract class DefaultCLI implements CLI {
     const keyMethods = ['create', 'classify', 'link', 'list', 'deleteLink', 'execute', 'info', 'help'];
     const displayMethods = methods.filter(m => keyMethods.includes(m.name)).slice(0, 8);
     
+    // Calculate max command length for column alignment
+    let maxCommandLength = 0;
+    for (const method of displayMethods) {
+      const paramList = method.parameters.map(p => {
+        return p.required ? `<${p.name}>` : `[${p.name}]`;
+      }).join(' ');
+      const fullCommand = `${componentName.toLowerCase()} ${method.name} ${paramList}`;
+      maxCommandLength = Math.max(maxCommandLength, fullCommand.length);
+    }
+    
     for (const method of displayMethods) {
       const paramList = method.parameters.map(p => {
         return p.required ? `<${p.name}>` : `[${p.name}]`;
       }).join(' ');
       
-      output += `  ${colors.commands}${componentName.toLowerCase()} ${method.name}${colors.reset} ${colors.parameters}${paramList}${colors.reset}`;
+      const commandPart = `${componentName.toLowerCase()} ${method.name}`;
+      const fullCommand = `${commandPart} ${paramList}`;
+      const padding = ' '.repeat(Math.max(1, maxCommandLength - fullCommand.length + 3));
       
-      // Add spacing for alignment like requirement output
-      const spacing = Math.max(1, 40 - (componentName.length + method.name.length + paramList.length));
-      output += ' '.repeat(spacing);
-      
-      output += `${colors.descriptions}# ${method.description}${colors.reset}\n`;
+      output += `  ${colors.commands}${componentName.toLowerCase()} ${method.name}${colors.reset} ${colors.parameters}${paramList}${colors.reset}${padding}${colors.descriptions}# ${method.description}${colors.reset}\n`;
     }
     output += '\n';
     
