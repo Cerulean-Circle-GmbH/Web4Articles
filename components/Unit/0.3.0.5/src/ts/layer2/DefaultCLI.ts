@@ -199,7 +199,7 @@ export abstract class DefaultCLI implements CLI {
     const methodNames = Object.getOwnPropertyNames(prototype);
     
     for (const name of methodNames) {
-      if (name === 'constructor' || name.startsWith('_')) continue;
+      if (name === 'constructor' || name.startsWith('_') || this.isInternalMethod(name)) continue;
       
       const method = prototype[name];
       if (typeof method === 'function') {
@@ -793,6 +793,33 @@ export abstract class DefaultCLI implements CLI {
     // Extract base type name (remove import paths, generics, etc.)
     const baseType = typeName.replace(/.*\./, '').replace(/<.*>/, '');
     return typeMap[baseType] || baseType.toLowerCase();
+  }
+
+  /**
+   * Check if method is internal and should be hidden from CLI
+   * Web4 pattern: Internal method detection for clean CLI interface
+   */
+  private isInternalMethod(methodName: string): boolean {
+    // ✅ INTERNAL: Utility methods that should be hidden from CLI
+    const internalMethods = [
+      'extractUuidFromPath',
+      'calculateRelativePath', 
+      'checkOriginSync',
+      'resolveSpeakingName',
+      'findProjectRoot',
+      'isUUID',
+      'convertNameToFilename',
+      'generateSimpleIOR',
+      'extractFilePathFromIOR',
+      'transformArraysToReferences',
+      'findFilesToRename',
+      'upgradeToVersion035',
+      'createFromWordInFile',
+      'createFromCompleteFile',
+      'notifyOriginOfCopyChange'
+    ];
+    
+    return internalMethods.includes(methodName);
   }
 
   /**
