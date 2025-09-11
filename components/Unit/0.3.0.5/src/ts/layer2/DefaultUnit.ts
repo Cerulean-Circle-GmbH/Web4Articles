@@ -8,6 +8,8 @@ import { Upgrade } from '../layer3/Upgrade.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { UnitModel } from '../layer3/UnitModel.interface.js';
 import { UnitReference, SyncStatus } from '../layer3/UnitReference.interface.js';
+import { UnitIdentifier, isUUIDv4, isFilePath } from '../layer3/UnitIdentifier.type.js';
+import { UUIDv4 } from '../layer3/UUIDv4.class.js';
 import { TypeM3 } from '../layer3/TypeM3.enum.js';
 import { Model } from '../layer3/Model.interface.js';
 import { DefaultStorage } from './DefaultStorage.js';
@@ -234,20 +236,20 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * Create link to unit in target folder with enhanced parameter support
-   * Web4 pattern: Unified interface supporting both UUID and ln file parameters
+   * Create link to unit in target folder with TypeScript union type support
+   * Web4 pattern: Union type interface supporting both UUIDv4 and file path parameters
    * 
-   * @param uuidOrLnFile - Unit UUID (36-character) or existing ln file path
+   * @param identifier - Unit identifier (UUIDv4 instance or file path string)
    * @param targetFolder - Target directory for link creation (relative to project root)
    * @returns Promise<void> - Resolves when link creation completes
    * @throws Error when UUID/file invalid or target folder inaccessible
    * @example
    * ```typescript
-   * await unit.linkInto('44443290-015c-4720-be80-c42caf842252', 'components/backup/');
+   * await unit.linkInto(UUIDv4.from('44443290-015c-4720-be80-c42caf842252'), 'components/backup/');
    * await unit.linkInto('TSCompletion.ts.unit', 'components/backup/');
    * ```
    */
-  async linkInto(uuidOrLnFile: string, targetFolder: string): Promise<void> {
+  async linkInto(identifier: UnitIdentifier, targetFolder: string): Promise<void> {
     try {
       const { promises: fs } = await import('fs');
       const { resolve, basename } = await import('path');
@@ -255,22 +257,24 @@ export class DefaultUnit implements Unit, Upgrade {
       let uuid: string;
       let linkFilename: string;
       
-      // Determine if parameter is UUID or ln file
-      if (this.isUUID(uuidOrLnFile)) {
-        // Parameter is UUID - use unit name for filename
-        uuid = uuidOrLnFile;
+      // ✅ NEW: Use TypeScript union type guards for parameter discrimination
+      if (isUUIDv4(identifier)) {
+        // Parameter is UUIDv4 - use unit name for filename
+        uuid = identifier.toString();
         const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
         linkFilename = this.convertNameToFilename(scenario.model.name) + '.unit';
-      } else {
-        // Parameter is ln file - extract UUID and preserve filename
+      } else if (isFilePath(identifier)) {
+        // Parameter is file path - extract UUID and preserve filename
         const { readlinkSync } = await import('fs');
         const currentDir = process.cwd();
-        const existingLinkPath = resolve(currentDir, uuidOrLnFile);
+        const existingLinkPath = resolve(currentDir, identifier);
         
         // Extract UUID from existing link
         const scenarioPath = readlinkSync(existingLinkPath);
         uuid = this.extractUuidFromPath(scenarioPath);
-        linkFilename = basename(uuidOrLnFile);
+        linkFilename = basename(identifier);
+      } else {
+        throw new Error(`Invalid identifier type: ${typeof identifier}`);
       }
       
       // Load unit scenario

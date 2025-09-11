@@ -273,13 +273,18 @@ export abstract class DefaultCLI implements CLI {
         
         return paramInfo.map((param: any, index: number) => {
           const paramName = param.name || this.generateIntelligentParameterName(methodName, index);
+          const paramType = param.type || 'any';
+          
           return {
             name: paramName,
-            type: param.type || 'any',
+            type: paramType,
             required: param.required !== false,
             description: param.description || this.generateParameterDescription(methodName, paramName, index),
             examples: this.generateParameterExamples(paramName),
-            validation: []
+            validation: [],
+            // ✅ NEW: Union type detection for CLI syntax generation
+            isUnionType: this.isUnionType(paramType),
+            unionTypes: this.extractUnionTypes(paramType)
           };
         });
       }
@@ -732,6 +737,74 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
+   * Check if parameter type is a union type
+   * Web4 pattern: Union type detection for CLI syntax generation
+   */
+  private isUnionType(paramType: string): boolean {
+    // Detect TypeScript union types (e.g., "UUIDv4 | string", "string | number")
+    return paramType.includes(' | ') || paramType.includes('|');
+  }
+
+  /**
+   * Extract individual types from union type
+   * Web4 pattern: Union type parsing for CLI documentation
+   */
+  private extractUnionTypes(paramType: string): string[] {
+    if (!this.isUnionType(paramType)) {
+      return [paramType];
+    }
+    
+    // Split union type and clean up whitespace
+    return paramType.split('|').map(type => type.trim());
+  }
+
+  /**
+   * Generate CLI parameter syntax from type information
+   * Web4 pattern: Dynamic CLI syntax generation from TypeScript types
+   */
+  private generateParameterSyntax(param: any): string {
+    if (param.isUnionType && param.unionTypes) {
+      // Handle specific Web4 union types
+      if (this.isUnitIdentifierType(param.unionTypes)) {
+        return `<uuid|lnfile>`;
+      }
+      
+      // Generic union type handling
+      const typeNames = param.unionTypes.map((type: string) => this.simplifyTypeName(type));
+      return `<${typeNames.join('|')}>`;
+    }
+    
+    // Standard parameter syntax
+    return param.required ? `<${param.name}>` : `[${param.name}]`;
+  }
+
+  /**
+   * Check if union types represent UnitIdentifier (UUIDv4 | string)
+   */
+  private isUnitIdentifierType(unionTypes: string[]): boolean {
+    const hasUUID = unionTypes.some(type => type.includes('UUID') || type.includes('uuid'));
+    const hasString = unionTypes.some(type => type.includes('string') || type.includes('String'));
+    return hasUUID && hasString;
+  }
+
+  /**
+   * Simplify TypeScript type names for CLI display
+   */
+  private simplifyTypeName(typeName: string): string {
+    // Map TypeScript types to CLI-friendly names
+    const typeMap: { [key: string]: string } = {
+      'UUIDv4': 'uuid',
+      'string': 'lnfile',
+      'number': 'num',
+      'boolean': 'bool'
+    };
+    
+    // Extract base type name (remove import paths, generics, etc.)
+    const baseType = typeName.replace(/.*\./, '').replace(/<.*>/, '');
+    return typeMap[baseType] || baseType.toLowerCase();
+  }
+
+  /**
    * Generate structured usage output with unified Commands section
    */
   public generateStructuredUsage(): string {
@@ -765,7 +838,7 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Assemble unified Commands section with two-line format for smaller screens
+   * Assemble unified Commands section with two-line format and union type support
    */
   protected assembleUnifiedCommandsSection(): string {
     const methods = this.analyzeComponentMethods();
@@ -776,11 +849,12 @@ export abstract class DefaultCLI implements CLI {
     
     // Generate two-line command format: command line + description line
     for (const method of methods) {
-      const paramList = method.parameters.map(p => {
-        return p.required ? `<${p.name}>` : `[${p.name}]`;
+      // ✅ NEW: Generate parameter syntax with union type support
+      const paramList = method.parameters.map((p: any) => {
+        return this.generateParameterSyntax(p);
       }).join(' ');
       
-      // Line 1: Command with parameters
+      // Line 1: Command with parameters (enhanced with union type syntax)
       output += `  ${colors.toolName}${componentName.toLowerCase()}${colors.reset} ${colors.commands}${method.name}${colors.reset} ${colors.parameters}${paramList}${colors.reset}\n`;
       
       // Line 2: Description indented for better readability
