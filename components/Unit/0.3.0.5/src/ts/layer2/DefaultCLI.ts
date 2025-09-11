@@ -199,7 +199,11 @@ export abstract class DefaultCLI implements CLI {
     const methodNames = Object.getOwnPropertyNames(prototype);
     
     for (const name of methodNames) {
-      if (name === 'constructor' || name.startsWith('_') || this.isInternalMethod(name)) continue;
+      if (name === 'constructor' || name.startsWith('_')) continue;
+      
+      // ✅ ZERO CONFIG: Check @cliHide annotation instead of hardcoded list
+      const cliAnnotations = TSCompletion.extractCliAnnotations(this.componentClass.name, name);
+      if (cliAnnotations.hide) continue;
       
       const method = prototype[name];
       if (typeof method === 'function') {
@@ -644,13 +648,13 @@ export abstract class DefaultCLI implements CLI {
       }
     }
     
-    // ✅ RADICAL ELIMINATION: Filter to only value-adding parameters
-    const coreParams = this.filterToCoreParameters(allParams);
+    // ✅ ZERO CONFIG: Group parameters by @cliSyntax annotation
+    const parameterGroups = this.groupParametersBySyntax(allParams);
     
     let output = `${colors.sections}Parameters:${colors.reset}\n`;
     
-    // Generate documentation for core parameters only
-    for (const [name, param] of coreParams) {
+    // Generate documentation for unique parameter syntax types only
+    for (const [syntaxType, param] of parameterGroups) {
       const examples = this.generateParameterExamples(param.name);
       
       // Generate CLI syntax for parameter
@@ -675,58 +679,57 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Filter parameters to core types providing unique value
-   * Web4 pattern: Radical elimination of redundant parameter documentation
+   * Group parameters by CLI syntax type with zero config through @cliSyntax annotations
+   * Web4 pattern: Pure TSDoc annotation-driven parameter grouping
    */
-  private filterToCoreParameters(allParams: Map<string, any>): Map<string, any> {
-    const coreParams = new Map<string, any>();
+  private groupParametersBySyntax(allParams: Map<string, any>): Map<string, any> {
+    const syntaxGroups = new Map<string, any>();
     
-    // ✅ CORE PARAMETER TYPES: Only these provide unique value
-    const coreTypes = [
-      { type: 'uuid|lnfile', names: ['identifier', 'unit', 'uuidOrLnFile', 'originalUnit', 'originalUnitUUID', 'uuid'] },
-      { type: 'folder', names: ['folder', 'targetFolder'] },
-      { type: 'file', names: ['filename', 'linkFilename', 'copyPath', 'oldLinkPath', 'newLinkPath'] },
-      { type: 'position', names: ['startPos', 'endPos'] },
-      { type: 'name', names: ['name'] }
-    ];
-    
-    // Add first occurrence of each core type
-    for (const coreType of coreTypes) {
-      for (const paramName of coreType.names) {
-        if (allParams.has(paramName)) {
-          const param = allParams.get(paramName);
-          
-          // Enhance parameter with core type information
-          const enhancedParam = {
-            ...param,
-            name: coreType.type,
-            description: this.getCoreParameterDescription(coreType.type),
-            coreType: coreType.type
-          };
-          
-          coreParams.set(coreType.type, enhancedParam);
-          break; // Only add first occurrence of each type
-        }
+    // ✅ ZERO CONFIG: Group parameters by their @cliSyntax annotations
+    for (const [paramName, param] of allParams) {
+      // Get CLI syntax from @cliSyntax annotation or derive from conventions
+      let syntaxType = this.getParameterSyntaxType(param, paramName);
+      
+      // Only add first occurrence of each syntax type
+      if (!syntaxGroups.has(syntaxType)) {
+        syntaxGroups.set(syntaxType, {
+          ...param,
+          syntaxType: syntaxType
+        });
       }
     }
     
-    return coreParams;
+    return syntaxGroups;
   }
 
   /**
-   * Get standardized descriptions for core parameter types
-   * Web4 pattern: Consistent parameter documentation for core types
+   * Get parameter syntax type from @cliSyntax annotation or conventions
+   * Web4 pattern: Zero config syntax type detection
    */
-  private getCoreParameterDescription(coreType: string): string {
-    const descriptions: { [key: string]: string } = {
-      'uuid|lnfile': 'Unit reference (UUID or .unit file)',
-      'folder': 'Directory (relative to project root)',
-      'file': 'File path (relative to project root)',
-      'position': 'Position (line,column format)',
-      'name': 'Component name (spaces become dots)'
-    };
+  private getParameterSyntaxType(param: any, paramName: string): string {
+    // ✅ ZERO CONFIG: Check @cliSyntax annotation in parameter description
+    const description = param.description || '';
+    const syntaxMatch = description.match(/@cliSyntax\s+([^\s\n]+)/);
+    if (syntaxMatch) {
+      return syntaxMatch[1]; // Direct from @cliSyntax annotation
+    }
     
-    return descriptions[coreType] || `${coreType} parameter`;
+    // ✅ FALLBACK: Convention-based detection
+    if ((description.includes('UUID') || description.includes('uuid')) && 
+        (description.includes('file') || description.includes('path'))) {
+      return 'uuid|lnfile';
+    }
+    
+    if (description.toLowerCase().includes('directory')) {
+      return 'folder';
+    }
+    
+    if (description.toLowerCase().includes('file')) {
+      return 'file';
+    }
+    
+    // Default: parameter name
+    return paramName;
   }
 
   /**
@@ -787,27 +790,25 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Generate CLI parameter syntax from pure TSDoc conventions with zero mapping code
-   * Web4 pattern: Pure convention-driven CLI syntax generation
+   * Generate CLI parameter syntax from pure TSDoc @cliSyntax annotations
+   * Web4 pattern: Zero config CLI syntax generation through TSDoc annotations
    */
-  private generateParameterSyntax(param: any): string {
-    // ✅ ZERO MAPPING: Derive CLI syntax from TSDoc description conventions
-    const description = param.description || '';
+  private generateParameterSyntax(param: any, methodName?: string): string {
+    // ✅ ZERO CONFIG: Check @cliSyntax annotation first
+    if (methodName) {
+      const cliAnnotations = TSCompletion.extractCliAnnotations(this.componentClass.name, methodName, param.name);
+      if (cliAnnotations.syntax) {
+        return param.required ? `<${cliAnnotations.syntax}>` : `[${cliAnnotations.syntax}]`;
+      }
+    }
     
-    // ✅ WEB4 CONVENTION: Parse union type syntax from description patterns
+    // ✅ FALLBACK: Pure convention detection from description
+    const description = param.description || '';
     
     // Pattern: "UUID or .unit file" or "UUID string or file path"
     if ((description.includes('UUID') || description.includes('uuid')) && 
         (description.includes('file') || description.includes('path'))) {
       return param.required ? '<uuid|lnfile>' : '[uuid|lnfile]';
-    }
-    
-    // Pattern: "Type1 or .ext file"
-    const unionMatch = description.match(/(\w+)\s+or\s+\.(\w+)\s+file/i);
-    if (unionMatch) {
-      const type1 = unionMatch[1].toLowerCase();
-      const type2 = unionMatch[2].toLowerCase();
-      return param.required ? `<${type1}|${type2}file>` : `[${type1}|${type2}file]`;
     }
     
     // ✅ WEB4 CONVENTION: Derive from TypeScript union types
@@ -821,16 +822,8 @@ export abstract class DefaultCLI implements CLI {
       return param.required ? '<folder>' : '[folder]';
     }
     
-    if (description.toLowerCase().includes('file') && !unionMatch) {
-      return param.required ? '<filename>' : '[filename]';
-    }
-    
-    if (description.toLowerCase().includes('json format')) {
-      return param.required ? '<json>' : '[json]';
-    }
-    
-    if (description.toLowerCase().includes('line,column format')) {
-      return param.required ? '<position>' : '[position]';
+    if (description.toLowerCase().includes('file')) {
+      return param.required ? '<file>' : '[file]';
     }
     
     // ✅ WEB4 CONVENTION: Default to parameter name from TypeScript
@@ -863,32 +856,6 @@ export abstract class DefaultCLI implements CLI {
     return typeMap[baseType] || baseType.toLowerCase();
   }
 
-  /**
-   * Check if method is internal and should be hidden from CLI
-   * Web4 pattern: Internal method detection for clean CLI interface
-   */
-  private isInternalMethod(methodName: string): boolean {
-    // ✅ INTERNAL: Utility methods that should be hidden from CLI
-    const internalMethods = [
-      'extractUuidFromPath',
-      'calculateRelativePath', 
-      'checkOriginSync',
-      'resolveSpeakingName',
-      'findProjectRoot',
-      'isUUID',
-      'convertNameToFilename',
-      'generateSimpleIOR',
-      'extractFilePathFromIOR',
-      'transformArraysToReferences',
-      'findFilesToRename',
-      'upgradeToVersion035',
-      'createFromWordInFile',
-      'createFromCompleteFile',
-      'notifyOriginOfCopyChange'
-    ];
-    
-    return internalMethods.includes(methodName);
-  }
 
   /**
    * Generate structured usage output with unified Commands section

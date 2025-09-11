@@ -390,6 +390,63 @@ export class TSCompletion implements Completion {
     return typeString.split('|').map(type => type.trim());
   }
 
+  /**
+   * Extract CLI annotations from JSDoc (@cliHide, @cliSyntax, etc.)
+   * Web4 pattern: Pure TSDoc annotation parsing for zero config CLI generation
+   */
+  static extractCliAnnotations(className: string, methodName: string, paramName?: string): any {
+    const files = TSCompletion.getProjectSourceFiles();
+    
+    for (const file of files) {
+      const src = readFileSync(file, 'utf8');
+      const sourceFile = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true);
+      
+      ts.forEachChild(sourceFile, node => {
+        if (ts.isClassDeclaration(node) && node.name && node.name.text === className) {
+          for (const m of node.members) {
+            if (ts.isMethodDeclaration(m) && m.name && ts.isIdentifier(m.name) && m.name.text === methodName) {
+              const jsDocText = TSCompletion.extractJsDocText(m);
+              
+              if (paramName) {
+                // Extract parameter-specific annotations
+                const paramDoc = TSCompletion.extractParamJsDoc(m, paramName);
+                return TSCompletion.parseCliAnnotations(paramDoc);
+              } else {
+                // Extract method-level annotations
+                return TSCompletion.parseCliAnnotations(jsDocText);
+              }
+            }
+          }
+        }
+      });
+    }
+    
+    return {};
+  }
+
+  /**
+   * Parse CLI annotations from JSDoc text
+   * Web4 pattern: Zero config annotation parsing
+   */
+  private static parseCliAnnotations(jsDocText: string): any {
+    return {
+      hide: jsDocText.includes('@cliHide'),
+      syntax: TSCompletion.extractAnnotationValue(jsDocText, 'cliSyntax'),
+      optional: jsDocText.includes('@cliOptional'),
+      group: TSCompletion.extractAnnotationValue(jsDocText, 'cliGroup'),
+      alias: TSCompletion.extractAnnotationValue(jsDocText, 'cliAlias')
+    };
+  }
+
+  /**
+   * Extract value from @annotation pattern
+   */
+  private static extractAnnotationValue(text: string, annotation: string): string | null {
+    const regex = new RegExp(`@${annotation}\\s+([^\\s\\n]+)`);
+    const match = text.match(regex);
+    return match ? match[1] : null;
+  }
+
   static start() {
     const args = process.argv.slice(2);
     // Only log args if LOG_LEVEL is 4 or higher

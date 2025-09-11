@@ -191,7 +191,10 @@ export class DefaultUnit implements Unit, Upgrade {
     return this.model;
   }
 
-  // ✅ PRIVATE: Helper methods for link management (hidden from CLI)
+  /**
+   * Extract UUID from scenario path
+   * @cliHide
+   */
   private extractUuidFromPath(scenarioPath: string): string {
     // Extract UUID from path like ../scenarios/index/a/b/c/d/e/uuid.scenario.json
     const pathParts = scenarioPath.split('/');
@@ -199,6 +202,10 @@ export class DefaultUnit implements Unit, Upgrade {
     return filename.replace('.scenario.json', '');
   }
 
+  /**
+   * Calculate relative path between directories
+   * @cliHide
+   */
   private async calculateRelativePath(fromPath: string, toPath: string): Promise<string> {
     const { relative } = await import('path');
     return relative(fromPath, toPath);
@@ -263,9 +270,9 @@ export class DefaultUnit implements Unit, Upgrade {
    * Create link to unit in target folder with optional copy tracking
    * Web4 pattern: Unified interface with optional copy reference tracking
    * 
-   * @param unit - Unit reference (UUID or .unit file)
-   * @param folder - Target directory (relative to project root)
-   * @param originalUnit - Optional original unit reference for copy tracking
+   * @param unit - Unit reference (UUID or .unit file) @cliSyntax uuid|lnfile
+   * @param folder - Target directory (relative to project root) @cliSyntax folder
+   * @param originalUnit - Optional original unit reference for copy tracking @cliSyntax uuid|lnfile @cliOptional
    * @returns Promise<void> - Resolves when link creation completes
    * @throws Error when unit invalid or folder inaccessible
    * @example
