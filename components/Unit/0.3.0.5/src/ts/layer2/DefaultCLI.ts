@@ -403,140 +403,46 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Generate intelligent parameter names based on method context
+   * Generate parameter names from TSDoc with zero mapping code
+   * Web4 pattern: Pure convention-driven parameter name extraction
    */
   private generateIntelligentParameterName(methodName: string, index: number): string {
-    // Common parameter patterns based on method names and position
-    // ✅ OCCAM'S RAZOR: Radically simplified parameter patterns
-    const parameterPatterns: { [key: string]: string[] } = {
-      // Core unit operations - Universal <unit> parameter
-      'link': ['unit', 'filename'],
-      'linkInto': ['unit', 'folder'],
-      'linkIntoCopy': ['unit', 'folder', 'originalUnit'],
-      'deleteLink': ['unit'],
-      'deleteUnit': ['unit'],
-      'list': ['unit'],
-      'transform': ['unit'],
-      'validate': ['unit'],
-      'validateModel': ['unit'],
-      'toScenario': ['unit'],
-      'addExecutionCapability': ['unit'],
-      'getModel': ['unit'],
-      'origin': ['unit'],
-      
-      // Creation operations
-      'create': ['name', 'description', 'typeM3'],
-      'from': ['filename', 'startPos', 'endPos'],
-      
-      // File operations
-      'renameLink': ['oldFile', 'newFile'],
-      'rename': ['newName'],
-      
-      // Sync operations - Clear role separation
-      'detectCopyChanges': ['copyFile', 'unit'],
-      'syncFromCopy': ['copyFile', 'unit'],
-      'syncToCopy': ['copyFile', 'unit'],
-      
-      // Utility operations
-      'set': ['unit', 'key', 'value'],
-      'get': ['key'],
-      'extractUuidFromPath': ['path'],
-      'calculateRelativePath': ['fromPath', 'toPath'],
-      
-      // Legacy/specialized
-      'classify': ['unit', 'typeM3'],
-      'definition': ['unit', 'filename', 'startPos', 'endPos'],
-      'execute': ['name', 'input'],
-      'find': ['search-term'],
-      'replace': ['pattern', 'file-path'],
-      'update': ['component', 'version'],
-      'init': ['unit'],
-      'process': ['input'],
-      'store': ['key', 'value']
-    };
-    
-    // Check for exact method name match
-    if (parameterPatterns[methodName]) {
-      return parameterPatterns[methodName][index] || `arg${index + 1}`;
-    }
-    
-    // Check for partial matches
-    for (const [pattern, params] of Object.entries(parameterPatterns)) {
-      if (methodName.includes(pattern)) {
-        return params[index] || `arg${index + 1}`;
+    // ✅ ZERO MAPPING: Extract directly from TypeScript AST via TSCompletion
+    try {
+      const paramInfo = TSCompletion.getEnhancedMethodParameters(this.componentClass.name, methodName);
+      if (paramInfo && paramInfo[index]) {
+        return paramInfo[index].name; // ✅ Direct from TypeScript source
       }
+    } catch (error) {
+      // Fallback only if TSCompletion fails
     }
     
-    // Generic fallback with common patterns
-    const genericPatterns = ['uuid', 'name', 'data', 'value', 'path'];
-    return genericPatterns[index] || `arg${index + 1}`;
+    // ✅ WEB4 CONVENTION: Generic parameter naming based on position
+    const genericPatterns = ['identifier', 'target', 'data', 'options'];
+    return genericPatterns[index] || `param${index + 1}`;
   }
 
   /**
    * Generate parameter description based on name and context
    */
+  /**
+   * Generate parameter description from pure TSDoc with zero mapping code
+   * Web4 pattern: Pure convention-driven description extraction
+   */
   private generateParameterDescription(methodName: string, paramName: string, index: number): string {
-    // ✅ OCCAM'S RAZOR: Radically simplified parameter descriptions
-    const descriptions: { [key: string]: string } = {
-      // Universal unit parameter - THE CORE CONCEPT
-      'unit': 'Unit reference (UUID or .unit file)',
-      
-      // Core operation parameters
-      'folder': 'Target directory (relative to project root)',
-      'filename': 'File name or path (relative to project root)',
-      'copyFile': 'Copy file path (relative to project root)',
-      'originalUnit': 'Original unit reference (UUID or .unit file)',
-      
-      // File operation parameters
-      'oldFile': 'Current file path (relative to project root)',
-      'newFile': 'New file path (relative to project root)',
-      'newName': 'New name for the unit (will update all references)',
-      
-      // Creation parameters
-      'name': 'Component name (kebab-case preferred)',
-      'description': 'Component description (quoted string)',
-      'typeM3': 'MOF classification (CLASS, ATTRIBUTE, RELATIONSHIP)',
-      
-      // Position parameters
-      'startPos': 'Start position (line,column format like 5,10)',
-      'endPos': 'End position (line,column format like 15,30)',
-      
-      // Data parameters
-      'key': 'Property key (string identifier)',
-      'value': 'Property value (string or JSON)',
-      'input': 'Input data (JSON format)',
-      
-      // Path parameters
-      'path': 'File or directory path (relative to project root)',
-      'fromPath': 'Source path (relative to project root)',
-      'toPath': 'Target path (relative to project root)',
-      
-      // Search parameters
-      'search-term': 'Search term (quoted string)',
-      'pattern': 'Search pattern (regex supported)',
-      
-      // System parameters
-      'component': 'Component name (User, Unit, Web4Requirement)',
-      'version': 'Version string (0.3.0.5, latest, 1.0.0)',
-      
-      // Legacy parameters (for backward compatibility)
-      'uuid': 'Unit reference (UUID or .unit file)',
-      'linkfile': 'Unit reference (UUID or .unit file)',
-      'identifier': 'Unit reference (UUID or .unit file)',
-      'uuidOrLnFile': 'Unit reference (UUID or .unit file)',
-      'originalUnitUUID': 'Original unit reference (UUID or .unit file)',
-      'copyPath': 'Copy file path (relative to project root)',
-      'targetfolder': 'Target directory (relative to project root)'
-    };
-    
-    // Handle special parameter patterns
-    if (paramName.includes(':')) {
-      if (paramName.includes('start:') || paramName.includes('end:')) {
-        return 'File position in line,column format (e.g., 5,10)';
+    // ✅ ZERO MAPPING: Extract directly from TSDoc via TSCompletion
+    try {
+      const paramInfo = TSCompletion.getEnhancedMethodParameters(this.componentClass.name, methodName);
+      const param = paramInfo.find((p: any) => p.name === paramName);
+      if (param && param.description) {
+        return param.description; // ✅ Direct from TSDoc
       }
+    } catch (error) {
+      // Continue to fallback
     }
     
-    return descriptions[paramName] || `${paramName.charAt(0).toUpperCase() + paramName.slice(1)} parameter (see method documentation)`;
+    // ✅ WEB4 CONVENTION: Minimal fallback for missing TSDoc
+    return `${paramName.charAt(0).toUpperCase() + paramName.slice(1)} parameter (add TSDoc description)`;
   }
 
   /**
@@ -574,71 +480,59 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Generate parameter examples based on parameter name
+   * Generate parameter examples from pure TSDoc with zero mapping code
+   * Web4 pattern: Pure convention-driven example extraction from @example tags
    */
   private generateParameterExamples(paramName: string): string[] {
-    // ✅ OCCAM'S RAZOR: Radically simplified parameter examples
-    const examples: { [key: string]: string[] } = {
-      // Universal unit parameter - THE CORE CONCEPT
-      'unit': [
-        '44443290-015c-4720-be80-c42caf842252',      // UUID format
-        'TSCompletion.ts.unit',                      // File format
-        'auth-validator.unit'                        // File format
-      ],
-      
-      // Core operation parameters
-      'folder': ['backup/', 'components/temp/', 'scenarios/'],
-      'filename': ['auth-validator.unit', 'TSCompletion.ts', 'UserValidator.ts'],
-      'copyFile': ['components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.ts', 'components/User/0.1.0.0/src/ts/DefaultUser.ts'],
-      'originalUnit': [
-        '12345678-1234-1234-1234-123456789abc',      // UUID format
-        'original.unit',                             // File format
-        'TSRanger.v2.2.unit'                         // File format
-      ],
-      
-      // File operation parameters
-      'oldFile': ['TSCompletion.unit', 'auth-validator.link'],
-      'newFile': ['TSCompletion.ts.unit', 'auth-validator-enhanced.link'],
-      'newName': ['Enhanced.Auth.Validator', 'User.Manager.Pro'],
-      
-      // Creation parameters
-      'name': ['Auth.Validator', 'User.Manager', 'Data.Processor'],
-      'description': ['"User authentication validation"', '"Data processing component"'],
-      'typeM3': ['CLASS', 'ATTRIBUTE', 'RELATIONSHIP'],
-      
-      // Position parameters
-      'startPos': ['1,1', '5,10', '12,5'],
-      'endPos': ['10,20', '15,30', '25,15'],
-      
-      // Data parameters
-      'key': ['"name"', '"description"', '"typeM3"'],
-      'value': ['"Auth.Validator"', '"User validation component"', 'CLASS'],
-      'input': ['{"user": "test"}', '{"data": "sample"}'],
-      
-      // Path parameters
-      'path': ['scrum.pmo/sprints/sprint-20/', 'components/Unit/0.3.0.5/'],
-      'fromPath': ['components/Unit/0.3.0.5/', 'scrum.pmo/sprints/'],
-      'toPath': ['scenarios/index/', 'components/User/'],
-      
-      // Search parameters
-      'search-term': ['"authentication"', '"validation"'],
-      'pattern': ['[A-Za-z]+', 'function\\s+\\w+'],
-      
-      // System parameters
-      'component': ['User', 'Unit', 'Web4Requirement'],
-      'version': ['0.3.0.5', 'latest', '1.0.0'],
-      
-      // Legacy parameter examples (backward compatibility)
-      'uuid': ['44443290-015c-4720-be80-c42caf842252', 'TSCompletion.ts.unit'],
-      'linkfile': ['TSCompletion.ts.unit', 'auth-validator.unit'],
-      'identifier': ['44443290-015c-4720-be80-c42caf842252', 'TSCompletion.ts.unit'],
-      'uuidOrLnFile': ['44443290-015c-4720-be80-c42caf842252', 'TSCompletion.ts.unit'],
-      'originalUnitUUID': ['12345678-1234-1234-1234-123456789abc'],
-      'copyPath': ['components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.ts'],
-      'targetfolder': ['backup/', 'components/temp/']
-    };
+    // ✅ ZERO MAPPING: Extract examples from TSDoc @example tags
+    try {
+      // This would extract from @example sections in JSDoc
+      // For now, use convention-based generation until TSDoc example extraction is implemented
+      return this.deriveExamplesFromConventions(paramName);
+    } catch (error) {
+      return [`${paramName}-example`];
+    }
+  }
+
+  /**
+   * Derive examples from Web4 parameter naming conventions
+   * Web4 pattern: Convention-driven example generation with zero configuration
+   */
+  private deriveExamplesFromConventions(paramName: string): string[] {
+    // ✅ WEB4 CONVENTION: Derive examples from parameter name patterns
     
-    return examples[paramName] || [`${paramName}-example`];
+    // Unit reference convention
+    if (paramName.includes('unit') || paramName === 'identifier') {
+      return ['44443290-015c-4720-be80-c42caf842252', 'TSCompletion.ts.unit'];
+    }
+    
+    // Folder convention
+    if (paramName.toLowerCase().includes('folder') || paramName.toLowerCase().includes('directory')) {
+      return ['backup/', 'temp/', 'components/'];
+    }
+    
+    // File convention
+    if (paramName.toLowerCase().includes('file') || paramName === 'filename') {
+      return ['component.ts', 'auth-validator.unit', 'data.json'];
+    }
+    
+    // Name convention
+    if (paramName === 'name') {
+      return ['Auth.Validator', 'User.Manager', 'Data.Processor'];
+    }
+    
+    // Description convention
+    if (paramName === 'description') {
+      return ['"Component description"', '"Authentication validation"'];
+    }
+    
+    // Position convention
+    if (paramName.includes('Pos') || paramName.includes('position')) {
+      return ['1,1', '5,10', '12,5'];
+    }
+    
+    // Default: parameter name example
+    return [`${paramName}-example`];
   }
 
   /**
@@ -825,30 +719,53 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Generate CLI parameter syntax from type information with Occam's Razor simplification
-   * Web4 pattern: Dynamic CLI syntax generation with radical simplification
+   * Generate CLI parameter syntax from pure TSDoc conventions with zero mapping code
+   * Web4 pattern: Pure convention-driven CLI syntax generation
    */
   private generateParameterSyntax(param: any): string {
-    // ✅ OCCAM'S RAZOR: Force <uuid|lnfile> for universal unit parameters
-    if (param.name === 'unit' || param.name === 'identifier' || 
-        param.name === 'uuidOrLnFile' || param.name === 'originalUnit' ||
-        param.name === 'originalUnitUUID' || param.name === 'uuid') {
-      return param.required ? `<uuid|lnfile>` : `[uuid|lnfile]`;
+    // ✅ ZERO MAPPING: Derive CLI syntax from TSDoc description conventions
+    const description = param.description || '';
+    
+    // ✅ WEB4 CONVENTION: Parse union type syntax from description patterns
+    
+    // Pattern: "UUID or .unit file" or "UUID string or file path"
+    if ((description.includes('UUID') || description.includes('uuid')) && 
+        (description.includes('file') || description.includes('path'))) {
+      return param.required ? '<uuid|lnfile>' : '[uuid|lnfile]';
     }
     
-    // Handle TypeScript union types
+    // Pattern: "Type1 or .ext file"
+    const unionMatch = description.match(/(\w+)\s+or\s+\.(\w+)\s+file/i);
+    if (unionMatch) {
+      const type1 = unionMatch[1].toLowerCase();
+      const type2 = unionMatch[2].toLowerCase();
+      return param.required ? `<${type1}|${type2}file>` : `[${type1}|${type2}file]`;
+    }
+    
+    // ✅ WEB4 CONVENTION: Derive from TypeScript union types
     if (param.isUnionType && param.unionTypes) {
-      // Handle specific Web4 union types
-      if (this.isUnitIdentifierType(param.unionTypes)) {
-        return `<uuid|lnfile>`;
-      }
-      
-      // Generic union type handling
       const typeNames = param.unionTypes.map((type: string) => this.simplifyTypeName(type));
-      return `<${typeNames.join('|')}>`;
+      return param.required ? `<${typeNames.join('|')}>` : `[${typeNames.join('|')}]`;
     }
     
-    // Standard parameter syntax
+    // ✅ WEB4 CONVENTION: Derive from description keywords
+    if (description.toLowerCase().includes('directory')) {
+      return param.required ? '<folder>' : '[folder]';
+    }
+    
+    if (description.toLowerCase().includes('file') && !unionMatch) {
+      return param.required ? '<filename>' : '[filename]';
+    }
+    
+    if (description.toLowerCase().includes('json format')) {
+      return param.required ? '<json>' : '[json]';
+    }
+    
+    if (description.toLowerCase().includes('line,column format')) {
+      return param.required ? '<position>' : '[position]';
+    }
+    
+    // ✅ WEB4 CONVENTION: Default to parameter name from TypeScript
     return param.required ? `<${param.name}>` : `[${param.name}]`;
   }
 
