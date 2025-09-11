@@ -670,7 +670,7 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Generate structured usage output like requirement-v0.1.2.2
+   * Generate structured usage output with unified Commands section
    */
   public generateStructuredUsage(): string {
     const colors = this.getTSCompletionColors();
@@ -682,39 +682,8 @@ export abstract class DefaultCLI implements CLI {
     // Header section - ensure unit is cyan
     output += `${colors.toolName}Web4 ${componentName} CLI Tool${colors.reset} v${colors.version}${version}${colors.reset} - Dynamic Method Discovery with Structured Documentation\n\n`;
     
-    // Usage section  
-    output += `${colors.sections}Usage:${colors.reset}\n`;
-    const methods = this.analyzeComponentMethods();
-    
-    // Show key methods with proper parameter syntax
-    const keyMethods = ['create', 'classify', 'link', 'list', 'deleteLink', 'execute', 'info', 'help'];
-    const displayMethods = methods.filter(m => keyMethods.includes(m.name)).slice(0, 8);
-    
-    // Calculate max command length for column alignment
-    let maxCommandLength = 0;
-    for (const method of displayMethods) {
-      const paramList = method.parameters.map(p => {
-        return p.required ? `<${p.name}>` : `[${p.name}]`;
-      }).join(' ');
-      const fullCommand = `${componentName.toLowerCase()} ${method.name} ${paramList}`;
-      maxCommandLength = Math.max(maxCommandLength, fullCommand.length);
-    }
-    
-    for (const method of displayMethods) {
-      const paramList = method.parameters.map(p => {
-        return p.required ? `<${p.name}>` : `[${p.name}]`;
-      }).join(' ');
-      
-      const commandPart = `${componentName.toLowerCase()} ${method.name}`;
-      const fullCommand = `${commandPart} ${paramList}`;
-      const padding = ' '.repeat(Math.max(1, maxCommandLength - fullCommand.length + 3));
-      
-      output += `  ${colors.toolName}${componentName.toLowerCase()}${colors.reset} ${colors.commands}${method.name}${colors.reset} ${colors.parameters}${paramList}${colors.reset}${padding}${colors.descriptions}# ${method.description}${colors.reset}\n`;
-    }
-    output += '\n';
-    
-    // Commands section
-    output += this.assembleCommandSection();
+    // Unified Commands section (replaces Usage + Commands)
+    output += this.assembleUnifiedCommandsSection();
     output += '\n';
     
     // Parameters section
@@ -729,6 +698,41 @@ export abstract class DefaultCLI implements CLI {
     output += `  ${colors.descriptions}${componentName} operates as atomic Web4 element with dynamic CLI documentation.${colors.reset}\n`;
     output += `  ${colors.descriptions}Commands automatically discovered from component methods with structured formatting.${colors.reset}\n`;
     output += `  ${colors.descriptions}TSCompletion color coding and professional documentation generation.${colors.reset}\n`;
+    
+    return output;
+  }
+
+  /**
+   * Assemble unified Commands section with parameters in usage format
+   */
+  protected assembleUnifiedCommandsSection(): string {
+    const methods = this.analyzeComponentMethods();
+    const colors = this.getTSCompletionColors();
+    const componentName = this.getComponentName();
+    
+    let output = `${colors.sections}Commands:${colors.reset}\n`;
+    
+    // Calculate max command length for alignment
+    let maxCommandLength = 0;
+    for (const method of methods) {
+      const paramList = method.parameters.map(p => {
+        return p.required ? `<${p.name}>` : `[${p.name}]`;
+      }).join(' ');
+      const fullCommand = `${componentName.toLowerCase()} ${method.name} ${paramList}`;
+      maxCommandLength = Math.max(maxCommandLength, fullCommand.length);
+    }
+    
+    // Generate unified command lines with parameters and descriptions
+    for (const method of methods) {
+      const paramList = method.parameters.map(p => {
+        return p.required ? `<${p.name}>` : `[${p.name}]`;
+      }).join(' ');
+      
+      const fullCommand = `${componentName.toLowerCase()} ${method.name} ${paramList}`;
+      const padding = ' '.repeat(Math.max(1, maxCommandLength - fullCommand.length + 3));
+      
+      output += `  ${colors.toolName}${componentName.toLowerCase()}${colors.reset} ${colors.commands}${method.name}${colors.reset} ${colors.parameters}${paramList}${colors.reset}${padding}${colors.descriptions}# ${method.description}${colors.reset}\n`;
+    }
     
     return output;
   }
