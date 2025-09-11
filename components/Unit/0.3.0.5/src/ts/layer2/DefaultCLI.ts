@@ -271,14 +271,17 @@ export abstract class DefaultCLI implements CLI {
       if (typeof TSCompletion.getMethodParameters === 'function') {
         const paramInfo = TSCompletion.getMethodParameters(this.componentClass.name, methodName);
         
-        return paramInfo.map((param: any, index: number) => ({
-          name: param.name || this.generateIntelligentParameterName(methodName, index),
-          type: param.type || 'any',
-          required: param.required !== false,
-          description: param.description || this.generateParameterDescription(methodName, param.name || `arg${index + 1}`, index),
-          examples: this.generateParameterExamples(param.name || `arg${index + 1}`),
-          validation: []
-        }));
+        return paramInfo.map((param: any, index: number) => {
+          const paramName = param.name || this.generateIntelligentParameterName(methodName, index);
+          return {
+            name: paramName,
+            type: param.type || 'any',
+            required: param.required !== false,
+            description: param.description || this.generateParameterDescription(methodName, paramName, index),
+            examples: this.generateParameterExamples(paramName),
+            validation: []
+          };
+        });
       }
       
       // Fallback to intelligent parameter extraction
@@ -404,17 +407,30 @@ export abstract class DefaultCLI implements CLI {
       'classify': ['uuid', 'typeM3'],
       'link': ['uuid', 'filename'],
       'linkInto': ['linkfile', 'targetfolder'],
+      'linkIntoCopy': ['uuid', 'filename', 'targetfolder'],
       'list': ['uuid'],
       'origin': ['uuid'],
       'deleteLink': ['linkfile'],
       'deleteUnit': ['linkfile'],
-      'from': ['filename', 'start:line,column', 'end:line,column'],
-      'definition': ['uuid', 'filename', 'start:line,column', 'end:line,column'],
+      'from': ['filename', 'startPos', 'endPos'],
+      'definition': ['uuid', 'filename', 'startPos', 'endPos'],
       'execute': ['name', 'input'],
       'set': ['uuid', 'key', 'value'],
       'find': ['search-term'],
       'replace': ['pattern', 'file-path'],
-      'update': ['component', 'version']
+      'update': ['component', 'version'],
+      'init': ['uuid'],
+      'transform': ['uuid'],
+      'validate': ['uuid'],
+      'process': ['input'],
+      'validateModel': ['uuid'],
+      'toScenario': ['uuid'],
+      'addExecutionCapability': ['uuid'],
+      'getModel': ['uuid'],
+      'extractUuidFromPath': ['path'],
+      'calculateRelativePath': ['fromPath', 'toPath'],
+      'get': ['key'],
+      'store': ['key', 'value']
     };
     
     // Check for exact method name match
@@ -439,26 +455,41 @@ export abstract class DefaultCLI implements CLI {
    */
   private generateParameterDescription(methodName: string, paramName: string, index: number): string {
     const descriptions: { [key: string]: string } = {
-      'name': 'Component name for identification (required)',
-      'uuid': 'Component UUID for operations (8+ characters accepted)',
-      'description': 'Detailed description of the component or operation',
-      'typeM3': 'MOF classification (CLASS, ATTRIBUTE, RELATIONSHIP)',
-      'filename': 'File name for links or source references',
-      'linkfile': 'Link file name (e.g., component.unit)',
-      'targetfolder': 'Target directory for additional links',
-      'start:line,column': 'Start position in file (line:column format)',
-      'end:line,column': 'End position in file (line:column format)',
-      'input': 'JSON input data for operation',
-      'search-term': 'Search term for finding components',
-      'pattern': 'Pattern to search and replace',
-      'file-path': 'Relative path from project root',
-      'key': 'Property key to set or modify',
-      'value': 'Property value to assign',
+      'name': 'Component name for identification (kebab-case preferred)',
+      'uuid': 'Unique identifier (36-character UUID format)',
+      'description': 'Detailed description of the component or operation (quoted string)',
+      'typeM3': 'MOF M3 metamodel classification (CLASS, ATTRIBUTE, RELATIONSHIP)',
+      'filename': 'File path for links or source references (relative to project root)',
+      'linkfile': 'Link file path with .link extension for component reference',
+      'targetfolder': 'Target directory for component placement (relative path)',
+      'start:line,column': 'Starting position in file (line,column format like 5,10)',
+      'end:line,column': 'Ending position in file (line,column format like 15,30)',
+      'startPos': 'Starting position in file (line,column format like 5,10)',
+      'endPos': 'Ending position in file (line,column format like 15,30)',
+      'input': 'JSON input data for processing (quoted JSON string)',
+      'search-term': 'Search term for finding components (quoted string)',
+      'pattern': 'Pattern to search and replace (regex supported)',
+      'file-path': 'File or directory path (relative to project root)',
+      'path': 'File or directory path (relative to project root)',
+      'fromPath': 'Source path for relative calculation (relative to project root)',
+      'toPath': 'Target path for relative calculation (relative to project root)',
+      'key': 'Property key to set or modify (string identifier)',
+      'value': 'Property value to assign (string or JSON)',
       'component': 'Component name (e.g., User, Unit, Web4Requirement)',
-      'version': 'Version string (e.g., latest, v1.0, 0.3.0.5)'
+      'version': 'Version string (e.g., latest, v1.0, 0.3.0.5)',
+      'arg1': 'First method argument (context-dependent parameter)',
+      'arg2': 'Second method argument (context-dependent parameter)',
+      'arg3': 'Third method argument (context-dependent parameter)'
     };
     
-    return descriptions[paramName] || `${paramName.charAt(0).toUpperCase() + paramName.slice(1)} parameter`;
+    // Handle special parameter patterns
+    if (paramName.includes(':')) {
+      if (paramName.includes('start:') || paramName.includes('end:')) {
+        return 'File position in line,column format (e.g., 5,10)';
+      }
+    }
+    
+    return descriptions[paramName] || `${paramName.charAt(0).toUpperCase() + paramName.slice(1)} parameter (see method documentation)`;
   }
 
   /**
@@ -501,13 +532,27 @@ export abstract class DefaultCLI implements CLI {
   private generateParameterExamples(paramName: string): string[] {
     const examples: { [key: string]: string[] } = {
       'name': ['auth-validator', 'user-manager', 'data-processor'],
-      'uuid': ['a1b2c3d4-e5f6', '12345678-1234-1234-1234-123456789abc'],
-      'description': ['User authentication validation', 'Data processing component'],
+      'uuid': ['a1b2c3d4-e5f6-7890-abcd-ef1234567890', '12345678-1234-1234-1234-123456789abc'],
+      'description': ['"User authentication validation"', '"Data processing component"', '"Web4 unit for validation"'],
       'typeM3': ['CLASS', 'ATTRIBUTE', 'RELATIONSHIP'],
-      'filename': ['UserValidator.ts', 'auth-validator.unit'],
-      'input': ['{"user": "test"}', '{"data": "sample"}'],
-      'search-term': ['authentication', 'validation', 'empty constructor'],
-      'file-path': ['scrum.pmo/sprints/sprint-20/', 'components/Unit/0.3.0.5/']
+      'filename': ['components/Unit/0.3.0.5/src/ts/layer2/DefaultUnit.ts', 'auth-validator.unit', 'UserValidator.ts'],
+      'input': ['{"user": "test"}', '{"data": "sample"}', '{"name": "example"}'],
+      'search-term': ['"authentication"', '"validation"', '"empty constructor"'],
+      'file-path': ['scrum.pmo/sprints/sprint-20/', 'components/Unit/0.3.0.5/', 'docs/'],
+      'path': ['scrum.pmo/sprints/sprint-20/', 'components/Unit/0.3.0.5/', 'docs/'],
+      'fromPath': ['components/Unit/0.3.0.5/', 'scrum.pmo/sprints/', 'docs/'],
+      'toPath': ['scenarios/index/', 'components/User/', 'scripts/'],
+      'linkfile': ['unit-auth-validator.link', 'user-manager.link', 'data-processor.link'],
+      'targetfolder': ['scenarios/index/a/5/0/', 'components/backup/', 'temp/'],
+      'start': ['1,1', '5,10', '12,5'],
+      'end': ['10,20', '15,30', '25,15'],
+      'startPos': ['1,1', '5,10', '12,5'],
+      'endPos': ['10,20', '15,30', '25,15'],
+      'key': ['"name"', '"description"', '"typeM3"'],
+      'value': ['"auth-validator"', '"User validation component"', 'CLASS'],
+      'pattern': ['[A-Za-z]+', '\\d{4}-\\d{2}-\\d{2}', 'function\\s+\\w+'],
+      'component': ['User', 'Unit', 'Web4Requirement'],
+      'version': ['0.3.0.5', 'latest', '1.0.0']
     };
     
     return examples[paramName] || [`${paramName}-example`];
@@ -605,7 +650,7 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Assemble parameter section with specifications
+   * Assemble parameter section with specifications and example values
    */
   protected assembleParameterSection(): string {
     const methods = this.analyzeComponentMethods();
@@ -622,13 +667,18 @@ export abstract class DefaultCLI implements CLI {
     
     let output = `${colors.sections}Parameters:${colors.reset}\n`;
     
-    // Calculate max parameter name length for column alignment
-    const maxParamLength = Math.max(...Array.from(uniqueParams.keys()).map(name => name.length + 2)); // +2 for < >
-    
+    // Two-line format for parameters with examples
     for (const [name, param] of uniqueParams) {
-      const paramDisplay = `<${name}>`;
-      const padding = ' '.repeat(maxParamLength - paramDisplay.length + 3);
-      output += `  ${colors.parameters}${paramDisplay}${colors.reset}${padding}${colors.descriptions}${param.description}${colors.reset}\n`;
+      const examples = this.generateParameterExamples(param.name);
+      const exampleValue = examples[0] || 'value';
+      
+      // Line 1: Parameter name and description
+      output += `  ${colors.parameters}<${name}>${colors.reset}\n`;
+      
+      // Line 2: Description and example value
+      output += `    ${colors.descriptions}${param.description}${colors.reset}\n`;
+      output += `    ${colors.descriptions}Example: ${colors.parameters}${exampleValue}${colors.reset}\n`;
+      output += '\n'; // Empty line between parameters for better separation
     }
     
     return output;
