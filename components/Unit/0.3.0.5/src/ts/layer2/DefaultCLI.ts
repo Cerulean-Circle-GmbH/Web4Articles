@@ -703,7 +703,7 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Assemble unified Commands section with parameters in usage format
+   * Assemble unified Commands section with two-line format for smaller screens
    */
   protected assembleUnifiedCommandsSection(): string {
     const methods = this.analyzeComponentMethods();
@@ -712,26 +712,18 @@ export abstract class DefaultCLI implements CLI {
     
     let output = `${colors.sections}Commands:${colors.reset}\n`;
     
-    // Calculate max command length for alignment
-    let maxCommandLength = 0;
-    for (const method of methods) {
-      const paramList = method.parameters.map(p => {
-        return p.required ? `<${p.name}>` : `[${p.name}]`;
-      }).join(' ');
-      const fullCommand = `${componentName.toLowerCase()} ${method.name} ${paramList}`;
-      maxCommandLength = Math.max(maxCommandLength, fullCommand.length);
-    }
-    
-    // Generate unified command lines with parameters and descriptions
+    // Generate two-line command format: command line + description line
     for (const method of methods) {
       const paramList = method.parameters.map(p => {
         return p.required ? `<${p.name}>` : `[${p.name}]`;
       }).join(' ');
       
-      const fullCommand = `${componentName.toLowerCase()} ${method.name} ${paramList}`;
-      const padding = ' '.repeat(Math.max(1, maxCommandLength - fullCommand.length + 3));
+      // Line 1: Command with parameters
+      output += `  ${colors.toolName}${componentName.toLowerCase()}${colors.reset} ${colors.commands}${method.name}${colors.reset} ${colors.parameters}${paramList}${colors.reset}\n`;
       
-      output += `  ${colors.toolName}${componentName.toLowerCase()}${colors.reset} ${colors.commands}${method.name}${colors.reset} ${colors.parameters}${paramList}${colors.reset}${padding}${colors.descriptions}# ${method.description}${colors.reset}\n`;
+      // Line 2: Description indented for better readability
+      output += `    ${colors.descriptions}${method.description}${colors.reset}\n`;
+      output += '\n'; // Empty line between commands for better separation
     }
     
     return output;
