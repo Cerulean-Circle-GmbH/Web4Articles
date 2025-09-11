@@ -229,8 +229,6 @@ export class UnitCLI extends DefaultCLI {
       const searchTerm = args[0];
       const chainedMethods = args.slice(1);
       
-      console.log(`🔗 Method chaining detected: find("${searchTerm}").${chainedMethods.join('.')}`);
-      
       // Start with find
       const unit = this.getOrCreateUnit();
       let chainedUnit = await unit.find(searchTerm);
@@ -239,7 +237,6 @@ export class UnitCLI extends DefaultCLI {
       for (const methodName of chainedMethods) {
         if (methodName === 'list') {
           // ✅ INTERACTIVE: Execute list with less for interactive browsing
-          console.log(`📄 Executing interactive list for ${searchTerm} references...`);
           await this.executeInteractiveList(chainedUnit);
           return true;
         }
