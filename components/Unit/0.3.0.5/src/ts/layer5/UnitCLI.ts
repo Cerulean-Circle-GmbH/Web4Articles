@@ -175,6 +175,12 @@ export class UnitCLI extends DefaultCLI {
         return; // Command executed successfully
       }
 
+      // ✅ SPECIAL: Handle compound commands like "find <name> list"
+      if (command === 'find' && commandArgs.length >= 2 && commandArgs[1] === 'list') {
+        await this.executeFindAndList(commandArgs[0]);
+        return;
+      }
+
       // Special cases (non-component methods)
       switch (command) {
         case 'create':
