@@ -226,19 +226,41 @@ export class DefaultUnit implements Unit, Upgrade {
         'scripts'
       ];
       
-      const foundReferences: string[] = [];
+      const foundReferences: any[] = [];
       
       for (const dir of searchDirs) {
         try {
-          // Execute grep search in each directory
-          const grepCommand = `grep -r -l "${name}" ${dir}/ 2>/dev/null || true`;
+          // ✅ JEDI MODE: Enhanced grep with line and column positions for GitTextIOR
+          const grepCommand = `grep -r -n -o -H "${name}" ${dir}/ 2>/dev/null || true`;
           const { exec } = await import('child_process');
           const execPromise = promisify(exec);
           
           const result = await execPromise(grepCommand);
           if (result.stdout) {
-            const files = result.stdout.trim().split('\n').filter(f => f.length > 0);
-            foundReferences.push(...files);
+            const matches = result.stdout.trim().split('\n').filter(f => f.length > 0);
+            
+            // Parse grep output: filename:line:match
+            for (const match of matches) {
+              const parts = match.split(':');
+              if (parts.length >= 3) {
+                const filename = parts[0];
+                const lineNumber = parts[1];
+                const matchText = parts.slice(2).join(':');
+                
+                // Calculate column position
+                const columnPosition = await this.calculateColumnPosition(filename, lineNumber, name);
+                
+                const referenceInfo = {
+                  file: filename,
+                  line: lineNumber,
+                  column: columnPosition,
+                  match: matchText,
+                  gitTextIOR: `${filename}:${lineNumber},${columnPosition}`
+                };
+                
+                foundReferences.push(referenceInfo);
+              }
+            }
           }
         } catch (error) {
           // Continue searching other directories
@@ -267,12 +289,16 @@ export class DefaultUnit implements Unit, Upgrade {
       extendedModel.foundReferences = foundReferencesData;
       
       console.log(`✅ Filesystem search completed for: "${name}"`);
-      console.log(`   Found ${foundReferences.length} potential references:`);
+      console.log(`   Found ${foundReferences.length} potential references with precise positioning:`);
       
       if (foundReferences.length > 0) {
-        // ✅ SAFE: Always show summary, never interactive for background agents
-        foundReferences.slice(0, 10).forEach((file, index) => {
-          console.log(`   ${index + 1}. ${file}`);
+        // ✅ JEDI MODE: Show GitTextIOR-ready references with line:column positions
+        foundReferences.slice(0, 10).forEach((ref, index) => {
+          if (typeof ref === 'object' && ref.gitTextIOR) {
+            console.log(`   ${index + 1}. ${ref.file}:${ref.line},${ref.column} → "${ref.match}"`);
+          } else {
+            console.log(`   ${index + 1}. ${ref}`);
+          }
         });
         
         if (foundReferences.length > 10) {
@@ -303,6 +329,32 @@ export class DefaultUnit implements Unit, Upgrade {
     // ✅ SAFE: Never show interactive for background agents - require chaining
     // Interactive less is dangerous for background agents
     return false;
+  }
+
+  /**
+   * Calculate column position of match in file line
+   * Web4 pattern: Precise positioning for GitTextIOR creation
+   * @cliHide
+   */
+  private async calculateColumnPosition(filename: string, lineNumber: string, searchTerm: string): Promise<string> {
+    try {
+      const { promises: fs } = await import('fs');
+      const fileContent = await fs.readFile(filename, 'utf-8');
+      const lines = fileContent.split('\n');
+      const lineIndex = parseInt(lineNumber) - 1; // Convert to 0-based index
+      
+      if (lineIndex >= 0 && lineIndex < lines.length) {
+        const line = lines[lineIndex];
+        const columnIndex = line.indexOf(searchTerm);
+        if (columnIndex !== -1) {
+          return (columnIndex + 1).toString(); // Convert to 1-based column
+        }
+      }
+      
+      return '1'; // Default to column 1 if not found
+    } catch (error) {
+      return '1'; // Default to column 1 on error
+    }
   }
 
   /**

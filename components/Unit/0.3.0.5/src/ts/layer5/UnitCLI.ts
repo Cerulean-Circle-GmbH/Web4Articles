@@ -281,18 +281,30 @@ export class UnitCLI extends DefaultCLI {
         '',
         '📁 Files containing references:',
         '=' .repeat(80),
-        ...foundRefs.files.map((file: string, index: number) => 
-          `${(index + 1).toString().padStart(4)}: ${file}`
-        ),
+        ...foundRefs.files.map((ref: any, index: number) => {
+          if (typeof ref === 'object' && ref.gitTextIOR) {
+            return `${(index + 1).toString().padStart(4)}: ${ref.file}:${ref.line},${ref.column} → "${ref.match}"`;
+          } else {
+            return `${(index + 1).toString().padStart(4)}: ${ref}`;
+          }
+        }),
         '',
         '💡 Usage Instructions:',
         '=' .repeat(80),
         `   unit link <uuid|lnfile> <file>              # Track specific reference`,
+        `   unit from <file> <line,column> <line,column> # Create GitTextIOR unit from precise position`,
         `   unit references <uuid|lnfile>               # Show existing unit references`,
         '',
-        '🔗 Example Commands:',
-        `   unit link 44443290-015c-4720-be80-c42caf842252 ${foundRefs.files[0] || 'file.ts'}`,
-        `   unit linkInto TSCompletion.ts.unit backup/`,
+        '🔗 JEDI MODE - GitTextIOR Examples:',
+        ...foundRefs.files.slice(0, 3).map((ref: any) => {
+          if (typeof ref === 'object' && ref.gitTextIOR) {
+            const endLine = parseInt(ref.line);
+            const endColumn = parseInt(ref.column) + ref.match.length;
+            return `   unit from ${ref.file} ${ref.line},${ref.column} ${endLine},${endColumn}  # Create from "${ref.match}"`;
+          } else {
+            return `   unit link 44443290-015c-4720-be80-c42caf842252 ${ref}`;
+          }
+        }),
         ''
       ].join('\n');
       
