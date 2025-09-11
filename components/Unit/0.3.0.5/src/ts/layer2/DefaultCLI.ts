@@ -202,19 +202,23 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Extract parameter information from method
+   * Extract parameter information from method with intelligent naming
    */
   private extractParameterInfo(method: Function): any[] {
     const paramCount = method.length;
     const params = [];
+    const methodName = method.name;
     
     for (let i = 0; i < paramCount; i++) {
+      const paramName = this.generateIntelligentParameterName(methodName, i);
+      const paramDesc = this.generateParameterDescription(methodName, paramName, i);
+      
       params.push({
-        name: `arg${i + 1}`,
-        type: 'any',
-        required: true,
-        description: `Parameter ${i + 1}`,
-        examples: [],
+        name: paramName,
+        type: this.inferParameterType(methodName, paramName),
+        required: this.isParameterRequired(methodName, i),
+        description: paramDesc,
+        examples: this.generateParameterExamples(paramName),
         validation: []
       });
     }
@@ -223,9 +227,165 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Extract method description from method name
+   * Generate intelligent parameter names based on method context
+   */
+  private generateIntelligentParameterName(methodName: string, index: number): string {
+    // Common parameter patterns based on method names and position
+    const parameterPatterns: { [key: string]: string[] } = {
+      'create': ['name', 'description', 'typeM3'],
+      'classify': ['uuid', 'typeM3'],
+      'link': ['uuid', 'filename'],
+      'linkInto': ['linkfile', 'targetfolder'],
+      'list': ['uuid'],
+      'origin': ['uuid'],
+      'deleteLink': ['linkfile'],
+      'deleteUnit': ['linkfile'],
+      'from': ['filename', 'start:line,column', 'end:line,column'],
+      'definition': ['uuid', 'filename', 'start:line,column', 'end:line,column'],
+      'execute': ['name', 'input'],
+      'set': ['uuid', 'key', 'value'],
+      'find': ['search-term'],
+      'replace': ['pattern', 'file-path'],
+      'update': ['component', 'version']
+    };
+    
+    // Check for exact method name match
+    if (parameterPatterns[methodName]) {
+      return parameterPatterns[methodName][index] || `arg${index + 1}`;
+    }
+    
+    // Check for partial matches
+    for (const [pattern, params] of Object.entries(parameterPatterns)) {
+      if (methodName.includes(pattern)) {
+        return params[index] || `arg${index + 1}`;
+      }
+    }
+    
+    // Generic fallback with common patterns
+    const genericPatterns = ['uuid', 'name', 'data', 'value', 'path'];
+    return genericPatterns[index] || `arg${index + 1}`;
+  }
+
+  /**
+   * Generate parameter description based on name and context
+   */
+  private generateParameterDescription(methodName: string, paramName: string, index: number): string {
+    const descriptions: { [key: string]: string } = {
+      'name': 'Component name for identification (required)',
+      'uuid': 'Component UUID for operations (8+ characters accepted)',
+      'description': 'Detailed description of the component or operation',
+      'typeM3': 'MOF classification (CLASS, ATTRIBUTE, RELATIONSHIP)',
+      'filename': 'File name for links or source references',
+      'linkfile': 'Link file name (e.g., component.unit)',
+      'targetfolder': 'Target directory for additional links',
+      'start:line,column': 'Start position in file (line:column format)',
+      'end:line,column': 'End position in file (line:column format)',
+      'input': 'JSON input data for operation',
+      'search-term': 'Search term for finding components',
+      'pattern': 'Pattern to search and replace',
+      'file-path': 'Relative path from project root',
+      'key': 'Property key to set or modify',
+      'value': 'Property value to assign',
+      'component': 'Component name (e.g., User, Unit, Web4Requirement)',
+      'version': 'Version string (e.g., latest, v1.0, 0.3.0.5)'
+    };
+    
+    return descriptions[paramName] || `${paramName.charAt(0).toUpperCase() + paramName.slice(1)} parameter`;
+  }
+
+  /**
+   * Infer parameter type based on name patterns
+   */
+  private inferParameterType(methodName: string, paramName: string): string {
+    const typeMap: { [key: string]: string } = {
+      'uuid': 'string (UUID format)',
+      'name': 'string',
+      'description': 'string',
+      'typeM3': 'TypeM3 enum',
+      'filename': 'string (file path)',
+      'input': 'JSON object',
+      'search-term': 'string',
+      'pattern': 'string (regex pattern)',
+      'file-path': 'string (relative path)',
+      'key': 'string',
+      'value': 'any',
+      'component': 'string',
+      'version': 'string'
+    };
+    
+    return typeMap[paramName] || 'any';
+  }
+
+  /**
+   * Determine if parameter is required based on method and position
+   */
+  private isParameterRequired(methodName: string, index: number): boolean {
+    // First parameters are usually required, later ones optional
+    if (index === 0) return true;
+    if (methodName === 'create' && index <= 1) return true;
+    if (methodName.includes('delete') || methodName.includes('find')) return true;
+    return index < 2; // Default: first 2 parameters required
+  }
+
+  /**
+   * Generate parameter examples based on parameter name
+   */
+  private generateParameterExamples(paramName: string): string[] {
+    const examples: { [key: string]: string[] } = {
+      'name': ['auth-validator', 'user-manager', 'data-processor'],
+      'uuid': ['a1b2c3d4-e5f6', '12345678-1234-1234-1234-123456789abc'],
+      'description': ['User authentication validation', 'Data processing component'],
+      'typeM3': ['CLASS', 'ATTRIBUTE', 'RELATIONSHIP'],
+      'filename': ['UserValidator.ts', 'auth-validator.unit'],
+      'input': ['{"user": "test"}', '{"data": "sample"}'],
+      'search-term': ['authentication', 'validation', 'empty constructor'],
+      'file-path': ['scrum.pmo/sprints/sprint-20/', 'components/Unit/0.3.0.5/']
+    };
+    
+    return examples[paramName] || [`${paramName}-example`];
+  }
+
+  /**
+   * Extract method description from method name with detailed descriptions
    */
   private extractMethodDescription(name: string): string {
+    const descriptions: { [key: string]: string } = {
+      'create': 'Create new component with name, optional description, and optional classification',
+      'classify': 'Set MOF typeM3 classification for existing component',
+      'link': 'Create initial link to existing component using UUID',
+      'linkInto': 'Create additional link to same component in different location',
+      'list': 'List all links pointing to specific component UUID',
+      'origin': 'Show origin and definition source links as clickable URLs',
+      'deleteLink': 'Delete specific link file while preserving component in central storage',
+      'deleteUnit': 'Delete entire component from central storage and all associated link files',
+      'from': 'Create component from file text with extracted name and origin',
+      'definition': 'Add definition source reference to existing component',
+      'execute': 'Execute component with input data',
+      'info': 'Display current component information and scenario',
+      'help': 'Show this help message',
+      'transform': 'Transform input data using component logic',
+      'validate': 'Validate object against component rules',
+      'process': 'Process data through component workflow',
+      'init': 'Initialize component with scenario data',
+      'toScenario': 'Convert component state to scenario format',
+      'upgrade': 'Upgrade component to newer version',
+      'find': 'Search for components by content or properties',
+      'set': 'Set property value for existing component',
+      'update': 'Update component properties or regenerate components'
+    };
+    
+    // Check for exact match
+    if (descriptions[name]) {
+      return descriptions[name];
+    }
+    
+    // Check for partial matches
+    for (const [pattern, desc] of Object.entries(descriptions)) {
+      if (name.includes(pattern)) {
+        return desc.replace('component', name.includes('Unit') ? 'unit' : 'component');
+      }
+    }
+    
     return `${name.charAt(0).toUpperCase() + name.slice(1)} operation`;
   }
 
@@ -340,9 +500,23 @@ export abstract class DefaultCLI implements CLI {
     // Usage section  
     output += `${colors.sections}Usage:${colors.reset}\n`;
     const methods = this.analyzeComponentMethods();
-    for (const method of methods.slice(0, 5)) {
-      const paramList = method.parameters.map(p => `<${p.name}>`).join(' ');
-      output += `  ${colors.commands}${componentName.toLowerCase()} ${method.name}${colors.reset} ${colors.parameters}${paramList}${colors.reset}       ${colors.descriptions}# ${method.description}${colors.reset}\n`;
+    
+    // Show key methods with proper parameter syntax
+    const keyMethods = ['create', 'classify', 'link', 'list', 'deleteLink', 'execute', 'info', 'help'];
+    const displayMethods = methods.filter(m => keyMethods.includes(m.name)).slice(0, 8);
+    
+    for (const method of displayMethods) {
+      const paramList = method.parameters.map(p => {
+        return p.required ? `<${p.name}>` : `[${p.name}]`;
+      }).join(' ');
+      
+      output += `  ${colors.commands}${componentName.toLowerCase()} ${method.name}${colors.reset} ${colors.parameters}${paramList}${colors.reset}`;
+      
+      // Add spacing for alignment like requirement output
+      const spacing = Math.max(1, 40 - (componentName.length + method.name.length + paramList.length));
+      output += ' '.repeat(spacing);
+      
+      output += `${colors.descriptions}# ${method.description}${colors.reset}\n`;
     }
     output += '\n';
     
