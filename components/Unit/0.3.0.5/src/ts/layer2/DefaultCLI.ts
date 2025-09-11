@@ -627,38 +627,106 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Assemble parameter section with specifications and example values
+   * Assemble parameter section with radical elimination of redundant parameters
+   * Web4 pattern: Occam's Razor parameter documentation with value-based filtering
    */
   protected assembleParameterSection(): string {
     const methods = this.analyzeComponentMethods();
     const colors = this.getTSCompletionColors();
-    const uniqueParams = new Map<string, any>();
+    const allParams = new Map<string, any>();
     
+    // Collect all parameters
     for (const method of methods) {
       for (const param of method.parameters) {
-        if (!uniqueParams.has(param.name)) {
-          uniqueParams.set(param.name, param);
+        if (!allParams.has(param.name)) {
+          allParams.set(param.name, param);
         }
       }
     }
     
+    // ✅ RADICAL ELIMINATION: Filter to only value-adding parameters
+    const coreParams = this.filterToCoreParameters(allParams);
+    
     let output = `${colors.sections}Parameters:${colors.reset}\n`;
     
-    // Two-line format for parameters with examples
-    for (const [name, param] of uniqueParams) {
+    // Generate documentation for core parameters only
+    for (const [name, param] of coreParams) {
       const examples = this.generateParameterExamples(param.name);
-      const exampleValue = examples[0] || 'value';
       
-      // Line 1: Parameter name and description
-      output += `  ${colors.parameters}<${name}>${colors.reset}\n`;
+      // Generate CLI syntax for parameter
+      const syntax = this.generateParameterSyntax(param);
       
-      // Line 2: Description and example value
+      // Line 1: Parameter syntax
+      output += `  ${colors.parameters}${syntax}${colors.reset}\n`;
+      
+      // Line 2: Description
       output += `    ${colors.descriptions}${param.description}${colors.reset}\n`;
-      output += `    ${colors.descriptions}Example: ${colors.parameters}${exampleValue}${colors.reset}\n`;
-      output += '\n'; // Empty line between parameters for better separation
+      
+      // Line 3: Examples (multiple if available)
+      if (examples.length > 0) {
+        for (let i = 0; i < Math.min(2, examples.length); i++) {
+          output += `    ${colors.descriptions}Example: ${colors.parameters}${examples[i]}${colors.reset}\n`;
+        }
+      }
+      output += '\n'; // Empty line between parameters
     }
     
     return output;
+  }
+
+  /**
+   * Filter parameters to core types providing unique value
+   * Web4 pattern: Radical elimination of redundant parameter documentation
+   */
+  private filterToCoreParameters(allParams: Map<string, any>): Map<string, any> {
+    const coreParams = new Map<string, any>();
+    
+    // ✅ CORE PARAMETER TYPES: Only these provide unique value
+    const coreTypes = [
+      { type: 'uuid|lnfile', names: ['identifier', 'unit', 'uuidOrLnFile', 'originalUnit', 'originalUnitUUID', 'uuid'] },
+      { type: 'folder', names: ['folder', 'targetFolder'] },
+      { type: 'file', names: ['filename', 'linkFilename', 'copyPath', 'oldLinkPath', 'newLinkPath'] },
+      { type: 'position', names: ['startPos', 'endPos'] },
+      { type: 'name', names: ['name'] }
+    ];
+    
+    // Add first occurrence of each core type
+    for (const coreType of coreTypes) {
+      for (const paramName of coreType.names) {
+        if (allParams.has(paramName)) {
+          const param = allParams.get(paramName);
+          
+          // Enhance parameter with core type information
+          const enhancedParam = {
+            ...param,
+            name: coreType.type,
+            description: this.getCoreParameterDescription(coreType.type),
+            coreType: coreType.type
+          };
+          
+          coreParams.set(coreType.type, enhancedParam);
+          break; // Only add first occurrence of each type
+        }
+      }
+    }
+    
+    return coreParams;
+  }
+
+  /**
+   * Get standardized descriptions for core parameter types
+   * Web4 pattern: Consistent parameter documentation for core types
+   */
+  private getCoreParameterDescription(coreType: string): string {
+    const descriptions: { [key: string]: string } = {
+      'uuid|lnfile': 'Unit reference (UUID or .unit file)',
+      'folder': 'Directory (relative to project root)',
+      'file': 'File path (relative to project root)',
+      'position': 'Position (line,column format)',
+      'name': 'Component name (spaces become dots)'
+    };
+    
+    return descriptions[coreType] || `${coreType} parameter`;
   }
 
   /**
