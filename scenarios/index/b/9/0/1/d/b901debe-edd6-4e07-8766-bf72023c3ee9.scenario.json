@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "b901debe-edd6-4e07-8766-bf72023c3ee9",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"b901debe-edd6-4e07-8766-bf72023c3ee9\",\"timestamp\":\"2025-09-11T22:17:32.399Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "b901debe-edd6-4e07-8766-bf72023c3ee9",
+    "createdAt": "2025-09-11T22:17:32.398Z",
+    "updatedAt": "2025-09-11T22:17:32.401Z",
+    "typeM3": "CLASS",
+    "name": "UUID.interface",
+    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Web4Requirement/0.3.0.5/src/ts/layer3/UUID.interface.ts",
+    "definition": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Web4Requirement/0.3.0.5/src/ts/layer3/UUID.interface.ts",
+    "indexPath": "/workspace/scenarios/index/b/9/0/1/d/b901debe-edd6-4e07-8766-bf72023c3ee9.scenario.json",
+    "symlinkPaths": []
+  }
+}

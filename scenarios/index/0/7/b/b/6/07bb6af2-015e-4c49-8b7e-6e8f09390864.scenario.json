@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "07bb6af2-015e-4c49-8b7e-6e8f09390864",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"07bb6af2-015e-4c49-8b7e-6e8f09390864\",\"timestamp\":\"2025-09-11T22:18:41.791Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "07bb6af2-015e-4c49-8b7e-6e8f09390864",
+    "createdAt": "2025-09-11T22:18:41.791Z",
+    "updatedAt": "2025-09-11T22:18:41.795Z",
+    "typeM3": "CLASS",
+    "name": "DefaultCLI",
+    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Web4Requirement/0.3.0.5/src/ts/layer2/DefaultCLI.ts",
+    "definition": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Web4Requirement/0.3.0.5/src/ts/layer2/DefaultCLI.ts",
+    "indexPath": "/workspace/scenarios/index/0/7/b/b/6/07bb6af2-015e-4c49-8b7e-6e8f09390864.scenario.json",
+    "symlinkPaths": []
+  }
+}
