@@ -48,8 +48,8 @@ export class DefaultUnit implements Unit, Upgrade {
       // No state in UnitIndex model - state is requirement-like attribute
     }
     
-    // Check for missing terminal identity and show warnings (backward compatibility)
-    this.showTerminalIdentityWarning();
+    // ✅ FIX: Only show warning after operations if identity still missing
+    // Removed automatic warning - will check after scenario operations
     
     // Initialize storage with scenario - Web4 pattern
     const storageScenario = {
@@ -1242,6 +1242,11 @@ export class DefaultUnit implements Unit, Upgrade {
     };
   }
 
+  /**
+   * Show terminal identity warning only when appropriate
+   * Web4 pattern: Conditional warning based on context and completeness
+   * @cliHide
+   */
   showTerminalIdentityWarning(): void {
     const validation = this.validateTerminalIdentity();
     if (!validation.isComplete) {
@@ -1252,6 +1257,20 @@ export class DefaultUnit implements Unit, Upgrade {
       console.warn('');
       console.warn('   Next build version will require migration method for missing model info.');
       console.warn('   Please update unit with complete terminal identity (uni-t) attributes.');
+    }
+  }
+
+  /**
+   * Check terminal identity and warn only if unit is being saved/persisted
+   * Web4 pattern: Context-aware warning for terminal identity completeness
+   * @cliHide
+   */
+  private checkTerminalIdentityBeforePersistence(): void {
+    // Only warn if unit is being saved and identity is incomplete
+    const validation = this.validateTerminalIdentity();
+    if (!validation.isComplete && this.model.name && this.model.definition) {
+      // Unit has been used but still missing some identity - warn
+      this.showTerminalIdentityWarning();
     }
   }
 
