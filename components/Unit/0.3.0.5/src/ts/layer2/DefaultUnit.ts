@@ -144,6 +144,29 @@ export class DefaultUnit implements Unit, Upgrade {
    */
   async execute(): Promise<void> {
     try {
+      const extendedModel = this.model as any;
+      
+      // ✅ SAFE INTERACTIVE: Handle pending interactive browsing if requested
+      if (extendedModel.pendingInteractiveBrowsing) {
+        const browsing = extendedModel.pendingInteractiveBrowsing;
+        console.log(`\n🔍 Interactive browsing: ${browsing.references.length} references for "${browsing.searchTerm}"`);
+        console.log(`   💡 Background agent safe mode - showing summary instead of interactive less`);
+        
+        // Show safe summary instead of interactive less
+        browsing.references.slice(0, 20).forEach((file: string, index: number) => {
+          console.log(`   ${index + 1}. ${file}`);
+        });
+        
+        if (browsing.references.length > 20) {
+          console.log(`   ... and ${browsing.references.length - 20} more files`);
+        }
+        
+        console.log(`\n   💡 Use 'unit link <uuid|lnfile> <file>' to track specific references`);
+        
+        // Clear pending browsing
+        delete extendedModel.pendingInteractiveBrowsing;
+      }
+      
       // Save final unit state after all chained operations
       const scenario = await this.toScenario();
       await this.storage.saveScenario(this.model.uuid, scenario, []);
@@ -236,21 +259,18 @@ export class DefaultUnit implements Unit, Upgrade {
       console.log(`   Found ${foundReferences.length} potential references:`);
       
       if (foundReferences.length > 0) {
-        // ✅ INTERACTIVE: Check if this is a standalone find (no chaining)
-        if (this.isStandaloneFindOperation()) {
-          await this.showInteractiveFindResults(foundReferences, name);
-        } else {
-          // Show summary for chaining
-          foundReferences.slice(0, 5).forEach((file, index) => {
-            console.log(`   ${index + 1}. ${file}`);
-          });
-          
-          if (foundReferences.length > 5) {
-            console.log(`   ... and ${foundReferences.length - 5} more files`);
-          }
-          
-          console.log(`\n   💡 Chain commands: unit.find('${name}').link('file.ts').execute()`);
+        // ✅ SAFE: Always show summary, never interactive for background agents
+        foundReferences.slice(0, 10).forEach((file, index) => {
+          console.log(`   ${index + 1}. ${file}`);
+        });
+        
+        if (foundReferences.length > 10) {
+          console.log(`   ... and ${foundReferences.length - 10} more files`);
         }
+        
+        console.log(`\n   💡 Use 'unit link <uuid|lnfile> <file>' to track specific references`);
+        console.log(`   💡 Chain commands: unit.find('${name}').list().execute() for interactive browsing`);
+        console.log(`   💡 Use 'unit references <uuid|lnfile>' to show existing unit references`);
       } else {
         console.log(`   No references found in project directories`);
       }
@@ -269,9 +289,9 @@ export class DefaultUnit implements Unit, Upgrade {
    * @cliHide
    */
   private isStandaloneFindOperation(): boolean {
-    // ✅ HEURISTIC: Check if we're in a CLI context without chaining
-    // For now, assume standalone (can be enhanced with chaining detection)
-    return true;
+    // ✅ SAFE: Never show interactive for background agents - require chaining
+    // Interactive less is dangerous for background agents
+    return false;
   }
 
   /**
@@ -856,19 +876,19 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * List all links pointing to specific component with unified parameter support
+   * Show all references for unit (renamed from list for clarity)
    * Web4 pattern: Union type interface supporting both UUID and file path parameters
    * 
-   * @param identifier - Unit identifier (UUID string) or link file path
-   * @returns Promise<void> - Resolves when link listing completes
+   * @param identifier - Unit identifier (UUID string) or link file path @cliSyntax uuid|lnfile
+   * @returns Promise<void> - Resolves when reference listing completes
    * @throws Error when identifier invalid or unit not found
    * @example
    * ```typescript
-   * await unit.list('44443290-015c-4720-be80-c42caf842252');
-   * await unit.list('TSCompletion.ts.unit');
+   * await unit.references('44443290-015c-4720-be80-c42caf842252');
+   * await unit.references('TSCompletion.ts.unit');
    * ```
    */
-  async list(identifier: UnitIdentifier): Promise<void> {
+  async references(identifier: UnitIdentifier): Promise<void> {
     try {
       // ✅ NEW: Extract UUID from unified parameter
       let uuid: string;
@@ -903,7 +923,49 @@ export class DefaultUnit implements Unit, Upgrade {
         });
       }
     } catch (error) {
-      console.error(`Failed to list links: ${(error as Error).message}`);
+      console.error(`Failed to show references: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * List found references with interactive browsing (requires chaining for safety)
+   * Web4 pattern: Interactive reference browsing with command chaining requirement
+   * 
+   * @returns this - Enables command chaining, interactive browsing requires chaining
+   * @throws Error when no found references available
+   * @example
+   * ```typescript
+   * await unit.find('TSCompletion').list().execute(); // Interactive browsing
+   * ```
+   */
+  async list(): Promise<this> {
+    try {
+      const extendedModel = this.model as any;
+      const foundRefs = extendedModel.foundReferences;
+      
+      if (!foundRefs || !foundRefs.files || foundRefs.files.length === 0) {
+        console.log(`❌ No found references available`);
+        console.log(`   💡 Use 'unit find <name>' first to discover references`);
+        return this;
+      }
+      
+      console.log(`📄 Interactive browsing of ${foundRefs.count} found references for: "${foundRefs.searchTerm}"`);
+      console.log(`   💡 Chaining required for interactive browsing (safe for background agents)`);
+      console.log(`   💡 Use .execute() to complete chain and enable interactive browsing`);
+      
+      // Store interactive browsing request for execute() method
+      extendedModel.pendingInteractiveBrowsing = {
+        references: foundRefs.files,
+        searchTerm: foundRefs.searchTerm,
+        timestamp: new Date().toISOString()
+      };
+      
+      // ✅ COMMAND CHAINING: Return this for fluent interface
+      return this;
+      
+    } catch (error) {
+      console.error(`❌ Failed to prepare interactive listing: ${error instanceof Error ? error.message : error}`);
+      throw error;
     }
   }
 
