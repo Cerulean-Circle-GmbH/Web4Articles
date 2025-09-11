@@ -93,9 +93,10 @@ A DAPP for collective intelligence in article writing.
 - **Apply startup decision framework** - Use the 3 standard questions
 - **Create proper PDCAs** for all significant work
 - **Use numbered decisions** (1a, 1b format) when real choices exist
-- **Provide dual links** (GitHub | local)  
+- **Provide dual links** (GitHub | local) - ALWAYS both links
 - **Keep chat minimal** - details go in PDCA files
 - **Commit and push** immediately after PDCA creation
+- **Pull protocol** - Read + Analyze + PDCA new content, not just merge
 
 ## 🎯 Success Criteria
 
