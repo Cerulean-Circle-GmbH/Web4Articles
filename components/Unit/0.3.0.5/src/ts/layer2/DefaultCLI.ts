@@ -407,40 +407,52 @@ export abstract class DefaultCLI implements CLI {
    */
   private generateIntelligentParameterName(methodName: string, index: number): string {
     // Common parameter patterns based on method names and position
+    // ✅ OCCAM'S RAZOR: Radically simplified parameter patterns
     const parameterPatterns: { [key: string]: string[] } = {
+      // Core unit operations - Universal <unit> parameter
+      'link': ['unit', 'filename'],
+      'linkInto': ['unit', 'folder'],
+      'linkIntoCopy': ['unit', 'folder', 'originalUnit'],
+      'deleteLink': ['unit'],
+      'deleteUnit': ['unit'],
+      'list': ['unit'],
+      'transform': ['unit'],
+      'validate': ['unit'],
+      'validateModel': ['unit'],
+      'toScenario': ['unit'],
+      'addExecutionCapability': ['unit'],
+      'getModel': ['unit'],
+      'origin': ['unit'],
+      
+      // Creation operations
       'create': ['name', 'description', 'typeM3'],
-      'classify': ['uuid', 'typeM3'],
-      'link': ['identifier', 'filename'],
-      'linkInto': ['uuidOrLnFile', 'targetfolder'],
-      'linkIntoCopy': ['uuidOrLnFile', 'targetfolder', 'originalUnitUUID'],
-      'list': ['identifier'],
-      'origin': ['uuid'],
-      'deleteLink': ['identifier'],
-      'deleteUnit': ['linkfile'],
       'from': ['filename', 'startPos', 'endPos'],
-      'definition': ['uuid', 'filename', 'startPos', 'endPos'],
+      
+      // File operations
+      'renameLink': ['oldFile', 'newFile'],
+      'rename': ['newName'],
+      
+      // Sync operations - Clear role separation
+      'detectCopyChanges': ['copyFile', 'unit'],
+      'syncFromCopy': ['copyFile', 'unit'],
+      'syncToCopy': ['copyFile', 'unit'],
+      
+      // Utility operations
+      'set': ['unit', 'key', 'value'],
+      'get': ['key'],
+      'extractUuidFromPath': ['path'],
+      'calculateRelativePath': ['fromPath', 'toPath'],
+      
+      // Legacy/specialized
+      'classify': ['unit', 'typeM3'],
+      'definition': ['unit', 'filename', 'startPos', 'endPos'],
       'execute': ['name', 'input'],
-      'set': ['uuid', 'key', 'value'],
       'find': ['search-term'],
       'replace': ['pattern', 'file-path'],
       'update': ['component', 'version'],
-      'init': ['uuid'],
-      'transform': ['uuid'],
-      'validate': ['uuid'],
+      'init': ['unit'],
       'process': ['input'],
-      'validateModel': ['uuid'],
-      'toScenario': ['uuid'],
-      'addExecutionCapability': ['uuid'],
-      'getModel': ['uuid'],
-      'extractUuidFromPath': ['path'],
-      'calculateRelativePath': ['fromPath', 'toPath'],
-      'get': ['key'],
-      'store': ['key', 'value'],
-      'renameLink': ['oldLinkPath', 'newLinkPath'],
-      'rename': ['newName'],
-      'detectCopyChanges': ['copyPath', 'originalUUID'],
-      'syncFromCopy': ['copyPath', 'originalUUID'],
-      'syncToCopy': ['copyPath', 'originalUUID']
+      'store': ['key', 'value']
     };
     
     // Check for exact method name match
@@ -464,39 +476,57 @@ export abstract class DefaultCLI implements CLI {
    * Generate parameter description based on name and context
    */
   private generateParameterDescription(methodName: string, paramName: string, index: number): string {
+    // ✅ OCCAM'S RAZOR: Radically simplified parameter descriptions
     const descriptions: { [key: string]: string } = {
-      'name': 'Component name for identification (kebab-case preferred)',
-      'uuid': 'Unique identifier (36-character UUID format)',
-      'description': 'Detailed description of the component or operation (quoted string)',
-      'typeM3': 'MOF M3 metamodel classification (CLASS, ATTRIBUTE, RELATIONSHIP)',
-      'filename': 'File path for links or source references (relative to project root)',
-      'linkfile': 'Link file path with .link extension for component reference',
-      'targetfolder': 'Target directory for component placement (relative path)',
-      'start:line,column': 'Starting position in file (line,column format like 5,10)',
-      'end:line,column': 'Ending position in file (line,column format like 15,30)',
-      'startPos': 'Starting position in file (line,column format like 5,10)',
-      'endPos': 'Ending position in file (line,column format like 15,30)',
-      'input': 'JSON input data for processing (quoted JSON string)',
-      'search-term': 'Search term for finding components (quoted string)',
-      'pattern': 'Pattern to search and replace (regex supported)',
-      'file-path': 'File or directory path (relative to project root)',
+      // Universal unit parameter - THE CORE CONCEPT
+      'unit': 'Unit reference (UUID or .unit file)',
+      
+      // Core operation parameters
+      'folder': 'Target directory (relative to project root)',
+      'filename': 'File name or path (relative to project root)',
+      'copyFile': 'Copy file path (relative to project root)',
+      'originalUnit': 'Original unit reference (UUID or .unit file)',
+      
+      // File operation parameters
+      'oldFile': 'Current file path (relative to project root)',
+      'newFile': 'New file path (relative to project root)',
+      'newName': 'New name for the unit (will update all references)',
+      
+      // Creation parameters
+      'name': 'Component name (kebab-case preferred)',
+      'description': 'Component description (quoted string)',
+      'typeM3': 'MOF classification (CLASS, ATTRIBUTE, RELATIONSHIP)',
+      
+      // Position parameters
+      'startPos': 'Start position (line,column format like 5,10)',
+      'endPos': 'End position (line,column format like 15,30)',
+      
+      // Data parameters
+      'key': 'Property key (string identifier)',
+      'value': 'Property value (string or JSON)',
+      'input': 'Input data (JSON format)',
+      
+      // Path parameters
       'path': 'File or directory path (relative to project root)',
-      'fromPath': 'Source path for relative calculation (relative to project root)',
-      'toPath': 'Target path for relative calculation (relative to project root)',
-      'key': 'Property key to set or modify (string identifier)',
-      'value': 'Property value to assign (string or JSON)',
-      'component': 'Component name (e.g., User, Unit, Web4Requirement)',
-      'version': 'Version string (e.g., latest, v1.0, 0.3.0.5)',
-      'oldLinkPath': 'Current link file path (relative to project root, .unit/.link extension)',
-      'newLinkPath': 'New link file path (relative to project root, .unit/.link extension)',
-      'newName': 'New name for the unit (kebab-case preferred, will update all references)',
-      'identifier': 'Unit identifier (UUIDv4 instance or UUID string)',
-      'uuidOrLnFile': 'Unit UUID (36-character) or existing ln file path (.unit/.link extension)',
-      'originalUnitUUID': 'Optional original unit UUID for copy reference tracking (36-character)',
-      'copyPath': 'Path to copy file for sync operations (relative to project root)',
-      'arg1': 'First method argument (context-dependent parameter)',
-      'arg2': 'Second method argument (context-dependent parameter)',
-      'arg3': 'Third method argument (context-dependent parameter)'
+      'fromPath': 'Source path (relative to project root)',
+      'toPath': 'Target path (relative to project root)',
+      
+      // Search parameters
+      'search-term': 'Search term (quoted string)',
+      'pattern': 'Search pattern (regex supported)',
+      
+      // System parameters
+      'component': 'Component name (User, Unit, Web4Requirement)',
+      'version': 'Version string (0.3.0.5, latest, 1.0.0)',
+      
+      // Legacy parameters (for backward compatibility)
+      'uuid': 'Unit reference (UUID or .unit file)',
+      'linkfile': 'Unit reference (UUID or .unit file)',
+      'identifier': 'Unit reference (UUID or .unit file)',
+      'uuidOrLnFile': 'Unit reference (UUID or .unit file)',
+      'originalUnitUUID': 'Original unit reference (UUID or .unit file)',
+      'copyPath': 'Copy file path (relative to project root)',
+      'targetfolder': 'Target directory (relative to project root)'
     };
     
     // Handle special parameter patterns
@@ -547,36 +577,65 @@ export abstract class DefaultCLI implements CLI {
    * Generate parameter examples based on parameter name
    */
   private generateParameterExamples(paramName: string): string[] {
+    // ✅ OCCAM'S RAZOR: Radically simplified parameter examples
     const examples: { [key: string]: string[] } = {
-      'name': ['auth-validator', 'user-manager', 'data-processor'],
-      'uuid': ['a1b2c3d4-e5f6-7890-abcd-ef1234567890', '12345678-1234-1234-1234-123456789abc'],
-      'description': ['"User authentication validation"', '"Data processing component"', '"Web4 unit for validation"'],
+      // Universal unit parameter - THE CORE CONCEPT
+      'unit': [
+        '44443290-015c-4720-be80-c42caf842252',      // UUID format
+        'TSCompletion.ts.unit',                      // File format
+        'auth-validator.unit'                        // File format
+      ],
+      
+      // Core operation parameters
+      'folder': ['backup/', 'components/temp/', 'scenarios/'],
+      'filename': ['auth-validator.unit', 'TSCompletion.ts', 'UserValidator.ts'],
+      'copyFile': ['components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.ts', 'components/User/0.1.0.0/src/ts/DefaultUser.ts'],
+      'originalUnit': [
+        '12345678-1234-1234-1234-123456789abc',      // UUID format
+        'original.unit',                             // File format
+        'TSRanger.v2.2.unit'                         // File format
+      ],
+      
+      // File operation parameters
+      'oldFile': ['TSCompletion.unit', 'auth-validator.link'],
+      'newFile': ['TSCompletion.ts.unit', 'auth-validator-enhanced.link'],
+      'newName': ['Enhanced.Auth.Validator', 'User.Manager.Pro'],
+      
+      // Creation parameters
+      'name': ['Auth.Validator', 'User.Manager', 'Data.Processor'],
+      'description': ['"User authentication validation"', '"Data processing component"'],
       'typeM3': ['CLASS', 'ATTRIBUTE', 'RELATIONSHIP'],
-      'filename': ['components/Unit/0.3.0.5/src/ts/layer2/DefaultUnit.ts', 'auth-validator.unit', 'UserValidator.ts'],
-      'input': ['{"user": "test"}', '{"data": "sample"}', '{"name": "example"}'],
-      'search-term': ['"authentication"', '"validation"', '"empty constructor"'],
-      'file-path': ['scrum.pmo/sprints/sprint-20/', 'components/Unit/0.3.0.5/', 'docs/'],
-      'path': ['scrum.pmo/sprints/sprint-20/', 'components/Unit/0.3.0.5/', 'docs/'],
-      'fromPath': ['components/Unit/0.3.0.5/', 'scrum.pmo/sprints/', 'docs/'],
-      'toPath': ['scenarios/index/', 'components/User/', 'scripts/'],
-      'linkfile': ['unit-auth-validator.link', 'user-manager.link', 'data-processor.link'],
-      'targetfolder': ['scenarios/index/a/5/0/', 'components/backup/', 'temp/'],
-      'start': ['1,1', '5,10', '12,5'],
-      'end': ['10,20', '15,30', '25,15'],
+      
+      // Position parameters
       'startPos': ['1,1', '5,10', '12,5'],
       'endPos': ['10,20', '15,30', '25,15'],
+      
+      // Data parameters
       'key': ['"name"', '"description"', '"typeM3"'],
-      'value': ['"auth-validator"', '"User validation component"', 'CLASS'],
-      'pattern': ['[A-Za-z]+', '\\d{4}-\\d{2}-\\d{2}', 'function\\s+\\w+'],
+      'value': ['"Auth.Validator"', '"User validation component"', 'CLASS'],
+      'input': ['{"user": "test"}', '{"data": "sample"}'],
+      
+      // Path parameters
+      'path': ['scrum.pmo/sprints/sprint-20/', 'components/Unit/0.3.0.5/'],
+      'fromPath': ['components/Unit/0.3.0.5/', 'scrum.pmo/sprints/'],
+      'toPath': ['scenarios/index/', 'components/User/'],
+      
+      // Search parameters
+      'search-term': ['"authentication"', '"validation"'],
+      'pattern': ['[A-Za-z]+', 'function\\s+\\w+'],
+      
+      // System parameters
       'component': ['User', 'Unit', 'Web4Requirement'],
       'version': ['0.3.0.5', 'latest', '1.0.0'],
-      'oldLinkPath': ['TSCompletion.unit', 'auth-validator.link', 'components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.unit'],
-      'newLinkPath': ['TSCompletion.ts.unit', 'auth-validator-enhanced.link', 'components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.ts.unit'],
-      'newName': ['ts-completion-enhanced', 'auth-validator-v2', 'user-manager-pro'],
-      'identifier': ['44443290-015c-4720-be80-c42caf842252', '12345678-1234-1234-1234-123456789abc'],
-      'uuidOrLnFile': ['44443290-015c-4720-be80-c42caf842252', 'TSCompletion.ts.unit', 'auth-validator.link'],
-      'originalUnitUUID': ['12345678-1234-1234-1234-123456789abc', '98765432-4321-4321-4321-210987654321'],
-      'copyPath': ['components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.ts', 'components/User/0.1.0.0/src/ts/DefaultUser.ts']
+      
+      // Legacy parameter examples (backward compatibility)
+      'uuid': ['44443290-015c-4720-be80-c42caf842252', 'TSCompletion.ts.unit'],
+      'linkfile': ['TSCompletion.ts.unit', 'auth-validator.unit'],
+      'identifier': ['44443290-015c-4720-be80-c42caf842252', 'TSCompletion.ts.unit'],
+      'uuidOrLnFile': ['44443290-015c-4720-be80-c42caf842252', 'TSCompletion.ts.unit'],
+      'originalUnitUUID': ['12345678-1234-1234-1234-123456789abc'],
+      'copyPath': ['components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.ts'],
+      'targetfolder': ['backup/', 'components/temp/']
     };
     
     return examples[paramName] || [`${paramName}-example`];
@@ -766,10 +825,18 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Generate CLI parameter syntax from type information
-   * Web4 pattern: Dynamic CLI syntax generation from TypeScript types
+   * Generate CLI parameter syntax from type information with Occam's Razor simplification
+   * Web4 pattern: Dynamic CLI syntax generation with radical simplification
    */
   private generateParameterSyntax(param: any): string {
+    // ✅ OCCAM'S RAZOR: Force <uuid|lnfile> for universal unit parameters
+    if (param.name === 'unit' || param.name === 'identifier' || 
+        param.name === 'uuidOrLnFile' || param.name === 'originalUnit' ||
+        param.name === 'originalUnitUUID' || param.name === 'uuid') {
+      return param.required ? `<uuid|lnfile>` : `[uuid|lnfile]`;
+    }
+    
+    // Handle TypeScript union types
     if (param.isUnionType && param.unionTypes) {
       // Handle specific Web4 union types
       if (this.isUnitIdentifierType(param.unionTypes)) {
