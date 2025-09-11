@@ -174,6 +174,91 @@ export class DefaultUnit implements Unit, Upgrade {
     return operations.join(' → ') || 'initialization';
   }
 
+  /**
+   * Find potential references to unit name in filesystem using grep
+   * Web4 pattern: Filesystem reference discovery with command chaining support
+   * 
+   * @param name - Name to search for in filesystem @cliSyntax name
+   * @returns this - Enables command chaining for fluent interface
+   * @throws Error when search fails or name invalid
+   * @example
+   * ```typescript
+   * await unit.find('TSCompletion').link('discovered-file.ts').execute();
+   * ```
+   */
+  async find(name: string): Promise<this> {
+    try {
+      const { spawn } = await import('child_process');
+      const { promisify } = await import('util');
+      const execAsync = promisify(spawn);
+      
+      console.log(`🔍 Searching filesystem for references to: "${name}"`);
+      
+      // Use grep to search for name in project files
+      const searchDirs = [
+        'components',
+        'scenarios', 
+        'scrum.pmo',
+        'docs',
+        'scripts'
+      ];
+      
+      const foundReferences: string[] = [];
+      
+      for (const dir of searchDirs) {
+        try {
+          // Execute grep search in each directory
+          const grepCommand = `grep -r -l "${name}" ${dir}/ 2>/dev/null || true`;
+          const { exec } = await import('child_process');
+          const execPromise = promisify(exec);
+          
+          const result = await execPromise(grepCommand);
+          if (result.stdout) {
+            const files = result.stdout.trim().split('\n').filter(f => f.length > 0);
+            foundReferences.push(...files);
+          }
+        } catch (error) {
+          // Continue searching other directories
+          console.log(`   Skipped ${dir}/ (${error instanceof Error ? error.message : 'inaccessible'})`);
+        }
+      }
+      
+      // Store found references in unit model for potential linking
+      const extendedModel = this.model as any;
+      extendedModel.foundReferences = {
+        searchTerm: name,
+        files: foundReferences,
+        timestamp: new Date().toISOString(),
+        count: foundReferences.length
+      };
+      
+      console.log(`✅ Filesystem search completed for: "${name}"`);
+      console.log(`   Found ${foundReferences.length} potential references:`);
+      
+      if (foundReferences.length > 0) {
+        foundReferences.slice(0, 10).forEach((file, index) => {
+          console.log(`   ${index + 1}. ${file}`);
+        });
+        
+        if (foundReferences.length > 10) {
+          console.log(`   ... and ${foundReferences.length - 10} more files`);
+        }
+        
+        console.log(`\n   💡 Use 'unit link <uuid|lnfile> <file>' to track specific references`);
+        console.log(`   💡 Chain commands: unit.find('${name}').link('file.ts').execute()`);
+      } else {
+        console.log(`   No references found in project directories`);
+      }
+      
+      // ✅ COMMAND CHAINING: Return this for fluent interface
+      return this;
+      
+    } catch (error) {
+      console.error(`❌ Failed to search filesystem: ${error instanceof Error ? error.message : error}`);
+      throw error;
+    }
+  }
+
   async validateModel(): Promise<boolean> {
     // Comprehensive UnitModel validation
     try {
@@ -1340,6 +1425,7 @@ export class DefaultUnit implements Unit, Upgrade {
   /**
    * Recursively find files that contain the old name and should be renamed
    * Helper method for comprehensive unit renaming
+   * @cliHide
    */
   private async findFilesToRename(
     dirPath: string, 
