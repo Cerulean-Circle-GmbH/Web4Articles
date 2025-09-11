@@ -45,9 +45,6 @@ export class UnitCLI extends DefaultCLI {
   }
 
   private async createUnit(name: string, description: string = '', typeM3String?: string): Promise<void> {
-    // Get or create unit instance (command-based instantiation)
-    const unit = this.getOrCreateUnit();
-    
     // Validate typeM3 if provided
     let typeM3: TypeM3 | undefined;
     if (typeM3String) {
@@ -58,14 +55,21 @@ export class UnitCLI extends DefaultCLI {
       }
     }
     
-    // Store name, definition, and typeM3 immediately (TRON's correction)
+    // Get or create unit instance (command-based instantiation)
+    const unit = this.getOrCreateUnit();
+    
+    // ✅ FIX: Set name, definition, and typeM3 IMMEDIATELY to prevent warning
     unit.unitModel.name = name;
-    if (description) {
-      unit.unitModel.definition = description;  // ✅ Store description as definition immediately
-    }
+    unit.unitModel.definition = description || `Unit: ${name}`;  // ✅ Always set definition
     if (typeM3) {
       unit.unitModel.typeM3 = typeM3;  // ✅ Set MOF classification if provided
     }
+    
+    // ✅ FIX: Set origin to prevent warning
+    unit.unitModel.origin = `Created via CLI: unit create "${name}"`;
+    
+    // Update timestamp after setting properties
+    unit.unitModel.updatedAt = new Date().toISOString();
     
     // Add execution capability for the named unit
     unit.addExecutionCapability(name);
