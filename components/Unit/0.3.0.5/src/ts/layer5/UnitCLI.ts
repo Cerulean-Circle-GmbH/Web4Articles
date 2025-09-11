@@ -16,8 +16,8 @@ export class UnitCLI extends DefaultCLI {
     super(); // Call DefaultCLI constructor
     // Don't instantiate unit for usage display - command-based instantiation only
     this.unit = null;
-    // Initialize component reference for dynamic documentation
-    this.component = this.getOrCreateUnit();
+    // Initialize with component class reference (NOT instance) - no garbage creation
+    this.initWithComponentClass(DefaultUnit, 'Unit', '0.3.0.5');
   }
 
   /**
@@ -30,24 +30,8 @@ export class UnitCLI extends DefaultCLI {
 
   private getOrCreateUnit(): DefaultUnit {
     if (!this.unit) {
-      this.unit = new DefaultUnit();
-      // Initialize unit with empty scenario (Web4 pattern - 0.3.0.5 format)
-      const emptyScenario = {
-        ior: { uuid: crypto.randomUUID(), component: 'Unit', version: '0.3.0.5' },
-        owner: '',
-        model: {
-          uuid: crypto.randomUUID(),
-          name: '',
-          origin: '',
-          definition: '',
-          typeM3: TypeM3.CLASS,
-          indexPath: '',
-          references: [],
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }
-      };
-      this.unit.init(emptyScenario);
+      // Use lazy instantiation from DefaultCLI - only when method actually called
+      this.unit = this.getComponentInstance() as DefaultUnit;
     }
     return this.unit;
   }
@@ -179,11 +163,8 @@ export class UnitCLI extends DefaultCLI {
     const commandArgs = args.slice(1);
 
     try {
-      // Initialize component for dynamic method discovery
-      if (!this.component) {
-        this.component = this.getOrCreateUnit();
-        this.discoverMethods(); // Rediscover with component
-      }
+      // Component already initialized with class reference in constructor
+      // No need to create instance for method discovery
 
       // Try dynamic command execution first (TSRanger 2.2 pattern)
       if (await this.executeDynamicCommand(command, commandArgs)) {

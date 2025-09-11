@@ -8,15 +8,29 @@ import { CLI } from '../layer3/CLI.interface.js';
 import { MethodInfo } from '../layer3/MethodInfo.interface.js';
 import { ComponentAnalysis } from '../layer3/ComponentAnalysis.interface.js';
 import { ColorScheme, DocumentationSections } from '../layer3/ColorScheme.interface.js';
+// import { TSCompletion } from '../../../TSRanger/v2.2/src/ts/layer4/TSCompletion.js';
 
 export abstract class DefaultCLI implements CLI {
-  protected component: any;
+  protected componentClass: any;
+  protected componentName: string = '';
+  protected componentVersion: string = '';
+  protected componentInstance: any | null = null;
   protected methodSignatures: Map<string, MethodSignature> = new Map();
   
   constructor() {
     // Empty constructor - Web4 pattern
-    this.component = null;
+    // NO component instantiation for usage display
+  }
+  
+  /**
+   * Initialize CLI with component class reference (NOT instance)
+   */
+  initWithComponentClass(componentClass: any, name: string, version: string): this {
+    this.componentClass = componentClass;
+    this.componentName = name;
+    this.componentVersion = version;
     this.discoverMethods(); // TSRanger 2.2 pattern
+    return this;
   }
   
   /**
@@ -29,10 +43,11 @@ export abstract class DefaultCLI implements CLI {
   }
   
   /**
-   * Initialize CLI with component context
+   * Initialize CLI with component context (legacy - use initWithComponentClass)
    */
   init(component: any): this {
-    this.component = component;
+    // Legacy method - component instance initialization
+    this.componentInstance = component;
     return this;
   }
   
@@ -87,16 +102,16 @@ export abstract class DefaultCLI implements CLI {
    * TSRanger 2.2 method discovery pattern
    */
   protected discoverMethods(): void {
-    if (!this.component) return;
+    if (!this.componentClass) return;
     
-    const prototype = Object.getPrototypeOf(this.component);
+    const prototype = this.componentClass.prototype;
     const methodNames = Object.getOwnPropertyNames(prototype)
-      .filter(name => typeof this.component[name] === 'function')
+      .filter(name => typeof prototype[name] === 'function')
       .filter(name => !name.startsWith('_') && name !== 'constructor')
       .filter(name => !['init', 'toScenario', 'validateModel', 'getModel'].includes(name));
 
     for (const methodName of methodNames) {
-      const method = this.component[methodName];
+      const method = prototype[methodName];
       this.methodSignatures.set(methodName, {
         name: methodName,
         paramCount: method.length,
@@ -120,13 +135,14 @@ export abstract class DefaultCLI implements CLI {
       throw new Error(`${signature.paramCount} arguments required for ${command} command`);
     }
 
-    // Dynamic method invocation
-    const method = this.component[command];
+    // Dynamic method invocation with lazy instantiation
+    const componentInstance = this.getComponentInstance();
+    const method = componentInstance[command];
     
     if (signature.isAsync) {
-      await method.apply(this.component, args);
+      await method.apply(componentInstance, args);
     } else {
-      method.apply(this.component, args);
+      method.apply(componentInstance, args);
     }
     
     return true;
@@ -172,13 +188,13 @@ export abstract class DefaultCLI implements CLI {
   };
 
   /**
-   * Analyze component methods for dynamic documentation generation
+   * Analyze component methods for dynamic documentation generation using class reference
    */
   protected analyzeComponentMethods(): MethodInfo[] {
-    if (!this.component) return [];
+    if (!this.componentClass) return [];
     
     const methods: MethodInfo[] = [];
-    const prototype = Object.getPrototypeOf(this.component);
+    const prototype = this.componentClass.prototype;
     const methodNames = Object.getOwnPropertyNames(prototype);
     
     for (const name of methodNames) {
@@ -188,8 +204,8 @@ export abstract class DefaultCLI implements CLI {
       if (typeof method === 'function') {
         methods.push({
           name: name,
-          parameters: this.extractParameterInfo(method),
-          description: this.extractMethodDescription(name),
+          parameters: this.extractParameterInfoFromTSCompletion(name),
+          description: this.extractMethodDescriptionFromTSDoc(name),
           examples: [`${name} example`],
           returnType: 'any',
           isPublic: !name.startsWith('_'),
@@ -202,7 +218,127 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Extract parameter information from method with intelligent naming
+   * Get component instance only when method is actually called (lazy instantiation)
+   */
+  protected getComponentInstance(): any {
+    if (!this.componentInstance && this.componentClass) {
+      this.componentInstance = new this.componentClass();
+      // Initialize with empty scenario if component supports it
+      if (typeof this.componentInstance.init === 'function') {
+        const emptyScenario = this.createEmptyScenario();
+        this.componentInstance.init(emptyScenario);
+      }
+    }
+    return this.componentInstance;
+  }
+
+  /**
+   * Create empty scenario for component initialization
+   */
+  private createEmptyScenario(): any {
+    return {
+      ior: { uuid: crypto.randomUUID(), component: this.componentName, version: this.componentVersion },
+      owner: '',
+      model: {
+        uuid: crypto.randomUUID(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    };
+  }
+
+  /**
+   * Extract parameter information using TSCompletion from TSRanger 2.2
+   */
+  private extractParameterInfoFromTSCompletion(methodName: string): any[] {
+    try {
+      // TODO: Use TSCompletion to get parameter information from TypeScript source
+      // const tsCompletion = new TSCompletion();
+      // const paramInfo = tsCompletion.getMethodParameters(this.componentClass.name, methodName);
+      
+      // For now, fallback to intelligent parameter extraction
+      return this.extractParameterInfoFallback(methodName);
+    } catch (error) {
+      // Fallback to reflection-based approach
+      return this.extractParameterInfoFallback(methodName);
+    }
+  }
+
+  /**
+   * Extract method description using TSDoc from TypeScript source
+   */
+  private extractMethodDescriptionFromTSDoc(methodName: string): string {
+    try {
+      // TODO: Use TSCompletion to extract JSDoc comments
+      // const tsCompletion = new TSCompletion();
+      // const jsDocText = tsCompletion.extractMethodJSDoc(this.componentClass.name, methodName);
+      
+      // For now, fallback to intelligent description
+      return this.extractMethodDescriptionFallback(methodName);
+    } catch (error) {
+      // Fallback to intelligent description
+    }
+    
+    return this.extractMethodDescriptionFallback(methodName);
+  }
+
+  /**
+   * Fallback parameter extraction using reflection
+   */
+  private extractParameterInfoFallback(methodName: string): any[] {
+    const method = this.componentClass.prototype[methodName];
+    if (!method) return [];
+    
+    const paramCount = method.length;
+    const params = [];
+    
+    for (let i = 0; i < paramCount; i++) {
+      const paramName = this.generateIntelligentParameterName(methodName, i);
+      params.push({
+        name: paramName,
+        type: this.inferParameterType(methodName, paramName),
+        required: this.isParameterRequired(methodName, i),
+        description: this.generateParameterDescription(methodName, paramName, i),
+        examples: this.generateParameterExamples(paramName),
+        validation: []
+      });
+    }
+    
+    return params;
+  }
+
+  /**
+   * Fallback method description extraction
+   */
+  private extractMethodDescriptionFallback(methodName: string): string {
+    const descriptions: { [key: string]: string } = {
+      'create': 'Create new component with name, optional description, and optional classification',
+      'classify': 'Set MOF typeM3 classification for existing component',
+      'link': 'Create initial link to existing component using UUID',
+      'deleteLink': 'Delete specific link file while preserving component in central storage',
+      'list': 'List all links pointing to specific component UUID',
+      'from': 'Create component from file text with extracted name and origin',
+      'execute': 'Execute component with input data',
+      'transform': 'Transform input data using component logic',
+      'validate': 'Validate object against component rules',
+      'process': 'Process data through component workflow'
+    };
+    
+    if (descriptions[methodName]) {
+      return descriptions[methodName];
+    }
+    
+    for (const [pattern, desc] of Object.entries(descriptions)) {
+      if (methodName.includes(pattern)) {
+        return desc.replace('component', this.componentName.toLowerCase());
+      }
+    }
+    
+    return `${methodName.charAt(0).toUpperCase() + methodName.slice(1)} operation`;
+  }
+
+  /**
+   * Extract parameter information from method with intelligent naming (legacy)
    */
   private extractParameterInfo(method: Function): any[] {
     const paramCount = method.length;
@@ -511,8 +647,8 @@ export abstract class DefaultCLI implements CLI {
     
     let output = '';
     
-    // Header section
-    output += `${colors.toolName}Web4 ${componentName} CLI Tool v${colors.version}${version}${colors.reset} - Dynamic Method Discovery with Structured Documentation\n\n`;
+    // Header section - ensure unit is cyan
+    output += `${colors.toolName}Web4 ${componentName} CLI Tool${colors.reset} v${colors.version}${version}${colors.reset} - Dynamic Method Discovery with Structured Documentation\n\n`;
     
     // Usage section  
     output += `${colors.sections}Usage:${colors.reset}\n`;
@@ -569,15 +705,14 @@ export abstract class DefaultCLI implements CLI {
    * Get component name for documentation
    */
   private getComponentName(): string {
-    if (!this.component) return 'Unknown';
-    return this.component.constructor.name.replace('Default', '');
+    return this.componentName || 'Unknown';
   }
 
   /**
    * Get component version for documentation
    */
   private getComponentVersion(): string {
-    return '0.3.0.5';
+    return this.componentVersion || '0.3.0.5';
   }
 }
 
