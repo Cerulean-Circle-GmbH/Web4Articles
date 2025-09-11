@@ -96,7 +96,7 @@ export class TSCompletion implements Completion {
     return [];
   }
 
-  static getMethodParameters(className: string, methodName: string, paramName?: string): string[] {
+  static getMethodParameters(className: string, methodName: string, paramName?: string): any[] {
     const files = TSCompletion.getProjectSourceFiles();
     let params: string[] = [];
     let defaultValues: Record<string, string> = {};
@@ -324,6 +324,70 @@ export class TSCompletion implements Completion {
       return [];
     }
     return [];
+  }
+
+  /**
+   * Enhanced method parameter extraction with union type support
+   * Web4 pattern: TypeScript AST parsing with union type detection for CLI generation
+   */
+  static getEnhancedMethodParameters(className: string, methodName: string): any[] {
+    const files = TSCompletion.getProjectSourceFiles();
+    const parameterInfo: any[] = [];
+    
+    for (const file of files) {
+      const src = readFileSync(file, 'utf8');
+      const sourceFile = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true);
+      
+      ts.forEachChild(sourceFile, node => {
+        if (ts.isClassDeclaration(node) && node.name && node.name.text === className) {
+          for (const m of node.members) {
+            if (ts.isMethodDeclaration(m) && m.name && ts.isIdentifier(m.name) && m.name.text === methodName) {
+              // ✅ NEW: Enhanced parameter extraction with union type support
+              for (let i = 0; i < m.parameters.length; i++) {
+                const param = m.parameters[i];
+                const paramName = param.name.getText();
+                const paramType = param.type ? param.type.getText() : 'any';
+                
+                // Extract JSDoc description for parameter
+                const description = TSCompletion.extractParamJsDoc(m, paramName);
+                
+                parameterInfo.push({
+                  name: paramName,
+                  type: paramType,
+                  required: !param.questionToken, // Optional if has ? token
+                  description: description || `${paramName} parameter`,
+                  // ✅ NEW: Union type detection
+                  isUnionType: TSCompletion.isUnionType(paramType),
+                  unionTypes: TSCompletion.extractUnionTypes(paramType)
+                });
+              }
+            }
+          }
+        }
+      });
+    }
+    
+    return parameterInfo;
+  }
+
+  /**
+   * Check if type string represents a union type
+   * Web4 pattern: Union type detection from TypeScript AST
+   */
+  private static isUnionType(typeString: string): boolean {
+    return typeString.includes(' | ') || typeString.includes('|');
+  }
+
+  /**
+   * Extract individual types from union type string
+   * Web4 pattern: Union type parsing from TypeScript AST
+   */
+  private static extractUnionTypes(typeString: string): string[] {
+    if (!TSCompletion.isUnionType(typeString)) {
+      return [typeString];
+    }
+    
+    return typeString.split('|').map(type => type.trim());
   }
 
   static start() {

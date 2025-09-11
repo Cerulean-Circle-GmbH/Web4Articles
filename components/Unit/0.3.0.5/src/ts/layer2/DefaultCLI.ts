@@ -267,9 +267,9 @@ export abstract class DefaultCLI implements CLI {
     try {
       // Use TSCompletion static methods to get parameter information from TypeScript source
       
-      // Try to extract parameters using TSCompletion static methods
-      if (typeof TSCompletion.getMethodParameters === 'function') {
-        const paramInfo = TSCompletion.getMethodParameters(this.componentClass.name, methodName);
+      // Try to extract parameters using enhanced TSCompletion static methods
+      if (typeof TSCompletion.getEnhancedMethodParameters === 'function') {
+        const paramInfo = TSCompletion.getEnhancedMethodParameters(this.componentClass.name, methodName);
         
         return paramInfo.map((param: any, index: number) => {
           const paramName = param.name || this.generateIntelligentParameterName(methodName, index);
@@ -410,12 +410,12 @@ export abstract class DefaultCLI implements CLI {
     const parameterPatterns: { [key: string]: string[] } = {
       'create': ['name', 'description', 'typeM3'],
       'classify': ['uuid', 'typeM3'],
-      'link': ['uuid', 'filename'],
+      'link': ['identifier', 'filename'],
       'linkInto': ['uuidOrLnFile', 'targetfolder'],
       'linkIntoCopy': ['uuidOrLnFile', 'targetfolder', 'originalUnitUUID'],
-      'list': ['uuid'],
+      'list': ['identifier'],
       'origin': ['uuid'],
-      'deleteLink': ['linkfile'],
+      'deleteLink': ['identifier'],
       'deleteUnit': ['linkfile'],
       'from': ['filename', 'startPos', 'endPos'],
       'definition': ['uuid', 'filename', 'startPos', 'endPos'],
@@ -487,6 +487,7 @@ export abstract class DefaultCLI implements CLI {
       'oldLinkPath': 'Current link file path (relative to project root, .unit/.link extension)',
       'newLinkPath': 'New link file path (relative to project root, .unit/.link extension)',
       'newName': 'New name for the unit (kebab-case preferred, will update all references)',
+      'identifier': 'Unit identifier (UUIDv4 instance or UUID string)',
       'uuidOrLnFile': 'Unit UUID (36-character) or existing ln file path (.unit/.link extension)',
       'originalUnitUUID': 'Optional original unit UUID for copy reference tracking (36-character)',
       'arg1': 'First method argument (context-dependent parameter)',
@@ -568,6 +569,7 @@ export abstract class DefaultCLI implements CLI {
       'oldLinkPath': ['TSCompletion.unit', 'auth-validator.link', 'components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.unit'],
       'newLinkPath': ['TSCompletion.ts.unit', 'auth-validator-enhanced.link', 'components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.ts.unit'],
       'newName': ['ts-completion-enhanced', 'auth-validator-v2', 'user-manager-pro'],
+      'identifier': ['44443290-015c-4720-be80-c42caf842252', '12345678-1234-1234-1234-123456789abc'],
       'uuidOrLnFile': ['44443290-015c-4720-be80-c42caf842252', 'TSCompletion.ts.unit', 'auth-validator.link'],
       'originalUnitUUID': ['12345678-1234-1234-1234-123456789abc', '98765432-4321-4321-4321-210987654321']
     };

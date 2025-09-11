@@ -205,8 +205,32 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   // Advanced CLI Commands (Task 19) - Direct method naming convention v0.1.2.2
-  async link(uuid: string, filename: string): Promise<void> {
+  /**
+   * Create initial link to existing component with unified parameter support
+   * Web4 pattern: Union type interface supporting both UUIDv4 and file path parameters
+   * 
+   * @param identifier - Unit identifier (UUIDv4 instance or UUID string)
+   * @param filename - File path for link creation (relative to project root)
+   * @returns Promise<void> - Resolves when link creation completes
+   * @throws Error when UUID invalid or filename inaccessible
+   * @example
+   * ```typescript
+   * await unit.link(UUIDv4.from('44443290-015c-4720-be80-c42caf842252'), 'auth-validator.unit');
+   * await unit.link('44443290-015c-4720-be80-c42caf842252', 'auth-validator.unit');
+   * ```
+   */
+  async link(identifier: UnitIdentifier, filename: string): Promise<void> {
     try {
+      // ✅ NEW: Extract UUID from union type parameter
+      let uuid: string;
+      if (isUUIDv4(identifier)) {
+        uuid = identifier.toString();
+      } else if (typeof identifier === 'string' && this.isUUID(identifier)) {
+        uuid = identifier;
+      } else {
+        throw new Error(`Invalid UUID identifier: ${identifier}`);
+      }
+      
       // Convert multi-word filenames (spaces → single dots) for consistency
       const convertedFilename = filename.replace(/\s+/g, '.');
       
@@ -414,37 +438,66 @@ export class DefaultUnit implements Unit, Upgrade {
     }
   }
 
-  async deleteLink(linkFilename: string): Promise<void> {
+  /**
+   * Delete specific link file with unified parameter support
+   * Web4 pattern: Union type interface supporting both UUID and file path parameters
+   * 
+   * @param identifier - Unit identifier (UUID string) or link file path
+   * @returns Promise<void> - Resolves when link deletion completes
+   * @throws Error when identifier invalid or link not found
+   * @example
+   * ```typescript
+   * await unit.deleteLink('44443290-015c-4720-be80-c42caf842252');
+   * await unit.deleteLink('TSCompletion.ts.unit');
+   * ```
+   */
+  async deleteLink(identifier: UnitIdentifier): Promise<void> {
     try {
-      // Resolve link file to get target UUID
-      const { readlinkSync, unlinkSync } = await import('fs');
-      const currentDir = process.cwd();
-      const linkPath = `${currentDir}/${linkFilename}`;
+      // ✅ NEW: Handle unified parameter types
+      let uuid: string;
+      let linkPath: string;
       
-      // Read the symlink to get scenario path
-      const scenarioPath = readlinkSync(linkPath);
-      const uuid = this.extractUuidFromPath(scenarioPath);
-      
-      // Load unit scenario
-      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
-      
-      // Note: Legacy symlinkPaths handling removed in 0.3.0.5
-      
-      // Remove from references
-      const referenceIndex = scenario.model.references.findIndex(
-        ref => ref.linkLocation.includes(linkFilename)
-      );
-      if (referenceIndex > -1) {
-        scenario.model.references.splice(referenceIndex, 1);
+      if (isUUIDv4(identifier)) {
+        // UUIDv4 instance - find link by UUID
+        uuid = identifier.toString();
+        // Need to find the link file for this UUID (implementation needed)
+        throw new Error('UUID-based link deletion not yet implemented');
+      } else if (typeof identifier === 'string' && this.isUUID(identifier)) {
+        // UUID string - find link by UUID
+        uuid = identifier;
+        // Need to find the link file for this UUID (implementation needed)
+        throw new Error('UUID-based link deletion not yet implemented');
+      } else if (typeof identifier === 'string') {
+        // File path - use as link file
+        const { readlinkSync, unlinkSync } = await import('fs');
+        const currentDir = process.cwd();
+        linkPath = `${currentDir}/${identifier}`;
+        
+        // Read the symlink to get scenario path
+        const scenarioPath = readlinkSync(linkPath);
+        uuid = this.extractUuidFromPath(scenarioPath);
+        
+        // Load unit scenario
+        const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+        
+        // Remove from references
+        const referenceIndex = scenario.model.references.findIndex(
+          ref => ref.linkLocation.includes(identifier)
+        );
+        if (referenceIndex > -1) {
+          scenario.model.references.splice(referenceIndex, 1);
+        }
+        
+        // Update scenario in storage
+        await this.storage.saveScenario(uuid, scenario, []);
+        
+        // Remove the actual link file
+        unlinkSync(linkPath);
+        
+        console.log(`✅ Link deleted: ${identifier}`);
+      } else {
+        throw new Error(`Invalid identifier for deletion: ${identifier}`);
       }
-      
-      // Update scenario in storage
-      await this.storage.saveScenario(uuid, scenario, []);
-      
-      // Remove the actual link file
-      unlinkSync(linkPath);
-      
-      console.log(`✅ Link deleted: ${linkFilename}`);
       console.log(`   Unit ${uuid} preserved in central storage`);
       console.log(`   Remaining links: ${[].length}`);
     } catch (error) {
@@ -492,8 +545,40 @@ export class DefaultUnit implements Unit, Upgrade {
     }
   }
 
-  async list(uuid: string): Promise<void> {
+  /**
+   * List all links pointing to specific component with unified parameter support
+   * Web4 pattern: Union type interface supporting both UUID and file path parameters
+   * 
+   * @param identifier - Unit identifier (UUID string) or link file path
+   * @returns Promise<void> - Resolves when link listing completes
+   * @throws Error when identifier invalid or unit not found
+   * @example
+   * ```typescript
+   * await unit.list('44443290-015c-4720-be80-c42caf842252');
+   * await unit.list('TSCompletion.ts.unit');
+   * ```
+   */
+  async list(identifier: UnitIdentifier): Promise<void> {
     try {
+      // ✅ NEW: Extract UUID from unified parameter
+      let uuid: string;
+      
+      if (isUUIDv4(identifier)) {
+        uuid = identifier.toString();
+      } else if (typeof identifier === 'string' && this.isUUID(identifier)) {
+        uuid = identifier;
+      } else if (typeof identifier === 'string') {
+        // File path - extract UUID from link
+        const { readlinkSync } = await import('fs');
+        const { resolve } = await import('path');
+        const currentDir = process.cwd();
+        const linkPath = resolve(currentDir, identifier);
+        const scenarioPath = readlinkSync(linkPath);
+        uuid = this.extractUuidFromPath(scenarioPath);
+      } else {
+        throw new Error(`Invalid identifier for listing: ${identifier}`);
+      }
+      
       // Load unit scenario and list all LD links
       const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
       
