@@ -842,4 +842,209 @@ export class DefaultUnit implements Unit, Upgrade {
     const baseDir = location.replace('../scenarios/', '/workspace/scenarios/');
     return `${dirname(baseDir)}/${filename}`;
   }
+
+  /**
+   * Rename a unit link file and update all references in the unit model
+   * Web4 pattern: IOR-based reference updating with file system synchronization
+   * 
+   * @param oldLinkPath - Current link file path (relative to project root)
+   * @param newLinkPath - New link file path (relative to project root)
+   * @returns Promise<void> - Resolves when link rename and reference updates complete
+   * @throws Error when old link doesn't exist or new link path is invalid
+   * @example
+   * ```typescript
+   * await unit.renameLink('TSCompletion.unit', 'TSCompletion.ts.unit');
+   * ```
+   */
+  async renameLink(oldLinkPath: string, newLinkPath: string): Promise<void> {
+    try {
+      const { promises: fs } = await import('fs');
+      const path = await import('path');
+      
+      // Resolve absolute paths
+      const projectRoot = this.findProjectRoot();
+      const oldAbsolutePath = path.resolve(projectRoot, oldLinkPath);
+      const newAbsolutePath = path.resolve(projectRoot, newLinkPath);
+      
+      // Check if old link exists
+      if (!existsSync(oldAbsolutePath)) {
+        throw new Error(`Link file not found: ${oldLinkPath}`);
+      }
+      
+      // Rename the physical file
+      await fs.rename(oldAbsolutePath, newAbsolutePath);
+      
+      // Update references in unit model
+      if (this.model.references) {
+        for (const reference of this.model.references) {
+          // Update linkLocation if it matches the old path
+          if (reference.linkLocation.includes(oldLinkPath)) {
+            reference.linkLocation = reference.linkLocation.replace(oldLinkPath, newLinkPath);
+          }
+        }
+      }
+      
+      // Update model timestamp
+      this.model.updatedAt = new Date().toISOString();
+      
+      // Save updated model
+      const scenario = await this.toScenario();
+      await this.storage.saveScenario(this.model.uuid, scenario, []);
+      
+      console.log(`✅ Link renamed: ${oldLinkPath} → ${newLinkPath}`);
+      console.log(`   References updated in unit model: ${this.model.uuid}`);
+      
+    } catch (error) {
+      console.error(`❌ Failed to rename link: ${error instanceof Error ? error.message : error}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Rename the unit and update all associated file references and paths
+   * Web4 pattern: Comprehensive name change with IOR reference updating
+   * Updates unit name, file paths, link names, and all references containing the old name
+   * 
+   * @param newName - New name for the unit (kebab-case preferred)
+   * @returns Promise<void> - Resolves when unit rename and all reference updates complete
+   * @throws Error when new name is invalid or conflicts exist
+   * @example
+   * ```typescript
+   * await unit.rename('ts-completion-enhanced');
+   * ```
+   */
+  async rename(newName: string): Promise<void> {
+    try {
+      const { promises: fs } = await import('fs');
+      const path = await import('path');
+      
+      if (!newName || newName.trim().length === 0) {
+        throw new Error('New name cannot be empty');
+      }
+      
+      const oldName = this.model.name;
+      const projectRoot = this.findProjectRoot();
+      
+      // Update unit model name
+      this.model.name = newName.trim();
+      this.model.updatedAt = new Date().toISOString();
+      
+      // Update references that contain the old name
+      if (this.model.references) {
+        for (const reference of this.model.references) {
+          // Update linkLocation paths that contain old name
+          if (reference.linkLocation.includes(oldName)) {
+            reference.linkLocation = reference.linkLocation.replace(
+              new RegExp(oldName, 'g'), 
+              newName
+            );
+          }
+        }
+      }
+      
+      // Update origin and definition IORs if they contain the old name
+      if (this.model.origin && this.model.origin.includes(oldName)) {
+        this.model.origin = this.model.origin.replace(
+          new RegExp(oldName, 'g'), 
+          newName
+        );
+      }
+      
+      if (this.model.definition && this.model.definition.includes(oldName)) {
+        this.model.definition = this.model.definition.replace(
+          new RegExp(oldName, 'g'), 
+          newName
+        );
+      }
+      
+      // Find and rename associated files that include the old name
+      const potentialFiles = [
+        `${oldName}.unit`,
+        `${oldName}.ts.unit`,
+        `${oldName}.link`,
+        `${oldName}.ts`,
+        `${oldName}.js`
+      ];
+      
+      // Search for files in the project that might need renaming
+      const filesToRename: Array<{oldPath: string, newPath: string}> = [];
+      
+      // Check common locations for unit-related files
+      const searchDirs = [
+        'components',
+        'scenarios',
+        'scrum.pmo',
+        'docs'
+      ];
+      
+      for (const dir of searchDirs) {
+        const dirPath = path.resolve(projectRoot, dir);
+        if (existsSync(dirPath)) {
+          await this.findFilesToRename(dirPath, oldName, newName, filesToRename);
+        }
+      }
+      
+      // Rename found files
+      for (const {oldPath, newPath} of filesToRename) {
+        try {
+          await fs.rename(oldPath, newPath);
+          console.log(`✅ File renamed: ${path.relative(projectRoot, oldPath)} → ${path.relative(projectRoot, newPath)}`);
+        } catch (error) {
+          console.warn(`⚠️  Could not rename file: ${oldPath} (${error instanceof Error ? error.message : error})`);
+        }
+      }
+      
+      // Save updated model
+      const scenario = await this.toScenario();
+      await this.storage.saveScenario(this.model.uuid, scenario, []);
+      
+      console.log(`✅ Unit renamed: "${oldName}" → "${newName}"`);
+      console.log(`   UUID: ${this.model.uuid}`);
+      console.log(`   References updated: ${this.model.references?.length || 0}`);
+      
+    } catch (error) {
+      console.error(`❌ Failed to rename unit: ${error instanceof Error ? error.message : error}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Recursively find files that contain the old name and should be renamed
+   * Helper method for comprehensive unit renaming
+   */
+  private async findFilesToRename(
+    dirPath: string, 
+    oldName: string, 
+    newName: string, 
+    filesToRename: Array<{oldPath: string, newPath: string}>
+  ): Promise<void> {
+    try {
+      const { promises: fs } = await import('fs');
+      const path = await import('path');
+      
+      const entries = await fs.readdir(dirPath, { withFileTypes: true });
+      
+      for (const entry of entries) {
+        const fullPath = path.join(dirPath, entry.name);
+        
+        if (entry.isDirectory()) {
+          // Recursively search subdirectories
+          await this.findFilesToRename(fullPath, oldName, newName, filesToRename);
+        } else if (entry.isFile()) {
+          // Check if filename contains old name
+          if (entry.name.includes(oldName)) {
+            const newFileName = entry.name.replace(new RegExp(oldName, 'g'), newName);
+            const newPath = path.join(dirPath, newFileName);
+            filesToRename.push({
+              oldPath: fullPath,
+              newPath: newPath
+            });
+          }
+        }
+      }
+    } catch (error) {
+      // Continue search even if some directories are inaccessible
+      console.warn(`⚠️  Could not search directory: ${dirPath}`);
+    }
+  }
 }

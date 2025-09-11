@@ -430,7 +430,9 @@ export abstract class DefaultCLI implements CLI {
       'extractUuidFromPath': ['path'],
       'calculateRelativePath': ['fromPath', 'toPath'],
       'get': ['key'],
-      'store': ['key', 'value']
+      'store': ['key', 'value'],
+      'renameLink': ['oldLinkPath', 'newLinkPath'],
+      'rename': ['newName']
     };
     
     // Check for exact method name match
@@ -477,6 +479,9 @@ export abstract class DefaultCLI implements CLI {
       'value': 'Property value to assign (string or JSON)',
       'component': 'Component name (e.g., User, Unit, Web4Requirement)',
       'version': 'Version string (e.g., latest, v1.0, 0.3.0.5)',
+      'oldLinkPath': 'Current link file path (relative to project root, .unit/.link extension)',
+      'newLinkPath': 'New link file path (relative to project root, .unit/.link extension)',
+      'newName': 'New name for the unit (kebab-case preferred, will update all references)',
       'arg1': 'First method argument (context-dependent parameter)',
       'arg2': 'Second method argument (context-dependent parameter)',
       'arg3': 'Third method argument (context-dependent parameter)'
@@ -552,7 +557,10 @@ export abstract class DefaultCLI implements CLI {
       'value': ['"auth-validator"', '"User validation component"', 'CLASS'],
       'pattern': ['[A-Za-z]+', '\\d{4}-\\d{2}-\\d{2}', 'function\\s+\\w+'],
       'component': ['User', 'Unit', 'Web4Requirement'],
-      'version': ['0.3.0.5', 'latest', '1.0.0']
+      'version': ['0.3.0.5', 'latest', '1.0.0'],
+      'oldLinkPath': ['TSCompletion.unit', 'auth-validator.link', 'components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.unit'],
+      'newLinkPath': ['TSCompletion.ts.unit', 'auth-validator-enhanced.link', 'components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.ts.unit'],
+      'newName': ['ts-completion-enhanced', 'auth-validator-v2', 'user-manager-pro']
     };
     
     return examples[paramName] || [`${paramName}-example`];
