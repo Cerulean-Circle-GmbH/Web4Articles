@@ -257,10 +257,15 @@ export class DefaultUnit implements Unit, Upgrade {
       let uuid: string;
       let linkFilename: string;
       
-      // ✅ NEW: Use TypeScript union type guards for parameter discrimination
+      // ✅ NEW: Use TypeScript union type guards and UUID detection
       if (isUUIDv4(identifier)) {
-        // Parameter is UUIDv4 - use unit name for filename
+        // Parameter is UUIDv4 instance - use unit name for filename
         uuid = identifier.toString();
+        const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+        linkFilename = this.convertNameToFilename(scenario.model.name) + '.unit';
+      } else if (typeof identifier === 'string' && this.isUUID(identifier)) {
+        // Parameter is UUID string - use unit name for filename
+        uuid = identifier;
         const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
         linkFilename = this.convertNameToFilename(scenario.model.name) + '.unit';
       } else if (isFilePath(identifier)) {
@@ -274,7 +279,7 @@ export class DefaultUnit implements Unit, Upgrade {
         uuid = this.extractUuidFromPath(scenarioPath);
         linkFilename = basename(identifier);
       } else {
-        throw new Error(`Invalid identifier type: ${typeof identifier}`);
+        throw new Error(`Invalid identifier: ${identifier} (must be UUID or file path)`);
       }
       
       // Load unit scenario
@@ -1141,25 +1146,127 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * Convert unit name to filename with proper character replacement
-   * Web4 pattern: Spaces to dots, lowercase, safe filename characters
+   * Convert unit name to filename with 0.3.0.4 perfected standards
+   * Web4 pattern: Spaces to dots, preserve capitalization, safe filename characters
    * 
    * @param name - Unit name to convert
-   * @returns Filename-safe string with spaces converted to dots
+   * @returns Filename-safe string with spaces converted to dots (0.3.0.4 standard)
    * @example
    * ```typescript
-   * convertNameToFilename("TS Completion") // returns "ts.completion"
-   * convertNameToFilename("User Manager") // returns "user.manager"
+   * convertNameToFilename("UUID Indexing") // returns "UUID.Indexing"
+   * convertNameToFilename("Async Method Signature Update") // returns "Async.Method.Signature.Update"
+   * convertNameToFilename("TSCompletion") // returns "TSCompletion"
    * ```
    */
   private convertNameToFilename(name: string): string {
     if (!name) return 'unnamed';
     
     return name
-      .toLowerCase()                    // Convert to lowercase
-      .replace(/\s+/g, '.')            // Replace spaces with dots
-      .replace(/[^a-z0-9.-]/g, '')     // Remove non-alphanumeric chars except dots and dashes
-      .replace(/\.+/g, '.')            // Replace multiple dots with single dot
-      .replace(/^\.+|\.+$/g, '');      // Remove leading/trailing dots
+      .replace(/\s+/g, '.')            // ✅ CORRECT: Replace spaces with dots
+      .replace(/[^A-Za-z0-9.-]/g, '')  // ✅ CORRECT: Keep uppercase letters (0.3.0.4 standard)
+      .replace(/\.+/g, '.')            // ✅ CORRECT: Replace multiple dots with single dot
+      .replace(/^\.+|\.+$/g, '');      // ✅ CORRECT: Remove leading/trailing dots
+  }
+
+  /**
+   * Detect changes in copy files and notify origin units
+   * Web4 pattern: Bidirectional sync architecture with change propagation
+   * 
+   * @param copyPath - Path to copy file to check for changes
+   * @param originalUUID - UUID of original unit to notify
+   * @returns Promise<ChangeStatus> - Status of change detection
+   * @example
+   * ```typescript
+   * const status = await unit.detectCopyChanges('components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.ts', 'original-uuid');
+   * ```
+   */
+  async detectCopyChanges(copyPath: string, originalUUID: string): Promise<string> {
+    try {
+      const { promises: fs } = await import('fs');
+      
+      // Get copy file stats
+      const copyStats = await fs.stat(copyPath);
+      
+      // Load original unit to compare
+      const originalScenario = await this.storage.loadScenario(originalUUID) as Scenario<UnitModel>;
+      const originalPath = this.extractFilePathFromIOR(originalScenario.model.origin);
+      
+      if (!originalPath) {
+        return 'NO_ORIGIN';
+      }
+      
+      // Get original file stats
+      const originalStats = await fs.stat(originalPath);
+      
+      // Compare modification times
+      if (copyStats.mtime > originalStats.mtime) {
+        // Copy is newer - notify origin
+        await this.notifyOriginOfCopyChange(originalUUID, copyPath, 'COPY_NEWER');
+        return 'COPY_NEWER';
+      } else if (originalStats.mtime > copyStats.mtime) {
+        // Origin is newer - recommend sync
+        console.log(`📢 Copy sync recommended: ${copyPath}`);
+        console.log(`   Origin is newer: ${originalPath}`);
+        return 'ORIGIN_NEWER';
+      }
+      
+      return 'SYNCHRONIZED';
+      
+    } catch (error) {
+      console.error(`❌ Failed to detect copy changes: ${error instanceof Error ? error.message : error}`);
+      return 'ERROR';
+    }
+  }
+
+  /**
+   * Notify origin unit of copy changes
+   * Web4 pattern: Origin notification with sync recommendations
+   * 
+   * @param originalUUID - UUID of original unit to notify
+   * @param copyPath - Path to modified copy file
+   * @param changeType - Type of change detected
+   * @returns Promise<void> - Resolves when notification completes
+   */
+  async notifyOriginOfCopyChange(originalUUID: string, copyPath: string, changeType: string): Promise<void> {
+    try {
+      const originalScenario = await this.storage.loadScenario(originalUUID) as Scenario<UnitModel>;
+      
+      // Find copy reference in original unit
+      const copyReference = originalScenario.model.references.find(ref => 
+        ref.linkLocation.includes(copyPath) || ref.linkLocation.includes(copyPath.replace(/.*\//, ''))
+      );
+      
+      if (copyReference) {
+        // Update sync status to indicate change
+        copyReference.syncStatus = SyncStatus.MODIFIED;
+        
+        // Add notification metadata to model (extend with any for flexibility)
+        const extendedModel = originalScenario.model as any;
+        if (!extendedModel.notifications) {
+          extendedModel.notifications = [];
+        }
+        
+        extendedModel.notifications.push({
+          type: 'COPY_CHANGE',
+          copyPath: copyPath,
+          changeType: changeType,
+          timestamp: new Date().toISOString(),
+          syncRecommended: true
+        });
+        
+        originalScenario.model.updatedAt = new Date().toISOString();
+        
+        // Save updated original unit
+        await this.storage.saveScenario(originalUUID, originalScenario, []);
+        
+        console.log(`📢 Origin notified of copy change: ${originalUUID}`);
+        console.log(`   Copy: ${copyPath}`);
+        console.log(`   Change: ${changeType}`);
+        console.log(`   Sync recommended: Use 'unit syncFromCopy' to update origin`);
+      }
+      
+    } catch (error) {
+      console.error(`❌ Failed to notify origin: ${error instanceof Error ? error.message : error}`);
+    }
   }
 }
