@@ -1354,4 +1354,118 @@ export class DefaultUnit implements Unit, Upgrade {
       console.error(`❌ Failed to notify origin: ${error instanceof Error ? error.message : error}`);
     }
   }
+
+  /**
+   * Sync origin from modified copy file
+   * Web4 pattern: Bidirectional sync with copy-to-origin propagation
+   * 
+   * @param copyPath - Path to modified copy file
+   * @param originalUUID - UUID of original unit to update
+   * @returns Promise<void> - Resolves when sync completes
+   * @throws Error when sync fails or conflicts detected
+   * @example
+   * ```typescript
+   * await unit.syncFromCopy('components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.ts', 'original-uuid');
+   * ```
+   */
+  async syncFromCopy(copyPath: string, originalUUID: string): Promise<void> {
+    try {
+      const { promises: fs } = await import('fs');
+      
+      // Load original unit
+      const originalScenario = await this.storage.loadScenario(originalUUID) as Scenario<UnitModel>;
+      const originalPath = this.extractFilePathFromIOR(originalScenario.model.origin);
+      
+      if (!originalPath) {
+        throw new Error('Original file path not found in origin IOR');
+      }
+      
+      // Copy the modified file back to origin
+      await fs.copyFile(copyPath, originalPath);
+      
+      // Update sync status in references
+      const copyReference = originalScenario.model.references.find(ref => 
+        ref.linkLocation.includes(copyPath)
+      );
+      
+      if (copyReference) {
+        copyReference.syncStatus = SyncStatus.SYNCED;
+      }
+      
+      // Clear notifications
+      const extendedModel = originalScenario.model as any;
+      if (extendedModel.notifications) {
+        extendedModel.notifications = extendedModel.notifications.filter((n: any) => 
+          n.type !== 'COPY_CHANGE' || !n.copyPath.includes(copyPath)
+        );
+      }
+      
+      originalScenario.model.updatedAt = new Date().toISOString();
+      
+      // Save updated original unit
+      await this.storage.saveScenario(originalUUID, originalScenario, []);
+      
+      console.log(`✅ Origin synced from copy: ${originalUUID}`);
+      console.log(`   Copy: ${copyPath}`);
+      console.log(`   Origin: ${originalPath}`);
+      console.log(`   Status: SYNCED`);
+      
+    } catch (error) {
+      console.error(`❌ Failed to sync from copy: ${error instanceof Error ? error.message : error}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Sync copy from updated origin file
+   * Web4 pattern: Bidirectional sync with origin-to-copy propagation
+   * 
+   * @param copyPath - Path to copy file to update
+   * @param originalUUID - UUID of original unit to sync from
+   * @returns Promise<void> - Resolves when sync completes
+   * @throws Error when sync fails or conflicts detected
+   * @example
+   * ```typescript
+   * await unit.syncToCopy('components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.ts', 'original-uuid');
+   * ```
+   */
+  async syncToCopy(copyPath: string, originalUUID: string): Promise<void> {
+    try {
+      const { promises: fs } = await import('fs');
+      
+      // Load original unit
+      const originalScenario = await this.storage.loadScenario(originalUUID) as Scenario<UnitModel>;
+      const originalPath = this.extractFilePathFromIOR(originalScenario.model.origin);
+      
+      if (!originalPath) {
+        throw new Error('Original file path not found in origin IOR');
+      }
+      
+      // Copy the original file to copy location
+      await fs.copyFile(originalPath, copyPath);
+      
+      // Update sync status in references
+      const copyReference = originalScenario.model.references.find(ref => 
+        ref.linkLocation.includes(copyPath)
+      );
+      
+      if (copyReference) {
+        copyReference.syncStatus = SyncStatus.SYNCED;
+      }
+      
+      originalScenario.model.updatedAt = new Date().toISOString();
+      
+      // Save updated original unit
+      await this.storage.saveScenario(originalUUID, originalScenario, []);
+      
+      console.log(`✅ Copy synced from origin: ${originalUUID}`);
+      console.log(`   Origin: ${originalPath}`);
+      console.log(`   Copy: ${copyPath}`);
+      console.log(`   Status: SYNCED`);
+      
+    } catch (error) {
+      console.error(`❌ Failed to sync to copy: ${error instanceof Error ? error.message : error}`);
+      throw error;
+    }
+  }
 }

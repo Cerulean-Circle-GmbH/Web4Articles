@@ -437,7 +437,10 @@ export abstract class DefaultCLI implements CLI {
       'get': ['key'],
       'store': ['key', 'value'],
       'renameLink': ['oldLinkPath', 'newLinkPath'],
-      'rename': ['newName']
+      'rename': ['newName'],
+      'detectCopyChanges': ['copyPath', 'originalUUID'],
+      'syncFromCopy': ['copyPath', 'originalUUID'],
+      'syncToCopy': ['copyPath', 'originalUUID']
     };
     
     // Check for exact method name match
@@ -490,6 +493,7 @@ export abstract class DefaultCLI implements CLI {
       'identifier': 'Unit identifier (UUIDv4 instance or UUID string)',
       'uuidOrLnFile': 'Unit UUID (36-character) or existing ln file path (.unit/.link extension)',
       'originalUnitUUID': 'Optional original unit UUID for copy reference tracking (36-character)',
+      'copyPath': 'Path to copy file for sync operations (relative to project root)',
       'arg1': 'First method argument (context-dependent parameter)',
       'arg2': 'Second method argument (context-dependent parameter)',
       'arg3': 'Third method argument (context-dependent parameter)'
@@ -571,7 +575,8 @@ export abstract class DefaultCLI implements CLI {
       'newName': ['ts-completion-enhanced', 'auth-validator-v2', 'user-manager-pro'],
       'identifier': ['44443290-015c-4720-be80-c42caf842252', '12345678-1234-1234-1234-123456789abc'],
       'uuidOrLnFile': ['44443290-015c-4720-be80-c42caf842252', 'TSCompletion.ts.unit', 'auth-validator.link'],
-      'originalUnitUUID': ['12345678-1234-1234-1234-123456789abc', '98765432-4321-4321-4321-210987654321']
+      'originalUnitUUID': ['12345678-1234-1234-1234-123456789abc', '98765432-4321-4321-4321-210987654321'],
+      'copyPath': ['components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.ts', 'components/User/0.1.0.0/src/ts/DefaultUser.ts']
     };
     
     return examples[paramName] || [`${paramName}-example`];
