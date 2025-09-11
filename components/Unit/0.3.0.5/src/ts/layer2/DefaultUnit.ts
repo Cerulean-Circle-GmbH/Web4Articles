@@ -246,14 +246,25 @@ export class DefaultUnit implements Unit, Upgrade {
         }
       }
       
-      // Store found references in unit model for potential linking
-      const extendedModel = this.model as any;
-      extendedModel.foundReferences = {
+      // ✅ FIX: Store found references in persistent location for cross-command access
+      const { promises: fs } = await import('fs');
+      const { tmpdir } = await import('os');
+      const path = await import('path');
+      
+      // Store in temporary file for persistence across command invocations
+      const tempFile = path.join(tmpdir(), 'unit-found-references.json');
+      const foundReferencesData = {
         searchTerm: name,
         files: foundReferences,
         timestamp: new Date().toISOString(),
         count: foundReferences.length
       };
+      
+      await fs.writeFile(tempFile, JSON.stringify(foundReferencesData, null, 2), 'utf-8');
+      
+      // Also store in unit model for chaining support
+      const extendedModel = this.model as any;
+      extendedModel.foundReferences = foundReferencesData;
       
       console.log(`✅ Filesystem search completed for: "${name}"`);
       console.log(`   Found ${foundReferences.length} potential references:`);
@@ -928,43 +939,57 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * List found references with interactive browsing (requires chaining for safety)
-   * Web4 pattern: Interactive reference browsing with command chaining requirement
+   * List found references with safe browsing for background agents
+   * Web4 pattern: Safe reference browsing without hanging interactive commands
    * 
-   * @returns this - Enables command chaining, interactive browsing requires chaining
+   * @returns Promise<void> - Resolves when listing completes
    * @throws Error when no found references available
    * @example
    * ```typescript
-   * await unit.find('TSCompletion').list().execute(); // Interactive browsing
+   * await unit.find('TSCompletion'); // Discover references
+   * await unit.list();               // Browse found references safely
    * ```
    */
-  async list(): Promise<this> {
+  async list(): Promise<void> {
     try {
-      const extendedModel = this.model as any;
-      const foundRefs = extendedModel.foundReferences;
+      // ✅ FIX: Try to load found references from persistent storage first
+      const { promises: fs } = await import('fs');
+      const { tmpdir } = await import('os');
+      const path = await import('path');
+      
+      const tempFile = path.join(tmpdir(), 'unit-found-references.json');
+      let foundRefs: any = null;
+      
+      try {
+        const data = await fs.readFile(tempFile, 'utf-8');
+        foundRefs = JSON.parse(data);
+      } catch {
+        // Fallback to unit model
+        const extendedModel = this.model as any;
+        foundRefs = extendedModel.foundReferences;
+      }
       
       if (!foundRefs || !foundRefs.files || foundRefs.files.length === 0) {
         console.log(`❌ No found references available`);
         console.log(`   💡 Use 'unit find <name>' first to discover references`);
-        return this;
+        return;
       }
       
-      console.log(`📄 Interactive browsing of ${foundRefs.count} found references for: "${foundRefs.searchTerm}"`);
-      console.log(`   💡 Chaining required for interactive browsing (safe for background agents)`);
-      console.log(`   💡 Use .execute() to complete chain and enable interactive browsing`);
+      console.log(`\n📄 Browsing ${foundRefs.count} found references for: "${foundRefs.searchTerm}"`);
+      console.log(`   💡 Background agent safe mode - showing detailed list\n`);
       
-      // Store interactive browsing request for execute() method
-      extendedModel.pendingInteractiveBrowsing = {
-        references: foundRefs.files,
-        searchTerm: foundRefs.searchTerm,
-        timestamp: new Date().toISOString()
-      };
+      // ✅ SAFE: Show detailed list without interactive less
+      foundRefs.files.forEach((file: string, index: number) => {
+        const displayIndex = (index + 1).toString().padStart(4);
+        console.log(`   ${displayIndex}: ${file}`);
+      });
       
-      // ✅ COMMAND CHAINING: Return this for fluent interface
-      return this;
+      console.log(`\n✅ Listed ${foundRefs.count} references for "${foundRefs.searchTerm}"`);
+      console.log(`   💡 Use 'unit link <uuid|lnfile> <file>' to track specific references`);
+      console.log(`   💡 Use 'unit references <uuid|lnfile>' to show existing unit references`);
       
     } catch (error) {
-      console.error(`❌ Failed to prepare interactive listing: ${error instanceof Error ? error.message : error}`);
+      console.error(`❌ Failed to list found references: ${error instanceof Error ? error.message : error}`);
       throw error;
     }
   }
