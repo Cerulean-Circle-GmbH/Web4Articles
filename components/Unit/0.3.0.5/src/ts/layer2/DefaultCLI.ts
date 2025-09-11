@@ -660,7 +660,7 @@ export abstract class DefaultCLI implements CLI {
           const exampleCommand = `${componentName} ${method.name} ${exampleParams}`;
           const padding = ' '.repeat(Math.max(1, 50 - exampleCommand.length));
           
-          output += `  ${colors.commands}${componentName}${colors.reset} ${colors.commands}${method.name}${colors.reset} ${colors.parameters}${exampleParams}${colors.reset}${padding}${colors.descriptions}# ${method.description}${colors.reset}\n`;
+          output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}${method.name}${colors.reset} ${colors.parameters}${exampleParams}${colors.reset}${padding}${colors.descriptions}# ${method.description}${colors.reset}\n`;
         }
         output += '\n';
       }
@@ -709,7 +709,7 @@ export abstract class DefaultCLI implements CLI {
       const fullCommand = `${commandPart} ${paramList}`;
       const padding = ' '.repeat(Math.max(1, maxCommandLength - fullCommand.length + 3));
       
-      output += `  ${colors.commands}${componentName.toLowerCase()} ${method.name}${colors.reset} ${colors.parameters}${paramList}${colors.reset}${padding}${colors.descriptions}# ${method.description}${colors.reset}\n`;
+      output += `  ${colors.toolName}${componentName.toLowerCase()}${colors.reset} ${colors.commands}${method.name}${colors.reset} ${colors.parameters}${paramList}${colors.reset}${padding}${colors.descriptions}# ${method.description}${colors.reset}\n`;
     }
     output += '\n';
     
