@@ -90,8 +90,8 @@ export class DefaultUnit implements Unit {
       if (!this.model.definition || typeof this.model.definition !== 'string') return false;
       if (!this.model.indexPath || typeof this.model.indexPath !== 'string') return false;
       
-      // TypeM3 validation
-      if (!Object.values(TypeM3).includes(this.model.typeM3)) return false;
+      // TypeM3 validation (optional for backward compatibility)
+      if (this.model.typeM3 !== undefined && !Object.values(TypeM3).includes(this.model.typeM3)) return false;
       
       // Array properties
       if (!Array.isArray(this.model.symlinkPaths)) return false;

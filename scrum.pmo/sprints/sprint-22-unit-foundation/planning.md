@@ -200,14 +200,6 @@ Complete Unit foundation as Web4 deduplication and traceability cornerstone with
 - **Performance Concerns**: Managed through efficient change detection
 - **Scope Management**: Controlled by clear week-by-week prioritization
 
-#### **EPIC Z: VERSION MANAGEMENT AND CLI RESTORATION**
-
-- [ ] [Task Z1: Unit Version Consistency and CLI Restoration](./task-z1-unit-version-consistency-cli-restoration.md)  
-  **Priority:** 1 (CRITICAL - CLI Access) **Status:** PLANNED
-  - [ ] [Task Z1.1: Developer Symlink Correction](./task-z1.1-developer-symlink-correction.md)
-  - [ ] [Task Z1.2: Developer CLI Access Restoration](./task-z1.2-developer-cli-access-restoration.md)
-  - [ ] [Task Z1.3: Tester Version Consistency Validation](./task-z1.3-tester-version-consistency-validation.md)
-
 ---
 
 **Product Owner:** Background Agent (OntologyAgent → Product Owner)  

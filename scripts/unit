@@ -7,7 +7,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/web4-env.sh"
 
-COMPONENT_VERSION="0.3.0.5"
+COMPONENT_VERSION="0.3.0.4"
 COMPONENT_PATH="$PROJECT_ROOT/components/Unit/$COMPONENT_VERSION"
 CLI_PATH="$COMPONENT_PATH/dist/ts/layer5/UnitCLI.js"
 
