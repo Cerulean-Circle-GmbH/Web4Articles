@@ -8,27 +8,33 @@ import { Scenario } from './Scenario.interface.js';
 
 export interface Unit {
   /**
-   * Initialize from scenario - Web4 pattern
+   * Initialize from scenario - Web4 pattern with command chaining
    */
   init(scenario: Scenario): this;
 
   /**
-   * Transform data directly - no Input/Output protocol
+   * Transform data with command chaining support - fluent interface
    */
-  transform(data: unknown): unknown;
+  transform(data?: unknown): this;
 
   /**
-   * Validate object directly - no Input/Output protocol
+   * Validate object with command chaining support - fluent interface
    */
-  validate(object: any): boolean;
+  validate(object?: any): this;
 
   /**
-   * Process unit logic directly - no Input/Output protocol
+   * Process unit logic with command chaining support - fluent interface
    */
-  process(): void;
+  process(): this;
 
   /**
    * Convert to scenario for hibernation
    */
   toScenario(name?: string): Promise<Scenario>;
+
+  /**
+   * Execute complete command chain and finalize operations
+   * Web4 pattern: Final execution method for fluent interface completion
+   */
+  execute(): Promise<void>;
 }

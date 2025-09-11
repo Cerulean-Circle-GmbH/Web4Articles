@@ -61,24 +61,117 @@ export class DefaultUnit implements Unit, Upgrade {
     return this;
   }
 
-  // Protocol-less radical OOP methods - no Input/Output constructs
-  transform(data: unknown): unknown {
+  /**
+   * Transform input data with command chaining support
+   * Web4 pattern: Fluent interface enabling natural command chaining
+   * 
+   * @param data - Input data for transformation @cliSyntax json @cliOptional
+   * @returns this - Enables command chaining for fluent interface
+   * @example
+   * ```typescript
+   * await unit.from('data.json').transform(rules).validate(schema).execute();
+   * ```
+   */
+  transform(data?: unknown): this {
     this.model.updatedAt = new Date().toISOString();
-    return {
+    
+    // Store transformation result in unit for chaining
+    (this.model as any).lastTransformation = {
       transformed: data,
       by: this.model.uuid,
       timestamp: new Date().toISOString()
     };
+    
+    console.log(`✅ Data transformed by unit: ${this.model.name || this.model.uuid}`);
+    
+    // ✅ COMMAND CHAINING: Return this for fluent interface
+    return this;
   }
 
-  validate(object: any): boolean {
+  /**
+   * Validate object with command chaining support
+   * Web4 pattern: Fluent interface enabling natural command chaining
+   * 
+   * @param object - Object to validate @cliSyntax json @cliOptional
+   * @returns this - Enables command chaining for fluent interface
+   * @example
+   * ```typescript
+   * await unit.from('data.json').transform(rules).validate(schema).execute();
+   * ```
+   */
+  validate(object?: any): this {
     this.model.updatedAt = new Date().toISOString();
-    return object !== null && object !== undefined;
+    
+    const isValid = object !== null && object !== undefined;
+    
+    // Store validation result in unit for chaining
+    (this.model as any).lastValidation = {
+      isValid: isValid,
+      validatedObject: object,
+      by: this.model.uuid,
+      timestamp: new Date().toISOString()
+    };
+    
+    console.log(`✅ Object ${isValid ? 'validated' : 'validation failed'} by unit: ${this.model.name || this.model.uuid}`);
+    
+    // ✅ COMMAND CHAINING: Return this for fluent interface
+    return this;
   }
 
-  process(): void {
+  /**
+   * Process data with command chaining support
+   * Web4 pattern: Fluent interface enabling natural command chaining
+   * 
+   * @returns this - Enables command chaining for fluent interface
+   */
+  process(): this {
     this.model.updatedAt = new Date().toISOString();
-    console.log(`Unit ${this.model.uuid} processed`);
+    console.log(`✅ Unit processed: ${this.model.name || this.model.uuid}`);
+    
+    // ✅ COMMAND CHAINING: Return this for fluent interface
+    return this;
+  }
+
+  /**
+   * Execute the complete command chain and finalize operations
+   * Web4 pattern: Final execution method for command chaining completion
+   * 
+   * @returns Promise<void> - Resolves when all chained operations complete
+   * @example
+   * ```typescript
+   * await unit.from('component.ts').linkInto('backup/').transform(rules).validate(schema).execute();
+   * ```
+   */
+  async execute(): Promise<void> {
+    try {
+      // Save final unit state after all chained operations
+      const scenario = await this.toScenario();
+      await this.storage.saveScenario(this.model.uuid, scenario, []);
+      
+      console.log(`🎯 Command chain executed successfully!`);
+      console.log(`   Unit: ${this.model.name || 'Unnamed'} (${this.model.uuid})`);
+      console.log(`   Operations completed: ${this.getExecutedOperations()}`);
+      console.log(`   Final state saved to: ${this.model.indexPath}`);
+      
+    } catch (error) {
+      console.error(`❌ Failed to execute command chain: ${error instanceof Error ? error.message : error}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Get list of executed operations in the command chain
+   * @cliHide
+   */
+  private getExecutedOperations(): string {
+    const operations: string[] = [];
+    
+    const extendedModel = this.model as any;
+    if (extendedModel.lastTransformation) operations.push('transform');
+    if (extendedModel.lastValidation) operations.push('validate');
+    if (this.model.references?.length > 0) operations.push('link');
+    
+    return operations.join(' → ') || 'initialization';
   }
 
   async validateModel(): Promise<boolean> {
@@ -267,21 +360,21 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * Create link to unit in target folder with optional copy tracking
-   * Web4 pattern: Unified interface with optional copy reference tracking
+   * Create link to unit in target folder with command chaining support
+   * Web4 pattern: Fluent interface enabling natural command chaining
    * 
    * @param unit - Unit reference (UUID or .unit file) @cliSyntax uuid|lnfile
    * @param folder - Target directory (relative to project root) @cliSyntax folder
    * @param originalUnit - Optional original unit reference for copy tracking @cliSyntax uuid|lnfile @cliOptional
-   * @returns Promise<void> - Resolves when link creation completes
+   * @returns this - Enables command chaining for fluent interface
    * @throws Error when unit invalid or folder inaccessible
    * @example
    * ```typescript
-   * await unit.linkInto('44443290-015c-4720-be80-c42caf842252', 'backup/');
-   * await unit.linkInto('TSCompletion.ts.unit', 'backup/', 'original-uuid');
+   * await unit.linkInto('44443290-015c-4720-be80-c42caf842252', 'backup/').transform(data).execute();
+   * await unit.linkInto('TSCompletion.ts.unit', 'backup/').validate(rules).execute();
    * ```
    */
-  async linkInto(unit: UnitIdentifier, folder: string, originalUnit?: UnitIdentifier): Promise<void> {
+  async linkInto(unit: UnitIdentifier, folder: string, originalUnit?: UnitIdentifier): Promise<this> {
     try {
       const { promises: fs } = await import('fs');
       const { resolve, basename } = await import('path');
@@ -377,6 +470,9 @@ export class DefaultUnit implements Unit, Upgrade {
       console.log(`   Target: ${newLinkPath}`);
       console.log(`   Copy tracking: ${originalUnit ? 'enabled' : 'disabled'}`);
       console.log(`   References: ${scenario.model.references.length}`);
+      
+      // ✅ COMMAND CHAINING: Return this for fluent interface
+      return this;
     } catch (error) {
       console.error(`❌ Failed to create link: ${error instanceof Error ? error.message : error}`);
       throw error;
@@ -640,9 +736,23 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   // Method overloads for different parameter sets (Decision 5b)
-  async from(filename: string): Promise<void>;
-  async from(filename: string, startPos: string, endPos: string): Promise<void>;
-  async from(filename: string, startPos?: string, endPos?: string): Promise<void> {
+  /**
+   * Create unit from file with command chaining support
+   * Web4 pattern: Fluent interface enabling natural command chaining
+   * 
+   * @param filename - Source file path @cliSyntax file
+   * @param startPos - Start position for word-in-file @cliSyntax position @cliOptional
+   * @param endPos - End position for word-in-file @cliSyntax position @cliOptional
+   * @returns this - Enables command chaining for fluent interface
+   * @example
+   * ```typescript
+   * await unit.from('component.ts').linkInto('backup/').transform(data).execute();
+   * await unit.from('file.ts', '1,1', '10,20').validate(rules).execute();
+   * ```
+   */
+  async from(filename: string): Promise<this>;
+  async from(filename: string, startPos: string, endPos: string): Promise<this>;
+  async from(filename: string, startPos?: string, endPos?: string): Promise<this> {
     try {
       // Automatic detection based on parameters (Decision 4a)
       if (startPos && endPos) {
@@ -652,8 +762,12 @@ export class DefaultUnit implements Unit, Upgrade {
         // Complete file mode: Simple ior:url reference
         await this.createFromCompleteFile(filename);
       }
+      
+      // ✅ COMMAND CHAINING: Return this for fluent interface
+      return this;
     } catch (error) {
       console.error(`Failed to create unit from file: ${(error as Error).message}`);
+      throw error;
     }
   }
 
