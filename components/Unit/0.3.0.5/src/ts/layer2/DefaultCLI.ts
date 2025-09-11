@@ -8,7 +8,7 @@ import { CLI } from '../layer3/CLI.interface.js';
 import { MethodInfo } from '../layer3/MethodInfo.interface.js';
 import { ComponentAnalysis } from '../layer3/ComponentAnalysis.interface.js';
 import { ColorScheme, DocumentationSections } from '../layer3/ColorScheme.interface.js';
-// import { TSCompletion } from '../../../TSRanger/v2.2/src/ts/layer4/TSCompletion.js';
+import { TSCompletion } from '../layer4/TSCompletion.js';
 
 export abstract class DefaultCLI implements CLI {
   protected componentClass: any;
@@ -252,11 +252,23 @@ export abstract class DefaultCLI implements CLI {
    */
   private extractParameterInfoFromTSCompletion(methodName: string): any[] {
     try {
-      // TODO: Use TSCompletion to get parameter information from TypeScript source
-      // const tsCompletion = new TSCompletion();
-      // const paramInfo = tsCompletion.getMethodParameters(this.componentClass.name, methodName);
+      // Use TSCompletion static methods to get parameter information from TypeScript source
       
-      // For now, fallback to intelligent parameter extraction
+      // Try to extract parameters using TSCompletion static methods
+      if (typeof TSCompletion.getMethodParameters === 'function') {
+        const paramInfo = TSCompletion.getMethodParameters(this.componentClass.name, methodName);
+        
+        return paramInfo.map((param: any, index: number) => ({
+          name: param.name || this.generateIntelligentParameterName(methodName, index),
+          type: param.type || 'any',
+          required: param.required !== false,
+          description: param.description || this.generateParameterDescription(methodName, param.name || `arg${index + 1}`, index),
+          examples: this.generateParameterExamples(param.name || `arg${index + 1}`),
+          validation: []
+        }));
+      }
+      
+      // Fallback to intelligent parameter extraction
       return this.extractParameterInfoFallback(methodName);
     } catch (error) {
       // Fallback to reflection-based approach
@@ -269,9 +281,16 @@ export abstract class DefaultCLI implements CLI {
    */
   private extractMethodDescriptionFromTSDoc(methodName: string): string {
     try {
-      // TODO: Use TSCompletion to extract JSDoc comments
-      // const tsCompletion = new TSCompletion();
-      // const jsDocText = tsCompletion.extractMethodJSDoc(this.componentClass.name, methodName);
+      // Use TSCompletion static methods to extract JSDoc comments from TypeScript source
+      
+      // Try to extract JSDoc using TSCompletion static methods
+      if (typeof (TSCompletion as any).extractJsDocText === 'function') {
+        // Use TSCompletion to analyze TypeScript source files for JSDoc
+        const jsDocText = (TSCompletion as any).extractJsDocText(this.componentClass.name, methodName);
+        if (jsDocText && jsDocText.trim()) {
+          return jsDocText.trim();
+        }
+      }
       
       // For now, fallback to intelligent description
       return this.extractMethodDescriptionFallback(methodName);
