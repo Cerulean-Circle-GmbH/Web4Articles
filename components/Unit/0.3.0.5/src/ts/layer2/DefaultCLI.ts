@@ -657,8 +657,8 @@ export abstract class DefaultCLI implements CLI {
     for (const [syntaxType, param] of parameterGroups) {
       const examples = this.generateParameterExamples(param.name);
       
-      // ✅ ZERO CONFIG: Use syntax type as display format
-      const syntax = param.required ? `<${syntaxType}>` : `[${syntaxType}]`;
+      // ✅ ENHANCED: Use enhanced optional formatting
+      const syntax = this.generateParameterSyntax(param, 'linkInto'); // Use a method name for annotation access
       
       // Line 1: Parameter syntax
       output += `  ${colors.parameters}${syntax}${colors.reset}\n`;
@@ -809,15 +809,38 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Generate CLI parameter syntax from pure TSDoc @cliSyntax annotations
-   * Web4 pattern: Zero config CLI syntax generation through TSDoc annotations
+   * Generate CLI parameter syntax with enhanced optional formatting
+   * Web4 pattern: Clear optional parameter syntax with default values
    */
   private generateParameterSyntax(param: any, methodName?: string): string {
+    // Get base syntax from @cliSyntax annotation or conventions
+    let baseSyntax = this.getBaseSyntax(param, methodName);
+    
+    // ✅ ENHANCED: Apply optional formatting preferences
+    if (param.required) {
+      return `<${baseSyntax}>`;
+    } else {
+      // Check for default value in TypeScript or TSDoc
+      const defaultValue = this.extractDefaultValue(param, methodName);
+      
+      if (defaultValue) {
+        return `<${baseSyntax}=${defaultValue}>`;  // ✅ Enhanced: <parameter=defaultValue>
+      } else {
+        return `<${baseSyntax}> <?optional>`;     // ✅ Enhanced: <parameter> <?optional>
+      }
+    }
+  }
+
+  /**
+   * Get base syntax from @cliSyntax annotation or conventions
+   * Web4 pattern: Zero config base syntax detection
+   */
+  private getBaseSyntax(param: any, methodName?: string): string {
     // ✅ ZERO CONFIG: Check @cliSyntax annotation first
     if (methodName) {
       const cliAnnotations = TSCompletion.extractCliAnnotations(this.componentClass.name, methodName, param.name);
       if (cliAnnotations.syntax) {
-        return param.required ? `<${cliAnnotations.syntax}>` : `[${cliAnnotations.syntax}]`;
+        return cliAnnotations.syntax;
       }
     }
     
@@ -827,26 +850,54 @@ export abstract class DefaultCLI implements CLI {
     // Pattern: "UUID or .unit file" or "UUID string or file path"
     if ((description.includes('UUID') || description.includes('uuid')) && 
         (description.includes('file') || description.includes('path'))) {
-      return param.required ? '<uuid|lnfile>' : '[uuid|lnfile]';
+      return 'uuid|lnfile';
     }
     
     // ✅ WEB4 CONVENTION: Derive from TypeScript union types
     if (param.isUnionType && param.unionTypes) {
       const typeNames = param.unionTypes.map((type: string) => this.simplifyTypeName(type));
-      return param.required ? `<${typeNames.join('|')}>` : `[${typeNames.join('|')}]`;
+      return typeNames.join('|');
     }
     
     // ✅ WEB4 CONVENTION: Derive from description keywords
     if (description.toLowerCase().includes('directory')) {
-      return param.required ? '<folder>' : '[folder]';
+      return 'folder';
     }
     
     if (description.toLowerCase().includes('file')) {
-      return param.required ? '<file>' : '[file]';
+      return 'file';
     }
     
-    // ✅ WEB4 CONVENTION: Default to parameter name from TypeScript
-    return param.required ? `<${param.name}>` : `[${param.name}]`;
+    // Default: parameter name from TypeScript
+    return param.name;
+  }
+
+  /**
+   * Extract default value from TypeScript parameter or TSDoc
+   * Web4 pattern: Default value detection for enhanced optional syntax
+   */
+  private extractDefaultValue(param: any, methodName?: string): string | null {
+    // ✅ ZERO CONFIG: Check for @cliDefault annotation
+    if (methodName) {
+      const cliAnnotations = TSCompletion.extractCliAnnotations(this.componentClass.name, methodName, param.name);
+      if (cliAnnotations.default) {
+        return cliAnnotations.default;
+      }
+    }
+    
+    // ✅ CONVENTION: Common default values based on parameter type
+    const description = param.description || '';
+    
+    if (description.includes('boolean')) {
+      return 'false';
+    }
+    
+    if (description.includes('copy tracking') || description.includes('optional')) {
+      return null; // Show as <?optional> rather than default
+    }
+    
+    // No default value detected
+    return null;
   }
 
   /**

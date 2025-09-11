@@ -434,7 +434,8 @@ export class TSCompletion implements Completion {
       syntax: TSCompletion.extractAnnotationValue(jsDocText, 'cliSyntax'),
       optional: jsDocText.includes('@cliOptional'),
       group: TSCompletion.extractAnnotationValue(jsDocText, 'cliGroup'),
-      alias: TSCompletion.extractAnnotationValue(jsDocText, 'cliAlias')
+      alias: TSCompletion.extractAnnotationValue(jsDocText, 'cliAlias'),
+      default: TSCompletion.extractAnnotationValue(jsDocText, 'cliDefault')
     };
   }
 
