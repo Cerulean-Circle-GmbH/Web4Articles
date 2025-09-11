@@ -9,13 +9,6 @@ COMPONENT_VERSION="0.3.0.5"
 COMPONENT_PATH="$PROJECT_ROOT/components/Unit/$COMPONENT_VERSION"
 CLI_PATH="$COMPONENT_PATH/dist/ts/layer5/UnitCLI.js"
 
-# Self-register in /scripts/versions/ 
-if [ -d "$PROJECT_ROOT/scripts/versions" ]; then
-    VERSION_SCRIPT="$PROJECT_ROOT/scripts/versions/unit-v$COMPONENT_VERSION"
-    if [ ! -L "$VERSION_SCRIPT" ]; then
-        ln -sf "$SCRIPT_DIR/unit" "$VERSION_SCRIPT"
-    fi
-fi
 
 # Check if component exists
 if [ ! -d "$COMPONENT_PATH" ]; then

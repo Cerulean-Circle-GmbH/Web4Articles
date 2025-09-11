@@ -1,43 +1,14 @@
 #!/bin/bash
 
 # Unit 0.3.0.4 CLI Script
-# Web4 pattern: Self-registering component script with version management
+# Web4 pattern: Simple shell wrapper for TypeScript CLI
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CLI_PATH="$SCRIPT_DIR/dist/ts/layer5/UnitCLI.js"
-COMPONENT_VERSION="0.3.0.4"
 
-# Self-register in /scripts/versions/ if project root is accessible
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
-if [ -d "$PROJECT_ROOT/scripts/versions" ]; then
-    VERSION_SCRIPT="$PROJECT_ROOT/scripts/versions/unit-v$COMPONENT_VERSION"
-    if [ ! -L "$VERSION_SCRIPT" ]; then
-        ln -sf "$SCRIPT_DIR/unit" "$VERSION_SCRIPT"
-    fi
-fi
-
-# Function to check if rebuild is needed
-needs_rebuild() {
-    # If CLI doesn't exist, rebuild needed
-    [ ! -f "$CLI_PATH" ] && return 0
-    
-    # Check if any TypeScript file in src is newer than CLI
-    find "$SCRIPT_DIR/src" -name "*.ts" -newer "$CLI_PATH" 2>/dev/null | grep -q . && return 0
-    
-    return 1
-}
-
-# Auto-build if CLI not available or source is newer (Web4 self-building)
-if needs_rebuild; then
-    echo "🔧 Building Unit $COMPONENT_VERSION (source files updated)..."
-    cd "$SCRIPT_DIR"
-    npm install --silent 2>/dev/null || true
-    npm run build
-fi
-
-# Check if CLI is now available
+# Check if CLI is built
 if [ ! -f "$CLI_PATH" ]; then
-    echo "❌ Unit CLI build failed"
+    echo "❌ Unit CLI not built. Run 'npm run build' first."
     exit 1
 fi
 
