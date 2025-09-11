@@ -657,14 +657,15 @@ export abstract class DefaultCLI implements CLI {
     for (const [syntaxType, param] of parameterGroups) {
       const examples = this.generateParameterExamples(param.name);
       
-      // Generate CLI syntax for parameter
-      const syntax = this.generateParameterSyntax(param);
+      // ✅ ZERO CONFIG: Use syntax type as display format
+      const syntax = param.required ? `<${syntaxType}>` : `[${syntaxType}]`;
       
       // Line 1: Parameter syntax
       output += `  ${colors.parameters}${syntax}${colors.reset}\n`;
       
-      // Line 2: Description
-      output += `    ${colors.descriptions}${param.description}${colors.reset}\n`;
+      // Line 2: Description (from TSDoc or convention)
+      const description = param.description || this.getConventionDescription(syntaxType);
+      output += `    ${colors.descriptions}${description}${colors.reset}\n`;
       
       // Line 3: Examples (multiple if available)
       if (examples.length > 0) {
@@ -730,6 +731,24 @@ export abstract class DefaultCLI implements CLI {
     
     // Default: parameter name
     return paramName;
+  }
+
+  /**
+   * Get convention-based description for syntax types
+   * Web4 pattern: Convention-driven parameter descriptions
+   */
+  private getConventionDescription(syntaxType: string): string {
+    const descriptions: { [key: string]: string } = {
+      'uuid|lnfile': 'Unit reference (UUID or .unit file)',
+      'folder': 'Directory (relative to project root)',
+      'file': 'File path (relative to project root)',
+      'position': 'Position (line,column format)',
+      'name': 'Component name (spaces become dots)',
+      'json': 'Data (JSON format)',
+      'boolean': 'Boolean flag (true/false)'
+    };
+    
+    return descriptions[syntaxType] || `${syntaxType} parameter`;
   }
 
   /**
@@ -902,9 +921,9 @@ export abstract class DefaultCLI implements CLI {
     
     // Generate two-line command format: command line + description line
     for (const method of methods) {
-      // ✅ NEW: Generate parameter syntax with union type support
+      // ✅ ZERO CONFIG: Generate parameter syntax with @cliSyntax annotation support
       const paramList = method.parameters.map((p: any) => {
-        return this.generateParameterSyntax(p);
+        return this.generateParameterSyntax(p, method.name);
       }).join(' ');
       
       // Line 1: Command with parameters (enhanced with union type syntax)
