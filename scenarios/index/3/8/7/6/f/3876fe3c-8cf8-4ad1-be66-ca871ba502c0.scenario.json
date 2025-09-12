@@ -1,0 +1,26 @@
+{
+  "ior": {
+    "uuid": "3876fe3c-8cf8-4ad1-be66-ca871ba502c0",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"3876fe3c-8cf8-4ad1-be66-ca871ba502c0\",\"timestamp\":\"2025-09-12T20:04:52.093Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "3876fe3c-8cf8-4ad1-be66-ca871ba502c0",
+    "createdAt": "2025-09-12T20:04:52.090Z",
+    "updatedAt": "2025-09-12T20:04:52.097Z",
+    "name": "Folder",
+    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/MDAv4/M3/RELATIONSHIP/",
+    "definition": "M1 folder instance: MDAv4/M3/RELATIONSHIP/",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/3/8/7/6/f/3876fe3c-8cf8-4ad1-be66-ca871ba502c0.scenario.json",
+    "originName": "RELATIONSHIP",
+    "folderPath": "MDAv4/M3/RELATIONSHIP/",
+    "fileCount": 0,
+    "subfolderCount": 0,
+    "totalSize": 0,
+    "folderHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lastScanned": "2025-09-12T20:04:52.090Z",
+    "symlinkPaths": []
+  }
+}
