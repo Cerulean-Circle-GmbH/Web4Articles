@@ -33,6 +33,23 @@ export interface Unit {
   toScenario(name?: string): Promise<Scenario>;
 
   /**
+   * Copy unit's origin file to target location with automatic .unit LD link creation
+   * Web4 pattern: Automatic copy management with origin tracking
+   * @param targetPath - Target directory or file path for copy @cliSyntax targetPath
+   * @returns Promise resolving to this for chaining
+   * 
+   * @example
+   * ```typescript
+   * // Copy to directory - creates filename.ext and filename.ext.unit
+   * await unit.copyInto('components/NewComponent/src/layer4/').execute();
+   * 
+   * // Copy to specific file - creates specified file and file.unit
+   * await unit.copyInto('components/NewComponent/src/utils/MyFile.ts').execute();
+   * ```
+   */
+  copyInto(targetPath: string): Promise<this>;
+
+  /**
    * Execute complete command chain and finalize operations
    * Web4 pattern: Final execution method for fluent interface completion
    */

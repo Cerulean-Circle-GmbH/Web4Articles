@@ -13,6 +13,8 @@ import { UUIDv4 } from '../layer3/UUIDv4.class.js';
 import { TypeM3 } from '../layer3/TypeM3.enum.js';
 import { Model } from '../layer3/Model.interface.js';
 import { DefaultStorage } from './DefaultStorage.js';
+import * as fs from 'fs/promises';
+import * as path from 'path';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
 
@@ -129,6 +131,108 @@ export class DefaultUnit implements Unit, Upgrade {
     console.log(`✅ Unit processed: ${this.model.name || this.model.uuid}`);
     
     // ✅ COMMAND CHAINING: Return this for fluent interface
+    return this;
+  }
+
+  /**
+   * Copy unit's origin file to target location with automatic .unit LD link creation
+   * Web4 pattern: Automatic copy management with origin tracking
+   * 
+   * @param targetPath - Target directory or file path for copy
+   * @returns Promise resolving to this for chaining
+   * @example
+   * ```typescript
+   * // Copy to directory - creates filename.ext and filename.ext.unit
+   * await unit.copyInto('components/NewComponent/src/layer4/').execute();
+   * 
+   * // Copy to specific file - creates specified file and file.unit
+   * await unit.copyInto('components/NewComponent/src/utils/MyFile.ts').execute();
+   * ```
+   */
+  async copyInto(targetPath: string): Promise<this> {
+    // Validate unit has file origin
+    if (!this.model.origin || !this.model.origin.startsWith('ior:git:')) {
+      throw new Error('Unit must have file origin for copyInto operation');
+    }
+    
+    // Extract source file path from origin IOR
+    const sourceFilePath = this.extractFilePathFromIOR(this.model.origin);
+    if (!sourceFilePath) {
+      throw new Error('Cannot extract file path from origin IOR');
+    }
+    
+    // Ensure source file exists
+    const projectRoot = this.findProjectRoot();
+    const fullSourcePath = path.join(projectRoot, sourceFilePath);
+    
+    try {
+      await fs.access(fullSourcePath);
+    } catch {
+      throw new Error(`Source file not found: ${fullSourcePath}`);
+    }
+    
+    // Determine target file path
+    let targetFilePath: string;
+    let fullTargetPath: string;
+    
+    if (path.isAbsolute(targetPath)) {
+      fullTargetPath = targetPath;
+    } else {
+      fullTargetPath = path.join(projectRoot, targetPath);
+    }
+    
+    const isDirectory = await this.isDirectory(fullTargetPath);
+    
+    if (isDirectory) {
+      // Target is directory - use original filename
+      const filename = path.basename(sourceFilePath);
+      targetFilePath = path.join(fullTargetPath, filename);
+    } else {
+      // Target is specific file path
+      targetFilePath = fullTargetPath;
+    }
+    
+    // Ensure target directory exists
+    await fs.mkdir(path.dirname(targetFilePath), { recursive: true });
+    
+    // Copy the source file to target location
+    await fs.copyFile(fullSourcePath, targetFilePath);
+    console.log(`📄 Copied: ${sourceFilePath} → ${path.relative(projectRoot, targetFilePath)}`);
+    
+    // Create .unit LD link next to copied file
+    const unitLinkPath = `${targetFilePath}.unit`;
+    const scenarioPath = await this.getScenarioPath();
+    
+    // Create relative symlink to scenario
+    const relativePath = path.relative(path.dirname(unitLinkPath), scenarioPath);
+    
+    // Remove existing symlink if it exists
+    try {
+      await fs.unlink(unitLinkPath);
+    } catch {
+      // Ignore if file doesn't exist
+    }
+    
+    await fs.symlink(relativePath, unitLinkPath);
+    console.log(`🔗 Created LD link: ${path.basename(unitLinkPath)} → ${relativePath}`);
+    
+    // Update unit model with copy reference
+    if (!this.model.references) {
+      this.model.references = [];
+    }
+    
+    this.model.references.push({
+      linkLocation: `ior:local:ln:file://${path.relative(projectRoot, unitLinkPath)}`,
+      linkTarget: `ior:unit:uuid:${this.model.uuid}`,
+      syncStatus: SyncStatus.SYNCED
+    });
+    
+    // Save updated scenario
+    const scenario = await this.toScenario();
+    await this.storage.saveScenario(this.model.uuid, scenario, [unitLinkPath]);
+    
+    console.log(`✅ CopyInto completed: ${path.basename(targetFilePath)} with .unit LD link`);
+    
     return this;
   }
 
@@ -1954,5 +2058,39 @@ export class DefaultUnit implements Unit, Upgrade {
       console.error(`❌ Failed to sync to copy: ${error instanceof Error ? error.message : error}`);
       throw error;
     }
+  }
+
+
+  /**
+   * Check if path is a directory
+   * Web4 pattern: Path type detection with fallback logic
+   */
+  private async isDirectory(targetPath: string): Promise<boolean> {
+    try {
+      const stats = await fs.stat(targetPath);
+      return stats.isDirectory();
+    } catch {
+      // If path doesn't exist, check if it ends with common file extensions
+      return !targetPath.match(/\.[a-zA-Z0-9]+$/);
+    }
+  }
+
+  /**
+   * Get scenario file path for current unit
+   * Web4 pattern: Scenario path resolution for LD links
+   */
+  private async getScenarioPath(): Promise<string> {
+    const projectRoot = this.findProjectRoot();
+    const uuid = this.model.uuid;
+    const indexPath = this.buildIndexPath(uuid);
+    return path.join(projectRoot, 'scenarios', 'index', indexPath, `${uuid}.scenario.json`);
+  }
+
+  /**
+   * Build index path from UUID
+   * Web4 pattern: Consistent UUID-based directory structure
+   */
+  private buildIndexPath(uuid: string): string {
+    return path.join(uuid[0], uuid[1], uuid[2], uuid[3], uuid[4]);
   }
 }

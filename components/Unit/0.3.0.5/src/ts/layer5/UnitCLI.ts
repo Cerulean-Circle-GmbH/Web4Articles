@@ -154,6 +154,15 @@ export class UnitCLI extends DefaultCLI {
     console.log(`${'\x1b[90m'}  Updated:    ${scenario.model.updatedAt}${'\x1b[0m'}`);
   }
 
+  private async copyIntoTarget(targetPath: string): Promise<void> {
+    try {
+      const unit = this.getOrCreateUnit();
+      await (await unit.copyInto(targetPath)).execute();
+    } catch (error) {
+      throw new Error(`Failed to copy into target: ${(error as Error).message}`);
+    }
+  }
+
   /**
    * Unit-specific command execution implementation using DefaultCLI dynamic functionality
    */
@@ -202,6 +211,15 @@ export class UnitCLI extends DefaultCLI {
 
         case 'info':
           await this.showInfo();
+          break;
+
+        case 'copyinto':
+        case 'copy-into':
+          if (commandArgs.length < 1) {
+            console.error('❌ Usage: unit copyInto <targetPath>');
+            return;
+          }
+          await this.copyIntoTarget(commandArgs[0]);
           break;
           
         case 'help':
