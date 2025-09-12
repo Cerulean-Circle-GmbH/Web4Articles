@@ -18,4 +18,11 @@ if [ ! -d "$SCRIPT_DIR/dist" ]; then
 fi
 
 # Execute CLI with all arguments
-node "$SCRIPT_DIR/dist/ts/layer5/RequirementCLI.js" "$@"
+node -e "
+import('$SCRIPT_DIR/dist/ts/layer5/RequirementCLI.js').then(module => {
+  module.RequirementCLI.start(process.argv.slice(2));
+}).catch(err => {
+  console.error('Error:', err.message);
+  process.exit(1);
+});
+" "$@"
