@@ -1,0 +1,26 @@
+{
+  "ior": {
+    "uuid": "02e8ee5d-c4f4-4ecd-9ae2-376b433d78d4",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"02e8ee5d-c4f4-4ecd-9ae2-376b433d78d4\",\"timestamp\":\"2025-09-12T18:28:28.648Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "02e8ee5d-c4f4-4ecd-9ae2-376b433d78d4",
+    "createdAt": "2025-09-12T18:26:40.421Z",
+    "updatedAt": "2025-09-12T18:28:28.650Z",
+    "name": "VersionFolder",
+    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/MDAv4/",
+    "definition": "M1 folder instance: MDAv4/",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/0/2/e/8/e/02e8ee5d-c4f4-4ecd-9ae2-376b433d78d4.scenario.json",
+    "originName": "MDAv4",
+    "folderPath": "MDAv4/",
+    "fileCount": 0,
+    "subfolderCount": 1,
+    "totalSize": 0,
+    "folderHash": "739f9292d995138960cecddbea3766614a003b121f339946196d616654b87c04",
+    "lastScanned": "2025-09-12T18:26:40.421Z",
+    "symlinkPaths": []
+  }
+}
