@@ -11,8 +11,10 @@
     "updatedAt": "2025-09-11T15:36:30.262Z",
     "typeM3": "CLASS",
     "name": "TSCompletion",
-    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.ts",
-    "definition": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Unit/0.3.0.5/src/ts/layer4/TSCompletion.ts",
+    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/TSRanger/v2.2/src/ts/layer4/TSCompletion.ts",
+    "definition": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/TSRanger/v2.2/src/ts/layer4/TSCompletion.ts",
+    "syncStatus": "MODIFIED",
+    "modificationNotice": "Copy modified in Unit component with @cli annotations - TSRanger needs update",
     "indexPath": "/workspace/scenarios/index/4/4/4/4/3/44443290-015c-4720-be80-c42caf842252.scenario.json",
     "references": [
       {
