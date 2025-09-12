@@ -1,0 +1,26 @@
+{
+  "ior": {
+    "uuid": "3781e52e-d782-41c9-9301-332bead6c5bf",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"3781e52e-d782-41c9-9301-332bead6c5bf\",\"timestamp\":\"2025-09-12T15:07:47.870Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "3781e52e-d782-41c9-9301-332bead6c5bf",
+    "createdAt": "2025-09-12T15:07:47.868Z",
+    "updatedAt": "2025-09-12T15:07:47.873Z",
+    "name": "Folder",
+    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/test-folder-mof/",
+    "definition": "M1 folder instance: test-folder-mof/",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/3/7/8/1/e/3781e52e-d782-41c9-9301-332bead6c5bf.scenario.json",
+    "originName": "test-folder-mof",
+    "folderPath": "test-folder-mof/",
+    "fileCount": 0,
+    "subfolderCount": 0,
+    "totalSize": 0,
+    "folderHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lastScanned": "2025-09-12T15:07:47.868Z",
+    "symlinkPaths": []
+  }
+}

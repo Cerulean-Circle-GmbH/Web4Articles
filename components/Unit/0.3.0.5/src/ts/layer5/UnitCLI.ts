@@ -154,6 +154,7 @@ export class UnitCLI extends DefaultCLI {
     console.log(`${'\x1b[90m'}  Updated:    ${scenario.model.updatedAt}${'\x1b[0m'}`);
   }
 
+
   /**
    * Unit-specific command execution implementation using DefaultCLI dynamic functionality
    */
@@ -203,6 +204,7 @@ export class UnitCLI extends DefaultCLI {
         case 'info':
           await this.showInfo();
           break;
+
           
         case 'help':
           this.showUsage();
