@@ -138,7 +138,7 @@ export class DefaultUnit implements Unit, Upgrade {
    * Copy unit's origin file to target location with automatic .unit LD link creation
    * Web4 pattern: Automatic copy management with origin tracking
    * 
-   * @param targetPath - Target directory or file path for copy
+   * @param targetPath - Target directory or file path for copy @cliSyntax targetPath
    * @returns Promise resolving to this for chaining
    * @example
    * ```typescript
