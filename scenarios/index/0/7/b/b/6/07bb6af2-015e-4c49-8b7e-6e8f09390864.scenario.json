@@ -4,16 +4,135 @@
     "component": "Unit",
     "version": "0.3.0.4"
   },
-  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"07bb6af2-015e-4c49-8b7e-6e8f09390864\",\"timestamp\":\"2025-09-11T22:18:41.791Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"07bb6af2-015e-4c49-8b7e-6e8f09390864\",\"timestamp\":\"2025-09-12T12:39:16.195Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
   "model": {
     "uuid": "07bb6af2-015e-4c49-8b7e-6e8f09390864",
     "createdAt": "2025-09-11T22:18:41.791Z",
-    "updatedAt": "2025-09-11T22:18:41.795Z",
+    "updatedAt": "2025-09-12T12:39:16.198Z",
     "typeM3": "CLASS",
     "name": "DefaultCLI",
     "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Web4Requirement/0.3.0.5/src/ts/layer2/DefaultCLI.ts",
     "definition": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Web4Requirement/0.3.0.5/src/ts/layer2/DefaultCLI.ts",
     "indexPath": "/workspace/scenarios/index/0/7/b/b/6/07bb6af2-015e-4c49-8b7e-6e8f09390864.scenario.json",
-    "symlinkPaths": []
+    "symlinkPaths": [],
+    "references": [
+      {
+        "linkLocation": "ior:local:file://components/Web4Requirement/0.3.0.5/src/ts/layer2/DefaultCLI.ts",
+        "linkTarget": "ior:unit:uuid:07bb6af2-015e-4c49-8b7e-6e8f09390864",
+        "syncStatus": "TO_BE_CHECKED",
+        "gitHashIOR": "ior:git:hash:09aaad4df2547c0079524d9c21c8043831179fdb86ae2b54587dfa30aae3f8e3",
+        "fileSize": 36543,
+        "lastModified": "2025-09-11T22:18:41.490Z",
+        "diffStatus": "IDENTICAL"
+      },
+      {
+        "linkLocation": "ior:local:file://components/DefaultCLI/0.3.0.4/src/ts/layer2/DefaultCLI.ts",
+        "linkTarget": "ior:unit:uuid:07bb6af2-015e-4c49-8b7e-6e8f09390864",
+        "syncStatus": "TO_BE_CHECKED",
+        "gitHashIOR": "ior:git:hash:7e457fbcfed6cafdfe3264b6bd88b3acd1aee1c1889dd783b24a0e5b096ca987",
+        "fileSize": 5020,
+        "lastModified": "2025-09-10T22:39:16.617Z",
+        "diffStatus": "OLDER"
+      },
+      {
+        "linkLocation": "ior:local:file://components/Unit/0.3.0.5/src/ts/layer2/DefaultCLI.ts",
+        "linkTarget": "ior:unit:uuid:07bb6af2-015e-4c49-8b7e-6e8f09390864",
+        "syncStatus": "TO_BE_CHECKED",
+        "gitHashIOR": "ior:git:hash:09aaad4df2547c0079524d9c21c8043831179fdb86ae2b54587dfa30aae3f8e3",
+        "fileSize": 36543,
+        "lastModified": "2025-09-11T18:51:17.111Z",
+        "diffStatus": "IDENTICAL"
+      },
+      {
+        "linkLocation": "ior:local:file://components/TSRanger/v2.1/src/ts/layer2/DefaultCLI.ts",
+        "linkTarget": "ior:unit:uuid:07bb6af2-015e-4c49-8b7e-6e8f09390864",
+        "syncStatus": "TO_BE_CHECKED",
+        "gitHashIOR": "ior:git:hash:4f64e5b68fef8d322000f508d4e1d4a4ca98b0a2d86479e249d4ea045784437c",
+        "fileSize": 2689,
+        "lastModified": "2025-09-10T20:48:13.663Z",
+        "diffStatus": "OLDER"
+      },
+      {
+        "linkLocation": "ior:local:file://components/TSRanger/v2.2/src/ts/layer2/DefaultCLI.ts",
+        "linkTarget": "ior:unit:uuid:07bb6af2-015e-4c49-8b7e-6e8f09390864",
+        "syncStatus": "TO_BE_CHECKED",
+        "gitHashIOR": "ior:git:hash:4f64e5b68fef8d322000f508d4e1d4a4ca98b0a2d86479e249d4ea045784437c",
+        "fileSize": 2689,
+        "lastModified": "2025-09-10T20:48:13.663Z",
+        "diffStatus": "OLDER"
+      },
+      {
+        "linkLocation": "ior:local:file://components/TSRanger/v2.0/src/ts/layer2/DefaultCLI.ts",
+        "linkTarget": "ior:unit:uuid:07bb6af2-015e-4c49-8b7e-6e8f09390864",
+        "syncStatus": "TO_BE_CHECKED",
+        "gitHashIOR": "ior:git:hash:4f64e5b68fef8d322000f508d4e1d4a4ca98b0a2d86479e249d4ea045784437c",
+        "fileSize": 2689,
+        "lastModified": "2025-09-10T20:48:13.663Z",
+        "diffStatus": "OLDER"
+      },
+      {
+        "linkLocation": "ior:local:file://components/TSRanger/v3.njs14/v2.src.mut/ts/layer2/DefaultCLI.ts",
+        "linkTarget": "ior:unit:uuid:07bb6af2-015e-4c49-8b7e-6e8f09390864",
+        "syncStatus": "TO_BE_CHECKED",
+        "gitHashIOR": "ior:git:hash:73ed801b6c59c8cee2c2d041e63baf2d56bc8c13920a6012957ed9924ed42dcf",
+        "fileSize": 2680,
+        "lastModified": "2025-09-10T20:48:13.603Z",
+        "diffStatus": "OLDER"
+      },
+      {
+        "linkLocation": "ior:local:file://components/TSRanger/v3.njs14/src.mut/ts/layer2/DefaultCLI.ts",
+        "linkTarget": "ior:unit:uuid:07bb6af2-015e-4c49-8b7e-6e8f09390864",
+        "syncStatus": "TO_BE_CHECKED",
+        "gitHashIOR": "ior:git:hash:73ed801b6c59c8cee2c2d041e63baf2d56bc8c13920a6012957ed9924ed42dcf",
+        "fileSize": 2680,
+        "lastModified": "2025-09-10T20:48:13.599Z",
+        "diffStatus": "OLDER"
+      },
+      {
+        "linkLocation": "ior:local:file://components/TSRanger/latest/src/ts/layer2/DefaultCLI.ts",
+        "linkTarget": "ior:unit:uuid:07bb6af2-015e-4c49-8b7e-6e8f09390864",
+        "syncStatus": "TO_BE_CHECKED",
+        "gitHashIOR": "ior:git:hash:4f64e5b68fef8d322000f508d4e1d4a4ca98b0a2d86479e249d4ea045784437c",
+        "fileSize": 2689,
+        "lastModified": "2025-09-10T20:48:13.659Z",
+        "diffStatus": "OLDER"
+      },
+      {
+        "linkLocation": "ior:local:file://components/TSRanger/v1.0/src/ts/layer2/DefaultCLI.ts",
+        "linkTarget": "ior:unit:uuid:07bb6af2-015e-4c49-8b7e-6e8f09390864",
+        "syncStatus": "TO_BE_CHECKED",
+        "gitHashIOR": "ior:git:hash:4f64e5b68fef8d322000f508d4e1d4a4ca98b0a2d86479e249d4ea045784437c",
+        "fileSize": 2689,
+        "lastModified": "2025-09-10T20:48:13.659Z",
+        "diffStatus": "OLDER"
+      },
+      {
+        "linkLocation": "ior:local:file://components/TSRanger/0.1.0.0/src/ts/layer2/DefaultCLI.ts",
+        "linkTarget": "ior:unit:uuid:07bb6af2-015e-4c49-8b7e-6e8f09390864",
+        "syncStatus": "TO_BE_CHECKED",
+        "gitHashIOR": "ior:git:hash:4f64e5b68fef8d322000f508d4e1d4a4ca98b0a2d86479e249d4ea045784437c",
+        "fileSize": 2689,
+        "lastModified": "2025-09-10T20:48:13.655Z",
+        "diffStatus": "OLDER"
+      },
+      {
+        "linkLocation": "ior:local:file://components/IOR/0.3.0.2/src/ts/layer5/DefaultCLI.ts",
+        "linkTarget": "ior:unit:uuid:07bb6af2-015e-4c49-8b7e-6e8f09390864",
+        "syncStatus": "TO_BE_CHECKED",
+        "gitHashIOR": "ior:git:hash:0c65e5d2422d545c5ae9e48196441f1a6f18165141bf82d60a2fca40bb2427e5",
+        "fileSize": 7059,
+        "lastModified": "2025-09-10T22:39:16.617Z",
+        "diffStatus": "OLDER"
+      },
+      {
+        "linkLocation": "ior:local:file://components/IOR/0.3.0.0/src/ts/layer5/DefaultCLI.ts",
+        "linkTarget": "ior:unit:uuid:07bb6af2-015e-4c49-8b7e-6e8f09390864",
+        "syncStatus": "TO_BE_CHECKED",
+        "gitHashIOR": "ior:git:hash:3012d6f757dc4bea04a4de8ab2b80fc4ebc2b29d88b92137fceb70e37d81bad5",
+        "fileSize": 6700,
+        "lastModified": "2025-09-10T22:39:16.617Z",
+        "diffStatus": "OLDER"
+      }
+    ]
   }
 }
