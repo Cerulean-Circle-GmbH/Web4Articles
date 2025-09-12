@@ -119,6 +119,22 @@ export interface Unit {
   get(identifier: UnitIdentifier, attribute: string): Promise<this>;
 
   /**
+   * Discover files with same name and add as references with comprehensive metadata
+   * Web4 pattern: Automatic copy detection with git hash IOR and sync status management
+   * @param identifier - Unit identifier (UUID or scenario file) @cliSyntax uuid|scenario
+   * @returns Promise resolving to this for chaining
+   * 
+   * @example
+   * ```typescript
+   * // Automatic copy discovery and reference management
+   * await unit.discover('44443290-015c-4720-be80-c42caf842252').execute();
+   * 
+   * // Discovers all files named TSCompletion.ts and adds as references with metadata
+   * ```
+   */
+  discover(identifier: UnitIdentifier): Promise<this>;
+
+  /**
    * Copy unit's origin file to target location with automatic .unit LD link creation
    * Web4 pattern: Universal <uuid|lnfile> parameter pattern with scenario loading
    * @param identifier - Unit identifier (UUID or .unit file) @cliSyntax uuid|lnfile

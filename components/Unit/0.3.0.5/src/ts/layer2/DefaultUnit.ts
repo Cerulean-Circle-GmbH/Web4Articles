@@ -270,6 +270,69 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
+   * Discover files with same name and add as references with comprehensive metadata
+   * Web4 pattern: Automatic copy detection with git hash IOR and sync status management
+   */
+  async discover(identifier: UnitIdentifier): Promise<this> {
+    // 1. Load target unit
+    const targetUnit = await this.loadUnitFromIdentifier(identifier);
+    
+    // 2. Extract filename from unit's origin
+    const filename = this.extractFilenameFromOrigin(targetUnit.model.origin);
+    if (!filename) {
+      throw new Error('Cannot extract filename from unit origin for discovery');
+    }
+    
+    console.log(`🔍 Discovering copies of: ${filename}`);
+    console.log(`📁 Original unit: ${targetUnit.model.name || 'Unit'} (${targetUnit.model.uuid})`);
+    console.log(`📍 Origin: ${targetUnit.model.origin}`);
+    console.log('');
+    
+    // 3. Search entire project for files with same name
+    const discoveredFiles = await this.findFilesByName(filename);
+    
+    // 4. Analyze each discovered file
+    const analysisResults = [];
+    for (const filePath of discoveredFiles) {
+      const analysis = await this.analyzeDiscoveredFile(filePath, targetUnit);
+      analysisResults.push(analysis);
+      
+      // Add as reference with comprehensive metadata
+      if (!targetUnit.model.references) {
+        targetUnit.model.references = [];
+      }
+      
+      // Check if reference already exists
+      const existingRef = targetUnit.model.references.find(ref => 
+        ref.linkLocation.includes(filePath)
+      );
+      
+      if (!existingRef) {
+        (targetUnit.model.references as any[]).push({
+          linkLocation: `ior:local:file://${filePath}`,
+          linkTarget: `ior:unit:uuid:${targetUnit.model.uuid}`,
+          syncStatus: SyncStatus.TO_BE_CHECKED,
+          gitHashIOR: analysis.gitHashIOR,
+          fileSize: analysis.fileSize,
+          lastModified: analysis.lastModified,
+          diffStatus: analysis.diffStatus
+        });
+      }
+    }
+    
+    // 5. Generate detailed report
+    this.generateDiscoveryReport(targetUnit, analysisResults);
+    
+    // 6. Save updated scenario
+    const scenario = await targetUnit.toScenario();
+    await targetUnit.storage.saveScenario(targetUnit.model.uuid, scenario, []);
+    
+    console.log(`✅ Discovery completed: ${analysisResults.length} copies analyzed and tracked`);
+    
+    return this;
+  }
+
+  /**
    * Copy unit's origin file to target location with automatic .unit LD link creation
    * Web4 pattern: Universal <uuid|lnfile> parameter pattern with scenario loading
    * 
@@ -2237,6 +2300,179 @@ export class DefaultUnit implements Unit, Upgrade {
       throw new Error(`Failed to create GitTextIOR for ${file}: ${(error as Error).message}`);
     }
   }
+
+  /**
+   * Extract filename from origin IOR
+   * Web4 pattern: Filename extraction for discovery operations
+   */
+  private extractFilenameFromOrigin(origin: string | undefined): string | null {
+    if (!origin) return null;
+    
+    // Extract filename from IOR format
+    const filePath = this.extractFilePathFromIOR(origin);
+    if (!filePath) return null;
+    
+    return path.basename(filePath);
+  }
+
+  /**
+   * Find all files with same name across project
+   * Web4 pattern: Project-wide file discovery
+   */
+  private async findFilesByName(filename: string): Promise<string[]> {
+    const projectRoot = this.findProjectRoot();
+    const { execSync } = await import('child_process');
+    
+    try {
+      // Use find command to locate all files with same name
+      const findCommand = `find "${projectRoot}" -name "${filename}" -type f 2>/dev/null`;
+      const output = execSync(findCommand, { encoding: 'utf8' });
+      
+      return output.trim().split('\n')
+        .filter(line => line.length > 0)
+        .map(line => path.relative(projectRoot, line))
+        .filter(relativePath => relativePath.length > 0);
+    } catch (error) {
+      console.warn(`⚠️  File discovery failed: ${(error as Error).message}`);
+      return [];
+    }
+  }
+
+  /**
+   * Analyze discovered file with comprehensive metadata
+   * Web4 pattern: File analysis with git hash and diff detection
+   */
+  private async analyzeDiscoveredFile(filePath: string, targetUnit: DefaultUnit): Promise<any> {
+    const projectRoot = this.findProjectRoot();
+    const fullPath = path.join(projectRoot, filePath);
+    
+    try {
+      // Get file stats
+      const stats = await fs.stat(fullPath);
+      
+      // Calculate git hash
+      const content = await fs.readFile(fullPath);
+      const gitHash = await this.calculateGitHash(content);
+      
+      // Create git hash IOR
+      const gitHashIOR = `ior:git:hash:${gitHash}`;
+      
+      // Compare with original if possible
+      const diffStatus = await this.determineDiffStatus(filePath, targetUnit, content);
+      
+      return {
+        filePath,
+        fileSize: stats.size,
+        lastModified: stats.mtime.toISOString(),
+        gitHashIOR,
+        diffStatus,
+        content
+      };
+    } catch (error) {
+      return {
+        filePath,
+        fileSize: 0,
+        lastModified: new Date().toISOString(),
+        gitHashIOR: 'ior:git:hash:error',
+        diffStatus: 'UNKNOWN',
+        error: (error as Error).message
+      };
+    }
+  }
+
+  /**
+   * Calculate git hash for file content
+   * Web4 pattern: Git-compatible SHA256 hash calculation
+   */
+  private async calculateGitHash(content: Buffer): Promise<string> {
+    const crypto = await import('crypto');
+    return crypto.createHash('sha256').update(content).digest('hex');
+  }
+
+  /**
+   * Determine diff status by comparing file content
+   * Web4 pattern: Intelligent diff analysis
+   */
+  private async determineDiffStatus(filePath: string, targetUnit: DefaultUnit, content: Buffer): Promise<string> {
+    try {
+      // Try to read original file for comparison
+      const originalPath = this.extractFilePathFromIOR(targetUnit.model.origin);
+      if (!originalPath) return 'UNKNOWN';
+      
+      const projectRoot = this.findProjectRoot();
+      const originalFullPath = path.join(projectRoot, originalPath);
+      
+      try {
+        const originalContent = await fs.readFile(originalFullPath);
+        
+        if (content.equals(originalContent)) {
+          return 'IDENTICAL';
+        } else if (content.length > originalContent.length) {
+          return 'NEWER';
+        } else if (content.length < originalContent.length) {
+          return 'OLDER';
+        } else {
+          return 'MODIFIED';
+        }
+      } catch {
+        return 'UNKNOWN';
+      }
+    } catch (error) {
+      return 'UNKNOWN';
+    }
+  }
+
+  /**
+   * Generate detailed discovery report
+   * Web4 pattern: Comprehensive copy analysis reporting
+   */
+  private generateDiscoveryReport(targetUnit: DefaultUnit, analysisResults: any[]): void {
+    console.log(`📊 Discovery Report for ${targetUnit.model.name || 'Unit'}`);
+    console.log(`🎯 Original: ${this.extractFilePathFromIOR(targetUnit.model.origin)}`);
+    console.log('');
+    
+    analysisResults.forEach((result, index) => {
+      const statusIcon = this.getDiffStatusIcon(result.diffStatus);
+      const sizeInfo = result.fileSize > 0 ? `${result.fileSize} bytes` : 'unknown';
+      
+      console.log(`${index + 1}. ${statusIcon} ${result.filePath}`);
+      console.log(`   Size: ${sizeInfo} | Hash: ${result.gitHashIOR.slice(-8)}... | Status: ${result.diffStatus}`);
+      
+      if (result.error) {
+        console.log(`   ❌ Error: ${result.error}`);
+      }
+      
+      console.log('');
+    });
+    
+    // Summary
+    const identical = analysisResults.filter(r => r.diffStatus === 'IDENTICAL').length;
+    const modified = analysisResults.filter(r => r.diffStatus === 'MODIFIED').length;
+    const newer = analysisResults.filter(r => r.diffStatus === 'NEWER').length;
+    const unknown = analysisResults.filter(r => r.diffStatus === 'UNKNOWN').length;
+    
+    console.log(`📈 Summary: ${analysisResults.length} files discovered`);
+    console.log(`   ✅ Identical: ${identical} | 🔄 Modified: ${modified} | ⬆️  Newer: ${newer} | ❓ Unknown: ${unknown}`);
+  }
+
+  /**
+   * Get diff status icon for reporting
+   * Web4 pattern: Visual status indication
+   */
+  private getDiffStatusIcon(diffStatus: string): string {
+    switch (diffStatus) {
+      case 'IDENTICAL': return '✅';
+      case 'MODIFIED': return '🔄';
+      case 'NEWER': return '⬆️ ';
+      case 'OLDER': return '⬇️ ';
+      case 'UNKNOWN': return '❓';
+      default: return '📄';
+    }
+  }
+
+  /**
+   * Copy unit's origin file to target location with automatic .unit LD link creation
+   * Web4 pattern: Universal <uuid|lnfile> parameter pattern with scenario loading
 
   /**
    * Load unit from identifier (universal pattern)
