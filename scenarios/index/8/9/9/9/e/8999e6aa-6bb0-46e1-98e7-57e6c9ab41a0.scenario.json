@@ -1,0 +1,39 @@
+{
+  "ior": {
+    "uuid": "8999e6aa-6bb0-46e1-98e7-57e6c9ab41a0",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"8999e6aa-6bb0-46e1-98e7-57e6c9ab41a0\",\"timestamp\":\"2025-09-12T12:39:06.702Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "8999e6aa-6bb0-46e1-98e7-57e6c9ab41a0",
+    "createdAt": "2025-09-11T22:17:38.502Z",
+    "updatedAt": "2025-09-12T12:39:06.705Z",
+    "typeM3": "CLASS",
+    "name": "UUIDv4.class",
+    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Web4Requirement/0.3.0.5/src/ts/layer3/UUIDv4.class.ts",
+    "definition": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Web4Requirement/0.3.0.5/src/ts/layer3/UUIDv4.class.ts",
+    "indexPath": "/workspace/scenarios/index/8/9/9/9/e/8999e6aa-6bb0-46e1-98e7-57e6c9ab41a0.scenario.json",
+    "symlinkPaths": [],
+    "references": [
+      {
+        "linkLocation": "ior:local:file://components/Web4Requirement/0.3.0.5/src/ts/layer3/UUIDv4.class.ts",
+        "linkTarget": "ior:unit:uuid:8999e6aa-6bb0-46e1-98e7-57e6c9ab41a0",
+        "syncStatus": "TO_BE_CHECKED",
+        "gitHashIOR": "ior:git:hash:3a49a3adf4bbb189f33147f24f27c16a0c662dbb9dde577f078b8c4a6b94cd81",
+        "fileSize": 4282,
+        "lastModified": "2025-09-11T22:17:38.150Z",
+        "diffStatus": "IDENTICAL"
+      },
+      {
+        "linkLocation": "ior:local:file://components/Unit/0.3.0.5/src/ts/layer3/UUIDv4.class.ts",
+        "linkTarget": "ior:unit:uuid:8999e6aa-6bb0-46e1-98e7-57e6c9ab41a0",
+        "syncStatus": "TO_BE_CHECKED",
+        "gitHashIOR": "ior:git:hash:3a49a3adf4bbb189f33147f24f27c16a0c662dbb9dde577f078b8c4a6b94cd81",
+        "fileSize": 4282,
+        "lastModified": "2025-09-11T15:24:14.705Z",
+        "diffStatus": "IDENTICAL"
+      }
+    ]
+  }
+}

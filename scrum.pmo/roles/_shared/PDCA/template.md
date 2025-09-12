@@ -14,18 +14,18 @@
 **🚨 Issues:** {{KEY_ISSUES}}  
 
 **📎 Previous Commit:** {{PREVIOUS_COMMIT_SHA}} - {{PREVIOUS_COMMIT_DESCRIPTION}}  
-**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
-- **Changed Files:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
-- **New Components:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
-- **Requirements Created:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
-- **Related Artifacts:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **PDCA Document:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **Changed Files:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **New Components:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **Requirements Created:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **Related Artifacts:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
 
 ### **QA Decisions**
 - [x] {{COMPLETED_DECISION}}: {{DECISION_DESCRIPTION}}

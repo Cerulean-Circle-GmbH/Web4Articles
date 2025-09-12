@@ -13,16 +13,41 @@ import { UUIDv4 } from '../layer3/UUIDv4.class.js';
 import { TypeM3 } from '../layer3/TypeM3.enum.js';
 import { Model } from '../layer3/Model.interface.js';
 import { DefaultStorage } from './DefaultStorage.js';
+import * as fs from 'fs/promises';
+import * as path from 'path';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
 
 export class DefaultUnit implements Unit, Upgrade {
   private model: UnitModel;
   private storage: DefaultStorage;
+  private contextUnit: DefaultUnit | null = null;
 
   // Getter for CLI access to model
   get unitModel(): UnitModel {
     return this.model;
+  }
+
+  // Getter for originName - filesystem entity name
+  get originName(): string {
+    if (!this.model) return '';
+    return (this.model as any).originName || this.extractOriginName();
+  }
+
+  private extractOriginName(): string {
+    if (!this.model.origin) return '';
+    
+    const filePath = this.extractFilePathFromIOR(this.model.origin);
+    if (!filePath) return '';
+    
+    // For folders ending with /, return folder name
+    if (filePath.endsWith('/')) {
+      const folderPath = filePath.slice(0, -1);
+      return path.basename(folderPath);
+    }
+    
+    // For files, return filename
+    return path.basename(filePath);
   }
 
   constructor() {
@@ -129,6 +154,297 @@ export class DefaultUnit implements Unit, Upgrade {
     console.log(`✅ Unit processed: ${this.model.name || this.model.uuid}`);
     
     // ✅ COMMAND CHAINING: Return this for fluent interface
+    return this;
+  }
+
+  /**
+   * Load unit context for subsequent operations - eliminates repetitive identifiers
+   * Web4 pattern: Context loading for workflow optimization and Occam's razor efficiency
+   */
+  async on(identifier: UnitIdentifier): Promise<this> {
+    // Load target unit and set as current context
+    this.contextUnit = await this.loadUnitFromIdentifier(identifier);
+    
+    console.log(`🎯 Unit context loaded: ${this.contextUnit.model.name || 'Unit'}`);
+    console.log(`   UUID: ${this.contextUnit.model.uuid}`);
+    console.log(`   Origin: ${this.contextUnit.model.origin || '(not set)'}`);
+    console.log(`   Status: ${(this.contextUnit.model as any).syncStatus || '(not set)'}`);
+    
+    return this;
+  }
+
+  /**
+   * Set sophisticated definition from file text reference with GitTextIOR
+   * Web4 pattern: Sophisticated text reference capability with precise positioning
+   */
+  async definition(identifier: UnitIdentifier, file: string, startPos: string, endPos: string): Promise<this>;
+  async definition(file: string, startPos: string, endPos: string): Promise<this>;
+  async definition(identifierOrFile: UnitIdentifier | string, fileOrStartPos?: string, startPosOrEndPos?: string, endPos?: string): Promise<this> {
+    let targetUnit: DefaultUnit;
+    let file: string;
+    let startPos: string;
+    let endPosValue: string;
+
+    if (endPos !== undefined) {
+      // 4 parameters: identifier, file, startPos, endPos
+      targetUnit = await this.loadUnitFromIdentifier(identifierOrFile as UnitIdentifier);
+      file = fileOrStartPos!;
+      startPos = startPosOrEndPos!;
+      endPosValue = endPos;
+    } else {
+      // 3 parameters: file, startPos, endPos (use context)
+      if (!this.contextUnit) {
+        throw new Error('No unit context loaded. Use "unit on <uuid|lnfile>" first or provide identifier parameter.');
+      }
+      targetUnit = this.contextUnit;
+      file = identifierOrFile as string;
+      startPos = fileOrStartPos!;
+      endPosValue = startPosOrEndPos!;
+    }
+
+    // Create GitTextIOR from file position
+    const gitTextIOR = await this.createGitTextIOR(file, startPos, endPosValue);
+    
+    // Set definition as GitTextIOR reference
+    targetUnit.model.definition = gitTextIOR;
+    targetUnit.model.updatedAt = new Date().toISOString();
+    
+    // Save updated scenario
+    const scenario = await targetUnit.toScenario();
+    await targetUnit.storage.saveScenario(targetUnit.model.uuid, scenario, []);
+    
+    console.log(`✅ ${targetUnit.model.name || 'Unit'}: definition set from ${file}:${startPos}-${endPosValue}`);
+    console.log(`   GitTextIOR: ${gitTextIOR}`);
+    
+    return this;
+  }
+
+  /**
+   * Set model attribute value with universal identifier pattern or using loaded context
+   * Web4 pattern: Universal <uuid|lnfile> parameter with context-aware overloading
+   */
+  async set(identifier: UnitIdentifier, attribute: string, value: string): Promise<this>;
+  async set(attribute: string, value: string): Promise<this>;
+  async set(identifierOrAttribute: UnitIdentifier | string, attributeOrValue?: string, value?: string): Promise<this> {
+    let targetUnit: DefaultUnit;
+    let attribute: string;
+    let attributeValue: string;
+
+    if (value !== undefined) {
+      // 3 parameters: identifier, attribute, value
+      targetUnit = await this.loadUnitFromIdentifier(identifierOrAttribute as UnitIdentifier);
+      attribute = attributeOrValue!;
+      attributeValue = value;
+    } else {
+      // 2 parameters: attribute, value (use context)
+      if (!this.contextUnit) {
+        throw new Error('No unit context loaded. Use "unit on <uuid|lnfile>" first or provide identifier parameter.');
+      }
+      targetUnit = this.contextUnit;
+      attribute = identifierOrAttribute as string;
+      attributeValue = attributeOrValue!;
+    }
+
+    // Set model attribute with type conversion
+    (targetUnit.model as any)[attribute] = this.convertValue(attributeValue);
+    
+    // Update timestamp
+    targetUnit.model.updatedAt = new Date().toISOString();
+    
+    // Save updated scenario
+    const scenario = await targetUnit.toScenario();
+    await targetUnit.storage.saveScenario(targetUnit.model.uuid, scenario, []);
+    
+    console.log(`✅ ${targetUnit.model.name || 'Unit'}: ${attribute} set to ${attributeValue}`);
+    
+    return this;
+  }
+
+  /**
+   * Get model attribute value with universal identifier pattern or using loaded context
+   * Web4 pattern: Universal <uuid|lnfile> parameter with context-aware overloading
+   */
+  async get(identifier: UnitIdentifier, attribute: string): Promise<this>;
+  async get(attribute: string): Promise<this>;
+  async get(identifierOrAttribute: UnitIdentifier | string, attribute?: string): Promise<this> {
+    let targetUnit: DefaultUnit;
+    let attributeName: string;
+
+    if (attribute !== undefined) {
+      // 2 parameters: identifier, attribute
+      targetUnit = await this.loadUnitFromIdentifier(identifierOrAttribute as UnitIdentifier);
+      attributeName = attribute;
+    } else {
+      // 1 parameter: attribute (use context)
+      if (!this.contextUnit) {
+        throw new Error('No unit context loaded. Use "unit on <uuid|lnfile>" first or provide identifier parameter.');
+      }
+      targetUnit = this.contextUnit;
+      attributeName = identifierOrAttribute as string;
+    }
+
+    // Get model attribute value
+    const value = (targetUnit.model as any)[attributeName];
+    
+    console.log(`📋 ${targetUnit.model.name || 'Unit'}.${attributeName}: ${value || '(not set)'}`);
+    
+    return this;
+  }
+
+  /**
+   * Discover files with same name and add as references with comprehensive metadata
+   * Web4 pattern: Automatic copy detection with git hash IOR and sync status management
+   */
+  async discover(identifier: UnitIdentifier): Promise<this> {
+    // 1. Load target unit
+    const targetUnit = await this.loadUnitFromIdentifier(identifier);
+    
+    // 2. Extract filename from unit's origin
+    const filename = this.extractFilenameFromOrigin(targetUnit.model.origin);
+    if (!filename) {
+      throw new Error('Cannot extract filename from unit origin for discovery');
+    }
+    
+    console.log(`🔍 Discovering copies of: ${filename}`);
+    console.log(`📁 Original unit: ${targetUnit.model.name || 'Unit'} (${targetUnit.model.uuid})`);
+    console.log(`📍 Origin: ${targetUnit.model.origin}`);
+    console.log('');
+    
+    // 3. Search entire project for files with same name
+    const discoveredFiles = await this.findFilesByName(filename);
+    
+    // 4. Analyze each discovered file
+    const analysisResults = [];
+    for (const filePath of discoveredFiles) {
+      const analysis = await this.analyzeDiscoveredFile(filePath, targetUnit);
+      analysisResults.push(analysis);
+      
+      // Add as reference with comprehensive metadata
+      if (!targetUnit.model.references) {
+        targetUnit.model.references = [];
+      }
+      
+      // Check if reference already exists
+      const existingRef = targetUnit.model.references.find(ref => 
+        ref.linkLocation.includes(filePath)
+      );
+      
+      if (!existingRef) {
+        (targetUnit.model.references as any[]).push({
+          linkLocation: `ior:local:file://${filePath}`,
+          linkTarget: `ior:unit:uuid:${targetUnit.model.uuid}`,
+          syncStatus: SyncStatus.TO_BE_CHECKED,
+          gitHashIOR: analysis.gitHashIOR,
+          fileSize: analysis.fileSize,
+          lastModified: analysis.lastModified,
+          diffStatus: analysis.diffStatus
+        });
+      }
+    }
+    
+    // 5. Generate detailed report
+    this.generateDiscoveryReport(targetUnit, analysisResults);
+    
+    // 6. Save updated scenario
+    const scenario = await targetUnit.toScenario();
+    await targetUnit.storage.saveScenario(targetUnit.model.uuid, scenario, []);
+    
+    console.log(`✅ Discovery completed: ${analysisResults.length} copies analyzed and tracked`);
+    
+    return this;
+  }
+
+  /**
+   * Copy unit's origin file to target location with automatic .unit LD link creation
+   * Web4 pattern: Universal <uuid|lnfile> parameter pattern with scenario loading
+   * 
+   * @param identifier - Unit identifier (UUID or .unit file) @cliSyntax uuid|lnfile
+   * @param targetFolder - Target directory for copy @cliSyntax targetFolder
+   * @returns Promise resolving to this for chaining
+   * @example
+   * ```typescript
+   * // Copy unit by UUID to directory - creates filename.ext and filename.ext.unit
+   * await unit.copyInto('44443290-015c-4720-be80-c42caf842252', 'components/NewComponent/src/layer4/').execute();
+   * 
+   * // Copy unit by .unit file to directory
+   * await unit.copyInto('TSCompletion.ts.unit', 'components/NewComponent/src/layer4/').execute();
+   * ```
+   */
+  async copyInto(identifier: UnitIdentifier, targetFolder: string): Promise<this> {
+    // 1. Load scenario from identifier (universal pattern)
+    const targetUnit = await this.loadUnitFromIdentifier(identifier);
+    
+    // 2. Validate target unit has file origin
+    if (!targetUnit.model.origin || !targetUnit.model.origin.startsWith('ior:git:')) {
+      throw new Error('Target unit must have file origin for copyInto operation');
+    }
+    
+    // 3. Extract source file path from target unit's origin IOR
+    const sourceFilePath = this.extractFilePathFromIOR(targetUnit.model.origin);
+    if (!sourceFilePath) {
+      throw new Error('Cannot extract file path from target unit origin IOR');
+    }
+    
+    // 4. Ensure source file exists
+    const projectRoot = this.findProjectRoot();
+    const fullSourcePath = path.join(projectRoot, sourceFilePath);
+    
+    try {
+      await fs.access(fullSourcePath);
+    } catch {
+      throw new Error(`Source file not found: ${fullSourcePath}`);
+    }
+    
+    // 5. Determine target file path (always directory for copyInto)
+    const fullTargetPath = path.isAbsolute(targetFolder) ? 
+      targetFolder : 
+      path.join(projectRoot, targetFolder);
+    
+    // Use original filename in target directory
+    const filename = path.basename(sourceFilePath);
+    const targetFilePath = path.join(fullTargetPath, filename);
+    
+    // 6. Ensure target directory exists
+    await fs.mkdir(fullTargetPath, { recursive: true });
+    
+    // 7. Copy the source file to target location
+    await fs.copyFile(fullSourcePath, targetFilePath);
+    console.log(`📄 Copied: ${sourceFilePath} → ${path.relative(projectRoot, targetFilePath)}`);
+    
+    // 8. Create .unit LD link next to copied file
+    const unitLinkPath = `${targetFilePath}.unit`;
+    const targetScenarioPath = await targetUnit.getScenarioPath();
+    
+    // Create relative symlink to target unit's scenario
+    const relativePath = path.relative(path.dirname(unitLinkPath), targetScenarioPath);
+    
+    // Remove existing symlink if it exists
+    try {
+      await fs.unlink(unitLinkPath);
+    } catch {
+      // Ignore if file doesn't exist
+    }
+    
+    await fs.symlink(relativePath, unitLinkPath);
+    console.log(`🔗 Created LD link: ${path.basename(unitLinkPath)} → ${relativePath}`);
+    
+    // 9. Update target unit model with copy reference
+    if (!targetUnit.model.references) {
+      targetUnit.model.references = [];
+    }
+    
+    targetUnit.model.references.push({
+      linkLocation: `ior:local:ln:file://${path.relative(projectRoot, unitLinkPath)}`,
+      linkTarget: `ior:unit:uuid:${targetUnit.model.uuid}`,
+      syncStatus: SyncStatus.SYNCED
+    });
+    
+    // 10. Save updated target unit scenario
+    const targetScenario = await targetUnit.toScenario();
+    await targetUnit.storage.saveScenario(targetUnit.model.uuid, targetScenario, [unitLinkPath]);
+    
+    console.log(`✅ CopyInto completed: ${filename} with .unit LD link`);
+    
     return this;
   }
 
@@ -1063,15 +1379,26 @@ export class DefaultUnit implements Unit, Upgrade {
    */
   async from(filename: string): Promise<this>;
   async from(filename: string, startPos: string, endPos: string): Promise<this>;
-  async from(filename: string, startPos?: string, endPos?: string): Promise<this> {
+  async from(pathInput: string, startPos?: string, endPos?: string): Promise<this> {
     try {
-      // Automatic detection based on parameters (Decision 4a)
-      if (startPos && endPos) {
-        // Word-in-file mode: GitTextIOR with positions
-        await this.createFromWordInFile(filename, startPos, endPos);
+      const projectRoot = this.findProjectRoot();
+      const fullPath = path.isAbsolute(pathInput) ? pathInput : path.join(projectRoot, pathInput);
+      
+      // Check if path is folder or file
+      const stats = await fs.stat(fullPath);
+      
+      if (stats.isDirectory()) {
+        // ✅ REVOLUTIONARY: Create folder atomic element
+        await this.createFromFolder(pathInput);
       } else {
-        // Complete file mode: Simple ior:url reference
-        await this.createFromCompleteFile(filename);
+        // ✅ EXISTING: File functionality
+        if (startPos && endPos) {
+          // Word-in-file mode: GitTextIOR with positions
+          await this.createFromWordInFile(pathInput, startPos, endPos);
+        } else {
+          // Complete file mode: Simple ior:url reference
+          await this.createFromCompleteFile(pathInput);
+        }
       }
       
       // ✅ COMMAND CHAINING: Return this for fluent interface
@@ -1229,36 +1556,10 @@ export class DefaultUnit implements Unit, Upgrade {
     return match ? match[1] : null;
   }
 
-  async definition(uuid: string, filename: string, startPos: string, endPos: string): Promise<void> {
-    try {
-      // Add definition source reference to existing unit
-      const { GitTextIOR } = await import('./GitTextIOR.js');
-      
-      // Create GitTextIOR for definition with absolute path
-      const gitIOR = new GitTextIOR();
-      const { resolve } = await import('path');
-      const absolutePath = resolve(filename);
-      const relativePath = absolutePath.replace('/workspace/', '');
-      const gitUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${relativePath}#L${startPos}-${endPos}`;
-      const definitionIOR = gitIOR.parse(gitUrl);
-      
-      // Load existing unit
-      const existingScenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
-      
-      // Update definition
-      existingScenario.model.definition = definitionIOR;
-      
-      // Save updated scenario
-      await this.storage.saveScenario(uuid, existingScenario, []);
-      
-      console.log(`✅ Definition added to unit: ${uuid}`);
-      console.log(`   Definition: ${definitionIOR}`);
-      console.log(`   Source: ${filename} (${startPos}-${endPos})`);
-    } catch (error) {
-      console.error(`Failed to add definition: ${(error as Error).message}`);
-    }
-  }
 
+  /**
+   * @cliHide - Obsolete: Use unit get <uuid|lnfile> origin instead
+   */
   async origin(uuid: string): Promise<void> {
     try {
       // Display dual links to origin and definition as clickable URLs
@@ -1953,6 +2254,490 @@ export class DefaultUnit implements Unit, Upgrade {
     } catch (error) {
       console.error(`❌ Failed to sync to copy: ${error instanceof Error ? error.message : error}`);
       throw error;
+    }
+  }
+
+
+  /**
+   * Check if path is a directory
+   * Web4 pattern: Path type detection with fallback logic
+   */
+  private async isDirectory(targetPath: string): Promise<boolean> {
+    try {
+      const stats = await fs.stat(targetPath);
+      return stats.isDirectory();
+    } catch {
+      // If path doesn't exist, check if it ends with common file extensions
+      return !targetPath.match(/\.[a-zA-Z0-9]+$/);
+    }
+  }
+
+  /**
+   * Get scenario file path for current unit
+   * Web4 pattern: Scenario path resolution for LD links
+   */
+  private async getScenarioPath(): Promise<string> {
+    const projectRoot = this.findProjectRoot();
+    const uuid = this.model.uuid;
+    const indexPath = this.buildIndexPath(uuid);
+    return path.join(projectRoot, 'scenarios', 'index', indexPath, `${uuid}.scenario.json`);
+  }
+
+  /**
+   * Build index path from UUID
+   * Web4 pattern: Consistent UUID-based directory structure
+   */
+  private buildIndexPath(uuid: string): string {
+    return path.join(uuid[0], uuid[1], uuid[2], uuid[3], uuid[4]);
+  }
+
+  /**
+   * Convert string value to appropriate type
+   * Web4 pattern: Type-safe value conversion for model attributes
+   */
+  private convertValue(value: string): any {
+    // Boolean conversion
+    if (value.toLowerCase() === 'true') return true;
+    if (value.toLowerCase() === 'false') return false;
+    
+    // Number conversion
+    if (!isNaN(Number(value)) && value.trim() !== '') return Number(value);
+    
+    // Date conversion (keep ISO date strings as strings)
+    if (value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) {
+      return value;
+    }
+    
+    // Default: string value
+    return value;
+  }
+
+  /**
+   * Create GitTextIOR from file position
+   * Web4 pattern: Sophisticated text reference with precise positioning
+   */
+  private async createGitTextIOR(file: string, startPos: string, endPos: string): Promise<string> {
+    const projectRoot = this.findProjectRoot();
+    const fullPath = path.isAbsolute(file) ? file : path.join(projectRoot, file);
+    
+    try {
+      // Verify file exists
+      await fs.access(fullPath);
+      
+      // Create GitTextIOR format
+      const relativePath = path.relative(projectRoot, fullPath);
+      const gitTextIOR = `ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/${relativePath}#L${startPos}-${endPos}`;
+      
+      return gitTextIOR;
+    } catch (error) {
+      throw new Error(`Failed to create GitTextIOR for ${file}: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Extract filename from origin IOR - Enhanced for folders
+   * Web4 pattern: Filename/foldername extraction for discovery operations
+   */
+  private extractFilenameFromOrigin(origin: string | undefined): string | null {
+    if (!origin) return null;
+    
+    // Extract path from IOR format
+    const extractedPath = this.extractFilePathFromIOR(origin);
+    if (!extractedPath) return null;
+    
+    // For folders ending with /, return folder name
+    if (extractedPath.endsWith('/')) {
+      const folderPath = extractedPath.slice(0, -1); // Remove trailing /
+      return path.basename(folderPath);
+    }
+    
+    // For files, return filename
+    return path.basename(extractedPath);
+  }
+
+  /**
+   * Find all files/folders with same name across project
+   * Web4 pattern: Project-wide file and folder discovery
+   */
+  private async findFilesByName(name: string): Promise<string[]> {
+    const projectRoot = this.findProjectRoot();
+    const { execSync } = await import('child_process');
+    
+    try {
+      // Use find command to locate all files AND folders with same name
+      const findCommand = `find "${projectRoot}" -name "${name}" 2>/dev/null`;
+      const output = execSync(findCommand, { encoding: 'utf8' });
+      
+      return output.trim().split('\n')
+        .filter(line => line.length > 0)
+        .map(line => path.relative(projectRoot, line))
+        .filter(relativePath => relativePath.length > 0);
+    } catch (error) {
+      console.warn(`⚠️  Discovery failed: ${(error as Error).message}`);
+      return [];
+    }
+  }
+
+  /**
+   * Analyze discovered file with comprehensive metadata
+   * Web4 pattern: File analysis with git hash and diff detection
+   */
+  private async analyzeDiscoveredFile(filePath: string, targetUnit: DefaultUnit): Promise<any> {
+    const projectRoot = this.findProjectRoot();
+    const fullPath = path.join(projectRoot, filePath);
+    
+    try {
+      // Get file stats
+      const stats = await fs.stat(fullPath);
+      
+      // Calculate git hash
+      const content = await fs.readFile(fullPath);
+      const gitHash = await this.calculateGitHash(content);
+      
+      // Create git hash IOR
+      const gitHashIOR = `ior:git:hash:${gitHash}`;
+      
+      // Compare with original if possible
+      const diffStatus = await this.determineDiffStatus(filePath, targetUnit, content);
+      
+      return {
+        filePath,
+        fileSize: stats.size,
+        lastModified: stats.mtime.toISOString(),
+        gitHashIOR,
+        diffStatus,
+        content
+      };
+    } catch (error) {
+      return {
+        filePath,
+        fileSize: 0,
+        lastModified: new Date().toISOString(),
+        gitHashIOR: 'ior:git:hash:error',
+        diffStatus: 'UNKNOWN',
+        error: (error as Error).message
+      };
+    }
+  }
+
+  /**
+   * Calculate git hash for file content
+   * Web4 pattern: Git-compatible SHA256 hash calculation
+   */
+  private async calculateGitHash(content: Buffer): Promise<string> {
+    const crypto = await import('crypto');
+    return crypto.createHash('sha256').update(content).digest('hex');
+  }
+
+  /**
+   * Determine diff status by comparing file content
+   * Web4 pattern: Intelligent diff analysis
+   */
+  private async determineDiffStatus(filePath: string, targetUnit: DefaultUnit, content: Buffer): Promise<string> {
+    try {
+      // Try to read original file for comparison
+      const originalPath = this.extractFilePathFromIOR(targetUnit.model.origin);
+      if (!originalPath) return 'UNKNOWN';
+      
+      const projectRoot = this.findProjectRoot();
+      const originalFullPath = path.join(projectRoot, originalPath);
+      
+      try {
+        const originalContent = await fs.readFile(originalFullPath);
+        
+        if (content.equals(originalContent)) {
+          return 'IDENTICAL';
+        } else if (content.length > originalContent.length) {
+          return 'NEWER';
+        } else if (content.length < originalContent.length) {
+          return 'OLDER';
+        } else {
+          return 'MODIFIED';
+        }
+      } catch {
+        return 'UNKNOWN';
+      }
+    } catch (error) {
+      return 'UNKNOWN';
+    }
+  }
+
+  /**
+   * Generate detailed discovery report
+   * Web4 pattern: Comprehensive copy analysis reporting
+   */
+  private generateDiscoveryReport(targetUnit: DefaultUnit, analysisResults: any[]): void {
+    console.log(`📊 Discovery Report for ${targetUnit.model.name || 'Unit'}`);
+    console.log(`🎯 Original: ${this.extractFilePathFromIOR(targetUnit.model.origin)}`);
+    console.log('');
+    
+    analysisResults.forEach((result, index) => {
+      const statusIcon = this.getDiffStatusIcon(result.diffStatus);
+      const sizeInfo = result.fileSize > 0 ? `${result.fileSize} bytes` : 'unknown';
+      
+      console.log(`${index + 1}. ${statusIcon} ${result.filePath}`);
+      console.log(`   Size: ${sizeInfo} | Hash: ${result.gitHashIOR.slice(-8)}... | Status: ${result.diffStatus}`);
+      
+      if (result.error) {
+        console.log(`   ❌ Error: ${result.error}`);
+      }
+      
+      console.log('');
+    });
+    
+    // Summary
+    const identical = analysisResults.filter(r => r.diffStatus === 'IDENTICAL').length;
+    const modified = analysisResults.filter(r => r.diffStatus === 'MODIFIED').length;
+    const newer = analysisResults.filter(r => r.diffStatus === 'NEWER').length;
+    const unknown = analysisResults.filter(r => r.diffStatus === 'UNKNOWN').length;
+    
+    console.log(`📈 Summary: ${analysisResults.length} files discovered`);
+    console.log(`   ✅ Identical: ${identical} | 🔄 Modified: ${modified} | ⬆️  Newer: ${newer} | ❓ Unknown: ${unknown}`);
+  }
+
+  /**
+   * Get diff status icon for reporting
+   * Web4 pattern: Visual status indication
+   */
+  private getDiffStatusIcon(diffStatus: string): string {
+    switch (diffStatus) {
+      case 'IDENTICAL': return '✅';
+      case 'MODIFIED': return '🔄';
+      case 'NEWER': return '⬆️ ';
+      case 'OLDER': return '⬇️ ';
+      case 'UNKNOWN': return '❓';
+      default: return '📄';
+    }
+  }
+
+  /**
+   * Create unit from folder - Revolutionary 2002 vision implementation
+   * Web4 pattern: Folder atomic elements with °folder.unit tracking
+   */
+  private async createFromFolder(folderPath: string): Promise<void> {
+    const projectRoot = this.findProjectRoot();
+    const fullPath = path.isAbsolute(folderPath) ? folderPath : path.join(projectRoot, folderPath);
+    
+    // Analyze folder structure
+    const folderAnalysis = await this.analyzeFolderStructure(fullPath);
+    
+    // Set up folder unit model with proper MOF classification
+    this.model.uuid = UUIDv4.generate().toString();
+    this.model.name = "Folder";  // M3 class name
+    this.model.origin = `ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/${folderPath}`;
+    this.model.definition = `M1 folder instance: ${folderPath}`;
+    this.model.typeM3 = TypeM3.CLASS;  // Proper M3 classification
+    this.model.createdAt = new Date().toISOString();
+    this.model.updatedAt = new Date().toISOString();
+    this.model.indexPath = '';
+    
+    // Add originName for filesystem folder name
+    (this.model as any).originName = path.basename(folderPath);
+    
+    // Add folder-specific metadata
+    (this.model as any).folderPath = folderPath;
+    (this.model as any).fileCount = folderAnalysis.fileCount;
+    (this.model as any).subfolderCount = folderAnalysis.subfolderCount;
+    (this.model as any).totalSize = folderAnalysis.totalSize;
+    (this.model as any).folderHash = folderAnalysis.folderHash;
+    (this.model as any).lastScanned = new Date().toISOString();
+    
+    // Check for git repository
+    const gitStatus = await this.checkGitStatus(fullPath);
+    if (gitStatus) {
+      (this.model as any).gitStatus = gitStatus;
+    }
+    
+    // Save scenario first to get scenario path
+    const scenario = await this.toScenario();
+    await this.storage.saveScenario(this.model.uuid, scenario, []);
+    
+    // Create °folder.unit in the tracked folder
+    const folderUnitPath = path.join(fullPath, '°folder.unit');
+    const scenarioPath = await this.getScenarioPath();
+    const relativePath = path.relative(path.dirname(folderUnitPath), scenarioPath);
+    
+    // Remove existing °folder.unit if it exists
+    try {
+      await fs.unlink(folderUnitPath);
+    } catch {
+      // Ignore if file doesn't exist
+    }
+    
+    await fs.symlink(relativePath, folderUnitPath);
+    
+    console.log(`✅ Folder unit created: ${this.model.name}`);
+    console.log(`   UUID: ${this.model.uuid}`);
+    console.log(`   Origin: ${this.model.origin}`);
+    console.log(`   Files: ${folderAnalysis.fileCount} | Subfolders: ${folderAnalysis.subfolderCount}`);
+    console.log(`   Size: ${folderAnalysis.totalSize} bytes | Hash: ${folderAnalysis.folderHash.slice(0, 8)}...`);
+    console.log(`   Folder Unit: ${path.relative(projectRoot, folderUnitPath)}`);
+    
+    if (gitStatus) {
+      console.log(`   Git: ${gitStatus}`);
+    }
+  }
+
+  /**
+   * Analyze folder structure for atomic element metadata
+   * Web4 pattern: Comprehensive folder analysis for atomic elements
+   */
+  private async analyzeFolderStructure(folderPath: string): Promise<any> {
+    let fileCount = 0;
+    let subfolderCount = 0;
+    let totalSize = 0;
+    const fileHashes: string[] = [];
+    
+    try {
+      const entries = await fs.readdir(folderPath, { withFileTypes: true });
+      
+      for (const entry of entries) {
+        // Skip °folder.unit files in analysis
+        if (entry.name === '°folder.unit') continue;
+        
+        const entryPath = path.join(folderPath, entry.name);
+        
+        if (entry.isDirectory()) {
+          subfolderCount++;
+          // Add subfolder to hash calculation
+          fileHashes.push(`DIR:${entry.name}`);
+        } else if (entry.isFile()) {
+          fileCount++;
+          const stats = await fs.stat(entryPath);
+          totalSize += stats.size;
+          
+          // Calculate file hash for folder hash
+          const content = await fs.readFile(entryPath);
+          const fileHash = await this.calculateGitHash(content);
+          fileHashes.push(`FILE:${entry.name}:${fileHash.slice(0, 8)}`);
+        }
+      }
+    } catch (error) {
+      console.warn(`⚠️  Folder analysis failed: ${(error as Error).message}`);
+    }
+    
+    // Calculate folder hash from all file hashes and structure
+    const crypto = await import('crypto');
+    const folderHash = crypto.createHash('sha256')
+      .update(fileHashes.sort().join('|'))
+      .digest('hex');
+    
+    return {
+      fileCount,
+      subfolderCount,
+      totalSize,
+      folderHash
+    };
+  }
+
+  /**
+   * Check git status for folder
+   * Web4 pattern: Git repository detection and status
+   */
+  private async checkGitStatus(folderPath: string): Promise<string | null> {
+    try {
+      const { execSync } = await import('child_process');
+      
+      // Check if folder is a git repository
+      const gitDir = path.join(folderPath, '.git');
+      try {
+        await fs.access(gitDir);
+        
+        // Get git status
+        const output = execSync('git status --porcelain', { 
+          cwd: folderPath, 
+          encoding: 'utf8',
+          timeout: 5000
+        });
+        
+        if (output.trim().length === 0) {
+          return 'clean';
+        } else {
+          const lines = output.trim().split('\n');
+          return `${lines.length} changes`;
+        }
+      } catch {
+        return null; // Not a git repository
+      }
+    } catch (error) {
+      return null; // Git command failed
+    }
+  }
+
+  /**
+   * Copy unit's origin file to target location with automatic .unit LD link creation
+   * Web4 pattern: Universal <uuid|lnfile> parameter pattern with scenario loading
+
+  /**
+   * Load unit from identifier (universal pattern)
+   * Web4 pattern: Universal scenario loading from UnitIdentifier
+   */
+  private async loadUnitFromIdentifier(identifier: UnitIdentifier): Promise<DefaultUnit> {
+    const targetUnit = new DefaultUnit();
+    targetUnit.storage = this.storage; // Share storage instance
+    
+    if (isUUIDv4(identifier)) {
+      const uuid = identifier.toString();
+      await targetUnit.loadFromUUIDString(uuid);
+    } else if (this.isUUID(identifier)) {
+      await targetUnit.loadFromUUIDString(identifier);
+    } else {
+      // Load from .unit file
+      await targetUnit.loadFromUnitFile(identifier);
+    }
+    
+    return targetUnit;
+  }
+
+  /**
+   * Load unit from UUID string
+   * Web4 pattern: UUID-based scenario loading
+   */
+  private async loadFromUUIDString(uuid: string): Promise<void> {
+    // Use existing pattern from other methods - load scenario JSON directly
+    const projectRoot = this.findProjectRoot();
+    const indexPath = this.buildIndexPath(uuid);
+    const scenarioPath = path.join(projectRoot, 'scenarios', 'index', indexPath, `${uuid}.scenario.json`);
+    
+    try {
+      const scenarioContent = await fs.readFile(scenarioPath, 'utf-8');
+      const scenario = JSON.parse(scenarioContent);
+      
+      if (scenario.model) {
+        this.model = scenario.model;
+      } else {
+        throw new Error(`Invalid scenario format for UUID: ${uuid}`);
+      }
+    } catch (error) {
+      throw new Error(`Failed to load scenario for UUID ${uuid}: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Load unit from .unit file
+   * Web4 pattern: File-based scenario loading
+   */
+  private async loadFromUnitFile(unitFile: string): Promise<void> {
+    const projectRoot = this.findProjectRoot();
+    const fullPath = path.isAbsolute(unitFile) ? unitFile : path.join(projectRoot, unitFile);
+    
+    try {
+      // Read symlink target to get scenario path
+      const scenarioPath = await fs.readlink(fullPath);
+      const fullScenarioPath = path.isAbsolute(scenarioPath) ? 
+        scenarioPath : 
+        path.resolve(path.dirname(fullPath), scenarioPath);
+      
+      const scenarioContent = await fs.readFile(fullScenarioPath, 'utf-8');
+      const scenario = JSON.parse(scenarioContent);
+      
+      if (scenario.model) {
+        this.model = scenario.model;
+      } else {
+        throw new Error(`Invalid scenario format in unit file: ${unitFile}`);
+      }
+    } catch (error) {
+      throw new Error(`Failed to load unit from file ${unitFile}: ${(error as Error).message}`);
     }
   }
 }
