@@ -1,0 +1,21 @@
+{
+  "ior": {
+    "uuid": "b871ac1a-9462-4af2-86c4-89e692a5d1a6",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"b871ac1a-9462-4af2-86c4-89e692a5d1a6\",\"timestamp\":\"2025-09-12T09:39:40.477Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "b871ac1a-9462-4af2-86c4-89e692a5d1a6",
+    "createdAt": "2025-09-12T09:30:43.920Z",
+    "updatedAt": "2025-09-12T09:39:40.480Z",
+    "typeM3": "CLASS",
+    "name": "TSCompletion",
+    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/TSRanger/v2.2/src/ts/layer4/TSCompletion.ts",
+    "definition": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/TSRanger/v2.2/src/ts/layer4/TSCompletion.ts",
+    "syncStatus": "MODIFIED",
+    "modificationNotice": "Copy modified in Web4Requirement component - TSRanger needs update",
+    "indexPath": "/workspace/scenarios/index/b/8/7/1/a/b871ac1a-9462-4af2-86c4-89e692a5d1a6.scenario.json",
+    "symlinkPaths": []
+  }
+}
