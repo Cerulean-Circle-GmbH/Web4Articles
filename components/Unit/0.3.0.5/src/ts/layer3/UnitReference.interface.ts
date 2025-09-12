@@ -14,5 +14,6 @@ export enum SyncStatus {
   SYNCED = "SYNCED",
   OUTDATED = "OUTDATED", 
   BROKEN = "BROKEN",
-  UNKNOWN = "UNKNOWN"
+  UNKNOWN = "UNKNOWN",
+  MODIFIED = "MODIFIED"
 }
