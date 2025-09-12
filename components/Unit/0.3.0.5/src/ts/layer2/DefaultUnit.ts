@@ -1357,15 +1357,26 @@ export class DefaultUnit implements Unit, Upgrade {
    */
   async from(filename: string): Promise<this>;
   async from(filename: string, startPos: string, endPos: string): Promise<this>;
-  async from(filename: string, startPos?: string, endPos?: string): Promise<this> {
+  async from(pathInput: string, startPos?: string, endPos?: string): Promise<this> {
     try {
-      // Automatic detection based on parameters (Decision 4a)
-      if (startPos && endPos) {
-        // Word-in-file mode: GitTextIOR with positions
-        await this.createFromWordInFile(filename, startPos, endPos);
+      const projectRoot = this.findProjectRoot();
+      const fullPath = path.isAbsolute(pathInput) ? pathInput : path.join(projectRoot, pathInput);
+      
+      // Check if path is folder or file
+      const stats = await fs.stat(fullPath);
+      
+      if (stats.isDirectory()) {
+        // ✅ REVOLUTIONARY: Create folder atomic element
+        await this.createFromFolder(pathInput);
       } else {
-        // Complete file mode: Simple ior:url reference
-        await this.createFromCompleteFile(filename);
+        // ✅ EXISTING: File functionality
+        if (startPos && endPos) {
+          // Word-in-file mode: GitTextIOR with positions
+          await this.createFromWordInFile(pathInput, startPos, endPos);
+        } else {
+          // Complete file mode: Simple ior:url reference
+          await this.createFromCompleteFile(pathInput);
+        }
       }
       
       // ✅ COMMAND CHAINING: Return this for fluent interface
@@ -2302,30 +2313,37 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * Extract filename from origin IOR
-   * Web4 pattern: Filename extraction for discovery operations
+   * Extract filename from origin IOR - Enhanced for folders
+   * Web4 pattern: Filename/foldername extraction for discovery operations
    */
   private extractFilenameFromOrigin(origin: string | undefined): string | null {
     if (!origin) return null;
     
-    // Extract filename from IOR format
-    const filePath = this.extractFilePathFromIOR(origin);
-    if (!filePath) return null;
+    // Extract path from IOR format
+    const extractedPath = this.extractFilePathFromIOR(origin);
+    if (!extractedPath) return null;
     
-    return path.basename(filePath);
+    // For folders ending with /, return folder name
+    if (extractedPath.endsWith('/')) {
+      const folderPath = extractedPath.slice(0, -1); // Remove trailing /
+      return path.basename(folderPath);
+    }
+    
+    // For files, return filename
+    return path.basename(extractedPath);
   }
 
   /**
-   * Find all files with same name across project
-   * Web4 pattern: Project-wide file discovery
+   * Find all files/folders with same name across project
+   * Web4 pattern: Project-wide file and folder discovery
    */
-  private async findFilesByName(filename: string): Promise<string[]> {
+  private async findFilesByName(name: string): Promise<string[]> {
     const projectRoot = this.findProjectRoot();
     const { execSync } = await import('child_process');
     
     try {
-      // Use find command to locate all files with same name
-      const findCommand = `find "${projectRoot}" -name "${filename}" -type f 2>/dev/null`;
+      // Use find command to locate all files AND folders with same name
+      const findCommand = `find "${projectRoot}" -name "${name}" 2>/dev/null`;
       const output = execSync(findCommand, { encoding: 'utf8' });
       
       return output.trim().split('\n')
@@ -2333,7 +2351,7 @@ export class DefaultUnit implements Unit, Upgrade {
         .map(line => path.relative(projectRoot, line))
         .filter(relativePath => relativePath.length > 0);
     } catch (error) {
-      console.warn(`⚠️  File discovery failed: ${(error as Error).message}`);
+      console.warn(`⚠️  Discovery failed: ${(error as Error).message}`);
       return [];
     }
   }
@@ -2467,6 +2485,157 @@ export class DefaultUnit implements Unit, Upgrade {
       case 'OLDER': return '⬇️ ';
       case 'UNKNOWN': return '❓';
       default: return '📄';
+    }
+  }
+
+  /**
+   * Create unit from folder - Revolutionary 2002 vision implementation
+   * Web4 pattern: Folder atomic elements with °folder.unit tracking
+   */
+  private async createFromFolder(folderPath: string): Promise<void> {
+    const projectRoot = this.findProjectRoot();
+    const fullPath = path.isAbsolute(folderPath) ? folderPath : path.join(projectRoot, folderPath);
+    
+    // Analyze folder structure
+    const folderAnalysis = await this.analyzeFolderStructure(fullPath);
+    
+    // Set up folder unit model
+    this.model.uuid = UUIDv4.generate().toString();
+    this.model.name = path.basename(folderPath);
+    this.model.origin = `ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/${folderPath}`;
+    this.model.definition = `Folder atomic element: ${folderPath}`;
+    this.model.typeM3 = TypeM3.FOLDER;
+    this.model.createdAt = new Date().toISOString();
+    this.model.updatedAt = new Date().toISOString();
+    this.model.indexPath = '';
+    
+    // Add folder-specific metadata
+    (this.model as any).folderPath = folderPath;
+    (this.model as any).fileCount = folderAnalysis.fileCount;
+    (this.model as any).subfolderCount = folderAnalysis.subfolderCount;
+    (this.model as any).totalSize = folderAnalysis.totalSize;
+    (this.model as any).folderHash = folderAnalysis.folderHash;
+    (this.model as any).lastScanned = new Date().toISOString();
+    
+    // Check for git repository
+    const gitStatus = await this.checkGitStatus(fullPath);
+    if (gitStatus) {
+      (this.model as any).gitStatus = gitStatus;
+    }
+    
+    // Save scenario first to get scenario path
+    const scenario = await this.toScenario();
+    await this.storage.saveScenario(this.model.uuid, scenario, []);
+    
+    // Create °folder.unit in the tracked folder
+    const folderUnitPath = path.join(fullPath, '°folder.unit');
+    const scenarioPath = await this.getScenarioPath();
+    const relativePath = path.relative(path.dirname(folderUnitPath), scenarioPath);
+    
+    // Remove existing °folder.unit if it exists
+    try {
+      await fs.unlink(folderUnitPath);
+    } catch {
+      // Ignore if file doesn't exist
+    }
+    
+    await fs.symlink(relativePath, folderUnitPath);
+    
+    console.log(`✅ Folder unit created: ${this.model.name}`);
+    console.log(`   UUID: ${this.model.uuid}`);
+    console.log(`   Origin: ${this.model.origin}`);
+    console.log(`   Files: ${folderAnalysis.fileCount} | Subfolders: ${folderAnalysis.subfolderCount}`);
+    console.log(`   Size: ${folderAnalysis.totalSize} bytes | Hash: ${folderAnalysis.folderHash.slice(0, 8)}...`);
+    console.log(`   Folder Unit: ${path.relative(projectRoot, folderUnitPath)}`);
+    
+    if (gitStatus) {
+      console.log(`   Git: ${gitStatus}`);
+    }
+  }
+
+  /**
+   * Analyze folder structure for atomic element metadata
+   * Web4 pattern: Comprehensive folder analysis for atomic elements
+   */
+  private async analyzeFolderStructure(folderPath: string): Promise<any> {
+    let fileCount = 0;
+    let subfolderCount = 0;
+    let totalSize = 0;
+    const fileHashes: string[] = [];
+    
+    try {
+      const entries = await fs.readdir(folderPath, { withFileTypes: true });
+      
+      for (const entry of entries) {
+        // Skip °folder.unit files in analysis
+        if (entry.name === '°folder.unit') continue;
+        
+        const entryPath = path.join(folderPath, entry.name);
+        
+        if (entry.isDirectory()) {
+          subfolderCount++;
+          // Add subfolder to hash calculation
+          fileHashes.push(`DIR:${entry.name}`);
+        } else if (entry.isFile()) {
+          fileCount++;
+          const stats = await fs.stat(entryPath);
+          totalSize += stats.size;
+          
+          // Calculate file hash for folder hash
+          const content = await fs.readFile(entryPath);
+          const fileHash = await this.calculateGitHash(content);
+          fileHashes.push(`FILE:${entry.name}:${fileHash.slice(0, 8)}`);
+        }
+      }
+    } catch (error) {
+      console.warn(`⚠️  Folder analysis failed: ${(error as Error).message}`);
+    }
+    
+    // Calculate folder hash from all file hashes and structure
+    const crypto = await import('crypto');
+    const folderHash = crypto.createHash('sha256')
+      .update(fileHashes.sort().join('|'))
+      .digest('hex');
+    
+    return {
+      fileCount,
+      subfolderCount,
+      totalSize,
+      folderHash
+    };
+  }
+
+  /**
+   * Check git status for folder
+   * Web4 pattern: Git repository detection and status
+   */
+  private async checkGitStatus(folderPath: string): Promise<string | null> {
+    try {
+      const { execSync } = await import('child_process');
+      
+      // Check if folder is a git repository
+      const gitDir = path.join(folderPath, '.git');
+      try {
+        await fs.access(gitDir);
+        
+        // Get git status
+        const output = execSync('git status --porcelain', { 
+          cwd: folderPath, 
+          encoding: 'utf8',
+          timeout: 5000
+        });
+        
+        if (output.trim().length === 0) {
+          return 'clean';
+        } else {
+          const lines = output.trim().split('\n');
+          return `${lines.length} changes`;
+        }
+      } catch {
+        return null; // Not a git repository
+      }
+    } catch (error) {
+      return null; // Git command failed
     }
   }
 

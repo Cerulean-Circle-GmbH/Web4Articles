@@ -10,5 +10,6 @@
 export enum TypeM3 {
   CLASS = "CLASS",           // Components, classes, objects
   ATTRIBUTE = "ATTRIBUTE",   // Files, properties, data  
-  RELATIONSHIP = "RELATIONSHIP" // LD Links, associations, connections
+  RELATIONSHIP = "RELATIONSHIP", // LD Links, associations, connections
+  FOLDER = "FOLDER"          // Directories, packages, containers - 2002 vision atomic elements
 }

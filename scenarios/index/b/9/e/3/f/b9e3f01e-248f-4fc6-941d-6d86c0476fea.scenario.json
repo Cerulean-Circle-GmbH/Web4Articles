@@ -1,0 +1,25 @@
+{
+  "ior": {
+    "uuid": "b9e3f01e-248f-4fc6-941d-6d86c0476fea",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"b9e3f01e-248f-4fc6-941d-6d86c0476fea\",\"timestamp\":\"2025-09-12T13:45:30.614Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "b9e3f01e-248f-4fc6-941d-6d86c0476fea",
+    "createdAt": "2025-09-12T13:45:30.611Z",
+    "updatedAt": "2025-09-12T13:45:30.617Z",
+    "name": "0.3.0.5",
+    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/components/Unit/0.3.0.5/",
+    "definition": "Folder atomic element: components/Unit/0.3.0.5/",
+    "typeM3": "FOLDER",
+    "indexPath": "/workspace/scenarios/index/b/9/e/3/f/b9e3f01e-248f-4fc6-941d-6d86c0476fea.scenario.json",
+    "folderPath": "components/Unit/0.3.0.5/",
+    "fileCount": 6,
+    "subfolderCount": 4,
+    "totalSize": 71412,
+    "folderHash": "7133a7bc5edf0624e7ef34946bfae447d5ec5062fdd8c304b85471990be56a2d",
+    "lastScanned": "2025-09-12T13:45:30.611Z",
+    "symlinkPaths": []
+  }
+}
