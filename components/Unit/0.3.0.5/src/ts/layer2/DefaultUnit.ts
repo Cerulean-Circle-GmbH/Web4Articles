@@ -21,6 +21,7 @@ import { dirname } from 'path';
 export class DefaultUnit implements Unit, Upgrade {
   private model: UnitModel;
   private storage: DefaultStorage;
+  private contextUnit: DefaultUnit | null = null;
 
   // Getter for CLI access to model
   get unitModel(): UnitModel {
@@ -135,65 +136,135 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
+   * Load unit context for subsequent operations - eliminates repetitive identifiers
+   * Web4 pattern: Context loading for workflow optimization and Occam's razor efficiency
+   */
+  async on(identifier: UnitIdentifier): Promise<this> {
+    // Load target unit and set as current context
+    this.contextUnit = await this.loadUnitFromIdentifier(identifier);
+    
+    console.log(`🎯 Unit context loaded: ${this.contextUnit.model.name || 'Unit'}`);
+    console.log(`   UUID: ${this.contextUnit.model.uuid}`);
+    console.log(`   Origin: ${this.contextUnit.model.origin || '(not set)'}`);
+    console.log(`   Status: ${(this.contextUnit.model as any).syncStatus || '(not set)'}`);
+    
+    return this;
+  }
+
+  /**
    * Set sophisticated definition from file text reference with GitTextIOR
    * Web4 pattern: Sophisticated text reference capability with precise positioning
    */
-  async definition(identifier: UnitIdentifier, file: string, startPos: string, endPos: string): Promise<this> {
-    // 1. Load scenario from identifier (universal pattern)
-    const targetUnit = await this.loadUnitFromIdentifier(identifier);
+  async definition(identifier: UnitIdentifier, file: string, startPos: string, endPos: string): Promise<this>;
+  async definition(file: string, startPos: string, endPos: string): Promise<this>;
+  async definition(identifierOrFile: UnitIdentifier | string, fileOrStartPos?: string, startPosOrEndPos?: string, endPos?: string): Promise<this> {
+    let targetUnit: DefaultUnit;
+    let file: string;
+    let startPos: string;
+    let endPosValue: string;
+
+    if (endPos !== undefined) {
+      // 4 parameters: identifier, file, startPos, endPos
+      targetUnit = await this.loadUnitFromIdentifier(identifierOrFile as UnitIdentifier);
+      file = fileOrStartPos!;
+      startPos = startPosOrEndPos!;
+      endPosValue = endPos;
+    } else {
+      // 3 parameters: file, startPos, endPos (use context)
+      if (!this.contextUnit) {
+        throw new Error('No unit context loaded. Use "unit on <uuid|lnfile>" first or provide identifier parameter.');
+      }
+      targetUnit = this.contextUnit;
+      file = identifierOrFile as string;
+      startPos = fileOrStartPos!;
+      endPosValue = startPosOrEndPos!;
+    }
+
+    // Create GitTextIOR from file position
+    const gitTextIOR = await this.createGitTextIOR(file, startPos, endPosValue);
     
-    // 2. Create GitTextIOR from file position
-    const gitTextIOR = await this.createGitTextIOR(file, startPos, endPos);
-    
-    // 3. Set definition as GitTextIOR reference
+    // Set definition as GitTextIOR reference
     targetUnit.model.definition = gitTextIOR;
     targetUnit.model.updatedAt = new Date().toISOString();
     
-    // 4. Save updated scenario
+    // Save updated scenario
     const scenario = await targetUnit.toScenario();
     await targetUnit.storage.saveScenario(targetUnit.model.uuid, scenario, []);
     
-    console.log(`✅ ${targetUnit.model.name || 'Unit'}: definition set from ${file}:${startPos}-${endPos}`);
+    console.log(`✅ ${targetUnit.model.name || 'Unit'}: definition set from ${file}:${startPos}-${endPosValue}`);
     console.log(`   GitTextIOR: ${gitTextIOR}`);
     
     return this;
   }
 
   /**
-   * Set model attribute value with universal identifier pattern
-   * Web4 pattern: Universal <uuid|lnfile> parameter for attribute manipulation
+   * Set model attribute value with universal identifier pattern or using loaded context
+   * Web4 pattern: Universal <uuid|lnfile> parameter with context-aware overloading
    */
-  async set(identifier: UnitIdentifier, attribute: string, value: string): Promise<this> {
-    // 1. Load scenario from identifier (universal pattern)
-    const targetUnit = await this.loadUnitFromIdentifier(identifier);
+  async set(identifier: UnitIdentifier, attribute: string, value: string): Promise<this>;
+  async set(attribute: string, value: string): Promise<this>;
+  async set(identifierOrAttribute: UnitIdentifier | string, attributeOrValue?: string, value?: string): Promise<this> {
+    let targetUnit: DefaultUnit;
+    let attribute: string;
+    let attributeValue: string;
+
+    if (value !== undefined) {
+      // 3 parameters: identifier, attribute, value
+      targetUnit = await this.loadUnitFromIdentifier(identifierOrAttribute as UnitIdentifier);
+      attribute = attributeOrValue!;
+      attributeValue = value;
+    } else {
+      // 2 parameters: attribute, value (use context)
+      if (!this.contextUnit) {
+        throw new Error('No unit context loaded. Use "unit on <uuid|lnfile>" first or provide identifier parameter.');
+      }
+      targetUnit = this.contextUnit;
+      attribute = identifierOrAttribute as string;
+      attributeValue = attributeOrValue!;
+    }
+
+    // Set model attribute with type conversion
+    (targetUnit.model as any)[attribute] = this.convertValue(attributeValue);
     
-    // 2. Set model attribute with type conversion
-    (targetUnit.model as any)[attribute] = this.convertValue(value);
-    
-    // 3. Update timestamp
+    // Update timestamp
     targetUnit.model.updatedAt = new Date().toISOString();
     
-    // 4. Save updated scenario
+    // Save updated scenario
     const scenario = await targetUnit.toScenario();
     await targetUnit.storage.saveScenario(targetUnit.model.uuid, scenario, []);
     
-    console.log(`✅ ${targetUnit.model.name || 'Unit'}: ${attribute} set to ${value}`);
+    console.log(`✅ ${targetUnit.model.name || 'Unit'}: ${attribute} set to ${attributeValue}`);
     
     return this;
   }
 
   /**
-   * Get model attribute value with universal identifier pattern
-   * Web4 pattern: Universal <uuid|lnfile> parameter for attribute access
+   * Get model attribute value with universal identifier pattern or using loaded context
+   * Web4 pattern: Universal <uuid|lnfile> parameter with context-aware overloading
    */
-  async get(identifier: UnitIdentifier, attribute: string): Promise<this> {
-    // 1. Load scenario from identifier (universal pattern)
-    const targetUnit = await this.loadUnitFromIdentifier(identifier);
+  async get(identifier: UnitIdentifier, attribute: string): Promise<this>;
+  async get(attribute: string): Promise<this>;
+  async get(identifierOrAttribute: UnitIdentifier | string, attribute?: string): Promise<this> {
+    let targetUnit: DefaultUnit;
+    let attributeName: string;
+
+    if (attribute !== undefined) {
+      // 2 parameters: identifier, attribute
+      targetUnit = await this.loadUnitFromIdentifier(identifierOrAttribute as UnitIdentifier);
+      attributeName = attribute;
+    } else {
+      // 1 parameter: attribute (use context)
+      if (!this.contextUnit) {
+        throw new Error('No unit context loaded. Use "unit on <uuid|lnfile>" first or provide identifier parameter.');
+      }
+      targetUnit = this.contextUnit;
+      attributeName = identifierOrAttribute as string;
+    }
+
+    // Get model attribute value
+    const value = (targetUnit.model as any)[attributeName];
     
-    // 2. Get model attribute value
-    const value = (targetUnit.model as any)[attribute];
-    
-    console.log(`📋 ${targetUnit.model.name || 'Unit'}.${attribute}: ${value || '(not set)'}`);
+    console.log(`📋 ${targetUnit.model.name || 'Unit'}.${attributeName}: ${value || '(not set)'}`);
     
     return this;
   }
