@@ -5,6 +5,7 @@
  */
 
 import { Scenario } from './Scenario.interface.js';
+import { UnitIdentifier } from './UnitIdentifier.type.js';
 
 export interface Unit {
   /**
@@ -34,20 +35,21 @@ export interface Unit {
 
   /**
    * Copy unit's origin file to target location with automatic .unit LD link creation
-   * Web4 pattern: Automatic copy management with origin tracking
-   * @param targetPath - Target directory or file path for copy @cliSyntax targetPath
+   * Web4 pattern: Universal <uuid|lnfile> parameter pattern with scenario loading
+   * @param identifier - Unit identifier (UUID or .unit file) @cliSyntax uuid|lnfile
+   * @param targetFolder - Target directory for copy @cliSyntax targetFolder
    * @returns Promise resolving to this for chaining
    * 
    * @example
    * ```typescript
-   * // Copy to directory - creates filename.ext and filename.ext.unit
-   * await unit.copyInto('components/NewComponent/src/layer4/').execute();
+   * // Copy unit by UUID to directory - creates filename.ext and filename.ext.unit
+   * await unit.copyInto('44443290-015c-4720-be80-c42caf842252', 'components/NewComponent/src/layer4/').execute();
    * 
-   * // Copy to specific file - creates specified file and file.unit
-   * await unit.copyInto('components/NewComponent/src/utils/MyFile.ts').execute();
+   * // Copy unit by .unit file to directory
+   * await unit.copyInto('TSCompletion.ts.unit', 'components/NewComponent/src/layer4/').execute();
    * ```
    */
-  copyInto(targetPath: string): Promise<this>;
+  copyInto(identifier: UnitIdentifier, targetFolder: string): Promise<this>;
 
   /**
    * Execute complete command chain and finalize operations

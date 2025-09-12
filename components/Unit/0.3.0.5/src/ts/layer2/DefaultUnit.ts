@@ -136,32 +136,36 @@ export class DefaultUnit implements Unit, Upgrade {
 
   /**
    * Copy unit's origin file to target location with automatic .unit LD link creation
-   * Web4 pattern: Automatic copy management with origin tracking
+   * Web4 pattern: Universal <uuid|lnfile> parameter pattern with scenario loading
    * 
-   * @param targetPath - Target directory or file path for copy @cliSyntax targetPath
+   * @param identifier - Unit identifier (UUID or .unit file) @cliSyntax uuid|lnfile
+   * @param targetFolder - Target directory for copy @cliSyntax targetFolder
    * @returns Promise resolving to this for chaining
    * @example
    * ```typescript
-   * // Copy to directory - creates filename.ext and filename.ext.unit
-   * await unit.copyInto('components/NewComponent/src/layer4/').execute();
+   * // Copy unit by UUID to directory - creates filename.ext and filename.ext.unit
+   * await unit.copyInto('44443290-015c-4720-be80-c42caf842252', 'components/NewComponent/src/layer4/').execute();
    * 
-   * // Copy to specific file - creates specified file and file.unit
-   * await unit.copyInto('components/NewComponent/src/utils/MyFile.ts').execute();
+   * // Copy unit by .unit file to directory
+   * await unit.copyInto('TSCompletion.ts.unit', 'components/NewComponent/src/layer4/').execute();
    * ```
    */
-  async copyInto(targetPath: string): Promise<this> {
-    // Validate unit has file origin
-    if (!this.model.origin || !this.model.origin.startsWith('ior:git:')) {
-      throw new Error('Unit must have file origin for copyInto operation');
+  async copyInto(identifier: UnitIdentifier, targetFolder: string): Promise<this> {
+    // 1. Load scenario from identifier (universal pattern)
+    const targetUnit = await this.loadUnitFromIdentifier(identifier);
+    
+    // 2. Validate target unit has file origin
+    if (!targetUnit.model.origin || !targetUnit.model.origin.startsWith('ior:git:')) {
+      throw new Error('Target unit must have file origin for copyInto operation');
     }
     
-    // Extract source file path from origin IOR
-    const sourceFilePath = this.extractFilePathFromIOR(this.model.origin);
+    // 3. Extract source file path from target unit's origin IOR
+    const sourceFilePath = this.extractFilePathFromIOR(targetUnit.model.origin);
     if (!sourceFilePath) {
-      throw new Error('Cannot extract file path from origin IOR');
+      throw new Error('Cannot extract file path from target unit origin IOR');
     }
     
-    // Ensure source file exists
+    // 4. Ensure source file exists
     const projectRoot = this.findProjectRoot();
     const fullSourcePath = path.join(projectRoot, sourceFilePath);
     
@@ -171,40 +175,28 @@ export class DefaultUnit implements Unit, Upgrade {
       throw new Error(`Source file not found: ${fullSourcePath}`);
     }
     
-    // Determine target file path
-    let targetFilePath: string;
-    let fullTargetPath: string;
+    // 5. Determine target file path (always directory for copyInto)
+    const fullTargetPath = path.isAbsolute(targetFolder) ? 
+      targetFolder : 
+      path.join(projectRoot, targetFolder);
     
-    if (path.isAbsolute(targetPath)) {
-      fullTargetPath = targetPath;
-    } else {
-      fullTargetPath = path.join(projectRoot, targetPath);
-    }
+    // Use original filename in target directory
+    const filename = path.basename(sourceFilePath);
+    const targetFilePath = path.join(fullTargetPath, filename);
     
-    const isDirectory = await this.isDirectory(fullTargetPath);
+    // 6. Ensure target directory exists
+    await fs.mkdir(fullTargetPath, { recursive: true });
     
-    if (isDirectory) {
-      // Target is directory - use original filename
-      const filename = path.basename(sourceFilePath);
-      targetFilePath = path.join(fullTargetPath, filename);
-    } else {
-      // Target is specific file path
-      targetFilePath = fullTargetPath;
-    }
-    
-    // Ensure target directory exists
-    await fs.mkdir(path.dirname(targetFilePath), { recursive: true });
-    
-    // Copy the source file to target location
+    // 7. Copy the source file to target location
     await fs.copyFile(fullSourcePath, targetFilePath);
     console.log(`📄 Copied: ${sourceFilePath} → ${path.relative(projectRoot, targetFilePath)}`);
     
-    // Create .unit LD link next to copied file
+    // 8. Create .unit LD link next to copied file
     const unitLinkPath = `${targetFilePath}.unit`;
-    const scenarioPath = await this.getScenarioPath();
+    const targetScenarioPath = await targetUnit.getScenarioPath();
     
-    // Create relative symlink to scenario
-    const relativePath = path.relative(path.dirname(unitLinkPath), scenarioPath);
+    // Create relative symlink to target unit's scenario
+    const relativePath = path.relative(path.dirname(unitLinkPath), targetScenarioPath);
     
     // Remove existing symlink if it exists
     try {
@@ -216,22 +208,22 @@ export class DefaultUnit implements Unit, Upgrade {
     await fs.symlink(relativePath, unitLinkPath);
     console.log(`🔗 Created LD link: ${path.basename(unitLinkPath)} → ${relativePath}`);
     
-    // Update unit model with copy reference
-    if (!this.model.references) {
-      this.model.references = [];
+    // 9. Update target unit model with copy reference
+    if (!targetUnit.model.references) {
+      targetUnit.model.references = [];
     }
     
-    this.model.references.push({
+    targetUnit.model.references.push({
       linkLocation: `ior:local:ln:file://${path.relative(projectRoot, unitLinkPath)}`,
-      linkTarget: `ior:unit:uuid:${this.model.uuid}`,
+      linkTarget: `ior:unit:uuid:${targetUnit.model.uuid}`,
       syncStatus: SyncStatus.SYNCED
     });
     
-    // Save updated scenario
-    const scenario = await this.toScenario();
-    await this.storage.saveScenario(this.model.uuid, scenario, [unitLinkPath]);
+    // 10. Save updated target unit scenario
+    const targetScenario = await targetUnit.toScenario();
+    await targetUnit.storage.saveScenario(targetUnit.model.uuid, targetScenario, [unitLinkPath]);
     
-    console.log(`✅ CopyInto completed: ${path.basename(targetFilePath)} with .unit LD link`);
+    console.log(`✅ CopyInto completed: ${filename} with .unit LD link`);
     
     return this;
   }
@@ -2092,5 +2084,78 @@ export class DefaultUnit implements Unit, Upgrade {
    */
   private buildIndexPath(uuid: string): string {
     return path.join(uuid[0], uuid[1], uuid[2], uuid[3], uuid[4]);
+  }
+
+  /**
+   * Load unit from identifier (universal pattern)
+   * Web4 pattern: Universal scenario loading from UnitIdentifier
+   */
+  private async loadUnitFromIdentifier(identifier: UnitIdentifier): Promise<DefaultUnit> {
+    const targetUnit = new DefaultUnit();
+    targetUnit.storage = this.storage; // Share storage instance
+    
+    if (isUUIDv4(identifier)) {
+      const uuid = identifier.toString();
+      await targetUnit.loadFromUUIDString(uuid);
+    } else if (this.isUUID(identifier)) {
+      await targetUnit.loadFromUUIDString(identifier);
+    } else {
+      // Load from .unit file
+      await targetUnit.loadFromUnitFile(identifier);
+    }
+    
+    return targetUnit;
+  }
+
+  /**
+   * Load unit from UUID string
+   * Web4 pattern: UUID-based scenario loading
+   */
+  private async loadFromUUIDString(uuid: string): Promise<void> {
+    // Use existing pattern from other methods - load scenario JSON directly
+    const projectRoot = this.findProjectRoot();
+    const indexPath = this.buildIndexPath(uuid);
+    const scenarioPath = path.join(projectRoot, 'scenarios', 'index', indexPath, `${uuid}.scenario.json`);
+    
+    try {
+      const scenarioContent = await fs.readFile(scenarioPath, 'utf-8');
+      const scenario = JSON.parse(scenarioContent);
+      
+      if (scenario.model) {
+        this.model = scenario.model;
+      } else {
+        throw new Error(`Invalid scenario format for UUID: ${uuid}`);
+      }
+    } catch (error) {
+      throw new Error(`Failed to load scenario for UUID ${uuid}: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Load unit from .unit file
+   * Web4 pattern: File-based scenario loading
+   */
+  private async loadFromUnitFile(unitFile: string): Promise<void> {
+    const projectRoot = this.findProjectRoot();
+    const fullPath = path.isAbsolute(unitFile) ? unitFile : path.join(projectRoot, unitFile);
+    
+    try {
+      // Read symlink target to get scenario path
+      const scenarioPath = await fs.readlink(fullPath);
+      const fullScenarioPath = path.isAbsolute(scenarioPath) ? 
+        scenarioPath : 
+        path.resolve(path.dirname(fullPath), scenarioPath);
+      
+      const scenarioContent = await fs.readFile(fullScenarioPath, 'utf-8');
+      const scenario = JSON.parse(scenarioContent);
+      
+      if (scenario.model) {
+        this.model = scenario.model;
+      } else {
+        throw new Error(`Invalid scenario format in unit file: ${unitFile}`);
+      }
+    } catch (error) {
+      throw new Error(`Failed to load unit from file ${unitFile}: ${(error as Error).message}`);
+    }
   }
 }
