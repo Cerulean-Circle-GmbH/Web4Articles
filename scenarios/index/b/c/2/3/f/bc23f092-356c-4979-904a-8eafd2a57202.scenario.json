@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "bc23f092-356c-4979-904a-8eafd2a57202",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"bc23f092-356c-4979-904a-8eafd2a57202\",\"timestamp\":\"2025-09-12T15:07:20.427Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "bc23f092-356c-4979-904a-8eafd2a57202",
+    "createdAt": "2025-09-12T15:07:20.426Z",
+    "updatedAt": "2025-09-12T15:07:20.428Z",
+    "name": "Component",
+    "definition": "M3 metaclass defining component concept in software architecture and system design",
+    "indexPath": "/workspace/scenarios/index/b/c/2/3/f/bc23f092-356c-4979-904a-8eafd2a57202.scenario.json",
+    "symlinkPaths": [
+      "/workspace/unit-bc23f092"
+    ]
+  }
+}

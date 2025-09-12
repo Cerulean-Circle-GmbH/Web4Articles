@@ -1,0 +1,51 @@
+{
+  "name": "web4-requirement",
+  "version": "0.3.0.5",
+  "description": "Revolutionary Web4 Requirement Management Component with Unit 0.3.0.5 Principles",
+  "type": "module",
+  "main": "dist/ts/layer2/DefaultRequirement.js",
+  "types": "dist/ts/layer2/DefaultRequirement.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:watch": "vitest --watch",
+    "clean": "rm -rf dist",
+    "scenario:validate": "node dist/ts/layer5/RequirementCLI.js validate"
+  },
+  "keywords": [
+    "web4",
+    "requirements",
+    "management", 
+    "component",
+    "typescript",
+    "esm",
+    "revolutionary",
+    "command-chaining",
+    "union-types",
+    "jedi-mode"
+  ],
+  "author": "Web4Articles Revolutionary Architecture Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "dependencies": {
+    "uuid": "^9.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/ts/layer2/DefaultRequirement.js",
+      "types": "./dist/ts/layer2/DefaultRequirement.d.ts"
+    },
+    "./cli": {
+      "import": "./dist/ts/layer5/RequirementCLI.js",
+      "types": "./dist/ts/layer5/RequirementCLI.d.ts"
+    }
+  }
+}

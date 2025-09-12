@@ -48,7 +48,8 @@ class UnitCLI {
     console.log('Web4 Unit CLI Tool v0.3.0.4 - Atomic Execution Elements');
     console.log('');
     console.log('Usage:');
-    console.log('  unit create <name> [description]                # Create unit');
+    console.log('  unit create <name> [description] [typeM3]       # Create unit with optional MOF classification');
+    console.log('  unit classify <uuid> <typeM3>                   # Classify existing unit with MOF typeM3');
     console.log('  unit link <uuid> <filename>                     # Create initial link to unit');
     console.log('  unit linkInto <lnlinkfile.unit> <targetfolder>  # Create additional link in different location');
     console.log('  unit list <uuid>                                # List all links to unit');
@@ -62,7 +63,8 @@ class UnitCLI {
     console.log('  unit help                                       # Show this help');
     console.log('');
     console.log('Commands:');
-    console.log('  create       Create new unit with name and optional description');
+    console.log('  create       Create new unit with name, optional description, and optional MOF classification');
+    console.log('  classify     Set MOF typeM3 classification for existing unit');
     console.log('  link         Create initial LD link to existing unit using UUID');
     console.log('  linkInto     Create additional LD link to same unit in different location');
     console.log('  list         List all LD links pointing to specific unit UUID');
@@ -85,7 +87,8 @@ class UnitCLI {
     console.log('  <input>       JSON input data for unit execution');
     console.log('');
     console.log('Examples:');
-    console.log('  unit create test-unit "Test description"        # Create unit');
+    console.log('  unit create test-unit "Test description" CLASS  # Create unit with MOF classification');
+    console.log('  unit classify a1b2c3d4-e5f6 ATTRIBUTE           # Classify existing unit');
     console.log('  unit link a1b2c3d4-e5f6 auth-validator         # Create initial link to unit');
     console.log('  unit linkInto auth-validator.unit /workspace/project-a/  # Create additional link');
     console.log('  unit list a1b2c3d4-e5f6                        # List all links to unit');
@@ -97,6 +100,11 @@ class UnitCLI {
     console.log('  unit execute test-unit \'{"data": "test"}\'      # Execute unit');
     console.log('  unit info                                      # Show details');
     console.log('');
+    console.log('TypeM3 Classifications (MOF Meta-Meta-Model):');
+    console.log('  CLASS        - Components, classes, objects that can be instantiated');
+    console.log('  ATTRIBUTE    - Files, properties, data that describe characteristics');
+    console.log('  RELATIONSHIP - LD Links, associations, connections between entities');
+    console.log('');
     console.log('Web4 Integration:');
     console.log('  Unit operates as atomic Web4 element with terminal identification (uni-t).');
     console.log('  All units use central UUID storage with LD links tracking and source traceability.');
@@ -104,14 +112,27 @@ class UnitCLI {
     console.log('');
   }
 
-  private async createUnit(name: string, description: string = ''): Promise<void> {
+  private async createUnit(name: string, description: string = '', typeM3String?: string): Promise<void> {
     // Get or create unit instance (command-based instantiation)
     const unit = this.getOrCreateUnit();
     
-    // Store name and definition immediately (TRON's correction)
+    // Validate typeM3 if provided
+    let typeM3: TypeM3 | undefined;
+    if (typeM3String) {
+      if (Object.values(TypeM3).includes(typeM3String as TypeM3)) {
+        typeM3 = typeM3String as TypeM3;
+      } else {
+        throw new Error(`Invalid typeM3: ${typeM3String}. Valid values: CLASS, ATTRIBUTE, RELATIONSHIP`);
+      }
+    }
+    
+    // Store name, definition, and typeM3 immediately (TRON's correction)
     unit.unitModel.name = name;
     if (description) {
       unit.unitModel.definition = description;  // ✅ Store description as definition immediately
+    }
+    if (typeM3) {
+      unit.unitModel.typeM3 = typeM3;  // ✅ Set MOF classification if provided
     }
     
     // Add execution capability for the named unit
@@ -124,7 +145,24 @@ class UnitCLI {
     console.log(`✅ Unit created: ${name}`);
     console.log(`   UUID: ${scenario.ior.uuid}`);
     console.log(`   Index Path: ${scenario.model.indexPath}`);
+    if (typeM3) {
+      console.log(`   TypeM3: ${typeM3}`);
+    }
     console.log(`\n   Named Link: ${filename}.unit`);
+  }
+
+  private async classifyUnit(uuid: string, typeM3String: string): Promise<void> {
+    // Validate typeM3
+    if (!Object.values(TypeM3).includes(typeM3String as TypeM3)) {
+      throw new Error(`Invalid typeM3: ${typeM3String}. Valid values: CLASS, ATTRIBUTE, RELATIONSHIP`);
+    }
+
+    const typeM3 = typeM3String as TypeM3;
+    
+    // This would need to load existing unit from storage and update it
+    // For now, show what would be done
+    console.log(`✅ Unit ${uuid} would be classified as ${typeM3}`);
+    console.log(`   Note: Full implementation requires unit loading from storage`);
   }
 
   private async executeUnit(name: string, inputJson: string): Promise<void> {
@@ -146,10 +184,19 @@ class UnitCLI {
     
     console.log(`${'\x1b[36m'}Current Unit Information:${'\x1b[0m'}`);
     console.log(`  UUID: ${scenario.ior.uuid}`);
+    console.log(`  Name: ${scenario.model.name || 'Not set'}`);
+    console.log(`  TypeM3: ${scenario.model.typeM3 || 'Not classified'}`);
+    if (scenario.model.origin) {
+      console.log(`  Origin: ${scenario.model.origin}`);
+    }
+    if (scenario.model.definition) {
+      console.log(`  Definition: ${scenario.model.definition}`);
+    }
     console.log(`  Index Path: ${scenario.model.indexPath}`);
     console.log(`  Execution Capabilities: ${scenario.model.executionCapabilities.join(', ')}`);
     console.log(`  Storage Capabilities: ${scenario.model.storageCapabilities.join(', ')}`);
     console.log(`  Symlink Paths: ${scenario.model.symlinkPaths.length} links`);
+    console.log(`  Named Links: ${scenario.model.namedLinks.length}`);
     console.log(`  Created: ${scenario.model.createdAt}`);
     console.log(`  Updated: ${scenario.model.updatedAt}`);
   }
@@ -169,7 +216,14 @@ class UnitCLI {
           if (commandArgs.length === 0) {
             throw new Error('Unit name required for create command');
           }
-          await this.createUnit(commandArgs[0], commandArgs[1]);
+          await this.createUnit(commandArgs[0], commandArgs[1], commandArgs[2]);
+          break;
+
+        case 'classify':
+          if (commandArgs.length < 2) {
+            throw new Error('UUID and typeM3 required for classify command');
+          }
+          await this.classifyUnit(commandArgs[0], commandArgs[1]);
           break;
 
         case 'execute':

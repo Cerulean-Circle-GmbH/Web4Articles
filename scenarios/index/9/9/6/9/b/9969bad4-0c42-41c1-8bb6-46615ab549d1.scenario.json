@@ -1,0 +1,22 @@
+{
+  "ior": {
+    "uuid": "9969bad4-0c42-41c1-8bb6-46615ab549d1",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"9969bad4-0c42-41c1-8bb6-46615ab549d1\",\"timestamp\":\"2025-09-10T23:41:50.265Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "9969bad4-0c42-41c1-8bb6-46615ab549d1",
+    "name": "scenarios/ontology",
+    "origin": "",
+    "definition": "**Web4 Ontology Directory** - Systematic collection of concept definitions and architectural patterns for Web4 development. Contains hibernatable unit definitions for: \\n\\n- **ESM Patterns**: Dynamic imports, async methods, CJS elimination \\n- **File System Architecture**: Named links, symlinks, storage capabilities \\n- **UUID Management**: Indexing systems and reference structures \\n- **Execution Models**: Method signatures and capability definitions \\n- **M-Layer Concepts**: M1 file instances, M2 class definitions \\n\\nServes as the **conceptual foundation** for Web4 architecture understanding and provides **systematic ontological references** for component development and integration.",
+    "typeM3": "RELATIONSHIP",
+    "indexPath": "/workspace/scenarios/index/9/9/6/9/b/9969bad4-0c42-41c1-8bb6-46615ab549d1.scenario.json",
+    "references": [],
+    "createdAt": "2025-09-10T23:41:50.263Z",
+    "updatedAt": "2025-09-10T23:41:50.267Z",
+    "symlinkPaths": [
+      "/workspace/unit-9969bad4"
+    ]
+  }
+}

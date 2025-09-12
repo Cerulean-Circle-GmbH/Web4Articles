@@ -9,6 +9,7 @@ COMPONENT_VERSION="0.3.0.5"
 COMPONENT_PATH="$PROJECT_ROOT/components/Unit/$COMPONENT_VERSION"
 CLI_PATH="$COMPONENT_PATH/dist/ts/layer5/UnitCLI.js"
 
+
 # Check if component exists
 if [ ! -d "$COMPONENT_PATH" ]; then
     echo "❌ Unit $COMPONENT_VERSION not found at $COMPONENT_PATH"

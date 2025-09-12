@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "9ba227e5-5435-4e90-ad77-ea0167d21dd9",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"9ba227e5-5435-4e90-ad77-ea0167d21dd9\",\"timestamp\":\"2025-09-12T15:07:29.256Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "9ba227e5-5435-4e90-ad77-ea0167d21dd9",
+    "createdAt": "2025-09-12T15:07:29.256Z",
+    "updatedAt": "2025-09-12T15:07:29.257Z",
+    "name": "Folder",
+    "definition": "M3 metaclass defining folder and directory concept in filesystem architecture",
+    "indexPath": "/workspace/scenarios/index/9/b/a/2/2/9ba227e5-5435-4e90-ad77-ea0167d21dd9.scenario.json",
+    "symlinkPaths": [
+      "/workspace/unit-9ba227e5"
+    ]
+  }
+}

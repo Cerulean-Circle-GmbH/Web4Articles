@@ -41,10 +41,10 @@ class BuildCLI {
       
       // Validate DefaultCLI is available
       const fs = await import('fs');
-      const defaultCLIPath = '../../../DefaultCLI/0.3.0.4/dist';
+      const defaultCLIPath = '../../DefaultCLI/0.3.0.4/dist';
       if (!fs.existsSync(defaultCLIPath)) {
         console.log('📦 Building DefaultCLI dependency...');
-        await this.build.component('../../../DefaultCLI/0.3.0.4');
+        await this.build.component('../../DefaultCLI/0.3.0.4');
       }
 
       console.log('✅ Build System: Self dependencies resolved');

@@ -13,7 +13,7 @@ export interface UnitModel extends Model {
   name: string;                    // Human-readable unit name for terminal identification (uni-t)
   origin: string;                  // ✅ UNCHANGED: IOR string format from 0.3.0.4
   definition: string;              // ✅ UNCHANGED: IOR string format from 0.3.0.4
-  typeM3: TypeM3;                  // MOF M3/M2/M1 hierarchy classification
+  typeM3?: TypeM3;                 // MOF M3/M2/M1 hierarchy classification (optional for backward compatibility)
   indexPath: string;               // scenarios/index/path to this unit
   
   // ✅ ENHANCED: Unified reference tracking (replaces symlinkPaths + namedLinks)

@@ -1,0 +1,22 @@
+{
+  "ior": {
+    "uuid": "a88a0317-e064-434c-9837-d4c8efee3bf9",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"a88a0317-e064-434c-9837-d4c8efee3bf9\",\"timestamp\":\"2025-09-10T21:42:41.961Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "a88a0317-e064-434c-9837-d4c8efee3bf9",
+    "name": "source.env",
+    "origin": "",
+    "definition": "Environment configuration file that enables Web4 tool availability by adding scripts/ and scripts/versions/ directories to PATH, serving as the single mandatory precondition for all Web4 component operations and unit creation",
+    "typeM3": "ATTRIBUTE",
+    "indexPath": "/workspace/scenarios/index/a/8/8/a/0/a88a0317-e064-434c-9837-d4c8efee3bf9.scenario.json",
+    "references": [],
+    "createdAt": "2025-09-10T21:42:41.958Z",
+    "updatedAt": "2025-09-10T21:42:41.962Z",
+    "symlinkPaths": [
+      "/workspace/unit-a88a0317"
+    ]
+  }
+}
