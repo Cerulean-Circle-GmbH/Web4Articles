@@ -1,6 +1,6 @@
 [Back to Sprints](../)
 
-# 📋 Sprint 20 Planning - Web4 Methodology Implementation
+# Sprint 20 Planning - Web4 Methodology Implementation
 
 **📎 Previous Commit:** dfc1b12 (TLA: The Last Architecture & The Last Acronym - Formula: TLA = MDAv4 + EAMv4 + SOAv4 based on Web4. ONCE and FOR ALL. 42 emergence. Web4x reference implementation.)  
 **🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/project.journal/2025-08-20-1552/pdca/2025-08-20-1552-tla-the-last-architecture-web4x.md) | [../../project.journal/2025-08-20-1552/pdca/2025-08-20-1552-tla-the-last-architecture-web4x.md](../../project.journal/2025-08-20-1552/pdca/2025-08-20-1552-tla-the-last-architecture-web4x.md)
