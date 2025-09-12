@@ -16,6 +16,8 @@ export class UnitCLI extends DefaultCLI {
     super(); // Call DefaultCLI constructor
     // Don't instantiate unit for usage display - command-based instantiation only
     this.unit = null;
+    // Initialize with component class reference (NOT instance) - no garbage creation
+    this.initWithComponentClass(DefaultUnit, 'Unit', '0.3.0.5');
   }
 
   /**
@@ -28,24 +30,8 @@ export class UnitCLI extends DefaultCLI {
 
   private getOrCreateUnit(): DefaultUnit {
     if (!this.unit) {
-      this.unit = new DefaultUnit();
-      // Initialize unit with empty scenario (Web4 pattern - 0.3.0.5 format)
-      const emptyScenario = {
-        ior: { uuid: crypto.randomUUID(), component: 'Unit', version: '0.3.0.5' },
-        owner: '',
-        model: {
-          uuid: crypto.randomUUID(),
-          name: '',
-          origin: '',
-          definition: '',
-          typeM3: TypeM3.CLASS,
-          indexPath: '',
-          references: [],
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }
-      };
-      this.unit.init(emptyScenario);
+      // Use lazy instantiation from DefaultCLI - only when method actually called
+      this.unit = this.getComponentInstance() as DefaultUnit;
     }
     return this.unit;
   }
@@ -54,20 +40,11 @@ export class UnitCLI extends DefaultCLI {
    * Unit-specific usage display using DefaultCLI dynamic generation
    */
   showUsage(): void {
-    // Use DefaultCLI dynamic usage generation with TSCompletion colors
-    this.generateDynamicUsage('unit', '0.3.0.5');
-    
-    console.log('');
-    console.log(`${this.colors.bold}Web4 Integration:${this.colors.reset}`);
-    console.log(`${this.colors.dim}  Unit operates as atomic Web4 element with terminal identification (uni-t).${this.colors.reset}`);
-    console.log(`${this.colors.dim}  All units use central UUID storage with enhanced references array.${this.colors.reset}`);
-    console.log(`${this.colors.dim}  Internal CLI architecture with DefaultCLI base class and dynamic method discovery.${this.colors.reset}`);
+    // Use new structured usage generation like requirement-v0.1.2.2
+    console.log(this.generateStructuredUsage());
   }
 
   private async createUnit(name: string, description: string = '', typeM3String?: string): Promise<void> {
-    // Get or create unit instance (command-based instantiation)
-    const unit = this.getOrCreateUnit();
-    
     // Validate typeM3 if provided
     let typeM3: TypeM3 | undefined;
     if (typeM3String) {
@@ -78,14 +55,21 @@ export class UnitCLI extends DefaultCLI {
       }
     }
     
-    // Store name, definition, and typeM3 immediately (TRON's correction)
+    // Get or create unit instance (command-based instantiation)
+    const unit = this.getOrCreateUnit();
+    
+    // ✅ FIX: Set name, definition, and typeM3 IMMEDIATELY to prevent warning
     unit.unitModel.name = name;
-    if (description) {
-      unit.unitModel.definition = description;  // ✅ Store description as definition immediately
-    }
+    unit.unitModel.definition = description || `Unit: ${name}`;  // ✅ Always set definition
     if (typeM3) {
       unit.unitModel.typeM3 = typeM3;  // ✅ Set MOF classification if provided
     }
+    
+    // ✅ FIX: Set origin to prevent warning
+    unit.unitModel.origin = `Created via CLI: unit create "${name}"`;
+    
+    // Update timestamp after setting properties
+    unit.unitModel.updatedAt = new Date().toISOString();
     
     // Add execution capability for the named unit
     unit.addExecutionCapability(name);
@@ -183,13 +167,15 @@ export class UnitCLI extends DefaultCLI {
     const commandArgs = args.slice(1);
 
     try {
-      // Initialize component for dynamic method discovery
-      if (!this.component) {
-        this.component = this.getOrCreateUnit();
-        this.discoverMethods(); // Rediscover with component
+      // Component already initialized with class reference in constructor
+      // No need to create instance for method discovery
+
+      // ✅ METHOD CHAINING: Check for chained commands FIRST
+      if (await this.executeMethodChain(command, commandArgs)) {
+        return; // Method chain executed successfully
       }
 
-      // Try dynamic command execution first (TSRanger 2.2 pattern)
+      // Try dynamic command execution (TSRanger 2.2 pattern)
       if (await this.executeDynamicCommand(command, commandArgs)) {
         return; // Command executed successfully
       }
@@ -228,6 +214,116 @@ export class UnitCLI extends DefaultCLI {
     } catch (error) {
       console.error(this.formatError((error as Error).message));
       process.exit(1);
+    }
+  }
+
+  /**
+   * Execute method chaining from CLI arguments
+   * Web4 pattern: CLI method chaining support for natural language commands
+   */
+  private async executeMethodChain(command: string, args: string[]): Promise<boolean> {
+    // ✅ CHAINING: Parse method chain from CLI arguments
+    // Example: "find Unit list" → unit.find("Unit").list()
+    
+    if (command === 'find' && args.length >= 2) {
+      const searchTerm = args[0];
+      const chainedMethods = args.slice(1);
+      
+      // Start with find
+      const unit = this.getOrCreateUnit();
+      let chainedUnit = await unit.find(searchTerm);
+      
+      // Execute chained methods
+      for (const methodName of chainedMethods) {
+        if (methodName === 'list') {
+          // ✅ INTERACTIVE: Execute list with less for interactive browsing
+          await this.executeInteractiveList(chainedUnit);
+          return true;
+        }
+        // Add support for other chainable methods here
+      }
+      
+      return true;
+    }
+    
+    return false; // No method chain recognized
+  }
+
+  /**
+   * Execute interactive list with less for browsing found references
+   * Web4 pattern: Interactive reference browsing with less pager
+   */
+  private async executeInteractiveList(unit: DefaultUnit): Promise<void> {
+    try {
+      const extendedModel = (unit as any).unitModel;
+      const foundRefs = extendedModel.foundReferences;
+      
+      if (!foundRefs || !foundRefs.files || foundRefs.files.length === 0) {
+        console.log(`❌ No found references available`);
+        console.log(`   💡 Use 'unit find <name>' first to discover references`);
+        return;
+      }
+      
+      console.log(`📄 Opening ${foundRefs.count} references in interactive viewer...`);
+      console.log(`   💡 Use 'q' to quit, '/' to search, arrow keys to navigate\n`);
+      
+      // Create formatted content for less
+      const { promises: fs } = await import('fs');
+      const { tmpdir } = await import('os');
+      const path = await import('path');
+      
+      const tempFile = path.join(tmpdir(), `unit-find-${foundRefs.searchTerm}-${Date.now()}.txt`);
+      
+      const content = [
+        `🔍 Filesystem Search Results for: "${foundRefs.searchTerm}"`,
+        `📊 Found ${foundRefs.count} potential references`,
+        `⏰ Search completed: ${foundRefs.timestamp}`,
+        '',
+        '📁 Files containing references:',
+        '=' .repeat(80),
+        ...foundRefs.files.map((ref: any, index: number) => {
+          if (typeof ref === 'object' && ref.gitTextIOR) {
+            return `${(index + 1).toString().padStart(4)}: ${ref.file}:${ref.line},${ref.column} → "${ref.match}"`;
+          } else {
+            return `${(index + 1).toString().padStart(4)}: ${ref}`;
+          }
+        }),
+        '',
+        '💡 Usage Instructions:',
+        '=' .repeat(80),
+        `   unit link <uuid|lnfile> <file>              # Track specific reference`,
+        `   unit from <file> <line,column> <line,column> # Create GitTextIOR unit from precise position`,
+        `   unit references <uuid|lnfile>               # Show existing unit references`,
+        '',
+        '🔗 JEDI MODE - GitTextIOR Examples:',
+        ...foundRefs.files.slice(0, 3).map((ref: any) => {
+          if (typeof ref === 'object' && ref.gitTextIOR) {
+            const endLine = parseInt(ref.line);
+            const endColumn = parseInt(ref.column) + ref.match.length;
+            return `   unit from ${ref.file} ${ref.line},${ref.column} ${endLine},${endColumn}  # Create from "${ref.match}"`;
+          } else {
+            return `   unit link 44443290-015c-4720-be80-c42caf842252 ${ref}`;
+          }
+        }),
+        ''
+      ].join('\n');
+      
+      await fs.writeFile(tempFile, content, 'utf-8');
+      
+      // ✅ INTERACTIVE: Open in less for paging
+      const { spawn } = await import('child_process');
+      const less = spawn('less', ['-R', tempFile], { stdio: 'inherit' });
+      
+      await new Promise((resolve) => {
+        less.on('close', () => {
+          // Clean up temp file
+          fs.unlink(tempFile).catch(() => {});
+          resolve(void 0);
+        });
+      });
+      
+    } catch (error) {
+      console.error(`❌ Failed to show interactive list: ${error instanceof Error ? error.message : error}`);
     }
   }
 
