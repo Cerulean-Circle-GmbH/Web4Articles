@@ -2,13 +2,13 @@
   "ior": {
     "uuid": "44443290-015c-4720-be80-c42caf842252",
     "component": "Unit",
-    "version": "0.3.0.5"
+    "version": "0.3.0.4"
   },
-  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"44443290-015c-4720-be80-c42caf842252\",\"timestamp\":\"2025-09-11T12:58:32.393Z\",\"component\":\"Unit\",\"version\":\"0.3.0.5\"}",
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"44443290-015c-4720-be80-c42caf842252\",\"timestamp\":\"2025-09-12T09:39:18.745Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
   "model": {
     "uuid": "44443290-015c-4720-be80-c42caf842252",
     "createdAt": "2025-09-11T12:58:32.389Z",
-    "updatedAt": "2025-09-11T15:36:30.262Z",
+    "updatedAt": "2025-09-12T09:39:18.749Z",
     "typeM3": "CLASS",
     "name": "TSCompletion",
     "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/TSRanger/v2.2/src/ts/layer4/TSCompletion.ts",
@@ -38,6 +38,7 @@
         "syncStatus": "SYNCED"
       }
     ],
-    "symlinkPaths": []
+    "symlinkPaths": [],
+    "testAttribute": "testValue"
   }
 }

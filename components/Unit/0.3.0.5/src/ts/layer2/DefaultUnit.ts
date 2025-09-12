@@ -135,6 +135,45 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
+   * Set model attribute value with universal identifier pattern
+   * Web4 pattern: Universal <uuid|lnfile> parameter for attribute manipulation
+   */
+  async set(identifier: UnitIdentifier, attribute: string, value: string): Promise<this> {
+    // 1. Load scenario from identifier (universal pattern)
+    const targetUnit = await this.loadUnitFromIdentifier(identifier);
+    
+    // 2. Set model attribute with type conversion
+    (targetUnit.model as any)[attribute] = this.convertValue(value);
+    
+    // 3. Update timestamp
+    targetUnit.model.updatedAt = new Date().toISOString();
+    
+    // 4. Save updated scenario
+    const scenario = await targetUnit.toScenario();
+    await targetUnit.storage.saveScenario(targetUnit.model.uuid, scenario, []);
+    
+    console.log(`✅ ${targetUnit.model.name || 'Unit'}: ${attribute} set to ${value}`);
+    
+    return this;
+  }
+
+  /**
+   * Get model attribute value with universal identifier pattern
+   * Web4 pattern: Universal <uuid|lnfile> parameter for attribute access
+   */
+  async get(identifier: UnitIdentifier, attribute: string): Promise<this> {
+    // 1. Load scenario from identifier (universal pattern)
+    const targetUnit = await this.loadUnitFromIdentifier(identifier);
+    
+    // 2. Get model attribute value
+    const value = (targetUnit.model as any)[attribute];
+    
+    console.log(`📋 ${targetUnit.model.name || 'Unit'}.${attribute}: ${value || '(not set)'}`);
+    
+    return this;
+  }
+
+  /**
    * Copy unit's origin file to target location with automatic .unit LD link creation
    * Web4 pattern: Universal <uuid|lnfile> parameter pattern with scenario loading
    * 
@@ -2084,6 +2123,27 @@ export class DefaultUnit implements Unit, Upgrade {
    */
   private buildIndexPath(uuid: string): string {
     return path.join(uuid[0], uuid[1], uuid[2], uuid[3], uuid[4]);
+  }
+
+  /**
+   * Convert string value to appropriate type
+   * Web4 pattern: Type-safe value conversion for model attributes
+   */
+  private convertValue(value: string): any {
+    // Boolean conversion
+    if (value.toLowerCase() === 'true') return true;
+    if (value.toLowerCase() === 'false') return false;
+    
+    // Number conversion
+    if (!isNaN(Number(value)) && value.trim() !== '') return Number(value);
+    
+    // Date conversion (keep ISO date strings as strings)
+    if (value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) {
+      return value;
+    }
+    
+    // Default: string value
+    return value;
   }
 
   /**
