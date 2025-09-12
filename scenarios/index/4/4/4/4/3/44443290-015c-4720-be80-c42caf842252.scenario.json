@@ -4,15 +4,15 @@
     "component": "Unit",
     "version": "0.3.0.4"
   },
-  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"44443290-015c-4720-be80-c42caf842252\",\"timestamp\":\"2025-09-12T09:39:18.745Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"44443290-015c-4720-be80-c42caf842252\",\"timestamp\":\"2025-09-12T10:06:19.069Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
   "model": {
     "uuid": "44443290-015c-4720-be80-c42caf842252",
     "createdAt": "2025-09-11T12:58:32.389Z",
-    "updatedAt": "2025-09-12T09:39:18.749Z",
+    "updatedAt": "2025-09-12T10:06:19.073Z",
     "typeM3": "CLASS",
     "name": "TSCompletion",
     "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/TSRanger/v2.2/src/ts/layer4/TSCompletion.ts",
-    "definition": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/TSRanger/v2.2/src/ts/layer4/TSCompletion.ts",
+    "definition": "ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/components/Unit/0.3.0.5/src/ts/layer2/DefaultUnit.ts#L1,1-1,20",
     "syncStatus": "MODIFIED",
     "modificationNotice": "Copy modified in Unit component with @cli annotations - TSRanger needs update",
     "indexPath": "/workspace/scenarios/index/4/4/4/4/3/44443290-015c-4720-be80-c42caf842252.scenario.json",

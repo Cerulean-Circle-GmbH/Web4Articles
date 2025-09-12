@@ -135,6 +135,31 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
+   * Set sophisticated definition from file text reference with GitTextIOR
+   * Web4 pattern: Sophisticated text reference capability with precise positioning
+   */
+  async definition(identifier: UnitIdentifier, file: string, startPos: string, endPos: string): Promise<this> {
+    // 1. Load scenario from identifier (universal pattern)
+    const targetUnit = await this.loadUnitFromIdentifier(identifier);
+    
+    // 2. Create GitTextIOR from file position
+    const gitTextIOR = await this.createGitTextIOR(file, startPos, endPos);
+    
+    // 3. Set definition as GitTextIOR reference
+    targetUnit.model.definition = gitTextIOR;
+    targetUnit.model.updatedAt = new Date().toISOString();
+    
+    // 4. Save updated scenario
+    const scenario = await targetUnit.toScenario();
+    await targetUnit.storage.saveScenario(targetUnit.model.uuid, scenario, []);
+    
+    console.log(`✅ ${targetUnit.model.name || 'Unit'}: definition set from ${file}:${startPos}-${endPos}`);
+    console.log(`   GitTextIOR: ${gitTextIOR}`);
+    
+    return this;
+  }
+
+  /**
    * Set model attribute value with universal identifier pattern
    * Web4 pattern: Universal <uuid|lnfile> parameter for attribute manipulation
    */
@@ -1364,36 +1389,10 @@ export class DefaultUnit implements Unit, Upgrade {
     return match ? match[1] : null;
   }
 
-  async definition(uuid: string, filename: string, startPos: string, endPos: string): Promise<void> {
-    try {
-      // Add definition source reference to existing unit
-      const { GitTextIOR } = await import('./GitTextIOR.js');
-      
-      // Create GitTextIOR for definition with absolute path
-      const gitIOR = new GitTextIOR();
-      const { resolve } = await import('path');
-      const absolutePath = resolve(filename);
-      const relativePath = absolutePath.replace('/workspace/', '');
-      const gitUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${relativePath}#L${startPos}-${endPos}`;
-      const definitionIOR = gitIOR.parse(gitUrl);
-      
-      // Load existing unit
-      const existingScenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
-      
-      // Update definition
-      existingScenario.model.definition = definitionIOR;
-      
-      // Save updated scenario
-      await this.storage.saveScenario(uuid, existingScenario, []);
-      
-      console.log(`✅ Definition added to unit: ${uuid}`);
-      console.log(`   Definition: ${definitionIOR}`);
-      console.log(`   Source: ${filename} (${startPos}-${endPos})`);
-    } catch (error) {
-      console.error(`Failed to add definition: ${(error as Error).message}`);
-    }
-  }
 
+  /**
+   * @cliHide - Obsolete: Use unit get <uuid|lnfile> origin instead
+   */
   async origin(uuid: string): Promise<void> {
     try {
       // Display dual links to origin and definition as clickable URLs
@@ -2144,6 +2143,28 @@ export class DefaultUnit implements Unit, Upgrade {
     
     // Default: string value
     return value;
+  }
+
+  /**
+   * Create GitTextIOR from file position
+   * Web4 pattern: Sophisticated text reference with precise positioning
+   */
+  private async createGitTextIOR(file: string, startPos: string, endPos: string): Promise<string> {
+    const projectRoot = this.findProjectRoot();
+    const fullPath = path.isAbsolute(file) ? file : path.join(projectRoot, file);
+    
+    try {
+      // Verify file exists
+      await fs.access(fullPath);
+      
+      // Create GitTextIOR format
+      const relativePath = path.relative(projectRoot, fullPath);
+      const gitTextIOR = `ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/${relativePath}#L${startPos}-${endPos}`;
+      
+      return gitTextIOR;
+    } catch (error) {
+      throw new Error(`Failed to create GitTextIOR for ${file}: ${(error as Error).message}`);
+    }
   }
 
   /**

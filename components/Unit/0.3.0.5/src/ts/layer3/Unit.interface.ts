@@ -34,6 +34,25 @@ export interface Unit {
   toScenario(name?: string): Promise<Scenario>;
 
   /**
+   * Set sophisticated definition from file text reference with GitTextIOR
+   * Web4 pattern: Sophisticated text reference capability with precise positioning
+   * @param identifier - Unit identifier (UUID or .unit file) @cliSyntax uuid|lnfile
+   * @param file - Source file for definition text @cliSyntax file
+   * @param startPos - Start position (line,column) @cliSyntax startPos
+   * @param endPos - End position (line,column) @cliSyntax endPos
+   * @returns Promise resolving to this for chaining
+   * 
+   * @example
+   * ```typescript
+   * // Create sophisticated definition from file text
+   * await unit.definition('44443290-015c-4720-be80-c42caf842252', 'component.ts', '5,10', '5,30').execute();
+   * 
+   * // Creates GitTextIOR: ior:git:text:...component.ts#L5,10-5,30
+   * ```
+   */
+  definition(identifier: UnitIdentifier, file: string, startPos: string, endPos: string): Promise<this>;
+
+  /**
    * Set model attribute value with universal identifier pattern
    * Web4 pattern: Universal <uuid|lnfile> parameter for attribute manipulation
    * @param identifier - Unit identifier (UUID or .unit file) @cliSyntax uuid|lnfile
