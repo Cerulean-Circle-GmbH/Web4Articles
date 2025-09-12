@@ -10,14 +10,16 @@
 - Subtasks must be ordered to avoid blocking dependencies. If a blocking dependency is unavoidable, the Scrum Master is responsible for removing the impediment by reordering or splitting tasks.
 
 ## Status
-- [ ] Planned
-- [ ] In Progress
-  - [ ] refinement
-  - [ ] creating test cases
-  - [ ] implementing
-  - [ ] testing
-- [ ] QA Review
-- [ ] Done
+- [x] Planned
+- [x] In Progress
+  - [x] refinement
+  - [x] creating test cases
+  - [x] implementing
+  - [x] testing
+- [x] QA Review
+- [x] Done
+
+**Achievement:** DefaultCLI.ts implemented (1010 lines) with static start pattern in Unit 0.3.0.5
 
 ## Traceability
 - Add `[task:uuid:u3v4w5x6-y7z8-9012-uvwx-y34567890123]` to this task.

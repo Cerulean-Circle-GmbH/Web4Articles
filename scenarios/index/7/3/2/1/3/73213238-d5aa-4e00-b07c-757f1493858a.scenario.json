@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "73213238-d5aa-4e00-b07c-757f1493858a",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"73213238-d5aa-4e00-b07c-757f1493858a\",\"timestamp\":\"2025-09-12T22:29:40.430Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "73213238-d5aa-4e00-b07c-757f1493858a",
+    "createdAt": "2025-09-12T22:29:40.429Z",
+    "updatedAt": "2025-09-12T22:29:40.431Z",
+    "name": "Web4x Compliance",
+    "definition": "Comprehensive Web4 understanding including tech stack, requirements, and 0.3.0.5 component state analysis",
+    "indexPath": "/workspace/scenarios/index/7/3/2/1/3/73213238-d5aa-4e00-b07c-757f1493858a.scenario.json",
+    "symlinkPaths": [
+      "/workspace/unit-73213238"
+    ]
+  }
+}

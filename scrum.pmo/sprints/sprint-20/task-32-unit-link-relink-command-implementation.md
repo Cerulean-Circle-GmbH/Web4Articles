@@ -11,9 +11,15 @@
 
 ## Status
 - [x] Planned
-- [x] In Progress
-- [x] QA Review
-- [x] Done
+- [ ] In Progress
+  - [ ] refinement
+  - [ ] creating test cases
+  - [ ] implementing
+  - [ ] testing
+- [ ] QA Review
+- [ ] Done
+
+**Note:** Status reset from false completion claim - linkInto commands not found in Unit 0.3.0.5
 
 ## Traceability
 - Add `[task:uuid:32c1d2e3-f4g5-h6i7-j8k9-l0m1n2o3p4q5]` to this task.
