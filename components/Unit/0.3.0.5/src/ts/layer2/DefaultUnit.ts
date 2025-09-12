@@ -28,6 +28,28 @@ export class DefaultUnit implements Unit, Upgrade {
     return this.model;
   }
 
+  // Getter for originName - filesystem entity name
+  get originName(): string {
+    if (!this.model) return '';
+    return (this.model as any).originName || this.extractOriginName();
+  }
+
+  private extractOriginName(): string {
+    if (!this.model.origin) return '';
+    
+    const filePath = this.extractFilePathFromIOR(this.model.origin);
+    if (!filePath) return '';
+    
+    // For folders ending with /, return folder name
+    if (filePath.endsWith('/')) {
+      const folderPath = filePath.slice(0, -1);
+      return path.basename(folderPath);
+    }
+    
+    // For files, return filename
+    return path.basename(filePath);
+  }
+
   constructor() {
     // Empty constructor - Web4 pattern
     this.model = {
@@ -2499,15 +2521,18 @@ export class DefaultUnit implements Unit, Upgrade {
     // Analyze folder structure
     const folderAnalysis = await this.analyzeFolderStructure(fullPath);
     
-    // Set up folder unit model
+    // Set up folder unit model with proper MOF classification
     this.model.uuid = UUIDv4.generate().toString();
-    this.model.name = path.basename(folderPath);
+    this.model.name = "Folder";  // M3 class name
     this.model.origin = `ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/${folderPath}`;
-    this.model.definition = `Folder atomic element: ${folderPath}`;
-    this.model.typeM3 = TypeM3.FOLDER;
+    this.model.definition = `M1 folder instance: ${folderPath}`;
+    this.model.typeM3 = TypeM3.CLASS;  // Proper M3 classification
     this.model.createdAt = new Date().toISOString();
     this.model.updatedAt = new Date().toISOString();
     this.model.indexPath = '';
+    
+    // Add originName for filesystem folder name
+    (this.model as any).originName = path.basename(folderPath);
     
     // Add folder-specific metadata
     (this.model as any).folderPath = folderPath;
