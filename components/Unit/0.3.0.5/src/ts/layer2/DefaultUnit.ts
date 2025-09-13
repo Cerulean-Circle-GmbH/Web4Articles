@@ -17,6 +17,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 export class DefaultUnit implements Unit, Upgrade {
   private model: UnitModel;
@@ -817,21 +818,25 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   async toScenario(name?: string): Promise<Scenario<UnitModel>> {
+    // ✅ DYNAMIC VERSION: Use getComponentVersion() instead of hardcoded
+    const componentVersion = await this.getComponentVersion();
+    const componentName = await this.getComponentName();
+    
     // Generate proper owner data
     const ownerData = JSON.stringify({
       user: process.env.USER || 'system',
       hostname: process.env.HOSTNAME || 'localhost',
       uuid: this.model.uuid,
       timestamp: new Date().toISOString(),
-      component: 'Unit',
-      version: '0.3.0.4'
+      component: componentName,
+      version: componentVersion
     });
 
     const scenario: Scenario = {
       ior: {
         uuid: this.model.uuid,
-        component: 'Unit',
-        version: '0.3.0.4'
+        component: componentName,
+        version: componentVersion
       },
       owner: ownerData, // Modern TypeScript - no Web2 btoa() shit
       model: this.model
@@ -2850,6 +2855,36 @@ export class DefaultUnit implements Unit, Upgrade {
       
     } catch (error) {
       console.warn(`⚠️  Could not create automatic links: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Get component version dynamically from package.json
+   * Web4 pattern: Dynamic version detection eliminates hardcoded versions
+   */
+  private async getComponentVersion(): Promise<string> {
+    try {
+      const currentDir = path.dirname(fileURLToPath(import.meta.url));
+      const packageJsonPath = path.resolve(currentDir, '../../../package.json');
+      const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
+      return packageJson.version || '0.3.0.5';
+    } catch (error) {
+      return '0.3.0.5'; // Fallback version
+    }
+  }
+
+  /**
+   * Get component name dynamically from package.json
+   * Web4 pattern: Dynamic component detection
+   */
+  private async getComponentName(): Promise<string> {
+    try {
+      const currentDir = path.dirname(fileURLToPath(import.meta.url));
+      const packageJsonPath = path.resolve(currentDir, '../../../package.json');
+      const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
+      return packageJson.name?.split('/').pop()?.replace('@web4/', '') || 'Unit';
+    } catch (error) {
+      return 'Unit'; // Fallback name
     }
   }
 }
