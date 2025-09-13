@@ -1558,7 +1558,8 @@ export class DefaultUnit implements Unit, Upgrade {
     this.model.updatedAt = new Date().toISOString();
     
     // Store unit
-    await this.storage.saveScenario(this.model.uuid, await this.toScenario(), []);
+    const scenario = await this.toScenario();
+    await this.storage.saveScenario(this.model.uuid, scenario, []);
     
     console.log(`✅ Unit created from complete file: ${fileName}`);
     console.log(`   UUID: ${this.model.uuid}`);
@@ -1727,13 +1728,75 @@ export class DefaultUnit implements Unit, Upgrade {
   // Speaking name resolution methods (Decision 2a - in DefaultUnit)
   private async resolveSpeakingName(speakingName: string): Promise<string | null> {
     try {
-      // TODO: Implement speaking name to UUID resolution
-      // For now, return null - will be implemented with LD links system
+      // ✅ IMPLEMENTED: Speaking name to UUID resolution using ontology links
+      const projectRoot = this.findProjectRoot();
+      const ontologyDir = path.join(projectRoot, 'scenarios', 'ontology');
+      const unitFileName = `${speakingName.replace(/\s+/g, '.')}.unit`;
+      const unitLinkPath = path.join(ontologyDir, unitFileName);
+      
+      // Check if the speaking name exists as a unit link
+      try {
+        await fs.access(unitLinkPath);
+        const scenarioPath = await fs.readlink(unitLinkPath);
+        // Extract UUID from scenario path (last part before .scenario.json)
+        const uuidMatch = scenarioPath.match(/([a-f0-9-]{36})\.scenario\.json$/);
+        if (uuidMatch) {
+          return uuidMatch[1];
+        }
+      } catch {
+        // Unit link doesn't exist, continue to search
+      }
+      
+      // Fallback: Search through all units for matching names
+      const indexDir = path.join(projectRoot, 'scenarios', 'index');
+      const allScenarios = await this.findAllScenarios(indexDir);
+      
+      for (const scenarioPath of allScenarios) {
+        try {
+          const scenarioContent = await fs.readFile(scenarioPath, 'utf-8');
+          const scenario = JSON.parse(scenarioContent);
+          if (scenario.model?.name === speakingName) {
+            return scenario.ior.uuid;
+          }
+        } catch {
+          // Skip invalid scenarios
+        }
+      }
+      
       return null;
     } catch (error) {
       console.warn(`Failed to resolve speaking name ${speakingName}: ${(error as Error).message}`);
       return null;
     }
+  }
+
+  /**
+   * Find all scenario files in the index directory
+   * Web4 pattern: Recursive scenario discovery for speaking name resolution
+   */
+  private async findAllScenarios(indexDir: string): Promise<string[]> {
+    const scenarios: string[] = [];
+    
+    async function scanDirectory(dir: string): Promise<void> {
+      try {
+        const entries = await fs.readdir(dir, { withFileTypes: true });
+        
+        for (const entry of entries) {
+          const fullPath = path.join(dir, entry.name);
+          
+          if (entry.isDirectory()) {
+            await scanDirectory(fullPath);
+          } else if (entry.name.endsWith('.scenario.json')) {
+            scenarios.push(fullPath);
+          }
+        }
+      } catch {
+        // Skip directories that can't be read
+      }
+    }
+    
+    await scanDirectory(indexDir);
+    return scenarios;
   }
 
   async addSpeakingName(speakingName: string): Promise<void> {
@@ -2846,7 +2909,8 @@ export class DefaultUnit implements Unit, Upgrade {
         await fs.access(m3FolderUnitPath);
       } catch {
         const tempUnit = new DefaultUnit();
-        await (await tempUnit.from(`MDAv4/M3/${typeM3}/`)).execute();
+        const unitFromFolder = await tempUnit.from(`MDAv4/M3/${typeM3}/`);
+        await unitFromFolder.execute();
       }
       
       console.log(`🔗 Automatic links created using linkInto:`);

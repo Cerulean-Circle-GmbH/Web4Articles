@@ -1,14 +1,14 @@
 {
   "ior": {
     "uuid": "44443290-015c-4720-be80-c42caf842252",
-    "component": "Unit",
-    "version": "0.3.0.4"
+    "component": "unit",
+    "version": "0.3.0.5"
   },
-  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"44443290-015c-4720-be80-c42caf842252\",\"timestamp\":\"2025-09-12T12:39:36.572Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"44443290-015c-4720-be80-c42caf842252\",\"timestamp\":\"2025-09-13T12:54:06.577Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
   "model": {
     "uuid": "44443290-015c-4720-be80-c42caf842252",
     "createdAt": "2025-09-11T12:58:32.389Z",
-    "updatedAt": "2025-09-12T12:39:36.578Z",
+    "updatedAt": "2025-09-13T12:54:06.593Z",
     "typeM3": "CLASS",
     "name": "TSCompletion",
     "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/TSRanger/v2.2/src/ts/layer4/TSCompletion.ts",
@@ -153,9 +153,16 @@
         "fileSize": 13405,
         "lastModified": "2025-09-12T09:29:38.955Z",
         "diffStatus": "IDENTICAL"
+      },
+      {
+        "linkLocation": "ior:local:ln:file://components/Web4Requirement/0.3.0.5/src/ts/layer4/TSCompletion.ts.unit",
+        "linkTarget": "ior:unit:uuid:44443290-015c-4720-be80-c42caf842252",
+        "syncStatus": "SYNCED"
       }
     ],
-    "symlinkPaths": [],
+    "symlinkPaths": [
+      "/workspace/components/Web4Requirement/0.3.0.5/src/ts/layer4/TSCompletion.ts.unit"
+    ],
     "testAttribute": "testValue"
   }
 }

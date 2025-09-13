@@ -97,18 +97,18 @@ describe('Unit Component Acceptance Tests', () => {
       expect(linkTarget).toMatch(/\.scenario\.json$/);
     });
 
-    it('should populate namedLinks array with relative location and filename', async () => {
+    it('should populate references array with relative location and filename', async () => {
       process.chdir(testDir);
       
-      const scenario = await unit.toScenario('named-links-test');
+      const scenario = await unit.toScenario('references-test');
       
-      // Verify namedLinks array is populated
-      expect(scenario.model.namedLinks).toHaveLength(1);
+      // Verify references array is populated
+      expect(scenario.model.references).toHaveLength(1);
       
-      const namedLink = scenario.model.namedLinks[0];
-      expect(namedLink.filename).toBe('named-links-test.unit');
-      expect(namedLink.location).toMatch(/\.\.\/scenarios\/index\//);
-      expect(namedLink.location).toContain(scenario.ior.uuid);
+      const reference = scenario.model.references[0];
+      expect(reference.linkLocation).toContain('references-test.unit');
+      expect(reference.linkTarget).toContain(scenario.ior.uuid);
+      expect(reference.syncStatus).toBe('SYNCED');
     });
   });
 
@@ -121,8 +121,8 @@ describe('Unit Component Acceptance Tests', () => {
       // Verify lowercase ior field exists
       expect(scenario.ior).toBeDefined();
       expect(scenario.ior.uuid).toBeDefined();
-      expect(scenario.ior.component).toBe('Unit');
-      expect(scenario.ior.version).toBe('0.3.0.4');
+      expect(scenario.ior.component).toBe('unit');
+      expect(scenario.ior.version).toBe('0.3.0.5');
       
       // Verify no uppercase IOR field
       expect((scenario as any).IOR).toBeUndefined();
@@ -134,7 +134,7 @@ describe('Unit Component Acceptance Tests', () => {
       const scenario = await unit.toScenario('version-test');
       
       // Verify semantic versioning format
-      expect(scenario.ior.version).toBe('0.3.0.4');
+      expect(scenario.ior.version).toBe('0.3.0.5');
       expect(scenario.ior.version).not.toBe('v1.0');
       expect(scenario.ior.version).toMatch(/^\d+\.\d+\.\d+\.\d+$/);
     });
