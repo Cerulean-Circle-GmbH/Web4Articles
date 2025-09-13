@@ -292,6 +292,51 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
+   * Move unit link to target folder with correct relative path calculation
+   * Web4 pattern: Unit link movement with automatic relative path recalculation
+   */
+  async move(lnfile: string, targetFolder: string): Promise<this> {
+    const projectRoot = this.findProjectRoot();
+    const sourcePath = path.isAbsolute(lnfile) ? lnfile : path.join(projectRoot, lnfile);
+    const targetPath = path.isAbsolute(targetFolder) ? targetFolder : path.join(projectRoot, targetFolder);
+    
+    try {
+      // 1. Read current symlink to get scenario path
+      const currentTarget = await fs.readlink(sourcePath);
+      const absoluteScenarioPath = path.isAbsolute(currentTarget) ? 
+        currentTarget : 
+        path.resolve(path.dirname(sourcePath), currentTarget);
+      
+      // 2. Ensure target directory exists
+      await fs.mkdir(targetPath, { recursive: true });
+      
+      // 3. Calculate new filename and target path
+      const filename = path.basename(sourcePath);
+      const newLinkPath = path.join(targetPath, filename);
+      
+      // 4. Calculate correct relative path from new location to scenario
+      const newRelativePath = path.relative(path.dirname(newLinkPath), absoluteScenarioPath);
+      
+      // 5. Remove old symlink
+      await fs.unlink(sourcePath);
+      
+      // 6. Create new symlink with correct relative path
+      await fs.symlink(newRelativePath, newLinkPath);
+      
+      console.log(`✅ Unit link moved: ${path.relative(projectRoot, sourcePath)} → ${path.relative(projectRoot, newLinkPath)}`);
+      console.log(`   New relative path: ${newRelativePath}`);
+      
+      // 7. Update unit model references if this unit tracks the moved link
+      await this.updateMovedLinkReferences(sourcePath, newLinkPath);
+      
+    } catch (error) {
+      throw new Error(`Failed to move unit link: ${(error as Error).message}`);
+    }
+    
+    return this;
+  }
+
+  /**
    * Discover files with same name and add as references with comprehensive metadata
    * Web4 pattern: Automatic copy detection with git hash IOR and sync status management
    */
@@ -2738,6 +2783,20 @@ export class DefaultUnit implements Unit, Upgrade {
       }
     } catch (error) {
       throw new Error(`Failed to load unit from file ${unitFile}: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Update moved link references in unit model
+   * Web4 pattern: Reference tracking update for moved links
+   */
+  private async updateMovedLinkReferences(oldPath: string, newPath: string): Promise<void> {
+    try {
+      // This would update any unit models that reference the moved link
+      // For now, just log the move for reference tracking
+      console.log(`📝 Reference update: ${oldPath} → ${newPath}`);
+    } catch (error) {
+      console.warn(`⚠️  Could not update moved link references: ${(error as Error).message}`);
     }
   }
 }
