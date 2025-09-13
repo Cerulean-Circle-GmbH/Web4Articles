@@ -844,6 +844,9 @@ export class DefaultUnit implements Unit, Upgrade {
     
     await this.storage.saveScenario(this.model.uuid, scenario, [namedLink]);
     
+    // ✅ AUTOMATIC LINKING: Create ontology and M3 typeM3 links
+    await this.createAutomaticLinks();
+    
     // Add to namedLinks array if name provided - location should be relative path from link to scenario
     if (name) {
       // Get the actual relative path that was used to create the symlink
@@ -852,6 +855,10 @@ export class DefaultUnit implements Unit, Upgrade {
       
       try {
         const relativePath = readlinkSync(namedLink);
+        // ✅ SAFETY: Ensure references array exists
+        if (!this.model.references) {
+          this.model.references = [];
+        }
         this.model.references.push({
           linkLocation: `ior:local:ln:file:${namedLink}`,
           linkTarget: `ior:unit:${this.model.uuid}`,
@@ -1035,6 +1042,10 @@ export class DefaultUnit implements Unit, Upgrade {
       await fs.symlink(relativePath, newLinkPath);
       
       // Update scenario model with new link reference
+      // ✅ SAFETY: Ensure references array exists
+      if (!scenario.model.references) {
+        scenario.model.references = [];
+      }
       scenario.model.references.push({
         linkLocation: `ior:local:ln:file:${newLinkPath}`,
         linkTarget: `ior:unit:${uuid}`,
@@ -1151,6 +1162,10 @@ export class DefaultUnit implements Unit, Upgrade {
       await fs.symlink(relativePath, newLinkPath);
       
       // Update scenario model with new link reference
+      // ✅ SAFETY: Ensure references array exists
+      if (!scenario.model.references) {
+        scenario.model.references = [];
+      }
       scenario.model.references.push({
         linkLocation: `ior:local:ln:file:${newLinkPath}`,
         linkTarget: `ior:unit:${uuid}`,
@@ -2802,58 +2817,36 @@ export class DefaultUnit implements Unit, Upgrade {
 
   /**
    * Create automatic links in ontology and M3 typeM3 folders
-   * Web4 pattern: Automatic unit organization with dual browsing capability
+   * Web4 pattern: DRY compliant using existing linkInto method
    */
   private async createAutomaticLinks(): Promise<void> {
     try {
       const projectRoot = this.findProjectRoot();
-      const unitName = this.convertNameToFilename(this.model.name);
-      const scenarioPath = await this.getScenarioPath();
       
-      // 1. Create ontology link for alphabetical browsing
+      // Ensure directories exist
       const ontologyDir = path.join(projectRoot, 'scenarios', 'ontology');
       await fs.mkdir(ontologyDir, { recursive: true });
-      const ontologyLink = path.join(ontologyDir, `${unitName}.unit`);
       
-      // Remove existing ontology link if it exists
-      try {
-        await fs.unlink(ontologyLink);
-      } catch {
-        // Ignore if file doesn't exist
-      }
-      
-      const ontologyRelativePath = path.relative(path.dirname(ontologyLink), scenarioPath);
-      await fs.symlink(ontologyRelativePath, ontologyLink);
-      
-      // 2. Create M3 typeM3 link for MOF hierarchy browsing
       const typeM3 = this.model.typeM3 || TypeM3.CLASS;
       const m3Dir = path.join(projectRoot, 'MDAv4', 'M3', typeM3);
       await fs.mkdir(m3Dir, { recursive: true });
-      const m3Link = path.join(m3Dir, `${unitName}.unit`);
       
-      // Remove existing M3 link if it exists
-      try {
-        await fs.unlink(m3Link);
-      } catch {
-        // Ignore if file doesn't exist
-      }
+      // ✅ DRY COMPLIANT: Use existing linkInto method
+      await this.linkInto(this.model.uuid, ontologyDir);
+      await this.linkInto(this.model.uuid, m3Dir);
       
-      const m3RelativePath = path.relative(path.dirname(m3Link), scenarioPath);
-      await fs.symlink(m3RelativePath, m3Link);
-      
-      // 3. Create M3 folder unit if it doesn't exist (on-demand)
+      // Create M3 folder unit on-demand (also using existing methods)
       const m3FolderUnitPath = path.join(m3Dir, '°folder.unit');
       try {
         await fs.access(m3FolderUnitPath);
       } catch {
-        // Create M3 typeM3 folder unit on-demand
         const tempUnit = new DefaultUnit();
         await (await tempUnit.from(`MDAv4/M3/${typeM3}/`)).execute();
       }
       
-      console.log(`🔗 Automatic links created:`);
-      console.log(`   Ontology: scenarios/ontology/${unitName}.unit`);
-      console.log(`   M3 ${typeM3}: MDAv4/M3/${typeM3}/${unitName}.unit`);
+      console.log(`🔗 Automatic links created using linkInto:`);
+      console.log(`   Ontology: scenarios/ontology/${this.convertNameToFilename(this.model.name)}.unit`);
+      console.log(`   M3 ${typeM3}: MDAv4/M3/${typeM3}/${this.convertNameToFilename(this.model.name)}.unit`);
       
     } catch (error) {
       console.warn(`⚠️  Could not create automatic links: ${(error as Error).message}`);
