@@ -38,12 +38,30 @@ while IFS= read -r file; do
     if [ -n "$file" ]; then
         echo "✅ Analyzing: $(basename "$file")"
         
-        # Get git SHA and timestamp
-        SHA=$(git log -1 --format="%h" -- "$file" 2>/dev/null || echo "unknown")
-        TIMESTAMP=$(git log -1 --format="%ai" -- "$file" 2>/dev/null || stat -c %y "$file")
+        # Get original commit info by searching for the PDCA filename in dev/req0305 branch
+        FILENAME=$(basename "$file")
+        
+        # Search for this PDCA in dev/req0305 branch history
+        ORIGINAL_SHA=$(git log origin/dev/req0305 --format="%h" --name-only | grep -B1 "$FILENAME" | head -1 2>/dev/null || echo "unknown")
+        
+        if [ "$ORIGINAL_SHA" != "unknown" ]; then
+            ORIGINAL_TIMESTAMP=$(git log origin/dev/req0305 --format="%ai" "$ORIGINAL_SHA" 2>/dev/null || stat -c %y "$file")
+        else
+            # Fallback: search by commit message containing the PDCA title
+            PDCA_TITLE=$(grep "# 📋" "$file" | head -1 | sed 's/# 📋 \*\*PDCA Cycle: //' | sed 's/ - .*\*\*//' 2>/dev/null || echo "")
+            if [ -n "$PDCA_TITLE" ]; then
+                ORIGINAL_SHA=$(git log origin/dev/req0305 --format="%h" --grep="$PDCA_TITLE" | head -1 2>/dev/null || echo "unknown")
+                ORIGINAL_TIMESTAMP=$(git log origin/dev/req0305 --format="%ai" "$ORIGINAL_SHA" 2>/dev/null || stat -c %y "$file")
+            else
+                ORIGINAL_SHA="unknown"
+                ORIGINAL_TIMESTAMP=$(stat -c %y "$file")
+            fi
+        fi
+        
+        SHA="$ORIGINAL_SHA"
         
         # Convert to UTC format YYYY-MM-DD-UTC-HHMM
-        UTC_TIME=$(date -d "$TIMESTAMP" -u +"%Y-%m-%d-UTC-%H%M" 2>/dev/null || echo "unknown")
+        UTC_TIME=$(date -d "$ORIGINAL_TIMESTAMP" -u +"%Y-%m-%d-UTC-%H%M" 2>/dev/null || echo "unknown")
         
         # Get relative path
         REL_PATH=$(realpath --relative-to="$PROJECT_ROOT" "$file" 2>/dev/null || echo "$file")
