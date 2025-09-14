@@ -71,8 +71,8 @@ describe('Unit Filename Consistency Tests', () => {
         
         // Check that filename conversion worked correctly
         const expectedFilename = testCase.expected;
-        expect(scenario.model.namedLinks.some(link => 
-          link.filename === expectedFilename
+        expect(scenario.model.references.some(ref => 
+          ref.linkLocation.includes(expectedFilename)
         )).toBe(true);
       }
     });
@@ -87,8 +87,8 @@ describe('Unit Filename Consistency Tests', () => {
         unit.unitModel.name = testCase.input;
         const scenario = await unit.toScenario(testCase.input.replace(/\s+/g, '.'));
         
-        expect(scenario.model.namedLinks.some(link => 
-          link.filename === testCase.expected
+        expect(scenario.model.references.some(ref => 
+          ref.linkLocation.includes(testCase.expected)
         )).toBe(true);
       }
     });
@@ -103,8 +103,8 @@ describe('Unit Filename Consistency Tests', () => {
         unit.unitModel.name = testCase.input;
         const scenario = await unit.toScenario(testCase.input);
         
-        expect(scenario.model.namedLinks.some(link => 
-          link.filename === testCase.expected
+        expect(scenario.model.references.some(ref => 
+          ref.linkLocation.includes(testCase.expected)
         )).toBe(true);
       }
     });
@@ -178,8 +178,8 @@ describe('Unit Filename Consistency Tests', () => {
       unit.storage.loadScenario = async (uuid: string) => mockScenario;
       unit.storage.saveScenario = async (uuid: string, scenario: any, links: string[]) => {
         // Verify the scenario was updated with converted filename
-        expect(scenario.model.namedLinks.some((link: any) => 
-          link.filename === 'Multi.Word.Link.unit'
+        expect(scenario.model.references.some((ref: any) => 
+          ref.linkLocation.includes('Multi.Word.Link.unit')
         )).toBe(true);
         return scenario;
       };

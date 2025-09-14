@@ -17,6 +17,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 export class DefaultUnit implements Unit, Upgrade {
   private model: UnitModel;
@@ -287,6 +288,51 @@ export class DefaultUnit implements Unit, Upgrade {
     const value = (targetUnit.model as any)[attributeName];
     
     console.log(`📋 ${targetUnit.model.name || 'Unit'}.${attributeName}: ${value || '(not set)'}`);
+    
+    return this;
+  }
+
+  /**
+   * Move unit link to target folder with correct relative path calculation
+   * Web4 pattern: Unit link movement with automatic relative path recalculation
+   */
+  async move(lnfile: string, targetFolder: string): Promise<this> {
+    const projectRoot = this.findProjectRoot();
+    const sourcePath = path.isAbsolute(lnfile) ? lnfile : path.join(projectRoot, lnfile);
+    const targetPath = path.isAbsolute(targetFolder) ? targetFolder : path.join(projectRoot, targetFolder);
+    
+    try {
+      // 1. Read current symlink to get scenario path
+      const currentTarget = await fs.readlink(sourcePath);
+      const absoluteScenarioPath = path.isAbsolute(currentTarget) ? 
+        currentTarget : 
+        path.resolve(path.dirname(sourcePath), currentTarget);
+      
+      // 2. Ensure target directory exists
+      await fs.mkdir(targetPath, { recursive: true });
+      
+      // 3. Calculate new filename and target path
+      const filename = path.basename(sourcePath);
+      const newLinkPath = path.join(targetPath, filename);
+      
+      // 4. Calculate correct relative path from new location to scenario
+      const newRelativePath = path.relative(path.dirname(newLinkPath), absoluteScenarioPath);
+      
+      // 5. Remove old symlink
+      await fs.unlink(sourcePath);
+      
+      // 6. Create new symlink with correct relative path
+      await fs.symlink(newRelativePath, newLinkPath);
+      
+      console.log(`✅ Unit link moved: ${path.relative(projectRoot, sourcePath)} → ${path.relative(projectRoot, newLinkPath)}`);
+      console.log(`   New relative path: ${newRelativePath}`);
+      
+      // 7. Update unit model references if this unit tracks the moved link
+      await this.updateMovedLinkReferences(sourcePath, newLinkPath);
+      
+    } catch (error) {
+      throw new Error(`Failed to move unit link: ${(error as Error).message}`);
+    }
     
     return this;
   }
@@ -772,21 +818,25 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   async toScenario(name?: string): Promise<Scenario<UnitModel>> {
+    // ✅ DYNAMIC VERSION: Use getComponentVersion() instead of hardcoded
+    const componentVersion = await this.getComponentVersion();
+    const componentName = await this.getComponentName();
+    
     // Generate proper owner data
     const ownerData = JSON.stringify({
       user: process.env.USER || 'system',
       hostname: process.env.HOSTNAME || 'localhost',
       uuid: this.model.uuid,
       timestamp: new Date().toISOString(),
-      component: 'Unit',
-      version: '0.3.0.4'
+      component: componentName,
+      version: componentVersion
     });
 
     const scenario: Scenario = {
       ior: {
         uuid: this.model.uuid,
-        component: 'Unit',
-        version: '0.3.0.4'
+        component: componentName,
+        version: componentVersion
       },
       owner: ownerData, // Modern TypeScript - no Web2 btoa() shit
       model: this.model
@@ -799,6 +849,9 @@ export class DefaultUnit implements Unit, Upgrade {
     
     await this.storage.saveScenario(this.model.uuid, scenario, [namedLink]);
     
+    // ✅ AUTOMATIC LINKING: Create ontology and M3 typeM3 links
+    await this.createAutomaticLinks();
+    
     // Add to namedLinks array if name provided - location should be relative path from link to scenario
     if (name) {
       // Get the actual relative path that was used to create the symlink
@@ -807,6 +860,10 @@ export class DefaultUnit implements Unit, Upgrade {
       
       try {
         const relativePath = readlinkSync(namedLink);
+        // ✅ SAFETY: Ensure references array exists
+        if (!this.model.references) {
+          this.model.references = [];
+        }
         this.model.references.push({
           linkLocation: `ior:local:ln:file:${namedLink}`,
           linkTarget: `ior:unit:${this.model.uuid}`,
@@ -990,6 +1047,10 @@ export class DefaultUnit implements Unit, Upgrade {
       await fs.symlink(relativePath, newLinkPath);
       
       // Update scenario model with new link reference
+      // ✅ SAFETY: Ensure references array exists
+      if (!scenario.model.references) {
+        scenario.model.references = [];
+      }
       scenario.model.references.push({
         linkLocation: `ior:local:ln:file:${newLinkPath}`,
         linkTarget: `ior:unit:${uuid}`,
@@ -1106,6 +1167,10 @@ export class DefaultUnit implements Unit, Upgrade {
       await fs.symlink(relativePath, newLinkPath);
       
       // Update scenario model with new link reference
+      // ✅ SAFETY: Ensure references array exists
+      if (!scenario.model.references) {
+        scenario.model.references = [];
+      }
       scenario.model.references.push({
         linkLocation: `ior:local:ln:file:${newLinkPath}`,
         linkTarget: `ior:unit:${uuid}`,
@@ -1493,7 +1558,8 @@ export class DefaultUnit implements Unit, Upgrade {
     this.model.updatedAt = new Date().toISOString();
     
     // Store unit
-    await this.storage.saveScenario(this.model.uuid, await this.toScenario(), []);
+    const scenario = await this.toScenario();
+    await this.storage.saveScenario(this.model.uuid, scenario, []);
     
     console.log(`✅ Unit created from complete file: ${fileName}`);
     console.log(`   UUID: ${this.model.uuid}`);
@@ -1662,13 +1728,75 @@ export class DefaultUnit implements Unit, Upgrade {
   // Speaking name resolution methods (Decision 2a - in DefaultUnit)
   private async resolveSpeakingName(speakingName: string): Promise<string | null> {
     try {
-      // TODO: Implement speaking name to UUID resolution
-      // For now, return null - will be implemented with LD links system
+      // ✅ IMPLEMENTED: Speaking name to UUID resolution using ontology links
+      const projectRoot = this.findProjectRoot();
+      const ontologyDir = path.join(projectRoot, 'scenarios', 'ontology');
+      const unitFileName = `${speakingName.replace(/\s+/g, '.')}.unit`;
+      const unitLinkPath = path.join(ontologyDir, unitFileName);
+      
+      // Check if the speaking name exists as a unit link
+      try {
+        await fs.access(unitLinkPath);
+        const scenarioPath = await fs.readlink(unitLinkPath);
+        // Extract UUID from scenario path (last part before .scenario.json)
+        const uuidMatch = scenarioPath.match(/([a-f0-9-]{36})\.scenario\.json$/);
+        if (uuidMatch) {
+          return uuidMatch[1];
+        }
+      } catch {
+        // Unit link doesn't exist, continue to search
+      }
+      
+      // Fallback: Search through all units for matching names
+      const indexDir = path.join(projectRoot, 'scenarios', 'index');
+      const allScenarios = await this.findAllScenarios(indexDir);
+      
+      for (const scenarioPath of allScenarios) {
+        try {
+          const scenarioContent = await fs.readFile(scenarioPath, 'utf-8');
+          const scenario = JSON.parse(scenarioContent);
+          if (scenario.model?.name === speakingName) {
+            return scenario.ior.uuid;
+          }
+        } catch {
+          // Skip invalid scenarios
+        }
+      }
+      
       return null;
     } catch (error) {
       console.warn(`Failed to resolve speaking name ${speakingName}: ${(error as Error).message}`);
       return null;
     }
+  }
+
+  /**
+   * Find all scenario files in the index directory
+   * Web4 pattern: Recursive scenario discovery for speaking name resolution
+   */
+  private async findAllScenarios(indexDir: string): Promise<string[]> {
+    const scenarios: string[] = [];
+    
+    async function scanDirectory(dir: string): Promise<void> {
+      try {
+        const entries = await fs.readdir(dir, { withFileTypes: true });
+        
+        for (const entry of entries) {
+          const fullPath = path.join(dir, entry.name);
+          
+          if (entry.isDirectory()) {
+            await scanDirectory(fullPath);
+          } else if (entry.name.endsWith('.scenario.json')) {
+            scenarios.push(fullPath);
+          }
+        }
+      } catch {
+        // Skip directories that can't be read
+      }
+    }
+    
+    await scanDirectory(indexDir);
+    return scenarios;
   }
 
   async addSpeakingName(speakingName: string): Promise<void> {
@@ -2738,6 +2866,89 @@ export class DefaultUnit implements Unit, Upgrade {
       }
     } catch (error) {
       throw new Error(`Failed to load unit from file ${unitFile}: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Update moved link references in unit model
+   * Web4 pattern: Reference tracking update for moved links
+   */
+  private async updateMovedLinkReferences(oldPath: string, newPath: string): Promise<void> {
+    try {
+      // This would update any unit models that reference the moved link
+      // For now, just log the move for reference tracking
+      console.log(`📝 Reference update: ${oldPath} → ${newPath}`);
+    } catch (error) {
+      console.warn(`⚠️  Could not update moved link references: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Create automatic links in ontology and M3 typeM3 folders
+   * Web4 pattern: DRY compliant using existing linkInto method
+   */
+  private async createAutomaticLinks(): Promise<void> {
+    try {
+      const projectRoot = this.findProjectRoot();
+      
+      // Ensure directories exist
+      const ontologyDir = path.join(projectRoot, 'scenarios', 'ontology');
+      await fs.mkdir(ontologyDir, { recursive: true });
+      
+      const typeM3 = this.model.typeM3 || TypeM3.CLASS;
+      const m3Dir = path.join(projectRoot, 'MDAv4', 'M3', typeM3);
+      await fs.mkdir(m3Dir, { recursive: true });
+      
+      // ✅ DRY COMPLIANT: Use existing linkInto method
+      await this.linkInto(this.model.uuid, ontologyDir);
+      await this.linkInto(this.model.uuid, m3Dir);
+      
+      // Create M3 folder unit on-demand (also using existing methods)
+      const m3FolderUnitPath = path.join(m3Dir, '°folder.unit');
+      try {
+        await fs.access(m3FolderUnitPath);
+      } catch {
+        const tempUnit = new DefaultUnit();
+        const unitFromFolder = await tempUnit.from(`MDAv4/M3/${typeM3}/`);
+        await unitFromFolder.execute();
+      }
+      
+      console.log(`🔗 Automatic links created using linkInto:`);
+      console.log(`   Ontology: scenarios/ontology/${this.convertNameToFilename(this.model.name)}.unit`);
+      console.log(`   M3 ${typeM3}: MDAv4/M3/${typeM3}/${this.convertNameToFilename(this.model.name)}.unit`);
+      
+    } catch (error) {
+      console.warn(`⚠️  Could not create automatic links: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Get component version dynamically from package.json
+   * Web4 pattern: Dynamic version detection eliminates hardcoded versions
+   */
+  private async getComponentVersion(): Promise<string> {
+    try {
+      const currentDir = path.dirname(fileURLToPath(import.meta.url));
+      const packageJsonPath = path.resolve(currentDir, '../../../package.json');
+      const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
+      return packageJson.version || '0.3.0.5';
+    } catch (error) {
+      return '0.3.0.5'; // Fallback version
+    }
+  }
+
+  /**
+   * Get component name dynamically from package.json
+   * Web4 pattern: Dynamic component detection
+   */
+  private async getComponentName(): Promise<string> {
+    try {
+      const currentDir = path.dirname(fileURLToPath(import.meta.url));
+      const packageJsonPath = path.resolve(currentDir, '../../../package.json');
+      const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
+      return packageJson.name?.split('/').pop()?.replace('@web4/', '') || 'Unit';
+    } catch (error) {
+      return 'Unit'; // Fallback name
     }
   }
 }

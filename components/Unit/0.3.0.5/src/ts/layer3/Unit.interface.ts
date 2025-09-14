@@ -135,6 +135,23 @@ export interface Unit {
   discover(identifier: UnitIdentifier): Promise<this>;
 
   /**
+   * Move unit link to target folder with correct relative path calculation
+   * Web4 pattern: Unit link movement with automatic relative path recalculation
+   * @param lnfile - Unit link file to move @cliSyntax lnfile
+   * @param targetFolder - Target directory for move @cliSyntax targetFolder
+   * @returns Promise resolving to this for chaining
+   * 
+   * @example
+   * ```typescript
+   * // Move unit link with automatic relative path calculation
+   * await unit.move('Folder.unit', 'MDAv4/M3/CLASS/').execute();
+   * 
+   * // Automatically recalculates relative path from new location
+   * ```
+   */
+  move(lnfile: string, targetFolder: string): Promise<this>;
+
+  /**
    * Copy unit's origin file to target location with automatic .unit LD link creation
    * Web4 pattern: Universal <uuid|lnfile> parameter pattern with scenario loading
    * @param identifier - Unit identifier (UUID or .unit file) @cliSyntax uuid|lnfile

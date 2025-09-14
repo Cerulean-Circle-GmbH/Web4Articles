@@ -11,6 +11,8 @@ import { StorageModel } from '../layer3/StorageModel.interface.js';
 import { promises as fs } from 'fs';
 import { join, dirname, relative } from 'path';
 import { existsSync } from 'fs';
+import { fileURLToPath } from 'url';
+import * as path from 'path';
 
 export class DefaultStorage implements Storage {
   private model: StorageModel;
@@ -38,20 +40,24 @@ export class DefaultStorage implements Storage {
   }
 
   async toScenario(): Promise<StorageScenario> {
+    // ✅ DYNAMIC VERSION: Use getComponentVersion() instead of hardcoded
+    const componentVersion = await this.getComponentVersion();
+    const componentName = await this.getComponentName();
+    
     const ownerData = JSON.stringify({
       user: process.env.USER || 'system',
       hostname: process.env.HOSTNAME || 'localhost',
       uuid: this.model.uuid,
       timestamp: new Date().toISOString(),
-      component: 'Storage',
-      version: '0.3.0.4'
+      component: componentName,
+      version: componentVersion
     });
 
     return {
       ior: {
         uuid: this.model.uuid,
-        component: 'Storage', 
-        version: '0.3.0.4'
+        component: componentName, 
+        version: componentVersion
       },
       owner: ownerData,
       model: this.model
@@ -132,5 +138,35 @@ export class DefaultStorage implements Storage {
       currentDir = dirname(currentDir);
     }
     return process.cwd();
+  }
+
+  /**
+   * Get component version dynamically from package.json
+   * Web4 pattern: Dynamic version detection eliminates hardcoded versions
+   */
+  private async getComponentVersion(): Promise<string> {
+    try {
+      const currentDir = path.dirname(fileURLToPath(import.meta.url));
+      const packageJsonPath = path.resolve(currentDir, '../../../package.json');
+      const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
+      return packageJson.version || '0.3.0.5';
+    } catch (error) {
+      return '0.3.0.5'; // Fallback version
+    }
+  }
+
+  /**
+   * Get component name dynamically from package.json
+   * Web4 pattern: Dynamic component detection
+   */
+  private async getComponentName(): Promise<string> {
+    try {
+      const currentDir = path.dirname(fileURLToPath(import.meta.url));
+      const packageJsonPath = path.resolve(currentDir, '../../../package.json');
+      const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
+      return packageJson.name?.split('/').pop()?.replace('@web4/', '') || 'Storage';
+    } catch (error) {
+      return 'Storage'; // Fallback name
+    }
   }
 }

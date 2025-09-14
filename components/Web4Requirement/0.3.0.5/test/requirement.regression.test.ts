@@ -331,7 +331,7 @@ Authentication is critical for security.
     test('ESM module compliance', () => {
       // ✅ WEB4: ESM-only verification
       expect(typeof require).toBe('undefined'); // No require() in ESM
-      expect(typeof import).toBe('undefined'); // import is syntax, not function
+      expect(typeof import.meta).toBe('object'); // import.meta exists in ESM
     });
 
     test('Empty constructor principle', () => {

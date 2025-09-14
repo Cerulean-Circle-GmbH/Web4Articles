@@ -1,18 +1,31 @@
 {
   "ior": {
     "uuid": "df835f4c-237c-4dbf-a826-81588d75f72b",
-    "component": "Unit",
-    "version": "0.3.0.4"
+    "component": "unit",
+    "version": "0.3.0.5"
   },
-  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"df835f4c-237c-4dbf-a826-81588d75f72b\",\"timestamp\":\"2025-09-12T20:43:39.665Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"df835f4c-237c-4dbf-a826-81588d75f72b\",\"timestamp\":\"2025-09-13T12:13:54.685Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
   "model": {
     "uuid": "df835f4c-237c-4dbf-a826-81588d75f72b",
     "createdAt": "2025-09-12T20:41:49.714Z",
-    "updatedAt": "2025-09-12T20:43:39.668Z",
+    "updatedAt": "2025-09-13T12:13:54.692Z",
     "name": "UnitVersion.v0.3.0.4",
-    "definition": "ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/components/Unit/0.3.0.5/src/ts/layer2/DefaultStorage.ts#L54,17-54,27",
+    "definition": "ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/components/Unit/0.3.0.5/src/ts/layer2/GitTextIOR.ts#L49-56",
     "indexPath": "/workspace/scenarios/index/d/f/8/3/5/df835f4c-237c-4dbf-a826-81588d75f72b.scenario.json",
     "symlinkPaths": [],
-    "versionReferences": "Line 81: Storage IOR version, Line 782: Owner version, Line 789: Owner component version, Line 1728: Upgrade comment, Line 1733: Compatibility comment, Line 1764: Transform comment, Line 1799: Compatibility comment, Line 2022: Standards comment, Line 2026: Standard comment, Line 2039: Standard comment"
+    "versionReferences": "Line 81: Storage IOR version, Line 782: Owner version, Line 789: Owner component version, Line 1728: Upgrade comment, Line 1733: Compatibility comment, Line 1764: Transform comment, Line 1799: Compatibility comment, Line 2022: Standards comment, Line 2026: Standard comment, Line 2039: Standard comment",
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/scenarios/ontology/UnitVersion.v0.3.0.4.unit",
+        "linkTarget": "ior:unit:df835f4c-237c-4dbf-a826-81588d75f72b",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/MDAv4/M3/CLASS/UnitVersion.v0.3.0.4.unit",
+        "linkTarget": "ior:unit:df835f4c-237c-4dbf-a826-81588d75f72b",
+        "syncStatus": "SYNCED"
+      }
+    ],
+    "status": "PHASE_1_COMPLETED_ALL_VERSION_VIOLATIONS_FIXED"
   }
 }
