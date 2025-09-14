@@ -21,7 +21,7 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-14-UTC-1425/scrum.pmo/project.journal/2025-09-14-UTC-1425-session/pdca/role/developer/2025-09-14-UTC-1430-deletelink-cleanup-implementation.md) | [§/scrum.pmo/project.journal/2025-09-14-UTC-1425-session/pdca/role/developer/2025-09-14-UTC-1430-deletelink-cleanup-implementation.md](./2025-09-14-UTC-1430-deletelink-cleanup-implementation.md)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-14-UTC-1425/scrum.pmo/project.journal/2025-09-14-UTC-1425-session/pdca/role/developer/2025-09-14-UTC-1430-deletelink-cleanup-implementation.md) | [§/scrum.pmo/project.journal/2025-09-14-UTC-1425-session/pdca/role/developer/2025-09-14-UTC-1430-deletelink-cleanup-implementation.md](../../../scrum.pmo/project.journal/2025-09-14-UTC-1425-session/pdca/role/developer/2025-09-14-UTC-1430-deletelink-cleanup-implementation.md)
 - **Changed Files:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-14-UTC-1425/components/Unit/0.3.0.5/src/ts/layer2/DefaultUnit.ts) | [§/components/Unit/0.3.0.5/src/ts/layer2/DefaultUnit.ts](../../../components/Unit/0.3.0.5/src/ts/layer2/DefaultUnit.ts)
 - **Test Files:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-14-UTC-1425/components/Unit/0.3.0.5/test/) | [§/components/Unit/0.3.0.5/test/](../../../components/Unit/0.3.0.5/test/)
 
