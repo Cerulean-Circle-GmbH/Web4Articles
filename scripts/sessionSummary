@@ -1,0 +1,75 @@
+#!/bin/bash
+# sessionSummary - Automated PDCA Session Analysis Tool
+# Purpose: Extract TRON quotes and generate systematic MD tables
+
+# Get project root
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+# Simple implementation using grep and awk
+SESSION_PATH="$1"
+OUTPUT_FILE="$2"
+BRANCH="${3:-dev/req0305}"
+
+if [ -z "$SESSION_PATH" ]; then
+    echo "Usage: sessionSummary <sessionPath> [outputFile] [branch]"
+    echo "Example: sessionSummary scrum.pmo/project.journal/2025-09-11-UTC-0007-session"
+    exit 1
+fi
+
+echo "🚀 sessionSummary Tool Starting..."
+echo "🔍 Analyzing session: $SESSION_PATH"
+
+# Find all PDCA files
+PDCA_FILES=$(find "$SESSION_PATH" -name "*.pdca.md" -o -name "*.md" | sort)
+FILE_COUNT=$(echo "$PDCA_FILES" | wc -l)
+
+echo "📋 Found $FILE_COUNT PDCA files"
+
+# Generate table header
+TABLE="## **📊 Complete Session Analysis Table (Chronological Order with Git SHAs)**
+
+**Note:** Table shows chronological progression with exact TRON quotes. Total PDCAs analyzed: $FILE_COUNT
+
+| **Git SHA** | **PDCA Source/Evidence** | **Exact TRON Quotes** | **Key Learning/Achievement** |
+|-------------|--------------------------|------------------------|------------------------------|"
+
+# Process each file
+while IFS= read -r file; do
+    if [ -n "$file" ]; then
+        echo "✅ Analyzing: $(basename "$file")"
+        
+        # Get git SHA
+        SHA=$(git log -1 --format="%h" -- "$file" 2>/dev/null || echo "unknown")
+        
+        # Get relative path
+        REL_PATH=$(realpath --relative-to="$PROJECT_ROOT" "$file" 2>/dev/null || echo "$file")
+        
+        # Extract TRON quotes
+        QUOTES=$(grep -A 20 "### \*\*TRON Feedback" "$file" | sed -n '/```quote/,/```/p' | grep -v '```' | tr '\n' '\\n' || echo "No quotes")
+        
+        # Extract achievement from title
+        ACHIEVEMENT=$(grep "# 📋" "$file" | sed 's/# 📋 \*\*PDCA Cycle: //' | sed 's/ - .*\*\*//' || echo "Unknown")
+        
+        # Generate dual link
+        FILENAME=$(basename "$file")
+        GITHUB_URL="https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/$BRANCH/$REL_PATH"
+        DUAL_LINK="[GitHub]($GITHUB_URL) \\| [$FILENAME](N/A)"
+        
+        # Add to table
+        TABLE="$TABLE
+| **$SHA** | $DUAL_LINK | \`$QUOTES\` | **$ACHIEVEMENT** |"
+    fi
+done <<< "$PDCA_FILES"
+
+echo ""
+echo "📊 Generated Table:"
+echo "$TABLE"
+
+if [ -n "$OUTPUT_FILE" ]; then
+    echo "$TABLE" > "$OUTPUT_FILE"
+    echo ""
+    echo "💾 Table written to: $OUTPUT_FILE"
+fi
+
+echo ""
+echo "✅ sessionSummary Complete - Analyzed $FILE_COUNT PDCAs"
