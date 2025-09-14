@@ -26,12 +26,7 @@
 - **dev/req0305 Session:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/req0305/scrum.pmo/project.journal/2025-09-11-UTC-0007-session) | N/A (different branch)
 
 ### **QA Decisions**
-- [ ] **Decision 1: PDCA Merge Strategy**
-  - a) Cherry-pick all 31 PDCAs from dev/req0305 session to preserve complete documentation
-  - b) Merge only safe PDCAs avoiding DORY mode violation documents
-  - c) Copy PDCA directory structure maintaining agent session organization
-  - d) Create summary integration without individual PDCA files
-
+- [x] **Decision 1a Implemented:** Cherry-pick all 31 PDCAs from dev/req0305 session to preserve complete documentation
 - [ ] **Decision 2: Git SHA Identification Method**
   - a) Use latest safe commit before DORY mode violations (before switch case introduction)
   - b) Use commit with MDAv4 structure completion as merge point
@@ -41,6 +36,12 @@
 ### **TRON Feedback (2025-09-10-UTC-1138)**
 ```quote
 ok you need to merge the tables and pdca into this branch. not yet the code. we need to identify the git sha first
+```
+
+### **TRON Feedback (2025-09-10-UTC-1138)**
+```quote
+1a
+i decide 2 later after reviewing
 ```
 
 ### **My Answer**
