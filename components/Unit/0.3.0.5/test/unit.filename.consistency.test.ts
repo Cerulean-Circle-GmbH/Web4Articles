@@ -10,6 +10,7 @@ import { join } from 'path';
 import { existsSync } from 'fs';
 import { DefaultUnit } from '../src/ts/layer2/DefaultUnit.js';
 import { TypeM3 } from '../src/ts/layer3/TypeM3.enum.js';
+import { webcrypto as crypto } from 'crypto';
 
 describe('Unit Filename Consistency Tests', () => {
   let testDir: string;
