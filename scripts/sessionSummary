@@ -26,20 +26,24 @@ FILE_COUNT=$(echo "$PDCA_FILES" | wc -l)
 echo "📋 Found $FILE_COUNT PDCA files"
 
 # Generate table header
-TABLE="## **📊 Complete Session Analysis Table (Chronological Order with Git SHAs)**
+TABLE="## **📊 Complete Session Analysis Table (Chronological Order with Git SHAs and UTC Times)**
 
 **Note:** Table shows chronological progression with exact TRON quotes. Total PDCAs analyzed: $FILE_COUNT
 
-| **Git SHA** | **PDCA Source/Evidence** | **Exact TRON Quotes** | **Key Learning/Achievement** |
-|-------------|--------------------------|------------------------|------------------------------|"
+| **Git SHA** | **UTC Time** | **PDCA Source/Evidence** | **Exact TRON Quotes** | **Key Learning/Achievement** |
+|-------------|--------------|--------------------------|------------------------|-----------------------------|"
 
 # Process each file
 while IFS= read -r file; do
     if [ -n "$file" ]; then
         echo "✅ Analyzing: $(basename "$file")"
         
-        # Get git SHA
+        # Get git SHA and timestamp
         SHA=$(git log -1 --format="%h" -- "$file" 2>/dev/null || echo "unknown")
+        TIMESTAMP=$(git log -1 --format="%ai" -- "$file" 2>/dev/null || stat -c %y "$file")
+        
+        # Convert to UTC format YYYY-MM-DD-UTC-HHMM
+        UTC_TIME=$(date -d "$TIMESTAMP" -u +"%Y-%m-%d-UTC-%H%M" 2>/dev/null || echo "unknown")
         
         # Get relative path
         REL_PATH=$(realpath --relative-to="$PROJECT_ROOT" "$file" 2>/dev/null || echo "$file")
@@ -57,7 +61,7 @@ while IFS= read -r file; do
         
         # Add to table
         TABLE="$TABLE
-| **$SHA** | $DUAL_LINK | \`$QUOTES\` | **$ACHIEVEMENT** |"
+| **$SHA** | **$UTC_TIME** | $DUAL_LINK | \`$QUOTES\` | **$ACHIEVEMENT** |"
     fi
 done <<< "$PDCA_FILES"
 

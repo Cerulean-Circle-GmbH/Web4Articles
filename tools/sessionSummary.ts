@@ -16,6 +16,7 @@ interface PDCAAnalysis {
   achievement: string;
   timestamp: string;
   commitMessage: string;
+  utcTime: string;
 }
 
 export class SessionSummary {
@@ -83,7 +84,7 @@ export class SessionSummary {
   /**
    * Get git SHA and commit info for file
    */
-  private getGitInfo(filename: string): { sha: string; timestamp: string; message: string } {
+  private getGitInfo(filename: string): { sha: string; timestamp: string; message: string; utcTime: string } {
     try {
       const sha = execSync(`git log -1 --format="%h" -- "${filename}"`, 
         { encoding: 'utf8' }).trim();
@@ -92,14 +93,20 @@ export class SessionSummary {
       const message = execSync(`git log -1 --format="%s" -- "${filename}"`, 
         { encoding: 'utf8' }).trim();
       
-      return { sha, timestamp, message };
+      // Convert timestamp to UTC format YYYY-MM-DD-UTC-HHMM
+      const date = new Date(timestamp);
+      const utcTime = date.toISOString().slice(0, 16).replace('T', '-UTC-').replace(':', '');
+      
+      return { sha, timestamp, message, utcTime };
     } catch {
       // Fallback to file modification time
       const stat = statSync(filename);
+      const utcTime = stat.mtime.toISOString().slice(0, 16).replace('T', '-UTC-').replace(':', '');
       return { 
         sha: 'unknown', 
         timestamp: stat.mtime.toISOString(),
-        message: 'No git history'
+        message: 'No git history',
+        utcTime: utcTime
       };
     }
   }
@@ -119,7 +126,8 @@ export class SessionSummary {
       tronQuotes: this.extractTRONQuotes(content),
       achievement: this.extractAchievement(content, filename),
       timestamp: gitInfo.timestamp,
-      commitMessage: gitInfo.message
+      commitMessage: gitInfo.message,
+      utcTime: gitInfo.utcTime
     };
   }
 
@@ -152,10 +160,10 @@ export class SessionSummary {
    * Generate MD table from analyses
    */
   generateTable(analyses: PDCAAnalysis[], branch: string = 'dev/req0305'): string {
-    let table = `## **📊 Complete Session Analysis Table (Chronological Order with Git SHAs)**\n\n`;
+    let table = `## **📊 Complete Session Analysis Table (Chronological Order with Git SHAs and UTC Times)**\n\n`;
     table += `**Note:** Table shows chronological progression with exact TRON quotes. Total PDCAs analyzed: ${analyses.length}\n\n`;
-    table += `| **Git SHA** | **PDCA Source/Evidence** | **Exact TRON Quotes** | **Key Learning/Achievement** |\n`;
-    table += `|-------------|--------------------------|------------------------|--------------------------|\n`;
+    table += `| **Git SHA** | **UTC Time** | **PDCA Source/Evidence** | **Exact TRON Quotes** | **Key Learning/Achievement** |\n`;
+    table += `|-------------|--------------|--------------------------|------------------------|--------------------------|\n`;
 
     for (const analysis of analyses) {
       const filename = basename(analysis.relativePath);
@@ -163,7 +171,7 @@ export class SessionSummary {
       const dualLink = `[GitHub](${githubUrl}) \\| [${filename}](N/A)`;
       const quotes = analysis.tronQuotes.replace(/\n/g, '\\n');
       
-      table += `| **${analysis.sha}** | ${dualLink} | \`${quotes}\` | **${analysis.achievement}** |\n`;
+      table += `| **${analysis.sha}** | **${analysis.utcTime}** | ${dualLink} | \`${quotes}\` | **${analysis.achievement}** |\n`;
     }
 
     return table;
