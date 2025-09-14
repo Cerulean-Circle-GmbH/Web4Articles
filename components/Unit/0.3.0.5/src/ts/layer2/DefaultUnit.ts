@@ -18,6 +18,7 @@ import * as path from 'path';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { webcrypto as crypto } from 'crypto';
 
 export class DefaultUnit implements Unit, Upgrade {
   private model: UnitModel;
@@ -1145,7 +1146,8 @@ export class DefaultUnit implements Unit, Upgrade {
         // File path - use as link file
         const { readlinkSync, unlinkSync } = await import('fs');
         const currentDir = process.cwd();
-        linkPath = `${currentDir}/${identifier}`;
+        // Check if identifier is already a full path or relative path
+        linkPath = identifier.startsWith('/') ? identifier : `${currentDir}/${identifier}`;
         
         // Read the symlink to get scenario path
         const scenarioPath = readlinkSync(linkPath);
@@ -1167,6 +1169,9 @@ export class DefaultUnit implements Unit, Upgrade {
         
         // Remove the actual link file
         unlinkSync(linkPath);
+        
+        // Check if parent directory is empty and remove it if so
+        await this.cleanupEmptyDirectories(path.dirname(linkPath));
         
         console.log(`✅ Link deleted: ${identifier}`);
       } else {
@@ -2849,6 +2854,40 @@ export class DefaultUnit implements Unit, Upgrade {
       return packageJson.name?.split('/').pop()?.replace('@web4/', '') || 'Unit';
     } catch (error) {
       return 'Unit'; // Fallback name
+    }
+  }
+
+  /**
+   * Clean up empty directories after link deletion
+   * Recursively removes empty directories up to project root
+   * 
+   * @param dirPath - Directory path to check and potentially remove
+   * @returns Promise<void>
+   */
+  private async cleanupEmptyDirectories(dirPath: string): Promise<void> {
+    try {
+      const { rmdir } = await import('fs/promises');
+      const { readdir } = await import('fs/promises');
+      
+      // Check if directory exists and is empty
+      if (existsSync(dirPath)) {
+        const files = await readdir(dirPath);
+        
+        // If directory is empty, remove it and check parent
+        if (files.length === 0) {
+          await rmdir(dirPath);
+          console.log(`🗑️  Removed empty directory: ${dirPath}`);
+          
+          // Recursively check parent directory
+          const parentDir = path.dirname(dirPath);
+          if (parentDir !== dirPath) { // Prevent infinite recursion
+            await this.cleanupEmptyDirectories(parentDir);
+          }
+        }
+      }
+    } catch (error) {
+      // Silently ignore errors (directory might not be empty or might not exist)
+      // This prevents the cleanup from failing the main operation
     }
   }
 }

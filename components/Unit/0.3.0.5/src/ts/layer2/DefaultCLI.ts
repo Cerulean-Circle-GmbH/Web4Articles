@@ -9,6 +9,7 @@ import { MethodInfo } from '../layer3/MethodInfo.interface.js';
 import { ComponentAnalysis } from '../layer3/ComponentAnalysis.interface.js';
 import { ColorScheme, DocumentationSections } from '../layer3/ColorScheme.interface.js';
 import { TSCompletion } from '../layer4/TSCompletion.js';
+import { webcrypto as crypto } from 'crypto';
 
 export abstract class DefaultCLI implements CLI {
   protected componentClass: any;

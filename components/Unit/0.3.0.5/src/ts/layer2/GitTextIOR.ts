@@ -11,6 +11,7 @@ import { GitTextIORScenario } from '../layer3/GitTextIORScenario.interface.js';
 import { fileURLToPath } from 'url';
 import * as path from 'path';
 import { promises as fs } from 'fs';
+import { webcrypto as crypto } from 'crypto';
 
 export class GitTextIOR implements BaseIOR {
   private model: {

@@ -13,6 +13,7 @@ import { join, dirname, relative } from 'path';
 import { existsSync } from 'fs';
 import { fileURLToPath } from 'url';
 import * as path from 'path';
+import { webcrypto as crypto } from 'crypto';
 
 export class DefaultStorage implements Storage {
   private model: StorageModel;
