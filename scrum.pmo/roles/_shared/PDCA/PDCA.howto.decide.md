@@ -29,12 +29,26 @@
 ### **QA Decisions**
 - [x] Completed decision: [Description of what was already decided]
 - [ ] **Decision 1:** [Clear decision title]
-  - a) [First option with rationale]
-  - b) [Second option with rationale]
-  - c) [Third option if applicable]
+  1. a) [First option with rationale]
+  2. b) [Second option with rationale]
+  3. c) [Third option if applicable]
 - [ ] **Decision 2:** [Another decision title]
-  - a) [Option A with consequences]
-  - b) [Option B with consequences]
+  1. a) [Option A with consequences]
+  2. b) [Option B with consequences]
+```
+
+### **Mobile-Friendly Numbered Protocol**
+**CRITICAL:** Always use numbered protocol (1a, 2b) instead of clickable checkboxes for mobile compatibility!
+
+```markdown
+### **QA Decisions**
+**Decision 1: [Clear decision title]**
+1. a) [First option with rationale]
+2. b) [Second option with rationale]
+
+**Decision 2: [Another decision title]**  
+1. a) [Option A with consequences]
+2. b) [Option B with consequences]
 ```
 
 ### **When No Decisions Required**
