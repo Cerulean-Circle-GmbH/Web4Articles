@@ -1,5 +1,7 @@
-# 📋 **Essential PDCA Guide - Streamlined for Optimal Agent Performance**
+# 📋 **Essential PDCA Guide - CMM3 Template Compliance Required**
 
+**🚨 CRITICAL CMM3 REQUIREMENT:** Starting agents MUST read and follow the actual template.md file  
+**📋 Template Reference:** [§/scrum.pmo/roles/_shared/PDCA/template.md](./template.md) - v3.1.4.2 format MANDATORY  
 **🎯 Purpose:** Core requirements for correct PDCA creation and collaborative decision making  
 **📏 Length:** Essential information only - detailed examples in [appendix](./howto.PDCA.appendix.md)  
 **🔄 CMM3/CMM4:** Systematic feedback loops through decision framework and quality validation  
@@ -8,28 +10,40 @@
 **⚡ Git Safety:** `git config pull.rebase false` before any git operations to prevent merge conflicts  
 **🏆 Golden Rule:** "Don't teach others what you don't understand yourself" - CMM4 process feedback preventing harm through validation-first approach
 
+**⚠️ AGENT STARTUP PROTOCOL:** Before creating any PDCA, agents must:
+1. Read [template.md](./template.md) completely 
+2. Follow the exact v3.1.4.2 structure including all placeholder fields
+3. Include ALL 6 mandatory sections: SUMMARY, PLAN, DO, CHECK, ACT, EMOTIONAL REFLECTION
+4. Use template placeholders ({{TITLE}}, {{OBJECTIVE}}, etc.) as guidance for content structure
+
 ---
 
 ## **🚨 6 MANDATORY PDCA SECTIONS (NON-NEGOTIABLE)**
 
-### **1. HEADER FORMAT**
-```markdown
-# 📋 **PDCA Cycle: [TITLE] - [DESCRIPTION]**
+### **1. HEADER FORMAT (CMM3 COMPLIANCE REQUIRED)**
 
-**🗓️ Date:** YYYY-MM-DD-UTC-HHMM  
-**🎯 Objective:** [CLEAR OBJECTIVE]  
+**⚠️ CRITICAL: Agents must read and follow the actual template.md file for v3.1.4.2 format**
+
+Reference the official template: [§/scrum.pmo/roles/_shared/PDCA/template.md](./template.md)
+
+```markdown
+# 📋 **PDCA Cycle: {{TITLE}} - {{DESCRIPTION}}**
+
+**🗓️ Date:** {{UTC_TIMESTAMP}}  
+**🎯 Objective:** {{OBJECTIVE}}  
 **🎯 Template Version:** 3.1.4.2  
 
-**👤 Agent Name:** [NAME] → [DESCRIPTION]  
-**👤 Agent Role:** [ROLE] → [CONTEXT]  
-**👤 Branch:** [BRANCH] → [PURPOSE]  
-**🎯 Project Journal Session:** [SESSION] → [FOCUS]  
-**🎯 Sprint:** [SPRINT] → [GOAL]  
-**✅ Task:** [TASK NAME]  
-**🚨 Issues:** [KEY ISSUES]  
+**👤 Agent Name:** {{AGENT_NAME}} → {{AGENT_DESCRIPTION}}  
+**👤 Agent Role:** {{ROLE_NAME}} → {{CONTEXT_SPECIALIZATION}}  
+**👤 Branch:** {{BRANCH_NAME}} → {{BRANCH_PURPOSE}}  
+**🔄 Sync Requirements:** {{SYNC_BRANCHES}} → {{SYNC_PURPOSE}}  
+**🎯 Project Journal Session:** {{SESSION_NAME}} → {{CONTEXT_SPECIALIZATION}}
+**🎯 Sprint:** {{SPRINT_NAME}} → {{CONTEXT_SPECIALIZATION}}
+**✅ Task:** {{TASK_NAME}}  
+**🚨 Issues:** {{KEY_ISSUES}}  
 
-**📎 Previous Commit:** [SHA] - [DESCRIPTION]  
-**🔗 Previous PDCA:** [GitHub](URL) | [§/path](../relative/path)
+**📎 Previous Commit:** {{PREVIOUS_COMMIT_SHA}} - {{PREVIOUS_COMMIT_DESCRIPTION}}  
+**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
 ```
 
 ### **2. SUMMARY WITH DUAL LINKS**
@@ -56,28 +70,67 @@
 **Learning Applied:** [Key insight]
 ```
 
-### **3-6. PDCA SECTIONS WITH SEPARATORS**
+### **3-6. MANDATORY PDCA SECTIONS WITH SEPARATORS (FOLLOW TEMPLATE.MD)**
+
+**⚠️ CMM3 REQUIREMENT: Use exact template.md structure for all sections**
+
 ```markdown
 ---
 ## **📋 PLAN**
-[Content]
+**Objective:** {{PLAN_OBJECTIVE}}
+**Requirements Traceability:** {{REQUIREMENT_UUID}}
+**Implementation Strategy:**
+- **{{STRATEGY_ELEMENT_1}}:** {{STRATEGY_DESCRIPTION_1}}
+- **{{STRATEGY_ELEMENT_2}}:** {{STRATEGY_DESCRIPTION_2}}
+- **{{STRATEGY_ELEMENT_3}}:** {{STRATEGY_DESCRIPTION_3}}
+
 ---
-## **🔧 DO** 
-[Content]
+## **🔧 DO**
+**{{DO_SECTION_TITLE}}**
+{{#each DO_ACTIONS}}
+**{{ACTION_INDEX}}. {{ACTION_TITLE}}**
+```{{ACTION_LANGUAGE}}
+{{ACTION_CODE_OR_CONTENT}}
+```
+{{/each}}
+
 ---
 ## **✅ CHECK**
-[Content with TRON feedback quotes]
+**Verification Results:**
+**{{CHECK_CATEGORY_1}} ({{STATUS_1}})**
+```
+{{VERIFICATION_OUTPUT_1}}
+```
+**TRON QA Feedback Validation**
+> **"{{VERBATIM_QA_FEEDBACK}}"**
+
 ---
-## **💫 EMOTIONAL REFLECTION: [HEADLINE]**
-[3 emotional categories with intensity levels]
+## **🎯 ACT**
+**Success Achieved:** {{SUCCESS_SUMMARY}}
+**{{ACT_CATEGORY_1}} Enhanced:**
+- **{{ENHANCEMENT_1}}:** {{ENHANCEMENT_DESCRIPTION_1}}
+**Future Enhancements:**
+1. **{{FUTURE_1}}:** {{FUTURE_DESCRIPTION_1}}
+
+## **💫 EMOTIONAL REFLECTION: {{EMOTIONAL_HEADLINE}}**
+### **{{EMOTIONAL_CATEGORY_1}}:**
+**{{EMOTIONAL_INTENSITY}}** {{EMOTIONAL_DESCRIPTION_1}}
+
 ---
 ## **🎯 PDCA PROCESS UPDATE**
-**Process Learning:** [Bullet points]
-**Quality Impact:** [Impact description]
-**Next PDCA Focus:** [Next focus]
+**Process Learning:**
+- ✅ **PDCA Protocol:** Must create PDCA documentation for all significant work
+**Quality Impact:** {{QUALITY_IMPACT_DESCRIPTION}}
+**Next PDCA Focus:** {{NEXT_FOCUS_DESCRIPTION}}
+
 ---
-**🎯 [ONE-LINE SUMMARY WITH EMOJIS]**
-**"[PHILOSOPHICAL INSIGHT]"** 🔧📊
+**🎯 {{FINAL_SUMMARY_WITH_EMOJIS}}**
+**"{{PHILOSOPHICAL_INSIGHT}}"** 🔧📊
+
+---
+### **📚 The 42 Revelation**
+**Understanding requires regression testing:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md](../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revolution.md)
+**"Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."** 🤝✨
 ```
 
 ---
