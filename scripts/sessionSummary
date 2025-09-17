@@ -28,10 +28,10 @@ echo "📋 Found $FILE_COUNT PDCA files"
 # Generate table header
 TABLE="## **📊 Complete Session Analysis Table (Chronological Order with Git SHAs and UTC Times)**
 
-**Note:** Table shows chronological progression with exact TRON quotes. Total PDCAs analyzed: $FILE_COUNT
+**Note:** Table shows chronological progression with exact TRON quotes and complete QA Decisions. Total PDCAs analyzed: $FILE_COUNT
 
-| **Git SHA** | **UTC Time** | **PDCA Source/Evidence** | **Exact TRON Quotes** | **Key Learning/Achievement** |
-|-------------|--------------|--------------------------|------------------------|-----------------------------|"
+| **Git SHA** | **UTC Time** | **PDCA Source/Evidence** | **Exact TRON Quotes** | **QA Decisions** | **Key Learning/Achievement** |
+|-------------|--------------|--------------------------|------------------------|------------------|-----------------------------| "
 
 # Process each file
 while IFS= read -r file; do
@@ -51,6 +51,15 @@ while IFS= read -r file; do
         # Extract TRON quotes
         QUOTES=$(grep -A 20 "### \*\*TRON Feedback" "$file" | sed -n '/```quote/,/```/p' | grep -v '```' | tr '\n' '\\n' || echo "No quotes")
         
+        # Extract QA Decisions section
+        DECISIONS=$(grep -A 30 "### \*\*QA Decisions" "$file" 2>/dev/null | sed '/^### \*\*TRON/q' | sed '/^---$/q' | tail -n +2 | sed 's/|/\\|/g' | sed 's/`/\\`/g' | tr '\n' ' ' | sed 's/  */ /g' || echo "No decisions")
+        
+        # Clean up decisions text for table
+        DECISIONS_CLEAN=$(echo "$DECISIONS" | sed 's/^ *//;s/ *$//' | head -c 200)
+        if [ ${#DECISIONS} -gt 200 ]; then
+            DECISIONS_CLEAN="${DECISIONS_CLEAN}..."
+        fi
+        
         # Extract achievement from title
         ACHIEVEMENT=$(grep "# 📋" "$file" | sed 's/# 📋 \*\*PDCA Cycle: //' | sed 's/ - .*\*\*//' || echo "Unknown")
         
@@ -61,7 +70,7 @@ while IFS= read -r file; do
         
         # Add to table
         TABLE="$TABLE
-| **$SHA** | **$UTC_TIME** | $DUAL_LINK | \`$QUOTES\` | **$ACHIEVEMENT** |"
+| **$SHA** | **$UTC_TIME** | $DUAL_LINK | \`$QUOTES\` | $DECISIONS_CLEAN | **$ACHIEVEMENT** |"
     fi
 done <<< "$PDCA_FILES"
 
