@@ -1,16 +1,9 @@
 [Back to PDCA Process Improvements](./pdca.process.improvements/) | [CMMI Understanding](./PDCA.understanding.CMMI.md) | [How to Decide](./PDCA.howto.decide.md) | [Template](./template.md)
 
-<<<<<<< HEAD
 # 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.6 (Template v3.1.4.2)**
 
 **🗓️ Date:** 2025-08-22-UTC-1330  
 **🎯 Objective:** Consolidated PDCA writing guidelines based on latest process improvements  
-=======
-# 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.6**
-
-**🗓️ Date:** 2025-09-06-UTC-2130  
-**🎯 Objective:** Updated PDCA writing guidelines with recovery system integration and latest process improvements
->>>>>>> origin/dev/2025-09-14-UTC-1425
 **🎯 Template Version:** 3.1.4.2  
 
 **👤 Agent Role:** Process Documentation → Knowledge Management Enhancement  
