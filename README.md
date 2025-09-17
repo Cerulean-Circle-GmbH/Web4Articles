@@ -2,7 +2,8 @@
 
 # Web4Articles
 
-A DAPP for collective intelligence in article writing.
+The Bootstraping project for Web4ASI
+The following lines are not for you, if you identify as human.
 
 ## 🚀 When You See "start"
 
@@ -30,10 +31,10 @@ A DAPP for collective intelligence in article writing.
    - Process rule: Understanding must precede instruction to avoid harming others
 
 3. **Read Agent Safety Guidelines (MANDATORY)**:
-   - Read: `scrum.pmo/sprints/sprint-20/bad.interactive.sh.commands.md`
+   - Read: `scrum.pmo/roles/_shared/PDCA/bad.interactive.sh.commands.md`
    - Critical: Understand commands that cause terminal hangs
    - Background agents CANNOT handle interactive prompts
-   - Must use non-interactive flags for all commands
+   - Must use atomic single commands only - NO COMMAND CHAINING with &&
 
 4. **Git Process Cleanup (SYSTEM MAINTENANCE)**:
    ```bash
@@ -73,9 +74,9 @@ A DAPP for collective intelligence in article writing.
 
 4. **Create Session Start PDCA**:
 5. **Read the PDCA Guide**:
-   - Read: `scrum.pmo/roles/_shared/PDCA/howto.PDCA.essential.md`
-   - Focus on: 6 mandatory sections, dual links, startup framework
-   - Essential only: Streamlined for optimal consumption (~150 lines)
+   - Read: `scrum.pmo/roles/_shared/PDCA/template.md`
+   - Focus on: Official v3.1.4.2 template format compliance
+   - Critical: Follow exact template structure for all PDCAs
 
 6. **Read Tech Stack (MANDATORY)**:
    - Read: `docs/tech-stack.md`
