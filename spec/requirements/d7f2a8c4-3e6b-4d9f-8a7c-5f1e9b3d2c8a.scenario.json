@@ -1,0 +1,65 @@
+{
+  "ior": {
+    "uuid": "d7f2a8c4-3e6b-4d9f-8a7c-5f1e9b3d2c8a",
+    "component": "Web4Requirement", 
+    "version": "0.1.2.2"
+  },
+  "owner": {
+    "user": "system",
+    "timestamp": "2025-09-03T19:10:00.000Z"
+  },
+  "model": {
+    "uuid": "d7f2a8c4-3e6b-4d9f-8a7c-5f1e9b3d2c8a",
+    "name": "Universal Scenario Format Compliance - All 0.3.x.x Components Migration",
+    "description": "The new Web4 3-property scenario format (ior, owner, model) with UUIDv4, encrypted owner, and project root location must be applied to ALL 0.3.x.x components universally. This is the core architectural change for the entire 0.3.x.x component ecosystem.",
+    "type": "architectural-migration",
+    "priority": "critical",
+    "category": "universal-compliance",
+    "status": "approved",
+    "rationale": "New scenario format is the fundamental reason for 0.3.x.x version increment. All components must adopt the same format for ecosystem consistency and interoperability.",
+    "acceptance_criteria": [
+      "ALL 0.3.x.x components use Web4 3-property scenario format",
+      "ALL components save scenarios to project root /workspace/scenarios/",
+      "ALL components generate UUIDv4 for scenario identification",
+      "ALL components use encrypted owner data from User component",
+      "ALL components resolve FQDN/IP hosts with localhost fallback",
+      "Universal scenario format across entire 0.3.x.x ecosystem",
+      "Consistent scenario directory structure: scenarios/domain/component/version/",
+      "Backward compatibility maintained for loading existing scenarios"
+    ],
+    "affected_components": [
+      "ONCE/0.3.0.0",
+      "ONCE/0.3.0.1", 
+      "Build/0.3.0.0",
+      "Build/0.3.0.1",
+      "IOR/0.3.0.0",
+      "HttpServer/0.3.0.0",
+      "WsServer/0.3.0.0", 
+      "P2PServer/0.3.0.0",
+      "All future 0.3.x.x components"
+    ],
+    "technical_details": {
+      "scenario_format_universal": {
+        "structure": "{ ior: IOR, owner: encrypted_base64, model: ComponentModel }",
+        "uuid_format": "UUIDv4 (xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx)",
+        "owner_encryption": "User.getOwnerObject() + base64 encoding",
+        "location": "/workspace/scenarios/{domain}/{component}/{version}/"
+      },
+      "migration_scope": {
+        "components_affected": "All 0.3.x.x versions",
+        "methods_to_update": ["toScenario()", "saveScenario()", "loadScenario()"],
+        "interfaces_to_update": ["Component.interface.ts", "Scenario interfaces"],
+        "directory_structure": "Project root scenarios/ directory"
+      },
+      "implementation_pattern": {
+        "uuid_generation": "Use existing UUIDv4 generator pattern",
+        "owner_encryption": "Use User component DefaultUser.getOwnerObject()",
+        "host_resolution": "Network interface detection with fallback",
+        "directory_creation": "Recursive mkdir for scenario paths"
+      }
+    },
+    "implementation_notes": "This is a universal architectural migration affecting the entire 0.3.x.x ecosystem. Every component must be updated to maintain consistency and interoperability.",
+    "created_at": "2025-09-03T19:10:00.000Z",
+    "updated_at": "2025-09-03T19:10:00.000Z"
+  }
+}

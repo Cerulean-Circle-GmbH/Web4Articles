@@ -1,0 +1,44 @@
+{
+  "ior": {
+    "uuid": "1609da4f-0a7e-4dea-888b-f10694adab22",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"1609da4f-0a7e-4dea-888b-f10694adab22\",\"timestamp\":\"2025-09-08T11:56:55.951Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "1609da4f-0a7e-4dea-888b-f10694adab22",
+    "name": "UUID Indexing",
+    "origin": "",
+    "definition": "Test definition for UUID Indexing",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/1/6/0/9/d/1609da4f-0a7e-4dea-888b-f10694adab22.scenario.json",
+    "symlinkPaths": [
+      "/workspace/components/Unit/0.3.0.4/temp-filename-test/UUID.Indexing.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../../../../scenarios/index/1/6/0/9/d/1609da4f-0a7e-4dea-888b-f10694adab22.scenario.json",
+        "filename": "Test.Name.unit"
+      },
+      {
+        "location": "../../../../scenarios/index/1/6/0/9/d/1609da4f-0a7e-4dea-888b-f10694adab22.scenario.json",
+        "filename": "M2.Class.unit"
+      },
+      {
+        "location": "../../../../scenarios/index/1/6/0/9/d/1609da4f-0a7e-4dea-888b-f10694adab22.scenario.json",
+        "filename": "UUID.Indexing.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-08T11:56:55.938Z",
+    "updatedAt": "2025-09-08T11:56:55.951Z"
+  }
+}

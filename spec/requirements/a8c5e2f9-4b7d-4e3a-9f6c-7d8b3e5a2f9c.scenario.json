@@ -1,0 +1,47 @@
+{
+  "ior": {
+    "uuid": "a8c5e2f9-4b7d-4e3a-9f6c-7d8b3e5a2f9c",
+    "component": "Web4Requirement", 
+    "version": "0.1.2.2"
+  },
+  "owner": {
+    "user": "system",
+    "timestamp": "2025-09-05T09:35:00.000Z"
+  },
+  "model": {
+    "uuid": "a8c5e2f9-4b7d-4e3a-9f6c-7d8b3e5a2f9c",
+    "name": "Component Version Restoration - Build-015 State as 0.3.0.2 with Scripts Linking",
+    "description": "Restore all component versions from v0.3.0.0-build-015 commit as version 0.3.0.2 in each component directory and create proper scripts/versions linking for the clean recovery state.",
+    "type": "version-restoration",
+    "priority": "critical",
+    "category": "recovery-implementation",
+    "status": "approved",
+    "rationale": "TRON selected build-015 as clean recovery point. Need to restore all component versions from this commit as 0.3.0.2 and establish proper scripts linking for the recovered clean state.",
+    "acceptance_criteria": [
+      "Restore all components from v0.3.0.0-build-015 commit",
+      "Create version 0.3.0.2 directories for all components",
+      "Copy complete state from build-015 to 0.3.0.2 versions",
+      "Create scripts/versions links for all 0.3.0.2 components",
+      "Ensure all components have proper shell scripts and CLI functionality",
+      "Maintain Web4 compliance from clean build-015 state"
+    ],
+    "components_to_restore": [
+      "ONCE/0.3.0.0 -> ONCE/0.3.0.2",
+      "Build/0.3.0.0 -> Build/0.3.0.2", 
+      "P2PServer/0.3.0.0 -> P2PServer/0.3.0.2",
+      "IOR/0.3.0.0 -> IOR/0.3.0.2",
+      "WsServer/0.3.0.0 -> WsServer/0.3.0.2",
+      "HttpServer/0.3.0.0 -> HttpServer/0.3.0.2"
+    ],
+    "technical_details": {
+      "source_commit": "v0.3.0.0-build-015 (ee13104abde3af62fd9ba18182521db90b145781)",
+      "target_version": "0.3.0.2",
+      "restoration_process": "Copy complete component state from build-015",
+      "scripts_linking": "Create scripts/versions/{component}-v0.3.0.2 links",
+      "version_increment": "0.3.0.0 -> 0.3.0.2 (skipping 0.3.0.1 due to violations)"
+    },
+    "implementation_notes": "This restores the clean pre-violation state as new 0.3.0.2 versions, providing a clean foundation for continued development without DORY violations.",
+    "created_at": "2025-09-05T09:35:00.000Z",
+    "updated_at": "2025-09-05T09:35:00.000Z"
+  }
+}

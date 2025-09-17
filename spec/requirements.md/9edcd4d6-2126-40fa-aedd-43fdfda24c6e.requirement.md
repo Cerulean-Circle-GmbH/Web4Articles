@@ -16,8 +16,13 @@ Units are linux files that are unique and terminal identified via a uuid. They a
 
 ## Metadata
 
+<<<<<<< HEAD
 - **Created:** 2025-08-29T18:09:51.819Z
 - **Updated:** 2025-08-29T18:09:51.819Z
+=======
+- **Created:** 2025-08-26T13:33:24.192Z
+- **Updated:** 2025-08-26T13:33:24.192Z
+>>>>>>> origin/dev/2025-09-14-UTC-1425
 
 ## Owner Details
 

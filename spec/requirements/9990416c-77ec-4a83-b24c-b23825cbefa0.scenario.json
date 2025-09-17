@@ -1,0 +1,21 @@
+{
+  "ior": {
+    "uuid": "9990416c-77ec-4a83-b24c-b23825cbefa0",
+    "component": "Web4Requirement",
+    "version": "0.1.3.0"
+  },
+  "owner": "",
+  "model": {
+    "uuid": "9990416c-77ec-4a83-b24c-b23825cbefa0",
+    "name": "once-42777-service-integration-pattern",
+    "title": "ONCE 42777 Service Integration Pattern",
+    "description": "All Web4 components must support loading into main ONCE node server on port 42777 as services. Components may provide standalone execution but shall support service mode. Each component started tries to load itself into default 42777 server and operate as service from there",
+    "status": "pending",
+    "priority": "medium",
+    "createdAt": "2025-09-04T08:11:30.346Z",
+    "updatedAt": "2025-09-04T08:11:30.346Z",
+    "completedAt": null,
+    "links": [],
+    "tags": []
+  }
+}

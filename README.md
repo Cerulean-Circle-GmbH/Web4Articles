@@ -12,7 +12,46 @@ A DAPP for collective intelligence in article writing.
    ```bash
    # CRITICAL: Always start with identity check
    ./scripts/agent-identity-first-startup.sh
+1. **Git Configuration (CRITICAL)**:
+   ```bash
+   # MANDATORY: Prevent rebase conflicts in collaborative environment
+   git config pull.rebase false
    ```
+   - Prevents merge conflicts during git pull operations
+   - Must be set before any git operations
+   - Critical for collaborative branch management safety
+
+
+2. **Golden Rule (CMM4 Process Feedback)**:
+   **"Don't teach others what you don't understand yourself"**
+   - Validation-first approach: Experience → Understanding → Documentation → Guidance
+   - Treat others as you'd want to be treated = Give them validated, accurate guidance
+   - CMM4 feedback loop prevents giving others what you wouldn't want to receive
+   - Process rule: Understanding must precede instruction to avoid harming others
+
+3. **Read Agent Safety Guidelines (MANDATORY)**:
+   - Read: `scrum.pmo/sprints/sprint-20/bad.interactive.sh.commands.md`
+   - Critical: Understand commands that cause terminal hangs
+   - Background agents CANNOT handle interactive prompts
+   - Must use non-interactive flags for all commands
+
+4. **Git Process Cleanup (SYSTEM MAINTENANCE)**:
+   ```bash
+   # Wait 30 seconds then kill defunct git processes
+   sleep 30 && pkill -f "git" 2>/dev/null || true &
+   ```
+   - Cleans up defunct git processes from previous interactive failures
+   - Prevents system resource drain and process accumulation
+   - Runs in background, doesn't block startup continuation
+
+5. **Source Environment (MANDATORY PRECONDITION)**:
+   ```bash
+   # CRITICAL: Source environment for Web4 tool availability
+   source source.env
+   ```
+   - Makes Web4 tools available in PATH via scripts/ and scripts/versions/
+   - Enables component self-build functionality
+   - Required before any tool usage or component interaction
 
 2. **Initialize PDCA Framework**:
    ```bash
@@ -24,17 +63,27 @@ A DAPP for collective intelligence in article writing.
    git checkout origin/release/dev -- scrum.pmo/roles/_shared/PDCA/
    ```
 
+2. **Initialize PDCA Framework**:
+
 3. **Read the PDCA Guide**:
    - Read: `scrum.pmo/roles/_shared/PDCA/howto.PDCA.md`
    - Focus on: Template format, decision framework, dual links
    - Key sections: All 6 mandatory sections, startup decision framework
 
-4. **Check Your Role Process**:
-   - Read: `scrum.pmo/roles/BackgroundAgent/process.md`
-   - Follow role-specific guidance
-   - If your role is different, check the appropriate role directory
 
-5. **Create Session Start PDCA**:
+4. **Create Session Start PDCA**:
+5. **Read the PDCA Guide**:
+   - Read: `scrum.pmo/roles/_shared/PDCA/howto.PDCA.essential.md`
+   - Focus on: 6 mandatory sections, dual links, startup framework
+   - Essential only: Streamlined for optimal consumption (~150 lines)
+
+6. **Read Tech Stack (MANDATORY)**:
+   - Read: `docs/tech-stack.md`
+   - Critical constraints: Vitest mandatory, Jest BANNED
+   - Technical foundation: ESM-native, TypeScript-first, Docker/Devcontainer
+   - Must understand before any development or testing work
+
+7. **Create Session Start PDCA**:
    - Use the startup decision framework from `scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md`
    - Present the standard 3 decisions: Focus Area, Role Selection, Session Duration
    - Create PDCA with UTC timestamp format: `YYYY-MM-DD-UTC-HHMM`
@@ -58,9 +107,10 @@ A DAPP for collective intelligence in article writing.
 - **Apply startup decision framework** - Use the 3 standard questions
 - **Create proper PDCAs** for all significant work
 - **Use numbered decisions** (1a, 1b format) when real choices exist
-- **Provide dual links** (GitHub | local)  
+- **Provide dual links** (GitHub | local) - ALWAYS both links
 - **Keep chat minimal** - details go in PDCA files
 - **Commit and push** immediately after PDCA creation
+- **Pull protocol** - Read + Analyze + PDCA new content, not just merge
 
 ## 🎯 Success Criteria
 

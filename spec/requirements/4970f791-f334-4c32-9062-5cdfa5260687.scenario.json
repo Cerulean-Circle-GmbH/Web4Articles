@@ -1,0 +1,21 @@
+{
+  "ior": {
+    "uuid": "4970f791-f334-4c32-9062-5cdfa5260687",
+    "component": "Web4Requirement",
+    "version": "0.1.3.0"
+  },
+  "owner": "",
+  "model": {
+    "uuid": "4970f791-f334-4c32-9062-5cdfa5260687",
+    "name": "web4-component-unified-cli-architecture",
+    "title": "Web4 Component Unified CLI Architecture",
+    "description": "Each Web4 component must implement CLI following TSRanger 2.2 pattern but simplified: CLI interface with commands delegating to same-named methods in default implementation. Ideally one default CLI implementation for all components using unified pattern",
+    "status": "pending",
+    "priority": "medium",
+    "createdAt": "2025-09-04T08:11:17.564Z",
+    "updatedAt": "2025-09-04T08:11:17.564Z",
+    "completedAt": null,
+    "links": [],
+    "tags": []
+  }
+}

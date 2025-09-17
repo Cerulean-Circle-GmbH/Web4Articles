@@ -1,0 +1,48 @@
+{
+  "ior": {
+    "uuid": "d9e5f3b8-6c4a-4d7e-9f2b-8e6d3c5a7f9e",
+    "component": "Web4Requirement", 
+    "version": "0.1.2.2"
+  },
+  "owner": {
+    "user": "system",
+    "timestamp": "2025-09-03T19:45:00.000Z"
+  },
+  "model": {
+    "uuid": "d9e5f3b8-6c4a-4d7e-9f2b-8e6d3c5a7f9e",
+    "name": "Tagged Version Checkout - ONCE Component Version Review",
+    "description": "Checkout each tagged version into components/ONCE directory as dedicated version folders, remove version folders from gitignore, and commit all versions for TRON's GitHub review and selection.",
+    "type": "version-checkout",
+    "priority": "critical",
+    "category": "version-recovery",
+    "status": "approved",
+    "rationale": "TRON needs to review all tagged ONCE versions in GitHub to choose the correct recovery point. Each version must be checked out as dedicated folder and committed for visibility.",
+    "acceptance_criteria": [
+      "Checkout each v0.3.0.0-build-* tag into components/ONCE/v{tag}/ directories",
+      "Remove any gitignore patterns that hide version folders",
+      "Commit all version directories to make them visible in GitHub",
+      "Preserve each version's complete state for review",
+      "Enable TRON to review and choose correct recovery version"
+    ],
+    "technical_details": {
+      "tags_to_checkout": [
+        "v0.3.0.0-build-025",
+        "v0.3.0.0-build-024", 
+        "v0.3.0.0-build-023",
+        "v0.3.0.0-build-022",
+        "v0.3.0.0-build-021",
+        "v0.3.0.0-build-020",
+        "v0.3.0.0-build-019",
+        "v0.3.0.0-build-018",
+        "v0.3.0.0-build-017",
+        "v0.3.0.0-build-016"
+      ],
+      "directory_structure": "components/ONCE/v{tag}/",
+      "gitignore_update": "Remove patterns hiding version directories",
+      "commit_strategy": "Single commit with all versions for review"
+    },
+    "implementation_notes": "This enables TRON to visually review all tagged versions in GitHub and select the correct recovery point before violations started.",
+    "created_at": "2025-09-03T19:45:00.000Z",
+    "updated_at": "2025-09-03T19:45:00.000Z"
+  }
+}

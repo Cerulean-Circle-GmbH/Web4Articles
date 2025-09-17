@@ -1,0 +1,58 @@
+{
+  "ior": {
+    "uuid": "e7f4a9d6-8c3b-4e2f-9a7d-6f8e3d5c9a7e",
+    "component": "Web4Requirement", 
+    "version": "0.1.2.2"
+  },
+  "owner": {
+    "user": "system",
+    "timestamp": "2025-09-05T10:40:00.000Z"
+  },
+  "model": {
+    "uuid": "e7f4a9d6-8c3b-4e2f-9a7d-6f8e3d5c9a7e",
+    "name": "Simple IOR 0.3.0.3 & Build System 0.3.0.3 - Dependency-Free Architecture",
+    "description": "Create simple, fundamental, dependency-free IOR 0.3.0.3 component. IOR knows nothing about environment - ONCE creates environment-aware IORs. Create dependency-free Build 0.3.0.3 for seamless ONCE building. Restore once deinstall with Web4 compliance.",
+    "type": "architecture-simplification",
+    "priority": "critical",
+    "category": "dependency-resolution",
+    "status": "approved",
+    "rationale": "Circular dependencies prevent ecosystem building. Simple IOR with no environment knowledge enables dependency-free architecture. ONCE handles environment context. Build system must enable seamless once shell script execution.",
+    "acceptance_criteria": [
+      "Create IOR/0.3.0.3 - simple, fundamental, dependency-free",
+      "IOR knows nothing about environment (no ONCE references)",
+      "ONCE/0.3.0.2 modified to use simple IOR 0.3.0.3",
+      "ONCE creates environment-aware IORs using fundamental IOR",
+      "Resolve circular dependency between IOR and ONCE",
+      "Create Build/0.3.0.3 - dependency-free, can build ONCE",
+      "Restore once deinstall functionality with Web4 compliance",
+      "Enable seamless once shell script execution with build system"
+    ],
+    "architecture_strategy": {
+      "ior_simplification": {
+        "version": "0.3.0.3",
+        "principle": "Simple, fundamental, dependency-free",
+        "scope": "No environment knowledge, no ONCE references",
+        "usage": "ONCE uses IOR to create environment-aware instances"
+      },
+      "build_system": {
+        "version": "0.3.0.3", 
+        "principle": "Dependency-free, can bootstrap itself",
+        "scope": "Build ONCE and other components seamlessly",
+        "integration": "Works with once shell script for seamless execution"
+      },
+      "dependency_resolution": {
+        "current_problem": "IOR ↔ ONCE circular dependency",
+        "solution": "Simple IOR with no environment knowledge",
+        "result": "ONCE uses IOR, IOR doesn't know about ONCE"
+      }
+    },
+    "technical_details": {
+      "ior_structure": "uuid, component, version, location?, endpoint? (minimal)",
+      "build_capability": "Self-building, dependency resolution, component orchestration",
+      "once_integration": "Uses simple IOR to create environment-aware instances"
+    },
+    "implementation_notes": "This breaks circular dependencies by making IOR fundamental and environment-agnostic, while ONCE handles environment context.",
+    "created_at": "2025-09-05T10:40:00.000Z",
+    "updated_at": "2025-09-05T10:40:00.000Z"
+  }
+}

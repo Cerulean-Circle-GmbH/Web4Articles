@@ -2,9 +2,15 @@
 
 ## Interfaces
 
+<<<<<<< HEAD
 ### User
 ```typescript
 interface User {
+=======
+### IUser
+```typescript
+interface IUser {
+>>>>>>> origin/dev/2025-09-14-UTC-1425
   getUuid(): string;
   getUsername(): string;
   getHostname(): string;
@@ -13,25 +19,43 @@ interface User {
 }
 ```
 
+<<<<<<< HEAD
 ### EnvironmentCheck
 ```typescript
 interface EnvironmentCheck {
+=======
+### IEnvironmentCheck
+```typescript
+interface IEnvironmentCheck {
+>>>>>>> origin/dev/2025-09-14-UTC-1425
     check(): Promise<boolean>;
     getErrors(): string[];
 }
 ```
 
+<<<<<<< HEAD
 ### DependencyCheck
 ```typescript
 interface DependencyCheck {
+=======
+### IDependencyCheck
+```typescript
+interface IDependencyCheck {
+>>>>>>> origin/dev/2025-09-14-UTC-1425
     check(): Promise<boolean>;
     getErrors(): string[];
 }
 ```
 
+<<<<<<< HEAD
 ### DocumentationGenerator
 ```typescript
 interface DocumentationGenerator {
+=======
+### IDocumentationGenerator
+```typescript
+interface IDocumentationGenerator {
+>>>>>>> origin/dev/2025-09-14-UTC-1425
     generate(): Promise<void>;
     getGeneratedFiles(): string[];
 }
@@ -40,7 +64,11 @@ interface DocumentationGenerator {
 ## Classes
 
 ### DefaultUser
+<<<<<<< HEAD
 Implements the User interface with deterministic UUID generation.
+=======
+Implements the IUser interface with deterministic UUID generation.
+>>>>>>> origin/dev/2025-09-14-UTC-1425
 
 #### Methods
 - `constructor()`: Creates empty user instance

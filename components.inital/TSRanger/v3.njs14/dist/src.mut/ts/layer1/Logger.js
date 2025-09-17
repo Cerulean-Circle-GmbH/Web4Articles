@@ -12,17 +12,16 @@
  * First principle: Logging must never affect production behavior or output unless explicitly enabled.
  */
 export class Logger {
-    static log(msg, level = 'info') {
-        const envLevel = parseInt(process.env.LOG_LEVEL || '0', 10);
-        const levelMap = { error: 1, warn: 2, info: 3, debug: 4 };
-        if (envLevel >= (levelMap[level] || 3)) {
-            // Always print errors to stderr, others to stdout
-            if (level === 'error') {
-                console.error(msg);
-            }
-            else {
-                console.log(msg);
-            }
-        }
+  static log(msg: string, level: 'debug' | 'info' | 'warn' | 'error' = 'info') {
+    const envLevel = parseInt(process.env.LOG_LEVEL || '0', 10);
+    const levelMap = { error: 1, warn: 2, info: 3, debug: 4 };
+    if (envLevel >= (levelMap[level] || 3)) {
+      // Always print errors to stderr, others to stdout
+      if (level === 'error') {
+        console.error(msg);
+      } else {
+        console.log(msg);
+      }
     }
+  }
 }

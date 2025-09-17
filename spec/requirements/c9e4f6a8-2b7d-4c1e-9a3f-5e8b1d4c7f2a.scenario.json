@@ -1,0 +1,58 @@
+{
+  "ior": {
+    "uuid": "c9e4f6a8-2b7d-4c1e-9a3f-5e8b1d4c7f2a",
+    "component": "Web4Requirement", 
+    "version": "0.1.2.2"
+  },
+  "owner": {
+    "user": "system",
+    "timestamp": "2025-09-03T19:00:00.000Z"
+  },
+  "model": {
+    "uuid": "c9e4f6a8-2b7d-4c1e-9a3f-5e8b1d4c7f2a",
+    "name": "ONCE Scenario Format Compliance - Project Root Location & Proper UUIDv4 & Encrypted Owner",
+    "description": "Scenario directory must be in project root /scenarios/, not component home. UUID must ALWAYS be UUIDv4 format. Owner data must ALWAYS be encrypted (base64) from User component. Host must be FQDN/IP, not localhost fallback.",
+    "type": "scenario-format-compliance",
+    "priority": "critical",
+    "category": "once-component",
+    "status": "approved",
+    "rationale": "New scenario format is the core reason for 0.3.0.1 version. Proper UUID ensures uniqueness, encrypted owner ensures security, FQDN/IP ensures network resolvability.",
+    "acceptance_criteria": [
+      "Scenario directory MUST be /workspace/scenarios/ (project root)",
+      "UUID MUST be UUIDv4 format (xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx)",
+      "Owner data MUST be encrypted (base64 encoded) from User component",
+      "Host MUST be FQDN or IP address, localhost only as worst fallback",
+      "Directory structure: /workspace/scenarios/domain/component/version/",
+      "File format: {uuid}.scenario.json with Web4 3-property format",
+      "Owner encryption uses User.getOwnerObject() and base64 encoding",
+      "Host detection prioritizes: FQDN > IP > localhost fallback"
+    ],
+    "technical_details": {
+      "scenario_location": {
+        "correct_path": "/workspace/scenarios/local.once/ONCE/0.3.0.1/",
+        "incorrect_path": "/workspace/components/ONCE/0.3.0.1/scenarios/",
+        "structure": "scenarios/{domain}/{component}/{version}/{uuid}.scenario.json"
+      },
+      "uuid_format": {
+        "required": "UUIDv4",
+        "pattern": "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx",
+        "generation": "Math.random() based UUIDv4 generator",
+        "invalid_example": "once-kernel-1757059512695"
+      },
+      "owner_encryption": {
+        "source": "User component DefaultUser.getOwnerObject()",
+        "encoding": "base64",
+        "format": "Buffer.from(JSON.stringify(ownerObject)).toString('base64')",
+        "decoding": "JSON.parse(Buffer.from(base64String, 'base64').toString('utf-8'))"
+      },
+      "host_resolution": {
+        "priority_order": ["FQDN", "IP_address", "localhost"],
+        "detection_methods": ["os.hostname()", "dns.lookup()", "network_interfaces"],
+        "fallback": "localhost (worst case only)"
+      }
+    },
+    "implementation_notes": "Use existing UUIDv4 generator from ONCE components. Use User component for owner encryption. Implement proper host detection with network resolution.",
+    "created_at": "2025-09-03T19:00:00.000Z",
+    "updated_at": "2025-09-03T19:00:00.000Z"
+  }
+}

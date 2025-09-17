@@ -1,0 +1,42 @@
+{
+  "ior": {
+    "uuid": "a7b4e9f2-3c6d-4a8b-9e1f-5d8c2b7a4e9f",
+    "component": "Web4Requirement", 
+    "version": "0.1.2.2"
+  },
+  "owner": {
+    "user": "system",
+    "timestamp": "2025-09-03T19:35:00.000Z"
+  },
+  "model": {
+    "uuid": "a7b4e9f2-3c6d-4a8b-9e1f-5d8c2b7a4e9f",
+    "name": "PDCA Link Failure - Another DORY Moment",
+    "description": "PDCA links are not working again, indicating another DORY moment where I'm creating broken GitHub links. This is a recurring pattern of failure that needs immediate correction.",
+    "type": "dory-link-failure",
+    "priority": "critical",
+    "category": "pdca-compliance",
+    "status": "approved",
+    "rationale": "Broken PDCA links indicate systematic failure in documentation and git protocol compliance. This is a recurring DORY pattern that undermines all documentation efforts.",
+    "acceptance_criteria": [
+      "Fix all broken PDCA links immediately",
+      "Use proper GitHub URL format with commit hash",
+      "Test all links before committing",
+      "Document link construction pattern",
+      "Prevent future link failures"
+    ],
+    "link_failure_pattern": {
+      "symptom": "PDCA links not working",
+      "root_cause": "Incorrect GitHub URL construction",
+      "recurring_issue": "Multiple DORY moments with same problem",
+      "solution": "Use fix.dual.link tool or manual correction"
+    },
+    "technical_details": {
+      "correct_format": "https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/{commit_hash}/path/to/file",
+      "incorrect_format": "Relative paths or wrong commit references",
+      "fix_tool": "fix.dual.link available for systematic correction"
+    },
+    "implementation_notes": "This is a recurring DORY failure pattern. Fix immediately and implement prevention measures.",
+    "created_at": "2025-09-03T19:35:00.000Z",
+    "updated_at": "2025-09-03T19:35:00.000Z"
+  }
+}

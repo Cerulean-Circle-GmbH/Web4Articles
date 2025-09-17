@@ -72,6 +72,7 @@ export class RequirementOverview extends DefaultMDView {
     const totalCount = this.requirements.length;
     const timestamp = new Date().toISOString();
     
+<<<<<<< HEAD
     // Generate items list using item template - sort by newest date first
     const sortedRequirements = this.requirements
       .sort((a, b) => {
@@ -93,6 +94,11 @@ export class RequirementOverview extends DefaultMDView {
         
         return getDate(b).getTime() - getDate(a).getTime(); // Newest first
       });
+=======
+    // Generate items list using item template
+    const sortedRequirements = this.requirements
+      .sort((a, b) => new Date(b.createdAt || '').getTime() - new Date(a.createdAt || '').getTime()); // Newest first
+>>>>>>> origin/dev/2025-09-14-UTC-1425
     
     const itemsListPromises = sortedRequirements.map(req => this.generateItemEntry(req));
     const itemsListArray = await Promise.all(itemsListPromises);

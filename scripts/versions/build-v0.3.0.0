@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# Web4 Build CLI Tool - v0.3.0.0
+# Location-resilient CLI wrapper following requirement-v0.1.2.2 pattern
+
+find_project_root() {
+    local git_root=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [ -n "$git_root" ] && [ -d "$git_root" ]; then
+        if [ -f "$git_root/package.json" ] || [ -f "$git_root/README.md" ]; then
+            echo "$git_root"
+            return 0
+        fi
+    fi
+    
+    local current_dir="$PWD"
+    while [ "$current_dir" != "/" ]; do
+        if [ -d "$current_dir/.git" ] && [ -f "$current_dir/package.json" ]; then
+            echo "$current_dir"
+            return 0
+        fi
+        current_dir="$(dirname "$current_dir")"
+    done
+    
+    return 1
+}
+
+PROJECT_ROOT=$(find_project_root)
+if [ -z "$PROJECT_ROOT" ]; then
+    echo "❌ Error: Not in a Web4Articles project directory"
+    exit 1
+fi
+
+export PROJECT_ROOT
+CURRENT_DIR="$(pwd)"
+CONTEXT_INFO="arbitrary:$CURRENT_DIR"
+
+COMPONENT_VERSION="0.3.0.0"
+COMPONENT_DIR="$PROJECT_ROOT/components/Build/$COMPONENT_VERSION"
+CLI_SOURCE_PATH="$COMPONENT_DIR/src/ts/layer5/BuildCLI.ts"
+CLI_PATH="$COMPONENT_DIR/dist/ts/layer5/BuildCLI.js"
+
+if [ ! -f "$CLI_PATH" ]; then
+  if [ ! -f "$CLI_SOURCE_PATH" ]; then
+    echo "❌ CLI source not found at: $CLI_SOURCE_PATH"
+    exit 1
+  fi
+  
+  echo "🔨 Building Build CLI v$COMPONENT_VERSION..."
+  cd "$COMPONENT_DIR"
+  
+  if [ ! -d "node_modules" ]; then
+    npm install
+  fi
+  
+  if ! npm run build; then
+    echo "❌ Build failed for Build v$COMPONENT_VERSION"
+    exit 1
+  fi
+fi
+
+if ! command -v node >/dev/null 2>&1; then
+    echo "❌ Error: Node.js is required but not installed"
+    exit 1
+fi
+
+cd "$CURRENT_DIR"
+DIRECTORY_CONTEXT="$CONTEXT_INFO" node "$CLI_PATH" "$@"

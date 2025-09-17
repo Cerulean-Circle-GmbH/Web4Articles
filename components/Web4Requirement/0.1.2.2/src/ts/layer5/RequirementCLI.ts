@@ -6,7 +6,11 @@
 
 import { DefaultRequirement } from '../layer2/DefaultRequirement.js';
 import * as fs from 'fs/promises';
+<<<<<<< HEAD
 import { readFileSync, existsSync, lstatSync, readlinkSync } from 'fs';
+=======
+import { readFileSync, existsSync } from 'fs';
+>>>>>>> origin/dev/2025-09-14-UTC-1425
 import * as path from 'path';
 
 export class RequirementCLI {
@@ -104,9 +108,12 @@ export class RequirementCLI {
       case 'find':
         await this.handleFind(args.slice(1));
         break;
+<<<<<<< HEAD
       case 'show':
         await this.handleShow(args.slice(1));
         break;
+=======
+>>>>>>> origin/dev/2025-09-14-UTC-1425
       case 'replace':
         await this.handleReplace(args.slice(1));
         break;
@@ -533,6 +540,7 @@ export class RequirementCLI {
       
       console.log(`\n📋 Found ${uuids.size} requirements matching "${searchTerm}":\n`);
       
+<<<<<<< HEAD
       // Display results with full paths
       for (const [uuid, name] of uuids) {
         // Find the actual file path for this UUID
@@ -549,6 +557,11 @@ export class RequirementCLI {
         
         console.log(`  ${uuid} - ${name}`);
         console.log(`    📁 ${realPath}`);
+=======
+      // Display results
+      for (const [uuid, name] of uuids) {
+        console.log(`  ${uuid} - ${name}`);
+>>>>>>> origin/dev/2025-09-14-UTC-1425
       }
       
       console.log('\n💡 Use "requirement delete <uuid>" to remove duplicates');
@@ -558,6 +571,7 @@ export class RequirementCLI {
     }
   }
 
+<<<<<<< HEAD
   private async handleShow(args: string[]): Promise<void> {
     if (args.length < 1) {
       console.error('❌ Usage: requirement show <uuid>');
@@ -598,6 +612,8 @@ export class RequirementCLI {
     }
   }
 
+=======
+>>>>>>> origin/dev/2025-09-14-UTC-1425
   private async handleReplace(args: string[]): Promise<void> {
     if (args.length < 2) {
       console.error('Error: replace command requires placeholder pattern and file path');

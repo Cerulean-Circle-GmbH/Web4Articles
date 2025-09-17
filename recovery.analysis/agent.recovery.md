@@ -135,7 +135,7 @@ git reset --hard origin/feature/analyze-ranger
 cat recovery.analysis/recovery-process-analysis.md
 
 # Check QA feedback
-cat qa-feedback-log.md
+# Check sprint qa.md files for QA feedback
 ```
 
 ## Current Context

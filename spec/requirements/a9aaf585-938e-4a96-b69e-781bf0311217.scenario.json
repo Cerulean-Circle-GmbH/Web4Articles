@@ -1,0 +1,21 @@
+{
+  "ior": {
+    "uuid": "a9aaf585-938e-4a96-b69e-781bf0311217",
+    "component": "Web4Requirement",
+    "version": "0.1.3.0"
+  },
+  "owner": "",
+  "model": {
+    "uuid": "a9aaf585-938e-4a96-b69e-781bf0311217",
+    "name": "once-component-kernel-pattern",
+    "title": "ONCE Component Kernel Pattern",
+    "description": "ONCE must be implemented as environment kernel that boots in any environment (Node.js, Browser, Worker, PWA, iframe) and loads components from IORs and scenarios. NOT a server implementation - that belongs to capability components like HttpServer, WsServer, P2PServer",
+    "status": "pending",
+    "priority": "medium",
+    "createdAt": "2025-09-03T18:37:12.826Z",
+    "updatedAt": "2025-09-03T18:37:12.826Z",
+    "completedAt": null,
+    "links": [],
+    "tags": []
+  }
+}

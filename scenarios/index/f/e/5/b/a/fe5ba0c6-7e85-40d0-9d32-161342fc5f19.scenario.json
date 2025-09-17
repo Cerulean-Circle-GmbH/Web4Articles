@@ -1,1 +1,27 @@
+<<<<<<< HEAD
 ../../../../../scenarios/index/f/e/5/b/a/fe5ba0c6-7e85-40d0-9d32-161342fc5f19.scenario.json
+=======
+{
+  "IOR": {
+    "uuid": "fe5ba0c6-7e85-40d0-9d32-161342fc5f19",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI1VDE0OjI1OjAyLjc5M1oiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "fe5ba0c6-7e85-40d0-9d32-161342fc5f19",
+    "name": "Requirement CLI On Method Component Context",
+    "title": "Requirement CLI On Method Component Context",
+    "description": "Add on(component, version) method to DefaultRequirement that sets component context for all subsequent method calls in session. Enable CLI syntax like 'requirement on Component Version create title description' for explicit component targeting."
+  },
+  "unitIndex": {
+    "uuid": "fe5ba0c6-7e85-40d0-9d32-161342fc5f19",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/f/e/5/b/a/fe5ba0c6-7e85-40d0-9d32-161342fc5f19.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/components/User/latest/spec/requirements/fe5ba0c6-7e85-40d0-9d32-161342fc5f19.scenario.json"
+    ],
+    "createdAt": "2025-08-25T14:25:02.814Z",
+    "updatedAt": "2025-08-25T14:25:02.814Z"
+  }
+}
+>>>>>>> origin/dev/2025-09-14-UTC-1425

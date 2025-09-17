@@ -1,0 +1,38 @@
+{
+  "ior": {
+    "uuid": "11e814ac-9bd0-4d0f-bfde-1f676e368b4b",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"11e814ac-9bd0-4d0f-bfde-1f676e368b4b\",\"timestamp\":\"2025-09-13T12:33:48.105Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "11e814ac-9bd0-4d0f-bfde-1f676e368b4b",
+    "name": "SingleWord",
+    "origin": "",
+    "definition": "",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/1/1/e/8/1/11e814ac-9bd0-4d0f-bfde-1f676e368b4b.scenario.json",
+    "symlinkPaths": [
+      "/workspace/temp-filename-test/SingleWord.unit"
+    ],
+    "namedLinks": [],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-13T12:33:48.103Z",
+    "updatedAt": "2025-09-13T12:33:48.107Z",
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/temp-filename-test/SingleWord.unit",
+        "linkTarget": "ior:unit:11e814ac-9bd0-4d0f-bfde-1f676e368b4b",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "ior": {
+    "uuid": "e05187bc-a049-40c3-96b6-3418244a576c",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"e05187bc-a049-40c3-96b6-3418244a576c\",\"timestamp\":\"2025-09-13T12:13:39.688Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "e05187bc-a049-40c3-96b6-3418244a576c",
+    "name": "Folder",
+    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/MDAv4/M3/CLASS/",
+    "definition": "M1 folder instance: MDAv4/M3/CLASS/",
+    "typeM3": "CLASS",
+    "indexPath": "e/0/5/1/8/e05187bc-a049-40c3-96b6-3418244a576c.scenario.json",
+    "references": [],
+    "createdAt": "2025-09-13T12:13:39.682Z",
+    "updatedAt": "2025-09-13T12:13:39.689Z",
+    "originName": "CLASS",
+    "folderPath": "MDAv4/M3/CLASS/",
+    "fileCount": 0,
+    "subfolderCount": 0,
+    "totalSize": 0,
+    "folderHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lastScanned": "2025-09-13T12:13:39.682Z",
+    "symlinkPaths": []
+  }
+}

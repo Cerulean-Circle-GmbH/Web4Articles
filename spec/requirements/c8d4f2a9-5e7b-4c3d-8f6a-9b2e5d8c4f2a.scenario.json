@@ -1,0 +1,47 @@
+{
+  "ior": {
+    "uuid": "c8d4f2a9-5e7b-4c3d-8f6a-9b2e5d8c4f2a",
+    "component": "Web4Requirement", 
+    "version": "0.1.2.2"
+  },
+  "owner": {
+    "user": "system",
+    "timestamp": "2025-09-03T19:40:00.000Z"
+  },
+  "model": {
+    "uuid": "c8d4f2a9-5e7b-4c3d-8f6a-9b2e5d8c4f2a",
+    "name": "Recovery Branch Creation - MinimalONCE Already Major Violation",
+    "description": "TRON identified that even MinimalONCE was a major Web4 violation. Created dev/destroyed-once branch to attempt recovery without further breaking dev/once. Need to find pre-MinimalONCE working state.",
+    "type": "recovery-branch",
+    "priority": "critical",
+    "category": "dory-recovery",
+    "status": "approved",
+    "rationale": "MinimalONCE was already a major violation, not the solution. Need isolated branch to attempt recovery without destroying more work on dev/once.",
+    "acceptance_criteria": [
+      "Create dev/destroyed-once branch for recovery attempts",
+      "Find pre-MinimalONCE working state",
+      "Identify what was actually working before violations",
+      "Do not further break dev/once branch",
+      "Attempt recovery in isolation"
+    ],
+    "violation_timeline_correction": {
+      "previous_assumption": "MinimalONCE was working solution",
+      "reality": "MinimalONCE was already major Web4 violation",
+      "need": "Find pre-MinimalONCE working state",
+      "candidates": [
+        "b3cad6de - ONCE seamless execution success (but mentions StandaloneONCE)",
+        "017401bb - Fix critical build issues with seamless execution",
+        "Earlier commits before any Standalone/Minimal violations"
+      ]
+    },
+    "technical_details": {
+      "branch_created": "dev/destroyed-once",
+      "isolation_purpose": "Prevent further damage to dev/once",
+      "recovery_target": "Pre-MinimalONCE working implementation",
+      "violation_recognition": "MinimalONCE = major Web4 violation"
+    },
+    "implementation_notes": "Recovery must be attempted in isolation. MinimalONCE was not the solution but part of the problem.",
+    "created_at": "2025-09-03T19:40:00.000Z",
+    "updated_at": "2025-09-03T19:40:00.000Z"
+  }
+}

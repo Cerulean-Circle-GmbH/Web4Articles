@@ -1,0 +1,38 @@
+{
+  "ior": {
+    "uuid": "8f2a4d1c-5e7b-4a9f-8c3d-1f5e9b2a7c4e",
+    "component": "Web4Requirement", 
+    "version": "0.1.2.2"
+  },
+  "owner": {
+    "user": "system",
+    "timestamp": "2025-09-03T17:40:00.000Z"
+  },
+  "model": {
+    "uuid": "8f2a4d1c-5e7b-4a9f-8c3d-1f5e9b2a7c4e",
+    "name": "Web4 Component Service Integration Simplification",
+    "description": "ServiceCapable interface violates 'one interface per file' principle and is over-engineered. When ONCE kernel loads component dynamically into 42777 server, component is already service-capable via instantiation. No additional endpoints/ports required.",
+    "type": "interface-simplification",
+    "priority": "high",
+    "category": "web4-compliance",
+    "status": "approved",
+    "rationale": "Current ServiceCapable.interface.ts contains multiple interfaces (ServiceRegistration + ServiceCapable) violating Web4 principle. Over-engineered with unnecessary endpoint management when ONCE 42777 server provides service capability through dynamic loading.",
+    "acceptance_criteria": [
+      "ServiceCapable.interface.ts contains only ServiceCapable interface",
+      "ServiceRegistration moved to separate file if needed",
+      "Simplified service capability via ONCE kernel loading only",
+      "No additional port/endpoint management required",
+      "Component service availability via 42777 server instantiation"
+    ],
+    "technical_details": {
+      "violation_type": "multiple_interfaces_per_file",
+      "current_file": "components/IOR/0.3.0.0/src/ts/layer3/ServiceCapable.interface.ts",
+      "interfaces_found": ["ServiceRegistration", "ServiceCapable"],
+      "web4_principle": "one_interface_per_file",
+      "simplification_target": "service_capability_via_kernel_loading"
+    },
+    "implementation_notes": "When ONCE kernel loads component into 42777 server, component becomes service-capable automatically. Additional service registration complexity unnecessary.",
+    "created_at": "2025-09-03T17:40:00.000Z",
+    "updated_at": "2025-09-03T17:40:00.000Z"
+  }
+}

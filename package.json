@@ -9,6 +9,8 @@
   },
   "scripts": {
     "test": "vitest run",
+    "scenario:validate": "node --loader ts-node/esm ./src/ts/scenarios/ScenarioValidatorCLI.ts",
+    "scenario:validate:verbose": "node --loader ts-node/esm ./src/ts/scenarios/ScenarioValidatorCLI.ts --verbose",
     "tsranger": "node --loader ts-node/esm ./src/ts/layer4/TSRanger.ts",
     "build:n14": "tsc -p v3.n14.4/tsconfig.n14.json",
     "build:njs14": "tsc -p v3.njs14/tsconfig.njs14.json"

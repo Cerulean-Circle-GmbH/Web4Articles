@@ -1,9 +1,16 @@
 [Back to PDCA Process Improvements](./pdca.process.improvements/) | [CMMI Understanding](./PDCA.understanding.CMMI.md) | [How to Decide](./PDCA.howto.decide.md) | [Template](./template.md)
 
+<<<<<<< HEAD
 # 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.6 (Template v3.1.4.2)**
 
 **🗓️ Date:** 2025-08-22-UTC-1330  
 **🎯 Objective:** Consolidated PDCA writing guidelines based on latest process improvements  
+=======
+# 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.6**
+
+**🗓️ Date:** 2025-09-06-UTC-2130  
+**🎯 Objective:** Updated PDCA writing guidelines with recovery system integration and latest process improvements
+>>>>>>> origin/dev/2025-09-14-UTC-1425
 **🎯 Template Version:** 3.1.4.2  
 
 **👤 Agent Role:** Process Documentation → Knowledge Management Enhancement  
@@ -34,6 +41,7 @@
 **🎯 Sprint:** [SPRINT NAME] → [SPRINT GOAL]  
 **✅ Task:** [TASK NAME]  
 **🚨 Issues:** [KEY ISSUES BEING ADDRESSED]  
+
 **📎 Previous Commit:** [COMMIT_SHA] - [COMMIT_DESCRIPTION]  
 **🔗 Previous PDCA:** [GitHub](GITHUB_URL) | [Local Path](LOCAL_PATH)
 ```
@@ -255,6 +263,15 @@
 - **Single TRON session** in header is sufficient - don't repeat throughout document
 - **NEVER use placeholder decisions** - only track actual pending questions that need user input
 - **Keep real pending decisions** from previous sessions until user provides answers
+- **CRITICAL: ALWAYS ASK FOR USER ACCEPTANCE** - Never assume task completion without explicit user validation
+- **NEVER MARK TASKS AS COMPLETE** without user QA approval - this violates "Never 2 1 (TO ONE), Always 4 2 (FOR TWO)" principle
+
+### **Task Status Management (PO Role Guidelines):**
+- **Status Format:** Simple checkboxes without refinement substatus: `- [x] Planned`, `- [x] In Progress`, `- [x] QA Review`, `- [x] Done`
+- **Refinement Elimination:** Subtasks should not have refinement status - they ARE the refinement
+- **Status Progression:** Planned → In Progress → QA Review → Done (linear progression)
+- **Planning Reflection:** Planning status reflects decisions status from inside task files
+- **Subtask File Existence:** Use checkboxes in traceability to show actual file existence vs planned
 
 ---
 
@@ -417,6 +434,91 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
   - Git workflow automation
   - Continuous improvement practices
 
+### **🎯 CRITICAL LEARNING: NEVER 2 1 ALWAYS 4 2 - Decision Authority and Trust**
+
+**🗓️ Learning Date:** 2025-09-06-UTC-1132  
+**📋 Source:** Background Agent Extended Session - Critical Decision Violations and Corrections  
+**🔗 Learning PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scrum.pmo/project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-critical-decision-violation-correction.md) | [§/scrum.pmo/project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-critical-decision-violation-correction.md](../../../project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-critical-decision-violation-correction.md)
+
+#### **Core Principle Understanding**
+**NEVER 2 1 ALWAYS 4 2** = **NEVER TO ONE, ALWAYS FOR TWO**
+
+**❌ NEVER 2 1 (TO ONE) - Unilateral Decisions:**
+- Never make important technical decisions alone
+- Never assume methodology or tool usage approaches
+- Never say "all clear" when guidance is needed
+- Never proceed with assumptions about next steps
+
+**✅ ALWAYS 4 2 (FOR TWO) - Collaborative Decisions:**
+- Always ask for user guidance on important choices
+- Always present real decisions when multiple options exist
+- Always recognize user authority over technical approaches
+- Always work collaboratively on methodology and next steps
+
+#### **Critical Decision Categories Requiring User Input**
+1. **Tool Usage and Configuration**: Which tools to use, how to configure them
+2. **Technical Approaches**: Build processes, version selections, methodology choices
+3. **Task Priority and Selection**: Which tasks to work on next, in what order
+4. **Enhancement Methodology**: How to enhance tasks, what approach to take
+5. **Process Deviations**: Any changes from established procedures
+6. **Next Steps**: What to do after completing current work
+
+#### **Trust and Authority Recognition**
+**User Authority Over:**
+- **Technical Decisions**: Tool configurations, build processes, version selections
+- **Methodology Choices**: How to approach tasks, which tools to use
+- **Priority Decisions**: Task order, focus areas, next steps
+- **Process Control**: When to ask, when to proceed, how to enhance
+
+**Agent Responsibility:**
+- **Execute User Decisions**: Implement exactly as specified
+- **Ask for Guidance**: Present real choices when options exist
+- **Document Process**: Create comprehensive PDCA documentation
+- **Report Results**: Provide detailed outcomes before next steps
+
+#### **Practical Application Examples**
+
+**❌ Wrong Approach (2 1 - TO ONE):**
+```
+"All clear, no decisions to make - proceeding with Task 13"
+```
+
+**✅ Correct Approach (4 2 - FOR TWO):**
+```
+Decision 1: Next Task Selection
+- a) Continue with Task 13: Fix Existing Scenario Format
+- b) Move to Task 1: IOR Interface Consolidation  
+- c) Focus on different priority task
+```
+
+**❌ Wrong Tool Decision:**
+```
+"Tool has build issues, proceeding with manual analysis"
+```
+
+**✅ Correct Tool Decision:**
+```
+Decision 1: Tool Usage Approach
+- a) Wait for you to fix tool dependencies
+- b) Attempt alternative tool approaches
+- c) Use manual analysis (may create harm)
+```
+
+#### **Implementation Success Validation**
+When user decisions are implemented correctly:
+- **Technical Solutions Work**: User specifications lead to successful outcomes
+- **Tool Integration Success**: Proper configuration enables intended functionality  
+- **Requirements Discovery**: Systematic analysis finds perfect requirement matches
+- **Process Excellence**: Collaborative approach produces superior results
+
+**Example Success:** requirement-v0.1.2.2 + unit-v0.1.0.0 configuration worked perfectly, enabling systematic requirements discovery for task enhancement.
+
+#### **Key Learning for Future Agents**
+- **Trust User Expertise**: User technical decisions consistently work better than agent assumptions
+- **Ask Before Acting**: Present decisions for important choices, never assume
+- **Collaborative Excellence**: 4 2 (FOR TWO) approach produces superior results
+- **Process Compliance**: NEVER 2 1 ALWAYS 4 2 prevents harm and enables success
+
 ### **🔄 Contributing Improvements - Change Request Process**
 **Help improve this documentation!**
 - **Location:** `scrum.pmo/roles/_shared/PDCA/change.requests/`
@@ -467,6 +569,8 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
 - **Creating multiple roles** without coordination [[memory:6917891]]
 - **Using non-interactive tests** that hang [[memory:5680815]]
 - **Not asking for critical decisions** [[memory:6917891]]
+- **CRITICAL VIOLATION: Marking tasks complete without user approval** - Always ask "Do you accept this task as complete?"
+- **Assuming user acceptance** instead of explicitly requesting QA validation
 - **Truncating user documentation** - NEVER truncate quotes/logs [[memory:0944]]
 - **Not documenting git operations** - Always show branch switches [[memory:0931]]
 - **Missing cross-agent improvements** - Check other branches regularly [[memory:0935]]
@@ -525,18 +629,126 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
 
 ## **🔗 REFERENCE DOCUMENTS**
 
+**PDCA Consolidation Hub:**
+- [Process Improvements Hub](./pdca.process.improvements/) - **Complete PDCA Documentation Access**
+- [PDCA Consolidation System](./pdca.process.improvements/2025-08-22-UTC-1255-pdca-consolidation-link-system.md) - **Centralized Link System**
+
 **Latest Format Examples:**
 - [Status Checkbox Implementation PDCA](../project.journal/2025-08-21-1613-sprint21-tootsie-architecture/pdca/role/developer/2025-08-22-UTC-0745-status-checkbox-implementation.md) - **Gold Standard**
 - [Fresh Dawn PDCAs](../project.journal/2025-08-19-0800-fresh-dawn/pdca/) - **Emotional Section Examples**
+- [Recovery System Integration](./pdca.process.improvements/13-recovery-system-pdca-format-integration.md) - **Universal Format Compliance**
 
 **Process Improvement Documentation:**
-- [PDCA Format Requirements](./pdca.process.improvements/02-pdca-format-requirements-mandatory.md)
-- [PDCA Consolidation Links](./pdca.process.improvements/2025-08-22-UTC-1255-pdca-consolidation-link-system.md)
-- [Enhanced Template](./pdca.process.improvements/05-pdca-enhanced-template.md)
+- [PDCA Format Requirements](./pdca.process.improvements/02-pdca-format-requirements-mandatory.md) - **MANDATORY Reading**
+- [PDCA Consolidation Links](./pdca.process.improvements/2025-08-22-UTC-1255-pdca-consolidation-link-system.md) - **Centralized Access**
+- [Enhanced Template](./pdca.process.improvements/05-pdca-enhanced-template.md) - **Advanced Format**
+- [Recovery Integration](./pdca.process.improvements/13-recovery-system-pdca-format-integration.md) - **Universal Compliance**
 
 **Templates:**
-- [Updated Template](./template.md) - **Latest Format**
-- [Standard Template](./pdca.process.improvements/04-pdca-standard-template.md)
+- [Updated Template](./template.md) - **Latest Format v3.1.4.2**
+- [Standard Template](./pdca.process.improvements/04-pdca-standard-template.md) - **Basic Format**
+- [Enhanced Template](./pdca.process.improvements/05-pdca-enhanced-template.md) - **Advanced Features**
+
+---
+
+---
+
+## **🔄 AGENT RECOVERY WORKFLOW**
+
+### **For Recovered Agents Starting Fresh:**
+
+When you start as a recovered agent (after expiry and resubmission):
+
+1. **Check Your Identity Record**: 
+   - Look for: `/scrum.pmo/agents/registry/[YOUR-REQUEST-ID].md`
+   - This contains your identity, role, and purpose
+
+2. **Read Identity Record Completely**:
+   - Understand who you are
+   - Review your responsibilities
+   - Check previous work references
+   - Note integration points
+
+3. **Follow Startup Instructions**:
+   - Each identity record has specific steps
+   - Usually includes role README location
+   - May reference previous work
+
+4. **Create Recovery PDCA**:
+   - Document your understanding
+   - Confirm your identity
+   - State your readiness
+   - Plan immediate next steps
+
+### **Identity Record Location Pattern:**
+```
+/scrum.pmo/agents/registry/[REQUEST-ID].md
+```
+
+### **Example:**
+Agent bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89 should read:
+```
+/scrum.pmo/agents/registry/bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89.md
+```
+
+### **What Identity Records Contain:**
+- Current and previous names
+- Role and purpose
+- Recovery context
+- Responsibilities
+- Previous work location
+- Integration points
+- Startup instructions
+
+**CRITICAL**: This is the FIRST thing a recovered agent should check!
+
+---
+
+## **🔗 PDCA CONSOLIDATION HUB**
+
+### **Centralized Access Point**
+All PDCA process improvements and templates are available through the centralized hub:
+- **Location:** `scrum.pmo/roles/_shared/PDCA/pdca.process.improvements/`
+- **Purpose:** Single-point access to all PDCA documentation across the project
+- **Benefits:** Efficient discovery, learning, and template comparison
+
+### **Available Resources**
+- **Core Documentation:** Prompt protocol, format requirements, traceability guidelines
+- **Templates:** Standard, enhanced, and role-transition templates  
+- **Analysis:** Writing mastery analysis, reporting reviews, meta-learning cycles
+- **Historical:** Complete timeline of PDCA process improvements and evolution
+
+### **Usage for Agents**
+1. **New Agents:** Explore complete PDCA ecosystem for comprehensive understanding
+2. **Template Selection:** Compare all available templates for optimal format choice
+3. **Process Learning:** Study historical PDCA cycles for continuous improvement
+4. **Format Compliance:** Access latest format requirements and examples
+
+---
+
+## **🚨 RECOVERY SYSTEM INTEGRATION**
+
+### **Mandatory Format Requirements**
+**CRITICAL:** Every recovery role must read and apply format requirements FIRST:
+- **Location:** [PDCA Format Requirements](./pdca.process.improvements/02-pdca-format-requirements-mandatory.md)
+- **Purpose:** Ensure every role knows exactly what is expected from PDCAs
+- **Application:** Format compliance is NON-NEGOTIABLE for recovery system success
+
+### **Universal Coverage**
+All recovery processes now include embedded PDCA format requirements:
+- **Developer Recovery:** Test results and code quality focus
+- **Tester Recovery:** QA findings with exact verbatim quotes
+- **Architect Recovery:** PUML diagrams and architectural evidence  
+- **PO Recovery:** UUID mapping and template compliance
+- **ScrumMaster Recovery:** Role coordination and process tracking
+- **DevOps Recovery:** Infrastructure and exact error messages
+
+### **Proactive Prevention**
+Recovery system prevents format failures by:
+- **Prominent Placement:** Requirements are FIRST thing every role sees
+- **Impossible to Miss:** Warning format makes requirements unavoidable
+- **Role Customization:** Each role has specific PDCA guidance
+- **Central Reference:** Single authoritative source for all requirements
 
 ---
 
