@@ -26,24 +26,9 @@
 - **Project Status:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/start-background-process-32f2/scrum.pmo/project.journal/2025-09-18-UTC-1316-session/project.status.md) | [§/scrum.pmo/project.journal/2025-09-18-UTC-1316-session/project.status.md](../../project.status.md)
 
 ### **QA Decisions**
-- [ ] **Decision 1: Primary Work Focus Area**
-  - a) Technical Development Focus - component enhancement, bug fixes, feature development, testing framework improvements
-  - b) Architecture Focus - system design, process improvements, integration work, framework optimization
-  - c) Documentation Focus - requirement processing, automation, workflow optimization, PDCA process enhancement
-  - d) Quality/Testing Focus - testing strategies, validation, compliance checks, Vitest migration completion
-
-- [ ] **Decision 2: Role Selection for Session**
-  - a) Developer for implementation tasks, component development, and technical feature work
-  - b) Switch to Architect for system design and process improvements, framework architecture
-  - c) Switch to Tester for quality assurance, testing framework migration, and validation work
-  - d) Switch to DevOps for deployment, environment management, and CI/CD optimization
-  - e) Switch to PO for requirement analysis, user story management, and project planning
-
-- [ ] **Decision 3: Session Duration and Sprint Planning**
-  - a) Full day session with multiple sprint cycles and comprehensive component development
-  - b) Half-day focused session on specific component or testing framework improvements
-  - c) Quick analysis session for current project state review and technical debt assessment
-  - d) Extended multi-day session for major feature development and architecture enhancement
+- [x] **Decision 1: Primary Work Focus Area** → Selected: 1c) Documentation Focus - requirement processing, automation, workflow optimization, PDCA process enhancement
+- [x] **Decision 2: Role Selection for Session** → Selected: Switch to save/restart role (specialized agent role for process management)
+- [x] **Decision 3: Session Duration and Sprint Planning** → Selected: 3d) Extended multi-day session for major feature development and architecture enhancement
 
 ### **TRON Feedback (2025-09-18-UTC-1316)**
 ```quote
