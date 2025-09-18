@@ -431,7 +431,7 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
 
 **🗓️ Learning Date:** 2025-09-06-UTC-1132  
 **📋 Source:** Background Agent Extended Session - Critical Decision Violations and Corrections  
-**🔗 Learning PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scrum.pmo/project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-critical-decision-violation-correction.md) | [§/scrum.pmo/project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-critical-decision-violation-correction.md](../../../project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-critical-decision-violation-correction.md)
+**🔗 Learning PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-critical-decision-violation-correction.md) | [§/scrum.pmo/project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-critical-decision-violation-correction.md](../../../project.journal/2025-09-06-UTC-1132-session/pdca/role/po/2025-09-06-UTC-1132-critical-decision-violation-correction.md)
 
 #### **Core Principle Understanding**
 **NEVER 2 1 ALWAYS 4 2** = **NEVER TO ONE, ALWAYS FOR TWO**
