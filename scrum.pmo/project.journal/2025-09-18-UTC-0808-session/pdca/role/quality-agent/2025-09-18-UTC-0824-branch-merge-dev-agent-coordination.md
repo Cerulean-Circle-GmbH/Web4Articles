@@ -14,7 +14,7 @@
 **🚨 Issues:** Need development agent coordination while preserving quality work and session location  
 
 **📎 Previous Commit:** c6554fe1 - PDCA: Quality Agent Session - TaskStateMachine IOR Fix Success and CMM3 Foundation  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-17-UTC-1319/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/PDCA-decision-numbering-fix-cmm3-quality-focus-2025-09-18-UTC-0808.md) | [§/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/PDCA-decision-numbering-fix-cmm3-quality-focus-2025-09-18-UTC-0808.md](./PDCA-decision-numbering-fix-cmm3-quality-focus-2025-09-18-UTC-0808.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-17-UTC-1319/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/pdca/role/quality-agent/2025-09-18-UTC-0817-decision-numbering-fix-cmm3-quality.md) | [§/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/pdca/role/quality-agent/2025-09-18-UTC-0817-decision-numbering-fix-cmm3-quality.md](./2025-09-18-UTC-0817-decision-numbering-fix-cmm3-quality.md)
 
 ---
 

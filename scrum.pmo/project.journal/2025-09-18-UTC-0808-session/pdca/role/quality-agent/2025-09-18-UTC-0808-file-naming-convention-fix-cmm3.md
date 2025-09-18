@@ -14,7 +14,7 @@
 **🚨 Issues:** PDCA file naming convention totally wrong, need CMM3 understanding, decision format incorrect  
 
 **📎 Previous Commit:** 24b6e3bd - PDCA: CMM3 Compliance Reporting Fix - Process Violation Correction  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-17-UTC-1319/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/PDCA-cmm3-compliance-reporting-fix-2025-09-18-UTC-0808.md) | [§/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/PDCA-cmm3-compliance-reporting-fix-2025-09-18-UTC-0808.md](./PDCA-cmm3-compliance-reporting-fix-2025-09-18-UTC-0808.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-17-UTC-1319/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/pdca/role/quality-agent/2025-09-18-UTC-0826-cmm3-compliance-reporting-fix.md) | [§/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/pdca/role/quality-agent/2025-09-18-UTC-0826-cmm3-compliance-reporting-fix.md](./2025-09-18-UTC-0826-cmm3-compliance-reporting-fix.md)
 
 ---
 

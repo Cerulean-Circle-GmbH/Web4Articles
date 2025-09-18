@@ -14,7 +14,7 @@
 **🚨 Issues:** Completely non-compliant reporting - no PDCA, no dual links, bad decisions, long chat response  
 
 **📎 Previous Commit:** 9c25d9d2 - PDCA: Branch Merge and Development Agent Coordination - Quality Continuity  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-17-UTC-1319/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/PDCA-branch-merge-dev-agent-coordination-2025-09-18-UTC-0808.md) | [§/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/PDCA-branch-merge-dev-agent-coordination-2025-09-18-UTC-0808.md](./PDCA-branch-merge-dev-agent-coordination-2025-09-18-UTC-0808.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-17-UTC-1319/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/pdca/role/quality-agent/2025-09-18-UTC-0824-branch-merge-dev-agent-coordination.md) | [§/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/pdca/role/quality-agent/2025-09-18-UTC-0824-branch-merge-dev-agent-coordination.md](./2025-09-18-UTC-0824-branch-merge-dev-agent-coordination.md)
 
 ---
 

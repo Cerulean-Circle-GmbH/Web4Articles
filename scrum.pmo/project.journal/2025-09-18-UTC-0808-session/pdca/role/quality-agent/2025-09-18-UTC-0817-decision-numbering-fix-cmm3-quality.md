@@ -14,7 +14,7 @@
 **🚨 Issues:** Ridiculous decision numbering from merge conflict in PDCA guide, need CMM3 compliance validation  
 
 **📎 Previous Commit:** f6d9e64f - PDCA: Session Startup - Background Agent Initialization with Startup Decision Framework  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-18-UTC-0808/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/PDCA-session-startup-background-agent-initialization-2025-09-18-UTC-0808.md) | [§/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/PDCA-session-startup-background-agent-initialization-2025-09-18-UTC-0808.md](./PDCA-session-startup-background-agent-initialization-2025-09-18-UTC-0808.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-17-UTC-1319/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/pdca/role/quality-agent/2025-09-18-UTC-0809-session-startup-background-agent.md) | [§/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/pdca/role/quality-agent/2025-09-18-UTC-0809-session-startup-background-agent.md](./2025-09-18-UTC-0809-session-startup-background-agent.md)
 
 ---
 
