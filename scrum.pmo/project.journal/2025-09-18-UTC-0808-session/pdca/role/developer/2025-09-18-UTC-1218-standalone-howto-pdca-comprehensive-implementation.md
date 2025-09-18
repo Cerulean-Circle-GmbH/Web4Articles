@@ -22,7 +22,7 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/pdca/role/developer/2025-09-18-UTC-1218-standalone-howto-pdca-comprehensive-implementation.md) | [§/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/pdca/role/developer/2025-09-18-UTC-1218-standalone-howto-pdca-comprehensive-implementation.md](./2025-09-18-UTC-1218-standalone-howto-pdca-comprehensive-implementation.md)
-- **New Standalone Guide (To Be Created):** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/roles/_shared/PDCA/howto.PDCA.newagent.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.newagent.md](../../../roles/_shared/PDCA/howto.PDCA.newagent.md)
+- **New Standalone Guide (Primary):** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../../roles/_shared/PDCA/howto.PDCA.md)
 - **Original Comprehensive Guide:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../../roles/_shared/PDCA/howto.PDCA.md)
 - **Session Summary Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/2025-09-18-UTC-1134-comprehensive-session-summary.md) | [§/scrum.pmo/project.journal/2025-09-18-UTC-0808-session/2025-09-18-UTC-1134-comprehensive-session-summary.md](../2025-09-18-UTC-1134-comprehensive-session-summary.md)
 
@@ -55,7 +55,7 @@ Perfect! I'll create a completely new standalone howto PDCA document with compre
 **Requirements Traceability:** Self-sufficient new agent guide with comprehensive essential knowledge and validated dual link integrity
 
 **Implementation Strategy:**
-- **Standalone Document Creation**: Build complete howto.PDCA.newagent.md with all essential knowledge embedded
+- **Standalone Document Creation**: Build complete howto.PDCA.md with all essential knowledge embedded
 - **Comprehensive Coverage**: Include all 5 core areas plus session learnings in immediately usable format
 - **Dual Link Verification**: Systematically check and cherry-pick any missing referenced files
 - **Testing Framework**: Create both structured test scenario and live agent validation process
@@ -68,7 +68,7 @@ Perfect! I'll create a completely new standalone howto PDCA document with compre
 ### **1. User Decision Implementation**
 
 **Decision 1a: Standalone Document Creation**
-- Create new `howto.PDCA.newagent.md` as standalone replacement
+- Create new `howto.PDCA.md` as standalone replacement
 - Abandon all references to `howto.PDCA.essential.md`
 - Make document completely self-contained for immediate new agent use
 - Include working dual links to comprehensive guides for optional depth
@@ -146,7 +146,7 @@ Perfect! I'll create a completely new standalone howto PDCA document with compre
 
 **Standalone Document Created:**
 ```bash
-File: scrum.pmo/roles/_shared/PDCA/howto.PDCA.newagent.md
+File: scrum.pmo/roles/_shared/PDCA/howto.PDCA.md
 Length: Self-sufficient for immediate competency
 Coverage: All 5 core areas + session learnings + CMM3 compliance
 References: Working dual links to deeper documentation
@@ -170,7 +170,7 @@ Status: Self-contained with optional depth via links
 
 **User Decision Implementation (COMPLETE)**
 ```
-Decision 1a: ✅ Created standalone howto.PDCA.newagent.md replacing essential references
+Decision 1a: ✅ Created standalone howto.PDCA.md replacing essential references
 Decision 2c: ✅ Comprehensive coverage with all session learnings plus 5 core areas
 Decision 3a: ✅ All first 2 levels documentation verified present on dev/unit0305
 Decision 4c: ✅ Test scenario framework created and live testing preparation ready

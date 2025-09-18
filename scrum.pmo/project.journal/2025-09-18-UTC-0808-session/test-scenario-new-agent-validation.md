@@ -13,7 +13,7 @@
 **Test Instructions for New Agent:**
 1. **Git Safety**: Execute `git config pull.rebase false`
 2. **Environment**: Execute `source source.env`  
-3. **Read Guide**: Read `scrum.pmo/roles/_shared/PDCA/howto.PDCA.newagent.md`
+3. **Read Guide**: Read `scrum.pmo/roles/_shared/PDCA/howto.PDCA.md`
 4. **Create Session**: `mkdir -p scrum.pmo/project.journal/$(date -u +"%Y-%m-%d-UTC-%H%M")-session/pdca/role/[role]/`
 
 **Success Criteria:**

@@ -59,7 +59,7 @@ A DAPP for collective intelligence in article writing.
    ```
 
 2. **Read the PDCA Guide**:
-   - Read: `scrum.pmo/roles/_shared/PDCA/howto.PDCA.newagent.md`
+   - Read: `scrum.pmo/roles/_shared/PDCA/howto.PDCA.md`
    - Focus on: 6 mandatory sections, dual links, startup framework, CMM3 compliance
    - Self-sufficient: Complete knowledge for immediate competency (~200 lines)
 
