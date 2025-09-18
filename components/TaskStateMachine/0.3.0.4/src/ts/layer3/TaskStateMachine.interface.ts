@@ -20,10 +20,10 @@ export interface TaskModel {
   title: string;
   status: TaskStatus;
   steps: TaskStep[];
-  planningReference: IOR;  // IOR to planning.md file
-  requirementReferences: IOR[];  // IOR array to requirement files
-  parentTaskReference?: IOR;  // IOR to parent task (for subtasks)
-  subtaskReferences: IOR[];  // IOR array to subtask files
+  planningReference: string;  // File path to planning.md file (IOR removed - Occam's Razor)
+  requirementReferences: string[];  // File paths to requirement files (IOR removed)
+  parentTaskReference?: string;  // File path to parent task (for subtasks)
+  subtaskReferences: string[];  // File paths to subtask files
 }
 
 export interface TaskStateMachine {
@@ -36,10 +36,10 @@ export interface TaskStateMachine {
   setTitle(title: string): void;
   setStatus(status: TaskStatus): void;
   addStep(step: TaskStep): void;
-  setPlanningReference(planningIOR: IOR): void;
-  addRequirementReference(requirementIOR: IOR): void;
-  setParentTaskReference(parentIOR: IOR): void;
-  addSubtaskReference(subtaskIOR: IOR): void;
+  setPlanningReference(planningPath: string): void;
+  addRequirementReference(requirementPath: string): void;
+  setParentTaskReference(parentPath: string): void;
+  addSubtaskReference(subtaskPath: string): void;
   
   // Task state management methods
   startProgress(): boolean;
@@ -51,7 +51,7 @@ export interface TaskStateMachine {
   toScenario(): TaskScenario;
   fromScenario(scenario: TaskScenario): void;
   
-  // File operations with IOR integration
+  // File operations with direct file paths (IOR removed - Occam's Razor)
   parseTaskFile(taskScenario: TaskScenario): void;
   updateTaskFile(taskScenario: TaskScenario): void;
   syncWithPlanning(planningFilePath: string): void;

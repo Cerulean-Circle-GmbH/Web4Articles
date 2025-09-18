@@ -7,6 +7,8 @@
  */
 
 import { DefaultTaskStateMachine } from '../layer2/DefaultTaskStateMachine.js';
+import { TaskScenario } from '../layer3/TaskScenario.interface.js';
+import { TaskStatus } from '../layer3/TaskStateMachine.interface.js';
 import { readFileSync, writeFileSync } from 'fs';
 
 class TaskStateMachineCLI {
@@ -55,8 +57,7 @@ class TaskStateMachineCLI {
   static async updateTaskStatus(taskFilePath: string, newStatus: string): Promise<void> {
     const taskMachine = new DefaultTaskStateMachine();
     
-    // TODO: Convert file path to IOR
-    // IOR removed - Occam's Razor simplification
+    // Direct file path approach (IOR removed - Occam's Razor)
     const taskScenario: TaskScenario = {
       filePath: taskFilePath,
       owner: 'system',
