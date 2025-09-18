@@ -23,7 +23,7 @@
     "update-status": "npm run ensure-built && npm run cli -- --update-status"
 =======
   "scripts": {
-    "clean": "rm -rf dist/ *.tsbuildinfo node_modules/.cache",
+    "clean": "rm -rf dist/ && find src/ts -name '*.js' -delete && find src/ts -name '*.js.map' -delete && rm -f *.tsbuildinfo && rm -rf node_modules/.cache",
     "prebuild": "npm run clean",
     "build": "tsc",
     "start": "node -r ts-node/register src/ts/layer5/RequirementCLI.ts",
