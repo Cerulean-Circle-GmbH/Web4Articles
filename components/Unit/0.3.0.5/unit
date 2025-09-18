@@ -4,7 +4,12 @@
 # Web4 pattern: Component shell wrapper with stale prevention
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+# Use WEB4_PROJECT_ROOT if available, otherwise calculate from script location
+if [ -n "$WEB4_PROJECT_ROOT" ]; then
+    PROJECT_ROOT="$WEB4_PROJECT_ROOT"
+else
+    PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+fi
 COMPONENT_VERSION="0.3.0.5"
 COMPONENT_PATH="$PROJECT_ROOT/components/Unit/$COMPONENT_VERSION"
 CLI_PATH="$COMPONENT_PATH/dist/ts/layer5/UnitCLI.js"
