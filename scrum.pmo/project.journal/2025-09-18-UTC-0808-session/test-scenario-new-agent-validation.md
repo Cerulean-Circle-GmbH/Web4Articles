@@ -25,15 +25,15 @@
 ### **Phase 2: PDCA Creation Validation (Target: 5 minutes)**
 
 **Test Instructions:**
-1. **Create PDCA**: Using template version 3.1.4.2 format exactly
-2. **Include All Fields**: 10 header fields with Agent→Description format
-3. **Add Artifact Links**: At least PDCA document link in Summary section
+1. **Copy Official Template**: Copy scrum.pmo/roles/_shared/PDCA/template.md exactly as starting point
+2. **Fill Variables**: Replace all {{VARIABLES}} with your specific content
+3. **Maintain Structure**: Keep all sections and format exactly as in template
 4. **Present Real Decision**: Use startup decision framework or genuine choice
 
 **Success Criteria:**
-- [ ] Template version 3.1.4.2 format followed exactly
-- [ ] All 6 mandatory sections present with horizontal separators
-- [ ] Dual links properly formatted
+- [ ] Official template.md copied exactly as starting point
+- [ ] All {{VARIABLES}} replaced with agent-specific content
+- [ ] Template version 3.1.4.2 structure maintained
 - [ ] Real decisions presented (not fake "all clear")
 
 ### **Phase 3: Communication Validation (Target: 2 minutes)**

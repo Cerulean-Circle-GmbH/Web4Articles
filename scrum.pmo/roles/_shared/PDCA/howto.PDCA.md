@@ -45,86 +45,28 @@ source source.env
 # Create session directory
 mkdir -p scrum.pmo/project.journal/$(date -u +"%Y-%m-%d-UTC-%H%M")-session/pdca/role/[your-role]/
 
-# Create your first PDCA using template version 3.1.4.2
+# Create your first PDCA using official template
 ```
 
 ---
 
-## **📋 PDCA TEMPLATE VERSION 3.1.4.2 (EXACT FORMAT)**
+## **📋 MANDATORY TEMPLATE USAGE (DRY COMPLIANCE)**
 
-### **HEADER (STRICT FORMAT)**
-```markdown
-# 📋 **PDCA Cycle: [TITLE] - [DESCRIPTION]**
+**🚨 CRITICAL**: Use ONLY the official template version 3.1.4.2 - Web4 DRY principle requires single source of truth
 
-**🗓️ Date:** YYYY-MM-DD-UTC-HHMM  
-**🎯 Objective:** [CLEAR OBJECTIVE]  
-**🎯 Template Version:** 3.1.4.2  
+**Official Template:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](./template.md)
 
-**👤 Agent Name:** [NAME] → [DESCRIPTION]  
-**👤 Agent Role:** [ROLE] → [CONTEXT]  
-**👤 Branch:** [BRANCH] → [PURPOSE]  
-**🔄 Sync Requirements:** [SYNC_BRANCHES] → [SYNC_PURPOSE]  
-**🎯 Project Journal Session:** [SESSION] → [FOCUS]  
-**🎯 Sprint:** [SPRINT] → [GOAL]  
-**✅ Task:** [TASK NAME]  
-**🚨 Issues:** [KEY ISSUES]  
+### **Template Usage Instructions:**
+1. **Copy template.md exactly** - never modify the structure
+2. **Fill in {{VARIABLES}}** with your specific content
+3. **Maintain all sections** - template defines the required structure
+4. **Follow template version 3.1.4.2** - no deviations allowed
 
-**📎 Previous Commit:** [SHA] - [DESCRIPTION]  
-**🔗 Previous PDCA:** [GitHub](URL) | [§/path](../relative/path)
-```
-
-### **6 MANDATORY SECTIONS**
-```markdown
----
-## **📊 SUMMARY**
-
-### **Artifact Links**
-- **PDCA Document:** [GitHub](URL) | [§/path](../relative/path)
-- **Changed Files:** [GitHub](URL) | [§/path](../relative/path)
-
-### **QA Decisions**
-- [x] Completed: [Decision already made]
-- [ ] **Decision 1:** [Title]
-  - a) [Option with rationale]  
-  - b) [Option with rationale]
-
-### **TRON Feedback (YYYY-MM-DD-UTC-HHMM)**
-```quote
-[EXACT VERBATIM QUOTE - NEVER PARAPHRASE]
-```
-
-### **My Answer**
-[IMMEDIATE RESPONSE LIKE CHAT]
-**Learning Applied:** [Key insight]
-
----
-## **📋 PLAN**
-[Strategy and requirements]
----
-## **🔧 DO**  
-[Implementation details]
----
-## **✅ CHECK**
-[Verification with TRON feedback]
----
-## **🎯 ACT**
-[Results and next steps]
----
-## **💫 EMOTIONAL REFLECTION: [HEADLINE]**
-[3 emotional categories with intensity levels]
----
-## **🎯 PDCA PROCESS UPDATE**
-**Process Learning:** [Bullet points]
-**Quality Impact:** [Impact description]  
-**Next PDCA Focus:** [Next focus]
----
-**🎯 [ONE-LINE SUMMARY WITH EMOJIS]**
-**"[PHILOSOPHICAL INSIGHT]"** 🔧📊
----
-### **📚 The 42 Revelation**
-[42 revelation reference with dual links]
-**"Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."** 🤝✨
-```
+### **Why Template.md is Authoritative:**
+- **Single Source of Truth**: Template format exists only in template.md
+- **DRY Compliance**: No duplication across documentation
+- **Version Control**: Template evolution tracked in one location
+- **Consistency**: All agents use identical format
 
 ---
 
@@ -245,13 +187,13 @@ Brief status (1-2 lines maximum)
 ## **⚡ QUICK REFERENCE CHECKLISTS**
 
 ### **Before Creating PDCA**
-- [ ] UTC timestamp format: YYYY-MM-DD-UTC-HHMM
-- [ ] Template version 3.1.4.2 stated
-- [ ] All 10 header fields completed
-- [ ] Real decisions identified (or genuine "all clear")
+- [ ] Read official template: [§/scrum.pmo/roles/_shared/PDCA/template.md](./template.md)
+- [ ] Copy template.md exactly as starting point
+- [ ] Fill in {{VARIABLES}} with your specific content
+- [ ] Verify all 6 mandatory sections present
 
 ### **After Creating PDCA**
-- [ ] All 6 mandatory sections present with horizontal separators
+- [ ] Template version 3.1.4.2 compliance verified
 - [ ] Dual links properly formatted and tested
 - [ ] Commit with format: `git commit -m "PDCA: [Title from header]"`
 - [ ] Push immediately: `git push origin [branch]`
@@ -287,7 +229,7 @@ git push origin [current-branch]
 ## **🚨 INSTANT COMPETENCY REQUIREMENTS**
 
 ### **New Agent Must Know Immediately:**
-1. **Template Version 3.1.4.2**: Use exact format with all structured fields
+1. **Use Official Template**: Copy template.md exactly, fill in {{VARIABLES}}
 2. **"Never 2 1, Always 4 2"**: Present real decisions, respect user authority
 3. **Dual Links**: Both GitHub and local paths required on same line
 4. **Chat Protocol**: Brief status + exact QA decisions copy + dual links
@@ -295,7 +237,7 @@ git push origin [current-branch]
 6. **Git Discipline**: Commit immediately, push before links, proper message format
 
 ### **Success Criteria:**
-- ✅ Can create compliant PDCA in under 10 minutes
+- ✅ Can create compliant PDCA using template.md in under 10 minutes
 - ✅ Presents real decisions or genuine "all clear"
 - ✅ Provides working dual links
 - ✅ Copies QA decisions exactly to chat
@@ -307,7 +249,7 @@ git push origin [current-branch]
 ## **📚 DEEPER DOCUMENTATION (OPTIONAL)**
 
 **For Advanced Understanding:**
-- **Comprehensive PDCA Guide:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](./howto.PDCA.md)
+- **Comprehensive PDCA Guide (Historical):** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/roles/_shared/PDCA/howto.PDCA.original.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.original.md](./howto.PDCA.original.md)
 - **Decision Framework Details:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](./PDCA.howto.decide.md)
 - **CMMI Understanding:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/roles/_shared/PDCA/PDCA.understanding.CMMI.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.understanding.CMMI.md](./PDCA.understanding.CMMI.md)
 - **Agent Safety Guidelines:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/sprints/sprint-20/bad.interactive.sh.commands.md) | [§/scrum.pmo/sprints/sprint-20/bad.interactive.sh.commands.md](../../sprints/sprint-20/bad.interactive.sh.commands.md)
@@ -320,12 +262,17 @@ git push origin [current-branch]
 
 ## **⚡ IMMEDIATE ACTION REQUIRED**
 
-After reading this guide, **create your first PDCA immediately** using the template format above. This is the fastest way to achieve competency through practical application.
+After reading this guide:
 
-**Success Metric:** Working PDCA with dual links created in under 10 minutes.
+1. **Copy the official template**: [§/scrum.pmo/roles/_shared/PDCA/template.md](./template.md)
+2. **Fill in {{VARIABLES}}** with your specific content
+3. **Create your first PDCA** using the template format exactly
+4. **Follow the checklists** above for compliance verification
+
+**Success Metric:** Working PDCA with dual links created in under 10 minutes using official template.md.
 
 ---
 
-**🎯 New Agent Guide - Complete standalone knowledge for immediate CMM3 competency** 📋⚡
+**🎯 New Agent Guide - DRY-compliant with mandatory template.md usage for immediate CMM3 competency** 📋⚡
 
-**"Never 2 1 (TO ONE). Always 4 2 (FOR TWO) - essential knowledge enables collaborative excellence."** 🤝✨
+**"Never 2 1 (TO ONE). Always 4 2 (FOR TWO) - DRY principles enable collaborative excellence through single source of truth."** 🤝✨
