@@ -7,7 +7,7 @@
   "types": "dist/ts/layer2/DefaultCLI.d.ts",
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf dist/",
+    "clean": "rm -rf dist/ && find src/ts -name '*.js' -delete && find src/ts -name '*.js.map' -delete && find src/ts -name '*.d.ts' -delete && find src/ts -name '*.d.ts.map' -delete && rm -f *.tsbuildinfo",
     "start": "node dist/ts/layer5/DefaultCLI.js"
   },
   "keywords": [

@@ -10,7 +10,7 @@
     "test": "vitest",
     "test:watch": "vitest --watch",
     "dev": "tsc --watch",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf dist && find src/ts -name '*.js' -delete && find src/ts -name '*.js.map' -delete && find src/ts -name '*.d.ts' -delete && find src/ts -name '*.d.ts.map' -delete && rm -f *.tsbuildinfo",
     "prebuild": "npm run clean"
   },
   "keywords": [
