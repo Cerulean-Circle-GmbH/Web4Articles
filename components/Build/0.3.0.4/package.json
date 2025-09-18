@@ -7,7 +7,7 @@
   "types": "dist/ts/layer2/DefaultBuild.d.ts",
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf dist/"
+    "clean": "rm -rf dist/ && find src/ts -name '*.js' -delete && find src/ts -name '*.js.map' -delete && rm -f *.tsbuildinfo"
   },
   "keywords": [
     "web4",

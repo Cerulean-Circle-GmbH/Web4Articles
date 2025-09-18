@@ -20,7 +20,7 @@ export class DefaultTaskStateMachine implements TaskStateMachine {
       title: '',
       status: 'planned',
       steps: [],
-      planningReference: { uuid: '', component: '', version: '' },
+      planningReference: '',  // File path (IOR removed - Occam's Razor)
       requirementReferences: [],
       subtaskReferences: []
     };
@@ -44,20 +44,20 @@ export class DefaultTaskStateMachine implements TaskStateMachine {
     this.model.steps.push(step);
   }
 
-  setPlanningReference(planningIOR: IOR): void {
-    this.model.planningReference = planningIOR;
+  setPlanningReference(planningPath: string): void {
+    this.model.planningReference = planningPath;
   }
 
-  addRequirementReference(requirementIOR: IOR): void {
-    this.model.requirementReferences.push(requirementIOR);
+  addRequirementReference(requirementPath: string): void {
+    this.model.requirementReferences.push(requirementPath);
   }
 
-  setParentTaskReference(parentIOR: IOR): void {
-    this.model.parentTaskReference = parentIOR;
+  setParentTaskReference(parentPath: string): void {
+    this.model.parentTaskReference = parentPath;
   }
 
-  addSubtaskReference(subtaskIOR: IOR): void {
-    this.model.subtaskReferences.push(subtaskIOR);
+  addSubtaskReference(subtaskPath: string): void {
+    this.model.subtaskReferences.push(subtaskPath);
   }
 
   // Task state management methods
@@ -109,9 +109,9 @@ export class DefaultTaskStateMachine implements TaskStateMachine {
     this.model = scenario.model;
   }
 
-  // File operations with IOR integration
+  // File operations with direct file paths (IOR removed - Occam's Razor)
   parseTaskFile(taskScenario: TaskScenario): void {
-    // Direct file path approach (IOR removed for Occam's Razor)
+    // Direct file path approach (IOR removed - Occam's Razor)
     const filePath = taskScenario.filePath;
     
     try {
@@ -123,7 +123,7 @@ export class DefaultTaskStateMachine implements TaskStateMachine {
   }
 
   updateTaskFile(taskScenario: TaskScenario): void {
-    // Direct file path approach (IOR removed for Occam's Razor)
+    // Direct file path approach (IOR removed - Occam's Razor)
     const filePath = taskScenario.filePath;
     
     try {
