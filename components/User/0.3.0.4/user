@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# User 0.3.0.4 CLI Script
+# Web4 pattern: Simple shell wrapper for TypeScript CLI
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CLI_PATH="$SCRIPT_DIR/dist/ts/layer5/UserCLI.js"
+
+# Check if CLI is built
+if [ ! -f "$CLI_PATH" ]; then
+    echo "❌ User CLI not built. Run 'npm run build' first."
+    exit 1
+fi
+
+# Execute CLI with all arguments
+node "$CLI_PATH" "$@"

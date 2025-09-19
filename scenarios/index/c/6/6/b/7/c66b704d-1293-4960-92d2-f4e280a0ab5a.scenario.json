@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "c66b704d-1293-4960-92d2-f4e280a0ab5a",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI4VDE1OjU0OjQ5LjAxNFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "c66b704d-1293-4960-92d2-f4e280a0ab5a",
+    "name": "Test Requirement",
+    "title": "Test Requirement",
+    "description": "This is a test requirement created by the enhanced CLI system"
+  },
+  "unitIndex": {
+    "uuid": "c66b704d-1293-4960-92d2-f4e280a0ab5a",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/c/6/6/b/7/c66b704d-1293-4960-92d2-f4e280a0ab5a.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/c66b704d-1293-4960-92d2-f4e280a0ab5a.scenario.json"
+    ],
+    "createdAt": "2025-08-28T15:54:49.033Z",
+    "updatedAt": "2025-08-28T15:54:49.033Z"
+  }
+}

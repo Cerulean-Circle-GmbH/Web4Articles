@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Web4 Build Component Shell Starter v0.3.0.1
+# Web4-Compliant: Eliminates StandaloneBuild DORY violation
+# Uses proper layer architecture
+
+set -euo pipefail
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+COMPONENT_DIR="$SCRIPT_DIR"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+echo "🏗️ Web4 Build Component v0.3.0.1"
+echo "📂 Component: $COMPONENT_DIR"
+
+main() {
+    echo "🔍 Checking environment..."
+    
+    command -v node >/dev/null 2>&1 || {
+        echo -e "${RED}❌ Node.js required but not installed${NC}"
+        exit 1
+    }
+    
+    command -v npm >/dev/null 2>&1 || {
+        echo -e "${RED}❌ NPM required but not installed${NC}"
+        exit 1
+    }
+    
+    echo "🏗️ Building component (Web4-compliant bootstrap)..."
+    
+    # Build Web4-compliant Build component
+    if [ ! -f "$COMPONENT_DIR/dist/ts/layer5/BuildCLI.js" ]; then
+        echo "🔧 Bootstrapping Web4-compliant Build..."
+        cd "$COMPONENT_DIR"
+        npm install >/dev/null 2>&1
+        npx tsc >/dev/null 2>&1
+    fi
+    
+    echo "🚀 Delegating to Web4-Compliant Build CLI..."
+    
+    # Use Web4-compliant BuildCLI (proper layer5 architecture)
+    if [ -f "$COMPONENT_DIR/dist/ts/layer5/BuildCLI.js" ]; then
+        node "$COMPONENT_DIR/dist/ts/layer5/BuildCLI.js" "$@"
+    else
+        echo -e "${RED}❌ Web4-compliant Build CLI not found${NC}"
+        exit 1
+    fi
+}
+
+main "$@"

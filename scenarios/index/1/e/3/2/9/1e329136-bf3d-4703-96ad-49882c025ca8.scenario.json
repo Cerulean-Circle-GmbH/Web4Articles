@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "1e329136-bf3d-4703-96ad-49882c025ca8",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI5VDE4OjA5OjM1LjA4NVoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "1e329136-bf3d-4703-96ad-49882c025ca8",
+    "name": "Web4CLI Usage Sections Standardization",
+    "title": "Web4CLI Usage Sections Standardization",
+    "description": "All Web4Articles CLI tools must implement identical usage section structure: Usage, Commands, Parameters, Examples. This ensures consistent user experience and documentation patterns across the entire Web4 ecosystem. Each CLI must follow the exact same sectional layout as requirement-v0.1.2.2 for professional consistency and predictable user interaction patterns."
+  },
+  "unitIndex": {
+    "uuid": "1e329136-bf3d-4703-96ad-49882c025ca8",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/1/e/3/2/9/1e329136-bf3d-4703-96ad-49882c025ca8.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/1e329136-bf3d-4703-96ad-49882c025ca8.scenario.json"
+    ],
+    "createdAt": "2025-08-29T18:09:35.108Z",
+    "updatedAt": "2025-08-29T18:09:35.108Z"
+  }
+}

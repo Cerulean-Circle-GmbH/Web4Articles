@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Web4 Build Component v0.3.0.3 - Dependency-free build system
+# Self-bootstrapping shell script
+
+COMPONENT_VERSION="0.3.0.3"
+COMPONENT_DIR="/workspace/components/Build/$COMPONENT_VERSION"
+
+echo "🏗️ Web4 Build Component v$COMPONENT_VERSION"
+echo "📂 Component: $COMPONENT_DIR"
+
+# Check environment
+echo "🔍 Checking environment..."
+if ! command -v node &> /dev/null; then
+    echo "❌ Node.js not found. Please install Node.js"
+    exit 1
+fi
+
+if ! command -v npm &> /dev/null; then
+    echo "❌ npm not found. Please install npm"
+    exit 1
+fi
+
+# Build self if needed
+if [ ! -d "$COMPONENT_DIR/dist" ]; then
+    echo "🏗️ Building Build component (self-bootstrap)..."
+    cd "$COMPONENT_DIR"
+    npm install --silent
+    npx tsc
+    echo "✅ Build component ready"
+fi
+
+# Delegate to CLI
+echo "🚀 Delegating to Build CLI..."
+cd "$COMPONENT_DIR"
+node dist/ts/layer5/BuildCLI.js "$@"

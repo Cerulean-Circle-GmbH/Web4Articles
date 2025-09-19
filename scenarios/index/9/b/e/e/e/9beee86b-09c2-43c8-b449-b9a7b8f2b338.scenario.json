@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "9beee86b-09c2-43c8-b449-b9a7b8f2b338",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTMwVDEwOjQ5OjI1LjI3MFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "9beee86b-09c2-43c8-b449-b9a7b8f2b338",
+    "name": "ONCE Server Hierarchy Client-Server Model",
+    "title": "ONCE Server Hierarchy Client-Server Model",
+    "description": "When default ONCE server starts without parameters, it uses port 42777. If address is in use, it starts a ONCE ns client in process, registers with the default ONCE server, and starts on next available port 8080+ (counting up on each address in use error). Each server becomes a client to the default ONCE server. This creates a hierarchical server model where the first instance on port 42777 acts as the name server for subsequent instances."
+  },
+  "unitIndex": {
+    "uuid": "9beee86b-09c2-43c8-b449-b9a7b8f2b338",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/9/b/e/e/e/9beee86b-09c2-43c8-b449-b9a7b8f2b338.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/9beee86b-09c2-43c8-b449-b9a7b8f2b338.scenario.json"
+    ],
+    "createdAt": "2025-08-30T10:49:25.281Z",
+    "updatedAt": "2025-08-30T10:49:25.281Z"
+  }
+}

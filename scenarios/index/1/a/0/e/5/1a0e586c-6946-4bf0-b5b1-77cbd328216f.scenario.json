@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "1a0e586c-6946-4bf0-b5b1-77cbd328216f",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"1a0e586c-6946-4bf0-b5b1-77cbd328216f\",\"timestamp\":\"2025-09-12T18:15:28.116Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "1a0e586c-6946-4bf0-b5b1-77cbd328216f",
+    "createdAt": "2025-09-12T18:15:28.115Z",
+    "updatedAt": "2025-09-12T18:15:28.117Z",
+    "name": "VersionFolder",
+    "definition": "M3 metaclass for version-specific directory management with semantic versioning and component lifecycle inheritance from Folder",
+    "indexPath": "/workspace/scenarios/index/1/a/0/e/5/1a0e586c-6946-4bf0-b5b1-77cbd328216f.scenario.json",
+    "symlinkPaths": [
+      "/workspace/unit-1a0e586c"
+    ]
+  }
+}

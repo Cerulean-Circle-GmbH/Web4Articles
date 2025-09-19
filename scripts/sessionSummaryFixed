@@ -1,0 +1,102 @@
+#!/bin/bash
+# sessionSummary - Fixed version with correct original commit times
+# Purpose: Extract TRON quotes with accurate original dev/req0305 commit times
+
+# Get project root
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+SESSION_PATH="$1"
+OUTPUT_FILE="$2"
+BRANCH="${3:-dev/req0305}"
+
+if [ -z "$SESSION_PATH" ]; then
+    echo "Usage: sessionSummary <sessionPath> [outputFile] [branch]"
+    echo "Example: sessionSummary scrum.pmo/project.journal/2025-09-11-UTC-0007-session"
+    exit 1
+fi
+
+echo "🚀 sessionSummary Tool Starting..."
+echo "🔍 Analyzing session: $SESSION_PATH"
+
+# Create mapping of known commit times from dev/req0305
+declare -A COMMIT_TIMES
+COMMIT_TIMES["713ea5c2"]="2025-09-13-UTC-1322"
+COMMIT_TIMES["c036679e"]="2025-09-13-UTC-1307"
+COMMIT_TIMES["54425437"]="2025-09-13-UTC-1245"
+COMMIT_TIMES["ab34b83d"]="2025-09-13-UTC-1236"
+COMMIT_TIMES["64ab89b3"]="2025-09-13-UTC-1215"
+COMMIT_TIMES["79f3613b"]="2025-09-13-UTC-1200"
+COMMIT_TIMES["3c8ad277"]="2025-09-13-UTC-1141"
+COMMIT_TIMES["748fb825"]="2025-09-13-UTC-1129"
+COMMIT_TIMES["f6857c9f"]="2025-09-13-UTC-0828"
+COMMIT_TIMES["469cba80"]="2025-09-12-UTC-2045"
+COMMIT_TIMES["61b82753"]="2025-09-12-UTC-2029"
+COMMIT_TIMES["109de77a"]="2025-09-12-UTC-2005"
+COMMIT_TIMES["039112d4"]="2025-09-12-UTC-1854"
+COMMIT_TIMES["dec7d167"]="2025-09-12-UTC-1828"
+COMMIT_TIMES["9eaca7c7"]="2025-09-12-UTC-1816"
+COMMIT_TIMES["2e065580"]="2025-09-12-UTC-1508"
+
+# Find all PDCA files
+PDCA_FILES=$(find "$SESSION_PATH" -name "*.md" | sort)
+FILE_COUNT=$(echo "$PDCA_FILES" | wc -l)
+
+echo "📋 Found $FILE_COUNT PDCA files"
+
+# Generate table header
+TABLE="## **📊 Complete Session Analysis Table (Chronological Order with Git SHAs and Correct UTC Times)**
+
+**Note:** Table shows chronological progression with exact TRON quotes and original dev/req0305 commit times. Total PDCAs analyzed: $FILE_COUNT
+
+| **Git SHA** | **UTC Time** | **PDCA Source/Evidence** | **Exact TRON Quotes** | **Key Learning/Achievement** |
+|-------------|--------------|--------------------------|------------------------|-----------------------------|"
+
+# Process each file in chronological order
+for sha in "2e065580" "9eaca7c7" "dec7d167" "039112d4" "109de77a" "61b82753" "469cba80" "f6857c9f" "748fb825" "3c8ad277" "79f3613b" "64ab89b3" "ab34b83d" "54425437" "c036679e" "713ea5c2"; do
+    # Find matching PDCA file for this commit
+    MATCHING_FILE=$(find "$SESSION_PATH" -name "*.md" -exec grep -l "$sha" {} \; 2>/dev/null | head -1)
+    
+    if [ -z "$MATCHING_FILE" ]; then
+        # Try to find by approximate time matching
+        UTC_TIME="${COMMIT_TIMES[$sha]}"
+        TIME_PATTERN=$(echo "$UTC_TIME" | sed 's/-UTC-/-.*-/')
+        MATCHING_FILE=$(find "$SESSION_PATH" -name "*$TIME_PATTERN*" 2>/dev/null | head -1)
+    fi
+    
+    if [ -n "$MATCHING_FILE" ]; then
+        echo "✅ Processing SHA $sha: $(basename "$MATCHING_FILE")"
+        
+        UTC_TIME="${COMMIT_TIMES[$sha]}"
+        
+        # Get relative path
+        REL_PATH=$(realpath --relative-to="$PROJECT_ROOT" "$MATCHING_FILE" 2>/dev/null || echo "$MATCHING_FILE")
+        
+        # Extract TRON quotes
+        QUOTES=$(grep -A 20 "### \*\*TRON Feedback" "$MATCHING_FILE" | sed -n '/```quote/,/```/p' | grep -v '```' | tr '\n' '\\n' || echo "No quotes")
+        
+        # Extract achievement from title
+        ACHIEVEMENT=$(grep "# 📋" "$MATCHING_FILE" | sed 's/# 📋 \*\*PDCA Cycle: //' | sed 's/ - .*\*\*//' || echo "Unknown")
+        
+        # Generate dual link
+        FILENAME=$(basename "$MATCHING_FILE")
+        GITHUB_URL="https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/$REL_PATH"
+        DUAL_LINK="[GitHub]($GITHUB_URL) \\| [$FILENAME](N/A)"
+        
+        # Add to table
+        TABLE="$TABLE
+| **$sha** | **$UTC_TIME** | $DUAL_LINK | \`$QUOTES\` | **$ACHIEVEMENT** |"
+    fi
+done
+
+echo ""
+echo "📊 Generated Table with Correct Times:"
+echo "$TABLE"
+
+if [ -n "$OUTPUT_FILE" ]; then
+    echo "$TABLE" > "$OUTPUT_FILE"
+    echo ""
+    echo "💾 Table written to: $OUTPUT_FILE"
+fi
+
+echo ""
+echo "✅ sessionSummary Complete with Correct UTC Times"

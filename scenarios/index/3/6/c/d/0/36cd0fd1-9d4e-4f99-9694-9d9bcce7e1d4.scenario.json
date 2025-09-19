@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "36cd0fd1-9d4e-4f99-9694-9d9bcce7e1d4",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTMwVDEwOjQ5OjQwLjI0MVoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "36cd0fd1-9d4e-4f99-9694-9d9bcce7e1d4",
+    "name": "ONCE CLI Scenario File Support",
+    "title": "ONCE CLI Scenario File Support",
+    "description": "Enhance CLI to support 'once start <scenariofile>' parameter allowing server to load configuration from scenario file. When started without scenario file, follows default port procedure. When started with scenario file, loads server state and configuration from the specified scenario. This enables deterministic server configurations for testing and deployment."
+  },
+  "unitIndex": {
+    "uuid": "36cd0fd1-9d4e-4f99-9694-9d9bcce7e1d4",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/3/6/c/d/0/36cd0fd1-9d4e-4f99-9694-9d9bcce7e1d4.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/36cd0fd1-9d4e-4f99-9694-9d9bcce7e1d4.scenario.json"
+    ],
+    "createdAt": "2025-08-30T10:49:40.253Z",
+    "updatedAt": "2025-08-30T10:49:40.253Z"
+  }
+}

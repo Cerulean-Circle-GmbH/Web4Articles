@@ -1,0 +1,36 @@
+{
+  "ior": {
+    "uuid": "474b18d0-592c-420d-92cc-42c61e2ebc31",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"474b18d0-592c-420d-92cc-42c61e2ebc31\",\"timestamp\":\"2025-09-06T20:08:58.901Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "474b18d0-592c-420d-92cc-42c61e2ebc31",
+    "name": "",
+    "origin": "",
+    "definition": "",
+    "indexPath": "/workspace/scenarios/index/4/7/4/b/1/474b18d0-592c-420d-92cc-42c61e2ebc31.scenario.json",
+    "symlinkPaths": [
+      "/workspace/temp/terminal-identity-test.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../scenarios/index/4/7/4/b/1/474b18d0-592c-420d-92cc-42c61e2ebc31.scenario.json",
+        "filename": "terminal-identity-test.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process",
+      "terminal-identity-test"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-06T20:08:58.898Z",
+    "updatedAt": "2025-09-06T20:08:58.904Z"
+  }
+}

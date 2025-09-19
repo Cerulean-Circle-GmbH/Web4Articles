@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "be59689e-392c-4dc0-b4ef-35fc51762ff4",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"be59689e-392c-4dc0-b4ef-35fc51762ff4\",\"timestamp\":\"2025-09-12T20:34:21.758Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "be59689e-392c-4dc0-b4ef-35fc51762ff4",
+    "createdAt": "2025-09-12T20:34:21.758Z",
+    "updatedAt": "2025-09-12T20:34:21.760Z",
+    "name": "Web4 Dependency Chain Architecture",
+    "definition": "Fundamental Web4 component dependency chain architecture with Build component integration and circular dependency prevention",
+    "indexPath": "/workspace/scenarios/index/b/e/5/9/6/be59689e-392c-4dc0-b4ef-35fc51762ff4.scenario.json",
+    "symlinkPaths": [
+      "/workspace/unit-be59689e"
+    ]
+  }
+}

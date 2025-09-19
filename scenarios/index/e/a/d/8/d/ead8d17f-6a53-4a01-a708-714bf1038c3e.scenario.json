@@ -1,0 +1,38 @@
+{
+  "ior": {
+    "uuid": "ead8d17f-6a53-4a01-a708-714bf1038c3e",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"donges\",\"hostname\":\"localhost\",\"uuid\":\"ead8d17f-6a53-4a01-a708-714bf1038c3e\",\"timestamp\":\"2025-09-17T13:21:32.500Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "ead8d17f-6a53-4a01-a708-714bf1038c3e",
+    "name": "",
+    "origin": "",
+    "definition": "",
+    "typeM3": "CLASS",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/e/a/d/8/d/ead8d17f-6a53-4a01-a708-714bf1038c3e.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/components/Unit/0.3.0.5/test-temp/test-temp/test-temp/test-temp/test-temp/format-test.unit"
+    ],
+    "namedLinks": [],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-17T13:21:32.500Z",
+    "updatedAt": "2025-09-17T13:21:32.502Z",
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/Users/Shared/Workspaces/2cuGitHub/Web4Articles/components/Unit/0.3.0.5/test-temp/test-temp/test-temp/test-temp/test-temp/format-test.unit",
+        "linkTarget": "ior:unit:ead8d17f-6a53-4a01-a708-714bf1038c3e",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}

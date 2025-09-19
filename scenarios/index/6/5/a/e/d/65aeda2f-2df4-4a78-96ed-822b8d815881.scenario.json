@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "65aeda2f-2df4-4a78-96ed-822b8d815881",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"65aeda2f-2df4-4a78-96ed-822b8d815881\",\"timestamp\":\"2025-09-12T08:47:21.291Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "65aeda2f-2df4-4a78-96ed-822b8d815881",
+    "createdAt": "2025-09-12T08:47:21.291Z",
+    "updatedAt": "2025-09-12T08:47:21.294Z",
+    "typeM3": "CLASS",
+    "name": "TSCompletion",
+    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Web4Requirement/0.3.0.5/src/ts/layer4/TSCompletion.ts",
+    "definition": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Web4Requirement/0.3.0.5/src/ts/layer4/TSCompletion.ts",
+    "indexPath": "/workspace/scenarios/index/6/5/a/e/d/65aeda2f-2df4-4a78-96ed-822b8d815881.scenario.json",
+    "symlinkPaths": []
+  }
+}

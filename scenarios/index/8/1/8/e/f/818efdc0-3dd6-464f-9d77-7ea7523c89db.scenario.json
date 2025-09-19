@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "818efdc0-3dd6-464f-9d77-7ea7523c89db",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTMwVDEwOjUxOjIzLjczOFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "818efdc0-3dd6-464f-9d77-7ea7523c89db",
+    "name": "ONCE v0.2.0.0 API Stability",
+    "title": "ONCE v0.2.0.0 API Stability",
+    "description": "Create new ONCE version 0.2.0.0 that implements the new kernel architecture while maintaining CLI, API, and demo stability. Existing 'once demo' and other CLI commands must continue to work with same interface while using the new kernel architecture internally."
+  },
+  "unitIndex": {
+    "uuid": "818efdc0-3dd6-464f-9d77-7ea7523c89db",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/8/1/8/e/f/818efdc0-3dd6-464f-9d77-7ea7523c89db.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/818efdc0-3dd6-464f-9d77-7ea7523c89db.scenario.json"
+    ],
+    "createdAt": "2025-08-30T10:51:23.749Z",
+    "updatedAt": "2025-08-30T10:51:23.749Z"
+  }
+}

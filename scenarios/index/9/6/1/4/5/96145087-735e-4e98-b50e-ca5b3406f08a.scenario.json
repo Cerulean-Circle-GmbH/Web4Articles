@@ -1,0 +1,22 @@
+{
+  "ior": {
+    "uuid": "96145087-735e-4e98-b50e-ca5b3406f08a",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"96145087-735e-4e98-b50e-ca5b3406f08a\",\"timestamp\":\"2025-09-10T14:33:38.615Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "96145087-735e-4e98-b50e-ca5b3406f08a",
+    "name": "test-mof-unit",
+    "origin": "",
+    "definition": "Test MOF classification",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/9/6/1/4/5/96145087-735e-4e98-b50e-ca5b3406f08a.scenario.json",
+    "references": [],
+    "createdAt": "2025-09-10T14:33:38.613Z",
+    "updatedAt": "2025-09-10T14:33:38.617Z",
+    "symlinkPaths": [
+      "/workspace/temp/unit-96145087"
+    ]
+  }
+}

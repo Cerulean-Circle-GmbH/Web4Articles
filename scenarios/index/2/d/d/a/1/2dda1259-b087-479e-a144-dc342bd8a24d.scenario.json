@@ -1,0 +1,22 @@
+{
+  "ior": {
+    "uuid": "2dda1259-b087-479e-a144-dc342bd8a24d",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"2dda1259-b087-479e-a144-dc342bd8a24d\",\"timestamp\":\"2025-09-10T20:00:54.131Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "2dda1259-b087-479e-a144-dc342bd8a24d",
+    "name": "test-mof-reference-guide",
+    "origin": "",
+    "definition": "Test MOF for reference guide application",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/2/d/d/a/1/2dda1259-b087-479e-a144-dc342bd8a24d.scenario.json",
+    "references": [],
+    "createdAt": "2025-09-10T20:00:54.129Z",
+    "updatedAt": "2025-09-10T20:00:54.133Z",
+    "symlinkPaths": [
+      "/workspace/temp/unit-2dda1259"
+    ]
+  }
+}

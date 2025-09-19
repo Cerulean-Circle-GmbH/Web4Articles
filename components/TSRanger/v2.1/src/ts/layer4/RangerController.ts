@@ -410,7 +410,13 @@ export class RangerController {
         // Update model state
         this.model.selectedColumn = 1; // Move to Methods column  
         this.model.suppressMethodFilter = true;
-        this.model.deriveFiltersFromPrompt();
+        
+        // CRITICAL FIX: Don't call deriveFiltersFromPrompt here as it corrupts filter state
+        // Instead, manually set the method filter and update the model
+        this.model.filters[1] = firstMethod;
+        this.model.updateMethods();
+        this.model.updateParams();
+        
         this.view.render(this.model);
         return;
       }
@@ -444,7 +450,13 @@ export class RangerController {
         // Update model state
         this.model.selectedColumn = 0; // Move back to Classes column
         this.model.suppressMethodFilter = false;
-        this.model.deriveFiltersFromPrompt();
+        
+        // CRITICAL FIX: Don't call deriveFiltersFromPrompt here as it corrupts filter state
+        // Instead, manually clear the method filter and update the model
+        this.model.filters[1] = '';
+        this.model.updateMethods();
+        this.model.updateParams();
+        
         this.view.render(this.model);
         return;
       }

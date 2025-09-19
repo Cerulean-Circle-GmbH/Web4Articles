@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Web4 HttpServer CLI Tool - v0.3.0.0
+
+find_project_root() {
+    local git_root=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [ -n "$git_root" ] && [ -d "$git_root" ]; then
+        if [ -f "$git_root/package.json" ] || [ -f "$git_root/README.md" ]; then
+            echo "$git_root"
+            return 0
+        fi
+    fi
+    return 1
+}
+
+PROJECT_ROOT=$(find_project_root)
+if [ -z "$PROJECT_ROOT" ]; then
+    echo "❌ Error: Not in a Web4Articles project directory"
+    exit 1
+fi
+
+CURRENT_DIR="$(pwd)"
+COMPONENT_DIR="$PROJECT_ROOT/components/HttpServer/0.3.0.0"
+CLI_PATH="$COMPONENT_DIR/dist/ts/layer5/HttpServerCLI.js"
+
+if [ ! -f "$CLI_PATH" ]; then
+    echo "🔨 Building HttpServer CLI v0.3.0.0..."
+    cd "$COMPONENT_DIR"
+    [ ! -d "node_modules" ] && npm install
+    npm run build || exit 1
+fi
+
+command -v node >/dev/null 2>&1 || {
+    echo "❌ Error: Node.js is required but not installed"
+    exit 1
+}
+
+cd "$CURRENT_DIR"
+node "$CLI_PATH" "$@"

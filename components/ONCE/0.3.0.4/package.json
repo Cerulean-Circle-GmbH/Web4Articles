@@ -1,0 +1,15 @@
+{
+  "name": "@web4/once",
+  "version": "0.3.0.4",
+  "description": "Web4 ONCE - Object Network Communication Engine with Build Component Integration",
+  "type": "module",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "tsc",
+    "test": "echo 'No tests yet'"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

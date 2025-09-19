@@ -1,0 +1,37 @@
+{
+  "ior": {
+    "uuid": "54c95f17-acf0-4ce2-a90d-305b4ea45b18",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"54c95f17-acf0-4ce2-a90d-305b4ea45b18\",\"timestamp\":\"2025-09-08T13:44:15.724Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "54c95f17-acf0-4ce2-a90d-305b4ea45b18",
+    "name": "Filesystem ESM Pattern",
+    "origin": "",
+    "definition": "Converting sync fs operations to async fs/promises patterns",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/5/4/c/9/5/54c95f17-acf0-4ce2-a90d-305b4ea45b18.scenario.json",
+    "symlinkPaths": [
+      "/workspace/scenarios/ontology/Filesystem.ESM.Pattern.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../index/5/4/c/9/5/54c95f17-acf0-4ce2-a90d-305b4ea45b18.scenario.json",
+        "filename": "Filesystem.ESM.Pattern.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process",
+      "Filesystem ESM Pattern"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-08T13:44:15.722Z",
+    "updatedAt": "2025-09-08T13:44:15.728Z"
+  }
+}

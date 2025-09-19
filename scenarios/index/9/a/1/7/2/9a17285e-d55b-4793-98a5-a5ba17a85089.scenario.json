@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "9a17285e-d55b-4793-98a5-a5ba17a85089",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA5LTA4VDA4OjMyOjA3Ljc5NVoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "9a17285e-d55b-4793-98a5-a5ba17a85089",
+    "name": "CLI Options Prohibition Standard",
+    "title": "CLI Options Prohibition Standard",
+    "description": "Web4 CLI commands must NEVER use options (--flags). Unix and shells were meant to be OOP but options killed it all. Use positional parameters only for pure OOP CLI design."
+  },
+  "unitIndex": {
+    "uuid": "9a17285e-d55b-4793-98a5-a5ba17a85089",
+    "indexPath": "/workspace/scenarios/index/9/a/1/7/2/9a17285e-d55b-4793-98a5-a5ba17a85089.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/9a17285e-d55b-4793-98a5-a5ba17a85089.scenario.json"
+    ],
+    "createdAt": "2025-09-08T08:32:07.799Z",
+    "updatedAt": "2025-09-08T08:32:07.799Z"
+  }
+}

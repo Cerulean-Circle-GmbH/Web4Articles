@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "6707a628-bf3b-4dd4-a750-562f9f0c5fa4",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTMwVDEwOjQ5OjU0Ljk0N1oiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "6707a628-bf3b-4dd4-a750-562f9f0c5fa4",
+    "name": "ONCE Environment Variable Elimination",
+    "title": "ONCE Environment Variable Elimination",
+    "description": "Abandon use of environment variables that have to be present as currently used in simple vitests (HOST, PORT, PROJECT_ROOT). Replace with scenario-based configuration and default values. This improves testability, deployment consistency, and removes external dependencies."
+  },
+  "unitIndex": {
+    "uuid": "6707a628-bf3b-4dd4-a750-562f9f0c5fa4",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/6/7/0/7/a/6707a628-bf3b-4dd4-a750-562f9f0c5fa4.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/6707a628-bf3b-4dd4-a750-562f9f0c5fa4.scenario.json"
+    ],
+    "createdAt": "2025-08-30T10:49:54.974Z",
+    "updatedAt": "2025-08-30T10:49:54.974Z"
+  }
+}

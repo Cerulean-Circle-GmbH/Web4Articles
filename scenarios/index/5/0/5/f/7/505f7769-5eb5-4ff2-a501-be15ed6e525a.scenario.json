@@ -1,0 +1,22 @@
+{
+  "ior": {
+    "uuid": "505f7769-5eb5-4ff2-a501-be15ed6e525a",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"505f7769-5eb5-4ff2-a501-be15ed6e525a\",\"timestamp\":\"2025-09-10T23:15:40.489Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "505f7769-5eb5-4ff2-a501-be15ed6e525a",
+    "name": "mof-test",
+    "origin": "",
+    "definition": "Test MOF implementation",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/5/0/5/f/7/505f7769-5eb5-4ff2-a501-be15ed6e525a.scenario.json",
+    "references": [],
+    "createdAt": "2025-09-10T23:15:40.486Z",
+    "updatedAt": "2025-09-10T23:15:40.490Z",
+    "symlinkPaths": [
+      "/workspace/temp/unit-505f7769"
+    ]
+  }
+}

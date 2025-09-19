@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "b016ab1b-916e-4f70-b6fd-cf713572c691",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI1VDE0OjQ5OjU3LjExOFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "b016ab1b-916e-4f70-b6fd-cf713572c691",
+    "name": "MD View Owner Details Enhancement",
+    "title": "MD View Owner Details Enhancement",
+    "description": "Add decoded owner attribute details (user, hostname, timestamp, UUID) to the MD view template for improved requirement traceability and governance"
+  },
+  "unitIndex": {
+    "uuid": "b016ab1b-916e-4f70-b6fd-cf713572c691",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/b/0/1/6/a/b016ab1b-916e-4f70-b6fd-cf713572c691.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/components/Web4Requirement/latest/spec/requirements/b016ab1b-916e-4f70-b6fd-cf713572c691.scenario.json"
+    ],
+    "createdAt": "2025-08-25T14:49:57.127Z",
+    "updatedAt": "2025-08-25T14:49:57.127Z"
+  }
+}
