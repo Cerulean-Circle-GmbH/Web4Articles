@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "4e84f13a-edce-48a3-9f40-389b3f034d12",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA5LTA4VDEzOjUzOjQzLjA3MVoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "4e84f13a-edce-48a3-9f40-389b3f034d12",
+    "name": "Component Script Stale Prevention Standard",
+    "title": "Component Script Stale Prevention Standard",
+    "description": "All Web4 component CLI scripts must implement source freshness detection to prevent execution of stale compiled output. Scripts must check if any TypeScript source file is newer than the compiled CLI and automatically trigger rebuild when needed. This ensures users always execute the latest functionality without manual intervention."
+  },
+  "unitIndex": {
+    "uuid": "4e84f13a-edce-48a3-9f40-389b3f034d12",
+    "indexPath": "/workspace/scenarios/index/4/e/8/4/f/4e84f13a-edce-48a3-9f40-389b3f034d12.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/4e84f13a-edce-48a3-9f40-389b3f034d12.scenario.json"
+    ],
+    "createdAt": "2025-09-08T13:53:43.075Z",
+    "updatedAt": "2025-09-08T13:53:43.075Z"
+  }
+}

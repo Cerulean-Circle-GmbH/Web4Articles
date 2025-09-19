@@ -1,0 +1,37 @@
+{
+  "ior": {
+    "uuid": "4d98b405-b4ce-4da9-9f17-36b7dbb07205",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"4d98b405-b4ce-4da9-9f17-36b7dbb07205\",\"timestamp\":\"2025-09-08T11:21:31.767Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "4d98b405-b4ce-4da9-9f17-36b7dbb07205",
+    "name": "Test Single Dot",
+    "origin": "",
+    "definition": "Testing single dot conversion",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/4/d/9/8/b/4d98b405-b4ce-4da9-9f17-36b7dbb07205.scenario.json",
+    "symlinkPaths": [
+      "/workspace/temp/Test.Single.Dot.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../scenarios/index/4/d/9/8/b/4d98b405-b4ce-4da9-9f17-36b7dbb07205.scenario.json",
+        "filename": "Test.Single.Dot.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process",
+      "Test Single Dot"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-08T11:21:31.764Z",
+    "updatedAt": "2025-09-08T11:21:31.769Z"
+  }
+}

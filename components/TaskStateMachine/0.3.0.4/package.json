@@ -1,0 +1,33 @@
+{
+  "name": "@web4/taskstatemachine",
+  "version": "0.3.0.4",
+  "description": "Web4 Compliant Task State Management and Automation",
+  "type": "module",
+  "main": "dist/ts/layer5/TaskStateMachineCLI.js",
+  "bin": {
+    "taskstatemachine": "./dist/ts/layer5/TaskStateMachineCLI.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "taskstatemachine": "node --loader ts-node/esm ./src/ts/layer5/TaskStateMachineCLI.ts"
+  },
+  "dependencies": {
+    "@types/node": "^20.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0",
+    "ts-node": "^10.9.0"
+  },
+  "keywords": [
+    "web4",
+    "task-management",
+    "state-machine",
+    "automation",
+    "cmm3",
+    "sprint-management"
+  ],
+  "author": "Web4Articles",
+  "license": "MIT"
+}

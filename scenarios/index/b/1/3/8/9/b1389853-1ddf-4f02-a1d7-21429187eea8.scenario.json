@@ -1,0 +1,36 @@
+{
+  "ior": {
+    "uuid": "b1389853-1ddf-4f02-a1d7-21429187eea8",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"b1389853-1ddf-4f02-a1d7-21429187eea8\",\"timestamp\":\"2025-09-07T06:59:46.344Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "b1389853-1ddf-4f02-a1d7-21429187eea8",
+    "name": "",
+    "origin": "",
+    "definition": "",
+    "indexPath": "/workspace/scenarios/index/b/1/3/8/9/b1389853-1ddf-4f02-a1d7-21429187eea8.scenario.json",
+    "symlinkPaths": [
+      "/workspace/temp/instantiation-test.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../scenarios/index/b/1/3/8/9/b1389853-1ddf-4f02-a1d7-21429187eea8.scenario.json",
+        "filename": "instantiation-test.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process",
+      "instantiation-test"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-07T06:59:46.342Z",
+    "updatedAt": "2025-09-07T06:59:46.348Z"
+  }
+}

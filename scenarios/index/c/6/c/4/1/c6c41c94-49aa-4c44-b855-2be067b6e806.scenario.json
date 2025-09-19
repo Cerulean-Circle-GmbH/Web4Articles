@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "c6c41c94-49aa-4c44-b855-2be067b6e806",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA5LTA3VDA5OjA5OjIyLjA1M1oiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "c6c41c94-49aa-4c44-b855-2be067b6e806",
+    "name": "Static Start Method",
+    "title": "Static Start Method",
+    "description": "All CLI components MUST implement static start method for radical OOP compliance - no main functional entity point, only static start method receiving shell parameters. Pattern: ComponentCLI.start(process.argv.slice(2))"
+  },
+  "unitIndex": {
+    "uuid": "c6c41c94-49aa-4c44-b855-2be067b6e806",
+    "indexPath": "/workspace/scenarios/index/c/6/c/4/1/c6c41c94-49aa-4c44-b855-2be067b6e806.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/c6c41c94-49aa-4c44-b855-2be067b6e806.scenario.json"
+    ],
+    "createdAt": "2025-09-07T09:09:22.057Z",
+    "updatedAt": "2025-09-07T09:09:22.057Z"
+  }
+}
