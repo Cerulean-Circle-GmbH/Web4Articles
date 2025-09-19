@@ -20,7 +20,11 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1212-comprehensive-pdca-compliance-update.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1212-comprehensive-pdca-compliance-update.md](2025-08-28-UTC-1212-comprehensive-pdca-compliance-update.md)
+<<<<<<< HEAD
 [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/](.)
+=======
+- **PDCA Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/](.)
+>>>>>>> origin/dev/2025-09-14-UTC-1425
 
 ### **QA Decisions**
 - [ ] **Update Order:** Should I update chronologically or by severity of violations?
@@ -154,3 +158,7 @@ Starting with the earliest PDCAs and working forward to maintain historical cont
 
 ---
 
+<<<<<<< HEAD
+=======
+**🎯 Leading by example means fixing ALL my PDCAs to v2.5 compliance - no exceptions! 💫📋**
+>>>>>>> origin/dev/2025-09-14-UTC-1425

@@ -21,7 +21,11 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1222-readme-clarity-analysis.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1222-readme-clarity-analysis.md](2025-08-28-UTC-1222-readme-clarity-analysis.md)
+<<<<<<< HEAD
 [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/README.md) | [§/README.md](../../../../../../README.md)
+=======
+- **Main README:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/README.md) | [§/README.md](../../../../../README.md)
+>>>>>>> origin/dev/2025-09-14-UTC-1425
 
 ### **QA Decisions**
 - [x] **Root Cause:** What led to complex shell commands?
@@ -213,3 +217,7 @@ TS=$(date -u +"%Y-%m-%d-UTC-%H%M") && SESSION_DIR=scrum.pmo/project.journal/${TS
 
 **🎯 Root cause found - README needs Web4 philosophy and anti-complexity guidance! 🚫🐚**
 
+<<<<<<< HEAD
+=======
+**"Your QA 5 cents was worth $5 million in clarity"** 🎯✨
+>>>>>>> origin/dev/2025-09-14-UTC-1425
