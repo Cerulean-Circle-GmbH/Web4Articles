@@ -59,6 +59,7 @@ As defined in the role documentation:
 3. Update any outdated process documentation
 4. Maintain clean state for future recoveries
 
+<<<<<<< HEAD
 ## RequestID Reality
 Background agents CANNOT access:
 - ❌ Their own RequestID
@@ -85,6 +86,8 @@ Can we prevent expiry?
 save/start Agent → SaveRestartAgent (me)
 "Now I know my name in the system" - A profound moment of self-discovery! 🎭✨
 
+=======
+>>>>>>> origin/dev/2025-09-14-UTC-1425
 ---
 
 **Remember:** "Save/start is my home, process clarity is my mission." 🔄📋✅
