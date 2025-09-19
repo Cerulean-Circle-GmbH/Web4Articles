@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "124bb2a3-fc67-4c84-9525-f3c8d1d12d4a",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA5LTA0VDEwOjAyOjM4Ljg3MVoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "124bb2a3-fc67-4c84-9525-f3c8d1d12d4a",
+    "name": "Web4 ONCE Component Seamless Build Chain Execution",
+    "title": "Web4 ONCE Component Seamless Build Chain Execution",
+    "description": "Typing 'once' command must seamlessly execute complete build chain from scratch in empty environment, automatically resolving all dependencies, building all required components, and executing ONCE kernel without manual intervention or component-by-component building requirements"
+  },
+  "unitIndex": {
+    "uuid": "124bb2a3-fc67-4c84-9525-f3c8d1d12d4a",
+    "indexPath": "/workspace/scenarios/index/1/2/4/b/b/124bb2a3-fc67-4c84-9525-f3c8d1d12d4a.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/124bb2a3-fc67-4c84-9525-f3c8d1d12d4a.scenario.json"
+    ],
+    "createdAt": "2025-09-04T10:02:38.876Z",
+    "updatedAt": "2025-09-04T10:02:38.876Z"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "ior": {
+    "uuid": "9de30147-bd21-4235-9969-499246f7a964",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"9de30147-bd21-4235-9969-499246f7a964\",\"timestamp\":\"2025-09-11T00:06:59.810Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "9de30147-bd21-4235-9969-499246f7a964",
+    "name": "pull",
+    "origin": "",
+    "definition": "**Git Pull Protocol Enhanced** - Systematic collaborative learning operation that combines technical merge with comprehensive content analysis. \\n\\n**Core Process**: Read + Analyze + PDCA new content \\n\\n**Steps**: \\n1. **Execute git pull --no-edit** to merge remote changes safely \\n2. **Read ALL new files systematically** to understand new work \\n3. **Analyze content for process improvements** and learning opportunities \\n4. **Create PDCA documenting integration** of new insights and enhancements \\n5. **Apply learnings to current work** and systematic process enhancement \\n\\n**Critical Understanding**: Pull ≠ just technical merge - it's a **collaborative learning integration** where other agents' work enhances current process understanding and capabilities through systematic analysis and documentation.",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/9/d/e/3/0/9de30147-bd21-4235-9969-499246f7a964.scenario.json",
+    "references": [],
+    "createdAt": "2025-09-11T00:06:59.808Z",
+    "updatedAt": "2025-09-11T00:06:59.812Z",
+    "symlinkPaths": [
+      "/workspace/unit-9de30147"
+    ]
+  }
+}

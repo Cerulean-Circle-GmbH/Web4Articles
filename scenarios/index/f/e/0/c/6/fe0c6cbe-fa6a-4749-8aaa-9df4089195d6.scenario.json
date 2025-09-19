@@ -1,0 +1,37 @@
+{
+  "ior": {
+    "uuid": "fe0c6cbe-fa6a-4749-8aaa-9df4089195d6",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"fe0c6cbe-fa6a-4749-8aaa-9df4089195d6\",\"timestamp\":\"2025-09-08T13:43:45.480Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "fe0c6cbe-fa6a-4749-8aaa-9df4089195d6",
+    "name": "ESM Conversion Pattern",
+    "origin": "",
+    "definition": "Systematic approach to converting CJS require() to ESM import statements",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/f/e/0/c/6/fe0c6cbe-fa6a-4749-8aaa-9df4089195d6.scenario.json",
+    "symlinkPaths": [
+      "/workspace/scenarios/ontology/ESM.Conversion.Pattern.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../index/f/e/0/c/6/fe0c6cbe-fa6a-4749-8aaa-9df4089195d6.scenario.json",
+        "filename": "ESM.Conversion.Pattern.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process",
+      "ESM Conversion Pattern"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-08T13:43:45.478Z",
+    "updatedAt": "2025-09-08T13:43:45.484Z"
+  }
+}

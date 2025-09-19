@@ -1,0 +1,36 @@
+{
+  "ior": {
+    "uuid": "60121bd1-c1df-4b86-b46c-4640ef6e597d",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"60121bd1-c1df-4b86-b46c-4640ef6e597d\",\"timestamp\":\"2025-09-08T11:30:08.122Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "60121bd1-c1df-4b86-b46c-4640ef6e597d",
+    "name": "",
+    "origin": "",
+    "definition": "",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/6/0/1/2/1/60121bd1-c1df-4b86-b46c-4640ef6e597d.scenario.json",
+    "symlinkPaths": [
+      "/workspace/components/Unit/0.3.0.4/test-temp/test-temp/acceptance-test.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../../../../../scenarios/index/6/0/1/2/1/60121bd1-c1df-4b86-b46c-4640ef6e597d.scenario.json",
+        "filename": "acceptance-test.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-08T11:30:08.121Z",
+    "updatedAt": "2025-09-08T11:30:08.123Z"
+  }
+}
