@@ -28,24 +28,9 @@
 - **Startup Procedure:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-19-UTC-1645/recovery/start-command.md) | [§/recovery/start-command.md](../../recovery/start-command.md)
 
 ### **QA Decisions**
-- [ ] **Decision 1: Primary Work Focus Area**
-  - a) Technical Development Focus - Component enhancement, testing framework improvements, build system optimization
-  - b) Architecture Focus - System design review, process improvements, integration workflows
-  - c) Documentation Focus - Requirement processing, automation enhancement, workflow documentation
-  - d) Quality/Testing Focus - Testing strategies, validation frameworks, compliance verification
-
-- [ ] **Decision 2: Role Selection for Session**
-  - a) Background Agent for autonomous task execution and session management
-  - b) Switch to Developer for implementation tasks and component development
-  - c) Switch to Architect for system design and process improvements
-  - d) Switch to Tester for quality assurance and testing framework development
-  - e) Switch to Scrum Master for process coordination and team workflow optimization
-
-- [ ] **Decision 3: Session Duration and Sprint Planning**
-  - a) Full day session with multiple sprint cycles and comprehensive project advancement
-  - b) Half-day focused session on specific component or technical area
-  - c) Quick analysis session for current project state review and planning
-  - d) Extended multi-day session for major feature development or system overhaul
+- [x] **Decision 1: Primary Work Focus Area** → 1a) Technical Development Focus - Component enhancement, testing framework improvements, build system optimization
+- [x] **Decision 2: Role Selection for Session** → 2b) Switch to Developer for implementation tasks and component development
+- [x] **Decision 3: Session Duration and Sprint Planning** → 3d) Extended multi-day session for major feature development or system overhaul
 
 ### **TRON Feedback (2025-09-19-UTC-1645)**
 ```quote
