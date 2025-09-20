@@ -46,6 +46,73 @@
 | vitest.config.ts | present (10s timeout) | present (30s timeout, excludes dist) | (not found) |
 | tests present | yes (2 files) | yes (regression test) | none found |
 
+### **Legend**
+
+- ✅ present, ❌ missing
+- 🟩 identical, 🟨 similar, 🟪 unique, 🟥 different
+
+### **File Comparison Table**
+
+| Entry (file/dir) | Unit 0.3.0.5 | Web4Requirement 0.3.0.5 | ONCE 0.2.0.0 | Purpose | Similarity |
+|---|---|---|---|---|---|
+| package.json | ✅ | ✅ | ✅ | Package metadata, scripts, entry points | 🟨 Similar – component metadata |
+| package-lock.json | ✅ | ✅ | ❌ | Deterministic dependency lockfile | 🟥 Different – lockfile policy |
+| tsconfig.json | ✅ | ✅ | ✅ | TypeScript compiler configuration | 🟨 Similar – TS config baseline |
+| vitest.config.ts | ✅ | ✅ | ❌ | Vitest test runner configuration | 🟨 Similar (U+W) |
+| README.md | ✅ | ❌ | ❌ | Component documentation | 🟪 Unique – Unit |
+| dist/ | ✅ | ❌ | ✅ | Compiled JS and type declarations | 🟨 Similar (U+O) build |
+| src/ | ✅ | ✅ | ✅ | Source code (layers 2/3/4/5) | 🟥 Different – component domains |
+| test/ | ✅ (2) | ✅ (1) | ❌ | Automated test specs | 🟥 Different – coverage |
+| bin/ | ❌ | ❌ | ✅ | CLI executable shims (ONCE) | 🟪 Unique – ONCE |
+| scenarios/ | ❌ | ❌ | ✅ | Example/runtime scenarios (ONCE) | 🟪 Unique – ONCE |
+| spec/ | ❌ | ❌ | ✅ | Requirements/spec artifacts (ONCE) | 🟪 Unique – ONCE |
+| requirement (script) | ❌ | ✅ | ❌ | Requirement CLI wrapper (Web4Req) | 🟪 Unique – Web4Req |
+| °folder.unit | ✅ | ✅ | ❌ | Unit folder marker for test harness | 🟨 Similar (U+W) |
+| node_modules/ | ✅ | ❌ | ✅ | Installed dependencies directory | 🟨 Similar (U+O) |
+| package.json exports field | ❌ | ✅ | ❌ | ESM export map for subpath exports | 🟪 Unique – Web4Req |
+| src/ts/layer2/DefaultCLI.ts | ✅ | ✅ | ❌ | Default CLI wiring | 🟨 Similar (U+W) |
+| src/ts/layer2/DefaultStorage.ts | ✅ | ❌ | ❌ | Storage abstraction | 🟪 Unique – Unit |
+| src/ts/layer2/DefaultUnit.ts | ✅ | ❌ | ❌ | Core Unit implementation | 🟪 Unique – Unit |
+| src/ts/layer2/GitTextIOR.ts | ✅ | ❌ | ❌ | Git-backed IOR adapter | 🟪 Unique – Unit |
+| src/ts/layer2/DefaultRequirement.ts | ❌ | ✅ | ❌ | Core Requirement implementation | 🟪 Unique – Web4Req |
+| src/ts/layer2/DefaultONCE.ts | ❌ | ❌ | ✅ | Default ONCE core setup | 🟪 Unique – ONCE |
+| src/ts/layer2/PortManager.ts | ❌ | ❌ | ✅ | Port allocation/management | 🟪 Unique – ONCE |
+| src/ts/layer2/ScenarioManager.ts | ❌ | ❌ | ✅ | Scenario loading/management | 🟪 Unique – ONCE |
+| src/ts/layer2/ServerHierarchyManager.ts | ❌ | ❌ | ✅ | Server hierarchy orchestration | 🟪 Unique – ONCE |
+| src/ts/layer3/CLI.interface.ts | ✅ | ✅ | ❌ | CLI contract | 🟩 Identical (U=W) |
+| src/ts/layer3/Completion.ts | ✅ | ✅ | ❌ | CLI completion helper | 🟩 Identical (U=W) |
+| src/ts/layer3/ComponentAnalysis.interface.ts | ✅ | ✅ | ❌ | Component analysis contract | 🟩 Identical (U=W) |
+| src/ts/layer3/MethodInfo.interface.ts | ✅ | ✅ | ❌ | Method metadata contract | 🟩 Identical (U=W) |
+| src/ts/layer3/UUID.interface.ts | ✅ | ✅ | ❌ | UUID contract | 🟩 Identical (U=W) |
+| src/ts/layer3/UUIDv4.class.ts | ✅ | ✅ | ❌ | UUID v4 generator | 🟩 Identical (U=W) |
+| src/ts/layer3/Requirement.interface.ts | ❌ | ✅ | ❌ | Requirement entity contract | 🟪 Unique – Web4Req |
+| src/ts/layer3/RequirementIdentifier.type.ts | ❌ | ✅ | ❌ | Requirement identifier type | 🟪 Unique – Web4Req |
+| src/ts/layer3/Unit.interface.ts | ✅ | ❌ | ❌ | Unit entity contract | 🟪 Unique – Unit |
+| src/ts/layer3/UnitModel.interface.ts | ✅ | ❌ | ❌ | Unit model contract | 🟪 Unique – Unit |
+| src/ts/layer3/UnitReference.interface.ts | ✅ | ❌ | ❌ | Unit reference type | 🟪 Unique – Unit |
+| src/ts/layer3/Upgrade.interface.ts | ✅ | ❌ | ❌ | Upgrade operation contract | 🟪 Unique – Unit |
+| src/ts/layer3/NamedLink.interface.ts | ✅ | ❌ | ❌ | Named link structure | 🟪 Unique – Unit |
+| src/ts/layer3/TypeM3.enum.ts | ✅ | ❌ | ❌ | Meta-type enum (M3) | 🟪 Unique – Unit |
+| src/ts/layer3/Storage.interface.ts | ✅ | ❌ | ❌ | Storage contract | 🟪 Unique – Unit |
+| src/ts/layer3/StorageModel.interface.ts | ✅ | ❌ | ❌ | Storage model contract | 🟪 Unique – Unit |
+| src/ts/layer3/StorageScenario.interface.ts | ✅ | ❌ | ❌ | Storage scenario contract | 🟪 Unique – Unit |
+| src/ts/layer3/IOR.interface.ts | ✅ | ❌ | ❌ | IOR contract (Unit) | 🟪 Unique – Unit |
+| src/ts/layer3/Component.ts | ❌ | ❌ | ✅ | Base component abstraction (ONCE) | 🟪 Unique – ONCE |
+| src/ts/layer3/IOR.ts | ❌ | ❌ | ✅ | IOR types/logic (ONCE) | 🟪 Unique – ONCE |
+| src/ts/layer3/LifecycleEvents.ts | ❌ | ❌ | ✅ | Lifecycle event definitions | 🟪 Unique – ONCE |
+| src/ts/layer3/ONCE.ts | ❌ | ❌ | ✅ | ONCE orchestrator | 🟪 Unique – ONCE |
+| src/ts/layer3/ONCEServerModel.ts | ❌ | ❌ | ✅ | Server model types | 🟪 Unique – ONCE |
+| src/ts/layer3/Scenario.ts | ❌ | ❌ | ✅ | Scenario types/logic | 🟪 Unique – ONCE |
+| src/ts/layer4/TSCompletion.ts | ✅ | ✅ | ❌ | Typescript-aware completion | 🟩 Identical (U=W) |
+| src/ts/layer4/TSCompletion.ts.unit | ✅ | ✅ | ❌ | Tests for completion | 🟩 Identical (U=W) |
+| src/ts/layer5/UnitCLI.ts | ✅ | ❌ | ❌ | Unit CLI entry | 🟪 Unique – Unit |
+| src/ts/layer5/RequirementCLI.ts | ❌ | ✅ | ❌ | Requirement CLI entry | 🟪 Unique – Web4Req |
+| src/ts/layer5/index.ts | ❌ | ❌ | ✅ | Public exports index (ONCE) | 🟪 Unique – ONCE |
+| src/ts/layer5/ONCECLI.ts | ❌ | ❌ | ✅ | ONCE CLI entry | 🟪 Unique – ONCE |
+| test/unit.acceptance.test.ts | ✅ | ❌ | ❌ | Unit acceptance tests | 🟪 Unique – Unit |
+| test/unit.filename.consistency.test.ts | ✅ | ❌ | ❌ | Unit test naming consistency | 🟪 Unique – Unit |
+| test/requirement.regression.test.ts | ❌ | ✅ | ❌ | Requirement regression tests | 🟪 Unique – Web4Req |
+
 ### **QA Decisions**
 - [x] Completed decision: Read three components and document differences
 - [ ] Decision 1: Align testing/tooling versions
