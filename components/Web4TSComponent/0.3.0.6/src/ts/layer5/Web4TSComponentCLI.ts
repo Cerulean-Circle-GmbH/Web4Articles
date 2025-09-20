@@ -168,8 +168,8 @@ export class Web4TSComponentCLI extends DefaultCLI {
     console.log(`   Found: ${components.length} components`);
     
     components.forEach((component, index) => {
-      const status = component.complianceScore >= 70 ? '✅' : '❌';
-      console.log(`   ${index + 1}. ${status} ${component.name} v${component.version} (${component.complianceScore}/100)`);
+      const status = (component.complianceScore || 0) >= 70 ? '✅' : '❌';
+      console.log(`   ${index + 1}. ${status} ${component.name} v${component.version} (${component.complianceScore || 0}/100)`);
     });
     
     return this;
@@ -179,7 +179,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
    * Web4 CLI Topic: execute - Execute pending operations
    * Usage: web4tscomponent execute
    */
-  private async execute(): Promise<void> {
+  private async executeOperations(): Promise<void> {
     console.log(`✅ Web4TSComponent operations completed`);
     console.log(`   Component: Web4TSComponent 0.3.0.6`);
     console.log(`   Web4 Compliant: ✅`);
@@ -234,6 +234,58 @@ Examples:
 🎯 Feature equivalent to v1.0.0.0 with Web4 compliance like Unit 0.3.0.5
 `);
         break;
+    }
+  }
+
+  /**
+   * Web4TSComponent-specific command execution implementation using DefaultCLI dynamic functionality
+   */
+  async execute(args: string[]): Promise<void> {
+    if (args.length === 0) {
+      this.showUsage();
+      return;
+    }
+
+    const command = args[0];
+    const commandArgs = args.slice(1);
+
+    try {
+      // Try dynamic command execution (following Unit pattern)
+      if (await this.executeDynamicCommand(command, commandArgs)) {
+        return; // Command executed successfully
+      }
+
+      // Special cases (Web4TSComponent-specific methods)
+      switch (command) {
+        case 'create':
+          await this.create(commandArgs[0], commandArgs[1], commandArgs[2]);
+          break;
+        case 'set':
+          await this.set(commandArgs[0], commandArgs[1], commandArgs[2]);
+          break;
+        case 'get':
+          await this.get(commandArgs[0], commandArgs[1]);
+          break;
+        case 'from':
+          await this.from(commandArgs[0]);
+          break;
+        case 'find':
+          await this.find(commandArgs[0]);
+          break;
+        case 'execute':
+          await this.executeOperations();
+          break;
+        case 'info':
+          await this.info(commandArgs[0]);
+          break;
+        default:
+          console.log(`❌ Unknown command: ${command}`);
+          this.showUsage();
+          break;
+      }
+    } catch (error) {
+      console.error(`❌ Command failed: ${(error as Error).message}`);
+      process.exit(1);
     }
   }
 
