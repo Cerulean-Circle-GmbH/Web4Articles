@@ -38,11 +38,33 @@ export class DefaultSessionSummary implements ISessionSummary {
 
   extractTRONQuotes(content: string): string {
     const quotes: string[] = [];
+    
+    // Pattern 1: Standard TRON Feedback with quote blocks
     const tronSectionRegex = /### \*\*TRON Feedback[^`]*```quote\n([\s\S]*?)\n```/g;
     let match;
-    
     while ((match = tronSectionRegex.exec(content)) !== null) {
       quotes.push(match[1].trim());
+    }
+    
+    // Pattern 2: User Quote with timestamp format: > **User Quote (timestamp)**: *"quote"*
+    const userQuoteRegex = /> \*\*User Quote[^*]*\*\*: \*"([^"]+)"\*/g;
+    while ((match = userQuoteRegex.exec(content)) !== null) {
+      quotes.push(match[1].trim());
+    }
+    
+    // Pattern 3: Simple User Quote format: **User Quote:** *"quote"*
+    const simpleUserQuoteRegex = /\*\*User Quote:\*\* \*"([^"]+)"\*/g;
+    while ((match = simpleUserQuoteRegex.exec(content)) !== null) {
+      quotes.push(match[1].trim());
+    }
+    
+    // Pattern 4: TRON QA Feedback without quote blocks
+    const tronQARegex = /### \*\*TRON QA Feedback[^#]*?\n\n([^#]+?)(?=\n### |\n---|\n## |$)/g;
+    while ((match = tronQARegex.exec(content)) !== null) {
+      const feedbackText = match[1].trim().replace(/^\*\*[^*]+\*\*:?\s*/, '').replace(/^\*"([^"]+)"\*/, '$1');
+      if (feedbackText && !feedbackText.includes('```') && feedbackText.length > 10) {
+        quotes.push(feedbackText);
+      }
     }
     
     return quotes.join('\\n\\n');
