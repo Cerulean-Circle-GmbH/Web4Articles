@@ -13,6 +13,8 @@
 - `git cherry-pick` - 🍒 DANGEROUS: Hangs on conflicts without `--no-commit` flag, use cherry picking as taking work exclusively and committing to another branch
 - `git merge` - Interactive merge conflict resolution
 - `git rebase` - Interactive rebase prompts
+- `git reset --hard` - Destructive; discards local changes/history and can drop unpushed work
+- `git push --force` / `--force-with-lease` - Destructive; rewrites remote history and can erase teammates' commits
 
 ### **Package Managers**
 - `npm install` - Should use `npm install --yes` or `npm ci`
@@ -27,6 +29,9 @@
 - `git pull --rebase origin branch` - But requires `git config pull.rebase false` first
 - `git cherry-pick --no-commit` - 🍒 SAFER: Prevents interactive conflict resolution, but cherry picking = taking work exclusively and committing to another branch
 - `git status` - Always safe, read-only
+- `git merge --ff-only` - Ensures fast-forward only; avoids unintended merges
+- Create backup before risky operations: `git branch backup-$(date -u +%Y-%m-%d-UTC-%H%M%S)`
+- Prefer `git revert <range>` to undo while preserving history instead of `reset --hard`
 
 ### **Package Managers**
 - `npm ci` - Non-interactive, uses package-lock.json
