@@ -6,6 +6,15 @@ This document describes the symbolic link system connecting component versions w
 
 Each component version that had significant development work now has a `sessions/` directory containing symbolic links to the relevant project journal sessions. This provides direct traceability from component code to the development history and decisions.
 
+## Quick Navigation to Component Sessions
+
+- **ONCE v0.2.0.0:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/ONCE/0.2.0.0/sessions) | [§/ONCE/0.2.0.0/sessions](./ONCE/0.2.0.0/sessions) → 3 sessions
+- **Web4Test v0.1.0.0:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/Web4Test/0.1.0.0/sessions) | [§/Web4Test/0.1.0.0/sessions](./Web4Test/0.1.0.0/sessions) → Tootsie implementation
+- **Tootsie v0.1.0.0:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/Tootsie/0.1.0.0/sessions) | [§/Tootsie/0.1.0.0/sessions](./Tootsie/0.1.0.0/sessions) → Radical OOP approach
+- **Web4TSComponent v0.1.0.0:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/Web4TSComponent/0.1.0.0/sessions) | [§/Web4TSComponent/0.1.0.0/sessions](./Web4TSComponent/0.1.0.0/sessions) → Cleanup execution
+- **Web4Requirement v0.1.0.0:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/Web4Requirement/0.1.0.0/sessions) | [§/Web4Requirement/0.1.0.0/sessions](./Web4Requirement/0.1.0.0/sessions) → Build chain fixes
+- **Message v0.1.0.0:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/Message/0.1.0.0/sessions) | [§/Message/0.1.0.0/sessions](./Message/0.1.0.0/sessions) → Demo integration
+
 ## Structure
 
 ```
@@ -20,23 +29,29 @@ components/
 ## Current Session Links
 
 ### ONCE v0.2.0.0
+**Sessions Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/ONCE/0.2.0.0/sessions) | [§/ONCE/0.2.0.0/sessions](./ONCE/0.2.0.0/sessions)
 - **2025-08-29-component-development** → Major ONCE v0.2.0.0 implementation
 - **2025-08-29-comprehensive-learning** → ONCE CLI compliance and demo preparation
 - **2025-08-30-once-demo** → ONCE demo preparation and testing
 
 ### Web4Test v0.1.0.0
+**Sessions Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/Web4Test/0.1.0.0/sessions) | [§/Web4Test/0.1.0.0/sessions](./Web4Test/0.1.0.0/sessions)
 - **2025-08-29-tootsie-implementation** → Tootsie framework implementation and comprehensive test cases
 
 ### Tootsie v0.1.0.0
+**Sessions Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/Tootsie/0.1.0.0/sessions) | [§/Tootsie/0.1.0.0/sessions](./Tootsie/0.1.0.0/sessions)
 - **2025-08-29-radical-oop-implementation** → Radical OOP implementation and philosophy
 
 ### Web4TSComponent v0.1.0.0
+**Sessions Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/Web4TSComponent/0.1.0.0/sessions) | [§/Web4TSComponent/0.1.0.0/sessions](./Web4TSComponent/0.1.0.0/sessions)
 - **2025-08-29-cleanup-execution** → Component cleanup and testing improvements
 
 ### Web4Requirement v0.1.0.0
+**Sessions Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/Web4Requirement/0.1.0.0/sessions) | [§/Web4Requirement/0.1.0.0/sessions](./Web4Requirement/0.1.0.0/sessions)
 - **2025-08-30-build-chain-fix** → Build chain fixes and dependency resolution
 
 ### Message v0.1.0.0
+**Sessions Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/Message/0.1.0.0/sessions) | [§/Message/0.1.0.0/sessions](./Message/0.1.0.0/sessions)
 - **2025-08-29-demo-integration** → Demo integration and testing
 
 ## Key Session Relationships
