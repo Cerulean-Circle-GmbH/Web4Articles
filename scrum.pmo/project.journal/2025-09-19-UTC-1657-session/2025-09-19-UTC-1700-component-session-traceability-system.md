@@ -23,9 +23,14 @@
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-19-UTC-1657/scrum.pmo/project.journal/2025-09-19-UTC-1657-session/2025-09-19-UTC-1700-component-session-traceability-system.md) | [§/scrum.pmo/project.journal/2025-09-19-UTC-1657-session/2025-09-19-UTC-1700-component-session-traceability-system.md](./2025-09-19-UTC-1700-component-session-traceability-system.md)
 - **Traceability Documentation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-19-UTC-1657/components/sessions-documentation.md) | [§/components/sessions-documentation.md](../../components/sessions-documentation.md)
+
+### **Component Session Folders Created**
 - **ONCE v0.2.0.0 Sessions:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/ONCE/0.2.0.0/sessions) | [§/components/ONCE/0.2.0.0/sessions](../../components/ONCE/0.2.0.0/sessions)
-- **Web4Test Sessions:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/Web4Test/0.1.0.0/sessions) | [§/components/Web4Test/0.1.0.0/sessions](../../components/Web4Test/0.1.0.0/sessions)
-- **Complete System:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components) | [§/components](../../components)
+- **Web4Test v0.1.0.0 Sessions:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/Web4Test/0.1.0.0/sessions) | [§/components/Web4Test/0.1.0.0/sessions](../../components/Web4Test/0.1.0.0/sessions)
+- **Tootsie v0.1.0.0 Sessions:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/Tootsie/0.1.0.0/sessions) | [§/components/Tootsie/0.1.0.0/sessions](../../components/Tootsie/0.1.0.0/sessions)
+- **Web4TSComponent v0.1.0.0 Sessions:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/Web4TSComponent/0.1.0.0/sessions) | [§/components/Web4TSComponent/0.1.0.0/sessions](../../components/Web4TSComponent/0.1.0.0/sessions)
+- **Web4Requirement v0.1.0.0 Sessions:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/Web4Requirement/0.1.0.0/sessions) | [§/components/Web4Requirement/0.1.0.0/sessions](../../components/Web4Requirement/0.1.0.0/sessions)
+- **Message v0.1.0.0 Sessions:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/Message/0.1.0.0/sessions) | [§/components/Message/0.1.0.0/sessions](../../components/Message/0.1.0.0/sessions)
 
 ### **QA Decisions**
 - [x] **System Architecture Completed:** Created component/version/sessions/ structure with symbolic links to project journal sessions
