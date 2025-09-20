@@ -1,0 +1,1 @@
+../../../../scrum.pmo/project.journal/2025-08-23-0845-sprint22-user-component/session.summary.md
