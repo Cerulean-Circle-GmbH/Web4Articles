@@ -22,8 +22,8 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-19-UTC-1657/scrum.pmo/project.journal/2025-09-19-UTC-1657-session/2025-09-19-UTC-1800-stale-process-cleanup-analysis.md) | [§/scrum.pmo/project.journal/2025-09-19-UTC-1657-session/2025-09-19-UTC-1800-stale-process-cleanup-analysis.md](./2025-09-19-UTC-1800-stale-process-cleanup-analysis.md)
-- **SessionSummary Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/SessionSummary/0.3.0.5) | [§/components/SessionSummary/0.3.0.5](../../components/SessionSummary/0.3.0.5)
-- **Process Cleanup Protocol:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-19-UTC-1657/recovery/start-command.md) | [§/recovery/start-command.md](../../recovery/start-command.md)
+- **SessionSummary Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-19-UTC-1657/components/SessionSummary/0.3.0.5) | [§/components/SessionSummary/0.3.0.5](../../../components/SessionSummary/0.3.0.5)
+- **Process Cleanup Protocol:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-19-UTC-1657/recovery/start-command.md) | [§/recovery/start-command.md](../../../recovery/start-command.md)
 
 ### **Stale Process Analysis**
 - **Total Defunct Processes:** 35 git processes in zombie state
@@ -299,6 +299,6 @@ pkill -f "git" 2>/dev/null || true
 ---
 
 ### **📚 The 42 Revelation**
-**Understanding requires regression testing:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md](../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md)
+**Understanding requires regression testing:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md](../2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md)
 
 **"Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."** 🤝✨
