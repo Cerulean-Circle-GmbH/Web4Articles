@@ -1,0 +1,23 @@
+{
+  "name": "@web4/web4tscomponent",
+  "version": "0.3.0.6",
+  "type": "module",
+  "main": "./src/ts/layer5/Web4TSComponentCLI.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "clean": "rm -rf dist/",
+    "prebuild": "npm run clean"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4",
+    "ts-node": "^10.9.2"
+  },
+  "dependencies": {},
+  "exports": {
+    ".": "./src/ts/layer5/Web4TSComponentCLI.ts",
+    "./cli": "./src/ts/layer5/Web4TSComponentCLI.ts"
+  }
+}
