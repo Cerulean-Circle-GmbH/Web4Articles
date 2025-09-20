@@ -1,0 +1,1 @@
+../../../../scrum.pmo/project.journal/2025-08-19-1100-tsranger-v21-sprint/tsranger-v21-completion-summary.md
