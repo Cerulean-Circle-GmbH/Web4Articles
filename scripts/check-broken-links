@@ -1,0 +1,25 @@
+#!/bin/bash
+# Broken Links Detection Script
+# Usage: ./scripts/check-broken-links [directory]
+
+TARGET_DIR="${1:-/workspace/components}"
+
+echo "🔍 Checking for broken symbolic links in: $TARGET_DIR"
+echo "=================================================="
+
+BROKEN_LINKS=$(find "$TARGET_DIR" -type l ! -exec test -e {} \; -print)
+
+if [ -z "$BROKEN_LINKS" ]; then
+    echo "✅ No broken symbolic links found!"
+    exit 0
+else
+    echo "❌ Broken symbolic links found:"
+    echo "$BROKEN_LINKS"
+    echo ""
+    echo "📊 Summary:"
+    echo "   Count: $(echo "$BROKEN_LINKS" | wc -l)"
+    echo ""
+    echo "🧹 To clean up, run:"
+    echo "   find \"$TARGET_DIR\" -type l ! -exec test -e {} \\; -delete"
+    exit 1
+fi
