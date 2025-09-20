@@ -313,6 +313,172 @@ Standards:
 `);
   }
 
+  // Web4 CLI Topic Methods (for DefaultCLI dynamic execution)
+  
+  /**
+   * Create Web4-compliant component (maps to scaffold-component)
+   */
+  async create(name: string, version: string = '0.1.0.0', options: string = ''): Promise<void> {
+    // Parse options (maps from 1.0.0.0 --cli --spec --vitest --layers)
+    const scaffoldOptions: ComponentScaffoldOptions = {
+      componentName: name,
+      version,
+      includeLayerArchitecture: options.includes('layers') || options.includes('all'),
+      includeCLI: options.includes('cli') || options.includes('all'),
+      includeSpecFolder: options.includes('spec') || options.includes('all'),
+      includeVitest: options.includes('vitest') || options.includes('test') || options.includes('all')
+    };
+    
+    console.log(`🏗️ Creating Web4 component: ${name} v${version}`);
+    console.log(`📋 Options: ${options || 'default'}`);
+    
+    const metadata = await this.scaffoldComponent(scaffoldOptions);
+    
+    console.log(`✅ Component created: ${name}`);
+    console.log(`   Version: ${metadata.version}`);
+    console.log(`   Location: components/${name}/${version}`);
+    console.log(`   CLI: ${metadata.hasLocationResilientCLI ? '✅' : '❌'}`);
+    console.log(`   Layers: ${metadata.hasLayeredArchitecture ? '✅' : '❌'}`);
+    console.log(`   Spec: ${metadata.hasScenarioSupport ? '✅' : '❌'}`);
+  }
+
+  /**
+   * Set component configuration (maps to generate-cli)
+   */
+  async set(component: string, attribute: string, value: string): Promise<void> {
+    if (attribute === 'cli-script' || attribute === 'cli') {
+      console.log(`🔨 Generating CLI script for ${component} v${value}`);
+      const cliScript = await this.generateLocationResilientCLI(component, value);
+      const outputPath = `${component.toLowerCase()}${value.replace(/\\./g, '')}.sh`;
+      
+      await import('fs/promises').then(fs => fs.writeFile(outputPath, cliScript, { mode: 0o755 }));
+      
+      console.log(`✅ CLI script generated: ${outputPath}`);
+      console.log(`   Location-resilient: ✅`);
+      console.log(`   Web4 compliant: ✅`);
+    } else {
+      console.log(`⚠️ Unknown attribute: ${attribute}. Supported: cli-script, cli`);
+    }
+  }
+
+  /**
+   * Get validation results (maps to validate-standard)
+   */
+  async get(scriptPath: string, attribute: string): Promise<void> {
+    if (attribute === 'validation' || attribute === 'standard') {
+      console.log(`🔍 Validating CLI standard: ${scriptPath}`);
+      const validation = await this.validateCLIStandard(scriptPath);
+      
+      console.log(`\\n📊 Validation Results:`);
+      console.log(`   Compliant: ${validation.isCompliant ? '✅' : '❌'}`);
+      console.log(`   Score: ${validation.score}/100`);
+      
+      if (validation.issues.length > 0) {
+        console.log(`\\n⚠️ Issues found:`);
+        validation.issues.forEach((issue, index) => {
+          console.log(`   ${index + 1}. ${issue}`);
+        });
+      }
+    } else if (attribute === 'compliance') {
+      console.log(`🔍 Auditing component compliance: ${scriptPath}`);
+      const metadata = await this.auditComponentCompliance(scriptPath);
+      
+      console.log(`\\n📊 Compliance Results:`);
+      console.log(`   Component: ${metadata.name} v${metadata.version}`);
+      console.log(`   Score: ${metadata.complianceScore}/100`);
+      console.log(`   CLI: ${metadata.hasLocationResilientCLI ? '✅' : '❌'}`);
+      console.log(`   Layers: ${metadata.hasLayeredArchitecture ? '✅' : '❌'}`);
+    } else {
+      console.log(`⚠️ Unknown attribute: ${attribute}. Supported: validation, standard, compliance`);
+    }
+  }
+
+  /**
+   * Analyze component from path (maps to audit-compliance)
+   */
+  async from(componentPath: string): Promise<this> {
+    console.log(`🔍 Analyzing component: ${componentPath}`);
+    const metadata = await this.auditComponentCompliance(componentPath);
+    
+    console.log(`✅ Component analysis complete:`);
+    console.log(`   Name: ${metadata.name}`);
+    console.log(`   Version: ${metadata.version}`);
+    console.log(`   Compliance Score: ${metadata.complianceScore}/100`);
+    
+    if (metadata.issues && metadata.issues.length > 0) {
+      console.log(`\\n⚠️ Issues found:`);
+      metadata.issues.forEach((issue, index) => {
+        console.log(`   ${index + 1}. ${issue}`);
+      });
+    }
+    
+    return this;
+  }
+
+  /**
+   * Find components in directory (maps to generate-report)
+   */
+  async find(componentDir: string): Promise<this> {
+    console.log(`🔍 Discovering components in: ${componentDir}`);
+    const components = await this.generateComplianceReport(componentDir);
+    
+    console.log(`\\n📊 Component Discovery Results:`);
+    console.log(`   Found: ${components.length} components`);
+    
+    components.forEach((component, index) => {
+      const status = (component.complianceScore || 0) >= 70 ? '✅' : '❌';
+      console.log(`   ${index + 1}. ${status} ${component.name} v${component.version} (${component.complianceScore || 0}/100)`);
+    });
+    
+    return this;
+  }
+
+  /**
+   * Display information (maps to show-standard/guidelines)
+   */
+  async info(topic: string = 'overview'): Promise<void> {
+    switch (topic) {
+      case 'standard':
+      case 'standards':
+        this.showStandard();
+        break;
+      case 'guidelines':
+      case 'guide':
+        this.showGuidelines();
+        break;
+      case 'overview':
+      default:
+        console.log(`
+🚀 Web4TSComponent 0.3.0.6 - Web4-Compliant TypeScript Component Tools
+
+Web4 CLI Topics:
+  create <name> <version> [options]    # Create Web4-compliant component
+  set <component> cli-script <version> # Generate location-resilient CLI
+  get <path> validation                # Validate CLI standard
+  from <component-path>                # Analyze component compliance
+  find <component-dir>                 # Discover components
+  info [topic]                         # Show standards/guidelines
+
+Options for create:
+  all      # Include all features (cli, spec, vitest, layers)
+  cli      # Include CLI script
+  spec     # Include spec folder
+  vitest   # Include test configuration
+  layers   # Include layer architecture
+
+Examples:
+  web4tscomponent create MyComponent 0.1.0.0 all
+  web4tscomponent set MyComponent cli-script 0.1.0.0
+  web4tscomponent get ./myscript.sh validation
+  web4tscomponent from components/MyComponent/0.1.0.0
+  web4tscomponent find components/
+
+🎯 Feature equivalent to v1.0.0.0 with Web4 compliance like Unit 0.3.0.5
+`);
+        break;
+    }
+  }
+
   // Private helper methods for scaffolding
   private async createPackageJson(componentDir: string, componentName: string, version: string): Promise<void> {
     const packageJson = {
