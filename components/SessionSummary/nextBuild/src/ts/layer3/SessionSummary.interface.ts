@@ -12,7 +12,7 @@ export interface ISessionSummary {
   extractAchievement(content: string, filename: string): string;
   getGitInfo(filename: string): { sha: string; timestamp: string; message: string; utcTime: string };
   analyzePDCA(filename: string): PDCAAnalysis | null;
-  generateSummary(options: SessionAnalysisOptions): SessionSummaryResult;
+  generateSummary(options: SessionAnalysisOptions): Promise<SessionSummaryResult>;
   
   // NEW: Automated update methods
   onSessionSummaryGenerated(sessionPath: string, analyses: PDCAAnalysis[]): Promise<void>;
