@@ -6,7 +6,7 @@
 import { readFileSync, readdirSync, writeFileSync } from 'fs';
 import { join, basename, relative } from 'path';
 import { execSync } from 'child_process';
-import { ISessionSummary } from '../layer3/SessionSummary.interface.js';
+import { ISessionSummary, ComponentWork } from '../layer3/SessionSummary.interface.js';
 import { PDCAAnalysis, SessionAnalysisOptions, SessionSummaryResult } from '../layer3/PDCAAnalysis.interface.js';
 
 export class DefaultSessionSummary implements ISessionSummary {
@@ -154,7 +154,7 @@ export class DefaultSessionSummary implements ISessionSummary {
     }
   }
 
-  generateSummary(options: SessionAnalysisOptions): SessionSummaryResult {
+  async generateSummary(options: SessionAnalysisOptions): Promise<SessionSummaryResult> {
     const files = this.findPDCAFiles(options.sessionPath);
     const analyses = files.map(file => this.analyzePDCA(file)).filter(Boolean) as PDCAAnalysis[];
     

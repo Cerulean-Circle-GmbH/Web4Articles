@@ -51,7 +51,7 @@ export class SessionSummaryCLI extends DefaultCLI {
       
       console.log(`🔍 Analyzing session: ${sessionPath}`);
       
-      const result = sessionSummary.generateSummary({
+      const result = await sessionSummary.generateSummary({
         sessionPath,
         outputFile,
         includeDecisions: enhanced,

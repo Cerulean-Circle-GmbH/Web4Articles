@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# SessionSummary CLI Tool - Auto-Build with Source Freshness Check
+# Web4 pattern: Component shell wrapper with stale prevention
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Use WEB4_PROJECT_ROOT if available, otherwise calculate from script location
+if [ -n "$WEB4_PROJECT_ROOT" ]; then
+    PROJECT_ROOT="$WEB4_PROJECT_ROOT"
+else
+    PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+fi
+COMPONENT_VERSION="nextBuild"
+COMPONENT_PATH="$PROJECT_ROOT/components/SessionSummary/$COMPONENT_VERSION"
+CLI_PATH="$COMPONENT_PATH/dist/ts/layer5/SessionSummaryCLI.js"
+
+
+# Check if component exists
+if [ ! -d "$COMPONENT_PATH" ]; then
+    echo "❌ SessionSummary $COMPONENT_VERSION not found at $COMPONENT_PATH"
+    exit 1
+fi
+
+# Function to check if rebuild is needed
+needs_rebuild() {
+    # If CLI doesn't exist, rebuild needed
+    [ ! -f "$CLI_PATH" ] && return 0
+    
+    # Check if any TypeScript file in src is newer than CLI
+    find "$COMPONENT_PATH/src" -name "*.ts" -newer "$CLI_PATH" 2>/dev/null | grep -q . && return 0
+    
+    return 1
+}
+
+# Auto-build if CLI not available or source is newer
+if needs_rebuild; then
+    echo "🔧 Building SessionSummary $COMPONENT_VERSION (source files updated)..."
+    cd "$COMPONENT_PATH"
+    npm install --silent 2>/dev/null || true
+    npm run build --silent
+    cd "$PROJECT_ROOT"
+fi
+
+# Check if CLI is now available
+if [ ! -f "$CLI_PATH" ]; then
+    echo "❌ SessionSummary CLI build failed"
+    exit 1
+fi
+
+# Execute CLI with all arguments
+node "$CLI_PATH" "$@"
