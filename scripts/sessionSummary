@@ -3,7 +3,7 @@
 # Delegates to latest version automatically
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LATEST_VERSION="0.3.0.6"
+LATEST_VERSION="0.3.0.8"
 
 # Execute the versioned script
 exec "$SCRIPT_DIR/versions/sessionsummary-v$LATEST_VERSION" "$@"
