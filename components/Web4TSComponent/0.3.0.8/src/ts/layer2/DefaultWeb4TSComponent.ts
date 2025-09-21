@@ -608,6 +608,90 @@ Standards:
   }
 
   /**
+   * Display tree structure of component directory (chained after on)
+   * Shows directory structure like 'tree' command for the loaded component context
+   * @param depth Maximum depth to traverse (default: 3)
+   * @param showHidden Show hidden files and directories (default: false)
+   * @cliSyntax depth showHidden
+   * @cliDefault depth 3
+   * @cliDefault showHidden false
+   */
+  async tree(depth: string = '3', showHidden: string = 'false'): Promise<this> {
+    const context = this.getComponentContext();
+    if (!context) {
+      throw new Error('No component context loaded. Use "on <component> <version>" first.');
+    }
+
+    const maxDepth = parseInt(depth, 10) || 3;
+    const includeHidden = showHidden.toLowerCase() === 'true';
+    
+    console.log(`📁 Tree structure for ${context.component} v${context.version}:`);
+    console.log(context.path);
+    
+    await this.displayTreeStructure(context.path, '', maxDepth, 0, includeHidden);
+    
+    return this;
+  }
+
+  /**
+   * Recursively display tree structure
+   */
+  private async displayTreeStructure(
+    dirPath: string, 
+    prefix: string, 
+    maxDepth: number, 
+    currentDepth: number, 
+    showHidden: boolean
+  ): Promise<void> {
+    if (currentDepth >= maxDepth) return;
+
+    try {
+      const items = readdirSync(dirPath);
+      const filteredItems = showHidden ? items : items.filter(item => !item.startsWith('.'));
+      const sortedItems = filteredItems.sort((a, b) => {
+        const aPath = path.join(dirPath, a);
+        const bPath = path.join(dirPath, b);
+        const aIsDir = statSync(aPath).isDirectory();
+        const bIsDir = statSync(bPath).isDirectory();
+        
+        // Directories first, then files
+        if (aIsDir && !bIsDir) return -1;
+        if (!aIsDir && bIsDir) return 1;
+        return a.localeCompare(b);
+      });
+
+      for (let i = 0; i < sortedItems.length; i++) {
+        const item = sortedItems[i];
+        const itemPath = path.join(dirPath, item);
+        const isLast = i === sortedItems.length - 1;
+        const connector = isLast ? '└── ' : '├── ';
+        const nextPrefix = prefix + (isLast ? '    ' : '│   ');
+
+        try {
+          const stats = statSync(itemPath);
+          const isDirectory = stats.isDirectory();
+          const isSymlink = stats.isSymbolicLink();
+          
+          let displayName = item;
+          if (isDirectory) displayName += '/';
+          if (isSymlink) displayName += ' → ' + await fs.readlink(itemPath).catch(() => 'broken');
+          
+          console.log(prefix + connector + displayName);
+          
+          if (isDirectory && currentDepth < maxDepth - 1) {
+            await this.displayTreeStructure(itemPath, nextPrefix, maxDepth, currentDepth + 1, showHidden);
+          }
+        } catch (error) {
+          // Handle permission errors or broken symlinks
+          console.log(prefix + connector + item + ' [access denied]');
+        }
+      }
+    } catch (error) {
+      console.log(prefix + '[error reading directory]');
+    }
+  }
+
+  /**
    * Get current component context for chained operations
    */
   private getComponentContext(): { component: string, version: string, path: string } | null {
