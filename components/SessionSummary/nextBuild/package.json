@@ -1,0 +1,18 @@
+{
+  "name": "@web4x/sessionsummary",
+  "version": "nextBuild",
+  "type": "module",
+  "description": "Web4 SessionSummary Component",
+  "main": "src/ts/layer5/SessionSummaryCLI.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "start": "node -r ts-node/register src/ts/layer5/SessionSummaryCLI.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  }
+}
