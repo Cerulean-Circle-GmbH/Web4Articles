@@ -457,6 +457,174 @@ Standards:
   }
 
   /**
+   * Load component context for command chaining (like Unit's on method)
+   * Usage: web4tscomponent on <component> <version> upgrade <next>
+   */
+  async on(component: string, version: string): Promise<this> {
+    const componentPath = path.join(this.model.targetDirectory, 'components', component, version);
+    
+    if (!existsSync(componentPath)) {
+      throw new Error(`Component not found: ${component} v${version} at ${componentPath}`);
+    }
+    
+    // Set component context for chaining
+    this.model.name = component;
+    this.model.origin = componentPath;
+    this.model.definition = `Component context: ${component} v${version}`;
+    this.model.updatedAt = new Date().toISOString();
+    
+    // Store context for chained operations
+    (this.model as any).contextComponent = component;
+    (this.model as any).contextVersion = version;
+    (this.model as any).contextPath = componentPath;
+    
+    console.log(`✅ Component context loaded: ${component} v${version}`);
+    console.log(`   Path: ${componentPath}`);
+    
+    return this; // Enable chaining
+  }
+
+  /**
+   * Upgrade component version with semantic control (chained after on)
+   * Usage: web4tscomponent on Unit 0.3.0.5 upgrade nextBuild
+   */
+  async upgrade(versionType: string): Promise<this> {
+    const context = this.getComponentContext();
+    if (!context) {
+      throw new Error('No component context loaded. Use "on <component> <version>" first.');
+    }
+    
+    const currentVersion = context.version;
+    let nextVersion: string;
+    
+    switch (versionType) {
+      case 'nextBuild':
+      case 'nextPatch':
+      case 'patch':
+        nextVersion = this.incrementPatch(currentVersion);
+        console.log(`🔧 Upgrading ${context.component} to next patch: ${currentVersion} → ${nextVersion}`);
+        break;
+        
+      case 'nextMinor':
+      case 'minor':
+        nextVersion = this.incrementMinor(currentVersion);
+        console.log(`🚀 Upgrading ${context.component} to next minor: ${currentVersion} → ${nextVersion}`);
+        break;
+        
+      case 'nextMajor':
+      case 'major':
+        nextVersion = this.incrementMajor(currentVersion);
+        console.log(`💥 Upgrading ${context.component} to next major: ${currentVersion} → ${nextVersion}`);
+        break;
+        
+      default:
+        if (versionType.match(/^\d+\.\d+\.\d+\.\d+$/)) {
+          nextVersion = versionType;
+          console.log(`🎯 Upgrading ${context.component} to specific version: ${currentVersion} → ${nextVersion}`);
+        } else {
+          throw new Error(`Invalid version type: ${versionType}. Use: nextBuild, nextMinor, nextMajor, or specific version`);
+        }
+    }
+    
+    // Create new version from existing
+    await this.createVersionFromExisting(context.component, currentVersion, nextVersion);
+    
+    console.log(`✅ ${context.component} ${nextVersion} created successfully`);
+    console.log(`   Location: components/${context.component}/${nextVersion}`);
+    
+    // Update context to new version for further chaining
+    (this.model as any).contextVersion = nextVersion;
+    (this.model as any).contextPath = `components/${context.component}/${nextVersion}`;
+    
+    return this;
+  }
+
+  /**
+   * Get current component context for chained operations
+   */
+  private getComponentContext(): { component: string, version: string, path: string } | null {
+    const context = this.model as any;
+    if (!context.contextComponent || !context.contextVersion) {
+      return null;
+    }
+    
+    return {
+      component: context.contextComponent,
+      version: context.contextVersion,
+      path: context.contextPath
+    };
+  }
+
+  /**
+   * Version increment helpers
+   */
+  private incrementPatch(version: string): string {
+    const [major, minor, patch, build] = version.split('.').map(Number);
+    return `${major}.${minor}.${patch}.${build + 1}`;
+  }
+
+  private incrementMinor(version: string): string {
+    const [major, minor] = version.split('.').map(Number);
+    return `${major}.${minor + 1}.0.0`;
+  }
+
+  private incrementMajor(version: string): string {
+    const [major] = version.split('.').map(Number);
+    return `${major + 1}.0.0.0`;
+  }
+
+  /**
+   * Create new version from existing component
+   */
+  private async createVersionFromExisting(component: string, fromVersion: string, toVersion: string): Promise<void> {
+    const sourcePath = `${this.model.targetDirectory}/components/${component}/${fromVersion}`;
+    const targetPath = `${this.model.targetDirectory}/components/${component}/${toVersion}`;
+    
+    // Copy entire component structure
+    await this.copyDirectory(sourcePath, targetPath);
+    
+    // Update package.json version
+    const packageJsonPath = `${targetPath}/package.json`;
+    if (existsSync(packageJsonPath)) {
+      const packageContent = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
+      packageContent.version = toVersion;
+      await fs.writeFile(packageJsonPath, JSON.stringify(packageContent, null, 2));
+    }
+    
+    // Update CLI script version reference if exists
+    const cliScripts = await fs.readdir(targetPath);
+    const cliScript = cliScripts.find(file => file.endsWith('.sh') || (!file.includes('.') && file !== 'node_modules'));
+    if (cliScript) {
+      const cliScriptPath = `${targetPath}/${cliScript}`;
+      let cliContent = await fs.readFile(cliScriptPath, 'utf-8');
+      cliContent = cliContent.replace(
+        /COMPONENT_VERSION="[^"]+"/,
+        `COMPONENT_VERSION="${toVersion}"`
+      );
+      await fs.writeFile(cliScriptPath, cliContent);
+    }
+  }
+
+  /**
+   * Copy directory recursively
+   */
+  private async copyDirectory(source: string, target: string): Promise<void> {
+    await fs.mkdir(target, { recursive: true });
+    const entries = await fs.readdir(source, { withFileTypes: true });
+    
+    for (const entry of entries) {
+      const sourcePath = path.join(source, entry.name);
+      const targetPath = path.join(target, entry.name);
+      
+      if (entry.isDirectory()) {
+        await this.copyDirectory(sourcePath, targetPath);
+      } else {
+        await fs.copyFile(sourcePath, targetPath);
+      }
+    }
+  }
+
+  /**
    * Display information (maps to show-standard/guidelines)
    */
   async info(topic: string = 'overview'): Promise<void> {
