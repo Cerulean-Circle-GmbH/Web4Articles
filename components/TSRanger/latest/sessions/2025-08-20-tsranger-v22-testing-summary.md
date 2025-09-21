@@ -1,0 +1,1 @@
+../../../../scrum.pmo/project.journal/2025-08-20-1012-tsranger-v22-testing/session.summary.md
