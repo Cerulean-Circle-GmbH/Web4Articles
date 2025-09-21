@@ -853,6 +853,52 @@ export default defineConfig({
   }
 
   /**
+   * Verify and fix symlinks for component
+   * @cliSyntax 
+   */
+  async verifyAndFix(): Promise<this> {
+    const context = this.getComponentContext();
+    if (!context) {
+      throw new Error('I need a component context first. Please use "on <component> <version>" before verifying symlinks.');
+    }
+    
+    console.log(`🔍 Verifying and fixing symlinks for ${context.component}...`);
+    
+    // Verify and fix all symlinks
+    await this.verifyAndFixSymlinks(context.component);
+    
+    console.log(`✅ Symlink verification and repair completed for ${context.component}`);
+    return this;
+  }
+
+  /**
+   * Verify and fix all symlinks for component
+   */
+  private async verifyAndFixSymlinks(component: string): Promise<void> {
+    console.log(`🔍 Scanning ${component} symlinks...`);
+    
+    // Get highest version
+    const componentDir = path.join(this.model.targetDirectory, 'components', component);
+    const versions = this.getAvailableVersions(componentDir);
+    
+    if (versions.length === 0) {
+      console.log(`   ❌ No versions found for ${component}`);
+      return;
+    }
+    
+    const highestVersion = this.getHighestVersion(versions);
+    console.log(`   📊 Highest version found: ${highestVersion}`);
+    
+    // Verify and fix latest symlink
+    await this.verifyLatestSymlink(component, highestVersion);
+    
+    // Verify and fix scripts symlinks
+    await this.verifyScriptsSymlinks(component, versions, highestVersion);
+    
+    console.log(`   ✅ Symlink verification completed`);
+  }
+
+  /**
    * Update symlinks for component version (latest and scripts)
    */
   private async updateSymlinks(component: string, version: string): Promise<void> {
