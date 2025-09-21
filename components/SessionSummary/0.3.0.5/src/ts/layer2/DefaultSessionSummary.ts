@@ -180,11 +180,14 @@ export class DefaultSessionSummary implements ISessionSummary {
     table += `|-------------|--------------|--------------------------|------------------------|------------------|-----------------------------|\n`;
     
     for (const analysis of analyses) {
-      // Fix: Use commit SHA instead of branch for stable GitHub URLs
-      const githubUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/${analysis.sha}/${analysis.relativePath}`;
-      // Fix: Use proper relative path for local links
-      const localPath = analysis.relativePath.replace('scrum.pmo/project.journal/2025-09-20-UTC-1348-session/', './');
-      const dualLink = `[GitHub](${githubUrl}) \\| [§/${analysis.relativePath}](${localPath})`;
+      // Fix: Use commit SHA and clean relative path for GitHub URLs
+      const cleanPath = analysis.relativePath.replace(/^\.\.\/\.\.\/\.\.\//, '');
+      const githubUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/${analysis.sha}/${cleanPath}`;
+      // Fix: Use proper relative path for local links within session
+      const localPath = analysis.relativePath.includes('2025-09-20-UTC-1348-session/') 
+        ? `./${analysis.filename}` 
+        : analysis.relativePath;
+      const dualLink = `[GitHub](${githubUrl}) \\| [§/${cleanPath}](${localPath})`;
       
       // Truncate long TRON quotes for table readability
       const truncatedQuotes = analysis.tronQuotes.length > 100 
