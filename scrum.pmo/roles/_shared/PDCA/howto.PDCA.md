@@ -110,6 +110,61 @@ git push --force-with-lease origin branch
 
 ---
 
+## **🎯 PDCA TRIGGER LEARNING PROTOCOL**
+
+### **When User Writes "pdca" - Automatic Self-Check and Correction**
+
+**MANDATORY RESPONSE PROCESS:**
+1. **Self-Check Previous Response:**
+   - Analyze what was wrong with previous response against CMM3 standards
+   - Check template version 3.1.4.2 compliance
+   - Verify dual link format, safety protocol usage, TRON capture
+   - Identify specific violations or missing elements
+
+2. **Learn and Correct:**
+   - Re-read template.md and safety protocols if violations found
+   - Apply corrections to ensure proper CMM3 compliance
+   - Implement systematic approach to identified issues
+
+3. **Generate Chat PDCA:**
+   - Create proper PDCA document for the work/analysis
+   - Report PDCA in chat with corrected CMM3 compliance
+   - Provide working dual links (commit before providing GitHub URLs)
+   - Include comprehensive analysis and implementation steps
+
+**PDCA TRIGGER CHECKLIST:**
+- [ ] Previous response analyzed for CMM3 compliance
+- [ ] Template and safety protocols re-read if needed
+- [ ] Proper PDCA created with template version 3.1.4.2
+- [ ] Dual links working (GitHub and § local paths)
+- [ ] TRON feedback captured verbatim
+- [ ] Systematic implementation approach provided
+- [ ] Chat PDCA report generated with compliance
+
+**CMM3 COMPLIANCE SELF-CHECK FRAMEWORK:**
+```bash
+# Template Compliance Check:
+- Template version 3.1.4.2 structure applied ✅/❌
+- All required sections included (SUMMARY/PLAN/DO/CHECK/ACT) ✅/❌
+- Proper TRON Feedback verbatim format ✅/❌
+- Dual link format: [GitHub](URL) | [§/path](path) ✅/❌
+- Emotional Reflection and 42 Revelation sections ✅/❌
+
+# Safety Protocol Check:
+- Timeout usage for git operations ✅/❌
+- Shell isolation or pkill usage ✅/❌
+- Proper commit-before-link workflow ✅/❌
+- Non-interactive command usage ✅/❌
+
+# Content Quality Check:
+- Systematic analysis approach ✅/❌
+- Comprehensive implementation steps ✅/❌
+- Validation framework included ✅/❌
+- Learning application documented ✅/❌
+```
+
+---
+
 ## **🎯 MODULE CREATION STATUS**
 
 **✅ Created:**
