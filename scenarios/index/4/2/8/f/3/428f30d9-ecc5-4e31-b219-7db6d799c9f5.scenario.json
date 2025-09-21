@@ -1,0 +1,30 @@
+{
+  "ior": {
+    "uuid": "428f30d9-ecc5-4e31-b219-7db6d799c9f5",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"428f30d9-ecc5-4e31-b219-7db6d799c9f5\",\"timestamp\":\"2025-09-08T13:29:21.991Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "428f30d9-ecc5-4e31-b219-7db6d799c9f5",
+    "name": "Delete Test",
+    "origin": "",
+    "definition": "Testing delete functionality",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/4/2/8/f/3/428f30d9-ecc5-4e31-b219-7db6d799c9f5.scenario.json",
+    "symlinkPaths": [],
+    "namedLinks": [],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process",
+      "Delete Test"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-08T13:29:21.988Z",
+    "updatedAt": "2025-09-08T13:29:33.215Z"
+  }
+}

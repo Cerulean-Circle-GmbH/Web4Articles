@@ -14,18 +14,18 @@
 **🚨 Issues:** {{KEY_ISSUES}}  
 
 **📎 Previous Commit:** {{PREVIOUS_COMMIT_SHA}} - {{PREVIOUS_COMMIT_DESCRIPTION}}  
-**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
-- **Changed Files:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
-- **New Components:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
-- **Requirements Created:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
-- **Related Artifacts:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **PDCA Document:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **Changed Files:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **New Components:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **Requirements Created:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **Related Artifacts:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
 
 ### **QA Decisions**
 - [x] {{COMPLETED_DECISION}}: {{DECISION_DESCRIPTION}}
@@ -152,6 +152,6 @@
 ---
 
 ### **📚 The 42 Revelation**
-**Understanding requires regression testing:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md](../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md)
+**Understanding requires regression testing:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md](../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md)
 
 **"Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."** 🤝✨

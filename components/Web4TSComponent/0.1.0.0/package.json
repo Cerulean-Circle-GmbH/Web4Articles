@@ -5,6 +5,8 @@
   "description": "Web4 TypeScript Component Standard - Location-Resilient CLI Generator and Standards Enforcement",
   "main": "src/ts/layer5/Web4TSComponentCLI.ts",
   "scripts": {
+    "clean": "rm -rf dist/ && find src/ts -name '*.js' -delete && find src/ts -name '*.js.map' -delete && rm -f *.tsbuildinfo",
+    "prebuild": "npm run clean",
     "build": "tsc",
     "test": "vitest",
     "start": "node -r ts-node/register src/ts/layer5/Web4TSComponentCLI.ts",

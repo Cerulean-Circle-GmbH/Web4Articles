@@ -1,0 +1,9 @@
+#!/bin/bash
+# SessionSummary - Web4 Component Wrapper
+# Delegates to latest version automatically
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LATEST_VERSION="0.3.0.5"
+
+# Execute the versioned script
+exec "$SCRIPT_DIR/versions/sessionsummary-v$LATEST_VERSION" "$@"
