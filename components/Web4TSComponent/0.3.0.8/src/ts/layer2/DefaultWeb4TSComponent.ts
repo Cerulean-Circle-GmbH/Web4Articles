@@ -7,8 +7,8 @@ import { Web4TSComponent, ComponentScaffoldOptions, ComponentMetadata, CLIStanda
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { Web4TSComponentModel } from '../layer3/Web4TSComponentModel.interface.js';
 import * as fs from 'fs/promises';
+import { existsSync, readdirSync, statSync } from 'fs';
 import * as path from 'path';
-import { existsSync } from 'fs';
 
 export class DefaultWeb4TSComponent implements Web4TSComponent {
   private model: Web4TSComponentModel;
@@ -896,6 +896,140 @@ export default defineConfig({
     await this.verifyScriptsSymlinks(component, versions, highestVersion);
     
     console.log(`   ✅ Symlink verification completed`);
+  }
+
+  /**
+   * Verify latest symlink points to highest version
+   */
+  private async verifyLatestSymlink(component: string, highestVersion: string): Promise<void> {
+    const componentDir = path.join(this.model.targetDirectory, 'components', component);
+    const latestPath = path.join(componentDir, 'latest');
+    
+    try {
+      if (existsSync(latestPath)) {
+        const linkTarget = await fs.readlink(latestPath);
+        if (linkTarget === highestVersion) {
+          console.log(`   ✅ Latest symlink correct: latest → ${linkTarget}`);
+          return;
+        } else {
+          console.log(`   🔧 Fixing latest symlink: ${linkTarget} → ${highestVersion}`);
+          await fs.unlink(latestPath);
+        }
+      } else {
+        console.log(`   🔧 Creating missing latest symlink → ${highestVersion}`);
+      }
+      
+      await fs.symlink(highestVersion, latestPath);
+      console.log(`   ✅ Fixed latest symlink: latest → ${highestVersion}`);
+    } catch (error) {
+      console.log(`   ❌ Could not fix latest symlink: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Verify scripts symlinks
+   */
+  private async verifyScriptsSymlinks(component: string, versions: string[], highestVersion: string): Promise<void> {
+    const versionsDir = path.join(this.model.targetDirectory, 'scripts', 'versions');
+    const componentLower = component.toLowerCase();
+    
+    // Check main script symlink
+    const mainScriptPath = path.join(versionsDir, componentLower);
+    const expectedTarget = `${componentLower}-v${highestVersion}`;
+    
+    try {
+      if (existsSync(mainScriptPath)) {
+        const linkTarget = await fs.readlink(mainScriptPath);
+        if (linkTarget === expectedTarget) {
+          console.log(`   ✅ Main script correct: ${componentLower} → ${linkTarget}`);
+        } else {
+          console.log(`   🔧 Fixing main script: ${linkTarget} → ${expectedTarget}`);
+          await fs.unlink(mainScriptPath);
+          await fs.symlink(expectedTarget, mainScriptPath);
+          console.log(`   ✅ Fixed main script: ${componentLower} → ${expectedTarget}`);
+        }
+      } else {
+        console.log(`   🔧 Creating missing main script: ${componentLower} → ${expectedTarget}`);
+        await fs.symlink(expectedTarget, mainScriptPath);
+        console.log(`   ✅ Created main script: ${componentLower} → ${expectedTarget}`);
+      }
+    } catch (error) {
+      console.log(`   ❌ Could not fix main script symlink: ${(error as Error).message}`);
+    }
+    
+    // Verify version-specific symlinks exist
+    for (const version of versions) {
+      await this.verifyVersionScriptSymlink(component, version);
+    }
+  }
+
+  /**
+   * Verify version-specific script symlink exists
+   */
+  private async verifyVersionScriptSymlink(component: string, version: string): Promise<void> {
+    const versionsDir = path.join(this.model.targetDirectory, 'scripts', 'versions');
+    const componentLower = component.toLowerCase();
+    const scriptName = `${componentLower}-v${version}`;
+    const scriptPath = path.join(versionsDir, scriptName);
+    
+    if (existsSync(scriptPath)) {
+      try {
+        // Check if symlink target exists
+        const target = await fs.readlink(scriptPath);
+        const targetPath = path.resolve(versionsDir, target);
+        if (existsSync(targetPath)) {
+          console.log(`   ✅ Version script valid: ${scriptName}`);
+        } else {
+          console.log(`   🔧 Recreating broken version script: ${scriptName}`);
+          await this.createVersionScriptSymlink(component, version);
+        }
+      } catch (error) {
+        console.log(`   🔧 Recreating invalid version script: ${scriptName}`);
+        await this.createVersionScriptSymlink(component, version);
+      }
+    } else {
+      console.log(`   🔧 Creating missing version script: ${scriptName}`);
+      await this.createVersionScriptSymlink(component, version);
+    }
+  }
+
+  /**
+   * Get available versions from component directory
+   */
+  private getAvailableVersions(componentDir: string): string[] {
+    try {
+      const entries = readdirSync(componentDir);
+      return entries.filter(entry => {
+        const entryPath = path.join(componentDir, entry);
+        return statSync(entryPath).isDirectory() && 
+               entry.match(/^\d+\.\d+\.\d+\.\d+$/) &&
+               entry !== 'latest';
+      }).sort((a, b) => this.compareVersions(a, b));
+    } catch {
+      return [];
+    }
+  }
+
+  /**
+   * Get highest version from array of versions
+   */
+  private getHighestVersion(versions: string[]): string {
+    return versions.sort((a, b) => this.compareVersions(b, a))[0];
+  }
+
+  /**
+   * Compare two version strings (for sorting)
+   */
+  private compareVersions(a: string, b: string): number {
+    const aParts = a.split('.').map(Number);
+    const bParts = b.split('.').map(Number);
+    
+    for (let i = 0; i < 4; i++) {
+      if (aParts[i] !== bParts[i]) {
+        return aParts[i] - bParts[i];
+      }
+    }
+    return 0;
   }
 
   /**
