@@ -180,10 +180,26 @@ export class DefaultSessionSummary implements ISessionSummary {
     table += `|-------------|--------------|--------------------------|------------------------|------------------|-----------------------------|\n`;
     
     for (const analysis of analyses) {
-      const githubUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/${branch}/${analysis.relativePath}`;
-      const dualLink = `[GitHub](${githubUrl}) \\| [${analysis.filename}](N/A)`;
+      // Fix: Use commit SHA and clean relative path for GitHub URLs
+      const cleanPath = analysis.relativePath.replace(/^\.\.\/\.\.\/\.\.\//, '');
+      const githubUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/${analysis.sha}/${cleanPath}`;
+      // Fix: Use proper relative path for local links within session
+      const localPath = analysis.relativePath.includes('2025-09-20-UTC-1348-session/') 
+        ? `./${analysis.filename}` 
+        : analysis.relativePath;
+      const dualLink = `[GitHub](${githubUrl}) \\| [§/${cleanPath}](${localPath})`;
       
-      table += `| **${analysis.sha}** | **${analysis.utcTime}** | ${dualLink} | \`${analysis.tronQuotes}\` | ${analysis.qaDecisions} | **${analysis.achievement}** |\n`;
+      // Truncate long TRON quotes for table readability
+      const truncatedQuotes = analysis.tronQuotes.length > 100 
+        ? analysis.tronQuotes.substring(0, 100) + '...' 
+        : analysis.tronQuotes;
+      
+      // Truncate long QA decisions for table readability  
+      const truncatedDecisions = analysis.qaDecisions.length > 150
+        ? analysis.qaDecisions.substring(0, 150) + '...'
+        : analysis.qaDecisions;
+      
+      table += `| **${analysis.sha}** | **${analysis.utcTime}** | ${dualLink} | \`${truncatedQuotes}\` | ${truncatedDecisions} | **${analysis.achievement}** |\n`;
     }
     
     return table;
