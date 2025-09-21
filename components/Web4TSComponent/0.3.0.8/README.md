@@ -1,454 +1,678 @@
-# 🚀 **Web4TSComponent 0.3.0.6** - Web4-Compliant TypeScript Component Tools
+# 🚀 **Web4TSComponent 0.3.0.8** - Auto-Discovery CLI for New Agents
 
-**Version:** 0.3.0.6  
-**Web4 Compliance:** ✅ Full scenario support with Unit-like patterns  
-**Feature Equivalent:** Web4TSComponent 1.0.0.0 (with Web4 compliance fixes)  
-**Architecture:** Web4 layered architecture with semantic versioning and human-readable errors  
+**Version:** 0.3.0.8  
+**For:** New agents who have never seen Web4 components or auto-discovery CLI  
+**Goal:** Learn the simple, compliant way to add methods without breaking anything  
+**Architecture:** Unit-pattern CLI with automatic method discovery (it's easier than you think!)  
 
 ---
 
-## **📋 Quick Start**
+## **🎯 For New Agents: The Simple Truth**
+
+### **💡 What You Need to Know (Don't Overthink It!)**
+
+**Web4TSComponent has MAGIC:** 
+- Add a method to the component → it automatically appears in the CLI
+- No CLI configuration needed
+- No switch cases to update  
+- No hardcoded help text to maintain
+- **It just works automatically!**
+
+**Your Job is SIMPLE:**
+1. Add method to `DefaultWeb4TSComponent.ts`
+2. Add 3 lines of TSDoc comments
+3. That's it! CLI discovers it automatically
+
+---
+
+## **📋 Quick Start (Test This First!)**
 
 ```bash
 # Navigate to component directory
-cd components/Web4TSComponent/0.3.0.6
+cd components/Web4TSComponent/0.3.0.8
 
-# Show help (no parameters)
+# Show help - see ALL methods auto-discovered
 ./web4tscomponent
 
-# Create a new component
-./web4tscomponent create MyComponent 0.1.0.0 all
+# Create a component (watch it work!)
+./web4tscomponent create MyTestComponent 0.1.0.0 all
 
-# Load component context and upgrade
-./web4tscomponent on MyComponent 0.1.0.0 upgrade nextBuild
+# Test method chaining (this works too!)
+./web4tscomponent on MyTestComponent 0.1.0.0 upgrade nextBuild
+```
+
+**What you'll see:** The CLI shows dozens of methods automatically. You didn't configure any of them - they're discovered from the TypeScript code!
+
+---
+
+## **🎯 How Auto-Discovery CLI Works (The Magic Explained)**
+
+### **The Beautiful Simplicity:**
+
+```typescript
+// When you run: ./web4tscomponent create MyComponent 0.1.0.0 all
+// The CLI automatically:
+// 1. Finds the 'create' method on DefaultWeb4TSComponent
+// 2. Calls: component.create('MyComponent', '0.1.0.0', 'all')
+// 3. That's it! No configuration needed.
+```
+
+**How does it know?**
+- CLI scans `DefaultWeb4TSComponent` class
+- Finds all public methods automatically  
+- Reads TSDoc comments for parameter info
+- Generates help text automatically
+- **Zero configuration required!**
+
+---
+
+## **📚 Adding Your First Method (The Safe Way)**
+
+### **🚨 CRITICAL: Don't Break Anything!**
+
+**New agents often try complex approaches and break everything. Here's the SIMPLE way:**
+
+### **Step 1: Add Method to Component (Only Place You Edit!)**
+
+Open: `src/ts/layer2/DefaultWeb4TSComponent.ts`
+
+Add your method anywhere in the class:
+
+```typescript
+/**
+ * Your new awesome feature
+ * @param inputData Data to process  
+ * @param outputFormat Format for output (json, xml, csv)
+ * @cliSyntax inputData outputFormat
+ * @cliDefault outputFormat json
+ */
+async myAwesomeFeature(inputData: string, outputFormat: string = 'json'): Promise<this> {
+  console.log(`🚀 Processing ${inputData} as ${outputFormat}`);
+  
+  // Your implementation here
+  console.log(`✅ Awesome feature completed!`);
+  
+  return this; // Enable method chaining
+}
+```
+
+### **Step 2: Test It (Watch the Magic!)**
+
+```bash
+# Rebuild (auto-happens when you run CLI)
+cd components/Web4TSComponent/0.3.0.8
+
+# Check help - your method is automatically there!
+./web4tscomponent | grep myAwesome
+
+# Use your method
+./web4tscomponent myAwesomeFeature "test data" json
+```
+
+### **Step 3: That's It! (Seriously!)**
+
+**No other files to edit:**
+- ❌ Don't touch the CLI file
+- ❌ Don't add switch cases  
+- ❌ Don't update help text
+- ❌ Don't configure anything
+
+**It's automatically discovered and available!**
+
+---
+
+## **🎯 TSDoc Magic (The 3 Lines That Make It Work)**
+
+### **Required TSDoc Comments:**
+
+```typescript
+/**
+ * Human description of what the method does
+ * @param paramName Description of parameter
+ * @cliSyntax paramName anotherParam
+ * @cliDefault paramName defaultValue
+ * @cliHide  // Use this to hide internal methods
+ */
+```
+
+### **TSDoc Annotations Explained:**
+
+**`@cliSyntax paramName anotherParam`**
+- Tells CLI what parameters to expect
+- Generates: `myMethod <paramName> <anotherParam>`
+- **Required for CLI discovery**
+
+**`@cliDefault paramName defaultValue`**  
+- Sets default values for parameters
+- Generates: `<paramName=defaultValue>` in help
+- Makes parameters optional
+
+**`@cliHide`**
+- Hides method from CLI (for internal methods)
+- Method exists but won't show in help
+
+### **Parameter Types That Work:**
+
+```typescript
+// ✅ Simple parameters (recommended)
+async myMethod(name: string, version: string): Promise<this>
+
+// ✅ Optional parameters with defaults
+async myMethod(name: string, options: string = 'default'): Promise<this>
+
+// ✅ Return this for method chaining
+return this; // Enables: component.method1().method2()
 ```
 
 ---
 
-## **🎯 CLI Usage Output**
+## **⚠️ Common New Agent Mistakes (Don't Do These!)**
 
-When called without parameters, Web4TSComponent displays comprehensive usage information:
-
+### **❌ Mistake 1: Editing the CLI File**
+```typescript
+// ❌ DON'T DO THIS:
+// Editing Web4TSComponentCLI.ts to add switch cases
+switch (command) {
+  case 'myNewMethod':  // ← DON'T ADD THESE!
+    await this.myNewMethod();
+    break;
+}
 ```
-🚀 Web4TSComponent 0.3.0.6 - Web4-Compliant TypeScript Component Tools
 
-Web4 CLI Topics:
-  create <name> <version> [options]    # Create Web4-compliant component (scaffo
-ld-component)
+**✅ CORRECT:** Just add method to DefaultWeb4TSComponent - CLI finds it automatically!
 
-  set <component> cli-script <version> # Generate location-resilient CLI (genera
-te-cli)
+### **❌ Mistake 2: Complex Parameter Patterns**
+```typescript
+// ❌ DON'T DO THIS:
+async myMethod(options: { name: string, config: Config, flags: string[] }): Promise<void>
+```
 
-  get <path> validation                # Validate CLI standard (validate-standar
-d)
+**✅ CORRECT:** Use simple parameters:
+```typescript
+async myMethod(name: string, config: string, flags: string): Promise<this>
+```
 
-  from <component-path>                # Analyze component compliance (audit-com
-pliance)
+### **❌ Mistake 3: Forgetting TSDoc**
+```typescript
+// ❌ DON'T DO THIS:
+async myMethod(param: string): Promise<void> {
+  // No TSDoc comments
+}
+```
 
-  find <component-dir>                 # Discover components (generate-report)
-  execute                              # Execute pending operations
-  info [topic]                         # Show standards/guidelines
+**✅ CORRECT:** Always add TSDoc:
+```typescript
+/**
+ * Description of method
+ * @param param Description of parameter
+ * @cliSyntax param
+ */
+async myMethod(param: string): Promise<this>
+```
 
-Options for create:
-  all      # Include all features (--cli --spec --vitest --layers)
-  cli      # Include CLI script
-  spec     # Include spec folder
-  vitest   # Include test configuration
-  layers   # Include layer architecture
+### **❌ Mistake 4: Not Returning `this`**
+```typescript
+// ❌ DON'T DO THIS:
+async myMethod(): Promise<void> {
+  // Can't chain methods
+}
+```
 
-Examples:
-  web4tscomponent create MyComponent 0.1.0.0 all
-  web4tscomponent set MyComponent cli-script 0.1.0.0
-  web4tscomponent get ./myscript.sh validation
-  web4tscomponent from components/MyComponent/0.1.0.0
-  web4tscomponent find components/
-  web4tscomponent info standards
-
-🎯 Feature equivalent to v1.0.0.0 with Web4 compliance like Unit 0.3.0.5
+**✅ CORRECT:** Return this for chaining:
+```typescript
+async myMethod(): Promise<this> {
+  return this; // Enables method chaining
+}
 ```
 
 ---
 
-## **🏗️ Component Development & Maintenance Guide**
+## **🔧 Method Addition Checklist (Copy This!)**
 
-### **🎯 Web4 Architecture Principles**
+### **Before You Start:**
+- [ ] I understand I only edit DefaultWeb4TSComponent.ts
+- [ ] I won't touch the CLI files
+- [ ] I'll use simple parameters
+- [ ] I'll add proper TSDoc comments
 
-**Essential Web4 Patterns (Learned from Unit 0.3.0.5):**
-1. **Empty Constructor**: No logic in constructor - all initialization via `init()`
-2. **Scenario Support**: Components must implement `init()` and `toScenario()`
-3. **Model-Based State**: All component state stored in `this.model` property
-4. **Layer Architecture**: Proper separation of concerns across layers
-5. **Human-Readable Errors**: Programs speak like humans, not mainframes
+### **Adding the Method:**
+- [ ] Open `src/ts/layer2/DefaultWeb4TSComponent.ts`
+- [ ] Add method with TSDoc comments
+- [ ] Use `@cliSyntax` for parameters
+- [ ] Return `this` for chaining
+- [ ] Keep parameters simple (strings, not objects)
 
+### **Testing:**
+- [ ] Run `./web4tscomponent` to see method in help
+- [ ] Test method: `./web4tscomponent myMethod param1 param2`
+- [ ] Verify method chaining works if needed
+- [ ] Check that nothing broke
+
+### **If Something Breaks:**
+- [ ] Check TSDoc syntax (missing @cliSyntax?)
+- [ ] Check parameter types (too complex?)
+- [ ] Check return type (should be Promise<this>)
+- [ ] **Don't edit CLI files to "fix" it!**
+
+---
+
+## **🎯 Real Examples (Copy These Patterns!)**
+
+### **Example 1: Simple Data Processing**
 ```typescript
-// ✅ CORRECT Web4 Component Pattern
-export class DefaultWeb4TSComponent implements Web4TSComponent {
-  constructor() {
-    // ✅ Empty constructor - Web4 requirement
-    this.model = {
-      uuid: crypto.randomUUID(),
-      name: '',
-      origin: '',
-      definition: '',
-      targetDirectory: this.findProjectRoot(),
-      // ... other properties
-    };
-  }
-
-  // ✅ Scenario initialization - Web4 requirement
-  init(scenario: Scenario<Web4TSComponentModel>): this {
-    if (scenario.model) {
-      this.model = { ...this.model, ...scenario.model };
-    }
-    return this;
-  }
-
-  // ✅ Scenario serialization - Web4 requirement
-  async toScenario(name?: string): Promise<Scenario<Web4TSComponentModel>> {
-    return {
-      ior: { uuid: this.model.uuid, component: 'Web4TSComponent', version: '0.3.0.6' },
-      owner: JSON.stringify({ user: process.env.USER, timestamp: new Date().toISOString() }),
-      model: this.model
-    };
-  }
+/**
+ * Process component data with transformation
+ * @param inputFile Path to input file
+ * @param outputFormat Output format (json, xml, csv)
+ * @cliSyntax inputFile outputFormat
+ * @cliDefault outputFormat json
+ */
+async processData(inputFile: string, outputFormat: string = 'json'): Promise<this> {
+  console.log(`🔄 Processing ${inputFile} as ${outputFormat}`);
+  
+  // Your processing logic here
+  
+  console.log(`✅ Data processing completed`);
+  return this;
 }
 ```
 
-### **⛓️ CLI Pattern & Method Discovery**
+**Usage:** `./web4tscomponent processData myfile.txt xml`
 
-**Web4 CLI Standards (Unit-Compliant):**
-- **Simple 1:1 Mapping**: Each CLI topic maps to one component method
-- **No Complex Options**: Avoid `--flags` - use simple parameters instead
-- **Method Discovery**: CLI automatically discovers available methods
-- **Command Chaining**: Support `on <component> <version>` for context
-
+### **Example 2: Component Analysis**
 ```typescript
-// ✅ Web4-Compliant CLI Implementation
-export class Web4TSComponentCLI extends DefaultCLI {
-  private component: DefaultWeb4TSComponent;
-
-  constructor() {
-    super();
-    this.component = new DefaultWeb4TSComponent();
-  }
-
-  // ✅ Simple method mapping - no complex options
-  async execute(args: string[]): Promise<void> {
-    const [command, ...params] = args;
-    
-    switch (command) {
-      case 'create':
-        const [name, version, options] = params;
-        await this.component.create(name, version, options);
-        break;
-        
-      case 'on':
-        // ✅ Command chaining like Unit
-        const [compName, compVersion] = params;
-        await this.component.on(compName, compVersion);
-        break;
-        
-      case 'upgrade':
-        // ✅ Semantic versioning
-        const [versionType] = params;
-        await this.component.upgrade(versionType);
-        break;
-        
-      // ... other simple 1:1 mappings
-    }
-  }
+/**
+ * Analyze component for quality metrics
+ * @param componentPath Path to component directory
+ * @cliSyntax componentPath
+ */
+async analyzeQuality(componentPath: string): Promise<this> {
+  console.log(`📊 Analyzing quality: ${componentPath}`);
+  
+  // Your analysis logic here
+  
+  console.log(`✅ Quality analysis completed`);
+  return this;
 }
 ```
 
-### **📋 Scenario Pattern Deep Dive**
+**Usage:** `./web4tscomponent analyzeQuality components/MyComponent/0.1.0.0`
 
-**Why Scenarios Matter:**
-- **Hibernation**: Components can be serialized and stored
-- **Restoration**: Components can be restored from serialized state
-- **Persistence**: Component state survives process restarts
-- **Interoperability**: Components can communicate via scenarios
-
-**Scenario Structure:**
+### **Example 3: Method Chaining Support**
 ```typescript
-interface Scenario<T> {
-  ior: {
-    uuid: string;
-    component: string;
-    version: string;
+/**
+ * Optimize component performance
+ * @param level Optimization level (basic, advanced, extreme)
+ * @cliSyntax level
+ * @cliDefault level basic
+ */
+async optimize(level: string = 'basic'): Promise<this> {
+  const context = this.getComponentContext();
+  if (!context) {
+    throw new Error('I need a component context first. Please use "on <component> <version>" before optimizing.');
+  }
+  
+  console.log(`⚡ Optimizing ${context.component} at ${level} level`);
+  
+  // Your optimization logic here
+  
+  console.log(`✅ Optimization completed`);
+  return this;
+}
+```
+
+**Usage:** `./web4tscomponent on MyComponent 0.1.0.0 optimize advanced`
+
+---
+
+## **🛡️ Web4 Compliance Rules (Follow These Always!)**
+
+### **1. Empty Constructor Principle**
+```typescript
+// ✅ CORRECT: Empty constructor
+constructor() {
+  this.model = {
+    // Initialize with defaults
   };
-  owner: string; // JSON string with user, timestamp, etc.
-  model: T;      // Complete component state
+}
+
+// ❌ WRONG: Constructor with parameters
+constructor(config: Config) { // DON'T DO THIS!
 }
 ```
 
-**Usage Pattern:**
+### **2. Scenario Support (Required for Web4)**
 ```typescript
-// Save component state
-const scenario = await component.toScenario('backup');
+// ✅ EVERY component must have these methods:
+init(scenario: Scenario<Web4TSComponentModel>): this {
+  // Initialize from scenario
+}
 
-// Later, restore component state
-const newComponent = new DefaultWeb4TSComponent();
-newComponent.init(scenario);
-// Component is now in exact same state as before
+async toScenario(): Promise<Scenario<Web4TSComponentModel>> {
+  // Convert to scenario for hibernation
+}
+```
+
+### **3. Human-Readable Errors**
+```typescript
+// ✅ CORRECT: Speak like a human
+throw new Error('I couldn\'t find the component. Please check the name and version.');
+
+// ❌ WRONG: Technical error codes
+throw new Error('ENOENT: no such file or directory');
+```
+
+### **4. Return `this` for Chaining**
+```typescript
+// ✅ CORRECT: Enable method chaining
+async myMethod(): Promise<this> {
+  // Do work
+  return this; // Enables: component.method1().method2()
+}
+
+// ❌ WRONG: Can't chain
+async myMethod(): Promise<void> {
+  // Can't chain methods
+}
 ```
 
 ---
 
-## **🔧 Building Standards (Unit-Compliant)**
+## **🎯 Advanced: Context-Aware Methods**
 
-### **📁 Directory Structure**
-```
-Web4TSComponent/0.3.0.6/
-├── src/
-│   └── ts/
-│       ├── layer2/           # Core implementation
-│       │   └── DefaultWeb4TSComponent.ts
-│       ├── layer3/           # Interfaces
-│       │   ├── Web4TSComponent.interface.ts
-│       │   ├── Web4TSComponentModel.interface.ts
-│       │   └── Scenario.interface.ts
-│       ├── layer4/           # Utilities (TSCompletion)
-│       └── layer5/           # CLI
-│           └── Web4TSComponentCLI.ts
-├── test/                     # Vitest tests
-├── spec/                     # Specifications
-├── package.json              # NPM configuration
-├── tsconfig.json             # TypeScript configuration
-├── vitest.config.ts          # Test configuration
-├── web4tscomponent           # CLI script (no .sh extension)
-└── README.md                 # This documentation
-```
+### **When Your Method Needs Component Context:**
 
-### **🎯 Semantic Versioning**
-```bash
-# Version upgrade patterns
-web4tscomponent on MyComponent 0.1.0.0 upgrade nextBuild    # 0.1.0.0 → 0.1.0.1
-web4tscomponent on MyComponent 0.1.0.0 upgrade nextMinor    # 0.1.0.0 → 0.1.1.0
-web4tscomponent on MyComponent 0.1.0.0 upgrade nextMajor    # 0.1.0.0 → 0.2.0.0
-web4tscomponent on MyComponent 0.1.0.0 upgrade 1.5.2.3      # 0.1.0.0 → 1.5.2.3
-```
+Some methods work on a specific component (like upgrade, optimize, analyze). Use this pattern:
 
-### **💬 Human-Readable Error Messages**
-
-**❌ BEFORE (Cryptic Mainframe Era):**
-```
-EISDIR: illegal operation on a directory, read
-ENOENT: no such file or directory
-```
-
-**✅ AFTER (Semantic Web Era):**
-```
-⚠️ I tried to read a CLI script file, but found a directory instead. This is normal - continuing with version upgrade.
-⚠️ I couldn't find the CLI script file. This might be normal if the component doesn't have a CLI script.
-```
-
-**Implementation Pattern:**
 ```typescript
-try {
-  // File operations
-} catch (error) {
-  // Transform cryptic errors to human-readable messages
-  if ((error as Error).message.includes('EISDIR')) {
-    console.log(`⚠️ I tried to read a CLI script file, but found a directory instead. This is normal - continuing with version upgrade.`);
-  } else if ((error as Error).message.includes('ENOENT')) {
-    console.log(`⚠️ I couldn't find the CLI script file. This might be normal if the component doesn't have a CLI script.`);
-  } else {
-    console.log(`⚠️ Something unexpected happened while updating the CLI script: ${(error as Error).message}`);
+/**
+ * Your context-aware method
+ * @param parameter Your parameter
+ * @cliSyntax parameter
+ */
+async myContextMethod(parameter: string): Promise<this> {
+  // Get component context (set by 'on' command)
+  const context = this.getComponentContext();
+  if (!context) {
+    throw new Error('I need a component context first. Please use "on <component> <version>" before running this method.');
   }
-  // Don't throw - operation continues gracefully
+  
+  console.log(`🔧 Working on ${context.component} v${context.version}`);
+  console.log(`   Path: ${context.path}`);
+  
+  // Your logic here using context.component, context.version, context.path
+  
+  return this;
 }
 ```
 
----
-
-## **🧪 Testing & Validation**
-
-### **Component Testing Pattern**
-```typescript
-// Test component creation and upgrade
-describe('Web4TSComponent Functionality', () => {
-  test('should create and upgrade component', async () => {
-    const component = new DefaultWeb4TSComponent();
-    
-    // Test creation
-    await component.create('TestComponent', '0.1.0.0', 'all');
-    
-    // Test context loading
-    await component.on('TestComponent', '0.1.0.0');
-    
-    // Test upgrade
-    await component.upgrade('nextBuild');
-    
-    // Verify upgrade worked
-    expect(/* component upgraded to 0.1.0.1 */).toBeTruthy();
-  });
-});
-```
-
-### **Scenario Testing Pattern**
-```typescript
-// Test scenario hibernation/restoration
-describe('Web4TSComponent Scenarios', () => {
-  test('should preserve state through scenarios', async () => {
-    const component = new DefaultWeb4TSComponent();
-    component.model.name = 'TestComponent';
-    
-    // Serialize to scenario
-    const scenario = await component.toScenario();
-    
-    // Create new component and restore
-    const newComponent = new DefaultWeb4TSComponent();
-    newComponent.init(scenario);
-    
-    // Verify state preserved
-    expect(newComponent.model.name).toBe('TestComponent');
-  });
-});
-```
-
----
-
-## **🎯 Future Agent Onboarding**
-
-### **Quick Component Development Checklist**
-
-**For Future Agents Maintaining This Component:**
-
-1. **✅ Web4 Compliance Validation:**
-   - [ ] Empty constructor with model initialization
-   - [ ] `init(scenario)` method implemented
-   - [ ] `toScenario()` method implemented
-   - [ ] All state in `this.model` property
-   - [ ] Human-readable error messages
-
-2. **✅ CLI Standards Validation:**
-   - [ ] Extends `DefaultCLI` (copied from Unit)
-   - [ ] Simple 1:1 method mapping (no complex `--options`)
-   - [ ] Command chaining with `on` method
-   - [ ] Method discovery working
-   - [ ] Help output clear and comprehensive
-
-3. **✅ Testing Standards:**
-   - [ ] Vitest configuration present
-   - [ ] Component functionality tests
-   - [ ] Scenario hibernation/restoration tests
-   - [ ] CLI integration tests
-   - [ ] Timeout safety for all operations
-
-4. **✅ Building Standards:**
-   - [ ] Layer architecture (layer2, layer3, layer4, layer5)
-   - [ ] TypeScript compilation working
-   - [ ] CLI script executable (no .sh extension)
-   - [ ] Package.json with proper dependencies
-   - [ ] README with comprehensive documentation
-
-### **Common Maintenance Tasks**
-
-**Adding New CLI Topic:**
-```typescript
-// 1. Add method to DefaultWeb4TSComponent
-async newFeature(param1: string, param2: string): Promise<void> {
-  // Implementation with human-readable errors
-}
-
-// 2. Add CLI mapping in Web4TSComponentCLI
-case 'new-feature':
-  const [param1, param2] = params;
-  await this.component.newFeature(param1, param2);
-  break;
-
-// 3. Update help text in CLI
-// 4. Add tests for new functionality
-```
-
-**Version Upgrade Process:**
+**Usage:** 
 ```bash
-# 1. Create new version directory
-mkdir components/Web4TSComponent/0.3.0.7
-
-# 2. Copy existing version
-cp -r components/Web4TSComponent/0.3.0.6/* components/Web4TSComponent/0.3.0.7/
-
-# 3. Update package.json version
-# 4. Update component version references
-# 5. Test thoroughly before deployment
+./web4tscomponent on MyComponent 0.1.0.0 myContextMethod "parameter"
 ```
 
-**Error Message Humanization:**
+---
+
+## **🧪 Testing Your New Method**
+
+### **Quick Test Checklist:**
+
+```bash
+# 1. Check method appears in help
+./web4tscomponent | grep myMethod
+
+# 2. Test basic usage
+./web4tscomponent myMethod param1 param2
+
+# 3. Test with context if needed
+./web4tscomponent on TestComponent 0.1.0.0 myMethod param1
+
+# 4. Test method chaining
+./web4tscomponent on TestComponent 0.1.0.0 myMethod param1 upgrade nextBuild
+
+# 5. Verify nothing broke
+./web4tscomponent create TestVerify 0.1.0.0 all
+```
+
+---
+
+## **📋 Complete Example: Adding a New Method**
+
+### **Scenario:** You want to add a method that validates component structure
+
+### **Step 1: Add to DefaultWeb4TSComponent.ts**
 ```typescript
-// Always transform technical errors to human speech
-catch (error) {
-  if (error.message.includes('TECHNICAL_CODE')) {
-    console.log(`⚠️ I tried to [what you were doing], but [what actually happened]. [What happens next or guidance].`);
+/**
+ * Validate component structure and dependencies
+ * @param checkLevel Validation level (basic, thorough, strict)
+ * @param fixIssues Whether to fix found issues automatically
+ * @cliSyntax checkLevel fixIssues
+ * @cliDefault checkLevel basic
+ * @cliDefault fixIssues false
+ */
+async validateStructure(checkLevel: string = 'basic', fixIssues: string = 'false'): Promise<this> {
+  const context = this.getComponentContext();
+  if (!context) {
+    throw new Error('I need a component context first. Please use "on <component> <version>" before validating.');
   }
+  
+  console.log(`🔍 Validating ${context.component} structure at ${checkLevel} level`);
+  
+  // Your validation logic here
+  const shouldFix = fixIssues === 'true';
+  if (shouldFix) {
+    console.log(`🔧 Fixing issues automatically`);
+    // Fix logic here
+  }
+  
+  console.log(`✅ Structure validation completed`);
+  return this;
+}
+```
+
+### **Step 2: Test It**
+```bash
+# Method automatically appears in CLI:
+./web4tscomponent | grep validateStructure
+
+# Use it:
+./web4tscomponent on MyComponent 0.1.0.0 validateStructure thorough true
+
+# Chain it:
+./web4tscomponent on MyComponent 0.1.0.0 validateStructure basic false upgrade nextBuild
+```
+
+### **Step 3: Done!**
+Your method is now part of the CLI permanently. No other files to edit!
+
+---
+
+## **🚨 What NOT to Do (Save Yourself Hours of Debugging!)**
+
+### **❌ Don't Edit CLI Files**
+```typescript
+// ❌ NEVER EDIT: Web4TSComponentCLI.ts
+// ❌ NEVER EDIT: DefaultCLI.ts
+// The CLI auto-discovers methods - don't "help" it!
+```
+
+### **❌ Don't Add Switch Cases**
+```typescript
+// ❌ DON'T ADD THESE:
+switch (command) {
+  case 'myNewMethod':  // ← This breaks the auto-discovery!
+    await this.myNewMethod();
+    break;
+}
+```
+
+### **❌ Don't Update Help Text**
+```typescript
+// ❌ DON'T ADD HARDCODED HELP:
+console.log('myNewMethod - does something cool');
+// The CLI generates help automatically from TSDoc!
+```
+
+### **❌ Don't Use Complex Parameters**
+```typescript
+// ❌ DON'T USE OBJECTS:
+async myMethod(config: { name: string, options: string[] }): Promise<void>
+
+// ✅ USE SIMPLE PARAMETERS:
+async myMethod(name: string, options: string): Promise<this>
+```
+
+---
+
+## **🎯 Why This Works (The Web4 Magic)**
+
+### **Auto-Discovery Architecture:**
+1. **CLI scans DefaultWeb4TSComponent** using TypeScript reflection
+2. **Finds all public methods** automatically
+3. **Reads TSDoc comments** for parameter information  
+4. **Generates help text** from your comments
+5. **Routes commands** to your methods automatically
+
+### **Zero Configuration:**
+- No CLI configuration files
+- No method registration arrays
+- No hardcoded command lists
+- **Just add method + TSDoc = CLI command!**
+
+### **DRY Principle:**
+- Write method once → available everywhere
+- TSDoc comments → automatic documentation
+- Method signature → automatic parameter handling
+- **No repetitive code anywhere!**
+
+---
+
+## **🔧 Troubleshooting (When Things Don't Work)**
+
+### **Method Not Appearing in CLI?**
+```typescript
+// Check these:
+// 1. Method is public (not private)
+// 2. Has @cliSyntax annotation
+// 3. Proper TypeScript syntax
+// 4. Component compiles without errors
+
+// Common fix:
+/**
+ * @cliSyntax param1 param2  // ← Add this if missing
+ */
+async myMethod(param1: string, param2: string): Promise<this>
+```
+
+### **Method Throws Errors?**
+```typescript
+// Check these:
+// 1. Parameter count matches @cliSyntax
+// 2. Default values match @cliDefault
+// 3. Return type is Promise<this>
+// 4. Human-readable error messages
+
+// Common fix:
+async myMethod(param: string = 'default'): Promise<this> {  // ← Add default
+  return this;  // ← Add return
+}
+```
+
+### **Method Chaining Not Working?**
+```typescript
+// Check these:
+// 1. Method returns Promise<this>
+// 2. Uses getComponentContext() for context-aware operations
+// 3. Loads context with 'on' command first
+
+// Common fix:
+const context = this.getComponentContext();
+if (!context) {
+  throw new Error('I need a component context first. Please use "on <component> <version>" before this method.');
 }
 ```
 
 ---
 
-## **📚 Architecture Decision Records**
+## **🎯 Advanced Patterns (Once You're Comfortable)**
 
-### **Why Web4TSComponent 0.3.0.6 vs 1.0.0.0?**
+### **File Operations:**
+```typescript
+/**
+ * Process files in component directory
+ * @param pattern File pattern to match
+ * @cliSyntax pattern
+ */
+async processFiles(pattern: string): Promise<this> {
+  const context = this.getComponentContext();
+  if (!context) {
+    throw new Error('I need a component context first. Please use "on <component> <version>" before processing files.');
+  }
+  
+  // Use fs for file operations
+  const files = await fs.readdir(context.path);
+  // Process files matching pattern
+  
+  return this;
+}
+```
 
-**Problem:** Web4TSComponent 1.0.0.0 worked but violated Web4 standards:
-- ❌ Complex `--options` instead of simple 1:1 mapping
-- ❌ Didn't extend `DefaultCLI`
-- ❌ Not Web4-compliant scenario patterns
-
-**Solution:** Built 0.3.0.6 from scratch with:
-- ✅ Feature equivalent to 1.0.0.0
-- ✅ Full Web4 compliance like Unit 0.3.0.5
-- ✅ Simple CLI topics with 1:1 mapping
-- ✅ Human-readable error messages
-
-### **Why Scenarios Are Essential**
-
-**Web4 Requirement:** Components must support hibernation and restoration
-**Implementation:** `init()` and `toScenario()` methods
-**Benefit:** Components can survive process restarts and communicate state
-
-### **Why Human-Readable Errors**
-
-**Problem:** Technical error codes like `EISDIR` are cryptic
-**Solution:** Transform to human speech: "I tried to read a file, but found a directory"
-**Benefit:** Better user experience in semantic web era
-
----
-
-## **🎯 Component Maintenance Excellence**
-
-### **Key Learnings for Future Development:**
-
-1. **Follow Unit Patterns**: When in doubt, copy Unit's approach
-2. **Web4 Compliance First**: Empty constructor, scenarios, model-based state
-3. **Human Communication**: Error messages should read like helpful sentences
-4. **Simple CLI Design**: 1:1 mapping, no complex options
-5. **Comprehensive Testing**: Functionality, scenarios, CLI integration
-6. **Timeout Safety**: Always use timeouts for operations
-7. **Documentation**: README must enable future agents to get up to speed quickly
-
-### **Quality Assurance Checklist:**
-
-- [ ] **Web4 Compliant**: Empty constructor, init/toScenario methods
-- [ ] **Unit-Like**: Same patterns for team consistency  
-- [ ] **Human Errors**: No cryptic codes, speaking messages
-- [ ] **CLI Standard**: Simple topics, method discovery, command chaining
-- [ ] **Test Coverage**: All functionality tested with timeouts
-- [ ] **Documentation**: Comprehensive README for future agents
+### **External Tool Integration:**
+```typescript
+/**
+ * Run external validation tool
+ * @param toolName Name of validation tool
+ * @cliSyntax toolName
+ */
+async runValidator(toolName: string): Promise<this> {
+  console.log(`🔧 Running ${toolName} validator`);
+  
+  // Use child_process for external tools
+  const { execSync } = require('child_process');
+  try {
+    const result = execSync(`${toolName} --version`, { encoding: 'utf-8' });
+    console.log(`✅ ${toolName} available: ${result.trim()}`);
+  } catch (error) {
+    throw new Error(`I couldn't find ${toolName}. Please install it first.`);
+  }
+  
+  return this;
+}
+```
 
 ---
 
-## **🚀 Ready for Production**
+## **🚀 You're Ready! (It's Really This Simple)**
 
-Web4TSComponent 0.3.0.6 is production-ready with:
-- ✅ Full Web4 compliance and Unit-like consistency
-- ✅ Human-readable error communication  
-- ✅ Comprehensive testing with timeout safety
-- ✅ Feature equivalence to v1.0.0.0 with architectural improvements
-- ✅ Complete documentation for future agent maintenance
+### **Remember:**
+1. **Add method to DefaultWeb4TSComponent.ts**
+2. **Add TSDoc with @cliSyntax**  
+3. **Return this for chaining**
+4. **Test it works**
+5. **That's it!**
 
-**"Programs now speak like humans in the semantic web era!"** 💬🎯
+### **The CLI Magic:**
+- Automatically discovers your method
+- Generates help text from your TSDoc
+- Routes commands to your method
+- Handles parameters automatically
+- **Zero configuration required!**
+
+### **When You Need Help:**
+- Look at existing methods in DefaultWeb4TSComponent.ts
+- Copy their TSDoc pattern
+- Keep parameters simple
+- Test frequently
+
+**Welcome to Web4 auto-discovery CLI - it's simpler and more powerful than you think!** 🚀⚡
 
 ---
+
+## **📚 Related Documentation**
+
+- **Original Patterns:** Copy from existing methods in DefaultWeb4TSComponent.ts
+- **Unit Reference:** See Unit component for more auto-discovery examples
+- **Web4 Principles:** Empty constructors, scenarios, human-readable errors
+- **Testing:** Use Vitest for component testing (Jest is banned)
 
 **Never 2 1 (TO ONE). Always 4 2 (FOR TWO).** 🤝✨
