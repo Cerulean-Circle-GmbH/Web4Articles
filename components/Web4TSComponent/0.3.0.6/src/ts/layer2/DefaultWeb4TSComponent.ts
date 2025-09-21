@@ -81,6 +81,31 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return this;
   }
 
+  /**
+   * Convert component to scenario (Web4 pattern)
+   * Essential for Web4 compliance and hibernation/restoration
+   */
+  async toScenario(name?: string): Promise<Scenario<Web4TSComponentModel>> {
+    const ownerData = JSON.stringify({
+      user: process.env.USER || 'system',
+      hostname: process.env.HOSTNAME || 'localhost',
+      uuid: this.model.uuid,
+      timestamp: new Date().toISOString(),
+      component: 'Web4TSComponent',
+      version: '0.3.0.6'
+    });
+
+    return {
+      ior: {
+        uuid: this.model.uuid,
+        component: 'Web4TSComponent',
+        version: '0.3.0.6'
+      },
+      owner: ownerData,
+      model: this.model
+    };
+  }
+
   setTargetDirectory(directory: string): void {
     this.model.targetDirectory = directory;
     this.model.updatedAt = new Date().toISOString();
@@ -591,17 +616,41 @@ Standards:
       await fs.writeFile(packageJsonPath, JSON.stringify(packageContent, null, 2));
     }
     
-    // Update CLI script version reference if exists
-    const cliScripts = await fs.readdir(targetPath);
-    const cliScript = cliScripts.find(file => file.endsWith('.sh') || (!file.includes('.') && file !== 'node_modules'));
-    if (cliScript) {
-      const cliScriptPath = `${targetPath}/${cliScript}`;
-      let cliContent = await fs.readFile(cliScriptPath, 'utf-8');
-      cliContent = cliContent.replace(
-        /COMPONENT_VERSION="[^"]+"/,
-        `COMPONENT_VERSION="${toVersion}"`
+    // Update CLI script version reference if exists (with human-readable error handling)
+    try {
+      const cliScripts = await fs.readdir(targetPath);
+      const cliScript = cliScripts.find(file => 
+        file.endsWith('.sh') || 
+        (!file.includes('.') && file !== 'node_modules' && file !== 'spec' && file !== 'src' && file !== 'test')
       );
-      await fs.writeFile(cliScriptPath, cliContent);
+      
+      if (cliScript) {
+        const cliScriptPath = `${targetPath}/${cliScript}`;
+        
+        // Check if it's actually a file before reading (prevent EISDIR)
+        const stats = await fs.stat(cliScriptPath);
+        if (stats.isFile()) {
+          let cliContent = await fs.readFile(cliScriptPath, 'utf-8');
+          cliContent = cliContent.replace(
+            /COMPONENT_VERSION="[^"]+"/,
+            `COMPONENT_VERSION="${toVersion}"`
+          );
+          await fs.writeFile(cliScriptPath, cliContent);
+          console.log(`   ✅ CLI script updated: ${cliScript}`);
+        } else {
+          console.log(`   ⚠️ Skipping ${cliScript} - it's a directory, not a file`);
+        }
+      }
+    } catch (error) {
+      // Transform cryptic error to human-readable message
+      if ((error as Error).message.includes('EISDIR')) {
+        console.log(`   ⚠️ I tried to read a CLI script file, but found a directory instead. This is normal - continuing with version upgrade.`);
+      } else if ((error as Error).message.includes('ENOENT')) {
+        console.log(`   ⚠️ I couldn't find the CLI script file. This might be normal if the component doesn't have a CLI script.`);
+      } else {
+        console.log(`   ⚠️ Something unexpected happened while updating the CLI script: ${(error as Error).message}`);
+      }
+      // Don't throw - CLI script update is optional
     }
   }
 
