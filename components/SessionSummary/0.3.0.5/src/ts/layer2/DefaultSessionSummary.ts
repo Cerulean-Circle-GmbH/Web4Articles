@@ -193,6 +193,11 @@ export class DefaultSessionSummary implements ISessionSummary {
         ? `./${analysis.filename}` 
         : analysis.relativePath;
       
+      // Skip entries with empty achievements
+      if (!analysis.achievement || analysis.achievement.trim() === '' || analysis.achievement === '****') {
+        continue;
+      }
+      
       table += `### **${i + 1}. ${analysis.achievement}**\n`;
       table += `**🕐 Time:** ${analysis.utcTime} | **📋 SHA:** ${analysis.sha}\n\n`;
       
