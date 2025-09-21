@@ -1,6 +1,6 @@
 {
   "name": "@web4/session-summary",
-  "version": "nextBuild",
+  "version": "0.3.0.8",
   "description": "Web4 SessionSummary component - automated PDCA session analysis with TRON extraction and decisions tracking",
   "type": "module",
   "main": "dist/ts/layer2/DefaultSessionSummary.js",
