@@ -1,0 +1,1 @@
+../../project.journal/2025-09-21-UTC-2014-session/2025-09-21-UTC-2014-simplicity-and-spiritual-wisdom-pdca.md
