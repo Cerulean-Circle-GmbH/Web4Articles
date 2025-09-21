@@ -27,23 +27,9 @@
 - **Agent Registry:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-21-UTC-1714/scrum.pmo/agents/registry/pending-unknown-2025-09-21-UTC-1714.md) | [scrum.pmo/agents/registry/pending-unknown-2025-09-21-UTC-1714.md](../../agents/registry/pending-unknown-2025-09-21-UTC-1714.md)
 
 ### **QA Decisions**
-- [ ] **Decision 1: Primary Work Focus Area**
-  - a) Technical Development Focus - Component enhancement, testing improvements, feature development using Vitest
-  - b) Architecture Focus - System design improvements, process optimization, integration work
-  - c) Documentation Focus - Requirement processing, PDCA workflow enhancement, automation
-  - d) Quality/Testing Focus - Vitest testing strategies, validation processes, tech stack compliance
-
-- [ ] **Decision 2: Role Selection for Session**
-  - a) Continue as Background Agent for autonomous task coordination
-  - b) Switch to Developer for implementation tasks and component work
-  - c) Switch to Architect for system design and process improvements
-  - d) Switch to Tester for quality assurance and Vitest testing focus
-
-- [ ] **Decision 3: Session Duration and Sprint Planning**
-  - a) Full day session with multiple sprint cycles across various components
-  - b) Half-day focused session on specific component or testing improvement
-  - c) Quick analysis session for current project state review and PDCA compliance
-  - d) Extended session for major feature development with proper documentation
+- [x] **Decision 1: Primary Work Focus Area** → **1a** Technical Development Focus - Component enhancement, testing improvements, feature development using Vitest
+- [x] **Decision 2: Role Selection for Session** → **1b** Switch to Developer for implementation tasks and component work
+- [x] **Decision 3: Session Duration and Sprint Planning** → **3d** Extended session for major feature development with proper documentation
 
 ### **TRON Feedback (2025-09-21-UTC-1714)**
 ```quote
