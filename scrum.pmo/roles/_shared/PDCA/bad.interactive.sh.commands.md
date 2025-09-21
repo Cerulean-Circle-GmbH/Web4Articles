@@ -13,6 +13,9 @@
 - `git cherry-pick` - 🍒 DANGEROUS: Hangs on conflicts without `--no-commit` flag, use cherry picking as taking work exclusively and committing to another branch
 - `git merge` - Interactive merge conflict resolution
 - `git rebase` - Interactive rebase prompts
+- `git reset --hard` - Destructive; discards local changes/history and can drop unpushed work
+- `git push --force` / `--force-with-lease` - Destructive; rewrites remote history and can erase teammates' commits
+- `git add <large-directory-with-node_modules>` - TIMEOUT: Large directories (64MB+) cause extreme delays, exclude node_modules
 
 ### **Package Managers**
 - `npm install` - Should use `npm install --yes` or `npm ci`
@@ -27,6 +30,11 @@
 - `git pull --rebase origin branch` - But requires `git config pull.rebase false` first
 - `git cherry-pick --no-commit` - 🍒 SAFER: Prevents interactive conflict resolution, but cherry picking = taking work exclusively and committing to another branch
 - `git status` - Always safe, read-only
+- `git merge --ff-only` - Ensures fast-forward only; avoids unintended merges
+- Create backup before risky operations: `git branch backup-$(date -u +%Y-%m-%d-UTC-%H%M%S)`
+- Prefer `git revert <range>` to undo while preserving history instead of `reset --hard`
+- `git add src/ package.json README.md` - Add specific files instead of entire directories
+- `git add . --exclude=node_modules` - Exclude large directories from staging
 
 ### **Package Managers**
 - `npm ci` - Non-interactive, uses package-lock.json
@@ -55,6 +63,13 @@ When stuck in interactive command:
 - **Impact:** Terminal session became unresponsive, 900s timeout
 - **Resolution:** Started fresh terminal session
 - **Prevention:** Use `git pull --no-edit` or configure `pull.rebase false`
+
+### **Incident 2: 2025-09-20-UTC-2010**
+- **Command:** `git add components/Web4TSComponent/0.3.0.7`
+- **Issue:** Git add timeout on 64MB directory including node_modules
+- **Impact:** Command exceeded 20s timeout, hung indefinitely
+- **Resolution:** Add only source files: `git add src/ package.json README.md`
+- **Prevention:** Always exclude node_modules and large binary directories from git
 
 ---
 
