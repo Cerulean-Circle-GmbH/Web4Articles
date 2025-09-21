@@ -1033,6 +1033,19 @@ export default defineConfig({
   }
 
   /**
+   * Test method for README demonstration
+   * @param inputData Data to process  
+   * @param outputFormat Format for output (json, xml, csv)
+   * @cliSyntax inputData outputFormat
+   * @cliDefault outputFormat json
+   */
+  async testNewMethod(inputData: string, outputFormat: string = 'json'): Promise<this> {
+    console.log(`🚀 Processing ${inputData} as ${outputFormat}`);
+    console.log(`✅ Test method completed successfully!`);
+    return this;
+  }
+
+  /**
    * Update symlinks for component version (latest and scripts)
    */
   private async updateSymlinks(component: string, version: string): Promise<void> {
