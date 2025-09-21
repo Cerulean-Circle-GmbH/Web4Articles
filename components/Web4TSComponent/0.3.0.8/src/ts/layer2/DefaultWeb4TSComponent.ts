@@ -364,7 +364,13 @@ Standards:
   // Web4 CLI Topic Methods (for DefaultCLI dynamic execution)
   
   /**
-   * Create Web4-compliant component (maps to scaffold-component)
+   * Create Web4-compliant component with scaffolding
+   * @param name Component name (spaces become dots)
+   * @param version Semantic version in 0.1.0.0 format  
+   * @param options Scaffolding options (all, cli, spec, vitest, layers)
+   * @cliSyntax name version options
+   * @cliDefault version 0.1.0.0
+   * @cliDefault options all
    */
   async create(name: string, version: string = '0.1.0.0', options: string = ''): Promise<void> {
     // Parse options (maps from 1.0.0.0 --cli --spec --vitest --layers)
@@ -393,11 +399,18 @@ Standards:
   /**
    * Set component configuration (maps to generate-cli)
    */
-  async set(component: string, attribute: string, value: string): Promise<void> {
-    if (attribute === 'cli-script' || attribute === 'cli') {
-      console.log(`🔨 Generating CLI script for ${component} v${value}`);
-      const cliScript = await this.generateLocationResilientCLI(component, value);
-      const outputPath = `${component.toLowerCase()}${value.replace(/\\./g, '')}.sh`;
+  /**
+   * Set component property or generate CLI script
+   * @param component Component name for CLI generation
+   * @param property Property to set (cli-script, etc.)
+   * @param version Version for CLI script generation
+   * @cliSyntax component property version
+   */
+  async set(component: string, property: string, version: string): Promise<void> {
+    if (property === 'cli-script' || property === 'cli') {
+      console.log(`🔨 Generating CLI script for ${component} v${version}`);
+      const cliScript = await this.generateLocationResilientCLI(component, version);
+      const outputPath = `${component.toLowerCase()}${version.replace(/\\./g, '')}.sh`;
       
       await import('fs/promises').then(fs => fs.writeFile(outputPath, cliScript, { mode: 0o755 }));
       
@@ -405,17 +418,23 @@ Standards:
       console.log(`   Location-resilient: ✅`);
       console.log(`   Web4 compliant: ✅`);
     } else {
-      console.log(`⚠️ Unknown attribute: ${attribute}. Supported: cli-script, cli`);
+      console.log(`⚠️ Unknown property: ${property}. Supported: cli-script, cli`);
     }
   }
 
   /**
    * Get validation results (maps to validate-standard)
    */
-  async get(scriptPath: string, attribute: string): Promise<void> {
-    if (attribute === 'validation' || attribute === 'standard') {
-      console.log(`🔍 Validating CLI standard: ${scriptPath}`);
-      const validation = await this.validateCLIStandard(scriptPath);
+  /**
+   * Get component validation or property
+   * @param path Component path or property to validate
+   * @param operation Validation operation (validation, etc.)
+   * @cliSyntax path operation
+   */
+  async get(path: string, operation: string): Promise<void> {
+    if (operation === 'validation' || operation === 'standard') {
+      console.log(`🔍 Validating CLI standard: ${path}`);
+      const validation = await this.validateCLIStandard(path);
       
       console.log(`\\n📊 Validation Results:`);
       console.log(`   Compliant: ${validation.isCompliant ? '✅' : '❌'}`);
@@ -427,9 +446,9 @@ Standards:
           console.log(`   ${index + 1}. ${issue}`);
         });
       }
-    } else if (attribute === 'compliance') {
-      console.log(`🔍 Auditing component compliance: ${scriptPath}`);
-      const metadata = await this.auditComponentCompliance(scriptPath);
+    } else if (operation === 'compliance') {
+      console.log(`🔍 Auditing component compliance: ${path}`);
+      const metadata = await this.auditComponentCompliance(path);
       
       console.log(`\\n📊 Compliance Results:`);
       console.log(`   Component: ${metadata.name} v${metadata.version}`);
@@ -437,12 +456,17 @@ Standards:
       console.log(`   CLI: ${metadata.hasLocationResilientCLI ? '✅' : '❌'}`);
       console.log(`   Layers: ${metadata.hasLayeredArchitecture ? '✅' : '❌'}`);
     } else {
-      console.log(`⚠️ Unknown attribute: ${attribute}. Supported: validation, standard, compliance`);
+      console.log(`⚠️ Unknown operation: ${operation}. Supported: validation, standard, compliance`);
     }
   }
 
   /**
    * Analyze component from path (maps to audit-compliance)
+   */
+  /**
+   * Analyze component compliance from path
+   * @param componentPath Path to component directory
+   * @cliSyntax componentPath
    */
   async from(componentPath: string): Promise<this> {
     console.log(`🔍 Analyzing component: ${componentPath}`);
@@ -466,6 +490,11 @@ Standards:
   /**
    * Find components in directory (maps to generate-report)
    */
+  /**
+   * Find and discover components in directory
+   * @param componentDir Directory to search for components
+   * @cliSyntax componentDir
+   */
   async find(componentDir: string): Promise<this> {
     console.log(`🔍 Discovering components in: ${componentDir}`);
     const components = await this.generateComplianceReport(componentDir);
@@ -484,6 +513,12 @@ Standards:
   /**
    * Load component context for command chaining (like Unit's on method)
    * Usage: web4tscomponent on <component> <version> upgrade <next>
+   */
+  /**
+   * Load component context for command chaining
+   * @param component Component name
+   * @param version Component version
+   * @cliHide
    */
   async on(component: string, version: string): Promise<this> {
     const componentPath = path.join(this.model.targetDirectory, 'components', component, version);
@@ -512,6 +547,11 @@ Standards:
   /**
    * Upgrade component version with semantic control (chained after on)
    * Usage: web4tscomponent on Unit 0.3.0.5 upgrade nextBuild
+   */
+  /**
+   * Upgrade component to next version
+   * @param versionType Version upgrade type (nextBuild, nextMinor, nextMajor, or specific version)
+   * @cliSyntax versionType
    */
   async upgrade(versionType: string): Promise<this> {
     const context = this.getComponentContext();
