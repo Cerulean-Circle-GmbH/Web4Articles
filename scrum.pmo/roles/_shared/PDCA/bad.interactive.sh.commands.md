@@ -16,6 +16,7 @@
 - `git reset --hard` - Destructive; discards local changes/history and can drop unpushed work
 - `git push --force` / `--force-with-lease` - Destructive; rewrites remote history and can erase teammates' commits
 - `git add <large-directory-with-node_modules>` - TIMEOUT: Large directories (64MB+) cause extreme delays, exclude node_modules
+- `mv file1 file2` - No git tracking, breaks history and traceability
 
 ### **Package Managers**
 - `npm install` - Should use `npm install --yes` or `npm ci`
@@ -35,6 +36,7 @@
 - Prefer `git revert <range>` to undo while preserving history instead of `reset --hard`
 - `git add src/ package.json README.md` - Add specific files instead of entire directories
 - `git add . --exclude=node_modules` - Exclude large directories from staging
+- `bash -c "timeout 30s git mv oldpath newpath"` - Git tracked moves with safety protocol
 
 ### **Package Managers**
 - `npm ci` - Non-interactive, uses package-lock.json
