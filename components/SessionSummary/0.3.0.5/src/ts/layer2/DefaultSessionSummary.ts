@@ -151,10 +151,17 @@ export class DefaultSessionSummary implements ISessionSummary {
     const sessionName = basename(options.sessionPath);
     const outputPath = options.outputFile || join(options.sessionPath, 'session.summary.md');
     
-    let summary = `# Session Summary: ${sessionName}\n\n`;
-    summary += `**Generated:** ${new Date().toISOString()}\n`;
-    summary += `**Session Path:** ${options.sessionPath}\n`;
-    summary += `**PDCAs Analyzed:** ${analyses.length}\n\n`;
+    let summary = `# 📋 **Session Summary: ${sessionName} - CMM3 Systematic PDCA Analysis**\n\n`;
+    summary += `**🗓️ Generated:** ${new Date().toISOString()}\n`;
+    summary += `**📁 Session Path:** ${options.sessionPath}\n`;
+    summary += `**📊 PDCAs Analyzed:** ${analyses.length}\n`;
+    summary += `**🎯 Template Version:** 3.1.4.2\n\n`;
+    
+    // Add session overview
+    summary += `## **📊 Session Overview**\n\n`;
+    summary += `**Session Focus:** Systematic PDCA analysis with chronological progression\n`;
+    summary += `**Analysis Method:** TRON quote extraction, QA decision tracking, git integration\n`;
+    summary += `**Quality Standards:** CMM3 compliance with dual links and professional formatting\n\n`;
     
     if (options.includeDecisions) {
       summary += this.generateEnhancedTable(analyses, options.branch || 'main');
@@ -174,10 +181,12 @@ export class DefaultSessionSummary implements ISessionSummary {
   }
 
   private generateEnhancedTable(analyses: PDCAAnalysis[], branch: string): string {
-    let table = `## **📊 Complete Session Analysis Table (Enhanced with QA Decisions)**\n\n`;
-    table += `**Note:** Table shows chronological progression with exact TRON quotes and complete QA Decisions. Total PDCAs analyzed: ${analyses.length}\n\n`;
-    table += `| **Git SHA** | **UTC Time** | **PDCA Source/Evidence** | **Exact TRON Quotes** | **QA Decisions** | **Key Learning/Achievement** |\n`;
-    table += `|-------------|--------------|--------------------------|------------------------|------------------|-----------------------------|\n`;
+    let table = `## **📊 CMM3 Session Analysis Table (PDCA Systematic Review)**\n\n`;
+    table += `**CMM3 Compliance:** Standardized PDCA analysis with systematic TRON extraction and QA decision tracking\n`;
+    table += `**Analysis Method:** Chronological progression with git integration and dual links formatting\n`;
+    table += `**Quality Standards:** Template version 3.1.4.2 compliance with professional documentation\n\n`;
+    table += `| **Git SHA** | **UTC Time** | **PDCA Source/Evidence** | **TRON Quotes** | **QA Decisions** | **Achievement** |\n`;
+    table += `|-------------|--------------|--------------------------|-----------------|------------------|----------------|\n`;
     
     for (const analysis of analyses) {
       // Fix: Use commit SHA and clean relative path for GitHub URLs
