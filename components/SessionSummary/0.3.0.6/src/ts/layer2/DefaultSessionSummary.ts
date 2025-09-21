@@ -67,17 +67,8 @@ export class DefaultSessionSummary implements ISessionSummary {
       }
     }
     
-    // Enhanced quote processing for table display
-    const processedQuotes = quotes.map(quote => {
-      // Limit quote length for table readability
-      const maxLength = 100;
-      if (quote.length > maxLength) {
-        return quote.substring(0, maxLength) + '...';
-      }
-      return quote;
-    });
-    
-    return processedQuotes.join('\\n\\n');
+    // Return full quotes without truncation to preserve complete TRON feedback
+    return quotes.join('\\n\\n');
   }
 
   extractQADecisions(content: string): string {
@@ -98,25 +89,12 @@ export class DefaultSessionSummary implements ISessionSummary {
   extractAchievement(content: string, filename: string): string {
     const titleMatch = content.match(/# 📋 \*\*PDCA Cycle: ([^*]+) - ([^*]+)\*\*/);
     if (titleMatch) {
-      const achievement = `${titleMatch[1]} - ${titleMatch[2]}`;
-      // Limit achievement length for table readability
-      const maxLength = 80;
-      if (achievement.length > maxLength) {
-        return achievement.substring(0, maxLength) + '...';
-      }
-      return achievement;
+      return `${titleMatch[1]} - ${titleMatch[2]}`;
     }
     
     const baseName = basename(filename, '.md');
     const parts = baseName.split('-').slice(4);
-    const achievement = parts.join(' ').replace(/([a-z])([A-Z])/g, '$1 $2');
-    
-    // Limit achievement length for table readability
-    const maxLength = 80;
-    if (achievement.length > maxLength) {
-      return achievement.substring(0, maxLength) + '...';
-    }
-    return achievement;
+    return parts.join(' ').replace(/([a-z])([A-Z])/g, '$1 $2');
   }
 
   getGitInfo(filename: string): { sha: string; timestamp: string; message: string; utcTime: string } {
