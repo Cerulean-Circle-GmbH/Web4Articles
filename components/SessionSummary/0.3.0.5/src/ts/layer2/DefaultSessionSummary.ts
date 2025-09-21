@@ -180,10 +180,23 @@ export class DefaultSessionSummary implements ISessionSummary {
     table += `|-------------|--------------|--------------------------|------------------------|------------------|-----------------------------|\n`;
     
     for (const analysis of analyses) {
-      const githubUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/${branch}/${analysis.relativePath}`;
-      const dualLink = `[GitHub](${githubUrl}) \\| [${analysis.filename}](N/A)`;
+      // Fix: Use commit SHA instead of branch for stable GitHub URLs
+      const githubUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/${analysis.sha}/${analysis.relativePath}`;
+      // Fix: Use proper relative path for local links
+      const localPath = analysis.relativePath.replace('scrum.pmo/project.journal/2025-09-20-UTC-1348-session/', './');
+      const dualLink = `[GitHub](${githubUrl}) \\| [§/${analysis.relativePath}](${localPath})`;
       
-      table += `| **${analysis.sha}** | **${analysis.utcTime}** | ${dualLink} | \`${analysis.tronQuotes}\` | ${analysis.qaDecisions} | **${analysis.achievement}** |\n`;
+      // Truncate long TRON quotes for table readability
+      const truncatedQuotes = analysis.tronQuotes.length > 100 
+        ? analysis.tronQuotes.substring(0, 100) + '...' 
+        : analysis.tronQuotes;
+      
+      // Truncate long QA decisions for table readability  
+      const truncatedDecisions = analysis.qaDecisions.length > 150
+        ? analysis.qaDecisions.substring(0, 150) + '...'
+        : analysis.qaDecisions;
+      
+      table += `| **${analysis.sha}** | **${analysis.utcTime}** | ${dualLink} | \`${truncatedQuotes}\` | ${truncatedDecisions} | **${analysis.achievement}** |\n`;
     }
     
     return table;
