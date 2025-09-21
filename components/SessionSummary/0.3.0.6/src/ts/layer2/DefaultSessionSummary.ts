@@ -36,6 +36,19 @@ export class DefaultSessionSummary implements ISessionSummary {
     return files;
   }
 
+  private escapeTableContent(content: string): string {
+    return content
+      .replace(/\|/g, '\\|')           // Escape pipe characters
+      .replace(/\n/g, ' ')             // Replace newlines with spaces
+      .replace(/\r/g, '')              // Remove carriage returns
+      .replace(/\t/g, ' ')             // Replace tabs with spaces
+      .replace(/\s+/g, ' ')            // Normalize multiple spaces
+      .replace(/\*\*/g, '')            // Remove bold markdown
+      .replace(/\*/g, '')              // Remove italic markdown
+      .replace(/`/g, '\\`')            // Escape backticks
+      .trim();                         // Remove leading/trailing whitespace
+  }
+
   extractTRONQuotes(content: string): string {
     const quotes: string[] = [];
     
@@ -67,21 +80,16 @@ export class DefaultSessionSummary implements ISessionSummary {
       }
     }
     
-    // Return full quotes without truncation to preserve complete TRON feedback
-    return quotes.join('\\n\\n');
+    // Apply table escaping to preserve table structure
+    const escapedQuotes = quotes.map(quote => this.escapeTableContent(quote));
+    return escapedQuotes.join(' | ');
   }
 
   extractQADecisions(content: string): string {
     // Enhanced feature from origin/dev/once0304 bash implementation
     const decisionMatch = content.match(/### \*\*QA Decisions\*\*([\s\S]*?)(?=### \*\*TRON|---|\n## )/);
     if (decisionMatch) {
-      return decisionMatch[1]
-        .replace(/\|/g, '\\|')
-        .replace(/`/g, '\\`')
-        .replace(/\n/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim()
-        .substring(0, 200) + (decisionMatch[1].length > 200 ? '...' : '');
+      return this.escapeTableContent(decisionMatch[1]);
     }
     return 'No decisions';
   }
@@ -89,12 +97,13 @@ export class DefaultSessionSummary implements ISessionSummary {
   extractAchievement(content: string, filename: string): string {
     const titleMatch = content.match(/# 📋 \*\*PDCA Cycle: ([^*]+) - ([^*]+)\*\*/);
     if (titleMatch) {
-      return `${titleMatch[1]} - ${titleMatch[2]}`;
+      return this.escapeTableContent(`${titleMatch[1]} - ${titleMatch[2]}`);
     }
     
     const baseName = basename(filename, '.md');
     const parts = baseName.split('-').slice(4);
-    return parts.join(' ').replace(/([a-z])([A-Z])/g, '$1 $2');
+    const achievement = parts.join(' ').replace(/([a-z])([A-Z])/g, '$1 $2');
+    return this.escapeTableContent(achievement);
   }
 
   getGitInfo(filename: string): { sha: string; timestamp: string; message: string; utcTime: string } {
