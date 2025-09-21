@@ -67,7 +67,17 @@ export class DefaultSessionSummary implements ISessionSummary {
       }
     }
     
-    return quotes.join('\\n\\n');
+    // Enhanced quote processing for table display
+    const processedQuotes = quotes.map(quote => {
+      // Limit quote length for table readability
+      const maxLength = 100;
+      if (quote.length > maxLength) {
+        return quote.substring(0, maxLength) + '...';
+      }
+      return quote;
+    });
+    
+    return processedQuotes.join('\\n\\n');
   }
 
   extractQADecisions(content: string): string {
@@ -88,12 +98,25 @@ export class DefaultSessionSummary implements ISessionSummary {
   extractAchievement(content: string, filename: string): string {
     const titleMatch = content.match(/# 📋 \*\*PDCA Cycle: ([^*]+) - ([^*]+)\*\*/);
     if (titleMatch) {
-      return `${titleMatch[1]} - ${titleMatch[2]}`;
+      const achievement = `${titleMatch[1]} - ${titleMatch[2]}`;
+      // Limit achievement length for table readability
+      const maxLength = 80;
+      if (achievement.length > maxLength) {
+        return achievement.substring(0, maxLength) + '...';
+      }
+      return achievement;
     }
     
-    const baseName = basename(filename, '.pdca.md');
+    const baseName = basename(filename, '.md');
     const parts = baseName.split('-').slice(4);
-    return parts.join(' ').replace(/([a-z])([A-Z])/g, '$1 $2');
+    const achievement = parts.join(' ').replace(/([a-z])([A-Z])/g, '$1 $2');
+    
+    // Limit achievement length for table readability
+    const maxLength = 80;
+    if (achievement.length > maxLength) {
+      return achievement.substring(0, maxLength) + '...';
+    }
+    return achievement;
   }
 
   getGitInfo(filename: string): { sha: string; timestamp: string; message: string; utcTime: string } {
@@ -110,11 +133,14 @@ export class DefaultSessionSummary implements ISessionSummary {
       
       return { sha, timestamp, message, utcTime };
     } catch (error) {
+      // Enhanced fallback for uncommitted files
+      const now = new Date();
+      const utcTime = now.toISOString().slice(0, 16).replace('T', '-UTC-').replace(':', '');
       return { 
-        sha: 'unknown', 
-        timestamp: 'unknown', 
-        message: 'No commit info', 
-        utcTime: 'unknown' 
+        sha: 'UNCOMMITTED', 
+        timestamp: now.toISOString(), 
+        message: 'File not yet committed to git',
+        utcTime: utcTime
       };
     }
   }
