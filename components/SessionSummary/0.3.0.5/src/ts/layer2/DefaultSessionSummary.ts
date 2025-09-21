@@ -181,34 +181,36 @@ export class DefaultSessionSummary implements ISessionSummary {
   }
 
   private generateEnhancedTable(analyses: PDCAAnalysis[], branch: string): string {
-    let table = `## **📊 CMM3 Session Analysis Table (PDCA Systematic Review)**\n\n`;
-    table += `**CMM3 Compliance:** Standardized PDCA analysis with systematic TRON extraction and QA decision tracking\n`;
-    table += `**Analysis Method:** Chronological progression with git integration and dual links formatting\n`;
-    table += `**Quality Standards:** Template version 3.1.4.2 compliance with professional documentation\n\n`;
-    table += `| **Git SHA** | **UTC Time** | **PDCA Source/Evidence** | **TRON Quotes** | **QA Decisions** | **Achievement** |\n`;
-    table += `|-------------|--------------|--------------------------|-----------------|------------------|----------------|\n`;
+    let table = `## **📊 CMM3 Session Analysis (PDCA Systematic Review)**\n\n`;
+    table += `**Total PDCAs:** ${analyses.length} | **Analysis Method:** Chronological progression with TRON extraction\n\n`;
     
-    for (const analysis of analyses) {
-      // Fix: Use commit SHA and clean relative path for GitHub URLs
+    // Generate clean, readable list format instead of broken table
+    for (let i = 0; i < analyses.length; i++) {
+      const analysis = analyses[i];
       const cleanPath = analysis.relativePath.replace(/^\.\.\/\.\.\/\.\.\//, '');
       const githubUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/${analysis.sha}/${cleanPath}`;
-      // Fix: Use proper relative path for local links within session
       const localPath = analysis.relativePath.includes('2025-09-20-UTC-1348-session/') 
         ? `./${analysis.filename}` 
         : analysis.relativePath;
-      const dualLink = `[GitHub](${githubUrl}) \\| [§/${cleanPath}](${localPath})`;
       
-      // Truncate long TRON quotes for table readability
-      const truncatedQuotes = analysis.tronQuotes.length > 100 
-        ? analysis.tronQuotes.substring(0, 100) + '...' 
-        : analysis.tronQuotes;
+      table += `### **${i + 1}. ${analysis.achievement}**\n`;
+      table += `**🕐 Time:** ${analysis.utcTime} | **📋 SHA:** ${analysis.sha}\n\n`;
       
-      // Truncate long QA decisions for table readability  
-      const truncatedDecisions = analysis.qaDecisions.length > 150
-        ? analysis.qaDecisions.substring(0, 150) + '...'
-        : analysis.qaDecisions;
+      // TRON Quotes (clean format)
+      if (analysis.tronQuotes && analysis.tronQuotes.trim() && analysis.tronQuotes !== '``') {
+        table += `**💬 TRON Feedback:**\n`;
+        table += `\`\`\`\n${analysis.tronQuotes}\n\`\`\`\n\n`;
+      }
       
-      table += `| **${analysis.sha}** | **${analysis.utcTime}** | ${dualLink} | \`${truncatedQuotes}\` | ${truncatedDecisions} | **${analysis.achievement}** |\n`;
+      // QA Decisions (clean format)
+      if (analysis.qaDecisions && analysis.qaDecisions.trim() && analysis.qaDecisions !== 'No decisions') {
+        table += `**🎯 QA Decisions:**\n`;
+        table += `${analysis.qaDecisions}\n\n`;
+      }
+      
+      // Links (clean format)
+      table += `**🔗 Links:** [GitHub](${githubUrl}) | [§/${cleanPath}](${localPath})\n\n`;
+      table += `---\n\n`;
     }
     
     return table;
