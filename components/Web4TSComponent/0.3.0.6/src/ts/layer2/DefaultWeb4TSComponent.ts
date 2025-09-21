@@ -20,13 +20,36 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       name: '',
       origin: '',
       definition: '',
-      targetDirectory: '',
+      targetDirectory: this.findProjectRoot(),
       componentStandards: [],
       validationRules: [],
       scaffoldingTemplates: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
+  }
+
+  private findProjectRoot(): string {
+    // Find project root using git or directory traversal
+    try {
+      const { execSync } = require('child_process');
+      const gitRoot = execSync('git rev-parse --show-toplevel', { encoding: 'utf-8' }).trim();
+      if (existsSync(gitRoot)) {
+        return gitRoot;
+      }
+    } catch {
+      // Fallback to directory traversal
+    }
+    
+    let dir = process.cwd();
+    while (dir !== '/') {
+      if (existsSync(path.join(dir, '.git')) && existsSync(path.join(dir, 'package.json'))) {
+        return dir;
+      }
+      dir = path.dirname(dir);
+    }
+    
+    return process.cwd(); // Fallback to current directory
   }
 
   init(scenario: Scenario<Web4TSComponentModel>): this {
