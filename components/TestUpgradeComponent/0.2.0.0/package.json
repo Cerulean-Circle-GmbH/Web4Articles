@@ -1,17 +1,21 @@
 {
   "name": "@web4/testupgradecomponent",
   "version": "0.2.0.0",
+  "description": "Web4-compliant TestUpgradeComponent component",
   "type": "module",
-  "main": "./src/ts/layer5/TestUpgradeComponentCLI.ts",
+  "main": "dist/ts/layer2/DefaultTestUpgradeComponent.js",
+  "types": "dist/ts/layer2/DefaultTestUpgradeComponent.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "vitest",
-    "clean": "rm -rf dist/"
+    "test:watch": "vitest --watch"
+  },
+  "dependencies": {
+    "@web4/unit": "^0.3.0.5"
   },
   "devDependencies": {
-    "@types/node": "^24.1.0",
     "typescript": "^5.0.0",
-    "vitest": "^3.2.4",
-    "ts-node": "^10.9.2"
+    "vitest": "^1.0.0",
+    "@types/node": "^20.0.0"
   }
 }
