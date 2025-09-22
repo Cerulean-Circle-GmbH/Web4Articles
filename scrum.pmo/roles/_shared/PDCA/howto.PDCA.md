@@ -165,6 +165,51 @@ git push --force-with-lease origin branch
 
 ---
 
+## **📋 HOWTO REPORT TRIGGER - CMM3 CHAT REPORTING**
+
+### **When "howto report" Mentioned in PDCA - Automatic CMM3 Chat Compliance**
+
+**MANDATORY RESPONSE PROCESS:**
+1. **Detect Howto Report Mention:**
+   - Scan PDCA content for "howto report" references
+   - Check user feedback for chat reporting protocol mentions
+   - Identify CMM3 compliance requirements
+
+2. **Activate CMM3 Chat Reporting:**
+   - Follow strict minimal chat format as per howto PDCA
+   - Report only: Dual links + QA decisions + essential status
+   - Move detailed content to PDCA document
+   - Maintain CMM3 compliant chat brevity
+
+3. **Chat Format Compliance:**
+   - Dual links: [GitHub](URL) | [§/path](path)
+   - QA decisions: Brief decision points only
+   - Essential status: Minimal completion status
+   - PDCA reference: Direct link to comprehensive analysis
+
+**CMM3 CHAT REPORTING FORMAT:**
+```markdown
+**Work Complete:** [Brief one-line status]
+
+**PDCA Analysis:** [GitHub](URL) | [§/path](path)
+
+**QA Decisions:**
+- [x] **Decision 1:** Brief decision description
+- [ ] **Decision 2:** Brief pending decision
+
+**Essential Status:** [Minimal completion status]
+```
+
+**HOWTO REPORT TRIGGER CHECKLIST:**
+- [ ] Howto report mention detected in content
+- [ ] CMM3 chat format applied (minimal, dual links, decisions)
+- [ ] Detailed content moved to PDCA document
+- [ ] Chat brevity maintained per howto PDCA protocol
+- [ ] Dual links working (GitHub and § local paths)
+- [ ] Essential status only in chat response
+
+---
+
 ## **🎯 MODULE CREATION STATUS**
 
 **✅ Created:**
