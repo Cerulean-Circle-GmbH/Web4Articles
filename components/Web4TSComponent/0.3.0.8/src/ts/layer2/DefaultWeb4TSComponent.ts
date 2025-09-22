@@ -149,10 +149,15 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     
     if (includeLayerArchitecture) {
       await this.createLayerStructure(componentDir);
+      await this.createComponentImplementation(componentDir, componentName, version);
+      await this.createComponentInterfaces(componentDir, componentName);
+      await this.createTSCompletion(componentDir);
+      await this.copyDefaultCLI(componentDir);
     }
     
     if (includeCLI) {
       await this.createCLIScript(componentDir, componentName, version);
+      await this.createCLIImplementation(componentDir, componentName, version);
     }
     
     if (includeSpecFolder) {
@@ -1314,6 +1319,313 @@ export default defineConfig({
       await fs.symlink(versionScriptName, mainScriptPath);
     } catch (error) {
       console.log(`   ⚠️ Could not update main script symlink: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Create component implementation with auto-discovery features
+   * @cliHide
+   */
+  private async createComponentImplementation(componentDir: string, componentName: string, version: string): Promise<void> {
+    const componentImplementation = `/**
+ * Default${componentName} - ${componentName} Component Implementation
+ * Web4 pattern: Empty constructor + scenario initialization + component functionality
+ */
+
+import { ${componentName} } from '../layer3/${componentName}.interface.js';
+import { Scenario } from '../layer3/Scenario.interface.js';
+import { ${componentName}Model } from '../layer3/${componentName}Model.interface.js';
+
+export class Default${componentName} implements ${componentName} {
+  private model: ${componentName}Model;
+
+  constructor() {
+    // Empty constructor - Web4 pattern
+    this.model = {
+      uuid: crypto.randomUUID(),
+      name: '',
+      origin: '',
+      definition: '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+  }
+
+  /**
+   * @cliHide
+   */
+  init(scenario: Scenario<${componentName}Model>): this {
+    if (scenario.model) {
+      this.model = { ...this.model, ...scenario.model };
+    }
+    return this;
+  }
+
+  /**
+   * @cliHide
+   */
+  async toScenario(name?: string): Promise<Scenario<${componentName}Model>> {
+    const ownerData = JSON.stringify({
+      user: process.env.USER || 'system',
+      hostname: process.env.HOSTNAME || 'localhost',
+      uuid: this.model.uuid,
+      timestamp: new Date().toISOString(),
+      component: '${componentName}',
+      version: '${version}'
+    });
+
+    return {
+      ior: {
+        uuid: this.model.uuid,
+        component: '${componentName}',
+        version: '${version}'
+      },
+      owner: ownerData,
+      model: this.model
+    };
+  }
+
+  /**
+   * Create example operation for ${componentName}
+   * @param input Input data to process
+   * @param format Output format (json, text, xml)
+   * @cliSyntax input format
+   * @cliDefault format json
+   */
+  async create(input: string, format: string = 'json'): Promise<this> {
+    console.log(\`🚀 Creating \${input} in \${format} format\`);
+    this.model.name = input;
+    this.model.updatedAt = new Date().toISOString();
+    console.log(\`✅ ${componentName} operation completed\`);
+    return this;
+  }
+
+  /**
+   * Process data through ${componentName} logic
+   * @param data Data to process
+   * @cliSyntax data
+   */
+  async process(data: string): Promise<this> {
+    console.log(\`🔧 Processing: \${data}\`);
+    this.model.updatedAt = new Date().toISOString();
+    return this;
+  }
+
+  /**
+   * Show information about current ${componentName} state
+   */
+  async info(): Promise<this> {
+    console.log(\`📋 ${componentName} Information:\`);
+    console.log(\`   UUID: \${this.model.uuid}\`);
+    console.log(\`   Name: \${this.model.name || 'Not set'}\`);
+    console.log(\`   Created: \${this.model.createdAt}\`);
+    console.log(\`   Updated: \${this.model.updatedAt}\`);
+    return this;
+  }
+}`;
+
+    const implementationPath = path.join(componentDir, 'src/ts/layer2', `Default${componentName}.ts`);
+    await fs.writeFile(implementationPath, componentImplementation);
+  }
+
+  /**
+   * Create component interfaces
+   * @cliHide
+   */
+  private async createComponentInterfaces(componentDir: string, componentName: string): Promise<void> {
+    // Component interface
+    const componentInterface = `/**
+ * ${componentName} - ${componentName} Component Interface
+ * Web4 pattern: Component interface definition
+ */
+
+import { Scenario } from './Scenario.interface.js';
+import { ${componentName}Model } from './${componentName}Model.interface.js';
+
+export interface ${componentName} {
+  init(scenario: Scenario<${componentName}Model>): this;
+  toScenario(name?: string): Promise<Scenario<${componentName}Model>>;
+  create(input: string, format?: string): Promise<this>;
+  process(data: string): Promise<this>;
+  info(): Promise<this>;
+}`;
+
+    const interfacePath = path.join(componentDir, 'src/ts/layer3', `${componentName}.interface.ts`);
+    await fs.writeFile(interfacePath, componentInterface);
+
+    // Component model interface
+    const modelInterface = `/**
+ * ${componentName}Model - ${componentName} Component Model Interface
+ * Web4 pattern: Component model following auto-discovery patterns
+ */
+
+import { Model } from './Model.interface.js';
+
+export interface ${componentName}Model extends Model {
+  uuid: string;
+  name: string;
+  origin: string;
+  definition: string;
+  createdAt: string;
+  updatedAt: string;
+}`;
+
+    const modelPath = path.join(componentDir, 'src/ts/layer3', `${componentName}Model.interface.ts`);
+    await fs.writeFile(modelPath, modelInterface);
+
+    // Copy essential interfaces from Web4TSComponent
+    await this.copyEssentialInterfaces(componentDir);
+  }
+
+  /**
+   * Create CLI implementation with auto-discovery
+   * @cliHide
+   */
+  private async createCLIImplementation(componentDir: string, componentName: string, version: string): Promise<void> {
+    const cliImplementation = `#!/usr/bin/env node
+
+/**
+ * ${componentName}CLI - ${componentName} CLI implementation with auto-discovery
+ * Web4 pattern: Auto-discovery CLI with chaining support
+ */
+
+import { DefaultCLI } from '../layer2/DefaultCLI.js';
+import { Default${componentName} } from '../layer2/Default${componentName}.js';
+
+export class ${componentName}CLI extends DefaultCLI {
+  private component: Default${componentName} | null;
+
+  constructor() {
+    super();
+    this.component = null;
+    this.initWithComponentClass(Default${componentName}, '${componentName}', '${version}');
+  }
+
+  /**
+   * Static start method - Web4 radical OOP entry point
+   */
+  static async start(args: string[]): Promise<void> {
+    const cli = new ${componentName}CLI();
+    await cli.execute(args);
+  }
+
+  private getOrCreateComponent(): Default${componentName} {
+    if (!this.component) {
+      this.component = this.getComponentInstance() as Default${componentName};
+    }
+    return this.component;
+  }
+
+  /**
+   * ${componentName}-specific usage display using DefaultCLI dynamic generation
+   */
+  showUsage(): void {
+    console.log(this.generateStructuredUsage());
+  }
+
+  /**
+   * Execute CLI commands with auto-discovery
+   */
+  async execute(args: string[]): Promise<void> {
+    if (args.length === 0) {
+      this.showUsage();
+      return;
+    }
+
+    const command = args[0];
+    const commandArgs = args.slice(1);
+
+    try {
+      // Try dynamic command execution
+      if (await this.executeDynamicCommand(command, commandArgs)) {
+        return;
+      }
+
+      // Special cases
+      switch (command) {
+        case 'help':
+          this.showUsage();
+          break;
+          
+        default:
+          throw new Error(\`Unknown command: \${command}\`);
+      }
+    } catch (error) {
+      console.error(this.formatError((error as Error).message));
+      process.exit(1);
+    }
+  }
+}
+
+// Static entry point for shell execution
+if (import.meta.url === \`file://\${process.argv[1]}\`) {
+  ${componentName}CLI.start(process.argv.slice(2));
+}`;
+
+    const cliPath = path.join(componentDir, 'src/ts/layer5', `${componentName}CLI.ts`);
+    await fs.writeFile(cliPath, cliImplementation);
+  }
+
+  /**
+   * Copy essential interfaces for auto-discovery
+   * @cliHide
+   */
+  private async copyEssentialInterfaces(componentDir: string): Promise<void> {
+    const interfaceFiles = [
+      'Model.interface.ts',
+      'Scenario.interface.ts',
+      'CLI.interface.ts',
+      'MethodInfo.interface.ts',
+      'ColorScheme.interface.ts',
+      'ComponentAnalysis.interface.ts',
+      'Completion.ts'
+    ];
+
+    for (const file of interfaceFiles) {
+      const currentDir = path.dirname(new URL(import.meta.url).pathname);
+      const sourcePath = path.join(currentDir, '../../../src/ts/layer3', file);
+      const targetPath = path.join(componentDir, 'src/ts/layer3', file);
+      
+      try {
+        const content = await fs.readFile(sourcePath, 'utf-8');
+        await fs.writeFile(targetPath, content);
+      } catch (error) {
+        console.log(`   ⚠️ Could not copy ${file}: ${(error as Error).message}`);
+      }
+    }
+  }
+
+  /**
+   * Create TSCompletion for auto-discovery
+   * @cliHide
+   */
+  private async createTSCompletion(componentDir: string): Promise<void> {
+    const currentDir = path.dirname(new URL(import.meta.url).pathname);
+    const sourcePath = path.join(currentDir, '../../../src/ts/layer4/TSCompletion.ts');
+    const targetPath = path.join(componentDir, 'src/ts/layer4/TSCompletion.ts');
+    
+    try {
+      const content = await fs.readFile(sourcePath, 'utf-8');
+      await fs.writeFile(targetPath, content);
+    } catch (error) {
+      console.log(`   ⚠️ Could not copy TSCompletion.ts: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Copy DefaultCLI for auto-discovery
+   * @cliHide
+   */
+  private async copyDefaultCLI(componentDir: string): Promise<void> {
+    const currentDir = path.dirname(new URL(import.meta.url).pathname);
+    const sourcePath = path.join(currentDir, '../../../src/ts/layer2/DefaultCLI.ts');
+    const targetPath = path.join(componentDir, 'src/ts/layer2/DefaultCLI.ts');
+    
+    try {
+      const content = await fs.readFile(sourcePath, 'utf-8');
+      await fs.writeFile(targetPath, content);
+    } catch (error) {
+      console.log(`   ⚠️ Could not copy DefaultCLI.ts: ${(error as Error).message}`);
     }
   }
 }
