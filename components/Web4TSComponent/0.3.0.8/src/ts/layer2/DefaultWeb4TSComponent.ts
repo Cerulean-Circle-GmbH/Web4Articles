@@ -884,17 +884,24 @@ Standards:
 
   /**
    * Version increment helpers
+   * @cliHide
    */
   private incrementPatch(version: string): string {
     const [major, minor, patch, build] = version.split('.').map(Number);
     return `${major}.${minor}.${patch}.${build + 1}`;
   }
 
+  /**
+   * @cliHide
+   */
   private incrementMinor(version: string): string {
     const [major, minor] = version.split('.').map(Number);
     return `${major}.${minor + 1}.0.0`;
   }
 
+  /**
+   * @cliHide
+   */
   private incrementMajor(version: string): string {
     const [major] = version.split('.').map(Number);
     return `${major + 1}.0.0.0`;
@@ -902,6 +909,7 @@ Standards:
 
   /**
    * Create new version from existing component
+   * @cliHide
    */
   private async createVersionFromExisting(component: string, fromVersion: string, toVersion: string): Promise<void> {
     const sourcePath = `${this.model.targetDirectory}/components/${component}/${fromVersion}`;
@@ -958,6 +966,7 @@ Standards:
 
   /**
    * Copy directory recursively
+   * @cliHide
    */
   private async copyDirectory(source: string, target: string): Promise<void> {
     await fs.mkdir(target, { recursive: true });
@@ -1024,6 +1033,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
   }
 
   // Private helper methods for scaffolding
+  /**
+   * @cliHide
+   */
   private async createPackageJson(componentDir: string, componentName: string, version: string): Promise<void> {
     const packageJson = {
       "name": `@web4/${componentName.toLowerCase()}`,
@@ -1049,6 +1061,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     );
   }
 
+  /**
+   * @cliHide
+   */
   private async createTsConfig(componentDir: string): Promise<void> {
     const tsConfig = {
       "compilerOptions": {
@@ -1076,6 +1091,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     );
   }
 
+  /**
+   * @cliHide
+   */
   private async createLayerStructure(componentDir: string): Promise<void> {
     const layers = ['layer2', 'layer3', 'layer4', 'layer5'];
     
@@ -1084,12 +1102,18 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
+  /**
+   * @cliHide
+   */
   private async createCLIScript(componentDir: string, componentName: string, version: string): Promise<void> {
     const cliScript = await this.generateLocationResilientCLI(componentName, version);
     const scriptPath = path.join(componentDir, `${componentName.toLowerCase()}.sh`);
     await fs.writeFile(scriptPath, cliScript, { mode: 0o755 });
   }
 
+  /**
+   * @cliHide
+   */
   private async createSpecStructure(componentDir: string): Promise<void> {
     await fs.mkdir(path.join(componentDir, 'spec'), { recursive: true });
   }
@@ -1116,6 +1140,7 @@ export default defineConfig({
   /**
    * Verify and fix symlinks for component
    * @cliSyntax 
+   * @cliHide
    */
   async verifyAndFix(): Promise<this> {
     const context = this.getComponentContext();
@@ -1256,6 +1281,7 @@ export default defineConfig({
 
   /**
    * Get available versions from component directory
+   * @cliHide
    */
   private getAvailableVersions(componentDir: string): string[] {
     try {
