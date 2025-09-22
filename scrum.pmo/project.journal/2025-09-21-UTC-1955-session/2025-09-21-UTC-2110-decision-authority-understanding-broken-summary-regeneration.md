@@ -23,7 +23,7 @@
 ### **Artifact Links**
 - **PDCA Document:** [GitHub]({{GITHUB_URL_TO_BE_ADDED}}) | [§/scrum.pmo/project.journal/2025-09-21-UTC-1955-session/2025-09-21-UTC-2110-decision-authority-understanding-broken-summary-regeneration.md](./2025-09-21-UTC-2110-decision-authority-understanding-broken-summary-regeneration.md)
 - **Decision Guide:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../../scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md)
-- **Regenerated Summary:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/scrum.pmo/project.journal/2025-08-30-UTC-0840-once-demo-session/session.summary.md) | [§/2025-08-30-UTC-0840-once-demo-session/session.summary.md](../2025-08-30-UTC-0840-once-demo-session/session.summary.md)
+- **Regenerated Summary:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/scrum.pmo/project.journal/2025-08-30-UTC-0840-once-demo-session/session.summary.md) | [§/scrum.pmo/project.journal/2025-08-30-UTC-0840-once-demo-session/session.summary.md](../2025-08-30-UTC-0840-once-demo-session/session.summary.md)
 
 ### **Critical Learning: USER Decides, Not Agent**
 - **Misunderstanding:** I was creating fake decisions instead of real user decisions
