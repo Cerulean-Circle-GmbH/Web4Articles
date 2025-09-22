@@ -395,33 +395,106 @@ export class TSCompletion implements Completion {
    * Web4 pattern: Pure TSDoc annotation parsing for zero config CLI generation
    */
   static extractCliAnnotations(className: string, methodName: string, paramName?: string): any {
-    const files = TSCompletion.getProjectSourceFiles();
+    // Enhanced file discovery for zero config annotation processing
+    const files = TSCompletion.getAllTypeScriptFiles();
     
     for (const file of files) {
-      const src = readFileSync(file, 'utf8');
-      const sourceFile = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true);
-      
-      ts.forEachChild(sourceFile, node => {
-        if (ts.isClassDeclaration(node) && node.name && node.name.text === className) {
-          for (const m of node.members) {
-            if (ts.isMethodDeclaration(m) && m.name && ts.isIdentifier(m.name) && m.name.text === methodName) {
-              const jsDocText = TSCompletion.extractJsDocText(m);
-              
-              if (paramName) {
-                // Extract parameter-specific annotations
-                const paramDoc = TSCompletion.extractParamJsDoc(m, paramName);
-                return TSCompletion.parseCliAnnotations(paramDoc);
-              } else {
-                // Extract method-level annotations
-                return TSCompletion.parseCliAnnotations(jsDocText);
-              }
-            }
-          }
+      try {
+        const src = readFileSync(file, 'utf8');
+        const sourceFile = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true);
+        
+        const result = TSCompletion.searchClassForAnnotations(sourceFile, className, methodName, paramName);
+        if (result) {
+          return result;
         }
-      });
+      } catch (error) {
+        // Continue to next file if this one fails
+        continue;
+      }
     }
     
     return {};
+  }
+
+  /**
+   * Get all TypeScript files in the component for zero config processing
+   */
+  private static getAllTypeScriptFiles(): string[] {
+    const __dirname = path.dirname(new URL(import.meta.url).pathname);
+    const componentRoot = path.resolve(__dirname, '../../..');
+    
+    const searchDirs = [
+      path.join(componentRoot, 'src/ts/layer2'),
+      path.join(componentRoot, 'src/ts/layer3'),
+      path.join(componentRoot, 'src/ts/layer4'),
+      path.join(componentRoot, 'src/ts/layer5')
+    ];
+    
+    let files: string[] = [];
+    for (const dir of searchDirs) {
+      if (existsSync(dir)) {
+        try {
+          const dirFiles = readdirSync(dir)
+            .filter(f => f.endsWith('.ts'))
+            .map(f => path.join(dir, f));
+          files = files.concat(dirFiles);
+        } catch (error) {
+          // Continue if directory can't be read
+        }
+      }
+    }
+    
+    return files;
+  }
+
+  /**
+   * Search class for CLI annotations with enhanced JSDoc extraction
+   */
+  private static searchClassForAnnotations(sourceFile: ts.SourceFile, className: string, methodName: string, paramName?: string): any | null {
+    let result: any | null = null;
+    
+    ts.forEachChild(sourceFile, node => {
+      if (ts.isClassDeclaration(node) && node.name && node.name.text === className) {
+        for (const member of node.members) {
+          if (ts.isMethodDeclaration(member) && member.name && ts.isIdentifier(member.name) && member.name.text === methodName) {
+            // Enhanced JSDoc extraction with better comment detection
+            const jsDocText = TSCompletion.extractEnhancedJsDocText(member);
+            
+            if (paramName) {
+              const paramDoc = TSCompletion.extractParamJsDoc(member, paramName);
+              result = TSCompletion.parseCliAnnotations(paramDoc);
+            } else {
+              result = TSCompletion.parseCliAnnotations(jsDocText);
+            }
+            return; // Found the method, stop searching
+          }
+        }
+      }
+    });
+    
+    return result;
+  }
+
+  /**
+   * Enhanced JSDoc text extraction with better comment detection
+   */
+  private static extractEnhancedJsDocText(node: ts.Node): string {
+    // Get all JSDoc comments for the node
+    const jsDocComments = ts.getJSDocCommentsAndTags(node);
+    let fullText = '';
+    
+    for (const comment of jsDocComments) {
+      if (ts.isJSDoc(comment)) {
+        fullText += comment.getFullText();
+      }
+    }
+    
+    // Fallback to original method if enhanced extraction fails
+    if (!fullText.trim()) {
+      fullText = TSCompletion.extractJsDocText(node);
+    }
+    
+    return fullText;
   }
 
   /**
