@@ -29,6 +29,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     };
   }
 
+  /**
+   * @cliHide
+   */
   private findProjectRoot(): string {
     // Find project root using git or directory traversal
     try {
@@ -52,6 +55,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return process.cwd(); // Fallback to current directory
   }
 
+  /**
+   * @cliHide
+   */
   init(scenario: Scenario<Web4TSComponentModel>): this {
     if (scenario.model) {
       this.model = { ...this.model, ...scenario.model };
@@ -59,6 +65,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return this;
   }
 
+  /**
+   * @cliHide
+   */
   transform(data?: unknown): this {
     // Transform component data if needed
     if (data) {
@@ -67,6 +76,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return this;
   }
 
+  /**
+   * @cliHide
+   */
   validate(object?: any): this {
     // Validate component configuration
     if (object) {
@@ -75,6 +87,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return this;
   }
 
+  /**
+   * @cliHide
+   */
   process(): this {
     // Process component operations
     this.model.updatedAt = new Date().toISOString();
@@ -84,6 +99,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   /**
    * Convert component to scenario (Web4 pattern)
    * Essential for Web4 compliance and hibernation/restoration
+   * @cliHide
    */
   async toScenario(name?: string): Promise<Scenario<Web4TSComponentModel>> {
     const ownerData = JSON.stringify({
@@ -106,11 +122,17 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     };
   }
 
+  /**
+   * @cliHide
+   */
   setTargetDirectory(directory: string): void {
     this.model.targetDirectory = directory;
     this.model.updatedAt = new Date().toISOString();
   }
 
+  /**
+   * @cliHide
+   */
   async scaffoldComponent(options: ComponentScaffoldOptions): Promise<ComponentMetadata> {
     const { componentName, version, includeLayerArchitecture, includeCLI, includeSpecFolder, includeVitest } = options;
     
@@ -153,6 +175,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     };
   }
 
+  /**
+   * @cliHide
+   */
   async generateLocationResilientCLI(componentName: string, version: string): Promise<string> {
     const cliTemplate = `#!/bin/bash
 
@@ -198,6 +223,9 @@ node --loader ts-node/esm "./components/${componentName}/${version}/src/ts/layer
     return cliTemplate;
   }
 
+  /**
+   * @cliHide
+   */
   async validateCLIStandard(scriptPath: string): Promise<CLIStandardValidation> {
     try {
       const content = await fs.readFile(scriptPath, 'utf-8');
@@ -684,6 +712,7 @@ Standards:
 
   /**
    * Recursively display tree structure
+   * @cliHide
    */
   private async displayTreeStructure(
     dirPath: string, 
@@ -742,6 +771,7 @@ Standards:
 
   /**
    * Get current component context for chained operations
+   * @cliHide
    */
   private getComponentContext(): { component: string, version: string, path: string } | null {
     const context = this.model as any;
