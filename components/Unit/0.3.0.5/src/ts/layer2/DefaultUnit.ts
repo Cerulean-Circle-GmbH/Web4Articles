@@ -939,8 +939,8 @@ export class DefaultUnit implements Unit, Upgrade {
    * Create initial link to existing component with unified parameter support
    * Web4 pattern: Union type interface supporting both UUIDv4 and file path parameters
    * 
-   * @param identifier - Unit identifier (UUIDv4 instance or UUID string)
-   * @param filename - File path for link creation (relative to project root)
+   * @param identifier - Unit reference (UUID or .unit file) @cliSyntax uuid|lnfile
+   * @param filename - File path for link creation (relative to project root) @cliSyntax file
    * @returns Promise<void> - Resolves when link creation completes
    * @throws Error when UUID invalid or filename inaccessible
    * @example
