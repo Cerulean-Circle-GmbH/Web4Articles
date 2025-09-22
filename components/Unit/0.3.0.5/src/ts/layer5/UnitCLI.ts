@@ -360,8 +360,8 @@ export class UnitCLI extends DefaultCLI {
     const scenario = await unit.toScenario();
     const filename = name.replace(/\s+/g, '.');
     
-    // Create local named link
-    await unit.link(unit.model.uuid, filename);
+    // Save scenario and create local named link
+    await unit.saveAndLink(filename);
     
     console.log(`✅ Unit created: ${name}`);
     console.log(`   UUID: ${scenario.ior.uuid}`);
