@@ -31,7 +31,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
   /**
    * Discover methods from component class for chaining support
    */
-  private discoverMethods(): void {
+  protected discoverMethods(): void {
     const prototype = DefaultWeb4TSComponent.prototype as any;
     const methodNames = Object.getOwnPropertyNames(prototype)
       .filter(name => typeof (prototype as any)[name] === 'function')
@@ -74,7 +74,8 @@ export class Web4TSComponentCLI extends DefaultCLI {
     if (typeof super.generateStructuredUsage === 'function') {
       console.log(super.generateStructuredUsage());
     } else {
-      super.showUsage();
+      // Implement showUsage directly since it's abstract
+      console.log('Web4TSComponent CLI - Use --help for more information');
     }
   }
 

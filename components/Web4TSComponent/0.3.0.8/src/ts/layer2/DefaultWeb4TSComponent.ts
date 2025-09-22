@@ -484,15 +484,20 @@ Standards:
   }
 
   /**
-   * Get validation results (maps to validate-standard)
-   */
-  /**
-   * Get component validation or property
-   * @param path Component path or property to validate
-   * @param operation Validation operation (validation, etc.)
+   * Validate and analyze component compliance (internal validation tool)
+   * 
+   * Analyzes component files for Web4 compliance and standards adherence.
+   * Validates CLI scripts, architecture, and implementation quality.
+   * Maps to validate-standard functionality for component validation.
+   * 
+   * @param path Path to component or CLI script to validate
+   * @param operation Type of validation ('validation' for CLI, 'standard' for compliance)
+   * 
+   * @example
+   * // Validate CLI script
+   * await component.get('./myscript.sh', 'validation');
+   * 
    * @cliSyntax path operation
-   */
-  /**
    * @cliHide
    */
   async get(path: string, operation: string): Promise<void> {
@@ -555,14 +560,12 @@ Standards:
   }
 
   /**
-   * Find components in directory (maps to generate-report)
-   */
-  /**
    * Discover and list all Web4 components in a directory
    * 
    * Scans directory structure for Web4-compliant components and provides
    * detailed analysis of each component's features and compliance status.
    * Perfect for auditing component ecosystems and finding available components.
+   * Maps to generate-report functionality for comprehensive component discovery.
    * 
    * @param componentDir Directory path to search for components (relative to project root)
    * 
@@ -592,14 +595,24 @@ Standards:
   }
 
   /**
-   * Load component context for command chaining (like Unit's on method)
-   * Usage: web4tscomponent on <component> <version> upgrade <next>
-   */
-  /**
-   * Load component context for command chaining
-   * @param component Component name
-   * @param version Component version
-   * @cliHide
+   * Load component context for command chaining operations
+   * 
+   * Essential method for chaining workflows. Loads component context that
+   * enables subsequent chained operations like tree, upgrade, setLatest.
+   * Based on Unit's on method pattern for consistent chaining architecture.
+   * 
+   * @param component Component name to load context for
+   * @param version Component version to load
+   * 
+   * @example
+   * // Load context for chaining
+   * await component.on('Unit', '0.3.0.5');
+   * 
+   * @example
+   * // Load context for this component
+   * await component.on('Web4TSComponent', '0.3.0.8');
+   * 
+   * @cliSyntax component version
    */
   async on(component: string, version: string): Promise<this> {
     const componentPath = path.join(this.model.targetDirectory, 'components', component, version);
@@ -626,12 +639,26 @@ Standards:
   }
 
   /**
-   * Upgrade component version with semantic control (chained after on)
-   * Usage: web4tscomponent on Unit 0.3.0.5 upgrade nextBuild
-   */
-  /**
-   * Upgrade component to next version
-   * @param versionType Version upgrade type (nextBuild, nextMinor, nextMajor, or specific version)
+   * Upgrade component to next version with semantic version control
+   * 
+   * Performs intelligent version upgrades for loaded component context.
+   * Must be used after 'on' method to load component context. Supports
+   * semantic versioning with nextBuild, nextMinor, nextMajor patterns.
+   * 
+   * @param versionType Version upgrade type: 'nextBuild', 'nextMinor', 'nextMajor', or specific version
+   * 
+   * @example
+   * // Upgrade to next build version (0.1.0.0 → 0.1.0.1)
+   * await component.upgrade('nextBuild');
+   * 
+   * @example
+   * // Upgrade to next minor version (0.1.0.0 → 0.2.0.0)
+   * await component.upgrade('nextMinor');
+   * 
+   * @example
+   * // Upgrade to specific version
+   * await component.upgrade('1.0.0.0');
+   * 
    * @cliSyntax versionType
    */
   async upgrade(versionType: string): Promise<this> {
