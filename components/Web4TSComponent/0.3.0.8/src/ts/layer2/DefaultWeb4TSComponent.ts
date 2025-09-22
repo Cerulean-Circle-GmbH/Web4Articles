@@ -377,6 +377,9 @@ node --loader ts-node/esm "./components/[name]/[version]/src/ts/layer5/[Name]CLI
 `);
   }
 
+  /**
+   * @cliHide
+   */
   showGuidelines(): void {
     console.log(`
 🏗️ Web4 Architecture Guidelines
@@ -1159,6 +1162,7 @@ export default defineConfig({
 
   /**
    * Verify and fix all symlinks for component
+   * @cliHide
    */
   private async verifyAndFixSymlinks(component: string): Promise<void> {
     console.log(`🔍 Scanning ${component} symlinks...`);
@@ -1186,6 +1190,7 @@ export default defineConfig({
 
   /**
    * Verify latest symlink points to highest version
+   * @cliHide
    */
   private async verifyLatestSymlink(component: string, highestVersion: string): Promise<void> {
     const componentDir = path.join(this.model.targetDirectory, 'components', component);
@@ -1214,6 +1219,7 @@ export default defineConfig({
 
   /**
    * Verify scripts symlinks
+   * @cliHide
    */
   private async verifyScriptsSymlinks(component: string, versions: string[], highestVersion: string): Promise<void> {
     const versionsDir = path.join(this.model.targetDirectory, 'scripts', 'versions');
@@ -1299,6 +1305,7 @@ export default defineConfig({
 
   /**
    * Get highest version from array of versions
+   * @cliHide
    */
   private getHighestVersion(versions: string[]): string {
     return versions.sort((a, b) => this.compareVersions(b, a))[0];
@@ -1306,6 +1313,7 @@ export default defineConfig({
 
   /**
    * Compare two version strings (for sorting)
+   * @cliHide
    */
   private compareVersions(a: string, b: string): number {
     const aParts = a.split('.').map(Number);
@@ -1337,6 +1345,7 @@ export default defineConfig({
 
   /**
    * Update symlinks for component version (latest and scripts)
+   * @cliHide
    */
   private async updateSymlinks(component: string, version: string): Promise<void> {
     try {
@@ -1354,6 +1363,7 @@ export default defineConfig({
 
   /**
    * Update latest symlink in component directory
+   * @cliHide
    */
   private async updateLatestSymlink(component: string, version: string): Promise<void> {
     const componentDir = path.join(this.model.targetDirectory, 'components', component);
@@ -1374,6 +1384,7 @@ export default defineConfig({
 
   /**
    * Update scripts and scripts/versions symlinks
+   * @cliHide
    */
   private async updateScriptsSymlinks(component: string, version: string): Promise<void> {
     try {
@@ -1389,6 +1400,7 @@ export default defineConfig({
 
   /**
    * Create version-specific script symlink
+   * @cliHide
    */
   private async createVersionScriptSymlink(component: string, version: string): Promise<void> {
     const versionsDir = path.join(this.model.targetDirectory, 'scripts', 'versions');
@@ -1434,6 +1446,7 @@ export default defineConfig({
 
   /**
    * Update main script symlink in scripts/versions
+   * @cliHide
    */
   private async updateMainScriptSymlink(component: string, version: string): Promise<void> {
     const versionsDir = path.join(this.model.targetDirectory, 'scripts', 'versions');
