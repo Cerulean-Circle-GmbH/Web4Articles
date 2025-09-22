@@ -11,7 +11,7 @@ export interface MethodInfo {
   examples: string[];
   returnType: string;
   isPublic: boolean;
-  category: 'create' | 'modify' | 'query' | 'delete' | 'utility';
+  category: 'create' | 'modify' | 'query' | 'delete' | 'utility' | 'context';
 }
 
 export interface ParameterInfo {
