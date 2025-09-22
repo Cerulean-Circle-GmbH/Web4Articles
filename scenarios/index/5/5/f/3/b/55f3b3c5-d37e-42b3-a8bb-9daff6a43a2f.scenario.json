@@ -1,0 +1,29 @@
+{
+  "ior": {
+    "uuid": "55f3b3c5-d37e-42b3-a8bb-9daff6a43a2f",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"55f3b3c5-d37e-42b3-a8bb-9daff6a43a2f\",\"timestamp\":\"2025-09-22T11:07:10.957Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "55f3b3c5-d37e-42b3-a8bb-9daff6a43a2f",
+    "createdAt": "2025-09-22T11:07:10.955Z",
+    "updatedAt": "2025-09-22T11:07:10.965Z",
+    "name": "TestFixed",
+    "definition": "Testing the fix",
+    "indexPath": "/workspace/scenarios/index/5/5/f/3/b/55f3b3c5-d37e-42b3-a8bb-9daff6a43a2f.scenario.json",
+    "symlinkPaths": [],
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/scenarios/ontology/TestFixed.unit",
+        "linkTarget": "ior:unit:55f3b3c5-d37e-42b3-a8bb-9daff6a43a2f",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/MDAv4/M3/CLASS/TestFixed.unit",
+        "linkTarget": "ior:unit:55f3b3c5-d37e-42b3-a8bb-9daff6a43a2f",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}
