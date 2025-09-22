@@ -74,10 +74,11 @@ export class UnitCLI extends DefaultCLI {
     // Add execution capability for the named unit
     unit.addExecutionCapability(name);
     
-    // Convert multi-word names to filename (spaces → single dots)
+    // Convert multi-word names to filename (spaces → single dots) and set in model
     const filename = name.replace(/\s+/g, '.');
+    unit.unitModel.name = filename;
     
-    const scenario = await unit.toScenario(filename);
+    const scenario = await unit.toScenario();
     console.log(`✅ Unit created: ${name}`);
     console.log(`   UUID: ${scenario.ior.uuid}`);
     console.log(`   Index Path: ${scenario.model.indexPath}`);
@@ -356,12 +357,12 @@ export class UnitCLI extends DefaultCLI {
       unit.unitModel.typeM3 = typeM3;
     }
 
-    // Save the unit
-    const scenario = await unit.toScenario();
+    // Set model name and save the unit
     const filename = name.replace(/\s+/g, '.');
+    unit.unitModel.name = filename;
     
-    // Create local named link
-    await unit.link(unit.model.uuid, filename);
+    // toScenario() now uses model.name automatically
+    const scenario = await unit.toScenario();
     
     console.log(`✅ Unit created: ${name}`);
     console.log(`   UUID: ${scenario.ior.uuid}`);

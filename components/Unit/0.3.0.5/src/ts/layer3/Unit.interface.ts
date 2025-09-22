@@ -31,7 +31,7 @@ export interface Unit {
   /**
    * Convert to scenario for hibernation
    */
-  toScenario(name?: string): Promise<Scenario>;
+  toScenario(): Promise<Scenario>;
 
   /**
    * Load unit context for subsequent operations - eliminates repetitive identifiers
