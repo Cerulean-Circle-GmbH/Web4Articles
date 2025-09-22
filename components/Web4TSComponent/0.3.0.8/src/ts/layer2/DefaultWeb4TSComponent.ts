@@ -377,6 +377,9 @@ node --loader ts-node/esm "./components/[name]/[version]/src/ts/layer5/[Name]CLI
 `);
   }
 
+  /**
+   * @cliHide
+   */
   showGuidelines(): void {
     console.log(`
 🏗️ Web4 Architecture Guidelines
@@ -884,17 +887,24 @@ Standards:
 
   /**
    * Version increment helpers
+   * @cliHide
    */
   private incrementPatch(version: string): string {
     const [major, minor, patch, build] = version.split('.').map(Number);
     return `${major}.${minor}.${patch}.${build + 1}`;
   }
 
+  /**
+   * @cliHide
+   */
   private incrementMinor(version: string): string {
     const [major, minor] = version.split('.').map(Number);
     return `${major}.${minor + 1}.0.0`;
   }
 
+  /**
+   * @cliHide
+   */
   private incrementMajor(version: string): string {
     const [major] = version.split('.').map(Number);
     return `${major + 1}.0.0.0`;
@@ -902,6 +912,7 @@ Standards:
 
   /**
    * Create new version from existing component
+   * @cliHide
    */
   private async createVersionFromExisting(component: string, fromVersion: string, toVersion: string): Promise<void> {
     const sourcePath = `${this.model.targetDirectory}/components/${component}/${fromVersion}`;
@@ -958,6 +969,7 @@ Standards:
 
   /**
    * Copy directory recursively
+   * @cliHide
    */
   private async copyDirectory(source: string, target: string): Promise<void> {
     await fs.mkdir(target, { recursive: true });
@@ -1024,6 +1036,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
   }
 
   // Private helper methods for scaffolding
+  /**
+   * @cliHide
+   */
   private async createPackageJson(componentDir: string, componentName: string, version: string): Promise<void> {
     const packageJson = {
       "name": `@web4/${componentName.toLowerCase()}`,
@@ -1049,6 +1064,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     );
   }
 
+  /**
+   * @cliHide
+   */
   private async createTsConfig(componentDir: string): Promise<void> {
     const tsConfig = {
       "compilerOptions": {
@@ -1076,6 +1094,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     );
   }
 
+  /**
+   * @cliHide
+   */
   private async createLayerStructure(componentDir: string): Promise<void> {
     const layers = ['layer2', 'layer3', 'layer4', 'layer5'];
     
@@ -1084,12 +1105,18 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
+  /**
+   * @cliHide
+   */
   private async createCLIScript(componentDir: string, componentName: string, version: string): Promise<void> {
     const cliScript = await this.generateLocationResilientCLI(componentName, version);
     const scriptPath = path.join(componentDir, `${componentName.toLowerCase()}.sh`);
     await fs.writeFile(scriptPath, cliScript, { mode: 0o755 });
   }
 
+  /**
+   * @cliHide
+   */
   private async createSpecStructure(componentDir: string): Promise<void> {
     await fs.mkdir(path.join(componentDir, 'spec'), { recursive: true });
   }
@@ -1116,6 +1143,7 @@ export default defineConfig({
   /**
    * Verify and fix symlinks for component
    * @cliSyntax 
+   * @cliHide
    */
   async verifyAndFix(): Promise<this> {
     const context = this.getComponentContext();
@@ -1134,6 +1162,7 @@ export default defineConfig({
 
   /**
    * Verify and fix all symlinks for component
+   * @cliHide
    */
   private async verifyAndFixSymlinks(component: string): Promise<void> {
     console.log(`🔍 Scanning ${component} symlinks...`);
@@ -1161,6 +1190,7 @@ export default defineConfig({
 
   /**
    * Verify latest symlink points to highest version
+   * @cliHide
    */
   private async verifyLatestSymlink(component: string, highestVersion: string): Promise<void> {
     const componentDir = path.join(this.model.targetDirectory, 'components', component);
@@ -1189,6 +1219,7 @@ export default defineConfig({
 
   /**
    * Verify scripts symlinks
+   * @cliHide
    */
   private async verifyScriptsSymlinks(component: string, versions: string[], highestVersion: string): Promise<void> {
     const versionsDir = path.join(this.model.targetDirectory, 'scripts', 'versions');
@@ -1256,6 +1287,7 @@ export default defineConfig({
 
   /**
    * Get available versions from component directory
+   * @cliHide
    */
   private getAvailableVersions(componentDir: string): string[] {
     try {
@@ -1273,6 +1305,7 @@ export default defineConfig({
 
   /**
    * Get highest version from array of versions
+   * @cliHide
    */
   private getHighestVersion(versions: string[]): string {
     return versions.sort((a, b) => this.compareVersions(b, a))[0];
@@ -1280,6 +1313,7 @@ export default defineConfig({
 
   /**
    * Compare two version strings (for sorting)
+   * @cliHide
    */
   private compareVersions(a: string, b: string): number {
     const aParts = a.split('.').map(Number);
@@ -1311,6 +1345,7 @@ export default defineConfig({
 
   /**
    * Update symlinks for component version (latest and scripts)
+   * @cliHide
    */
   private async updateSymlinks(component: string, version: string): Promise<void> {
     try {
@@ -1328,6 +1363,7 @@ export default defineConfig({
 
   /**
    * Update latest symlink in component directory
+   * @cliHide
    */
   private async updateLatestSymlink(component: string, version: string): Promise<void> {
     const componentDir = path.join(this.model.targetDirectory, 'components', component);
@@ -1348,6 +1384,7 @@ export default defineConfig({
 
   /**
    * Update scripts and scripts/versions symlinks
+   * @cliHide
    */
   private async updateScriptsSymlinks(component: string, version: string): Promise<void> {
     try {
@@ -1363,6 +1400,7 @@ export default defineConfig({
 
   /**
    * Create version-specific script symlink
+   * @cliHide
    */
   private async createVersionScriptSymlink(component: string, version: string): Promise<void> {
     const versionsDir = path.join(this.model.targetDirectory, 'scripts', 'versions');
@@ -1408,6 +1446,7 @@ export default defineConfig({
 
   /**
    * Update main script symlink in scripts/versions
+   * @cliHide
    */
   private async updateMainScriptSymlink(component: string, version: string): Promise<void> {
     const versionsDir = path.join(this.model.targetDirectory, 'scripts', 'versions');

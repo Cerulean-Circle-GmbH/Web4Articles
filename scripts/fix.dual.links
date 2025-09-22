@@ -128,6 +128,13 @@ fix_markdown_file() {
                     new_display="§/$local_path"
                     new_path=$(calculate_relative_path "$md_file" "$PROJECT_ROOT/$local_path")
                 fi
+            elif [[ "$display_text" == "§/components/"* ]] && [[ "$local_path" == "../../components/"* ]]; then
+                # Pattern: [§/components/path](../../components/path) - path duplication issue
+                if [[ -e "$PROJECT_ROOT/${display_text#§/}" ]]; then
+                    needs_fix=true
+                    new_path=$(calculate_relative_path "$md_file" "$PROJECT_ROOT/${display_text#§/}")
+                    # Keep display text as is (already correct with §/)
+                fi
             fi
             
             # Additional check: if GitHub path exists, ensure local path is consistent
