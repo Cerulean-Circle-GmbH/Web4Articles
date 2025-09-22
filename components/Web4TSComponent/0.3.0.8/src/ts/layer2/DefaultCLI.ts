@@ -761,7 +761,7 @@ export abstract class DefaultCLI implements CLI {
     
     let output = `${colors.sections}Examples:${colors.reset}\n`;
     
-    const categories = ['create', 'modify', 'query', 'delete', 'utility'];
+    const categories = ['create', 'modify', 'query', 'delete', 'utility', 'on'];
     
     for (const category of categories) {
       const categoryMethods = methods.filter(m => m.category === category);
