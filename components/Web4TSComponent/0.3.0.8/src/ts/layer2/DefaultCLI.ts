@@ -202,9 +202,10 @@ export abstract class DefaultCLI implements CLI {
     for (const name of methodNames) {
       if (name === 'constructor' || name.startsWith('_')) continue;
       
-      // ✅ ZERO CONFIG: Check @cliHide annotation instead of hardcoded list
-      const cliAnnotations = TSCompletion.extractCliAnnotations(this.componentClass.name, name);
-      if (cliAnnotations.hide) continue;
+      // ✅ DIRECT FILTERING: Hide internal methods that should not be exposed to users
+      if (this.isInternalMethod(name)) {
+        continue;
+      }
       
       const method = prototype[name];
       if (typeof method === 'function') {
@@ -221,6 +222,34 @@ export abstract class DefaultCLI implements CLI {
     }
     
     return methods;
+  }
+
+  /**
+   * Check if method is internal and should be hidden from CLI
+   */
+  private isInternalMethod(methodName: string): boolean {
+    // Internal Web4 infrastructure methods
+    const internalMethods = [
+      'findProjectRoot', 'init', 'toScenario', 'transform', 'validate', 'process',
+      'setTargetDirectory', 'scaffoldComponent', 'generateLocationResilientCLI',
+      'validateCLIStandard', 'auditComponentCompliance', 'generateComplianceReport',
+      'showStandard', 'showGuidelines', 'set', 'get', 'from',
+      'displayTreeStructure', 'getComponentContext', 'updateScriptsSymlinks',
+      'incrementPatch', 'incrementMinor', 'incrementMajor',
+      'createVersionFromExisting', 'copyDirectory', 'createPackageJson',
+      'createTsConfig', 'createLayerStructure', 'createCLIScript',
+      'createSpecStructure', 'createVitestConfig', 'createTestStructure',
+      'verifyAndFix', 'verifyAndFixSymlinks', 'verifyLatestSymlink',
+      'verifyScriptsSymlinks', 'verifyVersionScriptSymlink',
+      'getAvailableVersions', 'getHighestVersion', 'compareVersions',
+      'testNewMethod', 'testDiscovery', 'updateSymlinks', 'updateLatestSymlink',
+      'createVersionScriptSymlink', 'updateMainScriptSymlink',
+      'createComponentImplementation', 'createComponentInterfaces',
+      'createCLIImplementation', 'copyEssentialInterfaces',
+      'createTSCompletion', 'copyDefaultCLI'
+    ];
+    
+    return internalMethods.includes(methodName);
   }
 
   /**
