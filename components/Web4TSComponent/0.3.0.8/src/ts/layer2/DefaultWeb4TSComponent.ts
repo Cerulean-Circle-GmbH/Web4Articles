@@ -634,6 +634,55 @@ Standards:
   }
 
   /**
+   * Set latest symlink for component (chained after on)
+   * Updates the 'latest' symlink to point to specified version
+   * @param targetVersion Version to set as latest (default: use current context version)
+   * @cliSyntax targetVersion
+   * @cliDefault targetVersion current
+   */
+  async setLatest(targetVersion: string = 'current'): Promise<this> {
+    const context = this.getComponentContext();
+    if (!context) {
+      throw new Error('No component context loaded. Use "on <component> <version>" first.');
+    }
+
+    const version = targetVersion === 'current' ? context.version : targetVersion;
+    const componentDir = path.join(this.model.targetDirectory, 'components', context.component);
+    const latestSymlink = path.join(componentDir, 'latest');
+    const targetDir = path.join(componentDir, version);
+
+    // Verify target version exists
+    if (!existsSync(targetDir)) {
+      throw new Error(`Target version ${version} does not exist at ${targetDir}`);
+    }
+
+    console.log(`🔗 Setting latest symlink for ${context.component}:`);
+    console.log(`   Target: ${version}`);
+    console.log(`   Symlink: ${latestSymlink}`);
+
+    try {
+      // Remove existing symlink if it exists
+      if (existsSync(latestSymlink)) {
+        await fs.unlink(latestSymlink);
+        console.log(`   Removed existing latest symlink`);
+      }
+
+      // Create new symlink (relative path)
+      await fs.symlink(version, latestSymlink);
+      console.log(`✅ Latest symlink updated: latest → ${version}`);
+
+      // Update scripts symlinks
+      await this.updateScriptsSymlinks(context.component, version);
+
+    } catch (error) {
+      throw new Error(`Failed to update latest symlink: ${(error as Error).message}`);
+    }
+
+    return this;
+  }
+
+
+  /**
    * Recursively display tree structure
    */
   private async displayTreeStructure(
