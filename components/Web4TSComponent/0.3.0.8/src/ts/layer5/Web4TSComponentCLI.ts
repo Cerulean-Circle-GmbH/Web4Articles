@@ -1,15 +1,22 @@
 #!/usr/bin/env node
 
 /**
- * Web4TSComponentCLI - Web4TSComponent CLI implementation
- * Web4 pattern: Dependency-free CLI with component creation and management
+ * Web4TSComponentCLI - Web4TSComponent CLI implementation with chaining support
+ * Web4 pattern: Dependency-free CLI with component creation and chaining
  */
 
 import { DefaultCLI } from '../layer2/DefaultCLI.js';
 import { DefaultWeb4TSComponent } from '../layer2/DefaultWeb4TSComponent.js';
 
+interface MethodSignature {
+  name: string;
+  paramCount: number;
+  isAsync: boolean;
+}
+
 export class Web4TSComponentCLI extends DefaultCLI {
   private tsComponent: DefaultWeb4TSComponent | null;
+  protected methodSignatures: Map<string, MethodSignature> = new Map();
 
   constructor() {
     super(); // Call DefaultCLI constructor
@@ -17,6 +24,28 @@ export class Web4TSComponentCLI extends DefaultCLI {
     this.tsComponent = null;
     // Initialize with component class reference (NOT instance) - no garbage creation
     this.initWithComponentClass(DefaultWeb4TSComponent, 'Web4TSComponent', '0.3.0.8');
+    // Discover methods for chaining support
+    this.discoverMethods();
+  }
+
+  /**
+   * Discover methods from component class for chaining support
+   */
+  private discoverMethods(): void {
+    const prototype = DefaultWeb4TSComponent.prototype as any;
+    const methodNames = Object.getOwnPropertyNames(prototype)
+      .filter(name => typeof (prototype as any)[name] === 'function')
+      .filter(name => !name.startsWith('_') && name !== 'constructor')
+      .filter(name => !['init', 'toScenario', 'validateModel', 'getModel'].includes(name));
+
+    for (const methodName of methodNames) {
+      const method = (prototype as any)[methodName];
+      this.methodSignatures.set(methodName, {
+        name: methodName,
+        paramCount: method.length,
+        isAsync: method.constructor.name === 'AsyncFunction'
+      });
+    }
   }
 
   /**
@@ -27,10 +56,12 @@ export class Web4TSComponentCLI extends DefaultCLI {
     await cli.execute(args);
   }
 
+  /**
+   * Get component instance (Web4TSComponent-specific)
+   */
   private getOrCreateTSComponent(): DefaultWeb4TSComponent {
     if (!this.tsComponent) {
-      // Use lazy instantiation from DefaultCLI - only when method actually called
-      this.tsComponent = this.getComponentInstance() as DefaultWeb4TSComponent;
+      this.tsComponent = new DefaultWeb4TSComponent();
     }
     return this.tsComponent;
   }
@@ -100,9 +131,9 @@ export class Web4TSComponentCLI extends DefaultCLI {
     }
 
     const signature = this.methodSignatures.get(command)!;
-    const minArgs = this.getMinimumArguments(command);
+    const minArgs = Math.min(signature.paramCount, 1); // At least 1 arg for most methods
     
-    if (args.length < minArgs) {
+    if (args.length < minArgs && signature.paramCount > 0) {
       throw new Error(`At least ${minArgs} arguments required for ${command} command`);
     }
 
@@ -112,8 +143,8 @@ export class Web4TSComponentCLI extends DefaultCLI {
     const remainingArgs = args.slice(consumedArgs);
 
     // Execute the method
-    const componentInstance = this.getComponentInstance();
-    const method = componentInstance[command];
+    const componentInstance = this.getOrCreateTSComponent();
+    const method = (componentInstance as any)[command];
     
     if (signature.isAsync) {
       await method.apply(componentInstance, methodArgs);
