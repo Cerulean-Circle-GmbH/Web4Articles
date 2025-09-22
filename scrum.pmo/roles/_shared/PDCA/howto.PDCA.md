@@ -176,10 +176,10 @@ git push --force-with-lease origin branch
    - Identify CMM3 compliance requirements
 
 2. **Activate CMM3 Chat Reporting:**
-   - Follow strict minimal chat format as per howto PDCA
-   - Report only: Dual links + QA decisions + essential status
-   - Move detailed content to PDCA document
-   - Maintain CMM3 compliant chat brevity
+   - Explain work constantly during process (what you're doing)
+   - End with CMM3 format: PDCA dual links + decisions only
+   - Move long summaries and detailed content to PDCA document
+   - Maintain CMM3 compliant ending with decisions compliance
 
 3. **Chat Format Compliance:**
    - Dual links: [GitHub](URL) | [§/path](path)
@@ -187,9 +187,9 @@ git push --force-with-lease origin branch
    - Essential status: Minimal completion status
    - PDCA reference: Direct link to comprehensive analysis
 
-**CMM3 CHAT REPORTING FORMAT:**
+**ENHANCED CMM3 CHAT REPORTING FORMAT:**
 ```markdown
-**Work Complete:** [Brief one-line status]
+[Explain work constantly during process - what you're doing step by step]
 
 **PDCA Analysis:** [GitHub](URL) | [§/path](path)
 
@@ -197,16 +197,16 @@ git push --force-with-lease origin branch
 - [x] **Decision 1:** Brief decision description
 - [ ] **Decision 2:** Brief pending decision
 
-**Essential Status:** [Minimal completion status]
+[Long summaries and detailed content go in PDCA document, not chat]
 ```
 
 **HOWTO REPORT TRIGGER CHECKLIST:**
 - [ ] Howto report mention detected in content
-- [ ] CMM3 chat format applied (minimal, dual links, decisions)
-- [ ] Detailed content moved to PDCA document
-- [ ] Chat brevity maintained per howto PDCA protocol
+- [ ] Explain work constantly during process in chat
+- [ ] End with CMM3 format: PDCA dual links + decisions only
+- [ ] Long summaries moved to PDCA document (not in chat)
+- [ ] Decisions CMM3 compliance covered by PDCA trigger
 - [ ] Dual links working (GitHub and § local paths)
-- [ ] Essential status only in chat response
 
 ---
 
