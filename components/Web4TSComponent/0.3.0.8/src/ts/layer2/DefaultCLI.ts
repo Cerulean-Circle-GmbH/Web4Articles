@@ -225,6 +225,85 @@ export abstract class DefaultCLI implements CLI {
     return methods;
   }
 
+  /**
+   * Extract method description from TSDoc annotations
+   */
+  private extractMethodDescriptionFromTSDoc(methodName: string): string {
+    try {
+      // Try to extract description from TSCompletion
+      const cliAnnotations = TSCompletion.extractCliAnnotations(this.componentClass.name, methodName);
+      if (cliAnnotations.description) {
+        return cliAnnotations.description;
+      }
+      
+      // Fallback to extracting first line of JSDoc
+      const jsDocText = this.extractJsDocForMethod(methodName);
+      if (jsDocText) {
+        // Extract first meaningful line from JSDoc
+        const lines = jsDocText.split('\n');
+        for (const line of lines) {
+          const cleaned = line.replace(/^\s*\*\s*/, '').trim();
+          if (cleaned && !cleaned.startsWith('@') && cleaned !== '/**' && cleaned !== '*/') {
+            return cleaned;
+          }
+        }
+      }
+    } catch (error) {
+      // Continue to fallback
+    }
+    
+    return this.extractMethodDescriptionFallback(methodName);
+  }
+
+  /**
+   * Extract JSDoc text for a specific method
+   */
+  private extractJsDocForMethod(methodName: string): string {
+    try {
+      const files = TSCompletion.getAllTypeScriptFiles();
+      
+      for (const file of files) {
+        const src = require('fs').readFileSync(file, 'utf8');
+        const sourceFile = require('typescript').createSourceFile(file, src, require('typescript').ScriptTarget.Latest, true);
+        
+        const jsDoc = this.findMethodJsDoc(sourceFile, this.componentClass.name, methodName);
+        if (jsDoc) {
+          return jsDoc;
+        }
+      }
+    } catch (error) {
+      // Fallback to default descriptions
+    }
+    
+    return '';
+  }
+
+  /**
+   * Find JSDoc for specific method in source file
+   */
+  private findMethodJsDoc(sourceFile: any, className: string, methodName: string): string {
+    let jsDocText = '';
+    
+    const ts = require('typescript');
+    ts.forEachChild(sourceFile, (node: any) => {
+      if (ts.isClassDeclaration(node) && node.name && node.name.text === className) {
+        for (const member of node.members) {
+          if (ts.isMethodDeclaration(member) && member.name && ts.isIdentifier(member.name) && member.name.text === methodName) {
+            // Get JSDoc comments
+            const jsDocComments = ts.getJSDocCommentsAndTags(member);
+            for (const comment of jsDocComments) {
+              if (ts.isJSDoc(comment)) {
+                jsDocText += comment.getFullText();
+              }
+            }
+            break;
+          }
+        }
+      }
+    });
+    
+    return jsDocText;
+  }
 
   /**
    * Get minimum arguments for overloaded methods
@@ -356,20 +435,28 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Fallback method description extraction
+   * Fallback method description extraction with meaningful descriptions
    */
   private extractMethodDescriptionFallback(methodName: string): string {
     const descriptions: { [key: string]: string } = {
-      'create': 'Create new component with name, optional description, and optional classification',
+      'create': 'Create new Web4-compliant component with auto-discovery CLI and full architecture',
+      'find': 'Discover and analyze Web4 components in directory with compliance reporting',
+      'on': 'Load component context for chaining operations (essential for workflows)',
+      'upgrade': 'Upgrade component to next version with semantic version control',
+      'tree': 'Display directory structure for loaded component (requires context)',
+      'setLatest': 'Update latest symlink to point to specified version (requires context)',
+      'info': 'Display comprehensive information about Web4 standards and guidelines',
       'classify': 'Set MOF typeM3 classification for existing component',
       'link': 'Create initial link to existing component using UUID',
       'deleteLink': 'Delete specific link file while preserving component in central storage',
       'list': 'List all links pointing to specific component UUID',
-      'from': 'Create component from file text with extracted name and origin',
-      'execute': 'Execute component with input data',
-      'transform': 'Transform input data using component logic',
-      'validate': 'Validate object against component rules',
-      'process': 'Process data through component workflow'
+      'from': 'Analyze component compliance from directory path with detailed reporting',
+      'execute': 'Execute component with input data and return processed results',
+      'transform': 'Transform input data using component logic and return modified data',
+      'validate': 'Validate object against component rules and return compliance status',
+      'process': 'Process data through component workflow and return results',
+      'set': 'Configure component properties and generate CLI scripts',
+      'get': 'Validate component compliance and analyze architecture quality'
     };
     
     if (descriptions[methodName]) {
@@ -382,7 +469,21 @@ export abstract class DefaultCLI implements CLI {
       }
     }
     
-    return `${methodName.charAt(0).toUpperCase() + methodName.slice(1)} operation`;
+    // Enhanced fallback with meaningful descriptions instead of useless "operation"
+    if (methodName.includes('create')) {
+      return `Create ${methodName.replace('create', '').toLowerCase()} with Web4 compliance and proper structure`;
+    }
+    if (methodName.includes('update')) {
+      return `Update ${methodName.replace('update', '').toLowerCase()} with intelligent management and verification`;
+    }
+    if (methodName.includes('verify')) {
+      return `Verify and fix ${methodName.replace('verify', '').toLowerCase()} with automatic repair and validation`;
+    }
+    if (methodName.includes('get')) {
+      return `Get ${methodName.replace('get', '').toLowerCase()} information with detailed analysis and reporting`;
+    }
+    
+    return `${methodName.charAt(0).toUpperCase() + methodName.slice(1)} functionality for Web4 component operations`;
   }
 
   /**

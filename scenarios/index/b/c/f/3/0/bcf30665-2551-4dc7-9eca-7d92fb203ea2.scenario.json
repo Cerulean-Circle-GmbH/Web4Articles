@@ -1,0 +1,36 @@
+{
+  "ior": {
+    "uuid": "bcf30665-2551-4dc7-9eca-7d92fb203ea2",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"bcf30665-2551-4dc7-9eca-7d92fb203ea2\",\"timestamp\":\"2025-09-22T11:18:04.582Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "bcf30665-2551-4dc7-9eca-7d92fb203ea2",
+    "createdAt": "2025-09-22T11:18:04.573Z",
+    "updatedAt": "2025-09-22T11:18:04.584Z",
+    "name": "TestFinal",
+    "definition": "Testing the final complete fix",
+    "indexPath": "/workspace/scenarios/index/b/c/f/3/0/bcf30665-2551-4dc7-9eca-7d92fb203ea2.scenario.json",
+    "symlinkPaths": [
+      "/workspace/TestFinal.unit"
+    ],
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/scenarios/ontology/TestFinal.unit",
+        "linkTarget": "ior:unit:bcf30665-2551-4dc7-9eca-7d92fb203ea2",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/MDAv4/M3/CLASS/TestFinal.unit",
+        "linkTarget": "ior:unit:bcf30665-2551-4dc7-9eca-7d92fb203ea2",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/TestFinal.unit",
+        "linkTarget": "ior:unit:bcf30665-2551-4dc7-9eca-7d92fb203ea2",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}
