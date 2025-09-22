@@ -709,6 +709,15 @@ Standards:
     return this;
   }
 
+  /**
+   * Test method to verify zero config discovery
+   * @param message Test message to display
+   * @cliSyntax message
+   */
+  async testDiscovery(message: string = 'Zero config discovery works!'): Promise<this> {
+    console.log(`🧪 Discovery Test: ${message}`);
+    return this;
+  }
 
   /**
    * Recursively display tree structure
