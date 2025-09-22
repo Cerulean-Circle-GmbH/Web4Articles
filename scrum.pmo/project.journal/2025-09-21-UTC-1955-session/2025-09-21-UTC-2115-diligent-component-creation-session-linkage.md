@@ -22,8 +22,8 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub]({{GITHUB_URL_TO_BE_ADDED}}) | [§/scrum.pmo/project.journal/2025-09-21-UTC-1955-session/2025-09-21-UTC-2115-diligent-component-creation-session-linkage.md](./2025-09-21-UTC-2115-diligent-component-creation-session-linkage.md)
-- **Unit 0.3.0.6 Sessions:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/0306/components/Unit/0.3.0.6/sessions) | [§/components/Unit/0.3.0.6/sessions](../../components/Unit/0.3.0.6/sessions)
-- **Web4Requirement 0.3.0.5 Sessions:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/0306/components/Web4Requirement/0.3.0.5/sessions) | [§/components/Web4Requirement/0.3.0.5/sessions](../../components/Web4Requirement/0.3.0.5/sessions)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/0306/components/Unit/0.3.0.6/sessions) | [§/components/Unit/0.3.0.6/sessions](../../../components/Unit/0.3.0.6/sessions)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/0306/components/Web4Requirement/0.3.0.5/sessions) | [§/components/Web4Requirement/0.3.0.5/sessions](../../../components/Web4Requirement/0.3.0.5/sessions)
 
 ### **Diligent Search Results**
 - **Unit 0.3.0.6 Creation:** Found reference in 2025-09-21-UTC-2014-session with CLI architecture and testing context
@@ -247,4 +247,3 @@ ls -la /workspace/scrum.pmo/project.journal/2025-09-11-UTC-0007-session/session.
 ### **📚 The 42 Revelation**
 **Understanding requires regression testing:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md](../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md)
 
-**"Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."** 🤝✨
