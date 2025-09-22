@@ -226,7 +226,7 @@ export abstract class DefaultCLI implements CLI {
   /**
    * Get minimum arguments for overloaded methods
    */
-  private getMinimumArguments(command: string): number {
+  protected getMinimumArguments(command: string): number {
     // Handle overloaded methods with different minimum arguments
     const overloadedMethods: { [key: string]: number } = {
       'from': 1,  // Can be called with 1 (file) or 3 (file, start, end) arguments
@@ -763,18 +763,15 @@ export abstract class DefaultCLI implements CLI {
     
     let output = `${colors.sections}Examples:${colors.reset}\n`;
     
-    // ✅ HIGHLIGHT: 'on' method chaining patterns (most common usage)
-    output += `  ${colors.descriptions}# Method chaining with 'on' (common pattern - use often!)${colors.reset}\n`;
+    // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
+    output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.0.8${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}verifyAndFix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
+    output += '\n';
+    output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
-    output += '\n';
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.0.8${colors.reset}          ${colors.descriptions}# 1. Load this component${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}                     ${colors.descriptions}# 2. Upgrade to next version${colors.reset}\n`;
-    output += '\n';
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset}              ${colors.descriptions}# 1. Load custom component${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}verifyAndFix${colors.reset}                           ${colors.descriptions}# 2. Fix symlinks${colors.reset}\n`;
-    output += '\n';
-    output += `  ${colors.descriptions}# Note: Run each command separately (CLI creates new instance each time)${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples

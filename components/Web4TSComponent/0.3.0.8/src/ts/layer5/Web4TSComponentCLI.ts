@@ -44,7 +44,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
   }
 
   /**
-   * Execute CLI commands with Unit pattern - dynamic discovery with minimal switch
+   * Execute CLI commands with Unit pattern - dynamic discovery with chaining support
    */
   async execute(args: string[]): Promise<void> {
     if (args.length === 0) {
@@ -52,31 +52,114 @@ export class Web4TSComponentCLI extends DefaultCLI {
       return;
     }
 
-    const command = args[0];
-    const commandArgs = args.slice(1);
-
     try {
-      // Component already initialized with class reference in constructor
-      // No need to create instance for method discovery
+      await this.executeWithChaining(args);
+    } catch (error) {
+      console.error(this.formatError((error as Error).message));
+      process.exit(1);
+    }
+  }
 
-      // Try dynamic command execution (TSRanger 2.2 pattern)
-      if (await this.executeDynamicCommand(command, commandArgs)) {
-        return; // Command executed successfully
+  /**
+   * Execute commands with chaining support
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   */
+  private async executeWithChaining(args: string[]): Promise<void> {
+    let remainingArgs = [...args];
+    
+    while (remainingArgs.length > 0) {
+      const command = remainingArgs[0];
+      
+      // Try dynamic command execution
+      const result = await this.executeDynamicCommandWithChaining(command, remainingArgs.slice(1));
+      
+      if (result.executed) {
+        // Command executed successfully, continue with remaining args
+        remainingArgs = result.remainingArgs;
+        continue;
       }
 
       // Special cases (minimal switch - only help)
       switch (command) {
         case 'help':
           this.showUsage();
-          break;
+          return;
           
         default:
           throw new Error(`Unknown command: ${command}`);
       }
-    } catch (error) {
-      console.error(this.formatError((error as Error).message));
-      process.exit(1);
     }
+  }
+
+  /**
+   * Execute dynamic command and return remaining arguments for chaining
+   */
+  private async executeDynamicCommandWithChaining(command: string, args: string[]): Promise<{executed: boolean, remainingArgs: string[]}> {
+    if (!this.methodSignatures.has(command)) {
+      return { executed: false, remainingArgs: args };
+    }
+
+    const signature = this.methodSignatures.get(command)!;
+    const minArgs = this.getMinimumArguments(command);
+    
+    if (args.length < minArgs) {
+      throw new Error(`At least ${minArgs} arguments required for ${command} command`);
+    }
+
+    // Intelligently determine how many arguments this method consumes
+    const consumedArgs = this.determineArgumentConsumption(command, args);
+    const methodArgs = args.slice(0, consumedArgs);
+    const remainingArgs = args.slice(consumedArgs);
+
+    // Execute the method
+    const componentInstance = this.getComponentInstance();
+    const method = componentInstance[command];
+    
+    if (signature.isAsync) {
+      await method.apply(componentInstance, methodArgs);
+    } else {
+      method.apply(componentInstance, methodArgs);
+    }
+    
+    return { executed: true, remainingArgs };
+  }
+
+  /**
+   * Intelligently determine how many arguments a method should consume
+   * Stops at next known command to enable chaining
+   */
+  private determineArgumentConsumption(command: string, args: string[]): number {
+    const signature = this.methodSignatures.get(command)!;
+    
+    // Special handling for methods with default parameters
+    const methodSpecificMaxArgs = this.getMethodMaxArguments(command);
+    const maxArgs = methodSpecificMaxArgs || signature.paramCount;
+    
+    // Look for next command in the arguments
+    for (let i = 0; i < Math.min(maxArgs, args.length); i++) {
+      if (this.methodSignatures.has(args[i])) {
+        // Found next command, consume up to this point
+        return i;
+      }
+    }
+    
+    // No next command found, consume up to method's parameter count
+    return Math.min(maxArgs, args.length);
+  }
+
+  /**
+   * Get maximum arguments for methods with default parameters
+   */
+  private getMethodMaxArguments(command: string): number | null {
+    // Methods with default parameters that should consume more args than function.length shows
+    const methodMaxArgs: { [key: string]: number } = {
+      'tree': 2,  // depth and showHidden parameters (both have defaults)
+      'create': 3, // name, version, options (options has default)
+      'upgrade': 1, // versionType
+      'on': 2 // component and version
+    };
+    
+    return methodMaxArgs[command] || null;
   }
 }
 
