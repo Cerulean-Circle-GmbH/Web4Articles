@@ -162,6 +162,7 @@ export class DefaultUnit implements Unit, Upgrade {
   /**
    * Load unit context for subsequent operations - eliminates repetitive identifiers
    * Web4 pattern: Context loading for workflow optimization and Occam's razor efficiency
+   * @param identifier - Unit identifier (UUID or .unit file) @cliSyntax uuid|lnfile
    */
   async on(identifier: UnitIdentifier): Promise<this> {
     // Load target unit and set as current context
