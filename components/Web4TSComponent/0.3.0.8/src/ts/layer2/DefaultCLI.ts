@@ -226,7 +226,7 @@ export abstract class DefaultCLI implements CLI {
   /**
    * Get minimum arguments for overloaded methods
    */
-  private getMinimumArguments(command: string): number {
+  protected getMinimumArguments(command: string): number {
     // Handle overloaded methods with different minimum arguments
     const overloadedMethods: { [key: string]: number } = {
       'from': 1,  // Can be called with 1 (file) or 3 (file, start, end) arguments
@@ -587,7 +587,8 @@ export abstract class DefaultCLI implements CLI {
   /**
    * Categorize method based on name patterns
    */
-  private categorizeMethod(name: string): 'create' | 'modify' | 'query' | 'delete' | 'utility' {
+  private categorizeMethod(name: string): 'create' | 'modify' | 'query' | 'delete' | 'utility' | 'context' {
+    if (name === 'on') return 'context'; // Special category for context loading
     if (name.includes('create') || name.includes('add')) return 'create';
     if (name.includes('update') || name.includes('set') || name.includes('upgrade')) return 'modify';
     if (name.includes('get') || name.includes('find') || name.includes('list') || name.includes('info')) return 'query';
@@ -753,23 +754,35 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Assemble example section with usage examples
+   * Assemble example section with usage examples highlighting 'on' method chaining
    */
   protected assembleExampleSection(): string {
     const methods = this.analyzeComponentMethods();
     const colors = this.getTSCompletionColors();
+    const componentName = this.getComponentName().toLowerCase();
     
     let output = `${colors.sections}Examples:${colors.reset}\n`;
     
+    // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
+    output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.0.8${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}verifyAndFix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
+    output += '\n';
+    output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += '\n';
+    
+    // Standard categorized examples
     const categories = ['create', 'modify', 'query', 'delete', 'utility'];
     
     for (const category of categories) {
-      const categoryMethods = methods.filter(m => m.category === category);
+      const categoryMethods = methods.filter(m => m.category === category && m.name !== 'on');
       if (categoryMethods.length > 0) {
         output += `  ${colors.descriptions}# ${category.charAt(0).toUpperCase() + category.slice(1)} operations${colors.reset}\n`;
         
         for (const method of categoryMethods.slice(0, 2)) {
-          const componentName = this.getComponentName().toLowerCase();
           const exampleParams = method.parameters.map(p => {
             const examples = this.generateParameterExamples(p.name);
             return examples[0] || p.name;
@@ -1000,7 +1013,7 @@ export abstract class DefaultCLI implements CLI {
    * Get component version for documentation
    */
   private getComponentVersion(): string {
-    return this.componentVersion || '0.3.0.5';
+    return this.componentVersion || '0.3.0.8';
   }
 }
 

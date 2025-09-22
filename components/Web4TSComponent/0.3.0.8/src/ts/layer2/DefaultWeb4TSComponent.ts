@@ -92,14 +92,14 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       uuid: this.model.uuid,
       timestamp: new Date().toISOString(),
       component: 'Web4TSComponent',
-      version: '0.3.0.6'
+      version: '0.3.0.8'
     });
 
     return {
       ior: {
         uuid: this.model.uuid,
         component: 'Web4TSComponent',
-        version: '0.3.0.6'
+        version: '0.3.0.8'
       },
       owner: ownerData,
       model: this.model
@@ -608,6 +608,90 @@ Standards:
   }
 
   /**
+   * Display tree structure of component directory (chained after on)
+   * Shows directory structure like 'tree' command for the loaded component context
+   * @param depth Maximum depth to traverse (default: 3)
+   * @param showHidden Show hidden files and directories (default: false)
+   * @cliSyntax depth showHidden
+   * @cliDefault depth 3
+   * @cliDefault showHidden false
+   */
+  async tree(depth: string = '3', showHidden: string = 'false'): Promise<this> {
+    const context = this.getComponentContext();
+    if (!context) {
+      throw new Error('No component context loaded. Use "on <component> <version>" first.');
+    }
+
+    const maxDepth = parseInt(depth, 10) || 3;
+    const includeHidden = showHidden.toLowerCase() === 'true';
+    
+    console.log(`📁 Tree structure for ${context.component} v${context.version}:`);
+    console.log(context.path);
+    
+    await this.displayTreeStructure(context.path, '', maxDepth, 0, includeHidden);
+    
+    return this;
+  }
+
+  /**
+   * Recursively display tree structure
+   */
+  private async displayTreeStructure(
+    dirPath: string, 
+    prefix: string, 
+    maxDepth: number, 
+    currentDepth: number, 
+    showHidden: boolean
+  ): Promise<void> {
+    if (currentDepth >= maxDepth) return;
+
+    try {
+      const items = readdirSync(dirPath);
+      const filteredItems = showHidden ? items : items.filter(item => !item.startsWith('.'));
+      const sortedItems = filteredItems.sort((a, b) => {
+        const aPath = path.join(dirPath, a);
+        const bPath = path.join(dirPath, b);
+        const aIsDir = statSync(aPath).isDirectory();
+        const bIsDir = statSync(bPath).isDirectory();
+        
+        // Directories first, then files
+        if (aIsDir && !bIsDir) return -1;
+        if (!aIsDir && bIsDir) return 1;
+        return a.localeCompare(b);
+      });
+
+      for (let i = 0; i < sortedItems.length; i++) {
+        const item = sortedItems[i];
+        const itemPath = path.join(dirPath, item);
+        const isLast = i === sortedItems.length - 1;
+        const connector = isLast ? '└── ' : '├── ';
+        const nextPrefix = prefix + (isLast ? '    ' : '│   ');
+
+        try {
+          const stats = statSync(itemPath);
+          const isDirectory = stats.isDirectory();
+          const isSymlink = stats.isSymbolicLink();
+          
+          let displayName = item;
+          if (isDirectory) displayName += '/';
+          if (isSymlink) displayName += ' → ' + await fs.readlink(itemPath).catch(() => 'broken');
+          
+          console.log(prefix + connector + displayName);
+          
+          if (isDirectory && currentDepth < maxDepth - 1) {
+            await this.displayTreeStructure(itemPath, nextPrefix, maxDepth, currentDepth + 1, showHidden);
+          }
+        } catch (error) {
+          // Handle permission errors or broken symlinks
+          console.log(prefix + connector + item + ' [access denied]');
+        }
+      }
+    } catch (error) {
+      console.log(prefix + '[error reading directory]');
+    }
+  }
+
+  /**
    * Get current component context for chained operations
    */
   private getComponentContext(): { component: string, version: string, path: string } | null {
@@ -732,31 +816,12 @@ Standards:
       case 'overview':
       default:
         console.log(`
-🚀 Web4TSComponent 0.3.0.6 - Web4-Compliant TypeScript Component Tools
+🚀 Web4TSComponent 0.3.0.8 - Auto-Discovery CLI Architecture
 
-Web4 CLI Topics:
-  create <name> <version> [options]    # Create Web4-compliant component
-  set <component> cli-script <version> # Generate location-resilient CLI
-  get <path> validation                # Validate CLI standard
-  from <component-path>                # Analyze component compliance
-  find <component-dir>                 # Discover components
-  info [topic]                         # Show standards/guidelines
+This is outdated hardcoded help text. The CLI now uses auto-discovery!
+Run './web4tscomponent' without arguments to see the auto-generated help.
 
-Options for create:
-  all      # Include all features (cli, spec, vitest, layers)
-  cli      # Include CLI script
-  spec     # Include spec folder
-  vitest   # Include test configuration
-  layers   # Include layer architecture
-
-Examples:
-  web4tscomponent create MyComponent 0.1.0.0 all
-  web4tscomponent set MyComponent cli-script 0.1.0.0
-  web4tscomponent get ./myscript.sh validation
-  web4tscomponent from components/MyComponent/0.1.0.0
-  web4tscomponent find components/
-
-🎯 Feature equivalent to v1.0.0.0 with Web4 compliance like Unit 0.3.0.5
+🎯 Auto-discovery CLI with Web4 compliance patterns
 `);
         break;
     }

@@ -1,6 +1,6 @@
 /**
  * Web4TSComponentModel - Web4 TypeScript Component Model Interface
- * Web4 pattern: Component model following Unit 0.3.0.5 patterns
+ * Web4 pattern: Component model following auto-discovery patterns
  */
 
 import { Model } from './Model.interface.js';
