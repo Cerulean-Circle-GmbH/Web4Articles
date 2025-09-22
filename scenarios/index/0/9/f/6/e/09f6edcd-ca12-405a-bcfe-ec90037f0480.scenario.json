@@ -1,0 +1,29 @@
+{
+  "ior": {
+    "uuid": "09f6edcd-ca12-405a-bcfe-ec90037f0480",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"09f6edcd-ca12-405a-bcfe-ec90037f0480\",\"timestamp\":\"2025-09-22T11:16:36.730Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "09f6edcd-ca12-405a-bcfe-ec90037f0480",
+    "createdAt": "2025-09-22T11:16:36.728Z",
+    "updatedAt": "2025-09-22T11:16:36.738Z",
+    "name": "TestComplete",
+    "definition": "Testing the complete fix with storage persistence",
+    "indexPath": "/workspace/scenarios/index/0/9/f/6/e/09f6edcd-ca12-405a-bcfe-ec90037f0480.scenario.json",
+    "symlinkPaths": [],
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/scenarios/ontology/TestComplete.unit",
+        "linkTarget": "ior:unit:09f6edcd-ca12-405a-bcfe-ec90037f0480",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/MDAv4/M3/CLASS/TestComplete.unit",
+        "linkTarget": "ior:unit:09f6edcd-ca12-405a-bcfe-ec90037f0480",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}
