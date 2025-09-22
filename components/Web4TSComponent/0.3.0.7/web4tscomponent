@@ -10,7 +10,7 @@ if [ -n "$WEB4_PROJECT_ROOT" ]; then
 else
     PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 fi
-COMPONENT_VERSION="0.3.0.7"
+COMPONENT_VERSION="0.3.0.6"
 COMPONENT_PATH="$PROJECT_ROOT/components/Web4TSComponent/$COMPONENT_VERSION"
 CLI_PATH="$COMPONENT_PATH/dist/ts/layer5/Web4TSComponentCLI.js"
 
