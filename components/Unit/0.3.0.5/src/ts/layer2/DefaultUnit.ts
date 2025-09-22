@@ -915,6 +915,23 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
+   * Save scenario to storage and create local named link
+   * Web4 pattern: Combined save and link operation for CLI convenience
+   * 
+   * @param filename - Base filename for .unit link (without extension)
+   * @returns Promise<void> - Resolves when save and link operations complete
+   * @throws Error when save or link operations fail
+   */
+  async saveAndLink(filename: string): Promise<void> {
+    // Save the scenario to storage first
+    const scenario = await this.toScenario();
+    await this.storage.saveScenario(this.model.uuid, scenario, []);
+    
+    // Create local named link
+    await this.link(this.model.uuid, filename);
+  }
+
+  /**
    * Extract UUID from scenario path
    * @cliHide
    */
@@ -951,6 +968,8 @@ export class DefaultUnit implements Unit, Upgrade {
    */
   async link(identifier: UnitIdentifier, filename: string): Promise<void> {
     try {
+      const { promises: fs } = await import('fs');
+      
       // ✅ NEW: Extract UUID from union type parameter
       let uuid: string;
       if (isUUIDv4(identifier)) {
@@ -980,6 +999,11 @@ export class DefaultUnit implements Unit, Upgrade {
       
       // Create new LD link pointing to existing scenario
       const scenarioPath = existingScenario.model.indexPath;
+      
+      // Create actual filesystem symlink
+      const relativePath = await this.calculateRelativePath(currentDir, scenarioPath);
+      await fs.symlink(relativePath, linkPath);
+      
       await this.storage.saveScenario(uuid, existingScenario, [linkPath]);
       
       console.log(`✅ Link created: ${convertedFilename}.unit → ${uuid}`);
