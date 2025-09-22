@@ -1,0 +1,21 @@
+{
+  "name": "@web4/testcomponent",
+  "version": "0.1.0.0",
+  "description": "Web4-compliant TestComponent component",
+  "type": "module",
+  "main": "dist/ts/layer2/DefaultTestComponent.js",
+  "types": "dist/ts/layer2/DefaultTestComponent.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "test:watch": "vitest --watch"
+  },
+  "dependencies": {
+    "@web4/unit": "^0.3.0.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0",
+    "@types/node": "^20.0.0"
+  }
+}
