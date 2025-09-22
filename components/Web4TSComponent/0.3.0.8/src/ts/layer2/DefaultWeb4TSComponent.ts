@@ -92,14 +92,14 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       uuid: this.model.uuid,
       timestamp: new Date().toISOString(),
       component: 'Web4TSComponent',
-      version: '0.3.0.6'
+      version: '0.3.0.8'
     });
 
     return {
       ior: {
         uuid: this.model.uuid,
         component: 'Web4TSComponent',
-        version: '0.3.0.6'
+        version: '0.3.0.8'
       },
       owner: ownerData,
       model: this.model
@@ -816,31 +816,12 @@ Standards:
       case 'overview':
       default:
         console.log(`
-🚀 Web4TSComponent 0.3.0.6 - Web4-Compliant TypeScript Component Tools
+🚀 Web4TSComponent 0.3.0.8 - Auto-Discovery CLI Architecture
 
-Web4 CLI Topics:
-  create <name> <version> [options]    # Create Web4-compliant component
-  set <component> cli-script <version> # Generate location-resilient CLI
-  get <path> validation                # Validate CLI standard
-  from <component-path>                # Analyze component compliance
-  find <component-dir>                 # Discover components
-  info [topic]                         # Show standards/guidelines
+This is outdated hardcoded help text. The CLI now uses auto-discovery!
+Run './web4tscomponent' without arguments to see the auto-generated help.
 
-Options for create:
-  all      # Include all features (cli, spec, vitest, layers)
-  cli      # Include CLI script
-  spec     # Include spec folder
-  vitest   # Include test configuration
-  layers   # Include layer architecture
-
-Examples:
-  web4tscomponent create MyComponent 0.1.0.0 all
-  web4tscomponent set MyComponent cli-script 0.1.0.0
-  web4tscomponent get ./myscript.sh validation
-  web4tscomponent from components/MyComponent/0.1.0.0
-  web4tscomponent find components/
-
-🎯 Feature equivalent to v1.0.0.0 with Web4 compliance like Unit 0.3.0.5
+🎯 Auto-discovery CLI with Web4 compliance patterns
 `);
         break;
     }
