@@ -272,6 +272,9 @@ node --loader ts-node/esm "./components/${componentName}/${version}/src/ts/layer
     }
   }
 
+  /**
+   * @cliHide
+   */
   async auditComponentCompliance(componentPath: string): Promise<ComponentMetadata> {
     const packageJsonPath = path.join(componentPath, 'package.json');
     const tsConfigPath = path.join(componentPath, 'tsconfig.json');
@@ -322,6 +325,9 @@ node --loader ts-node/esm "./components/${componentName}/${version}/src/ts/layer
     return metadata;
   }
 
+  /**
+   * @cliHide
+   */
   async generateComplianceReport(componentDir: string): Promise<ComponentMetadata[]> {
     const components: ComponentMetadata[] = [];
     
@@ -348,6 +354,9 @@ node --loader ts-node/esm "./components/${componentName}/${version}/src/ts/layer
     return components;
   }
 
+  /**
+   * @cliHide
+   */
   showStandard(): void {
     console.log(`
 🔧 Web4 Location-Resilient CLI Standard
@@ -397,10 +406,26 @@ Standards:
   // Web4 CLI Topic Methods (for DefaultCLI dynamic execution)
   
   /**
-   * Create Web4-compliant component with scaffolding
-   * @param name Component name (spaces become dots)
-   * @param version Semantic version in 0.1.0.0 format  
-   * @param options Scaffolding options (all, cli, spec, vitest, layers)
+   * Create a new Web4-compliant component with full auto-discovery capabilities
+   * 
+   * Generates a complete component with the same features as Web4TSComponent:
+   * - Auto-discovery CLI with method discovery
+   * - Web4 architecture patterns (empty constructor, scenarios)
+   * - TypeScript compilation and build system
+   * - Comprehensive layer structure (layer2/3/4/5)
+   * 
+   * @param name Component name (CamelCase, spaces become dots)
+   * @param version Semantic version in X.Y.Z.W format (default: 0.1.0.0)
+   * @param options Features to include: 'all' (recommended), 'cli', 'spec', 'vitest', 'layers'
+   * 
+   * @example
+   * // Create full-featured component
+   * await component.create('UserManager', '0.1.0.0', 'all');
+   * 
+   * @example  
+   * // Create minimal component
+   * await component.create('DataProcessor', '0.1.0.0', 'cli');
+   * 
    * @cliSyntax name version options
    * @cliDefault version 0.1.0.0
    * @cliDefault options all
@@ -439,6 +464,9 @@ Standards:
    * @param version Version for CLI script generation
    * @cliSyntax component property version
    */
+  /**
+   * @cliHide
+   */
   async set(component: string, property: string, version: string): Promise<void> {
     if (property === 'cli-script' || property === 'cli') {
       console.log(`🔨 Generating CLI script for ${component} v${version}`);
@@ -456,13 +484,21 @@ Standards:
   }
 
   /**
-   * Get validation results (maps to validate-standard)
-   */
-  /**
-   * Get component validation or property
-   * @param path Component path or property to validate
-   * @param operation Validation operation (validation, etc.)
+   * Validate and analyze component compliance (internal validation tool)
+   * 
+   * Analyzes component files for Web4 compliance and standards adherence.
+   * Validates CLI scripts, architecture, and implementation quality.
+   * Maps to validate-standard functionality for component validation.
+   * 
+   * @param path Path to component or CLI script to validate
+   * @param operation Type of validation ('validation' for CLI, 'standard' for compliance)
+   * 
+   * @example
+   * // Validate CLI script
+   * await component.get('./myscript.sh', 'validation');
+   * 
    * @cliSyntax path operation
+   * @cliHide
    */
   async get(path: string, operation: string): Promise<void> {
     if (operation === 'validation' || operation === 'standard') {
@@ -501,6 +537,9 @@ Standards:
    * @param componentPath Path to component directory
    * @cliSyntax componentPath
    */
+  /**
+   * @cliHide
+   */
   async from(componentPath: string): Promise<this> {
     console.log(`🔍 Analyzing component: ${componentPath}`);
     const metadata = await this.auditComponentCompliance(componentPath);
@@ -521,11 +560,23 @@ Standards:
   }
 
   /**
-   * Find components in directory (maps to generate-report)
-   */
-  /**
-   * Find and discover components in directory
-   * @param componentDir Directory to search for components
+   * Discover and list all Web4 components in a directory
+   * 
+   * Scans directory structure for Web4-compliant components and provides
+   * detailed analysis of each component's features and compliance status.
+   * Perfect for auditing component ecosystems and finding available components.
+   * Maps to generate-report functionality for comprehensive component discovery.
+   * 
+   * @param componentDir Directory path to search for components (relative to project root)
+   * 
+   * @example
+   * // Discover all components in main directory
+   * await component.find('components/');
+   * 
+   * @example
+   * // Discover in backup location
+   * await component.find('backup/components/');
+   * 
    * @cliSyntax componentDir
    */
   async find(componentDir: string): Promise<this> {
@@ -544,14 +595,24 @@ Standards:
   }
 
   /**
-   * Load component context for command chaining (like Unit's on method)
-   * Usage: web4tscomponent on <component> <version> upgrade <next>
-   */
-  /**
-   * Load component context for command chaining
-   * @param component Component name
-   * @param version Component version
-   * @cliHide
+   * Load component context for command chaining operations
+   * 
+   * Essential method for chaining workflows. Loads component context that
+   * enables subsequent chained operations like tree, upgrade, setLatest.
+   * Based on Unit's on method pattern for consistent chaining architecture.
+   * 
+   * @param component Component name to load context for
+   * @param version Component version to load
+   * 
+   * @example
+   * // Load context for chaining
+   * await component.on('Unit', '0.3.0.5');
+   * 
+   * @example
+   * // Load context for this component
+   * await component.on('Web4TSComponent', '0.3.0.8');
+   * 
+   * @cliSyntax component version
    */
   async on(component: string, version: string): Promise<this> {
     const componentPath = path.join(this.model.targetDirectory, 'components', component, version);
@@ -578,12 +639,26 @@ Standards:
   }
 
   /**
-   * Upgrade component version with semantic control (chained after on)
-   * Usage: web4tscomponent on Unit 0.3.0.5 upgrade nextBuild
-   */
-  /**
-   * Upgrade component to next version
-   * @param versionType Version upgrade type (nextBuild, nextMinor, nextMajor, or specific version)
+   * Upgrade component to next version with semantic version control
+   * 
+   * Performs intelligent version upgrades for loaded component context.
+   * Must be used after 'on' method to load component context. Supports
+   * semantic versioning with nextBuild, nextMinor, nextMajor patterns.
+   * 
+   * @param versionType Version upgrade type: 'nextBuild', 'nextMinor', 'nextMajor', or specific version
+   * 
+   * @example
+   * // Upgrade to next build version (0.1.0.0 → 0.1.0.1)
+   * await component.upgrade('nextBuild');
+   * 
+   * @example
+   * // Upgrade to next minor version (0.1.0.0 → 0.2.0.0)
+   * await component.upgrade('nextMinor');
+   * 
+   * @example
+   * // Upgrade to specific version
+   * await component.upgrade('1.0.0.0');
+   * 
    * @cliSyntax versionType
    */
   async upgrade(versionType: string): Promise<this> {
@@ -718,6 +793,13 @@ Standards:
    * Test method to verify zero config discovery
    * @param message Test message to display
    * @cliSyntax message
+   */
+  /**
+   * Test zero config discovery functionality (development/testing only)
+   * 
+   * @param message Test message to display
+   * @cliSyntax message
+   * @cliHide
    */
   async testDiscovery(message: string = 'Zero config discovery works!'): Promise<this> {
     console.log(`🧪 Discovery Test: ${message}`);
@@ -894,7 +976,28 @@ Standards:
   }
 
   /**
-   * Display information (maps to show-standard/guidelines)
+   * Display Web4TSComponent information and standards
+   * 
+   * Shows comprehensive information about Web4 component standards,
+   * implementation guidelines, and architecture patterns. Essential
+   * reference for understanding Web4 component development.
+   * 
+   * @param topic Information topic to display: 'overview' (default), 'standard', 'guidelines'
+   * 
+   * @example
+   * // Show general overview
+   * await component.info();
+   * 
+   * @example
+   * // Show Web4 standards
+   * await component.info('standard');
+   * 
+   * @example
+   * // Show implementation guidelines  
+   * await component.info('guidelines');
+   * 
+   * @cliSyntax topic
+   * @cliDefault topic overview
    */
   async info(topic: string = 'overview'): Promise<void> {
     switch (topic) {
@@ -1196,6 +1299,9 @@ export default defineConfig({
    * @param outputFormat Format for output (json, xml, csv)
    * @cliSyntax inputData outputFormat
    * @cliDefault outputFormat json
+   */
+  /**
+   * @cliHide
    */
   async testNewMethod(inputData: string, outputFormat: string = 'json'): Promise<this> {
     console.log(`🚀 Processing ${inputData} as ${outputFormat}`);
