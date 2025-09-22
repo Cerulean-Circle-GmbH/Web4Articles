@@ -187,7 +187,8 @@ export class Web4TSComponentCLI extends DefaultCLI {
       'tree': 2,  // depth and showHidden parameters (both have defaults)
       'create': 3, // name, version, options (options has default)
       'upgrade': 1, // versionType
-      'on': 2 // component and version
+      'on': 2, // component and version
+      'setLatest': 1 // targetVersion (has default)
     };
     
     return methodMaxArgs[command] || null;
