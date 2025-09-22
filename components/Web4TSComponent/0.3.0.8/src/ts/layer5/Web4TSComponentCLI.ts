@@ -70,8 +70,12 @@ export class Web4TSComponentCLI extends DefaultCLI {
    * Web4TSComponent-specific usage display using DefaultCLI dynamic generation
    */
   showUsage(): void {
-    // Use new structured usage generation like requirement-v0.1.2.2
-    console.log(this.generateStructuredUsage());
+    // Use DefaultCLI's auto-discovery which respects @cliHide annotations
+    if (typeof super.generateStructuredUsage === 'function') {
+      console.log(super.generateStructuredUsage());
+    } else {
+      super.showUsage();
+    }
   }
 
   /**
