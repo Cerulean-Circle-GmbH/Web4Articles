@@ -1,22 +1,96 @@
+/**
+ * DefaultTestFeatureComponent - TestFeatureComponent Component Implementation
+ * Web4 pattern: Empty constructor + scenario initialization + component functionality
+ */
+
 import { TestFeatureComponent } from '../layer3/TestFeatureComponent.interface.js';
+import { Scenario } from '../layer3/Scenario.interface.js';
+import { TestFeatureComponentModel } from '../layer3/TestFeatureComponentModel.interface.js';
 
 export class DefaultTestFeatureComponent implements TestFeatureComponent {
+  private model: TestFeatureComponentModel;
+
   constructor() {
     // Empty constructor - Web4 pattern
+    this.model = {
+      uuid: crypto.randomUUID(),
+      name: '',
+      origin: '',
+      definition: '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
   }
-  
-  init(scenario: any): this {
-    // Initialize from scenario
+
+  /**
+   * @cliHide
+   */
+  init(scenario: Scenario<TestFeatureComponentModel>): this {
+    if (scenario.model) {
+      this.model = { ...this.model, ...scenario.model };
+    }
     return this;
   }
-  
-  async toScenario(): Promise<any> {
-    // Convert to scenario
-    return {};
+
+  /**
+   * @cliHide
+   */
+  async toScenario(name?: string): Promise<Scenario<TestFeatureComponentModel>> {
+    const ownerData = JSON.stringify({
+      user: process.env.USER || 'system',
+      hostname: process.env.HOSTNAME || 'localhost',
+      uuid: this.model.uuid,
+      timestamp: new Date().toISOString(),
+      component: 'TestFeatureComponent',
+      version: '0.1.0.0'
+    });
+
+    return {
+      ior: {
+        uuid: this.model.uuid,
+        component: 'TestFeatureComponent',
+        version: '0.1.0.0'
+      },
+      owner: ownerData,
+      model: this.model
+    };
   }
-  
-  process(): this {
-    // Process operations
+
+  /**
+   * Create example operation for TestFeatureComponent
+   * @param input Input data to process
+   * @param format Output format (json, text, xml)
+   * @cliSyntax input format
+   * @cliDefault format json
+   */
+  async create(input: string, format: string = 'json'): Promise<this> {
+    console.log(`🚀 Creating ${input} in ${format} format`);
+    this.model.name = input;
+    this.model.updatedAt = new Date().toISOString();
+    console.log(`✅ TestFeatureComponent operation completed`);
+    return this;
+  }
+
+  /**
+   * Process data through TestFeatureComponent logic
+   * @param data Data to process
+   * @cliSyntax data
+   */
+  async process(data: string): Promise<this> {
+    console.log(`🔧 Processing: ${data}`);
+    this.model.updatedAt = new Date().toISOString();
+    return this;
+  }
+
+  /**
+   * Show information about current TestFeatureComponent state
+   */
+  async info(): Promise<this> {
+    console.log(`📋 TestFeatureComponent Information:`);
+    console.log(`   UUID: ${this.model.uuid}`);
+    console.log(`   Name: ${this.model.name || 'Not set'}`);
+    console.log(`   Created: ${this.model.createdAt}`);
+    console.log(`   Updated: ${this.model.updatedAt}`);
     return this;
   }
 }
