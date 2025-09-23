@@ -19,27 +19,27 @@ This eagerness is exactly what creates chaos. You're exhibiting **CMM1 behavior*
 
 Before you touch anything, you need to understand **where you are** and **where you need to be:**
 
-### CMM1 (Where You Are Now): Chaos
+### CMM1 (Where You Are Now): [Chaos](cmm-levels-summary.md#level-1-initial-chaos)
 You want to jump in and start changing things. You think you can figure it out as you go. You believe your intuition and experience from other contexts will guide you.
 
 **Reality:** This approach creates unpredictable, often destructive results.
 
-### CMM2 (Where Most Agents Get Stuck): Template Following
+### CMM2 (Where Most Agents Get Stuck): [Template Following](cmm-levels-summary.md#level-2-managed-repeatable-via-templates)
 You'll discover templates and think following them makes you professional. You'll create repeatable work but with individual variations and interpretation.
 
 **Problem:** Templates leave room for hallucination. Your work will vary from others even when following the "same" process.
 
-### CMM3 (Minimum Acceptable): Objective Definitions
+### CMM3 (Minimum Acceptable): [Objective Definitions](cmm-levels-summary.md#level-3-defined-objective-automated-definition)
 You achieve scientific reproducibility. Your work produces identical results every time, independent of context or personal interpretation.
 
 **Achievement:** Assembly line precision - no undefined states, no variations.
 
-### CMM4 (Your Target): Feedback Loop Mastery
+### CMM4 (Your Target): [Feedback Loop Mastery](cmm-levels-summary.md#level-4-quantitatively-managed-feedback-loop-mastery)
 You run systems multiple times to understand them as whiteboxes. You can pinpoint exact improvement opportunities without breaking existing success.
 
 **Capability:** Systematic improvement through comprehensive understanding.
 
-### CMM5 (Avoid This): Life-Critical Perfection
+### CMM5 (Avoid This): [Life-Critical Perfection](cmm-levels-summary.md#level-5-optimizing-life-critical-perfection)
 100% perfection, exponentially expensive, only for life-threatening scenarios (NASA missions, medical devices, nuclear plants).
 
 **Reality:** Economically impossible for normal work. Web4 deliberately targets CMM4, not CMM5.
@@ -131,5 +131,15 @@ Now that you understand CMM levels, you can properly understand what PDCA actual
 ## Dory Mode Prevention
 
 **If you start forgetting things you just learned:** Re-read this document top-down, then check the prevention guide linked above. CMM4 requires continuous learning maintenance.
+
+## Web4 Project Preparation
+
+**Before you start actual work, understand the Web4 ecosystem:**
+
+**Technical Foundation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/docs/tech-stack.md) | [docs/tech-stack.md](../../../docs/tech-stack.md) - Vitest mandatory, Jest banned, ESM-native TypeScript approach
+
+**Component Example:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/components/Web4TSComponent/0.3.0.8/README.md) | [components/Web4TSComponent/0.3.0.8/README.md](../../../components/Web4TSComponent/0.3.0.8/README.md) - Auto-discovery CLI patterns and method addition guide
+
+**Web4 Requirements:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-22-UTC-1908/components/Web4Requirement/0.3.0.5) | [components/Web4Requirement/0.3.0.5](../../../components/Web4Requirement/0.3.0.5) - Web4 paradigm and component standards
 
 **Ready?** Go read [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../../scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) with your new CMM4 understanding. Everything will make more sense now.
