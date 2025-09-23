@@ -307,6 +307,10 @@ Level 4: Quantitatively Managed (Feedback Loop Mastery)
 - **Ariane 5 Flight 501 (1996):** $500 million rocket exploded due to software overflow
 - **Therac-25 Medical Device:** Radiation overdoses killed patients due to software race conditions
 
+**CMM5 vs CMM4 Example:**
+- **NASA (CMM5):** Life-critical missions, 100% perfection required, exponentially expensive but zero failure tolerance
+- **SpaceX (CMM4):** 80/20 Pareto efficiency, acceptable risk-cost ratio, faster innovation, sustainable economics
+
 ### The Economic Reality
 
 **CMM4 (80/20 Rule):**
