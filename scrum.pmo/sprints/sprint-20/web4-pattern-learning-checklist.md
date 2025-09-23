@@ -1,0 +1,1 @@
+../../project.journal/2025-09-23-UTC-1052-session/web4-pattern-learning-checklist.md
