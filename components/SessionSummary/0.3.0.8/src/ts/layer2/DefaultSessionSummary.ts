@@ -4,7 +4,7 @@
  */
 
 import { readFileSync, readdirSync, writeFileSync } from 'fs';
-import { join, basename, relative } from 'path';
+import { join, basename, relative, dirname } from 'path';
 import { execSync } from 'child_process';
 import { ISessionSummary, ComponentWork } from '../layer3/SessionSummary.interface.js';
 import { PDCAAnalysis, SessionAnalysisOptions, SessionSummaryResult } from '../layer3/PDCAAnalysis.interface.js';
@@ -330,9 +330,10 @@ export class DefaultSessionSummary implements ISessionSummary {
       const projectRoot = this.findProjectRoot();
       const targetAbsolutePath = join(projectRoot, cleanPath);
       
-      // Session summary file location (session directory)
+      // Session summary file location (inside session directory)
       const sessionDir = sessionPath || process.cwd();
-      const relativePath = relative(sessionDir, targetAbsolutePath);
+      const sessionSummaryFile = join(sessionDir, 'session.summary.md');
+      const relativePath = relative(dirname(sessionSummaryFile), targetAbsolutePath);
       
       table += `| **${analysis.sha}** | **${analysis.utcTime}** | [GitHub](${githubUrl}) \\| [${displayPath}](${relativePath}) | ${analysis.tronQuotes} | ${analysis.qaDecisions} | ${analysis.achievement} |\n`;
     }
