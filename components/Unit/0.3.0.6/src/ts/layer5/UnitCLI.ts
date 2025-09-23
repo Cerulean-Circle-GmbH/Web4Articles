@@ -208,10 +208,7 @@ export class UnitCLI extends DefaultCLI {
           await this.classify(commandArgs[0], commandArgs[1]);
           break;
 
-        case 'info':
-          const infoFile = commandArgs[0]; // Extract file parameter
-          await this.showInfo(infoFile);
-          break;
+        // 'info' method now handled by auto-discovery via executeDynamicCommand
 
           
         case 'help':
