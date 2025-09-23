@@ -744,6 +744,15 @@ Standards:
           // Switch auto-discovery to target component
           (this as any).componentClass = targetClass;
           (this as any).componentName = component;
+          
+          // Clear cached component instance to force reload with new class
+          (this as any).componentInstance = null;
+          
+          // Refresh method signatures for new component
+          if (typeof (this as any).discoverMethods === 'function') {
+            (this as any).discoverMethods();
+          }
+          
           console.log(`   🔍 Auto-discovery enabled for ${component} methods`);
         }
       }
