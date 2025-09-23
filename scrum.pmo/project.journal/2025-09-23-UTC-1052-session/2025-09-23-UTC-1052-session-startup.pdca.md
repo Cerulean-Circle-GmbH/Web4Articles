@@ -21,10 +21,10 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-23-UTC-1052/scrum.pmo/project.journal/2025-09-23-UTC-1052-session/2025-09-23-UTC-1052-session-startup.pdca.md) | [scrum.pmo/project.journal/2025-09-23-UTC-1052-session/2025-09-23-UTC-1052-session-startup.pdca.md](scrum.pmo/project.journal/2025-09-23-UTC-1052-session/2025-09-23-UTC-1052-session-startup.pdca.md)
-- **Agent Registry:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-23-UTC-1052/scrum.pmo/agents/registry/pending-unknown-2025-09-23-UTC-1050.md) | [scrum.pmo/agents/registry/pending-unknown-2025-09-23-UTC-1050.md](scrum.pmo/agents/registry/pending-unknown-2025-09-23-UTC-1050.md)
-- **CMM4 Framework:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md)
-- **PDCA Framework:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-23-UTC-1052/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-23-UTC-1052/scrum.pmo/project.journal/2025-09-23-UTC-1052-session/2025-09-23-UTC-1052-session-startup.pdca.md) | [§/scrum.pmo/project.journal/2025-09-23-UTC-1052-session/2025-09-23-UTC-1052-session-startup.pdca.md](scrum.pmo/project.journal/2025-09-23-UTC-1052-session/2025-09-23-UTC-1052-session-startup.pdca.md)
+- **Agent Registry:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-23-UTC-1052/scrum.pmo/agents/registry/pending-unknown-2025-09-23-UTC-1050.md) | [§/scrum.pmo/agents/registry/pending-unknown-2025-09-23-UTC-1050.md](scrum.pmo/agents/registry/pending-unknown-2025-09-23-UTC-1050.md)
+- **CMM4 Framework:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md) | [§/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md)
+- **PDCA Framework:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-23-UTC-1052/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)
 
 ### **QA Decisions**
 - [x] CMM4 Framework Understanding: Successfully completed comprehensive reading and understanding of Web4Articles CMM4 approach targeting systematic feedback loop mastery
