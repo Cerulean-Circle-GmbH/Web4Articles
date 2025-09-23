@@ -3,7 +3,7 @@
  * Purpose: Automated PDCA session analysis with TRON extraction and decisions tracking
  */
 
-import { readFileSync, readdirSync, writeFileSync } from 'fs';
+import { readFileSync, readdirSync, writeFileSync, existsSync } from 'fs';
 import { join, basename, relative, dirname } from 'path';
 import { execSync } from 'child_process';
 import { ISessionSummary, ComponentWork } from '../layer3/SessionSummary.interface.js';
@@ -287,7 +287,83 @@ export class DefaultSessionSummary implements ISessionSummary {
    */
   private async updateCoverageTrackingTable(sessionPath: string, componentWork: ComponentWork[]): Promise<void> {
     console.log(`📊 Updating coverage tracking table for ${componentWork.length} component work items`);
-    // TODO: Implement automatic coverage table updates
+    
+    if (componentWork.length === 0) {
+      console.log(`   No component work items to add to coverage tracking`);
+      return;
+    }
+
+    try {
+      const projectRoot = this.findProjectRoot();
+      const coverageFile = join(projectRoot, 'scrum.pmo/project.journal/component-version-session-coverage-tracking.md');
+      
+      if (!existsSync(coverageFile)) {
+        console.warn(`   Coverage tracking file not found: ${coverageFile}`);
+        return;
+      }
+
+      const content = readFileSync(coverageFile, 'utf8');
+      const sessionName = basename(sessionPath);
+      
+      // Calculate relative path from coverage file to session summary
+      const coverageFileDir = join(projectRoot, 'scrum.pmo/project.journal');
+      const sessionSummaryPath = join(sessionPath, 'session.summary.md');
+      const relativeToSession = relative(coverageFileDir, sessionSummaryPath);
+      
+      // Generate new component entries
+      let newEntries = '';
+      const sessionSummaryRelPath = relative(coverageFileDir, sessionSummaryPath);
+      const addedComponents = new Set<string>(); // Prevent duplicates
+      
+      for (const work of componentWork) {
+        for (const componentName of work.components) {
+          // Extract version from component name if present (e.g., "Web4TSComponent 0.3.0.8")
+          const versionMatch = componentName.match(/^(\S+)\s+v?([\d.]+)$/);
+          const name = versionMatch ? versionMatch[1] : componentName;
+          const version = versionMatch ? versionMatch[2] : '0.1.0.0';
+          
+          const componentKey = `${name}-${version}`;
+          
+          // Check if already in file or already added
+          if (!addedComponents.has(componentKey) && !content.includes(`**${name}** | ${version} |`)) {
+            addedComponents.add(componentKey);
+            
+            // Generate entry with new format (without Sessions Directory column)
+            newEntries += `| **${name}** | ${version} | [${sessionName} development](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/${sessionSummaryRelPath}) \\| [§/${sessionSummaryRelPath}](${sessionSummaryRelPath}) | ✅ Has coverage |\n`;
+          }
+        }
+      }
+      
+      // Insert new entries before the final status line
+      const finalStatusPattern = /\*\*Current Status:\*\* \d+\/\d+ component versions/;
+      const match = content.match(finalStatusPattern);
+      
+      if (match && newEntries.trim()) {
+        const insertionPoint = content.indexOf(match[0]);
+        const beforeInsertion = content.substring(0, insertionPoint);
+        const afterInsertion = content.substring(insertionPoint);
+        
+        const updatedContent = beforeInsertion + newEntries + '\n' + afterInsertion;
+        
+        // Update component count in final status
+        const currentCount = content.match(/(\d+)\/\d+ component versions/);
+        if (currentCount) {
+          const newCount = parseInt(currentCount[1]) + componentWork.length;
+          const updatedFinalContent = updatedContent.replace(
+            /\*\*Current Status:\*\* \d+\/\d+ component versions/,
+            `**Current Status:** ${newCount}/${newCount} component versions`
+          );
+          
+          writeFileSync(coverageFile, updatedFinalContent);
+          console.log(`   ✅ Added ${componentWork.length} component entries to coverage tracking`);
+          console.log(`   📊 Updated component count to ${newCount}`);
+        }
+      } else {
+        console.log(`   ⚠️ Could not find insertion point in coverage tracking file`);
+      }
+    } catch (error) {
+      console.error(`   ❌ Error updating coverage tracking table: ${error}`);
+    }
   }
 
   /**
