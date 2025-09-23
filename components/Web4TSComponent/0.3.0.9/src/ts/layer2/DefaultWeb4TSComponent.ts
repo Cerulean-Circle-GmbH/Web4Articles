@@ -229,45 +229,60 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliHide
    */
   async generateLocationResilientCLI(componentName: string, version: string): Promise<string> {
-    const cliTemplate = `#!/bin/bash
+    const cliTemplate = `#!/usr/bin/env node
 
-# ${componentName} CLI Tool - Location Resilient Version
-# Web4 Architecture Standard - Self-Implementing Reference
-# Works from any directory, finds project root via git
+/**
+ * ${componentName} CLI Tool - Modern ESM TypeScript
+ * Web4 Architecture Standard - Pure ESM execution
+ * Works from any directory, finds project root via git
+ */
 
-# Function to find project root using git
-find_project_root() {
-    local git_root=$(git rev-parse --show-toplevel 2>/dev/null)
-    if [ -n "$git_root" ] && [ -d "$git_root" ]; then
-        if [ -f "$git_root/package.json" ] || [ -f "$git_root/README.md" ]; then
-            echo "$git_root"
-            return 0
-        fi
-    fi
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { execSync } from 'child_process';
+import { existsSync } from 'fs';
+
+// Find project root using git
+function findProjectRoot() {
+    try {
+        const gitRoot = execSync('git rev-parse --show-toplevel', { encoding: 'utf-8' }).trim();
+        if (existsSync(gitRoot)) {
+            return gitRoot;
+        }
+    } catch {
+        // Fallback to directory traversal
+    }
     
-    local current_dir="$PWD"
-    while [ "$current_dir" != "/" ]; do
-        if [ -d "$current_dir/.git" ] && [ -f "$current_dir/package.json" ]; then
-            echo "$current_dir"
-            return 0
-        fi
-        current_dir="$(dirname "$current_dir")"
-    done
+    let dir = process.cwd();
+    while (dir !== '/') {
+        if (existsSync(join(dir, '.git')) && existsSync(join(dir, 'package.json'))) {
+            return dir;
+        }
+        dir = dirname(dir);
+    }
     
-    return 1
+    throw new Error('❌ Error: Not in a Web4 project directory');
 }
 
-# Main execution
-PROJECT_ROOT=$(find_project_root)
-if [ -z "$PROJECT_ROOT" ]; then
-    echo "❌ Error: Not in a Web4 project directory"
-    exit 1
-fi
-
-cd "$PROJECT_ROOT"
-
-# Execute component CLI
-node --loader ts-node/esm "./components/${componentName}/${version}/src/ts/layer5/${componentName}CLI.ts" "$@"
+// Main execution
+try {
+    const projectRoot = findProjectRoot();
+    process.chdir(projectRoot);
+    
+    // Import and execute component CLI
+    const cliPath = join(projectRoot, 'components', '${componentName}', '${version}', 'dist', 'ts', 'layer5', '${componentName}CLI.js');
+    
+    if (!existsSync(cliPath)) {
+        throw new Error(\`❌ ${componentName} CLI not built. Run npm run build in component directory.\`);
+    }
+    
+    const { ${componentName}CLI } = await import(cliPath);
+    await ${componentName}CLI.start(process.argv.slice(2));
+    
+} catch (error) {
+    console.error(error.message || error);
+    process.exit(1);
+}
 `;
     
     return cliTemplate;
