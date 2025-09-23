@@ -2,17 +2,22 @@
 
 **CMM/CMMI:** Capability Maturity Model (Integration) - Process maturity framework with 5 levels
 
+**Critical Principle:** The maturity level of the whole is always the least mature level applied somewhere. CMM3 compliance is not negotiable - if any part varies, the entire system drops to CMM2.
+
+**Web4 Philosophy:** CMM4 everywhere - all processes must achieve feedback loop mastery.
+
 ## Chapter 1: CMM Level Definitions (Consolidated to CMM4 Style)
 
 ### Level 1: Initial (Chaos)
-- **State:** Unpredictable, reactive, no process control
+- **Main Characteristic:** Unpredictable, reactive, no process control
 - **Reality:** Ad-hoc work, heroics required, complete chaos
-- **Example:** Random approaches, no repeatability
+- **Method:** Random approaches, no repeatability
+- **Foundation:** No systematic approach
 
 ### Level 2: Managed (Repeatable via Templates)
 - **Main Characteristic:** Templates create repeatability but with hallucination room
 - **Reality:** Same thing done repeatably but individually different
-- **Problem:** Statistical noise, measurements always vary
+- **Method:** Statistical noise, measurements always vary
 - **Foundation:** Grown, incomplete, subjective to actor/organization
 
 ### Level 3: Defined (Objective, Automated Definition)
@@ -24,14 +29,14 @@
 
 ### Level 4: Quantitatively Managed (Feedback Loop Mastery)
 - **Main Characteristic:** Feedback loop - run CMM3 system multiple times
-- **Purpose:** Fully incorporate knowledge, understand all aspects as whitebox
+- **Reality:** Fully incorporate knowledge, understand all aspects as whitebox
 - **Method:** Pinpoint exact places for improvement without breaking previous success
-- **Protection:** Avoid CMM2 hallucinations about unanalyzed system parts
-- **Example:** PDCA cycle (Plan → Do → Check → Act → repeat until improvement achieved)
+- **Foundation:** Avoid CMM2 hallucinations about unanalyzed system parts
+- **Result:** PDCA cycle (Plan → Do → Check → Act → repeat until improvement achieved)
 
 ### Level 5: Optimizing (Continuous Improvement)
 - **Main Characteristic:** Continuous improvement of CMM3 definitions
-- **Purpose:** Optimize objective definitions systematically
+- **Reality:** Optimize objective definitions systematically
 - **Method:** Systematic innovation based on CMM4 feedback loops
 - **Foundation:** Refined CMM3 definitions with enhanced performance
 
