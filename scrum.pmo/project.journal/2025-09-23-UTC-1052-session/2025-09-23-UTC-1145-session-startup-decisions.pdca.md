@@ -26,24 +26,9 @@
 - **Project README:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-23-UTC-1052/README.md) | [README.md](../../../README.md)
 
 ### **QA Decisions**
-- [ ] **Decision 1: Primary Work Focus Area**
-  - a) Technical Development Focus - Investigation of modified core implementation files (DefaultWeb4TSComponent.ts, DefaultCLI.ts, TSCompletion.ts)
-  - b) Architecture Focus - Analysis of new dist/ and node_modules/ directories impact on build process
-  - c) Quality/Testing Focus - Deep investigation of 48.6% test failure rate and new file-protection test correlation
-  - d) Documentation Focus - Comprehensive regression analysis documentation and version comparison refinement
-
-- [ ] **Decision 2: Role Selection for Session**
-  - a) Current Unknown Agent for coordination and multi-perspective analysis
-  - b) Switch to Developer for implementation examination and code analysis
-  - c) Switch to Architect for system design impact assessment and build process evaluation  
-  - d) Switch to Tester for regression test analysis and failure investigation
-  - e) Switch to Process Coordinator for comprehensive PDCA documentation and workflow optimization
-
-- [ ] **Decision 3: Session Duration and Sprint Planning**
-  - a) Full day session with multiple sprint cycles covering all analysis aspects
-  - b) Half-day focused session on specific regression issue investigation
-  - c) Quick analysis session for immediate component status review and next steps
-  - d) Extended multi-day session for complete version comparison and regression resolution
+- [x] **Decision 1: Primary Work Focus Area** - Selected: c) Quality/Testing Focus - Deep investigation of 48.6% test failure rate and new file-protection test correlation
+- [x] **Decision 2: Role Selection for Session** - Selected: d) Switch to Tester for regression test analysis and failure investigation
+- [x] **Decision 3: Session Duration and Sprint Planning** - Selected: d) Extended multi-day session for complete version comparison and regression resolution
 
 ### **TRON Feedback (2025-09-23-UTC-1145)**
 ```quote
