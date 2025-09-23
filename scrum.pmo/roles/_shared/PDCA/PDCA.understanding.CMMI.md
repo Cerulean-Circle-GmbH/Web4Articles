@@ -5,17 +5,17 @@
 **👤 Role:** Background Agent → CMMI Research Specialist  
 **🚨 Issues:** Need comprehensive documentation of CMMI principles and their application in the project  
 **📎 Previous Commit:** 11fd76d - PDCA: Tools cherry-pick - integrate source.env, components, scenarios, scripts from release/dev  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/project.journal/2025-08-26-UTC-2048-tools-integration/pdca/2025-08-26-UTC-2050-tools-cherry-pick.md) | [scrum.pmo/project.journal/2025-08-26-UTC-2048-tools-integration/pdca/2025-08-26-UTC-2050-tools-cherry-pick.md](scrum.pmo/project.journal/2025-08-26-UTC-2048-tools-integration/pdca/2025-08-26-UTC-2050-tools-cherry-pick.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-26-UTC-2036/scrum.pmo/project.journal/2025-08-26-UTC-2048-tools-integration/pdca/2025-08-26-UTC-2050-tools-cherry-pick.md) | [scrum.pmo/project.journal/2025-08-26-UTC-2048-tools-integration/pdca/2025-08-26-UTC-2050-tools-cherry-pick.md](scrum.pmo/project.journal/2025-08-26-UTC-2048-tools-integration/pdca/2025-08-26-UTC-2050-tools-cherry-pick.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/roles/_shared/PDCA/understanding.CMMI.md) | [scrum.pmo/roles/_shared/PDCA/understanding.CMMI.md](scrum.pmo/roles/_shared/PDCA/understanding.CMMI.md)
-- **CMMI Change Request:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/roles/_shared/PDCA/change.requests/2025-08-24-background-agent-cmm-learning.md) | [scrum.pmo/roles/_shared/PDCA/change.requests/2025-08-24-background-agent-cmm-learning.md](scrum.pmo/roles/_shared/PDCA/change.requests/2025-08-24-background-agent-cmm-learning.md)
-- **CMMI Test Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/project.journal/2025-08-20-1012-tsranger-v22-testing/pdca/role/developer/2025-08-20-UTC-2005-cmm-level-3-agile-4-dory-cycle-elimination.md) | [scrum.pmo/project.journal/2025-08-20-1012-tsranger-v22-testing/pdca/role/developer/2025-08-20-UTC-2005-cmm-level-3-agile-4-dory-cycle-elimination.md](scrum.pmo/project.journal/2025-08-20-1012-tsranger-v22-testing/pdca/role/developer/2025-08-20-UTC-2005-cmm-level-3-agile-4-dory-cycle-elimination.md)
-- **CMMI Compliance Examples:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/project.journal/2025-08-24-consolidated-learning/) | [scrum.pmo/project.journal/2025-08-24-consolidated-learning/](scrum.pmo/project.journal/2025-08-24-consolidated-learning/)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-26-UTC-2036/scrum.pmo/roles/_shared/PDCA/understanding.CMMI.md) | [scrum.pmo/roles/_shared/PDCA/understanding.CMMI.md](scrum.pmo/roles/_shared/PDCA/understanding.CMMI.md)
+- **CMMI Change Request:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-26-UTC-2036/scrum.pmo/roles/_shared/PDCA/change.requests/2025-08-24-background-agent-cmm-learning.md) | [scrum.pmo/roles/_shared/PDCA/change.requests/2025-08-24-background-agent-cmm-learning.md](scrum.pmo/roles/_shared/PDCA/change.requests/2025-08-24-background-agent-cmm-learning.md)
+- **CMMI Test Implementation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-26-UTC-2036/scrum.pmo/project.journal/2025-08-20-1012-tsranger-v22-testing/pdca/role/developer/2025-08-20-UTC-2005-cmm-level-3-agile-4-dory-cycle-elimination.md) | [scrum.pmo/project.journal/2025-08-20-1012-tsranger-v22-testing/pdca/role/developer/2025-08-20-UTC-2005-cmm-level-3-agile-4-dory-cycle-elimination.md](scrum.pmo/project.journal/2025-08-20-1012-tsranger-v22-testing/pdca/role/developer/2025-08-20-UTC-2005-cmm-level-3-agile-4-dory-cycle-elimination.md)
+- **CMMI Compliance Examples:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-26-UTC-2036/scrum.pmo/project.journal/2025-08-24-consolidated-learning/) | [scrum.pmo/project.journal/2025-08-24-consolidated-learning/](scrum.pmo/project.journal/2025-08-24-consolidated-learning/)
 
 ### **QA Decisions**
 - [x] Completed decision: Research CMM references across entire repository
