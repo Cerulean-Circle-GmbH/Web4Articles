@@ -334,29 +334,59 @@ export class DefaultSessionSummary implements ISessionSummary {
         }
       }
       
-      // Insert new entries before the final status line
-      const finalStatusPattern = /\*\*Current Status:\*\* \d+\/\d+ component versions/;
+      // Generate backlinks section for new components
+      let backlinksSection = '';
+      if (newEntries.trim()) {
+        backlinksSection += `\n## Traceability for ${sessionName}\n\n`;
+        backlinksSection += `### Session → Components\n`;
+        backlinksSection += `- **up**: [${sessionName}](${sessionSummaryRelPath})\n`;
+        backlinksSection += `- **down**:\n`;
+        
+        for (const work of componentWork) {
+          for (const componentName of work.components) {
+            const versionMatch = componentName.match(/^(\S+)\s+v?([\d.]+)$/);
+            const name = versionMatch ? versionMatch[1] : componentName;
+            const version = versionMatch ? versionMatch[2] : '0.1.0.0';
+            const componentKey = `${name}-${version}`;
+            
+            if (!content.includes(`**${name}** | ${version} |`)) {
+              const componentRelPath = `../components/${name}/${version}`;
+              backlinksSection += `  - [${name} ${version}](${componentRelPath})\n`;
+            }
+          }
+        }
+        backlinksSection += `\n`;
+      }
+      
+      // Insert new entries before the final status line  
+      const finalStatusPattern = /\*\*Current Status:\*\*/;
       const match = content.match(finalStatusPattern);
+      
+      console.log(`   🔍 Debug: Looking for pattern **Current Status:**`);
+      console.log(`   🔍 Match found: ${match ? 'YES' : 'NO'}`);
+      console.log(`   🔍 New entries length: ${newEntries.trim().length}`);
       
       if (match && newEntries.trim()) {
         const insertionPoint = content.indexOf(match[0]);
         const beforeInsertion = content.substring(0, insertionPoint);
         const afterInsertion = content.substring(insertionPoint);
         
-        const updatedContent = beforeInsertion + newEntries + '\n' + afterInsertion;
+        const updatedContent = beforeInsertion + newEntries + backlinksSection + afterInsertion;
         
         // Update component count in final status
-        const currentCount = content.match(/(\d+)\/\d+ component versions/);
+        const currentCount = content.match(/\*\*Current Status:\*\* (\d+)\/\d+ component versions/);
         if (currentCount) {
-          const newCount = parseInt(currentCount[1]) + componentWork.length;
+          const newComponentCount = addedComponents.size;
+          const newCount = parseInt(currentCount[1]) + newComponentCount;
           const updatedFinalContent = updatedContent.replace(
-            /\*\*Current Status:\*\* \d+\/\d+ component versions/,
-            `**Current Status:** ${newCount}/${newCount} component versions`
+            /\*\*Current Status:\*\* \d+\/\d+ component versions have session coverage \(100%\)\. ✅ COMPLETE COVERAGE MAINTAINED!/,
+            `**Current Status:** ${newCount}/${newCount} component versions have session coverage (100%). ✅ COMPLETE COVERAGE MAINTAINED!`
           );
           
           writeFileSync(coverageFile, updatedFinalContent);
-          console.log(`   ✅ Added ${componentWork.length} component entries to coverage tracking`);
+          console.log(`   ✅ Added ${newComponentCount} component entries to coverage tracking`);
           console.log(`   📊 Updated component count to ${newCount}`);
+          console.log(`   🔗 Added traceability section for ${sessionName}`);
         }
       } else {
         console.log(`   ⚠️ Could not find insertion point in coverage tracking file`);
