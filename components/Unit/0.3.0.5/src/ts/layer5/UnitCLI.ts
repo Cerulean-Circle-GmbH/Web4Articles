@@ -115,8 +115,14 @@ export class UnitCLI extends DefaultCLI {
     }
   }
 
-  private async showInfo(): Promise<void> {
+  private async showInfo(unitFile?: string): Promise<void> {
     const unit = this.getOrCreateUnit();
+    
+    // If unit file specified, load it first
+    if (unitFile) {
+      await (unit as any).loadFromUnitFile(unitFile);
+    }
+    
     const scenario = await unit.toScenario();
     
     console.log(`${'\x1b[36m'}═══ Unit Information ═══${'\x1b[0m'}`);
@@ -203,7 +209,8 @@ export class UnitCLI extends DefaultCLI {
           break;
 
         case 'info':
-          await this.showInfo();
+          const infoFile = commandArgs[0]; // Extract file parameter
+          await this.showInfo(infoFile);
           break;
 
           
