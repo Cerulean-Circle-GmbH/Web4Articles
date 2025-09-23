@@ -948,11 +948,20 @@ Standards:
       for (const entry of entries) {
         const entryPath = relativePath ? `${relativePath}/${entry.name}` : entry.name;
         
+        // Filter out irrelevant files and directories from comparison
+        if (entry.name === 'sessions' || 
+            entry.name.startsWith('spec.requirement') ||
+            entryPath.includes('temp-filename-test/temp-filename-test')) {
+          continue; // Skip irrelevant content
+        }
+        
         if (entry.isDirectory()) {
           analysis.directories.add(entryPath);
           
           // Recursively analyze important directories
-          if (!entry.name.startsWith('.') && entry.name !== 'node_modules' && entry.name !== 'dist') {
+          if (!entry.name.startsWith('.') && 
+              entry.name !== 'node_modules' && 
+              entry.name !== 'dist') {
             await this.analyzeFileStructure(path.join(dirPath, entry.name), analysis, entryPath);
           }
         } else {
