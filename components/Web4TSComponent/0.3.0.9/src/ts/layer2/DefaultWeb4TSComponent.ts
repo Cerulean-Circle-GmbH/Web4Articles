@@ -2124,7 +2124,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    */
   private async createCLIScript(componentDir: string, componentName: string, version: string): Promise<void> {
     const cliScript = await this.generateLocationResilientCLI(componentName, version);
-    const scriptPath = path.join(componentDir, `${componentName.toLowerCase()}.sh`);
+    const scriptPath = path.join(componentDir, `${componentName.toLowerCase()}.js`);
     await fs.writeFile(scriptPath, cliScript, { mode: 0o755 });
   }
 
