@@ -29,21 +29,9 @@
 ### **QA Decisions**
 - [x] **Decision 1: Path Normalization Strategy** - Selected: 4d (Robust path normalization across tests and component logic)
 - [x] **Decision 2: Test Component Location** - Selected: components/version/test/data structure for isolation
-- [ ] **Decision 3: Implementation Approach**
-  - a) Modify only test files to use isolated test directory (minimal impact)
-  - b) Add test mode detection to component logic for test-specific paths (conditional)
-  - c) Create test utility class for path management (abstraction layer)
-  - d) Implement environment-aware path resolution in core component (comprehensive)
-- [ ] **Decision 4: Cleanup Strategy**
-  - a) Manual cleanup of existing test components before implementation
-  - b) Automated cleanup script integrated with test setup/teardown
-  - c) Migration script to move existing test components to new structure
-  - d) Fresh start with complete removal and recreation in new structure
-- [ ] **Decision 5: Test Data Persistence**
-  - a) Clean test data after each test run (ephemeral)
-  - b) Preserve test data for debugging (persistent)
-  - c) Configurable cleanup based on test results (smart)
-  - d) Snapshot-based test data management (versioned)
+- [x] **Decision 3: Implementation Approach** - Selected: d) Implement environment-aware path resolution in core component (comprehensive)
+- [x] **Decision 4: Cleanup Strategy** - Selected: d) Fresh start with complete removal and recreation in new structure
+- [x] **Decision 5: Test Data Persistence** - Selected: a) Clean test data after each test run (ephemeral)
 
 ### **TRON Feedback (2025-09-23-UTC-1205)**
 ```quote
