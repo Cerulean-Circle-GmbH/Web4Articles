@@ -25,18 +25,15 @@
 - **Save Branch Status:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/cmm-start) | [save/cmm-start branch](.)
 
 ### **QA Decisions**
-- [ ] **Decision 1: Legacy Learning Documents**
-  - a) Keep all session learning documents as historical reference
-  - b) Archive outdated learning documents to legacy folder
-  - c) Delete superseded documents that conflict with current understanding
-- [ ] **Decision 2: Outdated Component Files**  
-  - a) Update all component versions to match current patterns
-  - b) Archive old component versions for reference
-  - c) Remove outdated components that no longer serve purpose
-- [ ] **Decision 3: Duplicate PDCA Files**
-  - a) Consolidate similar PDCAs into single comprehensive documents
-  - b) Keep all PDCAs for complete traceability
-  - c) Archive duplicate PDCAs while preserving unique insights
+- [x] **Decision 1: Legacy Learning Documents**
+  - c) ✅ Delete superseded documents that conflict with current understanding (they are in git)
+- [x] **Decision 2: Outdated Component Files**  
+  - c) ✅ Remove outdated components that no longer serve purpose (they are in git)
+- [x] **Decision 3: Duplicate PDCA Files**
+  - b) ✅ Keep all PDCAs for complete traceability
+
+**Additional Decision:**
+- [x] **Template Cleanup:** Delete all outdated templates and references other than version 3.1.4.2
 
 ### **TRON Feedback (2025-09-22-UTC-1923)**
 ```quote
