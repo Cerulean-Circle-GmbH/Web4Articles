@@ -8,30 +8,42 @@ import { DefaultWeb4TSComponent } from '../src/ts/layer2/DefaultWeb4TSComponent.
 import { Web4TSComponentCLI } from '../src/ts/layer5/Web4TSComponentCLI.js';
 import * as fs from 'fs/promises';
 import { existsSync } from 'fs';
+import * as path from 'path';
 
 describe('Web4TSComponent Functionality', () => {
   let component: DefaultWeb4TSComponent;
   let cli: Web4TSComponentCLI;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    // Enable test mode for environment-aware path resolution
+    (globalThis as any).__TEST_MODE__ = true;
+    
+    // Ensure test data directory exists
+    const testDataDir = path.join(__dirname, 'data');
+    await fs.mkdir(testDataDir, { recursive: true });
+    
     component = new DefaultWeb4TSComponent();
     cli = new Web4TSComponentCLI();
   });
 
   afterEach(async () => {
-    // Clean up test components
+    // Clean up test components (ephemeral test data as per decision 5a)
     await cleanupTestComponents();
+    delete (globalThis as any).__TEST_MODE__;
   });
 
   async function cleanupTestComponents() {
+    const testDataDir = path.join(__dirname, 'data');
     const testComponents = ['TestCreateComponent', 'TestUpgradeComponent', 'TestFeatureComponent'];
+    
     for (const comp of testComponents) {
       try {
-        if (existsSync(`components/${comp}`)) {
-          await fs.rm(`components/${comp}`, { recursive: true, force: true });
+        const compPath = path.join(testDataDir, comp);
+        if (existsSync(compPath)) {
+          await fs.rm(compPath, { recursive: true, force: true });
         }
       } catch (error) {
-        // Ignore cleanup errors
+        console.warn(`Cleanup warning for ${comp}:`, error.message);
       }
     }
   }
@@ -43,11 +55,11 @@ describe('Web4TSComponent Functionality', () => {
       
       await component.create(componentName, version, 'all');
       
-      const componentPath = `components/${componentName}/${version}`;
+      const componentPath = path.join(__dirname, 'data', componentName, version);
       expect(existsSync(componentPath)).toBe(true);
       
       // Verify all expected files created (same as 1.0.0.0)
-      expect(existsSync(`${componentPath}/package.json`)).toBe(true);
+      expect(existsSync(path.join(componentPath, 'package.json'))).toBe(true);
       expect(existsSync(`${componentPath}/tsconfig.json`)).toBe(true);
       expect(existsSync(`${componentPath}/${componentName.toLowerCase()}.sh`)).toBe(true);
       expect(existsSync(`${componentPath}/vitest.config.ts`)).toBe(true);
@@ -93,7 +105,7 @@ describe('Web4TSComponent Functionality', () => {
     it('should upgrade to next build (patch) version', async () => {
       await component.upgrade('nextBuild');
       
-      const newVersionPath = `components/${baseComponent}/0.1.0.1`;
+      const newVersionPath = path.join(__dirname, 'data', baseComponent, '0.1.0.1');
       expect(existsSync(newVersionPath)).toBe(true);
       
       // Verify package.json version updated
@@ -106,28 +118,28 @@ describe('Web4TSComponent Functionality', () => {
     it('should upgrade to next minor version', async () => {
       await component.upgrade('nextMinor');
       
-      const newVersionPath = `components/${baseComponent}/0.1.1.0`;
+      const newVersionPath = path.join(__dirname, 'data', baseComponent, '0.1.1.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
     it('should upgrade to next major version', async () => {
       await component.upgrade('nextMajor');
       
-      const newVersionPath = `components/${baseComponent}/0.2.0.0`;
+      const newVersionPath = path.join(__dirname, 'data', baseComponent, '0.2.0.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
     it('should upgrade to explicit version', async () => {
       await component.upgrade('0.5.0.0');
       
-      const newVersionPath = `components/${baseComponent}/0.5.0.0`;
+      const newVersionPath = path.join(__dirname, 'data', baseComponent, '0.5.0.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
     it('should preserve all files during upgrade', async () => {
       await component.upgrade('nextBuild');
       
-      const newVersionPath = `components/${baseComponent}/0.1.0.1`;
+      const newVersionPath = path.join(__dirname, 'data', baseComponent, '0.1.0.1');
       
       // Verify all original files preserved
       expect(existsSync(`${newVersionPath}/package.json`)).toBe(true);
@@ -149,7 +161,7 @@ describe('Web4TSComponent Functionality', () => {
         .then(comp => comp.upgrade('nextBuild'));
       
       expect(result).toBe(component);
-      expect(existsSync(`components/${componentName}/0.1.0.1`)).toBe(true);
+      expect(existsSync(path.join(__dirname, 'data', componentName, '0.1.0.1'))).toBe(true);
     });
 
     it('should maintain context through multiple operations', async () => {
@@ -168,7 +180,7 @@ describe('Web4TSComponent Functionality', () => {
       // Second upgrade from new context
       await component.upgrade('nextMinor'); // 0.1.0.1 → 0.1.1.0
       
-      expect(existsSync(`components/${componentName}/0.1.1.0`)).toBe(true);
+      expect(existsSync(path.join(__dirname, 'data', componentName, '0.1.1.0'))).toBe(true);
     });
   });
 
@@ -199,7 +211,7 @@ describe('Web4TSComponent Functionality', () => {
       await cli.execute(['upgrade', 'nextBuild']);
       
       // Verify upgrade worked
-      expect(existsSync(`components/${componentName}/0.1.0.1`)).toBe(true);
+      expect(existsSync(path.join(__dirname, 'data', componentName, '0.1.0.1'))).toBe(true);
     });
   });
 
