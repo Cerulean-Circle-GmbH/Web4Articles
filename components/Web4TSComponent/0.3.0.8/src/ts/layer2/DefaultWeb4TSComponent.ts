@@ -810,6 +810,922 @@ Standards:
   }
 
   /**
+   * Compare multiple components and generate detailed comparison table
+   * 
+   * Analyzes multiple components and generates comprehensive comparison table
+   * in the exact format used in component analysis documentation. Shows
+   * package metadata, dependencies, file structure, and architectural differences.
+   * 
+   * @param components Comma-separated list of "ComponentName Version" pairs
+   * 
+   * @example
+   * // Compare multiple components
+   * await component.compare('Unit 0.3.0.5, Web4TSComponent 0.3.0.8, ONCE 0.2.0.0');
+   * 
+   * @example
+   * // Compare specific versions
+   * await component.compare('Web4Requirement 0.3.0.5, Unit 0.3.0.5');
+   * 
+   * @cliSyntax components
+   */
+  async compare(components: string): Promise<this> {
+    console.log(`📊 Component Comparison Analysis`);
+    console.log(`🔍 Analyzing components: ${components}`);
+    
+    // Parse component specifications
+    const componentSpecs = this.parseComponentSpecs(components);
+    
+    if (componentSpecs.length < 2) {
+      throw new Error('At least 2 components required for comparison. Format: "Component1 Version1, Component2 Version2"');
+    }
+    
+    console.log(`\n📋 Components to analyze: ${componentSpecs.length}`);
+    for (const spec of componentSpecs) {
+      console.log(`   - ${spec.name} ${spec.version}`);
+    }
+    
+    // Analyze each component
+    const analyses = await this.analyzeComponentsForComparison(componentSpecs);
+    
+    // Generate comparison tables
+    await this.generateDifferencesTable(componentSpecs, analyses);
+    await this.generateFileComparisonTable(componentSpecs, analyses);
+    
+    console.log(`\n✅ Component comparison analysis complete`);
+    
+    return this;
+  }
+
+  /**
+   * Parse component specifications from input string
+   * @cliHide
+   */
+  private parseComponentSpecs(components: string): Array<{name: string, version: string}> {
+    const specs = components.split(',').map(spec => spec.trim());
+    const result = [];
+    
+    for (const spec of specs) {
+      const parts = spec.trim().split(/\s+/);
+      if (parts.length >= 2) {
+        const name = parts[0];
+        const version = parts[1];
+        result.push({ name, version });
+      } else {
+        throw new Error(`Invalid component specification: "${spec}". Use format: "ComponentName Version"`);
+      }
+    }
+    
+    return result;
+  }
+
+  /**
+   * Analyze components for comparison
+   * @cliHide
+   */
+  private async analyzeComponentsForComparison(componentSpecs: Array<{name: string, version: string}>): Promise<any[]> {
+    const analyses = [];
+    
+    for (const spec of componentSpecs) {
+      const componentPath = path.join(this.model.targetDirectory, 'components', spec.name, spec.version);
+      
+      if (!existsSync(componentPath)) {
+        throw new Error(`Component not found: ${spec.name} v${spec.version} at ${componentPath}`);
+      }
+      
+      const analysis = await this.analyzeComponentStructure(componentPath, spec.name, spec.version);
+      analyses.push(analysis);
+    }
+    
+    return analyses;
+  }
+
+  /**
+   * Analyze component structure for comparison
+   * @cliHide
+   */
+  private async analyzeComponentStructure(componentPath: string, name: string, version: string): Promise<any> {
+    const analysis: any = {
+      name,
+      version,
+      path: componentPath,
+      packageJson: null as any,
+      files: new Set<string>(),
+      directories: new Set<string>(),
+      scripts: {},
+      dependencies: {},
+      devDependencies: {},
+      engines: {}
+    };
+    
+    // Analyze package.json
+    const packageJsonPath = path.join(componentPath, 'package.json');
+    if (existsSync(packageJsonPath)) {
+      try {
+        analysis.packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
+        analysis.scripts = analysis.packageJson?.scripts || {};
+        analysis.dependencies = analysis.packageJson?.dependencies || {};
+        analysis.devDependencies = analysis.packageJson?.devDependencies || {};
+        analysis.engines = analysis.packageJson?.engines || {};
+      } catch (error) {
+        console.log(`   ⚠️ Could not parse package.json for ${name}`);
+      }
+    }
+    
+    // Analyze file structure
+    await this.analyzeFileStructure(componentPath, analysis);
+    
+    return analysis;
+  }
+
+  /**
+   * Analyze file structure recursively
+   * @cliHide
+   */
+  private async analyzeFileStructure(dirPath: string, analysis: any, relativePath: string = ''): Promise<void> {
+    try {
+      const entries = await fs.readdir(dirPath, { withFileTypes: true });
+      
+      for (const entry of entries) {
+        const entryPath = relativePath ? `${relativePath}/${entry.name}` : entry.name;
+        
+        // Filter out irrelevant files and directories from comparison
+        if (entry.name === 'sessions' || 
+            entry.name === 'spec' ||
+            entry.name.startsWith('spec.requirement') ||
+            entryPath.startsWith('spec/') ||
+            entryPath.includes('temp-filename-test/temp-filename-test')) {
+          continue; // Skip irrelevant content
+        }
+        
+        if (entry.isDirectory()) {
+          analysis.directories.add(entryPath);
+          
+          // Recursively analyze important directories
+          if (!entry.name.startsWith('.') && 
+              entry.name !== 'node_modules' && 
+              entry.name !== 'dist') {
+            await this.analyzeFileStructure(path.join(dirPath, entry.name), analysis, entryPath);
+          }
+        } else {
+          analysis.files.add(entryPath);
+        }
+      }
+    } catch (error) {
+      console.log(`   ⚠️ Could not analyze directory: ${dirPath}`);
+    }
+  }
+
+  /**
+   * Generate differences table in exact format
+   * @cliHide
+   */
+  private async generateDifferencesTable(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<void> {
+    console.log(`\n### **Differences Table**\n`);
+    
+    // Table header
+    let header = '| Aspect';
+    for (const spec of componentSpecs) {
+      header += ` | ${spec.name} ${spec.version}`;
+    }
+    header += ' |';
+    console.log(header);
+    
+    // Table separator
+    let separator = '|---|';
+    for (let i = 0; i < componentSpecs.length; i++) {
+      separator += '---|';
+    }
+    console.log(separator);
+    
+    // Package name row
+    let packageNameRow = '| package name';
+    for (const analysis of analyses) {
+      const packageName = analysis.packageJson?.name || '(not specified)';
+      packageNameRow += ` | ${packageName}`;
+    }
+    packageNameRow += ' |';
+    console.log(packageNameRow);
+    
+    // Version row
+    let versionRow = '| version';
+    for (const analysis of analyses) {
+      versionRow += ` | ${analysis.version}`;
+    }
+    versionRow += ' |';
+    console.log(versionRow);
+    
+    // Engines.node row
+    let enginesRow = '| engines.node';
+    for (const analysis of analyses) {
+      const nodeEngine = analysis.engines?.node || '(not specified)';
+      enginesRow += ` | ${nodeEngine}`;
+    }
+    enginesRow += ' |';
+    console.log(enginesRow);
+    
+    // Scripts.test row
+    let scriptsTestRow = '| scripts.test';
+    for (const analysis of analyses) {
+      const testScript = analysis.scripts?.test || '(not specified)';
+      scriptsTestRow += ` | ${testScript}`;
+    }
+    scriptsTestRow += ' |';
+    console.log(scriptsTestRow);
+    
+    // DevDependencies.vitest row
+    let vitestRow = '| devDependencies.vitest';
+    for (const analysis of analyses) {
+      const vitest = analysis.devDependencies?.vitest || '(not specified)';
+      vitestRow += ` | ${vitest}`;
+    }
+    vitestRow += ' |';
+    console.log(vitestRow);
+    
+    // DevDependencies.typescript row
+    let typescriptRow = '| devDependencies.typescript';
+    for (const analysis of analyses) {
+      const typescript = analysis.devDependencies?.typescript || '(not specified)';
+      typescriptRow += ` | ${typescript}`;
+    }
+    typescriptRow += ' |';
+    console.log(typescriptRow);
+    
+    // Dependencies row
+    let dependenciesRow = '| dependencies';
+    for (const analysis of analyses) {
+      const deps = analysis.dependencies;
+      const depsList = deps ? Object.entries(deps).map(([key, value]) => `${key} ${value}`).join(', ') : '(none)';
+      dependenciesRow += ` | ${depsList}`;
+    }
+    dependenciesRow += ' |';
+    console.log(dependenciesRow);
+  }
+
+  /**
+   * Generate file comparison table in exact format
+   * @cliHide
+   */
+  private async generateFileComparisonTable(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<void> {
+    console.log(`\n### **File Comparison Table**\n`);
+    
+    // Table header
+    let header = '| Entry (file/dir)';
+    for (const spec of componentSpecs) {
+      header += ` | ${spec.name} ${spec.version}`;
+    }
+    header += ' | Purpose | Similarity |';
+    console.log(header);
+    
+    // Table separator
+    let separator = '|---|';
+    for (let i = 0; i < componentSpecs.length; i++) {
+      separator += '---|';
+    }
+    separator += '---|---|';
+    console.log(separator);
+    
+    // Collect all unique files and directories
+    const allEntries = new Set<string>();
+    for (const analysis of analyses) {
+      for (const file of analysis.files) {
+        allEntries.add(file);
+      }
+      for (const dir of analysis.directories) {
+        allEntries.add(dir + '/');
+      }
+    }
+    
+    // Group template pattern files (CLI files with same template pattern)
+    const templateGroups = await this.groupTemplatePatternFiles(Array.from(allEntries), componentSpecs, analyses);
+    const processedEntries = new Set<string>();
+    
+    // Process template groups first
+    for (const group of templateGroups) {
+      if (group.files.length > 1) {
+        await this.generateTemplateGroupRow(group, componentSpecs, analyses);
+        group.files.forEach((file: string) => processedEntries.add(file));
+      }
+    }
+    
+    // Process remaining individual files
+    const sortedEntries = Array.from(allEntries).sort();
+    for (const entry of sortedEntries) {
+      if (processedEntries.has(entry)) continue; // Skip already processed template groups
+      
+      let row = `| ${entry}`;
+      
+      let presentCount = 0;
+      const presencePattern = [];
+      
+      for (const analysis of analyses) {
+        const isPresent = analysis.files.has(entry) || analysis.directories.has(entry.replace('/', ''));
+        const symbol = isPresent ? '✅' : '❌';
+        row += ` | ${symbol}`;
+        
+        if (isPresent) {
+          presentCount++;
+          presencePattern.push(analysis.name.charAt(0));
+        }
+      }
+      
+      // Determine purpose and similarity
+      const purpose = this.determinePurpose(entry);
+      const similarity = await this.determineSimilarity(entry, componentSpecs, presentCount, componentSpecs.length, presencePattern, analyses);
+      
+      row += ` | ${purpose} | ${similarity} |`;
+      console.log(row);
+    }
+  }
+
+  /**
+   * Group template pattern files that should be compared together
+   * @cliHide
+   */
+  private async groupTemplatePatternFiles(allEntries: string[], componentSpecs: any[], analyses: any[]): Promise<any[]> {
+    const templateGroups = [];
+    
+    // Group CLI files in layer5
+    const cliFiles = allEntries.filter(entry => 
+      entry.includes('src/ts/layer5/') && entry.endsWith('CLI.ts')
+    );
+    
+    if (cliFiles.length > 1) {
+      // Check if CLI files follow same template pattern
+      const cliGroup = {
+        type: 'CLI Template',
+        files: cliFiles,
+        pattern: 'extends DefaultCLI'
+      };
+      
+      // Verify they actually follow the same template
+      const isValidGroup = await this.verifyTemplateGroup(cliGroup, componentSpecs, analyses);
+      
+      if (isValidGroup) {
+        templateGroups.push(cliGroup);
+      }
+    }
+    
+    return templateGroups;
+  }
+
+  /**
+   * Verify that files in a group follow the same template pattern
+   * @cliHide
+   */
+  private async verifyTemplateGroup(group: any, componentSpecs: any[], analyses: any[]): Promise<boolean> {
+    const fileContents = [];
+    
+    // Collect contents of all files in the group
+    for (const file of group.files) {
+      for (let i = 0; i < componentSpecs.length; i++) {
+        const analysis = analyses[i];
+        const spec = componentSpecs[i];
+        
+        if (analysis.files.has(file)) {
+          const componentPath = `/workspace/components/${spec.name}/${spec.version}`;
+          const filePath = path.join(componentPath, file);
+          
+          try {
+            const content = await fs.readFile(filePath, 'utf8');
+            fileContents.push(content);
+            break; // Found the file in this component
+          } catch (error) {
+            continue;
+          }
+        }
+      }
+    }
+    
+    // Use simple template similarity detection
+    if (fileContents.length >= 2) {
+      return this.checkTemplateSimilarity(fileContents, group.files[0]);
+    }
+    
+    return false;
+  }
+
+  /**
+   * Generate a row for template group (files that follow same template pattern)
+   * @cliHide
+   */
+  private async generateTemplateGroupRow(group: any, componentSpecs: any[], analyses: any[]): Promise<void> {
+    let row = `| ${group.type} (${group.files.join(', ')})`;
+    
+    let presentCount = 0;
+    const presencePattern = [];
+    
+    // Check presence across components
+    for (const analysis of analyses) {
+      const hasAnyFile = group.files.some((file: string) => analysis.files.has(file));
+      const symbol = hasAnyFile ? '✅' : '❌';
+      row += ` | ${symbol}`;
+      
+      if (hasAnyFile) {
+        presentCount++;
+        presencePattern.push(analysis.name.charAt(0));
+      }
+    }
+    
+    // Template groups are always similar
+    const purpose = 'CLI template pattern';
+    const similarity = presentCount >= 2 ? `🟨 Similar (${presencePattern.join('+')})` : `🟪 Unique – ${presencePattern[0]}`;
+    
+    row += ` | ${purpose} | ${similarity} |`;
+    console.log(row);
+  }
+
+  /**
+   * Determine purpose of file/directory
+   * @cliHide
+   */
+  private determinePurpose(entry: string): string {
+    const purposeMap: { [key: string]: string } = {
+      'package.json': 'Package metadata, scripts, entry points',
+      'package-lock.json': 'Deterministic dependency lockfile',
+      'tsconfig.json': 'TypeScript compiler configuration',
+      'vitest.config.ts': 'Vitest test runner configuration',
+      'README.md': 'Component documentation',
+      'dist/': 'Compiled JS and type declarations',
+      'src/': 'Source code (layers 2/3/4/5)',
+      'test/': 'Automated test specs',
+      'bin/': 'CLI executable shims',
+      'scenarios/': 'Example/runtime scenarios',
+      'spec/': 'Requirements/spec artifacts',
+      'node_modules/': 'Installed dependencies directory'
+    };
+    
+    if (purposeMap[entry]) {
+      return purposeMap[entry];
+    }
+    
+    // Pattern-based purpose detection
+    if (entry.includes('CLI.ts')) return 'CLI entry';
+    if (entry.includes('Default') && entry.includes('.ts')) return 'Core component implementation';
+    if (entry.includes('.interface.ts')) return 'TypeScript interface definition';
+    if (entry.includes('.test.ts')) return 'Component test specs';
+    if (entry.includes('layer2/')) return 'Implementation layer';
+    if (entry.includes('layer3/')) return 'Interface layer';
+    if (entry.includes('layer4/')) return 'Service layer';
+    if (entry.includes('layer5/')) return 'CLI layer';
+    
+    return 'Component file';
+  }
+
+  /**
+   * Determine similarity based on actual content comparison
+   * - Identical: Files have NO diff at all (byte-identical)
+   * - Similar: Files stem from same template but adapted to component specifics
+   * - Folders: Identical if they exist in all components (content irrelevant)
+   * @cliHide
+   */
+  private async determineSimilarity(entry: string, componentSpecs: any[], presentCount: number, totalCount: number, presencePattern: string[], analyses: any[]): Promise<string> {
+    // Handle directories - identical if present in all components
+    if (entry.endsWith('/')) {
+      if (presentCount === totalCount) {
+        return '🟩 Identical';
+      } else if (presentCount === 1) {
+        const uniqueComponent = presencePattern[0];
+        return `🟪 Unique – ${uniqueComponent}`;
+      } else if (presentCount > 1 && presentCount < totalCount) {
+        const pattern = presencePattern.join('+');
+        return `🟨 Partial (${pattern})`;
+      } else {
+        return '🟥 Different';
+      }
+    }
+
+    // Handle files - need to check actual content
+    if (presentCount < 2) {
+      // File exists in only one or no components
+      if (presentCount === 1) {
+        const uniqueComponent = presencePattern[0];
+        return `🟪 Unique – ${uniqueComponent}`;
+      } else {
+        return '🟥 Different';
+      }
+    }
+
+    // Files present in 2+ components - check for content similarity
+    const presentComponents = [];
+    const filePaths = [];
+    
+    for (let i = 0; i < componentSpecs.length; i++) {
+      const analysis = analyses[i];
+      if (analysis.files.has(entry)) {
+        presentComponents.push(componentSpecs[i]);
+        const componentPath = `/workspace/components/${componentSpecs[i].name}/${componentSpecs[i].version}`;
+        filePaths.push(path.join(componentPath, entry));
+      }
+    }
+
+    // Special case: Check for template-pattern files across components
+    // Even if file names differ, they might follow the same template pattern
+    if (presentCount === 1 && this.isTemplatePatternFile(entry)) {
+      const templateSimilarFiles = await this.findTemplateSimilarFiles(entry, componentSpecs, analyses);
+      if (templateSimilarFiles.length > 0) {
+        // Found template-similar files across components
+        const pattern = templateSimilarFiles.map(f => f.component.charAt(0)).join('+');
+        return `🟨 Similar (${pattern})`;
+      }
+    }
+
+    // Read and compare file contents
+    try {
+      const fileContents = [];
+      for (const filePath of filePaths) {
+        try {
+          const content = await fs.readFile(filePath, 'utf8');
+          fileContents.push(content);
+        } catch (error) {
+          // File might be binary or unreadable, treat as different
+          return `🟨 Similar (${presencePattern.join('+')})`;
+        }
+      }
+
+      // Check if all files are byte-identical
+      const firstContent = fileContents[0];
+      const allIdentical = fileContents.every(content => content === firstContent);
+      
+      if (allIdentical) {
+        return '🟩 Identical';
+      }
+
+      // Check if files are similar (same template structure but adapted)
+      const similarity = this.checkTemplateSimilarity(fileContents, entry);
+      if (similarity) {
+        if (presentCount === totalCount) {
+          return '🟨 Similar';
+        } else {
+          const pattern = presencePattern.join('+');
+          return `🟨 Similar (${pattern})`;
+        }
+      } else {
+        const pattern = presencePattern.join('+');
+        return `🟥 Different (${pattern})`;
+      }
+
+    } catch (error) {
+      // Error reading files
+      const pattern = presencePattern.join('+');
+      return `🟨 Similar (${pattern})`;
+    }
+  }
+
+  /**
+   * Check if files are similar using simple template pattern detection
+   * @cliHide
+   */
+  private checkTemplateSimilarity(fileContents: string[], entry: string): boolean {
+    if (fileContents.length < 2) return false;
+
+    // Simple template similarity checks
+    const checks = [
+      this.hasCommonInheritancePattern(fileContents),
+      this.hasExplicitTemplateReferences(fileContents),
+      this.hasCommonImportPatterns(fileContents),
+      this.hasSpecificTemplatePatterns(fileContents, entry)
+    ];
+    
+    // If 2+ checks pass, files are template-similar
+    const passedChecks = checks.filter(check => check).length;
+    return passedChecks >= 2;
+  }
+
+  /**
+   * Check if a file follows a template pattern that should be compared across components
+   * @cliHide
+   */
+  private isTemplatePatternFile(entry: string): boolean {
+    // CLI files in layer5 follow template patterns
+    if (entry.includes('src/ts/layer5/') && entry.endsWith('CLI.ts')) {
+      return true;
+    }
+    
+    // Default implementation files in layer2 follow patterns
+    if (entry.includes('src/ts/layer2/Default') && entry.endsWith('.ts')) {
+      return true;
+    }
+    
+    // Interface files often follow patterns
+    if (entry.endsWith('.interface.ts')) {
+      return true;
+    }
+    
+    return false;
+  }
+
+  /**
+   * Find template-similar files across components even with different names
+   * @cliHide
+   */
+  private async findTemplateSimilarFiles(entry: string, componentSpecs: any[], analyses: any[]): Promise<any[]> {
+    const similarFiles = [];
+    
+    // For CLI files, look for other CLI files in the same layer across components
+    if (entry.includes('CLI.ts') && entry.includes('src/ts/layer5/')) {
+      for (let i = 0; i < componentSpecs.length; i++) {
+        const analysis = analyses[i];
+        const spec = componentSpecs[i];
+        
+        // Find CLI files in this component's layer5
+        const cliFiles = Array.from(analysis.files as Set<string>).filter(file => 
+          file.includes('src/ts/layer5/') && file.endsWith('CLI.ts')
+        );
+        
+        for (const cliFile of cliFiles) {
+          if (cliFile !== entry) {
+            // Check if these CLI files follow the same template pattern
+            const thisFilePath = `/workspace/components/${spec.name}/${spec.version}/${cliFile}`;
+            const originalFilePath = this.findOriginalFilePath(entry, componentSpecs, analyses);
+            
+            if (await this.areTemplatePatternFiles(originalFilePath, thisFilePath)) {
+              similarFiles.push({
+                file: cliFile,
+                component: spec.name,
+                path: thisFilePath
+              });
+            }
+          }
+        }
+      }
+    }
+    
+    return similarFiles;
+  }
+
+  /**
+   * Find the path of the original file for comparison
+   * @cliHide
+   */
+  private findOriginalFilePath(entry: string, componentSpecs: any[], analyses: any[]): string | null {
+    for (let i = 0; i < componentSpecs.length; i++) {
+      const analysis = analyses[i];
+      const spec = componentSpecs[i];
+      
+      if (analysis.files.has(entry)) {
+        return `/workspace/components/${spec.name}/${spec.version}/${entry}`;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Check if two files follow the same template pattern
+   * @cliHide
+   */
+  private async areTemplatePatternFiles(filePath1: string | null, filePath2: string): Promise<boolean> {
+    if (!filePath1) return false;
+    
+    try {
+      const content1 = await fs.readFile(filePath1, 'utf8');
+      const content2 = await fs.readFile(filePath2, 'utf8');
+      
+      // Use simple template similarity detection
+      return this.checkTemplateSimilarity([content1, content2], path.basename(filePath1));
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * Check for common inheritance patterns (e.g., extends DefaultCLI)
+   * @cliHide
+   */
+  private hasCommonInheritancePattern(fileContents: string[]): boolean {
+    const inheritanceClasses = fileContents.map(content => 
+      this.extractClassExtension(content)
+    ).filter(cls => cls !== null);
+    
+    // If 2+ files extend the same base class, they're template-similar
+    if (inheritanceClasses.length >= 2 && new Set(inheritanceClasses).size === 1) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Extract the class that this file extends (e.g., "DefaultCLI")
+   * @cliHide
+   */
+  private extractClassExtension(content: string): string | null {
+    const match = content.match(/extends\s+(\w+)/);
+    return match ? match[1] : null;
+  }
+
+  /**
+   * Check for explicit template references in comments or metadata
+   * @cliHide
+   */
+  private hasExplicitTemplateReferences(fileContents: string[]): boolean {
+    const templatePatterns = [
+      /(?:template|Template):\s*(\w+)/i,
+      /based\s+on:\s*(\w+)/i,
+      /extends:\s*(\w+)/i
+    ];
+    
+    const templateReferences = fileContents.map(content => {
+      for (const pattern of templatePatterns) {
+        const match = content.match(pattern);
+        if (match) return match[1];
+      }
+      return null;
+    }).filter(ref => ref !== null);
+    
+    // If 2+ files reference the same template, they're similar
+    if (templateReferences.length >= 2 && new Set(templateReferences).size === 1) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Check for common import patterns indicating template usage
+   * @cliHide
+   */
+  private hasCommonImportPatterns(fileContents: string[]): boolean {
+    const importPatterns = fileContents.map(content => {
+      // Extract imports from template base classes
+      const imports = content.match(/import\s+{[^}]*}\s+from\s+['"](\.\.\/.*Default\w+)['"]/g);
+      if (imports) {
+        return imports.map(imp => {
+          const match = imp.match(/Default\w+/);
+          return match ? match[0] : null;
+        }).filter(imp => imp !== null);
+      }
+      return [];
+    });
+    
+    // Find common imports across files
+    const allImports = importPatterns.flat();
+    const importCounts = new Map<string, number>();
+    
+    for (const imp of allImports) {
+      importCounts.set(imp, (importCounts.get(imp) || 0) + 1);
+    }
+    
+    // If any import appears in 2+ files, they share template patterns
+    for (const count of importCounts.values()) {
+      if (count >= 2) return true;
+    }
+    
+    return false;
+  }
+
+  /**
+   * Check for specific template patterns based on file type
+   * @cliHide
+   */
+  private hasSpecificTemplatePatterns(fileContents: string[], entry: string): boolean {
+    // CLI files should extend DefaultCLI and call initWithComponentClass
+    if (entry.includes('CLI.ts') && !entry.includes('DefaultCLI.ts')) {
+      return fileContents.every(content => 
+        content.includes('extends DefaultCLI') && 
+        content.includes('initWithComponentClass')
+      );
+    }
+    
+    // Package.json files should have similar structure
+    if (entry === 'package.json') {
+      return this.checkPackageJsonSimilarity(fileContents);
+    }
+    
+    // Interface files should have similar patterns
+    if (entry.endsWith('.interface.ts')) {
+      return fileContents.every(content => 
+        content.includes('interface') && 
+        (content.includes('export') || content.includes('export default'))
+      );
+    }
+    
+    // Config files should have similar structure
+    if (entry === 'tsconfig.json' || entry.includes('config.ts')) {
+      return this.checkConfigFileSimilarity(fileContents);
+    }
+    
+    return false;
+  }
+
+  /**
+   * Check package.json similarity (same structure, different names/versions)
+   * @cliHide
+   */
+  private checkPackageJsonSimilarity(fileContents: string[]): boolean {
+    try {
+      const packages = fileContents.map(content => JSON.parse(content));
+      
+      // Check if they have similar structure
+      const firstKeys = Object.keys(packages[0]).sort();
+      const allHaveSimilarStructure = packages.every(pkg => {
+        const keys = Object.keys(pkg).sort();
+        // Allow some variation in keys but require core structure
+        const commonKeys = ['name', 'version', 'scripts', 'devDependencies'];
+        return commonKeys.every(key => keys.includes(key));
+      });
+      
+      return allHaveSimilarStructure;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * Check config file similarity (same structure, different values)
+   * @cliHide
+   */
+  private checkConfigFileSimilarity(fileContents: string[]): boolean {
+    // Remove comments and normalize whitespace for comparison
+    const normalized = fileContents.map(content => 
+      content.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').trim()
+    );
+    
+    // Check if structure is similar (same property names, possibly different values)
+    const firstNormalized = normalized[0];
+    return normalized.every(content => {
+      // Calculate similarity ratio based on common structure
+      const similarity = this.calculateStructuralSimilarity(firstNormalized, content);
+      return similarity > 0.7; // 70% structural similarity threshold
+    });
+  }
+
+  /**
+   * Check DefaultCLI.ts similarity (template-based but component-specific)
+   * @cliHide
+   */
+  private checkDefaultCLISimilarity(fileContents: string[]): boolean {
+    // DefaultCLI files should have similar class structure but different component names
+    const hasCommonStructure = fileContents.every(content => 
+      content.includes('class Default') && 
+      content.includes('CLI') &&
+      content.includes('export default') &&
+      content.includes('discoverMethods')
+    );
+    
+    return hasCommonStructure;
+  }
+
+  /**
+   * Check TypeScript file similarity (interfaces, classes, similar structure)
+   * @cliHide
+   */
+  private checkTypeScriptFileSimilarity(fileContents: string[]): boolean {
+    // Check for common TypeScript patterns
+    const patterns = ['interface', 'class', 'export', 'import', 'type', 'enum'];
+    const firstContent = fileContents[0];
+    
+    return fileContents.every(content => {
+      // Check if files have similar TypeScript structure
+      const firstPatterns = patterns.filter(pattern => firstContent.includes(pattern));
+      const currentPatterns = patterns.filter(pattern => content.includes(pattern));
+      
+      // Files are similar if they share most structural patterns
+      const commonPatterns = firstPatterns.filter(pattern => currentPatterns.includes(pattern));
+      return commonPatterns.length >= Math.min(firstPatterns.length, currentPatterns.length) * 0.6;
+    });
+  }
+
+  /**
+   * Check general structural similarity
+   * @cliHide
+   */
+  private checkGeneralStructuralSimilarity(fileContents: string[]): boolean {
+    const firstContent = fileContents[0];
+    
+    return fileContents.every(content => {
+      const similarity = this.calculateStructuralSimilarity(firstContent, content);
+      return similarity > 0.5; // 50% structural similarity threshold for general files
+    });
+  }
+
+  /**
+   * Calculate structural similarity between two text contents
+   * @cliHide
+   */
+  private calculateStructuralSimilarity(text1: string, text2: string): number {
+    // Simple structural similarity based on line structure and length
+    const lines1 = text1.split('\n').filter(line => line.trim().length > 0);
+    const lines2 = text2.split('\n').filter(line => line.trim().length > 0);
+    
+    const lengthSimilarity = 1 - Math.abs(lines1.length - lines2.length) / Math.max(lines1.length, lines2.length);
+    
+    // Count similar line patterns (ignoring specific values)
+    const pattern1 = lines1.map(line => line.replace(/['"]\w+['"]/g, '""').replace(/\d+/g, '0'));
+    const pattern2 = lines2.map(line => line.replace(/['"]\w+['"]/g, '""').replace(/\d+/g, '0'));
+    
+    let commonPatterns = 0;
+    const minLength = Math.min(pattern1.length, pattern2.length);
+    
+    for (let i = 0; i < minLength; i++) {
+      if (pattern1[i] === pattern2[i]) {
+        commonPatterns++;
+      }
+    }
+    
+    const patternSimilarity = minLength > 0 ? commonPatterns / minLength : 0;
+    
+    return (lengthSimilarity + patternSimilarity) / 2;
+  }
+
+  /**
    * Recursively display tree structure
    * @cliHide
    */
