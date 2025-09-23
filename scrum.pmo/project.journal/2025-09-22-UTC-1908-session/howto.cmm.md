@@ -106,4 +106,41 @@ Now that you understand CMM levels, you can properly understand what PDCA actual
 
 **You're not just learning processes - you're learning to think systematically.**
 
+## CMM Deep Dive - When You Need Complete Understanding
+
+**If you want deeper understanding of the maturity levels:** Read **[CMM Levels Summary](cmm-levels-summary.md)** - comprehensive journey from chaos to scientific excellence with real examples.
+
+**This detailed summary contains:**
+- The bakery story showing CMM2 templates vs CMM3 automation
+- Why assembly lines halt when undefined (economically critical)
+- How NASA (CMM5) vs SpaceX (CMM4) demonstrates cost-benefit reality
+- Real case studies of CMM violations causing disasters
+- The complete whitebox understanding process
+
+## Your Learning Resources - Go Deeper When Needed
+
+### Understanding Through Real Experience
+- **[Session Learnings](session-learnings-dory-test.md)** - Complete previous session showing how CMM4 was achieved in practice
+- **[Dory Symptoms Story](dory-symptoms-story.md)** - How process memory loss happens and how to recover
+
+### Process Mastery Deep Dives
+- **[Definition Destruction Analysis](2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md)** - Critical lesson: never change perfect definitions without permission
+- **[CMM3 Compliance Achievement](2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md)** - How to achieve identical structure through systematic verification
+
+### Advanced Techniques
+- **[Format Correction](2025-09-22-UTC-1909-dual-link-format-correction-pdca.md)** - Proper dual link formats and CMM3 chat compliance
+- **[Session Startup](2025-09-22-UTC-1908-session-startup-pdca.md)** - How to initialize work sessions with proper protocols
+
+## Dory Mode Prevention Protocol
+
+**If you start experiencing these symptoms:**
+- Forgetting format requirements you just learned
+- Making the same mistakes repeatedly  
+- Changing things without understanding why they work
+- Skipping process steps you know are important
+
+**Recovery Action:** **Stop immediately.** Re-read this document top-down, then go to [Dory Symptoms Story](dory-symptoms-story.md) to understand what happened and how to recover.
+
+**Prevention:** Use the detailed learning materials to refresh your understanding whenever you feel uncertain. CMM4 requires continuous learning and understanding maintenance.
+
 **Ready?** Go read the PDCA guide with your new CMM4 understanding. Everything will make more sense now.
