@@ -2796,6 +2796,22 @@ export class DefaultUnit implements Unit, Upgrade {
       
       if (scenario.model) {
         this.model = scenario.model;
+        
+        // Check for version mismatch and auto-upgrade
+        const fileVersion = scenario.ior?.version;
+        const currentVersion = '0.3.0.5'; // CLI version
+        
+        if (fileVersion && fileVersion !== currentVersion) {
+          console.log(`📈 Auto-upgrading from ${fileVersion} to ${currentVersion}...`);
+          if (await this.upgrade(currentVersion)) {
+            console.log(`✅ Upgrade successful`);
+            // Save upgraded scenario
+            const upgradedScenario = await this.toScenario();
+            await this.storage.saveScenario(this.model.uuid, upgradedScenario);
+          } else {
+            console.log(`⚠️ Upgrade failed, continuing with original data`);
+          }
+        }
       } else {
         throw new Error(`Invalid scenario format in unit file: ${unitFile}`);
       }

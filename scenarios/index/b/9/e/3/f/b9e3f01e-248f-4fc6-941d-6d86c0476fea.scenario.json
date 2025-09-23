@@ -1,14 +1,14 @@
 {
   "ior": {
     "uuid": "b9e3f01e-248f-4fc6-941d-6d86c0476fea",
-    "component": "Unit",
-    "version": "0.3.0.4"
+    "component": "unit",
+    "version": "0.3.0.6"
   },
-  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"b9e3f01e-248f-4fc6-941d-6d86c0476fea\",\"timestamp\":\"2025-09-12T13:45:30.614Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"b9e3f01e-248f-4fc6-941d-6d86c0476fea\",\"timestamp\":\"2025-09-23T18:09:26.579Z\",\"component\":\"unit\",\"version\":\"0.3.0.6\"}",
   "model": {
     "uuid": "b9e3f01e-248f-4fc6-941d-6d86c0476fea",
     "createdAt": "2025-09-12T13:45:30.611Z",
-    "updatedAt": "2025-09-12T13:45:30.617Z",
+    "updatedAt": "2025-09-23T18:09:26.584Z",
     "name": "0.3.0.5",
     "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/components/Unit/0.3.0.5/",
     "definition": "Folder atomic element: components/Unit/0.3.0.5/",
@@ -20,6 +20,30 @@
     "totalSize": 71412,
     "folderHash": "7133a7bc5edf0624e7ef34946bfae447d5ec5062fdd8c304b85471990be56a2d",
     "lastScanned": "2025-09-12T13:45:30.611Z",
-    "symlinkPaths": []
+    "symlinkPaths": [
+      "/workspace/components/Unit/0.3.0.5/0.3.0.5.unit"
+    ],
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/components/Unit/0.3.0.5/0.3.0.5.unit",
+        "linkTarget": "ior:unit:b9e3f01e-248f-4fc6-941d-6d86c0476fea",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/components/Unit/0.3.0.5/0.3.0.5.unit",
+        "linkTarget": "ior:unit:b9e3f01e-248f-4fc6-941d-6d86c0476fea",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/components/Unit/0.3.0.5/0.3.0.5.unit",
+        "linkTarget": "ior:unit:b9e3f01e-248f-4fc6-941d-6d86c0476fea",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/components/Unit/0.3.0.5/0.3.0.5.unit",
+        "linkTarget": "ior:unit:b9e3f01e-248f-4fc6-941d-6d86c0476fea",
+        "syncStatus": "SYNCED"
+      }
+    ]
   }
 }

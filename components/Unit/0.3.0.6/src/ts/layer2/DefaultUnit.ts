@@ -1776,8 +1776,10 @@ export class DefaultUnit implements Unit, Upgrade {
    */
   async upgrade(targetVersion: string): Promise<boolean> {
     try {
-      if (targetVersion === '0.3.0.6') {
+      if (targetVersion === '0.3.0.5') {
         return await this.upgradeToVersion035();
+      } else if (targetVersion === '0.3.0.6') {
+        return await this.upgradeToVersion036();
       }
       
       throw new Error(`Unsupported upgrade target version: ${targetVersion}`);
@@ -1788,7 +1790,7 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * Upgrade from 0.3.0.4 to 0.3.0.6 model
+   * Upgrade from 0.3.0.4 to 0.3.0.5 model
    * Transforms symlinkPaths + namedLinks to unified references array
    * Keeps existing IOR string format for compatibility
    */
@@ -1854,6 +1856,25 @@ export class DefaultUnit implements Unit, Upgrade {
     }
     
     return references;
+  }
+
+  /**
+   * Upgrade from 0.3.0.5 to 0.3.0.6 model
+   * Maintains existing structure, updates version and any 0.3.0.6 specific enhancements
+   * Keeps existing IOR string format for compatibility
+   */
+  private async upgradeToVersion036(): Promise<boolean> {
+    // For 0.3.0.5 to 0.3.0.6, the model structure is compatible
+    // Just update version and timestamp
+    this.model.updatedAt = new Date().toISOString();
+    
+    // Save enhanced scenario with version update
+    const scenario = await this.toScenario();
+    scenario.ior.version = '0.3.0.6';
+    await this.storage.saveScenario(this.model.uuid, scenario, []);
+    
+    console.log(`✅ Unit upgraded to 0.3.0.6: ${this.model.uuid}`);
+    return true;
   }
 
   // ❌ REMOVED: Legacy symlinks compatibility methods (migration successful)
@@ -2782,7 +2803,7 @@ export class DefaultUnit implements Unit, Upgrade {
    */
   private async loadFromUnitFile(unitFile: string): Promise<void> {
     const projectRoot = this.findProjectRoot();
-    const fullPath = path.isAbsolute(unitFile) ? unitFile : path.join(projectRoot, unitFile);
+    const fullPath = path.isAbsolute(unitFile) ? unitFile : path.resolve(process.cwd(), unitFile);
     
     try {
       // Read symlink target to get scenario path
@@ -2796,6 +2817,22 @@ export class DefaultUnit implements Unit, Upgrade {
       
       if (scenario.model) {
         this.model = scenario.model;
+        
+        // Check for version mismatch and auto-upgrade
+        const fileVersion = scenario.ior?.version;
+        const currentVersion = '0.3.0.6'; // CLI version
+        
+        if (fileVersion && fileVersion !== currentVersion) {
+          console.log(`📈 Auto-upgrading from ${fileVersion} to ${currentVersion}...`);
+          if (await this.upgrade(currentVersion)) {
+            console.log(`✅ Upgrade successful`);
+            // Save upgraded scenario
+            const upgradedScenario = await this.toScenario();
+            await this.storage.saveScenario(this.model.uuid, upgradedScenario, []);
+          } else {
+            console.log(`⚠️ Upgrade failed, continuing with original data`);
+          }
+        }
       } else {
         throw new Error(`Invalid scenario format in unit file: ${unitFile}`);
       }

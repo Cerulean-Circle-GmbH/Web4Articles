@@ -115,8 +115,14 @@ export class UnitCLI extends DefaultCLI {
     }
   }
 
-  private async showInfo(): Promise<void> {
+  private async showInfo(unitFile?: string): Promise<void> {
     const unit = this.getOrCreateUnit();
+    
+    // If unit file specified, load it first
+    if (unitFile) {
+      await (unit as any).loadFromUnitFile(unitFile);
+    }
+    
     const scenario = await unit.toScenario();
     
     console.log(`${'\x1b[36m'}═══ Unit Information ═══${'\x1b[0m'}`);
@@ -135,8 +141,8 @@ export class UnitCLI extends DefaultCLI {
     console.log('');
     console.log(`${'\x1b[1m'}Origin:${'\x1b[0m'}     ${scenario.model.origin || '\x1b[90m(not specified)\x1b[0m'}`);
     console.log('');
-    console.log(`${'\x1b[1m'}References:${'\x1b[0m'} ${scenario.model.references.length} links`);
-    if (scenario.model.references.length > 0) {
+    console.log(`${'\x1b[1m'}References:${'\x1b[0m'} ${scenario.model.references?.length || 0} links`);
+    if (scenario.model.references && scenario.model.references.length > 0) {
       scenario.model.references.forEach((ref: any, index: number) => {
         const filename = ref.linkLocation.split('/').pop()?.replace('ior:local:ln:file:', '') || 'unknown';
         const status = ref.syncStatus === 'SYNCED' ? '\x1b[32m●\x1b[0m' : '\x1b[31m●\x1b[0m';
@@ -203,7 +209,8 @@ export class UnitCLI extends DefaultCLI {
           break;
 
         case 'info':
-          await this.showInfo();
+          const infoFile = commandArgs[0]; // Extract file parameter
+          await this.showInfo(infoFile);
           break;
 
           
