@@ -22,9 +22,12 @@
 - **Result:** 3x same definition = 3x same measured result (scientifically correct)
 - **Foundation:** Small automated well-tested first principles, OOP encapsulated building blocks
 
-### Level 4: Quantitatively Managed
-- **State:** Statistical control of defined processes
-- **Reality:** Managing CMM3 definitions quantitatively
+### Level 4: Quantitatively Managed (Performance Paradox)
+- **State:** Perfect measurement reveals performance problems
+- **Reality:** Deterministic results that are too slow, expensive, or problematic
+- **Challenge:** Must prove CMM3 definition wrong to improve
+- **Paradox:** New changes start at Level 1 and initially worsen measurements
+- **Requirement:** Comprehensive understanding of definitions before improvement
 
 ### Level 5: Optimizing
 - **State:** Continuous improvement of CMM3 definitions
