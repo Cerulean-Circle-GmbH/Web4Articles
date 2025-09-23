@@ -214,6 +214,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       await this.createTestStructure(componentDir);
     }
     
+    // Install dependencies for complete self-building
+    await this.installComponentDependencies(componentDir);
+    
     return {
       name: componentName,
       version,
@@ -223,6 +226,32 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       hasScenarioSupport: true,
       complianceScore: 100
     };
+  }
+
+  /**
+   * Install component dependencies for complete self-building
+   * @cliHide
+   */
+  private async installComponentDependencies(componentDir: string): Promise<void> {
+    const packageJsonPath = path.join(componentDir, 'package.json');
+    
+    if (!existsSync(packageJsonPath)) {
+      console.log('   ⚠️ No package.json found, skipping dependency installation');
+      return;
+    }
+    
+    try {
+      console.log('   📦 Installing dependencies...');
+      const { execSync } = await import('child_process');
+      execSync('npm install', { 
+        cwd: componentDir, 
+        stdio: 'pipe' // Suppress npm output for clean CLI experience
+      });
+      console.log('   ✅ Dependencies installed successfully');
+    } catch (error) {
+      console.log('   ⚠️ Failed to install dependencies - component may need manual npm install');
+      console.log(`   Error: ${error}`);
+    }
   }
 
   /**
