@@ -11,14 +11,16 @@
 ### Level 1: Initial (Chaos)
 - **Main Characteristic:** Unpredictable, reactive, no process control
 - **Reality:** Ad-hoc work, heroics required, complete chaos
-- **Method:** Random approaches, no repeatability
-- **Foundation:** No systematic approach
+- **Method:** Random approaches, no systematic execution
+- **Foundation:** No systematic approach, individual heroics
+- **Result:** Unpredictable outcomes, no repeatability
 
 ### Level 2: Managed (Repeatable via Templates)
 - **Main Characteristic:** Templates create repeatability but with hallucination room
 - **Reality:** Same thing done repeatably but individually different
 - **Method:** Statistical noise, measurements always vary
 - **Foundation:** Grown, incomplete, subjective to actor/organization
+- **Result:** Repeatable but varied outcomes, statistical measurement variance
 
 ### Level 3: Defined (Objective, Automated Definition)
 - **Main Characteristic:** Unit exists that defines it completely, objectively
