@@ -1118,7 +1118,7 @@ Standards:
       
       // Determine purpose and similarity
       const purpose = this.determinePurpose(entry);
-      const similarity = this.determineSimilarity(presentCount, componentSpecs.length, presencePattern);
+      const similarity = await this.determineSimilarity(entry, componentSpecs, presentCount, componentSpecs.length, presencePattern, analyses);
       
       row += ` | ${purpose} | ${similarity} |`;
       console.log(row);
@@ -1163,23 +1163,240 @@ Standards:
   }
 
   /**
-   * Determine similarity pattern
+   * Determine similarity based on actual content comparison
+   * - Identical: Files have NO diff at all (byte-identical)
+   * - Similar: Files stem from same template but adapted to component specifics
+   * - Folders: Identical if they exist in all components (content irrelevant)
    * @cliHide
    */
-  private determineSimilarity(presentCount: number, totalCount: number, presencePattern: string[]): string {
-    if (presentCount === totalCount) {
-      return '🟩 Identical';
-    } else if (presentCount === totalCount - 1) {
-      return '🟨 Similar';
-    } else if (presentCount === 1) {
-      const uniqueComponent = presencePattern[0];
-      return `🟪 Unique – ${uniqueComponent}`;
-    } else if (presentCount > 1 && presentCount < totalCount) {
+  private async determineSimilarity(entry: string, componentSpecs: any[], presentCount: number, totalCount: number, presencePattern: string[], analyses: any[]): Promise<string> {
+    // Handle directories - identical if present in all components
+    if (entry.endsWith('/')) {
+      if (presentCount === totalCount) {
+        return '🟩 Identical';
+      } else if (presentCount === 1) {
+        const uniqueComponent = presencePattern[0];
+        return `🟪 Unique – ${uniqueComponent}`;
+      } else if (presentCount > 1 && presentCount < totalCount) {
+        const pattern = presencePattern.join('+');
+        return `🟨 Partial (${pattern})`;
+      } else {
+        return '🟥 Different';
+      }
+    }
+
+    // Handle files - need to check actual content
+    if (presentCount < 2) {
+      // File exists in only one or no components
+      if (presentCount === 1) {
+        const uniqueComponent = presencePattern[0];
+        return `🟪 Unique – ${uniqueComponent}`;
+      } else {
+        return '🟥 Different';
+      }
+    }
+
+    // Files present in 2+ components - check for content similarity
+    const presentComponents = [];
+    const filePaths = [];
+    
+    for (let i = 0; i < componentSpecs.length; i++) {
+      const analysis = analyses[i];
+      if (analysis.files.has(entry)) {
+        presentComponents.push(componentSpecs[i]);
+        const componentPath = `/workspace/components/${componentSpecs[i].name}/${componentSpecs[i].version}`;
+        filePaths.push(path.join(componentPath, entry));
+      }
+    }
+
+    // Read and compare file contents
+    try {
+      const fileContents = [];
+      for (const filePath of filePaths) {
+        try {
+          const content = await fs.readFile(filePath, 'utf8');
+          fileContents.push(content);
+        } catch (error) {
+          // File might be binary or unreadable, treat as different
+          return `🟨 Similar (${presencePattern.join('+')})`;
+        }
+      }
+
+      // Check if all files are byte-identical
+      const firstContent = fileContents[0];
+      const allIdentical = fileContents.every(content => content === firstContent);
+      
+      if (allIdentical) {
+        return '🟩 Identical';
+      }
+
+      // Check if files are similar (same template structure but adapted)
+      const similarity = this.checkTemplateSimilarity(fileContents, entry);
+      if (similarity) {
+        if (presentCount === totalCount) {
+          return '🟨 Similar';
+        } else {
+          const pattern = presencePattern.join('+');
+          return `🟨 Similar (${pattern})`;
+        }
+      } else {
+        const pattern = presencePattern.join('+');
+        return `🟥 Different (${pattern})`;
+      }
+
+    } catch (error) {
+      // Error reading files
       const pattern = presencePattern.join('+');
       return `🟨 Similar (${pattern})`;
-    } else {
-      return '🟥 Different';
     }
+  }
+
+  /**
+   * Check if files are similar (same template structure but adapted)
+   * @cliHide
+   */
+  private checkTemplateSimilarity(fileContents: string[], entry: string): boolean {
+    if (fileContents.length < 2) return false;
+
+    // For specific file types, use targeted similarity checks
+    if (entry === 'package.json') {
+      return this.checkPackageJsonSimilarity(fileContents);
+    }
+    
+    if (entry === 'tsconfig.json' || entry === 'vitest.config.ts') {
+      return this.checkConfigFileSimilarity(fileContents);
+    }
+    
+    if (entry.includes('DefaultCLI.ts')) {
+      return this.checkDefaultCLISimilarity(fileContents);
+    }
+    
+    if (entry.endsWith('.interface.ts') || entry.endsWith('.ts')) {
+      return this.checkTypeScriptFileSimilarity(fileContents);
+    }
+
+    // General structural similarity check
+    return this.checkGeneralStructuralSimilarity(fileContents);
+  }
+
+  /**
+   * Check package.json similarity (same structure, different names/versions)
+   * @cliHide
+   */
+  private checkPackageJsonSimilarity(fileContents: string[]): boolean {
+    try {
+      const packages = fileContents.map(content => JSON.parse(content));
+      
+      // Check if they have similar structure
+      const firstKeys = Object.keys(packages[0]).sort();
+      const allHaveSimilarStructure = packages.every(pkg => {
+        const keys = Object.keys(pkg).sort();
+        // Allow some variation in keys but require core structure
+        const commonKeys = ['name', 'version', 'scripts', 'devDependencies'];
+        return commonKeys.every(key => keys.includes(key));
+      });
+      
+      return allHaveSimilarStructure;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * Check config file similarity (same structure, different values)
+   * @cliHide
+   */
+  private checkConfigFileSimilarity(fileContents: string[]): boolean {
+    // Remove comments and normalize whitespace for comparison
+    const normalized = fileContents.map(content => 
+      content.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').trim()
+    );
+    
+    // Check if structure is similar (same property names, possibly different values)
+    const firstNormalized = normalized[0];
+    return normalized.every(content => {
+      // Calculate similarity ratio based on common structure
+      const similarity = this.calculateStructuralSimilarity(firstNormalized, content);
+      return similarity > 0.7; // 70% structural similarity threshold
+    });
+  }
+
+  /**
+   * Check DefaultCLI.ts similarity (template-based but component-specific)
+   * @cliHide
+   */
+  private checkDefaultCLISimilarity(fileContents: string[]): boolean {
+    // DefaultCLI files should have similar class structure but different component names
+    const hasCommonStructure = fileContents.every(content => 
+      content.includes('class Default') && 
+      content.includes('CLI') &&
+      content.includes('export default') &&
+      content.includes('discoverMethods')
+    );
+    
+    return hasCommonStructure;
+  }
+
+  /**
+   * Check TypeScript file similarity (interfaces, classes, similar structure)
+   * @cliHide
+   */
+  private checkTypeScriptFileSimilarity(fileContents: string[]): boolean {
+    // Check for common TypeScript patterns
+    const patterns = ['interface', 'class', 'export', 'import', 'type', 'enum'];
+    const firstContent = fileContents[0];
+    
+    return fileContents.every(content => {
+      // Check if files have similar TypeScript structure
+      const firstPatterns = patterns.filter(pattern => firstContent.includes(pattern));
+      const currentPatterns = patterns.filter(pattern => content.includes(pattern));
+      
+      // Files are similar if they share most structural patterns
+      const commonPatterns = firstPatterns.filter(pattern => currentPatterns.includes(pattern));
+      return commonPatterns.length >= Math.min(firstPatterns.length, currentPatterns.length) * 0.6;
+    });
+  }
+
+  /**
+   * Check general structural similarity
+   * @cliHide
+   */
+  private checkGeneralStructuralSimilarity(fileContents: string[]): boolean {
+    const firstContent = fileContents[0];
+    
+    return fileContents.every(content => {
+      const similarity = this.calculateStructuralSimilarity(firstContent, content);
+      return similarity > 0.5; // 50% structural similarity threshold for general files
+    });
+  }
+
+  /**
+   * Calculate structural similarity between two text contents
+   * @cliHide
+   */
+  private calculateStructuralSimilarity(text1: string, text2: string): number {
+    // Simple structural similarity based on line structure and length
+    const lines1 = text1.split('\n').filter(line => line.trim().length > 0);
+    const lines2 = text2.split('\n').filter(line => line.trim().length > 0);
+    
+    const lengthSimilarity = 1 - Math.abs(lines1.length - lines2.length) / Math.max(lines1.length, lines2.length);
+    
+    // Count similar line patterns (ignoring specific values)
+    const pattern1 = lines1.map(line => line.replace(/['"]\w+['"]/g, '""').replace(/\d+/g, '0'));
+    const pattern2 = lines2.map(line => line.replace(/['"]\w+['"]/g, '""').replace(/\d+/g, '0'));
+    
+    let commonPatterns = 0;
+    const minLength = Math.min(pattern1.length, pattern2.length);
+    
+    for (let i = 0; i < minLength; i++) {
+      if (pattern1[i] === pattern2[i]) {
+        commonPatterns++;
+      }
+    }
+    
+    const patternSimilarity = minLength > 0 ? commonPatterns / minLength : 0;
+    
+    return (lengthSimilarity + patternSimilarity) / 2;
   }
 
   /**
