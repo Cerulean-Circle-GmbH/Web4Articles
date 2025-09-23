@@ -329,8 +329,10 @@ export class DefaultSessionSummary implements ISessionSummary {
       // Calculate relative path from session summary file to target file
       const projectRoot = this.findProjectRoot();
       const targetAbsolutePath = join(projectRoot, cleanPath);
-      const sessionSummaryPath = sessionPath ? join(sessionPath, 'session.summary.md') : join(process.cwd(), 'session.summary.md');
-      const relativePath = relative(join(sessionSummaryPath, '..'), targetAbsolutePath);
+      
+      // Session summary file location (session directory)
+      const sessionDir = sessionPath || process.cwd();
+      const relativePath = relative(sessionDir, targetAbsolutePath);
       
       table += `| **${analysis.sha}** | **${analysis.utcTime}** | [GitHub](${githubUrl}) \\| [${displayPath}](${relativePath}) | ${analysis.tronQuotes} | ${analysis.qaDecisions} | ${analysis.achievement} |\n`;
     }
