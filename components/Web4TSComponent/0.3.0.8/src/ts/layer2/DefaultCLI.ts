@@ -256,11 +256,39 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
+   * Get TypeScript files for JSDoc extraction
+   */
+  private getTypeScriptFiles(): string[] {
+    const files = [];
+    const fs = require('fs');
+    const path = require('path');
+    
+    try {
+      // Look for TypeScript files in src/ts/layer directories
+      const srcDir = path.join(process.cwd(), 'src', 'ts');
+      for (let layer = 2; layer <= 5; layer++) {
+        const layerDir = path.join(srcDir, `layer${layer}`);
+        if (fs.existsSync(layerDir)) {
+          const layerFiles = fs.readdirSync(layerDir)
+            .filter((file: string) => file.endsWith('.ts'))
+            .map((file: string) => path.join(layerDir, file));
+          files.push(...layerFiles);
+        }
+      }
+    } catch (error) {
+      // Continue with empty files array
+    }
+    
+    return files;
+  }
+
+  /**
    * Extract JSDoc text for a specific method
    */
   private extractJsDocForMethod(methodName: string): string {
     try {
-      const files = TSCompletion.getAllTypeScriptFiles();
+      // Get TypeScript files for JSDoc extraction
+      const files = this.getTypeScriptFiles();
       
       for (const file of files) {
         const src = require('fs').readFileSync(file, 'utf8');
@@ -384,30 +412,6 @@ export abstract class DefaultCLI implements CLI {
     }
   }
 
-  /**
-   * Extract method description using TSDoc from TypeScript source
-   */
-  private extractMethodDescriptionFromTSDoc(methodName: string): string {
-    try {
-      // Use TSCompletion static methods to extract JSDoc comments from TypeScript source
-      
-      // Try to extract JSDoc using TSCompletion static methods
-      if (typeof (TSCompletion as any).extractJsDocText === 'function') {
-        // Use TSCompletion to analyze TypeScript source files for JSDoc
-        const jsDocText = (TSCompletion as any).extractJsDocText(this.componentClass.name, methodName);
-        if (jsDocText && jsDocText.trim()) {
-          return jsDocText.trim();
-        }
-      }
-      
-      // For now, fallback to intelligent description
-      return this.extractMethodDescriptionFallback(methodName);
-    } catch (error) {
-      // Fallback to intelligent description
-    }
-    
-    return this.extractMethodDescriptionFallback(methodName);
-  }
 
   /**
    * Fallback parameter extraction using reflection

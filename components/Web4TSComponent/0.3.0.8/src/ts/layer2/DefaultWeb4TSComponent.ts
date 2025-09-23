@@ -904,11 +904,11 @@ Standards:
    * @cliHide
    */
   private async analyzeComponentStructure(componentPath: string, name: string, version: string): Promise<any> {
-    const analysis = {
+    const analysis: any = {
       name,
       version,
       path: componentPath,
-      packageJson: null,
+      packageJson: null as any,
       files: new Set<string>(),
       directories: new Set<string>(),
       scripts: {},
@@ -922,10 +922,10 @@ Standards:
     if (existsSync(packageJsonPath)) {
       try {
         analysis.packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
-        analysis.scripts = analysis.packageJson.scripts || {};
-        analysis.dependencies = analysis.packageJson.dependencies || {};
-        analysis.devDependencies = analysis.packageJson.devDependencies || {};
-        analysis.engines = analysis.packageJson.engines || {};
+        analysis.scripts = analysis.packageJson?.scripts || {};
+        analysis.dependencies = analysis.packageJson?.dependencies || {};
+        analysis.devDependencies = analysis.packageJson?.devDependencies || {};
+        analysis.engines = analysis.packageJson?.engines || {};
       } catch (error) {
         console.log(`   ⚠️ Could not parse package.json for ${name}`);
       }
