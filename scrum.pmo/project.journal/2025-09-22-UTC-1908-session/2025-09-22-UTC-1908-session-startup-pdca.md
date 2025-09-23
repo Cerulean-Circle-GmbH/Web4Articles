@@ -21,9 +21,9 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-session-startup-pdca.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-session-startup-pdca.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-session-startup-pdca.md)
-- **Session Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session](scrum.pmo/project.journal/2025-09-22-UTC-1908-session)
-- **Project Status:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/project.status.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/project.status.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/project.status.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-session-startup-pdca.md) | [§/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-session-startup-pdca.md](2025-09-22-UTC-1908-session-startup-pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session) | [§/scrum.pmo/project.journal/2025-09-22-UTC-1908-session](.)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/project.status.md) | [§/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/project.status.md](project.status.md)
 
 ### **QA Decisions**
 - [x] **Decision 1: Primary Work Focus Area**
@@ -234,4 +234,3 @@ Every successful session starts with:
 
 **Dual Links:**
 - **GitHub:** [https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-session-startup-pdca.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-session-startup-pdca.md)
-- **§Local:** [/workspace/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-session-startup-pdca.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-session-startup-pdca.md)

@@ -22,7 +22,7 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-technical-development-session-plan-pdca.md) | [§/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-technical-development-session-plan-pdca.md](2025-09-22-UTC-1908-technical-development-session-plan-pdca.md)
-- **Session Plan:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session) | [§/scrum.pmo/project.journal/2025-09-22-UTC-1908-session](.)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session) | [§/scrum.pmo/project.journal/2025-09-22-UTC-1908-session](.)
 
 ### **User Decisions Implemented**
 - [x] **Decision 1a:** Technical Development Focus - component enhancement, bug fixes, feature development, Unit naming architecture work
@@ -199,4 +199,3 @@ Extended multi-day sessions enable:
 
 **Dual Links:**
 - **GitHub:** [https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-technical-development-session-plan-pdca.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-technical-development-session-plan-pdca.md)
-- **§Local:** [/workspace/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-technical-development-session-plan-pdca.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-technical-development-session-plan-pdca.md)
