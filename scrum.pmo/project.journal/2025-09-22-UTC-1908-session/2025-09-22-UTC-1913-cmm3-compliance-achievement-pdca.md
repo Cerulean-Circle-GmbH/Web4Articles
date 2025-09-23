@@ -21,8 +21,8 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md)
-- **CMM Compliance:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/cmm-levels-summary.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/cmm-levels-summary.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/cmm-levels-summary.md)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md) | [2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md](2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md)
+- **CMM Compliance:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/cmm-levels-summary.md) | [cmm-levels-summary.md](cmm-levels-summary.md)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - CMM3 compliance achieved through systematic identical structure implementation
@@ -179,4 +179,4 @@ True CMM3 achievement requires:
 **Next PDCA Focus:** Apply CMM3 compliance principles to technical development work
 
 **Dual Links:**
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md)
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md) | [2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md](2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md)
