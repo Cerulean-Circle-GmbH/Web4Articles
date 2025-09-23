@@ -25,18 +25,15 @@
 [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/cmm-start) | [save/cmm-start branch](.)
 
 ### **QA Decisions**
-- [ ] **Decision 1: Legacy Learning Documents**
-  - a) Keep all session learning documents as historical reference
-  - b) Archive outdated learning documents to legacy folder
-  - c) Delete superseded documents that conflict with current understanding
-- [ ] **Decision 2: Outdated Component Files**  
-  - a) Update all component versions to match current patterns
-  - b) Archive old component versions for reference
-  - c) Remove outdated components that no longer serve purpose
-- [ ] **Decision 3: Duplicate PDCA Files**
-  - a) Consolidate similar PDCAs into single comprehensive documents
-  - b) Keep all PDCAs for complete traceability
-  - c) Archive duplicate PDCAs while preserving unique insights
+- [x] **Decision 1: Legacy Learning Documents**
+  - c) ✅ Delete superseded documents that conflict with current understanding (they are in git)
+- [x] **Decision 2: Outdated Component Files**  
+  - c) ✅ Remove outdated components that no longer serve purpose (they are in git)
+- [x] **Decision 3: Duplicate PDCA Files**
+  - b) ✅ Keep all PDCAs for complete traceability
+
+**Additional Decision:**
+- [x] **Template Cleanup:** Delete all outdated templates and references other than version 3.1.4.2
 
 ### **TRON Feedback (2025-09-22-UTC-1923)**
 ```quote
@@ -71,14 +68,14 @@ Analyzing legacy files and outdated documentation accumulated during save/cmm-st
 
 ### **Comprehensive File Status Table**
 
-| **File Path** | **File Type** | **Current Status** | **Issue Description** | **Suggested Action** | **Priority** |
-|---------------|---------------|-------------------|----------------------|---------------------|--------------|
-| **session-learnings-dory-test.md** | Learning Doc | ✅ Current | Accurate previous session documentation | **KEEP** - Historical reference | Low |
-| **dory-symptoms-story.md** | Educational | ✅ Current | Valuable process memory loss prevention | **KEEP** - Educational value | Low |
-| **cmm-levels-summary.md** | Reference | ✅ Current | Updated with user corrections | **KEEP** - Core reference | Low |
-| **blank-agent-quickstart.md** | Legacy | ❌ Outdated | Superseded by howto.cmm.md | **ARCHIVE** - Redundant | Medium |
-| **blank-agent-learning-journey.md** | Legacy | ❌ Outdated | Content integrated into howto.cmm.md | **ARCHIVE** - Redundant | Medium |
-| **learning-index.md** | Legacy | ❌ Outdated | Navigation replaced by howto.cmm.md links | **ARCHIVE** - Redundant | Medium |
+| **File Path** | **File Type** | **Current Status** | **Issue Description** | **Suggested Action** | **Priority** | **Change Status** |
+|---------------|---------------|-------------------|----------------------|---------------------|--------------|------------------|
+| [session-learnings-dory-test.md](session-learnings-dory-test.md) | Learning Doc | ✅ Current | Accurate previous session documentation | **KEEP** - Historical reference | Low | ✅ No change needed |
+| [dory-symptoms-story.md](dory-symptoms-story.md) | Educational | ✅ Current | Valuable process memory loss prevention | **KEEP** - Educational value | Low | ✅ No change needed |
+| [cmm-levels-summary.md](cmm-levels-summary.md) | Reference | ✅ Current | Updated with user corrections | **KEEP** - Core reference | Low | ✅ No change needed |
+| ~~blank-agent-quickstart.md~~ | Legacy | ❌ Deleted | Superseded by howto.cmm.md | **DELETED** - Redundant | Medium | ✅ COMPLETED |
+| ~~blank-agent-learning-journey.md~~ | Legacy | ❌ Deleted | Content integrated into howto.cmm.md | **DELETED** - Redundant | Medium | ✅ COMPLETED |
+| ~~learning-index.md~~ | Legacy | ❌ Deleted | Navigation replaced by howto.cmm.md links | **DELETED** - Redundant | Medium | ✅ COMPLETED |
 | **2025-09-22-UTC-1910-cmm-understanding-consolidation-pdca.md** | Process | ⚠️ Redundant | Superseded by later compliance PDCAs | **ARCHIVE** - Historical | Low |
 | **2025-09-22-UTC-1911-cmm3-definition-compliance-fix-pdca.md** | Process | ⚠️ Redundant | Superseded by later analysis | **ARCHIVE** - Historical | Low |
 | **2025-09-22-UTC-1915-howto-cmm-optimization-pdca.md** | Process | ⚠️ Redundant | Process documented in final howto.cmm.md | **ARCHIVE** - Historical | Low |
