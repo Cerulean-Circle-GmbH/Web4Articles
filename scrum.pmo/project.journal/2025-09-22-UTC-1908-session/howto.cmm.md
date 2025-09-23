@@ -67,7 +67,7 @@ Now that you understand CMM levels, you can properly understand what PDCA actual
 
 **Now that you understand CMM framework, you're ready to learn the specific tools:**
 
-1. **Read Next:** `scrum.pmo/roles/_shared/PDCA/howto.PDCA.md` - Now you'll understand it's a CMM4 feedback loop system, not just a documentation template
+1. **Read Next:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../../scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) - Now you'll understand it's a CMM4 feedback loop system, not just a documentation template
 
 2. **Understand PDCA Nature:** When you read the PDCA guide, you'll recognize it as systematic feedback loop mastery - the core of CMM4 work
 
@@ -108,7 +108,7 @@ Now that you understand CMM levels, you can properly understand what PDCA actual
 
 ## CMM Deep Dive - When You Need Complete Understanding
 
-**If you want deeper understanding of the maturity levels:** Read **[CMM Levels Summary](cmm-levels-summary.md)** - comprehensive journey from chaos to scientific excellence with real examples.
+**If you want deeper understanding of the maturity levels:** Read [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/cmm-levels-summary.md) | [cmm-levels-summary.md](cmm-levels-summary.md) - comprehensive journey from chaos to scientific excellence with real examples.
 
 **This detailed summary contains:**
 - The bakery story showing CMM2 templates vs CMM3 automation
@@ -120,16 +120,16 @@ Now that you understand CMM levels, you can properly understand what PDCA actual
 ## Your Learning Resources - Go Deeper When Needed
 
 ### Understanding Through Real Experience
-- **[Session Learnings](session-learnings-dory-test.md)** - Complete previous session showing how CMM4 was achieved in practice
-- **[Dory Symptoms Story](dory-symptoms-story.md)** - How process memory loss happens and how to recover
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/session-learnings-dory-test.md) | [session-learnings-dory-test.md](session-learnings-dory-test.md) - Complete previous session showing how CMM4 was achieved in practice
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/dory-symptoms-story.md) | [dory-symptoms-story.md](dory-symptoms-story.md) - How process memory loss happens and how to recover
 
 ### Process Mastery Deep Dives
-- **[Definition Destruction Analysis](2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md)** - Critical lesson: never change perfect definitions without permission
-- **[CMM3 Compliance Achievement](2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md)** - How to achieve identical structure through systematic verification
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md) | [2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md](2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md) - Critical lesson: never change perfect definitions without permission
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md) | [2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md](2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md) - How to achieve identical structure through systematic verification
 
 ### Advanced Techniques
-- **[Format Correction](2025-09-22-UTC-1909-dual-link-format-correction-pdca.md)** - Proper dual link formats and CMM3 chat compliance
-- **[Session Startup](2025-09-22-UTC-1908-session-startup-pdca.md)** - How to initialize work sessions with proper protocols
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1909-dual-link-format-correction-pdca.md) | [2025-09-22-UTC-1909-dual-link-format-correction-pdca.md](2025-09-22-UTC-1909-dual-link-format-correction-pdca.md) - Proper dual link formats and CMM3 chat compliance
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-session-startup-pdca.md) | [2025-09-22-UTC-1908-session-startup-pdca.md](2025-09-22-UTC-1908-session-startup-pdca.md) - How to initialize work sessions with proper protocols
 
 ## Dory Mode Prevention Protocol
 
@@ -139,8 +139,8 @@ Now that you understand CMM levels, you can properly understand what PDCA actual
 - Changing things without understanding why they work
 - Skipping process steps you know are important
 
-**Recovery Action:** **Stop immediately.** Re-read this document top-down, then go to [Dory Symptoms Story](dory-symptoms-story.md) to understand what happened and how to recover.
+**Recovery Action:** **Stop immediately.** Re-read this document top-down, then go to [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/dory-symptoms-story.md) | [dory-symptoms-story.md](dory-symptoms-story.md) to understand what happened and how to recover.
 
 **Prevention:** Use the detailed learning materials to refresh your understanding whenever you feel uncertain. CMM4 requires continuous learning and understanding maintenance.
 
-**Ready?** Go read the PDCA guide with your new CMM4 understanding. Everything will make more sense now.
+**Ready?** Go read [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../../scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) with your new CMM4 understanding. Everything will make more sense now.
