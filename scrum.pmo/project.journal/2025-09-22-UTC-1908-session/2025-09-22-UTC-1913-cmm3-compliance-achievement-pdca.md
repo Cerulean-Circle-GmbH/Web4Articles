@@ -14,7 +14,7 @@
 **🚨 Issues:** CMM3 compliance achieved, process learning integration required  
 
 **📎 Previous Commit:** Pending - CMM3 compliance implementation  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md) | [§/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md](2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md)
 
 ---
 
@@ -179,4 +179,3 @@ True CMM3 achievement requires:
 **Next PDCA Focus:** Apply CMM3 compliance principles to technical development work
 
 **Dual Links:**
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md) | [2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md](2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md)

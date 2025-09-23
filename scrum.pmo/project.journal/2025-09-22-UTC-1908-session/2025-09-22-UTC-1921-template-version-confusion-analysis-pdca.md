@@ -20,7 +20,7 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1921-template-version-confusion-analysis-pdca.md) | [2025-09-22-UTC-1921-template-version-confusion-analysis-pdca.md](2025-09-22-UTC-1921-template-version-confusion-analysis-pdca.md)
-- **Template Reality:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/roles/_shared/PDCA/template.md) | [scrum.pmo/roles/_shared/PDCA/template.md](scrum.pmo/roles/_shared/PDCA/template.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](../../roles/_shared/PDCA/template.md)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Template version confusion identified, using actual template v3.0
@@ -150,4 +150,3 @@ Agent was hallucinating about template standards
 
 **🎯 Template version confusion resolved - using actual template 3.0 correctly without false claims 🔧📊**
 
-**"The answer to teaching integrity is using actual standards, not imagined improvements"** 🔧📊

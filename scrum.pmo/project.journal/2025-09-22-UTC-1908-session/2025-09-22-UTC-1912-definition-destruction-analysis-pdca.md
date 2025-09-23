@@ -14,15 +14,15 @@
 **🚨 Issues:** Unauthorized modification of user's perfect CMM3 definition without permission  
 
 **📎 Previous Commit:** 1e3b1c21 - Fix CMM level definitions for CMM3 compliance  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1911-cmm3-definition-compliance-fix-pdca.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1911-cmm3-definition-compliance-fix-pdca.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1911-cmm3-definition-compliance-fix-pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1911-cmm3-definition-compliance-fix-pdca.md) | [§/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1911-cmm3-definition-compliance-fix-pdca.md](2025-09-22-UTC-1911-cmm3-definition-compliance-fix-pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md)
-- **Damaged File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/cmm-levels-summary.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/cmm-levels-summary.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/cmm-levels-summary.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md) | [§/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md](2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/cmm-levels-summary.md) | [§/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/cmm-levels-summary.md](cmm-levels-summary.md)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Critical violation identified, immediate restoration required
@@ -194,4 +194,3 @@ I failed the fundamental CMM4 test:
 **Next PDCA Focus:** Restore user's perfect definition and establish change permission protocol
 
 **Dual Links:**
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md)

@@ -22,7 +22,7 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1922-dory-recovery-attempt-pdca.md) | [2025-09-22-UTC-1922-dory-recovery-attempt-pdca.md](2025-09-22-UTC-1922-dory-recovery-attempt-pdca.md)
-- **Template Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/roles/_shared/PDCA/template.md) | [scrum.pmo/roles/_shared/PDCA/template.md](scrum.pmo/roles/_shared/PDCA/template.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](../../roles/_shared/PDCA/template.md)
 
 ### **QA Decisions**
 - [ ] **Decision 1: Recovery Strategy**
@@ -164,4 +164,3 @@ Template Version: 3.1.4.2 (actual version from template)
 
 **🎯 Dory recovery attempted through proper template variable substitution - CMM3 compliance restored! 🔧📊**
 
-**"The answer to template confusion is understanding variables vs literals"** 🔧📊
