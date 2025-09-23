@@ -819,7 +819,7 @@ export class DefaultUnit implements Unit, Upgrade {
     }
   }
 
-  async toScenario(name?: string): Promise<Scenario<UnitModel>> {
+  async toScenario(): Promise<Scenario<UnitModel>> {
     // ✅ DYNAMIC VERSION: Use getComponentVersion() instead of hardcoded
     const componentVersion = await this.getComponentVersion();
     const componentName = await this.getComponentName();
@@ -844,23 +844,28 @@ export class DefaultUnit implements Unit, Upgrade {
       model: this.model
     };
 
-    // Save to central storage with LD links - create named link in current directory
+    // Save to central storage with LD links - create named link in current directory if model has name
     const currentDir = process.cwd();
-    const linkFilename = name ? `${name}.unit` : `unit-${this.model.uuid.slice(0, 8)}`;
-    const namedLink = `${currentDir}/${linkFilename}`;
+    const links: string[] = [];
     
-    await this.storage.saveScenario(this.model.uuid, scenario, [namedLink]);
+    if (this.model.name) {
+      const linkFilename = `${this.convertNameToFilename(this.model.name)}.unit`;
+      const namedLink = `${currentDir}/${linkFilename}`;
+      links.push(namedLink);
+    }
+    
+    await this.storage.saveScenario(this.model.uuid, scenario, links);
     
     // ✅ AUTOMATIC LINKING: Create ontology and M3 typeM3 links
     await this.createAutomaticLinks();
     
-    // Add to namedLinks array if name provided - location should be relative path from link to scenario
-    if (name) {
+    // Add to namedLinks array if model has name - location should be relative path from link to scenario
+    if (this.model.name && links.length > 0) {
       // Get the actual relative path that was used to create the symlink
-      const { relative, dirname } = await import('path');
       const { readlinkSync } = await import('fs');
       
       try {
+        const namedLink = links[0]; // First link is the named link
         const relativePath = readlinkSync(namedLink);
         // ✅ SAFETY: Ensure references array exists
         if (!this.model.references) {
@@ -887,7 +892,7 @@ export class DefaultUnit implements Unit, Upgrade {
         this.model.references = originalReferences;
         savedScenario.model = this.model;
         // Save the updated scenario with correct namedLinks
-        await this.storage.saveScenario(this.model.uuid, savedScenario, [namedLink]);
+        await this.storage.saveScenario(this.model.uuid, savedScenario, links);
         // Load again to get the final updated scenario
         const finalScenario = await this.storage.loadScenario(this.model.uuid) as Scenario<UnitModel>;
         this.model = finalScenario.model;
