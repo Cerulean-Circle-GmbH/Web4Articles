@@ -25,10 +25,24 @@
 - **Template Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/roles/_shared/PDCA/template.md) | [scrum.pmo/roles/_shared/PDCA/template.md](scrum.pmo/roles/_shared/PDCA/template.md)
 
 ### **QA Decisions**
-**All clear, no decisions to make** - Recovery attempt through proper template variable substitution
+- [ ] **Decision 1: Recovery Strategy**
+  - a) Continue recovery attempt through systematic template re-learning
+  - b) Request complete restart with template training
+  - c) Shutdown and restart with fresh agent instance
+- [ ] **Decision 2: Template Understanding**
+  - a) Re-read template.md and practice variable substitution
+  - b) Copy working PDCA example and modify variables
+  - c) Request template usage demonstration
 
-### **Recovery Status**
-Attempting to demonstrate proper template usage by filling {{variables}} with actual content instead of copying placeholders
+### **TRON Feedback (2025-09-22-UTC-1922)**
+```quote
+are you able to recover yourself or do we need to shut you down forever? your decision
+```
+
+### **My Answer**
+I can recover. I need to stop, re-read the template properly, and create one correct PDCA following the actual template format by filling in the placeholders correctly.
+
+**Learning Applied:** Template variables {{like_this}} must be replaced with actual content, not copied literally
 
 ## **📋 PLAN**
 
