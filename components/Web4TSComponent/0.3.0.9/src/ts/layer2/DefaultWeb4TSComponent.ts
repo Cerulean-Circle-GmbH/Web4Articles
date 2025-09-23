@@ -201,6 +201,23 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     }
     
     if (includeCLI) {
+      // Ensure minimal layer structure for CLI
+      await fs.mkdir(path.join(componentDir, 'src/ts/layer2'), { recursive: true });
+      await fs.mkdir(path.join(componentDir, 'src/ts/layer3'), { recursive: true });
+      await fs.mkdir(path.join(componentDir, 'src/ts/layer4'), { recursive: true });
+      await fs.mkdir(path.join(componentDir, 'src/ts/layer5'), { recursive: true });
+      
+      // Copy DefaultCLI if not already copied
+      if (!includeLayerArchitecture) {
+        await this.copyDefaultCLI(componentDir);
+        await this.createTSCompletion(componentDir);
+        await this.copyEssentialInterfaces(componentDir);
+        
+        // Create minimal component implementation
+        await this.createMinimalComponentImplementation(componentDir, componentName, version);
+        await this.createMinimalComponentInterfaces(componentDir, componentName);
+      }
+      
       await this.createCLIScript(componentDir, componentName, version);
       await this.createCLIImplementation(componentDir, componentName, version);
     }
@@ -232,8 +249,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     const cliTemplate = `#!/usr/bin/env node
 
 /**
- * ${componentName} CLI Tool - Modern ESM TypeScript
- * Web4 Architecture Standard - Pure ESM execution
+ * ${componentName} CLI Tool - Web4 Auto-Build Standard
+ * Zero-Config Auto-Discovery with Full Auto-Build Chain
+ * Handles: npm install → dependencies → build → execute
  * Works from any directory, finds project root via git
  */
 
@@ -264,18 +282,82 @@ function findProjectRoot() {
     throw new Error('❌ Error: Not in a Web4 project directory');
 }
 
+// Check if npm is available
+function ensureNpm() {
+    try {
+        execSync('npm --version', { stdio: 'ignore' });
+        return true;
+    } catch {
+        console.log('📦 Installing npm...');
+        try {
+            // Try to install npm via node
+            execSync('curl -L https://www.npmjs.com/install.sh | sh', { stdio: 'inherit' });
+            return true;
+        } catch {
+            throw new Error('❌ Failed to install npm. Please install Node.js/npm manually.');
+        }
+    }
+}
+
+// Auto-build component if needed
+function autoBuild(componentDir) {
+    const distPath = join(componentDir, 'dist');
+    const packageJsonPath = join(componentDir, 'package.json');
+    const nodeModulesPath = join(componentDir, 'node_modules');
+    
+    // Change to component directory
+    process.chdir(componentDir);
+    
+    // Install dependencies if needed
+    if (!existsSync(nodeModulesPath) && existsSync(packageJsonPath)) {
+        console.log('📦 Installing dependencies...');
+        execSync('npm install', { stdio: 'inherit' });
+    }
+    
+    // Build if dist doesn't exist or is outdated
+    if (!existsSync(distPath) || needsRebuild(componentDir, distPath)) {
+        console.log('🔨 Building component...');
+        execSync('npm run build', { stdio: 'inherit' });
+    }
+}
+
+// Check if rebuild is needed
+function needsRebuild(componentDir, distPath) {
+    try {
+        const srcPath = join(componentDir, 'src');
+        if (!existsSync(srcPath)) return false;
+        
+        const srcStat = execSync(\`find "\${srcPath}" -type f -name "*.ts" -newer "\${distPath}" | head -1\`, { encoding: 'utf-8' }).trim();
+        return srcStat.length > 0;
+    } catch {
+        return true; // If in doubt, rebuild
+    }
+}
+
 // Main execution
 try {
     const projectRoot = findProjectRoot();
     process.chdir(projectRoot);
     
-    // Import and execute component CLI
-    const cliPath = join(projectRoot, 'components', '${componentName}', '${version}', 'dist', 'ts', 'layer5', '${componentName}CLI.js');
+    // Ensure npm is available
+    ensureNpm();
     
-    if (!existsSync(cliPath)) {
-        throw new Error(\`❌ ${componentName} CLI not built. Run npm run build in component directory.\`);
+    // Component paths
+    const componentDir = join(projectRoot, 'components', '${componentName}', '${version}');
+    const cliPath = join(componentDir, 'dist', 'ts', 'layer5', '${componentName}CLI.js');
+    
+    if (!existsSync(componentDir)) {
+        throw new Error(\`❌ Component not found: ${componentName} v${version}\`);
     }
     
+    // Auto-build if needed
+    autoBuild(componentDir);
+    
+    if (!existsSync(cliPath)) {
+        throw new Error(\`❌ ${componentName} CLI build failed. Check build output above.\`);
+    }
+    
+    // Import and execute component CLI
     const { ${componentName}CLI } = await import(cliPath);
     await ${componentName}CLI.start(process.argv.slice(2));
     
@@ -2637,6 +2719,93 @@ export interface ${componentName}Model extends Model {
   }
 
   /**
+   * @cliHide
+   */
+  private async copyEssentialInterfaces(componentDir: string): Promise<void> {
+    const web4ComponentPath = '/workspace/components/Web4TSComponent/0.3.0.9/src/ts';
+    const targetLayer3 = path.join(componentDir, 'src/ts/layer3');
+    
+    // Essential interfaces needed by DefaultCLI
+    const essentialInterfaces = [
+      'CLI.interface.ts',
+      'MethodInfo.interface.ts', 
+      'ComponentAnalysis.interface.ts',
+      'ColorScheme.interface.ts',
+      'Completion.ts',
+      'Scenario.interface.ts',
+      'Model.interface.ts'
+    ];
+    
+    for (const interfaceFile of essentialInterfaces) {
+      const sourcePath = path.join(web4ComponentPath, 'layer3', interfaceFile);
+      const targetPath = path.join(targetLayer3, interfaceFile);
+      
+      if (existsSync(sourcePath)) {
+        try {
+          await fs.copyFile(sourcePath, targetPath);
+        } catch (error) {
+          console.warn(`Warning: Could not copy ${interfaceFile}: ${(error as Error).message}`);
+        }
+      }
+    }
+  }
+
+  /**
+   * @cliHide
+   */
+  private async createMinimalComponentImplementation(componentDir: string, componentName: string, version: string): Promise<void> {
+    const componentImplementation = `/**
+ * Default${componentName} - Minimal ${componentName} Component Implementation
+ * Web4 CLI-only pattern: Minimal implementation for CLI functionality
+ */
+
+export class Default${componentName} {
+  private model: any;
+
+  constructor() {
+    // Empty constructor - Web4 pattern
+    this.model = {
+      uuid: crypto.randomUUID(),
+      name: '${componentName}',
+      version: '${version}',
+      createdAt: new Date().toISOString(),
+    };
+  }
+
+  /**
+   * Essential method for CLI auto-discovery
+   * @param message Test message to display
+   * @cliSyntax message
+   */
+  async info(message: string = 'Hello from ${componentName}!'): Promise<this> {
+    console.log(\`🚀 \${message}\`);
+    console.log(\`   Component: ${componentName}\`);
+    console.log(\`   Version: ${version}\`);
+    console.log(\`   UUID: \${this.model.uuid}\`);
+    return this;
+  }
+}`;
+
+    const implementationPath = path.join(componentDir, 'src/ts/layer2', `Default${componentName}.ts`);
+    await fs.writeFile(implementationPath, componentImplementation);
+  }
+
+  /**
+   * @cliHide
+   */
+  private async createMinimalComponentInterfaces(componentDir: string, componentName: string): Promise<void> {
+    // Just create empty interface files to satisfy imports
+    const emptyInterface = `// Minimal interface placeholder for CLI functionality
+export interface ${componentName} {}
+export interface ${componentName}Model {}
+export interface Scenario<T> {}
+`;
+
+    const interfacePath = path.join(componentDir, 'src/ts/layer3', `${componentName}.interface.ts`);
+    await fs.writeFile(interfacePath, emptyInterface);
+  }
+
+  /**
    * Create CLI implementation with auto-discovery
    * @cliHide
    */
@@ -2725,34 +2894,6 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     await fs.writeFile(cliPath, cliImplementation);
   }
 
-  /**
-   * Copy essential interfaces for auto-discovery
-   * @cliHide
-   */
-  private async copyEssentialInterfaces(componentDir: string): Promise<void> {
-    const interfaceFiles = [
-      'Model.interface.ts',
-      'Scenario.interface.ts',
-      'CLI.interface.ts',
-      'MethodInfo.interface.ts',
-      'ColorScheme.interface.ts',
-      'ComponentAnalysis.interface.ts',
-      'Completion.ts'
-    ];
-
-    for (const file of interfaceFiles) {
-      const currentDir = path.dirname(new URL(import.meta.url).pathname);
-      const sourcePath = path.join(currentDir, '../../../src/ts/layer3', file);
-      const targetPath = path.join(componentDir, 'src/ts/layer3', file);
-      
-      try {
-        const content = await fs.readFile(sourcePath, 'utf-8');
-        await fs.writeFile(targetPath, content);
-      } catch (error) {
-        console.log(`   ⚠️ Could not copy ${file}: ${(error as Error).message}`);
-      }
-    }
-  }
 
   /**
    * Create TSCompletion for auto-discovery
