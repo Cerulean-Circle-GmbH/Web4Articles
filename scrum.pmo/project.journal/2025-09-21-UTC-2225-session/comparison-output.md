@@ -26,7 +26,7 @@
 | dist/ | ❌ | ✅ | ❌ | Compiled JS and type declarations | 🟪 Unique – W |
 | node_modules/ | ❌ | ✅ | ❌ | Installed dependencies directory | 🟪 Unique – W |
 | package-lock.json | ✅ | ✅ | ✅ | Deterministic dependency lockfile | 🟥 Different (W+W+U) |
-| package.json | ✅ | ✅ | ✅ | Package metadata, scripts, entry points | 🟨 Similar |
+| package.json | ✅ | ✅ | ✅ | Package metadata, scripts, entry points | 🟥 Different (W+W+U) |
 | requirement | ✅ | ❌ | ❌ | Component file | 🟪 Unique – W |
 | src/ | ✅ | ✅ | ✅ | Source code (layers 2/3/4/5) | 🟩 Identical |
 | src/ts/ | ❌ | ❌ | ❌ | Component file | 🟥 Different |
@@ -48,12 +48,12 @@
 | src/ts/layer3/GitPositioning.interface.ts | ❌ | ❌ | ✅ | TypeScript interface definition | 🟪 Unique – U |
 | src/ts/layer3/GitTextIORScenario.interface.ts | ❌ | ❌ | ✅ | TypeScript interface definition | 🟪 Unique – U |
 | src/ts/layer3/IOR.interface.ts | ❌ | ❌ | ✅ | TypeScript interface definition | 🟪 Unique – U |
-| src/ts/layer3/MethodInfo.interface.ts | ✅ | ✅ | ✅ | TypeScript interface definition | 🟨 Similar |
-| src/ts/layer3/Model.interface.ts | ❌ | ✅ | ✅ | TypeScript interface definition | 🟨 Similar (W+U) |
+| src/ts/layer3/MethodInfo.interface.ts | ✅ | ✅ | ✅ | TypeScript interface definition | 🟥 Different (W+W+U) |
+| src/ts/layer3/Model.interface.ts | ❌ | ✅ | ✅ | TypeScript interface definition | 🟥 Different (W+U) |
 | src/ts/layer3/NamedLink.interface.ts | ❌ | ❌ | ✅ | TypeScript interface definition | 🟪 Unique – U |
 | src/ts/layer3/Requirement.interface.ts | ✅ | ❌ | ❌ | TypeScript interface definition | 🟪 Unique – W |
 | src/ts/layer3/RequirementIdentifier.type.ts | ✅ | ❌ | ❌ | Interface layer | 🟪 Unique – W |
-| src/ts/layer3/Scenario.interface.ts | ❌ | ✅ | ✅ | TypeScript interface definition | 🟨 Similar (W+U) |
+| src/ts/layer3/Scenario.interface.ts | ❌ | ✅ | ✅ | TypeScript interface definition | 🟥 Different (W+U) |
 | src/ts/layer3/Storage.interface.ts | ❌ | ❌ | ✅ | TypeScript interface definition | 🟪 Unique – U |
 | src/ts/layer3/StorageModel.interface.ts | ❌ | ❌ | ✅ | TypeScript interface definition | 🟪 Unique – U |
 | src/ts/layer3/StorageScenario.interface.ts | ❌ | ❌ | ✅ | TypeScript interface definition | 🟪 Unique – U |
@@ -68,7 +68,7 @@
 | src/ts/layer3/Web4TSComponent.interface.ts | ❌ | ✅ | ❌ | TypeScript interface definition | 🟪 Unique – W |
 | src/ts/layer3/Web4TSComponentModel.interface.ts | ❌ | ✅ | ❌ | TypeScript interface definition | 🟪 Unique – W |
 | src/ts/layer4/ | ❌ | ❌ | ❌ | Service layer | 🟥 Different |
-| src/ts/layer4/TSCompletion.ts | ✅ | ✅ | ✅ | Service layer | 🟨 Similar |
+| src/ts/layer4/TSCompletion.ts | ✅ | ✅ | ✅ | Service layer | 🟥 Different (W+W+U) |
 | src/ts/layer4/TSCompletion.ts.unit | ✅ | ❌ | ✅ | Service layer | 🟩 Identical |
 | src/ts/layer5/ | ❌ | ❌ | ❌ | CLI layer | 🟥 Different |
 | src/ts/layer5/RequirementCLI.ts | ✅ | ❌ | ❌ | CLI entry | 🟪 Unique – W |
@@ -89,6 +89,6 @@
 | unit | ❌ | ❌ | ✅ | Component file | 🟪 Unique – U |
 | vitest.config.ts | ✅ | ✅ | ✅ | Vitest test runner configuration | 🟥 Different (W+W+U) |
 | web4tscomponent | ❌ | ✅ | ❌ | Component file | 🟪 Unique – W |
-| °folder.unit | ✅ | ❌ | ✅ | Component file | 🟨 Similar (W+U) |
+| °folder.unit | ✅ | ❌ | ✅ | Component file | 🟥 Different (W+U) |
 
 ✅ Component comparison analysis complete
