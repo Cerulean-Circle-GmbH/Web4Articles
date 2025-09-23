@@ -298,4 +298,36 @@ describe('Web4TSComponent Functionality', () => {
       expect(metadata.hasScenarioSupport).toBe(true);
     });
   });
+
+  describe('Component Comparison', () => {
+    it('should generate comparison MD file in test/data directory', async () => {
+      // Create test components for comparison
+      await component.create('TestComp1', '0.1.0.0', 'all');
+      await component.create('TestComp2', '0.1.0.1', 'all');
+      
+      // Change to test data directory to simulate working directory
+      const testDataDir = path.join(__dirname, 'data');
+      const originalCwd = process.cwd();
+      process.chdir(testDataDir);
+      
+      try {
+        // Run comparison
+        await component.compare('TestComp1 0.1.0.0, TestComp2 0.1.0.1');
+        
+        // Check if comparison file was created
+        const files = await fs.readdir(testDataDir);
+        const comparisonFile = files.find(f => f.includes('testcomp1') && f.includes('comparison') && f.endsWith('.md'));
+        
+        expect(comparisonFile).toBeDefined();
+        
+        // Verify file content has dual links
+        const content = await fs.readFile(path.join(testDataDir, comparisonFile), 'utf-8');
+        expect(content).toContain('[GitHub]');
+        expect(content).toContain('Component Comparison Analysis');
+        
+      } finally {
+        process.chdir(originalCwd);
+      }
+    });
+  });
 });
