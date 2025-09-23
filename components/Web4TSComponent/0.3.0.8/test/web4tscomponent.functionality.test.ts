@@ -29,6 +29,7 @@ describe('Web4TSComponent Functionality', () => {
   afterEach(async () => {
     // Clean up test components (ephemeral test data as per decision 5a)
     await cleanupTestComponents();
+    await cleanupComparisonFiles();
     delete (globalThis as any).__TEST_MODE__;
   });
 
@@ -44,6 +45,19 @@ describe('Web4TSComponent Functionality', () => {
         }
       } catch (error) {
         console.warn(`Cleanup warning for ${comp}:`, error.message);
+      }
+    }
+  }
+
+  async function cleanupComparisonFiles() {
+    const testDataDir = path.join(__dirname, 'data');
+    if (existsSync(testDataDir)) {
+      const entries = await fs.readdir(testDataDir);
+      for (const entry of entries) {
+        if (entry.includes('-comparison-') && entry.endsWith('.md')) {
+          const filePath = path.join(testDataDir, entry);
+          await fs.unlink(filePath).catch(() => {}); // Ignore if file doesn't exist
+        }
       }
     }
   }
