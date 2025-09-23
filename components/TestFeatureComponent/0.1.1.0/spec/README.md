@@ -1,1 +1,0 @@
-# TestFeatureComponent Specifications\n\nComponent specifications and requirements.

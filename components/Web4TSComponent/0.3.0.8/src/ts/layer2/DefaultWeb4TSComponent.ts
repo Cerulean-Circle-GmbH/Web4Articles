@@ -133,10 +133,55 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   /**
    * @cliHide
    */
+  private isTestEnvironment(): boolean {
+    return process.env.NODE_ENV === 'test' || 
+           process.env.VITEST === 'true' ||
+           process.cwd().includes('/test/') ||
+           !!((globalThis as any).__TEST_MODE__);
+  }
+
+  /**
+   * @cliHide
+   */
+  private getTestDataDirectory(): string {
+    // Each version tests in its own test/data folder
+    // From: /workspace/components/Web4TSComponent/0.3.0.8/src/ts/layer2/DefaultWeb4TSComponent.ts
+    // To:   /workspace/components/Web4TSComponent/0.3.0.8/test/data
+    const currentVersionDir = path.resolve(__dirname, '..', '..', '..');
+    return path.join(currentVersionDir, 'test', 'data');
+  }
+
+  /**
+   * @cliHide
+   */
+  private findVersionDirectories(componentDir: string): string[] {
+    try {
+      const entries = readdirSync(componentDir, { withFileTypes: true });
+      return entries
+        .filter(entry => entry.isDirectory() && /^\d+\.\d+\.\d+\.\d+$/.test(entry.name))
+        .map(entry => entry.name);
+    } catch {
+      return ['0.3.0.8']; // Fallback
+    }
+  }
+
+  /**
+   * @cliHide
+   */
+  private resolveComponentPath(componentName: string, version: string): string {
+    if (this.isTestEnvironment()) {
+      return path.join(this.getTestDataDirectory(), componentName, version);
+    }
+    return path.join(this.model.targetDirectory, 'components', componentName, version);
+  }
+
+  /**
+   * @cliHide
+   */
   async scaffoldComponent(options: ComponentScaffoldOptions): Promise<ComponentMetadata> {
     const { componentName, version, includeLayerArchitecture, includeCLI, includeSpecFolder, includeVitest } = options;
     
-    const componentDir = path.join(this.model.targetDirectory, 'components', componentName, version);
+    const componentDir = this.resolveComponentPath(componentName, version);
     
     // Create directory structure
     await fs.mkdir(componentDir, { recursive: true });
@@ -618,7 +663,7 @@ Standards:
    * @cliSyntax component version
    */
   async on(component: string, version: string): Promise<this> {
-    const componentPath = path.join(this.model.targetDirectory, 'components', component, version);
+    const componentPath = this.resolveComponentPath(component, version);
     
     if (!existsSync(componentPath)) {
       throw new Error(`Component not found: ${component} v${version} at ${componentPath}`);
@@ -1831,8 +1876,8 @@ Standards:
    * @cliHide
    */
   private async createVersionFromExisting(component: string, fromVersion: string, toVersion: string): Promise<void> {
-    const sourcePath = `${this.model.targetDirectory}/components/${component}/${fromVersion}`;
-    const targetPath = `${this.model.targetDirectory}/components/${component}/${toVersion}`;
+    const sourcePath = this.resolveComponentPath(component, fromVersion);
+    const targetPath = this.resolveComponentPath(component, toVersion);
     
     // Copy entire component structure
     await this.copyDirectory(sourcePath, targetPath);
