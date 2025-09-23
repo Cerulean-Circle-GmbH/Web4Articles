@@ -427,6 +427,31 @@ After completing the compliance review, the agent MUST:
 
 ---
 
+## **🔄 RESPONDING TO 'NOOP' PROMPT - NO ACTION WORKAROUND**
+
+When a user types just `noop` as a prompt, this is a **technical workaround** for Cursor PWA conversation display issues.
+
+### **No Action Required**
+- **NO PDCA Creation:** Do not create any PDCA document
+- **NO Process Execution:** Do not execute any process or analysis
+- **NO Response Generation:** Minimal acknowledgment only
+- **Purpose:** Overcome Cursor PWA bug that prevents conversation display without trigger
+
+### **Response Pattern**
+```
+Acknowledged - noop trigger received for Cursor PWA compatibility.
+```
+
+### **Technical Context**
+The Cursor PWA has a display bug where conversations may not show properly without a recognized trigger word. The "noop" trigger provides a workaround that requires no agent action while resolving the display issue.
+
+### **Known Triggers Summary**
+- **`pdca`** - Compliance check request (creates PDCA for review and correction)
+- **`start`** - Session initialization (creates PDCA with startup decision framework)
+- **`noop`** - Technical workaround (no action, minimal acknowledgment only)
+
+---
+
 ## **📚 ADVANCED LEARNING RESOURCES**
 
 ### **Save/Restart Agent's Detailed PDCAs**
