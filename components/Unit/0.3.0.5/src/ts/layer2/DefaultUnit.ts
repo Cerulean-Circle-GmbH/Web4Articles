@@ -89,6 +89,66 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
+   * Display comprehensive unit information with auto-upgrade support
+   * Web4 pattern: Auto-discovery CLI method with file loading capability
+   * 
+   * @param unitFile Optional unit file to load and analyze
+   * @cliSyntax unitFile
+   * @cliDefault unitFile ""
+   * @returns this - Enables command chaining for fluent interface
+   * @example
+   * ```bash
+   * unit info °folder.unit
+   * unit on MyComponent 0.1.0.0 info
+   * ```
+   */
+  async info(unitFile?: string): Promise<this> {
+    // If unit file specified, load it first (includes auto-upgrade)
+    if (unitFile) {
+      await this.loadFromUnitFile(unitFile);
+    }
+    
+    const scenario = await this.toScenario();
+    
+    console.log(`${'\x1b[36m'}═══ Unit Information ═══${'\x1b[0m'}`);
+    console.log('');
+    
+    // Key Information (Highlighted)
+    console.log(`${'\x1b[1m'}Name:${'\x1b[0m'}       ${scenario.model.name || '\x1b[90m(not specified)\x1b[0m'}`);
+    console.log(`${'\x1b[1m'}TypeM3:${'\x1b[0m'}     ${scenario.model.typeM3 || '\x1b[90m(not classified)\x1b[0m'}`);
+    console.log('');
+    console.log(`${'\x1b[1m'}Definition:${'\x1b[0m'}`);
+    if (scenario.model.definition) {
+      console.log(`${scenario.model.definition}`);
+    } else {
+      console.log(`${'\x1b[90m'}(not specified)${'\x1b[0m'}`);
+    }
+    console.log('');
+    console.log(`${'\x1b[1m'}Origin:${'\x1b[0m'}     ${scenario.model.origin || '\x1b[90m(not specified)\x1b[0m'}`);
+    console.log('');
+    console.log(`${'\x1b[1m'}References:${'\x1b[0m'} ${scenario.model.references?.length || 0} links`);
+    if (scenario.model.references && scenario.model.references.length > 0) {
+      scenario.model.references.forEach((ref: any, index: number) => {
+        const filename = ref.linkLocation.split('/').pop()?.replace('ior:local:ln:file:', '') || 'unknown';
+        const status = ref.syncStatus === 'SYNCED' ? '\x1b[32m●\x1b[0m' : '\x1b[31m●\x1b[0m';
+        console.log(`  ${index + 1}. ${status} ${filename} → ${ref.linkTarget}`);
+      });
+    } else {
+      console.log(`    ${'\x1b[90m'}(no references)${'\x1b[0m'}`);
+    }
+    console.log('');
+    
+    // Technical Details
+    console.log(`${'\x1b[90m'}Technical Details:${'\x1b[0m'}`);
+    console.log(`${'\x1b[90m'}  UUID:       ${scenario.model.uuid}${'\x1b[0m'}`);
+    console.log(`${'\x1b[90m'}  Index Path: ${scenario.model.indexPath || '(not indexed)'}${'\x1b[0m'}`);
+    console.log(`${'\x1b[90m'}  Created:    ${scenario.model.createdAt}${'\x1b[0m'}`);
+    console.log(`${'\x1b[90m'}  Updated:    ${scenario.model.updatedAt}${'\x1b[0m'}`);
+    
+    return this;
+  }
+
+  /**
    * Transform input data with command chaining support
    * Web4 pattern: Fluent interface enabling natural command chaining
    * 
@@ -2807,7 +2867,7 @@ export class DefaultUnit implements Unit, Upgrade {
             console.log(`✅ Upgrade successful`);
             // Save upgraded scenario
             const upgradedScenario = await this.toScenario();
-            await this.storage.saveScenario(this.model.uuid, upgradedScenario);
+            await this.storage.saveScenario(this.model.uuid, upgradedScenario, []);
           } else {
             console.log(`⚠️ Upgrade failed, continuing with original data`);
           }
