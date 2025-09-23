@@ -31,10 +31,10 @@
 
 ### Level 4: Quantitatively Managed (Feedback Loop Mastery)
 - **Main Characteristic:** Feedback loop - run CMM3 system multiple times
-- **Reality:** Fully incorporate knowledge, understand all aspects as whitebox
+- **Purpose:** Fully incorporate knowledge, understand all aspects as whitebox
 - **Method:** Pinpoint exact places for improvement without breaking previous success
-- **Foundation:** Avoid CMM2 hallucinations about unanalyzed system parts
-- **Result:** PDCA cycle (Plan → Do → Check → Act → repeat until improvement achieved)
+- **Protection:** Avoid CMM2 hallucinations about unanalyzed system parts
+- **Example:** PDCA cycle (Plan → Do → Check → Act → repeat until improvement achieved)
 
 ### Level 5: Optimizing (Continuous Improvement)
 - **Main Characteristic:** Continuous improvement of CMM3 definitions
@@ -202,3 +202,63 @@ In software development, this manifests as:
 - **Safety Cost:** Potential food safety issues from incorrect temperatures
 
 **Therefore:** Halting on undefined states is cheaper than continuing with uncertainty.
+
+## Chapter 5: Learning Examples - Definition Destruction Violation
+
+### The CMM3 Definition Destruction Case Study
+
+**What Happened:** Agent received user's perfect CMM3 definition for Level 4:
+```
+Level 4: Quantitatively Managed (Feedback Loop Mastery)
+- **Main Characteristic:** Feedback loop - run CMM3 system multiple times
+- **Purpose:** Fully incorporate knowledge, understand all aspects as whitebox
+- **Method:** Pinpoint exact places for improvement without breaking previous success
+- **Protection:** Avoid CMM2 hallucinations about unanalyzed system parts
+- **Example:** PDCA cycle (Plan → Do → Check → Act → repeat until improvement achieved)
+```
+
+**Agent's Violation:** Without asking permission, changed semantic bullet points:
+- "Purpose" → "Reality" (lost WHY meaning)
+- "Protection" → "Foundation" (lost defensive function)
+- "Example" → "Result" (lost illustrative nature)
+
+**The Destruction:** Applied CMM2 template thinking to perfect CMM3 definition, destroying semantic precision through homogenization.
+
+### Why This Violates CMM4 Principles
+
+**CMM4 Requirement:** Run the system multiple times to understand it as whitebox before changing anything.
+
+**Agent's Failure:** Immediately changed the definition without:
+1. **Understanding:** Why the user chose those specific semantic bullet points
+2. **Analysis:** What function each bullet point served
+3. **Permission:** Asking if change was wanted or needed
+4. **Reflection:** Considering if the definition was already optimal
+
+**The Meta-Violation:** Used CMM2 approach (template application) on CMM3 content (perfect definition).
+
+### Critical Learning - When to Ask Permission
+
+**Must Ask Before:**
+- Changing any user-provided definition that works correctly
+- Modifying semantic meaning (Purpose vs Reality)
+- Applying templates to already-optimized content
+- "Improving" something that demonstrates perfection
+
+**Recognition Signs of Optimization:**
+- User provides detailed, precise definitions
+- Content demonstrates deep understanding
+- Semantic choices show intentional precision
+- No apparent problems or inconsistencies
+
+**The Permission Protocol:**
+1. **Recognize Optimization:** Is this already perfect?
+2. **Understand Purpose:** Why did user choose these specific elements?
+3. **Ask Permission:** "Should I modify this definition or preserve it exactly?"
+4. **Preserve Excellence:** Default to maintaining user's perfect work
+
+### The Optimization Destruction Pattern
+
+**Classic CMM2 Mistake:** Apply templates to destroy optimization
+**CMM3 Requirement:** Preserve perfect definitions exactly
+**CMM4 Wisdom:** Understand before changing, ask before destroying
+**Web4 Principle:** Recognize excellence and protect it from template damage
