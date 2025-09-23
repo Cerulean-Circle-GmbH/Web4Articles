@@ -680,6 +680,9 @@ Standards:
     (this.model as any).contextVersion = version;
     (this.model as any).contextPath = componentPath;
     
+    // UNIVERSAL AUTO-DISCOVERY: Load target component class for ALL components
+    await this.loadTargetComponentForAutoDiscovery(component, version, componentPath);
+    
     console.log(`✅ Component context loaded: ${component} v${version}`);
     console.log(`   Path: ${componentPath}`);
     
