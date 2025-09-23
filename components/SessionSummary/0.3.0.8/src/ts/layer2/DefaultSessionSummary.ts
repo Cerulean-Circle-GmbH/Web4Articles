@@ -4,7 +4,7 @@
  */
 
 import { readFileSync, readdirSync, writeFileSync } from 'fs';
-import { join, basename, relative } from 'path';
+import { join, basename, relative, dirname } from 'path';
 import { execSync } from 'child_process';
 import { ISessionSummary, ComponentWork } from '../layer3/SessionSummary.interface.js';
 import { PDCAAnalysis, SessionAnalysisOptions, SessionSummaryResult } from '../layer3/PDCAAnalysis.interface.js';
@@ -12,6 +12,23 @@ import { PDCAAnalysis, SessionAnalysisOptions, SessionSummaryResult } from '../l
 export class DefaultSessionSummary implements ISessionSummary {
   constructor() {
     // Web4 Empty Constructor Principle
+  }
+
+  private findProjectRoot(): string {
+    let currentDir = process.cwd();
+    while (currentDir !== '/') {
+      try {
+        const gitDir = join(currentDir, '.git');
+        if (readdirSync(currentDir).includes('.git')) {
+          return currentDir;
+        }
+      } catch (error) {
+        // Continue searching
+      }
+      currentDir = join(currentDir, '..');
+    }
+    // Fallback to workspace if no .git found
+    return '/workspace';
   }
 
   findPDCAFiles(sessionPath: string): string[] {
@@ -140,7 +157,7 @@ export class DefaultSessionSummary implements ISessionSummary {
       return {
         sha: gitInfo.sha,
         filename: basename(filename),
-        relativePath: relative(process.cwd(), filename),
+        relativePath: relative(this.findProjectRoot(), filename),
         tronQuotes: this.extractTRONQuotes(content),
         qaDecisions: this.extractQADecisions(content),
         achievement: this.extractAchievement(content, filename),
@@ -170,7 +187,7 @@ export class DefaultSessionSummary implements ISessionSummary {
     summary += `**📊 PDCAs Analyzed:** ${analyses.length}\n\n`;
     
     if (options.includeDecisions) {
-      summary += this.generateEnhancedTable(analyses, options.branch || 'main');
+      summary += this.generateEnhancedTable(analyses, options.branch || 'main', options.sessionPath);
     } else {
       summary += this.generateBasicTable(analyses, options.branch || 'main');
     }
@@ -297,16 +314,28 @@ export class DefaultSessionSummary implements ISessionSummary {
     // TODO: Implement automatic component session link creation
   }
 
-  private generateEnhancedTable(analyses: PDCAAnalysis[], branch: string): string {
+  private generateEnhancedTable(analyses: PDCAAnalysis[], branch: string, sessionPath?: string): string {
     let table = `| **Git SHA** | **UTC Time** | **PDCA Source/Evidence** | **TRON Feedback** | **QA Decisions** | **Achievement** |\n`;
     table += `|-------------|--------------|--------------------------|-------------------|------------------|----------------|\n`;
     
     for (const analysis of analyses) {
-      const cleanPath = analysis.relativePath.replace(/^\.\.\/\.\.\/\.\.\//, '');
+      // analysis.relativePath is now relative from project root (fixed in analyzePDCA)
+      const cleanPath = analysis.relativePath;
       const githubUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/${analysis.sha}/${cleanPath}`;
-      const localPath = analysis.relativePath;
       
-      table += `| **${analysis.sha}** | **${analysis.utcTime}** | [GitHub](${githubUrl}) \\| [§/${localPath}](${localPath}) | ${analysis.tronQuotes} | ${analysis.qaDecisions} | ${analysis.achievement} |\n`;
+      // Generate CMM3 compliant dual links
+      const displayPath = `§/${cleanPath}`;
+      
+      // Calculate relative path from session summary file to target file
+      const projectRoot = this.findProjectRoot();
+      const targetAbsolutePath = join(projectRoot, cleanPath);
+      
+      // Session summary file location (inside session directory)
+      const sessionDir = sessionPath || process.cwd();
+      const sessionSummaryFile = join(sessionDir, 'session.summary.md');
+      const relativePath = relative(dirname(sessionSummaryFile), targetAbsolutePath);
+      
+      table += `| **${analysis.sha}** | **${analysis.utcTime}** | [GitHub](${githubUrl}) \\| [${displayPath}](${relativePath}) | ${analysis.tronQuotes} | ${analysis.qaDecisions} | ${analysis.achievement} |\n`;
     }
     
     return table;
