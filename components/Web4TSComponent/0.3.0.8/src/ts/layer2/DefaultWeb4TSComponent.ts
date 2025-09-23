@@ -1209,6 +1209,17 @@ Standards:
       }
     }
 
+    // Special case: Check for template-pattern files across components
+    // Even if file names differ, they might follow the same template pattern
+    if (presentCount === 1 && this.isTemplatePatternFile(entry)) {
+      const templateSimilarFiles = await this.findTemplateSimilarFiles(entry, componentSpecs, analyses);
+      if (templateSimilarFiles.length > 0) {
+        // Found template-similar files across components
+        const pattern = templateSimilarFiles.map(f => f.component.charAt(0)).join('+');
+        return `🟨 Similar (${pattern})`;
+      }
+    }
+
     // Read and compare file contents
     try {
       const fileContents = [];
@@ -1252,31 +1263,237 @@ Standards:
   }
 
   /**
-   * Check if files are similar (same template structure but adapted)
+   * Check if files are similar using simple template pattern detection
    * @cliHide
    */
   private checkTemplateSimilarity(fileContents: string[], entry: string): boolean {
     if (fileContents.length < 2) return false;
 
-    // For specific file types, use targeted similarity checks
+    // Simple template similarity checks
+    const checks = [
+      this.hasCommonInheritancePattern(fileContents),
+      this.hasExplicitTemplateReferences(fileContents),
+      this.hasCommonImportPatterns(fileContents),
+      this.hasSpecificTemplatePatterns(fileContents, entry)
+    ];
+    
+    // If 2+ checks pass, files are template-similar
+    const passedChecks = checks.filter(check => check).length;
+    return passedChecks >= 2;
+  }
+
+  /**
+   * Check if a file follows a template pattern that should be compared across components
+   * @cliHide
+   */
+  private isTemplatePatternFile(entry: string): boolean {
+    // CLI files in layer5 follow template patterns
+    if (entry.includes('src/ts/layer5/') && entry.endsWith('CLI.ts')) {
+      return true;
+    }
+    
+    // Default implementation files in layer2 follow patterns
+    if (entry.includes('src/ts/layer2/Default') && entry.endsWith('.ts')) {
+      return true;
+    }
+    
+    // Interface files often follow patterns
+    if (entry.endsWith('.interface.ts')) {
+      return true;
+    }
+    
+    return false;
+  }
+
+  /**
+   * Find template-similar files across components even with different names
+   * @cliHide
+   */
+  private async findTemplateSimilarFiles(entry: string, componentSpecs: any[], analyses: any[]): Promise<any[]> {
+    const similarFiles = [];
+    
+    // For CLI files, look for other CLI files in the same layer across components
+    if (entry.includes('CLI.ts') && entry.includes('src/ts/layer5/')) {
+      for (let i = 0; i < componentSpecs.length; i++) {
+        const analysis = analyses[i];
+        const spec = componentSpecs[i];
+        
+        // Find CLI files in this component's layer5
+        const cliFiles = Array.from(analysis.files as Set<string>).filter(file => 
+          file.includes('src/ts/layer5/') && file.endsWith('CLI.ts')
+        );
+        
+        for (const cliFile of cliFiles) {
+          if (cliFile !== entry) {
+            // Check if these CLI files follow the same template pattern
+            const thisFilePath = `/workspace/components/${spec.name}/${spec.version}/${cliFile}`;
+            const originalFilePath = this.findOriginalFilePath(entry, componentSpecs, analyses);
+            
+            if (await this.areTemplatePatternFiles(originalFilePath, thisFilePath)) {
+              similarFiles.push({
+                file: cliFile,
+                component: spec.name,
+                path: thisFilePath
+              });
+            }
+          }
+        }
+      }
+    }
+    
+    return similarFiles;
+  }
+
+  /**
+   * Find the path of the original file for comparison
+   * @cliHide
+   */
+  private findOriginalFilePath(entry: string, componentSpecs: any[], analyses: any[]): string | null {
+    for (let i = 0; i < componentSpecs.length; i++) {
+      const analysis = analyses[i];
+      const spec = componentSpecs[i];
+      
+      if (analysis.files.has(entry)) {
+        return `/workspace/components/${spec.name}/${spec.version}/${entry}`;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Check if two files follow the same template pattern
+   * @cliHide
+   */
+  private async areTemplatePatternFiles(filePath1: string | null, filePath2: string): Promise<boolean> {
+    if (!filePath1) return false;
+    
+    try {
+      const content1 = await fs.readFile(filePath1, 'utf8');
+      const content2 = await fs.readFile(filePath2, 'utf8');
+      
+      // Use simple template similarity detection
+      return this.checkTemplateSimilarity([content1, content2], path.basename(filePath1));
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * Check for common inheritance patterns (e.g., extends DefaultCLI)
+   * @cliHide
+   */
+  private hasCommonInheritancePattern(fileContents: string[]): boolean {
+    const inheritanceClasses = fileContents.map(content => 
+      this.extractClassExtension(content)
+    ).filter(cls => cls !== null);
+    
+    // If 2+ files extend the same base class, they're template-similar
+    if (inheritanceClasses.length >= 2 && new Set(inheritanceClasses).size === 1) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Extract the class that this file extends (e.g., "DefaultCLI")
+   * @cliHide
+   */
+  private extractClassExtension(content: string): string | null {
+    const match = content.match(/extends\s+(\w+)/);
+    return match ? match[1] : null;
+  }
+
+  /**
+   * Check for explicit template references in comments or metadata
+   * @cliHide
+   */
+  private hasExplicitTemplateReferences(fileContents: string[]): boolean {
+    const templatePatterns = [
+      /(?:template|Template):\s*(\w+)/i,
+      /based\s+on:\s*(\w+)/i,
+      /extends:\s*(\w+)/i
+    ];
+    
+    const templateReferences = fileContents.map(content => {
+      for (const pattern of templatePatterns) {
+        const match = content.match(pattern);
+        if (match) return match[1];
+      }
+      return null;
+    }).filter(ref => ref !== null);
+    
+    // If 2+ files reference the same template, they're similar
+    if (templateReferences.length >= 2 && new Set(templateReferences).size === 1) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Check for common import patterns indicating template usage
+   * @cliHide
+   */
+  private hasCommonImportPatterns(fileContents: string[]): boolean {
+    const importPatterns = fileContents.map(content => {
+      // Extract imports from template base classes
+      const imports = content.match(/import\s+{[^}]*}\s+from\s+['"](\.\.\/.*Default\w+)['"]/g);
+      if (imports) {
+        return imports.map(imp => {
+          const match = imp.match(/Default\w+/);
+          return match ? match[0] : null;
+        }).filter(imp => imp !== null);
+      }
+      return [];
+    });
+    
+    // Find common imports across files
+    const allImports = importPatterns.flat();
+    const importCounts = new Map<string, number>();
+    
+    for (const imp of allImports) {
+      importCounts.set(imp, (importCounts.get(imp) || 0) + 1);
+    }
+    
+    // If any import appears in 2+ files, they share template patterns
+    for (const count of importCounts.values()) {
+      if (count >= 2) return true;
+    }
+    
+    return false;
+  }
+
+  /**
+   * Check for specific template patterns based on file type
+   * @cliHide
+   */
+  private hasSpecificTemplatePatterns(fileContents: string[], entry: string): boolean {
+    // CLI files should extend DefaultCLI and call initWithComponentClass
+    if (entry.includes('CLI.ts') && !entry.includes('DefaultCLI.ts')) {
+      return fileContents.every(content => 
+        content.includes('extends DefaultCLI') && 
+        content.includes('initWithComponentClass')
+      );
+    }
+    
+    // Package.json files should have similar structure
     if (entry === 'package.json') {
       return this.checkPackageJsonSimilarity(fileContents);
     }
     
-    if (entry === 'tsconfig.json' || entry === 'vitest.config.ts') {
+    // Interface files should have similar patterns
+    if (entry.endsWith('.interface.ts')) {
+      return fileContents.every(content => 
+        content.includes('interface') && 
+        (content.includes('export') || content.includes('export default'))
+      );
+    }
+    
+    // Config files should have similar structure
+    if (entry === 'tsconfig.json' || entry.includes('config.ts')) {
       return this.checkConfigFileSimilarity(fileContents);
     }
     
-    if (entry.includes('DefaultCLI.ts')) {
-      return this.checkDefaultCLISimilarity(fileContents);
-    }
-    
-    if (entry.endsWith('.interface.ts') || entry.endsWith('.ts')) {
-      return this.checkTypeScriptFileSimilarity(fileContents);
-    }
-
-    // General structural similarity check
-    return this.checkGeneralStructuralSimilarity(fileContents);
+    return false;
   }
 
   /**
