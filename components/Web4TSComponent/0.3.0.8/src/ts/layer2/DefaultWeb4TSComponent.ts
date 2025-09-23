@@ -1429,10 +1429,10 @@ Standards:
       
       if (analysis.files.has(entry) || analysis.directories.has(entry.replace('/', ''))) {
         const githubPath = `components/${spec.name}/${spec.version}/${entry}`;
-        const localPath = `components/${spec.name}/${spec.version}/${entry}`;
         const githubUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/0306/${githubPath}`;
         
-        return `[${entry}](${githubUrl}) \\| [${localPath}](${localPath})`;
+        // GitHub link always shows "[GitHub]", local path is relative to version folder
+        return `[GitHub](${githubUrl}) \\| [${entry}](${entry})`;
       }
     }
     
