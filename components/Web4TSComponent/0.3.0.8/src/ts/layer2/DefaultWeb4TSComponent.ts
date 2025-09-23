@@ -950,7 +950,9 @@ Standards:
         
         // Filter out irrelevant files and directories from comparison
         if (entry.name === 'sessions' || 
+            entry.name === 'spec' ||
             entry.name.startsWith('spec.requirement') ||
+            entryPath.startsWith('spec/') ||
             entryPath.includes('temp-filename-test/temp-filename-test')) {
           continue; // Skip irrelevant content
         }
