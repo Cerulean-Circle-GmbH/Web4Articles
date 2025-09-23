@@ -77,7 +77,7 @@ export class DefaultSessionSummary implements ISessionSummary {
    * Rename session directory safely
    */
   private async renameSessionDirectory(oldPath: string, newPath: string): Promise<void> {
-    const { execSync } = require('child_process');
+    // Use imported execSync
     try {
       execSync(`git mv "${oldPath}" "${newPath}"`, { cwd: this.findProjectRoot() });
       console.log(`✅ Session directory renamed: ${basename(oldPath)} → ${basename(newPath)}`);
@@ -92,7 +92,7 @@ export class DefaultSessionSummary implements ISessionSummary {
    */
   private async renamePDCAFiles(sessionPath: string, oldSessionName: string, newSessionName: string): Promise<void> {
     const pdcaDir = join(sessionPath, 'pdca');
-    if (!require('fs').existsSync(pdcaDir)) return;
+    if (!existsSync(pdcaDir)) return;
     
     const oldUTCPart = oldSessionName.match(/UTC-\d{4}/)?.[0] || '';
     const newUTCPart = newSessionName.match(/UTC-\d{4}/)?.[0] || '';
@@ -100,7 +100,7 @@ export class DefaultSessionSummary implements ISessionSummary {
     if (!oldUTCPart || !newUTCPart) return;
     
     const files = readdirSync(pdcaDir).filter(f => f.includes(oldUTCPart));
-    const { execSync } = require('child_process');
+    // Use imported execSync
     
     for (const file of files) {
       const oldFile = join(pdcaDir, file);
@@ -120,7 +120,7 @@ export class DefaultSessionSummary implements ISessionSummary {
    */
   private async fixAllLinks(sessionPath: string, oldSessionName: string, newSessionName: string): Promise<void> {
     const pdcaDir = join(sessionPath, 'pdca');
-    if (!require('fs').existsSync(pdcaDir)) return;
+    if (!existsSync(pdcaDir)) return;
     
     const oldUTCPart = oldSessionName.match(/UTC-\d{4}/)?.[0] || '';
     const newUTCPart = newSessionName.match(/UTC-\d{4}/)?.[0] || '';

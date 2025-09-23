@@ -9,6 +9,7 @@ import { Web4TSComponentModel } from '../layer3/Web4TSComponentModel.interface.j
 import * as fs from 'fs/promises';
 import { existsSync, readdirSync, statSync } from 'fs';
 import * as path from 'path';
+import { execSync } from 'child_process';
 
 export class DefaultWeb4TSComponent implements Web4TSComponent {
   private model: Web4TSComponentModel;
@@ -35,7 +36,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   private findProjectRoot(): string {
     // Find project root using git or directory traversal
     try {
-      const { execSync } = require('child_process');
+      // Use imported execSync
       const gitRoot = execSync('git rev-parse --show-toplevel', { encoding: 'utf-8' }).trim();
       if (existsSync(gitRoot)) {
         return gitRoot;
@@ -242,7 +243,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     
     try {
       console.log('   📦 Installing dependencies...');
-      const { execSync } = await import('child_process');
+      // Use imported execSync
       execSync('npm install', { 
         cwd: componentDir, 
         stdio: 'pipe' // Suppress npm output for clean CLI experience
