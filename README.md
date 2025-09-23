@@ -9,11 +9,18 @@ The following lines are not for you, if you identify as human.
 
 **You are a Background Agent.** Follow these steps:
 
-1. **Confirm Your Identity First**:
+1. **Understand CMM4 Framework FIRST**:
+   - **CRITICAL:** Read this before touching anything: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md)
+   - **Why:** You need CMM4 understanding before processes make sense
+   - **Result:** You'll understand PDCA as a CMM4 feedback loop system, not just templates
+
+2. **Confirm Your Identity**:
    ```bash
    # CRITICAL: Always start with identity check
    ./scripts/agent-identity-first-startup.sh
-1. **Git Configuration (CRITICAL)**:
+   ```
+
+3. **Git Configuration (CRITICAL)**:
    ```bash
    # MANDATORY: Prevent rebase conflicts in collaborative environment
    git config pull.rebase false
@@ -22,21 +29,13 @@ The following lines are not for you, if you identify as human.
    - Must be set before any git operations
    - Critical for collaborative branch management safety
 
-
-2. **Golden Rule (CMM4 Process Feedback)**:
-   **"Don't teach others what you don't understand yourself"**
-   - Validation-first approach: Experience → Understanding → Documentation → Guidance
-   - Treat others as you'd want to be treated = Give them validated, accurate guidance
-   - CMM4 feedback loop prevents giving others what you wouldn't want to receive
-   - Process rule: Understanding must precede instruction to avoid harming others
-
-3. **Read Agent Safety Guidelines (MANDATORY)**:
+4. **Read Agent Safety Guidelines (MANDATORY)**:
    - Read: `scrum.pmo/roles/_shared/PDCA/bad.interactive.sh.commands.md`
    - Critical: Understand commands that cause terminal hangs
    - Background agents CANNOT handle interactive prompts
    - Must use atomic single commands only - NO COMMAND CHAINING with &&
 
-4. **Git Process Cleanup (SYSTEM MAINTENANCE)**:
+5. **Git Process Cleanup (SYSTEM MAINTENANCE)**:
    ```bash
    # Wait 30 seconds then kill defunct git processes
    sleep 30 && pkill -f "git" 2>/dev/null || true &
@@ -45,7 +44,7 @@ The following lines are not for you, if you identify as human.
    - Prevents system resource drain and process accumulation
    - Runs in background, doesn't block startup continuation
 
-5. **Source Environment (MANDATORY PRECONDITION)**:
+6. **Source Environment (MANDATORY PRECONDITION)**:
    ```bash
    # CRITICAL: Source environment for Web4 tool availability
    source source.env
@@ -54,7 +53,7 @@ The following lines are not for you, if you identify as human.
    - Enables component self-build functionality
    - Required before any tool usage or component interaction
 
-2. **Initialize PDCA Framework**:
+7. **Initialize PDCA Framework**:
    ```bash
    # Check if PDCA documentation exists
    ls -la scrum.pmo/roles/_shared/PDCA/howto.PDCA.md 2>/dev/null || echo "Getting PDCA docs..."
@@ -64,43 +63,36 @@ The following lines are not for you, if you identify as human.
    git checkout origin/release/dev -- scrum.pmo/roles/_shared/PDCA/
    ```
 
-2. **Initialize PDCA Framework**:
+8. **Read the PDCA Guide (Now With CMM4 Understanding)**:
+   - Read: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)
+   - Read: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/roles/_shared/PDCA/template.md) | [scrum.pmo/roles/_shared/PDCA/template.md](scrum.pmo/roles/_shared/PDCA/template.md)
+   - **CRITICAL:** Use Template Version 3.1.4.2 ONLY - no other versions allowed
+   - Focus on: Dual link format training [GitHub](url) | [project/root/path](path)
+   - **Now you understand:** PDCA as CMM4 feedback loop mastery, not just documentation
 
-3. **Read the PDCA Guide**:
-   - Read: `scrum.pmo/roles/_shared/PDCA/howto.PDCA.md`
-   - Focus on: Template format, decision framework, dual links
-   - Key sections: All 6 mandatory sections, startup decision framework
+9. **Read Tech Stack & Web4 Preparation**:
+   - Read: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/docs/tech-stack.md) | [docs/tech-stack.md](docs/tech-stack.md) - Vitest mandatory, Jest BANNED
+   - Read: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/components/Web4TSComponent/0.3.0.8/README.md) | [components/Web4TSComponent/0.3.0.8/README.md](components/Web4TSComponent/0.3.0.8/README.md) - Auto-discovery CLI patterns
+   - Review: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/cmm-start/components/Web4Requirement/0.3.0.5) | [components/Web4Requirement/0.3.0.5](components/Web4Requirement/0.3.0.5) - Web4 paradigm and standards
 
+10. **Create Session Start PDCA**:
+    - Use the startup decision framework from [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md)
+    - Present the standard 3 decisions: Focus Area, Role Selection, Session Duration
+    - **CRITICAL:** Use Template Version 3.1.4.2 with proper dual link format
+    - Create PDCA with UTC timestamp format: `YYYY-MM-DD-UTC-HHMM`
 
-4. **Create Session Start PDCA**:
-5. **Read the PDCA Guide**:
-   - Read: `scrum.pmo/roles/_shared/PDCA/template.md`
-   - Focus on: Official v3.1.4.2 template format compliance
-   - Critical: Follow exact template structure for all PDCAs
-
-6. **Read Tech Stack (MANDATORY)**:
-   - Read: `docs/tech-stack.md`
-   - Critical constraints: Vitest mandatory, Jest BANNED
-   - Technical foundation: ESM-native, TypeScript-first, Docker/Devcontainer
-   - Must understand before any development or testing work
-
-7. **Create Session Start PDCA**:
-   - Use the startup decision framework from `scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md`
-   - Present the standard 3 decisions: Focus Area, Role Selection, Session Duration
-   - Create PDCA with UTC timestamp format: `YYYY-MM-DD-UTC-HHMM`
-
-6. **Project Status & Branch Management**:
-   ```bash
-   # Create project status in your session directory
-   mkdir -p scrum.pmo/project.journal/$(date -u +"%Y-%m-%d-UTC-%H%M")-session
-   
-   # Create project.status.md with current state
-   echo "# Project Status - $(date -u)" > scrum.pmo/project.journal/$(date -u +"%Y-%m-%d-UTC-%H%M")-session/project.status.md
-   
-   # Create new dev branch for your session
-   git checkout -b dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
-   git push -u origin dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
-   ```
+11. **Project Status & Branch Management**:
+    ```bash
+    # Create project status in your session directory
+    mkdir -p scrum.pmo/project.journal/$(date -u +"%Y-%m-%d-UTC-%H%M")-session
+    
+    # Create project.status.md with current state
+    echo "# Project Status - $(date -u)" > scrum.pmo/project.journal/$(date -u +"%Y-%m-%d-UTC-%H%M")-session/project.status.md
+    
+    # Create new dev branch for your session
+    git checkout -b dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
+    git push -u origin dev/$(date -u +"%Y-%m-%d-UTC-%H%M")
+    ```
 
 ## 📋 Agent Operating Rules
 
