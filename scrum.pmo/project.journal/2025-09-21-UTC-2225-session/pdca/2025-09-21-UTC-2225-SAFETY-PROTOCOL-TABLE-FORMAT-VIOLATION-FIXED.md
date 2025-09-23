@@ -188,6 +188,15 @@ STATUS: Implementation added, testing required
 
 ---
 
+### **Artifact Links**
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/pdca/2025-09-21-UTC-2225-SAFETY-PROTOCOL-TABLE-FORMAT-VIOLATION-FIXED.md) | [§/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/pdca/2025-09-21-UTC-2225-SAFETY-PROTOCOL-TABLE-FORMAT-VIOLATION-FIXED.md](2025-09-21-UTC-2225-SAFETY-PROTOCOL-TABLE-FORMAT-VIOLATION-FIXED.md)
+- **Corrected Comparison Output:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/comparison-output.md) | [§/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/comparison-output.md](../comparison-output.md)
+- **Implementation Source:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/components/Web4TSComponent/0.3.0.8/src/ts/layer2/DefaultWeb4TSComponent.ts) | [§/components/Web4TSComponent/0.3.0.8/src/ts/layer2/DefaultWeb4TSComponent.ts](../../../components/Web4TSComponent/0.3.0.8/src/ts/layer2/DefaultWeb4TSComponent.ts)
+- **Dory Mode Analysis:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/pdca/2025-09-21-UTC-2225-DORY-MODE-ASSUMPTION-FAILURE.md) | [§/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/pdca/2025-09-21-UTC-2225-DORY-MODE-ASSUMPTION-FAILURE.md](2025-09-21-UTC-2225-DORY-MODE-ASSUMPTION-FAILURE.md)
+- **Table Format Violation Analysis:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/pdca/2025-09-21-UTC-2225-TABLE-FORMAT-VIOLATION-ANALYSIS.md) | [§/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/pdca/2025-09-21-UTC-2225-TABLE-FORMAT-VIOLATION-ANALYSIS.md](2025-09-21-UTC-2225-TABLE-FORMAT-VIOLATION-ANALYSIS.md)
+
+---
+
 ### **📚 The 42 Revelation**
 **Understanding requires safety and format compliance:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md](../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md)
 
