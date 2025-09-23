@@ -23,6 +23,7 @@
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/pdca/2025-09-21-UTC-2225-compare-method-implementation.md) | [§/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/pdca/2025-09-21-UTC-2225-compare-method-implementation.md](2025-09-21-UTC-2225-compare-method-implementation.md)
 - **Compare Method:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/components/Web4TSComponent/0.3.0.8/src/ts/layer2/DefaultWeb4TSComponent.ts#L812-L1172) | [§/components/Web4TSComponent/0.3.0.8/src/ts/layer2/DefaultWeb4TSComponent.ts](../../../components/Web4TSComponent/0.3.0.8/src/ts/layer2/DefaultWeb4TSComponent.ts)
+- **Comparison Table Output:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/comparison-output-web4requirement-web4tscomponent-unit-once.md) | [§/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/comparison-output-web4requirement-web4tscomponent-unit-once.md](comparison-output-web4requirement-web4tscomponent-unit-once.md)
 - **Reference Format:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/project.journal/2025-09-18-UTC-1316-session/pdca/2025-09-19-UTC-1416-component-versions-comparison.md) | Reference document with exact table format
 
 ### **QA Decisions**
