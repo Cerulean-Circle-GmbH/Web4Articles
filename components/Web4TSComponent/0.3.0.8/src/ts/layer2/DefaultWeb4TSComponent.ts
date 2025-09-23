@@ -1158,7 +1158,9 @@ Standards:
       };
       
       // Verify they actually follow the same template
-      if (await this.verifyTemplateGroup(cliGroup, componentSpecs, analyses)) {
+      const isValidGroup = await this.verifyTemplateGroup(cliGroup, componentSpecs, analyses);
+      
+      if (isValidGroup) {
         templateGroups.push(cliGroup);
       }
     }
