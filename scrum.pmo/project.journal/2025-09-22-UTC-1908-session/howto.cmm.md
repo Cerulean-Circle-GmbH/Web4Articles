@@ -10,6 +10,11 @@ You're probably eager to start working immediately. You see tools, you see code,
 
 This eagerness is exactly what creates chaos. You're exhibiting **CMM1 behavior** - reactive, ad-hoc approaches without understanding the system you're about to enter.
 
+**Essential Resources (Access When Ready):**
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/cmm-levels-summary.md) | [cmm-levels-summary.md](cmm-levels-summary.md) - Complete CMM understanding with bakery/NASA examples
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/session-learnings-dory-test.md) | [session-learnings-dory-test.md](session-learnings-dory-test.md) - Real CMM4 achievement examples and failure patterns
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/dory-symptoms-story.md) | [dory-symptoms-story.md](dory-symptoms-story.md) - Process memory loss prevention and recovery
+
 ## The Maturity Reality Check
 
 Before you touch anything, you need to understand **where you are** and **where you need to be:**
@@ -117,30 +122,14 @@ Now that you understand CMM levels, you can properly understand what PDCA actual
 - Real case studies of CMM violations causing disasters
 - The complete whitebox understanding process
 
-## Your Learning Resources - Go Deeper When Needed
+## Advanced Learning - When You Need Deeper Mastery
 
-### Understanding Through Real Experience
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/session-learnings-dory-test.md) | [session-learnings-dory-test.md](session-learnings-dory-test.md) - Complete previous session showing how CMM4 was achieved in practice
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/dory-symptoms-story.md) | [dory-symptoms-story.md](dory-symptoms-story.md) - How process memory loss happens and how to recover
+**Process Mastery:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md) | [2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md](2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md) - Never change perfect definitions without permission
 
-### Process Mastery Deep Dives
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md) | [2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md](2025-09-22-UTC-1912-definition-destruction-analysis-pdca.md) - Critical lesson: never change perfect definitions without permission
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md) | [2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md](2025-09-22-UTC-1913-cmm3-compliance-achievement-pdca.md) - How to achieve identical structure through systematic verification
+**Format Excellence:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1909-dual-link-format-correction-pdca.md) | [2025-09-22-UTC-1909-dual-link-format-correction-pdca.md](2025-09-22-UTC-1909-dual-link-format-correction-pdca.md) - Dual link formats and CMM3 chat compliance
 
-### Advanced Techniques
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1909-dual-link-format-correction-pdca.md) | [2025-09-22-UTC-1909-dual-link-format-correction-pdca.md](2025-09-22-UTC-1909-dual-link-format-correction-pdca.md) - Proper dual link formats and CMM3 chat compliance
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-session-startup-pdca.md) | [2025-09-22-UTC-1908-session-startup-pdca.md](2025-09-22-UTC-1908-session-startup-pdca.md) - How to initialize work sessions with proper protocols
+## Dory Mode Prevention
 
-## Dory Mode Prevention Protocol
-
-**If you start experiencing these symptoms:**
-- Forgetting format requirements you just learned
-- Making the same mistakes repeatedly  
-- Changing things without understanding why they work
-- Skipping process steps you know are important
-
-**Recovery Action:** **Stop immediately.** Re-read this document top-down, then go to [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/dory-symptoms-story.md) | [dory-symptoms-story.md](dory-symptoms-story.md) to understand what happened and how to recover.
-
-**Prevention:** Use the detailed learning materials to refresh your understanding whenever you feel uncertain. CMM4 requires continuous learning and understanding maintenance.
+**If you start forgetting things you just learned:** Re-read this document top-down, then check the prevention guide linked above. CMM4 requires continuous learning maintenance.
 
 **Ready?** Go read [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../../scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) with your new CMM4 understanding. Everything will make more sense now.
