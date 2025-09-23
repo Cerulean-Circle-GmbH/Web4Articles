@@ -22,7 +22,7 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1918-agent-improvement-requirements-pdca.md) | [2025-09-22-UTC-1918-agent-improvement-requirements-pdca.md](2025-09-22-UTC-1918-agent-improvement-requirements-pdca.md)
-- **Success Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/0306) | [dev/0306 branch success pattern](.)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/0306) | [dev/0306 branch success pattern](.)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Improvement requirements analysis through PDCA caca cycles
@@ -224,4 +224,3 @@ New agents following enhanced README will achieve dev/0306 success level through
 **"The answer to agent improvement is understanding what made previous success possible"** 🔧📊
 
 **Dual Links:**
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1918-agent-improvement-requirements-pdca.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1918-agent-improvement-requirements-pdca.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1918-agent-improvement-requirements-pdca.md)
