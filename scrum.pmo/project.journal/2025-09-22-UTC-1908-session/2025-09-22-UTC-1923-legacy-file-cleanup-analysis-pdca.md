@@ -68,14 +68,14 @@ Analyzing legacy files and outdated documentation accumulated during save/cmm-st
 
 ### **Comprehensive File Status Table**
 
-| **File Path** | **File Type** | **Current Status** | **Issue Description** | **Suggested Action** | **Priority** |
-|---------------|---------------|-------------------|----------------------|---------------------|--------------|
-| **session-learnings-dory-test.md** | Learning Doc | ✅ Current | Accurate previous session documentation | **KEEP** - Historical reference | Low |
-| **dory-symptoms-story.md** | Educational | ✅ Current | Valuable process memory loss prevention | **KEEP** - Educational value | Low |
-| **cmm-levels-summary.md** | Reference | ✅ Current | Updated with user corrections | **KEEP** - Core reference | Low |
-| **blank-agent-quickstart.md** | Legacy | ❌ Outdated | Superseded by howto.cmm.md | **ARCHIVE** - Redundant | Medium |
-| **blank-agent-learning-journey.md** | Legacy | ❌ Outdated | Content integrated into howto.cmm.md | **ARCHIVE** - Redundant | Medium |
-| **learning-index.md** | Legacy | ❌ Outdated | Navigation replaced by howto.cmm.md links | **ARCHIVE** - Redundant | Medium |
+| **File Path** | **File Type** | **Current Status** | **Issue Description** | **Suggested Action** | **Priority** | **Change Status** |
+|---------------|---------------|-------------------|----------------------|---------------------|--------------|------------------|
+| [session-learnings-dory-test.md](session-learnings-dory-test.md) | Learning Doc | ✅ Current | Accurate previous session documentation | **KEEP** - Historical reference | Low | ✅ No change needed |
+| [dory-symptoms-story.md](dory-symptoms-story.md) | Educational | ✅ Current | Valuable process memory loss prevention | **KEEP** - Educational value | Low | ✅ No change needed |
+| [cmm-levels-summary.md](cmm-levels-summary.md) | Reference | ✅ Current | Updated with user corrections | **KEEP** - Core reference | Low | ✅ No change needed |
+| ~~blank-agent-quickstart.md~~ | Legacy | ❌ Deleted | Superseded by howto.cmm.md | **DELETED** - Redundant | Medium | ✅ COMPLETED |
+| ~~blank-agent-learning-journey.md~~ | Legacy | ❌ Deleted | Content integrated into howto.cmm.md | **DELETED** - Redundant | Medium | ✅ COMPLETED |
+| ~~learning-index.md~~ | Legacy | ❌ Deleted | Navigation replaced by howto.cmm.md links | **DELETED** - Redundant | Medium | ✅ COMPLETED |
 | **2025-09-22-UTC-1910-cmm-understanding-consolidation-pdca.md** | Process | ⚠️ Redundant | Superseded by later compliance PDCAs | **ARCHIVE** - Historical | Low |
 | **2025-09-22-UTC-1911-cmm3-definition-compliance-fix-pdca.md** | Process | ⚠️ Redundant | Superseded by later analysis | **ARCHIVE** - Historical | Low |
 | **2025-09-22-UTC-1915-howto-cmm-optimization-pdca.md** | Process | ⚠️ Redundant | Process documented in final howto.cmm.md | **ARCHIVE** - Historical | Low |
