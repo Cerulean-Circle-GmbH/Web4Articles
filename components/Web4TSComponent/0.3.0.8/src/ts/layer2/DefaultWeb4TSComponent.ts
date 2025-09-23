@@ -1140,22 +1140,9 @@ Standards:
       }
     }
     
-    // Group template pattern files (CLI files with same template pattern)
-    const templateGroups = await this.groupTemplatePatternFiles(Array.from(allEntries), componentSpecs, analyses);
-    const processedEntries = new Set<string>();
-    
-    // Process template groups first
-    for (const group of templateGroups) {
-      if (group.files.length > 1) {
-        await this.generateTemplateGroupRow(group, componentSpecs, analyses);
-        group.files.forEach((file: string) => processedEntries.add(file));
-      }
-    }
-    
-    // Process remaining individual files
+    // Process all files individually (maintain table format)
     const sortedEntries = Array.from(allEntries).sort();
     for (const entry of sortedEntries) {
-      if (processedEntries.has(entry)) continue; // Skip already processed template groups
       
       let row = `| ${entry}`;
       
@@ -1363,14 +1350,12 @@ Standards:
       }
     }
 
-    // Special case: Check for template-pattern files across components
-    // Even if file names differ, they might follow the same template pattern
+    // Enhanced: Check for cross-component template similarity
+    // Files that exist in only one component but follow same template pattern as files in other components
     if (presentCount === 1 && this.isTemplatePatternFile(entry)) {
-      const templateSimilarFiles = await this.findTemplateSimilarFiles(entry, componentSpecs, analyses);
-      if (templateSimilarFiles.length > 0) {
-        // Found template-similar files across components
-        const pattern = templateSimilarFiles.map(f => f.component.charAt(0)).join('+');
-        return `🟨 Similar (${pattern})`;
+      const hasTemplateSimilarity = await this.hasCrossComponentTemplateSimilarity(entry, componentSpecs, analyses);
+      if (hasTemplateSimilarity) {
+        return '🟨 Similar';
       }
     }
 
@@ -1434,6 +1419,59 @@ Standards:
     // If 2+ checks pass, files are template-similar
     const passedChecks = checks.filter(check => check).length;
     return passedChecks >= 2;
+  }
+
+  /**
+   * Check if file has template similarity with files in other components
+   * @cliHide
+   */
+  private async hasCrossComponentTemplateSimilarity(entry: string, componentSpecs: any[], analyses: any[]): Promise<boolean> {
+    // For CLI files, check if other components have CLI files following same template
+    if (entry.includes('CLI.ts') && entry.includes('src/ts/layer5/')) {
+      const thisFileContent = await this.getFileContent(entry, componentSpecs, analyses);
+      if (!thisFileContent) return false;
+      
+      // Look for CLI files in other components
+      for (let i = 0; i < componentSpecs.length; i++) {
+        const analysis = analyses[i];
+        const spec = componentSpecs[i];
+        
+        const otherCLIFiles = Array.from(analysis.files as Set<string>)
+          .filter(file => file.includes('src/ts/layer5/') && file.endsWith('CLI.ts') && file !== entry);
+        
+        for (const otherCLIFile of otherCLIFiles) {
+          const otherFileContent = await this.getFileContent(otherCLIFile, [spec], [analysis]);
+          if (otherFileContent && this.checkTemplateSimilarity([thisFileContent, otherFileContent], entry)) {
+            return true; // Found template-similar CLI file in another component
+          }
+        }
+      }
+    }
+    
+    return false;
+  }
+
+  /**
+   * Get file content for cross-component comparison
+   * @cliHide
+   */
+  private async getFileContent(entry: string, componentSpecs: any[], analyses: any[]): Promise<string | null> {
+    for (let i = 0; i < componentSpecs.length; i++) {
+      const analysis = analyses[i];
+      const spec = componentSpecs[i];
+      
+      if (analysis.files.has(entry)) {
+        const componentPath = `/workspace/components/${spec.name}/${spec.version}`;
+        const filePath = path.join(componentPath, entry);
+        
+        try {
+          return await fs.readFile(filePath, 'utf8');
+        } catch (error) {
+          continue;
+        }
+      }
+    }
+    return null;
   }
 
   /**
