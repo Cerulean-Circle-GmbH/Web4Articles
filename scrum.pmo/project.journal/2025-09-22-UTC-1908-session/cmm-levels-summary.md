@@ -22,12 +22,12 @@
 - **Result:** 3x same definition = 3x same measured result (scientifically correct)
 - **Foundation:** Small automated well-tested first principles, OOP encapsulated building blocks
 
-### Level 4: Quantitatively Managed (Performance Paradox)
-- **State:** Perfect measurement reveals performance problems
-- **Reality:** Deterministic results that are too slow, expensive, or problematic
-- **Challenge:** Must prove CMM3 definition wrong to improve
-- **Paradox:** New changes start at Level 1 and initially worsen measurements
-- **Requirement:** Comprehensive understanding of definitions before improvement
+### Level 4: Quantitatively Managed (Feedback Loop Mastery)
+- **Main Characteristic:** Feedback loop - run CMM3 system multiple times
+- **Purpose:** Fully incorporate knowledge, understand all aspects as whitebox
+- **Method:** Pinpoint exact places for improvement without breaking previous success
+- **Protection:** Avoid CMM2 hallucinations about unanalyzed system parts
+- **Example:** PDCA cycle (Plan → Do → Check → Act → repeat until improvement achieved)
 
 ### Level 5: Optimizing
 - **State:** Continuous improvement of CMM3 definitions
@@ -51,23 +51,32 @@ Like an assembly line, the process halts when any state is undefined. If the wat
 
 CMM3 is built from small, automated, well-tested first principles - each component (flour dispenser, water heater, timer) is an OOP encapsulated correct building block. The entire system achieves assembly line precision through perfect definition of every step.
 
-**The Performance Paradox (CMM4)**
+**The Feedback Loop Mastery (CMM4)**
 
-Here's where it gets interesting. You've achieved CMM3 - your bread machine works perfectly, producing identical loaves every time. You can measure accurately and deterministically. But you may not like the deterministic result: perhaps the bread takes 3 hours to make, costs $5 per loaf, or uses too much energy.
+You've achieved CMM3 - your bread machine works perfectly, producing identical loaves every time. But now comes the main characteristic of CMM4: the feedback loop. You don't just run the machine once and declare victory. You run it multiple times, measuring everything, understanding every component interaction as a whitebox system.
 
-This is CMM4: the point where you can measure accurately and deterministically, but the deterministic result reveals performance issues - too slow, too expensive, or other problems. You have perfect measurement of an imperfect process.
+Through repeated execution with measurement, you discover performance issues: the bread takes 3 hours (too slow), costs $5 per loaf (too expensive), or uses excessive energy. But unlike CMM2 practitioners who would make random changes based on hallucinations, you now have comprehensive knowledge of the entire system.
 
-**The Innovation Challenge**
+**The Whitebox Understanding**
 
-To improve, you must prove the CMM3 definition wrong. This means providing a better definition that improves output performance in a deterministically measurable way. But here's the paradox: introducing any change is a new capability that starts at Level 1 (chaos) and initially worsens the measurement.
+The feedback loop reveals why every parameter exists: the 3-hour cycle allows gluten development, the 37°C water activates yeast optimally, the 8-minute knead creates proper texture. You understand the system completely - no black boxes, no guesswork, no CMM2 hallucinations about unanalyzed parts.
 
-If you modify the bread machine to reduce baking time, you've introduced chaos into a perfect system. The first attempt will likely fail - burnt bread, raw centers, inconsistent results. You've temporarily moved from CMM3 back to CMM1 for this new capability.
+This comprehensive understanding allows you to pinpoint exact places for improvement without breaking previous success. You can prove the CMM3 definition wrong not through random experimentation, but through precise knowledge of what can be optimized and why.
 
-**The Path to True Improvement**
+**The PDCA Example**
 
-To improve the measured result, changing requires comprehensive understanding of the definitions and their purpose first. You must understand why the original process used 3 hours, what each temperature and timing achieves, how ingredients interact. Only with this deep comprehension can you create a change that deterministically produces measurably improved results.
+PDCA itself is a CMM4 feedback loop system:
 
-This is why CMM4 is "quantitatively managed" - you're managing the transition from proven CMM3 definitions to improved CMM3 definitions through quantitative analysis and measurement. You're not just measuring the process; you're measuring the improvement of the process itself.
+1. **Plan:** Design improvement based on comprehensive system understanding
+2. **Do:** Execute the planned change on the CMM3 system  
+3. **Check:** Measure if the plan worked and you executed correctly
+4. **Act:** Address anything that didn't achieve improvement or worsened the situation
+
+Then repeat Check and Act until the CMM4 improvement is achieved. The cycle continues until you've proven the new definition superior through deterministic measurement.
+
+**The Innovation Safety**
+
+CMM4 protects against the paradox where introducing changes (new capabilities) temporarily returns you to Level 1 chaos. The feedback loop ensures you understand the system so completely that improvements are targeted and measured, not random and hopeful.
 
 ### The Programming Parallel
 
