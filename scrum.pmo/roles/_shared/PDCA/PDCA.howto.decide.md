@@ -18,7 +18,7 @@
 - If you're unsure about terminology → Check official wiki/documentation
 - If multiple valid interpretations exist → Present them as a decision
 - **Remember:** 42 - The answer to everything is often another question
-- **The 42 Revelation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md](../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md)
+- **The 42 Revelation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md](../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md)
 
 ---
 
@@ -27,7 +27,7 @@
 ### **Standard Format in PDCA Summary Section**
 ```markdown
 ### **QA Decisions**
-- [x] Completed decision: [Description of what was already decided BY TRON the QA user]
+- [x] Completed decision: [Description of what was already decided]
 - [ ] **Decision 1:** [Clear decision title]
   - a) [First option with rationale]
   - b) [Second option with rationale]
@@ -428,9 +428,9 @@ Before finalizing any PDCA:
 ---
 
 ### **📚 The 42 Testing Philosophy**
-**Regression Testing Story:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1220-regression-testing-story.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1220-regression-testing-story.md](../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1220-regression-testing-story.md)
+**Regression Testing Story:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1220-regression-testing-story.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1220-regression-testing-story.md](../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1220-regression-testing-story.md)
 
-**Testing Guide:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/unit0305/scrum.pmo/roles/Tester/howto.test.regression.cycles.md) | [§/scrum.pmo/roles/Tester/howto.test.regression.cycles.md](../../../Tester/howto.test.regression.cycles.md)
+**Testing Guide:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/Tester/howto.test.regression.cycles.md) | [§/scrum.pmo/roles/Tester/howto.test.regression.cycles.md](../../../Tester/howto.test.regression.cycles.md)
 
 **"Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."** 🤝✨
 
