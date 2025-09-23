@@ -19,8 +19,8 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-09-23-UTC-1027-start/pdca-start-session-initialization.md) | [./pdca-start-session-initialization.md](./pdca-start-session-initialization.md)
-- **Session Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-09-23-UTC-1027-start/) | [./](./.)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-09-23-UTC-1027-start/pdca-start-session-initialization.md) | [§/scrum.pmo/project.journal/2025-09-23-UTC-1027-start/pdca-start-session-initialization.md](pdca-start-session-initialization.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/scrum.pmo/project.journal/2025-09-23-UTC-1027-start/) | [§/scrum.pmo/project.journal/2025-09-23-UTC-1027-start/](.)
 - **Project Root:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/) | [../../../..](../../../..)
 
 ### **QA Decisions**
@@ -154,4 +154,3 @@ Created: /workspace/scrum.pmo/project.journal/2025-09-23-UTC-1027-start/
 
 **🎯 Web4Articles session initialized successfully with main branch foundation and comprehensive PDCA documentation 🚀📋**
 
-**"Every great journey begins with a single, well-documented step toward clarity and purpose."** 🔧📊

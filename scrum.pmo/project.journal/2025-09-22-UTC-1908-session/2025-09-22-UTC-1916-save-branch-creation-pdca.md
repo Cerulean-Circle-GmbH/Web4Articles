@@ -22,7 +22,7 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1916-save-branch-creation-pdca.md) | [2025-09-22-UTC-1916-save-branch-creation-pdca.md](2025-09-22-UTC-1916-save-branch-creation-pdca.md)
-- **Save Branch:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/cmm-start) | [save/cmm-start branch](.)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/cmm-start) | [save/cmm-start branch](.)
 - **CMM Learning:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md) | [howto.cmm.md](howto.cmm.md)
 
 ### **QA Decisions**
@@ -184,4 +184,3 @@ Save branches preserve:
 **Next PDCA Focus:** Test CMM learning system with blank agent using enhanced startup procedure
 
 **Dual Links:**
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1916-save-branch-creation-pdca.md) | [2025-09-22-UTC-1916-save-branch-creation-pdca.md](2025-09-22-UTC-1916-save-branch-creation-pdca.md)

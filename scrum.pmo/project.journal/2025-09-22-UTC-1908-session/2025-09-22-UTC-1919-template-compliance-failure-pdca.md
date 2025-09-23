@@ -20,7 +20,7 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1919-template-compliance-failure-pdca.md) | [2025-09-22-UTC-1919-template-compliance-failure-pdca.md](2025-09-22-UTC-1919-template-compliance-failure-pdca.md)
-- **Template Reality:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/roles/_shared/PDCA/template.md) | [scrum.pmo/roles/_shared/PDCA/template.md](scrum.pmo/roles/_shared/PDCA/template.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](../../roles/_shared/PDCA/template.md)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - Template compliance failure recognized, immediate correction required
@@ -140,4 +140,3 @@ No 3.1.4.2 version exists
 
 **🎯 Template compliance failure recognized - must achieve CMM3 before teaching CMM4 🔧📊**
 
-**"The answer to teaching integrity is demonstrating the standards you claim to follow"** 🔧📊

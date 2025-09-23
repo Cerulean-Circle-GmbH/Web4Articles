@@ -14,15 +14,15 @@
 **🚨 Issues:** PDCA trigger activated - previous response analysis required  
 
 **📎 Previous Commit:** Pending - CMM levels summary update  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/4dc81f90/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-technical-development-session-plan-pdca.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-technical-development-session-plan-pdca.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-technical-development-session-plan-pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/4dc81f90/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-technical-development-session-plan-pdca.md) | [§/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1908-technical-development-session-plan-pdca.md](2025-09-22-UTC-1908-technical-development-session-plan-pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1910-cmm-understanding-consolidation-pdca.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1910-cmm-understanding-consolidation-pdca.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1910-cmm-understanding-consolidation-pdca.md)
-- **CMM Summary:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/cmm-levels-summary.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/cmm-levels-summary.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/cmm-levels-summary.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1910-cmm-understanding-consolidation-pdca.md) | [§/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1910-cmm-understanding-consolidation-pdca.md](2025-09-22-UTC-1910-cmm-understanding-consolidation-pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/cmm-levels-summary.md) | [§/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/cmm-levels-summary.md](cmm-levels-summary.md)
 
 ### **QA Decisions**
 **All clear, no decisions to make** - CMM understanding consolidation complete with user guidance integration
@@ -213,4 +213,3 @@ By consolidating CMM definitions using CMM3 principles, we achieve:
 **Next PDCA Focus:** Apply consolidated CMM understanding to technical development work
 
 **Dual Links:**
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-22-UTC-1908/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1910-cmm-understanding-consolidation-pdca.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1910-cmm-understanding-consolidation-pdca.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/2025-09-22-UTC-1910-cmm-understanding-consolidation-pdca.md)
