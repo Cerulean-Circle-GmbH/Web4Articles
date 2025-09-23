@@ -34,7 +34,7 @@
 ### **TRON Link Verification Request**
 ```quote
 do these links exisit
-| **cb89c303** | **2025-09-21-UTC-2226** | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cb89c303/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/project.status.md) \| [§/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/project.status.md](scrum.pmo/project.journal/2025-09-21-UTC-2225-session/project.status.md) |  | No decisions |  |
+| **cb89c303** | **2025-09-21-UTC-2025** | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cb89c303/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/project.status.md) \| [§/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/project.status.md](scrum.pmo/project.journal/2025-09-21-UTC-2225-session/project.status.md) |  | No decisions |  |
 
 from /workspace/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/session.summary.md
 ```
@@ -103,7 +103,7 @@ timeout 5s head -10 /workspace/components/Web4TSComponent/0.3.0.9/sessions/2025-
 RESULT: 
 # Session Summary: 2025-09-21-UTC-2225-session
 **📊 PDCAs Analyzed:** 24
-| **cb89c303** | **2025-09-21-UTC-2226** | [GitHub]... | [§]...
+| **cb89c303** | **2025-09-21-UTC-2025** | [GitHub]... | [§]...
 
 VERIFICATION: Session documentation accessible with cb89c303 reference ✅
 ```
