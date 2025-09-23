@@ -1095,11 +1095,23 @@ Standards:
       }
     }
     
-    // Sort entries
-    const sortedEntries = Array.from(allEntries).sort();
+    // Group template pattern files (CLI files with same template pattern)
+    const templateGroups = await this.groupTemplatePatternFiles(Array.from(allEntries), componentSpecs, analyses);
+    const processedEntries = new Set<string>();
     
-    // Generate rows for each entry
+    // Process template groups first
+    for (const group of templateGroups) {
+      if (group.files.length > 1) {
+        await this.generateTemplateGroupRow(group, componentSpecs, analyses);
+        group.files.forEach((file: string) => processedEntries.add(file));
+      }
+    }
+    
+    // Process remaining individual files
+    const sortedEntries = Array.from(allEntries).sort();
     for (const entry of sortedEntries) {
+      if (processedEntries.has(entry)) continue; // Skip already processed template groups
+      
       let row = `| ${entry}`;
       
       let presentCount = 0;
@@ -1123,6 +1135,101 @@ Standards:
       row += ` | ${purpose} | ${similarity} |`;
       console.log(row);
     }
+  }
+
+  /**
+   * Group template pattern files that should be compared together
+   * @cliHide
+   */
+  private async groupTemplatePatternFiles(allEntries: string[], componentSpecs: any[], analyses: any[]): Promise<any[]> {
+    const templateGroups = [];
+    
+    // Group CLI files in layer5
+    const cliFiles = allEntries.filter(entry => 
+      entry.includes('src/ts/layer5/') && entry.endsWith('CLI.ts')
+    );
+    
+    if (cliFiles.length > 1) {
+      // Check if CLI files follow same template pattern
+      const cliGroup = {
+        type: 'CLI Template',
+        files: cliFiles,
+        pattern: 'extends DefaultCLI'
+      };
+      
+      // Verify they actually follow the same template
+      if (await this.verifyTemplateGroup(cliGroup, componentSpecs, analyses)) {
+        templateGroups.push(cliGroup);
+      }
+    }
+    
+    return templateGroups;
+  }
+
+  /**
+   * Verify that files in a group follow the same template pattern
+   * @cliHide
+   */
+  private async verifyTemplateGroup(group: any, componentSpecs: any[], analyses: any[]): Promise<boolean> {
+    const fileContents = [];
+    
+    // Collect contents of all files in the group
+    for (const file of group.files) {
+      for (let i = 0; i < componentSpecs.length; i++) {
+        const analysis = analyses[i];
+        const spec = componentSpecs[i];
+        
+        if (analysis.files.has(file)) {
+          const componentPath = `/workspace/components/${spec.name}/${spec.version}`;
+          const filePath = path.join(componentPath, file);
+          
+          try {
+            const content = await fs.readFile(filePath, 'utf8');
+            fileContents.push(content);
+            break; // Found the file in this component
+          } catch (error) {
+            continue;
+          }
+        }
+      }
+    }
+    
+    // Use simple template similarity detection
+    if (fileContents.length >= 2) {
+      return this.checkTemplateSimilarity(fileContents, group.files[0]);
+    }
+    
+    return false;
+  }
+
+  /**
+   * Generate a row for template group (files that follow same template pattern)
+   * @cliHide
+   */
+  private async generateTemplateGroupRow(group: any, componentSpecs: any[], analyses: any[]): Promise<void> {
+    let row = `| ${group.type} (${group.files.join(', ')})`;
+    
+    let presentCount = 0;
+    const presencePattern = [];
+    
+    // Check presence across components
+    for (const analysis of analyses) {
+      const hasAnyFile = group.files.some((file: string) => analysis.files.has(file));
+      const symbol = hasAnyFile ? '✅' : '❌';
+      row += ` | ${symbol}`;
+      
+      if (hasAnyFile) {
+        presentCount++;
+        presencePattern.push(analysis.name.charAt(0));
+      }
+    }
+    
+    // Template groups are always similar
+    const purpose = 'CLI template pattern';
+    const similarity = presentCount >= 2 ? `🟨 Similar (${presencePattern.join('+')})` : `🟪 Unique – ${presencePattern[0]}`;
+    
+    row += ` | ${purpose} | ${similarity} |`;
+    console.log(row);
   }
 
   /**
