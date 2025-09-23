@@ -22,16 +22,16 @@
 
 | Entry (file/dir) | Web4Requirement 0.3.0.5 | Web4TSComponent 0.3.0.8 | Unit 0.3.0.5 | Purpose | Similarity |
 |---|---|---|---|---|---|
-| README.md | ❌ | ✅ | ✅ | Component documentation | 🟨 Similar |
+| README.md | ❌ | ✅ | ✅ | Component documentation | 🟥 Different (W+U) |
 | dist/ | ❌ | ✅ | ❌ | Compiled JS and type declarations | 🟪 Unique – W |
 | node_modules/ | ❌ | ✅ | ❌ | Installed dependencies directory | 🟪 Unique – W |
-| package-lock.json | ✅ | ✅ | ✅ | Deterministic dependency lockfile | 🟩 Identical |
-| package.json | ✅ | ✅ | ✅ | Package metadata, scripts, entry points | 🟩 Identical |
+| package-lock.json | ✅ | ✅ | ✅ | Deterministic dependency lockfile | 🟥 Different (W+W+U) |
+| package.json | ✅ | ✅ | ✅ | Package metadata, scripts, entry points | 🟨 Similar |
 | requirement | ✅ | ❌ | ❌ | Component file | 🟪 Unique – W |
 | src/ | ✅ | ✅ | ✅ | Source code (layers 2/3/4/5) | 🟩 Identical |
 | src/ts/ | ❌ | ❌ | ❌ | Component file | 🟥 Different |
 | src/ts/layer2/ | ❌ | ❌ | ❌ | Implementation layer | 🟥 Different |
-| src/ts/layer2/DefaultCLI.ts | ✅ | ✅ | ✅ | CLI entry | 🟩 Identical |
+| src/ts/layer2/DefaultCLI.ts | ✅ | ✅ | ✅ | CLI entry | 🟥 Different (W+W+U) |
 | src/ts/layer2/DefaultCLI.ts.unit | ✅ | ❌ | ❌ | CLI entry | 🟪 Unique – W |
 | src/ts/layer2/DefaultRequirement.ts | ✅ | ❌ | ❌ | Core component implementation | 🟪 Unique – W |
 | src/ts/layer2/DefaultStorage.ts | ❌ | ❌ | ✅ | Core component implementation | 🟪 Unique – U |
@@ -48,18 +48,18 @@
 | src/ts/layer3/GitPositioning.interface.ts | ❌ | ❌ | ✅ | TypeScript interface definition | 🟪 Unique – U |
 | src/ts/layer3/GitTextIORScenario.interface.ts | ❌ | ❌ | ✅ | TypeScript interface definition | 🟪 Unique – U |
 | src/ts/layer3/IOR.interface.ts | ❌ | ❌ | ✅ | TypeScript interface definition | 🟪 Unique – U |
-| src/ts/layer3/MethodInfo.interface.ts | ✅ | ✅ | ✅ | TypeScript interface definition | 🟩 Identical |
-| src/ts/layer3/Model.interface.ts | ❌ | ✅ | ✅ | TypeScript interface definition | 🟨 Similar |
+| src/ts/layer3/MethodInfo.interface.ts | ✅ | ✅ | ✅ | TypeScript interface definition | 🟨 Similar |
+| src/ts/layer3/Model.interface.ts | ❌ | ✅ | ✅ | TypeScript interface definition | 🟨 Similar (W+U) |
 | src/ts/layer3/NamedLink.interface.ts | ❌ | ❌ | ✅ | TypeScript interface definition | 🟪 Unique – U |
 | src/ts/layer3/Requirement.interface.ts | ✅ | ❌ | ❌ | TypeScript interface definition | 🟪 Unique – W |
 | src/ts/layer3/RequirementIdentifier.type.ts | ✅ | ❌ | ❌ | Interface layer | 🟪 Unique – W |
-| src/ts/layer3/Scenario.interface.ts | ❌ | ✅ | ✅ | TypeScript interface definition | 🟨 Similar |
+| src/ts/layer3/Scenario.interface.ts | ❌ | ✅ | ✅ | TypeScript interface definition | 🟨 Similar (W+U) |
 | src/ts/layer3/Storage.interface.ts | ❌ | ❌ | ✅ | TypeScript interface definition | 🟪 Unique – U |
 | src/ts/layer3/StorageModel.interface.ts | ❌ | ❌ | ✅ | TypeScript interface definition | 🟪 Unique – U |
 | src/ts/layer3/StorageScenario.interface.ts | ❌ | ❌ | ✅ | TypeScript interface definition | 🟪 Unique – U |
 | src/ts/layer3/TypeM3.enum.ts | ❌ | ❌ | ✅ | Interface layer | 🟪 Unique – U |
-| src/ts/layer3/UUID.interface.ts | ✅ | ❌ | ✅ | TypeScript interface definition | 🟨 Similar |
-| src/ts/layer3/UUIDv4.class.ts | ✅ | ❌ | ✅ | Interface layer | 🟨 Similar |
+| src/ts/layer3/UUID.interface.ts | ✅ | ❌ | ✅ | TypeScript interface definition | 🟩 Identical |
+| src/ts/layer3/UUIDv4.class.ts | ✅ | ❌ | ✅ | Interface layer | 🟩 Identical |
 | src/ts/layer3/Unit.interface.ts | ❌ | ❌ | ✅ | TypeScript interface definition | 🟪 Unique – U |
 | src/ts/layer3/UnitIdentifier.type.ts | ❌ | ❌ | ✅ | Interface layer | 🟪 Unique – U |
 | src/ts/layer3/UnitModel.interface.ts | ❌ | ❌ | ✅ | TypeScript interface definition | 🟪 Unique – U |
@@ -68,8 +68,8 @@
 | src/ts/layer3/Web4TSComponent.interface.ts | ❌ | ✅ | ❌ | TypeScript interface definition | 🟪 Unique – W |
 | src/ts/layer3/Web4TSComponentModel.interface.ts | ❌ | ✅ | ❌ | TypeScript interface definition | 🟪 Unique – W |
 | src/ts/layer4/ | ❌ | ❌ | ❌ | Service layer | 🟥 Different |
-| src/ts/layer4/TSCompletion.ts | ✅ | ✅ | ✅ | Service layer | 🟩 Identical |
-| src/ts/layer4/TSCompletion.ts.unit | ✅ | ❌ | ✅ | Service layer | 🟨 Similar |
+| src/ts/layer4/TSCompletion.ts | ✅ | ✅ | ✅ | Service layer | 🟨 Similar |
+| src/ts/layer4/TSCompletion.ts.unit | ✅ | ❌ | ✅ | Service layer | 🟩 Identical |
 | src/ts/layer5/ | ❌ | ❌ | ❌ | CLI layer | 🟥 Different |
 | src/ts/layer5/RequirementCLI.ts | ✅ | ❌ | ❌ | CLI entry | 🟪 Unique – W |
 | src/ts/layer5/UnitCLI.ts | ❌ | ❌ | ✅ | CLI entry | 🟪 Unique – U |
@@ -85,10 +85,10 @@
 | test/web4tscomponent.command-chaining.test.ts | ❌ | ✅ | ❌ | Component test specs | 🟪 Unique – W |
 | test/web4tscomponent.file-protection.test.ts | ❌ | ✅ | ❌ | Component test specs | 🟪 Unique – W |
 | test/web4tscomponent.functionality.test.ts | ❌ | ✅ | ❌ | Component test specs | 🟪 Unique – W |
-| tsconfig.json | ✅ | ✅ | ✅ | TypeScript compiler configuration | 🟩 Identical |
+| tsconfig.json | ✅ | ✅ | ✅ | TypeScript compiler configuration | 🟥 Different (W+W+U) |
 | unit | ❌ | ❌ | ✅ | Component file | 🟪 Unique – U |
-| vitest.config.ts | ✅ | ✅ | ✅ | Vitest test runner configuration | 🟩 Identical |
+| vitest.config.ts | ✅ | ✅ | ✅ | Vitest test runner configuration | 🟥 Different (W+W+U) |
 | web4tscomponent | ❌ | ✅ | ❌ | Component file | 🟪 Unique – W |
-| °folder.unit | ✅ | ❌ | ✅ | Component file | 🟨 Similar |
+| °folder.unit | ✅ | ❌ | ✅ | Component file | 🟨 Similar (W+U) |
 
 ✅ Component comparison analysis complete
