@@ -710,10 +710,47 @@ Standards:
     (this.model as any).contextVersion = version;
     (this.model as any).contextPath = componentPath;
     
+    // ENHANCED: Load target component class for auto-discovery
+    await this.loadTargetComponentForAutoDiscovery(component, version, componentPath);
+    
     console.log(`✅ Component context loaded: ${component} v${version}`);
     console.log(`   Path: ${componentPath}`);
     
     return this; // Enable chaining
+  }
+
+  /**
+   * Load target component class for universal auto-discovery
+   * Enables auto-discovery to serve ALL components, not just CLI component
+   * @cliHide
+   */
+  private async loadTargetComponentForAutoDiscovery(component: string, version: string, componentPath: string): Promise<void> {
+    try {
+      // Try to load the target component's main implementation
+      const targetTSPath = path.join(componentPath, 'src', 'ts', 'layer2', `Default${component}.ts`);
+      const targetJSPath = path.join(componentPath, 'dist', 'ts', 'layer2', `Default${component}.js`);
+      
+      if (existsSync(targetTSPath)) {
+        let targetModule;
+        // Try built JS first, fallback to TS
+        if (existsSync(targetJSPath)) {
+          targetModule = await import(targetJSPath);
+        } else {
+          targetModule = await import(targetTSPath);
+        }
+        const targetClass = targetModule[`Default${component}`];
+        
+        if (targetClass) {
+          // Switch auto-discovery to target component
+          (this as any).componentClass = targetClass;
+          (this as any).componentName = component;
+          console.log(`   🔍 Auto-discovery enabled for ${component} methods`);
+        }
+      }
+    } catch (error) {
+      // Fallback to CLI component auto-discovery (backward compatibility)
+      console.log(`   ⚠️ Using CLI auto-discovery (${component} methods not dynamically loadable)`);
+    }
   }
 
   /**
