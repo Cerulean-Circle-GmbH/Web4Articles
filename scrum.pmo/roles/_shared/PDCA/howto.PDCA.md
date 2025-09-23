@@ -166,6 +166,29 @@
 
 ---
 
+## **🚨 GIT COMMIT MESSAGE REQUIREMENT - CRITICAL**
+
+### **MANDATORY Format:**
+```bash
+git commit -m "PDCA: [Title from PDCA header]"
+```
+
+### **Examples:**
+- `git commit -m "PDCA: Branch update coordination - cherry-pick strategy"`
+- `git commit -m "PDCA: Session Summary - Complete regression resolution"`
+- `git commit -m "PDCA: Test component isolation implementation"`
+
+### **Purpose:**
+- **Traceability:** Links commits directly to PDCA documentation
+- **Robustness:** Clear connection between changes and reasoning
+- **CMM3 Compliance:** Consistent, reproducible commit messages
+- **Project Navigation:** Easy to find related documentation from git history
+
+### **Chat Reporting:**
+When reporting git operations in chat, always include the exact commit message used.
+
+---
+
 ## **🔄 DUAL LINK SYSTEM REQUIREMENTS**
 
 ### **Format Standard (CRITICAL)**
