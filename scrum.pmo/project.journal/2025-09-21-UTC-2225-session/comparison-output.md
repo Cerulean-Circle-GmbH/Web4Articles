@@ -22,6 +22,7 @@
 
 | Entry (file/dir) | Web4Requirement 0.3.0.5 | Web4TSComponent 0.3.0.8 | Unit 0.3.0.5 | Purpose | Similarity |
 |---|---|---|---|---|---|
+| CLI Template (src/ts/layer5/RequirementCLI.ts, src/ts/layer5/Web4TSComponentCLI.ts, src/ts/layer5/UnitCLI.ts) | ✅ | ✅ | ✅ | CLI template pattern | 🟨 Similar (W+W+U) |
 | README.md | ❌ | ✅ | ✅ | Component documentation | 🟥 Different (W+U) |
 | dist/ | ❌ | ✅ | ❌ | Compiled JS and type declarations | 🟪 Unique – W |
 | node_modules/ | ❌ | ✅ | ❌ | Installed dependencies directory | 🟪 Unique – W |
@@ -71,9 +72,6 @@
 | src/ts/layer4/TSCompletion.ts | ✅ | ✅ | ✅ | Service layer | 🟥 Different (W+W+U) |
 | src/ts/layer4/TSCompletion.ts.unit | ✅ | ❌ | ✅ | Service layer | 🟩 Identical |
 | src/ts/layer5/ | ❌ | ❌ | ❌ | CLI layer | 🟥 Different |
-| src/ts/layer5/RequirementCLI.ts | ✅ | ❌ | ❌ | CLI entry | 🟪 Unique – W |
-| src/ts/layer5/UnitCLI.ts | ❌ | ❌ | ✅ | CLI entry | 🟪 Unique – U |
-| src/ts/layer5/Web4TSComponentCLI.ts | ❌ | ✅ | ❌ | CLI entry | 🟪 Unique – W |
 | temp-filename-test/ | ❌ | ❌ | ✅ | Component file | 🟪 Unique – U |
 | temp-filename-test/M2.Class.unit | ❌ | ❌ | ✅ | Component file | 🟪 Unique – U |
 | temp-filename-test/Test.Name.unit | ❌ | ❌ | ✅ | Component file | 🟪 Unique – U |
