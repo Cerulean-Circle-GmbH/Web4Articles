@@ -23,7 +23,7 @@
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/pdca/2025-09-21-UTC-2225-unit-component-cleanup-comparison-filtering.md) | [§/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/pdca/2025-09-21-UTC-2225-unit-component-cleanup-comparison-filtering.md](2025-09-21-UTC-2225-unit-component-cleanup-comparison-filtering.md)
 - **Original Comparison (with garbage):** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/comparison-output-web4requirement-web4tscomponent-unit-once.md) | [§/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/comparison-output-web4requirement-web4tscomponent-unit-once.md](comparison-output-web4requirement-web4tscomponent-unit-once.md)
-- **Filtered Comparison (clean):** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/comparison-output-filtered-clean.md) | [§/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/comparison-output-filtered-clean.md](comparison-output-filtered-clean.md)
+- **Filtered Comparison (clean):** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/comparison-output-fully-filtered.md) | [§/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/comparison-output-fully-filtered.md](comparison-output-fully-filtered.md)
 - **Cleaned Unit Component:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/0306/components/Unit/0.3.0.5) | [§/components/Unit/0.3.0.5](../../../components/Unit/0.3.0.5)
 
 ### **QA Decisions**
@@ -100,13 +100,16 @@ ls -la temp-filename-test/temp-filename-test/
 // Enhanced analyzeFileStructure with filtering:
 // Filter out irrelevant files and directories from comparison
 if (entry.name === 'sessions' || 
+    entry.name === 'spec' ||
     entry.name.startsWith('spec.requirement') ||
+    entryPath.startsWith('spec/') ||
     entryPath.includes('temp-filename-test/temp-filename-test')) {
   continue; // Skip irrelevant content
 }
 
 // Filtering criteria:
 ✅ sessions: Filtered out (text traceability, not component architecture)
+✅ spec/: Filtered out (requirements/spec artifacts, not component structure)
 ✅ spec.requirement: Filtered out (documentation, not component structure)
 ✅ temp-filename-test/temp-filename-test: Filtered out (garbage directories)
 ✅ node_modules, dist, .git: Already filtered (build artifacts)
@@ -118,8 +121,8 @@ if (entry.name === 'sessions' ||
 ./web4tscomponent compare "Web4Requirement 0.3.0.5, Web4TSComponent 0.3.0.8, Unit 0.3.0.5, ONCE 0.2.0.0"
 
 # Filtering verification:
-grep -c "sessions\|temp-filename-test/temp-filename-test" comparison-output-filtered-clean.md
-# Result: 0 matches (successfully filtered)
+grep -c "sessions\|temp-filename-test/temp-filename-test\|spec/" comparison-output-fully-filtered.md
+# Result: 0 matches (successfully filtered all irrelevant content)
 
 # Clean output focuses on:
 ✅ Package metadata and dependencies
@@ -134,8 +137,8 @@ grep -c "sessions\|temp-filename-test/temp-filename-test" comparison-output-filt
 # Original comparison (with garbage):
 - **Original Comparison:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/comparison-output-web4requirement-web4tscomponent-unit-once.md) | [§/comparison-output-web4requirement-web4tscomponent-unit-once.md](comparison-output-web4requirement-web4tscomponent-unit-once.md)
 
-# Filtered comparison (clean):
-- **Filtered Comparison:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/comparison-output-filtered-clean.md) | [§/comparison-output-filtered-clean.md](comparison-output-filtered-clean.md)
+# Fully filtered comparison (clean):
+- **Fully Filtered Comparison:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0306/scrum.pmo/project.journal/2025-09-21-UTC-2225-session/comparison-output-fully-filtered.md) | [§/comparison-output-fully-filtered.md](comparison-output-fully-filtered.md)
 ```
 
 ---
