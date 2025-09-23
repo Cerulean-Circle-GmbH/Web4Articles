@@ -14,14 +14,14 @@
 **🚨 Issues:** Extensive zombie process accumulation identified, system impact assessment needed  
 
 **📎 Previous Commit:** dc3afa8e - PDCA: Session Startup - User decisions implemented and work handover understood  
-**🔗 Previous PDCA:** [GitHub](TBD) | [scrum.pmo/project.journal/2025-09-23-UTC-1843-session/2025-09-23-UTC-1843-session-startup.pdca.md](scrum.pmo/project.journal/2025-09-23-UTC-1843-session/2025-09-23-UTC-1843-session-startup.pdca.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dc3afa8e/scrum.pmo/project.journal/2025-09-23-UTC-1843-session/2025-09-23-UTC-1843-session-startup.pdca.md) | [scrum.pmo/project.journal/2025-09-23-UTC-1843-session/2025-09-23-UTC-1843-session-startup.pdca.md](scrum.pmo/project.journal/2025-09-23-UTC-1843-session/2025-09-23-UTC-1843-session-startup.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](TBD) | [scrum.pmo/project.journal/2025-09-23-UTC-1843-session/2025-09-23-UTC-1911-zombie-process-analysis.pdca.md](scrum.pmo/project.journal/2025-09-23-UTC-1843-session/2025-09-23-UTC-1911-zombie-process-analysis.pdca.md)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/1b88551a/scrum.pmo/project.journal/2025-09-23-UTC-1843-session/2025-09-23-UTC-1911-zombie-process-analysis.pdca.md) | [scrum.pmo/project.journal/2025-09-23-UTC-1843-session/2025-09-23-UTC-1911-zombie-process-analysis.pdca.md](scrum.pmo/project.journal/2025-09-23-UTC-1843-session/2025-09-23-UTC-1911-zombie-process-analysis.pdca.md)
 - **System Analysis Data:** Comprehensive investigation results included in DO section
 
 ### **QA Decisions**
