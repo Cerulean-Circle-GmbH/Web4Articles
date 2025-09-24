@@ -1,7 +1,7 @@
 # 📋 **PDCA Cycle: Developer Role Transition - Sprint 21 Web4TSRanger v3.0 Technical Development**
 
 **🗓️ Date:** 2025-09-24-UTC-1028  
-**🎯 Objective:** Transition to Developer role and analyze Sprint 21 ONCE kernel implementation opportunities for extended multi-day session  
+**🎯 Objective:** Post-merge development planning with ONCE 0.3.0.4 foundation and Unit 0.3.0.6 integration for Sprint 21 implementation  
 **🎯 Template Version:** 3.1  
 
 **👤 Agent Role:** Developer → Technical Implementation and Component Development  
@@ -9,7 +9,7 @@
 **🎯 Project Journal Session:** 2025-09-24-UTC-1028-session → Technical Development Focus  
 **🎯 Sprint:** Sprint-21 Analysis → Web4TSRanger v3.0 Planning  
 **✅ Task:** ONCE Kernel Foundation and Technical Development Assessment  
-**🚨 Issues:** ONCE kernel needs implementation, TSRanger has critical bugs  
+**🚨 Issues:** Post-merge development direction needed, ONCE 0.3.0.4 vs Sprint 21 requirements assessment  
 
 **📎 Previous Commit:** 7bed0b81 - Update PDCA with user decisions: Technical Development + Developer role + Extended session  
 **🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/project.journal/2025-09-24-UTC-1028-session/2025-09-24-UTC-1028-startup-session.pdca.md) | [scrum.pmo/project.journal/2025-09-24-UTC-1028-session/2025-09-24-UTC-1028-startup-session.pdca.md](scrum.pmo/project.journal/2025-09-24-UTC-1028-session/2025-09-24-UTC-1028-startup-session.pdca.md)
@@ -27,23 +27,20 @@
 ### **QA Decisions**
 - [x] Role Transition: Successfully transitioned to Developer for technical development focus
 - [x] Technical Analysis: Completed comprehensive analysis of Sprint 21 opportunities
-- [ ] **Decision 1: Primary Development Focus**
-  - a) Implement ONCE Web4ORB Kernel Foundation - highest impact for Sprint 21 infrastructure
-  - b) Fix TSRanger Critical Bugs - immediate technical debt resolution 
-  - c) Build ScenarioExtractor Implementation - move from architectural to working code
-  - d) Enhanced Unit Component Development - strengthen core Web4 foundation
+- [x] **Decision 1: Primary Development Focus** → **1d) Enhanced Unit Component Development** - strengthen core Web4 foundation
+- [x] **Decision 2: ONCE Kernel Implementation Strategy** → **2a) Ground-up TypeScript implementation** with P2P WebSocket communication (NOTE: existing implementation needs merge first)
+- [x] **Decision 3: Extended Session Architecture** → **3d) Component integration testing** with existing Unit/Web4Requirement ecosystem
+- [x] **Decision 4: Pre-Development Merge Requirements** → **COMPLETED: dev/0308 merged successfully**
+  - [x] a) **ONCE Implementation Found:** Multiple versions through 0.3.0.4 with working TypeScript structure
+  - [x] b) **Unit Component Updated:** Now includes versions through 0.3.0.6 with latest improvements
+  - [x] c) **Massive Development History:** Extensive project journals and component work integrated
+  - [x] d) **Development Environment Ready:** All merge requirements satisfied
 
-- [ ] **Decision 2: ONCE Kernel Implementation Strategy**
-  - a) Ground-up TypeScript implementation with P2P WebSocket communication
-  - b) Multi-platform deployment focus (browser, Node.js, web workers, PWA)
-  - c) Component lifecycle management with scenario-based hibernation
-  - d) IOR-based distributed object references and Web4 empty constructor pattern
-
-- [ ] **Decision 3: Extended Session Architecture**  
-  - a) Multi-day ONCE kernel development with daily milestone deliveries
-  - b) Combined ONCE + TSRanger v3.0 integrated development approach
-  - c) Bug fixes parallel to new development for continuous improvement
-  - d) Component integration testing with existing Unit/Web4Requirement ecosystem
+- [ ] **Decision 5: Post-Merge Development Strategy**  
+  - a) Build on ONCE 0.3.0.4 foundation with Sprint 21 Web4ORB kernel implementation
+  - b) Consolidate Unit component to latest 0.3.0.6 and enhance for Web4 integration
+  - c) Fix TSRanger critical bugs while building Web4TSRanger v3.0 foundation
+  - d) Focus on component integration testing with merged ecosystem
 
 ---
 
