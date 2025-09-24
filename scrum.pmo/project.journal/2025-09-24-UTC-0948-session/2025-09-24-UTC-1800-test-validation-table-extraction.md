@@ -85,13 +85,13 @@ git mv /Users/Shared/Workspaces/2cuGitHub/Web4Articles/unit-0302-vs-unit-0304-vs
 |-------------------|------|---------|---------------|
 | 🟩 **Identical** | Green | All versions have identical files/behavior | `src/` directory - all components have same structure |
 | 🟥 **Different** | Red | All versions have different implementations | `package.json`, `README.md` - version-specific content |
-| 🟨 **Partial** | Yellow | Some versions share, others differ | `dist/`, `node_modules/` - build artifacts |
+| 🟨 **SIMILAR** | Yellow | Same template/structure with version adaptations | `dist/`, `node_modules/` - build artifacts |
 | 🟪 **Unique** | Purple | Only one version has this feature | `0.3.0.5.unit`, `Folder.unit` - version-specific files |
 
 **Key Insights for Web4TSComponent Version Comparison:**
 - **IDENTICAL (🟩):** Core functionality unchanged between versions
 - **DIFFERENT (🟥):** Version-specific metadata and documentation
-- **PARTIAL (🟨):** Build/dependency variations
+- **SIMILAR (🟨):** Same template with version-specific adaptations
 - **UNIQUE (🟪):** Version-specific features or files
 
 ### **Step 3: Extract Test Validation Tables with Cleaned Emoji Usage**
@@ -121,7 +121,7 @@ git mv /Users/Shared/Workspaces/2cuGitHub/Web4Articles/unit-0302-vs-unit-0304-vs
 **This confirms the similarity methodology:**
 - **IDENTICAL** = Same test results, same issues, same fixes apply
 - **DIFFERENT** = Would require version-specific analysis and fixes
-- **PARTIAL** = Some tests identical, some different
+- **SIMILAR** = Same template/structure with version adaptations
 - **UNIQUE** = Version-specific test cases or behaviors
 
 ---
@@ -173,7 +173,7 @@ Web4TSComponent 0.3.0.6 vs 0.3.0.7:
 **Version Comparison Requirements Established:**
 1. **🟩 IDENTICAL:** Same test behavior = same fixes apply across versions
 2. **🟥 DIFFERENT:** Different behavior = version-specific analysis required
-3. **🟨 PARTIAL:** Mixed patterns = selective fix application
+3. **🟨 SIMILAR:** Same template with adaptations = consistent fix strategy with version adjustments
 4. **🟪 UNIQUE:** Version-specific = isolated analysis needed
 
 **Implementation Impact:**
