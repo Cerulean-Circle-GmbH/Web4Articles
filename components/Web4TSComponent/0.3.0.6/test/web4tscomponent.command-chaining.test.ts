@@ -9,10 +9,12 @@ import { Web4TSComponentCLI } from '../src/ts/layer5/Web4TSComponentCLI.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { existsSync } from 'fs';
+import { ProjectRootMocker } from './utils/ProjectRootMocker.js';
 
 describe('Web4TSComponent Command Chaining', () => {
   let component: DefaultWeb4TSComponent;
   let cli: Web4TSComponentCLI;
+  let rootMocker: ProjectRootMocker;
   const testComponentName = 'TestChainComponent';
   const testVersion = '0.1.0.0';
 
@@ -20,11 +22,17 @@ describe('Web4TSComponent Command Chaining', () => {
     // Enable test mode for environment-aware path resolution
     (globalThis as any).__TEST_MODE__ = true;
     
-    // Ensure test data directory exists
+    // Setup test data directory
     const testDataDir = path.join(__dirname, 'data');
     await fs.mkdir(testDataDir, { recursive: true });
     
+    // Mock project root to be test data directory
+    rootMocker = new ProjectRootMocker(testDataDir);
+    rootMocker.mock();
+    
     component = new DefaultWeb4TSComponent();
+    // Update target directory to use mocked root
+    component.setTargetDirectory(testDataDir);
     cli = new Web4TSComponentCLI();
     
     // Clean up any existing test components
@@ -32,6 +40,11 @@ describe('Web4TSComponent Command Chaining', () => {
   });
 
   afterEach(async () => {
+    // Restore original project root
+    if (rootMocker) {
+      rootMocker.restore();
+    }
+    
     // Clean up test components
     await cleanupTestComponent();
     delete (globalThis as any).__TEST_MODE__;
