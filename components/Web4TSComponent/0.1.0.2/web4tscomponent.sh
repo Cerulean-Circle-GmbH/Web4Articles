@@ -1,0 +1,120 @@
+#!/bin/bash
+
+# Web4TSComponent CLI Tool - Location Resilient Version
+# Web4 Architecture Standard - Self-Implementing Reference
+# Works from any directory, finds project root via git
+
+# Function to find project root using git
+find_project_root() {
+    # Try git first (most reliable)
+    local git_root=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [ -n "$git_root" ] && [ -d "$git_root" ]; then
+        # Verify it's Web4Articles project by checking for key files
+        if [ -f "$git_root/package.json" ] || [ -f "$git_root/README.md" ]; then
+            echo "$git_root"
+            return 0
+        fi
+    fi
+    
+    # Fallback: walk up looking for .git and package.json
+    local current_dir="$PWD"
+    while [ "$current_dir" != "/" ]; do
+        if [ -d "$current_dir/.git" ] && [ -f "$current_dir/package.json" ]; then
+            echo "$current_dir"
+            return 0
+        fi
+        current_dir="$(dirname "$current_dir")"
+    done
+    
+    return 1
+}
+
+# Check if this is test mode (first argument is 'test')
+if [ "${1:-}" = "test" ]; then
+    # In test mode, bypass project directory validation
+    echo "🧪 [TEST MODE] Bypassing project directory validation"
+    PROJECT_ROOT="$PWD"
+else
+    # Find project root
+    PROJECT_ROOT=$(find_project_root)
+    if [ -z "$PROJECT_ROOT" ]; then
+        echo "❌ Error: Not in a Web4Articles project directory"
+        echo "💡 Please run from within the Web4Articles git repository"
+        exit 1
+    fi
+fi
+
+export PROJECT_ROOT
+
+# Detect context for the CLI
+CURRENT_DIR="$(pwd)"
+CONTEXT_INFO=""
+
+# Check if we're in a component directory
+if [[ "$CURRENT_DIR" == *"/components/"*"/"*"/"* ]]; then
+    COMPONENT_PATH=$(echo "$CURRENT_DIR" | grep -o '.*/components/[^/]*/[^/]*')
+    if [ -n "$COMPONENT_PATH" ]; then
+        CONTEXT_INFO="component:$COMPONENT_PATH"
+    fi
+fi
+
+# Default context if none detected
+if [ -z "$CONTEXT_INFO" ]; then
+    CONTEXT_INFO="arbitrary:$CURRENT_DIR"
+fi
+
+# Find the CLI in the components directory structure
+COMPONENT_VERSION="0.1.0.2"
+
+# In test mode, use the original Web4Articles project for CLI execution
+if [ "${1:-}" = "test" ]; then
+    # Find the actual Web4Articles project root for CLI binaries
+    WEB4_ROOT=$(find_project_root 2>/dev/null || echo "/Users/Shared/Workspaces/2cuGitHub/Web4Articles")
+    COMPONENT_DIR="$WEB4_ROOT/components/Web4TSComponent/$COMPONENT_VERSION"
+else
+    COMPONENT_DIR="$PROJECT_ROOT/components/Web4TSComponent/$COMPONENT_VERSION"
+fi
+
+CLI_SOURCE_PATH="$COMPONENT_DIR/src/ts/layer5/Web4TSComponentCLI.ts"
+CLI_PATH="$COMPONENT_DIR/dist/ts/layer5/Web4TSComponentCLI.js"
+
+# Check if compiled CLI exists, if not try to build
+if [ ! -f "$CLI_PATH" ]; then
+  if [ ! -f "$CLI_SOURCE_PATH" ]; then
+    echo "❌ CLI source not found at: $CLI_SOURCE_PATH"
+    echo "📁 Component directory: $COMPONENT_DIR"
+    exit 1
+  fi
+  
+  echo "🔨 Building Web4TSComponent CLI v$COMPONENT_VERSION..."
+  cd "$COMPONENT_DIR"
+  
+  # Install dependencies if needed
+  if [ ! -d "node_modules" ]; then
+    npm install
+  fi
+  
+  # Build the project
+  if ! npm run build; then
+    echo "❌ Build failed for Web4TSComponent v$COMPONENT_VERSION"
+    exit 1
+  fi
+  
+  if [ ! -f "$CLI_PATH" ]; then
+    echo "❌ CLI still not found at: $CLI_PATH after build"
+    exit 1
+  fi
+fi
+
+# Check for Node.js
+if ! command -v node >/dev/null 2>&1; then
+    echo "❌ Error: Node.js is required but not installed"
+    exit 1
+fi
+
+# Execute the CLI with context info and all arguments
+cd "$CURRENT_DIR"
+DIRECTORY_CONTEXT="$CONTEXT_INFO" node "$CLI_PATH" "$@"
+
+
+

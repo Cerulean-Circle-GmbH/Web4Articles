@@ -1,0 +1,26 @@
+{
+  "ior": {
+    "uuid": "53b62bef-9953-49d4-8ea5-34643a176699",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"53b62bef-9953-49d4-8ea5-34643a176699\",\"timestamp\":\"2025-09-22T12:07:51.742Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "53b62bef-9953-49d4-8ea5-34643a176699",
+    "createdAt": "2025-09-22T12:07:51.741Z",
+    "updatedAt": "2025-09-22T12:07:51.752Z",
+    "name": "ModelDriven",
+    "definition": "Testing the model-driven naming architecture",
+    "indexPath": "/workspace/scenarios/index/5/3/b/6/2/53b62bef-9953-49d4-8ea5-34643a176699.scenario.json",
+    "symlinkPaths": [
+      "/workspace/ModelDriven.unit"
+    ],
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/ModelDriven.unit",
+        "linkTarget": "ior:unit:53b62bef-9953-49d4-8ea5-34643a176699",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}

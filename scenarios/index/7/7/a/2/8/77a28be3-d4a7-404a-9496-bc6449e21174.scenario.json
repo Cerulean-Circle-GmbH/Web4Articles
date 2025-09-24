@@ -1,0 +1,43 @@
+{
+  "ior": {
+    "uuid": "77a28be3-d4a7-404a-9496-bc6449e21174",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"77a28be3-d4a7-404a-9496-bc6449e21174\",\"timestamp\":\"2025-09-13T12:50:59.164Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "77a28be3-d4a7-404a-9496-bc6449e21174",
+    "name": "AlreadyDotted.Name",
+    "origin": "",
+    "definition": "",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/7/7/a/2/8/77a28be3-d4a7-404a-9496-bc6449e21174.scenario.json",
+    "symlinkPaths": [
+      "/workspace/temp-filename-test/AlreadyDotted.Name.unit"
+    ],
+    "namedLinks": [],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-13T12:50:59.161Z",
+    "updatedAt": "2025-09-13T12:50:59.172Z",
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/temp-filename-test/SingleWord.unit",
+        "linkTarget": "ior:unit:77a28be3-d4a7-404a-9496-bc6449e21174",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/temp-filename-test/AlreadyDotted.Name.unit",
+        "linkTarget": "ior:unit:77a28be3-d4a7-404a-9496-bc6449e21174",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}

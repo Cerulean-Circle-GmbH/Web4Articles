@@ -1,0 +1,41 @@
+{
+  "name": "@web4x/once",
+  "version": "0.1.0.0",
+  "type": "module",
+  "description": "ONCE - Object Network Communication Engine - Universal Web4ORB kernel",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "once": "./bin/once",
+    "once-cli": "./dist/ts/layer5/ONCECLI.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "test:server": "vitest --config vitest.config.ts test/server/",
+    "test:watch": "vitest --watch",
+    "start": "node dist/ts/layer5/ONCECLI.js",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean"
+  },
+  "keywords": [
+    "web4",
+    "once",
+    "orb",
+    "p2p",
+    "distributed",
+    "kernel"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/ws": "^8.18.1",
+    "typescript": "^5.9.2",
+    "vitest": "^1.0.0"
+  },
+  "dependencies": {
+    "@types/webrtc": "^0.0.42",
+    "chalk": "^5.6.0",
+    "ws": "^8.18.3"
+  }
+}

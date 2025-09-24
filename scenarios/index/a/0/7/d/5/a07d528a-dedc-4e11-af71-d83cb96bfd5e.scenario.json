@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "a07d528a-dedc-4e11-af71-d83cb96bfd5e",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA5LTA0VDA4OjUwOjUwLjQ0OFoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "a07d528a-dedc-4e11-af71-d83cb96bfd5e",
+    "name": "Web4 Component Shell Script Linking Requirements",
+    "title": "Web4 Component Shell Script Linking Requirements",
+    "description": "Each Web4 component shell starter script must be linked in scripts/ folder with component name and in scripts/versions/ folder with component-version pattern following requirement-v0.1.2.2 pattern for universal accessibility and consistent interface"
+  },
+  "unitIndex": {
+    "uuid": "a07d528a-dedc-4e11-af71-d83cb96bfd5e",
+    "indexPath": "/workspace/scenarios/index/a/0/7/d/5/a07d528a-dedc-4e11-af71-d83cb96bfd5e.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/a07d528a-dedc-4e11-af71-d83cb96bfd5e.scenario.json"
+    ],
+    "createdAt": "2025-09-04T08:50:50.452Z",
+    "updatedAt": "2025-09-04T08:50:50.452Z"
+  }
+}
