@@ -32,7 +32,7 @@
   - Option B: Document violations and create systematic fix plan for gradual remediation
   - Option C: Accept current violations and update requirement to allow project root test outputs
 - [ ] **Decision 2: Testing Scope Priority**  
-  - Option A: Focus on fixing latest versions (0.3.x and 1.0.0.0) first as they are most actively used
+  - Option A: Focus on fixing latest versions (0.3.x and 0.0.0.1) first as they are most actively used
   - Option B: Fix all versions systematically starting from oldest to maintain version consistency
   - Option C: Only fix versions that have active test suites and deprecate others
 - [ ] **Decision 3: Compliance Enforcement**
@@ -88,14 +88,14 @@ Now tested ALL 11 versions with comprehensive statistics. Multiple versions viol
 **1. Version Inventory and Test Capability Analysis**
 ```bash
 # All Web4TSComponent versions identified:
-0.1.0.0, 0.1.0.1, 0.1.0.2, 0.1.0.3, 0.1.0.4, 0.1.1.0, 0.3.0.6, 0.3.0.7, 0.3.0.8, 0.3.0.9, 1.0.0.0
+0.1.0.0, 0.1.0.1, 0.1.0.2, 0.1.0.3, 0.1.0.4, 0.1.1.0, 0.3.0.6, 0.3.0.7, 0.3.0.8, 0.3.0.9, 0.0.0.1
 
 # Versions with test directories:
 0.3.0.6: Has test directory (5 files)
 0.3.0.7: Has test directory (5 files)  
 0.3.0.8: Has test directory (7 files)
 0.3.0.9: Has test directory (6 files)
-1.0.0.0: Has test directory (4 files) - NO TEST FILES FOUND
+0.0.0.1: Has test directory (4 files) - NO TEST FILES FOUND
 
 # Versions without test directories:
 0.1.0.0, 0.1.0.1, 0.1.0.2, 0.1.0.3, 0.1.0.4, 0.1.1.0 (6 versions)
@@ -115,7 +115,7 @@ Now tested ALL 11 versions with comprehensive statistics. Multiple versions viol
 | 0.3.0.7 | ❌ FAILED | 28 | 10 | 18 | 🚨 **YES** | `/components/TestCreateComponent` |
 | 0.3.0.8 | ❌ FAILED | 38 | 28 | 10 | ✅ **NO** | All outputs in `test/data/` |
 | 0.3.0.9 | ❌ FAILED | 37 | 30 | 7 | 🚨 **UNKNOWN** | Not verified after cleanup |
-| 1.0.0.0 | ❌ NO TESTS | 0 | 0 | 0 | ❌ N/A | No test files found |
+| 0.0.0.1 | ❌ NO TESTS | 0 | 0 | 0 | ❌ N/A | No test files found |
 
 **3. Critical Violations Found**
 ```bash
@@ -137,7 +137,7 @@ Testable Versions: 4
 Compliant Versions: 1 (0.3.0.8 only - 25% of testable versions)
 Violating Versions: 2 confirmed (0.3.0.6, 0.3.0.7 - 50% of testable versions)
 Unknown Status: 1 (0.3.0.9 - 25% of testable versions)
-Non-functional Tests: 1 (1.0.0.0 - 25% of testable versions)
+Non-functional Tests: 1 (0.0.0.1 - 25% of testable versions)
 ```
 
 ---
@@ -151,7 +151,7 @@ Non-functional Tests: 1 (1.0.0.0 - 25% of testable versions)
 All 11 Web4TSComponent versions analyzed:
 - 6 versions have no test directories (early versions)
 - 4 versions have test directories but only 3 are functional
-- 1 version (1.0.0.0) has test directory but no test files
+- 1 version (0.0.0.1) has test directory but no test files
 - Multiple versions create illegal test outputs at project root level
 ```
 
@@ -162,7 +162,7 @@ CRITICAL VIOLATIONS DETECTED:
 - Version 0.3.0.7: Creates TestCreateComponent, TestFeatureComponent, TestUpgradeComponent at project root
 - Version 0.3.0.8: COMPLIANT - all outputs in test/data/
 - Version 0.3.0.9: Status unknown after cleanup
-- Version 1.0.0.0: No functional tests to evaluate
+- Version 0.0.0.1: No functional tests to evaluate
 ```
 
 **TRON QA Feedback Validation**

@@ -44,8 +44,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    */
   private getTestDataDirectory(): string {
     // Each version tests in its own test/data folder
-    // From: /workspace/components/Web4TSComponent/0.3.0.7/src/ts/layer2/DefaultWeb4TSComponent.ts
-    // To:   /workspace/components/Web4TSComponent/0.3.0.7/test/data
+    // From: /workspace/components/Web4TSComponent/0.3.0.6/src/ts/layer2/DefaultWeb4TSComponent.ts
+    // To:   /workspace/components/Web4TSComponent/0.3.0.6/test/data
     const currentVersionDir = path.resolve(__dirname, '..', '..', '..');
     return path.join(currentVersionDir, 'test', 'data');
   }
