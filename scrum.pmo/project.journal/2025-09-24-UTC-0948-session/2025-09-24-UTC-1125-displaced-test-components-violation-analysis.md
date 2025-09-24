@@ -72,7 +72,7 @@ Root cause identified: Command chaining test files bypass the test mode support 
 
 | Component Name | Location | Versions | Size | Origin Investigation |
 |---|---|---|---|---|
-| TestChainComponent | `/components/TestChainComponent/` | 5 versions (0.1.0.0, 0.1.0.1, 0.2.0.0, 0.5.0.0, 1.0.0.0) | Multiple files | ✅ **TRACED** |
+| TestChainComponent | `/components/TestChainComponent/` | 5 versions (0.1.0.0, 0.1.0.1, 0.2.0.0, 0.5.0.0, 0.0.0.1) | Multiple files | ✅ **TRACED** |
 | TestCorrectComponent | `/components/TestCorrectComponent/` | 1 version (0.1.0.0) | Single directory | ❌ **UNKNOWN** |
 
 **2. Root Cause Analysis - TestChainComponent**

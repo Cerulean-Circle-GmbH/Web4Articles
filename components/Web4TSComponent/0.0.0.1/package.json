@@ -1,6 +1,6 @@
 {
   "name": "@web4x/web4-tscomponent",
-  "version": "1.0.0.0",
+  "version": "0.0.0.1",
   "type": "module",
   "description": "Web4 TypeScript Component Standard - Location-Resilient CLI Generator and Standards Enforcement",
   "main": "src/ts/layer5/Web4TSComponentCLI.ts",
