@@ -27,20 +27,27 @@
 - [x] **Format Violation Identified**: Missing § notation in dual links across multiple PDCAs
 - [x] **Source Analysis Required**: Document where incorrect format information originated
 - [x] **CMM3 Compliance**: Implement systematic correction following Template Version 3.1.4.2
-- [ ] **Decision 1: Correction Scope**
-  - a) Correct only current session PDCAs and establish proper format going forward
-  - b) Perform systematic correction of all recent PDCAs with format violations
-  - c) Create format validation checklist to prevent future violations
+- [x] **Decision 1b Implemented**: Perform systematic correction of all recent PDCAs with format violations
 
 ### **TRON Feedback (2025-09-24-UTC-1012)**
 ```quote
 latest dual links use § format. pleas double chaeck. write where you picked up all the wrong information we have to currect currently from in a table in a new pdca strictly cmm3 compliant to Template Version: 3.1.4.2
 ```
 
-### **My Answer**
-Confirmed dual link format violation. I failed to implement the § notation requirement from howto.PDCA.md lines 197-204. Creating systematic analysis of information sources and implementing CMM3 compliant corrections per Template Version 3.1.4.2.
+### **TRON Feedback (2025-09-24-UTC-1015)**
+```quote
+1b
 
-**Learning Applied:** Must always verify format requirements against official documentation rather than assuming or using incomplete patterns.
+add to your table in the pdca a column where you finally found the correct information
+pdca
+```
+
+### **My Answer**
+**Decision 1b Implemented**: Performing systematic correction of all recent PDCAs with format violations. Added "Correct Information Source" column to analysis table showing exactly where proper § notation requirements are documented in howto.PDCA.md.
+
+**PDCA Compliance Check**: Reviewing current PDCA against all Template Version 3.1.4.2 requirements and howto.PDCA.md standards.
+
+**Learning Applied:** Complete source traceability from incorrect assumptions to authoritative documentation ensures systematic correction and prevention.
 
 ---
 
@@ -64,13 +71,13 @@ Confirmed dual link format violation. I failed to implement the § notation requ
 
 **1. Incorrect Information Sources Analysis**
 
-| **Source Type** | **Specific Location** | **Incorrect Information** | **Impact** | **Root Cause** |
-|---|---|---|---|---|
-| Template Assumption | Agent internal logic | Used simple filename links without § notation | All PDCA dual links incorrect | Failed to read format requirements thoroughly |
-| Previous PDCA Pattern | Session start PDCA creation | Copied format without § notation | Propagated incorrect format | Pattern replication without validation |
-| Memory/Experience | General link formatting | Applied standard markdown link format | Missing project-specific § requirement | Assumed standard markdown was sufficient |
-| Incomplete Reading | howto.PDCA.md lines 197-204 | Missed § notation requirement | Systematic format violations | Skipped detailed format specification section |
-| Chat Response Pattern | Previous chat responses | Used project root paths without § display | Inconsistent format application | Mixed up PDCA vs Chat format requirements |
+| **Source Type** | **Specific Location** | **Incorrect Information** | **Impact** | **Root Cause** | **Correct Information Source** |
+|---|---|---|---|---|---|
+| Template Assumption | Agent internal logic | Used simple filename links without § notation | All PDCA dual links incorrect | Failed to read format requirements thoroughly | howto.PDCA.md lines 197-204: § notation requirement |
+| Previous PDCA Pattern | Session start PDCA creation | Copied format without § notation | Propagated incorrect format | Pattern replication without validation | howto.PDCA.md lines 207-208: § notation for display |
+| Memory/Experience | General link formatting | Applied standard markdown link format | Missing project-specific § requirement | Assumed standard markdown was sufficient | howto.PDCA.md lines 192-218: Dual Link System Requirements |
+| Incomplete Reading | howto.PDCA.md lines 197-204 | Missed § notation requirement | Systematic format violations | Skipped detailed format specification section | howto.PDCA.md lines 197-204: Format Standard (CRITICAL) |
+| Chat Response Pattern | Previous chat responses | Used project root paths without § display | Inconsistent format application | Mixed up PDCA vs Chat format requirements | howto.PDCA.md lines 201-204: Chat vs PDCA format distinction |
 
 **2. Correct Format Requirements (from howto.PDCA.md)**
 
