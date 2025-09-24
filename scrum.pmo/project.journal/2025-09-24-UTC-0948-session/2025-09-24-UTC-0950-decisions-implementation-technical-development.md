@@ -13,15 +13,15 @@
 **✅ Task:** Implement startup decisions and verify CMM documentation integration  
 **🚨 Issues:** None - Clear user direction provided  
 **📎 Previous Commit:** e4f11982 - PDCA: Session start - Dev/0308 branch continuation  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-0948-session-start-dev0308-continuation.md) | [2025-09-24-UTC-0948-session-start-dev0308-continuation.md](2025-09-24-UTC-0948-session-start-dev0308-continuation.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-0948-session-start-dev0308-continuation.md) | [§/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-0948-session-start-dev0308-continuation.md](2025-09-24-UTC-0948-session-start-dev0308-continuation.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-0950-decisions-implementation-technical-development.md) | [2025-09-24-UTC-0950-decisions-implementation-technical-development.md](2025-09-24-UTC-0950-decisions-implementation-technical-development.md)
-- **CMM Documentation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md) | [../2025-09-22-UTC-1908-session/howto.cmm.md](../2025-09-22-UTC-1908-session/howto.cmm.md)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-0950-decisions-implementation-technical-development.md) | [§/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-0950-decisions-implementation-technical-development.md](2025-09-24-UTC-0950-decisions-implementation-technical-development.md)
+- **CMM Documentation:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md) | [§/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md](../2025-09-22-UTC-1908-session/howto.cmm.md)
 
 ### **QA Decisions**
 - [x] **Decision 1a Implemented**: Technical Development Focus - Component enhancement, bug fixes, feature development
