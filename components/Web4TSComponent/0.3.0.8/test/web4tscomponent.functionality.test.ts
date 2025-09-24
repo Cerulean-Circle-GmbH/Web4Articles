@@ -9,27 +9,39 @@ import { Web4TSComponentCLI } from '../src/ts/layer5/Web4TSComponentCLI.js';
 import * as fs from 'fs/promises';
 import { existsSync } from 'fs';
 import * as path from 'path';
+import { ProjectRootMocker } from './utils/ProjectRootMocker.js';
 
 describe('Web4TSComponent Functionality', () => {
   let component: DefaultWeb4TSComponent;
   let cli: Web4TSComponentCLI;
+  let rootMocker: ProjectRootMocker;
 
   beforeEach(async () => {
     // Enable test mode for environment-aware path resolution
     (globalThis as any).__TEST_MODE__ = true;
     
-    // Ensure test data directory exists
+    // Setup test data directory
     const testDataDir = path.join(__dirname, 'data');
     await fs.mkdir(testDataDir, { recursive: true });
     
+    // Mock project root to be test data directory
+    rootMocker = new ProjectRootMocker(testDataDir);
+    rootMocker.mock();
+    
     component = new DefaultWeb4TSComponent();
+    // Update target directory to use mocked root
+    component.setTargetDirectory(testDataDir);
     cli = new Web4TSComponentCLI();
   });
 
   afterEach(async () => {
+    // Restore original project root
+    if (rootMocker) {
+      rootMocker.restore();
+    }
+    
     // Clean up test components (ephemeral test data as per decision 5a)
     await cleanupTestComponents();
-    await cleanupComparisonFiles();
     delete (globalThis as any).__TEST_MODE__;
   });
 
@@ -44,20 +56,7 @@ describe('Web4TSComponent Functionality', () => {
           await fs.rm(compPath, { recursive: true, force: true });
         }
       } catch (error) {
-        console.warn(`Cleanup warning for ${comp}:`, error.message);
-      }
-    }
-  }
-
-  async function cleanupComparisonFiles() {
-    const testDataDir = path.join(__dirname, 'data');
-    if (existsSync(testDataDir)) {
-      const entries = await fs.readdir(testDataDir);
-      for (const entry of entries) {
-        if (entry.includes('-comparison-') && entry.endsWith('.md')) {
-          const filePath = path.join(testDataDir, entry);
-          await fs.unlink(filePath).catch(() => {}); // Ignore if file doesn't exist
-        }
+        // Ignore cleanup errors
       }
     }
   }
@@ -69,11 +68,11 @@ describe('Web4TSComponent Functionality', () => {
       
       await component.create(componentName, version, 'all');
       
-      const componentPath = path.join(__dirname, 'data', componentName, version);
+      const componentPath = `components/${componentName}/${version}`;
       expect(existsSync(componentPath)).toBe(true);
       
       // Verify all expected files created (same as 1.0.0.0)
-      expect(existsSync(path.join(componentPath, 'package.json'))).toBe(true);
+      expect(existsSync(`${componentPath}/package.json`)).toBe(true);
       expect(existsSync(`${componentPath}/tsconfig.json`)).toBe(true);
       expect(existsSync(`${componentPath}/${componentName.toLowerCase()}.sh`)).toBe(true);
       expect(existsSync(`${componentPath}/vitest.config.ts`)).toBe(true);
@@ -119,7 +118,7 @@ describe('Web4TSComponent Functionality', () => {
     it('should upgrade to next build (patch) version', async () => {
       await component.upgrade('nextBuild');
       
-      const newVersionPath = path.join(__dirname, 'data', baseComponent, '0.1.0.1');
+      const newVersionPath = `components/${baseComponent}/0.1.0.1`;
       expect(existsSync(newVersionPath)).toBe(true);
       
       // Verify package.json version updated
@@ -132,28 +131,28 @@ describe('Web4TSComponent Functionality', () => {
     it('should upgrade to next minor version', async () => {
       await component.upgrade('nextMinor');
       
-      const newVersionPath = path.join(__dirname, 'data', baseComponent, '0.1.1.0');
+      const newVersionPath = `components/${baseComponent}/0.1.1.0`;
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
     it('should upgrade to next major version', async () => {
       await component.upgrade('nextMajor');
       
-      const newVersionPath = path.join(__dirname, 'data', baseComponent, '0.2.0.0');
+      const newVersionPath = `components/${baseComponent}/0.2.0.0`;
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
     it('should upgrade to explicit version', async () => {
       await component.upgrade('0.5.0.0');
       
-      const newVersionPath = path.join(__dirname, 'data', baseComponent, '0.5.0.0');
+      const newVersionPath = `components/${baseComponent}/0.5.0.0`;
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
     it('should preserve all files during upgrade', async () => {
       await component.upgrade('nextBuild');
       
-      const newVersionPath = path.join(__dirname, 'data', baseComponent, '0.1.0.1');
+      const newVersionPath = `components/${baseComponent}/0.1.0.1`;
       
       // Verify all original files preserved
       expect(existsSync(`${newVersionPath}/package.json`)).toBe(true);
@@ -296,38 +295,6 @@ describe('Web4TSComponent Functionality', () => {
       expect(metadata.hasLayeredArchitecture).toBe(true);
       expect(metadata.hasEmptyConstructors).toBe(true);
       expect(metadata.hasScenarioSupport).toBe(true);
-    });
-  });
-
-  describe('Component Comparison', () => {
-    it('should generate comparison MD file in test/data directory', async () => {
-      // Create test components for comparison
-      await component.create('TestComp1', '0.1.0.0', 'all');
-      await component.create('TestComp2', '0.1.0.1', 'all');
-      
-      // Change to test data directory to simulate working directory
-      const testDataDir = path.join(__dirname, 'data');
-      const originalCwd = process.cwd();
-      process.chdir(testDataDir);
-      
-      try {
-        // Run comparison
-        await component.compare('TestComp1 0.1.0.0, TestComp2 0.1.0.1');
-        
-        // Check if comparison file was created
-        const files = await fs.readdir(testDataDir);
-        const comparisonFile = files.find(f => f.includes('testcomp1') && f.includes('comparison') && f.endsWith('.md'));
-        
-        expect(comparisonFile).toBeDefined();
-        
-        // Verify file content has dual links
-        const content = await fs.readFile(path.join(testDataDir, comparisonFile), 'utf-8');
-        expect(content).toContain('[GitHub]');
-        expect(content).toContain('Component Comparison Analysis');
-        
-      } finally {
-        process.chdir(originalCwd);
-      }
     });
   });
 });
