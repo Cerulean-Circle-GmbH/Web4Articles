@@ -29,6 +29,7 @@
 | Web4TSComponent Patterns | Component architecture | Not following Web4 component patterns and CLI standards | Inconsistent component implementation, missing auto-discovery | Missing component architecture reference | Component patterns at components/Web4TSComponent/0.3.0.8/README.md | Memory ID: 9283048 - Web4TSComponent Example Location |
 | Web4Requirement Standards | Architecture principles | Not following Web4 paradigm and component standards | Non-compliant architecture, missing requirements framework | Missing Web4 standards documentation | Web4 standards at components/Web4Requirement/0.3.0.5 | Memory ID: 9283050 - Web4Requirement Standards Location |
 | Project Root Variability | Path portability | Hardcoding absolute paths assuming fixed project location | Path failures in different execution contexts | Not accounting for environment variability | Project root varies by context - use relative paths and environment variables | Memory ID: 9283053 - Project Root Path Variability |
+| TRON CMM4 Verification | Measurement-based validation | Accepting statements without systematic verification | Blind acceptance, missing CMM4 whitebox understanding | Trusting authority over measurement and evidence | TRON wants agents to prove him wrong through measurement - trust nothing but verification | Memory ID: 9283312 - TRON CMM4 Verification Principle |
 
 ---
 
