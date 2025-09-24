@@ -8,27 +8,39 @@ import { DefaultWeb4TSComponent } from '../src/ts/layer2/DefaultWeb4TSComponent.
 import { Web4TSComponentCLI } from '../src/ts/layer5/Web4TSComponentCLI.js';
 import * as fs from 'fs/promises';
 import { existsSync } from 'fs';
+import * as path from 'path';
 
 describe('Web4TSComponent Functionality', () => {
   let component: DefaultWeb4TSComponent;
   let cli: Web4TSComponentCLI;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    // Enable test mode for environment-aware path resolution
+    (globalThis as any).__TEST_MODE__ = true;
+    
+    // Ensure test data directory exists
+    const testDataDir = path.join(__dirname, 'data');
+    await fs.mkdir(testDataDir, { recursive: true });
+    
     component = new DefaultWeb4TSComponent();
     cli = new Web4TSComponentCLI();
   });
 
   afterEach(async () => {
-    // Clean up test components
+    // Clean up test components (ephemeral test data as per decision 5a)
     await cleanupTestComponents();
+    delete (globalThis as any).__TEST_MODE__;
   });
 
   async function cleanupTestComponents() {
+    const testDataDir = path.join(__dirname, 'data');
     const testComponents = ['TestCreateComponent', 'TestUpgradeComponent', 'TestFeatureComponent'];
+    
     for (const comp of testComponents) {
       try {
-        if (existsSync(`components/${comp}`)) {
-          await fs.rm(`components/${comp}`, { recursive: true, force: true });
+        const compPath = path.join(testDataDir, comp);
+        if (existsSync(compPath)) {
+          await fs.rm(compPath, { recursive: true, force: true });
         }
       } catch (error) {
         // Ignore cleanup errors
@@ -149,7 +161,7 @@ describe('Web4TSComponent Functionality', () => {
         .then(comp => comp.upgrade('nextBuild'));
       
       expect(result).toBe(component);
-      expect(existsSync(`components/${componentName}/0.1.0.1`)).toBe(true);
+      expect(existsSync(path.join(__dirname, 'data', componentName, '0.1.0.1'))).toBe(true);
     });
 
     it('should maintain context through multiple operations', async () => {
@@ -168,7 +180,7 @@ describe('Web4TSComponent Functionality', () => {
       // Second upgrade from new context
       await component.upgrade('nextMinor'); // 0.1.0.1 → 0.1.1.0
       
-      expect(existsSync(`components/${componentName}/0.1.1.0`)).toBe(true);
+      expect(existsSync(path.join(__dirname, 'data', componentName, '0.1.1.0'))).toBe(true);
     });
   });
 
@@ -199,7 +211,7 @@ describe('Web4TSComponent Functionality', () => {
       await cli.execute(['upgrade', 'nextBuild']);
       
       // Verify upgrade worked
-      expect(existsSync(`components/${componentName}/0.1.0.1`)).toBe(true);
+      expect(existsSync(path.join(__dirname, 'data', componentName, '0.1.0.1'))).toBe(true);
     });
   });
 
