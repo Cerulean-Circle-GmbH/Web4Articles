@@ -1,1 +1,0 @@
-../../../../scrum.pmo/project.journal/2025-08-25-0947-external-references-learnings/session.summary.md

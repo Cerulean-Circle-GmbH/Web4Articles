@@ -1,1 +1,0 @@
-../../../../scrum.pmo/project.journal/2025-08-26-1410-component-build-chain-recovery/session.summary.md
