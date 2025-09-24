@@ -9,6 +9,7 @@ import { Web4TSComponentModel } from '../layer3/Web4TSComponentModel.interface.j
 import * as fs from 'fs/promises';
 import { existsSync, readdirSync, statSync } from 'fs';
 import * as path from 'path';
+import { execSync } from 'child_process';
 
 export class DefaultWeb4TSComponent implements Web4TSComponent {
   private model: Web4TSComponentModel;
@@ -35,7 +36,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   private findProjectRoot(): string {
     // Find project root using git or directory traversal
     try {
-      const { execSync } = require('child_process');
+      // Use imported execSync
       const gitRoot = execSync('git rev-parse --show-toplevel', { encoding: 'utf-8' }).trim();
       if (existsSync(gitRoot)) {
         return gitRoot;
@@ -214,6 +215,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       await this.createTestStructure(componentDir);
     }
     
+    // Install dependencies for complete self-building
+    await this.installComponentDependencies(componentDir);
+    
     return {
       name: componentName,
       version,
@@ -223,6 +227,32 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       hasScenarioSupport: true,
       complianceScore: 100
     };
+  }
+
+  /**
+   * Install component dependencies for complete self-building
+   * @cliHide
+   */
+  private async installComponentDependencies(componentDir: string): Promise<void> {
+    const packageJsonPath = path.join(componentDir, 'package.json');
+    
+    if (!existsSync(packageJsonPath)) {
+      console.log('   ⚠️ No package.json found, skipping dependency installation');
+      return;
+    }
+    
+    try {
+      console.log('   📦 Installing dependencies...');
+      // Use imported execSync
+      execSync('npm install', { 
+        cwd: componentDir, 
+        stdio: 'pipe' // Suppress npm output for clean CLI experience
+      });
+      console.log('   ✅ Dependencies installed successfully');
+    } catch (error) {
+      console.log('   ⚠️ Failed to install dependencies - component may need manual npm install');
+      console.log(`   Error: ${error}`);
+    }
   }
 
   /**

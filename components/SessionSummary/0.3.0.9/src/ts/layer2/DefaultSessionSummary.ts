@@ -61,8 +61,8 @@ export class DefaultSessionSummary implements ISessionSummary {
     for (const file of pdcaFiles) {
       try {
         const content = readFileSync(file, 'utf-8');
-        const analysis = this.analyzePDCA(content, file);
-        if (analysis.utcTime) {
+        const analysis = this.analyzePDCA(file);
+        if (analysis?.utcTime) {
           utcTimes.add(analysis.utcTime);
         }
       } catch (error) {
@@ -77,7 +77,7 @@ export class DefaultSessionSummary implements ISessionSummary {
    * Rename session directory safely
    */
   private async renameSessionDirectory(oldPath: string, newPath: string): Promise<void> {
-    const { execSync } = require('child_process');
+    // Use imported execSync
     try {
       execSync(`git mv "${oldPath}" "${newPath}"`, { cwd: this.findProjectRoot() });
       console.log(`✅ Session directory renamed: ${basename(oldPath)} → ${basename(newPath)}`);
@@ -92,7 +92,7 @@ export class DefaultSessionSummary implements ISessionSummary {
    */
   private async renamePDCAFiles(sessionPath: string, oldSessionName: string, newSessionName: string): Promise<void> {
     const pdcaDir = join(sessionPath, 'pdca');
-    if (!require('fs').existsSync(pdcaDir)) return;
+    if (!existsSync(pdcaDir)) return;
     
     const oldUTCPart = oldSessionName.match(/UTC-\d{4}/)?.[0] || '';
     const newUTCPart = newSessionName.match(/UTC-\d{4}/)?.[0] || '';
@@ -100,7 +100,7 @@ export class DefaultSessionSummary implements ISessionSummary {
     if (!oldUTCPart || !newUTCPart) return;
     
     const files = readdirSync(pdcaDir).filter(f => f.includes(oldUTCPart));
-    const { execSync } = require('child_process');
+    // Use imported execSync
     
     for (const file of files) {
       const oldFile = join(pdcaDir, file);
@@ -120,7 +120,7 @@ export class DefaultSessionSummary implements ISessionSummary {
    */
   private async fixAllLinks(sessionPath: string, oldSessionName: string, newSessionName: string): Promise<void> {
     const pdcaDir = join(sessionPath, 'pdca');
-    if (!require('fs').existsSync(pdcaDir)) return;
+    if (!existsSync(pdcaDir)) return;
     
     const oldUTCPart = oldSessionName.match(/UTC-\d{4}/)?.[0] || '';
     const newUTCPart = newSessionName.match(/UTC-\d{4}/)?.[0] || '';
@@ -146,135 +146,6 @@ export class DefaultSessionSummary implements ISessionSummary {
     }
   }
 
-  /**
-   * Fix UTC naming for session directory and PDCA files
-   * Zero-config auto-correction of UTC mismatches from git commits
-   */
-  async fixUTCNaming(sessionPath: string): Promise<void> {
-    console.log(`🔧 Analyzing UTC naming for session: ${basename(sessionPath)}`);
-    
-    // Extract git commit UTC times from session PDCAs
-    const gitCommitUTCs = await this.extractGitCommitUTCs(sessionPath);
-    if (gitCommitUTCs.length === 0) {
-      console.log('❌ No git commits found in session PDCAs');
-      return;
-    }
-    
-    // Use the first (earliest) commit UTC as the correct session UTC
-    const correctUTC = gitCommitUTCs[0];
-    const currentSessionName = basename(sessionPath);
-    const correctSessionName = currentSessionName.replace(/UTC-\d{4}/, `UTC-${correctUTC.split('-UTC-')[1].split('-')[0]}`);
-    
-    if (currentSessionName === correctSessionName) {
-      console.log('✅ Session UTC naming already correct');
-      return;
-    }
-    
-    console.log(`🔄 Renaming session: ${currentSessionName} → ${correctSessionName}`);
-    
-    // Rename session directory
-    const parentDir = dirname(sessionPath);
-    const newSessionPath = join(parentDir, correctSessionName);
-    
-    await this.renameSessionDirectory(sessionPath, newSessionPath);
-    await this.renamePDCAFiles(newSessionPath, currentSessionName, correctSessionName);
-    await this.fixAllLinks(newSessionPath, currentSessionName, correctSessionName);
-    
-    console.log('✅ UTC naming correction complete');
-  }
-
-  /**
-   * Extract git commit UTC times from session PDCA files
-   */
-  private async extractGitCommitUTCs(sessionPath: string): Promise<string[]> {
-    const pdcaFiles = this.findPDCAFiles(sessionPath);
-    const utcTimes = new Set<string>();
-    
-    for (const file of pdcaFiles) {
-      try {
-        const content = readFileSync(file, 'utf-8');
-        const analysis = this.analyzePDCA(content, file);
-        if (analysis.utcTime) {
-          utcTimes.add(analysis.utcTime);
-        }
-      } catch (error) {
-        continue;
-      }
-    }
-    
-    return Array.from(utcTimes).sort();
-  }
-
-  /**
-   * Rename session directory safely
-   */
-  private async renameSessionDirectory(oldPath: string, newPath: string): Promise<void> {
-    const { execSync } = require('child_process');
-    try {
-      execSync(`git mv "${oldPath}" "${newPath}"`, { cwd: this.findProjectRoot() });
-      console.log(`✅ Session directory renamed: ${basename(oldPath)} → ${basename(newPath)}`);
-    } catch (error) {
-      console.log(`❌ Failed to rename session directory: ${error}`);
-      throw error;
-    }
-  }
-
-  /**
-   * Rename all PDCA files to use correct UTC
-   */
-  private async renamePDCAFiles(sessionPath: string, oldSessionName: string, newSessionName: string): Promise<void> {
-    const pdcaDir = join(sessionPath, 'pdca');
-    if (!require('fs').existsSync(pdcaDir)) return;
-    
-    const oldUTCPart = oldSessionName.match(/UTC-\d{4}/)?.[0] || '';
-    const newUTCPart = newSessionName.match(/UTC-\d{4}/)?.[0] || '';
-    
-    if (!oldUTCPart || !newUTCPart) return;
-    
-    const files = readdirSync(pdcaDir).filter(f => f.includes(oldUTCPart));
-    const { execSync } = require('child_process');
-    
-    for (const file of files) {
-      const oldFile = join(pdcaDir, file);
-      const newFile = join(pdcaDir, file.replace(oldUTCPart, newUTCPart));
-      
-      try {
-        execSync(`git mv "${oldFile}" "${newFile}"`, { cwd: this.findProjectRoot() });
-        console.log(`✅ PDCA renamed: ${file} → ${basename(newFile)}`);
-      } catch (error) {
-        console.log(`❌ Failed to rename PDCA: ${file}`);
-      }
-    }
-  }
-
-  /**
-   * Fix all links in PDCA files to use correct UTC
-   */
-  private async fixAllLinks(sessionPath: string, oldSessionName: string, newSessionName: string): Promise<void> {
-    const pdcaDir = join(sessionPath, 'pdca');
-    if (!require('fs').existsSync(pdcaDir)) return;
-    
-    const oldUTCPart = oldSessionName.match(/UTC-\d{4}/)?.[0] || '';
-    const newUTCPart = newSessionName.match(/UTC-\d{4}/)?.[0] || '';
-    
-    const files = readdirSync(pdcaDir).filter(f => f.endsWith('.md'));
-    
-    for (const file of files) {
-      const filePath = join(pdcaDir, file);
-      try {
-        let content = readFileSync(filePath, 'utf-8');
-        
-        // Fix GitHub links and session references
-        content = content.replace(new RegExp(oldUTCPart, 'g'), newUTCPart);
-        content = content.replace(new RegExp(oldSessionName, 'g'), newSessionName);
-        
-        writeFileSync(filePath, content);
-        console.log(`✅ Links fixed in: ${file}`);
-      } catch (error) {
-        console.log(`❌ Failed to fix links in: ${file}`);
-      }
-    }
-  }
 
   private findProjectRoot(): string {
     let currentDir = process.cwd();
