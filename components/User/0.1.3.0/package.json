@@ -13,6 +13,14 @@
     "postinstall": "npm run build && npm run symlink",
     "prebuild": "npm run clean && npm run check:deps",
     "build": "tsc",
+<<<<<<< HEAD
+    "clean": "rm -rf dist/ node_modules/ package-lock.json",
+    "prebuild": "npm run clean-dist",
+    "clean-dist": "rm -rf dist/",
+    "install-and-build": "npm install && npm run build",
+    "fresh-build": "npm run clean && npm run install-and-build",
+=======
+>>>>>>> origin/dev/2025-09-14-UTC-1425
     "postbuild": "npm run verify && npm run generate:docs",
     "clean": "rm -rf dist/ *.tsbuildinfo",
     "check:deps": "node dist/ts/layer5/LifecycleCLI.js check-dependencies || echo 'Skipping dependency check - build in progress'",

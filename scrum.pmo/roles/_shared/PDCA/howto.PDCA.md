@@ -1,10 +1,10 @@
 [Back to PDCA Process Improvements](./pdca.process.improvements/) | [CMMI Understanding](./PDCA.understanding.CMMI.md) | [How to Decide](./PDCA.howto.decide.md) | [Template](./template.md)
 
-# 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.5**
+# 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.6 (Template v3.1.4.2)**
 
 **🗓️ Date:** 2025-08-22-UTC-1330  
 **🎯 Objective:** Consolidated PDCA writing guidelines based on latest process improvements  
-**🎯 Template Version:** 3.1  
+**🎯 Template Version:** 3.1.4.2  
 
 **👤 Agent Role:** Process Documentation → Knowledge Management Enhancement  
 **👤 Branch:** save/start.v1 → Template Evolution  
@@ -24,7 +24,7 @@
 
 **🗓️ Date:** YYYY-MM-DD-UTC-HHMM  
 **🎯 Objective:** [CLEAR, SPECIFIC OBJECTIVE STATEMENT]  
-**🎯 Template Version:** 3.1  
+**🎯 Template Version:** 3.1.4.2  
 
 **👤 Agent Name:** [AGENT NAME] → [AGENT DESCRIPTION]  
 **👤 Agent Role:** [ROLE NAME] → [CONTEXT/SPECIALIZATION]  
@@ -163,6 +163,29 @@
 
 **"[PHILOSOPHICAL_INSIGHT - e.g., Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."]** 🔧📊
 ```
+
+---
+
+## **🚨 GIT COMMIT MESSAGE REQUIREMENT - CRITICAL**
+
+### **MANDATORY Format:**
+```bash
+git commit -m "PDCA: [Title from PDCA header]"
+```
+
+### **Examples:**
+- `git commit -m "PDCA: Branch update coordination - cherry-pick strategy"`
+- `git commit -m "PDCA: Session Summary - Complete regression resolution"`
+- `git commit -m "PDCA: Test component isolation implementation"`
+
+### **Purpose:**
+- **Traceability:** Links commits directly to PDCA documentation
+- **Robustness:** Clear connection between changes and reasoning
+- **CMM3 Compliance:** Consistent, reproducible commit messages
+- **Project Navigation:** Easy to find related documentation from git history
+
+### **Chat Reporting:**
+When reporting git operations in chat, always include the exact commit message used.
 
 ---
 
@@ -401,6 +424,31 @@ After completing the compliance review, the agent MUST:
 - **CMM3 maturity** maintenance
 
 **Remember:** The 'pdca' prompt is a self-correction mechanism to ensure consistent quality throughout the session!
+
+---
+
+## **🔄 RESPONDING TO 'NOOP' PROMPT - NO ACTION WORKAROUND**
+
+When a user types just `noop` as a prompt, this is a **technical workaround** for Cursor PWA conversation display issues.
+
+### **No Action Required**
+- **NO PDCA Creation:** Do not create any PDCA document
+- **NO Process Execution:** Do not execute any process or analysis
+- **NO Response Generation:** Minimal acknowledgment only
+- **Purpose:** Overcome Cursor PWA bug that prevents conversation display without trigger
+
+### **Response Pattern**
+```
+Acknowledged - noop trigger received for Cursor PWA compatibility.
+```
+
+### **Technical Context**
+The Cursor PWA has a display bug where conversations may not show properly without a recognized trigger word. The "noop" trigger provides a workaround that requires no agent action while resolving the display issue.
+
+### **Known Triggers Summary**
+- **`pdca`** - Compliance check request (creates PDCA for review and correction)
+- **`start`** - Session initialization (creates PDCA with startup decision framework)
+- **`noop`** - Technical workaround (no action, minimal acknowledgment only)
 
 ---
 

@@ -1,0 +1,28 @@
+{
+  "ior": {
+    "uuid": "65917eac-9940-4843-b498-4b5ca28618d9",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"65917eac-9940-4843-b498-4b5ca28618d9\",\"timestamp\":\"2025-09-10T10:28:03.582Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "65917eac-9940-4843-b498-4b5ca28618d9",
+    "name": "File",
+    "origin": "",
+    "definition": "M2 Class for M1 file instances",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/6/5/9/1/7/65917eac-9940-4843-b498-4b5ca28618d9.scenario.json",
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/scenarios/ontology/File.unit",
+        "linkTarget": "ior:unit:65917eac-9940-4843-b498-4b5ca28618d9",
+        "syncStatus": "SYNCED"
+      }
+    ],
+    "createdAt": "2025-09-10T10:28:03.580Z",
+    "updatedAt": "2025-09-10T10:28:03.586Z",
+    "symlinkPaths": [
+      "/workspace/scenarios/ontology/File.unit"
+    ]
+  }
+}

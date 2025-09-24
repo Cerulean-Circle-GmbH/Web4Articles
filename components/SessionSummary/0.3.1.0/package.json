@@ -1,0 +1,17 @@
+{
+  "name": "@web4/sessionsummary",
+  "version": "0.3.1.0",
+  "type": "module",
+  "main": "./src/ts/layer5/SessionSummaryCLI.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "clean": "rm -rf dist/"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4",
+    "ts-node": "^10.9.2"
+  }
+}

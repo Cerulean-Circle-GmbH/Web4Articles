@@ -1,0 +1,37 @@
+{
+  "ior": {
+    "uuid": "044bf7bd-7338-4733-b202-37d8b846d5cd",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"044bf7bd-7338-4733-b202-37d8b846d5cd\",\"timestamp\":\"2025-09-08T13:44:50.495Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "044bf7bd-7338-4733-b202-37d8b846d5cd",
+    "name": "Named Link Structure",
+    "origin": "",
+    "definition": "Bidirectional linking system enabling semantic navigation and reference",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/0/4/4/b/f/044bf7bd-7338-4733-b202-37d8b846d5cd.scenario.json",
+    "symlinkPaths": [
+      "/workspace/scenarios/ontology/Named.Link.Structure.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../index/0/4/4/b/f/044bf7bd-7338-4733-b202-37d8b846d5cd.scenario.json",
+        "filename": "Named.Link.Structure.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process",
+      "Named Link Structure"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-08T13:44:50.493Z",
+    "updatedAt": "2025-09-08T13:44:50.498Z"
+  }
+}

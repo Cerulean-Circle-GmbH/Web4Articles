@@ -1,0 +1,24 @@
+{
+  "name": "@web4x/build",
+  "version": "0.1.0.0",
+  "type": "module",
+  "description": "Web4 Build Component",
+  "main": "src/ts/layer5/BuildCLI.ts",
+  "scripts": {
+    "prestart": "npm run ensure-built",
+    "start": "./build0.1.0.0.sh",
+    "ensure-built": "npm run check-build || npm run build",
+    "check-build": "test -d dist && echo '✅ Already built' || (echo '🔨 Build required' && false)",
+    "build": "tsc",
+    "postbuild": "echo '✅ Build component built successfully'",
+    "test": "vitest",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist/",
+    "cli": "node dist/ts/layer5/BuildCLI.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
+  }
+}
