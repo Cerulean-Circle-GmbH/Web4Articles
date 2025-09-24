@@ -1,1 +1,0 @@
-../../articles/medium-com/2025-09-05-UTC-1100-legacy-letter-cursor-cto-brutal-honesty.md

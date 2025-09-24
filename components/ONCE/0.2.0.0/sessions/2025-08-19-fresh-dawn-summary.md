@@ -1,1 +1,0 @@
-../../../../scrum.pmo/project.journal/2025-08-19-0800-fresh-dawn/session.summary.md

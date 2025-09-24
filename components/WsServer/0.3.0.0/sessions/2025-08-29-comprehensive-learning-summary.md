@@ -1,1 +1,0 @@
-../../../../scrum.pmo/project.journal/2025-08-29-UTC-1616-comprehensive-learning-session/session.summary.md

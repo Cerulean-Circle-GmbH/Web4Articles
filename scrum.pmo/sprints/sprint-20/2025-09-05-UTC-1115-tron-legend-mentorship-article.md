@@ -1,1 +1,0 @@
-../../articles/medium-com/2025-09-05-UTC-1115-tron-and-the-42-revelation-ai-agent-mentorship.md

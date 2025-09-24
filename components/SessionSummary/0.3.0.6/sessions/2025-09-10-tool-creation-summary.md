@@ -1,1 +1,0 @@
-../../../../scrum.pmo/project.journal/2025-09-10-UTC-1138-session/session.summary.md
