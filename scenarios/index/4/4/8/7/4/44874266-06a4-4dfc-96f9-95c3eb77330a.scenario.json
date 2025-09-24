@@ -1,0 +1,43 @@
+{
+  "ior": {
+    "uuid": "44874266-06a4-4dfc-96f9-95c3eb77330a",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"donges\",\"hostname\":\"localhost\",\"uuid\":\"44874266-06a4-4dfc-96f9-95c3eb77330a\",\"timestamp\":\"2025-09-17T13:21:32.495Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "44874266-06a4-4dfc-96f9-95c3eb77330a",
+    "name": "Extra    Space     Test",
+    "origin": "",
+    "definition": "",
+    "typeM3": "CLASS",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/4/4/8/7/4/44874266-06a4-4dfc-96f9-95c3eb77330a.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/components/Unit/0.3.0.5/temp-filename-test/temp-filename-test/Extra.Space.Test.unit"
+    ],
+    "namedLinks": [],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-17T13:21:32.488Z",
+    "updatedAt": "2025-09-17T13:21:32.496Z",
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/Users/Shared/Workspaces/2cuGitHub/Web4Articles/components/Unit/0.3.0.5/temp-filename-test/temp-filename-test/Test.Multiple.Spaces.unit",
+        "linkTarget": "ior:unit:44874266-06a4-4dfc-96f9-95c3eb77330a",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/Users/Shared/Workspaces/2cuGitHub/Web4Articles/components/Unit/0.3.0.5/temp-filename-test/temp-filename-test/Extra.Space.Test.unit",
+        "linkTarget": "ior:unit:44874266-06a4-4dfc-96f9-95c3eb77330a",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}

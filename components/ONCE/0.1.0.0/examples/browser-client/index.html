@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONCE Web4 Browser Client - Demo Mode</title>
+    <style>
+        body { 
+            font-family: 'Courier New', monospace; 
+            background: #1a1a1a; 
+            color: #0f0; 
+            margin: 0;
+            padding: 20px;
+        }
+        .demo-header { 
+            border: 2px solid #0f0; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            text-align: center;
+            background: rgba(0, 255, 0, 0.1);
+        }
+        .connection-status {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .message-log { 
+            background: #000; 
+            border: 1px solid #0f0; 
+            padding: 15px; 
+            height: 400px; 
+            overflow-y: scroll; 
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .acknowledgment { color: #ff0; font-weight: bold; }
+        .connection { color: #0ff; }
+        .message { color: #0f0; }
+        .error { color: #f00; }
+        .timestamp { color: #999; font-size: 0.9em; }
+        
+        .controls {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background: #ff0;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .stat-box {
+            border: 1px solid #0f0;
+            padding: 10px;
+            background: rgba(0, 255, 0, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-header">
+        <h1>🎭 ONCE Interactive Demo - Browser Client</h1>
+        <p>Web4 P2P Communication with Message Component Integration</p>
+        <div class="connection-status" id="connectionStatus">🔴 Disconnected</div>
+    </div>
+    
+    <div class="stats">
+        <div class="stat-box">
+            <strong>Messages Sent:</strong> <span id="messagesSent">0</span>
+        </div>
+        <div class="stat-box">
+            <strong>Messages Received:</strong> <span id="messagesReceived">0</span>
+        </div>
+        <div class="stat-box">
+            <strong>Acknowledgments:</strong> <span id="acknowledgmentsSent">0</span>
+        </div>
+        <div class="stat-box">
+            <strong>Connection Time:</strong> <span id="connectionTime">--:--:--</span>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <button onclick="sendTestMessage()">Send Test Message</button>
+        <button onclick="sendAcknowledgment()">Send Acknowledgment</button>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+    
+    <div class="message-log" id="messageLog">
+        <div class="connection">📡 Initializing ONCE Browser Client...</div>
+    </div>
+    
+    <script>
+        // Browser client with Message component integration
+        const urlParams = new URLSearchParams(window.location.search);
+        const serverHost = urlParams.get('server') || 'localhost:8080';
+        const isDemoMode = urlParams.get('demo') === 'true';
+        
+        let ws = null;
+        let stats = {
+            messagesSent: 0,
+            messagesReceived: 0,
+            acknowledgmentsSent: 0,
+            connectionTime: null
+        };
+        
+        console.log('ONCE Browser Client - Demo Mode:', isDemoMode);
+        console.log('Connecting to server:', serverHost);
+        
+        addMessage('connection', '🎭 ONCE Browser Client started in demo mode');
+        addMessage('connection', `📡 Attempting connection to: ${serverHost}`);
+        
+        // WebSocket connection with Message acknowledgments
+        function connectToServer() {
+            try {
+                ws = new WebSocket(`ws://${serverHost}`);
+                
+                ws.onopen = function() {
+                    stats.connectionTime = new Date();
+                    updateConnectionStatus('🟢 Connected to ' + serverHost);
+                    addMessage('connection', '✅ Connected to ONCE server');
+                    
+                    // Send connection acknowledgment using Message component pattern
+                    const ackMessage = {
+                        type: 'message-component-ack',
+                        scenario: createMessageScenario(
+                            'Browser client connected and ready for P2P communication',
+                            'acknowledgment',
+                            'ServerConnection'
+                        )
+                    };
+                    
+                    ws.send(JSON.stringify(ackMessage));
+                    stats.acknowledgmentsSent++;
+                    updateStats();
+                    addMessage('acknowledgment', '📨 Sent connection acknowledgment via Message component');
+                };
+                
+                ws.onmessage = function(event) {
+                    try {
+                        const message = JSON.parse(event.data);
+                        stats.messagesReceived++;
+                        updateStats();
+                        
+                        addMessage('message', `📥 Received: ${message.type || 'unknown'}`);
+                        
+                        // Create acknowledgment for received messages
+                        if (message.type === 'scenario' || message.type === 'message-component-ack') {
+                            const ackMessage = {
+                                type: 'message-component-ack',
+                                scenario: createMessageScenario(
+                                    `Acknowledged receipt of ${message.type}`,
+                                    'acknowledgment',
+                                    message.type
+                                )
+                            };
+                            
+                            ws.send(JSON.stringify(ackMessage));
+                            stats.acknowledgmentsSent++;
+                            updateStats();
+                            addMessage('acknowledgment', '📨 Sent acknowledgment for received message');
+                        }
+                    } catch (error) {
+                        addMessage('error', `❌ Error parsing message: ${error.message}`);
+                    }
+                };
+                
+                ws.onclose = function() {
+                    updateConnectionStatus('🔴 Disconnected');
+                    addMessage('connection', '❌ Disconnected from ONCE server');
+                };
+                
+                ws.onerror = function(error) {
+                    addMessage('error', `❌ WebSocket error: ${error.message || 'Connection failed'}`);
+                };
+                
+            } catch (error) {
+                addMessage('error', `❌ Failed to connect: ${error.message}`);
+            }
+        }
+        
+        // Message component scenario creation
+        function createMessageScenario(content, type = 'message', acknowledgedType = null) {
+            return {
+                uuid: generateUUID(),
+                component: 'Message',
+                version: '0.1.0.0',
+                data: {
+                    content: content,
+                    type: type,
+                    timestamp: new Date().toISOString(),
+                    sender: 'Browser-Client-' + Date.now(),
+                    acknowledgedType: acknowledgedType,
+                    status: type === 'acknowledgment' ? 'received' : 'sent'
+                }
+            };
+        }
+        
+        // UI Functions
+        function addMessage(type, text) {
+            const log = document.getElementById('messageLog');
+            const div = document.createElement('div');
+            div.className = type;
+            
+            const timestamp = new Date().toLocaleTimeString();
+            div.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${text}`;
+            
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        function updateConnectionStatus(status) {
+            document.getElementById('connectionStatus').textContent = status;
+        }
+        
+        function updateStats() {
+            document.getElementById('messagesSent').textContent = stats.messagesSent;
+            document.getElementById('messagesReceived').textContent = stats.messagesReceived;
+            document.getElementById('acknowledgmentsSent').textContent = stats.acknowledgmentsSent;
+            
+            if (stats.connectionTime) {
+                const now = new Date();
+                const diff = now - stats.connectionTime;
+                const hours = Math.floor(diff / 3600000).toString().padStart(2, '0');
+                const minutes = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+                const seconds = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+                document.getElementById('connectionTime').textContent = `${hours}:${minutes}:${seconds}`;
+            }
+        }
+        
+        // Control Functions
+        function sendTestMessage() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                const testMessage = {
+                    type: 'message-component-test',
+                    scenario: createMessageScenario('Test message from browser client', 'message')
+                };
+                
+                ws.send(JSON.stringify(testMessage));
+                stats.messagesSent++;
+                updateStats();
+                addMessage('message', '📤 Sent test message');
+            } else {
+                addMessage('error', '❌ Not connected to server');
+            }
+        }
+        
+        function sendAcknowledgment() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                const ackMessage = {
+                    type: 'message-component-ack',
+                    scenario: createMessageScenario('Manual acknowledgment from browser', 'acknowledgment', 'ManualTest')
+                };
+                
+                ws.send(JSON.stringify(ackMessage));
+                stats.acknowledgmentsSent++;
+                updateStats();
+                addMessage('acknowledgment', '📨 Sent manual acknowledgment');
+            } else {
+                addMessage('error', '❌ Not connected to server');
+            }
+        }
+        
+        function clearLog() {
+            document.getElementById('messageLog').innerHTML = '';
+            addMessage('connection', '🧹 Log cleared');
+        }
+        
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
+        }
+        
+        // Update stats periodically
+        setInterval(updateStats, 1000);
+        
+        // Auto-connect when page loads
+        connectToServer();
+        
+        // Welcome message for demo mode
+        if (isDemoMode) {
+            setTimeout(() => {
+                addMessage('message', '🎭 Welcome to ONCE Interactive Demo!');
+                addMessage('message', '🌐 This browser client demonstrates Web4 P2P communication');
+                addMessage('message', '📨 Message component acknowledgments are enabled');
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

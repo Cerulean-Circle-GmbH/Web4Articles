@@ -11,7 +11,7 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/temp/2025-08-24-UTC-0926-save-restart-agent-role-pdca.md) | [temp/2025-08-24-UTC-0926-save-restart-agent-role-pdca.md](temp/2025-08-24-UTC-0926-save-restart-agent-role-pdca.md)
-- **Role Definition:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/scrum.pmo/roles/SaveRestartAgent/role-definition.md) | [scrum.pmo/roles/SaveRestartAgent/role-definition.md](scrum.pmo/roles/SaveRestartAgent/role-definition.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/scrum.pmo/roles/SaveRestartAgent/role-definition.md) | [§/scrum.pmo/roles/SaveRestartAgent/role-definition.md](../role-definition.md)
 
 ### **QA Decisions**
 All clear, no decisions to make - Documenting my specific role as requested.
@@ -166,4 +166,3 @@ cat .git/hooks/post-commit
 
 **🔄 Save/Restart Agent: Guardian of save/start, enabler of recovery! 🚀📋✅**
 
-**"I am save/start, save/start is me."** 🔄🎯

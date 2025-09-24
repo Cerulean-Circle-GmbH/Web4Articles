@@ -1,0 +1,38 @@
+{
+  "ior": {
+    "uuid": "fe639dd4-c066-4f04-92da-bdad08d48e8d",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"donges\",\"hostname\":\"localhost\",\"uuid\":\"fe639dd4-c066-4f04-92da-bdad08d48e8d\",\"timestamp\":\"2025-09-17T13:21:32.505Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "fe639dd4-c066-4f04-92da-bdad08d48e8d",
+    "name": "Test Unit",
+    "origin": "",
+    "definition": "Test definition",
+    "typeM3": "CLASS",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/f/e/6/3/9/fe639dd4-c066-4f04-92da-bdad08d48e8d.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/components/Unit/0.3.0.5/temp-filename-test/temp-filename-test/temp-filename-test/temp-filename-test/temp-filename-test/temp-filename-test/temp-filename-test/temp-filename-test/Test.Unit.unit"
+    ],
+    "namedLinks": [],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-17T13:21:32.504Z",
+    "updatedAt": "2025-09-17T13:21:32.506Z",
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/Users/Shared/Workspaces/2cuGitHub/Web4Articles/components/Unit/0.3.0.5/temp-filename-test/temp-filename-test/temp-filename-test/temp-filename-test/temp-filename-test/temp-filename-test/temp-filename-test/temp-filename-test/Test.Unit.unit",
+        "linkTarget": "ior:unit:fe639dd4-c066-4f04-92da-bdad08d48e8d",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}

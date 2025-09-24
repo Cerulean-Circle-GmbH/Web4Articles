@@ -1,0 +1,19 @@
+{
+  "name": "@web4/scenario",
+  "version": "0.1.3.0",
+  "description": "Web4 Scenario - Universal object hibernation component",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "echo \"No tests yet\""
+  },
+  "keywords": ["web4", "scenario", "hibernation", "serialization"],
+  "author": "Web4Articles",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

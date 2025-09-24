@@ -1,0 +1,17 @@
+{
+  "IOR": {
+    "uuid": "8b7c7279-4df6-4e13-806e-29752cbe3ece",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDA2OjAyOjAyLjk2N1oiLCJ1dWlkIjoiNjczYjBmNTQtNGU5OC00MWIxLThkZjQtYWM4OTA1OGE5NDYxIn0=",
+  "model": {
+    "uuid": "8b7c7279-4df6-4e13-806e-29752cbe3ece",
+    "name": "Directory Context Fix and Test",
+    "title": "Directory Context Fix and Test",
+    "description": "Check and fix the issue where requirements are always generated in Unit component spec folder instead of the component where the script is called from. Then create this prompt as a requirement to test if it will arrive in Web4Requirement spec folder correctly.",
+    "implemented": true,
+    "updatedAt": "2025-08-22T10:40:22.672Z",
+    "implementationStatus": "completed"
+  }
+}

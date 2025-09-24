@@ -1,0 +1,25 @@
+{
+  "ior": {
+    "uuid": "f6ed81b9-b62b-4850-957b-6de01e49a23b",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"f6ed81b9-b62b-4850-957b-6de01e49a23b\",\"timestamp\":\"2025-09-12T13:47:26.930Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "f6ed81b9-b62b-4850-957b-6de01e49a23b",
+    "createdAt": "2025-09-12T13:47:26.928Z",
+    "updatedAt": "2025-09-12T13:47:26.933Z",
+    "name": "test-folder-tracking",
+    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/test-folder-tracking/",
+    "definition": "Folder atomic element: test-folder-tracking/",
+    "typeM3": "FOLDER",
+    "indexPath": "/workspace/scenarios/index/f/6/e/d/8/f6ed81b9-b62b-4850-957b-6de01e49a23b.scenario.json",
+    "folderPath": "test-folder-tracking/",
+    "fileCount": 0,
+    "subfolderCount": 2,
+    "totalSize": 0,
+    "folderHash": "77de58a005b30fd7fa17a808607c5a34fd2a55d14edafdf3cd2eceb28a1d9cb3",
+    "lastScanned": "2025-09-12T13:47:26.928Z",
+    "symlinkPaths": []
+  }
+}

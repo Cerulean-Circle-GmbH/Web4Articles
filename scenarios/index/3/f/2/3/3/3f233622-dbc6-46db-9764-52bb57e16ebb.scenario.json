@@ -1,0 +1,37 @@
+{
+  "ior": {
+    "uuid": "3f233622-dbc6-46db-9764-52bb57e16ebb",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"3f233622-dbc6-46db-9764-52bb57e16ebb\",\"timestamp\":\"2025-09-08T13:43:51.196Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "3f233622-dbc6-46db-9764-52bb57e16ebb",
+    "name": "Async Method Signature Update",
+    "origin": "",
+    "definition": "Converting sync methods to async when ESM requires await operations",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/3/f/2/3/3/3f233622-dbc6-46db-9764-52bb57e16ebb.scenario.json",
+    "symlinkPaths": [
+      "/workspace/scenarios/ontology/Async.Method.Signature.Update.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../index/3/f/2/3/3/3f233622-dbc6-46db-9764-52bb57e16ebb.scenario.json",
+        "filename": "Async.Method.Signature.Update.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process",
+      "Async Method Signature Update"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-08T13:43:51.194Z",
+    "updatedAt": "2025-09-08T13:43:51.200Z"
+  }
+}

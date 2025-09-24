@@ -1,0 +1,37 @@
+{
+  "name": "@web4/httpserver",
+  "version": "0.3.0.0",
+  "description": "HttpServer v0.3.0.0 - HTTP server capability component with radical OOP patterns and Web4 architecture compliance",
+  "type": "module",
+  "main": "dist/ts/layer3/HttpServer.interface.js",
+  "types": "dist/ts/layer3/HttpServer.interface.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean"
+  },
+  "keywords": [
+    "web4",
+    "httpserver",
+    "capability-component",
+    "radical-oop",
+    "type-safety"
+  ],
+  "author": "Web4Articles",
+  "license": "MIT",
+  "dependencies": {
+    "@types/uuid": "^10.0.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.13",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

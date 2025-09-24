@@ -1,0 +1,38 @@
+{
+  "ior": {
+    "uuid": "ccce3656-0227-43c0-b12a-ad3e6965a769",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"ccce3656-0227-43c0-b12a-ad3e6965a769\",\"timestamp\":\"2025-09-13T12:56:23.876Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "ccce3656-0227-43c0-b12a-ad3e6965a769",
+    "createdAt": "2025-09-13T12:56:11.467Z",
+    "updatedAt": "2025-09-13T12:56:23.881Z",
+    "typeM3": "CLASS",
+    "name": "DefaultCLI",
+    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Unit/0.3.0.5/src/ts/layer2/DefaultCLI.ts",
+    "definition": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/components/Unit/0.3.0.5/src/ts/layer2/DefaultCLI.ts",
+    "indexPath": "/workspace/scenarios/index/c/c/c/e/3/ccce3656-0227-43c0-b12a-ad3e6965a769.scenario.json",
+    "symlinkPaths": [
+      "/workspace/components/Web4Requirement/0.3.0.5/src/ts/layer2/DefaultCLI.ts.unit"
+    ],
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/scenarios/ontology/DefaultCLI.unit",
+        "linkTarget": "ior:unit:ccce3656-0227-43c0-b12a-ad3e6965a769",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/MDAv4/M3/CLASS/DefaultCLI.unit",
+        "linkTarget": "ior:unit:ccce3656-0227-43c0-b12a-ad3e6965a769",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file://components/Web4Requirement/0.3.0.5/src/ts/layer2/DefaultCLI.ts.unit",
+        "linkTarget": "ior:unit:uuid:ccce3656-0227-43c0-b12a-ad3e6965a769",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+#!/bin/bash
+# ONCE CLI Tool v0.3.0.4 - Fresh start with working build
+# Target: 0.2.0.0 functionality + 0.3.0.2 structure
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+COMPONENT_DIR="$SCRIPT_DIR"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+echo "🔗 Web4 ONCE Component v0.3.0.4 - Object Network Communication Engine"
+echo "📂 Component: $COMPONENT_DIR"
+
+CLI_PATH="$COMPONENT_DIR/dist/ts/layer5/index.js"
+
+# Function to check if rebuild is needed
+needs_rebuild() {
+    # If CLI doesn't exist, rebuild needed
+    [ ! -f "$CLI_PATH" ] && return 0
+    
+    # Check if any TypeScript file in src is newer than CLI
+    find "$COMPONENT_DIR/src" -name "*.ts" -newer "$CLI_PATH" 2>/dev/null | grep -q . && return 0
+    
+    return 1
+}
+
+# Build if needed (with source freshness check)
+if needs_rebuild; then
+    echo "🔨 Building ONCE v0.3.0.4 (source files updated)..."
+    cd "$COMPONENT_DIR"
+    npm install --silent 2>/dev/null || true
+    npm run build --silent
+fi
+
+# Check if CLI exists after build
+if [ ! -f "$CLI_PATH" ]; then
+    echo -e "${RED}❌ ONCE CLI not found at: $CLI_PATH${NC}"
+    exit 1
+fi
+
+# Execute CLI
+node "$CLI_PATH" "$@"

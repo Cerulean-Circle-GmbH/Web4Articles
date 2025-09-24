@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Web4 P2PServer Component Wrapper - v0.3.0.0
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+if [ -z "$PROJECT_ROOT" ]; then
+  PROJECT_ROOT="$SCRIPT_DIR"
+  while [ "$PROJECT_ROOT" != "/" ]; do
+    if [ -f "$PROJECT_ROOT/package.json" ] || [ -d "$PROJECT_ROOT/.git" ]; then
+      break
+    fi
+    PROJECT_ROOT="$(dirname "$PROJECT_ROOT")"
+  done
+  export PROJECT_ROOT
+fi
+
+CURRENT_DIR="$(pwd)"
+SHELL_STARTER="$PROJECT_ROOT/components/P2PServer/0.3.0.0/p2pserver"
+
+if [ ! -x "$SHELL_STARTER" ]; then
+    echo "❌ P2PServer shell starter not found at: $SHELL_STARTER"
+    exit 1
+fi
+
+cd "$CURRENT_DIR"
+"$SHELL_STARTER" "$@"

@@ -5,12 +5,12 @@
 **👤 Role:** Save/Restart Agent → Knowledge Integrator  
 **🚨 Issues:** Need to integrate temp PDCAs from dev/2025-08-25-UTC-1308  
 **📎 Previous Commit:** fe32b402 - Implement: Change request process  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-24-UTC-1406-change-request-process-pdca.md) | [scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-24-UTC-1406-change-request-process-pdca.md](scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-24-UTC-1406-change-request-process-pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-24-UTC-1406-change-request-process-pdca.md) | [§/scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-24-UTC-1406-change-request-process-pdca.md](2025-08-24-UTC-1406-change-request-process-pdca.md)
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-25-UTC-1435-cherry-pick-temp-folder.md) | [scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-25-UTC-1435-cherry-pick-temp-folder.md](scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-25-UTC-1435-cherry-pick-temp-folder.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-25-UTC-1435-cherry-pick-temp-folder.md) | [§/scrum.pmo/roles/SaveRestartAgent/pdca/2025-08-25-UTC-1435-cherry-pick-temp-folder.md](2025-08-25-UTC-1435-cherry-pick-temp-folder.md)
 - **Source Branch:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-25-UTC-1308) | dev/2025-08-25-UTC-1308
 
 ### **QA Decisions**
@@ -139,4 +139,3 @@ git checkout origin/dev/2025-08-25-UTC-1308 -- temp/
 
 **📂 Cherry-pick complete: 29 PDCAs preserved! 🔄📋✅**
 
-**"Every PDCA tells a story of learning."** 📚🎯

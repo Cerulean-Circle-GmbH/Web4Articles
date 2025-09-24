@@ -1,0 +1,106 @@
+@startuml RequirementOverviewGeneration
+!define REQUIREMENT_COLOR #E3F2FD
+!define GENERATOR_COLOR #E8F5E8
+!define VIEW_COLOR #FCE4EC
+!define OUTPUT_COLOR #FFF3E0
+
+title Web4 Requirement Overview Generation Process
+
+participant "Product Owner" as PO
+participant "Web4Requirement" as Req <<REQUIREMENT_COLOR>>
+participant "RequirementOverview" as Generator <<GENERATOR_COLOR>>
+participant "RequirementMDView" as MDView <<VIEW_COLOR>>
+participant "requirements.md" as Output <<OUTPUT_COLOR>>
+
+PO -> Req : create requirement objects
+activate Req
+
+loop for each requirement
+  Req -> Req : init(requirementScenario)
+  note right: Web4 Pattern:\n• Empty constructor\n• Scenario initialization\n• IOR-based traceability
+  
+  Req -> Req : addTestReference(testIOR)
+  Req -> Req : updateStatus(status)
+end
+
+PO -> Generator : create overview generator
+activate Generator
+
+Generator -> Generator : init(overviewScenario)
+
+loop for all requirements
+  PO -> Generator : addRequirement(requirement)
+  Generator -> Req : getMetadata()
+  Generator -> Req : getTraceability()
+  
+  Req --> Generator : requirement data
+end
+
+PO -> Generator : generateOverviewMD()
+
+Generator -> Generator : getOverview()
+note right: Calculate:\n• Completion statistics\n• Priority breakdown\n• Epic grouping
+
+Generator -> Generator : groupRequirementsByEpic()
+
+loop for each epic
+  loop for each requirement in epic
+    Generator -> Req : generateMDView()
+    activate MDView
+    
+    Req -> MDView : create MDView representation
+    
+    MDView -> MDView : formatCheckboxStatus()
+    MDView -> MDView : formatUUID()
+    MDView -> MDView : formatDescription()
+    MDView -> MDView : formatAcceptanceCriteria()
+    MDView -> MDView : formatTestCoverage()
+    
+    MDView --> Generator : markdown string
+    deactivate MDView
+  end
+end
+
+Generator -> Output : write requirements.md file
+activate Output
+
+note over Output
+  **Generated requirements.md Structure:**
+  
+  # Sprint Requirements
+  
+  ## 📊 Completion Status
+  - Total: X requirements
+  - Completed: Y (Z%)
+  
+  ## 📋 Requirements
+  
+  ### Epic Name
+  - [x] Requirement Title
+    [requirement:uuid:...]
+    > Description
+    
+    **Acceptance Criteria:**
+    - [ ] Criteria 1
+    - [x] Criteria 2
+    
+    **Test Coverage:**
+    - [test:uuid:...](link)
+end note
+
+Generator --> PO : complete requirements.md
+deactivate Generator
+deactivate Output
+
+PO -> Output : review generated overview
+note left: **Product Owner Benefits:**\n• Auto-generated from objects\n• Real-time status tracking\n• Complete test traceability\n• Epic organization\n• Checkbox functionality
+
+note over Req, Generator
+  **Web4 Object Network:**
+  Each requirement = object instance
+  Overview = MDView of object network
+  Status changes = object mutations
+  Traceability = IOR references
+end note
+
+@enduml

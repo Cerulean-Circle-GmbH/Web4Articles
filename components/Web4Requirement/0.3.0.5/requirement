@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Web4Requirement 0.3.0.5 - Revolutionary Requirement Management CLI
+# Component-aware requirement management with Unit 0.3.0.5 principles
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+COMPONENT_VERSION="0.3.0.5"
+COMPONENT_NAME="Web4Requirement"
+
+# Web4 self-building component principle
+if [ ! -d "$SCRIPT_DIR/dist" ]; then
+    echo "🔄 Building Web4Requirement $COMPONENT_VERSION..."
+    cd "$SCRIPT_DIR" && npm install && npm run build
+    if [ $? -ne 0 ]; then
+        echo "❌ Build failed for Web4Requirement $COMPONENT_VERSION"
+        exit 1
+    fi
+fi
+
+# Execute CLI with all arguments
+node -e "
+import('$SCRIPT_DIR/dist/ts/layer5/RequirementCLI.js').then(module => {
+  module.RequirementCLI.start(process.argv.slice(2));
+}).catch(err => {
+  console.error('Error:', err.message);
+  process.exit(1);
+});
+" "$@"

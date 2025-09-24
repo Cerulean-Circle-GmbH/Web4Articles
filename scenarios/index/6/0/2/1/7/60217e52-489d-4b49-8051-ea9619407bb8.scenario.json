@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "60217e52-489d-4b49-8051-ea9619407bb8",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI5VDE4OjM3OjQyLjgwNVoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "60217e52-489d-4b49-8051-ea9619407bb8",
+    "name": "Web4 CMMI-4: Respectful TRON Challenge Protocol",
+    "title": "Web4 CMMI-4: Respectful TRON Challenge Protocol",
+    "description": "CMMI Level 4 (Quantitatively Managed) permits questioning TRON decisions, but ONLY when you can definitively prove TRON wrong AND provide a demonstrably better alternative. This includes leveraging TRON's observed weaknesses such as typing errors and typos as opportunities for improvement. The challenge must be respectful, evidence-based, and solution-oriented. Authority remains with TRON unless superior proof is provided."
+  },
+  "unitIndex": {
+    "uuid": "60217e52-489d-4b49-8051-ea9619407bb8",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/6/0/2/1/7/60217e52-489d-4b49-8051-ea9619407bb8.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/60217e52-489d-4b49-8051-ea9619407bb8.scenario.json"
+    ],
+    "createdAt": "2025-08-29T18:37:42.815Z",
+    "updatedAt": "2025-08-29T18:37:42.815Z"
+  }
+}

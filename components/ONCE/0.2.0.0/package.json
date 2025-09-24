@@ -1,0 +1,42 @@
+{
+  "name": "@web4/once",
+  "version": "0.2.0.0",
+  "description": "ONCE v0.2.0.0 - Object Network Communication Engine with Server Hierarchy and Scenario-based Configuration",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "test:server": "vitest --config vitest.config.ts test/server/ --run",
+    "test:watch": "vitest --watch",
+    "start": "node dist/ts/layer5/ONCECLI.js",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean"
+  },
+  "keywords": [
+    "web4",
+    "once",
+    "p2p",
+    "communication",
+    "server-hierarchy",
+    "scenario-based"
+  ],
+  "author": "Web4Articles",
+  "license": "MIT",
+  "dependencies": {
+    "@types/uuid": "^10.0.0",
+    "uuid": "^11.1.0",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "@types/ws": "^8.5.8",
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

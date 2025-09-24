@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "1b9ae5de-2867-4192-8473-9e41a817b99a",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTMwVDA5OjM5OjI2Ljk4NFoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "1b9ae5de-2867-4192-8473-9e41a817b99a",
+    "name": "Test Build Fix",
+    "title": "Test Build Fix",
+    "description": "Testing Web4Requirement after fixing Unit → User → Web4Requirement build chain"
+  },
+  "unitIndex": {
+    "uuid": "1b9ae5de-2867-4192-8473-9e41a817b99a",
+    "indexPath": "/workspace/scenarios/index/1/b/9/a/e/1b9ae5de-2867-4192-8473-9e41a817b99a.scenario.json",
+    "symlinkPaths": [
+      "/workspace/temp/spec/requirements/1b9ae5de-2867-4192-8473-9e41a817b99a.scenario.json"
+    ],
+    "createdAt": "2025-08-30T09:39:26.989Z",
+    "updatedAt": "2025-08-30T09:39:26.989Z"
+  }
+}

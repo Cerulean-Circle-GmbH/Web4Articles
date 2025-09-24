@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "d4cbb120-c2e1-4e60-8e68-5b54192f6a92",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA5LTA0VDEwOjAzOjAyLjg5OVoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "d4cbb120-c2e1-4e60-8e68-5b54192f6a92",
+    "name": "Web4 Component DRY CLI Color Constants",
+    "title": "Web4 Component DRY CLI Color Constants",
+    "description": "All Web4 component CLIs must externalize repeated CLI color constants (cyan, yellow, green, bold, reset) into shared DRY-compliant color utility following Web4 DRY principles to eliminate code duplication across component CLI implementations"
+  },
+  "unitIndex": {
+    "uuid": "d4cbb120-c2e1-4e60-8e68-5b54192f6a92",
+    "indexPath": "/workspace/scenarios/index/d/4/c/b/b/d4cbb120-c2e1-4e60-8e68-5b54192f6a92.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/d4cbb120-c2e1-4e60-8e68-5b54192f6a92.scenario.json"
+    ],
+    "createdAt": "2025-09-04T10:03:02.902Z",
+    "updatedAt": "2025-09-04T10:03:02.902Z"
+  }
+}
