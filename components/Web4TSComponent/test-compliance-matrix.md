@@ -18,7 +18,7 @@
 | 0.3.0.7 | ✅ TESTED | 28 | 4 | 24 | ✅ **NO** | All outputs in `test/data/` | ✅ **COMPLIANT** |
 | 0.3.0.8 | ✅ TESTED | 38 | 28 | 10 | ✅ **NO** | All outputs in `test/data/` | ✅ **COMPLIANT** |
 | 0.3.0.9 | ✅ TESTED | 37 | 30 | 7 | ✅ **NO** | All outputs in `test/data/` | ✅ **COMPLIANT** |
-| 1.0.0.0 | ❌ NO TESTS | 0 | 0 | 0 | ❌ N/A | No test files found | ❌ **NON-FUNCTIONAL** |
+| 0.0.0.1 | ❌ NO TESTS | 0 | 0 | 0 | ❌ N/A | No test files found | ❌ **NON-FUNCTIONAL** |
 
 ## Historical Violations (RESOLVED)
 
@@ -41,7 +41,7 @@
 Total Versions: 11
 Testable Versions: 4 (0.3.0.6, 0.3.0.7, 0.3.0.8, 0.3.0.9)
 Deprecated Versions: 6 (all 0.1.x versions)
-Non-functional: 1 (1.0.0.0)
+Non-functional: 1 (0.0.0.1)
 Current Compliance Rate: 100% (4/4 testable versions COMPLIANT)
 ```
 

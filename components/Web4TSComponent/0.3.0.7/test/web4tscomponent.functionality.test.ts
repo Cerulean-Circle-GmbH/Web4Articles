@@ -9,24 +9,37 @@ import { Web4TSComponentCLI } from '../src/ts/layer5/Web4TSComponentCLI.js';
 import * as fs from 'fs/promises';
 import { existsSync } from 'fs';
 import * as path from 'path';
+import { ProjectRootMocker } from './utils/ProjectRootMocker.js';
 
 describe('Web4TSComponent Functionality', () => {
   let component: DefaultWeb4TSComponent;
   let cli: Web4TSComponentCLI;
+  let rootMocker: ProjectRootMocker;
 
   beforeEach(async () => {
     // Enable test mode for environment-aware path resolution
     (globalThis as any).__TEST_MODE__ = true;
     
-    // Ensure test data directory exists
+    // Setup test data directory
     const testDataDir = path.join(__dirname, 'data');
     await fs.mkdir(testDataDir, { recursive: true });
     
+    // Mock project root to be test data directory
+    rootMocker = new ProjectRootMocker(testDataDir);
+    rootMocker.mock();
+    
     component = new DefaultWeb4TSComponent();
+    // Update target directory to use mocked root
+    component.setTargetDirectory(testDataDir);
     cli = new Web4TSComponentCLI();
   });
 
   afterEach(async () => {
+    // Restore original project root
+    if (rootMocker) {
+      rootMocker.restore();
+    }
+    
     // Clean up test components (ephemeral test data as per decision 5a)
     await cleanupTestComponents();
     delete (globalThis as any).__TEST_MODE__;
@@ -43,7 +56,7 @@ describe('Web4TSComponent Functionality', () => {
           await fs.rm(compPath, { recursive: true, force: true });
         }
       } catch (error) {
-        console.warn(`Cleanup warning for ${comp}:`, error.message);
+        // Ignore cleanup errors
       }
     }
   }
