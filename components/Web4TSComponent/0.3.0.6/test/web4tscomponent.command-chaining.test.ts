@@ -15,9 +15,15 @@ describe('Web4TSComponent Command Chaining', () => {
   let cli: Web4TSComponentCLI;
   const testComponentName = 'TestChainComponent';
   const testVersion = '0.1.0.0';
-  const testComponentPath = `components/${testComponentName}/${testVersion}`;
 
   beforeEach(async () => {
+    // Enable test mode for environment-aware path resolution
+    (globalThis as any).__TEST_MODE__ = true;
+    
+    // Ensure test data directory exists
+    const testDataDir = path.join(__dirname, 'data');
+    await fs.mkdir(testDataDir, { recursive: true });
+    
     component = new DefaultWeb4TSComponent();
     cli = new Web4TSComponentCLI();
     
@@ -28,12 +34,15 @@ describe('Web4TSComponent Command Chaining', () => {
   afterEach(async () => {
     // Clean up test components
     await cleanupTestComponent();
+    delete (globalThis as any).__TEST_MODE__;
   });
 
   async function cleanupTestComponent() {
     try {
-      if (existsSync(`components/${testComponentName}`)) {
-        await fs.rm(`components/${testComponentName}`, { recursive: true, force: true });
+      const testDataDir = path.join(__dirname, 'data');
+      const compPath = path.join(testDataDir, testComponentName);
+      if (existsSync(compPath)) {
+        await fs.rm(compPath, { recursive: true, force: true });
       }
     } catch (error) {
       // Ignore cleanup errors
