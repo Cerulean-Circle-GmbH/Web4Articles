@@ -1,1 +1,0 @@
-../../../../scrum.pmo/project.journal/2025-09-05-UTC-1300-branch-switch-session/session.summary.md

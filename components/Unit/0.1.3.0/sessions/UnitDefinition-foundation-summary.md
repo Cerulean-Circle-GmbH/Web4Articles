@@ -1,1 +1,0 @@
-../../../../scrum.pmo/project.journal/UnitDefinitionSession/session.summary.md
