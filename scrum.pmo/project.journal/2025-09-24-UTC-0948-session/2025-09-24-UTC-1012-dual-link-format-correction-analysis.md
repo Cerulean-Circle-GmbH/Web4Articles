@@ -21,7 +21,8 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-1012-dual-link-format-correction-analysis.md) | [§/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-1012-dual-link-format-correction-analysis.md](2025-09-24-UTC-1012-dual-link-format-correction-analysis.md)
-- **Format Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../../roles/_shared/PDCA/howto.PDCA.md)
+- **Analysis Table:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/process.memory.fixed.md) | [§/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/process.memory.fixed.md](process.memory.fixed.md)
+- **Format Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../roles/_shared/PDCA/howto.PDCA.md)
 
 ### **QA Decisions**
 - [x] **Format Violation Identified**: Missing § notation in dual links across multiple PDCAs
@@ -71,14 +72,12 @@ pdca
 
 **1. Incorrect Information Sources Analysis**
 
-| **Source Type** | **Specific Location** | **Incorrect Information** | **Impact** | **Root Cause** | **Correct Information Source** |
-|---|---|---|---|---|---|
-| Template Assumption | Agent internal logic | Used simple filename links without § notation | All PDCA dual links incorrect | Failed to read format requirements thoroughly | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md#L197-L204) \| [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../roles/_shared/PDCA/howto.PDCA.md) lines 197-204: § notation requirement |
-| Previous PDCA Pattern | Session start PDCA creation | Copied format without § notation | Propagated incorrect format | Pattern replication without validation | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md#L207-L208) \| [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../roles/_shared/PDCA/howto.PDCA.md) lines 207-208: § notation for display |
-| Memory/Experience | General link formatting | Applied standard markdown link format | Missing project-specific § requirement | Assumed standard markdown was sufficient | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md#L192-L218) \| [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../roles/_shared/PDCA/howto.PDCA.md) lines 192-218: Dual Link System Requirements |
-| Incomplete Reading | howto.PDCA.md lines 197-204 | Missed § notation requirement | Systematic format violations | Skipped detailed format specification section | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md#L197-L204) \| [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../roles/_shared/PDCA/howto.PDCA.md) lines 197-204: Format Standard (CRITICAL) |
-| Chat Response Pattern | Previous chat responses | Used project root paths without § display | Inconsistent format application | Mixed up PDCA vs Chat format requirements | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md#L201-L204) \| [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../roles/_shared/PDCA/howto.PDCA.md) lines 201-204: Chat vs PDCA format distinction |
-| **Relative Path Error** | **Table link correction** | **Used incorrect ../../../ path instead of ../../** | **Broken local links in analysis table** | **Failed to calculate relative path correctly from document location** | **[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md#L208-L209) \| [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../roles/_shared/PDCA/howto.PDCA.md) lines 208-209: Relative path FROM document TO target** |
+**Comprehensive Analysis Table:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/process.memory.fixed.md) | [§/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/process.memory.fixed.md](process.memory.fixed.md)
+
+The detailed analysis table has been extracted to a separate file with comprehensive source analysis, correct information references, and memory consolidation including:
+- 6 distinct error patterns from template assumptions to relative path calculations
+- Complete dual link format requirements with § notation
+- Memory references (IDs: 9282142, 9282144, 9282146) for systematic knowledge preservation
 
 **2. Correct Format Requirements (from howto.PDCA.md)**
 
