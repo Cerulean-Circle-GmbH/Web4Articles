@@ -37,7 +37,7 @@
 
 ### **Memory ID: 9282142 - Test Output Location Requirement**
 **Title:** Test Output Location Requirement - All Components  
-**Content:** ALL tests for ANY component must create their output exclusively to `<component>/<version>/test/data` directory. Any test creating output in other locations must be immediately stopped and reported in a PDCA.
+**Content:** ALL tests for ANY component must create their output exclusively to `<component>/<version>/test/data` directory. Any test creating output in other locations must be immediately stopped and reported in a PDCA. User requirement established in [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-1038-memory-management-test-requirements.md) | [§/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-1038-memory-management-test-requirements.md](2025-09-24-UTC-1038-memory-management-test-requirements.md).
 
 ### **Memory ID: 9282144 - Dual Link Format Requirements**
 **Title:** Dual Link Format Requirements - § Notation Mandatory  
@@ -45,7 +45,7 @@
 
 ### **Memory ID: 9282146 - PDCA Template Compliance**
 **Title:** PDCA Template Version 3.1.4.2 Compliance Requirements  
-**Content:** All PDCAs must strictly follow Template Version 3.1.4.2 with 6 mandatory sections: Header with UTC timestamp, Summary with artifact links and QA decisions, Plan/Do/Check/Act with horizontal separators, Emotional Reflection, PDCA Process Update, and final one-line summary.
+**Content:** All PDCAs must strictly follow Template Version 3.1.4.2 with 6 mandatory sections. Template and requirements documented in [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../roles/_shared/PDCA/howto.PDCA.md) and [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](../../roles/_shared/PDCA/template.md).
 
 ---
 
