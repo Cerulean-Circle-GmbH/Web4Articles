@@ -22,18 +22,16 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-1125-displaced-test-components-violation-analysis.md) | [§/2025-09-24-UTC-1125-displaced-test-components-violation-analysis.md](2025-09-24-UTC-1125-displaced-test-components-violation-analysis.md)
-- **Violation Evidence:** TestChainComponent and TestCorrectComponent at project root level
-- **Root Cause Analysis:** Command chaining test files bypass test mode support
+- **Violating Test Files:**
+  - [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/components/Web4TSComponent/0.3.0.6/test/web4tscomponent.command-chaining.test.ts) | [§/components/Web4TSComponent/0.3.0.6/test/web4tscomponent.command-chaining.test.ts](../../../components/Web4TSComponent/0.3.0.6/test/web4tscomponent.command-chaining.test.ts)
+  - [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/components/Web4TSComponent/0.3.0.7/test/web4tscomponent.command-chaining.test.ts) | [§/components/Web4TSComponent/0.3.0.7/test/web4tscomponent.command-chaining.test.ts](../../../components/Web4TSComponent/0.3.0.7/test/web4tscomponent.command-chaining.test.ts)
+- **Implementation Files Needing Updates:**
+  - [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/components/Web4TSComponent/0.3.0.6/src/ts/layer2/DefaultWeb4TSComponent.ts) | [§/components/Web4TSComponent/0.3.0.6/src/ts/layer2/DefaultWeb4TSComponent.ts](../../../components/Web4TSComponent/0.3.0.6/src/ts/layer2/DefaultWeb4TSComponent.ts)
+  - [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/components/Web4TSComponent/0.3.0.7/src/ts/layer2/DefaultWeb4TSComponent.ts) | [§/components/Web4TSComponent/0.3.0.7/src/ts/layer2/DefaultWeb4TSComponent.ts](../../../components/Web4TSComponent/0.3.0.7/src/ts/layer2/DefaultWeb4TSComponent.ts)
+- **Previous Analysis:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-1115-comprehensive-web4tscomponent-test-compliance-analysis.md) | [§/2025-09-24-UTC-1115-comprehensive-web4tscomponent-test-compliance-analysis.md](2025-09-24-UTC-1115-comprehensive-web4tscomponent-test-compliance-analysis.md)
 
 ### **QA Decisions**
-- [ ] **Decision 1: Immediate Violation Cleanup**
-  - Option A: Remove displaced components immediately and fix command chaining tests to use test/data
-  - Option B: Document violations and create systematic fix plan for all command chaining tests  
-  - Option C: Accept current violations and update requirement to allow specific test component types
-- [ ] **Decision 2: Command Chaining Test Strategy**
-  - Option A: Update all command chaining tests to use test mode support consistently
-  - Option B: Create separate test mode for command chaining tests with different path resolution
-  - Option C: Deprecate command chaining tests that cannot comply with test output location requirement
+**CMM2 Chaos Operations** - No strategic decisions needed, just systematic cleanup work to be executed.
 
 ### **TRON Feedback (2025-09-24-UTC-1125)**
 ```quote
