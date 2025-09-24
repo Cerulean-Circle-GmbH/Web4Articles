@@ -36,11 +36,7 @@
   - [x] c) **Massive Development History:** Extensive project journals and component work integrated
   - [x] d) **Development Environment Ready:** All merge requirements satisfied
 
-- [ ] **Decision 5: Post-Merge Development Strategy**  
-  - a) Build on ONCE 0.3.0.4 foundation with Sprint 21 Web4ORB kernel implementation
-  - b) Consolidate Unit component to latest 0.3.0.6 and enhance for Web4 integration
-  - c) Fix TSRanger critical bugs while building Web4TSRanger v3.0 foundation
-  - d) Focus on component integration testing with merged ecosystem
+- [x] **Decision 5: Post-Merge Development Strategy** → **5d) Component integration testing** with merged ecosystem focus
 
 ---
 
