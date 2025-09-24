@@ -21,9 +21,9 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dc3afa8e/scrum.pmo/project.journal/2025-09-23-UTC-1843-session/2025-09-23-UTC-1843-session-startup.pdca.md) | [scrum.pmo/project.journal/2025-09-23-UTC-1843-session/2025-09-23-UTC-1843-session-startup.pdca.md](scrum.pmo/project.journal/2025-09-23-UTC-1843-session/2025-09-23-UTC-1843-session-startup.pdca.md)
-- **Session Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dc3afa8e/scrum.pmo/project.journal/2025-09-23-UTC-1843-session) | [scrum.pmo/project.journal/2025-09-23-UTC-1843-session/](scrum.pmo/project.journal/2025-09-23-UTC-1843-session/)
-- **Agent Registry:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dc3afa8e/scrum.pmo/agents/registry/pending-unknown-2025-09-23-UTC-1841.md) | [scrum.pmo/agents/registry/pending-unknown-2025-09-23-UTC-1841.md](scrum.pmo/agents/registry/pending-unknown-2025-09-23-UTC-1841.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dc3afa8e/scrum.pmo/project.journal/2025-09-23-UTC-1843-session/2025-09-23-UTC-1843-session-startup.pdca.md) | [§/scrum.pmo/project.journal/2025-09-23-UTC-1843-session/2025-09-23-UTC-1843-session-startup.pdca.md](2025-09-23-UTC-1843-session-startup.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dc3afa8e/scrum.pmo/project.journal/2025-09-23-UTC-1843-session) | [§/scrum.pmo/project.journal/2025-09-23-UTC-1843-session/](.)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dc3afa8e/scrum.pmo/agents/registry/pending-unknown-2025-09-23-UTC-1841.md) | [§/scrum.pmo/agents/registry/pending-unknown-2025-09-23-UTC-1841.md](../../agents/registry/pending-unknown-2025-09-23-UTC-1841.md)
 
 ### **QA Decisions**
 - [x] Completed startup protocol: CMM4 framework understanding, PDCA guide mastery, tech stack review, environment setup
