@@ -17,6 +17,21 @@
 - [ ] [Task 14: Fix UnitIndex Central Storage Location](./task-14-fix-central-storage-location.md)  
   **Priority:** 1 (Critical - UnitIndex Central Storage) **Status:** 📋 PLANNED
 
+- [ ] **Task 36: CI/CD Test Output Location Violation Detection System**  
+  **Priority:** 2 (High - Test Compliance Automation) **Status:** 📋 PLANNED  
+  **Objective:** Implement automated detection system for test output location violations in CI/CD pipeline  
+  **Background:** [Comprehensive Web4TSComponent Test Compliance Analysis](../../project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-1115-comprehensive-web4tscomponent-test-compliance-analysis.md) revealed 75% of testable versions violate Memory ID: 9282142 test output location requirement  
+  **Requirements:**
+  - Automated pre-test validation to ensure all test outputs go exclusively to `<component>/<version>/test/data`
+  - CI/CD pipeline integration to prevent violations from being committed
+  - Violation detection reporting with specific component and version details
+  - Integration with existing Web4TSComponent testing framework
+  **Success Criteria:**
+  - Zero test output location violations in CI/CD pipeline
+  - Automated detection prevents project root contamination
+  - Clear violation reporting for developers
+  **Related Analysis:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-1115-comprehensive-web4tscomponent-test-compliance-analysis.md) | [§/../../project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-1115-comprehensive-web4tscomponent-test-compliance-analysis.md](../../project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-1115-comprehensive-web4tscomponent-test-compliance-analysis.md)
+
 ### **CMM3 AUTOMATION**
 - [ ] [Task 33: Create Web4 Compliant TaskStateMachine 0.3.0.4](./task-33-taskstatemachine-web4-compliance-0304.md)  
   **Priority:** 2 (High - CMM3 Tool) **Status:** 🔄 IN PROGRESS (build issues - IOR removal needed)

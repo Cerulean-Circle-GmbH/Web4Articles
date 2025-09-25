@@ -29,6 +29,37 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     };
   }
 
+  /**
+   * @cliHide
+   */
+  private isTestEnvironment(): boolean {
+    return process.env.NODE_ENV === 'test' || 
+           process.env.VITEST === 'true' ||
+           process.cwd().includes('/test/') ||
+           !!((globalThis as any).__TEST_MODE__);
+  }
+
+  /**
+   * @cliHide
+   */
+  private getTestDataDirectory(): string {
+    // Each version tests in its own test/data folder
+    // From: /workspace/components/Web4TSComponent/0.3.0.6/src/ts/layer2/DefaultWeb4TSComponent.ts
+    // To:   /workspace/components/Web4TSComponent/0.3.0.6/test/data
+    const currentVersionDir = path.resolve(__dirname, '..', '..', '..');
+    return path.join(currentVersionDir, 'test', 'data');
+  }
+
+  /**
+   * @cliHide
+   */
+  private resolveComponentPath(componentName: string, version: string): string {
+    if (this.isTestEnvironment()) {
+      return path.join(this.getTestDataDirectory(), componentName, version);
+    }
+    return path.join(this.model.targetDirectory, 'components', componentName, version);
+  }
+
   private findProjectRoot(): string {
     // Find project root using git or directory traversal
     try {
@@ -114,7 +145,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   async scaffoldComponent(options: ComponentScaffoldOptions): Promise<ComponentMetadata> {
     const { componentName, version, includeLayerArchitecture, includeCLI, includeSpecFolder, includeVitest } = options;
     
-    const componentDir = path.join(this.model.targetDirectory, 'components', componentName, version);
+    const componentDir = this.resolveComponentPath(componentName, version);
     
     // Create directory structure
     await fs.mkdir(componentDir, { recursive: true });
