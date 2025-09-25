@@ -82,7 +82,7 @@ describe('Web4TSComponent Functionality', () => {
       
       await component.create(componentName); // No version specified
       
-      const componentPath = `components/${componentName}/0.1.0.0`; // Should default to 0.1.0.0
+      const componentPath = path.join(testDataDir, 'components', componentName, '0.1.0.0');
       expect(existsSync(componentPath)).toBe(true);
     });
 
@@ -147,11 +147,11 @@ describe('Web4TSComponent Functionality', () => {
       const newVersionPath = `components/${baseComponent}/0.1.0.1`;
       
       // Verify all original files preserved
-      expect(existsSync(`${newVersionPath}/package.json`)).toBe(true);
-      expect(existsSync(`${newVersionPath}/tsconfig.json`)).toBe(true);
-      expect(existsSync(`${newVersionPath}/src/ts/layer2`)).toBe(true);
-      expect(existsSync(`${newVersionPath}/spec`)).toBe(true);
-      expect(existsSync(`${newVersionPath}/test`)).toBe(true);
+      expect(existsSync(path.join(newVersionPath, 'package.json'))).toBe(true);
+      expect(existsSync(path.join(newVersionPath, 'tsconfig.json'))).toBe(true);
+      expect(existsSync(path.join(newVersionPath, 'src/ts/layer2'))).toBe(true);
+      expect(existsSync(path.join(newVersionPath, 'spec'))).toBe(true);
+      expect(existsSync(path.join(newVersionPath, 'test'))).toBe(true);
     });
   });
 
