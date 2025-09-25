@@ -3,46 +3,38 @@
  * Tests for component creation and feature equivalence with 1.0.0.0
  */
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { DefaultWeb4TSComponent } from '../src/ts/layer2/DefaultWeb4TSComponent.js';
 import { Web4TSComponentCLI } from '../src/ts/layer5/Web4TSComponentCLI.js';
-import * as fs from 'fs/promises';
 import { existsSync } from 'fs';
 import * as path from 'path';
-import { ProjectRootMocker } from './utils/ProjectRootMocker.js';
+import * as fsPromises from 'fs/promises';
 
 describe('Web4TSComponent Functionality', () => {
   let component: DefaultWeb4TSComponent;
   let cli: Web4TSComponentCLI;
-  let rootMocker: ProjectRootMocker;
+  let testDataDir: string;
 
   beforeEach(async () => {
-    // Enable test mode for environment-aware path resolution
-    (globalThis as any).__TEST_MODE__ = true;
-    
     // Setup test data directory
-    const testDataDir = path.join(__dirname, 'data');
-    await fs.mkdir(testDataDir, { recursive: true });
+    testDataDir = path.join(__dirname, 'data');
+    await fsPromises.mkdir(testDataDir, { recursive: true });
     
-    // Mock project root to be test data directory
-    rootMocker = new ProjectRootMocker(testDataDir);
-    rootMocker.mock();
-    
+    // Initialize component and set targetDirectory to test data
+    // Component remains unaware it's being tested - just gets different target
     component = new DefaultWeb4TSComponent();
-    // Update target directory to use mocked root
-    component.setTargetDirectory(testDataDir);
+    await component.init({
+      name: 'Web4TSComponent',
+      version: '0.3.0.6',
+      targetDirectory: testDataDir  // Point to test/data instead of project root
+    });
+    
     cli = new Web4TSComponentCLI();
   });
 
   afterEach(async () => {
-    // Restore original project root
-    if (rootMocker) {
-      rootMocker.restore();
-    }
-    
-    // Clean up test components (ephemeral test data as per decision 5a)
+    // Clean up test components from test data directory
     await cleanupTestComponents();
-    delete (globalThis as any).__TEST_MODE__;
   });
 
   async function cleanupTestComponents() {
@@ -68,7 +60,7 @@ describe('Web4TSComponent Functionality', () => {
       
       await component.create(componentName, version, 'all');
       
-      const componentPath = `components/${componentName}/${version}`;
+      const componentPath = path.join(testDataDir, 'components', componentName, version);
       expect(existsSync(componentPath)).toBe(true);
       
       // Verify all expected files created (same as 1.0.0.0)
@@ -90,7 +82,7 @@ describe('Web4TSComponent Functionality', () => {
       
       await component.create(componentName); // No version specified
       
-      const componentPath = `components/${componentName}/0.1.0.0`; // Should default to 0.1.0.0
+      const componentPath = path.join(testDataDir, 'components', componentName, '0.1.0.0');
       expect(existsSync(componentPath)).toBe(true);
     });
 
@@ -100,7 +92,7 @@ describe('Web4TSComponent Functionality', () => {
       
       await cli.execute(['create', componentName, version, 'all']);
       
-      const componentPath = `components/${componentName}/${version}`;
+      const componentPath = path.join(testDataDir, 'components', componentName, version);
       expect(existsSync(componentPath)).toBe(true);
     });
   });
@@ -118,7 +110,7 @@ describe('Web4TSComponent Functionality', () => {
     it('should upgrade to next build (patch) version', async () => {
       await component.upgrade('nextBuild');
       
-      const newVersionPath = `components/${baseComponent}/0.1.0.1`;
+      const newVersionPath = path.join(testDataDir, 'components', baseComponent, '0.1.0.1');
       expect(existsSync(newVersionPath)).toBe(true);
       
       // Verify package.json version updated
@@ -131,21 +123,21 @@ describe('Web4TSComponent Functionality', () => {
     it('should upgrade to next minor version', async () => {
       await component.upgrade('nextMinor');
       
-      const newVersionPath = `components/${baseComponent}/0.1.1.0`;
+      const newVersionPath = path.join(testDataDir, 'components', baseComponent, '0.1.1.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
     it('should upgrade to next major version', async () => {
       await component.upgrade('nextMajor');
       
-      const newVersionPath = `components/${baseComponent}/0.2.0.0`;
+      const newVersionPath = path.join(testDataDir, 'components', baseComponent, '0.2.0.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
     it('should upgrade to explicit version', async () => {
       await component.upgrade('0.5.0.0');
       
-      const newVersionPath = `components/${baseComponent}/0.5.0.0`;
+      const newVersionPath = path.join(testDataDir, 'components', baseComponent, '0.5.0.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
@@ -155,11 +147,11 @@ describe('Web4TSComponent Functionality', () => {
       const newVersionPath = `components/${baseComponent}/0.1.0.1`;
       
       // Verify all original files preserved
-      expect(existsSync(`${newVersionPath}/package.json`)).toBe(true);
-      expect(existsSync(`${newVersionPath}/tsconfig.json`)).toBe(true);
-      expect(existsSync(`${newVersionPath}/src/ts/layer2`)).toBe(true);
-      expect(existsSync(`${newVersionPath}/spec`)).toBe(true);
-      expect(existsSync(`${newVersionPath}/test`)).toBe(true);
+      expect(existsSync(path.join(newVersionPath, 'package.json'))).toBe(true);
+      expect(existsSync(path.join(newVersionPath, 'tsconfig.json'))).toBe(true);
+      expect(existsSync(path.join(newVersionPath, 'src/ts/layer2'))).toBe(true);
+      expect(existsSync(path.join(newVersionPath, 'spec'))).toBe(true);
+      expect(existsSync(path.join(newVersionPath, 'test'))).toBe(true);
     });
   });
 
@@ -260,9 +252,8 @@ describe('Web4TSComponent Functionality', () => {
       
       await component.create(componentName, '0.1.0.0', 'all');
       
-      const componentPath = `components/${componentName}/0.1.0.0`;
-      
-      // Verify same file structure as 1.0.0.0 creates
+      // Verify same file structure as 1.0.0.0 creates  
+      const componentPath = path.join(testDataDir, 'components', componentName, '0.1.0.0');
       expect(existsSync(`${componentPath}/package.json`)).toBe(true);
       expect(existsSync(`${componentPath}/tsconfig.json`)).toBe(true);
       expect(existsSync(`${componentPath}/${componentName.toLowerCase()}.sh`)).toBe(true);
