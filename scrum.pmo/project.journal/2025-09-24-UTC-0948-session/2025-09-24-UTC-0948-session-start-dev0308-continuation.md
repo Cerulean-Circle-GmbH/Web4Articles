@@ -21,7 +21,7 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-0948-session-start-dev0308-continuation.md) | [§/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-0948-session-start-dev0308-continuation.md](2025-09-24-UTC-0948-session-start-dev0308-continuation.md)
-- **Session Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/0308/scrum.pmo/project.journal/2025-09-24-UTC-0948-session) | [§/scrum.pmo/project.journal/2025-09-24-UTC-0948-session](.)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/0308/scrum.pmo/project.journal/2025-09-24-UTC-0948-session) | [§/scrum.pmo/project.journal/2025-09-24-UTC-0948-session](.)
 
 ### **QA Decisions**
 - [x] **Environment Setup**: Successfully completed all README startup requirements
