@@ -27,7 +27,7 @@
 - **Requirements Created:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
 - **Related Artifacts:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
 
-### **QA Decisions**
+### **To TRON: QA Decisions required**
 - [x] {{COMPLETED_DECISION}}: {{DECISION_DESCRIPTION}}
 - [ ] {{PENDING_DECISION}}: {{DECISION_DESCRIPTION}}
 - [ ] {{FOLLOWUP_REQUIRED}}: {{DECISION_DESCRIPTION}}
