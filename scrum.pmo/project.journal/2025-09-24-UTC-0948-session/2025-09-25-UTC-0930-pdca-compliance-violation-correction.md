@@ -19,10 +19,15 @@
 - **New Memories Created:** Memory checks detect/prevent violations, Git safety protocol, PDCA trigger understanding
 - **Implementation:** Decision 2a - Automatic memory citation requirements
 
-### **QA Decisions**
-- [x] **Decision 2a Selected:** Implement automatic memory citation requirements immediately [[memory:9321199]]
-- [x] **Git Protocol Missing:** Must add pull, commit, PUSH after every PDCA [[memory:9321200]]
-- [x] **PDCA Trigger Understanding:** User saying "pdca" means "you are NOT compliant" [[memory:9321201]]
+### **To TRON: QA Decisions required**
+[ ] **How should I resolve the git merge conflict?**  
+a. Resolve the conflict manually in session.summary.md and complete PUSH  
+b. Reset to avoid conflict and lose current work  
+c. Ask you to resolve the conflict as it may contain important changes
+
+- [x] **Decision 2a Selected:** Implement automatic memory citation requirements immediately [[memory:9321393]]
+- [x] **Git Protocol Missing:** Must add pull, commit, PUSH after every PDCA [[memory:9321396]]
+- [x] **PDCA Trigger Understanding:** User saying "pdca" means "you are NOT compliant" [[memory:9321399]]
 
 ### **TRON Feedback (2025-09-25-UTC-0930)**
 ```quote
