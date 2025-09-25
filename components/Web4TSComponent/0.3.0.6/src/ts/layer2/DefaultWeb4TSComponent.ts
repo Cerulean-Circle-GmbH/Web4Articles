@@ -145,7 +145,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   async scaffoldComponent(options: ComponentScaffoldOptions): Promise<ComponentMetadata> {
     const { componentName, version, includeLayerArchitecture, includeCLI, includeSpecFolder, includeVitest } = options;
     
-    const componentDir = this.resolveComponentPath(componentName, version);
+    const componentDir = path.join(this.model.targetDirectory, 'components', componentName, version);
     
     // Create directory structure
     await fs.mkdir(componentDir, { recursive: true });
