@@ -155,7 +155,7 @@ describe('Web4TSComponent Command Chaining', () => {
         .then(comp => comp.upgrade('nextBuild'));
       
       expect(result).toBe(component);
-      expect(existsSync(`components/${testComponentName}/0.1.0.1`)).toBe(true);
+      expect(existsSync(path.join(__dirname, 'data', 'components', testComponentName, '0.1.0.1'))).toBe(true);
     });
 
     it('should maintain context through chaining', async () => {
@@ -196,7 +196,7 @@ describe('Web4TSComponent Command Chaining', () => {
       await cli.execute(['upgrade', 'nextBuild']);
       
       // Verify new version created
-      expect(existsSync(`components/${testComponentName}/0.1.0.1`)).toBe(true);
+      expect(existsSync(path.join(__dirname, 'data', 'components', testComponentName, '0.1.0.1'))).toBe(true);
     });
   });
 
