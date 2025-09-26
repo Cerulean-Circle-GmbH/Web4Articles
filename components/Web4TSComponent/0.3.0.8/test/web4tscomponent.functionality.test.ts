@@ -65,42 +65,46 @@ describe('Web4TSComponent Functionality', () => {
     it('should create component with all features (feature equivalence to 1.0.0.0)', async () => {
       const componentName = 'TestCreateComponent';
       const version = '0.1.0.0';
+      const testDataDir = path.join(__dirname, 'data');
       
       await component.create(componentName, version, 'all');
       
-      const componentPath = `components/${componentName}/${version}`;
+      // In test environment, components are created directly in testDataDir/componentName/version
+      const componentPath = path.join(testDataDir, componentName, version);
       expect(existsSync(componentPath)).toBe(true);
       
       // Verify all expected files created (same as 1.0.0.0)
-      expect(existsSync(`${componentPath}/package.json`)).toBe(true);
-      expect(existsSync(`${componentPath}/tsconfig.json`)).toBe(true);
-      expect(existsSync(`${componentPath}/${componentName.toLowerCase()}.sh`)).toBe(true);
-      expect(existsSync(`${componentPath}/vitest.config.ts`)).toBe(true);
+      expect(existsSync(path.join(componentPath, 'package.json'))).toBe(true);
+      expect(existsSync(path.join(componentPath, 'tsconfig.json'))).toBe(true);
+      expect(existsSync(path.join(componentPath, `${componentName.toLowerCase()}.sh`))).toBe(true);
+      expect(existsSync(path.join(componentPath, 'vitest.config.ts'))).toBe(true);
       
       // Verify directories created
-      expect(existsSync(`${componentPath}/src/ts/layer2`)).toBe(true);
-      expect(existsSync(`${componentPath}/src/ts/layer3`)).toBe(true);
-      expect(existsSync(`${componentPath}/src/ts/layer5`)).toBe(true);
-      expect(existsSync(`${componentPath}/spec`)).toBe(true);
-      expect(existsSync(`${componentPath}/test`)).toBe(true);
+      expect(existsSync(path.join(componentPath, 'src/ts/layer2'))).toBe(true);
+      expect(existsSync(path.join(componentPath, 'src/ts/layer3'))).toBe(true);
+      expect(existsSync(path.join(componentPath, 'src/ts/layer5'))).toBe(true);
+      expect(existsSync(path.join(componentPath, 'spec'))).toBe(true);
+      expect(existsSync(path.join(componentPath, 'test'))).toBe(true);
     });
 
     it('should create component with intelligent defaults', async () => {
       const componentName = 'TestCreateComponent';
+      const testDataDir = path.join(__dirname, 'data');
       
       await component.create(componentName); // No version specified
       
-      const componentPath = `components/${componentName}/0.1.0.0`; // Should default to 0.1.0.0
+      const componentPath = path.join(testDataDir, componentName, '0.1.0.0'); // Should default to 0.1.0.0
       expect(existsSync(componentPath)).toBe(true);
     });
 
     it('should handle component creation via CLI', async () => {
       const componentName = 'TestCreateComponent';
       const version = '0.1.0.0';
+      const testDataDir = path.join(__dirname, 'data');
       
       await cli.execute(['create', componentName, version, 'all']);
       
-      const componentPath = `components/${componentName}/${version}`;
+      const componentPath = path.join(testDataDir, componentName, version);
       expect(existsSync(componentPath)).toBe(true);
     });
   });
@@ -116,50 +120,60 @@ describe('Web4TSComponent Functionality', () => {
     });
 
     it('should upgrade to next build (patch) version', async () => {
+      const testDataDir = path.join(__dirname, 'data');
+      
       await component.upgrade('nextBuild');
       
-      const newVersionPath = `components/${baseComponent}/0.1.0.1`;
+      const newVersionPath = path.join(testDataDir, baseComponent, '0.1.0.1');
       expect(existsSync(newVersionPath)).toBe(true);
       
       // Verify package.json version updated
       const packageContent = JSON.parse(
-        await fs.readFile(`${newVersionPath}/package.json`, 'utf-8')
+        await fs.readFile(path.join(newVersionPath, 'package.json'), 'utf-8')
       );
       expect(packageContent.version).toBe('0.1.0.1');
     });
 
     it('should upgrade to next minor version', async () => {
+      const testDataDir = path.join(__dirname, 'data');
+      
       await component.upgrade('nextMinor');
       
-      const newVersionPath = `components/${baseComponent}/0.1.1.0`;
+      const newVersionPath = path.join(testDataDir, baseComponent, '0.1.1.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
     it('should upgrade to next major version', async () => {
+      const testDataDir = path.join(__dirname, 'data');
+      
       await component.upgrade('nextMajor');
       
-      const newVersionPath = `components/${baseComponent}/0.2.0.0`;
+      const newVersionPath = path.join(testDataDir, baseComponent, '0.2.0.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
     it('should upgrade to explicit version', async () => {
+      const testDataDir = path.join(__dirname, 'data');
+      
       await component.upgrade('0.5.0.0');
       
-      const newVersionPath = `components/${baseComponent}/0.5.0.0`;
+      const newVersionPath = path.join(testDataDir, baseComponent, '0.5.0.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
     it('should preserve all files during upgrade', async () => {
+      const testDataDir = path.join(__dirname, 'data');
+      
       await component.upgrade('nextBuild');
       
-      const newVersionPath = `components/${baseComponent}/0.1.0.1`;
+      const newVersionPath = path.join(testDataDir, baseComponent, '0.1.0.1');
       
       // Verify all original files preserved
-      expect(existsSync(`${newVersionPath}/package.json`)).toBe(true);
-      expect(existsSync(`${newVersionPath}/tsconfig.json`)).toBe(true);
-      expect(existsSync(`${newVersionPath}/src/ts/layer2`)).toBe(true);
-      expect(existsSync(`${newVersionPath}/spec`)).toBe(true);
-      expect(existsSync(`${newVersionPath}/test`)).toBe(true);
+      expect(existsSync(path.join(newVersionPath, 'package.json'))).toBe(true);
+      expect(existsSync(path.join(newVersionPath, 'tsconfig.json'))).toBe(true);
+      expect(existsSync(path.join(newVersionPath, 'src/ts/layer2'))).toBe(true);
+      expect(existsSync(path.join(newVersionPath, 'spec'))).toBe(true);
+      expect(existsSync(path.join(newVersionPath, 'test'))).toBe(true);
     });
   });
 
@@ -257,23 +271,24 @@ describe('Web4TSComponent Functionality', () => {
   describe('Feature Equivalence with 1.0.0.0', () => {
     it('should create same structure as Web4TSComponent 1.0.0.0', async () => {
       const componentName = 'TestFeatureComponent';
+      const testDataDir = path.join(__dirname, 'data');
       
       await component.create(componentName, '0.1.0.0', 'all');
       
-      const componentPath = `components/${componentName}/0.1.0.0`;
+      const componentPath = path.join(testDataDir, componentName, '0.1.0.0');
       
       // Verify same file structure as 1.0.0.0 creates
-      expect(existsSync(`${componentPath}/package.json`)).toBe(true);
-      expect(existsSync(`${componentPath}/tsconfig.json`)).toBe(true);
-      expect(existsSync(`${componentPath}/${componentName.toLowerCase()}.sh`)).toBe(true);
-      expect(existsSync(`${componentPath}/vitest.config.ts`)).toBe(true);
+      expect(existsSync(path.join(componentPath, 'package.json'))).toBe(true);
+      expect(existsSync(path.join(componentPath, 'tsconfig.json'))).toBe(true);
+      expect(existsSync(path.join(componentPath, `${componentName.toLowerCase()}.sh`))).toBe(true);
+      expect(existsSync(path.join(componentPath, 'vitest.config.ts'))).toBe(true);
       
       // Verify directory structure
-      expect(existsSync(`${componentPath}/src/ts/layer2`)).toBe(true);
-      expect(existsSync(`${componentPath}/src/ts/layer3`)).toBe(true);
-      expect(existsSync(`${componentPath}/src/ts/layer5`)).toBe(true);
-      expect(existsSync(`${componentPath}/spec`)).toBe(true);
-      expect(existsSync(`${componentPath}/test`)).toBe(true);
+      expect(existsSync(path.join(componentPath, 'src/ts/layer2'))).toBe(true);
+      expect(existsSync(path.join(componentPath, 'src/ts/layer3'))).toBe(true);
+      expect(existsSync(path.join(componentPath, 'src/ts/layer5'))).toBe(true);
+      expect(existsSync(path.join(componentPath, 'spec'))).toBe(true);
+      expect(existsSync(path.join(componentPath, 'test'))).toBe(true);
     });
 
     it('should provide same metadata as 1.0.0.0', async () => {
