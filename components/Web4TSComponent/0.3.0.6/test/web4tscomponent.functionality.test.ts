@@ -8,7 +8,7 @@ import { DefaultWeb4TSComponent } from '../src/ts/layer2/DefaultWeb4TSComponent.
 import { Web4TSComponentCLI } from '../src/ts/layer5/Web4TSComponentCLI.js';
 import { existsSync } from 'fs';
 import * as path from 'path';
-import * as fsPromises from 'fs/promises';
+import { promises as fs } from 'fs';
 
 describe('Web4TSComponent Functionality', () => {
   let component: DefaultWeb4TSComponent;
@@ -117,7 +117,7 @@ describe('Web4TSComponent Functionality', () => {
       
       // Verify package.json version updated
       const packageContent = JSON.parse(
-        await readFile(`${newVersionPath}/package.json`, 'utf-8')
+        await fs.readFile(`${newVersionPath}/package.json`, 'utf-8')
       );
       expect(packageContent.version).toBe('0.1.0.1');
     });
@@ -125,7 +125,7 @@ describe('Web4TSComponent Functionality', () => {
     it('should upgrade to next minor version', async () => {
       await component.upgrade('nextMinor');
       
-      const newVersionPath = path.join(testDataDir, 'components', baseComponent, '0.1.1.0');
+      const newVersionPath = path.join(testDataDir, 'components', baseComponent, '0.2.0.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
