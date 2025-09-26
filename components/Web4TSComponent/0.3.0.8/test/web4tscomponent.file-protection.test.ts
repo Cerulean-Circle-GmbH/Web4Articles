@@ -240,7 +240,7 @@ IMMEDIATE ACTION REQUIRED:
       expect(content, 'Tree method missing').toContain('async tree(');
       expect(content, 'Tree method missing TSDoc').toContain('Display tree structure of component directory');
       expect(content, 'Tree method missing @cliSyntax').toContain('@cliSyntax depth showHidden');
-      expect(content, 'Tree method missing @cliDefault').toContain('@cliDefault depth 3');
+      expect(content, 'Tree method missing @cliDefault').toContain('@cliDefault depth 4');
       
       // Verify tree method uses component context
       expect(content, 'Tree method must check context').toContain('getComponentContext()');
@@ -264,7 +264,7 @@ IMMEDIATE ACTION REQUIRED:
         // Verify Web4 patterns
         expect(treeMethod, 'Tree method must return this for chaining').toContain('return this');
         expect(treeMethod, 'Tree method must be async').toContain('async tree(');
-        expect(treeMethod, 'Tree method must have default parameters').toContain("= '3'");
+        expect(treeMethod, 'Tree method must have default parameters').toContain("= '4'");
         expect(treeMethod, 'Tree method must have default parameters').toContain("= 'false'");
       }
     });
