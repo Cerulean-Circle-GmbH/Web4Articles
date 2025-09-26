@@ -2,8 +2,8 @@
 
 **Generated:** 2025-09-24-UTC-1800  
 **Source:** [Detailed Test Validation Analysis](../../../scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-24-UTC-1740-detailed-test-validation-analysis.md)  
-**Overall Results:** 28 tests total, 4 passed, 24 failed (85.7% failure rate)  
-**Comparison to 0.3.0.6:** IDENTICAL behavior patterns
+**Overall Results:** 28 tests total, 6 passed, 22 failed (78.6% failure rate)  
+**Comparison to 0.3.0.6:** Regression test copied but component not updated - expected failures
 
 ## Failed Tests Analysis
 
