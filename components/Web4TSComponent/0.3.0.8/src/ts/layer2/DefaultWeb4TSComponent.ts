@@ -2173,16 +2173,24 @@ Standards:
    * @cliHide
    */
   private incrementMinor(version: string): string {
-    const [major, minor] = version.split('.').map(Number);
-    return `${major}.${minor + 1}.0.0`;
+    const parts = version.split('.');
+    if (parts.length !== 4) {
+      throw new Error(`Invalid version format: ${version}. Expected: major.minor.patch.build`);
+    }
+    const [major, minor, patch, build] = parts.map(Number);
+    return `${major}.${minor}.${patch + 1}.0`;
   }
 
   /**
    * @cliHide
    */
   private incrementMajor(version: string): string {
-    const [major] = version.split('.').map(Number);
-    return `${major + 1}.0.0.0`;
+    const parts = version.split('.');
+    if (parts.length !== 4) {
+      throw new Error(`Invalid version format: ${version}. Expected: major.minor.patch.build`);
+    }
+    const [major, minor, patch, build] = parts.map(Number);
+    return `${major}.${minor + 1}.0.0`;
   }
 
   /**
