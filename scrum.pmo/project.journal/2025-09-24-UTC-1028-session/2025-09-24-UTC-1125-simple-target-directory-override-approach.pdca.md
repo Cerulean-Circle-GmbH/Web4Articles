@@ -30,7 +30,10 @@
 - [x] **Existing API Discovered:** `setTargetDirectory(directory: string)` method already exists and is PUBLIC
 - [x] **Current Usage Found:** Tests already use `component.setTargetDirectory(testDataDir)` approach
 - [x] **Complexity Comparison:** Simple override vs complex environment mocking approach analyzed
-- [ ] **Decision 1: Implementation Choice** → **Simple override vs Complex mocking approach**
+- [ ] **Decision 1: Implementation Choice**
+  - a) Use simple `setTargetDirectory(testDataDir)` approach (1 line) with test path expectation fixes
+  - b) Implement complex environment mocking with process.cwd(), execSync, and fs.existsSync overrides (60+ lines)
+  - c) Hybrid approach combining simple override with minimal ProjectRootMocker enhancements
 
 ### **TRON Feedback (2025-09-24-UTC-1125)**
 ```quote
