@@ -61,8 +61,8 @@ export class DefaultSessionSummary implements ISessionSummary {
     for (const file of pdcaFiles) {
       try {
         const content = readFileSync(file, 'utf-8');
-        const analysis = this.analyzePDCA(content, file);
-        if (analysis.utcTime) {
+        const analysis = this.analyzePDCA(file);
+        if (analysis?.utcTime) {
           utcTimes.add(analysis.utcTime);
         }
       } catch (error) {
@@ -229,8 +229,44 @@ export class DefaultSessionSummary implements ISessionSummary {
       }
     }
     
-    // Apply table escaping to preserve table structure
-    const escapedQuotes = quotes.map(quote => this.escapeTableContent(quote));
+    // Pattern 5: QA Feedback with timestamp format: **QA Feedback (timestamp):**
+    const qaFeedbackTimestampRegex = /\*\*QA Feedback \([^)]+\):\*\*\s*```([^`]+?)```/g;
+    while ((match = qaFeedbackTimestampRegex.exec(content)) !== null) {
+      const feedbackText = match[1].trim();
+      if (feedbackText && feedbackText.length > 5) {
+        quotes.push(feedbackText);
+      }
+    }
+    
+    // Pattern 6: Simple QA Feedback format: **QA Feedback:**
+    const simpleFeedbackRegex = /\*\*QA Feedback:\*\*\s*```([^`]+?)```/g;
+    while ((match = simpleFeedbackRegex.exec(content)) !== null) {
+      const feedbackText = match[1].trim();
+      if (feedbackText && feedbackText.length > 5) {
+        quotes.push(feedbackText);
+      }
+    }
+    
+    // Pattern 7: QA Feedback Analysis blocks: **QA Feedback Analysis:**
+    const qaAnalysisRegex = /\*\*QA Feedback Analysis:\*\*\s*>\s*"([^"]+)"/g;
+    while ((match = qaAnalysisRegex.exec(content)) !== null) {
+      quotes.push(match[1].trim());
+    }
+    
+    // Pattern 8: Inline feedback without structured headers
+    const inlineFeedbackRegex = /(?:^|\n)\s*([a-z][^.\n]*(?:pdca|test|fix|check|update|create|analyze)[^.\n]*\.?)\s*(?:\n|$)/gmi;
+    while ((match = inlineFeedbackRegex.exec(content)) !== null) {
+      const feedbackText = match[1].trim();
+      if (feedbackText.length > 10 && feedbackText.length < 200 && 
+          !feedbackText.includes('Decision') && !feedbackText.includes('Plan') &&
+          /\b(pdca|test|fix|check|update|create|implement|analyze|review)\b/i.test(feedbackText)) {
+        quotes.push(feedbackText);
+      }
+    }
+    
+    // Apply table escaping to preserve table structure and deduplicate
+    const uniqueQuotes = [...new Set(quotes.filter(quote => quote && quote.length > 3))];
+    const escapedQuotes = uniqueQuotes.map(quote => this.escapeTableContent(quote));
     return escapedQuotes.join(' | ');
   }
 
