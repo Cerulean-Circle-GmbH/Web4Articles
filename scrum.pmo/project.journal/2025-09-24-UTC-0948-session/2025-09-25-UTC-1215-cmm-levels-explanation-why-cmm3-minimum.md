@@ -28,7 +28,14 @@
 ### **To TRON: QA Decisions required**
 - [x] CMM Framework Education: Explain all 5 CMM levels with examples
 - [x] CMM3 Minimum Justification: Establish why CMM3 is minimum acceptable
-- [ ] Process Improvement Strategy: Define path from current CMM2 to required CMM3
+- [ ] **Decision 1:** CMM3 Implementation Priority  
+  a. Focus on decision format compliance first, then other CMM3 aspects  
+  b. Implement all CMM3 requirements simultaneously across all processes  
+  c. Gradual CMM3 adoption starting with template compliance only  
+- [ ] **Decision 2:** CMM3 Verification Method  
+  a. Create CMM3 compliance checklist for all future work  
+  b. Implement automated CMM3 validation tools  
+  c. Manual CMM3 verification by user feedback only
 
 ### **TRON Feedback (2025-09-25-UTC-1215)**
 ```quote
