@@ -901,9 +901,10 @@ Standards:
     // Generate simple table content for MD file
     const tableContent = await this.generateSimpleTablesForMD(componentSpecs, analyses);
     
-    // Save to MD file in current working directory
+    // Save to MD file in first component's directory to avoid project root clutter
     const filename = this.generateSafeFilename(componentSpecs);
-    const outputPath = path.join(process.cwd(), filename);
+    const firstComponentPath = path.join(this.model.targetDirectory, 'components', componentSpecs[0].name, componentSpecs[0].version);
+    const outputPath = path.join(firstComponentPath, filename);
     
     await fs.writeFile(outputPath, tableContent, 'utf-8');
     
