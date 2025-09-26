@@ -2235,6 +2235,116 @@ Standards:
       }
       // Don't throw - CLI script update is optional
     }
+    
+    // Create release note symbolic link for significant releases
+    await this.createReleaseNoteLink(component, fromVersion, toVersion, targetPath);
+  }
+
+  /**
+   * Create release note symbolic link for significant version upgrades
+   * @cliHide
+   */
+  private async createReleaseNoteLink(component: string, fromVersion: string, toVersion: string, targetPath: string): Promise<void> {
+    try {
+      // Determine if this is a significant release (minor or major upgrade)
+      const isSignificantRelease = this.isSignificantRelease(fromVersion, toVersion);
+      
+      if (isSignificantRelease) {
+        // Look for existing PDCA documentation for this upgrade
+        const releaseNotePath = await this.findReleaseNotePDCA(component, toVersion);
+        
+        if (releaseNotePath) {
+          const linkPath = path.join(targetPath, 'release.note.pdca.md');
+          const relativePath = path.relative(targetPath, releaseNotePath);
+          
+          // Create symbolic link to release documentation
+          await fs.symlink(relativePath, linkPath);
+          console.log(`   📋 Release note linked: release.note.pdca.md → ${path.basename(releaseNotePath)}`);
+        } else {
+          console.log(`   ℹ️ No release documentation found for ${component} ${toVersion} (this is normal for automated upgrades)`);
+        }
+      }
+    } catch (error) {
+      console.log(`   ⚠️ Could not create release note link: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Determine if version upgrade represents a significant release
+   * @cliHide
+   */
+  private isSignificantRelease(fromVersion: string, toVersion: string): boolean {
+    const fromParts = fromVersion.split('.').map(Number);
+    const toParts = toVersion.split('.').map(Number);
+    
+    // Significant if major or minor version changed
+    return (toParts[0] > fromParts[0]) || (toParts[1] > fromParts[1]);
+  }
+
+  /**
+   * Find existing PDCA documentation for component version
+   * @cliHide
+   */
+  private async findReleaseNotePDCA(component: string, version: string): Promise<string | null> {
+    try {
+      const projectRoot = this.findProjectRoot();
+      const journalPath = path.join(projectRoot, 'scrum.pmo', 'project.journal');
+      
+      if (!existsSync(journalPath)) {
+        return null;
+      }
+      
+      // Search for PDCAs mentioning this component and version
+      const sessions = await fs.readdir(journalPath);
+      
+      for (const session of sessions) {
+        const sessionPath = path.join(journalPath, session);
+        if (!statSync(sessionPath).isDirectory()) continue;
+        
+        try {
+          const files = await fs.readdir(sessionPath);
+          
+          for (const file of files) {
+            if (file.endsWith('.md') && file.includes('pdca')) {
+              const filePath = path.join(sessionPath, file);
+              
+              // Check if PDCA mentions this component and version
+              const content = await fs.readFile(filePath, 'utf-8');
+              const componentPattern = new RegExp(`${component}.*${version.replace(/\./g, '\\.')}`, 'i');
+              
+              if (componentPattern.test(content)) {
+                return filePath;
+              }
+            }
+          }
+          
+          // Also check pdca subdirectory if it exists
+          const pdcaDir = path.join(sessionPath, 'pdca');
+          if (existsSync(pdcaDir)) {
+            const pdcaFiles = await fs.readdir(pdcaDir);
+            
+            for (const file of pdcaFiles) {
+              if (file.endsWith('.md')) {
+                const filePath = path.join(pdcaDir, file);
+                const content = await fs.readFile(filePath, 'utf-8');
+                const componentPattern = new RegExp(`${component}.*${version.replace(/\./g, '\\.')}`, 'i');
+                
+                if (componentPattern.test(content)) {
+                  return filePath;
+                }
+              }
+            }
+          }
+        } catch (error) {
+          // Skip sessions that can't be read
+          continue;
+        }
+      }
+      
+      return null;
+    } catch (error) {
+      return null;
+    }
   }
 
   /**
