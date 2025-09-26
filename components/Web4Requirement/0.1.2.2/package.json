@@ -1,0 +1,40 @@
+{
+  "name": "@web4x/web4-requirement",
+  "version": "0.1.2.2",
+  "type": "module",
+  "description": "Web4-native requirement tracking and overview generation component",
+  "main": "src/ts/layer5/RequirementCLI.ts",
+  "buildDependencies": {
+    "@web4/unit": "../../Unit/latest",
+    "@web4/user": "../../User/0.1.3.0"
+  },
+  "scripts": {
+    "prestart": "npm run ensure-built",
+    "start": "./requirement.sh",
+    "ensure-built": "npm run check-build || npm run build",
+    "check-build": "test -d dist && echo '✅ Already built' || (echo '🔨 Build required' && false)",
+    "prebuild": "npm run build-dependencies",
+    "build-dependencies": "node ../../Build/0.1.0.0/dist/ts/layer5/BuildCLI.js build-deps",
+    "build": "tsc",
+    "postbuild": "echo '✅ Web4Requirement built successfully'",
+    "cli": "node dist/ts/layer5/RequirementCLI.js",
+    "generate-overview": "npm run ensure-built && npm run cli -- --generate-overview",
+    "update-status": "npm run ensure-built && npm run cli -- --update-status"
+  },
+  "keywords": [
+    "web4",
+    "requirements",
+    "tracking",
+    "traceability", 
+    "mdview",
+    "overview"
+  ],
+  "author": "Web4 Architecture Team",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
+  }
+}

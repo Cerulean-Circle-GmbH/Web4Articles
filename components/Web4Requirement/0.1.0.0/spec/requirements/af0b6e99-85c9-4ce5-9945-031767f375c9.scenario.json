@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "af0b6e99-85c9-4ce5-9945-031767f375c9",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIzVDA4OjUxOjAxLjE2OFoiLCJ1dWlkIjoiMzQ2YTA5M2QtMmQyMy00MzE1LThiZGYtMzgwYTQ2MmJhMDk1In0=",
+  "model": {
+    "uuid": "af0b6e99-85c9-4ce5-9945-031767f375c9",
+    "name": "Deterministic User UUID",
+    "title": "Deterministic User UUID",
+    "description": "User UUIDs must be deterministic based on username to ensure consistent identification. The same username must always generate the same UUID using SHA-256 hashing of 'user:username' formatted as a valid UUID v4. For example, user 'donges' must always have UUID 7e65139d-38cf-4f34-b769-0a86dd3a94e3"
+  }
+}

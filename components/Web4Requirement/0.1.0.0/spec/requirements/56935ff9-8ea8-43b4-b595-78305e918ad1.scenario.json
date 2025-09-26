@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "56935ff9-8ea8-43b4-b595-78305e918ad1",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIzVDA4OjUxOjA5LjU3NVoiLCJ1dWlkIjoiNzA4YWZjMmItNDQxNi00NDliLTgxYjktZTc1MmNjMTcwNjFlIn0=",
+  "model": {
+    "uuid": "56935ff9-8ea8-43b4-b595-78305e918ad1",
+    "name": "Scenario Loading Principle",
+    "title": "Scenario Loading Principle",
+    "description": "Web4 scenarios enable hibernation and restoration of object state. A scenario can be loaded to recreate the exact object instance with all its state using empty constructors and model injection. The IOR provides the reference mechanism to locate and instantiate the correct component class"
+  }
+}

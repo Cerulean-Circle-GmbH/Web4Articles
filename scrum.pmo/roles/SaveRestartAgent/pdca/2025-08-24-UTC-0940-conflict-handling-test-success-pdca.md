@@ -11,7 +11,7 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/temp/2025-08-24-UTC-0940-conflict-handling-test-success-pdca.md) | [temp/2025-08-24-UTC-0940-conflict-handling-test-success-pdca.md](temp/2025-08-24-UTC-0940-conflict-handling-test-success-pdca.md)
-- **Improved Script:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/recovery/pdca-auto-merge.sh) | [recovery/pdca-auto-merge.sh](recovery/pdca-auto-merge.sh)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/recovery/pdca-auto-merge.sh) | [§/recovery/pdca-auto-merge.sh](../../../../recovery/pdca-auto-merge.sh)
 
 ### **QA Decisions**
 All clear, no decisions to make - Test completed successfully with expected behavior.
@@ -150,4 +150,3 @@ git commit -m "Test: Create conflict scenario..."
 
 **🎉 Conflict handling tested and proven: No more silent failures! 🚀📋✅**
 
-**"From silent failure to clear communication - that's progress!"** 🔄🎯

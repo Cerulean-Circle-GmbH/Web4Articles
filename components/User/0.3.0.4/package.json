@@ -1,0 +1,14 @@
+{
+  "name": "@web4/user",
+  "version": "0.3.0.4",
+  "description": "Web4 User component",
+  "type": "module",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "9b768111-7a06-4266-9d71-0ef72e90c62b",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTMwVDEwOjQ5OjMxLjc1N1oiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "9b768111-7a06-4266-9d71-0ef72e90c62b",
+    "name": "ONCE Scenario Storage Organization",
+    "title": "ONCE Scenario Storage Organization",
+    "description": "Server writes its scenario in organized directory structure: /scenarios/reverseDomain/component/version/uuid.scenario.json (e.g., /scenarios/local/once/ONCE/0.1.0.2/someUUID.scenario.json). This creates a hierarchical storage system that prevents naming conflicts and enables component discovery by domain and version."
+  },
+  "unitIndex": {
+    "uuid": "9b768111-7a06-4266-9d71-0ef72e90c62b",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/9/b/7/6/8/9b768111-7a06-4266-9d71-0ef72e90c62b.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/9b768111-7a06-4266-9d71-0ef72e90c62b.scenario.json"
+    ],
+    "createdAt": "2025-08-30T10:49:31.769Z",
+    "updatedAt": "2025-08-30T10:49:31.769Z"
+  }
+}

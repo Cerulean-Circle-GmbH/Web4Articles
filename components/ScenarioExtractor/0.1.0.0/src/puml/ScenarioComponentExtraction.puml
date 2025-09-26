@@ -1,0 +1,161 @@
+@startuml ScenarioComponentExtraction
+!theme toy
+title Proposed Architecture: Scenario Component Extraction via Unit
+
+package "Current Duplicated Architecture" <<Rectangle>> {
+  class Web4Requirement {
+    ❌ saveScenario()
+    ❌ loadFromScenario()
+    ❌ generateMDView()
+    ❌ updateOverview()
+  }
+  
+  class Web4ChangeRequest {
+    ❌ saveScenario()
+    ❌ loadFromScenario()
+    ❌ generateMDView()
+    ❌ updateOverview()
+  }
+  
+  Web4Requirement --> UnitIndexStorage : direct usage
+  Web4ChangeRequest --> UnitIndexStorage : direct usage
+}
+
+package "Proposed DRY Architecture" <<Rectangle>> {
+  
+  package "Enhanced Unit Component" <<Cloud>> {
+    class UnitScenarioManager {
+      🔥 CENTRALIZED SCENARIO LOGIC
+      --
+      +saveScenario(type, uuid, data)
+      +loadScenario(uuid)
+      +deleteScenario(uuid)
+      +moveScenario(uuid, newLocation)
+      +listScenarios(type?)
+      +getScenarioPath(uuid)
+      --
+      📊 Handles all scenario types:
+      - Requirements
+      - Change Requests  
+      - Test Cases
+      - Any Web4 scenario
+    }
+    
+    class UnitViewGenerator {
+      🔥 CENTRALIZED VIEW LOGIC
+      --
+      +generateMDView(scenario, template)
+      +processTemplate(template, context)
+      +decodeOwnerDetails(scenario)
+      +saveView(uuid, content, directory)
+      --
+      📊 Template-agnostic processing
+      🎨 Supports multiple view types
+      📝 Consistent owner handling
+    }
+    
+    class UnitOverviewBuilder {
+      🔥 CENTRALIZED OVERVIEW LOGIC
+      --
+      +buildOverview(type, directory)
+      +aggregateScenarios(filter)
+      +generateSummaryStats()
+      +updateOverviewFile()
+      --
+      📊 Multi-component support
+      📋 Consistent overview format
+      ⚡ Efficient batch processing
+    }
+  }
+  
+  package "Simplified Client Components" <<Cloud>> {
+    class Web4Requirement_v2 {
+      ✅ BUSINESS LOGIC ONLY
+      --
+      +create(title, description)
+      +update(attribute, value)
+      +validate()
+      +getStatus()
+      --
+      🎯 No storage concerns
+      🎯 No view concerns
+      🎯 Pure business logic
+    }
+    
+    class Web4ChangeRequest_v2 {
+      ✅ BUSINESS LOGIC ONLY
+      --
+      +create(title, description) 
+      +update(attribute, value)
+      +validate()
+      +getStatus()
+      +getRelatedRequirements()
+      --
+      🎯 No storage concerns
+      🎯 No view concerns  
+      🎯 Pure business logic
+    }
+    
+    class Web4TestCase {
+      ✅ BUSINESS LOGIC ONLY
+      --
+      +create(title, description)
+      +update(attribute, value)
+      +validate()
+      +getStatus()
+      +getTestResults()
+      --
+      🎯 New component possible
+      🎯 Consistent architecture
+    }
+  }
+}
+
+' New clean dependencies
+Web4Requirement_v2 --> UnitScenarioManager : delegates storage
+Web4Requirement_v2 --> UnitViewGenerator : delegates views
+Web4Requirement_v2 --> UnitOverviewBuilder : delegates overviews
+
+Web4ChangeRequest_v2 --> UnitScenarioManager : delegates storage
+Web4ChangeRequest_v2 --> UnitViewGenerator : delegates views
+Web4ChangeRequest_v2 --> UnitOverviewBuilder : delegates overviews
+
+Web4TestCase --> UnitScenarioManager : delegates storage
+Web4TestCase --> UnitViewGenerator : delegates views
+Web4TestCase --> UnitOverviewBuilder : delegates overviews
+
+' Internal Unit dependencies
+UnitScenarioManager --> UnitIndexStorage : enhanced usage
+UnitViewGenerator --> DefaultUser : owner handling
+UnitOverviewBuilder --> UnitScenarioManager : scenario access
+
+package "Architecture Benefits" <<Rectangle>> {
+  note as Benefits
+    ✅ **DRY Compliance:**
+    - Single source of truth for scenario logic
+    - Shared view generation system
+    - Consistent CLI patterns via Unit
+    
+    ✅ **Separation of Concerns:**
+    - Business logic in domain components
+    - Storage logic in Unit component
+    - View logic in Unit component
+    
+    ✅ **Extensibility:**
+    - Easy to add new scenario types
+    - Consistent behavior across components
+    - Centralized enhancement point
+    
+    ✅ **Maintainability:**
+    - Single place to fix bugs
+    - Single place to add features
+    - Reduced testing surface area
+    
+    ✅ **Web4 Compliance:**
+    - Unit as central orchestrator
+    - Scenario-based initialization
+    - IOR-based references maintained
+  end note
+}
+
+@enduml

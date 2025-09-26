@@ -1,0 +1,72 @@
+#!/usr/bin/env node
+
+/**
+ * ONCE CLI - Command line interface for ONCE demos
+ */
+
+import { spawn } from 'child_process';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const args = process.argv.slice(2);
+
+if (args[0] === 'demo' && args[1]) {
+    // Run test mode
+    const demoPath = join(__dirname, '../examples/multi-env-demo/interactive-demo.js');
+    const child = spawn('node', [demoPath, 'demo', args[1]], {
+        stdio: 'inherit',
+        cwd: join(__dirname, '../examples')
+    });
+    
+    child.on('exit', (code) => {
+        process.exit(code || 0);
+    });
+} else if (args[0] === 'demo') {
+    // Run interactive mode
+    const demoPath = join(__dirname, '../examples/multi-env-demo/interactive-demo.js');
+    const child = spawn('node', [demoPath], {
+        stdio: 'inherit',
+        cwd: join(__dirname, '../examples')
+    });
+    
+    child.on('exit', (code) => {
+        process.exit(code || 0);
+    });
+} else {
+    // Show help
+    console.log(`
+ONCE CLI - Object Network Communication Engine
+
+Usage:
+  once demo                    Start interactive demo
+  once demo "sequence"         Run demo with test sequence
+  
+Test Sequence Format:
+  - Letters are commands (s, 1, 2, 3, d, e, m, c, k, h, q)
+  - Numbers are pause durations in seconds
+  - Example: "s312d2e1q" 
+    (start server, wait 3s, launch clients 1&2, discover, wait 2s, exchange, wait 1s, quit)
+
+Available Commands:
+  s - Start/Stop server
+  1 - Launch Browser client
+  2 - Launch Node.js client
+  3 - Launch Worker client
+  d - Discover peers
+  e - Exchange scenarios
+  m - Show metrics
+  c - Clear screen
+  k - Kill all processes
+  h - Show help
+  q - Quit
+
+Examples:
+  once demo                    # Interactive mode
+  once demo "s3q"             # Start server, wait 3s, quit
+  once demo "s312d2e1q"       # Full demo sequence
+  once demo "s11123d1k2q"     # Stress test with multiple clients
+`);
+}

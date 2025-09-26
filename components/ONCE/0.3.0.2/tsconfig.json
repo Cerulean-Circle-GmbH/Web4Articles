@@ -1,0 +1,1 @@
+{"compilerOptions": {"module": "esnext", "target": "es2020", "skipLibCheck": true, "allowJs": true, "moduleResolution": "node"}}

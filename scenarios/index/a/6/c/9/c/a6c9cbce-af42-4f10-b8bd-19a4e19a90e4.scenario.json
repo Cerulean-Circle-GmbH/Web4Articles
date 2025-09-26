@@ -1,0 +1,37 @@
+{
+  "ior": {
+    "uuid": "a6c9cbce-af42-4f10-b8bd-19a4e19a90e4",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"a6c9cbce-af42-4f10-b8bd-19a4e19a90e4\",\"timestamp\":\"2025-09-08T13:45:01.880Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "a6c9cbce-af42-4f10-b8bd-19a4e19a90e4",
+    "name": "Storage Capabilities",
+    "origin": "",
+    "definition": "Data persistence mechanisms for Unit instances (scenarios, ld-links)",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/a/6/c/9/c/a6c9cbce-af42-4f10-b8bd-19a4e19a90e4.scenario.json",
+    "symlinkPaths": [
+      "/workspace/scenarios/ontology/Storage.Capabilities.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../index/a/6/c/9/c/a6c9cbce-af42-4f10-b8bd-19a4e19a90e4.scenario.json",
+        "filename": "Storage.Capabilities.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process",
+      "Storage Capabilities"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-08T13:45:01.877Z",
+    "updatedAt": "2025-09-08T13:45:01.883Z"
+  }
+}

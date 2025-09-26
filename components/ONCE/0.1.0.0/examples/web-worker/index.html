@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONCE Web Worker Example</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .panel {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            margin-top: 0;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background: #218838;
+        }
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .progress {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: #007bff;
+            transition: width 0.3s ease;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+            font-size: 12px;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .log-entry {
+            padding: 2px 0;
+        }
+        .log-entry.error {
+            color: #dc3545;
+        }
+        .log-entry.success {
+            color: #28a745;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .metric-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .metric-label {
+            font-size: 14px;
+            color: #6c757d;
+        }
+        pre {
+            background: #f1f3f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>⚡ ONCE Web Worker Example</h1>
+    
+    <div class="panel">
+        <h2>Worker Control</h2>
+        <button id="initBtn" onclick="initializeWorker()">Initialize Worker</button>
+        <button id="metricsBtn" onclick="requestMetrics()" disabled>Get Metrics</button>
+        <div id="workerStatus" style="margin-top: 10px;">Status: Not initialized</div>
+    </div>
+
+    <div class="panel">
+        <h2>Scenario Processing</h2>
+        <button onclick="processSingleScenario()" id="processBtn" disabled>Process Single Scenario</button>
+        <button onclick="processBatch()" id="batchBtn" disabled>Process Batch (10 scenarios)</button>
+        <button onclick="processLargeBatch()" id="largeBatchBtn" disabled>Process Large Batch (100 scenarios)</button>
+        
+        <div class="progress" id="progressContainer" style="display: none;">
+            <div class="progress-bar" id="progressBar">0%</div>
+        </div>
+        
+        <div id="processingStatus"></div>
+    </div>
+
+    <div class="panel">
+        <h2>Heavy Computation</h2>
+        <button onclick="startComputation(100000)" id="computeSmallBtn" disabled>Calculate Primes (100K)</button>
+        <button onclick="startComputation(1000000)" id="computeLargeBtn" disabled>Calculate Primes (1M)</button>
+        
+        <div id="computationStatus"></div>
+    </div>
+
+    <div class="panel">
+        <h2>Metrics</h2>
+        <div class="metrics" id="metricsDisplay">
+            <div class="metric-card">
+                <div class="metric-value">-</div>
+                <div class="metric-label">Scenarios Processed</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">-</div>
+                <div class="metric-label">Processing Time</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">-</div>
+                <div class="metric-label">Memory Usage</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>Worker Log</h2>
+        <div class="log" id="workerLog"></div>
+    </div>
+
+    <div class="panel">
+        <h2>Last Processed Scenario</h2>
+        <pre id="lastScenario">No scenario processed yet</pre>
+    </div>
+
+    <script type="module">
+        let worker = null;
+        let isInitialized = false;
+        let processedCount = 0;
+        let totalProcessingTime = 0;
+
+        // Make functions global for onclick handlers
+        window.initializeWorker = initializeWorker;
+        window.requestMetrics = requestMetrics;
+        window.processSingleScenario = processSingleScenario;
+        window.processBatch = processBatch;
+        window.processLargeBatch = processLargeBatch;
+        window.startComputation = startComputation;
+
+        function initializeWorker() {
+            log('Initializing Web Worker...');
+            
+            // Create worker
+            worker = new Worker('worker.js', { type: 'module' });
+            
+            // Set up message handler
+            worker.onmessage = (event) => {
+                handleWorkerMessage(event.data);
+            };
+            
+            worker.onerror = (error) => {
+                log(`Worker error: ${error}`, 'error');
+            };
+            
+            // Initialize ONCE in worker
+            worker.postMessage({ type: 'init' });
+            document.getElementById('initBtn').disabled = true;
+        }
+
+        function handleWorkerMessage(message) {
+            switch (message.type) {
+                case 'initialized':
+                    isInitialized = true;
+                    log(`✅ Worker initialized on ${message.environment.platform}`, 'success');
+                    document.getElementById('workerStatus').textContent = 
+                        `Status: Initialized (${message.environment.platform}, ${message.environment.capabilities.length} capabilities)`;
+                    enableButtons();
+                    break;
+
+                case 'scenario-processed':
+                    processedCount++;
+                    totalProcessingTime += message.metrics.processingTime;
+                    document.getElementById('lastScenario').textContent = 
+                        JSON.stringify(message.scenario, null, 2);
+                    log(`✅ Scenario processed in ${message.metrics.processingTime}ms`, 'success');
+                    updateMetrics();
+                    break;
+
+                case 'batch-started':
+                    log(`Starting batch processing of ${message.count} scenarios`);
+                    showProgress(0, message.count);
+                    break;
+
+                case 'batch-progress':
+                    updateProgress(message.current, message.total);
+                    break;
+
+                case 'batch-completed':
+                    hideProgress();
+                    log(`✅ Batch completed: ${message.stats.successful} successful, ${message.stats.failed} failed`, 'success');
+                    processedCount += message.stats.successful;
+                    updateMetrics();
+                    break;
+
+                case 'computation-started':
+                    log(`🔧 Starting computation with ${message.iterations} iterations`);
+                    document.getElementById('computationStatus').textContent = 'Computing...';
+                    break;
+
+                case 'computation-progress':
+                    document.getElementById('computationStatus').textContent = 
+                        `Progress: ${message.current.toLocaleString()}/${message.total.toLocaleString()} - Found ${message.primesFound} primes`;
+                    break;
+
+                case 'computation-completed':
+                    log(`✅ Computation completed in ${message.metrics.computationTime}ms`, 'success');
+                    document.getElementById('computationStatus').textContent = 
+                        `Found ${message.metrics.primesFound} primes in ${message.metrics.computationTime}ms`;
+                    document.getElementById('lastScenario').textContent = 
+                        JSON.stringify(message.result, null, 2);
+                    break;
+
+                case 'metrics':
+                    displayMetrics(message.metrics);
+                    break;
+
+                case 'log':
+                    log(message.message, message.level);
+                    break;
+
+                case 'error':
+                    log(`❌ Error: ${message.error}`, 'error');
+                    break;
+            }
+        }
+
+        function processSingleScenario() {
+            const scenario = createTestScenario();
+            worker.postMessage({
+                type: 'process-scenario',
+                data: { scenario }
+            });
+            log('📤 Sent scenario for processing');
+        }
+
+        function processBatch() {
+            const scenarios = Array(10).fill(null).map(() => createTestScenario());
+            worker.postMessage({
+                type: 'batch-process',
+                data: { scenarios }
+            });
+            log('📤 Sent batch of 10 scenarios');
+        }
+
+        function processLargeBatch() {
+            const scenarios = Array(100).fill(null).map(() => createTestScenario());
+            worker.postMessage({
+                type: 'batch-process',
+                data: { scenarios }
+            });
+            log('📤 Sent batch of 100 scenarios');
+        }
+
+        function startComputation(iterations) {
+            worker.postMessage({
+                type: 'heavy-computation',
+                data: { iterations }
+            });
+        }
+
+        function requestMetrics() {
+            worker.postMessage({ type: 'get-metrics' });
+        }
+
+        function createTestScenario() {
+            const types = ['Counter', 'Article', 'Task', 'Note'];
+            const type = types[Math.floor(Math.random() * types.length)];
+            
+            return {
+                uuid: generateUUID(),
+                objectType: type,
+                version: '0.1.0.0',
+                state: {
+                    IOR: `${type.toLowerCase()}:${generateUUID()}`,
+                    owner: 'test-generator',
+                    model: {
+                        value: Math.floor(Math.random() * 100),
+                        content: `Test content for ${type}`,
+                        timestamp: new Date().toISOString()
+                    }
+                },
+                metadata: {
+                    created: new Date().toISOString(),
+                    modified: new Date().toISOString(),
+                    description: `Test ${type} scenario`
+                }
+            };
+        }
+
+        function enableButtons() {
+            const buttons = ['processBtn', 'batchBtn', 'largeBatchBtn', 'computeSmallBtn', 'computeLargeBtn', 'metricsBtn'];
+            buttons.forEach(id => document.getElementById(id).disabled = false);
+        }
+
+        function showProgress(current, total) {
+            document.getElementById('progressContainer').style.display = 'block';
+            updateProgress(current, total);
+        }
+
+        function updateProgress(current, total) {
+            const percent = Math.round((current / total) * 100);
+            const bar = document.getElementById('progressBar');
+            bar.style.width = `${percent}%`;
+            bar.textContent = `${percent}%`;
+        }
+
+        function hideProgress() {
+            document.getElementById('progressContainer').style.display = 'none';
+        }
+
+        function updateMetrics() {
+            const avgTime = processedCount > 0 ? (totalProcessingTime / processedCount).toFixed(2) : 0;
+            
+            document.getElementById('metricsDisplay').innerHTML = `
+                <div class="metric-card">
+                    <div class="metric-value">${processedCount}</div>
+                    <div class="metric-label">Scenarios Processed</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">${avgTime}ms</div>
+                    <div class="metric-label">Avg Processing Time</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">${isInitialized ? 'Active' : 'Inactive'}</div>
+                    <div class="metric-label">Worker Status</div>
+                </div>
+            `;
+        }
+
+        function displayMetrics(metrics) {
+            console.log('Worker metrics:', metrics);
+        }
+
+        function log(message, level = 'info') {
+            const logDiv = document.getElementById('workerLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${level}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.insertBefore(entry, logDiv.firstChild);
+            
+            // Keep log size manageable
+            while (logDiv.children.length > 100) {
+                logDiv.removeChild(logDiv.lastChild);
+            }
+        }
+
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            log('Page loaded. Click "Initialize Worker" to begin.');
+        });
+    </script>
+</body>
+</html>

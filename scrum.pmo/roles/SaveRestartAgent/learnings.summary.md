@@ -1,6 +1,6 @@
 # 📚 **Save/Restart Agent - Learnings Summary**
 
-**Last Updated:** 2025-08-24-UTC-1028  
+**Last Updated:** 2025-08-28-UTC-1155  
 **Purpose:** Consolidated learnings from PDCA experiences for team benefit  
 **Update Schedule:** End of Day (EOD)
 
@@ -38,6 +38,12 @@
 - **Knowledge compounds** - Today's learning helps tomorrow
 - [Detailed PDCA](pdca/2025-08-24-UTC-0944-update-howto-pdca-learnings.md)
 
+### **6. Dual Link Format**
+- **Local links MUST use markdown syntax** - `[path](path)` not just `path`
+- **Both display and target use relative path** - Consistency matters
+- **§ symbol for section references** - Standard documentation practice
+- [Detailed PDCA](../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1155-dual-link-fix.md)
+
 ---
 
 ## **💡 Key Principles**
@@ -51,6 +57,7 @@
 ### **Quality Standards**
 - Every PDCA follows the 6-section format
 - Dual links always work (push before linking)
+- Local links use full markdown: `[path/to/file](path/to/file)`
 - User feedback quoted verbatim
 - Decisions numbered with clear options
 

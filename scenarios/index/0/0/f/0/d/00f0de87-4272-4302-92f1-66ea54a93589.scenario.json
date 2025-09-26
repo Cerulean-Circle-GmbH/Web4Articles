@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "00f0de87-4272-4302-92f1-66ea54a93589",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"00f0de87-4272-4302-92f1-66ea54a93589\",\"timestamp\":\"2025-09-11T20:26:10.525Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "00f0de87-4272-4302-92f1-66ea54a93589",
+    "createdAt": "2025-09-11T20:26:10.522Z",
+    "updatedAt": "2025-09-11T20:26:10.527Z",
+    "name": "Test Fixed",
+    "definition": "Fixed create method sets name and definition properly",
+    "indexPath": "/workspace/scenarios/index/0/0/f/0/d/00f0de87-4272-4302-92f1-66ea54a93589.scenario.json",
+    "symlinkPaths": [
+      "/workspace/unit-00f0de87"
+    ]
+  }
+}

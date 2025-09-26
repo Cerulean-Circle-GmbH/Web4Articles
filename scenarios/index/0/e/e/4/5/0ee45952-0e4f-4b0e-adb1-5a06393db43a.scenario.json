@@ -1,0 +1,29 @@
+{
+  "ior": {
+    "uuid": "0ee45952-0e4f-4b0e-adb1-5a06393db43a",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"0ee45952-0e4f-4b0e-adb1-5a06393db43a\",\"timestamp\":\"2025-09-13T12:13:27.320Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "0ee45952-0e4f-4b0e-adb1-5a06393db43a",
+    "createdAt": "2025-09-13T12:13:27.318Z",
+    "updatedAt": "2025-09-13T12:13:27.328Z",
+    "name": "Version Test",
+    "definition": "Testing dynamic version system after cleanup",
+    "indexPath": "/workspace/scenarios/index/0/e/e/4/5/0ee45952-0e4f-4b0e-adb1-5a06393db43a.scenario.json",
+    "symlinkPaths": [],
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/scenarios/ontology/Version.Test.unit",
+        "linkTarget": "ior:unit:0ee45952-0e4f-4b0e-adb1-5a06393db43a",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/MDAv4/M3/CLASS/Version.Test.unit",
+        "linkTarget": "ior:unit:0ee45952-0e4f-4b0e-adb1-5a06393db43a",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}

@@ -1,0 +1,412 @@
+#!/bin/bash
+# Web4Articles - Enhanced Dual Link Fixer
+# Automatically fixes dual links in all markdown files to comply with requirement e8535c4e-591d-4955-9874-6a853545e970
+# ENHANCEMENT: Now handles missing bracket cases like [GitHub](url) | plain/text/path
+# Usage: fix.dual.links.enhanced [file-or-directory]
+
+set -e
+
+# Ensure non-interactive mode
+export DEBIAN_FRONTEND=noninteractive
+export GIT_PAGER=cat
+export PAGER=cat
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+NC='\033[0m' # No Color
+
+# Find project root
+find_project_root() {
+    local current_dir="$(pwd)"
+    while [[ "$current_dir" != "/" ]]; do
+        if [[ -f "$current_dir/.git/config" ]] || [[ -d "$current_dir/.git" ]]; then
+            echo "$current_dir"
+            return 0
+        fi
+        current_dir="$(dirname "$current_dir")"
+    done
+    echo "Error: Not in a git repository" >&2
+    exit 1
+}
+
+PROJECT_ROOT=$(find_project_root)
+# Source environment with non-interactive settings
+if [[ -f "$PROJECT_ROOT/source.env" ]]; then
+    source "$PROJECT_ROOT/source.env" >/dev/null 2>&1 || true
+fi
+
+# Output header information without buffering
+printf "%b" "${BLUE}🔧 Web4Articles Enhanced Dual Link Fixer${NC}\n"
+printf "%b" "${PURPLE}✨ ENHANCEMENT: Now handles missing bracket cases${NC}\n"
+printf "%b" "${BLUE}📋 Requirement: e8535c4e-591d-4955-9874-6a853545e970${NC}\n"
+printf "%b" "${BLUE}🎯 Project Root: $PROJECT_ROOT${NC}\n\n"
+printf "%b" "${YELLOW}📌 Dual Link Standard:${NC}\n"
+printf "%b" "   ${GREEN}[GitHub](URL) | [§/path/from/root](../../../relative/path)${NC}\n"
+printf "%b" "   ${GREEN}[GitHub](URL) | [local/path](local/path)${NC} (for simple relative paths)\n\n"
+printf "%b" "${PURPLE}🆕 Enhanced Detection:${NC}\n"
+printf "%b" "   ${YELLOW}[GitHub](URL) | plain/text/path${NC} → ${GREEN}[GitHub](URL) | [§/path](../../../relative/path)${NC}\n\n"
+
+# Function to calculate relative path from document to target
+calculate_relative_path() {
+    local doc_path="$1"
+    local target_path="$2"
+    
+    # Get absolute paths
+    local doc_dir="$(dirname "$(realpath "$doc_path")")"
+    local target_abs="$(realpath "$target_path" 2>/dev/null || echo "$PROJECT_ROOT/$target_path")"
+    
+    # Calculate relative path using Python for accuracy (non-interactive)
+    python3 -u -c "
+import os.path
+doc_dir = '$doc_dir'
+target = '$target_abs'
+try:
+    rel_path = os.path.relpath(target, doc_dir)
+    print(rel_path)
+except:
+    print('$target_path')
+"
+}
+
+# Function to fix dual links in a markdown file
+fix_markdown_file() {
+    local md_file="$1"
+    local backup_file="${md_file}.bak"
+    
+    echo -e "${YELLOW}📄 Processing: ${md_file#$PROJECT_ROOT/}${NC}"
+    
+    # Create backup
+    cp "$md_file" "$backup_file"
+    
+    # Create temporary file for processing
+    local temp_file=$(mktemp)
+    
+    # Process the file line by line
+    local changes_made=0
+    local line_num=0
+    
+    while IFS= read -r line; do
+        line_num=$((line_num + 1))
+        
+        # ENHANCED: Check for multiple dual link patterns
+        local is_dual_link=false
+        local github_url=""
+        local display_text=""
+        local local_path=""
+        local fix_type=""
+        
+        # Pattern 1: Standard dual link [GitHub](...) | [text](path)
+        if echo "$line" | grep -qE '\[GitHub\]\([^)]+\)[[:space:]]*\|[[:space:]]*\[[^]]*\]\([^)]+\)'; then
+            is_dual_link=true
+            fix_type="standard"
+            github_url=$(echo "$line" | sed -E 's/.*\[GitHub\]\(([^)]+)\).*/\1/')
+            display_text=$(echo "$line" | sed -E 's/.*\|[[:space:]]*\[([^]]*)\]\([^)]+\).*/\1/')
+            local_path=$(echo "$line" | sed -E 's/.*\|[[:space:]]*\[[^]]*\]\(([^)]+)\).*/\1/')
+        
+        # Pattern 2: ENHANCED - Missing brackets on local part [GitHub](...) | plain/text
+        elif echo "$line" | grep -qE '\[GitHub\]\([^)]+\)[[:space:]]*\|[[:space:]]*[^[].*[^)]$'; then
+            is_dual_link=true
+            fix_type="missing_brackets"
+            github_url=$(echo "$line" | sed -E 's/.*\[GitHub\]\(([^)]+)\).*/\1/')
+            # Extract everything after the | (removing leading/trailing spaces)
+            local_path=$(echo "$line" | sed -E 's/.*\|[[:space:]]*(.*[^[:space:]]).*/\1/' | sed -E 's/[[:space:]]*$//')
+            display_text="$local_path"  # Default display text
+            echo -e "   ${PURPLE}🆕 ENHANCED: Detected missing brackets pattern${NC}"
+        
+        # Pattern 3: ENHANCED - Missing brackets but with some markdown [GitHub](...) | **text:** path
+        elif echo "$line" | grep -qE '\[GitHub\]\([^)]+\)[[:space:]]*\|[[:space:]]*\*\*[^*]+\*\*[[:space:]]*[^[]'; then
+            is_dual_link=true
+            fix_type="markdown_prefix"
+            github_url=$(echo "$line" | sed -E 's/.*\[GitHub\]\(([^)]+)\).*/\1/')
+            # Extract the path part after the markdown formatting
+            local_path=$(echo "$line" | sed -E 's/.*\|[[:space:]]*\*\*[^*]+\*\*[[:space:]]*(.*[^[:space:]]).*/\1/' | sed -E 's/[[:space:]]*$//')
+            display_text="$local_path"  # Default display text
+            echo -e "   ${PURPLE}🆕 ENHANCED: Detected markdown prefix pattern${NC}"
+        fi
+        
+        if [[ "$is_dual_link" == true ]]; then
+            # Extract the file path from GitHub URL to validate consistency
+            local github_path=""
+            if [[ "$github_url" =~ github\.com/[^/]+/[^/]+/blob/[^/]+/(.+)$ ]]; then
+                github_path="${BASH_REMATCH[1]}"
+            fi
+            
+            # Determine if we need to fix this link
+            local needs_fix=false
+            local new_display="$display_text"
+            local new_path="$local_path"
+            
+            # ENHANCED: Always fix missing bracket cases
+            if [[ "$fix_type" == "missing_brackets" ]] || [[ "$fix_type" == "markdown_prefix" ]]; then
+                needs_fix=true
+                echo -e "   ${PURPLE}🆕 ENHANCED: Fixing missing bracket case${NC}"
+                
+                # Determine if path is from project root or relative
+                if [[ -e "$PROJECT_ROOT/$local_path" ]]; then
+                    # Path exists from project root
+                    new_display="§/$local_path"
+                    new_path=$(calculate_relative_path "$md_file" "$PROJECT_ROOT/$local_path")
+                elif [[ -e "$(dirname "$md_file")/$local_path" ]]; then
+                    # Path exists relative to document
+                    new_display="$local_path"
+                    new_path="$local_path"
+                else
+                    # Path doesn't exist, but still fix the format
+                    new_display="§/$local_path"
+                    new_path=$(calculate_relative_path "$md_file" "$PROJECT_ROOT/$local_path")
+                fi
+            
+            # Original logic for standard dual links
+            elif [[ "$fix_type" == "standard" ]]; then
+                # Check if local path is absolute or doesn't match standard
+                if [[ "$local_path" == /* ]] && [[ "$local_path" != "$PROJECT_ROOT"* ]]; then
+                    # Absolute path that's not from project root
+                    needs_fix=true
+                    # Try to make it relative
+                    if [[ -e "$PROJECT_ROOT$local_path" ]]; then
+                        new_path=$(calculate_relative_path "$md_file" "$PROJECT_ROOT$local_path")
+                        new_display="§$local_path"
+                    fi
+                elif [[ "$local_path" != ../* ]] && [[ "$local_path" != ./* ]] && [[ ! "$local_path" =~ ^[a-zA-Z0-9] ]]; then
+                    # Path that doesn't start with ../ or ./ or alphanumeric (likely absolute)
+                    needs_fix=true
+                elif [[ "$display_text" != "§"* ]] && [[ "$display_text" == /* ]]; then
+                    # Display text looks like an absolute path but isn't using § notation
+                    needs_fix=true
+                    new_display="§$display_text"
+                elif [[ "$display_text" == "$local_path" ]] && [[ "$local_path" != ../* ]]; then
+                    # Display and path are identical and not relative - likely needs fixing
+                    if [[ -e "$PROJECT_ROOT/$local_path" ]]; then
+                        needs_fix=true
+                        new_display="§/$local_path"
+                        new_path=$(calculate_relative_path "$md_file" "$PROJECT_ROOT/$local_path")
+                    fi
+                fi
+                
+                # Additional check: if GitHub path exists, ensure local path is consistent
+                if [[ -n "$github_path" ]] && [[ "$github_path" != "$local_path" ]]; then
+                    # Check if the GitHub path matches what we expect
+                    local expected_path=$(calculate_relative_path "$md_file" "$PROJECT_ROOT/$github_path")
+                    if [[ "$local_path" != "$expected_path" ]] && [[ -e "$PROJECT_ROOT/$github_path" ]]; then
+                        needs_fix=true
+                        new_display="§/$github_path"
+                        new_path="$expected_path"
+                    fi
+                fi
+            fi
+            
+            if [[ "$needs_fix" == true ]]; then
+                # Build the new line
+                local new_line="[GitHub]($github_url) | [$new_display]($new_path)"
+                
+                # Replace the line (preserving any leading whitespace)
+                local leading_space="${line%%[![:space:]]*}"
+                echo "${leading_space}${new_line}" >> "$temp_file"
+                
+                changes_made=$((changes_made + 1))
+                echo -e "   ${GREEN}✅ Line $line_num: Fixed dual link (${fix_type})${NC}"
+                echo -e "      Old: $line"
+                echo -e "      New: ${leading_space}${new_line}"
+            else
+                echo "$line" >> "$temp_file"
+            fi
+        else
+            echo "$line" >> "$temp_file"
+        fi
+    done < "$md_file"
+    
+    # Replace original file if changes were made
+    if [[ $changes_made -gt 0 ]]; then
+        mv "$temp_file" "$md_file"
+        echo -e "   ${GREEN}✅ Fixed $changes_made dual links${NC}"
+        rm "$backup_file"
+        return 0
+    else
+        rm "$temp_file"
+        rm "$backup_file"
+        echo -e "   ${BLUE}ℹ️  No dual links needed fixing${NC}"
+        return 1
+    fi
+}
+
+# Function to check if a file should be processed
+should_process_file() {
+    local file="$1"
+    
+    # Skip certain directories
+    if [[ "$file" == *"/node_modules/"* ]] || \
+       [[ "$file" == *"/.git/"* ]] || \
+       [[ "$file" == *"/target/"* ]] || \
+       [[ "$file" == *"/dist/"* ]] || \
+       [[ "$file" == *"/.next/"* ]]; then
+        return 1
+    fi
+    
+    # Only process markdown files
+    if [[ "$file" == *.md ]]; then
+        return 0
+    fi
+    
+    return 1
+}
+
+# Function to process directory recursively
+process_directory() {
+    local dir="$1"
+    local total_files=0
+    local fixed_files=0
+    
+    echo -e "${BLUE}📁 Processing directory: ${dir#$PROJECT_ROOT/}${NC}"
+    echo ""
+    
+    # Find all markdown files
+    while IFS= read -r -d '' file; do
+        if should_process_file "$file"; then
+            total_files=$((total_files + 1))
+            if fix_markdown_file "$file"; then
+                fixed_files=$((fixed_files + 1))
+            fi
+        fi
+    done < <(find "$dir" -type f -name "*.md" -print0 2>/dev/null)
+    
+    echo ""
+    echo -e "${GREEN}📊 Summary: Processed $total_files files, fixed $fixed_files files${NC}"
+}
+
+# Function to run verification check
+verify_dual_links() {
+    local target="${1:-$PROJECT_ROOT}"
+    
+    echo -e "${BLUE}🔍 Enhanced verification of dual links in: ${target#$PROJECT_ROOT/}${NC}"
+    echo ""
+    
+    local issues_found=0
+    
+    # Find all dual links that might not comply
+    while IFS= read -r -d '' file; do
+        if should_process_file "$file"; then
+            local line_num=0
+            while IFS= read -r line; do
+                line_num=$((line_num + 1))
+                
+                # Check for standard dual links
+                if echo "$line" | grep -qE '\[GitHub\]\([^)]+\)[[:space:]]*\|[[:space:]]*\[[^]]*\]\([^)]+\)'; then
+                    local display_text=$(echo "$line" | sed -E 's/.*\|[[:space:]]*\[([^]]*)\]\([^)]+\).*/\1/')
+                    local local_path=$(echo "$line" | sed -E 's/.*\|[[:space:]]*\[[^]]*\]\(([^)]+)\).*/\1/')
+                    
+                    # Check for potential issues
+                    if [[ "$local_path" == /* ]] && [[ "$local_path" != "$PROJECT_ROOT"* ]] && [[ "$display_text" != "§"* ]]; then
+                        echo -e "${YELLOW}⚠️  ${file#$PROJECT_ROOT/}:$line_num - Absolute path without § notation${NC}"
+                        issues_found=$((issues_found + 1))
+                    elif [[ "$display_text" == "$local_path" ]] && [[ "$local_path" != ../* ]] && [[ "$local_path" != ./* ]]; then
+                        echo -e "${YELLOW}⚠️  ${file#$PROJECT_ROOT/}:$line_num - Display matches path (not using § notation)${NC}"
+                        issues_found=$((issues_found + 1))
+                    fi
+                
+                # ENHANCED: Check for missing bracket cases
+                elif echo "$line" | grep -qE '\[GitHub\]\([^)]+\)[[:space:]]*\|[[:space:]]*[^[].*[^)]$'; then
+                    echo -e "${PURPLE}🆕 ${file#$PROJECT_ROOT/}:$line_num - Missing brackets on local path (can be fixed)${NC}"
+                    issues_found=$((issues_found + 1))
+                
+                # ENHANCED: Check for markdown prefix cases  
+                elif echo "$line" | grep -qE '\[GitHub\]\([^)]+\)[[:space:]]*\|[[:space:]]*\*\*[^*]+\*\*[[:space:]]*[^[]'; then
+                    echo -e "${PURPLE}🆕 ${file#$PROJECT_ROOT/}:$line_num - Markdown prefix with missing brackets (can be fixed)${NC}"
+                    issues_found=$((issues_found + 1))
+                fi
+            done < "$file"
+        fi
+    done < <(find "$target" -type f -name "*.md" -print0 2>/dev/null)
+    
+    if [[ $issues_found -eq 0 ]]; then
+        echo -e "${GREEN}✅ All dual links comply with the standard!${NC}"
+    else
+        echo -e "${YELLOW}⚠️  Found $issues_found potential issues${NC}"
+        echo -e "${PURPLE}🆕 Enhanced tool can now fix missing bracket cases!${NC}"
+    fi
+}
+
+# Main execution
+main() {
+    local target="${1:-$PROJECT_ROOT}"
+    local verify_only="${2:-}"
+    
+    # Check if target exists
+    if [[ ! -e "$target" ]]; then
+        echo -e "${RED}❌ Target not found: $target${NC}"
+        exit 1
+    fi
+    
+    # Normalize path
+    target="$(realpath "$target")"
+    
+    if [[ "$verify_only" == "--verify" ]]; then
+        verify_dual_links "$target"
+        exit 0
+    fi
+    
+    echo -e "${BLUE}🎯 Target: ${target#$PROJECT_ROOT/}${NC}"
+    echo ""
+    
+    if [[ -f "$target" ]]; then
+        # Single file
+        if fix_markdown_file "$target"; then
+            echo -e "${GREEN}✅ Successfully fixed dual links in: ${target#$PROJECT_ROOT/}${NC}"
+        else
+            echo -e "${BLUE}ℹ️  No changes needed in: ${target#$PROJECT_ROOT/}${NC}"
+        fi
+    elif [[ -d "$target" ]]; then
+        # Directory
+        process_directory "$target"
+    else
+        echo -e "${RED}❌ Target is neither file nor directory: $target${NC}"
+        exit 1
+    fi
+    
+    echo ""
+    echo -e "${GREEN}🎉 Enhanced Dual Link fixing complete!${NC}"
+    echo -e "${PURPLE}✨ Now handles missing bracket cases!${NC}"
+    echo -e "${BLUE}📋 Compliance with requirement: e8535c4e-591d-4955-9874-6a853545e970${NC}"
+}
+
+# Show usage if help requested
+if [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]]; then
+    echo "Usage: $0 [file-or-directory] [--verify]"
+    echo ""
+    echo "ENHANCED: Automatically fixes dual links including missing bracket cases."
+    echo "Complies with dual link standard requirement e8535c4e-591d-4955-9874-6a853545e970."
+    echo ""
+    echo "Options:"
+    echo "  file-or-directory    Target file or directory (default: project root)"
+    echo "  --verify            Only verify compliance, don't fix"
+    echo "  --help, -h          Show this help message"
+    echo ""
+    echo "Examples:"
+    echo "  $0                                    # Fix all dual links in project"
+    echo "  $0 scrum.pmo/                        # Fix all dual links in scrum.pmo"
+    echo "  $0 path/to/specific.md               # Fix specific markdown file"
+    echo "  $0 . --verify                        # Verify all dual links"
+    echo ""
+    echo "Dual Link Format (per requirement e8535c4e-591d-4955-9874-6a853545e970):"
+    echo "  [GitHub](url) | [§/path/from/root](../../../relative/path)"
+    echo "  [GitHub](url) | [local/path](local/path) (for simple relative paths)"
+    echo ""
+    echo "ENHANCED Detection Patterns:"
+    echo "  ✅ [GitHub](url) | [text](path)           # Standard (existing)"
+    echo "  🆕 [GitHub](url) | plain/text/path        # Missing brackets (NEW)"
+    echo "  🆕 [GitHub](url) | **Label:** path        # Markdown prefix (NEW)"
+    echo ""
+    echo "The enhanced script will:"
+    echo "  - Convert absolute paths to relative paths from document location"
+    echo "  - Add § notation for paths from project root"
+    echo "  - Ensure consistency between GitHub URL and local path"
+    echo "  - Preserve existing correct dual links"
+    echo "  🆕 Fix missing bracket cases by adding proper link structure"
+    echo "  🆕 Handle markdown prefixes and convert to proper dual links"
+    exit 0
+fi
+
+main "$@"

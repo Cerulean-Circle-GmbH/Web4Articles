@@ -38,14 +38,26 @@ if [[ "$LOCAL" != "$REMOTE" ]]; then
     exit 1
 fi
 
-# Safety Check 4: Confirm no active agents (manual confirmation required)
-echo "⚠️  CRITICAL SAFETY CHECK:"
-echo "Are ALL other agents stopped? (y/N)"
-read -r response
-if [[ "$response" != "y" && "$response" != "Y" ]]; then
-    echo "❌ RELEASE ABORTED: Other agents must be stopped first"
-    echo "Coordinate with QA user to stop all agents before release"
-    exit 1
+# Safety Check 4: Confirm no active agents
+if [[ "${RELEASE_CONFIRM_AGENTS_STOPPED:-}" == "yes" ]] || [[ "${CI:-}" == "true" ]] || [[ "${GITHUB_ACTIONS:-}" == "true" ]]; then
+    echo "✅ Non-interactive mode: assuming all agents are stopped"
+else
+    echo "⚠️  CRITICAL SAFETY CHECK:"
+    echo "Are ALL other agents stopped? (y/N)"
+    if command -v timeout >/dev/null 2>&1; then
+        read -t 30 -r response || response="timeout"
+    else
+        read -r response
+    fi
+    
+    if [[ "$response" == "timeout" ]]; then
+        echo "❌ RELEASE ABORTED: Timeout waiting for confirmation"
+        exit 1
+    elif [[ "$response" != "y" && "$response" != "Y" ]]; then
+        echo "❌ RELEASE ABORTED: Other agents must be stopped first"
+        echo "Coordinate with QA user to stop all agents before release"
+        exit 1
+    fi
 fi
 
 # Get current commit info

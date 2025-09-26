@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "37b5d9e7-46ac-4641-8366-2137b8cad9e0",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTMwVDEwOjQ4OjQ4Ljk5NVoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "37b5d9e7-46ac-4641-8366-2137b8cad9e0",
+    "name": "--title",
+    "title": "--title",
+    "description": "ONCE Kernel Default Port Architecture"
+  },
+  "unitIndex": {
+    "uuid": "37b5d9e7-46ac-4641-8366-2137b8cad9e0",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/3/7/b/5/d/37b5d9e7-46ac-4641-8366-2137b8cad9e0.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/37b5d9e7-46ac-4641-8366-2137b8cad9e0.scenario.json"
+    ],
+    "createdAt": "2025-08-30T10:48:49.018Z",
+    "updatedAt": "2025-08-30T10:48:49.018Z"
+  }
+}

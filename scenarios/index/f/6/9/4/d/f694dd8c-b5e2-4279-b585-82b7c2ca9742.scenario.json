@@ -1,0 +1,38 @@
+{
+  "ior": {
+    "uuid": "f694dd8c-b5e2-4279-b585-82b7c2ca9742",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"f694dd8c-b5e2-4279-b585-82b7c2ca9742\",\"timestamp\":\"2025-09-13T12:33:48.100Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "f694dd8c-b5e2-4279-b585-82b7c2ca9742",
+    "name": "Test  Multiple   Spaces",
+    "origin": "",
+    "definition": "",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/f/6/9/4/d/f694dd8c-b5e2-4279-b585-82b7c2ca9742.scenario.json",
+    "symlinkPaths": [
+      "/workspace/temp-filename-test/Test.Multiple.Spaces.unit"
+    ],
+    "namedLinks": [],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-13T12:33:48.099Z",
+    "updatedAt": "2025-09-13T12:33:48.101Z",
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/temp-filename-test/Test.Multiple.Spaces.unit",
+        "linkTarget": "ior:unit:f694dd8c-b5e2-4279-b585-82b7c2ca9742",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "ior": {
+    "uuid": "1a033b6a-7503-40f2-8c7e-865fd3ae2966",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"1a033b6a-7503-40f2-8c7e-865fd3ae2966\",\"timestamp\":\"2025-09-13T11:40:56.585Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "1a033b6a-7503-40f2-8c7e-865fd3ae2966",
+    "createdAt": "2025-09-13T11:40:56.585Z",
+    "updatedAt": "2025-09-13T11:40:56.593Z",
+    "name": "Perfect DRY Test",
+    "definition": "Testing DRY compliant automatic linking with linkInto method and safety fixes",
+    "indexPath": "/workspace/scenarios/index/1/a/0/3/3/1a033b6a-7503-40f2-8c7e-865fd3ae2966.scenario.json",
+    "symlinkPaths": [],
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/scenarios/ontology/Perfect.DRY.Test.unit",
+        "linkTarget": "ior:unit:1a033b6a-7503-40f2-8c7e-865fd3ae2966",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/MDAv4/M3/CLASS/Perfect.DRY.Test.unit",
+        "linkTarget": "ior:unit:1a033b6a-7503-40f2-8c7e-865fd3ae2966",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}

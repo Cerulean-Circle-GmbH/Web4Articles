@@ -1,0 +1,38 @@
+{
+  "ior": {
+    "uuid": "b894b510-a413-47d2-a85d-22bf0f2bcd9e",
+    "component": "unit",
+    "version": "0.3.0.6"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"b894b510-a413-47d2-a85d-22bf0f2bcd9e\",\"timestamp\":\"2025-09-23T18:08:29.201Z\",\"component\":\"unit\",\"version\":\"0.3.0.6\"}",
+  "model": {
+    "uuid": "b894b510-a413-47d2-a85d-22bf0f2bcd9e",
+    "name": "Folder",
+    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/MDAv4/M3/FOLDER/",
+    "definition": "M1 folder instance: MDAv4/M3/FOLDER/",
+    "typeM3": "CLASS",
+    "indexPath": "b/8/9/4/b/b894b510-a413-47d2-a85d-22bf0f2bcd9e.scenario.json",
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/components/Unit/0.3.0.5/Folder.unit",
+        "linkTarget": "ior:unit:b894b510-a413-47d2-a85d-22bf0f2bcd9e",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/components/Unit/0.3.0.5/Folder.unit",
+        "linkTarget": "ior:unit:b894b510-a413-47d2-a85d-22bf0f2bcd9e",
+        "syncStatus": "SYNCED"
+      }
+    ],
+    "createdAt": "2025-09-23T18:08:29.196Z",
+    "updatedAt": "2025-09-23T18:08:29.203Z",
+    "originName": "FOLDER",
+    "folderPath": "MDAv4/M3/FOLDER/",
+    "fileCount": 0,
+    "subfolderCount": 0,
+    "totalSize": 0,
+    "folderHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lastScanned": "2025-09-23T18:08:29.196Z",
+    "symlinkPaths": []
+  }
+}

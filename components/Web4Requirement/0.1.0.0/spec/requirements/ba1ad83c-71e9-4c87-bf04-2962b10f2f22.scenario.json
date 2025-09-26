@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "ba1ad83c-71e9-4c87-bf04-2962b10f2f22",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIzVDA4OjUwOjUyLjAxNloiLCJ1dWlkIjoiNGExMjFmNTItNGRhZi00OTljLWIzODktZTFiZDliZDI4YjBiIn0=",
+  "model": {
+    "uuid": "ba1ad83c-71e9-4c87-bf04-2962b10f2f22",
+    "name": "Owner Field Encoding",
+    "title": "Owner Field Encoding",
+    "description": "The owner field in a Web4 scenario must be a Base64-encoded JSON object containing: user (string), hostname (string), utcTimestamp (ISO 8601 format), and uuid (v4 UUID). This provides full traceability of who created the scenario, where, when, and with what unique creation event ID"
+  }
+}

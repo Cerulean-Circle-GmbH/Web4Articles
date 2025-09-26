@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "26b53200-c6b9-418d-aeb1-1ff56bdf2731",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"26b53200-c6b9-418d-aeb1-1ff56bdf2731\",\"timestamp\":\"2025-09-13T11:27:30.255Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "26b53200-c6b9-418d-aeb1-1ff56bdf2731",
+    "createdAt": "2025-09-13T11:27:30.255Z",
+    "updatedAt": "2025-09-13T11:27:30.257Z",
+    "name": "AutoLinkTest",
+    "definition": "Testing automatic ontology and M3 linking system",
+    "indexPath": "/workspace/scenarios/index/2/6/b/5/3/26b53200-c6b9-418d-aeb1-1ff56bdf2731.scenario.json",
+    "symlinkPaths": [
+      "/workspace/unit-26b53200"
+    ]
+  }
+}

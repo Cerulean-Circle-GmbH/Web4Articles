@@ -49,7 +49,7 @@
 - OntologyAgent PDCA entry created: [2025-08-15-UTC-0923.md](../roles/OntologyAgent/PDCA/2025-08-15-UTC-0923.md)
 - Successful ontology merge from EAMD.ucp (180+ terms)
 - See [handover.backend.agent.md](../../handover.backend.agent.md)
-- QA log updates: [qa-feedback-log.md](../../qa-feedback-log.md)
+- QA feedback: Follow PDCA process as per [howto.PDCA.md](../../roles/_shared/PDCA/howto.PDCA.md)
 - Recovery log: [recovery.md](../../recovery.md)
 
 ## Risks/Blockers

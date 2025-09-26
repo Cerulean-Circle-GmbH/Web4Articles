@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "cda1e71c-e249-447a-a14e-22fea1c1967d",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDA1OjA4OjI4LjMyNVoiLCJ1dWlkIjoiZjMyM2RhODYtMWI1Zi00OTFkLWFmYTMtZmFjNmYxMzI2Yjc3In0=",
+  "model": {
+    "uuid": "cda1e71c-e249-447a-a14e-22fea1c1967d",
+    "name": "Unit Component Context Test",
+    "title": "Unit Component Context Test",
+    "description": "Testing spec/ structure creation in Unit component directory context"
+  }
+}

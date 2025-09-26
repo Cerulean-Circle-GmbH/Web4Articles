@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "259427fa-e53c-4651-8d86-4598c2a6a233",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIzVDA4OjUwOjQzLjQ2NVoiLCJ1dWlkIjoiYzJkZWFjZDYtN2FhOS00MWVmLTkzMTUtMWUyNDgwN2E2ZGZkIn0=",
+  "model": {
+    "uuid": "259427fa-e53c-4651-8d86-4598c2a6a233",
+    "name": "Scenario Structure",
+    "title": "Scenario Structure",
+    "description": "Every Web4 scenario must have exactly three top-level attributes: IOR (Inter-Object Reference containing uuid, component, and version), owner (Base64-encoded JSON with user, hostname, utcTimestamp, and uuid), and model (containing the object's state including at minimum a uuid field)"
+  }
+}

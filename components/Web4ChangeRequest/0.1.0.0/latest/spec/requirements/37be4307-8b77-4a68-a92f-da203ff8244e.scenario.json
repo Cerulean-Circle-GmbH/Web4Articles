@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "37be4307-8b77-4a68-a92f-da203ff8244e",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDA0OjAyOjU3LjgwMloiLCJ1dWlkIjoiOWYyZTkyM2MtODJmOC00OGQ0LWFkZmEtZmQzZTE2YmM5NTIxIn0=",
+  "model": {
+    "uuid": "37be4307-8b77-4a68-a92f-da203ff8244e",
+    "name": "Web4Requirement Name Attribute Enhancement",
+    "title": "Web4Requirement Name Attribute Enhancement",
+    "description": "Add at least a name attribute and a title getter and setter to name to the Web4Requirement implementation for better requirement identification and manipulation."
+  }
+}

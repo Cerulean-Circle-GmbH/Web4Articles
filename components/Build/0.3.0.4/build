@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Web4 Build CLI Tool v0.3.0.4 - Dependency Resolution and Build Management
+# Web4 pattern: Self-building with dependency resolution before usage
+
+# Get script directory and change to it
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+# Check if built, if not, build first
+if [ ! -d "dist" ]; then
+    echo "🔧 Building Build 0.3.0.4..."
+    
+    # Install dependencies if needed
+    if [ ! -d "node_modules" ]; then
+        npm install
+    fi
+    
+    # Build with TypeScript
+    npx tsc
+fi
+
+# Run the CLI
+node dist/ts/layer5/BuildCLI.js "$@"

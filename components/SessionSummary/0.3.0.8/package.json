@@ -1,0 +1,32 @@
+{
+  "name": "@web4/session-summary",
+  "version": "0.3.0.8",
+  "description": "Web4 SessionSummary component - automated PDCA session analysis with TRON extraction and decisions tracking",
+  "type": "module",
+  "main": "dist/ts/layer2/DefaultSessionSummary.js",
+  "types": "dist/ts/layer2/DefaultSessionSummary.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist/ && find src/ts -name '*.js' -delete && find src/ts -name '*.js.map' -delete && find src/ts -name '*.d.ts' -delete && find src/ts -name '*.d.ts.map' -delete && rm -f *.tsbuildinfo",
+    "test": "vitest",
+    "test:run": "vitest run"
+  },
+  "keywords": [
+    "web4",
+    "session-summary",
+    "pdca-analysis", 
+    "tron-extraction",
+    "decisions-tracking"
+  ],
+  "author": "Web4 Architecture Team",
+  "license": "MIT",
+  "dependencies": {
+    "@web4/defaultcli": "file:../../../DefaultCLI/0.3.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vitest/ui": "^3.2.4",
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
+  }
+}

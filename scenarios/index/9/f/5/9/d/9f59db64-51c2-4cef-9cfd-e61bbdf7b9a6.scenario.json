@@ -1,0 +1,37 @@
+{
+  "ior": {
+    "uuid": "9f59db64-51c2-4cef-9cfd-e61bbdf7b9a6",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"9f59db64-51c2-4cef-9cfd-e61bbdf7b9a6\",\"timestamp\":\"2025-09-08T13:44:23.582Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "9f59db64-51c2-4cef-9cfd-e61bbdf7b9a6",
+    "name": "M2 Class",
+    "origin": "",
+    "definition": "Meta-class level ontological construct that defines structure for M1 instances",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/9/f/5/9/d/9f59db64-51c2-4cef-9cfd-e61bbdf7b9a6.scenario.json",
+    "symlinkPaths": [
+      "/workspace/scenarios/ontology/M2.Class.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../index/9/f/5/9/d/9f59db64-51c2-4cef-9cfd-e61bbdf7b9a6.scenario.json",
+        "filename": "M2.Class.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process",
+      "M2 Class"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-08T13:44:23.579Z",
+    "updatedAt": "2025-09-08T13:44:23.585Z"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "62f7dae8-8750-47e6-9528-38d5b4ce173c",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI5VDA3OjUxOjM1LjQxNFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "62f7dae8-8750-47e6-9528-38d5b4ce173c",
+    "name": "GitHub Links Validation and Relative Path Correction",
+    "title": "GitHub Links Validation and Relative Path Correction",
+    "description": "None of the GitHub links in PDCA documents work correctly. The system must check branch and commit status for GitHub links and ensure files are linked relative to project root."
+  },
+  "unitIndex": {
+    "uuid": "62f7dae8-8750-47e6-9528-38d5b4ce173c",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/6/2/f/7/d/62f7dae8-8750-47e6-9528-38d5b4ce173c.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/62f7dae8-8750-47e6-9528-38d5b4ce173c.scenario.json"
+    ],
+    "createdAt": "2025-08-29T07:51:35.433Z",
+    "updatedAt": "2025-08-29T07:51:35.433Z"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "c4099ae8-1c38-4c46-8709-1daadcd7ad3f",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"c4099ae8-1c38-4c46-8709-1daadcd7ad3f\",\"timestamp\":\"2025-09-11T21:03:41.198Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "c4099ae8-1c38-4c46-8709-1daadcd7ad3f",
+    "createdAt": "2025-09-11T21:03:41.198Z",
+    "updatedAt": "2025-09-11T21:03:41.199Z",
+    "name": "Test Clean",
+    "definition": "This should not show warning now",
+    "indexPath": "/workspace/scenarios/index/c/4/0/9/9/c4099ae8-1c38-4c46-8709-1daadcd7ad3f.scenario.json",
+    "symlinkPaths": [
+      "/workspace/unit-c4099ae8"
+    ]
+  }
+}

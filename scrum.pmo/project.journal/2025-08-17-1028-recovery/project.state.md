@@ -54,9 +54,9 @@
 ## Recent Activity
 - **Recovery Process**: Enhanced recovery system with role flexibility and automated journal creation ✅
 - **Workspaces Tree Index**: Generated with file sizes and modification dates as requested ✅
-- **QA Feedback Integration**: Comprehensive qa-feedback-log.md maintained with timestamped user feedback
+- **QA Feedback Integration**: PDCA entries include verbatim QA feedback with UTC timestamps as per howto.PDCA.md
 - See [handover.backend.agent.md](../../handover.backend.agent.md)
-- QA log updates: [qa-feedback-log.md](../../qa-feedback-log.md)
+- QA feedback: Follow PDCA process as per [howto.PDCA.md](../../roles/_shared/PDCA/howto.PDCA.md)
 - Recovery log: [recovery.md](../../recovery.md)
 
 ## Project Principles (Canonical)
@@ -94,7 +94,7 @@
 ✅ **DevOps Environment Verification**: Docker and Node.js confirmed operational  
 ✅ **Project Principles Review**: Canonical first principles loaded and understood  
 ✅ **Role Process Scan**: All scrum.pmo roles and processes reviewed  
-✅ **QA Feedback Aggregation**: Existing qa-feedback-log.md confirmed current  
+✅ **QA Feedback Aggregation**: QA feedback captured in sprint qa.md files and PDCA entries  
 ✅ **Sprint Status Assessment**: Comprehensive overview of all sprints 0-18 completed  
 ✅ **Tree Index Generation**: workspacesMountPoint tree with file sizes and dates created  
 

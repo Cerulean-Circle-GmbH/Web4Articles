@@ -1,0 +1,41 @@
+@startuml
+title Template Logic Independence Architecture
+
+package "Interfaces" {
+  interface View {
+    +render(context): Promise<ViewResult>
+  }
+  
+  interface MDView {
+    +renderMD(context): Promise<ViewResult>
+  }
+  
+  interface TemplateProcessor {
+    +processTemplate(template, context): string
+  }
+}
+
+package "Implementations" {
+  class DefaultTemplateProcessor {
+    +processTemplate(template, context): string
+    +loadTemplate(path): Promise<string>
+  }
+  
+  class DefaultMDView {
+    -templateProcessor: TemplateProcessor
+    +renderMD(context): Promise<ViewResult>
+  }
+  
+  class MDOverview {
+    -itemTemplatePath: string
+    +renderMD(context): Promise<ViewResult>
+  }
+}
+
+TemplateProcessor ||..|| DefaultTemplateProcessor
+View ||..|| MDView
+MDView ||..|| DefaultMDView
+DefaultMDView ||--|| MDOverview
+DefaultMDView ||--|| DefaultTemplateProcessor
+
+@enduml

@@ -1,0 +1,14 @@
+{
+  "name": "@web4/ior",
+  "version": "0.3.0.3",
+  "description": "Simple, fundamental, dependency-free IOR component",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "clean": "rm -rf dist node_modules package-lock.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

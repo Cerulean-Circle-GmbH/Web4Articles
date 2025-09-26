@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "bde209b7-e688-43b2-bfd0-a95419fd9998",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA5LTA3VDEyOjA5OjEyLjA4MFoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "bde209b7-e688-43b2-bfd0-a95419fd9998",
+    "name": "MOF M2 Meta-Model",
+    "title": "MOF M2 Meta-Model",
+    "description": "M2 units are instances of M3 units with persistent scenarios. Example: Web4Folder is M2 instance of Unit M3 with name Folder and typeM3 class. M2 units define component behavior through scenarios."
+  },
+  "unitIndex": {
+    "uuid": "bde209b7-e688-43b2-bfd0-a95419fd9998",
+    "indexPath": "/workspace/scenarios/index/b/d/e/2/0/bde209b7-e688-43b2-bfd0-a95419fd9998.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/bde209b7-e688-43b2-bfd0-a95419fd9998.scenario.json"
+    ],
+    "createdAt": "2025-09-07T12:09:12.086Z",
+    "updatedAt": "2025-09-07T12:09:12.086Z"
+  }
+}

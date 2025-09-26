@@ -51,12 +51,26 @@ echo "$BRANCHES_TO_DELETE" | while read -r branch; do
 done
 echo ""
 
-# Confirm deletion
-read -p "Do you want to delete these branches? (yes/no): " CONFIRM
-
-if [[ "$CONFIRM" != "yes" ]]; then
-    echo "Deletion cancelled."
-    exit 0
+# Check for non-interactive mode
+if [[ "${CLEANUP_CONFIRM:-}" == "yes" ]] || [[ "${CI:-}" == "true" ]] || [[ "${GITHUB_ACTIONS:-}" == "true" ]]; then
+    echo "Non-interactive mode: proceeding with deletion"
+    CONFIRM="yes"
+else
+    # Confirm deletion (with timeout for safety)
+    echo "Do you want to delete these branches? (yes/no): "
+    if command -v timeout >/dev/null 2>&1; then
+        read -t 30 -r CONFIRM || CONFIRM="timeout"
+    else
+        read -r CONFIRM
+    fi
+    
+    if [[ "$CONFIRM" == "timeout" ]]; then
+        echo "Timeout waiting for response. Deletion cancelled."
+        exit 0
+    elif [[ "$CONFIRM" != "yes" ]]; then
+        echo "Deletion cancelled."
+        exit 0
+    fi
 fi
 
 # Delete branches

@@ -1,0 +1,380 @@
+import os from 'node:os';
+import path from 'node:path';
+import { RangerModel } from '../layer2/RangerModel.ts';
+
+export class RangerView {
+  private debugMode: boolean;
+  private debugMessages: string[] = [];
+  private controller?: any; // Reference to controller for input sequence
+
+  constructor(debugMode: boolean = false) {
+    this.debugMode = debugMode;
+  }
+
+  setController(controller: any): void {
+    this.controller = controller;
+  }
+
+  private debugLog(message: string): void {
+    if (this.debugMode) {
+      // Store debug messages instead of printing immediately
+      this.debugMessages.push(message);
+      // Keep only last 10 debug messages to prevent memory buildup
+      if (this.debugMessages.length > 10) {
+        this.debugMessages.shift();
+      }
+    }
+  }
+
+  private renderDebugSection(controller?: any): void {
+    if (this.debugMode) {
+      // Add a separator line
+      this.safeWrite('\n' + '─'.repeat(Math.min(80, process.stdout.columns || 80)) + '\n');
+      
+      // Output current debug messages (they overwrite each render)
+      if (this.debugMessages.length > 0) {
+        for (const msg of this.debugMessages) {
+          this.safeWrite(msg + '\n');
+        }
+        // Clear messages after rendering so they don't accumulate
+        this.debugMessages = [];
+      }
+      
+      // Show INPUT_SEQUENCE only in interactive debug mode (NOT in test mode)
+      if (controller && controller.getCurrentInputSequence && process.env.TSRANGER_TEST_MODE !== '1') {
+        const inputSeq = controller.getCurrentInputSequence();
+        const aggregationLine = `INPUT_SEQUENCE: "${inputSeq}"`;
+        this.safeWrite(aggregationLine + '\n');
+      }
+    }
+  }
+
+  private safeWrite(data: string): void {
+    try {
+      // Set up error handler for EPIPE before writing
+      const originalErrorHandler = process.stdout.listeners('error');
+      
+      process.stdout.once('error', (error: any) => {
+        if (error.code === 'EPIPE') {
+          // Silently ignore EPIPE errors during testing/pipe closure
+          return;
+        }
+        console.error('RangerView output error:', error);
+      });
+
+      const result = process.stdout.write(data);
+      
+      // If write returns false (buffer full), don't wait for drain in test mode
+      if (!result && process.env.TSRANGER_TEST_MODE === '1') {
+        // Test mode: don't wait for drain, continue silently
+        return;
+      }
+      
+    } catch (error) {
+      // Gracefully handle synchronous stdout errors
+      if ((error as any).code !== 'EPIPE') {
+        console.error('RangerView sync output error:', error);
+      }
+      // Continue execution - don't crash on output errors
+    }
+  }
+
+  render(model: RangerModel): void {
+    const width = process.stdout.columns || 120;
+    const height = process.stdout.rows || 30;
+    const colWidth = Math.max(16, Math.floor(width / 4));
+
+    const classes = model.filteredClasses();
+    const methods = model.filteredMethods();
+    const params = model.filteredParams();
+
+    const docsText = this.wrapText(model.getSelectedDocs(), colWidth);
+    const gridColumns: string[][] = [
+      this.formatColumn('Classes', classes, model.selectedColumn === 0 ? model.selectedIndexPerColumn[0] : -1, colWidth, model.filters[0]),
+      this.formatColumn('Methods', methods, model.selectedColumn === 1 ? model.selectedIndexPerColumn[1] : -1, colWidth, model.filters[1]),
+      this.formatColumn('Params', params, model.selectedColumn === 2 ? model.selectedIndexPerColumn[2] : -1, colWidth, model.filters[2]),
+      this.formatColumn('Docs', docsText, model.selectedColumn === 3 ? 0 : -1, colWidth, model.filters[3])
+    ];
+
+    // Clear screen and move cursor to top-left
+    this.safeWrite('\x1b[2J\x1b[H');
+
+    // Test mode: Show debug at TOP for easier regression testing
+    if (this.debugMode && process.env.TSRANGER_TEST_MODE === '1') {
+      this.renderDebugSection(this.controller);
+      this.safeWrite('\n');
+    }
+
+    // NEW RANGER-LIKE LAYOUT: Clean prompt line at top, then column-colored backgrounds
+    const cleanPromptLine = this.buildColoredCommand(model);
+    this.safeWrite(cleanPromptLine + '\n');
+    
+    // Column-colored backgrounds below the prompt
+    const columnBackgrounds = this.buildColumnBackgrounds(model, colWidth, width);
+    this.safeWrite(columnBackgrounds + '\n');
+
+    // Compute grid rows: reserve 2 lines (prompt + column backgrounds) + 1 footer = 3 total reserved
+    const maxRows = Math.max(...gridColumns.map(col => col.length));
+    const gridRows = Math.min(maxRows, Math.max(0, height - 3));
+    for (let r = 0; r < gridRows; r++) {
+      let row = '';
+      for (let c = 0; c < 4; c++) {
+        const cell = gridColumns[c][r] ?? this.makeCell('', colWidth);
+        row += cell;
+      }
+      this.safeWrite(row + '\n');
+    }
+
+    // Calculate remaining space for footer positioning
+    const usedLines = 2 + gridRows; // prompt line + column backgrounds + grid rows
+    
+    // Normal mode: Place help line 2 lines from bottom, use full width
+    if (!this.debugMode) {
+      const remainingLines = height - usedLines - 2; // 2 lines from bottom
+      if (remainingLines > 0) {
+        this.safeWrite('\n'.repeat(remainingLines));
+      }
+      
+      // Blue background with white text footer (full width)
+      const footerText = '←/→: column  ↑/↓: move  Type: filter  Backspace: clear  Enter: select/next param/exec  Space: next param  q/Esc: quit';
+      const footer = this.bgBlue(this.whiteBoldPadded(footerText, width));
+      this.safeWrite(footer);
+    } else {
+      // Debug mode: Reduced space above help line  
+      const remainingLines = height - usedLines - 5; 
+      if (remainingLines > 0) {
+        this.safeWrite('\n'.repeat(Math.min(remainingLines, 2))); // Max 2 lines padding
+      }
+      
+      // Blue background with white text footer
+      const footerText = '←/→: column  ↑/↓: move  Type: filter  Backspace: clear  Enter: select/next param/exec  Space: next param  q/Esc: quit';
+      const footer = this.bgBlue(this.whiteBoldPadded(footerText, Math.max(0, width - 1)));
+      this.safeWrite(footer);
+    }
+
+    // Render debug section BELOW the help line (interactive debug mode only)
+    if (this.debugMode && process.env.TSRANGER_TEST_MODE !== '1') {
+      this.renderDebugSection(this.controller);
+    }
+  }
+
+  private buildColumnBackgrounds(model: RangerModel, colWidth: number, screenWidth: number): string {
+    // Create clean column-colored background sections (no command prompt mixed in)
+    const sections: string[] = [];
+    const columnTitles = ['Classes', 'Methods', 'Params', 'Docs'];
+    
+    for (let i = 0; i < 4; i++) {
+      const colorCode = this.colorCodeForTitle(columnTitles[i]);
+      const isActive = model.selectedColumn === i;
+      
+      // Empty content - just colored backgrounds to indicate columns
+      const cellContent = this.makeCell('', colWidth);
+      let styledCell = '';
+      
+      if (isActive) {
+        // Active column: bright background
+        const bgColorCode = colorCode ? colorCode + 10 : 47; // Convert to background or default to white
+        styledCell = `\x1b[${bgColorCode}m${cellContent}\x1b[0m`;
+      } else {
+        // Inactive column: darker background
+        const bgColorCode = colorCode ? colorCode + 10 : 40; // Convert to background or default to black  
+        styledCell = `\x1b[${bgColorCode}m${cellContent}\x1b[0m`;
+      }
+      
+      sections.push(styledCell);
+    }
+    
+    return sections.join('');
+  }
+
+  private buildPlainPreview(model: RangerModel): string {
+    return model.buildCommandParts().join(' ');
+  }
+
+  private buildColoredCommand(model: RangerModel): string {
+    const tokens: string[] = [];
+    // Prompt
+    tokens.push(this.prompt());
+
+    // DEBUGGING: Add debug logs (conditional on debug mode)
+    this.debugLog(`[DEBUG] buildColoredCommand - selectedColumn=${model.selectedColumn}, promptBuffer='${model.promptBuffer}', selectedClass='${model.selectedClass}', selectedMethod='${model.selectedMethod}'`);
+
+    // Suggestion-aware rendering for prompt buffer
+    let buffer = model.promptBuffer || '';
+    const cursor = Math.max(0, Math.min(buffer.length, model.promptCursorIndex || 0));
+    const parts = buffer.split(/\s+/);
+    const tokenIdx = (buffer.slice(0, cursor).split(/\s+/).length - 1);
+
+    // Get current model state
+    const selectedClass = model.selectedClass || '';
+    const selectedMethod = model.selectedMethod || '';
+    
+    let display = buffer;
+    this.debugLog(`[DEBUG] Initial display='${display}', tokenIdx=${tokenIdx}, parts=[${parts.join(', ')}]`);
+    
+    if (tokenIdx === 0) {
+      const prefix = parts[0] || '';
+      const suggestion = (model.filteredClasses()[0] || '');
+      
+      if (suggestion && prefix && suggestion.toLowerCase().startsWith(prefix.toLowerCase())) {
+        // Filter mode: show suggestion based on typed prefix
+        display = suggestion + (parts.length > 1 ? (' ' + parts.slice(1).join(' ')) : '');
+        this.debugLog(`[DEBUG] Filter mode: display='${display}'`);
+      } else if (selectedClass && !prefix && model.selectedColumn === 0) {
+        // Navigation mode: ONLY show selected class, NEVER methods
+        // This ensures [down][up] navigation shows only class name IN CLASSES COLUMN
+        display = selectedClass;
+        this.debugLog(`[DEBUG] Navigation mode (classes column): display='${display}'`);
+      } else {
+  
+      }
+    } else if (tokenIdx === 1) {
+      // Method token: only show when explicitly advanced via [tab] or [right]
+      // When suppressing method filter (navigation/completion), show the full selected method
+      const forceSuggestion = model.suppressMethodFilter === true;
+      const typedRaw = parts[1] || '';
+      const typed = forceSuggestion ? '' : typedRaw;
+      if (selectedMethod) {
+        const before = parts[0] ? parts[0] + ' ' : '';
+        const combined = typed.length > 0
+          ? typed + selectedMethod.slice(typed.length)
+          : selectedMethod;
+        display = before + combined;
+        buffer = display;
+      }
+    }
+
+    // Recompute cursor position when suggesting method so it lands on the next letter after typed prefix
+    let effectiveCursor = cursor;
+    if (tokenIdx === 1) {
+      const cls = model.selectedClass || '';
+      const typedRaw = (parts[1] || '');
+      const typedLen = model.suppressMethodFilter ? 0 : typedRaw.length;
+      const methodStart = (cls ? cls.length + 1 : 0);
+      effectiveCursor = methodStart + typedLen;
+
+    }
+    // Navigation mode (tokenIdx === 0): cursor stays at first character of class
+    const before = display.slice(0, effectiveCursor);
+    const after = display.slice(effectiveCursor);
+    const renderedCursor = this.style(after.length > 0 ? after.charAt(0) : ' ', { inverse: true });
+    tokens.push(`${before}${renderedCursor}${(after.length > 0 ? after.slice(1) : '')}`);
+
+    return tokens.join(' ');
+  }
+
+  private prompt(): string {
+    // Prefer $PS1 if present; support common \h, \u, \w escapes
+    const ps1 = process.env.PS1 || '';
+    if (ps1) {
+      const host = this.safeHostname();
+      const user = this.safeUsername();
+      // Abbreviate working directory to its basename to keep command tokens visible
+      const pwd = path.basename(process.cwd() || '.');
+      const isRoot = (typeof process.getuid === 'function' && process.getuid() === 0) || user === 'root';
+      const userColored = this.style(user, { colorCode: isRoot ? 31 : 36 }); // red if root else cyan
+      const pwdColored = this.style(pwd, { colorCode: 33 }); // yellow
+      const replaced = ps1
+        .replace(/\\h/g, host)
+        .replace(/\\u/g, userColored)
+        .replace(/\\w/g, pwdColored)
+        .replace(/\n/g, '')
+        .replace(/\r/g, '');
+      return replaced.trim();
+    }
+    // Fallback to explicit format
+    const host = this.safeHostname();
+    const user = this.safeUsername();
+    const pwd = process.cwd();
+    const isRoot = (typeof process.getuid === 'function' && process.getuid() === 0) || user === 'root';
+    const userColored = this.style(user, { colorCode: isRoot ? 31 : 36 });
+    const pwdColored = this.style(pwd, { colorCode: 33 });
+    return `[${host}] ${userColored}@${pwdColored}`;
+  }
+
+  private safeHostname(): string {
+    try { return os.hostname(); } catch { return 'host'; }
+  }
+  private safeUsername(): string {
+    try { return (os.userInfo?.().username) || process.env.USER || 'user'; } catch { return 'user'; }
+  }
+
+  // Footer helpers
+  private whiteBoldPadded(text: string, width: number): string {
+    const padded = (text || '').slice(0, Math.max(0, width)).padEnd(Math.max(0, width));
+    return padded;
+  }
+
+  private bgBlue(text: string): string {
+    // Blue background + white bold foreground for footer
+    return `\x1b[44m\x1b[1m\x1b[37m${text}\x1b[0m`;
+  }
+
+  private formatColumn(title: string, items: string[], selectedIndex: number, width: number, filter: string): string[] {
+    const headerRaw = `[${title}]${filter ? ' (' + filter + ')' : ''}`;
+    const colorCode = this.colorCodeForTitle(title);
+    const rendered: string[] = [];
+    // Header cell: size first, then style entire cell
+    rendered.push(this.style(this.makeCell(headerRaw, width), { bold: true, colorCode }));
+    const rows = Math.max(items.length, 1);
+    for (let i = 0; i < rows; i++) {
+      const label = items[i] ?? '';
+      const isSelected = i === selectedIndex;
+      const cell = this.makeCell(label, width);
+      const styled = this.style(cell, { colorCode, inverse: isSelected });
+      rendered.push(styled);
+    }
+    return rendered;
+  }
+
+  private makeCell(text: string, width: number): string {
+    const raw = (text ?? '').slice(0, Math.max(0, width));
+    return raw.padEnd(Math.max(0, width), ' ');
+  }
+
+  private colorCodeForTitle(title: string): number | undefined {
+    switch (title) {
+      case 'Classes': return 36; // cyan
+      case 'Methods': return 33; // yellow
+      case 'Params': return 35; // magenta
+      case 'Docs': return 32; // green
+      default: return undefined;
+    }
+  }
+
+  private style(text: string, opts: { colorCode?: number; bold?: boolean; inverse?: boolean }): string {
+    let open = '';
+    if (opts.inverse) open += '\x1b[7m';
+    if (opts.bold) open += '\x1b[1m';
+    if (typeof opts.colorCode === 'number') open += `\x1b[${opts.colorCode}m`;
+    const close = '\x1b[0m';
+    return `${open}${text}${close}`;
+  }
+
+  private wrapText(text: string, width: number): string[] {
+    const lines: string[] = [];
+    const words = (text || '').split(/\s+/);
+    let current = '';
+    for (const w of words) {
+      if (!w) continue;
+      if ((current + (current ? ' ' : '') + w).length <= width) {
+        current = current ? current + ' ' + w : w;
+      } else {
+        if (current) lines.push(current);
+        // If a single word exceeds width, hard-slice
+        if (w.length > width) {
+          for (let i = 0; i < w.length; i += width) {
+            lines.push(w.slice(i, i + width));
+          }
+          current = '';
+        } else {
+          current = w;
+        }
+      }
+    }
+    if (current) lines.push(current);
+    return lines.length > 0 ? lines : [''];
+  }
+
+  // buildPrompt was unused; prompt() handles PS1/fallback
+}

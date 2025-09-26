@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "471d2d0a-4914-4900-9aed-74b69e032679",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTMwVDEwOjQ5OjEwLjg3NVoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "471d2d0a-4914-4900-9aed-74b69e032679",
+    "name": "ONCE Kernel Default Port 42777 Architecture",
+    "title": "ONCE Kernel Default Port 42777 Architecture",
+    "description": "ONCE server shall start by default on port 42777 instead of using environment variables. Server must auto-generate its own uuid.scenario.json file in the standard Web4 format with model containing: pid (Process ID), state (LifecycleState), platform (EnvironmentInfo), domain (reverse internet domain like com.ceruleancircle, default: local.once), host (fully qualified hostname), ip (fallback: 127.0.0.1), capabilities array with {capability, port} objects for httpPort, httpsPort, wsPort"
+  },
+  "unitIndex": {
+    "uuid": "471d2d0a-4914-4900-9aed-74b69e032679",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/4/7/1/d/2/471d2d0a-4914-4900-9aed-74b69e032679.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/components/ONCE/0.2.0.0/spec/requirements/471d2d0a-4914-4900-9aed-74b69e032679.scenario.json"
+    ],
+    "createdAt": "2025-08-30T10:49:10.878Z",
+    "updatedAt": "2025-08-30T10:49:10.878Z"
+  }
+}

@@ -1,11 +1,17 @@
 [Back to PDCA Process Improvements](./pdca.process.improvements/) | [CMMI Understanding](./PDCA.understanding.CMMI.md) | [How to Decide](./PDCA.howto.decide.md) | [Template](./template.md)
 
-# 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.5**
+# 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.6 (Template v3.1.4.2)**
 
 **🗓️ Date:** 2025-08-22-UTC-1330  
 **🎯 Objective:** Consolidated PDCA writing guidelines based on latest process improvements  
-**👤 Role:** Process Documentation → Knowledge Management Enhancement  
-**📋 Status:** Latest consolidated format based on UTC timestamps analysis  
+**🎯 Template Version:** 3.1.4.2  
+
+**👤 Agent Role:** Process Documentation → Knowledge Management Enhancement  
+**👤 Branch:** save/start.v1 → Template Evolution  
+**🎯 Project Journal Session:** Template Documentation → Version 3.0  
+**🎯 Sprint:** Sprint-21 → Process Standardization  
+**✅ Task:** PDCA Writing Guidelines  
+**🚨 Issues:** Version tracking needed for compliance  
 **🔗 Based on:** [Status Checkbox Implementation PDCA](../project.journal/2025-08-21-1613-sprint21-tootsie-architecture/pdca/role/developer/2025-08-22-UTC-0745-status-checkbox-implementation.md)
 
 ---
@@ -18,7 +24,15 @@
 
 **🗓️ Date:** YYYY-MM-DD-UTC-HHMM  
 **🎯 Objective:** [CLEAR, SPECIFIC OBJECTIVE STATEMENT]  
-**👤 Role:** [ROLE NAME] → [CONTEXT/SPECIALIZATION]  
+**🎯 Template Version:** 3.1.4.2  
+
+**👤 Agent Name:** [AGENT NAME] → [AGENT DESCRIPTION]  
+**👤 Agent Role:** [ROLE NAME] → [CONTEXT/SPECIALIZATION]  
+**👤 Branch:** [BRANCH NAME] → [BRANCH PURPOSE]  
+**🔄 Sync Requirements:** [SYNC BRANCHES] → [SYNC PURPOSE]  
+**🎯 Project Journal Session:** [SESSION NAME] → [SESSION FOCUS]  
+**🎯 Sprint:** [SPRINT NAME] → [SPRINT GOAL]  
+**✅ Task:** [TASK NAME]  
 **🚨 Issues:** [KEY ISSUES BEING ADDRESSED]  
 **📎 Previous Commit:** [COMMIT_SHA] - [COMMIT_DESCRIPTION]  
 **🔗 Previous PDCA:** [GitHub](GITHUB_URL) | [Local Path](LOCAL_PATH)
@@ -152,23 +166,62 @@
 
 ---
 
+## **🚨 GIT COMMIT MESSAGE REQUIREMENT - CRITICAL**
+
+### **MANDATORY Format:**
+```bash
+git commit -m "PDCA: [Title from PDCA header]"
+```
+
+### **Examples:**
+- `git commit -m "PDCA: Branch update coordination - cherry-pick strategy"`
+- `git commit -m "PDCA: Session Summary - Complete regression resolution"`
+- `git commit -m "PDCA: Test component isolation implementation"`
+
+### **Purpose:**
+- **Traceability:** Links commits directly to PDCA documentation
+- **Robustness:** Clear connection between changes and reasoning
+- **CMM3 Compliance:** Consistent, reproducible commit messages
+- **Project Navigation:** Easy to find related documentation from git history
+
+### **Chat Reporting:**
+When reporting git operations in chat, always include the exact commit message used.
+
+---
+
 ## **🔄 DUAL LINK SYSTEM REQUIREMENTS**
 
 ### **Format Standard (CRITICAL)**
+
+**In PDCA Files:**
 ```markdown
-[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/path/to/file) | [relative/path/to/file](relative/path/to/file)
+[GitHub](https://github.com/.../blob/branch/path/to/file) | [§/path/from/root](../../../relative/path)
+```
+
+**In Chat Responses:**
+```markdown
+[GitHub](https://github.com/.../blob/branch/path/to/file) | [§/path/from/root](path/from/root)
 ```
 
 ### **Link Requirements:**
-- **Local link text MUST display the actual relative path** 
+- **§ notation for display** when showing paths from project root
+- **In PDCAs:** Relative path FROM document TO target
+- **In Chat:** Full path from project root (NO relative paths)
 - **GitHub links MUST work** (require git push before providing) [[memory:6291031]]
 - **Both links on same line** separated by ` | `
 - **Always end chat responses with current artifact links** [[memory:6291031]]
 
+### **Critical Chat Rule:**
+- Chat has NO document context - you're not "in" any file
+- ALWAYS use project root paths in chat responses
+- The link path equals the display path (minus §)
+
 ### **Git Protocol (MANDATORY)**
 1. **Immediate commit and push** after every PDCA creation [[memory:6902297]]
 2. **Git add, commit, and push operations** ensure proper version control [[memory:6902297]]
-3. **One-liner commit messages** with `git commit -m "..."` [[memory:6713745]]
+3. **One-liner commit messages** with PDCA name: `git commit -m "PDCA: [Title from PDCA header]"` [[memory:6713745]]
+   - Example: `git commit -m "PDCA: Branch update coordination - cherry-pick strategy"`
+   - Include the PDCA title for traceability and robustness
 4. **Auto-merge to release/dev** after EVERY commit (Decision 1a - automatic)
 5. **File not found?** Always check release/dev and cherry-pick if missing:
    ```bash
@@ -299,7 +352,106 @@
 
 ---
 
-<<<<<<< HEAD
+## **🔄 RESPONDING TO 'PDCA' PROMPT - COMPLIANCE REVIEW**
+
+When a user types just `pdca` as a prompt, this is a **compliance check request**. The agent MUST:
+
+### **1. Review Previous PDCA**
+- **Immediately read** the most recent PDCA created
+- **Check compliance** against ALL sections in this howto.PDCA.md
+- **Identify violations** of the mandatory 6-section format
+
+### **2. Re-read Key Documents**
+1. **This howto.PDCA.md** - Full review of all requirements
+2. **[PDCA Reporting Requirement](./PDCA.reporting.requirement.md)** - Official standard
+3. **[Dual Link Format Requirement](./PDCA.dual.link.format.requirement.md)** - Link standards
+4. **[CMMI Understanding](./PDCA.understanding.CMMI.md)** - CMM Level 3 compliance
+
+### **3. Actions Based on Compliance Status**
+
+#### **If PDCA is Non-Compliant:**
+1. **Create a new PDCA** documenting the fixes needed
+2. **Fix the previous PDCA** to meet all requirements
+3. **Document learnings** about what was missed
+4. **Update the fixed PDCA** with correction notice
+5. **Act and report** CMM3 compliant in your response
+
+#### **If PDCA is Compliant:**
+1. **Acknowledge compliance** - "Previous PDCA meets all requirements ✅"
+2. **Refresh memory** after long tasks that may have caused forgetting
+3. **Return to CMM3 compliance** mindset
+4. **Continue with next task** maintaining standards
+5. **Act and report** CMM3 compliant in your response
+
+### **4. MANDATORY RESPONSE FORMAT**
+After completing the compliance review, the agent MUST:
+- **Report findings** in a structured, CMM3 compliant format
+- **Take action** if needed (fixes or acknowledgment)
+- **Maintain PDCA standards** in all subsequent responses
+- **Create PDCAs** for any new work that follows
+
+**WARNING:** Simply checking compliance without acting and reporting properly will trigger another `pdca` prompt from the user!
+
+### **4. Response Format for 'pdca' Prompt**
+```markdown
+## PDCA Compliance Check Result
+
+**Previous PDCA:** [GitHub](URL) | [local/path](path)
+**Compliance Status:** ✅ Compliant / ❌ Non-Compliant
+
+### Issues Found (if any):
+- Missing section: [section name]
+- Incorrect format: [issue description]
+- Dual link errors: [specific problems]
+
+### Actions Taken:
+- [x] Re-read howto.PDCA.md
+- [x] Reviewed reporting requirements
+- [x] Checked dual link standards
+- [x] Validated CMM3 compliance
+- [ ] Fixed previous PDCA (if needed)
+- [ ] Created correction PDCA (if needed)
+
+### Next Steps:
+[Continue with current task maintaining standards]
+```
+
+### **5. Purpose of 'pdca' Prompt**
+- **Quality gate** for long sessions
+- **Memory refresh** after complex tasks
+- **Compliance enforcement** for standards
+- **Learning opportunity** from mistakes
+- **CMM3 maturity** maintenance
+
+**Remember:** The 'pdca' prompt is a self-correction mechanism to ensure consistent quality throughout the session!
+
+---
+
+## **🔄 RESPONDING TO 'NOOP' PROMPT - NO ACTION WORKAROUND**
+
+When a user types just `noop` as a prompt, this is a **technical workaround** for Cursor PWA conversation display issues.
+
+### **No Action Required**
+- **NO PDCA Creation:** Do not create any PDCA document
+- **NO Process Execution:** Do not execute any process or analysis
+- **NO Response Generation:** Minimal acknowledgment only
+- **Purpose:** Overcome Cursor PWA bug that prevents conversation display without trigger
+
+### **Response Pattern**
+```
+Acknowledged - noop trigger received for Cursor PWA compatibility.
+```
+
+### **Technical Context**
+The Cursor PWA has a display bug where conversations may not show properly without a recognized trigger word. The "noop" trigger provides a workaround that requires no agent action while resolving the display issue.
+
+### **Known Triggers Summary**
+- **`pdca`** - Compliance check request (creates PDCA for review and correction)
+- **`start`** - Session initialization (creates PDCA with startup decision framework)
+- **`noop`** - Technical workaround (no action, minimal acknowledgment only)
+
+---
+
 ## **📚 ADVANCED LEARNING RESOURCES**
 
 ### **Save/Restart Agent's Detailed PDCAs**
@@ -367,6 +519,16 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
 - **Not documenting git operations** - Always show branch switches [[memory:0931]]
 - **Missing cross-agent improvements** - Check other branches regularly [[memory:0935]]
 
+### **🚨 CRITICAL: NO INTERACTIVE COMMANDS**
+- **NEVER use commands that require user input** (e.g., `git cherry-pick` without `--no-commit`)
+- **ALWAYS use non-interactive flags**: `--yes`, `--force`, `-y`, `--no-input`
+- **Examples of FORBIDDEN commands:**
+  - `git cherry-pick` (use `git cherry-pick --no-commit` or copy files directly)
+  - `npm install` (use `npm install --yes`)
+  - `apt-get install` (use `apt-get install -y`)
+- **Background agents CANNOT interact** - we run autonomously!
+- **If a command hangs**, it's likely waiting for input - CTRL+C and fix!
+
 ---
 
 ## **AMBIGUITIES & QA DECISIONS REQUIRED**
@@ -423,6 +585,59 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
 **Templates:**
 - [Updated Template](./template.md) - **Latest Format**
 - [Standard Template](./pdca.process.improvements/04-pdca-standard-template.md)
+
+---
+
+---
+
+## **🔄 AGENT RECOVERY WORKFLOW**
+
+### **For Recovered Agents Starting Fresh:**
+
+When you start as a recovered agent (after expiry and resubmission):
+
+1. **Check Your Identity Record**: 
+   - Look for: `/scrum.pmo/agents/registry/[YOUR-REQUEST-ID].md`
+   - This contains your identity, role, and purpose
+
+2. **Read Identity Record Completely**:
+   - Understand who you are
+   - Review your responsibilities
+   - Check previous work references
+   - Note integration points
+
+3. **Follow Startup Instructions**:
+   - Each identity record has specific steps
+   - Usually includes role README location
+   - May reference previous work
+
+4. **Create Recovery PDCA**:
+   - Document your understanding
+   - Confirm your identity
+   - State your readiness
+   - Plan immediate next steps
+
+### **Identity Record Location Pattern:**
+```
+/scrum.pmo/agents/registry/[REQUEST-ID].md
+```
+
+### **Example:**
+Agent bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89 should read:
+```
+/scrum.pmo/agents/registry/bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89.md
+```
+
+### **What Identity Records Contain:**
+- Current and previous names
+- Role and purpose
+- Recovery context
+- Responsibilities
+- Previous work location
+- Integration points
+- Startup instructions
+
+**CRITICAL**: This is the FIRST thing a recovered agent should check!
 
 ---
 

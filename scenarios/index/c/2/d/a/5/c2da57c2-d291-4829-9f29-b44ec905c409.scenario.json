@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "c2da57c2-d291-4829-9f29-b44ec905c409",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA5LTA3VDEyOjA5OjIyLjU2MloiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "c2da57c2-d291-4829-9f29-b44ec905c409",
+    "name": "MOF M1 Model Instances",
+    "title": "MOF M1 Model Instances",
+    "description": "M1 instances are concrete implementations of M2 units. File is M1 instance of unit typeM3 attribute. LD Link is M1 instance of unit typeM3 relationship. Folder is M1 instance of M2 Web4Folder."
+  },
+  "unitIndex": {
+    "uuid": "c2da57c2-d291-4829-9f29-b44ec905c409",
+    "indexPath": "/workspace/scenarios/index/c/2/d/a/5/c2da57c2-d291-4829-9f29-b44ec905c409.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/c2da57c2-d291-4829-9f29-b44ec905c409.scenario.json"
+    ],
+    "createdAt": "2025-09-07T12:09:22.567Z",
+    "updatedAt": "2025-09-07T12:09:22.567Z"
+  }
+}
