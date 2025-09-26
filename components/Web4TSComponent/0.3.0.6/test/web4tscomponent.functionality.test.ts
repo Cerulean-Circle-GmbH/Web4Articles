@@ -117,7 +117,7 @@ describe('Web4TSComponent Functionality', () => {
       
       // Verify package.json version updated
       const packageContent = JSON.parse(
-        await fs.readFile(`${newVersionPath}/package.json`, 'utf-8')
+        await readFile(`${newVersionPath}/package.json`, 'utf-8')
       );
       expect(packageContent.version).toBe('0.1.0.1');
     });
@@ -187,7 +187,7 @@ describe('Web4TSComponent Functionality', () => {
       // Second upgrade from new context
       await component.upgrade('nextMinor'); // 0.1.0.1 → 0.1.1.0
       
-      expect(existsSync(path.join(__dirname, 'data', 'components', componentName, '0.1.1.0'))).toBe(true);
+      expect(existsSync(path.join(__dirname, 'data', 'components', componentName, '0.2.0.0'))).toBe(true);
     });
   });
 

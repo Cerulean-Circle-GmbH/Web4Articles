@@ -119,7 +119,7 @@ describe('Web4TSComponent Command Chaining', () => {
     it('should increment minor version (nextMinor)', async () => {
       await component.upgrade('nextMinor');
       
-      const newVersionPath = path.join(__dirname, 'data', 'components', testComponentName, '0.1.1.0');
+      const newVersionPath = path.join(__dirname, 'data', 'components', testComponentName, '0.2.0.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
