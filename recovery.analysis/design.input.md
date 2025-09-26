@@ -29,7 +29,7 @@
 - `[step:uuid:004-idx-gen-002]` **Generate Index**: Create/update index.md with all .md files
 
 ### Aggregation Steps
-- `[step:uuid:005-agg-qaf-001]` **Check QA Log**: Read qa-feedback-log.md for existing feedback
+- `[step:uuid:005-agg-qaf-001]` **Check QA Feedback: Review sprint qa.md files and PDCA entries for feedback
 - `[step:uuid:005-agg-upd-002]` **Update QA Log**: Add new QA feedback to log
 
 ### Recovery Steps
@@ -113,7 +113,7 @@ scrum.pmo/
 **Reference:** `[step:uuid:005-agg-qaf-001]`
 
 #### Results:
-- ✅ qa-feedback-log.md exists
+- ✅ Sprint qa.md files exist for QA feedback
 - **Latest**: 2025-08-10
 
 **Easy:** Already aggregated  

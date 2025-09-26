@@ -1,0 +1,14 @@
+{
+  "IOR": {
+    "uuid": "6a76e890-eec2-466f-9ba9-c4b12c245221",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIzVDA4OjUxOjE3LjE0MVoiLCJ1dWlkIjoiZTllNmE1NDEtZWQ1ZC00N2JjLWFjOGUtMzkyZDJhZTgyOGFlIn0=",
+  "model": {
+    "uuid": "6a76e890-eec2-466f-9ba9-c4b12c245221",
+    "name": "Model State Completeness",
+    "title": "Model State Completeness",
+    "description": "The model field in a Web4 scenario must contain all attributes necessary to recreate the object's complete state. At minimum, it must include the object's uuid. Additional fields depend on the component type but should capture all semantic state required for the object to function after restoration"
+  }
+}

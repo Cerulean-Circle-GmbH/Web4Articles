@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "2c7fb37d-a1b8-4493-92df-db65b80b1441",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI5VDE4OjA5OjM4LjA4NFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "2c7fb37d-a1b8-4493-92df-db65b80b1441",
+    "name": "Web4CLI Radical OOP Command Structure",
+    "title": "Web4CLI Radical OOP Command Structure",
+    "description": "All Web4Articles CLI tools must NEVER use --options or -options patterns. Instead, always use commands and parameters following radical object-oriented principles. Options were a procedural programming mistake that should have never existed. Web4 CLIs use clean command parameter syntax like 'cli command parameter' instead of 'cli --option value'. This maintains pure OOP design and eliminates flag-based complexity."
+  },
+  "unitIndex": {
+    "uuid": "2c7fb37d-a1b8-4493-92df-db65b80b1441",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/2/c/7/f/b/2c7fb37d-a1b8-4493-92df-db65b80b1441.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/2c7fb37d-a1b8-4493-92df-db65b80b1441.scenario.json"
+    ],
+    "createdAt": "2025-08-29T18:09:38.095Z",
+    "updatedAt": "2025-08-29T18:09:38.095Z"
+  }
+}

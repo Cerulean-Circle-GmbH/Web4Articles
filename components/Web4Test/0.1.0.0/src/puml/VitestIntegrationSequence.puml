@@ -1,0 +1,94 @@
+@startuml VitestIntegrationSequence
+!define ACTOR_COLOR #E1F5FE
+!define WEB4_COLOR #E8F5E8
+!define VITEST_COLOR #FFF3E0
+!define RESULT_COLOR #FCE4EC
+
+title Tootsie ↔ Vitest Integration Sequence
+
+actor Developer <<ACTOR_COLOR>>
+participant "Web4TestCase" as TestCase <<WEB4_COLOR>>
+participant "Web4Test" as Test <<WEB4_COLOR>>
+participant "VitestTestSuite" as VitestSuite <<WEB4_COLOR>>
+participant "Vitest" as Vitest <<VITEST_COLOR>>
+participant "TestResultScenario" as Result <<RESULT_COLOR>>
+
+Developer -> TestCase : create test as Web4 object
+activate TestCase
+
+TestCase -> TestCase : init(testCaseScenario)
+note right: Web4 Pattern:\nconstructor() {}\ninit(scenario): this
+
+Developer -> Test : add test case to suite
+activate Test
+
+Test -> Test : init(testScenario)
+Test -> Test : addTestCase(testCase)
+
+Developer -> Test : execute()
+
+Test -> VitestSuite : executeTests(testCases[])
+activate VitestSuite
+
+loop for each TestCase
+  VitestSuite -> TestCase : execute()
+  activate TestCase
+  
+  TestCase -> TestCase : setup()
+  TestCase -> TestCase : executeTestLogic()
+  TestCase -> TestCase : evaluateAssertions()
+  TestCase -> TestCase : teardown()
+  
+  TestCase -> Result : create TestResultScenario
+  activate Result
+  
+  Result -> Result : hibernateEvidence()
+  note right: Complete test evidence\npreserved as scenario:\n• Input data\n• Execution steps\n• Assertions\n• Error details
+  
+  TestCase --> VitestSuite : TestResultScenario
+  deactivate TestCase
+  deactivate Result
+end
+
+VitestSuite -> Vitest : integrate with test runner
+activate Vitest
+
+note over Vitest
+  **Vitest Heavy Lifting:**
+  • Test discovery
+  • Parallel execution  
+  • Coverage collection
+  • Result aggregation
+  • Reporter integration
+end note
+
+Vitest --> VitestSuite : execution results
+deactivate Vitest
+
+VitestSuite -> VitestSuite : captureResults()
+VitestSuite -> VitestSuite : convertToWeb4Scenarios()
+
+VitestSuite --> Test : TestResultScenario[]
+deactivate VitestSuite
+
+Test -> Test : aggregateResults()
+Test -> Result : create TestSuiteResult
+activate Result
+
+Result -> Result : hibernateTestSuite()
+note right: Complete test suite\nresults hibernated:\n• All test results\n• Suite statistics\n• Execution timeline\n• Evidence networks
+
+Test --> Developer : TestSuiteResult
+deactivate Test
+deactivate Result
+
+note over Developer
+  **Developer Experience:**
+  1. Write tests as Web4 objects
+  2. Vitest handles execution
+  3. Results hibernated as scenarios
+  4. Complete traceability preserved
+  5. Evidence available for analysis
+end note
+
+@enduml

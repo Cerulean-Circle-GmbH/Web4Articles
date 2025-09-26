@@ -8,7 +8,7 @@
 **👤 Role:** Architect → Component Integration Specialist  
 **🚨 Issues:** Web4Requirement uses direct file operations instead of centralized UUID storage, missing unified orchestration  
 **🔗 Last Commit SHA:** 78e9b05  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/project.journal/2025-08-21-1613-sprint21-tootsie-architecture/pdca/role/architect/2025-08-22-UTC-1329-unit-uuid-index-implementation-success.md) | [2025-08-22-UTC-1329-unit-uuid-index-implementation-success.md](2025-08-22-UTC-1329-unit-uuid-index-implementation-success.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-21-1613-sprint21-tootsie-architecture/pdca/role/architect/2025-08-22-UTC-1329-unit-uuid-index-implementation-success.md) | [2025-08-22-UTC-1329-unit-uuid-index-implementation-success.md](2025-08-22-UTC-1329-unit-uuid-index-implementation-success.md)
 
 ---
 

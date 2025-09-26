@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "95263490-5df4-4eb5-8085-98e5dd6578fd",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"95263490-5df4-4eb5-8085-98e5dd6578fd\",\"timestamp\":\"2025-09-12T15:07:00.977Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "95263490-5df4-4eb5-8085-98e5dd6578fd",
+    "createdAt": "2025-09-12T15:07:00.977Z",
+    "updatedAt": "2025-09-12T15:07:00.979Z",
+    "name": "MDA",
+    "definition": "Model-Driven Architecture - Software design approach using models as primary development artifacts",
+    "indexPath": "/workspace/scenarios/index/9/5/2/6/3/95263490-5df4-4eb5-8085-98e5dd6578fd.scenario.json",
+    "symlinkPaths": [
+      "/workspace/unit-95263490"
+    ]
+  }
+}

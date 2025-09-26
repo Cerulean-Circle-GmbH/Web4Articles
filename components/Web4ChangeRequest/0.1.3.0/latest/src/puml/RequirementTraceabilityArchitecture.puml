@@ -1,0 +1,184 @@
+@startuml RequirementTraceabilityArchitecture
+!define REQUIREMENT_COLOR #E3F2FD
+!define TEST_COLOR #E8F5E8
+!define FEATURE_COLOR #FFF3E0
+!define COMPONENT_COLOR #F3E5F5
+!define VERSION_COLOR #FCE4EC
+!define UNIT_COLOR #E0F2F1
+
+title Web4 7-Stage Traceability Architecture
+
+package "Prosa → Requirements → Tests → Features → Components → Versions → Units" {
+  
+  class "Prosa Documentation" <<REQUIREMENT_COLOR>> {
+    +uuid: string
+    +content: string
+    +semanticIndex: WHY/WHAT/HOW
+    +ontologyReferences: IOR[]
+    --
+    +init(prosaScenario): this
+    +extractRequirements(): IOR[]
+    +generateSemanticIndex(): void
+  }
+  
+  class "Web4Requirement" <<REQUIREMENT_COLOR>> {
+    +uuid: string
+    +title: string
+    +description: string  
+    +status: RequirementStatus
+    +priority: RequirementPriority
+    +traceability: RequirementTraceability
+    --
+    +init(requirementScenario): this
+    +updateStatus(status): void
+    +addTestReference(testIOR): void
+    +generateMDView(): string
+    +toScenario(): RequirementScenario
+  }
+  
+  class "Web4TestCase" <<TEST_COLOR>> {
+    +uuid: string
+    +title: string
+    +requirementIORs: IOR[]
+    +evidence: TestEvidence
+    --
+    +init(testCaseScenario): this
+    +execute(): Promise<TestResultScenario>
+    +addRequirementReference(reqIOR): void
+    +hibernateResults(): TestResultScenario
+  }
+  
+  class "Web4Feature" <<FEATURE_COLOR>> {
+    +uuid: string
+    +name: string
+    +testIORs: IOR[]
+    +componentIORs: IOR[]
+    --
+    +init(featureScenario): this
+    +validateTestCoverage(): boolean
+    +getImplementingComponents(): IOR[]
+    +toScenario(): FeatureScenario
+  }
+  
+  class "Web4Component" <<COMPONENT_COLOR>> {
+    +uuid: string
+    +name: string
+    +version: string
+    +featureIORs: IOR[]
+    +unitIORs: IOR[]
+    --
+    +init(componentScenario): this
+    +implementsFeature(featureIOR): boolean
+    +getUnits(): IOR[]
+    +toScenario(): ComponentScenario
+  }
+  
+  class "Web4Version" <<VERSION_COLOR>> {
+    +uuid: string
+    +version: string
+    +componentIORs: IOR[]
+    +changeLog: ChangeEntry[]
+    --
+    +init(versionScenario): this
+    +validateRegression(): boolean
+    +getAffectedComponents(): IOR[]
+    +toScenario(): VersionScenario
+  }
+  
+  class "Web4Unit" <<UNIT_COLOR>> {
+    +uuid: string
+    +filePath: string
+    +componentIOR: IOR
+    +versionIOR: IOR
+    --
+    +init(unitScenario): this
+    +getSourceCode(): string
+    +validateImplementation(): boolean
+    +toScenario(): UnitScenario
+  }
+}
+
+package "Traceability Network" {
+  class IORNetwork {
+    +resolveTraceabilityChain(startIOR: IOR): Promise<TraceabilityChain>
+    +validateTraceability(): Promise<TraceabilityValidation>
+    +findBrokenLinks(): Promise<BrokenLink[]>
+  }
+  
+  class TraceabilityChain {
+    +prosaIOR: IOR
+    +requirementIORs: IOR[]
+    +testIORs: IOR[]
+    +featureIORs: IOR[]
+    +componentIORs: IOR[]
+    +versionIORs: IOR[]
+    +unitIORs: IOR[]
+    --
+    +getHopLength(): number
+    +validateComplete(): boolean
+    +findGaps(): TraceabilityGap[]
+  }
+}
+
+package "Web4 Requirements MDView Generation" {
+  class RequirementOverview {
+    +constructor()
+    +init(overviewScenario): this
+    +addRequirement(requirement): void
+    +generateOverviewMD(): string
+    +getCompletionStats(): CompletionStats
+    --
+    generateCheckboxList(): string
+    groupByEpic(): Map<string, Requirement[]>
+    calculatePriorityBreakdown(): PriorityStats
+  }
+  
+  class RequirementMDView {
+    +constructor()
+    +renderSingleRequirement(req: Requirement): string
+    +renderWithCheckbox(req: Requirement): string
+    +renderWithUUID(req: Requirement): string
+    +renderWithTraceability(req: Requirement): string
+  }
+}
+
+' Traceability Flow
+"Prosa Documentation" --> Web4Requirement : defines
+Web4Requirement --> Web4TestCase : validated by  
+Web4TestCase --> Web4Feature : verifies
+Web4Feature --> Web4Component : implemented by
+Web4Component --> Web4Version : versioned in
+Web4Version --> Web4Unit : deployed as
+
+' IOR Network
+Web4Requirement --> IORNetwork : referenced via
+Web4TestCase --> IORNetwork : referenced via
+Web4Feature --> IORNetwork : referenced via
+Web4Component --> IORNetwork : referenced via
+Web4Version --> IORNetwork : referenced via
+Web4Unit --> IORNetwork : referenced via
+
+' MDView Generation
+Web4Requirement --> RequirementOverview : feeds into
+RequirementOverview --> RequirementMDView : uses
+RequirementMDView --> RequirementOverviewRenderer : generates
+
+' Network Resolution
+IORNetwork --> TraceabilityChain : creates
+TraceabilityChain --> IORNetwork : validates via
+
+note top of IORNetwork
+  **7-Stage Traceability:**
+  Complete 6 hop-length chain from
+  Prosa to Units with IOR-based
+  distributed object references
+end note
+
+note bottom of RequirementOverview
+  **Overview Generation:**
+  requirements.md files are MDViews
+  generated from Web4Requirement
+  object networks with status tracking
+end note
+
+@enduml

@@ -1,0 +1,37 @@
+{
+  "ior": {
+    "uuid": "19dcf250-b343-40d9-8b71-b6446ef6ad8f",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"19dcf250-b343-40d9-8b71-b6446ef6ad8f\",\"timestamp\":\"2025-09-08T13:44:09.406Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "19dcf250-b343-40d9-8b71-b6446ef6ad8f",
+    "name": "CJS Elimination",
+    "origin": "",
+    "definition": "Complete removal of CommonJS patterns from Web4 codebases",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/1/9/d/c/f/19dcf250-b343-40d9-8b71-b6446ef6ad8f.scenario.json",
+    "symlinkPaths": [
+      "/workspace/scenarios/ontology/CJS.Elimination.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../index/1/9/d/c/f/19dcf250-b343-40d9-8b71-b6446ef6ad8f.scenario.json",
+        "filename": "CJS.Elimination.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process",
+      "CJS Elimination"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-08T13:44:09.404Z",
+    "updatedAt": "2025-09-08T13:44:09.409Z"
+  }
+}
