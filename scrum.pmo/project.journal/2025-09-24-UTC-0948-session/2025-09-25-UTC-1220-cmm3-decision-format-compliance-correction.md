@@ -26,14 +26,14 @@
 
 ### **To TRON: QA Decisions required**
 - [x] Decision Format Recognition: Identified process steps disguised as decisions
-- [ ] **Decision 1:** Decision Format Correction Scope  
-  a. Fix all PDCAs in current session to use real user choice decisions  
-  b. Fix only recent PDCAs and apply format going forward  
-  c. Create decision format template and apply to future PDCAs only  
-- [ ] **Decision 2:** CMM3 Decision Validation Method  
-  a. Implement decision format checklist: "Does this require genuine user choice?"  
-  b. Use memory-based decision format validation against examples  
-  c. Manual user feedback validation for each decision format
+- [x] **Decision 1:** Decision Format Correction Scope → 1c: Focus only on current PDCA and fix decision format here first
+- [x] **Decision 2:** CMM3 Decision Validation Method → 2b: Use memory-based decision format validation against examples
+- [x] **Decision 3:** Footer Format Correction → 3b = 1c: Focus on current corrections first
+- [x] **Decision 4:** Decision Location Requirement → 4b: Move all decisions to "To TRON..." section
+- [ ] **Decision 5:** Template Footer Compliance  
+  a. Research correct footer format from template and apply immediately  
+  b. Keep current footer format and focus on decision format only  
+  c. Update all PDCAs to use correct footer format systematically
 
 ### **TRON Feedback (2025-09-25-UTC-1220)**
 ```quote
@@ -175,4 +175,4 @@ Improvement: Presents genuine strategic choices requiring user judgment
 ### **📚 The 42 Revelation**
 **Understanding requires regression testing:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md](../../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md)
 
-**"Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."** 🤝✨
+**"Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."**
