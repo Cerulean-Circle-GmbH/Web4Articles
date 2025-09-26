@@ -21,9 +21,9 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-26-UTC-0931/scrum.pmo/project.journal/2025-09-26-UTC-0931-session/pdca/role/background-agent/2025-09-26-UTC-0931-session-start.md) | [scrum.pmo/project.journal/2025-09-26-UTC-0931-session/pdca/role/background-agent/2025-09-26-UTC-0931-session-start.md](./2025-09-26-UTC-0931-session-start.md)
-- **Session Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-26-UTC-0931/scrum.pmo/project.journal/2025-09-26-UTC-0931-session) | [scrum.pmo/project.journal/2025-09-26-UTC-0931-session/](../../)
-- **Project Status:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-26-UTC-0931/scrum.pmo/project.journal/2025-09-26-UTC-0931-session/project.status.md) | [scrum.pmo/project.journal/2025-09-26-UTC-0931-session/project.status.md](../../project.status.md)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-26-UTC-0931/scrum.pmo/project.journal/2025-09-26-UTC-0931-session/pdca/role/background-agent/2025-09-26-UTC-0931-session-start.md) | [scrum.pmo/project.journal/2025-09-26-UTC-0931-session/pdca/role/background-agent/2025-09-26-UTC-0931-session-start.md](../../../../../scrum.pmo/project.journal/2025-09-26-UTC-0931-session/pdca/role/background-agent/2025-09-26-UTC-0931-session-start.md)
+- **Session Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-26-UTC-0931/scrum.pmo/project.journal/2025-09-26-UTC-0931-session) | [scrum.pmo/project.journal/2025-09-26-UTC-0931-session/](../../../../../scrum.pmo/project.journal/2025-09-26-UTC-0931-session/)
+- **Project Status:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-26-UTC-0931/scrum.pmo/project.journal/2025-09-26-UTC-0931-session/project.status.md) | [scrum.pmo/project.journal/2025-09-26-UTC-0931-session/project.status.md](../../../../../scrum.pmo/project.journal/2025-09-26-UTC-0931-session/project.status.md)
 
 ### **QA Decisions**
 - [ ] **Decision 1: Primary Work Focus Area**
