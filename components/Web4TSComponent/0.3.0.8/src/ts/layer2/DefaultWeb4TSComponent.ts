@@ -898,23 +898,195 @@ Standards:
     // Analyze each component
     const analyses = await this.analyzeComponentsForComparison(componentSpecs);
     
-    // Generate comparison content
-    const comparisonContent = await this.generateComparisonMarkdown(componentSpecs, analyses, components);
+    // Generate simple table content for MD file
+    const tableContent = await this.generateSimpleTablesForMD(componentSpecs, analyses);
     
     // Save to MD file in current working directory
     const filename = this.generateSafeFilename(componentSpecs);
     const outputPath = path.join(process.cwd(), filename);
     
-    await fs.writeFile(outputPath, comparisonContent, 'utf-8');
-    
-    // Generate comparison tables to console
-    await this.generateDifferencesTable(componentSpecs, analyses);
-    await this.generateFileComparisonTable(componentSpecs, analyses);
+    await fs.writeFile(outputPath, tableContent, 'utf-8');
     
     console.log(`\n✅ Component comparison analysis complete`);
     console.log(`📄 Analysis saved to: ${outputPath}`);
     
     return this;
+  }
+
+  /**
+   * Generate simple table content for MD file (no fancy formatting)
+   * @cliHide
+   */
+  private async generateSimpleTablesForMD(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<string> {
+    const lines: string[] = [];
+    
+    // Differences Table
+    lines.push('### **Differences Table**\n');
+    
+    // Table header
+    let header = '| Aspect';
+    for (const spec of componentSpecs) {
+      header += ` | ${spec.name} ${spec.version}`;
+    }
+    header += ' |';
+    lines.push(header);
+    
+    // Table separator
+    let separator = '|---|';
+    for (let i = 0; i < componentSpecs.length; i++) {
+      separator += '---|';
+    }
+    lines.push(separator);
+    
+    // Package name row
+    let packageNameRow = '| package name';
+    for (const analysis of analyses) {
+      const packageName = analysis.packageJson?.name || '(not specified)';
+      packageNameRow += ` | ${packageName}`;
+    }
+    packageNameRow += ' |';
+    lines.push(packageNameRow);
+    
+    // Version row
+    let versionRow = '| version';
+    for (const analysis of analyses) {
+      versionRow += ` | ${analysis.version}`;
+    }
+    versionRow += ' |';
+    lines.push(versionRow);
+    
+    // Engines.node row
+    let enginesRow = '| engines.node';
+    for (const analysis of analyses) {
+      const nodeEngine = analysis.engines?.node || '(not specified)';
+      enginesRow += ` | ${nodeEngine}`;
+    }
+    enginesRow += ' |';
+    lines.push(enginesRow);
+    
+    // Scripts.test row
+    let scriptsTestRow = '| scripts.test';
+    for (const analysis of analyses) {
+      const testScript = analysis.scripts?.test || '(not specified)';
+      scriptsTestRow += ` | ${testScript}`;
+    }
+    scriptsTestRow += ' |';
+    lines.push(scriptsTestRow);
+    
+    // DevDependencies.vitest row
+    let vitestRow = '| devDependencies.vitest';
+    for (const analysis of analyses) {
+      const vitestVersion = analysis.devDependencies?.vitest || '(not specified)';
+      vitestRow += ` | ${vitestVersion}`;
+    }
+    vitestRow += ' |';
+    lines.push(vitestRow);
+    
+    // DevDependencies.typescript row
+    let typescriptRow = '| devDependencies.typescript';
+    for (const analysis of analyses) {
+      const typescriptVersion = analysis.devDependencies?.typescript || '(not specified)';
+      typescriptRow += ` | ${typescriptVersion}`;
+    }
+    typescriptRow += ' |';
+    lines.push(typescriptRow);
+    
+    // Dependencies row
+    let dependenciesRow = '| dependencies';
+    for (const analysis of analyses) {
+      const deps = analysis.dependencies;
+      let depsStr = '(not specified)';
+      if (deps && Object.keys(deps).length > 0) {
+        depsStr = Object.entries(deps).map(([name, version]) => `${name} ${version}`).join(', ');
+      }
+      dependenciesRow += ` | ${depsStr}`;
+    }
+    dependenciesRow += ' |';
+    lines.push(dependenciesRow);
+    
+    lines.push('');
+    
+    // File Comparison Table
+    lines.push('### **File Comparison Table**\n');
+    
+    // Table header for file comparison
+    let fileHeader = '| Entry (file/dir)';
+    for (const spec of componentSpecs) {
+      fileHeader += ` | ${spec.name} ${spec.version}`;
+    }
+    fileHeader += ' | Purpose | Similarity |';
+    lines.push(fileHeader);
+    
+    // Table separator for file comparison
+    let fileSeparator = '|---|';
+    for (let i = 0; i < componentSpecs.length; i++) {
+      fileSeparator += '---|';
+    }
+    fileSeparator += '---|---|';
+    lines.push(fileSeparator);
+    
+    // Collect all unique files and directories
+    const allEntries = new Set<string>();
+    for (const analysis of analyses) {
+      for (const file of analysis.files) {
+        allEntries.add(file);
+      }
+      for (const dir of analysis.directories) {
+        allEntries.add(dir + '/');
+      }
+    }
+    
+    // Process all files individually (maintain table format)
+    const sortedEntries = Array.from(allEntries).sort();
+    for (const entry of sortedEntries) {
+      
+      let row = `| ${entry}`;
+      
+      let presentCount = 0;
+      const presencePattern = [];
+      
+      for (const analysis of analyses) {
+        const isPresent = analysis.files.has(entry) || analysis.directories.has(entry.replace('/', ''));
+        const symbol = isPresent ? '✅' : '❌';
+        row += ` | ${symbol}`;
+        
+        if (isPresent) {
+          presentCount++;
+          presencePattern.push(analysis.name.charAt(0));
+        }
+      }
+      
+      // Determine purpose (simplified from original logic)
+      let purpose = 'Component file';
+      if (entry === 'package.json') purpose = 'Package metadata, scripts, entry points';
+      else if (entry === 'README.md') purpose = 'Component documentation';
+      else if (entry === 'package-lock.json') purpose = 'Deterministic dependency lockfile';
+      else if (entry.includes('test')) purpose = 'Automated test specs';
+      else if (entry.includes('CLI') || entry.includes('cli')) purpose = 'CLI entry';
+      else if (entry.includes('interface.ts')) purpose = 'TypeScript interface definition';
+      else if (entry.includes('layer2/Default')) purpose = 'Core component implementation';
+      else if (entry.includes('dist/')) purpose = 'Compiled JS and type declarations';
+      else if (entry.includes('node_modules/')) purpose = 'Installed dependencies directory';
+      else if (entry.includes('src/')) purpose = 'Source code (layers 2/3/4/5)';
+      else if (entry.includes('layer3/')) purpose = 'Interface layer';
+      else if (entry.includes('layer4/')) purpose = 'Service layer';
+      else if (entry.includes('layer5/')) purpose = 'CLI layer';
+      
+      // Determine similarity
+      let similarity = '🟥 Different';
+      if (presentCount === componentSpecs.length) {
+        similarity = '🟩 Identical';
+      } else if (presentCount > 1) {
+        similarity = `🟨 Similar (${presencePattern.join('+')})`;
+      } else if (presentCount === 1) {
+        similarity = `🟪 Unique – ${presencePattern[0]}`;
+      }
+      
+      row += ` | ${purpose} | ${similarity} |`;
+      lines.push(row);
+    }
+    
+    return lines.join('\n');
   }
 
   /**
