@@ -126,6 +126,41 @@ web4tscomponent compare "Web4TSComponent 0.3.0.6, Web4TSComponent 0.3.0.7"
 - ✅ **Version Analysis:** Detailed comparison between 0.3.0.6 and 0.3.0.7 completed
 - ✅ **Output Generation:** Comparison saved to web4tscomponent-0306-vs-web4tscomponent-0307-comparison-20250926T1539.md
 
+**Core Component Differences Analysis:**
+
+**Comparison Report Quote:**
+```
+| src/ts/layer2/DefaultCLI.ts | ✅ | ✅ | CLI entry | 🟨 Similar (W+W) |
+| src/ts/layer2/DefaultWeb4TSComponent.ts | ✅ | ✅ | Core component implementation | 🟨 Similar (W+W) |
+```
+
+**Detailed File Differences:**
+
+**DefaultCLI.ts Analysis:**
+- ✅ **Files Identical:** No differences found between 0.3.0.6 and 0.3.0.7
+- 📊 **Status:** Complete match, no changes in CLI entry implementation
+
+**DefaultWeb4TSComponent.ts Analysis:**
+```diff
+@@ -145,7 +145,7 @@
+   async scaffoldComponent(options: ComponentScaffoldOptions): Promise<ComponentMetadata> {
+     const { componentName, version, includeLayerArchitecture, includeCLI, includeSpecFolder, includeVitest } = options;
+     
+-    const componentDir = path.join(this.model.targetDirectory, 'components', componentName, version);
++    const componentDir = this.resolveComponentPath(componentName, version);
+     
+     // Create directory structure
+     await fs.mkdir(componentDir, { recursive: true });
+```
+- 🔄 **Key Change:** Line 148 - Direct path.join replaced with this.resolveComponentPath() method call
+- 🎯 **Purpose:** Enhanced path resolution abstraction for better component directory handling
+- 📋 **Impact:** Improved maintainability and potential test mode support
+
+**Version Creation History:**
+- ✅ **Version 0.3.0.6:** Created during test compliance fixes and regression testing
+- ✅ **Version 0.3.0.7:** Created in [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/scrum.pmo/project.journal/2025-09-20-UTC-1348-session/2025-09-20-UTC-2010-web4tscomponent-0307-cmm4-implementation.md) | [§/scrum.pmo/project.journal/2025-09-20-UTC-1348-session/2025-09-20-UTC-2010-web4tscomponent-0307-cmm4-implementation.md](../2025-09-20-UTC-1348-session/2025-09-20-UTC-2010-web4tscomponent-0307-cmm4-implementation.md) for CMM4 implementation with dynamic CLI discovery
+- 📚 **Historical Context:** 0.3.0.7 represents CMM4 upgrade with switch case elimination (87.5% reduction) and TSCompletion integration
+
 ---
 
 ## **🎯 ACT**
