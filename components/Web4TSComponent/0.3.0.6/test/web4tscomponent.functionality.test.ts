@@ -20,14 +20,16 @@ describe('Web4TSComponent Functionality', () => {
     testDataDir = path.join(__dirname, 'data');
     await fsPromises.mkdir(testDataDir, { recursive: true });
     
-    // Initialize component and set targetDirectory to test data
+    // Initialize component with test target directory
     // Component remains unaware it's being tested - just gets different target
     component = new DefaultWeb4TSComponent();
     await component.init({
       name: 'Web4TSComponent',
-      version: '0.3.0.6',
-      targetDirectory: testDataDir  // Point to test/data instead of project root
+      version: '0.3.0.6'
     });
+    
+    // Set target directory for testing - component unaware approach
+    component.model.targetDirectory = testDataDir;
     
     cli = new Web4TSComponentCLI();
   });
