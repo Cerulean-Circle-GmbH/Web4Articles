@@ -22,9 +22,12 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/testing/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-25-UTC-1235-version-0380-merge-component-comparison.md) | [§/scrum.pmo/project.journal/2025-09-24-UTC-0948-session/2025-09-25-UTC-1235-version-0380-merge-component-comparison.md](2025-09-25-UTC-1235-version-0380-merge-component-comparison.md)
-- **Source Branch:** origin/dev/2025-09-24-UTC-1028 → Version 0.3.8.0 source
+- **Source Branch:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/origin/dev/2025-09-24-UTC-1028) | [§/origin/dev/2025-09-24-UTC-1028](../../../origin/dev/2025-09-24-UTC-1028)
 - **Target Components:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/testing/components/Web4TSComponent) | [§/components/Web4TSComponent](../../../components/Web4TSComponent)
-- **Comparison Output:** Component comparison between 0.3.0.6 and 0.3.0.7
+- **Comparison Output:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/testing/web4tscomponent-0306-vs-web4tscomponent-0307-comparison-20250926T1539.md) | [§/web4tscomponent-0306-vs-web4tscomponent-0307-comparison-20250926T1539.md](../../../web4tscomponent-0306-vs-web4tscomponent-0307-comparison-20250926T1539.md)
+- **Version 0.3.0.6:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/testing/components/Web4TSComponent/0.3.0.6) | [§/components/Web4TSComponent/0.3.0.6](../../../components/Web4TSComponent/0.3.0.6)
+- **Version 0.3.0.7:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/testing/components/Web4TSComponent/0.3.0.7) | [§/components/Web4TSComponent/0.3.0.7](../../../components/Web4TSComponent/0.3.0.7)
+- **Version 0.3.0.8:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/testing/components/Web4TSComponent/0.3.0.8) | [§/components/Web4TSComponent/0.3.0.8](../../../components/Web4TSComponent/0.3.0.8)
 
 ### **To TRON: QA Decisions required**
 - [x] Version Merge Strategy: Version 0.3.8.0 already exists as 0.3.0.8 in current branch
