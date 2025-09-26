@@ -1,0 +1,195 @@
+### Branch Review
+
+- Reference branch: main
+
+- **Do not touch branches:**
+  - origin/main
+  - origin/retro/2025-08-10-agent-retro
+
+- **Unmerged into main:**
+  - [ ] origin/archive/2025-09-26-UTC-0900-broken
+  - [ ] origin/archive/save-start-bc-73b88848
+  - [ ] origin/chore/branch-review-checklist
+  - [ ] origin/cursor/automate-license-header-and-backlink-enforcement-3dd3
+  - [ ] origin/cursor/execute-role-from-readme-and-add-to-project-4f37
+  - [ ] origin/cursor/generate-project-journal-and-status-dfd0
+  - [ ] origin/cursor/hn-first-start-7e4f
+  - [ ] origin/cursor/recover-from-readme-file-0c0e
+  - [ ] origin/cursor/recover-from-readme-file-492d
+  - [ ] origin/cursor/recover-from-readme-file-4ac2
+  - [ ] origin/cursor/recover-from-readme-file-76e5
+  - [ ] origin/cursor/recover-from-readme-file-a627
+  - [ ] origin/cursor/recover-from-readme-file-ad03
+  - [ ] origin/cursor/recover-from-readme-file-c072
+  - [ ] origin/cursor/recover-from-readme-file-e4d7
+  - [ ] origin/cursor/recover-from-readme-file-ef6b
+  - [ ] origin/cursor/recover-from-readme-for-sprint-3-po-2719
+  - [ ] origin/cursor/recover-readme-and-overview-remote-branches-6e9e
+  - [ ] origin/cursor/recover-readme-and-test-state-machine-a372
+  - [ ] origin/cursor/recover-readme-for-pdca-entry-check-9aa0
+  - [ ] origin/cursor/recover-scrum-master-info-from-readme-fdc0
+  - [ ] origin/cursor/recover-scrum-session-from-readme-53bc
+  - [ ] origin/cursor/recovery-2025-08-12-0923
+  - [ ] origin/cursor/recovery-2025-08-12-1038
+  - [ ] origin/cursor/recovery-2025-08-12-1102
+  - [ ] origin/cursor/recovery-2025-08-13-1526
+  - [ ] origin/cursor/recovery-2025-08-13-1537
+  - [ ] origin/cursor/recovery-2025-08-13-1557
+  - [ ] origin/cursor/recovery-2025-08-16-1854
+  - [ ] origin/cursor/recovery-2025-08-16-2134
+  - [ ] origin/cursor/recovery-2025-08-20-0950
+  - [ ] origin/cursor/recovery-from-readme-20250819-0949
+  - [ ] origin/cursor/start-background-process-10df
+  - [ ] origin/cursor/start-background-process-2744
+  - [ ] origin/cursor/start-background-process-32f2
+  - [ ] origin/cursor/start-background-process-4ab2
+  - [ ] origin/cursor/start-background-process-7322
+  - [ ] origin/cursor/start-background-process-78bf
+  - [ ] origin/cursor/start-background-process-7bd3
+  - [ ] origin/cursor/start-background-process-dcf6
+  - [ ] origin/cursor/start-test-4-f177
+  - [ ] origin/cursor/tsranger-v22-testing-2025-08-20-1012
+  - [ ] origin/dev/0306
+  - [ ] origin/dev/0308
+  - [ ] origin/dev/2025-08-23-UTC-1529
+  - [ ] origin/dev/2025-08-24-UTC-0857
+  - [ ] origin/dev/2025-08-24-UTC-1248
+  - [ ] origin/dev/2025-08-25-UTC-0845
+  - [ ] origin/dev/2025-08-25-UTC-1308
+  - [ ] origin/dev/2025-08-26-UTC-2036
+  - [ ] origin/dev/2025-08-28-UTC-0850
+  - [ ] origin/dev/2025-08-28-UTC-0950
+  - [ ] origin/dev/2025-08-28-UTC-1125
+  - [ ] origin/dev/2025-08-28-UTC-1154
+  - [ ] origin/dev/2025-08-28-UTC-1225
+  - [ ] origin/dev/2025-08-28-UTC-1341
+  - [ ] origin/dev/2025-08-28-UTC-2140
+  - [ ] origin/dev/2025-08-28-UTC-2227
+  - [ ] origin/dev/2025-08-29-UTC-1113
+  - [ ] origin/dev/2025-08-30-UTC-0840
+  - [ ] origin/dev/2025-08-30-UTC-1831
+  - [ ] origin/dev/2025-08-31-UTC-1339
+  - [ ] origin/dev/2025-09-02-UTC-1912
+  - [ ] origin/dev/2025-09-03-UTC-1226
+  - [ ] origin/dev/2025-09-05-UTC-1149
+  - [ ] origin/dev/2025-09-06-UTC-0747
+  - [ ] origin/dev/2025-09-06-UTC-1124
+  - [ ] origin/dev/2025-09-06-UTC-2130
+  - [ ] origin/dev/2025-09-07-UTC-1921
+  - [ ] origin/dev/2025-09-10-UTC-1138
+  - [ ] origin/dev/2025-09-10-UTC-2048
+  - [ ] origin/dev/2025-09-14-UTC-1425
+  - [ ] origin/dev/2025-09-17-UTC-1319
+  - [ ] origin/dev/2025-09-18-UTC-0808
+  - [ ] origin/dev/2025-09-18-UTC-1316
+  - [ ] origin/dev/2025-09-18-UTC-1502
+  - [ ] origin/dev/2025-09-18-UTC-1648
+  - [ ] origin/dev/2025-09-18-UTC-1711
+  - [ ] origin/dev/2025-09-18-UTC-1717
+  - [ ] origin/dev/2025-09-19-UTC-1315
+  - [ ] origin/dev/2025-09-19-UTC-1348
+  - [ ] origin/dev/2025-09-19-UTC-1418
+  - [ ] origin/dev/2025-09-19-UTC-1645
+  - [ ] origin/dev/2025-09-19-UTC-1657
+  - [ ] origin/dev/2025-09-20-UTC-1348
+  - [ ] origin/dev/2025-09-21-UTC-1528
+  - [ ] origin/dev/2025-09-21-UTC-1714
+  - [ ] origin/dev/2025-09-21-UTC-2014
+  - [ ] origin/dev/2025-09-21-UTC-2225
+  - [ ] origin/dev/2025-09-21-UTC-2332
+  - [ ] origin/dev/2025-09-22-UTC-1908
+  - [ ] origin/dev/2025-09-23-UTC-1052
+  - [ ] origin/dev/2025-09-23-UTC-1326
+  - [ ] origin/dev/2025-09-24-UTC-0902
+  - [ ] origin/dev/2025-09-24-UTC-0944
+  - [ ] origin/dev/2025-09-24-UTC-1007
+  - [ ] origin/dev/2025-09-24-UTC-1021
+  - [ ] origin/dev/2025-09-24-UTC-1028
+  - [ ] origin/dev/2025-09-25-UTC-1523
+  - [ ] origin/dev/2025-09-26-UTC-0901
+  - [ ] origin/dev/2025-09-26-UTC-0931
+  - [ ] origin/dev/2025-09-26-UTC-0931-backup
+  - [ ] origin/dev/2025-09-26-UTC-1027
+  - [ ] origin/dev/2025-09-26-UTC-1315
+  - [ ] origin/dev/2025-09-26-UTC-1356
+  - [ ] origin/dev/destroyed-once
+  - [ ] origin/dev/once
+  - [ ] origin/dev/once0304
+  - [ ] origin/dev/once0310
+  - [ ] origin/dev/req0305
+  - [ ] origin/dev/sprint5
+  - [ ] origin/dev/unit0305
+  - [ ] origin/feature/TSRangerColumns
+  - [ ] origin/feature/branchStatusAgent
+  - [ ] origin/feature/eod-2025-08-24-background-agent
+  - [ ] origin/feature/ontology-agent
+  - [ ] origin/feature/recovery-agent
+  - [ ] origin/feature/research-agent
+  - [ ] origin/feature/user
+  - [ ] origin/fix/pr-based-workflows
+  - [ ] origin/fix/v2.5
+  - [ ] origin/integration/team-a-b-2025-08-20
+  - [ ] origin/local-dev
+  - [ ] origin/release/dev
+  - [ ] origin/release/production
+  - [ ] origin/release/testing
+  - [ ] origin/release/v1.0.0.plan
+  - [ ] origin/retro/2025-08-10-agent-retro
+  - [ ] origin/save/cmm-start
+  - [ ] origin/save/start
+  - [ ] origin/save/start.v1
+  - [ ] origin/save/start.v4
+  - [ ] origin/session/2025-08-29-UTC-0906-startup
+  - [ ] origin/stable/once2
+  - [ ] origin/temp-pdca-merge-1756049365
+  - [ ] origin/temp-pdca-merge-1756050429
+  - [ ] origin/temp-pdca-merge-1756050430
+  - [ ] origin/temp-pdca-merge-1756050898
+  - [ ] origin/temp-pdca-merge-1756051772
+  - [ ] origin/temp-pdca-merge-1756052356
+  - [ ] origin/temp-pdca-merge-1756052357
+  - [ ] origin/temp-pdca-merge-1756056226
+  - [ ] origin/temp-pdca-merge-1756056437
+  - [ ] origin/temp-pdca-merge-1756056798
+  - [ ] origin/temp-pdca-merge-1756057151
+  - [ ] origin/temp-pdca-merge-1756057605
+  - [ ] origin/temp-pdca-merge-1756059045
+  - [ ] origin/temp-pdca-merge-1756071992
+  - [ ] origin/test-merge/latest-48c865d
+  - [ ] origin/test-merge/prev1-4271417
+  - [ ] origin/test-merge/prev2-294d667
+  - [ ] origin/test-merge/prev3-6977416
+  - [ ] origin/test-merge/prev4-3b06952
+  - [ ] origin/test-merge/prev5-6047c5e
+  - [ ] origin/test-merge/prev6-ffe9d79
+  - [ ] origin/test-merge/prev7-15d5b21
+  - [ ] origin/test-merge/prev8-137e4fe
+  - [ ] origin/test-merge/prev9-4bb91d0
+  - [ ] origin/test/tsrangerV22FixedTestCasesApproachThomas
+  - [ ] origin/testing-analysis-clean
+  - [ ] origin/w-was
+
+- **Merged into main:**
+  - [x] origin/chore/sprint-4-devcontainer
+  - [x] origin/cursor/automate-gitscrum-project-setup-and-management-3bc8
+  - [x] origin/cursor/enhance-terminal-help-and-preview-9502
+  - [x] origin/cursor/get-workspace-tree-eff5
+  - [x] origin/cursor/implement-ranger-like-command-execution-with-custom-styling-65fc
+  - [x] origin/cursor/plan-new-sprint-with-tsranger-v2-ef48
+  - [x] origin/cursor/plan-ranger-shell-sprint-c396
+  - [x] origin/cursor/refactor-tsranger-to-one-class-per-file-7b09
+  - [x] origin/cursor/review-readme-and-sprint-2-work-5861
+  - [x] origin/cursor/start-background-process-cf55
+  - [x] origin/cursor/start-minimalist-process-5289
+  - [x] origin/dev/2025-08-24-UTC-0917
+  - [x] origin/docs/sprint-3-embed-svgs
+  - [x] origin/feat/sprint-4-devcontainer-planning-pr
+  - [x] origin/feat/ts.ranger.good
+  - [x] origin/feat/tsranger-colors
+  - [x] origin/feature/analyze-ranger
+  - [x] origin/handover/backend
+  - [x] origin/main
+  - [x] origin/save/start.v2
+  - [x] origin/save/start.v3
+  - [x] origin/test/recovery
+  - [x] origin/test/wentAstray
