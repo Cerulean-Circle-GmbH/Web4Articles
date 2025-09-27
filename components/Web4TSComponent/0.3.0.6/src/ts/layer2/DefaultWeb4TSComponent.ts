@@ -759,7 +759,8 @@ Examples:
       "main": `./src/ts/layer5/${componentName}CLI.ts`,
       "scripts": {
         "build": "tsc",
-        "test": "vitest",
+        "test": "vitest run",
+        "test:watch": "vitest",
         "clean": "rm -rf dist/"
       },
       "devDependencies": {

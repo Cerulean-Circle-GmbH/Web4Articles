@@ -97,6 +97,29 @@ describe('Web4TSComponent Functionality', () => {
       const componentPath = join(testDataDir, 'components', componentName, version);
       expect(existsSync(componentPath)).toBe(true);
     });
+
+    it('should generate package.json with infinite loop prevention in npm scripts', async () => {
+      const componentName = 'TestCreateComponent';
+      const version = '0.1.0.0';
+      
+      await component.create(componentName, version, 'all');
+      
+      const packageJsonPath = join(testDataDir, 'components', componentName, version, 'package.json');
+      expect(existsSync(packageJsonPath)).toBe(true);
+      
+      const packageContent = JSON.parse(await readFile(packageJsonPath, 'utf-8'));
+      
+      // Verify proper npm scripts configuration (infinite loop prevention)
+      expect(packageContent.scripts.test).toBe('vitest run');
+      expect(packageContent.scripts['test:watch']).toBe('vitest');
+      expect(packageContent.scripts.build).toBe('tsc');
+      expect(packageContent.scripts.clean).toBe('rm -rf dist/');
+      
+      // Verify component has proper name and version
+      expect(packageContent.name).toBe(`@web4/${componentName.toLowerCase()}`);
+      expect(packageContent.version).toBe(version);
+      expect(packageContent.type).toBe('module');
+    });
   });
 
   describe('Semantic Version Upgrades', () => {
@@ -120,6 +143,10 @@ describe('Web4TSComponent Functionality', () => {
         await readFile(`${newVersionPath}/package.json`, 'utf-8')
       );
       expect(packageContent.version).toBe('0.1.0.1');
+      
+      // Verify npm scripts have infinite loop prevention
+      expect(packageContent.scripts.test).toBe('vitest run');
+      expect(packageContent.scripts['test:watch']).toBe('vitest');
     });
 
     it('should upgrade to next minor version', async () => {
