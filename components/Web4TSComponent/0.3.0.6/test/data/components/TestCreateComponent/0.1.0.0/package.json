@@ -5,7 +5,8 @@
   "main": "./src/ts/layer5/TestCreateComponentCLI.ts",
   "scripts": {
     "build": "tsc",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "clean": "rm -rf dist/"
   },
   "devDependencies": {
