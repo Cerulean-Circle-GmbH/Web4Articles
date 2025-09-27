@@ -152,33 +152,45 @@ When creating your Session Start PDCA (step 11), present these decisions:
 - c) Documentation Focus - Requirement processing, automation, workflow optimization
 - d) Quality/Testing Focus - Testing strategies, validation, compliance checks
 
-### **Decision 2: Role Selection for Session**
-Choose from all available agent roles in scrum.pmo/roles:
+### **Decision 2: Agent Role Selection**
+**Agent should generate role options dynamically using this command:**
+```bash
+find scrum.pmo/roles -maxdepth 1 -type d -name '*Agent' | sed 's|.*/||' | sort
+```
 
-- a) **Architect** - System design, architecture documentation, technical leadership
-- b) **AuthenticIntegerExperiencialistStoryteller** - Narrative integration, experience design
-- c) **BackendAgent** - Server-side development, API design, database management
-- d) **BackgroundAgent** - General purpose automation, system maintenance
-- e) **BranchStatusAgent** - Git branch management, repository hygiene, branch analysis
-- f) **CICDAgent** - Continuous integration, deployment pipeline management
-- g) **Developer** - Software development, implementation, coding tasks
-- h) **DevOps** - Infrastructure management, deployment, operations
-- i) **OntologyAgent** - Knowledge organization, semantic analysis, categorization
-- j) **PDCAQualityAgent** - Process quality assurance, PDCA compliance verification
-- k) **PO** - Product Owner responsibilities, requirements management, stakeholder coordination
-- l) **RecoveryDefinitionAgent** - Error recovery processes, resilience planning
-- m) **ReleaseIntegrationAgent** - Release management, version coordination, integration
-- n) **ResearchAgent** - Investigation, analysis, research coordination
-- o) **SaveRestartAgent** - Session management, state preservation, recovery operations
+**Present discovered roles with descriptions:**
+- a) **BackendAgent** - Server-side development, API design, database management
+- b) **BackgroundAgent** - General purpose automation, system maintenance  
+- c) **BranchStatusAgent** - Git branch management, repository hygiene, branch analysis
+- d) **CICDAgent** - Continuous integration, deployment pipeline management
+- e) **OntologyAgent** - Knowledge organization, semantic analysis, categorization
+- f) **PDCAQualityAgent** - Process quality assurance, PDCA compliance verification
+- g) **RecoveryDefinitionAgent** - Error recovery processes, resilience planning
+- h) **ReleaseIntegrationAgent** - Release management, version coordination, integration
+- i) **ResearchAgent** - Investigation, analysis, research coordination
+- j) **SaveRestartAgent** - Session management, state preservation, recovery operations
+- k) *[Additional agent roles discovered dynamically...]*
+
+**Non-Agent Roles (legacy - use find command above for current agents):**
+- l) **Architect** - System design, architecture documentation, technical leadership
+- m) **Developer** - Software development, implementation, coding tasks
+- n) **DevOps** - Infrastructure management, deployment, operations
+- o) **PO** - Product Owner responsibilities, requirements management, stakeholder coordination
 - p) **ScrumMaster** - Agile process facilitation, team coordination, sprint management
 - q) **Tester** - Quality assurance, testing strategy, validation processes
-- r) **ToolBuilder** - Development tool creation, automation utilities
 
-### **Decision 3: Session Duration and Sprint Planning**
-- a) Full day session with multiple sprint cycles for comprehensive work
-- b) Half-day focused session on specific component or process improvement
-- c) Quick analysis session for current project state review and planning
-- d) Extended multi-day session for major feature development or system changes
+### **Decision 3: Session Duration Planning**
+**Select session duration for planning and scope context (informational - does not affect agent behavior):**
+- a) **Quick Session (1-2 hours)** - Focused single task or targeted bug fix
+- b) **Half-day Session (2-4 hours)** - Feature development or moderate complexity tasks  
+- c) **Full-day Session (4-8 hours)** - Complex features or multi-component integration work
+- d) **Multi-day Session (1+ days)** - Major architectural changes or extensive research projects
+
+### **Decision 4: PDCA Organization Location**
+**Choose where to create and maintain PDCAs based on work scope:**
+- a) **Session PDCAs** - `scrum.pmo/project.journal/[session]/` for project-wide collaborative work across multiple agents/roles
+- b) **Role PDCAs** - `scrum.pmo/roles/[AgentRole]/pdca/` for agent-specific specialized work within defined role boundaries  
+- c) **Component PDCAs** - `components/[Component]/[version]/` for component-specific development work (rare, use for focused component evolution)
 
 ---
 
