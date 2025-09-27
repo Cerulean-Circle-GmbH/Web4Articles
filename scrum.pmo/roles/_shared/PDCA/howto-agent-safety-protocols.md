@@ -14,14 +14,20 @@
 
 **Core Principle:** Each command runs in separate shell for automatic process cleanup when shell exits.
 
-**Usage Pattern:**
+**Enhanced Usage Pattern with Timeout Safety:**
 ```bash
 # Instead of direct commands that accumulate stale processes:
 git status
 git add file
 git commit -m "message"
 
-# Use shell isolation for automatic cleanup:
+# Use shell isolation with timeout for maximum safety:
+timeout 30s bash -c "git status"
+timeout 60s bash -c "git add file" 
+timeout 120s bash -c "git commit -m 'message'"
+timeout 300s bash -c "git push origin branch"
+
+# Fallback for systems without timeout (legacy):
 bash -c "git status"
 bash -c "git add file" 
 bash -c "git commit -m 'message'"
@@ -40,14 +46,46 @@ bash -c "git push origin branch"
 - Natural OS mechanisms provide reliable cleanup
 - Scales automatically with workload
 
+## **⏱️ TIMEOUT ENHANCEMENT (2025-09-27) - Ultimate Safety Protocol**
+
+### **🛡️ Enhanced Shell Isolation with Timeout Protection**
+
+**Core Principle Enhancement:** Combine shell isolation with timeout protection for ultimate command safety.
+
+**Timeout Strategy:**
+- **Short Operations (≤30s):** `timeout 30s bash -c "command"`
+- **Medium Operations (≤120s):** `timeout 120s bash -c "command"`
+- **Long Operations (≤300s):** `timeout 300s bash -c "command"`
+- **Network Operations:** Use longer timeouts (300s) for git push/pull
+
+**System Compatibility:**
+- **macOS:** Both `timeout` and `gtimeout` available
+- **Linux:** `timeout` from GNU coreutils
+- **Installation:** `brew install coreutils` or `port install coreutils`
+
+**Timeout Command Detection:**
+```bash
+# Check availability and create alias if needed
+if command -v gtimeout >/dev/null 2>&1; then
+    alias timeout='gtimeout'
+elif command -v timeout >/dev/null 2>&1; then
+    # timeout already available
+    echo "timeout command ready"
+else
+    # Install timeout via package manager
+    brew install coreutils  # macOS Homebrew
+    # or: port install coreutils  # macOS MacPorts
+fi
+```
+
 ### **🔧 Shell Isolation Implementation**
 
-**For Background Agents - Use This Pattern:**
+**For Background Agents - Enhanced Pattern with Timeout:**
 ```bash
-# Git operations with automatic cleanup
-bash -c "git fetch origin"
-bash -c "git pull --no-edit origin branch"
-bash -c "git add files"
+# Git operations with timeout protection and automatic cleanup
+timeout 60s bash -c "git fetch origin"
+timeout 120s bash -c "git pull --no-edit origin branch"
+timeout 30s bash -c "git add files"
 bash -c "git commit -m 'message'"
 bash -c "git push origin branch"
 ```
