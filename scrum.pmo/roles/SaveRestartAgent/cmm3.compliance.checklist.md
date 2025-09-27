@@ -3,8 +3,14 @@
 **🗓️ Updated:** 2025-09-27-UTC-1021  
 **⚠️ CMM Level:** Lowest compliance element determines overall level
 
+## **📚 Reference Documentation (DRY Compliance)**
+- **PDCA Template:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](../../_shared/PDCA/template.md)
+- **PDCA Howto:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../_shared/PDCA/howto.PDCA.md)
+- **Decision Guide:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../../_shared/PDCA/PDCA.howto.decide.md)
+- **Dual Link Format:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md](../../_shared/PDCA/PDCA.dual.link.format.requirement.md)
+
 1. **PDCA Compliance**
-   - [ ] a) Template version 3.1.4.2 exact match: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](../../_shared/PDCA/template.md)
+   - [ ] a) Template version 3.1.4.2 exact match (see PDCA Template above)
    - [ ] b) Real UTC time (`date -u` output), not hallucinated
    - [ ] c) All 6 sections with horizontal separators (see template, not duplication)
    - [ ] d) All sections: exact template format, no modifications
@@ -21,16 +27,16 @@
      8. act on the todolist and check again
      9. when achieved all expected output, write the rest of the pdca e.g. emotional section
      10. finally do the git protocol
-   - [ ] g) CMM3 violation reporting: Report to chat with dual link to [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../_shared/PDCA/howto.PDCA.md)
+   - [ ] g) CMM3 violation reporting: Report to chat with dual link (see PDCA Howto above)
    - [ ] h) Understanding research requirement: Research unknown terms/processes before use or ask TRON if research fails
 
 2. **Chat Response Compliance**  
-   - [ ] a) Links only, no explanatory text per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../_shared/PDCA/howto.PDCA.md)
-   - [ ] b) QA Decisions copied verbatim from PDCA per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../../_shared/PDCA/PDCA.howto.decide.md)
-   - [ ] c) Dual link format: [GitHub](URL) | [§/path](path) per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md](../../_shared/PDCA/PDCA.dual.link.format.requirement.md)
+   - [ ] a) Links only, no explanatory text (see PDCA Howto above)
+   - [ ] b) QA Decisions copied verbatim from PDCA (see Decision Guide above)
+   - [ ] c) Dual link format: [GitHub](URL) | [§/path](path) (see Dual Link Format above)
 
 3. **Link Compliance**
-   - [ ] a) GitHub URLs work after git push per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md](../../_shared/PDCA/PDCA.dual.link.format.requirement.md)
+   - [ ] a) GitHub URLs work after git push (see Dual Link Format above)
    - [ ] b) PDCA local links: relative from document location
    - [ ] c) Chat local links: absolute from project root
    - [ ] d) § notation for root path display
@@ -42,7 +48,7 @@
 
 5. **Authorization**
    - [ ] a) Only explicit user-authorized work
-   - [ ] b) Present decisions when direction unclear per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../../_shared/PDCA/PDCA.howto.decide.md)
+   - [ ] b) Present decisions when direction unclear (see Decision Guide above - cross-ref to 2b)
    - [ ] c) No assumptions about user intent
 
 **Usage:** Cite violations as "[number][letter] cmm2" (e.g., "2a cmm2")  
