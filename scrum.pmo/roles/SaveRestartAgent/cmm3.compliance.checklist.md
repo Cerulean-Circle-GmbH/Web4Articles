@@ -9,7 +9,18 @@
    - [ ] c) All 6 sections with horizontal separators (see template, not duplication)
    - [ ] d) All sections: exact template format, no modifications
    - [ ] e) Working dual links, no "TBD" placeholders
-   - [ ] f) 10-step PDCA process: 1)Header+Plan 2)Expected output 3)Do with safety 4)Document commands 5)Check planning 6)Verify output 7)Achievement status 8)Todo list 9)Act on todos 10)Complete PDCA+git
+   - [ ] f) 10-step PDCA process:
+     1. Header + Plan section
+     2. Plan with expected output
+     3. Do with safety protocol
+     4. Document commands in DO section
+     5. Check planning with command quotes
+     6. Verify expected output achieved
+     7. Achievement status analysis
+     8. Todo list with internal tool
+     9. Act on todos and check again
+     10. Complete PDCA sections + git protocol
+   - [ ] g) CMM3 violation reporting: Report to chat with dual link to [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../_shared/PDCA/howto.PDCA.md)
 
 2. **Chat Response Compliance**  
    - [ ] a) Links only, no explanatory text per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../_shared/PDCA/howto.PDCA.md)
