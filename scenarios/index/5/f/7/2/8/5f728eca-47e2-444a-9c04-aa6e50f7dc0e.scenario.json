@@ -1,0 +1,31 @@
+{
+  "ior": {
+    "uuid": "5f728eca-47e2-444a-9c04-aa6e50f7dc0e",
+    "component": "unit",
+    "version": "0.3.0.6"
+  },
+  "owner": "{\"user\":\"donges\",\"hostname\":\"localhost\",\"uuid\":\"5f728eca-47e2-444a-9c04-aa6e50f7dc0e\",\"timestamp\":\"2025-09-27T14:52:55.906Z\",\"component\":\"unit\",\"version\":\"0.3.0.6\"}",
+  "model": {
+    "uuid": "5f728eca-47e2-444a-9c04-aa6e50f7dc0e",
+    "createdAt": "2025-09-27T14:52:55.903Z",
+    "updatedAt": "2025-09-27T14:53:22.276Z",
+    "typeM3": "ATTRIBUTE",
+    "name": "cmm3.compliance.checklist",
+    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md",
+    "definition": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md",
+    "indexPath": "/Users/Shared/Workspaces/temp/Web4Articles/scenarios/index/5/f/7/2/8/5f728eca-47e2-444a-9c04-aa6e50f7dc0e.scenario.json",
+    "symlinkPaths": [],
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/Users/Shared/Workspaces/temp/Web4Articles/cmm3.compliance.checklist.unit",
+        "linkTarget": "ior:unit:5f728eca-47e2-444a-9c04-aa6e50f7dc0e",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/Users/Shared/Workspaces/temp/Web4Articles/scrum.pmo/roles/_shared/PDCA/cmm3.compliance.checklist.unit",
+        "linkTarget": "ior:unit:5f728eca-47e2-444a-9c04-aa6e50f7dc0e",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}
