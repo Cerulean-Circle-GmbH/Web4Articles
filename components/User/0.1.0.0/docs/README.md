@@ -3,9 +3,21 @@
 **Component:** @web4/user  
 **Version:** 1.0.0  
 **Description:** Web4 User component for consistent user identification  
+<<<<<<< HEAD
 **Generated:** 2025-08-26T18:12:43.307Z  
 **Git Commit:** c7946e6  
 **Git Branch:** dev/2025-08-25-UTC-1308
+=======
+<<<<<<< HEAD
+**Generated:** 2025-08-26T18:12:43.307Z  
+**Git Commit:** c7946e6  
+**Git Branch:** dev/2025-08-25-UTC-1308
+=======
+**Generated:** 2025-09-11T08:25:16.587Z  
+**Git Commit:** 0abf13fa  
+**Git Branch:** dev/once0304
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
 
 ## Overview
 

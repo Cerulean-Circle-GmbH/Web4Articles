@@ -1,8 +1,27 @@
+<<<<<<< HEAD
 {
   "uuid": "1a123c8b-e76f-4c2b-b6b2-375620179ce6",
   "name": "Test Unit",
   "description": "Testing UUID storage system",
   "createdAt": "2025-08-22T13:29:05.232Z",
+=======
+<<<<<<< HEAD
+../../../../../scenarios/index/1/a/1/2/3/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json
+=======
+{
+  "IOR": {
+    "uuid": "1a123c8b-e76f-4c2b-b6b2-375620179ce6",
+    "component": "TestComponent",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoic3lzdGVtIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTIyVDEzOjI5OjA1LjIzMloiLCJ1dWlkIjoiMWExMjNjOGItZTc2Zi00YzJiLWI2YjItMzc1NjIwMTc5Y2U2In0K",
+  "model": {
+    "uuid": "1a123c8b-e76f-4c2b-b6b2-375620179ce6",
+    "name": "Test Unit",
+    "title": "Test Unit",
+    "description": "Testing UUID storage system"
+  },
+>>>>>>> origin/start/save.v5
   "unitIndex": {
     "uuid": "1a123c8b-e76f-4c2b-b6b2-375620179ce6",
     "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/1/a/1/2/3/1a123c8b-e76f-4c2b-b6b2-375620179ce6.scenario.json",
@@ -14,4 +33,9 @@
     "createdAt": "2025-08-22T13:29:05.232Z",
     "updatedAt": "2025-08-22T13:29:05.249Z"
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5

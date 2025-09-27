@@ -2,9 +2,21 @@
 
 ## Interfaces
 
+<<<<<<< HEAD
 ### IUser
 ```typescript
 interface IUser {
+=======
+<<<<<<< HEAD
+### User
+```typescript
+interface User {
+=======
+### IUser
+```typescript
+interface IUser {
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
   getUuid(): string;
   getUsername(): string;
   getHostname(): string;
@@ -13,25 +25,61 @@ interface IUser {
 }
 ```
 
+<<<<<<< HEAD
 ### IEnvironmentCheck
 ```typescript
 interface IEnvironmentCheck {
+=======
+<<<<<<< HEAD
+### EnvironmentCheck
+```typescript
+interface EnvironmentCheck {
+=======
+### IEnvironmentCheck
+```typescript
+interface IEnvironmentCheck {
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
     check(): Promise<boolean>;
     getErrors(): string[];
 }
 ```
 
+<<<<<<< HEAD
 ### IDependencyCheck
 ```typescript
 interface IDependencyCheck {
+=======
+<<<<<<< HEAD
+### DependencyCheck
+```typescript
+interface DependencyCheck {
+=======
+### IDependencyCheck
+```typescript
+interface IDependencyCheck {
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
     check(): Promise<boolean>;
     getErrors(): string[];
 }
 ```
 
+<<<<<<< HEAD
 ### IDocumentationGenerator
 ```typescript
 interface IDocumentationGenerator {
+=======
+<<<<<<< HEAD
+### DocumentationGenerator
+```typescript
+interface DocumentationGenerator {
+=======
+### IDocumentationGenerator
+```typescript
+interface IDocumentationGenerator {
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
     generate(): Promise<void>;
     getGeneratedFiles(): string[];
 }
@@ -40,7 +88,15 @@ interface IDocumentationGenerator {
 ## Classes
 
 ### DefaultUser
+<<<<<<< HEAD
 Implements the IUser interface with deterministic UUID generation.
+=======
+<<<<<<< HEAD
+Implements the User interface with deterministic UUID generation.
+=======
+Implements the IUser interface with deterministic UUID generation.
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
 
 #### Methods
 - `constructor()`: Creates empty user instance

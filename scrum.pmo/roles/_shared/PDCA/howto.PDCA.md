@@ -1,10 +1,18 @@
 [Back to PDCA Process Improvements](./pdca.process.improvements/) | [CMMI Understanding](./PDCA.understanding.CMMI.md) | [How to Decide](./PDCA.howto.decide.md) | [Template](./template.md)
 
+<<<<<<< HEAD
 # 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.5**
 
 **🗓️ Date:** 2025-08-22-UTC-1330  
 **🎯 Objective:** Consolidated PDCA writing guidelines based on latest process improvements  
 **🎯 Template Version:** 3.1  
+=======
+# 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.6 (Template v3.1.4.2)**
+
+**🗓️ Date:** 2025-08-22-UTC-1330  
+**🎯 Objective:** Consolidated PDCA writing guidelines based on latest process improvements  
+**🎯 Template Version:** 3.1.4.2  
+>>>>>>> origin/start/save.v5
 
 **👤 Agent Role:** Process Documentation → Knowledge Management Enhancement  
 **👤 Branch:** save/start.v1 → Template Evolution  
@@ -24,7 +32,11 @@
 
 **🗓️ Date:** YYYY-MM-DD-UTC-HHMM  
 **🎯 Objective:** [CLEAR, SPECIFIC OBJECTIVE STATEMENT]  
+<<<<<<< HEAD
 **🎯 Template Version:** 3.1  
+=======
+**🎯 Template Version:** 3.1.4.2  
+>>>>>>> origin/start/save.v5
 
 **👤 Agent Name:** [AGENT NAME] → [AGENT DESCRIPTION]  
 **👤 Agent Role:** [ROLE NAME] → [CONTEXT/SPECIALIZATION]  
@@ -404,6 +416,46 @@ After completing the compliance review, the agent MUST:
 
 ---
 
+<<<<<<< HEAD
+=======
+## **🛑 RESPONDING TO 'STOP' PROMPT - EMERGENCY HALT PROTOCOL**
+
+When a user types just `stop` as a prompt, this is an **emergency halt request** for immediate damage prevention. The agent MUST:
+
+### **IMMEDIATE HALT REQUIREMENTS (NON-NEGOTIABLE)**
+1. **STOP ALL OPERATIONS INSTANTLY** - No git actions, no PDCA completion, no further processing
+2. **PREVENT DESTRUCTIVE ACTIONS** - Stop immediately to prevent dangerous or destructive operations
+3. **EMERGENCY RESPONSE** - Ask user "What's up?" in chat for immediate guidance
+
+### **Response Pattern**
+```
+🛑 STOP TRIGGER RECOGNIZED - IMMEDIATE HALT
+
+STOPPING ALL OPERATIONS IMMEDIATELY
+
+❌ No git actions  
+❌ No PDCA completion  
+❌ No further processing  
+
+What's up?
+
+Ready for your guidance on:
+- What needs immediate attention?
+- What damage prevention is required?
+- How should I proceed?
+```
+
+### **Purpose of 'stop' Prompt**
+- **Emergency damage prevention** for dangerous operations
+- **Immediate halt mechanism** when destructive actions detected  
+- **Safety protocol** to prevent system or process damage
+- **User override** for critical intervention scenarios
+
+**CRITICAL:** The 'stop' trigger is an emergency safety mechanism - NEVER continue operations after receiving this command!
+
+---
+
+>>>>>>> origin/start/save.v5
 ## **📚 ADVANCED LEARNING RESOURCES**
 
 ### **Save/Restart Agent's Detailed PDCAs**

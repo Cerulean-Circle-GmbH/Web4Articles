@@ -8,12 +8,28 @@ import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
 
+<<<<<<< HEAD
 export interface IDependencyCheck {
+=======
+<<<<<<< HEAD
+export interface DependencyCheck {
+=======
+export interface IDependencyCheck {
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
     check(): Promise<boolean>;
     getErrors(): string[];
 }
 
+<<<<<<< HEAD
 export class DependencyChecker implements IDependencyCheck {
+=======
+<<<<<<< HEAD
+export class DependencyChecker implements DependencyCheck {
+=======
+export class DependencyChecker implements IDependencyCheck {
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
     private errors: string[] = [];
     private componentRoot: string;
     private requiredDevDeps: string[] = [

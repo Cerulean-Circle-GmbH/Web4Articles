@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "5b2ccb2c-8069-4cb0-bcb1-20950d59114f",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"5b2ccb2c-8069-4cb0-bcb1-20950d59114f\",\"timestamp\":\"2025-09-12T15:07:11.190Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "5b2ccb2c-8069-4cb0-bcb1-20950d59114f",
+    "createdAt": "2025-09-12T15:07:11.190Z",
+    "updatedAt": "2025-09-12T15:07:11.191Z",
+    "name": "MOF",
+    "definition": "Meta-Object Facility - OMG standard providing meta-meta-model at top of meta-model hierarchy",
+    "indexPath": "/workspace/scenarios/index/5/b/2/c/c/5b2ccb2c-8069-4cb0-bcb1-20950d59114f.scenario.json",
+    "symlinkPaths": [
+      "/workspace/unit-5b2ccb2c"
+    ]
+  }
+}

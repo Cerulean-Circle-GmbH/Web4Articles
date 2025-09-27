@@ -1,4 +1,53 @@
 {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+  "name": "@web4x/web4test",
+  "version": "0.1.0.0",
+  "description": "Tootsie - Total Object-Oriented Testing Suite for Web4 ecosystem",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "web4test": "dist/ts/layer5/Web4TestCLI.js"
+  },
+  "scripts": {
+    "build": "npm run clean-dist && tsc",
+    "prebuild": "npm run clean-dist",
+    "clean-dist": "rm -rf dist",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "test:real": "vitest run --config vitest.real.config.ts",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "web4",
+    "tootsie",
+    "testing",
+    "object-oriented",
+    "vitest",
+    "typescript",
+    "scenario",
+    "hibernation",
+    "traceability"
+  ],
+  "author": "Web4Articles Project",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vitest/ui": "^1.0.0",
+    "c8": "^8.0.0",
+    "jsdom": "^22.1.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cerulean-Circle-GmbH/Web4Articles.git",
+    "directory": "components/Web4Test/0.1.0.0"
+=======
+>>>>>>> origin/start/save.v5
   "name": "@web4x/web4-test",
   "version": "1.0.0",
   "description": "Web4-native test orchestration and object-oriented testing component",
@@ -27,5 +76,9 @@
     "@types/node": "^20.0.0",
     "ts-node": "^10.9.0",
     "typescript": "^5.0.0"
+<<<<<<< HEAD
+=======
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
   }
 }

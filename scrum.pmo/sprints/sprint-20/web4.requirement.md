@@ -9,13 +9,29 @@ Document the revolutionary Web4 methodology principles that fundamentally differ
 ## Core Paradigm Shifts
 
 ### 1. Empty Constructor Principle
+<<<<<<< HEAD
 - [ ] **[[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/44da2f0a-885f-4547-ae1b-1619a0010069.requirement.md) | [§/spec/requirements.md/44da2f0a-885f-4547-ae1b-1619a0010069.requirement.md](../../../spec/requirements.md/44da2f0a-885f-4547-ae1b-1619a0010069.requirement.md)]** All objects MUST have empty constructors - NO initialization parameters
+=======
+<<<<<<< HEAD
+- [ ] **[[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/44da2f0a-885f-4547-ae1b-1619a0010069.requirement.md) | [§/spec/requirements.md/44da2f0a-885f-4547-ae1b-1619a0010069.requirement.md](../../../spec/requirements.md/44da2f0a-885f-4547-ae1b-1619a0010069.requirement.md)]** All objects MUST have empty constructors - NO initialization parameters
+=======
+- [x] **[[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/44da2f0a-885f-4547-ae1b-1619a0010069.requirement.md) | [§/spec/requirements.md/44da2f0a-885f-4547-ae1b-1619a0010069.requirement.md](../../../spec/requirements.md/44da2f0a-885f-4547-ae1b-1619a0010069.requirement.md)]** All objects MUST have empty constructors - NO initialization parameters
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
   - **Mainstream:** Objects initialized with constructor parameters
   - **Web4:** Objects created empty, then configured via setters
   - **Why:** Enables universal serialization, scenario-based testing, and object hibernation
 
 ### 2. Scenario-First Development
+<<<<<<< HEAD
 - [ ] **[[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/11466c7b-93e3-4912-b962-3f259b787480.requirement.md) | [§/spec/requirements.md/11466c7b-93e3-4912-b962-3f259b787480.requirement.md](../../../spec/requirements.md/11466c7b-93e3-4912-b962-3f259b787480.requirement.md)]** Every object instance is a scenario that can be hibernated/resurrected
+=======
+<<<<<<< HEAD
+- [ ] **[[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/11466c7b-93e3-4912-b962-3f259b787480.requirement.md) | [§/spec/requirements.md/11466c7b-93e3-4912-b962-3f259b787480.requirement.md](../../../spec/requirements.md/11466c7b-93e3-4912-b962-3f259b787480.requirement.md)]** Every object instance is a scenario that can be hibernated/resurrected
+=======
+- [~] **[[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/spec/requirements.md/11466c7b-93e3-4912-b962-3f259b787480.requirement.md) | [§/spec/requirements.md/11466c7b-93e3-4912-b962-3f259b787480.requirement.md](../../../spec/requirements.md/11466c7b-93e3-4912-b962-3f259b787480.requirement.md)]** Every object instance is a scenario that can be hibernated/resurrected
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
   - **Mainstream:** Objects as runtime entities with transient state
   - **Web4:** Objects as persistent scenarios with complete state preservation
   - **Why:** All formats (CSV/JSON/XML/Database) become semantically identical hibernation mechanisms

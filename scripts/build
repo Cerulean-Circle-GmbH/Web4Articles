@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Web4 Build Component Wrapper - v0.3.0.0
+# Location-resilient command wrapper following requirement pattern
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+if [ -z "$PROJECT_ROOT" ]; then
+  PROJECT_ROOT="$SCRIPT_DIR"
+  
+  while [ "$PROJECT_ROOT" != "/" ]; do
+    if [ -f "$PROJECT_ROOT/package.json" ] || [ -d "$PROJECT_ROOT/.git" ]; then
+      break
+    fi
+    PROJECT_ROOT="$(dirname "$PROJECT_ROOT")"
+  done
+  
+  export PROJECT_ROOT
+fi
+
+CURRENT_DIR="$(pwd)"
+COMPONENT_VERSION="0.3.0.0"
+COMPONENT_DIR="$PROJECT_ROOT/components/Build/$COMPONENT_VERSION"
+SHELL_STARTER="$COMPONENT_DIR/build"
+
+if [ ! -x "$SHELL_STARTER" ]; then
+    echo "❌ Build shell starter not found at: $SHELL_STARTER"
+    exit 1
+fi
+
+cd "$CURRENT_DIR"
+"$SHELL_STARTER" "$@"

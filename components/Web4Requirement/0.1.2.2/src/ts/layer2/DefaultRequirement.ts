@@ -2,8 +2,18 @@ import { Requirement, RequirementScenario, RequirementResult, RequirementStatus,
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
+<<<<<<< HEAD
 import { UnitIndexStorage } from '../../../../../Unit/latest/dist/ts/layer2/UnitIndexStorage.js';
 import { DefaultUser } from '../../../../../User/0.1.0.0/dist/ts/layer2/DefaultUser.js';
+=======
+<<<<<<< HEAD
+import { UnitIndexStorage } from '../../../../../Unit/latest/dist/ts/layer2/UnitIndexStorage.js';
+import { DefaultUser } from '../../../../../User/0.1.3.0/dist/ts/layer2/DefaultUser.js';
+=======
+import { UnitIndexStorage } from '../../../../../Unit/0.1.0.0/dist/ts/layer2/UnitIndexStorage.js';
+import { DefaultUser } from '../../../../../User/0.1.0.0/dist/ts/layer2/DefaultUser.js';
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -1152,16 +1162,44 @@ export class DefaultRequirement implements Requirement {
           title,
           name: title,
           filename,
+<<<<<<< HEAD
           createdAt: new Date().toISOString(), // Fallback timestamp
+=======
+<<<<<<< HEAD
+=======
+          createdAt: new Date().toISOString(), // Fallback timestamp
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
           implemented,
           implementationStatus
         };
         
+<<<<<<< HEAD
         // Include full scenario data (including owner) for DRY template processing
+=======
+<<<<<<< HEAD
+        // Include full scenario data (including owner and unitIndex) for DRY template processing
+=======
+        // Include full scenario data (including owner) for DRY template processing
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
         if (fullScenarioData) {
           requirementObj.owner = fullScenarioData.owner;
           requirementObj.IOR = fullScenarioData.IOR;
           requirementObj.model = fullScenarioData.model;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+          requirementObj.unitIndex = fullScenarioData.unitIndex; // Include unitIndex for date sorting
+        }
+        
+        // Only add fallback createdAt if no date information is available
+        if (!requirementObj.unitIndex?.createdAt && !requirementObj.unitIndex?.updatedAt && 
+            !requirementObj.model?.createdAt && !requirementObj.model?.updatedAt) {
+          requirementObj.createdAt = new Date().toISOString(); // Last resort fallback
+=======
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
         }
         
         requirements.push(requirementObj);

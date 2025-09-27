@@ -7,12 +7,28 @@ import { existsSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
+<<<<<<< HEAD
 export interface IEnvironmentCheck {
+=======
+<<<<<<< HEAD
+export interface EnvironmentCheck {
+=======
+export interface IEnvironmentCheck {
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
     check(): Promise<boolean>;
     getErrors(): string[];
 }
 
+<<<<<<< HEAD
 export class EnvironmentChecker implements IEnvironmentCheck {
+=======
+<<<<<<< HEAD
+export class EnvironmentChecker implements EnvironmentCheck {
+=======
+export class EnvironmentChecker implements IEnvironmentCheck {
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
     private errors: string[] = [];
     private projectRoot: string;
     private componentRoot: string;
@@ -79,7 +95,15 @@ export class EnvironmentChecker implements IEnvironmentCheck {
     private async checkProjectStructure(): Promise<void> {
         const requiredPaths = [
             'src/ts/layer2/DefaultUser.ts',
+<<<<<<< HEAD
             'src/ts/layer3/IUser.ts',
+=======
+<<<<<<< HEAD
+            'src/ts/layer3/User.ts',
+=======
+            'src/ts/layer3/IUser.ts',
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
             'tsconfig.json'
         ];
 

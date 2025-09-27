@@ -12,8 +12,13 @@
 
 | Agent Branch | Name | RequestID | Role | Template | Session | Status Merge | Sync | Lifecycle |
 |--------------|------|-----------|------|----------|---------|--------------|------|-----------|
+<<<<<<< HEAD
 | [save/start](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start) | SaveRestartAgent | [bc-1f94f7d5-57c5-4586-9cb8-096b2916052f](/scrum.pmo/agents/registry/bc-1f94f7d5-57c5-4586-9cb8-096b2916052f.md) | Save/Restart Agent | v3.1.4.2 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/session-start.md) \| [§/session-start.md](session-start.md) | ✅ Active<br>⚠️ Unmerged: 50+ PDCAs<br>📝 Modified: templates v3.1.4.2<br>🔧 42 revelation documented<br>🔄 Replaced bc-4c4928dd | release/dev (wild west)<br>save/start (source of truth)<br>save/start.v2 (for others)<br>main (agent startup) | 🟢 Healthy<br>⏱️ Runtime: Continuing<br>💾 Memory: Normal |
 | [dev/2025-08-28-UTC-2140](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-2140) | BackgroundAgent | - | Background Agent | v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-session-start.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-session-start.md](../../2025-08-28-UTC-2140-session/PDCA-session-start.md) | ✅ Active<br>✅ Merged: Initial PDCA<br>🆕 Fresh session<br>✅ Identity-first added | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 10min<br>💾 Memory: Normal<br>📋 Process: Updated |
+=======
+| [save/start.v1](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1) | SaveRestartAgent | [bc-4c4928dd-cf76-4a10-bb4c-bb80a98ecd5a](/scrum.pmo/agents/registry/bc-4c4928dd-cf76-4a10-bb4c-bb80a98ecd5a.md) | Save/Restart Agent | v3.1 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/session-start.md) \| [§/session-start.md](session-start.md) | ✅ Active<br>⚠️ Unmerged: 47 PDCAs<br>📝 Modified: howto.PDCA.md, template.md<br>🔧 New: registry system | release/dev (wild west)<br>save/start.v1 (clean home)<br>save/start.v2 (for others)<br>main (agent startup) | 🟢 Healthy<br>⏱️ Runtime: 2+ hours<br>💾 Memory: Normal |
+| [dev/2025-08-28-UTC-2140](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-2140) | BackgroundAgent | - | Background Agent | v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-session-start.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-session-start.md](../../2025-08-28-UTC-2140-session/PDCA-session-start.md) | ✅ Active<br>✅ Merged: Initial PDCA<br>🆕 Fresh session | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 10min<br>💾 Memory: Normal |
+>>>>>>> origin/start/save.v5
 | [dev/2025-08-28-UTC-1125](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-1125) | test2 main | [bc-e03cd16b-c3cf-424a-bd71-c57053a64d7e](/scrum.pmo/agents/registry/bc-e03cd16b-c3cf-424a-bd71-c57053a64d7e.md) | Background Agent | <v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-1125/scrum.pmo/project.journal/2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1140-fix-dual-links.md) \| [§/../../2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1140-fix-dual-links.md](../../2025-08-28-UTC-1125-session/pdca/2025-08-28-UTC-1140-fix-dual-links.md) | ✅ Active<br>📝 Fix dual links<br>🔢 Second main test | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 30min<br>💾 Memory: Normal |
 | [dev/2025-08-28-UTC-0850](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-0850) | test3 startet | [bc-b52ccb18-e854-4375-aa13-78a17887b9e0](/scrum.pmo/agents/registry/bc-b52ccb18-e854-4375-aa13-78a17887b9e0.md) | Background Agent | <v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-0850/scrum.pmo/project.journal/2025-08-28-UTC-0850-recovery/2025-08-28-UTC-0852-pdca-documentation-update.pdca.md) \| [§/../../2025-08-28-UTC-0850-recovery/2025-08-28-UTC-0852-pdca-documentation-update.pdca.md](../../2025-08-28-UTC-0850-recovery/2025-08-28-UTC-0852-pdca-documentation-update.pdca.md) | ✅ Active<br>📝 PDCA doc update<br>🔢 Third test (startet) | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 25min<br>💾 Memory: Normal |
 | [dev/2025-08-28-UTC-2140](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-28-UTC-2140) | test 3 main | - | Background Agent | v3.0 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-08-28-UTC-2140/scrum.pmo/project.journal/2025-08-28-UTC-2140-session/PDCA-requirements-management.md) \| [§/../../2025-08-28-UTC-2140-session/PDCA-requirements-management.md](../../2025-08-28-UTC-2140-session/PDCA-requirements-management.md) | ✅ Active<br>📝 Requirements work<br>✅ Using latest template | release/dev<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 20min<br>💾 Memory: Normal |
@@ -22,7 +27,11 @@
 | [testing-analysis-clean](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/testing-analysis-clean) | test8 save/start.v2 | [bc-2b501d80-caec-41b7-a0a1-d28972f5b538](/scrum.pmo/agents/registry/bc-2b501d80-caec-41b7-a0a1-d28972f5b538.md) | Background Agent | v3.1 | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/testing-analysis-clean/scrum.pmo/project.journal/2025-08-28-UTC-1113-background-start/pdca) \| [§/../../2025-08-28-UTC-1113-background-start/pdca](../../2025-08-28-UTC-1113-background-start/pdca) | ✅ Active<br>🔢 8th test agent<br>🎯 Testing v2 startup | save/start.v2<br>main (updates) | 🟢 Healthy<br>⏱️ Runtime: 15min<br>💾 Memory: Normal |
 | [dev/2025-08-25-UTC-1308](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-08-25-UTC-1308) | ocams razor | [bc-be844138-b4f9-4b47-9b36-ff8ce51a79a1](/scrum.pmo/agents/registry/bc-be844138-b4f9-4b47-9b36-ff8ce51a79a1.md) | Tool Builder | None | No PDCA found | ⚠️ Historical<br>🛠️ Built all tools<br>🏛️ Foundation agent<br>❌ No PDCA (pre-standard) | release/dev<br>main (legacy) | 🟡 Legacy<br>⏱️ Runtime: Historical<br>💾 Memory: N/A |
 | [cursor/start-background-process-3884](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-3884) | test1 save start success | [bc-4a53801e-0df5-46c2-b670-d21fa5d8597c](/scrum.pmo/agents/registry/bc-4a53801e-0df5-46c2-b670-d21fa5d8597c.md) | Background Agent | Unknown | No artifacts | 💀 Dead<br>🔢 First test attempt<br>❌ No PDCA/chat found<br>📚 Learning: Failed tests inform | N/A | 🔴 Dead<br>⏱️ Runtime: Unknown<br>💾 Memory: N/A |
+<<<<<<< HEAD
 
+=======
+| [cursor/start-minimalist-process-5289](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-minimalist-process-5289) | save/start Agent | [bc-73b88848-46e8-4ec4-9f13-17b3fd31d4b2](/scrum.pmo/agents/registry/bc-73b88848-46e8-4ec4-9f13-17b3fd31d4b2.md) | Save/Restart Agent | Unknown | Unknown | ⚠️ Near Expiry<br>👴 My predecessor<br>📅 5 days old<br>🚨 Branch startup issues | save/start branches | 🟡 Expiring<br>⏱️ Runtime: 5 days<br>💾 Memory: Unknown |
+>>>>>>> origin/start/save.v5
 | [cursor/start-background-process-dcf6](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-dcf6) | agent renaming → Agent Manager | [bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89](/scrum.pmo/agents/registry/bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89.md) | Agent Manager | Unknown | [Previous work](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-dcf6/scrum.pmo/project.journal/2025-08-23-1730-agent-management) | 💀 Expired<br>🔄 Ready for recovery<br>📊 Will manage agents<br>✅ Branch prepared | release/dev<br>agent tracking | 🔴 Expired<br>⏱️ Runtime: Expired<br>💾 Memory: N/A |
 | [cursor/recover-from-readme-file-76e5](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recover-from-readme-file-76e5) | dev/sprint5 1st pdca → TSRanger Developer | [bc-85a7dcaf-502f-494a-98d5-4ab612cecc39](/scrum.pmo/agents/registry/bc-85a7dcaf-502f-494a-98d5-4ab612cecc39.md) | TSRanger Developer | v2.2 | [TSRanger work](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recover-from-readme-file-76e5/src/ts/layer4) | 💀 Expired<br>🔄 Ready for recovery<br>🛠️ Created TSRanger v2.2<br>✅ Branch prepared | release/dev<br>tool development | 🔴 Expired<br>⏱️ Runtime: Expired<br>💾 Memory: N/A |
 
@@ -95,7 +104,11 @@ This allows agents to:
 
 ### **SaveRestartAgent**
 - `release/dev`: Receives all process improvements (wild west)
+<<<<<<< HEAD
 - `save/start`: Source of truth - unified with v1
+=======
+- `save/start.v1`: Home branch - NEVER leave
+>>>>>>> origin/start/save.v5
 - `save/start.v2`: Maintain for other agents
 - `main`: Keep updated for agent startups
 
@@ -194,7 +207,11 @@ This allows agents to:
 | Agent Branch | Name | RequestID | Last PDCA/Work | Recovery Status | Identity Record |
 |--------------|------|-----------|----------------|-----------------|-----------------|
 | [cursor/start-background-process-3884](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-3884) | test1 save start success | [bc-4a53801e-0df5-46c2-b670-d21fa5d8597c](bc-4a53801e-0df5-46c2-b670-d21fa5d8597c.md) | No PDCA found | 💀 Dead (no artifacts) | Pending |
+<<<<<<< HEAD
 
+=======
+| [cursor/start-minimalist-process-5289](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-minimalist-process-5289) | save/start Agent | [bc-73b88848-46e8-4ec4-9f13-17b3fd31d4b2](bc-73b88848-46e8-4ec4-9f13-17b3fd31d4b2.md) | Unknown | ⚠️ Near Expiry | Pending |
+>>>>>>> origin/start/save.v5
 | [cursor/start-background-process-dcf6](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-dcf6) | Agent Manager | [bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89](/scrum.pmo/agents/registry/bc-b1b62bba-9e33-46a3-a64d-8eb0162b8a89.md) | [Agent investigation](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-dcf6/scrum.pmo/project.journal/2025-08-23-1730-agent-management) | ✅ Ready for recovery | ✅ Complete |
 | [cursor/recover-from-readme-file-76e5](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/recover-from-readme-file-76e5) | TSRanger Developer | [bc-85a7dcaf-502f-494a-98d5-4ab612cecc39](/scrum.pmo/agents/registry/bc-85a7dcaf-502f-494a-98d5-4ab612cecc39.md) | TSRanger v2.2 work | ✅ Ready for recovery | ✅ Complete |
 | [cursor/start-background-process-78bf](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/cursor/start-background-process-78bf) | crayz start | Pending | [Crazy bash PDCA](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/start-background-process-78bf/scrum.pmo/project.journal/2025-08-28-UTC-1846-session/pdca/2025-08-28-UTC-1846-session-start.md) | ⚠️ Needs RequestID | Pending |
@@ -209,6 +226,7 @@ This allows agents to:
 
 ---
 
+<<<<<<< HEAD
 ## **🔴 Retired Agents**
 
 | Agent Branch | Name | RequestID | Role | Retirement Date | Reason | Replaced By |
@@ -269,4 +287,6 @@ This allows agents to:
 
 ---
 
+=======
+>>>>>>> origin/start/save.v5
 **Note:** This report demonstrates agent tracking capabilities. Actual lifecycle metrics would require system integration.

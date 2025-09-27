@@ -21,7 +21,15 @@
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1219-session-reflection.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-28-UTC-1219-session-reflection.md](2025-08-28-UTC-1219-session-reflection.md)
+<<<<<<< HEAD
 [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/](..)
+=======
+<<<<<<< HEAD
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/](..)
+=======
+- **Session Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/](..)
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
 
 ### **QA Decisions**
 - [ ] **Quality Assessment:** How does this session compare to the previous one?
@@ -198,3 +206,10 @@ Not because of perfection, but because of:
 
 **🎯 High-quality recovery session - from compliance failures to mastery through patient iteration! 📋🔄**
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+**"Quality is not perfection but the commitment to continuous improvement"** 🔧📊
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5

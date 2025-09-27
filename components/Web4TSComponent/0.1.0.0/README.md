@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 # Web4TSComponent - TypeScript Component Standards Enforcement
+=======
+<<<<<<< HEAD
+# Web4TSComponent v0.1.0.0 - TypeScript Component Standards Enforcement
+=======
+# Web4TSComponent - TypeScript Component Standards Enforcement
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
 
 ## Overview
 

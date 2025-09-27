@@ -130,28 +130,69 @@ export class RangerModel {
     const tokens = this.promptBuffer.split(/\s+/);
     const classToken = tokens[0] ?? '';
     const methodToken = tokens[1] ?? '';
+<<<<<<< HEAD
     this.filters[0] = classToken;
     // Prefer exact match class selection if present
     this.selectedIndexPerColumn[0] = 0;
     // Update methods based on class filter impact
     this.classes = TSCompletion.getClasses();
     const filteredClasses = this.filteredClasses();
+=======
+    
+    // CRITICAL FIX: Only set class filter if there's actual text input
+    // Navigation operations (up/down) should NOT set filters
+    if (classToken.trim().length > 0) {
+      this.filters[0] = classToken;
+    } else {
+      // Clear class filter for navigation operations
+      this.filters[0] = '';
+    }
+    
+    // Prefer exact match class selection if present
+    this.selectedIndexPerColumn[0] = 0;
+    
+    // Update methods based on class filter impact
+    this.classes = TSCompletion.getClasses();
+    const filteredClasses = this.filteredClasses();
+    
+>>>>>>> origin/start/save.v5
     // Snap selection to exact class match if unique
     const exactClassIdx = filteredClasses.findIndex(c => c === classToken);
     if (exactClassIdx >= 0) {
       this.selectedIndexPerColumn[0] = exactClassIdx;
     }
+<<<<<<< HEAD
     this.updateMethods();
     // Apply method filter only when not suppressed
     this.filters[1] = this.suppressMethodFilter ? '' : methodToken;
     // If a method token exists and corresponds to an available method, snap selection to it
     const methodsNow = this.filteredMethods();
     if (!this.suppressMethodFilter && methodToken) {
+=======
+    
+    this.updateMethods();
+    
+    // Apply method filter only when not suppressed and there's actual text
+    if (!this.suppressMethodFilter && methodToken.trim().length > 0) {
+      this.filters[1] = methodToken;
+    } else {
+      // Clear method filter for navigation operations
+      this.filters[1] = '';
+    }
+    
+    // If a method token exists and corresponds to an available method, snap selection to it
+    const methodsNow = this.filteredMethods();
+    if (!this.suppressMethodFilter && methodToken.trim().length > 0) {
+>>>>>>> origin/start/save.v5
       const exactMethodIdx = methodsNow.findIndex(m => m === methodToken);
       this.selectedIndexPerColumn[1] = exactMethodIdx >= 0 ? exactMethodIdx : 0;
     } else {
       this.selectedIndexPerColumn[1] = 0;
     }
+<<<<<<< HEAD
+=======
+    
+>>>>>>> origin/start/save.v5
     this.updateParams();
   }
 

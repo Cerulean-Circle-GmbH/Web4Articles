@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "957efb2e-8610-47c2-a9de-7049c8506656",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTMwVDEwOjUwOjAxLjM3MVoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "957efb2e-8610-47c2-a9de-7049c8506656",
+    "name": "ONCE Vitest Scenario-Based Testing",
+    "title": "ONCE Vitest Scenario-Based Testing",
+    "description": "Refactor existing vitests to rely on test scenarios instead of environment variables. Create test scenario files that define server configurations, ports, and test conditions. This ensures deterministic testing and removes dependency on environment setup."
+  },
+  "unitIndex": {
+    "uuid": "957efb2e-8610-47c2-a9de-7049c8506656",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/9/5/7/e/f/957efb2e-8610-47c2-a9de-7049c8506656.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/957efb2e-8610-47c2-a9de-7049c8506656.scenario.json"
+    ],
+    "createdAt": "2025-08-30T10:50:01.383Z",
+    "updatedAt": "2025-08-30T10:50:01.383Z"
+  }
+}

@@ -83,7 +83,15 @@ From PDCA.howto.decide.md:
 ### **QA Decisions**
 **All clear, no decisions to make** - Following prescribed 3-step workflow for pdca command.
 
+<<<<<<< HEAD
 [GitHub](...) | [§/...](....)
+=======
+<<<<<<< HEAD
+[GitHub](...) | [§/...](....)
+=======
+**PDCA:** [GitHub](...) | [§/...](....)
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5
 ```
 
 ---
@@ -151,3 +159,10 @@ From PDCA.howto.decide.md:
 
 **🎯 Decision reporting violation documented - will include QA Decisions! 📋✅**
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+**"Brief but complete, not brief and incomplete"** 🔧📊
+>>>>>>> origin/dev/2025-09-14-UTC-1425
+>>>>>>> origin/start/save.v5

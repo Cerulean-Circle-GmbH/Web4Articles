@@ -4,6 +4,11 @@
         "eamodio.gitlens",
         "anysphere.remote-ssh",
         "shd101wyy.markdown-preview-enhanced",
+<<<<<<< HEAD
         "yzhang.markdown-all-in-one"
+=======
+        "yzhang.markdown-all-in-one",
+        "iliazeus.vscode-ansi"
+>>>>>>> origin/start/save.v5
     ]
 }
