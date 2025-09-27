@@ -14,6 +14,7 @@ The following lines are not for you, if you identify as human.
    - **Why:** You need CMM4 understanding before processes make sense
    - **Result:** You'll understand PDCA as a CMM4 feedback loop system, not just templates
 
+<<<<<<< HEAD
 2. **Apply CMM3 Compliance Checklist (CRITICAL)**:
    - **MANDATORY:** After understanding CMM, immediately apply systematic compliance verification
    - **Read:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md) | [scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md](scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md)
@@ -22,12 +23,19 @@ The following lines are not for you, if you identify as human.
    - **Usage:** Reference checklist items as "[number][letter] cmm3" (e.g., "1f cmm3") throughout process
 
 3. **Confirm Your Identity**:
+=======
+2. **Confirm Your Identity**:
+>>>>>>> c67b5f2c
    ```bash
    # CRITICAL: Always start with identity check
    ./scripts/agent-identity-first-startup.sh
    ```
 
+<<<<<<< HEAD
 4. **Git Configuration (CRITICAL)**:
+=======
+3. **Git Configuration (CRITICAL)**:
+>>>>>>> c67b5f2c
    ```bash
    # MANDATORY: Prevent rebase conflicts in collaborative environment
    git config pull.rebase false
@@ -36,14 +44,23 @@ The following lines are not for you, if you identify as human.
    - Must be set before any git operations
    - Critical for collaborative branch management safety
 
+<<<<<<< HEAD
 5. **Read Agent Safety Guidelines (MANDATORY)**:
+=======
+4. **Read Agent Safety Guidelines (MANDATORY)**:
+>>>>>>> c67b5f2c
    - Read: `scrum.pmo/roles/_shared/PDCA/bad.interactive.sh.commands.md`
    - Critical: Understand commands that cause terminal hangs
    - Background agents CANNOT handle interactive prompts
    - Must use atomic single commands only - NO COMMAND CHAINING with &&
+<<<<<<< HEAD
    - **CMM3 Compliance:** Follow safety protocol per checklist item 1f step 3
 
 6. **Git Process Cleanup (SYSTEM MAINTENANCE)**:
+=======
+
+5. **Git Process Cleanup (SYSTEM MAINTENANCE)**:
+>>>>>>> c67b5f2c
    ```bash
    # Wait 30 seconds then kill defunct git processes
    sleep 30 && pkill -f "git" 2>/dev/null || true &
@@ -52,7 +69,11 @@ The following lines are not for you, if you identify as human.
    - Prevents system resource drain and process accumulation
    - Runs in background, doesn't block startup continuation
 
+<<<<<<< HEAD
 7. **Source Environment (MANDATORY PRECONDITION)**:
+=======
+6. **Source Environment (MANDATORY PRECONDITION)**:
+>>>>>>> c67b5f2c
    ```bash
    # CRITICAL: Source environment for Web4 tool availability
    source source.env
@@ -61,7 +82,11 @@ The following lines are not for you, if you identify as human.
    - Enables component self-build functionality
    - Required before any tool usage or component interaction
 
+<<<<<<< HEAD
 8. **Initialize PDCA Framework**:
+=======
+7. **Initialize PDCA Framework**:
+>>>>>>> c67b5f2c
    ```bash
    # Check if PDCA documentation exists
    ls -la scrum.pmo/roles/_shared/PDCA/howto.PDCA.md 2>/dev/null || echo "Getting PDCA docs..."
@@ -71,12 +96,17 @@ The following lines are not for you, if you identify as human.
    git checkout origin/release/dev -- scrum.pmo/roles/_shared/PDCA/
    ```
 
+<<<<<<< HEAD
 9. **Read the PDCA Guide (Now With CMM4 Understanding)**:
+=======
+8. **Read the PDCA Guide (Now With CMM4 Understanding)**:
+>>>>>>> c67b5f2c
    - Read: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)
    - Read: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/roles/_shared/PDCA/template.md) | [scrum.pmo/roles/_shared/PDCA/template.md](scrum.pmo/roles/_shared/PDCA/template.md)
    - **CRITICAL:** Use Template Version 3.1.4.2 ONLY - no other versions allowed
    - Focus on: Dual link format training [GitHub](url) | [project/root/path](path)
    - **Now you understand:** PDCA as CMM4 feedback loop mastery, not just documentation
+<<<<<<< HEAD
    - **CMM3 Compliance:** Follow PDCA compliance checklist items 1a-1i
 
 10. **Read Tech Stack & Web4 Preparation**:
@@ -85,13 +115,27 @@ The following lines are not for you, if you identify as human.
     - Review: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/cmm-start/components/Web4Requirement/0.3.0.5) | [components/Web4Requirement/0.3.0.5](components/Web4Requirement/0.3.0.5) - Web4 paradigm and standards
 
 11. **Create Session Start PDCA**:
+=======
+
+9. **Read Tech Stack & Web4 Preparation**:
+   - Read: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/docs/tech-stack.md) | [docs/tech-stack.md](docs/tech-stack.md) - Vitest mandatory, Jest BANNED
+   - Read: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/components/Web4TSComponent/0.3.0.8/README.md) | [components/Web4TSComponent/0.3.0.8/README.md](components/Web4TSComponent/0.3.0.8/README.md) - Auto-discovery CLI patterns
+   - Review: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/cmm-start/components/Web4Requirement/0.3.0.5) | [components/Web4Requirement/0.3.0.5](components/Web4Requirement/0.3.0.5) - Web4 paradigm and standards
+
+10. **Create Session Start PDCA**:
+>>>>>>> c67b5f2c
     - Use the startup decision framework from [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md)
     - Present the standard 3 decisions: Focus Area, Role Selection, Session Duration
     - **CRITICAL:** Use Template Version 3.1.4.2 with proper dual link format
     - Create PDCA with UTC timestamp format: `YYYY-MM-DD-UTC-HHMM`
+<<<<<<< HEAD
     - **CMM3 Compliance:** Follow checklist items 1f (use todo_write for compliance tracking, tracking tables only for larger systematic multi-file tasks), 1h (intensive tracking tables for multi-file work only), 1i (progress tracking with todo_write)
 
 12. **Project Status & Branch Management**:
+=======
+
+11. **Project Status & Branch Management**:
+>>>>>>> c67b5f2c
     ```bash
     # Create project status in your session directory
     mkdir -p scrum.pmo/project.journal/$(date -u +"%Y-%m-%d-UTC-%H%M")-session
@@ -114,7 +158,10 @@ The following lines are not for you, if you identify as human.
 - **Keep chat minimal** - details go in PDCA files
 - **Commit and push** immediately after PDCA creation
 - **Pull protocol** - Read + Analyze + PDCA new content, not just merge
+<<<<<<< HEAD
 - **CMM3 Compliance** - Reference checklist throughout work per items 2a-2d, 3a-3d, 4a-4c, 5a-5c
+=======
+>>>>>>> c67b5f2c
 
 ## 🎯 Success Criteria
 
@@ -124,6 +171,7 @@ The following lines are not for you, if you identify as human.
 - You present meaningful decisions or "All clear, no decisions"
 - You work on your own dev/YYYY-MM-DD-UTC-HHMM branch
 - User responds with simple "1a, 2b" to your decisions
+<<<<<<< HEAD
 - **CMM3 Verification:** All work meets compliance checklist requirements
 
 ## 📋 Startup File Reading Tracking
@@ -195,3 +243,9 @@ find scrum.pmo/roles -maxdepth 1 -type d -name '*Agent' | sed 's|.*/||' | sort
 ---
 
 **The PDCA Quality Agent maintains process quality. When in doubt, refer to the startup decision framework and CMM3 compliance checklist!** 🎯
+=======
+
+---
+
+**The PDCA Quality Agent maintains process quality. When in doubt, refer to the startup decision framework!** 🎯
+>>>>>>> c67b5f2c

@@ -8,8 +8,8 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist/ && find src/ts -name '*.js' -delete && find src/ts -name '*.js.map' -delete && find src/ts -name '*.d.ts' -delete && find src/ts -name '*.d.ts.map' -delete && rm -f *.tsbuildinfo",
-    "test": "vitest",
-    "test:run": "vitest run"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "keywords": [
     "web4",
