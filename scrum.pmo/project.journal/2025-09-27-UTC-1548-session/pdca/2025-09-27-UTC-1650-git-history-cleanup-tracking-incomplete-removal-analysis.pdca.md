@@ -26,17 +26,8 @@
 - **Remaining References:** Session files still present in git history
 
 ### **QA Decisions**
-- [ ] **Decision 1: Remaining References Handling**
-  - a) Apply additional git filter-branch targeting session files specifically
-  - b) Use git filter-repo for more comprehensive cleanup (if available)
-  - c) Manual cleanup of remaining references using git rm
-  - d) Accept partial removal and document remaining references
-
-- [ ] **Decision 2: Push Strategy for Rewritten History**
-  - a) Force push to overwrite remote history (WARNING: Destructive to collaborators)
-  - b) Create new branch with cleaned history for review
-  - c) Document changes but don't force push remote
-  - d) Revert filter-branch changes if incomplete
+- [x] **Decision 1: Remaining References Handling** → **1d) Accept partial removal and document remaining references** - Session files remain in history as acceptable
+- [x] **Decision 2: Push Strategy for Rewritten History** → **2a) Force push to overwrite remote history** - WARNING: Destructive operation will rewrite remote commit SHAs
 
 ### **TRON Feedback (2025-09-27-UTC-1650)**
 ```quote
