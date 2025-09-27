@@ -24,6 +24,7 @@
      11. Interrupt this process immediately on total unexpeded observations or amgiguities and ask TRON. after the answer contionue.
    - [ ] g) CMM3 violation reporting: Report to chat with dual link to [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../_shared/PDCA/howto.PDCA.md)
    - [ ] h) Understanding research requirement: Research unknown terms/processes before use or ask TRON if research fails - Add intense use of tracking tables for artifacts and task lists in plan section
+   - [ ] i) Progress tracking requirement: Update tracking tables in CHECK section showing progress, use todo_write to track status, mention in chat if stopping incomplete for continuation prompt
 
 2. **Chat Response Compliance**  
    - [ ] a) Links only, no explanatory text per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../_shared/PDCA/howto.PDCA.md)
