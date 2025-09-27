@@ -26,11 +26,7 @@
 - **Last PDCA Verified:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/test/scrum.pmo/project.journal/2025-09-27-UTC-1548-session/pdca/2025-09-27-UTC-1640-breakthrough-100-percent-success-release-test-branch.pdca.md) | [scrum.pmo/project.journal/2025-09-27-UTC-1548-session/pdca/2025-09-27-UTC-1640-breakthrough-100-percent-success-release-test-branch.pdca.md](2025-09-27-UTC-1640-breakthrough-100-percent-success-release-test-branch.pdca.md)
 
 ### **QA Decisions**
-- [ ] **Decision 1: Git History Cleanup Method**
-  - a) Use git filter-branch to remove Web4TSComponent/1.0.0.0 completely
-  - b) Use git revert to undo commits that added the component
-  - c) Use git rm to remove from current state only (safer)
-  - d) Create backup before any destructive operations
+- [x] **Decision 1: Git History Cleanup Method** → **1a) Applied git filter-branch** - Rewrote 2165 commits, component still partially present in history
 
 ### **TRON Feedback (2025-09-27-UTC-1645)**
 ```quote
