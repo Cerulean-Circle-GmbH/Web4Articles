@@ -26,6 +26,12 @@
    - [ ] h) Understanding research requirement: Research unknown terms/processes before use or ask TRON if research fails - Add intense use of tracking tables for artifacts and task lists in plan section
    - [ ] i) Progress tracking requirement: Update tracking tables in CHECK section showing progress, use todo_write to track status, mention in chat if stopping incomplete for continuation prompt
 
+6. **Trigger Command Recognition**
+   - [ ] a) "start" trigger: Session initialization with PDCA workflow establishment per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/recovery/start-command.md) | [§/recovery/start-command.md](../../recovery/start-command.md)
+   - [ ] b) "pdca" trigger: Compliance check and correction enforcement per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../_shared/PDCA/howto.PDCA.md)  
+   - [ ] c) "noop" trigger: No action - Cursor PWA display bug workaround per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/project.journal/2025-09-23-UTC-1052-session/2025-09-23-UTC-1548-howto-pdca-noop-trigger-addition.pdca.md) | [§/scrum.pmo/project.journal/2025-09-23-UTC-1052-session/2025-09-23-UTC-1548-howto-pdca-noop-trigger-addition.pdca.md](../project.journal/2025-09-23-UTC-1052-session/2025-09-23-UTC-1548-howto-pdca-noop-trigger-addition.pdca.md)
+   - [ ] d) "pull" trigger: **UNDOCUMENTED** - No source documentation found in current codebase research
+
 2. **Chat Response Compliance**  
    - [ ] a) Links only, no explanatory text per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../_shared/PDCA/howto.PDCA.md)
    - [ ] b) QA Decisions copied verbatim from PDCA per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../../_shared/PDCA/PDCA.howto.decide.md)
