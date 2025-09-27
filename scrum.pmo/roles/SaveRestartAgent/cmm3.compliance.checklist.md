@@ -6,9 +6,10 @@
 1. **PDCA Compliance**
    - [ ] a) Template version 3.1.4.2 exact match: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](../../_shared/PDCA/template.md)
    - [ ] b) Real UTC time (`date -u` output), not hallucinated
-   - [ ] c) All 6 sections with horizontal separators per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../_shared/PDCA/howto.PDCA.md)
-   - [ ] d) Footer: exact template format, no modifications
+   - [ ] c) All 6 sections with horizontal separators (see template, not duplication)
+   - [ ] d) All sections: exact template format, no modifications
    - [ ] e) Working dual links, no "TBD" placeholders
+   - [ ] f) 10-step PDCA process: 1)Header+Plan 2)Expected output 3)Do with safety 4)Document commands 5)Check planning 6)Verify output 7)Achievement status 8)Todo list 9)Act on todos 10)Complete PDCA+git
 
 2. **Chat Response Compliance**  
    - [ ] a) Links only, no explanatory text per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../_shared/PDCA/howto.PDCA.md)
