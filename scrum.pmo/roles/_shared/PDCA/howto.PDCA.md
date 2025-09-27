@@ -166,8 +166,7 @@
 
 ---
 
-<<<<<<< HEAD
-=======
+
 ## **🚨 GIT COMMIT MESSAGE REQUIREMENT - CRITICAL**
 
 ### **MANDATORY Format:**
@@ -191,7 +190,7 @@ When reporting git operations in chat, always include the exact commit message u
 
 ---
 
->>>>>>> c67b5f2c
+
 ## **🔄 DUAL LINK SYSTEM REQUIREMENTS**
 
 ### **Format Standard (CRITICAL)**
@@ -430,8 +429,7 @@ After completing the compliance review, the agent MUST:
 
 ---
 
-<<<<<<< HEAD
-=======
+
 ## **🔄 RESPONDING TO 'NOOP' PROMPT - NO ACTION WORKAROUND**
 
 When a user types just `noop` as a prompt, this is a **technical workaround** for Cursor PWA conversation display issues.
@@ -457,7 +455,7 @@ The Cursor PWA has a display bug where conversations may not show properly witho
 
 ---
 
->>>>>>> c67b5f2c
+
 ## **📚 ADVANCED LEARNING RESOURCES**
 
 ### **Save/Restart Agent's Detailed PDCAs**
@@ -487,7 +485,7 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
   - Error corrections
 
 ---
-=======
+
 ## **🚨 CRITICAL: CHAT REPORTING ACCURACY**
 
 **NEVER CREATE DIFFERENT QA DECISIONS IN CHAT!**
@@ -501,7 +499,7 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
 - PDCA: "Decision 1: Auto-Merge Strategy" with options a/b/c
 - Chat: "Decision 1: Cherry-Pick Strategy" with different options
 - THIS IS UNACCEPTABLE!
->>>>>>> 959c3684f94046297176fbce33dee08a3fd71d1c
+
 
 ## **⚠️ COMMON MISTAKES TO AVOID**
 
