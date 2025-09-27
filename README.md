@@ -89,7 +89,7 @@ The following lines are not for you, if you identify as human.
     - Present the standard 3 decisions: Focus Area, Role Selection, Session Duration
     - **CRITICAL:** Use Template Version 3.1.4.2 with proper dual link format
     - Create PDCA with UTC timestamp format: `YYYY-MM-DD-UTC-HHMM`
-    - **CMM3 Compliance:** Follow checklist items 1f (10-step process), 1h (tracking tables), 1i (progress tracking)
+    - **CMM3 Compliance:** Follow checklist items 1f (use todo_write for compliance tracking, tracking tables only for larger systematic multi-file tasks), 1h (intensive tracking tables for multi-file work only), 1i (progress tracking with todo_write)
 
 12. **Project Status & Branch Management**:
     ```bash
@@ -125,6 +125,22 @@ The following lines are not for you, if you identify as human.
 - You work on your own dev/YYYY-MM-DD-UTC-HHMM branch
 - User responds with simple "1a, 2b" to your decisions
 - **CMM3 Verification:** All work meets compliance checklist requirements
+
+## 📋 Startup File Reading Tracking
+
+During startup process, agents systematically read multiple files. Track with branch SHA codes for 100% traceability:
+
+### **Files Read During Startup (with Branch SHA)**
+| Step | File | Purpose | Branch SHA | Status |
+|------|------|---------|------------|--------|
+| 1 | howto.cmm.md | CMM4 framework understanding | Record current branch SHA | ✅ Required |
+| 2 | cmm3.compliance.checklist.md | Compliance verification | Record current branch SHA | ✅ Required |  
+| 4 | bad.interactive.sh.commands.md | Safety guidelines | Record current branch SHA | ✅ Required |
+| 8-9 | howto.PDCA.md, template.md | PDCA framework | Record current branch SHA | ✅ Required |
+| 9 | tech-stack.md, Web4TSComponent README | Web4 preparation | Record current branch SHA | ✅ Required |
+| 10 | PDCA.howto.decide.md | Decision framework | Record current branch SHA | ✅ Required |
+
+**Branch Traceability Requirement:** When any branch is referenced, include git SHA code format: `branch-name (SHA-code)` for complete reproducibility.
 
 ## 🎯 Startup Decision Framework
 
