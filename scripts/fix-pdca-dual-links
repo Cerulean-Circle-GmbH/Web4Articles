@@ -96,9 +96,11 @@ fix_pdca_file() {
     local changes_made=0
     while IFS= read -r line; do
         # Check if line contains dual link pattern: [GitHub](...) | [local](path)
-        if [[ "$line" =~ \[GitHub\]\([^)]+\)[[:space:]]*\|[[:space:]]*\[([^]]*)\]\(([^)]+)\) ]]; then
-            local display_text="${BASH_REMATCH[1]}"
-            local local_path="${BASH_REMATCH[2]}"
+        if echo "$line" | grep -q '\[GitHub\]([^)]*) | \[[^]]*\]([^)]*)'; then
+            # Extract display text (between second set of brackets)
+            local display_text=$(echo "$line" | sed 's/.*\[GitHub\]([^)]*) | \[\([^]]*\)\](.*/\1/')
+            # Extract local path (in second set of parentheses)
+            local local_path=$(echo "$line" | sed 's/.*\[GitHub\]([^)]*) | \[[^]]*\](\([^)]*\)).*/\1/')
             
             # Skip if already using § notation
             if [[ "$display_text" == "§"/* ]]; then
