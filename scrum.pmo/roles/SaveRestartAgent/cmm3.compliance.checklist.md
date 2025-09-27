@@ -10,16 +10,17 @@
    - [ ] d) All sections: exact template format, no modifications
    - [ ] e) Working dual links, no "TBD" placeholders
    - [ ] f) 10-step PDCA process:
-     1. Header + Plan section
-     2. Plan with expected output
-     3. Do with safety protocol
-     4. Document commands in DO section
-     5. Check planning with command quotes
-     6. Verify expected output achieved
-     7. Achievement status analysis
-     8. Todo list with internal tool
-     9. Act on todos and check again
-     10. Complete PDCA sections + git protocol
+     1. start with the header and the plan section
+     2. plan with expected output
+     3. do what you planned with savety protocoll
+     4. document what you did with command quotes in the do section
+     5. write how you will check it in the check section and what outputs you need to verify how with command quotes
+     5. check if you achieved the expected output
+     6. write what as achieved and what is not yet achieved
+     7. write a todolist with your internal write todo tool what to continue to check and fix
+     8. act on the todolist and check again
+     9. when achieved all expected output, write the rest of the pdca e.g. emotional section
+     10. finally do the git protocol
    - [ ] g) CMM3 violation reporting: Report to chat with dual link to [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../_shared/PDCA/howto.PDCA.md)
 
 2. **Chat Response Compliance**  
