@@ -28,6 +28,7 @@
 - **Related Artifacts:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
 
 ### **To TRON: QA Decisions required**
+**TEMPLATE VERIFICATION: Before using this template, verify it matches current 3.1.4.2 requirements exactly - no modifications or assumptions**
 - [x] {{COMPLETED_DECISION}}: {{DECISION_DESCRIPTION}}
 - [ ] {{PENDING_DECISION}}: {{DECISION_DESCRIPTION}}
 - [ ] {{FOLLOWUP_REQUIRED}}: {{DECISION_DESCRIPTION}}
