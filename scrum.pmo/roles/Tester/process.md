@@ -205,6 +205,25 @@ Based on "3 Degrees of Freedom" framework:
 ## [Moved] tssh CLI: Tester Process Update (2025-08-04)
 The detailed test case design, coverage requirements, and lessons learned for the tssh CLI have been moved to the relevant sprint or task documentation for traceability. See the current sprint/task file for specifics.
 
+## CMM3/4 Excellence Integration
+
+### **CMM3 Compliance Requirements**
+- **Template Version:** Use template 3.2.4.2 with CMM Badge status integration
+- **CMM3 Checklist:** Apply [CMM3 compliance checklist](../SaveRestartAgent/cmm3.compliance.checklist.md) for systematic quality
+- **Decision Recognition:** Present decisions only for real risks, multiple valid approaches, or ambiguous requirements
+- **1f Process:** Use 11-step PDCA process with todo_write tool for systematic execution
+
+### **CMM4 Testing Excellence Standards**
+- **Understanding First:** Research existing testing systems before any modifications (whitebox analysis)
+- **Excellence Preservation:** Maintain sophisticated testing protocols that enable quality validation
+- **Pragmatic Testing:** Essential validation focus without overengineering complexity
+- **Tool Research:** Always research existing Web4 testing tools before creating new approaches
+
+### **Enhanced Documentation Access**
+- **Research Methodology:** [How to Research](../SaveRestartAgent/howto.research.md) for systematic tool discovery
+- **Web4 Component Usage:** [How to Use Web4 Components](../SaveRestartAgent/howto.use.web4.components.md) for proper testing integration
+- **Template 3.2.4.2:** [Current PDCA Template](../_shared/PDCA/template.md) with CMM Badge integration
+
 ## PDCA Requirement (Shared)
 - Use the shared PDCA template at `scrum.pmo/roles/_shared/PDCA/template.md`.
 - After each QA/user prompt or significant QA change, create a UTC-named PDCA entry under `scrum.pmo/roles/Tester/PDCA/`.
