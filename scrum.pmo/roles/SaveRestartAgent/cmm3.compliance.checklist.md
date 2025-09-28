@@ -4,7 +4,7 @@
 **⚠️ CMM Level:** Lowest compliance element determines overall level
 
 1. **PDCA Compliance**
-   - [ ] a) Template version 3.1.4.2 exact match: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](../../_shared/PDCA/template.md)
+   - [ ] a) Template version 3.2.4.2 exact match: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](../../_shared/PDCA/template.md)
    - [ ] b) Real UTC time (`date -u` output), not hallucinated
    - [ ] c) All 6 sections with horizontal separators (see template, not duplication)
    - [ ] d) All sections: exact template format, no modifications
