@@ -1,0 +1,38 @@
+{
+  "ior": {
+    "uuid": "ca48df66-3aca-4ef2-a185-75164a0b6d78",
+    "component": "unit",
+    "version": "0.3.0.6"
+  },
+  "owner": "{\"user\":\"donges\",\"hostname\":\"localhost\",\"uuid\":\"ca48df66-3aca-4ef2-a185-75164a0b6d78\",\"timestamp\":\"2025-09-27T14:52:55.938Z\",\"component\":\"unit\",\"version\":\"0.3.0.6\"}",
+  "model": {
+    "uuid": "ca48df66-3aca-4ef2-a185-75164a0b6d78",
+    "name": "Folder",
+    "origin": "ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/req0305/MDAv4/M3/ATTRIBUTE/",
+    "definition": "M1 folder instance: MDAv4/M3/ATTRIBUTE/",
+    "typeM3": "CLASS",
+    "indexPath": "c/a/4/8/d/ca48df66-3aca-4ef2-a185-75164a0b6d78.scenario.json",
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/Users/Shared/Workspaces/temp/Web4Articles/Folder.unit",
+        "linkTarget": "ior:unit:ca48df66-3aca-4ef2-a185-75164a0b6d78",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/Users/Shared/Workspaces/temp/Web4Articles/Folder.unit",
+        "linkTarget": "ior:unit:ca48df66-3aca-4ef2-a185-75164a0b6d78",
+        "syncStatus": "SYNCED"
+      }
+    ],
+    "createdAt": "2025-09-27T14:52:55.926Z",
+    "updatedAt": "2025-09-27T14:52:55.942Z",
+    "originName": "ATTRIBUTE",
+    "folderPath": "MDAv4/M3/ATTRIBUTE/",
+    "fileCount": 0,
+    "subfolderCount": 0,
+    "totalSize": 0,
+    "folderHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lastScanned": "2025-09-27T14:52:55.926Z",
+    "symlinkPaths": []
+  }
+}
