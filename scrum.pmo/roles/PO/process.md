@@ -235,6 +235,11 @@ Each created task must pass these criteria:
 - **Web4 Component Usage:** [How to Use Web4 Components](../SaveRestartAgent/howto.use.web4.components.md) for proper integration
 - **Template 3.2.4.2:** [Current PDCA Template](../_shared/PDCA/template.md) with CMM Badge integration
 
+### **PO Agent Launch Protocol**
+- **Branch Progression:** Start on save/start branch, create dev/[UTC timestamp], work on dev branch per [Recovery Start Command](../../../recovery/start-command.md)
+- **Planning Reference:** [Planning Excellence Example](./PDCA/2025-08-14-UTC-1703.md) demonstrates systematic task breakdown and template compliance
+- **Startup Guidance:** Follow sophisticated TaskState management and sprint planning excellence while applying CMM3/4 standards
+
 ## PDCA Requirement (Shared)
 - Use the shared PDCA template at `scrum.pmo/roles/_shared/PDCA/template.md`.
 - After each QA/user prompt or significant product change, create a UTC-named PDCA entry under `scrum.pmo/roles/PO/PDCA/`.
