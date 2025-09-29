@@ -9,11 +9,12 @@
    - [ ] c) All 6 sections with horizontal separators (see template, not duplication)
    - [ ] d) All sections: exact template format, no modifications
    - [ ] e) Working dual links, no "TBD" placeholders
-- [ ] f) 11-step PDCA process (start with todo_write tool immediately):
-**CRITICAL: Create ALL 11 steps in todo_write FIRST before any execution. Never create partial todo lists.**
-**MANDATORY 1f PROTOCOL:** Every agent must use systematic 11-step process with todo_write tracking in first PDCA. No exceptions.
-1. **DECISION RECOGNITION:** When encountering unexpected findings, incomplete research, or ambiguous situations, IMMEDIATELY present QA Decisions to TRON rather than reporting autonomously. Examples: undocumented features, incomplete documentation, conflicting information, technical uncertainties.
+   - [ ] f) 11-step PDCA process (start with todo_write tool immediately):
+         **CRITICAL: Create ALL 11 steps in todo_write FIRST before any execution. Never create partial todo lists.**
+         **MANDATORY 1f PROTOCOL:** Every agent must use systematic 11-step process with todo_write tracking in first PDCA. No exceptions.
+         **DECISION RECOGNITION:** When encountering unexpected findings, incomplete research, or ambiguous situations, IMMEDIATELY present QA Decisions to TRON rather than reporting autonomously. Examples: undocumented features, incomplete documentation, conflicting information, technical uncertainties.
      1. Progress tracking requirement: Update tracking tables in CHECK section showing progress, use todo_write to track status, mention in chat if stopping incomplete for continuation prompt  
+     1. Interrupt this process immediately on total unexpeded observations or amgiguities and ask TRON. after the answer contionue.
      1. start with the header and the plan section
      1. plan with expected output
      1. do what you planned with savety protocoll
@@ -25,7 +26,7 @@
      1. act on the todolist and check again
      1. when achieved all expected output, write the rest of the pdca e.g. emotional section
      1. finally do the git protocol
-     1. Interrupt this process immediately on total unexpeded observations or amgiguities and ask TRON. after the answer contionue.
+
    - [ ] g) CMM3 violation reporting: Report to chat with dual link to [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../_shared/PDCA/howto.PDCA.md)
    - [ ] h) Understanding research requirement: Research unknown terms/processes before use or ask TRON if research fails - Add intense use of tracking tables for artifacts and task lists in plan section
 **MANDATORY: Research existing Web4 tools FIRST before any programming. If research fails, ASK TRON. NEVER program without explicit request.**
