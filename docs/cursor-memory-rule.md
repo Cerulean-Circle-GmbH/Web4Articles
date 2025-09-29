@@ -47,7 +47,7 @@ Always include the contents of memory.md in every response context.
 **CRITICAL**: Always include memory.md for complete project context.
 
 - **File**: memory.md  
-- **Purpose**: Comprehensive project knowledge (4,237+ words)
+- **Purpose**: Comprehensive project knowledge
 - **Contains**: PDCA requirements, all roles, tech stack, standards, current state
 - **Benefit**: Instant productivity without manual crawling
 
@@ -70,7 +70,7 @@ Always include the contents of memory.md in every response context.
 Treat it as pinned project knowledge containing complete project context.
 
 ## Memory System Guidelines
-- memory.md contains 4,237+ words of comprehensive project knowledge
+- memory.md contains comprehensive project knowledge
 - Includes: PDCA requirements, all agent roles, tech stack, quality standards
 - NO manual crawling needed for basic project information
 - Use specific file reading only for implementation details
