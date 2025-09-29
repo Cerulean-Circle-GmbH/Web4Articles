@@ -2408,7 +2408,7 @@ export default defineConfig({
   }
 
   /**
-   * Verify and fix symlinks for component
+   * Verify and fix all symlinks for component - comprehensive symlink maintenance
    * @cliSyntax 
    * @cliHide
    */
@@ -2523,7 +2523,13 @@ export default defineConfig({
   }
 
   /**
-   * Verify version-specific script symlink exists
+   * Verify version-specific script symlink exists and create if missing
+   * @param component Component name for symlink verification
+   * @param version Component version for symlink creation
+   * @cliSyntax component version  
+   * @cliDefault component Web4TSComponent
+   * @cliDefault version 0.3.0.10
+   * @cliHide
    */
   private async verifyVersionScriptSymlink(component: string, version: string): Promise<void> {
     const versionsDir = path.join(this.model.targetDirectory, 'scripts', 'versions');
