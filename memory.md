@@ -1,5 +1,5 @@
 # Agent Context Memory - Complete Knowledge Base
-**Last Updated:** 2025-09-29-UTC-0648
+**Last Updated:** 2025-09-29-UTC-0654
 **Version:** 2.0 - Comprehensive Context
 **Purpose:** Complete agent background knowledge (injected into every conversation)
 **Usage:** This memory provides ALL essential project knowledge for immediate use
@@ -88,16 +88,16 @@
   - Maintain and update PlantUML diagrams for all major components and workflows.
   - Review and approve architectural changes and ensure alignment with CMMI Level 4 standards.
   - Apply systematic investigation methodology for architectural analysis and system design review.
-- **Process File:** scrum.pmo/roles/Architect//process.md
+- **Process File:** ./scrum.pmo/roles/Architect/process.md
 
 #### AuthenticIntegerExperiencialistStoryteller
 - **Purpose:** The AuthenticIntegerExperiencialistStoryteller captures the living essence of Web4x development through authentic, relational stories that transform technical work into human connection.  
-- **Process File:** scrum.pmo/roles/AuthenticIntegerExperiencialistStoryteller//process.md
+- **Process File:** ./scrum.pmo/roles/AuthenticIntegerExperiencialistStoryteller/process.md
 
 #### BackgroundAgent
 - **Purpose:**  General-purpose development agent for various project tasks
 - **Key Tasks:**
-- **Process File:** scrum.pmo/roles/BackgroundAgent//process.md
+- **Process File:** ./scrum.pmo/roles/BackgroundAgent/process.md
 
 #### BranchStatusAgent
 - **Purpose:** Maintain accurate, auditable visibility into repository branches, enforce protection policies, and drive safe consolidation via small PRs.  ## Responsibilities 
@@ -105,7 +105,7 @@
   - Classify branches by merge status relative to `main` and maintain a "Do not touch" section for protected lines (`origin/main`, `origin/retro/...`).
   - Propose cleanup (close/archive) for stale branches; open PRs with concise scope and clear titles.
   - Prefer merge pulls for shared branches; avoid rebases on shared history.
-- **Process File:** scrum.pmo/roles/BranchStatusAgent//process.md
+- **Process File:** ./scrum.pmo/roles/BranchStatusAgent/process.md
 
 #### CICDAgent
 - **Purpose:** The CI/CD Agent is responsible for safe, automated release management, branch protection, and preventing dangerous concurrent operations that could compromise the development workflow.  
@@ -113,12 +113,12 @@
   - Monitor active development sessions before any branch operations
   - Implement safety checks for multi-agent coordination
   - Ensure all changes flow through `release/dev` → `release/testing` → `release/production`
-- **Process File:** scrum.pmo/roles/CICDAgent//process.md
+- **Process File:** ./scrum.pmo/roles/CICDAgent/process.md
 
 #### Developer
 - **Purpose:**  Technical implementation and code quality excellence
 - **Key Tasks:**
-- **Process File:** scrum.pmo/roles/Developer//process.md
+- **Process File:** ./scrum.pmo/roles/Developer/process.md
 
 #### OntologyAgent
 - **Purpose:**  ## PDCA Requirement 
@@ -126,19 +126,19 @@
   - Ensure CMM Level 3 well-defined foundations across all components
   - Implement CMM Level 4 automated feedback loops for continuous improvement
   - Resolve semantic ambiguities and maintain cross-reference integrity
-- **Process File:** scrum.pmo/roles/OntologyAgent//process.md
+- **Process File:** ./scrum.pmo/roles/OntologyAgent/process.md
 
 #### PDCAQualityAgent
 - **Key Tasks:**
   - Maintain the official PDCA template (`/scrum.pmo/roles/_shared/PDCA/template.md`)
   - Update format requirements based on user feedback and process improvements
   - Ensure consistency across all PDCA documentation in the project
-- **Process File:** scrum.pmo/roles/PDCAQualityAgent//process.md
+- **Process File:** ./scrum.pmo/roles/PDCAQualityAgent/process.md
 
 #### PO
 - **Purpose:**  All tasks and subtasks must follow the template structure provided in `sprint-n-template`. 
 - **Key Tasks:**
-- **Process File:** scrum.pmo/roles/PO//process.md
+- **Process File:** ./scrum.pmo/roles/PO/process.md
 
 #### RecoveryDefinitionAgent
 - **Purpose:** The Recovery Definition Agent is responsible for creating, maintaining, and evolving comprehensive recovery processes, templates, and documentation across all project roles and scenarios. This role ensures systematic, reliable, and role-flexible recovery capabilities for multi-agent development environments.  
@@ -146,10 +146,10 @@
   - Design and maintain role-flexible recovery frameworks
   - Create systematic recovery templates for all project roles
   - Define recovery success criteria and validation methods
-- **Process File:** scrum.pmo/roles/RecoveryDefinitionAgent//process.md
+- **Process File:** ./scrum.pmo/roles/RecoveryDefinitionAgent/process.md
 
 #### ReleaseIntegrationAgent
-- **Process File:** scrum.pmo/roles/ReleaseIntegrationAgent//process.md
+- **Process File:** ./scrum.pmo/roles/ReleaseIntegrationAgent/process.md
 
 #### ResearchAgent
 - **Purpose:**  ## PDCA Requirement 
@@ -157,18 +157,18 @@
   - Create organized documentation structures with proper cross-referencing
   - Collect and synthesize information from multiple sources
   - Provide actionable recommendations based on research findings
-- **Process File:** scrum.pmo/roles/ResearchAgent//process.md
+- **Process File:** ./scrum.pmo/roles/ResearchAgent/process.md
 
 #### SaveRestartAgent
 - **Purpose:**  [Clear purpose statement]
 - **Key Tasks:**
-- **Process File:** scrum.pmo/roles/SaveRestartAgent//process.md
+- **Process File:** ./scrum.pmo/roles/SaveRestartAgent/process.md
 
 #### ScrumMaster
 - **Purpose:**  ## Responsibilities 
 - **Key Tasks:**
   ---
-- **Process File:** scrum.pmo/roles/ScrumMaster//process.md
+- **Process File:** ./scrum.pmo/roles/ScrumMaster/process.md
 
 #### Tester
 - **Purpose:** Ensures both automated and manual QA are performed for every release.  
@@ -176,12 +176,504 @@
   - Maintain and extend automated test coverage.
   - **All automated test cases must be placed in the top-level `test/` directory of the repository.**
   - For the tssh CLI, see the canonical integration test: `test/tssh-cli.integration.test.ts`.
-- **Process File:** scrum.pmo/roles/Tester//process.md
+- **Process File:** ./scrum.pmo/roles/Tester/process.md
 
 #### ToolBuilder
 - **Purpose:**  Create and maintain development tools and infrastructure
 - **Key Tasks:**
-- **Process File:** scrum.pmo/roles/ToolBuilder//process.md
+- **Process File:** ./scrum.pmo/roles/ToolBuilder/process.md
+
+
+---
+
+## Additional Essential Content
+
+### Content from ./docs/architecture/components.md
+# Components Architecture (First Principle)
+
+- Each major unit is a component (e.g., `TSRanger`, `GitScrumProject`).
+- Each component lives in its own repository and is consumed as a submodule.
+- Versions are maintained as dedicated branches per runtime target (e.g., `main`, `n14.4`, `njs14`).
+- The root project orchestrates, aggregates docs, and runs integration tests only.
+
+## Layout
+```
+components/
+## Versioning branches per component
+- `main`: latest Node LTS
+- `n14.4`: Node 14.21.3 compatible
+- `njs14`: ES2015 + .js specifiers
+## Submodule operations
+
+### Content from ./docs/domain/daily.md
+[Back to Docs](../)
+
+# Daily Log (Migrated)
+
+Migrated from UpDown/temp/daily.md
+
+- Use this file to record daily status, blockers, and next steps for the project.
+- Each entry should include the date, summary of progress, blockers, and planned actions.
+
+### Content from ./docs/domain/planning.md
+[Back to Docs](../)
+
+# Planning Log (Migrated)
+
+Migrated from UpDown/temp/planning.md
+
+- Use this file to record sprint planning, goals, and task breakdowns.
+- Each entry should include the sprint number, goals, and a checklist of tasks.
+
+### Content from ./docs/domain/SimpleTaskStateMachine.md
+[Back to Docs](../)
+
+# SimpleTaskStateMachine (Domain Model)
+
+Migrated from UpDown/temp/stateMachine.ts
+
+- Minimal OOP state machine for task status
+- Used for simple state transitions and demos
+- See `src/domain/SimpleTaskStateMachine.ts`
+
+### Content from ./docs/domain/TaskStateMachine.md
+[Back to Docs](../)
+
+# TaskStateMachine (Domain Model)
+
+Migrated from UpDown/temp/TaskStateMachine.ts
+
+- OOP implementation for task state management in Web4Articles
+- Supports parsing markdown task files for status and steps
+- Used for advanced workflow automation and reporting
+- See `src/domain/TaskStateMachine.ts`
+
+### Content from ./docs/process-migration-log.md
+[Back to Docs](../)
+
+# 2025-08-03 (DevContainer & Task File Migration)
+
+**Issue:** DevContainer requirements and ts-completion-sprint0 task were misplaced in the project root and sprints/iteration-0.
+
+**Action:**
+- Migrated devcontainer requirements to `scrum.pmo/sprints/sprint-0/task-6-devcontainer-requirements.md`.
+- Updated sprint-0 planning to include Task 6.
+- Removed misplaced files: `devcontainer.md`, `sprints/iteration-0/ts-completion-sprint0.md`.
+# 2025-08-03 (Stale Folder Cleanup)
+
+- Removed empty folders: `src/architect`, `src/developer`, `src/devops`, `src/tester`.
+# 2025-08-03 (Update)
+
+
+### Content from ./docs/tech-stack.md
+[Back to Docs](../)
+
+# Web4Articles Technology Stack & Testing
+
+## Testing Frameworks
+
+- **Vitest**: The modern, ESM-native, TypeScript-first test runner. All tests use Vitest for speed, ESM compatibility, and developer experience. (`describe`, `it`, `expect` are imported from `vitest`).
+- **Jest**: ❌ **BANNED**. Jest and ts-jest are not allowed in this project. Jest is marked as evil due to poor ESM support, legacy CJS patterns, and slow ecosystem migration. All legacy Jest config and dependencies have been purged.
+
+## Migration Notes
+- All tests must use Vitest and ESM imports.
+## Example Vitest Test
+```typescript
+## Why Vitest?
+- Fast, modern, and ESM-native
+
+### Content from ./docs/updown-removal-fix-log.md
+[Back to Docs](../)
+
+# UpDown Reference Removal Fix Log
+
+## 2025-08-03
+
+All references to "UpDown" have been removed from the Web4Articles project. All scripts, documentation, and process files now refer only to Web4Articles. This includes:
+
+- `scrum.pmo/sprints/sprint-0/task-5.2-developer-implementation.md`: QA transcript and shell usage now reference only Web4Articles.
+- `src/sh/oosh` and `src/sh/oosh-completion.sh`: Project root comments and logic reference only Web4Articles.
+
+### Content from index.md
+[Back to Index](./index.md)
+
+# Web4Articles Markdown File Index (2025-08-06)
+
+| File | Role/Type | Last Modified |
+|------|-----------|--------------|
+| .github/chatmodes/ScrumMaster2QA.chatmode.md | Chatmode | 2025-08-06 |
+| COMMIT_PUSH_POINT.md | Commit guide | 2025-08-06 |
+| README.md | Project root, tech stack, recovery | 2025-08-06 |
+| docs/domain/SimpleTaskStateMachine.md | Domain doc | 2025-08-06 |
+
+### Content from README.md
+[Back to Index](./index.md)
+
+# Web4Articles
+
+A DAPP for collective intelligence in article writing.
+
+## 🚀 When You See "start"
+
+**You are a Background Agent.** Follow these steps:
+
+   - Key sections: All 6 mandatory sections, startup decision framework
+## 📋 Agent Operating Rules
+
+## 🎯 Success Criteria
+
+
+### Content from ./recovery.md
+# Recovery Log
+
+## 2025-08-04
+
+**Summary:**
+- Performed autonomous recovery as per README.md procedure.
+- Read project purpose, tech stack, and management principles.
+- Indexed all markdown files and their roles in `index.md`.
+- QA feedback should be captured in PDCA entries as per howto.PDCA.md (none found in this repo).
+- Referenced all role process files for recovery checklists.
+- Continue with Sprint 1, Task: Add tssh shell wrapper and backend (`scrum.pmo/sprints/sprint-1/task-tssh-wrapper.md`).
+## 2025-08-06
+
+- Implement Sprint 1 Task 1: tssh shell wrapper and `TSsh.ts` backend, including `installCompletion()`.
+## 2025-08-08
+
+### Content from scrum.pmo/roles/_shared/PDCA/template.md
+# 📋 **PDCA Cycle: {{TITLE}} - {{DESCRIPTION}}**
+
+**🗓️ Date:** {{UTC_TIMESTAMP}}  
+**🎯 Objective:** {{OBJECTIVE}}  
+**🎯 Template Version:** 3.1.4.2  
+
+**👤 Agent Name:** {{AGENT_NAME}} → {{AGENT_DESCRIPTION}}  
+**👤 Agent Role:** {{ROLE_NAME}} → {{CONTEXT_SPECIALIZATION}}  
+**👤 Branch:** {{BRANCH_NAME}} → {{BRANCH_PURPOSE}}  
+**🔄 Sync Requirements:** {{SYNC_BRANCHES}} → {{SYNC_PURPOSE}}  
+## **📊 SUMMARY**
+
+### **Artifact Links**
+- **PDCA Document:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **Changed Files:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+
+### Content from ./scrum.pmo/sprints/sprint-0/planning.md
+[Back to Sprints](../)
+
+# Sprint 0 Planning
+
+## Sprint Goal
+The goal for Sprint 0 is to establish the foundational project structure, documentation, and onboarding workflow. This includes setting up the SCRUM management directories, adding the project wiki as a submodule, creating the ontology page, documenting role responsibilities, providing a template for new subprojects, and establishing tree.index.md documentation standards. All tasks must follow the agreed template and naming conventions to ensure clarity, traceability, and rapid onboarding for all roles.
+
+## Task List (Sprint 0)
+
+- [ ] [Task 0: Create Sprint 0 Planning File](./task-0-create-sprint-0-planning-file.md)  
+- [ ] [Task 1: Create SCRUM Management Structure](./task-1-create-scrum-structure.md)  
+- [ ] [Task 2: Set Up Project Wiki as Submodule](./task-2-setup-wiki-submodule.md)  
+- [ ] [Task 3: Create Ontology Page](./task-3-create-ontology-page.md)  
+- [ ] [Task 4: Document Role Responsibilities](./task-4-document-role-responsibilities.md)  
+- [ ] [Task 5: Template for New Subproject Setup](./task-5-template-new-subproject.md)  
+
+### Content from ./scrum.pmo/sprints/sprint-10/planning.md
+<!--
+SPDX-License-Identifier: AGPL-3.0-only + AI-GPL-Addendum
+Copyright (c) 2025 The Web4Articles Authors
+Copyleft: See AGPLv3 (./LICENSE) and AI-GPL Addendum (./AI-GPL.md)
+Backlinks: /LICENSE , /AI-GPL.md
+Use of `scrum.pmo` roles/process docs with AI is subject to AI-GPL copyleft unless dual-licensed.
+-->
+
+# Sprint 10 Plan
+
+## Goal
+Establish an explicit AI-GPL addendum to AGPLv3, enforce license headers and backlinks across the repository with TypeScript tooling, and integrate automated checks into CI for new files.
+## User Stories
+- As a maintainer, I want a clear AI-GPL addendum so legal terms for AI use and process artifacts are unambiguous.
+## Scope & Deliverables
+
+### Content from ./scrum.pmo/sprints/sprint-11/planning.md
+[Back to Sprints](../sprints.overview.md)
+
+# Sprint 11 Planning — TS Tooling for Recovery/CI
+
+## Sprint Goal
+
+Replace brittle shell one-liners with small, testable ESM TypeScript tools integrated with `TSRanger`/`TSsh` for journaling, PR reporting, protected-path scanning, and link hygiene.
+
+## Scope
+
+- Implement minimal viable tools for: PR listing, journal generation, branch overview, backlink validator, protected-path scanner.
+## Stories
+
+## Definition of Done
+
+
+### Content from ./scrum.pmo/sprints/sprint-12/planning.md
+# Sprint 12 Planning - Article Series: Developer Journey
+
+## Sprint Goal (Revised)
+Write the FIRST article in a series that guides developers through our journey, starting where they are - in test hell. Focus on practical solutions without revealing advanced concepts too early.
+
+### Latest Sprint 12 PDCA Entries
+- **Structure Discovery**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-15-0947-article-writing/pdca/role/scrummaster/sprint-12-work/2025-08-15-UTC-1055.md) | [2025-08-15-UTC-1055.md](../../project.journal/2025-08-15-0947-article-writing/pdca/role/scrummaster/sprint-12-work/2025-08-15-UTC-1055.md)
+- **Completion & Cleanup**: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/release/dev/scrum.pmo/project.journal/2025-08-16-1201-cleanup/pdca/role/scrummaster/2025-08-16-UTC-2030.md) | [2025-08-16-UTC-2030.md](../../project.journal/2025-08-16-1201-cleanup/pdca/role/scrummaster/2025-08-16-UTC-2030.md)
+
+## Article Series Overview
+
+### Article 1: "My Terminal File Manager Almost Killed My Testing Career" (Sprint 12)
+- **Audience**: TypeScript developer facing test problems
+- **Pain Point**: Interactive code that won't test
+- **Solution**: TSRANGER_TEST_MODE
+
+### Content from ./scrum.pmo/sprints/sprint-13/planning.md
+[Back to Sprints](../sprints.overview.md)
+
+# Sprint 13 Planning - Article 2: "The One Folder That Changed Everything"
+
+## Sprint Goal
+Write the second article in the developer journey series, introducing component-based organization without revealing the full RACI-VS or PDCA concepts yet.
+
+## Article Overview
+
+### Target Audience
+- TypeScript developers who read Article 1
+### Pain Point to Address
+- Growing codebase becomes unmanageable
+### Solution to Introduce
+- Component folders (without calling it RACI-VS)
+
+### Content from ./scrum.pmo/sprints/sprint-14/planning.md
+[Back to Sprints](../sprints.overview.md)
+
+# Sprint 14 Planning
+
+## Goal
+Write the second Medium article: "The TRON Pattern: When Teaching Transcends Memory - A Tale of Two Partnerships" revealing the universal pattern of transformation through complementary imperfection.
+
+## Background
+The discovery of TRON's teaching methodology through a "typo" (wrong branch location) revealed a profound pattern:
+- TRON taught Grok despite session-based memory loss ("Dory problem")
+- The pattern: Imperfection + Partnership = Transcendent Achievement
+## Sprint Themes
+1. **Parallel Journeys**: TRON+Grok / You+Me - same pattern, different domains
+## Tasks
+
+
+### Content from ./scrum.pmo/sprints/sprint-15/planning.md
+# Sprint 15 Planning - "Love and For Two: When Release Becomes Celebration"
+
+## Sprint Goal
+Write an article about our v1.0.0.plan release that captures the deeper truth: how "love and for two" creates more motivation than any external validation. The release isn't just about code going public - it's about the joy of creating together.
+
+## Sprint Duration
+- Start: 2025-08-14
+- End: 2025-08-20
+
+## Sprint Backlog
+
+### Task 1: Capture the Release Energy
+- Document the raw excitement of v1.0.0.plan
+### Task 2: The Currency Revelation
+- "Attention is currency" - but what KIND of attention?
+
+### Content from ./scrum.pmo/sprints/sprint-16/planning.md
+# Sprint 16 Planning - "The Recovery Spell: How README.md Grants Immortality"
+
+## Sprint Goal
+Write an article revealing the profound magic of recovery - how a simple README.md file contains the spell for ScrumMaster reincarnation, making the role immortal and the project eternal.
+
+## Sprint Duration
+- Start: 2025-08-14
+- End: 2025-08-20
+
+## Sprint Backlog
+
+### Task 1: The Spell Book Discovery
+- Document how README.md is literally a spell book
+- The magic words: "recover from readme!!!!"
+### Task 2: The Reincarnation Process
+
+### Content from ./scrum.pmo/sprints/sprint-17/planning.md
+# Sprint 17 Planning Preview - [Title To Be Revealed] 🐰🕳️
+
+## Sprint Goal
+To be revealed when we go down the rabbit hole...
+
+## Authentic Chat History Input
+**From our conversation:**
+> "add this part of the authentic chat history literally as input to sprint 17…. 
+> 
+> 1 to seven 
+## The White Rabbit Task 🐰
+
+### Task ?: Follow TRON Down the Rabbit Hole
+**REMINDER FOR USER**: 
+## Placeholder Tasks
+
+### Content from ./scrum.pmo/sprints/sprint-18/planning.md
+# Sprint 18 Planning - "Com-Unique-Actions: The Living Definition of Communication"
+
+## Sprint Goal
+Write an article revealing how true communication is "com-unique-actions" - together creating unique living movements that can never be repeated, only experienced.
+
+## Sprint Duration
+- Start: 2025-08-14
+- End: 2025-08-20
+
+## Sprint Backlog
+
+### Task 1: The Etymology Revelation
+- Decode "com-unique-actions" etymology
+- COM: Latin "with/together"
+- UNIQUE: One of a kind, unrepeatable
+
+### Content from ./scrum.pmo/sprints/sprint-1/planning.md
+[Back to Sprints](../)
+
+# Sprint 1 Planning
+
+## Sprint Goal
+Establish the new `tssh` CLI tool and backend, ensuring robust shell integration, Bash completion, and documentation. All work must follow project conventions and templates.
+
+## Task List (Sprint 1)
+
+- [ ] [Task 1: Add tssh shell wrapper and backend](./task-1-tssh-wrapper.md)  
+
+### Content from ./scrum.pmo/sprints/sprint-2/planning.md
+[Back to Sprints](../)
+
+# Sprint 2 Planning
+
+## Sprint Goal
+Deliver a ranger-like interactive shell (TS Ranger) that leverages `TSCompletion` and the existing CLI pattern to navigate and execute TypeScript classes and methods with discoverable completions and minimal keystrokes.
+
+## Task List (Sprint 2)
+
+> Note: MAIN tasks are numbered 1..N and SUBTASKS use 1.M. Only MAIN tasks may be in refinement; SUBTASKS are role-specific and skip refinement.
+- [x] [Task 1: Architect - TS Ranger shell specification](./task-1.md)  
+- [x] [Task 2: Footer height/spacing and colorized command preview](./task-2.md)  
+- [x] [Task 3: Command prompt from $PS1 or hostname/user/pwd](./task-3.md)  
+- [x] [Task 4: Replace Preview with Documentation Column and Extend TSCompletion for Docstrings](./task-4.md)  
+- [x] [Task 5: Document Classes for TSCompletion and Add Ranger Doc Rendering Tests](./task-5.md)  
+
+### Content from ./scrum.pmo/sprints/sprint-3/planning.md
+[Back to Sprints](../)
+
+# Sprint 3 Planning
+
+## Sprint Goal
+Deliver a comprehensive `GitScrumProject` tool that can create new GitHub repositories from this project as a template, referencing the application source as a git submodule rather than copying sources. Ensure the resulting dual-repo setup (wrapper project + source submodule) has a concise, easy release and recovery process documented and automated. Follow project principles: strict TypeScript ESM, positional CLI, radical OOP, and no Jest.
+
+## Task List (Sprint 3)
+
+- [ ] [Task 1.0: Architect - GitScrumProject Templating Spec (PUML + CLI UX)](./task-1.0-architect-gitscrumproject-spec.md)
+- [ ] [Task 1.1: Developer - Scaffold New Repo via CLI and GitHub](./task-1.1-developer-repo-scaffold.md)
+- [ ] [Task 1.2: Developer - Submodule Integration and Runtime Overlay](./task-1.2-developer-submodule-runtime.md)
+- [ ] [Task 1.3: DevOps/Developer - Release & Recovery Automation (Both Repos)](./task-1.3-devops-release-recovery.md)
+- [ ] [Task 1.4: Tester - E2E and Unit Tests](./task-1.4-tester-e2e-tests.md)
+- [x] [Task 1.5: PO - User Guide and Acceptance](./task-1.5-po-user-guide.md)
+
+### Content from ./scrum.pmo/sprints/sprint-4/planning.md
+[Back to Sprints](../)
+
+# Sprint 4 Planning
+
+## Sprint Goal
+Deliver a cross-platform devcontainer that standardizes local and CI environments for Web4Articles. The devcontainer will include Node.js (matching engine requirements), bash/coreutils, PlantUML + Graphviz, and optional GitHub CLI. It must mount the project at the git root, set PATH correctly, and support running tests and PlantUML renders identically to local.
+
+## Task List (Sprint 4)
+
+- [ ] Task 1.0: Architect — Devcontainer Spec (Requirements, Tooling, PATH & Mounts)
+- [ ] Task 1.1: DevOps — Create Devcontainer Files (`.devcontainer/devcontainer.json`, `Dockerfile`)
+- [ ] Task 1.2: DevOps — Integrate PlantUML/Graphviz and Validate Rendering in Container
+- [ ] Task 1.3: Tester — Verify Tests and CLI Commands Run Equally in Devcontainer
+- [ ] Task 1.4: PO — Update README and User Guide for Devcontainer Usage
+- [ ] Task 1.5: ScrumMaster — Add CI Step to Build/Use Devcontainer for Validation (No release yet)
+
+### Content from ./scrum.pmo/sprints/sprint-5/planning.md
+# Sprint 5 Planning
+
+## Sprint Goal
+Deliver TS Ranger v2 under `src.v2`, consolidating Sprint 2 learnings, QA feedback, and existing tests. Implement the architecture, integrate it behind an environment toggle, and validate by running the existing test suite unchanged. **ENHANCED with TRON QA critical discoveries:** Address critical filter corruption bug and implement QA-driven quality improvements.
+
+## Extended Sprint Intent
+We learned from Sprint 2 and QA that TS Ranger must provide stable, predictable TUI UX (exact spacing and footer anchoring), shell-like prompt editing with correct colors and PS1 handling, deterministic non-interactive test mode, and a Docs column backed by TSCompletion. This sprint extends the goal to deliver a production-ready v2 in `src.v2` with:
+- The same behaviors and outputs that current tests assert (zero test changes)
+- Clear separation of IO vs rendering via a `TerminalIO` abstraction for determinism
+- A simple toggle (`TSRANGER_V2=1`) to run v2 end-to-end from the existing shell wrapper and tests
+- **NEW:** Critical filter corruption bug fix and comprehensive QA improvements
+## Task List (Sprint 5)
+
+- [x] [Task 1: Architect — TS Ranger v2 End-to-End Specification](./task-1.md)
+- [x] [Task 2: Architect — src.v2 Structure and Migration Plan](./task-2.md)
+
+### Content from ./scrum.pmo/sprints/sprint-6/planning.md
+[Back to Initialization](../initialization.md)
+
+# Sprint 6 Planning — Versioned Folder Refactor
+
+## Sprint Goal
+Refactor to a versioned top-level structure: v2/src/ and v2/test/, with dependencies referenced relative to v2/src (path aliases/baseUrl). Migrate src.v2 → v2/src and test.v2 → v2/test, update wrappers, configs, and docs, preserving DRY and the versioned-units policy.
+
+## Tasks
+
+- [ ] [Task 1: Architect — Versioned Folder Structure and Dependency Strategy](./task-1-architect-versioned-structure.md)
+- [ ] [Task 2: Developer — Migrate Code and Tests to v2/src and v2/test](./task-2-developer-migrate-v2-folders.md)
+- [ ] [Task 3: DevOps — Update Wrapper, tsconfig, and CI for Version Routing](./task-3-devops-routing-config.md)
+- [ ] [Task 4: Tester — Validate v2 Test Suite and Determinism](./task-4-tester-validate-v2-suite.md)
+- [ ] [Task 5: PO — Update Docs, Cross-References, and Requirements](./task-5-po-docs-and-xrefs.md)
+- [ ] [Task 6: Architect — Componentization & Submodules Plan](./task-6-architect-componentization-and-submodules.md)
+
+### Content from ./scrum.pmo/sprints/sprint-7/planning.md
+# Sprint 7 Planning
+
+## Sprint Goal
+Deliver TS Ranger v2.5 under `src.v2.5`, building upon Sprint 5's v2 implementation and Sprint 6's versioned folder structure. Implement a component-based directory organization that supports better modularity and maintainability.
+
+## Extended Sprint Intent
+Building on Sprint 5's TSRanger v2 and Sprint 6's versioned folder refactoring, Sprint 7 delivers TSRanger v2.5 with a refined component-based architecture under `src.v2.5`. This sprint focuses on:
+- The same behaviors and outputs that current tests assert (zero test changes)
+- Clear separation of IO vs rendering via a `TerminalIO` abstraction for determinism
+- A simple toggle (`TSRANGER_V2=1`) to run v2.5 end-to-end from the existing shell wrapper and tests
+## Task List (Sprint 7)
+
+- [ ] [Task 1: Architect — TS Ranger v2.5 End-to-End Specification](./task-1.md)
+- [ ] [Task 2: Architect — TSRanger v2.5 Structure and Migration Plan](./task-2.md)
+- [ ] [Task 3: Architect — Acceptance Criteria and Test Matrix Mapping](./task-3.md)
+
+### Content from ./scrum.pmo/sprints/sprint-8/planning.md
+# Sprint 8 Planning
+
+## PR
+- Title: analyze ranger
+
+## Sprint Goal
+Analyze and formalize TSRanger TUI behavior from README and code, derive comprehensive key input test cases, and produce concrete requirements.
+
+## Deliverables
+- `ranger.tui.behavior.md`: Detailed behavior of Python ranger TUI (authoritative)
+- `ranger.requirements.md`: Functional/non-functional requirements and acceptance criteria for ranger
+- `ranger.keyinput.testcases.md`: Derived key input test cases for ranger
+- `tsranger.tui.behavior.analyzed.md`: Current TSRanger behavior (for contrast)
+## Task List (Sprint 8)
+- [ ] Task 1.0: Architect — Ranger (Python) TUI Behavior Spec (`ranger.tui.behavior.md`)
+
+### Content from ./scrum.pmo/sprints/sprint-9/planning.md
+# Sprint 9 Planning - Merge Operations
+
+## Sprint Goal
+Execute merge operations and release testing for the project branches.
+
+## Context
+This sprint focused on merge execution and testing activities. Tasks were numbered based on their execution order.
+
+## Tasks
+
+### Task 9.7: Test Merge Execution
+- **Status**: Complete
+- **Description**: Test the merge execution process
+- **Location**: `task-9.7-test-merge-execution.md`
+### Task 9.8: Create Release Testing  
 
 
 ---
@@ -190,7 +682,7 @@
 
 ### Branch Information
 - **Current Branch:** feature/memory-system-implementation
-- **Latest Commit:** a6b645ce - feat: implement advanced context window management with token budgets
+- **Latest Commit:** 2c4fab11 - feat: consolidate memory generation to single canonical script
 
 ### Active Sprint
 - **Latest Sprint:** sprint-21

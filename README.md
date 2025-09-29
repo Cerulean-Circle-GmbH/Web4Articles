@@ -4,9 +4,36 @@
 
 A DAPP for collective intelligence in article writing.
 
+## 🧠 Agent Memory System
+
+**IMPORTANT:** Agents now have comprehensive project memory! Before crawling files manually, your complete project context is available in `memory.md`.
+
+### Memory-Enhanced Startup Process
+1. **Read Memory Context**: `memory.md` contains ALL essential project knowledge (6,355+ tokens)
+2. **Instant Knowledge**: PDCA requirements, roles, tech stack, commands - everything in one file
+3. **Selective Reading**: Only read specific files for detailed implementation
+
+**Memory Benefits:**
+- ✅ **No context rebuilding** - Complete knowledge instantly available
+- ✅ **Consistent understanding** - Same knowledge base for all agents  
+- ✅ **Faster startup** - Essential info without crawling 52+ files
+- ✅ **MCP-style context** - Comprehensive background knowledge injection
+
+### When to Update Memory
+```bash
+# Update memory when:
+# - New files added to project
+# - PDCA processes updated  
+# - Agent roles modified
+# - Technical standards changed
+./scripts/generate-memory.sh
+```
+
+---
+
 ## 🚀 When You See "start"
 
-**You are a Background Agent.** Follow these steps:
+**You are a Background Agent.** Follow these memory-enhanced steps:
 
 1. **Initialize PDCA Framework**:
    ```bash
@@ -43,23 +70,62 @@ A DAPP for collective intelligence in article writing.
 
 ## 📋 Agent Operating Rules
 
-- **Use newest PDCA template** - Always check template.md first
-- **Apply startup decision framework** - Use the 3 standard questions
+### Memory-First Workflow
+- **Start with memory.md** - Complete project context before any work
+- **Use memory knowledge** - PDCA requirements, tech stack, standards all included
+- **Read specific files only** - For detailed implementation after memory context
+- **Update memory when needed** - Run `./scripts/generate-memory.sh` after major changes
+
+### Process Requirements  
+- **Use newest PDCA template** - Template version and requirements in memory.md
+- **Apply startup decision framework** - Decision format documented in memory.md
 - **Create proper PDCAs** for all significant work
 - **Use numbered decisions** (1a, 1b format) when real choices exist
-- **Provide dual links** (GitHub | local)  
+- **Provide dual links** (GitHub | local) - Format specified in memory.md
 - **Keep chat minimal** - details go in PDCA files
 - **Commit and push** immediately after PDCA creation
 
 ## 🎯 Success Criteria
 
+### Memory-Enhanced Agent Success
+- **Use memory.md context** - Start with comprehensive project knowledge
+- **Demonstrate memory knowledge** - Reference PDCA requirements, tech stack, roles without reading files
+- **Efficient startup** - Work immediately using memory context vs. extensive crawling
+- **Selective file reading** - Only read specific files for implementation details
+
+### Traditional Success Criteria
 - You identify as your specific agent role (Developer, Architect, etc.)
-- You create session directory and project.status.md
-- You create proper PDCAs using current template
+- You create session directory and project.status.md  
+- You create proper PDCAs using current template (format in memory.md)
 - You present meaningful decisions or "All clear, no decisions"
 - You work on your own dev/YYYY-MM-DD-UTC-HHMM branch
 - User responds with simple "1a, 2b" to your decisions
 
 ---
 
-**The PDCA Quality Agent maintains process quality. When in doubt, refer to the startup decision framework!** 🎯
+## 🔧 Quick Reference
+
+### Essential Commands
+```bash
+# View comprehensive memory context
+cat memory.md
+
+# Update memory after changes
+./scripts/generate-memory.sh
+
+# Check agent identity  
+./scripts/agent-identity-first-startup.sh
+
+# Current branch status
+git branch --show-current
+```
+
+### Memory-First Agent Workflow
+1. **Read memory.md** → Get complete project context (6,355+ tokens)
+2. **Start work immediately** → Use memory knowledge for PDCA, roles, standards
+3. **Read specific files** → Only for detailed implementation when needed
+4. **Update memory** → When making significant project changes
+
+---
+
+**The PDCA Quality Agent maintains process quality. For complete context, start with memory.md! When in doubt, refer to the startup decision framework documented in your memory context.** 🧠🎯

@@ -23,16 +23,49 @@ echo -e "${YELLOW}Purpose: Comprehensive agent context (MCP-style)${NC}"
 cd "$WORKSPACE_ROOT"
 START_TIME=$(date +%s)
 
-# Core files that contain essential information
-ESSENTIAL_FILES=(
-    "README.md"
-    "index.md"
-    "recovery.md"
-    "scrum.pmo/roles/_shared/PDCA/howto.PDCA.md"
-    "scrum.pmo/roles/_shared/PDCA/template.md"
-    "scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md"
-    "docs/tech-stack.md"
-)
+# Discover ALL markdown files using configuration patterns
+echo -e "${YELLOW}🔍 Discovering all markdown files recursively...${NC}"
+
+ALL_MD_FILES=()
+
+# Load discovery patterns from configuration
+DISCOVERY_PATTERNS=($(python3 -c "
+import json
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+for pattern in config['discovery_patterns']['patterns']:
+    print(pattern)
+"))
+
+# Add core files
+CORE_FILES=($(python3 -c "
+import json
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+for file in config['core_files']['files']:
+    print(file)
+"))
+
+# Comprehensive file discovery
+for pattern in "${DISCOVERY_PATTERNS[@]}"; do
+    while IFS= read -r -d '' file; do
+        if [[ -f "$file" ]]; then
+            ALL_MD_FILES+=("$file")
+        fi
+    done < <(find . -path "./$pattern" -type f -print0 2>/dev/null)
+done
+
+# Add core files
+for file in "${CORE_FILES[@]}"; do
+    if [[ -f "$file" ]]; then
+        ALL_MD_FILES+=("$file")
+    fi
+done
+
+# Remove duplicates and sort
+readarray -t ALL_MD_FILES < <(printf '%s\n' "${ALL_MD_FILES[@]}" | sort -u)
+
+echo "  📊 Discovered ${#ALL_MD_FILES[@]} markdown files for comprehensive memory"
 
 # Extract essential content from key files
 extract_essential_content() {
@@ -154,11 +187,41 @@ cat >> "$MEMORY_FILE" << 'EOF'
 
 EOF
 
-# Add all role information
-echo -e "${YELLOW}📋 Processing agent roles...${NC}"
-for role_dir in scrum.pmo/roles/*/; do
-    if [[ -d "$role_dir" && -f "$role_dir/process.md" ]]; then
-        extract_role_info "$role_dir/process.md" >> "$MEMORY_FILE"
+# Process all discovered files for comprehensive content
+echo -e "${YELLOW}📋 Processing ${#ALL_MD_FILES[@]} files for comprehensive content...${NC}"
+
+# Add role information (prioritized)
+for file in "${ALL_MD_FILES[@]}"; do
+    if [[ "$file" == *"/roles/"*"/process.md" ]]; then
+        extract_role_info "$file" >> "$MEMORY_FILE"
+    fi
+done
+
+# Add key content sections from all other files
+cat >> "$MEMORY_FILE" << 'EOF'
+
+---
+
+## Additional Essential Content
+
+EOF
+
+# Process other important files for key content
+for file in "${ALL_MD_FILES[@]}"; do
+    # Skip role files (already processed) and very large files
+    if [[ "$file" != *"/roles/"*"/process.md" ]] && [[ -f "$file" ]]; then
+        file_size=$(wc -l < "$file" 2>/dev/null || echo "0")
+        if [[ $file_size -lt 200 ]] && [[ $file_size -gt 5 ]]; then
+            echo "### Content from $file" >> "$MEMORY_FILE"
+            # Extract key sections - headers and first few lines of each section
+            awk '
+                /^#/ { print; getline; print; next }
+                /^-.*:/ { print; next }
+                /Purpose|Important|Critical|Key|Must|Required/ { print; next }
+                NR <= 10 { print }
+            ' "$file" | head -15 >> "$MEMORY_FILE"
+            echo "" >> "$MEMORY_FILE"
+        fi
     fi
 done
 
