@@ -8,7 +8,8 @@ Add this simple, effective rule to your Cursor user rules:
 
 ```
 Always include the contents of memory.md in every response context. 
-Treat it as pinned project knowledge.
+- Treat it as pinned project knowledge.
+- Check if memory.md is actually being injected into context (This would be visible in the conversation context)
 ```
 
 **Why this rule is perfect:**
