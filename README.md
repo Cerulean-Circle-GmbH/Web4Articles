@@ -8,10 +8,10 @@ A DAPP for collective intelligence in article writing.
 
 **IMPORTANT:** Agents now have comprehensive project memory! Before crawling files manually, your complete project context is available in `memory.md`.
 
-### Memory-Enhanced Startup Process
-1. **Read Memory Context**: `memory.md` contains ALL essential project knowledge (6,355+ tokens)
-2. **Instant Knowledge**: PDCA requirements, roles, tech stack, commands - everything in one file
-3. **Selective Reading**: Only read specific files for detailed implementation
+### Auto-Injection Startup Process
+1. **Auto-Load Memory Context**: `memory.md` contains ALL essential project knowledge (22,600+ tokens)
+2. **Instant Knowledge**: PDCA requirements, roles, tech stack, commands - everything auto-injected
+3. **Zero Essential Reading**: All basic project knowledge loaded automatically in Step 1
 
 **Memory Benefits:**
 - ✅ **No context rebuilding** - Complete knowledge instantly available
@@ -35,41 +35,54 @@ A DAPP for collective intelligence in article writing.
 
 **You are a Background Agent.** Follow these memory-enhanced steps:
 
-1. **Ensure Memory Context is Current**:
+1. **Auto-Load Complete Memory Context (FIRST PRIORITY)**:
    ```bash
-   # Validate and ensure memory.md is current and comprehensive
+   # CRITICAL: Ensure memory is current and automatically load content
    ./scripts/ensure-memory.sh
+   
+   # Auto-inject memory content into agent context
+   echo "🧠 LOADING COMPLETE PROJECT CONTEXT..."
+   echo "📊 Memory contains: $(wc -w < memory.md) words of comprehensive knowledge"
+   echo "🎯 Auto-injecting memory.md content for instant agent context..."
+   
+   # AUTOMATIC MEMORY INJECTION - No manual reading required
+   cat memory.md
    ```
 
-2. **Initialize PDCA Framework**:
+2. **Validate Memory Context Loading**:
    ```bash
-   # Check if PDCA documentation exists
+   # Verify memory content is now available in conversation context
+   echo "✅ Memory validation complete"
+   echo "🧠 Agent now has complete project knowledge including:"
+   echo "   - All PDCA requirements and templates"
+   echo "   - All agent roles and responsibilities" 
+   echo "   - Complete technology stack (Vitest, TypeScript, etc.)"
+   echo "   - Project philosophy and decision frameworks"
+   echo "   - Recovery and troubleshooting procedures"
+   echo "🎯 Ready for immediate productive work!"
+   ```
+
+3. **Initialize PDCA Framework (if needed)**:
+   ```bash
+   # Check if PDCA documentation exists (usually not needed due to memory)
    ls -la scrum.pmo/roles/_shared/PDCA/howto.PDCA.md 2>/dev/null || echo "Getting PDCA docs..."
    
-   # Get PDCA framework if missing
+   # Get PDCA framework if missing (fallback only)
    git fetch origin release/dev
    git checkout origin/release/dev -- scrum.pmo/roles/_shared/PDCA/
    ```
 
-3. **Read Memory Context First**:
-   ```bash
-   # Your comprehensive project context is now ready
-   echo "🧠 Reading comprehensive memory context..."
-   echo "📊 Memory contains: $(wc -w < memory.md) words of complete project knowledge"
-   # Review memory.md - it contains PDCA requirements, roles, tech stack, everything!
-   ```
+4. **Work Immediately with Memory Context**:
+   - ✅ **Complete PDCA knowledge**: Template format, decision framework, dual links (loaded in Step 1)
+   - ✅ **All 6 mandatory sections**: Documented and accessible from memory context
+   - ✅ **No file reading required**: All essential information now in conversation context
+   - ✅ **Template version**: v3.1.4.2 and all requirements available from memory
 
-4. **Verify PDCA Knowledge from Memory**:
-   - **Memory contains**: Complete PDCA template format, decision framework, dual links
-   - **All 6 mandatory sections** documented in memory.md
-   - **No need to read** `howto.PDCA.md` unless implementing specific details
-   - **Template version** and requirements already in memory context
-
-5. **Create Session Start PDCA**:
-   - **Use memory knowledge**: Decision framework format documented in memory.md
-   - **Standard 3 decisions**: Focus Area, Role Selection, Session Duration (from memory)
-   - **PDCA format**: UTC timestamp format `YYYY-MM-DD-UTC-HHMM` (from memory)
-   - **No file reading needed**: All requirements in memory context
+5. **Create Session Start PDCA Using Memory**:
+   - 🧠 **Use loaded memory knowledge**: Decision framework and format now in context
+   - 🎯 **Standard 3 decisions**: Focus Area, Role Selection, Session Duration (from memory)
+   - ⏰ **PDCA format**: UTC timestamp format `YYYY-MM-DD-UTC-HHMM` (from memory)
+   - 🚀 **Instant productivity**: All requirements accessible without additional file reading
 
 6. **Project Status & Branch Management**:
    ```bash
@@ -86,11 +99,12 @@ A DAPP for collective intelligence in article writing.
 
 ## 📋 Agent Operating Rules
 
-### Memory-First Workflow
-- **Start with memory.md** - Complete project context before any work
-- **Use memory knowledge** - PDCA requirements, tech stack, standards all included
-- **Read specific files only** - For detailed implementation after memory context
-- **Update memory when needed** - Run `./scripts/generate-memory.sh` after major changes
+### Auto-Injection Memory Workflow
+- **Step 1 auto-loads memory** - Complete project context automatically injected
+- **Instant knowledge access** - PDCA, tech stack, roles immediately available in conversation
+- **Zero manual reading** - All essential information loaded via `cat memory.md`
+- **Selective file access only** - Read specific files only for detailed implementation
+- **Update when needed** - Run `./scripts/generate-memory.sh` after major changes
 
 ### Process Requirements  
 - **Use newest PDCA template** - Template version and requirements in memory.md
@@ -103,11 +117,11 @@ A DAPP for collective intelligence in article writing.
 
 ## 🎯 Success Criteria
 
-### Memory-Enhanced Agent Success
-- **Use memory.md context** - Start with comprehensive project knowledge
-- **Demonstrate memory knowledge** - Reference PDCA requirements, tech stack, roles without reading files
-- **Efficient startup** - Work immediately using memory context vs. extensive crawling
-- **Selective file reading** - Only read specific files for implementation details
+### Auto-Injection Memory Success
+- **Memory auto-loaded in Step 1** - Complete project knowledge immediately accessible
+- **Instant knowledge demonstration** - Reference PDCA, tech stack, roles from loaded context
+- **Ultra-fast startup** - Work immediately with 22,600 tokens of context vs. file crawling
+- **Zero essential file reading** - All basic project knowledge pre-loaded in conversation
 
 ### Traditional Success Criteria
 - You identify as your specific agent role (Developer, Architect, etc.)
@@ -139,11 +153,12 @@ cat memory.md
 git branch --show-current
 ```
 
-### Memory-First Agent Workflow
-1. **Read memory.md** → Get complete project context (6,355+ tokens)
-2. **Start work immediately** → Use memory knowledge for PDCA, roles, standards
-3. **Read specific files** → Only for detailed implementation when needed
-4. **Update memory** → When making significant project changes
+### Auto-Injection Agent Workflow
+1. **Run startup Step 1** → Auto-loads complete project context (22,600+ tokens)
+2. **Work immediately** → Use injected memory for PDCA, roles, standards, everything
+3. **Skip basic file reading** → All essential knowledge already in conversation context
+4. **Read specific files only** → For detailed implementation when absolutely needed
+5. **Update memory** → When making significant project changes
 
 ---
 
