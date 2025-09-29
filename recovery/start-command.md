@@ -43,6 +43,19 @@ echo "✅ Working on dev/$TIMESTAMP for this session"
 - Read: `scrum.pmo/roles/_shared/PDCA/howto.PDCA.md` (focus on sections 1-2)
 - Note: 6 mandatory sections, dual links, numbered decisions
 
+### **4.1 Mandatory Git Session Progression Documentation**
+**CRITICAL:** All agents must include git progression table in first or second PDCA showing:
+```markdown
+## Branch Progression Timeline with Commit SHAs
+
+| # | Branch | Commit SHA (Full) | Short SHA | Timestamp (UTC) | Commit Message | Session Phase |
+|---|--------|-------------------|-----------|-----------------|----------------|---------------|
+| 1 | cursor/[initial] | [full-sha] | [short] | [timestamp] | [message] | **Initial State** |
+| 2 | save/start | [full-sha] | [short] | [timestamp] | [message] | **Recovery** |
+| 3 | dev/[UTC-timestamp] | [full-sha] | [short] | [timestamp] | [message] | **Work Branch Creation** |
+```
+**Purpose:** Enable TRON branch progression analysis and startup verification
+
 ### **5. Install Git Automation (CRITICAL)**
 ```bash
 # Create post-commit hook for auto-merge
