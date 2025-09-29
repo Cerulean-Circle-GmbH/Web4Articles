@@ -21,12 +21,58 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       origin: '',
       definition: '',
       targetDirectory: this.findProjectRoot(),
+      version: this.discoverComponentVersion(),
+      component: this.discoverComponentName(),
       componentStandards: [],
       validationRules: [],
       scaffoldingTemplates: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
+  }
+
+  /**
+   * Discover current component version from package.json or directory
+   * @returns Current component version string
+   */
+  private discoverComponentVersion(): string {
+    try {
+      // Method 1: Read package.json version
+      const packagePath = path.join(__dirname, '../../../package.json');
+      if (existsSync(packagePath)) {
+        const packageData = JSON.parse(require('fs').readFileSync(packagePath, 'utf-8'));
+        return packageData.version;
+      }
+      
+      // Method 2: Parse from directory structure
+      const currentDir = __dirname;
+      const versionMatch = currentDir.match(/\/(\d+\.\d+\.\d+\.\d+)\//);
+      if (versionMatch) {
+        return versionMatch[1];
+      }
+      
+      // Fallback
+      return 'versionUnknown';
+    } catch (error) {
+      return 'versionUnknown';
+    }
+  }
+
+  /**
+   * Discover current component name from directory structure
+   * @returns Current component name string  
+   */
+  private discoverComponentName(): string {
+    try {
+      const currentDir = __dirname;
+      const componentMatch = currentDir.match(/\/components\/([^/]+)\//);
+      if (componentMatch) {
+        return componentMatch[1];
+      }
+      return 'componentUnknown';
+    } catch (error) {
+      return 'componentUnknown';
+    }
   }
 
   /**
@@ -108,14 +154,14 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       uuid: this.model.uuid,
       timestamp: new Date().toISOString(),
       component: 'Web4TSComponent',
-      version: '0.3.0.8'
+      version: this.model.version
     });
 
     return {
       ior: {
         uuid: this.model.uuid,
         component: 'Web4TSComponent',
-        version: '0.3.0.8'
+        version: this.model.version
       },
       owner: ownerData,
       model: this.model
@@ -2291,7 +2337,7 @@ Standards:
       case 'overview':
       default:
         console.log(`
-🚀 Web4TSComponent 0.3.0.8 - Auto-Discovery CLI Architecture
+🚀 Web4TSComponent 0.3.0.10 - Auto-Discovery CLI Architecture
 
 This is outdated hardcoded help text. The CLI now uses auto-discovery!
 Run './web4tscomponent' without arguments to see the auto-generated help.
@@ -2410,7 +2456,6 @@ export default defineConfig({
   /**
    * Verify and fix all symlinks for component - comprehensive symlink maintenance
    * @cliSyntax 
-   * @cliHide
    */
   async verifyAndFix(): Promise<this> {
     const context = this.getComponentContext();

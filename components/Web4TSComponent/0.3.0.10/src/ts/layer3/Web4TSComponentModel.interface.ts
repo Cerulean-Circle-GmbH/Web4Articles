@@ -13,6 +13,8 @@ export interface Web4TSComponentModel extends Model {
   
   // Web4TSComponent-specific properties
   targetDirectory: string;
+  version: string;
+  component: string;
   componentStandards: ComponentStandard[];
   validationRules: ValidationRule[];
   scaffoldingTemplates: ScaffoldingTemplate[];
