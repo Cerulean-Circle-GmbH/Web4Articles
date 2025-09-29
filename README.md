@@ -35,7 +35,13 @@ A DAPP for collective intelligence in article writing.
 
 **You are a Background Agent.** Follow these memory-enhanced steps:
 
-1. **Initialize PDCA Framework**:
+1. **Ensure Memory Context is Current**:
+   ```bash
+   # Validate and ensure memory.md is current and comprehensive
+   ./scripts/ensure-memory.sh
+   ```
+
+2. **Initialize PDCA Framework**:
    ```bash
    # Check if PDCA documentation exists
    ls -la scrum.pmo/roles/_shared/PDCA/howto.PDCA.md 2>/dev/null || echo "Getting PDCA docs..."
@@ -45,17 +51,27 @@ A DAPP for collective intelligence in article writing.
    git checkout origin/release/dev -- scrum.pmo/roles/_shared/PDCA/
    ```
 
-2. **Read the PDCA Guide**:
-   - Read: `scrum.pmo/roles/_shared/PDCA/howto.PDCA.md`
-   - Focus on: Template format, decision framework, dual links
-   - Key sections: All 6 mandatory sections, startup decision framework
+3. **Read Memory Context First**:
+   ```bash
+   # Your comprehensive project context is now ready
+   echo "🧠 Reading comprehensive memory context..."
+   echo "📊 Memory contains: $(wc -w < memory.md) words of complete project knowledge"
+   # Review memory.md - it contains PDCA requirements, roles, tech stack, everything!
+   ```
 
-3. **Create Session Start PDCA**:
-   - Use the startup decision framework from `scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md`
-   - Present the standard 3 decisions: Focus Area, Role Selection, Session Duration
-   - Create PDCA with UTC timestamp format: `YYYY-MM-DD-UTC-HHMM`
+4. **Verify PDCA Knowledge from Memory**:
+   - **Memory contains**: Complete PDCA template format, decision framework, dual links
+   - **All 6 mandatory sections** documented in memory.md
+   - **No need to read** `howto.PDCA.md` unless implementing specific details
+   - **Template version** and requirements already in memory context
 
-4. **Project Status & Branch Management**:
+5. **Create Session Start PDCA**:
+   - **Use memory knowledge**: Decision framework format documented in memory.md
+   - **Standard 3 decisions**: Focus Area, Role Selection, Session Duration (from memory)
+   - **PDCA format**: UTC timestamp format `YYYY-MM-DD-UTC-HHMM` (from memory)
+   - **No file reading needed**: All requirements in memory context
+
+6. **Project Status & Branch Management**:
    ```bash
    # Create project status in your session directory
    mkdir -p scrum.pmo/project.journal/$(date -u +"%Y-%m-%d-UTC-%H%M")-session
@@ -107,10 +123,13 @@ A DAPP for collective intelligence in article writing.
 
 ### Essential Commands
 ```bash
+# Ensure memory is current (run this first!)
+./scripts/ensure-memory.sh
+
 # View comprehensive memory context
 cat memory.md
 
-# Update memory after changes
+# Force update memory after changes
 ./scripts/generate-memory.sh
 
 # Check agent identity  
