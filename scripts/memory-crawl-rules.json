@@ -1,10 +1,43 @@
 {
-  "version": "1.0",
-  "description": "Memory generation crawling rules configuration",
-  "updated": "2025-09-29",
+  "version": "2.0",
+  "description": "Comprehensive content inclusion strategy for memory generation",
+  "updated": "2025-09-29-Phase1",
+  
+  "full_include_files": {
+    "description": "Critical files included with complete content (navigation removed)",
+    "files": [
+      "README.md",
+      "index.md",
+      "scrum.pmo/roles/_shared/PDCA/howto.PDCA.md",
+      "scrum.pmo/roles/_shared/PDCA/template.md",
+      "scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md",
+      "scrum.pmo/roles/_shared/PDCA/PDCA.understanding.CMMI.md",
+      "docs/tech-stack.md",
+      "recovery.md"
+    ]
+  },
+  
+  "smart_extract_files": {
+    "description": "Important files with intelligent content extraction",
+    "patterns": [
+      "scrum.pmo/roles/*/process.md",
+      "docs/architecture/*.md",
+      "docs/domain/*.md",
+      "docs/memory-*.md"
+    ]
+  },
+  
+  "summary_only_files": {
+    "description": "Reference files with header and summary extraction only",
+    "patterns": [
+      "scrum.pmo/project.journal/**/*.md",
+      "scrum.pmo/sprints/*/planning.md",
+      "recovery.analysis/**/*.md"
+    ]
+  },
   
   "core_files": {
-    "description": "Essential files that must always be included",
+    "description": "Legacy core files list (deprecated - use full_include_files)",
     "files": [
       "README.md",
       "index.md",
@@ -84,11 +117,18 @@
   },
   
   "quality_rules": {
-    "description": "Rules for maintaining quality and efficiency",
+    "description": "Rules for maintaining quality and efficiency with comprehensive content",
     "max_files": 100,
-    "max_file_size_kb": 500,
-    "token_target": 5000,
-    "generation_time_target_seconds": 30,
+    "max_file_size_kb": 1000,
+    "token_target": 15000,
+    "token_maximum": 20000,
+    "generation_time_target_seconds": 45,
+    "content_strategy": {
+      "full_include_no_size_limit": true,
+      "remove_navigation_elements": true,
+      "preserve_all_knowledge": true,
+      "intelligent_token_management": true
+    },
     "deduplication": {
       "enabled": true,
       "rules": [
@@ -98,22 +138,44 @@
         "reference_dont_repeat"
       ]
     },
-    "summarization": {
+    "navigation_removal": {
       "enabled": true,
-      "large_file_threshold_kb": 50,
-      "max_content_length_chars": 2000,
-      "preserve_sections": [
-        "overview",
-        "key points",
-        "requirements",
-        "process",
-        "standards"
-      ]
+      "patterns_to_remove": [
+        "^\\[Back to .*\\].*",
+        "^\\[.*\\].*\\|.*\\[.*\\].*",
+        "^---$",
+        "^\\[.*\\]\\(\\.\\./"
+      ],
+      "preserve_content_links": true
+    },
+    "content_extraction": {
+      "full_include": {
+        "remove_only_navigation": true,
+        "preserve_headers": true,
+        "preserve_code_blocks": true,
+        "preserve_lists": true,
+        "preserve_processes": true
+      },
+      "smart_extract": {
+        "include_all_headers": true,
+        "include_numbered_lists": true,
+        "include_processes": true,
+        "include_examples": true,
+        "max_section_lines": 50
+      },
+      "summary_only": {
+        "headers_and_first_paragraph": true,
+        "key_bullet_points": true,
+        "max_lines_per_file": 20
+      }
     }
   },
   
   "priority_weights": {
-    "description": "Priority weights for file inclusion when limits are reached",
+    "description": "Priority weights for comprehensive content inclusion",
+    "full_include_files": 100,
+    "smart_extract_files": 80,
+    "summary_only_files": 40,
     "core_files": 10,
     "role_files": 8,
     "process_files": 7,
