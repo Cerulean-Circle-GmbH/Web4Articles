@@ -22,7 +22,7 @@ MEMORY_VERSIONS="$WORKSPACE_ROOT/.memory-versions"
 ENABLE_INCREMENTAL=true
 FORCE_FULL_REGENERATION=${FORCE_FULL:-false}
 
-echo -e "${BLUE}🧠 Memory Generation Script v3.0 (Incremental Updates)${NC}"
+echo -e "${BLUE}🧠 Memory Generation Script v4.0 (Comprehensive Content Inclusion)${NC}"
 echo -e "${BLUE}====================================${NC}"
 echo -e "${YELLOW}Purpose: Comprehensive agent context (MCP-style)${NC}"
 
@@ -177,11 +177,89 @@ update_all_file_trackers() {
 }
 
 # ========================================
+# CONFIGURATION LOADING FUNCTIONS
+# ========================================
+
+# Load file categories from configuration
+load_file_categories() {
+    echo -e "${YELLOW}📂 Loading file categories from configuration...${NC}"
+    
+    # Load full include files
+    FULL_INCLUDE_FILES=($(python3 -c "
+import json
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+if 'full_include_files' in config:
+    for file in config['full_include_files']['files']:
+        print(file)
+"))
+    
+    # Load smart extract patterns
+    SMART_EXTRACT_PATTERNS=($(python3 -c "
+import json
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+if 'smart_extract_files' in config:
+    for pattern in config['smart_extract_files']['patterns']:
+        print(pattern)
+"))
+    
+    # Load summary only patterns
+    SUMMARY_ONLY_PATTERNS=($(python3 -c "
+import json
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+if 'summary_only_files' in config:
+    for pattern in config['summary_only_files']['patterns']:
+        print(pattern)
+"))
+    
+    echo "  📊 Loaded ${#FULL_INCLUDE_FILES[@]} full include files"
+    echo "  📊 Loaded ${#SMART_EXTRACT_PATTERNS[@]} smart extract patterns"
+    echo "  📊 Loaded ${#SUMMARY_ONLY_PATTERNS[@]} summary only patterns"
+}
+
+# Categorize a file based on configuration
+categorize_file() {
+    local file="$1"
+    
+    # Check if it's a full include file
+    for full_file in "${FULL_INCLUDE_FILES[@]}"; do
+        if [[ "$file" == "$full_file" ]]; then
+            echo "full_include"
+            return
+        fi
+    done
+    
+    # Check if it matches smart extract patterns
+    for pattern in "${SMART_EXTRACT_PATTERNS[@]}"; do
+        if [[ "$file" == $pattern ]]; then
+            echo "smart_extract"
+            return
+        fi
+    done
+    
+    # Check if it matches summary only patterns  
+    for pattern in "${SUMMARY_ONLY_PATTERNS[@]}"; do
+        if [[ "$file" == $pattern ]]; then
+            echo "summary_only"
+            return
+        fi
+    done
+    
+    # Default to smart extract for uncategorized files
+    echo "smart_extract"
+}
+
+# ========================================
 # MAIN SCRIPT EXECUTION
 # ========================================
 
 # Initialize incremental update system
 init_file_tracker
+
+# Load file categories from configuration
+load_file_categories
 
 # Discover ALL markdown files using configuration patterns
 echo -e "${YELLOW}🔍 Discovering all markdown files recursively...${NC}"
@@ -249,18 +327,118 @@ else
     fi
 fi
 
-# Extract essential content from key files
+# ========================================
+# ENHANCED CONTENT EXTRACTION FUNCTIONS
+# ========================================
+
+# Remove navigation elements while preserving knowledge content
+remove_navigation() {
+    local content="$1"
+    # Remove navigation patterns from config
+    echo "$content" | sed \
+        -e '/^\[Back to .*\].*/d' \
+        -e '/^\[.*\].*|.*\[.*\].*/d' \
+        -e '/^---$/d' \
+        -e '/^\[.*\](\.\.\/.*)/d'
+}
+
+# Full content extraction (for critical files)
+extract_full_content() {
+    local file="$1"
+    
+    if [[ ! -f "$file" ]]; then
+        return
+    fi
+    
+    echo "### Complete Content from $file"
+    echo ""
+    
+    # Get content and remove navigation elements
+    local content=$(cat "$file")
+    local clean_content=$(remove_navigation "$content")
+    
+    # Output clean content preserving all knowledge
+    echo "$clean_content"
+    echo ""
+}
+
+# Smart content extraction (for important files)
+extract_smart_content() {
+    local file="$1"
+    
+    if [[ ! -f "$file" ]]; then
+        return
+    fi
+    
+    echo "### Key Content from $file"
+    echo ""
+    
+    # Extract all headers, lists, code blocks, and processes
+    local content=$(cat "$file")
+    local clean_content=$(remove_navigation "$content")
+    
+    # Smart extraction preserving essential information
+    echo "$clean_content" | awk '
+        # Include all headers
+        /^#+/ { print; next }
+        
+        # Include all lists (numbered and bulleted)
+        /^[0-9]+\./ { print; next }
+        /^-/ { print; next }
+        /^\*/ { print; next }
+        
+        # Include code blocks
+        /^```/ { in_code=1; print; next }
+        in_code==1 { print; if(/^```/) in_code=0; next }
+        
+        # Include process descriptions and requirements
+        /Purpose|Process|Requirement|Step|Task|Goal|Objective/ { print; next }
+        /MUST|SHOULD|SHALL|REQUIRED|CRITICAL|IMPORTANT/ { print; next }
+        
+        # Include examples and commands
+        /Example|Command|Usage/ { print; next }
+        
+        # Skip empty lines in bulk but preserve structure
+        /^$/ { if(prev_empty!=1) print; prev_empty=1; next }
+        { prev_empty=0 }
+    '
+    echo ""
+}
+
+# Summary extraction (for reference files)
+extract_summary_content() {
+    local file="$1"
+    
+    if [[ ! -f "$file" ]]; then
+        return
+    fi
+    
+    echo "### Summary from $file"
+    echo ""
+    
+    # Extract headers and first paragraph of each section
+    local content=$(cat "$file")
+    local clean_content=$(remove_navigation "$content")
+    
+    echo "$clean_content" | awk '
+        /^#+/ { 
+            print; 
+            # Get next non-empty line as summary
+            while(getline && /^$/) continue;
+            if(NF > 0) print;
+            next
+        }
+        /^-.*:/ { print; next }
+    ' | head -20
+    echo ""
+}
+
+# Legacy function for compatibility
 extract_essential_content() {
     local file="$1"
     local max_lines="$2"
     
-    if [[ -f "$file" ]]; then
-        echo "### From $file"
-        echo '```'
-        head -n "$max_lines" "$file" | grep -v "^$" | head -20
-        echo '```'
-        echo ""
-    fi
+    extract_smart_content "$file"
 }
 
 # Extract role definitions
@@ -388,24 +566,103 @@ cat >> "$MEMORY_FILE" << 'EOF'
 
 EOF
 
-# Process other important files for key content
-for file in "${ALL_MD_FILES[@]}"; do
-    # Skip role files (already processed) and very large files
-    if [[ "$file" != *"/roles/"*"/process.md" ]] && [[ -f "$file" ]]; then
-        file_size=$(wc -l < "$file" 2>/dev/null || echo "0")
-        if [[ $file_size -lt 200 ]] && [[ $file_size -gt 5 ]]; then
-            echo "### Content from $file" >> "$MEMORY_FILE"
-            # Extract key sections - headers and first few lines of each section
-            awk '
-                /^#/ { print; getline; print; next }
-                /^-.*:/ { print; next }
-                /Purpose|Important|Critical|Key|Must|Required/ { print; next }
-                NR <= 10 { print }
-            ' "$file" | head -15 >> "$MEMORY_FILE"
-            echo "" >> "$MEMORY_FILE"
+# ========================================
+# COMPREHENSIVE CONTENT PROCESSING
+# ========================================
+
+echo -e "${YELLOW}📋 Processing files with comprehensive content inclusion...${NC}"
+
+# Track token usage
+CURRENT_TOKENS=0
+TOKEN_TARGET=$(python3 -c "
+import json
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+print(config.get('quality_rules', {}).get('token_target', 15000))
+")
+
+TOKEN_MAXIMUM=$(python3 -c "
+import json
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+print(config.get('quality_rules', {}).get('token_maximum', 20000))
+")
+
+echo "  🎯 Target: $TOKEN_TARGET tokens, Maximum: $TOKEN_MAXIMUM tokens"
+
+# Process files by category priority
+echo -e "${BLUE}📚 Phase 1: Full Include Files (Critical Content)${NC}"
+for file in "${FULL_INCLUDE_FILES[@]}"; do
+    if [[ -f "$file" ]]; then
+        echo "  📖 Including complete content: $file"
+        extract_full_content "$file" >> "$MEMORY_FILE"
+        
+        # Check token count
+        CURRENT_TOKENS=$(wc -w < "$MEMORY_FILE" 2>/dev/null || echo "0")
+        ESTIMATED_TOKENS=$((CURRENT_TOKENS * 150 / 100))
+        
+        if [[ $ESTIMATED_TOKENS -gt $TOKEN_MAXIMUM ]]; then
+            echo -e "${YELLOW}⚠️  Approaching token limit at $ESTIMATED_TOKENS tokens${NC}"
         fi
     fi
 done
+
+echo -e "${BLUE}📚 Phase 2: Smart Extract Files (Important Content)${NC}"
+for file in "${ALL_MD_FILES[@]}"; do
+    category=$(categorize_file "$file")
+    
+    if [[ "$category" == "smart_extract" ]] && [[ -f "$file" ]]; then
+        # Skip if already processed as full include
+        skip_file=false
+        for full_file in "${FULL_INCLUDE_FILES[@]}"; do
+            if [[ "$file" == "$full_file" ]]; then
+                skip_file=true
+                break
+            fi
+        done
+        
+        if [[ "$skip_file" == "false" ]]; then
+            echo "  📝 Smart extraction: $file"
+            extract_smart_content "$file" >> "$MEMORY_FILE"
+            
+            # Check token count
+            CURRENT_TOKENS=$(wc -w < "$MEMORY_FILE" 2>/dev/null || echo "0")
+            ESTIMATED_TOKENS=$((CURRENT_TOKENS * 150 / 100))
+            
+            if [[ $ESTIMATED_TOKENS -gt $TOKEN_MAXIMUM ]]; then
+                echo -e "${RED}🚫 Token limit reached at $ESTIMATED_TOKENS tokens, stopping smart extraction${NC}"
+                break
+            fi
+        fi
+    fi
+done
+
+echo -e "${BLUE}📚 Phase 3: Summary Only Files (Reference Content)${NC}"
+# Only process summary files if we have token budget remaining
+CURRENT_TOKENS=$(wc -w < "$MEMORY_FILE" 2>/dev/null || echo "0")
+ESTIMATED_TOKENS=$((CURRENT_TOKENS * 150 / 100))
+
+if [[ $ESTIMATED_TOKENS -lt $TOKEN_TARGET ]]; then
+    for file in "${ALL_MD_FILES[@]}"; do
+        category=$(categorize_file "$file")
+        
+        if [[ "$category" == "summary_only" ]] && [[ -f "$file" ]]; then
+            echo "  📋 Summary extraction: $file"
+            extract_summary_content "$file" >> "$MEMORY_FILE"
+            
+            # Check token count
+            CURRENT_TOKENS=$(wc -w < "$MEMORY_FILE" 2>/dev/null || echo "0")
+            ESTIMATED_TOKENS=$((CURRENT_TOKENS * 150 / 100))
+            
+            if [[ $ESTIMATED_TOKENS -gt $TOKEN_TARGET ]]; then
+                echo -e "${YELLOW}✅ Token target reached at $ESTIMATED_TOKENS tokens${NC}"
+                break
+            fi
+        fi
+    done
+else
+    echo -e "${YELLOW}📊 Skipping summary files - already at $ESTIMATED_TOKENS tokens${NC}"
+fi
 
 # Add current project state
 cat >> "$MEMORY_FILE" << EOF
@@ -542,14 +799,17 @@ if [[ "$ENABLE_INCREMENTAL" == "true" ]]; then
     update_all_file_trackers
 fi
 
-echo -e "${GREEN}✅ Memory Generation Completed!${NC}"
-echo -e "${GREEN}📊 Statistics:${NC}"
+echo -e "${GREEN}✅ Comprehensive Memory Generation Completed!${NC}"
+echo -e "${GREEN}📊 Enhanced Statistics:${NC}"
 echo "  📄 Output file: $MEMORY_FILE"
 echo "  📏 File size: $FILE_SIZE bytes"
 echo "  📝 Words: $WORD_COUNT"
 echo "  🎯 Estimated tokens: $TOKEN_COUNT"
 echo "  ⏱️  Generation time: ${GENERATION_TIME}s"
 echo "  🔄 Incremental updates: $([ "$ENABLE_INCREMENTAL" == "true" ] && echo "enabled" || echo "disabled")"
+echo "  📚 Full include files: ${#FULL_INCLUDE_FILES[@]} processed"
+echo "  📋 Content strategy: Comprehensive inclusion with navigation removal"
+echo "  🎯 Token target: $TOKEN_TARGET (Maximum: $TOKEN_MAXIMUM)"
 
 if [[ $TOKEN_COUNT -gt 8000 ]]; then
     echo -e "${YELLOW}⚠️  Warning: Token count ($TOKEN_COUNT) is high - consider optimization${NC}"
