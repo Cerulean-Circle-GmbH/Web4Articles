@@ -34,26 +34,45 @@
   - c) Documentation Focus - Requirement processing, automation, workflow optimization
   - d) Quality/Testing Focus - Testing strategies, validation, compliance checks
 - [ ] **Decision 2: Agent Role Selection**
-  - a) **BackgroundAgent** - General purpose automation, system maintenance (current default)
-  - b) **PDCAQualityAgent** - Process quality assurance, PDCA compliance verification
-  - c) **ResearchAgent** - Investigation, analysis, research coordination
-  - d) **RecoveryDefinitionAgent** - Error recovery processes, resilience planning
-  - e) **SaveRestartAgent** - Session management, state preservation, recovery operations
+  - a) **BackendAgent** - Server-side development, API design, database management
+  - b) **BackgroundAgent** - General purpose automation, system maintenance (current default)
+  - c) **BranchStatusAgent** - Git branch management, repository hygiene, branch analysis
+  - d) **CICDAgent** - Continuous integration, deployment pipeline management
+  - e) **OntologyAgent** - Knowledge organization, semantic analysis, categorization
+  - f) **PDCAQualityAgent** - Process quality assurance, PDCA compliance verification
+  - g) **RecoveryDefinitionAgent** - Error recovery processes, resilience planning
+  - h) **ReleaseIntegrationAgent** - Release management, version coordination, integration
+  - i) **ResearchAgent** - Investigation, analysis, research coordination
+  - j) **SaveRestartAgent** - Session management, state preservation, recovery operations
+  - k) **Architect** - System design, architecture documentation, technical leadership
+  - l) **Developer** - Software development, implementation, coding tasks
+  - m) **DevOps** - Infrastructure management, deployment, operations
+  - n) **PO** - Product Owner responsibilities, requirements management, stakeholder coordination
+  - o) **ScrumMaster** - Agile process facilitation, team coordination, sprint management
+  - p) **Tester** - Quality assurance, testing strategy, validation processes
 - [ ] **Decision 3: Session Duration Planning**
   - a) **Quick Session (1-2 hours)** - Focused single task or targeted bug fix
   - b) **Half-day Session (2-4 hours)** - Feature development or moderate complexity tasks  
   - c) **Full-day Session (4-8 hours)** - Complex features or multi-component integration work
   - d) **Multi-day Session (1+ days)** - Major architectural changes or extensive research projects
+- [ ] **Decision 4: PDCA Organization Location**
+  - a) **Session PDCAs** - `scrum.pmo/project.journal/[session]/` for project-wide collaborative work across multiple agents/roles
+  - b) **Role PDCAs** - `scrum.pmo/roles/[AgentRole]/pdca/` for agent-specific specialized work within defined role boundaries  
+  - c) **Component PDCAs** - `components/[Component]/[version]/session` for component-specific development work (rare, use for focused component evolution)
 
 ### **TRON Feedback (2025-09-29-UTC-1029)**
 ```quote
-start
+1d
+2 Tester (not listed...cmm2 bug)
+3c
+
+question 4. missing! cmm2 bug
 ```
 
 ### **My Answer**
-Executing Background Agent startup protocol with CMM4 framework understanding. Completed identity check, git configuration, environment sourcing, and PDCA framework initialization. Now presenting startup decision framework as defined in process documentation.
+Acknowledged CMM2 bugs: Missing Decision 4 and incomplete role discovery. Fixed with dynamic role discovery and added complete Decision 4. Implementing selections: 1d (Quality/Testing Focus), 2p (Tester role), 3c (Full-day Session), need Decision 4 selection.
 
-**Learning Applied:** CMM4 understanding enables systematic feedback loop mastery - PDCA is not just documentation but a feedback system for whitebox understanding and improvement.
+**Learning Applied:** CMM2 violations occur when templates are incomplete - systematic verification prevents such gaps.
 
 ---
 
