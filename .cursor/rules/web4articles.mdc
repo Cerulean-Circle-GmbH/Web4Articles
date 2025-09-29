@@ -1,0 +1,47 @@
+---
+alwaysApply: true
+---
+
+# Web4Articles Memory System - Project Rules
+
+## Memory Context (CRITICAL)
+Always include the contents of memory.md in every response context. 
+Treat it as pinned project knowledge containing complete project context.
+
+## Memory System Guidelines
+- memory.md contains 4,237+ words of comprehensive project knowledge
+- Includes: PDCA requirements, all agent roles, tech stack, quality standards
+- NO manual crawling needed for basic project information
+- Use specific file reading only for implementation details
+
+## Agent Startup Protocol
+1. Memory validation runs automatically during agent startup
+2. All agents must reference memory context before file reading
+3. Use ./scripts/ensure-memory.sh to validate memory currency
+4. Update memory with ./scripts/generate-memory.sh after significant changes
+
+## Technology Stack (from memory.md)
+- Testing: Vitest (Jest is BANNED)
+- Architecture: 5-layer structure, strict OOP
+- Code Style: ESM-native, TypeScript-first
+- Quality: DRY principles, KISS approach
+
+## Process Requirements (from memory.md)
+- PDCA methodology for all significant work
+- UTC timestamps: YYYY-MM-DD-UTC-HHMM format
+- Dual links: [GitHub](URL) | [local/path](path)
+- Immediate commit/push after PDCA creation
+
+## Memory Update Triggers
+Update memory when:
+- Role processes change (scrum.pmo/roles/*/process.md)
+- PDCA framework updates
+- Documentation changes
+- Technology stack decisions
+- Project structure modifications
+
+## Success Indicators
+✅ Agents reference project knowledge without reading files
+✅ Consistent understanding across all agent sessions
+✅ Immediate productivity with complete context
+✅ No manual crawling for basic project information
