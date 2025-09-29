@@ -16,6 +16,29 @@
 
 ---
 
+## **🧠 MEMORY-ENHANCED PDCA PROCESS**
+
+**CRITICAL:** All agents now have comprehensive project context via memory.md. Use this knowledge in your PDCAs.
+
+### **Memory Integration in PDCAs**
+- **Use memory context**: Reference PDCA requirements, role definitions, tech stack from memory
+- **No manual file reading**: Essential project knowledge readily available in memory
+- **Consistent understanding**: All agents share same knowledge base via memory context
+- **Quality decisions**: Make informed PDCA decisions using complete project context
+
+### **Memory Validation Before PDCA Creation**
+```bash
+# REQUIRED: Validate memory context before creating PDCAs
+./scripts/ensure-memory.sh
+
+# Verify memory contains current PDCA requirements
+grep -E "PDCA.*template|6.*mandatory.*sections" memory.md
+```
+
+**Memory ensures PDCAs are informed by complete project context and current standards.**
+
+---
+
 ## **📊 MANDATORY PDCA FORMAT - 6 SECTIONS REQUIRED**
 
 ### **1. STRICT HEADER FORMAT (NON-NEGOTIABLE)**
