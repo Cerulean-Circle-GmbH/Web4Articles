@@ -187,18 +187,27 @@
   },
   
   "auto_optimization": {
-    "description": "Automatic AI optimization configuration",
+    "description": "REAL AI optimization configuration - whole file processing",
     "enabled": true,
     "token_threshold": 35000,
-    "optimization_method": "intelligent_chunking",
-    "target_reduction": 0.4,
+    "optimization_method": "whole_file_ai",
+    "target_reduction": 0.6,
     "backup_enabled": true,
-    "ai_service": "local",
+    "ai_service_priority": ["claude", "openai", "manual"],
+    "fallback_to_pattern_matching": false,
     "quality_validation": {
       "preserve_all_roles": true,
       "preserve_all_processes": true,
       "preserve_all_commands": true,
-      "preserve_file_references": true
+      "preserve_file_references": true,
+      "minimum_reduction_percent": 30
+    },
+    "ai_optimization_prompt": {
+      "target_reduction": "60%",
+      "preserve_meaning": true,
+      "intelligent_consolidation": true,
+      "remove_redundancy": true,
+      "compress_verbose_sections": true
     }
   },
   

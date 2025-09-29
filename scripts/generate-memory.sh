@@ -926,8 +926,8 @@ if [[ "$AUTO_OPTIMIZE" == "True" ]] && [[ $TOKEN_COUNT -gt $AUTO_OPTIMIZE_THRESH
     cp "$MEMORY_FILE" "$OPTIMIZATION_BACKUP"
     echo -e "${YELLOW}💾 Backup created: $OPTIMIZATION_BACKUP${NC}"
     
-    # Run AI optimization
-    if python3 "$WORKSPACE_ROOT/scripts/optimize-memory-smart.py" --auto-mode; then
+    # Run REAL AI optimization (whole file, not chunking)
+    if python3 "$WORKSPACE_ROOT/scripts/optimize-memory-ai-real.py" auto; then
         # Check if optimized file exists and replace original
         OPTIMIZED_MEMORY="$WORKSPACE_ROOT/memory-optimized.md"
         if [[ -f "$OPTIMIZED_MEMORY" ]]; then
