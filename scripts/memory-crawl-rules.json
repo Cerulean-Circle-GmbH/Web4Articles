@@ -121,5 +121,35 @@
     "documentation_files": 5,
     "specification_files": 4,
     "other_files": 1
+  },
+  
+  "incremental_updates": {
+    "description": "Configuration for incremental update system",
+    "enabled": true,
+    "file_tracking": {
+      "track_modification_time": true,
+      "track_file_size": true,
+      "tracker_file": ".memory-tracker"
+    },
+    "version_management": {
+      "enabled": true,
+      "versions_directory": ".memory-versions",
+      "max_versions": 50,
+      "auto_cleanup_days": 30
+    },
+    "selective_regeneration": {
+      "enabled": true,
+      "section_mapping": {
+        "roles": ["scrum.pmo/roles/*/process.md"],
+        "pdca": ["scrum.pmo/roles/_shared/PDCA/*.md"],
+        "docs": ["docs/*.md", "docs/*/*.md"],
+        "core": ["README.md", "index.md", "recovery.md"]
+      }
+    },
+    "performance_optimization": {
+      "cache_file_discovery": true,
+      "parallel_processing": false,
+      "skip_unchanged_sections": true
+    }
   }
 }

@@ -15,13 +15,173 @@ NC='\033[0m' # No Color
 WORKSPACE_ROOT="$(git rev-parse --show-toplevel)"
 MEMORY_FILE="$WORKSPACE_ROOT/memory.md"
 CONFIG_FILE="$WORKSPACE_ROOT/scripts/memory-crawl-rules.json"
+MEMORY_TRACKER="$WORKSPACE_ROOT/.memory-tracker"
+MEMORY_VERSIONS="$WORKSPACE_ROOT/.memory-versions"
 
-echo -e "${BLUE}🧠 Memory Generation Script v2.0${NC}"
+# Incremental update settings
+ENABLE_INCREMENTAL=true
+FORCE_FULL_REGENERATION=${FORCE_FULL:-false}
+
+echo -e "${BLUE}🧠 Memory Generation Script v3.0 (Incremental Updates)${NC}"
 echo -e "${BLUE}====================================${NC}"
 echo -e "${YELLOW}Purpose: Comprehensive agent context (MCP-style)${NC}"
 
 cd "$WORKSPACE_ROOT"
 START_TIME=$(date +%s)
+
+# ========================================
+# INCREMENTAL UPDATE FUNCTIONS
+# ========================================
+
+# Initialize or load file tracker
+init_file_tracker() {
+    if [[ ! -f "$MEMORY_TRACKER" ]]; then
+        echo "# Memory File Tracker - Modification Times" > "$MEMORY_TRACKER"
+        echo "# Format: filepath:mtime:size" >> "$MEMORY_TRACKER"
+        echo -e "${YELLOW}📊 Initializing file tracker...${NC}"
+    fi
+}
+
+# Check if file has changed since last memory generation
+file_has_changed() {
+    local file="$1"
+    local current_mtime current_size
+    
+    if [[ ! -f "$file" ]]; then
+        return 0  # File doesn't exist, consider it changed
+    fi
+    
+    current_mtime=$(stat -c %Y "$file" 2>/dev/null || echo "0")
+    current_size=$(stat -c %s "$file" 2>/dev/null || echo "0")
+    
+    # Check if file is tracked
+    if grep -q "^$file:" "$MEMORY_TRACKER" 2>/dev/null; then
+        local tracked_info=$(grep "^$file:" "$MEMORY_TRACKER")
+        local tracked_mtime=$(echo "$tracked_info" | cut -d: -f2)
+        local tracked_size=$(echo "$tracked_info" | cut -d: -f3)
+        
+        if [[ "$current_mtime" != "$tracked_mtime" ]] || [[ "$current_size" != "$tracked_size" ]]; then
+            return 0  # File has changed
+        else
+            return 1  # File unchanged
+        fi
+    else
+        return 0  # File not tracked, consider it changed
+    fi
+}
+
+# Update file tracker with current file state
+update_file_tracker() {
+    local file="$1"
+    local current_mtime current_size
+    
+    if [[ ! -f "$file" ]]; then
+        return
+    fi
+    
+    current_mtime=$(stat -c %Y "$file" 2>/dev/null || echo "0")
+    current_size=$(stat -c %s "$file" 2>/dev/null || echo "0")
+    
+    # Remove old entry if exists
+    grep -v "^$file:" "$MEMORY_TRACKER" > "$MEMORY_TRACKER.tmp" 2>/dev/null || touch "$MEMORY_TRACKER.tmp"
+    
+    # Add new entry
+    echo "$file:$current_mtime:$current_size" >> "$MEMORY_TRACKER.tmp"
+    
+    mv "$MEMORY_TRACKER.tmp" "$MEMORY_TRACKER"
+}
+
+# Create memory version entry
+create_memory_version() {
+    local version_info="$1"
+    local timestamp=$(date -u +"%Y-%m-%d-UTC-%H%M")
+    
+    # Create versions directory if it doesn't exist
+    mkdir -p "$MEMORY_VERSIONS"
+    
+    # Backup current memory
+    if [[ -f "$MEMORY_FILE" ]]; then
+        cp "$MEMORY_FILE" "$MEMORY_VERSIONS/memory-$timestamp.md"
+    fi
+    
+    # Create version log entry
+    echo "[$timestamp] $version_info" >> "$MEMORY_VERSIONS/version-log.txt"
+    echo -e "${BLUE}📚 Memory version created: $timestamp${NC}"
+}
+
+# Check if incremental update is needed
+check_incremental_update_needed() {
+    local changed_files=0
+    local total_files=0
+    
+    echo -e "${YELLOW}🔍 Checking for file changes since last memory generation...${NC}"
+    
+    # Check if memory file exists and is recent
+    if [[ ! -f "$MEMORY_FILE" ]]; then
+        echo -e "${YELLOW}📋 Memory file doesn't exist, full generation needed${NC}"
+        return 0  # Full generation needed
+    fi
+    
+    # Check core files
+    for file in "${CORE_FILES[@]}"; do
+        if [[ -f "$file" ]]; then
+            total_files=$((total_files + 1))
+            if file_has_changed "$file"; then
+                changed_files=$((changed_files + 1))
+                echo -e "${YELLOW}  📝 Changed: $file${NC}"
+            fi
+        fi
+    done
+    
+    # Check discovered files
+    for file in "${ALL_MD_FILES[@]}"; do
+        if [[ -f "$file" ]]; then
+            total_files=$((total_files + 1))
+            if file_has_changed "$file"; then
+                changed_files=$((changed_files + 1))
+                echo -e "${YELLOW}  📝 Changed: $file${NC}"
+            fi
+        fi
+    done
+    
+    echo -e "${BLUE}📊 File Change Summary: $changed_files/$total_files files changed${NC}"
+    
+    if [[ $changed_files -eq 0 ]] && [[ "$FORCE_FULL_REGENERATION" != "true" ]]; then
+        echo -e "${GREEN}✅ No changes detected, memory is current${NC}"
+        return 1  # No update needed
+    else
+        echo -e "${YELLOW}🔄 Changes detected, memory update needed${NC}"
+        return 0  # Update needed
+    fi
+}
+
+# Update file tracker for all processed files
+update_all_file_trackers() {
+    echo -e "${YELLOW}📊 Updating file modification tracker...${NC}"
+    
+    # Update core files
+    for file in "${CORE_FILES[@]}"; do
+        if [[ -f "$file" ]]; then
+            update_file_tracker "$file"
+        fi
+    done
+    
+    # Update discovered files
+    for file in "${ALL_MD_FILES[@]}"; do
+        if [[ -f "$file" ]]; then
+            update_file_tracker "$file"
+        fi
+    done
+    
+    echo -e "${GREEN}✅ File tracker updated${NC}"
+}
+
+# ========================================
+# MAIN SCRIPT EXECUTION
+# ========================================
+
+# Initialize incremental update system
+init_file_tracker
 
 # Discover ALL markdown files using configuration patterns
 echo -e "${YELLOW}🔍 Discovering all markdown files recursively...${NC}"
@@ -66,6 +226,28 @@ done
 readarray -t ALL_MD_FILES < <(printf '%s\n' "${ALL_MD_FILES[@]}" | sort -u)
 
 echo "  📊 Discovered ${#ALL_MD_FILES[@]} markdown files for comprehensive memory"
+
+# ========================================
+# INCREMENTAL UPDATE CHECK
+# ========================================
+
+if [[ "$ENABLE_INCREMENTAL" == "true" ]]; then
+    if ! check_incremental_update_needed; then
+        echo -e "${GREEN}✅ Memory is current, no regeneration needed${NC}"
+        echo -e "${BLUE}📊 Performance: Incremental check completed in $(($(date +%s) - START_TIME)) seconds${NC}"
+        exit 0
+    fi
+    
+    # Create version backup before regeneration
+    if [[ -f "$MEMORY_FILE" ]]; then
+        create_memory_version "Incremental update: $(date -u +"%Y-%m-%d %H:%M") - Files changed"
+    fi
+else
+    echo -e "${YELLOW}🔄 Full regeneration mode (incremental disabled)${NC}"
+    if [[ -f "$MEMORY_FILE" ]]; then
+        create_memory_version "Full regeneration: $(date -u +"%Y-%m-%d %H:%M")"
+    fi
+fi
 
 # Extract essential content from key files
 extract_essential_content() {
@@ -355,6 +537,11 @@ WORD_COUNT=$(wc -w < "$MEMORY_FILE" 2>/dev/null || echo "0")
 # Estimate tokens (more conservative for comprehensive content)
 TOKEN_COUNT=$((WORD_COUNT * 150 / 100))
 
+# Update file trackers for incremental updates
+if [[ "$ENABLE_INCREMENTAL" == "true" ]]; then
+    update_all_file_trackers
+fi
+
 echo -e "${GREEN}✅ Memory Generation Completed!${NC}"
 echo -e "${GREEN}📊 Statistics:${NC}"
 echo "  📄 Output file: $MEMORY_FILE"
@@ -362,6 +549,7 @@ echo "  📏 File size: $FILE_SIZE bytes"
 echo "  📝 Words: $WORD_COUNT"
 echo "  🎯 Estimated tokens: $TOKEN_COUNT"
 echo "  ⏱️  Generation time: ${GENERATION_TIME}s"
+echo "  🔄 Incremental updates: $([ "$ENABLE_INCREMENTAL" == "true" ] && echo "enabled" || echo "disabled")"
 
 if [[ $TOKEN_COUNT -gt 8000 ]]; then
     echo -e "${YELLOW}⚠️  Warning: Token count ($TOKEN_COUNT) is high - consider optimization${NC}"
