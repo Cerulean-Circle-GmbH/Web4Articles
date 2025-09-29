@@ -179,6 +179,57 @@ INSTRUCTIONS:
 OPTIMIZED VERSION:
 """
 
+    def auto_optimize_content(self, content):
+        """Apply automatic optimization rules based on demonstrated patterns"""
+        lines = content.split('\n')
+        optimized_lines = []
+        skip_next_empty = False
+        
+        for i, line in enumerate(lines):
+            # Remove excessive empty lines
+            if line.strip() == '':
+                if skip_next_empty:
+                    continue
+                skip_next_empty = True
+                optimized_lines.append(line)
+                continue
+            else:
+                skip_next_empty = False
+            
+            # Compress verbose explanations
+            if line.startswith('**') and line.endswith('**') and len(line) > 100:
+                # Shorten verbose explanations
+                line = line[:80] + '**'
+            
+            # Remove redundant phrases
+            line = line.replace('(injected into every conversation)', '')
+            line = line.replace('for immediate use', '')
+            line = line.replace('Complete agent background knowledge', 'Agent background knowledge')
+            
+            # Consolidate headers
+            if line.startswith('### ') and 'Content from' in line:
+                # Skip redundant headers, keep content
+                continue
+                
+            optimized_lines.append(line)
+        
+        return '\n'.join(optimized_lines)
+    
+    def auto_optimize_memory(self):
+        """Automatically optimize memory using pattern-based rules"""
+        with open(self.memory_file, 'r') as f:
+            content = f.read()
+        
+        # Apply automatic optimization
+        optimized_content = self.auto_optimize_content(content)
+        
+        # Write optimized memory
+        optimized_file = self.workspace_root / "memory-optimized.md"
+        with open(optimized_file, 'w') as f:
+            f.write(optimized_content)
+            
+        return optimized_file
+
     def create_reassembly_script(self, chunks_dir):
         """Create script to reassemble optimized chunks"""
         script_content = f"""#!/bin/bash
@@ -233,14 +284,19 @@ fi
         return reassemble_script
 
 def main():
-    print("🤖 AI-Powered Memory Optimization Script")
-    print("=" * 40)
+    import sys
+    auto_mode = "--auto-mode" in sys.argv
+    
+    if not auto_mode:
+        print("🤖 AI-Powered Memory Optimization Script")
+        print("=" * 40)
     
     # Initialize optimizer
     memory_file = Path.cwd() / "memory.md"
     if not memory_file.exists():
-        print(f"❌ Memory file not found: {memory_file}")
-        return
+        if not auto_mode:
+            print(f"❌ Memory file not found: {memory_file}")
+        return False
         
     optimizer = MemoryOptimizer(memory_file)
     
@@ -250,11 +306,24 @@ def main():
     # Analyze current memory
     stats = optimizer.analyze_memory()
     
-    # Create optimization chunks
-    chunks_dir, chunks = optimizer.create_optimization_chunks()
-    
-    # Create reassembly script
-    reassemble_script = optimizer.create_reassembly_script(chunks_dir)
+    if auto_mode:
+        # Auto-optimization mode - apply automatic rules
+        try:
+            optimized_file = optimizer.auto_optimize_memory()
+            if not auto_mode:
+                print(f"✅ Auto-optimization completed: {optimized_file}")
+            return True
+        except Exception as e:
+            if not auto_mode:
+                print(f"❌ Auto-optimization failed: {e}")
+            return False
+    else:
+        # Manual optimization mode - create chunks for AI processing
+        # Create optimization chunks
+        chunks_dir, chunks = optimizer.create_optimization_chunks()
+        
+        # Create reassembly script
+        reassemble_script = optimizer.create_reassembly_script(chunks_dir)
     
     print(f"\n✅ Optimization preparation complete!")
     print(f"\n📁 Files created:")

@@ -897,5 +897,70 @@ else
     echo -e "${GREEN}✅ Token count acceptable for comprehensive context${NC}"
 fi
 
+# ========================================
+# AUTOMATIC AI OPTIMIZATION (IF ENABLED)
+# ========================================
+
+# Check if AI optimization is enabled and token count is high
+AUTO_OPTIMIZE=$(python3 -c "
+import json
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+print(config.get('auto_optimization', {}).get('enabled', False))
+" 2>/dev/null || echo "False")
+
+AUTO_OPTIMIZE_THRESHOLD=$(python3 -c "
+import json
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+print(config.get('auto_optimization', {}).get('token_threshold', 35000))
+" 2>/dev/null || echo "35000")
+
+if [[ "$AUTO_OPTIMIZE" == "True" ]] && [[ $TOKEN_COUNT -gt $AUTO_OPTIMIZE_THRESHOLD ]]; then
+    echo -e "${YELLOW}🤖 Auto-optimization enabled and token threshold exceeded${NC}"
+    echo -e "${YELLOW}📊 Current: $TOKEN_COUNT tokens > Threshold: $AUTO_OPTIMIZE_THRESHOLD tokens${NC}"
+    echo -e "${BLUE}🔄 Starting automatic AI optimization...${NC}"
+    
+    # Create backup before optimization
+    OPTIMIZATION_BACKUP="$MEMORY_FILE.pre-optimization-$(date -u +"%Y-%m-%d-UTC-%H%M")"
+    cp "$MEMORY_FILE" "$OPTIMIZATION_BACKUP"
+    echo -e "${YELLOW}💾 Backup created: $OPTIMIZATION_BACKUP${NC}"
+    
+    # Run AI optimization
+    if python3 "$WORKSPACE_ROOT/scripts/optimize-memory-smart.py" --auto-mode; then
+        # Check if optimized file exists and replace original
+        OPTIMIZED_MEMORY="$WORKSPACE_ROOT/memory-optimized.md"
+        if [[ -f "$OPTIMIZED_MEMORY" ]]; then
+            mv "$OPTIMIZED_MEMORY" "$MEMORY_FILE"
+            
+            # Recalculate statistics
+            OPTIMIZED_WORD_COUNT=$(wc -w < "$MEMORY_FILE" 2>/dev/null || echo "0")
+            OPTIMIZED_TOKEN_COUNT=$((OPTIMIZED_WORD_COUNT * 150 / 100))
+            REDUCTION_PERCENT=$(((WORD_COUNT - OPTIMIZED_WORD_COUNT) * 100 / WORD_COUNT))
+            
+            echo -e "${GREEN}✅ AI optimization completed successfully!${NC}"
+            echo -e "${GREEN}📊 Optimization Results:${NC}"
+            echo "  📝 Original: $WORD_COUNT words ($TOKEN_COUNT tokens)"
+            echo "  📝 Optimized: $OPTIMIZED_WORD_COUNT words ($OPTIMIZED_TOKEN_COUNT tokens)"
+            echo "  📉 Reduction: $((WORD_COUNT - OPTIMIZED_WORD_COUNT)) words ($REDUCTION_PERCENT%)"
+            echo "  💾 Original backed up to: $OPTIMIZATION_BACKUP"
+            
+            # Update final statistics
+            WORD_COUNT=$OPTIMIZED_WORD_COUNT
+            TOKEN_COUNT=$OPTIMIZED_TOKEN_COUNT
+        else
+            echo -e "${RED}❌ AI optimization failed - using original memory${NC}"
+        fi
+    else
+        echo -e "${RED}❌ AI optimization failed - using original memory${NC}"
+    fi
+else
+    if [[ "$AUTO_OPTIMIZE" != "True" ]]; then
+        echo -e "${BLUE}ℹ️  Auto-optimization disabled in configuration${NC}"
+    else
+        echo -e "${BLUE}ℹ️  Token count ($TOKEN_COUNT) below auto-optimization threshold ($AUTO_OPTIMIZE_THRESHOLD)${NC}"
+    fi
+fi
+
 echo ""
 echo -e "${BLUE}🎯 Memory ready for agent context injection!${NC}"

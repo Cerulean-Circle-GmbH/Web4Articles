@@ -186,6 +186,22 @@
     "other_files": 1
   },
   
+  "auto_optimization": {
+    "description": "Automatic AI optimization configuration",
+    "enabled": true,
+    "token_threshold": 35000,
+    "optimization_method": "intelligent_chunking",
+    "target_reduction": 0.4,
+    "backup_enabled": true,
+    "ai_service": "local",
+    "quality_validation": {
+      "preserve_all_roles": true,
+      "preserve_all_processes": true,
+      "preserve_all_commands": true,
+      "preserve_file_references": true
+    }
+  },
+  
   "incremental_updates": {
     "description": "Configuration for incremental update system",
     "enabled": true,
