@@ -367,6 +367,12 @@ When starting a new work session, always present these three categories of decis
   - b) Half-day focused session on specific component
   - c) Quick analysis session for current project state review
   - d) Extended multi-day session for major feature development
+
+- [ ] **Decision 4: PDCA Organization Location**
+  - a) Agent Role PDCAs - scrum.pmo/roles/[Role]/pdca/ for role-specific work sessions
+  - b) Session PDCAs - scrum.pmo/project.journal/[session]/ for project-wide collaborative work
+  - c) Sprint PDCAs - scrum.pmo/sprints/[sprint]/ for sprint-focused development cycles
+  - d) Component PDCAs - components/[component]/pdca/ for component-specific development work
 ```
 
 ### **Adaptation Guidelines:**
@@ -378,8 +384,8 @@ When starting a new work session, always present these three categories of decis
 
 **Role Selection Customization:**
 - Start with current session role as option (a)
-- Include roles relevant to identified focus areas
-- Consider specialized roles available in the project (e.g., TSRanger focus → include testing specialist)
+- **CRITICAL: Use dynamic role discovery** - Replace static examples with: `find scrum.pmo/roles -maxdepth 1 -type d | grep -v "_shared" | sed 's|scrum.pmo/roles/||' | sort`
+- Include ALL available roles (18+ roles including Tester, Developer, Architect, PO, etc.)
 - Match role capabilities to focus area requirements
 
 **Session Planning Customization:**

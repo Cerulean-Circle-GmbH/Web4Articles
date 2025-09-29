@@ -56,6 +56,15 @@ echo "✅ Working on dev/$TIMESTAMP for this session"
 ```
 **Purpose:** Enable TRON branch progression analysis and startup verification
 
+### **4.2 Mandatory PDCA Naming Format**
+**CRITICAL:** All PDCA files must use UTC-only naming format:
+- **REQUIRED FORMAT:** `YYYY-MM-DD-UTC-HHMM.pdca.md`
+- **FORBIDDEN:** Long descriptive names like "session-startup.pdca.md"
+- **EXAMPLES:** 
+  - ✅ CORRECT: `2025-09-28-UTC-1158.pdca.md`
+  - ❌ VIOLATION: `2025-09-28-UTC-1158-session-startup.pdca.md`
+**Purpose:** Systematic PDCA organization and compliance verification
+
 ### **5. Install Git Automation (CRITICAL)**
 ```bash
 # Create post-commit hook for auto-merge

@@ -9,9 +9,10 @@
    - [ ] c) All 6 sections with horizontal separators (see template, not duplication)
    - [ ] d) All sections: exact template format, no modifications
    - [ ] e) Working dual links, no "TBD" placeholders
-   - [ ] f) 11-step PDCA process (start with todo_write tool immediately):
+- [ ] f) 11-step PDCA process (start with todo_write tool immediately):
 **CRITICAL: Create ALL 11 steps in todo_write FIRST before any execution. Never create partial todo lists.**
-     1. **DECISION RECOGNITION:** When encountering unexpected findings, incomplete research, or ambiguous situations, IMMEDIATELY present QA Decisions to TRON rather than reporting autonomously. Examples: undocumented features, incomplete documentation, conflicting information, technical uncertainties.
+**MANDATORY 1f PROTOCOL:** Every agent must use systematic 11-step process with todo_write tracking in first PDCA. No exceptions.
+1. **DECISION RECOGNITION:** When encountering unexpected findings, incomplete research, or ambiguous situations, IMMEDIATELY present QA Decisions to TRON rather than reporting autonomously. Examples: undocumented features, incomplete documentation, conflicting information, technical uncertainties.
      1. Progress tracking requirement: Update tracking tables in CHECK section showing progress, use todo_write to track status, mention in chat if stopping incomplete for continuation prompt  
      1. start with the header and the plan section
      1. plan with expected output
