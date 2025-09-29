@@ -15,16 +15,16 @@
 **🚨 Issues:** Multiple CMM2 violations identified: 5a authorization, 6b fake decision opposites, 1a missing CMM badge in header  
 
 **📎 Previous Commit:** 0ce965355c0c8d59805187e662fe2d8a182b28d8 - PDCA: CMM3 Failure Analysis - Template Incompleteness Root Cause and Tester Role Transition  
-**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-29-UTC-1029/scrum.pmo/roles/Tester/pdca/2025-09-29-UTC-1046-cmm3-failure-analysis-tester-transition.pdca.md) | [scrum.pmo/roles/Tester/pdca/2025-09-29-UTC-1046-cmm3-failure-analysis-tester-transition.pdca.md](2025-09-29-UTC-1046-cmm3-failure-analysis-tester-transition.pdca.md)
+**🔗 Previous PDCA:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-29-UTC-1029/scrum.pmo/roles/Tester/PDCA/2025-09-29-UTC-1046-cmm3-failure-analysis-tester-transition.pdca.md) | [§/scrum.pmo/roles/Tester/PDCA/2025-09-29-UTC-1046-cmm3-failure-analysis-tester-transition.pdca.md](2025-09-29-UTC-1046-cmm3-failure-analysis-tester-transition.pdca.md)
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-29-UTC-1029/scrum.pmo/roles/Tester/pdca/2025-09-29-UTC-1057-cmm2-violation-corrections-web4tscomponent-testing.pdca.md) | [scrum.pmo/roles/Tester/pdca/2025-09-29-UTC-1057-cmm2-violation-corrections-web4tscomponent-testing.pdca.md](2025-09-29-UTC-1057-cmm2-violation-corrections-web4tscomponent-testing.pdca.md)
-- **Web4TSComponent 0.3.0.6:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-29-UTC-1029/components/Web4TSComponent/0.3.0.6) | [components/Web4TSComponent/0.3.0.6](../../../components/Web4TSComponent/0.3.0.6)
-- **Testing Results:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-29-UTC-1029/scrum.pmo/roles/Tester/pdca) | [scrum.pmo/roles/Tester/pdca](.)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-29-UTC-1029/scrum.pmo/roles/Tester/PDCA/2025-09-29-UTC-1057-cmm2-violation-corrections-web4tscomponent-testing.pdca.md) | [§/scrum.pmo/roles/Tester/PDCA/2025-09-29-UTC-1057-cmm2-violation-corrections-web4tscomponent-testing.pdca.md](2025-09-29-UTC-1057-cmm2-violation-corrections-web4tscomponent-testing.pdca.md)
+- **Web4TSComponent 0.3.0.6:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-29-UTC-1029/components/Web4TSComponent/0.3.0.6) | [§/components/Web4TSComponent/0.3.0.6](../../../components/Web4TSComponent/0.3.0.6)
+- **Testing Results:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-29-UTC-1029/scrum.pmo/roles/Tester/PDCA) | [§/scrum.pmo/roles/Tester/PDCA](.)
 
 ### **To TRON: QA Decisions required**
 - [x] CMM2 Violation Acknowledgment: 5a authorization, 6b fake opposites, 1a missing badge
