@@ -1,0 +1,113 @@
+{
+  "version": "1.0",
+  "description": "Memory generation crawling rules configuration",
+  "updated": "2025-09-29",
+  
+  "core_files": {
+    "description": "Essential files that must always be included",
+    "files": [
+      "README.md",
+      "index.md",
+      "scrum.pmo/roles/_shared/PDCA/howto.PDCA.md",
+      "scrum.pmo/roles/_shared/PDCA/template.md",
+      "scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md"
+    ]
+  },
+  
+  "discovery_patterns": {
+    "description": "Glob patterns to discover additional files",
+    "patterns": [
+      "scrum.pmo/roles/*/process.md",
+      "docs/*.md",
+      "docs/*/*.md",
+      "recovery.md",
+      "scrum.pmo/sprints/*/planning.md"
+    ]
+  },
+  
+  "file_categories": {
+    "description": "Categories for organizing discovered files",
+    "process_files": {
+      "patterns": [
+        "README.md",
+        "index.md", 
+        "recovery.md",
+        "scrum.pmo/roles/_shared/PDCA/*"
+      ],
+      "description": "Core process and methodology files"
+    },
+    "role_files": {
+      "patterns": [
+        "scrum.pmo/roles/*/process.md"
+      ],
+      "description": "Agent role process definitions"
+    },
+    "sprint_files": {
+      "patterns": [
+        "scrum.pmo/sprints/*/planning.md",
+        "scrum.pmo/sprints/*/task-*.md"
+      ],
+      "description": "Sprint planning and task files"
+    },
+    "documentation_files": {
+      "patterns": [
+        "docs/*.md",
+        "docs/*/*.md"
+      ],
+      "description": "Technical documentation"
+    },
+    "specification_files": {
+      "patterns": [
+        "spec/*.md",
+        "spec/*/*.md"
+      ],
+      "description": "Requirements and specifications"
+    }
+  },
+  
+  "exclude_patterns": {
+    "description": "Files and patterns to exclude from crawling",
+    "patterns": [
+      "*.tmp",
+      "*.bak",
+      "*.backup",
+      "*~",
+      ".git/*",
+      ".cursor/*",
+      "node_modules/*",
+      "*/node_modules/*",
+      "temp/*",
+      "*/temp/*",
+      "*/.DS_Store",
+      "*.log"
+    ]
+  },
+  
+  "quality_rules": {
+    "description": "Rules for maintaining quality and efficiency",
+    "max_files": 100,
+    "max_file_size_kb": 500,
+    "token_target": 5000,
+    "generation_time_target_seconds": 30,
+    "deduplication": {
+      "enabled": true,
+      "rules": [
+        "one_entry_per_file",
+        "latest_version_wins", 
+        "consolidate_similar_content",
+        "reference_dont_repeat"
+      ]
+    }
+  },
+  
+  "priority_weights": {
+    "description": "Priority weights for file inclusion when limits are reached",
+    "core_files": 10,
+    "role_files": 8,
+    "process_files": 7,
+    "sprint_files": 6,
+    "documentation_files": 5,
+    "specification_files": 4,
+    "other_files": 1
+  }
+}

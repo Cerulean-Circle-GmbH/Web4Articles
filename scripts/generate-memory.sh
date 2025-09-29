@@ -14,6 +14,7 @@ NC='\033[0m' # No Color
 # Configuration
 WORKSPACE_ROOT="$(git rev-parse --show-toplevel)"
 MEMORY_FILE="$WORKSPACE_ROOT/memory.md"
+CONFIG_FILE="$WORKSPACE_ROOT/scripts/memory-crawl-rules.json"
 
 echo -e "${BLUE}🧠 Memory Generation Script v1.0${NC}"
 echo -e "${BLUE}===========================================${NC}"
@@ -21,14 +22,24 @@ echo -e "${BLUE}===========================================${NC}"
 cd "$WORKSPACE_ROOT"
 START_TIME=$(date +%s)
 
-# Core files to always include
-CORE_FILES=(
-    "README.md"
-    "index.md"
-    "scrum.pmo/roles/_shared/PDCA/howto.PDCA.md"
-    "scrum.pmo/roles/_shared/PDCA/template.md"
-    "scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md"
-)
+# Load configuration from JSON file
+echo -e "${YELLOW}📋 Loading crawling rules configuration...${NC}"
+
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    echo -e "${RED}❌ Configuration file not found: $CONFIG_FILE${NC}"
+    exit 1
+fi
+
+# Extract core files from configuration
+CORE_FILES=($(python3 -c "
+import json
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+for file in config['core_files']['files']:
+    print(file)
+"))
+
+echo "  📋 Core files: ${#CORE_FILES[@]}"
 
 # Find additional files
 echo -e "${YELLOW}📋 Discovering files...${NC}"
@@ -42,29 +53,111 @@ for file in "${CORE_FILES[@]}"; do
     fi
 done
 
-# Add role process files
-while IFS= read -r -d '' file; do
-    rel_file="${file#$WORKSPACE_ROOT/}"
-    ALL_FILES+=("$rel_file")
-    echo "  ✅ Role: $rel_file"
-done < <(find "scrum.pmo/roles" -name "process.md" -print0 2>/dev/null)
+# Add files based on discovery patterns from configuration
+python3 -c "
+import json
+import glob
+import os
+import fnmatch
 
-# Add documentation files
-while IFS= read -r -d '' file; do
-    rel_file="${file#$WORKSPACE_ROOT/}"
-    ALL_FILES+=("$rel_file")
-    echo "  ✅ Doc: $rel_file"
-done < <(find "docs" -name "*.md" -print0 2>/dev/null)
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
 
-# Add other important files
-for file in "recovery.md" "docs/tech-stack.md"; do
-    if [[ -f "$file" ]]; then
+# Get exclude patterns
+exclude_patterns = config['exclude_patterns']['patterns']
+
+def should_exclude(filepath):
+    for pattern in exclude_patterns:
+        if fnmatch.fnmatch(filepath, pattern) or fnmatch.fnmatch(os.path.basename(filepath), pattern):
+            return True
+    return False
+
+discovered_files = []
+for pattern in config['discovery_patterns']['patterns']:
+    matches = glob.glob(pattern, recursive=True)
+    for match in matches:
+        if os.path.isfile(match) and not should_exclude(match):
+            discovered_files.append(match)
+
+# Remove duplicates and sort
+discovered_files = sorted(list(set(discovered_files)))
+
+for file in discovered_files:
+    print(file)
+" > /tmp/discovered_files.txt
+
+# Read discovered files and add to array
+while IFS= read -r file; do
+    if [[ -n "$file" ]]; then
         ALL_FILES+=("$file")
-        echo "  ✅ Extra: $file"
+        # Categorize the file for display
+        case "$file" in
+            scrum.pmo/roles/*/process.md)
+                echo "  ✅ Role: $file"
+                ;;
+            docs/*)
+                echo "  ✅ Doc: $file"
+                ;;
+            scrum.pmo/sprints/*)
+                echo "  ✅ Sprint: $file"
+                ;;
+            *)
+                echo "  ✅ Extra: $file"
+                ;;
+        esac
     fi
-done
+done < /tmp/discovered_files.txt
 
 echo "  📊 Total files: ${#ALL_FILES[@]}"
+
+# Categorize files using configuration
+echo -e "${YELLOW}📋 Categorizing files...${NC}"
+
+python3 -c "
+import json
+import fnmatch
+
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+
+# Read files from bash array (passed as arguments)
+import sys
+files = []
+for line in sys.stdin:
+    line = line.strip()
+    if line:
+        files.append(line)
+
+categories = config['file_categories']
+
+categorized = {
+    'process_files': [],
+    'role_files': [],
+    'sprint_files': [],
+    'documentation_files': [],
+    'specification_files': [],
+    'other_files': []
+}
+
+for file in files:
+    categorized_flag = False
+    for category_name in categorized.keys():
+        if category_name in categories:
+            for pattern in categories[category_name]['patterns']:
+                if fnmatch.fnmatch(file, pattern):
+                    categorized[category_name].append(file)
+                    categorized_flag = True
+                    break
+            if categorized_flag:
+                break
+    
+    if not categorized_flag:
+        categorized['other_files'].append(file)
+
+# Output statistics
+for category, files_list in categorized.items():
+    print(f'{category}: {len(files_list)}')
+" <<< \"$(printf '%s\n' \"${ALL_FILES[@]}\")\"
 
 # Generate memory.md
 echo -e "${YELLOW}📋 Generating memory.md...${NC}"
@@ -87,7 +180,7 @@ cat > "$MEMORY_FILE" << EOF
 - **"Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."** - Collaborative intelligence principle
 - **CMMI Level 4** process compliance with systematic improvement
 - **DRY (Don't Repeat Yourself)** - No duplication of logic, documentation, or code
-- **KISS (Keep It Simple, Stupid)** - Simple, clear solutions over complexity
+- **KISS (Keep It Simple and Short)** - Simple, clear solutions over complexity
 
 ---
 
