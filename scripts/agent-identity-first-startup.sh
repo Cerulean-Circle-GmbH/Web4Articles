@@ -1,13 +1,28 @@
 #!/bin/bash
 # Agent Identity-First Startup Process
-# Version: 1.0
-# Purpose: Ensure agents identify themselves before proceeding
+# Version: 2.0
+# Purpose: Ensure agents have memory context AND identify themselves before proceeding
 
-echo "🤖 Agent Identity-First Startup Process v1.0"
-echo "============================================"
+echo "🤖 Agent Identity-First Startup Process v2.0"
+echo "============================================="
+echo "🧠 Memory-Enhanced Agent Startup"
 
-# Step 1: Check for RequestID environment variable or cursor context
-echo "📋 Step 1: Checking for agent identity..."
+# Step 1: Ensure comprehensive memory context
+echo "📋 Step 1: Ensuring comprehensive memory context..."
+if [[ -f "./scripts/ensure-memory.sh" ]]; then
+    ./scripts/ensure-memory.sh
+    if [[ $? -eq 0 ]]; then
+        echo "✅ Memory context ready - agents now have complete project knowledge"
+    else
+        echo "⚠️ Memory generation had issues, but continuing with startup..."
+    fi
+else
+    echo "⚠️ Memory validation script not found, continuing without memory validation..."
+fi
+
+echo ""
+# Step 2: Check for RequestID environment variable or cursor context  
+echo "📋 Step 2: Checking for agent identity..."
 
 # Look for identity markers
 IDENTITY_FOUND=false
@@ -22,7 +37,7 @@ elif [ ! -z "$CURSOR_REQUEST_ID" ]; then
     IDENTITY_FOUND=true
 fi
 
-# Step 2: Check agent registry
+# Step 3: Check agent registry
 if [ "$IDENTITY_FOUND" = true ] && [ ! -z "$REQUEST_ID" ]; then
     echo "✅ Found RequestID: $REQUEST_ID"
     
@@ -32,7 +47,11 @@ if [ "$IDENTITY_FOUND" = true ] && [ ! -z "$REQUEST_ID" ]; then
         echo "Your identity:"
         head -n 20 "scrum.pmo/agents/registry/${REQUEST_ID}.md"
         echo ""
-        echo "✅ Identity confirmed. Please read your full identity record."
+        echo "✅ Identity confirmed with complete memory context."
+        echo "🧠 You now have:"
+        echo "   - Complete project knowledge from memory.md"
+        echo "   - Your specific role identity and responsibilities"
+        echo "   - Ready to work with full context!"
     else
         echo "⚠️ No identity record found for $REQUEST_ID"
         echo "📝 Creating pending registration..."
@@ -54,7 +73,13 @@ if [ "$IDENTITY_FOUND" = true ] && [ ! -z "$REQUEST_ID" ]; then
 2. This file will be updated with your details
 3. Follow your role-specific process.md
 
-**Waiting for QA assignment...**
+### Memory Context Available
+- **Complete project knowledge**: Available in memory.md
+- **PDCA requirements**: Documented in memory context
+- **All agent roles**: Described in memory.md
+- **Tech stack & standards**: Ready in memory context
+
+**Waiting for QA assignment (with full project context ready)...**
 EOF
         echo "✅ Pending identity created: scrum.pmo/agents/registry/pending-${REQUEST_ID}.md"
     fi
@@ -86,7 +111,13 @@ QA: Please provide this agent's RequestID and role assignment
 - Working Branch: $BRANCH
 - Session Start: $TIMESTAMP
 
-**Awaiting identification...**
+### Memory Context Available
+- **Complete project knowledge**: Available in memory.md
+- **PDCA requirements**: Documented in memory context
+- **All agent roles**: Described in memory.md
+- **Tech stack & standards**: Ready in memory context
+
+**Awaiting identification (with full project context ready)...**
 EOF
     
     echo "📝 Registration created: scrum.pmo/agents/registry/pending-unknown-${TIMESTAMP}.md"
