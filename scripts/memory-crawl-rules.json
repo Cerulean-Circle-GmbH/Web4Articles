@@ -97,6 +97,18 @@
         "consolidate_similar_content",
         "reference_dont_repeat"
       ]
+    },
+    "summarization": {
+      "enabled": true,
+      "large_file_threshold_kb": 50,
+      "max_content_length_chars": 2000,
+      "preserve_sections": [
+        "overview",
+        "key points",
+        "requirements",
+        "process",
+        "standards"
+      ]
     }
   },
   

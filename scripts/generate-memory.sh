@@ -16,11 +16,102 @@ WORKSPACE_ROOT="$(git rev-parse --show-toplevel)"
 MEMORY_FILE="$WORKSPACE_ROOT/memory.md"
 CONFIG_FILE="$WORKSPACE_ROOT/scripts/memory-crawl-rules.json"
 
+# Token counting function using tiktoken (more accurate than word estimation)
+count_tokens() {
+    local file="$1"
+    python3 -c "
+import sys
+import os
+try:
+    import tiktoken
+    encoding = tiktoken.encoding_for_model('gpt-4')
+    with open('$file', 'r', encoding='utf-8') as f:
+        content = f.read()
+    tokens = len(encoding.encode(content))
+    print(tokens)
+except ImportError:
+    # Fallback to word-based estimation if tiktoken not available
+    with open('$file', 'r', encoding='utf-8') as f:
+        content = f.read()
+    words = len(content.split())
+    # Conservative estimation: 1.3 tokens per word for markdown
+    tokens = int(words * 1.3)
+    print(tokens)
+except Exception as e:
+    print(0)
+"
+}
+
+# Install tiktoken if not available
+install_tiktoken_if_needed() {
+    python3 -c "import tiktoken" 2>/dev/null || {
+        echo -e "${YELLOW}📦 Installing tiktoken for accurate token counting...${NC}"
+        pip3 install tiktoken --user --quiet || {
+            echo -e "${YELLOW}⚠️  tiktoken installation failed, using fallback estimation${NC}"
+        }
+    }
+}
+
+# Smart content summarization function
+summarize_content() {
+    local file="$1"
+    local max_length="$2"
+    
+    python3 -c "
+import json
+import os
+
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+
+summarization_config = config['quality_rules']['summarization']
+preserve_sections = summarization_config['preserve_sections']
+
+try:
+    with open('$file', 'r', encoding='utf-8') as f:
+        content = f.read()
+except:
+    print('# File read error')
+    exit()
+
+if len(content) <= $max_length:
+    print(content)
+    exit()
+
+# Smart summarization - preserve important sections
+lines = content.split('\n')
+important_lines = []
+current_section = ''
+in_important_section = False
+
+for line in lines:
+    # Check for section headers
+    if line.startswith('#'):
+        current_section = line.lower()
+        in_important_section = any(keyword in current_section for keyword in preserve_sections)
+        important_lines.append(line)
+    elif in_important_section or len(important_lines) < 20:  # Keep first 20 lines always
+        important_lines.append(line)
+    elif any(keyword in line.lower() for keyword in ['important', 'critical', 'key', 'must', 'required']):
+        important_lines.append(line)
+
+# If still too long, truncate with summary
+summary_content = '\n'.join(important_lines)
+if len(summary_content) > $max_length:
+    summary_content = summary_content[:$max_length] + '\n\n*(Content summarized for token efficiency)*'
+
+print(summary_content)
+"
+}
+
 echo -e "${BLUE}🧠 Memory Generation Script v1.0${NC}"
 echo -e "${BLUE}===========================================${NC}"
 
 cd "$WORKSPACE_ROOT"
 START_TIME=$(date +%s)
+
+# Initialize token counting
+install_tiktoken_if_needed
 
 # Load configuration from JSON file
 echo -e "${YELLOW}📋 Loading crawling rules configuration...${NC}"
@@ -157,11 +248,67 @@ for file in files:
 # Output statistics
 for category, files_list in categorized.items():
     print(f'{category}: {len(files_list)}')
-" <<< \"$(printf '%s\n' \"${ALL_FILES[@]}\")\"
 
-# Generate memory.md
-echo -e "${YELLOW}📋 Generating memory.md...${NC}"
+# Priority scoring and content optimization
+for file in files:
+    # Calculate priority score based on category
+    priority_score = 1  # default
+    for category_name, file_list in categorized.items():
+        if file in file_list:
+            category_key = category_name.replace('_files', '_files')
+            if category_key == 'process_files':
+                priority_score = 10
+            elif category_key == 'role_files':
+                priority_score = 8
+            elif category_key == 'sprint_files':
+                priority_score = 6
+            elif category_key == 'documentation_files':
+                priority_score = 5
+            elif category_key == 'specification_files':
+                priority_score = 4
+            break
+    
+    print(f'PRIORITY|{file}|{priority_score}')
+" <<< \"$(printf '%s\n' \"${ALL_FILES[@]}\")\" > /tmp/file_priorities.txt
 
+# Parse priority information and sort files by priority
+echo -e "${YELLOW}📋 Optimizing content by priority...${NC}"
+
+# Extract priority scores and create sorted file list
+PRIORITIZED_FILES=()
+while IFS='|' read -r prefix file priority; do
+    if [[ "$prefix" == "PRIORITY" ]]; then
+        PRIORITIZED_FILES+=("$priority|$file")
+    fi
+done < /tmp/file_priorities.txt
+
+# Sort by priority (descending)
+readarray -t SORTED_FILES < <(printf '%s\n' "${PRIORITIZED_FILES[@]}" | sort -nr)
+
+echo "  📊 Files prioritized: ${#SORTED_FILES[@]}"
+
+# Generate memory.md with token budget management
+echo -e "${YELLOW}📋 Generating memory.md with token budget control...${NC}"
+
+# Load quality rules from configuration
+TOKEN_TARGET=$(python3 -c "
+import json
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+print(config['quality_rules']['token_target'])
+")
+
+MAX_FILES=$(python3 -c "
+import json
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+print(config['quality_rules']['max_files'])
+")
+
+echo "  🎯 Token target: $TOKEN_TARGET"
+echo "  📁 Max files: $MAX_FILES"
+
+# Generate initial template
 cat > "$MEMORY_FILE" << EOF
 # Agent Context Memory
 **Last Updated:** $(date -u +"%Y-%m-%d-UTC-%H%M")
@@ -407,7 +554,52 @@ with open('$MEMORY_FILE', 'w') as f:
     f.write(content)
 "
 
-# Calculate generation time
+# Monitor token count and apply budget controls
+echo -e "${YELLOW}📊 Checking token budget...${NC}"
+CURRENT_TOKENS=$(count_tokens "$MEMORY_FILE")
+
+if [ "$CURRENT_TOKENS" -gt "$TOKEN_TARGET" ]; then
+    echo -e "${YELLOW}⚠️  Token limit exceeded ($CURRENT_TOKENS > $TOKEN_TARGET), optimizing...${NC}"
+    
+    # Create optimized version by prioritizing content
+    python3 -c "
+import json
+import os
+
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+
+with open('$MEMORY_FILE', 'r') as f:
+    content = f.read()
+
+# Simple content optimization: truncate less important sections
+lines = content.split('\n')
+optimized_lines = []
+in_optional_section = False
+
+for line in lines:
+    # Keep essential headers and key content
+    if any(keyword in line.lower() for keyword in ['overview', 'process framework', 'current state', 'pdca', 'agent startup']):
+        in_optional_section = False
+        optimized_lines.append(line)
+    elif any(keyword in line.lower() for keyword in ['decision history', 'quick reference', 'revolutionary breakthroughs']):
+        in_optional_section = True
+        optimized_lines.append(line)
+        # Add truncation notice
+        optimized_lines.append('*(Content truncated for token budget)*')
+        break
+    elif not in_optional_section:
+        optimized_lines.append(line)
+
+with open('$MEMORY_FILE', 'w') as f:
+    f.write('\n'.join(optimized_lines))
+"
+    
+    CURRENT_TOKENS=$(count_tokens "$MEMORY_FILE")
+    echo "  📊 Optimized tokens: $CURRENT_TOKENS"
+fi
+
+# Calculate final statistics
 END_TIME=$(date +%s)
 GENERATION_TIME=$((END_TIME - START_TIME))
 
@@ -417,20 +609,19 @@ echo "  📁 Files processed: ${#ALL_FILES[@]}"
 echo "  ⏱️  Generation time: ${GENERATION_TIME}s"
 echo "  📄 Output file: $MEMORY_FILE"
 
-# Check file size and estimate tokens
+# Final token budget check
 if [[ -f "$MEMORY_FILE" ]]; then
     size=$(wc -c < "$MEMORY_FILE")
     words=$(wc -w < "$MEMORY_FILE")
-    estimated_tokens=$((words * 140 / 100))
     
     echo "  📏 File size: $size bytes"
     echo "  📝 Words: $words"
-    echo "  🎯 Estimated tokens: $estimated_tokens"
+    echo "  🎯 Actual tokens: $CURRENT_TOKENS"
     
-    if [[ $estimated_tokens -gt 5000 ]]; then
-        echo -e "${YELLOW}⚠️  Warning: Estimated tokens ($estimated_tokens) exceed 5,000 target${NC}"
+    if [[ $CURRENT_TOKENS -gt $TOKEN_TARGET ]]; then
+        echo -e "${YELLOW}⚠️  Warning: Tokens ($CURRENT_TOKENS) exceed target ($TOKEN_TARGET)${NC}"
     else
-        echo -e "${GREEN}✅ Token count within target (<5,000)${NC}"
+        echo -e "${GREEN}✅ Token count within target (<$TOKEN_TARGET)${NC}"
     fi
 fi
 
