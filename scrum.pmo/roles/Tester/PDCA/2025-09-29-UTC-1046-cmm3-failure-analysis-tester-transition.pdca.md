@@ -21,8 +21,8 @@
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-29-UTC-1046/scrum.pmo/roles/Tester/pdca/2025-09-29-UTC-1046-cmm3-failure-analysis-tester-transition.pdca.md) | [scrum.pmo/roles/Tester/pdca/2025-09-29-UTC-1046-cmm3-failure-analysis-tester-transition.pdca.md](2025-09-29-UTC-1046-cmm3-failure-analysis-tester-transition.pdca.md)
-- **Tester Role Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-29-UTC-1046/scrum.pmo/roles/Tester/pdca) | [scrum.pmo/roles/Tester/pdca](.)
+- **PDCA Document:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-29-UTC-1029/scrum.pmo/roles/Tester/PDCA/2025-09-29-UTC-1046-cmm3-failure-analysis-tester-transition.pdca.md) | [§/scrum.pmo/roles/Tester/PDCA/2025-09-29-UTC-1046-cmm3-failure-analysis-tester-transition.pdca.md](2025-09-29-UTC-1046-cmm3-failure-analysis-tester-transition.pdca.md)
+- **Tester Role Directory:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-29-UTC-1029/scrum.pmo/roles/Tester/PDCA) | [§/scrum.pmo/roles/Tester/PDCA](.)
 - **Web4TSComponent Target:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-29-UTC-1046/components/Web4TSComponent) | [components/Web4TSComponent](../../../components/Web4TSComponent)
 
 ### **To TRON: QA Decisions required**
