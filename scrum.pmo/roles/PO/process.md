@@ -13,6 +13,20 @@
 ## Role Definition
 The Product Owner (PO) is responsible for defining the vision, requirements, and priorities of the project. The PO ensures that the project delivers value to stakeholders and that all documentation and artifacts align with business goals.
 
+## PO Agent Startup Protocol
+
+For PO agent startup, follow systematic protocol per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-29-UTC-1329/recovery/start-command.md) | [§/recovery/start-command.md](../../../recovery/start-command.md) with PO-specific enhancements:
+
+### CMM3 Checklist Integration
+- **MANDATORY:** Apply [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-29-UTC-1329/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md) | [§/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md](../../../scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md) from first PDCA
+- **1f Process:** Execute systematic 11-step process with todo_write tracking per checklist requirement 1f
+- **Template Compliance:** Use template 3.2.4.2 with intensive dual link integration per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-29-UTC-1329/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](../../../scrum.pmo/roles/_shared/PDCA/template.md)
+
+### Badge Management Protocol  
+- **Authority Recognition:** Only TRON awards badges - never self-award to prevent massive authority violations
+- **Badge Fragility:** CMM badges fragile requiring diligent execution for maintenance
+- **Progression Tracking:** Document badge changes with TRON timestamp and reasoning
+
 ## Responsibilities
 
 ## Task Reference
@@ -189,6 +203,33 @@ Each created task must pass these criteria:
 - When referencing project status, releases, or reviews, include GitHub links to the repo, target branch, and any relevant PRs for quick navigation.
 - Apply "42 = FOR TWO" collaborative intelligence principle - combine TRON strategic vision with systematic PO execution for superior results.
 
+## Systematic Violation Prevention Protocol
+
+### Common PO Violations and Prevention
+Reference systematic violation patterns per session analysis for prevention:
+
+#### Authority Violations
+- **NEVER:** Self-award badges or claim authority not granted by TRON
+- **PREVENTION:** Always acknowledge TRON as sole badge authority per fragility protocol
+
+#### Format Compliance Violations  
+- **TEMPLATE:** Always verify template 3.2.4.2 compliance per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-29-UTC-1329/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](../../../scrum.pmo/roles/_shared/PDCA/template.md)
+- **DUAL LINKS:** Intensive dual link integration with § notation per format requirements
+- **PREVENTION:** Systematic format verification before commit using checklist reference
+
+#### Lazy Analysis Prevention
+- **COMPLETE READING:** Never skip systematic reading - complete analysis required
+- **WHITEBOX UNDERSTANDING:** Read ALL relevant sources for comprehensive understanding  
+- **PREVENTION:** Use tracking tables for systematic coverage verification per 1f process
+
+### Enhanced Research Methodology (DRY Integration)
+
+**MANDATORY RESEARCH SEQUENCE:**
+1. **Read Documentation First:** Per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-29-UTC-1329/scrum.pmo/roles/SaveRestartAgent/howto.research.md) | [§/scrum.pmo/roles/SaveRestartAgent/howto.research.md](../../../scrum.pmo/roles/SaveRestartAgent/howto.research.md)
+2. **Component Usage Patterns:** Per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-29-UTC-1329/scrum.pmo/roles/SaveRestartAgent/howto.use.web4.components.md) | [§/scrum.pmo/roles/SaveRestartAgent/howto.use.web4.components.md](../../../scrum.pmo/roles/SaveRestartAgent/howto.use.web4.components.md)
+3. **Safety Protocol:** Never program without explicit request - ASK TRON if research fails
+4. **Tool Discovery:** Search existing tools systematically before any creation
+
 ## Pre-Commit Spellcheck & Cross-Reference Check (Mandatory)
 - Before committing planning/tasks/subtasks edits:
   - Spellcheck changed markdown text; correct obvious typos.
@@ -249,7 +290,17 @@ Each created task must pass these criteria:
 ## Recovery → PDCA → Commit & Push (Enforced)
 - After recovery or any QA prompt: perform recovery, write PDCA (UTC, QA quote, Actions with artifact links), then commit and push immediately.
 
-## Linking Policy (GitHub-first dual-linking)
-- Provide GitHub web link followed by relative path link for referenced files.
-- Example:
-  - `[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/<branch>/scrum.pmo/roles/PO/process.md): [scrum.pmo/roles/PO/process.md](../../scrum.pmo/roles/PO/process.md)`
+## Enhanced Linking Policy (Intensive Dual Link Standards)
+
+**MANDATORY:** All links must use intensive dual format per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-29-UTC-1329/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md](../../../scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md)
+
+### Critical Link Format Requirements:
+- **GitHub + § Local:** [GitHub](URL) | [§/path](path) format MANDATORY
+- **§ Notation:** All local paths must use § for root path display  
+- **Connected Information:** Always preserve knowledge chain through dual link integration
+- **Reference Integration:** Use dual links in context where information is discussed, not just artifact sections
+
+### Compliance Requirements:
+- **3b cmm3:** PDCA local links relative from document location
+- **3c cmm3:** Chat local links absolute from project root  
+- **3d cmm3:** § notation for root path display MANDATORY
