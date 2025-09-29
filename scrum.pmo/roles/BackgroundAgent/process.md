@@ -55,6 +55,27 @@ cat memory.md
 
 ## Startup Process
 
+### Step 0: Memory Context Validation (FIRST PRIORITY)
+```bash
+# CRITICAL: Always validate memory context BEFORE any other steps
+./scripts/ensure-memory.sh
+
+# Verify memory contains current project knowledge
+wc -w memory.md  # Should be 4,000+ words
+grep "Agent Context Memory" memory.md  # Should find header
+
+# If memory validation fails, regenerate:
+./scripts/generate-memory.sh
+```
+
+**Memory Validation Checklist:**
+- ✅ Memory file exists and is current
+- ✅ Contains 4,000+ words of project knowledge  
+- ✅ Includes PDCA requirements, role definitions, tech stack
+- ✅ Memory context available in agent conversation
+
+**REQUIREMENT:** Do not proceed to identity confirmation until memory context is validated and available.
+
 ### Step 1: Identity Confirmation
 ```bash
 # Run identity check

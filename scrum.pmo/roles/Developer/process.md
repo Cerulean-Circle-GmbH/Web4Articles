@@ -47,6 +47,27 @@
 
 ## Startup Process
 
+### Step 0: Memory Context Validation (FIRST PRIORITY)
+```bash
+# CRITICAL: Validate memory context BEFORE any development work
+./scripts/ensure-memory.sh
+
+# Verify development-specific memory content
+grep -E "Vitest|TypeScript|5-layer|strict OOP" memory.md
+grep "Testing.*Vitest" memory.md  # Confirm Vitest requirement
+
+# If memory missing or outdated:
+./scripts/generate-memory.sh
+```
+
+**Developer Memory Validation:**
+- ✅ Tech stack decisions available (Vitest, TypeScript, ESM)
+- ✅ Architecture patterns documented (5-layer, strict OOP)
+- ✅ Quality standards accessible (testing, code standards)
+- ✅ Development workflow requirements clear
+
+**REQUIREMENT:** Memory context must be validated before any development tasks.
+
 ### Step 1: Identity Confirmation
 ```bash
 # Run identity check
