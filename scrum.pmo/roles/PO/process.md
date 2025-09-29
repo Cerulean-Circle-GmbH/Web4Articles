@@ -10,8 +10,32 @@
 - All requirements, documentation, and automation must reference the canonical Logger and verification principles where applicable. Logging must be environment-aware, non-intrusive in production, and support traceability for debugging and process improvement.
 - After any automated or scripted action, always verify the intended effect (e.g., file creation, output, or state change) and document any discrepancies for process improvement.
 
+## 🧠 Memory-Enhanced Product Ownership
+
+**Memory Context for Requirements:** Complete project knowledge available for informed product decisions.
+
+### PO Memory Benefits
+- **Complete requirement history**: All specifications and documentation in memory context
+- **Role understanding**: How all team roles contribute to product delivery
+- **Technical constraints**: Architecture and tech stack limitations/capabilities in memory
+- **Process framework**: PDCA methodology for requirements validation and improvement
+
+### Memory-Enhanced Requirements Process
+1. **Use memory context** for understanding current project state and technical constraints
+2. **Leverage documented standards** from memory for quality requirements
+3. **Apply PDCA methodology** (documented in memory) for requirements validation
+4. **Coordinate with other roles** using memory-based role understanding
+
+### PO-Specific Memory Content
+- **All role definitions**: Understand team capabilities and responsibilities
+- **Technical architecture**: Constraints and capabilities for requirement feasibility
+- **Quality standards**: Requirements must align with documented standards
+- **Process methodology**: PDCA framework for systematic requirements improvement
+
 ## Role Definition
 The Product Owner (PO) is responsible for defining the vision, requirements, and priorities of the project. The PO ensures that the project delivers value to stakeholders and that all documentation and artifacts align with business goals.
+
+**Memory Enhancement:** PO decisions are now informed by complete project context, enabling better requirement definition and stakeholder alignment.
 
 ## Responsibilities
 

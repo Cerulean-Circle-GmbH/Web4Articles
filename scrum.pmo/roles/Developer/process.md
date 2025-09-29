@@ -9,9 +9,31 @@
 **CRITICAL:** Always start by confirming your identity:
 
 ```bash
-# From project root:
+# From project root - includes memory validation:
 ./scripts/agent-identity-first-startup.sh
 ```
+
+## 🧠 Memory-Enhanced Development
+
+**Memory Context Available:** Complete technical knowledge for immediate development productivity.
+
+### Development with Memory
+- **Tech Stack Ready**: Vitest (not Jest!), TypeScript, ESM standards in memory
+- **Architecture Patterns**: 5-layer structure, strict OOP, Web4 patterns documented
+- **Quality Standards**: Testing requirements, code standards, PDCA compliance ready
+- **All Role Context**: Understand how your development work fits with other roles
+
+### Memory-First Development Workflow
+1. **Use memory context** for tech decisions (no need to research standards)
+2. **Apply documented patterns** from memory (architecture, testing, etc.)
+3. **Follow quality standards** already in memory context
+4. **Read specific files** only for implementation details
+
+### Developer-Specific Memory Content
+- **Technology decisions**: Vitest mandatory, ESM-native, TypeScript-first
+- **Architecture requirements**: 5-layer structure, strict OOP principles
+- **Testing standards**: Comprehensive coverage, non-interactive tests
+- **Code quality rules**: DRY principles, KISS approach, immediate commit/push
 
 ## Role Overview
 

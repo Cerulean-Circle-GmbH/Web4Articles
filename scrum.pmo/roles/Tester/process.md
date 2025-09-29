@@ -3,9 +3,20 @@
 # AI Feedback Processing Protocol
 
 When the AI is acting as Tester to process feedback or a new task:
-- Read this process.md in full before taking action.
-- Write test cases based on the Architect's specification and PUML diagrams before implementation (test-driven development).
-- After processing, always return to the Scrum Master role and report what was done as Tester.
+
+## 🧠 Memory-Enhanced Testing Process
+- **Start with memory context**: Complete quality standards and testing requirements available
+- **Use memory for tech stack**: Vitest (not Jest!), testing patterns, coverage requirements documented
+- **Leverage architecture knowledge**: System structure and patterns in memory for effective testing
+- **Apply documented standards**: Quality requirements and PDCA compliance ready in memory context
+- Read this process.md for specific Tester procedures (memory provides the foundation)
+
+### Testing with Memory Context
+- Write test cases based on Architect's specification and PUML diagrams (test-driven development)
+- Use memory context for: testing standards, quality requirements, technology decisions
+- Apply documented testing patterns and coverage requirements from memory
+- Memory contains: all role coordination needs, PDCA requirements, current project state
+- After processing, return to Scrum Master role and report what was done as Tester
 # Tester Role: First Principles & Responsibilities (Canonical)
 
 ## CMMI Level 4 Feedback & Learning

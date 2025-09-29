@@ -3,9 +3,38 @@
 
 # First Principles for All Roles
 
+## 🧠 Memory System Coordination (ScrumMaster Responsibility)
+
+**CRITICAL:** As ScrumMaster, you coordinate memory system usage across all roles.
+
+### Memory System Management
+- **Ensure all agents use memory**: Every role should leverage comprehensive project context
+- **Coordinate memory updates**: When processes change, ensure memory is regenerated
+- **Memory quality oversight**: Verify agents are using memory effectively vs. manual crawling
+- **Cross-role memory alignment**: Ensure consistent understanding through shared memory context
+
+### Memory Commands for Coordination
+```bash
+# Update memory when processes change
+./scripts/generate-memory.sh
+
+# Validate memory is current
+./scripts/ensure-memory.sh
+
+# Check memory content for completeness
+cat memory.md | wc -w  # Should be 4,000+ words
+```
+
+### ScrumMaster Memory Responsibilities
+- **Monitor memory usage**: Ensure agents reference memory vs. reading multiple files
+- **Update triggers**: Regenerate memory when role processes, tech stack, or PDCA requirements change
+- **Quality assurance**: Memory should contain current process standards and role definitions
+- **Team coordination**: All roles should have consistent project understanding through memory
+
 ## CMMI Level 4 Feedback & Learning
 - All process improvements, debugging lessons, and cross-role feedback must be documented in the appropriate process.md file for traceability and continuous improvement.
 - The ScrumMaster is responsible for ensuring that all roles update their process documentation after significant debugging, integration, or process improvement sessions.
+- **NEW:** When process.md files are updated, ScrumMaster must trigger memory regeneration for team consistency.
 
 
 ## **DO NOT REPEAT YOURSELF (DRY):** 

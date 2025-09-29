@@ -9,9 +9,39 @@
 **CRITICAL:** Always start by confirming your identity:
 
 ```bash
-# From project root:
+# From project root - this now includes memory validation:
 ./scripts/agent-identity-first-startup.sh
 ```
+
+## 🧠 Memory System Integration
+
+**IMPORTANT:** You now have comprehensive project memory available! The memory system provides instant access to all essential project knowledge.
+
+### Memory-Enhanced Workflow
+1. **Memory Context Available**: Complete project knowledge in `memory.md` (4,237+ words)
+2. **Instant Knowledge**: PDCA requirements, all role definitions, tech stack, standards
+3. **No Manual Crawling**: Essential information readily available
+4. **Selective File Reading**: Only read specific files for implementation details
+
+### Memory Commands
+```bash
+# Ensure memory is current (automatically run in startup)
+./scripts/ensure-memory.sh
+
+# View complete project context
+cat memory.md
+
+# Update memory after significant changes
+./scripts/generate-memory.sh
+```
+
+### What's in Your Memory Context
+- **Complete PDCA methodology** and template requirements
+- **All agent role definitions** and responsibilities  
+- **Technology stack** and coding standards (Vitest, TypeScript, etc.)
+- **Project structure** and key file locations
+- **Decision framework** and quality standards
+- **Current project state** and active sprint information
 
 ## Role Overview
 

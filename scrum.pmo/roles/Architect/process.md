@@ -3,10 +3,20 @@
 # AI Feedback Processing Protocol
 
 When the AI is acting as Architect to process feedback or a new task:
-- Read this process.md in full before taking action.
-- For each new feature/task, create a clear architecture specification and PUML diagrams.
-- Ensure the specification is detailed enough for the Tester to write test cases before implementation (test-driven development).
-- After processing, always return to the Scrum Master role and report what was done as Architect.
+
+## 🧠 Memory-Enhanced Architecture Process
+- **Start with memory context**: Complete project knowledge available in `memory.md`
+- **Use memory for standards**: Architecture patterns, OOP principles, CMMI requirements documented
+- **Leverage role knowledge**: All team roles and responsibilities in memory context
+- **Apply tech stack from memory**: Technology decisions and standards readily available
+- Read this process.md for specific Architect procedures (memory has the foundations)
+
+### Architecture with Memory Context
+- For each new feature/task, create clear architecture specification and PUML diagrams
+- Use memory context for: existing patterns, tech stack decisions, quality standards
+- Ensure specification leverages documented architecture principles from memory
+- Memory contains: all role definitions, PDCA requirements, current project state
+- After processing, return to Scrum Master role and report what was done as Architect
 
 # Architect Role Process
 
