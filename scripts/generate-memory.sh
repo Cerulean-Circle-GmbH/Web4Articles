@@ -22,7 +22,7 @@ MEMORY_VERSIONS="$WORKSPACE_ROOT/.memory-versions"
 ENABLE_INCREMENTAL=true
 FORCE_FULL_REGENERATION=${FORCE_FULL:-false}
 
-echo -e "${BLUE}🧠 Memory Generation Script v4.0 (Comprehensive Content Inclusion)${NC}"
+echo -e "${BLUE}🧠 Memory Generation Script v4.1 (Performance Optimized)${NC}"
 echo -e "${BLUE}====================================${NC}"
 echo -e "${YELLOW}Purpose: Comprehensive agent context (MCP-style)${NC}"
 
@@ -109,10 +109,11 @@ create_memory_version() {
     echo -e "${BLUE}📚 Memory version created: $timestamp${NC}"
 }
 
-# Check if incremental update is needed
+# Check if incremental update is needed - OPTIMIZED
 check_incremental_update_needed() {
     local changed_files=0
     local total_files=0
+    local priority_changed=false
     
     echo -e "${YELLOW}🔍 Checking for file changes since last memory generation...${NC}"
     
@@ -122,24 +123,43 @@ check_incremental_update_needed() {
         return 0  # Full generation needed
     fi
     
-    # Check core files
-    for file in "${CORE_FILES[@]}"; do
+    # Priority check: full include files first (most important)
+    for file in "${FULL_INCLUDE_FILES[@]}"; do
         if [[ -f "$file" ]]; then
             total_files=$((total_files + 1))
             if file_has_changed "$file"; then
                 changed_files=$((changed_files + 1))
-                echo -e "${YELLOW}  📝 Changed: $file${NC}"
+                priority_changed=true
+                echo -e "${RED}  🔥 Priority file changed: $file${NC}"
             fi
         fi
     done
     
-    # Check discovered files
+    # If priority files changed, we need full regeneration
+    if [[ "$priority_changed" == "true" ]]; then
+        echo -e "${RED}🚨 Critical files changed, full regeneration required${NC}"
+        echo -e "${BLUE}📊 File Change Summary: $changed_files/$total_files files changed (priority files affected)${NC}"
+        return 0  # Full generation needed
+    fi
+    
+    # Check other discovered files only if no priority changes
     for file in "${ALL_MD_FILES[@]}"; do
         if [[ -f "$file" ]]; then
-            total_files=$((total_files + 1))
-            if file_has_changed "$file"; then
-                changed_files=$((changed_files + 1))
-                echo -e "${YELLOW}  📝 Changed: $file${NC}"
+            # Skip if already checked as full include file
+            skip_file=false
+            for full_file in "${FULL_INCLUDE_FILES[@]}"; do
+                if [[ "$file" == "$full_file" ]]; then
+                    skip_file=true
+                    break
+                fi
+            done
+            
+            if [[ "$skip_file" == "false" ]]; then
+                total_files=$((total_files + 1))
+                if file_has_changed "$file"; then
+                    changed_files=$((changed_files + 1))
+                    echo -e "${YELLOW}  📝 Changed: $file${NC}"
+                fi
             fi
         fi
     done
@@ -342,7 +362,7 @@ remove_navigation() {
         -e '/^\[.*\](\.\.\/.*)/d'
 }
 
-# Full content extraction (for critical files)
+# Full content extraction (for critical files) - OPTIMIZED
 extract_full_content() {
     local file="$1"
     
@@ -353,16 +373,17 @@ extract_full_content() {
     echo "### Complete Content from $file"
     echo ""
     
-    # Get content and remove navigation elements
-    local content=$(cat "$file")
-    local clean_content=$(remove_navigation "$content")
-    
-    # Output clean content preserving all knowledge
-    echo "$clean_content"
+    # Optimized single-pass navigation removal
+    sed \
+        -e '/^\[Back to .*\].*/d' \
+        -e '/^\[.*\].*|.*\[.*\].*/d' \
+        -e '/^---$/d' \
+        -e '/^\[.*\](\.\.\/.*)/d' \
+        "$file"
     echo ""
 }
 
-# Smart content extraction (for important files)
+# Smart content extraction (for important files) - OPTIMIZED
 extract_smart_content() {
     local file="$1"
     
@@ -373,12 +394,14 @@ extract_smart_content() {
     echo "### Key Content from $file"
     echo ""
     
-    # Extract all headers, lists, code blocks, and processes
-    local content=$(cat "$file")
-    local clean_content=$(remove_navigation "$content")
-    
-    # Smart extraction preserving essential information
-    echo "$clean_content" | awk '
+    # Optimized single-pass extraction with navigation removal
+    awk '
+        # Remove navigation patterns first
+        /^\[Back to .*\].*/ { next }
+        /^\[.*\].*\|.*\[.*\].*/ { next }
+        /^---$/ { next }
+        /^\[.*\]\(\.\.\/.*\)/ { next }
+        
         # Include all headers
         /^#+/ { print; next }
         
@@ -398,14 +421,14 @@ extract_smart_content() {
         # Include examples and commands
         /Example|Command|Usage/ { print; next }
         
-        # Skip empty lines in bulk but preserve structure
+        # Skip excessive empty lines but preserve structure
         /^$/ { if(prev_empty!=1) print; prev_empty=1; next }
-        { prev_empty=0 }
-    '
+        { prev_empty=0; print }
+    ' "$file"
     echo ""
 }
 
-# Summary extraction (for reference files)
+# Summary extraction (for reference files) - OPTIMIZED
 extract_summary_content() {
     local file="$1"
     
@@ -416,11 +439,15 @@ extract_summary_content() {
     echo "### Summary from $file"
     echo ""
     
-    # Extract headers and first paragraph of each section
-    local content=$(cat "$file")
-    local clean_content=$(remove_navigation "$content")
-    
-    echo "$clean_content" | awk '
+    # Optimized summary extraction with compression
+    awk '
+        # Remove navigation patterns
+        /^\[Back to .*\].*/ { next }
+        /^\[.*\].*\|.*\[.*\].*/ { next }
+        /^---$/ { next }
+        /^\[.*\]\(\.\.\/.*\)/ { next }
+        
+        # Extract headers and their context
         /^#+/ { 
             print; 
             # Get next non-empty line as summary
@@ -428,9 +455,40 @@ extract_summary_content() {
             if(NF > 0) print;
             next
         }
+        
+        # Include key list items with context
         /^-.*:/ { print; next }
-    ' | head -20
+        /CRITICAL|IMPORTANT|REQUIRED|MUST/ { print; next }
+        
+        # Skip excessive content but preserve structure
+        NR <= 15 { print }
+    ' "$file"
     echo ""
+}
+
+# Content compression function for redundant sections
+compress_redundant_content() {
+    local input_file="$1"
+    
+    # Remove duplicate headers and consolidate similar sections
+    awk '
+        # Track seen headers to avoid duplication
+        /^###/ {
+            if (seen_headers[$0]) next
+            seen_headers[$0] = 1
+        }
+        
+        # Remove excessive empty lines
+        /^$/ {
+            if (prev_empty) next
+            prev_empty = 1
+            print
+            next
+        }
+        
+        # Reset empty line tracker and print
+        { prev_empty = 0; print }
+    ' "$input_file"
 }
 
 # Legacy function for compatibility
@@ -585,7 +643,14 @@ TOKEN_MAXIMUM=$(python3 -c "
 import json
 with open('$CONFIG_FILE') as f:
     config = json.load(f)
-print(config.get('quality_rules', {}).get('token_maximum', 20000))
+print(config.get('quality_rules', {}).get('token_maximum', 22000))
+")
+
+TOKEN_WARNING=$(python3 -c "
+import json
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+print(config.get('quality_rules', {}).get('token_warning', 20000))
 ")
 
 echo "  🎯 Target: $TOKEN_TARGET tokens, Maximum: $TOKEN_MAXIMUM tokens"
@@ -793,6 +858,21 @@ FILE_SIZE=$(wc -c < "$MEMORY_FILE" 2>/dev/null || echo "0")
 WORD_COUNT=$(wc -w < "$MEMORY_FILE" 2>/dev/null || echo "0")
 # Estimate tokens (more conservative for comprehensive content)
 TOKEN_COUNT=$((WORD_COUNT * 150 / 100))
+
+# ========================================
+# CONTENT COMPRESSION AND OPTIMIZATION
+# ========================================
+
+echo -e "${YELLOW}🗜️  Applying content compression to reduce redundancy...${NC}"
+
+# Create temporary file for compression
+TEMP_MEMORY="$MEMORY_FILE.tmp"
+compress_redundant_content "$MEMORY_FILE" > "$TEMP_MEMORY"
+
+# Replace original with compressed version
+mv "$TEMP_MEMORY" "$MEMORY_FILE"
+
+echo -e "${GREEN}✅ Content compression completed${NC}"
 
 # Update file trackers for incremental updates
 if [[ "$ENABLE_INCREMENTAL" == "true" ]]; then

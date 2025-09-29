@@ -120,9 +120,10 @@
     "description": "Rules for maintaining quality and efficiency with comprehensive content",
     "max_files": 100,
     "max_file_size_kb": 1000,
-    "token_target": 15000,
-    "token_maximum": 20000,
-    "generation_time_target_seconds": 45,
+    "token_target": 18000,
+    "token_maximum": 22000,
+    "token_warning": 20000,
+    "generation_time_target_seconds": 30,
     "content_strategy": {
       "full_include_no_size_limit": true,
       "remove_navigation_elements": true,
