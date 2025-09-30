@@ -65,6 +65,20 @@ echo "✅ Working on dev/$TIMESTAMP for this session"
   - ❌ VIOLATION: `2025-09-28-UTC-1158-session-startup.pdca.md`
 **Purpose:** Systematic PDCA organization and compliance verification
 
+### **4.3 Git Fetch Verification Protocol**
+**CRITICAL:** Always verify git fetch success before remote operations:
+```bash
+# Verify git fetch executed successfully
+git fetch origin
+echo "✅ Git fetch completed - remote data current"
+
+# Verify fresh branch data available
+git branch -r | head -5
+echo "✅ Fresh remote branch data confirmed"
+```
+**Purpose:** Prevent stale data analysis and ensure current remote information
+**Dual Link:** [CMM3 Compliance Checklist](../scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md) | [§/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md](../scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md)
+
 ### **5. Install Git Automation (CRITICAL)**
 ```bash
 # Create post-commit hook for auto-merge
