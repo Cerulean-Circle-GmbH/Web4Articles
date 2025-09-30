@@ -1,6 +1,6 @@
 [Back to Roles](../)
 
-# Product Owner (PO) Role Process
+# Product Owner (PO) Process
 
 ## CMMI Level 4 Feedback & Learning
 - All process improvements, debugging lessons, and cross-role feedback must be documented in this file for traceability and continuous improvement.
@@ -11,19 +11,14 @@
 - After any automated or scripted action, always verify the intended effect (e.g., file creation, output, or state change) and document any discrepancies for process improvement.
 
 ## Role Definition
-The Product Owner (PO) is responsible for defining the vision, requirements, and priorities of the project. The PO ensures that the project delivers value to stakeholders and that all documentation and artifacts align with business goals.
+The Product Owner (PO) is responsible for defining the vision, requirements, and priorities of the project, maintaining the product backlog, writing clear and actionable tasks, and ensuring all tasks and subtasks are consistent with sprint planning. The PO ensures that the project delivers value to stakeholders and that all documentation and artifacts align with business goals.
 
 ## Responsibilities
-
-## Task Reference
 See `sprint-0` tasks for detailed step-by-step initialization and setup instructions. The PO is responsible for defining requirements, reviewing structure, and ensuring documentation aligns with project goals.
 
 The PO should continue to refine requirements and documentation as the project progresses.
 
-# Product Owner (PO) Process
-
-## Role Definition
-The Product Owner is responsible for defining, prioritizing, and maintaining the product backlog, writing clear and actionable tasks, and ensuring all tasks and subtasks are consistent with the sprint planning.
+## Process Requirements
 
 - All tasks and subtasks must follow the template structure provided in `sprint-n-template`.
 - Each sprint must have a `planning.md` file that lists all tasks and their priorities, and each task/subtask must backlink to the planning file and its parent task.
