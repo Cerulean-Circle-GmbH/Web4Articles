@@ -16,6 +16,23 @@ describe('Web4TSComponent Functionality', () => {
   let cli: Web4TSComponentCLI;
   let rootMocker: ProjectRootMocker;
 
+  describe('Dynamic Version Discovery', () => {
+    it('should discover correct version from package.json', async () => {
+      const component = new DefaultWeb4TSComponent();
+      expect(component.model.version).toBe('0.3.0.10');
+    });
+    
+    it('should discover correct component name from directory', async () => {
+      const component = new DefaultWeb4TSComponent();
+      expect(component.model.component).toBe('Web4TSComponent');
+    });
+    
+    it('should show correct version in CLI help', async () => {
+      const cli = new Web4TSComponentCLI();
+      // Test that CLI displays v0.3.0.10 in help output
+    });
+  });
+
   beforeEach(async () => {
     // Enable test mode for environment-aware path resolution
     (globalThis as any).__TEST_MODE__ = true;

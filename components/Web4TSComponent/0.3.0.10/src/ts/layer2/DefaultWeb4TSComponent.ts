@@ -34,6 +34,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   /**
    * Discover current component version from package.json or directory
    * @returns Current component version string
+   * @cliHide
    */
   private discoverComponentVersion(): string {
     try {
@@ -61,6 +62,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   /**
    * Discover current component name from directory structure
    * @returns Current component name string  
+   * @cliHide
    */
   private discoverComponentName(): string {
     try {
