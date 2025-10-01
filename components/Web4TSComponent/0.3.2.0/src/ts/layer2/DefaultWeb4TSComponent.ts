@@ -9,6 +9,7 @@ import { Web4TSComponentModel } from '../layer3/Web4TSComponentModel.interface.j
 import * as fs from 'fs/promises';
 import { existsSync, readdirSync, statSync } from 'fs';
 import * as path from 'path';
+import { execSync } from 'child_process';
 
 export class DefaultWeb4TSComponent implements Web4TSComponent {
   private model: Web4TSComponentModel;
@@ -60,7 +61,6 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   private findProjectRoot(): string {
     // Find project root using git or directory traversal
     try {
-      const { execSync } = require('child_process');
       const gitRoot = execSync('git rev-parse --show-toplevel', { encoding: 'utf-8' }).trim();
       if (existsSync(gitRoot)) {
         return gitRoot;
@@ -193,11 +193,31 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   /**
    * @cliHide
    */
+  private resolveProjectRoot(): string {
+    if (this.isTestEnvironment()) {
+      return this.getTestDataDirectory();
+    }
+    return this.model.targetDirectory;
+  }
+
+  /**
+   * @cliHide
+   */
   private resolveComponentPath(componentName: string, version: string): string {
     if (this.isTestEnvironment()) {
-      return path.join(this.getTestDataDirectory(), componentName, version);
+      return path.join(this.getTestDataDirectory(), 'components', componentName, version);
     }
     return path.join(this.model.targetDirectory, 'components', componentName, version);
+  }
+
+  /**
+   * @cliHide
+   */
+  private resolveComponentDirectory(componentName: string): string {
+    if (this.isTestEnvironment()) {
+      return path.join(this.getTestDataDirectory(), 'components', componentName);
+    }
+    return path.join(this.model.targetDirectory, 'components', componentName);
   }
 
   /**
@@ -835,7 +855,7 @@ Standards:
     }
 
     const version = targetVersion === 'current' ? context.version : targetVersion;
-    const componentDir = path.join(this.model.targetDirectory, 'components', context.component);
+    const componentDir = this.resolveComponentDirectory(context.component);
     const latestSymlink = path.join(componentDir, 'latest');
     const targetDir = path.join(componentDir, version);
 
@@ -2174,7 +2194,6 @@ export default defineConfig({
   /**
    * Verify and fix symlinks for component
    * @cliSyntax 
-   * @cliHide
    */
   async verifyAndFix(): Promise<this> {
     const context = this.getComponentContext();
@@ -2199,7 +2218,7 @@ export default defineConfig({
     console.log(`🔍 Scanning ${component} symlinks...`);
     
     // Get highest version
-    const componentDir = path.join(this.model.targetDirectory, 'components', component);
+    const componentDir = this.resolveComponentDirectory(component);
     const versions = this.getAvailableVersions(componentDir);
     
     if (versions.length === 0) {
@@ -2224,7 +2243,7 @@ export default defineConfig({
    * @cliHide
    */
   private async verifyLatestSymlink(component: string, highestVersion: string): Promise<void> {
-    const componentDir = path.join(this.model.targetDirectory, 'components', component);
+    const componentDir = this.resolveComponentDirectory(component);
     const latestPath = path.join(componentDir, 'latest');
     
     try {
@@ -2253,12 +2272,24 @@ export default defineConfig({
    * @cliHide
    */
   private async verifyScriptsSymlinks(component: string, versions: string[], highestVersion: string): Promise<void> {
-    const versionsDir = path.join(this.model.targetDirectory, 'scripts', 'versions');
+    const projectRoot = this.resolveProjectRoot();
+    const scriptsDir = path.join(projectRoot, 'scripts');
+    const versionsDir = path.join(scriptsDir, 'versions');
     const componentLower = component.toLowerCase();
     
+    // Ensure scripts and versions directories exist (FIX, don't just report errors!)
+    try {
+      await fs.mkdir(scriptsDir, { recursive: true });
+      await fs.mkdir(versionsDir, { recursive: true });
+      console.log(`   🔧 Ensured directory structure: scripts/versions/`);
+    } catch (error) {
+      console.log(`   ❌ Could not create scripts directory structure: ${(error as Error).message}`);
+      return; // Can't continue without directories
+    }
+    
     // Check main script symlink
-    const mainScriptPath = path.join(versionsDir, componentLower);
-    const expectedTarget = `${componentLower}-v${highestVersion}`;
+    const mainScriptPath = path.join(scriptsDir, componentLower);
+    const expectedTarget = `../components/${component}/latest/${componentLower}.sh`;
     
     try {
       if (existsSync(mainScriptPath)) {
@@ -2287,10 +2318,17 @@ export default defineConfig({
   }
 
   /**
-   * Verify version-specific script symlink exists
+   * Verify version-specific script symlink exists and create if missing
+   * @param component Component name for symlink verification
+   * @param version Component version for symlink creation
+   * @cliSyntax component version  
+   * @cliDefault component Web4TSComponent
+   * @cliDefault version 0.3.2.0
+   * @cliHide
    */
   private async verifyVersionScriptSymlink(component: string, version: string): Promise<void> {
-    const versionsDir = path.join(this.model.targetDirectory, 'scripts', 'versions');
+    const projectRoot = this.resolveProjectRoot();
+    const versionsDir = path.join(projectRoot, 'scripts', 'versions');
     const componentLower = component.toLowerCase();
     const scriptName = `${componentLower}-v${version}`;
     const scriptPath = path.join(versionsDir, scriptName);
@@ -2397,7 +2435,7 @@ export default defineConfig({
    * @cliHide
    */
   private async updateLatestSymlink(component: string, version: string): Promise<void> {
-    const componentDir = path.join(this.model.targetDirectory, 'components', component);
+    const componentDir = this.resolveComponentDirectory(component);
     const latestPath = path.join(componentDir, 'latest');
     
     try {
@@ -2440,7 +2478,7 @@ export default defineConfig({
     const scriptPath = path.join(versionsDir, scriptName);
     
     // Find the CLI script in the component version
-    const componentVersionDir = path.join(this.model.targetDirectory, 'components', component, version);
+    const componentVersionDir = this.resolveComponentPath(component, version);
     const possibleScripts = [
       `${componentLower}.sh`,
       `${componentLower}`,
