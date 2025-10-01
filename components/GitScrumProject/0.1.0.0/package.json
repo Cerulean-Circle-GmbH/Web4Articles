@@ -1,0 +1,18 @@
+{
+  "name": "@web4x/gitscrumproject",
+  "version": "0.1.0.0", 
+  "type": "module",
+  "scripts": {
+    "start": "npm run clean && npm run build && npm run run",
+    "clean": "rm -rf dist",
+    "build": "npx tsc", 
+    "run": "node dist/ts/layer2/GitScrumProject.js"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@octokit/rest": "^21.0.2"
+  }
+}
