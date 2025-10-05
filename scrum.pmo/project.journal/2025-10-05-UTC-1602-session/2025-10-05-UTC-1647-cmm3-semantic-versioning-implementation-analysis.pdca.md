@@ -49,21 +49,48 @@ Accepting CMM3 badge assignment by TRON. Conducting systematic analysis of seman
 
 ## **📋 PLAN**
 
-**Objective:** Systematically analyze semantic versioning inconsistencies, create structured problem/solution table, document version propagation workflows, and design implementation fixes for TRON authorization.
+**Objective:** Fix documentation and tests to match correct implementation (Option A selected by TRON). Systematic correction of terminology mismatches while preserving working code logic.
 
-**Requirements Traceability:** TRON CMM3 badge assignment, systematic inconsistency analysis, problem/solution table creation, workflow documentation, implementation authorization request
+**Requirements Traceability:** TRON CMM3 badge assignment, Option A implementation approach, systematic inconsistency correction, documentation alignment with correct code
 
 **Implementation Strategy:**
-- **Inconsistency Analysis:** Systematic identification of terminology mismatches between docs/code/tests
-- **Problem Table:** Structured table with Problem | Current Code | Proposed Solution columns
-- **Workflow Documentation:** Complete understanding of "test" command version propagation
-- **Authorization Request:** Present implementation plan for TRON approval before DO phase
+- **Approach A:** Fix documentation to match correct implementation (preserve code logic)
+- **Documentation Fixes:** Align comments and examples with actual PATCH increment behavior
+- **Test Corrections:** Update test expectations to match correct semantic versioning
+- **Terminology Alignment:** Ensure consistency between method names and behavior
+
+### **📊 PLAN ANALYSIS TABLE**
+
+| **Task ID** | **Component** | **Current Problem** | **Required Fix** | **Implementation Method** | **Validation** |
+|-------------|---------------|-------------------|------------------|--------------------------|---------------|
+| **PA-001** | Documentation Line 1091 | Claims "increment minor" but code increments PATCH | Change to "increment patch, reset build" | Edit comment in `handleTestSuccessPromotion()` | Verify comment matches `incrementPatch()` behavior |
+| **PA-002** | Documentation Line 1093 | Example correct but contradicts line 1091 | Add clarification that example shows PATCH increment | Update example comment for clarity | Ensure example aligns with corrected line 1091 |
+| **PA-003** | Test Expectations | Tests expect MINOR increment for nextPatch | Update tests to expect PATCH increment | Modify `web4tscomponent.version-promotion.test.ts` | Run tests to verify 100% pass rate |
+| **PA-004** | Method Terminology | `upgrade('nextPatch')` vs `incrementPatch()` disconnect | Document parameter mapping clearly | Add JSDoc to `upgrade()` method | Verify parameter documentation clarity |
+| **PA-005** | Semantic Verification | Missing version sequence validation | Add format and progression checks | Enhance `handleTestSuccessPromotion()` safety | Test with invalid version sequences |
+
+### **🔧 IMPLEMENTATION ORDER**
+
+**Phase 1: Documentation Alignment**
+1. Fix line 1091 comment to match PATCH increment behavior
+2. Clarify line 1093 example with PATCH increment explanation
+3. Add JSDoc parameter mapping to `upgrade()` method
+
+**Phase 2: Test Correction**
+1. Update test expectations from MINOR to PATCH increment
+2. Verify test version sequences match implementation
+3. Run full test suite to confirm 100% pass rate
+
+**Phase 3: Enhanced Validation**
+1. Add version format validation
+2. Implement version sequence progression checks  
+3. Test edge cases and error conditions
 
 **Expected Output:**
-- Comprehensive problem/solution table with exact code quotes
-- Complete documentation of version propagation workflows
-- Systematic implementation plan ready for authorization
-- Clear understanding of semantic versioning MAJOR.MINOR.PATCH.BUILD semantics
+- Documentation aligned with correct PATCH increment implementation
+- Tests expecting correct MAJOR.MINOR.PATCH.BUILD behavior
+- Enhanced semantic version validation for robustness
+- 100% test pass rate with corrected expectations
 
 ---
 
