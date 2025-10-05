@@ -33,16 +33,39 @@
   - c) Activate tests one by one with individual problem resolution
   - d) Complete rewrite of problematic test implementations
 
-### **TRON Feedback (2025-10-05-UTC-1720)**
-```quote
-1b
+- [ ] **Decision 2: File Protection Alarm Handling** 
+  - ✅ a) Ignore file protection alarm until TRON says otherwise **← SELECTED**
+  - b) Fix file protection issues immediately
+  - c) Update file protection expectations to match current state
+  - d) Disable file protection tests completely
 
-well asked, well documented in the pdca.
-go on fix it
+- [ ] **Decision 3: Test Data Directory Issue Analysis**
+  - a) Tests expect components in `test/data-functionality` but create in `test/data`
+  - b) ProjectRootMocker may not be isolating correctly to intended directory
+  - c) Test cleanup may be interfering with test isolation
+  - d) Component creation method may have wrong target directory configuration
+
+- [ ] **Decision 4: Test Isolation Fix Approach**
+  - a) Update tests to expect correct `test/data` directory (align tests with reality)
+  - b) Fix ProjectRootMocker to create in `test/data-functionality` (align reality with tests)
+  - c) Create separate test data directories for each test suite
+  - d) Redesign test isolation to avoid directory conflicts
+
+### **TRON Feedback (2025-10-05-UTC-1727)**
+```quote
+nubmber questions!!! use decision format!!!
+1 ignore file protection alarm until i say
+2 plan! should be in test/data!
+3 which, why, howto fix
 ```
 
 ### **My Answer**
-Implementing Decision 1b: Fix identified issues first, then activate tests systematically. Proceeding with systematic fixes based on approved solution table before test activation.
+Implementing Decision 1b: Fix identified issues first, then activate tests systematically. 
+
+**New Issues Analysis:**
+1. **File Protection Alarm:** Will ignore until TRON authorizes action (Decision 2a)
+2. **Test Data Location:** Tests expect `test/data-functionality` but components create in `test/data` 
+3. **Root Cause:** Directory mismatch between test expectations and actual component creation location
 
 **Learning Applied:** "plan" command triggers systematic PDCA analysis with problem/solution tables for TRON review before implementation.
 
@@ -71,11 +94,14 @@ Implementing Decision 1b: Fix identified issues first, then activate tests syste
 | **FP-001** | Hash-based file protection | ```typescript\n// Line 17-18: file-protection.test.ts\nconst protectedFiles = {\n  'src/ts/layer2/DefaultCLI.ts': {``` | File hashes may be outdated after recent changes | ```typescript\n// Update or regenerate hashes\nconst protectedFiles = {\n  'src/ts/layer2/DefaultCLI.ts': {\n    expectedHash: 'current-hash-value'\n  }``` | Regenerate file hashes for current state |
 | **FP-002** | Crypto hash verification | ```typescript\n// File protection uses crypto hashing\nimport * as crypto from 'crypto';``` | Hash verification may fail on legitimate changes | ```typescript\n// Add hash update mechanism\nif (actualHash !== expectedHash) {\n  console.warn('Hash mismatch - may need update');\n  // Option to update hash in development\n}``` | Add hash update workflow for development |
 
-### **📊 COMMAND TRIGGER DOCUMENTATION**
+### **📊 TEST DATA DIRECTORY ANALYSIS TABLE**
 
-| **Trigger** | **Purpose** | **Required Format** | **Output** | **Example Usage** |
-|-------------|-------------|-------------------|-----------|------------------|
-| **"plan"** | Systematic problem analysis with solution tables | PDCA with problem/solution table, code quotes, TRON review request | Structured implementation plan awaiting approval | "plan functional test activation" → Creates analysis PDCA |
+| **Issue ID** | **Which Component** | **Current Behavior** | **Expected Behavior** | **Why Mismatch** | **How to Fix** |
+|-------------|-------------------|-------------------|-------------------|-----------------|----------------|
+| **TD-001** | beforeEach setup | ```typescript\n// Line 24: web4tscomponent.functionality.test.ts\nconst testDataDir = path.join(__dirname, 'data');\ncomponent.setTargetDirectory(testDataDir);``` | Tests expect: `test/data-functionality` | Setup creates `test/data` but tests hardcode `test/data-functionality` paths | **Option A:** Change setup to `'data-functionality'` **Option B:** Update all test paths to use `'data'` |
+| **TD-002** | Test expectations | ```typescript\n// Line 88: functionality test\nconst testDataDir = path.join(__dirname, 'data-functionality');\nconst componentPath = path.join(testDataDir, 'components', componentName, version);``` | Component created in: `test/data/components/...` | Tests create new testDataDir instead of using setup | **Fix:** Use setup testDataDir instead of creating new path |
+| **TD-003** | ProjectRootMocker | ```typescript\n// Line 28: beforeEach\nrootMocker = new ProjectRootMocker(testDataDir);\nrootMocker.mock();``` | Mock should isolate to test directory | Mocking may not affect component.create() target | **Fix:** Verify mock affects DefaultWeb4TSComponent.create() method |
+| **TD-004** | Directory consistency | Multiple `testDataDir` definitions across tests | Single consistent test isolation directory | Each test redefines path instead of using setup | **Fix:** Use class-level testDataDir from beforeEach setup |
 
 **Implementation Strategy:**
 - **Phase 1:** Remove `.skip` from test suites to activate all 24 tests
