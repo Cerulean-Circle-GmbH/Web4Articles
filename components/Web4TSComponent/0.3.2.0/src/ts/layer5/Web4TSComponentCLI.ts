@@ -119,7 +119,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
       switch (command) {
         case 'help':
           this.showUsage();
-          return;
+      return;
           
         default:
           throw new Error(`Unknown command: ${command}`);
@@ -193,7 +193,9 @@ export class Web4TSComponentCLI extends DefaultCLI {
       'create': 3, // name, version, options (options has default)
       'upgrade': 1, // versionType
       'on': 2, // component and version
-      'setLatest': 1 // targetVersion (has default)
+      'setLatest': 1, // targetVersion (has default)
+      'removeVersion': 2, // componentName and version (both have defaults)
+      'removeComponent': 1 // componentName (has default)
     };
     
     return methodMaxArgs[command] || null;

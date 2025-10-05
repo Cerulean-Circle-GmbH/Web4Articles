@@ -541,7 +541,7 @@ Standards:
       includeVitest: options.includes('vitest') || options.includes('test') || options.includes('all')
     };
     
-    console.log(`🏗️ Creating Web4 component: ${name} v${version}`);
+    console.log(`🏗️ Creating Web4 component: ${name} ${version}`);
     console.log(`📋 Options: ${options || 'default'}`);
     
     const metadata = await this.scaffoldComponent(scaffoldOptions);
@@ -732,7 +732,7 @@ Standards:
     (this.model as any).contextVersion = version;
     (this.model as any).contextPath = componentPath;
     
-    console.log(`✅ Component context loaded: ${component} v${version}`);
+    console.log(`✅ Component context loaded: ${component} ${version}`);
     console.log(`   Path: ${componentPath}`);
     
     return this; // Enable chaining
@@ -833,7 +833,7 @@ Standards:
     const maxDepth = parseInt(depth, 10) || 3;
     const includeHidden = showHidden.toLowerCase() === 'true';
     
-    console.log(`📁 Tree structure for ${context.component} v${context.version}:`);
+    console.log(`📁 Tree structure for ${context.component} ${context.version}:`);
     console.log(context.path);
     
     await this.displayTreeStructure(context.path, '', maxDepth, 0, includeHidden);
@@ -884,6 +884,267 @@ Standards:
 
     } catch (error) {
       throw new Error(`Failed to update latest symlink: ${(error as Error).message}`);
+    }
+
+    return this;
+  }
+
+  /**
+   * Execute test command in loaded component context
+   * Run test suite for the loaded component using its build system
+   * @cliSyntax
+   * @cliExample web4tscomponent on Unit 0.3.0.5 test
+   */
+  async test(): Promise<this> {
+    const context = this.getComponentContext();
+    if (!context) {
+      throw new Error('No component context loaded. Use "on <component> <version>" first.');
+    }
+
+    const componentPath = this.resolveComponentPath(context.component, context.version);
+    
+    console.log(`🧪 Running tests for ${context.component} ${context.version}...`);
+    
+    try {
+      execSync('npm test', { 
+        cwd: componentPath, 
+        stdio: 'inherit',
+        encoding: 'utf-8'
+      });
+      console.log(`✅ Tests completed for ${context.component} ${context.version}`);
+    } catch (error) {
+      console.error(`❌ Tests failed for ${context.component} ${context.version}`);
+      throw error;
+    }
+
+    return this;
+  }
+
+  /**
+   * Execute start command in loaded component context
+   * Build and run the loaded component using its build system
+   * @cliSyntax
+   * @cliExample web4tscomponent on Unit 0.3.0.5 start
+   */
+  async start(): Promise<this> {
+    const context = this.getComponentContext();
+    if (!context) {
+      throw new Error('No component context loaded. Use "on <component> <version>" first.');
+    }
+
+    const componentPath = this.resolveComponentPath(context.component, context.version);
+    
+    console.log(`🚀 Starting ${context.component} ${context.version}...`);
+    
+    try {
+      execSync('npm start', { 
+        cwd: componentPath, 
+        stdio: 'inherit',
+        encoding: 'utf-8'
+      });
+      console.log(`✅ Started ${context.component} ${context.version}`);
+    } catch (error) {
+      console.error(`❌ Failed to start ${context.component} ${context.version}`);
+      throw error;
+    }
+
+    return this;
+  }
+
+  /**
+   * Execute build command in loaded component context
+   * Build the loaded component using its build system
+   * @cliSyntax
+   * @cliExample web4tscomponent on Unit 0.3.0.5 build
+   */
+  async build(): Promise<this> {
+    const context = this.getComponentContext();
+    if (!context) {
+      throw new Error('No component context loaded. Use "on <component> <version>" first.');
+    }
+
+    const componentPath = this.resolveComponentPath(context.component, context.version);
+    
+    console.log(`🔨 Building ${context.component} ${context.version}...`);
+    
+    try {
+      execSync('npm run build', { 
+        cwd: componentPath, 
+        stdio: 'inherit',
+        encoding: 'utf-8'
+      });
+      console.log(`✅ Build completed for ${context.component} ${context.version}`);
+    } catch (error) {
+      console.error(`❌ Build failed for ${context.component} ${context.version}`);
+      throw error;
+    }
+
+    return this;
+  }
+
+  /**
+   * Execute clean command in loaded component context
+   * Clean build artifacts for the loaded component using its build system
+   * @cliSyntax
+   * @cliExample web4tscomponent on Unit 0.3.0.5 clean
+   */
+  async clean(): Promise<this> {
+    const context = this.getComponentContext();
+    if (!context) {
+      throw new Error('No component context loaded. Use "on <component> <version>" first.');
+    }
+
+    const componentPath = this.resolveComponentPath(context.component, context.version);
+    
+    console.log(`🧹 Cleaning ${context.component} ${context.version}...`);
+    
+    try {
+      execSync('npm run clean', { 
+        cwd: componentPath, 
+        stdio: 'inherit',
+        encoding: 'utf-8'
+      });
+      console.log(`✅ Cleaned ${context.component} ${context.version}`);
+    } catch (error) {
+      console.error(`❌ Clean failed for ${context.component} ${context.version}`);
+      throw error;
+    }
+
+    return this;
+  }
+
+  /**
+   * Remove a specific version of a component
+   * Removes the version directory and updates symlinks accordingly
+   * @param componentName Component name to remove version from (uses context if not provided)
+   * @param version Version to remove (uses context version if not provided)
+   * @cliSyntax componentName version
+   * @cliDefault componentName current
+   * @cliDefault version current
+   * @cliExample web4tscomponent removeVersion Unit 0.2.0.0
+   * @cliExample web4tscomponent on Unit 0.2.0.0 removeVersion
+   */
+  async removeVersion(componentName: string = 'current', version: string = 'current'): Promise<this> {
+    let targetComponent: string;
+    let targetVersion: string;
+
+    // Only check context if either parameter is 'current'
+    if (componentName === 'current' || version === 'current') {
+      const context = this.getComponentContext();
+      if (!context) {
+        throw new Error('No component context loaded and no component/version specified. Use "on <component> <version>" first or provide component and version.');
+      }
+      targetComponent = componentName === 'current' ? context.component : componentName;
+      targetVersion = version === 'current' ? context.version : version;
+    } else {
+      // Both parameters explicitly provided
+      targetComponent = componentName;
+      targetVersion = version;
+    }
+
+    const componentDir = this.resolveComponentDirectory(targetComponent);
+    const versionDir = path.join(componentDir, targetVersion);
+    const latestSymlink = path.join(componentDir, 'latest');
+
+    if (!existsSync(versionDir)) {
+      throw new Error(`Version ${targetVersion} of ${targetComponent} does not exist at ${versionDir}`);
+    }
+
+    console.log(`🗑️ Removing ${targetComponent} ${targetVersion}...`);
+    console.log(`   Directory: ${versionDir}`);
+
+    // Check if this is the latest version
+    let wasLatest = false;
+    if (existsSync(latestSymlink)) {
+      try {
+        const latestTarget = await fs.readlink(latestSymlink);
+        wasLatest = latestTarget === targetVersion;
+      } catch (error) {
+        // Ignore readlink errors
+      }
+    }
+
+    // Remove the version directory
+    await fs.rm(versionDir, { recursive: true, force: true });
+    console.log(`✅ Removed ${targetComponent} ${targetVersion}`);
+
+    // If this was the latest version, update the latest symlink to highest remaining version
+    if (wasLatest) {
+      const versions = this.getAvailableVersions(componentDir);
+      if (versions.length > 0) {
+        const highestVersion = this.getHighestVersion(versions);
+        console.log(`🔗 Updating latest symlink: ${targetVersion} → ${highestVersion}`);
+        
+        // Remove old latest symlink
+        if (existsSync(latestSymlink)) {
+          await fs.unlink(latestSymlink);
+        }
+        
+        // Create new latest symlink
+        await fs.symlink(highestVersion, latestSymlink);
+        console.log(`✅ Latest symlink updated: latest → ${highestVersion}`);
+      } else {
+        // No versions left, remove latest symlink
+        if (existsSync(latestSymlink)) {
+          await fs.unlink(latestSymlink);
+          console.log(`🔗 Removed latest symlink (no versions remaining)`);
+        }
+      }
+    }
+
+    // Remove version-specific script symlinks
+    await this.cleanupVersionScriptSymlinks(targetComponent, targetVersion);
+
+    return this;
+  }
+
+  /**
+   * Remove an entire component and all its versions
+   * Removes the complete component directory and all associated symlinks
+   * @param componentName Component name to remove completely (uses context if not provided)
+   * @cliSyntax componentName
+   * @cliDefault componentName current
+   * @cliExample web4tscomponent removeComponent TestComponent
+   * @cliExample web4tscomponent on TestComponent 1.0.0.0 removeComponent
+   */
+  async removeComponent(componentName: string = 'current'): Promise<this> {
+    let targetComponent: string;
+
+    if (componentName === 'current') {
+      const context = this.getComponentContext();
+      if (!context) {
+        throw new Error('No component context loaded and no component specified. Use "on <component> <version>" first or provide component name.');
+      }
+      targetComponent = context.component;
+    } else {
+      targetComponent = componentName;
+    }
+
+    const componentDir = this.resolveComponentDirectory(targetComponent);
+
+    if (!existsSync(componentDir)) {
+      throw new Error(`Component ${targetComponent} does not exist at ${componentDir}`);
+    }
+
+    console.log(`🗑️ Removing entire component: ${targetComponent}...`);
+    console.log(`   Directory: ${componentDir}`);
+
+    // Get all versions before removal for cleanup
+    const versions = this.getAvailableVersions(componentDir);
+    
+    // Remove the entire component directory
+    await fs.rm(componentDir, { recursive: true, force: true });
+    console.log(`✅ Removed component ${targetComponent} and all versions`);
+
+    // Clean up all script symlinks for this component
+    await this.cleanupAllComponentScriptSymlinks(targetComponent, versions);
+
+    // Clear context if we just removed the loaded component
+    const context = this.getComponentContext();
+    if (context && context.component === targetComponent) {
+      (this.model as any).contextComponent = null;
+      (this.model as any).contextVersion = null;
+      console.log(`🔧 Cleared component context`);
     }
 
     return this;
@@ -2896,7 +3157,7 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
       throw new Error('No component context loaded. Use "on <component> <version>" first.');
     }
     
-    console.log(`🔧 Updating build system for ${context.component} v${context.version}...`);
+    console.log(`🔧 Updating build system for ${context.component} ${context.version}...`);
     
     // Update shell scripts with latest templates
     await this.createShellScriptStructure(context.path, context.component);
@@ -2987,5 +3248,76 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
 
     // Copy essential interfaces from current component
     await this.copyEssentialInterfaces(componentDir);
+  }
+
+  /**
+   * Cleanup version-specific script symlinks
+   * @cliHide
+   */
+  private async cleanupVersionScriptSymlinks(componentName: string, version: string): Promise<void> {
+    const projectRoot = this.resolveProjectRoot();
+    const scriptsDir = path.join(projectRoot, 'scripts');
+    const versionsDir = path.join(scriptsDir, 'versions');
+    
+    if (!existsSync(versionsDir)) {
+      return;
+    }
+
+    const componentLowerCase = componentName.toLowerCase();
+    const versionScriptName = `${componentLowerCase}-v${version}`;
+    const versionScriptPath = path.join(versionsDir, versionScriptName);
+
+    if (existsSync(versionScriptPath)) {
+      await fs.unlink(versionScriptPath);
+      console.log(`🔗 Removed version script symlink: ${versionScriptName}`);
+    }
+
+    // If the main script points to this version, remove it
+    const mainScriptPath = path.join(scriptsDir, componentLowerCase);
+    if (existsSync(mainScriptPath)) {
+      try {
+        const linkTarget = await fs.readlink(mainScriptPath);
+        if (linkTarget.includes(`${versionScriptName}`)) {
+          await fs.unlink(mainScriptPath);
+          console.log(`🔗 Removed main script symlink: ${componentLowerCase}`);
+        }
+      } catch (error) {
+        // Ignore readlink errors
+      }
+    }
+  }
+
+  /**
+   * Cleanup all script symlinks for a component
+   * @cliHide
+   */
+  private async cleanupAllComponentScriptSymlinks(componentName: string, versions: string[]): Promise<void> {
+    const projectRoot = this.resolveProjectRoot();
+    const scriptsDir = path.join(projectRoot, 'scripts');
+    const versionsDir = path.join(scriptsDir, 'versions');
+    
+    if (!existsSync(versionsDir)) {
+      return;
+    }
+
+    const componentLowerCase = componentName.toLowerCase();
+
+    // Remove all version-specific symlinks
+    for (const version of versions) {
+      const versionScriptName = `${componentLowerCase}-v${version}`;
+      const versionScriptPath = path.join(versionsDir, versionScriptName);
+
+      if (existsSync(versionScriptPath)) {
+        await fs.unlink(versionScriptPath);
+        console.log(`🔗 Removed version script symlink: ${versionScriptName}`);
+      }
+    }
+
+    // Remove main script symlink
+    const mainScriptPath = path.join(scriptsDir, componentLowerCase);
+    if (existsSync(mainScriptPath)) {
+      await fs.unlink(mainScriptPath);
+      console.log(`🔗 Removed main script symlink: ${componentLowerCase}`);
+    }
   }
 }
