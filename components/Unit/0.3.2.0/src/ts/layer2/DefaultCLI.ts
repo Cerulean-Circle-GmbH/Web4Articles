@@ -443,13 +443,14 @@ export abstract class DefaultCLI implements CLI {
    */
   private extractMethodDescriptionFallback(methodName: string): string {
     const descriptions: { [key: string]: string } = {
-      'create': 'Create new Web4-compliant component with auto-discovery CLI and full architecture',
+      'create': 'Create unit operation with configurable output format',
+      'process': 'Execute Unit processing workflow on provided data',
+      'info': 'Display detailed Unit instance information and state',
       'find': 'Discover and analyze Web4 components in directory with compliance reporting',
       'on': 'Load component context for chaining operations (essential for workflows)',
       'upgrade': 'Upgrade component to next version with semantic version control',
       'tree': 'Display directory structure for loaded component (requires context)',
       'setLatest': 'Update latest symlink to point to specified version (requires context)',
-      'info': 'Display comprehensive information about Web4 standards and guidelines',
       'classify': 'Set MOF typeM3 classification for existing component',
       'link': 'Create initial link to existing component using UUID',
       'deleteLink': 'Delete specific link file while preserving component in central storage',
@@ -458,7 +459,6 @@ export abstract class DefaultCLI implements CLI {
       'execute': 'Execute component with input data and return processed results',
       'transform': 'Transform input data using component logic and return modified data',
       'validate': 'Validate object against component rules and return compliance status',
-      'process': 'Process data through component workflow and return results',
       'set': 'Configure component properties and generate CLI scripts',
       'get': 'Validate component compliance and analyze architecture quality'
     };
@@ -653,7 +653,9 @@ export abstract class DefaultCLI implements CLI {
    */
   private extractMethodDescription(name: string): string {
     const descriptions: { [key: string]: string } = {
-      'create': 'Create new component with name, optional description, and optional classification',
+      'create': 'Create unit operation with configurable output format',
+      'process': 'Execute Unit processing workflow on provided data',
+      'info': 'Display detailed Unit instance information and state',
       'classify': 'Set MOF typeM3 classification for existing component',
       'link': 'Create initial link to existing component using UUID',
       'linkInto': 'Create additional link to same component in different location',
@@ -664,11 +666,9 @@ export abstract class DefaultCLI implements CLI {
       'from': 'Create component from file text with extracted name and origin',
       'definition': 'Add definition source reference to existing component',
       'execute': 'Execute component with input data',
-      'info': 'Display current component information and scenario',
       'help': 'Show this help message',
       'transform': 'Transform input data using component logic',
       'validate': 'Validate object against component rules',
-      'process': 'Process data through component workflow',
       'init': 'Initialize component with scenario data',
       'toScenario': 'Convert component state to scenario format',
       'upgrade': 'Upgrade component to newer version',

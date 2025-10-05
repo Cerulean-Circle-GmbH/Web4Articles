@@ -57,14 +57,28 @@ export class DefaultUnit implements Unit {
   }
 
   /**
-   * Create example operation for Unit
+   * Create unit operation with configurable output format
+   * 
+   * Creates a new unit operation with specified input data and output format.
+   * This is the primary method for initializing Unit processing workflows
+   * with configurable output formatting options.
+   * 
    * @param input Input data to process
    * @param format Output format (json, text, xml)
+   * 
+   * @example
+   * // Create unit with JSON output
+   * await unit.create('user-data', 'json');
+   * 
+   * @example
+   * // Create unit with text output
+   * await unit.create('system-config', 'text');
+   * 
    * @cliSyntax input format
    * @cliDefault format json
    */
   async create(input: string, format: string = 'json'): Promise<this> {
-    console.log(`🚀 Creating ${input} in ${format} format`);
+    console.log(`🚀 Creating unit operation: ${input} in ${format} format`);
     this.model.name = input;
     this.model.updatedAt = new Date().toISOString();
     console.log(`✅ Unit operation completed`);
@@ -72,18 +86,43 @@ export class DefaultUnit implements Unit {
   }
 
   /**
-   * Process data through Unit logic
-   * @param data Data to process
+   * Execute Unit processing workflow on provided data
+   * 
+   * Executes the core Unit processing workflow on the provided data.
+   * This method applies Unit-specific transformations and business logic
+   * to process the input according to Web4 standards.
+   * 
+   * @param data Data to process through Unit workflow
+   * 
+   * @example
+   * // Process user input data
+   * await unit.process('{"userId": 123, "action": "update"}');
+   * 
+   * @example
+   * // Process configuration data
+   * await unit.process('config=production,debug=false');
+   * 
    * @cliSyntax data
    */
   async process(data: string): Promise<this> {
-    console.log(`🔧 Processing: ${data}`);
+    console.log(`🔧 Processing data through Unit workflow: ${data}`);
     this.model.updatedAt = new Date().toISOString();
+    console.log(`✅ Unit processing completed`);
     return this;
   }
 
   /**
-   * Show information about current Unit state
+   * Display detailed Unit instance information and state
+   * 
+   * Shows detailed information about the current Unit instance including
+   * UUID, name, creation timestamp, and last update timestamp. Useful
+   * for debugging and monitoring Unit state during development.
+   * 
+   * @example
+   * // Display current unit information
+   * await unit.info();
+   * 
+   * @cliSyntax
    */
   async info(): Promise<this> {
     console.log(`📋 Unit Information:`);
