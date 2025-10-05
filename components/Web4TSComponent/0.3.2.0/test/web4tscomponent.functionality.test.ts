@@ -85,7 +85,7 @@ describe('Web4TSComponent Functionality', () => {
       
       await component.create(componentName, version, 'all');
       
-      const testDataDir = path.join(__dirname, 'data-functionality');
+      const testDataDir = path.join(__dirname, 'data');
       const componentPath = path.join(testDataDir, 'components', componentName, version);
       expect(existsSync(componentPath)).toBe(true);
       
@@ -108,7 +108,7 @@ describe('Web4TSComponent Functionality', () => {
       
       await component.create(componentName); // No version specified
       
-      const testDataDir = path.join(__dirname, 'data-functionality');
+      const testDataDir = path.join(__dirname, 'data');
       const componentPath = path.join(testDataDir, 'components', componentName, '0.1.0.0'); // Should default to 0.1.0.0
       expect(existsSync(componentPath)).toBe(true);
     });
@@ -119,7 +119,7 @@ describe('Web4TSComponent Functionality', () => {
       
       await cli.execute(['create', componentName, version, 'all']);
       
-      const testDataDir = path.join(__dirname, 'data-functionality');
+      const testDataDir = path.join(__dirname, 'data');
       const componentPath = path.join(testDataDir, 'components', componentName, version);
       expect(existsSync(componentPath)).toBe(true);
     });
@@ -138,7 +138,7 @@ describe('Web4TSComponent Functionality', () => {
     it('should upgrade to next build (patch) version', async () => {
       await component.upgrade('nextBuild');
       
-      const testDataDir = path.join(__dirname, 'data-functionality');
+      const testDataDir = path.join(__dirname, 'data');
       const newVersionPath = path.join(testDataDir, 'components', baseComponent, '0.1.0.1');
       expect(existsSync(newVersionPath)).toBe(true);
       
@@ -152,7 +152,7 @@ describe('Web4TSComponent Functionality', () => {
     it('should upgrade to next minor version', async () => {
       await component.upgrade('nextMinor');
       
-      const testDataDir = path.join(__dirname, 'data-functionality');
+      const testDataDir = path.join(__dirname, 'data');
       const newVersionPath = path.join(testDataDir, 'components', baseComponent, '0.2.0.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
@@ -160,7 +160,7 @@ describe('Web4TSComponent Functionality', () => {
     it('should upgrade to next major version', async () => {
       await component.upgrade('nextMajor');
       
-      const testDataDir = path.join(__dirname, 'data-functionality');
+      const testDataDir = path.join(__dirname, 'data');
       const newVersionPath = path.join(testDataDir, 'components', baseComponent, '1.0.0.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
@@ -168,7 +168,7 @@ describe('Web4TSComponent Functionality', () => {
     it('should upgrade to explicit version', async () => {
       await component.upgrade('0.5.0.0');
       
-      const testDataDir = path.join(__dirname, 'data-functionality');
+      const testDataDir = path.join(__dirname, 'data');
       const newVersionPath = path.join(testDataDir, 'components', baseComponent, '0.5.0.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
@@ -176,7 +176,7 @@ describe('Web4TSComponent Functionality', () => {
     it('should preserve all files during upgrade', async () => {
       await component.upgrade('nextBuild');
       
-      const testDataDir = path.join(__dirname, 'data-functionality');
+      const testDataDir = path.join(__dirname, 'data');
       const newVersionPath = path.join(testDataDir, 'components', baseComponent, '0.1.0.1');
       
       // Verify all original files preserved
@@ -285,7 +285,7 @@ describe('Web4TSComponent Functionality', () => {
       
       await component.create(componentName, '0.1.0.0', 'all');
       
-      const testDataDir = path.join(__dirname, 'data-functionality');
+      const testDataDir = path.join(__dirname, 'data');
       const componentPath = path.join(testDataDir, 'components', componentName, '0.1.0.0');
       
       // Verify same file structure as 1.0.0.0 creates
