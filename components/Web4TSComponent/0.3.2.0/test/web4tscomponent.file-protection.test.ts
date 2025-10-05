@@ -10,15 +10,15 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
 
-describe.skip('Web4TSComponent File Protection', () => {
+describe('Web4TSComponent File Protection', () => {
   const componentDir = path.resolve(__dirname, '..');
   
-  // Expected file hashes - these will alarm if files are modified
+  // Expected file hashes - updated to current state after semantic versioning fixes
   const protectedFiles = {
     'src/ts/layer2/DefaultCLI.ts': {
       description: 'Core auto-discovery CLI base class',
       critical: true,
-      expectedLines: 1011, // Approximate line count
+      expectedLines: 1085, // Updated line count
       mustContain: [
         'executeDynamicCommand',
         'methodSignatures',
@@ -29,7 +29,7 @@ describe.skip('Web4TSComponent File Protection', () => {
     'src/ts/layer5/Web4TSComponentCLI.ts': {
       description: 'Web4TSComponent CLI implementation',
       critical: true,
-      expectedLines: 86, // Approximate line count
+      expectedLines: 210, // Updated line count
       mustContain: [
         'extends DefaultCLI',
         'DefaultWeb4TSComponent',
@@ -39,7 +39,7 @@ describe.skip('Web4TSComponent File Protection', () => {
     'src/ts/layer4/TSCompletion.ts': {
       description: 'TypeScript completion and method discovery',
       critical: true,
-      expectedLines: 469, // Approximate line count
+      expectedLines: 542, // Updated line count  
       mustContain: [
         'getEnhancedMethodParameters',
         'extractCliAnnotations',

@@ -11,7 +11,7 @@ import { existsSync } from 'fs';
 import * as path from 'path';
 import { ProjectRootMocker } from './utils/ProjectRootMocker.js';
 
-describe.skip('Web4TSComponent Functionality', () => {
+describe('Web4TSComponent Functionality', () => {
   let component: DefaultWeb4TSComponent;
   let cli: Web4TSComponentCLI;
   let rootMocker: ProjectRootMocker;
@@ -20,13 +20,23 @@ describe.skip('Web4TSComponent Functionality', () => {
     // Enable test mode for environment-aware path resolution
     (globalThis as any).__TEST_MODE__ = true;
     
+    // Verify test mode is active
+    if (!(globalThis as any).__TEST_MODE__) {
+      throw new Error('Test mode activation failed');
+    }
+    
     // Setup test data directory
     const testDataDir = path.join(__dirname, 'data');
     await fs.mkdir(testDataDir, { recursive: true });
     
-    // Mock project root to be test data directory
+    // Mock project root to be test data directory with error handling
     rootMocker = new ProjectRootMocker(testDataDir);
-    rootMocker.mock();
+    try {
+      rootMocker.mock();
+    } catch (error) {
+      console.warn('ProjectRootMocker failed:', error);
+      throw error; // Re-throw to fail test setup properly
+    }
     
     component = new DefaultWeb4TSComponent();
     // Update target directory to use mocked root
@@ -35,14 +45,21 @@ describe.skip('Web4TSComponent Functionality', () => {
   });
 
   afterEach(async () => {
-    // Restore original project root
-    if (rootMocker) {
-      rootMocker.restore();
+    // Ensure cleanup always succeeds with proper error handling
+    try {
+      // Restore original project root
+      if (rootMocker) {
+        rootMocker.restore();
+      }
+      
+      // Clean up test components (ephemeral test data as per decision 5a)
+      await cleanupTestComponents();
+    } catch (error) {
+      console.warn('Test cleanup failed:', error);
+    } finally {
+      // Always clean up test mode regardless of cleanup success
+      delete (globalThis as any).__TEST_MODE__;
     }
-    
-    // Clean up test components (ephemeral test data as per decision 5a)
-    await cleanupTestComponents();
-    delete (globalThis as any).__TEST_MODE__;
   });
 
   async function cleanupTestComponents() {
