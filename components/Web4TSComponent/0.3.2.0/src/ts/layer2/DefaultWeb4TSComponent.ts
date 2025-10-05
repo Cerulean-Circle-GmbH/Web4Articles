@@ -1088,9 +1088,9 @@ Standards:
    * Auto-promotion workflow:
    * - If dev and test are same version: automatically creates nextBuild and tests it
    * - After 100% test success, automatically promotes versions through workflow:
-   * - Current version → nextPatch (increment minor, reset patch) → prod
+   * - Current version → nextPatch (increment patch, reset build) → prod
    * - nextBuild (increment build from new prod) → dev and test
-   * Example: 0.3.2.0 → 0.3.3.0 (prod), 0.3.3.1 (dev/test)
+   * Example: 0.3.2.0 → 0.3.3.0 (prod via nextPatch - PATCH increment), 0.3.3.1 (dev/test via nextBuild)
    * @cliSyntax
    * @cliExample web4tscomponent test
    * @cliExample web4tscomponent on Unit 0.3.0.5 test

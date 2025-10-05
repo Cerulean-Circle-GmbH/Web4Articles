@@ -64,16 +64,16 @@ describe('🚀 Web4TSComponent Version Promotion Tests', () => {
       // Verify promotion workflow results
       const finalLinks = await component.getSemanticLinks('PromotionTest');
       
-      // Check that nextPatch (0.2.0.0) was created and set as prod
+      // Check that nextPatch (0.1.1.0) was created and set as prod - PATCH increment
       const componentsDir = path.join(testDataDir, 'components', 'PromotionTest');
-      expect(fs.existsSync(path.join(componentsDir, '0.2.0.0'))).toBe(true);
-      expect(finalLinks.prod).toBe('0.2.0.0');
-      expect(finalLinks.latest).toBe('0.2.0.0');
+      expect(fs.existsSync(path.join(componentsDir, '0.1.1.0'))).toBe(true);
+      expect(finalLinks.prod).toBe('0.1.1.0');
+      expect(finalLinks.latest).toBe('0.1.1.0');
 
-      // Check that nextBuild (0.2.0.1) was created and set as dev/test
-      expect(fs.existsSync(path.join(componentsDir, '0.2.0.1'))).toBe(true);
-      expect(finalLinks.dev).toBe('0.2.0.1');
-      expect(finalLinks.test).toBe('0.2.0.1');
+      // Check that nextBuild (0.1.1.1) was created and set as dev/test
+      expect(fs.existsSync(path.join(componentsDir, '0.1.1.1'))).toBe(true);
+      expect(finalLinks.dev).toBe('0.1.1.1');
+      expect(finalLinks.test).toBe('0.1.1.1');
     });
 
     it('should skip promotion if version is already marked as prod (safety check)', async () => {
@@ -160,18 +160,18 @@ describe('🚀 Web4TSComponent Version Promotion Tests', () => {
       // Verify semantic versioning
       const componentsDir = path.join(testDataDir, 'components', 'VersionTest');
       
-      // nextPatch should be 1.6.0.0 (increment minor from 1.5.3.2)
-      expect(fs.existsSync(path.join(componentsDir, '1.6.0.0'))).toBe(true);
+      // nextPatch should be 1.5.4.0 (increment patch from 1.5.3.2)
+      expect(fs.existsSync(path.join(componentsDir, '1.5.4.0'))).toBe(true);
       
-      // nextBuild should be 1.6.0.1 (increment patch from 1.6.0.0)  
-      expect(fs.existsSync(path.join(componentsDir, '1.6.0.1'))).toBe(true);
+      // nextBuild should be 1.5.4.1 (increment build from 1.5.4.0)  
+      expect(fs.existsSync(path.join(componentsDir, '1.5.4.1'))).toBe(true);
       
       // Verify semantic links
       const finalLinks = await component.getSemanticLinks('VersionTest');
-      expect(finalLinks.prod).toBe('1.6.0.0');
-      expect(finalLinks.latest).toBe('1.6.0.0');
-      expect(finalLinks.dev).toBe('1.6.0.1');
-      expect(finalLinks.test).toBe('1.6.0.1');
+      expect(finalLinks.prod).toBe('1.5.4.0');
+      expect(finalLinks.latest).toBe('1.5.4.0');
+      expect(finalLinks.dev).toBe('1.5.4.1');
+      expect(finalLinks.test).toBe('1.5.4.1');
     });
 
     it('should verify test success before promotion', async () => {
@@ -255,8 +255,8 @@ describe('🚀 Web4TSComponent Version Promotion Tests', () => {
       expect(testVersions.length).toBeGreaterThanOrEqual(4);
       expect(testVersions).toContain('0.1.0.0');
       expect(testVersions).toContain('0.0.1.0');
-      expect(testVersions).toContain('0.2.0.0'); // nextPatch (increment minor, reset patch)
-      expect(testVersions).toContain('0.2.0.1'); // nextBuild (increment patch from new prod)
+      expect(testVersions).toContain('0.1.1.0'); // nextPatch (increment patch, reset build)
+      expect(testVersions).toContain('0.1.1.1'); // nextBuild (increment build from new prod)
       
       // Verify NO contamination in project root
       const projectRoot = path.resolve(__dirname, '../../../../..');
