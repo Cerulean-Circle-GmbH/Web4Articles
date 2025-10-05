@@ -27,22 +27,22 @@
 - **File Protection Tests:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-05-UTC-1602/components/Web4TSComponent/0.3.2.0/test/web4tscomponent.file-protection.test.ts) | [§/components/Web4TSComponent/0.3.2.0/test/web4tscomponent.file-protection.test.ts](components/Web4TSComponent/0.3.2.0/test/web4tscomponent.file-protection.test.ts)
 
 ### **QA Decisions**
-- [ ] **Decision 1: Functional Test Activation Priority**
+- [x] **Decision 1: Functional Test Activation Priority** ✅ SELECTED BY TRON
   - a) Activate all functionality tests immediately with current implementations
-  - b) Fix identified issues first, then activate tests systematically
+  - ✅ b) Fix identified issues first, then activate tests systematically **← SELECTED**
   - c) Activate tests one by one with individual problem resolution
   - d) Complete rewrite of problematic test implementations
 
 ### **TRON Feedback (2025-10-05-UTC-1720)**
 ```quote
-ok. do not skip functional tests. pdca about problems and solutions as code quotes for PLAN as a table and let me review 
+1b
 
-
-document this as „plan" command trigger!!!
+well asked, well documented in the pdca.
+go on fix it
 ```
 
 ### **My Answer**
-Creating systematic plan to activate skipped functional tests with detailed problem/solution analysis. Documenting "plan" command trigger for systematic problem resolution approach with code quotes and implementation tables.
+Implementing Decision 1b: Fix identified issues first, then activate tests systematically. Proceeding with systematic fixes based on approved solution table before test activation.
 
 **Learning Applied:** "plan" command triggers systematic PDCA analysis with problem/solution tables for TRON review before implementation.
 
