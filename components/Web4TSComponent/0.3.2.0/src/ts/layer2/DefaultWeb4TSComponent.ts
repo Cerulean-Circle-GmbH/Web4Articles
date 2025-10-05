@@ -1123,6 +1123,10 @@ Standards:
         throw error;
       }
       
+      // Check if Web4TSComponent itself should be promoted after successful internal tests
+      console.log(`\n🎯 Checking Web4TSComponent self-promotion after internal test success...`);
+      await this.handleTestSuccessPromotion('Web4TSComponent', '0.3.2.0');
+      
       return this;
     }
 
