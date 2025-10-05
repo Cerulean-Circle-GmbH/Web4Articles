@@ -23,7 +23,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
     // Don't instantiate tsComponent for usage display - command-based instantiation only
     this.tsComponent = null;
     // Initialize with component class reference (NOT instance) - no garbage creation
-    this.initWithComponentClass(DefaultWeb4TSComponent, 'Web4TSComponent', '0.3.0.9');
+    this.initWithComponentClass(DefaultWeb4TSComponent, 'Web4TSComponent', '0.3.2.0');
     // Discover methods for chaining support
     this.discoverMethods();
   }
@@ -194,6 +194,9 @@ export class Web4TSComponentCLI extends DefaultCLI {
       'upgrade': 1, // versionType
       'on': 2, // component and version
       'setLatest': 1, // targetVersion (has default)
+      'setDev': 1, // targetVersion (has default)
+      'setTest': 1, // targetVersion (has default)
+      'setProd': 1, // targetVersion (has default)
       'removeVersion': 2, // componentName and version (both have defaults)
       'removeComponent': 1 // componentName (has default)
     };

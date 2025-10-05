@@ -1,7 +1,7 @@
 #!/bin/sh
 echo "🧪 Running Unit tests..."
 
-# Prepare (clean, install, build)
+# Smart build before testing
 ./src/sh/build.sh
 
 # Run tests

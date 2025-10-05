@@ -9,6 +9,9 @@ import { MethodInfo } from '../layer3/MethodInfo.interface.js';
 import { ComponentAnalysis } from '../layer3/ComponentAnalysis.interface.js';
 import { ColorScheme, DocumentationSections } from '../layer3/ColorScheme.interface.js';
 import { TSCompletion } from '../layer4/TSCompletion.js';
+import { readFileSync, existsSync, readdirSync } from 'fs';
+import { join } from 'path';
+import * as ts from 'typescript';
 import { webcrypto as crypto } from 'crypto';
 
 export abstract class DefaultCLI implements CLI {
@@ -214,7 +217,7 @@ export abstract class DefaultCLI implements CLI {
           name: name,
           parameters: this.extractParameterInfoFromTSCompletion(name),
           description: this.extractMethodDescriptionFromTSDoc(name),
-          examples: [`${name} example`],
+          examples: this.extractExamplesFromTSDoc(name),
           returnType: 'any',
           isPublic: !name.startsWith('_'),
           category: this.categorizeMethod(name)
@@ -230,21 +233,22 @@ export abstract class DefaultCLI implements CLI {
    */
   private extractMethodDescriptionFromTSDoc(methodName: string): string {
     try {
-      // Try to extract description from TSCompletion
-      const cliAnnotations = TSCompletion.extractCliAnnotations(this.componentClass.name, methodName);
-      if (cliAnnotations.description) {
-        return cliAnnotations.description;
-      }
-      
-      // Fallback to extracting first line of JSDoc
-      const jsDocText = this.extractJsDocForMethod(methodName);
-      if (jsDocText) {
-        // Extract first meaningful line from JSDoc
-        const lines = jsDocText.split('\n');
-        for (const line of lines) {
-          const cleaned = line.replace(/^\s*\*\s*/, '').trim();
-          if (cleaned && !cleaned.startsWith('@') && cleaned !== '/**' && cleaned !== '*/') {
-            return cleaned;
+      // Try to extract description from TSCompletion first
+      const componentInstance = this.getComponentInstance();
+      if (componentInstance) {
+        const componentClassName = componentInstance.constructor.name;
+        
+        // Get full method documentation using TSCompletion
+        const fullMethodDoc = TSCompletion.getMethodDoc(componentClassName, methodName);
+        
+        if (fullMethodDoc) {
+          // Extract first meaningful line from TSDoc
+          const lines = fullMethodDoc.split('\n');
+          for (const line of lines) {
+            const cleaned = line.replace(/^\s*\*\s*/, '').trim();
+            if (cleaned && !cleaned.startsWith('@') && cleaned !== '/**' && cleaned !== '*/') {
+              return cleaned;
+            }
           }
         }
       }
@@ -252,7 +256,54 @@ export abstract class DefaultCLI implements CLI {
       // Continue to fallback
     }
     
-    return this.extractMethodDescriptionFallback(methodName);
+    // If TSDoc extraction failed, return method name only (no fallback descriptions)
+    return methodName;
+  }
+
+  /**
+   * Extract examples from TSDoc @example annotations
+   */
+  private extractExamplesFromTSDoc(methodName: string): string[] {
+    try {
+      const componentInstance = this.getComponentInstance();
+      if (componentInstance) {
+        const componentClassName = componentInstance.constructor.name;
+        
+        // Get full method documentation using TSCompletion
+        const fullMethodDoc = TSCompletion.getMethodDoc(componentClassName, methodName);
+        
+        if (fullMethodDoc) {
+          const examples: string[] = [];
+          const lines = fullMethodDoc.split('\n');
+          let inExampleSection = false;
+          
+          for (const line of lines) {
+            const cleaned = line.replace(/^\s*\*\s*/, '').trim();
+            
+            if (cleaned.startsWith('@example')) {
+              inExampleSection = true;
+              const exampleText = cleaned.replace('@example', '').trim();
+              if (exampleText) {
+                examples.push(exampleText);
+              }
+            } else if (inExampleSection && cleaned && !cleaned.startsWith('@')) {
+              examples.push(cleaned);
+            } else if (cleaned.startsWith('@') && !cleaned.startsWith('@example')) {
+              inExampleSection = false;
+            }
+          }
+          
+          if (examples.length > 0) {
+            return examples;
+          }
+        }
+      }
+    } catch (error) {
+      // Continue to fallback
+    }
+    
+    // If no TSDoc examples found, return method name only
+    return [methodName];
   }
 
   /**
@@ -260,18 +311,16 @@ export abstract class DefaultCLI implements CLI {
    */
   private getTypeScriptFiles(): string[] {
     const files = [];
-    const fs = require('fs');
-    const path = require('path');
     
     try {
       // Look for TypeScript files in src/ts/layer directories
-      const srcDir = path.join(process.cwd(), 'src', 'ts');
+      const srcDir = join(process.cwd(), 'src', 'ts');
       for (let layer = 2; layer <= 5; layer++) {
-        const layerDir = path.join(srcDir, `layer${layer}`);
-        if (fs.existsSync(layerDir)) {
-          const layerFiles = fs.readdirSync(layerDir)
+        const layerDir = join(srcDir, `layer${layer}`);
+        if (existsSync(layerDir)) {
+          const layerFiles = readdirSync(layerDir)
             .filter((file: string) => file.endsWith('.ts'))
-            .map((file: string) => path.join(layerDir, file));
+            .map((file: string) => join(layerDir, file));
           files.push(...layerFiles);
         }
       }
@@ -283,20 +332,21 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Extract JSDoc text for a specific method
+   * Extract TSDoc text for a specific method
    */
-  private extractJsDocForMethod(methodName: string): string {
+  private extractTsDocForMethod(methodName: string, componentClassName?: string): string {
     try {
-      // Get TypeScript files for JSDoc extraction
+      // Get TypeScript files for TSDoc extraction
       const files = this.getTypeScriptFiles();
+      const classNameToFind = componentClassName || this.componentClass.name;
       
       for (const file of files) {
-        const src = require('fs').readFileSync(file, 'utf8');
-        const sourceFile = require('typescript').createSourceFile(file, src, require('typescript').ScriptTarget.Latest, true);
+        const src = readFileSync(file, 'utf8');
+        const sourceFile = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true);
         
-        const jsDoc = this.findMethodJsDoc(sourceFile, this.componentClass.name, methodName);
-        if (jsDoc) {
-          return jsDoc;
+        const tsDoc = this.findMethodTsDoc(sourceFile, classNameToFind, methodName);
+        if (tsDoc) {
+          return tsDoc;
         }
       }
     } catch (error) {
@@ -307,21 +357,20 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Find JSDoc for specific method in source file
+   * Find TSDoc for specific method in source file
    */
-  private findMethodJsDoc(sourceFile: any, className: string, methodName: string): string {
-    let jsDocText = '';
+  private findMethodTsDoc(sourceFile: any, className: string, methodName: string): string {
+    let tsDocText = '';
     
-    const ts = require('typescript');
     ts.forEachChild(sourceFile, (node: any) => {
       if (ts.isClassDeclaration(node) && node.name && node.name.text === className) {
         for (const member of node.members) {
           if (ts.isMethodDeclaration(member) && member.name && ts.isIdentifier(member.name) && member.name.text === methodName) {
-            // Get JSDoc comments
-            const jsDocComments = ts.getJSDocCommentsAndTags(member);
-            for (const comment of jsDocComments) {
+            // Get TSDoc comments
+            const tsDocComments = ts.getJSDocCommentsAndTags(member);
+            for (const comment of tsDocComments) {
               if (ts.isJSDoc(comment)) {
-                jsDocText += comment.getFullText();
+                tsDocText += comment.getFullText();
               }
             }
             break;
@@ -330,7 +379,7 @@ export abstract class DefaultCLI implements CLI {
       }
     });
     
-    return jsDocText;
+    return tsDocText;
   }
 
   /**
@@ -438,57 +487,6 @@ export abstract class DefaultCLI implements CLI {
     return params;
   }
 
-  /**
-   * Fallback method description extraction with meaningful descriptions
-   */
-  private extractMethodDescriptionFallback(methodName: string): string {
-    const descriptions: { [key: string]: string } = {
-      'create': 'Create unit operation with configurable output format',
-      'process': 'Execute Unit processing workflow on provided data',
-      'info': 'Display detailed Unit instance information and state',
-      'find': 'Discover and analyze Web4 components in directory with compliance reporting',
-      'on': 'Load component context for chaining operations (essential for workflows)',
-      'upgrade': 'Upgrade component to next version with semantic version control',
-      'tree': 'Display directory structure for loaded component (requires context)',
-      'setLatest': 'Update latest symlink to point to specified version (requires context)',
-      'classify': 'Set MOF typeM3 classification for existing component',
-      'link': 'Create initial link to existing component using UUID',
-      'deleteLink': 'Delete specific link file while preserving component in central storage',
-      'list': 'List all links pointing to specific component UUID',
-      'from': 'Analyze component compliance from directory path with detailed reporting',
-      'execute': 'Execute component with input data and return processed results',
-      'transform': 'Transform input data using component logic and return modified data',
-      'validate': 'Validate object against component rules and return compliance status',
-      'set': 'Configure component properties and generate CLI scripts',
-      'get': 'Validate component compliance and analyze architecture quality'
-    };
-    
-    if (descriptions[methodName]) {
-      return descriptions[methodName];
-    }
-    
-    for (const [pattern, desc] of Object.entries(descriptions)) {
-      if (methodName.includes(pattern)) {
-        return desc.replace('component', this.componentName.toLowerCase());
-      }
-    }
-    
-    // Enhanced fallback with meaningful descriptions instead of useless "operation"
-    if (methodName.includes('create')) {
-      return `Create ${methodName.replace('create', '').toLowerCase()} with Web4 compliance and proper structure`;
-    }
-    if (methodName.includes('update')) {
-      return `Update ${methodName.replace('update', '').toLowerCase()} with intelligent management and verification`;
-    }
-    if (methodName.includes('verify')) {
-      return `Verify and fix ${methodName.replace('verify', '').toLowerCase()} with automatic repair and validation`;
-    }
-    if (methodName.includes('get')) {
-      return `Get ${methodName.replace('get', '').toLowerCase()} information with detailed analysis and reporting`;
-    }
-    
-    return `${methodName.charAt(0).toUpperCase() + methodName.slice(1)} functionality for Web4 component operations`;
-  }
 
   /**
    * Extract parameter information from method with intelligent naming (legacy)
@@ -648,49 +646,6 @@ export abstract class DefaultCLI implements CLI {
     return [`${paramName}-example`];
   }
 
-  /**
-   * Extract method description from method name with detailed descriptions
-   */
-  private extractMethodDescription(name: string): string {
-    const descriptions: { [key: string]: string } = {
-      'create': 'Create unit operation with configurable output format',
-      'process': 'Execute Unit processing workflow on provided data',
-      'info': 'Display detailed Unit instance information and state',
-      'classify': 'Set MOF typeM3 classification for existing component',
-      'link': 'Create initial link to existing component using UUID',
-      'linkInto': 'Create additional link to same component in different location',
-      'list': 'List all links pointing to specific component UUID',
-      'origin': 'Show origin and definition source links as clickable URLs',
-      'deleteLink': 'Delete specific link file while preserving component in central storage',
-      'deleteUnit': 'Delete entire component from central storage and all associated link files',
-      'from': 'Create component from file text with extracted name and origin',
-      'definition': 'Add definition source reference to existing component',
-      'execute': 'Execute component with input data',
-      'help': 'Show this help message',
-      'transform': 'Transform input data using component logic',
-      'validate': 'Validate object against component rules',
-      'init': 'Initialize component with scenario data',
-      'toScenario': 'Convert component state to scenario format',
-      'upgrade': 'Upgrade component to newer version',
-      'find': 'Search for components by content or properties',
-      'set': 'Set property value for existing component',
-      'update': 'Update component properties or regenerate components'
-    };
-    
-    // Check for exact match
-    if (descriptions[name]) {
-      return descriptions[name];
-    }
-    
-    // Check for partial matches
-    for (const [pattern, desc] of Object.entries(descriptions)) {
-      if (name.includes(pattern)) {
-        return desc.replace('component', name.includes('Unit') ? 'unit' : 'component');
-      }
-    }
-    
-    return `${name.charAt(0).toUpperCase() + name.slice(1)} operation`;
-  }
 
   /**
    * Categorize method based on name patterns

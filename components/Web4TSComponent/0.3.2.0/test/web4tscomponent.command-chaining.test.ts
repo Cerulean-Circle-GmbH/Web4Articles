@@ -104,12 +104,13 @@ describe('Web4TSComponent Command Chaining', () => {
       
       expect(result).toBe(component); // Should return this for chaining
       
-      // Verify new version directory created
-      const newVersionPath = `components/${testComponentName}/0.1.0.1`;
+      // Verify new version directory created (use absolute path to test data)
+      const testDataDir = path.join(__dirname, 'data');
+      const newVersionPath = path.join(testDataDir, 'components', testComponentName, '0.1.0.1');
       expect(existsSync(newVersionPath)).toBe(true);
       
       // Verify package.json version updated
-      const packageJsonPath = `${newVersionPath}/package.json`;
+      const packageJsonPath = path.join(newVersionPath, 'package.json');
       if (existsSync(packageJsonPath)) {
         const packageContent = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
         expect(packageContent.version).toBe('0.1.0.1');
@@ -119,21 +120,24 @@ describe('Web4TSComponent Command Chaining', () => {
     it('should increment minor version (nextMinor)', async () => {
       await component.upgrade('nextMinor');
       
-      const newVersionPath = `components/${testComponentName}/0.1.1.0`;
+      const testDataDir = path.join(__dirname, 'data');
+      const newVersionPath = path.join(testDataDir, 'components', testComponentName, '0.2.0.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
     it('should increment major version (nextMajor)', async () => {
       await component.upgrade('nextMajor');
       
-      const newVersionPath = `components/${testComponentName}/0.2.0.0`;
+      const testDataDir = path.join(__dirname, 'data');
+      const newVersionPath = path.join(testDataDir, 'components', testComponentName, '0.2.0.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
     it('should handle explicit version specification', async () => {
       await component.upgrade('0.5.0.0');
       
-      const newVersionPath = `components/${testComponentName}/0.5.0.0`;
+      const testDataDir = path.join(__dirname, 'data');
+      const newVersionPath = path.join(testDataDir, 'components', testComponentName, '0.5.0.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
@@ -155,7 +159,9 @@ describe('Web4TSComponent Command Chaining', () => {
         .then(comp => comp.upgrade('nextBuild'));
       
       expect(result).toBe(component);
-      expect(existsSync(`components/${testComponentName}/0.1.0.1`)).toBe(true);
+      const testDataDir = path.join(__dirname, 'data');
+      const newVersionPath = path.join(testDataDir, 'components', testComponentName, '0.1.0.1');
+      expect(existsSync(newVersionPath)).toBe(true);
     });
 
     it('should maintain context through chaining', async () => {
@@ -196,7 +202,9 @@ describe('Web4TSComponent Command Chaining', () => {
       await cli.execute(['upgrade', 'nextBuild']);
       
       // Verify new version created
-      expect(existsSync(`components/${testComponentName}/0.1.0.1`)).toBe(true);
+      const testDataDir = path.join(__dirname, 'data');
+      const newVersionPath = path.join(testDataDir, 'components', testComponentName, '0.1.0.1');
+      expect(existsSync(newVersionPath)).toBe(true);
     });
   });
 

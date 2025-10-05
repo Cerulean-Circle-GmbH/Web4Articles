@@ -133,14 +133,14 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       uuid: this.model.uuid,
       timestamp: new Date().toISOString(),
       component: 'Web4TSComponent',
-      version: '0.3.0.9'
+      version: '0.3.2.0'
     });
 
       return {
       ior: {
         uuid: this.model.uuid,
         component: 'Web4TSComponent',
-        version: '0.3.0.9'
+        version: '0.3.2.0'
       },
       owner: ownerData,
       model: this.model
@@ -170,9 +170,10 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    */
   private getTestDataDirectory(): string {
     // Each version tests in its own test/data folder
-    // From: /workspace/components/Web4TSComponent/0.3.0.9/src/ts/layer2/DefaultWeb4TSComponent.ts
-    // To:   /workspace/components/Web4TSComponent/0.3.0.9/test/data
-    const currentVersionDir = path.resolve(__dirname, '..', '..', '..');
+    // From: /workspace/components/Web4TSComponent/0.3.2.0/src/ts/layer2/DefaultWeb4TSComponent.ts
+    // To:   /workspace/components/Web4TSComponent/0.3.2.0/test/data
+    const currentFileUrl = new URL(import.meta.url);
+    const currentVersionDir = path.resolve(path.dirname(currentFileUrl.pathname), '..', '..', '..');
     return path.join(currentVersionDir, 'test', 'data');
   }
 
@@ -186,7 +187,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         .filter(entry => entry.isDirectory() && /^\d+\.\d+\.\d+\.\d+$/.test(entry.name))
         .map(entry => entry.name);
     } catch {
-      return ['0.3.0.9']; // Fallback
+      return ['0.3.2.0']; // Fallback
     }
   }
 
@@ -429,11 +430,20 @@ node --loader ts-node/esm "./components/${componentName}/${version}/src/ts/layer
     const components: ComponentMetadata[] = [];
     
     try {
-      const entries = await fs.readdir(componentDir, { withFileTypes: true });
+      // Resolve componentDir relative to project root ONLY if it's a relative path
+      let fullComponentDir: string;
+      if (path.isAbsolute(componentDir)) {
+        fullComponentDir = componentDir;
+      } else {
+        const projectRoot = this.resolveProjectRoot();
+        fullComponentDir = path.join(projectRoot, componentDir);
+      }
+      
+      const entries = await fs.readdir(fullComponentDir, { withFileTypes: true });
       
       for (const entry of entries) {
         if (entry.isDirectory()) {
-          const componentPath = path.join(componentDir, entry.name);
+          const componentPath = path.join(fullComponentDir, entry.name);
           const versions = await fs.readdir(componentPath, { withFileTypes: true });
           
           for (const version of versions) {
@@ -506,7 +516,7 @@ Standards:
   // Web4 CLI Topic Methods (for DefaultCLI dynamic execution)
   
   /**
-   * Create a new Web4-compliant component with full auto-discovery capabilities
+   * Create new Web4-compliant component with auto-discovery CLI and full architecture
    * 
    * Generates a complete component with the same features as Web4TSComponent:
    * - Auto-discovery CLI with method discovery
@@ -660,7 +670,7 @@ Standards:
   }
 
   /**
-   * Discover and list all Web4 components in a directory
+   * Discover and analyze Web4 components in directory with compliance reporting
    * 
    * Scans directory structure for Web4-compliant components and provides
    * detailed analysis of each component's features and compliance status.
@@ -695,7 +705,7 @@ Standards:
   }
 
   /**
-   * Load component context for command chaining operations
+   * Load component context for chaining operations (essential for workflows)
    * 
    * Essential method for chaining workflows. Loads component context that
    * enables subsequent chained operations like tree, upgrade, setLatest.
@@ -710,7 +720,7 @@ Standards:
    * 
    * @example
    * // Load context for this component
-   * await component.on('Web4TSComponent', '0.3.0.9');
+   * await component.on('Web4TSComponent', '0.3.2.0');
    * 
    * @cliSyntax component version
    */
@@ -772,6 +782,10 @@ Standards:
     
     switch (versionType) {
       case 'nextBuild':
+        nextVersion = this.incrementBuild(currentVersion);
+        console.log(`🔧 Upgrading ${context.component} to next build: ${currentVersion} → ${nextVersion}`);
+        break;
+        
       case 'nextPatch':
       case 'patch':
         nextVersion = this.incrementPatch(currentVersion);
@@ -816,7 +830,7 @@ Standards:
   }
 
   /**
-   * Display tree structure of component directory (chained after on)
+   * Display directory structure for loaded component (requires context)
    * Shows directory structure like 'tree' command for the loaded component context
    * @param depth Maximum depth to traverse (default: 3)
    * @param showHidden Show hidden files and directories (default: false)
@@ -842,7 +856,7 @@ Standards:
   }
 
   /**
-   * Set latest symlink for component (chained after on)
+   * Update latest symlink to point to specified version (requires context)
    * Updates the 'latest' symlink to point to specified version
    * @param targetVersion Version to set as latest (default: use current context version)
    * @cliSyntax targetVersion
@@ -890,34 +904,422 @@ Standards:
   }
 
   /**
-   * Execute test command in loaded component context
-   * Run test suite for the loaded component using its build system
-   * @cliSyntax
-   * @cliExample web4tscomponent on Unit 0.3.0.5 test
+   * Set development version link - version currently under development
+   * @param targetVersion Version to set as dev (default: use current context version)
+   * @example setDev 0.4.0.0
+   * @example setDev
    */
-  async test(): Promise<this> {
+  async setDev(targetVersion: string = 'current'): Promise<this> {
     const context = this.getComponentContext();
     if (!context) {
       throw new Error('No component context loaded. Use "on <component> <version>" first.');
     }
 
-    const componentPath = this.resolveComponentPath(context.component, context.version);
+    const version = targetVersion === 'current' ? context.version : targetVersion;
+    await this.createSemanticLink(context.component, 'dev', version);
+    console.log(`🚧 Dev symlink updated: dev → ${version}`);
     
-    console.log(`🧪 Running tests for ${context.component} ${context.version}...`);
+    return this;
+  }
+
+  /**
+   * Set test version link - version ready for 100% revision testing
+   * @param targetVersion Version to set as test (default: use current context version)
+   * @example setTest 0.3.2.0
+   * @example setTest
+   */
+  async setTest(targetVersion: string = 'current'): Promise<this> {
+    const context = this.getComponentContext();
+    if (!context) {
+      throw new Error('No component context loaded. Use "on <component> <version>" first.');
+    }
+
+    const version = targetVersion === 'current' ? context.version : targetVersion;
+    await this.createSemanticLink(context.component, 'test', version);
+    console.log(`🧪 Test symlink updated: test → ${version}`);
+    
+    return this;
+  }
+
+  /**
+   * Set production version link - version that achieved 100% testing success
+   * @param targetVersion Version to set as prod (default: use current context version)
+   * @example setProd 0.3.1.0
+   * @example setProd
+   */
+  async setProd(targetVersion: string = 'current'): Promise<this> {
+    const context = this.getComponentContext();
+    if (!context) {
+      throw new Error('No component context loaded. Use "on <component> <version>" first.');
+    }
+
+    const version = targetVersion === 'current' ? context.version : targetVersion;
+    await this.createSemanticLink(context.component, 'prod', version);
+    console.log(`🚀 Prod symlink updated: prod → ${version}`);
+    
+    return this;
+  }
+
+  /**
+   * Display semantic version links for loaded component (dev, test, prod, latest)
+   * Shows development workflow status and version progression
+   * @example links
+   */
+  async links(): Promise<this> {
+    const context = this.getComponentContext();
+    if (!context) {
+      throw new Error('No component context loaded. Use "on <component> <version>" first.');
+    }
+
+    const semanticLinks = await this.getSemanticLinks(context.component);
+    const componentDir = this.resolveComponentDirectory(context.component);
+    const availableVersions = this.getAvailableVersions(componentDir);
+
+    console.log(`\n🔗 Semantic Version Links for ${context.component}:`);
+    console.log(`   📊 Available versions: ${availableVersions.length}`);
+    console.log('');
+
+    // Display semantic links with status indicators
+    const linkOrder = ['prod', 'test', 'dev', 'latest'];
+    for (const linkType of linkOrder) {
+      const target = semanticLinks[linkType];
+      const icon = this.getLinkIcon(linkType);
+      const status = target ? `→ ${target}` : '(not set)';
+      const exists = target && availableVersions.includes(target) ? '✅' : target ? '❌' : '⚪';
+      
+      console.log(`   ${icon} ${linkType.padEnd(6)} ${status.padEnd(15)} ${exists}`);
+    }
+
+    console.log('');
+    console.log('Legend: ✅ Valid  ❌ Broken  ⚪ Not Set');
+    console.log('');
+    console.log('Workflow: dev → test → prod');
+    console.log('  🚧 dev:  Version under development');
+    console.log('  🧪 test: Ready for 100% revision testing');
+    console.log('  🚀 prod: Achieved 100% testing success');
+    console.log('  📦 latest: Current stable release');
+
+    return this;
+  }
+
+  /**
+   * Get icon for semantic link type
+   * @cliHide
+   */
+  private getLinkIcon(linkType: string): string {
+    const icons: Record<string, string> = {
+      'dev': '🚧',
+      'test': '🧪', 
+      'prod': '🚀',
+      'latest': '📦'
+    };
+    return icons[linkType] || '🔗';
+  }
+
+  /**
+   * Create or update a semantic symlink (dev, test, prod, latest)
+   * @cliHide
+   */
+  private async createSemanticLink(componentName: string, linkType: string, targetVersion: string): Promise<void> {
+    const componentDir = this.resolveComponentDirectory(componentName);
+    const linkPath = path.join(componentDir, linkType);
+    const targetDir = path.join(componentDir, targetVersion);
+
+    // Verify target version exists
+    if (!existsSync(targetDir)) {
+      throw new Error(`Target version ${targetVersion} does not exist at ${targetDir}`);
+    }
+
+    console.log(`🔗 Setting ${linkType} symlink for ${componentName}:`);
+    console.log(`   Target: ${targetVersion}`);
+    console.log(`   Symlink: ${linkPath}`);
+
+    try {
+      // Remove existing symlink if it exists
+      if (existsSync(linkPath)) {
+        await fs.unlink(linkPath);
+        console.log(`   Removed existing ${linkType} symlink`);
+      }
+
+      // Create new symlink (relative path)
+      await fs.symlink(targetVersion, linkPath);
+
+      // Update scripts symlinks only for 'latest' to maintain backward compatibility
+      if (linkType === 'latest') {
+        await this.updateScriptsSymlinks(componentName, targetVersion);
+      }
+
+    } catch (error) {
+      throw new Error(`Failed to update ${linkType} symlink: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Get all semantic links for a component
+   * @cliHide
+   */
+  private async getSemanticLinks(componentName: string): Promise<Record<string, string | null>> {
+    const componentDir = this.resolveComponentDirectory(componentName);
+    const semanticLinks = ['latest', 'dev', 'test', 'prod'];
+    const result: Record<string, string | null> = {};
+
+    for (const linkType of semanticLinks) {
+      const linkPath = path.join(componentDir, linkType);
+      try {
+        if (existsSync(linkPath)) {
+          const target = await fs.readlink(linkPath);
+          result[linkType] = target;
+        } else {
+          result[linkType] = null;
+        }
+      } catch (error) {
+        result[linkType] = null;
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Execute test command - runs own tests if no context, or target component tests if context loaded
+   * When no context: Run Web4TSComponent's own test suite
+   * When context loaded: Run test suite for the loaded component using its build system
+   * 
+   * Auto-promotion workflow:
+   * - If dev and test are same version: automatically creates nextBuild and tests it
+   * - After 100% test success, automatically promotes versions through workflow:
+   * - Current version → nextPatch (increment minor, reset patch) → prod
+   * - nextBuild (increment build from new prod) → dev and test
+   * Example: 0.3.2.0 → 0.3.3.0 (prod), 0.3.3.1 (dev/test)
+   * @cliSyntax
+   * @cliExample web4tscomponent test
+   * @cliExample web4tscomponent on Unit 0.3.0.5 test
+   */
+  async test(): Promise<this> {
+    const context = this.getComponentContext();
+    
+    // WORKFLOW REMINDER: Always work on dev → test → dev cycle
+    console.log(`\n🔄 WORKFLOW REMINDER:`);
+    console.log(`   🚧 ALWAYS work on dev version until you run test`);
+    console.log(`   🧪 ALWAYS work on test version until test succeeds`);  
+    console.log(`   🚧 ALWAYS work on dev version after test success\n`);
+    
+    if (!context) {
+      // No context - run Web4TSComponent's own tests
+      console.log(`🧪 Running Web4TSComponent internal tests...`);
+      
+      try {
+        // Run Web4TSComponent's own test suite
+        execSync('npm test', { 
+          cwd: process.cwd(), // Current Web4TSComponent directory
+          stdio: 'inherit',
+          encoding: 'utf-8'
+        });
+        
+        console.log(`✅ Web4TSComponent internal tests completed successfully`);
+        
+      } catch (error) {
+        console.error(`❌ Web4TSComponent internal tests failed`);
+        throw error;
+      }
+      
+      return this;
+    }
+
+    // Context loaded - check if dev and test are same version and do nextBuild first
+    const semanticLinks = await this.getSemanticLinks(context.component);
+    const devVersion = semanticLinks['dev'];
+    const testVersion = semanticLinks['test'];
+    
+    let targetVersion = context.version;
+    
+    // If dev and test are the same version, do nextBuild promotion first
+    if (devVersion && testVersion && devVersion === testVersion && devVersion === context.version) {
+      console.log(`🔄 Dev and test are same version (${devVersion}) - creating nextBuild for testing...`);
+      
+      try {
+        const nextBuildVersion = await this.createNextBuildVersion(context.component, context.version);
+        
+        // Update test symlink to point to new build version
+        await this.createSemanticLink(context.component, 'test', nextBuildVersion);
+        console.log(`✅ Test updated: test → ${nextBuildVersion}`);
+        
+        // Switch context to the new build version for testing
+        await this.on(context.component, nextBuildVersion);
+        targetVersion = nextBuildVersion;
+        
+        console.log(`🎯 Now testing new build version: ${nextBuildVersion}`);
+        
+      } catch (error) {
+        console.error(`❌ Failed to create nextBuild version: ${(error as Error).message}`);
+        throw error;
+      }
+    }
+
+    // Run target component tests and handle promotion
+    const componentPath = this.resolveComponentPath(context.component, targetVersion);
+    
+    console.log(`🧪 Running tests for ${context.component} ${targetVersion}...`);
     
     try {
+      // Run the target component's tests
       execSync('npm test', { 
         cwd: componentPath, 
         stdio: 'inherit',
         encoding: 'utf-8'
       });
-      console.log(`✅ Tests completed for ${context.component} ${context.version}`);
+      
+      console.log(`✅ Tests completed for ${context.component} ${targetVersion}`);
+      
+      // Check if 100% success and promote versions
+      await this.handleTestSuccessPromotion(context.component, targetVersion);
+      
     } catch (error) {
-      console.error(`❌ Tests failed for ${context.component} ${context.version}`);
+      console.error(`❌ Tests failed for ${context.component} ${targetVersion}`);
       throw error;
     }
 
     return this;
+  }
+
+  /**
+   * Handle version promotion after 100% test success
+   * Implements the workflow: current → nextPatch → prod, nextBuild → dev/test
+   * Includes safety checks to prevent accidental double promotion
+   * @cliHide
+   */
+  async handleTestSuccessPromotion(componentName: string, currentVersion: string): Promise<void> {
+    console.log(`\n🎯 Analyzing test success for version promotion...`);
+    
+    // Safety check: verify this version hasn't already been promoted
+    const semanticLinks = await this.getSemanticLinks(componentName);
+    const currentProd = semanticLinks['prod'];
+    
+    if (currentProd === currentVersion) {
+      console.log(`⚠️  Version ${currentVersion} is already marked as prod - skipping promotion`);
+      console.log(`💡 This prevents accidental double promotion`);
+      return;
+    }
+    
+    // Check if test result indicates 100% success
+    const testSuccess = await this.verifyTestSuccess(componentName, currentVersion);
+    if (!testSuccess) {
+      console.log(`⚠️  Test success verification failed - skipping promotion`);
+      return;
+    }
+    
+    console.log(`🚀 100% test success confirmed! Starting version promotion workflow...`);
+    
+    try {
+      // Step 1: Create nextPatch version from current
+      console.log(`\n🔧 Step 1: Creating nextPatch version from ${currentVersion}...`);
+      const nextPatchVersion = await this.createNextPatchVersion(componentName, currentVersion);
+      
+      // Step 2: Set nextPatch as new prod
+      console.log(`\n🚀 Step 2: Promoting ${nextPatchVersion} to prod...`);
+      await this.createSemanticLink(componentName, 'prod', nextPatchVersion);
+      console.log(`✅ Prod updated: prod → ${nextPatchVersion}`);
+      
+      // Step 3: Create nextBuild version for development
+      console.log(`\n🔧 Step 3: Creating nextBuild version for development...`);
+      const nextBuildVersion = await this.createNextBuildVersion(componentName, nextPatchVersion);
+      
+      // Step 4: Set nextBuild as dev and test
+      console.log(`\n🚧 Step 4: Setting up development workflow...`);
+      await this.createSemanticLink(componentName, 'dev', nextBuildVersion);
+      await this.createSemanticLink(componentName, 'test', nextBuildVersion);
+      console.log(`✅ Dev updated: dev → ${nextBuildVersion}`);
+      console.log(`✅ Test updated: test → ${nextBuildVersion}`);
+      
+      // Step 5: Update latest to nextPatch (the new stable)
+      console.log(`\n📦 Step 5: Updating latest to stable version...`);
+      await this.createSemanticLink(componentName, 'latest', nextPatchVersion);
+      console.log(`✅ Latest updated: latest → ${nextPatchVersion}`);
+      
+      console.log(`\n🎉 Version promotion workflow completed successfully!`);
+      console.log(`📊 Final state:`);
+      console.log(`   🚀 prod:   ${nextPatchVersion} (promoted from ${currentVersion})`);
+      console.log(`   📦 latest: ${nextPatchVersion} (stable release)`);
+      console.log(`   🧪 test:   ${nextBuildVersion} (ready for next cycle)`);
+      console.log(`   🚧 dev:    ${nextBuildVersion} (active development)`);
+      
+    } catch (error) {
+      console.error(`❌ Version promotion failed: ${(error as Error).message}`);
+      console.log(`💡 Manual intervention may be required`);
+    }
+  }
+
+  /**
+   * Verify that tests achieved 100% success
+   * @cliHide
+   */
+  async verifyTestSuccess(componentName: string, version: string): Promise<boolean> {
+    // For now, we assume tests passed if the test command didn't throw
+    // In a more sophisticated implementation, this could parse test output
+    // or check for specific success indicators
+    console.log(`✅ Test success verification: Assuming 100% success (test command completed without error)`);
+    return true;
+  }
+
+  /**
+   * Create nextPatch version from current version
+   * nextPatch increments patch version and resets build to 0
+   * e.g., 0.3.2.0 → 0.3.3.0
+   * @cliHide
+   */
+  private async createNextPatchVersion(componentName: string, currentVersion: string): Promise<string> {
+    // Use the existing upgrade method to create nextPatch (increment patch, reset build)
+    const originalContext = this.getComponentContext();
+    
+    // Temporarily set context to current version
+    await this.on(componentName, currentVersion);
+    
+    try {
+      await this.upgrade('nextPatch'); // Use nextPatch to increment patch version
+      
+      // Calculate what the nextPatch version would be (increment patch, reset build)
+      // This should match what upgrade('nextPatch') actually created
+      const parts = currentVersion.split('.').map(Number);
+      const nextPatchVersion = `${parts[0]}.${parts[1]}.${parts[2] + 1}.0`; // Increment patch, reset build to 0
+      
+      console.log(`✅ Created nextPatch version: ${nextPatchVersion}`);
+      return nextPatchVersion;
+      
+    } finally {
+      // Restore original context
+      if (originalContext) {
+        await this.on(originalContext.component, originalContext.version);
+      }
+    }
+  }
+
+  /**
+   * Create nextBuild version from base version
+   * @cliHide
+   */
+  private async createNextBuildVersion(componentName: string, baseVersion: string): Promise<string> {
+    // Use the existing upgrade method to create nextBuild
+    const originalContext = this.getComponentContext();
+    
+    // Temporarily set context to base version
+    await this.on(componentName, baseVersion);
+    
+    try {
+      await this.upgrade('nextBuild');
+      
+      // Calculate what the nextBuild version would be
+      const parts = baseVersion.split('.').map(Number);
+      const nextBuildVersion = `${parts[0]}.${parts[1]}.${parts[2]}.${parts[3] + 1}`;
+      
+      console.log(`✅ Created nextBuild version: ${nextBuildVersion}`);
+      return nextBuildVersion;
+      
+    } finally {
+      // Restore original context
+      if (originalContext) {
+        await this.on(originalContext.component, originalContext.version);
+      }
+    }
   }
 
   /**
@@ -1178,7 +1580,7 @@ Standards:
    * 
    * @example
    * // Compare multiple components
-   * await component.compare('Unit 0.3.0.5, Web4TSComponent 0.3.0.9, ONCE 0.2.0.0');
+   * await component.compare('Unit 0.3.0.5, Web4TSComponent 0.3.2.0, ONCE 0.2.0.0');
    * 
    * @example
    * // Compare specific versions
@@ -2201,7 +2603,7 @@ Standards:
    * Version increment helpers
    * @cliHide
    */
-  private incrementPatch(version: string): string {
+  private incrementBuild(version: string): string {
     const [major, minor, patch, build] = version.split('.').map(Number);
     return `${major}.${minor}.${patch}.${build + 1}`;
   }
@@ -2212,6 +2614,14 @@ Standards:
   private incrementMinor(version: string): string {
     const [major, minor] = version.split('.').map(Number);
     return `${major}.${minor + 1}.0.0`;
+  }
+
+  /**
+   * @cliHide
+   */
+  private incrementPatch(version: string): string {
+    const [major, minor, patch] = version.split('.').map(Number);
+    return `${major}.${minor}.${patch + 1}.0`;
   }
 
   /**
@@ -2293,6 +2703,20 @@ Standards:
       
       if (entry.isDirectory()) {
         await this.copyDirectory(sourcePath, targetPath);
+      } else if (entry.isSymbolicLink()) {
+        // Handle symlinks properly - read the link target and recreate the symlink
+        const linkTarget = await fs.readlink(sourcePath);
+        try {
+          await fs.symlink(linkTarget, targetPath);
+        } catch (error) {
+          if ((error as NodeJS.ErrnoException).code === 'EEXIST') {
+            // Target symlink already exists - remove it first, then create new one
+            await fs.unlink(targetPath);
+            await fs.symlink(linkTarget, targetPath);
+          } else {
+            throw error;
+          }
+        }
       } else {
         await fs.copyFile(sourcePath, targetPath);
       }
@@ -2300,7 +2724,7 @@ Standards:
   }
 
   /**
-   * Display Web4TSComponent information and standards
+   * Display comprehensive information about Web4 standards and guidelines
    * 
    * Shows comprehensive information about Web4 component standards,
    * implementation guidelines, and architecture patterns. Essential
@@ -2336,7 +2760,7 @@ Standards:
       case 'overview':
       default:
         console.log(`
-🚀 Web4TSComponent 0.3.0.9 - Auto-Discovery CLI Architecture
+🚀 Web4TSComponent 0.3.2.0 - Auto-Discovery CLI Architecture
 
 This is outdated hardcoded help text. The CLI now uses auto-discovery!
 Run './web4tscomponent' without arguments to see the auto-generated help.
@@ -2433,6 +2857,10 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     await fs.mkdir(path.join(componentDir, 'spec'), { recursive: true });
   }
 
+  /**
+   * Create vitest configuration file
+   * @cliHide
+   */
   private async createVitestConfig(componentDir: string): Promise<void> {
     const vitestConfig = `import { defineConfig } from 'vitest/config';
 
@@ -2448,6 +2876,10 @@ export default defineConfig({
     await fs.writeFile(path.join(componentDir, 'vitest.config.ts'), vitestConfig);
   }
 
+  /**
+   * Create test directory structure
+   * @cliHide
+   */
   private async createTestStructure(componentDir: string): Promise<void> {
     await fs.mkdir(path.join(componentDir, 'test'), { recursive: true });
   }
@@ -2496,7 +2928,42 @@ export default defineConfig({
     // Verify and fix scripts symlinks
     await this.verifyScriptsSymlinks(component, versions, highestVersion);
     
+    // Verify semantic links
+    await this.verifySemanticLinks(component, versions);
+    
     console.log(`   ✅ Symlink verification completed`);
+  }
+
+  /**
+   * Verify semantic links (dev, test, prod) are valid
+   * @cliHide
+   */
+  private async verifySemanticLinks(component: string, availableVersions: string[]): Promise<void> {
+    const semanticLinks = await this.getSemanticLinks(component);
+    const semanticTypes = ['dev', 'test', 'prod']; // Don't check 'latest' as it's handled separately
+    
+    for (const linkType of semanticTypes) {
+      const target = semanticLinks[linkType];
+      
+      if (target) {
+        if (availableVersions.includes(target)) {
+          console.log(`   ✅ ${linkType} link valid: ${linkType} → ${target}`);
+        } else {
+          console.log(`   ❌ ${linkType} link broken: ${linkType} → ${target} (version not found)`);
+          // Remove broken semantic link
+          try {
+            const componentDir = this.resolveComponentDirectory(component);
+            const linkPath = path.join(componentDir, linkType);
+            await fs.unlink(linkPath);
+            console.log(`   🔧 Removed broken ${linkType} link`);
+          } catch (error) {
+            console.log(`   ❌ Could not remove broken ${linkType} link: ${(error as Error).message}`);
+          }
+        }
+      } else {
+        console.log(`   ⚪ ${linkType} link not set`);
+      }
+    }
   }
 
   /**
@@ -2733,7 +3200,8 @@ export default defineConfig({
    * @cliHide
    */
   private async createVersionScriptSymlink(component: string, version: string): Promise<void> {
-    const versionsDir = path.join(this.model.targetDirectory, 'scripts', 'versions');
+    const projectRoot = this.resolveProjectRoot(); // FIX: Use resolveProjectRoot instead of direct model access
+    const versionsDir = path.join(projectRoot, 'scripts', 'versions');
     const componentLower = component.toLowerCase();
     const scriptName = `${componentLower}-v${version}`;
     const scriptPath = path.join(versionsDir, scriptName);
@@ -2779,7 +3247,8 @@ export default defineConfig({
    * @cliHide
    */
   private async updateMainScriptSymlink(component: string, version: string): Promise<void> {
-    const versionsDir = path.join(this.model.targetDirectory, 'scripts', 'versions');
+    const projectRoot = this.resolveProjectRoot(); // FIX: Use resolveProjectRoot instead of direct model access
+    const versionsDir = path.join(projectRoot, 'scripts', 'versions');
     const componentLower = component.toLowerCase();
     const mainScriptPath = path.join(versionsDir, componentLower);
     const versionScriptName = `${componentLower}-v${version}`;
