@@ -39,24 +39,22 @@
   - c) Update file protection expectations to match current state
   - d) Disable file protection tests completely
 
-- [ ] **Decision 3: Test Data Directory Issue Analysis**
-  - a) Tests expect components in `test/data-functionality` but create in `test/data`
+- [x] **Decision 3: Test Data Directory Issue Analysis** ✅ CONFIRMED BY TRON
+  - ✅ a) Tests expect components in `test/data-functionality` but create in `test/data` **← TRON CONFIRMED: test/data is correct**
   - b) ProjectRootMocker may not be isolating correctly to intended directory
   - c) Test cleanup may be interfering with test isolation
   - d) Component creation method may have wrong target directory configuration
 
-- [ ] **Decision 4: Test Isolation Fix Approach**
-  - a) Update tests to expect correct `test/data` directory (align tests with reality)
+- [x] **Decision 4: Test Isolation Fix Approach** ✅ SELECTED BY TRON
+  - ✅ a) Update tests to expect correct `test/data` directory (align tests with reality) **← SELECTED**
   - b) Fix ProjectRootMocker to create in `test/data-functionality` (align reality with tests)
   - c) Create separate test data directories for each test suite
   - d) Redesign test isolation to avoid directory conflicts
 
-### **TRON Feedback (2025-10-05-UTC-1727)**
+### **TRON Feedback (2025-10-05-UTC-1730)**
 ```quote
-nubmber questions!!! use decision format!!!
-1 ignore file protection alarm until i say
-2 plan! should be in test/data!
-3 which, why, howto fix
+4a
+3 test/data is correct
 ```
 
 ### **My Answer**
