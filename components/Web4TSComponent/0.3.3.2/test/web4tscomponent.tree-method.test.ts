@@ -1,11 +1,12 @@
 /**
  * Web4TSComponent tree() Method Tests
  * 
- * Tests the tree() method which displays directory structure for loaded components.
- * This method requires context (component must be loaded with 'on' first).
+ * Tests the tree() method which displays directory structure for components.
+ * WITHOUT context: Shows tree for current component (self-operation)
+ * WITH context: Shows tree for target component
  * 
  * Test Categories:
- * 1. Context Requirement (3 tests)
+ * 1. Context Modes (3 tests)
  * 2. Directory Structure Display (4 tests)
  * 3. Depth Parameter (3 tests)
  * 4. Hidden Files Parameter (2 tests)
@@ -59,13 +60,13 @@ describe('🌳 tree() Method Tests', () => {
     await cleanupTestDataContent(testDataDir);
   });
 
-  describe('🎯 1. Context Requirement', () => {
-    it('should require context to be loaded', async () => {
-      // Act & Assert: Calling tree() without context should throw
-      await expect(web4ts.tree()).rejects.toThrow('No component context loaded');
+  describe('🎯 1. Context Modes', () => {
+    it('should work WITHOUT context (shows current component tree)', async () => {
+      // Act & Assert: Calling tree() without context should work (self-operation)
+      await expect(web4ts.tree()).resolves.not.toThrow();
     });
 
-    it('should work when context is loaded', async () => {
+    it('should work WITH context (shows target component tree)', async () => {
       // Arrange: Create component and load context
       await web4ts.create('TreeTestComponent', '0.1.0.0');
       await web4ts.on('TreeTestComponent', '0.1.0.0');

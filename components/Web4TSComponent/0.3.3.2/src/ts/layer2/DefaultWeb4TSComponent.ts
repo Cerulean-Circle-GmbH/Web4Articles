@@ -959,8 +959,9 @@ Standards:
   }
 
   /**
-   * Display directory structure for loaded component (requires context)
-   * Shows directory structure like 'tree' command for the loaded component context
+   * Display directory structure for component
+   * WITHOUT context: Shows tree for current component (self-operation)
+   * WITH context: Shows tree for target component
    * @param depth Maximum depth to traverse (default: 3)
    * @param showHidden Show hidden files and directories (default: false)
    * @cliSyntax depth showHidden
@@ -969,17 +970,21 @@ Standards:
    */
   async tree(depth: string = '3', showHidden: string = 'false'): Promise<this> {
     const context = this.getComponentContext();
-    if (!context) {
-      throw new Error('No component context loaded. Use "on <component> <version>" first.');
-    }
-
     const maxDepth = parseInt(depth, 10) || 3;
     const includeHidden = showHidden.toLowerCase() === 'true';
     
-    console.log(`📁 Tree structure for ${context.component} ${context.version}:`);
-    console.log(context.path);
-    
-    await this.displayTreeStructure(context.path, '', maxDepth, 0, includeHidden);
+    if (context) {
+      // WITH context: Show target component's tree
+      console.log(`📁 Tree structure for ${context.component} ${context.version}:`);
+      console.log(context.path);
+      await this.displayTreeStructure(context.path, '', maxDepth, 0, includeHidden);
+    } else {
+      // WITHOUT context: Show current component's tree (self-operation)
+      const currentPath = process.cwd();
+      console.log(`📁 Tree structure for current component:`);
+      console.log(currentPath);
+      await this.displayTreeStructure(currentPath, '', maxDepth, 0, includeHidden);
+    }
     
     return this;
   }
