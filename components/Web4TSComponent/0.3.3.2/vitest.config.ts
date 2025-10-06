@@ -5,6 +5,7 @@ export default defineConfig({
     environment: 'node',
     globals: true,
     include: ['test/**/*.test.ts'],
+    exclude: ['test/data/**', '**/node_modules/**'],  // Exclude test data and node_modules
     testTimeout: 5000,     // Reduced from 10s to 5s to catch hangs faster
     hookTimeout: 5000,     // Reduced from 10s to 5s
     bail: 1,               // Stop on first failure to prevent cascade hangs
