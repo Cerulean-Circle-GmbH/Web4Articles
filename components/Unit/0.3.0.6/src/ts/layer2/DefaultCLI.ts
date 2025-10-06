@@ -318,13 +318,12 @@ export abstract class DefaultCLI implements CLI {
         }
       }
       
-      // For now, fallback to intelligent description
-      return this.extractMethodDescriptionFallback(methodName);
+      // TSDoc-only approach: Return method name if no TSDoc found
+      return `${methodName.charAt(0).toUpperCase() + methodName.slice(1)}`;
     } catch (error) {
-      // Fallback to intelligent description
+      // Minimal fallback - just method name
+      return `${methodName.charAt(0).toUpperCase() + methodName.slice(1)}`;
     }
-    
-    return this.extractMethodDescriptionFallback(methodName);
   }
 
   /**
@@ -350,36 +349,6 @@ export abstract class DefaultCLI implements CLI {
     }
     
     return params;
-  }
-
-  /**
-   * Fallback method description extraction
-   */
-  private extractMethodDescriptionFallback(methodName: string): string {
-    const descriptions: { [key: string]: string } = {
-      'create': 'Create new component with name, optional description, and optional classification',
-      'classify': 'Set MOF typeM3 classification for existing component',
-      'link': 'Create initial link to existing component using UUID',
-      'deleteLink': 'Delete specific link file while preserving component in central storage',
-      'list': 'List all links pointing to specific component UUID',
-      'from': 'Create component from file text with extracted name and origin',
-      'execute': 'Execute component with input data',
-      'transform': 'Transform input data using component logic',
-      'validate': 'Validate object against component rules',
-      'process': 'Process data through component workflow'
-    };
-    
-    if (descriptions[methodName]) {
-      return descriptions[methodName];
-    }
-    
-    for (const [pattern, desc] of Object.entries(descriptions)) {
-      if (methodName.includes(pattern)) {
-        return desc.replace('component', this.componentName.toLowerCase());
-      }
-    }
-    
-    return `${methodName.charAt(0).toUpperCase() + methodName.slice(1)} operation`;
   }
 
   /**
@@ -538,50 +507,6 @@ export abstract class DefaultCLI implements CLI {
     
     // Default: parameter name example
     return [`${paramName}-example`];
-  }
-
-  /**
-   * Extract method description from method name with detailed descriptions
-   */
-  private extractMethodDescription(name: string): string {
-    const descriptions: { [key: string]: string } = {
-      'create': 'Create new component with name, optional description, and optional classification',
-      'classify': 'Set MOF typeM3 classification for existing component',
-      'link': 'Create initial link to existing component using UUID',
-      'linkInto': 'Create additional link to same component in different location',
-      'list': 'List all links pointing to specific component UUID',
-      'origin': 'Show origin and definition source links as clickable URLs',
-      'deleteLink': 'Delete specific link file while preserving component in central storage',
-      'deleteUnit': 'Delete entire component from central storage and all associated link files',
-      'from': 'Create component from file text with extracted name and origin',
-      'definition': 'Add definition source reference to existing component',
-      'execute': 'Execute component with input data',
-      'info': 'Display current component information and scenario',
-      'help': 'Show this help message',
-      'transform': 'Transform input data using component logic',
-      'validate': 'Validate object against component rules',
-      'process': 'Process data through component workflow',
-      'init': 'Initialize component with scenario data',
-      'toScenario': 'Convert component state to scenario format',
-      'upgrade': 'Upgrade component to newer version',
-      'find': 'Search for components by content or properties',
-      'set': 'Set property value for existing component',
-      'update': 'Update component properties or regenerate components'
-    };
-    
-    // Check for exact match
-    if (descriptions[name]) {
-      return descriptions[name];
-    }
-    
-    // Check for partial matches
-    for (const [pattern, desc] of Object.entries(descriptions)) {
-      if (name.includes(pattern)) {
-        return desc.replace('component', name.includes('Unit') ? 'unit' : 'component');
-      }
-    }
-    
-    return `${name.charAt(0).toUpperCase() + name.slice(1)} operation`;
   }
 
   /**

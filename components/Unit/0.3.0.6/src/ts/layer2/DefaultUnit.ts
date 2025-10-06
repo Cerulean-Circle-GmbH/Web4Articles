@@ -69,6 +69,22 @@ export class DefaultUnit implements Unit, Upgrade {
     // Storage will be initialized with scenario in init() method
   }
 
+  /**
+   * Initialize component with scenario data
+   * 
+   * Initializes the unit component with provided scenario data, setting up the
+   * internal model and storage systems. Establishes the component's identity,
+   * UUID, and operational context required for all subsequent operations.
+   * Essential first step in the Web4 component lifecycle.
+   * 
+   * @param scenario - Scenario containing unit model and configuration data
+   * @returns this - Enables method chaining for fluent interface
+   * @example
+   * ```typescript
+   * const scenario = { ior: {...}, owner: '', model: {...} };
+   * unit.init(scenario).info().execute();
+   * ```
+   */
   init(scenario: Scenario<UnitModel>): this {
     if (scenario.model) {
       this.model = scenario.model;
@@ -89,8 +105,11 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * Display comprehensive unit information with auto-upgrade support
-   * Web4 pattern: Auto-discovery CLI method with file loading capability
+   * Display current component information and scenario
+   * 
+   * Shows comprehensive unit information including name, classification, definition,
+   * origin references, and technical details. Supports auto-upgrade when loading
+   * from unit files and provides formatted console output for easy reading.
    * 
    * @param unitFile Optional unit file to load and analyze
    * @cliSyntax unitFile
@@ -149,8 +168,11 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * Transform input data with command chaining support
-   * Web4 pattern: Fluent interface enabling natural command chaining
+   * Transform input data using component logic
+   * 
+   * Applies transformation logic to the provided input data and stores the result
+   * within the unit for command chaining. Updates the component's timestamp and
+   * maintains transformation history for traceability and debugging purposes.
    * 
    * @param data - Input data for transformation @cliSyntax json @cliOptional
    * @returns this - Enables command chaining for fluent interface
@@ -176,8 +198,11 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * Validate object with command chaining support
-   * Web4 pattern: Fluent interface enabling natural command chaining
+   * Validate object against component rules
+   * 
+   * Performs validation of the provided object against component-specific rules
+   * and stores the validation result for command chaining. Updates component
+   * timestamp and maintains validation history for audit and debugging purposes.
    * 
    * @param object - Object to validate @cliSyntax json @cliOptional
    * @returns this - Enables command chaining for fluent interface
@@ -206,10 +231,18 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * Process data with command chaining support
-   * Web4 pattern: Fluent interface enabling natural command chaining
+   * Process data through component workflow
+   * 
+   * Executes the component's data processing workflow, applying any configured
+   * transformations, validations, and business logic. Updates the component's
+   * timestamp and provides status feedback for workflow tracking and debugging.
+   * Essential step in the component's operational lifecycle.
    * 
    * @returns this - Enables command chaining for fluent interface
+   * @example
+   * ```typescript
+   * await unit.from('data.json').transform(rules).process().execute();
+   * ```
    */
   process(): this {
     this.model.updatedAt = new Date().toISOString();
@@ -237,8 +270,23 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * Set sophisticated definition from file text reference with GitTextIOR
-   * Web4 pattern: Sophisticated text reference capability with precise positioning
+   * Add definition source reference to existing component
+   * 
+   * Sets a sophisticated definition reference using GitTextIOR format for precise
+   * file positioning. Creates traceable links between components and their source
+   * definitions, enabling version control integration and automated documentation.
+   * Supports both context-based and explicit identifier-based operations.
+   * 
+   * @param identifier - Unit identifier (optional, uses context if not provided)
+   * @param file - Source file path for definition reference
+   * @param startPos - Start position in file (line,column format)
+   * @param endPos - End position in file (line,column format)
+   * @returns this - Enables command chaining for fluent interface
+   * @example
+   * ```typescript
+   * await unit.definition('component.ts', '10,5', '15,20').execute();
+   * await unit.on('uuid').definition('source.ts', '1,1', '5,10').execute();
+   * ```
    */
   async definition(identifier: UnitIdentifier, file: string, startPos: string, endPos: string): Promise<this>;
   async definition(file: string, startPos: string, endPos: string): Promise<this>;
@@ -283,8 +331,22 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * Set model attribute value with universal identifier pattern or using loaded context
-   * Web4 pattern: Universal <uuid|lnfile> parameter with context-aware overloading
+   * Set property value for existing component
+   * 
+   * Updates a specific attribute value for a unit component, supporting both
+   * context-based operations and explicit identifier targeting. Provides flexible
+   * parameter overloading for different usage scenarios and maintains component
+   * state consistency with automatic timestamp updates.
+   * 
+   * @param identifier - Unit identifier (optional, uses context if not provided)
+   * @param attribute - Attribute name to update
+   * @param value - New value for the attribute
+   * @returns this - Enables command chaining for fluent interface
+   * @example
+   * ```typescript
+   * await unit.set('name', 'NewComponentName').execute();
+   * await unit.on('uuid').set('typeM3', 'CLASS').execute();
+   * ```
    */
   async set(identifier: UnitIdentifier, attribute: string, value: string): Promise<this>;
   async set(attribute: string, value: string): Promise<this>;
@@ -557,8 +619,11 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * Execute the complete command chain and finalize operations
-   * Web4 pattern: Final execution method for command chaining completion
+   * Execute component with input data
+   * 
+   * Executes the complete command chain and finalizes all operations. This method
+   * processes any pending interactive browsing, displays execution summaries, and
+   * completes the fluent interface workflow. Essential for command chaining completion.
    * 
    * @returns Promise<void> - Resolves when all chained operations complete
    * @example
@@ -622,8 +687,11 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * Find potential references to unit name in filesystem using grep
-   * Web4 pattern: Filesystem reference discovery with command chaining support
+   * Search for components by content or properties
+   * 
+   * Performs filesystem-wide search for references to the specified name across
+   * project directories. Displays interactive results with clickable file links
+   * and provides automatic component discovery and analysis capabilities.
    * 
    * @param name - Name to search for in filesystem @cliSyntax name
    * @returns this - Enables command chaining for fluent interface
@@ -879,6 +947,21 @@ export class DefaultUnit implements Unit, Upgrade {
     }
   }
 
+  /**
+   * Convert component state to scenario format
+   * 
+   * Converts the current unit component state into a standardized scenario format
+   * suitable for storage, serialization, and inter-component communication.
+   * Includes owner metadata, version information, and complete model data
+   * following Web4 architectural patterns.
+   * 
+   * @returns Promise<Scenario<UnitModel>> - Scenario containing complete component state
+   * @example
+   * ```typescript
+   * const scenario = await unit.toScenario();
+   * await storage.saveScenario(unit.model.uuid, scenario);
+   * ```
+   */
   async toScenario(): Promise<Scenario<UnitModel>> {
     // ✅ DYNAMIC VERSION: Use getComponentVersion() instead of hardcoded
     const componentVersion = await this.getComponentVersion();
@@ -1018,8 +1101,11 @@ export class DefaultUnit implements Unit, Upgrade {
 
   // Advanced CLI Commands (Task 19) - Direct method naming convention v0.1.2.2
   /**
-   * Create initial link to existing component with unified parameter support
-   * Web4 pattern: Union type interface supporting both UUIDv4 and file path parameters
+   * Create initial link to existing component using UUID
+   * 
+   * Creates a symbolic link to an existing unit component stored in central storage.
+   * The link allows local access to the component while maintaining the original
+   * in its central location. Supports both UUID strings and UUIDv4 objects.
    * 
    * @param identifier - Unit reference (UUID or .unit file) @cliSyntax uuid|lnfile
    * @param filename - File path for link creation (relative to project root) @cliSyntax file
@@ -1079,8 +1165,11 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * Create link to unit in target folder with command chaining support
-   * Web4 pattern: Fluent interface enabling natural command chaining
+   * Create additional link to same component in different location
+   * 
+   * Creates a symbolic link to an existing unit component in a specified target
+   * directory, enabling the same component to be accessible from multiple locations.
+   * Supports copy tracking for synchronization and provides command chaining.
    * 
    * @param unit - Unit reference (UUID or .unit file) @cliSyntax uuid|lnfile
    * @param folder - Target directory (relative to project root) @cliSyntax folder
@@ -1204,8 +1293,12 @@ export class DefaultUnit implements Unit, Upgrade {
 
 
   /**
-   * Delete specific link file with unified parameter support
-   * Web4 pattern: Union type interface supporting both UUID and file path parameters
+   * Delete specific link file while preserving component in central storage
+   * 
+   * Removes a symbolic link to a unit component while keeping the original component
+   * safely stored in central storage. This allows cleanup of local references without
+   * affecting the component's availability from other locations. Supports both UUID
+   * strings and direct file path parameters.
    * 
    * @param identifier - Unit identifier (UUID string) or link file path
    * @returns Promise<void> - Resolves when link deletion completes
@@ -1274,6 +1367,22 @@ export class DefaultUnit implements Unit, Upgrade {
     }
   }
 
+  /**
+   * Delete entire component from central storage and all associated link files
+   * 
+   * Permanently removes a unit component from central storage along with all
+   * symbolic links pointing to it. This is a destructive operation that cannot
+   * be undone. Use with caution as it affects component availability across
+   * the entire project.
+   * 
+   * @param linkFilename - Link file name to identify the component for deletion
+   * @returns Promise<void> - Resolves when component and links are deleted
+   * @throws Error when component not found or deletion fails
+   * @example
+   * ```typescript
+   * await unit.deleteUnit('obsolete-component.unit');
+   * ```
+   */
   async deleteUnit(linkFilename: string): Promise<void> {
     try {
       // Resolve link file to get target UUID
@@ -1367,8 +1476,12 @@ export class DefaultUnit implements Unit, Upgrade {
   }
 
   /**
-   * List found references with safe browsing for background agents
-   * Web4 pattern: Safe reference browsing without hanging interactive commands
+   * List all links pointing to specific component UUID
+   * 
+   * Displays found references with safe browsing capabilities for background agents.
+   * Lists all symbolic links and references discovered during search operations,
+   * providing formatted output with file paths and context information. Prevents
+   * hanging interactive commands by using safe display methods.
    * 
    * @returns Promise<void> - Resolves when listing completes
    * @throws Error when no found references available
@@ -1424,8 +1537,12 @@ export class DefaultUnit implements Unit, Upgrade {
 
   // Method overloads for different parameter sets (Decision 5b)
   /**
-   * Create unit from file with command chaining support
-   * Web4 pattern: Fluent interface enabling natural command chaining
+   * Create component from file text with extracted name and origin
+   * 
+   * Creates a new unit component from a file or specific text portion within a file.
+   * Supports both complete file processing and precise word-in-file extraction with
+   * position-based referencing. Automatically extracts component name and establishes
+   * origin tracking for traceability and version control integration.
    * 
    * @param filename - Source file path @cliSyntax file
    * @param startPos - Start position for word-in-file @cliSyntax position @cliOptional

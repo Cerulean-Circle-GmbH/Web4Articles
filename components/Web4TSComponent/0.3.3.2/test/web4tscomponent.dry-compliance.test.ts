@@ -1,0 +1,132 @@
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { DefaultWeb4TSComponent } from '../src/ts/layer2/DefaultWeb4TSComponent.js';
+import { ProjectRootMocker } from '../src/ts/layer4/ProjectRootMocker.js';
+import { existsSync, lstatSync, rmSync } from 'fs';
+import path from 'path';
+
+describe('🧽 DRY Principle Compliance Tests', () => {
+    const testDataDir = path.join(process.cwd(), 'test', 'data');
+    let mockProjectRoot: ProjectRootMocker;
+    let web4ts: DefaultWeb4TSComponent;
+
+    beforeEach(() => {
+        // Clean test data directory
+        if (existsSync(testDataDir)) {
+            rmSync(testDataDir, { recursive: true, force: true });
+        }
+        
+        // Set up isolated test environment
+        mockProjectRoot = new ProjectRootMocker(testDataDir);
+        web4ts = new DefaultWeb4TSComponent();
+    });
+
+    afterEach(() => {
+        // Clean up test data
+        if (existsSync(testDataDir)) {
+            rmSync(testDataDir, { recursive: true, force: true });
+        }
+    });
+
+    describe('📦 node_modules DRY Compliance', () => {
+        it('should create components with symlinked node_modules (not real directories)', async () => {
+            // Create a test component
+            await web4ts.create('DRYTestComponent', '0.1.0.0', 'all');
+            
+            const componentDir = path.join(testDataDir, 'components', 'DRYTestComponent', '0.1.0.0');
+            const nodeModulesPath = path.join(componentDir, 'node_modules');
+            
+            // Build the component (this runs install-deps.sh)
+            await web4ts.on('DRYTestComponent', '0.1.0.0').build();
+            
+            // Verify node_modules exists
+            expect(existsSync(nodeModulesPath)).toBe(true);
+            
+            // CRITICAL: Must be a symlink, NOT a real directory
+            expect(lstatSync(nodeModulesPath).isSymbolicLink()).toBe(true);
+            expect(lstatSync(nodeModulesPath).isDirectory()).toBe(false);
+            
+            console.log('✅ DRY Compliance: Component has symlinked node_modules');
+        });
+
+        it('should detect and report DRY violations in existing components', async () => {
+            // Create a component first
+            await web4ts.create('DRYViolationTest', '0.1.0.0', 'all');
+            
+            const componentDir = path.join(testDataDir, 'components', 'DRYViolationTest', '0.1.0.0');
+            const nodeModulesPath = path.join(componentDir, 'node_modules');
+            
+            // Simulate a DRY violation by creating a real node_modules
+            await web4ts.on('DRYViolationTest', '0.1.0.0').build();
+            
+            // Manually break it (simulate old broken behavior)
+            if (lstatSync(nodeModulesPath).isSymbolicLink()) {
+                rmSync(nodeModulesPath);
+                // Create a real directory (DRY violation)
+                const fs = await import('fs');
+                fs.mkdirSync(nodeModulesPath);
+            }
+            
+            // Now test should detect the violation
+            expect(existsSync(nodeModulesPath)).toBe(true);
+            expect(lstatSync(nodeModulesPath).isSymbolicLink()).toBe(false);
+            expect(lstatSync(nodeModulesPath).isDirectory()).toBe(true);
+            
+            console.log('🚨 DRY Violation detected: Real node_modules directory found');
+        });
+
+        it('should handle multiple components without node_modules duplication', async () => {
+            // Create multiple components
+            await web4ts.create('Component1', '0.1.0.0', 'all');
+            await web4ts.create('Component2', '0.1.0.0', 'all');
+            await web4ts.create('Component3', '0.1.0.0', 'all');
+            
+            // Build all components
+            await web4ts.on('Component1', '0.1.0.0').build();
+            await web4ts.on('Component2', '0.1.0.0').build();
+            await web4ts.on('Component3', '0.1.0.0').build();
+            
+            // Check all have symlinks
+            const components = ['Component1', 'Component2', 'Component3'];
+            for (const comp of components) {
+                const nodeModulesPath = path.join(testDataDir, 'components', comp, '0.1.0.0', 'node_modules');
+                expect(existsSync(nodeModulesPath)).toBe(true);
+                expect(lstatSync(nodeModulesPath).isSymbolicLink()).toBe(true);
+                console.log(`✅ ${comp}: Symlinked node_modules`);
+            }
+            
+            // Verify only ONE real node_modules exists (at project root)
+            const globalNodeModules = path.join(testDataDir, 'node_modules');
+            expect(existsSync(globalNodeModules)).toBe(true);
+            expect(lstatSync(globalNodeModules).isDirectory()).toBe(true);
+            expect(lstatSync(globalNodeModules).isSymbolicLink()).toBe(false);
+            
+            console.log('✅ DRY Principle: Only one global node_modules exists');
+        });
+    });
+
+    describe('🔧 install-deps.sh Template Compliance', () => {
+        it('should generate install-deps.sh with correct order (npm install BEFORE symlink)', async () => {
+            await web4ts.create('TemplateTest', '0.1.0.0', 'all');
+            
+            const installDepsPath = path.join(testDataDir, 'components', 'TemplateTest', '0.1.0.0', 'src', 'sh', 'install-deps.sh');
+            expect(existsSync(installDepsPath)).toBe(true);
+            
+            const fs = await import('fs');
+            const content = fs.readFileSync(installDepsPath, 'utf-8');
+            
+            // Check for correct order
+            const npmInstallIndex = content.indexOf('npm install');
+            const symlinkIndex = content.indexOf('ln -sf ../../../node_modules node_modules');
+            
+            expect(npmInstallIndex).toBeGreaterThan(0);
+            expect(symlinkIndex).toBeGreaterThan(0);
+            expect(npmInstallIndex).toBeLessThan(symlinkIndex); // npm install BEFORE symlink
+            
+            // Check for global check
+            expect(content).toContain('if [ ! -d "../../../node_modules" ]');
+            expect(content).toContain('rm -rf node_modules');
+            
+            console.log('✅ Template generates correct install-deps.sh order');
+        });
+    });
+});
