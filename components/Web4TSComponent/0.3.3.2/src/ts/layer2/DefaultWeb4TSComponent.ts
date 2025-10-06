@@ -545,24 +545,90 @@ Standards:
     // Create root directory if needed
     await fs.mkdir(projectRoot, { recursive: true });
     
-    // Create or update root tsconfig.json
+    // 🛡️ SELF-HEALING: Validate and heal root tsconfig.json
     const tsConfigPath = path.join(projectRoot, 'tsconfig.json');
-    if (!existsSync(tsConfigPath)) {
+    let tsconfigValid = true;
+    
+    if (existsSync(tsConfigPath)) {
+      // Validate existing tsconfig.json
+      try {
+        const content = await fs.readFile(tsConfigPath, 'utf-8');
+        const parsed = JSON.parse(content);
+        
+        // Check if it has required Web4 structure
+        if (!parsed.compilerOptions || !parsed.compilerOptions.module) {
+          tsconfigValid = false;
+          console.log(`   ⚠️  Detected corrupted tsconfig.json - backing up and resetting...`);
+          
+          // Create timestamped backup with milliseconds for uniqueness
+          const now = new Date();
+          const timestamp = now.toISOString().replace(/[-:]/g, '').replace(/[T.]/g, '-').slice(0, -1); // YYYYMMDDHHmmssSSS
+          const backupPath = path.join(projectRoot, `tsconfig.json.backup.${timestamp}`);
+          await fs.writeFile(backupPath, content);
+        }
+      } catch (error) {
+        // Invalid JSON
+        tsconfigValid = false;
+        console.log(`   ⚠️  Detected corrupted tsconfig.json - backing up and resetting...`);
+        
+        // Create timestamped backup with milliseconds for uniqueness
+        const content = await fs.readFile(tsConfigPath, 'utf-8');
+        const now = new Date();
+        const timestamp = now.toISOString().replace(/[-:]/g, '').replace(/[T.]/g, '-').slice(0, -1); // YYYYMMDDHHmmssSSS
+        const backupPath = path.join(projectRoot, `tsconfig.json.backup.${timestamp}`);
+        await fs.writeFile(backupPath, content);
+      }
+    }
+    
+    if (!existsSync(tsConfigPath) || !tsconfigValid) {
       const tsConfigContent = await this.loadTemplate('config/root-tsconfig.json.template', {});
       await fs.writeFile(tsConfigPath, tsConfigContent);
       console.log(`   ✅ Created tsconfig.json`);
     } else {
-      console.log(`   ℹ️  tsconfig.json already exists (skipped)`);
+      console.log(`   ℹ️  tsconfig.json already exists (valid)`);
     }
     
-    // Create or update root package.json for global node_modules
+    // 🛡️ SELF-HEALING: Validate and heal root package.json
     const packageJsonPath = path.join(projectRoot, 'package.json');
-    if (!existsSync(packageJsonPath)) {
+    let packageValid = true;
+    
+    if (existsSync(packageJsonPath)) {
+      // Validate existing package.json
+      try {
+        const content = await fs.readFile(packageJsonPath, 'utf-8');
+        const parsed = JSON.parse(content);
+        
+        // Check if it has required fields (at minimum needs to be an object with some content)
+        if (!parsed || typeof parsed !== 'object' || Object.keys(parsed).length === 0) {
+          packageValid = false;
+          console.log(`   ⚠️  Detected corrupted package.json - backing up and resetting...`);
+          
+          // Create timestamped backup with milliseconds for uniqueness
+          const now = new Date();
+          const timestamp = now.toISOString().replace(/[-:]/g, '').replace(/[T.]/g, '-').slice(0, -1); // YYYYMMDDHHmmssSSS
+          const backupPath = path.join(projectRoot, `package.json.backup.${timestamp}`);
+          await fs.writeFile(backupPath, content);
+        }
+      } catch (error) {
+        // Invalid JSON
+        packageValid = false;
+        console.log(`   ⚠️  Detected corrupted package.json - backing up and resetting...`);
+        
+        // Create timestamped backup with milliseconds for uniqueness
+        const content = await fs.readFile(packageJsonPath, 'utf-8');
+        const now = new Date();
+        const timestamp = now.toISOString().replace(/[-:]/g, '').replace(/[T.]/g, '-').slice(0, -1); // YYYYMMDDHHmmssSSS
+        const backupPath = path.join(projectRoot, `package.json.backup.${timestamp}`);
+        await fs.writeFile(backupPath, content);
+      }
+    }
+    
+    if (!existsSync(packageJsonPath) || !packageValid) {
       const packageJsonContent = await this.loadTemplate('config/root-package.json.template', {});
       await fs.writeFile(packageJsonPath, packageJsonContent);
       console.log(`   ✅ Created package.json`);
     } else {
-      console.log(`   ℹ️  package.json already exists (skipped)`);
+      console.log(`   ℹ️  package.json already exists (valid)`);
     }
     
     // Create global node_modules directory
