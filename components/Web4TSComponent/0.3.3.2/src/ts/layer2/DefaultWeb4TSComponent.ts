@@ -904,10 +904,12 @@ Standards:
   }
 
   /**
-   * Set development version link - version currently under development
+   * Set development version link - version currently under development (requires context)
    * @param targetVersion Version to set as dev (default: use current context version)
-   * @example setDev 0.4.0.0
-   * @example setDev
+   * @cliSyntax targetVersion
+   * @cliDefault targetVersion current
+   * @cliExample web4tscomponent on Unit 0.3.0.5 setDev
+   * @cliExample web4tscomponent on Unit 0.3.0.5 setDev 0.4.0.0
    */
   async setDev(targetVersion: string = 'current'): Promise<this> {
     const context = this.getComponentContext();
@@ -923,10 +925,12 @@ Standards:
   }
 
   /**
-   * Set test version link - version ready for 100% revision testing
+   * Set test version link - version ready for 100% revision testing (requires context)
    * @param targetVersion Version to set as test (default: use current context version)
-   * @example setTest 0.3.2.0
-   * @example setTest
+   * @cliSyntax targetVersion
+   * @cliDefault targetVersion current
+   * @cliExample web4tscomponent on Unit 0.3.0.5 setTest
+   * @cliExample web4tscomponent on Unit 0.3.0.5 setTest 0.3.2.0
    */
   async setTest(targetVersion: string = 'current'): Promise<this> {
     const context = this.getComponentContext();
@@ -942,10 +946,12 @@ Standards:
   }
 
   /**
-   * Set production version link - version that achieved 100% testing success
+   * Set production version link - version that achieved 100% testing success (requires context)
    * @param targetVersion Version to set as prod (default: use current context version)
-   * @example setProd 0.3.1.0
-   * @example setProd
+   * @cliSyntax targetVersion
+   * @cliDefault targetVersion current
+   * @cliExample web4tscomponent on Unit 0.3.0.5 setProd
+   * @cliExample web4tscomponent on Unit 0.3.0.5 setProd 0.3.1.0
    */
   async setProd(targetVersion: string = 'current'): Promise<this> {
     const context = this.getComponentContext();

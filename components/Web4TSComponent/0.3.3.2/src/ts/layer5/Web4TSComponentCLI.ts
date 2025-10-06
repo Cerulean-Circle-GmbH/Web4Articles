@@ -23,7 +23,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
     // Don't instantiate tsComponent for usage display - command-based instantiation only
     this.tsComponent = null;
     // Initialize with component class reference (NOT instance) - no garbage creation
-    this.initWithComponentClass(DefaultWeb4TSComponent, 'Web4TSComponent', '0.3.2.0');
+    this.initWithComponentClass(DefaultWeb4TSComponent, 'Web4TSComponent', '0.3.3.2');
     // Discover methods for chaining support
     this.discoverMethods();
   }

@@ -1075,7 +1075,7 @@ export abstract class DefaultCLI implements CLI {
    * Get component version for documentation
    */
   private getComponentVersion(): string {
-    return this.componentVersion || '0.3.2.0';
+    return this.componentVersion || '0.3.3.2';
   }
 }
 
