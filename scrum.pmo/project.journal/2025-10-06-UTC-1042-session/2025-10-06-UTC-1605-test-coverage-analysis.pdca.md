@@ -415,22 +415,22 @@ test/web4tscomponent.self-healing-config.test.ts
 
 **Systematic Tracking Table - Phase 2 (In Progress):**
 
-| Priority | Method | Tests | Status | Suite File | Completion |
-|----------|--------|-------|--------|------------|------------|
-| 🚨 CRITICAL | initProject | 23 | ✅ DONE | self-healing-config.test.ts | 100% |
-| ⚠️ HIGH | tree | 12 | ✅ DONE | tree-method.test.ts | 100% |
-| ⚠️ HIGH | start | 4 | ✅ DONE | lifecycle-methods.test.ts | Context tests |
-| ⚠️ HIGH | clean | 4 | ✅ DONE | lifecycle-methods.test.ts | Context tests |
-| ⚠️ HIGH | removeVersion | 1 | ✅ DONE | smoke-tests.test.ts | Smoke test |
-| ⚠️ HIGH | removeComponent | 1 | ✅ DONE | smoke-tests.test.ts | Smoke test |
-| 📊 MEDIUM | compare | 1 | ⏭️ SKIP | smoke-tests.test.ts | Global paths |
-| 📊 MEDIUM | info | 1 | ✅ DONE | smoke-tests.test.ts | Smoke test |
-| 📊 MEDIUM | updateBuildSystem | 1 | ✅ DONE | smoke-tests.test.ts | Smoke test |
-| 🔧 LOW | set | 1 | ✅ DONE | smoke-tests.test.ts | Smoke test |
-| 🔧 LOW | get | 1 | ✅ DONE | smoke-tests.test.ts | Smoke test |
-| 🔧 LOW | from | 1 | ✅ DONE | smoke-tests.test.ts | Smoke test |
-| 🔧 LOW | find | 1 | ✅ DONE | smoke-tests.test.ts | Smoke test |
-| 🔧 LOW | testNewMethod | 1 | ✅ DONE | smoke-tests.test.ts | Smoke test |
+| Priority | Method | Tests | Coverage Type | Status | Suite File |
+|----------|--------|-------|---------------|--------|------------|
+| 🚨 CRITICAL | initProject | 23 | **Full Test** (corruption, backup, preservation, integration, edge cases) | ✅ DONE | self-healing-config.test.ts |
+| ⚠️ HIGH | tree | 12 | **Full Test** (context, structure, depth, hidden files) | ✅ DONE | tree-method.test.ts |
+| ⚠️ HIGH | start | 4 | **Context Test** (requirement validation, error messages) | ✅ DONE | lifecycle-methods.test.ts |
+| ⚠️ HIGH | clean | 4 | **Context Test** (requirement validation, error messages) | ✅ DONE | lifecycle-methods.test.ts |
+| ⚠️ HIGH | removeVersion | 1 | **Smoke Test** (basic removal verification) | ✅ DONE | smoke-tests.test.ts |
+| ⚠️ HIGH | removeComponent | 1 | **Smoke Test** (basic removal verification) | ✅ DONE | smoke-tests.test.ts |
+| 📊 MEDIUM | compare | 1 | **Smoke Test** (skipped - global paths) | ⏭️ SKIP | smoke-tests.test.ts |
+| 📊 MEDIUM | info | 1 | **Smoke Test** (basic display verification) | ✅ DONE | smoke-tests.test.ts |
+| 📊 MEDIUM | updateBuildSystem | 1 | **Smoke Test** (context requirement check) | ✅ DONE | smoke-tests.test.ts |
+| 🔧 LOW | set | 1 | **Smoke Test** (basic property setting) | ✅ DONE | smoke-tests.test.ts |
+| 🔧 LOW | get | 1 | **Smoke Test** (basic CLI validation) | ✅ DONE | smoke-tests.test.ts |
+| 🔧 LOW | from | 1 | **Smoke Test** (basic path analysis) | ✅ DONE | smoke-tests.test.ts |
+| 🔧 LOW | find | 1 | **Smoke Test** (basic discovery) | ✅ DONE | smoke-tests.test.ts |
+| 🔧 LOW | testNewMethod | 1 | **Smoke Test** (basic processing) | ✅ DONE | smoke-tests.test.ts |
 
 **Phase 2 Complete:** +48 tests (35 Phase 1 + 13 Phase 2)  
 **Total Tests:** 152 tests (104 baseline + 48 new)  
