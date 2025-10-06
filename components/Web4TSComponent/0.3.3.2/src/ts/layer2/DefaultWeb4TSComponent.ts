@@ -7,7 +7,7 @@ import { Web4TSComponent, ComponentScaffoldOptions, ComponentMetadata, CLIStanda
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { Web4TSComponentModel } from '../layer3/Web4TSComponentModel.interface.js';
 import * as fs from 'fs/promises';
-import { existsSync, readdirSync, statSync } from 'fs';
+import { existsSync, readdirSync, statSync, lstatSync } from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 
@@ -2767,17 +2767,32 @@ Standards:
         const nextPrefix = prefix + (isLast ? '    ' : '│   ');
 
         try {
-          const stats = statSync(itemPath);
-          const isDirectory = stats.isDirectory();
-          const isSymlink = stats.isSymbolicLink();
+          // Use lstatSync to detect symlinks without following them
+          const lstats = lstatSync(itemPath);
+          const isSymlink = lstats.isSymbolicLink();
+          const isDirectory = isSymlink ? statSync(itemPath).isDirectory() : lstats.isDirectory();
           
           let displayName = item;
           if (isDirectory) displayName += '/';
-          if (isSymlink) displayName += ' → ' + await fs.readlink(itemPath).catch(() => 'broken');
+          
+          // Special handling for node_modules symlink - show on one line
+          if (item === 'node_modules' && isSymlink) {
+            const linkTarget = await fs.readlink(itemPath).catch(() => 'broken');
+            displayName += ` → ${linkTarget}`;
+            console.log(prefix + connector + displayName);
+            continue; // Don't recurse into node_modules symlink
+          }
+          
+          // Show symlink target for other symlinks
+          if (isSymlink) {
+            const linkTarget = await fs.readlink(itemPath).catch(() => 'broken');
+            displayName += ` → ${linkTarget}`;
+          }
           
           console.log(prefix + connector + displayName);
           
-          if (isDirectory && currentDepth < maxDepth - 1) {
+          // Recurse into directories (but not symlinked node_modules)
+          if (isDirectory && currentDepth < maxDepth - 1 && !isSymlink) {
             await this.displayTreeStructure(itemPath, nextPrefix, maxDepth, currentDepth + 1, showHidden);
           }
         } catch (error) {
