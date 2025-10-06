@@ -962,15 +962,15 @@ Standards:
    * Display directory structure for component
    * WITHOUT context: Shows tree for current component (self-operation)
    * WITH context: Shows tree for target component
-   * @param depth Maximum depth to traverse (default: 3)
+   * @param depth Maximum depth to traverse (default: 4)
    * @param showHidden Show hidden files and directories (default: false)
    * @cliSyntax depth showHidden
-   * @cliDefault depth 3
+   * @cliDefault depth 4
    * @cliDefault showHidden false
    */
-  async tree(depth: string = '3', showHidden: string = 'false'): Promise<this> {
+  async tree(depth: string = '4', showHidden: string = 'false'): Promise<this> {
     const context = this.getComponentContext();
-    const maxDepth = parseInt(depth, 10) || 3;
+    const maxDepth = parseInt(depth, 10) || 4;
     const includeHidden = showHidden.toLowerCase() === 'true';
     
     if (context) {
@@ -2783,6 +2783,13 @@ Standards:
             continue; // Don't recurse into node_modules symlink
           }
           
+          // Special handling for dist directory - mark as generated, don't expand
+          if (item === 'dist' && isDirectory) {
+            displayName += ' [generated]';
+            console.log(prefix + connector + displayName);
+            continue; // Don't recurse into dist
+          }
+          
           // Show symlink target for other symlinks
           if (isSymlink) {
             const linkTarget = await fs.readlink(itemPath).catch(() => 'broken');
@@ -2791,7 +2798,7 @@ Standards:
           
           console.log(prefix + connector + displayName);
           
-          // Recurse into directories (but not symlinked node_modules)
+          // Recurse into directories (but not symlinks, node_modules, or dist)
           if (isDirectory && currentDepth < maxDepth - 1 && !isSymlink) {
             await this.displayTreeStructure(itemPath, nextPrefix, maxDepth, currentDepth + 1, showHidden);
           }
