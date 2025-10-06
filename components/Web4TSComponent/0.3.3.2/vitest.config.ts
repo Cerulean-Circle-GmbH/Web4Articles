@@ -5,8 +5,9 @@ export default defineConfig({
     environment: 'node',
     globals: true,
     include: ['test/**/*.test.ts'],
-    testTimeout: 10000,
-    hookTimeout: 10000,
+    testTimeout: 5000,     // Reduced from 10s to 5s to catch hangs faster
+    hookTimeout: 5000,     // Reduced from 10s to 5s
+    bail: 1,               // Stop on first failure to prevent cascade hangs
     // CRITICAL: Run tests sequentially to prevent race conditions
     pool: 'forks',
     poolOptions: {

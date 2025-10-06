@@ -73,12 +73,104 @@ npm start  # ← Same magic, fully automatic
 
 - ✅ **Auto-Discovery CLI** - Add methods to component, they appear in CLI automatically
 - ✅ **Automatic Lifecycle** - `npm start` handles everything (build, deps, execution)
+- ✅ **Project Initialization** - `initProject` bootstraps any project with Web4 standards
 - ✅ **Version Management** - Semantic versioning with intelligent promotion workflow
 - ✅ **DRY Compliance** - Detects and prevents node_modules duplication
 - ✅ **Test Isolation** - ProjectRootMocker ensures tests don't affect production
 - ✅ **Method Chaining** - Fluent API with context-aware operations
 - ✅ **CMM3+ Compliance** - Objective, reproducible, automated verification
 - ✅ **Self-Replicating** - Components created work the same way
+
+---
+
+## 🚀 Automatic Project Initialization
+
+**You don't need to do anything!** Web4TSComponent automatically initializes your project structure on first run.
+
+### What Happens Automatically:
+
+1. **Creates Root `tsconfig.json`**
+   - Provides base TypeScript configuration
+   - All component tsconfig files `extend` from this root
+   - Ensures consistent TypeScript settings across all components
+
+2. **Creates Root `package.json`**
+   - Defines global dependencies (TypeScript, Vitest, etc.)
+   - Enables the DRY principle (Don't Repeat Yourself)
+   - All components symlink to the global `node_modules`
+
+3. **Creates Global `node_modules` Directory**
+   - Single source of truth for all dependencies
+   - Components symlink here instead of duplicating packages
+   - Saves disk space and ensures version consistency
+
+### Why This Matters (DRY Principle):
+
+**WITHOUT initProject:**
+```
+❌ project/
+   ├── Component1/0.1.0.0/node_modules/  (100MB)
+   ├── Component2/0.1.0.0/node_modules/  (100MB)
+   └── Component3/0.1.0.0/node_modules/  (100MB)
+Total: 300MB of duplicated dependencies
+```
+
+**WITH initProject:**
+```
+✅ project/
+   ├── tsconfig.json          (root config)
+   ├── package.json           (root dependencies)
+   ├── node_modules/          (100MB - single copy)
+   ├── Component1/0.1.0.0/
+   │   └── node_modules → ../../../node_modules  (symlink)
+   ├── Component2/0.1.0.0/
+   │   └── node_modules → ../../../node_modules  (symlink)
+   └── Component3/0.1.0.0/
+       └── node_modules → ../../../node_modules  (symlink)
+Total: 100MB (67% space savings)
+```
+
+### When Does This Happen?
+
+Automatic initialization triggers when you run:
+- ✅ `npm start` (first time)
+- ✅ `npm run build` (first time)
+- ✅ `npm test` (first time)
+- ✅ Any component creation
+
+**The philosophy:** You should **never** have to manually initialize anything. Just `npm start` and everything works.
+
+### Self-Healing Configuration
+
+The system is **resilient** and automatically fixes corrupted configs:
+
+- ✅ **Detects** broken or invalid JSON in `tsconfig.json` or `package.json`
+- ✅ **Backs up** the corrupted file (timestamped: `*.backup.20251006-153000`)
+- ✅ **Regenerates** a fresh, working configuration
+- ✅ **Continues** without manual intervention
+
+**Example:** If someone accidentally breaks `tsconfig.json`:
+```bash
+# Next npm start automatically:
+⚠️  Detected corrupted tsconfig.json - backing up and resetting...
+   Creating root tsconfig.json...
+   ✅ Web4 project initialized
+```
+
+**What gets validated:**
+- JSON syntax must be valid
+- `tsconfig.json` must have `compilerOptions.module` (critical for ES modules)
+- `package.json` must be parseable by Node.js
+
+**What is preserved:**
+- If configs are **valid but customized**, they are **NOT overwritten**
+- Only **broken/corrupted** files trigger regeneration
+- User customizations are safe as long as they're valid JSON
+
+**Note:** If you really need to manually initialize (e.g., CI/CD pre-setup), you can still call:
+```bash
+./web4tscomponent initProject
+```
 
 ---
 

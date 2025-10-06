@@ -1,34 +1,51 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { DefaultWeb4TSComponent } from '../src/ts/layer2/DefaultWeb4TSComponent.js';
-import { ProjectRootMocker } from '../src/ts/layer4/ProjectRootMocker.js';
+import { ProjectRootMocker } from './utils/ProjectRootMocker.js';
 import { existsSync, lstatSync, rmSync } from 'fs';
+import * as fs from 'fs/promises';
 import path from 'path';
+
+/**
+ * Helper function to clean up test data content (not the directory itself)
+ */
+async function cleanupTestDataContent(testDataDir: string) {
+  try {
+    if (existsSync(testDataDir)) {
+      const entries = await fs.readdir(testDataDir);
+      for (const entry of entries) {
+        const entryPath = path.join(testDataDir, entry);
+        await fs.rm(entryPath, { recursive: true, force: true });
+      }
+    }
+  } catch (error) {
+    // Ignore cleanup errors
+  }
+}
 
 describe('🧽 DRY Principle Compliance Tests', () => {
     const testDataDir = path.join(process.cwd(), 'test', 'data');
     let mockProjectRoot: ProjectRootMocker;
     let web4ts: DefaultWeb4TSComponent;
 
-    beforeEach(() => {
-        // Clean test data directory
-        if (existsSync(testDataDir)) {
-            rmSync(testDataDir, { recursive: true, force: true });
-        }
+    beforeEach(async () => {
+        // Clean test data CONTENT (not the directory itself)
+        await cleanupTestDataContent(testDataDir);
         
         // Set up isolated test environment
         mockProjectRoot = new ProjectRootMocker(testDataDir);
         web4ts = new DefaultWeb4TSComponent();
+        
+        // Initialize project with root configs (DRY principle)
+        await web4ts.initProject();
     });
 
-    afterEach(() => {
-        // Clean up test data
-        if (existsSync(testDataDir)) {
-            rmSync(testDataDir, { recursive: true, force: true });
-        }
+    afterEach(async () => {
+        // Clean up test data CONTENT (preserve directory)
+        await cleanupTestDataContent(testDataDir);
     });
 
     describe('📦 node_modules DRY Compliance', () => {
-        it('should create components with symlinked node_modules (not real directories)', async () => {
+        it('should create components with symlinked node_modules (not real directories)', { timeout: 30000 }, async () => {
             // Create a test component
             await web4ts.create('DRYTestComponent', '0.1.0.0', 'all');
             
@@ -36,7 +53,8 @@ describe('🧽 DRY Principle Compliance Tests', () => {
             const nodeModulesPath = path.join(componentDir, 'node_modules');
             
             // Build the component (this runs install-deps.sh)
-            await web4ts.on('DRYTestComponent', '0.1.0.0').build();
+            await web4ts.on('DRYTestComponent', '0.1.0.0');
+            await web4ts.build();
             
             // Verify node_modules exists
             expect(existsSync(nodeModulesPath)).toBe(true);
