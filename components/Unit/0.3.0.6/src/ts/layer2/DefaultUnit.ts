@@ -3017,4 +3017,63 @@ export class DefaultUnit implements Unit, Upgrade {
       // This prevents the cleanup from failing the main operation
     }
   }
+
+  /**
+   * Create new component with name, optional description, and optional classification
+   * 
+   * Creates a new Unit component with the specified properties and saves it to storage.
+   * The component is automatically linked in the current directory for easy access.
+   * 
+   * @param name - Component name (will be converted to filename format)
+   * @param description - Optional description text for the component
+   * @param typeM3String - Optional MOF classification (CLASS, ATTRIBUTE, RELATIONSHIP)
+   * @returns Promise resolving to this for method chaining
+   * 
+   * @example
+   * ```typescript
+   * // Create simple component
+   * await unit.create('MyComponent').execute();
+   * 
+   * // Create with description and classification
+   * await unit.create('DataModel', 'Core data structure', 'CLASS').execute();
+   * ```
+   */
+  async create(name: string, description?: string, typeM3String?: string): Promise<this> {
+    // Validate typeM3 if provided
+    let typeM3: TypeM3 | undefined;
+    if (typeM3String) {
+      if (Object.values(TypeM3).includes(typeM3String as TypeM3)) {
+        typeM3 = typeM3String as TypeM3;
+      } else {
+        throw new Error(`Invalid typeM3: ${typeM3String}. Valid values: CLASS, ATTRIBUTE, RELATIONSHIP`);
+      }
+    }
+
+    // Set unit properties
+    this.model.name = name;
+    if (description) {
+      this.model.definition = description;
+    }
+    if (typeM3) {
+      this.model.typeM3 = typeM3;
+    }
+
+    // Convert name to filename format
+    const filename = name.replace(/\s+/g, '.');
+    this.model.name = filename;
+    this.model.updatedAt = new Date().toISOString();
+    
+    // Save and create named link
+    await this.saveAndLink(filename);
+    
+    console.log(`✅ Unit created: ${filename}`);
+    console.log(`   UUID: ${this.model.uuid}`);
+    console.log(`   TypeM3: ${this.model.typeM3}`);
+    if (description) {
+      console.log(`   Description: ${description}`);
+    }
+    
+    // ✅ COMMAND CHAINING: Return this for fluent interface
+    return this;
+  }
 }
