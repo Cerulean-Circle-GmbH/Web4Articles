@@ -11,7 +11,7 @@
     "clean": "./src/sh/clean.sh",
     "clean:local": "./src/sh/clean-local.sh",
     "build": "./src/sh/build.sh",
-    "component": "node dist/ts/layer5/Web4TSComponentCLI.js",
+    "component": "./web4tscomponent",
     "vitest": "npx vitest run",
     "install-deps": "./src/sh/install-deps.sh"
   },

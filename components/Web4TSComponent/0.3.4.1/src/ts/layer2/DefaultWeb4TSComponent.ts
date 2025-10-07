@@ -1266,12 +1266,17 @@ Standards:
    * - Current version → nextPatch (increment minor, reset patch) → prod
    * - nextBuild (increment build from new prod) → dev and test
    * Example: 0.3.2.0 → 0.3.3.0 (prod), 0.3.3.1 (dev/test)
-   * @cliSyntax
+   * 
+   * @param skipPromotion Optional flag to skip version promotion (for testing/development)
+   * @cliSyntax skipPromotion
+   * @cliDefault skipPromotion false
    * @cliExample web4tscomponent test
+   * @cliExample web4tscomponent test withoutVersionPromotion
    * @cliExample web4tscomponent on Unit 0.3.0.5 test
    */
-  async test(): Promise<this> {
+  async test(skipPromotion: string = 'false'): Promise<this> {
     const context = this.getComponentContext();
+    const shouldSkipPromotion = skipPromotion === 'withoutVersionPromotion' || skipPromotion === 'true';
     
     // WORKFLOW REMINDER: Always work on dev → test → dev cycle
     console.log(`\n🔄 WORKFLOW REMINDER:`);
@@ -1279,23 +1284,30 @@ Standards:
     console.log(`   🧪 ALWAYS work on test version until test succeeds`);  
     console.log(`   🚧 ALWAYS work on dev version after test success\n`);
     
+    if (shouldSkipPromotion) {
+      console.log(`⚠️  Version promotion disabled for this test run\n`);
+    }
+    
     if (!context) {
-      // 🚨 RECURSION PREVENTION: Check if we're already inside a test run
+      // No context - run Web4TSComponent's own tests
+      // Architecture: npm test → web4tscomponent test → vitest
+      
+      // 🚨 RECURSION DETECTION: Check if we're already inside vitest
       const insideTestEnvironment = !!(process.env.VITEST || process.env.VITEST_WORKER_ID);
       
       if (insideTestEnvironment) {
-        // We're inside a test - tests are already running, skip test execution
-        console.log(`🧪 Running Web4TSComponent internal tests (already in test environment)...`);
-        console.log(`✅ Web4TSComponent internal tests completed successfully`);
-        // ✅ CONTINUE TO PROMOTION - Don't return early!
+        // Already inside a test - prevent infinite recursion
+        // This happens when a test calls test() method
+        console.log(`🧪 Already in test environment - skipping recursive vitest execution`);
+        console.log(`✅ Test execution skipped (recursion prevented)`);
       } else {
-        // No context and not in test - run Web4TSComponent's own tests
+        // Not in test environment - run vitest normally
         console.log(`🧪 Running Web4TSComponent internal tests...`);
         
         try {
-          // Run Web4TSComponent's own test suite
-          execSync('npm test', { 
-            cwd: process.cwd(), // Current Web4TSComponent directory
+          // Run vitest directly (npm test delegates to us, so we run vitest)
+          execSync('npx vitest run', { 
+            cwd: process.cwd(),
             stdio: 'inherit',
             encoding: 'utf-8'
           });
@@ -1308,10 +1320,20 @@ Standards:
         }
       }
       
-      // 🎯 SELF-PROMOTION: After tests complete (either way), handle version promotion
-      console.log(`\n🔍 Checking for self-promotion opportunity...`);
-      const currentVersion = await this.getCurrentVersion();
-      await this.handleTestSuccessPromotion('Web4TSComponent', currentVersion);
+      // 🎯 SELF-PROMOTION: After tests complete (or are skipped), handle version promotion
+      // Only attempt promotion if:
+      // 1. We're in the actual component directory, not test/data
+      // 2. skipPromotion flag is not set
+      const currentPath = process.cwd();
+      if (shouldSkipPromotion) {
+        console.log(`\n⚠️  Skipping promotion (disabled by user)`);
+      } else if (currentPath.includes('/test/data')) {
+        console.log(`\n⚠️  Skipping promotion (inside test environment)`);
+      } else {
+        console.log(`\n🔍 Checking for self-promotion opportunity...`);
+        const currentVersion = await this.getCurrentVersion();
+        await this.handleTestSuccessPromotion('Web4TSComponent', currentVersion);
+      }
       
       return this;
     }
@@ -1368,8 +1390,12 @@ Standards:
       
       console.log(`✅ Tests completed for ${context.component} ${targetVersion}`);
       
-      // Check if 100% success and promote versions
-      await this.handleTestSuccessPromotion(context.component, targetVersion);
+      // Check if 100% success and promote versions (unless disabled)
+      if (shouldSkipPromotion) {
+        console.log(`⚠️  Skipping promotion (disabled by user)`);
+      } else {
+        await this.handleTestSuccessPromotion(context.component, targetVersion);
+      }
       
     } catch (error) {
       console.error(`❌ Tests failed for ${context.component} ${targetVersion}`);
@@ -1396,6 +1422,27 @@ Standards:
       console.log(`⚠️  Version ${currentVersion} is already marked as prod - skipping promotion`);
       console.log(`💡 This prevents accidental double promotion`);
       return;
+    }
+    
+    // 🚨 CRITICAL FIX: Check if currentVersion is already ahead of prod
+    // This prevents the bug where we calculate nextPatch from an old prod
+    // and accidentally overwrite newer test versions
+    if (currentProd) {
+      const comparison = this.compareVersionsForHierarchy(currentVersion, currentProd);
+      if (comparison > 0) {
+        // currentVersion is AHEAD of prod (e.g., test is 0.3.4.1, prod is 0.3.3.2)
+        // This means a previous promotion cycle completed and we're working on the next iteration
+        console.log(`📊 Version hierarchy detected:`);
+        console.log(`   Current test: ${currentVersion}`);
+        console.log(`   Current prod: ${currentProd}`);
+        console.log(`   Test version is AHEAD of prod (new development cycle)`);
+        console.log(`   Will promote test → nextPatch (from test version, not prod)`);
+      } else if (comparison < 0) {
+        // currentVersion is BEHIND prod - this shouldn't happen!
+        console.error(`❌ ERROR: Test version (${currentVersion}) is BEHIND prod (${currentProd})!`);
+        console.error(`💡 This is an invalid state - test should always be >= prod`);
+        throw new Error(`Invalid version state: test (${currentVersion}) < prod (${currentProd})`);
+      }
     }
     
     // Check if test result indicates 100% success
@@ -1456,6 +1503,26 @@ Standards:
     // or check for specific success indicators
     console.log(`✅ Test success verification: Assuming 100% success (test command completed without error)`);
     return true;
+  }
+
+  /**
+   * Compare two semantic versions FOR HIERARCHY CHECK ONLY
+   * Returns: -1 if v1 < v2, 0 if v1 == v2, 1 if v1 > v2
+   * @cliHide
+   */
+  private compareVersionsForHierarchy(v1: string, v2: string): number {
+    const parts1 = v1.split('.').map(Number);
+    const parts2 = v2.split('.').map(Number);
+    
+    for (let i = 0; i < 4; i++) {
+      const p1 = parts1[i] || 0;
+      const p2 = parts2[i] || 0;
+      
+      if (p1 > p2) return 1;
+      if (p1 < p2) return -1;
+    }
+    
+    return 0; // Equal
   }
 
   /**
@@ -2889,6 +2956,14 @@ Standards:
     const sourcePath = this.resolveComponentPath(component, fromVersion);
     const targetPath = this.resolveComponentPath(component, toVersion);
     
+    // 🚨 CRITICAL: Check if target version already exists
+    if (existsSync(targetPath)) {
+      console.error(`❌ ERROR: Version ${toVersion} already exists!`);
+      console.error(`   Path: ${targetPath}`);
+      console.error(`   This would overwrite existing work - ABORTING!`);
+      throw new Error(`Version ${toVersion} already exists - refusing to overwrite`);
+    }
+    
     // Copy entire component structure
     await this.copyDirectory(sourcePath, targetPath);
     
@@ -3371,6 +3446,7 @@ export default defineConfig({
 
   /**
    * Compare two version strings (for sorting)
+   * Returns the difference for Array.sort() compatibility
    * @cliHide
    */
   private compareVersions(a: string, b: string): number {
