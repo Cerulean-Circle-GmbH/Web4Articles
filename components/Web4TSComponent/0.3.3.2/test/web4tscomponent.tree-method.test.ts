@@ -172,13 +172,13 @@ describe('🌳 tree() Method Tests', () => {
       expect(true).toBe(true);
     });
 
-    it('should respect depth=3 (default)', async () => {
+    it('should respect depth=4 (default)', async () => {
       // Arrange: Create component
-      await web4ts.create('DepthTest3', '0.1.0.0');
-      await web4ts.on('DepthTest3', '0.1.0.0');
+      await web4ts.create('DepthTest4', '0.1.0.0');
+      await web4ts.on('DepthTest4', '0.1.0.0');
       
-      // Act: Display tree with default depth (3)
-      await web4ts.tree('3');
+      // Act: Display tree with default depth (4)
+      await web4ts.tree('4');
       
       // Assert: Method completes successfully
       expect(true).toBe(true);
