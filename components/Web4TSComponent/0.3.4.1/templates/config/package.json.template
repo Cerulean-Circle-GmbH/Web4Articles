@@ -11,7 +11,7 @@
     "clean": "./src/sh/clean.sh",
     "clean:local": "./src/sh/clean-local.sh",
     "build": "./src/sh/build.sh",
-    "component": "./{{COMPONENT_NAME_LOWER}}",
+    "component": "node dist/ts/layer5/{{COMPONENT_NAME}}CLI.js",
     "vitest": "npx vitest run",
     "install-deps": "./src/sh/install-deps.sh"
   },

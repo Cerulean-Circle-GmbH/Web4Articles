@@ -7,9 +7,6 @@
 
 import { DefaultCLI } from '../layer2/DefaultCLI.js';
 import { DefaultWeb4TSComponent } from '../layer2/DefaultWeb4TSComponent.js';
-import { readFileSync, writeFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join, basename } from 'path';
 
 interface MethodSignature {
   name: string;
@@ -26,91 +23,9 @@ export class Web4TSComponentCLI extends DefaultCLI {
     // Don't instantiate tsComponent for usage display - command-based instantiation only
     this.tsComponent = null;
     // Initialize with component class reference (NOT instance) - no garbage creation
-    // ✅ Read version dynamically from package.json (single source of truth)
-    const version = this.readVersionFromPackageJson();
-    this.initWithComponentClass(DefaultWeb4TSComponent, 'Web4TSComponent', version);
+    this.initWithComponentClass(DefaultWeb4TSComponent, 'Web4TSComponent', '0.3.3.2');
     // Discover methods for chaining support
     this.discoverMethods();
-  }
-
-  /**
-   * Read version - HYBRID APPROACH
-   * 
-   * TRUTH HIERARCHY:
-   * 1. Directory name is authoritative (Web4 principle)
-   * 2. package.json must match (validated/auto-fixed)
-   * 3. Fallback to package.json if not in version directory
-   * 
-   * @cliHide
-   */
-  private readVersionFromPackageJson(): string {
-    try {
-      // Get the directory of this file
-      const __filename = fileURLToPath(import.meta.url);
-      const __dirname = dirname(__filename);
-      
-      // Navigate up to component root (from layer5 to root: ../../../)
-      const componentRoot = join(__dirname, '..', '..', '..');
-      const componentDirName = basename(componentRoot);
-      
-      // Check if we're in a version directory
-      const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(componentDirName);
-      
-      if (isVersionDir) {
-        // Directory name is TRUTH
-        const dirVersion = componentDirName;
-        
-        // Validate/fix package.json
-        this.validateAndFixPackageJsonVersion(componentRoot, dirVersion);
-        
-        return dirVersion;
-      }
-      
-      // Fallback: read from package.json
-      const packageJsonPath = join(componentRoot, 'package.json');
-      const packageJsonContent = readFileSync(packageJsonPath, 'utf-8');
-      const packageJson = JSON.parse(packageJsonContent);
-      
-      console.warn(`⚠️  CLI not in version directory, using package.json: ${packageJson.version}`);
-      return packageJson.version;
-      
-    } catch (error) {
-      // Fallback only if everything fails
-      console.error('⚠️  Warning: Could not determine version, using fallback');
-      return '0.0.0';
-    }
-  }
-
-  /**
-   * Validate and auto-fix package.json version
-   * @cliHide
-   */
-  private validateAndFixPackageJsonVersion(componentRoot: string, correctVersion: string): void {
-    try {
-      const packageJsonPath = join(componentRoot, 'package.json');
-      const packageJsonContent = readFileSync(packageJsonPath, 'utf-8');
-      const packageJson = JSON.parse(packageJsonContent);
-      
-      if (packageJson.version !== correctVersion) {
-        console.error(`❌ VERSION MISMATCH DETECTED!`);
-        console.error(`   Directory (TRUTH): ${correctVersion}`);
-        console.error(`   package.json:      ${packageJson.version}`);
-        console.error(`   Auto-fixing package.json...`);
-        
-        // Create backup
-        const timestamp = new Date().toISOString().replace(/[-:]/g, '').replace(/[T.]/g, '-').slice(0, -1);
-        const backupPath = join(componentRoot, `package.json.backup.${timestamp}`);
-        writeFileSync(backupPath, packageJsonContent);
-        console.error(`   📦 Backup: package.json.backup.${timestamp}`);
-        
-        // Fix version
-        packageJson.version = correctVersion;
-        writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
-        console.error(`   ✅ Fixed to ${correctVersion}`);
-      }
-    } catch (error) {
-      console.warn(`⚠️  Could not validate package.json: ${(error as Error).message}`);
-    }
   }
 
   /**
