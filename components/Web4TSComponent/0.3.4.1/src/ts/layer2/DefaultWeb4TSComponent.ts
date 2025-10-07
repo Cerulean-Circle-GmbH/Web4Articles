@@ -7,7 +7,7 @@ import { Web4TSComponent, ComponentScaffoldOptions, ComponentMetadata, CLIStanda
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { Web4TSComponentModel } from '../layer3/Web4TSComponentModel.interface.js';
 import * as fs from 'fs/promises';
-import { existsSync, readdirSync, statSync, lstatSync } from 'fs';
+import { existsSync, readdirSync, readFileSync, statSync, lstatSync } from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 
@@ -133,18 +133,33 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       uuid: this.model.uuid,
       timestamp: new Date().toISOString(),
       component: 'Web4TSComponent',
-      version: '0.3.2.0'
+      version: this.getCurrentComponentVersion()
     });
 
       return {
       ior: {
         uuid: this.model.uuid,
         component: 'Web4TSComponent',
-        version: '0.3.2.0'
+        version: this.getCurrentComponentVersion()
       },
       owner: ownerData,
       model: this.model
     };
+  }
+
+  /**
+   * Get current component version from package.json (single source of truth)
+   * @cliHide
+   */
+  private getCurrentComponentVersion(): string {
+    try {
+      const packageJsonPath = path.join(process.cwd(), 'package.json');
+      const packageJsonContent = readFileSync(packageJsonPath, 'utf-8');
+      const packageJson = JSON.parse(packageJsonContent);
+      return packageJson.version;
+    } catch (error) {
+      return 'unknown';
+    }
   }
 
   /**
@@ -187,7 +202,13 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         .filter(entry => entry.isDirectory() && /^\d+\.\d+\.\d+\.\d+$/.test(entry.name))
         .map(entry => entry.name);
     } catch {
-      return ['0.3.2.0']; // Fallback
+      // Fallback: return current version if available
+      try {
+        const currentVersion = this.getCurrentComponentVersion();
+        return [currentVersion];
+      } catch {
+        return []; // No versions found
+      }
     }
   }
 

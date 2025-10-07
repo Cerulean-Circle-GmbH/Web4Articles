@@ -7,6 +7,9 @@
 
 import { DefaultCLI } from '../layer2/DefaultCLI.js';
 import { DefaultWeb4TSComponent } from '../layer2/DefaultWeb4TSComponent.js';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
 interface MethodSignature {
   name: string;
@@ -23,9 +26,34 @@ export class Web4TSComponentCLI extends DefaultCLI {
     // Don't instantiate tsComponent for usage display - command-based instantiation only
     this.tsComponent = null;
     // Initialize with component class reference (NOT instance) - no garbage creation
-    this.initWithComponentClass(DefaultWeb4TSComponent, 'Web4TSComponent', '0.3.4.1');
+    // ✅ Read version dynamically from package.json (single source of truth)
+    const version = this.readVersionFromPackageJson();
+    this.initWithComponentClass(DefaultWeb4TSComponent, 'Web4TSComponent', version);
     // Discover methods for chaining support
     this.discoverMethods();
+  }
+
+  /**
+   * Read version from package.json - single source of truth
+   * No hardcoded versions allowed!
+   */
+  private readVersionFromPackageJson(): string {
+    try {
+      // Get the directory of this file
+      const __filename = fileURLToPath(import.meta.url);
+      const __dirname = dirname(__filename);
+      
+      // Navigate to package.json (from layer5 to root: ../../../package.json)
+      const packageJsonPath = join(__dirname, '..', '..', '..', 'package.json');
+      const packageJsonContent = readFileSync(packageJsonPath, 'utf-8');
+      const packageJson = JSON.parse(packageJsonContent);
+      
+      return packageJson.version;
+    } catch (error) {
+      // Fallback only if package.json is truly missing (shouldn't happen)
+      console.error('⚠️  Warning: Could not read version from package.json, using fallback');
+      return '0.0.0';
+    }
   }
 
   /**
