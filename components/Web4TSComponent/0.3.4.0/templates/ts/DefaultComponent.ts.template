@@ -1,0 +1,121 @@
+/**
+ * Default{{COMPONENT_NAME}} - {{COMPONENT_NAME}} Component Implementation
+ * Web4 pattern: Empty constructor + scenario initialization + component functionality
+ */
+
+import { {{COMPONENT_NAME}} } from '../layer3/{{COMPONENT_NAME}}.interface.js';
+import { Scenario } from '../layer3/Scenario.interface.js';
+import { {{COMPONENT_NAME}}Model } from '../layer3/{{COMPONENT_NAME}}Model.interface.js';
+
+export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
+  private model: {{COMPONENT_NAME}}Model;
+
+  constructor() {
+    // Empty constructor - Web4 pattern
+    this.model = {
+      uuid: crypto.randomUUID(),
+      name: '',
+      origin: '',
+      definition: '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+  }
+
+  /**
+   * @cliHide
+   */
+  init(scenario: Scenario<{{COMPONENT_NAME}}Model>): this {
+    if (scenario.model) {
+      this.model = { ...this.model, ...scenario.model };
+    }
+    return this;
+  }
+
+  /**
+   * @cliHide
+   */
+  async toScenario(name?: string): Promise<Scenario<{{COMPONENT_NAME}}Model>> {
+    const ownerData = JSON.stringify({
+      user: process.env.USER || 'system',
+      hostname: process.env.HOSTNAME || 'localhost',
+      uuid: this.model.uuid,
+      timestamp: new Date().toISOString(),
+      component: '{{COMPONENT_NAME}}',
+      version: '{{VERSION}}'
+    });
+
+    return {
+      ior: {
+        uuid: this.model.uuid,
+        component: '{{COMPONENT_NAME}}',
+        version: '{{VERSION}}'
+      },
+      owner: ownerData,
+      model: this.model
+    };
+  }
+
+  /**
+   * Create example operation for {{COMPONENT_NAME}}
+   * @param input Input data to process
+   * @param format Output format (json, text, xml)
+   * @cliSyntax input format
+   * @cliDefault format json
+   */
+  async create(input: string, format: string = 'json'): Promise<this> {
+    console.log(`🚀 Creating ${input} in ${format} format`);
+    this.model.name = input;
+    this.model.updatedAt = new Date().toISOString();
+    console.log(`✅ {{COMPONENT_NAME}} operation completed`);
+    return this;
+  }
+
+  /**
+   * Process data through {{COMPONENT_NAME}} logic
+   * @param data Data to process
+   * @cliSyntax data
+   */
+  async process(data: string): Promise<this> {
+    console.log(`🔧 Processing: ${data}`);
+    this.model.updatedAt = new Date().toISOString();
+    return this;
+  }
+
+  /**
+   * Show information about current {{COMPONENT_NAME}} state
+   */
+  async info(): Promise<this> {
+    console.log(`📋 {{COMPONENT_NAME}} Information:`);
+    console.log(`   UUID: ${this.model.uuid}`);
+    console.log(`   Name: ${this.model.name || 'Not set'}`);
+    console.log(`   Created: ${this.model.createdAt}`);
+    console.log(`   Updated: ${this.model.updatedAt}`);
+    return this;
+  }
+
+  /**
+   * Execute component tests using Web4TSComponent test infrastructure
+   * Delegates to web4tscomponent for comprehensive testing and version promotion workflow
+   * @cliSyntax
+   * @cliExample testpatterncomponent test
+   */
+  async test(): Promise<this> {
+    console.log(`🧪 Running {{COMPONENT_NAME}} tests via Web4TSComponent infrastructure...`);
+    
+    try {
+      // Call web4tscomponent on {{COMPONENT_NAME}} dev test to use the promotion workflow
+      const { execSync } = await import('child_process');
+      execSync('web4tscomponent on {{COMPONENT_NAME}} dev test', { 
+        stdio: 'inherit',
+        encoding: 'utf-8'
+      });
+      console.log(`✅ {{COMPONENT_NAME}} tests completed successfully`);
+    } catch (error) {
+      console.error(`❌ {{COMPONENT_NAME}} tests failed`);
+      throw error;
+    }
+    
+    return this;
+  }
+}
