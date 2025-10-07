@@ -5,9 +5,9 @@
   "description": "{{COMPONENT_NAME}} Component",
   "main": "dist/ts/layer5/{{COMPONENT_NAME}}CLI.js",
   "scripts": {
-    "start": "node dist/ts/layer5/{{COMPONENT_NAME}}CLI.js start",
+    "start": "./{{COMPONENT_NAME_LOWER}} start",
     "start:clean": "./src/sh/start-clean.sh",
-    "test": "node dist/ts/layer5/{{COMPONENT_NAME}}CLI.js test",
+    "test": "./{{COMPONENT_NAME_LOWER}} test",
     "clean": "./src/sh/clean.sh",
     "clean:local": "./src/sh/clean-local.sh",
     "build": "./src/sh/build.sh",

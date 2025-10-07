@@ -5,9 +5,9 @@
   "description": "Web4 TypeScript Component Standards Enforcement & Architecture Compliance",
   "main": "dist/ts/layer5/Web4TSComponentCLI.js",
   "scripts": {
-    "start": "node dist/ts/layer5/Web4TSComponentCLI.js start",
+    "start": "./web4tscomponent start",
     "start:clean": "./src/sh/start-clean.sh",
-    "test": "node dist/ts/layer5/Web4TSComponentCLI.js test",
+    "test": "./web4tscomponent test",
     "clean": "./src/sh/clean.sh",
     "clean:local": "./src/sh/clean-local.sh",
     "build": "./src/sh/build.sh",
