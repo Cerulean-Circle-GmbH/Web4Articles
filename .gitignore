@@ -1,6 +1,8 @@
 # project specifics
 core
 **/test/data
+**/test/logs
+test-results.json
 .DS_Store
 scenarios/local.once
 

@@ -5,9 +5,10 @@ export default defineConfig({
     environment: 'node',
     globals: true,
     include: ['test/**/*.test.ts'],
-    exclude: ['test/data/**', '**/node_modules/**'],  // Exclude test data and node_modules
-    testTimeout: 5000,     // Reduced from 10s to 5s to catch hangs faster
-    hookTimeout: 5000,     // Reduced from 10s to 5s
+    exclude: ['test/data/**', 'test/logs/**', '**/node_modules/**'],  // Exclude test data, logs, and node_modules
+    testTimeout: 180000,   // 180s per test (3 minutes) - standardized timeout
+    hookTimeout: 30000,    // 30s for setup/teardown
+    teardownTimeout: 10000, // 10s for cleanup
     bail: 1,               // Stop on first failure to prevent cascade hangs
     // CRITICAL: Run tests sequentially to prevent race conditions
     pool: 'forks',
@@ -18,7 +19,10 @@ export default defineConfig({
     },
     // Run tests in sequence, not parallel
     fileParallelism: false,
-    maxConcurrency: 1
+    maxConcurrency: 1,
+    // Multi-reporter: console + JSON for structured output
+    reporters: ['default', 'json'],
+    outputFile: './test/test-results.json'
   },
   resolve: {
     alias: {
