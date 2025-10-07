@@ -106,32 +106,31 @@ This creates:
 // vitest.config.ts
 export default {
   test: {
-    testTimeout: 120000,        // Per-test timeout (ms)
-    hookTimeout: 30000,          // beforeEach/afterEach timeout (ms)
-    teardownTimeout: 10000       // Cleanup timeout (ms)
+    testTimeout: 120000,        // Per-test timeout (ms) - ⚠️ CURRENTLY NOT SET
+    hookTimeout: 30000,          // beforeEach/afterEach timeout (ms) - ⚠️ CURRENTLY NOT SET
+    teardownTimeout: 10000       // Cleanup timeout (ms) - ⚠️ CURRENTLY NOT SET
   }
 }
 ```
 
+**Current State:** ❌ Using shell-level `timeout 120s` command (crude, inconsistent)  
+**Proposed:** ✅ Use vitest's `testTimeout: 180000` (native, consistent)
+
 #### **Vitest CLI Options:**
 
 ```bash
-# Run with timeout
+# Run with timeout (NOT CURRENTLY USED)
 vitest --testTimeout=120000
 
-# Run with reporters
+# Run with reporters (NOT CURRENTLY USED)
 vitest --reporter=default --reporter=json --outputFile=test-results.json
 
-# Run with custom config
+# Run with custom config (NOT CURRENTLY USED)
 vitest --config=vitest.custom.config.ts
 ```
 
-#### **Vitest Environment:**
-
-```bash
-# Via environment variable (not standard, but custom)
-VITEST_TIMEOUT=120000 vitest
-```
+**Current State:** ❌ Plain `npm run vitest` with no custom options  
+**Proposed:** ✅ Add JSON reporter in vitest.config.ts
 
 ### **Investigation 2: Current test.sh Implementation**
 
@@ -142,6 +141,7 @@ echo "🧪 Running Web4TSComponent tests..."
 # Smart build before testing
 ./src/sh/build.sh
 
+# ❌ CURRENT: Shell-level timeout (crude)
 # Run tests with 120-second timeout to prevent infinite loops
 echo "⏱️  Running tests with 120s timeout..."
 timeout 120s npm run vitest || {
@@ -153,50 +153,58 @@ timeout 120s npm run vitest || {
     exit $EXIT_CODE
   fi
 }
+
+# ❌ MISSING: No automatic logging
+# ❌ MISSING: No tee output
 ```
 
 **Issues:**
-- Shell-level `timeout` command (works but crude)
-- No logging
-- Hardcoded 120s (inconsistent with agent's 180s calls)
+- ❌ Shell-level `timeout` command (works but crude)
+- ❌ No logging
+- ❌ Hardcoded 120s (agent uses 180s manually)
+- ❌ No tee for output capture
+
+**Proposed:** ✅ Use vitest timeout + add tee logging
 
 ### **Investigation 3: Vitest Reporters & Logging**
 
+**Current State:** ❌ Console output only, no file logging  
+**Proposed:** ✅ Multi-reporter with console + JSON + tee
+
 Vitest supports multiple reporters:
-- `default` - Console output
-- `verbose` - Detailed console output
-- `json` - JSON output to file
-- `junit` - JUnit XML format
-- Custom reporters
+- `default` - Console output (✅ CURRENTLY USING)
+- `verbose` - Detailed console output (❌ NOT USING)
+- `json` - JSON output to file (❌ NOT USING, SHOULD ADD)
+- `junit` - JUnit XML format (❌ NOT USING)
+- Custom reporters (❌ NOT USING)
 
-**Best Practice:**
+**Best Practice (PROPOSED):**
 ```bash
-vitest --reporter=default --reporter=json --outputFile=./test/data/test-results.json
+# ✅ NEW: Multi-output via vitest.config.ts + tee
+vitest 2>&1 | tee ./test/data/logs/test-TIMESTAMP.log
 ```
 
-This outputs to console AND saves JSON report.
-
-For full console logging with `tee`:
-```bash
-vitest 2>&1 | tee ./test/data/test-output.log
-```
+This outputs to console AND saves full log.
 
 ### **Investigation 4: Test Log Location**
 
+**Current State:** ❌ No log storage, `/tmp/` files are manual and temporary  
+**Proposed:** ✅ `test/data/logs/` with timestamped filenames
+
 **Options:**
 
-1. `test/data/logs/` ✅ BEST
-   - Already using `test/data/` for test fixtures
-   - Consistent with existing structure
+1. `test/data/logs/` ✅ **PROPOSED** (BEST)
+   - Consistent with existing `test/data/` structure
    - Easy to .gitignore: `test/data/logs/`
+   - Permanent record for regression analysis
 
-2. `test/logs/` 
+2. `test/logs/` (alternative, not recommended)
    - Separate from test data
    - But adds another directory
 
-3. `logs/` at component root
+3. `logs/` at component root (not recommended)
    - Pollutes root
-   - Not recommended
+   - Not consistent
 
 **Recommendation:** `test/data/logs/` with timestamped filenames
 
@@ -334,10 +342,37 @@ async test(timeout: string = '180'): Promise<this> {
 3. .gitignore updates
 4. Remove shell-level `timeout` command
 
+### **Current State vs Proposed Changes:**
+
+| Component | Current (❌) | Proposed (✅) | Benefit |
+|-----------|-------------|---------------|---------|
+| **Timeout Method** | Shell `timeout 120s` | vitest `testTimeout: 180000` | Native, consistent |
+| **Timeout Value** | 120s (inconsistent) | 180s (standardized) | Predictable |
+| **Test Logging** | None (manual /tmp) | Auto `test/data/logs/TIMESTAMP.log` | Permanent audit trail |
+| **Output Capture** | Manual `tee` | Automatic `tee` in test.sh | No manual intervention |
+| **JSON Reports** | None | `test-results.json` | Structured data for CI/CD |
+| **Log Location** | `/tmp` (temporary) | `test/data/logs/` (permanent) | Regression analysis |
+| **Reporters** | `default` only | `default` + `json` | Multi-format output |
+
+### **Summary of Changes:**
+
+**REMOVING:**
+- ❌ Shell-level `timeout 120s` command
+- ❌ Hardcoded 120s timeout value
+- ❌ Manual tee commands by agent
+- ❌ Temporary /tmp log files
+
+**ADDING:**
+- ✅ `vitest.config.ts`: `testTimeout: 180000`
+- ✅ `vitest.config.ts`: JSON reporter
+- ✅ `test.sh`: Automatic `tee` to `test/data/logs/test-TIMESTAMP.log`
+- ✅ `.gitignore`: `**/test/data/logs/`
+- ✅ `test/data/logs/` directory creation
+
 ### **Implementation Order:**
 
-1. Update `vitest.config.ts` (both 0.3.4.0 and 0.3.4.1)
-2. Update `test.sh` (both 0.3.4.0 and 0.3.4.1)
+1. Update `vitest.config.ts` (0.3.4.1 ONLY - not 0.3.4.0 prod!)
+2. Update `test.sh` (0.3.4.1 ONLY)
 3. Update `test.sh.template` (for new components)
 4. Update `.gitignore`
 5. Test the changes
