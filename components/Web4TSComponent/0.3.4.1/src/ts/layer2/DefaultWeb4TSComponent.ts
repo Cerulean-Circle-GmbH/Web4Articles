@@ -1260,23 +1260,24 @@ Standards:
    * When no context: Run Web4TSComponent's own test suite
    * When context loaded: Run test suite for the loaded component using its build system
    * 
-   * Auto-promotion workflow:
-   * - If dev and test are same version: automatically creates nextBuild and tests it
-   * - After 100% test success, automatically promotes versions through workflow:
-   * - Current version → nextPatch (increment minor, reset patch) → prod
-   * - nextBuild (increment build from new prod) → dev and test
-   * Example: 0.3.2.0 → 0.3.3.0 (prod), 0.3.3.1 (dev/test)
+   * Auto-promotion workflow (OPT-IN only):
+   * - Promotion is DISABLED by default (safety measure)
+   * - Use 'test withVersionPromotion' to enable promotion
+   * - After 100% test success with promotion enabled:
+   *   - Current version → nextPatch (increment patch) → prod
+   *   - nextBuild (increment build from new prod) → dev and test
+   * Example: 0.3.4.1 → 0.3.5.0 (prod), 0.3.5.1 (dev/test)
    * 
-   * @param skipPromotion Optional flag to skip version promotion (for testing/development)
-   * @cliSyntax skipPromotion
-   * @cliDefault skipPromotion false
+   * @param enablePromotion Optional flag to enable version promotion (DISABLED by default)
+   * @cliSyntax test [enablePromotion]
+   * @cliDefault enablePromotion false
    * @cliExample web4tscomponent test
-   * @cliExample web4tscomponent test withoutVersionPromotion
+   * @cliExample web4tscomponent test withVersionPromotion
    * @cliExample web4tscomponent on Unit 0.3.0.5 test
    */
-  async test(skipPromotion: string = 'false'): Promise<this> {
+  async test(enablePromotion: string = 'false'): Promise<this> {
     const context = this.getComponentContext();
-    const shouldSkipPromotion = skipPromotion === 'withoutVersionPromotion' || skipPromotion === 'true';
+    const shouldPromote = enablePromotion === 'withVersionPromotion' || enablePromotion === 'true';
     
     // WORKFLOW REMINDER: Always work on dev → test → dev cycle
     console.log(`\n🔄 WORKFLOW REMINDER:`);
@@ -1284,8 +1285,10 @@ Standards:
     console.log(`   🧪 ALWAYS work on test version until test succeeds`);  
     console.log(`   🚧 ALWAYS work on dev version after test success\n`);
     
-    if (shouldSkipPromotion) {
-      console.log(`⚠️  Version promotion disabled for this test run\n`);
+    if (shouldPromote) {
+      console.log(`🚀 Version promotion ENABLED for this test run\n`);
+    } else {
+      console.log(`⚠️  Version promotion DISABLED (use 'test withVersionPromotion' to enable)\n`);
     }
     
     if (!context) {
@@ -1321,12 +1324,13 @@ Standards:
       }
       
       // 🎯 SELF-PROMOTION: After tests complete (or are skipped), handle version promotion
+      // SAFETY: Promotion is now OPT-IN only (disabled by default)
       // Only attempt promotion if:
-      // 1. We're in the actual component directory, not test/data
-      // 2. skipPromotion flag is not set
+      // 1. User explicitly enabled promotion (enablePromotion === 'withVersionPromotion')
+      // 2. We're in the actual component directory, not test/data
       const currentPath = process.cwd();
-      if (shouldSkipPromotion) {
-        console.log(`\n⚠️  Skipping promotion (disabled by user)`);
+      if (!shouldPromote) {
+        console.log(`\n⚠️  Skipping promotion (disabled by default - use 'test withVersionPromotion')`);
       } else if (currentPath.includes('/test/data')) {
         console.log(`\n⚠️  Skipping promotion (inside test environment)`);
       } else {
@@ -1390,9 +1394,9 @@ Standards:
       
       console.log(`✅ Tests completed for ${context.component} ${targetVersion}`);
       
-      // Check if 100% success and promote versions (unless disabled)
-      if (shouldSkipPromotion) {
-        console.log(`⚠️  Skipping promotion (disabled by user)`);
+      // Check if 100% success and promote versions (OPT-IN only)
+      if (!shouldPromote) {
+        console.log(`⚠️  Skipping promotion (disabled by default - use 'test withVersionPromotion')`);
       } else {
         await this.handleTestSuccessPromotion(context.component, targetVersion);
       }
