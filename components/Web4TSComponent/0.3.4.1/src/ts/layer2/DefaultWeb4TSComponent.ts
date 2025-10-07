@@ -7,7 +7,7 @@ import { Web4TSComponent, ComponentScaffoldOptions, ComponentMetadata, CLIStanda
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { Web4TSComponentModel } from '../layer3/Web4TSComponentModel.interface.js';
 import * as fs from 'fs/promises';
-import { existsSync, readdirSync, readFileSync, statSync, lstatSync } from 'fs';
+import { existsSync, readdirSync, readFileSync, writeFileSync, statSync, lstatSync } from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 
@@ -148,17 +148,83 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
-   * Get current component version from package.json (single source of truth)
+   * Get current component version - HYBRID APPROACH
+   * 
+   * TRUTH HIERARCHY:
+   * 1. Directory name is authoritative (Web4 principle: filesystem as database)
+   * 2. package.json must match directory (auto-fixed if mismatch)
+   * 3. Fallback to package.json only if not in version directory
+   * 
+   * This ensures:
+   * - Single source of truth (directory name)
+   * - npm compatibility (package.json auto-synced)
+   * - Error prevention (auto-healing)
+   * 
    * @cliHide
    */
   private getCurrentComponentVersion(): string {
+    // STEP 1: Try to get version from directory name (authoritative)
+    const currentDir = path.basename(process.cwd());
+    const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(currentDir);
+    
+    if (isVersionDir) {
+      // We're in a version directory - this is the TRUTH
+      const dirVersion = currentDir;
+      
+      // STEP 2: Validate package.json matches (and auto-fix if needed)
+      this.validateAndFixPackageJsonVersion(dirVersion);
+      
+      return dirVersion;
+    }
+    
+    // STEP 3: Fallback - not in version directory, use package.json
     try {
       const packageJsonPath = path.join(process.cwd(), 'package.json');
       const packageJsonContent = readFileSync(packageJsonPath, 'utf-8');
       const packageJson = JSON.parse(packageJsonContent);
+      console.warn(`⚠️  Not in version directory, using package.json version: ${packageJson.version}`);
       return packageJson.version;
     } catch (error) {
       return 'unknown';
+    }
+  }
+
+  /**
+   * Validate that package.json version matches directory name
+   * Auto-fix if mismatch detected (self-healing)
+   * @cliHide
+   */
+  private validateAndFixPackageJsonVersion(correctVersion: string): void {
+    try {
+      const packageJsonPath = path.join(process.cwd(), 'package.json');
+      
+      // Read current package.json
+      const packageJsonContent = readFileSync(packageJsonPath, 'utf-8');
+      const packageJson = JSON.parse(packageJsonContent);
+      const pkgVersion = packageJson.version;
+      
+      // Check for mismatch
+      if (correctVersion !== pkgVersion) {
+        console.error(`❌ VERSION MISMATCH DETECTED!`);
+        console.error(`   Directory (TRUTH): ${correctVersion}`);
+        console.error(`   package.json:      ${pkgVersion}`);
+        console.error(`   Auto-fixing package.json to match directory...`);
+        
+        // Create timestamped backup
+        const timestamp = new Date().toISOString().replace(/[-:]/g, '').replace(/[T.]/g, '-').slice(0, -1);
+        const backupPath = path.join(process.cwd(), `package.json.backup.${timestamp}`);
+        writeFileSync(backupPath, packageJsonContent);
+        console.error(`   📦 Backup created: ${path.basename(backupPath)}`);
+        
+        // Fix version
+        packageJson.version = correctVersion;
+        writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
+        console.error(`   ✅ Auto-fixed package.json version to ${correctVersion}`);
+        console.error(`   ℹ️  This is normal after version promotion or manual errors`);
+      }
+    } catch (error) {
+      // Validation failed, but don't break the build
+      console.warn(`⚠️  Could not validate package.json: ${(error as Error).message}`);
     }
   }
 
