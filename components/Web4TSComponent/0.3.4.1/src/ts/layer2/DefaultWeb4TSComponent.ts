@@ -1652,36 +1652,6 @@ Standards:
   }
 
   /**
-   * Create nextMinor version from current version
-   * nextMinor increments minor version and resets patch and build to 0
-   * e.g., 0.3.4.2 → 0.4.0.0
-   * @cliHide
-   */
-  private async createNextMinorVersion(componentName: string, currentVersion: string): Promise<string> {
-    const originalContext = this.getComponentContext();
-    
-    // Temporarily set context to current version
-    await this.on(componentName, currentVersion);
-    
-    try {
-      await this.upgrade('nextMinor'); // Increment minor, reset patch and build
-      
-      // Calculate what the nextMinor version would be
-      const parts = currentVersion.split('.').map(Number);
-      const nextMinorVersion = `${parts[0]}.${parts[1] + 1}.0.0`; // Increment minor, reset others
-      
-      console.log(`✅ Created nextMinor version: ${nextMinorVersion}`);
-      return nextMinorVersion;
-      
-    } finally {
-      // Restore original context
-      if (originalContext) {
-        await this.on(originalContext.component, originalContext.version);
-      }
-    }
-  }
-
-  /**
    * Execute start command in loaded component context
    * Build and run the loaded component using its build system
    * @cliSyntax
