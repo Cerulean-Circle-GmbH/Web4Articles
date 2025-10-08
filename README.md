@@ -190,7 +190,7 @@ find scrum.pmo/roles -maxdepth 1 -type d -name '*Agent' | sed 's|.*/||' | sort
 **Choose where to create and maintain PDCAs based on work scope:**
 - a) **Session PDCAs** - `scrum.pmo/project.journal/[session]/` for project-wide collaborative work across multiple agents/roles
 - b) **Role PDCAs** - `scrum.pmo/roles/[AgentRole]/pdca/` for agent-specific specialized work within defined role boundaries  
-- c) **Component PDCAs** - `components/[Component]/[version]/` for component-specific development work (rare, use for focused component evolution)
+- c) **Component PDCAs** - `components/[Component]/[version]/session` for component-specific development work (rare, use for focused component evolution)
 
 ---
 
