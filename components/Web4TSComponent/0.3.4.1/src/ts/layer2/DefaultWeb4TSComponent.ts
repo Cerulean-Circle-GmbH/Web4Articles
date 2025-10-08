@@ -10,6 +10,8 @@ import * as fs from 'fs/promises';
 import { existsSync, readdirSync, statSync, lstatSync } from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
+import { dirname, join, basename } from 'path';
 
 export class DefaultWeb4TSComponent implements Web4TSComponent {
   private model: Web4TSComponentModel;
@@ -1533,11 +1535,48 @@ Standards:
    * Get current version from package.json
    * @cliHide
    */
+  /**
+   * Get current component version - CRITICAL FIX
+   * 
+   * PROBLEM: process.cwd() changes during test execution!
+   * - When running tests, cwd might be test/data/components/Web4TSComponent/0.3.3.2
+   * - This causes promotion to use WRONG version (0.3.3.2 instead of actual 0.3.4.1)
+   * 
+   * SOLUTION: Use __dirname (where THIS code file lives) instead of process.cwd()
+   * - This file is in: components/Web4TSComponent/0.3.4.1/src/ts/layer2/
+   * - Navigate up 3 levels to get component root
+   * - Use directory name as source of truth (Web4 principle: filesystem as database)
+   * 
+   * @cliHide
+   */
   private async getCurrentVersion(): Promise<string> {
-    const packageJsonPath = path.join(process.cwd(), 'package.json');
-    const packageJsonContent = await fs.readFile(packageJsonPath, 'utf-8');
-    const packageJson = JSON.parse(packageJsonContent);
-    return packageJson.version;
+    try {
+      // Get the directory where THIS file lives (not process.cwd()!)
+      const __filename = fileURLToPath(import.meta.url);
+      const __dirname = dirname(__filename);
+      
+      // Navigate up to component root: layer2 → ts → src → component root
+      const componentRoot = join(__dirname, '..', '..', '..');
+      const componentDirName = basename(componentRoot);
+      
+      // Check if we're in a version directory (0.x.x.x format)
+      const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(componentDirName);
+      
+      if (isVersionDir) {
+        console.log(`🔍 Version determined from directory: ${componentDirName}`);
+        return componentDirName; // Directory name is authoritative!
+      }
+      
+      // Fallback: read from package.json in component root
+      const packageJsonPath = join(componentRoot, 'package.json');
+      const packageJsonContent = await fs.readFile(packageJsonPath, 'utf-8');
+      const packageJson = JSON.parse(packageJsonContent);
+      console.warn(`⚠️  Not in version directory, using package.json: ${packageJson.version}`);
+      return packageJson.version;
+    } catch (error) {
+      console.error(`❌ Failed to determine version: ${(error as Error).message}`);
+      throw error;
+    }
   }
 
   /**
