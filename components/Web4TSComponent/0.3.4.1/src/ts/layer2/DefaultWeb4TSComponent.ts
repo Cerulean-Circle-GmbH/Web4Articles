@@ -1467,7 +1467,7 @@ Standards:
 
   /**
    * Handle 100% test success: promote test to prod (Stage 2)
-   * Workflow Stage 2: test → prod (nextMinor) + new dev (nextBuild)
+   * Workflow Stage 2: test → prod (nextPatch) + new dev (nextBuild)
    * E.g., 0.3.4.2 (test) → 0.3.5.0 (prod) + 0.3.5.1 (dev)
    * @cliHide
    */
@@ -1508,26 +1508,26 @@ Standards:
     }
     
     console.log(`🚀 100% test success confirmed! Starting Stage 2 promotion workflow...`);
-    console.log(`📋 Workflow Stage 2: test → prod (nextMinor) + new dev (nextBuild)`);
+    console.log(`📋 Workflow Stage 2: test → prod (nextPatch) + new dev (nextBuild)`);
     
     try {
-      // Step 1: Create nextMinor version from current (test becomes prod)
-      console.log(`\n🔧 Step 1: Creating nextMinor version from ${currentVersion}...`);
-      const nextMinorVersion = await this.createNextMinorVersion(componentName, currentVersion);
+      // Step 1: Create nextPatch version from current (test becomes prod)
+      console.log(`\n🔧 Step 1: Creating nextPatch version from ${currentVersion}...`);
+      const nextPatchVersion = await this.createNextPatchVersion(componentName, currentVersion);
       
-      // Step 2: Set nextMinor as new prod
-      console.log(`\n🚀 Step 2: Promoting ${nextMinorVersion} to prod...`);
-      await this.createSemanticLink(componentName, 'prod', nextMinorVersion);
-      console.log(`✅ Prod updated: prod → ${nextMinorVersion}`);
+      // Step 2: Set nextPatch as new prod
+      console.log(`\n🚀 Step 2: Promoting ${nextPatchVersion} to prod...`);
+      await this.createSemanticLink(componentName, 'prod', nextPatchVersion);
+      console.log(`✅ Prod updated: prod → ${nextPatchVersion}`);
       
-      // Step 3: Update latest to nextMinor (the new stable)
+      // Step 3: Update latest to nextPatch (the new stable)
       console.log(`\n📦 Step 3: Updating latest to stable version...`);
-      await this.createSemanticLink(componentName, 'latest', nextMinorVersion);
-      console.log(`✅ Latest updated: latest → ${nextMinorVersion}`);
+      await this.createSemanticLink(componentName, 'latest', nextPatchVersion);
+      console.log(`✅ Latest updated: latest → ${nextPatchVersion}`);
       
       // Step 4: Create nextBuild version for new development cycle
       console.log(`\n🔧 Step 4: Creating nextBuild version for development...`);
-      const nextBuildVersion = await this.createNextBuildVersion(componentName, nextMinorVersion);
+      const nextBuildVersion = await this.createNextBuildVersion(componentName, nextPatchVersion);
       
       // Step 5: Set nextBuild as new dev and test
       console.log(`\n🚧 Step 5: Setting up development workflow...`);
@@ -1538,8 +1538,8 @@ Standards:
       
       console.log(`\n🎉 Stage 2 promotion workflow completed successfully!`);
       console.log(`📊 Final state:`);
-      console.log(`   🚀 prod:   ${nextMinorVersion} (promoted from ${currentVersion})`);
-      console.log(`   📦 latest: ${nextMinorVersion} (stable release)`);
+      console.log(`   🚀 prod:   ${nextPatchVersion} (promoted from ${currentVersion})`);
+      console.log(`   📦 latest: ${nextPatchVersion} (stable release)`);
       console.log(`   🧪 test:   ${nextBuildVersion} (ready for next cycle)`);
       console.log(`   🚧 dev:    ${nextBuildVersion} (active development)`);
       

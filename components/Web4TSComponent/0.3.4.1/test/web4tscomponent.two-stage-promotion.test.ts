@@ -78,7 +78,7 @@ describe('🎯 Two-Stage Promotion Workflow Tests', () => {
     });
   });
 
-  describe('🚀 Stage 2: test → prod (nextMinor) + new dev', () => {
+  describe('🚀 Stage 2: test → prod (nextPatch) + new dev', () => {
     it('should BLOCK promotion in test environment (safety check)', async () => {
       // Create old prod version first
       await component.create('ProdTest', '0.1.0.0', 'all');
@@ -103,8 +103,8 @@ describe('🎯 Two-Stage Promotion Workflow Tests', () => {
       expect(links.test).toBe('0.1.0.1'); // Unchanged!
       
       // Verify no new versions created
-      const prodPath = path.join(testDataDir, 'components', 'ProdTest', '0.2.0.0');
-      const devPath = path.join(testDataDir, 'components', 'ProdTest', '0.2.0.1');
+      const prodPath = path.join(testDataDir, 'components', 'ProdTest', '0.1.1.0');
+      const devPath = path.join(testDataDir, 'components', 'ProdTest', '0.1.1.1');
       expect(existsSync(prodPath)).toBe(false);
       expect(existsSync(devPath)).toBe(false);
       
@@ -130,8 +130,8 @@ describe('🎯 Two-Stage Promotion Workflow Tests', () => {
       await component.handleTestSuccessPromotion('NotTestYet', '0.1.0.0');
       
       // Verify no new version created
-      const minorPath = path.join(testDataDir, 'components', 'NotTestYet', '0.2.0.0');
-      expect(existsSync(minorPath)).toBe(false);
+      const patchPath = path.join(testDataDir, 'components', 'NotTestYet', '0.1.1.0');
+      expect(existsSync(patchPath)).toBe(false);
       
       // Verify links unchanged
       links = await component.getSemanticLinks('NotTestYet');
@@ -155,8 +155,8 @@ describe('🎯 Two-Stage Promotion Workflow Tests', () => {
       await component.handleTestSuccessPromotion('AlreadyProd', '0.1.0.0');
       
       // Verify no new version created
-      const minorPath = path.join(testDataDir, 'components', 'AlreadyProd', '0.2.0.0');
-      expect(existsSync(minorPath)).toBe(false);
+      const patchPath = path.join(testDataDir, 'components', 'AlreadyProd', '0.1.1.0');
+      expect(existsSync(patchPath)).toBe(false);
     });
   });
 
@@ -189,7 +189,7 @@ describe('🎯 Two-Stage Promotion Workflow Tests', () => {
       console.log('✅ Stage 1 complete: 0.3.4.1 (dev) → 0.3.4.2 (test)');
       
       // Stage 2 would be blocked in test/data (safety feature)
-      console.log('\n📋 STAGE 2: Would promote 0.3.4.2 → 0.3.5.0 in production');
+      console.log('\n📋 STAGE 2: Would promote 0.3.4.2 → 0.3.5.0 (nextPatch) in production');
       console.log('⚠️  But blocked in test/data environment (safety)');
       await component.on('FullWorkflow', '0.3.4.2');
       await component.handleTestSuccessPromotion('FullWorkflow', '0.3.4.2');
