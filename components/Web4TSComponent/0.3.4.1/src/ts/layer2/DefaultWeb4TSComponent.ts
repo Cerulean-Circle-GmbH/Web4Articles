@@ -15,12 +15,19 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   private model: Web4TSComponentModel;
 
   constructor() {
-    // Empty constructor - Web4 pattern
+    // Initialize with version from directory (single source of truth)
+    const currentFileUrl = new URL(import.meta.url);
+    const currentVersionDir = path.resolve(path.dirname(currentFileUrl.pathname), '..', '..', '..');
+    const componentDirName = path.basename(currentVersionDir);
+    const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(componentDirName);
+    
     this.model = {
       uuid: crypto.randomUUID(),
       name: '',
       origin: '',
       definition: '',
+      component: 'Web4TSComponent',
+      version: isVersionDir ? componentDirName : '0.0.0', // Read from directory name, fallback to 0.0.0
       targetDirectory: this.findProjectRoot(),
       componentStandards: [],
       validationRules: [],
@@ -127,20 +134,21 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliHide
    */
   async toScenario(name?: string): Promise<Scenario<Web4TSComponentModel>> {
+    // Version is in the model (single source of truth)
     const ownerData = JSON.stringify({
       user: process.env.USER || 'system',
       hostname: process.env.HOSTNAME || 'localhost',
       uuid: this.model.uuid,
       timestamp: new Date().toISOString(),
-      component: 'Web4TSComponent',
-      version: '0.3.2.0'
+      component: this.model.component,
+      version: this.model.version
     });
 
       return {
       ior: {
         uuid: this.model.uuid,
-        component: 'Web4TSComponent',
-        version: '0.3.2.0'
+        component: this.model.component,
+        version: this.model.version
       },
       owner: ownerData,
       model: this.model
@@ -187,7 +195,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         .filter(entry => entry.isDirectory() && /^\d+\.\d+\.\d+\.\d+$/.test(entry.name))
         .map(entry => entry.name);
     } catch {
-      return ['0.3.2.0']; // Fallback
+      // Fallback: return current version from model
+      return [this.model.version];
     }
   }
 
@@ -1526,14 +1535,12 @@ Standards:
   }
 
   /**
-   * Get current version from package.json
+   * Get current version from model (single source of truth)
+   * Model is initialized from directory name in constructor
    * @cliHide
    */
   private async getCurrentVersion(): Promise<string> {
-    const packageJsonPath = path.join(process.cwd(), 'package.json');
-    const packageJsonContent = await fs.readFile(packageJsonPath, 'utf-8');
-    const packageJson = JSON.parse(packageJsonContent);
-    return packageJson.version;
+    return this.model.version;
   }
 
   /**

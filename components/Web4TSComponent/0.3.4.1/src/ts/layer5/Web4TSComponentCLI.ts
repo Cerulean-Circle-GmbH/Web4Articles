@@ -22,8 +22,11 @@ export class Web4TSComponentCLI extends DefaultCLI {
     super(); // Call DefaultCLI constructor
     // Don't instantiate tsComponent for usage display - command-based instantiation only
     this.tsComponent = null;
+    // Get version from a temporary component instance (reads from directory in constructor)
+    const tempComponent = new DefaultWeb4TSComponent();
+    const version = (tempComponent as any).model.version; // Access model directly (synchronous)
     // Initialize with component class reference (NOT instance) - no garbage creation
-    this.initWithComponentClass(DefaultWeb4TSComponent, 'Web4TSComponent', '0.3.4.1');
+    this.initWithComponentClass(DefaultWeb4TSComponent, 'Web4TSComponent', version);
     // Discover methods for chaining support
     this.discoverMethods();
   }

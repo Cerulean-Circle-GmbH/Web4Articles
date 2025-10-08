@@ -242,21 +242,20 @@ describe('🚨 CRITICAL: Hardcoded Version Detection', () => {
     console.log(`✅ Scanned ${tsFiles.length} source files - no hardcoded versions found`);
   });
 
-  it('should verify version is read dynamically from package.json', () => {
-    // Check that CLI reads version from package.json (not hardcoded)
+  it('should verify version is read dynamically from model', () => {
+    // Check that CLI reads version from component model (not hardcoded)
     const cliPath = path.join(process.cwd(), 'src', 'ts', 'layer5', 'Web4TSComponentCLI.ts');
     const cliContent = readFileSync(cliPath, 'utf-8');
     
-    // Should have readVersionFromPackageJson method
-    const hasVersionReader = cliContent.includes('readVersionFromPackageJson') && 
-                             cliContent.includes('package.json');
+    // Should read version from model
+    const readsFromModel = cliContent.includes('.model.version');
     
     // Should NOT have hardcoded version in initWithComponentClass
     const hasNoHardcodedVersion = !cliContent.includes(`initWithComponentClass(DefaultWeb4TSComponent, 'Web4TSComponent', '${CURRENT_VERSION}')`);
     
-    expect(hasVersionReader).toBe(true);
+    expect(readsFromModel).toBe(true);
     expect(hasNoHardcodedVersion).toBe(true);
-    console.log('✅ CLI reads version dynamically from package.json');
+    console.log('✅ CLI reads version dynamically from component model');
   });
 
   it('should verify package.json version matches current directory', () => {

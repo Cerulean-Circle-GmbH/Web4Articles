@@ -11,6 +11,10 @@ export interface Web4TSComponentModel extends Model {
   origin: string;
   definition: string;
   
+  // Single source of truth: component identity
+  component: string;  // Component name (e.g., 'Web4TSComponent')
+  version: string;    // Version from directory name (e.g., X.Y.Z.W format)
+  
   // Web4TSComponent-specific properties
   targetDirectory: string;
   componentStandards: ComponentStandard[];

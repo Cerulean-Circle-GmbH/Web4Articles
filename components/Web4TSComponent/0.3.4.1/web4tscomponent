@@ -35,8 +35,10 @@ if [ -z "$PROJECT_ROOT" ]; then
     exit 1
 fi
 
-COMPONENT_VERSION="0.3.3.2"
-COMPONENT_PATH="$PROJECT_ROOT/components/Web4TSComponent/$COMPONENT_VERSION"
+# Get component version from directory name (single source of truth)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+COMPONENT_VERSION="$(basename "$SCRIPT_DIR")"
+COMPONENT_PATH="$SCRIPT_DIR"
 
 # Verify component exists
 if [ ! -d "$COMPONENT_PATH" ]; then
