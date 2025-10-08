@@ -94,6 +94,13 @@ describe('Web4TSComponent Command Chaining', () => {
 
   describe('Semantic Version Control', () => {
     beforeEach(async () => {
+      // Clean up any previous test versions
+      const testDataDir = path.join(__dirname, 'data');
+      const componentPath = path.join(testDataDir, 'components', testComponentName);
+      if (existsSync(componentPath)) {
+        await fs.rm(componentPath, { recursive: true, force: true });
+      }
+      
       // Create base component for version testing
       await component.create(testComponentName, testVersion, 'all');
       await component.on(testComponentName, testVersion);
@@ -129,7 +136,7 @@ describe('Web4TSComponent Command Chaining', () => {
       await component.upgrade('nextMajor');
       
       const testDataDir = path.join(__dirname, 'data');
-      const newVersionPath = path.join(testDataDir, 'components', testComponentName, '0.2.0.0');
+      const newVersionPath = path.join(testDataDir, 'components', testComponentName, '1.0.0.0');
       expect(existsSync(newVersionPath)).toBe(true);
     });
 
@@ -149,6 +156,15 @@ describe('Web4TSComponent Command Chaining', () => {
   });
 
   describe('Command Chaining Integration', () => {
+    beforeEach(async () => {
+      // Clean up any previous test versions
+      const testDataDir = path.join(__dirname, 'data');
+      const componentPath = path.join(testDataDir, 'components', testComponentName);
+      if (existsSync(componentPath)) {
+        await fs.rm(componentPath, { recursive: true, force: true });
+      }
+    });
+
     it('should support full command chaining pattern', async () => {
       // Create base component
       await component.create(testComponentName, testVersion, 'all');

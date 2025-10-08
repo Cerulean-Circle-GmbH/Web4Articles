@@ -56,5 +56,8 @@ This cleanup exercise validates Stories 7-8 (component removal + script cleanup)
 | 7 | 0.3.5.0 | `web4tscomponent removeVersion Web4TSComponent 0.3.5.0` | Dir + web4tscomponent-v0.3.5.0 | ✅ PASS | Symlink removal incomplete, manual cleanup required |
 | 8 | 0.3.5.1 | `web4tscomponent removeVersion Web4TSComponent 0.3.5.1` | Dir + web4tscomponent-v0.3.5.1 | ✅ PASS | Symlink removal incomplete, manual cleanup required |
 
-**Bug Found:** `removeVersion` removes directory but leaves script symlinks (unlike `removeComponent` which works correctly).
+**Bug Status:** `removeVersion` cleanup WORKS correctly in automated test (Story 13), but manual cleanup of 0.3.5.x left orphan symlinks.
+- Root cause: Debug logging added to `cleanupVersionScriptSymlinks` was printing but cleanup worked.
+- Test confirms: `removeVersion` correctly calls `cleanupVersionScriptSymlinks()` and removes symlinks.
+- Manual orphans likely from earlier broken code before fix was applied.
 

@@ -167,10 +167,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliHide
    */
   private isTestEnvironment(): boolean {
-    return process.env.NODE_ENV === 'test' || 
-           process.env.VITEST === 'true' ||
-           process.cwd().includes('/test/') ||
-           !!((globalThis as any).__TEST_MODE__);
+    // Web4 OOP principle: Use model state, not global/env variables
+    return this.model.targetDirectory.includes('/test/data');
   }
 
   /**
@@ -202,31 +200,29 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 
   /**
    * @cliHide
+   * 
+   * Web4 OOP principle: Use model state, not test detection.
+   * Tests control environment via setTargetDirectory().
    */
   private resolveProjectRoot(): string {
-    if (this.isTestEnvironment()) {
-      return this.getTestDataDirectory();
-    }
     return this.model.targetDirectory;
   }
 
   /**
    * @cliHide
+   * 
+   * Web4 OOP principle: Always use model.targetDirectory (no test detection needed)
    */
   private resolveComponentPath(componentName: string, version: string): string {
-    if (this.isTestEnvironment()) {
-      return path.join(this.getTestDataDirectory(), 'components', componentName, version);
-    }
     return path.join(this.model.targetDirectory, 'components', componentName, version);
   }
 
   /**
    * @cliHide
+   * 
+   * Web4 OOP principle: Always use model.targetDirectory (no test detection needed)
    */
   private resolveComponentDirectory(componentName: string): string {
-    if (this.isTestEnvironment()) {
-      return path.join(this.getTestDataDirectory(), 'components', componentName);
-    }
     return path.join(this.model.targetDirectory, 'components', componentName);
   }
 
@@ -275,6 +271,10 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     if (includeVitest) {
       await this.createTestStructure(componentDir);
     }
+    
+    // Create latest symlink and script symlinks for new component
+    await this.updateLatestSymlink(componentName, version);
+    await this.updateScriptsSymlinks(componentName, version);
     
     return {
       name: componentName,
@@ -1330,14 +1330,9 @@ Standards:
       }
       
       // 🎯 SELF-PROMOTION: After tests complete (or are skipped), handle version promotion
-      // Only attempt promotion if:
-      // 1. We're in the actual component directory, not test/data
-      // 2. skipPromotion flag is not set
-      const currentPath = process.cwd();
+      // handleTestSuccessPromotion has its own safety checks (isTestEnvironment, already promoted, etc.)
       if (shouldSkipPromotion) {
         console.log(`\n⚠️  Skipping promotion (disabled by user)`);
-      } else if (currentPath.includes('/test/data')) {
-        console.log(`\n⚠️  Skipping promotion (inside test environment)`);
       } else {
         console.log(`\n🔍 Checking for self-promotion opportunity...`);
         const currentVersion = await this.getCurrentVersion();
@@ -1422,6 +1417,13 @@ Standards:
    */
   async handleTestSuccessPromotion(componentName: string, currentVersion: string): Promise<void> {
     console.log(`\n🎯 Analyzing test success for version promotion...`);
+    
+    // 🚨 CRITICAL: Never promote when in test environment (test/data)
+    if (this.isTestEnvironment()) {
+      console.log(`⚠️  Skipping promotion: Running in test environment`);
+      console.log(`💡 Promotions only happen in real component directories, not test/data`);
+      return;
+    }
     
     // Safety check: verify this version hasn't already been promoted
     const semanticLinks = await this.getSemanticLinks(componentName);
@@ -1747,7 +1749,6 @@ Standards:
 
     const componentDir = this.resolveComponentDirectory(targetComponent);
     const versionDir = path.join(componentDir, targetVersion);
-    const latestSymlink = path.join(componentDir, 'latest');
 
     if (!existsSync(versionDir)) {
       throw new Error(`Version ${targetVersion} of ${targetComponent} does not exist at ${versionDir}`);
@@ -1756,42 +1757,37 @@ Standards:
     console.log(`🗑️ Removing ${targetComponent} ${targetVersion}...`);
     console.log(`   Directory: ${versionDir}`);
 
-    // Check if this is the latest version
-    let wasLatest = false;
-    if (existsSync(latestSymlink)) {
-      try {
-        const latestTarget = await fs.readlink(latestSymlink);
-        wasLatest = latestTarget === targetVersion;
-      } catch (error) {
-        // Ignore readlink errors
-      }
-    }
-
     // Remove the version directory
     await fs.rm(versionDir, { recursive: true, force: true });
     console.log(`✅ Removed ${targetComponent} ${targetVersion}`);
 
-    // If this was the latest version, update the latest symlink to highest remaining version
-    if (wasLatest) {
-      const versions = this.getAvailableVersions(componentDir);
-      if (versions.length > 0) {
-        const highestVersion = this.getHighestVersion(versions);
-        console.log(`🔗 Updating latest symlink: ${targetVersion} → ${highestVersion}`);
-        
-        // Remove old latest symlink
-        if (existsSync(latestSymlink)) {
-          await fs.unlink(latestSymlink);
+    // Clean up ALL semantic symlinks pointing to removed version
+    const semanticLinks = ['latest', 'dev', 'test', 'prod'];
+    const versions = this.getAvailableVersions(componentDir);
+    const highestVersion = versions.length > 0 ? this.getHighestVersion(versions) : null;
+    
+    for (const linkName of semanticLinks) {
+      const symlinkPath = path.join(componentDir, linkName);
+      
+      // Check if symlink exists using lstat (doesn't follow symlinks, works with broken links)
+      try {
+        const stats = lstatSync(symlinkPath);
+        if (stats.isSymbolicLink()) {
+          const linkTarget = await fs.readlink(symlinkPath);
+          if (linkTarget === targetVersion) {
+            await fs.unlink(symlinkPath);
+            
+            if (highestVersion) {
+              // Repoint to highest remaining version
+              await fs.symlink(highestVersion, symlinkPath);
+              console.log(`🔗 Updated ${linkName}: ${targetVersion} → ${highestVersion}`);
+            } else {
+              console.log(`🔗 Removed ${linkName} (no versions remaining)`);
+            }
+          }
         }
-        
-        // Create new latest symlink
-        await fs.symlink(highestVersion, latestSymlink);
-        console.log(`✅ Latest symlink updated: latest → ${highestVersion}`);
-      } else {
-        // No versions left, remove latest symlink
-        if (existsSync(latestSymlink)) {
-          await fs.unlink(latestSymlink);
-          console.log(`🔗 Removed latest symlink (no versions remaining)`);
-        }
+      } catch {
+        // Symlink doesn't exist or can't be read - skip
       }
     }
 
@@ -3433,12 +3429,22 @@ export default defineConfig({
     try {
       const entries = readdirSync(componentDir);
       return entries.filter(entry => {
+        // Skip semantic symlinks
+        if (['latest', 'dev', 'test', 'prod'].includes(entry)) {
+          return false;
+        }
+        
         const entryPath = path.join(componentDir, entry);
-        return statSync(entryPath).isDirectory() && 
-               entry.match(/^\d+\.\d+\.\d+\.\d+$/) &&
-               entry !== 'latest';
+        try {
+          // Use lstatSync to not follow symlinks, then check if it's a directory
+          const stats = lstatSync(entryPath);
+          return stats.isDirectory() && entry.match(/^\d+\.\d+\.\d+\.\d+$/) !== null;
+        } catch {
+          // Skip entries that can't be stat'd (broken symlinks, etc.)
+          return false;
+        }
       }).sort((a, b) => this.compareVersions(a, b));
-      } catch {
+    } catch {
       return [];
     }
   }
@@ -3546,6 +3552,10 @@ export default defineConfig({
   private async createVersionScriptSymlink(component: string, version: string): Promise<void> {
     const projectRoot = this.resolveProjectRoot(); // FIX: Use resolveProjectRoot instead of direct model access
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
+    
+    // Ensure scripts/versions directory exists
+    await fs.mkdir(versionsDir, { recursive: true });
+    
     const componentLower = component.toLowerCase();
     const scriptName = `${componentLower}-v${version}`;
     const scriptPath = path.join(versionsDir, scriptName);
@@ -4069,8 +4079,7 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
    */
   private async cleanupVersionScriptSymlinks(componentName: string, version: string): Promise<void> {
     const projectRoot = this.resolveProjectRoot();
-    const scriptsDir = path.join(projectRoot, 'scripts');
-    const versionsDir = path.join(scriptsDir, 'versions');
+    const versionsDir = path.join(projectRoot, 'scripts', 'versions');
     
     if (!existsSync(versionsDir)) {
       return;
@@ -4080,22 +4089,35 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     const versionScriptName = `${componentLowerCase}-v${version}`;
     const versionScriptPath = path.join(versionsDir, versionScriptName);
 
+    // Remove version-specific script symlink
     if (existsSync(versionScriptPath)) {
       await fs.unlink(versionScriptPath);
       console.log(`🔗 Removed version script symlink: ${versionScriptName}`);
     }
 
-    // If the main script points to this version, remove it
-    const mainScriptPath = path.join(scriptsDir, componentLowerCase);
+    // Check if main script points to this version, repoint if needed
+    const mainScriptPath = path.join(versionsDir, componentLowerCase);
     if (existsSync(mainScriptPath)) {
       try {
         const linkTarget = await fs.readlink(mainScriptPath);
-        if (linkTarget.includes(`${versionScriptName}`)) {
+        if (linkTarget.includes(versionScriptName)) {
+          // Repoint to highest remaining version
+          const componentDir = this.resolveComponentDirectory(componentName);
+          const versions = this.getAvailableVersions(componentDir);
+          const highestVersion = versions.length > 0 ? this.getHighestVersion(versions) : null;
+          
           await fs.unlink(mainScriptPath);
-          console.log(`🔗 Removed main script symlink: ${componentLowerCase}`);
+          
+          if (highestVersion) {
+            const newTarget = `${componentLowerCase}-v${highestVersion}`;
+            await fs.symlink(newTarget, mainScriptPath);
+            console.log(`🔗 Repointed main script: ${componentLowerCase} → ${newTarget}`);
+          } else {
+            console.log(`🔗 Removed main script symlink (no versions remaining): ${componentLowerCase}`);
+          }
         }
-      } catch (error) {
-        // Ignore readlink errors
+      } catch {
+        // Silent fail for broken symlinks or permission errors
       }
     }
   }
@@ -4120,17 +4142,25 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
       const versionScriptName = `${componentLowerCase}-v${version}`;
       const versionScriptPath = path.join(versionsDir, versionScriptName);
 
-      if (existsSync(versionScriptPath)) {
+      try {
+        // Use lstatSync to detect broken symlinks (existsSync returns false for broken symlinks)
+        lstatSync(versionScriptPath);
         await fs.unlink(versionScriptPath);
         console.log(`🔗 Removed version script symlink: ${versionScriptName}`);
+      } catch {
+        // Doesn't exist or already removed
       }
     }
 
-    // Remove main script symlink
-    const mainScriptPath = path.join(scriptsDir, componentLowerCase);
-    if (existsSync(mainScriptPath)) {
+    // Remove main script symlink (it's in scripts/versions/, not scripts/)
+    const mainScriptPath = path.join(versionsDir, componentLowerCase);
+    try {
+      // Use lstatSync to detect broken symlinks (existsSync returns false for broken symlinks)
+      lstatSync(mainScriptPath);
       await fs.unlink(mainScriptPath);
       console.log(`🔗 Removed main script symlink: ${componentLowerCase}`);
+    } catch {
+      // Doesn't exist or already removed
     }
   }
 }

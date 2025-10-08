@@ -69,6 +69,145 @@ Systematically test Web4TSComponent lifecycle operations with consistent isolati
 
 **Coverage:** 10/21 methods tested (48%)
 
+---
+
+## 🎯 CONSOLIDATED TEST STORY - MASTER Suite
+
+**File:** `web4tscomponent.consolidated-story.test.ts`
+
+This is THE comprehensive test suite that supersedes redundant tests. It systematically covers ALL critical functionality.
+
+### Story Map
+
+| Part | Stories | Focus Area | Tests | Status |
+|------|---------|------------|-------|--------|
+| 1 | 1.1-1.3 | npm start ONLY Principle | 3 | ✅ READY |
+| 2 | 2.1-2.3 | Test Isolation (test/data as root) | 3 | ✅ READY |
+| 3 | 3.1-3.3 | Auto-Discovery & No Hardcoding | 3 | ✅ READY |
+| 4 | 4.1-4.7 | Component Lifecycle | 7 | ✅ READY |
+| 5 | 5.1-5.5 | Semantic Links | 5 | ✅ READY |
+| 6 | 6.1-6.3 | Context Pattern | 3 | ✅ READY |
+| 7 | 7.1-7.4 | Tree Visualization | 4 | ✅ READY |
+| 8 | 8.1-8.2 | Location Independence | 2 | ✅ READY |
+| 9 | 9.1-9.2 | DRY Principles | 2 | ✅ READY |
+| 10 | 10.1-10.5 | Script Symlinks | 5 | ✅ READY |
+| 11 | 11.1-11.4 | Error Handling | 4 | ✅ READY |
+| **TOTAL** | **41 Stories** | **Complete Coverage** | **41** | ✅ **READY** |
+
+### Detailed Story Breakdown
+
+#### Part 1: npm start ONLY Principle
+| Story | Test Name | CLI Command | Method | Line | Status |
+|-------|-----------|-------------|--------|------|--------|
+| 1.1 | Component itself uses shell script for npm start | - | package.json validation | [:56](test/web4tscomponent.consolidated-story.test.ts#L56) | ✅ PASS |
+| 1.2 | Component itself uses shell script for npm test | - | package.json validation | [:69](test/web4tscomponent.consolidated-story.test.ts#L69) | ✅ PASS |
+| 1.3 | Generated components use shell script for npm start | `web4tscomponent create NpmStartTest 0.1.0.0 all` | [`create(name: string, version: string = '0.1.0.0', options: string = ''): Promise<void>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L681) | [:82](test/web4tscomponent.consolidated-story.test.ts#L82) | ✅ PASS |
+
+#### Part 2: Test Isolation - test/data as Project Root
+| Story | Test Name | CLI Command | Method | Line | Status |
+|-------|-----------|-------------|--------|------|--------|
+| 2.1 | Component thinks test/data is project root | `web4tscomponent create IsolationTest 0.1.0.0 all` | [`create(name: string, version: string = '0.1.0.0', options: string = ''): Promise<void>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L681) | [:103](test/web4tscomponent.consolidated-story.test.ts#L103) | ✅ PASS |
+| 2.2 | All operations stay within test/data | `web4tscomponent on + upgrade + setDev + setTest` | [`on(component: string, version: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L865) + [`upgrade(versionType: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L912) + [`setDev(targetVersion: string = 'current'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L1057) + [`setTest(targetVersion: string = 'current'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L1078) | [:121](test/web4tscomponent.consolidated-story.test.ts#L121) | ✅ PASS |
+| 2.3 | Script symlinks created in test/data/scripts | - | Script validation | [:139](test/web4tscomponent.consolidated-story.test.ts#L139) | ✅ PASS |
+
+#### Part 3: Auto-Discovery & No Hardcoding
+| Story | Test Name | CLI Command | Method | Line | Status |
+|-------|-----------|-------------|--------|------|--------|
+| 3.1 | CLI auto-discovers methods from @cli annotations | - | Code scanning | [:156](test/web4tscomponent.consolidated-story.test.ts#L156) | ✅ PASS |
+| 3.2 | Version is read from directory, not hardcoded | - | Code scanning | [:171](test/web4tscomponent.consolidated-story.test.ts#L171) | ✅ PASS |
+| 3.3 | Component reads version from model | - | [`toScenario()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L195) | [:192](test/web4tscomponent.consolidated-story.test.ts#L192) | ✅ PASS |
+
+#### Part 4: Component Lifecycle
+| Story | Test Name | CLI Command | Method | Line | Status |
+|-------|-----------|-------------|--------|------|--------|
+| 4.1 | Create component with all features | `web4tscomponent create LifecycleTest 0.1.0.0 all` | [`create(name: string, version: string = '0.1.0.0', options: string = ''): Promise<void>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L681) | [:212](test/web4tscomponent.consolidated-story.test.ts#L212) | ✅ PASS |
+| 4.2 | Upgrade to nextBuild (0.1.0.0 → 0.1.0.1) | `web4tscomponent on LifecycleTest 0.1.0.0 upgrade nextBuild` | [`upgrade(versionType: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L912) | [:227](test/web4tscomponent.consolidated-story.test.ts#L227) | ✅ PASS |
+| 4.3 | Upgrade to nextPatch (0.1.0.1 → 0.1.1.0) | `web4tscomponent on LifecycleTest 0.1.0.1 upgrade nextPatch` | [`upgrade(versionType: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L912) | [:242](test/web4tscomponent.consolidated-story.test.ts#L242) | ✅ PASS |
+| 4.4 | Upgrade to nextMinor (0.1.1.0 → 0.2.0.0) | `web4tscomponent on LifecycleTest 0.1.1.0 upgrade nextMinor` | [`upgrade(versionType: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L912) | [:254](test/web4tscomponent.consolidated-story.test.ts#L254) | ✅ PASS |
+| 4.5 | Upgrade to nextMajor (0.2.0.0 → 1.0.0.0) | `web4tscomponent on LifecycleTest 0.2.0.0 upgrade nextMajor` | [`upgrade(versionType: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L912) | [:266](test/web4tscomponent.consolidated-story.test.ts#L266) | ✅ PASS |
+| 4.6 | Remove specific version | `web4tscomponent on LifecycleTest 0.1.0.1 removeVersion current current` | [`removeVersion(componentName: string = 'current', version: string = 'current'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L1737) | [:278](test/web4tscomponent.consolidated-story.test.ts#L278) | ✅ PASS |
+| 4.7 | Remove entire component | `web4tscomponent on LifecycleTest 1.0.0.0 removeComponent current` | [`removeComponent(componentName: string = 'current'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L1814) | [:290](test/web4tscomponent.consolidated-story.test.ts#L290) | ✅ PASS |
+
+#### Part 5: Semantic Links
+| Story | Test Name | CLI Command | Method | Line | Status |
+|-------|-----------|-------------|--------|------|--------|
+| 5.1 | Set dev symlink | `web4tscomponent on SemanticTest 0.1.0.0 setDev 0.1.0.1` | [`setDev(targetVersion: string = 'current'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L1057) | [:316](test/web4tscomponent.consolidated-story.test.ts#L316) | ✅ PASS |
+| 5.2 | Set test symlink | `web4tscomponent on SemanticTest 0.1.0.0 setTest 0.1.0.1` | [`setTest(targetVersion: string = 'current'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L1078) | [:329](test/web4tscomponent.consolidated-story.test.ts#L329) | ✅ PASS |
+| 5.3 | Set prod symlink | `web4tscomponent on SemanticTest 0.1.0.0 setProd 0.1.0.0` | [`setProd(targetVersion: string = 'current'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L1099) | [:342](test/web4tscomponent.consolidated-story.test.ts#L342) | ✅ PASS |
+| 5.4 | Set latest symlink (auto-updated on upgrade) | - | Auto-updated | [:355](test/web4tscomponent.consolidated-story.test.ts#L355) | ✅ PASS |
+| 5.5 | Full workflow - dev → test → prod promotion | `web4tscomponent on + setDev + setTest + setProd` | Workflow | [:367](test/web4tscomponent.consolidated-story.test.ts#L367) | ✅ PASS |
+
+#### Part 6: Context Pattern
+| Story | Test Name | CLI Command | Method | Line | Status |
+|-------|-----------|-------------|--------|------|--------|
+| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 2 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ✅ PASS |
+| 6.2 | Operations WITH context work on target component | `web4tscomponent on ContextTest 0.1.0.0 upgrade nextBuild` | [`on(component: string, version: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L865) + [`upgrade(versionType: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L912) | [:412](test/web4tscomponent.consolidated-story.test.ts#L412) | ✅ PASS |
+| 6.3 | Context is maintained through chaining | `web4tscomponent on + upgrade + setDev` | Chaining | [:426](test/web4tscomponent.consolidated-story.test.ts#L426) | ✅ PASS |
+
+#### Part 7: Tree Visualization
+| Story | Test Name | CLI Command | Method | Line | Status |
+|-------|-----------|-------------|--------|------|--------|
+| 7.1 | tree() without context shows current structure | `web4tscomponent tree 2 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ✅ PASS |
+| 7.2 | tree() with context shows target component | `web4tscomponent on TreeTest 0.1.0.0 tree 3 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:465](test/web4tscomponent.consolidated-story.test.ts#L465) | ✅ PASS |
+| 7.3 | tree() shows semantic symlinks | - | Validation | [:474](test/web4tscomponent.consolidated-story.test.ts#L474) | ✅ PASS |
+| 7.4 | tree() respects depth parameter | `web4tscomponent on TreeTest 0.1.0.0 tree <depth> false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:489](test/web4tscomponent.consolidated-story.test.ts#L489) | ✅ PASS |
+
+#### Part 8: Location Independence
+| Story | Test Name | CLI Command | Method | Line | Status |
+|-------|-----------|-------------|--------|------|--------|
+| 8.1 | CLI wrapper resolves symlinks correctly | - | Shell script validation | [:507](test/web4tscomponent.consolidated-story.test.ts#L507) | ✅ PASS |
+| 8.2 | CLI wrapper reads version from directory | - | Shell script validation | [:523](test/web4tscomponent.consolidated-story.test.ts#L523) | ✅ PASS |
+
+#### Part 9: DRY Principles
+| Story | Test Name | CLI Command | Method | Line | Status |
+|-------|-----------|-------------|--------|------|--------|
+| 9.1 | Component uses symlinked node_modules | `web4tscomponent create DryTest 0.1.0.0 all` | [`create(name: string, version: string = '0.1.0.0', options: string = ''): Promise<void>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L681) | [:542](test/web4tscomponent.consolidated-story.test.ts#L542) | ✅ PASS |
+| 9.2 | Upgrade preserves files and structure | `web4tscomponent on DryTest 0.1.0.0 upgrade nextBuild` | [`upgrade(versionType: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L912) | [:561](test/web4tscomponent.consolidated-story.test.ts#L561) | ✅ PASS |
+
+#### Part 10: Script Symlinks
+| Story | Test Name | CLI Command | Method | Line | Status |
+|-------|-----------|-------------|--------|------|--------|
+| 10.1 | Create generates version-specific script symlink | `web4tscomponent create ScriptTest 0.1.0.0 all` | [`create(name: string, version: string = '0.1.0.0', options: string = ''): Promise<void>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L681) | [:585](test/web4tscomponent.consolidated-story.test.ts#L585) | ✅ PASS |
+| 10.2 | Create generates main script symlink | `web4tscomponent create ScriptTest 0.1.0.0 all` | [`create(name: string, version: string = '0.1.0.0', options: string = ''): Promise<void>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L681) | [:597](test/web4tscomponent.consolidated-story.test.ts#L597) | ✅ PASS |
+| 10.3 | Upgrade creates new script symlinks | `web4tscomponent on ScriptTest 0.1.0.0 upgrade nextBuild` | [`upgrade(versionType: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L912) | [:607](test/web4tscomponent.consolidated-story.test.ts#L607) | ✅ PASS |
+| 10.4 | RemoveVersion cleans up script symlinks | `web4tscomponent on ScriptTest 0.1.0.0 removeVersion current current` | [`removeVersion(componentName: string = 'current', version: string = 'current'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L1737) | [:619](test/web4tscomponent.consolidated-story.test.ts#L619) | ✅ PASS |
+| 10.5 | RemoveComponent cleans up all script symlinks | `web4tscomponent on ScriptTest 0.1.0.1 removeComponent current` | [`removeComponent(componentName: string = 'current'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L1814) | [:631](test/web4tscomponent.consolidated-story.test.ts#L631) | ✅ PASS |
+
+#### Part 11: Error Handling & Edge Cases
+| Story | Test Name | CLI Command | Method | Line | Status |
+|-------|-----------|-------------|--------|------|--------|
+| 11.1 | Context required methods fail gracefully without context | `web4tscomponent upgrade nextBuild` (should fail) | Error handling | [:650](test/web4tscomponent.consolidated-story.test.ts#L650) | ✅ PASS |
+| 11.2 | Cannot set semantic link to non-existent version | `web4tscomponent on ErrorTest 0.1.0.0 setDev 9.9.9.9` (should fail) | Error validation | [:663](test/web4tscomponent.consolidated-story.test.ts#L663) | ✅ PASS |
+| 11.3 | Cannot remove non-existent version | `web4tscomponent removeVersion ErrorTest 9.9.9.9` (should fail) | Error validation | [:676](test/web4tscomponent.consolidated-story.test.ts#L676) | ✅ PASS |
+| 11.4 | Chaining returns correct instance for fluent API | `web4tscomponent create + on` chaining | Chaining validation | [:685](test/web4tscomponent.consolidated-story.test.ts#L685) | ✅ PASS |
+
+### What This Suite Covers (Consolidates)
+
+**Replaces/Supersedes:**
+- ✅ `test-story.test.ts` Stories 1-17 (enhanced)
+- ✅ `full-workflow.test.ts` (all 9 tests)
+- ✅ `functionality.test.ts` (all 15 tests)
+- ✅ `promotion-context.test.ts` (all 5 tests)
+- ✅ `promotion-isolation.test.ts` (all 3 tests)
+- ✅ `version-promotion.test.ts` (6/7 tests)
+- ✅ `semantic-links.test.ts` (basic functionality, keeps advanced workflows)
+- ✅ `smoke-tests.test.ts` (removeVersion, removeComponent)
+
+**Keeps & Extends:**
+- ✅ `command-chaining.test.ts` (chaining patterns - extended)
+- ✅ `context-pattern.test.ts` (WITH/WITHOUT context - extended)
+- ✅ `npm-start-only.test.ts` (enhanced with validation)
+- ✅ `hardcoded-version-detection.test.ts` (auto-discovery - extended)
+- ✅ `tree-method.test.ts` (tree visualization - extended)
+- ✅ `promotion-edge-cases.test.ts` (edge cases still needed)
+
+**Test Coverage:**
+- **Before:** 241 tests across 25 files (89.6% active, 10.4% skipped)
+- **After:** 41 consolidated stories + 8-10 specialized test files
+- **Result:** ~100 focused, non-redundant, comprehensive tests
+
+---
+
 ## PDCA: Systematic Test Development
 
 ### PLAN
