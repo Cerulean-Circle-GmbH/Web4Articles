@@ -1431,6 +1431,239 @@ Standards:
   }
 
   /**
+   * Run tests with major release promotion (nextMinor instead of nextPatch)
+   * Same as test() but on 100% success promotes using nextMinor for major version bump
+   * Use this for significant releases with breaking changes or major new features
+   * 
+   * Two-stage workflow:
+   * - Stage 1: dev → test (nextBuild) - same as test()
+   * - Stage 2: test → prod (nextMinor) + new dev (nextBuild) - MAJOR RELEASE
+   * Example: 0.3.4.2 → 0.4.0.0 (prod), 0.4.0.1 (dev/test)
+   * 
+   * @param skipPromotion Optional flag to skip version promotion (for testing/development)
+   * @cliSyntax skipPromotion
+   * @cliDefault skipPromotion false
+   * @cliExample web4tscomponent releaseTest
+   * @cliExample web4tscomponent releaseTest withoutVersionPromotion
+   * @cliExample web4tscomponent on Unit 0.3.0.5 releaseTest
+   */
+  async releaseTest(skipPromotion: string = 'false'): Promise<this> {
+    const context = this.getComponentContext();
+    const shouldSkipPromotion = skipPromotion === 'withoutVersionPromotion' || skipPromotion === 'true';
+    
+    // WORKFLOW REMINDER: Always work on dev → test → dev cycle
+    console.log(`\n🔄 MAJOR RELEASE TEST WORKFLOW:`);
+    console.log(`   🚧 ALWAYS work on dev version until you run releaseTest`);
+    console.log(`   🧪 ALWAYS work on test version until test succeeds`);  
+    console.log(`   🚀 On 100% success: Promotes using nextMinor (MAJOR release)`);
+    console.log(`   🚧 ALWAYS work on dev version after test success\n`);
+    
+    if (shouldSkipPromotion) {
+      console.log(`⚠️  Version promotion disabled for this test run\n`);
+    }
+    
+    if (!context) {
+      // No context - run Web4TSComponent's own tests
+      const insideTestEnvironment = !!(process.env.VITEST || process.env.VITEST_WORKER_ID);
+      
+      if (insideTestEnvironment) {
+        console.log(`🧪 Already in test environment - skipping recursive vitest execution`);
+        console.log(`✅ Test execution skipped (recursion prevented)`);
+      } else {
+        console.log(`🧪 Running Web4TSComponent internal tests (RELEASE MODE)...`);
+        
+        try {
+          execSync('npx vitest run', { 
+            cwd: process.cwd(),
+            stdio: 'inherit',
+            encoding: 'utf-8'
+          });
+          
+          console.log(`✅ Web4TSComponent internal tests completed successfully`);
+          
+        } catch (error) {
+          console.error(`❌ Web4TSComponent internal tests failed`);
+          throw error;
+        }
+      }
+      
+      // 🎯 SELF-PROMOTION: After tests complete, handle RELEASE version promotion
+      if (shouldSkipPromotion) {
+        console.log(`\n⚠️  Skipping promotion (disabled by user)`);
+      } else {
+        console.log(`\n🔍 Checking for RELEASE promotion opportunity...`);
+        const currentVersion = await this.getCurrentVersion();
+        
+        // Determine which promotion stage to apply
+        const semanticLinks = await this.getSemanticLinks('Web4TSComponent');
+        const currentTest = semanticLinks.test;
+        
+        if (currentVersion !== currentTest) {
+          // Stage 1: This is a dev version, promote to test
+          await this.handleFirstTestRun('Web4TSComponent', currentVersion);
+        } else {
+          // Stage 2 RELEASE: This is the test version, use nextMinor
+          await this.handleReleaseTestSuccessPromotion('Web4TSComponent', currentVersion);
+        }
+      }
+      
+      return this;
+    }
+
+    // 🚨 RECURSION SAFETY CHECK
+    if (context.component === 'Web4TSComponent') {
+      console.log(`🚨 RECURSION SAFETY: Web4TSComponent cannot test itself via delegation`);
+      throw new Error('Recursion prevented: Use without context instead.');
+    }
+
+    // Context loaded - check if dev and test are same version and do nextBuild first
+    const semanticLinks = await this.getSemanticLinks(context.component);
+    const devVersion = semanticLinks['dev'];
+    const testVersion = semanticLinks['test'];
+    
+    let targetVersion = context.version;
+    
+    // If dev and test are the same version, do nextBuild promotion first
+    if (devVersion && testVersion && devVersion === testVersion && devVersion === context.version) {
+      console.log(`🔄 Dev and test are same version (${devVersion}) - creating nextBuild for testing...`);
+      
+      try {
+        const nextBuildVersion = await this.createNextBuildVersion(context.component, context.version);
+        await this.createSemanticLink(context.component, 'test', nextBuildVersion);
+        console.log(`✅ Test updated: test → ${nextBuildVersion}`);
+        await this.on(context.component, nextBuildVersion);
+        targetVersion = nextBuildVersion;
+        console.log(`🎯 Now testing new build version: ${nextBuildVersion}`);
+      } catch (error) {
+        console.error(`❌ Failed to create nextBuild version: ${(error as Error).message}`);
+        throw error;
+      }
+    }
+
+    // Run target component tests and handle RELEASE promotion
+    const componentPath = this.resolveComponentPath(context.component, targetVersion);
+    console.log(`🧪 Running tests for ${context.component} ${targetVersion} (RELEASE MODE)...`);
+    
+    try {
+      execSync('npm test', { 
+        cwd: componentPath, 
+        stdio: 'inherit',
+        encoding: 'utf-8'
+      });
+      
+      console.log(`✅ Tests completed for ${context.component} ${targetVersion}`);
+      
+      // Check for RELEASE promotion opportunity
+      if (shouldSkipPromotion) {
+        console.log(`⚠️  Skipping promotion (disabled by user)`);
+      } else {
+        const semanticLinks = await this.getSemanticLinks(context.component);
+        const currentTest = semanticLinks.test;
+        
+        if (targetVersion !== currentTest) {
+          // Stage 1: This is a dev version, promote to test
+          await this.handleFirstTestRun(context.component, targetVersion);
+        } else {
+          // Stage 2 RELEASE: This is the test version, use nextMinor
+          await this.handleReleaseTestSuccessPromotion(context.component, targetVersion);
+        }
+      }
+      
+    } catch (error) {
+      console.error(`❌ Tests failed for ${context.component} ${targetVersion}`);
+      throw error;
+    }
+
+    return this;
+  }
+
+  /**
+   * Handle release test success: promote test to prod using nextMinor (Stage 2 - Major Release)
+   * Workflow Stage 2 (Release): test → prod (nextMinor) + new dev (nextBuild)
+   * E.g., 0.3.4.2 (test) → 0.4.0.0 (prod) + 0.4.0.1 (dev)
+   * Used by releaseTest() for major version releases
+   * @cliHide
+   */
+  async handleReleaseTestSuccessPromotion(componentName: string, currentVersion: string): Promise<void> {
+    console.log(`\n🎯 Analyzing release test success for version promotion...`);
+    console.log(`📋 MAJOR RELEASE MODE: Will use nextMinor (not nextPatch)`);
+    
+    // 🚨 CRITICAL: Never promote when in test environment (test/data)
+    if (this.isTestEnvironment()) {
+      console.log(`⚠️  Skipping promotion: Running in test environment`);
+      console.log(`💡 Promotions only happen in real component directories, not test/data`);
+      return;
+    }
+    
+    // Safety check: verify this version is currently 'test'
+    const semanticLinks = await this.getSemanticLinks(componentName);
+    const currentTest = semanticLinks.test;
+    
+    if (currentTest !== currentVersion) {
+      console.log(`⚠️  Skipping Stage 2: Current version (${currentVersion}) is not the test version`);
+      console.log(`💡 Current test version is: ${currentTest || 'none'}`);
+      console.log(`💡 Only the test version can be promoted to prod`);
+      return;
+    }
+    
+    // Safety check: verify this version hasn't already been promoted
+    const currentProd = semanticLinks.prod;
+    if (currentProd === currentVersion) {
+      console.log(`⚠️  Version ${currentVersion} is already marked as prod - skipping promotion`);
+      console.log(`💡 This prevents accidental double promotion`);
+      return;
+    }
+    
+    // Check if test result indicates 100% success
+    const testSuccess = await this.verifyTestSuccess(componentName, currentVersion);
+    if (!testSuccess) {
+      console.log(`⚠️  Test success verification failed - skipping promotion`);
+      return;
+    }
+    
+    console.log(`🚀 100% test success confirmed! Starting Stage 2 RELEASE promotion workflow...`);
+    console.log(`📋 Workflow Stage 2 (Release): test → prod (nextMinor) + new dev (nextBuild)`);
+    
+    try {
+      // Step 1: Create nextMinor version from current (test becomes prod - MAJOR RELEASE)
+      console.log(`\n🔧 Step 1: Creating nextMinor version from ${currentVersion}...`);
+      const nextMinorVersion = await this.createNextMinorVersion(componentName, currentVersion);
+      
+      // Step 2: Set nextMinor as new prod
+      console.log(`\n🚀 Step 2: Promoting ${nextMinorVersion} to prod (MAJOR RELEASE)...`);
+      await this.createSemanticLink(componentName, 'prod', nextMinorVersion);
+      console.log(`✅ Prod updated: prod → ${nextMinorVersion}`);
+      
+      // Step 3: Update latest to nextMinor (the new stable)
+      console.log(`\n📦 Step 3: Updating latest to stable version...`);
+      await this.createSemanticLink(componentName, 'latest', nextMinorVersion);
+      console.log(`✅ Latest updated: latest → ${nextMinorVersion}`);
+      
+      // Step 4: Create nextBuild version for new development cycle
+      console.log(`\n🔧 Step 4: Creating nextBuild version for development...`);
+      const nextBuildVersion = await this.createNextBuildVersion(componentName, nextMinorVersion);
+      
+      // Step 5: Set nextBuild as new dev and test
+      console.log(`\n🚧 Step 5: Setting up development workflow...`);
+      await this.createSemanticLink(componentName, 'dev', nextBuildVersion);
+      await this.createSemanticLink(componentName, 'test', nextBuildVersion);
+      console.log(`✅ Dev updated: dev → ${nextBuildVersion}`);
+      console.log(`✅ Test updated: test → ${nextBuildVersion}`);
+      
+      console.log(`\n🎉 Stage 2 RELEASE promotion workflow completed successfully!`);
+      console.log(`📊 Final state:`);
+      console.log(`   🚀 prod:   ${nextMinorVersion} (MAJOR RELEASE from ${currentVersion})`);
+      console.log(`   📦 latest: ${nextMinorVersion} (stable release)`);
+      console.log(`   🧪 test:   ${nextBuildVersion} (ready for next cycle)`);
+      console.log(`   🚧 dev:    ${nextBuildVersion} (active development)`);
+      
+    } catch (error) {
+      console.error(`❌ Stage 2 RELEASE promotion failed: ${(error as Error).message}`);
+      console.log(`💡 Manual intervention may be required`);
+    }
+  }
+
+  /**
    * Handle first test run: promote dev to test (Stage 1)
    * Workflow Stage 1: dev → test (nextBuild)
    * E.g., 0.3.4.1 (dev) → 0.3.4.2 (test)
@@ -1642,6 +1875,36 @@ Standards:
       
       console.log(`✅ Created nextBuild version: ${nextBuildVersion}`);
       return nextBuildVersion;
+      
+    } finally {
+      // Restore original context
+      if (originalContext) {
+        await this.on(originalContext.component, originalContext.version);
+      }
+    }
+  }
+
+  /**
+   * Create nextMinor version from current version (for major releases)
+   * nextMinor increments minor version and resets patch and build to 0
+   * e.g., 0.3.4.2 → 0.4.0.0
+   * @cliHide
+   */
+  private async createNextMinorVersion(componentName: string, currentVersion: string): Promise<string> {
+    const originalContext = this.getComponentContext();
+    
+    // Temporarily set context to current version
+    await this.on(componentName, currentVersion);
+    
+    try {
+      await this.upgrade('nextMinor'); // Increment minor, reset patch and build
+      
+      // Calculate what the nextMinor version would be
+      const parts = currentVersion.split('.').map(Number);
+      const nextMinorVersion = `${parts[0]}.${parts[1] + 1}.0.0`; // Increment minor, reset others
+      
+      console.log(`✅ Created nextMinor version: ${nextMinorVersion}`);
+      return nextMinorVersion;
       
     } finally {
       // Restore original context
