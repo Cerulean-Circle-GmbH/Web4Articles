@@ -95,24 +95,46 @@ export class DefaultDemoComponent implements DemoComponent {
   }
 
   /**
-   * Execute component tests using vitest
+   * Execute component tests with Web4TSComponent promotion workflow
+   * Delegates to web4tscomponent for version management
    * @cliSyntax
    * @cliExample {{COMPONENT_LOWER}} test
    */
   async test(): Promise<this> {
-    console.log(`🧪 Running DemoComponent tests...`);
+    // 🚨 RECURSION DETECTION: Check if we're already inside vitest
+    const insideTestEnvironment = !!(process.env.VITEST || process.env.VITEST_WORKER_ID);
     
-    try {
-      const { execSync } = await import('child_process');
-      execSync('npx vitest run', { 
-        stdio: 'inherit',
-        encoding: 'utf-8',
-        cwd: process.cwd()
-      });
-      console.log(`✅ DemoComponent tests completed successfully`);
-    } catch (error) {
-      console.error(`❌ DemoComponent tests failed`);
-      throw error;
+    if (insideTestEnvironment) {
+      // Already in test environment - just run vitest, no delegation
+      console.log(`🧪 Running DemoComponent tests (in test environment)...`);
+      
+      try {
+        const { execSync } = await import('child_process');
+        execSync('npx vitest run', { 
+          stdio: 'inherit',
+          encoding: 'utf-8',
+          cwd: process.cwd()
+        });
+        console.log(`✅ DemoComponent tests completed successfully`);
+      } catch (error) {
+        console.error(`❌ DemoComponent tests failed`);
+        throw error;
+      }
+    } else {
+      // Not in test environment - delegate to web4tscomponent for promotion workflow
+      console.log(`🧪 Running DemoComponent tests via Web4TSComponent infrastructure...`);
+      
+      try {
+        const { execSync } = await import('child_process');
+        execSync('web4tscomponent on DemoComponent dev test', { 
+          stdio: 'inherit',
+          encoding: 'utf-8'
+        });
+        console.log(`✅ DemoComponent tests completed successfully`);
+      } catch (error) {
+        console.error(`❌ DemoComponent tests failed`);
+        throw error;
+      }
     }
     
     return this;

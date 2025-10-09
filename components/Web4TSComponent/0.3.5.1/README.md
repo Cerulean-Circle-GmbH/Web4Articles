@@ -658,26 +658,28 @@ npm test
 
 ### 🔧 Testing Generated Components (DemoComponent, etc.)
 
-When testing components **generated** by Web4TSComponent:
+Generated components have **two ways** to run tests:
 
+**Option 1: Simple Testing (no promotion)**
 ```bash
-# REQUIRED: Source the environment to get web4tscomponent in PATH
-source source.env
-
 cd components/DemoComponent
-npm test
+npm test  # Runs vitest directly, no version promotion
 ```
 
-**Why `source.env` is needed:**
-- Generated components delegate to `web4tscomponent` for promotion workflows
-- This is **INTENTIONAL**, not a bug - it's how version promotion is triggered
-- Without sourcing, you'll get `command not found: web4tscomponent`
-- The delegation enables automatic promotion for generated components too
+**Option 2: Testing with Promotion Workflow**
+```bash
+# REQUIRED: Source the environment first
+source source.env
 
-**This is by design:**
-- Web4TSComponent manages promotion workflows centrally
-- Generated components inherit this capability via delegation
-- Ensures consistent promotion behavior across all components
+# Run with Web4TSComponent promotion infrastructure
+web4tscomponent on DemoComponent dev test
+```
+
+**Key Differences:**
+- `npm test` → Runs vitest only, good for development/debugging
+- `web4tscomponent on ComponentName dev test` → Runs tests + triggers version promotion on 100% success
+- Promotion workflow requires `source.env` to add web4tscomponent to PATH
+- The CLI `test()` method delegates to web4tscomponent for promotion (prevents recursion via VITEST env check)
 
 ---
 

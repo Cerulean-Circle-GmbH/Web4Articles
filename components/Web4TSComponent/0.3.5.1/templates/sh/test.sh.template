@@ -1,9 +1,10 @@
 #!/bin/sh
-# npm test → test.sh → {{COMPONENT_LOWER}} test → vitest (with recursion prevention & promotion)
+# npm test → test.sh → vitest directly (no CLI delegation to prevent recursion)
 
 # Smart build before testing
 ./src/sh/build.sh
 
-# Run {{COMPONENT_LOWER}} test (handles vitest execution, recursion prevention, and promotion)
-./{{COMPONENT_LOWER}}.sh test
+# Run vitest directly (no delegation - prevents infinite recursion)
+# If you want promotion workflow, use: web4tscomponent on {{COMPONENT_NAME}} dev test
+npx vitest run
 
