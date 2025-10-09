@@ -656,6 +656,29 @@ npm test
 - ❌ DON'T: `npm test | grep something` (hides important context)
 - ✅ DO: Just `npm test` - all output is already logged to `test/logs/`
 
+### 🔧 Testing Generated Components (DemoComponent, etc.)
+
+When testing components **generated** by Web4TSComponent:
+
+```bash
+# REQUIRED: Source the environment to get web4tscomponent in PATH
+source source.env
+
+cd components/DemoComponent
+npm test
+```
+
+**Why `source.env` is needed:**
+- Generated components delegate to `web4tscomponent` for promotion workflows
+- This is **INTENTIONAL**, not a bug - it's how version promotion is triggered
+- Without sourcing, you'll get `command not found: web4tscomponent`
+- The delegation enables automatic promotion for generated components too
+
+**This is by design:**
+- Web4TSComponent manages promotion workflows centrally
+- Generated components inherit this capability via delegation
+- Ensures consistent promotion behavior across all components
+
 ---
 
 ## 🎉 What Happens on 100% Test Success?

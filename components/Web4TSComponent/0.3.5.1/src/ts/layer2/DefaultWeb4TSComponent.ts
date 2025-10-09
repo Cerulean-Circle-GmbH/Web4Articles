@@ -4407,7 +4407,8 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
 
     for (const script of scripts) {
       const scriptContent = await this.loadTemplate(`sh/${script}.template`, {
-        'COMPONENT_NAME': componentName
+        'COMPONENT_NAME': componentName,
+        'COMPONENT_LOWER': componentName.toLowerCase()
       });
       
       const scriptPath = path.join(shDir, script);
