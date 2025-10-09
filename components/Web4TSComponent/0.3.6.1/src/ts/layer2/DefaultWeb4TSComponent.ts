@@ -1714,10 +1714,16 @@ Standards:
       return;
     }
     
-    // Stage 1: Current is dev, no test link OR test is outdated → create test version
-    if (currentVersion === semanticLinks.dev && 
-        (!semanticLinks.test || semanticLinks.test < currentVersion)) {
-      console.log(`\n🧪 Stage 1: dev → test (creating test version)...`);
+    // Stage 1: Current is dev → create new test version
+    // Key insight: When dev === test === currentVersion, that signals this dev is ready for testing!
+    // We create a FRESH test version from the current dev
+    if (currentVersion === semanticLinks.dev) {
+      if (semanticLinks.test === currentVersion) {
+        console.log(`\n🔄 Discovery: dev and test both point to ${currentVersion} - this dev is ready for testing!`);
+        console.log(`🧪 Stage 1: Creating FRESH test version from dev ${currentVersion}...`);
+      } else {
+        console.log(`\n🧪 Stage 1: dev → test (creating test version)...`);
+      }
       await this.handleDevToTest(componentName, currentVersion);
       return;
     }

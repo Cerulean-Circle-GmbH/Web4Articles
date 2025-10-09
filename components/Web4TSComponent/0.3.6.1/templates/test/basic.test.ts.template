@@ -5,6 +5,9 @@
 
 import { describe, it, expect } from 'vitest';
 import { Default{{COMPONENT_NAME}} } from '../src/ts/layer2/Default{{COMPONENT_NAME}}.js';
+import { execSync } from 'child_process';
+import { existsSync } from 'fs';
+import * as path from 'path';
 
 describe('{{COMPONENT_NAME}} Basic Tests', () => {
   it('should create instance successfully', () => {
@@ -15,5 +18,37 @@ describe('{{COMPONENT_NAME}} Basic Tests', () => {
   it('should have empty constructor (Web4 standard)', () => {
     const component = new Default{{COMPONENT_NAME}}();
     expect(component).toBeInstanceOf(Default{{COMPONENT_NAME}});
+  });
+});
+
+describe('{{COMPONENT_NAME}} CLI Location Resilience', () => {
+  it('should work when called from scripts/ directory', () => {
+    // Find component root (test/data for tests, or actual component root in production)
+    const componentRoot = path.resolve(__dirname, '../../..');
+    const componentParentDir = path.resolve(componentRoot, '..');
+    const scriptsDir = path.join(componentParentDir, 'scripts');
+    const cliScriptPath = path.join(scriptsDir, '{{COMPONENT_LOWER}}');
+    
+    // Verify CLI script symlink exists in scripts/
+    expect(existsSync(cliScriptPath)).toBe(true);
+    
+    // Test: Run CLI from scripts/ directory
+    // This verifies location-resilient symlink resolution works correctly
+    try {
+      const result = execSync('./{{COMPONENT_LOWER}}', {
+        cwd: scriptsDir,
+        encoding: 'utf-8',
+        timeout: 10000
+      });
+      
+      expect(result).toContain('{{COMPONENT_NAME}} CLI Tool');
+      console.log('   ✅ CLI works from scripts/ directory (location-resilient)');
+    } catch (error: any) {
+      console.error('   ❌ CLI FAILED from scripts/ directory');
+      console.error('   Error:', error.message);
+      console.error('\n🔴 BUG: CLI script is NOT location-resilient!');
+      console.error('   The CLI script needs proper symlink resolution logic.');
+      throw new Error(`CLI script failed from scripts/ directory: ${error.message}`);
+    }
   });
 });
