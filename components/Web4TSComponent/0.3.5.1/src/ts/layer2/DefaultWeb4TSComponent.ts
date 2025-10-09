@@ -1009,7 +1009,7 @@ Standards:
   }
 
   /**
-   * Display directory structure for component
+   * Display tree structure of component directory
    * WITHOUT context: Shows tree for current component (self-operation)
    * WITH context: Shows tree for target component
    * @param depth Maximum depth to traverse (default: 4)
@@ -1356,6 +1356,7 @@ Standards:
         // Not in test environment - run vitest normally
         console.log(`🧪 Running Web4TSComponent internal tests...`);
         
+        let testsFailed = false;
         try {
           // Run vitest directly (npm test delegates to us, so we run vitest)
           execSync('npx vitest run', { 
@@ -1368,12 +1369,15 @@ Standards:
           
         } catch (error) {
           console.error(`❌ Web4TSComponent internal tests failed`);
-          throw error;
+          testsFailed = true;
+          // DO NOT throw - allow promotion logic to run
+          // Stage 1 (dev → test) should happen regardless of test results
+          // Stage 2 (test → prod) only happens on 100% success
         }
       }
       
-      // 🎯 SELF-PROMOTION: After tests complete (or are skipped), handle version promotion
-      // Correct workflow: prod → dev → test → prod cycle
+      // 🎯 SELF-PROMOTION: After tests complete (or fail), handle version promotion
+      // CRITICAL: Stage 1 (dev → test) runs ALWAYS, Stage 2 (test → prod) requires 100% success
       if (shouldSkipPromotion) {
         console.log(`\n⚠️  Skipping promotion (disabled by user)`);
       } else {
@@ -1749,7 +1753,14 @@ Standards:
       await this.createSemanticLink(componentName, 'dev', devVersion);
       
       console.log(`\n✅ Stage 0 complete: ${currentVersion} (prod) → ${devVersion} (dev)`);
-      console.log(`📊 Next step: Work on ${devVersion} for development`);
+      console.log(`🔄 Switching to ${devVersion} to continue testing...`);
+      
+      // CRITICAL: Switch context to the newly created dev version
+      await this.on(componentName, devVersion);
+      
+      // Re-run test on the dev version (this will trigger Stage 1 logic)
+      console.log(`🧪 Now running tests on ${devVersion} (dev version)...`);
+      await this.test();
       
     } catch (error) {
       console.error(`❌ Stage 0 failed: ${(error as Error).message}`);
@@ -1773,7 +1784,14 @@ Standards:
       await this.createSemanticLink(componentName, 'test', testVersion);
       
       console.log(`\n✅ Stage 1 complete: ${currentVersion} (dev) → ${testVersion} (test)`);
-      console.log(`📊 Next step: Work on ${testVersion} until 100% test coverage`);
+      console.log(`🔄 Switching to ${testVersion} to run tests...`);
+      
+      // CRITICAL: Switch context to the newly created test version
+      await this.on(componentName, testVersion);
+      
+      // Re-run test on the test version (this will trigger Stage 2 logic)
+      console.log(`🧪 Now running tests on ${testVersion} (test version)...`);
+      await this.test();
       
     } catch (error) {
       console.error(`❌ Stage 1 failed: ${(error as Error).message}`);
@@ -2216,7 +2234,8 @@ Standards:
     await fs.rm(versionDir, { recursive: true, force: true });
     console.log(`✅ Removed ${targetComponent} ${targetVersion}`);
 
-    // Clean up ALL semantic symlinks pointing to removed version
+    // Clean up semantic symlinks pointing to removed version
+    // ONLY repoint 'latest' automatically - other links should be managed explicitly
     const semanticLinks = ['latest', 'dev', 'test', 'prod'];
     const versions = this.getAvailableVersions(componentDir);
     const highestVersion = versions.length > 0 ? this.getHighestVersion(versions) : null;
@@ -2232,12 +2251,14 @@ Standards:
           if (linkTarget === targetVersion) {
             await fs.unlink(symlinkPath);
             
-            if (highestVersion) {
-              // Repoint to highest remaining version
+            // Only auto-repoint 'latest' to highest remaining version
+            // Other semantic links (dev/test/prod) should be managed explicitly via their set methods
+            if (linkName === 'latest' && highestVersion) {
               await fs.symlink(highestVersion, symlinkPath);
               console.log(`🔗 Updated ${linkName}: ${targetVersion} → ${highestVersion}`);
             } else {
-              console.log(`🔗 Removed ${linkName} (no versions remaining)`);
+              console.log(`🔗 Removed ${linkName} symlink (pointed to removed version ${targetVersion})`);
+              console.log(`💡 Use set${linkName.charAt(0).toUpperCase() + linkName.slice(1)}() to reassign if needed`);
             }
           }
         }
@@ -2359,11 +2380,24 @@ Standards:
     // Analyze each component
     const analyses = await this.analyzeComponentsForComparison(componentSpecs);
     
-    // Generate comparison tables
+    // Generate comparison content for file
+    const comparisonContent = await this.generateComparisonMarkdown(componentSpecs, analyses, components);
+    
+    // Save to first component's version directory
+    const firstSpec = componentSpecs[0];
+    const firstComponentDir = this.resolveComponentDirectory(firstSpec.name);
+    const firstVersionDir = path.join(firstComponentDir, firstSpec.version);
+    const filename = this.generateSafeFilename(componentSpecs);
+    const outputPath = path.join(firstVersionDir, filename);
+    
+    await fs.writeFile(outputPath, comparisonContent, 'utf-8');
+    
+    // Generate comparison tables to console
     await this.generateDifferencesTable(componentSpecs, analyses);
     await this.generateFileComparisonTable(componentSpecs, analyses);
     
     console.log(`\n✅ Component comparison analysis complete`);
+    console.log(`📄 Analysis saved to: ${outputPath}`);
     
     return this;
   }
@@ -2388,6 +2422,252 @@ Standards:
     }
     
     return result;
+  }
+
+  /**
+   * Generate safe filename from component specifications
+   * @cliHide
+   */
+  private generateSafeFilename(componentSpecs: Array<{name: string, version: string}>): string {
+    // Create a descriptive but safe filename
+    const componentParts = componentSpecs.map(spec => 
+      `${spec.name.toLowerCase()}-${spec.version.replace(/\./g, '')}`
+    );
+    
+    const baseName = componentParts.join('-vs-');
+    const timestamp = new Date().toISOString().slice(0, 16).replace(/[:-]/g, '');
+    
+    // Ensure filename is not too long and is filesystem-safe
+    const maxLength = 200;
+    let filename = `${baseName}-comparison-${timestamp}.md`;
+    
+    if (filename.length > maxLength) {
+      // Truncate but keep the important parts
+      const truncatedBase = baseName.slice(0, maxLength - 30);
+      filename = `${truncatedBase}-comparison-${timestamp}.md`;
+    }
+    
+    // Remove any remaining unsafe characters
+    filename = filename.replace(/[^a-zA-Z0-9.-]/g, '-');
+    
+    return filename;
+  }
+
+  /**
+   * Generate complete markdown content for comparison
+   * @cliHide
+   */
+  private async generateComparisonMarkdown(
+    componentSpecs: Array<{name: string, version: string}>, 
+    analyses: any[],
+    originalComponents: string
+  ): Promise<string> {
+    const lines: string[] = [];
+    
+    // Header
+    const componentList = componentSpecs.map(spec => `${spec.name} ${spec.version}`).join(' vs ');
+    lines.push(`# Component Comparison Analysis`);
+    lines.push(`## ${componentList}`);
+    lines.push('');
+    lines.push(`**Generated:** ${new Date().toISOString().slice(0, 19).replace('T', ' ')} UTC`);
+    lines.push(`**Tool:** Web4TSComponent Compare`);
+    lines.push(`**Command:** \`web4tscomponent compare "${originalComponents}"\``);
+    lines.push('');
+    lines.push('---');
+    lines.push('');
+    
+    // Executive Summary
+    lines.push('## Executive Summary');
+    lines.push('');
+    lines.push(`This analysis compares ${componentSpecs.length} components to identify architectural differences, dependencies, and file structure variations.`);
+    lines.push('');
+    
+    // Differences Table
+    lines.push('## Package and Configuration Differences');
+    lines.push('');
+    const differencesTable = await this.generateDifferencesTableContent(componentSpecs, analyses);
+    lines.push(...differencesTable);
+    lines.push('');
+    
+    // File Comparison Table
+    lines.push('## File Structure Analysis');
+    lines.push('');
+    const fileTable = await this.generateFileComparisonTableContent(componentSpecs, analyses);
+    lines.push(...fileTable);
+    lines.push('');
+    
+    // Footer
+    lines.push('---');
+    lines.push('');
+    lines.push(`**Analysis completed:** ✅ Component comparison analysis complete`);
+    lines.push(`**Generated by:** Web4TSComponent Compare Tool`);
+    lines.push(`**Components analyzed:** ${componentSpecs.length}`);
+    
+    return lines.join('\n');
+  }
+
+  /**
+   * Generate differences table content for markdown
+   * @cliHide
+   */
+  private async generateDifferencesTableContent(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<string[]> {
+    const lines: string[] = [];
+    
+    // Table header
+    let header = '| Aspect';
+    for (const spec of componentSpecs) {
+      header += ` | ${spec.name} ${spec.version}`;
+    }
+    header += ' |';
+    lines.push(header);
+    
+    // Table separator
+    let separator = '|---|';
+    for (let i = 0; i < componentSpecs.length; i++) {
+      separator += '---|';
+    }
+    lines.push(separator);
+    
+    // Package name row
+    let packageNameRow = '| package name';
+    for (const analysis of analyses) {
+      const packageName = analysis.packageJson?.name || '(not specified)';
+      packageNameRow += ` | ${packageName}`;
+    }
+    packageNameRow += ' |';
+    lines.push(packageNameRow);
+    
+    // Version row
+    let versionRow = '| version';
+    for (const analysis of analyses) {
+      versionRow += ` | ${analysis.version}`;
+    }
+    versionRow += ' |';
+    lines.push(versionRow);
+    
+    // Engines.node row
+    let enginesRow = '| engines.node';
+    for (const analysis of analyses) {
+      const nodeEngine = analysis.engines?.node || '(not specified)';
+      enginesRow += ` | ${nodeEngine}`;
+    }
+    enginesRow += ' |';
+    lines.push(enginesRow);
+    
+    // Scripts.test row
+    let scriptsTestRow = '| scripts.test';
+    for (const analysis of analyses) {
+      const testScript = analysis.scripts?.test || '(not specified)';
+      scriptsTestRow += ` | ${testScript}`;
+    }
+    scriptsTestRow += ' |';
+    lines.push(scriptsTestRow);
+    
+    // DevDependencies.vitest row
+    let vitestRow = '| devDependencies.vitest';
+    for (const analysis of analyses) {
+      const vitest = analysis.devDependencies?.vitest || '(not specified)';
+      vitestRow += ` | ${vitest}`;
+    }
+    vitestRow += ' |';
+    lines.push(vitestRow);
+    
+    // DevDependencies.typescript row
+    let typescriptRow = '| devDependencies.typescript';
+    for (const analysis of analyses) {
+      const typescript = analysis.devDependencies?.typescript || '(not specified)';
+      typescriptRow += ` | ${typescript}`;
+    }
+    typescriptRow += ' |';
+    lines.push(typescriptRow);
+    
+    // Dependencies row
+    let dependenciesRow = '| dependencies';
+    for (const analysis of analyses) {
+      const deps = analysis.dependencies;
+      const depsList = deps ? Object.entries(deps).map(([key, value]) => `${key} ${value}`).join(', ') : '(none)';
+      dependenciesRow += ` | ${depsList}`;
+    }
+    dependenciesRow += ' |';
+    lines.push(dependenciesRow);
+    
+    return lines;
+  }
+
+  /**
+   * Generate file comparison table content for markdown with dual links
+   * @cliHide
+   */
+  private async generateFileComparisonTableContent(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<string[]> {
+    const lines: string[] = [];
+    
+    // Table header
+    let header = '| Entry (file/dir)';
+    for (const spec of componentSpecs) {
+      header += ` | ${spec.name} ${spec.version}`;
+    }
+    header += ' | Purpose | Similarity |';
+    lines.push(header);
+    
+    // Table separator
+    let separator = '|---|';
+    for (let i = 0; i < componentSpecs.length; i++) {
+      separator += '---|';
+    }
+    separator += '---|---|';
+    lines.push(separator);
+    
+    // Collect all unique files and directories
+    const allEntries = new Set<string>();
+    for (const analysis of analyses) {
+      for (const file of analysis.files) {
+        allEntries.add(file);
+      }
+      for (const dir of analysis.directories) {
+        allEntries.add(dir + '/');
+      }
+    }
+    
+    // Process all files individually with dual links
+    const sortedEntries = Array.from(allEntries).sort();
+    for (const entry of sortedEntries) {
+      
+      // Generate dual link for the entry
+      const dualLink = this.generateDualLinkForEntry(entry, componentSpecs, analyses);
+      let row = `| ${dualLink}`;
+      
+      let presentCount = 0;
+      const presencePattern = [];
+      
+      for (const analysis of analyses) {
+        const isPresent = analysis.files.has(entry) || analysis.directories.has(entry.endsWith('/') ? entry.slice(0, -1) : entry);
+        const symbol = isPresent ? '✅' : '❌';
+        row += ` | ${symbol}`;
+        
+        if (isPresent) {
+          presentCount++;
+          presencePattern.push(analysis.name.charAt(0));
+        }
+      }
+      
+      // Determine purpose and similarity
+      const purpose = this.determinePurpose(entry);
+      const similarity = await this.determineSimilarity(entry, componentSpecs, presentCount, componentSpecs.length, presencePattern, analyses);
+      
+      row += ` | ${purpose} | ${similarity} |`;
+      lines.push(row);
+    }
+    
+    return lines;
+  }
+
+  /**
+   * Generate dual link for file entry (local path only, relative to version folder)
+   * @cliHide
+   */
+  private generateDualLinkForEntry(entry: string, componentSpecs: Array<{name: string, version: string}>, analyses: any[]): string {
+    // Simply return the entry as a local relative path
+    return entry;
   }
 
   /**
@@ -2617,7 +2897,7 @@ Standards:
       const presencePattern = [];
       
       for (const analysis of analyses) {
-        const isPresent = analysis.files.has(entry) || analysis.directories.has(entry.replace('/', ''));
+        const isPresent = analysis.files.has(entry) || analysis.directories.has(entry.endsWith('/') ? entry.slice(0, -1) : entry);
         const symbol = isPresent ? '✅' : '❌';
         row += ` | ${symbol}`;
         
@@ -2681,8 +2961,8 @@ Standards:
         const spec = componentSpecs[i];
         
         if (analysis.files.has(file)) {
-          const componentPath = `/workspace/components/${spec.name}/${spec.version}`;
-          const filePath = path.join(componentPath, file);
+          // Use the actual component path from analysis
+          const filePath = path.join(analysis.path, file);
           
           try {
             const content = await fs.readFile(filePath, 'utf8');
@@ -2774,20 +3054,17 @@ Standards:
    * Determine similarity based on actual content comparison
    * - Identical: Files have NO diff at all (byte-identical)
    * - Similar: Files stem from same template but adapted to component specifics
-   * - Folders: Identical if they exist in all components (content irrelevant)
+   * - Folders: Identical if they exist in 2+ components (content irrelevant)
    * @cliHide
    */
   private async determineSimilarity(entry: string, componentSpecs: any[], presentCount: number, totalCount: number, presencePattern: string[], analyses: any[]): Promise<string> {
-    // Handle directories - identical if present in all components
+    // Handle directories - identical if present in 2+ components (content doesn't matter)
     if (entry.endsWith('/')) {
-      if (presentCount === totalCount) {
+      if (presentCount >= 2) {
         return '🟩 Identical';
       } else if (presentCount === 1) {
         const uniqueComponent = presencePattern[0];
         return `🟪 Unique – ${uniqueComponent}`;
-      } else if (presentCount > 1 && presentCount < totalCount) {
-        const pattern = presencePattern.join('+');
-        return `🟨 Partial (${pattern})`;
       } else {
         return '🟥 Different';
       }
@@ -2812,8 +3089,8 @@ Standards:
       const analysis = analyses[i];
       if (analysis.files.has(entry)) {
         presentComponents.push(componentSpecs[i]);
-        const componentPath = `/workspace/components/${componentSpecs[i].name}/${componentSpecs[i].version}`;
-        filePaths.push(path.join(componentPath, entry));
+        // Use the actual component path from analysis
+        filePaths.push(path.join(analysis.path, entry));
       }
     }
 
@@ -2925,11 +3202,10 @@ Standards:
   private async getFileContent(entry: string, componentSpecs: any[], analyses: any[]): Promise<string | null> {
     for (let i = 0; i < componentSpecs.length; i++) {
       const analysis = analyses[i];
-      const spec = componentSpecs[i];
       
       if (analysis.files.has(entry)) {
-        const componentPath = `/workspace/components/${spec.name}/${spec.version}`;
-        const filePath = path.join(componentPath, entry);
+        // Use the actual component path from analysis
+        const filePath = path.join(analysis.path, entry);
         
         try {
           return await fs.readFile(filePath, 'utf8');
@@ -2985,7 +3261,7 @@ Standards:
         for (const cliFile of cliFiles) {
           if (cliFile !== entry) {
             // Check if these CLI files follow the same template pattern
-            const thisFilePath = `/workspace/components/${spec.name}/${spec.version}/${cliFile}`;
+            const thisFilePath = path.join(analysis.path, cliFile);
             const originalFilePath = this.findOriginalFilePath(entry, componentSpecs, analyses);
             
             if (await this.areTemplatePatternFiles(originalFilePath, thisFilePath)) {
@@ -3010,10 +3286,10 @@ Standards:
   private findOriginalFilePath(entry: string, componentSpecs: any[], analyses: any[]): string | null {
     for (let i = 0; i < componentSpecs.length; i++) {
       const analysis = analyses[i];
-      const spec = componentSpecs[i];
       
       if (analysis.files.has(entry)) {
-        return `/workspace/components/${spec.name}/${spec.version}/${entry}`;
+        // Use the actual component path from analysis
+        return path.join(analysis.path, entry);
       }
     }
     return null;
@@ -4546,10 +4822,13 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     const versionScriptName = `${componentLowerCase}-v${version}`;
     const versionScriptPath = path.join(versionsDir, versionScriptName);
 
-    // Remove version-specific script symlink
-    if (existsSync(versionScriptPath)) {
+    // Remove version-specific script symlink (use lstat to detect broken symlinks)
+    try {
+      lstatSync(versionScriptPath);
       await fs.unlink(versionScriptPath);
       console.log(`🔗 Removed version script symlink: ${versionScriptName}`);
+    } catch (error) {
+      // Symlink doesn't exist - that's fine
     }
 
     // Check if main script points to this version, repoint if needed
