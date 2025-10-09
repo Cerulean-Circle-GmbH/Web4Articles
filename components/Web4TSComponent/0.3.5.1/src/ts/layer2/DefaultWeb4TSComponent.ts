@@ -272,12 +272,20 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       await this.createTestStructure(componentDir);
     }
     
-    // Create latest symlink and script symlinks for new component
+    // Create semantic symlinks for new component
+    // Initial version is prod + latest (NOT dev - dev comes later when you start working)
     await this.updateLatestSymlink(componentName, version);
+    await this.createSemanticLink(componentName, 'prod', version); // Mark as production
     await this.updateScriptsSymlinks(componentName, version);
     
     // Create base package.json for npm start ONLY principle
     await this.createBasePackageJson(componentName, version);
+    
+    console.log(`\n📊 Initial semantic links:`);
+    console.log(`   🚀 prod:   ${version} (initial production version)`);
+    console.log(`   📦 latest: ${version} (stable release)`);
+    console.log(`   🚧 dev:    none (will be created on first test run)`);
+    console.log(`   🧪 test:   none (will be created when dev is tested)`);
     
     return {
       name: componentName,
@@ -323,39 +331,29 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 
 # ${componentName} CLI Tool - Location Resilient Version
 # Web4 Architecture Standard - Self-Implementing Reference
-# Works from any directory, finds project root via git
+# Works from any directory via symlink resolution
 
-# Function to find project root using git
-find_project_root() {
-    local git_root=$(git rev-parse --show-toplevel 2>/dev/null)
-    if [ -n "$git_root" ] && [ -d "$git_root" ]; then
-        if [ -f "$git_root/package.json" ] || [ -f "$git_root/README.md" ]; then
-            echo "$git_root"
-            return 0
-        fi
+# Get component version directory from script location (location-resilient)
+# Resolve symlinks: Follow the script file itself, not just the directory
+SCRIPT_FILE="\${BASH_SOURCE[0]}"
+# Resolve all symlinks
+while [ -L "$SCRIPT_FILE" ]; do
+    SCRIPT_FILE="$(readlink "$SCRIPT_FILE")"
+    # Handle relative symlinks
+    if [[ "$SCRIPT_FILE" != /* ]]; then
+        SCRIPT_FILE="$(dirname "\${BASH_SOURCE[0]}")/$SCRIPT_FILE"
     fi
-    
-    local current_dir="$PWD"
-    while [ "$current_dir" != "/" ]; do
-        if [ -d "$current_dir/.git" ] && [ -f "$current_dir/package.json" ]; then
-            echo "$current_dir"
-            return 0
-        fi
-        current_dir="$(dirname "$current_dir")"
-    done
-    
-    return 1
-}
+done
+SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_FILE")" && pwd)"
+COMPONENT_PATH="$SCRIPT_DIR"
 
-# Main execution
-PROJECT_ROOT=$(find_project_root)
-if [ -z "$PROJECT_ROOT" ]; then
-    echo "❌ Error: Not in a Web4 project directory"
+# Verify component exists
+if [ ! -d "$COMPONENT_PATH" ]; then
+    echo "❌ ${componentName} ${version} not found at $COMPONENT_PATH"
     exit 1
 fi
 
-# Navigate to component version directory
-COMPONENT_PATH="$PROJECT_ROOT/components/${componentName}/${version}"
+# Change to component directory
 cd "$COMPONENT_PATH" || {
     echo "❌ Failed to cd to $COMPONENT_PATH"
     exit 1
@@ -1175,7 +1173,7 @@ Standards:
       console.log('');
 
       // Display semantic links with status indicators
-      const linkOrder = ['prod', 'test', 'dev', 'latest'];
+      const linkOrder = ['prod', 'test', 'dev', 'latest'] as const;
       for (const linkType of linkOrder) {
         const target = semanticLinks[linkType];
         const icon = this.getLinkIcon(linkType);
@@ -1207,7 +1205,7 @@ Standards:
     console.log('');
 
     // Display semantic links with status indicators
-    const linkOrder = ['prod', 'test', 'dev', 'latest'];
+    const linkOrder = ['prod', 'test', 'dev', 'latest'] as const;
     for (const linkType of linkOrder) {
       const target = semanticLinks[linkType];
       const icon = this.getLinkIcon(linkType);
@@ -1285,22 +1283,24 @@ Standards:
    * Get all semantic links for a component
    * @cliHide
    */
-  private async getSemanticLinks(componentName: string): Promise<Record<string, string | null>> {
+  private async getSemanticLinks(componentName: string): Promise<{ dev: string | null; test: string | null; prod: string | null; latest: string | null }> {
     const componentDir = this.resolveComponentDirectory(componentName);
-    const semanticLinks = ['latest', 'dev', 'test', 'prod'];
-    const result: Record<string, string | null> = {};
+    const result = {
+      dev: null as string | null,
+      test: null as string | null,
+      prod: null as string | null,
+      latest: null as string | null
+    };
 
-    for (const linkType of semanticLinks) {
+    for (const linkType of ['dev', 'test', 'prod', 'latest'] as const) {
       const linkPath = path.join(componentDir, linkType);
       try {
         if (existsSync(linkPath)) {
           const target = await fs.readlink(linkPath);
           result[linkType] = target;
-        } else {
-          result[linkType] = null;
         }
       } catch (error) {
-        result[linkType] = null;
+        // Leave as null
       }
     }
 
@@ -1373,24 +1373,16 @@ Standards:
       }
       
       // 🎯 SELF-PROMOTION: After tests complete (or are skipped), handle version promotion
-      // Two-stage workflow: Stage 1 (dev → test) or Stage 2 (test → prod)
+      // Correct workflow: prod → dev → test → prod cycle
       if (shouldSkipPromotion) {
         console.log(`\n⚠️  Skipping promotion (disabled by user)`);
       } else {
         console.log(`\n🔍 Checking for promotion opportunity...`);
         const currentVersion = await this.getCurrentVersion();
-        
-        // Determine which promotion stage to apply
         const semanticLinks = await this.getSemanticLinks('Web4TSComponent');
-        const currentTest = semanticLinks.test;
         
-        if (currentVersion !== currentTest) {
-          // Stage 1: This is a dev version, promote to test
-          await this.handleFirstTestRun('Web4TSComponent', currentVersion);
-        } else {
-          // Stage 2: This is the test version, check for 100% pass
-          await this.handleTestSuccessPromotion('Web4TSComponent', currentVersion);
-        }
+        // Determine promotion stage based on semantic links
+        await this.determinePromotionStage('Web4TSComponent', currentVersion, semanticLinks);
       }
       
       return this;
@@ -1452,17 +1444,8 @@ Standards:
       if (shouldSkipPromotion) {
         console.log(`⚠️  Skipping promotion (disabled by user)`);
       } else {
-        // Determine which promotion stage to apply
         const semanticLinks = await this.getSemanticLinks(context.component);
-        const currentTest = semanticLinks.test;
-        
-        if (targetVersion !== currentTest) {
-          // Stage 1: This is a dev version, promote to test
-          await this.handleFirstTestRun(context.component, targetVersion);
-        } else {
-          // Stage 2: This is the test version, check for 100% pass
-          await this.handleTestSuccessPromotion(context.component, targetVersion);
-        }
+        await this.determinePromotionStage(context.component, targetVersion, semanticLinks);
       }
       
     } catch (error) {
@@ -1631,13 +1614,6 @@ Standards:
     console.log(`\n🎯 Analyzing release test success for version promotion...`);
     console.log(`📋 MAJOR RELEASE MODE: Will use nextMinor (not nextPatch)`);
     
-    // 🚨 CRITICAL: Never promote when in test environment (test/data)
-    if (this.isTestEnvironment()) {
-      console.log(`⚠️  Skipping promotion: Running in test environment`);
-      console.log(`💡 Promotions only happen in real component directories, not test/data`);
-      return;
-    }
-    
     // Safety check: verify this version is currently 'test'
     const semanticLinks = await this.getSemanticLinks(componentName);
     const currentTest = semanticLinks.test;
@@ -1707,10 +1683,110 @@ Standards:
   }
 
   /**
+   * Determine which promotion stage to apply based on current semantic links
+   * Correct workflow:
+   * 1. Create 0.1.0.0 → prod + latest (initial production version)
+   * 2. No dev? → Create 0.1.0.1 → dev (start development)
+   * 3. Testing dev? → Create 0.1.0.2 → test (start testing)
+   * 4. 100% test pass? → Create 0.1.1.0 → prod + latest, Create 0.1.1.1 → dev (new cycle)
+   * @cliHide
+   */
+  private async determinePromotionStage(
+    componentName: string, 
+    currentVersion: string, 
+    semanticLinks: { dev: string | null; test: string | null; prod: string | null; latest: string | null }
+  ): Promise<void> {
+    console.log(`\n📊 Current semantic links:`);
+    console.log(`   🚀 prod:   ${semanticLinks.prod || 'none'}`);
+    console.log(`   🧪 test:   ${semanticLinks.test || 'none'}`);
+    console.log(`   🚧 dev:    ${semanticLinks.dev || 'none'}`);
+    console.log(`   📦 latest: ${semanticLinks.latest || 'none'}`);
+    console.log(`   📍 Current: ${currentVersion}`);
+    
+    // Stage 0: No dev link exists → create first dev version
+    if (!semanticLinks.dev) {
+      console.log(`\n🚧 Stage 0: No dev version exists, creating first dev version...`);
+      await this.handleCreateFirstDev(componentName, currentVersion);
+      return;
+    }
+    
+    // Stage 1: Current is dev, no test link OR test is outdated → create test version
+    if (currentVersion === semanticLinks.dev && 
+        (!semanticLinks.test || semanticLinks.test < currentVersion)) {
+      console.log(`\n🧪 Stage 1: dev → test (creating test version)...`);
+      await this.handleDevToTest(componentName, currentVersion);
+      return;
+    }
+    
+    // Stage 2: Current is test and 100% pass → promote to prod
+    if (currentVersion === semanticLinks.test) {
+      console.log(`\n🚀 Stage 2: test → prod (checking for 100% test success)...`);
+      await this.handleTestSuccessPromotion(componentName, currentVersion);
+      return;
+    }
+    
+    // Unknown state
+    console.log(`\n⚠️  Current version ${currentVersion} doesn't match any promotion pattern`);
+    console.log(`💡 Expected:`);
+    console.log(`   - If you just created the component: run test again to create dev version`);
+    console.log(`   - If you're developing: make sure you're on the dev version`);
+    console.log(`   - If you're testing: make sure you're on the test version`);
+  }
+
+  /**
+   * Stage 0: Create first dev version from prod
+   * E.g., 0.1.0.0 (prod) → 0.1.0.1 (dev)
+   * @cliHide
+   */
+  private async handleCreateFirstDev(componentName: string, currentVersion: string): Promise<void> {
+    console.log(`\n🚧 Creating first dev version from ${currentVersion}...`);
+    
+    try {
+      // Create nextBuild version (increment build number)
+      const devVersion = await this.createNextBuildVersion(componentName, currentVersion);
+      
+      // Set as dev
+      await this.createSemanticLink(componentName, 'dev', devVersion);
+      
+      console.log(`\n✅ Stage 0 complete: ${currentVersion} (prod) → ${devVersion} (dev)`);
+      console.log(`📊 Next step: Work on ${devVersion} for development`);
+      
+    } catch (error) {
+      console.error(`❌ Stage 0 failed: ${(error as Error).message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Stage 1: Create test version from dev
+   * E.g., 0.1.0.1 (dev) → 0.1.0.2 (test)
+   * @cliHide
+   */
+  private async handleDevToTest(componentName: string, currentVersion: string): Promise<void> {
+    console.log(`\n🧪 Creating test version from ${currentVersion}...`);
+    
+    try {
+      // Create nextBuild version (increment build number)
+      const testVersion = await this.createNextBuildVersion(componentName, currentVersion);
+      
+      // Set as test
+      await this.createSemanticLink(componentName, 'test', testVersion);
+      
+      console.log(`\n✅ Stage 1 complete: ${currentVersion} (dev) → ${testVersion} (test)`);
+      console.log(`📊 Next step: Work on ${testVersion} until 100% test coverage`);
+      
+    } catch (error) {
+      console.error(`❌ Stage 1 failed: ${(error as Error).message}`);
+      throw error;
+    }
+  }
+
+  /**
    * Handle first test run: promote dev to test (Stage 1)
    * Workflow Stage 1: dev → test (nextBuild)
    * E.g., 0.3.4.1 (dev) → 0.3.4.2 (test)
    * @cliHide
+   * @deprecated Use determinePromotionStage instead
    */
   private async handleFirstTestRun(componentName: string, currentVersion: string): Promise<void> {
     console.log(`\n🧪 First test run detected for ${componentName} ${currentVersion}`);
@@ -1749,13 +1825,6 @@ Standards:
    */
   async handleTestSuccessPromotion(componentName: string, currentVersion: string): Promise<void> {
     console.log(`\n🎯 Analyzing test success for version promotion...`);
-    
-    // 🚨 CRITICAL: Never promote when in test environment (test/data)
-    if (this.isTestEnvironment()) {
-      console.log(`⚠️  Skipping promotion: Running in test environment`);
-      console.log(`💡 Promotions only happen in real component directories, not test/data`);
-      return;
-    }
     
     // Safety check: verify this version is currently 'test'
     const semanticLinks = await this.getSemanticLinks(componentName);
@@ -1831,7 +1900,10 @@ Standards:
    */
   async verifyTestSuccess(componentName: string, version: string): Promise<boolean> {
     // Read test results from vitest JSON output
-    const testResultsPath = path.join(process.cwd(), 'test/test-results.json');
+    // Use component's directory, not process.cwd() (which may be different in test environments)
+    const componentsDir = path.join(this.model.targetDirectory || process.cwd(), 'components');
+    const componentVersionDir = path.join(componentsDir, componentName, version);
+    const testResultsPath = path.join(componentVersionDir, 'test/test-results.json');
     
     if (!existsSync(testResultsPath)) {
       console.log(`⚠️  No test results file found at ${testResultsPath}`);
@@ -3579,24 +3651,10 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     await fs.mkdir(path.join(componentDir, 'spec'), { recursive: true });
   }
 
-  /**
-   * Create vitest configuration file
-   * @cliHide
-   */
-  private async createVitestConfig(componentDir: string): Promise<void> {
-    const vitestConfig = `import { defineConfig } from 'vitest/config';
-
-export default defineConfig({
-  test: {
-    globals: true,
-    environment: 'node',
-    timeout: 30000,
-    exclude: ['**/node_modules/**', '**/dist/**']
-  }
-});`;
-    
-    await fs.writeFile(path.join(componentDir, 'vitest.config.ts'), vitestConfig);
-  }
+  // DEAD CODE REMOVED (2025-10-08): createVitestConfig() was replaced by createVitestConfigFromTemplate()
+  // Old version had hardcoded config without reporters/outputFile for test-results.json
+  // New version uses template with proper JSON reporting for promotion verification
+  // Proof: grep shows 0 callers for createVitestConfig(), only createVitestConfigFromTemplate() is called at line 248
 
   /**
    * Create test directory structure with basic test file
@@ -3674,7 +3732,7 @@ export default defineConfig({
    */
   private async verifySemanticLinks(component: string, availableVersions: string[]): Promise<void> {
     const semanticLinks = await this.getSemanticLinks(component);
-    const semanticTypes = ['dev', 'test', 'prod']; // Don't check 'latest' as it's handled separately
+    const semanticTypes = ['dev', 'test', 'prod'] as const; // Don't check 'latest' as it's handled separately
     
     for (const linkType of semanticTypes) {
       const target = semanticLinks[linkType];
@@ -4551,8 +4609,8 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
       }
     }
 
-    // Remove main script symlink (it's in scripts/versions/, not scripts/)
-    const mainScriptPath = path.join(versionsDir, componentLowerCase);
+    // Remove main script symlink (it's in scripts/, not scripts/versions/)
+    const mainScriptPath = path.join(scriptsDir, componentLowerCase);
     try {
       // Use lstatSync to detect broken symlinks (existsSync returns false for broken symlinks)
       lstatSync(mainScriptPath);

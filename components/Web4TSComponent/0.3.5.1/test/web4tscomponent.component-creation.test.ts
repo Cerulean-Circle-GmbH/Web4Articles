@@ -255,18 +255,18 @@ describe('🏗️ Component Creation', () => {
       expect(target).toBe(testVersion);
     });
 
-    it('should create script symlinks in scripts/versions/', async () => {
+    it('should create script symlinks in scripts/ and scripts/versions/', async () => {
       await component.create(testComponentName, testVersion, 'all');
       
       const componentLower = testComponentName.toLowerCase();
-      const mainScriptLink = path.join(testDataDir, 'scripts/versions', componentLower);
+      const mainScriptLink = path.join(testDataDir, 'scripts', componentLower);
       const versionedScriptLink = path.join(testDataDir, 'scripts/versions', `${componentLower}-v${testVersion}`);
       
-      // Verify main script symlink exists
+      // Verify main script symlink exists (in scripts/, not scripts/versions/)
       expect(existsSync(mainScriptLink)).toBe(true);
       expect(lstatSync(mainScriptLink).isSymbolicLink()).toBe(true);
       
-      // Verify versioned script exists (may be file or symlink depending on implementation)
+      // Verify versioned script exists in scripts/versions/
       expect(existsSync(versionedScriptLink)).toBe(true);
     });
   });

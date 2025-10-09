@@ -11,7 +11,7 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { DefaultWeb4TSComponent } from '../src/ts/layer2/DefaultWeb4TSComponent.js';
-import { existsSync, rmSync, readFileSync } from 'fs';
+import { existsSync, rmSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 
@@ -23,16 +23,11 @@ describe('🧪 Generated Component Testing Workflow', () => {
   beforeEach(() => {
     component = new DefaultWeb4TSComponent();
     component.setTargetDirectory(testDataDir);
-    
-    // Clean up test component
-    const componentDir = path.join(testDataDir, 'components', testComponentName);
-    if (existsSync(componentDir)) {
-      rmSync(componentDir, { recursive: true, force: true });
-    }
   });
 
   afterEach(() => {
-    // Leave test results visible for inspection
+    // Clean up BEFORE next test (not after) to leave evidence visible
+    // This will be called AFTER the current test completes
   });
 
   describe('📝 Story: Generated Component Test Infrastructure', () => {
@@ -56,7 +51,7 @@ describe('🧪 Generated Component Testing Workflow', () => {
       console.log('   ✅ Enables promotion workflow on 100% test success');
     });
 
-    it('should create component with test() method that has recursion prevention', async () => {
+    it('should create component with simple test() method that runs vitest', async () => {
       console.log('\n📖 Checking generated TypeScript test() method...');
       
       await component.create(testComponentName, '0.1.0.0', 'all');
@@ -74,24 +69,29 @@ describe('🧪 Generated Component Testing Workflow', () => {
       
       const implContent = readFileSync(componentImplPath, 'utf-8');
       
-      // Verify recursion detection logic
-      expect(implContent).toContain('process.env.VITEST');
-      expect(implContent).toContain('insideTestEnvironment');
-      expect(implContent).toContain('web4tscomponentPath');
-      expect(implContent).toContain('dev test');
+      // Verify auto-promotion implementation (same as Web4TSComponent)
+      expect(implContent).toContain('async test(): Promise<this>');
+      expect(implContent).toContain('npx vitest run');
+      expect(implContent).toContain('automatic promotion workflow');
+      expect(implContent).toContain('Stage 0: prod (initial) → create dev');
+      expect(implContent).toContain('Stage 1: dev → create test');
+      expect(implContent).toContain('Stage 2: test + 100% → create prod + dev');
       
-      console.log('   ✅ test() method has VITEST env check');
-      console.log('   ✅ Delegates to web4tscomponent when not in vitest');
-      console.log('   ✅ Runs vitest directly when already in test environment');
+      // MUST have recursion detection
+      expect(implContent).toContain('process.env.VITEST');
+      expect(implContent).toContain('RECURSION DETECTION');
+      
+      // MUST use OOP (not shell exec to web4tscomponent)
+      expect(implContent).toContain('DefaultWeb4TSComponent');
+      expect(implContent).toContain('setTargetDirectory');
+      expect(implContent).toContain('insideTestEnvironment');
+      
+      console.log('   ✅ test() method has auto-promotion logic');
+      console.log('   ✅ Recursion prevention via VITEST env var');
+      console.log('   ✅ Promotion via OOP (DefaultWeb4TSComponent instantiation)');
     });
 
-    // Note: This test is skipped because npm test on first run includes:
-    // - Installing all dependencies (93 packages)
-    // - Building TypeScript from scratch
-    // - Running vitest
-    // This can take > 60 seconds, causing timeout false positives
-    // The recursion prevention is verified by the other tests in this suite
-    it.skip('should allow npm test to run without recursion (skipped: too slow on first build)', async () => {
+    it('should allow npm test to run without recursion', async () => {
       console.log('\n📖 Testing npm test workflow (no recursion)...');
       
       await component.create(testComponentName, '0.1.0.0', 'all');
@@ -99,11 +99,18 @@ describe('🧪 Generated Component Testing Workflow', () => {
       const componentDir = path.join(testDataDir, 'components', testComponentName, '0.1.0.0');
       
       // Run npm test (should NOT recurse)
+      // Note: First run includes installing 93 packages + building TypeScript
+      // CRITICAL: Use clean environment (don't inherit VITEST from parent)
+      const cleanEnv = { ...process.env };
+      delete cleanEnv.VITEST;
+      delete cleanEnv.VITEST_WORKER_ID;
+      
       try {
         const result = execSync('npm test', {
           cwd: componentDir,
           encoding: 'utf-8',
-          timeout: 60000 // 60 second timeout (includes build time + test time)
+          timeout: 120000, // 120 second timeout (first build is slow but should complete)
+          env: cleanEnv // Use clean environment without VITEST
         });
         
         // If we get here, no infinite recursion occurred
@@ -121,8 +128,8 @@ describe('🧪 Generated Component Testing Workflow', () => {
       }
     });
 
-    it('should have test() CLI method that delegates for promotion workflow', async () => {
-      console.log('\n📖 Verifying CLI delegation for promotion...');
+    it('should create component that documents promotion workflow in test() method', async () => {
+      console.log('\n📖 Verifying promotion workflow documentation...');
       
       await component.create(testComponentName, '0.1.0.0', 'all');
       
@@ -137,82 +144,73 @@ describe('🧪 Generated Component Testing Workflow', () => {
       
       const implContent = readFileSync(componentImplPath, 'utf-8');
       
-      // Verify delegation happens when NOT in vitest
-      expect(implContent).toContain('Not in test environment - delegate to web4tscomponent');
-      expect(implContent).toContain('web4tscomponentPath');
-      expect(implContent).toContain('dev test');
+      // Verify documentation about auto-promotion workflow
+      expect(implContent).toContain('automatic promotion workflow');
+      expect(implContent).toContain('Stage 0: prod (initial) → create dev');
+      expect(implContent).toContain('Stage 1: dev → create test');
+      expect(implContent).toContain('Stage 2: test + 100% → create prod + dev');
+      expect(implContent).toContain('DefaultWeb4TSComponent'); // OOP instantiation
       
-      console.log('   ✅ CLI test() method delegates to web4tscomponent');
-      console.log('   ✅ Enables promotion workflow when called directly');
-      console.log('   💡 Usage: web4tscomponent on TestGeneratedComponent dev test');
+      console.log('   ✅ Component documents promotion workflow');
+      console.log('   ✅ Auto-promotion via OOP (DefaultWeb4TSComponent)');
+      console.log('   💡 Generated components promote themselves!');
     });
 
-    // Note: Skipped for same reason as above test - first npm test is too slow
-    it.skip('should document two testing modes in generated component (skipped: too slow on first build)', async () => {
-      console.log('\n📖 Checking component has both testing modes available...');
+    it('should verify npm test works on generated component', async () => {
+      console.log('\n📖 Verifying npm test works correctly...');
       
       await component.create(testComponentName, '0.1.0.0', 'all');
       
       const componentDir = path.join(testDataDir, 'components', testComponentName, '0.1.0.0');
       
-      // Verify npm test works (Mode 1: Simple testing)
+      // Verify npm test works
+      // CRITICAL: Use clean environment (don't inherit VITEST from parent)
+      const cleanEnv = { ...process.env };
+      delete cleanEnv.VITEST;
+      delete cleanEnv.VITEST_WORKER_ID;
+      
       const testResult = execSync('npm test', {
         cwd: componentDir,
         encoding: 'utf-8',
-        timeout: 60000 // 60 second timeout (includes build)
+        timeout: 120000, // 120 second timeout (first build is slow)
+        env: cleanEnv // Use clean environment without VITEST
       });
       expect(testResult).toContain('passed');
       
-      console.log('   ✅ Mode 1: npm test (simple testing, no promotion)');
-      console.log('   ✅ Mode 2: web4tscomponent on ComponentName dev test (with promotion)');
-      console.log('   📝 Both modes prevent infinite recursion');
+      console.log('   ✅ npm test runs with auto-promotion');
+      console.log('   ✅ Recursion prevented via VITEST env var check');
+      console.log('   💡 Generated components promote themselves!');
     });
   });
 
-  describe('🔄 Recursion Prevention Mechanisms', () => {
-    it('should prevent recursion via VITEST env check in test() method', async () => {
+  describe('🔄 Web4TSComponent Promotion Workflow', () => {
+    beforeEach(() => {
+      // Clean up before each test in this describe block
+      const componentDir = path.join(testDataDir, 'components', testComponentName);
+      if (existsSync(componentDir)) {
+        rmSync(componentDir, { recursive: true, force: true });
+      }
+    });
+
+    it('should support correct promotion workflow stages', async () => {
       await component.create(testComponentName, '0.1.0.0', 'all');
       
-      const implPath = path.join(
-        testDataDir, 
-        'components', 
-        testComponentName, 
-        '0.1.0.0', 
-        'src/ts/layer2',
-        `Default${testComponentName}.ts`
-      );
-      const content = readFileSync(implPath, 'utf-8');
+      const componentDir = path.join(testDataDir, 'components', testComponentName);
       
-      // Verify recursion prevention via VITEST env check
-      expect(content).toContain('process.env.VITEST');
-      expect(content).toContain('insideTestEnvironment');
-      expect(content).toContain('npx vitest run');
+      // Verify initial state: prod + latest only
+      expect(existsSync(path.join(componentDir, 'prod'))).toBe(true);
+      expect(existsSync(path.join(componentDir, 'latest'))).toBe(true);
+      expect(existsSync(path.join(componentDir, 'dev'))).toBe(false);
+      expect(existsSync(path.join(componentDir, 'test'))).toBe(false);
       
-      console.log('   ✅ Recursion prevented via VITEST environment variable');
-      console.log('   ✅ When VITEST is set, runs vitest directly without delegation');
+      console.log('   ✅ Initial: 0.1.0.0 → prod + latest (no dev/test yet)');
+      console.log('   📋 Stage 0: First test run will create dev');
+      console.log('   📋 Stage 1: Testing dev will create test');
+      console.log('   📋 Stage 2: 100% test pass will promote to prod + create new dev');
     });
 
 
-    it('should support promotion workflow via web4tscomponent delegation', async () => {
-      console.log('\n📖 Testing promotion workflow for generated components...');
-      
-      await component.create(testComponentName, '0.1.0.0', 'all');
-      
-      // Set up for promotion workflow
-      await component.on(testComponentName, '0.1.0.0');
-      await component.setDev('0.1.0.0');
-      
-      // Verify component can be promoted via Web4TSComponent infrastructure
-      const links = await component.getSemanticLinks(testComponentName);
-      expect(links.dev).toBe('0.1.0.0');
-      
-      console.log('   ✅ Generated component supports promotion workflow');
-      console.log('   ✅ Can be promoted via: web4tscomponent on ComponentName dev test');
-      console.log('   💡 npm test (simple) vs web4tscomponent on ComponentName dev test (with promotion)');
-    });
-
-    // Note: Skipped for same reason - npm test on first run is legitimately slow
-    it.skip('should handle timeout gracefully if recursion occurs (skipped: first build is slow)', async () => {
+    it('should handle timeout gracefully if recursion occurs', async () => {
       // This test verifies our timeout mechanism works
       // If a component has infinite recursion, the test should fail with timeout
       // not hang forever
@@ -227,13 +225,13 @@ describe('🧪 Generated Component Testing Workflow', () => {
         execSync('npm test', {
           cwd: componentDir,
           encoding: 'utf-8',
-          timeout: 60000 // 60 second timeout (first run includes build)
+          timeout: 120000 // 120 second timeout (first run includes build)
         });
         
         const duration = Date.now() - startTime;
         
-        // Test should complete without timeout (< 60 seconds)
-        expect(duration).toBeLessThan(60000);
+        // Test should complete without timeout (< 120 seconds)
+        expect(duration).toBeLessThan(120000);
         
         console.log(`   ✅ Test completed in ${duration}ms (no recursion)`);
       } catch (error) {
@@ -242,6 +240,86 @@ describe('🧪 Generated Component Testing Workflow', () => {
         }
         // Other errors are OK (test failures, etc.)
       }
+    });
+
+    // LAST TEST: Leave evidence visible for manual inspection
+    it('should complete FULL promotion workflow: prod → dev → test → prod cycle (EVIDENCE LEFT VISIBLE)', async () => {
+      console.log('\n📖 Testing COMPLETE promotion workflow...');
+      console.log('⚠️  This test runs LAST to leave promotion evidence visible in test/data');
+      
+      // Stage 0: Create component
+      console.log('\n🏗️  Stage 0: Create component...');
+      await component.create(testComponentName, '0.1.0.0', 'all');
+      
+      let links = await component.getSemanticLinks(testComponentName);
+      expect(links.prod).toBe('0.1.0.0');
+      expect(links.dev).toBeNull();
+      expect(links.test).toBeNull();
+      console.log('   ✅ Created: 0.1.0.0 → prod + latest');
+      
+      // Stage 1: First test run → Create dev
+      console.log('\n🚧 Stage 1: First test run → Create dev...');
+      await component.on(testComponentName, '0.1.0.0');
+      await component.test();
+      
+      links = await component.getSemanticLinks(testComponentName);
+      expect(links.prod).toBe('0.1.0.0');
+      expect(links.dev).toBe('0.1.0.1');
+      expect(links.test).toBeNull();
+      expect(existsSync(path.join(testDataDir, 'components', testComponentName, '0.1.0.1'))).toBe(true);
+      console.log('   ✅ Stage 1: 0.1.0.0 (prod) → 0.1.0.1 (dev)');
+      
+      // Stage 2: Test dev → Create test
+      console.log('\n🧪 Stage 2: Test dev → Create test...');
+      await component.on(testComponentName, '0.1.0.1');
+      await component.test();
+      
+      links = await component.getSemanticLinks(testComponentName);
+      expect(links.prod).toBe('0.1.0.0');
+      expect(links.dev).toBe('0.1.0.1');
+      expect(links.test).toBe('0.1.0.2');
+      expect(existsSync(path.join(testDataDir, 'components', testComponentName, '0.1.0.2'))).toBe(true);
+      console.log('   ✅ Stage 2: 0.1.0.1 (dev) → 0.1.0.2 (test)');
+      
+      // Stage 3: Test with 100% → Promote to prod + create new dev
+      console.log('\n🚀 Stage 3: Test with 100% → Promote to prod...');
+      
+      // CRITICAL: Create mock test-results.json with 100% success
+      // (Vitest won't run due to recursion detection, so we mock the results)
+      const testDir = path.join(testDataDir, 'components', testComponentName, '0.1.0.2', 'test');
+      if (!existsSync(testDir)) {
+        mkdirSync(testDir, { recursive: true });
+      }
+      const testResultsPath = path.join(testDir, 'test-results.json');
+      const mockTestResults = {
+        numTotalTests: 1,
+        numFailedTests: 0,
+        numPassedTests: 1,
+        numPendingTests: 0,
+        numTodoTests: 0,
+        success: true
+      };
+      writeFileSync(testResultsPath, JSON.stringify(mockTestResults, null, 2));
+      console.log('   ✅ Mock test results created (100% success)');
+      
+      await component.on(testComponentName, '0.1.0.2');
+      await component.test();
+      
+      links = await component.getSemanticLinks(testComponentName);
+      expect(links.prod).toBe('0.1.1.0');
+      expect(links.dev).toBe('0.1.1.1');
+      expect(links.test).toBe('0.1.1.1');
+      expect(existsSync(path.join(testDataDir, 'components', testComponentName, '0.1.1.0'))).toBe(true);
+      expect(existsSync(path.join(testDataDir, 'components', testComponentName, '0.1.1.1'))).toBe(true);
+      console.log('   ✅ Stage 3: 0.1.0.2 (test) → 0.1.1.0 (prod) + 0.1.1.1 (dev)');
+      
+      console.log('\n🎉 COMPLETE WORKFLOW PROVEN:');
+      console.log('   ✅ 0.1.0.0 → prod (initial)');
+      console.log('   ✅ 0.1.0.1 → dev (Stage 1)');
+      console.log('   ✅ 0.1.0.2 → test (Stage 2)');
+      console.log('   ✅ 0.1.1.0 → prod (Stage 3)');
+      console.log('   ✅ 0.1.1.1 → dev (Stage 3)');
+      console.log('\n💡 Check evidence: test/data/components/TestGeneratedComponent/');
     });
   });
 });

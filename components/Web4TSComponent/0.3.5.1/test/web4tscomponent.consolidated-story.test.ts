@@ -649,7 +649,7 @@ describe('🎯 CONSOLIDATED TEST STORY - Master Suite', () => {
       // Create component first (each test is isolated)
       await component.create(scriptComponent, '0.1.0.0', 'all');
       
-      const mainScript = path.join(testDataDir, 'scripts', 'versions', 'scripttest');
+      const mainScript = path.join(testDataDir, 'scripts', 'scripttest');
       expect(existsSync(mainScript)).toBe(true);
       
       console.log('✅ Main script symlink created');

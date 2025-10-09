@@ -122,11 +122,22 @@ describe('📖 Systematic Test Story', () => {
       
       // Verify no script symlinks remain
       const scriptsDir = path.join(testDataDir, 'scripts');
+      const versionsDir = path.join(scriptsDir, 'versions');
+      
+      // Check main scripts directory for main symlink (e.g., scripts/storytestcomponent)
       if (existsSync(scriptsDir)) {
         const scripts = await fs.readdir(scriptsDir);
-        const componentScripts = scripts.filter(s => s.includes(testComponentName.toLowerCase()));
-        expect(componentScripts.length).toBe(0);
-        console.log('   ✅ No script symlinks remaining');
+        const mainScripts = scripts.filter(s => s === testComponentName.toLowerCase());
+        expect(mainScripts.length).toBe(0);
+        console.log(`   ✅ No main script symlink in scripts/ (checked: ${testComponentName.toLowerCase()})`);
+      }
+      
+      // Check versions directory for version-specific symlinks
+      if (existsSync(versionsDir)) {
+        const versionScripts = await fs.readdir(versionsDir);
+        const componentVersionScripts = versionScripts.filter(s => s.includes(testComponentName.toLowerCase()));
+        expect(componentVersionScripts.length).toBe(0);
+        console.log(`   ✅ No version symlinks in scripts/versions/`);
       }
       
       console.log('✅ Complete cleanup verified');
@@ -194,8 +205,9 @@ describe('📖 Systematic Test Story', () => {
       }
       
       // Check script symlinks
-      const scriptsDir = path.join(projectRoot, 'scripts', 'versions');
-      const versionSymlink = path.join(scriptsDir, 'realtestcomponent-v0.1.0.0');
+      const versionsDir = path.join(projectRoot, 'scripts', 'versions');
+      const scriptsDir = path.join(projectRoot, 'scripts');
+      const versionSymlink = path.join(versionsDir, 'realtestcomponent-v0.1.0.0');
       const mainSymlink = path.join(scriptsDir, 'realtestcomponent');
       
       expect(existsSync(versionSymlink), 'Version script symlink should exist').toBe(true);
@@ -332,11 +344,12 @@ describe('📖 Systematic Test Story', () => {
       await component.on('RemoveVersionTestComponent', '0.1.0.0');
       await component.upgrade('nextBuild');
       
-      const scriptsDir = path.join(projectRoot, 'scripts', 'versions');
+      const versionsDir = path.join(projectRoot, 'scripts', 'versions');
+      const scriptsDir = path.join(projectRoot, 'scripts');
       
       // Verify both versions have symlinks
-      const v0Symlink = path.join(scriptsDir, 'removeversiontestcomponent-v0.1.0.0');
-      const v1Symlink = path.join(scriptsDir, 'removeversiontestcomponent-v0.1.0.1');
+      const v0Symlink = path.join(versionsDir, 'removeversiontestcomponent-v0.1.0.0');
+      const v1Symlink = path.join(versionsDir, 'removeversiontestcomponent-v0.1.0.1');
       const mainSymlink = path.join(scriptsDir, 'removeversiontestcomponent');
       
       expect(existsSync(v0Symlink), 'v0.1.0.0 symlink should exist').toBe(true);

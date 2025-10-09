@@ -1,14 +1,14 @@
 /**
- * Default{{COMPONENT_NAME}} - {{COMPONENT_NAME}} Component Implementation
+ * DefaultDemoWeb4Component - DemoWeb4Component Component Implementation
  * Web4 pattern: Empty constructor + scenario initialization + component functionality
  */
 
-import { {{COMPONENT_NAME}} } from '../layer3/{{COMPONENT_NAME}}.interface.js';
+import { DemoWeb4Component } from '../layer3/DemoWeb4Component.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
-import { {{COMPONENT_NAME}}Model } from '../layer3/{{COMPONENT_NAME}}Model.interface.js';
+import { DemoWeb4ComponentModel } from '../layer3/DemoWeb4ComponentModel.interface.js';
 
-export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
-  private model: {{COMPONENT_NAME}}Model;
+export class DefaultDemoWeb4Component implements DemoWeb4Component {
+  private model: DemoWeb4ComponentModel;
 
   constructor() {
     // Empty constructor - Web4 pattern
@@ -25,7 +25,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   /**
    * @cliHide
    */
-  init(scenario: Scenario<{{COMPONENT_NAME}}Model>): this {
+  init(scenario: Scenario<DemoWeb4ComponentModel>): this {
     if (scenario.model) {
       this.model = { ...this.model, ...scenario.model };
     }
@@ -35,21 +35,21 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   /**
    * @cliHide
    */
-  async toScenario(name?: string): Promise<Scenario<{{COMPONENT_NAME}}Model>> {
+  async toScenario(name?: string): Promise<Scenario<DemoWeb4ComponentModel>> {
     const ownerData = JSON.stringify({
       user: process.env.USER || 'system',
       hostname: process.env.HOSTNAME || 'localhost',
       uuid: this.model.uuid,
       timestamp: new Date().toISOString(),
-      component: '{{COMPONENT_NAME}}',
-      version: '{{VERSION}}'
+      component: 'DemoWeb4Component',
+      version: '0.1.0.0'
     });
 
     return {
       ior: {
         uuid: this.model.uuid,
-        component: '{{COMPONENT_NAME}}',
-        version: '{{VERSION}}'
+        component: 'DemoWeb4Component',
+        version: '0.1.0.0'
       },
       owner: ownerData,
       model: this.model
@@ -57,7 +57,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   }
 
   /**
-   * Create example operation for {{COMPONENT_NAME}}
+   * Create example operation for DemoWeb4Component
    * @param input Input data to process
    * @param format Output format (json, text, xml)
    * @cliSyntax input format
@@ -67,12 +67,12 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
     console.log(`🚀 Creating ${input} in ${format} format`);
     this.model.name = input;
     this.model.updatedAt = new Date().toISOString();
-    console.log(`✅ {{COMPONENT_NAME}} operation completed`);
+    console.log(`✅ DemoWeb4Component operation completed`);
     return this;
   }
 
   /**
-   * Process data through {{COMPONENT_NAME}} logic
+   * Process data through DemoWeb4Component logic
    * @param data Data to process
    * @cliSyntax data
    */
@@ -83,10 +83,10 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   }
 
   /**
-   * Show information about current {{COMPONENT_NAME}} state
+   * Show information about current DemoWeb4Component state
    */
   async info(): Promise<this> {
-    console.log(`📋 {{COMPONENT_NAME}} Information:`);
+    console.log(`📋 DemoWeb4Component Information:`);
     console.log(`   UUID: ${this.model.uuid}`);
     console.log(`   Name: ${this.model.name || 'Not set'}`);
     console.log(`   Created: ${this.model.createdAt}`);
@@ -107,7 +107,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
    */
   async test(): Promise<this> {
     const { execSync } = await import('child_process');
-    const { readFileSync, readlinkSync, existsSync, lstatSync, readdirSync } = await import('fs');
+    const { readFileSync, readlinkSync, existsSync, lstatSync } = await import('fs');
     const path = await import('path');
     const { fileURLToPath } = await import('url');
     const { dirname } = await import('path');
@@ -128,7 +128,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
     console.log(`   🧪 ALWAYS work on test version until test succeeds`);
     console.log(`   🚧 ALWAYS work on dev version after test success\n`);
     
-    console.log(`🧪 Running {{COMPONENT_NAME}} tests with auto-promotion...`);
+    console.log(`🧪 Running DemoWeb4Component tests with auto-promotion...`);
     
     try {
       // Get current version from THIS component version's package.json
@@ -149,7 +149,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
         encoding: 'utf-8'
       });
       
-      console.log(`✅ {{COMPONENT_NAME}} tests completed successfully`);
+      console.log(`✅ DemoWeb4Component tests completed successfully`);
       
       // 🎯 AUTO-PROMOTION: Determine and execute promotion stage
       console.log(`\n🔍 Checking for promotion opportunity...`);
@@ -199,24 +199,24 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
       // Stage 0: No dev link exists → create first dev version
       if (!semanticLinks.dev) {
         console.log(`\n🚧 Stage 0: No dev version exists, creating first dev version...`);
-        await web4ts.on('{{COMPONENT_NAME}}', currentVersion);
+        await web4ts.on('DemoWeb4Component', currentVersion);
         await web4ts.upgrade('nextBuild');
         const parts = currentVersion.split('.').map(Number);
         const devVersion = `${parts[0]}.${parts[1]}.${parts[2]}.${parts[3] + 1}`;
-        await web4ts.on('{{COMPONENT_NAME}}', devVersion);
+        await web4ts.on('DemoWeb4Component', devVersion);
         await web4ts.setDev();
       }
       // Stage 1: Current is dev, no test link OR test is outdated → create test version
       else if (currentVersion === semanticLinks.dev && (!semanticLinks.test || semanticLinks.test < currentVersion)) {
         console.log(`\n🧪 Stage 1: dev → test (creating test version)...`);
-        await web4ts.on('{{COMPONENT_NAME}}', currentVersion);
+        await web4ts.on('DemoWeb4Component', currentVersion);
         await web4ts.upgrade('nextBuild');
         const parts = currentVersion.split('.').map(Number);
         const testVersion = `${parts[0]}.${parts[1]}.${parts[2]}.${parts[3] + 1}`;
-        await web4ts.on('{{COMPONENT_NAME}}', testVersion);
+        await web4ts.on('DemoWeb4Component', testVersion);
         await web4ts.setTest();
       }
-      // Stage 2: Current is test and 100% pass → promote to prod AND create new dev
+      // Stage 2: Current is test and 100% pass → promote to prod
       else if (currentVersion === semanticLinks.test) {
         console.log(`\n🚀 Stage 2: test → prod (verifying 100% test success)...`);
         // CRITICAL: Verify 100% test success before promoting to production
@@ -226,36 +226,9 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
           if (results.numFailedTests === 0 && results.numPassedTests > 0) {
             console.log(`✅ 100% test success verified (${results.numPassedTests} passed, 0 failed)`);
             console.log(`🚀 Promoting to production...`);
-            await web4ts.on('{{COMPONENT_NAME}}', currentVersion);
+            await web4ts.on('DemoWeb4Component', currentVersion);
             await web4ts.upgrade('nextPatch');
-            
-            // Find the newly created prod version (highest version)
-            const componentParentDir = path.dirname(path.dirname(path.dirname(componentRoot)));
-            const componentsDir = path.join(componentParentDir, 'components');
-            const componentDir = path.join(componentsDir, '{{COMPONENT_NAME}}');
-            const versions = readdirSync(componentDir)
-              .filter(v => /^\d+\.\d+\.\d+\.\d+$/.test(v))
-              .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
-            const prodVersion = versions[0];  // Highest version is the new prod
-            
-            // Set prod symlink
-            await web4ts.on('{{COMPONENT_NAME}}', prodVersion);
-            await web4ts.setProd();
-            console.log(`✅ Promoted to production: ${prodVersion}`);
-            
-            // CRITICAL: Now create new dev version (nextBuild from prod)
-            console.log(`🚧 Creating new dev version...`);
-            await web4ts.on('{{COMPONENT_NAME}}', prodVersion);
-            await web4ts.upgrade('nextBuild');
-            
-            // Find the newly created dev version (highest version)
-            const newVersions = readdirSync(componentDir)
-              .filter(v => /^\d+\.\d+\.\d+\.\d+$/.test(v))
-              .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
-            const newDevVersion = newVersions[0];  // Highest version is the new dev
-            await web4ts.on('{{COMPONENT_NAME}}', newDevVersion);
-            await web4ts.setDev();
-            console.log(`✅ New dev version created: ${newDevVersion}`);
+            console.log(`✅ Promoted to production successfully!`);
           } else {
             console.log(`⚠️  Tests did not achieve 100% success:`);
             console.log(`   Passed: ${results.numPassedTests}`);
@@ -269,7 +242,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
       }
       
     } catch (error) {
-      console.error(`❌ {{COMPONENT_NAME}} tests failed`);
+      console.error(`❌ DemoWeb4Component tests failed`);
       throw error;
     }
     
