@@ -95,20 +95,19 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   }
 
   /**
-   * Execute component tests using Web4TSComponent test infrastructure
-   * Delegates to web4tscomponent for comprehensive testing and version promotion workflow
+   * Execute component tests using vitest
    * @cliSyntax
-   * @cliExample testpatterncomponent test
+   * @cliExample {{COMPONENT_LOWER}} test
    */
   async test(): Promise<this> {
-    console.log(`🧪 Running {{COMPONENT_NAME}} tests via Web4TSComponent infrastructure...`);
+    console.log(`🧪 Running {{COMPONENT_NAME}} tests...`);
     
     try {
-      // Call web4tscomponent on {{COMPONENT_NAME}} dev test to use the promotion workflow
       const { execSync } = await import('child_process');
-      execSync('web4tscomponent on {{COMPONENT_NAME}} dev test', { 
+      execSync('npx vitest run', { 
         stdio: 'inherit',
-        encoding: 'utf-8'
+        encoding: 'utf-8',
+        cwd: process.cwd()
       });
       console.log(`✅ {{COMPONENT_NAME}} tests completed successfully`);
     } catch (error) {

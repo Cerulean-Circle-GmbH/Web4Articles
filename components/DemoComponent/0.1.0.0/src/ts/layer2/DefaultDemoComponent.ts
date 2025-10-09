@@ -95,20 +95,19 @@ export class DefaultDemoComponent implements DemoComponent {
   }
 
   /**
-   * Execute component tests using Web4TSComponent test infrastructure
-   * Delegates to web4tscomponent for comprehensive testing and version promotion workflow
+   * Execute component tests using vitest
    * @cliSyntax
-   * @cliExample testpatterncomponent test
+   * @cliExample {{COMPONENT_LOWER}} test
    */
   async test(): Promise<this> {
-    console.log(`🧪 Running DemoComponent tests via Web4TSComponent infrastructure...`);
+    console.log(`🧪 Running DemoComponent tests...`);
     
     try {
-      // Call web4tscomponent on DemoComponent dev test to use the promotion workflow
       const { execSync } = await import('child_process');
-      execSync('web4tscomponent on DemoComponent dev test', { 
+      execSync('npx vitest run', { 
         stdio: 'inherit',
-        encoding: 'utf-8'
+        encoding: 'utf-8',
+        cwd: process.cwd()
       });
       console.log(`✅ DemoComponent tests completed successfully`);
     } catch (error) {
