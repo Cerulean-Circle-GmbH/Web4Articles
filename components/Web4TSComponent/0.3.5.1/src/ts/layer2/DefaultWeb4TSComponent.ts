@@ -354,10 +354,25 @@ if [ -z "$PROJECT_ROOT" ]; then
     exit 1
 fi
 
-cd "$PROJECT_ROOT"
+# Navigate to component version directory
+COMPONENT_PATH="$PROJECT_ROOT/components/${componentName}/${version}"
+cd "$COMPONENT_PATH" || {
+    echo "❌ Failed to cd to $COMPONENT_PATH"
+    exit 1
+}
 
-# Execute component CLI
-node --loader ts-node/esm "./components/${componentName}/${version}/src/ts/layer5/${componentName}CLI.ts" "$@"
+# Use smart build system (handles freshness, dependencies, everything)
+./src/sh/build.sh
+
+# Check if CLI is available after build
+CLI_PATH="dist/ts/layer5/${componentName}CLI.js"
+if [ ! -f "$CLI_PATH" ]; then
+    echo "❌ ${componentName} CLI build failed"
+    exit 1
+fi
+
+# Execute compiled CLI (no ts-node, no deprecation warnings)
+node "$CLI_PATH" "$@"
 `;
     
     return cliTemplate;
