@@ -5,9 +5,6 @@
  */
 
 import { Model } from './Model.interface.js';
-import { ComponentStandard } from './ComponentStandard.interface.js';
-import { ValidationRule } from './ValidationRule.interface.js';
-import { ScaffoldingTemplate } from './ScaffoldingTemplate.interface.js';
 
 export interface Web4TSComponentModel extends Model {
   // uuid inherited from Model - don't redeclare
@@ -22,9 +19,7 @@ export interface Web4TSComponentModel extends Model {
   // Web4TSComponent-specific properties
   projectRoot: string;        // Discovered once at init, used for all absolute path operations
   targetDirectory: string;    // Can be overridden (e.g., test/data for test isolation)
-  componentStandards: ComponentStandard[];
-  validationRules: ValidationRule[];
-  scaffoldingTemplates: ScaffoldingTemplate[];
   
   // Note: createdAt/updatedAt removed per Web4 principle - these belong in ChangeEvent
+  // Note: componentStandards, validationRules, scaffoldingTemplates removed - never used in main test story
 }

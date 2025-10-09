@@ -4,11 +4,9 @@
  * Purpose: Structure for component method analysis and documentation generation
  */
 
-import { ParameterInfo } from './ParameterInfo.interface.js';
-
 export interface MethodInfo {
   name: string;
-  parameters: ParameterInfo[];
+  parameters: any[];  // Simplified - was ParameterInfo[] (deleted bloat interface)
   description: string;
   examples: string[];
   returnType: string;

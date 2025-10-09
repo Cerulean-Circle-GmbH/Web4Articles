@@ -659,7 +659,7 @@ export abstract class DefaultCLI implements CLI {
   /**
    * Get TSCompletion color scheme
    */
-  protected getTSCompletionColors(): any {
+  protected getTSCompletionColors(): ColorScheme {
     return {
       toolName: '\x1b[1;36m',      // Cyan for unit
       version: '\x1b[1;36m',       // Cyan for version

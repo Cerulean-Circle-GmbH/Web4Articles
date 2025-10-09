@@ -255,7 +255,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   /**
    * @cliHide
    */
-  async scaffoldComponent(options: any): Promise<any> {
+  async scaffoldComponent(options: ComponentScaffoldOptions): Promise<ComponentMetadata> {
     const { componentName, version, includeLayerArchitecture, includeCLI, includeSpecFolder, includeVitest } = options;
     
     const componentDir = this.resolveComponentPath(componentName, version);
@@ -411,7 +411,7 @@ node "$CLI_PATH" "$@"
   /**
    * @cliHide
    */
-  async validateCLIStandard(scriptPath: string): Promise<any> {
+  async validateCLIStandard(scriptPath: string): Promise<CLIStandardValidation> {
     try {
       const content = await fs.readFile(scriptPath, 'utf-8');
       
@@ -455,11 +455,11 @@ node "$CLI_PATH" "$@"
   /**
    * @cliHide
    */
-  async auditComponentCompliance(componentPath: string): Promise<any> {
+  async auditComponentCompliance(componentPath: string): Promise<ComponentMetadata> {
     const packageJsonPath = path.join(componentPath, 'package.json');
     const tsConfigPath = path.join(componentPath, 'tsconfig.json');
     
-    let metadata: any = {
+    let metadata: ComponentMetadata = {
       name: path.basename(path.dirname(componentPath)),
       version: path.basename(componentPath),
       hasLocationResilientCLI: false,
@@ -508,8 +508,8 @@ node "$CLI_PATH" "$@"
   /**
    * @cliHide
    */
-  async generateComplianceReport(componentDir: string): Promise<any[]> {
-    const components: any[] = [];
+  async generateComplianceReport(componentDir: string): Promise<ComponentMetadata[]> {
+    const components: ComponentMetadata[] = [];
     
     try {
       // Resolve componentDir relative to project root ONLY if it's a relative path
@@ -753,7 +753,7 @@ Standards:
    */
   async create(name: string, version: string = '0.1.0.0', options: string = 'all'): Promise<void> {
     // Parse options (maps from 1.0.0.0 --cli --spec --vitest --layers)
-    const scaffoldOptions: any = {
+    const scaffoldOptions: ComponentScaffoldOptions = {
       componentName: name,
       version,
       includeLayerArchitecture: options.includes('layers') || options.includes('all'),
@@ -832,7 +832,7 @@ Standards:
       
       if (validation.issues.length > 0) {
         console.log(`\\n⚠️ Issues found:`);
-        validation.issues.forEach((issue: any, index: any) => {
+        validation.issues.forEach((issue, index) => {
           console.log(`   ${index + 1}. ${issue}`);
         });
       }
@@ -872,7 +872,7 @@ Standards:
     
     if (metadata.issues && metadata.issues.length > 0) {
       console.log(`\\n⚠️ Issues found:`);
-      metadata.issues.forEach((issue: any, index: any) => {
+      metadata.issues.forEach((issue, index) => {
         console.log(`   ${index + 1}. ${issue}`);
       });
     }
@@ -4704,7 +4704,7 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
       'Scenario.interface.ts',
       'CLI.interface.ts',
       'MethodInfo.interface.ts',
-      'any.interface.ts',
+      'ColorScheme.interface.ts',
       'ComponentAnalysis.interface.ts',
       'Completion.ts'
     ];
