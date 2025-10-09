@@ -1,0 +1,55 @@
+#!/bin/bash
+# build.sh.template - Web4TSComponent Template  
+# Auto-generated dependency-aware build script
+# Version: {VERSION}
+# Component: {COMPONENT_NAME}
+
+set -e
+
+echo "🔨 Building {COMPONENT_NAME}@{VERSION}..."
+
+# Find project root
+find_project_root() {
+    local git_root=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [ -n "$git_root" ] && [ -d "$git_root" ]; then
+        if [ -f "$git_root/package.json" ] || [ -f "$git_root/README.md" ]; then
+            echo "$git_root"
+            return 0
+        fi
+    fi
+    
+    local current_dir="$PWD"
+    while [ "$current_dir" != "/" ]; do
+        if [ -d "$current_dir/.git" ] && [ -f "$current_dir/package.json" ]; then
+            echo "$current_dir"
+            return 0
+        fi
+        current_dir="$(dirname "$current_dir")"
+    done
+    
+    return 1
+}
+
+PROJECT_ROOT=$(find_project_root)
+if [ -z "$PROJECT_ROOT" ]; then
+    echo "❌ Error: Not in a Web4Articles project directory"
+    exit 1
+fi
+
+COMPONENT_DIR="$PROJECT_ROOT/components/{COMPONENT_NAME}/{VERSION}"
+
+# Check if we're in the right directory
+if [ ! -f "$COMPONENT_DIR/package.json" ]; then
+    echo "❌ Error: Component directory not found: $COMPONENT_DIR"
+    exit 1
+fi
+
+cd "$COMPONENT_DIR"
+
+# Verify Dependencies Section - Populated by Web4TSComponent
+{DEPENDENCIES_VERIFY_SECTION}
+
+echo "🔨 Building TypeScript..."
+npm run build
+
+echo "✅ Build completed for {COMPONENT_NAME}@{VERSION}"

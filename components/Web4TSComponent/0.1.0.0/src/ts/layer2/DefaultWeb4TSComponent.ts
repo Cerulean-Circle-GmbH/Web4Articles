@@ -3,7 +3,7 @@
  * Implements Web4 TypeScript component standards enforcement
  */
 
-import { Web4TSComponent, ComponentMetadata, CLIStandardValidation, ComponentScaffoldOptions } from '../layer3/Web4TSComponent.js';
+import { Web4TSComponent, ComponentMetadata, CLIStandardValidation, ComponentScaffoldOptions, ComponentDependency } from '../layer3/Web4TSComponent.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
@@ -15,6 +15,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   private componentName: string = '';
   private version: string = '';
   private targetDirectory: string = '';
+  private dependencies: ComponentDependency[] = [];
 
   // Web4 Empty Constructor Principle
   constructor() {
@@ -32,6 +33,10 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 
   setTargetDirectory(directory: string): void {
     this.targetDirectory = directory;
+  }
+
+  setDependencies(dependencies: ComponentDependency[]): void {
+    this.dependencies = dependencies;
   }
 
   // Standard enforcement methods
@@ -270,6 +275,22 @@ DIRECTORY_CONTEXT="$CONTEXT_INFO" node "$CLI_PATH" "$@"
         await fs.writeFile(path.join(componentPath, `${options.componentName.toLowerCase()}.sh`), cliScript);
       }
 
+      // Generate dependency-aware build scripts
+      if (options.dependencies && options.dependencies.length > 0) {
+        const installDepsScript = await this.generateInstallDepsScript(options.componentName, options.version, options.dependencies);
+        await fs.writeFile(path.join(componentPath, 'install-deps.sh'), installDepsScript);
+        
+        const buildScript = await this.generateBuildScript(options.componentName, options.version, options.dependencies);
+        await fs.writeFile(path.join(componentPath, 'build.sh'), buildScript);
+        
+        // Make scripts executable
+        const { spawn } = await import('child_process');
+        await new Promise<void>((resolve) => {
+          const child = spawn('chmod', ['+x', 'install-deps.sh', 'build.sh'], { cwd: componentPath });
+          child.on('close', () => resolve());
+        });
+      }
+
       const metadata: ComponentMetadata = {
         name: options.componentName,
         version: options.version,
@@ -277,7 +298,8 @@ DIRECTORY_CONTEXT="$CONTEXT_INFO" node "$CLI_PATH" "$@"
         hasLocationResilientCLI: options.includeCLI,
         hasEmptyConstructors: true,
         hasScenarioSupport: true,
-        hasLayeredArchitecture: options.includeLayerArchitecture
+        hasLayeredArchitecture: options.includeLayerArchitecture,
+        dependencies: options.dependencies
       };
 
       return metadata;
@@ -394,6 +416,172 @@ Use Web4TSComponent for scaffolding and validation.
 `;
   }
 
+  generateDependenciesBuildSection(dependencies: ComponentDependency[]): string {
+    if (!dependencies || dependencies.length === 0) {
+      return '# No dependencies to build';
+    }
+
+    let section = '# Build component dependencies first\n';
+    section += 'echo "🔗 Building component dependencies..."\n\n';
+
+    for (const dep of dependencies) {
+      section += `# Build ${dep.component}@${dep.version}\n`;
+      section += `DEP_PATH="$PROJECT_ROOT/components/${dep.component}/${dep.version}"\n`;
+      section += `if [ ! -d "$DEP_PATH" ]; then\n`;
+      section += `    echo "❌ Error: Dependency not found: ${dep.component}@${dep.version} at $DEP_PATH"\n`;
+      section += `    exit 1\n`;
+      section += `fi\n\n`;
+      
+      section += `echo "📦 Building dependency: ${dep.component}@${dep.version}"\n`;
+      section += `cd "$DEP_PATH"\n\n`;
+      
+      section += `# Check if already built\n`;
+      section += `if [ ! -d "dist" ] || [ "package.json" -nt "dist" ]; then\n`;
+      section += `    echo "🔨 Installing and building ${dep.component}@${dep.version}..."\n`;
+      section += `    npm install\n`;
+      section += `    npm run build\n`;
+      section += `    echo "✅ Built ${dep.component}@${dep.version}"\n`;
+      section += `else\n`;
+      section += `    echo "✅ ${dep.component}@${dep.version} already built"\n`;
+      section += `fi\n\n`;
+      
+      section += `cd "$COMPONENT_DIR"\n\n`;
+    }
+
+    return section;
+  }
+
+  generateDependenciesVerifySection(dependencies: ComponentDependency[]): string {
+    if (!dependencies || dependencies.length === 0) {
+      return '# No dependencies to verify';
+    }
+
+    let section = '# Verify all dependencies are built\n';
+    section += 'echo "🔍 Verifying component dependencies..."\n\n';
+
+    for (const dep of dependencies) {
+      section += `# Verify ${dep.component}@${dep.version}\n`;
+      section += `DEP_PATH="$PROJECT_ROOT/components/${dep.component}/${dep.version}"\n`;
+      section += `if [ ! -d "$DEP_PATH/dist" ]; then\n`;
+      section += `    echo "❌ Error: Dependency not built: ${dep.component}@${dep.version}"\n`;
+      section += `    echo "💡 Run: cd $DEP_PATH && npm install && npm run build"\n`;
+      section += `    exit 1\n`;
+      section += `fi\n`;
+      section += `echo "✅ Verified ${dep.component}@${dep.version}"\n\n`;
+    }
+
+    return section;
+  }
+
+  async generateInstallDepsScript(componentName: string, version: string, dependencies: ComponentDependency[]): Promise<string> {
+    const templatePath = path.join(__dirname, '../../../templates/sh/install-deps.sh.template');
+    
+    try {
+      const template = await fs.readFile(templatePath, 'utf-8');
+      const dependenciesBuildSection = this.generateDependenciesBuildSection(dependencies);
+      
+      return template
+        .replace(/{COMPONENT_NAME}/g, componentName)
+        .replace(/{VERSION}/g, version)
+        .replace(/{DEPENDENCIES_BUILD_SECTION}/g, dependenciesBuildSection);
+    } catch (error) {
+      throw new Error(`Failed to generate install-deps.sh: ${(error as Error).message}`);
+    }
+  }
+
+  async generateBuildScript(componentName: string, version: string, dependencies: ComponentDependency[]): Promise<string> {
+    const templatePath = path.join(__dirname, '../../../templates/sh/build.sh.template');
+    
+    try {
+      const template = await fs.readFile(templatePath, 'utf-8');
+      const dependenciesVerifySection = this.generateDependenciesVerifySection(dependencies);
+      
+      return template
+        .replace(/{COMPONENT_NAME}/g, componentName)
+        .replace(/{VERSION}/g, version)
+        .replace(/{DEPENDENCIES_VERIFY_SECTION}/g, dependenciesVerifySection);
+    } catch (error) {
+      throw new Error(`Failed to generate build.sh: ${(error as Error).message}`);
+    }
+  }
+
+  async buildDependencies(componentName: string): Promise<void> {
+    console.log(`🔗 Building dependencies for ${componentName}...`);
+    
+    for (const dep of this.dependencies) {
+      const depPath = dep.path || path.join(this.targetDirectory || process.cwd(), 'components', dep.component, dep.version);
+      
+      console.log(`📦 Building dependency: ${dep.component}@${dep.version}`);
+      
+      try {
+        // Check if dependency exists
+        await fs.access(depPath);
+        
+        // Check if already built
+        const distPath = path.join(depPath, 'dist');
+        let needsBuild = true;
+        
+        try {
+          await fs.access(distPath);
+          // Check if package.json is newer than dist
+          const packageJsonPath = path.join(depPath, 'package.json');
+          const packageStat = await fs.stat(packageJsonPath);
+          const distStat = await fs.stat(distPath);
+          needsBuild = packageStat.mtime > distStat.mtime;
+        } catch {
+          // dist doesn't exist, needs build
+          needsBuild = true;
+        }
+        
+        if (needsBuild) {
+          console.log(`🔨 Building ${dep.component}@${dep.version}...`);
+          
+          // Install dependencies first
+          const installProcess = await import('child_process');
+          await new Promise<void>((resolve, reject) => {
+            const child = installProcess.spawn('npm', ['install'], {
+              cwd: depPath,
+              stdio: 'inherit'
+            });
+            
+            child.on('close', (code) => {
+              if (code === 0) {
+                resolve();
+              } else {
+                reject(new Error(`npm install failed for ${dep.component}@${dep.version} with code ${code}`));
+              }
+            });
+          });
+          
+          // Build the component
+          await new Promise<void>((resolve, reject) => {
+            const child = installProcess.spawn('npm', ['run', 'build'], {
+              cwd: depPath,
+              stdio: 'inherit'
+            });
+            
+            child.on('close', (code) => {
+              if (code === 0) {
+                console.log(`✅ Successfully built ${dep.component}@${dep.version}`);
+                resolve();
+              } else {
+                reject(new Error(`npm run build failed for ${dep.component}@${dep.version} with code ${code}`));
+              }
+            });
+          });
+        } else {
+          console.log(`✅ ${dep.component}@${dep.version} already built`);
+        }
+        
+      } catch (error) {
+        console.error(`❌ Failed to build dependency ${dep.component}@${dep.version}:`, (error as Error).message);
+        throw error;
+      }
+    }
+    
+    console.log(`✅ All dependencies built for ${componentName}`);
+  }
+
   // Scenario support (Web4 Scenario-First Development)
   toScenario(): any {
     return {
@@ -406,6 +594,7 @@ Use Web4TSComponent for scaffolding and validation.
         componentName: this.componentName,
         version: this.version,
         targetDirectory: this.targetDirectory,
+        dependencies: this.dependencies,
         created: new Date().toISOString(),
         updated: new Date().toISOString()
       }
@@ -417,6 +606,7 @@ Use Web4TSComponent for scaffolding and validation.
       this.componentName = scenario.model.componentName || '';
       this.version = scenario.model.version || '';
       this.targetDirectory = scenario.model.targetDirectory || '';
+      this.dependencies = scenario.model.dependencies || [];
     }
   }
 }
