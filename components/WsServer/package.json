@@ -1,0 +1,12 @@
+{
+  "name": "@web4x/wsserver",
+  "version": "0.3.1.0",
+  "type": "module",
+  "description": "WsServer Component - Base Entry Point",
+  "scripts": {
+    "start": "cd latest && npm start",
+    "test": "cd latest && npm test",
+    "build": "cd latest && npm run build"
+  },
+  "private": true
+}
