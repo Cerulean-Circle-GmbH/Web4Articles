@@ -1,278 +1,242 @@
 /**
- * DefaultWsServer - WsServer Component Implementation
- * Web4 pattern: Empty constructor + scenario initialization + component functionality
+ * DefaultWsServer - WebSocket server capability component implementation
+ * 
+ * Web4 pattern: Empty constructor + scenario initialization
+ * Following established radical OOP pattern from IOR and ONCE components
+ * Self-managed WebSocket server capability with type-safe WsServerModel
  */
 
 import { WsServer } from '../layer3/WsServer.interface.js';
-import { Scenario } from '../layer3/Scenario.interface.js';
 import { WsServerModel } from '../layer3/WsServerModel.interface.js';
+import { IOR, DefaultIOR } from '../../../../../IOR/0.3.0.3/dist/index.js';
+import { Scenario } from '../../../../../Scenario/0.3.0.2/dist/ts/Scenario.js';
+import { DefaultUser } from '../../../../../User/0.3.0.2/dist/ts/layer2/DefaultUser.js';
 
 export class DefaultWsServer implements WsServer {
-  private model: WsServerModel;
+  private data: WsServerModel;
+  private scenarioService: Scenario;  // ✅ DRY: Shared component composition
+  private userService: DefaultUser;   // ✅ DRY: Shared component composition
+  private iorComponent: DefaultIOR;   // ✅ DRY: Shared IOR component
 
+  /**
+   * Web4 Pattern: Empty constructor
+   */
   constructor() {
-    // Empty constructor - Web4 pattern
-    this.model = {
-      uuid: crypto.randomUUID(),
-      name: '',
-      origin: '',
-      definition: '',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+    // Initialize with minimal WebSocket server data
+    this.data = {
+      uuid: '',
+      name: 'WebSocket Server',
+      description: 'WebSocket Server Capability Component',
+      port: 42777,
+      state: 'stopped',
+      connections: [],         // IOR references to connection components
+      protocol: 'ws',
+      maxConnections: 100,     // ✅ Config in model (scenarios ARE configs)
+      heartbeatInterval: 30000, // ✅ Config in model (scenarios ARE configs)
+      compression: true,       // ✅ Config in model (scenarios ARE configs)
+      startedAt: undefined,
+      stoppedAt: undefined
     };
+    
+    // ✅ Web4 DRY: Compose with shared components
+    this.scenarioService = new Scenario();
+    this.userService = new DefaultUser();
+    this.iorComponent = new DefaultIOR();
+    
+    // Radical OOP: Return proxy-wrapped class instance
+    return this.createProxy();
   }
 
   /**
-   * @cliHide
+   * Model getter/setter for proxy management (Following IOR pattern)
    */
-  init(scenario: Scenario<WsServerModel>): this {
+  get model(): WsServerModel { 
+    return this.data; 
+  }
+  
+  set model(value: WsServerModel) { 
+    this.data = value;
+    this.onChange?.(this.data);
+  }
+
+  /**
+   * Radical OOP: Class-based proxy with encapsulation
+   */
+  private createProxy(): DefaultWsServer {
+    return new Proxy(this, {
+      set: (target, prop, value) => this.handlePropertySet(prop, value),
+      get: (target, prop) => this.handlePropertyGet(prop)
+    });
+  }
+
+  private handlePropertySet(prop: string | symbol, value: any): boolean {
+    if (prop in this.data) {
+      (this.data as any)[prop] = value;
+      this.onChange?.(this.data);
+      return true;
+    }
+    if (prop in this) {
+      (this as any)[prop] = value;
+      return true;
+    }
+    return false;
+  }
+
+  private handlePropertyGet(prop: string | symbol): any {
+    if (prop in this.data) {
+      return (this.data as any)[prop];
+    }
+    return (this as any)[prop];
+  }
+
+  /**
+   * Initialize from scenario (scenarios ARE configs)
+   */
+  init(scenario: Scenario): this {
     if (scenario.model) {
-      this.model = { ...this.model, ...scenario.model };
+      Object.assign(this.data, scenario.model);
     }
     return this;
   }
 
   /**
-   * @cliHide
+   * Optional onChange callback for controller integration
    */
-  async toScenario(name?: string): Promise<Scenario<WsServerModel>> {
-    const ownerData = JSON.stringify({
-      user: process.env.USER || 'system',
-      hostname: process.env.HOSTNAME || 'localhost',
-      uuid: this.model.uuid,
-      timestamp: new Date().toISOString(),
-      component: 'WsServer',
-      version: '0.3.1.0'
+  onChange?: (data: WsServerModel) => void;
+
+  /**
+   * WsServer Interface Implementation
+   */
+
+  async startServer(): Promise<void> {
+    this.data.state = 'starting';
+    this.data.startedAt = new Date().toISOString();
+    
+    // WebSocket server implementation would go here
+    console.log(`WsServer: Starting WebSocket server on port ${this.data.port}`);
+    
+    this.data.state = 'running';
+  }
+
+  async stopServer(): Promise<void> {
+    this.data.state = 'stopping';
+    
+    // WebSocket server shutdown would go here
+    console.log(`WsServer: Stopping WebSocket server on port ${this.data.port}`);
+    
+    this.data.state = 'stopped';
+    this.data.stoppedAt = new Date().toISOString();
+  }
+
+  addConnection(connectionIOR: IOR): void {
+    // Add connection component reference (Web4 principle: connections are components)
+    this.data.connections.push(connectionIOR);
+    console.log(`WsServer: Added connection component ${connectionIOR.component}:${connectionIOR.uuid}`);
+  }
+
+  removeConnection(connectionIOR: IOR): void {
+    // Remove connection component reference
+    this.data.connections = this.data.connections.filter(
+      conn => conn.uuid !== connectionIOR.uuid
+    );
+    console.log(`WsServer: Removed connection component ${connectionIOR.uuid}`);
+  }
+
+  getPort(): number {
+    return this.data.port;
+  }
+
+  isRunning(): boolean {
+    return this.data.state === 'running';
+  }
+
+  async saveAsScenario(): Promise<Scenario> {
+    // Delegate hibernation to Scenario component
+    const ownerData = await this.userService.generateOwnerData({
+      user: 'system',
+      hostname: 'localhost',
+      uuid: this.data.uuid
     });
 
-    return {
+    const scenario = new Scenario().init({
       ior: {
-        uuid: this.model.uuid,
+        uuid: this.data.uuid,
         component: 'WsServer',
-        version: '0.3.1.0'
+        version: '0.3.0.0'
       },
       owner: ownerData,
-      model: this.model
-    };
+      model: this.data as WsServerModel
+    });
+
+    return scenario;
   }
 
   /**
-   * Create example operation for WsServer
-   * @param input Input data to process
-   * @param format Output format (json, text, xml)
-   * @cliSyntax input format
-   * @cliDefault format json
+   * CLI Command Methods - Same names as CLI commands for delegation
    */
-  async create(input: string, format: string = 'json'): Promise<this> {
-    console.log(`🚀 Creating ${input} in ${format} format`);
-    this.model.name = input;
-    this.model.updatedAt = new Date().toISOString();
-    console.log(`✅ WsServer operation completed`);
-    return this;
+
+  async start(args: string[]): Promise<void> {
+    console.log('WsServer: Starting WebSocket server...');
+    this.data.state = 'running';
+    console.log(`WsServer: Server started on port ${this.data.port}`);
   }
 
-  /**
-   * Process data through WsServer logic
-   * @param data Data to process
-   * @cliSyntax data
-   */
-  async process(data: string): Promise<this> {
-    console.log(`🔧 Processing: ${data}`);
-    this.model.updatedAt = new Date().toISOString();
-    return this;
+  async stop(args: string[]): Promise<void> {
+    console.log('WsServer: Stopping WebSocket server...');
+    this.data.state = 'stopped';
+    console.log('WsServer: Server stopped');
   }
 
-  /**
-   * Show information about current WsServer state
-   */
-  async info(): Promise<this> {
-    console.log(`📋 WsServer Information:`);
-    console.log(`   UUID: ${this.model.uuid}`);
-    console.log(`   Name: ${this.model.name || 'Not set'}`);
-    console.log(`   Created: ${this.model.createdAt}`);
-    console.log(`   Updated: ${this.model.updatedAt}`);
-    return this;
+  async status(args: string[]): Promise<void> {
+    console.log(`WsServer Status:`);
+    console.log(`  State: ${this.data.state}`);
+    console.log(`  Port: ${this.data.port}`);
+    console.log(`  Host: ${this.data.host}`);
+    console.log(`  Active Connections: ${this.data.connections.length}`);
+    console.log(`  SSL Enabled: ${this.data.sslEnabled}`);
   }
 
-  /**
-   * Run component tests with automatic promotion workflow
-   * 
-   * Follows the same promotion pattern as Web4TSComponent:
-   * - Stage 0: prod (initial) → create dev
-   * - Stage 1: dev → create test  
-   * - Stage 2: test + 100% → create prod + dev
-   * 
-   * @cliSyntax
-   * @cliExample {{COMPONENT_LOWER}} test
-   */
-  async test(): Promise<this> {
-    const { execSync } = await import('child_process');
-    const { readFileSync, readlinkSync, existsSync, lstatSync, readdirSync } = await import('fs');
-    const path = await import('path');
-    const { fileURLToPath } = await import('url');
-    const { dirname } = await import('path');
-    
-    // 🚨 RECURSION DETECTION: Check if we're already inside vitest
-    const insideTestEnvironment = !!(process.env.VITEST || process.env.VITEST_WORKER_ID);
-    
-    if (insideTestEnvironment) {
-      // Already inside a test - prevent infinite recursion
-      console.log(`🧪 Already in test environment - skipping recursive vitest execution`);
-      console.log(`✅ Test execution skipped (recursion prevented)`);
-      return this;
+  async info(args: string[]): Promise<void> {
+    console.log(`WsServer - WebSocket Server Capability`);
+    console.log(`Version: 0.3.0.0`);
+    console.log(`Description: ${this.data.description}`);
+    console.log(`UUID: ${this.data.uuid}`);
+    console.log(`Port: ${this.data.port}`);
+    console.log(`State: ${this.data.state}`);
+  }
+
+  async listConnections(args: string[]): Promise<void> {
+    console.log(`WsServer Connections (${this.data.connections.length}):`);
+    for (const connection of this.data.connections) {
+      console.log(`  - Connection: ${connection.component}:${connection.version} (${connection.uuid})`);
     }
-    
-    // WORKFLOW REMINDER
-    console.log(`\n🔄 WORKFLOW REMINDER:`);
-    console.log(`   🚧 ALWAYS work on dev version until you run test`);
-    console.log(`   🧪 ALWAYS work on test version until test succeeds`);
-    console.log(`   🚧 ALWAYS work on dev version after test success\n`);
-    
-    console.log(`🧪 Running WsServer tests with auto-promotion...`);
-    
-    try {
-      // Get current version from THIS component version's package.json
-      // Use import.meta.url to get the directory of THIS file, not cwd
-      // File is at: dist/ts/layer2/DefaultComponent.js
-      // Package.json is at: ./package.json (component root)
-      const __filename = fileURLToPath(import.meta.url);
-      const __dirname = dirname(__filename);
-      const componentRoot = path.resolve(__dirname, '../../..');  // Go up 3 levels: layer2 -> ts -> dist -> root
-      const packageJsonPath = path.join(componentRoot, 'package.json');
-      const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
-      const currentVersion = packageJson.version;
-      
-      // Run vitest first
-      execSync('npx vitest run', { 
-        cwd: process.cwd(),
-        stdio: 'inherit',
-        encoding: 'utf-8'
-      });
-      
-      console.log(`✅ WsServer tests completed successfully`);
-      
-      // 🎯 AUTO-PROMOTION: Determine and execute promotion stage
-      console.log(`\n🔍 Checking for promotion opportunity...`);
-      
-      // componentRoot is the VERSION directory (e.g., /path/to/ComponentName/0.1.0.0)
-      // Semantic links are ONE LEVEL UP in the COMPONENT directory (e.g., /path/to/ComponentName/)
-      const componentDir = path.dirname(componentRoot);
-      
-      // Read semantic links from component directory (NOT version directory)
-      const getLink = (name: string): string | null => {
-        const linkPath = path.join(componentDir, name);
-        if (existsSync(linkPath) && lstatSync(linkPath).isSymbolicLink()) {
-          return readlinkSync(linkPath);
-        }
-        return null;
-      };
-      
-      const semanticLinks = {
-        dev: getLink('dev'),
-        test: getLink('test'),
-        prod: getLink('prod'),
-        latest: getLink('latest')
-      };
-      
-      console.log(`\n📊 Current semantic links:`);
-      console.log(`   🚀 prod:   ${semanticLinks.prod || 'none'}`);
-      console.log(`   🧪 test:   ${semanticLinks.test || 'none'}`);
-      console.log(`   🚧 dev:    ${semanticLinks.dev || 'none'}`);
-      console.log(`   📦 latest: ${semanticLinks.latest || 'none'}`);
-      console.log(`   📍 Current: ${currentVersion}`);
-      
-      // 🎯 OOP PROMOTION: Use Web4TSComponent programmatically (NOT via shell)
-      // Calculate target directory (e.g., /test/data or project root)
-      // componentRoot is like: /path/to/test/data/components/ComponentName/0.1.0.0
-      // We need: /path/to/test/data (3 levels up: version -> component -> components -> parent)
-      const componentParentDir = path.dirname(path.dirname(path.dirname(componentRoot)));
-      
-      // Import Web4TSComponent dynamically (OOP way!)
-      const projectRoot = componentRoot.split('/components/')[0];
-      const web4tscomponentModule = await import(`${projectRoot}/components/Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js`);
-      const { DefaultWeb4TSComponent } = web4tscomponentModule;
-      
-      // Instantiate Web4TSComponent with proper target directory (test isolation!)
-      const web4ts = new DefaultWeb4TSComponent();
-      web4ts.setTargetDirectory(componentParentDir);
-      
-      // Stage 0: No dev link exists → create first dev version
-      if (!semanticLinks.dev) {
-        console.log(`\n🚧 Stage 0: No dev version exists, creating first dev version...`);
-        await web4ts.on('WsServer', currentVersion);
-        await web4ts.upgrade('nextBuild');
-        const parts = currentVersion.split('.').map(Number);
-        const devVersion = `${parts[0]}.${parts[1]}.${parts[2]}.${parts[3] + 1}`;
-        await web4ts.on('WsServer', devVersion);
-        await web4ts.setDev();
-      }
-      // Stage 1: Current is dev, no test link OR test is outdated → create test version
-      else if (currentVersion === semanticLinks.dev && (!semanticLinks.test || semanticLinks.test < currentVersion)) {
-        console.log(`\n🧪 Stage 1: dev → test (creating test version)...`);
-        await web4ts.on('WsServer', currentVersion);
-        await web4ts.upgrade('nextBuild');
-        const parts = currentVersion.split('.').map(Number);
-        const testVersion = `${parts[0]}.${parts[1]}.${parts[2]}.${parts[3] + 1}`;
-        await web4ts.on('WsServer', testVersion);
-        await web4ts.setTest();
-      }
-      // Stage 2: Current is test and 100% pass → promote to prod AND create new dev
-      else if (currentVersion === semanticLinks.test) {
-        console.log(`\n🚀 Stage 2: test → prod (verifying 100% test success)...`);
-        // CRITICAL: Verify 100% test success before promoting to production
-        const testResultsPath = path.join(process.cwd(), 'test/test-results.json');
-        if (existsSync(testResultsPath)) {
-          const results = JSON.parse(readFileSync(testResultsPath, 'utf-8'));
-          if (results.numFailedTests === 0 && results.numPassedTests > 0) {
-            console.log(`✅ 100% test success verified (${results.numPassedTests} passed, 0 failed)`);
-            console.log(`🚀 Promoting to production...`);
-            await web4ts.on('WsServer', currentVersion);
-            await web4ts.upgrade('nextPatch');
-            
-            // Find the newly created prod version (highest version)
-            const componentParentDir = path.dirname(path.dirname(path.dirname(componentRoot)));
-            const componentsDir = path.join(componentParentDir, 'components');
-            const componentDir = path.join(componentsDir, 'WsServer');
-            const versions = readdirSync(componentDir)
-              .filter(v => /^\d+\.\d+\.\d+\.\d+$/.test(v))
-              .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
-            const prodVersion = versions[0];  // Highest version is the new prod
-            
-            // Set prod symlink
-            await web4ts.on('WsServer', prodVersion);
-            await web4ts.setProd();
-            console.log(`✅ Promoted to production: ${prodVersion}`);
-            
-            // CRITICAL: Now create new dev version (nextBuild from prod)
-            console.log(`🚧 Creating new dev version...`);
-            await web4ts.on('WsServer', prodVersion);
-            await web4ts.upgrade('nextBuild');
-            
-            // Find the newly created dev version (highest version)
-            const newVersions = readdirSync(componentDir)
-              .filter(v => /^\d+\.\d+\.\d+\.\d+$/.test(v))
-              .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
-            const newDevVersion = newVersions[0];  // Highest version is the new dev
-            await web4ts.on('WsServer', newDevVersion);
-            await web4ts.setDev();
-            console.log(`✅ New dev version created: ${newDevVersion}`);
-          } else {
-            console.log(`⚠️  Tests did not achieve 100% success:`);
-            console.log(`   Passed: ${results.numPassedTests}`);
-            console.log(`   Failed: ${results.numFailedTests}`);
-            console.log(`   Skipping promotion - fix failing tests first!`);
-          }
-        } else {
-          console.log(`⚠️  test-results.json not found - cannot verify test success`);
-          console.log(`   Skipping promotion for safety`);
-        }
-      }
-      
-    } catch (error) {
-      console.error(`❌ WsServer tests failed`);
-      throw error;
+  }
+
+  async broadcast(args: string[]): Promise<void> {
+    if (args.length === 0) {
+      throw new Error('broadcast requires message');
     }
-    
-    return this;
+    const message = args.join(' ');
+    console.log(`WsServer: Broadcasting message to ${this.data.connections.length} connections: "${message}"`);
+  }
+
+  /**
+   * Utility methods following IOR pattern
+   */
+  toJSON(): WsServerModel {
+    return { ...this.data };
+  }
+
+  validate(): boolean {
+    return !!(this.data.uuid && this.data.name && this.data.description);
+  }
+
+  static create(uuid: string, name: string, description: string, port: number): DefaultWsServer {
+    const scenario = new Scenario().init({
+      ior: { uuid, component: 'WsServer', version: '0.3.0.0' },
+      owner: '',
+      model: { uuid, name, description, port } as WsServerModel
+    });
+    return new DefaultWsServer().init(scenario);
   }
 }

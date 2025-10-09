@@ -1,15 +1,58 @@
 /**
- * WsServerModel - WsServer Component Model Interface
- * Web4 pattern: Component model following auto-discovery patterns
+ * WsServerModel Interface - WebSocket server capability component model
+ * 
+ * Web4 principle: Single interface per file
+ * Pattern Decision: Component-specific model extending Model (type safety approach)
+ * Configuration: Scenarios ARE configs - no separate config interfaces
  */
 
 import { Model } from './Model.interface.js';
+import { IOR } from '../../../../../IOR/0.3.0.3/dist/index.js';
 
 export interface WsServerModel extends Model {
-  uuid: string;
-  name: string;
-  origin: string;
-  definition: string;
-  createdAt: string;
-  updatedAt: string;
+  /**
+   * WebSocket server port number
+   */
+  port: number;
+
+  /**
+   * Server lifecycle state
+   */
+  state: 'stopped' | 'starting' | 'running' | 'stopping' | 'error';
+
+  /**
+   * Connected client IOR references
+   * Web4 principle: Connections are components with IORs, not info objects
+   */
+  connections: IOR[];
+
+  /**
+   * WebSocket protocol version
+   */
+  protocol: string;
+
+  /**
+   * Maximum allowed connections (config in model - scenarios ARE configs)
+   */
+  maxConnections: number;
+
+  /**
+   * Heartbeat interval (config in model - scenarios ARE configs)  
+   */
+  heartbeatInterval: number;
+
+  /**
+   * Compression enabled (config in model - scenarios ARE configs)
+   */
+  compression: boolean;
+
+  /**
+   * Server start timestamp
+   */
+  startedAt?: string;
+
+  /**
+   * Server stop timestamp
+   */
+  stoppedAt?: string;
 }

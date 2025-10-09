@@ -15,9 +15,9 @@ import { DefaultServiceRegistry } from './DefaultServiceRegistry.js';
 import { IOR, DefaultIOR } from '../../../../../IOR/0.3.0.3/dist/index.js';
 import { Scenario } from '../../../../../Scenario/0.3.0.2/dist/ts/Scenario.js';
 import { DefaultUser } from '../../../../../User/0.3.0.2/dist/ts/DefaultUser.js';
-import { DefaultHttpServer } from '../../../../../HttpServer/0.3.0.2/dist/ts/layer2/DefaultHttpServer.js';
-import { DefaultWsServer } from '../../../../../WsServer/0.3.0.2/dist/ts/layer2/DefaultWsServer.js';
-import { DefaultP2PServer } from '../../../../../P2PServer/0.3.0.2/dist/ts/layer2/DefaultP2PServer.js';
+import { DefaultHttpServer } from '../../../../../HttpServer/0.3.1.0/dist/ts/layer2/DefaultHttpServer.js';
+import { DefaultWsServer } from '../../../../../WsServer/0.3.1.0/dist/ts/layer2/DefaultWsServer.js';
+import { DefaultP2PServer } from '../../../../../P2PServer/0.3.1.0/dist/ts/layer2/DefaultP2PServer.js';
 // Capability component types for dynamic loading
 type HttpServerModel = any;
 type WsServerModel = any;
