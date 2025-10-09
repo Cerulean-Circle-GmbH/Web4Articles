@@ -15,18 +15,18 @@
 **🚨 Issues:** {{KEY_ISSUES}}  
 
 **📎 Previous Commit:** {{PREVIOUS_COMMIT_SHA}} - {{PREVIOUS_COMMIT_DESCRIPTION}}  
-**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
 
 ---
 
 ## **📊 SUMMARY**
 
 ### **Artifact Links**
-- **PDCA Document:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
-- **Changed Files:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
-- **New Components:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
-- **Requirements Created:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
-- **Related Artifacts:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **PDCA Document:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **Changed Files:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **New Components:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **Requirements Created:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **Related Artifacts:** [GitHub]({{GITHUB_URL}}) | [§/{{LOCAL_PATH}}]({{LOCAL_PATH}})
 
 ### **To TRON: QA Decisions required**
 **TEMPLATE VERIFICATION: Before using this template, verify it matches current 3.1.4.2 requirements exactly - no modifications or assumptions**
