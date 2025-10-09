@@ -909,13 +909,13 @@ Standards:
     const componentPath = this.resolveComponentPath(component, version);
     
     if (!existsSync(componentPath)) {
-      throw new Error(`Component not found: ${component} v${version} at ${componentPath}`);
+      throw new Error(`Component not found: ${component} ${version} at ${componentPath}`);
     }
     
     // Set component context for chaining
     this.model.name = component;
     this.model.origin = componentPath;
-    this.model.definition = `Component context: ${component} v${version}`;
+    this.model.definition = `Component context: ${component} ${version}`;
     this.model.updatedAt = new Date().toISOString();
     
     // Store context for chained operations
@@ -2329,7 +2329,7 @@ Standards:
       const componentPath = path.join(this.model.targetDirectory, 'components', spec.name, spec.version);
       
       if (!existsSync(componentPath)) {
-        throw new Error(`Component not found: ${spec.name} v${spec.version} at ${componentPath}`);
+        throw new Error(`Component not found: ${spec.name} ${spec.version} at ${componentPath}`);
       }
       
       const analysis = await this.analyzeComponentStructure(componentPath, spec.name, spec.version);
