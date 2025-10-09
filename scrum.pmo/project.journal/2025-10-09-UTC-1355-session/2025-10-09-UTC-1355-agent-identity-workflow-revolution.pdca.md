@@ -43,13 +43,11 @@
 
 ### QA Decisions
 
-- [ ] **Decision 1:** Approve save/start.v6 as new default for all agent startups?
-  - a) Yes - set as default, deprecate old workflow immediately
-  - b) Pilot with selected agents first for 1 week
+- [x] **Decision 1:** Approve save/start.v6 as new default for all agent startups?
+  - **APPROVED: 1a** - Yes, set as default, deprecated old workflow immediately
   
-- [ ] **Decision 2:** Update existing pending-unknown-*.md files?
-  - a) Convert all to new format with user input for RequestID/Name
-  - b) Leave as-is for historical reference
+- [x] **Decision 2:** Update existing pending-unknown-*.md files?
+  - **EXECUTED:** Remove them - 14 files deleted (2025-09-19 through 2025-10-08)
 
 ---
 
