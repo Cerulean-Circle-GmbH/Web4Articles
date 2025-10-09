@@ -5,7 +5,7 @@
 
 import { Web4TSComponent, ComponentScaffoldOptions, ComponentMetadata, CLIStandardValidation } from '../layer3/Web4TSComponent.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
-import { Web4TSComponentModel } from '../layer3/Web4TSComponentModel.interface.js';
+import { Web4TSComponentModel, ComponentDependency } from '../layer3/Web4TSComponentModel.interface.js';
 import { DefaultCLI } from './DefaultCLI.js';
 import * as fs from 'fs/promises';
 import { existsSync, readdirSync, statSync, lstatSync } from 'fs';
@@ -36,6 +36,62 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
+  }
+
+  /**
+   * Set component dependencies that must be built before this component
+   * @param dependencies Array of component dependencies
+   * @cliHide
+   */
+  setDependencies(dependencies: ComponentDependency[]): this {
+    this.model.dependencies = dependencies;
+    return this;
+  }
+
+  /**
+   * Build all component dependencies before building this component
+   * Recursively builds dependencies in correct order
+   * @cliHide
+   */
+  async buildDependencies(componentName: string): Promise<void> {
+    const componentDir = this.resolveComponentDirectory(componentName);
+    const versionDirs = readdirSync(componentDir)
+      .filter(name => /^\d+\.\d+\.\d+\.\d+$/.test(name))
+      .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
+    
+    if (versionDirs.length === 0) {
+      console.log(`⚠️  No versions found for ${componentName}, skipping dependency build`);
+      return;
+    }
+    
+    // Use latest version
+    const latestVersion = versionDirs[0];
+    const componentVersionDir = path.join(componentDir, latestVersion);
+    const packageJsonPath = path.join(componentVersionDir, 'package.json');
+    
+    if (!existsSync(packageJsonPath)) {
+      console.log(`⚠️  No package.json in ${componentName}/${latestVersion}, skipping`);
+      return;
+    }
+    
+    console.log(`🔧 Building dependency: ${componentName}/${latestVersion}`);
+    
+    try {
+      // Build the dependency
+      const buildScript = path.join(componentVersionDir, 'src/sh/build.sh');
+      if (existsSync(buildScript)) {
+        execSync('./src/sh/build.sh', {
+          cwd: componentVersionDir,
+          stdio: 'inherit'
+        });
+        console.log(`✅ Dependency built: ${componentName}/${latestVersion}`);
+      } else {
+        console.log(`⚠️  No build.sh in ${componentName}/${latestVersion}, skipping`);
+      }
+    } catch (error) {
+      console.error(`❌ Failed to build dependency ${componentName}/${latestVersion}: ${(error as Error).message}`);
+      throw new Error(`Dependency build failed: ${componentName}/${latestVersion}`);
+    }
   }
 
   /**

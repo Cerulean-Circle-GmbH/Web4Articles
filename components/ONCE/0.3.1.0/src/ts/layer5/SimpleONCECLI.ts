@@ -30,7 +30,7 @@ class SimpleONCE {
       console.log('🧹 ONCE: Starting ecosystem deinstall...');
       console.log('🔗 Using Build component for comprehensive cleaning...');
       
-      const { DefaultBuild } = await import('../../../Build/0.3.0.3/dist/index.js');
+      const { DefaultBuild } = await import('../../../../../Build/0.3.0.3/dist/index.js');
       const build = new DefaultBuild();
       await build.cleanAllComponents();
       

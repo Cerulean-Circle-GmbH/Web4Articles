@@ -20,6 +20,7 @@ export interface Web4TSComponentModel extends Model {
   componentStandards: ComponentStandard[];
   validationRules: ValidationRule[];
   scaffoldingTemplates: ScaffoldingTemplate[];
+  dependencies?: ComponentDependency[];  // Component dependencies with auto-build
   
   createdAt: string;
   updatedAt: string;
@@ -46,4 +47,10 @@ export interface ScaffoldingTemplate {
   path: string;
   content?: string;
   conditions?: string[];
+}
+
+export interface ComponentDependency {
+  component: string;  // Component name (e.g., 'IOR', 'Scenario')
+  version: string;    // Required version (e.g., '0.3.0.3')
+  path?: string;      // Optional custom path (defaults to ../ComponentName/version)
 }
