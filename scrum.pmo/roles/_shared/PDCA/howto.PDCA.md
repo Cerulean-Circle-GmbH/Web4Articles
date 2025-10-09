@@ -198,23 +198,29 @@ When reporting git operations in chat, always include the exact commit message u
 [GitHub](https://github.com/.../blob/branch/path/to/file) | [§/path/from/root](../../../relative/path)
 ```
 
-**In Chat Responses:**
+**In Chat Responses (Cursor AI Context):**
 ```markdown
-[GitHub](https://github.com/.../blob/branch/path/to/file) | [§/path/from/root](path/from/root)
+[GitHub](https://github.com/.../blob/commit-sha/path/to/file) | [§/path/from/root](file:///absolute/path/to/file)
+```
+
+**Example:**
+```markdown
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/14e91446/components/Web4TSComponent/0.3.7.0/session/letter.md) | [§/components/Web4TSComponent/0.3.7.0/session/letter.md](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.7.0/session/letter.md)
 ```
 
 ### **Link Requirements:**
 - **§ notation for display** when showing paths from project root
-- **In PDCAs:** Relative path FROM document TO target
-- **In Chat:** Full path from project root (NO relative paths)
+- **In PDCAs:** Relative path FROM document TO target (e.g., `../../../relative/path`)
+- **In Chat:** Absolute `file://` URL (because chat has NO file context)
 - **GitHub links MUST work** (require git push before providing) [[memory:6291031]]
 - **Both links on same line** separated by ` | `
 - **Always end chat responses with current artifact links** [[memory:6291031]]
 
 ### **Critical Chat Rule:**
-- Chat has NO document context - you're not "in" any file
-- ALWAYS use project root paths in chat responses
-- The link path equals the display path (minus §)
+- **Chat has NO document context** - you're not "in" any file
+- **Chat links MUST use `file://` absolute URLs** - relative paths will show "file does not exist" error
+- **Why:** Cursor resolves relative paths from chat context, not from any file location
+- **The display text uses §/** to show the path from project root for consistency
 
 ### **Git Protocol (MANDATORY)**
 1. **Immediate commit and push** after every PDCA creation [[memory:6902297]]
