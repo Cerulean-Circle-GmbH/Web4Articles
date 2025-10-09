@@ -660,26 +660,36 @@ npm test
 
 Generated components have **two ways** to run tests:
 
-**Option 1: Simple Testing (no promotion)**
+**Option 1: Simple Testing (no promotion) ← DEFAULT**
 ```bash
 cd components/DemoComponent
 npm test  # Runs vitest directly, no version promotion
 ```
+- ✅ Fast iteration during development
+- ✅ No setup required
+- ❌ No automatic version promotion
 
 **Option 2: Testing with Promotion Workflow**
 ```bash
 # REQUIRED: Source the environment first
 source source.env
 
-# Run with Web4TSComponent promotion infrastructure
+# Set up semantic links
+web4tscomponent on DemoComponent 0.1.0.0
+web4tscomponent setDev 0.1.0.0
+
+# Run with promotion workflow
 web4tscomponent on DemoComponent dev test
 ```
+- ✅ Automatic version promotion on 100% success
+- ✅ Uses Web4TSComponent's proven promotion infrastructure
+- ⚠️  Requires manual setup (semantic links)
 
-**Key Differences:**
-- `npm test` → Runs vitest only, good for development/debugging
-- `web4tscomponent on ComponentName dev test` → Runs tests + triggers version promotion on 100% success
-- Promotion workflow requires `source.env` to add web4tscomponent to PATH
-- The CLI `test()` method delegates to web4tscomponent for promotion (prevents recursion via VITEST env check)
+**Why Two Modes?**
+1. **`npm test`** is for rapid development - run tests quickly without promotion overhead
+2. **`web4tscomponent on Component dev test`** is for release preparation - validates 100% success and promotes versions
+
+**Important:** Generated components do NOT auto-promote on `npm test` by design. This prevents accidental promotions during development. Use the Web4TSComponent promotion workflow when you're ready to release.
 
 ---
 

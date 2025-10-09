@@ -14,7 +14,7 @@ export class DemoComponentCLI extends DefaultCLI {
   constructor() {
     super();
     this.component = null;
-    this.initWithComponentClass(DefaultDemoComponent, 'DemoComponent', '0.1.0.0');
+    this.initWithComponentClass(DefaultDemoComponent, 'DemoComponent', '0.3.5.0');
   }
 
   /**

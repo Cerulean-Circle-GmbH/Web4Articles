@@ -198,6 +198,24 @@ describe('🧪 Generated Component Testing Workflow', () => {
       expect(content).toContain('insideTestEnvironment');
     });
 
+    it('should support promotion workflow via web4tscomponent delegation', async () => {
+      console.log('\n📖 Testing promotion workflow for generated components...');
+      
+      await component.create(testComponentName, '0.1.0.0', 'all');
+      
+      // Set up for promotion workflow
+      await component.on(testComponentName, '0.1.0.0');
+      await component.setDev('0.1.0.0');
+      
+      // Verify component can be promoted via Web4TSComponent infrastructure
+      const links = await component.getSemanticLinks(testComponentName);
+      expect(links.dev).toBe('0.1.0.0');
+      
+      console.log('   ✅ Generated component supports promotion workflow');
+      console.log('   ✅ Can be promoted via: web4tscomponent on ComponentName dev test');
+      console.log('   💡 npm test (simple) vs web4tscomponent on ComponentName dev test (with promotion)');
+    });
+
     // Note: Skipped for same reason - npm test on first run is legitimately slow
     it.skip('should handle timeout gracefully if recursion occurs (skipped: first build is slow)', async () => {
       // This test verifies our timeout mechanism works

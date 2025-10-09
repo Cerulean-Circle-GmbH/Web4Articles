@@ -1,6 +1,6 @@
 {
   "name": "@web4x/democomponent",
-  "version": "0.1.0.0",
+  "version": "0.3.5.0",
   "type": "module",
   "description": "DemoComponent Component - Base Entry Point",
   "scripts": {
