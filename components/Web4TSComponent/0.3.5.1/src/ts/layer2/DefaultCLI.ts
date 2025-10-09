@@ -189,7 +189,8 @@ export abstract class DefaultCLI implements CLI {
     blue: '\x1b[34m',
     magenta: '\x1b[35m',
     cyan: '\x1b[36m',
-    white: '\x1b[37m'
+    white: '\x1b[37m',
+    orange: '\x1b[38;5;208m'
   };
 
   /**
@@ -208,7 +209,8 @@ export abstract class DefaultCLI implements CLI {
       blue: '\x1b[34m',
       magenta: '\x1b[35m',
       cyan: '\x1b[36m',
-      white: '\x1b[37m'
+      white: '\x1b[37m',
+      orange: '\x1b[38;5;208m'
     };
   }
 

@@ -3180,8 +3180,18 @@ Standards:
             displayName += '/';
             coloredName = `${colors.cyan}${colors.bold}${item}/${colors.reset}`;
           } else {
+            // Protected files (orange warning - do not modify)
+            if (item.endsWith('.interface.ts') ||
+                item === 'package.json' ||
+                item === 'package-lock.json' ||
+                item === 'tsconfig.json' ||
+                item === 'vitest.config.ts' ||
+                item === '.gitignore' ||
+                item === '.npmrc') {
+              coloredName = `${colors.orange}${item}${colors.reset}`;
+            }
             // File type specific coloring
-            if (item === 'README.md') {
+            else if (item === 'README.md') {
               coloredName = `${colors.green}${colors.bold}${item}${colors.reset}`;
             } else if (item.endsWith('.test.ts')) {
               coloredName = `${colors.magenta}${item}${colors.reset}`;
