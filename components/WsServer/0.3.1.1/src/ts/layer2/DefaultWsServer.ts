@@ -150,6 +150,21 @@ export class DefaultWsServer implements WsServer {
     return this.data.state === 'running';
   }
 
+  /**
+   * Component interface wrappers (for ONCE compatibility)
+   */
+  async start(): Promise<void> {
+    return this.startServer();
+  }
+
+  async stop(): Promise<void> {
+    return this.stopServer();
+  }
+
+  getIOR(): IOR {
+    return this.iorComponent.toJSON();
+  }
+
   async saveAsScenario(): Promise<Scenario> {
     // Delegate hibernation to Scenario component
     const ownerData = await this.userService.generateOwnerData({
