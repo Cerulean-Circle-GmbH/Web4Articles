@@ -34,14 +34,21 @@ export class DefaultUser implements User {
   }
 
   /**
-   * Generate owner data for scenario creation (ONCE compatibility)
+   * Generate owner data JSON string for scenario creation (ONCE compatibility)
    * Modern ESM TypeScript implementation - pure OOP
+   * @param user Username (e.g., 'system', 'admin', 'developer')
+   * @param hostname Hostname (e.g., 'localhost', 'server1')
+   * @param uuid Component UUID for ownership tracking
+   * @returns JSON string with owner data for scenario initialization
+   * @cliSyntax user hostname uuid
+   * @cliExample user generateOwnerData system localhost abc-123-def-456
+   * @cliHide
    */
-  async generateOwnerData(params: { user: string; hostname: string; uuid: string }): Promise<string> {
+  generateOwnerData(user: string, hostname: string, uuid: string): string {
     return JSON.stringify({
-      user: params.user,
-      hostname: params.hostname,
-      uuid: params.uuid,
+      user: user,
+      hostname: hostname,
+      uuid: uuid,
       timestamp: new Date().toISOString(),
       component: 'User',
       version: '0.3.1.1'

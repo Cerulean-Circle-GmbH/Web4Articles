@@ -377,11 +377,7 @@ export class DefaultONCE implements ONCE {
    */
   async saveAsScenario(): Promise<Scenario> {
     // Delegate hibernation to Scenario component (Decision 1a)
-    const ownerData = await this.userService.generateOwnerData({
-      user: 'system',
-      hostname: this.data.host,
-      uuid: this.data.uuid
-    });
+    const ownerData = this.userService.generateOwnerData('system', this.data.host, this.data.uuid);
 
     // ✅ Create actual Scenario component instance with type-safe model
     const scenario = new Scenario().init({
@@ -408,11 +404,7 @@ export class DefaultONCE implements ONCE {
       version: '0.3.0.0'
     });
     
-    const ownerData = await this.userService.generateOwnerData({
-      user: 'system',
-      hostname: this.data.host,
-      uuid: httpServerIOR.uuid
-    });
+    const ownerData = this.userService.generateOwnerData('system', this.data.host, httpServerIOR.uuid);
     
     const scenario = new Scenario().init({
       ior: httpServerIOR.toJSON(),
