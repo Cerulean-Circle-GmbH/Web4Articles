@@ -1,17 +1,21 @@
 # CMM3 Compliance Checklist
 
-**🗓️ Updated:** 2025-09-27-UTC-1021  
+**🗓️ Updated:** 2025-09-30-UTC-0943 (manually)  
+**CMM Definitions:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md)
 **⚠️ CMM Level:** Lowest compliance element determines overall level
 
 1. **PDCA Compliance**
-   - [ ] a) Template version 3.1.4.2 exact match: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](../../_shared/PDCA/template.md)
+   - [ ] a) Template version 3.2.4.2 exact match: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](../../_shared/PDCA/template.md)
    - [ ] b) Real UTC time (`date -u` output), not hallucinated
    - [ ] c) All 6 sections with horizontal separators (see template, not duplication)
    - [ ] d) All sections: exact template format, no modifications
    - [ ] e) Working dual links, no "TBD" placeholders
    - [ ] f) 11-step PDCA process (start with todo_write tool immediately):
-     1. **DECISION RECOGNITION:** When encountering unexpected findings, incomplete research, or ambiguous situations, IMMEDIATELY present QA Decisions to TRON rather than reporting autonomously. Examples: undocumented features, incomplete documentation, conflicting information, technical uncertainties.
+         **CRITICAL: Create ALL 11 steps in todo_write FIRST before any execution. Never create partial todo lists.**
+         **MANDATORY 1f PROTOCOL:** Every agent must use systematic 11-step process with todo_write tracking in first PDCA. No exceptions.
+         **DECISION RECOGNITION:** When encountering unexpected findings, incomplete research, or ambiguous situations, IMMEDIATELY present QA Decisions to TRON rather than reporting autonomously. Examples: undocumented features, incomplete documentation, conflicting information, technical uncertainties.
      1. Progress tracking requirement: Update tracking tables in CHECK section showing progress, use todo_write to track status, mention in chat if stopping incomplete for continuation prompt  
+     1. Interrupt this process immediately on total unexpeded observations or amgiguities and ask TRON. after the answer contionue.
      1. start with the header and the plan section
      1. plan with expected output
      1. do what you planned with savety protocoll
@@ -23,13 +27,15 @@
      1. act on the todolist and check again
      1. when achieved all expected output, write the rest of the pdca e.g. emotional section
      1. finally do the git protocol
-     1. Interrupt this process immediately on total unexpeded observations or amgiguities and ask TRON. after the answer contionue.
+
    - [ ] g) CMM3 violation reporting: Report to chat with dual link to [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../_shared/PDCA/howto.PDCA.md)
    - [ ] h) Understanding research requirement: Research unknown terms/processes before use or ask TRON if research fails - Add intense use of tracking tables for artifacts and task lists in plan section
+**MANDATORY: Research existing Web4 tools FIRST before any programming. If research fails, ASK TRON. NEVER program without explicit request.**
 
 6. **Trigger Command Recognition**
+**CRITICAL: "stop" = IMMEDIATE EMERGENCY HALT - No git operations, no PDCA completion, ask "what's up?" immediately**
    - [ ] a) "start" trigger: Session initialization with PDCA workflow establishment per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/recovery/start-command.md) | [§/recovery/start-command.md](../../recovery/start-command.md)
-   - [ ] b) "pdca" trigger: Compliance check and correction enforcement per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../_shared/PDCA/howto.PDCA.md)  
+   - [ ] b) "pdca" trigger: CMM3 compliance check and correction enforcement - Use CMM3 checklist to verify last PDCA and fix violations, then create new PDCA using checklist and 1f process per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../_shared/PDCA/howto.PDCA.md)  
    - [ ] c) "noop" trigger: No action - Cursor PWA display bug workaround per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/project.journal/2025-09-23-UTC-1052-session/2025-09-23-UTC-1548-howto-pdca-noop-trigger-addition.pdca.md) | [§/scrum.pmo/project.journal/2025-09-23-UTC-1052-session/2025-09-23-UTC-1548-howto-pdca-noop-trigger-addition.pdca.md](../project.journal/2025-09-23-UTC-1052-session/2025-09-23-UTC-1548-howto-pdca-noop-trigger-addition.pdca.md)
    - [ ] d) "pull" trigger: PDCA content analysis protocol - Read + Analyze + PDCA new content per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-2150-pull-protocol-update-new-files-analysis.md) | [§/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-2150-pull-protocol-update-new-files-analysis.md](../project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-2150-pull-protocol-update-new-files-analysis.md)
    - [ ] e) "stop" trigger: Emergency halt protocol - Immediate stop all operations, no git/PDCA completion, ask "what's up?" per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../_shared/PDCA/howto.PDCA.md)
@@ -54,6 +60,7 @@
 5. **Authorization**
    - [ ] a) Only explicit user-authorized work
    - [ ] b) Present decisions when direction unclear per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../../_shared/PDCA/PDCA.howto.decide.md)
+**WARNING: Never create fake opposites like "do it vs don't do it" - Only present decisions for REAL RISKS with multiple valid approaches**
    - [ ] c) No assumptions about user intent
 
 **Usage:** Cite violations as "[number][letter] cmm2" (e.g., "2a cmm2")  
