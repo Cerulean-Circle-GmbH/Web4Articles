@@ -1,10 +1,10 @@
 [Back to PDCA Process Improvements](./pdca.process.improvements/) | [CMMI Understanding](./PDCA.understanding.CMMI.md) | [How to Decide](./PDCA.howto.decide.md) | [Template](./template.md)
 
-# 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.6 (Template v3.2.4.2)**
+# 📋 **How to Write Excellent PDCAs - Consolidated Guidelines v2.6 (Template v3.1.4.2)**
 
 **🗓️ Date:** 2025-08-22-UTC-1330  
 **🎯 Objective:** Consolidated PDCA writing guidelines based on latest process improvements  
-**🎯 Template Version:** 3.2.4.2  
+**🎯 Template Version:** 3.1.4.2  
 
 **👤 Agent Role:** Process Documentation → Knowledge Management Enhancement  
 **👤 Branch:** save/start.v1 → Template Evolution  
@@ -24,7 +24,7 @@
 
 **🗓️ Date:** YYYY-MM-DD-UTC-HHMM  
 **🎯 Objective:** [CLEAR, SPECIFIC OBJECTIVE STATEMENT]  
-**🎯 Template Version:** 3.2.4.2  
+**🎯 Template Version:** 3.1.4.2  
 
 **👤 Agent Name:** [AGENT NAME] → [AGENT DESCRIPTION]  
 **👤 Agent Role:** [ROLE NAME] → [CONTEXT/SPECIALIZATION]  
@@ -166,7 +166,6 @@
 
 ---
 
-
 ## **🚨 GIT COMMIT MESSAGE REQUIREMENT - CRITICAL**
 
 ### **MANDATORY Format:**
@@ -190,7 +189,6 @@ When reporting git operations in chat, always include the exact commit message u
 
 ---
 
-
 ## **🔄 DUAL LINK SYSTEM REQUIREMENTS**
 
 ### **Format Standard (CRITICAL)**
@@ -200,23 +198,29 @@ When reporting git operations in chat, always include the exact commit message u
 [GitHub](https://github.com/.../blob/branch/path/to/file) | [§/path/from/root](../../../relative/path)
 ```
 
-**In Chat Responses:**
+**In Chat Responses (Cursor AI Context):**
 ```markdown
-[GitHub](https://github.com/.../blob/branch/path/to/file) | [§/path/from/root](path/from/root)
+[GitHub](https://github.com/.../blob/commit-sha/path/to/file) | [§/path/from/root](file:///absolute/path/to/file)
+```
+
+**Example:**
+```markdown
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/14e91446/components/Web4TSComponent/0.3.7.0/session/letter.md) | [§/components/Web4TSComponent/0.3.7.0/session/letter.md](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.7.0/session/letter.md)
 ```
 
 ### **Link Requirements:**
 - **§ notation for display** when showing paths from project root
-- **In PDCAs:** Relative path FROM document TO target
-- **In Chat:** Full path from project root (NO relative paths)
+- **In PDCAs:** Relative path FROM document TO target (e.g., `../../../relative/path`)
+- **In Chat:** Absolute `file://` URL (because chat has NO file context)
 - **GitHub links MUST work** (require git push before providing) [[memory:6291031]]
 - **Both links on same line** separated by ` | `
 - **Always end chat responses with current artifact links** [[memory:6291031]]
 
 ### **Critical Chat Rule:**
-- Chat has NO document context - you're not "in" any file
-- ALWAYS use project root paths in chat responses
-- The link path equals the display path (minus §)
+- **Chat has NO document context** - you're not "in" any file
+- **Chat links MUST use `file://` absolute URLs** - relative paths will show "file does not exist" error
+- **Why:** Cursor resolves relative paths from chat context, not from any file location
+- **The display text uses §/** to show the path from project root for consistency
 
 ### **Git Protocol (MANDATORY)**
 1. **Immediate commit and push** after every PDCA creation [[memory:6902297]]
@@ -429,7 +433,6 @@ After completing the compliance review, the agent MUST:
 
 ---
 
-
 ## **🔄 RESPONDING TO 'NOOP' PROMPT - NO ACTION WORKAROUND**
 
 When a user types just `noop` as a prompt, this is a **technical workaround** for Cursor PWA conversation display issues.
@@ -454,7 +457,6 @@ The Cursor PWA has a display bug where conversations may not show properly witho
 - **`noop`** - Technical workaround (no action, minimal acknowledgment only)
 
 ---
-
 
 ## **📚 ADVANCED LEARNING RESOURCES**
 
@@ -485,7 +487,7 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
   - Error corrections
 
 ---
-
+=======
 ## **🚨 CRITICAL: CHAT REPORTING ACCURACY**
 
 **NEVER CREATE DIFFERENT QA DECISIONS IN CHAT!**
@@ -499,7 +501,7 @@ For deep insights on PDCA best practices, process improvements, and lessons lear
 - PDCA: "Decision 1: Auto-Merge Strategy" with options a/b/c
 - Chat: "Decision 1: Cherry-Pick Strategy" with different options
 - THIS IS UNACCEPTABLE!
-
+>>>>>>> 959c3684f94046297176fbce33dee08a3fd71d1c
 
 ## **⚠️ COMMON MISTAKES TO AVOID**
 
