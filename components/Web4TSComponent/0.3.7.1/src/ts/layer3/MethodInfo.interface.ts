@@ -4,6 +4,8 @@
  * Purpose: Structure for component method analysis and documentation generation
  */
 
+import { ParameterInfo } from './ParameterInfo.interface.js';
+
 export interface MethodInfo {
   name: string;
   parameters: ParameterInfo[];
@@ -12,13 +14,4 @@ export interface MethodInfo {
   returnType: string;
   isPublic: boolean;
   category: 'create' | 'modify' | 'query' | 'delete' | 'utility' | 'context';
-}
-
-export interface ParameterInfo {
-  name: string;
-  type: string;
-  required: boolean;
-  description: string;
-  examples: string[];
-  validation: string[];
 }

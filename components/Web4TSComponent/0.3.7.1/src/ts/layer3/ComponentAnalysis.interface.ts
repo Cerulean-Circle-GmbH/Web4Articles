@@ -5,6 +5,8 @@
  */
 
 import { MethodInfo } from './MethodInfo.interface.js';
+import { InterfaceAnalysis } from './InterfaceAnalysis.interface.js';
+import { ExampleAnalysis } from './ExampleAnalysis.interface.js';
 
 export interface ComponentAnalysis {
   className: string;
@@ -13,24 +15,4 @@ export interface ComponentAnalysis {
   methods: MethodInfo[];
   interfaces: InterfaceAnalysis[];
   examples: ExampleAnalysis[];
-}
-
-export interface InterfaceAnalysis {
-  name: string;
-  properties: PropertyAnalysis[];
-  description: string;
-}
-
-export interface PropertyAnalysis {
-  name: string;
-  type: string;
-  required: boolean;
-  description: string;
-}
-
-export interface ExampleAnalysis {
-  title: string;
-  code: string;
-  description: string;
-  category: string;
 }

@@ -14,12 +14,3 @@ export interface ColorScheme {
   sections: string;      // Blue bold for section headers
   reset: string;         // Reset to default
 }
-
-export interface DocumentationSections {
-  header: string;
-  usage: string;
-  commands: string;
-  parameters: string;
-  examples: string;
-  integration: string;
-}

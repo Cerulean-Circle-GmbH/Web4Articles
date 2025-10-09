@@ -3,7 +3,10 @@
  * Web4 pattern: Empty constructor + scenario initialization + component functionality
  */
 
-import { Web4TSComponent, ComponentScaffoldOptions, ComponentMetadata, CLIStandardValidation } from '../layer3/Web4TSComponent.interface.js';
+import { Web4TSComponent } from '../layer3/Web4TSComponent.interface.js';
+import { ComponentScaffoldOptions } from '../layer3/ComponentScaffoldOptions.interface.js';
+import { ComponentMetadata } from '../layer3/ComponentMetadata.interface.js';
+import { CLIStandardValidation } from '../layer3/CLIStandardValidation.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { Web4TSComponentModel } from '../layer3/Web4TSComponentModel.interface.js';
 import * as fs from 'fs/promises';

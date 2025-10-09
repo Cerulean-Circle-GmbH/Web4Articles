@@ -4,6 +4,9 @@
  */
 
 import { Scenario } from './Scenario.interface.js';
+import { ComponentScaffoldOptions } from './ComponentScaffoldOptions.interface.js';
+import { ComponentMetadata } from './ComponentMetadata.interface.js';
+import { CLIStandardValidation } from './CLIStandardValidation.interface.js';
 
 export interface Web4TSComponent {
   // Web4 standard methods
@@ -23,31 +26,4 @@ export interface Web4TSComponent {
   setTargetDirectory(directory: string): void;
   showStandard(): void;
   showGuidelines(): void;
-}
-
-export interface ComponentScaffoldOptions {
-  componentName: string;
-  version: string;
-  includeLayerArchitecture?: boolean;
-  includeCLI?: boolean;
-  includeSpecFolder?: boolean;
-  includeVitest?: boolean;
-}
-
-export interface ComponentMetadata {
-  name: string;
-  version: string;
-  hasLocationResilientCLI: boolean;
-  hasLayeredArchitecture: boolean;
-  hasEmptyConstructors: boolean;
-  hasScenarioSupport: boolean;
-  complianceScore?: number;
-  issues?: string[];
-}
-
-export interface CLIStandardValidation {
-  isCompliant: boolean;
-  score: number;
-  issues: string[];
-  suggestions: string[];
 }

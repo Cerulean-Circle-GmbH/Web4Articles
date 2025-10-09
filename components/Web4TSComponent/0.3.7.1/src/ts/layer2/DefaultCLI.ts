@@ -7,7 +7,8 @@
 import { CLI } from '../layer3/CLI.interface.js';
 import { MethodInfo } from '../layer3/MethodInfo.interface.js';
 import { ComponentAnalysis } from '../layer3/ComponentAnalysis.interface.js';
-import { ColorScheme, DocumentationSections } from '../layer3/ColorScheme.interface.js';
+import { ColorScheme } from '../layer3/ColorScheme.interface.js';
+import { DocumentationSections } from '../layer3/DocumentationSections.interface.js';
 import { TSCompletion } from '../layer4/TSCompletion.js';
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import { join } from 'path';
