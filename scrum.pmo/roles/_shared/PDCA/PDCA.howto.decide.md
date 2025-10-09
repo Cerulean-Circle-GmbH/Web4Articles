@@ -367,6 +367,12 @@ When starting a new work session, always present these three categories of decis
   - b) Half-day focused session on specific component
   - c) Quick analysis session for current project state review
   - d) Extended multi-day session for major feature development
+
+- [ ] **Decision 4: PDCA Organization Location**
+  - a) Agent Role PDCAs - scrum.pmo/roles/[Role]/pdca/ for role-specific work sessions
+  - b) Session PDCAs - scrum.pmo/project.journal/[session]/ for project-wide collaborative work
+  - c) Sprint PDCAs - scrum.pmo/sprints/[sprint]/ for sprint-focused development cycles
+  - d) Component PDCAs - components/[component]/pdca/ for component-specific development work
 ```
 
 ### **Adaptation Guidelines:**
@@ -378,8 +384,8 @@ When starting a new work session, always present these three categories of decis
 
 **Role Selection Customization:**
 - Start with current session role as option (a)
-- Include roles relevant to identified focus areas
-- Consider specialized roles available in the project (e.g., TSRanger focus → include testing specialist)
+- **CRITICAL: Use dynamic role discovery** - Replace static examples with: `find scrum.pmo/roles -maxdepth 1 -type d | grep -v "_shared" | sed 's|scrum.pmo/roles/||' | sort`
+- Include ALL available roles (18+ roles including Tester, Developer, Architect, PO, etc.)
 - Match role capabilities to focus area requirements
 
 **Session Planning Customization:**
@@ -428,10 +434,7 @@ Before finalizing any PDCA:
 ---
 
 ### **📚 The 42 Testing Philosophy**
-**Regression Testing Story:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1220-regression-testing-story.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1220-regression-testing-story.md](../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1220-regression-testing-story.md)
-
-**Testing Guide:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/roles/Tester/howto.test.regression.cycles.md) | [§/scrum.pmo/roles/Tester/howto.test.regression.cycles.md](../../../Tester/howto.test.regression.cycles.md)
+**Understanding requires regression testing:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md](../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md)
 
 **"Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."** 🤝✨
-
 **"The only stupid question is the one not asked when clarity is needed."** 🤔💡
