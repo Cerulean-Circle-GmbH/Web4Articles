@@ -3179,6 +3179,17 @@ Standards:
           if (isDirectory) {
             displayName += '/';
             coloredName = `${colors.cyan}${colors.bold}${item}/${colors.reset}`;
+          } else {
+            // File type specific coloring
+            if (item === 'README.md') {
+              coloredName = `${colors.green}${colors.bold}${item}${colors.reset}`;
+            } else if (item.endsWith('.test.ts')) {
+              coloredName = `${colors.magenta}${item}${colors.reset}`;
+            } else if (item.endsWith('.sh')) {
+              coloredName = `${colors.blue}${item}${colors.reset}`;
+            } else if (item.includes('.template') || dirPath.includes('/templates/')) {
+              coloredName = `${colors.yellow}${item}${colors.reset}`;
+            }
           }
           
           // Special handling for node_modules symlink - show on one line
