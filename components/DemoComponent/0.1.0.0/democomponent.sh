@@ -34,7 +34,7 @@ if [ -z "$PROJECT_ROOT" ]; then
 fi
 
 # Navigate to component version directory
-COMPONENT_PATH="$PROJECT_ROOT/components/DemoComponent/0.3.5.0"
+COMPONENT_PATH="$PROJECT_ROOT/components/DemoComponent/0.1.0.0"
 cd "$COMPONENT_PATH" || {
     echo "❌ Failed to cd to $COMPONENT_PATH"
     exit 1

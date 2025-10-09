@@ -126,7 +126,16 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
       
       try {
         const { execSync } = await import('child_process');
-        execSync('web4tscomponent on {{COMPONENT_NAME}} dev test', { 
+        const path = await import('path');
+        
+        // Find project root (where scripts/ directory is)
+        const projectRoot = process.cwd().includes('/components/') 
+          ? process.cwd().split('/components/')[0]
+          : process.cwd();
+        
+        const web4tscomponentPath = path.join(projectRoot, 'scripts', 'web4tscomponent');
+        
+        execSync(`${web4tscomponentPath} on {{COMPONENT_NAME}} dev test`, { 
           stdio: 'inherit',
           encoding: 'utf-8'
         });

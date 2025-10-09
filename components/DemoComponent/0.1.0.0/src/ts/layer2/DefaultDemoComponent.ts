@@ -42,14 +42,14 @@ export class DefaultDemoComponent implements DemoComponent {
       uuid: this.model.uuid,
       timestamp: new Date().toISOString(),
       component: 'DemoComponent',
-      version: '0.3.5.0'
+      version: '0.1.0.0'
     });
 
     return {
       ior: {
         uuid: this.model.uuid,
         component: 'DemoComponent',
-        version: '0.3.5.0'
+        version: '0.1.0.0'
       },
       owner: ownerData,
       model: this.model
