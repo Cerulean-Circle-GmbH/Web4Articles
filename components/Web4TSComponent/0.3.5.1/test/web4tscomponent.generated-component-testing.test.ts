@@ -181,6 +181,40 @@ describe('🧪 Generated Component Testing Workflow', () => {
       console.log('   ✅ Recursion prevented via VITEST env var check');
       console.log('   💡 Generated components promote themselves!');
     });
+
+    it('should work when called via scripts/ symlink (multi-level symlink resolution)', async () => {
+      console.log('\n📖 Testing symlink resolution via scripts/ directory...');
+      
+      // Create component in test/data
+      await component.create(testComponentName, '0.1.0.0', 'all');
+      
+      const testComponentLower = testComponentName.toLowerCase();
+      const scriptsSymlink = path.join(testDataDir, 'scripts', testComponentLower);
+      
+      // Verify scripts symlink exists (in test/data/scripts)
+      expect(existsSync(scriptsSymlink)).toBe(true);
+      console.log(`   ✅ Symlink exists: test/data/scripts/${testComponentLower}`);
+      
+      // Call component via scripts symlink (multi-level: scripts/X → components/X/latest/X → X.sh)
+      const result = execSync(`./scripts/${testComponentLower}`, {
+        cwd: testDataDir,
+        encoding: 'utf-8',
+        timeout: 30000
+      });
+      
+      // Verify it successfully ran (should show help with CLI Tool message)
+      expect(result).toContain(`${testComponentName} CLI Tool`);
+      expect(result).toContain('0.1.0.0');
+      
+      console.log('   ✅ Multi-level symlink resolution works');
+      console.log('   ✅ Component found correct directory (not /scripts)');
+      console.log('   ✅ Build script executed successfully');
+      console.log(`   💡 This test catches the symlink resolution bug!`);
+      console.log(`   Manual test: cd test/data && ./scripts/${testComponentLower}`);
+      
+      // Cleanup
+      await component.removeComponent(testComponentName);
+    });
   });
 
   describe('🔄 Web4TSComponent Promotion Workflow', () => {
