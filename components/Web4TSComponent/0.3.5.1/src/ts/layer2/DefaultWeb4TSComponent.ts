@@ -276,6 +276,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     await this.updateLatestSymlink(componentName, version);
     await this.updateScriptsSymlinks(componentName, version);
     
+    // Create base package.json for npm start ONLY principle
+    await this.createBasePackageJson(componentName, version);
+    
     return {
       name: componentName,
       version,
@@ -285,6 +288,31 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       hasScenarioSupport: true,
       complianceScore: 100
     };
+  }
+
+  /**
+   * Create base package.json in component root for npm start ONLY principle
+   * Forwards to latest version via symlink
+   * @cliHide
+   */
+  private async createBasePackageJson(componentName: string, version: string): Promise<void> {
+    const componentBaseDir = this.resolveComponentDirectory(componentName);
+    const basePackageJsonPath = path.join(componentBaseDir, 'package.json');
+    
+    const basePackageJson = {
+      "name": `@web4x/${componentName.toLowerCase()}`,
+      "version": version,
+      "type": "module",
+      "description": `${componentName} Component - Base Entry Point`,
+      "scripts": {
+        "start": "cd latest && npm start",
+        "test": "cd latest && npm test",
+        "build": "cd latest && npm run build"
+      },
+      "private": true
+    };
+    
+    await fs.writeFile(basePackageJsonPath, JSON.stringify(basePackageJson, null, 2) + '\n');
   }
 
   /**

@@ -271,6 +271,46 @@ describe('🏗️ Component Creation', () => {
     });
   });
 
+  describe('🚀 npm start ONLY Principle', () => {
+    const testComponentName = 'NpmStartTest';
+    const testVersion = '0.1.0.0';
+    
+    beforeEach(async () => {
+      const componentDir = path.join(testDataDir, 'components', testComponentName);
+      if (existsSync(componentDir)) {
+        rmSync(componentDir, { recursive: true, force: true });
+      }
+    });
+
+    it('should allow npm start from component base directory', async () => {
+      await component.create(testComponentName, testVersion, 'all');
+      
+      const componentBaseDir = path.join(testDataDir, 'components', testComponentName);
+      const basePackageJson = path.join(componentBaseDir, 'package.json');
+      
+      // Verify base package.json exists for npm start ONLY principle
+      expect(existsSync(basePackageJson)).toBe(true);
+      
+      const packageJson = JSON.parse(readFileSync(basePackageJson, 'utf-8'));
+      expect(packageJson.scripts).toBeDefined();
+      expect(packageJson.scripts.start).toBeDefined();
+    });
+
+    it('should allow npm start from versioned directory', async () => {
+      await component.create(testComponentName, testVersion, 'all');
+      
+      const versionedDir = path.join(testDataDir, 'components', testComponentName, testVersion);
+      const versionedPackageJson = path.join(versionedDir, 'package.json');
+      
+      // Verify versioned package.json exists
+      expect(existsSync(versionedPackageJson)).toBe(true);
+      
+      const packageJson = JSON.parse(readFileSync(versionedPackageJson, 'utf-8'));
+      expect(packageJson.scripts).toBeDefined();
+      expect(packageJson.scripts.start).toBe('./src/sh/start.sh');
+    });
+  });
+
   describe('🔍 Edge Cases', () => {
     it('should handle component names with mixed case', async () => {
       const testComponentName = 'MixedCaseComponent';
