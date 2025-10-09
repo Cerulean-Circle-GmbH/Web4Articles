@@ -9,10 +9,11 @@
 SCRIPT_FILE="${BASH_SOURCE[0]}"
 # Resolve all symlinks
 while [ -L "$SCRIPT_FILE" ]; do
+    DIR="$(cd "$(dirname "$SCRIPT_FILE")" && pwd)"
     SCRIPT_FILE="$(readlink "$SCRIPT_FILE")"
-    # Handle relative symlinks
+    # Handle relative symlinks - resolve relative to current script's directory
     if [[ "$SCRIPT_FILE" != /* ]]; then
-        SCRIPT_FILE="$(dirname "${BASH_SOURCE[0]}")/$SCRIPT_FILE"
+        SCRIPT_FILE="$DIR/$SCRIPT_FILE"
     fi
 done
 SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_FILE")" && pwd)"
