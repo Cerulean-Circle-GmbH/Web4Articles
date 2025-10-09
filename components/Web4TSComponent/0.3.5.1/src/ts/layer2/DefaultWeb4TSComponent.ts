@@ -678,7 +678,7 @@ Standards:
    * @cliDefault version 0.1.0.0
    * @cliDefault options all
    */
-  async create(name: string, version: string = '0.1.0.0', options: string = ''): Promise<void> {
+  async create(name: string, version: string = '0.1.0.0', options: string = 'all'): Promise<void> {
     // Parse options (maps from 1.0.0.0 --cli --spec --vitest --layers)
     const scaffoldOptions: ComponentScaffoldOptions = {
       componentName: name,
@@ -3481,8 +3481,20 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    */
   private async createCLIScript(componentDir: string, componentName: string, version: string): Promise<void> {
     const cliScript = await this.generateLocationResilientCLI(componentName, version);
-    const scriptPath = path.join(componentDir, `${componentName.toLowerCase()}.sh`);
+    const componentLowerCase = componentName.toLowerCase();
+    const scriptPath = path.join(componentDir, `${componentLowerCase}.sh`);
     await fs.writeFile(scriptPath, cliScript, { mode: 0o755 });
+    
+    // Create symlink from componentname -> componentname.sh (required for package.json scripts)
+    const symlinkPath = path.join(componentDir, componentLowerCase);
+    try {
+      if (existsSync(symlinkPath)) {
+        await fs.unlink(symlinkPath);
+      }
+      await fs.symlink(`${componentLowerCase}.sh`, symlinkPath);
+    } catch (error) {
+      console.warn(`⚠️  Could not create CLI symlink: ${(error as Error).message}`);
+    }
   }
 
   /**
