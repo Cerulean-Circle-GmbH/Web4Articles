@@ -433,11 +433,7 @@ export class DefaultONCE implements ONCE {
       version: '0.3.0.0'
     });
     
-    const ownerData = await this.userService.generateOwnerData({
-      user: 'system',
-      hostname: this.data.host,
-      uuid: wsServerIOR.uuid
-    });
+    const ownerData = this.userService.generateOwnerData('system', this.data.host, wsServerIOR.uuid);
     
     const scenario = new Scenario().init({
       ior: wsServerIOR.toJSON(),
@@ -466,11 +462,7 @@ export class DefaultONCE implements ONCE {
       version: '0.3.0.0'
     });
     
-    const ownerData = await this.userService.generateOwnerData({
-      user: 'system',
-      hostname: this.data.host,
-      uuid: p2pServerIOR.uuid
-    });
+    const ownerData = this.userService.generateOwnerData('system', this.data.host, p2pServerIOR.uuid);
     
     const scenario = new Scenario().init({
       ior: p2pServerIOR.toJSON(),
