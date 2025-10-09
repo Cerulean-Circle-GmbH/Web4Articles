@@ -36,7 +36,7 @@ describe('🧪 Generated Component Testing Workflow', () => {
   });
 
   describe('📝 Story: Generated Component Test Infrastructure', () => {
-    it('should create component with test.sh that runs vitest directly', async () => {
+    it('should create component with test.sh that calls component CLI test method', async () => {
       console.log('\n📖 Creating component and checking test.sh...');
       
       // Create component
@@ -48,12 +48,12 @@ describe('🧪 Generated Component Testing Workflow', () => {
       
       const testShContent = readFileSync(testShPath, 'utf-8');
       
-      // Verify it runs vitest directly (not via CLI delegation)
-      expect(testShContent).toContain('npx vitest run');
-      expect(testShContent).not.toContain('./testgeneratedcomponent.sh test');
+      // Verify it calls the component's CLI test method (which handles promotion)
+      expect(testShContent).toContain('./testgeneratedcomponent test');
+      expect(testShContent).not.toContain('npx vitest run');
       
-      console.log('   ✅ test.sh runs vitest directly (no CLI delegation)');
-      console.log('   ✅ Prevents infinite recursion by bypassing CLI');
+      console.log('   ✅ test.sh calls component CLI test method');
+      console.log('   ✅ Enables promotion workflow on 100% test success');
     });
 
     it('should create component with test() method that has recursion prevention', async () => {
@@ -77,7 +77,8 @@ describe('🧪 Generated Component Testing Workflow', () => {
       // Verify recursion detection logic
       expect(implContent).toContain('process.env.VITEST');
       expect(implContent).toContain('insideTestEnvironment');
-      expect(implContent).toContain('web4tscomponent on');
+      expect(implContent).toContain('web4tscomponentPath');
+      expect(implContent).toContain('dev test');
       
       console.log('   ✅ test() method has VITEST env check');
       console.log('   ✅ Delegates to web4tscomponent when not in vitest');
@@ -138,7 +139,8 @@ describe('🧪 Generated Component Testing Workflow', () => {
       
       // Verify delegation happens when NOT in vitest
       expect(implContent).toContain('Not in test environment - delegate to web4tscomponent');
-      expect(implContent).toContain(`web4tscomponent on ${testComponentName} dev test`);
+      expect(implContent).toContain('web4tscomponentPath');
+      expect(implContent).toContain('dev test');
       
       console.log('   ✅ CLI test() method delegates to web4tscomponent');
       console.log('   ✅ Enables promotion workflow when called directly');
@@ -168,18 +170,7 @@ describe('🧪 Generated Component Testing Workflow', () => {
   });
 
   describe('🔄 Recursion Prevention Mechanisms', () => {
-    it('should prevent recursion via test.sh bypassing CLI', async () => {
-      await component.create(testComponentName, '0.1.0.0', 'all');
-      
-      const testShPath = path.join(testDataDir, 'components', testComponentName, '0.1.0.0', 'src/sh/test.sh');
-      const content = readFileSync(testShPath, 'utf-8');
-      
-      // test.sh should call vitest, not the CLI
-      expect(content).toContain('npx vitest run');
-      expect(content).not.toContain(`./${testComponentName.toLowerCase()}.sh test`);
-    });
-
-    it('should prevent recursion via VITEST env check in TypeScript', async () => {
+    it('should prevent recursion via VITEST env check in test() method', async () => {
       await component.create(testComponentName, '0.1.0.0', 'all');
       
       const implPath = path.join(
@@ -192,11 +183,15 @@ describe('🧪 Generated Component Testing Workflow', () => {
       );
       const content = readFileSync(implPath, 'utf-8');
       
-      // TypeScript should check VITEST env
+      // Verify recursion prevention via VITEST env check
       expect(content).toContain('process.env.VITEST');
-      expect(content).toContain('process.env.VITEST_WORKER_ID');
       expect(content).toContain('insideTestEnvironment');
+      expect(content).toContain('npx vitest run');
+      
+      console.log('   ✅ Recursion prevented via VITEST environment variable');
+      console.log('   ✅ When VITEST is set, runs vitest directly without delegation');
     });
+
 
     it('should support promotion workflow via web4tscomponent delegation', async () => {
       console.log('\n📖 Testing promotion workflow for generated components...');
