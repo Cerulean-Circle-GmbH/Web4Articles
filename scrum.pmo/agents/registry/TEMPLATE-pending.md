@@ -4,17 +4,21 @@
 
 ---
 
-## 📝 FILL THIS OUT NOW (Agent Self-Registration)
+## 📝 AGENT FILLS THIS AUTOMATICALLY
 
-### Session Information
-- **Start Time:** `PASTE UTC TIMESTAMP HERE (e.g., 2025-10-08-UTC-1601)`
-- **Working Branch:** `PASTE YOUR BRANCH HERE (e.g., dev/0350)`
+### Session Information (Agent Auto-Fills)
+- **Start Time:** `$(date -u +"%Y-%m-%d-UTC-%H%M")`  ← Agent runs this command
+- **Working Branch:** `$(git branch --show-current)`  ← Agent runs this command
 - **Registration Type:** Self-registered unknown agent
 
+---
+
+## 👤 USER MUST DECIDE THIS (Agent Asks User)
+
 ### Agent Declaration (What You Want To Do)
-- **Intended Role:** `PASTE ROLE HERE (e.g., Developer, BackendAgent, SaveRestartAgent)`
-- **Session Purpose:** `PASTE PURPOSE HERE (e.g., Update README files, Fix bug in component X)`
-- **Expected Duration:** `PASTE DURATION HERE (e.g., Quick Session 1-2 hours, Half-day Session 2-4 hours)`
+- **Intended Role:** `USER DECIDES (e.g., Developer, BackendAgent, SaveRestartAgent)`
+- **Session Purpose:** `USER DECIDES (e.g., Update README files, Fix bug in component X)`
+- **Expected Duration:** `USER DECIDES (e.g., Quick Session 1-2 hours, Half-day Session 2-4 hours)`
 
 ---
 
@@ -68,9 +72,11 @@
 
 ### For New Agents (You):
 1. Copy this template to create: `pending-unknown-YYYY-MM-DD-UTC-HHMM.md`
-2. Fill in the **"FILL THIS OUT NOW"** section (lines 7-15)
-3. Commit and push the file
-4. Wait for QA (TRON) to assign RequestID
+2. **Auto-fill** Session Information using commands shown (timestamp, branch)
+3. **Ask USER** for Agent Declaration (role, purpose, duration)
+4. Fill in user's answers to the 3 questions above
+5. Commit and push the file
+6. Wait for QA (TRON) to assign RequestID
 
 ### For QA (TRON):
 1. Review agent declaration
