@@ -5,5 +5,5 @@
 ./src/sh/build.sh
 
 # Run {{COMPONENT_LOWER}} test (handles vitest execution, recursion prevention, and promotion)
-./{{COMPONENT_LOWER}}.sh test
+./{{COMPONENT_LOWER}} test
 

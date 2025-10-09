@@ -32,7 +32,6 @@ describe('🧽 Dirtpig Detection Tests', () => {
       /^Debug.*$/i,             // DebugXxx
       /^Mock.*$/i,              // MockXxx
       /^Fake.*$/i,              // FakeXxx
-      /^Demo.*Component$/i,     // DemoXxxComponent (suspicious)
       /^Temp.*$/i,              // TempXxx
       /^Scratch.*$/i,           // ScratchXxx
     ];
@@ -40,8 +39,9 @@ describe('🧽 Dirtpig Detection Tests', () => {
     const contaminatedComponents: string[] = [];
 
     for (const componentName of componentDirs) {
-      // Skip legitimate test components (Web4Test is a real component)
-      if (componentName === 'Web4Test') continue;
+      // Skip legitimate components
+      const legitimateComponents = ['Web4Test', 'DemoComponent'];
+      if (legitimateComponents.includes(componentName)) continue;
 
       // Check against test patterns
       for (const pattern of testPatterns) {

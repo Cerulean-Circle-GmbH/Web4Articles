@@ -8,7 +8,7 @@ Systematically test Web4TSComponent lifecycle operations with consistent isolati
 
 ## Summary
 
-✅ **15/17 Stories Automated & Passing** (2 TODO)
+✅ **20/22 Stories Automated & Passing** (2 TODO)
 
 - Stories 1-4: test/data operations (create, verify, remove, cleanup)
 - Stories 5-8: Real project operations (create, verify, remove, cleanup)  
@@ -16,6 +16,7 @@ Systematically test Web4TSComponent lifecycle operations with consistent isolati
 - Story 12: Operations work without test mode coupling
 - Story 13: removeVersion script cleanup (bug was already fixed)
 - Stories 14-17: Location independence (CLI works from any symlink)
+- Stories 18-22: Generated component testing workflow (recursion prevention, symlink validation)
 
 **Key Achievement:** All manual tests converted to repeatable vitest automation with dual-linked manual command documentation.
 
@@ -40,6 +41,11 @@ Systematically test Web4TSComponent lifecycle operations with consistent isolati
 | 15 | Story 15: CLI works via scripts/web4tscomponent symlink | ✅ PASS | `./scripts/web4tscomponent` | [Shell wrapper script](web4tscomponent#L8) | Symlink resolution | [:391](test/web4tscomponent.test-story.test.ts#L391) |
 | 16 | Story 16: CLI works via scripts/versions/vX.X.X.X | ✅ PASS | `./scripts/versions/web4tscomponent-v0.3.4.1` | [Shell wrapper script](web4tscomponent#L8) | Symlink resolution | [:413](test/web4tscomponent.test-story.test.ts#L413) |
 | 17 | Story 17: CLI works via latest symlink | ✅ PASS | `./components/Web4TSComponent/latest/web4tscomponent` | [Shell wrapper script](web4tscomponent#L8) | Symlink resolution | [:441](test/web4tscomponent.test-story.test.ts#L441) |
+| 18 | should create component with test.sh that runs vitest directly | ✅ PASS | `web4tscomponent create TestGeneratedComponent 0.1.0.0` | [`create(name, version, options)`](src/ts/layer2/DefaultWeb4TSComponent.ts#L681) | `loadTemplate('sh/test.sh.template')` | [:29](test/web4tscomponent.generated-component-testing.test.ts#L29) |
+| 19 | should create component with test() method that has recursion prevention | ✅ PASS | `web4tscomponent create TestGeneratedComponent 0.1.0.0` | [`create(name, version, options)`](src/ts/layer2/DefaultWeb4TSComponent.ts#L681) | `loadTemplate('ts/DefaultComponent.ts.template')` | [:48](test/web4tscomponent.generated-component-testing.test.ts#L48) |
+| 20 | should have test() CLI method that delegates for promotion workflow | ✅ PASS | `web4tscomponent create TestGeneratedComponent 0.1.0.0` | [`create(name, version, options)`](src/ts/layer2/DefaultWeb4TSComponent.ts#L681) | Template validation | [:116](test/web4tscomponent.generated-component-testing.test.ts#L116) |
+| 21 | should prevent recursion via test.sh bypassing CLI | ✅ PASS | `web4tscomponent create TestGeneratedComponent 0.1.0.0` | [`create(name, version, options)`](src/ts/layer2/DefaultWeb4TSComponent.ts#L681) | `loadTemplate('sh/test.sh.template')` | [:167](test/web4tscomponent.generated-component-testing.test.ts#L167) |
+| 22 | should prevent recursion via VITEST env check in TypeScript | ✅ PASS | `web4tscomponent create TestGeneratedComponent 0.1.0.0` | [`create(name, version, options)`](src/ts/layer2/DefaultWeb4TSComponent.ts#L681) | `loadTemplate('ts/DefaultComponent.ts.template')` | [:180](test/web4tscomponent.generated-component-testing.test.ts#L180) |
 
 ## CLI Method Test Coverage
 

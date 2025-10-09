@@ -633,22 +633,63 @@ npm run build
 ### Simple Test Command:
 
 ```bash
-cd /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.3.2
+cd /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.5.1
 
-# Run the complete test suite
+# Just run npm test - that's it!
 npm test
 
-# Or use the shell script directly
-./src/sh/test.sh
+# DO NOT filter output with 2>&1, grep, tail, etc.
+# Let the test output flow naturally - we built in all the redirections!
 ```
 
 ### What Happens When You Test:
 
 1. **Smart Build** - Automatically rebuilds only if source files changed
-2. **Run Vitest** - Executes 12 comprehensive test suites (sequential, not parallel)
-3. **Verify DRY Compliance** - Ensures no node_modules duplication
-4. **Test Success Verification** - Checks for 100% test pass rate
-5. **Automatic Promotion** - If 100% success, triggers version promotion workflow
+2. **Run Vitest** - Executes comprehensive test suites (sequential, not parallel)
+3. **Test Logging** - Output automatically saved to `test/logs/test-YYYYMMDD-HHMMSS.log`
+4. **Verify DRY Compliance** - Ensures no node_modules duplication
+5. **Test Success Verification** - Checks for 100% test pass rate
+6. **Automatic Promotion** - If 100% success, triggers version promotion workflow
+
+**⚠️ CRITICAL: Never filter test output!**
+- ❌ DON'T: `npm test 2>&1 | tail -100` (makes you blind to test failures)
+- ❌ DON'T: `npm test | grep something` (hides important context)
+- ✅ DO: Just `npm test` - all output is already logged to `test/logs/`
+
+### 🔧 Testing Generated Components (DemoComponent, etc.)
+
+Generated components have **two ways** to run tests:
+
+**Option 1: Simple Testing (no promotion) ← DEFAULT**
+```bash
+cd components/DemoComponent
+npm test  # Runs vitest directly, no version promotion
+```
+- ✅ Fast iteration during development
+- ✅ No setup required
+- ❌ No automatic version promotion
+
+**Option 2: Testing with Promotion Workflow**
+```bash
+# REQUIRED: Source the environment first
+source source.env
+
+# Set up semantic links
+web4tscomponent on DemoComponent 0.1.0.0
+web4tscomponent setDev 0.1.0.0
+
+# Run with promotion workflow
+web4tscomponent on DemoComponent dev test
+```
+- ✅ Automatic version promotion on 100% success
+- ✅ Uses Web4TSComponent's proven promotion infrastructure
+- ⚠️  Requires manual setup (semantic links)
+
+**Why Two Modes?**
+1. **`npm test`** is for rapid development - run tests quickly without promotion overhead
+2. **`web4tscomponent on Component dev test`** is for release preparation - validates 100% success and promotes versions
+
+**Important:** Generated components do NOT auto-promote on `npm test` by design. This prevents accidental promotions during development. Use the Web4TSComponent promotion workflow when you're ready to release.
 
 ---
 
