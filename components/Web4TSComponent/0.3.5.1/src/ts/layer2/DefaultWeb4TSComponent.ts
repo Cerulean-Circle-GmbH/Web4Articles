@@ -14,6 +14,22 @@ import { execSync } from 'child_process';
 export class DefaultWeb4TSComponent implements Web4TSComponent {
   private model: Web4TSComponentModel;
 
+  /**
+   * ANSI color codes for tree output (from DefaultCLI pattern)
+   */
+  private colors = {
+    reset: '\x1b[0m',
+    bold: '\x1b[1m',
+    dim: '\x1b[90m',
+    red: '\x1b[31m',
+    green: '\x1b[32m',
+    yellow: '\x1b[33m',
+    blue: '\x1b[34m',
+    magenta: '\x1b[35m',
+    cyan: '\x1b[36m',
+    white: '\x1b[37m'
+  };
+
   constructor() {
     // Initialize with version from directory (single source of truth)
     const currentFileUrl = new URL(import.meta.url);
@@ -984,14 +1000,14 @@ Standards:
     
     if (context) {
       // WITH context: Show target component's tree
-      console.log(`📁 Tree structure for ${context.component} ${context.version}:`);
-      console.log(context.path);
+      console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${context.component} ${context.version}:${this.colors.reset}`);
+      console.log(`${this.colors.dim}${context.path}${this.colors.reset}`);
       await this.displayTreeStructure(context.path, '', maxDepth, 0, includeHidden);
     } else {
       // WITHOUT context: Show current component's tree (self-operation)
       const currentPath = process.cwd();
-      console.log(`📁 Tree structure for current component:`);
-      console.log(currentPath);
+      console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for current component:${this.colors.reset}`);
+      console.log(`${this.colors.dim}${currentPath}${this.colors.reset}`);
       await this.displayTreeStructure(currentPath, '', maxDepth, 0, includeHidden);
     }
     
@@ -3170,20 +3186,28 @@ Standards:
           const isDirectory = isSymlink ? statSync(itemPath).isDirectory() : lstats.isDirectory();
           
           let displayName = item;
-          if (isDirectory) displayName += '/';
+          let coloredName = item;
+          
+          // Apply colors based on item type
+          if (isDirectory) {
+            displayName += '/';
+            coloredName = `${this.colors.cyan}${this.colors.bold}${item}/${this.colors.reset}`;
+          }
           
           // Special handling for node_modules symlink - show on one line
           if (item === 'node_modules' && isSymlink) {
             const linkTarget = await fs.readlink(itemPath).catch(() => 'broken');
             displayName += ` → ${linkTarget}`;
-            console.log(prefix + connector + displayName);
+            coloredName = `${this.colors.magenta}${item}/ → ${linkTarget}${this.colors.reset}`;
+            console.log(prefix + connector + coloredName);
             continue; // Don't recurse into node_modules symlink
           }
           
           // Special handling for dist directory - mark as generated, don't expand
           if (item === 'dist' && isDirectory) {
             displayName += ' [generated]';
-            console.log(prefix + connector + displayName);
+            coloredName = `${this.colors.cyan}${this.colors.bold}${item}/${this.colors.reset} ${this.colors.dim}[generated]${this.colors.reset}`;
+            console.log(prefix + connector + coloredName);
             continue; // Don't recurse into dist
           }
           
@@ -3191,9 +3215,14 @@ Standards:
           if (isSymlink) {
             const linkTarget = await fs.readlink(itemPath).catch(() => 'broken');
             displayName += ` → ${linkTarget}`;
+            if (isDirectory) {
+              coloredName = `${this.colors.magenta}${item}/ → ${linkTarget}${this.colors.reset}`;
+            } else {
+              coloredName = `${this.colors.magenta}${item} → ${linkTarget}${this.colors.reset}`;
+            }
           }
           
-          console.log(prefix + connector + displayName);
+          console.log(prefix + connector + coloredName);
           
           // Recurse into directories (but not symlinks, node_modules, or dist)
           if (isDirectory && currentDepth < maxDepth - 1 && !isSymlink) {
@@ -3201,11 +3230,11 @@ Standards:
           }
         } catch (error) {
           // Handle permission errors or broken symlinks
-          console.log(prefix + connector + item + ' [access denied]');
+          console.log(prefix + connector + item + ` ${this.colors.red}[access denied]${this.colors.reset}`);
         }
       }
     } catch (error) {
-      console.log(prefix + '[error reading directory]');
+      console.log(prefix + `${this.colors.red}[error reading directory]${this.colors.reset}`);
     }
   }
 
