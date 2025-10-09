@@ -3,6 +3,12 @@
  * Defines the contract for TypeScript component standards enforcement
  */
 
+export interface ComponentDependency {
+  component: string;  // 'IOR', 'Scenario', 'User', etc.
+  version: string;    // '0.3.0.3'
+  path?: string;      // Optional custom path
+}
+
 export interface ComponentMetadata {
   name: string;
   version: string;
@@ -11,6 +17,7 @@ export interface ComponentMetadata {
   hasEmptyConstructors: boolean;
   hasScenarioSupport: boolean;
   hasLayeredArchitecture: boolean;
+  dependencies?: ComponentDependency[];  // Component dependencies with auto-build
 }
 
 export interface CLIStandardValidation {
@@ -29,6 +36,7 @@ export interface ComponentScaffoldOptions {
   includeCLI: boolean;
   includeSpecFolder: boolean;
   includeVitest: boolean;
+  dependencies?: ComponentDependency[];
 }
 
 export interface Web4TSComponent {
@@ -39,11 +47,17 @@ export interface Web4TSComponent {
   setComponentName(name: string): void;
   setVersion(version: string): void;
   setTargetDirectory(directory: string): void;
+  setDependencies(dependencies: ComponentDependency[]): void;
 
   // Standard enforcement methods  
   validateLocationResilientCLI(scriptPath: string): Promise<CLIStandardValidation>;
   generateLocationResilientCLI(componentName: string, version: string): Promise<string>;
   scaffoldComponent(options: ComponentScaffoldOptions): Promise<ComponentMetadata>;
+  
+  // Dependency management
+  buildDependencies(componentName: string): Promise<void>;
+  generateInstallDepsScript(componentName: string, version: string, dependencies: ComponentDependency[]): Promise<string>;
+  generateBuildScript(componentName: string, version: string, dependencies: ComponentDependency[]): Promise<string>;
   
   // Compliance checking
   auditComponentCompliance(componentPath: string): Promise<ComponentMetadata>;
