@@ -193,6 +193,26 @@ export abstract class DefaultCLI implements CLI {
   };
 
   /**
+   * Get ANSI color codes for CLI output (static accessor for DRY compliance)
+   * Allows non-subclass components to use standardized colors without duplication
+   * @returns Object containing ANSI color code strings
+   */
+  static getColors() {
+    return {
+      reset: '\x1b[0m',
+      bold: '\x1b[1m',
+      dim: '\x1b[90m',
+      red: '\x1b[31m',
+      green: '\x1b[32m',
+      yellow: '\x1b[33m',
+      blue: '\x1b[34m',
+      magenta: '\x1b[35m',
+      cyan: '\x1b[36m',
+      white: '\x1b[37m'
+    };
+  }
+
+  /**
    * Analyze component methods for dynamic documentation generation using class reference
    */
   protected analyzeComponentMethods(): MethodInfo[] {

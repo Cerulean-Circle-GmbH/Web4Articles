@@ -6,6 +6,7 @@
 import { Web4TSComponent, ComponentScaffoldOptions, ComponentMetadata, CLIStandardValidation } from '../layer3/Web4TSComponent.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { Web4TSComponentModel } from '../layer3/Web4TSComponentModel.interface.js';
+import { DefaultCLI } from './DefaultCLI.js';
 import * as fs from 'fs/promises';
 import { existsSync, readdirSync, statSync, lstatSync } from 'fs';
 import * as path from 'path';
@@ -13,22 +14,6 @@ import { execSync } from 'child_process';
 
 export class DefaultWeb4TSComponent implements Web4TSComponent {
   private model: Web4TSComponentModel;
-
-  /**
-   * ANSI color codes for tree output (from DefaultCLI pattern)
-   */
-  private colors = {
-    reset: '\x1b[0m',
-    bold: '\x1b[1m',
-    dim: '\x1b[90m',
-    red: '\x1b[31m',
-    green: '\x1b[32m',
-    yellow: '\x1b[33m',
-    blue: '\x1b[34m',
-    magenta: '\x1b[35m',
-    cyan: '\x1b[36m',
-    white: '\x1b[37m'
-  };
 
   constructor() {
     // Initialize with version from directory (single source of truth)
@@ -997,18 +982,19 @@ Standards:
     const context = this.getComponentContext();
     const maxDepth = parseInt(depth, 10) || 4;
     const includeHidden = showHidden.toLowerCase() === 'true';
+    const colors = DefaultCLI.getColors();
     
     if (context) {
       // WITH context: Show target component's tree
-      console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${context.component} ${context.version}:${this.colors.reset}`);
-      console.log(`${this.colors.dim}${context.path}${this.colors.reset}`);
-      await this.displayTreeStructure(context.path, '', maxDepth, 0, includeHidden);
+      console.log(`${colors.cyan}${colors.bold}📁 Tree structure for ${context.component} ${context.version}:${colors.reset}`);
+      console.log(`${colors.dim}${context.path}${colors.reset}`);
+      await this.displayTreeStructure(context.path, '', maxDepth, 0, includeHidden, colors);
     } else {
       // WITHOUT context: Show current component's tree (self-operation)
       const currentPath = process.cwd();
-      console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for current component:${this.colors.reset}`);
-      console.log(`${this.colors.dim}${currentPath}${this.colors.reset}`);
-      await this.displayTreeStructure(currentPath, '', maxDepth, 0, includeHidden);
+      console.log(`${colors.cyan}${colors.bold}📁 Tree structure for current component:${colors.reset}`);
+      console.log(`${colors.dim}${currentPath}${colors.reset}`);
+      await this.displayTreeStructure(currentPath, '', maxDepth, 0, includeHidden, colors);
     }
     
     return this;
@@ -3153,7 +3139,8 @@ Standards:
     prefix: string, 
     maxDepth: number, 
     currentDepth: number, 
-    showHidden: boolean
+    showHidden: boolean,
+    colors: ReturnType<typeof DefaultCLI.getColors>
   ): Promise<void> {
     if (currentDepth >= maxDepth) return;
 
@@ -3191,14 +3178,14 @@ Standards:
           // Apply colors based on item type
           if (isDirectory) {
             displayName += '/';
-            coloredName = `${this.colors.cyan}${this.colors.bold}${item}/${this.colors.reset}`;
+            coloredName = `${colors.cyan}${colors.bold}${item}/${colors.reset}`;
           }
           
           // Special handling for node_modules symlink - show on one line
           if (item === 'node_modules' && isSymlink) {
             const linkTarget = await fs.readlink(itemPath).catch(() => 'broken');
             displayName += ` → ${linkTarget}`;
-            coloredName = `${this.colors.magenta}${item}/ → ${linkTarget}${this.colors.reset}`;
+            coloredName = `${colors.magenta}${item}/ → ${linkTarget}${colors.reset}`;
             console.log(prefix + connector + coloredName);
             continue; // Don't recurse into node_modules symlink
           }
@@ -3206,7 +3193,7 @@ Standards:
           // Special handling for dist directory - mark as generated, don't expand
           if (item === 'dist' && isDirectory) {
             displayName += ' [generated]';
-            coloredName = `${this.colors.cyan}${this.colors.bold}${item}/${this.colors.reset} ${this.colors.dim}[generated]${this.colors.reset}`;
+            coloredName = `${colors.cyan}${colors.bold}${item}/${colors.reset} ${colors.dim}[generated]${colors.reset}`;
             console.log(prefix + connector + coloredName);
             continue; // Don't recurse into dist
           }
@@ -3216,9 +3203,9 @@ Standards:
             const linkTarget = await fs.readlink(itemPath).catch(() => 'broken');
             displayName += ` → ${linkTarget}`;
             if (isDirectory) {
-              coloredName = `${this.colors.magenta}${item}/ → ${linkTarget}${this.colors.reset}`;
+              coloredName = `${colors.magenta}${item}/ → ${linkTarget}${colors.reset}`;
             } else {
-              coloredName = `${this.colors.magenta}${item} → ${linkTarget}${this.colors.reset}`;
+              coloredName = `${colors.magenta}${item} → ${linkTarget}${colors.reset}`;
             }
           }
           
@@ -3226,15 +3213,15 @@ Standards:
           
           // Recurse into directories (but not symlinks, node_modules, or dist)
           if (isDirectory && currentDepth < maxDepth - 1 && !isSymlink) {
-            await this.displayTreeStructure(itemPath, nextPrefix, maxDepth, currentDepth + 1, showHidden);
+            await this.displayTreeStructure(itemPath, nextPrefix, maxDepth, currentDepth + 1, showHidden, colors);
           }
         } catch (error) {
           // Handle permission errors or broken symlinks
-          console.log(prefix + connector + item + ` ${this.colors.red}[access denied]${this.colors.reset}`);
+          console.log(prefix + connector + item + ` ${colors.red}[access denied]${colors.reset}`);
         }
       }
     } catch (error) {
-      console.log(prefix + `${this.colors.red}[error reading directory]${this.colors.reset}`);
+      console.log(prefix + `${colors.red}[error reading directory]${colors.reset}`);
     }
   }
 
