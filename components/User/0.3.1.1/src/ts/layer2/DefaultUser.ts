@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { User } from '../layer3/User';
+import { User } from '../layer3/User.js';
 
 export class DefaultUser implements User {
   public readonly uuid: string;
@@ -31,6 +31,21 @@ export class DefaultUser implements User {
     ].join('-');
     
     return uuid;
+  }
+
+  /**
+   * Generate owner data for scenario creation (ONCE compatibility)
+   * Modern ESM TypeScript implementation - pure OOP
+   */
+  async generateOwnerData(params: { user: string; hostname: string; uuid: string }): Promise<string> {
+    return JSON.stringify({
+      user: params.user,
+      hostname: params.hostname,
+      uuid: params.uuid,
+      timestamp: new Date().toISOString(),
+      component: 'User',
+      version: '0.3.1.1'
+    });
   }
 
   getScenario(): any {
@@ -230,15 +245,33 @@ export class DefaultUser implements User {
       if (args[0] === '--all') {
         console.log('🔍 Finding all scenario files...');
         
-        // Dynamic import for Node.js modules
-        const { glob } = await import('glob');
+        // Modern ESM imports (no legacy glob dependency)
+        const { readdir, stat } = await import('fs/promises');
         const path = await import('path');
         const { fileURLToPath } = await import('url');
         
         // Find project root (3 levels up from current file location)
         const currentFilePath = import.meta.url ? fileURLToPath(import.meta.url) : __filename;
         const projectRoot = path.resolve(path.dirname(currentFilePath), '../../../..');
-        const scenarioFiles = await glob('scenarios/index/**/*.scenario.json', { cwd: projectRoot });
+        
+        // Modern recursive file finder (replaces glob)
+        const findScenarioFiles = async (dir: string): Promise<string[]> => {
+          const files: string[] = [];
+          const entries = await readdir(dir, { withFileTypes: true });
+          
+          for (const entry of entries) {
+            const fullPath = path.join(dir, entry.name);
+            if (entry.isDirectory()) {
+              files.push(...await findScenarioFiles(fullPath));
+            } else if (entry.isFile() && entry.name.endsWith('.scenario.json')) {
+              files.push(fullPath);
+            }
+          }
+          return files;
+        };
+        
+        const scenariosDir = path.join(projectRoot, 'scenarios/index');
+        const scenarioFiles = await findScenarioFiles(scenariosDir);
         
         if (scenarioFiles.length === 0) {
           console.log('❌ No scenario files found');
@@ -248,8 +281,8 @@ export class DefaultUser implements User {
         console.log(`📁 Found ${scenarioFiles.length} scenario files`);
         console.log('🔧 Starting batch fix...\n');
 
-        // Convert to absolute paths
-        const absolutePaths = scenarioFiles.map(file => path.resolve(projectRoot, file));
+        // Files are already absolute paths from findScenarioFiles
+        const absolutePaths = scenarioFiles;
         
         const batchResult = await DefaultUser.batchFixScenarioOwnerUUIDs(absolutePaths);
         
