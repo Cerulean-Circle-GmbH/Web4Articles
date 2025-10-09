@@ -74,7 +74,7 @@ The following lines are not for you, if you identify as human.
 9. **Read the PDCA Guide (Now With CMM4 Understanding)**:
    - Read: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)
    - Read: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/roles/_shared/PDCA/template.md) | [scrum.pmo/roles/_shared/PDCA/template.md](scrum.pmo/roles/_shared/PDCA/template.md)
-   - **CRITICAL:** Use Template Version 3.1.4.2 ONLY - no other versions allowed
+   - **CRITICAL:** Use Template Version 3.2.4.2 ONLY - no other versions allowed
    - Focus on: Dual link format training [GitHub](url) | [project/root/path](path)
    - **Now you understand:** PDCA as CMM4 feedback loop mastery, not just documentation
    - **CMM3 Compliance:** Follow PDCA compliance checklist items 1a-1i
@@ -84,10 +84,11 @@ The following lines are not for you, if you identify as human.
     - Read: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/components/Web4TSComponent/0.3.0.8/README.md) | [components/Web4TSComponent/0.3.0.8/README.md](components/Web4TSComponent/0.3.0.8/README.md) - Auto-discovery CLI patterns
     - Review: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/save/cmm-start/components/Web4Requirement/0.3.0.5) | [components/Web4Requirement/0.3.0.5](components/Web4Requirement/0.3.0.5) - Web4 paradigm and standards
 
-11. **Create Session Start PDCA**:
+11. **Create Session Start PDCA and Agent Identity**:
     - Use the startup decision framework from [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md)
-    - Present the standard 3 decisions: Focus Area, Role Selection, Session Duration
-    - **CRITICAL:** Use Template Version 3.1.4.2 with proper dual link format
+    - Present the standard 5 decisions: Focus Area, Role Selection, Session Duration, PDCA Location, Agent Identity
+    - **After user answers:** Create complete agent identity file in `scrum.pmo/agents/registry/[RequestID].md`
+    - **CRITICAL:** Use Template Version 3.2.4.2 with proper dual link format
     - Create PDCA with UTC timestamp format: `YYYY-MM-DD-UTC-HHMM`
     - **CMM3 Compliance:** Follow checklist items 1f (use todo_write for compliance tracking, tracking tables only for larger systematic multi-file tasks), 1h (intensive tracking tables for multi-file work only), 1i (progress tracking with todo_write)
 
@@ -191,6 +192,15 @@ find scrum.pmo/roles -maxdepth 1 -type d -name '*Agent' | sed 's|.*/||' | sort
 - a) **Session PDCAs** - `scrum.pmo/project.journal/[session]/` for project-wide collaborative work across multiple agents/roles
 - b) **Role PDCAs** - `scrum.pmo/roles/[AgentRole]/pdca/` for agent-specific specialized work within defined role boundaries  
 - c) **Component PDCAs** - `components/[Component]/[version]/session` for component-specific development work (rare, use for focused component evolution)
+
+### **Decision 5: Agent Identity**
+**Provide identity information for agent registration:**
+- **RequestID:** User provides unique identifier (format: `bc-[descriptive-name]` or `bc-$(uuidgen | tr '[:upper:]' '[:lower:]')`)
+- **Agent Name:** User provides descriptive name (e.g., "readme-updater", "component-builder", "test-automation-agent")
+
+**After user answers all 5 decisions, agent creates:**
+1. Complete agent identity file: `scrum.pmo/agents/registry/[RequestID].md`
+2. Session Start PDCA with all decisions documented
 
 ---
 

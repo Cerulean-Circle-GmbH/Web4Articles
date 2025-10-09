@@ -1,41 +1,55 @@
-# Pending Agent Identification
+# ⚠️ DEPRECATED - USE NEW WORKFLOW
 
-## Status: ⏳ Awaiting RequestID Assignment
+## This Template is Obsolete
 
-### Session Information
-- **Start Time:** {{TIMESTAMP}}
-- **Working Branch:** {{BRANCH}}
-- **Registration Type:** Self-registered unknown agent
+**Old workflow:** Agent creates pending file, waits for QA to assign RequestID  
+**New workflow:** User provides RequestID in startup Decision 5, agent creates complete identity immediately
 
-### Agent Declaration
-- **Intended Role:** {{TO_BE_DECLARED}}
-- **Session Purpose:** {{TO_BE_DECLARED}}
-- **Expected Duration:** {{TO_BE_DECLARED}}
+---
 
-### Required QA Action
-1. Provide RequestID for this agent
-2. Rename this file to [RequestID].md
-3. Update with complete identity information
+## ✅ NEW WORKFLOW (Use This Instead)
 
-### Standard Identity Format (After RequestID)
-```
-## RequestID: {{REQUEST_ID}}
+### For New Agents:
 
-### Identity
-- **Current Name:** {{AGENT_NAME}}
-- **Role:** {{ROLE}}
-- **Purpose:** {{PURPOSE}}
+1. **Present 5 startup decisions to user** (see README.md § Startup Decision Framework):
+   - Decision 1: Primary Work Focus Area
+   - Decision 2: Agent Role Selection
+   - Decision 3: Session Duration Planning
+   - Decision 4: PDCA Organization Location
+   - **Decision 5: Agent Identity** (RequestID and Agent Name)
 
-### Current Status
-- **Status:** ✅ Active
-- **Branch:** {{HOME_BRANCH}}
-- **Session:** {{SESSION_DIR}}
+2. **User provides:**
+   - RequestID (e.g., `bc-readme-updater` or `bc-$(uuidgen | tr '[:upper:]' '[:lower:]')`)
+   - Agent Name (e.g., "README Maintenance Agent")
 
-### Core Responsibilities
-{{NUMBERED_LIST}}
+3. **Agent creates complete identity file:**
+   - Use template: `TEMPLATE-agent-identity.md`
+   - Fill in all fields from user's 5 decisions
+   - Save as: `scrum.pmo/agents/registry/[RequestID].md`
+   - Commit and push
 
-### Integration Points
-{{INTEGRATION_DETAILS}}
-```
+4. **Done!** No waiting for QA, no pending status, complete identity from the start.
 
-**"Every agent deserves an identity"** 🆔
+---
+
+## 📋 Template Reference
+
+**Use this template instead:**  
+→ [scrum.pmo/agents/registry/TEMPLATE-agent-identity.md](TEMPLATE-agent-identity.md)
+
+**Startup decision framework:**  
+→ [README.md § Startup Decision Framework](../../README.md#-startup-decision-framework)
+
+---
+
+## 🔄 Migration Note
+
+All existing `pending-unknown-*.md` files should be:
+1. Reviewed for user's original intent
+2. User provides RequestID and Name (Decision 5)
+3. Converted to complete identity using new template
+4. Renamed from `pending-unknown-*.md` to `[RequestID].md`
+
+---
+
+**"Every agent gets immediate identity"** ⚡🆔
