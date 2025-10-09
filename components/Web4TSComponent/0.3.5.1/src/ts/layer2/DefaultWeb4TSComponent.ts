@@ -3992,15 +3992,18 @@ export default defineConfig({
   }
 
   /**
-   * Update main script symlink in scripts/versions
+   * Update main script symlink in scripts/ to point to latest
    * @cliHide
    */
   private async updateMainScriptSymlink(component: string, version: string): Promise<void> {
-    const projectRoot = this.resolveProjectRoot(); // FIX: Use resolveProjectRoot instead of direct model access
-    const versionsDir = path.join(projectRoot, 'scripts', 'versions');
+    const projectRoot = this.resolveProjectRoot();
+    const scriptsDir = path.join(projectRoot, 'scripts');
     const componentLower = component.toLowerCase();
-    const mainScriptPath = path.join(versionsDir, componentLower);
-    const versionScriptName = `${componentLower}-v${version}`;
+    const mainScriptPath = path.join(scriptsDir, componentLower);
+    
+    // Target: ../components/ComponentName/latest/componentname
+    const componentDir = path.join(projectRoot, 'components', component);
+    const targetPath = path.relative(scriptsDir, path.join(componentDir, 'latest', componentLower));
     
     try {
       // Remove existing main script symlink if it exists
@@ -4008,8 +4011,8 @@ export default defineConfig({
         await fs.unlink(mainScriptPath);
       }
       
-      // Create main script symlink pointing to versioned script
-      await fs.symlink(versionScriptName, mainScriptPath);
+      // Create main script symlink pointing to latest
+      await fs.symlink(targetPath, mainScriptPath);
     } catch (error) {
       console.log(`   ⚠️ Could not update main script symlink: ${(error as Error).message}`);
     }
