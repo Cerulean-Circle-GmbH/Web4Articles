@@ -6,7 +6,7 @@
  * Configuration: Scenarios ARE configs - no separate config interfaces
  */
 
-import { Model, IOR } from '../../../../IOR/0.3.0.3/dist/index.js';
+import { Model, IOR } from '../../../../../IOR/0.3.0.3/dist/index.js';
 
 export interface HttpServerModel extends Model {
   /**
