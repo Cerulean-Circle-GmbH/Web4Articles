@@ -32,24 +32,10 @@ export class Web4TSComponentCLI extends DefaultCLI {
   }
 
   /**
-   * Discover methods from component class for chaining support
+   * Use parent class method discovery (DefaultCLI now handles both CLI and component methods)
+   * No override needed - inherits from DefaultCLI
    */
-  protected discoverMethods(): void {
-    const prototype = DefaultWeb4TSComponent.prototype as any;
-    const methodNames = Object.getOwnPropertyNames(prototype)
-      .filter(name => typeof (prototype as any)[name] === 'function')
-      .filter(name => !name.startsWith('_') && name !== 'constructor')
-      .filter(name => !['init', 'toScenario', 'validateModel', 'getModel'].includes(name));
-
-    for (const methodName of methodNames) {
-      const method = (prototype as any)[methodName];
-      this.methodSignatures.set(methodName, {
-        name: methodName,
-        paramCount: method.length,
-        isAsync: method.constructor.name === 'AsyncFunction'
-      });
-    }
-  }
+  // protected discoverMethods() removed - using DefaultCLI implementation
 
   /**
    * Static start method - Web4 radical OOP entry point
@@ -150,14 +136,26 @@ export class Web4TSComponentCLI extends DefaultCLI {
     const methodArgs = args.slice(0, consumedArgs);
     const remainingArgs = args.slice(consumedArgs);
 
-    // Execute the method
-    const componentInstance = this.getOrCreateTSComponent();
-    const method = (componentInstance as any)[command];
-    
-    if (signature.isAsync) {
-      await method.apply(componentInstance, methodArgs);
+    // Execute the method (CLI methods take precedence over component methods)
+    // Web4 pattern: completeParameter, actionParameterCompletion are CLI methods
+    if (typeof (this as any)[command] === 'function') {
+      // Execute on CLI instance
+      const method = (this as any)[command];
+      if (signature.isAsync) {
+        await method.apply(this, methodArgs);
+      } else {
+        method.apply(this, methodArgs);
+      }
     } else {
-      method.apply(componentInstance, methodArgs);
+      // Fallback to component instance
+      const componentInstance = this.getOrCreateTSComponent();
+      const method = (componentInstance as any)[command];
+      
+      if (signature.isAsync) {
+        await method.apply(componentInstance, methodArgs);
+      } else {
+        method.apply(componentInstance, methodArgs);
+      }
     }
     
     return { executed: true, remainingArgs };
@@ -165,16 +163,21 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Intelligently determine how many arguments a method should consume
-   * Stops at next known command to enable chaining
+   * Stops at next known command to enable chaining (unless explicit max is set)
    */
   private determineArgumentConsumption(command: string, args: string[]): number {
     const signature = this.methodSignatures.get(command)!;
     
-    // Special handling for methods with default parameters
+    // Special handling for methods with hardcoded parameter counts
+    // These MUST consume their args even if they look like commands (e.g., completeParameter)
     const methodSpecificMaxArgs = this.getMethodMaxArguments(command);
-    const maxArgs = methodSpecificMaxArgs || signature.paramCount;
+    if (methodSpecificMaxArgs !== null) {
+      // Hardcoded count - consume exactly that many args, no command detection
+      return Math.min(methodSpecificMaxArgs, args.length);
+    }
     
-    // Look for next command in the arguments
+    // Default behavior: stop at next command for chaining
+    const maxArgs = signature.paramCount;
     for (let i = 0; i < Math.min(maxArgs, args.length); i++) {
       if (this.methodSignatures.has(args[i])) {
         // Found next command, consume up to this point
@@ -188,10 +191,13 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Get maximum arguments for methods with default parameters
+   * Also prevents chaining interference for completion methods
    */
   private getMethodMaxArguments(command: string): number | null {
     // Methods with default parameters that should consume more args than function.length shows
-    const methodMaxArgs: { [key: string]: number } = {
+    // Also: completion methods must consume their args even if they look like commands
+    const methodMaxArgs: { [key: string]: number} = {
+      'completeParameter': 1,  // MUST consume callback name (even if it's a command name)
       'tree': 2,  // depth and showHidden parameters (both have defaults)
       'create': 3, // name, version, options (options has default)
       'upgrade': 1, // versionType

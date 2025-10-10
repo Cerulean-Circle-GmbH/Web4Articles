@@ -102,23 +102,49 @@ export abstract class DefaultCLI implements CLI {
 
   /**
    * TSRanger 2.2 method discovery pattern
+   * Discovers methods from entire CLI inheritance chain (DefaultCLI and subclasses)
    */
   protected discoverMethods(): void {
-    if (!this.componentClass) return;
-    
-    const prototype = this.componentClass.prototype;
-    const methodNames = Object.getOwnPropertyNames(prototype)
-      .filter(name => typeof prototype[name] === 'function')
-      .filter(name => !name.startsWith('_') && name !== 'constructor')
-      .filter(name => !['init', 'toScenario', 'validateModel', 'getModel'].includes(name));
+    // Walk up the prototype chain to discover ALL CLI methods
+    let currentPrototype = Object.getPrototypeOf(this);
+    while (currentPrototype && currentPrototype !== Object.prototype) {
+      const methodNames = Object.getOwnPropertyNames(currentPrototype)
+        .filter(name => typeof currentPrototype[name] === 'function')
+        .filter(name => !name.startsWith('_') && name !== 'constructor')
+        .filter(name => !['init', 'toScenario', 'validateModel', 'getModel'].includes(name));
 
-    for (const methodName of methodNames) {
-      const method = prototype[methodName];
-      this.methodSignatures.set(methodName, {
-        name: methodName,
-        paramCount: method.length,
-        isAsync: method.constructor.name === 'AsyncFunction'
-      });
+      for (const methodName of methodNames) {
+        // Don't overwrite if already discovered (subclass takes precedence)
+        if (!this.methodSignatures.has(methodName)) {
+          const method = currentPrototype[methodName];
+          this.methodSignatures.set(methodName, {
+            name: methodName,
+            paramCount: method.length,
+            isAsync: method.constructor.name === 'AsyncFunction'
+          });
+        }
+      }
+      
+      // Move up the chain
+      currentPrototype = Object.getPrototypeOf(currentPrototype);
+    }
+    
+    // Also discover component methods if componentClass is set
+    if (this.componentClass) {
+      const prototype = this.componentClass.prototype;
+      const methodNames = Object.getOwnPropertyNames(prototype)
+        .filter(name => typeof prototype[name] === 'function')
+        .filter(name => !name.startsWith('_') && name !== 'constructor')
+        .filter(name => !['init', 'toScenario', 'validateModel', 'getModel'].includes(name));
+
+      for (const methodName of methodNames) {
+        const method = prototype[methodName];
+        this.methodSignatures.set(methodName, {
+          name: methodName,
+          paramCount: method.length,
+          isAsync: method.constructor.name === 'AsyncFunction'
+        });
+      }
     }
   }
 
@@ -138,14 +164,26 @@ export abstract class DefaultCLI implements CLI {
       throw new Error(`At least ${minArgs} arguments required for ${command} command`);
     }
 
-    // Dynamic method invocation with lazy instantiation
-    const componentInstance = this.getComponentInstance();
-    const method = componentInstance[command];
-    
-    if (signature.isAsync) {
-      await method.apply(componentInstance, args);
+    // Check if method exists on CLI (this) or component
+    // CLI methods take precedence (e.g., completeParameter, actionParameterCompletion)
+    if (typeof (this as any)[command] === 'function') {
+      // Execute on CLI instance (DefaultCLI or Web4TSComponentCLI)
+      const method = (this as any)[command];
+      if (signature.isAsync) {
+        await method.apply(this, args);
+      } else {
+        method.apply(this, args);
+      }
     } else {
-      method.apply(componentInstance, args);
+      // Fallback to component instance
+      const componentInstance = this.getComponentInstance();
+      const method = componentInstance[command];
+      
+      if (signature.isAsync) {
+        await method.apply(componentInstance, args);
+      } else {
+        method.apply(componentInstance, args);
+      }
     }
     
     return true;
@@ -200,8 +238,13 @@ export abstract class DefaultCLI implements CLI {
     const prototype = this.componentClass.prototype;
     const methodNames = Object.getOwnPropertyNames(prototype);
     
+    // Whitelist for internal CLI methods that start with __ (hidden but executable)
+    const internalCLIMethods = ['__completeParameter'];
+    
     for (const name of methodNames) {
-      if (name === 'constructor' || name.startsWith('_')) continue;
+      // Skip constructor and private methods (except whitelisted internal CLI methods)
+      if (name === 'constructor') continue;
+      if (name.startsWith('_') && !internalCLIMethods.includes(name)) continue;
       
       // ✅ ZERO CONFIG: Check @cliHide annotation with enhanced processing
       const cliAnnotations = TSCompletion.extractCliAnnotations(this.componentClass.name, name);
@@ -1074,6 +1117,143 @@ export abstract class DefaultCLI implements CLI {
    */
   private getComponentVersion(): string {
     return this.componentVersion || 'unknown';
+  }
+
+  /**
+   * Minimal parameter completion for 'action' parameter
+   * First iteration: Static list, no dynamic logic
+   * 
+   * Future: Will be auto-discovered via naming convention
+   * See: 2025-10-10-UTC-0340-tscompletion-oop-modernization.pdca.md
+   * 
+   * @param currentArgs Current argument values (unused in minimal version)
+   * @returns Array of action completions
+   */
+  async actionParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    return [
+      '',         // Empty = default action
+      'fix',      // Fix/repair
+      'verify',   // Verify/check
+      'show',     // Display/show
+      'list'      // List items
+    ];
+  }
+
+  /**
+   * Execute parameter completion callback for dynamic tab completion
+   * Called by bash completion when TSCompletion returns __CALLBACK__:methodName
+   * Web4 pattern: Hidden via @cliHide, not via naming convention
+   * @cliHide
+   */
+  async completeParameter(callbackName: string): Promise<void> {
+    // Check if callback method exists on this instance
+    if (typeof (this as any)[callbackName] === 'function') {
+      const values = await (this as any)[callbackName]([]);
+      // Output space-separated values for bash compgen
+      console.log(values.join(' '));
+    } else {
+      // Callback not found - return empty (no completions)
+      console.log('');
+    }
+  }
+
+  /**
+   * Find project root using git (Web4 standard pattern)
+   * Fallback to directory traversal if not in git repo
+   * @private
+   */
+  private findProjectRoot(): string {
+    // Try WEB4_PROJECT_ROOT first (if source.env was sourced)
+    if (process.env.WEB4_PROJECT_ROOT) {
+      return process.env.WEB4_PROJECT_ROOT;
+    }
+    
+    // Fallback: traverse up looking for .git and package.json
+    let current = process.cwd();
+    while (current !== '/') {
+      if (existsSync(join(current, '.git')) && existsSync(join(current, 'package.json'))) {
+        return current;
+      }
+      current = join(current, '..');
+    }
+    
+    // Last resort: current working directory
+    return process.cwd();
+  }
+
+  /**
+   * Get current component context from working directory
+   * 
+   * Replaces shell detect_component_context() function.
+   * TypeScript-first approach: NO environment variables!
+   * 
+   * Migration: Replaces WEB4_COMPONENT_* ENV vars.
+   * See: 2025-10-10-UTC-1002.pdca.md
+   * 
+   * @param format Output format: 'json' (default) or 'bash'
+   * @returns Component context information
+   * @example
+   *   web4tscomponent getContext
+   *   web4tscomponent getContext bash
+   */
+  async getContext(format: string = 'json'): Promise<void> {
+    const cwd = process.cwd();
+    const projectRoot = this.findProjectRoot();
+    
+    // Check if in component directory
+    const componentsDir = join(projectRoot, 'components');
+    if (!cwd.startsWith(componentsDir)) {
+      if (format === 'bash') {
+        console.log('export WEB4_COMPONENT_CONTEXT="false"');
+      } else {
+        console.log(JSON.stringify({ 
+          context: false, 
+          message: 'Not in component directory',
+          cwd,
+          projectRoot
+        }, null, 2));
+      }
+      return;
+    }
+    
+    // Parse component path: .../components/ComponentName/version
+    const relative = cwd.replace(componentsDir + '/', '');
+    const parts = relative.split('/');
+    
+    if (parts.length < 2) {
+      if (format === 'bash') {
+        console.log('export WEB4_COMPONENT_CONTEXT="false"');
+      } else {
+        console.log(JSON.stringify({ 
+          context: false, 
+          message: 'Invalid component path (need ComponentName/version)',
+          cwd,
+          projectRoot
+        }, null, 2));
+      }
+      return;
+    }
+    
+    const [componentName, version, ...rest] = parts;
+    const componentRoot = join(componentsDir, componentName, version);
+    
+    if (format === 'bash') {
+      // Legacy bash export format (for backwards compat if needed)
+      console.log(`export WEB4_COMPONENT_CONTEXT="true"`);
+      console.log(`export WEB4_COMPONENT_NAME="${componentName}"`);
+      console.log(`export WEB4_COMPONENT_VERSION="${version}"`);
+      console.log(`export WEB4_COMPONENT_ROOT="${componentRoot}"`);
+    } else {
+      // Modern JSON format (default)
+      console.log(JSON.stringify({
+        context: true,
+        componentName,
+        version,
+        componentRoot,
+        projectRoot,
+        subdirectory: rest.length > 0 ? rest.join('/') : null
+      }, null, 2));
+    }
   }
 }
 

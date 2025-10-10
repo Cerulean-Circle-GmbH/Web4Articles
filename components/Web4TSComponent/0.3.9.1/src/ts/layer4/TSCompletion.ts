@@ -79,6 +79,20 @@ export class TSCompletion implements Completion {
   }
 
   static getClassMethods(className: string): string[] {
+    // Support comma-separated class names: "DefaultCLI,DefaultWeb4TSComponent"
+    // Web4 standard syntax (same as compare command)
+    // This discovers methods from multiple classes (e.g., CLI + Component)
+    if (className.includes(',')) {
+      const classes = className.split(',');
+      const allMethods = new Set<string>();
+      classes.forEach(cls => {
+        const methods = this.getClassMethods(cls.trim());
+        methods.forEach(m => allMethods.add(m));
+      });
+      return Array.from(allMethods);
+    }
+    
+    // Single class: existing logic
     const files = TSCompletion.getProjectSourceFiles();
     for (const file of files) {
       const src = readFileSync(file, 'utf8');
@@ -299,9 +313,25 @@ export class TSCompletion implements Completion {
       }
       if (subMethods.length === 1) {
         if (subMethods[0] === methodPrefix) {
-          return TSCompletion.getMethodParameters(className, methodPrefix);
+          // Method name is complete - smart detection: VALUES vs NAMES
+          const params = TSCompletion.getMethodParameters(className, methodPrefix);
+          if (params.length > 0) {
+            // Check if first param is optional with default value
+            const enhancedParams = TSCompletion.getEnhancedMethodParameters(className, methodPrefix);
+            const firstParam = enhancedParams[0];
+            
+            if (firstParam && !firstParam.required && firstParam.default !== undefined) {
+              // Optional param with default - return callback hint for dynamic VALUES
+              // Bash completion will call back to get actual values
+              return [`__CALLBACK__:${params[0]}ParameterCompletion`];
+            }
+          }
+          // Required params or no callback - return parameter NAMES as hints
+          return params;
         }
-        return [subMethods[0].slice(methodPrefix.length)];
+        // Return FULL word for bash completion (not suffix!)
+        // Bash compgen needs complete words to match against current input
+        return [subMethods[0]];
       }
       // No methods match the prefix; try parameters for the methodPrefix
       const params = TSCompletion.getMethodParameters(className, methodPrefix);
@@ -309,15 +339,35 @@ export class TSCompletion implements Completion {
       return subMethods;
     }
     if (args.length === 3) {
-      // If the second arg + third arg matches a method, complete its parameters
-      const [className, methodPrefix, subMethodOrParam] = args;
-      // First, try to complete default value for the parameter of the methodPrefix
-      const values = TSCompletion.getMethodParameters(className, methodPrefix, subMethodOrParam);
-      if (values.length > 0 && values[0] !== subMethodOrParam && values[0] !== undefined && values[0] !== '') {
+      const [className, methodPrefix, currentWord] = args;
+      
+      // Check if method has optional parameter (works for both empty and partial currentWord)
+      // This handles: web4tscomponent links <Tab> AND web4tscomponent links f<Tab>
+      const methods = TSCompletion.getClassMethods(className);
+      if (methods.includes(methodPrefix)) {
+        const enhancedParams = TSCompletion.getEnhancedMethodParameters(className, methodPrefix);
+        const firstParam = enhancedParams[0];
+        
+        if (firstParam && !firstParam.required && firstParam.default !== undefined) {
+          // Optional param with default - return callback hint for dynamic VALUES
+          // Bash compgen will filter values based on currentWord (e.g., 'f' matches 'fix')
+          const params = TSCompletion.getMethodParameters(className, methodPrefix);
+          return [`__CALLBACK__:${params[0]}ParameterCompletion`];
+        }
+        
+        // Required param - return parameter NAMES only when currentWord is empty
+        if (currentWord === '') {
+          return TSCompletion.getMethodParameters(className, methodPrefix);
+        }
+      }
+      
+      // Fallback: method chaining logic for non-empty currentWord
+      // This handles cases like: web4tscomponent createN<Tab> → createNextPatch
+      const values = TSCompletion.getMethodParameters(className, methodPrefix, currentWord);
+      if (values.length > 0 && values[0] !== currentWord && values[0] !== undefined && values[0] !== '') {
         return values;
       }
-      const methods = TSCompletion.getClassMethods(className);
-      const fullMethod = methodPrefix + (subMethodOrParam.charAt(0).toUpperCase() + subMethodOrParam.slice(1));
+      const fullMethod = methodPrefix + (currentWord.charAt(0).toUpperCase() + currentWord.slice(1));
       if (methods.includes(fullMethod)) {
         return TSCompletion.getMethodParameters(className, fullMethod);
       }
@@ -348,14 +398,21 @@ export class TSCompletion implements Completion {
                 const paramName = param.name.getText();
                 const paramType = param.type ? param.type.getText() : 'any';
                 
-                // Extract JSDoc description for parameter
+                // Extract JSDoc description and annotations for parameter
                 const description = TSCompletion.extractParamJsDoc(m, paramName);
+                const jsDoc = ts.getJSDocTags(m).map(tag => tag.comment).join(' ');
+                const cliAnnotations = TSCompletion.parseCliAnnotations(jsDoc);
+                
+                // Detect if parameter has default value (e.g., action: string = '')
+                const hasInitializer = param.initializer !== undefined;
+                const hasDefault = cliAnnotations.default !== null || hasInitializer;
                 
                 parameterInfo.push({
                   name: paramName,
                   type: paramType,
-                  required: !param.questionToken, // Optional if has ? token
+                  required: !param.questionToken && !hasDefault, // Optional if has ? OR default value
                   description: description || `${paramName} parameter`,
+                  default: hasInitializer ? param.initializer.getText() : cliAnnotations.default,
                   // ✅ NEW: Union type detection
                   isUnionType: TSCompletion.isUnionType(paramType),
                   unionTypes: TSCompletion.extractUnionTypes(paramType)
