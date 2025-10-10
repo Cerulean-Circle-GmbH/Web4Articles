@@ -1,0 +1,35 @@
+#!/bin/bash
+# {{COMPONENT_NAME}} CLI Tool - Simplified Wrapper using Smart Build System
+# Web4 pattern: Component shell wrapper with smart build delegation
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Use WEB4_PROJECT_ROOT if available, otherwise calculate from script location
+if [ -n "$WEB4_PROJECT_ROOT" ]; then
+    PROJECT_ROOT="$WEB4_PROJECT_ROOT"
+else
+    PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+fi
+COMPONENT_VERSION="{{VERSION}}"
+COMPONENT_PATH="$PROJECT_ROOT/components/{{COMPONENT_NAME}}/$COMPONENT_VERSION"
+
+# Check if component exists
+if [ ! -d "$COMPONENT_PATH" ]; then
+    echo "❌ {{COMPONENT_NAME}} $COMPONENT_VERSION not found at $COMPONENT_PATH"
+    exit 1
+fi
+
+# Change to component directory and use smart build system
+cd "$COMPONENT_PATH"
+
+# Use our smart build system instead of duplicating logic
+./src/sh/build.sh
+
+# Check if CLI is now available
+CLI_PATH="dist/ts/layer5/{{COMPONENT_NAME}}CLI.js"
+if [ ! -f "$CLI_PATH" ]; then
+    echo "❌ {{COMPONENT_NAME}} CLI build failed"
+    exit 1
+fi
+
+# Execute CLI with all arguments
+node "$CLI_PATH" "$@"
