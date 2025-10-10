@@ -1,0 +1,9 @@
+#!/bin/sh
+# npm test → test.sh → {{COMPONENT_LOWER}} test → vitest (with recursion prevention & promotion)
+
+# Smart build before testing
+./src/sh/build.sh
+
+# Run {{COMPONENT_LOWER}} test (handles vitest execution, recursion prevention, and promotion)
+./{{COMPONENT_LOWER}} test
+
