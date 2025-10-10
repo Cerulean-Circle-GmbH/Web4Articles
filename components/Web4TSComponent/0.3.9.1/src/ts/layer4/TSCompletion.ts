@@ -327,32 +327,32 @@ export class TSCompletion implements Completion {
     if (args.length === 3) {
       const [className, methodPrefix, currentWord] = args;
       
-      // If current word is empty and method is complete, check for optional params with callbacks
-      // This handles: web4tscomponent links <Tab> (bash passes empty string as 3rd arg)
-      if (currentWord === '') {
-        const methods = TSCompletion.getClassMethods(className);
-        if (methods.includes(methodPrefix)) {
-          // Method exists and is complete - check if first param is optional
-          const enhancedParams = TSCompletion.getEnhancedMethodParameters(className, methodPrefix);
-          const firstParam = enhancedParams[0];
-          
-          if (firstParam && !firstParam.required && firstParam.default !== undefined) {
-            // Optional param with default - return callback hint for dynamic VALUES
-            const params = TSCompletion.getMethodParameters(className, methodPrefix);
-            return [`__CALLBACK__:${params[0]}ParameterCompletion`];
-          }
-          
-          // Required param - return parameter NAMES
+      // Check if method has optional parameter (works for both empty and partial currentWord)
+      // This handles: web4tscomponent links <Tab> AND web4tscomponent links f<Tab>
+      const methods = TSCompletion.getClassMethods(className);
+      if (methods.includes(methodPrefix)) {
+        const enhancedParams = TSCompletion.getEnhancedMethodParameters(className, methodPrefix);
+        const firstParam = enhancedParams[0];
+        
+        if (firstParam && !firstParam.required && firstParam.default !== undefined) {
+          // Optional param with default - return callback hint for dynamic VALUES
+          // Bash compgen will filter values based on currentWord (e.g., 'f' matches 'fix')
+          const params = TSCompletion.getMethodParameters(className, methodPrefix);
+          return [`__CALLBACK__:${params[0]}ParameterCompletion`];
+        }
+        
+        // Required param - return parameter NAMES only when currentWord is empty
+        if (currentWord === '') {
           return TSCompletion.getMethodParameters(className, methodPrefix);
         }
       }
       
-      // Non-empty currentWord - existing logic for completing parameter values
+      // Fallback: method chaining logic for non-empty currentWord
+      // This handles cases like: web4tscomponent createN<Tab> → createNextPatch
       const values = TSCompletion.getMethodParameters(className, methodPrefix, currentWord);
       if (values.length > 0 && values[0] !== currentWord && values[0] !== undefined && values[0] !== '') {
         return values;
       }
-      const methods = TSCompletion.getClassMethods(className);
       const fullMethod = methodPrefix + (currentWord.charAt(0).toUpperCase() + currentWord.slice(1));
       if (methods.includes(fullMethod)) {
         return TSCompletion.getMethodParameters(className, fullMethod);
