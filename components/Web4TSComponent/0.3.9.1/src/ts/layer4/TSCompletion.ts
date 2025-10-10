@@ -299,7 +299,15 @@ export class TSCompletion implements Completion {
       }
       if (subMethods.length === 1) {
         if (subMethods[0] === methodPrefix) {
-          return TSCompletion.getMethodParameters(className, methodPrefix);
+          // Method name is complete - return parameter VALUES, not names
+          // Minimal MVP: Hardcoded for 'action' parameter
+          const params = TSCompletion.getMethodParameters(className, methodPrefix);
+          if (params.length > 0 && params[0] === 'action') {
+            // Return action parameter VALUES
+            return ['', 'fix', 'verify', 'show', 'list'];
+          }
+          // Default: return parameter names
+          return params;
         }
         return [subMethods[0].slice(methodPrefix.length)];
       }
