@@ -196,7 +196,7 @@ describe('📖 Systematic Test Story', () => {
         'vitest.config.ts': path.join(componentPath, 'vitest.config.ts'),
         'src/ts/layer2': path.join(componentPath, 'src/ts/layer2'),
         'src/sh': path.join(componentPath, 'src/sh'),
-        'CLI script': path.join(componentPath, 'realtestcomponent.sh')
+        'CLI script': path.join(componentPath, 'realtestcomponent')
       };
 
       for (const [name, filePath] of Object.entries(structure)) {

@@ -102,23 +102,49 @@ export abstract class DefaultCLI implements CLI {
 
   /**
    * TSRanger 2.2 method discovery pattern
+   * Discovers methods from entire CLI inheritance chain (DefaultCLI and subclasses)
    */
   protected discoverMethods(): void {
-    if (!this.componentClass) return;
-    
-    const prototype = this.componentClass.prototype;
-    const methodNames = Object.getOwnPropertyNames(prototype)
-      .filter(name => typeof prototype[name] === 'function')
-      .filter(name => !name.startsWith('_') && name !== 'constructor')
-      .filter(name => !['init', 'toScenario', 'validateModel', 'getModel'].includes(name));
+    // Walk up the prototype chain to discover ALL CLI methods
+    let currentPrototype = Object.getPrototypeOf(this);
+    while (currentPrototype && currentPrototype !== Object.prototype) {
+      const methodNames = Object.getOwnPropertyNames(currentPrototype)
+        .filter(name => typeof currentPrototype[name] === 'function')
+        .filter(name => !name.startsWith('_') && name !== 'constructor')
+        .filter(name => !['init', 'toScenario', 'validateModel', 'getModel'].includes(name));
 
-    for (const methodName of methodNames) {
-      const method = prototype[methodName];
-      this.methodSignatures.set(methodName, {
-        name: methodName,
-        paramCount: method.length,
-        isAsync: method.constructor.name === 'AsyncFunction'
-      });
+      for (const methodName of methodNames) {
+        // Don't overwrite if already discovered (subclass takes precedence)
+        if (!this.methodSignatures.has(methodName)) {
+          const method = currentPrototype[methodName];
+          this.methodSignatures.set(methodName, {
+            name: methodName,
+            paramCount: method.length,
+            isAsync: method.constructor.name === 'AsyncFunction'
+          });
+        }
+      }
+      
+      // Move up the chain
+      currentPrototype = Object.getPrototypeOf(currentPrototype);
+    }
+    
+    // Also discover component methods if componentClass is set
+    if (this.componentClass) {
+      const prototype = this.componentClass.prototype;
+      const methodNames = Object.getOwnPropertyNames(prototype)
+        .filter(name => typeof prototype[name] === 'function')
+        .filter(name => !name.startsWith('_') && name !== 'constructor')
+        .filter(name => !['init', 'toScenario', 'validateModel', 'getModel'].includes(name));
+
+      for (const methodName of methodNames) {
+        const method = prototype[methodName];
+        this.methodSignatures.set(methodName, {
+          name: methodName,
+          paramCount: method.length,
+          isAsync: method.constructor.name === 'AsyncFunction'
+        });
+      }
     }
   }
 
@@ -138,14 +164,26 @@ export abstract class DefaultCLI implements CLI {
       throw new Error(`At least ${minArgs} arguments required for ${command} command`);
     }
 
-    // Dynamic method invocation with lazy instantiation
-    const componentInstance = this.getComponentInstance();
-    const method = componentInstance[command];
-    
-    if (signature.isAsync) {
-      await method.apply(componentInstance, args);
+    // Check if method exists on CLI (this) or component
+    // CLI methods take precedence (e.g., completeParameter, actionParameterCompletion)
+    if (typeof (this as any)[command] === 'function') {
+      // Execute on CLI instance (DefaultCLI or Web4TSComponentCLI)
+      const method = (this as any)[command];
+      if (signature.isAsync) {
+        await method.apply(this, args);
+      } else {
+        method.apply(this, args);
+      }
     } else {
-      method.apply(componentInstance, args);
+      // Fallback to component instance
+      const componentInstance = this.getComponentInstance();
+      const method = componentInstance[command];
+      
+      if (signature.isAsync) {
+        await method.apply(componentInstance, args);
+      } else {
+        method.apply(componentInstance, args);
+      }
     }
     
     return true;
@@ -200,8 +238,13 @@ export abstract class DefaultCLI implements CLI {
     const prototype = this.componentClass.prototype;
     const methodNames = Object.getOwnPropertyNames(prototype);
     
+    // Whitelist for internal CLI methods that start with __ (hidden but executable)
+    const internalCLIMethods = ['__completeParameter'];
+    
     for (const name of methodNames) {
-      if (name === 'constructor' || name.startsWith('_')) continue;
+      // Skip constructor and private methods (except whitelisted internal CLI methods)
+      if (name === 'constructor') continue;
+      if (name.startsWith('_') && !internalCLIMethods.includes(name)) continue;
       
       // ✅ ZERO CONFIG: Check @cliHide annotation with enhanced processing
       const cliAnnotations = TSCompletion.extractCliAnnotations(this.componentClass.name, name);
@@ -1094,6 +1137,24 @@ export abstract class DefaultCLI implements CLI {
       'show',     // Display/show
       'list'      // List items
     ];
+  }
+
+  /**
+   * Execute parameter completion callback for dynamic tab completion
+   * Called by bash completion when TSCompletion returns __CALLBACK__:methodName
+   * Web4 pattern: Hidden via @cliHide, not via naming convention
+   * @cliHide
+   */
+  async completeParameter(callbackName: string): Promise<void> {
+    // Check if callback method exists on this instance
+    if (typeof (this as any)[callbackName] === 'function') {
+      const values = await (this as any)[callbackName]([]);
+      // Output space-separated values for bash compgen
+      console.log(values.join(' '));
+    } else {
+      // Callback not found - return empty (no completions)
+      console.log('');
+    }
   }
 
   /**
