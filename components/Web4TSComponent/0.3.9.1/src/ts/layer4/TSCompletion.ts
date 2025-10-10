@@ -299,14 +299,20 @@ export class TSCompletion implements Completion {
       }
       if (subMethods.length === 1) {
         if (subMethods[0] === methodPrefix) {
-          // Method name is complete - return parameter VALUES, not names
-          // Minimal MVP: Hardcoded for 'action' parameter
+          // Method name is complete - smart detection: VALUES vs NAMES
           const params = TSCompletion.getMethodParameters(className, methodPrefix);
-          if (params.length > 0 && params[0] === 'action') {
-            // Return action parameter VALUES
-            return ['', 'fix', 'verify', 'show', 'list'];
+          if (params.length > 0) {
+            // Check if first param is optional with default value
+            const enhancedParams = TSCompletion.getEnhancedMethodParameters(className, methodPrefix);
+            const firstParam = enhancedParams[0];
+            
+            if (firstParam && !firstParam.required && firstParam.default !== undefined) {
+              // Optional param with default - return callback hint for dynamic VALUES
+              // Bash completion will call back to get actual values
+              return [`__CALLBACK__:${params[0]}ParameterCompletion`];
+            }
           }
-          // Default: return parameter names
+          // Required params or no callback - return parameter NAMES as hints
           return params;
         }
         // Return FULL word for bash completion (not suffix!)
@@ -358,14 +364,21 @@ export class TSCompletion implements Completion {
                 const paramName = param.name.getText();
                 const paramType = param.type ? param.type.getText() : 'any';
                 
-                // Extract JSDoc description for parameter
+                // Extract JSDoc description and annotations for parameter
                 const description = TSCompletion.extractParamJsDoc(m, paramName);
+                const jsDoc = ts.getJSDocTags(m).map(tag => tag.comment).join(' ');
+                const cliAnnotations = TSCompletion.parseCliAnnotations(jsDoc);
+                
+                // Detect if parameter has default value (e.g., action: string = '')
+                const hasInitializer = param.initializer !== undefined;
+                const hasDefault = cliAnnotations.default !== null || hasInitializer;
                 
                 parameterInfo.push({
                   name: paramName,
                   type: paramType,
-                  required: !param.questionToken, // Optional if has ? token
+                  required: !param.questionToken && !hasDefault, // Optional if has ? OR default value
                   description: description || `${paramName} parameter`,
+                  default: hasInitializer ? param.initializer.getText() : cliAnnotations.default,
                   // ✅ NEW: Union type detection
                   isUnionType: TSCompletion.isUnionType(paramType),
                   unionTypes: TSCompletion.extractUnionTypes(paramType)

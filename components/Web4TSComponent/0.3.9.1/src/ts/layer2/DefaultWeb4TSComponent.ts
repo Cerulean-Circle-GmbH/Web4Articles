@@ -5158,4 +5158,21 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     // Delegate to DefaultCLI - single source of truth!
     await cli.getContext(format);
   }
+
+  /**
+   * Execute parameter completion callback for dynamic tab completion
+   * Called by bash completion when TSCompletion returns __CALLBACK__:methodName
+   * @cliHide
+   */
+  async __completeParameter(callbackName: string): Promise<void> {
+    // Check if callback method exists on this instance
+    if (typeof (this as any)[callbackName] === 'function') {
+      const values = await (this as any)[callbackName]([]);
+      // Output space-separated values for bash compgen
+      console.log(values.join(' '));
+    } else {
+      // Callback not found - return empty (no completions)
+      console.log('');
+    }
+  }
 }
