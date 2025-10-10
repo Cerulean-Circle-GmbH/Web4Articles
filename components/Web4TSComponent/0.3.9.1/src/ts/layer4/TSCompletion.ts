@@ -325,15 +325,35 @@ export class TSCompletion implements Completion {
       return subMethods;
     }
     if (args.length === 3) {
-      // If the second arg + third arg matches a method, complete its parameters
-      const [className, methodPrefix, subMethodOrParam] = args;
-      // First, try to complete default value for the parameter of the methodPrefix
-      const values = TSCompletion.getMethodParameters(className, methodPrefix, subMethodOrParam);
-      if (values.length > 0 && values[0] !== subMethodOrParam && values[0] !== undefined && values[0] !== '') {
+      const [className, methodPrefix, currentWord] = args;
+      
+      // If current word is empty and method is complete, check for optional params with callbacks
+      // This handles: web4tscomponent links <Tab> (bash passes empty string as 3rd arg)
+      if (currentWord === '') {
+        const methods = TSCompletion.getClassMethods(className);
+        if (methods.includes(methodPrefix)) {
+          // Method exists and is complete - check if first param is optional
+          const enhancedParams = TSCompletion.getEnhancedMethodParameters(className, methodPrefix);
+          const firstParam = enhancedParams[0];
+          
+          if (firstParam && !firstParam.required && firstParam.default !== undefined) {
+            // Optional param with default - return callback hint for dynamic VALUES
+            const params = TSCompletion.getMethodParameters(className, methodPrefix);
+            return [`__CALLBACK__:${params[0]}ParameterCompletion`];
+          }
+          
+          // Required param - return parameter NAMES
+          return TSCompletion.getMethodParameters(className, methodPrefix);
+        }
+      }
+      
+      // Non-empty currentWord - existing logic for completing parameter values
+      const values = TSCompletion.getMethodParameters(className, methodPrefix, currentWord);
+      if (values.length > 0 && values[0] !== currentWord && values[0] !== undefined && values[0] !== '') {
         return values;
       }
       const methods = TSCompletion.getClassMethods(className);
-      const fullMethod = methodPrefix + (subMethodOrParam.charAt(0).toUpperCase() + subMethodOrParam.slice(1));
+      const fullMethod = methodPrefix + (currentWord.charAt(0).toUpperCase() + currentWord.slice(1));
       if (methods.includes(fullMethod)) {
         return TSCompletion.getMethodParameters(className, fullMethod);
       }
