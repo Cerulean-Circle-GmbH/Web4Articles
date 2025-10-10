@@ -79,6 +79,19 @@ export class TSCompletion implements Completion {
   }
 
   static getClassMethods(className: string): string[] {
+    // Support composite class names: "DefaultCLI+DefaultWeb4TSComponent"
+    // This allows discovering methods from multiple classes (e.g., CLI + Component)
+    if (className.includes('+')) {
+      const classes = className.split('+');
+      const allMethods = new Set<string>();
+      classes.forEach(cls => {
+        const methods = this.getClassMethods(cls.trim());
+        methods.forEach(m => allMethods.add(m));
+      });
+      return Array.from(allMethods);
+    }
+    
+    // Single class: existing logic
     const files = TSCompletion.getProjectSourceFiles();
     for (const file of files) {
       const src = readFileSync(file, 'utf8');
