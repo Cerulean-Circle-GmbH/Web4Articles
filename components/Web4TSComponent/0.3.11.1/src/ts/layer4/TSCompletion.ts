@@ -415,8 +415,9 @@ export class TSCompletion implements Completion {
       return [];
     }
     
-    // Handle 4+ args: Completion for 2nd, 3rd, ... parameters
+    // Handle 4+ args: Completion for 2nd, 3rd, ... parameters OR chained methods
     // Example: web4tscomponent on Unit <Tab> → complete 2nd parameter (version)
+    // Example: web4tscomponent on Unit 0.3.2.0 tre<Tab> → complete chained method (tree)
     if (args.length >= 4) {
       const [className, methodName, ...providedParams] = args;
       const currentWord = providedParams[providedParams.length - 1];
@@ -427,13 +428,21 @@ export class TSCompletion implements Completion {
         const params = TSCompletion.getMethodParameters(className, methodName);
         
         if (paramIndex < params.length) {
-          // Check if there's a completion method for this parameter
+          // Still completing method parameters
           const completionMethodName = `${params[paramIndex]}ParameterCompletion`;
           
           if (methods.includes(completionMethodName)) {
             // Completion method exists - return callback hint
             return [`__CALLBACK__:${params[paramIndex]}ParameterCompletion`];
           }
+          
+          // No completion method for this parameter - return empty
+          return [];
+        } else {
+          // All parameters provided - complete next chained method
+          // Filter methods that start with currentWord
+          const matchingMethods = methods.filter(m => m.startsWith(currentWord));
+          return matchingMethods;
         }
       }
       
