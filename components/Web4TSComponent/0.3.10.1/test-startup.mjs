@@ -17,3 +17,4 @@ console.log(`Instance created in ${instanceTime}ms`);
 const total = Date.now() - start;
 console.log(`Total: ${total}ms`);
 
+

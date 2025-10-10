@@ -16,3 +16,4 @@ const endTime = Date.now();
 console.log(`\nstart() method took ${endTime - startMethodTime}ms`);
 console.log(`Total: ${endTime - start}ms`);
 
+
