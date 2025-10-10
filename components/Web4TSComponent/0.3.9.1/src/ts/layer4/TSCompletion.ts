@@ -79,10 +79,11 @@ export class TSCompletion implements Completion {
   }
 
   static getClassMethods(className: string): string[] {
-    // Support composite class names: "DefaultCLI+DefaultWeb4TSComponent"
-    // This allows discovering methods from multiple classes (e.g., CLI + Component)
-    if (className.includes('+')) {
-      const classes = className.split('+');
+    // Support comma-separated class names: "DefaultCLI,DefaultWeb4TSComponent"
+    // Web4 standard syntax (same as compare command)
+    // This discovers methods from multiple classes (e.g., CLI + Component)
+    if (className.includes(',')) {
+      const classes = className.split(',');
       const allMethods = new Set<string>();
       classes.forEach(cls => {
         const methods = this.getClassMethods(cls.trim());
