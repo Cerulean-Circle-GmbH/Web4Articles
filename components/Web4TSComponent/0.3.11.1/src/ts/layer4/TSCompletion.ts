@@ -49,6 +49,7 @@ export class TSCompletion implements Completion {
       path.resolve(__dirname, '../layer1'),
       path.resolve(__dirname, '../layer2'),
       path.resolve(__dirname, '../layer3'),
+      path.resolve(__dirname, '../layer5'),  // Scan CLI layer for component-specific completion methods
     ];
     let files: string[] = [];
     for (const dir of dirs) {
@@ -92,22 +93,47 @@ export class TSCompletion implements Completion {
       return Array.from(allMethods);
     }
     
-    // Single class: existing logic
+    // Single class: discover methods including inherited ones
     const files = TSCompletion.getProjectSourceFiles();
+    const allMethods = new Set<string>();
+    let baseClassName: string | null = null;
+    
+    // First pass: find the class and its methods, and discover base class
     for (const file of files) {
       const src = readFileSync(file, 'utf8');
       const sourceFile = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true);
-      let found: string[] = [];
+      
       ts.forEachChild(sourceFile, node => {
         if (ts.isClassDeclaration(node) && node.name && node.name.text === className) {
-          found = node.members
+          // Get methods declared in this class
+          node.members
             .filter(m => ts.isMethodDeclaration(m) && m.name && ts.isIdentifier(m.name))
-            .map(m => (m.name as ts.Identifier).text);
+            .forEach(m => allMethods.add((m.name as ts.Identifier).text));
+          
+          // Discover base class from extends clause
+          if (node.heritageClauses) {
+            for (const clause of node.heritageClauses) {
+              if (clause.token === ts.SyntaxKind.ExtendsKeyword) {
+                const extendsType = clause.types[0];
+                if (ts.isExpressionWithTypeArguments(extendsType) && ts.isIdentifier(extendsType.expression)) {
+                  baseClassName = extendsType.expression.text;
+                }
+              }
+            }
+          }
         }
       });
-      if (found.length > 0) return found;
+      
+      if (allMethods.size > 0) break; // Found the class
     }
-    return [];
+    
+    // Second pass: if we found a base class, recursively get its methods
+    if (baseClassName) {
+      const baseMethods = this.getClassMethods(baseClassName);
+      baseMethods.forEach(m => allMethods.add(m));
+    }
+    
+    return Array.from(allMethods);
   }
 
   static getMethodParameters(className: string, methodName: string, paramName?: string): any[] {
@@ -329,17 +355,17 @@ export class TSCompletion implements Completion {
           // Method name is complete - smart detection: VALUES vs NAMES
           const params = TSCompletion.getMethodParameters(className, methodPrefix);
           if (params.length > 0) {
-            // Check if first param is optional with default value
-            const enhancedParams = TSCompletion.getEnhancedMethodParameters(className, methodPrefix);
-            const firstParam = enhancedParams[0];
+            // Check if a completion method exists for first parameter (required or optional)
+            const completionMethodName = `${params[0]}ParameterCompletion`;
+            const methods = TSCompletion.getClassMethods(className);
             
-            if (firstParam && !firstParam.required && firstParam.default !== undefined) {
-              // Optional param with default - return callback hint for dynamic VALUES
+            if (methods.includes(completionMethodName)) {
+              // Completion method exists - return callback hint for dynamic VALUES
               // Bash completion will call back to get actual values
               return [`__CALLBACK__:${params[0]}ParameterCompletion`];
             }
           }
-          // Required params or no callback - return parameter NAMES as hints
+          // No completion method - return parameter NAMES as hints
           return params;
         }
         // Return FULL word for bash completion (not suffix!)
@@ -354,21 +380,23 @@ export class TSCompletion implements Completion {
     if (args.length === 3) {
       const [className, methodPrefix, currentWord] = args;
       
-      // Check if method has optional parameter (works for both empty and partial currentWord)
+      // Check if method has a completion method for first parameter
       // This handles: web4tscomponent links <Tab> AND web4tscomponent links f<Tab>
       const methods = TSCompletion.getClassMethods(className);
       if (methods.includes(methodPrefix)) {
-        const enhancedParams = TSCompletion.getEnhancedMethodParameters(className, methodPrefix);
-        const firstParam = enhancedParams[0];
+        const params = TSCompletion.getMethodParameters(className, methodPrefix);
         
-        if (firstParam && !firstParam.required && firstParam.default !== undefined) {
-          // Optional param with default - return callback hint for dynamic VALUES
-          // Bash compgen will filter values based on currentWord (e.g., 'f' matches 'fix')
-          const params = TSCompletion.getMethodParameters(className, methodPrefix);
-          return [`__CALLBACK__:${params[0]}ParameterCompletion`];
+        if (params.length > 0) {
+          const completionMethodName = `${params[0]}ParameterCompletion`;
+          
+          if (methods.includes(completionMethodName)) {
+            // Completion method exists - return callback hint for dynamic VALUES
+            // Bash compgen will filter values based on currentWord (e.g., 'f' matches 'fix')
+            return [`__CALLBACK__:${params[0]}ParameterCompletion`];
+          }
         }
         
-        // Required param - return parameter NAMES only when currentWord is empty
+        // No completion method - return parameter NAMES only when currentWord is empty
         if (currentWord === '') {
           return TSCompletion.getMethodParameters(className, methodPrefix);
         }

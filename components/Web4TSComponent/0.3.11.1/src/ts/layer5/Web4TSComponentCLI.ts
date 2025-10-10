@@ -213,6 +213,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
     // Method not found or has no parameters
     return null;
   }
+
 }
 
 // Static entry point for shell execution - Web4 radical OOP pattern

@@ -1266,6 +1266,104 @@ export abstract class DefaultCLI implements CLI {
       }, null, 2));
     }
   }
+
+  /**
+   * Tab completion for component parameter of 'on' command
+   * NOTE: Implemented in base CLI for all Web4 components
+   * @cliHide
+   */
+  async componentParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    // Resolve project root from current process
+    const cwd = process.cwd();
+    const { readdirSync, lstatSync, existsSync } = await import('fs');
+    const { join } = await import('path');
+
+    // Find project root by looking for components directory
+    let projectRoot = cwd;
+    while (!existsSync(join(projectRoot, 'components'))) {
+      const parent = join(projectRoot, '..');
+      if (parent === projectRoot) break; // Reached filesystem root
+      projectRoot = parent;
+    }
+
+    try {
+      const componentsDir = join(projectRoot, 'components');
+      const entries = readdirSync(componentsDir);
+      const components: string[] = [];
+
+      for (const entry of entries) {
+        const entryPath = join(componentsDir, entry);
+        try {
+          const stats = lstatSync(entryPath);
+          if (stats.isDirectory()) {
+            components.push(entry);
+          }
+        } catch {
+          // Skip entries we can't stat
+        }
+      }
+      
+      return components.sort();
+    } catch {
+      return [];
+    }
+  }
+
+  /**
+   * Tab completion for version parameter of 'on' command
+   * NOTE: Implemented in base CLI for all Web4 components
+   * @cliHide
+   */
+  async versionParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    // Extract component name from args (should be the first arg after 'on')
+    const componentName = currentArgs[1]; // args: ['on', 'ComponentName', ...]
+    
+    if (!componentName) {
+      return ['latest', 'dev', 'test', 'prod'];
+    }
+    
+    // Resolve project root from current process
+    const cwd = process.cwd();
+    const { readdirSync, existsSync } = await import('fs');
+    const { join } = await import('path');
+
+    // Find project root by looking for components directory
+    let projectRoot = cwd;
+    while (!existsSync(join(projectRoot, 'components'))) {
+      const parent = join(projectRoot, '..');
+      if (parent === projectRoot) break; // Reached filesystem root
+      projectRoot = parent;
+    }
+    
+    try {
+      const componentDir = join(projectRoot, 'components', componentName);
+      const entries = readdirSync(componentDir);
+      const versions: string[] = ['latest', 'dev', 'test', 'prod'];
+      
+      for (const entry of entries) {
+        // Add semantic version directories
+        if (entry.match(/^\d+\.\d+\.\d+\.\d+$/)) {
+          versions.push(entry);
+        }
+      }
+      
+      // Simple sort: semantic links first, then versions descending
+      return versions.sort((a, b) => {
+        const semanticOrder = ['latest', 'prod', 'test', 'dev'];
+        const aIdx = semanticOrder.indexOf(a);
+        const bIdx = semanticOrder.indexOf(b);
+        
+        if (aIdx >= 0 && bIdx >= 0) return aIdx - bIdx;
+        if (aIdx >= 0) return -1;
+        if (bIdx >= 0) return 1;
+        
+        // Both are versions - sort descending
+        return b.localeCompare(a, undefined, { numeric: true });
+      });
+    } catch {
+      return ['latest', 'dev', 'test', 'prod'];
+    }
+  }
 }
 
 interface MethodSignature {
