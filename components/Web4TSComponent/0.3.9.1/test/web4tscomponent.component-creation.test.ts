@@ -60,8 +60,8 @@ describe('🏗️ Component Creation', () => {
       expect(existsSync(path.join(componentDir, `src/ts/layer2/Default${testComponentName}.ts`))).toBe(true);
       expect(existsSync(path.join(componentDir, `src/ts/layer5/${testComponentName}CLI.ts`))).toBe(true);
       
-      // Verify CLI files exist
-      expect(existsSync(path.join(componentDir, `${componentLower}.sh`))).toBe(true);
+      // Verify CLI files exist (no .sh extension - Web4 standard)
+      expect(existsSync(path.join(componentDir, componentLower))).toBe(true);
       
       // Verify spec and test folders exist
       expect(existsSync(path.join(componentDir, 'spec'))).toBe(true);
