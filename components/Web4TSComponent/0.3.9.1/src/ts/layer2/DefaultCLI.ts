@@ -1095,6 +1095,105 @@ export abstract class DefaultCLI implements CLI {
       'list'      // List items
     ];
   }
+
+  /**
+   * Find project root using git (Web4 standard pattern)
+   * Fallback to directory traversal if not in git repo
+   * @private
+   */
+  private findProjectRoot(): string {
+    // Try WEB4_PROJECT_ROOT first (if source.env was sourced)
+    if (process.env.WEB4_PROJECT_ROOT) {
+      return process.env.WEB4_PROJECT_ROOT;
+    }
+    
+    // Fallback: traverse up looking for .git and package.json
+    let current = process.cwd();
+    while (current !== '/') {
+      if (existsSync(join(current, '.git')) && existsSync(join(current, 'package.json'))) {
+        return current;
+      }
+      current = join(current, '..');
+    }
+    
+    // Last resort: current working directory
+    return process.cwd();
+  }
+
+  /**
+   * Get current component context from working directory
+   * 
+   * Replaces shell detect_component_context() function.
+   * TypeScript-first approach: NO environment variables!
+   * 
+   * Migration: Replaces WEB4_COMPONENT_* ENV vars.
+   * See: 2025-10-10-UTC-1002.pdca.md
+   * 
+   * @param format Output format: 'json' (default) or 'bash'
+   * @returns Component context information
+   * @example
+   *   web4tscomponent getContext
+   *   web4tscomponent getContext bash
+   */
+  async getContext(format: string = 'json'): Promise<void> {
+    const cwd = process.cwd();
+    const projectRoot = this.findProjectRoot();
+    
+    // Check if in component directory
+    const componentsDir = join(projectRoot, 'components');
+    if (!cwd.startsWith(componentsDir)) {
+      if (format === 'bash') {
+        console.log('export WEB4_COMPONENT_CONTEXT="false"');
+      } else {
+        console.log(JSON.stringify({ 
+          context: false, 
+          message: 'Not in component directory',
+          cwd,
+          projectRoot
+        }, null, 2));
+      }
+      return;
+    }
+    
+    // Parse component path: .../components/ComponentName/version
+    const relative = cwd.replace(componentsDir + '/', '');
+    const parts = relative.split('/');
+    
+    if (parts.length < 2) {
+      if (format === 'bash') {
+        console.log('export WEB4_COMPONENT_CONTEXT="false"');
+      } else {
+        console.log(JSON.stringify({ 
+          context: false, 
+          message: 'Invalid component path (need ComponentName/version)',
+          cwd,
+          projectRoot
+        }, null, 2));
+      }
+      return;
+    }
+    
+    const [componentName, version, ...rest] = parts;
+    const componentRoot = join(componentsDir, componentName, version);
+    
+    if (format === 'bash') {
+      // Legacy bash export format (for backwards compat if needed)
+      console.log(`export WEB4_COMPONENT_CONTEXT="true"`);
+      console.log(`export WEB4_COMPONENT_NAME="${componentName}"`);
+      console.log(`export WEB4_COMPONENT_VERSION="${version}"`);
+      console.log(`export WEB4_COMPONENT_ROOT="${componentRoot}"`);
+    } else {
+      // Modern JSON format (default)
+      console.log(JSON.stringify({
+        context: true,
+        componentName,
+        version,
+        componentRoot,
+        projectRoot,
+        subdirectory: rest.length > 0 ? rest.join('/') : null
+      }, null, 2));
+    }
+  }
 }
 
 interface MethodSignature {

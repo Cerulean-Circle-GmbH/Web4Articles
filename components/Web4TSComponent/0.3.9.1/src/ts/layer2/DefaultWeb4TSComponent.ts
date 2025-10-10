@@ -1187,12 +1187,25 @@ Standards:
    * When no context: Show Web4TSComponent's own semantic version links
    * When context loaded: Show semantic version links for the loaded component
    * Shows development workflow status and version progression
+   * @param action Optional action: 'fix' to repair all links and symlinks
    * @cliSyntax
    * @cliExample web4tscomponent links
+   * @cliExample web4tscomponent links fix
    * @cliExample web4tscomponent on Unit 0.3.2.0 links
    */
-  async links(): Promise<this> {
+  async links(action: string = ''): Promise<this> {
     const context = this.getComponentContext();
+    const componentName = context?.component || 'Web4TSComponent';
+    
+    // If 'fix' action requested, run verifyAndFix first
+    if (action === 'fix') {
+      console.log(`\n🔧 Fixing all links and symlinks for ${componentName}...`);
+      await this.verifyAndFix();
+      
+      // Also fix semantic links (dev, test, prod, latest)
+      await this.fixSemanticLinks(componentName);
+      console.log(`✅ All links repaired for ${componentName}\n`);
+    }
     
     if (!context) {
       // No context - show Web4TSComponent's own links
@@ -1200,7 +1213,7 @@ Standards:
       const componentDir = this.resolveComponentDirectory('Web4TSComponent');
       const availableVersions = this.getAvailableVersions(componentDir);
 
-      console.log(`\n🔗 Semantic Version Links for Web4TSComponent:`);
+      console.log(`🔗 Semantic Version Links for Web4TSComponent:`);
       console.log(`   📊 Available versions: ${availableVersions.length}`);
       console.log('');
 
@@ -1257,6 +1270,89 @@ Standards:
     console.log('  📦 latest: Current stable release');
 
     return this;
+  }
+
+  /**
+   * Fix missing or broken semantic links (dev, test, prod, latest)
+   * @cliHide
+   */
+  private async fixSemanticLinks(componentName: string): Promise<void> {
+    const componentDir = this.resolveComponentDirectory(componentName);
+    const availableVersions = this.getAvailableVersions(componentDir);
+    
+    if (availableVersions.length === 0) {
+      console.log(`   ⚠️  No versions available for ${componentName}`);
+      return;
+    }
+    
+    const semanticLinks = await this.getSemanticLinks(componentName);
+    const fs = await import('fs/promises');
+    
+    // Determine what links should be
+    const highestVersion = availableVersions[0]; // Already sorted by getAvailableVersions
+    
+    // Fix 'latest' - should always point to highest version
+    if (!semanticLinks.latest || semanticLinks.latest !== highestVersion) {
+      console.log(`   🔧 Fixing 'latest' link: ${semanticLinks.latest || 'missing'} → ${highestVersion}`);
+      try {
+        await this.createSemanticLink(componentName, 'latest', highestVersion);
+      } catch (error) {
+        console.log(`   ❌ Could not fix 'latest': ${(error as Error).message}`);
+      }
+    }
+    
+    // Fix 'prod' - if missing, set to latest
+    if (!semanticLinks.prod) {
+      console.log(`   🔧 Creating missing 'prod' link → ${highestVersion}`);
+      try {
+        await this.createSemanticLink(componentName, 'prod', highestVersion);
+      } catch (error) {
+        console.log(`   ❌ Could not create 'prod': ${(error as Error).message}`);
+      }
+    } else if (!availableVersions.includes(semanticLinks.prod)) {
+      console.log(`   🔧 Fixing broken 'prod' link: ${semanticLinks.prod} (missing) → ${highestVersion}`);
+      try {
+        await this.createSemanticLink(componentName, 'prod', highestVersion);
+      } catch (error) {
+        console.log(`   ❌ Could not fix 'prod': ${(error as Error).message}`);
+      }
+    }
+    
+    // Fix 'dev' - if missing, set to prod
+    const prodVersion = semanticLinks.prod || highestVersion;
+    if (!semanticLinks.dev) {
+      console.log(`   🔧 Creating missing 'dev' link → ${prodVersion}`);
+      try {
+        await this.createSemanticLink(componentName, 'dev', prodVersion);
+      } catch (error) {
+        console.log(`   ❌ Could not create 'dev': ${(error as Error).message}`);
+      }
+    } else if (!availableVersions.includes(semanticLinks.dev)) {
+      console.log(`   🔧 Fixing broken 'dev' link: ${semanticLinks.dev} (missing) → ${prodVersion}`);
+      try {
+        await this.createSemanticLink(componentName, 'dev', prodVersion);
+      } catch (error) {
+        console.log(`   ❌ Could not fix 'dev': ${(error as Error).message}`);
+      }
+    }
+    
+    // Fix 'test' - if missing, set to dev
+    const devVersion = semanticLinks.dev || prodVersion;
+    if (!semanticLinks.test) {
+      console.log(`   🔧 Creating missing 'test' link → ${devVersion}`);
+      try {
+        await this.createSemanticLink(componentName, 'test', devVersion);
+      } catch (error) {
+        console.log(`   ❌ Could not create 'test': ${(error as Error).message}`);
+      }
+    } else if (!availableVersions.includes(semanticLinks.test)) {
+      console.log(`   🔧 Fixing broken 'test' link: ${semanticLinks.test} (missing) → ${devVersion}`);
+      try {
+        await this.createSemanticLink(componentName, 'test', devVersion);
+      } catch (error) {
+        console.log(`   ❌ Could not fix 'test': ${(error as Error).message}`);
+      }
+    }
   }
 
   /**
@@ -4009,19 +4105,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
   private async createCLIScript(componentDir: string, componentName: string, version: string): Promise<void> {
     const cliScript = await this.generateLocationResilientCLI(componentName, version);
     const componentLowerCase = componentName.toLowerCase();
-    const scriptPath = path.join(componentDir, `${componentLowerCase}.sh`);
+    const scriptPath = path.join(componentDir, componentLowerCase);
     await fs.writeFile(scriptPath, cliScript, { mode: 0o755 });
-    
-    // Create symlink from componentname -> componentname.sh (required for package.json scripts)
-    const symlinkPath = path.join(componentDir, componentLowerCase);
-    try {
-      if (existsSync(symlinkPath)) {
-        await fs.unlink(symlinkPath);
-      }
-      await fs.symlink(`${componentLowerCase}.sh`, symlinkPath);
-    } catch (error) {
-      console.warn(`⚠️  Could not create CLI symlink: ${(error as Error).message}`);
-    }
   }
 
   /**
@@ -4063,16 +4148,14 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    */
   async verifyAndFix(): Promise<this> {
     const context = this.getComponentContext();
-    if (!context) {
-      throw new Error('I need a component context first. Please use "on <component> <version>" before verifying symlinks.');
-    }
+    const componentName = context?.component || 'Web4TSComponent';
     
-    console.log(`🔍 Verifying and fixing symlinks for ${context.component}...`);
+    console.log(`🔍 Verifying and fixing symlinks for ${componentName}...`);
     
     // Verify and fix all symlinks
-    await this.verifyAndFixSymlinks(context.component);
+    await this.verifyAndFixSymlinks(componentName);
     
-    console.log(`✅ Symlink verification and repair completed for ${context.component}`);
+    console.log(`✅ Symlink verification and repair completed for ${componentName}`);
     return this;
   }
 
@@ -4190,7 +4273,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     
     // Check main script symlink
     const mainScriptPath = path.join(scriptsDir, componentLower);
-    const expectedTarget = `../components/${component}/latest/${componentLower}.sh`;
+    const expectedTarget = `../components/${component}/latest/${componentLower}`;
     
     try {
       if (existsSync(mainScriptPath)) {
@@ -4210,6 +4293,38 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       }
     } catch (error) {
       console.log(`   ❌ Could not fix main script symlink: ${(error as Error).message}`);
+    }
+    
+    // Fix old wrong pattern: componentname.sh files in component directories
+    // These should be renamed to just componentname (no .sh extension)
+    for (const version of versions) {
+      const componentDir = this.resolveComponentPath(component, version);
+      const wrongShFile = path.join(componentDir, `${componentLower}.sh`);
+      const correctFile = path.join(componentDir, componentLower);
+      
+      if (existsSync(wrongShFile)) {
+        try {
+          // Check if correct file already exists
+          if (existsSync(correctFile)) {
+            // If correct file exists and is a symlink, remove it first
+            const stats = await fs.lstat(correctFile);
+            if (stats.isSymbolicLink()) {
+              await fs.unlink(correctFile);
+            } else {
+              // Correct file exists as regular file, just remove the wrong .sh file
+              await fs.unlink(wrongShFile);
+              console.log(`   🧹 Removed obsolete ${componentLower}.sh in ${version} (correct file already exists)`);
+              continue;
+            }
+          }
+          
+          // Rename .sh file to remove extension
+          await fs.rename(wrongShFile, correctFile);
+          console.log(`   🔧 Fixed CLI script in ${version}: ${componentLower}.sh → ${componentLower}`);
+        } catch (error) {
+          console.log(`   ⚠️  Could not fix ${componentLower}.sh in ${version}: ${(error as Error).message}`);
+        }
+      }
     }
     
     // Verify version-specific symlinks exist
@@ -4234,7 +4349,16 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     const scriptName = `${componentLower}-v${version}`;
     const scriptPath = path.join(versionsDir, scriptName);
     
-    if (existsSync(scriptPath)) {
+    // Use lstat to detect symlink presence (even if broken)
+    let symlinkExists = false;
+    try {
+      await fs.lstat(scriptPath);
+      symlinkExists = true;
+    } catch {
+      // Symlink doesn't exist
+    }
+    
+    if (symlinkExists) {
       try {
         // Check if symlink target exists
         const target = await fs.readlink(scriptPath);
@@ -4242,11 +4366,11 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
         if (existsSync(targetPath)) {
           console.log(`   ✅ Version script valid: ${scriptName}`);
         } else {
-          console.log(`   🔧 Recreating broken version script: ${scriptName}`);
+          console.log(`   🔧 Fixing broken version script: ${scriptName} (target doesn't exist)`);
           await this.createVersionScriptSymlink(component, version);
         }
       } catch (error) {
-        console.log(`   🔧 Recreating invalid version script: ${scriptName}`);
+        console.log(`   🔧 Fixing invalid version script: ${scriptName}`);
         await this.createVersionScriptSymlink(component, version);
       }
     } else {
@@ -4417,16 +4541,19 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
     
     try {
-      // Remove existing symlink if it exists
-      if (existsSync(scriptPath)) {
+      // Remove existing symlink if it exists (use lstat to detect broken symlinks too)
+      try {
+        await fs.lstat(scriptPath);
         await fs.unlink(scriptPath);
+      } catch {
+        // Symlink doesn't exist, that's fine
       }
       
       // Create relative path from scripts/versions to component script
       const relativePath = path.relative(versionsDir, path.join(componentVersionDir, targetScript));
       await fs.symlink(relativePath, scriptPath);
     } catch (error) {
-      console.log(`   ⚠️ Could not create version script symlink: ${(error as Error).message}`);
+      console.log(`   ❌ Could not create version script symlink: ${(error as Error).message}`);
     }
   }
 
@@ -5000,5 +5127,35 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     } catch {
       // Doesn't exist or already removed
     }
+  }
+
+  /**
+   * Get current component context from working directory
+   * 
+   * DRY: Delegates to DefaultCLI.getContext() - single source of truth!
+   * Wrapper method for CLI auto-discovery.
+   * 
+   * Replaces shell detect_component_context() function.
+   * TypeScript-first approach: NO environment variables!
+   * 
+   * Migration: Replaces WEB4_COMPONENT_* ENV vars.
+   * See: 2025-10-10-UTC-1002.pdca.md
+   * 
+   * @param format Output format: 'json' (default) or 'bash'
+   * @returns Component context information
+   * @example
+   *   web4tscomponent getContext
+   *   web4tscomponent getContext bash
+   */
+  async getContext(format: string = 'json'): Promise<void> {
+    // Import DefaultCLI dynamically to access static logic
+    const { DefaultCLI } = await import('./DefaultCLI.js');
+    const cli = new (class extends DefaultCLI {
+      async execute() {} // Required by interface
+      showUsage() {} // Required by interface
+    })();
+    
+    // Delegate to DefaultCLI - single source of truth!
+    await cli.getContext(format);
   }
 }
