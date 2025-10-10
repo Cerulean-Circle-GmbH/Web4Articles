@@ -309,7 +309,9 @@ export class TSCompletion implements Completion {
           // Default: return parameter names
           return params;
         }
-        return [subMethods[0].slice(methodPrefix.length)];
+        // Return FULL word for bash completion (not suffix!)
+        // Bash compgen needs complete words to match against current input
+        return [subMethods[0]];
       }
       // No methods match the prefix; try parameters for the methodPrefix
       const params = TSCompletion.getMethodParameters(className, methodPrefix);
