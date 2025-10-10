@@ -31,31 +31,13 @@
 cp scrum.pmo/roles/_shared/PDCA/template.md <your-session-directory>/YYYY-MM-DD-UTC-HHMM.pdca.md
 ```
 
-**Naming Convention (CMM3 Checklist Section 4):**
-- Format: `YYYY-MM-DD-UTC-HHMM.pdca.md`
-- NO descriptive text in filename
-- Location: `scrum.pmo/roles/[AgentRole]/pdca/` or session directory
+**Naming Convention:** See [CMM3 Checklist Section 4](../../SaveRestartAgent/cmm3.compliance.checklist.md#4-naminglocation)
 
 ### **Step 2: Fill Placeholders**
-Replace all `{{PLACEHOLDER}}` values:
-- `{{TITLE}}` - Clear, specific title
-- `{{DESCRIPTION}}` - Brief description
-- `{{UTC_TIMESTAMP}}` - Format: YYYY-MM-DD-UTC-HHMM
-- `{{OBJECTIVE}}` - Clear objective statement
-- `{{CMM_STATUS}}` - Current CMM badge level
-- `{{BADGE_TYPE}}` - Type of badge earned
-- `{{BADGE_TIMESTAMP}}` - When badge was earned
-- etc.
+Replace all `{{PLACEHOLDER}}` values - see [template.md](./template.md) for complete list.
 
 ### **Step 3: Fill Content Sections**
-Follow the structure in template.md:
-- **📊 SUMMARY** - Links, decisions, TRON feedback
-- **📋 PLAN** - What you're going to do
-- **🔧 DO** - What you actually did
-- **✅ CHECK** - Verification and results
-- **🎯 ACT** - Deployment and next steps
-- **💫 EMOTIONAL REFLECTION** - The journey
-- **🎯 PDCA PROCESS UPDATE** - Learnings and improvements
+Follow the structure in [template.md](./template.md) - all sections are defined there.
 
 ---
 
@@ -94,15 +76,9 @@ Follow the structure in template.md:
 - Never paraphrase or summarize user guidance
 
 ### **Dual Link Format**
-**In PDCA Files:**
-```markdown
-[GitHub](https://github.com/.../blob/branch/path/to/file) | [§/path/from/root](../../../relative/path)
-```
-
-**In Chat Responses:**
-```markdown
-[GitHub](https://github.com/.../blob/commit-sha/path/to/file) | [§/path/from/root](file:///absolute/path)
-```
+**See:** [CMM3 Checklist Section 6](../../SaveRestartAgent/cmm3.compliance.checklist.md#6-dual-link-format)
+- PDCA files use relative paths
+- Chat responses use `file://` absolute URLs
 
 ### **CMM Badge Tracking**
 - Document current badge level
@@ -119,48 +95,34 @@ Follow the structure in template.md:
 - Template is versioned and maintains format consistency
 
 ### **2. Git Commit Format**
-```bash
-git commit -m "YYYY-MM-DD-UTC-HHMM"
-```
-Example: `git commit -m "2025-10-10-UTC-0215"`
+See [CMM3 Checklist Section 4](../../SaveRestartAgent/cmm3.compliance.checklist.md#4-naminglocation)
 
-**Note:** Commit message matches PDCA filename (no descriptive text per CMM3 checklist)
-
-### **3. Horizontal Separators**
-Use `---` between major sections as shown in template
-
-### **4. Emoji Consistency**
-Follow template emoji usage exactly:
-- 📋 for PLAN
-- 🔧 for DO
-- ✅ for CHECK
-- 🎯 for ACT
-- 💫 for EMOTIONAL REFLECTION
+### **3. Template Compliance**
+See [CMM3 Checklist Section 5](../../SaveRestartAgent/cmm3.compliance.checklist.md#5-pdca-template-compliance) for:
+- Required sections
+- Horizontal separators
+- Emoji consistency
 
 ---
 
 ## **❌ COMMON MISTAKES TO AVOID**
 
-1. **Using old template versions** → Always use latest template.md
-2. **Paraphrasing TRON feedback** → Quote verbatim
-3. **Skipping sections** → Template defines required sections
-4. **Wrong dual link format** → PDCA uses relative, Chat uses file://
-5. **Missing CMM badge info** → Required in current template
-6. **Duplicating template in docs** → Violates DRY principle
+1. **Using old template versions** → See [template.md](./template.md)
+2. **Paraphrasing TRON feedback** → Quote verbatim (Key Principles above)
+3. **Skipping sections** → See [CMM3 Checklist Section 5](../../SaveRestartAgent/cmm3.compliance.checklist.md#5-pdca-template-compliance)
+4. **Wrong dual link format** → See [CMM3 Checklist Section 6](../../SaveRestartAgent/cmm3.compliance.checklist.md#6-dual-link-format)
+5. **Duplicating content** → Violates DRY principle (this document is the example!)
 
 ---
 
 ## **✅ CHECKLIST BEFORE COMMITTING PDCA**
 
-- [ ] Copied from latest [template.md](./template.md)
-- [ ] All `{{PLACEHOLDERS}}` replaced with actual values
-- [ ] TRON feedback quoted verbatim with UTC timestamp
-- [ ] Dual links in correct format (relative paths in PDCA)
-- [ ] CMM badge info included
-- [ ] All required sections present (SUMMARY, PLAN, DO, CHECK, ACT, EMOTIONAL REFLECTION, PDCA PROCESS UPDATE)
-- [ ] Horizontal separators (`---`) between sections
-- [ ] Emojis match template format
-- [ ] Git commit message format: `YYYY-MM-DD-UTC-HHMM`
+**See CMM3 Compliance Checklist:** [SaveRestartAgent/cmm3.compliance.checklist.md](../../SaveRestartAgent/cmm3.compliance.checklist.md)
+
+Specifically:
+- **Section 4:** Naming/Location requirements
+- **Section 5:** PDCA Template compliance (all required sections, emojis, separators)
+- **Section 6:** Dual link format (relative in files, file:// in chat)
 
 ---
 
