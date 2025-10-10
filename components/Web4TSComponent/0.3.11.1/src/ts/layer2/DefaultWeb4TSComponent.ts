@@ -792,16 +792,23 @@ Standards:
     await fs.mkdir(nodeModulesPath, { recursive: true });
     console.log(`   ✅ Ensured node_modules directory exists`);
     
-    // 🛡️ SELF-HEALING: Create or validate source.env (essential for tab completion)
+    // 🛡️ SELF-HEALING: Create or update source.env (essential for tab completion)
     const sourceEnvPath = path.join(projectRoot, 'source.env');
-    if (!existsSync(sourceEnvPath)) {
-      const sourceEnvContent = await this.loadTemplate('project/source.env.template', {});
+    const sourceEnvContent = await this.loadTemplate('project/source.env.template', {});
+    
+    if (existsSync(sourceEnvPath)) {
+      const existing = await fs.readFile(sourceEnvPath, 'utf-8');
+      if (existing !== sourceEnvContent) {
+        await fs.writeFile(sourceEnvPath, sourceEnvContent);
+        await fs.chmod(sourceEnvPath, 0o755);
+        console.log(`   ✅ Updated source.env (tab completion, PATH)`);
+      } else {
+        console.log(`   ℹ️  source.env already up to date`);
+      }
+    } else {
       await fs.writeFile(sourceEnvPath, sourceEnvContent);
-      // Make executable
       await fs.chmod(sourceEnvPath, 0o755);
       console.log(`   ✅ Created source.env (tab completion, PATH)`);
-    } else {
-      console.log(`   ℹ️  source.env already exists`);
     }
     
     console.log(`\n✅ Project initialized successfully!`);
@@ -1045,8 +1052,9 @@ Standards:
    * await component.on('Web4TSComponent', '0.3.2.0');
    * 
    * @cliSyntax component version
+   * @cliDefault version latest
    */
-  async on(component: string, version: string): Promise<this> {
+  async on(component: string, version: string = 'latest'): Promise<this> {
     const componentPath = this.resolveComponentPath(component, version);
     
     if (!existsSync(componentPath)) {
@@ -1210,10 +1218,13 @@ Standards:
     console.log(`   Symlink: ${latestSymlink}`);
 
     try {
-      // Remove existing symlink if it exists
-      if (existsSync(latestSymlink)) {
+      // Remove existing symlink if it exists (using lstat to detect broken symlinks too)
+      try {
+        await fs.lstat(latestSymlink);
         await fs.unlink(latestSymlink);
         console.log(`   Removed existing latest symlink`);
+      } catch (err) {
+        // Symlink doesn't exist, that's fine
       }
 
       // Create new symlink (relative path)
@@ -4497,6 +4508,81 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     // Verify version-specific symlinks exist
     for (const version of versions) {
       await this.verifyVersionScriptSymlink(component, version);
+    }
+    
+    // Clean up broken/orphaned symlinks in scripts/versions
+    await this.cleanupOrphanedScriptSymlinks(component, versions);
+  }
+
+  /**
+   * Clean up broken/orphaned symlinks in scripts and scripts/versions
+   * @cliHide
+   */
+  private async cleanupOrphanedScriptSymlinks(component: string, validVersions: string[]): Promise<void> {
+    const projectRoot = this.resolveProjectRoot();
+    const scriptsDir = path.join(projectRoot, 'scripts');
+    const versionsDir = path.join(scriptsDir, 'versions');
+    const componentLower = component.toLowerCase();
+    
+    // Check scripts/versions directory for orphaned symlinks
+    try {
+      const entries = await fs.readdir(versionsDir);
+      const pattern = new RegExp(`^${componentLower}-v(.+)$`);
+      
+      for (const entry of entries) {
+        const match = entry.match(pattern);
+        if (match) {
+          const version = match[1];
+          const symlinkPath = path.join(versionsDir, entry);
+          
+          try {
+            // Check if symlink target exists
+            const target = await fs.readlink(symlinkPath);
+            const targetPath = path.resolve(versionsDir, target);
+            
+            if (!existsSync(targetPath)) {
+              // Broken symlink - target doesn't exist
+              console.log(`   🧹 Removing broken symlink: ${entry} (target missing)`);
+              await fs.unlink(symlinkPath);
+            } else if (!validVersions.includes(version)) {
+              // Orphaned symlink - version no longer exists
+              console.log(`   🧹 Removing orphaned symlink: ${entry} (version ${version} removed)`);
+              await fs.unlink(symlinkPath);
+            }
+          } catch (error) {
+            // Not a symlink or can't read it - remove it
+            console.log(`   🧹 Removing invalid entry: ${entry}`);
+            try {
+              await fs.unlink(symlinkPath);
+            } catch {
+              // Ignore cleanup errors
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.log(`   ⚠️  Could not scan scripts/versions for cleanup: ${(error as Error).message}`);
+    }
+    
+    // Check main scripts directory for broken component symlink
+    try {
+      const mainScriptPath = path.join(scriptsDir, componentLower);
+      
+      try {
+        await fs.lstat(mainScriptPath);
+        // Symlink exists, check if it's broken
+        const target = await fs.readlink(mainScriptPath);
+        const targetPath = path.resolve(scriptsDir, target);
+        
+        if (!existsSync(targetPath)) {
+          console.log(`   🧹 Removing broken main script symlink: ${componentLower} (target missing)`);
+          await fs.unlink(mainScriptPath);
+        }
+      } catch {
+        // Symlink doesn't exist, that's fine
+      }
+    } catch (error) {
+      console.log(`   ⚠️  Could not check main script symlink: ${(error as Error).message}`);
     }
   }
 
