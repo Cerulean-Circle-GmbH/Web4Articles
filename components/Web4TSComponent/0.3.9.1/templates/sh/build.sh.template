@@ -3,11 +3,6 @@
 # Note: All status messages go to stderr (>&2) to avoid polluting stdout for tab completion
 FORCE_BUILD=${1:-false}
 
-# Ensure required directories exist for environment (completion logging, etc.)
-# Navigate to project root (3 levels up: component/version/X.X.X.X -> project root)
-PROJECT_ROOT="$(cd ../../../ && pwd)"
-mkdir -p "$PROJECT_ROOT/temp/logs" 2>/dev/null || true
-
 if [ "$FORCE_BUILD" = "force" ] || [ "$FORCE_BUILD" = "true" ]; then
     echo "🔧 Force building {{COMPONENT_NAME}}..." >&2
     # Clean everything

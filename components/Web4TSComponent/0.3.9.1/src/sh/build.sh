@@ -2,11 +2,6 @@
 # Smart build - only rebuild if needed, unless forced
 FORCE_BUILD=${1:-false}
 
-# Ensure required directories exist for environment (completion logging, etc.)
-# Navigate to project root (3 levels up: component/version/0.3.9.1 -> project root)
-PROJECT_ROOT="$(cd ../../../ && pwd)"
-mkdir -p "$PROJECT_ROOT/temp/logs" 2>/dev/null || true
-
 if [ "$FORCE_BUILD" = "force" ] || [ "$FORCE_BUILD" = "true" ]; then
     echo "🔧 Force building Web4TSComponent..." >&2
     # Clean everything
