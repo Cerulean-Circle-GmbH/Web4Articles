@@ -199,6 +199,12 @@ export class Web4TSComponentCLI extends DefaultCLI {
    * a cached static import at the top of the file (TSCompletion is already imported)
    */
   private getMethodMaxArguments(command: string): number | null {
+    // Special case: completeParameter uses rest parameters (...contextArgs)
+    // It should consume ALL remaining args to pass as context to completion method
+    if (command === 'completeParameter') {
+      return 999; // Consume all remaining args
+    }
+    
     // TSCompletion is statically imported at the top for synchronous access
     // Auto-discover parameter count from TypeScript AST
     // This works for BOTH CLI methods (DefaultCLI) and Component methods (DefaultWeb4TSComponent)

@@ -1120,10 +1120,11 @@ export abstract class DefaultCLI implements CLI {
    * Web4 pattern: Hidden via @cliHide, not via naming convention
    * @cliHide
    */
-  async completeParameter(callbackName: string): Promise<void> {
+  async completeParameter(callbackName: string, ...contextArgs: string[]): Promise<void> {
     // Check if callback method exists on this instance
     if (typeof (this as any)[callbackName] === 'function') {
-      const values = await (this as any)[callbackName]([]);
+      // Pass context args to completion method (e.g., ['on', 'ComponentName'] for versionParameterCompletion)
+      const values = await (this as any)[callbackName](contextArgs);
       // Output space-separated values for bash compgen
       console.log(values.join(' '));
     } else {

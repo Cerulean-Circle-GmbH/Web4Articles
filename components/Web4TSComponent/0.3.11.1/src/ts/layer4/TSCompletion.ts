@@ -414,6 +414,32 @@ export class TSCompletion implements Completion {
       }
       return [];
     }
+    
+    // Handle 4+ args: Completion for 2nd, 3rd, ... parameters
+    // Example: web4tscomponent on Unit <Tab> → complete 2nd parameter (version)
+    if (args.length >= 4) {
+      const [className, methodName, ...providedParams] = args;
+      const currentWord = providedParams[providedParams.length - 1];
+      const paramIndex = providedParams.length - 1; // 0-based index of parameter we're completing
+      
+      const methods = TSCompletion.getClassMethods(className);
+      if (methods.includes(methodName)) {
+        const params = TSCompletion.getMethodParameters(className, methodName);
+        
+        if (paramIndex < params.length) {
+          // Check if there's a completion method for this parameter
+          const completionMethodName = `${params[paramIndex]}ParameterCompletion`;
+          
+          if (methods.includes(completionMethodName)) {
+            // Completion method exists - return callback hint
+            return [`__CALLBACK__:${params[paramIndex]}ParameterCompletion`];
+          }
+        }
+      }
+      
+      return [];
+    }
+    
     return [];
   }
 
