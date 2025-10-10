@@ -1,4 +1,4 @@
-[Back to PDCA Process Improvements](./pdca.process.improvements/) | [CMMI Understanding](./PDCA.understanding.CMMI.md) | [How to Decide](./PDCA.howto.decide.md) | [Template](./template.md)
+[Process Improvements](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/0350/scrum.pmo/roles/_shared/PDCA/pdca.process.improvements) | [§](./pdca.process.improvements/) • [CMMI Understanding](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/PDCA.understanding.CMMI.md) | [§](./PDCA.understanding.CMMI.md) • [How to Decide](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§](./PDCA.howto.decide.md) • [Template](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/template.md) | [§](./template.md)
 
 # 📋 **How to Write Excellent PDCAs - Consolidated Guidelines**
 
@@ -14,7 +14,7 @@
 
 ### **Template Location (ALWAYS USE THIS)**
 
-**File:** [template.md](./template.md)
+**File:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](./template.md)
 
 **Usage:**
 1. Copy `template.md` to your session directory
@@ -31,13 +31,13 @@
 cp scrum.pmo/roles/_shared/PDCA/template.md <your-session-directory>/YYYY-MM-DD-UTC-HHMM.pdca.md
 ```
 
-**Naming Convention:** See [CMM3 Checklist Section 4](../../SaveRestartAgent/cmm3.compliance.checklist.md#4-naminglocation)
+**Naming Convention:** See [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md#4-naminglocation) | [§/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md#4-naminglocation](../../SaveRestartAgent/cmm3.compliance.checklist.md#4-naminglocation)
 
 ### **Step 2: Fill Placeholders**
-Replace all `{{PLACEHOLDER}}` values - see [template.md](./template.md) for complete list.
+Replace all `{{PLACEHOLDER}}` values - see [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](./template.md) for complete list.
 
 ### **Step 3: Fill Content Sections**
-Follow the structure in [template.md](./template.md) - all sections are defined there.
+Follow the structure in [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](./template.md) - all sections are defined there.
 
 ---
 
@@ -76,7 +76,7 @@ Follow the structure in [template.md](./template.md) - all sections are defined 
 - Never paraphrase or summarize user guidance
 
 ### **Dual Link Format**
-**See:** [CMM3 Checklist Section 6](../../SaveRestartAgent/cmm3.compliance.checklist.md#6-dual-link-format)
+**See:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md#6-dual-link-format) | [§/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md#6-dual-link-format](../../SaveRestartAgent/cmm3.compliance.checklist.md#6-dual-link-format)
 - PDCA files use relative paths
 - Chat responses use `file://` absolute URLs
 
@@ -90,15 +90,15 @@ Follow the structure in [template.md](./template.md) - all sections are defined 
 ## **🚨 CRITICAL REQUIREMENTS**
 
 ### **1. Use Current Template**
-- **ALWAYS** check [template.md](./template.md) for latest format
+- **ALWAYS** check [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](./template.md) for latest format
 - **NEVER** rely on examples or documentation for structure
 - Template is versioned and maintains format consistency
 
 ### **2. Git Commit Format**
-See [CMM3 Checklist Section 4](../../SaveRestartAgent/cmm3.compliance.checklist.md#4-naminglocation)
+See [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md#4-naminglocation) | [§/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md#4-naminglocation](../../SaveRestartAgent/cmm3.compliance.checklist.md#4-naminglocation)
 
 ### **3. Template Compliance**
-See [CMM3 Checklist Section 5](../../SaveRestartAgent/cmm3.compliance.checklist.md#5-pdca-template-compliance) for:
+See [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md#5-pdca-template-compliance) | [§/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md#5-pdca-template-compliance](../../SaveRestartAgent/cmm3.compliance.checklist.md#5-pdca-template-compliance) for:
 - Required sections
 - Horizontal separators
 - Emoji consistency
@@ -107,17 +107,17 @@ See [CMM3 Checklist Section 5](../../SaveRestartAgent/cmm3.compliance.checklist.
 
 ## **❌ COMMON MISTAKES TO AVOID**
 
-1. **Using old template versions** → See [template.md](./template.md)
+1. **Using old template versions** → See [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](./template.md)
 2. **Paraphrasing TRON feedback** → Quote verbatim (Key Principles above)
-3. **Skipping sections** → See [CMM3 Checklist Section 5](../../SaveRestartAgent/cmm3.compliance.checklist.md#5-pdca-template-compliance)
-4. **Wrong dual link format** → See [CMM3 Checklist Section 6](../../SaveRestartAgent/cmm3.compliance.checklist.md#6-dual-link-format)
+3. **Skipping sections** → See [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md#5-pdca-template-compliance) | [§/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md#5-pdca-template-compliance](../../SaveRestartAgent/cmm3.compliance.checklist.md#5-pdca-template-compliance)
+4. **Wrong dual link format** → See [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md#6-dual-link-format) | [§/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md#6-dual-link-format](../../SaveRestartAgent/cmm3.compliance.checklist.md#6-dual-link-format)
 5. **Duplicating content** → Violates DRY principle (this document is the example!)
 
 ---
 
 ## **✅ CHECKLIST BEFORE COMMITTING PDCA**
 
-**See CMM3 Compliance Checklist:** [SaveRestartAgent/cmm3.compliance.checklist.md](../../SaveRestartAgent/cmm3.compliance.checklist.md)
+**See CMM3 Compliance Checklist:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md) | [§/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md](../../SaveRestartAgent/cmm3.compliance.checklist.md)
 
 Specifically:
 - **Section 4:** Naming/Location requirements
@@ -128,10 +128,11 @@ Specifically:
 
 ## **🔗 REFERENCES**
 
-- **Template (SINGLE SOURCE OF TRUTH):** [template.md](./template.md)
-- **CMMI Understanding:** [PDCA.understanding.CMMI.md](./PDCA.understanding.CMMI.md)
-- **Decision Making:** [PDCA.howto.decide.md](./PDCA.howto.decide.md)
-- **Process Improvements:** [pdca.process.improvements/](./pdca.process.improvements/)
+- **Template (SINGLE SOURCE OF TRUTH):** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](./template.md)
+- **CMM3 Compliance Checklist:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md) | [§/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md](../../SaveRestartAgent/cmm3.compliance.checklist.md)
+- **CMMI Understanding:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/PDCA.understanding.CMMI.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.understanding.CMMI.md](./PDCA.understanding.CMMI.md)
+- **Decision Making:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](./PDCA.howto.decide.md)
+- **Process Improvements:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/0350/scrum.pmo/roles/_shared/PDCA/pdca.process.improvements) | [§/scrum.pmo/roles/_shared/PDCA/pdca.process.improvements/](./pdca.process.improvements/)
 
 ---
 
