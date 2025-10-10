@@ -5162,9 +5162,10 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
   /**
    * Execute parameter completion callback for dynamic tab completion
    * Called by bash completion when TSCompletion returns __CALLBACK__:methodName
+   * Web4 pattern: Hidden via @cliHide, not via naming convention
    * @cliHide
    */
-  async __completeParameter(callbackName: string): Promise<void> {
+  async completeParameter(callbackName: string): Promise<void> {
     // Check if callback method exists on this instance
     if (typeof (this as any)[callbackName] === 'function') {
       const values = await (this as any)[callbackName]([]);
