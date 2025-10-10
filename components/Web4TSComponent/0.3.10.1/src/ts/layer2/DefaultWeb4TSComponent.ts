@@ -854,12 +854,36 @@ Standards:
     
     const metadata = await this.scaffoldComponent(scaffoldOptions);
     
-    console.log(`✅ Component created: ${name}`);
+    console.log(`✅ Component structure created: ${name}`);
     console.log(`   Version: ${metadata.version}`);
     console.log(`   Location: components/${name}/${version}`);
     console.log(`   CLI: ${metadata.hasLocationResilientCLI ? '✅' : '❌'}`);
     console.log(`   Layers: ${metadata.hasLayeredArchitecture ? '✅' : '❌'}`);
     console.log(`   Spec: ${metadata.hasScenarioSupport ? '✅' : '❌'}`);
+    
+    // Tier 1 Improvement: Automatically initialize component integration
+    // PDCA: 2025-10-10-UTC-1850-component-initialization-ux-gap.pdca.md
+    console.log(`🔗 Initializing project integration...`);
+    
+    // Load the newly created component and verify/fix its symlinks
+    const tempComponent = new DefaultWeb4TSComponent();
+    // Set component context directly (Web4 pattern: modify model, not init)
+    tempComponent.model.component = name;
+    tempComponent.model.version = version;
+    await tempComponent.verifyAndFix();
+    
+    // Verify component is callable
+    const cliScriptName = name.toLowerCase().replace(/\./g, '');
+    const cliPath = path.join(this.model.projectRoot, 'scripts', cliScriptName);
+    
+    if (existsSync(cliPath)) {
+      console.log(`✅ Component fully initialized and ready to use!`);
+      console.log(`   CLI command: ${cliScriptName}`);
+      console.log(`   Try: ${cliScriptName} --help`);
+    } else {
+      console.log(`⚠️  Component created but CLI not available at expected path: ${cliPath}`);
+      console.log(`   Run manually: web4tscomponent on ${name} ${version} verifyAndFix`);
+    }
   }
 
   /**
@@ -1376,7 +1400,8 @@ Standards:
     const fs = await import('fs/promises');
     
     // Determine what links should be
-    const highestVersion = availableVersions[0]; // Already sorted by getAvailableVersions
+    // getAvailableVersions() sorts LOW to HIGH, so we need the LAST element for highest!
+    const highestVersion = this.getHighestVersion(availableVersions);
     
     // Fix 'latest' - should always point to highest version
     if (!semanticLinks.latest || semanticLinks.latest !== highestVersion) {
@@ -1405,37 +1430,38 @@ Standards:
       }
     }
     
-    // Fix 'dev' - if missing, set to prod
+    // Fix 'dev' - should point to highest version (active development)
     const prodVersion = semanticLinks.prod || highestVersion;
-    if (!semanticLinks.dev) {
-      console.log(`   🔧 Creating missing 'dev' link → ${prodVersion}`);
+    if (!semanticLinks.dev || semanticLinks.dev !== highestVersion) {
+      const action = !semanticLinks.dev ? 'Creating missing' : 'Updating';
+      console.log(`   🔧 ${action} 'dev' link → ${highestVersion}`);
       try {
-        await this.createSemanticLink(componentName, 'dev', prodVersion);
+        await this.createSemanticLink(componentName, 'dev', highestVersion);
       } catch (error) {
-        console.log(`   ❌ Could not create 'dev': ${(error as Error).message}`);
+        console.log(`   ❌ Could not ${action.toLowerCase()} 'dev': ${(error as Error).message}`);
       }
     } else if (!availableVersions.includes(semanticLinks.dev)) {
-      console.log(`   🔧 Fixing broken 'dev' link: ${semanticLinks.dev} (missing) → ${prodVersion}`);
+      console.log(`   🔧 Fixing broken 'dev' link: ${semanticLinks.dev} (missing) → ${highestVersion}`);
       try {
-        await this.createSemanticLink(componentName, 'dev', prodVersion);
+        await this.createSemanticLink(componentName, 'dev', highestVersion);
       } catch (error) {
         console.log(`   ❌ Could not fix 'dev': ${(error as Error).message}`);
       }
     }
     
-    // Fix 'test' - if missing, set to dev
-    const devVersion = semanticLinks.dev || prodVersion;
-    if (!semanticLinks.test) {
-      console.log(`   🔧 Creating missing 'test' link → ${devVersion}`);
+    // Fix 'test' - should point to highest version (ready for testing)
+    if (!semanticLinks.test || semanticLinks.test !== highestVersion) {
+      const action = !semanticLinks.test ? 'Creating missing' : 'Updating';
+      console.log(`   🔧 ${action} 'test' link → ${highestVersion}`);
       try {
-        await this.createSemanticLink(componentName, 'test', devVersion);
+        await this.createSemanticLink(componentName, 'test', highestVersion);
       } catch (error) {
-        console.log(`   ❌ Could not create 'test': ${(error as Error).message}`);
+        console.log(`   ❌ Could not ${action.toLowerCase()} 'test': ${(error as Error).message}`);
       }
     } else if (!availableVersions.includes(semanticLinks.test)) {
-      console.log(`   🔧 Fixing broken 'test' link: ${semanticLinks.test} (missing) → ${devVersion}`);
+      console.log(`   🔧 Fixing broken 'test' link: ${semanticLinks.test} (missing) → ${highestVersion}`);
       try {
-        await this.createSemanticLink(componentName, 'test', devVersion);
+        await this.createSemanticLink(componentName, 'test', highestVersion);
       } catch (error) {
         console.log(`   ❌ Could not fix 'test': ${(error as Error).message}`);
       }

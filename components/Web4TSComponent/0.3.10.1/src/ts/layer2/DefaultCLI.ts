@@ -928,12 +928,13 @@ export abstract class DefaultCLI implements CLI {
   /**
    * Generate CLI parameter syntax with enhanced optional formatting
    * Web4 pattern: Clear optional parameter syntax with default values
+   * Notation: <?param:'defaultValue'> for optional parameters
    */
   private generateParameterSyntax(param: any, methodName?: string): string {
     // Get base syntax from @cliSyntax annotation or conventions
     let baseSyntax = this.getBaseSyntax(param, methodName);
     
-    // ✅ ENHANCED: Apply optional formatting preferences
+    // ✅ ENHANCED: Apply Web4 notation for optional parameters
     if (param.required) {
       return `<${baseSyntax}>`;
     } else {
@@ -941,51 +942,25 @@ export abstract class DefaultCLI implements CLI {
       const defaultValue = this.extractDefaultValue(param, methodName);
       
       if (defaultValue) {
-        return `<${baseSyntax}=${defaultValue}>`;  // ✅ Enhanced: <parameter=defaultValue>
+        return `<?${baseSyntax}:'${defaultValue}'>`;  // ✅ Web4 notation: <?parameter:'defaultValue'>
       } else {
-        return `<${baseSyntax}> <?optional>`;     // ✅ Enhanced: <parameter> <?optional>
+        return `<?${baseSyntax}>`;     // ✅ Web4 notation: <?parameter> (no default available)
       }
     }
   }
 
   /**
-   * Get base syntax from @cliSyntax annotation or conventions
-   * Web4 pattern: Zero config base syntax detection
+   * Get base syntax - ALWAYS use actual TypeScript parameter name
+   * Web4 pattern: Zero config, zero convention, zero magic - just the truth!
+   * 
+   * CRITICAL: NO convention detection here! The parameter name IS the syntax.
+   * User expectation: "showHidden" parameter should show as "<?showHidden:'false'>"
+   * NOT as "<?file:'false'>" just because description mentions "files"!
    */
   private getBaseSyntax(param: any, methodName?: string): string {
-    // ✅ ZERO CONFIG: Check @cliSyntax annotation first
-    if (methodName) {
-      const cliAnnotations = TSCompletion.extractCliAnnotations(this.componentClass.name, methodName, param.name);
-      if (cliAnnotations.syntax) {
-        return cliAnnotations.syntax;
-      }
-    }
-    
-    // ✅ FALLBACK: Pure convention detection from description
-    const description = param.description || '';
-    
-    // Pattern: "UUID or .unit file" or "UUID string or file path"
-    if ((description.includes('UUID') || description.includes('uuid')) && 
-        (description.includes('file') || description.includes('path'))) {
-      return 'uuid|lnfile';
-    }
-    
-    // ✅ WEB4 CONVENTION: Derive from TypeScript union types
-    if (param.isUnionType && param.unionTypes) {
-      const typeNames = param.unionTypes.map((type: string) => this.simplifyTypeName(type));
-      return typeNames.join('|');
-    }
-    
-    // ✅ WEB4 CONVENTION: Derive from description keywords
-    if (description.toLowerCase().includes('directory')) {
-      return 'folder';
-    }
-    
-    if (description.toLowerCase().includes('file')) {
-      return 'file';
-    }
-    
-    // Default: parameter name from TypeScript
+    // ALWAYS return actual TypeScript parameter name - NOTHING ELSE!
+    // This is what the user types in the command: web4tscomponent tree 4 false
+    // The parameter names ARE: depth, showHidden (not depth, file!)
     return param.name;
   }
 

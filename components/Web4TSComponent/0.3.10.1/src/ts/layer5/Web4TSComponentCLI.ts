@@ -7,6 +7,7 @@
 
 import { DefaultCLI } from '../layer2/DefaultCLI.js';
 import { DefaultWeb4TSComponent } from '../layer2/DefaultWeb4TSComponent.js';
+import { TSCompletion } from '../layer4/TSCompletion.js';
 
 interface MethodSignature {
   name: string;
@@ -191,26 +192,26 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Get maximum arguments for methods with default parameters
-   * Also prevents chaining interference for completion methods
+   * AUTO-DISCOVERED from TypeScript signatures via TSCompletion
+   * Web4 pattern: Zero config, zero hardcoding - pure AST introspection!
+   * 
+   * NOTE: This is called synchronously during argument parsing, so we use
+   * a cached static import at the top of the file (TSCompletion is already imported)
    */
   private getMethodMaxArguments(command: string): number | null {
-    // Methods with default parameters that should consume more args than function.length shows
-    // Also: completion methods must consume their args even if they look like commands
-    const methodMaxArgs: { [key: string]: number} = {
-      'completeParameter': 1,  // MUST consume callback name (even if it's a command name)
-      'tree': 2,  // depth and showHidden parameters (both have defaults)
-      'create': 3, // name, version, options (options has default)
-      'upgrade': 1, // versionType
-      'on': 2, // component and version
-      'setLatest': 1, // targetVersion (has default)
-      'setDev': 1, // targetVersion (has default)
-      'setTest': 1, // targetVersion (has default)
-      'setProd': 1, // targetVersion (has default)
-      'removeVersion': 2, // componentName and version (both have defaults)
-      'removeComponent': 1 // componentName (has default)
-    };
+    // TSCompletion is statically imported at the top for synchronous access
+    // Auto-discover parameter count from TypeScript AST
+    // This works for BOTH CLI methods (DefaultCLI) and Component methods (DefaultWeb4TSComponent)
+    const params = TSCompletion.getEnhancedMethodParameters('DefaultCLI,DefaultWeb4TSComponent', command);
     
-    return methodMaxArgs[command] || null;
+    if (params && params.length > 0) {
+      // Return actual parameter count from TypeScript signature
+      // This handles all methods with optional parameters automatically!
+      return params.length;
+    }
+    
+    // Method not found or has no parameters
+    return null;
   }
 }
 

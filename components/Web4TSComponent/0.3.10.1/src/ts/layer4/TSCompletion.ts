@@ -111,6 +111,19 @@ export class TSCompletion implements Completion {
   }
 
   static getMethodParameters(className: string, methodName: string, paramName?: string): any[] {
+    // Support comma-separated class names: "DefaultCLI,DefaultWeb4TSComponent"
+    // Try each class until we find the method
+    if (className.includes(',')) {
+      const classes = className.split(',').map(c => c.trim());
+      for (const cls of classes) {
+        const params = this.getMethodParameters(cls, methodName, paramName);
+        if (params.length > 0) {
+          return params;
+        }
+      }
+      return [];
+    }
+    
     const files = TSCompletion.getProjectSourceFiles();
     let params: string[] = [];
     let defaultValues: Record<string, string> = {};
@@ -379,8 +392,22 @@ export class TSCompletion implements Completion {
   /**
    * Enhanced method parameter extraction with union type support
    * Web4 pattern: TypeScript AST parsing with union type detection for CLI generation
+   * Supports composite class names (comma-separated)
    */
   static getEnhancedMethodParameters(className: string, methodName: string): any[] {
+    // Support comma-separated class names: "DefaultCLI,DefaultWeb4TSComponent"
+    // Try each class until we find the method
+    if (className.includes(',')) {
+      const classes = className.split(',').map(c => c.trim());
+      for (const cls of classes) {
+        const params = this.getEnhancedMethodParameters(cls, methodName);
+        if (params.length > 0) {
+          return params;
+        }
+      }
+      return [];
+    }
+    
     const files = TSCompletion.getProjectSourceFiles();
     const parameterInfo: any[] = [];
     
@@ -517,12 +544,9 @@ export class TSCompletion implements Completion {
             // Enhanced JSDoc extraction with better comment detection
             const jsDocText = TSCompletion.extractEnhancedJsDocText(member);
             
-            if (paramName) {
-              const paramDoc = TSCompletion.extractParamJsDoc(member, paramName);
-              result = TSCompletion.parseCliAnnotations(paramDoc);
-            } else {
-              result = TSCompletion.parseCliAnnotations(jsDocText);
-            }
+            // ALWAYS parse method's JSDoc (contains @cliDefault annotations)
+            // Pass paramName to extract parameter-specific values
+            result = TSCompletion.parseCliAnnotations(jsDocText, paramName);
             return; // Found the method, stop searching
           }
         }
@@ -558,21 +582,31 @@ export class TSCompletion implements Completion {
    * Parse CLI annotations from JSDoc text
    * Web4 pattern: Zero config annotation parsing
    */
-  private static parseCliAnnotations(jsDocText: string): any {
+  private static parseCliAnnotations(jsDocText: string, paramName?: string): any {
     return {
       hide: jsDocText.includes('@cliHide'),
-      syntax: TSCompletion.extractAnnotationValue(jsDocText, 'cliSyntax'),
+      syntax: TSCompletion.extractAnnotationValue(jsDocText, 'cliSyntax', paramName),
       optional: jsDocText.includes('@cliOptional'),
-      group: TSCompletion.extractAnnotationValue(jsDocText, 'cliGroup'),
-      alias: TSCompletion.extractAnnotationValue(jsDocText, 'cliAlias'),
-      default: TSCompletion.extractAnnotationValue(jsDocText, 'cliDefault')
+      group: TSCompletion.extractAnnotationValue(jsDocText, 'cliGroup', paramName),
+      alias: TSCompletion.extractAnnotationValue(jsDocText, 'cliAlias', paramName),
+      default: TSCompletion.extractAnnotationValue(jsDocText, 'cliDefault', paramName)
     };
   }
 
   /**
    * Extract value from @annotation pattern
+   * For @cliDefault, extracts paramName and value (e.g., "@cliDefault version 0.1.0.0")
    */
-  private static extractAnnotationValue(text: string, annotation: string): string | null {
+  private static extractAnnotationValue(text: string, annotation: string, paramName?: string): string | null {
+    if (annotation === 'cliDefault' && paramName) {
+      // Special handling for @cliDefault paramName value
+      // Example: "@cliDefault version 0.1.0.0" -> extract "0.1.0.0" when paramName is "version"
+      const regex = new RegExp(`@cliDefault\\s+${paramName}\\s+([^\\s\\n]+)`);
+      const match = text.match(regex);
+      return match ? match[1] : null;
+    }
+    
+    // Generic annotation extraction (first word after annotation)
     const regex = new RegExp(`@${annotation}\\s+([^\\s\\n]+)`);
     const match = text.match(regex);
     return match ? match[1] : null;
