@@ -258,7 +258,7 @@ export class TestFileParser {
 
   /**
    * Format test files with hierarchical structure like describe format
-   * Format: "1:  filename.test.ts\n      a) File-level test execution"
+   * Format: "1:  filename.test.ts" (no sub-options since there's only one choice)
    */
   static formatFilesHierarchical(files: TestFile[]): string[] {
     const display: string[] = [];
@@ -266,17 +266,13 @@ export class TestFileParser {
     // ANSI color codes (OOSH format for bash completion compatibility)
     const ESC = '\x1b[';
     const cyan = `${ESC}36m`;
-    const green = `${ESC}32m`;
     const reset = `${ESC}0m`;
 
     files.forEach((file, fileIndex) => {
       const fileNum = fileIndex + 1;
       
-      // Add file header (colored file number) - same format as describe
+      // Add file header (colored file number) - no sub-options for single choice
       display.push(`${cyan}${fileNum}:${reset}  ${file.name}`);
-      
-      // Add single file execution option (no duplication)
-      display.push(`      ${green}a)${reset} Execute entire file`);
     });
 
     return display;
