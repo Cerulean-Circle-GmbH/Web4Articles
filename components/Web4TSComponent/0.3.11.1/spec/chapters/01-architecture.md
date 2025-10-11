@@ -157,6 +157,99 @@ The system is **resilient** and automatically fixes corrupted configs:
 5. **Multi-Parameter Support** - Completes 1st, 2nd, 3rd... parameters intelligently
 6. **Command Chaining** - Seamlessly switches between parameters and chained methods
 
+### 3.2 The Complete Architecture Map (Overview)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        USER TYPES IN BASH                       │
+│              web4tscomponent on Unit 0.3.2.0 tre<Tab>          │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+                         ↓
+┌─────────────────────────────────────────────────────────────────┐
+│              BASH COMPLETION (source.env)                       │
+│  • Captures: COMP_WORDS=[web4tscomponent, on, Unit, 0.3.2.0, tre]│
+│  • Extracts: args=[on, Unit, 0.3.2.0, tre]                     │
+│  • Injects: className=Web4TSComponentCLI,DefaultWeb4TSComponent│
+│  • Calls: TSCompletion with [className, ...args]               │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+                         ↓
+┌─────────────────────────────────────────────────────────────────┐
+│            TSCOMPLETION (TypeScript AST Parser)                 │
+│  • Receives: [Web4TSComponentCLI,DefaultWeb4TSComponent,        │
+│               on, Unit, 0.3.2.0, tre]                          │
+│  • Scans: Web4TSComponentCLI.ts → finds 'extends DefaultCLI'   │
+│  • Discovers: DefaultCLI methods (componentParameterCompletion,│
+│               versionParameterCompletion, etc.)                 │
+│  • Analyzes: args.length=5, method 'on' has 2 params           │
+│  • Determines: paramIndex=2 >= params.length → CHAINING!       │
+│  • Returns: ['tree', 'test', 'transform', ...] (methods        │
+│             starting with 'tre')                                │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+                         ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                    BASH DISPLAYS RESULTS                        │
+│                      tree                                       │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 🎪 Alternative Flow: Callback Path
+
+```
+USER: web4tscomponent on <Tab>
+  ↓
+BASH: calls TSCompletion with [Web4TSComponentCLI,DefaultWeb4TSComponent, on, '']
+  ↓
+TSCOMPLETION: 
+  • args.length=3 → completing 1st parameter
+  • Gets params=['component', 'version']
+  • Checks: componentParameterCompletion exists? YES!
+  • Returns: __CALLBACK__:componentParameterCompletion
+  ↓
+BASH: detects __CALLBACK__:componentParameterCompletion
+      calls: web4tscomponent completeParameter componentParameterCompletion on
+  ↓
+DEFAULTCLI.completeParameter():
+  • Receives: callbackName='componentParameterCompletion', contextArgs=['on']
+  • Calls: this.componentParameterCompletion(['on'])
+  ↓
+DEFAULTCLI.componentParameterCompletion():
+  • Context: ['on'] (could extract if needed)
+  • Lists: all directories in components/
+  • Returns: ['Build', 'DefaultCLI', 'Unit', 'Web4TSComponent', ...]
+  ↓
+BASH: displays all components for user to choose
+```
+
+### 💎 Why This Is Beautiful
+
+1. **Zero Maintenance** - Add a method to your class, it's automatically in tab completion
+2. **Inheritance Just Works** - Common completions in DefaultCLI, component-specific in YourComponentCLI
+3. **Context-Aware** - Version completion knows which component you selected
+4. **Seamless Chaining** - Switches automatically between parameters and methods
+5. **TypeScript-First** - Everything derived from actual TypeScript code, not config files
+6. **Location Resilient** - Works from any directory in the project
+7. **DRY Compliant** - Single source of truth: your TypeScript class definitions
+
+### 🎓 Key Takeaways
+
+- **Never hardcode completion lists** - Use TSCompletion to discover from AST
+- **Parameter name = completion method** - `depth` → `depthParameterCompletion`
+- **Use @cliHide** - Hide completion methods from CLI help
+- **Context passing works** - Completion methods receive all previous args
+- **Inheritance is automatic** - `Web4TSComponentCLI extends DefaultCLI` = all methods inherited
+- **Multi-parameter support** - 1st, 2nd, 3rd, nth parameters all work
+- **Chaining is seamless** - After last parameter, methods complete again
+
+**This is what CMM4 looks like. This is simplexity. This is Web4.** 🎯
+
+**Related Topics:**
+- [TSDoc Annotations](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/02-development-guide.md#-tsdoc-magic-the-3-lines-that-make-it-work) | [chapters/02-development-guide.md](chapters/02-development-guide.md#-tsdoc-magic-the-3-lines-that-make-it-work) - How to make methods discoverable
+- [Method Chaining](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/04-compliance-and-standards.md#-web4-compliance-principles) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#-web4-compliance-principles) - Web4 compliance requirement
+
+---
 ### 3.2 Completion Flow Specification
 
 #### 3.2.1 Method Completion (Initial Command)
@@ -228,9 +321,9 @@ web4tscomponent on Unit 0.3.2.0 tre<Tab>
 - Switches to chained method completion
 - Returns all methods starting with 'tre'
 
-### 3.3 Three-Layer Architecture
+### 3.4 Three-Layer Architecture
 
-#### 3.3.1 Layer 1: Bash Completion Interface
+#### 3.4.1 Layer 1: Bash Completion Interface
 ```bash
 # Injected by source.env when you load the environment
 _web4_tscompletion() {
@@ -487,97 +580,4 @@ async actionParameterCompletion(currentArgs: string[]): Promise<string[]> {
 - Parameter name: `component` → Completion method: `componentParameterCompletion`
 - Parameter name: `myCustomParam` → Completion method: `myCustomParamParameterCompletion`
 
-### 🎭 The Complete Architecture Map
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        USER TYPES IN BASH                       │
-│              web4tscomponent on Unit 0.3.2.0 tre<Tab>          │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         ↓
-┌─────────────────────────────────────────────────────────────────┐
-│              BASH COMPLETION (source.env)                       │
-│  • Captures: COMP_WORDS=[web4tscomponent, on, Unit, 0.3.2.0, tre]│
-│  • Extracts: args=[on, Unit, 0.3.2.0, tre]                     │
-│  • Injects: className=Web4TSComponentCLI,DefaultWeb4TSComponent│
-│  • Calls: TSCompletion with [className, ...args]               │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         ↓
-┌─────────────────────────────────────────────────────────────────┐
-│            TSCOMPLETION (TypeScript AST Parser)                 │
-│  • Receives: [Web4TSComponentCLI,DefaultWeb4TSComponent,        │
-│               on, Unit, 0.3.2.0, tre]                          │
-│  • Scans: Web4TSComponentCLI.ts → finds 'extends DefaultCLI'   │
-│  • Discovers: DefaultCLI methods (componentParameterCompletion,│
-│               versionParameterCompletion, etc.)                 │
-│  • Analyzes: args.length=5, method 'on' has 2 params           │
-│  • Determines: paramIndex=2 >= params.length → CHAINING!       │
-│  • Returns: ['tree', 'test', 'transform', ...] (methods        │
-│             starting with 'tre')                                │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                    BASH DISPLAYS RESULTS                        │
-│                      tree                                       │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-### 🎪 Alternative Flow: Callback Path
-
-```
-USER: web4tscomponent on <Tab>
-  ↓
-BASH: calls TSCompletion with [Web4TSComponentCLI,DefaultWeb4TSComponent, on, '']
-  ↓
-TSCOMPLETION: 
-  • args.length=3 → completing 1st parameter
-  • Gets params=['component', 'version']
-  • Checks: componentParameterCompletion exists? YES!
-  • Returns: __CALLBACK__:componentParameterCompletion
-  ↓
-BASH: detects __CALLBACK__:componentParameterCompletion
-      calls: web4tscomponent completeParameter componentParameterCompletion on
-  ↓
-DEFAULTCLI.completeParameter():
-  • Receives: callbackName='componentParameterCompletion', contextArgs=['on']
-  • Calls: this.componentParameterCompletion(['on'])
-  ↓
-DEFAULTCLI.componentParameterCompletion():
-  • Context: ['on'] (could extract if needed)
-  • Lists: all directories in components/
-  • Returns: ['Build', 'DefaultCLI', 'Unit', 'Web4TSComponent', ...]
-  ↓
-BASH: displays all components for user to choose
-```
-
-### 💎 Why This Is Beautiful
-
-1. **Zero Maintenance** - Add a method to your class, it's automatically in tab completion
-2. **Inheritance Just Works** - Common completions in DefaultCLI, component-specific in YourComponentCLI
-3. **Context-Aware** - Version completion knows which component you selected
-4. **Seamless Chaining** - Switches automatically between parameters and methods
-5. **TypeScript-First** - Everything derived from actual TypeScript code, not config files
-6. **Location Resilient** - Works from any directory in the project
-7. **DRY Compliant** - Single source of truth: your TypeScript class definitions
-
-### 🎓 Key Takeaways
-
-- **Never hardcode completion lists** - Use TSCompletion to discover from AST
-- **Parameter name = completion method** - `depth` → `depthParameterCompletion`
-- **Use @cliHide** - Hide completion methods from CLI help
-- **Context passing works** - Completion methods receive all previous args
-- **Inheritance is automatic** - `Web4TSComponentCLI extends DefaultCLI` = all methods inherited
-- **Multi-parameter support** - 1st, 2nd, 3rd, nth parameters all work
-- **Chaining is seamless** - After last parameter, methods complete again
-
-**This is what CMM4 looks like. This is simplexity. This is Web4.** 🎯
-
-**Related Topics:**
-- [TSDoc Annotations](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/02-development-guide.md#-tsdoc-magic-the-3-lines-that-make-it-work) | [chapters/02-development-guide.md](chapters/02-development-guide.md#-tsdoc-magic-the-3-lines-that-make-it-work) - How to make methods discoverable
-- [Method Chaining](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/04-compliance-and-standards.md#-web4-compliance-principles) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#-web4-compliance-principles) - Web4 compliance requirement
-
----
 
