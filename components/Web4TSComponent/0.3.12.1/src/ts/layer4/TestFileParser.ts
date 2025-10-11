@@ -373,6 +373,9 @@ export class TestFileParser {
       });
     });
 
+    // Debug: Log tokens for troubleshooting
+    console.error('DEBUG: Generated tokens:', tokens.slice(0, 10));
+
     return { display, tokens };
   }
   static getAllDescribesHierarchical(testDir: string): {

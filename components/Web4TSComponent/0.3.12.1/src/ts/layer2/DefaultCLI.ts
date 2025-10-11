@@ -1515,6 +1515,65 @@ export abstract class DefaultCLI implements CLI {
     // Get all it cases in hierarchical format
     const result = TestFileParser.getAllItCasesHierarchical(testDir);
     
+    // Check if there's a filter prefix (e.g., '16a' from 'test itCase 16a')
+    const filterPrefix = currentArgs[2];
+    
+    if (filterPrefix) {
+      // Filter tokens that start with the prefix
+      const filteredTokens = result.tokens.filter(token => token.startsWith(filterPrefix));
+      
+      if (filteredTokens.length === 0) {
+        // No matches - return empty
+        return [];
+      }
+      
+      // Filter the display lines to show only matching entries
+      const filteredDisplay: string[] = [];
+      const displayLines = result.display;
+      
+      for (let i = 0; i < displayLines.length; i++) {
+        const line = displayLines[i];
+        
+        // Strip ANSI escape codes for pattern matching
+        const cleanLine = line.replace(/\x1B\[[0-9;]*m/g, '');
+        
+        // Check if this line represents a token that matches our filter
+        const tokenMatch = cleanLine.match(/(\d+[a-z]\d+)\)/);
+        if (tokenMatch && filteredTokens.includes(tokenMatch[1])) {
+          // Include this line and potentially its parent context
+          
+          // Find the file header for this token
+          const fileNum = tokenMatch[1].match(/^(\d+)/)?.[1];
+          const describeMatch = tokenMatch[1].match(/^(\d+[a-z])/)?.[1];
+          
+          // Add file header if not already added
+          const fileHeaderPattern = new RegExp(`^${fileNum}:\\s`);
+          const fileHeaderIndex = displayLines.findIndex(l => {
+            const cleanL = l.replace(/\x1B\[[0-9;]*m/g, '');
+            return fileHeaderPattern.test(cleanL);
+          });
+          if (fileHeaderIndex !== -1 && !filteredDisplay.includes(displayLines[fileHeaderIndex])) {
+            filteredDisplay.push(displayLines[fileHeaderIndex]);
+          }
+          
+          // Add describe header if not already added
+          const describeHeaderPattern = new RegExp(`^\\s{4}${describeMatch}\\)`);
+          const describeHeaderIndex = displayLines.findIndex(l => {
+            const cleanL = l.replace(/\x1B\[[0-9;]*m/g, '');
+            return describeHeaderPattern.test(cleanL);
+          });
+          if (describeHeaderIndex !== -1 && !filteredDisplay.includes(displayLines[describeHeaderIndex])) {
+            filteredDisplay.push(displayLines[describeHeaderIndex]);
+          }
+          
+          // Add the matching it case line
+          filteredDisplay.push(line);
+        }
+      }
+      
+      return [filteredDisplay.join('\n')];
+    }
+    
     // OOSH Pattern: Return hierarchical display for bash printf + token extraction
     // Bash will use printf to show the colored hierarchy to user
     // Bash will extract clean tokens (5a1, 17b2) for COMPREPLY matching
