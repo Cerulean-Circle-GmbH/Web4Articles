@@ -82,7 +82,7 @@
 **Maturity Level:** CMM4 (Quantitatively Managed)  
 **Purpose:** TypeScript component standards enforcement and automatic lifecycle management
 
-**What it does:** Creates and manages TypeScript components with auto-discovery CLI, automatic lifecycle (build/test/deploy), DRY principle enforcement, and CMM4 quality processes.
+**What it does:** Creates and manages TypeScript components with [auto-discovery CLI](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained) | [chapters/01-architecture.md](chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained), automatic lifecycle (build/test/deploy), [DRY principle](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-automatic-project-initialization) | [chapters/01-architecture.md](chapters/01-architecture.md#-automatic-project-initialization) enforcement, and [CMM4](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/04-compliance-and-standards.md#9-cmm4-implementation-specification) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#9-cmm4-implementation-specification) quality processes.
 
 **Why it matters:** Zero-configuration component development. Add a method, it appears in CLI automatically. Run `npm start`, everything works immediately. Every component created works the same way.
 
