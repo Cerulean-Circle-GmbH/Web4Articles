@@ -2499,45 +2499,39 @@ Standards:
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
     
     if (references.length === 0) {
-      console.error(`❌ Missing file number`);
-      console.log(`💡 Usage: web4tscomponent test describe <fileNumber> <describeNumber>`);
-      throw new Error(`Missing file number`);
-    }
-    
-    // Get file by number
-    const fileNum = parseInt(references[0], 10);
-    const targetFile = TestFileParser.getFileByNumber(testFiles, fileNum);
-    
-    if (!targetFile) {
-      console.error(`❌ Invalid file number: ${fileNum}`);
-      console.log(`💡 Valid range: 1-${testFiles.length}`);
-      throw new Error(`Invalid file number`);
-    }
-    
-    // Parse describe blocks from file
-    const describes = TestFileParser.parseDescribeBlocks(targetFile.absolutePath);
-    
-    if (references.length === 1) {
-      // No describe number - list available describes
-      console.log(`\n📋 Describe blocks in ${targetFile.name}:`);
-      const formatted = TestFileParser.formatDescribesForCompletion(describes);
-      formatted.forEach(d => console.log(`   ${d}`));
-      console.log(`\n💡 Usage: web4tscomponent test describe ${fileNum} <number>`);
+      // No reference - show hierarchical list
+      const result = TestFileParser.getAllDescribesHierarchical(testDir);
+      console.log(`\n📋 Available describe blocks:\n`);
+      console.log(result.display.join('\n'));
+      console.log(`\n💡 Usage: web4tscomponent test describe <reference>`);
+      console.log(`   Example: web4tscomponent test describe 17a`);
       return;
     }
     
-    // Get describe by number
-    const describeNum = parseInt(references[1], 10);
-    const targetDescribe = TestFileParser.getDescribeByNumber(describes, describeNum);
-    
-    if (!targetDescribe) {
-      console.error(`❌ Invalid describe number: ${describeNum}`);
-      console.log(`💡 Valid range: 1-${describes.length}`);
-      throw new Error(`Invalid describe number`);
+    // Extract token from completion string (e.g., "17a)     ..." → "17a")
+    let ref = references[0];
+    // Remove ANSI codes first
+    ref = ref.replace(/\x1b\[\d+m/g, '');
+    const tokenMatch = ref.match(/^([0-9]+[a-z])/);
+    if (tokenMatch) {
+      ref = tokenMatch[1];
     }
     
-    console.log(`🧪 Running tests for describe: "${targetDescribe.name}"`);
-    console.log(`   File: ${targetFile.name}`);
+    // Parse compound reference (e.g., "17a")
+    const result = TestFileParser.getDescribeByReference(testDir, ref);
+    
+    if (!result) {
+      console.error(`❌ Invalid reference: ${ref}`);
+      console.log(`💡 Use format: <fileNum><letter> (e.g., 5a, 17b)`);
+      console.log(`   Run 'web4tscomponent test describe' to see available options`);
+      throw new Error(`Invalid describe reference`);
+    }
+    
+    const { file, describe } = result;
+    
+    console.log(`🧪 Running tests for describe: "${describe.name}"`);
+    console.log(`   File: ${file.name}`);
+    console.log(`   Reference: ${ref}`);
     
     // Execute vitest with test name pattern
     const context = this.getComponentContext();
@@ -2546,12 +2540,14 @@ Standards:
       : process.cwd();
     
     try {
-      execSync(`npx vitest -t "${targetDescribe.name}"`, {
+      execSync(`npx vitest -t "${describe.name}"`, {
         cwd,
         stdio: 'inherit',
         encoding: 'utf-8'
       });
+      console.log(`✅ Test completed for: ${ref}`);
     } catch (error) {
+      console.error(`❌ Test failed for: ${ref}`);
       throw error;
     }
   }

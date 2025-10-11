@@ -685,7 +685,20 @@ export class TSCompletion implements Completion {
     const completion = new TSCompletion();
     const results = completion.complete(args);
     if (results.length > 0) {
-      console.log(results.join(' '));
+      // Smart Join (OOSH-inspired):
+      // If results contain numbered references (e.g. "1:filename") or any item with spaces,
+      // join with NEWLINES to trigger bash line-based completion (preserves spaces).
+      // Otherwise join with SPACES for backward compatibility (standard single-word completion).
+      const hasNumberedRefs = results.some(r => r.match(/^\d+:/));
+      const hasSpaces = results.some(r => r.includes(' '));
+      
+      if (hasNumberedRefs || hasSpaces) {
+        // Multi-LINE mode: each result on its own line
+        console.log(results.join('\n'));
+      } else {
+        // Multi-WORD mode: space-separated for compgen -W
+        console.log(results.join(' '));
+      }
     }
   }
 }

@@ -292,5 +292,86 @@ export class TestFileParser {
   static getItCaseByNumber(itCases: ItCase[], num: number): ItCase | undefined {
     return itCases[num - 1];
   }
+
+  /**
+   * Get all describe blocks from all test files in hierarchical format
+   * Returns both display (for visual hierarchy) and tokens (for completion)
+   * 
+   * Display format:
+   * 5:  web4tscomponent.dirtpig-detection.test.ts
+   *       a) 🧽 Dirtpig Detection Tests
+   * 17: web4tscomponent.version-promotion.test.ts
+   *       a) 🚀 Web4TSComponent Version Promotion Tests
+   *       b) Version Promotion Isolation
+   * 
+   * Token format: ["5a", "17a", "17b"]
+   */
+  static getAllDescribesHierarchical(testDir: string): {
+    display: string[];
+    tokens: string[];
+  } {
+    const files = TestFileParser.scanTestFiles(testDir);
+    const display: string[] = [];
+    const tokens: string[] = [];
+
+    // ANSI color codes (OOSH format for bash completion compatibility)
+    const ESC = '\x1b[';
+    const cyan = `${ESC}36m`;
+    const green = `${ESC}32m`;
+    const reset = `${ESC}0m`;
+
+    files.forEach((file, fileIndex) => {
+      const fileNum = fileIndex + 1;
+      const describes = TestFileParser.parseDescribeBlocks(file.absolutePath);
+
+      if (describes.length === 0) {
+        return; // Skip files with no describe blocks
+      }
+
+      // Add file header (colored file number)
+      display.push(`${cyan}${fileNum}:${reset}  ${file.name}`);
+
+      // Add describe blocks with letter indices
+      describes.forEach((desc, descIndex) => {
+        const letter = String.fromCharCode('a'.charCodeAt(0) + descIndex);
+        display.push(`      ${green}${letter})${reset} ${desc.name}`);
+        tokens.push(`${fileNum}${letter}`);
+      });
+    });
+
+    return { display, tokens };
+  }
+
+  /**
+   * Parse compound reference like "17a" into file number and describe index
+   * Returns: { fileNum: 17, describeIndex: 0 } (a=0, b=1, c=2, etc.)
+   */
+  static parseDescribeReference(ref: string): { fileNum: number; describeIndex: number } | null {
+    const match = ref.match(/^(\d+)([a-z])$/);
+    if (!match) return null;
+
+    const fileNum = parseInt(match[1], 10);
+    const describeIndex = match[2].charCodeAt(0) - 'a'.charCodeAt(0);
+
+    return { fileNum, describeIndex };
+  }
+
+  /**
+   * Get describe block by compound reference (e.g., "17a")
+   */
+  static getDescribeByReference(testDir: string, ref: string): { file: TestFile; describe: DescribeBlock } | null {
+    const parsed = TestFileParser.parseDescribeReference(ref);
+    if (!parsed) return null;
+
+    const files = TestFileParser.scanTestFiles(testDir);
+    const file = files[parsed.fileNum - 1];
+    if (!file) return null;
+
+    const describes = TestFileParser.parseDescribeBlocks(file.absolutePath);
+    const describe = describes[parsed.describeIndex];
+    if (!describe) return null;
+
+    return { file, describe };
+  }
 }
 

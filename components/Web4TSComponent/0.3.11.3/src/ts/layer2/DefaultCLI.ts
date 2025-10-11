@@ -1125,8 +1125,21 @@ export abstract class DefaultCLI implements CLI {
     if (typeof (this as any)[callbackName] === 'function') {
       // Pass context args to completion method (e.g., ['on', 'ComponentName'] for versionParameterCompletion)
       const values = await (this as any)[callbackName](contextArgs);
-      // Output space-separated values for bash compgen
-      console.log(values.join(' '));
+      
+      // Smart Join (OOSH-inspired, matching TSCompletion.start() logic):
+      // If values contain numbered references (e.g. "1:filename") or any item with spaces,
+      // join with NEWLINES to trigger bash line-based completion (preserves spaces).
+      // Otherwise join with SPACES for backward compatibility (standard single-word completion).
+      const hasNumberedRefs = values.some((v: string) => v.match(/^\d+:/));
+      const hasSpaces = values.some((v: string) => v.includes(' '));
+      
+      if (hasNumberedRefs || hasSpaces) {
+        // Multi-LINE mode: each value on its own line
+        console.log(values.join('\n'));
+      } else {
+        // Multi-WORD mode: space-separated for compgen -W
+        console.log(values.join(' '));
+      }
     } else {
       // Callback not found - return empty (no completions)
       console.log('');
@@ -1436,17 +1449,6 @@ export abstract class DefaultCLI implements CLI {
     const { join, dirname } = await import('path');
     const { existsSync } = await import('fs');
     
-    // Extract file number from args: ['test', 'describe', '2', ...]
-    const fileNumStr = currentArgs[2];
-    if (!fileNumStr) {
-      return [];
-    }
-    
-    const fileNum = parseInt(fileNumStr, 10);
-    if (isNaN(fileNum)) {
-      return [];
-    }
-    
     // Get test directory
     const component = (this as any).getOrCreateTSComponent();
     const context = component.getComponentContext();
@@ -1464,17 +1466,13 @@ export abstract class DefaultCLI implements CLI {
       return [];
     }
     
-    // Get test files and target file
-    const testFiles = TestFileParser.scanTestFiles(testDir);
-    const targetFile = TestFileParser.getFileByNumber(testFiles, fileNum);
+    // Get all describes in hierarchical format
+    const result = TestFileParser.getAllDescribesHierarchical(testDir);
     
-    if (!targetFile) {
-      return [];
-    }
-    
-    // Parse describe blocks
-    const describes = TestFileParser.parseDescribeBlocks(targetFile.absolutePath);
-    return TestFileParser.formatDescribesForCompletion(describes);
+    // OOSH Pattern: Return hierarchical display for bash printf + token extraction
+    // Bash will use printf to show the colored hierarchy to user
+    // Bash will extract clean tokens (1a, 17b) for COMPREPLY matching
+    return result.display;
   }
 
   /**
@@ -1490,8 +1488,14 @@ export abstract class DefaultCLI implements CLI {
     const fileNumStr = currentArgs[2];
     const describeNumStr = currentArgs[3];
     
-    if (!fileNumStr || !describeNumStr) {
-      return [];
+    if (!fileNumStr) {
+      // No file number yet → show FILE list first
+      return this.getTestFileReferences(currentArgs);
+    }
+    
+    if (!describeNumStr) {
+      // Has file, no describe → show DESCRIBE list for that file
+      return this.getTestDescribeReferences(currentArgs);
     }
     
     const fileNum = parseInt(fileNumStr, 10);
