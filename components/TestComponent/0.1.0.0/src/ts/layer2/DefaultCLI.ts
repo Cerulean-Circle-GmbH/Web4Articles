@@ -778,35 +778,10 @@ export abstract class DefaultCLI implements CLI {
           output += `    ${colors.descriptions}Example: ${colors.parameters}${examples[i]}${colors.reset}\n`;
         }
       }
-      
-      // ✅ NEW: Line 4: Used By (which commands use this parameter)
-      const usedByCommands = this.getCommandsUsingParameter(param.name, methods);
-      if (usedByCommands.length > 0) {
-        output += `    ${colors.descriptions}Used By: ${colors.commands}${usedByCommands.join(', ')}${colors.reset}\n`;
-      }
-      
       output += '\n'; // Empty line between parameters
     }
     
     return output;
-  }
-
-  /**
-   * Get list of commands that use a specific parameter
-   * Web4 pattern: Cross-reference parameter usage across all methods
-   */
-  private getCommandsUsingParameter(parameterName: string, methods: any[]): string[] {
-    const commandsUsingParam: string[] = [];
-    
-    for (const method of methods) {
-      // Check if this method has a parameter with the given name
-      const hasParameter = method.parameters.some((param: any) => param.name === parameterName);
-      if (hasParameter) {
-        commandsUsingParam.push(method.name);
-      }
-    }
-    
-    return commandsUsingParam.sort(); // Sort alphabetically for consistency
   }
 
   /**
@@ -959,39 +934,19 @@ export abstract class DefaultCLI implements CLI {
     // Get base syntax from @cliSyntax annotation or conventions
     let baseSyntax = this.getBaseSyntax(param, methodName);
     
-    // ✅ ENHANCED: Apply Web4 notation for optional parameters first
-    let finalSyntax: string;
+    // ✅ ENHANCED: Apply Web4 notation for optional parameters
     if (param.required) {
-      finalSyntax = `<${baseSyntax}>`;
+      return `<${baseSyntax}>`;
     } else {
       // Check for default value in TypeScript or TSDoc
       const defaultValue = this.extractDefaultValue(param, methodName);
       
       if (defaultValue) {
-        finalSyntax = `<?${baseSyntax}:'${defaultValue}'>`;  // ✅ Web4 notation: <?parameter:'defaultValue'>
+        return `<?${baseSyntax}:'${defaultValue}'>`;  // ✅ Web4 notation: <?parameter:'defaultValue'>
       } else {
-        finalSyntax = `<?${baseSyntax}>`;     // ✅ Web4 notation: <?parameter> (no default available)
+        return `<?${baseSyntax}>`;     // ✅ Web4 notation: <?parameter> (no default available)
       }
     }
-    
-    // ✅ NEW: Check if parameter has completion method and add ! prefix to entire syntax if not
-    const hasCompletion = this.hasParameterCompletion(param.name);
-    if (!hasCompletion) {
-      finalSyntax = `!${finalSyntax}`;
-    }
-    
-    return finalSyntax;
-  }
-
-  /**
-   * Check if a parameter has a completion method
-   * Web4 pattern: Parameters with completion methods get intelligent tab completion
-   */
-  private hasParameterCompletion(parameterName: string): boolean {
-    const completionMethodName = `${parameterName}ParameterCompletion`;
-    
-    // Check if the completion method exists on this class instance
-    return typeof (this as any)[completionMethodName] === 'function';
   }
 
   /**
@@ -1744,68 +1699,6 @@ export abstract class DefaultCLI implements CLI {
     // Parse it cases for the specific describe block
     const itCases = TestFileParser.parseItCases(targetFile.absolutePath, describeNum - 1);
     return TestFileParser.formatItCasesForCompletion(itCases);
-  }
-
-  /**
-   * Complete component names for create command
-   * Provides suggestions for new component names based on common patterns
-   */
-  async nameParameterCompletion(currentArgs: string[]): Promise<string[]> {
-    // Suggest common component name patterns
-    const suggestions = [
-      'UserManager',
-      'DataProcessor', 
-      'FileHandler',
-      'ConfigManager',
-      'ServiceClient',
-      'EventHandler',
-      'ApiConnector',
-      'DatabaseManager',
-      'CacheManager',
-      'LoggingService'
-    ];
-    
-    const filterPrefix = currentArgs[1];
-    if (filterPrefix) {
-      const filtered = suggestions.filter(name => 
-        name.toLowerCase().startsWith(filterPrefix.toLowerCase())
-      );
-      return filtered.length > 0 ? filtered : suggestions;
-    }
-    
-    return suggestions;
-  }
-
-  /**
-   * Complete options parameter for create command
-   * Provides feature option suggestions
-   */
-  async optionsParameterCompletion(currentArgs: string[]): Promise<string[]> {
-    const allOptions = [
-      'all',      // All features (recommended)
-      'cli',      // CLI only
-      'spec',     // Specification folder
-      'vitest',   // Testing framework  
-      'layers',   // Layer architecture
-      'cli layers',        // CLI + layers
-      'cli spec',          // CLI + spec
-      'cli vitest',        // CLI + vitest
-      'spec vitest',       // Spec + vitest
-      'layers vitest',     // Layers + vitest
-      'cli spec vitest',   // CLI + spec + vitest
-      'layers spec vitest' // Layers + spec + vitest
-    ];
-    
-    const filterPrefix = currentArgs[3] || currentArgs[2] || currentArgs[1]; // Handle different contexts
-    if (filterPrefix) {
-      const filtered = allOptions.filter(option => 
-        option.toLowerCase().includes(filterPrefix.toLowerCase()) ||
-        option.startsWith(filterPrefix)
-      );
-      return filtered.length > 0 ? filtered : allOptions;
-    }
-    
-    return allOptions;
   }
 }
 

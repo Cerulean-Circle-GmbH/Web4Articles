@@ -65,7 +65,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
       console.log(super.generateStructuredUsage());
     } else {
       // Implement showUsage directly since it's abstract
-      console.log('Web4TSComponent CLI - Use --help for more information');
+      console.log('Web4TSComponent CLI - Run without arguments to see all available methods');
     }
   }
 

@@ -1506,6 +1506,46 @@ ln -sf ../../../node_modules node_modules
 npm install  # without proper symlink setup
 ```
 
+### 6. **CLI Flags Prohibition (CRITICAL Web4 Principle)**
+
+**❌ ALL `--flags` and `-options` are STRICTLY FORBIDDEN in Web4 CLIs**
+
+```bash
+# ❌ WRONG - Web4 CLIs NEVER accept flags
+web4tscomponent --help
+web4tscomponent create MyComponent --cli --spec
+web4tscomponent -v
+web4tscomponent --version
+
+# ✅ CORRECT - Web4 uses ONLY positional arguments
+web4tscomponent
+web4tscomponent create MyComponent 0.1.0.0 all
+web4tscomponent version
+```
+
+**Why flags are forbidden:**
+- **Simplicity**: No complex option parsing required
+- **Consistency**: All Web4 components use identical CLI patterns
+- **Auto-Discovery**: Method names map directly to commands
+- **Tab Completion**: Positional arguments enable intelligent completion
+- **Human-Readable**: Commands read like natural language
+- **Method Chaining**: `component method1 param1 method2 param2` flows naturally
+
+**Web4 CLI Philosophy:**
+- **Commands are method names** (discovered automatically from TypeScript)
+- **Parameters are positional** (mapped to method parameters in order)
+- **No configuration required** (everything auto-discovered from code)
+- **No flag parsing complexity** (just split arguments and call methods)
+
+**If you need help:**
+```bash
+# ✅ CORRECT way to get help
+web4tscomponent           # Shows all available methods
+web4tscomponent version   # Shows version information
+```
+
+**⚠️ CRITICAL:** Any agent or developer who uses `--flags` has violated a core Web4 architectural principle and must immediately correct their approach.
+
 ---
 
 ## 🚀 Quick Reference

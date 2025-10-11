@@ -5247,8 +5247,6 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
       'Scenario.interface.ts',
       'CLI.interface.ts',
       'MethodInfo.interface.ts',
-      'any.interface.ts',
-      'ComponentAnalysis.interface.ts',
       'Completion.ts'
     ];
 
@@ -5293,6 +5291,17 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
       await fs.writeFile(testFileParserTargetPath, testFileParserContent);
     } catch (error) {
       console.log(`   ⚠️ Could not copy TestFileParser.ts: ${(error as Error).message}`);
+    }
+    
+    // Copy HierarchicalCompletionFilter.ts (required by DefaultCLI for DRY filtering)
+    const hierarchicalFilterSourcePath = path.join(currentDir, '../../../src/ts/layer4/HierarchicalCompletionFilter.ts');
+    const hierarchicalFilterTargetPath = path.join(componentDir, 'src/ts/layer4/HierarchicalCompletionFilter.ts');
+    
+    try {
+      const hierarchicalFilterContent = await fs.readFile(hierarchicalFilterSourcePath, 'utf-8');
+      await fs.writeFile(hierarchicalFilterTargetPath, hierarchicalFilterContent);
+    } catch (error) {
+      console.log(`   ⚠️ Could not copy HierarchicalCompletionFilter.ts: ${(error as Error).message}`);
     }
   }
 

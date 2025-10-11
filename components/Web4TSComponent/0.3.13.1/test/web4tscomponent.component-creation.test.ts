@@ -7,10 +7,12 @@
  * - CLI symlinks are properly created
  * - Components are fully functional after creation
  * - npm start works without additional setup
+ * - Created components compile without ANY errors
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { existsSync, readlinkSync, lstatSync, rmSync, readFileSync } from 'fs';
+import { execSync } from 'child_process';
 import * as path from 'path';
 import { DefaultWeb4TSComponent } from '../src/ts/layer2/DefaultWeb4TSComponent.js';
 
@@ -26,6 +28,183 @@ describe('🏗️ Component Creation', () => {
   afterEach(() => {
     // Clean up test data but leave for inspection
     // Future enhancement: make this configurable
+  });
+
+  describe('🚨 CRITICAL: Build Verification', () => {
+    const testComponentName = 'BuildVerificationTest';
+    const testVersion = '0.1.0.0';
+    
+    beforeEach(async () => {
+      const componentDir = path.join(testDataDir, 'components', testComponentName);
+      if (existsSync(componentDir)) {
+        rmSync(componentDir, { recursive: true, force: true });
+      }
+    });
+
+    it('should create component that compiles WITHOUT ANY ERRORS', async () => {
+      // Create the component
+      await component.create(testComponentName, testVersion, 'all');
+      
+      const componentDir = path.join(testDataDir, 'components', testComponentName, testVersion);
+      expect(existsSync(componentDir)).toBe(true);
+      
+      // CRITICAL TEST: Component MUST compile without ANY errors
+      let buildOutput = '';
+      let buildError = '';
+      
+      try {
+        // Run npm run build and capture all output
+        buildOutput = execSync('npm run build', {
+          cwd: componentDir,
+          encoding: 'utf8',
+          stdio: 'pipe',
+          timeout: 60000 // 60 second timeout
+        });
+      } catch (error: any) {
+        buildError = error.message;
+        if (error.stdout) buildOutput += error.stdout;
+        if (error.stderr) buildError += error.stderr;
+      }
+      
+      // FAIL THE TEST if there are ANY build errors
+      if (buildError) {
+        console.error('❌ BUILD FAILED:');
+        console.error('Build Output:', buildOutput);
+        console.error('Build Error:', buildError);
+        throw new Error(`Created component FAILED to build: ${buildError}`);
+      }
+      
+      // Verify build completed successfully
+      expect(buildOutput).toContain('build.sh');
+      expect(buildError).toBe('');
+      
+      // Verify dist directory was created
+      expect(existsSync(path.join(componentDir, 'dist'))).toBe(true);
+      expect(existsSync(path.join(componentDir, 'dist/ts'))).toBe(true);
+      
+      console.log('✅ Created component builds successfully without ANY errors');
+    });
+
+    it('should create component that has working CLI after build', async () => {
+      // Create the component
+      await component.create(testComponentName, testVersion, 'all');
+      
+      const componentDir = path.join(testDataDir, 'components', testComponentName, testVersion);
+      const componentLower = testComponentName.toLowerCase();
+      const cliPath = path.join(componentDir, componentLower);
+      
+      // Build the component first
+      execSync('npm run build', {
+        cwd: componentDir,
+        stdio: 'pipe',
+        timeout: 60000
+      });
+      
+      // Test CLI functionality
+      let cliOutput = '';
+      let cliError = '';
+      
+      try {
+        // Run the CLI to verify it works
+        cliOutput = execSync(`./${componentLower}`, {
+          cwd: componentDir,
+          encoding: 'utf8',
+          stdio: 'pipe',
+          timeout: 30000
+        });
+      } catch (error: any) {
+        cliError = error.message;
+        if (error.stdout) cliOutput += error.stdout;
+        if (error.stderr) cliError += error.stderr;
+      }
+      
+      // CLI should work without errors and show help
+      if (cliError && !cliOutput.includes('Commands:')) {
+        console.error('❌ CLI FAILED:');
+        console.error('CLI Output:', cliOutput);
+        console.error('CLI Error:', cliError);
+        throw new Error(`Created component CLI FAILED to run: ${cliError}`);
+      }
+      
+      // Verify CLI shows expected output
+      expect(cliOutput).toContain('Commands:');
+      expect(cliOutput).toContain(testComponentName);
+      
+      console.log('✅ Created component CLI works correctly after build');
+    });
+
+    it('should create component with all required layer4 files for completion', async () => {
+      // Create the component
+      await component.create(testComponentName, testVersion, 'all');
+      
+      const componentDir = path.join(testDataDir, 'components', testComponentName, testVersion);
+      const layer4Dir = path.join(componentDir, 'src/ts/layer4');
+      
+      // CRITICAL: Verify ALL required layer4 files exist
+      const requiredLayer4Files = [
+        'TSCompletion.ts',
+        'TestFileParser.ts',
+        'HierarchicalCompletionFilter.ts'
+      ];
+      
+      for (const file of requiredLayer4Files) {
+        const filePath = path.join(layer4Dir, file);
+        expect(existsSync(filePath)).toBe(true);
+        
+        // Verify file has content (not empty)
+        const content = readFileSync(filePath, 'utf8');
+        expect(content.length).toBeGreaterThan(100);
+        expect(content).toContain('export');
+      }
+      
+      console.log('✅ Created component has all required layer4 files');
+    });
+
+    it('should create component that passes its own tests', async () => {
+      // Create the component
+      await component.create(testComponentName, testVersion, 'all');
+      
+      const componentDir = path.join(testDataDir, 'components', testComponentName, testVersion);
+      
+      // Build first
+      execSync('npm run build', {
+        cwd: componentDir,
+        stdio: 'pipe',
+        timeout: 60000
+      });
+      
+      // Run tests
+      let testOutput = '';
+      let testError = '';
+      
+      try {
+        testOutput = execSync('npm test', {
+          cwd: componentDir,
+          encoding: 'utf8',
+          stdio: 'pipe',
+          timeout: 120000 // 2 minute timeout for tests
+        });
+      } catch (error: any) {
+        testError = error.message;
+        if (error.stdout) testOutput += error.stdout;
+        if (error.stderr) testError += error.stderr;
+      }
+      
+      // Tests should pass
+      if (testError && !testOutput.includes('✓')) {
+        console.error('❌ TESTS FAILED:');
+        console.error('Test Output:', testOutput);
+        console.error('Test Error:', testError);
+        throw new Error(`Created component FAILED its own tests: ${testError}`);
+      }
+      
+      // Verify tests passed
+      expect(testOutput).toMatch(/✓|✅.*tests completed successfully/);
+      expect(testOutput).toMatch(/Test Files|tests completed successfully/);
+      expect(testOutput).toMatch(/passed|completed successfully/);
+      
+      console.log('✅ Created component passes its own tests');
+    });
   });
 
   describe('📦 Default Parameters', () => {
