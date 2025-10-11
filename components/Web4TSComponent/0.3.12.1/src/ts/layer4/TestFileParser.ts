@@ -258,7 +258,7 @@ export class TestFileParser {
 
   /**
    * Format test files with hierarchical structure like describe format
-   * Format: "1:  filename.test.ts" (no sub-options since there's only one choice)
+   * Format: "1:\tfilename.test.ts" (tab-aligned to prevent jumping)
    */
   static formatFilesHierarchical(files: TestFile[]): string[] {
     const display: string[] = [];
@@ -271,8 +271,8 @@ export class TestFileParser {
     files.forEach((file, fileIndex) => {
       const fileNum = fileIndex + 1;
       
-      // Add file header (colored file number) - no sub-options for single choice
-      display.push(`${cyan}${fileNum}:${reset}  ${file.name}`);
+      // Add file header with tab alignment to prevent jumping
+      display.push(`${cyan}${fileNum}:${reset}\t${file.name}`);
     });
 
     return display;
