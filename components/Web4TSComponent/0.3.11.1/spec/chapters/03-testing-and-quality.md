@@ -121,6 +121,8 @@ When tests achieve **100% success**, Web4TSComponent triggers an **automatic ver
 - ✅ **Clear Status Messages** - Always know what's happening
 - ✅ **Error Recovery** - Manual intervention possible if needed
 
+**Related:** See [Development Workflow](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/03-testing-and-quality.md#-development-workflow-reminder) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#-development-workflow-reminder) for the complete dev → test → prod cycle
+
 ### PDCA Integration:
 
 This workflow implements **PDCA (Plan-Do-Check-Act)** at CMM4 level:
