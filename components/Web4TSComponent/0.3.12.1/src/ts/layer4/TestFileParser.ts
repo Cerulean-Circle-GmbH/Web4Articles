@@ -275,8 +275,8 @@ export class TestFileParser {
       // Add file header (colored file number) - same format as describe
       display.push(`${cyan}${fileNum}:${reset}  ${file.name}`);
       
-      // Add file-level execution option
-      display.push(`      ${green}a)${reset} ${file.name}`);
+      // Add single file execution option (no duplication)
+      display.push(`      ${green}a)${reset} Execute entire file`);
     });
 
     return display;
