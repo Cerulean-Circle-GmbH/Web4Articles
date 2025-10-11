@@ -1423,6 +1423,7 @@ export abstract class DefaultCLI implements CLI {
    */
   private async getTestFileReferences(currentArgs: string[]): Promise<string[]> {
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
+    const { HierarchicalCompletionFilter } = await import('../layer4/HierarchicalCompletionFilter.js');
     const { join, dirname } = await import('path');
     const { existsSync } = await import('fs');
     
@@ -1445,10 +1446,14 @@ export abstract class DefaultCLI implements CLI {
       return [];
     }
     
-    const testFiles = TestFileParser.scanTestFiles(testDir);
+    // Get all files in hierarchical format with tokens
+    const result = TestFileParser.getAllFilesHierarchical(testDir);
     
-    // Use hierarchical format like describe output (with colors and structure)
-    return TestFileParser.formatFilesHierarchical(testFiles);
+    // Apply DRY Web4 filtering pattern
+    const filterPrefix = currentArgs[2];
+    const fileTokenPattern = /(\d+):/; // Pattern to match file tokens in display like "1:", "17:"
+    
+    return HierarchicalCompletionFilter.applyPrefixFilter(result, filterPrefix, fileTokenPattern);
   }
 
   /**
@@ -1477,13 +1482,77 @@ export abstract class DefaultCLI implements CLI {
       return [];
     }
     
-    // Get all describes in hierarchical format
+    // Get all describes in hierarchical format with tokens
     const result = TestFileParser.getAllDescribesHierarchical(testDir);
     
+    // Check if there's a filter prefix (e.g., '1a' from 'test describe 1a')
+    const filterPrefix = currentArgs[2];
+    
+    if (filterPrefix) {
+      // Filter tokens that start with the prefix
+      const filteredTokens = result.tokens.filter(token => token.startsWith(filterPrefix));
+      
+      if (filteredTokens.length === 0) {
+        // No matches - return empty
+        return [];
+      }
+      
+      // Filter the display lines to show only matching entries
+      const filteredDisplay: string[] = [];
+      const displayLines = result.display;
+      
+      for (let i = 0; i < displayLines.length; i++) {
+        const line = displayLines[i];
+        
+        // Find file context for this line
+        const fileContext = this.findFileContext(displayLines, i);
+        
+        // Strip ANSI escape codes for pattern matching
+        const cleanLine = line.replace(/\x1B\[[0-9;]*m/g, '');
+        
+        // Check if this line represents a describe block
+        const describeMatch = cleanLine.match(/^\s+([a-z])\)/);
+        if (describeMatch && fileContext) {
+          const fullToken = `${fileContext}${describeMatch[1]}`;
+          
+          if (filteredTokens.includes(fullToken)) {
+            // Add file header if not already added
+            const fileHeaderPattern = new RegExp(`^${fileContext}:\\s`);
+            const fileHeaderIndex = displayLines.findIndex(l => {
+              const cleanL = l.replace(/\x1B\[[0-9;]*m/g, '');
+              return fileHeaderPattern.test(cleanL);
+            });
+            if (fileHeaderIndex !== -1 && !filteredDisplay.includes(displayLines[fileHeaderIndex])) {
+              filteredDisplay.push(displayLines[fileHeaderIndex]);
+            }
+            
+            // Add the matching describe line
+            filteredDisplay.push(line);
+          }
+        }
+      }
+      
+      return [filteredDisplay.join('\n')];
+    }
+    
     // OOSH Pattern: Return hierarchical display for bash printf + token extraction
-    // Bash will use printf to show the colored hierarchy to user
-    // Bash will extract clean tokens (1a, 17b) for COMPREPLY matching
     return result.display;
+  }
+
+  /**
+   * Find the file number context for a describe line
+   */
+  private findFileContext(displayLines: string[], currentIndex: number): string | null {
+    // Look backwards for the most recent file header
+    for (let i = currentIndex - 1; i >= 0; i--) {
+      const line = displayLines[i];
+      const cleanLine = line.replace(/\x1B\[[0-9;]*m/g, '');
+      const fileMatch = cleanLine.match(/^(\d+):/);
+      if (fileMatch) {
+        return fileMatch[1];
+      }
+    }
+    return null;
   }
 
   /**
@@ -1492,6 +1561,7 @@ export abstract class DefaultCLI implements CLI {
    */
   private async getTestItCaseReferences(currentArgs: string[]): Promise<string[]> {
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
+    const { HierarchicalCompletionFilter } = await import('../layer4/HierarchicalCompletionFilter.js');
     const { join, dirname } = await import('path');
     const { existsSync } = await import('fs');
     
@@ -1512,72 +1582,14 @@ export abstract class DefaultCLI implements CLI {
       return [];
     }
     
-    // Get all it cases in hierarchical format
+    // Get all it cases in hierarchical format with tokens
     const result = TestFileParser.getAllItCasesHierarchical(testDir);
     
-    // Check if there's a filter prefix (e.g., '16a' from 'test itCase 16a')
+    // Apply DRY Web4 filtering pattern
     const filterPrefix = currentArgs[2];
+    const itCaseTokenPattern = /(\d+[a-z]\d+)\)/; // Pattern to match it case tokens like "1a1)", "17b2)"
     
-    if (filterPrefix) {
-      // Filter tokens that start with the prefix
-      const filteredTokens = result.tokens.filter(token => token.startsWith(filterPrefix));
-      
-      if (filteredTokens.length === 0) {
-        // No matches - return empty
-        return [];
-      }
-      
-      // Filter the display lines to show only matching entries
-      const filteredDisplay: string[] = [];
-      const displayLines = result.display;
-      
-      for (let i = 0; i < displayLines.length; i++) {
-        const line = displayLines[i];
-        
-        // Strip ANSI escape codes for pattern matching
-        const cleanLine = line.replace(/\x1B\[[0-9;]*m/g, '');
-        
-        // Check if this line represents a token that matches our filter
-        const tokenMatch = cleanLine.match(/(\d+[a-z]\d+)\)/);
-        if (tokenMatch && filteredTokens.includes(tokenMatch[1])) {
-          // Include this line and potentially its parent context
-          
-          // Find the file header for this token
-          const fileNum = tokenMatch[1].match(/^(\d+)/)?.[1];
-          const describeMatch = tokenMatch[1].match(/^(\d+[a-z])/)?.[1];
-          
-          // Add file header if not already added
-          const fileHeaderPattern = new RegExp(`^${fileNum}:\\s`);
-          const fileHeaderIndex = displayLines.findIndex(l => {
-            const cleanL = l.replace(/\x1B\[[0-9;]*m/g, '');
-            return fileHeaderPattern.test(cleanL);
-          });
-          if (fileHeaderIndex !== -1 && !filteredDisplay.includes(displayLines[fileHeaderIndex])) {
-            filteredDisplay.push(displayLines[fileHeaderIndex]);
-          }
-          
-          // Add describe header if not already added
-          const describeHeaderPattern = new RegExp(`^\\s{4}${describeMatch}\\)`);
-          const describeHeaderIndex = displayLines.findIndex(l => {
-            const cleanL = l.replace(/\x1B\[[0-9;]*m/g, '');
-            return describeHeaderPattern.test(cleanL);
-          });
-          if (describeHeaderIndex !== -1 && !filteredDisplay.includes(displayLines[describeHeaderIndex])) {
-            filteredDisplay.push(displayLines[describeHeaderIndex]);
-          }
-          
-          // Add the matching it case line
-          filteredDisplay.push(line);
-        }
-      }
-      
-      return [filteredDisplay.join('\n')];
-    }
-    
-    // OOSH Pattern: Return hierarchical display for bash printf + token extraction
-    // Bash will use printf to show the colored hierarchy to user
-    // Bash will extract clean tokens (5a1, 17b2) for COMPREPLY matching
-    return [result.display.join('\n')];
+    return HierarchicalCompletionFilter.applyPrefixFilter(result, filterPrefix, itCaseTokenPattern);
   }
 
   /**

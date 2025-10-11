@@ -257,22 +257,36 @@ export class TestFileParser {
   }
 
   /**
-   * Format test files with hierarchical structure like describe format
-   * Format: "1:\tfilename.test.ts\n2:\tfilename2.test.ts" (newlines to trigger multi-line OOSH mode)
+   * Get all test files in hierarchical format with tokens for filtering
+   * Returns both display (for visual hierarchy) and tokens (for completion)
+   * 
+   * Display format:
+   * 1:  init-project-source-env.test.ts
+   * 2:  web4tscomponent.cleanup-testpromo.test.ts
+   * 
+   * Token format: ["1", "2", "3", ...]
    */
-  static formatFilesHierarchical(files: TestFile[]): string[] {
+  static getAllFilesHierarchical(testDir: string): {
+    display: string[];
+    tokens: string[];
+  } {
+    const files = TestFileParser.scanTestFiles(testDir);
+    const display: string[] = [];
+    const tokens: string[] = [];
+
     // ANSI color codes (OOSH format for bash completion compatibility)
     const ESC = '\x1b[';
     const cyan = `${ESC}36m`;
     const reset = `${ESC}0m`;
 
-    const lines = files.map((file, fileIndex) => {
+    files.forEach((file, fileIndex) => {
       const fileNum = fileIndex + 1;
-      return `${cyan}${fileNum}:${reset}\t${file.name}`;
+      const token = `${fileNum}`;
+      display.push(`${cyan}${fileNum}:${reset}\t${file.name}`);
+      tokens.push(token);
     });
 
-    // Return as single string with newlines to trigger OOSH multi-line mode
-    return [lines.join('\n')];
+    return { display, tokens };
   }
 
   /**
@@ -372,9 +386,6 @@ export class TestFileParser {
         });
       });
     });
-
-    // Debug: Log tokens for troubleshooting
-    console.error('DEBUG: Generated tokens:', tokens.slice(0, 10));
 
     return { display, tokens };
   }
