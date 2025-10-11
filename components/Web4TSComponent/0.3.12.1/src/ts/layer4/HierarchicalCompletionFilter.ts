@@ -96,7 +96,10 @@ export class HierarchicalCompletionFilter {
       }
     }
 
-    return [filteredDisplay.join('\n')];
+    // Always add a trailing newline to trigger OOSH multi-line display mode
+    // even for single results - this ensures consistent hierarchical display
+    const result = filteredDisplay.join('\n');
+    return [result + (result ? '\n' : '')];
   }
 
   /**
