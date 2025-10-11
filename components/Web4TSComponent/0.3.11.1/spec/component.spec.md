@@ -247,8 +247,8 @@ web4tscomponent create MyComponent 0.1.0.0 all
 ```
 
 **What Happens:**
-- **initProject:** Creates root `tsconfig.json`, `package.json`, global `node_modules` (DRY principle)
-- **create:** Generates component with layered architecture, TypeScript, Vitest, auto-discovery CLI, build scripts, templates
+- **initProject:** Creates root `tsconfig.json`, `package.json`, global `node_modules` ([DRY principle](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-automatic-project-initialization) | [chapters/01-architecture.md](chapters/01-architecture.md#-automatic-project-initialization))
+- **create:** Generates component with layered architecture, TypeScript, Vitest, [auto-discovery CLI](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained) | [chapters/01-architecture.md](chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained), build scripts, templates
 - **Result:** Fully functional component that works exactly like Web4TSComponent itself
 
 **When to Use:** Starting new project or adding new component to existing project
@@ -273,7 +273,7 @@ web4tscomponent test
 **What Happens:**
 - **on:** Loads component metadata into context (path, version, name)
 - **Subsequent commands:** Operate on loaded component instead of self
-- **Chaining:** Multiple operations in single command (recommended for scripting)
+- **Chaining:** Multiple operations in single command (recommended for scripting) - see [Method Chaining](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/04-compliance-and-standards.md#-web4-compliance-principles) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#-web4-compliance-principles)
 
 **When to Use:** Any operation targeting a specific component version
 
@@ -306,7 +306,7 @@ web4tscomponent on MyComponent latest links
 - **test:** Version ready for testing (100% revision testing target)
 - **prod:** Version that achieved 100% testing success
 - **latest:** Stable release (same as prod)
-- **Automatic Promotion:** On 100% test success, systematic version progression
+- **Automatic Promotion:** On 100% test success, systematic version progression - see [100% Test Success Workflow](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/03-testing-and-quality.md#-what-happens-on-100-test-success) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#-what-happens-on-100-test-success)
 
 **When to Use:** All development - this is the systematic Web4 workflow
 
@@ -354,8 +354,8 @@ web4tscomponent on MyComponent test test true  # skipPromotion=true
 ```
 
 **What Happens:**
-- **test:** Runs test suite, logs to `test/logs/`, checks for 100% success
-- **100% Success Triggers:** Automatic promotion workflow (see Use Case 3)
+- **test:** Runs test suite, logs to `test/logs/`, checks for 100% success - see [Testing Specification](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/03-testing-and-quality.md#6-testing-specification) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#6-testing-specification)
+- **100% Success Triggers:** Automatic promotion workflow - see [100% Test Success](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/03-testing-and-quality.md#-what-happens-on-100-test-success) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#-what-happens-on-100-test-success)
 - **< 100% Success:** No promotion, stay on test version, fix issues
 - **releaseTest:** Uses nextMinor instead of nextPatch for major releases
 
@@ -401,8 +401,8 @@ web4tscomponent info overview
 ### Core Capabilities:
 
 1. **Creates versioned TypeScript components** with standardized architecture
-2. **Enforces Web4 architectural principles** (empty constructors, scenario support, layered architecture)
-3. **Auto-discovers CLI commands** from TypeScript methods (no manual CLI configuration)
+2. **Enforces Web4 architectural principles** (empty constructors, scenario support, layered architecture) - see [Web4 Compliance](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/04-compliance-and-standards.md#-web4-compliance-principles) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#-web4-compliance-principles)
+3. **Auto-discovers CLI commands** from TypeScript methods (no manual CLI configuration) - see [Auto-Discovery](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained) | [chapters/01-architecture.md](chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained)
 4. **Manages automatic version promotion workflows** after successful testing
 5. **Enforces DRY principle** (symlinked node_modules, no duplication)
 6. **Provides comprehensive test suites** with isolated test environments
@@ -410,11 +410,11 @@ web4tscomponent info overview
 
 ### Key Features:
 
-- ✅ **Auto-Discovery CLI** - Add methods to component, they appear in CLI automatically
+- ✅ **Auto-Discovery CLI** - Add methods to component, they appear in CLI automatically - [How it works](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained) | [chapters/01-architecture.md](chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained)
 - ✅ **Automatic Lifecycle** - `npm start` handles everything (build, deps, execution)
 - ✅ **Project Initialization** - `initProject` bootstraps any project with Web4 standards
 - ✅ **Version Management** - Semantic versioning with intelligent promotion workflow
-- ✅ **DRY Compliance** - Detects and prevents node_modules duplication
+- ✅ **DRY Compliance** - Detects and prevents node_modules duplication - [DRY Principle](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-automatic-project-initialization) | [chapters/01-architecture.md](chapters/01-architecture.md#-automatic-project-initialization)
 - ✅ **Test Isolation** - ProjectRootMocker ensures tests don't affect production
 - ✅ **Method Chaining** - Fluent API with context-aware operations
 - ✅ **CMM3+ Compliance** - Objective, reproducible, automated verification
