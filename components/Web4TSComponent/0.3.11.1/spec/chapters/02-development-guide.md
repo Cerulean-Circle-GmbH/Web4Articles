@@ -88,7 +88,7 @@ npm start
 **`@cliSyntax paramName anotherParam`**
 - Tells CLI what parameters to expect
 - Generates: `myMethod <paramName> <anotherParam>`
-- **Required for CLI discovery**
+- **Required for CLI discovery** - see [Tab Completion](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#3-tab-completion-architecture) | [chapters/01-architecture.md](chapters/01-architecture.md#3-tab-completion-architecture)
 
 **`@cliDefault paramName defaultValue`**
 - Sets default values for parameters
@@ -354,6 +354,11 @@ async validateStructure(checkLevel: string = 'basic', fixIssues: string = 'false
 
 # Chain with other operations
 ./web4tscomponent on MyComponent 0.1.0.0 validateStructure basic false upgrade nextBuild
+```
+
+---
+
+ponent 0.1.0.0 validateStructure basic false upgrade nextBuild
 ```
 
 ---
