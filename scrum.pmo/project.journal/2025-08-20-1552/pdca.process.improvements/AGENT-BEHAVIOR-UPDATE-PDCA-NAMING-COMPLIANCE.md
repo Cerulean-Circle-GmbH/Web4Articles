@@ -15,7 +15,7 @@ PDCA-descriptive-title-YYYY-MM-DD-UTC-HHMM.md
 
 ### **✅ CORRECT PATTERN (ALWAYS USE):**
 ```
-YYYY-MM-DD-UTC-HHMM-descriptive-title.md
+YYYY-MM-DD-UTC-HHMM.pdca.md
 ```
 
 ---
@@ -23,7 +23,7 @@ YYYY-MM-DD-UTC-HHMM-descriptive-title.md
 ## **📋 MANDATORY NAMING RULES**
 
 ### **1. Timestamp FIRST (NON-NEGOTIABLE)**
-- **Format:** YYYY-MM-DD-UTC-HHMM-descriptive-title.md
+- **Format:** YYYY-MM-DD-UTC-HHMM.pdca.md
 - **Reason:** Chronological ordering in file systems
 - **Example:** 2025-09-18-UTC-0840-session-startup.md
 
@@ -47,7 +47,7 @@ YYYY-MM-DD-UTC-HHMM-descriptive-title.md
 
 ### **When Creating New PDCA:**
 1. **Get current UTC timestamp:** `date -u +"%Y-%m-%d-UTC-%H%M"`
-2. **Use format:** `YYYY-MM-DD-UTC-HHMM-descriptive-title.md`
+2. **Use format:** `YYYY-MM-DD-UTC-HHMM.pdca.md`
 3. **Place in:** `pdca/role/[your-role]/`
 4. **NO "PDCA-" prefix ever**
 

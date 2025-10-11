@@ -1495,27 +1495,6 @@ export abstract class DefaultCLI implements CLI {
     const { join, dirname } = await import('path');
     const { existsSync } = await import('fs');
     
-    // Extract file and describe numbers: ['test', 'itCase', '2', '1', ...]
-    const fileNumStr = currentArgs[2];
-    const describeNumStr = currentArgs[3];
-    
-    if (!fileNumStr) {
-      // No file number yet → show FILE list first
-      return this.getTestFileReferences(currentArgs);
-    }
-    
-    if (!describeNumStr) {
-      // Has file, no describe → show DESCRIBE list for that file
-      return this.getTestDescribeReferences(currentArgs);
-    }
-    
-    const fileNum = parseInt(fileNumStr, 10);
-    const describeNum = parseInt(describeNumStr, 10);
-    
-    if (isNaN(fileNum) || isNaN(describeNum)) {
-      return [];
-    }
-    
     // Get test directory
     const component = (this as any).getOrCreateTSComponent();
     const context = component.getComponentContext();
@@ -1533,17 +1512,13 @@ export abstract class DefaultCLI implements CLI {
       return [];
     }
     
-    // Get test files and target file
-    const testFiles = TestFileParser.scanTestFiles(testDir);
-    const targetFile = TestFileParser.getFileByNumber(testFiles, fileNum);
+    // Get all it cases in hierarchical format
+    const result = TestFileParser.getAllItCasesHierarchical(testDir);
     
-    if (!targetFile) {
-      return [];
-    }
-    
-    // Parse it cases for the specific describe block
-    const itCases = TestFileParser.parseItCases(targetFile.absolutePath, describeNum - 1);
-    return TestFileParser.formatItCasesForCompletion(itCases);
+    // OOSH Pattern: Return hierarchical display for bash printf + token extraction
+    // Bash will use printf to show the colored hierarchy to user
+    // Bash will extract clean tokens (5a1, 17b2) for COMPREPLY matching
+    return [result.display.join('\n')];
   }
 
   /**

@@ -313,18 +313,68 @@ export class TestFileParser {
   }
 
   /**
-   * Get all describe blocks from all test files in hierarchical format
+   * Get all it cases from all test files in hierarchical format
    * Returns both display (for visual hierarchy) and tokens (for completion)
    * 
    * Display format:
    * 5:  web4tscomponent.dirtpig-detection.test.ts
    *       a) 🧽 Dirtpig Detection Tests
+   *         a1) should detect dirtpig patterns
+   *         a2) should clean up after detection
    * 17: web4tscomponent.version-promotion.test.ts
    *       a) 🚀 Web4TSComponent Version Promotion Tests
+   *         a1) should promote version correctly
+   *         a2) should handle edge cases
    *       b) Version Promotion Isolation
+   *         b1) should isolate promotion process
    * 
-   * Token format: ["5a", "17a", "17b"]
+   * Token format: ["5a1", "5a2", "17a1", "17a2", "17b1"]
    */
+  static getAllItCasesHierarchical(testDir: string): {
+    display: string[];
+    tokens: string[];
+  } {
+    const files = TestFileParser.scanTestFiles(testDir);
+    const display: string[] = [];
+    const tokens: string[] = [];
+
+    // ANSI color codes (OOSH format for bash completion compatibility)
+    const ESC = '\x1b[';
+    const cyan = `${ESC}36m`;
+    const green = `${ESC}32m`;
+    const yellow = `${ESC}33m`;
+    const reset = `${ESC}0m`;
+
+    files.forEach((file, fileIndex) => {
+      const fileNum = fileIndex + 1;
+      const describes = TestFileParser.parseDescribeBlocks(file.absolutePath);
+
+      if (describes.length === 0) {
+        return; // Skip files with no describe blocks
+      }
+
+      // Add file header (colored file number)
+      display.push(`${cyan}${fileNum}:${reset}\t${file.name}`);
+
+      // Add describe blocks with their it cases
+      describes.forEach((desc, descIndex) => {
+        const letter = String.fromCharCode('a'.charCodeAt(0) + descIndex);
+        display.push(`    ${cyan}${fileNum}${letter})${reset} ${desc.name}`);
+        
+        // Get it cases for this describe block
+        const itCases = TestFileParser.parseItCases(file.absolutePath, descIndex);
+        
+        itCases.forEach((itCase, itIndex) => {
+          const itNum = itIndex + 1;
+          const token = `${fileNum}${letter}${itNum}`;
+          display.push(`           ${cyan}${fileNum}${green}${letter}${yellow}${itNum})${reset} ${itCase.name}`);
+          tokens.push(token);
+        });
+      });
+    });
+
+    return { display, tokens };
+  }
   static getAllDescribesHierarchical(testDir: string): {
     display: string[];
     tokens: string[];

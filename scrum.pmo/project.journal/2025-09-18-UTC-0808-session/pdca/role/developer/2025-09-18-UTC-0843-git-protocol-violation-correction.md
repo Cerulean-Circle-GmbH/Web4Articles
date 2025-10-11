@@ -181,7 +181,7 @@ Protocol compliance: Maintain atomic, specific git operations
 # CORRECT approach for future operations:
 git add specific/file/path.ext
 git add another/specific/file.ext
-git commit -m "descriptive commit message"
+git commit -m "PDCA title, feature reference or short commit message"
 git push origin branch-name
 ```
 
