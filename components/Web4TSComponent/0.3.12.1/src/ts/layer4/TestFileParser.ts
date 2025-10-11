@@ -258,24 +258,21 @@ export class TestFileParser {
 
   /**
    * Format test files with hierarchical structure like describe format
-   * Format: "1:\tfilename.test.ts" (tab-aligned to prevent jumping)
+   * Format: "1:\tfilename.test.ts\n2:\tfilename2.test.ts" (newlines to trigger multi-line OOSH mode)
    */
   static formatFilesHierarchical(files: TestFile[]): string[] {
-    const display: string[] = [];
-    
     // ANSI color codes (OOSH format for bash completion compatibility)
     const ESC = '\x1b[';
     const cyan = `${ESC}36m`;
     const reset = `${ESC}0m`;
 
-    files.forEach((file, fileIndex) => {
+    const lines = files.map((file, fileIndex) => {
       const fileNum = fileIndex + 1;
-      
-      // Add file header with tab alignment to prevent jumping
-      display.push(`${cyan}${fileNum}:${reset}\t${file.name}`);
+      return `${cyan}${fileNum}:${reset}\t${file.name}`;
     });
 
-    return display;
+    // Return as single string with newlines to trigger OOSH multi-line mode
+    return [lines.join('\n')];
   }
 
   /**
