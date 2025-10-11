@@ -2476,7 +2476,7 @@ Standards:
       : process.cwd();
     
     try {
-      execSync(`npx vitest ${path.join('test', targetFile.name)}`, {
+      execSync(`npx vitest --run ${path.join('test', targetFile.name)}`, {
         cwd,
         stdio: 'inherit',
         encoding: 'utf-8'
@@ -2540,7 +2540,7 @@ Standards:
       : process.cwd();
     
     try {
-      execSync(`npx vitest -t "${describe.name}"`, {
+      execSync(`npx vitest --run -t "${describe.name}"`, {
         cwd,
         stdio: 'inherit',
         encoding: 'utf-8'
@@ -2623,7 +2623,7 @@ Standards:
       : process.cwd();
     
     try {
-      execSync(`npx vitest -t "${targetIt.name}"`, {
+      execSync(`npx vitest --run -t "${targetIt.name}"`, {
         cwd,
         stdio: 'inherit',
         encoding: 'utf-8'
