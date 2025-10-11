@@ -1645,36 +1645,37 @@ Standards:
   }
 
   /**
-   * Run tests with major release promotion (nextMinor instead of nextPatch)
-   * Same as test() but on 100% success promotes using nextMinor for major version bump
-   * Use this for significant releases with breaking changes or major new features
+   * Run tests with configurable release promotion 
+   * Same as test() but on 100% success promotes using specified promotion level
    * 
    * Two-stage workflow:
    * - Stage 1: dev → test (nextBuild) - same as test()
-   * - Stage 2: test → prod (nextMinor) + new dev (nextBuild) - MAJOR RELEASE
-   * Example: 0.3.4.2 → 0.4.0.0 (prod), 0.4.0.1 (dev/test)
+   * - Stage 2: test → prod (specified promotion) + new dev (nextBuild)
    * 
-   * @param skipPromotion Optional flag to skip version promotion (for testing/development)
-   * @cliSyntax skipPromotion
-   * @cliDefault skipPromotion false
+   * @param successPromotion Promotion level on test success: nextPatch, nextMinor, or nextMajor
+   * @cliSyntax successPromotion
+   * @cliDefault successPromotion nextPatch
+   * @cliCompletion successPromotion successPromotionParameterCompletion
    * @cliExample web4tscomponent releaseTest
-   * @cliExample web4tscomponent releaseTest withoutVersionPromotion
-   * @cliExample web4tscomponent on Unit 0.3.0.5 releaseTest
+   * @cliExample web4tscomponent releaseTest nextMinor
+   * @cliExample web4tscomponent on Unit 0.3.0.5 releaseTest nextMajor
    */
-  async releaseTest(skipPromotion: string = 'false'): Promise<this> {
+  async releaseTest(successPromotion: string = 'nextPatch'): Promise<this> {
     const context = this.getComponentContext();
-    const shouldSkipPromotion = skipPromotion === 'withoutVersionPromotion' || skipPromotion === 'true';
+    const validPromotions = ['nextPatch', 'nextMinor', 'nextMajor'];
+    
+    if (!validPromotions.includes(successPromotion)) {
+      console.error(`❌ Invalid promotion level: ${successPromotion}`);
+      console.log(`💡 Valid options: ${validPromotions.join(', ')}`);
+      throw new Error(`Invalid promotion level`);
+    }
     
     // WORKFLOW REMINDER: Always work on dev → test → dev cycle
-    console.log(`\n🔄 MAJOR RELEASE TEST WORKFLOW:`);
+    console.log(`\n🔄 RELEASE TEST WORKFLOW (${successPromotion.toUpperCase()}):`);
     console.log(`   🚧 ALWAYS work on dev version until you run releaseTest`);
     console.log(`   🧪 ALWAYS work on test version until test succeeds`);  
-    console.log(`   🚀 On 100% success: Promotes using nextMinor (MAJOR release)`);
+    console.log(`   🚀 On 100% success: Promotes using ${successPromotion}`);
     console.log(`   🚧 ALWAYS work on dev version after test success\n`);
-    
-    if (shouldSkipPromotion) {
-      console.log(`⚠️  Version promotion disabled for this test run\n`);
-    }
     
     if (!context) {
       // No context - run Web4TSComponent's own tests
@@ -1767,20 +1768,16 @@ Standards:
       
       console.log(`✅ Tests completed for ${context.component} ${targetVersion}`);
       
-      // Check for RELEASE promotion opportunity
-      if (shouldSkipPromotion) {
-        console.log(`⚠️  Skipping promotion (disabled by user)`);
+      // RELEASE promotion based on successPromotion level
+      const semanticLinks = await this.getSemanticLinks(context.component);
+      const currentTest = semanticLinks.test;
+      
+      if (targetVersion !== currentTest) {
+        // Stage 1: This is a dev version, promote to test
+        await this.handleFirstTestRun(context.component, targetVersion);
       } else {
-        const semanticLinks = await this.getSemanticLinks(context.component);
-        const currentTest = semanticLinks.test;
-        
-        if (targetVersion !== currentTest) {
-          // Stage 1: This is a dev version, promote to test
-          await this.handleFirstTestRun(context.component, targetVersion);
-        } else {
-          // Stage 2 RELEASE: This is the test version, use nextMinor
-          await this.handleReleaseTestSuccessPromotion(context.component, targetVersion);
-        }
+        // Stage 2 RELEASE: This is the test version, use specified promotion level
+        await this.handleReleaseTestSuccessPromotion(context.component, targetVersion, successPromotion);
       }
       
     } catch (error) {

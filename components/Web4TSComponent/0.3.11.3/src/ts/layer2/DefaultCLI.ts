@@ -1166,11 +1166,20 @@ export abstract class DefaultCLI implements CLI {
 
   /**
    * Fundamental parameter completion: skipPromotion (boolean flag)
-   * Used by: test, releaseTest, and any method with skipPromotion parameter
+   * Used by: test, and any method with skipPromotion parameter
    * @cliHide
    */
   async skipPromotionParameterCompletion(currentArgs: string[]): Promise<string[]> {
     return ['true', 'false'];
+  }
+
+  /**
+   * Fundamental parameter completion: successPromotion (promotion level)
+   * Used by: releaseTest for configurable promotion levels
+   * @cliHide
+   */
+  async successPromotionParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    return ['nextPatch', 'nextMinor', 'nextMajor'];
   }
 
   /**
