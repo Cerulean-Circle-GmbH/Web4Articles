@@ -56,6 +56,8 @@ if (!context) {
 }
 ```
 
+**Related:** See [Context-Aware Methods](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/02-development-guide.md#-context-aware-methods-advanced-pattern) | [chapters/02-development-guide.md](chapters/02-development-guide.md#-context-aware-methods-advanced-pattern) for pattern details
+
 ### Component Won't Build?
 
 ```bash
