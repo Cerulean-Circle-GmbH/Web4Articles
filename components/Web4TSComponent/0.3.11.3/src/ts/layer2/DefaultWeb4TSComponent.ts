@@ -1703,23 +1703,19 @@ Standards:
       }
       
       // 🎯 SELF-PROMOTION: After tests complete, handle RELEASE version promotion
-      if (shouldSkipPromotion) {
-        console.log(`\n⚠️  Skipping promotion (disabled by user)`);
+      console.log(`\n🔍 Checking for RELEASE promotion opportunity...`);
+      const currentVersion = await this.getCurrentVersion();
+      
+      // Determine which promotion stage to apply
+      const semanticLinks = await this.getSemanticLinks('Web4TSComponent');
+      const currentTest = semanticLinks.test;
+      
+      if (currentVersion !== currentTest) {
+        // Stage 1: This is a dev version, promote to test
+        await this.handleFirstTestRun('Web4TSComponent', currentVersion);
       } else {
-        console.log(`\n🔍 Checking for RELEASE promotion opportunity...`);
-        const currentVersion = await this.getCurrentVersion();
-        
-        // Determine which promotion stage to apply
-        const semanticLinks = await this.getSemanticLinks('Web4TSComponent');
-        const currentTest = semanticLinks.test;
-        
-        if (currentVersion !== currentTest) {
-          // Stage 1: This is a dev version, promote to test
-          await this.handleFirstTestRun('Web4TSComponent', currentVersion);
-        } else {
-          // Stage 2 RELEASE: This is the test version, use nextMinor
-          await this.handleReleaseTestSuccessPromotion('Web4TSComponent', currentVersion);
-        }
+        // Stage 2 RELEASE: This is the test version, use specified promotion level
+        await this.handleReleaseTestSuccessPromotion('Web4TSComponent', currentVersion, successPromotion);
       }
       
       return this;
@@ -1795,9 +1791,9 @@ Standards:
    * Used by releaseTest() for major version releases
    * @cliHide
    */
-  async handleReleaseTestSuccessPromotion(componentName: string, currentVersion: string): Promise<void> {
+  async handleReleaseTestSuccessPromotion(componentName: string, currentVersion: string, promotionLevel: string = 'nextPatch'): Promise<void> {
     console.log(`\n🎯 Analyzing release test success for version promotion...`);
-    console.log(`📋 MAJOR RELEASE MODE: Will use nextMinor (not nextPatch)`);
+    console.log(`📋 RELEASE MODE: Will use ${promotionLevel.toUpperCase()}`);
     
     // Safety check: verify this version is currently 'test'
     const semanticLinks = await this.getSemanticLinks(componentName);
@@ -1826,26 +1822,40 @@ Standards:
     }
     
     console.log(`🚀 100% test success confirmed! Starting Stage 2 RELEASE promotion workflow...`);
-    console.log(`📋 Workflow Stage 2 (Release): test → prod (nextMinor) + new dev (nextBuild)`);
+    console.log(`📋 Workflow Stage 2 (Release): test → prod (${promotionLevel}) + new dev (nextBuild)`);
     
     try {
-      // Step 1: Create nextMinor version from current (test becomes prod - MAJOR RELEASE)
-      console.log(`\n🔧 Step 1: Creating nextMinor version from ${currentVersion}...`);
-      const nextMinorVersion = await this.createNextMinorVersion(componentName, currentVersion);
+      // Step 1: Create promotion version from current (based on promotion level)
+      console.log(`\n🔧 Step 1: Creating ${promotionLevel} version from ${currentVersion}...`);
       
-      // Step 2: Set nextMinor as new prod
-      console.log(`\n🚀 Step 2: Promoting ${nextMinorVersion} to prod (MAJOR RELEASE)...`);
-      await this.createSemanticLink(componentName, 'prod', nextMinorVersion);
-      console.log(`✅ Prod updated: prod → ${nextMinorVersion}`);
+      let newProdVersion: string;
+      switch (promotionLevel) {
+        case 'nextPatch':
+          newProdVersion = await this.createNextPatchVersion(componentName, currentVersion);
+          break;
+        case 'nextMinor':
+          newProdVersion = await this.createNextMinorVersion(componentName, currentVersion);
+          break;
+        case 'nextMajor':
+          newProdVersion = await this.createNextMajorVersion(componentName, currentVersion);
+          break;
+        default:
+          throw new Error(`Invalid promotion level: ${promotionLevel}`);
+      }
       
-      // Step 3: Update latest to nextMinor (the new stable)
+      // Step 2: Set new version as prod
+      console.log(`\n🚀 Step 2: Promoting ${newProdVersion} to prod (${promotionLevel.toUpperCase()})...`);
+      await this.createSemanticLink(componentName, 'prod', newProdVersion);
+      console.log(`✅ Prod updated: prod → ${newProdVersion}`);
+      
+      // Step 3: Update latest to new stable version
       console.log(`\n📦 Step 3: Updating latest to stable version...`);
-      await this.createSemanticLink(componentName, 'latest', nextMinorVersion);
-      console.log(`✅ Latest updated: latest → ${nextMinorVersion}`);
+      await this.createSemanticLink(componentName, 'latest', newProdVersion);
+      console.log(`✅ Latest updated: latest → ${newProdVersion}`);
       
       // Step 4: Create nextBuild version for new development cycle
       console.log(`\n🔧 Step 4: Creating nextBuild version for development...`);
-      const nextBuildVersion = await this.createNextBuildVersion(componentName, nextMinorVersion);
+      const nextBuildVersion = await this.createNextBuildVersion(componentName, newProdVersion);
       
       // Step 5: Set nextBuild as new dev and test
       console.log(`\n🚧 Step 5: Setting up development workflow...`);
