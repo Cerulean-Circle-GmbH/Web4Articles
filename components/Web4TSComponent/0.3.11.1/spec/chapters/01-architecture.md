@@ -111,6 +111,8 @@ The system is **resilient** and automatically fixes corrupted configs:
 // 3. That's it! No configuration needed.
 ```
 
+**Related:** See [API Extension](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/02-development-guide.md#4-api-extension-specification) | [chapters/02-development-guide.md](chapters/02-development-guide.md#4-api-extension-specification) for how to add your own methods
+
 ### How Does It Know?
 
 **Web4TSComponent has MAGIC:**
@@ -572,6 +574,10 @@ BASH: displays all components for user to choose
 - **Chaining is seamless** - After last parameter, methods complete again
 
 **This is what CMM4 looks like. This is simplexity. This is Web4.** 🎯
+
+**Related Topics:**
+- [TSDoc Annotations](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/02-development-guide.md#-tsdoc-magic-the-3-lines-that-make-it-work) | [chapters/02-development-guide.md](chapters/02-development-guide.md#-tsdoc-magic-the-3-lines-that-make-it-work) - How to make methods discoverable
+- [Method Chaining](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/04-compliance-and-standards.md#-web4-compliance-principles) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#-web4-compliance-principles) - Web4 compliance requirement
 
 ---
 
