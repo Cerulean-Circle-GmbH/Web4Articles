@@ -12,15 +12,22 @@
 ## Table of Contents
 
 ### Part 1: Understanding (Read First)
-- **[Chapter 1: Architecture](chapters/01-architecture.md)** - How the system works internally
-- **[Chapter 2: Development Guide](chapters/02-development-guide.md)** - How to extend and develop
+- **Chapter 1: Architecture** - How the system works internally  
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md) | [chapters/01-architecture.md](chapters/01-architecture.md)
+
+- **Chapter 2: Development Guide** - How to extend and develop  
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/02-development-guide.md) | [chapters/02-development-guide.md](chapters/02-development-guide.md)
 
 ### Part 2: Doing (Actionable Guides)
-- **[Chapter 3: Testing & Quality](chapters/03-testing-and-quality.md)** - How to test and validate
-- **[Chapter 5: Troubleshooting](chapters/05-troubleshooting.md)** - How to fix issues
+- **Chapter 3: Testing & Quality** - How to test and validate  
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/03-testing-and-quality.md) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md)
+
+- **Chapter 5: Troubleshooting** - How to fix issues  
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/05-troubleshooting.md) | [chapters/05-troubleshooting.md](chapters/05-troubleshooting.md)
 
 ### Part 3: Requirements (Reference)
-- **[Chapter 4: Compliance & Standards](chapters/04-compliance-and-standards.md)** - Requirements and verification
+- **Chapter 4: Compliance & Standards** - Requirements and verification  
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/04-compliance-and-standards.md) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md)
 
 ---
 
