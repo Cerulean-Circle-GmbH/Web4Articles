@@ -279,12 +279,16 @@ export class TestFileParser {
     const cyan = `${ESC}36m`;
     const reset = `${ESC}0m`;
 
+    const lines: string[] = [];
     files.forEach((file, fileIndex) => {
       const fileNum = fileIndex + 1;
       const token = `${fileNum}`;
-      display.push(`${cyan}${fileNum}:${reset}\t${file.name}`);
+      lines.push(`${cyan}${fileNum}:${reset}\t${file.name}`);
       tokens.push(token);
     });
+
+    // Return as single string with newlines to trigger OOSH multi-line mode
+    display.push(lines.join('\n'));
 
     return { display, tokens };
   }

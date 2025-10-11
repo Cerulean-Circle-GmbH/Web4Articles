@@ -55,8 +55,13 @@ export class HierarchicalCompletionFilter {
     const filteredDisplay: string[] = [];
     const addedContexts = new Set<string>();
 
-    for (let i = 0; i < displayLines.length; i++) {
-      const line = displayLines[i];
+    // Handle case where displayLines contains a single string with newlines (file completion)
+    const allLines = displayLines.length === 1 && displayLines[0].includes('\n') 
+      ? displayLines[0].split('\n')
+      : displayLines;
+
+    for (let i = 0; i < allLines.length; i++) {
+      const line = allLines[i];
       
       // Strip ANSI escape codes for pattern matching
       const cleanLine = line.replace(/\x1B\[[0-9;]*m/g, '');
@@ -70,7 +75,7 @@ export class HierarchicalCompletionFilter {
         // For describe patterns like "a)", we need to find the file number from context
         if (tokenPattern.source.includes('[a-z]\\)') && !tokenPattern.source.includes('[0-9]+')) {
           // This is a describe pattern like "a)" - need to find file context
-          const fileContext = this.findFileContext(displayLines, i);
+          const fileContext = this.findFileContext(allLines, i);
           if (fileContext) {
             fullToken = `${fileContext}${tokenMatch[1]}`;
           }
@@ -79,7 +84,7 @@ export class HierarchicalCompletionFilter {
         if (filteredTokens.includes(fullToken)) {
           // Add hierarchical context based on token structure
           this.addHierarchicalContext(
-            displayLines, 
+            allLines, 
             fullToken, 
             filteredDisplay, 
             addedContexts

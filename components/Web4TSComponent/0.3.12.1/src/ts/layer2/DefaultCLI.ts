@@ -1451,7 +1451,7 @@ export abstract class DefaultCLI implements CLI {
     
     // Apply DRY Web4 filtering pattern
     const filterPrefix = currentArgs[2];
-    const fileTokenPattern = /(\d+):/; // Pattern to match file tokens in display like "1:", "17:"
+    const fileTokenPattern = /^(\d+):/; // Pattern to match file tokens in display like "1:", "17:"
     
     return HierarchicalCompletionFilter.applyPrefixFilter(result, filterPrefix, fileTokenPattern);
   }
