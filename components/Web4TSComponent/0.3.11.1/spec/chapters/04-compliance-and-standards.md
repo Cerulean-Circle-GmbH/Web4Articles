@@ -61,6 +61,8 @@ ln -sf ../../../node_modules node_modules
 npm install  # without proper symlink setup
 ```
 
+**Related:** See [Automatic Project Initialization](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-automatic-project-initialization) | [chapters/01-architecture.md](chapters/01-architecture.md#-automatic-project-initialization) for how DRY is enforced
+
 ---
 
 ## 🚀 Quick Reference
@@ -99,9 +101,9 @@ npm run clean  # Clean and rebuild
 
 ### Auto-Discovery Architecture:
 
-1. **CLI scans DefaultWeb4TSComponent** using TypeScript reflection
+1. **CLI scans DefaultWeb4TSComponent** using TypeScript reflection - see [Architecture](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained) | [chapters/01-architecture.md](chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained)
 2. **Finds all public methods** automatically
-3. **Reads TSDoc comments** for parameter information
+3. **Reads TSDoc comments** for parameter information - see [TSDoc Magic](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/02-development-guide.md#-tsdoc-magic-the-3-lines-that-make-it-work) | [chapters/02-development-guide.md](chapters/02-development-guide.md#-tsdoc-magic-the-3-lines-that-make-it-work)
 4. **Generates help text** from your comments
 5. **Routes commands** to your methods automatically
 
