@@ -8,6 +8,54 @@
 
 ---
 
+## 🔄 Development Workflow Reminder
+
+Web4TSComponent enforces a **systematic development workflow**:
+
+```
+🔄 WORKFLOW CYCLE:
+
+1. 🚧 Work on dev version
+   → Implement features
+   → Add methods
+   → Fix issues
+
+2. 🧪 Run test on dev version
+   → If dev === test: auto-creates nextBuild
+   → Switches context to new build
+   → Runs tests
+
+3. ✅ Tests Pass (100%):
+   → Automatic version promotion
+   → New prod version created
+   → New dev version ready
+   → Continue at step 1
+
+4. ❌ Tests Fail:
+   → Stay on test version
+   → Fix issues
+   → Re-run tests
+   → Loop until success
+```
+
+### Never Do This:
+
+- ❌ Work directly on prod version
+- ❌ Skip testing before promotion
+- ❌ Manually edit version numbers
+- ❌ Create real node_modules directories
+- ❌ Break the test → dev cycle
+- ❌ Edit CLI files manually
+
+### Always Do This:
+
+- ✅ Work on dev until ready to test
+- ✅ Test thoroughly before promotion
+- ✅ Use automatic version promotion
+- ✅ Maintain symlinked node_modules
+- ✅ Follow the systematic workflow
+- ✅ Use `npm start` for components
+
 ## 6. Testing Specification
 
 ### Simple Test Command:
@@ -214,56 +262,6 @@ Version 0.3.3.2 includes **12 test suites** with sequential execution (prevents 
 - **beforeEach** - Clean test environment for each test
 - **afterEach** - Clean up test data after each test
 - **No Production Impact** - Tests never touch production components
-
----
-
-## 🔄 Development Workflow Reminder
-
-Web4TSComponent enforces a **systematic development workflow**:
-
-```
-🔄 WORKFLOW CYCLE:
-
-1. 🚧 Work on dev version
-   → Implement features
-   → Add methods
-   → Fix issues
-
-2. 🧪 Run test on dev version
-   → If dev === test: auto-creates nextBuild
-   → Switches context to new build
-   → Runs tests
-
-3. ✅ Tests Pass (100%):
-   → Automatic version promotion
-   → New prod version created
-   → New dev version ready
-   → Continue at step 1
-
-4. ❌ Tests Fail:
-   → Stay on test version
-   → Fix issues
-   → Re-run tests
-   → Loop until success
-```
-
-### Never Do This:
-
-- ❌ Work directly on prod version
-- ❌ Skip testing before promotion
-- ❌ Manually edit version numbers
-- ❌ Create real node_modules directories
-- ❌ Break the test → dev cycle
-- ❌ Edit CLI files manually
-
-### Always Do This:
-
-- ✅ Work on dev until ready to test
-- ✅ Test thoroughly before promotion
-- ✅ Use automatic version promotion
-- ✅ Maintain symlinked node_modules
-- ✅ Follow the systematic workflow
-- ✅ Use `npm start` for components
 
 ---
 
