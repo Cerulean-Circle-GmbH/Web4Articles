@@ -9,8 +9,8 @@
 ## Summary
 
 **Artifact Links:**
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/session/2025-10-12-UTC-0230-methodsignature-elimination-catastrophic-failure.pdca.md) | [§/components/Web4TSComponent/0.3.13.1/session/2025-10-12-UTC-0230-methodsignature-elimination-catastrophic-failure.pdca.md](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/session/2025-10-12-UTC-0230-methodsignature-elimination-catastrophic-failure.pdca.md)
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md) | [§/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md)
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/session/2025-10-12-UTC-0230-methodsignature-elimination-catastrophic-failure.pdca.md) | [§/components/Web4TSComponent/0.3.13.1/session/2025-10-12-UTC-0230-methodsignature-elimination-catastrophic-failure.pdca.md](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/session/2025-10-12-UTC-0230-methodsignature-elimination-catastrophic-failure.pdca.md)
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md) | [§/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md)
 
 **QA Decisions:**
 - [ ] Decision 1: Revert all changes and lose 969 lines of completed features
@@ -47,8 +47,8 @@
 
 | File | Timestamp (Estimated) | Changes |
 |------|----------------------|---------|
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) | ~2025-10-12 00:45 | Removed MethodSignature import, eliminated methodSignatures Map, added getMethodByName reflection |
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer5/Web4TSComponentCLI.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer5/Web4TSComponentCLI.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer5/Web4TSComponentCLI.ts) | ~2025-10-12 00:50 | Removed duplicate MethodSignature interface, removed methodSignatures field |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) | ~2025-10-12 00:45 | Removed MethodSignature import, eliminated methodSignatures Map, added getMethodByName reflection |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer5/Web4TSComponentCLI.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer5/Web4TSComponentCLI.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer5/Web4TSComponentCLI.ts) | ~2025-10-12 00:50 | Removed duplicate MethodSignature interface, removed methodSignatures field |
 | **DELETED:** MethodSignature.interface.ts | ~2025-10-12 01:00 | Completely removed file (LOST FOREVER) |
 
 #### 2. DRY Parameter Consolidation  
@@ -57,8 +57,8 @@
 
 | File | Timestamp (Estimated) | Changes |
 |------|----------------------|---------|
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts) | ~2025-10-12 01:15 | Renamed componentName parameter to component in removeVersion/removeComponent |
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) | ~2025-10-12 01:20 | Added getCommandsUsingParameterDRY method, made it public for reuse |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts) | ~2025-10-12 01:15 | Renamed componentName parameter to component in removeVersion/removeComponent |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) | ~2025-10-12 01:20 | Added getCommandsUsingParameterDRY method, made it public for reuse |
 
 #### 3. CI/CD Method Refactoring
 **Implementation:** setDev, setLatest, setProd, setTest → unified setCICDVersion, old methods now thin wrappers with @deprecated annotations  
@@ -66,7 +66,7 @@
 
 | File | Timestamp (Estimated) | Changes |
 |------|----------------------|---------|
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts) | ~2025-10-12 01:30 | Added setCICDVersion method, migrated setLatest/setDev/setProd/setTest to use it |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts) | ~2025-10-12 01:30 | Added setCICDVersion method, migrated setLatest/setDev/setProd/setTest to use it |
 
 #### 4. Enhanced Parameter Documentation
 **Implementation:** ! prefix for parameters without completion (!<?param>), "Used By:" cross-reference lines showing which commands use each parameter  
@@ -74,7 +74,7 @@
 
 | File | Timestamp (Estimated) | Changes |
 |------|----------------------|---------|
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) | ~2025-10-12 01:45 | Modified generateParameterSyntax to add ! prefix, added assembleParameterSection "Used By:" logic |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) | ~2025-10-12 01:45 | Modified generateParameterSyntax to add ! prefix, added assembleParameterSection "Used By:" logic |
 
 #### 5. New Commands Added
 **Implementation:** discover <parameter> - dynamically discover and test parameter completions, auto-discovery context resolution (no hardcoded lookup tables)  
@@ -82,8 +82,8 @@
 
 | File | Timestamp (Estimated) | Changes |
 |------|----------------------|---------|
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts) | ~2025-10-12 02:00 | Added discover method, discoverParameterContext method with auto-discovery |
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) | ~2025-10-12 02:05 | Added parameterParameterCompletion method |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts) | ~2025-10-12 02:00 | Added discover method, discoverParameterContext method with auto-discovery |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) | ~2025-10-12 02:05 | Added parameterParameterCompletion method |
 
 #### 6. Version Resolution for Create
 **Implementation:** create command now accepts versionType (nextMinor, nextPatch, etc.), resolves versions dynamically instead of requiring literal versions  
@@ -91,8 +91,8 @@
 
 | File | Timestamp (Estimated) | Changes |
 |------|----------------------|---------|
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts) | ~2025-10-12 02:10 | Added resolveVersionForCreate, getBaseVersionForNewComponent methods, modified create method |
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) | ~2025-10-12 02:12 | Added createVersionParameterCompletion method |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultWeb4TSComponent.ts) | ~2025-10-12 02:10 | Added resolveVersionForCreate, getBaseVersionForNewComponent methods, modified create method |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) | ~2025-10-12 02:12 | Added createVersionParameterCompletion method |
 
 #### 7. Test Updates
 **Implementation:** All legacy method calls updated to use new setCICDVersion, fixed test expectations for reflection-based approach  
@@ -100,11 +100,11 @@
 
 | File | Timestamp (Estimated) | Changes |
 |------|----------------------|---------|
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.consolidated-story.test.ts) \| [§/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.consolidated-story.test.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.consolidated-story.test.ts) | ~2025-10-12 02:15 | Changed discoverMethods expectation to getMethodByName |
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.test-story.test.ts) \| [§/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.test-story.test.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.test-story.test.ts) | ~2025-10-12 02:16 | Updated setLatest/setDev calls to setCICDVersion |
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.test-success-verification.test.ts) \| [§/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.test-success-verification.test.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.test-success-verification.test.ts) | ~2025-10-12 02:17 | Updated legacy method calls |
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.two-stage-promotion.test.ts) \| [§/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.two-stage-promotion.test.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.two-stage-promotion.test.ts) | ~2025-10-12 02:18 | Updated 14 legacy method calls to setCICDVersion |
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.version-promotion.test.ts) \| [§/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.version-promotion.test.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.version-promotion.test.ts) | ~2025-10-12 02:19 | Updated legacy method calls |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.consolidated-story.test.ts) \| [§/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.consolidated-story.test.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.consolidated-story.test.ts) | ~2025-10-12 02:15 | Changed discoverMethods expectation to getMethodByName |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.test-story.test.ts) \| [§/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.test-story.test.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.test-story.test.ts) | ~2025-10-12 02:16 | Updated setLatest/setDev calls to setCICDVersion |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.test-success-verification.test.ts) \| [§/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.test-success-verification.test.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.test-success-verification.test.ts) | ~2025-10-12 02:17 | Updated legacy method calls |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.two-stage-promotion.test.ts) \| [§/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.two-stage-promotion.test.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.two-stage-promotion.test.ts) | ~2025-10-12 02:18 | Updated 14 legacy method calls to setCICDVersion |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.version-promotion.test.ts) \| [§/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.version-promotion.test.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/test/web4tscomponent.version-promotion.test.ts) | ~2025-10-12 02:19 | Updated legacy method calls |
 
 ### 💥 BROKEN FEATURES (MY FAULT):
 
@@ -114,7 +114,7 @@
 
 | File | Timestamp (Estimated) | Damage |
 |------|----------------------|--------|
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) | ~2025-10-12 02:25 | Broke getMethodByName by trying to instantiate component instead of using prototype |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer2/DefaultCLI.ts) | ~2025-10-12 02:25 | Broke getMethodByName by trying to instantiate component instead of using prototype |
 
 #### 2. Constructor Hanging  
 **Problem:** I broke the constructor with unnecessary component instantiation  
@@ -122,7 +122,7 @@
 
 | File | Timestamp (Estimated) | Damage |
 |------|----------------------|--------|
-| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer5/Web4TSComponentCLI.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer5/Web4TSComponentCLI.ts](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer5/Web4TSComponentCLI.ts) | ~2025-10-12 02:27 | Added `new DefaultWeb4TSComponent()` in constructor causing hang |
+| [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/src/ts/layer5/Web4TSComponentCLI.ts) \| [§/components/Web4TSComponent/0.3.13.1/src/ts/layer5/Web4TSComponentCLI.ts](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/src/ts/layer5/Web4TSComponentCLI.ts) | ~2025-10-12 02:27 | Added `new DefaultWeb4TSComponent()` in constructor causing hang |
 
 #### 3. Basic Commands  
 **Problem:** create, completeParameter, etc. all broken due to method resolution failure  

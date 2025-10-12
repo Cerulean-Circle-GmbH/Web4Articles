@@ -78,4 +78,4 @@ AI Agent
 ---
 
 **Dual Links:**
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md) | [§/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md](file:///Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md)
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md) | [§/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md)
