@@ -120,8 +120,8 @@ describe('🧪 Test Success Verification', () => {
       await component.on(testComponentName, testVersion);
       
       // Set up as test version
-      await component.setTest(testVersion);
-      await component.setDev(testVersion);
+      await component.setCICDVersion('setTest',testVersion);
+      await component.setCICDVersion('setDev',testVersion);
       
       // Create mock failed test results
       const testDir = path.dirname(testResultsPath);
@@ -156,8 +156,8 @@ describe('🧪 Test Success Verification', () => {
       await component.on(testComponentName, testVersion);
       
       // Set up as test version
-      await component.setTest(testVersion);
-      await component.setDev(testVersion);
+      await component.setCICDVersion('setTest',testVersion);
+      await component.setCICDVersion('setDev',testVersion);
       
       // Create mock successful test results
       const mockResults = {

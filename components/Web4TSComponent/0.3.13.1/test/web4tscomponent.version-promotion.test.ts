@@ -42,9 +42,9 @@ describe('🚀 Web4TSComponent Version Promotion Tests', () => {
       await component.create('PromotionTest', '0.0.1.0', 'all');
       
       // Set initial semantic links to simulate development state
-      await component.setDev('0.1.0.0');
-      await component.setTest('0.1.0.0');
-      await component.setProd('0.0.1.0'); // Older version as prod
+      await component.setCICDVersion('setDev', '0.1.0.0');
+      await component.setCICDVersion('setTest', '0.1.0.0');
+      await component.setCICDVersion('setProd', '0.0.1.0'); // Older version as prod
       
       // Verify initial state
       const initialLinks = await component.getSemanticLinks('PromotionTest');
@@ -92,8 +92,8 @@ describe('🚀 Web4TSComponent Version Promotion Tests', () => {
       
       // Perform various operations
       await component.upgrade('nextBuild');
-      await component.setDev('1.0.0.1');
-      await component.setTest('1.0.0.1');
+      await component.setCICDVersion('setDev', '1.0.0.1');
+      await component.setCICDVersion('setTest', '1.0.0.1');
       
       // Verify all artifacts in test/data only
       const testDir = path.join(testDataDir, 'components', 'TestBoundary');

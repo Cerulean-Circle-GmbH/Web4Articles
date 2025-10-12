@@ -122,8 +122,8 @@ describe('🎯 CONSOLIDATED TEST STORY - Master Suite', () => {
       
       await component.on(isolationTestComponent, '0.1.0.0');
       await component.upgrade('nextBuild');
-      await component.setDev('0.1.0.1');
-      await component.setTest('0.1.0.1');
+      await component.setCICDVersion('setDev','0.1.0.1');
+      await component.setCICDVersion('setTest','0.1.0.1');
       
       // All operations created files in test/data only
       const testDataComponents = path.join(testDataDir, 'components', isolationTestComponent);
@@ -160,8 +160,8 @@ describe('🎯 CONSOLIDATED TEST STORY - Master Suite', () => {
       
       // Should NOT have hardcoded method list
       expect(cliContent).not.toContain('const methods = [');
-      // Should have discoverMethods() call
-      expect(cliContent).toContain('discoverMethods()');
+      // Should use direct reflection instead of method caching
+      expect(cliContent).toContain('getMethodByName');
       
       console.log('✅ CLI uses auto-discovery pattern');
     });
@@ -333,7 +333,7 @@ describe('🎯 CONSOLIDATED TEST STORY - Master Suite', () => {
       console.log('\n📖 Story 5.1: Setting dev symlink...');
       
       await component.on(semanticComponent, '0.1.0.0');
-      await component.setDev('0.1.0.1');
+      await component.setCICDVersion('setDev','0.1.0.1');
       
       const devLink = path.join(testDataDir, 'components', semanticComponent, 'dev');
       expect(existsSync(devLink)).toBe(true);
@@ -346,7 +346,7 @@ describe('🎯 CONSOLIDATED TEST STORY - Master Suite', () => {
       console.log('\n📖 Story 5.2: Setting test symlink...');
       
       await component.on(semanticComponent, '0.1.0.0');
-      await component.setTest('0.1.0.1');
+      await component.setCICDVersion('setTest','0.1.0.1');
       
       const testLink = path.join(testDataDir, 'components', semanticComponent, 'test');
       expect(existsSync(testLink)).toBe(true);
@@ -359,7 +359,7 @@ describe('🎯 CONSOLIDATED TEST STORY - Master Suite', () => {
       console.log('\n📖 Story 5.3: Setting prod symlink...');
       
       await component.on(semanticComponent, '0.1.0.0');
-      await component.setProd('0.1.0.0');
+      await component.setCICDVersion('setProd','0.1.0.0');
       
       const prodLink = path.join(testDataDir, 'components', semanticComponent, 'prod');
       expect(existsSync(prodLink)).toBe(true);
@@ -384,15 +384,15 @@ describe('🎯 CONSOLIDATED TEST STORY - Master Suite', () => {
       await component.on(semanticComponent, '0.1.0.0');
       
       // Set dev to new version
-      await component.setDev('0.1.0.2');
+      await component.setCICDVersion('setDev','0.1.0.2');
       expect(readlinkSync(path.join(testDataDir, 'components', semanticComponent, 'dev'))).toBe('0.1.0.2');
       
       // Promote to test
-      await component.setTest('0.1.0.2');
+      await component.setCICDVersion('setTest','0.1.0.2');
       expect(readlinkSync(path.join(testDataDir, 'components', semanticComponent, 'test'))).toBe('0.1.0.2');
       
       // Promote to prod
-      await component.setProd('0.1.0.2');
+      await component.setCICDVersion('setProd','0.1.0.2');
       expect(readlinkSync(path.join(testDataDir, 'components', semanticComponent, 'prod'))).toBe('0.1.0.2');
       
       console.log('✅ Full promotion workflow: dev → test → prod');
@@ -449,7 +449,7 @@ describe('🎯 CONSOLIDATED TEST STORY - Master Suite', () => {
       await component
         .on(contextComponent, '0.1.0.0')
         .then(c => c.upgrade('nextBuild'))
-        .then(c => c.setDev('0.1.0.1'));
+        .then(c => c.setCICDVersion('setDev', '0.1.0.1'));
       
       const devLink = path.join(testDataDir, 'components', contextComponent, 'dev');
       expect(readlinkSync(devLink)).toBe('0.1.0.1');
@@ -475,9 +475,9 @@ describe('🎯 CONSOLIDATED TEST STORY - Master Suite', () => {
       await component.create(treeComponent, '0.1.0.0', 'all');
       await component.on(treeComponent, '0.1.0.0');
       await component.upgrade('nextBuild');
-      await component.setDev('0.1.0.1');
-      await component.setTest('0.1.0.1');
-      await component.setProd('0.1.0.0');
+      await component.setCICDVersion('setDev','0.1.0.1');
+      await component.setCICDVersion('setTest','0.1.0.1');
+      await component.setCICDVersion('setProd','0.1.0.0');
     });
 
     // NO afterEach - leave components visible for inspection!
@@ -768,7 +768,7 @@ describe('🎯 CONSOLIDATED TEST STORY - Master Suite', () => {
       const result = await component
         .on('ChainTest', '0.1.0.0')
         .then(c => c.upgrade('nextBuild'))
-        .then(c => c.setDev('0.1.0.1'));
+        .then(c => c.setCICDVersion('setDev', '0.1.0.1'));
       
       expect(result).toBe(component);
       expect(result.on).toBeDefined();
