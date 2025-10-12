@@ -9,8 +9,8 @@
 ## Summary
 
 **Artifact Links:**
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/session/2025-10-12-UTC-0230-methodsignature-elimination-catastrophic-failure.pdca.md) | [§/components/Web4TSComponent/0.3.13.1/session/2025-10-12-UTC-0230-methodsignature-elimination-catastrophic-failure.pdca.md](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/session/2025-10-12-UTC-0230-methodsignature-elimination-catastrophic-failure.pdca.md)
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md) | [§/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/session/2025-10-12-UTC-0230-methodsignature-elimination-catastrophic-failure.pdca.md) | [§/components/Web4TSComponent/0.3.13.1/session/2025-10-12-UTC-0230-methodsignature-elimination-catastrophic-failure.pdca.md](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/session/2025-10-12-UTC-0230-methodsignature-elimination-catastrophic-failure.pdca.md)
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/broken/03131/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md) | [§/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md](/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.1/session/Letter-to-Cursor-CTO-2025-10-12-IDIOT-CONFESSION.md)
 
 **QA Decisions:**
 - [ ] Decision 1: Revert all changes and lose 969 lines of completed features
