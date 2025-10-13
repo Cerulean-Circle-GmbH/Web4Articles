@@ -156,7 +156,7 @@ When creating your Session Start PDCA (step 11), present these decisions:
 ### **Decision 2: Agent Role Selection**
 **Agent should generate role options dynamically using this command:**
 ```bash
-find scrum.pmo/roles -maxdepth 1 -type d -name '*Agent' | sed 's|.*/||' | sort
+find scrum.pmo/roles -maxdepth 1 -mindepth 1 -type d ! -name '_shared' | sed 's|.*/||' | sort
 ```
 
 **Present discovered roles with descriptions:**
