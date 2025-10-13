@@ -114,7 +114,7 @@
 
 ### **After Every PDCA Creation:**
 1. **✅ Format Validation:** Verify all 6 mandatory sections present
-2. **✅ Commit Changes:** `git add . && git commit -m "descriptive message"`
+2. **✅ Commit Changes:** `git commit -m "PDCA: [Title from PDCA header]"`
 3. **✅ Push to GitHub:** `git push origin dev/sprint5` 
 4. **✅ Provide Dual Links:** Both GitHub and local links in chat response
 5. **✅ Verify GitHub Link:** Actually test that the GitHub link works
