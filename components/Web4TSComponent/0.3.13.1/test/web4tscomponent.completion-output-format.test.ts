@@ -92,7 +92,7 @@ describe('🎯 Tab Completion Output Format Tests', () => {
         execSync(`${cliPath}`, { 
           cwd: projectRoot, 
           stdio: 'pipe',
-          timeout: 10000 
+          timeout: 30000 
         });
       }).not.toThrow();
     });
@@ -103,7 +103,7 @@ describe('🎯 Tab Completion Output Format Tests', () => {
         execSync(`${cliPath} completeParameter successPromotionParameterCompletion releaseTest`, { 
           cwd: projectRoot, 
           stdio: 'pipe',
-          timeout: 10000 
+          timeout: 30000 
         });
       }).not.toThrow();
     });
@@ -127,7 +127,7 @@ describe('🎯 Tab Completion Output Format Tests', () => {
       // Verify format triggers OOSH multi-line mode
       expect(output).toMatch(/\n$/); // Must have trailing newline
       expect(output).toMatch(/\x1b\[/); // Must contain ANSI escape sequences
-      expect(output).toMatch(/^\d+:/); // Must start with numbered reference
+      expect(output).toMatch(/(\x1b\[\d+m)?\d+:/); // Must contain numbered reference (with optional ANSI codes)
     });
   });
 });

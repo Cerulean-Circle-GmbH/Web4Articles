@@ -157,11 +157,11 @@ describe('🎨 Tab Completion Architecture', () => {
     it('should return parameter names if no completion method exists', () => {
       const completion = new TSCompletion();
       // Use a method that has parameters but no completion method
-      const results = completion.complete(['Web4TSComponentCLI,DefaultWeb4TSComponent', 'create', '']);
+      const results = completion.complete(['Web4TSComponentCLI,DefaultWeb4TSComponent', 'find', '']);
       
       // Should return parameter names as fallback
-      // create method has parameters: name, version, options
-      expect(results).toContain('name');
+      // find method has parameters: componentDir
+      expect(results).toContain('componentDir');
       expect(results.length).toBeGreaterThan(0);
     });
   });
@@ -334,9 +334,10 @@ describe('🎨 Tab Completion Architecture', () => {
       // User types "web4tscomponent create <Tab>"
       const results = completion.complete(['Web4TSComponentCLI,DefaultWeb4TSComponent', 'create', '']);
       
-      // Should return parameter names (no completion method for component name)
-      // create method has parameters: name, version, options
-      expect(results).toContain('name');
+      // Should return callback for name parameter (now has completion)
+      // create method has completion methods for all parameters
+      expect(results).toHaveLength(1);
+      expect(results[0]).toBe('__CALLBACK__:nameParameterCompletion');
     });
   });
 

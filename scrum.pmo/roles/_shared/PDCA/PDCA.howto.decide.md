@@ -360,7 +360,8 @@ When starting a new work session, always present these three categories of decis
   - b) Switch to Developer for [implementation tasks]
   - c) Switch to Architect for [system design and process improvements]
   - d) Switch to Tester for [quality assurance and testing]
-  - e) Switch to [Other Relevant Role] for [specific capability]
+  - e) Switch to [Dynamically Discovered Role] for [specific capability]
+    **Note: Use `find scrum.pmo/roles -maxdepth 1 -type d | grep -v "_shared"` to list all available roles**
 
 - [ ] **Decision 3: Session Duration and Sprint Planning**
   - a) Full day session with multiple sprint cycles
@@ -385,7 +386,7 @@ When starting a new work session, always present these three categories of decis
 **Role Selection Customization:**
 - Start with current session role as option (a)
 - **CRITICAL: Use dynamic role discovery** - Replace static examples with: `find scrum.pmo/roles -maxdepth 1 -type d | grep -v "_shared" | sed 's|scrum.pmo/roles/||' | sort`
-- Include ALL available roles (18+ roles including Tester, Developer, Architect, PO, etc.)
+- Include ALL available roles (discovered dynamically from scrum.pmo/roles directory)
 - Match role capabilities to focus area requirements
 
 **Session Planning Customization:**

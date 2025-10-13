@@ -1,6 +1,6 @@
 # Web4TSComponent - Technical Specification
 
-**Version:** 0.3.12.1  
+**Version:** 0.3.13.1  
 **Document Type:** Component Specification  
 **Audience:** Developers, Architects, System Integrators  
 **Status:** Active Development  
@@ -15,51 +15,51 @@
 
 **Chapter 1: Architecture** - How the system works internally
 - Automatic Project Initialization  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-automatic-project-initialization) | [chapters/01-architecture.md](chapters/01-architecture.md#-automatic-project-initialization)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/01-architecture.md#-automatic-project-initialization) | [chapters/01-architecture.md](chapters/01-architecture.md#-automatic-project-initialization)
 - Auto-Discovery CLI Works  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained) | [chapters/01-architecture.md](chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained) | [chapters/01-architecture.md](chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained)
 - Tab Completion Architecture  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#3-tab-completion-architecture) | [chapters/01-architecture.md](chapters/01-architecture.md#3-tab-completion-architecture)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/01-architecture.md#3-tab-completion-architecture) | [chapters/01-architecture.md](chapters/01-architecture.md#3-tab-completion-architecture)
 
 **Chapter 2: Development Guide** - How to extend and develop
 - API Extension Specification  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/02-development-guide.md#4-api-extension-specification) | [chapters/02-development-guide.md](chapters/02-development-guide.md#4-api-extension-specification)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/02-development-guide.md#4-api-extension-specification) | [chapters/02-development-guide.md](chapters/02-development-guide.md#4-api-extension-specification)
 - TSDoc Magic  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/02-development-guide.md#-tsdoc-magic-the-3-lines-that-make-it-work) | [chapters/02-development-guide.md](chapters/02-development-guide.md#-tsdoc-magic-the-3-lines-that-make-it-work)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/02-development-guide.md#-tsdoc-magic-the-3-lines-that-make-it-work) | [chapters/02-development-guide.md](chapters/02-development-guide.md#-tsdoc-magic-the-3-lines-that-make-it-work)
 - Common Mistakes  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/02-development-guide.md#-common-new-agent-mistakes-dont-do-these) | [chapters/02-development-guide.md](chapters/02-development-guide.md#-common-new-agent-mistakes-dont-do-these)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/02-development-guide.md#-common-new-agent-mistakes-dont-do-these) | [chapters/02-development-guide.md](chapters/02-development-guide.md#-common-new-agent-mistakes-dont-do-these)
 - Context-Aware Methods  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/02-development-guide.md#-context-aware-methods-advanced-pattern) | [chapters/02-development-guide.md](chapters/02-development-guide.md#-context-aware-methods-advanced-pattern)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/02-development-guide.md#-context-aware-methods-advanced-pattern) | [chapters/02-development-guide.md](chapters/02-development-guide.md#-context-aware-methods-advanced-pattern)
 - Method Addition Checklist  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/02-development-guide.md#-method-addition-checklist-copy-this) | [chapters/02-development-guide.md](chapters/02-development-guide.md#-method-addition-checklist-copy-this)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/02-development-guide.md#-method-addition-checklist-copy-this) | [chapters/02-development-guide.md](chapters/02-development-guide.md#-method-addition-checklist-copy-this)
 - Real-World Examples  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/02-development-guide.md#-real-world-examples-copy-these-patterns) | [chapters/02-development-guide.md](chapters/02-development-guide.md#-real-world-examples-copy-these-patterns)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/02-development-guide.md#-real-world-examples-copy-these-patterns) | [chapters/02-development-guide.md](chapters/02-development-guide.md#-real-world-examples-copy-these-patterns)
 
 ### Part 2: Doing (Actionable Guides)
 
 **Chapter 3: Testing & Quality** - How to test and validate
 - Testing Specification  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/03-testing-and-quality.md#6-testing-specification) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#6-testing-specification)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/03-testing-and-quality.md#6-testing-specification) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#6-testing-specification)
 - 100% Test Success Workflow  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/03-testing-and-quality.md#-what-happens-on-100-test-success) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#-what-happens-on-100-test-success)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/03-testing-and-quality.md#-what-happens-on-100-test-success) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#-what-happens-on-100-test-success)
 - Version Updates  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/03-testing-and-quality.md#-whats-new-in-version-0332) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#-whats-new-in-version-0332)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/03-testing-and-quality.md#-whats-new-in-version-0332) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#-whats-new-in-version-0332)
 - Comprehensive Test Suites  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/03-testing-and-quality.md#-comprehensive-test-suites) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#-comprehensive-test-suites)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/03-testing-and-quality.md#-comprehensive-test-suites) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#-comprehensive-test-suites)
 - Development Workflow  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/03-testing-and-quality.md#-development-workflow-reminder) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#-development-workflow-reminder)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/03-testing-and-quality.md#-development-workflow-reminder) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#-development-workflow-reminder)
 
 **Chapter 5: Troubleshooting** - How to fix issues
 - Troubleshooting Reference  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/05-troubleshooting.md#5-troubleshooting-reference) | [chapters/05-troubleshooting.md](chapters/05-troubleshooting.md#5-troubleshooting-reference)                
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/05-troubleshooting.md#5-troubleshooting-reference) | [chapters/05-troubleshooting.md](chapters/05-troubleshooting.md#5-troubleshooting-reference)                
 - Quick Reference  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/05-troubleshooting.md#-quick-reference) | [chapters/05-troubleshooting.md](chapters/05-troubleshooting.md#-quick-reference)                                      
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/05-troubleshooting.md#-quick-reference) | [chapters/05-troubleshooting.md](chapters/05-troubleshooting.md#-quick-reference)                                      
 - Why This Works  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/05-troubleshooting.md#-why-this-works-the-web4-magic) | [chapters/05-troubleshooting.md](chapters/05-troubleshooting.md#-why-this-works-the-web4-magic)          
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/05-troubleshooting.md#-why-this-works-the-web4-magic) | [chapters/05-troubleshooting.md](chapters/05-troubleshooting.md#-why-this-works-the-web4-magic)          
 - For New Agents  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/05-troubleshooting.md#-for-new-agents) | [chapters/05-troubleshooting.md](chapters/05-troubleshooting.md#-for-new-agents)                                        
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/05-troubleshooting.md#-for-new-agents) | [chapters/05-troubleshooting.md](chapters/05-troubleshooting.md#-for-new-agents)                                        
 - Success Criteria  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/05-troubleshooting.md#-success-criteria) | [chapters/05-troubleshooting.md](chapters/05-troubleshooting.md#-success-criteria)                                    
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/05-troubleshooting.md#-success-criteria) | [chapters/05-troubleshooting.md](chapters/05-troubleshooting.md#-success-criteria)                                    
 
 **Chapter 6: CMM5 Nobel Prize Achievements** - Technical Excellence & Innovation  
 - OOSH-Inspired Completion Architecture  
@@ -75,13 +75,13 @@
 
 **Chapter 4: Compliance & Standards** - Requirements and verification
 - Web4 Compliance Principles  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/04-compliance-and-standards.md#-web4-compliance-principles) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#-web4-compliance-principles)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/04-compliance-and-standards.md#-web4-compliance-principles) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#-web4-compliance-principles)
 - CMM4 Implementation  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/04-compliance-and-standards.md#9-cmm4-implementation-specification) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#9-cmm4-implementation-specification)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/04-compliance-and-standards.md#9-cmm4-implementation-specification) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#9-cmm4-implementation-specification)
 - Version History  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/04-compliance-and-standards.md#-version-history--migration-path) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#-version-history--migration-path)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/04-compliance-and-standards.md#-version-history--migration-path) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#-version-history--migration-path)
 - Related Documentation  
-  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/04-compliance-and-standards.md#-related-documentation) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#-related-documentation)
+  [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/04-compliance-and-standards.md#-related-documentation) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#-related-documentation)
 
 ---
 
@@ -92,7 +92,7 @@
 **Maturity Level:** CMM4 (Quantitatively Managed)  
 **Purpose:** TypeScript component standards enforcement and automatic lifecycle management
 
-**What it does:** Creates and manages TypeScript components with [auto-discovery CLI](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained) | [chapters/01-architecture.md](chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained), automatic lifecycle (build/test/deploy), [DRY principle](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-automatic-project-initialization) | [chapters/01-architecture.md](chapters/01-architecture.md#-automatic-project-initialization) enforcement, and [CMM4](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/04-compliance-and-standards.md#9-cmm4-implementation-specification) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#9-cmm4-implementation-specification) quality processes.
+**What it does:** Creates and manages TypeScript components with [auto-discovery CLI](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained) | [chapters/01-architecture.md](chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained), automatic lifecycle (build/test/deploy), [DRY principle](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/01-architecture.md#-automatic-project-initialization) | [chapters/01-architecture.md](chapters/01-architecture.md#-automatic-project-initialization) enforcement, and [CMM4](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/04-compliance-and-standards.md#9-cmm4-implementation-specification) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#9-cmm4-implementation-specification) quality processes.
 
 **Why it matters:** Zero-configuration component development. Add a method, it appears in CLI automatically. Run `npm start`, everything works immediately. Every component created works the same way.
 
@@ -260,8 +260,8 @@ web4tscomponent create MyComponent 0.1.0.0 all
 ```
 
 **What Happens:**
-- **initProject:** Creates root `tsconfig.json`, `package.json`, global `node_modules` ([DRY principle](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-automatic-project-initialization) | [chapters/01-architecture.md](chapters/01-architecture.md#-automatic-project-initialization))
-- **create:** Generates component with layered architecture, TypeScript, Vitest, [auto-discovery CLI](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained) | [chapters/01-architecture.md](chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained), build scripts, templates
+- **initProject:** Creates root `tsconfig.json`, `package.json`, global `node_modules` ([DRY principle](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/01-architecture.md#-automatic-project-initialization) | [chapters/01-architecture.md](chapters/01-architecture.md#-automatic-project-initialization))
+- **create:** Generates component with layered architecture, TypeScript, Vitest, [auto-discovery CLI](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained) | [chapters/01-architecture.md](chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained), build scripts, templates
 - **Result:** Fully functional component that works exactly like Web4TSComponent itself
 
 **When to Use:** Starting new project or adding new component to existing project
@@ -286,7 +286,7 @@ web4tscomponent test
 **What Happens:**
 - **on:** Loads component metadata into context (path, version, name)
 - **Subsequent commands:** Operate on loaded component instead of self
-- **Chaining:** Multiple operations in single command (recommended for scripting) - see [Method Chaining](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/04-compliance-and-standards.md#-web4-compliance-principles) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#-web4-compliance-principles)
+- **Chaining:** Multiple operations in single command (recommended for scripting) - see [Method Chaining](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/04-compliance-and-standards.md#-web4-compliance-principles) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#-web4-compliance-principles)
 
 **When to Use:** Any operation targeting a specific component version
 
@@ -319,7 +319,7 @@ web4tscomponent on MyComponent latest links
 - **test:** Version ready for testing (100% revision testing target)
 - **prod:** Version that achieved 100% testing success
 - **latest:** Stable release (same as prod)
-- **Automatic Promotion:** On 100% test success, systematic version progression - see [100% Test Success Workflow](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/03-testing-and-quality.md#-what-happens-on-100-test-success) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#-what-happens-on-100-test-success)
+- **Automatic Promotion:** On 100% test success, systematic version progression - see [100% Test Success Workflow](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/03-testing-and-quality.md#-what-happens-on-100-test-success) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#-what-happens-on-100-test-success)
 
 **When to Use:** All development - this is the systematic Web4 workflow
 
@@ -367,8 +367,8 @@ web4tscomponent on MyComponent test test true  # skipPromotion=true
 ```
 
 **What Happens:**
-- **test:** Runs test suite, logs to `test/logs/`, checks for 100% success - see [Testing Specification](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/03-testing-and-quality.md#6-testing-specification) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#6-testing-specification)
-- **100% Success Triggers:** Automatic promotion workflow - see [100% Test Success](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/03-testing-and-quality.md#-what-happens-on-100-test-success) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#-what-happens-on-100-test-success)
+- **test:** Runs test suite, logs to `test/logs/`, checks for 100% success - see [Testing Specification](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/03-testing-and-quality.md#6-testing-specification) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#6-testing-specification)
+- **100% Success Triggers:** Automatic promotion workflow - see [100% Test Success](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/03-testing-and-quality.md#-what-happens-on-100-test-success) | [chapters/03-testing-and-quality.md](chapters/03-testing-and-quality.md#-what-happens-on-100-test-success)
 - **< 100% Success:** No promotion, stay on test version, fix issues
 - **releaseTest:** Uses nextMinor instead of nextPatch for major releases
 
@@ -414,8 +414,8 @@ web4tscomponent info overview
 ### Core Capabilities:
 
 1. **Creates versioned TypeScript components** with standardized architecture
-2. **Enforces Web4 architectural principles** (empty constructors, scenario support, layered architecture) - see [Web4 Compliance](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/04-compliance-and-standards.md#-web4-compliance-principles) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#-web4-compliance-principles)
-3. **Auto-discovers CLI commands** from TypeScript methods (no manual CLI configuration) - see [Auto-Discovery](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained) | [chapters/01-architecture.md](chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained)
+2. **Enforces Web4 architectural principles** (empty constructors, scenario support, layered architecture) - see [Web4 Compliance](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/04-compliance-and-standards.md#-web4-compliance-principles) | [chapters/04-compliance-and-standards.md](chapters/04-compliance-and-standards.md#-web4-compliance-principles)
+3. **Auto-discovers CLI commands** from TypeScript methods (no manual CLI configuration) - see [Auto-Discovery](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained) | [chapters/01-architecture.md](chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained)
 4. **Manages automatic version promotion workflows** after successful testing
 5. **Enforces DRY principle** (symlinked node_modules, no duplication)
 6. **Provides comprehensive test suites** with isolated test environments
@@ -423,11 +423,11 @@ web4tscomponent info overview
 
 ### Key Features:
 
-- ✅ **Auto-Discovery CLI** - Add methods to component, they appear in CLI automatically - [How it works](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained) | [chapters/01-architecture.md](chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained)
+- ✅ **Auto-Discovery CLI** - Add methods to component, they appear in CLI automatically - [How it works](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained) | [chapters/01-architecture.md](chapters/01-architecture.md#-how-auto-discovery-cli-works-the-magic-explained)
 - ✅ **Automatic Lifecycle** - `npm start` handles everything (build, deps, execution)
 - ✅ **Project Initialization** - `initProject` bootstraps any project with Web4 standards
 - ✅ **Version Management** - Semantic versioning with intelligent promotion workflow
-- ✅ **DRY Compliance** - Detects and prevents node_modules duplication - [DRY Principle](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-automatic-project-initialization) | [chapters/01-architecture.md](chapters/01-architecture.md#-automatic-project-initialization)
+- ✅ **DRY Compliance** - Detects and prevents node_modules duplication - [DRY Principle](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.13.1/spec/chapters/01-architecture.md#-automatic-project-initialization) | [chapters/01-architecture.md](chapters/01-architecture.md#-automatic-project-initialization)
 - ✅ **Test Isolation** - ProjectRootMocker ensures tests don't affect production
 - ✅ **Method Chaining** - Fluent API with context-aware operations
 - ✅ **CMM3+ Compliance** - Objective, reproducible, automated verification

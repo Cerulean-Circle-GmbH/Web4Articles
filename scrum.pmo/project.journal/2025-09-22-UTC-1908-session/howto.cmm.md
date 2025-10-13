@@ -68,6 +68,97 @@ Now that you understand CMM levels, you can properly understand what PDCA actual
 
 **Tool Integration:** Use write_todo to track Check-Act iterations systematically. Never try to manage complex improvement cycles manually.
 
+## CMM3 Core Principles: Tools and Versioning
+
+### Version Management - CMM3 Single Source of Truth
+
+**Critical Understanding:** In CMM3, versioning follows strict automated hierarchy:
+
+1. **"prod" symlink = CMM3 Base Layer of Truth** - Always authoritative for any component
+2. **Older versions = Outdated** - Historical reference only, never use for current work  
+3. **Newer versions = Require Release Testing** - Must pass `releaseTest` method to become authoritative
+4. **Package.json version = Working Reality** - Current development state
+
+**Example from Web4TSComponent:**
+- Working version: 0.3.13.1 (package.json)
+- Documentation must match working version (CMM3 consistency)
+- Until 0.3.13.1 passes release testing, previous "prod" remains authoritative base
+
+**CMM3 Rule:** Never assume version conflicts - always check `components/{ComponentName}/prod` symlink and understand release testing process via `DefaultWeb4TSComponent.releaseTest` method.
+
+### Documentation Version Challenges - Static vs Dynamic Truth
+
+**Critical CMM3 Problem:** Software can lookup single points of truth dynamically, but markdown documentation cannot.
+
+**The Challenge:**
+- **Software Reality:** Code references `prod` symlink and `package.json` - always current
+- **Documentation Reality:** Hardcoded version references get "copied over" between versions
+- **Result:** Documentation version drift - references become stale over time
+
+**Current Duplication Issues:**
+1. **Hardcoded Version References:** Documentation contains `0.3.11.1`, `0.3.12.1` paths that should dynamically resolve
+2. **Session History Bloat:** Session directories contain copied documents from other versions instead of only documents about that specific version
+3. **Manual Cleanup Required:** No automated solution yet exists - requires manual intervention
+
+**CMM3 Implications:**
+- **Acceptable:** Software using dynamic lookups (single source of truth)
+- **Problem:** Static markdown copying hardcoded versions (multiple conflicting sources)
+- **Current State:** Manual batch updates needed until automation solution developed
+
+**Future CMM4 Improvement Opportunity:** 
+- Create documentation templating system that dynamically inserts version references
+- Develop session document version filtering automation
+- Establish clear separation between version-specific and version-agnostic documentation
+
+**CMM3 Automation Solution - Date-Based Cleanup:**
+```bash
+# Simple heuristic rule for version bump cleanup
+# Remove all .md files older than version folder creation date
+find session/ -name "*.md" -not -newer . -delete
+```
+
+**Why This Achieves CMM3:**
+- **Simple Rule:** Use version folder creation date as authoritative timestamp
+- **Automated:** No manual decision-making about which files to keep/remove  
+- **Objective:** Date comparison eliminates subjective interpretation
+- **Bootstrapping Context:** All manual work before automation = CMM2, automation = CMM3
+
+**Implementation Strategy:**
+1. **Current State:** CMM2 bootstrapping - manual cleanup required
+2. **CMM3 Achievement:** Implement date-based heuristic rule automation
+3. **Result:** Session directories automatically contain only version-relevant documents
+
+**Interim CMM3 Practice:**
+- When creating new versions, audit and update hardcoded version references
+- Keep session directories clean - only documents about that specific version
+- Document this limitation so future agents understand the manual cleanup requirement
+- **CMM3 Transition:** Implement date-based automation to eliminate manual session cleanup
+
+**The CMM2→CMM3 Transition Pattern:**
+- **CMM2 Bootstrapping:** Manual processes, subjective decisions, individual interpretation
+- **CMM3 Achievement:** Simple automated rules, objective criteria, reproducible results
+- **Example:** Manual file cleanup → Date-based heuristic automation
+
+### Tools Before Manual Processes - CMM3 Automation Priority
+
+**Fundamental CMM3 Principle:** Always prefer release-tested production tools over manual template processes.
+
+**Real Example:** 
+- ❌ **CMM2 Approach:** Manually format dual links following template documentation
+- ✅ **CMM3 Approach:** Use `fix.dual.links` tool as single source of CMM3 truth
+
+**Why This Matters:**
+- **CMM3 Tools** = Objective, reproducible, scientifically validated
+- **Manual Templates** = Subject to interpretation, hallucination, human variation
+- **Economic Impact:** Manual processes create rework cycles, tools eliminate them
+
+**CMM3 Decision Framework:**
+1. **First Check:** Does a release-tested production tool exist for this task?
+2. **If Yes:** Use the tool, reference it as CMM3 truth source
+3. **If No:** Follow templates, but plan to create/request automated tool for CMM4 improvement
+
+**All Tasks Application:** This applies to dual links, version management, role discovery, decision frameworks - everything. CMM3 means automation over manual work across the entire system.
+
 ## Your Next Steps
 
 **Now that you understand CMM framework, you're ready to learn the specific tools:**
