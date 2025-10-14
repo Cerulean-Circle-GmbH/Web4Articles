@@ -33,7 +33,7 @@
    - [ ] i) Git commit message format: One-liner only `git commit -m "PDCAfilename.pdca.md"` - NO multiline descriptions
 **MANDATORY: Research existing Web4 tools FIRST before any programming. If research fails, ASK TRON. NEVER program without explicit request.**
 
-6. **Trigger Command Recognition**
+1. **Trigger Command Recognition**
 **CRITICAL: "stop" = IMMEDIATE EMERGENCY HALT - No git operations, no PDCA completion, ask "what's up?" immediately**
    - [ ] a) "start" trigger: Session initialization with PDCA workflow establishment per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/recovery/start-command.md) | [§/recovery/start-command.md](../../../recovery/start-command.md)
    - [ ] b) "pdca" trigger: CMM3 compliance check and correction enforcement - Use CMM3 checklist to verify last PDCA and fix violations, then create new PDCA using checklist and 1f process per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../_shared/PDCA/howto.PDCA.md)  
@@ -41,30 +41,34 @@
    - [ ] d) "pull" trigger: PDCA content analysis protocol - Read + Analyze + PDCA new content per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-2150-pull-protocol-update-new-files-analysis.md) | [§/scrum.pmo/project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-2150-pull-protocol-update-new-files-analysis.md](../../project.journal/2025-09-10-UTC-1953-session/2025-09-10-UTC-2150-pull-protocol-update-new-files-analysis.md)
    - [ ] e) "stop" trigger: Emergency halt protocol - Immediate stop all operations, no git/PDCA completion, ask "what's up?" per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../_shared/PDCA/howto.PDCA.md)
 
-2. **Chat Response Compliance**  
+1. **Chat Response Compliance**  
    - [ ] a) Links only, no explanatory text per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../../_shared/PDCA/howto.PDCA.md)
    - [ ] b) QA Decisions copied verbatim from PDCA per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../../_shared/PDCA/PDCA.howto.decide.md)
    - [ ] c) Dual link format: [GitHub](URL) | [§/path](path) per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md](../../_shared/PDCA/PDCA.dual.link.format.requirement.md)
    - [ ] d) Finally apply cmm3 compliant format to the chat report
 
-3. **Link Compliance**
+1. **Link Compliance**
    - [ ] a) GitHub URLs work after git push per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md](../../_shared/PDCA/PDCA.dual.link.format.requirement.md)
    - [ ] b) PDCA local links: relative from document location
    - [ ] c) Chat local links: absolute from project root
    - [ ] d) § notation for root path display
 
-4. **Naming/Location**
+1. **Naming/Location**
    - [ ] a) YYYY-MM-DD-UTC-HHMM.pdca.md format only
    - [ ] b) Role directory: scrum.pmo/roles/[AgentRole]/pdca/
    - [ ] c) No descriptive text in filename
 
-5. **Authorization**
+1. **Authorization**
    - [ ] a) Only explicit user-authorized work
    - [ ] b) Present decisions when direction unclear per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../../_shared/PDCA/PDCA.howto.decide.md)
 **WARNING: Never create fake opposites like "do it vs don't do it" - Only present decisions for REAL RISKS with multiple valid approaches**
    - [ ] c) No assumptions about user intent
 
-**Usage:** Cite violations as "[number][letter] cmm2" (e.g., "2a cmm2")  
+1. **Markdown Quality**
+   - [ ] a) All numbered lists use "1." for each item (not 1. 2. 3.) - HTML auto-numbers correctly, prevents confusion when inserting/deleting items
+   - [ ] b) Agent self-check: Can modify list order without manual renumbering
+
+**Usage:** Cite violations as "[number][letter] cmm2" (e.g., "2a cmm2") - Note: markdown auto-numbers sections 1-7 in display order  
 **Recovery:** Fix violation, verify entire checklist, continue
 
 **"Death is not the end, but a chance for rebirth with wisdom"** 🔄✨
