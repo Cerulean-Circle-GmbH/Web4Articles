@@ -688,12 +688,12 @@ Standards:
    * await component.initProject('/path/to/project');
    * 
    * @cliSyntax targetDir
-   * @cliDefault targetDir .
+   * @cliDefault targetDir §
    */
-  async initProject(targetDir: string = '.'): Promise<this> {
+  async initProject(targetDir: string = '§'): Promise<this> {
     // Resolve target directory
-    const projectRoot = targetDir === '.' 
-      ? (this.isTestEnvironment() ? this.getTestDataDirectory() : process.cwd())
+    const projectRoot = targetDir === '§' 
+      ? this.model.projectRoot // Use already-discovered project root
       : targetDir;
     
     console.log(`🚀 Initializing Web4 project at: ${projectRoot}`);
