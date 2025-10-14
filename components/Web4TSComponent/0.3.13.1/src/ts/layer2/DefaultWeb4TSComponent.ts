@@ -693,7 +693,7 @@ Standards:
   async initProject(targetDir: string = '§'): Promise<this> {
     // Resolve target directory
     const projectRoot = targetDir === '§' 
-      ? this.model.projectRoot // Use already-discovered project root
+      ? (this.isTestEnvironment() ? this.getTestDataDirectory() : this.model.projectRoot)
       : targetDir;
     
     console.log(`🚀 Initializing Web4 project at: ${projectRoot}`);
