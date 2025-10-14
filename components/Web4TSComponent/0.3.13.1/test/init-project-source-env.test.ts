@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 describe('initProject creates source.env', () => {
-  const testDataDir = path.resolve(process.cwd(), 'test/data');
+  const testDataDir = path.join(__dirname, '..', 'test', 'data');
   let component: DefaultWeb4TSComponent;
 
   beforeEach(async () => {
