@@ -17,7 +17,7 @@ import { execSync } from 'child_process';
 
 describe('🧪 Generated Component Testing Workflow', () => {
   let component: DefaultWeb4TSComponent;
-  const testDataDir = path.resolve(process.cwd(), 'test/data');
+  const testDataDir = path.join(__dirname, '..', 'test', 'data');
   const testComponentName = 'TestGeneratedComponent';
   
   beforeEach(() => {

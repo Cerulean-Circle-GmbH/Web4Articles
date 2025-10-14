@@ -15,7 +15,7 @@ import * as path from 'path';
 
 describe('🧪 Test Success Verification', () => {
   let component: DefaultWeb4TSComponent;
-  const testDataDir = path.resolve(process.cwd(), 'test/data');
+  const testDataDir = path.join(__dirname, '..', 'test', 'data');
   
   beforeEach(() => {
     component = new DefaultWeb4TSComponent();

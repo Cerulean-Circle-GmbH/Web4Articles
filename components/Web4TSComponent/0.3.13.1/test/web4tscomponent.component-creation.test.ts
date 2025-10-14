@@ -18,7 +18,7 @@ import { DefaultWeb4TSComponent } from '../src/ts/layer2/DefaultWeb4TSComponent.
 
 describe('🏗️ Component Creation', () => {
   let component: DefaultWeb4TSComponent;
-  const testDataDir = path.resolve(process.cwd(), 'test/data');
+  const testDataDir = path.join(__dirname, '..', 'test', 'data');
   
   beforeEach(() => {
     component = new DefaultWeb4TSComponent();

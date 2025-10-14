@@ -21,7 +21,7 @@ import { DefaultWeb4TSComponent } from '../src/ts/layer2/DefaultWeb4TSComponent.
 import { Web4TSComponentCLI } from '../src/ts/layer5/Web4TSComponentCLI.js';
 
 describe('🎨 Tab Completion Architecture', () => {
-  const testDataDir = path.resolve(process.cwd(), 'test/data/tab-completion');
+  const testDataDir = path.join(__dirname, '..', 'test', 'data', 'tab-completion');
   
   beforeEach(() => {
     // Create isolated test environment
