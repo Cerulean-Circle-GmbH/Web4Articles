@@ -67,6 +67,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   /**
    * Build all component dependencies before building this component
    * Recursively builds dependencies in correct order
+   * @param componentName Name of component whose dependencies to build
    * @cliHide
    */
   async buildDependencies(componentName: string): Promise<void> {
@@ -112,6 +113,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 
   /**
    * Load template from external file and substitute placeholders
+   * @param templatePath Relative path to template file in templates directory
+   * @param substitutions Key-value pairs for {{PLACEHOLDER}} substitution
+   * @returns Template content with all placeholders substituted
    * @cliHide
    */
   private async loadTemplate(templatePath: string, substitutions: Record<string, string>): Promise<string> {
@@ -184,6 +188,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * Initialize component with scenario data (Web4 pattern)
+   * @param scenario Scenario containing component model and context
+   * @returns this component instance for method chaining
    * @cliHide
    */
   init(scenario: Scenario<Web4TSComponentModel>): this {
@@ -194,6 +201,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * Transform component data (Web4 lifecycle method)
+   * @param data Optional data to transform
+   * @returns this component instance for method chaining
    * @cliHide
    */
   transform(data?: unknown): this {
@@ -205,6 +215,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * Validate component configuration (Web4 lifecycle method)
+   * @param object Optional object to validate against component rules
+   * @returns this component instance for method chaining
    * @cliHide
    */
   validate(object?: any): this {
@@ -216,6 +229,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * Process component operations (Web4 lifecycle method)
+   * @returns this component instance for method chaining
    * @cliHide
    */
   process(): this {
@@ -252,6 +267,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * Set target directory for component operations and update project root
+   * Discovers project root from target directory for test isolation
+   * @param directory Target directory path for component operations
    * @cliHide
    */
   setTargetDirectory(directory: string): void {
@@ -264,6 +282,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * Check if running in test environment (test/data directory)
+   * Uses model state rather than global/env variables (Web4 OOP principle)
+   * @returns true if targetDirectory includes '/test/data'
    * @cliHide
    */
   private isTestEnvironment(): boolean {
@@ -272,6 +293,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * Get test/data directory path for current component version
+   * Each version tests in its own test/data folder for isolation
+   * @returns Absolute path to test/data directory
    * @cliHide
    */
   private getTestDataDirectory(): string {
@@ -284,6 +308,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * Find all version directories for a component
+   * @param componentDir Component directory path to scan for versions
+   * @returns Array of version directory names (e.g., ['0.1.0.0', '0.2.0.0'])
    * @cliHide
    */
   private findVersionDirectories(componentDir: string): string[] {
@@ -327,6 +354,10 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * Scaffold complete component structure with all Web4 features
+   * Creates directories, files, and symlinks for new component
+   * @param options Scaffold options (componentName, version, features to include)
+   * @returns Component metadata including compliance score and features
    * @cliHide
    */
   async scaffoldComponent(options: any): Promise<any> {
@@ -424,6 +455,11 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * Generate location-resilient CLI bash script for component
+   * Creates self-contained script with symlink resolution and build integration
+   * @param componentName Name of component for CLI script
+   * @param version Version number for CLI script
+   * @returns Generated bash script content as string
    * @cliHide
    */
   async generateLocationResilientCLI(componentName: string, version: string): Promise<string> {
@@ -483,6 +519,10 @@ node "$CLI_PATH" "$@"
   }
 
   /**
+   * Validate CLI script against Web4 location-resilient standard
+   * Checks for project root detection, error handling, and ESM patterns
+   * @param scriptPath Path to CLI script file to validate
+   * @returns Validation result with compliance score and issues
    * @cliHide
    */
   async validateCLIStandard(scriptPath: string): Promise<any> {
@@ -527,6 +567,10 @@ node "$CLI_PATH" "$@"
   }
 
   /**
+   * Audit component for Web4 compliance and architecture patterns
+   * Checks for layered architecture, package.json, CLI script, etc.
+   * @param componentPath Path to component version directory
+   * @returns Compliance metadata with score and feature flags
    * @cliHide
    */
   async auditComponentCompliance(componentPath: string): Promise<any> {
@@ -580,6 +624,10 @@ node "$CLI_PATH" "$@"
   }
 
   /**
+   * Generate compliance report for all components in a directory
+   * Scans directory and audits each component version for compliance
+   * @param componentDir Directory path containing components to audit
+   * @returns Array of compliance metadata for all discovered components
    * @cliHide
    */
   async generateComplianceReport(componentDir: string): Promise<any[]> {
@@ -618,6 +666,8 @@ node "$CLI_PATH" "$@"
   }
 
   /**
+   * Display Web4 location-resilient CLI standard information
+   * Shows template structure and key requirements for Web4 CLI scripts
    * @cliHide
    */
   showStandard(): void {
@@ -641,6 +691,8 @@ node --loader ts-node/esm "./components/[name]/[version]/src/ts/layer5/[Name]CLI
   }
 
   /**
+   * Display Web4 architecture guidelines and core principles
+   * Shows layer structure, standards, and development patterns
    * @cliHide
    */
   showGuidelines(): void {
@@ -894,16 +946,13 @@ Standards:
   }
 
   /**
-   * Set component configuration (maps to generate-cli)
-   */
-  /**
    * Set component property or generate CLI script
+   * Maps to generate-cli functionality for backward compatibility
+   * 
    * @param component Component name for CLI generation
    * @param property Property to set (cli-script, etc.)
    * @param version Version for CLI script generation
    * @cliSyntax component property version
-   */
-  /**
    * @cliHide
    */
   async set(component: string, property: string, version: string): Promise<void> {
@@ -969,14 +1018,11 @@ Standards:
   }
 
   /**
-   * Analyze component from path (maps to audit-compliance)
-   */
-  /**
    * Analyze component compliance from path
+   * Maps to audit-compliance functionality for backward compatibility
+   * 
    * @param componentPath Path to component directory
    * @cliSyntax componentPath
-   */
-  /**
    * @cliHide
    */
   async from(componentPath: string): Promise<this> {
@@ -1396,6 +1442,8 @@ Standards:
 
   /**
    * Fix missing or broken semantic links (dev, test, prod, latest)
+   * Repairs or creates semantic symlinks to valid version targets
+   * @param componentName Component name to fix semantic links for
    * @cliHide
    */
   private async fixSemanticLinks(componentName: string): Promise<void> {
@@ -1495,6 +1543,10 @@ Standards:
 
   /**
    * Create or update a semantic symlink (dev, test, prod, latest)
+   * Replaces existing symlink and updates scripts symlinks for 'latest'
+   * @param componentName Component name for semantic link
+   * @param linkType Type of semantic link (dev, test, prod, latest)
+   * @param targetVersion Version to point semantic link to
    * @cliHide
    */
   private async createSemanticLink(componentName: string, linkType: string, targetVersion: string): Promise<void> {
@@ -1533,6 +1585,9 @@ Standards:
 
   /**
    * Get all semantic links for a component
+   * Reads dev, test, prod, and latest symlinks
+   * @param componentName Component name to get semantic links for
+   * @returns Object with dev, test, prod, latest versions (null if not set)
    * @cliHide
    */
   private async getSemanticLinks(componentName: string): Promise<{ dev: string | null; test: string | null; prod: string | null; latest: string | null }> {
@@ -2828,12 +2883,8 @@ Standards:
   }
 
   /**
-   * Test method to verify zero config discovery
-   * @param message Test message to display
-   * @cliSyntax message
-   */
-  /**
    * Test zero config discovery functionality (development/testing only)
+   * Verifies that CLI auto-discovery is working correctly
    * 
    * @param message Test message to display (default: 'Zero config discovery works!')
    * @cliSyntax message
@@ -2907,6 +2958,9 @@ Standards:
 
   /**
    * Parse component specifications from input string
+   * Converts "CompA 1.0.0.0, CompB 2.0.0.0" to array of {name, version} objects
+   * @param components Comma-separated component specifications
+   * @returns Array of parsed component specifications
    * @cliHide
    */
   private parseComponentSpecs(components: string): Array<{name: string, version: string}> {
@@ -2929,6 +2983,9 @@ Standards:
 
   /**
    * Generate safe filename from component specifications
+   * Creates filesystem-safe filename for comparison markdown file
+   * @param componentSpecs Array of component specifications to include in filename
+   * @returns Safe filename with timestamp and component names
    * @cliHide
    */
   private generateSafeFilename(componentSpecs: Array<{name: string, version: string}>): string {
@@ -2957,7 +3014,12 @@ Standards:
   }
 
   /**
-   * Generate complete markdown content for comparison
+   * Generate complete markdown content for comparison report
+   * Creates formatted markdown with tables and analysis
+   * @param componentSpecs Array of components being compared
+   * @param analyses Array of analysis results for each component
+   * @param originalComponents Original input string for documentation
+   * @returns Complete markdown content for comparison report
    * @cliHide
    */
   private async generateComparisonMarkdown(
@@ -3011,6 +3073,10 @@ Standards:
 
   /**
    * Generate differences table content for markdown
+   * Creates package and configuration comparison table
+   * @param componentSpecs Array of components being compared
+   * @param analyses Array of analysis results for each component
+   * @returns Array of markdown table lines
    * @cliHide
    */
   private async generateDifferencesTableContent(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<string[]> {
@@ -3099,6 +3165,10 @@ Standards:
 
   /**
    * Generate file comparison table content for markdown with dual links
+   * Creates file structure comparison table showing presence across components
+   * @param componentSpecs Array of components being compared
+   * @param analyses Array of analysis results for each component
+   * @returns Array of markdown table lines
    * @cliHide
    */
   private async generateFileComparisonTableContent(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<string[]> {
@@ -3166,6 +3236,10 @@ Standards:
 
   /**
    * Generate dual link for file entry (local path only, relative to version folder)
+   * @param entry File or directory entry name
+   * @param componentSpecs Array of components being compared (unused, for interface consistency)
+   * @param analyses Array of analysis results (unused, for interface consistency)
+   * @returns Entry name as local relative path
    * @cliHide
    */
   private generateDualLinkForEntry(entry: string, componentSpecs: Array<{name: string, version: string}>, analyses: any[]): string {
@@ -3175,6 +3249,9 @@ Standards:
 
   /**
    * Analyze components for comparison
+   * Loads and analyzes each component's structure, package.json, and files
+   * @param componentSpecs Array of component specifications to analyze
+   * @returns Array of analysis results for each component
    * @cliHide
    */
   private async analyzeComponentsForComparison(componentSpecs: Array<{name: string, version: string}>): Promise<any[]> {
@@ -3196,6 +3273,11 @@ Standards:
 
   /**
    * Analyze component structure for comparison
+   * Reads package.json and recursively scans file structure
+   * @param componentPath Absolute path to component version directory
+   * @param name Component name
+   * @param version Component version
+   * @returns Analysis object with files, directories, dependencies, etc.
    * @cliHide
    */
   private async analyzeComponentStructure(componentPath: string, name: string, version: string): Promise<any> {
@@ -3234,6 +3316,10 @@ Standards:
 
   /**
    * Analyze file structure recursively
+   * Scans directory and adds files/directories to analysis object
+   * @param dirPath Absolute path to directory to analyze
+   * @param analysis Analysis object to populate with files and directories
+   * @param relativePath Current relative path from component root (for recursion)
    * @cliHide
    */
   private async analyzeFileStructure(dirPath: string, analysis: any, relativePath: string = ''): Promise<void> {
@@ -3271,7 +3357,10 @@ Standards:
   }
 
   /**
-   * Generate differences table in exact format
+   * Generate differences table in exact format (console output)
+   * Displays package and configuration comparison table
+   * @param componentSpecs Array of components being compared
+   * @param analyses Array of analysis results for each component
    * @cliHide
    */
   private async generateDifferencesTable(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<void> {
@@ -3357,7 +3446,10 @@ Standards:
   }
 
   /**
-   * Generate file comparison table in exact format
+   * Generate file comparison table in exact format (console output)
+   * Displays file structure comparison table
+   * @param componentSpecs Array of components being compared
+   * @param analyses Array of analysis results for each component
    * @cliHide
    */
   private async generateFileComparisonTable(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<void> {
@@ -4845,13 +4937,13 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
   }
 
   /**
-   * Test method for README demonstration
+   * Test method for README demonstration (development/testing only)
+   * Shows auto-discovery CLI parameter handling
+   * 
    * @param inputData Data to process  
    * @param outputFormat Format for output (json, xml, csv)
    * @cliSyntax inputData outputFormat
    * @cliDefault outputFormat json
-   */
-  /**
    * @cliHide
    */
   async testNewMethod(inputData: string, outputFormat: string = 'json'): Promise<this> {
