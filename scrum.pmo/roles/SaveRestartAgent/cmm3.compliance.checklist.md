@@ -1,6 +1,6 @@
 # CMM3 Compliance Checklist
 
-**🗓️ Updated:** 2025-09-30-UTC-0943 (manually)  
+**🗓️ Updated:** 2025-10-14-UTC-0948 - Link fixes and git protocol addition  
 **CMM Definitions:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md](scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md)
 **⚠️ CMM Level:** Lowest compliance element determines overall level
 
