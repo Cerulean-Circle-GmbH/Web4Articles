@@ -156,29 +156,28 @@ When creating your Session Start PDCA (step 11), present these decisions:
 ### **Decision 2: Agent Role Selection**
 **Agent should generate role options dynamically using this command:**
 ```bash
-find scrum.pmo/roles -maxdepth 1 -type d -name '*Agent' | sed 's|.*/||' | sort
+find scrum.pmo/roles -maxdepth 1 -type d ! -path scrum.pmo/roles ! -name '_shared' | sed 's|scrum.pmo/roles/||' | sort
 ```
 
-**Present discovered roles with descriptions:**
-- a) **BackendAgent** - Server-side development, API design, database management
-- b) **BackgroundAgent** - General purpose automation, system maintenance  
-- c) **BranchStatusAgent** - Git branch management, repository hygiene, branch analysis
-- d) **CICDAgent** - Continuous integration, deployment pipeline management
-- e) **OntologyAgent** - Knowledge organization, semantic analysis, categorization
-- f) **PDCAQualityAgent** - Process quality assurance, PDCA compliance verification
-- g) **RecoveryDefinitionAgent** - Error recovery processes, resilience planning
-- h) **ReleaseIntegrationAgent** - Release management, version coordination, integration
-- i) **ResearchAgent** - Investigation, analysis, research coordination
-- j) **SaveRestartAgent** - Session management, state preservation, recovery operations
-- k) *[Additional agent roles discovered dynamically...]*
-
-**Non-Agent Roles (legacy - use find command above for current agents):**
-- l) **Architect** - System design, architecture documentation, technical leadership
-- m) **Developer** - Software development, implementation, coding tasks
-- n) **DevOps** - Infrastructure management, deployment, operations
-- o) **PO** - Product Owner responsibilities, requirements management, stakeholder coordination
+**Present discovered roles with descriptions (18 roles):**
+- a) **Architect** - System design, architecture documentation, technical leadership
+- b) **AuthenticIntegerExperiencialistStoryteller** - Specialized storytelling and authentic experience design
+- c) **BackendAgent** - Server-side development, API design, database management
+- d) **BackgroundAgent** - General purpose automation, system maintenance  
+- e) **BranchStatusAgent** - Git branch management, repository hygiene, branch analysis
+- f) **CICDAgent** - Continuous integration, deployment pipeline management
+- g) **DevOps** - Infrastructure management, deployment, operations
+- h) **Developer** - Software development, implementation, coding tasks
+- i) **OntologyAgent** - Knowledge organization, semantic analysis, categorization
+- j) **PDCAQualityAgent** - Process quality assurance, PDCA compliance verification
+- k) **PO** - Product Owner responsibilities, requirements management, stakeholder coordination
+- l) **RecoveryDefinitionAgent** - Error recovery processes, resilience planning
+- m) **ReleaseIntegrationAgent** - Release management, version coordination, integration
+- n) **ResearchAgent** - Investigation, analysis, research coordination
+- o) **SaveRestartAgent** - Session management, state preservation, recovery operations
 - p) **ScrumMaster** - Agile process facilitation, team coordination, sprint management
 - q) **Tester** - Quality assurance, testing strategy, validation processes
+- r) **ToolBuilder** - Tool development and automation infrastructure
 
 ### **Decision 3: Session Duration Planning**
 **Select session duration for planning and scope context (informational - does not affect agent behavior):**
