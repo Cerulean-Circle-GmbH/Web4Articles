@@ -11,6 +11,7 @@ import * as fs from 'fs/promises';
 import { existsSync, readdirSync, statSync, lstatSync } from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
+import { randomUUID } from 'crypto';
 
 export class DefaultWeb4TSComponent implements Web4TSComponent {
   private model: Web4TSComponentModel;
@@ -41,7 +42,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     
     const discoveredRoot = this.findProjectRoot();
     this.model = {
-      uuid: crypto.randomUUID(),
+      uuid: randomUUID(),
       name: '',
       origin: '',
       definition: '',

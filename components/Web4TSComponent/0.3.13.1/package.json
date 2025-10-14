@@ -4,6 +4,9 @@
   "type": "module",
   "description": "Web4 TypeScript Component Standards Enforcement & Architecture Compliance",
   "main": "dist/ts/layer5/Web4TSComponentCLI.js",
+  "engines": {
+    "node": ">=20.17.0"
+  },
   "scripts": {
     "start": "./src/sh/start.sh",
     "start:clean": "./src/sh/start-clean.sh",
@@ -20,8 +23,8 @@
     "install-deps": "./src/sh/install-deps.sh"
   },
   "devDependencies": {
-    "@types/node": "^24.1.0",
-    "typescript": "^5.9.3",
+    "@types/node": "^22.10.5",
+    "typescript": "^5.7.3",
     "vitest": "^3.2.4"
   },
   "dependencies": {
