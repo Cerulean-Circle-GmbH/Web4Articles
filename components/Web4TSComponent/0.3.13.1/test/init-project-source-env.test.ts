@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 describe('initProject creates source.env', () => {
-  const testDataDir = path.join(__dirname, '..', 'test', 'data', 'init-source-env-test');
+  const testDataDir = path.resolve(process.cwd(), 'test/data');
   let component: DefaultWeb4TSComponent;
 
   beforeEach(async () => {
@@ -26,7 +26,7 @@ describe('initProject creates source.env', () => {
   afterEach(async () => {
     // Clean up after test
     if (existsSync(testDataDir)) {
-      await rm(testDataDir, { recursive: true, force: true });
+      // await rm(testDataDir, { recursive: true, force: true });
     }
   });
 
@@ -41,7 +41,7 @@ describe('initProject creates source.env', () => {
     // Assert: source.env has correct content
     const content = await readFile(sourceEnvPath, 'utf-8');
     expect(content).toContain('#!/bin/bash');
-    expect(content).toContain('Web4 Project Environment Setup');
+    expect(content).toContain('Web4Articles Project Environment Setup');
     expect(content).toContain('WEB4_PROJECT_ROOT');
     expect(content).toContain('_web4_tscompletion');
     expect(content).toContain('_web4_register_completions');
