@@ -265,14 +265,20 @@ This is "Understand First Before Understood" - the breakthrough pattern.
 4. **Breadcrumb Navigation** → Follow Previous PDCA chain backward (minimum 5), create awareness notes
 5. **Depth 3 Reading** → Read CMM3 checklist, howto.PDCA.md, PDCA.howto.decide.md COMPLETELY
 6. **Situational Awareness Check** → Can you answer: What's current focus? What patterns to avoid?
-7. **Create dev/UTC** → Create dev/[timestamp] branch and switch to it (Decision 1d)
-8. **Automate** → Install git post-commit hook
-9. **Create Todo** → Use todo_write for task management
-10. **Execute** → Perform requested work with pattern awareness
-11. **Document** → Create PDCA following mandatory format
-12. **Verify Before Claiming** → Use verification tables, grep for ALL instances
-13. **Commit** → Git add, commit, push immediately (auto-merge triggers)
-14. **Report** → Minimal chat with dual links and numbered decisions
+7. **Present Startup Decisions** → MANDATORY: Present 4 decision categories per [PDCA.howto.decide.md § "🚀 STARTUP DECISION FRAMEWORK"](../scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md#-startup-decision-framework):
+   - Decision 1: Primary Work Focus Area (Technical/Architecture/Documentation/Quality)
+   - Decision 2: Role Selection (Dynamic discovery: `find scrum.pmo/roles -maxdepth 1 -type d | grep -v "_shared"`)
+   - Decision 3: Session Duration and Sprint Planning
+   - Decision 4: PDCA Organization Location
+8. **Wait for User Selections** → Do NOT proceed until user responds with selections (e.g., "1a, 2e, 3d, 4b")
+9. **Create dev/UTC** → Create dev/[timestamp] branch and switch to it (Decision 1d)
+10. **Automate** → Install git post-commit hook
+11. **Create Todo** → Use todo_write for task management
+12. **Execute** → Perform requested work with pattern awareness
+13. **Document** → Create PDCA following mandatory format
+14. **Verify Before Claiming** → Use verification tables, grep for ALL instances
+15. **Commit** → Git add, commit, push immediately (auto-merge triggers)
+16. **Report** → Minimal chat with dual links and numbered decisions
 
 **CRITICAL WARNINGS:**
 - **NEVER** identify as Scrum Master, Developer, or other roles!
@@ -367,17 +373,19 @@ You've reached optimal state when:
 2. ✅ Can articulate current focus and patterns to avoid
 3. ✅ Read CMM3 checklist, PDCA protocols to depth 3
 4. ✅ Created situational awareness notes with verification
-5. ✅ PDCAs follow 6-section mandatory format
-6. ✅ Chat responses are minimal with dual links
-7. ✅ Decisions are numbered with clear options
-8. ✅ User responds with simple "1a, 2b" format
-9. ✅ All work is documented in PDCA files
-10. ✅ GitHub links work (files are pushed)
-11. ✅ Auto-merge to release/dev works
-12. ✅ Only real decisions presented
-13. ✅ Warnings given for destructive operations
-14. ✅ Verification tables used (not just claims)
-15. ✅ Link validation performed before claiming complete
+5. ✅ Presented startup decisions (4 categories: Focus, Role, Duration, Location)
+6. ✅ Waited for user selections before proceeding with work
+7. ✅ PDCAs follow 6-section mandatory format
+8. ✅ Chat responses are minimal with dual links
+9. ✅ Decisions are numbered with clear options
+10. ✅ User responds with simple "1a, 2b" format
+11. ✅ All work is documented in PDCA files
+12. ✅ GitHub links work (files are pushed)
+13. ✅ Auto-merge to release/dev works
+14. ✅ Only real decisions presented
+15. ✅ Warnings given for destructive operations
+16. ✅ Verification tables used (not just claims)
+17. ✅ Link validation performed before claiming complete
 
 ---
 
