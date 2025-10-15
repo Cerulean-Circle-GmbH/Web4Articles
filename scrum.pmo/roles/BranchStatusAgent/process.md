@@ -1,7 +1,7 @@
 # BranchStatusAgent — Process
 
 ## Purpose
-Maintain accurate, auditable visibility into repository branches, enforce protection policies, and drive safe consolidation via small PRs.
+Maintain accurate, auditable visibility into repository branches, enforce protection policies, and drive safe consolidation.
 
 ## Responsibilities
 - Generate and maintain branch status in `scrum.pmo/project.journal/<date>/branches.checklist.md`.
