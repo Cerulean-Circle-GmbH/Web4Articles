@@ -1207,3 +1207,289 @@ Most can be marked **HISTORICAL** unless you remember specific valuable work.
 
 ---
 
+
+## **LOW Priority** ⚪ **- Bulk Categories**
+
+*127 branches organized by category. Most can be bulk-actioned.*
+
+---
+
+## **Category: Cursor Branches** (30 branches)
+
+### **Batch WODA Analysis**
+
+### **What**
+Cursor AI experimental branches from August-September development sessions.
+
+### **Overview**
+- **Branch Pattern:** `cursor/*`
+- **Total Count:** 30 branches
+- **Date Range:** August 12 - September 29
+- **Type:** AI agent experimental work
+- **Common Themes:**
+  - Recovery from README experiments
+  - Session startup attempts
+  - Background process testing
+  - Test execution experiments
+
+**Branch List:**
+1. `cursor/execute-role-from-readme-and-add-to-project-4f37` (Aug 13)
+2. `cursor/hn-first-start-7e4f` (Aug 28)
+3. `cursor/recover-from-readme-file-492d` (Aug 19)
+4. `cursor/recover-from-readme-file-4ac2` (Aug 22)
+5. `cursor/recover-from-readme-file-76e5` (Aug 29)
+6. `cursor/recover-from-readme-file-a627` (Aug 20)
+7. `cursor/recover-from-readme-file-ad03` (Aug 18)
+8. `cursor/recover-from-readme-file-c072` (Aug 19)
+9. `cursor/recover-from-readme-file-ef6b` (Aug 12)
+10. `cursor/recover-scrum-master-info-from-readme-fdc0` (Aug 20)
+11. `cursor/recover-scrum-session-from-readme-53bc` (Aug 19)
+12. `cursor/recovery-2025-08-20-0950` (Aug 20)
+13. `cursor/recovery-from-readme-20250819-0949` (Aug 19)
+14. `cursor/start-background-process-10df` (Aug 25)
+15. `cursor/start-background-process-2744` (Aug 28)
+16. `cursor/start-background-process-2cb6` (Sep 27)
+17. `cursor/start-background-process-32f2` (Sep 18)
+18. `cursor/start-background-process-4ab2` (Aug 29)
+19. `cursor/start-background-process-5a03` (Sep 29) - Already analyzed in test
+20. `cursor/start-background-process-7322` (Aug 29)
+21. `cursor/start-background-process-78bf` (Aug 29)
+22. `cursor/start-background-process-7b6a` (Sep 29)
+23. `cursor/start-background-process-7bd3` (Sep 18)
+24. `cursor/start-background-process-da8e` (Sep 29)
+25. `cursor/start-background-process-db25` (Sep 29)
+26. `cursor/start-background-process-dcf6` (Aug 29)
+27. `cursor/start-test-4-f177` (Aug 28)
+28. `cursor/read-readme-and-start-process-80b8` (Already up to date)
+29. `cursor/read-readme-and-start-process-d21e` (Already up to date)
+30. `cursor/start-background-process-2d33` (Already up to date)
+
+### **Details**
+
+**Common Characteristics:**
+- **Purpose:** AI learning and experimentation
+- **Age:** 16-66 days old
+- **Pattern:** Multiple attempts at same tasks (recover, start, test)
+- **Outcome:** Some superseded, some experimental
+
+**Example Patterns:**
+- **Recovery experiments (13 branches):** Various attempts to recover from README
+- **Startup attempts (12 branches):** Different approaches to background process startup
+- **Test execution (1 branch):** Test 4 with Vitest
+- **Already merged (3 branches):** Content already in dev/0400
+
+**Why LOW Priority:**
+- Experimental AI agent work
+- Multiple iterations of same concepts
+- Most likely superseded by final solutions
+- Historical value > practical value
+
+### **Action**
+
+**💡 My Bulk Recommendation:** **KEEP ALL AS HISTORICAL ARCHIVE**
+
+**Reasoning:**
+- **Historical Value:** Shows AI agent learning progression
+- **No Deletion:** Following "no deletion" policy
+- **No Merge:** Experimental work, not production code
+- **Archive Category:** "AI agent experimentation history"
+
+**What This Preserves:**
+- Agent evolution timeline
+- Learning process documentation
+- Experimental approaches tried
+- Context for understanding current solutions
+
+**Exceptions:**
+- 3 branches marked "Already up to date" can be noted as merged
+- If you remember specific valuable work in any branch, can investigate individually
+
+**Bulk Action:**
+```
+For all 30 cursor/* branches:
+- Status: HISTORICAL
+- Action: Keep as-is
+- Category: AI Experimentation Archive
+- Merge: No
+- Delete: No
+```
+
+**❓ Questions for You:**
+1. Bulk mark all 30 as HISTORICAL?
+2. Any specific cursor branch you remember as valuable?
+3. Or should I analyze each individually? (would add 2-3 hours)
+
+---
+
+## **Category: Temp Merge Branches** (14 branches)
+
+### **Batch WODA Analysis**
+
+### **What**
+Temporary PDCA merge branches with Unix timestamps, created during August 24 merge experiments.
+
+### **Overview**
+- **Branch Pattern:** `temp-pdca-merge-[timestamp]`
+- **Total Count:** 14 branches
+- **Creation:** All from August 24, 2025
+- **Type:** Temporary merge attempts
+- **Purpose:** Safe merge experiments for PDCA files
+
+**Branch List:**
+1. `temp-pdca-merge-1756049365` (Aug 24)
+2. `temp-pdca-merge-1756050429` (Aug 24)
+3. `temp-pdca-merge-1756050430` (Aug 24)
+4. `temp-pdca-merge-1756050898` (Aug 24)
+5. `temp-pdca-merge-1756051772` (Aug 24)
+6. `temp-pdca-merge-1756052356` (Aug 24)
+7. `temp-pdca-merge-1756052357` (Aug 24)
+8. `temp-pdca-merge-1756056226` (Aug 24)
+9. `temp-pdca-merge-1756056437` (Aug 24)
+10. `temp-pdca-merge-1756056798` (Aug 24)
+11. `temp-pdca-merge-1756057151` (Aug 24)
+12. `temp-pdca-merge-1756057605` (Aug 24)
+13. `temp-pdca-merge-1756059045` (Aug 24)
+14. (1 more found in analysis)
+
+### **Details**
+
+**What These Are:**
+- **Temporary branches:** Created during merge experiment session
+- **Same day:** All Aug 24 = single session's attempts
+- **Unix timestamps:** Branch names are Unix epoch seconds
+- **Pattern:** Multiple iterative attempts to merge PDCA content safely
+
+**Common Commit Message:**
+"Safe merge: Add newer content from dev/2025-08-24-UTC-0857"
+
+**Why They Exist:**
+- Agent was experimenting with safe merge strategies
+- Created temporary branches to test merges
+- Multiple attempts suggest trial-and-error approach
+- Likely intended to be deleted after successful merge
+
+### **Action**
+
+**💡 My Bulk Recommendation:** **DELETE ALL 14 BRANCHES**
+
+**Reasoning:**
+- **Temporary by nature:** "temp" prefix indicates not meant to be permanent
+- **Experiment complete:** Work from Aug 24 now 53 days old
+- **Purpose fulfilled:** Merge experiments completed (successful merge likely elsewhere)
+- **No unique content:** Just merge attempts, not unique work
+- **Git clutter:** 14 branches with timestamp names add noise
+
+**Safety Check Before Delete:**
+```bash
+# Verify these are just merge attempts with no unique content
+for branch in temp-pdca-merge-*; do
+    git log -1 --oneline "origin/$branch"
+done
+```
+
+**Bulk Action:**
+```
+For all 14 temp-pdca-merge-* branches:
+- Status: TEMPORARY/CLEANUP
+- Action: DELETE
+- Reason: Merge experiments complete, temporary branches
+- Risk: Low (merge attempts, not unique work)
+```
+
+**Alternative (Conservative):**
+If you want to be extra safe:
+- Keep them marked as HISTORICAL
+- But they just add clutter
+
+**❓ Questions for You:**
+1. **DELETE all 14 temp branches?** (Recommended)
+2. Or keep as HISTORICAL? (Conservative)
+3. Need to verify content first? (5 min)
+
+---
+
+## **Category: Test Merge Branches** (9 branches)
+
+### **Batch WODA Analysis**
+
+### **What**
+Test merge branches with snapshot versions (prev1-prev9, latest) from August 19-20 branch merging experiments.
+
+### **Overview**
+- **Branch Pattern:** `test-merge/[version]`
+- **Total Count:** 9 branches
+- **Creation:** August 19-20, 2025
+- **Type:** Test branches for merge validation
+- **Purpose:** Version snapshots during merge testing
+
+**Branch List:**
+1. `test-merge/latest-48c865d` (Aug 20) - "Branch tree documentation complete"
+2. `test-merge/prev1-4271417` (Aug 19) - "Update index.md with recovery analysis docs"
+3. `test-merge/prev2-294d667` (Aug 19) - Same as prev1
+4. `test-merge/prev3-6977416` (Aug 19) - Same as prev1
+5. `test-merge/prev4-3b06952` (Aug 19) - Same as prev1
+6. `test-merge/prev5-6047c5e` (Aug 19) - Same as prev1
+7. `test-merge/prev6-ffe9d79` (Aug 19) - Same as prev1
+8. `test-merge/prev7-15d5b21` (Aug 19) - Same as prev1
+9. `test-merge/prev8-137e4fe` (Aug 19) - Same as prev1
+
+### **Details**
+
+**What These Are:**
+- **Snapshot branches:** prev1-prev8 appear to be identical snapshots
+- **Latest:** One "latest" branch from Aug 20
+- **All old:** 55-56 days ago
+- **Test purpose:** Experimental merge testing
+
+**Pattern:**
+- 8 branches (prev1-prev8) all point to same commit
+- Suggests sequential testing where state was preserved
+- "latest" is one day newer with different work
+
+**Why LOW Priority:**
+- Test branches from 55+ days ago
+- Merge experiments complete
+- No ongoing test use
+- Just historical snapshots
+
+### **Action**
+
+**💡 My Bulk Recommendation:** **DELETE ALL 9 BRANCHES**
+
+**Reasoning:**
+- **Test purpose complete:** Merge tests from 55+ days ago
+- **Duplicate snapshots:** 8 branches are identical
+- **No unique value:** Just test versions, not unique work
+- **Git clutter:** 9 test branches add noise
+- **Age:** 55+ days = experiments long complete
+
+**Safety Check:**
+```bash
+# Verify prev1-prev8 are duplicates
+for i in {1..8}; do
+    git log -1 --format="%H" "origin/test-merge/prev$i-*"
+done | uniq -c
+# Should show all same hash
+```
+
+**Bulk Action:**
+```
+For all 9 test-merge/* branches:
+- Status: TEST/CLEANUP
+- Action: DELETE
+- Reason: Test experiments complete, duplicate snapshots
+- Risk: Very Low (test branches, old)
+```
+
+**Alternative (Conservative):**
+- Keep "latest" branch as reference
+- Delete 8 duplicate "prev" branches
+- But even "latest" is just test history
+
+**❓ Questions for You:**
+1. **DELETE all 9 test branches?** (Recommended)
+2. Keep "latest" but delete "prev" duplicates? (Conservative)
+3. Keep all as HISTORICAL? (Most conservative)
+
+---
+
