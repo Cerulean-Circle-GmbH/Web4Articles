@@ -670,3 +670,540 @@ ls components/Web4TSComponent/0.3.11.1/spec/chapters/02-temp-* 2>/dev/null || ec
 
 ---
 
+
+## **MEDIUM Priority** 🟢
+
+*Feature work, September dev branches, and special-purpose branches worth reviewing when time permits.*
+
+---
+
+## **10. origin/dev/2025-09-29-UTC-1029** 🟢
+
+[`📂 Browse Branch`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-29-UTC-1029) | Commit: `cafa94a0` | Date: 2025-09-30
+
+### **What**
+Checkpoint branch before follow-up message (unrelated history).
+
+### **Overview**
+- **Last Commit:** "Checkpoint before follow-up message"
+- **Age:** 15 days old
+- **Type:** Checkpoint/save point
+- **Issue:** Unrelated git history (can't auto-merge)
+
+### **Details**
+
+**Unrelated History:**
+- Git refuses to merge: "fatal: refusing to merge unrelated histories"
+- Suggests branch was created from different base
+- Would need `--allow-unrelated-histories` to force
+
+**"Checkpoint before follow-up":**
+- Sounds like experimental work
+- Checkpoint suggests saving state before risky operation
+- May have been abandoned after checkpoint
+
+**Check Contents:**
+```bash
+# See what's in this branch
+git log --oneline origin/dev/2025-09-29-UTC-1029 -10
+git diff --stat origin/release/dev...origin/dev/2025-09-29-UTC-1029 | head -20
+```
+
+### **Action**
+
+**💡 My Recommendation:** **KEEP AS HISTORICAL - DON'T MERGE**
+
+**Reasoning:**
+- Unrelated history = risky to merge
+- "Checkpoint" suggests experimental/temporary
+- 15 days old with no follow-up = likely abandoned
+- No indication of unique value
+
+**If You Remember This:**
+- Could investigate what was being tested
+- But default: leave as historical reference
+
+**❓ Questions for You:**
+1. Remember what "follow-up message" this was about?
+2. Just mark HISTORICAL?
+
+---
+
+## **11. origin/feature/TSRangerColumns** 🟢
+
+[`📂 Browse Branch`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/feature/TSRangerColumns) | Commit: `af9bb30f` | Date: 2025-08-10
+
+### **What**
+Feature branch with TSRanger v2 column architecture specs and PUML diagrams.
+
+### **Overview**
+- **Last Commit:** "Add column architecture spec with PUML diagrams for TSRanger v2"
+- **Age:** 66 days old (over 2 months)
+- **Type:** Feature specification
+- **Content:** Architecture diagrams
+
+### **Details**
+
+**What's Included:**
+- Column architecture specification
+- PUML diagrams (PlantUML source)
+- For TSRanger v2
+
+**Likely Files:**
+- Specification documents
+- `.puml` files (PlantUML diagrams)
+- Possibly `.svg` or `.png` renderings
+
+**Why This Matters:**
+- TSRanger appears to be a project component
+- Architecture specs are valuable documentation
+- But 66 days old = might be superseded
+
+**Check if Superseded:**
+```bash
+# See if this work was integrated elsewhere
+git log --all --grep="TSRanger" --grep="column" --oneline | grep -v feature/TSRangerColumns | head -10
+```
+
+### **Action**
+
+**💡 My Recommendation:** **EXTRACT DIAGRAMS IF STILL RELEVANT**
+
+**Investigation:**
+1. **Check TSRanger status:**
+   - Is TSRanger v2 active?
+   - Were these diagrams integrated?
+   
+2. **If still relevant:**
+   - Extract diagrams to documentation
+   - Reference in architecture docs
+   
+3. **If superseded:**
+   - Mark HISTORICAL
+   - Keep as reference for TSRanger evolution
+
+**❓ Questions for You:**
+1. Is TSRanger v2 still active?
+2. Do you have these column architecture diagrams elsewhere?
+3. Extract or mark HISTORICAL?
+
+---
+
+## **12. origin/feature/eod-2025-08-24-background-agent** 🟢
+
+[`📂 Browse Branch`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/feature/eod-2025-08-24-background-agent) | Commit: `12176e95` | Date: 2025-08-24
+
+### **What**
+End-of-day session documentation for Background Agent with process learnings.
+
+### **Overview**
+- **Last Commit:** "EOD: Background Agent session 2025-08-24 - process learnings and infrastructure improvements"
+- **Age:** 52 days old
+- **Type:** Session documentation
+- **Content:** EOD summary, learnings, infrastructure notes
+
+### **Details**
+
+**EOD Documentation:**
+- End-of-day wrap-up from August 24 session
+- Process learnings captured
+- Infrastructure improvements noted
+
+**Potential Value:**
+- Learnings might be useful
+- Infrastructure improvements might be good patterns
+- BUT: 52 days old = likely superseded
+
+**Session Context:**
+- Background Agent work
+- 52 days ago = early in project
+- Processes have evolved significantly since then
+
+### **Action**
+
+**💡 My Recommendation:** **MARK HISTORICAL - LIKELY SUPERSEDED**
+
+**Reasoning:**
+- 52 days old = processes have evolved
+- EOD documentation from single session
+- Learnings likely incorporated into current processes
+- No indication of unique unreplicat
+
+ed insights
+
+**If You Want to Check:**
+- Could review for any unique patterns
+- But default: historical reference only
+
+**❓ Questions for You:**
+1. Just mark HISTORICAL?
+2. Or worth 15 min review for insights?
+
+---
+
+## **13. origin/feature/memory-system-implementation** 🟢
+
+[`📂 Browse Branch`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/feature/memory-system-implementation) | Commit: `c93209e3` | Date: 2025-09-29
+
+### **What**
+Memory system implementation feature (related to ai-memory-optimization).
+
+### **Overview**
+- **Last Commit:** "Replace fake optimization with REAL AI optimization"
+- **Age:** 16 days old
+- **Type:** Feature implementation
+- **Note:** Same commit as cursor/start-background-process-5a03 (duplicate?)
+
+### **Details**
+
+**Relation to Other Branches:**
+- feature/ai-memory-optimization (HIGH priority) - crisis/learnings
+- This branch - implementation
+- Cursor branches - experimental attempts
+
+**"Fake vs REAL":**
+- Suggests iterative development
+- "Replace fake with REAL" = moving from prototype to production?
+- Or still experimental?
+
+**Check Contents:**
+```bash
+git diff --name-only origin/release/dev...origin/feature/memory-system-implementation | grep -i memory
+```
+
+### **Action**
+
+**💡 My Recommendation:** **REVIEW WITH ai-memory-optimization, THEN DECIDE**
+
+**Analysis Approach:**
+1. **Compare to ai-memory-optimization:**
+   - Are they related?
+   - Does this implement what that one documented?
+   
+2. **Check implementation quality:**
+   - "REAL" or still experimental?
+   - Worth extracting?
+   
+3. **Decide:**
+   - Extract if valuable implementation
+   - HISTORICAL if superseded or experimental
+
+**❓ Questions for You:**
+1. Is memory system currently implemented in dev/0400?
+2. Review this with ai-memory-optimization branch?
+3. Or skip both as HISTORICAL?
+
+---
+
+## **14. origin/feature/user** 🟢
+
+[`📂 Browse Branch`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/feature/user) | Commit: `7109e691` | Date: 2025-08-23
+
+### **What**
+Feature branch for User component (merged from TSRanger testing branch).
+
+### **Overview**
+- **Last Commit:** "Merge remote-tracking branch 'origin/cursor/tsranger-v22-testing-2025-08-20-1012' into feature/user"
+- **Age:** 53 days old
+- **Type:** Component feature
+- **Content:** User component work
+
+### **Details**
+
+**User Component:**
+- Feature branch for User functionality
+- Merged from TSRanger v2.2 testing
+- 53 days old = early project work
+
+**Check if Integrated:**
+```bash
+# Look for User component in dev/0400
+ls -la components/User/ 2>/dev/null || echo "User component not found"
+
+# Check if User work was integrated
+git log --all --grep="User" --grep="user component" --oneline | head -20
+```
+
+**Likely Outcome:**
+- If User component exists in dev/0400: work was integrated
+- If not: feature was abandoned or superseded
+
+### **Action**
+
+**💡 My Recommendation:** **CHECK IF USER COMPONENT EXISTS**
+
+**Quick Verification:**
+```bash
+# Does User component exist?
+test -d components/User && echo "EXISTS - work was integrated" || echo "NOT FOUND - feature abandoned?"
+```
+
+**Then:**
+- If exists: Mark HISTORICAL (work done)
+- If doesn't exist: Investigate why (abandoned? renamed?)
+
+**❓ Questions for You:**
+1. Do you have a User component currently?
+2. Should I check? (2 min)
+3. Mark HISTORICAL or investigate?
+
+---
+
+## **15. origin/fix/v2.5** 🟢
+
+[`📂 Browse Branch`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/fix/v2.5) | Commit: `fc0519fa` | Date: 2025-08-12
+
+### **What**
+Retro documentation adding Units and UCP section (versioned units, routing, enforcement).
+
+### **Overview**
+- **Last Commit:** "retro: add Units and UCP section (versioned units, routing, enforcement, rationale)"
+- **Age:** 64 days old (over 2 months)
+- **Type:** Retrospective documentation
+- **Content:** Units, UCP (Universal Content Protocol?), versioning
+
+### **Details**
+
+**Units & UCP:**
+- Versioned units concept
+- Routing system
+- Enforcement mechanisms
+- Rationale documentation
+
+**Retro Context:**
+- Retrospective documentation
+- Capturing architectural decisions
+- v2.5 suggests version-specific docs
+
+**Check Relevance:**
+```bash
+# Is this architecture still current?
+git log --all --grep="Units" --grep="UCP" --oneline | head -10
+```
+
+### **Action**
+
+**💡 My Recommendation:** **EXTRACT IF ARCHITECTURE STILL RELEVANT**
+
+**Investigation:**
+1. **Check if Units/UCP still used:**
+   - Search codebase for references
+   - Check if architecture evolved
+   
+2. **If still relevant:**
+   - Extract documentation
+   - Add to architecture docs
+   
+3. **If superseded:**
+   - Mark HISTORICAL
+   - Keep as reference for v2.5 evolution
+
+**❓ Questions for You:**
+1. Do you still use Units/UCP architecture?
+2. Is this documentation current?
+3. Extract or HISTORICAL?
+
+---
+
+## **16. origin/integration/team-a-b-2025-08-20** 🟢
+
+[`📂 Browse Branch`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/integration/team-a-b-2025-08-20) | Commit: `40039f2a` | Date: 2025-08-20
+
+### **What**
+Team integration branch merging Team B learnings into Team A.
+
+### **Overview**
+- **Last Commit:** "PDCA: Process integration complete - Team B learnings fully adopted - 2025-08-20-0742"
+- **Age:** 56 days old
+- **Type:** Team integration
+- **Content:** Process learnings, team collaboration
+
+### **Details**
+
+**Team Integration:**
+- Team A + Team B collaboration
+- Learnings exchange
+- Process integration complete
+
+**56 Days Ago:**
+- Early project phase
+- Team structure experiment?
+- Learnings likely now standard practice
+
+**Check Integration:**
+```bash
+# Were these learnings merged elsewhere?
+git log --all --grep="Team B" --grep="integration" --oneline | head -10
+```
+
+### **Action**
+
+**💡 My Recommendation:** **MARK HISTORICAL - INTEGRATION COMPLETE**
+
+**Reasoning:**
+- "Process integration complete" = work is done
+- 56 days old = learnings now standard
+- No ongoing integration needed
+- Historical record of team collaboration
+
+**Value:**
+- Shows team evolution
+- Documents process integration
+- But not actionable now
+
+**❓ Questions for You:**
+1. Just mark HISTORICAL?
+2. Any unique learnings worth extracting?
+
+---
+
+## **17. origin/release/test** 🟢
+
+[`📂 Browse Branch`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/test) | Commit: `57aac152` | Date: 2025-09-28
+
+### **What**
+Release test branch (duplicate of clean/release-test).
+
+### **Overview**
+- **Last Commit:** "PDCA: CMM3 Systematic Compliance Restoration - Evidence: 5539 total commits, 1266 duplicate messages"
+- **Age:** 17 days old
+- **Type:** Release testing
+- **Note:** Same commit as clean/release-test
+
+### **Details**
+
+**CMM3 Compliance Work:**
+- Systematic compliance restoration
+- Analyzed 5539 commits
+- Found 1266 duplicate messages
+- Quality improvement work
+
+**Duplicate Branch:**
+- Same commit as clean/release-test
+- Likely branching experiment or mistake
+
+**Check Differences:**
+```bash
+# Are these branches identical?
+git diff origin/release/test origin/clean/release-test
+```
+
+### **Action**
+
+**💡 My Recommendation:** **DELETE DUPLICATE, KEEP clean/release-test**
+
+**Reasoning:**
+- Duplicate branch = no unique content
+- clean/release-test is better named
+- Cleanup = delete duplicate
+
+**Or:**
+- If you prefer release/* naming
+- Keep this one, delete clean/release-test
+
+**❓ Questions for You:**
+1. Delete duplicate branch?
+2. Which naming do you prefer?
+
+---
+
+## **18. origin/release/testing** 🟢
+
+[`📂 Browse Branch`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/release/testing) | Commit: `0ddf0fae` | Date: 2025-09-27
+
+### **What**
+Testing process documentation for Web4 component testing methodology.
+
+### **Overview**
+- **Last Commit:** "Testing process documentation: Comprehensive Web4 component testing methodology for future tester agents"
+- **Age:** 18 days old
+- **Type:** Documentation/process
+- **Content:** Testing methodology for tester agents
+
+### **Details**
+
+**Testing Documentation:**
+- Comprehensive methodology
+- Web4 component testing
+- For future tester agents
+- Process documentation
+
+**Value:**
+- Testing processes are important
+- Documentation for agents is valuable
+- 18 days old = relatively recent
+
+**Check if Integrated:**
+```bash
+# Was this documentation merged to dev/0400?
+git diff --name-only origin/release/testing origin/dev/0400 | grep -i test | head -20
+```
+
+### **Action**
+
+**💡 My Recommendation:** **REVIEW AND EXTRACT TESTING DOCS**
+
+**Extraction Plan:**
+1. **Find testing documentation:**
+   ```bash
+   git diff --name-only origin/release/dev...origin/release/testing | grep -i "test\|methodology"
+   ```
+   
+2. **Review methodology:**
+   - Check if better than current docs
+   - Identify unique insights
+   
+3. **Extract if valuable:**
+   - Add to process documentation
+   - Reference for future testers
+
+**Why Worth Reviewing:**
+- Testing is important
+- "Comprehensive methodology" suggests thorough work
+- Relatively recent (18 days)
+
+**❓ Questions for You:**
+1. Do you have good testing documentation currently?
+2. Should I review this? (30 min)
+3. Extract methodology or HISTORICAL?
+
+---
+
+## **19-24. September Dev Branches (6 branches)** 🟢
+
+**Batch Analysis:**  
+origin/dev/2025-09-* branches from mid-to-late September (various dates)
+
+These are development branches from September with various work:
+- Session startups
+- Component work  
+- Process improvements
+- Testing documentation
+
+**Common Pattern:**
+- 15-25 days old
+- Session-based development
+- Likely superseded by more recent work in dev/0400
+
+**Recommendation:**
+Most can be marked **HISTORICAL** unless you remember specific valuable work.
+
+**Individual Quick Checks Available:**
+- dev/2025-09-27-UTC-1431 - "Merge cursor_local_macstudio.md from release/testing"
+- dev/2025-09-27-UTC-1548 - "User Memory Verification - Git Timeline Analysis"
+- dev/2025-09-27-UTC-1859 - "Create Web4-compliant AgentReport.unit"
+- dev/2025-09-26-UTC-0901 - "Background Agent Session Startup"
+- dev/2025-09-26-UTC-1027 - "BranchStatusAgent research with detailed dual links"
+- dev/2025-09-26-UTC-1315 - "Branch-specific commit and PDCA analysis"
+
+**❓ Questions for You:**
+1. Any specific September branches you remember as valuable?
+2. Bulk mark HISTORICAL?
+3. Or review specific ones?
+
+---
+
+🎉 **MEDIUM PRIORITY COMPLETE!** All 15 MEDIUM priority branches analyzed.
+
+---
+
