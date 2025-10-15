@@ -874,6 +874,91 @@ Standards:
   }
 
   /**
+   * Resolve version for create command - handles both literal versions and versionTypes
+   * @param componentName Component name to create
+   * @param versionInput Either a literal version (X.Y.Z.W) or versionType (nextBuild, nextPatch, etc.)
+   * @returns Resolved semantic version
+   * @cliHide
+   */
+  private async resolveVersionForCreate(componentName: string, versionInput: string): Promise<string> {
+    // If it's already a literal version, return as-is
+    if (versionInput.match(/^\d+\.\d+\.\d+\.\d+$/)) {
+      return versionInput;
+    }
+    
+    // Handle versionType patterns
+    const baseVersion = await this.getBaseVersionForNewComponent(componentName);
+    
+    switch (versionInput) {
+      case 'nextBuild':
+        const nextBuild = this.incrementBuild(baseVersion);
+        console.log(`🔢 Version calculation: ${versionInput} from base ${baseVersion} → ${nextBuild}`);
+        return nextBuild;
+        
+      case 'nextPatch':
+      case 'patch':
+        const nextPatch = this.incrementPatch(baseVersion);
+        console.log(`🔢 Version calculation: ${versionInput} from base ${baseVersion} → ${nextPatch}`);
+        return nextPatch;
+        
+      case 'nextMinor':
+      case 'minor':
+        const nextMinor = this.incrementMinor(baseVersion);
+        console.log(`🔢 Version calculation: ${versionInput} from base ${baseVersion} → ${nextMinor}`);
+        return nextMinor;
+        
+      case 'nextMajor':
+      case 'major':
+        const nextMajor = this.incrementMajor(baseVersion);
+        console.log(`🔢 Version calculation: ${versionInput} from base ${baseVersion} → ${nextMajor}`);
+        return nextMajor;
+        
+      default:
+        // If it's not a recognized versionType, treat as literal version
+        return versionInput;
+    }
+  }
+
+  /**
+   * Get base version for new component creation
+   * Logic: If component exists, use its latest version. Otherwise use Web4TSComponent's latest.
+   * @param componentName Component name
+   * @returns Base version for calculations
+   * @cliHide
+   */
+  private async getBaseVersionForNewComponent(componentName: string): Promise<string> {
+    try {
+      // Check if component already exists
+      const componentDir = this.resolveComponentDirectory(componentName);
+      if (existsSync(componentDir)) {
+        // Component exists, find its latest version
+        const versions = await this.getAvailableVersions(componentName);
+        if (versions.length > 0) {
+          const latestVersion = versions[versions.length - 1]; // Assuming sorted
+          console.log(`📊 Using existing component's latest version as base: ${latestVersion}`);
+          return latestVersion;
+        }
+      }
+      
+      // Component doesn't exist, use Web4TSComponent's latest as template
+      const web4Versions = await this.getAvailableVersions('Web4TSComponent');
+      if (web4Versions.length > 0) {
+        const templateVersion = web4Versions[web4Versions.length - 1];
+        console.log(`📊 Using Web4TSComponent latest as template base: ${templateVersion}`);
+        return templateVersion;
+      }
+      
+      // Fallback to default
+      console.log(`📊 Using default base version: 0.1.0.0`);
+      return '0.1.0.0';
+      
+    } catch (error) {
+      console.log(`📊 Error finding base version, using default: 0.1.0.0`);
+      return '0.1.0.0';
+    }
+  }
+
+  /**
    * Create new Web4-compliant component with auto-discovery CLI and full architecture
    * 
    * Generates a complete component with the same features as Web4TSComponent:
@@ -883,40 +968,47 @@ Standards:
    * - Comprehensive layer structure (layer2/3/4/5)
    * 
    * @param name Component name (CamelCase, spaces become dots)
-   * @param version Semantic version in X.Y.Z.W format (default: 0.1.0.0)
+   * @param version Semantic version in X.Y.Z.W format OR versionType (nextBuild, nextPatch, nextMinor, nextMajor) (default: 0.1.0.0)
    * @param options Features to include: 'all' (recommended), 'cli', 'spec', 'vitest', 'layers'
    * 
    * @example
-   * // Create full-featured component
+   * // Create full-featured component with specific version
    * await component.create('UserManager', '0.1.0.0', 'all');
    * 
    * @example  
-   * // Create minimal component
-   * await component.create('DataProcessor', '0.1.0.0', 'cli');
+   * // Create component with version calculated from base
+   * await component.create('UserManager', 'nextMinor', 'all');
    * 
    * @cliSyntax name version options
    * @cliDefault version 0.1.0.0
    * @cliDefault options all
+   * @cliCompletion version createVersionParameterCompletion
    */
   async create(name: string, version: string = '0.1.0.0', options: string = 'all'): Promise<void> {
+    // Resolve actual version from versionType if needed
+    const resolvedVersion = await this.resolveVersionForCreate(name, version);
+    
     // Parse options (maps from 1.0.0.0 --cli --spec --vitest --layers)
     const scaffoldOptions: any = {
       componentName: name,
-      version,
+      version: resolvedVersion,
       includeLayerArchitecture: options.includes('layers') || options.includes('all'),
       includeCLI: options.includes('cli') || options.includes('all'),
       includeSpecFolder: options.includes('spec') || options.includes('all'),
       includeVitest: options.includes('vitest') || options.includes('test') || options.includes('all')
     };
     
-    console.log(`🏗️ Creating Web4 component: ${name} ${version}`);
+    console.log(`🏗️ Creating Web4 component: ${name} ${resolvedVersion}`);
+    if (version !== resolvedVersion) {
+      console.log(`   📊 Version calculated: ${version} → ${resolvedVersion}`);
+    }
     console.log(`📋 Options: ${options || 'default'}`);
     
     const metadata = await this.scaffoldComponent(scaffoldOptions);
     
     console.log(`✅ Component structure created: ${name}`);
     console.log(`   Version: ${metadata.version}`);
-    console.log(`   Location: components/${name}/${version}`);
+    console.log(`   Location: components/${name}/${resolvedVersion}`);
     console.log(`   CLI: ${metadata.hasLocationResilientCLI ? '✅' : '❌'}`);
     console.log(`   Layers: ${metadata.hasLayeredArchitecture ? '✅' : '❌'}`);
     console.log(`   Spec: ${metadata.hasScenarioSupport ? '✅' : '❌'}`);
@@ -929,7 +1021,7 @@ Standards:
     const tempComponent = new DefaultWeb4TSComponent();
     // Set component context directly (Web4 pattern: modify model, not init)
     tempComponent.model.component = name;
-    tempComponent.model.version = version;
+    tempComponent.model.version = resolvedVersion;
     await tempComponent.verifyAndFix();
     
     // Verify component is callable
@@ -942,7 +1034,227 @@ Standards:
       console.log(`   Try: ${cliScriptName}`);
     } else {
       console.log(`⚠️  Component created but CLI not available at expected path: ${cliPath}`);
-      console.log(`   Run manually: web4tscomponent on ${name} ${version} verifyAndFix`);
+      console.log(`   Run manually: web4tscomponent on ${name} ${resolvedVersion} verifyAndFix`);
+    }
+  }
+
+  /**
+   * Discover and execute parameter completions dynamically
+   * 
+   * This command discovers available parameter completion methods and executes them,
+   * following DRY principles by reusing existing completion infrastructure.
+   * Useful for debugging, development, and understanding CLI completion system.
+   * 
+   * @param parameter Parameter name to discover completion for (e.g., 'version', 'versionType', 'action')
+   * 
+   * @example
+   * // Discover version parameter completions
+   * await component.discover('version');
+   * 
+   * @example
+   * // Discover action parameter completions  
+   * await component.discover('action');
+   * 
+   * @cliSyntax parameter
+   * @cliCompletion parameter parameterParameterCompletion
+   */
+  async discover(parameter: string): Promise<this> {
+    console.log(`🔍 Discovering completions for parameter: ${parameter}`);
+    
+    // Use the existing completeParameter infrastructure (DRY principle)
+    // This reuses the same logic that handles tab completion
+    try {
+      // Try different completion method patterns
+      const possibleMethods = [
+        `${parameter}ParameterCompletion`,
+        `create${parameter.charAt(0).toUpperCase() + parameter.slice(1)}ParameterCompletion`
+      ];
+      
+      let foundMethod = '';
+      let results: string[] = [];
+      let contextCommand = 'upgrade'; // Default context
+      
+      for (const methodName of possibleMethods) {
+        try {
+          // Use the CLI's completeParameter method to execute the completion
+          // This is the same method used by the actual tab completion system
+          const { execSync } = await import('child_process');
+          const cliPath = './web4tscomponent'; // Use relative path from component root
+          
+          // Choose appropriate context based on parameter type
+          // Auto-discover which commands use this parameter (DRY principle)
+          contextCommand = await this.discoverParameterContext(parameter, methodName);
+          
+          const output = execSync(
+            `${cliPath} completeParameter ${methodName} ${contextCommand}`,
+            { encoding: 'utf8', timeout: 5000 }
+          );
+          
+          if (output.trim()) {
+            results = output.trim().split(/\s+/);
+            foundMethod = methodName;
+            break;
+          }
+        } catch (error) {
+          // Method doesn't exist or failed, try next one
+          continue;
+        }
+      }
+      
+      if (!foundMethod) {
+        console.log(`❌ No completion method found for parameter: ${parameter}`);
+        console.log(`   Tried: ${possibleMethods.join(', ')}`);
+        
+        // Show available parameters by calling parameterParameterCompletion
+        try {
+          const { execSync } = await import('child_process');
+          const cliPath = './web4tscomponent'; // Use relative path from component root
+          
+          const availableOutput = execSync(
+            `${cliPath} completeParameter parameterParameterCompletion discover`,
+            { encoding: 'utf8', timeout: 5000 }
+          );
+          
+          if (availableOutput.trim()) {
+            const availableParams = availableOutput.trim().split(/\s+/);
+            console.log(`\n💡 Available parameters:`);
+            availableParams.forEach((param: string) => {
+              console.log(`   • ${param}`);
+            });
+          }
+        } catch (listError) {
+          console.log(`   (Could not list available parameters)`);
+        }
+        
+        return this;
+      }
+      
+      console.log(`✅ Found completion method: ${foundMethod}`);
+      console.log(`\n📋 Completion results for '${parameter}':`);
+      console.log(`   Method: ${foundMethod}`);
+      console.log(`   Count: ${results.length} options`);
+      console.log(`\n🎯 Available options:`);
+      
+      results.forEach((option: string, index: number) => {
+        const emoji = index < 3 ? ['🥇', '🥈', '🥉'][index] : '  ';
+        console.log(`   ${emoji} ${option}`);
+      });
+      
+      // Test filtering if there are results
+      if (results.length > 0 && results[0].length > 1) {
+        const testPrefix = results[0].substring(0, 2);
+        console.log(`\n🧪 Testing prefix filtering with '${testPrefix}':`);
+        
+        try {
+          const { execSync } = await import('child_process');
+          const cliPath = './web4tscomponent'; // Use relative path from component root
+          
+          const filteredOutput = execSync(
+            `${cliPath} completeParameter ${foundMethod} ${contextCommand} ${testPrefix}`,
+            { encoding: 'utf8', timeout: 5000 }
+          );
+          
+          const filteredResults = filteredOutput.trim().split(/\s+/);
+          const filteredCount = filteredResults.filter((r: string) => r.startsWith(testPrefix)).length;
+          console.log(`   Filtered: ${filteredCount}/${results.length} options match prefix`);
+          
+          if (filteredCount > 0 && filteredCount < results.length) {
+            console.log(`   ✅ Prefix filtering works correctly`);
+          } else if (filteredCount === results.length) {
+            console.log(`   ⚠️  All options match prefix (possibly no filtering implemented)`);
+          } else {
+            console.log(`   ❌ No matches found for test prefix`);
+          }
+        } catch (filterError) {
+          console.log(`   ❌ Prefix filtering test failed: ${filterError}`);
+        }
+      }
+      
+    } catch (error) {
+      console.log(`❌ Error during discovery: ${error}`);
+    }
+    
+    return this;
+  }
+
+  /**
+   * Auto-discover which command context to use for a parameter completion method
+   * This implements true auto-discovery instead of hardcoded lookup tables
+   * @param parameter Parameter name (e.g., 'version', 'action', 'versionType')
+   * @param methodName Completion method name (e.g., 'versionParameterCompletion')
+   * @returns Command context that uses this parameter
+   * @cliHide
+   */
+  private async discoverParameterContext(parameter: string, methodName: string): Promise<string> {
+    try {
+      // Strategy 1: Use DRY method to find which commands use this parameter
+      // Access the CLI's consolidated logic through the concrete CLI class
+      const { Web4TSComponentCLI } = await import('../layer5/Web4TSComponentCLI.js');
+      const cliInstance = new Web4TSComponentCLI();
+      
+      const commandsUsingParameter = cliInstance.getCommandsUsingParameterDRY(parameter);
+      
+      if (commandsUsingParameter.length > 0) {
+        // Use the first command found that uses this parameter
+        const firstCommand = commandsUsingParameter[0];
+        
+        // Add appropriate default arguments for commands that need them
+        if (firstCommand === 'on') {
+          return 'on TestComp';
+        } else if (firstCommand === 'create') {
+          return 'create TestComp 0.1.0.0';
+        } else {
+          return firstCommand;
+        }
+      }
+      
+      // Strategy 2: If no direct match, use method name patterns and try multiple contexts
+      // Extract base parameter name from method name
+      let baseParam = methodName.replace('ParameterCompletion', '');
+      if (baseParam.startsWith('create')) {
+        baseParam = baseParam.replace(/^create/, '').toLowerCase();
+        // For create-specific completions, use create command
+        return `create TestComponent 0.1.0.0`;
+      }
+      
+      // Try common command patterns by testing them
+      // This is still auto-discovery - we test which contexts actually work
+      const { execSync } = await import('child_process');
+      const cliPath = './web4tscomponent';
+      
+      const candidateContexts = [
+        'upgrade',                    // Most completion methods work with upgrade
+        'on TestComp',               // For version-related parameters
+        'links',                     // For action parameters
+        'setCICDVersion',            // For target version parameters
+        'releaseTest',               // For promotion parameters
+        'test',                      // For skip/boolean parameters
+        'create TestComp 0.1.0.0'    // For create-related parameters
+      ];
+      
+      // Test each candidate context to see which one works
+      for (const candidateContext of candidateContexts) {
+        try {
+          const testOutput = execSync(
+            `${cliPath} completeParameter ${methodName} ${candidateContext}`,
+            { encoding: 'utf8', timeout: 2000 }
+          );
+          if (testOutput.trim()) {
+            // This context works! Use it.
+            return candidateContext;
+          }
+        } catch (error) {
+          // This context doesn't work, try the next one
+          continue;
+        }
+      }
+      
+      // Fallback: use a generic command that's likely to work
+      return 'upgrade';
+      
+    } catch (error) {
+      // If auto-discovery fails, use safe fallback
+      return 'upgrade';
     }
   }
 
@@ -1147,6 +1459,7 @@ Standards:
    * await component.upgrade('1.0.0.0');
    * 
    * @cliSyntax versionType
+   * @cliCompletion versionType versionTypeParameterCompletion
    */
   async upgrade(versionType: string): Promise<this> {
     const context = this.getComponentContext();
@@ -1238,118 +1551,93 @@ Standards:
   }
 
   /**
-   * Update latest symlink to point to specified version (requires context)
-   * Updates the 'latest' symlink to point to specified version
-   * @param targetVersion Version to set as latest (default: use current context version)
-   * @cliSyntax targetVersion
-   * @cliDefault targetVersion current
+   * Set CI/CD version link - unified method for all semantic version links
+   * Replaces setDev, setLatest, setProd, setTest with single systematic approach
+   * 
+   * @param targetVersion CI/CD stage to set: 'setDev', 'setLatest', 'setProd', 'setTest'
+   * @param version Version to set for the CI/CD stage (default: current context version)
+   * 
+   * @example
+   * // Set dev version to current context version
+   * await component.setCICDVersion('setDev');
+   * 
+   * @example
+   * // Set prod version to specific version
+   * await component.setCICDVersion('setProd', '1.0.0.0');
+   * 
+   * @example
+   * // Set latest to specific version
+   * await component.setCICDVersion('setLatest', '0.3.2.0');
+   * 
+   * @cliSyntax targetVersion version
+   * @cliDefault version 0.1.0.0
    */
-  async setLatest(targetVersion: string = 'current'): Promise<this> {
+  async setCICDVersion(targetVersion: string, version: string = '0.1.0.0'): Promise<this> {
     const context = this.getComponentContext();
     if (!context) {
       throw new Error('No component context loaded. Use "on <component> <version>" first.');
     }
 
-    const version = targetVersion === 'current' ? context.version : targetVersion;
-    const componentDir = this.resolveComponentDirectory(context.component);
-    const latestSymlink = path.join(componentDir, 'latest');
-    const targetDir = path.join(componentDir, version);
-
-    // Verify target version exists
-    if (!existsSync(targetDir)) {
-      throw new Error(`Target version ${version} does not exist at ${targetDir}`);
+    const actualVersion = version === 'current' ? context.version : version;
+    
+    // Map targetVersion to the appropriate semantic link
+    const linkMap: { [key: string]: string } = {
+      'setDev': 'dev',
+      'setLatest': 'latest', 
+      'setProd': 'prod',
+      'setTest': 'test'
+    };
+    
+    const linkName = linkMap[targetVersion];
+    if (!linkName) {
+      throw new Error(`Invalid targetVersion: ${targetVersion}. Must be one of: setDev, setLatest, setProd, setTest`);
     }
+    
+    // Special handling for 'latest' which has different logic
+    if (linkName === 'latest') {
+      const componentDir = this.resolveComponentDirectory(context.component);
+      const latestSymlink = path.join(componentDir, 'latest');
+      const targetDir = path.join(componentDir, actualVersion);
 
-    console.log(`🔗 Setting latest symlink for ${context.component}:`);
-    console.log(`   Target: ${version}`);
-    console.log(`   Symlink: ${latestSymlink}`);
-
-    try {
-      // Remove existing symlink if it exists (using lstat to detect broken symlinks too)
-      try {
-        await fs.lstat(latestSymlink);
-        await fs.unlink(latestSymlink);
-        console.log(`   Removed existing latest symlink`);
-      } catch (err) {
-        // Symlink doesn't exist, that's fine
+      // Verify target version exists
+      if (!existsSync(targetDir)) {
+        throw new Error(`Target version ${actualVersion} does not exist at ${targetDir}`);
       }
 
-      // Create new symlink (relative path)
-      await fs.symlink(version, latestSymlink);
-      console.log(`✅ Latest symlink updated: latest → ${version}`);
+      console.log(`🔗 Setting latest symlink for ${context.component}:`);
+      console.log(`   Target: ${actualVersion}`);
+      console.log(`   Symlink: ${latestSymlink}`);
 
-      // Update scripts symlinks
-      await this.updateScriptsSymlinks(context.component, version);
+      try {
+        // Remove existing symlink if it exists
+        try {
+          await fs.lstat(latestSymlink);
+          await fs.unlink(latestSymlink);
+          console.log(`   Removed existing latest symlink`);
+        } catch (err) {
+          // Symlink doesn't exist, that's fine
+        }
 
-    } catch (error) {
-      throw new Error(`Failed to update latest symlink: ${(error as Error).message}`);
+        // Create new symlink
+        await fs.symlink(actualVersion, latestSymlink);
+        console.log(`   ✅ Latest symlink created: latest → ${actualVersion}`);
+        
+        // Update scripts symlinks for latest
+        await this.updateScriptsSymlinks(context.component, actualVersion);
+      } catch (error) {
+        throw new Error(`Failed to create latest symlink: ${error}`);
+      }
+    } else {
+      // Use createSemanticLink for dev, prod, test
+      await this.createSemanticLink(context.component, linkName, actualVersion);
+      
+      const emoji = linkName === 'dev' ? '🚧' : linkName === 'prod' ? '🚀' : '🧪';
+      console.log(`${emoji} ${linkName.charAt(0).toUpperCase() + linkName.slice(1)} symlink updated: ${linkName} → ${actualVersion}`);
     }
-
-    return this;
-  }
-
-  /**
-   * Set development version link - version currently under development (requires context)
-   * @param targetVersion Version to set as dev (default: use current context version)
-   * @cliSyntax targetVersion
-   * @cliDefault targetVersion current
-   * @cliExample web4tscomponent on Unit 0.3.0.5 setDev
-   * @cliExample web4tscomponent on Unit 0.3.0.5 setDev 0.4.0.0
-   */
-  async setDev(targetVersion: string = 'current'): Promise<this> {
-    const context = this.getComponentContext();
-    if (!context) {
-      throw new Error('No component context loaded. Use "on <component> <version>" first.');
-    }
-
-    const version = targetVersion === 'current' ? context.version : targetVersion;
-    await this.createSemanticLink(context.component, 'dev', version);
-    console.log(`🚧 Dev symlink updated: dev → ${version}`);
     
     return this;
   }
 
-  /**
-   * Set test version link - version ready for 100% revision testing (requires context)
-   * @param targetVersion Version to set as test (default: use current context version)
-   * @cliSyntax targetVersion
-   * @cliDefault targetVersion current
-   * @cliExample web4tscomponent on Unit 0.3.0.5 setTest
-   * @cliExample web4tscomponent on Unit 0.3.0.5 setTest 0.3.2.0
-   */
-  async setTest(targetVersion: string = 'current'): Promise<this> {
-    const context = this.getComponentContext();
-    if (!context) {
-      throw new Error('No component context loaded. Use "on <component> <version>" first.');
-    }
-
-    const version = targetVersion === 'current' ? context.version : targetVersion;
-    await this.createSemanticLink(context.component, 'test', version);
-    console.log(`🧪 Test symlink updated: test → ${version}`);
-    
-    return this;
-  }
-
-  /**
-   * Set production version link - version that achieved 100% testing success (requires context)
-   * @param targetVersion Version to set as prod (default: use current context version)
-   * @cliSyntax targetVersion
-   * @cliDefault targetVersion current
-   * @cliExample web4tscomponent on Unit 0.3.0.5 setProd
-   * @cliExample web4tscomponent on Unit 0.3.0.5 setProd 0.3.1.0
-   */
-  async setProd(targetVersion: string = 'current'): Promise<this> {
-    const context = this.getComponentContext();
-    if (!context) {
-      throw new Error('No component context loaded. Use "on <component> <version>" first.');
-    }
-
-    const version = targetVersion === 'current' ? context.version : targetVersion;
-    await this.createSemanticLink(context.component, 'prod', version);
-    console.log(`🚀 Prod symlink updated: prod → ${version}`);
-    
-    return this;
-  }
 
   /**
    * Display semantic version links - shows own links if no context, or target component links if context loaded
@@ -1357,7 +1645,8 @@ Standards:
    * When context loaded: Show semantic version links for the loaded component
    * Shows development workflow status and version progression
    * @param action Optional action: 'fix' to repair all links and symlinks
-   * @cliSyntax
+   * @cliSyntax action
+   * @cliCompletion action actionParameterCompletion
    * @cliExample web4tscomponent links
    * @cliExample web4tscomponent links fix
    * @cliExample web4tscomponent on Unit 0.3.2.0 links
@@ -2760,21 +3049,21 @@ Standards:
    * @cliExample web4tscomponent removeVersion Unit 0.2.0.0
    * @cliExample web4tscomponent on Unit 0.2.0.0 removeVersion
    */
-  async removeVersion(componentName: string = 'current', version: string = 'current'): Promise<this> {
+  async removeVersion(component: string = 'current', version: string = 'current'): Promise<this> {
     let targetComponent: string;
     let targetVersion: string;
 
     // Only check context if either parameter is 'current'
-    if (componentName === 'current' || version === 'current') {
+    if (component === 'current' || version === 'current') {
       const context = this.getComponentContext();
       if (!context) {
         throw new Error('No component context loaded and no component/version specified. Use "on <component> <version>" first or provide component and version.');
       }
-      targetComponent = componentName === 'current' ? context.component : componentName;
+      targetComponent = component === 'current' ? context.component : component;
       targetVersion = version === 'current' ? context.version : version;
     } else {
       // Both parameters explicitly provided
-      targetComponent = componentName;
+      targetComponent = component;
       targetVersion = version;
     }
 
@@ -2835,22 +3124,22 @@ Standards:
    * Remove an entire component and all its versions
    * Removes the complete component directory and all associated symlinks
    * @param componentName Component name to remove completely (uses context if not provided)
-   * @cliSyntax componentName
-   * @cliDefault componentName current
+   * @cliSyntax component
+   * @cliDefault component current
    * @cliExample web4tscomponent removeComponent TestComponent
    * @cliExample web4tscomponent on TestComponent 1.0.0.0 removeComponent
    */
-  async removeComponent(componentName: string = 'current'): Promise<this> {
+  async removeComponent(component: string = 'current'): Promise<this> {
     let targetComponent: string;
 
-    if (componentName === 'current') {
+    if (component === 'current') {
       const context = this.getComponentContext();
       if (!context) {
         throw new Error('No component context loaded and no component specified. Use "on <component> <version>" first or provide component name.');
       }
       targetComponent = context.component;
     } else {
-      targetComponent = componentName;
+      targetComponent = component;
     }
 
     const componentDir = this.resolveComponentDirectory(targetComponent);

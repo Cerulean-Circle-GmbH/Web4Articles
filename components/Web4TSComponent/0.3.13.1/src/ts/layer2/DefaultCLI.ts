@@ -17,7 +17,7 @@ export abstract class DefaultCLI implements CLI {
   protected componentName: string = '';
   protected componentVersion: string = '';
   protected componentInstance: any | null = null;
-  protected methodSignatures: Map<string, MethodSignature> = new Map();
+  // Method signatures removed - using direct reflection instead
   
   constructor() {
     // Empty constructor - Web4 pattern
@@ -31,7 +31,7 @@ export abstract class DefaultCLI implements CLI {
     this.componentClass = componentClass;
     this.componentName = name;
     this.componentVersion = version;
-    this.discoverMethods(); // TSRanger 2.2 pattern
+    // Method discovery removed - using direct reflection on-demand
     return this;
   }
   
@@ -100,65 +100,68 @@ export abstract class DefaultCLI implements CLI {
     return `ℹ️ ${message}`;
   }
 
-  /**
-   * TSRanger 2.2 method discovery pattern
-   * Discovers methods from entire CLI inheritance chain (DefaultCLI and subclasses)
-   */
-  protected discoverMethods(): void {
-    // Walk up the prototype chain to discover ALL CLI methods
-    let currentPrototype = Object.getPrototypeOf(this);
-    while (currentPrototype && currentPrototype !== Object.prototype) {
-      const methodNames = Object.getOwnPropertyNames(currentPrototype)
-        .filter(name => typeof currentPrototype[name] === 'function')
-        .filter(name => !name.startsWith('_') && name !== 'constructor')
-        .filter(name => !['init', 'toScenario', 'validateModel', 'getModel'].includes(name));
-
-      for (const methodName of methodNames) {
-        // Don't overwrite if already discovered (subclass takes precedence)
-        if (!this.methodSignatures.has(methodName)) {
-          const method = currentPrototype[methodName];
-          this.methodSignatures.set(methodName, {
-            name: methodName,
-            paramCount: method.length,
-            isAsync: method.constructor.name === 'AsyncFunction'
-          });
-        }
-      }
-      
-      // Move up the chain
-      currentPrototype = Object.getPrototypeOf(currentPrototype);
-    }
-    
-    // Also discover component methods if componentClass is set
-    if (this.componentClass) {
-      const prototype = this.componentClass.prototype;
-      const methodNames = Object.getOwnPropertyNames(prototype)
-        .filter(name => typeof prototype[name] === 'function')
-        .filter(name => !name.startsWith('_') && name !== 'constructor')
-        .filter(name => !['init', 'toScenario', 'validateModel', 'getModel'].includes(name));
-
-      for (const methodName of methodNames) {
-        const method = prototype[methodName];
-        this.methodSignatures.set(methodName, {
-          name: methodName,
-          paramCount: method.length,
-          isAsync: method.constructor.name === 'AsyncFunction'
-        });
-      }
-    }
-  }
+  // Method discovery removed - using direct reflection on-demand instead
 
   /**
    * Dynamic command execution (TSRanger 2.2 pattern)
    */
-  protected async executeDynamicCommand(command: string, args: string[]): Promise<boolean> {
-    if (!this.methodSignatures.has(command)) {
-      return false; // Command not found
+  /**
+   * Get method by name with reflection (replaces stored signatures)
+   */
+  protected getMethodByName(command: string): Function | null {
+    // Check CLI methods first
+    if (typeof (this as any)[command] === 'function') {
+      return (this as any)[command];
     }
-
-    const signature = this.methodSignatures.get(command)!;
     
-    // Dynamic argument validation with overload support
+    // Check component methods
+    try {
+      const componentInstance = this.getComponentInstance();
+      if (typeof (componentInstance as any)[command] === 'function') {
+        return (componentInstance as any)[command];
+      }
+    } catch {
+      // Component not available
+    }
+    
+    return null;
+  }
+
+  /**
+   * Get available command names (replaces methodSignatures.keys())
+   */
+  private getAvailableCommands(): string[] {
+    const commands = new Set<string>();
+    
+    // Add CLI methods
+    const cliMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(this))
+      .filter(name => typeof (this as any)[name] === 'function' && !name.startsWith('_') && name !== 'constructor');
+    cliMethods.forEach(cmd => commands.add(cmd));
+    
+    // Add component methods if componentClass is available
+    if (this.componentClass) {
+      try {
+        const prototype = this.componentClass.prototype;
+        const componentMethods = Object.getOwnPropertyNames(prototype)
+          .filter(name => typeof prototype[name] === 'function' && !name.startsWith('_') && name !== 'constructor')
+          .filter(name => !['init', 'toScenario', 'validateModel', 'getModel'].includes(name));
+        componentMethods.forEach(cmd => commands.add(cmd));
+      } catch {
+        // Component class inspection failed
+      }
+    }
+    
+    return Array.from(commands).sort();
+  }
+
+  protected async executeDynamicCommand(command: string, args: string[]): Promise<boolean> {
+    // Get method info via reflection instead of stored signature
+    const method = this.getMethodByName(command);
+    if (!method) {
+      return false;
+    }
+    
+    // Dynamic argument validation with overload support  
     const minArgs = this.getMinimumArguments(command);
     if (args.length < minArgs) {
       throw new Error(`At least ${minArgs} arguments required for ${command} command`);
@@ -169,7 +172,7 @@ export abstract class DefaultCLI implements CLI {
     if (typeof (this as any)[command] === 'function') {
       // Execute on CLI instance (DefaultCLI or Web4TSComponentCLI)
       const method = (this as any)[command];
-      if (signature.isAsync) {
+      if (method.constructor.name === 'AsyncFunction') {
         await method.apply(this, args);
       } else {
         method.apply(this, args);
@@ -179,7 +182,7 @@ export abstract class DefaultCLI implements CLI {
       const componentInstance = this.getComponentInstance();
       const method = componentInstance[command];
       
-      if (signature.isAsync) {
+      if (method.constructor.name === 'AsyncFunction') {
         await method.apply(componentInstance, args);
       } else {
         method.apply(componentInstance, args);
@@ -198,8 +201,10 @@ export abstract class DefaultCLI implements CLI {
     console.log(`${this.colors.bold}Usage:${this.colors.reset}`);
     
     // Dynamic usage generation from discovered methods
-    for (const [methodName, signature] of this.methodSignatures) {
-      const params = Array(signature.paramCount).fill(0)
+    for (const methodName of this.getAvailableCommands()) {
+      const method = this.getMethodByName(methodName);
+      const paramCount = method?.length || 0;
+      const params = Array(paramCount).fill(0)
         .map((_, i) => `${this.colors.yellow}<arg${i + 1}>${this.colors.reset}`)
         .join(' ');
       console.log(`  ${this.colors.green}${toolName} ${methodName}${this.colors.reset} ${params}`);
@@ -431,7 +436,7 @@ export abstract class DefaultCLI implements CLI {
       'from': 1,  // Can be called with 1 (file) or 3 (file, start, end) arguments
     };
     
-    return overloadedMethods[command] || this.methodSignatures.get(command)?.paramCount || 0;
+    return overloadedMethods[command] || this.getMethodByName(command)?.length || 0;
   }
 
   /**
@@ -795,18 +800,34 @@ export abstract class DefaultCLI implements CLI {
    * Get list of commands that use a specific parameter
    * Web4 pattern: Cross-reference parameter usage across all methods
    */
-  private getCommandsUsingParameter(parameterName: string, methods: any[]): string[] {
+  /**
+   * DRY utility: Find which commands use a specific parameter
+   * Used by both getCommandsUsingParameter and discover command
+   * @param parameterName Parameter to search for
+   * @returns Array of command names that use this parameter
+   * @cliHide
+   */
+  public getCommandsUsingParameterDRY(parameterName: string): string[] {
+    const methods = this.analyzeComponentMethods();
     const commandsUsingParam: string[] = [];
     
     for (const method of methods) {
-      // Check if this method has a parameter with the given name
       const hasParameter = method.parameters.some((param: any) => param.name === parameterName);
       if (hasParameter) {
         commandsUsingParam.push(method.name);
       }
     }
     
-    return commandsUsingParam.sort(); // Sort alphabetically for consistency
+    return commandsUsingParam.sort();
+  }
+
+  /**
+   * Get commands that use a specific parameter (now DRY wrapper)
+   * @cliHide
+   */
+  private getCommandsUsingParameter(parameterName: string, methods: any[]): string[] {
+    // DRY: Reuse the consolidated logic (ignore passed methods, use fresh analysis)
+    return this.getCommandsUsingParameterDRY(parameterName);
   }
 
   /**
@@ -1150,13 +1171,23 @@ export abstract class DefaultCLI implements CLI {
    * @returns Array of action completions
    */
   async actionParameterCompletion(currentArgs: string[]): Promise<string[]> {
-    return [
+    const allOptions = [
       '',         // Empty = default action
       'fix',      // Fix/repair
       'verify',   // Verify/check
       'show',     // Display/show
       'list'      // List items
     ];
+    
+    // Apply simple prefix filtering
+    const filterPrefix = currentArgs[1]; // The second argument is the prefix to filter by
+    
+    if (filterPrefix) {
+      const filtered = allOptions.filter(option => option.startsWith(filterPrefix));
+      return filtered.length > 0 ? filtered : allOptions;
+    }
+    
+    return allOptions;
   }
 
   /**
@@ -1216,6 +1247,116 @@ export abstract class DefaultCLI implements CLI {
    */
   async skipPromotionParameterCompletion(currentArgs: string[]): Promise<string[]> {
     return ['true', 'false'];
+  }
+
+  /**
+   * Fundamental parameter completion: parameter (parameter names for discover command)
+   * Used by: discover for parameter name discovery
+   * @cliHide
+   */
+  async parameterParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    // Dynamically discover all available parameter completion methods
+    const allMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(this))
+      .filter(name => name.endsWith('ParameterCompletion'))
+      .sort();
+    
+    // Extract parameter names from method names
+    const parameterNames: string[] = [];
+    
+    allMethods.forEach(method => {
+      // Handle different patterns:
+      // - versionParameterCompletion → version
+      // - createVersionParameterCompletion → version (for create command)
+      // - targetVersionParameterCompletion → targetVersion
+      // - successPromotionParameterCompletion → successPromotion
+      
+      let paramName = method.replace('ParameterCompletion', '');
+      
+      // Handle createXxxParameterCompletion pattern
+      if (paramName.startsWith('create')) {
+        paramName = paramName.replace(/^create/, '').toLowerCase();
+      }
+      
+      // Convert camelCase to lowercase for user-friendly display
+      const userFriendlyName = paramName.charAt(0).toLowerCase() + paramName.slice(1);
+      
+      if (!parameterNames.includes(userFriendlyName)) {
+        parameterNames.push(userFriendlyName);
+      }
+    });
+    
+    // Apply simple prefix filtering
+    const filterPrefix = currentArgs[1]; // The second argument is the prefix to filter by
+    
+    if (filterPrefix) {
+      const filtered = parameterNames.filter(param => param.startsWith(filterPrefix));
+      return filtered.length > 0 ? filtered : parameterNames;
+    }
+    
+    return parameterNames;
+  }
+
+  /**
+   * Fundamental parameter completion: version (version input for create command)
+   * Used by: create for version parameter (supports both literal versions and versionTypes)
+   * @cliHide
+   */
+  async createVersionParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    const versionTypeOptions = [
+      'nextBuild',   // Next build version (0.1.0.0 → 0.1.0.1)
+      'nextPatch',   // Next patch version (0.1.0.0 → 0.1.1.0)
+      'patch',       // Alias for nextPatch
+      'nextMinor',   // Next minor version (0.1.0.0 → 0.2.0.0)
+      'minor',       // Alias for nextMinor
+      'nextMajor',   // Next major version (0.1.0.0 → 1.0.0.0)
+      'major'        // Alias for nextMajor
+    ];
+    
+    const literalVersionOptions = [
+      '0.1.0.0',     // Default initial version
+      '1.0.0.0',     // Major release
+      '0.2.0.0',     // Minor release
+      '0.1.1.0'      // Patch release
+    ];
+    
+    const allOptions = [...versionTypeOptions, ...literalVersionOptions];
+    
+    // Apply simple prefix filtering
+    const filterPrefix = currentArgs[2]; // The version parameter should be the 3rd arg: [create, TestComp, nextB]
+    
+    if (filterPrefix) {
+      const filtered = allOptions.filter(option => option.startsWith(filterPrefix));
+      return filtered.length > 0 ? filtered : allOptions;
+    }
+    
+    return allOptions;
+  }
+
+  /**
+   * Fundamental parameter completion: versionType (version upgrade types)
+   * Used by: upgrade for version upgrade options
+   * @cliHide
+   */
+  async versionTypeParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    const allOptions = [
+      'nextBuild',   // Next build version (0.1.0.0 → 0.1.0.1)
+      'nextPatch',   // Next patch version (0.1.0.0 → 0.1.1.0)
+      'patch',       // Alias for nextPatch
+      'nextMinor',   // Next minor version (0.1.0.0 → 0.2.0.0)
+      'minor',       // Alias for nextMinor
+      'nextMajor',   // Next major version (0.1.0.0 → 1.0.0.0)
+      'major'        // Alias for nextMajor
+    ];
+    
+    // Apply simple prefix filtering
+    const filterPrefix = currentArgs[1]; // The second argument is the prefix to filter by
+    
+    if (filterPrefix) {
+      const filtered = allOptions.filter(option => option.startsWith(filterPrefix));
+      return filtered.length > 0 ? filtered : allOptions;
+    }
+    
+    return allOptions;
   }
 
   /**
@@ -1807,10 +1948,27 @@ export abstract class DefaultCLI implements CLI {
     
     return allOptions;
   }
-}
 
-interface MethodSignature {
-  name: string;
-  paramCount: number;
-  isAsync: boolean;
+  /**
+   * Complete targetVersion parameter for setCICDVersion command
+   * Provides CI/CD stage suggestions
+   */
+  async targetVersionParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    const cicdStages = [
+      'setDev',     // Development version
+      'setLatest',  // Latest stable version
+      'setProd',    // Production version
+      'setTest'     // Test version
+    ];
+    
+    const filterPrefix = currentArgs[1]; // First parameter after setCICDVersion
+    if (filterPrefix) {
+      const filtered = cicdStages.filter(stage => 
+        stage.toLowerCase().startsWith(filterPrefix.toLowerCase())
+      );
+      return filtered.length > 0 ? filtered : cicdStages;
+    }
+    
+    return cicdStages;
+  }
 }

@@ -35,7 +35,7 @@ describe('🎯 Two-Stage Promotion Workflow Tests', () => {
       // Create initial component as dev
       await component.create('StageTest', '0.1.0.0', 'all');
       await component.on('StageTest', '0.1.0.0');
-      await component.setDev('0.1.0.0');
+      await component.setCICDVersion('setDev', '0.1.0.0');
       
       // Initial state: dev exists, no test
       let links = await component.getSemanticLinks('StageTest');
@@ -59,7 +59,7 @@ describe('🎯 Two-Stage Promotion Workflow Tests', () => {
       // Create component already marked as test
       await component.create('SkipTest', '0.1.0.0', 'all');
       await component.on('SkipTest', '0.1.0.0');
-      await component.setTest('0.1.0.0');
+      await component.setCICDVersion('setTest', '0.1.0.0');
       
       // Initial state
       let links = await component.getSemanticLinks('SkipTest');
@@ -86,8 +86,8 @@ describe('🎯 Two-Stage Promotion Workflow Tests', () => {
       // Create test version
       await component.create('ProdTest', '0.1.0.1', 'all');
       await component.on('ProdTest', '0.1.0.1');
-      await component.setTest('0.1.0.1');
-      await component.setProd('0.1.0.0'); // Old prod
+      await component.setCICDVersion('setTest', '0.1.0.1');
+      await component.setCICDVersion('setProd', '0.1.0.0'); // Old prod
       
       // Initial state
       let links = await component.getSemanticLinks('ProdTest');
@@ -115,13 +115,13 @@ describe('🎯 Two-Stage Promotion Workflow Tests', () => {
       // Create component and set as prod and dev
       await component.create('NotTestYet', '0.1.0.0', 'all');
       await component.on('NotTestYet', '0.1.0.0');
-      await component.setDev('0.1.0.0');
-      await component.setProd('0.1.0.0'); // Initially prod
+      await component.setCICDVersion('setDev', '0.1.0.0');
+      await component.setCICDVersion('setProd','0.1.0.0'); // Initially prod
       
       // Upgrade to create test version (0.1.0.1)
       await component.upgrade('nextBuild'); // Creates 0.1.0.1
       await component.on('NotTestYet', '0.1.0.1');
-      await component.setTest('0.1.0.1');
+      await component.setCICDVersion('setTest', '0.1.0.1');
       
       // Initial state
       let links = await component.getSemanticLinks('NotTestYet');
@@ -146,8 +146,8 @@ describe('🎯 Two-Stage Promotion Workflow Tests', () => {
       // Create version already as prod
       await component.create('AlreadyProd', '0.1.0.0', 'all');
       await component.on('AlreadyProd', '0.1.0.0');
-      await component.setTest('0.1.0.0');
-      await component.setProd('0.1.0.0'); // Same version
+      await component.setCICDVersion('setTest', '0.1.0.0');
+      await component.setCICDVersion('setProd','0.1.0.0'); // Same version
       
       // Initial state
       let links = await component.getSemanticLinks('AlreadyProd');
@@ -171,8 +171,8 @@ describe('🎯 Two-Stage Promotion Workflow Tests', () => {
       // Starting state: 0.3.4.1 as dev
       await component.create('FullWorkflow', '0.3.4.1', 'all');
       await component.on('FullWorkflow', '0.3.4.1');
-      await component.setDev('0.3.4.1');
-      await component.setProd('0.3.4.0'); // Previous prod
+      await component.setCICDVersion('setDev', '0.3.4.1');
+      await component.setCICDVersion('setProd','0.3.4.0'); // Previous prod
       
       // Initial state
       let links = await component.getSemanticLinks('FullWorkflow');
@@ -221,8 +221,8 @@ describe('🎯 Two-Stage Promotion Workflow Tests', () => {
       // Create initial dev and prod
       await component.create('Iterative', '0.1.0.0', 'all');
       await component.on('Iterative', '0.1.0.0');
-      await component.setDev('0.1.0.0');
-      await component.setProd('0.1.0.0'); // Initially prod
+      await component.setCICDVersion('setDev', '0.1.0.0');
+      await component.setCICDVersion('setProd','0.1.0.0'); // Initially prod
       
       // Stage 1: First iteration
       await component.handleFirstTestRun('Iterative', '0.1.0.0');
@@ -259,7 +259,7 @@ describe('🎯 Two-Stage Promotion Workflow Tests', () => {
       // Create component
       await component.create('SafetyTest', '0.1.0.0', 'all');
       await component.on('SafetyTest', '0.1.0.0');
-      await component.setTest('0.1.0.0');
+      await component.setCICDVersion('setTest', '0.1.0.0');
       
       // Try Stage 2 (should be blocked by isTestEnvironment)
       await component.handleTestSuccessPromotion('SafetyTest', '0.1.0.0');

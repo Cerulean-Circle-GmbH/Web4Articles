@@ -559,7 +559,7 @@ describe('📖 Systematic Test Story', () => {
       const devVersion = '0.1.0.1';
       
       // Set dev link
-      await component.setDev(devVersion);
+      await component.setCICDVersion('setDev',devVersion);
       
       // Verify dev symlink exists and points to correct version
       const devLink = path.join(testDataDir, 'components', testComponentName, 'dev');
@@ -570,14 +570,14 @@ describe('📖 Systematic Test Story', () => {
       console.log(`✅ dev symlink → ${linkTarget}`);
       
       // Set test link
-      await component.setTest(devVersion);
+      await component.setCICDVersion('setTest',devVersion);
       const testLink = path.join(testDataDir, 'components', testComponentName, 'test');
       expect(existsSync(testLink)).toBe(true);
       expect(readlinkSync(testLink)).toBe(devVersion);
       console.log(`✅ test symlink → ${devVersion}`);
       
       // Set prod link
-      await component.setProd(devVersion);
+      await component.setCICDVersion('setProd',devVersion);
       const prodLink = path.join(testDataDir, 'components', testComponentName, 'prod');
       expect(existsSync(prodLink)).toBe(true);
       expect(readlinkSync(prodLink)).toBe(devVersion);
@@ -592,9 +592,9 @@ describe('📖 Systematic Test Story', () => {
       console.log(`\n💡 Manual test command:`);
       console.log(`   cd components/Web4TSComponent/0.3.4.1`);
       console.log(`   web4tscomponent on ${testComponentName} 0.1.0.0`);
-      console.log(`   web4tscomponent setDev 0.1.0.1`);
-      console.log(`   web4tscomponent setTest 0.1.0.1`);
-      console.log(`   web4tscomponent setProd 0.1.0.1`);
+      console.log(`   web4tscomponent setCICDVersion setDev 0.1.0.1`);
+      console.log(`   web4tscomponent setCICDVersion setTest 0.1.0.1`);
+      console.log(`   web4tscomponent setCICDVersion setProd 0.1.0.1`);
     });
   });
 });

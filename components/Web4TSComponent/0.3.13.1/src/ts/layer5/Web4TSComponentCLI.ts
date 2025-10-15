@@ -9,34 +9,40 @@ import { DefaultCLI } from '../layer2/DefaultCLI.js';
 import { DefaultWeb4TSComponent } from '../layer2/DefaultWeb4TSComponent.js';
 import { TSCompletion } from '../layer4/TSCompletion.js';
 
-interface MethodSignature {
-  name: string;
-  paramCount: number;
-  isAsync: boolean;
-}
-
 export class Web4TSComponentCLI extends DefaultCLI {
   private tsComponent: DefaultWeb4TSComponent | null;
-  protected methodSignatures: Map<string, MethodSignature> = new Map();
+  // Inherited from DefaultCLI: method signatures removed - using direct reflection instead
 
   constructor() {
     super(); // Call DefaultCLI constructor
     // Don't instantiate tsComponent for usage display - command-based instantiation only
     this.tsComponent = null;
-    // Get version from a temporary component instance (reads from directory in constructor)
-    const tempComponent = new DefaultWeb4TSComponent();
-    const version = (tempComponent as any).model.version; // Access model directly (synchronous)
+    
+    // Get version from package.json or directory name instead of instantiating component
+    const version = this.getVersionFromDirectory() || '0.3.13.1';
+    
     // Initialize with component class reference (NOT instance) - no garbage creation
     this.initWithComponentClass(DefaultWeb4TSComponent, 'Web4TSComponent', version);
-    // Discover methods for chaining support
-    this.discoverMethods();
+    // Method discovery removed - using direct reflection on-demand
+  }
+  
+  /**
+   * Get version from directory name (safer than instantiating component)
+   */
+  private getVersionFromDirectory(): string | null {
+    try {
+      const currentDir = process.cwd();
+      const dirName = currentDir.split('/').pop();
+      if (dirName && /^\d+\.\d+\.\d+\.\d+$/.test(dirName)) {
+        return dirName;
+      }
+    } catch {
+      // Fallback to default
+    }
+    return null;
   }
 
-  /**
-   * Use parent class method discovery (DefaultCLI now handles both CLI and component methods)
-   * No override needed - inherits from DefaultCLI
-   */
-  // protected discoverMethods() removed - using DefaultCLI implementation
+  // Method discovery removed - using direct reflection on-demand
 
   /**
    * Static start method - Web4 radical OOP entry point
@@ -60,12 +66,20 @@ export class Web4TSComponentCLI extends DefaultCLI {
    * Web4TSComponent-specific usage display using DefaultCLI dynamic generation
    */
   showUsage(): void {
-    // Use DefaultCLI's auto-discovery which respects @cliHide annotations
-    if (typeof super.generateStructuredUsage === 'function') {
-      console.log(super.generateStructuredUsage());
-    } else {
-      // Implement showUsage directly since it's abstract
-      console.log('Web4TSComponent CLI - Run without arguments to see all available methods');
+    try {
+      // Use DefaultCLI's auto-discovery which respects @cliHide annotations
+      if (typeof super.generateStructuredUsage === 'function') {
+        console.log(super.generateStructuredUsage());
+      } else {
+        // Fallback if generateStructuredUsage doesn't exist
+        console.log('Web4TSComponent CLI - Dynamic Method Discovery');
+        console.log('Run with specific command for help: web4tscomponent <command>');
+      }
+    } catch (error) {
+      // Safe fallback if anything goes wrong
+      console.log('Web4TSComponent CLI v0.3.13.1');
+      console.log('Available commands: create, upgrade, on, tree, version, help');
+      console.log('Run with specific command for help: web4tscomponent <command>');
     }
   }
 
@@ -117,18 +131,21 @@ export class Web4TSComponentCLI extends DefaultCLI {
     }
   }
 
+  // getMethodByName inherited from DefaultCLI (now protected)
+
   /**
    * Execute dynamic command and return remaining arguments for chaining
    */
   private async executeDynamicCommandWithChaining(command: string, args: string[]): Promise<{executed: boolean, remainingArgs: string[]}> {
-    if (!this.methodSignatures.has(command)) {
+    const method = this.getMethodByName(command);
+    if (!method) {
       return { executed: false, remainingArgs: args };
     }
 
-    const signature = this.methodSignatures.get(command)!;
-    const minArgs = Math.min(signature.paramCount, 1); // At least 1 arg for most methods
+    const paramCount = method.length;
+    const minArgs = Math.min(paramCount, 1); // At least 1 arg for most methods
     
-    if (args.length < minArgs && signature.paramCount > 0) {
+    if (args.length < minArgs && paramCount > 0) {
       throw new Error(`At least ${minArgs} arguments required for ${command} command`);
     }
 
@@ -142,7 +159,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
     if (typeof (this as any)[command] === 'function') {
       // Execute on CLI instance
       const method = (this as any)[command];
-      if (signature.isAsync) {
+      if (method.constructor.name === 'AsyncFunction') {
         await method.apply(this, methodArgs);
       } else {
         method.apply(this, methodArgs);
@@ -152,7 +169,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
       const componentInstance = this.getOrCreateTSComponent();
       const method = (componentInstance as any)[command];
       
-      if (signature.isAsync) {
+      if (method.constructor.name === 'AsyncFunction') {
         await method.apply(componentInstance, methodArgs);
       } else {
         method.apply(componentInstance, methodArgs);
@@ -167,8 +184,6 @@ export class Web4TSComponentCLI extends DefaultCLI {
    * Stops at next known command to enable chaining (unless explicit max is set)
    */
   private determineArgumentConsumption(command: string, args: string[]): number {
-    const signature = this.methodSignatures.get(command)!;
-    
     // Special handling for methods with hardcoded parameter counts
     // These MUST consume their args even if they look like commands (e.g., completeParameter)
     const methodSpecificMaxArgs = this.getMethodMaxArguments(command);
@@ -178,9 +193,10 @@ export class Web4TSComponentCLI extends DefaultCLI {
     }
     
     // Default behavior: stop at next command for chaining
-    const maxArgs = signature.paramCount;
+    const method = this.getMethodByName(command);
+    const maxArgs = method?.length || 0;
     for (let i = 0; i < Math.min(maxArgs, args.length); i++) {
-      if (this.methodSignatures.has(args[i])) {
+      if (this.getMethodByName(args[i])) {
         // Found next command, consume up to this point
         return i;
       }
