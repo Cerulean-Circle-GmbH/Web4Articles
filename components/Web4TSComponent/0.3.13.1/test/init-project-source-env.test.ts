@@ -73,5 +73,51 @@ describe('initProject creates source.env', () => {
     const isExecutable = (stats.mode & 0o111) !== 0;
     expect(isExecutable, 'source.env should be executable').toBe(true);
   });
+
+  it('should have version number aligned with component version', async () => {
+    // Get the current component version from directory structure
+    const componentDir = path.join(__dirname, '..');
+    const componentVersion = path.basename(componentDir);
+    
+    // Act: Initialize project
+    await component.initProject(testDataDir);
+    
+    // Assert: source.env contains version header
+    const sourceEnvPath = path.join(testDataDir, 'source.env');
+    const content = await readFile(sourceEnvPath, 'utf-8');
+    
+    // Check for version header
+    expect(content).toContain('# Version:');
+    
+    // Extract version from source.env
+    const versionMatch = content.match(/# Version: ([\d.]+)/);
+    expect(versionMatch, 'source.env should contain version number').toBeTruthy();
+    
+    const templateVersion = versionMatch![1];
+    
+    // CRITICAL CHECK: Version must match component directory
+    expect(templateVersion, 
+      `\n\n⚠️  AGENT REMINDER: Template version MISMATCH!\n` +
+      `   Template version: ${templateVersion}\n` +
+      `   Component version: ${componentVersion}\n` +
+      `   Single source of truth: ${componentVersion}\n` +
+      `   👉 UPDATE templates/project/source.env.template header manually!\n`
+    ).toBe(componentVersion);
+  });
+
+  it('should use BRIGHT_CYAN for "web4" in prompt', async () => {
+    // Act: Initialize project
+    await component.initProject(testDataDir);
+    
+    // Assert: source.env uses BRIGHT_CYAN for "web4" text
+    const sourceEnvPath = path.join(testDataDir, 'source.env');
+    const content = await readFile(sourceEnvPath, 'utf-8');
+    
+    // Check for the colored "web4" in the prompt
+    expect(content).toContain('printf "\\nyour ${BRIGHT_CYAN}web4${NO_COLOR} command >');
+    
+    // Ensure it's not using the old uncolored version
+    expect(content).not.toContain('printf "\\nyour web4 command >');
+  });
 });
 
