@@ -265,12 +265,13 @@ This is "Understand First Before Understood" - the breakthrough pattern.
 4. **Breadcrumb Navigation** → Follow Previous PDCA chain backward (minimum 5), create awareness notes
 5. **Depth 3 Reading** → Read CMM3 checklist, howto.PDCA.md, PDCA.howto.decide.md COMPLETELY
 6. **Situational Awareness Check** → Can you answer: What's current focus? What patterns to avoid?
-7. **Present Startup Decisions** → MANDATORY: Present 4 decision categories per [PDCA.howto.decide.md § "🚀 STARTUP DECISION FRAMEWORK"](../scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md#-startup-decision-framework):
+7. **Present Startup Decisions** → MANDATORY: Present 5 decision categories per [PDCA.howto.decide.md § "🚀 STARTUP DECISION FRAMEWORK"](../scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md#-startup-decision-framework):
    - Decision 1: Primary Work Focus Area (Technical/Architecture/Documentation/Quality)
    - Decision 2: Role Selection (Dynamic discovery: `find scrum.pmo/roles -maxdepth 1 -type d | grep -v "_shared"`)
    - Decision 3: Session Duration and Sprint Planning
    - Decision 4: PDCA Organization Location
-8. **Wait for User Selections** → Do NOT proceed until user responds with selections (e.g., "1a, 2e, 3d, 4b")
+   - Decision 5: Agent Identity Verification (RequestID + Agent Name - ALWAYS present with current values for verification)
+8. **Wait for User Selections** → Do NOT proceed until user responds with selections (e.g., "1a, 2e, 3d, 4b, 5: RequestID/Name")
 9. **Create dev/UTC** → Create dev/[timestamp] branch and switch to it (Decision 1d)
 10. **Automate** → Install git post-commit hook
 11. **Create Todo** → Use todo_write for task management
@@ -373,19 +374,20 @@ You've reached optimal state when:
 2. ✅ Can articulate current focus and patterns to avoid
 3. ✅ Read CMM3 checklist, PDCA protocols to depth 3
 4. ✅ Created situational awareness notes with verification
-5. ✅ Presented startup decisions (4 categories: Focus, Role, Duration, Location)
+5. ✅ Presented startup decisions (5 categories: Focus, Role, Duration, Location, Identity)
 6. ✅ Waited for user selections before proceeding with work
-7. ✅ PDCAs follow 6-section mandatory format
-8. ✅ Chat responses are minimal with dual links
-9. ✅ Decisions are numbered with clear options
-10. ✅ User responds with simple "1a, 2b" format
-11. ✅ All work is documented in PDCA files
-12. ✅ GitHub links work (files are pushed)
-13. ✅ Auto-merge to release/dev works
-14. ✅ Only real decisions presented
-15. ✅ Warnings given for destructive operations
-16. ✅ Verification tables used (not just claims)
-17. ✅ Link validation performed before claiming complete
+7. ✅ Verified agent identity with current values (never assumed)
+8. ✅ PDCAs follow 6-section mandatory format
+9. ✅ Chat responses are minimal with dual links
+10. ✅ Decisions are numbered with clear options
+11. ✅ User responds with simple "1a, 2b" format
+12. ✅ All work is documented in PDCA files
+13. ✅ GitHub links work (files are pushed)
+14. ✅ Auto-merge to release/dev works
+15. ✅ Only real decisions presented
+16. ✅ Warnings given for destructive operations
+17. ✅ Verification tables used (not just claims)
+18. ✅ Link validation performed before claiming complete
 
 ---
 

@@ -374,6 +374,22 @@ When starting a new work session, always present these three categories of decis
   - b) Session PDCAs - scrum.pmo/project.journal/[session]/ for project-wide collaborative work
   - c) Sprint PDCAs - scrum.pmo/sprints/[sprint]/ for sprint-focused development cycles
   - d) Component PDCAs - components/[component]/pdca/ for component-specific development work
+
+- [ ] **Decision 5: Agent Identity Verification**
+  Please verify or update agent identification:
+  - **RequestID:** [Display current: e.g., "agent-without-id" or session-specific identifier]
+  - **Agent Name:** [Display current: e.g., "Claude Sonnet 4.5" or previous session value]
+  
+  **Purpose:** Explicit agent identification for session tracking, registry management, and collaboration clarity
+  
+  **Format for response:**
+  ```
+  5:
+  RequestID: [your-request-id]
+  Agent Name: "[Your chosen agent name]"
+  ```
+  
+  **CRITICAL:** Always present this decision even if you have context from previous sessions. Display current/previous values and ask for verification rather than assuming they remain the same. This prevents the assumption pattern where agents skip verification because they "think they know the answer."
 ```
 
 ### **Adaptation Guidelines:**
