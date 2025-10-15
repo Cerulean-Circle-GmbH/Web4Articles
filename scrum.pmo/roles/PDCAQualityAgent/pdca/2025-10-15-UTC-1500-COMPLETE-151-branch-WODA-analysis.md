@@ -397,3 +397,276 @@ Feature branch documenting AI memory system crisis and resolution strategy.
 
 ---
 
+
+## **6. origin/dev/0308** 🟡
+
+[`📂 Browse Branch`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/0308) | Commit: `10c10b22` | Date: 2025-10-08
+
+### **What**
+Bug fix for getCurrentVersion method using wrong directory.
+
+### **Overview**
+- **Last Commit:** "2025-10-07-UTC-1945-getCurrentVersion-uses-wrong-directory"
+- **Age:** 7 days old
+- **Conflict:** Single component file
+- **Type:** Bug fix
+
+### **Details**
+
+**Key File:**
+
+**[`components/Web4TSComponent/0.3.4.1/src/ts/layer2/DefaultWeb4TSComponent.ts`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0308/components/Web4TSComponent/0.3.4.1/src/ts/layer2/DefaultWeb4TSComponent.ts)** ⚠️ CONFLICTS
+- getCurrentVersion method fix
+- Was using wrong directory
+- **Compare:** `git diff dev/0400 origin/dev/0308 -- components/Web4TSComponent/0.3.4.1/src/ts/layer2/DefaultWeb4TSComponent.ts`
+
+**Why This Matters:**
+- Bug fixes are usually valuable
+- Wrong directory = could cause runtime errors
+- Component version 0.3.4.1 might still be in use
+
+**Need to Verify:**
+- Is this bug already fixed in dev/0400?
+- Is component 0.3.4.1 still active?
+- Does getCurrentVersion work correctly now?
+
+### **Action**
+
+**💡 My Recommendation:** **CHECK IF BUG EXISTS, MERGE IF NEEDED**
+
+**Verification Steps:**
+1. **Check current code:**
+   ```bash
+   # Does this file exist in dev/0400?
+   test -f components/Web4TSComponent/0.3.4.1/src/ts/layer2/DefaultWeb4TSComponent.ts && echo "EXISTS" || echo "NOT FOUND"
+   
+   # Check getCurrentVersion implementation
+   grep -A 10 "getCurrentVersion" components/Web4TSComponent/0.3.4.1/src/ts/layer2/DefaultWeb4TSComponent.ts
+   ```
+
+2. **If bug still exists:**
+   - Extract the fix
+   - Apply to dev/0400
+   - Test
+
+3. **If already fixed:**
+   - Mark branch HISTORICAL
+   - Document that bug was fixed elsewhere
+
+**❓ Questions for You:**
+1. Is component 0.3.4.1 still in use?
+2. Should I check if this bug still exists? (15 min)
+3. Apply fix if needed? (30 min)
+
+---
+
+## **7. origin/dev/2025-09-29-UTC-1351** 🟡
+
+[`📂 Browse Branch`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-29-UTC-1351) | Commit: `2b84e6ab` | Date: 2025-09-29
+
+### **What**
+Session start PDCA from late September.
+
+### **Overview**
+- **Last Commit:** "feat: Session start PDCA 2025-09-29-UTC-1351"
+- **Age:** 16 days old
+- **Conflicts:** README.md, PDCA howto.PDCA.md
+- **Type:** Session documentation
+
+### **Details**
+
+**Key Files:**
+
+1. **Session PDCA:**
+   - Likely at scrum.pmo/project.journal/2025-09-29-UTC-1351/
+   - Documents session startup process
+   - **Find:** `git diff --name-only origin/release/dev...origin/dev/2025-09-29-UTC-1351 | grep "2025-09-29-UTC-1351"`
+
+2. **[`README.md`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-29-UTC-1351/README.md)** ⚠️ CONFLICTS
+   - Session documentation updates
+   - **Compare:** `git diff dev/0400 origin/dev/2025-09-29-UTC-1351 -- README.md`
+
+3. **[`scrum.pmo/roles/_shared/PDCA/howto.PDCA.md`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-29-UTC-1351/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)** ⚠️ CONFLICTS
+   - Process documentation from session
+   - **Compare:** `git diff dev/0400 origin/dev/2025-09-29-UTC-1351 -- scrum.pmo/roles/_shared/PDCA/howto.PDCA.md`
+
+**Why This Matters (or Doesn't):**
+- 16 days old = likely superseded by more recent work
+- Session start patterns have evolved since then
+- PDCA templates in dev/0400 are newer (with Decision 5)
+
+**Likely Outcome:**
+- Historical reference only
+- No unique value over current dev/0400
+
+### **Action**
+
+**💡 My Recommendation:** **MARK HISTORICAL - NO EXTRACTION NEEDED**
+
+**Reasoning:**
+- Session from 16 days ago
+- Startup patterns have evolved significantly
+- PDCA templates superseded by dev/0400 (with Decision 5 from this session)
+- No unique value identified
+
+**If You Disagree:**
+- Could check for specific insights
+- Review session PDCA for lessons
+- But likely not worth the time
+
+**❓ Questions for You:**
+1. Remember this session? Any unique work done?
+2. Just mark HISTORICAL and move on?
+3. Or spend 15 min reviewing for insights?
+
+---
+
+## **8. origin/dev/2025-09-29-UTC-1329** 🟡
+
+[`📂 Browse Branch`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-09-29-UTC-1329) | Commit: `0bf6166e` | Date: 2025-09-30
+
+### **What**
+Feature branch implementing UUIDs in Sprint 23 plus process.md enhancements.
+
+### **Overview**
+- **Last Commit:** "feat: Enhance process.md and implement UUIDs in Sprint 23"
+- **Age:** 15 days old
+- **Type:** Feature work (UUIDs) + documentation
+- **Conflict Type:** Unrelated history (can't auto-merge)
+
+### **Details**
+
+**UUID Implementation:**
+- "implement UUIDs in Sprint 23" suggests adding UUID support
+- Could be for tracking, identification, or data integrity
+- **Check what changed:** `git diff --stat origin/release/dev...origin/dev/2025-09-29-UTC-1329`
+
+**process.md Enhancements:**
+- Process documentation improvements
+- Which role's process.md?
+- **Find:** `git diff --name-only origin/release/dev...origin/dev/2025-09-29-UTC-1329 | grep process.md`
+
+**Unrelated History Problem:**
+- Branch can't auto-merge (different git history)
+- Would require `--allow-unrelated-histories`
+- Risky to force merge
+
+**Why This Matters:**
+- UUID implementation might be valuable functionality
+- process.md improvements could have good insights
+- BUT: Unrelated history = risky merge
+
+### **Action**
+
+**💡 My Recommendation:** **MANUAL REVIEW UUID WORK, DON'T MERGE**
+
+**Investigation Steps:**
+1. **Check UUID implementation:**
+   ```bash
+   # See what UUID-related changes exist
+   git log origin/dev/2025-09-29-UTC-1329 --grep="UUID" --oneline
+   git diff --name-only origin/release/dev...origin/dev/2025-09-29-UTC-1329 | grep -i uuid
+   ```
+
+2. **Review process.md changes:**
+   ```bash
+   git diff --name-only origin/release/dev...origin/dev/2025-09-29-UTC-1329 | grep process.md
+   git show origin/dev/2025-09-29-UTC-1329:<path-to-process.md>
+   ```
+
+3. **Extract if valuable:**
+   - If UUID implementation is good, recreate in dev/0400
+   - If process.md has insights, incorporate them
+   - Don't force-merge unrelated histories
+
+**Why Not Merge:**
+- Unrelated histories = dangerous merge
+- Could break git history
+- Selective extraction safer
+
+**❓ Questions for You:**
+1. Do you use UUIDs currently? Need this implementation?
+2. Should I investigate UUID changes? (30 min)
+3. Or just mark HISTORICAL and skip?
+
+---
+
+## **9. origin/dev/2025-10-10-UTC-0124** 🟡
+
+[`📂 Browse Branch`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/2025-10-10-UTC-0124) | Commit: `9f3bd3ba` | Date: 2025-10-11
+
+### **What**
+Refactoring branch removing temporary spec files from component.
+
+### **Overview**
+- **Last Commit:** "Refactor: Remove temporary spec files"
+- **Age:** 4 days old
+- **Conflict:** Component README
+- **Type:** Cleanup/refactoring
+
+### **Details**
+
+**What Was Removed:**
+- 5 temporary spec files in components/Web4TSComponent/0.3.11.1/spec/chapters/
+  - 02-development-guide.md.backup
+  - 02-temp-checklist.txt
+  - 02-temp-examples.txt
+  - 02-temp-header.txt
+  - 02-temp-main.txt
+
+**Conflict:**
+
+**[`components/Web4TSComponent/0.3.11.1/README.md`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/README.md)** ⚠️ CONFLICTS
+- Component README updated (documents cleanup?)
+- **Compare:** `git diff dev/0400 origin/dev/2025-10-10-UTC-0124 -- components/Web4TSComponent/0.3.11.1/README.md`
+
+**Why This Matters (or Doesn't):**
+- Cleanup work on older component version (0.3.11.1)
+- 4 days old = recent
+- BUT: Removing temp files = low-risk work
+- Temp files probably don't exist in dev/0400 anyway
+
+**Quick Check:**
+```bash
+# Do these temp files exist in dev/0400?
+ls components/Web4TSComponent/0.3.11.1/spec/chapters/02-temp-* 2>/dev/null || echo "Files don't exist"
+```
+
+### **Action**
+
+**💡 My Recommendation:** **CHECK IF FILES EXIST, DELETE IF FOUND, SKIP MERGE**
+
+**Simple Plan:**
+1. **Check for temp files:**
+   ```bash
+   ls components/Web4TSComponent/0.3.11.1/spec/chapters/02-temp-* 2>/dev/null
+   ```
+
+2. **If they exist:**
+   - Delete them manually in dev/0400
+   - Good housekeeping
+
+3. **If they don't exist:**
+   - Cleanup already done elsewhere
+   - Mark branch HISTORICAL
+
+4. **Skip README merge:**
+   - Cleanup documentation not critical
+   - Avoid conflict for minor benefit
+
+**Why This Approach:**
+- Gets the cleanup benefit (if needed)
+- Avoids merge conflict
+- Simple and low-risk
+
+**❓ Questions for You:**
+1. Should I check for these temp files? (2 min)
+2. Delete if found? (1 min)
+3. Mark branch HISTORICAL?
+
+---
+
+🎉 **HIGH PRIORITY COMPLETE!** All 8 HIGH priority branches analyzed in full WODA format.
+
+---
+
