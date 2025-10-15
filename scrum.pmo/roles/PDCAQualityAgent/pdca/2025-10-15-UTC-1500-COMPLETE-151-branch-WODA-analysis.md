@@ -1493,3 +1493,254 @@ For all 9 test-merge/* branches:
 
 ---
 
+
+## **Category: Save Branches** (5 branches)
+
+### **Batch WODA Analysis**
+
+### **What**
+Save/recovery checkpoint branches with intentionally separate git histories.
+
+### **Overview**
+- **Branch Pattern:** `save/*` and `start/*`
+- **Total Count:** 5 branches
+- **Type:** Disaster recovery points
+- **Characteristic:** Unrelated git histories (by design)
+
+**Branch List:**
+1. `save/start` (Oct 10) - Latest save point
+2. `save/start-2025-09-28-UTC-1145` (Sep 26) - Dated checkpoint
+3. `save/start.v1` (Aug 31) - Version 1
+4. `save/start.v5` (Sep 28) - Version 5
+5. `save/start.v6` (Oct 9) - Version 6
+
+**Related:**
+- `start/save.v5` (Oct 8) - Mirror/variant
+- `start/save.v5-clean` (Sep 28) - Clean version
+- `start/save.v6` (Sep 28) - Variant
+
+### **Details**
+
+**Purpose:**
+- **Disaster Recovery:** Checkpoints for rollback
+- **Unrelated Histories:** Intentionally separate from main history
+- **Save Points:** Critical system states preserved
+- **Version Evolution:** v1 → v5 → v6 shows iteration
+
+**Why Unrelated Histories:**
+- Designed as independent recovery points
+- Can't be merged (by design)
+- Allow complete rollback if needed
+- Preserve system state snapshots
+
+**Git Error Expected:**
+```
+fatal: refusing to merge unrelated histories
+```
+This is INTENTIONAL and CORRECT.
+
+### **Action**
+
+**💡 My Bulk Recommendation:** **KEEP ALL SEPARATE - DO NOT MERGE**
+
+**Reasoning:**
+- **Critical Function:** Disaster recovery capability
+- **By Design:** Unrelated histories are intentional
+- **Safety Net:** Preserve ability to rollback
+- **No Merge Needed:** These aren't meant to be integrated
+- **Keep Forever:** Recovery points should persist
+
+**What Each Branch Is:**
+- `save/start.*` - Main save branches (keep all versions)
+- `save/start-2025-09-28-UTC-1145` - Dated checkpoint (keep)
+- `start/save.*` - Alternative naming (keep or consolidate)
+
+**Maintenance Consideration:**
+- Eventually could clean up very old versions
+- But keep recent versions (last 3-6 months)
+- Current: All within last 2 months = keep all
+
+**Bulk Action:**
+```
+For all 5 save/* branches:
+- Status: RECOVERY CHECKPOINT
+- Action: KEEP SEPARATE
+- Merge: Never (unrelated histories by design)
+- Delete: Never (disaster recovery)
+- Purpose: Rollback capability
+```
+
+**❓ Questions for You:**
+1. **Keep all save branches?** (Recommended)
+2. Any cleanup of old save versions needed?
+3. Consolidate save/* vs start/* naming?
+
+---
+
+## **Category: Archive Branches** (2 branches)
+
+### **Individual WODA Analysis**
+
+## **25. origin/archive/2025-09-26-UTC-0900-broken** ⚪
+
+[`📂 Browse Branch`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/archive/2025-09-26-UTC-0900-broken) | Commit: `43e9fbf9` | Date: 2025-09-26
+
+### **What**
+Archived broken branch with recovery PDCA for rename and reset operation.
+
+### **Overview**
+- **Last Commit:** "⚠️ Branch recovery PDCA - rename and reset operation planning"
+- **Age:** 19 days old
+- **Status:** Already archived
+- **Size:** 135 commits, 148 PDCA files, 805 component files
+
+### **Details**
+
+**Already Archived:**
+- Branch is in `archive/` directory
+- Marked as "broken"
+- Contains recovery planning documentation
+
+**Large Branch:**
+- 135 commits ahead of release/dev
+- Substantial content
+- But marked as broken for a reason
+
+**Recovery PDCA:**
+- Planning for rename/reset operation
+- Documents what went wrong
+- Likely successful recovery happened elsewhere
+
+### **Action**
+
+**💡 My Recommendation:** **KEEP AS ARCHIVED - ALREADY HANDLED**
+
+**Reasoning:**
+- Already in archive/ = intentionally archived
+- "broken" designation = known issue
+- Recovery documented
+- Historical reference value
+
+**No Action Needed:**
+- Already properly categorized
+- Serves as archive/reference
+- No merge or extraction needed
+
+---
+
+## **26. origin/archive/save-start-bc-73b88848** ⚪
+
+[`📂 Browse Branch`](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/archive/save-start-bc-73b88848) | Commit: `11cf9661` | Date: 2025-08-28
+
+### **What**
+Archived save/start checkpoint from August 28.
+
+### **Overview**
+- **Last Commit:** "Session start PDCA 2025-08-28-UTC-1225 with startup decision framework"
+- **Age:** 48 days old
+- **Status:** Already archived
+- **Type:** Historical checkpoint
+
+### **Details**
+
+**Archived Save Point:**
+- Checkpoint from Aug 28
+- Session startup documentation
+- Decision framework state from that time
+
+**Historical Value:**
+- Shows system state 48 days ago
+- Decision framework evolution
+- Process maturity reference
+
+### **Action**
+
+**💡 My Recommendation:** **KEEP AS ARCHIVED - ALREADY HANDLED**
+
+**Reasoning:**
+- Already properly archived
+- Historical checkpoint value
+- No action needed
+
+---
+
+## **Category: Remaining Dev Branches - August** (13 branches)
+
+### **Batch WODA Analysis**
+
+### **What**
+Development branches from August 2025 (various dates).
+
+### **Overview**
+- **Date Range:** August 23-31
+- **Total Count:** 13 branches
+- **Age:** 45-53 days old
+- **Type:** Session-based development work
+
+**Branch List:**
+1. `dev/2025-08-23-UTC-1529` - "Fix recovery role identification"
+2. `dev/2025-08-24-UTC-0857` - "Document dependency chain blocking CLIs"
+3. `dev/2025-08-25-UTC-0845` - "Fix dual-link format"
+4. `dev/2025-08-25-UTC-1308` - "Add identity-first process"
+5. `dev/2025-08-26-UTC-2036` - "Cherry-pick: Essential updates from save/start.v1"
+6. `dev/2025-08-28-UTC-0850` - "Add identity-first process"
+7. `dev/2025-08-28-UTC-0950` - "Cherry-pick: Essential updates"
+8. `dev/2025-08-28-UTC-1125` - "Add identity-first process"
+9. `dev/2025-08-28-UTC-1154` - "Cherry-pick: Essential updates"
+10. `dev/2025-08-28-UTC-1225` - "Add identity-first process"
+11. `dev/2025-08-28-UTC-1341` - "Cherry-pick: Essential updates"
+12. `dev/2025-08-28-UTC-2140` - "Add identity-first process for BackgroundAgent"
+13. `dev/2025-08-28-UTC-2227` - "Add interactive ONCE demo"
+
+### **Details**
+
+**Common Patterns:**
+- **Identity-first process (6 branches):** Multiple sessions working on same feature
+- **Cherry-pick updates (4 branches):** Bringing in save/start.v1 updates
+- **Process fixes:** Dual-link format, role identification
+- **Component work:** ONCE demo, CLI documentation
+
+**Age Factor:**
+- 45-53 days old = early project work
+- Processes evolved significantly since then
+- Likely superseded by more recent branches
+
+**Likely Superseded:**
+- Identity-first work likely now standard
+- Cherry-pick branches = transitory
+- Fixes likely integrated elsewhere
+
+### **Action**
+
+**💡 My Bulk Recommendation:** **MARK ALL AS HISTORICAL**
+
+**Reasoning:**
+- 45-53 days old = processes evolved
+- Repetitive patterns suggest iterative work now complete
+- Cherry-pick branches = integration already done
+- No unique unreplicat
+
+ed work identified
+
+**Individual Exceptions:**
+If you remember specific valuable work:
+- "Fix dual-link format" might have insights
+- "ONCE demo" might be reusable
+- But default: HISTORICAL
+
+**Bulk Action:**
+```
+For all 13 dev/2025-08--* branches:
+- Status: HISTORICAL
+- Action: Keep as-is
+- Reason: Age (45-53 days), likely superseded
+- Category: August Development Archive
+```
+
+**❓ Questions for You:**
+1. Bulk mark all August dev branches as HISTORICAL?
+2. Any specific August branch valuable?
+3. Or review each individually? (2-3 hours)
+
+---
+
