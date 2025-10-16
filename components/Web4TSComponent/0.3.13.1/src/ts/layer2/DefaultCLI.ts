@@ -1475,15 +1475,33 @@ export abstract class DefaultCLI implements CLI {
         const fullMethodDoc = TSCompletion.getMethodDoc(componentClassName, methodName);
         
         if (fullMethodDoc) {
-          // Format documentation with nice spacing
+          // Format documentation with full signature and green TSDoc
           const BRIGHT_CYAN = '\x1b[1;36m';
           const BRIGHT_WHITE_BOLD = '\x1b[1;37m';
+          const BRIGHT_YELLOW = '\x1b[1;33m';
+          const GREEN = '\x1b[32m';
           const RESET = '\x1b[0m';
           
-          // Return: method name + newline + separator + doc + double newline
+          // Extract parameters for full signature
+          const parameters = this.extractParameterInfoFromTSCompletion(methodName);
+          
+          // Build full colored signature (method name + parameters)
+          const isCLIMethod = this.hasCliAnnotations(methodName);
+          const methodColor = isCLIMethod ? BRIGHT_WHITE_BOLD : '';
+          
+          let signature = `${methodColor}${methodName}${RESET}`;
+          if (parameters && parameters.length > 0) {
+            const paramList = parameters.map((p: any) => {
+              return this.generateParameterSyntax(p, methodName);
+            }).join(' ');
+            signature = `${methodColor}${methodName}${RESET} ${BRIGHT_YELLOW}${paramList}${RESET}`;
+          }
+          
+          // Return: full signature + separator + green doc + double newline
           const separator = `\n${BRIGHT_CYAN}${'─'.repeat(60)}${RESET}\n`;
           const header = `${BRIGHT_WHITE_BOLD}📖 Documentation:${RESET}\n`;
-          return [methodName + separator + header + fullMethodDoc + '\n\n'];
+          const greenDoc = `${GREEN}${fullMethodDoc}${RESET}`;
+          return [signature + separator + header + greenDoc + '\n\n'];
         }
         
         return [methodName];  // Plain method name for bash completion
