@@ -1270,7 +1270,7 @@ export abstract class DefaultCLI implements CLI {
   /**
    * Dynamic parameter completion: completionName (depends on 'what' value)
    * Returns method names if what=method, parameter completion names if what=parameter
-   * Uses multiline format with signatures for readability
+   * Uses multiline format with full signatures for methods
    * Shared by: filterParameterCompletion (via delegation)
    * @cliHide
    */
@@ -1289,35 +1289,48 @@ export abstract class DefaultCLI implements CLI {
     const BRIGHT_CYAN = '\x1b[1;36m';
     const RESET = '\x1b[0m';
     
-    // Get all discovered methods
-    const allMethods = Array.from(this.methodSignatures.keys());
-    
-    let filtered: string[];
-    
     if (what === 'parameter') {
-      // Return parameter completion callback names with numbering (multiline format)
-      filtered = allMethods
+      // Return parameter completion callback names
+      const allMethods = Array.from(this.methodSignatures.keys());
+      let filtered = allMethods
         .filter(name => name.endsWith('ParameterCompletion'))
         .sort();
+      
+      // Apply prefix filtering if provided
+      if (filterPrefix) {
+        const prefixFiltered = filtered.filter(name => name.startsWith(filterPrefix));
+        filtered = prefixFiltered.length > 0 ? prefixFiltered : filtered;
+      }
+      
+      return filtered.map((name, index) => `${BRIGHT_CYAN}${index + 1}:${RESET} ${name}`);
     } else {
-      // what === 'method'
-      // Return regular method names (excluding parameter completions and hidden methods)
-      filtered = allMethods
-        .filter(name => !name.endsWith('ParameterCompletion'))
-        .filter(name => name !== 'completeParameter') // Hide internal completion method
-        .filter(name => name !== 'execute') // Hide internal execution method
-        .filter(name => name !== 'start') // Hide static start method
-        .sort();
+      // what === 'method' - Use analyzeComponentMethods for full signature generation
+      const methods = this.analyzeComponentMethods();
+      let filtered = methods
+        .filter(m => !m.name.endsWith('ParameterCompletion'))
+        .filter(m => m.name !== 'completeParameter')
+        .filter(m => m.name !== 'execute')
+        .filter(m => m.name !== 'start');
+      
+      // Apply prefix filtering if provided
+      if (filterPrefix) {
+        const prefixFiltered = filtered.filter(m => m.name.startsWith(filterPrefix));
+        filtered = prefixFiltered.length > 0 ? prefixFiltered : filtered;
+      }
+      
+      // Generate full CLI signatures using auto-discovery
+      return filtered.map((method, index) => {
+        if (method.parameters && method.parameters.length > 0) {
+          // Build parameter list using auto-discovery
+          const paramList = method.parameters.map((p: any) => {
+            return this.generateParameterSyntax(p, method.name);
+          }).join(' ');
+          return `${BRIGHT_CYAN}${index + 1}:${RESET} ${method.name} ${paramList}`;
+        }
+        // No parameters - just method name
+        return `${BRIGHT_CYAN}${index + 1}:${RESET} ${method.name}`;
+      });
     }
-    
-    // Apply prefix filtering if provided
-    if (filterPrefix) {
-      const prefixFiltered = filtered.filter(name => name.startsWith(filterPrefix));
-      filtered = prefixFiltered.length > 0 ? prefixFiltered : filtered;
-    }
-    
-    // Format as numbered list with bright cyan numbers for multiline display
-    return filtered.map((name, index) => `${BRIGHT_CYAN}${index + 1}:${RESET} ${name}`);
   }
 
   /**
