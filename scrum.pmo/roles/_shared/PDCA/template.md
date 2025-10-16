@@ -15,7 +15,8 @@
 **🚨 Issues:** {{KEY_ISSUES}}  
 
 **📎 Previous Commit:** {{PREVIOUS_COMMIT_SHA}} - {{PREVIOUS_COMMIT_DESCRIPTION}}  
-**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})  
+**➡️ Next PDCA:** [GitHub]({{NEXT_GITHUB_URL}}) | [{{NEXT_LOCAL_PATH}}]({{NEXT_LOCAL_PATH}})
 
 ---
 
@@ -143,7 +144,8 @@
 
 **Quality Impact:** {{QUALITY_IMPACT_DESCRIPTION}}
 
-**Next PDCA Focus:** {{NEXT_FOCUS_DESCRIPTION}}
+**Next PDCA Focus:** {{NEXT_FOCUS_DESCRIPTION}}  
+*(Note: Update header "Next PDCA:" link once next PDCA is created for bidirectional navigation)*
 
 ---
 
