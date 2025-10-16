@@ -475,6 +475,12 @@ export abstract class DefaultCLI implements CLI {
       if (typeof TSCompletion.getEnhancedMethodParameters === 'function') {
         const paramInfo = TSCompletion.getEnhancedMethodParameters(this.componentClass.name, methodName);
         
+        // ✅ FIX: If TSCompletion found no parameters but method exists, use fallback
+        // This happens for private methods, methods without CLI annotations, etc.
+        if (paramInfo.length === 0) {
+          return this.extractParameterInfoFallback(methodName);
+        }
+        
         return paramInfo.map((param: any, index: number) => {
           const paramName = param.name || this.generateIntelligentParameterName(methodName, index);
           const paramType = param.type || 'any';
