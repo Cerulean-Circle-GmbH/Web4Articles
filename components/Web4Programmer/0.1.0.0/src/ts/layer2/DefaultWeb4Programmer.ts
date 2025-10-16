@@ -6,7 +6,7 @@
 import { Web4Programmer } from '../layer3/Web4Programmer.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { Web4ProgrammerModel } from '../layer3/Web4ProgrammerModel.interface.js';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync, lstatSync, readlinkSync } from 'fs';
 import { join, dirname, resolve } from 'path';
 
 export class DefaultWeb4Programmer implements Web4Programmer {
@@ -120,17 +120,38 @@ export class DefaultWeb4Programmer implements Web4Programmer {
       throw new Error(`I couldn't find component: ${component} ${version} at ${componentPath}`);
     }
     
+    // Resolve actual version if symlink was provided (e.g., 'latest', 'dev', 'prod', 'test')
+    let actualVersion = version;
+    if (lstatSync(componentPath).isSymbolicLink()) {
+      const linkTarget = readlinkSync(componentPath);
+      // Extract version number from link target (e.g., "0.1.0.0" from "../0.1.0.0" or "0.1.0.0")
+      const versionMatch = linkTarget.match(/(\d+\.\d+\.\d+\.\d+)/);
+      if (versionMatch) {
+        actualVersion = versionMatch[1];
+      }
+    } else {
+      // Not a symlink - extract version from path
+      const pathMatch = componentPath.match(/(\d+\.\d+\.\d+\.\d+)$/);
+      if (pathMatch) {
+        actualVersion = pathMatch[1];
+      }
+    }
+    
     // Set component context for chaining
     this.model.name = component;
     this.model.origin = componentPath;
-    this.model.definition = `Component context: ${component} ${version}`;
+    this.model.definition = `Component context: ${component} ${actualVersion}`;
     
     // Store context for chained operations
     (this.model as any).contextComponent = component;
-    (this.model as any).contextVersion = version;
+    (this.model as any).contextVersion = actualVersion;  // Store ACTUAL version, not symlink name
     (this.model as any).contextPath = componentPath;
     
-    console.log(`✅ Component context loaded: ${component} ${version}`);
+    if (actualVersion !== version) {
+      console.log(`✅ Component context loaded: ${component} ${version} → ${actualVersion}`);
+    } else {
+      console.log(`✅ Component context loaded: ${component} ${version}`);
+    }
     console.log(`   Path: ${componentPath}`);
     
     return this; // Enable chaining

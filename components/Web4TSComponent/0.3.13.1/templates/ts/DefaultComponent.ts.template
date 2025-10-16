@@ -6,6 +6,8 @@
 import { {{COMPONENT_NAME}} } from '../layer3/{{COMPONENT_NAME}}.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { {{COMPONENT_NAME}}Model } from '../layer3/{{COMPONENT_NAME}}Model.interface.js';
+import { existsSync, lstatSync, readlinkSync, readdirSync, statSync } from 'fs';
+import { join, dirname } from 'path';
 
 export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   private model: {{COMPONENT_NAME}}Model;
