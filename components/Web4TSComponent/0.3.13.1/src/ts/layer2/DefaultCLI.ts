@@ -1247,6 +1247,15 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
+   * Fundamental parameter completion: what (completion type)
+   * Used by: completion method for testing tab completions
+   * @cliHide
+   */
+  async whatParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    return ['method', 'parameter'];
+  }
+
+  /**
    * Find project root using git (Web4 standard pattern)
    * Fallback to directory traversal if not in git repo
    * @private
