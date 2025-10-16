@@ -1280,27 +1280,21 @@ export abstract class DefaultCLI implements CLI {
    */
   private hasCliAnnotations(methodName: string): boolean {
     try {
-      // Import modules - must be at top level for proper async support
-      // For now, use a simpler approach: check if method has parameters OR is explicitly marked
+      // Check if method exists on component class
+      const method = this.componentClass?.prototype?.[methodName];
+      if (!method) return false;
+      
+      // Check method source for @cli annotations (works for both parameter-ful and parameter-less methods)
+      const methodStr = method.toString();
+      if (methodStr.includes('@cli')) {
+        return true;
+      }
       
       // Fallback: check if TSCompletion found parameters
       // (TSCompletion only extracts parameters from methods with proper TSDoc)
       const paramInfo = TSCompletion.getEnhancedMethodParameters(this.componentClass.name, methodName);
       if (paramInfo.length > 0) {
         // Method has TSDoc-documented parameters - likely a CLI method
-        return true;
-      }
-      
-      // For methods without parameters, use a simple heuristic:
-      // Check if the method appears in a predefined list of known CLI methods
-      // This is imperfect but works for common cases
-      const knownCliMethods = [
-        'on', 'create', 'info', 'process', 'test', 'completion',
-        'needsUpgradeCheck', 'addMethod', 'calculateSum',
-        'resolveComponentPath'
-      ];
-      
-      if (knownCliMethods.includes(methodName)) {
         return true;
       }
       

@@ -16,6 +16,8 @@ export class Web4ProgrammerCLI extends DefaultCLI {
     super();
     this.component = null;
     this.initWithComponentClass(DefaultWeb4Programmer, 'Web4Programmer', '0.1.0.0');
+    // Discover methods for chaining support
+    this.discoverMethods();
   }
 
   /**
