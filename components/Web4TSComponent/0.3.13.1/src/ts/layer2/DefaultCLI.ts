@@ -1274,6 +1274,36 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
+   * Check if a method has CLI annotations (@cli* tags in JSDoc)
+   * Used by: completion method to visually distinguish CLI-exposed methods
+   * @cliHide
+   */
+  private hasCliAnnotations(methodName: string): boolean {
+    try {
+      // Check if method exists on component class
+      const method = this.componentClass?.prototype?.[methodName];
+      if (!method) return false;
+      
+      // Get JSDoc text from method's toString (includes comments in some cases)
+      // More reliable: check if TSCompletion.getEnhancedMethodParameters found it
+      const paramInfo = TSCompletion.getEnhancedMethodParameters(this.componentClass.name, methodName);
+      
+      // If TSCompletion found parameters, check if they have CLI-specific metadata
+      // (TSCompletion only extracts parameters from methods with proper TSDoc)
+      if (paramInfo.length > 0) {
+        // Method has TSDoc-documented parameters - likely a CLI method
+        // Additional check: see if method source contains @cli annotations
+        const methodStr = method.toString();
+        return methodStr.includes('@cli') || paramInfo.length > 0;
+      }
+      
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
    * Dynamic parameter completion: completionName (depends on 'what' value)
    * Returns method names if what=method, parameter completion names if what=parameter
    * Uses multiline format with full signatures for methods
@@ -1294,6 +1324,7 @@ export abstract class DefaultCLI implements CLI {
     // ANSI color codes (matching help output color scheme)
     const BRIGHT_CYAN = '\x1b[1;36m';     // Numbers
     const BRIGHT_YELLOW = '\x1b[1;33m';   // Parameters (matching colors.parameters)
+    const BRIGHT_WHITE_BOLD = '\x1b[1;37m'; // CLI methods (user-facing commands)
     const RESET = '\x1b[0m';
     
     if (what === 'parameter') {
@@ -1332,16 +1363,20 @@ export abstract class DefaultCLI implements CLI {
         // Extract parameters for this method
         const parameters = this.extractParameterInfoFromTSCompletion(methodName);
         
+        // Check if method has CLI annotations for visual distinction
+        const isCLIMethod = this.hasCliAnnotations(methodName);
+        const methodColor = isCLIMethod ? BRIGHT_WHITE_BOLD : '';  // CLI methods: bright white bold, internal: plain
+        
         if (parameters && parameters.length > 0) {
           // Build parameter list using auto-discovery
           const paramList = parameters.map((p: any) => {
             return this.generateParameterSyntax(p, methodName);
           }).join(' ');
-          // Color scheme: number (bright cyan), method name (plain), parameters (bright yellow)
-          return `${BRIGHT_CYAN}${index + 1}:${RESET} ${methodName} ${BRIGHT_YELLOW}${paramList}${RESET}`;
+          // Color scheme: number (bright cyan), method name (bright white bold for CLI, plain for internal), parameters (bright yellow)
+          return `${BRIGHT_CYAN}${index + 1}:${RESET} ${methodColor}${methodName}${RESET} ${BRIGHT_YELLOW}${paramList}${RESET}`;
         }
         // No parameters - just method name
-        return `${BRIGHT_CYAN}${index + 1}:${RESET} ${methodName}`;
+        return `${BRIGHT_CYAN}${index + 1}:${RESET} ${methodColor}${methodName}${RESET}`;
       });
     }
   }
