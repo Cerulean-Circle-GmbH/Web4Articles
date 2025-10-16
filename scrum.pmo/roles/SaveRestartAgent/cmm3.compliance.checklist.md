@@ -60,10 +60,11 @@
    - [ ] c) No descriptive text in filename
 
 1. **Authorization**
-   - [ ] a) Only explicit user-authorized work
-   - [ ] b) Present decisions when direction unclear per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../_shared/PDCA/PDCA.howto.decide.md)
+   - [ ] a) NEVER SELF ASSIGN A CMM BADGE - Only TRON assigns badges; always document the current badge (assigned by TRON) in the PDCA header
+   - [ ] b) Only explicit user-authorized work
+   - [ ] c) Present decisions when direction unclear per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../_shared/PDCA/PDCA.howto.decide.md)
 **WARNING: Never create fake opposites like "do it vs don't do it" - Only present decisions for REAL RISKS with multiple valid approaches**
-   - [ ] c) No assumptions about user intent
+   - [ ] d) No assumptions about user intent
 
 1. **Markdown Quality**
    - [ ] a) All numbered lists use "1." for each item (not 1. 2. 3.) - HTML auto-numbers correctly, prevents confusion when inserting/deleting items
