@@ -280,4 +280,78 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
     
     return this;
   }
+
+  /**
+   * Test and discover tab completions for debugging and development
+   * @param what Type of completion to test: "method" or "parameter"
+   * @param filter Optional prefix to filter results (e.g., "v" shows only validate*, verify*, etc.)
+   * @cliSyntax what filter
+   * @cliDefault filter ""
+   */
+  async completion(what: string, filter?: string): Promise<this> {
+    const context = this.getComponentContext();
+    const { execSync } = await import('child_process');
+    const path = await import('path');
+    
+    // Always call completionNameParameterCompletion with proper args structure
+    const callbackName = 'completionNameParameterCompletion';
+    // Args structure: ['completion', 'method|parameter', 'filterPrefix']
+    const callbackArgs = ['completion', what, filter || ''].map((arg: string) => `"${arg}"`).join(' ');
+    
+    if (!context) {
+      // No context - test completions on {{COMPONENT_NAME}} itself
+      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on {{COMPONENT_NAME}}${filter ? ` (filter: ${filter})` : ''}`);
+      console.log(`---`);
+      
+      // Call completeParameter via CLI (completeParameter is on DefaultCLI)
+      // Suppress stderr (build messages) to avoid duplicate "up to date" noise
+      const cliPath = path.join(process.cwd(), '{{COMPONENT_LOWER}}');
+      execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs} 2>/dev/null`, { 
+        cwd: process.cwd(),
+        stdio: 'inherit',
+        encoding: 'utf-8'
+      });
+    } else {
+      // Context loaded - test completions on target component
+      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on ${context.component} ${context.version}${filter ? ` (filter: ${filter})` : ''}`);
+      console.log(`---`);
+      
+      // Call completeParameter on the target component via its CLI script
+      // Suppress stderr (build messages) to avoid duplicate "up to date" noise
+      const cliScriptName = context.component.toLowerCase().replace(/\./g, '');
+      
+      // Find project root
+      let currentDir = process.cwd();
+      while (!existsSync(path.join(currentDir, 'components'))) {
+        const parentDir = path.dirname(currentDir);
+        if (parentDir === currentDir) break;
+        currentDir = parentDir;
+      }
+      
+      const cliPath = path.join(currentDir, 'scripts', cliScriptName);
+      
+      execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs} 2>/dev/null`, { 
+        cwd: context.path,
+        stdio: 'inherit',
+        encoding: 'utf-8'
+      });
+    }
+    
+    return this;
+  }
+
+  /**
+   * @cliHide
+   */
+  protected getComponentContext(): { component: string; version: string; path: string } | null {
+    const context = this.model as any;
+    if (context.contextComponent && context.contextVersion && context.contextPath) {
+      return {
+        component: context.contextComponent,
+        version: context.contextVersion,
+        path: context.contextPath
+      };
+    }
+    return null;
+  }
 }

@@ -464,6 +464,56 @@ ${params.map(p => `    console.log(\`   ${p}: \${${p}}\`);`).join('\n')}
   }
 
   /**
+   * Test and discover tab completions for debugging and development
+   * @param what Type of completion to test: "method" or "parameter"
+   * @param filter Optional prefix to filter results
+   * @cliSyntax what filter
+   * @cliDefault filter ""
+   */
+  async completion(what: string, filter?: string): Promise<this> {
+    const context = this.getComponentContext();
+    const { execSync } = await import('child_process');
+    const path = await import('path');
+    
+    const callbackName = 'completionNameParameterCompletion';
+    const callbackArgs = ['completion', what, filter || ''].map((arg: string) => `"${arg}"`).join(' ');
+    
+    if (!context) {
+      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on Web4Programmer${filter ? ` (filter: ${filter})` : ''}`);
+      console.log(`---`);
+      
+      const cliPath = path.join(process.cwd(), 'web4programmer');
+      execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs} 2>/dev/null`, { 
+        cwd: process.cwd(),
+        stdio: 'inherit',
+        encoding: 'utf-8'
+      });
+    } else {
+      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on ${context.component} ${context.version}${filter ? ` (filter: ${filter})` : ''}`);
+      console.log(`---`);
+      
+      const cliScriptName = context.component.toLowerCase().replace(/\./g, '');
+      
+      let currentDir = process.cwd();
+      while (!existsSync(path.join(currentDir, 'components'))) {
+        const parentDir = dirname(currentDir);
+        if (parentDir === currentDir) break;
+        currentDir = parentDir;
+      }
+      
+      const cliPath = path.join(currentDir, 'scripts', cliScriptName);
+      
+      execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs} 2>/dev/null`, { 
+        cwd: context.path,
+        stdio: 'inherit',
+        encoding: 'utf-8'
+      });
+    }
+    
+    return this;
+  }
+
+  /**
    * Check if component needs upgrade by comparing template timestamps
    * @cliSyntax
    */
