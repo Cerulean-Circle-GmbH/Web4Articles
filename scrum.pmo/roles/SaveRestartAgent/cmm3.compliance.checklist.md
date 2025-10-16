@@ -46,7 +46,17 @@
    - [ ] a) Links only, no explanatory text per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../_shared/PDCA/howto.PDCA.md)
    - [ ] b) QA Decisions copied verbatim from PDCA per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../_shared/PDCA/PDCA.howto.decide.md)
    - [ ] c) Dual link format: [GitHub](URL) | [§/path](path) per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md](../_shared/PDCA/PDCA.dual.link.format.requirement.md)
-   - [ ] d) Finally apply cmm3 compliant format to the chat report
+   - [ ] d) Finally apply cmm3 compliant format to the chat report:
+     **MANDATORY VALIDATION:** Before sending chat report, verify against chat.report.template.md
+     **Forcing Function Checklist:**
+     - [ ] 3a: Links only, no explanatory text (no summaries, metrics, verbose descriptions)
+     - [ ] 4c: Dual link uses project-root-relative path (NO `file://` prefix)
+     - [ ] 3c: Format is `[GitHub](URL) | [§/path](path-from-root)`
+     - [ ] 3b: QA Decisions copied verbatim from PDCA (not paraphrased)
+     - [ ] 1g: Violations cited as "[#][letter] cmm2" if any exist
+     - [ ] Link tested and works when clicked
+     **If ANY checkbox unchecked → FIX before sending**
+     **Template:** [GitHub](https://github.com/CeruleanCircle/Web4Articles/blob/dev/2025-10-16-UTC-0918/scrum.pmo/roles/_shared/PDCA/chat.report.template.md) | [§/scrum.pmo/roles/_shared/PDCA/chat.report.template.md](../_shared/PDCA/chat.report.template.md)
 
 1. **Link Compliance**
    - [ ] a) GitHub URLs work after git push per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.dual.link.format.requirement.md](../_shared/PDCA/PDCA.dual.link.format.requirement.md)

@@ -168,6 +168,45 @@ Decision 1: Cherry-pick requested files
 **Example Warning:**
 "⚠️ WARNING: This will DELETE all content in release/dev and replace it with save/start. This cannot be undone. Continue?"
 
+## **✅ PRE-CHAT-RESPONSE VALIDATION (MANDATORY)**
+
+**PURPOSE:** Prevent chat compliance violations by validating BEFORE sending report.
+
+**WHEN TO USE:** After PDCA completion, BEFORE sending chat report (part of step 11 in 1f protocol).
+
+**THE FORCING FUNCTION CHECKLIST:**
+
+Before sending ANY chat response after completing work, verify:
+
+- [ ] **3a Compliance:** Links only, no explanatory text? (No summaries, metrics, or verbose descriptions)
+- [ ] **4c Compliance:** Dual link uses project-root-relative path? (NOT `file://` prefix)
+- [ ] **3c Compliance:** Dual link format is `[GitHub](URL) | [§/path](path-from-root)`?
+- [ ] **3b Compliance:** QA Decisions copied verbatim from PDCA (not paraphrased)?
+- [ ] **1g Compliance:** Any violations cited as "[#][letter] cmm2" format?
+- [ ] **Link Test:** Can you click the local link? Does it resolve?
+
+**IF ANY CHECKBOX UNCHECKED → FIX BEFORE SENDING**
+
+**Path Verification Command:**
+```bash
+# Your chat link should use project-root-relative path
+# Test: From workspace root, verify file exists
+ls scrum.pmo/project.journal/session-name/file.pdca.md
+
+# If this fails → your path is wrong → fix before sending
+```
+
+**Template Reference:**
+See full template with examples: [GitHub](https://github.com/CeruleanCircle/Web4Articles/blob/dev/2025-10-16-UTC-0918/scrum.pmo/roles/_shared/PDCA/chat.report.template.md) | [§/scrum.pmo/roles/_shared/PDCA/chat.report.template.md](../scrum.pmo/roles/_shared/PDCA/chat.report.template.md)
+
+**Why This Matters:**
+- Context switching: PDCA rules ≠ Chat rules
+- Format blindness: Agents monitor content, forget format
+- Integrity alignment: Do what you documented
+- Trust process: Self-correct before TRON sees output
+
+**Remember:** Documentation ≠ Execution without validation checkpoint.
+
 ## **🎯 PDCA REPORTING PROTOCOL**
 
 ### **Chat Response Format (MINIMAL)**
