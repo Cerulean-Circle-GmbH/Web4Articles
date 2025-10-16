@@ -1354,7 +1354,17 @@ export abstract class DefaultCLI implements CLI {
             try {
               // Call the completion callback with empty args (discovery mode)
               const results = await callback.call(this, []);
-              return Array.isArray(results) ? results : [results];
+              const resultArray = Array.isArray(results) ? results : [results];
+              
+              // ✅ POST-PROCESSING: Add newline for better output formatting
+              // The callback returns raw values (e.g., "nextPatch nextMinor nextMajor")
+              // Add newline to separate from shell prompt
+              if (resultArray.length > 0) {
+                const lastIndex = resultArray.length - 1;
+                resultArray[lastIndex] = resultArray[lastIndex] + '\n';
+              }
+              
+              return resultArray;
             } catch (error) {
               // If callback fails, return parameter name
               return [paramName];
