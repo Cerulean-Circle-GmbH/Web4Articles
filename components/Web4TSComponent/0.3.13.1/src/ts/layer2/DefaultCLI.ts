@@ -1340,30 +1340,48 @@ export abstract class DefaultCLI implements CLI {
         filtered = prefixFiltered.length > 0 ? prefixFiltered : filtered;
       }
       
+      // ✅ DRY FIX: Extract parameters from ALL methods ONCE (not once per parameter!)
+      // Cache results to avoid O(parameters × methods) complexity  
+      const allMethodNames = Array.from(this.methodSignatures.keys())
+        .filter(m => !m.endsWith('ParameterCompletion'));
+      
+      // Extract parameters from all methods ONCE (DRY principle)
+      // Also cache CLI annotation checks to avoid repeated calls during sort
+      const allMethodParams = new Map<string, any[]>();
+      const cliMethodsSet = new Set<string>();
+      
+      for (const methodName of allMethodNames) {
+        const params = this.extractParameterInfoFromTSCompletion(methodName);
+        allMethodParams.set(methodName, params);
+        
+        // Cache CLI annotation check: method with TSDoc parameters from TSCompletion = CLI method
+        // This avoids calling hasCliAnnotations which would re-call getEnhancedMethodParameters
+        if (params.length > 0) {
+          cliMethodsSet.add(methodName);
+        }
+      }
+      
+      // Sort methods: CLI methods first (they have better metadata)
+      const methodNames = allMethodNames.sort((a, b) => {
+        const aIsCLI = cliMethodsSet.has(a);
+        const bIsCLI = cliMethodsSet.has(b);
+        if (aIsCLI && !bIsCLI) return -1;
+        if (!aIsCLI && bIsCLI) return 1;
+        return a.localeCompare(b);
+      });
+      
       // Transform: versionParameterCompletion → <?version:'0.1.0.0'>
-      // Find methods that use this parameter to extract default values
+      // Now use cached parameter data for each parameter
       return filtered.map((callbackName, index) => {
         const paramName = callbackName.replace(/ParameterCompletion$/, '');
-        
-        // Find CLI methods (with annotations) first, then other methods
-        const methodNames = Array.from(this.methodSignatures.keys())
-          .filter(m => !m.endsWith('ParameterCompletion'))
-          .sort((a, b) => {
-            // Prioritize CLI-annotated methods (they have better metadata)
-            const aIsCLI = this.hasCliAnnotations(a);
-            const bIsCLI = this.hasCliAnnotations(b);
-            if (aIsCLI && !bIsCLI) return -1;
-            if (!aIsCLI && bIsCLI) return 1;
-            return a.localeCompare(b);
-          });
         
         let paramSyntax = `<${paramName}>`;  // Default: required parameter
         let bestParam: any = null;
         
-        // Search methods for this parameter
+        // Search cached method parameters (no repeated extraction!)
         // Prefer optional parameters with defaults over required ones
         for (const methodName of methodNames) {
-          const params = this.extractParameterInfoFromTSCompletion(methodName);
+          const params = allMethodParams.get(methodName)!;  // Cached lookup
           const param = params.find(p => p.name === paramName);
           
           if (param) {
