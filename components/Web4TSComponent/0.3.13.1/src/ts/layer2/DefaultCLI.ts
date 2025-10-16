@@ -1356,12 +1356,21 @@ export abstract class DefaultCLI implements CLI {
               const results = await callback.call(this, []);
               const resultArray = Array.isArray(results) ? results : [results];
               
-              // ✅ POST-PROCESSING: Add newline for better output formatting
-              // The callback returns raw values (e.g., "nextPatch nextMinor nextMajor")
-              // Add newline to separate from shell prompt
+              // ✅ POST-PROCESSING: Format values for better UX
+              // 1. Color values bright cyan (matching shell completion style)
+              // 2. Add double newline for clean separation from prompt
+              const BRIGHT_CYAN = '\x1b[1;36m';
+              const RESET = '\x1b[0m';
+              
               if (resultArray.length > 0) {
-                const lastIndex = resultArray.length - 1;
-                resultArray[lastIndex] = resultArray[lastIndex] + '\n';
+                // Color each result bright cyan
+                const coloredResults = resultArray.map(val => `${BRIGHT_CYAN}${val}${RESET}`);
+                
+                // Add double newline to last element for clean spacing
+                const lastIndex = coloredResults.length - 1;
+                coloredResults[lastIndex] = coloredResults[lastIndex] + '\n\n';
+                
+                return coloredResults;
               }
               
               return resultArray;

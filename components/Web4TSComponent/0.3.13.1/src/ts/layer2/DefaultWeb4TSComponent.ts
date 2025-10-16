@@ -2782,8 +2782,9 @@ Standards:
       console.log(`---`);
       
       // Call completeParameter via CLI (completeParameter is on DefaultCLI, not DefaultWeb4TSComponent)
+      // Suppress stderr (build messages) to avoid duplicate "up to date" noise
       const cliPath = path.join(process.cwd(), 'web4tscomponent');
-      execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs}`, { 
+      execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs} 2>/dev/null`, { 
         cwd: process.cwd(),
         stdio: 'inherit',
         encoding: 'utf-8'
@@ -2794,11 +2795,12 @@ Standards:
       console.log(`---`);
       
       // Call completeParameter on the target component via its CLI script
+      // Suppress stderr (build messages) to avoid duplicate "up to date" noise
       const componentPath = this.resolveComponentPath(context.component, context.version);
       const cliScriptName = context.component.toLowerCase().replace(/\./g, '');
       const cliPath = path.join(this.model.projectRoot, 'scripts', cliScriptName);
       
-      execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs}`, { 
+      execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs} 2>/dev/null`, { 
         cwd: componentPath,
         stdio: 'inherit',
         encoding: 'utf-8'
