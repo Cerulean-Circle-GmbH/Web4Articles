@@ -2762,6 +2762,7 @@ Standards:
    * 
    * @cliSyntax what filter
    * @cliCompletion what whatParameterCompletion
+   * @cliCompletion filter completionNameParameterCompletion
    * @cliExample web4tscomponent completion method
    * @cliExample web4tscomponent completion method v
    * @cliExample web4tscomponent completion parameter s
