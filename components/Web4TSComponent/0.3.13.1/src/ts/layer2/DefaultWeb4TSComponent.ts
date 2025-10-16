@@ -2754,48 +2754,42 @@ Standards:
    * WITHOUT context: Test completions on Web4TSComponent itself
    * WITH context: Test completions on the loaded component
    * 
-   * Enables testing tab completion callbacks programmatically without bash shell:
-   * - Discover available completions for a component
-   * - Debug completion callback behavior
-   * - Verify completion output format (multi-line vs multi-word)
+   * Automatically discovers and lists methods or parameter completions based on 'what' parameter.
+   * Supports prefix filtering to narrow down results.
    * 
    * @param what Type of completion to test: "method" or "parameter"
-   * @param completionName Name of completion callback (e.g., "scopeParameterCompletion", "versionParameterCompletion")
+   * @param filter Optional prefix to filter results (e.g., "v" shows only validate*, verify*, etc.)
    * 
-   * @cliSyntax what completionName
+   * @cliSyntax what filter
    * @cliCompletion what whatParameterCompletion
-   * @cliCompletion completionName completionNameParameterCompletion
-   * @cliExample web4tscomponent completion parameter scopeParameterCompletion
-   * @cliExample web4tscomponent completion parameter referencesParameterCompletion test file
-   * @cliExample web4tscomponent on Unit 0.3.0.5 completion parameter versionParameterCompletion
+   * @cliExample web4tscomponent completion method
+   * @cliExample web4tscomponent completion method v
+   * @cliExample web4tscomponent completion parameter s
+   * @cliExample web4tscomponent on Unit 0.3.0.5 completion method
    */
-  async completion(what: string, completionName: string, ...args: string[]): Promise<this> {
+  async completion(what: string, filter?: string): Promise<this> {
     const context = this.getComponentContext();
+    
+    // Always call completionNameParameterCompletion with proper args structure
+    const callbackName = 'completionNameParameterCompletion';
+    // Args structure: ['completion', 'method|parameter', 'filterPrefix']
+    const callbackArgs = ['completion', what, filter || ''].map(arg => `"${arg}"`).join(' ');
     
     if (!context) {
       // No context - test completions on Web4TSComponent itself
-      console.log(`🔍 Testing completion on Web4TSComponent: ${completionName}`);
-      console.log(`📋 Type: ${what}`);
-      if (args.length > 0) {
-        console.log(`📌 Args: ${args.join(' ')}`);
-      }
+      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on Web4TSComponent${filter ? ` (filter: ${filter})` : ''}`);
       console.log(`---`);
       
       // Call completeParameter via CLI (completeParameter is on DefaultCLI, not DefaultWeb4TSComponent)
       const cliPath = path.join(process.cwd(), 'web4tscomponent');
-      const completeArgs = [completionName, ...args].map(arg => `"${arg}"`).join(' ');
-      execSync(`${cliPath} completeParameter ${completeArgs}`, { 
+      execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs}`, { 
         cwd: process.cwd(),
         stdio: 'inherit',
         encoding: 'utf-8'
       });
     } else {
       // Context loaded - test completions on target component
-      console.log(`🔍 Testing completion on ${context.component} ${context.version}: ${completionName}`);
-      console.log(`📋 Type: ${what}`);
-      if (args.length > 0) {
-        console.log(`📌 Args: ${args.join(' ')}`);
-      }
+      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on ${context.component} ${context.version}${filter ? ` (filter: ${filter})` : ''}`);
       console.log(`---`);
       
       // Call completeParameter on the target component via its CLI script
@@ -2803,8 +2797,7 @@ Standards:
       const cliScriptName = context.component.toLowerCase().replace(/\./g, '');
       const cliPath = path.join(this.model.projectRoot, 'scripts', cliScriptName);
       
-      const completeArgs = [completionName, ...args].map(arg => `"${arg}"`).join(' ');
-      execSync(`${cliPath} completeParameter ${completeArgs}`, { 
+      execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs}`, { 
         cwd: componentPath,
         stdio: 'inherit',
         encoding: 'utf-8'
