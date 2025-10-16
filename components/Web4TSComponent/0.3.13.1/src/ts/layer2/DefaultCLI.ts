@@ -1340,6 +1340,13 @@ export abstract class DefaultCLI implements CLI {
         filtered = prefixFiltered.length > 0 ? prefixFiltered : filtered;
       }
       
+      // ✅ SINGLE MATCH: Auto-complete if only one parameter matches
+      // Standard shell behavior: one match = complete it, multiple = show list
+      if (filtered.length === 1) {
+        const paramName = filtered[0].replace(/ParameterCompletion$/, '');
+        return [paramName];  // Plain name for bash completion
+      }
+      
       // ✅ DRY FIX: Extract parameters from ALL methods ONCE (not once per parameter!)
       // Cache results to avoid O(parameters × methods) complexity  
       const allMethodNames = Array.from(this.methodSignatures.keys())
@@ -1417,6 +1424,12 @@ export abstract class DefaultCLI implements CLI {
       if (filterPrefix) {
         const prefixFiltered = filtered.filter(name => name.startsWith(filterPrefix));
         filtered = prefixFiltered.length > 0 ? prefixFiltered : filtered;
+      }
+      
+      // ✅ SINGLE MATCH: Auto-complete if only one method matches
+      // Standard shell behavior: one match = complete it, multiple = show list
+      if (filtered.length === 1) {
+        return [filtered[0]];  // Plain method name for bash completion
       }
       
       // Generate full CLI signatures using extractParameterInfoFromTSCompletion (with color coding)
