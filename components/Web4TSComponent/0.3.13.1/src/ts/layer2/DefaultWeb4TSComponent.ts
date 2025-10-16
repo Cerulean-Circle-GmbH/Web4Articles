@@ -894,14 +894,14 @@ Standards:
    * // Create minimal component
    * await component.create('DataProcessor', '0.1.0.0', 'cli');
    * 
-   * @cliSyntax name version options
+   * @cliSyntax component version options
    * @cliDefault version 0.1.0.0
    * @cliDefault options all
    */
-  async create(name: string, version: string = '0.1.0.0', options: string = 'all'): Promise<void> {
+  async create(component: string, version: string = '0.1.0.0', options: string = 'all'): Promise<void> {
     // Parse options (maps from 1.0.0.0 --cli --spec --vitest --layers)
     const scaffoldOptions: any = {
-      componentName: name,
+      componentName: component,
       version,
       includeLayerArchitecture: options.includes('layers') || options.includes('all'),
       includeCLI: options.includes('cli') || options.includes('all'),
@@ -909,14 +909,14 @@ Standards:
       includeVitest: options.includes('vitest') || options.includes('test') || options.includes('all')
     };
     
-    console.log(`🏗️ Creating Web4 component: ${name} ${version}`);
+    console.log(`🏗️ Creating Web4 component: ${component} ${version}`);
     console.log(`📋 Options: ${options || 'default'}`);
     
     const metadata = await this.scaffoldComponent(scaffoldOptions);
     
-    console.log(`✅ Component structure created: ${name}`);
+    console.log(`✅ Component structure created: ${component}`);
     console.log(`   Version: ${metadata.version}`);
-    console.log(`   Location: components/${name}/${version}`);
+    console.log(`   Location: components/${component}/${version}`);
     console.log(`   CLI: ${metadata.hasLocationResilientCLI ? '✅' : '❌'}`);
     console.log(`   Layers: ${metadata.hasLayeredArchitecture ? '✅' : '❌'}`);
     console.log(`   Spec: ${metadata.hasScenarioSupport ? '✅' : '❌'}`);
@@ -928,12 +928,12 @@ Standards:
     // Load the newly created component and verify/fix its symlinks
     const tempComponent = new DefaultWeb4TSComponent();
     // Set component context directly (Web4 pattern: modify model, not init)
-    tempComponent.model.component = name;
+    tempComponent.model.component = component;
     tempComponent.model.version = version;
     await tempComponent.verifyAndFix();
     
     // Verify component is callable
-    const cliScriptName = name.toLowerCase().replace(/\./g, '');
+    const cliScriptName = component.toLowerCase().replace(/\./g, '');
     const cliPath = path.join(this.model.projectRoot, 'scripts', cliScriptName);
     
     if (existsSync(cliPath)) {
@@ -942,7 +942,7 @@ Standards:
       console.log(`   Try: ${cliScriptName}`);
     } else {
       console.log(`⚠️  Component created but CLI not available at expected path: ${cliPath}`);
-      console.log(`   Run manually: web4tscomponent on ${name} ${version} verifyAndFix`);
+      console.log(`   Run manually: web4tscomponent on ${component} ${version} verifyAndFix`);
     }
   }
 
