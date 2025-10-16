@@ -1479,16 +1479,28 @@ export abstract class DefaultCLI implements CLI {
         const isCLIMethod = this.hasCliAnnotations(methodName);
         const methodColor = isCLIMethod ? BRIGHT_WHITE_BOLD : '';  // CLI methods: bright white bold, internal: plain
         
+        // ✅ SEARCH HIGHLIGHTING: Highlight filter prefix in red
+        const RED = '\x1b[1;31m';
+        let displayName = methodName;
+        if (filterPrefix && methodName.toLowerCase().startsWith(filterPrefix.toLowerCase())) {
+          // Split: prefix (red) + rest (normal method color)
+          const prefix = methodName.substring(0, filterPrefix.length);
+          const rest = methodName.substring(filterPrefix.length);
+          displayName = `${RED}${prefix}${RESET}${methodColor}${rest}${RESET}`;
+        } else {
+          displayName = `${methodColor}${methodName}${RESET}`;
+        }
+        
         if (parameters && parameters.length > 0) {
           // Build parameter list using auto-discovery
           const paramList = parameters.map((p: any) => {
             return this.generateParameterSyntax(p, methodName);
           }).join(' ');
-          // Color scheme: number (bright cyan), method name (bright white bold for CLI, plain for internal), parameters (bright yellow)
-          return `${BRIGHT_CYAN}${index + 1}:${RESET} ${methodColor}${methodName}${RESET} ${BRIGHT_YELLOW}${paramList}${RESET}`;
+          // Color scheme: number (bright cyan), search term (red), method name (bright white bold for CLI, plain for internal), parameters (bright yellow)
+          return `${BRIGHT_CYAN}${index + 1}:${RESET} ${displayName} ${BRIGHT_YELLOW}${paramList}${RESET}`;
         }
         // No parameters - just method name
-        return `${BRIGHT_CYAN}${index + 1}:${RESET} ${methodColor}${methodName}${RESET}`;
+        return `${BRIGHT_CYAN}${index + 1}:${RESET} ${displayName}`;
       });
     }
   }
