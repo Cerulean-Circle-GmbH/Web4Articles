@@ -1285,8 +1285,9 @@ export abstract class DefaultCLI implements CLI {
       return [];
     }
     
-    // ANSI color codes
-    const BRIGHT_CYAN = '\x1b[1;36m';
+    // ANSI color codes (matching help output color scheme)
+    const BRIGHT_CYAN = '\x1b[1;36m';     // Numbers
+    const BRIGHT_YELLOW = '\x1b[1;33m';   // Parameters (matching colors.parameters)
     const RESET = '\x1b[0m';
     
     if (what === 'parameter') {
@@ -1318,14 +1319,15 @@ export abstract class DefaultCLI implements CLI {
         filtered = prefixFiltered.length > 0 ? prefixFiltered : filtered;
       }
       
-      // Generate full CLI signatures using auto-discovery
+      // Generate full CLI signatures using auto-discovery (with color coding)
       return filtered.map((method, index) => {
         if (method.parameters && method.parameters.length > 0) {
           // Build parameter list using auto-discovery
           const paramList = method.parameters.map((p: any) => {
             return this.generateParameterSyntax(p, method.name);
           }).join(' ');
-          return `${BRIGHT_CYAN}${index + 1}:${RESET} ${method.name} ${paramList}`;
+          // Color scheme: number (bright cyan), method name (plain), parameters (bright yellow)
+          return `${BRIGHT_CYAN}${index + 1}:${RESET} ${method.name} ${BRIGHT_YELLOW}${paramList}${RESET}`;
         }
         // No parameters - just method name
         return `${BRIGHT_CYAN}${index + 1}:${RESET} ${method.name}`;
