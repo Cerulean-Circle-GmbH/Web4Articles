@@ -335,7 +335,7 @@ node dist/ts/layer5/WODAAnalyzerCLI.js --output <path>  # ✅ Executed
   - tsconfig.json
 
 **2. Generated Analysis Document:**
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0400/scrum.pmo/roles/PDCAQualityAgent/pdca/2025-10-16-UTC-0830-WODA-component-generated.md) | [§/scrum.pmo/roles/PDCAQualityAgent/pdca/2025-10-16-UTC-0830-WODA-component-generated.md](../2025-10-16-UTC-0830-WODA-component-generated.md)
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0400/scrum.pmo/roles/PDCAQualityAgent/pdca/2025-10-16-UTC-0830-WODA-component-generated.md) | [§/scrum.pmo/roles/PDCAQualityAgent/pdca/2025-10-16-UTC-0830-WODA-component-generated.md](./2025-10-16-UTC-0830-WODA-component-generated.md)
 - 5,611 lines
 - 151/151 branches with complete WODA
 
@@ -576,7 +576,7 @@ class CustomAnalyzer extends DefaultWODAAnalyzer {
 - [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0400/components/WODAAnalyzer/0.1.0.0/README.md) | [§/components/WODAAnalyzer/0.1.0.0/README.md](../../../../components/WODAAnalyzer/0.1.0.0/README.md)
 
 **Generated Output:**
-- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0400/scrum.pmo/roles/PDCAQualityAgent/pdca/2025-10-16-UTC-0830-WODA-component-generated.md) | [§/scrum.pmo/roles/PDCAQualityAgent/pdca/2025-10-16-UTC-0830-WODA-component-generated.md](../2025-10-16-UTC-0830-WODA-component-generated.md)
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0400/scrum.pmo/roles/PDCAQualityAgent/pdca/2025-10-16-UTC-0830-WODA-component-generated.md) | [§/scrum.pmo/roles/PDCAQualityAgent/pdca/2025-10-16-UTC-0830-WODA-component-generated.md](./2025-10-16-UTC-0830-WODA-component-generated.md)
 
 **Previous Work:**
 - [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0400/scrum.pmo/roles/PDCAQualityAgent/pdca/2025-10-16-UTC-0755-pattern-break-automation-solution.pdca.md) | [§/scrum.pmo/roles/PDCAQualityAgent/pdca/2025-10-16-UTC-0755-pattern-break-automation-solution.pdca.md](../2025-10-16-UTC-0755-pattern-break-automation-solution.pdca.md)
