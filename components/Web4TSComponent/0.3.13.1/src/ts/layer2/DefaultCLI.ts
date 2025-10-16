@@ -1262,39 +1262,49 @@ export abstract class DefaultCLI implements CLI {
    * @cliHide
    */
   async completionNameParameterCompletion(currentArgs: string[]): Promise<string[]> {
-    // currentArgs: ['completion', 'method'|'parameter', ...] in bash completion context
+    // currentArgs: ['completion', 'method'|'parameter', 'prefix', ...] in bash completion context
     // Extract 'what' value from args (index 1 = first parameter value)
     const what = currentArgs[1]; // Index 1 contains the 'what' value
+    const filterPrefix = currentArgs[2]; // Optional prefix for filtering
     
     if (!what || (what !== 'method' && what !== 'parameter')) {
       // No valid 'what' value yet - return empty
       return [];
     }
     
+    // ANSI color codes
+    const BRIGHT_CYAN = '\x1b[1;36m';
+    const RESET = '\x1b[0m';
+    
     // Get all discovered methods
     const allMethods = Array.from(this.methodSignatures.keys());
     
+    let filtered: string[];
+    
     if (what === 'parameter') {
       // Return parameter completion callback names with numbering (multiline format)
-      const paramCompletions = allMethods
+      filtered = allMethods
         .filter(name => name.endsWith('ParameterCompletion'))
         .sort();
-      
-      // Format as numbered list for multiline display
-      return paramCompletions.map((name, index) => `${index + 1}: ${name}`);
     } else {
       // what === 'method'
       // Return regular method names (excluding parameter completions and hidden methods)
-      const regularMethods = allMethods
+      filtered = allMethods
         .filter(name => !name.endsWith('ParameterCompletion'))
         .filter(name => name !== 'completeParameter') // Hide internal completion method
         .filter(name => name !== 'execute') // Hide internal execution method
         .filter(name => name !== 'start') // Hide static start method
         .sort();
-      
-      // Format as numbered list for multiline display
-      return regularMethods.map((name, index) => `${index + 1}: ${name}`);
     }
+    
+    // Apply prefix filtering if provided
+    if (filterPrefix) {
+      const prefixFiltered = filtered.filter(name => name.startsWith(filterPrefix));
+      filtered = prefixFiltered.length > 0 ? prefixFiltered : filtered;
+    }
+    
+    // Format as numbered list with bright cyan numbers for multiline display
+    return filtered.map((name, index) => `${BRIGHT_CYAN}${index + 1}:${RESET} ${name}`);
   }
 
   /**
