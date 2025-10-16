@@ -1,0 +1,47 @@
+{
+  "name": "@web4articles/woda-analyzer",
+  "version": "0.1.0.0",
+  "description": "Git branch analysis & WODA format document generator - Web4TSComponent",
+  "type": "module",
+  "main": "dist/ts/layer5/WODAAnalyzerCLI.js",
+  "types": "dist/ts/layer2/DefaultWODAAnalyzer.d.ts",
+  "bin": {
+    "wodaanalyzer": "./dist/ts/layer5/WODAAnalyzerCLI.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/ts/layer2/DefaultWODAAnalyzer.js",
+      "types": "./dist/ts/layer2/DefaultWODAAnalyzer.d.ts"
+    },
+    "./cli": {
+      "import": "./dist/ts/layer5/WODAAnalyzerCLI.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo 'No tests yet' && exit 0",
+    "analyze": "node --loader ts-node/esm src/ts/layer5/WODAAnalyzerCLI.ts",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "woda",
+    "analysis",
+    "git",
+    "branch",
+    "documentation",
+    "web4",
+    "typescript"
+  ],
+  "author": "Cerulean Circle GmbH",
+  "license": "PROPRIETARY",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.0"
+  },
+  "dependencies": {}
+}
+
