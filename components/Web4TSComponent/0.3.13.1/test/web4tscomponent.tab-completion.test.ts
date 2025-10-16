@@ -334,10 +334,10 @@ describe('🎨 Tab Completion Architecture', () => {
       // User types "web4tscomponent create <Tab>"
       const results = completion.complete(['Web4TSComponentCLI,DefaultWeb4TSComponent', 'create', '']);
       
-      // Should return callback for name parameter (now has completion)
+      // Should return callback for component parameter (now has completion)
       // create method has completion methods for all parameters
       expect(results).toHaveLength(1);
-      expect(results[0]).toBe('__CALLBACK__:nameParameterCompletion');
+      expect(results[0]).toBe('__CALLBACK__:componentParameterCompletion');
     });
   });
 
