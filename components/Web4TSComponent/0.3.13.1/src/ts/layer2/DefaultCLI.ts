@@ -1328,7 +1328,7 @@ export abstract class DefaultCLI implements CLI {
     const RESET = '\x1b[0m';
     
     if (what === 'parameter') {
-      // Return parameter completion callback names
+      // Return parameter names in Web4 notation (not callback names)
       const allMethods = Array.from(this.methodSignatures.keys());
       let filtered = allMethods
         .filter(name => name.endsWith('ParameterCompletion'))
@@ -1340,7 +1340,12 @@ export abstract class DefaultCLI implements CLI {
         filtered = prefixFiltered.length > 0 ? prefixFiltered : filtered;
       }
       
-      return filtered.map((name, index) => `${BRIGHT_CYAN}${index + 1}:${RESET} ${name}`);
+      // Transform: actionParameterCompletion → <action>
+      // Display in yellow to match CLI help parameter display
+      return filtered.map((name, index) => {
+        const paramName = name.replace(/ParameterCompletion$/, '');
+        return `${BRIGHT_CYAN}${index + 1}:${RESET} ${BRIGHT_YELLOW}<${paramName}>${RESET}`;
+      });
     } else {
       // what === 'method' - Use methodSignatures for ALL methods (including @cliHide)
       // Discovery tool should show hidden methods for debugging/development
