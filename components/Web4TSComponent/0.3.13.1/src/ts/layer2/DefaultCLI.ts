@@ -1305,32 +1305,37 @@ export abstract class DefaultCLI implements CLI {
       
       return filtered.map((name, index) => `${BRIGHT_CYAN}${index + 1}:${RESET} ${name}`);
     } else {
-      // what === 'method' - Use analyzeComponentMethods for full signature generation
-      const methods = this.analyzeComponentMethods();
-      let filtered = methods
-        .filter(m => !m.name.endsWith('ParameterCompletion'))
-        .filter(m => m.name !== 'completeParameter')
-        .filter(m => m.name !== 'execute')
-        .filter(m => m.name !== 'start');
+      // what === 'method' - Use methodSignatures for ALL methods (including @cliHide)
+      // Discovery tool should show hidden methods for debugging/development
+      const allMethodNames = Array.from(this.methodSignatures.keys());
+      let filtered = allMethodNames
+        .filter(name => !name.endsWith('ParameterCompletion'))
+        .filter(name => name !== 'completeParameter')
+        .filter(name => name !== 'execute')
+        .filter(name => name !== 'start')
+        .sort();
       
       // Apply prefix filtering if provided
       if (filterPrefix) {
-        const prefixFiltered = filtered.filter(m => m.name.startsWith(filterPrefix));
+        const prefixFiltered = filtered.filter(name => name.startsWith(filterPrefix));
         filtered = prefixFiltered.length > 0 ? prefixFiltered : filtered;
       }
       
-      // Generate full CLI signatures using auto-discovery (with color coding)
-      return filtered.map((method, index) => {
-        if (method.parameters && method.parameters.length > 0) {
+      // Generate full CLI signatures using extractParameterInfoFromTSCompletion (with color coding)
+      return filtered.map((methodName, index) => {
+        // Extract parameters for this method
+        const parameters = this.extractParameterInfoFromTSCompletion(methodName);
+        
+        if (parameters && parameters.length > 0) {
           // Build parameter list using auto-discovery
-          const paramList = method.parameters.map((p: any) => {
-            return this.generateParameterSyntax(p, method.name);
+          const paramList = parameters.map((p: any) => {
+            return this.generateParameterSyntax(p, methodName);
           }).join(' ');
           // Color scheme: number (bright cyan), method name (plain), parameters (bright yellow)
-          return `${BRIGHT_CYAN}${index + 1}:${RESET} ${method.name} ${BRIGHT_YELLOW}${paramList}${RESET}`;
+          return `${BRIGHT_CYAN}${index + 1}:${RESET} ${methodName} ${BRIGHT_YELLOW}${paramList}${RESET}`;
         }
         // No parameters - just method name
-        return `${BRIGHT_CYAN}${index + 1}:${RESET} ${method.name}`;
+        return `${BRIGHT_CYAN}${index + 1}:${RESET} ${methodName}`;
       });
     }
   }
