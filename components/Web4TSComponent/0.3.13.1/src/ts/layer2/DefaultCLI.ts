@@ -1467,7 +1467,26 @@ export abstract class DefaultCLI implements CLI {
       // ✅ SINGLE MATCH: Auto-complete if only one method matches
       // Standard shell behavior: one match = complete it, multiple = show list
       if (filtered.length === 1) {
-        return [filtered[0]];  // Plain method name for bash completion
+        const methodName = filtered[0];
+        
+        // ✅ SHOW DOCUMENTATION: Display TSDoc for discovered method
+        // Get method documentation from TSCompletion
+        const componentClassName = this.componentClass.name;
+        const fullMethodDoc = TSCompletion.getMethodDoc(componentClassName, methodName);
+        
+        if (fullMethodDoc) {
+          // Format documentation with nice spacing
+          const BRIGHT_CYAN = '\x1b[1;36m';
+          const BRIGHT_WHITE_BOLD = '\x1b[1;37m';
+          const RESET = '\x1b[0m';
+          
+          // Return: method name + newline + separator + doc + double newline
+          const separator = `\n${BRIGHT_CYAN}${'─'.repeat(60)}${RESET}\n`;
+          const header = `${BRIGHT_WHITE_BOLD}📖 Documentation:${RESET}\n`;
+          return [methodName + separator + header + fullMethodDoc + '\n\n'];
+        }
+        
+        return [methodName];  // Plain method name for bash completion
       }
       
       // Generate full CLI signatures using extractParameterInfoFromTSCompletion (with color coding)
