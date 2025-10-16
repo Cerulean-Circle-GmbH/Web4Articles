@@ -1262,9 +1262,9 @@ export abstract class DefaultCLI implements CLI {
    * @cliHide
    */
   async completionNameParameterCompletion(currentArgs: string[]): Promise<string[]> {
-    // currentArgs: ['method'|'parameter'] - just the 'what' value passed via completeParameter
-    // Extract 'what' value from args
-    const what = currentArgs[0]; // Index 0 contains the 'what' value
+    // currentArgs: ['completion', 'method'|'parameter', ...] in bash completion context
+    // Extract 'what' value from args (index 1 = first parameter value)
+    const what = currentArgs[1]; // Index 1 contains the 'what' value
     
     if (!what || (what !== 'method' && what !== 'parameter')) {
       // No valid 'what' value yet - return empty
