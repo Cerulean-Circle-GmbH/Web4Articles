@@ -1256,6 +1256,48 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
+   * Dynamic parameter completion: completionName (depends on 'what' value)
+   * Returns method names if what=method, parameter completion names if what=parameter
+   * Uses multiline format with signatures for readability
+   * @cliHide
+   */
+  async completionNameParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    // currentArgs: ['method'|'parameter'] - just the 'what' value passed via completeParameter
+    // Extract 'what' value from args
+    const what = currentArgs[0]; // Index 0 contains the 'what' value
+    
+    if (!what || (what !== 'method' && what !== 'parameter')) {
+      // No valid 'what' value yet - return empty
+      return [];
+    }
+    
+    // Get all discovered methods
+    const allMethods = Array.from(this.methodSignatures.keys());
+    
+    if (what === 'parameter') {
+      // Return parameter completion callback names with numbering (multiline format)
+      const paramCompletions = allMethods
+        .filter(name => name.endsWith('ParameterCompletion'))
+        .sort();
+      
+      // Format as numbered list for multiline display
+      return paramCompletions.map((name, index) => `${index + 1}: ${name}`);
+    } else {
+      // what === 'method'
+      // Return regular method names (excluding parameter completions and hidden methods)
+      const regularMethods = allMethods
+        .filter(name => !name.endsWith('ParameterCompletion'))
+        .filter(name => name !== 'completeParameter') // Hide internal completion method
+        .filter(name => name !== 'execute') // Hide internal execution method
+        .filter(name => name !== 'start') // Hide static start method
+        .sort();
+      
+      // Format as numbered list for multiline display
+      return regularMethods.map((name, index) => `${index + 1}: ${name}`);
+    }
+  }
+
+  /**
    * Find project root using git (Web4 standard pattern)
    * Fallback to directory traversal if not in git repo
    * @private

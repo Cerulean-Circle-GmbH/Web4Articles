@@ -2764,6 +2764,7 @@ Standards:
    * 
    * @cliSyntax what completionName
    * @cliCompletion what whatParameterCompletion
+   * @cliCompletion completionName completionNameParameterCompletion
    * @cliExample web4tscomponent completion parameter scopeParameterCompletion
    * @cliExample web4tscomponent completion parameter referencesParameterCompletion test file
    * @cliExample web4tscomponent on Unit 0.3.0.5 completion parameter versionParameterCompletion
