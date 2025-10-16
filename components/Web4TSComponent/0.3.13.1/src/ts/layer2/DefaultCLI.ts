@@ -1328,7 +1328,7 @@ export abstract class DefaultCLI implements CLI {
     const RESET = '\x1b[0m';
     
     if (what === 'parameter') {
-      // Return parameter names in Web4 notation (not callback names)
+      // Return parameter names in Web4 notation with defaults (matching method signatures)
       const allMethods = Array.from(this.methodSignatures.keys());
       let filtered = allMethods
         .filter(name => name.endsWith('ParameterCompletion'))
@@ -1340,11 +1340,49 @@ export abstract class DefaultCLI implements CLI {
         filtered = prefixFiltered.length > 0 ? prefixFiltered : filtered;
       }
       
-      // Transform: actionParameterCompletion → <action>
-      // Display in yellow to match CLI help parameter display
-      return filtered.map((name, index) => {
-        const paramName = name.replace(/ParameterCompletion$/, '');
-        return `${BRIGHT_CYAN}${index + 1}:${RESET} ${BRIGHT_YELLOW}<${paramName}>${RESET}`;
+      // Transform: versionParameterCompletion → <?version:'0.1.0.0'>
+      // Find methods that use this parameter to extract default values
+      return filtered.map((callbackName, index) => {
+        const paramName = callbackName.replace(/ParameterCompletion$/, '');
+        
+        // Find CLI methods (with annotations) first, then other methods
+        const methodNames = Array.from(this.methodSignatures.keys())
+          .filter(m => !m.endsWith('ParameterCompletion'))
+          .sort((a, b) => {
+            // Prioritize CLI-annotated methods (they have better metadata)
+            const aIsCLI = this.hasCliAnnotations(a);
+            const bIsCLI = this.hasCliAnnotations(b);
+            if (aIsCLI && !bIsCLI) return -1;
+            if (!aIsCLI && bIsCLI) return 1;
+            return a.localeCompare(b);
+          });
+        
+        let paramSyntax = `<${paramName}>`;  // Default: required parameter
+        let bestParam: any = null;
+        
+        // Search methods for this parameter
+        // Prefer optional parameters with defaults over required ones
+        for (const methodName of methodNames) {
+          const params = this.extractParameterInfoFromTSCompletion(methodName);
+          const param = params.find(p => p.name === paramName);
+          
+          if (param) {
+            if (!bestParam) {
+              bestParam = { param, methodName };
+            }
+            // If we found an optional parameter with default, prefer it
+            if (!param.required && param.default) {
+              bestParam = { param, methodName };
+              break;  // Found ideal match - optional with default
+            }
+          }
+        }
+        
+        if (bestParam) {
+          paramSyntax = this.generateParameterSyntax(bestParam.param, bestParam.methodName);
+        }
+        
+        return `${BRIGHT_CYAN}${index + 1}:${RESET} ${BRIGHT_YELLOW}${paramSyntax}${RESET}`;
       });
     } else {
       // what === 'method' - Use methodSignatures for ALL methods (including @cliHide)
