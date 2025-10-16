@@ -1256,9 +1256,22 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
+   * Fundamental parameter completion: filter (prefix for filtering completions)
+   * Used by: completion method for testing tab completions
+   * Delegates to completionNameParameterCompletion for shared logic
+   * @cliHide
+   */
+  async filterParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    // TSCompletion expects {parameterName}ParameterCompletion naming convention
+    // Delegate to shared logic in completionNameParameterCompletion
+    return this.completionNameParameterCompletion(currentArgs);
+  }
+
+  /**
    * Dynamic parameter completion: completionName (depends on 'what' value)
    * Returns method names if what=method, parameter completion names if what=parameter
    * Uses multiline format with signatures for readability
+   * Shared by: filterParameterCompletion (via delegation)
    * @cliHide
    */
   async completionNameParameterCompletion(currentArgs: string[]): Promise<string[]> {

@@ -2761,12 +2761,12 @@ Standards:
    * @param filter Optional prefix to filter results (e.g., "v" shows only validate*, verify*, etc.)
    * 
    * @cliSyntax what filter
-   * @cliCompletion what whatParameterCompletion
-   * @cliCompletion filter completionNameParameterCompletion
    * @cliExample web4tscomponent completion method
    * @cliExample web4tscomponent completion method v
    * @cliExample web4tscomponent completion parameter s
    * @cliExample web4tscomponent on Unit 0.3.0.5 completion method
+   * 
+   * @remarks TSCompletion uses convention: filterParameterCompletion (not @cliCompletion tag)
    */
   async completion(what: string, filter?: string): Promise<this> {
     const context = this.getComponentContext();
