@@ -1340,11 +1340,30 @@ export abstract class DefaultCLI implements CLI {
         filtered = prefixFiltered.length > 0 ? prefixFiltered : filtered;
       }
       
-      // ✅ SINGLE MATCH: Auto-complete if only one parameter matches
-      // Standard shell behavior: one match = complete it, multiple = show list
+      // ✅ EXACT MATCH: Execute the completion callback to discover parameter values
+      // Example: "successPromotion" → execute successPromotionParameterCompletion
       if (filtered.length === 1) {
-        const paramName = filtered[0].replace(/ParameterCompletion$/, '');
-        return [paramName];  // Plain name for bash completion
+        const callbackName = filtered[0];
+        const paramName = callbackName.replace(/ParameterCompletion$/, '');
+        
+        // Check if filter exactly matches the parameter name (discovery mode)
+        if (filterPrefix === paramName) {
+          // Execute the completion callback to show available values
+          const callback = (this as any)[callbackName];
+          if (callback && typeof callback === 'function') {
+            try {
+              // Call the completion callback with empty args (discovery mode)
+              const results = await callback.call(this, []);
+              return Array.isArray(results) ? results : [results];
+            } catch (error) {
+              // If callback fails, return parameter name
+              return [paramName];
+            }
+          }
+        }
+        
+        // Otherwise return plain name for bash completion
+        return [paramName];
       }
       
       // ✅ DRY FIX: Extract parameters from ALL methods ONCE (not once per parameter!)
