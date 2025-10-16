@@ -463,4 +463,99 @@ ${params.map(p => `    console.log(\`   ${p}: \${${p}}\`);`).join('\n')}
     return this;
   }
 
+  /**
+   * Check if component needs upgrade by comparing template timestamps
+   * @cliSyntax
+   */
+  async needsUpgradeCheck(): Promise<this> {
+    const context = this.getComponentContext();
+    if (!context) {
+      throw new Error('I need a component context first. Please use "on <component> <version>" before checking upgrade needs.');
+    }
+
+    console.log(`🔍 Checking if ${context.component} ${context.version} needs upgrade...`);
+    
+    const { statSync } = await import('fs');
+    const path = await import('path');
+    
+    // Find Web4TSComponent latest version for template comparison
+    const projectRoot = context.path.split('/components/')[0];
+    const web4tsComponentPath = path.join(projectRoot, 'components', 'Web4TSComponent', 'latest');
+    const templatesPath = path.join(web4tsComponentPath, 'templates');
+    
+    if (!existsSync(templatesPath)) {
+      throw new Error(`I couldn't find Web4TSComponent templates at ${templatesPath}`);
+    }
+
+    console.log(`\n📊 Checking against Web4TSComponent templates:`);
+    console.log(`   Template source: ${templatesPath}`);
+    console.log(`   Component: ${context.path}`);
+    
+    // Get component creation time from directory metadata
+    const componentCreatedTime = statSync(context.path).mtime;
+    console.log(`\n📅 Component directory created: ${componentCreatedTime.toISOString()}`);
+    
+    // Check critical template files against generated files
+    const criticalFiles = [
+      { template: 'ts/DefaultComponent.ts.template', generated: `src/ts/layer2/Default${context.component}.ts` },
+      { template: 'ts/ComponentCLI.ts.template', generated: `src/ts/layer5/${context.component}CLI.ts` },
+      { template: 'config/package.json.template', generated: 'package.json' },
+      { template: 'config/tsconfig.json.template', generated: 'tsconfig.json' },
+      { template: 'sh/build.sh.template', generated: 'src/sh/build.sh' }
+    ];
+    
+    let newerTemplatesFound = 0;
+    let totalChecked = 0;
+    const upgradeDetails: string[] = [];
+    
+    console.log(`\n📋 File-by-file comparison:`);
+    
+    for (const file of criticalFiles) {
+      const templatePath = path.join(templatesPath, file.template);
+      const generatedPath = path.join(context.path, file.generated);
+      
+      if (!existsSync(templatePath) || !existsSync(generatedPath)) {
+        continue; // Skip if either file doesn't exist
+      }
+      
+      const templateTime = statSync(templatePath).mtime;
+      const generatedTime = statSync(generatedPath).mtime;
+      
+      totalChecked++;
+      const diffMinutes = Math.floor((templateTime.getTime() - generatedTime.getTime()) / 1000 / 60);
+      
+      if (templateTime > generatedTime) {
+        newerTemplatesFound++;
+        console.log(`   ⚠️  ${file.generated}`);
+        console.log(`      Template: ${templateTime.toISOString()}`);
+        console.log(`      Generated: ${generatedTime.toISOString()}`);
+        console.log(`      Template is ${diffMinutes} minutes newer`);
+        upgradeDetails.push(`${file.generated} (${diffMinutes}min older)`);
+      } else {
+        console.log(`   ✅ ${file.generated}`);
+        console.log(`      Up to date (${Math.abs(diffMinutes)} minutes since template)`);
+      }
+    }
+    
+    console.log(`\n📊 Check Summary:`);
+    console.log(`   Files checked: ${totalChecked}`);
+    console.log(`   Newer templates: ${newerTemplatesFound}`);
+    console.log(`   Up to date: ${totalChecked - newerTemplatesFound}`);
+    
+    if (newerTemplatesFound > 0) {
+      console.log(`\n⚠️  UPGRADE RECOMMENDED`);
+      console.log(`   ${newerTemplatesFound} template(s) are newer than generated files:`);
+      upgradeDetails.forEach(detail => console.log(`   - ${detail}`));
+      console.log(`\n💡 Recommendation:`);
+      console.log(`   Component generated: ${componentCreatedTime.toISOString()}`);
+      console.log(`   Templates updated after generation`);
+      console.log(`   Consider: Recreate component or manually merge template updates`);
+    } else {
+      console.log(`\n✅ NO UPGRADE NEEDED`);
+      console.log(`   Component is up to date with current templates`);
+    }
+    
+    return this;
+  }
+
 }
