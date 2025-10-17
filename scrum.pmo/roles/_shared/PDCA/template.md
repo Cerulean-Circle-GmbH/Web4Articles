@@ -15,8 +15,18 @@
 **🚨 Issues:** {{KEY_ISSUES}}  
 
 **📎 Previous Commit:** {{PREVIOUS_COMMIT_SHA}} - {{PREVIOUS_COMMIT_DESCRIPTION}}  
-**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})  
-**➡️ Next PDCA:** [GitHub]({{NEXT_GITHUB_URL}}) | [{{NEXT_LOCAL_PATH}}]({{NEXT_LOCAL_PATH}})
+**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})  
+**➡️ Next PDCA:** [GitHub]({{NEXT_GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{NEXT_SESSION}}/{{NEXT_FILENAME}}](../{{NEXT_SESSION}}/{{NEXT_FILENAME}})
+
+<!-- 
+CRITICAL: Link format explained
+- Display TEXT: §/scrum.pmo/path/from/project/root/file.md (shows full context)
+- Link HREF: ../relative/path/from/THIS/file.md (relative navigation)
+- From: scrum.pmo/project.journal/YOUR-SESSION/this-file.md
+- To sibling session: ../ (ONE level up to project.journal/)
+- To roles: ../../roles/_shared/PDCA/ (TWO levels up to scrum.pmo/)
+- VERIFY with ls before committing: cd to your PDCA dir, run ls -la ../path
+-->
 
 ---
 

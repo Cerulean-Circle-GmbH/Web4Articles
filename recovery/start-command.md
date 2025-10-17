@@ -97,13 +97,69 @@ Follow this protocol per CMM3 Section 7c:
 
 **If you cannot answer these ⟹ Read more breadcrumbs!**
 
-### **5. Read Key PDCA Guidelines (Depth 3)**
+### **5. Dual Link Format & Path Verification (CRITICAL)**
+
+**MOST COMMON MISTAKE:** Off-by-one errors in relative path calculation
+
+**The Format (MANDATORY for ALL local links):**
+```markdown
+[§/scrum.pmo/path/from/project/root/file.md](../relative/path/from/current/file.md)
+       ↑                                         ↑
+  DISPLAY (full path with §/ prefix)      HREF (relative from current location)
+```
+
+**From:** `scrum.pmo/project.journal/SESSION/your-file.md`
+
+**To sibling session:**
+```
+Target: scrum.pmo/project.journal/OTHER-SESSION/file.md
+Display: §/scrum.pmo/project.journal/OTHER-SESSION/file.md
+HREF: ../OTHER-SESSION/file.md
+Count: ONE ../ (up to project.journal/)
+```
+
+**To roles directory:**
+```
+Target: scrum.pmo/roles/_shared/PDCA/template.md
+Display: §/scrum.pmo/roles/_shared/PDCA/template.md
+HREF: ../../roles/_shared/PDCA/template.md
+Count: TWO ../ (up to project.journal/, up to scrum.pmo/)
+```
+
+**VERIFICATION PROTOCOL (Before Committing ANY PDCA):**
+```bash
+# Navigate to your PDCA's directory
+cd scrum.pmo/project.journal/YOUR-SESSION/
+
+# Test EVERY relative path you used with ls
+ls -la ../OTHER-SESSION/file.pdca.md        # Should work
+ls -la ../../roles/_shared/PDCA/template.md # Should work
+
+# If ls fails → path is WRONG → fix before committing
+```
+
+**Common Errors to Avoid:**
+❌ `../../OTHER-SESSION/` (one too many ../  for sibling sessions)
+❌ `../../../roles/` (one too many ../ for roles directory)
+❌ Assuming paths work without testing
+❌ Copying from template without adjusting for your location
+
+**Why This Matters:**
+- Broken links waste TRON's time
+- Prevents review of your work
+- Creates correction cycles
+- Pattern repeats across agents
+
+**Reference Learning:**
+[2025-10-17-UTC-0814 Meta-Loop Breaking](../scrum.pmo/project.journal/2025-10-17-UTC-0747-session/2025-10-17-UTC-0814.meta-loop-breaking-link-verification.pdca.md)
+
+### **6. Read Key PDCA Guidelines (Depth 3)**
 - Read: `scrum.pmo/roles/_shared/PDCA/howto.PDCA.md` (COMPLETE, not sections 1-2 only)
 - Read: `scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md` (QA Decisions format)
 - Read: `scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md` (ALL sections)
 - Note: 6 mandatory sections, dual links, numbered decisions, depth 3 reading, link validation
 
-### **6. Install Git Automation (CRITICAL)**
+### **7. Install Git Automation (CRITICAL)**
 ```bash
 # Create post-commit hook for auto-merge
 cat > .git/hooks/post-commit << 'EOF'
