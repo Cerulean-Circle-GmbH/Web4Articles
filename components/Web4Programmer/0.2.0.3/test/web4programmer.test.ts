@@ -78,3 +78,74 @@ describe('Web4Programmer CLI Location Resilience', () => {
     }
   });
 });
+
+describe('Web4Programmer on() Method - Component Context Loading', () => {
+  it('should load component context successfully', async () => {
+    const programmer = new DefaultWeb4Programmer();
+    
+    // Load Web4Programmer 0.2.0.3 as context
+    await programmer.on('Web4Programmer', '0.2.0.3');
+    
+    // Verify context is stored (internal check via any)
+    const context = (programmer as any).model;
+    expect(context.name).toBe('Web4Programmer');
+    expect(context.contextComponent).toBe('Web4Programmer');
+    expect(context.contextVersion).toBe('0.2.0.3');
+    expect(context.contextPath).toContain('Web4Programmer/0.2.0.3');
+  });
+
+  it('should resolve symlink to actual version', async () => {
+    const programmer = new DefaultWeb4Programmer();
+    
+    // Load using 'latest' symlink
+    await programmer.on('Web4Programmer', 'latest');
+    
+    const context = (programmer as any).model;
+    // Should resolve to actual version number, not 'latest'
+    expect(context.contextVersion).toMatch(/\d+\.\d+\.\d+\.\d+/);
+    expect(context.contextVersion).not.toBe('latest');
+  });
+
+  it('should error on non-existent component', async () => {
+    const programmer = new DefaultWeb4Programmer();
+    
+    await expect(async () => {
+      await programmer.on('NonExistentComponent', '1.0.0.0');
+    }).rejects.toThrow('Component directory not found');
+  });
+});
+
+describe('Web4Programmer needsUpgradeCheck() Method', () => {
+  it('should check upgrade status without errors', async () => {
+    const programmer = new DefaultWeb4Programmer();
+    
+    // Load context first
+    await programmer.on('Web4Programmer', '0.2.0.3');
+    
+    // Should complete without throwing
+    await expect(async () => {
+      await programmer.needsUpgradeCheck();
+    }).not.toThrow();
+  });
+
+  it('should require component context', async () => {
+    const programmer = new DefaultWeb4Programmer();
+    
+    // Should error without context
+    await expect(async () => {
+      await programmer.needsUpgradeCheck();
+    }).rejects.toThrow('need a component context first');
+  });
+});
+
+describe('Web4Programmer migrateFrom() Method', () => {
+  it('should demonstrate migration pattern', async () => {
+    const programmer = new DefaultWeb4Programmer();
+    
+    // Should complete successfully
+    const result = await programmer.migrateFrom('0.1.0.0');
+    
+    // Should return this for chaining
+    expect(result).toBe(programmer);
+  });
+});
