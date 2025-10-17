@@ -11,6 +11,7 @@ import { join, dirname } from 'path';
 
 export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   private model: {{COMPONENT_NAME}}Model;
+  private _web4ts?: any; // Web4TSComponent instance for delegation
 
   constructor() {
     // Empty constructor - Web4 pattern
@@ -22,6 +23,43 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
+  }
+
+  /**
+   * Lazy initialization of Web4TSComponent for delegation (DRY principle)
+   * All path resolution and setup happens once, reusable by any method
+   * @cliHide
+   */
+  private async getWeb4TSComponent(): Promise<any> {
+    if (this._web4ts) return this._web4ts;
+    
+    const path = await import('path');
+    const { fileURLToPath } = await import('url');
+    const { dirname } = await import('path');
+    
+    // Get component root (where this version's package.json is)
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const componentRoot = path.resolve(__dirname, '../../..');
+    
+    // Find project root (where components/ directory is)
+    const projectRoot = componentRoot.split('/components/')[0];
+    
+    // Import Web4TSComponent class dynamically (OOP way!)
+    const web4tscomponentModule = await import(
+      `${projectRoot}/components/Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js`
+    );
+    const { DefaultWeb4TSComponent } = web4tscomponentModule;
+    
+    // Instantiate and configure Web4TSComponent
+    this._web4ts = new DefaultWeb4TSComponent();
+    
+    // Set 'on' context: load THIS component
+    const componentName = '{{COMPONENT_NAME}}';
+    const currentVersion = '{{VERSION}}';
+    await this._web4ts.on(componentName, currentVersion);
+    
+    return this._web4ts;
   }
 
   /**
@@ -97,22 +135,40 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   }
 
   /**
-   * Run component tests with automatic promotion workflow
+   * Run component tests with hierarchical selection or full suite with auto-promotion
+   * 
+   * DRY PRINCIPLE: For hierarchical testing (file/describe/itCase), this method
+   * DELEGATES to Web4TSComponent via OOP to avoid code duplication.
    * 
    * Follows the same promotion pattern as Web4TSComponent:
    * - Stage 0: prod (initial) → create dev
    * - Stage 1: dev → create test  
    * - Stage 2: test + 100% → create prod + dev
    * 
-   * @cliSyntax
+   * @param scope Test scope: 'all' (full suite with promotion) or 'file'/'describe'/'itCase' (selective, no promotion)
+   * @param references Test references for selective testing (e.g., file number, describe reference, itCase token)
+   * @cliSyntax scope references
+   * @cliDefault scope all
    * @cliExample {{COMPONENT_LOWER}} test
+   * @cliExample {{COMPONENT_LOWER}} test file
+   * @cliExample {{COMPONENT_LOWER}} test file 1
+   * @cliExample {{COMPONENT_LOWER}} test describe 3b
+   * @cliExample {{COMPONENT_LOWER}} test itCase 1a1
    */
-  async test(): Promise<this> {
+  async test(scope: string = 'all', ...references: string[]): Promise<this> {
     const { execSync } = await import('child_process');
     const { readFileSync, readlinkSync, existsSync, lstatSync, readdirSync } = await import('fs');
     const path = await import('path');
     const { fileURLToPath } = await import('url');
     const { dirname } = await import('path');
+    
+    // 🎯 DRY: Delegate hierarchical testing to Web4TSComponent (OOP)
+    const selectiveScopes = ['file', 'describe', 'itCase'];
+    if (selectiveScopes.includes(scope)) {
+      const web4ts = await this.getWeb4TSComponent();
+      await web4ts.test(scope, ...references);
+      return this;
+    }
     
     // 🚨 RECURSION DETECTION: Check if we're already inside vitest
     const insideTestEnvironment = !!(process.env.VITEST || process.env.VITEST_WORKER_ID);
