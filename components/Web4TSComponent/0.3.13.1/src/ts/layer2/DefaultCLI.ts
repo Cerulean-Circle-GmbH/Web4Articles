@@ -1284,17 +1284,18 @@ export abstract class DefaultCLI implements CLI {
       const method = this.componentClass?.prototype?.[methodName];
       if (!method) return false;
       
-      // Get JSDoc text from method's toString (includes comments in some cases)
-      // More reliable: check if TSCompletion.getEnhancedMethodParameters found it
-      const paramInfo = TSCompletion.getEnhancedMethodParameters(this.componentClass.name, methodName);
+      // Check method source for @cli annotations (works for both parameter-ful and parameter-less methods)
+      const methodStr = method.toString();
+      if (methodStr.includes('@cli')) {
+        return true;
+      }
       
-      // If TSCompletion found parameters, check if they have CLI-specific metadata
+      // Fallback: check if TSCompletion found parameters
       // (TSCompletion only extracts parameters from methods with proper TSDoc)
+      const paramInfo = TSCompletion.getEnhancedMethodParameters(this.componentClass.name, methodName);
       if (paramInfo.length > 0) {
         // Method has TSDoc-documented parameters - likely a CLI method
-        // Additional check: see if method source contains @cli annotations
-        const methodStr = method.toString();
-        return methodStr.includes('@cli') || paramInfo.length > 0;
+        return true;
       }
       
       return false;
