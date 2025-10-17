@@ -1,17 +1,17 @@
 /**
- * Default{{COMPONENT_NAME}} - {{COMPONENT_NAME}} Component Implementation
+ * DefaultWeb4Programmer - Web4Programmer Component Implementation
  * Web4 pattern: Empty constructor + scenario initialization + component functionality
  */
 
-import { {{COMPONENT_NAME}} } from '../layer3/{{COMPONENT_NAME}}.interface.js';
+import { Web4Programmer } from '../layer3/Web4Programmer.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
-import { {{COMPONENT_NAME}}Model } from '../layer3/{{COMPONENT_NAME}}Model.interface.js';
+import { Web4ProgrammerModel } from '../layer3/Web4ProgrammerModel.interface.js';
 import { existsSync, lstatSync, readlinkSync, readdirSync, statSync } from 'fs';
 import { join, dirname } from 'path';
 import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js';
 
-export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
-  private model: {{COMPONENT_NAME}}Model;
+export class DefaultWeb4Programmer implements Web4Programmer {
+  private model: Web4ProgrammerModel;
   private web4ts = new DefaultWeb4TSComponent(); // Always available for delegation!
 
   constructor() {
@@ -29,7 +29,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   /**
    * @cliHide
    */
-  init(scenario: Scenario<{{COMPONENT_NAME}}Model>): this {
+  init(scenario: Scenario<Web4ProgrammerModel>): this {
     if (scenario.model) {
       this.model = { ...this.model, ...scenario.model };
     }
@@ -39,21 +39,21 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   /**
    * @cliHide
    */
-  async toScenario(name?: string): Promise<Scenario<{{COMPONENT_NAME}}Model>> {
+  async toScenario(name?: string): Promise<Scenario<Web4ProgrammerModel>> {
     const ownerData = JSON.stringify({
       user: process.env.USER || 'system',
       hostname: process.env.HOSTNAME || 'localhost',
       uuid: this.model.uuid,
       timestamp: new Date().toISOString(),
-      component: '{{COMPONENT_NAME}}',
-      version: '{{VERSION}}'
+      component: 'Web4Programmer',
+      version: '0.2.0.1'
     });
 
     return {
       ior: {
         uuid: this.model.uuid,
-        component: '{{COMPONENT_NAME}}',
-        version: '{{VERSION}}'
+        component: 'Web4Programmer',
+        version: '0.2.0.1'
       },
       owner: ownerData,
       model: this.model
@@ -61,7 +61,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   }
 
   /**
-   * Create example operation for {{COMPONENT_NAME}}
+   * Create example operation for Web4Programmer
    * @param input Input data to process
    * @param format Output format (json, text, xml)
    * @cliSyntax input format
@@ -71,12 +71,12 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
     console.log(`🚀 Creating ${input} in ${format} format`);
     this.model.name = input;
     this.model.updatedAt = new Date().toISOString();
-    console.log(`✅ {{COMPONENT_NAME}} operation completed`);
+    console.log(`✅ Web4Programmer operation completed`);
     return this;
   }
 
   /**
-   * Process data through {{COMPONENT_NAME}} logic
+   * Process data through Web4Programmer logic
    * @param data Data to process
    * @cliSyntax data
    */
@@ -87,10 +87,10 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   }
 
   /**
-   * Show information about current {{COMPONENT_NAME}} state
+   * Show information about current Web4Programmer state
    */
   async info(): Promise<this> {
-    console.log(`📋 {{COMPONENT_NAME}} Information:`);
+    console.log(`📋 Web4Programmer Information:`);
     console.log(`   UUID: ${this.model.uuid}`);
     console.log(`   Name: ${this.model.name || 'Not set'}`);
     console.log(`   Created: ${this.model.createdAt}`);
@@ -129,7 +129,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
     // 🎯 DRY: Delegate hierarchical testing to Web4TSComponent (OOP)
     const selectiveScopes = ['file', 'describe', 'itCase'];
     if (selectiveScopes.includes(scope)) {
-      await this.web4ts.on('{{COMPONENT_NAME}}', '{{VERSION}}');
+      await this.web4ts.on('Web4Programmer', '0.2.0.1');
       await this.web4ts.test(scope, ...references);
       return this;
     }
@@ -149,7 +149,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
     console.log(`   🧪 ALWAYS work on test version until test succeeds`);
     console.log(`   🚧 ALWAYS work on dev version after test success\n`);
     
-    console.log(`🧪 Running {{COMPONENT_NAME}} tests with auto-promotion...`);
+    console.log(`🧪 Running Web4Programmer tests with auto-promotion...`);
     
     try {
       // Get current version from THIS component version's package.json
@@ -172,7 +172,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
         });
       }
       
-      console.log(`✅ {{COMPONENT_NAME}} tests completed successfully`);
+      console.log(`✅ Web4Programmer tests completed successfully`);
       
       // 🎯 AUTO-PROMOTION: Determine and execute promotion stage
       console.log(`\n🔍 Checking for promotion opportunity...`);
@@ -222,21 +222,21 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
       // Stage 0: No dev link exists → create first dev version
       if (!semanticLinks.dev) {
         console.log(`\n🚧 Stage 0: No dev version exists, creating first dev version...`);
-        await web4ts.on('{{COMPONENT_NAME}}', currentVersion);
+        await web4ts.on('Web4Programmer', currentVersion);
         await web4ts.upgrade('nextBuild');
         const parts = currentVersion.split('.').map(Number);
         const devVersion = `${parts[0]}.${parts[1]}.${parts[2]}.${parts[3] + 1}`;
-        await web4ts.on('{{COMPONENT_NAME}}', devVersion);
+        await web4ts.on('Web4Programmer', devVersion);
         await web4ts.setDev();
       }
       // Stage 1: Current is dev, no test link OR test is outdated → create test version
       else if (currentVersion === semanticLinks.dev && (!semanticLinks.test || semanticLinks.test < currentVersion)) {
         console.log(`\n🧪 Stage 1: dev → test (creating test version)...`);
-        await web4ts.on('{{COMPONENT_NAME}}', currentVersion);
+        await web4ts.on('Web4Programmer', currentVersion);
         await web4ts.upgrade('nextBuild');
         const parts = currentVersion.split('.').map(Number);
         const testVersion = `${parts[0]}.${parts[1]}.${parts[2]}.${parts[3] + 1}`;
-        await web4ts.on('{{COMPONENT_NAME}}', testVersion);
+        await web4ts.on('Web4Programmer', testVersion);
         await web4ts.setTest();
       }
       // Stage 2: Current is test and 100% pass → promote to prod AND create new dev
@@ -249,26 +249,26 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
           if (results.numFailedTests === 0 && results.numPassedTests > 0) {
             console.log(`✅ 100% test success verified (${results.numPassedTests} passed, 0 failed)`);
             console.log(`🚀 Promoting to production...`);
-            await web4ts.on('{{COMPONENT_NAME}}', currentVersion);
+            await web4ts.on('Web4Programmer', currentVersion);
             await web4ts.upgrade('nextPatch');
             
             // Find the newly created prod version (highest version)
             const componentParentDir = path.dirname(path.dirname(path.dirname(componentRoot)));
             const componentsDir = path.join(componentParentDir, 'components');
-            const componentDir = path.join(componentsDir, '{{COMPONENT_NAME}}');
+            const componentDir = path.join(componentsDir, 'Web4Programmer');
             const versions = readdirSync(componentDir)
               .filter(v => /^\d+\.\d+\.\d+\.\d+$/.test(v))
               .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
             const prodVersion = versions[0];  // Highest version is the new prod
             
             // Set prod symlink
-            await web4ts.on('{{COMPONENT_NAME}}', prodVersion);
+            await web4ts.on('Web4Programmer', prodVersion);
             await web4ts.setProd();
             console.log(`✅ Promoted to production: ${prodVersion}`);
             
             // CRITICAL: Now create new dev version (nextBuild from prod)
             console.log(`🚧 Creating new dev version...`);
-            await web4ts.on('{{COMPONENT_NAME}}', prodVersion);
+            await web4ts.on('Web4Programmer', prodVersion);
             await web4ts.upgrade('nextBuild');
             
             // Find the newly created dev version (highest version)
@@ -276,7 +276,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
               .filter(v => /^\d+\.\d+\.\d+\.\d+$/.test(v))
               .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
             const newDevVersion = newVersions[0];  // Highest version is the new dev
-            await web4ts.on('{{COMPONENT_NAME}}', newDevVersion);
+            await web4ts.on('Web4Programmer', newDevVersion);
             await web4ts.setDev();
             
             // CRITICAL: Also update test symlink to point to new dev version
@@ -296,7 +296,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
       }
       
     } catch (error) {
-      console.error(`❌ {{COMPONENT_NAME}} tests failed`);
+      console.error(`❌ Web4Programmer tests failed`);
       throw error;
     }
     
@@ -321,8 +321,8 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
     const callbackArgs = ['completion', what, filter || ''].map((arg: string) => `"${arg}"`).join(' ');
     
     if (!context) {
-      // No context - test completions on {{COMPONENT_NAME}} itself
-      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on {{COMPONENT_NAME}}${filter ? ` (filter: ${filter})` : ''}`);
+      // No context - test completions on Web4Programmer itself
+      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on Web4Programmer${filter ? ` (filter: ${filter})` : ''}`);
       console.log(`---`);
       
       // Call completeParameter via CLI (completeParameter is on DefaultCLI)
@@ -375,5 +375,103 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
       };
     }
     return null;
+  }
+
+  // 🔄 Custom Business Logic (migrated for v0.2.0.1 testing)
+
+  /**
+   * Add a new method to a component dynamically
+   * @param methodName Name of the method to add
+   * @param parameters Comma-separated parameter names
+   * @param description Method description
+   * @cliSyntax methodName parameters description
+   * @cliDefault parameters ''
+   * @cliDefault description 'New method'
+   */
+  async addMethod(methodName: string, parameters: string = '', description: string = 'New method'): Promise<this> {
+    const context = this.getComponentContext();
+    if (!context) {
+      throw new Error('I need a component context first. Please use "on <component> <version>" before adding methods.');
+    }
+    
+    console.log(`🔧 Adding method '${methodName}' to ${context.component} ${context.version}`);
+    
+    // Build the method code
+    const params = parameters ? parameters.split(',').map(p => p.trim()) : [];
+    const methodCode = this.generateMethodCode(methodName, params, description);
+    
+    // Find the DefaultComponent.ts file
+    const { join } = await import('path');
+    const { readFileSync, writeFileSync } = await import('fs');
+    const defaultComponentFile = join(context.path, 'src/ts/layer2', `Default${context.component}.ts`);
+    
+    if (!existsSync(defaultComponentFile)) {
+      throw new Error(`I couldn't find the component implementation file: ${defaultComponentFile}`);
+    }
+    
+    // Read current content
+    const content = readFileSync(defaultComponentFile, 'utf-8');
+    
+    // Find insertion point (before the closing brace of the class)
+    const lastBraceIndex = content.lastIndexOf('}');
+    if (lastBraceIndex === -1) {
+      throw new Error('I couldn\'t find the class closing brace in the component file.');
+    }
+    
+    // Insert the new method before the closing brace
+    const newContent = content.substring(0, lastBraceIndex) + '\n' + methodCode + '\n}\n';
+    
+    // Write back the file
+    writeFileSync(defaultComponentFile, newContent, 'utf-8');
+    
+    console.log(`✅ Method '${methodName}' added successfully!`);
+    console.log(`   File: ${defaultComponentFile}`);
+    console.log(`   Parameters: ${params.join(', ') || 'none'}`);
+    console.log(`\n💡 Next steps:`);
+    console.log(`   1. Rebuild the component: cd ${context.path} && npm run build`);
+    console.log(`   2. Test the new method: ./${context.component.toLowerCase()} ${methodName}`);
+    
+    return this;
+  }
+
+  /**
+   * @cliHide
+   */
+  protected generateMethodCode(methodName: string, params: string[], description: string): string {
+    const paramList = params.map(p => `${p}: string`).join(', ');
+    const cliSyntax = params.join(' ');
+    
+    return `  /**
+   * ${description}
+${params.map(p => `   * @param ${p} Description of ${p}`).join('\n')}
+   * @cliSyntax ${cliSyntax}
+   */
+  async ${methodName}(${paramList}): Promise<this> {
+    console.log(\`🚀 ${methodName} called\`);
+${params.map(p => `    console.log(\`   ${p}: \${${p}}\`);`).join('\n')}
+    
+    // Your implementation here
+    
+    console.log(\`✅ ${methodName} completed\`);
+    return this;
+  }
+`;
+  }
+
+  /**
+   * Calculate sum of two numbers (demo custom method)
+   * @param a First number
+   * @param b Second number
+   * @cliSyntax a b
+   */
+  async calculateSum(a: string, b: string): Promise<this> {
+    console.log(`🚀 calculateSum called`);
+    console.log(`   a: ${a}`);
+    console.log(`   b: ${b}`);
+    
+    const sum = parseFloat(a) + parseFloat(b);
+    console.log(`\n✅ Result: ${a} + ${b} = ${sum}`);
+    
+    return this;
   }
 }
