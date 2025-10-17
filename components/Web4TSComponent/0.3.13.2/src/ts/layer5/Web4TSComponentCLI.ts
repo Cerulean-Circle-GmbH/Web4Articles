@@ -7,13 +7,8 @@
 
 import { DefaultCLI } from '../layer2/DefaultCLI.js';
 import { DefaultWeb4TSComponent } from '../layer2/DefaultWeb4TSComponent.js';
+import { MethodSignature } from '../layer3/MethodSignature.interface.js';
 import { TSCompletion } from '../layer4/TSCompletion.js';
-
-interface MethodSignature {
-  name: string;
-  paramCount: number;
-  isAsync: boolean;
-}
 
 export class Web4TSComponentCLI extends DefaultCLI {
   private tsComponent: DefaultWeb4TSComponent | null;

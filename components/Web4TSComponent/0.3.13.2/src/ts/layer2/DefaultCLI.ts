@@ -6,6 +6,8 @@
 
 import { CLI } from '../layer3/CLI.interface.js';
 import { MethodInfo } from '../layer3/MethodInfo.interface.js';
+import { MethodSignature } from '../layer3/MethodSignature.interface.js';
+import { Component } from '../layer3/Component.interface.js';
 import { TSCompletion } from '../layer4/TSCompletion.js';
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import { join } from 'path';
@@ -16,7 +18,7 @@ export abstract class DefaultCLI implements CLI {
   protected componentClass: any;
   protected componentName: string = '';
   protected componentVersion: string = '';
-  protected componentInstance: any | null = null;
+  protected componentInstance: Component | null = null;
   protected methodSignatures: Map<string, MethodSignature> = new Map();
   
   constructor() {
@@ -98,6 +100,43 @@ export abstract class DefaultCLI implements CLI {
    */
   protected formatInfo(message: string): string {
     return `ℹ️ ${message}`;
+  }
+
+  /**
+   * Get Web4TSComponent reference for helper methods
+   * Works in both master (Web4TSComponent) and generated components
+   * Eliminates ugly (this as any) casts throughout CLI code
+   * @cliHide
+   */
+  protected getWeb4TS(): any {
+    // If componentInstance has web4ts property (generated components)
+    if (this.componentInstance && (this.componentInstance as any).web4ts) {
+      return (this.componentInstance as any).web4ts;
+    }
+    
+    // If component has getOrCreateTSComponent method (Web4TSComponent itself)
+    if (typeof (this as any).getOrCreateTSComponent === 'function') {
+      return (this as any).getOrCreateTSComponent();
+    }
+    
+    throw new Error('No Web4TSComponent reference available');
+  }
+
+  /**
+   * Get test directory path (DRY helper)
+   * Eliminates duplicated path resolution logic across completion methods
+   * @cliHide
+   */
+  protected getTestDir(): string {
+    const web4ts = this.getWeb4TS();
+    const context = web4ts.getComponentContext();
+    
+    if (context) {
+      return join(web4ts.resolveComponentPath(context.component, context.version), 'test');
+    }
+    
+    // Fallback to current working directory
+    return join(process.cwd(), 'test');
   }
 
   /**
@@ -1776,23 +1815,10 @@ export abstract class DefaultCLI implements CLI {
   private async getTestFileReferences(currentArgs: string[]): Promise<string[]> {
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
     const { HierarchicalCompletionFilter } = await import('../layer4/HierarchicalCompletionFilter.js');
-    const { join, dirname } = await import('path');
     const { existsSync } = await import('fs');
     
-    // Determine test directory
-    const component = (this as any).getOrCreateTSComponent();
-    const context = component.getComponentContext();
-    
-    let testDir: string;
-    if (context) {
-      testDir = join((this as any).resolveComponentPath(context.component, context.version), 'test');
-    } else {
-      // No context - use Web4TSComponent's own test directory
-      // Navigate from dist/ts/layer2/DefaultCLI.js to test/
-      const currentFileUrl = new URL(import.meta.url);
-      const componentRoot = join(dirname(currentFileUrl.pathname), '../../..');
-      testDir = join(componentRoot, 'test');
-    }
+    // Use DRY helper to get test directory
+    const testDir = this.getTestDir();
     
     if (!existsSync(testDir)) {
       return [];
@@ -1814,21 +1840,10 @@ export abstract class DefaultCLI implements CLI {
    */
   private async getTestDescribeReferences(currentArgs: string[]): Promise<string[]> {
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
-    const { join, dirname } = await import('path');
     const { existsSync } = await import('fs');
     
-    // Get test directory
-    const component = (this as any).getOrCreateTSComponent();
-    const context = component.getComponentContext();
-    
-    let testDir: string;
-    if (context) {
-      testDir = join((this as any).resolveComponentPath(context.component, context.version), 'test');
-    } else {
-      const currentFileUrl = new URL(import.meta.url);
-      const componentRoot = join(dirname(currentFileUrl.pathname), '../../..');
-      testDir = join(componentRoot, 'test');
-    }
+    // Use DRY helper to get test directory
+    const testDir = this.getTestDir();
     
     if (!existsSync(testDir)) {
       return [];
@@ -1914,21 +1929,10 @@ export abstract class DefaultCLI implements CLI {
   private async getTestItCaseReferences(currentArgs: string[]): Promise<string[]> {
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
     const { HierarchicalCompletionFilter } = await import('../layer4/HierarchicalCompletionFilter.js');
-    const { join, dirname } = await import('path');
     const { existsSync } = await import('fs');
     
-    // Get test directory
-    const component = (this as any).getOrCreateTSComponent();
-    const context = component.getComponentContext();
-    
-    let testDir: string;
-    if (context) {
-      testDir = join((this as any).resolveComponentPath(context.component, context.version), 'test');
-    } else {
-      const currentFileUrl = new URL(import.meta.url);
-      const componentRoot = join(dirname(currentFileUrl.pathname), '../../..');
-      testDir = join(componentRoot, 'test');
-    }
+    // Use DRY helper to get test directory
+    const testDir = this.getTestDir();
     
     if (!existsSync(testDir)) {
       return [];
@@ -1951,7 +1955,6 @@ export abstract class DefaultCLI implements CLI {
    */
   async testDescribeReferenceParameterCompletion(currentArgs: string[]): Promise<string[]> {
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
-    const { join } = await import('path');
     const { existsSync } = await import('fs');
     
     // Extract file number from args: ['test', 'describe', '2', ...]
@@ -1967,13 +1970,8 @@ export abstract class DefaultCLI implements CLI {
       return [];
     }
     
-    // Get test directory
-    const component = (this as any).getOrCreateTSComponent();
-    const context = component.getComponentContext();
-    
-    const testDir = context
-      ? join((this as any).resolveComponentPath(context.component, context.version), 'test')
-      : join(process.cwd(), 'test');
+    // Use DRY helper to get test directory
+    const testDir = this.getTestDir();
     
     if (!existsSync(testDir)) {
       return [];
@@ -1999,7 +1997,6 @@ export abstract class DefaultCLI implements CLI {
    */
   async testItCaseReferenceParameterCompletion(currentArgs: string[]): Promise<string[]> {
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
-    const { join } = await import('path');
     const { existsSync } = await import('fs');
     
     // Extract file and describe numbers: ['test', 'itCase', '2', '1', ...]
@@ -2018,13 +2015,8 @@ export abstract class DefaultCLI implements CLI {
       return [];
     }
     
-    // Get test directory
-    const component = (this as any).getOrCreateTSComponent();
-    const context = component.getComponentContext();
-    
-    const testDir = context
-      ? join((this as any).resolveComponentPath(context.component, context.version), 'test')
-      : join(process.cwd(), 'test');
+    // Use DRY helper to get test directory
+    const testDir = this.getTestDir();
     
     if (!existsSync(testDir)) {
       return [];
@@ -2106,8 +2098,4 @@ export abstract class DefaultCLI implements CLI {
   }
 }
 
-interface MethodSignature {
-  name: string;
-  paramCount: number;
-  isAsync: boolean;
-}
+// MethodSignature interface moved to layer3/MethodSignature.interface.ts (imported above)
