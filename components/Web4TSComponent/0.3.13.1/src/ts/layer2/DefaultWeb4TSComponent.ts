@@ -2648,9 +2648,11 @@ Standards:
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
     
     if (references.length === 0) {
-      console.error(`❌ Missing it case reference`);
-      console.log(`💡 Usage: web4tscomponent test itCase <token> (e.g., 5a1)`);
-      throw new Error(`Missing references`);
+      // No reference - show hierarchical list of all test cases
+      const result = TestFileParser.getAllItCasesHierarchical(testDir);
+      result.display.forEach(line => console.log(line));
+      console.log(`\n💡 Usage: web4tscomponent test itCase <token> (e.g., 5a1)`);
+      return;
     }
     
     // Parse hierarchical token (e.g., "5a1" -> file=5, describe=a, itCase=1)
