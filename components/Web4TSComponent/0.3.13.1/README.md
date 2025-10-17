@@ -83,6 +83,217 @@ npm start  # ← Same magic, fully automatic
 
 ---
 
+## 🔍 Exploring Component Functionality (Discovery Workflow)
+
+**Don't read documentation - DISCOVER what the component can do!** Web4TSComponent includes powerful discovery tools that let you explore any component's functionality, parameters, and tests interactively.
+
+### 🎯 Quick Discovery Examples:
+
+```bash
+# What methods are available?
+./web4tscomponent completion method
+
+# What methods start with "test"?
+./web4tscomponent completion method test
+
+# What parameters does this component use?
+./web4tscomponent completion parameter
+
+# What values can the "scope" parameter have?
+./web4tscomponent completion parameter scope
+```
+
+### 📚 Complete Discovery Workflow:
+
+#### **1. Method Discovery**
+
+**Discover all methods:**
+```bash
+./web4tscomponent completion method
+# Shows ALL methods with full signatures:
+# 1: build
+# 2: create <component> <?version:'0.1.0.0'> <?options:'all'>
+# 3: completion <what> <?filter:'""'>
+# ... 72 methods total
+```
+
+**Search for specific methods:**
+```bash
+./web4tscomponent completion method create
+# Shows methods starting with "create":
+# 1: create <component> <?version:'0.1.0.0'> <?options:'all'>
+# 2: createBasePackageJson !<identifier> !<target>
+# 3: createCLIImplementation !<identifier> !<target> !<?data>
+```
+
+**Get method documentation:**
+```bash
+./web4tscomponent completion method initP
+# Single match shows full TSDoc:
+# initProject !<?targetDir:'§'>
+# ────────────────────────────────────────────────────────────
+# 📖 Documentation:
+# Initialize or upgrade project with Web4 global configuration files
+# 
+# Creates root-level tsconfig.json and package.json for global node_modules
+# and TypeScript extends pattern (DRY principle). Safe to run multiple times.
+```
+
+#### **2. Parameter Discovery**
+
+**Discover all parameters:**
+```bash
+./web4tscomponent completion parameter
+# Shows all unique parameters with Web4 notation:
+# 1: <action>
+# 2: <?depth:'4'>
+# 3: <?options:'all'>
+# 4: <?successPromotion:'nextPatch'>
+# 5: <?version:'0.1.0.0'>
+```
+
+**Discover parameter values:**
+```bash
+./web4tscomponent completion parameter successPromotion
+# Shows valid values for this parameter:
+# nextPatch nextMinor nextMajor
+```
+
+#### **3. Test Discovery (Hierarchical System)**
+
+**List all test files:**
+```bash
+./web4tscomponent test file
+# Output:
+# 📁 Available test files:
+#    1:init-project-source-env.test.ts
+#    2:web4tscomponent.cleanup-testpromo.test.ts
+#    3:web4tscomponent.completion-discovery.test.ts
+#    ...
+#    19:web4tscomponent.version-promotion.test.ts
+```
+
+**List describe blocks:**
+```bash
+./web4tscomponent test describe
+# Output:
+# 📋 Available describe blocks:
+# 1:  init-project-source-env.test.ts
+#       a) initProject creates source.env
+# 2:  web4tscomponent.cleanup-testpromo.test.ts
+#       a) 🧹 Cleanup: TestPromo Pollution
+# 3:  web4tscomponent.completion-discovery.test.ts
+#       a) 🔍 Completion Discovery Feature Tests
+#       b) 1. Method Discovery - Single Match Auto-Completion
+#       c) 2. Method Discovery - Multiple Match Listing
+```
+
+**List individual test cases:**
+```bash
+./web4tscomponent test itCase 1a
+# Output:
+# 1:      init-project-source-env.test.ts
+#     1a) initProject creates source.env
+#            1a1) should create source.env with correct content
+#            1a2) should not overwrite existing source.env
+#            1a3) should make source.env executable
+#            1a4) should have version number aligned with component version
+#            1a5) should use BRIGHT_CYAN for "web4" in prompt
+```
+
+#### **4. Surgical Test Execution**
+
+**Run specific test file (fast!):**
+```bash
+./web4tscomponent test file 3
+# Runs ONLY file #3 (completion-discovery.test.ts)
+# Duration: ~2s instead of 214s for full suite
+```
+
+**Run specific describe block (even faster!):**
+```bash
+./web4tscomponent test describe 3b
+# Runs only "1. Method Discovery - Single Match Auto-Completion"
+# Duration: ~500ms (400x faster than full suite!)
+```
+
+**Run single test case (surgical precision!):**
+```bash
+./web4tscomponent test itCase 1a1
+# Runs ONLY "should create source.env with correct content"
+# Duration: ~350ms (600x faster!)
+# Perfect for TDD: write test → run test → fix → repeat in <1s cycles
+```
+
+#### **5. Context-Aware Discovery (Universal Tool Pattern)**
+
+**Discover methods on ANY component:**
+```bash
+# Even if Web4Programmer was created from outdated template!
+./web4tscomponent on Web4Programmer 0.1.0.1 completion method
+
+# Discover parameters on ANY component:
+./web4tscomponent on Web4Programmer 0.1.0.1 completion parameter
+
+# List tests on ANY component:
+./web4tscomponent on Web4Programmer 0.1.0.1 test file
+
+# Run specific test on ANY component:
+./web4tscomponent on Web4Programmer 0.1.0.1 test itCase 1a1
+```
+
+**Key Insight:** The `on` pattern brings ALL modern Web4TSComponent features to ANY component, even those created years ago with outdated templates!
+
+### 🎯 Discovery Workflow for New Components:
+
+When encountering a new component:
+
+1. **Discover methods:** `./web4tscomponent completion method`
+1. **Search for relevant methods:** `./web4tscomponent completion method test`
+1. **Get method documentation:** `./web4tscomponent completion method initP` (single match)
+1. **Discover parameters:** `./web4tscomponent completion parameter`
+1. **Get parameter values:** `./web4tscomponent completion parameter scope`
+1. **List test files:** `./web4tscomponent test file`
+1. **Run specific test:** `./web4tscomponent test file 3`
+
+### 🚀 Why This is Revolutionary:
+
+**Traditional Approach:**
+- Read documentation (often outdated)
+- Search through code manually
+- Guess at parameter values
+- Run full test suite (slow)
+
+**Web4 Discovery Approach:**
+- Components document themselves
+- Discover functionality interactively
+- See valid values instantly
+- Run surgical tests (600x faster!)
+
+### 📊 Performance Benefits:
+
+| Operation | Traditional | Web4 Discovery | Speedup |
+|-----------|-------------|----------------|---------|
+| Find method documentation | Grep README | `completion method name` | Instant |
+| List test cases | Read test files | `test itCase` | 1 command |
+| Run single test | Vitest with complex filter | `test itCase 1a1` | **600x** |
+| Full test suite | 214s | 214s | Baseline |
+| Describe block | N/A | 500ms | **400x** |
+| Single test | N/A | 350ms | **600x** |
+
+### 🎓 Key Takeaways:
+
+- **Don't read docs first** - discover interactively
+- **Single-match completion shows TSDoc** - type until one match
+- **Hierarchical test system** - file → describe → itCase
+- **Context-aware commands** - `on Component version command`
+- **Surgical testing** - run only what you need (350ms vs 214s)
+- **Universal tool pattern** - modern features on ANY component
+
+**This is Web4's self-documenting architecture in action!** 🎯✨
+
+---
+
 ## 🚀 Automatic Project Initialization
 
 **You don't need to do anything!** Web4TSComponent automatically initializes your project structure on first run.
