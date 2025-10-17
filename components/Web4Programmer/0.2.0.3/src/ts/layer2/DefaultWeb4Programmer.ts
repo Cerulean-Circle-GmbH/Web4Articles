@@ -149,11 +149,11 @@ export class DefaultWeb4Programmer implements Web4Programmer {
    * @param references Test references for selective testing (e.g., file number, describe reference, itCase token)
    * @cliSyntax scope references
    * @cliDefault scope all
-   * @cliExample {{COMPONENT_LOWER}} test
-   * @cliExample {{COMPONENT_LOWER}} test file
-   * @cliExample {{COMPONENT_LOWER}} test file 1
-   * @cliExample {{COMPONENT_LOWER}} test describe 3b
-   * @cliExample {{COMPONENT_LOWER}} test itCase 1a1
+   * @cliExample web4programmer test
+   * @cliExample web4programmer test file
+   * @cliExample web4programmer test file 1
+   * @cliExample web4programmer test describe 3b
+   * @cliExample web4programmer test itCase 1a1
    */
   async test(scope: string = 'all', ...references: string[]): Promise<this> {
     const { execSync } = await import('child_process');
@@ -398,7 +398,7 @@ export class DefaultWeb4Programmer implements Web4Programmer {
       
       // Call completeParameter via CLI (completeParameter is on DefaultCLI)
       // Suppress stderr (build messages) to avoid duplicate "up to date" noise
-      const cliPath = path.join(process.cwd(), '{{COMPONENT_LOWER}}');
+      const cliPath = path.join(process.cwd(), 'web4programmer');
       execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs} 2>/dev/null`, { 
         cwd: process.cwd(),
         stdio: 'inherit',
