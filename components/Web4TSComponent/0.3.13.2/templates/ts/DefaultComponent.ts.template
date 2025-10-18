@@ -398,54 +398,22 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
    */
   async completion(what: string, filter?: string): Promise<this> {
     const context = this.getComponentContext();
-    const { execSync } = await import('child_process');
-    const path = await import('path');
     
-    // Always call completionNameParameterCompletion with proper args structure
-    const callbackName = 'completionNameParameterCompletion';
-    // Args structure: ['completion', 'method|parameter', 'filterPrefix']
-    const callbackArgs = ['completion', what, filter || ''].map((arg: string) => `"${arg}"`).join(' ');
+    // OOP: Instantiate own CLI and call completeParameter directly (no shell!)
+    const { {{COMPONENT_NAME}}CLI } = await import('../layer5/{{COMPONENT_NAME}}CLI.js');
+    const cli = new {{COMPONENT_NAME}}CLI();
     
     if (!context) {
       // No context - test completions on {{COMPONENT_NAME}} itself
       console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on {{COMPONENT_NAME}}${filter ? ` (filter: ${filter})` : ''}`);
       console.log(`---`);
       
-      // Call completeParameter via CLI (completeParameter is on DefaultCLI)
-      // Suppress stderr (build messages) to avoid duplicate "up to date" noise
-      // Dynamic: resolve component CLI name from package.json or context
-      const packageJson = JSON.parse(await fs.readFile(path.join(process.cwd(), '..', 'package.json'), 'utf-8'));
-      const componentName = packageJson.name.replace('@web4x/', '');
-      const cliPath = path.join(process.cwd(), componentName);
-      execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs} 2>/dev/null`, { 
-        cwd: process.cwd(),
-        stdio: 'inherit',
-        encoding: 'utf-8'
-      });
+      // Call completeParameter directly via OOP (completeParameter is on DefaultCLI)
+      await cli.completeParameter('completionNameParameterCompletion', 'completion', what, filter || '');
     } else {
-      // Context loaded - test completions on target component
-      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on ${context.component} ${context.version}${filter ? ` (filter: ${filter})` : ''}`);
-      console.log(`---`);
-      
-      // Call completeParameter on the target component via its CLI script
-      // Suppress stderr (build messages) to avoid duplicate "up to date" noise
-      const cliScriptName = context.component.toLowerCase().replace(/\./g, '');
-      
-      // Find project root
-      let currentDir = process.cwd();
-      while (!existsSync(path.join(currentDir, 'components'))) {
-        const parentDir = path.dirname(currentDir);
-        if (parentDir === currentDir) break;
-        currentDir = parentDir;
-      }
-      
-      const cliPath = path.join(currentDir, 'scripts', cliScriptName);
-      
-      execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs} 2>/dev/null`, { 
-        cwd: context.path,
-        stdio: 'inherit',
-        encoding: 'utf-8'
-      });
+      // Context loaded - delegate to web4tscomponent for target component discovery
+      const web4ts = await this.getWeb4TSComponent();
+      await web4ts.completion(what, filter);
     }
     
     return this;

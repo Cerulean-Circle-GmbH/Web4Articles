@@ -2789,37 +2789,28 @@ Standards:
   async completion(what: string, filter?: string): Promise<this> {
     const context = this.getComponentContext();
     
-    // Always call completionNameParameterCompletion with proper args structure
-    const callbackName = 'completionNameParameterCompletion';
-    // Args structure: ['completion', 'method|parameter', 'filterPrefix']
-    const callbackArgs = ['completion', what, filter || ''].map(arg => `"${arg}"`).join(' ');
+    // OOP: Instantiate CLI and call completeParameter directly (no shell!)
+    const { Web4TSComponentCLI } = await import('../layer5/Web4TSComponentCLI.js');
+    const cli = new Web4TSComponentCLI();
     
     if (!context) {
       // No context - test completions on Web4TSComponent itself
       console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on Web4TSComponent${filter ? ` (filter: ${filter})` : ''}`);
       console.log(`---`);
       
-      // Call completeParameter via CLI (completeParameter is on DefaultCLI, not DefaultWeb4TSComponent)
-      // Suppress stderr (build messages) to avoid duplicate "up to date" noise
-      const cliPath = path.join(process.cwd(), 'web4tscomponent');
-      execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs} 2>/dev/null`, { 
-        cwd: process.cwd(),
-        stdio: 'inherit',
-        encoding: 'utf-8'
-      });
+      // Call completeParameter directly via OOP (completeParameter is on DefaultCLI)
+      await cli.completeParameter('completionNameParameterCompletion', 'completion', what, filter || '');
     } else {
-      // Context loaded - test completions on target component
+      // Context loaded - test completions on target component via its CLI
       console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on ${context.component} ${context.version}${filter ? ` (filter: ${filter})` : ''}`);
       console.log(`---`);
       
-      // Call completeParameter on the target component via its CLI script
-      // Suppress stderr (build messages) to avoid duplicate "up to date" noise
-      const componentPath = this.resolveComponentPath(context.component, context.version);
+      // Delegate to target component's CLI via web4tscomponent on context
       const cliScriptName = context.component.toLowerCase().replace(/\./g, '');
       const cliPath = path.join(this.model.projectRoot, 'scripts', cliScriptName);
       
-      execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs} 2>/dev/null`, { 
-        cwd: componentPath,
+      execSync(`${cliPath} completeParameter completionNameParameterCompletion "completion" "${what}" "${filter || ''}" 2>/dev/null`, { 
+        cwd: this.resolveComponentPath(context.component, context.version),
         stdio: 'inherit',
         encoding: 'utf-8'
       });
