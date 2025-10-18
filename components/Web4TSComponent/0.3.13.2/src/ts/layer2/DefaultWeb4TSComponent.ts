@@ -4690,7 +4690,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * Called during component creation to establish complete semantic link infrastructure
    * 
    * @returns this for method chaining
-   * @cliHide
+   * @cliSyntax
    */
   async setCICDVersion(): Promise<this> {
     const context = this.getComponentContext();
