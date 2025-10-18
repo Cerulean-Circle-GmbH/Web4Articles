@@ -870,10 +870,10 @@ export abstract class DefaultCLI implements CLI {
           } else if (example.startsWith('Discovery Command:')) {
             // Show discovery command with proper colors
             const commandText = example.replace('Discovery Command: ', '');
-            // Color: web4tscomponent (tool) + completion parameter X (command)
+            // Color: web4tscomponent (GREEN) + completion (WHITE) + parameter X (YELLOW)
             const coloredCommand = commandText.replace(
-              /^(web4tscomponent)\s+(.+)$/,
-              `${colors.toolName}$1${colors.reset} ${colors.commands}$2${colors.reset}`
+              /^(web4tscomponent)\s+(completion)\s+(parameter\s+.+)$/,
+              `${colors.toolName}$1${colors.reset} ${colors.commands}$2${colors.reset} ${colors.parameters}$3${colors.reset}`
             );
             output += `    ${colors.descriptions}Possible Values: ${coloredCommand}\n`;
           } else if (example !== `${param.name}-example`) {

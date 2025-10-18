@@ -659,6 +659,7 @@ export class TSCompletion implements Completion {
                 // Check if first part is a parameter name
                 if (parts[0] === paramName) {
                   // Format: @cliValues paramName value1 value2...
+                  // Skip first token (parameter name), return only enum values
                   result = parts.slice(1);
                   return; // Found it, stop searching
                 } else if (parts[0] !== paramName) {

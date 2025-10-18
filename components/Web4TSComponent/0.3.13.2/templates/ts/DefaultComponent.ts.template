@@ -9,8 +9,8 @@ import { {{COMPONENT_NAME}}Model } from '../layer3/{{COMPONENT_NAME}}Model.inter
 import { existsSync, lstatSync, readlinkSync, readdirSync, statSync } from 'fs';
 import { join, dirname } from 'path';
 
-// Use prod version for stable delegation (not latest which could be unstable dev)
-import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/prod/dist/ts/layer2/DefaultWeb4TSComponent.js';
+// Use latest version for delegation (always available)
+import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js';
 
 export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   private model: {{COMPONENT_NAME}}Model;
