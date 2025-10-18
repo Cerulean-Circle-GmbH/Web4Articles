@@ -397,19 +397,15 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     }
     
     // Create semantic symlinks for new component
-    // Initial version is prod + latest (NOT dev - dev comes later when you start working)
+    // Semantic links are set by setCICDVersion() in create() method
+    // setCICDVersion intelligently sets links based on build number:
+    // - Build 0 (*.*.*.0): prod + latest
+    // - Build 1+ (*.*.*.1+): dev + test + latest
     await this.updateLatestSymlink(componentName, version);
-    await this.createSemanticLink(componentName, 'prod', version); // Mark as production
     await this.updateScriptsSymlinks(componentName, version);
     
     // Create base package.json for npm start ONLY principle
     await this.createBasePackageJson(componentName, version);
-    
-    console.log(`\n📊 Initial semantic links:`);
-    console.log(`   🚀 prod:   ${version} (initial production version)`);
-    console.log(`   📦 latest: ${version} (stable release)`);
-    console.log(`   🚧 dev:    none (will be created on first test run)`);
-    console.log(`   🧪 test:   none (will be created when dev is tested)`);
     
     return {
       name: componentName,
