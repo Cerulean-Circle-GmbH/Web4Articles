@@ -1,6 +1,6 @@
 {
   "name": "@web4x/web4programmer",
-  "version": "0.2.0.1",
+  "version": "0.2.0.3",
   "type": "module",
   "description": "Web4Programmer Component - Base Entry Point",
   "scripts": {

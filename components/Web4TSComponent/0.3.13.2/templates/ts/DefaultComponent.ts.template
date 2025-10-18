@@ -340,6 +340,41 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   }
 
   /**
+   * Build component (TypeScript compilation)
+   * Delegates to Web4TSComponent for DRY architecture
+   * @cliHide
+   */
+  async build(): Promise<this> {
+    const web4ts = await this.getWeb4TSComponent();
+    await web4ts.build();
+    return this;
+  }
+
+  /**
+   * Clean component build artifacts
+   * Delegates to Web4TSComponent for DRY architecture
+   * @cliHide
+   */
+  async clean(): Promise<this> {
+    const web4ts = await this.getWeb4TSComponent();
+    await web4ts.clean();
+    return this;
+  }
+
+  /**
+   * Show component directory tree structure
+   * Delegates to Web4TSComponent for DRY architecture
+   * @param depth Maximum depth to show (default: 4)
+   * @param showHidden Whether to show hidden files (default: false)
+   * @cliHide
+   */
+  async tree(depth: string = '4', showHidden: string = 'false'): Promise<this> {
+    const web4ts = await this.getWeb4TSComponent();
+    await web4ts.tree(depth, showHidden);
+    return this;
+  }
+
+  /**
    * Test and discover tab completions for debugging and development
    * @param what Type of completion to test: "method" or "parameter"
    * @param filter Optional prefix to filter results (e.g., "v" shows only validate*, verify*, etc.)

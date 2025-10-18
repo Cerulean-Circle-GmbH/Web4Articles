@@ -5417,6 +5417,8 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
       'Scenario.interface.ts',
       'CLI.interface.ts',
       'MethodInfo.interface.ts',
+      'MethodSignature.interface.ts',  // ✅ Added for Phase 3 DefaultCLI refactoring
+      'Component.interface.ts',        // ✅ Added for Phase 1 architecture migration
       'Completion.ts'
     ];
 

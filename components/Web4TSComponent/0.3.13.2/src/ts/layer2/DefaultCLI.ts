@@ -480,9 +480,10 @@ export abstract class DefaultCLI implements CLI {
     if (!this.componentInstance && this.componentClass) {
       this.componentInstance = new this.componentClass();
       // Initialize with empty scenario if component supports it
-      if (typeof this.componentInstance.init === 'function') {
+      const instance = this.componentInstance; // TypeScript type narrowing helper
+      if (instance && typeof instance.init === 'function') {
         const emptyScenario = this.createEmptyScenario();
-        this.componentInstance.init(emptyScenario);
+        instance.init(emptyScenario);
       }
     }
     return this.componentInstance;
