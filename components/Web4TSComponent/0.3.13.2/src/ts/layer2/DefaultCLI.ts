@@ -1733,16 +1733,6 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Tab completion for componentName parameter
-   * Delegates to componentParameterCompletion for consistency
-   * Used by: removeComponent, removeVersion
-   * @cliHide
-   */
-  async componentNameParameterCompletion(currentArgs: string[]): Promise<string[]> {
-    return this.componentParameterCompletion(currentArgs);
-  }
-
-  /**
    * Tab completion for version parameter of 'on' command
    * NOTE: Implemented in base CLI for all Web4 components
    * @cliHide

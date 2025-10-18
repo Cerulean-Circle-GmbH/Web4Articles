@@ -2781,29 +2781,29 @@ Standards:
   /**
    * Remove a specific version of a component
    * Removes the version directory and updates symlinks accordingly
-   * @param componentName Component name to remove version from (uses context if not provided)
+   * @param component Component name to remove version from (uses context if not provided)
    * @param version Version to remove (uses context version if not provided)
-   * @cliSyntax componentName version
-   * @cliDefault componentName current
+   * @cliSyntax component version
+   * @cliDefault component current
    * @cliDefault version current
    * @cliExample web4tscomponent removeVersion Unit 0.2.0.0
    * @cliExample web4tscomponent on Unit 0.2.0.0 removeVersion
    */
-  async removeVersion(componentName: string = 'current', version: string = 'current'): Promise<this> {
+  async removeVersion(component: string = 'current', version: string = 'current'): Promise<this> {
     let targetComponent: string;
     let targetVersion: string;
 
     // Only check context if either parameter is 'current'
-    if (componentName === 'current' || version === 'current') {
+    if (component === 'current' || version === 'current') {
       const context = this.getComponentContext();
       if (!context) {
         throw new Error('No component context loaded and no component/version specified. Use "on <component> <version>" first or provide component and version.');
       }
-      targetComponent = componentName === 'current' ? context.component : componentName;
+      targetComponent = component === 'current' ? context.component : component;
       targetVersion = version === 'current' ? context.version : version;
     } else {
       // Both parameters explicitly provided
-      targetComponent = componentName;
+      targetComponent = component;
       targetVersion = version;
     }
 
@@ -2863,23 +2863,23 @@ Standards:
   /**
    * Remove an entire component and all its versions
    * Removes the complete component directory and all associated symlinks
-   * @param componentName Component name to remove completely (uses context if not provided)
-   * @cliSyntax componentName
-   * @cliDefault componentName current
+   * @param component Component name to remove completely (uses context if not provided)
+   * @cliSyntax component
+   * @cliDefault component current
    * @cliExample web4tscomponent removeComponent TestComponent
    * @cliExample web4tscomponent on TestComponent 1.0.0.0 removeComponent
    */
-  async removeComponent(componentName: string = 'current'): Promise<this> {
+  async removeComponent(component: string = 'current'): Promise<this> {
     let targetComponent: string;
 
-    if (componentName === 'current') {
+    if (component === 'current') {
       const context = this.getComponentContext();
       if (!context) {
         throw new Error('No component context loaded and no component specified. Use "on <component> <version>" first or provide component name.');
       }
       targetComponent = context.component;
     } else {
-      targetComponent = componentName;
+      targetComponent = component;
     }
 
     const componentDir = this.resolveComponentDirectory(targetComponent);
