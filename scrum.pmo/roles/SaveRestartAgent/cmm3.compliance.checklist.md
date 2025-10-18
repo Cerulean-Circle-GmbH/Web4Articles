@@ -30,7 +30,7 @@
 
    - [ ] g) CMM3 violation reporting: Report to chat with dual link to [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../_shared/PDCA/howto.PDCA.md)
    - [ ] h) Understanding research requirement: Research unknown terms/processes before use or ask TRON if research fails - Add intense use of tracking tables for artifacts and task lists in plan section
-   - [ ] i) Git commit message format: One-liner only `git commit -m "PDCAfilename.pdca.md"` - NO multiline descriptions
+   - [ ] i) Git commit & push protocol: One-liner commit `git commit -m "PDCAfilename.pdca.md"` then ALWAYS push `git push` - GitHub dual links REQUIRE push to be accessible
    - [ ] j) QA Decisions format: Either proper decisions (with [ ] **Decision N:** and options a/b/c) OR "All clear, no decisions to make - [reason]" per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../_shared/PDCA/PDCA.howto.decide.md)
 **MANDATORY: Research existing Web4 tools FIRST before any programming. If research fails, ASK TRON. NEVER program without explicit request.**
 
