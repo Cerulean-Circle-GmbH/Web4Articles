@@ -917,12 +917,13 @@ Standards:
     // PDCA: 2025-10-10-UTC-1850-component-initialization-ux-gap.pdca.md
     console.log(`🔗 Initializing project integration...`);
     
-    // Load the newly created component and verify/fix its symlinks
+    // Load the newly created component and set up CI/CD links
     const tempComponent = new DefaultWeb4TSComponent();
     // Set component context directly (Web4 pattern: modify model, not init)
     tempComponent.model.component = component;
     tempComponent.model.version = version;
-    await tempComponent.verifyAndFix();
+    // Use setCICDVersion for proper CI/CD link setup (recovered from catastrophic failure)
+    await tempComponent.setCICDVersion();
     
     // Verify component is callable
     const cliScriptName = component.toLowerCase().replace(/\./g, '');
@@ -4663,6 +4664,98 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     await this.verifyAndFixSymlinks(componentName);
     
     console.log(`✅ Symlink verification and repair completed for ${componentName}`);
+    return this;
+  }
+
+  /**
+   * Set all CI/CD semantic links for a component version
+   * Recovered from catastrophic failure - unified method for semantic link setup
+   * 
+   * Sets links intelligently based on version build number:
+   * - Build 0 (*.*.*.0): prod version (stable release)
+   * - Build 1+ (*.*.*.1+): dev/test versions (development/testing)
+   * 
+   * Always sets:
+   * - latest → current version (canonical reference)
+   * 
+   * For build 0 versions:
+   * - prod → current version (stable production)
+   * 
+   * For build 1+ versions:
+   * - dev → current version (active development)
+   * - test → current version (testing active)
+   * 
+   * Called during component creation to establish complete semantic link infrastructure
+   * 
+   * @returns this for method chaining
+   * @cliHide
+   */
+  async setCICDVersion(): Promise<this> {
+    const context = this.getComponentContext();
+    const componentName = context?.component || this.model.component;
+    const version = context?.version || this.model.version;
+    
+    if (!componentName || !version) {
+      throw new Error('Component name and version required for CI/CD link setup');
+    }
+    
+    // Parse version to determine if this is build 0 (prod) or build 1+ (dev/test)
+    const versionParts = version.split('.');
+    const buildNumber = parseInt(versionParts[3] || '0', 10);
+    const isBuild0 = buildNumber === 0;
+    
+    console.log(`🔗 Setting up CI/CD link infrastructure for ${componentName} ${version}`);
+    console.log(`   Build type: ${isBuild0 ? 'Build 0 (Production)' : `Build ${buildNumber} (Development/Test)`}`);
+    
+    // Always set latest - canonical reference
+    await this.on(componentName, version);
+    
+    const fs = await import('fs/promises');
+    const componentDir = this.resolveComponentDirectory(componentName);
+    
+    // Set latest symlink (always)
+    const latestLink = path.join(componentDir, 'latest');
+    try {
+      await fs.unlink(latestLink).catch(() => {});
+      await fs.symlink(version, latestLink);
+      console.log(`   ✅ latest → ${version}`);
+    } catch (error) {
+      console.log(`   ⚠️  Could not set latest link: ${error}`);
+    }
+    
+    if (isBuild0) {
+      // Build 0: Set as prod (stable release)
+      const prodLink = path.join(componentDir, 'prod');
+      try {
+        await fs.unlink(prodLink).catch(() => {});
+        await fs.symlink(version, prodLink);
+        console.log(`   ✅ prod → ${version} (stable build 0)`);
+      } catch (error) {
+        console.log(`   ⚠️  Could not set prod link: ${error}`);
+      }
+    } else {
+      // Build 1+: Set as dev and test (development/testing)
+      const devLink = path.join(componentDir, 'dev');
+      const testLink = path.join(componentDir, 'test');
+      
+      try {
+        await fs.unlink(devLink).catch(() => {});
+        await fs.symlink(version, devLink);
+        console.log(`   ✅ dev → ${version} (build ${buildNumber} development)`);
+      } catch (error) {
+        console.log(`   ⚠️  Could not set dev link: ${error}`);
+      }
+      
+      try {
+        await fs.unlink(testLink).catch(() => {});
+        await fs.symlink(version, testLink);
+        console.log(`   ✅ test → ${version} (build ${buildNumber} testing)`);
+      } catch (error) {
+        console.log(`   ⚠️  Could not set test link: ${error}`);
+      }
+    }
+    
+    console.log(`✅ CI/CD links established for ${componentName} ${version}`);
     return this;
   }
 
