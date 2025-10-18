@@ -589,6 +589,101 @@ export class TSCompletion implements Completion {
   }
 
   /**
+   * Extract @cliValues annotation for enum parameters
+   * Web4 pattern: TSDoc-driven enum value declaration for zero hardcoding
+   * @param className Class name to search
+   * @param methodName Method name to search (empty string = search all methods)
+   * @param paramName Parameter name to extract values for
+   * @returns Array of enum values, or empty array if not found
+   */
+  static extractCliValues(className: string, methodName: string, paramName: string): string[] {
+    try {
+      const files = TSCompletion.getAllTypeScriptFiles();
+      
+      for (const file of files) {
+        const src = readFileSync(file, 'utf8');
+        const sourceFile = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true);
+        
+        const values = TSCompletion.searchClassForCliValues(sourceFile, className, methodName, paramName);
+        if (values && values.length > 0) {
+          return values;
+        }
+      }
+    } catch (error) {
+      // Silently fail - no @cliValues found
+    }
+    
+    return [];
+  }
+
+  /**
+   * Search class for @cliValues annotation
+   * Web4 pattern: TSDoc enum value extraction
+   */
+  private static searchClassForCliValues(
+    sourceFile: ts.SourceFile,
+    className: string,
+    methodName: string,
+    paramName: string
+  ): string[] | null {
+    let result: string[] | null = null;
+    
+    ts.forEachChild(sourceFile, node => {
+      if (ts.isClassDeclaration(node) && node.name && node.name.text === className) {
+        for (const member of node.members) {
+          if (ts.isMethodDeclaration(member) && 
+              member.name && 
+              ts.isIdentifier(member.name)) {
+            
+            // If methodName is empty, search all methods; otherwise match specific method
+            if (methodName && member.name.text !== methodName) {
+              continue;
+            }
+            
+            // Extract JSDoc tags
+            const jsDocs = ts.getJSDocTags(member);
+            for (const tag of jsDocs) {
+              if (tag.tagName.text === 'cliValues') {
+                // Parse space-separated values from comment text
+                const comment = typeof tag.comment === 'string' ? tag.comment : '';
+                
+                // Check if this @cliValues is for our specific parameter
+                // Format can be:
+                // @cliValues value1 value2 value3  (applies to first/only parameter)
+                // @cliValues paramName value1 value2 value3  (applies to specific parameter)
+                
+                const parts = comment.trim().split(/\s+/).filter(v => v.length > 0);
+                
+                if (parts.length === 0) continue;
+                
+                // Check if first part is a parameter name
+                if (parts[0] === paramName) {
+                  // Format: @cliValues paramName value1 value2...
+                  result = parts.slice(1);
+                  return; // Found it, stop searching
+                } else if (parts[0] !== paramName) {
+                  // Check if this method actually has our parameter
+                  const hasParam = member.parameters.some(p => 
+                    p.name && ts.isIdentifier(p.name) && p.name.text === paramName
+                  );
+                  
+                  if (hasParam) {
+                    // Format: @cliValues value1 value2... (no param name prefix)
+                    result = parts;
+                    return; // Found it, stop searching
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+    
+    return result;
+  }
+
+  /**
    * Get all TypeScript files in the component for zero config processing
    */
   private static getAllTypeScriptFiles(): string[] {

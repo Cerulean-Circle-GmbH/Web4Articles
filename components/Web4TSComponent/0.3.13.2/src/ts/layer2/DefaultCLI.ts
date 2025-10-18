@@ -694,25 +694,22 @@ export abstract class DefaultCLI implements CLI {
   /**
    * Derive examples from Web4 parameter naming conventions
    * Web4 pattern: Convention-driven example generation with zero configuration
-   * ✅ ENHANCED: Returns "Possible Values" for parameters with known completion values
+   * ✅ ENHANCED: Returns "Possible Values" for parameters with @cliValues TSDoc annotation
    */
   private deriveExamplesFromConventions(paramName: string): string[] {
-    // ✅ INTELLIGENT: Known completion values for common parameters
-    const knownCompletionValues: Record<string, string[]> = {
-      'targetVersion': ['dev', 'latest', 'prod', 'test'],
-      'versionPromotion': ['nextBuild', 'nextMinor', 'nextMajor', 'nextPatch'],
-      'format': ['json', 'bash', 'text', 'xml', 'csv'],
-      'action': ['fix', 'verify'],
-      'what': ['method', 'parameter'],
-      'scope': ['all', 'file', 'describe', 'itCase'],
-      'skipPromotion': ['true', 'false'],
-      'showHidden': ['true', 'false']
-    };
+    // ✅ ZERO HARDCODING: Extract from @cliValues TSDoc annotation
+    const enumValues = this.enumParameterCompletion(paramName);
     
-    if (knownCompletionValues[paramName]) {
-      const values = knownCompletionValues[paramName];
-      const valuesStr = values.map(v => `'${v}'`).join(', ');
+    if (enumValues && enumValues.length > 0) {
+      const valuesStr = enumValues.map(v => `'${v}'`).join(', ');
       return [`Possible Values: ${valuesStr}`];
+    }
+    
+    // ✅ FALLBACK: If no @cliValues, try calling actual completion method
+    const completionMethodName = `${paramName}ParameterCompletion`;
+    if (typeof (this as any)[completionMethodName] === 'function') {
+      // Show command to discover values dynamically
+      return [`Possible Values: web4tscomponent completion parameter ${paramName}`];
     }
     
     // ✅ WEB4 CONVENTION: Derive examples from parameter name patterns
@@ -1088,24 +1085,48 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
+   * Generic enum parameter completion based on @cliValues TSDoc annotation
+   * Web4 pattern: Convention-based enum completion with zero hardcoding
+   * 
+   * ALL enum parameters should use this method via convention:
+   * - Parameter: versionPromotion
+   * - Completion: async versionPromotionParameterCompletion(args) { return this.enumParameterCompletion('versionPromotion'); }
+   * - TSDoc: @cliValues nextPatch nextMinor nextMajor nextBuild
+   * 
+   * @param paramName Parameter name to get enum values for
+   * @returns Array of possible enum values from @cliValues annotation
+   */
+  protected enumParameterCompletion(paramName: string): string[] {
+    // ✅ PERFORMANCE: Direct TSCompletion query without method analysis overhead
+    // Try to extract @cliValues from any method that has this parameter
+    
+    try {
+      // Quick extraction: search for @cliValues in source files directly
+      const values = TSCompletion.extractCliValues(
+        this.componentClass.name,
+        '',  // Empty method name = search all methods
+        paramName
+      );
+      
+      if (values && values.length > 0) {
+        return values;
+      }
+    } catch (error) {
+      // Fallback: return empty array
+    }
+    
+    return [];
+  }
+
+  /**
    * Get union values for parameters with known completion values
-   * Web4 pattern: Show finite value sets directly in syntax
+   * Web4 pattern: Show finite value sets directly in syntax via @cliValues TSDoc annotation
    * @returns Array of possible values, or null if not applicable
    */
   private getParameterUnionValues(paramName: string): string[] | null {
-    // Same dictionary as deriveExamplesFromConventions
-    const knownCompletionValues: Record<string, string[]> = {
-      'targetVersion': ['dev', 'latest', 'prod', 'test'],
-      'versionPromotion': ['nextPatch', 'nextMinor', 'nextMajor', 'nextBuild'],
-      'format': ['json', 'bash', 'text', 'xml', 'csv'],
-      'action': ['fix', 'verify'],
-      'what': ['method', 'parameter'],
-      'scope': ['all', 'file', 'describe', 'itCase'],
-      'skipPromotion': ['true', 'false'],
-      'showHidden': ['false', 'true']  // Note: default 'false' first
-    };
-    
-    return knownCompletionValues[paramName] || null;
+    // ✅ ZERO HARDCODING: Extract from @cliValues TSDoc annotation
+    const values = this.enumParameterCompletion(paramName);
+    return values.length > 0 ? values : null;
   }
 
   /**

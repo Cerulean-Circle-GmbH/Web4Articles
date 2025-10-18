@@ -1183,6 +1183,7 @@ Standards:
    * await component.upgrade('1.0.0.0');
    * 
    * @cliSyntax versionPromotion
+   * @cliValues versionPromotion nextPatch nextMinor nextMajor nextBuild
    */
   async upgrade(versionPromotion: string): Promise<this> {
     const context = this.getComponentContext();
@@ -1251,6 +1252,7 @@ Standards:
    * @cliSyntax depth showHidden
    * @cliDefault depth 4
    * @cliDefault showHidden false
+   * @cliValues showHidden false true
    */
   async tree(depth: string = '4', showHidden: string = 'false'): Promise<this> {
     const context = this.getComponentContext();
@@ -1333,6 +1335,7 @@ Standards:
    * Shows development workflow status and version progression
    * @param action Optional action: 'fix' to repair all links and symlinks
    * @cliSyntax
+   * @cliValues action fix verify
    * @cliExample web4tscomponent links
    * @cliExample web4tscomponent links fix
    * @cliExample web4tscomponent on Unit 0.3.2.0 links
@@ -1604,6 +1607,7 @@ Standards:
    * @param references - For selective testing: numeric references to select tests
    * @cliSyntax scope ...references
    * @cliDefault scope all
+   * @cliValues scope all file describe itCase
    * @cliExample web4tscomponent test
    * @cliExample web4tscomponent test all
    * @cliExample web4tscomponent test file 2
@@ -1686,6 +1690,7 @@ Standards:
    * @param versionPromotion Promotion level on test success: nextPatch, nextMinor, or nextMajor
    * @cliSyntax versionPromotion
    * @cliDefault versionPromotion nextPatch
+   * @cliValues versionPromotion nextPatch nextMinor nextMajor nextBuild
    * @cliExample web4tscomponent releaseTest
    * @cliExample web4tscomponent releaseTest nextMinor
    * @cliExample web4tscomponent on Unit 0.3.0.5 releaseTest nextMajor
@@ -2737,6 +2742,7 @@ Standards:
    * @param filter Optional prefix to filter results (e.g., "v" shows only validate*, verify*, etc.)
    * 
    * @cliSyntax what filter
+   * @cliValues what method parameter
    * @cliExample web4tscomponent completion method
    * @cliExample web4tscomponent completion method v
    * @cliExample web4tscomponent completion parameter s
@@ -4634,6 +4640,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @returns this for method chaining
    * @cliSyntax targetVersion version
    * @cliDefault version current
+   * @cliValues targetVersion dev latest prod test
    * @cliExample web4tscomponent setCICDVersion prod 1.0.0.0
    * @cliExample web4tscomponent setCICDVersion dev 0.1.1.1
    * @cliExample web4tscomponent on Component 0.1.0.0 setCICDVersion latest
@@ -5767,6 +5774,7 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
    * @returns Component context information
    * @cliSyntax format
    * @cliDefault format json
+   * @cliValues format json bash text xml csv
    * @example
    *   web4tscomponent getContext
    *   web4tscomponent getContext bash
