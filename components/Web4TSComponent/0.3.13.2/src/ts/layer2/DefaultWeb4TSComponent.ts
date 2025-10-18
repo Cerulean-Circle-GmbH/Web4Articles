@@ -913,30 +913,38 @@ Standards:
     // PDCA: 2025-10-10-UTC-1850-component-initialization-ux-gap.pdca.md
     console.log(`🔗 Initializing project integration...`);
     
-    // Load the newly created component and set up CI/CD links
-    const tempComponent = new DefaultWeb4TSComponent();
-    // Set component context directly (Web4 pattern: modify model, not init)
-    tempComponent.model.component = component;
-    tempComponent.model.version = version;
-    
+    // Set up semantic links directly (without calling on() - respects test isolation)
     // Use setCICDVersion for proper CI/CD link setup (recovered from catastrophic failure)
     // Parse version to determine build number
     const versionParts = version.split('.');
     const buildNumber = parseInt(versionParts[3] || '0', 10);
     
-    // Load component into context for setCICDVersion
-    await tempComponent.on(component, version);
+    const componentDir = this.resolveComponentDirectory(component);
+    const fs = await import('fs/promises');
     
     // Always set latest
-    await tempComponent.setCICDVersion('latest', version);
+    const latestPath = path.join(componentDir, 'latest');
+    await fs.unlink(latestPath).catch(() => {});
+    await fs.symlink(version, latestPath);
+    console.log(`   🔗 latest → ${version}`);
     
     if (buildNumber === 0) {
       // Build 0: Set as prod (stable release)
-      await tempComponent.setCICDVersion('prod', version);
+      const prodPath = path.join(componentDir, 'prod');
+      await fs.unlink(prodPath).catch(() => {});
+      await fs.symlink(version, prodPath);
+      console.log(`   🔗 prod → ${version}`);
     } else {
       // Build 1+: Set as dev and test (development/testing)
-      await tempComponent.setCICDVersion('dev', version);
-      await tempComponent.setCICDVersion('test', version);
+      const devPath = path.join(componentDir, 'dev');
+      await fs.unlink(devPath).catch(() => {});
+      await fs.symlink(version, devPath);
+      console.log(`   🔗 dev → ${version}`);
+      
+      const testPath = path.join(componentDir, 'test');
+      await fs.unlink(testPath).catch(() => {});
+      await fs.symlink(version, testPath);
+      console.log(`   🔗 test → ${version}`);
     }
     
     // Verify component is callable

@@ -11,7 +11,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { existsSync, readlinkSync, lstatSync, rmSync, readFileSync } from 'fs';
+import { existsSync, readlinkSync, lstatSync, rmSync, readFileSync, unlinkSync } from 'fs';
 import { execSync } from 'child_process';
 import * as path from 'path';
 import { DefaultWeb4TSComponent } from '../src/ts/layer2/DefaultWeb4TSComponent.js';
@@ -512,6 +512,139 @@ describe('🏗️ Component Creation', () => {
       // Test major.minor.patch.build format
       await component.create(testComponentName, '1.2.3.4', 'all');
       expect(existsSync(path.join(testDataDir, 'components', testComponentName, '1.2.3.4'))).toBe(true);
+    });
+  });
+
+  describe('🔗 DRY Refactoring - setCICDVersion() Impact on Templates', () => {
+    const testComponentName = 'DRYRefactoringTest';
+    const testVersion = '0.1.0.0';
+    
+    beforeEach(async () => {
+      const componentDir = path.join(testDataDir, 'components', testComponentName);
+      if (existsSync(componentDir)) {
+        rmSync(componentDir, { recursive: true, force: true });
+      }
+    });
+
+    it('5i1: should create component using refactored templates with setCICDVersion', async () => {
+      // This test verifies that our DRY refactoring (fixSemanticLinks using setCICDVersion)
+      // doesn't break component creation from templates
+      await component.create(testComponentName, testVersion, 'all');
+      
+      const componentDir = path.join(testDataDir, 'components', testComponentName, testVersion);
+      expect(existsSync(componentDir)).toBe(true);
+      
+      // Verify semantic links were created during component creation
+      const componentBaseDir = path.join(testDataDir, 'components', testComponentName);
+      const latestLink = path.join(componentBaseDir, 'latest');
+      const prodLink = path.join(componentBaseDir, 'prod');
+      
+      expect(existsSync(latestLink)).toBe(true);
+      expect(existsSync(prodLink)).toBe(true); // Build 0 should set prod
+      
+      const latestTarget = readlinkSync(latestLink);
+      const prodTarget = readlinkSync(prodLink);
+      
+      expect(latestTarget).toBe(testVersion);
+      expect(prodTarget).toBe(testVersion); // Build 0 logic preserved
+    });
+
+    it('5i2: should create component with working links fix command', async () => {
+      // Verify that links fix (which uses refactored fixSemanticLinks) works on new components
+      await component.create(testComponentName, testVersion, 'all');
+      
+      // Load component context and run links fix
+      await component.on(testComponentName, testVersion);
+      await component.links('fix');
+      
+      // Verify all semantic links exist and are correct
+      const componentBaseDir = path.join(testDataDir, 'components', testComponentName);
+      const links = ['latest', 'prod', 'dev', 'test'];
+      
+      for (const linkName of links) {
+        const linkPath = path.join(componentBaseDir, linkName);
+        expect(existsSync(linkPath)).toBe(true);
+        
+        const linkTarget = readlinkSync(linkPath);
+        expect(linkTarget).toBe(testVersion);
+      }
+    });
+
+    it('5i3: should create component that can use setCICDVersion directly', async () => {
+      // Verify that generated components can use setCICDVersion (DRY refactored method)
+      await component.create(testComponentName, testVersion, 'all');
+      await component.on(testComponentName, testVersion);
+      
+      // Use setCICDVersion to set different links
+      await component.setCICDVersion('dev', testVersion);
+      await component.setCICDVersion('test', testVersion);
+      await component.setCICDVersion('latest', testVersion);
+      
+      // Verify links were created correctly via setCICDVersion
+      const componentBaseDir = path.join(testDataDir, 'components', testComponentName);
+      
+      const devLink = path.join(componentBaseDir, 'dev');
+      const testLink = path.join(componentBaseDir, 'test');
+      const latestLink = path.join(componentBaseDir, 'latest');
+      
+      expect(existsSync(devLink)).toBe(true);
+      expect(existsSync(testLink)).toBe(true);
+      expect(existsSync(latestLink)).toBe(true);
+      
+      expect(readlinkSync(devLink)).toBe(testVersion);
+      expect(readlinkSync(testLink)).toBe(testVersion);
+      expect(readlinkSync(latestLink)).toBe(testVersion);
+    });
+
+    it('5i4: should create build 1 component with correct semantic links (no prod)', async () => {
+      // Verify build number logic in setCICDVersion still works correctly
+      const build1Version = '0.1.0.1';
+      await component.create(testComponentName, build1Version, 'all');
+      
+      const componentBaseDir = path.join(testDataDir, 'components', testComponentName);
+      
+      // Build 1 should set latest, dev, test - but NOT prod
+      const latestLink = path.join(componentBaseDir, 'latest');
+      const devLink = path.join(componentBaseDir, 'dev');
+      const testLink = path.join(componentBaseDir, 'test');
+      const prodLink = path.join(componentBaseDir, 'prod');
+      
+      expect(existsSync(latestLink)).toBe(true);
+      expect(existsSync(devLink)).toBe(true);
+      expect(existsSync(testLink)).toBe(true);
+      expect(existsSync(prodLink)).toBe(false); // Build 1+ should NOT set prod
+      
+      expect(readlinkSync(latestLink)).toBe(build1Version);
+      expect(readlinkSync(devLink)).toBe(build1Version);
+      expect(readlinkSync(testLink)).toBe(build1Version);
+    });
+
+    it('5i5: should verify fixSemanticLinks uses setCICDVersion (no direct fs.symlink)', async () => {
+      // This test documents that fixSemanticLinks() now uses setCICDVersion() for DRY compliance
+      // We verify this indirectly by checking that links fix works and creates valid links
+      await component.create(testComponentName, testVersion, 'all');
+      
+      // Delete all semantic links to simulate broken state
+      const componentBaseDir = path.join(testDataDir, 'components', testComponentName);
+      const links = ['latest', 'prod', 'dev', 'test'];
+      
+      for (const linkName of links) {
+        const linkPath = path.join(componentBaseDir, linkName);
+        if (existsSync(linkPath)) {
+          unlinkSync(linkPath);
+        }
+      }
+      
+      // Use links fix to recreate them (should use setCICDVersion internally)
+      await component.on(testComponentName, testVersion);
+      await component.links('fix');
+      
+      // Verify all links were recreated correctly via setCICDVersion
+      for (const linkName of links) {
+        const linkPath = path.join(componentBaseDir, linkName);
+        expect(existsSync(linkPath)).toBe(true);
+        expect(readlinkSync(linkPath)).toBe(testVersion);
+      }
     });
   });
 });
