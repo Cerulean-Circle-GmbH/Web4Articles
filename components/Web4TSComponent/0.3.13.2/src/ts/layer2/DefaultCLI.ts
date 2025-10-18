@@ -844,9 +844,10 @@ export abstract class DefaultCLI implements CLI {
           
           // Check if this is a "Possible Values" line (from completion callback)
           if (example.startsWith('Possible Values:')) {
-            // Show possible values with default if available
-            const defaultStr = param.default ? ` Default: '${param.default}'` : '';
-            output += `    ${colors.descriptions}${example}${defaultStr}${colors.reset}\n`;
+            // Show possible values with colored formatting (like syntax)
+            const valuesText = example.replace('Possible Values: ', '');
+            const coloredValues = valuesText.replace(/'([^']+)'/g, `'${colors.parameters}$1${colors.reset}'`);
+            output += `    ${colors.descriptions}Possible Values: ${coloredValues}\n`;
           } else if (example !== `${param.name}-example`) {
             // Only show examples if they're NOT the useless "${paramName}-example" format
             output += `    ${colors.descriptions}Example: ${colors.parameters}${example}${colors.reset}\n`;
@@ -1049,7 +1050,17 @@ export abstract class DefaultCLI implements CLI {
       // Check for default value in TypeScript or TSDoc
       const defaultValue = this.extractDefaultValue(param, methodName);
       
-      if (defaultValue) {
+      // ✅ NEW: Check if parameter has known union values
+      const unionValues = this.getParameterUnionValues(param.name);
+      
+      if (unionValues && unionValues.length > 1 && unionValues.length < 10) {
+        // Show union values in syntax: <?param:'default|value2|value3'>
+        const defaultFirst = unionValues.filter(v => v === defaultValue);
+        const others = unionValues.filter(v => v !== defaultValue);
+        const orderedValues = [...defaultFirst, ...others]; // Default first
+        const unionStr = orderedValues.join('|');
+        finalSyntax = `<?${baseSyntax}:'${unionStr}'>`;
+      } else if (defaultValue) {
         finalSyntax = `<?${baseSyntax}:'${defaultValue}'>`;  // ✅ Web4 notation: <?parameter:'defaultValue'>
       } else {
         finalSyntax = `<?${baseSyntax}>`;     // ✅ Web4 notation: <?parameter> (no default available)
@@ -1074,6 +1085,27 @@ export abstract class DefaultCLI implements CLI {
     
     // Check if the completion method exists on this class instance
     return typeof (this as any)[completionMethodName] === 'function';
+  }
+
+  /**
+   * Get union values for parameters with known completion values
+   * Web4 pattern: Show finite value sets directly in syntax
+   * @returns Array of possible values, or null if not applicable
+   */
+  private getParameterUnionValues(paramName: string): string[] | null {
+    // Same dictionary as deriveExamplesFromConventions
+    const knownCompletionValues: Record<string, string[]> = {
+      'targetVersion': ['dev', 'latest', 'prod', 'test'],
+      'versionPromotion': ['nextPatch', 'nextMinor', 'nextMajor', 'nextBuild'],
+      'format': ['json', 'bash', 'text', 'xml', 'csv'],
+      'action': ['fix', 'verify'],
+      'what': ['method', 'parameter'],
+      'scope': ['all', 'file', 'describe', 'itCase'],
+      'skipPromotion': ['true', 'false'],
+      'showHidden': ['false', 'true']  // Note: default 'false' first
+    };
+    
+    return knownCompletionValues[paramName] || null;
   }
 
   /**

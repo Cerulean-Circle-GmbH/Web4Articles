@@ -1247,7 +1247,7 @@ Standards:
    * WITHOUT context: Shows tree for current component (self-operation)
    * WITH context: Shows tree for target component
    * @param depth Maximum depth to traverse (default: 4)
-   * @param showHidden Show hidden files and directories (default: false)
+   * @param showHidden Show hidden files and directories
    * @cliSyntax depth showHidden
    * @cliDefault depth 4
    * @cliDefault showHidden false
