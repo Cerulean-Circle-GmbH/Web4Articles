@@ -1871,11 +1871,20 @@ export abstract class DefaultCLI implements CLI {
 
   /**
    * Completion for targetDir parameter
-   * Returns: § (discovered project root) and test/data (test isolation)
+   * Returns: resolved project root path (from §) and test/data (for test isolation)
    * @cliHide
    */
   async targetDirParameterCompletion(currentArgs: string[]): Promise<string[]> {
-    return this.enumParameterCompletion('targetDir');
+    // Get enum values from @cliValues annotation (§ and test/data)
+    const values = this.enumParameterCompletion('targetDir');
+    
+    // Resolve § to actual project root path for tab completion
+    return values.map(value => {
+      if (value === '§') {
+        return this.findProjectRoot();
+      }
+      return value;
+    });
   }
 
   /**
