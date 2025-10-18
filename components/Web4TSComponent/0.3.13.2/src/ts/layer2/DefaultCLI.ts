@@ -1284,11 +1284,10 @@ export abstract class DefaultCLI implements CLI {
    * See: 2025-10-10-UTC-0340-tscompletion-oop-modernization.pdca.md
    * 
    * @param currentArgs Current argument values (unused in minimal version)
-   * @returns Array of action completions
+   * @returns Array of action completions (no empty string to avoid spacing issues)
    */
   async actionParameterCompletion(currentArgs: string[]): Promise<string[]> {
     return [
-      '',         // Empty = default action
       'fix',      // Fix/repair
       'verify',   // Verify/check
       'show',     // Display/show
