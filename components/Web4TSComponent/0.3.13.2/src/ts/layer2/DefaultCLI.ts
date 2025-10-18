@@ -1265,25 +1265,6 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Fundamental parameter completion: successPromotion (promotion level)
-   * Used by: releaseTest for configurable promotion levels
-   * @cliHide
-   */
-  async successPromotionParameterCompletion(currentArgs: string[]): Promise<string[]> {
-    const allOptions = ['nextPatch', 'nextMinor', 'nextMajor'];
-    
-    // Apply simple prefix filtering
-    const filterPrefix = currentArgs[1]; // The second argument is the prefix to filter by
-    
-    if (filterPrefix) {
-      const filtered = allOptions.filter(option => option.startsWith(filterPrefix));
-      return filtered.length > 0 ? filtered : allOptions;
-    }
-    
-    return allOptions;
-  }
-
-  /**
    * Fundamental parameter completion: format (output format)
    * Used by: getContext, and any method with format parameter
    * @cliHide
@@ -1390,7 +1371,7 @@ export abstract class DefaultCLI implements CLI {
       }
       
       // ✅ EXACT MATCH: Execute the completion callback to discover parameter values
-      // Example: "successPromotion" → execute successPromotionParameterCompletion
+      // Example: "versionPromotion" → execute versionPromotionParameterCompletion
       if (filtered.length === 1) {
         const callbackName = filtered[0];
         const paramName = callbackName.replace(/ParameterCompletion$/, '');
@@ -1807,11 +1788,12 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Tab completion for versionType parameter of 'upgrade' command
+   * Tab completion for versionPromotion parameter
    * Provides semantic version increment options
+   * Used by: upgrade, releaseTest
    * @cliHide
    */
-  async versionTypeParameterCompletion(currentArgs: string[]): Promise<string[]> {
+  async versionPromotionParameterCompletion(currentArgs: string[]): Promise<string[]> {
     return ['nextBuild', 'nextMinor', 'nextMajor', 'nextPatch'];
   }
 

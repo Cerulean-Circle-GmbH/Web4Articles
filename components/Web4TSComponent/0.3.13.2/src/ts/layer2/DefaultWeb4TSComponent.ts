@@ -1168,7 +1168,7 @@ Standards:
    * Must be used after 'on' method to load component context. Supports
    * semantic versioning with nextBuild, nextMinor, nextMajor patterns.
    * 
-   * @param versionType Version upgrade type: 'nextBuild', 'nextMinor', 'nextMajor', or specific version
+   * @param versionPromotion Version upgrade type: 'nextBuild', 'nextMinor', 'nextMajor', or specific version
    * 
    * @example
    * // Upgrade to next build version (0.1.0.0 → 0.1.0.1)
@@ -1182,9 +1182,9 @@ Standards:
    * // Upgrade to specific version
    * await component.upgrade('1.0.0.0');
    * 
-   * @cliSyntax versionType
+   * @cliSyntax versionPromotion
    */
-  async upgrade(versionType: string): Promise<this> {
+  async upgrade(versionPromotion: string): Promise<this> {
     const context = this.getComponentContext();
     if (!context) {
       throw new Error('No component context loaded. Use "on <component> <version>" first.');
@@ -1193,7 +1193,7 @@ Standards:
     const currentVersion = context.version;
     let nextVersion: string;
     
-    switch (versionType) {
+    switch (versionPromotion) {
       case 'nextBuild':
         nextVersion = this.incrementBuild(currentVersion);
         console.log(`🔧 Upgrading ${context.component} to next build: ${currentVersion} → ${nextVersion}`);
@@ -1218,11 +1218,11 @@ Standards:
         break;
         
       default:
-        if (versionType.match(/^\d+\.\d+\.\d+\.\d+$/)) {
-          nextVersion = versionType;
+        if (versionPromotion.match(/^\d+\.\d+\.\d+\.\d+$/)) {
+          nextVersion = versionPromotion;
           console.log(`🎯 Upgrading ${context.component} to specific version: ${currentVersion} → ${nextVersion}`);
         } else {
-          throw new Error(`Invalid version type: ${versionType}. Use: nextBuild, nextMinor, nextMajor, or specific version`);
+          throw new Error(`Invalid version type: ${versionPromotion}. Use: nextBuild, nextMinor, nextMajor, or specific version`);
         }
     }
     
@@ -1683,29 +1683,28 @@ Standards:
    * - Stage 1: dev → test (nextBuild) - same as test()
    * - Stage 2: test → prod (specified promotion) + new dev (nextBuild)
    * 
-   * @param successPromotion Promotion level on test success: nextPatch, nextMinor, or nextMajor
-   * @cliSyntax successPromotion
-   * @cliDefault successPromotion nextPatch
-   * @cliCompletion successPromotion successPromotionParameterCompletion
+   * @param versionPromotion Promotion level on test success: nextPatch, nextMinor, or nextMajor
+   * @cliSyntax versionPromotion
+   * @cliDefault versionPromotion nextPatch
    * @cliExample web4tscomponent releaseTest
    * @cliExample web4tscomponent releaseTest nextMinor
    * @cliExample web4tscomponent on Unit 0.3.0.5 releaseTest nextMajor
    */
-  async releaseTest(successPromotion: string = 'nextPatch'): Promise<this> {
+  async releaseTest(versionPromotion: string = 'nextPatch'): Promise<this> {
     const context = this.getComponentContext();
     const validPromotions = ['nextPatch', 'nextMinor', 'nextMajor'];
     
-    if (!validPromotions.includes(successPromotion)) {
-      console.error(`❌ Invalid promotion level: ${successPromotion}`);
+    if (!validPromotions.includes(versionPromotion)) {
+      console.error(`❌ Invalid promotion level: ${versionPromotion}`);
       console.log(`💡 Valid options: ${validPromotions.join(', ')}`);
       throw new Error(`Invalid promotion level`);
     }
     
     // WORKFLOW REMINDER: Always work on dev → test → dev cycle
-    console.log(`\n🔄 RELEASE TEST WORKFLOW (${successPromotion.toUpperCase()}):`);
+    console.log(`\n🔄 RELEASE TEST WORKFLOW (${versionPromotion.toUpperCase()}):`);
     console.log(`   🚧 ALWAYS work on dev version until you run releaseTest`);
     console.log(`   🧪 ALWAYS work on test version until test succeeds`);  
-    console.log(`   🚀 On 100% success: Promotes using ${successPromotion}`);
+    console.log(`   🚀 On 100% success: Promotes using ${versionPromotion}`);
     console.log(`   🚧 ALWAYS work on dev version after test success\n`);
     
     if (!context) {
@@ -1746,7 +1745,7 @@ Standards:
         await this.handleFirstTestRun('Web4TSComponent', currentVersion);
       } else {
         // Stage 2 RELEASE: This is the test version, use specified promotion level
-        await this.handleReleaseTestSuccessPromotion('Web4TSComponent', currentVersion, successPromotion);
+        await this.handleReleaseTestSuccessPromotion('Web4TSComponent', currentVersion, versionPromotion);
       }
       
       return this;
@@ -1795,7 +1794,7 @@ Standards:
       
       console.log(`✅ Tests completed for ${context.component} ${targetVersion}`);
       
-      // RELEASE promotion based on successPromotion level
+      // RELEASE promotion based on versionPromotion level
       const semanticLinks = await this.getSemanticLinks(context.component);
       const currentTest = semanticLinks.test;
       
@@ -1804,7 +1803,7 @@ Standards:
         await this.handleFirstTestRun(context.component, targetVersion);
       } else {
         // Stage 2 RELEASE: This is the test version, use specified promotion level
-        await this.handleReleaseTestSuccessPromotion(context.component, targetVersion, successPromotion);
+        await this.handleReleaseTestSuccessPromotion(context.component, targetVersion, versionPromotion);
       }
       
     } catch (error) {
