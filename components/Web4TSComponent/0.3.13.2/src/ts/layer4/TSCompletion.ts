@@ -263,6 +263,31 @@ export class TSCompletion implements Completion {
     return '';
   }
 
+  /**
+   * Check if a method has @cliHide annotation
+   * Used by DefaultCLI to determine if method should be visually distinguished
+   */
+  static isMethodHidden(className: string, methodName: string): boolean {
+    const files = TSCompletion.getProjectSourceFiles();
+    for (const file of files) {
+      const src = readFileSync(file, 'utf8');
+      const sourceFile = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true);
+      let hidden = false;
+      ts.forEachChild(sourceFile, node => {
+        if (ts.isClassDeclaration(node) && node.name && node.name.text === className) {
+          for (const m of node.members) {
+            if (ts.isMethodDeclaration(m) && m.name && ts.isIdentifier(m.name) && m.name.text === methodName) {
+              const jsDocText = TSCompletion.extractJsDocText(m);
+              hidden = jsDocText.includes('@cliHide');
+            }
+          }
+        }
+      });
+      if (hidden) return true;
+    }
+    return false;
+  }
+
   static getParamDoc(className: string, methodName: string, paramName: string): string {
     const files = TSCompletion.getProjectSourceFiles();
     for (const file of files) {

@@ -1320,13 +1320,21 @@ export abstract class DefaultCLI implements CLI {
    */
   private hasCliAnnotations(methodName: string): boolean {
     try {
+      // CRITICAL: Check @cliHide FIRST using TSCompletion (source analysis)
+      // Method.toString() doesn't have TSDoc comments (stripped in compilation)
+      if (TSCompletion.isMethodHidden(this.componentClass.name, methodName)) {
+        return false;
+      }
+      
       // Check if method exists on component class
       const method = this.componentClass?.prototype?.[methodName];
       if (!method) return false;
       
-      // Check method source for @cli annotations (works for both parameter-ful and parameter-less methods)
+      // Check method source for @cli annotations
       const methodStr = method.toString();
-      if (methodStr.includes('@cli')) {
+      
+      // Check for CLI-exposing annotations in method source (for runtime-added methods)
+      if (methodStr.includes('@cliSyntax') || methodStr.includes('@cliExample') || methodStr.includes('@cliDefault')) {
         return true;
       }
       
