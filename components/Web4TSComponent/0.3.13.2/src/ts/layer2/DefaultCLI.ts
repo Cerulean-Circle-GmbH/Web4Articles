@@ -694,8 +694,27 @@ export abstract class DefaultCLI implements CLI {
   /**
    * Derive examples from Web4 parameter naming conventions
    * Web4 pattern: Convention-driven example generation with zero configuration
+   * ✅ ENHANCED: Returns "Possible Values" for parameters with known completion values
    */
   private deriveExamplesFromConventions(paramName: string): string[] {
+    // ✅ INTELLIGENT: Known completion values for common parameters
+    const knownCompletionValues: Record<string, string[]> = {
+      'targetVersion': ['dev', 'latest', 'prod', 'test'],
+      'versionPromotion': ['nextBuild', 'nextMinor', 'nextMajor', 'nextPatch'],
+      'format': ['json', 'bash', 'text', 'xml', 'csv'],
+      'action': ['fix', 'verify'],
+      'what': ['method', 'parameter'],
+      'scope': ['all', 'file', 'describe', 'itCase'],
+      'skipPromotion': ['true', 'false'],
+      'showHidden': ['true', 'false']
+    };
+    
+    if (knownCompletionValues[paramName]) {
+      const values = knownCompletionValues[paramName];
+      const valuesStr = values.map(v => `'${v}'`).join(', ');
+      return [`Possible Values: ${valuesStr}`];
+    }
+    
     // ✅ WEB4 CONVENTION: Derive examples from parameter name patterns
     
     // Unit reference convention
@@ -806,8 +825,6 @@ export abstract class DefaultCLI implements CLI {
     
     // Generate documentation for unique parameter syntax types only
     for (const [syntaxType, param] of parameterGroups) {
-      const examples = this.generateParameterExamples(param.name);
-      
       // ✅ ENHANCED: Use enhanced optional formatting
       const syntax = this.generateParameterSyntax(param, 'linkInto'); // Use a method name for annotation access
       
@@ -818,10 +835,23 @@ export abstract class DefaultCLI implements CLI {
       const description = param.description || this.getConventionDescription(syntaxType);
       output += `    ${colors.descriptions}${description}${colors.reset}\n`;
       
-      // Line 3: Examples (multiple if available)
+      // Line 3: Intelligent value documentation (Possible Values or Examples)
+      const examples = this.generateParameterExamples(param.name);
+      
       if (examples.length > 0) {
         for (let i = 0; i < Math.min(2, examples.length); i++) {
-          output += `    ${colors.descriptions}Example: ${colors.parameters}${examples[i]}${colors.reset}\n`;
+          const example = examples[i];
+          
+          // Check if this is a "Possible Values" line (from completion callback)
+          if (example.startsWith('Possible Values:')) {
+            // Show possible values with default if available
+            const defaultStr = param.default ? ` Default: '${param.default}'` : '';
+            output += `    ${colors.descriptions}${example}${defaultStr}${colors.reset}\n`;
+          } else if (example !== `${param.name}-example`) {
+            // Only show examples if they're NOT the useless "${paramName}-example" format
+            output += `    ${colors.descriptions}Example: ${colors.parameters}${example}${colors.reset}\n`;
+          }
+          // Else: Skip useless examples
         }
       }
       
@@ -959,7 +989,13 @@ export abstract class DefaultCLI implements CLI {
         for (const method of categoryMethods.slice(0, 2)) {
           const exampleParams = method.parameters.map(p => {
             const examples = this.generateParameterExamples(p.name);
-            return examples[0] || p.name;
+            // Skip useless examples and "Possible Values" lines
+            if (examples[0] && !examples[0].startsWith('Possible Values:') && examples[0] !== `${p.name}-example`) {
+              return examples[0];
+            } else {
+              // Use parameter name placeholder when no good example exists
+              return `<${p.name}>`;
+            }
           }).join(' ');
           
           const exampleCommand = `${componentName} ${method.name} ${exampleParams}`;
