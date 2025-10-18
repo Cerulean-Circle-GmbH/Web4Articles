@@ -1798,6 +1798,15 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
+   * Tab completion for targetVersion parameter of 'setCICDVersion' command
+   * Returns available semantic links: dev, latest, prod, test
+   * @cliHide
+   */
+  async targetVersionParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    return ['dev', 'latest', 'prod', 'test'];
+  }
+
+  /**
    * Tab completion for references parameter of 'test' command (file scope)
    * Returns numbered list of test files when scope is 'file'
    * @cliHide

@@ -918,8 +918,26 @@ Standards:
     // Set component context directly (Web4 pattern: modify model, not init)
     tempComponent.model.component = component;
     tempComponent.model.version = version;
+    
     // Use setCICDVersion for proper CI/CD link setup (recovered from catastrophic failure)
-    await tempComponent.setCICDVersion();
+    // Parse version to determine build number
+    const versionParts = version.split('.');
+    const buildNumber = parseInt(versionParts[3] || '0', 10);
+    
+    // Load component into context for setCICDVersion
+    await tempComponent.on(component, version);
+    
+    // Always set latest
+    await tempComponent.setCICDVersion('latest', version);
+    
+    if (buildNumber === 0) {
+      // Build 0: Set as prod (stable release)
+      await tempComponent.setCICDVersion('prod', version);
+    } else {
+      // Build 1+: Set as dev and test (development/testing)
+      await tempComponent.setCICDVersion('dev', version);
+      await tempComponent.setCICDVersion('test', version);
+    }
     
     // Verify component is callable
     const cliScriptName = component.toLowerCase().replace(/\./g, '');
@@ -1251,120 +1269,53 @@ Standards:
    * Update latest symlink to point to specified version (requires context)
    * Updates the 'latest' symlink to point to specified version
    * 
-   * @deprecated Use setCICDVersion() for intelligent semantic link management
+   * @deprecated Use setCICDVersion('latest', version) instead
    * This method is kept for backward compatibility but hidden from CLI
    * 
    * @param targetVersion Version to set as latest (default: use current context version)
    * @cliHide
    */
   async setLatest(targetVersion: string = 'current'): Promise<this> {
-    const context = this.getComponentContext();
-    if (!context) {
-      throw new Error('No component context loaded. Use "on <component> <version>" first.');
-    }
-
-    const version = targetVersion === 'current' ? context.version : targetVersion;
-    const componentDir = this.resolveComponentDirectory(context.component);
-    const latestSymlink = path.join(componentDir, 'latest');
-    const targetDir = path.join(componentDir, version);
-
-    // Verify target version exists
-    if (!existsSync(targetDir)) {
-      throw new Error(`Target version ${version} does not exist at ${targetDir}`);
-    }
-
-    console.log(`🔗 Setting latest symlink for ${context.component}:`);
-    console.log(`   Target: ${version}`);
-    console.log(`   Symlink: ${latestSymlink}`);
-
-    try {
-      // Remove existing symlink if it exists (using lstat to detect broken symlinks too)
-      try {
-        await fs.lstat(latestSymlink);
-        await fs.unlink(latestSymlink);
-        console.log(`   Removed existing latest symlink`);
-      } catch (err) {
-        // Symlink doesn't exist, that's fine
-      }
-
-      // Create new symlink (relative path)
-      await fs.symlink(version, latestSymlink);
-      console.log(`✅ Latest symlink updated: latest → ${version}`);
-
-      // Update scripts symlinks
-      await this.updateScriptsSymlinks(context.component, version);
-
-    } catch (error) {
-      throw new Error(`Failed to update latest symlink: ${(error as Error).message}`);
-    }
-
-    return this;
+    return this.setCICDVersion('latest', targetVersion);
   }
 
   /**
    * Set development version link - version currently under development (requires context)
    * 
-   * @deprecated Use setCICDVersion() for intelligent semantic link management
+   * @deprecated Use setCICDVersion('dev', version) instead
    * This method is kept for backward compatibility but hidden from CLI
    * 
    * @param targetVersion Version to set as dev (default: use current context version)
    * @cliHide
    */
   async setDev(targetVersion: string = 'current'): Promise<this> {
-    const context = this.getComponentContext();
-    if (!context) {
-      throw new Error('No component context loaded. Use "on <component> <version>" first.');
-    }
-
-    const version = targetVersion === 'current' ? context.version : targetVersion;
-    await this.createSemanticLink(context.component, 'dev', version);
-    console.log(`🚧 Dev symlink updated: dev → ${version}`);
-    
-    return this;
+    return this.setCICDVersion('dev', targetVersion);
   }
 
   /**
    * Set test version link - version ready for 100% revision testing (requires context)
    * 
-   * @deprecated Use setCICDVersion() for intelligent semantic link management
+   * @deprecated Use setCICDVersion('test', version) instead
    * This method is kept for backward compatibility but hidden from CLI
    * 
    * @param targetVersion Version to set as test (default: use current context version)
    * @cliHide
    */
   async setTest(targetVersion: string = 'current'): Promise<this> {
-    const context = this.getComponentContext();
-    if (!context) {
-      throw new Error('No component context loaded. Use "on <component> <version>" first.');
-    }
-
-    const version = targetVersion === 'current' ? context.version : targetVersion;
-    await this.createSemanticLink(context.component, 'test', version);
-    console.log(`🧪 Test symlink updated: test → ${version}`);
-    
-    return this;
+    return this.setCICDVersion('test', targetVersion);
   }
 
   /**
    * Set production version link - version that achieved 100% testing success (requires context)
    * 
-   * @deprecated Use setCICDVersion() for intelligent semantic link management
+   * @deprecated Use setCICDVersion('prod', version) instead
    * This method is kept for backward compatibility but hidden from CLI
    * 
    * @param targetVersion Version to set as prod (default: use current context version)
    * @cliHide
    */
   async setProd(targetVersion: string = 'current'): Promise<this> {
-    const context = this.getComponentContext();
-    if (!context) {
-      throw new Error('No component context loaded. Use "on <component> <version>" first.');
-    }
-
-    const version = targetVersion === 'current' ? context.version : targetVersion;
-    await this.createSemanticLink(context.component, 'prod', version);
-    console.log(`🚀 Prod symlink updated: prod → ${version}`);
-    
-    return this;
+    return this.setCICDVersion('prod', targetVersion);
   }
 
   /**
@@ -4661,92 +4612,65 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
   }
 
   /**
-   * Set all CI/CD semantic links for a component version
-   * Recovered from catastrophic failure - unified method for semantic link setup
+   * Set CI/CD semantic links for a component version
+   * Unified method replacing individual setDev, setLatest, setProd, setTest methods
    * 
    * Sets links intelligently based on version build number:
    * - Build 0 (*.*.*.0): prod version (stable release)
    * - Build 1+ (*.*.*.1+): dev/test versions (development/testing)
    * 
-   * Always sets:
-   * - latest → current version (canonical reference)
-   * 
-   * For build 0 versions:
-   * - prod → current version (stable production)
-   * 
-   * For build 1+ versions:
-   * - dev → current version (active development)
-   * - test → current version (testing active)
-   * 
    * Called during component creation to establish complete semantic link infrastructure
    * 
+   * @param targetVersion Semantic link to set: 'dev', 'latest', 'prod', 'test'
+   * @param version Version to set for the link (default: current context version)
    * @returns this for method chaining
-   * @cliSyntax
+   * @cliSyntax targetVersion version
+   * @cliDefault version current
+   * @cliExample web4tscomponent setCICDVersion prod 1.0.0.0
+   * @cliExample web4tscomponent setCICDVersion dev 0.1.1.1
+   * @cliExample web4tscomponent on Component 0.1.0.0 setCICDVersion latest
    */
-  async setCICDVersion(): Promise<this> {
+  async setCICDVersion(
+    targetVersion: string,
+    version: string = 'current'
+  ): Promise<this> {
     const context = this.getComponentContext();
-    const componentName = context?.component || this.model.component;
-    const version = context?.version || this.model.version;
-    
-    if (!componentName || !version) {
-      throw new Error('Component name and version required for CI/CD link setup');
+    if (!context) {
+      throw new Error('No component context loaded. Use "on <component> <version>" first.');
     }
     
-    // Parse version to determine if this is build 0 (prod) or build 1+ (dev/test)
-    const versionParts = version.split('.');
-    const buildNumber = parseInt(versionParts[3] || '0', 10);
-    const isBuild0 = buildNumber === 0;
+    const actualVersion = version === 'current' ? context.version : version;
     
-    console.log(`🔗 Setting up CI/CD link infrastructure for ${componentName} ${version}`);
-    console.log(`   Build type: ${isBuild0 ? 'Build 0 (Production)' : `Build ${buildNumber} (Development/Test)`}`);
+    // Validate targetVersion
+    const validLinks = ['dev', 'latest', 'prod', 'test'];
+    if (!validLinks.includes(targetVersion)) {
+      throw new Error(`Invalid targetVersion: ${targetVersion}. Must be one of: ${validLinks.join(', ')}`);
+    }
     
-    // Get component directory for link operations
+    console.log(`🔗 Setting ${targetVersion} symlink for ${context.component}:`);
+    console.log(`   Target: ${actualVersion}`);
+    
     const fs = await import('fs/promises');
-    const componentDir = this.resolveComponentDirectory(componentName);
+    const componentDir = this.resolveComponentDirectory(context.component);
+    const linkPath = path.join(componentDir, targetVersion);
+    const targetDir = path.join(componentDir, actualVersion);
     
-    // Set latest symlink (always)
-    const latestLink = path.join(componentDir, 'latest');
+    // Verify target version exists
+    if (!existsSync(targetDir)) {
+      throw new Error(`Target version ${actualVersion} does not exist at ${targetDir}`);
+    }
+    
     try {
-      await fs.unlink(latestLink).catch(() => {});
-      await fs.symlink(version, latestLink);
-      console.log(`   ✅ latest → ${version}`);
+      // Remove existing symlink if exists
+      await fs.unlink(linkPath).catch(() => {});
+      
+      // Create new symlink
+      await fs.symlink(actualVersion, linkPath);
+      console.log(`   ✅ ${targetVersion} → ${actualVersion}`);
     } catch (error) {
-      console.log(`   ⚠️  Could not set latest link: ${error}`);
+      throw new Error(`Failed to set ${targetVersion} link: ${error}`);
     }
     
-    if (isBuild0) {
-      // Build 0: Set as prod (stable release)
-      const prodLink = path.join(componentDir, 'prod');
-      try {
-        await fs.unlink(prodLink).catch(() => {});
-        await fs.symlink(version, prodLink);
-        console.log(`   ✅ prod → ${version} (stable build 0)`);
-      } catch (error) {
-        console.log(`   ⚠️  Could not set prod link: ${error}`);
-      }
-    } else {
-      // Build 1+: Set as dev and test (development/testing)
-      const devLink = path.join(componentDir, 'dev');
-      const testLink = path.join(componentDir, 'test');
-      
-      try {
-        await fs.unlink(devLink).catch(() => {});
-        await fs.symlink(version, devLink);
-        console.log(`   ✅ dev → ${version} (build ${buildNumber} development)`);
-      } catch (error) {
-        console.log(`   ⚠️  Could not set dev link: ${error}`);
-      }
-      
-      try {
-        await fs.unlink(testLink).catch(() => {});
-        await fs.symlink(version, testLink);
-        console.log(`   ✅ test → ${version} (build ${buildNumber} testing)`);
-      } catch (error) {
-        console.log(`   ⚠️  Could not set test link: ${error}`);
-      }
-    }
-    
-    console.log(`✅ CI/CD links established for ${componentName} ${version}`);
     return this;
   }
 
