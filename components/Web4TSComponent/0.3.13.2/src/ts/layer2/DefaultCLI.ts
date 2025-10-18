@@ -1457,8 +1457,7 @@ export abstract class DefaultCLI implements CLI {
       
       // Apply prefix filtering if provided
       if (filterPrefix) {
-        const prefixFiltered = filtered.filter(name => name.startsWith(filterPrefix));
-        filtered = prefixFiltered.length > 0 ? prefixFiltered : filtered;
+        filtered = filtered.filter(name => name.startsWith(filterPrefix));
       }
       
       // ✅ EXACT MATCH: Execute the completion callback to discover parameter values
@@ -1581,8 +1580,7 @@ export abstract class DefaultCLI implements CLI {
       
       // Apply prefix filtering if provided
       if (filterPrefix) {
-        const prefixFiltered = filtered.filter(name => name.startsWith(filterPrefix));
-        filtered = prefixFiltered.length > 0 ? prefixFiltered : filtered;
+        filtered = filtered.filter(name => name.startsWith(filterPrefix));
       }
       
       // ✅ SINGLE MATCH: Auto-complete if only one method matches
