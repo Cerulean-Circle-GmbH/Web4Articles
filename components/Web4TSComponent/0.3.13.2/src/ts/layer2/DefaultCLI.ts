@@ -8,7 +8,9 @@ import { CLI } from '../layer3/CLI.interface.js';
 import { MethodInfo } from '../layer3/MethodInfo.interface.js';
 import { MethodSignature } from '../layer3/MethodSignature.interface.js';
 import { Component } from '../layer3/Component.interface.js';
+import { Colors } from '../layer3/Colors.interface.js';
 import { TSCompletion } from '../layer4/TSCompletion.js';
+import { DefaultColors } from '../layer4/DefaultColors.js';
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import { join } from 'path';
 import * as ts from 'typescript';
@@ -20,6 +22,7 @@ export abstract class DefaultCLI implements CLI {
   protected componentVersion: string = '';
   protected componentInstance: Component | null = null;
   protected methodSignatures: Map<string, MethodSignature> = new Map();
+  protected colors: Colors = DefaultColors.getInstance();
   
   constructor() {
     // Empty constructor - Web4 pattern
@@ -250,22 +253,6 @@ export abstract class DefaultCLI implements CLI {
     console.log(`${this.colors.dim}Commands automatically discovered from component methods${this.colors.reset}`);
     console.log(`${this.colors.dim}Add new methods to component and they become available immediately${this.colors.reset}`);
   }
-
-  /**
-   * TSCompletion color definitions
-   */
-  protected colors = {
-    reset: '\x1b[0m',
-    bold: '\x1b[1m',
-    dim: '\x1b[90m',
-    red: '\x1b[31m',
-    green: '\x1b[32m',
-    yellow: '\x1b[33m',
-    blue: '\x1b[34m',
-    magenta: '\x1b[35m',
-    cyan: '\x1b[36m',
-    white: '\x1b[37m'
-  };
 
   /**
    * Analyze component methods for dynamic documentation generation using class reference
@@ -532,6 +519,7 @@ export abstract class DefaultCLI implements CLI {
             description: param.description || this.generateParameterDescription(methodName, paramName, index),
             examples: this.generateParameterExamples(paramName),
             validation: [],
+            default: param.default, // ✅ FIX: Pass through default value for yellow coloring
             // ✅ NEW: Union type detection for CLI syntax generation
             isUnionType: this.isUnionType(paramType),
             unionTypes: this.extractUnionTypes(paramType)
@@ -764,27 +752,11 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Get TSCompletion color scheme
-   */
-  protected getTSCompletionColors(): any {
-    return {
-      toolName: '\x1b[1;36m',      // Cyan for unit
-      version: '\x1b[1;36m',       // Cyan for version
-      commands: '\x1b[0;37m',      // White for commands
-      parameters: '\x1b[1;33m',    // Yellow for parameters
-      descriptions: '\x1b[0;32m',  // Green for documentation
-      examples: '\x1b[0;37m',      // White for examples (commands)
-      sections: '\x1b[1;37m',      // White bold for section headers
-      reset: '\x1b[0m'             // Reset
-    };
-  }
-
-  /**
    * Assemble command section with color coding
    */
   protected assembleCommandSection(): string {
     const methods = this.analyzeComponentMethods();
-    const colors = this.getTSCompletionColors();
+    const colors = this.colors;
     
     let output = `${colors.sections}Commands:${colors.reset}\n`;
     
@@ -805,7 +777,7 @@ export abstract class DefaultCLI implements CLI {
    */
   protected assembleParameterSection(): string {
     const methods = this.analyzeComponentMethods();
-    const colors = this.getTSCompletionColors();
+    const colors = this.colors;
     const allParams = new Map<string, any>();
     
     // Collect all parameters
@@ -813,6 +785,12 @@ export abstract class DefaultCLI implements CLI {
       for (const param of method.parameters) {
         if (!allParams.has(param.name)) {
           allParams.set(param.name, param);
+        } else {
+          // ✅ FIX: If we already have this parameter, prefer the one WITH a default value
+          const existing = allParams.get(param.name);
+          if (param.default && !existing.default) {
+            allParams.set(param.name, param);
+          }
         }
       }
     }
@@ -866,7 +844,7 @@ export abstract class DefaultCLI implements CLI {
               coloredValues = valuesText.replace(/'([^']+)'/g, `'${colors.descriptions}$1${colors.reset}'`);
             }
             
-            output += `    Possible Values: ${coloredValues}\n`;
+            output += `    ${colors.descriptions}Possible Values:${colors.reset} ${coloredValues}\n`;
           } else if (example.startsWith('Discovery Command:')) {
             // Show discovery command with proper colors
             const commandText = example.replace('Discovery Command: ', '');
@@ -875,13 +853,13 @@ export abstract class DefaultCLI implements CLI {
               /^(web4tscomponent)\s+(completion)\s+(parameter\s+.+)$/,
               `${colors.toolName}$1${colors.reset} ${colors.commands}$2${colors.reset} ${colors.parameters}$3${colors.reset}`
             );
-            output += `    Possible Values: ${coloredCommand}\n`;
-          } else if (example !== `${param.name}-example`) {
-            // Only show examples if they're NOT the useless "${paramName}-example" format
-            output += `    ${colors.descriptions}Example: ${colors.parameters}${example}${colors.reset}\n`;
-          }
+            output += `    ${colors.descriptions}Possible Values:${colors.reset} ${coloredCommand}\n`;
+          } 
           // Else: Skip useless examples
         }
+      } else if (param.default) {
+        // ✅ FIX: No enum values, but has default → show default in yellow
+        output += `    ${colors.descriptions}Default: ${colors.parameters}${param.default}${colors.reset}\n`;
       }
       
       // ✅ NEW: Line 4: Used By (which commands use this parameter)
@@ -991,7 +969,7 @@ export abstract class DefaultCLI implements CLI {
    */
   protected assembleExampleSection(): string {
     const methods = this.analyzeComponentMethods();
-    const colors = this.getTSCompletionColors();
+    const colors = this.colors;
     const componentName = this.getComponentName().toLowerCase();
     
     let output = `${colors.sections}Examples:${colors.reset}\n`;
@@ -1227,7 +1205,7 @@ export abstract class DefaultCLI implements CLI {
    * Generate structured usage output with unified Commands section
    */
   public generateStructuredUsage(): string {
-    const colors = this.getTSCompletionColors();
+    const colors = this.colors;
     const componentName = this.getComponentName();
     const version = this.getComponentVersion();
     
@@ -1261,7 +1239,7 @@ export abstract class DefaultCLI implements CLI {
    */
   protected assembleUnifiedCommandsSection(): string {
     const methods = this.analyzeComponentMethods();
-    const colors = this.getTSCompletionColors();
+    const colors = this.colors;
     const componentName = this.getComponentName();
     
     let output = `${colors.sections}Commands:${colors.reset}\n`;
@@ -1464,11 +1442,11 @@ export abstract class DefaultCLI implements CLI {
       return [];
     }
     
-    // ANSI color codes (matching help output color scheme)
-    const BRIGHT_CYAN = '\x1b[1;36m';     // Numbers
-    const BRIGHT_YELLOW = '\x1b[1;33m';   // Parameters (matching colors.parameters)
-    const BRIGHT_WHITE_BOLD = '\x1b[1;37m'; // CLI methods (user-facing commands)
-    const RESET = '\x1b[0m';
+    // ANSI color codes (use centralized Colors instance)
+    const BRIGHT_CYAN = this.colors.toolName;     // Numbers
+    const BRIGHT_YELLOW = this.colors.parameters;   // Parameters
+    const BRIGHT_WHITE_BOLD = this.colors.sections; // CLI methods (user-facing commands)
+    const RESET = this.colors.reset;
     
     if (what === 'parameter') {
       // Return parameter names in Web4 notation with defaults (matching method signatures)
@@ -1502,8 +1480,8 @@ export abstract class DefaultCLI implements CLI {
               // ✅ POST-PROCESSING: Format values for better UX
               // 1. Color values bright cyan (matching shell completion style)
               // 2. Add double newline for clean separation from prompt
-              const BRIGHT_CYAN = '\x1b[1;36m';
-              const RESET = '\x1b[0m';
+              const BRIGHT_CYAN = this.colors.toolName;
+              const RESET = this.colors.reset;
               
               if (resultArray.length > 0) {
                 // Color each result bright cyan
@@ -1619,11 +1597,11 @@ export abstract class DefaultCLI implements CLI {
         
         if (fullMethodDoc) {
           // Format documentation with full signature and green TSDoc
-          const BRIGHT_CYAN = '\x1b[1;36m';
-          const BRIGHT_WHITE_BOLD = '\x1b[1;37m';
-          const BRIGHT_YELLOW = '\x1b[1;33m';
-          const GREEN = '\x1b[32m';
-          const RESET = '\x1b[0m';
+          const BRIGHT_CYAN = this.colors.toolName;
+          const BRIGHT_WHITE_BOLD = this.colors.sections;
+          const BRIGHT_YELLOW = this.colors.parameters;
+          const GREEN = this.colors.descriptions;
+          const RESET = this.colors.reset;
           
           // Extract parameters for full signature
           const parameters = this.extractParameterInfoFromTSCompletion(methodName);
@@ -1660,7 +1638,7 @@ export abstract class DefaultCLI implements CLI {
         const methodColor = isCLIMethod ? BRIGHT_WHITE_BOLD : '';  // CLI methods: bright white bold, internal: plain
         
         // ✅ SEARCH HIGHLIGHTING: Highlight filter prefix in red
-        const RED = '\x1b[1;31m';
+        const RED = this.colors.red;
         let displayName = methodName;
         if (filterPrefix && methodName.toLowerCase().startsWith(filterPrefix.toLowerCase())) {
           // Split: prefix (red) + rest (normal method color)

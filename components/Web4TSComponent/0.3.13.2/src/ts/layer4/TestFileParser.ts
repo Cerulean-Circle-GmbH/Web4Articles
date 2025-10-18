@@ -4,6 +4,7 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import * as path from 'node:path';
 import * as ts from 'typescript';
+import { DefaultColors } from './DefaultColors.js';
 
 export interface TestFile {
   name: string;
@@ -274,10 +275,10 @@ export class TestFileParser {
     const display: string[] = [];
     const tokens: string[] = [];
 
-    // ANSI color codes (OOSH format for bash completion compatibility)
-    const ESC = '\x1b[';
-    const cyan = `${ESC}36m`;
-    const reset = `${ESC}0m`;
+    // ANSI color codes (use centralized Colors)
+    const colors = DefaultColors.getInstance();
+    const cyan = colors.toolName;  // Use toolName for cyan bold
+    const reset = colors.reset;
 
     const lines: string[] = [];
     files.forEach((file, fileIndex) => {
@@ -356,12 +357,12 @@ export class TestFileParser {
     const display: string[] = [];
     const tokens: string[] = [];
 
-    // ANSI color codes (OOSH format for bash completion compatibility)
-    const ESC = '\x1b[';
-    const cyan = `${ESC}36m`;
-    const green = `${ESC}32m`;
-    const yellow = `${ESC}33m`;
-    const reset = `${ESC}0m`;
+    // ANSI color codes (use centralized Colors)
+    const colors = DefaultColors.getInstance();
+    const cyan = colors.toolName;
+    const green = colors.descriptions;
+    const yellow = colors.parameters;
+    const reset = colors.reset;
 
     files.forEach((file, fileIndex) => {
       const fileNum = fileIndex + 1;
@@ -401,11 +402,11 @@ export class TestFileParser {
     const display: string[] = [];
     const tokens: string[] = [];
 
-    // ANSI color codes (OOSH format for bash completion compatibility)
-    const ESC = '\x1b[';
-    const cyan = `${ESC}36m`;
-    const green = `${ESC}32m`;
-    const reset = `${ESC}0m`;
+    // ANSI color codes (use centralized Colors)
+    const colors = DefaultColors.getInstance();
+    const cyan = colors.toolName;
+    const green = colors.descriptions;
+    const reset = colors.reset;
 
     files.forEach((file, fileIndex) => {
       const fileNum = fileIndex + 1;

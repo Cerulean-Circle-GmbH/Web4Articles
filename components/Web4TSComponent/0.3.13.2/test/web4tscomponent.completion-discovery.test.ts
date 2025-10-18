@@ -130,8 +130,8 @@ describe('🔍 Completion Discovery Feature Tests', () => {
   });
 
   describe('3. Parameter Discovery - Value Discovery', () => {
-    it('3a. should discover values for successPromotion parameter', () => {
-      const command = `${cliPath} completion parameter successPromotion`;
+    it('3a. should discover values for versionPromotion parameter', () => {
+      const command = `${cliPath} completion parameter versionPromotion`;
       const output = execSync(command, { encoding: 'utf8', cwd: projectRoot, env: { ...process.env } });
       
       // Should contain all promotion levels

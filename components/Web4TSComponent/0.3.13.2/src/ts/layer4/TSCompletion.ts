@@ -515,19 +515,27 @@ export class TSCompletion implements Completion {
                 
                 // Extract JSDoc description and annotations for parameter
                 const description = TSCompletion.extractParamJsDoc(m, paramName);
-                const jsDoc = ts.getJSDocTags(m).map(tag => tag.comment).join(' ');
-                const cliAnnotations = TSCompletion.parseCliAnnotations(jsDoc);
+                // ✅ FIX: Use full JSDoc text extraction to get @cliDefault annotations
+                const jsDoc = TSCompletion.extractEnhancedJsDocText(m);
+                const cliAnnotations = TSCompletion.parseCliAnnotations(jsDoc, paramName);
                 
                 // Detect if parameter has default value (e.g., action: string = '')
                 const hasInitializer = param.initializer !== undefined;
                 const hasDefault = cliAnnotations.default !== null || hasInitializer;
+                
+                // Extract default value and strip quotes if present
+                let defaultValue = hasInitializer ? param.initializer.getText() : cliAnnotations.default;
+                if (defaultValue && typeof defaultValue === 'string') {
+                  // Strip surrounding quotes: 'value' or "value" → value
+                  defaultValue = defaultValue.replace(/^['"]|['"]$/g, '');
+                }
                 
                 parameterInfo.push({
                   name: paramName,
                   type: paramType,
                   required: !param.questionToken && !hasDefault, // Optional if has ? OR default value
                   description: description || `${paramName} parameter`,
-                  default: hasInitializer ? param.initializer.getText() : cliAnnotations.default,
+                  default: defaultValue,
                   // ✅ NEW: Union type detection
                   isUnionType: TSCompletion.isUnionType(paramType),
                   unionTypes: TSCompletion.extractUnionTypes(paramType)
@@ -662,7 +670,18 @@ export class TSCompletion implements Completion {
                   // Skip first token (parameter name), return only enum values
                   result = parts.slice(1);
                   return; // Found it, stop searching
-                } else if (parts[0] !== paramName) {
+                } else {
+                  // ✅ FIX: Check if first part is a DIFFERENT parameter name
+                  // If so, this @cliValues is for that OTHER parameter, not ours
+                  const firstPartIsOtherParam = member.parameters.some(p => 
+                    p.name && ts.isIdentifier(p.name) && p.name.text === parts[0]
+                  );
+                  
+                  if (firstPartIsOtherParam) {
+                    // This @cliValues is for a different parameter, skip it
+                    continue;
+                  }
+                  
                   // Check if this method actually has our parameter
                   const hasParam = member.parameters.some(p => 
                     p.name && ts.isIdentifier(p.name) && p.name.text === paramName
@@ -670,8 +689,8 @@ export class TSCompletion implements Completion {
                   
                   if (hasParam) {
                     // Format: @cliValues value1 value2... (no param name prefix)
-                    // ✅ FIX: Skip first token (parameter name) just like explicit match case
-                    result = parts.slice(1);
+                    // All parts are values, use them directly
+                    result = parts;
                     return; // Found it, stop searching
                   }
                 }

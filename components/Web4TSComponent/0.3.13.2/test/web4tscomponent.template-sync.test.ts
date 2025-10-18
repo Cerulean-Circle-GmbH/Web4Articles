@@ -9,7 +9,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync, existsSync, readdirSync, statSync } from 'fs';
 import * as path from 'path';
 
 describe('🔄 Template Synchronization', () => {
@@ -116,6 +116,78 @@ describe('🔄 Template Synchronization', () => {
       console.log('');
       
       expect(true).toBe(true);
+    });
+  });
+
+  describe('Template Completeness - New File Detection', () => {
+    it('should verify runtime-copied files are in copyEssentialInterfaces()', () => {
+      // This test verifies that infrastructure files added to src/ are included in copyEssentialInterfaces()
+      // so that new components get them automatically during creation
+      
+      const componentRoot = path.join(__dirname, '..');
+      const defaultWeb4TSComponentPath = path.join(componentRoot, 'src/ts/layer2/DefaultWeb4TSComponent.ts');
+      const sourceContent = readFileSync(defaultWeb4TSComponentPath, 'utf8');
+      
+      // Extract the copyEssentialInterfaces method
+      const copyEssentialInterfacesMatch = sourceContent.match(/private async copyEssentialInterfaces\([^)]*\): Promise<void> \{[\s\S]*?^\s\s\}/m);
+      
+      if (!copyEssentialInterfacesMatch) {
+        throw new Error('Could not find copyEssentialInterfaces method in DefaultWeb4TSComponent.ts');
+      }
+      
+      const methodContent = copyEssentialInterfacesMatch[0];
+      
+      // Critical infrastructure files that MUST be runtime-copied
+      const requiredLayer3Files = [
+        'Model.interface.ts',
+        'Scenario.interface.ts',
+        'CLI.interface.ts',
+        'MethodInfo.interface.ts',
+        'MethodSignature.interface.ts',
+        'Component.interface.ts',
+        'Completion.ts',
+        'Colors.interface.ts'  // Added for DRY refactoring
+      ];
+      
+      const requiredLayer4Files = [
+        'DefaultColors.ts'  // Added for DRY refactoring
+      ];
+      
+      const missingLayer3Files: string[] = [];
+      const missingLayer4Files: string[] = [];
+      
+      // Check layer3 files
+      for (const file of requiredLayer3Files) {
+        if (!methodContent.includes(`'${file}'`)) {
+          missingLayer3Files.push(file);
+        }
+      }
+      
+      // Check layer4 files
+      for (const file of requiredLayer4Files) {
+        if (!methodContent.includes(`'${file}'`)) {
+          missingLayer4Files.push(file);
+        }
+      }
+      
+      if (missingLayer3Files.length > 0 || missingLayer4Files.length > 0) {
+        console.error('\n❌ Missing files in copyEssentialInterfaces():');
+        if (missingLayer3Files.length > 0) {
+          console.error('\n  Layer3 files missing:');
+          missingLayer3Files.forEach(f => console.error(`   - ${f}`));
+        }
+        if (missingLayer4Files.length > 0) {
+          console.error('\n  Layer4 files missing:');
+          missingLayer4Files.forEach(f => console.error(`   - ${f}`));
+        }
+        console.error('\n💡 Action: Add these files to copyEssentialInterfaces() method');
+        console.error('   Location: DefaultWeb4TSComponent.ts copyEssentialInterfaces()\n');
+      }
+      
+      expect(missingLayer3Files).toEqual([]);
+      expect(missingLayer4Files).toEqual([]);
+      
+      console.log('✅ All required infrastructure files are in copyEssentialInterfaces()');
     });
   });
 });

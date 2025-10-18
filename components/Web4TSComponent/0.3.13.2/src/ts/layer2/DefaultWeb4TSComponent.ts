@@ -7,6 +7,8 @@ import { Web4TSComponent } from '../layer3/Web4TSComponent.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { Web4TSComponentModel } from '../layer3/Web4TSComponentModel.interface.js';
 import { ComponentDependency } from '../layer3/ComponentDependency.interface.js';
+import { Colors } from '../layer3/Colors.interface.js';
+import { DefaultColors } from '../layer4/DefaultColors.js';
 import * as fs from 'fs/promises';
 import { existsSync, readdirSync, statSync, lstatSync, readlinkSync } from 'fs';
 import * as path from 'path';
@@ -15,23 +17,7 @@ import { randomUUID } from 'crypto';
 
 export class DefaultWeb4TSComponent implements Web4TSComponent {
   private model: Web4TSComponentModel;
-
-  /**
-   * ANSI color codes for tree output (from DefaultCLI pattern)
-   */
-  private colors = {
-    reset: '\x1b[0m',
-    bold: '\x1b[1m',
-    dim: '\x1b[90m',
-    red: '\x1b[31m',
-    green: '\x1b[32m',
-    yellow: '\x1b[33m',
-    blue: '\x1b[34m',
-    magenta: '\x1b[35m',
-    cyan: '\x1b[36m',
-    white: '\x1b[37m',
-    orange: '\x1b[38;5;208m'
-  };
+  private colors: Colors = DefaultColors.getInstance();
 
   constructor() {
     // Initialize with version from directory (single source of truth)
@@ -885,6 +871,7 @@ Standards:
    * @cliSyntax component version options
    * @cliDefault version 0.1.0.0
    * @cliDefault options all
+   * @cliValues options all cli spec vitest layers
    */
   async create(component: string, version: string = '0.1.0.0', options: string = 'all'): Promise<void> {
     // Parse options (maps from 1.0.0.0 --cli --spec --vitest --layers)
@@ -1114,7 +1101,7 @@ Standards:
    * await component.on('Web4TSComponent', '0.3.2.0');
    * 
    * @cliSyntax component version
-   * @cliDefault version latest
+   * @cliDefault version current
    */
   async on(component: string, version: string = 'latest'): Promise<this> {
     const componentPath = this.resolveComponentPath(component, version);
@@ -1183,9 +1170,10 @@ Standards:
    * await component.upgrade('1.0.0.0');
    * 
    * @cliSyntax versionPromotion
+   * @cliDefault versionPromotion nextPatch
    * @cliValues versionPromotion nextPatch nextMinor nextMajor nextBuild
    */
-  async upgrade(versionPromotion: string): Promise<this> {
+  async upgrade(versionPromotion: string = 'nextPatch'): Promise<this> {
     const context = this.getComponentContext();
     if (!context) {
       throw new Error('No component context loaded. Use "on <component> <version>" first.');
@@ -1607,7 +1595,7 @@ Standards:
    * @param references - For selective testing: numeric references to select tests
    * @cliSyntax scope ...references
    * @cliDefault scope all
-   * @cliValues scope all file describe itCase
+   * @cliValues file describe itCase
    * @cliExample web4tscomponent test
    * @cliExample web4tscomponent test all
    * @cliExample web4tscomponent test file 2
@@ -4640,7 +4628,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @returns this for method chaining
    * @cliSyntax targetVersion version
    * @cliDefault version current
-   * @cliValues targetVersion dev latest prod test
+   * @cliValues dev latest prod test
    * @cliExample web4tscomponent setCICDVersion prod 1.0.0.0
    * @cliExample web4tscomponent setCICDVersion dev 0.1.1.1
    * @cliExample web4tscomponent on Component 0.1.0.0 setCICDVersion latest
@@ -5442,13 +5430,32 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
       'MethodInfo.interface.ts',
       'MethodSignature.interface.ts',  // ✅ Added for Phase 3 DefaultCLI refactoring
       'Component.interface.ts',        // ✅ Added for Phase 1 architecture migration
-      'Completion.ts'
+      'Completion.ts',
+      'Colors.interface.ts'            // ✅ Added for DRY refactoring - centralized colors
     ];
 
     for (const file of interfaceFiles) {
       const currentDir = path.dirname(new URL(import.meta.url).pathname);
       const sourcePath = path.join(currentDir, '../../../src/ts/layer3', file);
       const targetPath = path.join(componentDir, 'src/ts/layer3', file);
+      
+      try {
+        const content = await fs.readFile(sourcePath, 'utf-8');
+        await fs.writeFile(targetPath, content);
+      } catch (error) {
+        console.log(`   ⚠️ Could not copy ${file}: ${(error as Error).message}`);
+      }
+    }
+    
+    // Copy layer4 files (DefaultColors for DRY refactoring)
+    const layer4Files = [
+      'DefaultColors.ts'              // ✅ Added for DRY refactoring - centralized color implementation
+    ];
+    
+    for (const file of layer4Files) {
+      const currentDir = path.dirname(new URL(import.meta.url).pathname);
+      const sourcePath = path.join(currentDir, '../../../src/ts/layer4', file);
+      const targetPath = path.join(componentDir, 'src/ts/layer4', file);
       
       try {
         const content = await fs.readFile(sourcePath, 'utf-8');
