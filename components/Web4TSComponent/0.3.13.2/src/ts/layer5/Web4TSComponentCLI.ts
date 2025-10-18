@@ -83,7 +83,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
    */
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];

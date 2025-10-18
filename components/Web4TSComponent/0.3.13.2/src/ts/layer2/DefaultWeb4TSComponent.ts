@@ -1410,7 +1410,7 @@ Standards:
 
   /**
    * Fix missing or broken semantic links (dev, test, prod, latest)
-   * Repairs or creates semantic symlinks to valid version targets
+   * Repairs or creates semantic symlinks using setCICDVersion() for DRY compliance
    * @param componentName Component name to fix semantic links for
    * @cliHide
    */
@@ -1424,17 +1424,18 @@ Standards:
     }
     
     const semanticLinks = await this.getSemanticLinks(componentName);
-    const fs = await import('fs/promises');
     
     // Determine what links should be
-    // getAvailableVersions() sorts LOW to HIGH, so we need the LAST element for highest!
     const highestVersion = this.getHighestVersion(availableVersions);
+    
+    // Load component into context for setCICDVersion
+    await this.on(componentName, highestVersion);
     
     // Fix 'latest' - should always point to highest version
     if (!semanticLinks.latest || semanticLinks.latest !== highestVersion) {
       console.log(`   🔧 Fixing 'latest' link: ${semanticLinks.latest || 'missing'} → ${highestVersion}`);
       try {
-        await this.createSemanticLink(componentName, 'latest', highestVersion);
+        await this.setCICDVersion('latest', highestVersion);
       } catch (error) {
         console.log(`   ❌ Could not fix 'latest': ${(error as Error).message}`);
       }
@@ -1444,33 +1445,32 @@ Standards:
     if (!semanticLinks.prod) {
       console.log(`   🔧 Creating missing 'prod' link → ${highestVersion}`);
       try {
-        await this.createSemanticLink(componentName, 'prod', highestVersion);
+        await this.setCICDVersion('prod', highestVersion);
       } catch (error) {
         console.log(`   ❌ Could not create 'prod': ${(error as Error).message}`);
       }
     } else if (!availableVersions.includes(semanticLinks.prod)) {
       console.log(`   🔧 Fixing broken 'prod' link: ${semanticLinks.prod} (missing) → ${highestVersion}`);
       try {
-        await this.createSemanticLink(componentName, 'prod', highestVersion);
+        await this.setCICDVersion('prod', highestVersion);
       } catch (error) {
         console.log(`   ❌ Could not fix 'prod': ${(error as Error).message}`);
       }
     }
     
     // Fix 'dev' - should point to highest version (active development)
-    const prodVersion = semanticLinks.prod || highestVersion;
     if (!semanticLinks.dev || semanticLinks.dev !== highestVersion) {
       const action = !semanticLinks.dev ? 'Creating missing' : 'Updating';
       console.log(`   🔧 ${action} 'dev' link → ${highestVersion}`);
       try {
-        await this.createSemanticLink(componentName, 'dev', highestVersion);
+        await this.setCICDVersion('dev', highestVersion);
       } catch (error) {
         console.log(`   ❌ Could not ${action.toLowerCase()} 'dev': ${(error as Error).message}`);
       }
     } else if (!availableVersions.includes(semanticLinks.dev)) {
       console.log(`   🔧 Fixing broken 'dev' link: ${semanticLinks.dev} (missing) → ${highestVersion}`);
       try {
-        await this.createSemanticLink(componentName, 'dev', highestVersion);
+        await this.setCICDVersion('dev', highestVersion);
       } catch (error) {
         console.log(`   ❌ Could not fix 'dev': ${(error as Error).message}`);
       }
@@ -1481,14 +1481,14 @@ Standards:
       const action = !semanticLinks.test ? 'Creating missing' : 'Updating';
       console.log(`   🔧 ${action} 'test' link → ${highestVersion}`);
       try {
-        await this.createSemanticLink(componentName, 'test', highestVersion);
+        await this.setCICDVersion('test', highestVersion);
       } catch (error) {
         console.log(`   ❌ Could not ${action.toLowerCase()} 'test': ${(error as Error).message}`);
       }
     } else if (!availableVersions.includes(semanticLinks.test)) {
       console.log(`   🔧 Fixing broken 'test' link: ${semanticLinks.test} (missing) → ${highestVersion}`);
       try {
-        await this.createSemanticLink(componentName, 'test', highestVersion);
+        await this.setCICDVersion('test', highestVersion);
       } catch (error) {
         console.log(`   ❌ Could not fix 'test': ${(error as Error).message}`);
       }
@@ -4596,7 +4596,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Verify and fix symlinks for component
-   * @cliSyntax 
+   * @deprecated Use 'links fix' instead - this method is kept for backward compatibility
+   * @cliHide
    */
   async verifyAndFix(): Promise<this> {
     const context = this.getComponentContext();
