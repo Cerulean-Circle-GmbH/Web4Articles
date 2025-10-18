@@ -1860,11 +1860,12 @@ export abstract class DefaultCLI implements CLI {
 
   /**
    * Tab completion for scope parameter of 'test' command
-   * Returns available test scopes: all (full suite), file, describe, itCase
+   * Returns available test scopes: file, describe, itCase
+   * Note: 'all' is the default (runs full suite), not needed in tab completion
    * @cliHide
    */
   async scopeParameterCompletion(currentArgs: string[]): Promise<string[]> {
-    return ['all', 'file', 'describe', 'itCase'];
+    return ['file', 'describe', 'itCase'];
   }
 
   /**
