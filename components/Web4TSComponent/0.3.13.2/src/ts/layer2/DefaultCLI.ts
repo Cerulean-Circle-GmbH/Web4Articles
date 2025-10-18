@@ -1870,6 +1870,15 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
+   * Completion for targetDir parameter
+   * Returns: § (discovered project root) and test/data (test isolation)
+   * @cliHide
+   */
+  async targetDirParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    return this.enumParameterCompletion('targetDir');
+  }
+
+  /**
    * Tab completion for targetVersion parameter of 'setCICDVersion' command
    * Returns available semantic links: dev, latest, prod, test
    * @cliHide

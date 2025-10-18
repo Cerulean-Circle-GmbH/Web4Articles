@@ -704,7 +704,7 @@ Standards:
    * Creates root-level tsconfig.json and package.json for global node_modules
    * and TypeScript extends pattern (DRY principle). Safe to run multiple times.
    * 
-   * @param targetDir Target directory (default: current working directory or test/data in test mode)
+   * @param targetDir Absolute path to project root (§ = discovered root, test/data = test isolation)
    * 
    * @example
    * // Initialize current project
@@ -716,6 +716,7 @@ Standards:
    * 
    * @cliSyntax targetDir
    * @cliDefault targetDir §
+   * @cliValues targetDir § test/data
    */
   async initProject(targetDir: string = '§'): Promise<this> {
     // Resolve target directory
