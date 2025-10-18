@@ -701,6 +701,8 @@ export abstract class DefaultCLI implements CLI {
     const enumValues = this.enumParameterCompletion(paramName);
     
     if (enumValues && enumValues.length > 0) {
+      // Format: Show all values with proper formatting
+      // Values will be colored in assembleParameterSection (default=yellow, others=green)
       const valuesStr = enumValues.map(v => `'${v}'`).join(', ');
       return [`Possible Values: ${valuesStr}`];
     }
@@ -708,8 +710,8 @@ export abstract class DefaultCLI implements CLI {
     // ✅ FALLBACK: If no @cliValues, try calling actual completion method
     const completionMethodName = `${paramName}ParameterCompletion`;
     if (typeof (this as any)[completionMethodName] === 'function') {
-      // Show command to discover values dynamically
-      return [`Possible Values: web4tscomponent completion parameter ${paramName}`];
+      // Show command to discover values dynamically (will be colored in assembleParameterSection)
+      return [`Discovery Command: web4tscomponent completion parameter ${paramName}`];
     }
     
     // ✅ WEB4 CONVENTION: Derive examples from parameter name patterns
@@ -841,10 +843,39 @@ export abstract class DefaultCLI implements CLI {
           
           // Check if this is a "Possible Values" line (from completion callback)
           if (example.startsWith('Possible Values:')) {
-            // Show possible values with colored formatting (like syntax)
+            // Show possible values with colored formatting
+            // Default value in yellow, others in green
             const valuesText = example.replace('Possible Values: ', '');
-            const coloredValues = valuesText.replace(/'([^']+)'/g, `'${colors.parameters}$1${colors.reset}'`);
+            
+            // Extract default value from param
+            const defaultValue = param.default;
+            
+            // Color each value: default=yellow, others=green
+            let coloredValues = valuesText;
+            if (defaultValue) {
+              // Regex to find and color values
+              coloredValues = valuesText.replace(/'([^']+)'/g, (match, value) => {
+                if (value === defaultValue) {
+                  return `'${colors.parameters}${value}${colors.reset}'`; // Yellow for default
+                } else {
+                  return `'${colors.commands}${value}${colors.reset}'`; // Green for others
+                }
+              });
+            } else {
+              // No default - all values in green
+              coloredValues = valuesText.replace(/'([^']+)'/g, `'${colors.commands}$1${colors.reset}'`);
+            }
+            
             output += `    ${colors.descriptions}Possible Values: ${coloredValues}\n`;
+          } else if (example.startsWith('Discovery Command:')) {
+            // Show discovery command with proper colors
+            const commandText = example.replace('Discovery Command: ', '');
+            // Color: web4tscomponent (tool) + completion parameter X (command)
+            const coloredCommand = commandText.replace(
+              /^(web4tscomponent)\s+(.+)$/,
+              `${colors.toolName}$1${colors.reset} ${colors.commands}$2${colors.reset}`
+            );
+            output += `    ${colors.descriptions}Possible Values: ${coloredCommand}\n`;
           } else if (example !== `${param.name}-example`) {
             // Only show examples if they're NOT the useless "${paramName}-example" format
             output += `    ${colors.descriptions}Example: ${colors.parameters}${example}${colors.reset}\n`;
@@ -1047,17 +1078,10 @@ export abstract class DefaultCLI implements CLI {
       // Check for default value in TypeScript or TSDoc
       const defaultValue = this.extractDefaultValue(param, methodName);
       
-      // ✅ NEW: Check if parameter has known union values
-      const unionValues = this.getParameterUnionValues(param.name);
+      // ✅ NOTE: Syntax shows ONLY the default value, not all union values
+      // "Possible Values" documentation will show all values with default highlighted
       
-      if (unionValues && unionValues.length > 1 && unionValues.length < 10) {
-        // Show union values in syntax: <?param:'default|value2|value3'>
-        const defaultFirst = unionValues.filter(v => v === defaultValue);
-        const others = unionValues.filter(v => v !== defaultValue);
-        const orderedValues = [...defaultFirst, ...others]; // Default first
-        const unionStr = orderedValues.join('|');
-        finalSyntax = `<?${baseSyntax}:'${unionStr}'>`;
-      } else if (defaultValue) {
+      if (defaultValue) {
         finalSyntax = `<?${baseSyntax}:'${defaultValue}'>`;  // ✅ Web4 notation: <?parameter:'defaultValue'>
       } else {
         finalSyntax = `<?${baseSyntax}>`;     // ✅ Web4 notation: <?parameter> (no default available)
