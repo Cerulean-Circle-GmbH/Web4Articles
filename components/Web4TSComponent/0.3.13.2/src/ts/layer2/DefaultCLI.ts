@@ -1807,6 +1807,15 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
+   * Tab completion for versionType parameter of 'upgrade' command
+   * Provides semantic version increment options
+   * @cliHide
+   */
+  async versionTypeParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    return ['nextBuild', 'nextMinor', 'nextMajor', 'nextPatch'];
+  }
+
+  /**
    * Tab completion for references parameter of 'test' command (file scope)
    * Returns numbered list of test files when scope is 'file'
    * @cliHide
