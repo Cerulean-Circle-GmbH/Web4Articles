@@ -82,5 +82,14 @@ export interface Component<TModel extends Model = Model> {
    * @returns this for method chaining
    */
   tree?(depth?: string, showHidden?: string): Promise<this>;
+  
+  /**
+   * Show semantic version links (dev, test, prod, latest)
+   * Delegates to Web4TSComponent
+   * 
+   * @param action Optional action (e.g., 'repair' to fix broken links)
+   * @returns this for method chaining
+   */
+  links?(action?: string): Promise<this>;
 }
 

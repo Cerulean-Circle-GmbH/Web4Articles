@@ -375,6 +375,18 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   }
 
   /**
+   * Show semantic version links (dev, test, prod, latest)
+   * Delegates to Web4TSComponent for DRY architecture
+   * @param action Optional action (e.g., 'repair' to fix broken links)
+   * @cliHide
+   */
+  async links(action: string = ''): Promise<this> {
+    const web4ts = await this.getWeb4TSComponent();
+    await web4ts.links(action);
+    return this;
+  }
+
+  /**
    * Test and discover tab completions for debugging and development
    * @param what Type of completion to test: "method" or "parameter"
    * @param filter Optional prefix to filter results (e.g., "v" shows only validate*, verify*, etc.)
