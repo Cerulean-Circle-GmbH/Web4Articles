@@ -1250,9 +1250,12 @@ Standards:
   /**
    * Update latest symlink to point to specified version (requires context)
    * Updates the 'latest' symlink to point to specified version
+   * 
+   * @deprecated Use setCICDVersion() for intelligent semantic link management
+   * This method is kept for backward compatibility but hidden from CLI
+   * 
    * @param targetVersion Version to set as latest (default: use current context version)
-   * @cliSyntax targetVersion
-   * @cliDefault targetVersion current
+   * @cliHide
    */
   async setLatest(targetVersion: string = 'current'): Promise<this> {
     const context = this.getComponentContext();
@@ -1300,11 +1303,12 @@ Standards:
 
   /**
    * Set development version link - version currently under development (requires context)
+   * 
+   * @deprecated Use setCICDVersion() for intelligent semantic link management
+   * This method is kept for backward compatibility but hidden from CLI
+   * 
    * @param targetVersion Version to set as dev (default: use current context version)
-   * @cliSyntax targetVersion
-   * @cliDefault targetVersion current
-   * @cliExample web4tscomponent on Unit 0.3.0.5 setDev
-   * @cliExample web4tscomponent on Unit 0.3.0.5 setDev 0.4.0.0
+   * @cliHide
    */
   async setDev(targetVersion: string = 'current'): Promise<this> {
     const context = this.getComponentContext();
@@ -1321,11 +1325,12 @@ Standards:
 
   /**
    * Set test version link - version ready for 100% revision testing (requires context)
+   * 
+   * @deprecated Use setCICDVersion() for intelligent semantic link management
+   * This method is kept for backward compatibility but hidden from CLI
+   * 
    * @param targetVersion Version to set as test (default: use current context version)
-   * @cliSyntax targetVersion
-   * @cliDefault targetVersion current
-   * @cliExample web4tscomponent on Unit 0.3.0.5 setTest
-   * @cliExample web4tscomponent on Unit 0.3.0.5 setTest 0.3.2.0
+   * @cliHide
    */
   async setTest(targetVersion: string = 'current'): Promise<this> {
     const context = this.getComponentContext();
@@ -1342,11 +1347,12 @@ Standards:
 
   /**
    * Set production version link - version that achieved 100% testing success (requires context)
+   * 
+   * @deprecated Use setCICDVersion() for intelligent semantic link management
+   * This method is kept for backward compatibility but hidden from CLI
+   * 
    * @param targetVersion Version to set as prod (default: use current context version)
-   * @cliSyntax targetVersion
-   * @cliDefault targetVersion current
-   * @cliExample web4tscomponent on Unit 0.3.0.5 setProd
-   * @cliExample web4tscomponent on Unit 0.3.0.5 setProd 0.3.1.0
+   * @cliHide
    */
   async setProd(targetVersion: string = 'current'): Promise<this> {
     const context = this.getComponentContext();
@@ -4703,9 +4709,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     console.log(`🔗 Setting up CI/CD link infrastructure for ${componentName} ${version}`);
     console.log(`   Build type: ${isBuild0 ? 'Build 0 (Production)' : `Build ${buildNumber} (Development/Test)`}`);
     
-    // Always set latest - canonical reference
-    await this.on(componentName, version);
-    
+    // Get component directory for link operations
     const fs = await import('fs/promises');
     const componentDir = this.resolveComponentDirectory(componentName);
     
