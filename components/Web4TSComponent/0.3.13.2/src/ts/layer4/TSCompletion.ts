@@ -670,7 +670,8 @@ export class TSCompletion implements Completion {
                   
                   if (hasParam) {
                     // Format: @cliValues value1 value2... (no param name prefix)
-                    result = parts;
+                    // ✅ FIX: Skip first token (parameter name) just like explicit match case
+                    result = parts.slice(1);
                     return; // Found it, stop searching
                   }
                 }

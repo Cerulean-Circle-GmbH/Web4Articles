@@ -858,15 +858,15 @@ export abstract class DefaultCLI implements CLI {
                 if (value === defaultValue) {
                   return `'${colors.parameters}${value}${colors.reset}'`; // Yellow for default
                 } else {
-                  return `'${colors.commands}${value}${colors.reset}'`; // Green for others
+                  return `'${colors.descriptions}${value}${colors.reset}'`; // Green for others
                 }
               });
             } else {
               // No default - all values in green
-              coloredValues = valuesText.replace(/'([^']+)'/g, `'${colors.commands}$1${colors.reset}'`);
+              coloredValues = valuesText.replace(/'([^']+)'/g, `'${colors.descriptions}$1${colors.reset}'`);
             }
             
-            output += `    ${colors.descriptions}Possible Values: ${coloredValues}\n`;
+            output += `    Possible Values: ${coloredValues}\n`;
           } else if (example.startsWith('Discovery Command:')) {
             // Show discovery command with proper colors
             const commandText = example.replace('Discovery Command: ', '');
@@ -875,7 +875,7 @@ export abstract class DefaultCLI implements CLI {
               /^(web4tscomponent)\s+(completion)\s+(parameter\s+.+)$/,
               `${colors.toolName}$1${colors.reset} ${colors.commands}$2${colors.reset} ${colors.parameters}$3${colors.reset}`
             );
-            output += `    ${colors.descriptions}Possible Values: ${coloredCommand}\n`;
+            output += `    Possible Values: ${coloredCommand}\n`;
           } else if (example !== `${param.name}-example`) {
             // Only show examples if they're NOT the useless "${paramName}-example" format
             output += `    ${colors.descriptions}Example: ${colors.parameters}${example}${colors.reset}\n`;
