@@ -324,7 +324,161 @@ I will NEVER forget:
 
 ---
 
-**Last Updated:** 2025-10-19-UTC-1339  
+## **🔧 PDCA Tool Usage - Automated CMM3 Compliance Checking**
+
+### **Purpose**
+
+The `PDCA 0.1.0.0` component provides automated CMM3 compliance checking tools to supplement the manual systematic review process documented above.
+
+### **Tool Overview**
+
+| Command | Purpose | Scope |
+|---------|---------|-------|
+| `pdca setSession <path>` | Configure default session path | Sets context for other commands |
+| `pdca cmm3check <file>` | Check single PDCA file | Individual file analysis |
+| `pdca cmm3checkSession [<path>]` | Check all PDCAs in session | Batch analysis |
+| `pdca updateFeatureTrackingTable [<path>]` | Update columns 1-3 of this table | Auto-populate compliance data |
+| `pdca checkCmm3Checklist` | Verify PDCA component is up-to-date | Validates tool against checklist changes |
+| `pdca acceptCmm3Checklist` | Accept checklist updates | Updates tool's last-sync timestamp |
+| `pdca fixDualLinks [<target>]` | Fix dual link format violations | Corrects `[§/path](path)` format |
+
+### **Typical Workflow**
+
+#### **1. Configure Session**
+```bash
+cd /Users/Shared/Workspaces/temp/Web4Articles
+pdca setSession scrum.pmo/project.journal/2025-10-14-UTC-0948-session
+```
+
+**Output:**
+```
+📁 Setting Default Session Path
+
+   Old: scrum.pmo/project.journal/2025-10-14-UTC-0948-session
+   New: scrum.pmo/project.journal/2025-10-14-UTC-0948-session
+
+✅ Default session updated!
+   This will be used for:
+   - cmm3checkSession (when no path specified)
+   - updateFeatureTrackingTable (when no path specified)
+```
+
+#### **2. Check Single PDCA (Deep Dive)**
+```bash
+pdca cmm3check scrum.pmo/project.journal/2025-10-14-UTC-0948-session/2025-10-14-UTC-1309.pdca.md
+```
+
+**Output:**
+```
+🔍 CMM3 Compliance Check - Single File
+📄 File: 2025-10-14-UTC-1309.pdca.md
+
+⚠️ 2025-10-14-UTC-1309.pdca.md - CMM2
+   Violations: 1j
+
+📋 Violation Details:
+   1j: QA Decisions section not properly formatted
+```
+
+#### **3. Check Entire Session (Overview)**
+```bash
+pdca cmm3checkSession
+```
+
+**Output:**
+```
+🔍 CMM3 Compliance Check - Session
+📁 Target: scrum.pmo/project.journal/2025-10-14-UTC-0948-session
+
+📊 Found 108 PDCA file(s) to check
+
+✅ 2025-10-14-UTC-0948.pdca.md - CMM3 Compliant
+⚠️ 2025-10-14-UTC-1231.pdca.md - CMM2
+   Violations: 1j
+❌ 2025-10-14-UTC-1331.pdca.md - CMM1
+   Violations: 1a, 1b, 1d, 1j, 3a, 3b
+...
+
+📈 Summary:
+   Total PDCAs: 108
+   ✅ CMM3: 23 (21%)
+   ⚠️  CMM2: 44 (41%)
+   ❌ CMM1: 41 (38%)
+   Total Violations: 145
+```
+
+#### **4. Update Feature Tracking Table**
+```bash
+pdca updateFeatureTrackingTable
+```
+
+**Output:**
+- Updates columns 1-3 of this table
+- Shows transitions (e.g., `✅ CMM3 → ❌ CMM1 (1a, 1d) [tool]`)
+- Marks all updates with `[tool]` to distinguish from manual reviews
+
+#### **5. Maintain Tool Freshness**
+```bash
+# Check if checklist or dual-linked files were modified
+pdca checkCmm3Checklist
+
+# If warning appears, review DefaultPDCA.ts check methods and accept changes
+pdca acceptCmm3Checklist
+```
+
+### **Integration with Manual Process**
+
+The automated tools **complement** (not replace) the manual systematic review:
+
+| Step | Manual Process | Automated Tool | Benefit |
+|------|----------------|----------------|---------|
+| **1. Read PDCA** | Human reads PDCA content | N/A | Context & understanding |
+| **2. Check CMM3** | Human evaluates compliance | `pdca cmm3check <file>` | Catches technical violations |
+| **3. Find Test** | Human runs `web4tscomponent test itCase` | N/A | Maps tests to features |
+| **4. Update Table** | Human edits markdown | `pdca updateFeatureTrackingTable` | Batch compliance updates |
+| **5. Add Backlink** | Human adds dual link in PDCA | `pdca fixDualLinks <file>` | Fixes format violations |
+
+### **Violation Codes Reference**
+
+| Code | Description | Severity |
+|------|-------------|----------|
+| **1a** | Missing template header or version | CMM1 |
+| **1b** | Incorrect file naming (not YYYY-MM-DD-UTC-HHMM) | CMM1 |
+| **1c** | Missing timestamp in header | CMM1 |
+| **1d** | Missing template footer | CMM1 |
+| **1e** | Incorrect artifact link format | CMM2 |
+| **1f** | Git history mismatch | CMM2 |
+| **1g** | Missing QA Decisions section | CMM2 |
+| **1h** | Badge validation failure | CMM2 |
+| **1i** | Missing Metrics section | CMM2 |
+| **1j** | QA Decisions format incorrect | CMM2 |
+| **3a** | Missing GitHub dual link | CMM2 |
+| **3b** | Missing local § dual link | CMM2 |
+| **3c** | Dual link format incorrect | CMM2 |
+| **4a** | Git message not matching PDCA filename | CMM2 |
+| **4b** | Commit message format violation | CMM2 |
+| **4d** | Missing git push | CMM2 |
+
+### **Limitations & Known Issues**
+
+1. **check1f (Git History):** Cannot be automated - requires manual verification of git log vs PDCA content
+2. **Context Understanding:** Tool checks structure, not content quality or correctness
+3. **Test Mapping:** Still requires manual `web4tscomponent test itCase` verification
+4. **False Positives:** Relaxed checks (1a, 1d) may miss some violations or flag false issues
+5. **Template Drift:** If template changes significantly, `checkCmm3Checklist` will warn to review tool
+
+### **Tool Development History**
+
+- **Created:** 2025-10-19-UTC-1245 (Initial `cmm3check` method)
+- **Enhanced:** 2025-10-19-UTC-1410 (Added `updateFeatureTrackingTable`, `checkCmm3Checklist`, `acceptCmm3Checklist`)
+- **Relaxed:** 2025-10-19-UTC-1430 (Relaxed 1a and 1d to reduce false positives)
+- **Refactored:** 2025-10-19-UTC-1506 (Split into `cmm3check` single file + `cmm3checkSession` batch, added `setSession`)
+- **Current Version:** PDCA 0.1.0.0
+- **Source:** [§/components/PDCA/0.1.0.0/src/ts/layer2/DefaultPDCA.ts](../../../components/PDCA/0.1.0.0/src/ts/layer2/DefaultPDCA.ts)
+
+---
+
+**Last Updated:** 2025-10-19-UTC-1507  
 **Total PDCAs:** 107  
 **Reviewed:** 59 (55%)  
 **Remaining:** 48 (45%)
