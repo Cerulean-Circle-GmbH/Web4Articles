@@ -481,8 +481,146 @@ The automated tools **complement** (not replace) the manual systematic review:
 
 ---
 
-**Last Updated:** 2025-10-19-UTC-1520  
-**Total PDCAs:** 109  
+## 🧪 **Test Gap Analysis Workflow - Test vs Code Decision Process**
+
+### **Purpose**
+Web4TSComponent has evolved significantly. When creating regression tests for old bugs, we must systematically determine:
+- **Is the test wrong?** (behavior evolved, test needs update)
+- **Is the code wrong?** (regression introduced, code needs fix)
+
+### **Decision Framework**
+
+When a newly created regression test fails:
+
+| Step | Action | Tools | Decision Point |
+|------|--------|-------|----------------|
+| **1. Stop** | Don't just "fix test to green" | Human judgment | Analyze first |
+| **2. Read Original PDCA** | Understand what bug actually was | Read P## PDCA file | What was core problem? |
+| **3. Identify Core Bug** | What specific behavior was broken? | PDCA summary section | Bug definition |
+| **4. Verify Core Fix** | Is *that specific* problem solved? | Run test, check output | Core bug fixed? |
+| **5. Analyze Failure** | What is test checking? | Test assertion | Test intent correct? |
+| **6. Decision** | Test wrong OR code regressed? | Framework below | Choose path |
+| **7. PDCA** | Document decision reasoning | Create PDCA | Traceability |
+| **8. Ask TRON** | Request review of decision | User feedback | Final approval |
+
+### **Decision Criteria**
+
+| Evidence | Suggests |
+|----------|----------|
+| Core bug verified fixed | Test likely wrong |
+| Related test passes | Test likely wrong |
+| Different assertion failing | Test likely wrong |
+| Original PDCA doesn't mention this | Test likely wrong |
+| Core bug NOT fixed | Code likely regressed |
+| Related test also fails | Code likely regressed |
+| User-visible behavior changed | Code likely regressed |
+
+### **Example: P24 Test Adaptation** 
+**Reference:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-14-UTC-0948/scrum.pmo/project.journal/2025-10-14-UTC-0948-session/2025-10-19-UTC-1601.pdca.md) | [§/scrum.pmo/project.journal/2025-10-14-UTC-0948-session/2025-10-19-UTC-1601.pdca.md](./2025-10-19-UTC-1601.pdca.md)
+
+**Situation:**
+- Created regression test 5j2 for P24 (array index bug)
+- Test 5j1 passed ✅ (verifies method discovery)
+- Test 5j2 failed ❌ (expected callback names, got parameter names)
+
+**Analysis:**
+- Core bug: `currentArgs[0]` → `currentArgs[1]` to prevent directory fallback
+- Test 5j1: Verified no directory fallback ✅
+- Test 5j2: Checking for callback names (different behavior)
+- P24 PDCA: Never mentioned callback vs parameter names
+
+**Decision:** Test needs update
+- Core bug verified fixed (no directory fallback)
+- Test checking wrong thing (callbacks vs names)
+- Current behavior appears intentional (parameter names useful)
+
+**Action:**
+1. Created PDCA documenting decision (2025-10-19-UTC-1601.pdca.md)
+2. Updated test 5j2 to expect parameter names
+3. Both tests pass ✅
+
+**Learning:** Test should verify *specific* bug regression, not guess about related behavior.
+
+### **New Tools Learned**
+
+#### **Run Entire Describe Block**
+```bash
+web4tscomponent test describe <ref>
+
+# Example - Run all P24 tests (describe block 9):
+web4tscomponent test describe 5j
+
+# Output:
+# ✓ 9a. should correctly parse "method" from bash completion context
+# ✓ 9b. should correctly parse "parameter" from bash completion context
+# Tests: 2 passed
+```
+
+#### **Run Single Test Case**
+```bash
+web4tscomponent test itCase <ref>
+
+# Example - Run only test 9a:
+web4tscomponent test itCase 5j1
+
+# Output:
+# ✓ 9a. should correctly parse "method" from bash completion context
+# Tests: 1 passed
+```
+
+#### **Discover Test References**
+```bash
+# List all test files and their numbers
+web4tscomponent test itCase | grep -i "pattern"
+
+# Example - Find completion tests:
+web4tscomponent test itCase | grep -i "completion-discovery"
+# Output: 5: web4tscomponent.completion-discovery.test.ts
+
+# List all describe blocks in a file:
+web4tscomponent test itCase | grep "Regression"
+# Output: 5j) 9. Regression Test - P24: ...
+#         5j1) 9a. should correctly parse "method"...
+#         5j2) 9b. should correctly parse "parameter"...
+```
+
+### **Updated Workflow: Test Gap Analysis (P24-P26)**
+
+| Step | Action | Output |
+|------|--------|--------|
+| **1. Read PDCA** | Understand original bug | Core problem identified |
+| **2. Create Test** | Write regression test | Test committed |
+| **3. Run Test** | `web4tscomponent test describe <ref>` | Pass ✅ or Fail ❌ |
+| **4. IF PASS** | Update table, move to next | Test gap closed |
+| **5. IF FAIL** | STOP and analyze | Don't auto-fix |
+| **6. Decision** | Test vs Code framework | Reasoned choice |
+| **7. PDCA** | Document decision | Create PDCA |
+| **8. Ask TRON** | Request review | Await approval |
+| **9. After Approval** | Fix test OR fix code | Re-run test |
+| **10. Update Table** | Mark test gap closed | Continue |
+
+### **Quality Impact**
+
+**Before This Process:**
+- ❌ Test fails → immediately "fix" test to pass
+- ❌ No documentation of why test changed
+- ❌ Risk: Hide actual regressions by changing tests
+
+**After This Process:**
+- ✅ Test fails → analyze systematically
+- ✅ PDCA documents reasoning
+- ✅ TRON reviews all test adaptations
+- ✅ Clear: "Test adapted because X" vs "Code regressed, fixed Y"
+
+**CMM3 Compliance:**
+- **Traceability:** Every test adaptation has PDCA
+- **Review:** TRON validates all decisions
+- **Learning:** Process improves with each case
+
+---
+
+**Last Updated:** 2025-10-19-UTC-1601  
+**Total PDCAs:** 110 (added P110: 2025-10-19-UTC-1601.pdca.md)  
 **Reviewed:** 59 (54%)  
-**Remaining:** 50 (46%)
+**Remaining:** 50 (45%)
 
