@@ -121,6 +121,9 @@ export class DefaultPDCA implements PDCA {
     const projectRoot = componentRoot.split('/components/')[0];
     const fullPath = path.join(projectRoot, pdcaPath);
 
+    // Check if CMM3 checklist has been modified since this code was written
+    await this.checkChecklistFreshness(projectRoot, fs, path);
+
     // Check if path exists
     const stats = await fs.stat(fullPath);
     const pdcaFiles: string[] = [];
@@ -173,6 +176,38 @@ export class DefaultPDCA implements PDCA {
     console.log(`   Total Violations: ${totalViolations}`);
 
     return this;
+  }
+
+  /**
+   * Check if CMM3 checklist has been modified more recently than this code
+   * Last synced: 2025-10-19-UTC-1413
+   * @cliHide
+   */
+  private async checkChecklistFreshness(
+    projectRoot: string, 
+    fs: typeof import('fs/promises'),
+    path: typeof import('path')
+  ): Promise<void> {
+    const checklistPath = path.join(projectRoot, 'scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md');
+    const thisFilePath = path.join(projectRoot, 'components/PDCA/0.1.0.0/src/ts/layer2/DefaultPDCA.ts');
+    
+    try {
+      const checklistStats = await fs.stat(checklistPath);
+      const thisFileStats = await fs.stat(thisFilePath);
+      
+      // Last code update timestamp: 2025-10-19-UTC-1413
+      const lastCodeUpdate = new Date('2025-10-19T14:13:00Z');
+      
+      if (checklistStats.mtime > lastCodeUpdate) {
+        console.log(`⚠️  WARNING: CMM3 Checklist Modified!`);
+        console.log(`   Checklist: ${checklistStats.mtime.toISOString()}`);
+        console.log(`   Last Code Update: ${lastCodeUpdate.toISOString()}`);
+        console.log(`   ⚠️  Review check methods in DefaultPDCA.ts to ensure all rules are covered!`);
+        console.log(`   📍 File: ${checklistPath}\n`);
+      }
+    } catch (error) {
+      // Silently ignore if checklist doesn't exist
+    }
   }
 
   /**
