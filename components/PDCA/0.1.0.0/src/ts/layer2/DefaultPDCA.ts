@@ -398,15 +398,48 @@ export class DefaultPDCA implements PDCA {
 
   /**
    * 1a) Template version 3.2.4.2 exact match
-   * Check for PLAN, DO, CHECK, ACT sections with proper formatting
+   * Check for required template structure by reading actual template
    * @cliHide
    */
   private check1a(content: string): boolean {
-    // Must have all 6 sections with horizontal separators
-    return content.includes('## **📋 PLAN**') &&
-           content.includes('## **⚙️ DO**') &&
-           content.includes('## **✅ CHECK**') &&
-           content.includes('## **🎯 ACT**');
+    // Check for template version marker
+    if (!content.includes('**🎯 Template Version:** 3.2.4.2')) {
+      return false;
+    }
+    
+    // Check for required static section headers from template
+    const requiredSections = [
+      '## **📊 SUMMARY**',
+      '### **Artifact Links**',
+      '### **To TRON: QA Decisions required**',
+      '### **TRON Feedback',
+      '### **My Answer**',
+      '## **📋 PLAN**',
+      '## **🔧 DO**',
+      '## **✅ CHECK**',
+      '## **🎯 ACT**'
+    ];
+    
+    // Alternative section formats (older PDCAs might use different emojis)
+    const alternativeSections = [
+      '## **PLAN**',
+      '## **DO**',
+      '## **CHECK**',
+      '## **ACT**'
+    ];
+    
+    // Check if all required sections exist (with fallback to alternatives)
+    for (const section of requiredSections) {
+      if (!content.includes(section)) {
+        // Check alternatives
+        const alt = alternativeSections.find(alt => section.includes(alt.replace(/\*\*/g, '')));
+        if (!alt || !content.includes(alt)) {
+          return false;
+        }
+      }
+    }
+    
+    return true;
   }
 
   /**
