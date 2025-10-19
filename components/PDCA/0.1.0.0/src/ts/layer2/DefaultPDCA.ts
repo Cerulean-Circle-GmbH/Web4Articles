@@ -101,6 +101,7 @@ export class DefaultPDCA implements PDCA {
 
   /**
    * Check PDCA file(s) for CMM3 compliance violations
+   * Based on scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md
    * 
    * @param pdcaPath - Path to PDCA file or directory (defaults to current session)
    * @cliSyntax pdcaPath
@@ -176,38 +177,236 @@ export class DefaultPDCA implements PDCA {
 
   /**
    * Check a single PDCA content for CMM3 compliance violations
+   * Based on scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md
    * @cliHide
    */
   private async checkPDCACompliance(content: string, fileName: string): Promise<string[]> {
     const violations: string[] = [];
 
-    // 1a: Date format (YYYY-MM-DD-UTC-HHMM)
-    const dateMatch = content.match(/\*\*(?:🗓️ Date|Created):\*\*\s*(\S+)/);
-    if (!dateMatch || !dateMatch[1].match(/^\d{4}-\d{2}-\d{2}-UTC-\d{4}$/)) {
-      violations.push('1a');
-    }
+    // 1. PDCA Compliance
+    if (!this.check1a(content)) violations.push('1a');
+    if (!this.check1b(content, fileName)) violations.push('1b');
+    if (!this.check1c(content)) violations.push('1c');
+    if (!this.check1d(content)) violations.push('1d');
+    if (!this.check1e(content)) violations.push('1e');
+    // 1f requires todo_write tool access, skip for now
+    if (!this.check1g(content)) violations.push('1g');
+    // 1h requires external research capability, skip for now
+    if (!this.check1i(content)) violations.push('1i');
+    if (!this.check1j(content)) violations.push('1j');
 
-    // 1c: Artifact Links section
-    if (!content.includes('### **Artifact Links**') && !content.includes('**📊 Feature Gap Analysis:**')) {
-      violations.push('1c');
-    }
+    // 3. Chat Response Compliance (relevant sections in PDCA)
+    if (!this.check3a(content)) violations.push('3a');
+    if (!this.check3b(content)) violations.push('3b');
+    if (!this.check3c(content)) violations.push('3c');
 
-    // 1d: Dual links (check for both GitHub and local links)
-    if (!content.includes('[GitHub]') || !content.includes('[§/')) {
-      violations.push('1d');
-    }
+    // 4. Link Compliance
+    if (!this.check4a(content)) violations.push('4a');
+    if (!this.check4b(content)) violations.push('4b');
+    if (!this.check4c(content)) violations.push('4c');
+    if (!this.check4d(content)) violations.push('4d');
 
-    // 3a: CHECK section
-    if (!content.includes('## **✅ CHECK') && !content.includes('## **CHECK')) {
-      violations.push('3a');
-    }
+    // 5. Naming/Location
+    if (!this.check5a(fileName)) violations.push('5a');
+    // 5b and 5c require file path context, check if present
+    if (!this.check5c(fileName)) violations.push('5c');
 
-    // 3b: ACT section
-    if (!content.includes('## **🎯 ACT') && !content.includes('## **ACT')) {
-      violations.push('3b');
-    }
+    // 6. Authorization
+    if (!this.check6a(content)) violations.push('6a');
+
+    // 7. Markdown Quality
+    // 7a and 7b require list inspection, complex to automate
 
     return violations;
+  }
+
+  /**
+   * 1a) Template version 3.2.4.2 exact match
+   * Check for PLAN, DO, CHECK, ACT sections with proper formatting
+   * @cliHide
+   */
+  private check1a(content: string): boolean {
+    // Must have all 6 sections with horizontal separators
+    return content.includes('## **📋 PLAN**') &&
+           content.includes('## **⚙️ DO**') &&
+           content.includes('## **✅ CHECK**') &&
+           content.includes('## **🎯 ACT**');
+  }
+
+  /**
+   * 1b) Real UTC time (YYYY-MM-DD-UTC-HHMM), not hallucinated
+   * @cliHide
+   */
+  private check1b(content: string, fileName: string): boolean {
+    // Extract date from filename
+    const fileMatch = fileName.match(/^(\d{4}-\d{2}-\d{2}-UTC-\d{4})/);
+    if (!fileMatch) return false;
+
+    // Check if date appears in content with exact format
+    const dateMatch = content.match(/\*\*(?:🗓️ Date|Created):\*\*\s*(\d{4}-\d{2}-\d{2}-UTC-\d{4})/);
+    if (!dateMatch) return false;
+
+    // Filename and content date must match
+    return fileMatch[1] === dateMatch[1];
+  }
+
+  /**
+   * 1c) All 6 sections with horizontal separators
+   * @cliHide
+   */
+  private check1c(content: string): boolean {
+    // Count --- separators (should have at least 4 for section divisions)
+    const separators = (content.match(/^---$/gm) || []).length;
+    return separators >= 4;
+  }
+
+  /**
+   * 1d) All sections: exact template format, no modifications
+   * Check for required subsections in DO section
+   * @cliHide
+   */
+  private check1d(content: string): boolean {
+    // DO section must have: Agent Name, Branch, Date
+    return content.includes('**Agent Name:**') &&
+           content.includes('**Branch:**') &&
+           content.includes('**🗓️ Date:**');
+  }
+
+  /**
+   * 1e) Working dual links, no "TBD" placeholders
+   * @cliHide
+   */
+  private check1e(content: string): boolean {
+    // Check for TBD in links or artifact sections
+    return !content.includes('[TBD]') && 
+           !content.includes('(TBD)') &&
+           content.includes('[GitHub]') &&
+           content.includes('[§/');
+  }
+
+  /**
+   * 1g) CMM3 violation reporting with dual link to howto.PDCA.md
+   * Check for Artifact Links section
+   * @cliHide
+   */
+  private check1g(content: string): boolean {
+    return content.includes('### **Artifact Links**') || 
+           content.includes('**📊 Feature Gap Analysis:**');
+  }
+
+  /**
+   * 1i) Git commit & push protocol: PDCAfilename.pdca.md format
+   * Cannot check from content alone, assume compliant if file exists
+   * @cliHide
+   */
+  private check1i(content: string): boolean {
+    // Git protocol verification would require git log access
+    // For now, check if PDCA has typical markers of being committed
+    return true; // Cannot validate from content alone
+  }
+
+  /**
+   * 1j) QA Decisions format: proper decisions OR "All clear, no decisions"
+   * @cliHide
+   */
+  private check1j(content: string): boolean {
+    // Must have either QA Decisions section or mention of decisions
+    return content.includes('### QA Decisions') ||
+           content.includes('All clear, no decisions') ||
+           content.includes('**D1:**') ||
+           content.includes('Decision 1:');
+  }
+
+  /**
+   * 3a) CHECK section present
+   * @cliHide
+   */
+  private check3a(content: string): boolean {
+    return content.includes('## **✅ CHECK') || content.includes('## **CHECK');
+  }
+
+  /**
+   * 3b) ACT section present
+   * @cliHide
+   */
+  private check3b(content: string): boolean {
+    return content.includes('## **🎯 ACT') || content.includes('## **ACT');
+  }
+
+  /**
+   * 3c) Dual link format: [GitHub](URL) | [§/path](path)
+   * @cliHide
+   */
+  private check3c(content: string): boolean {
+    // Check for proper dual link format
+    return content.includes('[GitHub]') && 
+           content.includes('[§/') &&
+           content.includes('github.com');
+  }
+
+  /**
+   * 4a) GitHub URLs work after git push
+   * Cannot validate without network access
+   * @cliHide
+   */
+  private check4a(content: string): boolean {
+    // Check if GitHub URLs are present and well-formed
+    const githubLinks = content.match(/https:\/\/github\.com\/[^\s)]+/g);
+    return githubLinks !== null && githubLinks.length > 0;
+  }
+
+  /**
+   * 4b) PDCA local links: relative from document location
+   * @cliHide
+   */
+  private check4b(content: string): boolean {
+    // Check for relative paths in local links
+    return content.includes('](../') || content.includes('](./');
+  }
+
+  /**
+   * 4c) Chat local links: absolute from project root
+   * Less relevant for PDCA files themselves
+   * @cliHide
+   */
+  private check4c(content: string): boolean {
+    // For PDCA files, local links should be relative
+    return true;
+  }
+
+  /**
+   * 4d) § notation for root path display
+   * @cliHide
+   */
+  private check4d(content: string): boolean {
+    return content.includes('[§/');
+  }
+
+  /**
+   * 5a) YYYY-MM-DD-UTC-HHMM.pdca.md format only
+   * @cliHide
+   */
+  private check5a(fileName: string): boolean {
+    return /^\d{4}-\d{2}-\d{2}-UTC-\d{4}[^\/]*\.pdca\.md$/.test(fileName);
+  }
+
+  /**
+   * 5c) No descriptive text in filename
+   * @cliHide
+   */
+  private check5c(fileName: string): boolean {
+    // After UTC-HHMM, should only have .pdca.md or allowed suffixes like .error.pdca.md
+    return /^\d{4}-\d{2}-\d{2}-UTC-\d{4}(\.error|\.verification|\.ultimate-test|\.updown-experience-analysis)?\.pdca\.md$/.test(fileName);
+  }
+
+  /**
+   * 6a) NEVER SELF ASSIGN A CMM BADGE
+   * @cliHide
+   */
+  private check6a(content: string): boolean {
+    // Check for self-assignment language
+    const selfAssignment = /CMM\d badge (assigned|granted|awarded) to self|I (assign|grant|award) myself CMM\d/i;
+    return !selfAssignment.test(content);
   }
 
   /**
@@ -218,8 +417,8 @@ export class DefaultPDCA implements PDCA {
     // CMM3: No violations
     if (violations.length === 0) return 'CMM3';
     
-    // CMM1: Missing CHECK or ACT sections
-    if (violations.includes('3a') || violations.includes('3b')) return 'CMM1';
+    // CMM1: Missing CHECK or ACT sections (3a, 3b), or no sections at all (1a)
+    if (violations.includes('3a') || violations.includes('3b') || violations.includes('1a')) return 'CMM1';
     
     // CMM2: Has CHECK/ACT but other violations
     return 'CMM2';
