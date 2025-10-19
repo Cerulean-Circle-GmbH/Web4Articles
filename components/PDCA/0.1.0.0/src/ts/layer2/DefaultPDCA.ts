@@ -276,41 +276,56 @@ export class DefaultPDCA implements PDCA {
         const pdcaFilename = path.basename(match[2]);
         const data = pdcaData.get(pdcaFilename);
         
-        if (data) {
-          // Extract columns
-          const columns = line.split('|').map(c => c.trim());
-          
-          if (columns.length >= 5) {
-            // Update column 3 (index 4): CMM3 Compliant
-            let complianceStatus = '';
-            if (data.level === 'CMM3') {
-              complianceStatus = '✅ CMM3';
-            } else if (data.level === 'CMM2') {
-              if (data.violations.length > 0) {
-                complianceStatus = `⚠️ CMM2 (${data.violations.join(', ')})`;
-              } else {
-                complianceStatus = '⚠️ CMM2';
-              }
-            } else {
-              if (data.violations.length > 0) {
-                complianceStatus = `❌ CMM1 (${data.violations.join(', ')})`;
-              } else {
-                complianceStatus = '❌ CMM1';
+          if (data) {
+            // Extract columns
+            const columns = line.split('|').map(c => c.trim());
+            
+            if (columns.length >= 5) {
+              // Column 4 is CMM3 Compliant (index 4 in 1-indexed array with leading empty string)
+              const existingStatus = columns[4];
+              
+              // Only update if:
+              // 1. Current status is TBD or empty
+              // 2. OR current status is manually set but tool found violations
+              const shouldUpdate = 
+                existingStatus === 'TBD' || 
+                existingStatus === '' ||
+                existingStatus.trim() === '';
+              
+              if (shouldUpdate || data.violations.length > 0) {
+                // Build compliance status
+                let complianceStatus = '';
+                if (data.level === 'CMM3') {
+                  complianceStatus = '✅ CMM3 [tool]';
+                } else if (data.level === 'CMM2') {
+                  if (data.violations.length > 0) {
+                    complianceStatus = `⚠️ CMM2 (${data.violations.join(', ')}) [tool]`;
+                  } else {
+                    complianceStatus = '⚠️ CMM2 [tool]';
+                  }
+                } else {
+                  if (data.violations.length > 0) {
+                    complianceStatus = `❌ CMM1 (${data.violations.join(', ')}) [tool]`;
+                  } else {
+                    complianceStatus = '❌ CMM1 [tool]';
+                  }
+                }
+                
+                // If there was a manual review and tool found different results, note both
+                if (!shouldUpdate && existingStatus && !existingStatus.includes('[tool]')) {
+                  complianceStatus = `${existingStatus} → ${complianceStatus}`;
+                }
+                
+                columns[4] = complianceStatus;
+                
+                // Reconstruct line
+                const updatedLine = columns.join(' | ');
+                updatedLines.push(updatedLine);
+                updatedCount++;
+                continue;
               }
             }
-            
-            // Add tool-discovered marker
-            complianceStatus += ' [tool]';
-            
-            columns[4] = complianceStatus;
-            
-            // Reconstruct line
-            const updatedLine = columns.join(' | ');
-            updatedLines.push(updatedLine);
-            updatedCount++;
-            continue;
           }
-        }
       }
       
       updatedLines.push(line);
