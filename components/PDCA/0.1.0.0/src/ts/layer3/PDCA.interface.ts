@@ -11,6 +11,7 @@ export interface PDCA {
   toScenario(name?: string): Promise<Scenario<PDCAModel>>;
   cmm3check(pdcaPath?: string): Promise<this>;
   updateFeatureTrackingTable(sessionPath?: string): Promise<this>;
+  checkChecklistFreshness(): Promise<this>;
   process(data: string): Promise<this>;
   info(): Promise<this>;
   test(): Promise<this>;

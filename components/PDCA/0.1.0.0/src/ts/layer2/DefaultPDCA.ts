@@ -121,9 +121,6 @@ export class DefaultPDCA implements PDCA {
     const projectRoot = componentRoot.split('/components/')[0];
     const fullPath = path.join(projectRoot, pdcaPath);
 
-    // Check if CMM3 checklist has been modified since this code was written
-    await this.checkChecklistFreshness(projectRoot, fs, path);
-
     // Check if path exists
     const stats = await fs.stat(fullPath);
     const pdcaFiles: string[] = [];
@@ -179,35 +176,115 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
-   * Check if CMM3 checklist has been modified more recently than this code
+   * Check if CMM3 checklist or its dual-linked files have been modified since last PDCA component update
+   * Warns if any files are newer than the component's last code update timestamp
    * Last synced: 2025-10-19-UTC-1413
-   * @cliHide
+   * 
+   * @cliSyntax 
    */
-  private async checkChecklistFreshness(
-    projectRoot: string, 
-    fs: typeof import('fs/promises'),
-    path: typeof import('path')
-  ): Promise<void> {
-    const checklistPath = path.join(projectRoot, 'scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md');
+  async checkChecklistFreshness(): Promise<this> {
+    console.log(`\n🔍 Checking CMM3 Checklist Freshness\n`);
+
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    
+    // Get project root
+    const __filename = (await import('url')).fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const componentRoot = path.resolve(__dirname, '../../..');
+    const projectRoot = componentRoot.split('/components/')[0];
+    
+    // Last code update timestamp: 2025-10-19-UTC-1413
+    const lastCodeUpdate = new Date('2025-10-19T14:13:00Z');
     const thisFilePath = path.join(projectRoot, 'components/PDCA/0.1.0.0/src/ts/layer2/DefaultPDCA.ts');
     
+    console.log(`📅 PDCA Component Last Update: ${lastCodeUpdate.toISOString()}`);
+    console.log(`📍 Component File: ${thisFilePath}\n`);
+    
+    // List of files to check
+    const checklistPath = path.join(projectRoot, 'scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md');
+    
+    // Extract all dual-linked files from checklist
+    const dualLinkedFiles: string[] = [];
+    
     try {
-      const checklistStats = await fs.stat(checklistPath);
-      const thisFileStats = await fs.stat(thisFilePath);
+      const checklistContent = await fs.readFile(checklistPath, 'utf-8');
       
-      // Last code update timestamp: 2025-10-19-UTC-1413
-      const lastCodeUpdate = new Date('2025-10-19T14:13:00Z');
-      
-      if (checklistStats.mtime > lastCodeUpdate) {
-        console.log(`⚠️  WARNING: CMM3 Checklist Modified!`);
-        console.log(`   Checklist: ${checklistStats.mtime.toISOString()}`);
-        console.log(`   Last Code Update: ${lastCodeUpdate.toISOString()}`);
-        console.log(`   ⚠️  Review check methods in DefaultPDCA.ts to ensure all rules are covered!`);
-        console.log(`   📍 File: ${checklistPath}\n`);
+      // Extract all § notation paths (local file references)
+      // Format: [§/path/to/file](path/to/file)
+      const linkRegex = /\[§\/([^\]]+)\]\(([^)]+)\)/g;
+      let match;
+      while ((match = linkRegex.exec(checklistContent)) !== null) {
+        const displayPath = match[1];
+        const linkPath = match[2];
+        
+        // Skip placeholder examples (where both parts match exactly or are generic like "path")
+        if (displayPath === linkPath || displayPath === 'path' || linkPath === 'path') {
+          continue;
+        }
+        
+        dualLinkedFiles.push(displayPath);
       }
     } catch (error) {
-      // Silently ignore if checklist doesn't exist
+      console.log(`❌ Error: Cannot read checklist at ${checklistPath}`);
+      console.log(`   ${error}`);
+      return this;
     }
+    
+    // Check checklist itself
+    const filesToCheck = [
+      { name: 'CMM3 Compliance Checklist', path: checklistPath }
+    ];
+    
+    // Add all dual-linked files
+    for (const relPath of dualLinkedFiles) {
+      filesToCheck.push({
+        name: `Dual-linked: ${relPath}`,
+        path: path.join(projectRoot, relPath)
+      });
+    }
+    
+    console.log(`📋 Checking ${filesToCheck.length} files...\n`);
+    
+    const modifiedFiles: Array<{name: string, path: string, mtime: Date}> = [];
+    
+    for (const file of filesToCheck) {
+      try {
+        const stats = await fs.stat(file.path);
+        
+        if (stats.mtime > lastCodeUpdate) {
+          modifiedFiles.push({
+            name: file.name,
+            path: file.path,
+            mtime: stats.mtime
+          });
+        }
+      } catch (error) {
+        console.log(`⚠️  Warning: Cannot access ${file.name}`);
+        console.log(`   Path: ${file.path}`);
+        console.log(`   Error: ${error}\n`);
+      }
+    }
+    
+    // Report results
+    if (modifiedFiles.length === 0) {
+      console.log(`✅ All files up to date!`);
+      console.log(`   No files modified since ${lastCodeUpdate.toISOString()}\n`);
+    } else {
+      console.log(`⚠️  WARNING: ${modifiedFiles.length} file(s) modified since last PDCA component update!\n`);
+      console.log(`🔧 ACTION REQUIRED: Review PDCA component check methods!\n`);
+      
+      for (const file of modifiedFiles) {
+        console.log(`📄 ${file.name}`);
+        console.log(`   Modified: ${file.mtime.toISOString()}`);
+        console.log(`   Path: ${file.path}\n`);
+      }
+      
+      console.log(`⚠️  These files have been updated since the PDCA component was last modified.`);
+      console.log(`   Review DefaultPDCA.ts check methods to ensure all rules are covered!\n`);
+    }
+    
+    return this;
   }
 
   /**
