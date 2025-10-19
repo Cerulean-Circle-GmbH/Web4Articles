@@ -178,11 +178,11 @@ export class DefaultPDCA implements PDCA {
   /**
    * Check if CMM3 checklist or its dual-linked files have been modified since last PDCA component update
    * Warns if any files are newer than the component's last code update timestamp
-   * Last synced: 2025-10-19-UTC-1413
+   * Last synced: 2025-10-19-UTC-1500
    * 
    * @cliSyntax 
    */
-  async checkChecklistFreshness(): Promise<this> {
+  async checkCmm3Checklist(): Promise<this> {
     console.log(`\n🔍 Checking CMM3 Checklist Freshness\n`);
 
     const fs = await import('fs/promises');
@@ -194,8 +194,8 @@ export class DefaultPDCA implements PDCA {
     const componentRoot = path.resolve(__dirname, '../../..');
     const projectRoot = componentRoot.split('/components/')[0];
     
-    // Last code update timestamp: 2025-10-19-UTC-1413
-    const lastCodeUpdate = new Date('2025-10-19T14:13:00Z');
+    // Last code update timestamp: 2025-10-19-UTC-1500
+    const lastCodeUpdate = new Date('2025-10-19T15:00:00Z');
     const thisFilePath = path.join(projectRoot, 'components/PDCA/0.1.0.0/src/ts/layer2/DefaultPDCA.ts');
     
     console.log(`📅 PDCA Component Last Update: ${lastCodeUpdate.toISOString()}`);
@@ -283,6 +283,78 @@ export class DefaultPDCA implements PDCA {
       console.log(`⚠️  These files have been updated since the PDCA component was last modified.`);
       console.log(`   Review DefaultPDCA.ts check methods to ensure all rules are covered!\n`);
     }
+    
+    return this;
+  }
+
+  /**
+   * Accept CMM3 checklist changes by updating the last code update timestamp
+   * This acknowledges that you have reviewed the checklist changes and updated the check methods accordingly
+   * 
+   * @cliSyntax 
+   */
+  async acceptCmm3Checklist(): Promise<this> {
+    console.log(`\n✅ Accepting CMM3 Checklist Changes\n`);
+
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    
+    // Get project root
+    const __filename = (await import('url')).fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const componentRoot = path.resolve(__dirname, '../../..');
+    const projectRoot = componentRoot.split('/components/')[0];
+    
+    const thisFilePath = path.join(projectRoot, 'components/PDCA/0.1.0.0/src/ts/layer2/DefaultPDCA.ts');
+    
+    // Read the current file
+    let content = await fs.readFile(thisFilePath, 'utf-8');
+    
+    // Find the current timestamp in the code
+    const timestampMatch = content.match(/Last code update timestamp: (\d{4}-\d{2}-\d{2}-UTC-\d{4})/);
+    const oldTimestamp = timestampMatch ? timestampMatch[1] : 'unknown';
+    
+    // Generate new timestamp in format YYYY-MM-DD-UTC-HHMM
+    const now = new Date();
+    const year = now.getUTCFullYear();
+    const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(now.getUTCDate()).padStart(2, '0');
+    const hours = String(now.getUTCHours()).padStart(2, '0');
+    const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+    const newTimestamp = `${year}-${month}-${day}-UTC-${hours}${minutes}`;
+    
+    console.log(`📅 Old Timestamp: ${oldTimestamp}`);
+    console.log(`📅 New Timestamp: ${newTimestamp}\n`);
+    
+    // Update the timestamp in the file
+    // Pattern 1: In checkCmm3Checklist method's JSDoc comment
+    content = content.replace(
+      /Last synced: \d{4}-\d{2}-\d{2}-UTC-\d{4}/,
+      `Last synced: ${newTimestamp}`
+    );
+    
+    // Pattern 2: In the actual code where lastCodeUpdate is defined
+    content = content.replace(
+      /Last code update timestamp: \d{4}-\d{2}-\d{2}-UTC-\d{4}/,
+      `Last code update timestamp: ${newTimestamp}`
+    );
+    
+    content = content.replace(
+      /const lastCodeUpdate = new Date\('(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2}):00Z'\);/,
+      `const lastCodeUpdate = new Date('${year}-${month}-${day}T${hours}:${minutes}:00Z');`
+    );
+    
+    // Write back to file
+    await fs.writeFile(thisFilePath, content);
+    
+    console.log(`✅ Updated timestamp in ${thisFilePath.replace(projectRoot + '/', '')}`);
+    console.log(`\n⚠️  NOTE: You must rebuild the component for changes to take effect:`);
+    console.log(`   web4tscomponent on PDCA 0.1.0.0 build\n`);
+    console.log(`📋 Remember to:`);
+    console.log(`   1. Review all check methods in DefaultPDCA.ts`);
+    console.log(`   2. Ensure all new checklist rules are covered`);
+    console.log(`   3. Test with: pdca checkCmm3Checklist`);
+    console.log(`   4. Commit your changes\n`);
     
     return this;
   }
