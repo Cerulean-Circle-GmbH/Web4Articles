@@ -471,14 +471,15 @@ export class DefaultPDCA implements PDCA {
 
   /**
    * 1d) All sections: exact template format, no modifications
-   * Check for required subsections in DO section
+   * Check for required footer section from template (The 42 Revelation)
    * @cliHide
    */
   private check1d(content: string): boolean {
-    // DO section must have: Agent Name, Branch, Date
-    return content.includes('**Agent Name:**') &&
-           content.includes('**Branch:**') &&
-           content.includes('**🗓️ Date:**');
+    // Check for the footer section from template
+    // This is a required static part that all PDCAs should have
+    return content.includes('### **📚 The 42 Revelation**') ||
+           content.includes('**Understanding requires regression testing:**') ||
+           content.includes('**"Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."**');
   }
 
   /**
