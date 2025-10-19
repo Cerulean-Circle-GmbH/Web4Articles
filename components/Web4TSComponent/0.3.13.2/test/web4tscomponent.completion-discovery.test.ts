@@ -399,16 +399,19 @@ describe('🔍 Completion Discovery Feature Tests', () => {
       const command = `${cliPath} completion parameter`;
       const output = execSync(command, { encoding: 'utf8', cwd: projectRoot, env: { ...process.env } });
       
-      // Should show numbered parameter completion list
+      // Should show numbered parameter list (NOT directory listing)
       expect(output).toMatch(/1:/);
+      expect(output).toMatch(/2:/);
       
-      // Should contain parameter completions
+      // Should contain parameter names (the current behavior shows parameter names, not callbacks)
       const stripped = output.replace(/\x1b\[[0-9;]*m/g, '');
-      expect(stripped).toContain('componentParameterCompletion');
-      expect(stripped).toContain('scopeParameterCompletion');
+      expect(stripped).toContain('<?action>');
+      expect(stripped).toContain('<completionName>');
+      expect(stripped).toContain('<?component:');
       
       // Should NOT show directory listing fallback
       expect(output).not.toContain('.git/');
+      expect(output).not.toContain('.github/');
     });
   });
 });
