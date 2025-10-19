@@ -164,16 +164,20 @@ export class Web4TSComponentCLI extends DefaultCLI {
   private determineArgumentConsumption(command: string, args: string[]): number {
     const signature = this.methodSignatures.get(command)!;
     
-    // Special handling for methods with hardcoded parameter counts
-    // These MUST consume their args even if they look like commands (e.g., completeParameter)
-    const methodSpecificMaxArgs = this.getMethodMaxArguments(command);
-    if (methodSpecificMaxArgs !== null) {
-      // Hardcoded count - consume exactly that many args, no command detection
-      return Math.min(methodSpecificMaxArgs, args.length);
+    // Special handling for methods that MUST consume all their args (no command detection)
+    // completeParameter: uses rest parameters (...contextArgs)
+    // completion: filter argument might be a method name (e.g., "completion method create")
+    if (command === 'completeParameter' || command === 'completion') {
+      const methodSpecificMaxArgs = this.getMethodMaxArguments(command);
+      return methodSpecificMaxArgs !== null ? Math.min(methodSpecificMaxArgs, args.length) : args.length;
     }
     
-    // Default behavior: stop at next command for chaining
-    const maxArgs = signature.paramCount;
+    // Get max args from TypeScript signature (handles optional parameters)
+    const methodSpecificMaxArgs = this.getMethodMaxArguments(command);
+    const maxArgs = methodSpecificMaxArgs !== null ? methodSpecificMaxArgs : signature.paramCount;
+    
+    // ALWAYS check for next command to enable chaining
+    // Stop consuming args when we encounter a known method name
     for (let i = 0; i < Math.min(maxArgs, args.length); i++) {
       if (this.methodSignatures.has(args[i])) {
         // Found next command, consume up to this point

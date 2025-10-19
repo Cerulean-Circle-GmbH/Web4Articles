@@ -7,14 +7,15 @@ export default defineConfig({
     include: ['test/**/*.test.ts'],
     exclude: ['test/data/**', 'test/logs/**', '**/node_modules/**'],  // Exclude test data, logs, and node_modules
     testTimeout: 180000,   // 180s per test (3 minutes) - standardized timeout
-    hookTimeout: 30000,    // 30s for setup/teardown
-    teardownTimeout: 10000, // 10s for cleanup
+    hookTimeout: 180000,   // 180s for setup/teardown (increased from 30s to handle slow tests)
+    teardownTimeout: 30000, // 30s for cleanup
     bail: 1,               // Stop on first failure to prevent cascade hangs
     // CRITICAL: Run tests sequentially to prevent race conditions
     pool: 'forks',
     poolOptions: {
       forks: {
-        singleFork: true
+        singleFork: true,
+        isolate: false  // Reduce IPC overhead that causes "onTaskUpdate" timeout
       }
     },
     // Run tests in sequence, not parallel

@@ -1861,10 +1861,34 @@ export abstract class DefaultCLI implements CLI {
    * Tab completion for scope parameter of 'test' command
    * Returns available test scopes: file, describe, itCase
    * Note: 'all' is the default (runs full suite), not needed in tab completion
+   * 
+   * ENHANCED: When currentArgs contains 'test', also output one-line documentation
+   * like the 'links' command does, to help users understand test command
+   * 
    * @cliHide
    */
   async scopeParameterCompletion(currentArgs: string[]): Promise<string[]> {
-    return ['file', 'describe', 'itCase'];
+    const scopes = ['file', 'describe', 'itCase'];
+    
+    // Check if we're completing for the 'test' command
+    // currentArgs format when called from bash: ['test', ...]
+    // (NOT [className, 'test'] - that's for other callbacks!)
+    if (currentArgs.length >= 1 && currentArgs[0] === 'test') {
+      // Output ONE LINE documentation BEFORE the parameter options
+      // This helps users understand what 'test' does while seeing parameter options
+      const GREEN = this.colors.descriptions;
+      const YELLOW = this.colors.parameters;
+      const RESET = this.colors.reset;
+      
+      // MUST use process.stdout.write (not console.log) because bash completion
+      // filters stderr - only stdout is captured and displayed
+      process.stdout.write(`${GREEN}1: test <?scope:'all'> <references> - Execute test command - runs tests WITHOUT promotion${RESET}\n`);
+      process.stdout.write(`${GREEN}   Use releaseTest() for version promotion workflow${RESET}\n`);
+      process.stdout.write(`${GREEN}   Modes: all (full suite), file (specific file), describe (describe block), itCase (specific test)${RESET}\n\n`);
+      process.stdout.write(`${YELLOW}<?scope:'all'>${RESET}\n`);
+    }
+    
+    return scopes;
   }
 
   /**

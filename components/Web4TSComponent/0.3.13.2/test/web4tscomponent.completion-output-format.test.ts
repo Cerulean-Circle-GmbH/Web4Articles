@@ -25,18 +25,18 @@ describe('🎯 Tab Completion Output Format Tests', () => {
   describe('Simple Option Completion (Single-Word Mode)', () => {
     it('should output releaseTest options without trailing newline for bash compgen filtering', () => {
       // Test the exact case user reported: releaseTest n
-      const command = `${cliPath} completeParameter successPromotionParameterCompletion releaseTest n`;
+      const command = `${cliPath} completeParameter versionPromotionParameterCompletion releaseTest n`;
       const output = execSync(command, { encoding: 'utf8', cwd: projectRoot });
       
       // Should be space-separated options without trailing newline
-      expect(output).toBe('nextPatch nextMinor nextMajor');
+      expect(output).toBe('nextPatch nextMinor nextMajor nextBuild');
       expect(output).not.toMatch(/\n$/); // No trailing newline - CRITICAL for compgen
       expect(output).toMatch(/^[a-zA-Z\s]+$/); // Only letters and spaces
     });
 
     it('should filter releaseTest nextPa to nextPatch only', () => {
       // Test the specific case: nextPa should filter to nextPatch
-      const command = `${cliPath} completeParameter successPromotionParameterCompletion releaseTest nextPa`;
+      const command = `${cliPath} completeParameter versionPromotionParameterCompletion releaseTest nextPa`;
       const output = execSync(command, { encoding: 'utf8', cwd: projectRoot });
       
       expect(output).toBe('nextPatch');
@@ -44,10 +44,10 @@ describe('🎯 Tab Completion Output Format Tests', () => {
     });
 
     it('should show all options for empty prefix', () => {
-      const command = `${cliPath} completeParameter successPromotionParameterCompletion releaseTest`;
+      const command = `${cliPath} completeParameter versionPromotionParameterCompletion releaseTest`;
       const output = execSync(command, { encoding: 'utf8', cwd: projectRoot });
       
-      expect(output).toBe('nextPatch nextMinor nextMajor');
+      expect(output).toBe('nextPatch nextMinor nextMajor nextBuild');
       expect(output).not.toMatch(/\n$/);
     });
   });
@@ -100,7 +100,7 @@ describe('🎯 Tab Completion Output Format Tests', () => {
     it('should handle completion callbacks without crashing', () => {
       // Verify completion system doesn't crash
       expect(() => {
-        execSync(`${cliPath} completeParameter successPromotionParameterCompletion releaseTest`, { 
+        execSync(`${cliPath} completeParameter versionPromotionParameterCompletion releaseTest`, { 
           cwd: projectRoot, 
           stdio: 'pipe',
           timeout: 30000 
@@ -111,13 +111,13 @@ describe('🎯 Tab Completion Output Format Tests', () => {
 
   describe('Bash Integration Verification', () => {
     it('should produce output compatible with bash compgen for simple options', () => {
-      const command = `${cliPath} completeParameter successPromotionParameterCompletion releaseTest n`;
+      const command = `${cliPath} completeParameter versionPromotionParameterCompletion releaseTest n`;
       const output = execSync(command, { encoding: 'utf8', cwd: projectRoot });
       
       // Verify format is exactly what bash compgen expects
       expect(output).not.toMatch(/\n/); // No newlines anywhere
-      expect(output.split(' ')).toHaveLength(3); // Three space-separated options
-      expect(output.split(' ')).toEqual(['nextPatch', 'nextMinor', 'nextMajor']);
+      expect(output.split(' ')).toHaveLength(4); // Four space-separated options
+      expect(output.split(' ')).toEqual(['nextPatch', 'nextMinor', 'nextMajor', 'nextBuild']);
     });
 
     it('should produce output compatible with OOSH display for hierarchical', () => {

@@ -443,14 +443,108 @@ export class TSCompletion implements Completion {
     // Handle 4+ args: Completion for 2nd, 3rd, ... parameters OR chained methods
     // Example: web4tscomponent on Unit <Tab> → complete 2nd parameter (version)
     // Example: web4tscomponent on Unit 0.3.2.0 tre<Tab> → complete chained method (tree)
+    // Example: web4tscomponent on Unit 0.3.2.0 setCICDVersion p<TAB> → complete targetVersion parameter of setCICDVersion
     if (args.length >= 4) {
       const [className, methodName, ...providedParams] = args;
       const currentWord = providedParams[providedParams.length - 1];
       const paramIndex = providedParams.length - 1; // 0-based index of parameter we're completing
       
+      // Debug logging
+      const logLevel = parseInt(process.env.LOG_LEVEL || '0', 10);
+      if (logLevel > 3) {
+        console.error('[TSCompletion] Entered 4+ args block');
+        console.error(`  args.length: ${args.length}`);
+        console.error(`  className: ${className}`);
+        console.error(`  methodName: ${methodName}`);
+        console.error(`  providedParams: ${JSON.stringify(providedParams)}`);
+      }
+      
       const methods = TSCompletion.getClassMethods(className);
+      
+      if (logLevel > 3) {
+        console.error(`  methods.includes("${methodName}"): ${methods.includes(methodName)}`);
+        console.error(`  total methods found: ${methods.length}`);
+      }
+      
       if (methods.includes(methodName)) {
         const params = TSCompletion.getMethodParameters(className, methodName);
+        
+        if (logLevel > 3) {
+          console.error('[TSCompletion Chaining Debug]');
+          console.error(`  params for ${methodName}: ${JSON.stringify(params)}`);
+        }
+        
+        // ✅ NEW: Detect chained methods in providedParams
+        // Scan providedParams to find where a known method name appears
+        // That indicates we've switched to completing parameters for the chained method
+        let chainedMethodIndex = -1;
+        for (let i = 0; i < providedParams.length - 1; i++) {
+          if (methods.includes(providedParams[i])) {
+            chainedMethodIndex = i;
+            if (logLevel > 3) {
+              console.error(`  Found chained method at index ${i}: ${providedParams[i]}`);
+            }
+            break; // Use first chained method found
+          }
+        }
+        
+        if (chainedMethodIndex >= 0) {
+          // Chained method detected!
+          // Example: ["Web4Programmer", "0.2.0.3", "setCICDVersion", "p"]
+          // chainedMethodIndex = 2 (setCICDVersion)
+          const chainedMethodName = providedParams[chainedMethodIndex];
+          const chainedParams = providedParams.slice(chainedMethodIndex + 1); // ["p"]
+          const chainedParamIndex = chainedParams.length - 1; // 0
+          const chainedCurrentWord = chainedParams[chainedParams.length - 1]; // "p"
+          
+          if (logLevel > 3) {
+            console.error(`  Chained method: ${chainedMethodName}`);
+            console.error(`  Chained params: ${JSON.stringify(chainedParams)}`);
+            console.error(`  Chained param index: ${chainedParamIndex}`);
+          }
+          
+          // Get parameters for chained method
+          const chainedMethodParams = TSCompletion.getMethodParameters(className, chainedMethodName);
+          
+          if (logLevel > 3) {
+            console.error(`  Chained method params: ${JSON.stringify(chainedMethodParams)}`);
+          }
+          
+          if (chainedParamIndex < chainedMethodParams.length) {
+            // Still completing chained method parameters
+            const completionMethodName = `${chainedMethodParams[chainedParamIndex]}ParameterCompletion`;
+            
+            if (logLevel > 3) {
+              console.error(`  Looking for completion method: ${completionMethodName}`);
+            }
+            
+            if (methods.includes(completionMethodName)) {
+              // Completion method exists - return callback hint
+              if (logLevel > 3) {
+                console.error(`  ✅ Found completion method: ${completionMethodName}`);
+              }
+              return [`__CALLBACK__:${chainedMethodParams[chainedParamIndex]}ParameterCompletion`];
+            }
+            
+            // No completion method for this parameter - return empty
+            if (logLevel > 3) {
+              console.error(`  ❌ No completion method found`);
+            }
+            return [];
+          } else {
+            // All chained method parameters provided - complete next chained method
+            const matchingMethods = methods.filter(m => m.startsWith(chainedCurrentWord));
+            if (logLevel > 3) {
+              console.error(`  Completing next chained method starting with "${chainedCurrentWord}": ${matchingMethods.length} matches`);
+            }
+            return matchingMethods;
+          }
+        }
+        
+        // No chained method detected - standard parameter completion for first method
+        if (logLevel > 3) {
+          console.error(`  No chained method detected, using standard completion`);
+        }
         
         if (paramIndex < params.length) {
           // Still completing method parameters

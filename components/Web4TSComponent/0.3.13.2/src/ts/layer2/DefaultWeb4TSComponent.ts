@@ -822,11 +822,19 @@ Standards:
     
     // 🛡️ SELF-HEALING: Create or update source.env (essential for tab completion)
     const sourceEnvPath = path.join(projectRoot, 'source.env');
-    const sourceEnvContent = await this.loadTemplate('project/source.env.template', {});
+    
+    // Get template path (same logic as loadTemplate method)
+    const currentDir = path.dirname(new URL(import.meta.url).pathname);
+    const templatePath = path.join(currentDir, '../../../templates', 'project/source.env.template');
     
     if (existsSync(sourceEnvPath)) {
-      const existing = await fs.readFile(sourceEnvPath, 'utf-8');
-      if (existing !== sourceEnvContent) {
+      // Timestamp-based sync: Check if template is newer than existing file
+      const sourceEnvStats = await fs.stat(sourceEnvPath);
+      const templateStats = await fs.stat(templatePath);
+      
+      if (templateStats.mtime > sourceEnvStats.mtime) {
+        // Template is newer - update the file
+        const sourceEnvContent = await this.loadTemplate('project/source.env.template', {});
         await fs.writeFile(sourceEnvPath, sourceEnvContent);
         await fs.chmod(sourceEnvPath, 0o755);
         console.log(`   ✅ Updated source.env (tab completion, PATH)`);
@@ -834,6 +842,8 @@ Standards:
         console.log(`   ℹ️  source.env already up to date`);
       }
     } else {
+      // File doesn't exist - create it
+      const sourceEnvContent = await this.loadTemplate('project/source.env.template', {});
       await fs.writeFile(sourceEnvPath, sourceEnvContent);
       await fs.chmod(sourceEnvPath, 0o755);
       console.log(`   ✅ Created source.env (tab completion, PATH)`);

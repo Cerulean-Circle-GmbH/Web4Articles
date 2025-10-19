@@ -190,5 +190,88 @@ describe('🔄 Template Synchronization', () => {
       console.log('✅ All required infrastructure files are in copyEssentialInterfaces()');
     });
   });
+
+  describe('Project File Synchronization', () => {
+    it('should DETECT when project files are out of sync with templates', async () => {
+      // This is the MASTER sync check for ALL template-generated project files
+      // Uses hybrid validation: Timestamp for template updates, Content for manual edits
+      
+      const projectRoot = path.join(__dirname, '../../../..');
+      const templatesDir = path.join(__dirname, '../templates');
+      
+      // Define all critical files that must stay in sync with templates
+      const criticalFiles = [
+        {
+          name: 'source.env',
+          projectPath: path.join(projectRoot, 'source.env'),
+          templatePath: path.join(templatesDir, 'project/source.env.template'),
+        },
+        {
+          name: 'root tsconfig.json',
+          projectPath: path.join(projectRoot, 'tsconfig.json'),
+          templatePath: path.join(templatesDir, 'config/root-tsconfig.json.template'),
+        },
+        {
+          name: 'root package.json',
+          projectPath: path.join(projectRoot, 'package.json'),
+          templatePath: path.join(templatesDir, 'config/root-package.json.template'),
+        },
+      ];
+      
+      const errors: string[] = [];
+      
+      for (const file of criticalFiles) {
+        // Skip if file doesn't exist yet (fresh project)
+        if (!existsSync(file.projectPath)) {
+          console.log(`ℹ️  ${file.name} does not exist yet - run initProject to create it`);
+          continue;
+        }
+        
+        if (!existsSync(file.templatePath)) {
+          errors.push(`❌ CRITICAL: Template missing for ${file.name}: ${file.templatePath}`);
+          continue;
+        }
+        
+        const projectStats = statSync(file.projectPath);
+        const templateStats = statSync(file.templatePath);
+        
+        // Check 1: Template is NEWER than project (template was updated)
+        if (templateStats.mtime > projectStats.mtime) {
+          errors.push(
+            `⚠️  ${file.name} is OUTDATED (template is newer)\n` +
+            `   Project:  ${file.projectPath} (${projectStats.mtime.toISOString()})\n` +
+            `   Template: ${file.templatePath} (${templateStats.mtime.toISOString()})\n` +
+            `   🔧 FIX: Run 'web4tscomponent initProject' to sync`
+          );
+        }
+        
+        // Check 2: Content DIFFERS (manual edits detected)
+        // NOTE: We use CONTENT comparison for manual edit detection because initProject
+        // always writes newer timestamps when syncing (unavoidable filesystem behavior)
+        const projectContent = readFileSync(file.projectPath, 'utf-8');
+        const templateContent = readFileSync(file.templatePath, 'utf-8');
+        
+        if (projectContent !== templateContent) {
+          errors.push(
+            `⚠️  ${file.name} has DIFFERENT CONTENT than template\n` +
+            `   Project:  ${file.projectPath}\n` +
+            `   Template: ${file.templatePath}\n` +
+            `   🔧 FIX: Update template with your changes, then rebuild & re-sync:\n` +
+            `   1. diff ${file.projectPath} ${file.templatePath}\n` +
+            `   2. Copy changes to template\n` +
+            `   3. npm run build\n` +
+            `   4. web4tscomponent initProject`
+          );
+        }
+      }
+      
+      if (errors.length > 0) {
+        const errorMessage = '\n\n' + errors.join('\n\n') + '\n';
+        expect(errors.length, errorMessage).toBe(0);
+      }
+      
+      console.log('✅ All project files are in sync with templates');
+    });
+  });
 });
 

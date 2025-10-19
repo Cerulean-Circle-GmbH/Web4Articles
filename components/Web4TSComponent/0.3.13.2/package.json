@@ -10,14 +10,14 @@
   "scripts": {
     "start": "./src/sh/start.sh",
     "start:clean": "./src/sh/start-clean.sh",
-    "test": "./src/sh/test.sh",
+    "test": "./src/sh/test.sh verbose",
     "test:bail": "npx vitest --bail=1",
     "test:watch": "npx vitest --watch",
     "test:file": "npx vitest",
     "test:coverage": "npx vitest --coverage",
     "clean": "./src/sh/clean.sh",
     "clean:local": "./src/sh/clean-local.sh",
-    "build": "./src/sh/build.sh",
+    "build": "./src/sh/build.sh verbose",
     "component": "./web4tscomponent",
     "vitest": "npx vitest run",
     "install-deps": "./src/sh/install-deps.sh"

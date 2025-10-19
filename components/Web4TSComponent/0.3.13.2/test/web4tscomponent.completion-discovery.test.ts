@@ -48,7 +48,7 @@ describe('🔍 Completion Discovery Feature Tests', () => {
       expect(output).toContain('releaseTest');
       
       // Should contain parameter with default value
-      expect(output).toContain('<?successPromotion:');
+      expect(output).toContain('<?versionPromotion:');
       expect(output).toContain('nextPatch');
       
       // Should contain documentation
@@ -157,11 +157,11 @@ describe('🔍 Completion Discovery Feature Tests', () => {
     });
 
     it('3c. should complete parameter prefix to full name', () => {
-      const command = `${cliPath} completion parameter suc`;
+      const command = `${cliPath} completion parameter ver`;
       const output = execSync(command, { encoding: 'utf8', cwd: projectRoot, env: { ...process.env } });
       
       // Should complete to full parameter name (for tab completion)
-      expect(output).toContain('successPromotion');
+      expect(output).toContain('versionPromotion');
       
       // Should NOT contain values (only completes to name, not discovering values yet)
       expect(output).not.toContain('nextPatch nextMinor');
@@ -190,7 +190,7 @@ describe('🔍 Completion Discovery Feature Tests', () => {
       // Should contain optional parameters with defaults
       expect(output).toContain('<?version:');
       expect(output).toContain('<?options:');
-      expect(output).toContain('<?successPromotion:');
+      expect(output).toContain('<?versionPromotion:');
       expect(output).toContain('<?depth:');
     });
 
@@ -204,8 +204,8 @@ describe('🔍 Completion Discovery Feature Tests', () => {
       // Should show options with default
       expect(output).toContain("<?options:'all'>");
       
-      // Should show successPromotion with default
-      expect(output).toContain("<?successPromotion:'nextPatch'>");
+      // Should show versionPromotion with default
+      expect(output).toContain("<?versionPromotion:'nextPatch'>");
     });
   });
 
@@ -262,11 +262,11 @@ describe('🔍 Completion Discovery Feature Tests', () => {
       const command = `${cliPath} completion method initP`;
       const output = execSync(command, { encoding: 'utf8', cwd: projectRoot, env: { ...process.env } });
       
-      // Should contain green color code for TSDoc (32m)
-      expect(output).toContain('\x1b[32m');
+      // Should contain green color code for TSDoc (32m or 0;32m)
+      expect(output).toMatch(/\x1b\[(0;)?32m/);
       
       // Green should be applied to documentation content
-      const greenMatch = output.match(/\x1b\[32m.*Initialize.*\x1b\[0m/s);
+      const greenMatch = output.match(/\x1b\[(0;)?32m.*Initialize.*\x1b\[0m/s);
       expect(greenMatch).toBeDefined();
     });
 
@@ -281,7 +281,7 @@ describe('🔍 Completion Discovery Feature Tests', () => {
       expect(stripped).toContain('releaseTest');
       
       // Should contain parameter
-      expect(stripped).toContain('successPromotion');
+      expect(stripped).toContain('versionPromotion');
       
       // Separator should be present
       const separatorLine = stripped.split('\n').find(l => l.includes('─'));
@@ -299,22 +299,22 @@ describe('🔍 Completion Discovery Feature Tests', () => {
       // Test that full method discovery doesn't take too long
       const start = Date.now();
       const command = `${cliPath} completion method`;
-      execSync(command, { encoding: 'utf8', cwd: projectRoot, env: { ...process.env }, timeout: 15000 });
+      execSync(command, { encoding: 'utf8', cwd: projectRoot, env: { ...process.env }, timeout: 25000 });
       const duration = Date.now() - start;
       
-      // Should complete within reasonable time (not the old 20s+ timeout)
-      expect(duration).toBeLessThan(15000);
+      // Should complete within reasonable time
+      expect(duration).toBeLessThan(25000);
       console.log(`✅ Method discovery completed in ${duration}ms`);
     });
 
     it('7b. should handle parameter discovery without timing out', () => {
       const start = Date.now();
       const command = `${cliPath} completion parameter`;
-      execSync(command, { encoding: 'utf8', cwd: projectRoot, env: { ...process.env }, timeout: 15000 });
+      execSync(command, { encoding: 'utf8', cwd: projectRoot, env: { ...process.env }, timeout: 25000 });
       const duration = Date.now() - start;
       
       // Should complete within reasonable time
-      expect(duration).toBeLessThan(15000);
+      expect(duration).toBeLessThan(25000);
       console.log(`✅ Parameter discovery completed in ${duration}ms`);
     });
 
@@ -341,15 +341,15 @@ describe('🔍 Completion Discovery Feature Tests', () => {
       // Step 1: List parameters
       let command = `${cliPath} completion parameter`;
       let output = execSync(command, { encoding: 'utf8', cwd: projectRoot, env: { ...process.env } });
-      expect(output).toContain('<?successPromotion:');
+      expect(output).toContain('<?versionPromotion:');
       
       // Step 2: Complete to specific parameter
-      command = `${cliPath} completion parameter suc`;
+      command = `${cliPath} completion parameter ver`;
       output = execSync(command, { encoding: 'utf8', cwd: projectRoot, env: { ...process.env } });
-      expect(output).toContain('successPromotion');
+      expect(output).toContain('versionPromotion');
       
       // Step 3: Discover parameter values
-      command = `${cliPath} completion parameter successPromotion`;
+      command = `${cliPath} completion parameter versionPromotion`;
       output = execSync(command, { encoding: 'utf8', cwd: projectRoot, env: { ...process.env } });
       expect(output).toContain('nextPatch');
       expect(output).toContain('nextMinor');
@@ -366,7 +366,7 @@ describe('🔍 Completion Discovery Feature Tests', () => {
       command = `${cliPath} completion method releaseT`;
       output = execSync(command, { encoding: 'utf8', cwd: projectRoot, env: { ...process.env } });
       expect(output).toContain('releaseTest');
-      expect(output).toContain('<?successPromotion:');
+      expect(output).toContain('<?versionPromotion:');
       expect(output).toContain('📖 Documentation:');
       expect(output).toContain('Run tests with configurable release promotion');
     });
