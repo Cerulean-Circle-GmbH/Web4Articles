@@ -729,6 +729,9 @@ Standards:
     // Create root directory if needed
     await fs.mkdir(projectRoot, { recursive: true });
     
+    // Get template path (same logic as loadTemplate method) - needed for all template sync operations
+    const currentDir = path.dirname(new URL(import.meta.url).pathname);
+    
     // 🛡️ SELF-HEALING: Validate and heal root tsconfig.json
     const tsConfigPath = path.join(projectRoot, 'tsconfig.json');
     let tsconfigValid = true;
@@ -769,7 +772,19 @@ Standards:
       await fs.writeFile(tsConfigPath, tsConfigContent);
       console.log(`   ✅ Created tsconfig.json`);
     } else {
-      console.log(`   ℹ️  tsconfig.json already exists (valid)`);
+      // Timestamp-based sync: Check if template is newer than existing file
+      const tsconfigTemplatePath = path.join(currentDir, '../../../templates', 'config/root-tsconfig.json.template');
+      const tsConfigStats = await fs.stat(tsConfigPath);
+      const tsconfigTemplateStats = await fs.stat(tsconfigTemplatePath);
+      
+      if (tsconfigTemplateStats.mtime > tsConfigStats.mtime) {
+        // Template is newer - update the file
+        const tsConfigContent = await this.loadTemplate('config/root-tsconfig.json.template', {});
+        await fs.writeFile(tsConfigPath, tsConfigContent);
+        console.log(`   ✅ Updated tsconfig.json (template is newer)`);
+      } else {
+        console.log(`   ℹ️  tsconfig.json already up to date`);
+      }
     }
     
     // 🛡️ SELF-HEALING: Validate and heal root package.json
@@ -812,7 +827,19 @@ Standards:
       await fs.writeFile(packageJsonPath, packageJsonContent);
       console.log(`   ✅ Created package.json`);
     } else {
-      console.log(`   ℹ️  package.json already exists (valid)`);
+      // Timestamp-based sync: Check if template is newer than existing file
+      const packageTemplatePath = path.join(currentDir, '../../../templates', 'config/root-package.json.template');
+      const packageStats = await fs.stat(packageJsonPath);
+      const packageTemplateStats = await fs.stat(packageTemplatePath);
+      
+      if (packageTemplateStats.mtime > packageStats.mtime) {
+        // Template is newer - update the file
+        const packageJsonContent = await this.loadTemplate('config/root-package.json.template', {});
+        await fs.writeFile(packageJsonPath, packageJsonContent);
+        console.log(`   ✅ Updated package.json (template is newer)`);
+      } else {
+        console.log(`   ℹ️  package.json already up to date`);
+      }
     }
     
     // Create global node_modules directory
@@ -822,9 +849,6 @@ Standards:
     
     // 🛡️ SELF-HEALING: Create or update source.env (essential for tab completion)
     const sourceEnvPath = path.join(projectRoot, 'source.env');
-    
-    // Get template path (same logic as loadTemplate method)
-    const currentDir = path.dirname(new URL(import.meta.url).pathname);
     const templatePath = path.join(currentDir, '../../../templates', 'project/source.env.template');
     
     if (existsSync(sourceEnvPath)) {

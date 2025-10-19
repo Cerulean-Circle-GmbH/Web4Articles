@@ -216,6 +216,21 @@ describe('🔄 Template Synchronization', () => {
           projectPath: path.join(projectRoot, 'package.json'),
           templatePath: path.join(templatesDir, 'config/root-package.json.template'),
         },
+        {
+          name: 'vitest.config.ts',
+          projectPath: path.join(projectRoot, 'components/Web4TSComponent/0.3.13.2/vitest.config.ts'),
+          templatePath: path.join(templatesDir, 'config/vitest.config.ts.template'),
+        },
+        {
+          name: 'build.sh',
+          projectPath: path.join(projectRoot, 'components/Web4TSComponent/0.3.13.2/src/sh/build.sh'),
+          templatePath: path.join(templatesDir, 'sh/build.sh.template'),
+        },
+        {
+          name: 'test.sh',
+          projectPath: path.join(projectRoot, 'components/Web4TSComponent/0.3.13.2/src/sh/test.sh'),
+          templatePath: path.join(templatesDir, 'sh/test.sh.template'),
+        },
       ];
       
       const errors: string[] = [];
