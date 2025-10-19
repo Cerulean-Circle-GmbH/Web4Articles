@@ -15,6 +15,7 @@ import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/di
 export class DefaultPDCA implements PDCA {
   private model: PDCAModel;
   private web4ts?: any; // Lazy-initialized Web4TSComponent for delegation
+  private defaultSession: string = 'scrum.pmo/project.journal/2025-10-14-UTC-0948-session'; // Default session path
 
   constructor() {
     // Empty constructor - Web4 pattern
@@ -100,16 +101,36 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
-   * Check PDCA file(s) for CMM3 compliance violations
+   * Set the default session path for PDCA operations
+   * 
+   * @param sessionPath - Path to session directory
+   * @cliSyntax sessionPath
+   */
+  async setSession(sessionPath: string): Promise<this> {
+    console.log(`\n📁 Setting Default Session Path\n`);
+    console.log(`   Old: ${this.defaultSession}`);
+    console.log(`   New: ${sessionPath}\n`);
+    
+    this.defaultSession = sessionPath;
+    
+    console.log(`✅ Default session updated!`);
+    console.log(`   This will be used for:`);
+    console.log(`   - cmm3checkSession (when no path specified)`);
+    console.log(`   - updateFeatureTrackingTable (when no path specified)\n`);
+    
+    return this;
+  }
+
+  /**
+   * Check a single PDCA file for CMM3 compliance violations
    * Based on scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md
    * 
-   * @param pdcaPath - Path to PDCA file or directory (defaults to current session)
-   * @cliSyntax pdcaPath
-   * @cliDefault pdcaPath scrum.pmo/project.journal/2025-10-14-UTC-0948-session
+   * @param pdcaFile - Path to PDCA file (relative to project root or absolute)
+   * @cliSyntax pdcaFile
    */
-  async cmm3check(pdcaPath: string = 'scrum.pmo/project.journal/2025-10-14-UTC-0948-session'): Promise<this> {
-    console.log(`\n🔍 CMM3 Compliance Check`);
-    console.log(`📁 Target: ${pdcaPath}\n`);
+  async cmm3check(pdcaFile: string): Promise<this> {
+    console.log(`\n🔍 CMM3 Compliance Check - Single File`);
+    console.log(`📄 File: ${pdcaFile}\n`);
 
     const fs = await import('fs/promises');
     const path = await import('path');
@@ -119,20 +140,98 @@ export class DefaultPDCA implements PDCA {
     const __dirname = path.dirname(__filename);
     const componentRoot = path.resolve(__dirname, '../../..');
     const projectRoot = componentRoot.split('/components/')[0];
-    const fullPath = path.join(projectRoot, pdcaPath);
+    
+    // Resolve file path
+    let fullPath: string;
+    if (path.isAbsolute(pdcaFile)) {
+      fullPath = pdcaFile;
+    } else {
+      fullPath = path.join(projectRoot, pdcaFile);
+    }
+
+    // Check if file exists
+    try {
+      const stats = await fs.stat(fullPath);
+      if (!stats.isFile()) {
+        console.log(`❌ Error: ${pdcaFile} is not a file`);
+        console.log(`   Use 'cmm3checkSession' to check a directory\n`);
+        return this;
+      }
+    } catch (error) {
+      console.log(`❌ Error: File not found: ${pdcaFile}\n`);
+      return this;
+    }
+
+    if (!fullPath.endsWith('.pdca.md')) {
+      console.log(`❌ Error: ${pdcaFile} is not a PDCA file (.pdca.md)\n`);
+      return this;
+    }
+
+    // Check the file
+    const fileName = path.basename(fullPath);
+    const content = await fs.readFile(fullPath, 'utf-8');
+    const violations = await this.checkPDCACompliance(content, fileName);
+
+    if (violations.length === 0) {
+      console.log(`✅ ${fileName} - CMM3 Compliant\n`);
+    } else {
+      const level = this.determineCMMLevel(violations);
+      const badge = level === 'CMM1' ? '❌' : level === 'CMM2' ? '⚠️' : '🔄';
+      console.log(`${badge} ${fileName} - ${level}`);
+      console.log(`   Violations: ${violations.join(', ')}\n`);
+      
+      // Show detailed violations
+      console.log(`📋 Violation Details:`);
+      for (const violation of violations) {
+        const description = this.getViolationDescription(violation);
+        console.log(`   ${violation}: ${description}`);
+      }
+      console.log();
+    }
+
+    return this;
+  }
+
+  /**
+   * Check all PDCA files in a session directory for CMM3 compliance violations
+   * Based on scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md
+   * 
+   * @param sessionPath - Path to session directory (defaults to configured session)
+   * @cliSyntax sessionPath
+   */
+  async cmm3checkSession(sessionPath?: string): Promise<this> {
+    const targetPath = sessionPath || this.defaultSession;
+    console.log(`\n🔍 CMM3 Compliance Check - Session`);
+    console.log(`📁 Target: ${targetPath}\n`);
+
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    
+    // Get project root
+    const __filename = (await import('url')).fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const componentRoot = path.resolve(__dirname, '../../..');
+    const projectRoot = componentRoot.split('/components/')[0];
+    const fullPath = path.join(projectRoot, targetPath);
 
     // Check if path exists
-    const stats = await fs.stat(fullPath);
+    let stats;
+    try {
+      stats = await fs.stat(fullPath);
+    } catch (error) {
+      console.log(`❌ Error: Directory not found: ${targetPath}\n`);
+      return this;
+    }
+
     const pdcaFiles: string[] = [];
 
     if (stats.isDirectory()) {
       // Scan directory for PDCA files
       const files = await fs.readdir(fullPath);
       pdcaFiles.push(...files.filter(f => f.endsWith('.pdca.md') && existsSync(path.join(fullPath, f))).map(f => path.join(fullPath, f)));
-    } else if (fullPath.endsWith('.pdca.md')) {
-      pdcaFiles.push(fullPath);
     } else {
-      console.log(`❌ Error: ${pdcaPath} is not a PDCA file or directory`);
+      console.log(`❌ Error: ${targetPath} is not a directory`);
+      console.log(`   Use 'cmm3check' to check a single file\n`);
       return this;
     }
 
@@ -170,9 +269,37 @@ export class DefaultPDCA implements PDCA {
     console.log(`   ✅ CMM3: ${cmm3Count} (${Math.round(cmm3Count/pdcaFiles.length*100)}%)`);
     console.log(`   ⚠️  CMM2: ${cmm2Count} (${Math.round(cmm2Count/pdcaFiles.length*100)}%)`);
     console.log(`   ❌ CMM1: ${cmm1Count} (${Math.round(cmm1Count/pdcaFiles.length*100)}%)`);
-    console.log(`   Total Violations: ${totalViolations}`);
+    console.log(`   Total Violations: ${totalViolations}\n`);
 
     return this;
+  }
+
+  /**
+   * Get human-readable description for a violation code
+   * @cliHide
+   */
+  private getViolationDescription(code: string): string {
+    const descriptions: Record<string, string> = {
+      '1a': 'Template version 3.2.4.2 not found or incorrect structure',
+      '1b': 'UTC timestamp not in correct format',
+      '1c': 'Missing section separators (---)',
+      '1d': 'Template footer (42 Revelation) not found',
+      '1e': 'Dual links contain TBD placeholders',
+      '1g': 'CMM3 violation not properly reported',
+      '1i': 'Git commit/push protocol not followed',
+      '1j': 'QA Decisions section not properly formatted',
+      '3a': 'Links only requirement not met',
+      '3b': 'QA Decisions not copied verbatim',
+      '3c': 'Dual link format incorrect',
+      '4a': 'GitHub URLs not working',
+      '4b': 'PDCA local links not relative',
+      '4c': 'Chat local links not absolute',
+      '4d': '§ notation not used',
+      '5a': 'Filename not in YYYY-MM-DD-UTC-HHMM.pdca.md format',
+      '5c': 'Filename contains descriptive text',
+      '6a': 'Self-assigned CMM badge detected'
+    };
+    return descriptions[code] || 'Unknown violation';
   }
 
   /**
@@ -635,13 +762,13 @@ export class DefaultPDCA implements PDCA {
   /**
    * Update feature tracking table with CMM3 compliance findings
    * 
-   * @param sessionPath - Path to session directory (defaults to current session)
+   * @param sessionPath - Path to session directory (defaults to configured session)
    * @cliSyntax sessionPath
-   * @cliDefault sessionPath scrum.pmo/project.journal/2025-10-14-UTC-0948-session
    */
-  async updateFeatureTrackingTable(sessionPath: string = 'scrum.pmo/project.journal/2025-10-14-UTC-0948-session'): Promise<this> {
+  async updateFeatureTrackingTable(sessionPath?: string): Promise<this> {
+    const targetPath = sessionPath || this.defaultSession;
     console.log(`\n📊 Updating Feature Tracking Table`);
-    console.log(`📁 Session: ${sessionPath}\n`);
+    console.log(`📁 Session: ${targetPath}\n`);
 
     const fs = await import('fs/promises');
     const path = await import('path');
@@ -652,7 +779,7 @@ export class DefaultPDCA implements PDCA {
     const componentRoot = path.resolve(__dirname, '../../..');
     const projectRoot = componentRoot.split('/components/')[0];
     
-    const pdcaDir = path.join(projectRoot, sessionPath);
+    const pdcaDir = path.join(projectRoot, targetPath);
     const tablePath = path.join(pdcaDir, 'feature-gap-analysis-table.md');
     
     // Check if table exists

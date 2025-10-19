@@ -9,7 +9,9 @@ import { PDCAModel } from './PDCAModel.interface.js';
 export interface PDCA {
   init(scenario: Scenario<PDCAModel>): this;
   toScenario(name?: string): Promise<Scenario<PDCAModel>>;
-  cmm3check(pdcaPath?: string): Promise<this>;
+  setSession(sessionPath: string): Promise<this>;
+  cmm3check(pdcaFile: string): Promise<this>;
+  cmm3checkSession(sessionPath?: string): Promise<this>;
   updateFeatureTrackingTable(sessionPath?: string): Promise<this>;
   checkCmm3Checklist(): Promise<this>;
   acceptCmm3Checklist(): Promise<this>;
