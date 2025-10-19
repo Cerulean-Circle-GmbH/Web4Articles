@@ -371,5 +371,45 @@ describe('🔍 Completion Discovery Feature Tests', () => {
       expect(output).toContain('Run tests with configurable release promotion');
     });
   });
+
+  describe('9. Regression Test - P24: completionNameParameterCompletion Array Index Bug', () => {
+    it('9a. should correctly parse "method" from bash completion context (currentArgs[1])', () => {
+      // Bug: completionNameParameterCompletion used currentArgs[0] which got 'completion' instead of 'method'
+      // Fix: Changed to currentArgs[1] to correctly extract the 'what' parameter
+      // Context: Bash completion passes ['completion', 'method'] not just ['method']
+      
+      const command = `${cliPath} completion method`;
+      const output = execSync(command, { encoding: 'utf8', cwd: projectRoot, env: { ...process.env } });
+      
+      // Should show numbered method list, NOT directory listing
+      expect(output).toMatch(/1:/);
+      expect(output).toMatch(/2:/);
+      
+      // Should contain methods (not .git/, .github/ directory fallback)
+      expect(output).toContain('analyzeComponentMethods');
+      expect(output).toContain('create');
+      expect(output).toContain('build');
+      
+      // Should NOT show directory listing fallback
+      expect(output).not.toContain('.git/');
+      expect(output).not.toContain('.github/');
+    });
+
+    it('9b. should correctly parse "parameter" from bash completion context', () => {
+      const command = `${cliPath} completion parameter`;
+      const output = execSync(command, { encoding: 'utf8', cwd: projectRoot, env: { ...process.env } });
+      
+      // Should show numbered parameter completion list
+      expect(output).toMatch(/1:/);
+      
+      // Should contain parameter completions
+      const stripped = output.replace(/\x1b\[[0-9;]*m/g, '');
+      expect(stripped).toContain('componentParameterCompletion');
+      expect(stripped).toContain('scopeParameterCompletion');
+      
+      // Should NOT show directory listing fallback
+      expect(output).not.toContain('.git/');
+    });
+  });
 });
 
