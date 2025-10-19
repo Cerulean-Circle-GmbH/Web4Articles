@@ -288,6 +288,279 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
+   * Fix dual links in markdown files to comply with Web4 dual link standard
+   * Uses Web4TSComponent prod to find project root
+   * Based on scripts/fix.dual.links logic
+   * 
+   * @param target - File or directory to fix (defaults to project root)
+   * @cliSyntax target
+   * @cliDefault target §
+   */
+  async fixDualLinks(target: string = '§'): Promise<this> {
+    console.log(`\n🔧 Fixing Dual Links\n`);
+
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    const { existsSync, lstatSync, readlinkSync } = await import('fs');
+    
+    // Get project root using search logic
+    const projectRoot = await this.getProjectRoot();
+    
+    console.log(`📍 Project Root: ${projectRoot}`);
+    
+    // Resolve target path
+    let targetPath: string;
+    if (target === '§') {
+      targetPath = projectRoot;
+    } else if (target.startsWith('§/')) {
+      // Remove § prefix and join with project root
+      targetPath = path.join(projectRoot, target.substring(2));
+    } else if (path.isAbsolute(target)) {
+      targetPath = target;
+    } else {
+      // Relative path - join with project root, not cwd
+      targetPath = path.join(projectRoot, target);
+    }
+    
+    console.log(`🎯 Target: ${targetPath}`);
+    console.log(`📋 Dual Link Standard: [GitHub](URL) | [§/path](relative/path)\n`);
+    
+    // Check if target exists
+    try {
+      await fs.stat(targetPath);
+    } catch (error) {
+      console.log(`❌ Error: Target not found: ${targetPath}`);
+      return this;
+    }
+    
+    // Process target
+    const stats = await fs.stat(targetPath);
+    let totalFiles = 0;
+    let fixedFiles = 0;
+    
+    if (stats.isFile()) {
+      // Single file
+      if (targetPath.endsWith('.md')) {
+        totalFiles = 1;
+        if (await this.fixMarkdownFile(targetPath, projectRoot, fs, path)) {
+          fixedFiles = 1;
+          console.log(`✅ Successfully fixed dual links in: ${targetPath.replace(projectRoot + '/', '')}`);
+        } else {
+          console.log(`ℹ️  No changes needed in: ${targetPath.replace(projectRoot + '/', '')}`);
+        }
+      } else {
+        console.log(`⚠️  Target is not a markdown file: ${targetPath}`);
+      }
+    } else if (stats.isDirectory()) {
+      // Directory - process recursively
+      console.log(`📁 Processing directory: ${targetPath.replace(projectRoot + '/', '')}\n`);
+      
+      const result = await this.processDirectory(targetPath, projectRoot, fs, path);
+      totalFiles = result.total;
+      fixedFiles = result.fixed;
+    }
+    
+    console.log(`\n📊 Summary: Processed ${totalFiles} files, fixed ${fixedFiles} files`);
+    console.log(`✅ Dual Link fixing complete!\n`);
+    
+    return this;
+  }
+
+  /**
+   * Get project root by searching for .git directory
+   * Same logic as Web4TSComponent's findProjectRoot
+   * @cliHide
+   */
+  private async getProjectRoot(): Promise<string> {
+    const path = await import('path');
+    const fs = await import('fs/promises');
+    
+    // Start from current working directory
+    let currentDir = process.cwd();
+    
+    while (currentDir !== '/') {
+      try {
+        // Check if .git exists (file or directory)
+        const gitPath = path.join(currentDir, '.git');
+        await fs.stat(gitPath);
+        // Found .git, this is the project root
+        return currentDir;
+      } catch {
+        // .git not found, go up one directory
+        currentDir = path.dirname(currentDir);
+      }
+    }
+    
+    // Fallback to current directory if no .git found
+    return process.cwd();
+  }
+
+  /**
+   * Calculate relative path from document to target
+   * @cliHide
+   */
+  private calculateRelativePath(docPath: string, targetPath: string, path: typeof import('path')): string {
+    const docDir = path.dirname(docPath);
+    return path.relative(docDir, targetPath);
+  }
+
+  /**
+   * Fix dual links in a single markdown file
+   * @cliHide
+   */
+  private async fixMarkdownFile(
+    mdFile: string,
+    projectRoot: string,
+    fs: typeof import('fs/promises'),
+    path: typeof import('path')
+  ): Promise<boolean> {
+    const { existsSync } = await import('fs');
+    
+    console.log(`📄 Processing: ${mdFile.replace(projectRoot + '/', '')}`);
+    
+    // Read file
+    const content = await fs.readFile(mdFile, 'utf-8');
+    const lines = content.split('\n');
+    
+    let changes = 0;
+    const newLines: string[] = [];
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const lineNum = i + 1;
+      
+      // Pattern 1: Standard dual link [GitHub](...) | [text](path)
+      const standardMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
+      
+      // Pattern 2: Missing brackets [GitHub](...) | plain/text
+      const missingBracketsMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*([^[].+[^)])$/);
+      
+      if (standardMatch) {
+        const [fullMatch, githubUrl, displayText, localPath] = standardMatch;
+        
+        // Extract GitHub path
+        const githubPathMatch = githubUrl.match(/github\.com\/[^/]+\/[^/]+\/blob\/[^/]+\/(.+)$/);
+        const githubPath = githubPathMatch ? githubPathMatch[1] : null;
+        
+        // Determine if fix is needed
+        let needsFix = false;
+        let newDisplay = displayText;
+        let newPath = localPath;
+        
+        // Check if display and path match (should use § notation)
+        if (displayText === localPath && !localPath.startsWith('../')) {
+          if (existsSync(path.join(projectRoot, localPath))) {
+            needsFix = true;
+            newDisplay = `§/${localPath}`;
+            newPath = this.calculateRelativePath(mdFile, path.join(projectRoot, localPath), path);
+          }
+        }
+        // Check if GitHub path differs from local path
+        else if (githubPath && githubPath !== localPath) {
+          const expectedPath = this.calculateRelativePath(mdFile, path.join(projectRoot, githubPath), path);
+          if (localPath !== expectedPath && existsSync(path.join(projectRoot, githubPath))) {
+            needsFix = true;
+            newDisplay = `§/${githubPath}`;
+            newPath = expectedPath;
+          }
+        }
+        
+        if (needsFix) {
+          const leading = line.match(/^(\s*)/)?.[1] || '';
+          const newLine = `${leading}[GitHub](${githubUrl}) | [${newDisplay}](${newPath})`;
+          newLines.push(newLine);
+          changes++;
+          console.log(`   ✅ Line ${lineNum}: Fixed dual link`);
+          console.log(`      Old: [${displayText}](${localPath})`);
+          console.log(`      New: [${newDisplay}](${newPath})`);
+        } else {
+          newLines.push(line);
+        }
+      } else if (missingBracketsMatch) {
+        const [, githubUrl, plainPath] = missingBracketsMatch;
+        
+        // Fix missing brackets
+        const trimmedPath = plainPath.trim();
+        let newDisplay: string;
+        let newPath: string;
+        
+        if (existsSync(path.join(projectRoot, trimmedPath))) {
+          newDisplay = `§/${trimmedPath}`;
+          newPath = this.calculateRelativePath(mdFile, path.join(projectRoot, trimmedPath), path);
+        } else {
+          newDisplay = trimmedPath;
+          newPath = trimmedPath;
+        }
+        
+        const leading = line.match(/^(\s*)/)?.[1] || '';
+        const newLine = `${leading}[GitHub](${githubUrl}) | [${newDisplay}](${newPath})`;
+        newLines.push(newLine);
+        changes++;
+        console.log(`   ✅ Line ${lineNum}: Fixed missing brackets`);
+        console.log(`      Old: ${plainPath}`);
+        console.log(`      New: [${newDisplay}](${newPath})`);
+      } else {
+        newLines.push(line);
+      }
+    }
+    
+    // Write file if changes were made
+    if (changes > 0) {
+      await fs.writeFile(mdFile, newLines.join('\n'));
+      console.log(`   ✅ Fixed ${changes} dual links\n`);
+      return true;
+    } else {
+      console.log(`   ℹ️  No dual links needed fixing\n`);
+      return false;
+    }
+  }
+
+  /**
+   * Process directory recursively
+   * @cliHide
+   */
+  private async processDirectory(
+    dir: string,
+    projectRoot: string,
+    fs: typeof import('fs/promises'),
+    path: typeof import('path')
+  ): Promise<{total: number, fixed: number}> {
+    let total = 0;
+    let fixed = 0;
+    
+    const shouldSkip = (filePath: string): boolean => {
+      return filePath.includes('/node_modules/') ||
+             filePath.includes('/.git/') ||
+             filePath.includes('/target/') ||
+             filePath.includes('/dist/') ||
+             filePath.includes('/.next/');
+    };
+    
+    const processDir = async (currentDir: string): Promise<void> => {
+      const entries = await fs.readdir(currentDir, { withFileTypes: true });
+      
+      for (const entry of entries) {
+        const fullPath = path.join(currentDir, entry.name);
+        
+        if (shouldSkip(fullPath)) continue;
+        
+        if (entry.isDirectory()) {
+          await processDir(fullPath);
+        } else if (entry.isFile() && entry.name.endsWith('.md')) {
+          total++;
+          if (await this.fixMarkdownFile(fullPath, projectRoot, fs, path)) {
+            fixed++;
+          }
+        }
+      }
+    };
+    
+    await processDir(dir);
+    
+    return { total, fixed };
+  }
+
+  /**
    * Update feature tracking table with CMM3 compliance findings
    * 
    * @param sessionPath - Path to session directory (defaults to current session)
@@ -622,13 +895,51 @@ export class DefaultPDCA implements PDCA {
 
   /**
    * 3c) Dual link format: [GitHub](URL) | [§/path](path)
+   * Checks that all dual links follow proper format
    * @cliHide
    */
   private check3c(content: string): boolean {
-    // Check for proper dual link format
-    return content.includes('[GitHub]') && 
-           content.includes('[§/') &&
-           content.includes('github.com');
+    // Find all lines with dual links
+    const lines = content.split('\n');
+    
+    for (const line of lines) {
+      // Check for GitHub dual link patterns
+      if (line.includes('[GitHub](') && line.includes('|')) {
+        // Pattern 1: Standard dual link [GitHub](...) | [text](path)
+        const standardMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
+        
+        // Pattern 2: Missing brackets [GitHub](...) | plain/text (VIOLATION)
+        const missingBracketsMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*([^[].+[^)])$/);
+        
+        if (missingBracketsMatch) {
+          // Found dual link with missing brackets - this is a violation
+          return false;
+        }
+        
+        if (standardMatch) {
+          const [, githubUrl, displayText, localPath] = standardMatch;
+          
+          // Check if display text uses § notation or is a relative path
+          // Valid: [§/path/to/file](../../../path/to/file)
+          // Valid: [local/file](local/file)
+          // Invalid: [/absolute/path](../../../path) without §
+          // Invalid: display text and local path don't match pattern
+          
+          if (displayText.startsWith('/') && !displayText.startsWith('§/')) {
+            // Absolute path without § notation
+            return false;
+          }
+          
+          // Check if GitHub URL is valid
+          if (!githubUrl.includes('github.com')) {
+            return false;
+          }
+        }
+      }
+    }
+    
+    // All dual links are properly formatted
+    return true;
   }
 
   /**

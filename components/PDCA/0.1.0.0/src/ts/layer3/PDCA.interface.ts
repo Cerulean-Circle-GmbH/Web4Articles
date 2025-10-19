@@ -12,6 +12,7 @@ export interface PDCA {
   cmm3check(pdcaPath?: string): Promise<this>;
   updateFeatureTrackingTable(sessionPath?: string): Promise<this>;
   checkChecklistFreshness(): Promise<this>;
+  fixDualLinks(target?: string): Promise<this>;
   process(data: string): Promise<this>;
   info(): Promise<this>;
   test(): Promise<this>;
