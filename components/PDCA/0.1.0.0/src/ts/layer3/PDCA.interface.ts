@@ -10,6 +10,7 @@ export interface PDCA {
   init(scenario: Scenario<PDCAModel>): this;
   toScenario(name?: string): Promise<Scenario<PDCAModel>>;
   cmm3check(pdcaPath?: string): Promise<this>;
+  updateFeatureTrackingTable(sessionPath?: string): Promise<this>;
   process(data: string): Promise<this>;
   info(): Promise<this>;
   test(): Promise<this>;

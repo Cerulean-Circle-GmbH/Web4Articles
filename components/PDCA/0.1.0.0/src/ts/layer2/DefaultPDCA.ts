@@ -211,6 +211,132 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
+   * Update feature tracking table with CMM3 compliance findings
+   * 
+   * @param sessionPath - Path to session directory (defaults to current session)
+   * @cliSyntax sessionPath
+   * @cliDefault sessionPath scrum.pmo/project.journal/2025-10-14-UTC-0948-session
+   */
+  async updateFeatureTrackingTable(sessionPath: string = 'scrum.pmo/project.journal/2025-10-14-UTC-0948-session'): Promise<this> {
+    console.log(`\n📊 Updating Feature Tracking Table`);
+    console.log(`📁 Session: ${sessionPath}\n`);
+
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    
+    // Get project root
+    const __filename = (await import('url')).fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const componentRoot = path.resolve(__dirname, '../../..');
+    const projectRoot = componentRoot.split('/components/')[0];
+    
+    const pdcaDir = path.join(projectRoot, sessionPath);
+    const tablePath = path.join(pdcaDir, 'feature-gap-analysis-table.md');
+    
+    // Check if table exists
+    if (!existsSync(tablePath)) {
+      console.log(`❌ Error: Feature tracking table not found at ${tablePath}`);
+      return this;
+    }
+
+    // Scan PDCAs and collect compliance data
+    const files = await fs.readdir(pdcaDir);
+    const pdcaFiles = files.filter(f => f.endsWith('.pdca.md') && existsSync(path.join(pdcaDir, f))).sort();
+    
+    console.log(`🔍 Scanning ${pdcaFiles.length} PDCA files...`);
+    
+    const pdcaData = new Map<string, {filename: string, violations: string[], level: string}>();
+    
+    for (const fileName of pdcaFiles) {
+      const filePath = path.join(pdcaDir, fileName);
+      try {
+        const content = await fs.readFile(filePath, 'utf-8');
+        const violations = await this.checkPDCACompliance(content, fileName);
+        const level = this.determineCMMLevel(violations);
+        
+        pdcaData.set(fileName, { filename: fileName, violations, level });
+      } catch (error) {
+        console.log(`⚠️  Skipping ${fileName}: ${error}`);
+      }
+    }
+    
+    // Read current table
+    let tableContent = await fs.readFile(tablePath, 'utf-8');
+    
+    // Update table rows
+    let updatedCount = 0;
+    const lines = tableContent.split('\n');
+    const updatedLines: string[] = [];
+    
+    for (const line of lines) {
+      // Match table rows with PDCA references
+      const match = line.match(/\|\s*\*\*P\d+\*\*\s*\|(.*?)\|\s*\[GitHub\].*?(\d{4}-\d{2}-\d{2}-UTC-\d{4}[^)]*\.pdca\.md)/);
+      
+      if (match) {
+        const pdcaFilename = path.basename(match[2]);
+        const data = pdcaData.get(pdcaFilename);
+        
+        if (data) {
+          // Extract columns
+          const columns = line.split('|').map(c => c.trim());
+          
+          if (columns.length >= 5) {
+            // Update column 3 (index 4): CMM3 Compliant
+            let complianceStatus = '';
+            if (data.level === 'CMM3') {
+              complianceStatus = '✅ CMM3';
+            } else if (data.level === 'CMM2') {
+              if (data.violations.length > 0) {
+                complianceStatus = `⚠️ CMM2 (${data.violations.join(', ')})`;
+              } else {
+                complianceStatus = '⚠️ CMM2';
+              }
+            } else {
+              if (data.violations.length > 0) {
+                complianceStatus = `❌ CMM1 (${data.violations.join(', ')})`;
+              } else {
+                complianceStatus = '❌ CMM1';
+              }
+            }
+            
+            // Add tool-discovered marker
+            complianceStatus += ' [tool]';
+            
+            columns[4] = complianceStatus;
+            
+            // Reconstruct line
+            const updatedLine = columns.join(' | ');
+            updatedLines.push(updatedLine);
+            updatedCount++;
+            continue;
+          }
+        }
+      }
+      
+      updatedLines.push(line);
+    }
+    
+    // Write updated table
+    const updatedContent = updatedLines.join('\n');
+    await fs.writeFile(tablePath, updatedContent);
+    
+    console.log(`✅ Updated ${updatedCount} PDCA entries in feature tracking table`);
+    console.log(`📍 File: ${tablePath}\n`);
+    
+    // Show summary
+    const cmm3Count = Array.from(pdcaData.values()).filter(d => d.level === 'CMM3').length;
+    const cmm2Count = Array.from(pdcaData.values()).filter(d => d.level === 'CMM2').length;
+    const cmm1Count = Array.from(pdcaData.values()).filter(d => d.level === 'CMM1').length;
+    
+    console.log(`📈 Compliance Summary:`);
+    console.log(`   ✅ CMM3: ${cmm3Count} (${Math.round(cmm3Count/pdcaFiles.length*100)}%)`);
+    console.log(`   ⚠️  CMM2: ${cmm2Count} (${Math.round(cmm2Count/pdcaFiles.length*100)}%)`);
+    console.log(`   ❌ CMM1: ${cmm1Count} (${Math.round(cmm1Count/pdcaFiles.length*100)}%)`);
+
+    return this;
+  }
+
+  /**
    * Check a single PDCA content for CMM3 compliance violations
    * Based on scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md
    * @cliHide
