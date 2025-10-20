@@ -918,12 +918,28 @@ export class TSCompletion implements Completion {
       console.error('[TSCompletion] args:', JSON.stringify(args));
     }
     
-    // ✅ HIERARCHICAL DISPLAY FIX: Empty args (just className) → trigger callback
+    // ✅ HIERARCHICAL DISPLAY FIX: Empty args or partial method name → return callback hint with context
     // When bash calls: TSCompletion.ts Web4TSComponentCLI,DefaultWeb4TSComponent
-    // We should return callback hint to show hierarchical numbered list
+    // OR: TSCompletion.ts Web4TSComponentCLI,DefaultWeb4TSComponent '' (bash adds empty string)
+    // OR: TSCompletion.ts Web4TSComponentCLI,DefaultWeb4TSComponent com (partial method name)
+    // Return callback hint WITH context args so bash calls:
+    // web4tscomponent completeParameter filterParameterCompletion completion method [filterPrefix]
     if (args.length === 1 && args[0].includes(',')) {
-      // className only, no method → show all methods via callback
-      console.log('__CALLBACK__:completionNameParameterCompletion');
+      // Just className, no method → show all methods
+      console.log('__CALLBACK__:filterParameterCompletion:completion:method');
+      return;
+    }
+    
+    if (args.length === 2 && args[0].includes(',')) {
+      // ClassName + one arg: either empty string or partial method name
+      const potentialFilter = args[1];
+      if (potentialFilter === '') {
+        // Empty string → show all methods
+        console.log('__CALLBACK__:filterParameterCompletion:completion:method');
+      } else {
+        // Partial method name → show filtered methods
+        console.log(`__CALLBACK__:filterParameterCompletion:completion:method:${potentialFilter}`);
+      }
       return;
     }
     
