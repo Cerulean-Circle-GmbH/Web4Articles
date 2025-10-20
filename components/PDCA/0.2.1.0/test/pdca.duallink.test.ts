@@ -183,6 +183,59 @@ Second link: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/
     expect(Array.isArray(results)).toBe(true);
     expect(results.length).toBeGreaterThan(0);
   });
+
+  // TC19: findPDCAsLinking - Scans all .md files (not just .pdca.md)
+  it('TC19: findPDCAsLinking should scan all .md files including non-PDCA markdown', async () => {
+    // Create a regular .md file (not .pdca.md) with a dual link
+    const regularMdPath = join(testDataDir, 'regular-markdown.md');
+    const regularMdContent = `# Regular Markdown File
+
+This is not a PDCA file but should still be scanned.
+
+**Dual Link:**
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-17-UTC-0747/test/data/dual-link-tests/target-file.md) | [§/test/data/dual-link-tests/target-file.md](test/data/dual-link-tests/target-file.md)
+`;
+    await writeFile(regularMdPath, regularMdContent);
+    
+    const output = await captureConsoleOutput(() => 
+      pdca.findPDCAsLinking('test/data/dual-link-tests/target-file.md')
+    );
+    
+    expect(output).toContain('Scanning');
+    expect(output).toContain('markdown files');
+    // Should find the regular .md file we just created
+    expect(output).toContain('regular-markdown.md');
+  });
+
+  // TC20: updateLinksToFile - Updates links in all .md files
+  it('TC20: updateLinksToFile should update links in all .md files (dry-run)', async () => {
+    // Create a regular .md file with a link that needs updating
+    const regularMdPath = join(testDataDir, 'needs-update.md');
+    const regularMdContent = `# File with Outdated Link
+
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-17-UTC-0747/test/data/old-path.md) | [§/test/data/old-path.md](test/data/old-path.md)
+`;
+    await writeFile(regularMdPath, regularMdContent);
+    
+    const output = await captureConsoleOutput(() => 
+      pdca.updateLinksToFile('test/data/old-path.md', 'test/data/new-path.md', 'true')
+    );
+    
+    expect(output).toContain('DRY RUN');
+    expect(output).toContain('Would update');
+    expect(output).toContain('needs-update.md');
+  });
+
+  // TC21: ensureValidLinks - Validates links in all .md files
+  it('TC21: ensureValidLinks should validate links across all .md files', async () => {
+    const output = await captureConsoleOutput(() => 
+      pdca.ensureValidLinks('components/PDCA/0.2.1.0/package.json', 'true')
+    );
+    
+    expect(output).toContain('Scanning');
+    expect(output).toContain('markdown files');
+    expect(output).toContain('Summary');
+  });
 });
 
 // Helper to capture console output

@@ -2077,7 +2077,7 @@ export class DefaultPDCA implements PDCA {
         
         if (entry.isDirectory()) {
           await scanDir(fullPath);
-        } else if (entry.isFile() && entry.name.endsWith('.pdca.md')) {
+        } else if (entry.isFile() && entry.name.endsWith('.md')) {
           pdcaFiles.push(fullPath);
         }
       }
@@ -2085,7 +2085,7 @@ export class DefaultPDCA implements PDCA {
     
     await scanDir(projectRoot);
     
-    console.log(`📊 Scanning ${pdcaFiles.length} PDCA files...\n`);
+    console.log(`📊 Scanning ${pdcaFiles.length} markdown files...\n`);
     
     // Search for links in each PDCA
     const matches: Array<{file: string, lines: Array<{num: number, content: string}>}> = [];
@@ -2203,7 +2203,7 @@ export class DefaultPDCA implements PDCA {
         
         if (entry.isDirectory()) {
           await scanDir(fullPath);
-        } else if (entry.isFile() && entry.name.endsWith('.pdca.md')) {
+        } else if (entry.isFile() && entry.name.endsWith('.md')) {
           pdcaFiles.push(fullPath);
         }
       }
@@ -2420,7 +2420,7 @@ export class DefaultPDCA implements PDCA {
     console.log(`\n✨ Canonical link: ${canonicalLink.substring(0, 80)}...\n`);
     
     // Step 4: Find all PDCAs linking to target
-    console.log(`🔍 Scanning project for PDCAs with links...\n`);
+    console.log(`🔍 Scanning project for markdown files...\n`);
     
     const pdcaFiles: string[] = [];
     
@@ -2442,7 +2442,7 @@ export class DefaultPDCA implements PDCA {
         
         if (entry.isDirectory()) {
           await scanDir(fullPath);
-        } else if (entry.isFile() && entry.name.endsWith('.pdca.md')) {
+        } else if (entry.isFile() && entry.name.endsWith('.md')) {
           pdcaFiles.push(fullPath);
         }
       }
