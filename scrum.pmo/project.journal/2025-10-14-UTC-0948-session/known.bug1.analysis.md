@@ -254,6 +254,149 @@ Keep the hierarchical display for `web4tscomponent <TAB>`, but ensure the normal
 
 ---
 
+## Architectural Lessons Learned
+
+### The Complexity Trap
+
+**Key Insight:** The hierarchical display feature (commit c4fbcfbe) is itself a fundamental and valuable feature. However, its implementation in bash script introduced complexity that made the system fragile and broke previously working functionality.
+
+**The Problem:**
+When we added the hierarchical display block (lines 143-308) to intercept `web4tscomponent <TAB>` and show the numbered list on first TAB press, we:
+1. Added conditional logic to detect empty args or single partial method names
+2. Directly executed callbacks from within bash
+3. Introduced multiple code paths for similar scenarios
+4. Created interdependencies between the trailing empty fix and the hierarchical display logic
+
+**The Consequence:**
+- ✅ `web4tscomponent <TAB>` works (new feature)
+- ✅ `web4tscomponent co<TAB>` works (filtered display)
+- ❌ `web4tscomponent completion method <TAB>` BROKEN (regression)
+- ❌ `web4tscomponent completion parameter <TAB>` BROKEN (regression)
+
+**Both features are fundamental. Both are now partially broken.**
+
+### Violation of Core Design Principle
+
+**Original Web4 Philosophy: "All logic in TypeScript"**
+
+The Web4 architecture was designed with a clear separation:
+- **Bash script:** Minimal glue code, just argument passing and display
+- **TypeScript:** All intelligence, completion logic, parameter analysis, filtering
+
+**What We Violated:**
+By adding the hierarchical display logic directly in bash, we:
+1. Duplicated completion logic across bash and TypeScript
+2. Made the bash script "smart" about when to call callbacks
+3. Introduced bash-specific array handling quirks
+4. Created timing dependencies (callback execution order matters)
+5. Made debugging harder (bash vs TypeScript, which is at fault?)
+
+**The Original Design Was Elegant:**
+```bash
+# Simple, bulletproof:
+local completeArgs=("$className" "${args[@]}")
+local out=$(node ... "$tsc" "${completeArgs[@]}")
+if [[ "$out" == __CALLBACK__:* ]]; then
+    callback="${out#__CALLBACK__:}"
+    out=$($cli completeParameter "$callback" "${args[@]}")
+fi
+```
+
+TypeScript decides EVERYTHING:
+- Which callback to call
+- What arguments to pass
+- What to return
+
+Bash just displays it. **No conditional logic. No intelligence.**
+
+### Why This Matters
+
+**Fragility Introduced:**
+- The trailing empty element fix (lines 46-52) now interacts with the hierarchical display logic
+- Changing one affects the other
+- Multiple engineers (or AI agents) working on this will introduce more bugs
+- The codebase becomes harder to understand and maintain
+
+**Testing Burden:**
+- Every change to bash completion now requires testing 6+ scenarios
+- Edge cases multiply (empty args, single arg, multi-arg, trailing space, etc.)
+- Regression risk is high
+
+**Debugging Nightmare:**
+- Is the bug in bash array handling?
+- Is the bug in the TypeScript callback?
+- Is the bug in the conditional logic?
+- Is the bug in the timeout?
+- Multiple points of failure make root cause analysis slow
+
+### The CMM Perspective
+
+**CMM1 → CMM2 Descent:**
+When we added complexity to bash to solve one problem (hierarchical display on first TAB), we:
+- Lost reproducibility (sometimes works, sometimes doesn't)
+- Lost predictability (same input, different behavior based on code path)
+- Lost simplicity (100+ lines of conditional logic vs. 10 lines of simple delegation)
+
+**This is a classic CMM trap:** Solving a problem by adding complexity instead of finding the root cause.
+
+### The Real Question
+
+**Why did we move logic into bash in the first place?**
+
+The hierarchical display feature is valuable. But should it have been implemented by:
+- **Option A:** Adding bash conditional logic to intercept empty args
+- **Option B:** Making TypeScript smarter to automatically return hierarchical display for empty method args
+
+**Option B would have:**
+- Kept all logic in TypeScript
+- No bash changes needed (except maybe `bind 'set show-all-if-ambiguous on'`)
+- No trailing empty argument issues
+- No regression risk
+- Easier to test (TypeScript unit tests vs. bash integration tests)
+
+### Conclusion
+
+**The architectural principle "All logic in TypeScript" was correct.**
+
+When we violated it by adding intelligence to bash, we:
+1. Introduced fragility
+2. Created regressions
+3. Made debugging harder
+4. Increased maintenance burden
+5. Lost the simplicity that made the system robust
+
+**The fix is not just about trailing empty arguments.**
+**The fix is about returning to the core principle:**
+- Bash = dumb display layer
+- TypeScript = intelligent completion engine
+
+---
+
+## Recommended Path Forward
+
+1. **Revert bash to simple 58a9b0a1 architecture**
+2. **Implement hierarchical display feature in TypeScript:**
+   - Detect when `what === 'method'` and `filterPrefix === ''`
+   - Automatically invoke `completionNameParameterCompletion` from within TypeScript
+   - Return the hierarchical display directly
+3. **Keep bash script minimal:**
+   - Just display whatever TypeScript returns
+   - No conditional logic
+   - No intelligence
+
+This way:
+- ✅ All 6 test cases work
+- ✅ No bash complexity
+- ✅ All logic in TypeScript
+- ✅ Easy to test
+- ✅ Easy to maintain
+- ✅ No regressions
+
+**"Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."**
+The logic should be in ONE place (TypeScript), not duplicated across TWO layers (bash + TypeScript).
+
+---
+
 ## References
 
 - **Working Commit:** 58a9b0a1 (2025-10-17-UTC-2015)
