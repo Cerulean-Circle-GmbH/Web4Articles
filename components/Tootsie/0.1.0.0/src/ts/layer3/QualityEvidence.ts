@@ -216,3 +216,16 @@ export interface NetworkTraffic {
     protocol: string;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+

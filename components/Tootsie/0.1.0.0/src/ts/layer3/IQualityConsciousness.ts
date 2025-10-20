@@ -79,3 +79,16 @@ export interface IQualityConsciousness {
     joinQualityNetwork(networkIOR: IOR): Promise<void>;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
