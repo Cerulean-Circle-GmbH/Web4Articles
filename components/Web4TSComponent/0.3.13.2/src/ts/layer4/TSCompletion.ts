@@ -917,6 +917,16 @@ export class TSCompletion implements Completion {
     if (logLevel > 3) {
       console.error('[TSCompletion] args:', JSON.stringify(args));
     }
+    
+    // ✅ HIERARCHICAL DISPLAY FIX: Empty args (just className) → trigger callback
+    // When bash calls: TSCompletion.ts Web4TSComponentCLI,DefaultWeb4TSComponent
+    // We should return callback hint to show hierarchical numbered list
+    if (args.length === 1 && args[0].includes(',')) {
+      // className only, no method → show all methods via callback
+      console.log('__CALLBACK__:completionNameParameterCompletion');
+      return;
+    }
+    
     const completion = new TSCompletion();
     const results = completion.complete(args);
     if (results.length > 0) {
