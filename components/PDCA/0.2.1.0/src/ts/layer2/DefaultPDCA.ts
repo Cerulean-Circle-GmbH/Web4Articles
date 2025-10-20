@@ -1830,11 +1830,14 @@ export class DefaultPDCA implements PDCA {
   /**
    * Get dual link for a file (GitHub URL + chat path)
    * Auto-fixes git status: adds, commits, pushes if needed
+   * Generates RELATIVE paths for markdown file portability
    * 
    * @param filePath Path to file (absolute or project-root-relative)
-   * @cliSyntax filePath
+   * @param fromDirectory Optional: directory to calculate relative path from (defaults to CWD)
+   * @cliSyntax filePath fromDirectory
+   * @cliDefault fromDirectory ""
    */
-  async getDualLink(filePath: string): Promise<this> {
+  async getDualLink(filePath: string, fromDirectory?: string): Promise<this> {
     console.log(`\n🔗 Generating Dual Link\n`);
     
     const fs = await import('fs/promises');
@@ -1865,6 +1868,17 @@ export class DefaultPDCA implements PDCA {
     }
     
     console.log(`📄 Target: ${normalizedPath}`);
+    
+    // Determine source directory for relative path calculation
+    const sourceDir = fromDirectory 
+      ? path.resolve(projectRoot, fromDirectory)
+      : process.cwd();
+    
+    // Calculate relative path from source to target
+    const relativePath = path.relative(sourceDir, fullPath);
+    
+    console.log(`📂 From: ${path.relative(projectRoot, sourceDir) || '(project root)'}`);
+    console.log(`🔗 Relative path: ${relativePath}`);
     console.log(`🔍 Checking git status...`);
     
     // Check and fix git status
@@ -1945,9 +1959,9 @@ export class DefaultPDCA implements PDCA {
       
       const githubUrl = `https://github.com/${org}/${repo}/blob/${branch}/${normalizedPath}`;
       
-      // Generate dual link
+      // Generate dual link with RELATIVE path in href
       console.log(`\n✨ Dual Link Generated:\n`);
-      console.log(`[GitHub](${githubUrl}) | [§/${normalizedPath}](${normalizedPath})\n`);
+      console.log(`[GitHub](${githubUrl}) | [§/${normalizedPath}](${relativePath})\n`);
       
     } catch (error: any) {
       console.log(`❌ Error: ${error.message}\n`);
