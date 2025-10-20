@@ -1515,10 +1515,10 @@ export class DefaultPDCA implements PDCA {
    * Train AI agents on specific topics with CMM3-defined, reproducible learning paths
    * Systematically transfers knowledge to ensure agents don't repeat CMM2 mistakes
    * 
-   * @param topic Training topic identifier (e.g., "how-to-start", "how-to-pdca", "how-to-cmm", "how-to-component")
+   * @param topic Training topic identifier (e.g., "how-to-start", "how-to-pdca", "how-to-cmm", "how-to-component", "how-to-dual-links", "how-to-ensure-links", "how-to-component-upgrade")
    * @param options Optional training configuration
    * @cliSyntax topic
-   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component
+   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-dual-links how-to-ensure-links how-to-component-upgrade
    */
   async trainAI(topic: string): Promise<this> {
     console.log(`\n🎓 AI Training Module - CMM3 Reproducible Learning\n`);
@@ -1562,14 +1562,16 @@ export class DefaultPDCA implements PDCA {
           '✅ Follow startup decisions: Focus, Role, Duration, Location, Identity',
           '✅ Create session-start PDCA using timestamp-only filename',
           '✅ Verify CMM3 compliance: objective, reproducible, verifiable',
-          '⚠️ Read to depth 3: document → references → secondary references'
+          '⚠️ Read to depth 3: document → references → secondary references',
+          '🔗 Session end: Validate dual links with `pdca ensureValidLinks <session-dir>`'
         ],
         verificationChecklist: [
           'Can recite the 12 startup steps from README.md',
           'Understands CMM1-CMM4 progression and why CMM4 is feedback loop mastery',
           'Can create agent identity file in correct location',
           'Can create session-start PDCA with correct filename format',
-          'Knows to use web4tscomponent for ALL version operations'
+          'Knows to use web4tscomponent for ALL version operations',
+          'Validates all dual links before session end'
         ]
       },
       'how-to-pdca': {
@@ -1598,14 +1600,18 @@ export class DefaultPDCA implements PDCA {
           '✅ Timestamp-only filenames: YYYY-MM-DD-UTC-HHMM.pdca.md (NO descriptive text)',
           '✅ DRY principle: cross-reference instead of duplicating content',
           '✅ Always include: "Never 2 1 (TO ONE). Always 4 2 (FOR TWO)." at end',
-          '⚠️ CMM badges track compliance status throughout PDCA lifecycle'
+          '⚠️ CMM badges track compliance status throughout PDCA lifecycle',
+          '🔗 Dual link format: [GitHub](URL) | [§/path](path) - see how-to-dual-links',
+          '🔗 Generate dual links: `pdca getDualLink <file>` (auto-fixes git status)',
+          '🔗 Validate links: `pdca ensureValidLinks <file>` before PDCA completion'
         ],
         verificationChecklist: [
           'Can create PDCA with correct filename format',
           'Includes all sections: Links, Plan (with TRON), Do, Check, Act, Meta',
           'Uses dual links (backward + forward placeholders)',
           'DRY: references documents instead of copying content',
-          'Includes philosophical insight line at end'
+          'Includes philosophical insight line at end',
+          'Validates dual links using getDualLink or ensureValidLinks'
         ]
       },
       'how-to-cmm': {
@@ -1637,6 +1643,111 @@ export class DefaultPDCA implements PDCA {
           'Recognizes CMM2 violations (manual cp, subjective decisions)',
           'Can identify how to elevate CMM2 operations to CMM3',
           'Understands why CMM4 enables LLM capability evolution'
+        ]
+      },
+      'how-to-dual-links': {
+        title: '🔗 How to Dual Links: GitHub + § Notation for Chat Reports',
+        description: 'Master dual link format: GitHub URLs for verification, § paths for local navigation',
+        requiredReading: [
+          {
+            path: 'scrum.pmo/roles/_shared/PDCA/chat.report.template.md',
+            reason: 'Official chat report format with dual link examples',
+            depth: 2
+          },
+          {
+            path: 'scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md',
+            reason: 'CMM3 4c: Link Compliance requirements',
+            depth: 1
+          },
+          {
+            path: 'scrum.pmo/roles/_shared/PDCA/howto.PDCA.md',
+            reason: 'Dual Link System section',
+            depth: 1
+          }
+        ],
+        keyLessons: [
+          '✅ Format: [GitHub](https://github.com/org/repo/blob/branch/path) | [§/path](path)',
+          '✅ GitHub link: For human verification, works in any context',
+          '✅ § notation: Project-root-relative, for local navigation',
+          '✅ MUST be in sync: Same file, same branch, both valid',
+          '⚠️ CMM3 4c: Links MUST be verifiable - file must be pushed',
+          '🔧 Tool: `pdca getDualLink <file>` auto-generates correct format',
+          '🔧 Auto-fix: getDualLink adds/commits/pushes if needed',
+          '❌ NEVER use file:// prefix (CMM2 violation)',
+          '❌ NEVER use relative paths without § notation'
+        ],
+        verificationChecklist: [
+          'Can write dual link format from memory',
+          'Understands why GitHub link is needed (verification)',
+          'Understands why § notation is needed (local navigation)',
+          'Can use getDualLink to generate correct links',
+          'Knows file must be pushed for link to be valid',
+          'Recognizes CMM2 link violations (file://, no §, unpushed files)'
+        ]
+      },
+      'how-to-ensure-links': {
+        title: '✅ How to Ensure Links: CMM3 Atomic Link Validation',
+        description: 'Zero-knowledge automation: Ensure all dual links are valid across entire project',
+        requiredReading: [
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-20-UTC-1215.pdca.md',
+            reason: 'Complete design of dual link methods (getDualLink, findPDCAsLinking, updateLinksToFile, ensureValidLinks)',
+            depth: 2
+          }
+        ],
+        keyLessons: [
+          '🎯 CMM3 Atomic: ensureValidLinks = single command, zero knowledge needed',
+          '✅ Process: Normalize → Fix git → Generate canonical → Find PDCAs → Validate → Fix → Commit → Push',
+          '✅ Usage: `pdca ensureValidLinks <file>` - fully automated',
+          '✅ Dry-run: `pdca ensureValidLinks <file> true` - preview without changes',
+          '✅ Idempotent: Safe to run multiple times, only fixes what needs fixing',
+          '🔍 findPDCAsLinking: Find all PDCAs linking to a file (building block)',
+          '🔄 updateLinksToFile: Bulk update when files move/version (building block)',
+          '⚠️ Always run before PDCA completion to ensure valid links',
+          '⚠️ Session end: Validate all session PDCAs'
+        ],
+        verificationChecklist: [
+          'Understands CMM3 atomic operation concept (zero-knowledge required)',
+          'Can run ensureValidLinks on any file',
+          'Knows when to use dry-run mode (preview)',
+          'Understands idempotency (safe to run repeatedly)',
+          'Can use findPDCAsLinking to find link dependencies',
+          'Knows to validate links before PDCA/session completion'
+        ]
+      },
+      'how-to-component-upgrade': {
+        title: '🚀 How to Component Upgrade: Link Management During Versioning',
+        description: 'Maintain valid links when components evolve: version bumps, file moves, refactoring',
+        requiredReading: [
+          {
+            path: 'components/Web4TSComponent/latest/README.md',
+            reason: 'Component versioning patterns',
+            depth: 1
+          },
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-20-UTC-1215.pdca.md',
+            reason: 'updateLinksToFile method design and usage',
+            depth: 1
+          }
+        ],
+        keyLessons: [
+          '✅ Workflow: Version bump → Update links → Test → Commit',
+          '✅ Create version: `web4tscomponent on <Component> <version> upgrade nextPatch`',
+          '✅ Update links: `pdca updateLinksToFile <old-path> <new-path>`',
+          '✅ Dry-run first: `pdca updateLinksToFile <old> <new> true` to preview',
+          '✅ Auto-commit: updateLinksToFile commits and pushes by default',
+          '🔍 Pre-check: `pdca findPDCAsLinking <old-path>` to see impact',
+          '⚠️ Always update links BEFORE deleting old version',
+          '⚠️ Document moves in PDCA (backward compatibility)',
+          '🎯 Example: 0.2.0.0 → 0.2.1.0 updates all linking PDCAs automatically'
+        ],
+        verificationChecklist: [
+          'Can create new component version using web4tscomponent',
+          'Knows to run findPDCAsLinking before version changes',
+          'Can use updateLinksToFile in dry-run mode',
+          'Understands when links need updating (path changes, version bumps)',
+          'Knows to document version changes in PDCA',
+          'Can maintain backward compatibility during refactoring'
         ]
       },
       'how-to-component': {
