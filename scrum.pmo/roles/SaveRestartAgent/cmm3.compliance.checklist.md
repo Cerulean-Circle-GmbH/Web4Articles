@@ -30,7 +30,7 @@
 
    - [ ] g) CMM3 violation reporting: When detecting violations in your PDCA or previous PDCAs, report to chat/TRON with specific citation using format "[number][letter] cmm2" (e.g., "2a cmm2" for trigger command violation, "1b cmm2" for hallucinated timestamp). **WHAT to report:** Any checklist item failure, broken links, missing sections, incorrect formats. **HOW to report:** 1) Cite violation using checklist reference, 2) Provide dual link to violated PDCA, 3) Explain what's wrong, 4) Propose fix or ask for guidance. **Example:** "Found 1b cmm2 violation in previous PDCA - timestamp appears hallucinated, not from `date -u` output. Should I fix with real timestamp?" See protocol: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../_shared/PDCA/howto.PDCA.md)
    - [ ] h) Understanding research requirement: Research unknown terms/processes before use or ask TRON if research fails - Add intense use of tracking tables for artifacts and task lists in plan section
-   - [ ] i) Git commit message format: One-liner only `git commit -m "PDCAfilename.pdca.md"` - NO multiline descriptions
+   - [ ] i) Git commit & push protocol: One-liner commit `git commit -m "PDCAfilename.pdca.md"` then ALWAYS push `git push` - GitHub dual links REQUIRE push to be accessible
    - [ ] j) QA Decisions format: Either proper decisions (with [ ] **Decision N:** and options a/b/c) OR "All clear, no decisions to make - [reason]" per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../_shared/PDCA/PDCA.howto.decide.md)
 **MANDATORY: Research existing Web4 tools FIRST before any programming. If research fails, ASK TRON. NEVER program without explicit request.**
 
@@ -70,10 +70,11 @@
    - [ ] c) No descriptive text in filename
 
 1. **Authorization**
-   - [ ] a) Only explicit user-authorized work
-   - [ ] b) Present decisions when direction unclear per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../_shared/PDCA/PDCA.howto.decide.md)
+   - [ ] a) NEVER SELF ASSIGN A CMM BADGE - Only TRON assigns badges; always document the current badge (assigned by TRON) in the PDCA header
+   - [ ] b) Only explicit user-authorized work
+   - [ ] c) Present decisions when direction unclear per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../_shared/PDCA/PDCA.howto.decide.md)
 **WARNING: Never create fake opposites like "do it vs don't do it" - Only present decisions for REAL RISKS with multiple valid approaches**
-   - [ ] c) No assumptions about user intent
+   - [ ] d) No assumptions about user intent
 
 1. **Markdown Quality**
    - [ ] a) All numbered lists use "1." for each item (not 1. 2. 3.) - HTML auto-numbers correctly, prevents confusion when inserting/deleting items

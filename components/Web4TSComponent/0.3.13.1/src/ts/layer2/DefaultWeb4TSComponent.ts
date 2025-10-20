@@ -8,7 +8,7 @@ import { Scenario } from '../layer3/Scenario.interface.js';
 import { Web4TSComponentModel } from '../layer3/Web4TSComponentModel.interface.js';
 import { ComponentDependency } from '../layer3/ComponentDependency.interface.js';
 import * as fs from 'fs/promises';
-import { existsSync, readdirSync, statSync, lstatSync } from 'fs';
+import { existsSync, readdirSync, statSync, lstatSync, readlinkSync } from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 import { randomUUID } from 'crypto';
@@ -979,36 +979,30 @@ Standards:
    * // Create component with version calculated from base
    * await component.create('UserManager', 'nextMinor', 'all');
    * 
-   * @cliSyntax name version options
+   * @cliSyntax component version options
    * @cliDefault version 0.1.0.0
    * @cliDefault options all
    * @cliCompletion version createVersionParameterCompletion
    */
-  async create(name: string, version: string = '0.1.0.0', options: string = 'all'): Promise<void> {
-    // Resolve actual version from versionType if needed
-    const resolvedVersion = await this.resolveVersionForCreate(name, version);
-    
+  async create(component: string, version: string = '0.1.0.0', options: string = 'all'): Promise<void> {
     // Parse options (maps from 1.0.0.0 --cli --spec --vitest --layers)
     const scaffoldOptions: any = {
-      componentName: name,
-      version: resolvedVersion,
+      componentName: component,
+      version,
       includeLayerArchitecture: options.includes('layers') || options.includes('all'),
       includeCLI: options.includes('cli') || options.includes('all'),
       includeSpecFolder: options.includes('spec') || options.includes('all'),
       includeVitest: options.includes('vitest') || options.includes('test') || options.includes('all')
     };
     
-    console.log(`🏗️ Creating Web4 component: ${name} ${resolvedVersion}`);
-    if (version !== resolvedVersion) {
-      console.log(`   📊 Version calculated: ${version} → ${resolvedVersion}`);
-    }
+    console.log(`🏗️ Creating Web4 component: ${component} ${version}`);
     console.log(`📋 Options: ${options || 'default'}`);
     
     const metadata = await this.scaffoldComponent(scaffoldOptions);
     
-    console.log(`✅ Component structure created: ${name}`);
+    console.log(`✅ Component structure created: ${component}`);
     console.log(`   Version: ${metadata.version}`);
-    console.log(`   Location: components/${name}/${resolvedVersion}`);
+    console.log(`   Location: components/${component}/${version}`);
     console.log(`   CLI: ${metadata.hasLocationResilientCLI ? '✅' : '❌'}`);
     console.log(`   Layers: ${metadata.hasLayeredArchitecture ? '✅' : '❌'}`);
     console.log(`   Spec: ${metadata.hasScenarioSupport ? '✅' : '❌'}`);
@@ -1020,12 +1014,12 @@ Standards:
     // Load the newly created component and verify/fix its symlinks
     const tempComponent = new DefaultWeb4TSComponent();
     // Set component context directly (Web4 pattern: modify model, not init)
-    tempComponent.model.component = name;
-    tempComponent.model.version = resolvedVersion;
+    tempComponent.model.component = component;
+    tempComponent.model.version = version;
     await tempComponent.verifyAndFix();
     
     // Verify component is callable
-    const cliScriptName = name.toLowerCase().replace(/\./g, '');
+    const cliScriptName = component.toLowerCase().replace(/\./g, '');
     const cliPath = path.join(this.model.projectRoot, 'scripts', cliScriptName);
     
     if (existsSync(cliPath)) {
@@ -1034,227 +1028,7 @@ Standards:
       console.log(`   Try: ${cliScriptName}`);
     } else {
       console.log(`⚠️  Component created but CLI not available at expected path: ${cliPath}`);
-      console.log(`   Run manually: web4tscomponent on ${name} ${resolvedVersion} verifyAndFix`);
-    }
-  }
-
-  /**
-   * Discover and execute parameter completions dynamically
-   * 
-   * This command discovers available parameter completion methods and executes them,
-   * following DRY principles by reusing existing completion infrastructure.
-   * Useful for debugging, development, and understanding CLI completion system.
-   * 
-   * @param parameter Parameter name to discover completion for (e.g., 'version', 'versionType', 'action')
-   * 
-   * @example
-   * // Discover version parameter completions
-   * await component.discover('version');
-   * 
-   * @example
-   * // Discover action parameter completions  
-   * await component.discover('action');
-   * 
-   * @cliSyntax parameter
-   * @cliCompletion parameter parameterParameterCompletion
-   */
-  async discover(parameter: string): Promise<this> {
-    console.log(`🔍 Discovering completions for parameter: ${parameter}`);
-    
-    // Use the existing completeParameter infrastructure (DRY principle)
-    // This reuses the same logic that handles tab completion
-    try {
-      // Try different completion method patterns
-      const possibleMethods = [
-        `${parameter}ParameterCompletion`,
-        `create${parameter.charAt(0).toUpperCase() + parameter.slice(1)}ParameterCompletion`
-      ];
-      
-      let foundMethod = '';
-      let results: string[] = [];
-      let contextCommand = 'upgrade'; // Default context
-      
-      for (const methodName of possibleMethods) {
-        try {
-          // Use the CLI's completeParameter method to execute the completion
-          // This is the same method used by the actual tab completion system
-          const { execSync } = await import('child_process');
-          const cliPath = './web4tscomponent'; // Use relative path from component root
-          
-          // Choose appropriate context based on parameter type
-          // Auto-discover which commands use this parameter (DRY principle)
-          contextCommand = await this.discoverParameterContext(parameter, methodName);
-          
-          const output = execSync(
-            `${cliPath} completeParameter ${methodName} ${contextCommand}`,
-            { encoding: 'utf8', timeout: 5000 }
-          );
-          
-          if (output.trim()) {
-            results = output.trim().split(/\s+/);
-            foundMethod = methodName;
-            break;
-          }
-        } catch (error) {
-          // Method doesn't exist or failed, try next one
-          continue;
-        }
-      }
-      
-      if (!foundMethod) {
-        console.log(`❌ No completion method found for parameter: ${parameter}`);
-        console.log(`   Tried: ${possibleMethods.join(', ')}`);
-        
-        // Show available parameters by calling parameterParameterCompletion
-        try {
-          const { execSync } = await import('child_process');
-          const cliPath = './web4tscomponent'; // Use relative path from component root
-          
-          const availableOutput = execSync(
-            `${cliPath} completeParameter parameterParameterCompletion discover`,
-            { encoding: 'utf8', timeout: 5000 }
-          );
-          
-          if (availableOutput.trim()) {
-            const availableParams = availableOutput.trim().split(/\s+/);
-            console.log(`\n💡 Available parameters:`);
-            availableParams.forEach((param: string) => {
-              console.log(`   • ${param}`);
-            });
-          }
-        } catch (listError) {
-          console.log(`   (Could not list available parameters)`);
-        }
-        
-        return this;
-      }
-      
-      console.log(`✅ Found completion method: ${foundMethod}`);
-      console.log(`\n📋 Completion results for '${parameter}':`);
-      console.log(`   Method: ${foundMethod}`);
-      console.log(`   Count: ${results.length} options`);
-      console.log(`\n🎯 Available options:`);
-      
-      results.forEach((option: string, index: number) => {
-        const emoji = index < 3 ? ['🥇', '🥈', '🥉'][index] : '  ';
-        console.log(`   ${emoji} ${option}`);
-      });
-      
-      // Test filtering if there are results
-      if (results.length > 0 && results[0].length > 1) {
-        const testPrefix = results[0].substring(0, 2);
-        console.log(`\n🧪 Testing prefix filtering with '${testPrefix}':`);
-        
-        try {
-          const { execSync } = await import('child_process');
-          const cliPath = './web4tscomponent'; // Use relative path from component root
-          
-          const filteredOutput = execSync(
-            `${cliPath} completeParameter ${foundMethod} ${contextCommand} ${testPrefix}`,
-            { encoding: 'utf8', timeout: 5000 }
-          );
-          
-          const filteredResults = filteredOutput.trim().split(/\s+/);
-          const filteredCount = filteredResults.filter((r: string) => r.startsWith(testPrefix)).length;
-          console.log(`   Filtered: ${filteredCount}/${results.length} options match prefix`);
-          
-          if (filteredCount > 0 && filteredCount < results.length) {
-            console.log(`   ✅ Prefix filtering works correctly`);
-          } else if (filteredCount === results.length) {
-            console.log(`   ⚠️  All options match prefix (possibly no filtering implemented)`);
-          } else {
-            console.log(`   ❌ No matches found for test prefix`);
-          }
-        } catch (filterError) {
-          console.log(`   ❌ Prefix filtering test failed: ${filterError}`);
-        }
-      }
-      
-    } catch (error) {
-      console.log(`❌ Error during discovery: ${error}`);
-    }
-    
-    return this;
-  }
-
-  /**
-   * Auto-discover which command context to use for a parameter completion method
-   * This implements true auto-discovery instead of hardcoded lookup tables
-   * @param parameter Parameter name (e.g., 'version', 'action', 'versionType')
-   * @param methodName Completion method name (e.g., 'versionParameterCompletion')
-   * @returns Command context that uses this parameter
-   * @cliHide
-   */
-  private async discoverParameterContext(parameter: string, methodName: string): Promise<string> {
-    try {
-      // Strategy 1: Use DRY method to find which commands use this parameter
-      // Access the CLI's consolidated logic through the concrete CLI class
-      const { Web4TSComponentCLI } = await import('../layer5/Web4TSComponentCLI.js');
-      const cliInstance = new Web4TSComponentCLI();
-      
-      const commandsUsingParameter = cliInstance.getCommandsUsingParameterDRY(parameter);
-      
-      if (commandsUsingParameter.length > 0) {
-        // Use the first command found that uses this parameter
-        const firstCommand = commandsUsingParameter[0];
-        
-        // Add appropriate default arguments for commands that need them
-        if (firstCommand === 'on') {
-          return 'on TestComp';
-        } else if (firstCommand === 'create') {
-          return 'create TestComp 0.1.0.0';
-        } else {
-          return firstCommand;
-        }
-      }
-      
-      // Strategy 2: If no direct match, use method name patterns and try multiple contexts
-      // Extract base parameter name from method name
-      let baseParam = methodName.replace('ParameterCompletion', '');
-      if (baseParam.startsWith('create')) {
-        baseParam = baseParam.replace(/^create/, '').toLowerCase();
-        // For create-specific completions, use create command
-        return `create TestComponent 0.1.0.0`;
-      }
-      
-      // Try common command patterns by testing them
-      // This is still auto-discovery - we test which contexts actually work
-      const { execSync } = await import('child_process');
-      const cliPath = './web4tscomponent';
-      
-      const candidateContexts = [
-        'upgrade',                    // Most completion methods work with upgrade
-        'on TestComp',               // For version-related parameters
-        'links',                     // For action parameters
-        'setCICDVersion',            // For target version parameters
-        'releaseTest',               // For promotion parameters
-        'test',                      // For skip/boolean parameters
-        'create TestComp 0.1.0.0'    // For create-related parameters
-      ];
-      
-      // Test each candidate context to see which one works
-      for (const candidateContext of candidateContexts) {
-        try {
-          const testOutput = execSync(
-            `${cliPath} completeParameter ${methodName} ${candidateContext}`,
-            { encoding: 'utf8', timeout: 2000 }
-          );
-          if (testOutput.trim()) {
-            // This context works! Use it.
-            return candidateContext;
-          }
-        } catch (error) {
-          // This context doesn't work, try the next one
-          continue;
-        }
-      }
-      
-      // Fallback: use a generic command that's likely to work
-      return 'upgrade';
-      
-    } catch (error) {
-      // If auto-discovery fails, use safe fallback
-      return 'upgrade';
+      console.log(`   Run manually: web4tscomponent on ${component} ${version} verifyAndFix`);
     }
   }
 
@@ -1420,18 +1194,39 @@ Standards:
       throw new Error(`Component not found: ${component} ${version} at ${componentPath}`);
     }
     
+    // Resolve actual version if symlink was provided (e.g., 'latest', 'dev', 'prod', 'test')
+    let actualVersion = version;
+    if (lstatSync(componentPath).isSymbolicLink()) {
+      const linkTarget = readlinkSync(componentPath);
+      // Extract version number from link target (e.g., "0.1.0.0" from "../0.1.0.0" or "0.1.0.0")
+      const versionMatch = linkTarget.match(/(\d+\.\d+\.\d+\.\d+)/);
+      if (versionMatch) {
+        actualVersion = versionMatch[1];
+      }
+    } else {
+      // Not a symlink - extract version from path
+      const pathMatch = componentPath.match(/(\d+\.\d+\.\d+\.\d+)$/);
+      if (pathMatch) {
+        actualVersion = pathMatch[1];
+      }
+    }
+    
     // Set component context for chaining
     this.model.name = component;
     this.model.origin = componentPath;
-    this.model.definition = `Component context: ${component} ${version}`;
+    this.model.definition = `Component context: ${component} ${actualVersion}`;
     // Note: updatedAt removed - belongs in ChangeEvent tracking
     
     // Store context for chained operations
     (this.model as any).contextComponent = component;
-    (this.model as any).contextVersion = version;
+    (this.model as any).contextVersion = actualVersion;  // Store ACTUAL version, not symlink name
     (this.model as any).contextPath = componentPath;
     
-    console.log(`✅ Component context loaded: ${component} ${version}`);
+    if (actualVersion !== version) {
+      console.log(`✅ Component context loaded: ${component} ${version} → ${actualVersion}`);
+    } else {
+      console.log(`✅ Component context loaded: ${component} ${version}`);
+    }
     console.log(`   Path: ${componentPath}`);
     
     return this; // Enable chaining
@@ -2916,9 +2711,11 @@ Standards:
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
     
     if (references.length === 0) {
-      console.error(`❌ Missing it case reference`);
-      console.log(`💡 Usage: web4tscomponent test itCase <token> (e.g., 5a1)`);
-      throw new Error(`Missing references`);
+      // No reference - show hierarchical list of all test cases
+      const result = TestFileParser.getAllItCasesHierarchical(testDir);
+      result.display.forEach(line => console.log(line));
+      console.log(`\n💡 Usage: web4tscomponent test itCase <token> (e.g., 5a1)`);
+      return;
     }
     
     // Parse hierarchical token (e.g., "5a1" -> file=5, describe=a, itCase=1)
@@ -3035,6 +2832,67 @@ Standards:
       throw error;
     }
 
+    return this;
+  }
+
+  /**
+   * Test and discover tab completions for debugging and development
+   * WITHOUT context: Test completions on Web4TSComponent itself
+   * WITH context: Test completions on the loaded component
+   * 
+   * Automatically discovers and lists methods or parameter completions based on 'what' parameter.
+   * Supports prefix filtering to narrow down results.
+   * 
+   * @param what Type of completion to test: "method" or "parameter"
+   * @param filter Optional prefix to filter results (e.g., "v" shows only validate*, verify*, etc.)
+   * 
+   * @cliSyntax what filter
+   * @cliExample web4tscomponent completion method
+   * @cliExample web4tscomponent completion method v
+   * @cliExample web4tscomponent completion parameter s
+   * @cliExample web4tscomponent on Unit 0.3.0.5 completion method
+   * 
+   * @remarks TSCompletion uses convention: filterParameterCompletion (not @cliCompletion tag)
+   */
+  async completion(what: string, filter?: string): Promise<this> {
+    const context = this.getComponentContext();
+    
+    // Always call completionNameParameterCompletion with proper args structure
+    const callbackName = 'completionNameParameterCompletion';
+    // Args structure: ['completion', 'method|parameter', 'filterPrefix']
+    const callbackArgs = ['completion', what, filter || ''].map(arg => `"${arg}"`).join(' ');
+    
+    if (!context) {
+      // No context - test completions on Web4TSComponent itself
+      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on Web4TSComponent${filter ? ` (filter: ${filter})` : ''}`);
+      console.log(`---`);
+      
+      // Call completeParameter via CLI (completeParameter is on DefaultCLI, not DefaultWeb4TSComponent)
+      // Suppress stderr (build messages) to avoid duplicate "up to date" noise
+      const cliPath = path.join(process.cwd(), 'web4tscomponent');
+      execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs} 2>/dev/null`, { 
+        cwd: process.cwd(),
+        stdio: 'inherit',
+        encoding: 'utf-8'
+      });
+    } else {
+      // Context loaded - test completions on target component
+      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on ${context.component} ${context.version}${filter ? ` (filter: ${filter})` : ''}`);
+      console.log(`---`);
+      
+      // Call completeParameter on the target component via its CLI script
+      // Suppress stderr (build messages) to avoid duplicate "up to date" noise
+      const componentPath = this.resolveComponentPath(context.component, context.version);
+      const cliScriptName = context.component.toLowerCase().replace(/\./g, '');
+      const cliPath = path.join(this.model.projectRoot, 'scripts', cliScriptName);
+      
+      execSync(`${cliPath} completeParameter ${callbackName} ${callbackArgs} 2>/dev/null`, { 
+        cwd: componentPath,
+        stdio: 'inherit',
+        encoding: 'utf-8'
+      });
+    }
+    
     return this;
   }
 
