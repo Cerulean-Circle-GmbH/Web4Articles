@@ -354,6 +354,51 @@ The hierarchical display feature is valuable. But should it have been implemente
 - No regression risk
 - Easier to test (TypeScript unit tests vs. bash integration tests)
 
+### The Evidence: Tab Completion Must ALWAYS Work
+
+**Critical Insight from User Testing:**
+
+The user demonstrates that **tab completion itself is a fundamental feature that must ALWAYS work**:
+
+```bash
+web4tscomponent test <TAB>
+web4tscomponent test itCase <TAB>
+web4tscomponent test itCase 16<TAB>
+```
+
+This progression shows:
+1. User discovers test modes (all, describe, file, itCase)
+2. User explores test references with intelligent completion
+3. User navigates to specific test file 16 with filtered results
+
+**This test completion already works!** The log shows it's using the same callback pattern:
+```
+🎯 Executing completion callback: `web4tscomponent completeParameter scopeParameterCompletion test `
+🎯 Executing completion callback: `web4tscomponent completeParameter referencesParameterCompletion test itCase `
+```
+
+**So why does `completion method <TAB>` break?**
+
+Because the bash script now has **100+ lines of conditional logic** trying to be smart about when to intercept, when to pass through, when to show hierarchical display. This complexity:
+- Broke the simple pass-through for `completion method`
+- Made debugging nearly impossible (which code path is executing?)
+- Created edge cases that multiply with every new feature
+- Made the bash script unmaintainable
+
+**The Question:**
+If `test <TAB>` works with the simple callback pattern, why did `web4tscomponent <TAB>` need special bash logic at all?
+
+**The Answer:**
+It didn't. TypeScript could have detected "empty args for method completion" and returned hierarchical display automatically. The bash script complexity was unnecessary from the start.
+
+**Evidence:**
+- `test <TAB>` → Works (uses callback)
+- `test itCase <TAB>` → Works (uses callback)
+- `completion method <TAB>` → Broken (bash intercepts incorrectly)
+- `web4tscomponent <TAB>` → Works (bash special case)
+
+The pattern is clear: **Callbacks work. Bash conditionals break.**
+
 ### Conclusion
 
 **The architectural principle "All logic in TypeScript" was correct.**
