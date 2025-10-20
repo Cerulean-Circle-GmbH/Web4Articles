@@ -1626,7 +1626,9 @@ export abstract class DefaultCLI implements CLI {
       }
       
       // Generate full CLI signatures using extractParameterInfoFromTSCompletion (with color coding)
-      return filtered.map((methodName, index) => {
+      // BUT: For hierarchical display with many matches, use process.stdout.write
+      // This prevents bash from asking "Display all XXX possibilities?"
+      const hierarchicalLines = filtered.map((methodName, index) => {
         // Extract parameters for this method
         const parameters = this.extractParameterInfoFromTSCompletion(methodName);
         
@@ -1657,6 +1659,24 @@ export abstract class DefaultCLI implements CLI {
         // No parameters - just method name
         return `${BRIGHT_CYAN}${index + 1}:${RESET} ${displayName}`;
       });
+      
+      // ✅ HIERARCHICAL DISPLAY: Show numbered list directly when many matches
+      // Use process.stdout.write (like scopeParameterCompletion) to bypass bash's
+      // "Display all XXX possibilities?" prompt and show our formatted output
+      if (hierarchicalLines.length > 10 || (!filterPrefix && hierarchicalLines.length > 5)) {
+        // Display hierarchical view to user
+        for (const line of hierarchicalLines) {
+          process.stdout.write(line + '\n');
+        }
+        process.stdout.write('\n\n');  // Double newline for clean separation
+        
+        // Return simple method names for bash compgen filtering
+        // This allows "co<TAB>" to still complete to single matches
+        return filtered;
+      }
+      
+      // Return hierarchical lines for bash (backward compatible for small result sets)
+      return hierarchicalLines;
     }
   }
 
