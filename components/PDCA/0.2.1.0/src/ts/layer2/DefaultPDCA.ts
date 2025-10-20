@@ -1918,6 +1918,520 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
+   * Find all PDCA files that link to a specific file
+   * Searches entire project for PDCAs containing dual links to target file
+   * 
+   * @param filePath Path to file to search for
+   * @cliSyntax filePath
+   */
+  async findPDCAsLinking(filePath: string): Promise<this> {
+    console.log(`\n🔍 Finding PDCAs Linking to File\n`);
+    
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    const { existsSync } = await import('fs');
+    
+    const projectRoot = await this.getProjectRoot();
+    
+    // Normalize target path
+    let targetPath: string;
+    if (path.isAbsolute(filePath)) {
+      targetPath = path.relative(projectRoot, filePath);
+    } else if (filePath.startsWith('§/')) {
+      targetPath = filePath.substring(2);
+    } else {
+      targetPath = filePath;
+    }
+    
+    console.log(`📍 Searching for PDCAs linking to: ${targetPath}\n`);
+    
+    // Find all PDCA files
+    const pdcaFiles: string[] = [];
+    
+    const shouldSkip = (filePath: string): boolean => {
+      return filePath.includes('/node_modules/') ||
+             filePath.includes('/.git/') ||
+             filePath.includes('/target/') ||
+             filePath.includes('/dist/') ||
+             filePath.includes('/.next/');
+    };
+    
+    const scanDir = async (dir: string): Promise<void> => {
+      const entries = await fs.readdir(dir, { withFileTypes: true });
+      
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        
+        if (shouldSkip(fullPath)) continue;
+        
+        if (entry.isDirectory()) {
+          await scanDir(fullPath);
+        } else if (entry.isFile() && entry.name.endsWith('.pdca.md')) {
+          pdcaFiles.push(fullPath);
+        }
+      }
+    };
+    
+    await scanDir(projectRoot);
+    
+    console.log(`📊 Scanning ${pdcaFiles.length} PDCA files...\n`);
+    
+    // Search for links in each PDCA
+    const matches: Array<{file: string, lines: Array<{num: number, content: string}>}> = [];
+    
+    for (const pdcaFile of pdcaFiles) {
+      const content = await fs.readFile(pdcaFile, 'utf-8');
+      const lines = content.split('\n');
+      const matchingLines: Array<{num: number, content: string}> = [];
+      
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        
+        // Pattern: [GitHub](...) | [text](path)
+        const dualLinkMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
+        
+        if (dualLinkMatch) {
+          const githubUrl = dualLinkMatch[1];
+          const localPath = dualLinkMatch[3];
+          
+          // Check if GitHub URL contains target path
+          if (githubUrl.includes(targetPath)) {
+            matchingLines.push({ num: i + 1, content: line.trim() });
+          }
+          // Check if local path matches (handle relative paths)
+          else if (localPath === targetPath || localPath.includes(targetPath)) {
+            matchingLines.push({ num: i + 1, content: line.trim() });
+          }
+        }
+      }
+      
+      if (matchingLines.length > 0) {
+        matches.push({
+          file: path.relative(projectRoot, pdcaFile),
+          lines: matchingLines
+        });
+      }
+    }
+    
+    // Display results
+    if (matches.length === 0) {
+      console.log(`ℹ️  No PDCAs found linking to: ${targetPath}\n`);
+    } else {
+      console.log(`Found ${matches.length} PDCA(s) with links:\n`);
+      
+      matches.forEach((match, idx) => {
+        console.log(`${idx + 1}. ${match.file}`);
+        match.lines.forEach(line => {
+          console.log(`   Line ${line.num}: ${line.content.substring(0, 80)}...`);
+        });
+        console.log();
+      });
+    }
+    
+    return this;
+  }
+
+  /**
+   * Update all links in PDCAs when a file moves or versions change
+   * 
+   * @param oldPath Current file path (what PDCAs currently link to)
+   * @param newPath New file path (what PDCAs should link to)
+   * @param dryRun Preview changes without writing (default: false)
+   * @cliSyntax oldPath newPath dryRun
+   * @cliDefault dryRun false
+   * @cliValues dryRun true false
+   */
+  async updateLinksToFile(oldPath: string, newPath: string, dryRun: string = 'false'): Promise<this> {
+    const isDryRun = dryRun === 'true';
+    
+    console.log(`\n🔄 Updating Links to File\n`);
+    if (isDryRun) {
+      console.log(`🔍 DRY RUN MODE - No changes will be made\n`);
+    }
+    
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    const { execSync } = await import('child_process');
+    
+    const projectRoot = await this.getProjectRoot();
+    
+    // Normalize paths
+    const normalizePathFn = (p: string): string => {
+      if (path.isAbsolute(p)) return path.relative(projectRoot, p);
+      if (p.startsWith('§/')) return p.substring(2);
+      return p;
+    };
+    
+    const oldNormalized = normalizePathFn(oldPath);
+    const newNormalized = normalizePathFn(newPath);
+    
+    console.log(`📍 Updating links from: ${oldNormalized}`);
+    console.log(`                    to: ${newNormalized}\n`);
+    
+    // Find PDCAs with links to old path
+    console.log(`🔍 Finding PDCAs with links...\n`);
+    
+    // Reuse findPDCAsLinking logic
+    const pdcaFiles: string[] = [];
+    
+    const shouldSkip = (filePath: string): boolean => {
+      return filePath.includes('/node_modules/') ||
+             filePath.includes('/.git/') ||
+             filePath.includes('/target/') ||
+             filePath.includes('/dist/') ||
+             filePath.includes('/.next/');
+    };
+    
+    const scanDir = async (dir: string): Promise<void> => {
+      const entries = await fs.readdir(dir, { withFileTypes: true });
+      
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        
+        if (shouldSkip(fullPath)) continue;
+        
+        if (entry.isDirectory()) {
+          await scanDir(fullPath);
+        } else if (entry.isFile() && entry.name.endsWith('.pdca.md')) {
+          pdcaFiles.push(fullPath);
+        }
+      }
+    };
+    
+    await scanDir(projectRoot);
+    
+    // Process each PDCA
+    const modifiedFiles: string[] = [];
+    let totalLinksUpdated = 0;
+    
+    for (const pdcaFile of pdcaFiles) {
+      const content = await fs.readFile(pdcaFile, 'utf-8');
+      const lines = content.split('\n');
+      let fileModified = false;
+      const newLines: string[] = [];
+      
+      for (const line of lines) {
+        const dualLinkMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
+        
+        if (dualLinkMatch) {
+          const githubUrl = dualLinkMatch[1];
+          const displayText = dualLinkMatch[2];
+          const localPath = dualLinkMatch[3];
+          
+          // Check if this link points to old path
+          if (githubUrl.includes(oldNormalized) || localPath.includes(oldNormalized)) {
+            // Generate new link using getDualLink logic
+            const branch = execSync('git branch --show-current', {
+              cwd: projectRoot,
+              encoding: 'utf-8'
+            }).trim();
+            
+            const gitConfig = execSync('git config --get remote.origin.url', {
+              cwd: projectRoot,
+              encoding: 'utf-8'
+            }).trim();
+            
+            const match = gitConfig.match(/github\.com[:/]([^/]+)\/([^/.]+)/);
+            if (match) {
+              const org = match[1];
+              const repo = match[2];
+              
+              const newGithubUrl = `https://github.com/${org}/${repo}/blob/${branch}/${newNormalized}`;
+              const newLine = line.replace(
+                /\[GitHub\]\([^)]+\)\s*\|\s*\[[^\]]*\]\([^)]+\)/,
+                `[GitHub](${newGithubUrl}) | [§/${newNormalized}](${newNormalized})`
+              );
+              
+              newLines.push(newLine);
+              fileModified = true;
+              totalLinksUpdated++;
+              continue;
+            }
+          }
+        }
+        
+        newLines.push(line);
+      }
+      
+      if (fileModified) {
+        const relativePath = path.relative(projectRoot, pdcaFile);
+        modifiedFiles.push(relativePath);
+        
+        if (!isDryRun) {
+          await fs.writeFile(pdcaFile, newLines.join('\n'));
+          console.log(`✅ Updated: ${relativePath}`);
+        } else {
+          console.log(`Would update: ${relativePath}`);
+        }
+      }
+    }
+    
+    // Summary
+    console.log(`\n📊 Summary:`);
+    console.log(`   - PDCAs updated: ${modifiedFiles.length}`);
+    console.log(`   - Links updated: ${totalLinksUpdated}`);
+    
+    if (!isDryRun && modifiedFiles.length > 0) {
+      // Auto-commit and push
+      console.log(`\n📦 Git operations:`);
+      try {
+        for (const file of modifiedFiles) {
+          execSync(`git add "${file}"`, { cwd: projectRoot });
+        }
+        console.log(`   ✅ Added ${modifiedFiles.length} files`);
+        
+        const commitMsg = `fix: update dual links from ${oldNormalized} to ${newNormalized}`;
+        execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot });
+        console.log(`   ✅ Committed: ${commitMsg}`);
+        
+        const branch = execSync('git branch --show-current', {
+          cwd: projectRoot,
+          encoding: 'utf-8'
+        }).trim();
+        execSync(`git push origin ${branch}`, { cwd: projectRoot });
+        console.log(`   ✅ Pushed to remote`);
+      } catch (error: any) {
+        console.log(`   ⚠️  Git error: ${error.message}`);
+      }
+    }
+    
+    console.log(`\n✨ ${isDryRun ? 'Dry run complete' : 'Update complete'}!\n`);
+    
+    return this;
+  }
+
+  /**
+   * Ensure all dual links to a file are valid across entire project
+   * CMM3 Atomic Operation: Zero-knowledge, fully automated
+   * 
+   * @param filePath Path to file to ensure links for
+   * @param dryRun Preview changes without modifying files (default: false)
+   * @cliSyntax filePath dryRun
+   * @cliDefault dryRun false
+   * @cliValues dryRun true false
+   */
+  async ensureValidLinks(filePath: string, dryRun: string = 'false'): Promise<this> {
+    const isDryRun = dryRun === 'true';
+    
+    console.log(`\n🔍 Ensuring Valid Dual Links\n`);
+    if (isDryRun) {
+      console.log(`🔍 DRY RUN MODE - No changes will be made\n`);
+    }
+    
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    const { existsSync } = await import('fs');
+    const { execSync } = await import('child_process');
+    
+    const projectRoot = await this.getProjectRoot();
+    
+    // Step 1: Normalize target file
+    let targetPath: string;
+    if (path.isAbsolute(filePath)) {
+      targetPath = path.relative(projectRoot, filePath);
+    } else if (filePath.startsWith('§/')) {
+      targetPath = filePath.substring(2);
+    } else {
+      targetPath = filePath;
+    }
+    
+    const fullPath = path.join(projectRoot, targetPath);
+    
+    if (!existsSync(fullPath)) {
+      console.log(`❌ Error: File does not exist: ${targetPath}\n`);
+      return this;
+    }
+    
+    console.log(`📄 Target: ${targetPath}\n`);
+    
+    // Step 2: Ensure target file git status
+    console.log(`🔍 Checking target file git status...`);
+    
+    if (!isDryRun) {
+      try {
+        const statusOutput = execSync(`git status --porcelain "${targetPath}"`, {
+          cwd: projectRoot,
+          encoding: 'utf-8'
+        }).trim();
+        
+        if (statusOutput.startsWith('??') || statusOutput) {
+          console.log(`⚠️  Target file not ready - fixing now`);
+          execSync(`git add "${targetPath}"`, { cwd: projectRoot });
+          
+          const diffCached = execSync(`git diff --cached --name-only "${targetPath}"`, {
+            cwd: projectRoot,
+            encoding: 'utf-8'
+          }).trim();
+          
+          if (diffCached) {
+            const commitMsg = `docs: ensure ${targetPath} for link validation`;
+            execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot });
+            console.log(`   ✅ Committed`);
+          }
+          
+          const branch = execSync('git branch --show-current', {
+            cwd: projectRoot,
+            encoding: 'utf-8'
+          }).trim();
+          
+          execSync(`git push origin ${branch}`, { cwd: projectRoot });
+          console.log(`   ✅ Pushed to remote`);
+        } else {
+          console.log(`✅ Target file ready: committed and pushed`);
+        }
+      } catch (error: any) {
+        console.log(`⚠️  Git error: ${error.message}`);
+      }
+    }
+    
+    // Step 3: Generate canonical dual link
+    const branch = execSync('git branch --show-current', {
+      cwd: projectRoot,
+      encoding: 'utf-8'
+    }).trim();
+    
+    const gitConfig = execSync('git config --get remote.origin.url', {
+      cwd: projectRoot,
+      encoding: 'utf-8'
+    }).trim();
+    
+    const match = gitConfig.match(/github\.com[:/]([^/]+)\/([^/.]+)/);
+    if (!match) {
+      console.log(`❌ Error: Could not parse GitHub URL\n`);
+      return this;
+    }
+    
+    const org = match[1];
+    const repo = match[2];
+    const canonicalGithubUrl = `https://github.com/${org}/${repo}/blob/${branch}/${targetPath}`;
+    const canonicalLink = `[GitHub](${canonicalGithubUrl}) | [§/${targetPath}](${targetPath})`;
+    
+    console.log(`\n✨ Canonical link: ${canonicalLink.substring(0, 80)}...\n`);
+    
+    // Step 4: Find all PDCAs linking to target
+    console.log(`🔍 Scanning project for PDCAs with links...\n`);
+    
+    const pdcaFiles: string[] = [];
+    
+    const shouldSkip = (filePath: string): boolean => {
+      return filePath.includes('/node_modules/') ||
+             filePath.includes('/.git/') ||
+             filePath.includes('/target/') ||
+             filePath.includes('/dist/') ||
+             filePath.includes('/.next/');
+    };
+    
+    const scanDir = async (dir: string): Promise<void> => {
+      const entries = await fs.readdir(dir, { withFileTypes: true });
+      
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        
+        if (shouldSkip(fullPath)) continue;
+        
+        if (entry.isDirectory()) {
+          await scanDir(fullPath);
+        } else if (entry.isFile() && entry.name.endsWith('.pdca.md')) {
+          pdcaFiles.push(fullPath);
+        }
+      }
+    };
+    
+    await scanDir(projectRoot);
+    
+    // Step 5: Validate and fix links
+    const modifiedFiles: string[] = [];
+    let totalLinksFound = 0;
+    let totalLinksFixed = 0;
+    
+    for (const pdcaFile of pdcaFiles) {
+      const content = await fs.readFile(pdcaFile, 'utf-8');
+      const lines = content.split('\n');
+      let fileModified = false;
+      const newLines: string[] = [];
+      
+      for (const line of lines) {
+        const dualLinkMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
+        
+        if (dualLinkMatch) {
+          const githubUrl = dualLinkMatch[1];
+          const displayText = dualLinkMatch[2];
+          const localPath = dualLinkMatch[3];
+          
+          // Check if this link points to target
+          if (githubUrl.includes(targetPath) || localPath.includes(targetPath)) {
+            totalLinksFound++;
+            
+            // Check if link is already canonical
+            if (githubUrl === canonicalGithubUrl && displayText === `§/${targetPath}` && localPath === targetPath) {
+              newLines.push(line);
+            } else {
+              // Fix the link
+              const newLine = line.replace(
+                /\[GitHub\]\([^)]+\)\s*\|\s*\[[^\]]*\]\([^)]+\)/,
+                `[GitHub](${canonicalGithubUrl}) | [§/${targetPath}](${targetPath})`
+              );
+              newLines.push(newLine);
+              fileModified = true;
+              totalLinksFixed++;
+            }
+            continue;
+          }
+        }
+        
+        newLines.push(line);
+      }
+      
+      if (fileModified) {
+        const relativePath = path.relative(projectRoot, pdcaFile);
+        modifiedFiles.push(relativePath);
+        
+        if (!isDryRun) {
+          await fs.writeFile(pdcaFile, newLines.join('\n'));
+          console.log(`✅ Fixed: ${relativePath}`);
+        } else {
+          console.log(`Would fix: ${relativePath}`);
+        }
+      }
+    }
+    
+    // Summary
+    console.log(`\n📊 Summary:`);
+    console.log(`   - Total links found: ${totalLinksFound}`);
+    console.log(`   - Links fixed: ${totalLinksFixed}`);
+    console.log(`   - Links already valid: ${totalLinksFound - totalLinksFixed}`);
+    console.log(`   - PDCAs modified: ${modifiedFiles.length}`);
+    
+    if (!isDryRun && modifiedFiles.length > 0) {
+      // Auto-commit and push
+      console.log(`\n📦 Git operations:`);
+      try {
+        for (const file of modifiedFiles) {
+          execSync(`git add "${file}"`, { cwd: projectRoot });
+        }
+        console.log(`   ✅ Added ${modifiedFiles.length} files`);
+        
+        const commitMsg = `fix: ensure valid dual links to ${targetPath}`;
+        execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot });
+        console.log(`   ✅ Committed: ${commitMsg}`);
+        
+        execSync(`git push origin ${branch}`, { cwd: projectRoot });
+        console.log(`   ✅ Pushed to remote`);
+      } catch (error: any) {
+        console.log(`   ⚠️  Git error: ${error.message}`);
+      }
+    }
+    
+    if (totalLinksFixed === 0) {
+      console.log(`\n✅ All dual links are already valid!\n`);
+    } else {
+      console.log(`\n✨ ${isDryRun ? 'Dry run complete' : 'All dual links are now valid'}!\n`);
+    }
+    
+    return this;
+  }
+
+  /**
    * Test and discover tab completions for debugging and development
    * @param what Type of completion to test: "method" or "parameter"
    * @param filter Optional prefix to filter results (e.g., "v" shows only validate*, verify*, etc.)
