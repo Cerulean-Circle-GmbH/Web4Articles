@@ -1717,6 +1717,207 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
+   * Get dual link for a file (GitHub URL + chat path)
+   * Auto-fixes git status: adds, commits, pushes if needed
+   * 
+   * @param filePath Path to file (absolute or project-root-relative)
+   * @cliSyntax filePath
+   */
+  async getDualLink(filePath: string): Promise<this> {
+    console.log(`\n🔗 Generating Dual Link\n`);
+    
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    const { existsSync } = await import('fs');
+    const { execSync } = await import('child_process');
+    
+    // Get project root
+    const projectRoot = await this.getProjectRoot();
+    
+    // Normalize file path to project-root-relative
+    let normalizedPath: string;
+    if (path.isAbsolute(filePath)) {
+      normalizedPath = path.relative(projectRoot, filePath);
+    } else if (filePath.startsWith('§/')) {
+      normalizedPath = filePath.substring(2);
+    } else {
+      normalizedPath = filePath;
+    }
+    
+    const fullPath = path.join(projectRoot, normalizedPath);
+    
+    // Check if file exists
+    if (!existsSync(fullPath)) {
+      console.log(`❌ Error: File does not exist`);
+      console.log(`   File: ${normalizedPath}\n`);
+      return this;
+    }
+    
+    console.log(`📄 Target: ${normalizedPath}`);
+    console.log(`🔍 Checking git status...`);
+    
+    // Check and fix git status
+    try {
+      // Check if added
+      const statusOutput = execSync(`git status --porcelain "${normalizedPath}"`, {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      
+      if (statusOutput.startsWith('??')) {
+        console.log(`⚠️  File not added to git - adding now`);
+        execSync(`git add "${normalizedPath}"`, { cwd: projectRoot });
+        console.log(`✅ Added: ${normalizedPath}`);
+      } else if (statusOutput) {
+        console.log(`⚠️  File has uncommitted changes - adding now`);
+        execSync(`git add "${normalizedPath}"`, { cwd: projectRoot });
+        console.log(`✅ Added: ${normalizedPath}`);
+      }
+      
+      // Check if committed
+      const diffCached = execSync(`git diff --cached --name-only "${normalizedPath}"`, {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      
+      if (diffCached) {
+        console.log(`⚠️  File not committed - committing now`);
+        const commitMsg = `docs: add ${normalizedPath} for link generation`;
+        execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot });
+        console.log(`✅ Committed: ${commitMsg}`);
+      }
+      
+      // Check if pushed
+      const branch = execSync('git branch --show-current', {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      
+      const localCommit = execSync(`git rev-parse HEAD`, {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      
+      let remoteCommit = '';
+      try {
+        remoteCommit = execSync(`git rev-parse origin/${branch}`, {
+          cwd: projectRoot,
+          encoding: 'utf-8'
+        }).trim();
+      } catch {
+        // Remote doesn't exist yet
+      }
+      
+      if (localCommit !== remoteCommit) {
+        console.log(`⚠️  Changes not pushed - pushing now`);
+        execSync(`git push origin ${branch}`, { cwd: projectRoot });
+        console.log(`✅ Pushed to remote: ${branch}`);
+      } else {
+        console.log(`✅ File ready: committed and pushed`);
+      }
+      
+      // Generate GitHub URL
+      const gitConfig = execSync('git config --get remote.origin.url', {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      
+      // Extract org/repo from git URL
+      const match = gitConfig.match(/github\.com[:/]([^/]+)\/([^/.]+)/);
+      if (!match) {
+        console.log(`❌ Error: Could not parse GitHub URL from git config\n`);
+        return this;
+      }
+      
+      const org = match[1];
+      const repo = match[2];
+      
+      const githubUrl = `https://github.com/${org}/${repo}/blob/${branch}/${normalizedPath}`;
+      
+      // Generate dual link
+      console.log(`\n✨ Dual Link Generated:\n`);
+      console.log(`[GitHub](${githubUrl}) | [§/${normalizedPath}](${normalizedPath})\n`);
+      
+    } catch (error: any) {
+      console.log(`❌ Error: ${error.message}\n`);
+    }
+    
+    return this;
+  }
+
+  /**
+   * Tab completion for filePath parameter
+   * Returns list of files in project (prioritizes markdown files)
+   * @cliHide
+   */
+  async filePathParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    const { existsSync } = await import('fs');
+    
+    const projectRoot = await this.getProjectRoot();
+    const partialPath = currentArgs[currentArgs.length - 1] || '';
+    
+    // Determine search directory and file prefix
+    let searchDir = projectRoot;
+    let filePrefix = '';
+    
+    if (partialPath.includes('/')) {
+      const lastSlash = partialPath.lastIndexOf('/');
+      searchDir = path.join(projectRoot, partialPath.substring(0, lastSlash));
+      filePrefix = partialPath.substring(lastSlash + 1);
+    } else {
+      filePrefix = partialPath;
+    }
+    
+    // If search dir doesn't exist, return empty
+    if (!existsSync(searchDir)) {
+      return [];
+    }
+    
+    // Read directory
+    const entries = await fs.readdir(searchDir, { withFileTypes: true });
+    const results: string[] = [];
+    
+    for (const entry of entries) {
+      // Skip hidden files and common ignore dirs
+      if (entry.name.startsWith('.')) continue;
+      if (['node_modules', 'dist', 'target', '.git', '.next'].includes(entry.name)) continue;
+      
+      const relativePath = partialPath.includes('/') 
+        ? partialPath.substring(0, partialPath.lastIndexOf('/') + 1) + entry.name
+        : entry.name;
+      
+      if (entry.isDirectory()) {
+        results.push(relativePath + '/');
+      } else if (entry.isFile()) {
+        // Prioritize markdown and TypeScript files
+        if (entry.name.endsWith('.md') || entry.name.endsWith('.ts') || entry.name.endsWith('.tsx')) {
+          results.push(relativePath);
+        }
+      }
+    }
+    
+    return results.sort();
+  }
+
+  /**
+   * Alias for oldPath parameter completion (same as filePath)
+   * @cliHide
+   */
+  async oldPathParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    return this.filePathParameterCompletion(currentArgs);
+  }
+
+  /**
+   * Alias for newPath parameter completion (same as filePath)
+   * @cliHide
+   */
+  async newPathParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    return this.filePathParameterCompletion(currentArgs);
+  }
+
+  /**
    * Test and discover tab completions for debugging and development
    * @param what Type of completion to test: "method" or "parameter"
    * @param filter Optional prefix to filter results (e.g., "v" shows only validate*, verify*, etc.)
