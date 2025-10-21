@@ -333,6 +333,58 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * Resolve semantic version link to actual version number
+   * DRY helper: Used by on(), setCICDVersion(), upgrade(), and other methods
+   * 
+   * @param componentName Component to resolve version for
+   * @param version Version or semantic link (latest/dev/test/prod/current or actual version)
+   * @param contextVersion Optional: current context version for 'current' resolution
+   * @returns Actual version number (e.g., "0.3.13.2")
+   * @cliHide
+   */
+  private resolveActualVersion(
+    componentName: string,
+    version: string,
+    contextVersion?: string
+  ): string {
+    // Handle 'current' keyword
+    if (version === 'current') {
+      if (!contextVersion) {
+        throw new Error('Cannot resolve "current" version without context');
+      }
+      return contextVersion;
+    }
+    
+    // If already a version number, return as-is
+    if (/^\d+\.\d+\.\d+\.\d+$/.test(version)) {
+      return version;
+    }
+    
+    // Resolve semantic link (latest/dev/test/prod) to actual version
+    const semanticLinks = ['latest', 'dev', 'test', 'prod'];
+    if (semanticLinks.includes(version)) {
+      const componentDir = this.resolveComponentDirectory(componentName);
+      const linkPath = path.join(componentDir, version);
+      
+      if (existsSync(linkPath) && lstatSync(linkPath).isSymbolicLink()) {
+        const resolvedVersion = readlinkSync(linkPath);
+        // Extract version number from link target (handles both "0.1.0.0" and "../0.1.0.0")
+        const versionMatch = resolvedVersion.match(/(\d+\.\d+\.\d+\.\d+)/);
+        if (versionMatch) {
+          return versionMatch[1];
+        }
+        // If no version pattern, assume it's already a clean version
+        return resolvedVersion;
+      } else {
+        throw new Error(`Semantic link '${version}' does not exist or is not a symlink for ${componentName}`);
+      }
+    }
+    
+    // Unknown format - return as-is and let caller validate
+    return version;
+  }
+
+  /**
    * Scaffold complete component structure with all Web4 features
    * Creates directories, files, and symlinks for new component
    * @param options Scaffold options (componentName, version, features to include)
@@ -1145,22 +1197,8 @@ Standards:
       throw new Error(`Component not found: ${component} ${version} at ${componentPath}`);
     }
     
-    // Resolve actual version if symlink was provided (e.g., 'latest', 'dev', 'prod', 'test')
-    let actualVersion = version;
-    if (lstatSync(componentPath).isSymbolicLink()) {
-      const linkTarget = readlinkSync(componentPath);
-      // Extract version number from link target (e.g., "0.1.0.0" from "../0.1.0.0" or "0.1.0.0")
-      const versionMatch = linkTarget.match(/(\d+\.\d+\.\d+\.\d+)/);
-      if (versionMatch) {
-        actualVersion = versionMatch[1];
-      }
-    } else {
-      // Not a symlink - extract version from path
-      const pathMatch = componentPath.match(/(\d+\.\d+\.\d+\.\d+)$/);
-      if (pathMatch) {
-        actualVersion = pathMatch[1];
-      }
-    }
+    // Use DRY helper to resolve actual version
+    const actualVersion = this.resolveActualVersion(component, version);
     
     // Set component context for chaining
     this.model.name = component;
@@ -4678,6 +4716,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Set CI/CD semantic links for a component version
+   * WITHOUT context: Sets link for current component (self-operation)
+   * WITH context: Sets link for target component
+   * 
    * Unified method replacing individual setDev, setLatest, setProd, setTest methods
    * 
    * Sets links intelligently based on version build number:
@@ -4701,11 +4742,32 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     version: string = 'current'
   ): Promise<this> {
     const context = this.getComponentContext();
-    if (!context) {
-      throw new Error('No component context loaded. Use "on <component> <version>" first.');
+    
+    // Determine component and version to work with
+    let componentName: string;
+    let componentDir: string;
+    
+    if (context) {
+      // WITH context: Set link for target component
+      componentName = context.component;
+      componentDir = this.resolveComponentDirectory(componentName);
+    } else {
+      // WITHOUT context: Set link for current component (self-operation)
+      const currentPath = process.cwd();
+      const versionDirName = path.basename(currentPath);
+      const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(versionDirName);
+      
+      if (!isVersionDir) {
+        throw new Error('Current directory is not a component version directory. Use "on <component> <version>" or run from a version directory.');
+      }
+      
+      componentDir = path.dirname(currentPath);
+      componentName = path.basename(componentDir);
     }
     
-    const actualVersion = version === 'current' ? context.version : version;
+    // Use DRY helper to resolve version (handles 'current', semantic links, and actual versions)
+    const contextVersion = context?.version || (process.cwd().match(/(\d+\.\d+\.\d+\.\d+)$/) || [])[1];
+    const actualVersion = this.resolveActualVersion(componentName, version, contextVersion);
     
     // Validate targetVersion
     const validLinks = ['dev', 'latest', 'prod', 'test'];
@@ -4713,11 +4775,10 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       throw new Error(`Invalid targetVersion: ${targetVersion}. Must be one of: ${validLinks.join(', ')}`);
     }
     
-    console.log(`🔗 Setting ${targetVersion} symlink for ${context.component}:`);
+    console.log(`🔗 Setting ${targetVersion} symlink for ${componentName}:`);
     console.log(`   Target: ${actualVersion}`);
     
     const fs = await import('fs/promises');
-    const componentDir = this.resolveComponentDirectory(context.component);
     const linkPath = path.join(componentDir, targetVersion);
     const targetDir = path.join(componentDir, actualVersion);
     
