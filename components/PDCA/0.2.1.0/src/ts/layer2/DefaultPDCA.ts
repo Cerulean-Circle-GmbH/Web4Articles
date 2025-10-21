@@ -2701,6 +2701,162 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
+   * Refresh all relative links in a markdown file after it was moved
+   * Recalculates relative paths based on file's current location
+   * 
+   * Use case: After moving a .md file to a different directory,
+   * all its relative links (../../) need to be recalculated
+   * 
+   * @param markdownFile Path to the markdown file that was moved
+   * @param dryRun Preview changes without writing (default: false)
+   * @cliSyntax markdownFile dryRun
+   * @cliDefault dryRun false
+   * @cliValues dryRun true false
+   */
+  async refreshRelativeLinks(markdownFile: string, dryRun: string = 'false'): Promise<this> {
+    const isDryRun = dryRun === 'true';
+    
+    console.log(`\n🔄 Refreshing Relative Links\n`);
+    if (isDryRun) {
+      console.log(`🔍 DRY RUN MODE - No changes will be made\n`);
+    }
+    
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    const { existsSync } = await import('fs');
+    const { execSync } = await import('child_process');
+    
+    const projectRoot = await this.getProjectRoot();
+    
+    // Normalize markdown file path
+    let normalizedPath: string;
+    if (path.isAbsolute(markdownFile)) {
+      normalizedPath = path.relative(projectRoot, markdownFile);
+    } else if (markdownFile.startsWith('§/')) {
+      normalizedPath = markdownFile.substring(2);
+    } else {
+      normalizedPath = markdownFile;
+    }
+    
+    const fullPath = path.join(projectRoot, normalizedPath);
+    
+    // Check if file exists
+    if (!existsSync(fullPath)) {
+      console.log(`❌ Error: File does not exist`);
+      console.log(`   File: ${normalizedPath}\n`);
+      return this;
+    }
+    
+    console.log(`📄 File: ${normalizedPath}`);
+    console.log(`📂 Location: ${path.dirname(normalizedPath)}\n`);
+    
+    // Read file
+    const content = await fs.readFile(fullPath, 'utf-8');
+    const lines = content.split('\n');
+    const newLines: string[] = [];
+    
+    let linksFound = 0;
+    let linksUpdated = 0;
+    
+    // Process each line
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const dualLinkMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
+      
+      if (dualLinkMatch) {
+        const githubUrl = dualLinkMatch[1];
+        const displayText = dualLinkMatch[2];
+        const oldLocalPath = dualLinkMatch[3];
+        
+        linksFound++;
+        
+        // Check if this is a relative link
+        const isRelative = oldLocalPath.includes('../') || oldLocalPath.includes('./');
+        
+        if (isRelative) {
+          // Extract target file from display text (§/path format)
+          const displayMatch = displayText.match(/§\/(.+)/);
+          if (displayMatch) {
+            const targetPath = displayMatch[1];
+            
+            // Calculate NEW relative path from current file location
+            const currentFileDir = path.dirname(fullPath);
+            const targetFile = path.join(projectRoot, targetPath);
+            const newRelativePath = path.relative(currentFileDir, targetFile);
+            
+            // Check if path changed
+            if (newRelativePath !== oldLocalPath) {
+              const newLine = line.replace(
+                /\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/,
+                `[GitHub](${githubUrl}) | [${displayText}](${newRelativePath})`
+              );
+              
+              newLines.push(newLine);
+              linksUpdated++;
+              
+              console.log(`   Line ${i + 1}: Updated relative path`);
+              console.log(`      Old: ${oldLocalPath}`);
+              console.log(`      New: ${newRelativePath}`);
+            } else {
+              newLines.push(line);
+            }
+          } else {
+            // Can't parse, keep original
+            newLines.push(line);
+          }
+        } else {
+          // Not a relative link, keep as-is
+          newLines.push(line);
+        }
+      } else {
+        newLines.push(line);
+      }
+    }
+    
+    // Summary
+    console.log(`\n📊 Summary:`);
+    console.log(`   - Links found: ${linksFound}`);
+    console.log(`   - Links updated: ${linksUpdated}`);
+    console.log(`   - Links unchanged: ${linksFound - linksUpdated}`);
+    
+    if (linksUpdated > 0) {
+      if (!isDryRun) {
+        // Write updated file
+        await fs.writeFile(fullPath, newLines.join('\n'));
+        console.log(`\n✅ Updated: ${normalizedPath}`);
+        
+        // Auto-commit and push
+        console.log(`\n📦 Git operations:`);
+        try {
+          execSync(`git add "${normalizedPath}"`, { cwd: projectRoot });
+          console.log(`   ✅ Added file`);
+          
+          const commitMsg = `fix: refresh relative links in ${normalizedPath}`;
+          execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot });
+          console.log(`   ✅ Committed: ${commitMsg}`);
+          
+          const branch = execSync('git branch --show-current', {
+            cwd: projectRoot,
+            encoding: 'utf-8'
+          }).trim();
+          execSync(`git push origin ${branch}`, { cwd: projectRoot });
+          console.log(`   ✅ Pushed to remote`);
+        } catch (error: any) {
+          console.log(`   ⚠️  Git error: ${error.message}`);
+        }
+      } else {
+        console.log(`\n⚠️  DRY RUN: Would update ${normalizedPath}`);
+      }
+    } else {
+      console.log(`\n✅ All relative links are already correct!`);
+    }
+    
+    console.log(`\n✨ Refresh complete!\n`);
+    
+    return this;
+  }
+
+  /**
    * Test and discover tab completions for debugging and development
    * @param what Type of completion to test: "method" or "parameter"
    * @param filter Optional prefix to filter results (e.g., "v" shows only validate*, verify*, etc.)
