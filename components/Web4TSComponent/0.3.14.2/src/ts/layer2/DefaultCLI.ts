@@ -12,7 +12,7 @@ import { Colors } from '../layer3/Colors.interface.js';
 import { TSCompletion } from '../layer4/TSCompletion.js';
 import { DefaultColors } from '../layer4/DefaultColors.js';
 import { readFileSync, existsSync, readdirSync } from 'fs';
-import { join } from 'path';
+import { join, basename } from 'path';
 import * as ts from 'typescript';
 import { webcrypto as crypto } from 'crypto';
 
@@ -1295,9 +1295,11 @@ export abstract class DefaultCLI implements CLI {
    * Format completion values with DISPLAY/WORD protocol
    * Handles both simple arrays and complex formatted output
    * DRY helper used by completeParameter and future completion methods
+   * @param values Array of completion values/lines
+   * @param commandContext Optional command-line context for prompt echo
    * @cliHide
    */
-  private formatCompletionOutput(values: string[]): void {
+  private formatCompletionOutput(values: string[], commandContext?: string[]): void {
     const lines: string[] = [];
     
     // Detect complex format (numbered lines like "1: methodName <params>")
@@ -1306,15 +1308,32 @@ export abstract class DefaultCLI implements CLI {
     
     if (hasNumberedRefs || hasSpaces) {
       // Complex format: numbered method list or formatted text
-      // Add DISPLAY lines (user-visible formatted output)
+      // Add DISPLAY lines (user-visible formatted output with ANSI colors)
       values.forEach((line: string) => {
         lines.push(`DISPLAY: ${line}`);
       });
       
+      // Add colored prompt echo if context provided
+      if (commandContext && commandContext.length > 0) {
+        const cyan = '\x1b[36m';
+        const white = '\x1b[37m';
+        const reset = '\x1b[0m';
+        // Format: "your web4 command >" with "web4" in cyan, rest in white
+        // Then the actual command without newline so bash can append completion
+        const prompt = `${white}your ${cyan}web4${white} command >${reset} ${commandContext.join(' ')}`;
+        lines.push(`DISPLAY: `);
+        lines.push(`DISPLAY: ${prompt}`);
+      }
+      
       // Extract method names/words and add WORD lines (for bash compgen)
+      // CRITICAL: Strip ANSI codes before extracting words!
       values.forEach((line: string) => {
-        const match = line.match(/^\d+:\s*(\S+)/);
-        const word = match ? match[1] : line.split(' ')[0];
+        // Strip ANSI escape codes: \x1b[...m
+        const cleanLine = line.replace(/\x1b\[[0-9;]*m/g, '');
+        
+        // Extract word: "1: methodName <params>" -> "methodName"
+        const match = cleanLine.match(/^\d+:\s*(\S+)/);
+        const word = match ? match[1] : cleanLine.split(' ')[0];
         lines.push(`WORD: ${word}`);
       });
     } else {
@@ -1341,8 +1360,13 @@ export abstract class DefaultCLI implements CLI {
       // Pass context args to completion method (e.g., ['on', 'ComponentName'] for versionParameterCompletion)
       const values = await (this as any)[callbackName](contextArgs);
       
+      // Build command-line context for prompt echo
+      // Bash exports WEB4_CLI_NAME for us to use in prompt
+      const cliName = process.env.WEB4_CLI_NAME || 'cli';
+      const commandContext = [cliName, ...contextArgs];
+      
       // Use DRY helper to format output with DISPLAY/WORD protocol
-      this.formatCompletionOutput(values);
+      this.formatCompletionOutput(values, commandContext);
     } else {
       // Callback not found - return empty (no completions)
       console.log('');
