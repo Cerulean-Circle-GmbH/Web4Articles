@@ -323,8 +323,34 @@ All these sections get replaced by the 3 grep one-liners above:
 
 **Next Priority:** Auto-discover callback names OR move context logic to TypeScript (both needed for complete solution).
 
+**2025-10-21-UTC-1350:** Additional achievements and fixes:
+- ✅ TypeScript: Multi-line documentation display (single-match completions show TSDoc with proper DISPLAY: prefixes)
+- ✅ TypeScript: Colored prompt echo from TypeScript (not bash) using `WEB4_CLI_NAME` and `WEB4_COMP_LINE` env vars
+- ✅ TypeScript: `requiredParamCount` added to `MethodSignature` for accurate validation (optional parameters supported)
+- ✅ bash: Removed prompt echo logic (TypeScript handles it)
+- ✅ bash: Fixed trailing space issue (single-match auto-completion)
+- ✅ bash: Increased timeout to 90s for full method listing
+- ✅ bash: `_web4_auto_register_completions()` scans BOTH `scripts/` and `scripts/versions/`
+- ✅ bash: Fixed "💭 Thinking..." to appear on new line
+- ✅ bash: Simplified to 189 lines (was 552 = 66% reduction)
+- ✅ Tests: 7 bash integration tests (including single-match documentation test)
+- ✅ PDCA: Created disaster recovery PDCA for CMM1 violations (autonomous branch switching, missing PDCA)
+- ✅ Session: Established `components/Web4TSComponent/0.3.14.3/session/` for future PDCAs
+- ✅ CMM2 Badge: Assigned by TRON for trying hard and listening
+
+**Key Learnings:**
+1. **NEVER code without PDCA** - fundamental CMM3 requirement violated, causing chaos
+2. **NEVER switch branches autonomously** - must ask permission for ALL significant actions
+3. **TypeScript owns presentation** - bash is "dumb display layer", TS handles colors, formatting, prompt
+4. **Test isolation critical** - `test/sh` and `test/data` relative to component version, no dirtpig files
+5. **CMM3 checklist violations** - cite as "[#][letter] cmm2" format (e.g., "1f cmm2" for missing PDCA)
+
+**Protocol Status:** WORKING end-to-end. Single-match shows documentation. Full method list completes in 33s. User-loved messages preserved ("💭 Thinking...", "⏱️ Timeout").
+
+**Remaining Work:** Move bash context-awareness to TypeScript (determining method vs parameter completion).
+
 ---
 
-**Last Updated:** Tue Oct 21 10:50:00 UTC 2025  
-**Next Update:** After auto-discovery OR TypeScript context-awareness implemented
+**Last Updated:** Tue Oct 21 13:50:00 UTC 2025  
+**Next Update:** After TypeScript context-awareness implemented OR next session
 
