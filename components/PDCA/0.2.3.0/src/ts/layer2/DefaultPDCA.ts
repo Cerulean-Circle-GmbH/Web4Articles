@@ -1514,12 +1514,12 @@ export class DefaultPDCA implements PDCA {
   /**
    * Train AI agents on specific topics with CMM3-defined, reproducible learning paths
    * Systematically transfers knowledge to ensure agents don't repeat CMM2 mistakes
-   * Includes collaboration patterns, instruction interpretation, and zero-knowledge method usage
+   * Includes collaboration patterns, instruction interpretation, test workflow, and zero-knowledge method usage
    * 
-   * @param topic Training topic identifier (e.g., "how-to-start", "how-to-pdca", "how-to-cmm", "how-to-component", "how-to-dual-links", "how-to-ensure-links", "how-to-component-upgrade", "how-to-interpret-instructions", "how-to-collaborate", "how-to-chat-response")
+   * @param topic Training topic identifier (e.g., "how-to-start", "how-to-pdca", "how-to-cmm", "how-to-component", "how-to-test-workflow", "how-to-dual-links", "how-to-ensure-links", "how-to-component-upgrade", "how-to-interpret-instructions", "how-to-collaborate", "how-to-chat-response")
    * @param options Optional training configuration
    * @cliSyntax topic
-   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-interpret-instructions how-to-collaborate how-to-chat-response
+   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-test-workflow how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-interpret-instructions how-to-collaborate how-to-chat-response
    */
   async trainAI(topic: string): Promise<this> {
     console.log(`\n🎓 AI Training Module - CMM3 Reproducible Learning\n`);
@@ -1793,6 +1793,47 @@ export class DefaultPDCA implements PDCA {
           'Knows component directory structure and symlink purposes',
           'Can build component using: web4tscomponent on <Component> <version> build',
           'Recognizes when to use nextPatch vs nextMinor vs nextMajor'
+        ]
+      },
+      'how-to-test-workflow': {
+        title: '🧪 How to Test Workflow: Semantic Versioning and Test Iteration',
+        description: 'Master the test workflow: latest → test → dev → prod with auto-promotion and test iteration',
+        requiredReading: [
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-21-UTC-1234.pdca-test-workflow.pdca.md',
+            reason: 'Complete test workflow documentation with semantic versioning',
+            depth: 3
+          },
+          {
+            path: 'components/Web4TSComponent/latest/README.md',
+            reason: 'Component versioning and testing patterns',
+            depth: 1
+          }
+        ],
+        keyLessons: [
+          '🔗 Semantic links: latest (dev work) → test (testing) → dev (stable) → prod (production)',
+          '🧪 Test workflow: Work on `latest` → run `pdca test` → auto-promotes to `test` on success',
+          '✅ Auto-promotion: `pdca test` creates/updates `test` symlink when all tests pass',
+          '🔧 Test iteration: `web4tscomponent on <Component> latest test itCase` shows test tree',
+          '📊 View state: `web4tscomponent on <Component> latest tree links` shows semantic links',
+          '🛑 WORKFLOW REMINDER: Always work on dev until test → work on test until success → work on dev after success',
+          '⚠️ Version promotion: Use component commands (promote, upgrade), NEVER manual symlinks',
+          '🎯 Test selection: `web4tscomponent test itCase <token>` to run specific tests (e.g., 2a1)',
+          '🔍 When tests fail: Fix on `test` version, not `latest`',
+          '❌ Violated pattern: Fixing tests on `latest` instead of switching to `test` version',
+          '💡 Test fixtures can pollute component structure (components/X/version/components/)',
+          '⚠️ Obey forcing functions: WORKFLOW REMINDER is there for a reason'
+        ],
+        verificationChecklist: [
+          'Understands 4-level semantic versioning (latest, test, dev, prod)',
+          'Knows the complete test workflow (latest → test → dev → prod)',
+          'Recognizes auto-promotion happens on test success',
+          'Can use `test itCase` to view and select tests',
+          'Can use `tree links` to view semantic version state',
+          'Knows to obey the WORKFLOW REMINDER',
+          'Understands why manual symlink changes are CMM3 violations',
+          'Can identify when to work on `test` vs `latest` version',
+          'Recognizes test fixture pollution issues'
         ]
       },
       'how-to-interpret-instructions': {
