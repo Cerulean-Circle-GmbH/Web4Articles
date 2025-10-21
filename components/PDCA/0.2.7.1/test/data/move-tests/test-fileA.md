@@ -1,6 +1,6 @@
 # Test File A
 
 ## Links
-- Link to B (same directory): [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-17-UTC-0747/components/PDCA/0.2.7.1/test/data/move-tests/test-fileB.md) | [§/components/PDCA/0.2.7.1/test/data/move-tests/test-fileB.md](test-fileB.md)
+- Link to B (same directory): [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-17-UTC-0747/components/PDCA/0.2.7.1/test/data/move-tests/subdir/test-fileB.md) | [§/components/PDCA/0.2.7.1/test/data/move-tests/subdir/test-fileB.md](subdir/test-fileB.md)
 
 

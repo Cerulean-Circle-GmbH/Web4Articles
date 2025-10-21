@@ -2371,7 +2371,7 @@ export class DefaultPDCA implements PDCA {
         
         if (entry.isDirectory()) {
           await scanDir(fullPath);
-        } else if (entry.isFile() && entry.name.endsWith('.pdca.md')) {
+        } else if (entry.isFile() && entry.name.endsWith('.md')) {
           pdcaFiles.push(fullPath);
         }
       }
@@ -2416,9 +2416,15 @@ export class DefaultPDCA implements PDCA {
               const repo = match[2];
               
               const newGithubUrl = `https://github.com/${org}/${repo}/blob/${branch}/${newNormalized}`;
+              
+              // Calculate relative path from current file to new file location
+              const linkingFileDir = path.dirname(pdcaFile);
+              const targetFilePath = path.join(projectRoot, newNormalized);
+              const relativePath = path.relative(linkingFileDir, targetFilePath);
+              
               const newLine = line.replace(
                 /\[GitHub\]\([^)]+\)\s*\|\s*\[[^\]]*\]\([^)]+\)/,
-                `[GitHub](${newGithubUrl}) | [§/${newNormalized}](${newNormalized})`
+                `[GitHub](${newGithubUrl}) | [§/${newNormalized}](${relativePath})`
               );
               
               newLines.push(newLine);
@@ -2813,6 +2819,57 @@ export class DefaultPDCA implements PDCA {
     console.log(`🔗 Step 2: Updating links in other files...`);
     await this.updateLinksToFile(oldPath, newPath, dryRun);
     console.log(); // Spacing
+
+    // Step 5: Refresh Relative Links in Moved File
+    if (!isDryRun) {
+      console.log(`🔄 Step 3: Refreshing relative links in moved file...`);
+      
+      const movedFileContent = fs.readFileSync(newFullPath, 'utf-8');
+      const lines = movedFileContent.split('\n');
+      let fileModified = false;
+      const newLines: string[] = [];
+      
+      for (const line of lines) {
+        const dualLinkMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
+        
+        if (dualLinkMatch) {
+          const githubUrl = dualLinkMatch[1];
+          const displayText = dualLinkMatch[2];
+          const localPath = dualLinkMatch[3];
+          
+          // Extract the target file path from § notation
+          const sectionMatch = displayText.match(/§\/(.+)/);
+          if (sectionMatch) {
+            const targetPath = sectionMatch[1];
+            const targetFullPath = path.join(projectRoot, targetPath);
+            
+            // Calculate new relative path from moved file's new location
+            const movedFileDir = path.dirname(newFullPath);
+            const newRelativePath = path.relative(movedFileDir, targetFullPath);
+            
+            // Only update if the relative path changed
+            if (newRelativePath !== localPath) {
+              const newLine = line.replace(
+                /\[GitHub\]\(([^)]+)\)\s*\|\s*\[[^\]]*\]\(([^)]+)\)/,
+                `[GitHub](${githubUrl}) | [§/${targetPath}](${newRelativePath})`
+              );
+              newLines.push(newLine);
+              fileModified = true;
+              continue;
+            }
+          }
+        }
+        
+        newLines.push(line);
+      }
+      
+      if (fileModified) {
+        fs.writeFileSync(newFullPath, newLines.join('\n'));
+        console.log(`✅ Refreshed relative links in moved file\n`);
+      } else {
+        console.log(`ℹ️  No relative links to refresh\n`);
+      }
+    }
 
     // Note: updateLinksToFile already commits and pushes everything (including the git mv)
     // No additional commit needed - DRY principle: trust the abstraction
