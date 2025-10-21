@@ -756,10 +756,13 @@ export class TSCompletion implements Completion {
       // Callback naming convention: {paramName}ParameterCompletion
       const callbackName = `${paramName}ParameterCompletion`;
       
-      // Verify the callback method exists
-      const methods = TSCompletion.getClassMethods(className);
-      if (methods.includes(callbackName)) {
-        return callbackName;
+      // Search for callback in multiple classes (callback might be in DefaultCLI even if method is in component)
+      const classesToCheck = ['DefaultCLI', 'DefaultWeb4TSComponent', className];
+      for (const cls of classesToCheck) {
+        const methods = TSCompletion.getClassMethods(cls);
+        if (methods.includes(callbackName)) {
+          return callbackName;
+        }
       }
       
       return null;

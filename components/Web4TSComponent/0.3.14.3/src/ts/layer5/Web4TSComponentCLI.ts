@@ -123,7 +123,26 @@ export class Web4TSComponentCLI extends DefaultCLI {
     const signature = this.methodSignatures.get(command)!;
     const minArgs = Math.min(signature.paramCount, 1); // At least 1 arg for most methods
     
-    if (args.length < minArgs && signature.paramCount > 0) {
+    // Filter out empty strings from args (bash completion sends empty strings for incomplete args)
+    const nonEmptyArgs = args.filter(arg => arg !== '');
+    
+    if (nonEmptyArgs.length < minArgs && signature.paramCount > 0) {
+      // Before failing, check if TSCompletion has a callback for the first missing parameter
+      // This enables tab completion: web4tscomponent completion <TAB> → __CALLBACK__:whatParameterCompletion
+      const paramIndex = nonEmptyArgs.length; // Index of first missing parameter
+      
+      // Check DefaultWeb4TSComponent first (component methods), then DefaultCLI (CLI methods)
+      let callback = TSCompletion.getParameterCallback('DefaultWeb4TSComponent', command, paramIndex);
+      if (!callback) {
+        callback = TSCompletion.getParameterCallback('DefaultCLI', command, paramIndex);
+      }
+      
+      if (callback) {
+        // Return callback marker for bash completion to trigger
+        console.log(`WORD: __CALLBACK__:${callback}`);
+        return { executed: true, remainingArgs: [] };
+      }
+      
       throw new Error(`At least ${minArgs} arguments required for ${command} command`);
     }
 
