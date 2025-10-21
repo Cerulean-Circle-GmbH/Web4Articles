@@ -1,0 +1,1 @@
+[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-17-UTC-0747/scrum.pmo/project.journal/2025-10-20-UTC-1008-session/testAAA.feature.pdca.md) | [§/scrum.pmo/project.journal/2025-10-20-UTC-1008-session/testAAA.feature.pdca.md](../../../scrum.pmo/project.journal/2025-10-20-UTC-1008-session/testAAA.feature.pdca.md)
