@@ -2373,7 +2373,10 @@ export class DefaultPDCA implements PDCA {
           
           // Check if this link points to old path
           if (githubUrl.includes(oldNormalized) || localPath.includes(oldNormalized)) {
-            // Generate new link using getDualLink logic
+            // Detect if original link was relative (contains ../) or absolute
+            const wasRelative = localPath.includes('../') || localPath.includes('./');
+            
+            // Generate new link
             const branch = execSync('git branch --show-current', {
               cwd: projectRoot,
               encoding: 'utf-8'
@@ -2390,9 +2393,22 @@ export class DefaultPDCA implements PDCA {
               const repo = match[2];
               
               const newGithubUrl = `https://github.com/${org}/${repo}/blob/${branch}/${newNormalized}`;
+              
+              // Preserve relative vs absolute format
+              let newLocalPath: string;
+              if (wasRelative) {
+                // Calculate relative path from this file to the target
+                const currentFileDir = path.dirname(pdcaFile);
+                const targetFile = path.join(projectRoot, newNormalized);
+                newLocalPath = path.relative(currentFileDir, targetFile);
+              } else {
+                // Keep absolute (project-root-relative)
+                newLocalPath = newNormalized;
+              }
+              
               const newLine = line.replace(
                 /\[GitHub\]\([^)]+\)\s*\|\s*\[[^\]]*\]\([^)]+\)/,
-                `[GitHub](${newGithubUrl}) | [§/${newNormalized}](${newNormalized})`
+                `[GitHub](${newGithubUrl}) | [§/${newNormalized}](${newLocalPath})`
               );
               
               newLines.push(newLine);
