@@ -1956,8 +1956,8 @@ export class DefaultPDCA implements PDCA {
     if (!training) {
       console.error(`❌ Unknown training topic: ${topic}`);
       console.log(`\n📚 Available topics:`);
-      Object.keys(trainingTopics).forEach(key => {
-        console.log(`   - ${key}: ${trainingTopics[key].title}`);
+      Object.keys(trainingTopics).forEach((key, index) => {
+        console.log(`   ${index + 1}:${key}: ${trainingTopics[key].title}`);
       });
       return this;
     }
