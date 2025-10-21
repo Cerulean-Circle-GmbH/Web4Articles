@@ -1151,7 +1151,13 @@ export abstract class DefaultCLI implements CLI {
    * Web4 pattern: Default value detection for enhanced optional syntax
    */
   private extractDefaultValue(param: any, methodName?: string): string | null {
-    // ✅ ZERO CONFIG: Check for @cliDefault annotation
+    // ✅ PRIORITY 1: Check TypeScript signature default (already extracted by TSCompletion)
+    // This ensures TypeScript native defaults ALWAYS take priority
+    if (param.default !== undefined && param.default !== null) {
+      return param.default;
+    }
+    
+    // ✅ PRIORITY 2: Check for @cliDefault annotation (fallback only)
     if (methodName) {
       const cliAnnotations = TSCompletion.extractCliAnnotations(this.componentClass.name, methodName, param.name);
       if (cliAnnotations.default) {
@@ -1159,7 +1165,7 @@ export abstract class DefaultCLI implements CLI {
       }
     }
     
-    // ✅ CONVENTION: Common default values based on parameter type
+    // ✅ PRIORITY 3: Convention-based defaults for common parameter types
     const description = param.description || '';
     
     if (description.includes('boolean')) {
