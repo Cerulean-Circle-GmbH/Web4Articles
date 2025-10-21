@@ -1683,16 +1683,16 @@ export abstract class DefaultCLI implements CLI {
             signature = `${methodColor}${methodName}${RESET} ${BRIGHT_YELLOW}${paramList}${RESET}`;
           }
           
-          // Return: full signature + separator + green doc + double newline
-          // Split into multiple lines for proper DISPLAY formatting
-          const separator = `${'─'.repeat(60)}`;
+          // Return: Multiple lines for proper DISPLAY formatting
+          // Each line becomes a separate DISPLAY: output line in protocol
+          const separator = `${BRIGHT_CYAN}${'─'.repeat(60)}${RESET}`;
           const header = `${BRIGHT_WHITE_BOLD}📖 Documentation:${RESET}`;
           const greenDoc = `${GREEN}${fullMethodDoc}${RESET}`;
           
-          // Return as array of lines (each will become a DISPLAY line)
+          // Return as array - each element becomes a DISPLAY line
           return [
             signature,
-            `${BRIGHT_CYAN}${separator}${RESET}`,
+            separator,
             header,
             greenDoc,
             ''  // Empty line for spacing
