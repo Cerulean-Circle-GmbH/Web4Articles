@@ -1185,15 +1185,21 @@ Standards:
 
   /**
    * Upgrade component to next version with semantic version control
+   * WITHOUT context: Upgrades current component (self-operation)
+   * WITH context: Upgrades target component
    * 
-   * Performs intelligent version upgrades for loaded component context.
-   * Must be used after 'on' method to load component context. Supports
-   * semantic versioning with nextBuild, nextMinor, nextMajor patterns.
+   * Performs intelligent version upgrades. If no context is loaded (via 'on'),
+   * upgrades the current component. Supports semantic versioning with nextBuild,
+   * nextPatch, nextMinor, nextMajor patterns.
    * 
-   * @param versionPromotion Version upgrade type: 'nextBuild', 'nextMinor', 'nextMajor', or specific version
+   * @param versionPromotion Version upgrade type: 'nextBuild', 'nextPatch', 'nextMinor', 'nextMajor', or specific version
    * 
    * @example
-   * // Upgrade to next build version (0.1.0.0 → 0.1.0.1)
+   * // WITH context: Upgrade target component
+   * await component.on('Web4TSComponent', 'latest').upgrade('nextBuild');
+   * 
+   * @example
+   * // WITHOUT context: Upgrade current component (0.1.0.0 → 0.1.0.1)
    * await component.upgrade('nextBuild');
    * 
    * @example
@@ -1210,58 +1216,80 @@ Standards:
    */
   async upgrade(versionPromotion: string = 'nextPatch'): Promise<this> {
     const context = this.getComponentContext();
-    if (!context) {
-      throw new Error('No component context loaded. Use "on <component> <version>" first.');
+    
+    // Determine component and version to upgrade
+    let componentName: string;
+    let currentVersion: string;
+    let componentPath: string;
+    
+    if (context) {
+      // WITH context: Upgrade target component
+      componentName = context.component;
+      currentVersion = context.version;
+      componentPath = context.path;
+    } else {
+      // WITHOUT context: Upgrade current component (self-operation)
+      const currentPath = process.cwd();
+      const versionDirName = path.basename(currentPath);
+      const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(versionDirName);
+      
+      if (!isVersionDir) {
+        throw new Error('Current directory is not a component version directory. Use "on <component> <version>" or run from a version directory.');
+      }
+      
+      const componentDir = path.dirname(currentPath);
+      componentName = path.basename(componentDir);
+      currentVersion = versionDirName;
+      componentPath = currentPath;
     }
     
-    const currentVersion = context.version;
     let nextVersion: string;
     
     switch (versionPromotion) {
       case 'nextBuild':
         nextVersion = this.incrementBuild(currentVersion);
-        console.log(`🔧 Upgrading ${context.component} to next build: ${currentVersion} → ${nextVersion}`);
+        console.log(`🔧 Upgrading ${componentName} to next build: ${currentVersion} → ${nextVersion}`);
         break;
         
       case 'nextPatch':
       case 'patch':
         nextVersion = this.incrementPatch(currentVersion);
-        console.log(`🔧 Upgrading ${context.component} to next patch: ${currentVersion} → ${nextVersion}`);
+        console.log(`🔧 Upgrading ${componentName} to next patch: ${currentVersion} → ${nextVersion}`);
         break;
         
       case 'nextMinor':
       case 'minor':
         nextVersion = this.incrementMinor(currentVersion);
-        console.log(`🚀 Upgrading ${context.component} to next minor: ${currentVersion} → ${nextVersion}`);
+        console.log(`🚀 Upgrading ${componentName} to next minor: ${currentVersion} → ${nextVersion}`);
         break;
         
       case 'nextMajor':
       case 'major':
         nextVersion = this.incrementMajor(currentVersion);
-        console.log(`💥 Upgrading ${context.component} to next major: ${currentVersion} → ${nextVersion}`);
+        console.log(`💥 Upgrading ${componentName} to next major: ${currentVersion} → ${nextVersion}`);
         break;
         
       default:
         if (versionPromotion.match(/^\d+\.\d+\.\d+\.\d+$/)) {
           nextVersion = versionPromotion;
-          console.log(`🎯 Upgrading ${context.component} to specific version: ${currentVersion} → ${nextVersion}`);
+          console.log(`🎯 Upgrading ${componentName} to specific version: ${currentVersion} → ${nextVersion}`);
         } else {
           throw new Error(`Invalid version type: ${versionPromotion}. Use: nextBuild, nextMinor, nextMajor, or specific version`);
         }
     }
     
     // Create new version from existing
-    await this.createVersionFromExisting(context.component, currentVersion, nextVersion);
+    await this.createVersionFromExisting(componentName, currentVersion, nextVersion);
     
     // Update symlinks to maintain proper script accessibility
-    await this.updateSymlinks(context.component, nextVersion);
+    await this.updateSymlinks(componentName, nextVersion);
     
-    console.log(`✅ ${context.component} ${nextVersion} created successfully`);
-    console.log(`   Location: components/${context.component}/${nextVersion}`);
+    console.log(`✅ ${componentName} ${nextVersion} created successfully`);
+    console.log(`   Location: components/${componentName}/${nextVersion}`);
     
     // Update context to new version for further chaining
     (this.model as any).contextVersion = nextVersion;
-    (this.model as any).contextPath = `components/${context.component}/${nextVersion}`;
+    (this.model as any).contextPath = `components/${componentName}/${nextVersion}`;
     
     return this;
   }
