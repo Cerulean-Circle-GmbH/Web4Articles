@@ -28,26 +28,19 @@ describe('PDCA CLI Location Resilience', () => {
     const findProjectRoot = (startDir: string): string => {
       let currentDir = path.resolve(startDir);
       
-      // First priority: Look for package.json + components/ directory
-      // This is MORE SPECIFIC and will correctly identify test/data or project root
+      // Look for Web4Articles project root by finding scripts/ directory
+      // This is more reliable than looking for package.json + components/
+      // because components themselves have package.json and may have test/data/components/
       while (currentDir !== path.dirname(currentDir)) {
-        if (existsSync(path.join(currentDir, 'package.json')) &&
-            existsSync(path.join(currentDir, 'components'))) {
+        const hasScripts = existsSync(path.join(currentDir, 'scripts'));
+        const hasComponents = existsSync(path.join(currentDir, 'components'));
+        if (hasScripts && hasComponents) {
           return currentDir;
         }
         currentDir = path.dirname(currentDir);
       }
       
-      // Fallback: Look for .git (for projects without components/ dir)
-      currentDir = path.resolve(startDir);
-      while (currentDir !== path.dirname(currentDir)) {
-        if (existsSync(path.join(currentDir, '.git'))) {
-          return currentDir;
-        }
-        currentDir = path.dirname(currentDir);
-      }
-      
-      return path.resolve(startDir);
+      throw new Error('Could not find Web4Articles project root');
     };
     
     // Discover project root once, then use absolute paths everywhere
