@@ -4732,7 +4732,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @returns this for method chaining
    * @cliSyntax targetVersion version
    * @cliDefault version current
-   * @cliValues dev latest prod test
+   * @cliValues targetVersion dev latest prod test
    * @cliExample web4tscomponent setCICDVersion prod 1.0.0.0
    * @cliExample web4tscomponent setCICDVersion dev 0.1.1.1
    * @cliExample web4tscomponent on Component 0.1.0.0 setCICDVersion latest

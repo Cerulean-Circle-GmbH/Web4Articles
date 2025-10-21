@@ -160,6 +160,11 @@ export class Web4TSComponentCLI extends DefaultCLI {
   /**
    * Intelligently determine how many arguments a method should consume
    * Stops at next known command to enable chaining (unless explicit max is set)
+   * 
+   * PRIORITY ORDER (feature.cli.parsing.md):
+   * 1. Valid @cliValues (parameter value) - CONSUME
+   * 2. Method name (chaining) - STOP
+   * 3. Neither - CONSUME (as arbitrary string parameter)
    */
   private determineArgumentConsumption(command: string, args: string[]): number {
     const signature = this.methodSignatures.get(command)!;
@@ -176,13 +181,31 @@ export class Web4TSComponentCLI extends DefaultCLI {
     const methodSpecificMaxArgs = this.getMethodMaxArguments(command);
     const maxArgs = methodSpecificMaxArgs !== null ? methodSpecificMaxArgs : signature.paramCount;
     
-    // ALWAYS check for next command to enable chaining
-    // Stop consuming args when we encounter a known method name
+    // Get parameter info for @cliValues checking
+    const params = TSCompletion.getEnhancedMethodParameters('DefaultCLI,DefaultWeb4TSComponent', command);
+    
+    // Check each argument position for chaining vs parameter value
     for (let i = 0; i < Math.min(maxArgs, args.length); i++) {
-      if (this.methodSignatures.has(args[i])) {
+      const argValue = args[i];
+      
+      // PRIORITY 1: Check if this argument is a valid @cliValues for its parameter position
+      if (params && i < params.length) {
+        const paramName = params[i].name;
+        const cliValues = TSCompletion.extractCliValues('DefaultWeb4TSComponent', command, paramName);
+        
+        if (cliValues.length > 0 && cliValues.includes(argValue)) {
+          // Valid parameter value - continue consuming
+          continue;
+        }
+      }
+      
+      // PRIORITY 2: Check if it's a method name (chaining)
+      if (this.methodSignatures.has(argValue)) {
         // Found next command, consume up to this point
         return i;
       }
+      
+      // PRIORITY 3: Neither @cliValues nor method name - continue consuming as arbitrary string
     }
     
     // No next command found, consume up to method's parameter count
