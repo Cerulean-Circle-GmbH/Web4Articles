@@ -45,12 +45,28 @@ export class TSCompletion implements Completion {
   }
   static getProjectSourceFiles(): string[] {
     const __dirname = path.dirname(new URL(import.meta.url).pathname);
+    
+    // ✅ FIX: Resolve to src/ts/ directory, not dist/ts/
+    // When running from dist/ts/layer4/, we need to go: ../../../src/ts/
+    // When running from src/ts/layer4/, we need to go: ../
+    // Solution: Detect if we're in dist/ or src/ and adjust accordingly
+    
+    let srcBase: string;
+    if (__dirname.includes('/dist/ts/')) {
+      // Running from compiled code: dist/ts/layer4 → ../../../src/ts
+      srcBase = path.resolve(__dirname, '../../../src/ts');
+    } else {
+      // Running directly from source: src/ts/layer4 → ../
+      srcBase = path.resolve(__dirname, '..');
+    }
+    
     const dirs = [
-      path.resolve(__dirname, '../layer1'),
-      path.resolve(__dirname, '../layer2'),
-      path.resolve(__dirname, '../layer3'),
-      path.resolve(__dirname, '../layer5'),  // Scan CLI layer for component-specific completion methods
+      path.join(srcBase, 'layer1'),
+      path.join(srcBase, 'layer2'),
+      path.join(srcBase, 'layer3'),
+      path.join(srcBase, 'layer5'),  // Scan CLI layer for component-specific completion methods
     ];
+    
     let files: string[] = [];
     for (const dir of dirs) {
       if (existsSync(dir)) {
