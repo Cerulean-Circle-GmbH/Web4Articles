@@ -23,73 +23,143 @@
 
 | **#** | **Component** | **File** | **Method/Function** | **Current State** | **Migration Status** | **Notes** |
 |-------|---------------|----------|---------------------|-------------------|----------------------|-----------|
-| 1 | TypeScript | DefaultWeb4TSComponent.ts | `completion(what, filter)` | ANSI formatted output | ⏳ **TODO** | Add DISPLAY/WORD prefix protocol |
-| 2 | TypeScript | DefaultCLI.ts | `completeParameter(callback, ...args)` | ANSI formatted output | ⏳ **TODO** | Add DISPLAY/WORD prefix protocol |
-| 3 | TypeScript | TSCompletion.ts | `complete(args)` | Returns string array | ⏳ **TODO** | Check if needs migration |
-| 4 | bash | source.env | `_web4_tscompletion()` | 442 lines with ANSI parsing | ⏳ **TODO** | Simplify to ~20 lines with grep |
-| 5 | bash | source.env | Method completion logic | Lines 50-252 (~200 lines) | ⏳ **TODO** | Replace with 3 grep one-liners |
-| 6 | bash | source.env | Parameter completion logic | Lines 277-329 (~52 lines) | ⏳ **TODO** | Replace with 3 grep one-liners |
-| 7 | bash | source.env | Callback handling | Lines 167-176, 267-275, 392-400 | ⏳ **TODO** | Simplify callback detection |
-| 8 | bash | source.env | Single-match detection | Multiple locations with regex | ⏳ **TODO** | Remove - bash counts words instead |
-| 9 | bash | source.env | ANSI stripping logic | `sed` commands in 3 places | ⏳ **TODO** | Remove - TypeScript outputs clean text |
-| 10 | bash | source.env | Timeout handling | Lines 167-176, 267-275, 392-400 | ✅ **KEEP** | Already simple, just update message |
+| 1 | TypeScript | DefaultCLI.ts:1300 | `completeParameter()` | Raw output (numbered/plain) | ⏳ **TODO** | **OUTPUT ROUTER** - Add DISPLAY/WORD prefixes |
+| 2 | TypeScript | DefaultCLI.ts:1429 | `completionNameParameterCompletion()` | ANSI colored output | ⏳ **TODO** | **METHOD LISTER** - Remove ANSI, return plain strings |
+| 3 | TypeScript | DefaultCLI.ts:1285 | `actionParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 4 | TypeScript | DefaultCLI.ts:1331 | `depthParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 5 | TypeScript | DefaultCLI.ts:1340 | `showHiddenParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 6 | TypeScript | DefaultCLI.ts:1349 | `skipPromotionParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 7 | TypeScript | DefaultCLI.ts:1358 | `formatParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 8 | TypeScript | DefaultCLI.ts:1367 | `whatParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 9 | TypeScript | DefaultCLI.ts:1377 | `filterParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Delegates to #2 |
+| 10 | TypeScript | DefaultCLI.ts:1763 | `componentParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 11 | TypeScript | DefaultCLI.ts:1805 | `versionParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 12 | TypeScript | DefaultCLI.ts:1866 | `scopeParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 13 | TypeScript | DefaultCLI.ts:1895 | `targetDirParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 14 | TypeScript | DefaultCLI.ts:1913 | `targetVersionParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 15 | TypeScript | DefaultCLI.ts:1923 | `versionPromotionParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 16 | TypeScript | DefaultCLI.ts:1932 | `referencesParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 17 | TypeScript | DefaultCLI.ts:2092 | `testDescribeReferenceParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 18 | TypeScript | DefaultCLI.ts:2134 | `testItCaseReferenceParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 19 | TypeScript | DefaultCLI.ts:2178 | `nameParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 20 | TypeScript | DefaultCLI.ts:2208 | `optionsParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 21 | bash | source.env | `_web4_tscompletion()` | 442 lines with ANSI parsing | ⏳ **TODO** | Simplify to ~30 lines with grep |
+| 22 | bash | source.env | Method completion logic | Lines 50-252 (~200 lines) | ⏳ **TODO** | Replace with 2 grep one-liners |
+| 23 | bash | source.env | Parameter completion logic | Lines 277-329 (~52 lines) | ⏳ **TODO** | Replace with 2 grep one-liners |
+| 24 | bash | source.env | Callback handling | Lines 167-176, 267-275, 392-400 | ⏳ **TODO** | Simplify callback detection |
+| 25 | bash | source.env | Single-match detection | Multiple locations with regex | ⏳ **TODO** | Remove - bash counts words instead |
+| 26 | bash | source.env | ANSI stripping logic | `sed` commands in 3 places | ⏳ **TODO** | Remove - TypeScript outputs clean text |
+| 27 | bash | source.env | Timeout handling | Lines 167-176, 267-275, 392-400 | ✅ **KEEP** | Already simple, just update message |
 
-**Status Legend:**
-- ⏳ **TODO** - Not started
-- 🔄 **IN PROGRESS** - Being worked on
-- ✅ **DONE** - Completed and tested
-- ✅ **KEEP** - Already simple, no migration needed
-- ❌ **SKIP** - Not needed after migration
+**Critical Items:** Only **2 TypeScript methods** need changes (#1, #2), then bash simplification  
+**Safe Items:** 18 TypeScript methods need **NO changes** (#3-20) - they're simple value providers
 
 ---
 
 ## **TypeScript Changes Required**
 
-### **1. DefaultWeb4TSComponent.ts - `completion()` method**
+### **⚠️ CRITICAL: These are WORKING methods used by bash completion RIGHT NOW!**
 
-**Current behavior:** Returns formatted ANSI output  
-**New behavior:** Output with DISPLAY/WORD prefixes
+**All changes must:**
+1. ✅ Keep bash completion working during migration
+2. ✅ Test each method individually after changes
+3. ✅ Verify output format changes don't break bash parsing
+4. ✅ Have rollback plan if migration breaks completion
+
+---
+
+### **1. DefaultCLI.ts - `completeParameter()` method (OUTPUT ROUTER)**
+
+**Location:** Line 1300  
+**Current behavior:** Routes to callback methods, then outputs their return values  
+**Current output:**
+- Numbered lines (e.g., `1: methodName <params>`) → newline-separated
+- Plain words → space-separated
+- **USED BY BASH RIGHT NOW!**
+
+**New behavior:** Add DISPLAY/WORD prefixes to output
 
 **Changes:**
 ```typescript
-// OLD:
-console.log(formattedOutput);
+// OLD (lines 1313-1319):
+if (hasNumberedRefs || hasSpaces) {
+  console.log(values.join('\n'));  // ❌ Raw output
+} else {
+  process.stdout.write(values.join(' '));  // ❌ Raw output
+}
 
 // NEW:
-formattedLines.forEach(line => console.log(`DISPLAY: ${line}`));
-methodNames.forEach(name => console.log(`WORD: ${name}`));
+if (hasNumberedRefs || hasSpaces) {
+  // Display lines (hierarchical)
+  values.forEach(line => console.log(`DISPLAY: ${line}`));
+  // Extract method names for compgen
+  const words = values.map(line => line.replace(/^\d+:\s*/, '').split(' ')[0]);
+  words.forEach(word => console.log(`WORD: ${word}`));
+} else {
+  // Just words (no display)
+  values.forEach(word => console.log(`WORD: ${word}`));
+}
 ```
 
 **Test cases:**
-- Multiple matches: Show display + words
-- Single match: Show display + single word (bash auto-completes)
-- No matches: Empty output
+- ✅ Method completion (numbered lines)
+- ✅ Parameter completion (plain words)
+- ✅ Single match detection (bash counts words)
 
 ---
 
-### **2. DefaultCLI.ts - `completeParameter()` method**
+### **2. DefaultCLI.ts - `completionNameParameterCompletion()` method (METHOD/PARAMETER LISTER)**
 
-**Current behavior:** Returns formatted callback completions  
-**New behavior:** Output with DISPLAY/WORD prefixes
+**Location:** Line 1429  
+**Current behavior:** Returns array of strings (method names or parameter names with ANSI colors)  
+**Current output format:**
+- Method mode: Numbered lines like `1: ${CYAN}methodName${RESET} <params>`
+- Parameter mode: Parameter names or colored values
+- **USED BY BASH RIGHT NOW via completeParameter!**
+
+**New behavior:** Return plain strings (no ANSI!), let `completeParameter` add prefixes
 
 **Changes:**
 ```typescript
-// Similar to completion() - add DISPLAY/WORD prefixes
+// REMOVE ANSI colors from this method entirely!
+// Lines 1441-1444: DELETE color code usage
+// Lines 1477-1486: DELETE color wrapping of results
+// Return PLAIN strings only - completeParameter will add DISPLAY: prefix
 ```
 
 **Test cases:**
-- Callback-based parameter completion
-- Direct parameter values
-- Single match auto-completion
+- ✅ `web4tscomponent completion method` (list all methods)
+- ✅ `web4tscomponent completion method co` (filtered methods)
+- ✅ `web4tscomponent completion parameter` (list parameters)
 
 ---
 
-### **3. TSCompletion.ts - `complete()` method**
+### **3-22. All other `*ParameterCompletion()` methods (VALUE PROVIDERS)**
 
-**Current behavior:** Returns string array  
-**Investigation needed:** Is this used by bash completion? Or internal only?
+**These methods return simple string arrays and DON'T need changes!**
 
-**Action:** Investigate usage and determine if migration needed
+| **#** | **Method** | **Line** | **Returns** | **Status** |
+|-------|------------|----------|-------------|------------|
+| 3 | `actionParameterCompletion` | 1285 | `['start', 'stop', 'restart']` | ✅ **NO CHANGE** |
+| 4 | `depthParameterCompletion` | 1331 | `['1', '2', ..., '10']` | ✅ **NO CHANGE** |
+| 5 | `showHiddenParameterCompletion` | 1340 | `['true', 'false']` | ✅ **NO CHANGE** |
+| 6 | `skipPromotionParameterCompletion` | 1349 | `['true', 'false']` | ✅ **NO CHANGE** |
+| 7 | `formatParameterCompletion` | 1358 | `['json', 'bash', 'text', ...]` | ✅ **NO CHANGE** |
+| 8 | `whatParameterCompletion` | 1367 | `['method', 'parameter']` | ✅ **NO CHANGE** |
+| 9 | `filterParameterCompletion` | 1377 | Delegates to `completionNameParameterCompletion` | ✅ **NO CHANGE** |
+| 10 | `componentParameterCompletion` | 1763 | Component names array | ✅ **NO CHANGE** |
+| 11 | `versionParameterCompletion` | 1805 | Version numbers array | ✅ **NO CHANGE** |
+| 12 | `scopeParameterCompletion` | 1866 | `['local', 'global']` | ✅ **NO CHANGE** |
+| 13 | `targetDirParameterCompletion` | 1895 | Directory paths | ✅ **NO CHANGE** |
+| 14 | `targetVersionParameterCompletion` | 1913 | Version numbers | ✅ **NO CHANGE** |
+| 15 | `versionPromotionParameterCompletion` | 1923 | `['nextPatch', 'nextMinor', ...]` | ✅ **NO CHANGE** |
+| 16 | `referencesParameterCompletion` | 1932 | Reference strings | ✅ **NO CHANGE** |
+| 17 | `testDescribeReferenceParameterCompletion` | 2092 | Test describe blocks | ✅ **NO CHANGE** |
+| 18 | `testItCaseReferenceParameterCompletion` | 2134 | Test it cases | ✅ **NO CHANGE** |
+| 19 | `nameParameterCompletion` | 2178 | Name suggestions | ✅ **NO CHANGE** |
+| 20 | `optionsParameterCompletion` | 2208 | Options array | ✅ **NO CHANGE** |
+
+**Why no changes?** These methods return simple string arrays. The `completeParameter()` method (item #1) receives these arrays and adds the DISPLAY/WORD prefixes.
 
 ---
 
