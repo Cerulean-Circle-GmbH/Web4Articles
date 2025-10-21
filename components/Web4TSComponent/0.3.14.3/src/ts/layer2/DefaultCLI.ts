@@ -203,6 +203,29 @@ export abstract class DefaultCLI implements CLI {
     // Dynamic argument validation with overload support
     const minArgs = this.getMinimumArguments(command);
     if (args.length < minArgs) {
+      // Before failing, check if TSCompletion has a callback for the first missing parameter
+      // This enables tab completion to work: web4tscomponent completion <TAB>
+      const paramIndex = args.length; // Index of first missing parameter
+      
+      // Debug: log what we're checking
+      console.error(`DEBUG: Checking callback for command="${command}" paramIndex=${paramIndex}`);
+      
+      // Check DefaultCLI first (where most completion callbacks live), then component class
+      let callback = TSCompletion.getParameterCallback('DefaultCLI', command, paramIndex);
+      console.error(`DEBUG: DefaultCLI callback="${callback}"`);
+      
+      if (!callback) {
+        callback = TSCompletion.getParameterCallback(this.componentClass.name, command, paramIndex);
+        console.error(`DEBUG: ${this.componentClass.name} callback="${callback}"`);
+      }
+      
+      if (callback) {
+        // Return callback marker for bash completion to trigger
+        console.log(`WORD: __CALLBACK__:${callback}`);
+        return true;
+      }
+      
+      // No callback available - validation fails
       throw new Error(`At least ${minArgs} arguments required for ${command} command`);
     }
 
