@@ -1683,19 +1683,21 @@ export abstract class DefaultCLI implements CLI {
             signature = `${methodColor}${methodName}${RESET} ${BRIGHT_YELLOW}${paramList}${RESET}`;
           }
           
-          // Return: Multiple lines for proper DISPLAY formatting
-          // Each line becomes a separate DISPLAY: output line in protocol
+          // Return: Array of semantic units for DISPLAY protocol
+          // DISPLAY protocol requires one DISPLAY: line per output line
+          // Each element becomes "DISPLAY: <element>" for bash to process
           const separator = `${BRIGHT_CYAN}${'─'.repeat(60)}${RESET}`;
           const header = `${BRIGHT_WHITE_BOLD}📖 Documentation:${RESET}`;
           const greenDoc = `${GREEN}${fullMethodDoc}${RESET}`;
           
-          // Return as array - each element becomes a DISPLAY line
+          // Array elements = semantic units, not artificial splits
+          // If greenDoc contains \n (from TSDoc), it stays as one element
           return [
             signature,
             separator,
             header,
             greenDoc,
-            ''  // Empty line for spacing
+            ''  // Empty line for visual spacing
           ];
         }
         
