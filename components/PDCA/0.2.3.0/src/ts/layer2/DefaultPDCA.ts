@@ -2715,21 +2715,25 @@ export class DefaultPDCA implements PDCA {
     
     const oldNormalized = normalizePath(oldPath);
     const newNormalized = normalizePath(newPath);
+    
+    // Create full paths for file system checks
+    const oldFullPath = path.join(projectRoot, oldNormalized);
+    const newFullPath = path.join(projectRoot, newNormalized);
 
     // Step 1: Input Validation
-    if (!fs.existsSync(oldNormalized)) {
+    if (!fs.existsSync(oldFullPath)) {
       console.error(`❌ Error: Source file not found: ${oldNormalized}`);
       return this;
     }
 
-    const newDir = path.dirname(newNormalized);
+    const newDir = path.dirname(newFullPath);
     if (!fs.existsSync(newDir)) {
-      console.error(`❌ Error: Destination directory does not exist: ${newDir}`);
-      console.log(`💡 Create directory first: mkdir -p ${newDir}`);
+      console.error(`❌ Error: Destination directory does not exist: ${path.dirname(newNormalized)}`);
+      console.log(`💡 Create directory first: mkdir -p ${path.dirname(newNormalized)}`);
       return this;
     }
 
-    if (fs.existsSync(newNormalized)) {
+    if (fs.existsSync(newFullPath)) {
       console.error(`❌ Error: Destination file already exists: ${newNormalized}`);
       return this;
     }
