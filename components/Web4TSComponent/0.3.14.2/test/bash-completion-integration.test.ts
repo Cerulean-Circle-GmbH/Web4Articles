@@ -23,10 +23,9 @@ describe('🎯 Bash Completion Integration - source.env', () => {
 
   // NO afterEach/afterAll - leave test/sh visible for inspection!
 
-  it('Case 1: Full method list: web4tscomponent <TAB> (KNOWN TIMEOUT)', () => {
+  it('Case 1: Full method list: web4tscomponent <TAB>', () => {
     // Test FULL method listing (no filter) - 200+ methods
-    // KNOWN ISSUE: This times out after 30s (source.env timeout)
-    // TODO: Fix in Case 10 - add user-visible timeout message
+    // With 90s timeout, this completes in ~33s
     const testScriptPath = join(testShDir, 'test-full-method-list.sh');
     const testScript = `
 #!/bin/bash
@@ -34,7 +33,6 @@ cd ${componentPath}
 source ${sourceEnv} >/dev/null 2>&1
 COMP_WORDS=(web4tscomponent "")
 COMP_CWORD=1
-# source.env has 30s timeout - will kill this
 _web4_generic_completion 2>/dev/null
 echo ""
 echo "COMPREPLY_COUNT: \${#COMPREPLY[@]}"
@@ -43,16 +41,17 @@ echo "COMPREPLY_COUNT: \${#COMPREPLY[@]}"
     writeFileSync(testScriptPath, testScript);
     execSync(`chmod +x ${testScriptPath}`);
     
-    const result = execSync(testScriptPath, { encoding: 'utf-8', timeout: 40000 });
+    const result = execSync(testScriptPath, { encoding: 'utf-8', timeout: 100000 });
     
-    // Check that we got timeout (0 results)
+    // Check that we got 200+ methods
     const countMatch = result.match(/COMPREPLY_COUNT: (\d+)/);
     expect(countMatch).toBeTruthy();
     const count = parseInt(countMatch![1], 10);
     
-    // KNOWN ISSUE: Currently times out (0 methods returned)
-    expect(count).toBe(0);
-    console.log('⏱️  Full method list times out (Case 10 - needs fix)');
+    // Should have 200+ methods (Web4TSComponent has many methods)
+    expect(count).toBeGreaterThan(200);
+    expect(result).toContain('💭 Thinking...');
+    console.log(`✅ Full method list returned ${count} methods`);
   });
 
   it('Bash simulation: web4tscomponent setCICDVersion <TAB>', () => {
