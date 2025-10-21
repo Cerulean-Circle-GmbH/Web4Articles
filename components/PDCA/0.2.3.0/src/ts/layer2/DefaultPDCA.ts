@@ -2773,43 +2773,10 @@ export class DefaultPDCA implements PDCA {
     await this.updateLinksToFile(oldPath, newPath, dryRun);
     console.log(); // Spacing
 
-    // Step 5: Git Operations (Commit and push - file already staged by git mv)
-    if (!isDryRun) {
-      console.log(`📦 Step 3: Committing changes...`);
-      
-      const commitMessage = `refactor: move ${path.basename(oldNormalized)} to new location
+    // Note: updateLinksToFile already commits and pushes everything (including the git mv)
+    // No additional commit needed - DRY principle: trust the abstraction
 
-Moved: ${oldNormalized} → ${newNormalized}
-Updated: All references to this file
-
-Auto-committed by pdca moveFile`;
-
-      try {
-        // Add any modified files (link updates)
-        execSync(`git add -A`, { cwd: projectRoot, stdio: 'pipe' });
-        
-        // Commit (includes the git mv + link updates)
-        execSync(`git commit -m "${commitMessage}"`, {
-          cwd: projectRoot,
-          stdio: 'pipe'
-        });
-        
-        // Push
-        execSync(`git push`, {
-          cwd: projectRoot,
-          stdio: 'pipe'
-        });
-        
-        console.log(`✅ Changes committed and pushed\n`);
-      } catch (error: any) {
-        console.error(`❌ Git operation failed: ${error.message}`);
-        return this;
-      }
-    } else {
-      console.log(`✓ Would commit and push changes\n`);
-    }
-
-    // Step 6: Summary Report
+    // Step 5: Summary Report
     console.log(`📊 Summary:`);
     console.log(`   - File moved: ${oldNormalized} → ${newNormalized}`);
     console.log(`   - Links updated in other files: See Step 2 output above`);
