@@ -1266,19 +1266,10 @@ Standards:
       currentVersion = context.version;
       componentPath = context.path;
     } else {
-      // WITHOUT context: Upgrade current component (self-operation)
-      const currentPath = process.cwd();
-      const versionDirName = path.basename(currentPath);
-      const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(versionDirName);
-      
-      if (!isVersionDir) {
-        throw new Error('Current directory is not a component version directory. Use "on <component> <version>" or run from a version directory.');
-      }
-      
-      const componentDir = path.dirname(currentPath);
-      componentName = path.basename(componentDir);
-      currentVersion = versionDirName;
-      componentPath = currentPath;
+      // WITHOUT context: Use THIS component's identity (location-resilient!)
+      componentName = this.model.component;
+      currentVersion = this.model.version;
+      componentPath = this.resolveComponentPath(componentName, currentVersion);
     }
     
     let nextVersion: string;
@@ -1354,11 +1345,11 @@ Standards:
       console.log(`${this.colors.dim}${context.path}${this.colors.reset}`);
       await this.displayTreeStructure(context.path, '', maxDepth, 0, includeHidden);
     } else {
-      // WITHOUT context: Show current component's tree (self-operation)
-      const currentPath = process.cwd();
-      console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for current component:${this.colors.reset}`);
-      console.log(`${this.colors.dim}${currentPath}${this.colors.reset}`);
-      await this.displayTreeStructure(currentPath, '', maxDepth, 0, includeHidden);
+      // WITHOUT context: Use THIS component's identity (location-resilient!)
+      const componentPath = this.resolveComponentPath(this.model.component, this.model.version);
+      console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${this.model.component} ${this.model.version}:${this.colors.reset}`);
+      console.log(`${this.colors.dim}${componentPath}${this.colors.reset}`);
+      await this.displayTreeStructure(componentPath, '', maxDepth, 0, includeHidden);
     }
     
     return this;
@@ -1431,7 +1422,7 @@ Standards:
    */
   async links(action: string = ''): Promise<this> {
     const context = this.getComponentContext();
-    const componentName = context?.component || 'Web4TSComponent';
+    const componentName = context?.component || this.model.component;
     
     // If 'fix' action requested, run verifyAndFix first
     if (action === 'fix') {
@@ -1444,12 +1435,12 @@ Standards:
     }
     
     if (!context) {
-      // No context - show Web4TSComponent's own links
-      const semanticLinks = await this.getSemanticLinks('Web4TSComponent');
-      const componentDir = this.resolveComponentDirectory('Web4TSComponent');
+      // No context - use THIS component's identity (location-resilient!)
+      const semanticLinks = await this.getSemanticLinks(this.model.component);
+      const componentDir = this.resolveComponentDirectory(this.model.component);
       const availableVersions = this.getAvailableVersions(componentDir);
 
-      console.log(`🔗 Semantic Version Links for Web4TSComponent:`);
+      console.log(`🔗 Semantic Version Links for ${this.model.component}:`);
       console.log(`   📊 Available versions: ${availableVersions.length}`);
       console.log('');
 
@@ -1718,8 +1709,8 @@ Standards:
     const context = this.getComponentContext();
     
     if (!context) {
-      // No context - run Web4TSComponent's own tests
-      console.log(`🧪 Running Web4TSComponent tests (no promotion)...`);
+      // No context - run this component's own tests
+      console.log(`🧪 Running ${this.model.component} tests (no promotion)...`);
       
       // 🚨 RECURSION DETECTION: Check if we're already inside vitest
       const insideTestEnvironment = !!(process.env.VITEST || process.env.VITEST_WORKER_ID);
@@ -1731,9 +1722,10 @@ Standards:
       }
       
       // Run vitest directly
+      const componentPath = this.resolveComponentPath(this.model.component, this.model.version);
       try {
         execSync('npx vitest run', { 
-          cwd: process.cwd(),
+          cwd: componentPath,
           stdio: 'inherit',
           encoding: 'utf-8'
         });
@@ -1802,18 +1794,19 @@ Standards:
     console.log(`   🚧 ALWAYS work on dev version after test success\n`);
     
     if (!context) {
-      // No context - run Web4TSComponent's own tests
+      // No context - run this component's own tests
       const insideTestEnvironment = !!(process.env.VITEST || process.env.VITEST_WORKER_ID);
       
       if (insideTestEnvironment) {
         console.log(`🧪 Already in test environment - skipping recursive vitest execution`);
         console.log(`✅ Test execution skipped (recursion prevented)`);
       } else {
-        console.log(`🧪 Running Web4TSComponent internal tests (RELEASE MODE)...`);
+        console.log(`🧪 Running ${this.model.component} internal tests (RELEASE MODE)...`);
         
+        const componentPath = this.resolveComponentPath(this.model.component, this.model.version);
         try {
           execSync('npx vitest run', { 
-            cwd: process.cwd(),
+            cwd: componentPath,
             stdio: 'inherit',
             encoding: 'utf-8'
           });
@@ -2474,18 +2467,19 @@ Standards:
     const context = this.getComponentContext();
     
     if (!context) {
-      // No context - build Web4TSComponent itself
-      console.log(`🔨 Building Web4TSComponent itself...`);
+      // No context - build this component itself
+      console.log(`🔨 Building ${this.model.component} itself...`);
       
+      const componentPath = this.resolveComponentPath(this.model.component, this.model.version);
       try {
         execSync('npm run build', { 
-          cwd: process.cwd(), // Current Web4TSComponent directory
+          cwd: componentPath,
           stdio: 'inherit',
           encoding: 'utf-8'
         });
-        console.log(`✅ Web4TSComponent build completed successfully`);
+        console.log(`✅ ${this.model.component} build completed successfully`);
       } catch (error) {
-        console.error(`❌ Web4TSComponent build failed`);
+        console.error(`❌ ${this.model.component} build failed`);
         throw error;
       }
       
@@ -2781,18 +2775,19 @@ Standards:
     const context = this.getComponentContext();
     
     if (!context) {
-      // No context - clean Web4TSComponent itself
-      console.log(`🧹 Cleaning Web4TSComponent itself...`);
+      // No context - clean this component itself
+      console.log(`🧹 Cleaning ${this.model.component} itself...`);
       
+      const componentPath = this.resolveComponentPath(this.model.component, this.model.version);
       try {
         execSync('npm run clean', { 
-          cwd: process.cwd(), // Current Web4TSComponent directory
+          cwd: componentPath,
           stdio: 'inherit',
           encoding: 'utf-8'
         });
-        console.log(`✅ Cleaned Web4TSComponent`);
+        console.log(`✅ Cleaned ${this.model.component}`);
       } catch (error) {
-        console.error(`❌ Clean failed for Web4TSComponent`);
+        console.error(`❌ Clean failed for ${this.model.component}`);
         throw error;
       }
       
@@ -4752,21 +4747,13 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       componentName = context.component;
       componentDir = this.resolveComponentDirectory(componentName);
     } else {
-      // WITHOUT context: Set link for current component (self-operation)
-      const currentPath = process.cwd();
-      const versionDirName = path.basename(currentPath);
-      const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(versionDirName);
-      
-      if (!isVersionDir) {
-        throw new Error('Current directory is not a component version directory. Use "on <component> <version>" or run from a version directory.');
-      }
-      
-      componentDir = path.dirname(currentPath);
-      componentName = path.basename(componentDir);
+      // WITHOUT context: Use THIS component's identity (location-resilient!)
+      componentName = this.model.component;
+      componentDir = this.resolveComponentDirectory(componentName);
     }
     
     // Use DRY helper to resolve version (handles 'current', semantic links, and actual versions)
-    const contextVersion = context?.version || (process.cwd().match(/(\d+\.\d+\.\d+\.\d+)$/) || [])[1];
+    const contextVersion = context?.version || this.model.version;
     const actualVersion = this.resolveActualVersion(componentName, version, contextVersion);
     
     // Validate targetVersion
