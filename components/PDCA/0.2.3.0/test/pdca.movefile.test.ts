@@ -4,6 +4,82 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 
+// NEW: Test for relative link bug using existing test fixtures
+describe('PDCA moveFile - Relative Link Bug Test', () => {
+  const testDataDir = 'components/PDCA/0.2.3.0/test/data/move-tests';
+  const fileA = path.join(testDataDir, 'test-fileA.md');
+  const fileB = path.join(testDataDir, 'test-fileB.md');
+  const fileBMoved = path.join(testDataDir, 'subdir', 'test-fileB.md');
+  const fileC = path.join(testDataDir, 'test-fileC.md');
+
+  beforeAll(() => {
+    // Ensure test files are in original state (fileB not in subdir)
+    if (fs.existsSync(fileBMoved)) {
+      // Move it back if it's already moved
+      try {
+        execSync(`git mv "${fileBMoved}" "${fileB}"`, { 
+          cwd: process.cwd(), 
+          stdio: 'pipe' 
+        });
+      } catch (e) {
+        // If git mv fails, use regular fs
+        fs.copyFileSync(fileBMoved, fileB);
+        fs.unlinkSync(fileBMoved);
+      }
+    }
+  });
+
+  test('TC39: moveFile should generate relative links (BUG REPRODUCTION)', async () => {
+    const pdca = new DefaultPDCA();
+    
+    // Pre-test verification: Read original links
+    const fileAContentBefore = fs.readFileSync(fileA, 'utf-8');
+    const fileBContentBefore = fs.readFileSync(fileB, 'utf-8');
+    
+    console.log('\n📋 PRE-TEST STATE:');
+    console.log('File A link to B:', fileAContentBefore.match(/\]\(([^)]+)\)/)?.[1]);
+    console.log('File B link to C:', fileBContentBefore.match(/\]\(([^)]+)\)/)?.[1]);
+    
+    // Execute: Move fileB to subdir
+    await pdca.moveFile(fileB, fileBMoved);
+    
+    // POST-TEST: Read updated links
+    const fileAContentAfter = fs.readFileSync(fileA, 'utf-8');
+    const fileBContentAfter = fs.readFileSync(fileBMoved, 'utf-8');
+    
+    // Extract local link paths (the part in parentheses after the § notation)
+    const fileALinkMatch = fileAContentAfter.match(/\[§\/[^\]]+\]\(([^)]+)\)/);
+    const fileBLinkMatch = fileBContentAfter.match(/\[§\/[^\]]+\]\(([^)]+)\)/);
+    
+    const fileALinkPath = fileALinkMatch ? fileALinkMatch[1] : 'NOT FOUND';
+    const fileBLinkPath = fileBLinkMatch ? fileBLinkMatch[1] : 'NOT FOUND';
+    
+    console.log('\n📋 POST-TEST STATE:');
+    console.log('File A link to B:', fileALinkPath);
+    console.log('File B link to C:', fileBLinkPath);
+    
+    // EXPECTED BEHAVIOR (currently fails):
+    // File A should link to B with: subdir/test-fileB.md (relative)
+    // File B should link to C with: ../test-fileC.md (relative)
+    
+    // ACTUAL BEHAVIOR (bug):
+    // File A links with: components/PDCA/0.2.3.0/test/data/move-tests/subdir/test-fileB.md (absolute)
+    // File B links with: test-fileC.md (not updated)
+    
+    console.log('\n✅ EXPECTED:');
+    console.log('  File A → B: subdir/test-fileB.md');
+    console.log('  File B → C: ../test-fileC.md');
+    
+    console.log('\n❌ ACTUAL (BUG):');
+    console.log('  File A → B:', fileALinkPath);
+    console.log('  File B → C:', fileBLinkPath);
+    
+    // TEST ASSERTIONS (these will FAIL until bug is fixed)
+    expect(fileALinkPath).toBe('subdir/test-fileB.md'); // Bug: Will be absolute path
+    expect(fileBLinkPath).toBe('../test-fileC.md');     // Bug: Will be unchanged
+  });
+});
+
 describe.skip('PDCA moveFile Tests', () => {
   // All tests skipped: Require git-committed files which creates test infrastructure complexity
   // Functionality verified through manual testing
