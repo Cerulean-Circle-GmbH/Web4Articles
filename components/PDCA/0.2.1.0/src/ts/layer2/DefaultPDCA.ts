@@ -1837,7 +1837,7 @@ export class DefaultPDCA implements PDCA {
    * @cliSyntax filePath fromDirectory
    * @cliDefault fromDirectory ""
    */
-  async getDualLink(filePath: string, fromDirectory?: string): Promise<this> {
+  async getDualLink(filePath: string, fromDirectory: string = ""): Promise<this> {
     console.log(`\n🔗 Generating Dual Link\n`);
     
     const fs = await import('fs/promises');
@@ -1870,9 +1870,12 @@ export class DefaultPDCA implements PDCA {
     console.log(`📄 Target: ${normalizedPath}`);
     
     // Determine source directory for relative path calculation
+    // Use USER_PWD (captured by CLI script before any cd) if available
+    // This ensures we calculate relative path from where the user invoked the command
+    const userPwd = process.env.USER_PWD || process.env.PWD || process.cwd();
     const sourceDir = fromDirectory 
       ? path.resolve(projectRoot, fromDirectory)
-      : process.cwd();
+      : userPwd;
     
     // Calculate relative path from source to target
     const relativePath = path.relative(sourceDir, fullPath);

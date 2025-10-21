@@ -4,6 +4,10 @@
 # Web4 Architecture Standard - Self-Implementing Reference
 # Works from any directory via symlink resolution
 
+# Capture user's original working directory BEFORE any cd commands
+# This is needed for relative path calculations in dual links
+export USER_PWD="$PWD"
+
 # Get component version directory from script location (location-resilient)
 # Resolve symlinks: Follow the script file itself, not just the directory
 SCRIPT_FILE="${BASH_SOURCE[0]}"
