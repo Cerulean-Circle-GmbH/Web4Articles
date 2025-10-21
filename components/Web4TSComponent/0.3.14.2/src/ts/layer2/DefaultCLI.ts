@@ -1315,12 +1315,34 @@ export abstract class DefaultCLI implements CLI {
       
       // Add colored prompt echo if context provided
       if (commandContext && commandContext.length > 0) {
-        const cyan = '\x1b[36m';
-        const white = '\x1b[37m';
+        // Prompt colors: "your web4 command >"
+        const promptWhite = '\x1b[37m';
+        const promptCyan = '\x1b[36m';
         const reset = '\x1b[0m';
-        // Format: "your web4 command >" with "web4" in cyan, rest in white
-        // Then the actual command without newline so bash can append completion
-        const prompt = `${white}your ${cyan}web4${white} command >${reset} ${commandContext.join(' ')}`;
+        
+        // TSCompletion colors for command parts
+        const toolName = '\x1b[1;36m';      // Cyan bold for CLI name
+        const commands = '\x1b[0;37m';      // White for method names
+        const parameters = '\x1b[1;33m';    // Yellow bold for parameters
+        
+        // Build colored command: cliName method param1 param2 ...
+        // commandContext = [cliName, ...args] where args might be method + params
+        const [cliName, ...args] = commandContext;
+        let coloredCommand = `${toolName}${cliName}${reset}`;
+        
+        if (args.length > 0) {
+          // First arg after CLI is usually the method (white)
+          coloredCommand += ` ${commands}${args[0]}${reset}`;
+          
+          // Remaining args are parameters (yellow bold)
+          if (args.length > 1) {
+            const params = args.slice(1).join(' ');
+            coloredCommand += ` ${parameters}${params}${reset}`;
+          }
+        }
+        
+        // Format: "your web4 command >" with colored command
+        const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
         lines.push(`DISPLAY: `);
         lines.push(`DISPLAY: ${prompt}`);
       }
