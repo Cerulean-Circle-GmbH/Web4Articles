@@ -146,7 +146,7 @@ if (hasNumberedRefs || hasSpaces) {
 | 5 | `showHiddenParameterCompletion` | 1340 | `['true', 'false']` | ✅ **NO CHANGE** |
 | 6 | `skipPromotionParameterCompletion` | 1349 | `['true', 'false']` | ✅ **NO CHANGE** |
 | 7 | `formatParameterCompletion` | 1358 | `['json', 'bash', 'text', ...]` | ✅ **NO CHANGE** |
-| 8 | `whatParameterCompletion` | 1367 | `['method', 'parameter']` | ✅ **NO CHANGE** |
+| 8 | `whatParameterCompletion` | 1367 | `['method', 'parameter']` | ✅ **VERIFIED** - [PDCA](../../../components/Web4TSComponent/0.3.14.3/session/2025-10-21-UTC-1358.pdca.md) |
 | 9 | `filterParameterCompletion` | 1377 | Delegates to `completionNameParameterCompletion` | ✅ **NO CHANGE** |
 | 10 | `componentParameterCompletion` | 1763 | Component names array | ✅ **NO CHANGE** |
 | 11 | `versionParameterCompletion` | 1805 | Version numbers array | ✅ **NO CHANGE** |
