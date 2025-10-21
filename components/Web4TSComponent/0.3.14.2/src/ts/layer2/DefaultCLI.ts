@@ -1684,10 +1684,19 @@ export abstract class DefaultCLI implements CLI {
           }
           
           // Return: full signature + separator + green doc + double newline
-          const separator = `\n${BRIGHT_CYAN}${'─'.repeat(60)}${RESET}\n`;
-          const header = `${BRIGHT_WHITE_BOLD}📖 Documentation:${RESET}\n`;
+          // Split into multiple lines for proper DISPLAY formatting
+          const separator = `${'─'.repeat(60)}`;
+          const header = `${BRIGHT_WHITE_BOLD}📖 Documentation:${RESET}`;
           const greenDoc = `${GREEN}${fullMethodDoc}${RESET}`;
-          return [signature + separator + header + greenDoc + '\n\n'];
+          
+          // Return as array of lines (each will become a DISPLAY line)
+          return [
+            signature,
+            `${BRIGHT_CYAN}${separator}${RESET}`,
+            header,
+            greenDoc,
+            ''  // Empty line for spacing
+          ];
         }
         
         return [methodName];  // Plain method name for bash completion
