@@ -1514,11 +1514,12 @@ export class DefaultPDCA implements PDCA {
   /**
    * Train AI agents on specific topics with CMM3-defined, reproducible learning paths
    * Systematically transfers knowledge to ensure agents don't repeat CMM2 mistakes
+   * Includes collaboration patterns, instruction interpretation, and zero-knowledge method usage
    * 
-   * @param topic Training topic identifier (e.g., "how-to-start", "how-to-pdca", "how-to-cmm", "how-to-component", "how-to-dual-links", "how-to-ensure-links", "how-to-component-upgrade")
+   * @param topic Training topic identifier (e.g., "how-to-start", "how-to-pdca", "how-to-cmm", "how-to-component", "how-to-dual-links", "how-to-ensure-links", "how-to-component-upgrade", "how-to-interpret-instructions", "how-to-collaborate", "how-to-chat-response")
    * @param options Optional training configuration
    * @cliSyntax topic
-   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-dual-links how-to-ensure-links how-to-component-upgrade
+   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-interpret-instructions how-to-collaborate how-to-chat-response
    */
   async trainAI(topic: string): Promise<this> {
     console.log(`\n🎓 AI Training Module - CMM3 Reproducible Learning\n`);
@@ -1563,7 +1564,10 @@ export class DefaultPDCA implements PDCA {
           '✅ Create session-start PDCA using timestamp-only filename',
           '✅ Verify CMM3 compliance: objective, reproducible, verifiable',
           '⚠️ Read to depth 3: document → references → secondary references',
-          '🔗 Session end: Validate dual links with `pdca ensureValidLinks <session-dir>`'
+          '🔗 Session end: Validate dual links with `pdca ensureValidLinks <session-dir>`',
+          '🛑 Feedback points: After showing results, STOP and wait for user',
+          '🤝 Collaboration: User controls loop, you execute within it',
+          '⚠️ "Show me" = show + STOP, not show + analyze + implement'
         ],
         verificationChecklist: [
           'Can recite the 12 startup steps from README.md',
@@ -1571,7 +1575,10 @@ export class DefaultPDCA implements PDCA {
           'Can create agent identity file in correct location',
           'Can create session-start PDCA with correct filename format',
           'Knows to use web4tscomponent for ALL version operations',
-          'Validates all dual links before session end'
+          'Validates all dual links before session end',
+          'Can recognize feedback points in startup sequence',
+          'Knows when to wait vs continue',
+          'Understands collaboration model'
         ]
       },
       'how-to-pdca': {
@@ -1603,7 +1610,11 @@ export class DefaultPDCA implements PDCA {
           '⚠️ CMM badges track compliance status throughout PDCA lifecycle',
           '🔗 Dual link format: [GitHub](URL) | [§/path](path) - see how-to-dual-links',
           '🔗 Generate dual links: `pdca getDualLink <file>` (auto-fixes git status)',
-          '🔗 Validate links: `pdca ensureValidLinks <file>` before PDCA completion'
+          '🔗 Validate links: `pdca ensureValidLinks <file>` before PDCA completion',
+          '🛑 1f Step 2: "Interrupt immediately on unexpected observations and ask TRON"',
+          '🤝 This is a feedback point - STOP and wait for TRON response',
+          '⚠️ Present decisions when direction unclear (6c)',
+          '❌ Never assume what user wants next'
         ],
         verificationChecklist: [
           'Can create PDCA with correct filename format',
@@ -1611,7 +1622,10 @@ export class DefaultPDCA implements PDCA {
           'Uses dual links (backward + forward placeholders)',
           'DRY: references documents instead of copying content',
           'Includes philosophical insight line at end',
-          'Validates dual links using getDualLink or ensureValidLinks'
+          'Validates dual links using getDualLink or ensureValidLinks',
+          'Recognizes when to stop and ask TRON',
+          'Can present decisions instead of assuming',
+          'Knows collaboration protocol during PDCA creation'
         ]
       },
       'how-to-cmm': {
@@ -1780,6 +1794,119 @@ export class DefaultPDCA implements PDCA {
           'Can build component using: web4tscomponent on <Component> <version> build',
           'Recognizes when to use nextPatch vs nextMinor vs nextMajor'
         ]
+      },
+      'how-to-interpret-instructions': {
+        title: '🎯 How to Interpret Instructions: Literal vs Implied Actions',
+        description: 'Master the art of parsing user instructions to understand exactly what\'s requested vs what\'s assumed',
+        requiredReading: [
+          {
+            path: 'scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md',
+            reason: '6d - No assumptions about user intent',
+            depth: 2
+          },
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-21-UTC-1007.meta-learning.pdca.md',
+            reason: 'Real example of instruction misinterpretation',
+            depth: 3
+          }
+        ],
+        keyLessons: [
+          '✅ "Show me X" means: Execute X, Display result, STOP',
+          '✅ "Fix X" means: Analyze, Propose, Implement (after confirmation)',
+          '✅ "X and Y" means: Do X, then do Y',
+          '✅ "X" does NOT imply Y, even if Y seems logical',
+          '⚠️ Punctuation matters: "pdca" vs "pdca!" vs "PDCA"',
+          '🛑 Feedback points: Where control returns to user',
+          '❌ Never add implied actions',
+          '❌ Never assume "next logical step"',
+          '💡 Examples: "run tests" → Execute + show output + STOP (NOT: run + analyze + fix + commit)',
+          '💡 "show me file.md" → Display file + STOP (NOT: show + analyze + suggest)',
+          '💡 "pdca!" → Create PDCA file (NOT: write PDCA-formatted response)',
+          '💡 "read X" → Read X, provide dual link, STOP (NOT: read + summarize + analyze)'
+        ],
+        verificationChecklist: [
+          'Can parse "show me X" correctly (execute + display + stop)',
+          'Understands difference between command and suggestion',
+          'Recognizes punctuation significance (!, CAPS, etc)',
+          'Can identify feedback points in instructions',
+          'Knows when to ask vs assume'
+        ]
+      },
+      'how-to-collaborate': {
+        title: '🤝 How to Collaborate: User-in-the-Loop CMM4 Pattern',
+        description: 'Understand CMM4 collaboration where user controls the loop and agent enables execution',
+        requiredReading: [
+          {
+            path: 'scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md',
+            reason: 'CMM4 as feedback loop mastery',
+            depth: 3
+          },
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-21-UTC-1007.meta-learning.pdca.md',
+            reason: 'Real example of collaboration violation',
+            depth: 3
+          },
+          {
+            path: 'scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md',
+            reason: 'Decision-making framework for user alignment',
+            depth: 2
+          }
+        ],
+        keyLessons: [
+          '🔄 CMM4 Loop: User decides → Agent executes → FEEDBACK POINT → User reflects → User decides',
+          '✅ User controls WHAT to do',
+          '✅ Agent controls HOW to do it',
+          '✅ Feedback points = where control returns to user',
+          '🛑 STOP at feedback points, don\'t assume next step',
+          '⚠️ "Helpful" = enabling user, NOT solving without asking',
+          '❌ Never close feedback loop prematurely',
+          '❌ Never assume user wants problem solved',
+          '💡 Collaboration Model: User (Decision) → Agent (Execute) → FEEDBACK POINT 🛑 STOP → User (Reflection) → User (Decision)',
+          '💡 Anti-Pattern: User → Agent → (everything done) → User sees result ❌',
+          '💡 Correct: User → Agent → Result → STOP → User → Next instruction ✅'
+        ],
+        verificationChecklist: [
+          'Understands CMM4 collaboration loop',
+          'Can identify feedback points',
+          'Knows when to STOP vs continue',
+          'Recognizes "helpful" vs "presumptuous"',
+          'Waits for user decision at feedback points'
+        ]
+      },
+      'how-to-chat-response': {
+        title: '💬 How to Chat Response: CMM3 Compliance for Agent Replies',
+        description: 'Master the art of chat responses - links only, no explanatory text, proper dual link format',
+        requiredReading: [
+          {
+            path: 'scrum.pmo/roles/_shared/PDCA/chat.report.template.md',
+            reason: 'Official chat report format',
+            depth: 2
+          },
+          {
+            path: 'scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md',
+            reason: '3a-3c chat response compliance',
+            depth: 2
+          }
+        ],
+        keyLessons: [
+          '✅ CMM3 3a: Links only, no explanatory text',
+          '✅ CMM3 3c: Dual link format: [GitHub](URL) | [§/path](path)',
+          '✅ CMM3 4c: Local link uses project-root-relative path',
+          '✅ When user says "read X" → provide dual link, that\'s it',
+          '⚠️ No summaries, no analysis, no "key points"',
+          '⚠️ Exception: QA Decisions must be copied verbatim',
+          '❌ NEVER add explanatory text before/after link',
+          '❌ NEVER provide summary instead of link',
+          '💡 Wrong: "I\'ve read the CMM3 compliance checklist. Key points: ... [link]" ❌',
+          '💡 Right: "[GitHub](URL) | [§/path](path)" ✅'
+        ],
+        verificationChecklist: [
+          'Can provide links without explanatory text',
+          'Uses correct dual link format',
+          'Knows when to add text (QA Decisions only)',
+          'Recognizes 3a violations in own responses',
+          'Can generate project-root-relative paths'
+        ]
       }
     };
 
@@ -1830,15 +1957,12 @@ export class DefaultPDCA implements PDCA {
   /**
    * Get dual link for a file (GitHub URL + chat path)
    * Auto-fixes git status: adds, commits, pushes if needed
-   * Generates PROJECT-ROOT-RELATIVE paths (original spec)
-   * 
-   * For user-location-relative paths, use getDualLinkRelative()
    * 
    * @param filePath Path to file (absolute or project-root-relative)
    * @cliSyntax filePath
    */
   async getDualLink(filePath: string): Promise<this> {
-    console.log(`\n🔗 Generating Dual Link (Project-Root-Relative)\n`);
+    console.log(`\n🔗 Generating Dual Link\n`);
     
     const fs = await import('fs/promises');
     const path = await import('path');
@@ -1868,145 +1992,6 @@ export class DefaultPDCA implements PDCA {
     }
     
     console.log(`📄 Target: ${normalizedPath}`);
-    console.log(`📂 Path format: Project-root-relative`);
-    console.log(`🔍 Checking git status...`);
-    
-    // Check and fix git status
-    try {
-      // Check if added
-      const statusOutput = execSync(`git status --porcelain "${normalizedPath}"`, {
-        cwd: projectRoot,
-        encoding: 'utf-8'
-      }).trim();
-      
-      // Auto-fix git status if needed
-      if (statusOutput) {
-        if (statusOutput.startsWith('??')) {
-          console.log(`📝 Adding file to git...`);
-          execSync(`git add "${normalizedPath}"`, { cwd: projectRoot });
-        }
-      }
-      
-      // Check if committed
-      try {
-        execSync(`git log --oneline -1 -- "${normalizedPath}"`, {
-          cwd: projectRoot,
-          encoding: 'utf-8'
-        });
-      } catch {
-        console.log(`📝 Committing file...`);
-        execSync(`git commit -m "docs: add ${normalizedPath}" "${normalizedPath}"`, { 
-          cwd: projectRoot 
-        });
-      }
-      
-      // Check if pushed
-      const branch = execSync('git rev-parse --abbrev-ref HEAD', {
-        cwd: projectRoot,
-        encoding: 'utf-8'
-      }).trim();
-      
-      try {
-        execSync(`git diff origin/${branch} HEAD -- "${normalizedPath}"`, {
-          cwd: projectRoot,
-          encoding: 'utf-8'
-        });
-        
-        console.log(`📤 Pushing to remote...`);
-        execSync(`git push origin ${branch}`, { cwd: projectRoot });
-      } catch {
-        // Already pushed
-      }
-      
-      console.log(`✅ File ready: committed and pushed\n`);
-      
-      // Get GitHub URL
-      const remoteUrl = execSync('git remote get-url origin', {
-        cwd: projectRoot,
-        encoding: 'utf-8'
-      }).trim();
-      
-      // Parse GitHub org/repo
-      const match = remoteUrl.match(/github\.com[:/]([^/]+)\/([^/.]+)/);
-      if (!match) {
-        console.log(`❌ Error: Could not parse GitHub URL from: ${remoteUrl}\n`);
-        return this;
-      }
-      
-      const org = match[1];
-      const repo = match[2];
-      
-      const githubUrl = `https://github.com/${org}/${repo}/blob/${branch}/${normalizedPath}`;
-      
-      // Generate dual link with PROJECT-ROOT-RELATIVE path (original spec)
-      console.log(`\n✨ Dual Link Generated:\n`);
-      console.log(`[GitHub](${githubUrl}) | [§/${normalizedPath}](${normalizedPath})\n`);
-      
-    } catch (error: any) {
-      console.log(`❌ Error: ${error.message}\n`);
-    }
-    
-    return this;
-  }
-
-  /**
-   * Get dual link for a file with USER-LOCATION-RELATIVE paths
-   * Auto-fixes git status: adds, commits, pushes if needed
-   * Generates paths RELATIVE to where you call it from (for markdown portability)
-   * 
-   * This is the "new" feature we developed for clickable links in markdown!
-   * For project-root-relative paths, use getDualLink()
-   * 
-   * @param filePath Path to file (absolute or project-root-relative)
-   * @param fromDirectory Optional: directory to calculate relative path from (defaults to USER_PWD)
-   * @cliSyntax filePath fromDirectory
-   * @cliDefault fromDirectory ""
-   */
-  async getDualLinkRelative(filePath: string, fromDirectory: string = ""): Promise<this> {
-    console.log(`\n🔗 Generating Dual Link (User-Location-Relative)\n`);
-    
-    const fs = await import('fs/promises');
-    const path = await import('path');
-    const { existsSync } = await import('fs');
-    const { execSync } = await import('child_process');
-    
-    // Get project root
-    const projectRoot = await this.getProjectRoot();
-    
-    // Normalize file path to project-root-relative
-    let normalizedPath: string;
-    if (path.isAbsolute(filePath)) {
-      normalizedPath = path.relative(projectRoot, filePath);
-    } else if (filePath.startsWith('§/')) {
-      normalizedPath = filePath.substring(2);
-    } else {
-      normalizedPath = filePath;
-    }
-    
-    const fullPath = path.join(projectRoot, normalizedPath);
-    
-    // Check if file exists
-    if (!existsSync(fullPath)) {
-      console.log(`❌ Error: File does not exist`);
-      console.log(`   File: ${normalizedPath}\n`);
-      return this;
-    }
-    
-    console.log(`📄 Target: ${normalizedPath}`);
-    
-    // Determine source directory for relative path calculation
-    // Use USER_PWD (captured by CLI script before any cd) if available
-    // This ensures we calculate relative path from where the user invoked the command
-    const userPwd = process.env.USER_PWD || process.env.PWD || process.cwd();
-    const sourceDir = fromDirectory 
-      ? path.resolve(projectRoot, fromDirectory)
-      : userPwd;
-    
-    // Calculate relative path from source to target
-    const relativePath = path.relative(sourceDir, fullPath);
-    
-    console.log(`📂 From: ${path.relative(projectRoot, sourceDir) || '(project root)'}`);
-    console.log(`🔗 Relative path: ${relativePath}`);
     console.log(`🔍 Checking git status...`);
     
     // Check and fix git status
@@ -2087,9 +2072,9 @@ export class DefaultPDCA implements PDCA {
       
       const githubUrl = `https://github.com/${org}/${repo}/blob/${branch}/${normalizedPath}`;
       
-      // Generate dual link with RELATIVE path in href
+      // Generate dual link
       console.log(`\n✨ Dual Link Generated:\n`);
-      console.log(`[GitHub](${githubUrl}) | [§/${normalizedPath}](${relativePath})\n`);
+      console.log(`[GitHub](${githubUrl}) | [§/${normalizedPath}](${normalizedPath})\n`);
       
     } catch (error: any) {
       console.log(`❌ Error: ${error.message}\n`);
@@ -2219,7 +2204,7 @@ export class DefaultPDCA implements PDCA {
         
         if (entry.isDirectory()) {
           await scanDir(fullPath);
-        } else if (entry.isFile() && entry.name.endsWith('.md')) {
+        } else if (entry.isFile() && entry.name.endsWith('.pdca.md')) {
           pdcaFiles.push(fullPath);
         }
       }
@@ -2227,7 +2212,7 @@ export class DefaultPDCA implements PDCA {
     
     await scanDir(projectRoot);
     
-    console.log(`📊 Scanning ${pdcaFiles.length} markdown files...\n`);
+    console.log(`📊 Scanning ${pdcaFiles.length} PDCA files...\n`);
     
     // Search for links in each PDCA
     const matches: Array<{file: string, lines: Array<{num: number, content: string}>}> = [];
@@ -2345,7 +2330,7 @@ export class DefaultPDCA implements PDCA {
         
         if (entry.isDirectory()) {
           await scanDir(fullPath);
-        } else if (entry.isFile() && entry.name.endsWith('.md')) {
+        } else if (entry.isFile() && entry.name.endsWith('.pdca.md')) {
           pdcaFiles.push(fullPath);
         }
       }
@@ -2373,10 +2358,7 @@ export class DefaultPDCA implements PDCA {
           
           // Check if this link points to old path
           if (githubUrl.includes(oldNormalized) || localPath.includes(oldNormalized)) {
-            // Detect if original link was relative (contains ../) or absolute
-            const wasRelative = localPath.includes('../') || localPath.includes('./');
-            
-            // Generate new link
+            // Generate new link using getDualLink logic
             const branch = execSync('git branch --show-current', {
               cwd: projectRoot,
               encoding: 'utf-8'
@@ -2393,22 +2375,9 @@ export class DefaultPDCA implements PDCA {
               const repo = match[2];
               
               const newGithubUrl = `https://github.com/${org}/${repo}/blob/${branch}/${newNormalized}`;
-              
-              // Preserve relative vs absolute format
-              let newLocalPath: string;
-              if (wasRelative) {
-                // Calculate relative path from this file to the target
-                const currentFileDir = path.dirname(pdcaFile);
-                const targetFile = path.join(projectRoot, newNormalized);
-                newLocalPath = path.relative(currentFileDir, targetFile);
-              } else {
-                // Keep absolute (project-root-relative)
-                newLocalPath = newNormalized;
-              }
-              
               const newLine = line.replace(
                 /\[GitHub\]\([^)]+\)\s*\|\s*\[[^\]]*\]\([^)]+\)/,
-                `[GitHub](${newGithubUrl}) | [§/${newNormalized}](${newLocalPath})`
+                `[GitHub](${newGithubUrl}) | [§/${newNormalized}](${newNormalized})`
               );
               
               newLines.push(newLine);
@@ -2578,7 +2547,7 @@ export class DefaultPDCA implements PDCA {
     console.log(`\n✨ Canonical link: ${canonicalLink.substring(0, 80)}...\n`);
     
     // Step 4: Find all PDCAs linking to target
-    console.log(`🔍 Scanning project for markdown files...\n`);
+    console.log(`🔍 Scanning project for PDCAs with links...\n`);
     
     const pdcaFiles: string[] = [];
     
@@ -2600,7 +2569,7 @@ export class DefaultPDCA implements PDCA {
         
         if (entry.isDirectory()) {
           await scanDir(fullPath);
-        } else if (entry.isFile() && entry.name.endsWith('.md')) {
+        } else if (entry.isFile() && entry.name.endsWith('.pdca.md')) {
           pdcaFiles.push(fullPath);
         }
       }
@@ -2696,162 +2665,6 @@ export class DefaultPDCA implements PDCA {
     } else {
       console.log(`\n✨ ${isDryRun ? 'Dry run complete' : 'All dual links are now valid'}!\n`);
     }
-    
-    return this;
-  }
-
-  /**
-   * Refresh all relative links in a markdown file after it was moved
-   * Recalculates relative paths based on file's current location
-   * 
-   * Use case: After moving a .md file to a different directory,
-   * all its relative links (../../) need to be recalculated
-   * 
-   * @param markdownFile Path to the markdown file that was moved
-   * @param dryRun Preview changes without writing (default: false)
-   * @cliSyntax markdownFile dryRun
-   * @cliDefault dryRun false
-   * @cliValues dryRun true false
-   */
-  async refreshRelativeLinks(markdownFile: string, dryRun: string = 'false'): Promise<this> {
-    const isDryRun = dryRun === 'true';
-    
-    console.log(`\n🔄 Refreshing Relative Links\n`);
-    if (isDryRun) {
-      console.log(`🔍 DRY RUN MODE - No changes will be made\n`);
-    }
-    
-    const fs = await import('fs/promises');
-    const path = await import('path');
-    const { existsSync } = await import('fs');
-    const { execSync } = await import('child_process');
-    
-    const projectRoot = await this.getProjectRoot();
-    
-    // Normalize markdown file path
-    let normalizedPath: string;
-    if (path.isAbsolute(markdownFile)) {
-      normalizedPath = path.relative(projectRoot, markdownFile);
-    } else if (markdownFile.startsWith('§/')) {
-      normalizedPath = markdownFile.substring(2);
-    } else {
-      normalizedPath = markdownFile;
-    }
-    
-    const fullPath = path.join(projectRoot, normalizedPath);
-    
-    // Check if file exists
-    if (!existsSync(fullPath)) {
-      console.log(`❌ Error: File does not exist`);
-      console.log(`   File: ${normalizedPath}\n`);
-      return this;
-    }
-    
-    console.log(`📄 File: ${normalizedPath}`);
-    console.log(`📂 Location: ${path.dirname(normalizedPath)}\n`);
-    
-    // Read file
-    const content = await fs.readFile(fullPath, 'utf-8');
-    const lines = content.split('\n');
-    const newLines: string[] = [];
-    
-    let linksFound = 0;
-    let linksUpdated = 0;
-    
-    // Process each line
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      const dualLinkMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
-      
-      if (dualLinkMatch) {
-        const githubUrl = dualLinkMatch[1];
-        const displayText = dualLinkMatch[2];
-        const oldLocalPath = dualLinkMatch[3];
-        
-        linksFound++;
-        
-        // Check if this is a relative link
-        const isRelative = oldLocalPath.includes('../') || oldLocalPath.includes('./');
-        
-        if (isRelative) {
-          // Extract target file from display text (§/path format)
-          const displayMatch = displayText.match(/§\/(.+)/);
-          if (displayMatch) {
-            const targetPath = displayMatch[1];
-            
-            // Calculate NEW relative path from current file location
-            const currentFileDir = path.dirname(fullPath);
-            const targetFile = path.join(projectRoot, targetPath);
-            const newRelativePath = path.relative(currentFileDir, targetFile);
-            
-            // Check if path changed
-            if (newRelativePath !== oldLocalPath) {
-              const newLine = line.replace(
-                /\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/,
-                `[GitHub](${githubUrl}) | [${displayText}](${newRelativePath})`
-              );
-              
-              newLines.push(newLine);
-              linksUpdated++;
-              
-              console.log(`   Line ${i + 1}: Updated relative path`);
-              console.log(`      Old: ${oldLocalPath}`);
-              console.log(`      New: ${newRelativePath}`);
-            } else {
-              newLines.push(line);
-            }
-          } else {
-            // Can't parse, keep original
-            newLines.push(line);
-          }
-        } else {
-          // Not a relative link, keep as-is
-          newLines.push(line);
-        }
-      } else {
-        newLines.push(line);
-      }
-    }
-    
-    // Summary
-    console.log(`\n📊 Summary:`);
-    console.log(`   - Links found: ${linksFound}`);
-    console.log(`   - Links updated: ${linksUpdated}`);
-    console.log(`   - Links unchanged: ${linksFound - linksUpdated}`);
-    
-    if (linksUpdated > 0) {
-      if (!isDryRun) {
-        // Write updated file
-        await fs.writeFile(fullPath, newLines.join('\n'));
-        console.log(`\n✅ Updated: ${normalizedPath}`);
-        
-        // Auto-commit and push
-        console.log(`\n📦 Git operations:`);
-        try {
-          execSync(`git add "${normalizedPath}"`, { cwd: projectRoot });
-          console.log(`   ✅ Added file`);
-          
-          const commitMsg = `fix: refresh relative links in ${normalizedPath}`;
-          execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot });
-          console.log(`   ✅ Committed: ${commitMsg}`);
-          
-          const branch = execSync('git branch --show-current', {
-            cwd: projectRoot,
-            encoding: 'utf-8'
-          }).trim();
-          execSync(`git push origin ${branch}`, { cwd: projectRoot });
-          console.log(`   ✅ Pushed to remote`);
-        } catch (error: any) {
-          console.log(`   ⚠️  Git error: ${error.message}`);
-        }
-      } else {
-        console.log(`\n⚠️  DRY RUN: Would update ${normalizedPath}`);
-      }
-    } else {
-      console.log(`\n✅ All relative links are already correct!`);
-    }
-    
-    console.log(`\n✨ Refresh complete!\n`);
     
     return this;
   }
