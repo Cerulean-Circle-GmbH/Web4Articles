@@ -1423,6 +1423,12 @@ export abstract class DefaultCLI implements CLI {
    * @cliHide
    */
   async completeParameter(callbackName: string, ...contextArgs: string[]): Promise<void> {
+    // Debug: Log what we're looking for
+    console.error(`DEBUG completeParameter: callbackName="${callbackName}"`);
+    console.error(`DEBUG completeParameter: contextArgs=${JSON.stringify(contextArgs)}`);
+    console.error(`DEBUG completeParameter: this.constructor.name="${this.constructor.name}"`);
+    console.error(`DEBUG completeParameter: typeof this[${callbackName}]="${typeof (this as any)[callbackName]}"`);
+    
     // Check if callback method exists on this instance
     if (typeof (this as any)[callbackName] === 'function') {
       // Pass context args to completion method (e.g., ['on', 'ComponentName'] for versionParameterCompletion)
@@ -1437,6 +1443,7 @@ export abstract class DefaultCLI implements CLI {
       this.formatCompletionOutput(values, commandContext);
     } else {
       // Callback not found - return empty (no completions)
+      console.error(`DEBUG completeParameter: Callback "${callbackName}" NOT FOUND`);
       console.log('');
     }
   }
