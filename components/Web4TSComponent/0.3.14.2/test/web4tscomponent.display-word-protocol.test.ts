@@ -8,8 +8,8 @@ describe('🎯 DISPLAY+WORD Protocol - targetVersionParameterCompletion', () => 
   let cliPath: string;
 
   beforeEach(() => {
-    // Use 0.3.14.2 (current dev version)
-    componentPath = path.resolve(process.cwd(), 'components/Web4TSComponent/0.3.14.2');
+    // Use current component directory (test runs from 0.3.14.2)
+    componentPath = process.cwd();
     cliPath = path.join(componentPath, 'web4tscomponent');
     
     // Verify component exists
@@ -18,14 +18,15 @@ describe('🎯 DISPLAY+WORD Protocol - targetVersionParameterCompletion', () => 
   });
 
   describe('1. TypeScript Output Format', () => {
-    it('1.1 targetVersionParameterCompletion returns simple string array (current)', () => {
-      // Call completeParameter which internally calls targetVersionParameterCompletion
+    it.skip('1.1 targetVersionParameterCompletion returns simple string array (OLD BEHAVIOR - REPLACED)', () => {
+      // This test documents the OLD behavior before DISPLAY/WORD protocol
+      // Kept for historical reference but skipped since we replaced this behavior
       const output = execSync(
         `${cliPath} completeParameter targetVersionParameterCompletion test targetVersion ""`,
         { encoding: 'utf-8', cwd: componentPath }
       );
       
-      // Current behavior: space-separated words
+      // OLD behavior: space-separated words (no longer used)
       const values = output.trim().split(/\s+/);
       
       // Should return semantic version links

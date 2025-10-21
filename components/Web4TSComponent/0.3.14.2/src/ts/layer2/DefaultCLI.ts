@@ -1292,6 +1292,44 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
+   * Format completion values with DISPLAY/WORD protocol
+   * Handles both simple arrays and complex formatted output
+   * DRY helper used by completeParameter and future completion methods
+   * @cliHide
+   */
+  private formatCompletionOutput(values: string[]): void {
+    const lines: string[] = [];
+    
+    // Detect complex format (numbered lines like "1: methodName <params>")
+    const hasNumberedRefs = values.some((v: string) => v.match(/^\d+:/));
+    const hasSpaces = values.some((v: string) => v.includes(' '));
+    
+    if (hasNumberedRefs || hasSpaces) {
+      // Complex format: numbered method list or formatted text
+      // Add DISPLAY lines (user-visible formatted output)
+      values.forEach((line: string) => {
+        lines.push(`DISPLAY: ${line}`);
+      });
+      
+      // Extract method names/words and add WORD lines (for bash compgen)
+      values.forEach((line: string) => {
+        const match = line.match(/^\d+:\s*(\S+)/);
+        const word = match ? match[1] : line.split(' ')[0];
+        lines.push(`WORD: ${word}`);
+      });
+    } else {
+      // Simple format: plain words like ['dev', 'latest', 'prod']
+      // Just add WORD lines
+      values.forEach((word: string) => {
+        lines.push(`WORD: ${word}`);
+      });
+    }
+    
+    // ONE console.log for entire block (efficient!)
+    console.log(lines.join('\n'));
+  }
+
+  /**
    * Execute parameter completion callback for dynamic tab completion
    * Called by bash completion when TSCompletion returns __CALLBACK__:methodName
    * Web4 pattern: Hidden via @cliHide, not via naming convention
@@ -1303,20 +1341,8 @@ export abstract class DefaultCLI implements CLI {
       // Pass context args to completion method (e.g., ['on', 'ComponentName'] for versionParameterCompletion)
       const values = await (this as any)[callbackName](contextArgs);
       
-      // Smart Join (OOSH-inspired, matching TSCompletion.start() logic):
-      // If values contain numbered references (e.g. "1:filename") or any item with spaces,
-      // join with NEWLINES to trigger bash line-based completion (preserves spaces).
-      // Otherwise join with SPACES for backward compatibility (standard single-word completion).
-      const hasNumberedRefs = values.some((v: string) => v.match(/^\d+:/));
-      const hasSpaces = values.some((v: string) => v.includes(' '));
-      
-      if (hasNumberedRefs || hasSpaces) {
-        // Multi-LINE mode: each value on its own line
-        console.log(values.join('\n'));
-      } else {
-        // Multi-WORD mode: space-separated for compgen -W (no trailing newline)
-        process.stdout.write(values.join(' '));
-      }
+      // Use DRY helper to format output with DISPLAY/WORD protocol
+      this.formatCompletionOutput(values);
     } else {
       // Callback not found - return empty (no completions)
       console.log('');
