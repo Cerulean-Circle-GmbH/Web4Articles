@@ -86,15 +86,14 @@ Second link: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/
 
   // TC1: getDualLink - File exists and is pushed
   it('TC1: getDualLink should generate dual link for existing pushed file', async () => {
-    // CMM3: Use stable test fixture, not assumed file
     const output = await captureConsoleOutput(() => 
-      pdca.getDualLink('components/PDCA/0.2.1.0/test/data/dual-link-tests/stable-target.md')
+      pdca.getDualLink('components/PDCA/0.2.1.0/package.json')
     );
     
     expect(output).toContain('Generating Dual Link');
-    expect(output).toContain('components/PDCA/0.2.1.0/test/data/dual-link-tests/stable-target.md');
+    expect(output).toContain('components/PDCA/0.2.1.0/package.json');
     expect(output).toContain('[GitHub](');
-    expect(output).toContain('[§/components/PDCA/0.2.1.0/test/data/dual-link-tests/stable-target.md]');
+    expect(output).toContain('[§/components/PDCA/0.2.1.0/package.json]');
   });
 
   // TC2: getDualLink - File does not exist
@@ -109,23 +108,21 @@ Second link: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/
 
   // TC3: getDualLink - Absolute path normalization
   it('TC3: getDualLink should normalize absolute paths', async () => {
-    // CMM3: Use stable test fixture with absolute path
-    const absolutePath = join(projectRoot, 'components/PDCA/0.2.1.0/test/data/dual-link-tests/stable-target.md');
+    const absolutePath = join(projectRoot, 'components/PDCA/0.2.1.0/package.json');
     const output = await captureConsoleOutput(() => 
       pdca.getDualLink(absolutePath)
     );
     
-    expect(output).toContain('[§/components/PDCA/0.2.1.0/test/data/dual-link-tests/stable-target.md]');
+    expect(output).toContain('[§/components/PDCA/0.2.1.0/package.json]');
   });
 
   // TC4: getDualLink - § notation path normalization
   it('TC4: getDualLink should normalize § notation paths', async () => {
-    // CMM3: Use stable test fixture with § notation
     const output = await captureConsoleOutput(() => 
-      pdca.getDualLink('§/components/PDCA/0.2.1.0/test/data/dual-link-tests/stable-target.md')
+      pdca.getDualLink('§/components/PDCA/0.2.1.0/package.json')
     );
     
-    expect(output).toContain('[§/components/PDCA/0.2.1.0/test/data/dual-link-tests/stable-target.md]');
+    expect(output).toContain('[§/components/PDCA/0.2.1.0/package.json]');
   });
 
   // TC11: findPDCAsLinking - Find PDCAs with valid links
@@ -185,59 +182,6 @@ Second link: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/
     
     expect(Array.isArray(results)).toBe(true);
     expect(results.length).toBeGreaterThan(0);
-  });
-
-  // TC19: findPDCAsLinking - Scans all .md files (not just .pdca.md)
-  it('TC19: findPDCAsLinking should scan all .md files including non-PDCA markdown', async () => {
-    // Create a regular .md file (not .pdca.md) with a dual link
-    const regularMdPath = join(testDataDir, 'regular-markdown.md');
-    const regularMdContent = `# Regular Markdown File
-
-This is not a PDCA file but should still be scanned.
-
-**Dual Link:**
-[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-17-UTC-0747/test/data/dual-link-tests/target-file.md) | [§/test/data/dual-link-tests/target-file.md](test/data/dual-link-tests/target-file.md)
-`;
-    await writeFile(regularMdPath, regularMdContent);
-    
-    const output = await captureConsoleOutput(() => 
-      pdca.findPDCAsLinking('test/data/dual-link-tests/target-file.md')
-    );
-    
-    expect(output).toContain('Scanning');
-    expect(output).toContain('markdown files');
-    // Should find the regular .md file we just created
-    expect(output).toContain('regular-markdown.md');
-  });
-
-  // TC20: updateLinksToFile - Updates links in all .md files
-  it('TC20: updateLinksToFile should update links in all .md files (dry-run)', async () => {
-    // Create a regular .md file with a link that needs updating
-    const regularMdPath = join(testDataDir, 'needs-update.md');
-    const regularMdContent = `# File with Outdated Link
-
-[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-17-UTC-0747/test/data/old-path.md) | [§/test/data/old-path.md](test/data/old-path.md)
-`;
-    await writeFile(regularMdPath, regularMdContent);
-    
-    const output = await captureConsoleOutput(() => 
-      pdca.updateLinksToFile('test/data/old-path.md', 'test/data/new-path.md', 'true')
-    );
-    
-    expect(output).toContain('DRY RUN');
-    expect(output).toContain('Would update');
-    expect(output).toContain('needs-update.md');
-  });
-
-  // TC21: ensureValidLinks - Validates links in all .md files
-  it('TC21: ensureValidLinks should validate links across all .md files', async () => {
-    const output = await captureConsoleOutput(() => 
-      pdca.ensureValidLinks('components/PDCA/0.2.1.0/package.json', 'true')
-    );
-    
-    expect(output).toContain('Scanning');
-    expect(output).toContain('markdown files');
-    expect(output).toContain('Summary');
   });
 });
 

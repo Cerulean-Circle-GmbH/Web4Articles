@@ -76,16 +76,17 @@ describe('PDCA Dual Link Relative Path Generation (TC22)', () => {
 
   // TC22.5: Actual use case from bug report
   it('TC22.5: Real scenario - linktest.md in temp/tpichler/ linking to PDCA', async () => {
+    // CMM3: Use stable test fixture, not assumed file
     // From: temp/tpichler/linktest.md
-    // To: scrum.pmo/project.journal/2025-10-20-UTC-1008-session/test123.feature.pdca.md
-    // Should generate: ../../scrum.pmo/project.journal/2025-10-20-UTC-1008-session/test123.feature.pdca.md
+    // To: components/PDCA/0.2.1.0/test/data/dual-link-tests/tc22-5-target.feature.pdca.md
+    // Should generate dual link successfully
     
     const output = await captureConsoleOutput(() => 
-      pdca.getDualLink('scrum.pmo/project.journal/2025-10-20-UTC-1008-session/test123.feature.pdca.md')
+      pdca.getDualLink('components/PDCA/0.2.1.0/test/data/dual-link-tests/tc22-5-target.feature.pdca.md')
     );
     
     expect(output).toContain('Dual Link Generated');
-    expect(output).toContain('test123.feature.pdca.md');
+    expect(output).toContain('tc22-5-target.feature.pdca.md');
     // Manual verification needed: Check if link works in actual markdown file
   });
 

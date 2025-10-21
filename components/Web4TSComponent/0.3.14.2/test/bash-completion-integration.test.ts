@@ -203,5 +203,43 @@ echo "COMPREPLY: \${COMPREPLY[*]}"
     expect(words).toContain('test');
     expect(words.length).toBe(4);
   });
+
+  it('✅ Single-match with documentation: web4tscomponent compl<TAB>', () => {
+    // Test single match shows TSDoc documentation and correct prompt
+    const testScriptPath = join(testShDir, 'test-single-match-doc.sh');
+    const testScript = `
+#!/bin/bash
+cd ${componentPath}
+source ${sourceEnv} >/dev/null 2>&1
+COMP_WORDS=(web4tscomponent compl)
+COMP_CWORD=1
+_web4_generic_completion
+echo ""
+echo "COMPREPLY: \${COMPREPLY[*]}"
+    `.trim();
+    
+    writeFileSync(testScriptPath, testScript);
+    execSync(`chmod +x ${testScriptPath}`);
+    
+    const result = execSync(testScriptPath, { encoding: 'utf-8' });
+    
+    // Should show TSDoc documentation
+    expect(result).toContain('📖 Documentation:');
+    expect(result).toContain('Test and discover tab completions');
+    
+    // Should show correct user input in prompt (not debugging command)
+    // Strip ANSI codes for matching
+    const cleanResult = result.replace(/\x1b\[[0-9;]*m/g, '');
+    expect(cleanResult).toContain('your web4 command > web4tscomponent compl');
+    expect(cleanResult).not.toContain('completion method');
+    
+    // Should have single completion word
+    const compreplyMatch = result.match(/COMPREPLY: (.+)/);
+    expect(compreplyMatch).toBeTruthy();
+    const words = compreplyMatch![1].trim().split(/\s+/);
+    expect(words).toEqual(['completion']);
+    
+    console.log('✅ Single-match documentation and prompt verified');
+  });
 });
 
