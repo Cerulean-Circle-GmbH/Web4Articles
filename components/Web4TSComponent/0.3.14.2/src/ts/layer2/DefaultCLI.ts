@@ -1309,8 +1309,11 @@ export abstract class DefaultCLI implements CLI {
     if (hasNumberedRefs || hasSpaces) {
       // Complex format: numbered method list or formatted text
       // Add DISPLAY lines (user-visible formatted output with ANSI colors)
-      values.forEach((line: string) => {
-        lines.push(`DISPLAY: ${line}`);
+      // Split on embedded \n first (for multi-line documentation)
+      values.forEach((value: string) => {
+        value.split('\n').forEach((line: string) => {
+          lines.push(`DISPLAY: ${line}`);
+        });
       });
       
       // Add colored prompt echo if context provided
