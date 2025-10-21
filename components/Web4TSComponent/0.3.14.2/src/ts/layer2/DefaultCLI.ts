@@ -1683,22 +1683,14 @@ export abstract class DefaultCLI implements CLI {
             signature = `${methodColor}${methodName}${RESET} ${BRIGHT_YELLOW}${paramList}${RESET}`;
           }
           
-          // Return: Array of semantic units for DISPLAY protocol
-          // DISPLAY protocol requires one DISPLAY: line per output line
-          // Each element becomes "DISPLAY: <element>" for bash to process
+          // Return: ONE string with embedded newlines for semantic structure
+          // formatCompletionOutput adds DISPLAY: prefix, bash printf handles \n
           const separator = `${BRIGHT_CYAN}${'─'.repeat(60)}${RESET}`;
           const header = `${BRIGHT_WHITE_BOLD}📖 Documentation:${RESET}`;
           const greenDoc = `${GREEN}${fullMethodDoc}${RESET}`;
           
-          // Array elements = semantic units, not artificial splits
-          // If greenDoc contains \n (from TSDoc), it stays as one element
-          return [
-            signature,
-            separator,
-            header,
-            greenDoc,
-            ''  // Empty line for visual spacing
-          ];
+          // Single string with \n - preserves semantic structure without artificial array splits
+          return [`${signature}\n${separator}\n${header}\n${greenDoc}\n`];
         }
         
         return [methodName];  // Plain method name for bash completion
