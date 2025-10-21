@@ -1316,8 +1316,8 @@ export abstract class DefaultCLI implements CLI {
         });
       });
       
-      // Add colored prompt echo if context provided
-      if (commandContext && commandContext.length > 0) {
+      // Add colored prompt echo if context provided AND in bash completion context
+      if (commandContext && commandContext.length > 0 && process.env.WEB4_CLI_NAME) {
         // Prompt colors: "your web4 command >"
         const promptWhite = '\x1b[37m';
         const promptCyan = '\x1b[36m';
@@ -1328,26 +1328,34 @@ export abstract class DefaultCLI implements CLI {
         const commands = '\x1b[0;37m';      // White for method names
         const parameters = '\x1b[1;33m';    // Yellow bold for parameters
         
-        // Build colored command: cliName method param1 param2 ...
-        // commandContext = [cliName, ...args] where args might be method + params
-        const [cliName, ...args] = commandContext;
-        let coloredCommand = `${toolName}${cliName}${reset}`;
-        
-        if (args.length > 0) {
-          // First arg after CLI is usually the method (white)
-          coloredCommand += ` ${commands}${args[0]}${reset}`;
+        // Build colored command from original user input (WEB4_COMP_LINE)
+        // Bash exports: WEB4_COMP_LINE="web4tscomponent com" (user's actual typing)
+        const compLine = process.env.WEB4_COMP_LINE || '';
+        if (compLine) {
+          const words = compLine.trim().split(/\s+/);
+          let coloredCommand = '';
           
-          // Remaining args are parameters (yellow bold)
-          if (args.length > 1) {
-            const params = args.slice(1).join(' ');
-            coloredCommand += ` ${parameters}${params}${reset}`;
+          if (words.length > 0) {
+            // First word: CLI name (cyan bold)
+            coloredCommand = `${toolName}${words[0]}${reset}`;
+            
+            if (words.length > 1) {
+              // Second word: method name (white)
+              coloredCommand += ` ${commands}${words[1]}${reset}`;
+              
+              // Remaining words: parameters (yellow bold)
+              if (words.length > 2) {
+                const params = words.slice(2).join(' ');
+                coloredCommand += ` ${parameters}${params}${reset}`;
+              }
+            }
           }
+          
+          // Format: "your web4 command >" with colored command
+          const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
+          lines.push(`DISPLAY: `);
+          lines.push(`DISPLAY: ${prompt}`);
         }
-        
-        // Format: "your web4 command >" with colored command
-        const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
-        lines.push(`DISPLAY: `);
-        lines.push(`DISPLAY: ${prompt}`);
       }
       
       // Extract method names/words and add WORD lines (for bash compgen)
