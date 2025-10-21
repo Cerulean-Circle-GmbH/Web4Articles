@@ -615,10 +615,10 @@ export class TSCompletion implements Completion {
                 
                 // Detect if parameter has default value (e.g., action: string = '')
                 const hasInitializer = param.initializer !== undefined;
-                const hasDefault = cliAnnotations.default !== null || hasInitializer;
+                const hasDefault = hasInitializer;  // Only TypeScript signature defaults count
                 
-                // Extract default value and strip quotes if present
-                let defaultValue = hasInitializer ? param.initializer.getText() : cliAnnotations.default;
+                // Extract default value from TypeScript signature ONLY and strip quotes if present
+                let defaultValue = hasInitializer ? param.initializer.getText() : null;
                 if (defaultValue && typeof defaultValue === 'string') {
                   // Strip surrounding quotes: 'value' or "value" → value
                   defaultValue = defaultValue.replace(/^['"]|['"]$/g, '');

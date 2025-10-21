@@ -1152,20 +1152,12 @@ export abstract class DefaultCLI implements CLI {
    */
   private extractDefaultValue(param: any, methodName?: string): string | null {
     // ✅ PRIORITY 1: Check TypeScript signature default (already extracted by TSCompletion)
-    // This ensures TypeScript native defaults ALWAYS take priority
+    // This is the ONLY source for explicit defaults - TypeScript native syntax
     if (param.default !== undefined && param.default !== null) {
       return param.default;
     }
     
-    // ✅ PRIORITY 2: Check for @cliDefault annotation (fallback only)
-    if (methodName) {
-      const cliAnnotations = TSCompletion.extractCliAnnotations(this.componentClass.name, methodName, param.name);
-      if (cliAnnotations.default) {
-        return cliAnnotations.default;
-      }
-    }
-    
-    // ✅ PRIORITY 3: Convention-based defaults for common parameter types
+    // ✅ PRIORITY 2: Convention-based defaults for common parameter types
     const description = param.description || '';
     
     if (description.includes('boolean')) {
