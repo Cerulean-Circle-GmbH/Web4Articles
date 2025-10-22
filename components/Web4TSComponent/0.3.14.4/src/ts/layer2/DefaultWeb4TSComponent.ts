@@ -15,9 +15,24 @@ import * as path from 'path';
 import { execSync } from 'child_process';
 import { randomUUID } from 'crypto';
 
+// Copy User interface to prevent build dependency
+// Source: components/User/0.3.0.4/src/ts/layer3/User.interface.ts
+interface User {
+  init(scenario: Scenario): this;
+  generateOwnerData(params: OwnerParams): Promise<string>;
+  toScenario(): Promise<Scenario>;
+}
+
+interface OwnerParams {
+  user: string;
+  hostname: string;
+  uuid?: string;
+}
+
 export class DefaultWeb4TSComponent implements Web4TSComponent {
   private model: Web4TSComponentModel;
   private colors: Colors = DefaultColors.getInstance();
+  private user?: User; // Optional User service (lazy initialization)
 
   constructor() {
     // Initialize with version from directory (single source of truth)
@@ -39,6 +54,29 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       // Note: createdAt/updatedAt removed per Web4 principle - belong in ChangeEvent
       // Note: componentStandards, validationRules, scaffoldingTemplates removed - never used
     };
+  }
+
+  /**
+   * Lazy initialization of User service for owner data generation
+   * NOT a build dependency - warns if unavailable, continues with fallback
+   * Pattern: components/User/0.3.0.4/src/ts/layer2/DefaultUser.ts
+   * @cliHide
+   */
+  private getUser(): User {
+    if (this.user) return this.user;
+    
+    try {
+      // Dynamic import - fails gracefully if User not available
+      const { DefaultUser } = require('../../User/latest/dist/ts/layer2/DefaultUser.js');
+      
+      // Initialize User with empty constructor (uses system/localhost defaults)
+      this.user = new DefaultUser();
+      
+      return this.user!; // Non-null assertion: we just assigned it
+    } catch (error) {
+      // User service not available - throw for caller to handle fallback
+      throw new Error('User service not available');
+    }
   }
 
   /**
