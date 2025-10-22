@@ -2462,16 +2462,16 @@ export class DefaultPDCA implements PDCA {
    * @cliDefault topic ""
    * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-feature-development how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-interpret-instructions how-to-collaborate how-to-chat-response
    */
-  async queryTrainAI(query: string, topic?: string): Promise<this> {
+  async queryTrainAI(query: string, topic: string = ''): Promise<this> {
     console.log(`\n🔍 trainAI Query Results\n`);
     console.log(`Query: "${query}"\n`);
     
     // DRY: Reuse existing trainAI infrastructure
     const trainingTopics = this._getTrainingTopicsInternal();
-    const searchScope = topic ? [topic] : Object.keys(trainingTopics);
+    const searchScope = (topic && topic !== '') ? [topic] : Object.keys(trainingTopics);
     
     // Validate topic if provided
-    if (topic && !trainingTopics[topic]) {
+    if (topic && topic !== '' && !trainingTopics[topic]) {
       console.log(`❌ Topic "${topic}" not found\n`);
       this._displayAvailableTopics(trainingTopics);
       return this;  // Method chaining
