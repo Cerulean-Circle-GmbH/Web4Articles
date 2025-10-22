@@ -167,7 +167,7 @@ export abstract class DefaultCLI implements CLI {
 1. **Bash asks CLI for default Scenario:**
    ```bash
    # Get default completion Scenario from CLI
-   scenario=$("$cli" __getCompletionScenario)
+   scenario=$("$cli" getCompletionScenario)
    ```
 
 2. **CLI returns complete Scenario with instance UUID**
@@ -183,7 +183,7 @@ export abstract class DefaultCLI implements CLI {
 
 4. **Send updated Scenario back via stdin:**
    ```bash
-   result=$(echo "$updated_scenario" | "$cli" __complete 2>>"$logfile" || true)
+   result=$(echo "$updated_scenario" | "$cli" complete 2>>"$logfile" || true)
    ```
 
 5. **Instance UUID ensures correct CLI instance receives update**
@@ -197,7 +197,7 @@ _web4_generic_completion() {
   local cli="${COMP_WORDS[0]}"
   
   # 1. Ask CLI for default Scenario with complete CLIModel
-  local scenario=$("$cli" __getCompletionScenario 2>>"$logfile")
+  local scenario=$("$cli" getCompletionScenario 2>>"$logfile")
   
   if [ -z "$scenario" ]; then
     echo "Failed to get completion scenario" >> "$logfile"
@@ -211,7 +211,7 @@ _web4_generic_completion() {
     '.model.completionCompWords = $words | .model.completionCompCword = ($cword | tonumber)')
   
   # 3. Send updated Scenario to CLI (instance UUID routes to correct instance)
-  result=$(echo "$updated_scenario" | "$cli" __complete 2>>"$logfile" || true)
+  result=$(echo "$updated_scenario" | "$cli" complete 2>>"$logfile" || true)
   
   # ... process DISPLAY/WORD output ...
 }
@@ -229,7 +229,7 @@ _web4_generic_completion() {
 
 ## TypeScript CLI Commands
 
-### 1. `__getCompletionScenario` - Provide Default Scenario
+### 1. `getCompletionScenario` - Provide Default Scenario
 
 ```typescript
 /**
@@ -237,7 +237,7 @@ _web4_generic_completion() {
  * Bash calls this first to get complete CLIModel structure
  * @cliHide
  */
-async __getCompletionScenario(): Promise<void> {
+async getCompletionScenario(): Promise<void> {
   // Create default CLIModel with instance UUID
   const scenario: Scenario<CLIModel> = {
     ior: {
@@ -288,7 +288,7 @@ async __getCompletionScenario(): Promise<void> {
 }
 ```
 
-### 2. `__complete` - Receive Updated Scenario, Execute Completion
+### 2. `complete` - Receive Updated Scenario, Execute Completion
 
 ```typescript
 /**
@@ -296,7 +296,7 @@ async __getCompletionScenario(): Promise<void> {
  * Bash has modified completionCompWords and completionCompCword
  * @cliHide
  */
-async __complete(): Promise<void> {
+async complete(): Promise<void> {
   // Read updated Scenario from stdin (bash modified its 2 fields)
   const scenarioJson = await this.readStdin();
   const scenario: Scenario<CLIModel> = JSON.parse(scenarioJson);
