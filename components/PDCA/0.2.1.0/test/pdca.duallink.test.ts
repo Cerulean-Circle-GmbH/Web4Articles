@@ -86,14 +86,15 @@ Second link: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/
 
   // TC1: getDualLink - File exists and is pushed
   it('TC1: getDualLink should generate dual link for existing pushed file', async () => {
+    // CMM3: Use stable test fixture, not assumed file
     const output = await captureConsoleOutput(() => 
-      pdca.getDualLink('components/PDCA/0.2.1.0/package.json')
+      pdca.getDualLink('components/PDCA/0.2.1.0/test/data/dual-link-tests/stable-target.md')
     );
     
     expect(output).toContain('Generating Dual Link');
-    expect(output).toContain('components/PDCA/0.2.1.0/package.json');
+    expect(output).toContain('components/PDCA/0.2.1.0/test/data/dual-link-tests/stable-target.md');
     expect(output).toContain('[GitHub](');
-    expect(output).toContain('[§/components/PDCA/0.2.1.0/package.json]');
+    expect(output).toContain('[§/components/PDCA/0.2.1.0/test/data/dual-link-tests/stable-target.md]');
   });
 
   // TC2: getDualLink - File does not exist
@@ -108,21 +109,23 @@ Second link: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/
 
   // TC3: getDualLink - Absolute path normalization
   it('TC3: getDualLink should normalize absolute paths', async () => {
-    const absolutePath = join(projectRoot, 'components/PDCA/0.2.1.0/package.json');
+    // CMM3: Use stable test fixture with absolute path
+    const absolutePath = join(projectRoot, 'components/PDCA/0.2.1.0/test/data/dual-link-tests/stable-target.md');
     const output = await captureConsoleOutput(() => 
       pdca.getDualLink(absolutePath)
     );
     
-    expect(output).toContain('[§/components/PDCA/0.2.1.0/package.json]');
+    expect(output).toContain('[§/components/PDCA/0.2.1.0/test/data/dual-link-tests/stable-target.md]');
   });
 
   // TC4: getDualLink - § notation path normalization
   it('TC4: getDualLink should normalize § notation paths', async () => {
+    // CMM3: Use stable test fixture with § notation
     const output = await captureConsoleOutput(() => 
-      pdca.getDualLink('§/components/PDCA/0.2.1.0/package.json')
+      pdca.getDualLink('§/components/PDCA/0.2.1.0/test/data/dual-link-tests/stable-target.md')
     );
     
-    expect(output).toContain('[§/components/PDCA/0.2.1.0/package.json]');
+    expect(output).toContain('[§/components/PDCA/0.2.1.0/test/data/dual-link-tests/stable-target.md]');
   });
 
   // TC11: findPDCAsLinking - Find PDCAs with valid links

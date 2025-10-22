@@ -1830,15 +1830,140 @@ export class DefaultPDCA implements PDCA {
   /**
    * Get dual link for a file (GitHub URL + chat path)
    * Auto-fixes git status: adds, commits, pushes if needed
-   * Generates RELATIVE paths for markdown file portability
+   * Generates PROJECT-ROOT-RELATIVE paths (original spec)
+   * 
+   * For user-location-relative paths, use getDualLinkRelative()
    * 
    * @param filePath Path to file (absolute or project-root-relative)
-   * @param fromDirectory Optional: directory to calculate relative path from (defaults to CWD)
+   * @cliSyntax filePath
+   */
+  async getDualLink(filePath: string): Promise<this> {
+    console.log(`\n🔗 Generating Dual Link (Project-Root-Relative)\n`);
+    
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    const { existsSync } = await import('fs');
+    const { execSync } = await import('child_process');
+    
+    // Get project root
+    const projectRoot = await this.getProjectRoot();
+    
+    // Normalize file path to project-root-relative
+    let normalizedPath: string;
+    if (path.isAbsolute(filePath)) {
+      normalizedPath = path.relative(projectRoot, filePath);
+    } else if (filePath.startsWith('§/')) {
+      normalizedPath = filePath.substring(2);
+    } else {
+      normalizedPath = filePath;
+    }
+    
+    const fullPath = path.join(projectRoot, normalizedPath);
+    
+    // Check if file exists
+    if (!existsSync(fullPath)) {
+      console.log(`❌ Error: File does not exist`);
+      console.log(`   File: ${normalizedPath}\n`);
+      return this;
+    }
+    
+    console.log(`📄 Target: ${normalizedPath}`);
+    console.log(`📂 Path format: Project-root-relative`);
+    console.log(`🔍 Checking git status...`);
+    
+    // Check and fix git status
+    try {
+      // Check if added
+      const statusOutput = execSync(`git status --porcelain "${normalizedPath}"`, {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      
+      // Auto-fix git status if needed
+      if (statusOutput) {
+        if (statusOutput.startsWith('??')) {
+          console.log(`📝 Adding file to git...`);
+          execSync(`git add "${normalizedPath}"`, { cwd: projectRoot });
+        }
+      }
+      
+      // Check if committed
+      try {
+        execSync(`git log --oneline -1 -- "${normalizedPath}"`, {
+          cwd: projectRoot,
+          encoding: 'utf-8'
+        });
+      } catch {
+        console.log(`📝 Committing file...`);
+        execSync(`git commit -m "docs: add ${normalizedPath}" "${normalizedPath}"`, { 
+          cwd: projectRoot 
+        });
+      }
+      
+      // Check if pushed
+      const branch = execSync('git rev-parse --abbrev-ref HEAD', {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      
+      try {
+        execSync(`git diff origin/${branch} HEAD -- "${normalizedPath}"`, {
+          cwd: projectRoot,
+          encoding: 'utf-8'
+        });
+        
+        console.log(`📤 Pushing to remote...`);
+        execSync(`git push origin ${branch}`, { cwd: projectRoot });
+      } catch {
+        // Already pushed
+      }
+      
+      console.log(`✅ File ready: committed and pushed\n`);
+      
+      // Get GitHub URL
+      const remoteUrl = execSync('git remote get-url origin', {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      
+      // Parse GitHub org/repo
+      const match = remoteUrl.match(/github\.com[:/]([^/]+)\/([^/.]+)/);
+      if (!match) {
+        console.log(`❌ Error: Could not parse GitHub URL from: ${remoteUrl}\n`);
+        return this;
+      }
+      
+      const org = match[1];
+      const repo = match[2];
+      
+      const githubUrl = `https://github.com/${org}/${repo}/blob/${branch}/${normalizedPath}`;
+      
+      // Generate dual link with PROJECT-ROOT-RELATIVE path (original spec)
+      console.log(`\n✨ Dual Link Generated:\n`);
+      console.log(`[GitHub](${githubUrl}) | [§/${normalizedPath}](${normalizedPath})\n`);
+      
+    } catch (error: any) {
+      console.log(`❌ Error: ${error.message}\n`);
+    }
+    
+    return this;
+  }
+
+  /**
+   * Get dual link for a file with USER-LOCATION-RELATIVE paths
+   * Auto-fixes git status: adds, commits, pushes if needed
+   * Generates paths RELATIVE to where you call it from (for markdown portability)
+   * 
+   * This is the "new" feature we developed for clickable links in markdown!
+   * For project-root-relative paths, use getDualLink()
+   * 
+   * @param filePath Path to file (absolute or project-root-relative)
+   * @param fromDirectory Optional: directory to calculate relative path from (defaults to USER_PWD)
    * @cliSyntax filePath fromDirectory
    * @cliDefault fromDirectory ""
    */
-  async getDualLink(filePath: string, fromDirectory?: string): Promise<this> {
-    console.log(`\n🔗 Generating Dual Link\n`);
+  async getDualLinkRelative(filePath: string, fromDirectory: string = ""): Promise<this> {
+    console.log(`\n🔗 Generating Dual Link (User-Location-Relative)\n`);
     
     const fs = await import('fs/promises');
     const path = await import('path');
@@ -1870,9 +1995,12 @@ export class DefaultPDCA implements PDCA {
     console.log(`📄 Target: ${normalizedPath}`);
     
     // Determine source directory for relative path calculation
+    // Use USER_PWD (captured by CLI script before any cd) if available
+    // This ensures we calculate relative path from where the user invoked the command
+    const userPwd = process.env.USER_PWD || process.env.PWD || process.cwd();
     const sourceDir = fromDirectory 
       ? path.resolve(projectRoot, fromDirectory)
-      : process.cwd();
+      : userPwd;
     
     // Calculate relative path from source to target
     const relativePath = path.relative(sourceDir, fullPath);
@@ -2245,7 +2373,10 @@ export class DefaultPDCA implements PDCA {
           
           // Check if this link points to old path
           if (githubUrl.includes(oldNormalized) || localPath.includes(oldNormalized)) {
-            // Generate new link using getDualLink logic
+            // Detect if original link was relative (contains ../) or absolute
+            const wasRelative = localPath.includes('../') || localPath.includes('./');
+            
+            // Generate new link
             const branch = execSync('git branch --show-current', {
               cwd: projectRoot,
               encoding: 'utf-8'
@@ -2262,9 +2393,22 @@ export class DefaultPDCA implements PDCA {
               const repo = match[2];
               
               const newGithubUrl = `https://github.com/${org}/${repo}/blob/${branch}/${newNormalized}`;
+              
+              // Preserve relative vs absolute format
+              let newLocalPath: string;
+              if (wasRelative) {
+                // Calculate relative path from this file to the target
+                const currentFileDir = path.dirname(pdcaFile);
+                const targetFile = path.join(projectRoot, newNormalized);
+                newLocalPath = path.relative(currentFileDir, targetFile);
+              } else {
+                // Keep absolute (project-root-relative)
+                newLocalPath = newNormalized;
+              }
+              
               const newLine = line.replace(
                 /\[GitHub\]\([^)]+\)\s*\|\s*\[[^\]]*\]\([^)]+\)/,
-                `[GitHub](${newGithubUrl}) | [§/${newNormalized}](${newNormalized})`
+                `[GitHub](${newGithubUrl}) | [§/${newNormalized}](${newLocalPath})`
               );
               
               newLines.push(newLine);
@@ -2552,6 +2696,162 @@ export class DefaultPDCA implements PDCA {
     } else {
       console.log(`\n✨ ${isDryRun ? 'Dry run complete' : 'All dual links are now valid'}!\n`);
     }
+    
+    return this;
+  }
+
+  /**
+   * Refresh all relative links in a markdown file after it was moved
+   * Recalculates relative paths based on file's current location
+   * 
+   * Use case: After moving a .md file to a different directory,
+   * all its relative links (../../) need to be recalculated
+   * 
+   * @param markdownFile Path to the markdown file that was moved
+   * @param dryRun Preview changes without writing (default: false)
+   * @cliSyntax markdownFile dryRun
+   * @cliDefault dryRun false
+   * @cliValues dryRun true false
+   */
+  async refreshRelativeLinks(markdownFile: string, dryRun: string = 'false'): Promise<this> {
+    const isDryRun = dryRun === 'true';
+    
+    console.log(`\n🔄 Refreshing Relative Links\n`);
+    if (isDryRun) {
+      console.log(`🔍 DRY RUN MODE - No changes will be made\n`);
+    }
+    
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    const { existsSync } = await import('fs');
+    const { execSync } = await import('child_process');
+    
+    const projectRoot = await this.getProjectRoot();
+    
+    // Normalize markdown file path
+    let normalizedPath: string;
+    if (path.isAbsolute(markdownFile)) {
+      normalizedPath = path.relative(projectRoot, markdownFile);
+    } else if (markdownFile.startsWith('§/')) {
+      normalizedPath = markdownFile.substring(2);
+    } else {
+      normalizedPath = markdownFile;
+    }
+    
+    const fullPath = path.join(projectRoot, normalizedPath);
+    
+    // Check if file exists
+    if (!existsSync(fullPath)) {
+      console.log(`❌ Error: File does not exist`);
+      console.log(`   File: ${normalizedPath}\n`);
+      return this;
+    }
+    
+    console.log(`📄 File: ${normalizedPath}`);
+    console.log(`📂 Location: ${path.dirname(normalizedPath)}\n`);
+    
+    // Read file
+    const content = await fs.readFile(fullPath, 'utf-8');
+    const lines = content.split('\n');
+    const newLines: string[] = [];
+    
+    let linksFound = 0;
+    let linksUpdated = 0;
+    
+    // Process each line
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const dualLinkMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
+      
+      if (dualLinkMatch) {
+        const githubUrl = dualLinkMatch[1];
+        const displayText = dualLinkMatch[2];
+        const oldLocalPath = dualLinkMatch[3];
+        
+        linksFound++;
+        
+        // Check if this is a relative link
+        const isRelative = oldLocalPath.includes('../') || oldLocalPath.includes('./');
+        
+        if (isRelative) {
+          // Extract target file from display text (§/path format)
+          const displayMatch = displayText.match(/§\/(.+)/);
+          if (displayMatch) {
+            const targetPath = displayMatch[1];
+            
+            // Calculate NEW relative path from current file location
+            const currentFileDir = path.dirname(fullPath);
+            const targetFile = path.join(projectRoot, targetPath);
+            const newRelativePath = path.relative(currentFileDir, targetFile);
+            
+            // Check if path changed
+            if (newRelativePath !== oldLocalPath) {
+              const newLine = line.replace(
+                /\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/,
+                `[GitHub](${githubUrl}) | [${displayText}](${newRelativePath})`
+              );
+              
+              newLines.push(newLine);
+              linksUpdated++;
+              
+              console.log(`   Line ${i + 1}: Updated relative path`);
+              console.log(`      Old: ${oldLocalPath}`);
+              console.log(`      New: ${newRelativePath}`);
+            } else {
+              newLines.push(line);
+            }
+          } else {
+            // Can't parse, keep original
+            newLines.push(line);
+          }
+        } else {
+          // Not a relative link, keep as-is
+          newLines.push(line);
+        }
+      } else {
+        newLines.push(line);
+      }
+    }
+    
+    // Summary
+    console.log(`\n📊 Summary:`);
+    console.log(`   - Links found: ${linksFound}`);
+    console.log(`   - Links updated: ${linksUpdated}`);
+    console.log(`   - Links unchanged: ${linksFound - linksUpdated}`);
+    
+    if (linksUpdated > 0) {
+      if (!isDryRun) {
+        // Write updated file
+        await fs.writeFile(fullPath, newLines.join('\n'));
+        console.log(`\n✅ Updated: ${normalizedPath}`);
+        
+        // Auto-commit and push
+        console.log(`\n📦 Git operations:`);
+        try {
+          execSync(`git add "${normalizedPath}"`, { cwd: projectRoot });
+          console.log(`   ✅ Added file`);
+          
+          const commitMsg = `fix: refresh relative links in ${normalizedPath}`;
+          execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot });
+          console.log(`   ✅ Committed: ${commitMsg}`);
+          
+          const branch = execSync('git branch --show-current', {
+            cwd: projectRoot,
+            encoding: 'utf-8'
+          }).trim();
+          execSync(`git push origin ${branch}`, { cwd: projectRoot });
+          console.log(`   ✅ Pushed to remote`);
+        } catch (error: any) {
+          console.log(`   ⚠️  Git error: ${error.message}`);
+        }
+      } else {
+        console.log(`\n⚠️  DRY RUN: Would update ${normalizedPath}`);
+      }
+    } else {
+      console.log(`\n✅ All relative links are already correct!`);
+    }
+    
+    console.log(`\n✨ Refresh complete!\n`);
     
     return this;
   }
