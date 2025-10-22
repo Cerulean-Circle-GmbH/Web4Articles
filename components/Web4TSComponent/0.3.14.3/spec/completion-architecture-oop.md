@@ -210,8 +210,9 @@ _web4_generic_completion() {
     --arg cword "$COMP_CWORD" \
     '.model.completionCompWords = $words | .model.completionCompCword = ($cword | tonumber)')
   
-  # 3. Send updated Scenario to CLI (instance UUID routes to correct instance)
-  result=$(echo "$updated_scenario" | "$cli" complete 2>>"$logfile" || true)
+  # 3. Send updated Scenario to CLI via parameter (NOT stdin!)
+  # ✅ Web4 pattern: Pass data as method parameters
+  result=$("$cli" complete "$updated_scenario" 2>>"$logfile" || true)
   
   # ... process DISPLAY/WORD output ...
 }
@@ -238,17 +239,22 @@ _web4_generic_completion() {
  * @cliHide
  */
 async getCompletionScenario(): Promise<void> {
-  // Create default CLIModel with instance UUID
+  // ✅ Use existing Web4 patterns for IOR creation
+  // Pattern from Unit/0.3.0.5/src/ts/layer2/DefaultUnit.ts:882-906
+  const componentVersion = await this.getComponentVersion();
+  const componentName = await this.getComponentName();
+  
+  // Create default CLIModel with instance UUID (from constructor)
   const scenario: Scenario<CLIModel> = {
     ior: {
-      uuid: randomUUID(),
-      component: "CLI",
-      version: "1.0.0"
+      uuid: this.model.uuid,  // ← UUID created in constructor (crypto.randomUUID())
+      component: componentName,  // ← Dynamic component name
+      version: componentVersion  // ← Dynamic version
     },
     owner: "bash-completion",
     model: {
-      uuid: this.model?.uuid || randomUUID(), // Preserve instance if exists
-      name: `${this.componentName}-cli-completion`,
+      uuid: this.model.uuid,  // ← Same UUID as IOR
+      name: `${componentName}-cli-completion`,
       origin: "bash-completion",
       definition: "CLI completion context",
       
@@ -296,16 +302,17 @@ async getCompletionScenario(): Promise<void> {
  * Bash has modified completionCompWords and completionCompCword
  * @cliHide
  */
-async complete(): Promise<void> {
-  // Read updated Scenario from stdin (bash modified its 2 fields)
-  const scenarioJson = await this.readStdin();
+async complete(scenarioJson: string): Promise<void> {
+  // ✅ Use method parameter (NOT stdin!)
+  // Web4 pattern: components receive data via method parameters or init(scenario)
   const scenario: Scenario<CLIModel> = JSON.parse(scenarioJson);
   
-  // Compute derived fields from bash-provided data
-  this.computeDerivedCompletionFields(scenario.model);
-  
-  // Initialize CLI with updated Scenario
+  // ✅ Use existing init() pattern to merge scenario
+  // Pattern from DefaultWeb4TSComponent.ts:183-188
   this.init(scenario);
+  
+  // Compute derived fields from bash-provided data
+  this.computeDerivedCompletionFields(this.model);
   
   // Get valid completion values from model
   const values = this.getValidCompletionValues();
