@@ -480,5 +480,142 @@ const state = await cli.toScenario();  // Export state
 
 ---
 
+## TSCompletion Integration
+
+### Current Collaboration Pattern
+
+DefaultCLI and TSCompletion have **clear separation of concerns**:
+
+| Layer | Responsibility | Methods |
+|-------|----------------|---------|
+| **TSCompletion** | Static AST parsing utility | `getEnhancedMethodParameters()`<br>`getMethodDoc()`<br>`getParameterCallback()`<br>`isMethodHidden()` |
+| **DefaultCLI** | Business logic + output formatting | `formatCompletionOutput()`<br>`completeParameter()`<br>`completionNameParameterCompletion()` |
+
+### Current Integration Points
+
+```
+┌──────────────────────────────────────────────────┐
+│ Bash Completion                                   │
+│ - Sets: COMP_WORDS, COMP_CWORD, WEB4_CLI_NAME   │
+│ - Calls: cli completion method <filter>          │
+│ - Or: cli completeParameter callback args        │
+└──────────────────┬───────────────────────────────┘
+                   │
+┌──────────────────▼───────────────────────────────┐
+│ DefaultCLI (Business Logic + Formatting)         │
+│                                                   │
+│ ┌───────────────────────────────────────────┐   │
+│ │ completeParameter(callback, ...args)       │   │
+│ │ • Executes: this[callback](args)           │   │
+│ │ • Formats: formatCompletionOutput()        │   │
+│ └───────────────────────────────────────────┘   │
+│                                                   │
+│ ┌───────────────────────────────────────────┐   │
+│ │ completionNameParameterCompletion(args)    │   │
+│ │ • Method listing: this.methodSignatures    │   │
+│ │ • Parameter info: TSCompletion.getEnhanced...│   │
+│ │ • Documentation: TSCompletion.getMethodDoc()│   │
+│ └───────────────────────────────────────────┘   │
+│                                                   │
+│ ┌───────────────────────────────────────────┐   │
+│ │ formatCompletionOutput(values, context)    │   │
+│ │ • DISPLAY: lines with ANSI colors          │   │
+│ │ • WORD: lines with clean completion values │   │
+│ │ • Prompt: colored echo (if WEB4_CLI_NAME)  │   │
+│ └───────────────────────────────────────────┘   │
+└──────────────────┬───────────────────────────────┘
+                   │
+┌──────────────────▼───────────────────────────────┐
+│ TSCompletion (Static AST Utility)                │
+│                                                   │
+│ • getEnhancedMethodParameters(class, method)     │
+│   └─> {name, type, required, default, doc}      │
+│                                                   │
+│ • getMethodDoc(class, method)                    │
+│   └─> JSDoc main comment text                   │
+│                                                   │
+│ • getParameterCallback(class, method, index)     │
+│   └─> "{paramName}ParameterCompletion" or null  │
+│                                                   │
+│ • isMethodHidden(class, method)                  │
+│   └─> boolean (@cliHide check)                  │
+└───────────────────────────────────────────────────┘
+```
+
+### What Works Well ✅
+
+1. **Clear separation:** TSCompletion handles AST complexity, DefaultCLI handles presentation
+2. **DRY achieved:** `formatCompletionOutput()` is the **ONE** place for DISPLAY/WORD protocol
+3. **Static utility pattern:** TSCompletion requires no state, can be called from anywhere
+4. **Callback discovery:** `getParameterCallback()` enables dynamic parameter completion without hardcoding
+
+### Future Optimizations (Low Priority)
+
+**A) TSCompletion AST Caching** (Medium Priority)
+- **Issue:** Every call re-parses AST (~200 methods per completion)
+- **Benefit:** 10x+ speed improvement for large method lists
+- **Decision:** MEASURE first (is it actually slow?), then optimize
+
+**B) Unified Method Source** (Low Priority)
+- **Issue:** Methods discovered via runtime reflection (`discoverMethods()`) AND AST parsing (`TSCompletion.getClassMethods()`)
+- **Decision:** DEFER - dual approach handles edge cases (compiled vs source) well
+
+### OOP Migration Integration
+
+**Key Insight:** TSCompletion remains a static utility. No changes needed.
+
+DefaultCLI will use TSCompletion to **populate CLIModel** in the new Scenario-based architecture:
+
+```typescript
+/**
+ * Get default completion Scenario for bash
+ * @cliHide
+ */
+async getCompletionScenario(): Promise<void> {
+  // Use TSCompletion to discover all method metadata upfront
+  const className = this.componentClass.name;
+  const methodNames = Array.from(this.methodSignatures.keys());
+  
+  // Build method info array using TSCompletion
+  const methodInfo = methodNames.map(methodName => ({
+    name: methodName,
+    doc: TSCompletion.getMethodDoc(className, methodName),
+    params: TSCompletion.getEnhancedMethodParameters(className, methodName),
+    hidden: TSCompletion.isMethodHidden(className, methodName)
+  }));
+  
+  // Create complete CLIModel with all metadata
+  const scenario: Scenario<CLIModel> = {
+    ior: {
+      uuid: randomUUID(),
+      component: "CLI",
+      version: this.componentVersion
+    },
+    model: {
+      // Completion context (bash will modify these 2 fields)
+      completionCompWords: [],
+      completionCompCword: 0,
+      
+      // Metadata (TypeScript populates, bash consumes)
+      completionAvailableMethods: methodInfo,
+      completionCurrentCommand: '',
+      completionCurrentArgs: [],
+      // ... other CLIModel fields
+    }
+  };
+  
+  // Output complete Scenario JSON
+  console.log(JSON.stringify(scenario, null, 2));
+}
+```
+
+**Benefits:**
+- TSCompletion called **once** per completion session (not per method!)
+- All method metadata cached in CLIModel
+- Bash decoupled from TypeScript internals (only knows about JSON)
+- TypeScript can derive all completion logic from model
+
+---
+
 **Radical OOP. Scenario Pattern. Model-Driven. DRY. Context-Aware.**
 
