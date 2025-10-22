@@ -5,6 +5,8 @@
  */
 
 import { CLI } from '../layer3/CLI.interface.js';
+import { CLIModel } from '../layer3/CLIModel.interface.js';
+import { Scenario } from '../layer3/Scenario.interface.js';
 import { MethodInfo } from '../layer3/MethodInfo.interface.js';
 import { MethodSignature } from '../layer3/MethodSignature.interface.js';
 import { Component } from '../layer3/Component.interface.js';
@@ -17,6 +19,7 @@ import * as ts from 'typescript';
 import { webcrypto as crypto } from 'crypto';
 
 export abstract class DefaultCLI implements CLI {
+  protected model: CLIModel;
   protected componentClass: any;
   protected componentName: string = '';
   protected componentVersion: string = '';
@@ -25,8 +28,45 @@ export abstract class DefaultCLI implements CLI {
   protected colors: Colors = DefaultColors.getInstance();
   
   constructor() {
-    // Empty constructor - Web4 pattern
+    // Initialize with empty model - Web4 Scenario pattern
+    this.model = this.createEmptyModel();
     // NO component instantiation for usage display
+  }
+  
+  /**
+   * Create empty CLIModel with default values
+   * Web4 pattern: Initialize model structure in constructor
+   * @cliHide
+   */
+  protected createEmptyModel(): CLIModel {
+    return {
+      uuid: crypto.randomUUID(),
+      name: 'cli',
+      origin: 'system',
+      definition: 'CLI model',
+      componentClass: null,
+      componentName: '',
+      componentVersion: '',
+      componentInstance: null,
+      // Completion context - initialized empty
+      completionCliName: '',
+      completionCompWords: [],
+      completionCompCword: 0,
+      // Derived fields
+      completionCurrentWord: '',
+      completionPreviousWord: '',
+      completionCommand: null,
+      completionParameters: [],
+      completionParameterIndex: 0,
+      // "on" context
+      completionOnComponent: null,
+      completionOnVersion: null,
+      // Chaining
+      completionChainedCommands: [],
+      // State flags
+      completionIsCompletingMethod: false,
+      completionIsCompletingParameter: false
+    };
   }
   
   /**
@@ -50,12 +90,142 @@ export abstract class DefaultCLI implements CLI {
   }
   
   /**
-   * Initialize CLI with component context (legacy - use initWithComponentClass)
+   * Initialize CLI with Scenario
+   * Web4 pattern: Components ALWAYS init with Scenario
+   * Merges incoming scenario model with existing model
+   * Pattern: DefaultWeb4TSComponent.ts:183-188
    */
-  init(component: any): this {
-    // Legacy method - component instance initialization
-    this.componentInstance = component;
+  init(scenario: Scenario<CLIModel>): this {
+    // Merge incoming scenario model into existing model
+    this.model = {
+      ...this.model,
+      ...scenario.model
+    };
     return this;
+  }
+  
+  /**
+   * Compute derived completion fields from bash-provided compWords/compCword
+   * Web4 pattern: TypeScript owns all model logic, bash only provides raw data
+   * Pattern: completion-architecture-oop.md:426-456
+   * @cliHide
+   */
+  protected computeDerivedCompletionFields(model: CLIModel): void {
+    const words = model.completionCompWords;
+    const cword = model.completionCompCword;
+    
+    // Derived from bash data
+    model.completionCurrentWord = words[cword] || "";
+    model.completionPreviousWord = words[cword - 1] || "";
+    
+    // Parse command (word at index 1 if exists)
+    model.completionCommand = cword > 0 && words[1] ? words[1] : null;
+    
+    // Parse parameters (words from index 2 to cword-1)
+    model.completionParameters = cword > 2 ? words.slice(2, cword) : [];
+    model.completionParameterIndex = Math.max(0, cword - 2);
+    
+    // Detect "on" context
+    const onIndex = words.indexOf("on");
+    if (onIndex >= 0 && onIndex + 2 < words.length) {
+      model.completionOnComponent = words[onIndex + 1];
+      model.completionOnVersion = words[onIndex + 2];
+    }
+    
+    // Detect chained commands (TODO: implement chaining detection)
+    model.completionChainedCommands = [];
+    
+    // Set state flags
+    model.completionIsCompletingMethod = cword === 1;
+    model.completionIsCompletingParameter = cword > 1;
+  }
+  
+  /**
+   * Get valid completion values based on model state
+   * Web4 pattern: Model-driven logic replaces functional callbacks
+   * DRY: Single method to get values, no duplicate callback execution
+   * Pattern: completion-architecture-oop.md:570-574
+   * @cliHide
+   */
+  protected getValidCompletionValues(): string[] {
+    if (this.model.completionIsCompletingMethod) {
+      // Completing method name - return all method names
+      return Array.from(this.methodSignatures.keys());
+    } else if (this.model.completionIsCompletingParameter) {
+      // Completing parameter - delegate to existing completeParameter logic
+      // This reuses existing parameter completion callbacks dynamically
+      return this.getParameterCompletionValues();
+    }
+    return [];
+  }
+  
+  /**
+   * Get parameter completion values using existing callback system
+   * Bridges model-driven approach with existing TSCompletion utilities
+   * @cliHide
+   */
+  protected getParameterCompletionValues(): string[] {
+    const command = this.model.completionCommand;
+    if (!command) return [];
+    
+    const signature = this.methodSignatures.get(command);
+    if (!signature) return [];
+    
+    const paramIndex = this.model.completionParameterIndex;
+    
+    // Use TSCompletion to get parameter information
+    const componentPath = this.componentClass ? this.getComponentFilePath() : null;
+    
+    if (!componentPath) return [];
+    
+    try {
+      const params = TSCompletion.getEnhancedMethodParameters(componentPath, command);
+      if (paramIndex >= params.length) return [];
+      
+      const param = params[paramIndex];
+      const callback = param.callback;
+      
+      if (!callback || typeof (this as any)[callback] !== 'function') {
+        return [];
+      }
+      
+      // Execute callback with current filter
+      const result = (this as any)[callback](
+        command,
+        this.model.completionCurrentWord
+      );
+      
+      // Handle both array and string results
+      if (Array.isArray(result)) {
+        return result;
+      } else if (typeof result === 'string') {
+        return result.split('\n').filter(line => line.trim());
+      }
+    } catch (error) {
+      console.error(`Error getting parameter completion:`, error);
+    }
+    
+    return [];
+  }
+  
+  /**
+   * Get component file path for TSCompletion
+   * @cliHide
+   */
+  protected getComponentFilePath(): string | null {
+    try {
+      const web4ts = this.getWeb4TS();
+      const context = web4ts.getComponentContext();
+      
+      if (context) {
+        const componentPath = web4ts.resolveComponentPath(context.component, context.version);
+        return join(componentPath, 'src/ts/layer2', `Default${context.component}.ts`);
+      }
+    } catch (error) {
+      // Fallback: try to find component file in current directory structure
+    }
+    
+    return null;
   }
   
   /**
