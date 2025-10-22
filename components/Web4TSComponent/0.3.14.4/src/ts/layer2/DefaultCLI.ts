@@ -1492,7 +1492,7 @@ export abstract class DefaultCLI implements CLI {
    * @param commandContext Optional command-line context for prompt echo
    * @cliHide
    */
-  private formatCompletionOutput(values: string[], commandContext?: string[]): void {
+  protected formatCompletionOutput(values: string[], commandContext?: string[]): void {
     const lines: string[] = [];
     
     // Detect complex format (numbered lines like "1: methodName <params>")
