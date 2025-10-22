@@ -203,5 +203,96 @@ echo "COMPREPLY: \${COMPREPLY[*]}"
     expect(words).toContain('test');
     expect(words.length).toBe(4);
   });
+
+  it('Row 6: Parameter empty - web4tscomponent completion <TAB>', () => {
+    // Test: completion command with empty parameter should return parameter options
+    const testScriptPath = join(testShDir, 'test-completion-empty-parameter.sh');
+    const testScript = `
+#!/bin/bash
+cd ${componentPath}
+source ${sourceEnv} >/dev/null 2>&1
+COMP_WORDS=(web4tscomponent completion "")
+COMP_CWORD=2
+_web4_generic_completion 2>/dev/null
+echo ""
+echo "COMPREPLY: \${COMPREPLY[*]}"
+    `.trim();
+    
+    writeFileSync(testScriptPath, testScript);
+    execSync(`chmod +x ${testScriptPath}`);
+    
+    const result = execSync(testScriptPath, { encoding: 'utf-8', timeout: 30000 });
+    
+    // Should contain both "method" and "parameter"
+    expect(result).toContain('method');
+    expect(result).toContain('parameter');
+    
+    // Should have exactly 2 completion options
+    const compreplyMatch = result.match(/COMPREPLY: (.+)/);
+    expect(compreplyMatch).toBeTruthy();
+    const options = compreplyMatch![1].trim().split(/\s+/);
+    expect(options).toHaveLength(2);
+  });
+
+  it('Row 7: Parameter partial - web4tscomponent completion m<TAB>', () => {
+    // Test: completion command with 'm' prefix should filter to 'method'
+    const testScriptPath = join(testShDir, 'test-completion-partial-parameter.sh');
+    const testScript = `
+#!/bin/bash
+cd ${componentPath}
+source ${sourceEnv} >/dev/null 2>&1
+COMP_WORDS=(web4tscomponent completion "m")
+COMP_CWORD=2
+_web4_generic_completion 2>/dev/null
+echo ""
+echo "COMPREPLY: \${COMPREPLY[*]}"
+    `.trim();
+    
+    writeFileSync(testScriptPath, testScript);
+    execSync(`chmod +x ${testScriptPath}`);
+    
+    const result = execSync(testScriptPath, { encoding: 'utf-8', timeout: 30000 });
+    
+    // Should contain only "method", not "parameter"
+    expect(result).toContain('method');
+    expect(result).not.toContain('parameter');
+    
+    // Should have exactly 1 completion option
+    const compreplyMatch = result.match(/COMPREPLY: (.+)/);
+    expect(compreplyMatch).toBeTruthy();
+    const options = compreplyMatch![1].trim().split(/\s+/);
+    expect(options).toHaveLength(1);
+    expect(options[0]).toBe('method');
+  });
+
+  it('Row 8: Nested parameter - completion method co<TAB>', () => {
+    // Test: completion method with 'co' prefix should return filtered methods
+    const testScriptPath = join(testShDir, 'test-completion-nested-parameter.sh');
+    const testScript = `
+#!/bin/bash
+cd ${componentPath}
+source ${sourceEnv} >/dev/null 2>&1
+COMP_WORDS=(web4tscomponent completion method "co")
+COMP_CWORD=3
+_web4_generic_completion 2>/dev/null
+echo ""
+echo "COMPREPLY: \${COMPREPLY[*]}"
+    `.trim();
+    
+    writeFileSync(testScriptPath, testScript);
+    execSync(`chmod +x ${testScriptPath}`);
+    
+    const result = execSync(testScriptPath, { encoding: 'utf-8', timeout: 30000 });
+    
+    // Should contain methods starting with "co" like "compare", "compareVersions", "completion"
+    expect(result).toContain('compare');
+    expect(result).toContain('completion');
+    
+    // Should have multiple matches
+    const compreplyMatch = result.match(/COMPREPLY: (.+)/);
+    expect(compreplyMatch).toBeTruthy();
+    const options = compreplyMatch![1].trim().split(/\s+/);
+    expect(options.length).toBeGreaterThan(1);
+  });
 });
 
