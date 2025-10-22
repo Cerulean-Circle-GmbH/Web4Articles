@@ -70,6 +70,59 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * Get default completion Scenario for bash completion
+   * Bash calls this first to get complete CLIModel structure with owner data
+   * Uses User service when available, falls back to manual generation
+   * @cliHide
+   */
+  async getCompletionScenario(): Promise<void> {
+    const componentVersion = this.model.version;
+    const componentName = this.model.component;
+    
+    // Generate owner data using User service (optional, warns if unavailable)
+    let ownerData: string;
+    try {
+      // Try to use User service if available (NOT a build dependency)
+      const user = await this.getUser();
+      ownerData = await user.generateOwnerData({
+        user: process.env.USER || 'system',
+        hostname: process.env.HOSTNAME || 'localhost',
+        uuid: this.model.uuid
+      });
+    } catch (error) {
+      // Fallback: Manual owner generation if User service unavailable
+      console.warn('⚠️  User service unavailable, using manual owner generation');
+      ownerData = JSON.stringify({
+        user: process.env.USER || 'system',
+        hostname: process.env.HOSTNAME || 'localhost',
+        uuid: this.model.uuid,
+        timestamp: new Date().toISOString(),
+        component: componentName,
+        version: componentVersion
+      });
+    }
+    
+    // Create default scenario structure (minimal for now - full CLIModel will be added later)
+    const scenario = {
+      ior: {
+        uuid: this.model.uuid,
+        component: componentName,
+        version: componentVersion
+      },
+      owner: ownerData,
+      model: {
+        uuid: this.model.uuid,
+        name: `${componentName}-cli-completion`,
+        origin: "bash-completion",
+        definition: "CLI completion context"
+      }
+    };
+    
+    // Output as JSON for bash
+    console.log(JSON.stringify(scenario, null, 2));
+  }
+
+  /**
    * Set component dependencies that must be built before this component
    * @param dependencies Array of component dependencies
    * @cliHide
