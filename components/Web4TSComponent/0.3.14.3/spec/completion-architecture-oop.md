@@ -109,7 +109,7 @@ export abstract class DefaultCLI implements CLI {
   
   /**
    * Set completion context from bash
-   * Called by __complete command with parsed bash environment
+   * Called by complete command with parsed bash environment
    */
   setCompletionContext(context: CompletionContext): this {
     this.model.completionContext = context;
@@ -251,7 +251,14 @@ async getCompletionScenario(): Promise<void> {
       component: componentName,  // ← Dynamic component name
       version: componentVersion  // ← Dynamic version
     },
-    owner: "bash-completion",
+    owner: JSON.stringify({
+      user: process.env.USER || 'system',
+      hostname: process.env.HOSTNAME || 'localhost',
+      uuid: this.model.uuid,
+      timestamp: new Date().toISOString(),
+      component: componentName,
+      version: componentVersion
+    }),  // ← Correct Web4 pattern (Unit:887-895)
     model: {
       uuid: this.model.uuid,  // ← Same UUID as IOR
       name: `${componentName}-cli-completion`,
@@ -406,7 +413,7 @@ private computeDerivedCompletionFields(model: CLIModel): void {
    - Add `getValidCompletionValues()`
    - Remove functional garbage
 
-4. **Add `__complete` command** to Web4TSComponentCLI
+4. **Add `complete` command** to Web4TSComponentCLI (with `@cliHide` annotation)
 
 5. **Update `source.env`** to pass CompletionContext JSON
 
@@ -428,16 +435,30 @@ cli.componentName = "Web4TSComponent";
 
 // ✅ GOOD: Scenario pattern
 const scenario: Scenario<CLIModel> = {
-  ior: { uuid, component: "CLI", version: "1.0.0" },
-  owner: "bash",
+  ior: { 
+    uuid: this.model.uuid,  // From constructor
+    component: await this.getComponentName(), 
+    version: await this.getComponentVersion() 
+  },
+  owner: JSON.stringify({
+    user: process.env.USER || 'system',
+    hostname: process.env.HOSTNAME || 'localhost',
+    uuid: this.model.uuid,
+    timestamp: new Date().toISOString(),
+    component: await this.getComponentName(),
+    version: await this.getComponentVersion()
+  }),
   model: {
-    uuid,
+    uuid: this.model.uuid,
     name: "web4tscomponent-cli",
     origin: "bash-completion",
     definition: "CLI for Web4TSComponent",
     componentName: "Web4TSComponent",
     componentVersion: "0.3.14.3",
-    completionContext: { ... }
+    // Completion context fields (FLAT, no nested object!)
+    completionCompWords: [],
+    completionCompCword: 0,
+    // ... other flat fields
   }
 };
 cli.init(scenario);
