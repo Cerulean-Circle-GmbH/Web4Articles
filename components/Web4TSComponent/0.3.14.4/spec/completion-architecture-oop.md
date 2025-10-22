@@ -241,9 +241,23 @@ _web4_generic_completion() {
 ```typescript
 // src/ts/layer2/DefaultWeb4TSComponent.ts
 
+// Copy User interface to prevent build dependency
+// Source: components/User/0.3.0.4/src/ts/layer3/User.interface.ts
+interface User {
+  init(scenario: Scenario): this;
+  generateOwnerData(params: OwnerParams): Promise<string>;
+  toScenario(): Promise<Scenario>;
+}
+
+interface OwnerParams {
+  user: string;
+  hostname: string;
+  uuid?: string;
+}
+
 export class DefaultWeb4TSComponent implements Web4TSComponent {
   private model: Web4TSComponentModel;
-  private user?: any; // Optional User service (lazy initialization)
+  private user?: User; // ✅ Proper typing, NOT any!
   
   constructor() {
     // ... existing constructor code ...
@@ -254,7 +268,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * NOT a build dependency - warns if unavailable, continues with fallback
    * @cliHide
    */
-  private getUser(): any {
+  private getUser(): User {
     if (this.user) return this.user;
     
     try {
