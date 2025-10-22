@@ -158,82 +158,161 @@ export abstract class DefaultCLI implements CLI {
 
 ## Bash Integration (source.env)
 
-Pass completion context to TypeScript as Scenario JSON:
+**Principle:** Bash constructs COMPLETE `Scenario<CLIModel>` JSON with ALL required Model properties.
+
+**No partial data. No adapters. No copying. Complete from source.**
 
 ```bash
 _web4_generic_completion() {
   # ... existing setup ...
   
-  # Build CompletionContext
-  local context=$(cat <<EOF
+  local cli="${COMP_WORDS[0]}"
+  local cur="${COMP_WORDS[COMP_CWORD]}"
+  local prev="${COMP_WORDS[COMP_CWORD-1]}"
+  
+  # Generate UUIDs for IOR and Model
+  local ior_uuid=$(uuidgen | tr '[:upper:]' '[:lower:]')
+  local model_uuid=$(uuidgen | tr '[:upper:]' '[:lower:]')
+  
+  # Detect command (if COMP_CWORD > 1, word at index 1 is command)
+  local command=""
+  if [ "$COMP_CWORD" -gt 1 ]; then
+    command="${COMP_WORDS[1]}"
+  fi
+  
+  # Build parameters array (words from index 2 to COMP_CWORD-1)
+  local parameters="[]"
+  if [ "$COMP_CWORD" -gt 2 ]; then
+    parameters=$(printf '"%s",' "${COMP_WORDS[@]:2:$((COMP_CWORD-2))}" | sed 's/,$//')
+    parameters="[$parameters]"
+  fi
+  
+  # Calculate parameter index
+  local param_index=0
+  if [ "$COMP_CWORD" -gt 2 ]; then
+    param_index=$((COMP_CWORD - 2))
+  fi
+  
+  # Detect "on" context (look for "on ComponentName version" pattern)
+  local on_component="null"
+  local on_version="null"
+  for ((i=0; i<${#COMP_WORDS[@]}-2; i++)); do
+    if [ "${COMP_WORDS[i]}" = "on" ]; then
+      on_component="\"${COMP_WORDS[i+1]}\""
+      on_version="\"${COMP_WORDS[i+2]}\""
+      break
+    fi
+  done
+  
+  # Build COMPLETE Scenario<CLIModel> JSON
+  local scenario=$(cat <<EOF
 {
-  "cliName": "$cli",
-  "compWords": [$(printf '"%s",' "${COMP_WORDS[@]}" | sed 's/,$//')],"compCword": $COMP_CWORD
+  "ior": {
+    "uuid": "$ior_uuid",
+    "component": "CLI",
+    "version": "1.0.0"
+  },
+  "owner": "bash-completion",
+  "model": {
+    "uuid": "$model_uuid",
+    "name": "$cli-completion",
+    "origin": "bash-completion-context",
+    "definition": "CLI completion context from bash",
+    
+    "componentClass": null,
+    "componentName": "$cli",
+    "componentVersion": "latest",
+    "componentInstance": null,
+    
+    "completionCliName": "$cli",
+    "completionCompWords": [$(printf '"%s",' "${COMP_WORDS[@]}" | sed 's/,$//')],
+    "completionCompCword": $COMP_CWORD,
+    
+    "completionCurrentWord": "$cur",
+    "completionPreviousWord": "$prev",
+    "completionCommand": ${command:+\"$command\"},
+    "completionParameters": $parameters,
+    "completionParameterIndex": $param_index,
+    
+    "completionOnComponent": $on_component,
+    "completionOnVersion": $on_version,
+    
+    "completionChainedCommands": [],
+    
+    "completionIsCompletingMethod": $([ "$COMP_CWORD" -eq 1 ] && echo "true" || echo "false"),
+    "completionIsCompletingParameter": $([ "$COMP_CWORD" -gt 1 ] && echo "true" || echo "false")
+  }
 }
 EOF
 )
   
-  # Call hidden __complete command with context
-  result=$(echo "$context" | "$cli" __complete 2>>"$logfile" || true)
+  # Pass COMPLETE Scenario to TypeScript __complete command
+  result=$(echo "$scenario" | "$cli" __complete 2>>"$logfile" || true)
   
   # ... process DISPLAY/WORD output ...
 }
 ```
 
+**Benefits:**
+- ✅ Complete Scenario<CLIModel> with ALL properties
+- ✅ No partial data structures
+- ✅ No TypeScript adapters needed
+- ✅ No data copying
+- ✅ TypeScript just deserializes and calls `init(scenario)`
+
 ---
 
 ## TypeScript Entry Point
 
-Hidden `__complete` command in Web4TSComponentCLI:
+**Simplified:** Receive complete Scenario, deserialize, init, execute.
 
 ```typescript
 /**
  * Internal completion command (hidden from users)
- * Called by bash with CompletionContext JSON on stdin
+ * Called by bash with COMPLETE Scenario<CLIModel> JSON on stdin
  * @cliHide
  */
 async __complete(): Promise<void> {
-  // Read context from stdin
-  const contextJson = await this.readStdin();
-  const context = this.parseCompletionContext(contextJson);
+  // Read COMPLETE Scenario from stdin
+  const scenarioJson = await this.readStdin();
+  const scenario: Scenario<CLIModel> = JSON.parse(scenarioJson);
   
-  // Set context in model (model-driven)
-  this.setCompletionContext(context);
+  // Initialize CLI with complete Scenario (Web4 pattern)
+  this.init(scenario);
   
-  // Get valid values from model
+  // Model now has ALL completion context - just query it
   const values = this.getValidCompletionValues();
   
   // Format with DISPLAY/WORD protocol
   this.formatCompletionOutput(values);
 }
 
-private parseCompletionContext(json: string): CompletionContext {
-  const data = JSON.parse(json);
+/**
+ * Get valid values for current completion position
+ * Model-driven: all logic queries this.model
+ */
+private getValidCompletionValues(): string[] {
+  // Model is COMPLETE from bash - just read it
+  if (this.model.completionIsCompletingMethod) {
+    return this.getAllMethodNames();
+  }
   
-  return {
-    cliName: data.cliName,
-    compWords: data.compWords,
-    compCword: data.compCword,
+  if (this.model.completionIsCompletingParameter) {
+    const callback = this.getParameterCallback(
+      this.model.completionCommand!,
+      this.model.completionParameterIndex
+    );
     
-    // Derive state
-    currentWord: data.compWords[data.compCword] || '',
-    previousWord: data.compWords[data.compCword - 1] || '',
-    
-    // Parse command and parameters
-    command: this.detectCommand(data.compWords, data.compCword),
-    parameters: this.extractParameters(data.compWords, data.compCword),
-    parameterIndex: this.calculateParameterIndex(data.compWords, data.compCword),
-    
-    // Detect contexts
-    onContext: this.detectOnContext(data.compWords),
-    chainedCommands: this.detectChainedCommands(data.compWords),
-    
-    // Set completion state
-    isCompletingMethod: data.compCword === 1,
-    isCompletingParameter: data.compCword > 1
-  };
+    if (callback) {
+      return this.executeCallback(callback, this.model.completionParameters);
+    }
+  }
+  
+  return [];
 }
 ```
+
+**No parsing logic. No context detection. No adapters. Just deserialize and use.**
 
 ---
 
