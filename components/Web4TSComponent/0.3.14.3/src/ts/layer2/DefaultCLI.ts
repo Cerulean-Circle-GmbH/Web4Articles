@@ -203,6 +203,29 @@ export abstract class DefaultCLI implements CLI {
     // Dynamic argument validation with overload support
     const minArgs = this.getMinimumArguments(command);
     if (args.length < minArgs) {
+      // Before failing, check if TSCompletion has a callback for the first missing parameter
+      // This enables tab completion to work: web4tscomponent completion <TAB>
+      const paramIndex = args.length; // Index of first missing parameter
+      
+      // Debug: log what we're checking
+      console.error(`DEBUG: Checking callback for command="${command}" paramIndex=${paramIndex}`);
+      
+      // Check DefaultCLI first (where most completion callbacks live), then component class
+      let callback = TSCompletion.getParameterCallback('DefaultCLI', command, paramIndex);
+      console.error(`DEBUG: DefaultCLI callback="${callback}"`);
+      
+      if (!callback) {
+        callback = TSCompletion.getParameterCallback(this.componentClass.name, command, paramIndex);
+        console.error(`DEBUG: ${this.componentClass.name} callback="${callback}"`);
+      }
+      
+      if (callback) {
+        // Return callback marker for bash completion to trigger
+        console.log(`WORD: __CALLBACK__:${callback}`);
+        return true;
+      }
+      
+      // No callback available - validation fails
       throw new Error(`At least ${minArgs} arguments required for ${command} command`);
     }
 
@@ -1364,15 +1387,27 @@ export abstract class DefaultCLI implements CLI {
         // Strip ANSI escape codes: \x1b[...m
         const cleanLine = line.replace(/\x1b\[[0-9;]*m/g, '');
         
-        // Extract word: "1: methodName <params>" -> "methodName"
+        // Extract word: "1: methodName <params>" -> "methodName" OR "1: <?action>" -> "action"
         const match = cleanLine.match(/^\d+:\s*(\S+)/);
-        const word = match ? match[1] : cleanLine.split(' ')[0];
+        let word = match ? match[1] : cleanLine.split(' ')[0];
+        
+        // Strip parameter syntax if present: <?action> -> action, <what> -> what
+        const paramMatch = word.match(/^<\??([^>:'"]+)/);
+        if (paramMatch) {
+          word = paramMatch[1];
+        }
+        
         lines.push(`WORD: ${word}`);
       });
     } else {
-      // Simple format: plain words like ['dev', 'latest', 'prod']
-      // Just add WORD lines
-      values.forEach((word: string) => {
+      // Simple format: plain words like ['dev', 'latest', 'prod'] OR parameter syntax like ['<?action>', '<what>']
+      // Extract naked names for WORD lines
+      values.forEach((value: string) => {
+        // Strip parameter syntax: <?action:'default'> -> action, <what> -> what
+        const cleanValue = value.replace(/\x1b\[[0-9;]*m/g, ''); // Strip ANSI first
+        // Match: <word>, <?word>, <?word:'default'>, <?word:"default">
+        const paramMatch = cleanValue.match(/^<\??([^>:'"]+)/);
+        const word = paramMatch ? paramMatch[1] : cleanValue;
         lines.push(`WORD: ${word}`);
       });
     }

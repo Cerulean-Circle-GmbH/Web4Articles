@@ -23,33 +23,37 @@
 
 | **#** | **Component** | **File** | **Method/Function** | **Current State** | **Migration Status** | **Notes** |
 |-------|---------------|----------|---------------------|-------------------|----------------------|-----------|
-| 1 | TypeScript | DefaultCLI.ts:1300 | `completeParameter()` | Raw output (numbered/plain) | ⏳ **TODO** | **OUTPUT ROUTER** - Add DISPLAY/WORD prefixes |
-| 2 | TypeScript | DefaultCLI.ts:1429 | `completionNameParameterCompletion()` | ANSI colored output | ⏳ **TODO** | **METHOD LISTER** - Remove ANSI, return plain strings |
-| 3 | TypeScript | DefaultCLI.ts:1285 | `actionParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 4 | TypeScript | DefaultCLI.ts:1331 | `depthParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 5 | TypeScript | DefaultCLI.ts:1340 | `showHiddenParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 6 | TypeScript | DefaultCLI.ts:1349 | `skipPromotionParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 7 | TypeScript | DefaultCLI.ts:1358 | `formatParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 8 | TypeScript | DefaultCLI.ts:1367 | `whatParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 9 | TypeScript | DefaultCLI.ts:1377 | `filterParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Delegates to #2 |
-| 10 | TypeScript | DefaultCLI.ts:1763 | `componentParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 11 | TypeScript | DefaultCLI.ts:1805 | `versionParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 12 | TypeScript | DefaultCLI.ts:1866 | `scopeParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 13 | TypeScript | DefaultCLI.ts:1895 | `targetDirParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 14 | TypeScript | DefaultCLI.ts:1913 | `targetVersionParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 15 | TypeScript | DefaultCLI.ts:1923 | `versionPromotionParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 16 | TypeScript | DefaultCLI.ts:1932 | `referencesParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 17 | TypeScript | DefaultCLI.ts:2092 | `testDescribeReferenceParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 18 | TypeScript | DefaultCLI.ts:2134 | `testItCaseReferenceParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 19 | TypeScript | DefaultCLI.ts:2178 | `nameParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 20 | TypeScript | DefaultCLI.ts:2208 | `optionsParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
-| 21 | bash | source.env | `_web4_tscompletion()` | 442 lines with ANSI parsing | ⏳ **TODO** | Simplify to ~30 lines with grep |
-| 22 | bash | source.env | Method completion logic | Lines 50-252 (~200 lines) | ⏳ **TODO** | Replace with 2 grep one-liners |
-| 23 | bash | source.env | Parameter completion logic | Lines 277-329 (~52 lines) | ⏳ **TODO** | Replace with 2 grep one-liners |
-| 24 | bash | source.env | Callback handling | Lines 167-176, 267-275, 392-400 | ⏳ **TODO** | Simplify callback detection |
-| 25 | bash | source.env | Single-match detection | Multiple locations with regex | ⏳ **TODO** | Remove - bash counts words instead |
-| 26 | bash | source.env | ANSI stripping logic | `sed` commands in 3 places | ⏳ **TODO** | Remove - TypeScript outputs clean text |
-| 27 | bash | source.env | Timeout handling | Lines 167-176, 267-275, 392-400 | ✅ **KEEP** | Already simple, just update message |
+| 1 | TypeScript | DefaultCLI.ts:1295 | `formatCompletionOutput()` | N/A (new method) | ✅ **DONE** | **DRY HELPER** - Formats DISPLAY/WORD output |
+| 2 | TypeScript | DefaultCLI.ts:1345 | `completeParameter()` | Calls formatCompletionOutput | ✅ **DONE** | **OUTPUT ROUTER** - Uses DRY helper |
+| 3 | TypeScript | DefaultCLI.ts:1429 | `completionNameParameterCompletion()` | ANSI colored output | ✅ **DONE** | **METHOD LISTER** - Returns semantic units for DISPLAY |
+| 4 | TypeScript | DefaultCLI.ts:1285 | `actionParameterCompletion()` | Returns string array | ✅ **VERIFIED** | Simple value provider (naked parameter names) |
+| 5 | TypeScript | DefaultCLI.ts:1331 | `depthParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 6 | TypeScript | DefaultCLI.ts:1340 | `showHiddenParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 7 | TypeScript | DefaultCLI.ts:1349 | `skipPromotionParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 8 | TypeScript | DefaultCLI.ts:1358 | `formatParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 9 | TypeScript | DefaultCLI.ts:1367 | `whatParameterCompletion()` | Returns string array | ✅ **VERIFIED** | Simple value provider (no changes needed) |
+| 10 | TypeScript | DefaultCLI.ts:1377 | `filterParameterCompletion()` | Returns string array | ✅ **VERIFIED** | Delegates to completionNameParameterCompletion |
+| 11 | TypeScript | DefaultCLI.ts:1763 | `componentParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 12 | TypeScript | DefaultCLI.ts:1805 | `versionParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 13 | TypeScript | DefaultCLI.ts:1866 | `scopeParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 14 | TypeScript | DefaultCLI.ts:1895 | `targetDirParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 15 | TypeScript | DefaultCLI.ts:1913 | `targetVersionParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 16 | TypeScript | DefaultCLI.ts:1923 | `versionPromotionParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 17 | TypeScript | DefaultCLI.ts:1932 | `referencesParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 18 | TypeScript | DefaultCLI.ts:2092 | `testDescribeReferenceParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 19 | TypeScript | DefaultCLI.ts:2134 | `testItCaseReferenceParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 20 | TypeScript | DefaultCLI.ts:2178 | `nameParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 21 | TypeScript | DefaultCLI.ts:2208 | `optionsParameterCompletion()` | Returns string array | ✅ **NO CHANGE** | Simple value provider |
+| 22 | TypeScript | TSCompletion.ts:746 | `getParameterCallback()` | N/A (new method) | ✅ **DONE** | Auto-detects missing parameter callbacks |
+| 23 | TypeScript | Web4TSComponentCLI.ts:126 | Validation check | Throws error on missing params | ✅ **DONE** | Returns __CALLBACK__ before error |
+| 24 | bash | source.env:35 | `_web4_generic_completion()` | 179 lines | ✅ **SIMPLIFIED** | ~80 lines, ONE-LINE grep protocol |
+| 25 | bash | source.env:158 | `_web4_auto_register_completions()` | Scans scripts/ | ✅ **FIXED** | Scans scripts/ AND scripts/versions/ |
+| 26 | bash | source.env | Method completion logic | Context-aware routing | ✅ **DONE** | Auto-detects method vs parameter completion |
+| 27 | bash | source.env | Parameter completion logic | Hardcoded setCICDVersion | ✅ **REMOVED** | All methods use auto-discovery |
+| 28 | bash | source.env | Callback handling | Lines 96-112 | ✅ **WORKING** | Detects __CALLBACK__: and calls completeParameter |
+| 29 | bash | source.env | Single-match detection | word_count logic | ✅ **SIMPLIFIED** | Bash wc -w for clean WORD: lines |
+| 30 | bash | source.env | ANSI stripping logic | N/A (removed) | ✅ **NOT NEEDED** | TypeScript outputs clean WORD: values |
+| 31 | bash | source.env | Timeout handling | 90s timeout | ✅ **UPDATED** | Increased to 90s for method listing |
 
 **Critical Items:** Only **2 TypeScript methods** need changes (#1, #2), then bash simplification  
 **Safe Items:** 18 TypeScript methods need **NO changes** (#3-20) - they're simple value providers
@@ -145,8 +149,8 @@ if (hasNumberedRefs || hasSpaces) {
 | 5 | `showHiddenParameterCompletion` | 1340 | `['true', 'false']` | ✅ **NO CHANGE** |
 | 6 | `skipPromotionParameterCompletion` | 1349 | `['true', 'false']` | ✅ **NO CHANGE** |
 | 7 | `formatParameterCompletion` | 1358 | `['json', 'bash', 'text', ...]` | ✅ **NO CHANGE** |
-| 8 | `whatParameterCompletion` | 1367 | `['method', 'parameter']` | ✅ **NO CHANGE** |
-| 9 | `filterParameterCompletion` | 1377 | Delegates to `completionNameParameterCompletion` | ✅ **NO CHANGE** |
+| 8 | `whatParameterCompletion` | 1367 | `['method', 'parameter']` | ✅ **VERIFIED** - [PDCA](../../../components/Web4TSComponent/0.3.14.3/session/2025-10-21-UTC-1358.pdca.md) |
+| 9 | `filterParameterCompletion` | 1377 | Delegates to `completionNameParameterCompletion` | ✅ **VERIFIED** - [PDCA](../../../components/Web4TSComponent/0.3.14.3/session/2025-10-21-UTC-1404.pdca.md) |
 | 10 | `componentParameterCompletion` | 1763 | Component names array | ✅ **NO CHANGE** |
 | 11 | `versionParameterCompletion` | 1805 | Version numbers array | ✅ **NO CHANGE** |
 | 12 | `scopeParameterCompletion` | 1866 | `['local', 'global']` | ✅ **NO CHANGE** |
@@ -308,10 +312,48 @@ All these sections get replaced by the 3 grep one-liners above:
 
 **2025-10-21-UTC-0627:** Created tracking table per TRON instruction. This ensures systematic migration without losing track of what needs to be changed.
 
-**Key Learning:** Large migrations need tracking tables. Without them, easy to forget pieces and create broken system.
+**2025-10-21-UTC-1050:** Phase 1 COMPLETE with limitations:
+- ✅ TypeScript: `formatCompletionOutput()` DRY helper added (lines 1295-1330)
+- ✅ TypeScript: `completeParameter()` uses new protocol (line 1345)
+- ✅ bash: Simplified to 179 lines (was 552 = 68% reduction, not 93% yet)
+- ✅ bash: Auto-discovery of CLIs restored
+- ✅ bash: PS1 prompt restored
+- ✅ Tests: 11 GREEN (8 protocol + 3 bash integration)
+- ⚠️ HARDCODED: Only `setCICDVersion` works (17 methods remaining)
+- ⚠️ bash still has context logic (should move to TypeScript)
+
+**Key Learning:** Large migrations need tracking tables. Without them, easy to forget pieces and create broken system. Tests prevented regressions - moving forward with working but incomplete system.
+
+**Next Priority:** Auto-discover callback names OR move context logic to TypeScript (both needed for complete solution).
+
+**2025-10-21-UTC-1350:** Additional achievements and fixes:
+- ✅ TypeScript: Multi-line documentation display (single-match completions show TSDoc with proper DISPLAY: prefixes)
+- ✅ TypeScript: Colored prompt echo from TypeScript (not bash) using `WEB4_CLI_NAME` and `WEB4_COMP_LINE` env vars
+- ✅ TypeScript: `requiredParamCount` added to `MethodSignature` for accurate validation (optional parameters supported)
+- ✅ bash: Removed prompt echo logic (TypeScript handles it)
+- ✅ bash: Fixed trailing space issue (single-match auto-completion)
+- ✅ bash: Increased timeout to 90s for full method listing
+- ✅ bash: `_web4_auto_register_completions()` scans BOTH `scripts/` and `scripts/versions/`
+- ✅ bash: Fixed "💭 Thinking..." to appear on new line
+- ✅ bash: Simplified to 189 lines (was 552 = 66% reduction)
+- ✅ Tests: 7 bash integration tests (including single-match documentation test)
+- ✅ PDCA: Created disaster recovery PDCA for CMM1 violations (autonomous branch switching, missing PDCA)
+- ✅ Session: Established `components/Web4TSComponent/0.3.14.3/session/` for future PDCAs
+- ✅ CMM2 Badge: Assigned by TRON for trying hard and listening
+
+**Key Learnings:**
+1. **NEVER code without PDCA** - fundamental CMM3 requirement violated, causing chaos
+2. **NEVER switch branches autonomously** - must ask permission for ALL significant actions
+3. **TypeScript owns presentation** - bash is "dumb display layer", TS handles colors, formatting, prompt
+4. **Test isolation critical** - `test/sh` and `test/data` relative to component version, no dirtpig files
+5. **CMM3 checklist violations** - cite as "[#][letter] cmm2" format (e.g., "1f cmm2" for missing PDCA)
+
+**Protocol Status:** WORKING end-to-end. Single-match shows documentation. Full method list completes in 33s. User-loved messages preserved ("💭 Thinking...", "⏱️ Timeout").
+
+**Remaining Work:** Move bash context-awareness to TypeScript (determining method vs parameter completion).
 
 ---
 
-**Last Updated:** Tue Oct 21 06:27:23 UTC 2025  
-**Next Update:** After Phase 1 TypeScript changes completed
+**Last Updated:** Tue Oct 21 13:50:00 UTC 2025  
+**Next Update:** After TypeScript context-awareness implemented OR next session
 
