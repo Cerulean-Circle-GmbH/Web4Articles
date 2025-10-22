@@ -158,129 +158,156 @@ export abstract class DefaultCLI implements CLI {
 
 ## Bash Integration (source.env)
 
-**Principle:** Bash constructs COMPLETE `Scenario<CLIModel>` JSON with ALL required Model properties.
+**Principle:** Bash has NO knowledge of CLIModel structure. Decoupled via Scenario exchange.
 
-**No partial data. No adapters. No copying. Complete from source.**
+**Bash responsibility:** Only `completionCompWords` and `completionCompCword` (2 fields)
+
+### Architecture
+
+1. **Bash asks CLI for default Scenario:**
+   ```bash
+   # Get default completion Scenario from CLI
+   scenario=$("$cli" __getCompletionScenario)
+   ```
+
+2. **CLI returns complete Scenario with instance UUID**
+
+3. **Bash modifies ONLY its 2 fields:**
+   ```bash
+   # Parse scenario, update only bash fields using jq
+   updated_scenario=$(echo "$scenario" | jq \
+     --argjson words "[$(printf '"%s",' "${COMP_WORDS[@]}" | sed 's/,$//')]" \
+     --arg cword "$COMP_CWORD" \
+     '.model.completionCompWords = $words | .model.completionCompCword = ($cword | tonumber)')
+   ```
+
+4. **Send updated Scenario back via stdin:**
+   ```bash
+   result=$(echo "$updated_scenario" | "$cli" __complete 2>>"$logfile" || true)
+   ```
+
+5. **Instance UUID ensures correct CLI instance receives update**
+
+### Complete bash Implementation
 
 ```bash
 _web4_generic_completion() {
   # ... existing setup ...
   
   local cli="${COMP_WORDS[0]}"
-  local cur="${COMP_WORDS[COMP_CWORD]}"
-  local prev="${COMP_WORDS[COMP_CWORD-1]}"
   
-  # Generate UUIDs for IOR and Model
-  local ior_uuid=$(uuidgen | tr '[:upper:]' '[:lower:]')
-  local model_uuid=$(uuidgen | tr '[:upper:]' '[:lower:]')
+  # 1. Ask CLI for default Scenario with complete CLIModel
+  local scenario=$("$cli" __getCompletionScenario 2>>"$logfile")
   
-  # Detect command (if COMP_CWORD > 1, word at index 1 is command)
-  local command=""
-  if [ "$COMP_CWORD" -gt 1 ]; then
-    command="${COMP_WORDS[1]}"
+  if [ -z "$scenario" ]; then
+    echo "Failed to get completion scenario" >> "$logfile"
+    return 1
   fi
   
-  # Build parameters array (words from index 2 to COMP_CWORD-1)
-  local parameters="[]"
-  if [ "$COMP_CWORD" -gt 2 ]; then
-    parameters=$(printf '"%s",' "${COMP_WORDS[@]:2:$((COMP_CWORD-2))}" | sed 's/,$//')
-    parameters="[$parameters]"
-  fi
+  # 2. Bash modifies ONLY its 2 fields: completionCompWords and completionCompCword
+  local updated_scenario=$(echo "$scenario" | jq \
+    --argjson words "[$(printf '"%s",' "${COMP_WORDS[@]}" | sed 's/,$//')]" \
+    --arg cword "$COMP_CWORD" \
+    '.model.completionCompWords = $words | .model.completionCompCword = ($cword | tonumber)')
   
-  # Calculate parameter index
-  local param_index=0
-  if [ "$COMP_CWORD" -gt 2 ]; then
-    param_index=$((COMP_CWORD - 2))
-  fi
-  
-  # Detect "on" context (look for "on ComponentName version" pattern)
-  local on_component="null"
-  local on_version="null"
-  for ((i=0; i<${#COMP_WORDS[@]}-2; i++)); do
-    if [ "${COMP_WORDS[i]}" = "on" ]; then
-      on_component="\"${COMP_WORDS[i+1]}\""
-      on_version="\"${COMP_WORDS[i+2]}\""
-      break
-    fi
-  done
-  
-  # Build COMPLETE Scenario<CLIModel> JSON
-  local scenario=$(cat <<EOF
-{
-  "ior": {
-    "uuid": "$ior_uuid",
-    "component": "CLI",
-    "version": "1.0.0"
-  },
-  "owner": "bash-completion",
-  "model": {
-    "uuid": "$model_uuid",
-    "name": "$cli-completion",
-    "origin": "bash-completion-context",
-    "definition": "CLI completion context from bash",
-    
-    "componentClass": null,
-    "componentName": "$cli",
-    "componentVersion": "latest",
-    "componentInstance": null,
-    
-    "completionCliName": "$cli",
-    "completionCompWords": [$(printf '"%s",' "${COMP_WORDS[@]}" | sed 's/,$//')],
-    "completionCompCword": $COMP_CWORD,
-    
-    "completionCurrentWord": "$cur",
-    "completionPreviousWord": "$prev",
-    "completionCommand": ${command:+\"$command\"},
-    "completionParameters": $parameters,
-    "completionParameterIndex": $param_index,
-    
-    "completionOnComponent": $on_component,
-    "completionOnVersion": $on_version,
-    
-    "completionChainedCommands": [],
-    
-    "completionIsCompletingMethod": $([ "$COMP_CWORD" -eq 1 ] && echo "true" || echo "false"),
-    "completionIsCompletingParameter": $([ "$COMP_CWORD" -gt 1 ] && echo "true" || echo "false")
-  }
-}
-EOF
-)
-  
-  # Pass COMPLETE Scenario to TypeScript __complete command
-  result=$(echo "$scenario" | "$cli" __complete 2>>"$logfile" || true)
+  # 3. Send updated Scenario to CLI (instance UUID routes to correct instance)
+  result=$(echo "$updated_scenario" | "$cli" __complete 2>>"$logfile" || true)
   
   # ... process DISPLAY/WORD output ...
 }
 ```
 
 **Benefits:**
-- ✅ Complete Scenario<CLIModel> with ALL properties
-- ✅ No partial data structures
-- ✅ No TypeScript adapters needed
-- ✅ No data copying
-- ✅ TypeScript just deserializes and calls `init(scenario)`
+- ✅ Bash knows NOTHING about CLIModel structure
+- ✅ When CLIModel changes, bash doesn't break
+- ✅ Bash owns only 2 fields (its responsibility)
+- ✅ CLI owns entire model (its responsibility)
+- ✅ Instance UUID ensures correct routing
+- ✅ Zero coupling between bash and TypeScript model
 
 ---
 
-## TypeScript Entry Point
+## TypeScript CLI Commands
 
-**Simplified:** Receive complete Scenario, deserialize, init, execute.
+### 1. `__getCompletionScenario` - Provide Default Scenario
 
 ```typescript
 /**
- * Internal completion command (hidden from users)
- * Called by bash with COMPLETE Scenario<CLIModel> JSON on stdin
+ * Get default completion Scenario for bash
+ * Bash calls this first to get complete CLIModel structure
+ * @cliHide
+ */
+async __getCompletionScenario(): Promise<void> {
+  // Create default CLIModel with instance UUID
+  const scenario: Scenario<CLIModel> = {
+    ior: {
+      uuid: randomUUID(),
+      component: "CLI",
+      version: "1.0.0"
+    },
+    owner: "bash-completion",
+    model: {
+      uuid: this.model?.uuid || randomUUID(), // Preserve instance if exists
+      name: `${this.componentName}-cli-completion`,
+      origin: "bash-completion",
+      definition: "CLI completion context",
+      
+      // Component context (from current CLI instance)
+      componentClass: null, // Can't serialize class
+      componentName: this.componentName,
+      componentVersion: this.componentVersion,
+      componentInstance: null, // Can't serialize instance
+      
+      // Completion context - defaults (bash will update its 2 fields)
+      completionCliName: this.componentName.toLowerCase(),
+      completionCompWords: [], // Bash updates this
+      completionCompCword: 0,   // Bash updates this
+      
+      // Derived fields (computed after bash update)
+      completionCurrentWord: "",
+      completionPreviousWord: "",
+      completionCommand: null,
+      completionParameters: [],
+      completionParameterIndex: 0,
+      
+      // Context detection (computed after bash update)
+      completionOnComponent: null,
+      completionOnVersion: null,
+      
+      // Chaining (computed after bash update)
+      completionChainedCommands: [],
+      
+      // State flags (computed after bash update)
+      completionIsCompletingMethod: false,
+      completionIsCompletingParameter: false
+    }
+  };
+  
+  // Output as JSON for bash
+  console.log(JSON.stringify(scenario, null, 2));
+}
+```
+
+### 2. `__complete` - Receive Updated Scenario, Execute Completion
+
+```typescript
+/**
+ * Complete bash completion with updated Scenario from bash
+ * Bash has modified completionCompWords and completionCompCword
  * @cliHide
  */
 async __complete(): Promise<void> {
-  // Read COMPLETE Scenario from stdin
+  // Read updated Scenario from stdin (bash modified its 2 fields)
   const scenarioJson = await this.readStdin();
   const scenario: Scenario<CLIModel> = JSON.parse(scenarioJson);
   
-  // Initialize CLI with complete Scenario (Web4 pattern)
+  // Compute derived fields from bash-provided data
+  this.computeDerivedCompletionFields(scenario.model);
+  
+  // Initialize CLI with updated Scenario
   this.init(scenario);
   
-  // Model now has ALL completion context - just query it
+  // Get valid completion values from model
   const values = this.getValidCompletionValues();
   
   // Format with DISPLAY/WORD protocol
@@ -288,31 +315,43 @@ async __complete(): Promise<void> {
 }
 
 /**
- * Get valid values for current completion position
- * Model-driven: all logic queries this.model
+ * Compute derived completion fields from bash-provided compWords/compCword
  */
-private getValidCompletionValues(): string[] {
-  // Model is COMPLETE from bash - just read it
-  if (this.model.completionIsCompletingMethod) {
-    return this.getAllMethodNames();
+private computeDerivedCompletionFields(model: CLIModel): void {
+  const words = model.completionCompWords;
+  const cword = model.completionCompCword;
+  
+  // Derived from bash data
+  model.completionCurrentWord = words[cword] || "";
+  model.completionPreviousWord = words[cword - 1] || "";
+  
+  // Parse command (word at index 1 if exists)
+  model.completionCommand = cword > 0 && words[1] ? words[1] : null;
+  
+  // Parse parameters (words from index 2 to cword-1)
+  model.completionParameters = cword > 2 ? words.slice(2, cword) : [];
+  model.completionParameterIndex = Math.max(0, cword - 2);
+  
+  // Detect "on" context
+  const onIndex = words.indexOf("on");
+  if (onIndex >= 0 && onIndex + 2 < words.length) {
+    model.completionOnComponent = words[onIndex + 1];
+    model.completionOnVersion = words[onIndex + 2];
   }
   
-  if (this.model.completionIsCompletingParameter) {
-    const callback = this.getParameterCallback(
-      this.model.completionCommand!,
-      this.model.completionParameterIndex
-    );
-    
-    if (callback) {
-      return this.executeCallback(callback, this.model.completionParameters);
-    }
-  }
+  // Detect chained commands (TODO: implement chaining detection)
+  model.completionChainedCommands = [];
   
-  return [];
+  // Set state flags
+  model.completionIsCompletingMethod = cword === 1;
+  model.completionIsCompletingParameter = cword > 1;
 }
 ```
 
-**No parsing logic. No context detection. No adapters. Just deserialize and use.**
+**Separation of Concerns:**
+- **Bash:** Provides `COMP_WORDS` and `COMP_CWORD` (2 fields)
+- **TypeScript:** Computes all derived fields, owns model logic
+- **No coupling:** Bash doesn't know CLIModel structure
 
 ---
 
