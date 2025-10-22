@@ -18,6 +18,8 @@ Web4 Pattern: **Everything is a Scenario with a Model**
 
 ### 1. CLIModel Interface (extends Model)
 
+**Web4 Principle: Self-sufficient, FLAT model - no relationships, no nested objects**
+
 ```typescript
 // layer3/CLIModel.interface.ts
 import { Model } from './Model.interface.js';
@@ -31,41 +33,29 @@ export interface CLIModel extends Model {
   componentVersion: string;
   componentInstance: any | null;
   
-  // Completion context (set from bash)
-  completionContext: CompletionContext | null;
-}
-```
-
-### 2. CompletionContext Interface
-
-```typescript
-// layer3/CompletionContext.interface.ts
-export interface CompletionContext {
-  // From bash environment (COMP_WORDS, COMP_CWORD)
-  cliName: string;           // e.g., "web4tscomponent"
-  compWords: string[];       // Full COMP_WORDS array from bash
-  compCword: number;         // Current word index from bash
+  // Completion context - FLAT in model (no CompletionContext relationship!)
+  // From bash environment
+  completionCliName: string;           // e.g., "web4tscomponent"
+  completionCompWords: string[];       // Full COMP_WORDS array from bash
+  completionCompCword: number;         // Current word index from bash
   
-  // Derived state (computed from compWords/compCword)
-  currentWord: string;       // compWords[compCword]
-  previousWord: string;      // compWords[compCword-1]
+  // Derived completion state
+  completionCurrentWord: string;       // compWords[compCword]
+  completionPreviousWord: string;      // compWords[compCword-1]
+  completionCommand: string | null;    // Detected command (null if completing method)
+  completionParameters: string[];      // Parameters provided so far
+  completionParameterIndex: number;    // Which parameter (0-based)
   
-  // Command parsing
-  command: string | null;    // Detected command (null if completing method name)
-  parameters: string[];      // Parameters provided so far
-  parameterIndex: number;    // Which parameter (0-based)
+  // "on" context (flat)
+  completionOnComponent: string | null;   // Component from "on ComponentName version"
+  completionOnVersion: string | null;     // Version from "on ComponentName version"
   
-  // Context awareness
-  onContext: {               // "on ComponentName version" context
-    component: string;
-    version: string;
-  } | null;
+  // Chaining context
+  completionChainedCommands: string[]; // Commands in chain
   
-  chainedCommands: string[]; // Commands in chain (for chaining support)
-  
-  // Completion state
-  isCompletingMethod: boolean;    // True if COMP_CWORD points to method name
-  isCompletingParameter: boolean; // True if COMP_CWORD points to parameter
+  // Completion state flags
+  completionIsCompletingMethod: boolean;    // True if completing method name
+  completionIsCompletingParameter: boolean; // True if completing parameter
 }
 ```
 
