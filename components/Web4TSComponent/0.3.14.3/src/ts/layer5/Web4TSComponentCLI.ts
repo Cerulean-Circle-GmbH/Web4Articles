@@ -145,6 +145,33 @@ export class Web4TSComponentCLI extends DefaultCLI {
       
       throw new Error(`At least ${minArgs} arguments required for ${command} command`);
     }
+    
+    // Check if parameters have valid values by attempting to get callback
+    // If callback exists, validate the provided value
+    // This handles: web4tscomponent completion m<TAB> where "m" is invalid
+    // ONLY for completion command (other commands let bash filter method names)
+    if (command === 'completion' && signature.paramCount > 0) {
+      for (let i = 0; i < nonEmptyArgs.length && i < signature.paramCount; i++) {
+        const callback = TSCompletion.getParameterCallback('DefaultWeb4TSComponent', command, i) 
+                      || TSCompletion.getParameterCallback('DefaultCLI', command, i);
+        
+        if (callback) {
+          // Callback exists for this parameter - validate the value
+          // Call the callback to get valid values
+          const validValues = await this.getCallbackValues(callback, command, nonEmptyArgs.slice(0, i));
+          
+          // If provided value doesn't match any valid value, trigger callback
+          const providedValue = nonEmptyArgs[i];
+          const isValid = validValues.some(v => v === providedValue);
+          
+          if (!isValid) {
+            // Invalid value - trigger callback for completion
+            console.log(`WORD: __CALLBACK__:${callback}`);
+            return { executed: true, remainingArgs: [] };
+          }
+        }
+      }
+    }
 
     // Intelligently determine how many arguments this method consumes
     const consumedArgs = this.determineArgumentConsumption(command, args);
@@ -229,6 +256,32 @@ export class Web4TSComponentCLI extends DefaultCLI {
     
     // No next command found, consume up to method's parameter count
     return Math.min(maxArgs, args.length);
+  }
+
+  /**
+   * Get valid values from a callback method
+   * Used for parameter validation during completion
+   */
+  private async getCallbackValues(callbackName: string, command: string, contextArgs: string[]): Promise<string[]> {
+    try {
+      // Try CLI instance first
+      if (typeof (this as any)[callbackName] === 'function') {
+        const result = (this as any)[callbackName](contextArgs);
+        return Array.isArray(result) ? result : [];
+      }
+      
+      // Try component instance
+      const componentInstance = this.getOrCreateTSComponent();
+      if (typeof (componentInstance as any)[callbackName] === 'function') {
+        const result = (componentInstance as any)[callbackName](contextArgs);
+        return Array.isArray(result) ? result : [];
+      }
+      
+      return [];
+    } catch (error) {
+      // If callback fails, return empty array (will trigger callback in completion)
+      return [];
+    }
   }
 
   /**
