@@ -1721,10 +1721,11 @@ Standards:
         return this;
       }
       
-      // Run vitest directly
+      // Run vitest directly with --bail=false to run all tests even after failures
+      // (releaseTest uses bail=1 from config to stop on first failure)
       const componentPath = this.resolveComponentPath(this.model.component, this.model.version);
       try {
-        execSync('npx vitest run', { 
+        execSync('npx vitest run --bail=false', { 
           cwd: componentPath,
           stdio: 'inherit',
           encoding: 'utf-8'
