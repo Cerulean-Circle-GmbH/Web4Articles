@@ -14,20 +14,8 @@ import { existsSync, readdirSync, statSync, lstatSync, readlinkSync } from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 import { randomUUID } from 'crypto';
-
-// Copy User interface to prevent build dependency
-// Source: components/User/0.3.0.4/src/ts/layer3/User.interface.ts
-interface User {
-  init(scenario: Scenario): this;
-  generateOwnerData(params: OwnerParams): Promise<string>;
-  toScenario(): Promise<Scenario>;
-}
-
-interface OwnerParams {
-  user: string;
-  hostname: string;
-  uuid?: string;
-}
+import { User } from '../layer3/User.interface.js';
+import { OwnerParams } from '../layer3/OwnerParams.interface.js';
 
 export class DefaultWeb4TSComponent implements Web4TSComponent {
   private model: Web4TSComponentModel;
