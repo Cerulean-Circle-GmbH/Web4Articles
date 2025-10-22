@@ -268,17 +268,18 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * NOT a build dependency - warns if unavailable, continues with fallback
    * @cliHide
    */
-  private getUser(): User {
+  private async getUser(): Promise<User> {
     if (this.user) return this.user;
     
     try {
-      // Dynamic import - fails gracefully if User not available
-      const { DefaultUser } = require('../../User/latest/dist/ts/layer2/DefaultUser.js');
+      // Dynamic ESM import - fails gracefully if User not available
+      const userModule = await import('../../User/latest/dist/ts/layer2/DefaultUser.js');
+      const { DefaultUser } = userModule;
       
       // Initialize User with empty constructor (uses system/localhost defaults)
       this.user = new DefaultUser();
       
-      return this.user;
+      return this.user!; // Non-null assertion: we just assigned it
     } catch (error) {
       // User service not available - throw for caller to handle fallback
       throw new Error('User service not available');

@@ -62,12 +62,14 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * Pattern: components/User/0.3.0.4/src/ts/layer2/DefaultUser.ts
    * @cliHide
    */
-  private getUser(): User {
+  private async getUser(): Promise<User> {
     if (this.user) return this.user;
     
     try {
-      // Dynamic import - fails gracefully if User not available
-      const { DefaultUser } = require('../../User/latest/dist/ts/layer2/DefaultUser.js');
+      // Dynamic ESM import - fails gracefully if User not available
+      // @ts-ignore - Optional dependency, path resolved at runtime
+      const userModule = await import('../../User/latest/dist/ts/layer2/DefaultUser.js');
+      const { DefaultUser } = userModule;
       
       // Initialize User with empty constructor (uses system/localhost defaults)
       this.user = new DefaultUser();
