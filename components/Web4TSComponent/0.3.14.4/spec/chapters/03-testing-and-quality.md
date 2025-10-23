@@ -258,10 +258,13 @@ Version 0.3.3.2 includes **12 test suites** with sequential execution (prevents 
 
 ### Test Isolation Strategy:
 
-- **ProjectRootMocker** - Redirects `process.cwd()` to `test/data` directory
+- **Self-Discovering Project Root** - TypeScript uses `import.meta.url` to find its location and walks up to find project root (looks for `components/` directory)
+- **Copy, Not Mock** - Components are physically copied to `test/data` (excluding `test/` and `node_modules/` to avoid recursion)
+- **Direct Node Wrappers** - Fresh shell scripts generated that call `node .../CLI.js` directly
 - **beforeEach** - Clean test environment for each test
-- **afterEach** - Clean up test data after each test
+- **afterEach** - Clean up test data after each test  
 - **No Production Impact** - Tests never touch production components
+- **No Symlinks** - Copying eliminates recursive loop risks (see Retroactive Isolation Architecture below)
 
 ### Retroactive Isolation Architecture (v0.3.14.4+):
 
