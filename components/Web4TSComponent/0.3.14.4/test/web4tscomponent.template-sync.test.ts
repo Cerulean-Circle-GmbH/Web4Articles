@@ -231,11 +231,29 @@ describe('🔄 Template Synchronization', () => {
           projectPath: path.join(projectRoot, 'components/Web4TSComponent/0.3.13.2/src/sh/test.sh'),
           templatePath: path.join(templatesDir, 'sh/test.sh.template'),
         },
+        {
+          name: 'version-wrapper.sh',
+          projectPath: null, // Generated files, not manually edited
+          templatePath: path.join(templatesDir, 'sh/version-wrapper.sh.template'),
+          checkTemplateOnly: true // Only verify template exists, don't compare to project
+        },
       ];
       
       const errors: string[] = [];
       
       for (const file of criticalFiles) {
+        // NEW: Template-only validation
+        if (file.checkTemplateOnly) {
+          // Verify template exists
+          if (!existsSync(file.templatePath)) {
+            errors.push(`❌ Template missing: ${file.name}`);
+            errors.push(`   Expected: ${file.templatePath}`);
+          } else {
+            console.log(`   ✅ Template exists: ${file.name}`);
+          }
+          continue; // Skip project file comparison
+        }
+        
         // Skip if file doesn't exist yet (fresh project)
         if (!existsSync(file.projectPath)) {
           console.log(`ℹ️  ${file.name} does not exist yet - run initProject to create it`);

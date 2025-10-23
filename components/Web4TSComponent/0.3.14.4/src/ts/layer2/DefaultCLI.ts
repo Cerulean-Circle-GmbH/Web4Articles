@@ -1485,6 +1485,72 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
+   * Get default completion Scenario for bash
+   * CLI understands command line context and tells TSCompletion what to complete
+   * @cliHide
+   */
+  async getCompletionScenario(): Promise<void> {
+    // Use this.model which already has componentName, componentVersion from constructor
+    const componentName = this.componentName;
+    const componentVersion = this.componentVersion;
+    
+    // Get owner data (simplified - no User dependency for now)
+    const ownerData = JSON.stringify({
+      user: process.env.USER || 'system',
+      hostname: process.env.HOSTNAME || 'localhost',
+      uuid: this.model.uuid,
+      timestamp: new Date().toISOString(),
+      component: componentName,
+      version: componentVersion
+    });
+    
+    // Create default Scenario with complete CLIModel
+    const scenario = {
+      ior: {
+        uuid: this.model.uuid,
+        component: componentName,
+        version: componentVersion
+      },
+      owner: ownerData,
+      model: {
+        uuid: this.model.uuid,
+        name: 'cli',
+        origin: 'bash-completion',
+        definition: `CLI for ${componentName}`,
+        
+        // Component identity
+        componentClass: null,
+        componentName: componentName,
+        componentVersion: componentVersion,
+        componentInstance: null,
+        
+        // Completion context fields (bash will modify these)
+        completionCliName: '',
+        completionCompWords: [],
+        completionCompCword: 0,
+        
+        // Derived completion state (computed from above)
+        completionCurrentWord: '',
+        completionPreviousWord: '',
+        completionCommand: null,
+        completionParameters: [],
+        completionParameterIndex: 0,
+        
+        completionOnComponent: null,
+        completionOnVersion: null,
+        
+        completionChainedCommands: [],
+        
+        completionIsCompletingMethod: false,
+        completionIsCompletingParameter: false
+      }
+    };
+    
+    // Output as JSON for bash
+    console.log(JSON.stringify(scenario, null, 2));
+  }
+
+  /**
    * Format completion values with DISPLAY/WORD protocol
    * Handles both simple arrays and complex formatted output
    * DRY helper used by completeParameter and future completion methods
