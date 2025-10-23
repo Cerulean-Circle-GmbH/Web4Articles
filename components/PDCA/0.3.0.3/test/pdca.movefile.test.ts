@@ -25,11 +25,11 @@ describe('PDCA moveFile - Relative Link Bug Test', () => {
   // We need: 0.2.6.1
   const componentRoot = path.dirname(__dirname); // /path/to/components/PDCA/0.2.6.1
   const componentVersion = path.basename(componentRoot); // 0.2.6.1
-  const testDataDir = path.join(projectRoot, `components/PDCA/${componentVersion}/test/data/move-tests`);
-  const fileA = path.join(testDataDir, 'test-fileA.md');
-  const fileB = path.join(testDataDir, 'test-fileB.md');
-  const fileBMoved = path.join(testDataDir, 'subdir', 'test-fileB.md');
-  const fileC = path.join(testDataDir, 'test-fileC.md');
+  const testDataDir = path.join(projectRoot, `components/PDCA/${componentVersion}/test/data/movefile-tests/source`);
+  const fileA = path.join(testDataDir, 'test-file-a.md');
+  const fileB = path.join(testDataDir, 'test-file-b.md');
+  const fileBMoved = path.join(testDataDir, '..', 'target', 'subdir', 'test-file-b.md');
+  const fileC = path.join(testDataDir, 'test-file-c.md');
 
   beforeAll(() => {
     // Ensure test files are in original state (fileB not in subdir)
@@ -63,8 +63,8 @@ describe('PDCA moveFile - Relative Link Bug Test', () => {
     console.log('File B link to C:', fileBContentBefore.match(/\]\(([^)]+)\)/)?.[1]);
     
     // Execute: Move fileB to subdir (use project-root-relative paths)
-    const fileBRelative = `components/PDCA/${componentVersion}/test/data/move-tests/test-fileB.md`;
-    const fileBMovedRelative = `components/PDCA/${componentVersion}/test/data/move-tests/subdir/test-fileB.md`;
+    const fileBRelative = `components/PDCA/${componentVersion}/test/data/movefile-tests/source/test-file-b.md`;
+    const fileBMovedRelative = `components/PDCA/${componentVersion}/test/data/movefile-tests/target/subdir/test-file-b.md`;
     
     console.log('\n🔄 Executing moveFile...');
     await pdca.moveFile(fileBRelative, fileBMovedRelative);
@@ -102,16 +102,16 @@ describe('PDCA moveFile - Relative Link Bug Test', () => {
     // File B links with: test-fileC.md (not updated)
     
     console.log('\n✅ EXPECTED:');
-    console.log('  File A → B: subdir/test-fileB.md');
-    console.log('  File B → C: ../test-fileC.md');
+    console.log('  File A → B: ../target/subdir/test-file-b.md');
+    console.log('  File B → C: ../../source/test-file-c.md');
     
     console.log('\n❌ ACTUAL (BUG):');
     console.log('  File A → B:', fileALinkPath);
     console.log('  File B → C:', fileBLinkPath);
     
     // TEST ASSERTIONS (these will FAIL until bug is fixed)
-    expect(fileALinkPath).toBe('subdir/test-fileB.md'); // Bug: Will be absolute path
-    expect(fileBLinkPath).toBe('../test-fileC.md');     // Bug: Will be unchanged
+    expect(fileALinkPath).toBe('../target/subdir/test-file-b.md'); // Bug: Will be absolute path
+    expect(fileBLinkPath).toBe('../../source/test-file-c.md');     // Bug: Will be unchanged
   });
 });
 
@@ -208,7 +208,7 @@ describe('PDCA moveFile Tests', () => {
     fs.rmSync(tempDir, { recursive: true, force: true });
   });
 
-  test.skip('TC32: moveFile - updates links in other files', async () => {
+  test('TC32: moveFile - updates links in other files', async () => {
     const pdca = new DefaultPDCA();
     
     // Setup: Create target file and file linking to it
@@ -245,7 +245,7 @@ describe('PDCA moveFile Tests', () => {
     }
   });
 
-  test.skip('TC33: moveFile - refreshes relative links in moved file', async () => {
+  test('TC33: moveFile - refreshes relative links in moved file', async () => {
     const pdca = new DefaultPDCA();
     
     // Setup: Create file with relative links
@@ -285,7 +285,7 @@ describe('PDCA moveFile Tests', () => {
     }
   });
 
-  test.skip('TC34: moveFile - dry run does not modify files', async () => {
+  test('TC34: moveFile - dry run does not modify files', async () => {
     const pdca = new DefaultPDCA();
     
     // Setup
@@ -313,7 +313,7 @@ describe('PDCA moveFile Tests', () => {
     execSync(`git commit -m "test: cleanup TC34"`, { cwd: process.cwd(), stdio: 'pipe' });
   });
 
-  test.skip('TC35: moveFile - error when source file does not exist', async () => {
+  test('TC35: moveFile - error when source file does not exist', async () => {
     const pdca = new DefaultPDCA();
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     
@@ -328,7 +328,7 @@ describe('PDCA moveFile Tests', () => {
     consoleSpy.mockRestore();
   });
 
-  test.skip('TC36: moveFile - error when destination already exists', async () => {
+  test('TC36: moveFile - error when destination already exists', async () => {
     const pdca = new DefaultPDCA();
     
     // Setup: Both files exist
@@ -366,7 +366,7 @@ describe('PDCA moveFile Tests', () => {
     execSync(`git commit -m "test: cleanup TC36"`, { cwd: process.cwd(), stdio: 'pipe' });
   });
 
-  test.skip('TC37: moveFile - error when destination directory does not exist', async () => {
+  test('TC37: moveFile - error when destination directory does not exist', async () => {
     const pdca = new DefaultPDCA();
     
     const oldPath = `${testDataDir}/file.md`;
@@ -398,7 +398,7 @@ describe('PDCA moveFile Tests', () => {
     execSync(`git commit -m "test: cleanup TC37"`, { cwd: process.cwd(), stdio: 'pipe' });
   });
 
-  test.skip('TC38: moveFile - handles file with multiple incoming and outgoing links', async () => {
+  test('TC38: moveFile - handles file with multiple incoming and outgoing links', async () => {
     const pdca = new DefaultPDCA();
     
     // Setup: File with links to others AND others link to it
