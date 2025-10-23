@@ -1113,6 +1113,13 @@ Standards:
         '# PIGGY HACK: Override for test isolation (was: git rev-parse --show-toplevel)\nexport WEB4_PROJECT_ROOT="$(pwd)"'
       );
       console.log(`   🔧 Replaced PROJECT_ROOT with pwd for test isolation`);
+      
+      // Also add ISOLATED PS1 prompt for old templates (they don't have it)
+      sourceEnvContent = sourceEnvContent.replace(
+        /(export PS1=".*?")/,
+        '# PIGGY HACK: Override PS1 for test isolation visibility\nexport PS1="\\[\\033[1;36m\\][ISOLATED web4 ' + componentName + '/' + componentVersion + ']\\[\\033[0m\\] \\[\\033[1;33m\\]\\w\\[\\033[0m\\] > "'
+      );
+      console.log(`   🔧 Added ISOLATED PS1 prompt for visibility`);
     }
     
     await fs.writeFile(sourceEnvPath, sourceEnvContent);
