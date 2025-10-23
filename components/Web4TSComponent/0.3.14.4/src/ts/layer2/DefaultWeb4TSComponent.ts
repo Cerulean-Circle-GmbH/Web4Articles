@@ -1028,6 +1028,29 @@ Standards:
   }
 
   /**
+   * Initialize test isolation for a specific component version
+   * Internal method called by version wrappers when test/data doesn't exist
+   * Hidden from CLI help but accessible via command line
+   * @param component Component name
+   * @param version Version to initialize
+   * @cliHide
+   */
+  async initTestIsolation(component: string, version: string): Promise<this> {
+    const componentPath = this.resolveComponentPath(component, version);
+    const testDataPath = path.join(componentPath, 'test', 'data');
+    
+    console.log(`\n🔧 Initializing test isolation for ${component} ${version}...`);
+    console.log(`   📂 Target: ${testDataPath}`);
+    
+    // Call the private initialization method
+    await this.initTestIsolationEnvironment(testDataPath);
+    
+    console.log(`✅ Test isolation environment ready for ${component} ${version}\n`);
+    
+    return this;
+  }
+
+  /**
    * Initialize test isolation environment in test/data
    * Creates scripts/versions/ structure and symlinks to test version CLI
    * Web4 principle: Use model state and resolveComponentPath(), no dirty path calculations
