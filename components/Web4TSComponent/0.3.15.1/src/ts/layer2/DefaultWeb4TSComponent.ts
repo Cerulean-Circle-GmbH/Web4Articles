@@ -3193,15 +3193,20 @@ exec node "${cliJsPath}" "$@"
     
     console.log(`🧪 Running tests from: ${targetFile.name}`);
     
-    // Execute vitest on specific file
+    // Web4 Pattern: Use model context for component root, not process.cwd()
     const context = this.getComponentContext();
-    const cwd = context
+    const componentRoot = context
       ? this.resolveComponentPath(context.component, context.version)
-      : process.cwd();
+      : path.join(
+          this.model.targetDirectory,
+          'components',
+          this.model.component,
+          this.model.version
+        );
     
     try {
       execSync(`npx vitest --run ${path.join('test', targetFile.name)}`, {
-        cwd,
+        cwd: componentRoot,
         stdio: 'inherit',
         encoding: 'utf-8'
       });
@@ -3257,15 +3262,20 @@ exec node "${cliJsPath}" "$@"
     console.log(`   File: ${file.name}`);
     console.log(`   Reference: ${ref}`);
     
-    // Execute vitest with test name pattern
+    // Web4 Pattern: Use model context for component root, not process.cwd()
     const context = this.getComponentContext();
-    const cwd = context
+    const componentRoot = context
       ? this.resolveComponentPath(context.component, context.version)
-      : process.cwd();
+      : path.join(
+          this.model.targetDirectory,
+          'components',
+          this.model.component,
+          this.model.version
+        );
     
     try {
       execSync(`npx vitest --run -t "${describe.name}"`, {
-        cwd,
+        cwd: componentRoot,
         stdio: 'inherit',
         encoding: 'utf-8'
       });
@@ -3345,15 +3355,20 @@ exec node "${cliJsPath}" "$@"
     console.log(`   Describe: ${targetDescribe.name}`);
     console.log(`   File: ${targetFile.name}`);
     
-    // Execute vitest with test name pattern
+    // Web4 Pattern: Use model context for component root, not process.cwd()
     const context = this.getComponentContext();
-    const cwd = context
+    const componentRoot = context
       ? this.resolveComponentPath(context.component, context.version)
-      : process.cwd();
+      : path.join(
+          this.model.targetDirectory,
+          'components',
+          this.model.component,
+          this.model.version
+        );
     
     try {
       execSync(`npx vitest --run -t "${targetIt.name}"`, {
-        cwd,
+        cwd: componentRoot,
         stdio: 'inherit',
         encoding: 'utf-8'
       });
