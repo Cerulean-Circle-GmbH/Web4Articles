@@ -222,7 +222,8 @@ describe('PDCA moveFile Tests', () => {
     
     fs.mkdirSync(path.join(tempDir, 'moved'), { recursive: true });
     fs.writeFileSync(oldPath, '# Target');
-    fs.writeFileSync(linkingFile, '[Link](target.md)');
+    // Use §/ format that findPDCAsLinking searches for
+    fs.writeFileSync(linkingFile, `[§/components/PDCA/0.3.0.3/test/temp-TC32/target.md](target.md)`);
     
     // Add to git
     try {
@@ -235,10 +236,11 @@ describe('PDCA moveFile Tests', () => {
     // Execute
     await pdca.moveFile(oldPath, newPath);
     
-    // Verify: linker.pdca.md should have updated link
+    // Verify: linker.pdca.md should have updated link (both § notation and relative path)
     const content = fs.readFileSync(linkingFile, 'utf-8');
+    expect(content).toContain('§/components/PDCA/0.3.0.3/test/temp-TC32/moved/target.md');
     expect(content).toContain('moved/target.md');
-    expect(content).not.toContain('[Link](target.md)');
+    expect(content).not.toContain('§/components/PDCA/0.3.0.3/test/temp-TC32/target.md');
     
     // Cleanup
     try {
