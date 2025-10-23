@@ -144,12 +144,20 @@ export class DefaultLicenseTool implements LicenseTool {
       if (await this.hasValidHeaderInternal(content, expectedHeader)) {
         console.log(`   ✅ ${path.relative(resolvedPath, file)}`);
         validCount++;
-      } else if (!content.includes('SPDX-License-Identifier')) {
-        console.log(`   ❌ ${path.relative(resolvedPath, file)} - missing header`);
-        missingCount++;
       } else {
-        console.log(`   ⚠️  ${path.relative(resolvedPath, file)} - outdated header`);
-        outdatedCount++;
+        // Check if there's ANY header-like content
+        const hasAnyHeader = 
+          (commentStyle === 'block' && content.trimStart().startsWith('/**')) ||
+          (commentStyle === 'hash' && content.trimStart().startsWith('#')) ||
+          (commentStyle === 'html' && content.trimStart().startsWith('<!--'));
+        
+        if (!hasAnyHeader) {
+          console.log(`   ❌ ${path.relative(resolvedPath, file)} - missing header`);
+          missingCount++;
+        } else {
+          console.log(`   ⚠️  ${path.relative(resolvedPath, file)} - outdated header`);
+          outdatedCount++;
+        }
       }
     }
     
@@ -351,15 +359,23 @@ export class DefaultLicenseTool implements LicenseTool {
     for (const entry of entries) {
       const fullPath = path.join(dirPath, entry.name);
       
-      if (await this.shouldSkipFileInternal(fullPath)) {
-        continue;
-      }
-      
+      // For directories, check if we should skip before recursing
       if (entry.isDirectory()) {
+        // Check if directory itself should be skipped
+        const pathParts = fullPath.split(path.sep);
+        const excludeDirs = ['node_modules', 'dist', '.git', 'coverage'];
+        const shouldSkipDir = excludeDirs.some(excludeDir => pathParts.includes(excludeDir));
+        
+        if (shouldSkipDir) {
+          continue;
+        }
+        
         const subFiles = await this.discoverFilesInternal(fullPath);
         files.push(...subFiles);
       } else if (entry.isFile()) {
-        files.push(fullPath);
+        if (!(await this.shouldSkipFileInternal(fullPath))) {
+          files.push(fullPath);
+        }
       }
     }
     
@@ -463,7 +479,15 @@ export class DefaultLicenseTool implements LicenseTool {
   async calculateRelativePathInternal(fromFile: string, toFile: string): Promise<string> {
     const path = await import('path');
     const fromDir = path.dirname(fromFile);
-    return path.relative(fromDir, toFile);
+    const relativePath = path.relative(fromDir, toFile);
+    
+    // If in same directory, path.relative returns just filename
+    // Prefix with ./ for clarity
+    if (!relativePath.startsWith('.') && !path.isAbsolute(relativePath)) {
+      return `./${relativePath}`;
+    }
+    
+    return relativePath;
   }
 
   /**

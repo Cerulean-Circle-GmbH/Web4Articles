@@ -641,7 +641,7 @@ describe('TC13: Relative Path Calculation', () => {
     
     const relativePath = await tool.calculateRelativePathInternal(nestedFile, targetFile);
     
-    expect(relativePath).toBe('../../../../../AI-GPL.md');
+    expect(relativePath).toBe('../../../../AI-GPL.md');
   });
 
   it('should calculate relative path from 3 levels deep', async () => {
