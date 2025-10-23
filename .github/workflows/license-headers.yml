@@ -1,0 +1,94 @@
+# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+# SPDX-FileComment: See ../../AI-GPL.md for AI-specific terms.
+# Copyright (c) 2025 Cerulean Circle GmbH
+# Copyleft: See AGPLv3 (../../LICENSE) and AI-GPL Addendum (../../AI-GPL.md)
+# Backlinks: /LICENSE, /AI-GPL.md
+
+name: License Header Check
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+jobs:
+  license-headers:
+    name: Verify License Headers
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for file detection
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install Dependencies
+        run: |
+          # Install global dependencies (Web4 pattern)
+          npm install -g typescript vitest @types/node
+          
+          # Install project dependencies
+          npm install
+      
+      - name: Build LicenseTool Component
+        run: |
+          cd components/LicenseTool/latest
+          ./src/sh/build.sh verbose
+      
+      - name: Check License Headers
+        run: |
+          # Source Web4 environment for CLI tools
+          source ./source.env
+          
+          # Run license header check on entire repository
+          licensetool check .
+          
+          # Capture exit code
+          EXIT_CODE=$?
+          
+          if [ $EXIT_CODE -ne 0 ]; then
+            echo "❌ License header check failed!"
+            echo "📝 Files are missing or have outdated license headers."
+            echo "🔧 To fix locally, run: licensetool apply . false"
+            exit 1
+          else
+            echo "✅ All license headers are valid!"
+          fi
+      
+      - name: Verify Required License Files
+        run: |
+          # Check for required license documentation
+          if [ ! -f LICENSE ]; then
+            echo "❌ Missing LICENSE file"
+            exit 1
+          fi
+          
+          if [ ! -f AI-GPL.md ]; then
+            echo "❌ Missing AI-GPL.md file"
+            exit 1
+          fi
+          
+          if [ ! -f .reuse/dep5 ]; then
+            echo "❌ Missing .reuse/dep5 file"
+            exit 1
+          fi
+          
+          echo "✅ All required license files present"
+      
+      - name: REUSE Compliance Check (Optional)
+        continue-on-error: true  # Don't fail build, just report
+        run: |
+          # Install REUSE tool
+          pip install reuse
+          
+          # Run REUSE lint (comprehensive license compliance check)
+          reuse lint || echo "⚠️  REUSE compliance has some issues (not blocking)"
+
+
