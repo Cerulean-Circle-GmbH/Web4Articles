@@ -8,8 +8,6 @@ import { Scenario } from '../layer3/Scenario.interface.js';
 import { PDCAModel } from '../layer3/PDCAModel.interface.js';
 import { existsSync, lstatSync, readlinkSync, readdirSync, statSync } from 'fs';
 import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
-import * as path from 'path';
 
 // Use latest version for delegation (always available)
 import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js';
@@ -36,19 +34,11 @@ export class DefaultPDCA implements PDCA {
 
   constructor() {
     // Empty constructor - Web4 pattern
-    // Initialize with version from directory (single source of truth - Web4TSComponent pattern)
-    const currentFileUrl = new URL(import.meta.url);
-    const currentVersionDir = path.resolve(path.dirname(fileURLToPath(currentFileUrl.href)), '..', '..', '..');
-    const componentDirName = path.basename(currentVersionDir);
-    const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(componentDirName);
-    
     this.model = {
       uuid: crypto.randomUUID(),
       name: '',
       origin: '',
       definition: '',
-      component: 'PDCA',
-      version: isVersionDir ? componentDirName : '0.0.0', // Read from directory name, fallback to 0.0.0
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -620,12 +610,387 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
-   * Calculate relative path from document to target
+   * Internal helper: Calculate relative path from document to target
    * @cliHide
    */
-  private calculateRelativePath(docPath: string, targetPath: string, path: typeof import('path')): string {
+  private calculateRelativePathInternal(docPath: string, targetPath: string, path: typeof import('path')): string {
     const docDir = path.dirname(docPath);
     return path.relative(docDir, targetPath);
+  }
+
+  /**
+   * DRY Helper: Get training topics (single source of truth)
+   * @cliHide
+   * 
+   * TODO (Future DRY Refactoring): trainAI method currently has its own copy of this data.
+   * In a future iteration, refactor trainAI to call this method instead of duplicating.
+   * For now, this is a necessary duplication to make queryTrainAI work without breaking trainAI.
+   */
+  private getTrainingTopicsInternal(): Record<string, any> {
+    // NOTE: This structure is temporarily duplicated from trainAI (lines 1702-2286)
+    // Future work: Make trainAI call this method to eliminate duplication
+    return {
+      'how-to-dual-links': {
+        keyLessons: [
+          '✅ Format: [GitHub](https://github.com/org/repo/blob/branch/path) | [§/path](path)',
+          '✅ GitHub link: For human verification, works in any context',
+          '✅ § notation: Project-root-relative, for local navigation',
+          '✅ MUST be in sync: Same file, same branch, both valid',
+          '⚠️ CMM3 4c: Links MUST be verifiable - file must be pushed',
+          '🔧 Tool: `pdca getDualLink <file>` auto-generates correct format',
+          '🔧 Auto-fix: getDualLink adds/commits/pushes if needed',
+          '❌ NEVER use file:// prefix (CMM2 violation)',
+          '❌ NEVER use relative paths without § notation',
+          '⚠️ getDualLink returns project-root-relative in local link part',
+          '⚠️ For source files NOT at root, use getDualLinkRelativePath to calculate paths',
+          '🔧 Tool: `pdca getDualLinkRelativePath <from> <to>` calculates relative paths',
+          '✅ Verification: cd to source dir, ls <path> to test link works',
+          '❌ NEVER assume getDualLink output works without verification',
+          '🚨 MANDATORY: Test every link with ls from source directory',
+          '✨ Use getDualLinkRelativePath for zero-knowledge path calculation'
+        ],
+        verificationChecklist: [
+          'Can write dual link format from memory',
+          'Understands why GitHub link is needed (verification)',
+          'Understands why § notation is needed (local navigation)',
+          'Can use getDualLink to generate correct links',
+          'Knows file must be pushed for link to be valid',
+          'Recognizes CMM2 link violations (file://, no §, unpushed files)',
+          'Knows getDualLink returns project-root-relative in local part',
+          'Can use getDualLinkRelativePath to calculate relative paths',
+          'Always verifies links with ls from source directory',
+          'Tests every link before committing'
+        ],
+        title: '🔗 How to Dual Links: GitHub + § Notation for Chat Reports'
+      },
+      'how-to-test-first': {
+        keyLessons: [
+          '✅ Test-First Pattern: Write test → Run test → See it fail → Fix code → See it pass',
+          '🎯 Trust the tests: If tests pass, functionality works. No manual verification needed.',
+          '❌ Anti-pattern: "Let me manually verify that the test failed before fixing"',
+          '❌ Anti-pattern: "I\'ll run the command manually to confirm the bug exists"',
+          '🔄 CMM4 feedback loop: Test IS the verification mechanism',
+          '⚡ Efficiency: Manual verification duplicates test effort and wastes time',
+          '🛡️ Safety: Tests are reproducible; manual checks are subjective and error-prone',
+          '📊 Test output is authoritative: PASS = works, FAIL = broken, no interpretation needed',
+          '🚫 Never skip directly to fixing: Always run the test first to see the failure',
+          '✨ Test-first enforces CMM3: Objective criteria (test assertions) over subjective judgment',
+          '⚠️ Root cause: Efficiency bias → assumption cascade → skipping verification step',
+          '💡 When debugging: Write a test that reproduces the bug, then fix until test passes'
+        ],
+        verificationChecklist: [
+          'Can write a failing test before implementing a feature',
+          'Trusts test output as authoritative (no manual verification)',
+          'Recognizes manual verification as an anti-pattern',
+          'Understands test-first as a CMM4 feedback loop',
+          'Can identify when bias is leading to assumption cascade',
+          'Knows to run tests first, not fix first',
+          'Understands why test-first is CMM3-compliant (objective criteria)',
+          'Can explain why manual verification is CMM2 (subjective)',
+          'Avoids over-implementation (doing more than requested)',
+          'Stops after showing test results, waits for user direction'
+        ],
+        title: '🧪 How to Test-First Verification: Trust Tests, Avoid Manual Verification'
+      },
+      'how-to-feature-development': {
+        keyLessons: [
+          '✅ Phase 0 - RAG Preparation: Query trainAI BEFORE planning (how-to-test-first, how-to-component)',
+          '⏱️ RAG Preparation is Non-Negotiable: 30 min reading → 2-3 hours debugging saved',
+          '📚 Read to depth 3: document → references → secondary references',
+          '🧠 Build complete mental model BEFORE coding (prevents assumption cascade)',
+          '✅ Phase 1 - TRON Collaboration: Accept challenges as refinement opportunities',
+          '🔄 TRON Challenges → Research → Document → Improve (not defend current approach)',
+          '📖 User has knowledge agent doesn\'t - research immediately when challenged',
+          '✅ Phase 2 - Test-First Design: Write 5-7 comprehensive tests BEFORE implementation',
+          '🎯 DRY at Planning Stage: Identify reusable parts in plan, extract helpers from start',
+          '🔧 Web4 Naming: methodNameInternal() for private helpers (NO underscores!)',
+          '❌ NEVER use _methodName() or _methodNameInternal() (underscore violation)',
+          '✅ Correct: calculateRelativePathInternal(), getDataInternal()',
+          '❌ Wrong: _calculateRelativePath(), _getTrainingTopicsInternal()',
+          '📝 Leave TODO comments for future DRY refactoring opportunities',
+          '✅ Phase 3 - Expected Failure: Run tests, see failure, TRUST it (no manual check)',
+          '✅ Phase 4 - Minimal Implementation: Add ONLY what\'s needed to pass tests',
+          '🎨 Apply Web4 principles systematically: DRY, Radical OOP, Method Chaining, Auto-Discovery',
+          '✅ Phase 5 - Trust the Green: Tests pass = done (no manual verification)',
+          '✅ Phase 6 - trainAI Integration: Close knowledge loop immediately',
+          '✅ Phase 7 - TRON Validation: User confirms pattern, closes feedback loop',
+          '🎯 CMM3 Compliance: Objective (tests) + Reproducible (git) + Systematic (process)',
+          '⏱️ Time Investment: ~90 min for CMM3 feature vs quick hack',
+          '🚀 Success Metric: TRON validates pattern, auto-promotion succeeds',
+          '🏆 One Loop = CMM4 Excellence: Write → Fail → Implement → Pass → Done (NO iteration)',
+          '❌ NEVER skip tests: Test-first is mandatory for CMM3',
+          '❌ NEVER manual verify: Tests are objective arbiter, not agent judgment',
+          '❌ Multiple loops = CMM2 trial-and-error (avoid this)',
+          '🔄 RAG-Powered FOR TWO: Agent + trainAI + Tests + TRON = CMM3 naturally',
+          '💡 Meta-Pattern: Query → Challenge → Test → Implement → Verify → Document → Validate',
+          '🎓 External verification at EVERY phase prevents CMM2 violations',
+          '✨ Pattern is replicable: Same 7 steps work for any new feature',
+          '📊 Web4 Principles Research Has Exponential ROI: 30 min reading → Apply 7 principles forever'
+        ],
+        verificationChecklist: [
+          'Queried trainAI before planning (how-to-test-first, relevant domain topics)',
+          'Read referenced docs to depth 3 (not just surface level)',
+          'Built complete mental model before coding',
+          'Identified reusable parts at planning stage (not refactoring)',
+          'Extracted DRY helpers from start (not after duplication)',
+          'Wrote tests before implementation (5-7 test cases)',
+          'Ran tests and saw expected failure (method not found, etc)',
+          'Trusted failure without manual verification',
+          'Applied Web4 principles systematically (DRY, Radical OOP, Chaining, Auto-Discovery)',
+          'Implemented minimal code to pass tests (no gold-plating)',
+          'All tests passed without manual verification',
+          'Implementation completed in ONE feedback loop (no iteration cycles)',
+          'TRON challenges led to research and documentation (not defense)',
+          'Updated trainAI with new knowledge immediately',
+          'TRON validated the pattern and result',
+          'Can explain why this is CMM3 (objective, reproducible, systematic)',
+          'Can replicate pattern for next feature development',
+          'Understands 90-min investment pays off in reliability',
+          'Recognizes external verification (trainAI + Tests + TRON) as key to CMM3',
+          'Achieved "one loop" success (TRON impressed with efficiency)'
+        ],
+        title: '🛠️ How to Feature Development: RAG-Powered Test-First CMM3 Pattern'
+      },
+      'how-to-test-workflow': {
+        keyLessons: [
+          '🔗 Semantic links: latest (dev work) → test (testing) → dev (stable) → prod (production)',
+          '🧪 Test workflow: Work on `latest` → run `pdca test` → auto-promotes to `test` on success',
+          '✅ Auto-promotion: `pdca test` creates/updates `test` symlink when all tests pass',
+          '🔧 Test iteration: `web4tscomponent on <Component> latest test itCase` shows test tree',
+          '📊 View state: `web4tscomponent on <Component> latest tree links` shows semantic links',
+          '🛑 WORKFLOW REMINDER: Always work on dev until test → work on test until success → work on dev after success',
+          '⚠️ Version promotion: Use component commands (promote, upgrade), NEVER manual symlinks',
+          '🎯 Test selection: `web4tscomponent test itCase <token>` to run specific tests (e.g., 2a1)',
+          '🔍 When tests fail: Fix on `test` version, not `latest`',
+          '❌ Violated pattern: Fixing tests on `latest` instead of switching to `test` version',
+          '💡 Test fixtures can pollute component structure (components/X/version/components/)',
+          '⚠️ Obey forcing functions: WORKFLOW REMINDER is there for a reason',
+          '📝 Commit discipline: Always commit new versions after successful `pdca test` auto-promotion',
+          '🔄 Version lifecycle: `pdca test` manages symlinks but does NOT commit - that\'s your job',
+          '✨ Test success = commit trigger: Auto-promotion signals "this version is ready to track"'
+        ],
+        verificationChecklist: [
+          'Understands 4-level semantic versioning (latest, test, dev, prod)',
+          'Knows the complete test workflow (latest → test → dev → prod)',
+          'Recognizes auto-promotion happens on test success',
+          'Can use `test itCase` to view and select tests',
+          'Can use `tree links` to view semantic version state',
+          'Knows to obey the WORKFLOW REMINDER',
+          'Understands why manual symlink changes are CMM3 violations',
+          'Can identify when to work on `test` vs `latest` version',
+          'Recognizes test fixture pollution issues',
+          'Commits new versions after `pdca test` auto-promotion',
+          'Understands that `pdca test` manages symlinks but does not commit'
+        ],
+        title: '🧪 How to Test Workflow: Semantic Versioning and Test Iteration'
+      },
+      'how-to-test-without-versioning': {
+        keyLessons: [
+          '🔍 Viewing Tests: `web4tscomponent on <Component> latest test itCase` shows complete test tree',
+          '📊 Test tree displays: file number, describe blocks, test cases with tokens (no execution, no versioning)',
+          '🎯 Running Specific Tests: `web4tscomponent on <Component> latest test itCase <token>` (e.g., 5a1)',
+          '✅ Specific tests run ONLY that test using vitest filtering - safe for baseline checks',
+          '🧪 Running All Tests: `cd components/<Component>/latest && npx vitest run` bypasses auto-promotion',
+          '📝 Direct vitest call useful for comprehensive baseline verification without versioning',
+          '✓ Before refactoring (establish baseline) - use test itCase or direct vitest',
+          '✓ During debugging (isolate failures) - use specific test tokens',
+          '✓ When testing in `latest` (not ready for auto-promotion) - avoid `pdca test`',
+          '❌ When ready to promote - use `pdca test` instead (triggers auto-promotion)',
+          '⚠️ Why NOT `pdca test`: Triggers auto-promotion workflow, creates new versions (test, prod, dev)',
+          '🚫 `pdca test` not suitable for baseline checks - it modifies semantic version links',
+          '🔢 Test Tokens Format: `<file><describe><test>` (e.g., 5a1 = file 5, describe a, test 1)',
+          '📁 File: Test file number (1-7), Describe: Letter (a, b, c), Test: Number (1, 2, 3)',
+          '🎓 Zero-Knowledge Principle: Use `web4tscomponent test itCase` FIRST to discover tests',
+          '🔍 Don\'t assume test names or structure - let the tool show you what exists',
+          '💡 Baseline truth test: Run tests BEFORE refactoring to prove system works',
+          '✅ If tests fail after refactoring, you KNOW you broke something (objective proof)',
+          '📊 CMM3 Compliance: Objective baseline = verifiable before/after comparison'
+        ],
+        verificationChecklist: [
+          'Can view test tree without executing tests',
+          'Can run specific test by token (e.g., 5a1)',
+          'Understands when to use `itCase` vs `pdca test`',
+          'Knows how to establish baseline before refactoring',
+          'Recognizes `pdca test` creates versions (auto-promotion)',
+          'Can explain test token format (<file><describe><test>)',
+          'Uses zero-knowledge approach (discover tests first, don\'t assume)',
+          'Understands baseline truth testing for CMM3 verification'
+        ],
+        title: '🧪 How to Test Without Versioning: Baseline Verification'
+      },
+      'how-to-report': {
+        keyLessons: [
+          '🚨 Summary Generation = Red Flag: Elaborate formatting/boxes indicate context window pressure',
+          '✅ Query RAG BEFORE Reporting: `pdca queryTrainAI "How should I report task completion?"`',
+          '✅ Concise Format: Facts + dual links + git status + STOP',
+          '❌ NEVER generate elaborate summaries without RAG query',
+          '❌ NEVER use boxes, multiple heading levels, decorative elements',
+          '❌ NEVER speculate on "What\'s Next" (user controls loop)',
+          '⚠️ Characteristics of Summary Mode: Comprehensive recaps, "executive summary" style, next steps speculation',
+          '⚠️ Why It Happens: Context window pressure → compression instinct → violation risk',
+          '🎯 Forcing Function Checklist: 1) git status 2) commit all 3) push 4) query trainAI 5) follow guidance 6) report 7) STOP',
+          '💡 Pattern: Integration into trainAI ≠ Active use of trainAI',
+          '💡 Even recent learning requires RAG queries (memory ≠ RAG)',
+          '🔄 Bootstrap Phase: Extra vigilance - query RAG for EVERY reporting task',
+          '✨ Correct Report: "Task complete. Files: [dual link]. Git status: clean. *Awaiting instruction.*"',
+          '🧠 Meta-Pattern: When you DON\'T think you need RAG is when you need it most',
+          '🤝 User Controls Loop: Report facts, provide links, STOP - no loop closure',
+          '⚠️ Summary instinct compensates for fuzzy memory - trigger for RAG query',
+          '🎓 Test: If you\'re about to write "Summary:", query trainAI instead'
+        ],
+        verificationChecklist: [
+          'Recognizes summary generation as context window symptom',
+          'Queries trainAI before reporting task completion',
+          'Uses concise format (facts + links + status + STOP)',
+          'Avoids elaborate formatting and decorative elements',
+          'Does not speculate on next steps',
+          'Checks git status before reporting',
+          'Commits ALL files, not just main deliverable',
+          'Understands forcing function checklist',
+          'Recognizes when assumptions are arising',
+          'Can identify "summary mode" in own writing',
+          'Knows to query RAG when NOT feeling uncertain (paradox)'
+        ],
+        title: '📊 How to Report: Concise Task Completion Without Summary Generation'
+      },
+      'how-to-merge': {
+        keyLessons: [
+          '⚠️ Source Code Merge ≠ Complete Integration!',
+          '✅ Post-Merge Checklist: Resolve conflicts → Commit → BUILD components → Test → Verify CLI',
+          '🔧 Build Step: MANDATORY for components with updated symlinks',
+          '⚠️ Symlink Change → Build Requirement: If latest/dev/test symlinks change, build new versions',
+          '🎯 Test Types: Build-time (tests pass) vs Runtime (CLI may fail) - both must work',
+          '❌ NEVER assume merged code is ready - verify runtime dependencies',
+          '🔍 Check Pattern: ls components/<Component>/<version>/dist/ after merge',
+          '⚠️ Missing dist/ = Unbuilt version = Runtime import failure',
+          '✅ Example: Web4TSComponent latest: 0.3.13.2 → 0.3.14.4 requires building 0.3.14.4',
+          '🔧 Build Command: cd components/<Component>/<version> && npm install && npm run build',
+          '💡 Why Tests Pass But CLI Fails: Tests use build context, CLI uses runtime imports',
+          '⚠️ Symlinks in merge: Auto-accepted, may point to unbuilt versions',
+          '🎯 Forcing Function: After merge, check ALL symlink targets for dist/ directory',
+          '✅ CI/CD Gap: Need automated post-merge build verification',
+          '📊 Integration = Source + Build Artifacts + Runtime Verification'
+        ],
+        verificationChecklist: [
+          'Understands source merge ≠ complete integration',
+          'Knows post-merge checklist includes BUILD step',
+          'Can identify when components need building (symlink changes)',
+          'Recognizes build-time vs runtime import differences',
+          'Checks for dist/ directory after merge',
+          'Knows how to build merged component versions',
+          'Understands why tests pass but CLI fails',
+          'Can diagnose "Cannot find module" as missing build',
+          'Verifies CLI works after merge (not just tests)',
+          'Knows to check all symlink targets for build artifacts'
+        ],
+        title: '🔀 How to Merge: Post-Merge Integration and Build Requirements'
+      }
+    };
+  }
+
+  /**
+   * DRY Helper: Search across multiple topics
+   * @cliHide
+   */
+  private searchAcrossTopicsInternal(
+    query: string,
+    scope: string[],
+    topics: Record<string, any>
+  ): any[] {
+    const results: any[] = [];
+    const queryLower = query.toLowerCase();
+    const keywords = queryLower.split(/\s+/);
+    
+    for (const topicKey of scope) {
+      const topic = topics[topicKey];
+      if (!topic) continue;
+      
+      // Search in key lessons
+      if (topic.keyLessons) {
+        topic.keyLessons.forEach((lesson: string) => {
+          const lessonLower = lesson.toLowerCase();
+          const matchCount = keywords.filter(kw => lessonLower.includes(kw)).length;
+          
+          if (matchCount > 0) {
+            results.push({
+              topic: topicKey,
+              content: lesson,
+              score: matchCount,
+              type: 'lesson'
+            });
+          }
+        });
+      }
+      
+      // Search in verification checklist
+      if (topic.verificationChecklist) {
+        topic.verificationChecklist.forEach((item: string) => {
+          const itemLower = item.toLowerCase();
+          const matchCount = keywords.filter(kw => itemLower.includes(kw)).length;
+          
+          if (matchCount > 0) {
+            results.push({
+              topic: topicKey,
+              content: item,
+              score: matchCount,
+              type: 'checklist'
+            });
+          }
+        });
+      }
+    }
+    
+    // Sort by relevance score
+    results.sort((a, b) => b.score - a.score);
+    
+    return results;
+  }
+
+  /**
+   * DRY Helper: Display query results grouped by topic
+   * @cliHide
+   */
+  private displayQueryResultsInternal(results: any[], topics: Record<string, any>): void {
+    // Group by topic
+    const grouped = new Map<string, any[]>();
+    for (const result of results) {
+      if (!grouped.has(result.topic)) {
+        grouped.set(result.topic, []);
+      }
+      grouped.get(result.topic)!.push(result);
+    }
+    
+    // Display each topic's results
+    for (const [topicKey, matches] of grouped.entries()) {
+      const topicTitle = topics[topicKey]?.title || topicKey;
+      console.log(`📚 Found in: ${topicKey}`);
+      console.log(`   ${topicTitle}`);
+      console.log(`${'─'.repeat(80)}`);
+      
+      matches.forEach(match => {
+        console.log(`${match.content}\n`);
+      });
+    }
+    
+    // Suggest related topics
+    console.log(`💡 Related topics:`);
+    for (const topicKey of grouped.keys()) {
+      console.log(`   - pdca trainAI ${topicKey} (full guide)`);
+    }
+    console.log();
+  }
+
+  /**
+   * DRY Helper: Display available topics
+   * @cliHide
+   */
+  private displayAvailableTopicsInternal(topics: Record<string, any>): void {
+    console.log(`💡 Available topics:`);
+    Object.keys(topics).forEach((key, i) => {
+      const title = topics[key]?.title || key;
+      console.log(`   ${i + 1}:${key} - ${title}`);
+    });
+    console.log();
   }
 
   /**
@@ -671,20 +1036,17 @@ export class DefaultPDCA implements PDCA {
         let newDisplay = displayText;
         let newPath = localPath;
         
-        // CORRECT FORMAT (PDCA files):
-        // [§/absolute/path](../../relative/path)
-        
-        // Check if display and path match (should use § notation + relative path)
+        // Check if display and path match (should use § notation)
         if (displayText === localPath && !localPath.startsWith('../')) {
           if (existsSync(path.join(projectRoot, localPath))) {
             needsFix = true;
             newDisplay = `§/${localPath}`;
-            newPath = this.calculateRelativePath(mdFile, path.join(projectRoot, localPath), path);
+            newPath = this.calculateRelativePathInternal(mdFile, path.join(projectRoot, localPath), path);
           }
         }
         // Check if GitHub path differs from local path
         else if (githubPath && githubPath !== localPath) {
-          const expectedPath = this.calculateRelativePath(mdFile, path.join(projectRoot, githubPath), path);
+          const expectedPath = this.calculateRelativePathInternal(mdFile, path.join(projectRoot, githubPath), path);
           if (localPath !== expectedPath && existsSync(path.join(projectRoot, githubPath))) {
             needsFix = true;
             newDisplay = `§/${githubPath}`;
@@ -706,14 +1068,14 @@ export class DefaultPDCA implements PDCA {
       } else if (missingBracketsMatch) {
         const [, githubUrl, plainPath] = missingBracketsMatch;
         
-        // Fix missing brackets - use PDCA format (relative paths)
+        // Fix missing brackets
         const trimmedPath = plainPath.trim();
         let newDisplay: string;
         let newPath: string;
         
         if (existsSync(path.join(projectRoot, trimmedPath))) {
           newDisplay = `§/${trimmedPath}`;
-          newPath = this.calculateRelativePath(mdFile, path.join(projectRoot, trimmedPath), path);
+          newPath = this.calculateRelativePathInternal(mdFile, path.join(projectRoot, trimmedPath), path);
         } else {
           newDisplay = trimmedPath;
           newPath = trimmedPath;
@@ -1094,34 +1456,15 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
-   * 1j) QA Decisions format
-   * Must include one of these valid patterns:
-   * 1. Pending decisions: [ ] **Decision N:** with options a/b/c
-   * 2. Completed decisions: [x] **Decision N:** with implementation note
-   * 3. All clear: "All clear, no decisions to make - [reason]"
-   * 
-   * Decision lifecycle: Pending [ ] → TRON answers → Agent implements → Completed [x]
+   * 1j) QA Decisions format: proper decisions OR "All clear, no decisions"
    * @cliHide
    */
   private check1j(content: string): boolean {
-    // Check for decisions section header
-    const hasDecisionSection = content.includes('### **To TRON: QA Decisions required**') ||
-                              content.includes('### QA Decisions');
-    
-    if (!hasDecisionSection) {
-      return false;
-    }
-    
-    // Valid patterns:
-    // 1. Pending: [ ] **Decision
-    // 2. Completed: [x] **Decision  
-    // 3. All clear: "All clear, no decisions"
-    
-    const hasPendingDecision = content.includes('[ ] **Decision');
-    const hasCompletedDecision = content.includes('[x] **Decision');
-    const hasAllClear = content.includes('All clear, no decisions');
-    
-    return hasPendingDecision || hasCompletedDecision || hasAllClear;
+    // Must have either QA Decisions section or mention of decisions
+    return content.includes('### QA Decisions') ||
+           content.includes('All clear, no decisions') ||
+           content.includes('**D1:**') ||
+           content.includes('Decision 1:');
   }
 
   /**
@@ -1143,16 +1486,6 @@ export class DefaultPDCA implements PDCA {
   /**
    * 3c) Dual link format: [GitHub](URL) | [§/path](path)
    * Checks that all dual links follow proper format
-   * 
-   * CORRECT Format (PDCA files):
-   * [§/absolute/path/from/root](../../relative/path/from/document)
-   * - Display: §/absolute/path for user clarity
-   * - Link: relative path for local markdown navigation
-   * 
-   * Chat format (getDualLink output - different!):
-   * [§/absolute/path](absolute/path)
-   * - Both parts absolute for chat display
-   * 
    * @cliHide
    */
   private check3c(content: string): boolean {
@@ -1176,13 +1509,14 @@ export class DefaultPDCA implements PDCA {
         if (standardMatch) {
           const [, githubUrl, displayText, localPath] = standardMatch;
           
-          // Check if display text uses § notation
-          // Valid: [§/path/to/file](../../../path/to/file) - PDCA format
-          // Valid: [§/path/to/file](path/to/file) - Chat format (also accepted)
+          // Check if display text uses § notation or is a relative path
+          // Valid: [§/path/to/file](../../../path/to/file)
+          // Valid: [local/file](local/file)
           // Invalid: [/absolute/path](../../../path) without §
+          // Invalid: display text and local path don't match pattern
           
-          if (!displayText.startsWith('§/')) {
-            // Display text must start with § notation
+          if (displayText.startsWith('/') && !displayText.startsWith('§/')) {
+            // Absolute path without § notation
             return false;
           }
           
@@ -1190,11 +1524,6 @@ export class DefaultPDCA implements PDCA {
           if (!githubUrl.includes('github.com')) {
             return false;
           }
-          
-          // Accept both formats:
-          // - Relative paths (PDCA files): ../../../path
-          // - Absolute paths (Chat format): path/from/root
-          // As long as display starts with §/, it's valid
         }
       }
     }
@@ -1563,10 +1892,10 @@ export class DefaultPDCA implements PDCA {
    * Systematically transfers knowledge to ensure agents don't repeat CMM2 mistakes
    * Includes collaboration patterns, instruction interpretation, test-first verification, and zero-knowledge method usage
    * 
-   * @param topic Training topic identifier (e.g., "how-to-start", "how-to-pdca", "how-to-cmm", "how-to-component", "how-to-test-workflow", "how-to-test-first", "how-to-dual-links", "how-to-ensure-links", "how-to-component-upgrade", "how-to-interpret-instructions", "how-to-collaborate", "how-to-chat-response") or number (e.g., "1", "2", "3")
+   * @param topic Training topic identifier (e.g., "how-to-start", "how-to-pdca", "how-to-cmm", "how-to-component", "how-to-feature-development", "how-to-test-workflow", "how-to-test-first", "how-to-dual-links", "how-to-ensure-links", "how-to-component-upgrade", "how-to-interpret-instructions", "how-to-collaborate", "how-to-chat-response") or number (e.g., "1", "2", "3")
    * @param options Optional training configuration
    * @cliSyntax topic
-   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-interpret-instructions how-to-collaborate how-to-chat-response 1 2 3 4 5 6 7 8 9 10 11 12
+   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-feature-development how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-interpret-instructions how-to-collaborate how-to-chat-response 1 2 3 4 5 6 7 8 9 10 11 12 13
    */
   async trainAI(topic: string): Promise<this> {
     console.log(`\n🎓 AI Training Module - CMM3 Reproducible Learning\n`);
@@ -1586,12 +1915,17 @@ export class DefaultPDCA implements PDCA {
       'how-to-dual-links',
       'how-to-ensure-links',
       'how-to-component-upgrade',
+      'how-to-merge',
       'how-to-component',
+      'how-to-feature-development',
       'how-to-test-workflow',
+      'how-to-test-without-versioning',
       'how-to-test-first',
       'how-to-interpret-instructions',
       'how-to-collaborate',
-      'how-to-chat-response'
+      'how-to-chat-response',
+      'how-to-report',
+      'how-to-license-headers'
     ];
 
     // Handle numeric input - map number to topic name
@@ -1777,7 +2111,21 @@ export class DefaultPDCA implements PDCA {
           '🔧 Tool: `pdca getDualLink <file>` auto-generates correct format',
           '🔧 Auto-fix: getDualLink adds/commits/pushes if needed',
           '❌ NEVER use file:// prefix (CMM2 violation)',
-          '❌ NEVER use relative paths without § notation'
+          '❌ NEVER use relative paths without § notation',
+          '⚠️ getDualLink returns project-root-relative in local link part',
+          '⚠️ For source files NOT at root, use getDualLinkRelativePath to calculate paths',
+          '🔧 Tool: `pdca getDualLinkRelativePath <from> <to>` calculates relative paths',
+          '✅ Verification: cd to source dir, ls <path> to test link works',
+          '❌ NEVER assume getDualLink output works without verification',
+          '🚨 MANDATORY: Test every link with ls from source directory',
+          '✨ Use getDualLinkRelativePath for zero-knowledge path calculation',
+          '🧠 Context Window Awareness: Long sessions → assumptions → violations',
+          '✅ ALWAYS run `git status` before presenting dual links',
+          '🔍 Pattern: getDualLink commits PDCA, but build artifacts may remain uncommitted',
+          '❌ NEVER assume all files are committed - VERIFY with git status',
+          '🔄 RAG First: When uncertain, query trainAI before acting',
+          '⚠️ Bootstrap Phase: Extra vigilance required - system being established (temporary)',
+          '🎯 Forcing Function: git status → commit all → push → THEN present link'
         ],
         verificationChecklist: [
           'Can write dual link format from memory',
@@ -1785,7 +2133,15 @@ export class DefaultPDCA implements PDCA {
           'Understands why § notation is needed (local navigation)',
           'Can use getDualLink to generate correct links',
           'Knows file must be pushed for link to be valid',
-          'Recognizes CMM2 link violations (file://, no §, unpushed files)'
+          'Recognizes CMM2 link violations (file://, no §, unpushed files)',
+          'Knows getDualLink returns project-root-relative in local part',
+          'Can use getDualLinkRelativePath to calculate relative paths',
+          'Always verifies links with ls from source directory',
+          'Tests every link before committing',
+          'Checks git status before presenting dual links',
+          'Commits ALL uncommitted files, not just PDCA',
+          'Queries trainAI when assumptions arise',
+          'Recognizes context window exhaustion symptoms'
         ]
       },
       'how-to-ensure-links': {
@@ -1853,6 +2209,46 @@ export class DefaultPDCA implements PDCA {
           'Can maintain backward compatibility during refactoring'
         ]
       },
+      'how-to-merge': {
+        title: '🔀 How to Merge: Post-Merge Integration and Build Requirements',
+        description: 'Complete merge integration: source + build + runtime verification for symlinked components',
+        requiredReading: [
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-23-UTC-1530.merge-impact-analysis.pdca.md',
+            reason: 'Real case: Merge brought unbuilt dependencies, CLI failure analysis',
+            depth: 2
+          }
+        ],
+        keyLessons: [
+          '⚠️ Source Code Merge ≠ Complete Integration!',
+          '✅ Post-Merge Checklist: Resolve conflicts → Commit → BUILD components → Test → Verify CLI',
+          '🔧 Build Step: MANDATORY for components with updated symlinks',
+          '⚠️ Symlink Change → Build Requirement: If latest/dev/test symlinks change, build new versions',
+          '🎯 Test Types: Build-time (tests pass) vs Runtime (CLI may fail) - both must work',
+          '❌ NEVER assume merged code is ready - verify runtime dependencies',
+          '🔍 Check Pattern: ls components/<Component>/<version>/dist/ after merge',
+          '⚠️ Missing dist/ = Unbuilt version = Runtime import failure',
+          '✅ Example: Web4TSComponent latest: 0.3.13.2 → 0.3.14.4 requires building 0.3.14.4',
+          '🔧 Build Command: cd components/<Component>/<version> && npm install && npm run build',
+          '💡 Why Tests Pass But CLI Fails: Tests use build context, CLI uses runtime imports',
+          '⚠️ Symlinks in merge: Auto-accepted, may point to unbuilt versions',
+          '🎯 Forcing Function: After merge, check ALL symlink targets for dist/ directory',
+          '✅ CI/CD Gap: Need automated post-merge build verification',
+          '📊 Integration = Source + Build Artifacts + Runtime Verification'
+        ],
+        verificationChecklist: [
+          'Understands source merge ≠ complete integration',
+          'Knows post-merge checklist includes BUILD step',
+          'Can identify when components need building (symlink changes)',
+          'Recognizes build-time vs runtime import differences',
+          'Checks for dist/ directory after merge',
+          'Knows how to build merged component versions',
+          'Understands why tests pass but CLI fails',
+          'Can diagnose "Cannot find module" as missing build',
+          'Verifies CLI works after merge (not just tests)',
+          'Knows to check all symlink targets for build artifacts'
+        ]
+      },
       'how-to-component': {
         title: '🔧 How to Component: Web4 Component System',
         description: 'Learn Web4 component patterns, versioning, and CLI auto-discovery',
@@ -1874,14 +2270,145 @@ export class DefaultPDCA implements PDCA {
           '✅ Semantic versioning: nextPatch, nextMinor, nextMajor, nextBuild',
           '✅ Component pattern: Empty constructor + scenario initialization + functionality',
           '✅ Symlinks: latest (dev), prod (stable), test, dev',
-          '⚠️ NEVER manually copy component versions - violates CMM3'
+          '⚠️ NEVER manually copy component versions - violates CMM3',
+          '✅ Web4 CLI uses positional parameters (no --flags)',
+          '✅ Parameter order defined by @cliSyntax annotation',
+          '✅ Optional parameters: <?param> (trail, can omit)',
+          '✅ Required parameters: <param> or !<param>',
+          '✅ Example: `pdca moveFile <oldPath> <newPath> <?dryRun>`',
+          '❌ NEVER use --flag syntax (Unix-style)',
+          '✅ Consistency: All Web4 components follow same pattern',
+          '🔧 @cliSyntax defines parameter order in method signature',
+          '🔧 @cliDefault provides defaults for optional parameters',
+          '🔧 @cliValues enables tab completion discovery',
+          '✅ DRY: Symlink node_modules, never duplicate dependencies',
+          '✅ DRY: Extend tsconfig.json from project root',
+          '✅ DRY: Reuse existing methods, never copy-paste logic',
+          '✅ DRY: Cross-reference docs, never duplicate content',
+          '✅ initProject creates global node_modules and tsconfig',
+          '❌ NEVER create real node_modules directories in components',
+          '⚠️ Duplicated dependencies violate CMM3 (not reproducible)',
+          '✅ Radical OOP: Empty constructors (no parameters)',
+          '✅ Radical OOP: All config via init(scenario) method',
+          '✅ Pattern: constructor() { this.model = {}; }',
+          '✅ Pattern: init(scenario: Scenario<Model>): this',
+          '✅ Why: Zero-dependency instantiation (testability)',
+          '✅ Why: Flexible composition (multiple scenarios)',
+          '❌ NEVER use constructor parameters (breaks radical OOP)',
+          '✅ Method Chaining: Always return Promise<this>',
+          '✅ Enables fluent API: component.method1().method2()',
+          '✅ Enables CLI chaining: pdca method1 param1 method2',
+          '✅ Pattern: async myMethod(): Promise<this> { return this; }',
+          '✅ Auto-Discovery: Add method → CLI command appears',
+          '✅ @cliSyntax annotation defines parameter order',
+          '✅ @cliValues annotation enables tab completion',
+          '✅ @cliHide annotation hides internal methods',
+          '✅ TSDoc becomes CLI help text automatically',
+          '❌ NEVER manually edit CLI files (auto-generated)'
         ],
         verificationChecklist: [
           'Can create new component version using web4tscomponent',
           'Understands semantic version promotion types',
           'Knows component directory structure and symlink purposes',
           'Can build component using: web4tscomponent on <Component> <version> build',
-          'Recognizes when to use nextPatch vs nextMinor vs nextMajor'
+          'Recognizes when to use nextPatch vs nextMinor vs nextMajor',
+          'Understands Web4 uses positional parameters, not flags',
+          'Can read @cliSyntax to determine parameter order',
+          'Knows optional parameters trail and can be omitted',
+          'Understands DRY principle for dependencies (symlinks)',
+          'Knows to extend tsconfig from root, not duplicate',
+          'Can identify code duplication and refactor to reuse',
+          'Understands radical OOP empty constructor pattern',
+          'Can write init(scenario) method for configuration',
+          'Knows constructor() should have no parameters',
+          'Always returns Promise<this> for method chaining',
+          'Understands @cliSyntax, @cliValues, @cliHide annotations',
+          'Can add methods that auto-discover as CLI commands',
+          'Recognizes CMM2 violations (real node_modules, constructor params)',
+          'Can explain why DRY and Radical OOP enable CMM3',
+          'Knows web4tscomponent initProject sets up DRY structure'
+        ]
+      },
+      'how-to-feature-development': {
+        title: '🛠️ How to Feature Development: RAG-Powered Test-First CMM3 Pattern',
+        description: 'Master CMM3-compliant feature development: RAG preparation, test-first design, automated verification, and knowledge loop closure',
+        requiredReading: [
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-21-UTC-1550.feature.pdca.md',
+            reason: 'Real example: getDualLinkRelativePath implementation using the pattern',
+            depth: 2
+          },
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-21-UTC-1605.pdca.md',
+            reason: 'Meta-learning: Pattern extraction and CMM3 compliance analysis',
+            depth: 2
+          },
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-21-UTC-1410.test-first-verification.pdca.md',
+            reason: 'Test-first verification principles and anti-patterns',
+            depth: 1
+          },
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-21-UTC-1700.pdca.md',
+            reason: 'One-loop success: queryTrainAI implementation and why it worked',
+            depth: 2
+          }
+        ],
+        keyLessons: [
+          '✅ Phase 0 - RAG Preparation: Query trainAI BEFORE planning (how-to-test-first, how-to-component)',
+          '⏱️ RAG Preparation is Non-Negotiable: 30 min reading → 2-3 hours debugging saved',
+          '📚 Read to depth 3: document → references → secondary references',
+          '🧠 Build complete mental model BEFORE coding (prevents assumption cascade)',
+          '✅ Phase 1 - TRON Collaboration: Accept challenges as refinement opportunities',
+          '🔄 TRON Challenges → Research → Document → Improve (not defend current approach)',
+          '📖 User has knowledge agent doesn\'t - research immediately when challenged',
+          '✅ Phase 2 - Test-First Design: Write 5-7 comprehensive tests BEFORE implementation',
+          '🎯 DRY at Planning Stage: Identify reusable parts in plan, extract helpers from start',
+          '🔧 Web4 Naming: methodNameInternal() for private helpers (NO underscores!)',
+          '❌ NEVER use _methodName() or _methodNameInternal() (underscore violation)',
+          '✅ Correct: calculateRelativePathInternal(), getDataInternal()',
+          '❌ Wrong: _calculateRelativePath(), _getTrainingTopicsInternal()',
+          '📝 Leave TODO comments for future DRY refactoring opportunities',
+          '✅ Phase 3 - Expected Failure: Run tests, see failure, TRUST it (no manual check)',
+          '✅ Phase 4 - Minimal Implementation: Add ONLY what\'s needed to pass tests',
+          '🎨 Apply Web4 principles systematically: DRY, Radical OOP, Method Chaining, Auto-Discovery',
+          '✅ Phase 5 - Trust the Green: Tests pass = done (no manual verification)',
+          '✅ Phase 6 - trainAI Integration: Close knowledge loop immediately',
+          '✅ Phase 7 - TRON Validation: User confirms pattern, closes feedback loop',
+          '🎯 CMM3 Compliance: Objective (tests) + Reproducible (git) + Systematic (process)',
+          '⏱️ Time Investment: ~90 min for CMM3 feature vs quick hack',
+          '🚀 Success Metric: TRON validates pattern, auto-promotion succeeds',
+          '🏆 One Loop = CMM4 Excellence: Write → Fail → Implement → Pass → Done (NO iteration)',
+          '❌ NEVER skip tests: Test-first is mandatory for CMM3',
+          '❌ NEVER manual verify: Tests are objective arbiter, not agent judgment',
+          '❌ Multiple loops = CMM2 trial-and-error (avoid this)',
+          '🔄 RAG-Powered FOR TWO: Agent + trainAI + Tests + TRON = CMM3 naturally',
+          '💡 Meta-Pattern: Query → Challenge → Test → Implement → Verify → Document → Validate',
+          '🎓 External verification at EVERY phase prevents CMM2 violations',
+          '✨ Pattern is replicable: Same 7 steps work for any new feature',
+          '📊 Web4 Principles Research Has Exponential ROI: 30 min reading → Apply 7 principles forever'
+        ],
+        verificationChecklist: [
+          'Queried trainAI before planning (how-to-test-first, relevant domain topics)',
+          'Read referenced docs to depth 3 (not just surface level)',
+          'Built complete mental model before coding',
+          'Identified reusable parts at planning stage (not refactoring)',
+          'Extracted DRY helpers from start (not after duplication)',
+          'Wrote tests before implementation (5-7 test cases)',
+          'Ran tests and saw expected failure (method not found, etc)',
+          'Trusted failure without manual verification',
+          'Applied Web4 principles systematically (DRY, Radical OOP, Chaining, Auto-Discovery)',
+          'Implemented minimal code to pass tests (no gold-plating)',
+          'All tests passed without manual verification',
+          'Implementation completed in ONE feedback loop (no iteration cycles)',
+          'TRON challenges led to research and documentation (not defense)',
+          'Updated trainAI with new knowledge immediately',
+          'TRON validated the pattern and result',
+          'Can explain why this is CMM3 (objective, reproducible, systematic)',
+          'Can replicate pattern for next feature development',
+          'Understands 90-min investment pays off in reliability',
+          'Recognizes external verification (trainAI + Tests + TRON) as key to CMM3',
+          'Achieved "one loop" success (TRON impressed with efficiency)'
         ]
       },
       'how-to-test-workflow': {
@@ -1928,6 +2455,53 @@ export class DefaultPDCA implements PDCA {
           'Recognizes test fixture pollution issues',
           'Commits new versions after `pdca test` auto-promotion',
           'Understands that `pdca test` manages symlinks but does not commit'
+        ]
+      },
+      'how-to-test-without-versioning': {
+        title: '🧪 How to Test Without Versioning: Baseline Verification',
+        description: 'Learn to run tests without triggering version creation: test itCase for discovery, specific tests for verification, direct vitest for baseline',
+        requiredReading: [
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-21-UTC-1710.pdca.md',
+            reason: 'Real-world learning: Baseline truth testing before DRY refactoring',
+            depth: 2
+          },
+          {
+            path: 'components/Web4TSComponent/latest/README.md',
+            reason: 'Test itCase functionality documentation',
+            depth: 1
+          }
+        ],
+        keyLessons: [
+          '🔍 Viewing Tests: `web4tscomponent on <Component> latest test itCase` shows complete test tree',
+          '📊 Test tree displays: file number, describe blocks, test cases with tokens (no execution, no versioning)',
+          '🎯 Running Specific Tests: `web4tscomponent on <Component> latest test itCase <token>` (e.g., 5a1)',
+          '✅ Specific tests run ONLY that test using vitest filtering - safe for baseline checks',
+          '🧪 Running All Tests: `cd components/<Component>/latest && npx vitest run` bypasses auto-promotion',
+          '📝 Direct vitest call useful for comprehensive baseline verification without versioning',
+          '✓ Before refactoring (establish baseline) - use test itCase or direct vitest',
+          '✓ During debugging (isolate failures) - use specific test tokens',
+          '✓ When testing in `latest` (not ready for auto-promotion) - avoid `pdca test`',
+          '❌ When ready to promote - use `pdca test` instead (triggers auto-promotion)',
+          '⚠️ Why NOT `pdca test`: Triggers auto-promotion workflow, creates new versions (test, prod, dev)',
+          '🚫 `pdca test` not suitable for baseline checks - it modifies semantic version links',
+          '🔢 Test Tokens Format: `<file><describe><test>` (e.g., 5a1 = file 5, describe a, test 1)',
+          '📁 File: Test file number (1-7), Describe: Letter (a, b, c), Test: Number (1, 2, 3)',
+          '🎓 Zero-Knowledge Principle: Use `web4tscomponent test itCase` FIRST to discover tests',
+          '🔍 Don\'t assume test names or structure - let the tool show you what exists',
+          '💡 Baseline truth test: Run tests BEFORE refactoring to prove system works',
+          '✅ If tests fail after refactoring, you KNOW you broke something (objective proof)',
+          '📊 CMM3 Compliance: Objective baseline = verifiable before/after comparison'
+        ],
+        verificationChecklist: [
+          'Can view test tree without executing tests',
+          'Can run specific test by token (e.g., 5a1)',
+          'Understands when to use `itCase` vs `pdca test`',
+          'Knows how to establish baseline before refactoring',
+          'Recognizes `pdca test` creates versions (auto-promotion)',
+          'Can explain test token format (<file><describe><test>)',
+          'Uses zero-knowledge approach (discover tests first, don\'t assume)',
+          'Understands baseline truth testing for CMM3 verification'
         ]
       },
       'how-to-test-first': {
@@ -2084,6 +2658,114 @@ export class DefaultPDCA implements PDCA {
           'Recognizes 3a violations in own responses',
           'Can generate project-root-relative paths'
         ]
+      },
+      'how-to-report': {
+        title: '📊 How to Report: Concise Task Completion Without Summary Generation',
+        description: 'Master concise reporting - avoid elaborate summaries (context window symptom), query RAG first, follow CMM3 format',
+        requiredReading: [
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-23-UTC-1445.meta-meta-learning-summary-instinct.pdca.md',
+            reason: 'Documents summary generation as context window pressure indicator',
+            depth: 2
+          },
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-23-UTC-1430.context-window-recovery-trainai.pdca.md',
+            reason: 'Context window exhaustion patterns and git status protocol',
+            depth: 2
+          }
+        ],
+        keyLessons: [
+          '🚨 Summary Generation = Red Flag: Elaborate formatting/boxes indicate context window pressure',
+          '✅ Query RAG BEFORE Reporting: `pdca queryTrainAI "How should I report task completion?"`',
+          '✅ Concise Format: Facts + dual links + git status + STOP',
+          '❌ NEVER generate elaborate summaries without RAG query',
+          '❌ NEVER use boxes, multiple heading levels, decorative elements',
+          '❌ NEVER speculate on "What\'s Next" (user controls loop)',
+          '⚠️ Characteristics of Summary Mode: Comprehensive recaps, "executive summary" style, next steps speculation',
+          '⚠️ Why It Happens: Context window pressure → compression instinct → violation risk',
+          '🎯 Forcing Function Checklist: 1) git status 2) commit all 3) push 4) query trainAI 5) follow guidance 6) report 7) STOP',
+          '💡 Pattern: Integration into trainAI ≠ Active use of trainAI',
+          '💡 Even recent learning requires RAG queries (memory ≠ RAG)',
+          '🔄 Bootstrap Phase: Extra vigilance - query RAG for EVERY reporting task',
+          '✨ Correct Report: "Task complete. Files: [dual link]. Git status: clean. *Awaiting instruction.*"',
+          '🧠 Meta-Pattern: When you DON\'T think you need RAG is when you need it most',
+          '🤝 User Controls Loop: Report facts, provide links, STOP - no loop closure',
+          '⚠️ Summary instinct compensates for fuzzy memory - trigger for RAG query',
+          '🎓 Test: If you\'re about to write "Summary:", query trainAI instead'
+        ],
+        verificationChecklist: [
+          'Recognizes summary generation as context window symptom',
+          'Queries trainAI before reporting task completion',
+          'Uses concise format (facts + links + status + STOP)',
+          'Avoids elaborate formatting and decorative elements',
+          'Does not speculate on next steps',
+          'Checks git status before reporting',
+          'Commits ALL files, not just main deliverable',
+          'Understands forcing function checklist',
+          'Recognizes when assumptions are arising',
+          'Can identify "summary mode" in own writing',
+          'Knows to query RAG when NOT feeling uncertain (paradox)'
+        ]
+      },
+      'how-to-license-headers': {
+        title: '📄 How to License Headers: AI-GPL License Management',
+        description: 'Master license header management - why headers matter, how to use licensetool, when to run checks',
+        requiredReading: [
+          {
+            path: 'AI-GPL.md',
+            reason: 'Complete AI-GPL addendum specification and rationale',
+            depth: 2
+          },
+          {
+            path: '.reuse/dep5',
+            reason: 'Machine-readable license mappings for all file types',
+            depth: 1
+          },
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-23-UTC-0904.feature.pdca.md',
+            reason: 'Complete LicenseTool implementation with test-first pattern',
+            depth: 2
+          },
+          {
+            path: 'scrum.pmo/sprints/sprint-10/planning.md',
+            reason: 'Original requirements and business context',
+            depth: 1
+          }
+        ],
+        keyLessons: [
+          '📄 Why Headers Matter: Legal protection, AI training clarity, copyleft enforcement',
+          '🎯 AGPL-3.0-only WITH AI-GPL-Addendum: All files get this license',
+          '📁 Process Artifacts: Subset with commercial dual-licensing (scrum.pmo/, *.pdca.md)',
+          '✅ licensetool check: Verify all headers present and up-to-date',
+          '✅ licensetool apply: Add/update headers automatically',
+          '✅ licensetool apply . true: Dry-run mode (see changes before applying)',
+          '🔧 Shebang Pattern: Remove from .ts source (causes build errors), only in .js',
+          '📝 Required Header Elements: SPDX-License-Identifier, SPDX-FileComment, Copyright, Copyleft, Backlinks',
+          '🔗 Relative Path to AI-GPL.md: Use calculateRelativePathInternal() pattern',
+          '🏗️ CI Integration: GitHub Actions runs licensetool check on all pushes/PRs',
+          '❌ NEVER manual headers: Use licensetool to ensure consistency',
+          '❌ NEVER skip CI: License compliance is mandatory',
+          '⚠️ Test Fixtures Exception: test/data/ files NOT process artifacts',
+          '💡 When adding new file types: Update shouldSkipFileInternal() in LicenseTool',
+          '💡 Web4 Naming: NO underscores, Internal suffix for private helpers',
+          '📊 REUSE Compliance: Industry standard for machine-readable license metadata',
+          '🎓 Dual-Licensing Model: Open-source (AGPLv3) + Commercial (AI use cases)',
+          '🔄 Header Updates: Run licensetool apply after copyright year changes',
+          '✨ Auto-Completion: Tab completion works for file paths and dryRun parameter',
+          '🧪 Test-First Pattern: 60 tests written before implementation (98.3% pass rate)'
+        ],
+        verificationChecklist: [
+          'Can run licensetool check and interpret results',
+          'Understands difference between missing vs outdated headers',
+          'Can use dry-run mode before applying changes',
+          'Knows when headers are required (all tracked files)',
+          'Understands AI-GPL scope (all files, process artifacts subset)',
+          'Can add headers to new file types if needed',
+          'Knows to check CI status after header changes',
+          'Understands shebang conflicts with headers',
+          'Can explain why headers use relative paths',
+          'Recognizes process artifacts vs regular files'
+        ]
       }
     };
 
@@ -2129,6 +2811,96 @@ export class DefaultPDCA implements PDCA {
     console.log(`🎓 Next: Read all required documents, verify understanding with checklist`);
     console.log(`💡 CMM4 Note: As you complete this training, you evolve beyond base LLM limitations\n`);
 
+    return this;
+  }
+
+  /**
+   * Query trainAI knowledge base with natural language questions
+   * Searches across all topics or within specific topic for quick answers
+   * 
+   * @param query Natural language question to search for
+   * @param topic Optional: limit search to specific topic
+   * @cliSyntax query topic
+   * @cliDefault topic ""
+   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-feature-development how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-merge how-to-interpret-instructions how-to-collaborate how-to-chat-response how-to-report how-to-license-headers
+   */
+  async queryTrainAI(query: string, topic: string = ''): Promise<this> {
+    console.log(`\n🔍 trainAI Query Results\n`);
+    console.log(`Query: "${query}"\n`);
+    
+    // DRY: Reuse existing trainAI infrastructure
+    const trainingTopics = this.getTrainingTopicsInternal();
+    const searchScope = (topic && topic !== '') ? [topic] : Object.keys(trainingTopics);
+    
+    // Validate topic if provided
+    if (topic && topic !== '' && !trainingTopics[topic]) {
+      console.log(`❌ Topic "${topic}" not found\n`);
+      this.displayAvailableTopicsInternal(trainingTopics);
+      return this;  // Method chaining
+    }
+    
+    // DRY: Use extracted search method
+    const results = this.searchAcrossTopicsInternal(query, searchScope, trainingTopics);
+    
+    // Handle no results
+    if (results.length === 0) {
+      console.log(`❌ No results found for "${query}"\n`);
+      this.displayAvailableTopicsInternal(trainingTopics);
+      return this;  // Method chaining
+    }
+    
+    // Display results grouped by topic
+    this.displayQueryResultsInternal(results, trainingTopics);
+    
+    return this;  // Method chaining
+  }
+
+  /**
+   * Calculate relative path from one file to another for dual link local part
+   * Groups with getDualLink for zero-knowledge discoverability in autocomplete
+   * 
+   * Use this to calculate the correct relative path for the local part of dual links
+   * when creating links in markdown files that are not at the project root.
+   * 
+   * @param fromFile Source file path (absolute or project-root-relative)
+   * @param toFile Target file path (absolute or project-root-relative)
+   * @returns Relative path from fromFile to toFile
+   * @cliSyntax fromFile toFile
+   */
+  async getDualLinkRelativePath(fromFile: string, toFile: string): Promise<this> {
+    console.log(`\n🧭 Relative Path Calculation\n`);
+    
+    const path = await import('path');
+    const projectRoot = await this.getProjectRoot();
+    
+    // Normalize paths to full paths
+    let fromFullPath: string;
+    let toFullPath: string;
+    
+    if (path.isAbsolute(fromFile)) {
+      fromFullPath = fromFile;
+    } else if (fromFile.startsWith('§/')) {
+      fromFullPath = path.join(projectRoot, fromFile.substring(2));
+    } else {
+      fromFullPath = path.join(projectRoot, fromFile);
+    }
+    
+    if (path.isAbsolute(toFile)) {
+      toFullPath = toFile;
+    } else if (toFile.startsWith('§/')) {
+      toFullPath = path.join(projectRoot, toFile.substring(2));
+    } else {
+      toFullPath = path.join(projectRoot, toFile);
+    }
+    
+    // Calculate relative path
+    const fromDir = path.dirname(fromFullPath);
+    const relativePath = path.relative(fromDir, toFullPath);
+    
+    console.log(`📁 From: ${path.relative(projectRoot, fromFullPath)}`);
+    console.log(`📁 To:   ${path.relative(projectRoot, toFullPath)}`);
+    console.log(`\n✨ Relative Path: ${relativePath}\n`);
+    
     return this;
   }
 
