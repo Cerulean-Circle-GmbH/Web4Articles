@@ -215,10 +215,10 @@ describe('PDCA moveFile Tests', () => {
     const pdca = new DefaultPDCA();
     const tempDir = path.join(__dirname, 'temp-TC32');
     
-    // Setup: Create target file and file linking to it
+    // Setup: Create target file and PDCA file linking to it (must be .pdca.md for findPDCAsLinking)
     const oldPath = path.join(tempDir, 'target.md');
     const newPath = path.join(tempDir, 'moved', 'target.md');
-    const linkingFile = path.join(tempDir, 'linker.md');
+    const linkingFile = path.join(tempDir, '2025-10-23-UTC-1700.linker.pdca.md');
     
     fs.mkdirSync(path.join(tempDir, 'moved'), { recursive: true });
     fs.writeFileSync(oldPath, '# Target');
@@ -235,7 +235,7 @@ describe('PDCA moveFile Tests', () => {
     // Execute
     await pdca.moveFile(oldPath, newPath);
     
-    // Verify: linker.md should have updated link
+    // Verify: linker.pdca.md should have updated link
     const content = fs.readFileSync(linkingFile, 'utf-8');
     expect(content).toContain('moved/target.md');
     expect(content).not.toContain('[Link](target.md)');
