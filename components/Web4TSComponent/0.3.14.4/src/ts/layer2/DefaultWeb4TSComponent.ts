@@ -14,10 +14,13 @@ import { existsSync, readdirSync, statSync, lstatSync, readlinkSync } from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 import { randomUUID } from 'crypto';
+import { User } from '../layer3/User.interface.js';
+import { OwnerParams } from '../layer3/OwnerParams.interface.js';
 
 export class DefaultWeb4TSComponent implements Web4TSComponent {
   private model: Web4TSComponentModel;
   private colors: Colors = DefaultColors.getInstance();
+  private user?: User; // Optional User service (lazy initialization)
 
   constructor() {
     // Initialize with version from directory (single source of truth)
@@ -39,6 +42,84 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       // Note: createdAt/updatedAt removed per Web4 principle - belong in ChangeEvent
       // Note: componentStandards, validationRules, scaffoldingTemplates removed - never used
     };
+  }
+
+  /**
+   * Lazy initialization of User service for owner data generation
+   * NOT a build dependency - warns if unavailable, continues with fallback
+   * Pattern: components/User/0.3.0.4/src/ts/layer2/DefaultUser.ts
+   * @cliHide
+   */
+  private async getUser(): Promise<User> {
+    if (this.user) return this.user;
+    
+    try {
+      // Dynamic ESM import - fails gracefully if User not available
+      // @ts-ignore - Optional dependency, path resolved at runtime
+      const userModule = await import('../../User/latest/dist/ts/layer2/DefaultUser.js');
+      const { DefaultUser } = userModule;
+      
+      // Initialize User with empty constructor (uses system/localhost defaults)
+      this.user = new DefaultUser();
+      
+      return this.user!; // Non-null assertion: we just assigned it
+    } catch (error) {
+      // User service not available - throw for caller to handle fallback
+      throw new Error('User service not available');
+    }
+  }
+
+  /**
+   * Get default completion Scenario for bash completion
+   * Bash calls this first to get complete CLIModel structure with owner data
+   * Uses User service when available, falls back to manual generation
+   * @cliHide
+   */
+  async getCompletionScenario(): Promise<void> {
+    const componentVersion = this.model.version;
+    const componentName = this.model.component;
+    
+    // Generate owner data using User service (optional, warns if unavailable)
+    let ownerData: string;
+    try {
+      // Try to use User service if available (NOT a build dependency)
+      const user = await this.getUser();
+      ownerData = await user.generateOwnerData({
+        user: process.env.USER || 'system',
+        hostname: process.env.HOSTNAME || 'localhost',
+        uuid: this.model.uuid
+      });
+    } catch (error) {
+      // Fallback: Manual owner generation if User service unavailable
+      console.warn('⚠️  User service unavailable, using manual owner generation');
+      ownerData = JSON.stringify({
+        user: process.env.USER || 'system',
+        hostname: process.env.HOSTNAME || 'localhost',
+        uuid: this.model.uuid,
+        timestamp: new Date().toISOString(),
+        component: componentName,
+        version: componentVersion
+      });
+    }
+    
+    // Create default scenario structure (minimal for now - full CLIModel will be added later)
+    const scenario = {
+      ior: {
+        uuid: this.model.uuid,
+        component: componentName,
+        version: componentVersion
+      },
+      owner: ownerData,
+      model: {
+        uuid: this.model.uuid,
+        name: `${componentName}-cli-completion`,
+        origin: "bash-completion",
+        definition: "CLI completion context"
+      }
+    };
+    
+    // Output as JSON for bash
+    console.log(JSON.stringify(scenario, null, 2));
   }
 
   /**
@@ -128,6 +209,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 
   /**
    * Find project root from current working directory
+   * Web4 principle: Trust findProjectRootFrom() logic with markers
    * @cliHide
    */
   private findProjectRoot(): string {
@@ -440,7 +522,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // - Build 0 (*.*.*.0): prod + latest
     // - Build 1+ (*.*.*.1+): dev + test + latest
     await this.updateLatestSymlink(componentName, version);
-    await this.updateScriptsSymlinks(componentName, version);
+    await this.updateScriptsIsolationWrappers(componentName, version);
     
     // Create base package.json for npm start ONLY principle
     await this.createBasePackageJson(componentName, version);
@@ -771,10 +853,19 @@ Standards:
    * @cliValues targetDir § test/data
    */
   async initProject(targetDir: string = '§'): Promise<this> {
-    // Resolve target directory
+    // Bash wrapper converts paths to absolute before cd, so we can trust them
     const projectRoot = targetDir === '§' 
       ? (this.isTestEnvironment() ? this.getTestDataDirectory() : this.model.projectRoot)
-      : targetDir;
+      : targetDir; // Already absolute from bash wrapper
+    
+    // Detect test isolation mode
+    const isTestIsolation = projectRoot.includes('/test/data');
+    
+    if (isTestIsolation) {
+      console.log(`🧪 Initializing test isolation environment at: ${projectRoot}`);
+      // Use this component's own name and version for current version test isolation
+      return await this.initTestIsolationEnvironment(projectRoot, this.model.component, this.model.version);
+    }
     
     console.log(`🚀 Initializing Web4 project at: ${projectRoot}`);
     
@@ -930,6 +1021,419 @@ Standards:
     console.log(`   Components can now use: "extends": "../../../tsconfig.json"`);
     console.log(`   DRY principle: All components symlink to shared node_modules`);
     console.log(`   👉 Source environment: . source.env`);
+    
+    // Generate version wrapper scripts for retroactive isolation
+    await this.generateVersionWrappers(projectRoot);
+    
+    return this;
+  }
+
+  /**
+   * Initialize test isolation for a specific component version
+   * Internal method called by version wrappers when test/data doesn't exist
+   * Hidden from CLI help but accessible via command line
+   * @param component Component name
+   * @param version Version to initialize
+   * @cliHide
+   */
+  async initTestIsolation(component: string, version: string): Promise<this> {
+    const componentPath = this.resolveComponentPath(component, version);
+    const testDataPath = path.join(componentPath, 'test', 'data');
+    
+    console.log(`\n🔧 Initializing test isolation for ${component} ${version}...`);
+    console.log(`   📂 Target: ${testDataPath}`);
+    
+    // Call the private initialization method with correct component and version
+    await this.initTestIsolationEnvironment(testDataPath, component, version);
+    
+    console.log(`✅ Test isolation environment ready for ${component} ${version}\n`);
+    
+    return this;
+  }
+
+  /**
+   * Initialize test isolation environment in test/data
+   * Creates scripts/versions/ structure and symlinks to test version CLI
+   * Web4 principle: Use model state and resolveComponentPath(), no dirty path calculations
+   * @param testDataPath Path to test/data directory
+   * @param targetComponent Component name to isolate (NOT this.model.component!)
+   * @param targetVersion Version to isolate (NOT this.model.version!)
+   * @cliHide
+   */
+  private async initTestIsolationEnvironment(testDataPath: string, targetComponent: string, targetVersion: string): Promise<this> {
+    // Path is already absolute (converted by bash wrapper)
+    const absoluteTestDataPath = testDataPath;
+    
+    // Use TARGET component/version (the one being isolated), not this.model!
+    const componentName = targetComponent;
+    const componentVersion = targetVersion;
+    const cliName = componentName.toLowerCase().replace(/[^a-z0-9]/g, '');
+    
+    // Use model.targetDirectory as the real project root (discovered in constructor)
+    const realProjectRoot = this.model.targetDirectory;
+    
+    // Trust resolveComponentPath() to find TARGET component location
+    const componentPath = this.resolveComponentPath(componentName, componentVersion);
+    
+    console.log(`   📦 Component: ${componentName} ${componentVersion}`);
+    console.log(`   🔧 CLI: ${cliName}`);
+    console.log(`   🌍 Main project root: ${realProjectRoot}`);
+    console.log(`   🔍 Component path: ${componentPath}`);
+    
+    // Create test/data directory structure
+    await fs.mkdir(absoluteTestDataPath, { recursive: true });
+    
+    // Create source.env, package.json, tsconfig.json (reuse existing logic)
+    const currentDir = path.dirname(new URL(import.meta.url).pathname);
+    
+    // 1. Create source.env FROM THE TARGET VERSION'S TEMPLATE!
+    // CRITICAL: Use the OLD version's template, not the current one!
+    const sourceEnvPath = path.join(absoluteTestDataPath, 'source.env');
+    const oldTemplateFile = path.join(componentPath, 'templates/project/source.env.template');
+    
+    let sourceEnvContent: string;
+    if (existsSync(oldTemplateFile)) {
+      // Use the old version's own template
+      sourceEnvContent = await fs.readFile(oldTemplateFile, 'utf-8');
+      console.log(`   📜 Using ${componentVersion}'s own source.env template`);
+    } else {
+      // Fallback: Use current template (for very old versions without templates)
+      sourceEnvContent = await this.loadTemplate('project/source.env.template', {});
+      console.log(`   📜 Using current template (${componentVersion} has no template)`);
+    }
+    
+    // 1b. PIGGY HACK: Inject fixes for test isolation in old templates
+    // Old templates don't have test isolation awareness, so we need to inject it
+    
+    // Fix 1: Replace WEB4_PROJECT_ROOT to use pwd (test/data) instead of git root
+    if (!sourceEnvContent.includes('test/data')) {
+      // Old template - replace the git rev-parse line with pwd
+      sourceEnvContent = sourceEnvContent.replace(
+        /export WEB4_PROJECT_ROOT="\$\(git rev-parse --show-toplevel.*?\)"/,
+        '# PIGGY HACK: Override for test isolation (was: git rev-parse --show-toplevel)\nexport WEB4_PROJECT_ROOT="$(pwd)"'
+      );
+      console.log(`   🔧 Replaced PROJECT_ROOT with pwd for test isolation`);
+      
+      // Also add ISOLATED PS1 prompt for old templates (they don't have it)
+      sourceEnvContent = sourceEnvContent.replace(
+        /(export PS1=".*?")/,
+        '# PIGGY HACK: Override PS1 for test isolation visibility\nexport PS1="\\[\\033[1;36m\\][ISOLATED web4 ' + componentName + '/' + componentVersion + ']\\[\\033[0m\\] \\[\\033[1;33m\\]\\w\\[\\033[0m\\] > "'
+      );
+      console.log(`   🔧 Added ISOLATED PS1 prompt for visibility`);
+    }
+    
+    await fs.writeFile(sourceEnvPath, sourceEnvContent);
+    await fs.chmod(sourceEnvPath, 0o755);
+    
+    // Fix 2: Inject completion registration
+    // Detect which completion function to use based on template version
+    let completionHack = '';
+    
+    if (sourceEnvContent.includes('_web4_tscompletion')) {
+      // Old template - need to CREATE the per-CLI function AND register it
+      completionHack = `
+# PIGGY HARDCODE (test isolation only): Force completion registration
+# Normal auto-discovery expects symlinks, but isolated CLI is direct Node wrapper
+# Old template uses _web4_tscompletion, so we need to create the wrapper function
+eval "_${cliName}_completion() { _web4_tscompletion '${componentName}' '${cliName}'; }"
+complete -F _${cliName}_completion -o nospace ${cliName}
+echo "✅ Tab completion registered for: ${cliName} (isolated)"
+`;
+    } else {
+      // New template - uses generic _web4_generic_completion
+      completionHack = `
+# PIGGY HARDCODE (test isolation only): Force completion registration
+# Normal auto-discovery expects symlinks, but isolated CLI is direct Node wrapper
+complete -F _web4_generic_completion -o nospace ${cliName}
+echo "✅ Tab completion registered for: ${cliName} (isolated)"
+`;
+    }
+    
+    // Try to inject after the test isolation PS1 block (new template)
+    if (sourceEnvContent.includes('export PS1=') && sourceEnvContent.includes('test_component')) {
+      const sourceEnvModified = sourceEnvContent.replace(
+        /(export PS1=.*?\n)(    fi\n)/,
+        `$1        ${completionHack}$2`
+      );
+      await fs.writeFile(sourceEnvPath, sourceEnvModified);
+      console.log(`   ✅ Created source.env (with isolated completion after PS1)`);
+    } 
+    // Try to inject after _web4_register_completions (old template)
+    else if (sourceEnvContent.includes('_web4_register_completions')) {
+      const sourceEnvModified = sourceEnvContent.replace(
+        /(_web4_register_completions\n)/,
+        `$1\n${completionHack}\n`
+      );
+      await fs.writeFile(sourceEnvPath, sourceEnvModified);
+      console.log(`   ✅ Created source.env (with isolated completion after registration)`);
+    }
+    // No safe injection point - use as-is
+    else {
+      console.log(`   ✅ Created source.env (no completion injection point found)`);
+    }
+    
+    // 2. Create package.json
+    const packageJsonPath = path.join(absoluteTestDataPath, 'package.json');
+    const packageJsonContent = await this.loadTemplate('config/root-package.json.template', {});
+    await fs.writeFile(packageJsonPath, packageJsonContent);
+    console.log(`   ✅ Created package.json`);
+    
+    // 3. Create tsconfig.json
+    const tsConfigPath = path.join(absoluteTestDataPath, 'tsconfig.json');
+    const tsConfigContent = await this.loadTemplate('config/root-tsconfig.json.template', {});
+    await fs.writeFile(tsConfigPath, tsConfigContent);
+    console.log(`   ✅ Created tsconfig.json`);
+    
+    // 4. Symlink to shared node_modules (go up to real project root)
+    const nodeModulesTarget = path.join(realProjectRoot, 'node_modules');
+    const nodeModulesLink = path.join(absoluteTestDataPath, 'node_modules');
+    
+    if (existsSync(nodeModulesLink)) {
+      await fs.unlink(nodeModulesLink);
+    }
+    await fs.symlink(nodeModulesTarget, nodeModulesLink, 'dir');
+    console.log(`   ✅ Symlinked node_modules`);
+    
+    // 5. Create components/ directory and COPY component files (NO SYMLINKS - safer!)
+    // CRITICAL DESIGN DECISION (2025-10-23):
+    // - MUST copy, NOT symlink!
+    // - Symlinks create recursive loops: test/data → component → test/data → ...
+    // - Node.js error: "cannot copy to subdirectory of self"
+    // - Trade-off: Disk space vs Safety (safety wins for test isolation!)
+    const componentsDir = path.join(absoluteTestDataPath, 'components');
+    const componentMirrorDir = path.join(componentsDir, componentName);
+    const componentCopyPath = path.join(componentMirrorDir, componentVersion);
+    
+    await fs.mkdir(componentMirrorDir, { recursive: true });
+    
+    // COPY the component directory manually (exclude test/data to avoid recursion)
+    if (existsSync(componentCopyPath)) {
+      await fs.rm(componentCopyPath, { recursive: true, force: true });
+    }
+    await fs.mkdir(componentCopyPath, { recursive: true });
+    
+    // Copy all entries EXCEPT node_modules
+    // For test/, we'll handle it specially after the loop
+    const entries = await fs.readdir(componentPath, { withFileTypes: true });
+    for (const entry of entries) {
+      const srcPath = path.join(componentPath, entry.name);
+      const destPath = path.join(componentCopyPath, entry.name);
+      
+      // Skip test directory - will copy separately
+      if (entry.name === 'test') {
+        continue;
+      }
+      
+      // Skip node_modules (symlink, can't copy)
+      if (entry.name === 'node_modules') {
+        continue;
+      }
+      
+      if (entry.isDirectory()) {
+        await fs.cp(srcPath, destPath, { recursive: true });
+      } else {
+        await fs.copyFile(srcPath, destPath);
+      }
+    }
+    
+    // Copy test/ directory but exclude test/data to avoid recursion
+    const testSrcDir = path.join(componentPath, 'test');
+    const testDestDir = path.join(componentCopyPath, 'test');
+    if (existsSync(testSrcDir)) {
+      await fs.mkdir(testDestDir, { recursive: true });
+      
+      const testEntries = await fs.readdir(testSrcDir, { withFileTypes: true });
+      for (const testEntry of testEntries) {
+        if (testEntry.name === 'data') {
+          // Skip test/data to avoid recursion
+          continue;
+        }
+        const testSrc = path.join(testSrcDir, testEntry.name);
+        const testDest = path.join(testDestDir, testEntry.name);
+        
+        if (testEntry.isDirectory()) {
+          await fs.cp(testSrc, testDest, { recursive: true });
+        } else {
+          await fs.copyFile(testSrc, testDest);
+        }
+      }
+    }
+    
+    console.log(`   ✅ Copied components/${componentName}/${componentVersion} (including tests, excluding test/data & node_modules)`);
+    
+    // 5b. ALSO symlink tests to test/data/test/ for OLD code that uses process.cwd() + '/test'
+    // Old versions' testSelective does: path.join(process.cwd(), 'test')
+    // So when in test/data, they look for test/data/test/
+    const oldCodeTestDir = path.join(absoluteTestDataPath, 'test');
+    const actualTestDir = path.join(componentCopyPath, 'test');
+    if (existsSync(actualTestDir)) {
+      try {
+        // Remove if exists
+        if (existsSync(oldCodeTestDir)) {
+          await fs.rm(oldCodeTestDir, { recursive: true, force: true });
+        }
+        // Symlink test/data/test → test/data/components/{Component}/{Version}/test
+        await fs.symlink(actualTestDir, oldCodeTestDir, 'dir');
+        console.log(`   ✅ Symlinked test/data/test → components/${componentName}/${componentVersion}/test (for old code compatibility)`);
+      } catch (error) {
+        console.log(`   ⚠️  Could not create test symlink: ${(error as Error).message}`);
+      }
+    }
+    
+    // 6. Create scripts/ directory and CREATE a direct Node CLI wrapper
+    // CRITICAL: Old component's 'web4tscomponent' file might be a wrapper from old initProject!
+    // Solution: Generate FRESH shell script that calls node directly on the .js file
+    const scriptsDir = path.join(absoluteTestDataPath, 'scripts');
+    await fs.mkdir(scriptsDir, { recursive: true });
+    
+    const cliScriptPath = path.join(scriptsDir, cliName);
+    const cliJsPath = path.join(componentPath, 'dist/ts/layer5', `${componentName}CLI.js`);
+    
+    if (!existsSync(cliJsPath)) {
+      console.log(`   ⚠️  CLI not found: ${cliJsPath}`);
+      console.log(`   💡 Build the component first: npm run build`);
+    } else {
+      // CREATE a direct shell wrapper that calls Node (NOT a version wrapper!)
+      const cliWrapperContent = `#!/bin/bash
+# Direct CLI wrapper for ${componentName} ${componentVersion} in test isolation
+# This is NOT a version wrapper - it directly executes the CLI via Node
+
+exec node "${cliJsPath}" "$@"
+`;
+      
+      if (existsSync(cliScriptPath)) {
+        await fs.unlink(cliScriptPath);
+      }
+      await fs.writeFile(cliScriptPath, cliWrapperContent, { mode: 0o755 });
+      console.log(`   ✅ Created scripts/${cliName} (direct Node wrapper)`);
+    }
+    
+    // 7. Create 'latest' symlink in components/{Component}/ for auto-discovery
+    const latestLink = path.join(componentMirrorDir, 'latest');
+    if (existsSync(latestLink)) {
+      await fs.unlink(latestLink);
+    }
+    await fs.symlink(componentVersion, latestLink, 'dir');
+    console.log(`   ✅ Created components/${componentName}/latest → ${componentVersion}`);
+    
+    // 8. Initialize ALL semantic links to point to the isolated version
+    // Semantic links live in components/{Component}/ directory, not scripts/
+    // This makes the isolated environment self-contained
+    for (const linkName of ['prod', 'test', 'dev']) {
+      const semanticLink = path.join(componentMirrorDir, linkName);
+      
+      if (existsSync(semanticLink)) {
+        await fs.unlink(semanticLink);
+      }
+      await fs.symlink(componentVersion, semanticLink, 'dir');
+    }
+    console.log(`   ✅ Initialized semantic links (prod/test/dev → ${componentVersion})`);
+    
+    console.log(`\n✅ Test isolation environment initialized!`);
+    console.log(`   📂 Location: ${absoluteTestDataPath}`);
+    console.log(`   🔧 CLI available: ${cliName}`);
+    console.log(`   🧪 Test with: cd ${absoluteTestDataPath} && source source.env`);
+    console.log(`   🎯 Then try: ${cliName} <TAB>`);
+    
+    return this;
+  }
+
+  /**
+   * Generate version wrapper scripts for retroactive isolation
+   * Scans all components (not just Web4TSComponent) and creates proxy wrappers
+   * This ensures old versions CANNOT modify production state
+   * @cliHide
+   */
+  private async generateVersionWrappers(projectRoot: string): Promise<this> {
+    const componentsDir = path.join(projectRoot, 'components');
+    
+    // Skip if components directory doesn't exist
+    if (!existsSync(componentsDir)) {
+      return this;
+    }
+    
+    // ESM: Use import.meta.url to find template
+    const currentFileUrl = new URL(import.meta.url);
+    const currentFilePath = path.dirname(currentFileUrl.pathname);
+    const templatePath = path.join(currentFilePath, '../../../templates/sh/version-wrapper.sh.template');
+    
+    // Check if template exists
+    if (!existsSync(templatePath)) {
+      console.log(`\n⚠️  Version wrapper template not found: ${templatePath}`);
+      return this;
+    }
+    
+    const templateContent = await fs.readFile(templatePath, 'utf-8');
+    
+    // Scan all components
+    const componentNames = await fs.readdir(componentsDir);
+    let totalWrappers = 0;
+    
+    console.log(`\n🔧 Generating version wrappers for all components...`);
+    
+    for (const componentName of componentNames) {
+      const componentDir = path.join(componentsDir, componentName);
+      
+      // Skip if not a directory
+      const stats = await fs.lstat(componentDir);
+      if (!stats.isDirectory()) continue;
+      
+      // Find all version directories
+      const entries = await fs.readdir(componentDir);
+      const versions: string[] = [];
+      
+      for (const entry of entries) {
+        if (/^\d+\.\d+\.\d+\.\d+$/.test(entry)) {
+          versions.push(entry);
+        }
+      }
+      
+      if (versions.length === 0) continue;
+      
+      const cliName = componentName.toLowerCase().replace(/[^a-z0-9]/g, '');
+      
+      // Get context to check if this is the CURRENT running component
+      const context = this.getComponentContext();
+      const isCurrentComponent = context && context.component === componentName;
+      
+      for (const version of versions) {
+        // CRITICAL: Skip generating wrapper for the CURRENT running version!
+        // The current version's CLI should be the REAL launcher, not a delegating wrapper
+        if (isCurrentComponent && version === context.version) {
+          console.log(`   ⏭️  Skipped ${cliName}-v${version} (current running version - not isolated)`);
+          continue;
+        }
+        
+        // Generate wrapper for this version
+        const wrapperContent = templateContent
+          .replace(/\{\{COMPONENT_NAME\}\}/g, componentName)
+          .replace(/\{\{VERSION\}\}/g, version)
+          .replace(/\{\{CLI_NAME\}\}/g, cliName);
+        
+        const wrapperPath = path.join(
+          projectRoot,
+          'scripts/versions',
+          `${cliName}-v${version}`
+        );
+        
+        // Remove existing symlink if it exists
+        try {
+          const stats = await fs.lstat(wrapperPath);
+          if (stats.isSymbolicLink()) {
+            await fs.unlink(wrapperPath);
+            console.log(`   🔄 Replaced symlink: ${cliName}-v${version}`);
+          }
+        } catch {
+          // File doesn't exist, that's fine
+        }
+        
+        await fs.writeFile(wrapperPath, wrapperContent, { mode: 0o755 });
+        totalWrappers++;
+      }
+    }
+    
+    console.log(`   📦 ${totalWrappers} version wrapper(s) created across all components`);
+    console.log(`   🛡️  Old versions will run in isolated test environments`);
     
     return this;
   }
@@ -1687,25 +2191,28 @@ Standards:
    * @param references - For selective testing: numeric references to select tests
    * @cliSyntax scope ...references
    * @TODO cliDefault scope all
-   * @cliValues file describe itCase
+   * @cliValues file describe itCase shell
    * @cliExample web4tscomponent test
    * @cliExample web4tscomponent test all
+   * @cliExample web4tscomponent test shell
    * @cliExample web4tscomponent test file 2
    * @cliExample web4tscomponent test describe 2 1
    * @cliExample web4tscomponent test itCase 2 1 3
    * @cliExample web4tscomponent on Unit 0.3.0.5 test
    */
   async test(scope: string = 'all', ...references: string[]): Promise<this> {
-    // Detect mode: selective testing vs full suite
-    const selectiveScopes = ['file', 'describe', 'itCase'];
-    const isSelectiveMode = selectiveScopes.includes(scope);
+    // MODE 1: Test shell (bash completion testing in isolated test/data)
+    if (scope === 'shell') {
+      return await this.testShell(...references);
+    }
     
-    if (isSelectiveMode) {
-      // MODE 2: Selective testing
+    // MODE 2: Selective testing
+    const selectiveScopes = ['file', 'describe', 'itCase'];
+    if (selectiveScopes.includes(scope)) {
       return await this.testSelective(scope, references);
     }
     
-    // MODE 1: Full test suite (NO promotion - use releaseTest for that)
+    // MODE 3: Full test suite (NO promotion - use releaseTest for that)
     const context = this.getComponentContext();
     
     if (!context) {
@@ -1758,6 +2265,80 @@ Standards:
       throw error;
     }
 
+    return this;
+  }
+
+  /**
+   * Start interactive shell in test/data environment for testing
+   * Optionally for a specific version (for retroactive isolation)
+   * Sources test environment's source.env for isolated completion testing
+   * 
+   * @param version Optional version to test (defaults to current context)
+   * @param command Optional command arguments to run in test shell (rest params)
+   * @cliHide
+   */
+  protected async testShell(version?: string, ...command: string[]): Promise<this> {
+    const context = this.getComponentContext();
+    
+    // Determine which version to use
+    const targetVersion = version || (context ? context.version : this.model.version);
+    const component = context ? context.component : this.model.component;
+    
+    const componentPath = this.resolveComponentPath(component, targetVersion);
+    const testDataPath = path.join(componentPath, 'test', 'data');
+    const sourceEnvPath = path.join(testDataPath, 'source.env');
+    
+    // Check if test environment exists
+    if (!existsSync(testDataPath)) {
+      console.log(`❌ Test environment not found at: ${testDataPath}`);
+      console.log(`💡 Run 'web4tscomponent initProject' first to create test environment`);
+      throw new Error('Test environment does not exist');
+    }
+    
+    if (!existsSync(sourceEnvPath)) {
+      console.log(`❌ Test source.env not found at: ${sourceEnvPath}`);
+      console.log(`💡 Run 'web4tscomponent initProject' to initialize test environment`);
+      throw new Error('Test source.env does not exist');
+    }
+    
+    console.log(`\n🧪 Test Shell for ${component} ${targetVersion}`);
+    console.log(`📂 Directory: ${testDataPath}`);
+    console.log(`🔧 Environment: test/data/source.env`);
+    
+    // If command provided, run it; otherwise start interactive shell
+    if (command.length > 0) {
+      // Run command in test shell
+      const cmd = command.join(' ');
+      console.log(`▶️  Running: ${cmd}\n`);
+      
+      try {
+        execSync(`cd "${testDataPath}" && source "${sourceEnvPath}" && ${cmd}`, {
+          stdio: 'inherit',
+          shell: '/bin/bash',
+          encoding: 'utf-8'
+        });
+      } catch (error) {
+        // Command failed
+        throw error;
+      }
+    } else {
+      // Interactive shell
+      console.log(`\n🎯 Test completion with: web4tscomponent <TAB>`);
+      console.log(`   Exit with: exit or Ctrl+D\n`);
+      
+      try {
+        execSync(`cd "${testDataPath}" && bash --init-file "${sourceEnvPath}" -i`, {
+          stdio: 'inherit',
+          encoding: 'utf-8'
+        });
+        
+        console.log(`\n✅ Exited test shell`);
+      } catch (error) {
+        // User exited shell (normal behavior)
+        console.log(`\n✅ Exited test shell`);
+      }
+    }
+    
     return this;
   }
 
@@ -2523,9 +3104,16 @@ Standards:
     const context = this.getComponentContext();
     
     // Determine test directory path
-    const testDir = context
-      ? path.join(this.resolveComponentPath(context.component, context.version), 'test')
-      : path.join(process.cwd(), 'test');
+    // If in test/data isolation (cwd ends with test/data), old code goes ../../test to find original tests
+    let testDir: string;
+    if (process.cwd().endsWith('/test/data')) {
+      // In test isolation - go up two levels to component version directory
+      testDir = path.join(process.cwd(), '../../test');
+    } else if (context) {
+      testDir = path.join(this.resolveComponentPath(context.component, context.version), 'test');
+    } else {
+      testDir = path.join(process.cwd(), 'test');
+    }
     
     if (!existsSync(testDir)) {
       console.error(`❌ Test directory not found: ${testDir}`);
@@ -4782,11 +5370,56 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       // Create new symlink
       await fs.symlink(actualVersion, linkPath);
       console.log(`   ✅ ${targetVersion} → ${actualVersion}`);
+      
+      // Also create scripts/versions semantic symlink (except for 'latest' which uses main script)
+      if (targetVersion !== 'latest') {
+        await this.createSemanticVersionSymlink(componentName, targetVersion, actualVersion);
+      }
     } catch (error) {
       throw new Error(`Failed to set ${targetVersion} link: ${error}`);
     }
     
     return this;
+  }
+
+  /**
+   * Create semantic version symlink in scripts/versions
+   * Example: web4tscomponent.prod → web4tscomponent-v0.3.13.2
+   * @cliHide
+   */
+  private async createSemanticVersionSymlink(component: string, semantic: string, version: string): Promise<void> {
+    const projectRoot = this.resolveProjectRoot();
+    const versionsDir = path.join(projectRoot, 'scripts', 'versions');
+    const componentLower = component.toLowerCase().replace(/[^a-z0-9]/g, '');
+    
+    // Semantic link name: web4tscomponent.prod
+    const semanticLinkName = `${componentLower}.${semantic}`;
+    const semanticLinkPath = path.join(versionsDir, semanticLinkName);
+    
+    // Target: web4tscomponent-v0.3.13.2
+    const targetWrapperName = `${componentLower}-v${version}`;
+    
+    try {
+      // Ensure target wrapper exists
+      const targetWrapperPath = path.join(versionsDir, targetWrapperName);
+      if (!existsSync(targetWrapperPath)) {
+        // Create the wrapper if it doesn't exist
+        await this.createVersionIsolationWrapper(component, version);
+      }
+      
+      // Remove existing semantic symlink if exists
+      try {
+        await fs.unlink(semanticLinkPath);
+      } catch {
+        // Doesn't exist, that's fine
+      }
+      
+      // Create symlink: .prod → -v0.3.13.2
+      await fs.symlink(targetWrapperName, semanticLinkPath);
+      console.log(`   🔗 Created semantic symlink: ${semanticLinkName} → ${targetWrapperName}`);
+    } catch (error) {
+      console.log(`   ⚠️  Could not create semantic symlink ${semanticLinkName}: ${(error as Error).message}`);
+    }
   }
 
   /**
@@ -4968,6 +5601,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Clean up broken/orphaned symlinks in scripts and scripts/versions
+   * Now handles two types:
+   * 1. Version wrappers: {cli}-v{version} (shell scripts, not symlinks)
+   * 2. Semantic symlinks: {cli}.{semantic} (symlinks pointing to version wrappers)
    * @cliHide
    */
   private async cleanupOrphanedScriptSymlinks(component: string, validVersions: string[]): Promise<void> {
@@ -4976,41 +5612,70 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     const versionsDir = path.join(scriptsDir, 'versions');
     const componentLower = component.toLowerCase();
     
-    // Check scripts/versions directory for orphaned symlinks
+    // Check scripts/versions directory for orphaned entries
     try {
       const entries = await fs.readdir(versionsDir);
-      const pattern = new RegExp(`^${componentLower}-v(.+)$`);
+      
+      // Pattern 1: Version wrappers (shell scripts): {cli}-v{version}
+      const versionPattern = new RegExp(`^${componentLower}-v(.+)$`);
+      
+      // Pattern 2: Semantic symlinks: {cli}.{semantic}
+      const semanticPattern = new RegExp(`^${componentLower}\\.(dev|test|prod)$`);
       
       for (const entry of entries) {
-        const match = entry.match(pattern);
-        if (match) {
-          const version = match[1];
-          const symlinkPath = path.join(versionsDir, entry);
+        const entryPath = path.join(versionsDir, entry);
+        const stats = await fs.lstat(entryPath).catch(() => null);
+        
+        if (!stats) continue;
+        
+        // Check if it's a version wrapper (shell script)
+        const versionMatch = entry.match(versionPattern);
+        if (versionMatch) {
+          const version = versionMatch[1];
+          
+          if (stats.isSymbolicLink()) {
+            // Old symlink format - should be replaced with wrapper
+            console.log(`   🔄 Converting old symlink to wrapper: ${entry}`);
+            await this.createVersionIsolationWrapper(component, version);
+          } else if (!validVersions.includes(version)) {
+            // Orphaned wrapper - version no longer exists
+            console.log(`   🧹 Removing orphaned wrapper: ${entry} (version ${version} removed)`);
+            await fs.unlink(entryPath);
+          }
+          // else: valid wrapper, keep it
+          continue;
+        }
+        
+        // Check if it's a semantic symlink
+        const semanticMatch = entry.match(semanticPattern);
+        if (semanticMatch) {
+          const semantic = semanticMatch[1]; // dev, test, or prod
+          
+          if (!stats.isSymbolicLink()) {
+            // Should be a symlink but isn't - remove it
+            console.log(`   🧹 Removing invalid semantic entry (not a symlink): ${entry}`);
+            await fs.unlink(entryPath);
+            continue;
+          }
           
           try {
             // Check if symlink target exists
-            const target = await fs.readlink(symlinkPath);
+            const target = await fs.readlink(entryPath);
             const targetPath = path.resolve(versionsDir, target);
             
             if (!existsSync(targetPath)) {
               // Broken symlink - target doesn't exist
-              console.log(`   🧹 Removing broken symlink: ${entry} (target missing)`);
-              await fs.unlink(symlinkPath);
-            } else if (!validVersions.includes(version)) {
-              // Orphaned symlink - version no longer exists
-              console.log(`   🧹 Removing orphaned symlink: ${entry} (version ${version} removed)`);
-              await fs.unlink(symlinkPath);
+              console.log(`   🧹 Removing broken semantic symlink: ${entry} (target missing)`);
+              await fs.unlink(entryPath);
             }
+            // else: valid semantic symlink, keep it
           } catch (error) {
-            // Not a symlink or can't read it - remove it
-            console.log(`   🧹 Removing invalid entry: ${entry}`);
-            try {
-              await fs.unlink(symlinkPath);
-            } catch {
-              // Ignore cleanup errors
-            }
+            // Can't read symlink - remove it
+            console.log(`   🧹 Removing invalid semantic symlink: ${entry}`);
+            await fs.unlink(entryPath);
           }
         }
+        // else: not our component's file, ignore it
       }
     } catch (error) {
       console.log(`   ⚠️  Could not scan scripts/versions for cleanup: ${(error as Error).message}`);
@@ -5054,33 +5719,30 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     const scriptName = `${componentLower}-v${version}`;
     const scriptPath = path.join(versionsDir, scriptName);
     
-    // Use lstat to detect symlink presence (even if broken)
-    let symlinkExists = false;
+    // Check if wrapper script exists (could be symlink or regular file)
+    let scriptExists = false;
+    let isSymlink = false;
     try {
-      await fs.lstat(scriptPath);
-      symlinkExists = true;
+      const stats = await fs.lstat(scriptPath);
+      scriptExists = true;
+      isSymlink = stats.isSymbolicLink();
     } catch {
-      // Symlink doesn't exist
+      // Script doesn't exist
     }
     
-    if (symlinkExists) {
-      try {
-        // Check if symlink target exists
-        const target = await fs.readlink(scriptPath);
-        const targetPath = path.resolve(versionsDir, target);
-        if (existsSync(targetPath)) {
-          console.log(`   ✅ Version script valid: ${scriptName}`);
-        } else {
-          console.log(`   🔧 Fixing broken version script: ${scriptName} (target doesn't exist)`);
-          await this.createVersionScriptSymlink(component, version);
-        }
-      } catch (error) {
-        console.log(`   🔧 Fixing invalid version script: ${scriptName}`);
-        await this.createVersionScriptSymlink(component, version);
+    if (scriptExists) {
+      if (isSymlink) {
+        // Old symlink exists - replace with wrapper
+        console.log(`   🔄 Replacing old symlink with wrapper: ${scriptName}`);
+        await this.createVersionIsolationWrapper(component, version);
+      } else {
+        // Wrapper script exists - verify it's valid
+        console.log(`   ✅ Version wrapper script exists: ${scriptName}`);
       }
     } else {
-      console.log(`   🔧 Creating missing version script: ${scriptName}`);
-      await this.createVersionScriptSymlink(component, version);
+      // Create new wrapper script
+      console.log(`   🔧 Creating missing version wrapper: ${scriptName}`);
+      await this.createVersionIsolationWrapper(component, version);
     }
   }
 
@@ -5163,7 +5825,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       await this.updateLatestSymlink(component, version);
       
       // Update scripts symlinks
-      await this.updateScriptsSymlinks(component, version);
+      await this.updateScriptsIsolationWrappers(component, version);
       
       console.log(`   🔗 Symlinks updated: latest → ${version}`);
     } catch (error) {
@@ -5193,26 +5855,94 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
   }
 
   /**
+   * Update scripts and scripts/versions with isolation wrappers (replaces symlinks)
+   * @cliHide
+   */
+  private async updateScriptsIsolationWrappers(component: string, version: string): Promise<void> {
+    try {
+      // Create version-specific isolation wrapper
+      await this.createVersionIsolationWrapper(component, version);
+      
+      // Update scripts/component symlink to point to latest version
+      await this.updateMainScriptSymlink(component, version);
+    } catch (error) {
+      console.log(`   ⚠️ Could not update scripts wrappers: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * @deprecated Use updateScriptsIsolationWrappers() instead. This version creates symlinks, deprecated in 0.3.14.4
    * Update scripts and scripts/versions symlinks
    * @cliHide
    */
   private async updateScriptsSymlinks(component: string, version: string): Promise<void> {
+    console.log(`   ⚠️ DEPRECATED: updateScriptsSymlinks() is deprecated in 0.3.14.4, use updateScriptsIsolationWrappers()`);
     try {
       // Update scripts/versions/component-vX.X.X.X symlink
       await this.createVersionScriptSymlink(component, version);
       
       // Update scripts/versions/component symlink to point to latest version
       await this.updateMainScriptSymlink(component, version);
-      } catch (error) {
+    } catch (error) {
       console.log(`   ⚠️ Could not update scripts symlinks: ${(error as Error).message}`);
     }
   }
 
   /**
+   * Create version-specific isolation wrapper (replaces symlinks with shell scripts)
+   * @cliHide
+   */
+  private async createVersionIsolationWrapper(component: string, version: string): Promise<void> {
+    const projectRoot = this.resolveProjectRoot();
+    const versionsDir = path.join(projectRoot, 'scripts', 'versions');
+    
+    await fs.mkdir(versionsDir, { recursive: true });
+    
+    const componentLower = component.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const wrapperName = `${componentLower}-v${version}`;
+    const wrapperPath = path.join(versionsDir, wrapperName);
+    
+    // Load wrapper template
+    const currentFileUrl = new URL(import.meta.url);
+    const currentFilePath = path.dirname(currentFileUrl.pathname);
+    const templatePath = path.join(currentFilePath, '../../../templates/sh/version-wrapper.sh.template');
+    
+    if (!existsSync(templatePath)) {
+      console.log(`   ⚠️ Wrapper template not found: ${templatePath}`);
+      return;
+    }
+    
+    try {
+      // Remove existing symlink if it exists
+      try {
+        const stats = await fs.lstat(wrapperPath);
+        if (stats.isSymbolicLink()) {
+          await fs.unlink(wrapperPath);
+        }
+      } catch {
+        // File doesn't exist, that's fine
+      }
+      
+      // Generate wrapper from template
+      const templateContent = await fs.readFile(templatePath, 'utf-8');
+      const wrapperContent = templateContent
+        .replace(/\{\{COMPONENT_NAME\}\}/g, component)
+        .replace(/\{\{VERSION\}\}/g, version)
+        .replace(/\{\{CLI_NAME\}\}/g, componentLower);
+      
+      await fs.writeFile(wrapperPath, wrapperContent, { mode: 0o755 });
+    } catch (error) {
+      console.log(`   ⚠️ Could not create wrapper: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * @deprecated Use createVersionIsolationWrapper() instead. This version creates symlinks, deprecated in 0.3.14.4
    * Create version-specific script symlink
    * @cliHide
    */
   private async createVersionScriptSymlink(component: string, version: string): Promise<void> {
+    console.log(`   ⚠️ DEPRECATED: createVersionScriptSymlink() is deprecated in 0.3.14.4, use createVersionIsolationWrapper()`);
     const projectRoot = this.resolveProjectRoot(); // Respects targetDirectory via model
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
     
@@ -5246,12 +5976,21 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
     
     try {
-      // Remove existing symlink if it exists (use lstat to detect broken symlinks too)
+      // Check if file exists and what type it is
       try {
-        await fs.lstat(scriptPath);
+        const stats = await fs.lstat(scriptPath);
+        
+        // If it's a regular file (wrapper script), don't overwrite it!
+        // Wrappers are generated by generateVersionWrappers() for retroactive isolation
+        if (stats.isFile() && !stats.isSymbolicLink()) {
+          // It's a wrapper script - leave it alone
+          return;
+        }
+        
+        // It's a symlink or something else - remove it
         await fs.unlink(scriptPath);
       } catch {
-        // Symlink doesn't exist, that's fine
+        // File doesn't exist, that's fine
       }
       
       // Create relative path from scripts/versions to component script

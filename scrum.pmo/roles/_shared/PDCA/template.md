@@ -16,7 +16,7 @@
 
 **📎 Previous Commit:** {{PREVIOUS_COMMIT_SHA}} - {{PREVIOUS_COMMIT_DESCRIPTION}}  
 **🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})  
-**➡️ Next PDCA:** [GitHub]({{NEXT_GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{NEXT_SESSION}}/{{NEXT_FILENAME}}](../{{NEXT_SESSION}}/{{NEXT_FILENAME}})
+**➡️ Next PDCA:** Use pdca chain
 
 <!-- 
 CRITICAL: Link format explained

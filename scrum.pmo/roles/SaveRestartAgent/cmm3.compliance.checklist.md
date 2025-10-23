@@ -36,7 +36,12 @@
    - [ ] g) CMM3 violation reporting: When detecting violations in your PDCA or previous PDCAs, report to chat/TRON with specific citation using format "[number][letter] cmm2" (e.g., "2a cmm2" for trigger command violation, "1b cmm2" for hallucinated timestamp). **WHAT to report:** Any checklist item failure, broken links, missing sections, incorrect formats. **HOW to report:** 1) Cite violation using checklist reference, 2) Provide dual link to violated PDCA, 3) Explain what's wrong, 4) Propose fix or ask for guidance. **Example:** "Found 1b cmm2 violation in previous PDCA - timestamp appears hallucinated, not from `date -u` output. Should I fix with real timestamp?" See protocol: [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](../_shared/PDCA/howto.PDCA.md)
    - [ ] h) Understanding research requirement: Research unknown terms/processes before use or ask TRON if research fails - Add intense use of tracking tables for artifacts and task lists in plan section
    - [ ] i) Git commit & push protocol: One-liner commit `git commit -m "PDCAfilename.pdca.md"` then ALWAYS push `git push` - GitHub dual links REQUIRE push to be accessible
-   - [ ] j) QA Decisions format: Either proper decisions (with [ ] **Decision N:** and options a/b/c) OR "All clear, no decisions to make - [reason]" per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../_shared/PDCA/PDCA.howto.decide.md)
+   - [ ] j) QA Decisions format: Must include one of these valid patterns per [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md](../_shared/PDCA/PDCA.howto.decide.md)
+     1. **Pending decisions** (awaiting TRON input): `[ ] **Decision 1:** Description` with options a/b/c
+     2. **Completed decisions** (TRON answered, implemented): `[x] **Decision 1:** Description` with ✅ implementation note
+     3. **No decisions needed**: "All clear, no decisions to make - [reason]"
+     
+     **Decision lifecycle:** Pending `[ ]` → TRON answers → Agent implements → Completed `[x]`
 **MANDATORY: Research existing Web4 tools FIRST before any programming. If research fails, ASK TRON. NEVER program without explicit request.**
 
 1. **Trigger Command Recognition**
