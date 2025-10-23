@@ -1852,7 +1852,8 @@ export class DefaultPDCA implements PDCA {
       'how-to-test-first',
       'how-to-interpret-instructions',
       'how-to-collaborate',
-      'how-to-chat-response'
+      'how-to-chat-response',
+      'how-to-license-headers'
     ];
 
     // Handle numeric input - map number to topic name
@@ -2531,6 +2532,66 @@ export class DefaultPDCA implements PDCA {
           'Recognizes 3a violations in own responses',
           'Can generate project-root-relative paths'
         ]
+      },
+      'how-to-license-headers': {
+        title: '📄 How to License Headers: AI-GPL License Management',
+        description: 'Master license header management - why headers matter, how to use licensetool, when to run checks',
+        requiredReading: [
+          {
+            path: 'AI-GPL.md',
+            reason: 'Complete AI-GPL addendum specification and rationale',
+            depth: 2
+          },
+          {
+            path: '.reuse/dep5',
+            reason: 'Machine-readable license mappings for all file types',
+            depth: 1
+          },
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-23-UTC-0904.feature.pdca.md',
+            reason: 'Complete LicenseTool implementation with test-first pattern',
+            depth: 2
+          },
+          {
+            path: 'scrum.pmo/sprints/sprint-10/planning.md',
+            reason: 'Original requirements and business context',
+            depth: 1
+          }
+        ],
+        keyLessons: [
+          '📄 Why Headers Matter: Legal protection, AI training clarity, copyleft enforcement',
+          '🎯 AGPL-3.0-only WITH AI-GPL-Addendum: All files get this license',
+          '📁 Process Artifacts: Subset with commercial dual-licensing (scrum.pmo/, *.pdca.md)',
+          '✅ licensetool check: Verify all headers present and up-to-date',
+          '✅ licensetool apply: Add/update headers automatically',
+          '✅ licensetool apply . true: Dry-run mode (see changes before applying)',
+          '🔧 Shebang Pattern: Remove from .ts source (causes build errors), only in .js',
+          '📝 Required Header Elements: SPDX-License-Identifier, SPDX-FileComment, Copyright, Copyleft, Backlinks',
+          '🔗 Relative Path to AI-GPL.md: Use calculateRelativePathInternal() pattern',
+          '🏗️ CI Integration: GitHub Actions runs licensetool check on all pushes/PRs',
+          '❌ NEVER manual headers: Use licensetool to ensure consistency',
+          '❌ NEVER skip CI: License compliance is mandatory',
+          '⚠️ Test Fixtures Exception: test/data/ files NOT process artifacts',
+          '💡 When adding new file types: Update shouldSkipFileInternal() in LicenseTool',
+          '💡 Web4 Naming: NO underscores, Internal suffix for private helpers',
+          '📊 REUSE Compliance: Industry standard for machine-readable license metadata',
+          '🎓 Dual-Licensing Model: Open-source (AGPLv3) + Commercial (AI use cases)',
+          '🔄 Header Updates: Run licensetool apply after copyright year changes',
+          '✨ Auto-Completion: Tab completion works for file paths and dryRun parameter',
+          '🧪 Test-First Pattern: 60 tests written before implementation (98.3% pass rate)'
+        ],
+        verificationChecklist: [
+          'Can run licensetool check and interpret results',
+          'Understands difference between missing vs outdated headers',
+          'Can use dry-run mode before applying changes',
+          'Knows when headers are required (all tracked files)',
+          'Understands AI-GPL scope (all files, process artifacts subset)',
+          'Can add headers to new file types if needed',
+          'Knows to check CI status after header changes',
+          'Understands shebang conflicts with headers',
+          'Can explain why headers use relative paths',
+          'Recognizes process artifacts vs regular files'
+        ]
       }
     };
 
@@ -2587,7 +2648,7 @@ export class DefaultPDCA implements PDCA {
    * @param topic Optional: limit search to specific topic
    * @cliSyntax query topic
    * @cliDefault topic ""
-   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-feature-development how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-interpret-instructions how-to-collaborate how-to-chat-response
+   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-feature-development how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-interpret-instructions how-to-collaborate how-to-chat-response how-to-license-headers
    */
   async queryTrainAI(query: string, topic: string = ''): Promise<this> {
     console.log(`\n🔍 trainAI Query Results\n`);
