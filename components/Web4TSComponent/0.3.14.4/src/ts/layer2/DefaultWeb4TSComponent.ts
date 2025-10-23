@@ -2103,7 +2103,7 @@ exec node "${cliJsPath}" "$@"
   async test(scope: string = 'all', ...references: string[]): Promise<this> {
     // MODE 1: Test shell (bash completion testing in isolated test/data)
     if (scope === 'shell') {
-      return await this.testShell();
+      return await this.testShell(...references);
     }
     
     // MODE 2: Selective testing
