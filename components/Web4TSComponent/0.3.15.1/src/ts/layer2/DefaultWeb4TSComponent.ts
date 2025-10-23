@@ -3264,11 +3264,11 @@ exec node "${cliJsPath}" "$@"
       const filtered = HierarchicalCompletionFilter.applyPrefixFilter(
         result,
         ref,
-        /([a-z])\)/  // Pattern to extract describe letters like "a)" (file context added by filter)
+        /([a-z])\)/  // Pattern to extract describe letters like "a)" - filter will add file context
       );
       
       console.log(`\n📋 Describe blocks for file ${fileNum}:\n`);
-      console.log(filtered.join('\n'));  // Use join instead of forEach - filtered is array of result strings
+      console.log(filtered.join('\n'));
       console.log(`\n💡 Usage: web4tscomponent test describe <token> (e.g., ${fileNum}a)`);
       return;
     }
