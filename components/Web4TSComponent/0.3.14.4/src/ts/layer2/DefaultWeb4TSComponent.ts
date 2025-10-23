@@ -1133,15 +1133,15 @@ Standards:
     }
     await fs.mkdir(componentCopyPath, { recursive: true });
     
-    // Copy all entries EXCEPT test/data and node_modules
+    // Copy all entries EXCEPT node_modules
+    // For test/, we'll handle it specially after the loop
     const entries = await fs.readdir(componentPath, { withFileTypes: true });
     for (const entry of entries) {
       const srcPath = path.join(componentPath, entry.name);
       const destPath = path.join(componentCopyPath, entry.name);
       
-      // Skip test directory entirely (will be created empty)
+      // Skip test directory - will copy separately
       if (entry.name === 'test') {
-        await fs.mkdir(destPath, { recursive: true });
         continue;
       }
       
@@ -1156,7 +1156,50 @@ Standards:
         await fs.copyFile(srcPath, destPath);
       }
     }
-    console.log(`   ✅ Copied components/${componentName}/${componentVersion} (excluding test & node_modules)`);
+    
+    // Copy test/ directory but exclude test/data to avoid recursion
+    const testSrcDir = path.join(componentPath, 'test');
+    const testDestDir = path.join(componentCopyPath, 'test');
+    if (existsSync(testSrcDir)) {
+      await fs.mkdir(testDestDir, { recursive: true });
+      
+      const testEntries = await fs.readdir(testSrcDir, { withFileTypes: true });
+      for (const testEntry of testEntries) {
+        if (testEntry.name === 'data') {
+          // Skip test/data to avoid recursion
+          continue;
+        }
+        const testSrc = path.join(testSrcDir, testEntry.name);
+        const testDest = path.join(testDestDir, testEntry.name);
+        
+        if (testEntry.isDirectory()) {
+          await fs.cp(testSrc, testDest, { recursive: true });
+        } else {
+          await fs.copyFile(testSrc, testDest);
+        }
+      }
+    }
+    
+    console.log(`   ✅ Copied components/${componentName}/${componentVersion} (including tests, excluding test/data & node_modules)`);
+    
+    // 5b. ALSO symlink tests to test/data/test/ for OLD code that uses process.cwd() + '/test'
+    // Old versions' testSelective does: path.join(process.cwd(), 'test')
+    // So when in test/data, they look for test/data/test/
+    const oldCodeTestDir = path.join(absoluteTestDataPath, 'test');
+    const actualTestDir = path.join(componentCopyPath, 'test');
+    if (existsSync(actualTestDir)) {
+      try {
+        // Remove if exists
+        if (existsSync(oldCodeTestDir)) {
+          await fs.rm(oldCodeTestDir, { recursive: true, force: true });
+        }
+        // Symlink test/data/test → test/data/components/{Component}/{Version}/test
+        await fs.symlink(actualTestDir, oldCodeTestDir, 'dir');
+        console.log(`   ✅ Symlinked test/data/test → components/${componentName}/${componentVersion}/test (for old code compatibility)`);
+      } catch (error) {
+        console.log(`   ⚠️  Could not create test symlink: ${(error as Error).message}`);
+      }
+    }
     
     // 6. Create scripts/ directory and CREATE a direct Node CLI wrapper
     // CRITICAL: Old component's 'web4tscomponent' file might be a wrapper from old initProject!
@@ -1249,7 +1292,18 @@ exec node "${cliJsPath}" "$@"
       
       const cliName = componentName.toLowerCase().replace(/[^a-z0-9]/g, '');
       
+      // Get context to check if this is the CURRENT running component
+      const context = this.getComponentContext();
+      const isCurrentComponent = context && context.component === componentName;
+      
       for (const version of versions) {
+        // CRITICAL: Skip generating wrapper for the CURRENT running version!
+        // The current version's CLI should be the REAL launcher, not a delegating wrapper
+        if (isCurrentComponent && version === context.version) {
+          console.log(`   ⏭️  Skipped ${cliName}-v${version} (current running version - not isolated)`);
+          continue;
+        }
+        
         // Generate wrapper for this version
         const wrapperContent = templateContent
           .replace(/\{\{COMPONENT_NAME\}\}/g, componentName)
@@ -2950,7 +3004,7 @@ exec node "${cliJsPath}" "$@"
     const context = this.getComponentContext();
     
     // Determine test directory path
-    // If in test/data isolation (cwd ends with test/data), look for tests in actual component version
+    // If in test/data isolation (cwd ends with test/data), old code goes ../../test to find original tests
     let testDir: string;
     if (process.cwd().endsWith('/test/data')) {
       // In test isolation - go up two levels to component version directory
