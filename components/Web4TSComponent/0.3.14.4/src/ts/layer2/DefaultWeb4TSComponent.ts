@@ -1120,18 +1120,27 @@ Standards:
     
     // Fix 2: Inject completion registration
     // Detect which completion function to use based on template version
-    let completionFunc = '_web4_generic_completion'; // Default for new templates
-    if (sourceEnvContent.includes('_web4_tscompletion')) {
-      // Old template uses per-CLI completion functions
-      completionFunc = `_${cliName}_completion`;
-    }
+    let completionHack = '';
     
-    const completionHack = `
+    if (sourceEnvContent.includes('_web4_tscompletion')) {
+      // Old template - need to CREATE the per-CLI function AND register it
+      completionHack = `
 # PIGGY HARDCODE (test isolation only): Force completion registration
 # Normal auto-discovery expects symlinks, but isolated CLI is direct Node wrapper
-complete -F ${completionFunc} -o nospace ${cliName}
+# Old template uses _web4_tscompletion, so we need to create the wrapper function
+eval "_${cliName}_completion() { _web4_tscompletion '${componentName}' '${cliName}'; }"
+complete -F _${cliName}_completion -o nospace ${cliName}
 echo "✅ Tab completion registered for: ${cliName} (isolated)"
 `;
+    } else {
+      // New template - uses generic _web4_generic_completion
+      completionHack = `
+# PIGGY HARDCODE (test isolation only): Force completion registration
+# Normal auto-discovery expects symlinks, but isolated CLI is direct Node wrapper
+complete -F _web4_generic_completion -o nospace ${cliName}
+echo "✅ Tab completion registered for: ${cliName} (isolated)"
+`;
+    }
     
     // Try to inject after the test isolation PS1 block (new template)
     if (sourceEnvContent.includes('export PS1=') && sourceEnvContent.includes('test_component')) {
