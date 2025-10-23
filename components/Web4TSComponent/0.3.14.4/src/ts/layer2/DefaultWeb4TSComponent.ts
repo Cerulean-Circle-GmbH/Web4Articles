@@ -1102,12 +1102,25 @@ Standards:
       console.log(`   📜 Using current template (${componentVersion} has no template)`);
     }
     
+    // 1b. PIGGY HACK: Inject fixes for test isolation in old templates
+    // Old templates don't have test isolation awareness, so we need to inject it
+    
+    // Fix 1: Override WEB4_PROJECT_ROOT to use pwd (test/data) instead of git root
+    if (!sourceEnvContent.includes('test/data')) {
+      // Old template - prepend PROJECT_ROOT override at the beginning
+      const projectRootFix = `# PIGGY HACK: Override PROJECT_ROOT for test isolation
+# Old templates use git root, but we want test/data to be the virtual root
+export WEB4_PROJECT_ROOT="$(pwd)"
+
+`;
+      sourceEnvContent = projectRootFix + sourceEnvContent;
+      console.log(`   🔧 Injected PROJECT_ROOT override for test isolation`);
+    }
+    
     await fs.writeFile(sourceEnvPath, sourceEnvContent);
     await fs.chmod(sourceEnvPath, 0o755);
     
-    // 1b. PIGGY HACK: Inject hardcoded completion registration for isolated CLI
-    // This is ONLY for test/data, so it's safe to hardcode the component-specific CLI
-    
+    // Fix 2: Inject completion registration
     // Detect which completion function to use based on template version
     let completionFunc = '_web4_generic_completion'; // Default for new templates
     if (sourceEnvContent.includes('_web4_tscompletion')) {
