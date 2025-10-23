@@ -1238,18 +1238,15 @@ exec node "${cliJsPath}" "$@"
     console.log(`   ✅ Created components/${componentName}/latest → ${componentVersion}`);
     
     // 8. Initialize ALL semantic links to point to the isolated version
+    // Semantic links live in components/{Component}/ directory, not scripts/
     // This makes the isolated environment self-contained
-    const scriptsVersionsDir = path.join(scriptsDir, 'versions');
-    await fs.mkdir(scriptsVersionsDir, { recursive: true });
-    
     for (const linkName of ['prod', 'test', 'dev']) {
-      const semanticLink = path.join(scriptsVersionsDir, `${cliName}.${linkName}`);
-      const target = path.join('../../components', componentName, componentVersion, cliName);
+      const semanticLink = path.join(componentMirrorDir, linkName);
       
       if (existsSync(semanticLink)) {
         await fs.unlink(semanticLink);
       }
-      await fs.symlink(target, semanticLink);
+      await fs.symlink(componentVersion, semanticLink, 'dir');
     }
     console.log(`   ✅ Initialized semantic links (prod/test/dev → ${componentVersion})`);
     
