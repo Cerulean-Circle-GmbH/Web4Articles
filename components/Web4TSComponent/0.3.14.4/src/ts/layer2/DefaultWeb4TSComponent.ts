@@ -1229,6 +1229,30 @@ exec node "${cliJsPath}" "$@"
       console.log(`   ✅ Created scripts/${cliName} (direct Node wrapper)`);
     }
     
+    // 7. Create 'latest' symlink in components/{Component}/ for auto-discovery
+    const latestLink = path.join(componentMirrorDir, 'latest');
+    if (existsSync(latestLink)) {
+      await fs.unlink(latestLink);
+    }
+    await fs.symlink(componentVersion, latestLink, 'dir');
+    console.log(`   ✅ Created components/${componentName}/latest → ${componentVersion}`);
+    
+    // 8. Initialize ALL semantic links to point to the isolated version
+    // This makes the isolated environment self-contained
+    const scriptsVersionsDir = path.join(scriptsDir, 'versions');
+    await fs.mkdir(scriptsVersionsDir, { recursive: true });
+    
+    for (const linkName of ['prod', 'test', 'dev']) {
+      const semanticLink = path.join(scriptsVersionsDir, `${cliName}.${linkName}`);
+      const target = path.join('../../components', componentName, componentVersion, cliName);
+      
+      if (existsSync(semanticLink)) {
+        await fs.unlink(semanticLink);
+      }
+      await fs.symlink(target, semanticLink);
+    }
+    console.log(`   ✅ Initialized semantic links (prod/test/dev → ${componentVersion})`);
+    
     console.log(`\n✅ Test isolation environment initialized!`);
     console.log(`   📂 Location: ${absoluteTestDataPath}`);
     console.log(`   🔧 CLI available: ${cliName}`);
