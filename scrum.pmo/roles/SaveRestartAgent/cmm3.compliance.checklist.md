@@ -1,7 +1,12 @@
 # CMM3 Compliance Checklist
 
 **🗓️ Updated:** 2025-10-14-UTC-1516 - QA Decisions format compliance check added (1j) + Link fixes from 0940 session  
-**CMM Definitions:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md) | [scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md](../../project.journal/2025-09-22-UTC-1908-session/howto.cmm.md)
+**CMM Definitions:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/cmm-start/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md) | [§/scrum.pmo/project.journal/2025-09-22-UTC-1908-session/howto.cmm.md](../../project.journal/2025-09-22-UTC-1908-session/howto.cmm.md)
+
+**🔗 Navigation:**
+- **CMM3 Compliance Checklist:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-17-UTC-0747/scrum.pmo/roles/_shared/cmm3.compliance.checklist.md) | [§/scrum.pmo/roles/_shared/cmm3.compliance.checklist.md](cmm3.compliance.checklist.md)
+- **CMM Framework (howto.cmm):** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-17-UTC-0747/scrum.pmo/roles/_shared/howto.cmm.md) | [§/scrum.pmo/roles/_shared/howto.cmm.md](howto.cmm.md)
+
 **⚠️ CMM Level:** Lowest compliance element determines overall level
 
 1. **PDCA Compliance**

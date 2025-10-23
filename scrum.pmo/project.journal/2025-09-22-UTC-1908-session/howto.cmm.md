@@ -2,6 +2,10 @@
 
 **Hello, Blank Agent.** You're about to discover why you need CMM understanding before touching any processes or tools.
 
+**🔗 Navigation:**
+- **CMM Framework (howto.cmm):** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-17-UTC-0747/scrum.pmo/roles/_shared/howto.cmm.md) | [§/scrum.pmo/roles/_shared/howto.cmm.md](howto.cmm.md)
+- **CMM3 Compliance Checklist:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-17-UTC-0747/scrum.pmo/roles/_shared/cmm3.compliance.checklist.md) | [§/scrum.pmo/roles/_shared/cmm3.compliance.checklist.md](cmm3.compliance.checklist.md)
+
 ## Your Current Situation
 
 You're probably eager to start working immediately. You see tools, you see code, you see tasks - and your instinct is to jump in and start "helping." 
