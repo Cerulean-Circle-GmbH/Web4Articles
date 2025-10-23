@@ -1105,16 +1105,14 @@ Standards:
     // 1b. PIGGY HACK: Inject fixes for test isolation in old templates
     // Old templates don't have test isolation awareness, so we need to inject it
     
-    // Fix 1: Override WEB4_PROJECT_ROOT to use pwd (test/data) instead of git root
+    // Fix 1: Replace WEB4_PROJECT_ROOT to use pwd (test/data) instead of git root
     if (!sourceEnvContent.includes('test/data')) {
-      // Old template - prepend PROJECT_ROOT override at the beginning
-      const projectRootFix = `# PIGGY HACK: Override PROJECT_ROOT for test isolation
-# Old templates use git root, but we want test/data to be the virtual root
-export WEB4_PROJECT_ROOT="$(pwd)"
-
-`;
-      sourceEnvContent = projectRootFix + sourceEnvContent;
-      console.log(`   🔧 Injected PROJECT_ROOT override for test isolation`);
+      // Old template - replace the git rev-parse line with pwd
+      sourceEnvContent = sourceEnvContent.replace(
+        /export WEB4_PROJECT_ROOT="\$\(git rev-parse --show-toplevel.*?\)"/,
+        '# PIGGY HACK: Override for test isolation (was: git rev-parse --show-toplevel)\nexport WEB4_PROJECT_ROOT="$(pwd)"'
+      );
+      console.log(`   🔧 Replaced PROJECT_ROOT with pwd for test isolation`);
     }
     
     await fs.writeFile(sourceEnvPath, sourceEnvContent);
