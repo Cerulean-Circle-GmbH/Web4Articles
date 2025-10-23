@@ -5175,7 +5175,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Create semantic version symlink in scripts/versions
-   * Example: web4tscomponent-vProd → web4tscomponent-v0.3.13.2
+   * Example: web4tscomponent.prod → web4tscomponent-v0.3.13.2
    * @cliHide
    */
   private async createSemanticVersionSymlink(component: string, semantic: string, version: string): Promise<void> {
@@ -5183,9 +5183,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
     const componentLower = component.toLowerCase().replace(/[^a-z0-9]/g, '');
     
-    // Semantic link name: web4tscomponent-vProd (capitalize first letter of semantic)
-    const semanticCapitalized = semantic.charAt(0).toUpperCase() + semantic.slice(1);
-    const semanticLinkName = `${componentLower}-v${semanticCapitalized}`;
+    // Semantic link name: web4tscomponent.prod
+    const semanticLinkName = `${componentLower}.${semantic}`;
     const semanticLinkPath = path.join(versionsDir, semanticLinkName);
     
     // Target: web4tscomponent-v0.3.13.2
@@ -5206,7 +5205,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
         // Doesn't exist, that's fine
       }
       
-      // Create symlink: vProd → v0.3.13.2
+      // Create symlink: .prod → -v0.3.13.2
       await fs.symlink(targetWrapperName, semanticLinkPath);
       console.log(`   🔗 Created semantic symlink: ${semanticLinkName} → ${targetWrapperName}`);
     } catch (error) {
