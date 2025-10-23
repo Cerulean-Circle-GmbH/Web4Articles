@@ -4,11 +4,15 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 
+// Web4-compliant pattern: Use import.meta.url instead of testDir
+const currentFileUrl = new URL(import.meta.url);
+const testDir = path.dirname(currentFileUrl.pathname);
+
 // NEW: Test for relative link bug using existing test fixtures
 describe('PDCA moveFile - Relative Link Bug Test', () => {
   // Get project root
   const getProjectRoot = () => {
-    let currentDir = __dirname;
+    let currentDir = testDir;
     while (currentDir !== path.dirname(currentDir)) {
       if (fs.existsSync(path.join(currentDir, 'scripts')) && 
           fs.existsSync(path.join(currentDir, 'components'))) {
@@ -20,10 +24,10 @@ describe('PDCA moveFile - Relative Link Bug Test', () => {
   };
   
   const projectRoot = getProjectRoot();
-  // Use __dirname to find current component version dynamically
-  // __dirname is: /path/to/components/PDCA/0.2.6.1/test
+  // Use testDir to find current component version dynamically
+  // testDir is: /path/to/components/PDCA/0.2.6.1/test
   // We need: 0.2.6.1
-  const componentRoot = path.dirname(__dirname); // /path/to/components/PDCA/0.2.6.1
+  const componentRoot = path.dirname(testDir); // /path/to/components/PDCA/0.2.6.1
   const componentVersion = path.basename(componentRoot); // 0.2.6.1
   const testDataDir = path.join(projectRoot, `components/PDCA/${componentVersion}/test/data/movefile-tests/source`);
   const fileA = path.join(testDataDir, 'test-file-a.md');
@@ -121,11 +125,11 @@ describe('PDCA moveFile - Relative Link Bug Test', () => {
 describe('PDCA moveFile Tests', () => {
   // Using committed test fixtures in test/data/movefile-tests/
   // Tests use copy-before-test pattern to preserve fixtures
-  const fixturesDir = path.join(__dirname, 'data', 'movefile-tests', 'source');
+  const fixturesDir = path.join(testDir, 'data', 'movefile-tests', 'source');
   
   test('TC30: moveFile - move file within same directory', async () => {
     const pdca = new DefaultPDCA();
-    const tempDir = path.join(__dirname, 'temp-TC30');
+    const tempDir = path.join(testDir, 'temp-TC30');
     
     // Setup: Copy fixture to temp location
     fs.mkdirSync(tempDir, { recursive: true });
@@ -167,7 +171,7 @@ describe('PDCA moveFile Tests', () => {
 
   test('TC31: moveFile - move file to different directory', async () => {
     const pdca = new DefaultPDCA();
-    const tempDir = path.join(__dirname, 'temp-TC31');
+    const tempDir = path.join(testDir, 'temp-TC31');
     
     // Setup: Copy fixture and create target directory structure
     const sourceDir = path.join(tempDir, 'source');
@@ -213,7 +217,7 @@ describe('PDCA moveFile Tests', () => {
 
   test.skip('TC32: moveFile - updates links in other files', async () => {
     const pdca = new DefaultPDCA();
-    const tempDir = path.join(__dirname, 'temp-TC32');
+    const tempDir = path.join(testDir, 'temp-TC32');
     
     // Note: This test verifies that moveFile completes successfully when files exist.
     // Actual link updating is thoroughly tested in TC39 with committed fixtures.
@@ -254,7 +258,7 @@ describe('PDCA moveFile Tests', () => {
 
   test.skip('TC33: moveFile - refreshes relative links in moved file', async () => {
     const pdca = new DefaultPDCA();
-    const tempDir = path.join(__dirname, 'temp-TC33');
+    const tempDir = path.join(testDir, 'temp-TC33');
     
     // Setup: Create file with relative links
     const sourceDir = path.join(tempDir, 'source');
@@ -298,7 +302,7 @@ describe('PDCA moveFile Tests', () => {
 
   test.skip('TC34: moveFile - dry run does not modify files', async () => {
     const pdca = new DefaultPDCA();
-    const tempDir = path.join(__dirname, 'temp-TC34');
+    const tempDir = path.join(testDir, 'temp-TC34');
     
     // Setup
     const oldPath = path.join(tempDir, 'stay.md');
@@ -348,7 +352,7 @@ describe('PDCA moveFile Tests', () => {
 
   test.skip('TC36: moveFile - error when destination already exists', async () => {
     const pdca = new DefaultPDCA();
-    const tempDir = path.join(__dirname, 'temp-TC36');
+    const tempDir = path.join(testDir, 'temp-TC36');
     
     // Setup: Both files exist
     const oldPath = path.join(tempDir, 'source.md');
@@ -393,7 +397,7 @@ describe('PDCA moveFile Tests', () => {
 
   test.skip('TC37: moveFile - error when destination directory does not exist', async () => {
     const pdca = new DefaultPDCA();
-    const tempDir = path.join(__dirname, 'temp-TC37');
+    const tempDir = path.join(testDir, 'temp-TC37');
     
     const oldPath = path.join(tempDir, 'file.md');
     const newPath = path.join(tempDir, 'nonexistent-dir', 'file.md');
@@ -432,7 +436,7 @@ describe('PDCA moveFile Tests', () => {
 
   test.skip('TC38: moveFile - handles file with multiple incoming and outgoing links', async () => {
     const pdca = new DefaultPDCA();
-    const tempDir = path.join(__dirname, 'temp-TC38');
+    const tempDir = path.join(testDir, 'temp-TC38');
     
     // Setup: File with links to others AND others link to it
     const oldPath = path.join(tempDir, 'hub.md');

@@ -9,6 +9,10 @@ import { execSync } from 'child_process';
 import { existsSync } from 'fs';
 import * as path from 'path';
 
+// Web4-compliant pattern: Use import.meta.url instead of __dirname
+const currentFileUrl = new URL(import.meta.url);
+const testDir = path.dirname(currentFileUrl.pathname);
+
 describe('PDCA Basic Tests', () => {
   it('should create instance successfully', () => {
     const component = new DefaultPDCA();
@@ -44,7 +48,7 @@ describe('PDCA CLI Location Resilience', () => {
     };
     
     // Discover project root once, then use absolute paths everywhere
-    const projectRoot = findProjectRoot(__dirname);
+    const projectRoot = findProjectRoot(testDir);
     const scriptsDir = path.join(projectRoot, 'scripts');
     const cliScriptPath = path.join(scriptsDir, 'pdca');
     
