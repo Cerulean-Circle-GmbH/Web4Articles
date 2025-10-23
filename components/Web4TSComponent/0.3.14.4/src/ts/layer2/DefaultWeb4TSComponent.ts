@@ -1086,15 +1086,28 @@ Standards:
     // Create source.env, package.json, tsconfig.json (reuse existing logic)
     const currentDir = path.dirname(new URL(import.meta.url).pathname);
     
-    // 1. Create source.env
+    // 1. Create source.env FROM THE TARGET VERSION'S TEMPLATE!
+    // CRITICAL: Use the OLD version's template, not the current one!
     const sourceEnvPath = path.join(absoluteTestDataPath, 'source.env');
-    const sourceEnvContent = await this.loadTemplate('project/source.env.template', {});
+    const oldTemplateFile = path.join(componentPath, 'templates/project/source.env.template');
+    
+    let sourceEnvContent: string;
+    if (existsSync(oldTemplateFile)) {
+      // Use the old version's own template
+      sourceEnvContent = await fs.readFile(oldTemplateFile, 'utf-8');
+      console.log(`   📜 Using ${componentVersion}'s own source.env template`);
+    } else {
+      // Fallback: Use current template (for very old versions without templates)
+      sourceEnvContent = await this.loadTemplate('project/source.env.template', {});
+      console.log(`   📜 Using current template (${componentVersion} has no template)`);
+    }
+    
     await fs.writeFile(sourceEnvPath, sourceEnvContent);
     await fs.chmod(sourceEnvPath, 0o755);
     
     // 1b. PIGGY HACK: Inject hardcoded completion registration for isolated CLI
     // This is ONLY for test/data, so it's safe to hardcode the component-specific CLI
-    // Insert right after the PS1 export line in the test isolation block
+    // Insert right after the PS1 export line in the test isolation block (if it exists)
     const completionHack = `
         # PIGGY HARDCODE (test isolation only): Force completion registration
         # Normal auto-discovery expects symlinks, but isolated CLI is direct Node wrapper
@@ -1102,12 +1115,18 @@ Standards:
         echo "    ✅ Tab completion registered for: ${cliName} (isolated)"
 `;
     
-    const sourceEnvModified = sourceEnvContent.replace(
-      /(export PS1=.*?\n)(    fi\n)/,
-      `$1${completionHack}$2`
-    );
-    await fs.writeFile(sourceEnvPath, sourceEnvModified);
-    console.log(`   ✅ Created source.env (with isolated completion registration)`);
+    // Only inject if the template has the test isolation PS1 block
+    if (sourceEnvContent.includes('export PS1=')) {
+      const sourceEnvModified = sourceEnvContent.replace(
+        /(export PS1=.*?\n)(    fi\n)/,
+        `$1${completionHack}$2`
+      );
+      await fs.writeFile(sourceEnvPath, sourceEnvModified);
+      console.log(`   ✅ Created source.env (with isolated completion registration)`);
+    } else {
+      // Old version without PS1 customization - just use as-is
+      console.log(`   ✅ Created source.env (old version, no PS1 customization)`);
+    }
     
     // 2. Create package.json
     const packageJsonPath = path.join(absoluteTestDataPath, 'package.json');
