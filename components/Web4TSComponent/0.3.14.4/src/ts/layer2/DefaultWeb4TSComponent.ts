@@ -5161,11 +5161,57 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       // Create new symlink
       await fs.symlink(actualVersion, linkPath);
       console.log(`   ✅ ${targetVersion} → ${actualVersion}`);
+      
+      // Also create scripts/versions semantic symlink (except for 'latest' which uses main script)
+      if (targetVersion !== 'latest') {
+        await this.createSemanticVersionSymlink(componentName, targetVersion, actualVersion);
+      }
     } catch (error) {
       throw new Error(`Failed to set ${targetVersion} link: ${error}`);
     }
     
     return this;
+  }
+
+  /**
+   * Create semantic version symlink in scripts/versions
+   * Example: web4tscomponent-vProd → web4tscomponent-v0.3.13.2
+   * @cliHide
+   */
+  private async createSemanticVersionSymlink(component: string, semantic: string, version: string): Promise<void> {
+    const projectRoot = this.resolveProjectRoot();
+    const versionsDir = path.join(projectRoot, 'scripts', 'versions');
+    const componentLower = component.toLowerCase().replace(/[^a-z0-9]/g, '');
+    
+    // Semantic link name: web4tscomponent-vProd (capitalize first letter of semantic)
+    const semanticCapitalized = semantic.charAt(0).toUpperCase() + semantic.slice(1);
+    const semanticLinkName = `${componentLower}-v${semanticCapitalized}`;
+    const semanticLinkPath = path.join(versionsDir, semanticLinkName);
+    
+    // Target: web4tscomponent-v0.3.13.2
+    const targetWrapperName = `${componentLower}-v${version}`;
+    
+    try {
+      // Ensure target wrapper exists
+      const targetWrapperPath = path.join(versionsDir, targetWrapperName);
+      if (!existsSync(targetWrapperPath)) {
+        // Create the wrapper if it doesn't exist
+        await this.createVersionIsolationWrapper(component, version);
+      }
+      
+      // Remove existing semantic symlink if exists
+      try {
+        await fs.unlink(semanticLinkPath);
+      } catch {
+        // Doesn't exist, that's fine
+      }
+      
+      // Create symlink: vProd → v0.3.13.2
+      await fs.symlink(targetWrapperName, semanticLinkPath);
+      console.log(`   🔗 Created semantic symlink: ${semanticLinkName} → ${targetWrapperName}`);
+    } catch (error) {
+      console.log(`   ⚠️  Could not create semantic symlink ${semanticLinkName}: ${(error as Error).message}`);
+    }
   }
 
   /**
@@ -5433,33 +5479,30 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     const scriptName = `${componentLower}-v${version}`;
     const scriptPath = path.join(versionsDir, scriptName);
     
-    // Use lstat to detect symlink presence (even if broken)
-    let symlinkExists = false;
+    // Check if wrapper script exists (could be symlink or regular file)
+    let scriptExists = false;
+    let isSymlink = false;
     try {
-      await fs.lstat(scriptPath);
-      symlinkExists = true;
+      const stats = await fs.lstat(scriptPath);
+      scriptExists = true;
+      isSymlink = stats.isSymbolicLink();
     } catch {
-      // Symlink doesn't exist
+      // Script doesn't exist
     }
     
-    if (symlinkExists) {
-      try {
-        // Check if symlink target exists
-        const target = await fs.readlink(scriptPath);
-        const targetPath = path.resolve(versionsDir, target);
-        if (existsSync(targetPath)) {
-          console.log(`   ✅ Version script valid: ${scriptName}`);
-        } else {
-          console.log(`   🔧 Fixing broken version script: ${scriptName} (target doesn't exist)`);
-          await this.createVersionScriptSymlink(component, version);
-        }
-      } catch (error) {
-        console.log(`   🔧 Fixing invalid version script: ${scriptName}`);
-        await this.createVersionScriptSymlink(component, version);
+    if (scriptExists) {
+      if (isSymlink) {
+        // Old symlink exists - replace with wrapper
+        console.log(`   🔄 Replacing old symlink with wrapper: ${scriptName}`);
+        await this.createVersionIsolationWrapper(component, version);
+      } else {
+        // Wrapper script exists - verify it's valid
+        console.log(`   ✅ Version wrapper script exists: ${scriptName}`);
       }
     } else {
-      console.log(`   🔧 Creating missing version script: ${scriptName}`);
-      await this.createVersionScriptSymlink(component, version);
+      // Create new wrapper script
+      console.log(`   🔧 Creating missing version wrapper: ${scriptName}`);
+      await this.createVersionIsolationWrapper(component, version);
     }
   }
 
