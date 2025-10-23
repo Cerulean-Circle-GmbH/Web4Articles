@@ -1107,10 +1107,18 @@ Standards:
     
     // 1b. PIGGY HACK: Inject hardcoded completion registration for isolated CLI
     // This is ONLY for test/data, so it's safe to hardcode the component-specific CLI
+    
+    // Detect which completion function to use based on template version
+    let completionFunc = '_web4_generic_completion'; // Default for new templates
+    if (sourceEnvContent.includes('_web4_tscompletion')) {
+      // Old template uses per-CLI completion functions
+      completionFunc = `_${cliName}_completion`;
+    }
+    
     const completionHack = `
 # PIGGY HARDCODE (test isolation only): Force completion registration
 # Normal auto-discovery expects symlinks, but isolated CLI is direct Node wrapper
-complete -F _web4_generic_completion -o nospace ${cliName}
+complete -F ${completionFunc} -o nospace ${cliName}
 echo "✅ Tab completion registered for: ${cliName} (isolated)"
 `;
     
