@@ -1096,15 +1096,15 @@ Standards:
     // This is ONLY for test/data, so it's safe to hardcode the component-specific CLI
     // Insert right after the PS1 export line in the test isolation block
     const completionHack = `
-        
         # PIGGY HARDCODE (test isolation only): Force completion registration
         # Normal auto-discovery expects symlinks, but isolated CLI is direct Node wrapper
         complete -F _web4_generic_completion -o nospace ${cliName}
-        echo "    ✅ Tab completion registered for: ${cliName} (isolated)"`;
+        echo "    ✅ Tab completion registered for: ${cliName} (isolated)"
+`;
     
     const sourceEnvModified = sourceEnvContent.replace(
-      /export PS1=.*test_component.*test_version.*\n/,
-      (match) => match + completionHack
+      /(export PS1=.*?\n)(    fi\n)/,
+      `$1${completionHack}$2`
     );
     await fs.writeFile(sourceEnvPath, sourceEnvModified);
     console.log(`   ✅ Created source.env (with isolated completion registration)`);
