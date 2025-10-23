@@ -1091,7 +1091,23 @@ Standards:
     const sourceEnvContent = await this.loadTemplate('project/source.env.template', {});
     await fs.writeFile(sourceEnvPath, sourceEnvContent);
     await fs.chmod(sourceEnvPath, 0o755);
-    console.log(`   ✅ Created source.env`);
+    
+    // 1b. PIGGY HACK: Inject hardcoded completion registration for isolated CLI
+    // This is ONLY for test/data, so it's safe to hardcode the component-specific CLI
+    // Insert right after the PS1 export line in the test isolation block
+    const completionHack = `
+        
+        # PIGGY HARDCODE (test isolation only): Force completion registration
+        # Normal auto-discovery expects symlinks, but isolated CLI is direct Node wrapper
+        complete -F _web4_generic_completion -o nospace ${cliName}
+        echo "    ✅ Tab completion registered for: ${cliName} (isolated)"`;
+    
+    const sourceEnvModified = sourceEnvContent.replace(
+      /export PS1=.*test_component.*test_version.*\n/,
+      (match) => match + completionHack
+    );
+    await fs.writeFile(sourceEnvPath, sourceEnvModified);
+    console.log(`   ✅ Created source.env (with isolated completion registration)`);
     
     // 2. Create package.json
     const packageJsonPath = path.join(absoluteTestDataPath, 'package.json');
