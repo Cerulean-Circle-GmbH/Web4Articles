@@ -2046,7 +2046,14 @@ export class DefaultPDCA implements PDCA {
           '✅ Verification: cd to source dir, ls <path> to test link works',
           '❌ NEVER assume getDualLink output works without verification',
           '🚨 MANDATORY: Test every link with ls from source directory',
-          '✨ Use getDualLinkRelativePath for zero-knowledge path calculation'
+          '✨ Use getDualLinkRelativePath for zero-knowledge path calculation',
+          '🧠 Context Window Awareness: Long sessions → assumptions → violations',
+          '✅ ALWAYS run `git status` before presenting dual links',
+          '🔍 Pattern: getDualLink commits PDCA, but build artifacts may remain uncommitted',
+          '❌ NEVER assume all files are committed - VERIFY with git status',
+          '🔄 RAG First: When uncertain, query trainAI before acting',
+          '⚠️ Bootstrap Phase: Extra vigilance required - system being established (temporary)',
+          '🎯 Forcing Function: git status → commit all → push → THEN present link'
         ],
         verificationChecklist: [
           'Can write dual link format from memory',
@@ -2058,7 +2065,11 @@ export class DefaultPDCA implements PDCA {
           'Knows getDualLink returns project-root-relative in local part',
           'Can use getDualLinkRelativePath to calculate relative paths',
           'Always verifies links with ls from source directory',
-          'Tests every link before committing'
+          'Tests every link before committing',
+          'Checks git status before presenting dual links',
+          'Commits ALL uncommitted files, not just PDCA',
+          'Queries trainAI when assumptions arise',
+          'Recognizes context window exhaustion symptoms'
         ]
       },
       'how-to-ensure-links': {
