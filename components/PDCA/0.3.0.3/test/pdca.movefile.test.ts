@@ -162,39 +162,50 @@ describe('PDCA moveFile Tests', () => {
     fs.rmSync(tempDir, { recursive: true, force: true });
   });
 
-  test.skip('TC31: moveFile - move file to different directory', async () => {
+  test('TC31: moveFile - move file to different directory', async () => {
     const pdca = new DefaultPDCA();
+    const tempDir = path.join(__dirname, 'temp-TC31');
     
-    // Setup
-    const sourceDir = `${testDataDir}/source`;
-    const destDir = `${testDataDir}/destination`;
-    const oldPath = `${sourceDir}/file.md`;
-    const newPath = `${destDir}/file.md`;
-    
+    // Setup: Copy fixture and create target directory structure
+    const sourceDir = path.join(tempDir, 'source');
+    const destDir = path.join(tempDir, 'destination');
     fs.mkdirSync(sourceDir, { recursive: true });
     fs.mkdirSync(destDir, { recursive: true });
-    fs.writeFileSync(oldPath, '# Test file');
     
-    // Add to git
+    const oldPath = path.join(sourceDir, 'test-file-a.md');
+    const newPath = path.join(destDir, 'test-file-a.md');
+    
+    // Copy fixture
+    fs.copyFileSync(
+      path.join(fixturesDir, 'test-file-a.md'),
+      oldPath
+    );
+    
+    // Commit fixture copy for git mv
     try {
       execSync(`git add "${oldPath}"`, { cwd: process.cwd(), stdio: 'pipe' });
-      execSync(`git commit -m "test: add file for TC31"`, { cwd: process.cwd(), stdio: 'pipe' });
+      execSync(`git commit -m "test: TC31 setup" --no-verify`, { cwd: process.cwd(), stdio: 'pipe' });
     } catch (e) {
-      // Ignore
+      // May already be committed
     }
     
-    // Execute
+    // Execute: Move file to different directory
     await pdca.moveFile(oldPath, newPath);
     
-    // Verify
-    expect(fs.existsSync(newPath)).toBe(true);
+    // Verify: File moved to destination
     expect(fs.existsSync(oldPath)).toBe(false);
+    expect(fs.existsSync(newPath)).toBe(true);
     
-    // Cleanup
+    // Cleanup: Remove temp directory and undo git changes
     if (fs.existsSync(newPath)) {
-      execSync(`git rm "${newPath}"`, { cwd: process.cwd(), stdio: 'pipe' });
-      execSync(`git commit -m "test: cleanup TC31"`, { cwd: process.cwd(), stdio: 'pipe' });
+      try {
+        execSync(`git rm "${newPath}"`, { cwd: process.cwd(), stdio: 'pipe' });
+        execSync(`git commit -m "test: TC31 cleanup" --no-verify`, { cwd: process.cwd(), stdio: 'pipe' });
+      } catch (e) {
+        // Cleanup error - continue
+      }
     }
+    fs.rmSync(tempDir, { recursive: true, force: true });
   });
 
   test.skip('TC32: moveFile - updates links in other files', async () => {
