@@ -1,6 +1,9 @@
 /**
- * DefaultLicenseTool - LicenseTool Component Implementation
- * Web4 pattern: Empty constructor + scenario initialization + component functionality
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { LicenseTool } from '../layer3/LicenseTool.interface.js';
@@ -66,11 +69,16 @@ export class DefaultLicenseTool implements LicenseTool {
   }
 
   /**
+   * Initialize component with scenario
+   * @param scenario Scenario containing model and configuration
    * @cliHide
    */
-  init(scenario: Scenario<LicenseToolModel>): this {
-    if (scenario.model) {
+  async init(scenario: Scenario<LicenseToolModel> | { targetPath?: string }): Promise<this> {
+    if ('model' in scenario && scenario.model) {
       this.model = { ...this.model, ...scenario.model };
+    }
+    if ('targetPath' in scenario) {
+      (this.model as any).targetPath = scenario.targetPath;
     }
     return this;
   }
@@ -100,41 +108,460 @@ export class DefaultLicenseTool implements LicenseTool {
   }
 
   /**
-   * Create example operation for LicenseTool
-   * @param input Input data to process
-   * @param format Output format (json, text, xml)
-   * @cliSyntax input format
-   * @cliDefault format json
+   * Check files for license header compliance
+   * @param targetPath Path to check (defaults to current directory)
+   * @cliSyntax targetPath
+   * @cliDefault targetPath "."
    */
-  async create(input: string, format: string = 'json'): Promise<this> {
-    console.log(`🚀 Creating ${input} in ${format} format`);
-    this.model.name = input;
-    this.model.updatedAt = new Date().toISOString();
-    console.log(`✅ LicenseTool operation completed`);
+  async check(targetPath: string = '.'): Promise<this> {
+    console.log(`\n📋 Checking license headers...\n`);
+    
+    const path = await import('path');
+    const fs = await import('fs/promises');
+    const { existsSync } = await import('fs');
+    
+    // Get project root
+    const projectRoot = await this.getProjectRootInternal();
+    
+    // Verify required files exist
+    await this.verifyRequiredFilesInternal(projectRoot);
+    
+    // Discover files
+    const resolvedPath = path.isAbsolute(targetPath) ? targetPath : path.join(process.cwd(), targetPath);
+    const files = await this.discoverFilesInternal(resolvedPath);
+    
+    console.log(`📁 Found ${files.length} files to check\n`);
+    
+    let validCount = 0;
+    let missingCount = 0;
+    let outdatedCount = 0;
+    
+    for (const file of files) {
+      const content = await fs.readFile(file, 'utf-8');
+      const commentStyle = await this.getCommentStyleInternal(file);
+      const expectedHeader = await this.buildHeaderInternal(file, commentStyle);
+      
+      if (await this.hasValidHeaderInternal(content, expectedHeader)) {
+        console.log(`   ✅ ${path.relative(resolvedPath, file)}`);
+        validCount++;
+      } else {
+        // Check if there's ANY header-like content
+        const hasAnyHeader = 
+          (commentStyle === 'block' && content.trimStart().startsWith('/**')) ||
+          (commentStyle === 'hash' && content.trimStart().startsWith('#')) ||
+          (commentStyle === 'html' && content.trimStart().startsWith('<!--'));
+        
+        if (!hasAnyHeader) {
+          console.log(`   ❌ ${path.relative(resolvedPath, file)} - missing header`);
+          missingCount++;
+        } else {
+          console.log(`   ⚠️  ${path.relative(resolvedPath, file)} - outdated header`);
+          outdatedCount++;
+        }
+      }
+    }
+    
+    console.log(`\n📊 Summary:`);
+    console.log(`   ✅ Valid: ${validCount}`);
+    console.log(`   ❌ Missing: ${missingCount}`);
+    console.log(`   ⚠️  Outdated: ${outdatedCount}`);
+    
     return this;
   }
 
   /**
-   * Process data through LicenseTool logic
-   * @param data Data to process
-   * @cliSyntax data
+   * Apply license headers to files
+   * @param targetPath Path to apply headers to (defaults to current directory)
+   * @param dryRun If true, only report what would be done without modifying files
+   * @cliSyntax targetPath dryRun
+   * @cliDefault targetPath "."
+   * @cliDefault dryRun "false"
+   * @cliValues dryRun ["true", "false"]
    */
-  async process(data: string): Promise<this> {
-    console.log(`🔧 Processing: ${data}`);
-    this.model.updatedAt = new Date().toISOString();
+  async apply(targetPath: string = '.', dryRun: boolean | string = false): Promise<this> {
+    const isDryRun = dryRun === true || dryRun === 'true';
+    
+    console.log(`\n${isDryRun ? '🔍 DRY RUN: ' : '✏️  '}Applying license headers...\n`);
+    
+    const path = await import('path');
+    const fs = await import('fs/promises');
+    const { existsSync } = await import('fs');
+    
+    // Get project root
+    const projectRoot = await this.getProjectRootInternal();
+    
+    // Verify required files exist
+    await this.verifyRequiredFilesInternal(projectRoot);
+    
+    // Discover files
+    const resolvedPath = path.isAbsolute(targetPath) ? targetPath : path.join(process.cwd(), targetPath);
+    const files = await this.discoverFilesInternal(resolvedPath);
+    
+    console.log(`📁 Found ${files.length} files to process\n`);
+    
+    let addedCount = 0;
+    let updatedCount = 0;
+    let skippedCount = 0;
+    
+    for (const file of files) {
+      const content = await fs.readFile(file, 'utf-8');
+      const commentStyle = await this.getCommentStyleInternal(file);
+      const newHeader = await this.buildHeaderInternal(file, commentStyle);
+      
+      if (await this.hasValidHeaderInternal(content, newHeader)) {
+        skippedCount++;
+        continue;
+      }
+      
+      let newContent: string;
+      
+      // Check if file has ANY header comment at the start
+      const hasAnyHeader = 
+        (commentStyle === 'block' && content.trimStart().startsWith('/**')) ||
+        (commentStyle === 'hash' && content.trimStart().startsWith('#')) ||
+        (commentStyle === 'html' && content.trimStart().startsWith('<!--'));
+      
+      if (!hasAnyHeader) {
+        // No header at all - insert
+        newContent = await this.insertHeaderInternal(content, newHeader);
+        console.log(`   ${isDryRun ? '📝 would add' : '✅ Added'} header: ${path.relative(resolvedPath, file)}`);
+        addedCount++;
+      } else {
+        // Outdated header - update
+        // Extract old header more carefully
+        let oldHeader = '';
+        
+        if (commentStyle === 'block') {
+          // For block comments, extract everything up to and including */
+          const endMarker = content.indexOf('*/');
+          if (endMarker !== -1) {
+            oldHeader = content.substring(0, endMarker + 2);
+          }
+        } else if (commentStyle === 'hash') {
+          // For hash comments, extract all leading # lines
+          const lines = content.split('\n');
+          let headerEndIndex = 0;
+          for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line.startsWith('#')) {
+              headerEndIndex = i;
+              break;
+            }
+          }
+          oldHeader = lines.slice(0, headerEndIndex).join('\n');
+        } else if (commentStyle === 'html') {
+          // For HTML comments, extract everything up to and including -->
+          const endMarker = content.indexOf('-->');
+          if (endMarker !== -1) {
+            oldHeader = content.substring(0, endMarker + 3);
+          }
+        }
+        
+        newContent = await this.updateHeaderInternal(content, oldHeader, newHeader);
+        console.log(`   ${isDryRun ? '📝 would update' : '🔄 Updated'} header: ${path.relative(resolvedPath, file)}`);
+        updatedCount++;
+      }
+      
+      if (!isDryRun) {
+        await fs.writeFile(file, newContent, 'utf-8');
+      }
+    }
+    
+    console.log(`\n📊 Summary:`);
+    console.log(`   ✅ Added: ${addedCount}`);
+    console.log(`   🔄 Updated: ${updatedCount}`);
+    console.log(`   ⏭️  Skipped (valid): ${skippedCount}`);
+    
+    if (isDryRun) {
+      console.log(`\n🔍 DRY RUN: No files were modified`);
+    }
+    
     return this;
   }
 
+  //
+  // Internal Helper Methods (Web4 Naming: No underscores, Internal suffix)
+  //
+
   /**
-   * Show information about current LicenseTool state
+   * Get project root directory
+   * @cliHide
    */
-  async info(): Promise<this> {
-    console.log(`📋 LicenseTool Information:`);
-    console.log(`   UUID: ${this.model.uuid}`);
-    console.log(`   Name: ${this.model.name || 'Not set'}`);
-    console.log(`   Created: ${this.model.createdAt}`);
-    console.log(`   Updated: ${this.model.updatedAt}`);
-    return this;
+  private async getProjectRootInternal(): Promise<string> {
+    const path = await import('path');
+    const { existsSync } = await import('fs');
+    
+    let currentDir = process.cwd();
+    
+    while (currentDir !== path.dirname(currentDir)) {
+      if (existsSync(path.join(currentDir, 'package.json')) &&
+          existsSync(path.join(currentDir, 'components'))) {
+        return currentDir;
+      }
+      currentDir = path.dirname(currentDir);
+    }
+    
+    return process.cwd();
+  }
+
+  /**
+   * Verify required license files exist at project root
+   * @cliHide
+   */
+  private async verifyRequiredFilesInternal(projectRoot: string): Promise<void> {
+    const path = await import('path');
+    const { existsSync } = await import('fs');
+    
+    const requiredFiles = [
+      { path: 'LICENSE', name: 'LICENSE (AGPLv3)' },
+      { path: 'AI-GPL.md', name: 'AI-GPL.md (AI-GPL Addendum)' },
+      { path: '.reuse/dep5', name: '.reuse/dep5 (REUSE metadata)' }
+    ];
+    
+    const missing: string[] = [];
+    
+    for (const file of requiredFiles) {
+      const fullPath = path.join(projectRoot, file.path);
+      if (!existsSync(fullPath)) {
+        missing.push(file.name);
+      }
+    }
+    
+    if (missing.length > 0) {
+      console.warn(`⚠️  Warning: Required license files missing:`);
+      missing.forEach(file => console.warn(`   - ${file}`));
+      console.warn(`   Headers may contain invalid relative paths.\n`);
+    }
+  }
+
+  /**
+   * Discover files recursively, respecting exclusions
+   * @cliHide
+   */
+  async discoverFilesInternal(dirPath: string): Promise<string[]> {
+    const path = await import('path');
+    const fs = await import('fs/promises');
+    const { existsSync, lstatSync } = await import('fs');
+    
+    if (!existsSync(dirPath)) {
+      return [];
+    }
+    
+    const stat = lstatSync(dirPath);
+    if (!stat.isDirectory()) {
+      // Single file
+      return await this.shouldSkipFileInternal(dirPath) ? [] : [dirPath];
+    }
+    
+    const files: string[] = [];
+    const entries = await fs.readdir(dirPath, { withFileTypes: true });
+    
+    for (const entry of entries) {
+      const fullPath = path.join(dirPath, entry.name);
+      
+      // For directories, check if we should skip before recursing
+      if (entry.isDirectory()) {
+        // Check if directory itself should be skipped
+        const pathParts = fullPath.split(path.sep);
+        const excludeDirs = ['node_modules', 'dist', '.git', 'coverage'];
+        const shouldSkipDir = excludeDirs.some(excludeDir => pathParts.includes(excludeDir));
+        
+        if (shouldSkipDir) {
+          continue;
+        }
+        
+        const subFiles = await this.discoverFilesInternal(fullPath);
+        files.push(...subFiles);
+      } else if (entry.isFile()) {
+        if (!(await this.shouldSkipFileInternal(fullPath))) {
+          files.push(fullPath);
+        }
+      }
+    }
+    
+    return files;
+  }
+
+  /**
+   * Check if file should be skipped
+   * @cliHide
+   */
+  async shouldSkipFileInternal(filePath: string): Promise<boolean> {
+    const path = await import('path');
+    const { existsSync, lstatSync } = await import('fs');
+    
+    const basename = path.basename(filePath);
+    const dirPath = path.dirname(filePath);
+    
+    // Check if it's a symlink (should skip)
+    if (existsSync(filePath) && lstatSync(filePath).isSymbolicLink()) {
+      return true;
+    }
+    
+    // Exclusion patterns
+    const excludeDirs = ['node_modules', 'dist', '.git', 'coverage'];
+    const excludeExtensions = ['.bin', '.exe', '.dll', '.so', '.dylib', '.jpg', '.png', '.gif', '.ico', '.woff', '.woff2', '.ttf', '.eot'];
+    
+    // Check if path contains excluded directories
+    for (const excludeDir of excludeDirs) {
+      const pathParts = filePath.split(path.sep);
+      if (pathParts.includes(excludeDir)) {
+        return true;
+      }
+    }
+    
+    // Check if file has excluded extension
+    const ext = path.extname(filePath).toLowerCase();
+    if (excludeExtensions.includes(ext)) {
+      return true;
+    }
+    
+    // Only process known text file types (exclude JSON)
+    const validExtensions = ['.ts', '.js', '.py', '.sh', '.md', '.yml', '.yaml', '.tsx', '.jsx'];
+    
+    // Also check for compound extensions like .pdca.md
+    const hasValidCompoundExt = basename.endsWith('.pdca.md') || basename.endsWith('.feature.md');
+    
+    if (ext && !validExtensions.includes(ext) && !hasValidCompoundExt) {
+      return true;
+    }
+    
+    // Check .gitignore (basic implementation)
+    const gitignorePath = path.join(dirPath, '.gitignore');
+    if (existsSync(gitignorePath)) {
+      const fs = await import('fs/promises');
+      const gitignore = await fs.readFile(gitignorePath, 'utf-8');
+      const patterns = gitignore.split('\n').filter(line => line.trim() && !line.startsWith('#'));
+      
+      for (const pattern of patterns) {
+        if (pattern.startsWith('*') && basename.endsWith(pattern.substring(1))) {
+          return true;
+        }
+        if (basename === pattern) {
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  }
+
+  /**
+   * Get comment style for file based on extension
+   * @cliHide
+   */
+  async getCommentStyleInternal(filePath: string): Promise<'block' | 'hash' | 'html'> {
+    const path = await import('path');
+    const ext = path.extname(filePath).toLowerCase();
+    
+    if (['.ts', '.js', '.tsx', '.jsx', '.java', '.c', '.cpp', '.cs'].includes(ext)) {
+      return 'block';
+    }
+    
+    if (['.py', '.sh', '.yml', '.yaml'].includes(ext)) {
+      return 'hash';
+    }
+    
+    if (['.md', '.html', '.xml'].includes(ext)) {
+      return 'html';
+    }
+    
+    return 'block'; // Default
+  }
+
+  /**
+   * Calculate relative path from one file to another
+   * Intentional duplication from PDCA component
+   * Reason: Component independence during bootstrap phase
+   * Future: Can be refactored to shared Web4Core utility library
+   * @cliHide
+   */
+  async calculateRelativePathInternal(fromFile: string, toFile: string): Promise<string> {
+    const path = await import('path');
+    const fromDir = path.dirname(fromFile);
+    const relativePath = path.relative(fromDir, toFile);
+    
+    // If in same directory, path.relative returns just filename
+    // Prefix with ./ for clarity
+    if (!relativePath.startsWith('.') && !path.isAbsolute(relativePath)) {
+      return `./${relativePath}`;
+    }
+    
+    return relativePath;
+  }
+
+  /**
+   * Build license header for file
+   * @cliHide
+   */
+  async buildHeaderInternal(filePath: string, commentStyle: 'block' | 'hash' | 'html'): Promise<string> {
+    const projectRoot = await this.getProjectRootInternal();
+    const licensePath = await this.calculateRelativePathInternal(filePath, await import('path').then(p => p.join(projectRoot, 'LICENSE')));
+    const aiGplPath = await this.calculateRelativePathInternal(filePath, await import('path').then(p => p.join(projectRoot, 'AI-GPL.md')));
+    
+    const currentYear = new Date().getFullYear();
+    
+    const lines = [
+      'SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum',
+      `SPDX-FileComment: See ${aiGplPath} for AI-specific terms.`,
+      `Copyright (c) ${currentYear} Cerulean Circle GmbH`,
+      `Copyleft: See AGPLv3 (${licensePath}) and AI-GPL Addendum (${aiGplPath})`,
+      'Backlinks: /LICENSE, /AI-GPL.md'
+    ];
+    
+    if (commentStyle === 'block') {
+      return '/**\n' + lines.map(line => ` * ${line}`).join('\n') + '\n */';
+    } else if (commentStyle === 'hash') {
+      return lines.map(line => `# ${line}`).join('\n');
+    } else if (commentStyle === 'html') {
+      return '<!--\n' + lines.join('\n') + '\n-->';
+    }
+    
+    return '';
+  }
+
+  /**
+   * Check if content has valid header
+   * @cliHide
+   */
+  async hasValidHeaderInternal(content: string, expectedHeader: string): Promise<boolean> {
+    // Normalize whitespace for comparison
+    const normalizeHeader = (header: string) => header.replace(/\s+/g, ' ').trim();
+    
+    const normalizedExpected = normalizeHeader(expectedHeader);
+    const normalizedContent = normalizeHeader(content);
+    
+    return normalizedContent.includes(normalizedExpected);
+  }
+
+  /**
+   * Insert header at start of file
+   * @cliHide
+   */
+  async insertHeaderInternal(content: string, header: string): Promise<string> {
+    return `${header}\n\n${content}`;
+  }
+
+  /**
+   * Update existing header in file
+   * @cliHide
+   */
+  async updateHeaderInternal(content: string, oldHeader: string, newHeader: string): Promise<string> {
+    if (!oldHeader || oldHeader.trim() === '') {
+      return await this.insertHeaderInternal(content, newHeader);
+    }
+    
+    // Replace old header with new header, handling whitespace
+    // Remove the old header and any trailing newlines
+    let contentWithoutOldHeader = content;
+    if (content.startsWith(oldHeader)) {
+      contentWithoutOldHeader = content.substring(oldHeader.length).trimStart();
+    } else {
+      // Try to find and replace the header
+      contentWithoutOldHeader = content.replace(oldHeader, '').trimStart();
+    }
+    
+    return `${newHeader}\n\n${contentWithoutOldHeader}`;
   }
 
   /**
