@@ -150,6 +150,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
     // If callback exists, validate the provided value
     // This handles: web4tscomponent completion m<TAB> where "m" is invalid
     // ONLY for completion command (other commands let bash filter method names)
+    // @deprecated Legacy validation - Scenario-based completion handles this in model
     if (command === 'completion' && signature.paramCount > 0) {
       for (let i = 0; i < nonEmptyArgs.length && i < signature.paramCount; i++) {
         const callback = TSCompletion.getParameterCallback('DefaultWeb4TSComponent', command, i) 
@@ -261,6 +262,8 @@ export class Web4TSComponentCLI extends DefaultCLI {
   /**
    * Get valid values from a callback method
    * Used for parameter validation during completion
+   * @deprecated Legacy functional approach - use model-driven getValidCompletionValues() instead
+   * TODO: Remove after full migration to Scenario-based completion
    */
   private async getCallbackValues(callbackName: string, command: string, contextArgs: string[]): Promise<string[]> {
     try {
