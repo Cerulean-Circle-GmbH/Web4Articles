@@ -82,36 +82,39 @@ describe('PDCA moveFile - Relative Link Bug Test', () => {
     const fileAContentAfter = fs.readFileSync(fileA, 'utf-8');
     const fileBContentAfter = fs.readFileSync(fileBMoved, 'utf-8');
     
-    // Extract local link paths (the part in parentheses after the § notation)
-    const fileALinkMatch = fileAContentAfter.match(/\[§\/[^\]]+\]\(([^)]+)\)/);
-    const fileBLinkMatch = fileBContentAfter.match(/\[§\/[^\]]+\]\(([^)]+)\)/);
+    // Extract BOTH links from dual-link format: [GitHub](...) | [§/...](...relative...)
+    // We care about the § local part (after the pipe)
+    const fileALinks = fileAContentAfter.matchAll(/\[GitHub\]\([^\)]+\) \| \[§\/[^\]]+\]\(([^)]+)\)/g);
+    const fileBLinks = fileBContentAfter.matchAll(/\[GitHub\]\([^\)]+\) \| \[§\/[^\]]+\]\(([^)]+)\)/g);
     
-    const fileALinkPath = fileALinkMatch ? fileALinkMatch[1] : 'NOT FOUND';
-    const fileBLinkPath = fileBLinkMatch ? fileBLinkMatch[1] : 'NOT FOUND';
+    const fileALinkPaths = Array.from(fileALinks).map(match => match[1]);
+    const fileBLinkPaths = Array.from(fileBLinks).map(match => match[1]);
     
     console.log('\n📋 POST-TEST STATE:');
-    console.log('File A link to B:', fileALinkPath);
-    console.log('File B link to C:', fileBLinkPath);
+    console.log('File A links:', fileALinkPaths);
+    console.log('File B links:', fileBLinkPaths);
     
-    // EXPECTED BEHAVIOR (currently fails):
-    // File A should link to B with: subdir/test-fileB.md (relative)
-    // File B should link to C with: ../test-fileC.md (relative)
-    
-    // ACTUAL BEHAVIOR (bug):
-    // File A links with: components/PDCA/0.2.3.0/test/data/move-tests/subdir/test-fileB.md (absolute)
-    // File B links with: test-fileC.md (not updated)
+    // EXPECTED BEHAVIOR:
+    // File A has 2 links (to B and C):
+    //   - Link to B should update to: ../target/subdir/test-file-b.md (relative to new location)
+    //   - Link to C should remain: test-file-c.md (same dir)
+    // File B has 1 link (to A):
+    //   - Link to A should update to: ../../source/test-file-a.md (relative from new location)
     
     console.log('\n✅ EXPECTED:');
     console.log('  File A → B: ../target/subdir/test-file-b.md');
-    console.log('  File B → C: ../../source/test-file-c.md');
+    console.log('  File A → C: test-file-c.md');
+    console.log('  File B → A: ../../source/test-file-a.md');
     
     console.log('\n❌ ACTUAL (BUG):');
-    console.log('  File A → B:', fileALinkPath);
-    console.log('  File B → C:', fileBLinkPath);
+    console.log('  File A → B:', fileALinkPaths[0] || 'NOT FOUND');
+    console.log('  File A → C:', fileALinkPaths[1] || 'NOT FOUND');
+    console.log('  File B → A:', fileBLinkPaths[0] || 'NOT FOUND');
     
     // TEST ASSERTIONS (these will FAIL until bug is fixed)
-    expect(fileALinkPath).toBe('../target/subdir/test-file-b.md'); // Bug: Will be absolute path
-    expect(fileBLinkPath).toBe('../../source/test-file-c.md');     // Bug: Will be unchanged
+    expect(fileALinkPaths[0]).toBe('../target/subdir/test-file-b.md'); // Bug: Will be absolute path
+    expect(fileALinkPaths[1]).toBe('test-file-c.md');                  // Should remain unchanged
+    expect(fileBLinkPaths[0]).toBe('../../source/test-file-a.md');     // Bug: Will not be updated
   });
 });
 
