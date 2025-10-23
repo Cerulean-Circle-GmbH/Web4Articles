@@ -814,6 +814,41 @@ export class DefaultPDCA implements PDCA {
           'Understands baseline truth testing for CMM3 verification'
         ],
         title: '🧪 How to Test Without Versioning: Baseline Verification'
+      },
+      'how-to-report': {
+        keyLessons: [
+          '🚨 Summary Generation = Red Flag: Elaborate formatting/boxes indicate context window pressure',
+          '✅ Query RAG BEFORE Reporting: `pdca queryTrainAI "How should I report task completion?"`',
+          '✅ Concise Format: Facts + dual links + git status + STOP',
+          '❌ NEVER generate elaborate summaries without RAG query',
+          '❌ NEVER use boxes, multiple heading levels, decorative elements',
+          '❌ NEVER speculate on "What\'s Next" (user controls loop)',
+          '⚠️ Characteristics of Summary Mode: Comprehensive recaps, "executive summary" style, next steps speculation',
+          '⚠️ Why It Happens: Context window pressure → compression instinct → violation risk',
+          '🎯 Forcing Function Checklist: 1) git status 2) commit all 3) push 4) query trainAI 5) follow guidance 6) report 7) STOP',
+          '💡 Pattern: Integration into trainAI ≠ Active use of trainAI',
+          '💡 Even recent learning requires RAG queries (memory ≠ RAG)',
+          '🔄 Bootstrap Phase: Extra vigilance - query RAG for EVERY reporting task',
+          '✨ Correct Report: "Task complete. Files: [dual link]. Git status: clean. *Awaiting instruction.*"',
+          '🧠 Meta-Pattern: When you DON\'T think you need RAG is when you need it most',
+          '🤝 User Controls Loop: Report facts, provide links, STOP - no loop closure',
+          '⚠️ Summary instinct compensates for fuzzy memory - trigger for RAG query',
+          '🎓 Test: If you\'re about to write "Summary:", query trainAI instead'
+        ],
+        verificationChecklist: [
+          'Recognizes summary generation as context window symptom',
+          'Queries trainAI before reporting task completion',
+          'Uses concise format (facts + links + status + STOP)',
+          'Avoids elaborate formatting and decorative elements',
+          'Does not speculate on next steps',
+          'Checks git status before reporting',
+          'Commits ALL files, not just main deliverable',
+          'Understands forcing function checklist',
+          'Recognizes when assumptions are arising',
+          'Can identify "summary mode" in own writing',
+          'Knows to query RAG when NOT feeling uncertain (paradox)'
+        ],
+        title: '📊 How to Report: Concise Task Completion Without Summary Generation'
       }
     };
   }
@@ -1853,6 +1888,7 @@ export class DefaultPDCA implements PDCA {
       'how-to-interpret-instructions',
       'how-to-collaborate',
       'how-to-chat-response',
+      'how-to-report',
       'how-to-license-headers'
     ];
 
@@ -2544,6 +2580,54 @@ export class DefaultPDCA implements PDCA {
           'Can generate project-root-relative paths'
         ]
       },
+      'how-to-report': {
+        title: '📊 How to Report: Concise Task Completion Without Summary Generation',
+        description: 'Master concise reporting - avoid elaborate summaries (context window symptom), query RAG first, follow CMM3 format',
+        requiredReading: [
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-23-UTC-1445.meta-meta-learning-summary-instinct.pdca.md',
+            reason: 'Documents summary generation as context window pressure indicator',
+            depth: 2
+          },
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-23-UTC-1430.context-window-recovery-trainai.pdca.md',
+            reason: 'Context window exhaustion patterns and git status protocol',
+            depth: 2
+          }
+        ],
+        keyLessons: [
+          '🚨 Summary Generation = Red Flag: Elaborate formatting/boxes indicate context window pressure',
+          '✅ Query RAG BEFORE Reporting: `pdca queryTrainAI "How should I report task completion?"`',
+          '✅ Concise Format: Facts + dual links + git status + STOP',
+          '❌ NEVER generate elaborate summaries without RAG query',
+          '❌ NEVER use boxes, multiple heading levels, decorative elements',
+          '❌ NEVER speculate on "What\'s Next" (user controls loop)',
+          '⚠️ Characteristics of Summary Mode: Comprehensive recaps, "executive summary" style, next steps speculation',
+          '⚠️ Why It Happens: Context window pressure → compression instinct → violation risk',
+          '🎯 Forcing Function Checklist: 1) git status 2) commit all 3) push 4) query trainAI 5) follow guidance 6) report 7) STOP',
+          '💡 Pattern: Integration into trainAI ≠ Active use of trainAI',
+          '💡 Even recent learning requires RAG queries (memory ≠ RAG)',
+          '🔄 Bootstrap Phase: Extra vigilance - query RAG for EVERY reporting task',
+          '✨ Correct Report: "Task complete. Files: [dual link]. Git status: clean. *Awaiting instruction.*"',
+          '🧠 Meta-Pattern: When you DON\'T think you need RAG is when you need it most',
+          '🤝 User Controls Loop: Report facts, provide links, STOP - no loop closure',
+          '⚠️ Summary instinct compensates for fuzzy memory - trigger for RAG query',
+          '🎓 Test: If you\'re about to write "Summary:", query trainAI instead'
+        ],
+        verificationChecklist: [
+          'Recognizes summary generation as context window symptom',
+          'Queries trainAI before reporting task completion',
+          'Uses concise format (facts + links + status + STOP)',
+          'Avoids elaborate formatting and decorative elements',
+          'Does not speculate on next steps',
+          'Checks git status before reporting',
+          'Commits ALL files, not just main deliverable',
+          'Understands forcing function checklist',
+          'Recognizes when assumptions are arising',
+          'Can identify "summary mode" in own writing',
+          'Knows to query RAG when NOT feeling uncertain (paradox)'
+        ]
+      },
       'how-to-license-headers': {
         title: '📄 How to License Headers: AI-GPL License Management',
         description: 'Master license header management - why headers matter, how to use licensetool, when to run checks',
@@ -2659,7 +2743,7 @@ export class DefaultPDCA implements PDCA {
    * @param topic Optional: limit search to specific topic
    * @cliSyntax query topic
    * @cliDefault topic ""
-   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-feature-development how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-interpret-instructions how-to-collaborate how-to-chat-response how-to-license-headers
+   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-feature-development how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-interpret-instructions how-to-collaborate how-to-chat-response how-to-report how-to-license-headers
    */
   async queryTrainAI(query: string, topic: string = ''): Promise<this> {
     console.log(`\n🔍 trainAI Query Results\n`);
