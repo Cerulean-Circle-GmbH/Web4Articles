@@ -263,5 +263,68 @@ Version 0.3.3.2 includes **12 test suites** with sequential execution (prevents 
 - **afterEach** - Clean up test data after each test
 - **No Production Impact** - Tests never touch production components
 
+### Retroactive Isolation Architecture (v0.3.14.4+):
+
+**Problem:** Old CLI versions could modify production state, causing regressions.
+
+**Solution:** Version-specific shell script wrappers that delegate to latest version's `test shell` command, forcing old versions into isolated `test/data` environments.
+
+#### Architecture Components:
+
+1. **Version Wrapper Generation** (`generateVersionWrappers`)
+   - Scans all components in project
+   - Generates `scripts/versions/{cliName}-v{version}` for each version
+   - Replaces old symlinks with shell script wrappers
+   - Template: `templates/sh/version-wrapper.sh.template`
+
+2. **Wrapper Behavior:**
+   ```bash
+   # Detects environment mode
+   if [[ Cursor Agent Mode ]]; then
+       # Source test/data/source.env in current shell
+       # Execute command without subshell (prevents hang)
+       cd test/data && source source.env && {CLI_NAME} "$@"
+   else
+       # Normal user mode: delegate to latest
+       exec {CLI_NAME} test shell {VERSION} "$@"
+   fi
+   ```
+
+3. **Cursor Agent Detection:**
+   - Checks `$CURSOR_AGENT` environment variable
+   - Checks for `cursor.*agent` process via `pgrep`
+   - Prevents interactive subshell creation in agent context
+   - Executes commands in current shell to maintain Cursor control
+
+4. **Test Environment Indicators:**
+   - Welcome message shows test isolation status
+   - **🧪 Test Isolation: {Component} {Version}** - when in test/data
+   - **🤖 Cursor Agent Mode** - when running in Cursor agent
+   - Helps developers identify execution context immediately
+
+#### Benefits:
+
+- ✅ **Production Safety:** Old versions CANNOT modify production state
+- ✅ **Backward Compatibility:** Old version commands still work
+- ✅ **Cursor Friendly:** No interactive shell hangs in agent mode
+- ✅ **Transparent:** Users see clear indicators of execution context
+- ✅ **Automatic:** Generated during `initProject`, no manual setup
+
+#### Example:
+
+```bash
+# User calls old version
+web4tscomponent-v0.3.13.2 test file
+
+# Wrapper detects Cursor mode
+# → cd /path/to/0.3.13.2/test/data
+# → source source.env
+# → web4tscomponent test file  # (runs in isolation)
+
+# Welcome message shows:
+# 🧪 Test Isolation: Web4TSComponent 0.3.13.2
+# 🤖 Cursor Agent Mode: Shell commands execute in current context
+```
+
 ---
 
