@@ -613,7 +613,7 @@ export class DefaultPDCA implements PDCA {
    * Internal helper: Calculate relative path from document to target
    * @cliHide
    */
-  private _calculateRelativePathInternal(docPath: string, targetPath: string, path: typeof import('path')): string {
+  private calculateRelativePathInternal(docPath: string, targetPath: string, path: typeof import('path')): string {
     const docDir = path.dirname(docPath);
     return path.relative(docDir, targetPath);
   }
@@ -626,7 +626,7 @@ export class DefaultPDCA implements PDCA {
    * In a future iteration, refactor trainAI to call this method instead of duplicating.
    * For now, this is a necessary duplication to make queryTrainAI work without breaking trainAI.
    */
-  private _getTrainingTopicsInternal(): Record<string, any> {
+  private getTrainingTopicsInternal(): Record<string, any> {
     // NOTE: This structure is temporarily duplicated from trainAI (lines 1702-2286)
     // Future work: Make trainAI call this method to eliminate duplication
     return {
@@ -857,7 +857,7 @@ export class DefaultPDCA implements PDCA {
    * DRY Helper: Search across multiple topics
    * @cliHide
    */
-  private _searchAcrossTopics(
+  private searchAcrossTopicsInternal(
     query: string,
     scope: string[],
     topics: Record<string, any>
@@ -915,7 +915,7 @@ export class DefaultPDCA implements PDCA {
    * DRY Helper: Display query results grouped by topic
    * @cliHide
    */
-  private _displayQueryResults(results: any[], topics: Record<string, any>): void {
+  private displayQueryResultsInternal(results: any[], topics: Record<string, any>): void {
     // Group by topic
     const grouped = new Map<string, any[]>();
     for (const result of results) {
@@ -949,7 +949,7 @@ export class DefaultPDCA implements PDCA {
    * DRY Helper: Display available topics
    * @cliHide
    */
-  private _displayAvailableTopics(topics: Record<string, any>): void {
+  private displayAvailableTopicsInternal(topics: Record<string, any>): void {
     console.log(`💡 Available topics:`);
     Object.keys(topics).forEach((key, i) => {
       const title = topics[key]?.title || key;
@@ -1006,12 +1006,12 @@ export class DefaultPDCA implements PDCA {
           if (existsSync(path.join(projectRoot, localPath))) {
             needsFix = true;
             newDisplay = `§/${localPath}`;
-            newPath = this._calculateRelativePathInternal(mdFile, path.join(projectRoot, localPath), path);
+            newPath = this.calculateRelativePathInternal(mdFile, path.join(projectRoot, localPath), path);
           }
         }
         // Check if GitHub path differs from local path
         else if (githubPath && githubPath !== localPath) {
-          const expectedPath = this._calculateRelativePathInternal(mdFile, path.join(projectRoot, githubPath), path);
+          const expectedPath = this.calculateRelativePathInternal(mdFile, path.join(projectRoot, githubPath), path);
           if (localPath !== expectedPath && existsSync(path.join(projectRoot, githubPath))) {
             needsFix = true;
             newDisplay = `§/${githubPath}`;
@@ -1040,7 +1040,7 @@ export class DefaultPDCA implements PDCA {
         
         if (existsSync(path.join(projectRoot, trimmedPath))) {
           newDisplay = `§/${trimmedPath}`;
-          newPath = this._calculateRelativePathInternal(mdFile, path.join(projectRoot, trimmedPath), path);
+          newPath = this.calculateRelativePathInternal(mdFile, path.join(projectRoot, trimmedPath), path);
         } else {
           newDisplay = trimmedPath;
           newPath = trimmedPath;
@@ -2750,28 +2750,28 @@ export class DefaultPDCA implements PDCA {
     console.log(`Query: "${query}"\n`);
     
     // DRY: Reuse existing trainAI infrastructure
-    const trainingTopics = this._getTrainingTopicsInternal();
+    const trainingTopics = this.getTrainingTopicsInternal();
     const searchScope = (topic && topic !== '') ? [topic] : Object.keys(trainingTopics);
     
     // Validate topic if provided
     if (topic && topic !== '' && !trainingTopics[topic]) {
       console.log(`❌ Topic "${topic}" not found\n`);
-      this._displayAvailableTopics(trainingTopics);
+      this.displayAvailableTopicsInternal(trainingTopics);
       return this;  // Method chaining
     }
     
     // DRY: Use extracted search method
-    const results = this._searchAcrossTopics(query, searchScope, trainingTopics);
+    const results = this.searchAcrossTopicsInternal(query, searchScope, trainingTopics);
     
     // Handle no results
     if (results.length === 0) {
       console.log(`❌ No results found for "${query}"\n`);
-      this._displayAvailableTopics(trainingTopics);
+      this.displayAvailableTopicsInternal(trainingTopics);
       return this;  // Method chaining
     }
     
     // Display results grouped by topic
-    this._displayQueryResults(results, trainingTopics);
+    this.displayQueryResultsInternal(results, trainingTopics);
     
     return this;  // Method chaining
   }
