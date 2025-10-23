@@ -115,63 +115,54 @@ describe('PDCA moveFile - Relative Link Bug Test', () => {
   });
 });
 
-describe.skip('PDCA moveFile Tests', () => {
-  // All tests skipped: Require git-committed files which creates test infrastructure complexity
-  // Functionality verified through manual testing
-  // Future: Create CMM3-compliant test fixtures in test/data/
-  const testDataDir = 'components/PDCA/0.2.3.0/test/data/move-tests';
+describe('PDCA moveFile Tests', () => {
+  // Using committed test fixtures in test/data/movefile-tests/
+  // Tests use copy-before-test pattern to preserve fixtures
+  const fixturesDir = path.join(__dirname, 'data', 'movefile-tests', 'source');
   
-  beforeAll(() => {
-    // Create test data directory
-    if (!fs.existsSync(testDataDir)) {
-      fs.mkdirSync(testDataDir, { recursive: true });
-    }
-  });
-
-  afterAll(() => {
-    // Cleanup: Remove test data directory
-    if (fs.existsSync(testDataDir)) {
-      fs.rmSync(testDataDir, { recursive: true, force: true });
-    }
-  });
-
   test('TC30: moveFile - move file within same directory', async () => {
     const pdca = new DefaultPDCA();
+    const tempDir = path.join(__dirname, 'temp-TC30');
     
-    // Setup: Create test file
-    const oldPath = `${testDataDir}/original-name.md`;
-    const newPath = `${testDataDir}/renamed.md`;
-    fs.writeFileSync(oldPath, '# Test file\nContent here.');
+    // Setup: Copy fixture to temp location
+    fs.mkdirSync(tempDir, { recursive: true });
+    const oldPath = path.join(tempDir, 'test-file-a.md');
+    const newPath = path.join(tempDir, 'test-file-a-moved.md');
     
-    // Need to add to git first for git mv to work
+    // Copy fixture
+    fs.copyFileSync(
+      path.join(fixturesDir, 'test-file-a.md'),
+      oldPath
+    );
+    
+    // Commit fixture copy for git mv
     try {
       execSync(`git add "${oldPath}"`, { cwd: process.cwd(), stdio: 'pipe' });
-      execSync(`git commit -m "test: add file for TC30" --no-verify`, { cwd: process.cwd(), stdio: 'pipe' });
-      execSync(`git push`, { cwd: process.cwd(), stdio: 'pipe' });
+      execSync(`git commit -m "test: TC30 setup" --no-verify`, { cwd: process.cwd(), stdio: 'pipe' });
     } catch (e) {
-      // File might already be committed, that's okay
+      // May already be committed
     }
     
-    // Execute
+    // Execute: Move file
     await pdca.moveFile(oldPath, newPath);
     
-    // Verify
-    expect(fs.existsSync(newPath)).toBe(true);
+    // Verify: File moved
     expect(fs.existsSync(oldPath)).toBe(false);
+    expect(fs.existsSync(newPath)).toBe(true);
     
-    // Cleanup: Delete the moved file
+    // Cleanup: Remove temp directory and undo git changes
     if (fs.existsSync(newPath)) {
       try {
         execSync(`git rm "${newPath}"`, { cwd: process.cwd(), stdio: 'pipe' });
-        execSync(`git commit -m "test: cleanup TC30" --no-verify`, { cwd: process.cwd(), stdio: 'pipe' });
-        execSync(`git push`, { cwd: process.cwd(), stdio: 'pipe' });
+        execSync(`git commit -m "test: TC30 cleanup" --no-verify`, { cwd: process.cwd(), stdio: 'pipe' });
       } catch (e) {
-        // Cleanup failed, file might already be removed
+        // Cleanup error - continue
       }
     }
+    fs.rmSync(tempDir, { recursive: true, force: true });
   });
 
-  test('TC31: moveFile - move file to different directory', async () => {
+  test.skip('TC31: moveFile - move file to different directory', async () => {
     const pdca = new DefaultPDCA();
     
     // Setup
@@ -206,7 +197,7 @@ describe.skip('PDCA moveFile Tests', () => {
     }
   });
 
-  test('TC32: moveFile - updates links in other files', async () => {
+  test.skip('TC32: moveFile - updates links in other files', async () => {
     const pdca = new DefaultPDCA();
     
     // Setup: Create target file and file linking to it
@@ -243,7 +234,7 @@ describe.skip('PDCA moveFile Tests', () => {
     }
   });
 
-  test('TC33: moveFile - refreshes relative links in moved file', async () => {
+  test.skip('TC33: moveFile - refreshes relative links in moved file', async () => {
     const pdca = new DefaultPDCA();
     
     // Setup: Create file with relative links
@@ -283,7 +274,7 @@ describe.skip('PDCA moveFile Tests', () => {
     }
   });
 
-  test('TC34: moveFile - dry run does not modify files', async () => {
+  test.skip('TC34: moveFile - dry run does not modify files', async () => {
     const pdca = new DefaultPDCA();
     
     // Setup
@@ -311,7 +302,7 @@ describe.skip('PDCA moveFile Tests', () => {
     execSync(`git commit -m "test: cleanup TC34"`, { cwd: process.cwd(), stdio: 'pipe' });
   });
 
-  test('TC35: moveFile - error when source file does not exist', async () => {
+  test.skip('TC35: moveFile - error when source file does not exist', async () => {
     const pdca = new DefaultPDCA();
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     
@@ -326,7 +317,7 @@ describe.skip('PDCA moveFile Tests', () => {
     consoleSpy.mockRestore();
   });
 
-  test('TC36: moveFile - error when destination already exists', async () => {
+  test.skip('TC36: moveFile - error when destination already exists', async () => {
     const pdca = new DefaultPDCA();
     
     // Setup: Both files exist
@@ -364,7 +355,7 @@ describe.skip('PDCA moveFile Tests', () => {
     execSync(`git commit -m "test: cleanup TC36"`, { cwd: process.cwd(), stdio: 'pipe' });
   });
 
-  test('TC37: moveFile - error when destination directory does not exist', async () => {
+  test.skip('TC37: moveFile - error when destination directory does not exist', async () => {
     const pdca = new DefaultPDCA();
     
     const oldPath = `${testDataDir}/file.md`;
@@ -396,7 +387,7 @@ describe.skip('PDCA moveFile Tests', () => {
     execSync(`git commit -m "test: cleanup TC37"`, { cwd: process.cwd(), stdio: 'pipe' });
   });
 
-  test('TC38: moveFile - handles file with multiple incoming and outgoing links', async () => {
+  test.skip('TC38: moveFile - handles file with multiple incoming and outgoing links', async () => {
     const pdca = new DefaultPDCA();
     
     // Setup: File with links to others AND others link to it
