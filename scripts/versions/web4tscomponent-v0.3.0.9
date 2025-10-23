@@ -49,10 +49,19 @@ if [[ -n "$CURSOR_AGENT" ]] || pgrep -f "cursor.*agent" > /dev/null 2>&1; then
         # Execute command in current shell context (CLI is in PATH from source.env)
         web4tscomponent "$@"
     else
-        echo "⚠️  Test isolation environment not ready for 0.3.0.9"
-        echo "💡 Run: web4tscomponent initProject to set up test/data for old versions"
-        echo "💡 Or use latest version: web4tscomponent $@"
-        exit 1
+        # Test environment not ready - call TypeScript to initialize it
+        echo "🔧 Initializing test isolation environment for 0.3.0.9..."
+        "$PROJECT_ROOT/scripts/web4tscomponent" initTestIsolation "Web4TSComponent" "0.3.0.9"
+        
+        # Now try again
+        if [ -d "$TEST_DATA" ] && [ -f "$TEST_DATA/source.env" ]; then
+            cd "$TEST_DATA" || exit 1
+            source source.env
+            web4tscomponent "$@"
+        else
+            echo "❌ Failed to initialize test environment for 0.3.0.9"
+            exit 1
+        fi
     fi
 else
     # Normal user shell - delegate to latest with test shell isolation

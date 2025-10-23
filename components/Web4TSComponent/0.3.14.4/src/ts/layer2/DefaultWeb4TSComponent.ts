@@ -863,7 +863,8 @@ Standards:
     
     if (isTestIsolation) {
       console.log(`🧪 Initializing test isolation environment at: ${projectRoot}`);
-      return await this.initTestIsolationEnvironment(projectRoot);
+      // Use this component's own name and version for current version test isolation
+      return await this.initTestIsolationEnvironment(projectRoot, this.model.component, this.model.version);
     }
     
     console.log(`🚀 Initializing Web4 project at: ${projectRoot}`);
@@ -1042,8 +1043,8 @@ Standards:
     console.log(`\n🔧 Initializing test isolation for ${component} ${version}...`);
     console.log(`   📂 Target: ${testDataPath}`);
     
-    // Call the private initialization method
-    await this.initTestIsolationEnvironment(testDataPath);
+    // Call the private initialization method with correct component and version
+    await this.initTestIsolationEnvironment(testDataPath, component, version);
     
     console.log(`✅ Test isolation environment ready for ${component} ${version}\n`);
     
@@ -1054,21 +1055,24 @@ Standards:
    * Initialize test isolation environment in test/data
    * Creates scripts/versions/ structure and symlinks to test version CLI
    * Web4 principle: Use model state and resolveComponentPath(), no dirty path calculations
+   * @param testDataPath Path to test/data directory
+   * @param targetComponent Component name to isolate (NOT this.model.component!)
+   * @param targetVersion Version to isolate (NOT this.model.version!)
    * @cliHide
    */
-  private async initTestIsolationEnvironment(testDataPath: string): Promise<this> {
+  private async initTestIsolationEnvironment(testDataPath: string, targetComponent: string, targetVersion: string): Promise<this> {
     // Path is already absolute (converted by bash wrapper)
     const absoluteTestDataPath = testDataPath;
     
-    // Use model state for component info (already discovered in constructor)
-    const componentName = this.model.component;
-    const componentVersion = this.model.version;
+    // Use TARGET component/version (the one being isolated), not this.model!
+    const componentName = targetComponent;
+    const componentVersion = targetVersion;
     const cliName = componentName.toLowerCase().replace(/[^a-z0-9]/g, '');
     
     // Use model.targetDirectory as the real project root (discovered in constructor)
     const realProjectRoot = this.model.targetDirectory;
     
-    // Trust resolveComponentPath() to find component location
+    // Trust resolveComponentPath() to find TARGET component location
     const componentPath = this.resolveComponentPath(componentName, componentVersion);
     
     console.log(`   📦 Component: ${componentName} ${componentVersion}`);
@@ -1111,54 +1115,75 @@ Standards:
     await fs.symlink(nodeModulesTarget, nodeModulesLink, 'dir');
     console.log(`   ✅ Symlinked node_modules`);
     
-    // 5. Create components/ directory and symlink back to actual component
+    // 5. Create components/ directory and COPY component files (NO SYMLINKS - safer!)
+    // CRITICAL DESIGN DECISION (2025-10-23):
+    // - MUST copy, NOT symlink!
+    // - Symlinks create recursive loops: test/data → component → test/data → ...
+    // - Node.js error: "cannot copy to subdirectory of self"
+    // - Trade-off: Disk space vs Safety (safety wins for test isolation!)
     const componentsDir = path.join(absoluteTestDataPath, 'components');
     const componentMirrorDir = path.join(componentsDir, componentName);
+    const componentCopyPath = path.join(componentMirrorDir, componentVersion);
+    
     await fs.mkdir(componentMirrorDir, { recursive: true });
     
-    const versionLink = path.join(componentMirrorDir, componentVersion);
-    if (existsSync(versionLink)) {
-      await fs.unlink(versionLink);
+    // COPY the component directory manually (exclude test/data to avoid recursion)
+    if (existsSync(componentCopyPath)) {
+      await fs.rm(componentCopyPath, { recursive: true, force: true });
     }
-    // Symlink from test/data/components/Web4TSComponent/0.3.14.4 → actual component
-    const relativeToComponent = path.relative(componentMirrorDir, componentPath);
-    await fs.symlink(relativeToComponent, versionLink, 'dir');
-    console.log(`   ✅ Created components/${componentName}/${componentVersion} → ${relativeToComponent}`);
+    await fs.mkdir(componentCopyPath, { recursive: true });
     
-    // 6. Create scripts/versions/ structure
+    // Copy all entries EXCEPT test/data and node_modules
+    const entries = await fs.readdir(componentPath, { withFileTypes: true });
+    for (const entry of entries) {
+      const srcPath = path.join(componentPath, entry.name);
+      const destPath = path.join(componentCopyPath, entry.name);
+      
+      // Skip test directory entirely (will be created empty)
+      if (entry.name === 'test') {
+        await fs.mkdir(destPath, { recursive: true });
+        continue;
+      }
+      
+      // Skip node_modules (symlink, can't copy)
+      if (entry.name === 'node_modules') {
+        continue;
+      }
+      
+      if (entry.isDirectory()) {
+        await fs.cp(srcPath, destPath, { recursive: true });
+      } else {
+        await fs.copyFile(srcPath, destPath);
+      }
+    }
+    console.log(`   ✅ Copied components/${componentName}/${componentVersion} (excluding test & node_modules)`);
+    
+    // 6. Create scripts/ directory and CREATE a direct Node CLI wrapper
+    // CRITICAL: Old component's 'web4tscomponent' file might be a wrapper from old initProject!
+    // Solution: Generate FRESH shell script that calls node directly on the .js file
     const scriptsDir = path.join(absoluteTestDataPath, 'scripts');
-    const versionsDir = path.join(scriptsDir, 'versions');
-    const componentVersionsDir = path.join(versionsDir, cliName);
+    await fs.mkdir(scriptsDir, { recursive: true });
     
-    await fs.mkdir(componentVersionsDir, { recursive: true });
-    console.log(`   ✅ Created scripts/versions/${cliName}/`);
+    const cliScriptPath = path.join(scriptsDir, cliName);
+    const cliJsPath = path.join(componentPath, 'dist/ts/layer5', `${componentName}CLI.js`);
     
-    // 7. Symlink CLI executable (test version)
-    const cliExecutable = path.join(componentPath, cliName);
-    const cliLinkInScripts = path.join(scriptsDir, cliName);
-    const cliLinkInVersions = path.join(componentVersionsDir, componentVersion);
-    
-    if (!existsSync(cliExecutable)) {
-      console.log(`   ⚠️  CLI executable not found: ${cliExecutable}`);
+    if (!existsSync(cliJsPath)) {
+      console.log(`   ⚠️  CLI not found: ${cliJsPath}`);
       console.log(`   💡 Build the component first: npm run build`);
     } else {
-      // Create symlink in scripts/
-      if (existsSync(cliLinkInScripts)) {
-        await fs.unlink(cliLinkInScripts);
-      }
-      // Use relative path for symlink (from scripts/ to ../..)
-      const relativePathToExec = path.relative(scriptsDir, cliExecutable);
-      await fs.symlink(relativePathToExec, cliLinkInScripts, 'file');
-      console.log(`   ✅ Symlinked scripts/${cliName} → ${relativePathToExec}`);
+      // CREATE a direct shell wrapper that calls Node (NOT a version wrapper!)
+      const cliWrapperContent = `#!/bin/bash
+# Direct CLI wrapper for ${componentName} ${componentVersion} in test isolation
+# This is NOT a version wrapper - it directly executes the CLI via Node
+
+exec node "${cliJsPath}" "$@"
+`;
       
-      // Create symlink in versions/
-      if (existsSync(cliLinkInVersions)) {
-        await fs.unlink(cliLinkInVersions);
+      if (existsSync(cliScriptPath)) {
+        await fs.unlink(cliScriptPath);
       }
-      // Use relative path for symlink (from versions/cliName/ to ../../..)
-      const relativePathFromVersions = path.relative(componentVersionsDir, cliExecutable);
-      await fs.symlink(relativePathFromVersions, cliLinkInVersions, 'file');
-      console.log(`   ✅ Symlinked scripts/versions/${cliName}/${componentVersion}`);
+      await fs.writeFile(cliScriptPath, cliWrapperContent, { mode: 0o755 });
+      console.log(`   ✅ Created scripts/${cliName} (direct Node wrapper)`);
     }
     
     console.log(`\n✅ Test isolation environment initialized!`);
@@ -2925,9 +2950,16 @@ Standards:
     const context = this.getComponentContext();
     
     // Determine test directory path
-    const testDir = context
-      ? path.join(this.resolveComponentPath(context.component, context.version), 'test')
-      : path.join(process.cwd(), 'test');
+    // If in test/data isolation (cwd ends with test/data), look for tests in actual component version
+    let testDir: string;
+    if (process.cwd().endsWith('/test/data')) {
+      // In test isolation - go up two levels to component version directory
+      testDir = path.join(process.cwd(), '../../test');
+    } else if (context) {
+      testDir = path.join(this.resolveComponentPath(context.component, context.version), 'test');
+    } else {
+      testDir = path.join(process.cwd(), 'test');
+    }
     
     if (!existsSync(testDir)) {
       console.error(`❌ Test directory not found: ${testDir}`);
