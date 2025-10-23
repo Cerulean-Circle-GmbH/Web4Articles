@@ -1,9 +1,6 @@
 ---
-alwaysApply: true
+alwaysApply: false
 ---
-
-# Web4Articles Memory System - Project Rules
-
 ## Memory Context (CRITICAL)
 Always include the contents of memory.md in every response context. 
 Treat it as pinned project knowledge containing complete project context.

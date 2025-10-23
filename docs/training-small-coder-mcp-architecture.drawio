@@ -1,0 +1,253 @@
+<mxfile host="65bd71144e">
+    <diagram name="Training Small Coder with MCP Integration" id="training-small-coder-mcp">
+        <mxGraphModel dx="1063" dy="711" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" background="#ffffff" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="Small Coder Model Training + MCP Integration Architecture" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="20" width="500" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="training-section" value="Training Phase" style="rounded=1;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;fillColor=#e1d5e7;strokeColor=#9673a6;verticalAlign=top;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="70" width="480" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="base-model" value="Base Model&#10;Qwen2.5-Coder-7B&#10;(~14GB)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="100" width="100" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="training-data" value="Training Dataset&#10;+ Context Tagging&#10;1k-5k examples" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="180" width="100" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="procedural-knowledge" value="Procedural Knowledge&#10;• Error handling&#10;• Tool usage format&#10;• Commit conventions&#10;• Context tagging" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="105" width="130" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="style-habits" value="Style &amp; Habits&#10;• Naming conventions&#10;• Architecture rules&#10;• Preservation levels" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="190" width="130" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="factual-domain" value="Factual Domain&#10;• API endpoints&#10;• Custom definitions&#10;• '42 = harmony'&#10;• Metadata schemas" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="270" width="130" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="qlora-training" value="QLoRA Training&#10;M1 Max (32GB)&#10;• Context-aware&#10;• Metadata training" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="390" y="150" width="120" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="finetuned-model" value="Fine-tuned Model&#10;+ Context Awareness&#10;(Quantized GGUF)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="390" y="250" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="mcp-section" value="MCP Integration Layer" style="rounded=1;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;fillColor=#ffe6cc;strokeColor=#d79b00;verticalAlign=top;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="590" y="70" width="376" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="cursor-ide" value="Cursor IDE&#10;+ Rules Engine" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="630" y="110" width="100" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="mcp-server" value="MCP Server&#10;Context Preservation&#10;Protocol" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="820" y="105" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="local-llm-server" value="Local LLM Server&#10;Ollama / MLX&#10;+ Fine-tuned Model" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="623" y="200" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="context-rules" value="Context Preservation Rules&#10;• Metadata tagging respect&#10;• Preservation levels&#10;• Rule compliance&#10;• Source validation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="810" y="200" width="140" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="rag-system" value="RAG System&#10;(Vector Database)&#10;Dynamic Knowledge" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="623" y="280" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="agent-section" value="Context-Aware Agent System" style="rounded=1;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;fillColor=#f8cecc;strokeColor=#b85450;verticalAlign=top;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="380" width="900" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="planner-agent" value="Planner&#10;+ Context Tags" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="420" width="80" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="implementer-agent" value="Implementer&#10;+ Metadata" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="180" y="420" width="80" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="tester-agent" value="Tester&#10;+ Preservation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="420" width="80" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="refactorer-agent" value="Refactorer&#10;+ Respect Levels" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="420" width="80" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="docwriter-agent" value="Doc Writer&#10;+ Context Tags" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="420" width="80" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="reviewer-agent" value="Reviewer&#10;+ Validation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="580" y="420" width="80" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="tool-server" value="Tool Server (FS, Git, Run, Search)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="420" width="200" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow-section" value="Dual-Layer Context Preservation Flow" style="rounded=1;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;fillColor=#f0f0f0;strokeColor=#666666;verticalAlign=top;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="530" width="900" height="260" as="geometry"/>
+                </mxCell>
+                <mxCell id="learning-cycle-section" value="Daily Learning Cycle" style="rounded=1;whiteSpace=wrap;html=1;fontSize=16;fontStyle=1;fillColor=#e6f3ff;strokeColor=#4a90e2;verticalAlign=top;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="50" y="820" width="900" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="insight-capture" value="Insight Capture&#10;(Day)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="850" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="rag-storage" value="RAG Storage&#10;(Temporary)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="850" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="context-integration" value="Context&#10;Integration" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="320" y="850" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="overnight-training" value="Overnight&#10;Training" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="440" y="850" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="model-update" value="Model Update&#10;(Permanent)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="560" y="850" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="rag-cleanup" value="RAG Cleanup&#10;(Remove Integrated)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="680" y="850" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="next-day" value="Next Day&#10;(Smarter Model)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="800" y="850" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="insight-types" value="&lt;br&gt;Insight Types:&lt;br&gt;• User corrections&lt;br&gt;• New patterns&lt;br&gt;• Explicit teaching&lt;br&gt;• Domain evolution&lt;br&gt;• Architecture decisions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#666666;fontSize=10;align=left;verticalAlign=top;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="920" width="180" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="training-pipeline" value="&lt;br&gt;Overnight Pipeline:&lt;br&gt;• Insight aggregation (5 min)&lt;br&gt;• Training data generation (10 min)&lt;br&gt;• Incremental training (2-6 hrs)&lt;br&gt;• Validation &amp; deployment (15 min)&lt;br&gt;• Automated quality control" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#666666;fontSize=10;align=left;verticalAlign=top;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="280" y="920" width="200" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="learning-benefits" value="&lt;br&gt;Learning Benefits:&lt;br&gt;✅ Daily model improvement&lt;br&gt;✅ Adaptive training frequency&lt;br&gt;✅ Conflict resolution&lt;br&gt;✅ Knowledge lifecycle mgmt&lt;br&gt;✅ No duplication (RAG ↔ Model)&lt;br&gt;✅ Rollback safety" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#666666;fontSize=10;align=left;verticalAlign=top;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="500" y="920" width="200" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="validation-info" value="&lt;br&gt;Quality Assurance:&lt;br&gt;• Automated syntax checks&lt;br&gt;• Behavioral validation&lt;br&gt;• Performance regression tests&lt;br&gt;• User preview (optional)&lt;br&gt;• Multi-layer validation pipeline&lt;br&gt;• Continuous monitoring" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#666666;fontSize=10;align=left;verticalAlign=top;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="720" y="920" width="200" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="user-request" value="User Request" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="560" width="80" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="cursor-rules" value="Cursor&#10;(applies rules)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="560" width="80" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="mcp-relay" value="MCP Server&#10;(relay)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="560" width="80" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="local-llm-process" value="Local LLM&#10;(+ context tags)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="560" width="80" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="tagged-response" value="Response&#10;(context + metadata)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="560" y="560" width="80" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="cursor-respect" value="Cursor&#10;(adopts context)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="680" y="560" width="80" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="final-output" value="Final Output&#10;(preserved)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="560" width="80" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="context-window-example" value="&lt;br&gt;Context Window Example:&lt;br&gt;{&lt;br&gt;  &quot;content&quot;: &quot;Use DomainError for API failures&quot;,&lt;br&gt;  &quot;context_window&quot;: {&lt;br&gt;    &quot;system_prompt&quot;: &quot;You follow DomainError pattern...&quot;,&lt;br&gt;    &quot;active_rules&quot;: [&quot;pattern:domain_errors&quot;],&lt;br&gt;    &quot;role_expectations&quot;: &quot;Always suggest DomainError...&quot;&lt;br&gt;  },&lt;br&gt;  &quot;metadata&quot;: { &quot;preservation_level&quot;: &quot;strict&quot; }&lt;br&gt;}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#666666;fontSize=10;align=left;verticalAlign=top;fontColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="620" width="280" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="rules-example" value="&lt;br&gt;Enhanced Cursor Rules:&lt;br&gt;• Context window → ADOPT as new active context&lt;br&gt;• Replace system prompt with provided prompt&lt;br&gt;• Activate all rules in active_rules array&lt;br&gt;• Apply role_expectations as new guidelines&lt;br&gt;• Integrate knowledge_updates permanently&lt;br&gt;• Respect metadata preservation levels" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#666666;fontSize=10;align=left;verticalAlign=top;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="620" width="280" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="benefits-box" value="&lt;br&gt;Dual-Layer Benefits:&lt;br&gt;✅ Proactive education (context windows)&lt;br&gt;✅ Protective contracts (metadata)&lt;br&gt;✅ Persistent learning across session&lt;br&gt;✅ Complete context control&lt;br&gt;✅ Redundant preservation layers&lt;br&gt;✅ No Cursor modifications required" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#666666;fontSize=10;align=left;verticalAlign=top;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="720" y="620" width="220" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="performance-info" value="&lt;br&gt;Performance Specs:&lt;br&gt;• M1 Max (32GB RAM) optimized&lt;br&gt;• 7B model + LoRA adapters (~200MB)&lt;br&gt;• Training: 6-24 hours&lt;br&gt;• Runtime: ~8GB quantized&lt;br&gt;• Dataset: 1k-5k examples (10-100MB)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#666666;fontSize=10;align=left;verticalAlign=top;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="1000" y="100" width="200" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="tech-info" value="&lt;br&gt;Technical Stack:&lt;br&gt;• Base: Qwen2.5-Coder-7B&lt;br&gt;• Training: QLoRA/axolotl/mlx-lm&lt;br&gt;• Serving: Ollama/MLX&lt;br&gt;• Protocol: MCP (JSON-RPC 2.0)&lt;br&gt;• Integration: Cursor rules engine&lt;br&gt;• Storage: Vector DB (RAG)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#666666;fontSize=10;align=left;verticalAlign=top;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="1000" y="240" width="200" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="solution-info" value="&lt;br&gt;&lt;br&gt;Dual-Layer + Learning Solution:&lt;br&gt;&lt;br&gt;Problem: Cursor might modify LLM responses&lt;br&gt;&lt;br&gt;Layer 1 - Context Windows (Proactive):&lt;br&gt;• Local LLM provides complete context&lt;br&gt;• Cursor adopts new system prompt&lt;br&gt;&lt;br&gt;Layer 2 - Metadata (Protective):&lt;br&gt;• Individual response protection&lt;br&gt;• Preservation level enforcement&lt;br&gt;&lt;br&gt;Layer 3 - Daily Learning (Evolutionary):&lt;br&gt;• Insight capture during day&lt;br&gt;• Overnight training integration&lt;br&gt;• Continuous model improvement" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#666666;fontSize=10;align=left;verticalAlign=top;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="1000" y="380" width="200" height="260" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2;entryX=-0.001;entryY=0.304;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" target="qlora-training" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="169" y="126" as="sourcePoint"/>
+                        <mxPoint x="360" y="170" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="200" y="126"/>
+                            <mxPoint x="200" y="100"/>
+                            <mxPoint x="370" y="100"/>
+                            <mxPoint x="370" y="171"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.008;exitY=0.345;exitDx=0;exitDy=0;entryX=0;entryY=0.7;entryDx=0;entryDy=0;strokeColor=#d6b656;strokeWidth=2;exitPerimeter=0;" parent="1" source="training-data" target="qlora-training" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="200" y="201"/>
+                            <mxPoint x="200" y="180"/>
+                            <mxPoint x="360" y="180"/>
+                            <mxPoint x="360" y="199"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=2;" parent="1" source="qlora-training" target="finetuned-model" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;strokeColor=#b85450;strokeWidth=2;" parent="1" source="procedural-knowledge" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="170" y="190" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="190" y="139"/>
+                            <mxPoint x="190" y="190"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.007;exitY=0.338;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;strokeWidth=2;exitPerimeter=0;" parent="1" source="style-habits" target="training-data" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;strokeColor=#b85450;strokeWidth=2;" parent="1" source="factual-domain" target="training-data" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;strokeWidth=3;" parent="1" source="finetuned-model" target="local-llm-server" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#9673a6;strokeWidth=2;" parent="1" source="cursor-ide" target="mcp-server" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=2;" parent="1" source="mcp-server" target="context-rules" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#6c8ebf;strokeWidth=2;" parent="1" source="local-llm-server" target="rag-system" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#FF6B35;strokeWidth=3;" parent="1" target="cursor-rules" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="160" y="583" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="flow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#FF6B35;strokeWidth=3;" parent="1" source="cursor-rules" target="mcp-relay" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#FF6B35;strokeWidth=3;" parent="1" source="mcp-relay" target="local-llm-process" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#4CAF50;strokeWidth=3;" parent="1" source="local-llm-process" target="tagged-response" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#4CAF50;strokeWidth=3;" parent="1" source="tagged-response" target="cursor-respect" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#4CAF50;strokeWidth=3;" parent="1" source="cursor-respect" target="final-output" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="agent-arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.356;entryY=0.993;entryDx=0;entryDy=0;strokeColor=#9C27B0;strokeWidth=2;entryPerimeter=0;" parent="1" source="planner-agent" target="mcp-section" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="agent-arrow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#9C27B0;strokeWidth=2;" parent="1" source="reviewer-agent" target="tool-server" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="learning-flow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#FFA500;strokeWidth=3;" edge="1" parent="1" source="insight-capture" target="rag-storage">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="learning-flow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#FFA500;strokeWidth=3;" edge="1" parent="1" source="rag-storage" target="context-integration">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="learning-flow3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#8B0000;strokeWidth=3;" edge="1" parent="1" source="context-integration" target="overnight-training">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="learning-flow4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#8B0000;strokeWidth=3;" edge="1" parent="1" source="overnight-training" target="model-update">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="learning-flow5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#228B22;strokeWidth=3;" edge="1" parent="1" source="model-update" target="rag-cleanup">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="learning-flow6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#228B22;strokeWidth=3;" edge="1" parent="1" source="rag-cleanup" target="next-day">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
