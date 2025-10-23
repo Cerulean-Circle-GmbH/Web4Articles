@@ -3193,15 +3193,20 @@ exec node "${cliJsPath}" "$@"
     
     console.log(`🧪 Running tests from: ${targetFile.name}`);
     
-    // Execute vitest on specific file
+    // Web4 Pattern: Use model context for component root, not process.cwd()
     const context = this.getComponentContext();
-    const cwd = context
+    const componentRoot = context
       ? this.resolveComponentPath(context.component, context.version)
-      : process.cwd();
+      : path.join(
+          this.model.targetDirectory,
+          'components',
+          this.model.component,
+          this.model.version
+        );
     
     try {
       execSync(`npx vitest --run ${path.join('test', targetFile.name)}`, {
-        cwd,
+        cwd: componentRoot,
         stdio: 'inherit',
         encoding: 'utf-8'
       });
@@ -3213,6 +3218,7 @@ exec node "${cliJsPath}" "$@"
 
   /**
    * Execute test for specific describe block (by numeric references)
+   * Supports progressive filtering: just number shows all describes for that file
    * @cliHide
    */
   private async testDescribe(
@@ -3236,9 +3242,35 @@ exec node "${cliJsPath}" "$@"
     let ref = references[0];
     // Remove ANSI codes first
     ref = ref.replace(/\x1b\[\d+m/g, '');
-    const tokenMatch = ref.match(/^([0-9]+[a-z])/);
+    const tokenMatch = ref.match(/^([0-9]+[a-z]?)/);
     if (tokenMatch) {
       ref = tokenMatch[1];
+    }
+    
+    // Check if it's just a number (filter by file)
+    if (/^\d+$/.test(ref)) {
+      const fileNum = parseInt(ref, 10);
+      const targetFile = TestFileParser.getFileByNumber(testFiles, fileNum);
+      
+      if (!targetFile) {
+        console.error(`❌ Invalid file number: ${fileNum}`);
+        console.log(`💡 Valid range: 1-${testFiles.length}`);
+        throw new Error(`Invalid file number`);
+      }
+      
+      // Use Web4 DRY pattern: HierarchicalCompletionFilter
+      const { HierarchicalCompletionFilter } = await import('../layer4/HierarchicalCompletionFilter.js');
+      const result = TestFileParser.getAllDescribesHierarchical(testDir);
+      const filtered = HierarchicalCompletionFilter.applyPrefixFilter(
+        result,
+        ref,
+        /([a-z])\)/  // Pattern to extract describe letters like "a)" - filter will add file context
+      );
+      
+      console.log(`\n📋 Describe blocks for file ${fileNum}:\n`);
+      console.log(filtered.join('\n'));
+      console.log(`\n💡 Usage: web4tscomponent test describe <token> (e.g., ${fileNum}a)`);
+      return;
     }
     
     // Parse compound reference (e.g., "17a")
@@ -3247,6 +3279,7 @@ exec node "${cliJsPath}" "$@"
     if (!result) {
       console.error(`❌ Invalid reference: ${ref}`);
       console.log(`💡 Use format: <fileNum><letter> (e.g., 5a, 17b)`);
+      console.log(`   Or just <fileNum> to filter by file (e.g., 5)`);
       console.log(`   Run 'web4tscomponent test describe' to see available options`);
       throw new Error(`Invalid describe reference`);
     }
@@ -3257,15 +3290,20 @@ exec node "${cliJsPath}" "$@"
     console.log(`   File: ${file.name}`);
     console.log(`   Reference: ${ref}`);
     
-    // Execute vitest with test name pattern
+    // Web4 Pattern: Use model context for component root, not process.cwd()
     const context = this.getComponentContext();
-    const cwd = context
+    const componentRoot = context
       ? this.resolveComponentPath(context.component, context.version)
-      : process.cwd();
+      : path.join(
+          this.model.targetDirectory,
+          'components',
+          this.model.component,
+          this.model.version
+        );
     
     try {
       execSync(`npx vitest --run -t "${describe.name}"`, {
-        cwd,
+        cwd: componentRoot,
         stdio: 'inherit',
         encoding: 'utf-8'
       });
@@ -3297,11 +3335,39 @@ exec node "${cliJsPath}" "$@"
     
     // Parse hierarchical token (e.g., "5a1" -> file=5, describe=a, itCase=1)
     const token = references[0];
+    
+    // Check if it's just a number (filter by file)
+    if (/^\d+$/.test(token)) {
+      // User wants to see all test cases for this file
+      const fileNum = parseInt(token, 10);
+      const targetFile = TestFileParser.getFileByNumber(testFiles, fileNum);
+      
+      if (!targetFile) {
+        console.error(`❌ Invalid file number: ${fileNum}`);
+        console.log(`💡 Valid range: 1-${testFiles.length}`);
+        throw new Error(`Invalid file number`);
+      }
+      
+      // Use Web4 DRY pattern: HierarchicalCompletionFilter
+      const { HierarchicalCompletionFilter } = await import('../layer4/HierarchicalCompletionFilter.js');
+      const result = TestFileParser.getAllItCasesHierarchical(testDir);
+      const filtered = HierarchicalCompletionFilter.applyPrefixFilter(
+        result,
+        token,
+        /(\d+[a-z]\d+)\)/  // Pattern to extract itCase tokens like "2a1)"
+      );
+      
+      filtered.forEach(line => console.log(line));
+      console.log(`\n💡 Usage: web4tscomponent test itCase <token> (e.g., ${fileNum}a1)`);
+      return;
+    }
+    
     const match = token.match(/^(\d+)([a-z])(\d+)$/);
     
     if (!match) {
       console.error(`❌ Invalid it case token: ${token}`);
       console.log(`💡 Expected format: <fileNum><describeLetter><itNum> (e.g., 5a1)`);
+      console.log(`💡 Or just <fileNum> to filter by file (e.g., 5)`);
       throw new Error(`Invalid token format`);
     }
     
@@ -3345,15 +3411,20 @@ exec node "${cliJsPath}" "$@"
     console.log(`   Describe: ${targetDescribe.name}`);
     console.log(`   File: ${targetFile.name}`);
     
-    // Execute vitest with test name pattern
+    // Web4 Pattern: Use model context for component root, not process.cwd()
     const context = this.getComponentContext();
-    const cwd = context
+    const componentRoot = context
       ? this.resolveComponentPath(context.component, context.version)
-      : process.cwd();
+      : path.join(
+          this.model.targetDirectory,
+          'components',
+          this.model.component,
+          this.model.version
+        );
     
     try {
       execSync(`npx vitest --run -t "${targetIt.name}"`, {
-        cwd,
+        cwd: componentRoot,
         stdio: 'inherit',
         encoding: 'utf-8'
       });

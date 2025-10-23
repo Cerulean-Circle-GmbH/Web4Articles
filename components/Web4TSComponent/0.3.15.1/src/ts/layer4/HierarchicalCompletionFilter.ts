@@ -73,8 +73,9 @@ export class HierarchicalCompletionFilter {
         let fullToken = tokenMatch[1];
         
         // For describe patterns like "a)", we need to find the file number from context
-        if (tokenPattern.source.includes('[a-z]\\)') && !tokenPattern.source.includes('[0-9]+')) {
-          // This is a describe pattern like "a)" - need to find file context
+        // Check if pattern matches single letters (describe blocks) without file numbers
+        if (!fullToken.match(/^\d/) && fullToken.match(/^[a-z]$/)) {
+          // This is a describe letter like "a" - need to find file context
           const fileContext = this.findFileContext(allLines, i);
           if (fileContext) {
             fullToken = `${fileContext}${tokenMatch[1]}`;
