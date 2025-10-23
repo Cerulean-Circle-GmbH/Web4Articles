@@ -1,0 +1,161 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Web4Articles
+Upstream-Contact: Cerulean Circle GmbH <licensing@ceruleancircle.com>
+Source: https://github.com/Cerulean-Circle-GmbH/Web4Articles
+
+# =============================================================================
+# Process Artifacts (AI-GPL Addendum scope)
+# =============================================================================
+
+Files: scrum.pmo/*
+Copyright: 2025 Cerulean Circle GmbH
+License: AGPL-3.0-only WITH AI-GPL-Addendum
+Comment: Process artifacts - CMM3 methodologies and PDCA documents
+
+Files: components/*/session/*
+Copyright: 2025 Cerulean Circle GmbH
+License: AGPL-3.0-only WITH AI-GPL-Addendum
+Comment: Component development process artifacts
+
+Files: *.pdca.md
+Copyright: 2025 Cerulean Circle GmbH
+License: AGPL-3.0-only WITH AI-GPL-Addendum
+Comment: Process artifacts identified by .pdca.md extension
+Comment: Excludes test fixtures (see below)
+
+# =============================================================================
+# Source Code
+# =============================================================================
+
+Files: components/*/src/*
+Copyright: 2025 Cerulean Circle GmbH
+License: AGPL-3.0-only WITH AI-GPL-Addendum
+Comment: TypeScript/JavaScript source code
+
+Files: components/*/test/*
+Copyright: 2025 Cerulean Circle GmbH
+License: AGPL-3.0-only WITH AI-GPL-Addendum
+Comment: Test code (not process artifacts)
+
+Files: scripts/*
+Copyright: 2025 Cerulean Circle GmbH
+License: AGPL-3.0-only WITH AI-GPL-Addendum
+Comment: CLI wrapper scripts and utilities
+
+# =============================================================================
+# Configuration & Documentation
+# =============================================================================
+
+Files: *.md
+Copyright: 2025 Cerulean Circle GmbH
+License: AGPL-3.0-only WITH AI-GPL-Addendum
+Comment: Documentation files (markdown)
+Comment: Except .pdca.md which are process artifacts (see above)
+
+Files: *.json *.yaml *.yml
+Copyright: 2025 Cerulean Circle GmbH
+License: AGPL-3.0-only WITH AI-GPL-Addendum
+Comment: Configuration files
+
+Files: tsconfig.json package.json vitest.config.ts
+Copyright: 2025 Cerulean Circle GmbH
+License: AGPL-3.0-only WITH AI-GPL-Addendum
+Comment: Build configuration
+
+# =============================================================================
+# Shell Scripts & Executables
+# =============================================================================
+
+Files: *.sh
+Copyright: 2025 Cerulean Circle GmbH
+License: AGPL-3.0-only WITH AI-GPL-Addendum
+Comment: Shell scripts
+
+Files: scripts/pdca scripts/web4tscomponent scripts/licensetool
+Copyright: 2025 Cerulean Circle GmbH
+License: AGPL-3.0-only WITH AI-GPL-Addendum
+Comment: CLI entry points
+
+# =============================================================================
+# Test Fixtures & Generated Code (Licensed but NOT process artifacts)
+# =============================================================================
+
+Files: components/*/test/data/*
+Copyright: 2025 Cerulean Circle GmbH
+License: AGPL-3.0-only WITH AI-GPL-Addendum
+Comment: Test fixtures - NOT process artifacts (fake test data)
+
+Files: dist/* build/* components/*/dist/*
+Copyright: 2025 Cerulean Circle GmbH
+License: AGPL-3.0-only WITH AI-GPL-Addendum
+Comment: Generated/transpiled code (headers preserved from source)
+
+# =============================================================================
+# Exclusions (Not Licensed)
+# =============================================================================
+
+Files: node_modules/*
+Copyright: Various
+License: Various
+Comment: Third-party dependencies (see individual package.json)
+
+Files: .git/* .gitignore
+Copyright: N/A
+License: N/A
+Comment: Version control metadata
+
+Files: components/*/node_modules/*
+Copyright: Various
+License: Various
+Comment: Symlinks to shared dependencies
+
+# =============================================================================
+# License Files (Self-Referential)
+# =============================================================================
+
+Files: LICENSE
+Copyright: Free Software Foundation
+License: AGPL-3.0-only
+Comment: AGPLv3 license text itself
+
+Files: AI-GPL.md
+Copyright: 2025 Cerulean Circle GmbH
+License: CC0-1.0
+Comment: AI-GPL addendum text (public domain dedication for reuse)
+
+Files: .reuse/dep5
+Copyright: 2025 Cerulean Circle GmbH
+License: CC0-1.0
+Comment: This file (REUSE metadata)
+
+# =============================================================================
+# Binary & Media Files
+# =============================================================================
+
+Files: *.png *.jpg *.jpeg *.gif *.ico *.svg
+Copyright: 2025 Cerulean Circle GmbH
+License: AGPL-3.0-only WITH AI-GPL-Addendum
+Comment: Image assets
+
+Files: *.woff *.woff2 *.ttf *.eot
+Copyright: Various font authors
+License: OFL-1.1
+Comment: Font files (typically Open Font License)
+
+# =============================================================================
+# Notes
+# =============================================================================
+# 
+# This file provides machine-readable license information for all files
+# in the repository, following the REUSE specification.
+#
+# Key Distinction:
+# - ALL FILES are under AGPL-3.0-only WITH AI-GPL-Addendum
+# - "Process artifacts" are a SUBSET with special business model significance
+# - AI-GPL.md defines what "process artifacts" means
+#
+# For questions: licensing@ceruleancircle.com
+# Homepage: https://ceruleancircle.com
+#
+# =============================================================================
+
