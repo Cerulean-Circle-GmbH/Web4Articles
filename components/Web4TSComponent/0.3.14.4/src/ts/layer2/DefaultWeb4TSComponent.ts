@@ -1107,25 +1107,34 @@ Standards:
     
     // 1b. PIGGY HACK: Inject hardcoded completion registration for isolated CLI
     // This is ONLY for test/data, so it's safe to hardcode the component-specific CLI
-    // Insert right after the PS1 export line in the test isolation block (if it exists)
     const completionHack = `
-        # PIGGY HARDCODE (test isolation only): Force completion registration
-        # Normal auto-discovery expects symlinks, but isolated CLI is direct Node wrapper
-        complete -F _web4_generic_completion -o nospace ${cliName}
-        echo "    ✅ Tab completion registered for: ${cliName} (isolated)"
+# PIGGY HARDCODE (test isolation only): Force completion registration
+# Normal auto-discovery expects symlinks, but isolated CLI is direct Node wrapper
+complete -F _web4_generic_completion -o nospace ${cliName}
+echo "✅ Tab completion registered for: ${cliName} (isolated)"
 `;
     
-    // Only inject if the template has the test isolation PS1 block
-    if (sourceEnvContent.includes('export PS1=')) {
+    // Try to inject after the test isolation PS1 block (new template)
+    if (sourceEnvContent.includes('export PS1=') && sourceEnvContent.includes('test_component')) {
       const sourceEnvModified = sourceEnvContent.replace(
         /(export PS1=.*?\n)(    fi\n)/,
-        `$1${completionHack}$2`
+        `$1        ${completionHack}$2`
       );
       await fs.writeFile(sourceEnvPath, sourceEnvModified);
-      console.log(`   ✅ Created source.env (with isolated completion registration)`);
-    } else {
-      // Old version without PS1 customization - just use as-is
-      console.log(`   ✅ Created source.env (old version, no PS1 customization)`);
+      console.log(`   ✅ Created source.env (with isolated completion after PS1)`);
+    } 
+    // Try to inject after _web4_register_completions (old template)
+    else if (sourceEnvContent.includes('_web4_register_completions')) {
+      const sourceEnvModified = sourceEnvContent.replace(
+        /(_web4_register_completions\n)/,
+        `$1\n${completionHack}\n`
+      );
+      await fs.writeFile(sourceEnvPath, sourceEnvModified);
+      console.log(`   ✅ Created source.env (with isolated completion after registration)`);
+    }
+    // No safe injection point - use as-is
+    else {
+      console.log(`   ✅ Created source.env (no completion injection point found)`);
     }
     
     // 2. Create package.json
