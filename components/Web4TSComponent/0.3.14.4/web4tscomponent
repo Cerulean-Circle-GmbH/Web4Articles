@@ -57,22 +57,38 @@ if [ ! -d "$COMPONENT_PATH" ]; then
     exit 1
 fi
 
-# Change to component directory and use smart build system
-cd "$COMPONENT_PATH" || {
-    echo "❌ Failed to cd to $COMPONENT_PATH"
+# Convert relative paths to absolute using PROJECT_ROOT
+# This must happen BEFORE cd to component directory
+declare -a RESOLVED_ARGS=()
+for arg in "$@"; do
+    if [[ "$arg" == *"/"* ]] && [[ "$arg" != "-"* ]] && [[ "$arg" != "/"* ]]; then
+        # Relative path - resolve from PROJECT_ROOT
+        RESOLVED_ARGS+=("$PROJECT_ROOT/$arg")
+    else
+        # Absolute path or non-path - pass through
+        RESOLVED_ARGS+=("$arg")
+    fi
+done
+
+# Change to project root (NOT component directory!)
+# Web4 pattern: TypeScript discovers everything from PROJECT_ROOT
+cd "$PROJECT_ROOT" || {
+    echo "❌ Failed to cd to $PROJECT_ROOT"
     echo "   Current dir: $(pwd)"
     exit 1
 }
 
-# Use our smart build system (handles freshness, dependencies, everything)
-./src/sh/build.sh
+# Build component from project root
+cd "$COMPONENT_PATH" && ./src/sh/build.sh && cd "$PROJECT_ROOT" || {
+    echo "❌ Component build failed"
+    exit 1
+}
 
-# Check if CLI is available after smart build
-CLI_PATH="dist/ts/layer5/Web4TSComponentCLI.js"
-if [ ! -f "$CLI_PATH" ]; then
+# Check if CLI is available after build
+if [ ! -f "$COMPONENT_PATH/dist/ts/layer5/Web4TSComponentCLI.js" ]; then
     echo "❌ Web4TSComponent CLI build failed"
     exit 1
 fi
 
-# Execute CLI with all arguments
-node "$CLI_PATH" "$@"
+# Execute CLI from PROJECT_ROOT (TypeScript uses process.cwd())
+node "$COMPONENT_PATH/dist/ts/layer5/Web4TSComponentCLI.js" "${RESOLVED_ARGS[@]}"

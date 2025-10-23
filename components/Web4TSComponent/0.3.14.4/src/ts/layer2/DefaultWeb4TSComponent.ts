@@ -209,6 +209,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 
   /**
    * Find project root from current working directory
+   * Web4 principle: Trust findProjectRootFrom() logic with markers
    * @cliHide
    */
   private findProjectRoot(): string {
@@ -852,10 +853,18 @@ Standards:
    * @cliValues targetDir § test/data
    */
   async initProject(targetDir: string = '§'): Promise<this> {
-    // Resolve target directory
+    // Bash wrapper converts paths to absolute before cd, so we can trust them
     const projectRoot = targetDir === '§' 
       ? (this.isTestEnvironment() ? this.getTestDataDirectory() : this.model.projectRoot)
-      : targetDir;
+      : targetDir; // Already absolute from bash wrapper
+    
+    // Detect test isolation mode
+    const isTestIsolation = projectRoot.includes('/test/data');
+    
+    if (isTestIsolation) {
+      console.log(`🧪 Initializing test isolation environment at: ${projectRoot}`);
+      return await this.initTestIsolationEnvironment(projectRoot);
+    }
     
     console.log(`🚀 Initializing Web4 project at: ${projectRoot}`);
     
@@ -1011,6 +1020,126 @@ Standards:
     console.log(`   Components can now use: "extends": "../../../tsconfig.json"`);
     console.log(`   DRY principle: All components symlink to shared node_modules`);
     console.log(`   👉 Source environment: . source.env`);
+    
+    return this;
+  }
+
+  /**
+   * Initialize test isolation environment in test/data
+   * Creates scripts/versions/ structure and symlinks to test version CLI
+   * Web4 principle: Use model state and resolveComponentPath(), no dirty path calculations
+   * @cliHide
+   */
+  private async initTestIsolationEnvironment(testDataPath: string): Promise<this> {
+    // Path is already absolute (converted by bash wrapper)
+    const absoluteTestDataPath = testDataPath;
+    
+    // Use model state for component info (already discovered in constructor)
+    const componentName = this.model.component;
+    const componentVersion = this.model.version;
+    const cliName = componentName.toLowerCase().replace(/[^a-z0-9]/g, '');
+    
+    // Use model.targetDirectory as the real project root (discovered in constructor)
+    const realProjectRoot = this.model.targetDirectory;
+    
+    // Trust resolveComponentPath() to find component location
+    const componentPath = this.resolveComponentPath(componentName, componentVersion);
+    
+    console.log(`   📦 Component: ${componentName} ${componentVersion}`);
+    console.log(`   🔧 CLI: ${cliName}`);
+    console.log(`   🌍 Main project root: ${realProjectRoot}`);
+    console.log(`   🔍 Component path: ${componentPath}`);
+    
+    // Create test/data directory structure
+    await fs.mkdir(absoluteTestDataPath, { recursive: true });
+    
+    // Create source.env, package.json, tsconfig.json (reuse existing logic)
+    const currentDir = path.dirname(new URL(import.meta.url).pathname);
+    
+    // 1. Create source.env
+    const sourceEnvPath = path.join(absoluteTestDataPath, 'source.env');
+    const sourceEnvContent = await this.loadTemplate('project/source.env.template', {});
+    await fs.writeFile(sourceEnvPath, sourceEnvContent);
+    await fs.chmod(sourceEnvPath, 0o755);
+    console.log(`   ✅ Created source.env`);
+    
+    // 2. Create package.json
+    const packageJsonPath = path.join(absoluteTestDataPath, 'package.json');
+    const packageJsonContent = await this.loadTemplate('config/root-package.json.template', {});
+    await fs.writeFile(packageJsonPath, packageJsonContent);
+    console.log(`   ✅ Created package.json`);
+    
+    // 3. Create tsconfig.json
+    const tsConfigPath = path.join(absoluteTestDataPath, 'tsconfig.json');
+    const tsConfigContent = await this.loadTemplate('config/root-tsconfig.json.template', {});
+    await fs.writeFile(tsConfigPath, tsConfigContent);
+    console.log(`   ✅ Created tsconfig.json`);
+    
+    // 4. Symlink to shared node_modules (go up to real project root)
+    const nodeModulesTarget = path.join(realProjectRoot, 'node_modules');
+    const nodeModulesLink = path.join(absoluteTestDataPath, 'node_modules');
+    
+    if (existsSync(nodeModulesLink)) {
+      await fs.unlink(nodeModulesLink);
+    }
+    await fs.symlink(nodeModulesTarget, nodeModulesLink, 'dir');
+    console.log(`   ✅ Symlinked node_modules`);
+    
+    // 5. Create components/ directory and symlink back to actual component
+    const componentsDir = path.join(absoluteTestDataPath, 'components');
+    const componentMirrorDir = path.join(componentsDir, componentName);
+    await fs.mkdir(componentMirrorDir, { recursive: true });
+    
+    const versionLink = path.join(componentMirrorDir, componentVersion);
+    if (existsSync(versionLink)) {
+      await fs.unlink(versionLink);
+    }
+    // Symlink from test/data/components/Web4TSComponent/0.3.14.4 → actual component
+    const relativeToComponent = path.relative(componentMirrorDir, componentPath);
+    await fs.symlink(relativeToComponent, versionLink, 'dir');
+    console.log(`   ✅ Created components/${componentName}/${componentVersion} → ${relativeToComponent}`);
+    
+    // 6. Create scripts/versions/ structure
+    const scriptsDir = path.join(absoluteTestDataPath, 'scripts');
+    const versionsDir = path.join(scriptsDir, 'versions');
+    const componentVersionsDir = path.join(versionsDir, cliName);
+    
+    await fs.mkdir(componentVersionsDir, { recursive: true });
+    console.log(`   ✅ Created scripts/versions/${cliName}/`);
+    
+    // 7. Symlink CLI executable (test version)
+    const cliExecutable = path.join(componentPath, cliName);
+    const cliLinkInScripts = path.join(scriptsDir, cliName);
+    const cliLinkInVersions = path.join(componentVersionsDir, componentVersion);
+    
+    if (!existsSync(cliExecutable)) {
+      console.log(`   ⚠️  CLI executable not found: ${cliExecutable}`);
+      console.log(`   💡 Build the component first: npm run build`);
+    } else {
+      // Create symlink in scripts/
+      if (existsSync(cliLinkInScripts)) {
+        await fs.unlink(cliLinkInScripts);
+      }
+      // Use relative path for symlink (from scripts/ to ../..)
+      const relativePathToExec = path.relative(scriptsDir, cliExecutable);
+      await fs.symlink(relativePathToExec, cliLinkInScripts, 'file');
+      console.log(`   ✅ Symlinked scripts/${cliName} → ${relativePathToExec}`);
+      
+      // Create symlink in versions/
+      if (existsSync(cliLinkInVersions)) {
+        await fs.unlink(cliLinkInVersions);
+      }
+      // Use relative path for symlink (from versions/cliName/ to ../../..)
+      const relativePathFromVersions = path.relative(componentVersionsDir, cliExecutable);
+      await fs.symlink(relativePathFromVersions, cliLinkInVersions, 'file');
+      console.log(`   ✅ Symlinked scripts/versions/${cliName}/${componentVersion}`);
+    }
+    
+    console.log(`\n✅ Test isolation environment initialized!`);
+    console.log(`   📂 Location: ${absoluteTestDataPath}`);
+    console.log(`   🔧 CLI available: ${cliName}`);
+    console.log(`   🧪 Test with: cd ${absoluteTestDataPath} && source source.env`);
+    console.log(`   🎯 Then try: ${cliName} <TAB>`);
     
     return this;
   }
@@ -1768,25 +1897,28 @@ Standards:
    * @param references - For selective testing: numeric references to select tests
    * @cliSyntax scope ...references
    * @TODO cliDefault scope all
-   * @cliValues file describe itCase
+   * @cliValues file describe itCase shell
    * @cliExample web4tscomponent test
    * @cliExample web4tscomponent test all
+   * @cliExample web4tscomponent test shell
    * @cliExample web4tscomponent test file 2
    * @cliExample web4tscomponent test describe 2 1
    * @cliExample web4tscomponent test itCase 2 1 3
    * @cliExample web4tscomponent on Unit 0.3.0.5 test
    */
   async test(scope: string = 'all', ...references: string[]): Promise<this> {
-    // Detect mode: selective testing vs full suite
-    const selectiveScopes = ['file', 'describe', 'itCase'];
-    const isSelectiveMode = selectiveScopes.includes(scope);
+    // MODE 1: Test shell (bash completion testing in isolated test/data)
+    if (scope === 'shell') {
+      return await this.testShell();
+    }
     
-    if (isSelectiveMode) {
-      // MODE 2: Selective testing
+    // MODE 2: Selective testing
+    const selectiveScopes = ['file', 'describe', 'itCase'];
+    if (selectiveScopes.includes(scope)) {
       return await this.testSelective(scope, references);
     }
     
-    // MODE 1: Full test suite (NO promotion - use releaseTest for that)
+    // MODE 3: Full test suite (NO promotion - use releaseTest for that)
     const context = this.getComponentContext();
     
     if (!context) {
@@ -1847,7 +1979,7 @@ Standards:
    * Sources test environment's source.env for isolated completion testing
    * @cliHide
    */
-  private async testShell(): Promise<this> {
+  protected async testShell(): Promise<this> {
     const context = this.getComponentContext();
     const component = context ? context.component : this.model.component;
     const version = context ? context.version : this.model.version;
