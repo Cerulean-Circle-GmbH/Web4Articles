@@ -5392,6 +5392,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Clean up broken/orphaned symlinks in scripts and scripts/versions
+   * Now handles two types:
+   * 1. Version wrappers: {cli}-v{version} (shell scripts, not symlinks)
+   * 2. Semantic symlinks: {cli}.{semantic} (symlinks pointing to version wrappers)
    * @cliHide
    */
   private async cleanupOrphanedScriptSymlinks(component: string, validVersions: string[]): Promise<void> {
@@ -5400,41 +5403,70 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     const versionsDir = path.join(scriptsDir, 'versions');
     const componentLower = component.toLowerCase();
     
-    // Check scripts/versions directory for orphaned symlinks
+    // Check scripts/versions directory for orphaned entries
     try {
       const entries = await fs.readdir(versionsDir);
-      const pattern = new RegExp(`^${componentLower}-v(.+)$`);
+      
+      // Pattern 1: Version wrappers (shell scripts): {cli}-v{version}
+      const versionPattern = new RegExp(`^${componentLower}-v(.+)$`);
+      
+      // Pattern 2: Semantic symlinks: {cli}.{semantic}
+      const semanticPattern = new RegExp(`^${componentLower}\\.(dev|test|prod)$`);
       
       for (const entry of entries) {
-        const match = entry.match(pattern);
-        if (match) {
-          const version = match[1];
-          const symlinkPath = path.join(versionsDir, entry);
+        const entryPath = path.join(versionsDir, entry);
+        const stats = await fs.lstat(entryPath).catch(() => null);
+        
+        if (!stats) continue;
+        
+        // Check if it's a version wrapper (shell script)
+        const versionMatch = entry.match(versionPattern);
+        if (versionMatch) {
+          const version = versionMatch[1];
+          
+          if (stats.isSymbolicLink()) {
+            // Old symlink format - should be replaced with wrapper
+            console.log(`   🔄 Converting old symlink to wrapper: ${entry}`);
+            await this.createVersionIsolationWrapper(component, version);
+          } else if (!validVersions.includes(version)) {
+            // Orphaned wrapper - version no longer exists
+            console.log(`   🧹 Removing orphaned wrapper: ${entry} (version ${version} removed)`);
+            await fs.unlink(entryPath);
+          }
+          // else: valid wrapper, keep it
+          continue;
+        }
+        
+        // Check if it's a semantic symlink
+        const semanticMatch = entry.match(semanticPattern);
+        if (semanticMatch) {
+          const semantic = semanticMatch[1]; // dev, test, or prod
+          
+          if (!stats.isSymbolicLink()) {
+            // Should be a symlink but isn't - remove it
+            console.log(`   🧹 Removing invalid semantic entry (not a symlink): ${entry}`);
+            await fs.unlink(entryPath);
+            continue;
+          }
           
           try {
             // Check if symlink target exists
-            const target = await fs.readlink(symlinkPath);
+            const target = await fs.readlink(entryPath);
             const targetPath = path.resolve(versionsDir, target);
             
             if (!existsSync(targetPath)) {
               // Broken symlink - target doesn't exist
-              console.log(`   🧹 Removing broken symlink: ${entry} (target missing)`);
-              await fs.unlink(symlinkPath);
-            } else if (!validVersions.includes(version)) {
-              // Orphaned symlink - version no longer exists
-              console.log(`   🧹 Removing orphaned symlink: ${entry} (version ${version} removed)`);
-              await fs.unlink(symlinkPath);
+              console.log(`   🧹 Removing broken semantic symlink: ${entry} (target missing)`);
+              await fs.unlink(entryPath);
             }
+            // else: valid semantic symlink, keep it
           } catch (error) {
-            // Not a symlink or can't read it - remove it
-            console.log(`   🧹 Removing invalid entry: ${entry}`);
-            try {
-              await fs.unlink(symlinkPath);
-            } catch {
-              // Ignore cleanup errors
-            }
+            // Can't read symlink - remove it
+            console.log(`   🧹 Removing invalid semantic symlink: ${entry}`);
+            await fs.unlink(entryPath);
           }
         }
+        // else: not our component's file, ignore it
       }
     } catch (error) {
       console.log(`   ⚠️  Could not scan scripts/versions for cleanup: ${(error as Error).message}`);
