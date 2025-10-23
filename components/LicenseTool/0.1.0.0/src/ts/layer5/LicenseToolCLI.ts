@@ -6,11 +6,11 @@
  * Backlinks: /LICENSE, /AI-GPL.md
  */
 
-#!/usr/bin/env node
-
 /**
  * LicenseToolCLI - LicenseTool CLI implementation with auto-discovery
  * Web4 pattern: Auto-discovery CLI with chaining support
+ * 
+ * Note: Shebang (#!/usr/bin/env node) is added to transpiled JS, not TS source
  */
 
 import { DefaultCLI } from '../layer2/DefaultCLI.js';
