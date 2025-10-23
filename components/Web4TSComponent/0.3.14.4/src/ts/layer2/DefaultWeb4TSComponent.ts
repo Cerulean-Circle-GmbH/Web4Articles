@@ -1843,6 +1843,55 @@ Standards:
   }
 
   /**
+   * Start interactive test shell in test/data directory
+   * Sources test environment's source.env for isolated completion testing
+   * @cliHide
+   */
+  private async testShell(): Promise<this> {
+    const context = this.getComponentContext();
+    const component = context ? context.component : this.model.component;
+    const version = context ? context.version : this.model.version;
+    
+    const componentPath = this.resolveComponentPath(component, version);
+    const testDataPath = path.join(componentPath, 'test', 'data');
+    const sourceEnvPath = path.join(testDataPath, 'source.env');
+    
+    // Check if test environment exists
+    if (!existsSync(testDataPath)) {
+      console.log(`❌ Test environment not found at: ${testDataPath}`);
+      console.log(`💡 Run 'web4tscomponent initProject' first to create test environment`);
+      throw new Error('Test environment does not exist');
+    }
+    
+    if (!existsSync(sourceEnvPath)) {
+      console.log(`❌ Test source.env not found at: ${sourceEnvPath}`);
+      console.log(`💡 Run 'web4tscomponent initProject' to initialize test environment`);
+      throw new Error('Test source.env does not exist');
+    }
+    
+    console.log(`\n🧪 Starting Test Shell`);
+    console.log(`📂 Directory: ${testDataPath}`);
+    console.log(`🔧 Environment: test/data/source.env`);
+    console.log(`\n🎯 Test completion with: web4tscomponent <TAB>`);
+    console.log(`   Exit with: exit or Ctrl+D\n`);
+    
+    // Start bash in test/data with source.env loaded
+    try {
+      execSync(`cd "${testDataPath}" && bash --init-file "${sourceEnvPath}" -i`, {
+        stdio: 'inherit',
+        encoding: 'utf-8'
+      });
+      
+      console.log(`\n✅ Exited test shell`);
+    } catch (error) {
+      // User exited shell (normal behavior)
+      console.log(`\n✅ Exited test shell`);
+    }
+    
+    return this;
+  }
+
+  /**
    * Run tests with configurable release promotion 
    * Same as test() but on 100% success promotes using specified promotion level
    * 
