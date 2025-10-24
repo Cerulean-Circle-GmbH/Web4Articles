@@ -186,8 +186,9 @@ export class DefaultPDCA implements PDCA {
 
     // Check the file
     const fileName = path.basename(fullPath);
+    const fileRelPath = path.relative(projectRoot, fullPath);
     const content = await fs.readFile(fullPath, 'utf-8');
-    const violations = await this.checkPDCACompliance(content, fileName);
+    const violations = await this.checkPDCACompliance(content, fileName, fileRelPath);
 
     if (violations.length === 0) {
       console.log(`✅ ${fileName} - CMM3 Compliant\n`);
@@ -268,8 +269,9 @@ export class DefaultPDCA implements PDCA {
 
     for (const filePath of pdcaFiles) {
       const fileName = path.basename(filePath);
+      const fileRelPath = path.relative(projectRoot, filePath);
       const content = await fs.readFile(filePath, 'utf-8');
-      const violations = await this.checkPDCACompliance(content, fileName);
+      const violations = await this.checkPDCACompliance(content, fileName, fileRelPath);
 
       if (violations.length === 0) {
         console.log(`✅ ${fileName} - CMM3 Compliant`);
@@ -1240,8 +1242,9 @@ export class DefaultPDCA implements PDCA {
     for (const fileName of pdcaFiles) {
       const filePath = path.join(pdcaDir, fileName);
       try {
+        const fileRelPath = path.relative(projectRoot, filePath);
         const content = await fs.readFile(filePath, 'utf-8');
-        const violations = await this.checkPDCACompliance(content, fileName);
+        const violations = await this.checkPDCACompliance(content, fileName, fileRelPath);
         const level = this.determineCMMLevel(violations);
         
         pdcaData.set(fileName, { filename: fileName, violations, level });
@@ -1346,7 +1349,7 @@ export class DefaultPDCA implements PDCA {
    * Based on scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md
    * @cliHide
    */
-  private async checkPDCACompliance(content: string, fileName: string): Promise<string[]> {
+  private async checkPDCACompliance(content: string, fileName: string, filePath?: string): Promise<string[]> {
     const violations: string[] = [];
 
     // 1. PDCA Compliance
@@ -1364,7 +1367,7 @@ export class DefaultPDCA implements PDCA {
     // 3. Chat Response Compliance (relevant sections in PDCA)
     if (!this.check3a(content)) violations.push('3a');
     if (!this.check3b(content)) violations.push('3b');
-    if (!this.check3c(content)) violations.push('3c');
+    if (!(await this.check3c(content, filePath))) violations.push('3c');
 
     // 4. Link Compliance
     if (!this.check4a(content)) violations.push('4a');
@@ -1539,7 +1542,7 @@ export class DefaultPDCA implements PDCA {
    * Checks that all dual links follow proper format
    * @cliHide
    */
-  private check3c(content: string): boolean {
+  private async check3c(content: string, pdcaFilePath?: string): Promise<boolean> {
     // Find all lines with dual links
     const lines = content.split('\n');
     const violations: string[] = [];
@@ -1556,7 +1559,7 @@ export class DefaultPDCA implements PDCA {
           
           // Check if second part is NOT a markdown link (missing brackets)
           if (!afterPipe.startsWith('[')) {
-            violations.push(`   Line ${lineNum + 1}: Missing brackets around local link\n      ${line.trim()}`);
+            violations.push(`   Line ${lineNum + 1}: Missing brackets around local link\n      Detected: ${line.trim()}`);
             continue; // Skip further checks for this malformed link
           }
         }
@@ -1571,16 +1574,48 @@ export class DefaultPDCA implements PDCA {
           // Valid: [§/path/to/file](../../../path/to/file)
           // Valid: [local/file](local/file)
           // Invalid: [/absolute/path](../../../path) without §
-          // Invalid: display text and local path don't match pattern
           
           if (displayText.startsWith('/') && !displayText.startsWith('§/')) {
             // Absolute path without § notation
-            violations.push(`   Line ${lineNum + 1}: Absolute path without § notation\n      Display: ${displayText}\n      ${line.trim()}`);
+            violations.push(`   Line ${lineNum + 1}: Absolute path without § notation\n      Detected: ${line.trim()}\n      Display text: ${displayText}`);
           }
           
           // Check if GitHub URL is valid
           if (!githubUrl.includes('github.com')) {
-            violations.push(`   Line ${lineNum + 1}: Invalid GitHub URL (missing github.com)\n      URL: ${githubUrl}\n      ${line.trim()}`);
+            violations.push(`   Line ${lineNum + 1}: Invalid GitHub URL (missing github.com)\n      Detected: ${line.trim()}\n      URL: ${githubUrl}`);
+          }
+          
+          // NEW CHECKS: Validate paths and suggest fixes
+          if (pdcaFilePath) {
+            const path = await import('path');
+            const { existsSync } = await import('fs');
+            const projectRoot = await this.getProjectRoot();
+            
+            // Extract just the path from display text (remove §/ if present)
+            const displayPath = displayText.startsWith('§/') ? displayText.substring(2) : displayText;
+            
+            // Resolve the target file path
+            let targetFilePath: string;
+            if (path.isAbsolute(localPath)) {
+              targetFilePath = localPath;
+            } else {
+              // Relative path from PDCA location
+              const pdcaDir = path.dirname(path.join(projectRoot, pdcaFilePath));
+              targetFilePath = path.resolve(pdcaDir, localPath);
+            }
+            
+            // Check if target file exists
+            if (!existsSync(targetFilePath)) {
+              const correctLink = await this.generateCorrectDualLink(displayPath, pdcaFilePath);
+              violations.push(`   Line ${lineNum + 1}: Local path does not exist\n      Detected: ${line.trim()}\n      Should Be: ${correctLink || '(file not found in project)'}`);
+            }
+            
+            // Check if display text matches actual path structure
+            const targetRelativeToRoot = path.relative(projectRoot, targetFilePath);
+            if (displayPath !== targetRelativeToRoot) {
+              const correctLink = await this.generateCorrectDualLink(targetRelativeToRoot, pdcaFilePath);
+              violations.push(`   Line ${lineNum + 1}: Display text doesn't match actual path\n      Detected: ${line.trim()}\n      Should Be: ${correctLink || '(unable to generate)'}`);
+            }
           }
         }
       }
@@ -1596,6 +1631,69 @@ export class DefaultPDCA implements PDCA {
     
     // All dual links are properly formatted
     return violations.length === 0;
+  }
+  
+  /**
+   * Generate correct dual link format for a target file from a PDCA location
+   * @cliHide
+   */
+  private async generateCorrectDualLink(targetPath: string, pdcaPath: string): Promise<string | null> {
+    try {
+      const path = await import('path');
+      const { existsSync } = await import('fs');
+      const { execSync } = await import('child_process');
+      
+      const projectRoot = await this.getProjectRoot();
+      
+      // Normalize target path to project-root-relative
+      let normalizedPath: string;
+      if (path.isAbsolute(targetPath)) {
+        normalizedPath = path.relative(projectRoot, targetPath);
+      } else if (targetPath.startsWith('§/')) {
+        normalizedPath = targetPath.substring(2);
+      } else {
+        normalizedPath = targetPath;
+      }
+      
+      const fullPath = path.join(projectRoot, normalizedPath);
+      
+      // Check if file exists
+      if (!existsSync(fullPath)) {
+        return null;
+      }
+      
+      // Calculate relative path from PDCA to target
+      const pdcaDir = path.dirname(path.join(projectRoot, pdcaPath));
+      const relativePath = path.relative(pdcaDir, fullPath);
+      
+      // Get current branch
+      const branch = execSync('git branch --show-current', {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      
+      // Get git remote URL
+      const gitConfig = execSync('git config --get remote.origin.url', {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      
+      // Extract org/repo from git URL
+      const match = gitConfig.match(/github\.com[:/]([^/]+)\/([^/.]+)/);
+      if (!match) {
+        return null;
+      }
+      
+      const org = match[1];
+      const repo = match[2];
+      
+      const githubUrl = `https://github.com/${org}/${repo}/blob/${branch}/${normalizedPath}`;
+      
+      return `[GitHub](${githubUrl}) | [§/${normalizedPath}](${relativePath})`;
+      
+    } catch (error) {
+      return null;
+    }
   }
 
   /**
