@@ -1,10 +1,22 @@
+#!/bin/sh
 # SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
 # SPDX-FileComment: See ../../../../../AI-GPL.md for AI-specific terms.
 # Copyright (c) 2025 Cerulean Circle GmbH
 # Copyleft: See AGPLv3 (../../../../../LICENSE) and AI-GPL Addendum (../../../../../AI-GPL.md)
 # Backlinks: /LICENSE, /AI-GPL.md
 
-#!/bin/sh
+# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+# SPDX-FileComment: See ../../../../../AI-GPL.md for AI-specific terms.
+# Copyright (c) 2025 Cerulean Circle GmbH
+# Copyleft: See AGPLv3 (../../../../../LICENSE) and AI-GPL Addendum (../../../../../AI-GPL.md)
+# Backlinks: /LICENSE, /AI-GPL.md
+
+# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+# SPDX-FileComment: See ../../../../../AI-GPL.md for AI-specific terms.
+# Copyright (c) 2025 Cerulean Circle GmbH
+# Copyleft: See AGPLv3 (../../../../../LICENSE) and AI-GPL Addendum (../../../../../AI-GPL.md)
+# Backlinks: /LICENSE, /AI-GPL.md
+
 # 🚀 Auto-initialize Web4 project structure (if needed)
 PROJECT_ROOT="../../.."
 

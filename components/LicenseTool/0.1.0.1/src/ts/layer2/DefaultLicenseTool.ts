@@ -471,11 +471,16 @@ export class DefaultLicenseTool implements LicenseTool {
       try {
         const fs = await import('fs/promises');
         const content = await fs.readFile(filePath, 'utf-8');
-        const firstLine = content.split('\n')[0].trim();
         
-        // Detect shebang for bash/python/ruby/perl scripts
-        if (firstLine.startsWith('#!')) {
-          return 'hash';
+        // Enhanced detection: Check first 20 lines for shebang
+        // This allows detection even when /** header was added on line 1
+        const lines = content.split('\n').slice(0, 20);
+        
+        // Look for shebang anywhere in first 20 lines
+        const hasShebang = lines.some(line => line.trim().startsWith('#!'));
+        
+        if (hasShebang) {
+          return 'hash'; // It's a bash/python/ruby/perl script
         }
       } catch (err) {
         // If can't read file, fall through to default
@@ -541,13 +546,27 @@ export class DefaultLicenseTool implements LicenseTool {
    * @cliHide
    */
   async hasValidHeaderInternal(content: string, expectedHeader: string): Promise<boolean> {
-    // Normalize whitespace for comparison
+    // Check if content has the expected header text
     const normalizeHeader = (header: string) => header.replace(/\s+/g, ' ').trim();
-    
     const normalizedExpected = normalizeHeader(expectedHeader);
     const normalizedContent = normalizeHeader(content);
     
-    return normalizedContent.includes(normalizedExpected);
+    if (!normalizedContent.includes(normalizedExpected)) {
+      return false; // Header missing or wrong content
+    }
+    
+    // Check if header is in the CORRECT FORMAT
+    // Expected hash header (#) but content has block (/**) = INVALID
+    if (expectedHeader.startsWith('#') && content.includes('/**')) {
+      return false; // Wrong format - needs update
+    }
+    
+    // Expected block header (/**) but content only has hash (#) = INVALID  
+    if (expectedHeader.startsWith('/**') && !content.includes('/**') && content.startsWith('#!/bin/bash')) {
+      return false; // Wrong format - needs update
+    }
+    
+    return true;
   }
 
   /**
@@ -555,7 +574,31 @@ export class DefaultLicenseTool implements LicenseTool {
    * @cliHide
    */
   async insertHeaderInternal(content: string, header: string): Promise<string> {
-    return `${header}\n\n${content}`;
+    // Extract shebang if present (must be on line 1 OR buried in content)
+    let shebang = '';
+    let restOfContent = content;
+    
+    const lines = content.split('\n');
+    const shebangIdx = lines.findIndex(line => line.trim().startsWith('#!'));
+    
+    if (shebangIdx >= 0) {
+      shebang = lines[shebangIdx] + '\n';
+      lines.splice(shebangIdx, 1);
+      restOfContent = lines.join('\n');
+    }
+    
+    // Remove any existing /** block comments
+    restOfContent = restOfContent.replace(/^\/\*\*[\s\S]*?\*\/\n*/gm, '');
+    
+    // Remove existing # SPDX headers (in case of double headers)
+    restOfContent = restOfContent.replace(/^# SPDX-License-Identifier:.*$/gm, '');
+    restOfContent = restOfContent.replace(/^# SPDX-FileComment:.*$/gm, '');
+    restOfContent = restOfContent.replace(/^# Copyright \(c\).*$/gm, '');
+    restOfContent = restOfContent.replace(/^# Copyleft:.*$/gm, '');
+    restOfContent = restOfContent.replace(/^# Backlinks:.*$/gm, '');
+    
+    // Return: shebang + header + rest
+    return shebang + `${header}\n\n${restOfContent.replace(/^\n+/, '')}`;
   }
 
   /**
@@ -567,17 +610,31 @@ export class DefaultLicenseTool implements LicenseTool {
       return await this.insertHeaderInternal(content, newHeader);
     }
     
-    // Replace old header with new header, handling whitespace
-    // Remove the old header and any trailing newlines
-    let contentWithoutOldHeader = content;
-    if (content.startsWith(oldHeader)) {
-      contentWithoutOldHeader = content.substring(oldHeader.length).trimStart();
-    } else {
-      // Try to find and replace the header
-      contentWithoutOldHeader = content.replace(oldHeader, '').trimStart();
+    // Extract shebang if present
+    let shebang = '';
+    let restOfContent = content;
+    
+    const lines = content.split('\n');
+    const shebangIdx = lines.findIndex(line => line.trim().startsWith('#!'));
+    
+    if (shebangIdx >= 0) {
+      shebang = lines[shebangIdx] + '\n';
+      lines.splice(shebangIdx, 1);
+      restOfContent = lines.join('\n');
     }
     
-    return `${newHeader}\n\n${contentWithoutOldHeader}`;
+    // Remove old header
+    if (restOfContent.startsWith(oldHeader)) {
+      restOfContent = restOfContent.substring(oldHeader.length).trimStart();
+    } else {
+      restOfContent = restOfContent.replace(oldHeader, '').trimStart();
+    }
+    
+    // Remove any /** block comments
+    restOfContent = restOfContent.replace(/^\/\*\*[\s\S]*?\*\/\n+/gm, '');
+    
+    // Return: shebang + new header + rest
+    return shebang + `${newHeader}\n\n${restOfContent.trimStart()}`;
   }
 
   /**
