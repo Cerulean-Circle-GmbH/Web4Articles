@@ -1,7 +1,9 @@
 /**
- * ServerLifecycleManager - Web4 Architecture Layer 2
- * Manages ONCE server lifecycle (start/stop/monitoring)
- * Replaces server management functions with proper Web4 class
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { spawn, ChildProcess } from 'child_process';

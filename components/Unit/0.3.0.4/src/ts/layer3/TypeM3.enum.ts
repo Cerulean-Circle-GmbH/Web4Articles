@@ -1,13 +1,11 @@
 /**
- * TypeM3 Enum - MOF Meta-Meta-Model Level Classification
- * Web4 principle: Single enum per file for MOF M3 level types
- * Purpose: Classify units at the M3 meta-meta-model level
- * 
- * Values:
- * - CLASS: Components, classes, objects, types that can be instantiated
- * - ATTRIBUTE: Files, properties, data, values that describe characteristics  
- * - RELATIONSHIP: LD Links, associations, connections, references between entities
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
+
 export enum TypeM3 {
   CLASS = "CLASS",
   ATTRIBUTE = "ATTRIBUTE", 

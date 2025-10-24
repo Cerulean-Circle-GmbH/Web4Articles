@@ -1,9 +1,9 @@
 /**
- * Web4 Unit Naming Validator - Layer 4 (Business Logic)
- * 
- * Validates that code follows Web4 naming standards:
- * - No Hungarian notation (I prefix for interfaces, T prefix for types)
- * - Clean, descriptive names
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 export class NamingValidator {

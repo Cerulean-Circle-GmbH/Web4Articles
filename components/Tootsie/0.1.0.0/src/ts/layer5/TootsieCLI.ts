@@ -1,12 +1,9 @@
 /**
- * TootsieCLI - Command Line Interface for Quality Consciousness
- * 
- * This CLI provides human-friendly access to the radical OOP quality
- * consciousness system. Instead of running procedural tests, users
- * interact with living quality objects that think, learn, and evolve.
- * 
- * @philosophy CLI as gateway to quality consciousness
- * @web4compliance Location-resilient, scenario-based operations
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { QualityOracle } from '../layer2/QualityOracle';

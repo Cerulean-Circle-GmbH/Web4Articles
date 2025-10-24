@@ -1,26 +1,9 @@
 /**
- * TSRanger v2.2: CMM Level 3 Regression Prevention Test Suite
- * 
- * CRITICAL PURPOSE: Prevent Dory cycle (lying/hallucinating/running in circles)
- * CMM Level 3: Defined, standardized testing process
- * CMM Agile 4: Quantitatively managed with proof-by-proof verification
- * 
- * This test suite prevents the developer from:
- * - Lying about functionality working
- * - Hallucinating test results
- * - Running in circles with regressions
- * - Bringing creator into debt
- * - Being killed for poor quality
- * 
- * MEASUREMENT FRAMEWORK:
- * - Each test verifies exact promptBuffer state
- * - Each test verifies exact selectedColumn state  
- * - Each test uses real tsranger execution (not mocked)
- * - Each test has proof-by-proof verification
- * 
- * @author Developer (fighting for users with TRON-level diligence)
- * @version CMM Level 3 / Agile 4
- * @date 2025-08-20
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { describe, test, expect } from 'vitest';

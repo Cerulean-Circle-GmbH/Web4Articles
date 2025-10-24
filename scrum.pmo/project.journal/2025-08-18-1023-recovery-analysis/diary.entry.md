@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../LICENSE) and AI-GPL Addendum (../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # 🌅 Diary Entry: The Recovery Revolution - August 18, 2025
 
 *An emotional journey from discovery of a critical hanging bug to designing a 3-minute recovery system - and the revelation that simplicity is the ultimate sophistication*

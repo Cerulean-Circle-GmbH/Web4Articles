@@ -1,8 +1,9 @@
 /**
- * P2PCoordinator - Layer4 P2P Orchestration and Coordination
- * 
- * Following Decision 3d: P2P coordination in Layer4 (Orchestration)
- * Web4 DRY principle: Coordinates P2P operations without reimplementing protocols
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 export class P2PCoordinator {

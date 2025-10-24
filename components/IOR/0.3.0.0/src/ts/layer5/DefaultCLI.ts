@@ -1,9 +1,9 @@
 /**
- * DefaultCLI - Universal CLI implementation for all Web4 components
- * 
- * Web4 pattern: Single CLI implementation serving all components
- * Command delegation: Each CLI command calls same-named method in component
- * Following TSRanger 2.2 pattern but simplified for universal usage
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { CLI } from './CLI.interface.js';

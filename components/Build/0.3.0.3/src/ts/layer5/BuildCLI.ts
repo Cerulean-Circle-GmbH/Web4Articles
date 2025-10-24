@@ -1,8 +1,9 @@
 /**
- * BuildCLI - Dependency-free build system CLI
- * 
- * Web4 principle: CLI in layer5
- * Version 0.3.0.3: Self-bootstrapping CLI
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { DefaultBuild } from '../layer2/DefaultBuild.js';

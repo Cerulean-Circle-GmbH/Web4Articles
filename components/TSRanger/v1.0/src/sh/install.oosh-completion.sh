@@ -1,6 +1,8 @@
-#!/bin/bash
-# install.oosh-completion.sh: Register oosh-completion.sh as a completion function for oosh
-# Usage: source install.oosh-completion.sh
+# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+# SPDX-FileComment: See ../../../../../AI-GPL.md for AI-specific terms.
+# Copyright (c) 2025 Cerulean Circle GmbH
+# Copyleft: See AGPLv3 (../../../../../LICENSE) and AI-GPL Addendum (../../../../../AI-GPL.md)
+# Backlinks: /LICENSE, /AI-GPL.md
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COMPLETION_SCRIPT="$SCRIPT_DIR/oosh-completion.sh"

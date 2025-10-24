@@ -1,10 +1,11 @@
 /**
- * ChangeEvent Interface - Separate concern for tracking model changes
- * Web4 principle: Single responsibility, separate from model structure
- * Purpose: Track creation and modification events independently
- * 
- * TRON Feedback: createdAt/updatedAt better in change event object (Occam's Razor)
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
+
 export interface ChangeEvent {
   targetUuid: string;              // UUID of the model being tracked
   eventType: 'created' | 'updated' | 'deleted';

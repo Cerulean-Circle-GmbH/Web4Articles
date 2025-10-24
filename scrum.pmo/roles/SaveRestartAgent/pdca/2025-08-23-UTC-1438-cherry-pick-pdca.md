@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # PDCA Report - Cherry-pick scrum.pmo/roles from feature/user
 
 **PDCA Entry**: [2025-08-23-UTC-1438-cherry-pick-pdca.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/cursor/start-minimalist-process-5289/temp/2025-08-23-UTC-1438-cherry-pick-pdca.md)

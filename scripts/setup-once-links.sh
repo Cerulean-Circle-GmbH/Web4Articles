@@ -1,6 +1,8 @@
-#!/bin/bash
-# setup-once-links.sh - Build process integration for ONCE CLI links
-# Follows Web4 CLI pattern - generates TypeScript-based CLI launchers
+# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+# SPDX-FileComment: See ../AI-GPL.md for AI-specific terms.
+# Copyright (c) 2025 Cerulean Circle GmbH
+# Copyleft: See AGPLv3 (../LICENSE) and AI-GPL Addendum (../AI-GPL.md)
+# Backlinks: /LICENSE, /AI-GPL.md
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SCRIPTS_DIR="$PROJECT_ROOT/scripts"

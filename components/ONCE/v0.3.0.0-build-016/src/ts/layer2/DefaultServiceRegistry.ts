@@ -1,8 +1,9 @@
 /**
- * DefaultServiceRegistry - ONCE 42777 service registry implementation
- * 
- * Web4 pattern: Service registry for distributed component architecture
- * Provides centralized service discovery and component orchestration
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { ServiceRegistry, ServiceRegistration } from '../layer3/ServiceRegistry.interface.js';

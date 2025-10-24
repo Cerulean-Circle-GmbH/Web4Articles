@@ -1,12 +1,9 @@
 /**
- * IOR - Internet Object Reference
- * 
- * Core Web4 concept for referencing objects across the distributed network.
- * Every hibernatable object can be referenced by an IOR, enabling
- * global object communication and distributed quality consciousness.
- * 
- * @philosophy Objects exist beyond their local context
- * @web4compliance Core distributed object reference system
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 export interface IOR {

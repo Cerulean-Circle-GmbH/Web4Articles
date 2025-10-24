@@ -1,6 +1,9 @@
 /**
- * Server Hierarchy Manager v0.2.0.0 - Implements server hierarchy with name server model
- * Implements requirement 9beee86b-09c2-43c8-b449-b9a7b8f2b338
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { createServer, Server } from 'http';

@@ -1,7 +1,9 @@
 /**
- * DefaultCLI - Web4 compliant dependency-free base component for CLI functionality
- * Web4 pattern: Empty constructor + scenario initialization + hibernation
- * Purpose: Foundation CLI component with terminal rendering and static start method
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { CLI } from '../layer3/CLI.interface.js';

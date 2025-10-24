@@ -1,7 +1,9 @@
 /**
- * Upgrade Interface - Radical OOP upgrade capability
- * Web4 principle: Single interface per file, class method implementation
- * Purpose: Enable version upgrade functionality through class method pattern
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 export interface Upgrade {

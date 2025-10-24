@@ -1,13 +1,9 @@
 /**
- * QualityJudgment - Individual Quality Assessment Object
- * 
- * Represents a single quality assessment as a living object.
- * Each judgment contains the complete context, evidence, and reasoning
- * behind a quality decision. Judgments can hibernate, communicate with
- * other judgments, and evolve their understanding over time.
- * 
- * @philosophy Quality assessments are living, thinking objects
- * @web4compliance Empty constructor, scenario-based, hibernatable
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { IOR } from './IOR';

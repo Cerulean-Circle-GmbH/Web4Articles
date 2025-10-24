@@ -1,6 +1,9 @@
-#!/bin/sh
-# Smart build - only rebuild if needed, unless forced
-# Note: All status messages go to stderr (>&2) to avoid polluting stdout for tab completion
+# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+# SPDX-FileComment: See ../../../../../AI-GPL.md for AI-specific terms.
+# Copyright (c) 2025 Cerulean Circle GmbH
+# Copyleft: See AGPLv3 (../../../../../LICENSE) and AI-GPL Addendum (../../../../../AI-GPL.md)
+# Backlinks: /LICENSE, /AI-GPL.md
+
 FORCE_BUILD=${1:-false}
 
 if [ "$FORCE_BUILD" = "force" ] || [ "$FORCE_BUILD" = "true" ]; then

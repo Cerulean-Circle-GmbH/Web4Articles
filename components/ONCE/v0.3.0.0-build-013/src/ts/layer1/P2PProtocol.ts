@@ -1,8 +1,9 @@
 /**
- * P2PProtocol - Layer1 P2P Infrastructure and Transport
- * 
- * Following Decision 3d: P2P protocols in Layer1 (Infrastructure)
- * Web4 DRY principle: Handles network protocols without duplicating existing transport logic
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 export class P2PProtocol {

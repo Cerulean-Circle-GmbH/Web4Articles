@@ -1,6 +1,9 @@
 /**
- * PeerManager - Manages P2P connections using WebRTC adapted for scenarios
- * Web4 pattern: All communication through scenario exchange
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { IOR } from '../layer3/IOR.js';

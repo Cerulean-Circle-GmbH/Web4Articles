@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../LICENSE) and AI-GPL Addendum (../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # Create svgs from requirement diagrams
 _Exported on 23/08/2025 at 12:39:41 CEST from Cursor (1.4.5)_
 

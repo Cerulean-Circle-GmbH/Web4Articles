@@ -1,8 +1,9 @@
 /**
- * Component Interface - General component loaded by ONCE kernel
- * 
- * Web4 principle: Single interface per file
- * UCP Unit-Component-Package: Defines what constitutes a loadable component
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { IOR } from '../../../../IOR/0.3.0.0/src/ts/layer3/IOR.interface.js';

@@ -1,7 +1,9 @@
 /**
- * Unit Filename Consistency Tests
- * Validates that all unit CLI commands use consistent filename conversion (spaces → single dots)
- * Task 29: Unit Filename Consistency Fix
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';

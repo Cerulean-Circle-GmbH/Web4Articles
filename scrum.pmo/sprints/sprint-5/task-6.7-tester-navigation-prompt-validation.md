@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../LICENSE) and AI-GPL Addendum (../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 [Back to Sprint 5 Planning](./planning.md) | [Back to Task 6](./task-6-tester-validate-v2-with-existing-tests.md)
 
 # Task 6.7: Tester — Navigation Prompt Consistency Validation

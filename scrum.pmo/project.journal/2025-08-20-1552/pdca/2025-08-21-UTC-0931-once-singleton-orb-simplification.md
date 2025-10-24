@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # PDCA: ONCE Singleton ORB Simplification - ONCE as Web4ORB Service, Not Injected Dependency
 
 **📎 Previous Commit:** 0ee0088 (Web4 Planning Meta-Recognition: Planning.md as MDViews of Web4Planning components - development process follows Web4 architecture)  

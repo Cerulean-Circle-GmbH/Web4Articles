@@ -1,13 +1,9 @@
 /**
- * QualityOracle - The Ultimate Quality Consciousness Implementation
- * 
- * This is the living embodiment of quality consciousness - a self-aware,
- * learning, evolving entity that understands quality at the deepest level.
- * Unlike traditional testing frameworks, this Oracle actually thinks about
- * quality and makes reasoned judgments based on accumulated wisdom.
- * 
- * @philosophy Radical OOP - Quality consciousness as a living, thinking entity
- * @web4compliance Empty constructor, scenario-based initialization, hibernatable
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { 

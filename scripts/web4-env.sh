@@ -1,7 +1,8 @@
-#!/bin/bash
-# Web4Articles Environment Loader
-# This script helps source the project environment from anywhere
-# Usage: source web4-env.sh
+# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+# SPDX-FileComment: See ../AI-GPL.md for AI-specific terms.
+# Copyright (c) 2025 Cerulean Circle GmbH
+# Copyleft: See AGPLv3 (../LICENSE) and AI-GPL Addendum (../AI-GPL.md)
+# Backlinks: /LICENSE, /AI-GPL.md
 
 # Find the project root by looking for source.env
 find_project_root() {

@@ -1,13 +1,9 @@
 /**
- * QualityEvidence - Living Evidence Objects
- * 
- * Evidence is not just data - it's a living object that preserves
- * complete execution context, can be replayed, analyzed, and even
- * testifies in quality disputes. Evidence objects are the foundation
- * of quality archaeology and time travel debugging.
- * 
- * @philosophy Evidence as living, self-aware objects
- * @web4compliance Empty constructor, scenario-based, hibernatable
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { IOR } from './IOR';

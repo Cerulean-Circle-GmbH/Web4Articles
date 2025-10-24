@@ -1,7 +1,9 @@
 /**
- * DefaultStorage - Web4 compliant UUID index system with LD links
- * Web4 pattern: Empty constructor + scenario initialization + hibernation
- * Purpose: Store scenarios in scenarios/index/ with 5-level UUID structure and symbolic links
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { Storage } from '../layer3/Storage.interface.js';

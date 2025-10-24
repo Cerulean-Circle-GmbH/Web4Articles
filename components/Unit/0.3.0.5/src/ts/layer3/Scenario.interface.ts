@@ -1,11 +1,9 @@
 /**
- * Scenario Interface - Universal hibernation pattern with typed Model
- * Web4 principle: Single interface per file, generic model support
- * Purpose: Universal scenario structure supporting any Model-compliant component
- * 
- * ⚠️ TRON QA WARNING: Cannot foresee complexity of template typed scenario
- * Future monitoring required for template complexity management
- * Template complexity concerns documented for future assessment
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { IOR } from './IOR.interface.js';

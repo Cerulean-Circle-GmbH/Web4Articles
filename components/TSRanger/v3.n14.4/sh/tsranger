@@ -1,4 +1,8 @@
-#!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+# SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+# Copyright (c) 2025 Cerulean Circle GmbH
+# Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+# Backlinks: /LICENSE, /AI-GPL.md
 
 # v3.n14.4/sh/tsranger — Run TSRanger on legacy Node 14.21.3 without Docker
 # - Compiles TS sources with v3.n14.4/tsconfig.n14.json into dist.n14/

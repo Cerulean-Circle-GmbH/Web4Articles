@@ -1,9 +1,9 @@
 /**
- * Web4 Scenario - Universal hibernation container
- * 
- * The simplest possible structure for object state persistence.
- * All Web4 components use this for hibernation/resurrection.
- * Scenarios are themselves Units that can be executed.
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { ObjectIdentifier } from '../layer3/ObjectIdentifier.interface.js';

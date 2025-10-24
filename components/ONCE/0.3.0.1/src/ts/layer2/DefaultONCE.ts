@@ -1,9 +1,9 @@
 /**
- * DefaultONCE - Object Network Communication Engine Implementation
- * 
- * Web4 principle: Implementation in layer2
- * Version 0.3.0.1: Fully Web4-compliant with demo/test functionality
- * Eliminates StandaloneONCE DORY leftover violations
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { ONCE } from '../layer3/ONCE.interface.js';

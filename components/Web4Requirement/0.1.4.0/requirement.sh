@@ -1,4 +1,8 @@
-#!/bin/bash
+# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+# SPDX-FileComment: See ../../../AI-GPL.md for AI-specific terms.
+# Copyright (c) 2025 Cerulean Circle GmbH
+# Copyleft: See AGPLv3 (../../../LICENSE) and AI-GPL Addendum (../../../AI-GPL.md)
+# Backlinks: /LICENSE, /AI-GPL.md
 
 # Web4Requirement CLI Tool v0.1.4.0 - Enhanced with Dependency Resolution
 # Automatically builds dependencies and self-builds on first run

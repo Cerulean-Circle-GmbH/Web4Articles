@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../LICENSE) and AI-GPL Addendum (../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # Component Comparison Analysis
 ## Unit 0.3.0.2 vs Unit 0.3.0.4 vs Unit 0.3.0.5 vs Unit 0.3.0.6 vs Web4TSComponent 0.3.0.6 vs Web4TSComponent 0.3.0.7 vs Web4TSComponent 0.3.0.8 vs Web4TSComponent 0.3.0.9
 

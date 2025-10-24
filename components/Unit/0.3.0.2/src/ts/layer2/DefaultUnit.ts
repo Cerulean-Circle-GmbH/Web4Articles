@@ -1,11 +1,9 @@
 /**
- * Default Unit Implementation - Layer 2 (Implementation)
- * 
- * Reference implementation of the Web4 Unit interface demonstrating pure Web4 patterns:
- * - Empty constructor with scenario initialization
- * - Complete state hibernation/restoration via scenarios
- * - IOR-based coordination and communication
- * - Evidence-based execution with full traceability
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { Unit, UnitScenario, UnitInput, UnitOutput, UnitCapability, UnitInterface, UnitMetadata, UnitMessage, CoordinationResult, UnitState, UnitLifecyclePhase, ExecutionEvidence } from '../layer3/Unit.js';

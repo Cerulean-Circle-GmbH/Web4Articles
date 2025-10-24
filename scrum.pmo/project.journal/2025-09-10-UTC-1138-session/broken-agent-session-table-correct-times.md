@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../LICENSE) and AI-GPL Addendum (../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 ## **📊 Complete Session Analysis Table (Original dev/req0305 Chronological Order with Correct UTC Times)**
 
 **Note:** Table shows original dev/req0305 commit progression with exact TRON quotes and correct commit times.

@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # PDCA: PDCA Object Architecture Recognition - MDView with Scenario Trees
 
 **📎 Previous Commit:** 8967849 (Object Instance Recognition Breakthrough: UUID references as scenario objects + Sprint 20 EPIC 7 integration)  

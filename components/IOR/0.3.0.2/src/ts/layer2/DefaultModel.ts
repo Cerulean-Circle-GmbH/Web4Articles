@@ -1,9 +1,9 @@
 /**
- * DefaultModel - Unified model implementation with reactive controller integration
- * 
- * Web4 pattern: Empty constructor + scenario initialization
- * Extends Proxy for onChange controller interaction
- * Occam's razor: Single model class for all components
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { Model } from '../layer3/Model.interface.js';

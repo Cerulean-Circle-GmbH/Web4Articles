@@ -1,8 +1,9 @@
 /**
- * ServiceCapable Interface - Service registration capability for Web4 components
- * 
- * Web4 principle: Single interface per file
- * Universal service registration interface for hybrid component operation
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 // import { ServiceRegistration } from '../../../ONCE/0.3.0.2/src/ts/layer3/ServiceRegistry.interface.js';

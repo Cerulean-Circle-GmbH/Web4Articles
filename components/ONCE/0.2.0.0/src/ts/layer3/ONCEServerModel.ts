@@ -1,6 +1,9 @@
 /**
- * ONCE Server Model v0.2.0.0 - Enhanced server state model
- * Implements requirement 471d2d0a-4914-4900-9aed-74b69e032679
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { LifecycleState } from './LifecycleEvents.js';

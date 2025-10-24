@@ -1,6 +1,9 @@
 /**
- * Web4TestCLI - Command line interface for Tootsie framework
- * Layer 5: CLI interface for Web4 testing suite
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { DefaultWeb4TestSuite } from '../layer2/DefaultWeb4TestSuite';

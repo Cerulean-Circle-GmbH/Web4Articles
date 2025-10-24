@@ -1,7 +1,8 @@
-#!/bin/bash
-# Web4Articles - PDCA Dual Link Fixer
-# Automatically fixes dual links in PDCA files to comply with requirement e8535c4e-591d-4955-9874-6a853545e970
-# Usage: fix-pdca-dual-links [file-or-directory]
+# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+# SPDX-FileComment: See ../AI-GPL.md for AI-specific terms.
+# Copyright (c) 2025 Cerulean Circle GmbH
+# Copyleft: See AGPLv3 (../LICENSE) and AI-GPL Addendum (../AI-GPL.md)
+# Backlinks: /LICENSE, /AI-GPL.md
 
 set -e
 

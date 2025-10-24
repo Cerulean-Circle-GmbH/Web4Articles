@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 [Process Improvements](https://github.com/Cerulean-Circle-GmbH/Web4Articles/tree/dev/0350/scrum.pmo/roles/_shared/PDCA/pdca.process.improvements) | [§](./pdca.process.improvements/) • [CMMI Understanding](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/PDCA.understanding.CMMI.md) | [§](./PDCA.understanding.CMMI.md) • [How to Decide](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md) | [§](./PDCA.howto.decide.md) • [Template](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/template.md) | [§](./template.md)
 
 # 📋 **How to Write Excellent PDCAs - Consolidated Guidelines**

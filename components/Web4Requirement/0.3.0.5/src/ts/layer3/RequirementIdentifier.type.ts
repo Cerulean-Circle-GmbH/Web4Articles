@@ -1,7 +1,9 @@
 /**
- * RequirementIdentifier Type - Web4 Union Type for Requirement Identification
- * Web4 principle: Single type per file, union types for flexible interfaces
- * Purpose: Define union type for requirement identification supporting both UUID and file paths
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { UUIDv4 } from './UUIDv4.class.js';

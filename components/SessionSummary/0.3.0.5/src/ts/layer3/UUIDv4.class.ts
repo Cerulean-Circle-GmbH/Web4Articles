@@ -1,7 +1,9 @@
 /**
- * UUIDv4 Class - Web4 Universal Unique Identifier Version 4 Implementation
- * Web4 principle: Single class per file, immutable value objects
- * Purpose: Provide type-safe UUIDv4 implementation for Web4 ecosystem
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { UUID } from './UUID.interface.js';

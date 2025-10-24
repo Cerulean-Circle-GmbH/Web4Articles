@@ -1,7 +1,9 @@
 /**
- * DefaultRequirement 0.3.0.5 - Revolutionary Requirement Management with Unit 0.3.0.5 Principles
- * Web4 principles: Command chaining, TypeScript union types, JEDI MODE search, zero config CLI
- * Purpose: Revolutionary requirement management with atomic executable element architecture
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { Requirement, RequirementStatus, RequirementResult, RequirementMetadata, RequirementScenario } from '../layer3/Requirement.interface.js';

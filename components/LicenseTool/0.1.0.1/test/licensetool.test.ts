@@ -115,6 +115,17 @@ describe('TC1: Comment Style Detection', () => {
     const style = await tool.getCommentStyleInternal(mdFile);
     expect(style).toBe('html');
   });
+
+  it('should detect hash style for bash scripts without extension (shebang detection)', async () => {
+    const tool = new DefaultLicenseTool();
+    await tool.init({ targetPath: testDataDir });
+    
+    const bashScript = path.join(testDataDir, 'myscript'); // No extension
+    writeFileSync(bashScript, '#!/bin/bash\n\necho "test"');
+    
+    const style = await tool.getCommentStyleInternal(bashScript);
+    expect(style).toBe('hash');
+  });
 });
 
 describe('TC2: Header Building', () => {

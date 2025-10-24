@@ -1,6 +1,8 @@
-#!/bin/bash
-# Automated Agent Branch Update Script
-# Purpose: Update multiple branches with identity-first process
+# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+# SPDX-FileComment: See ../AI-GPL.md for AI-specific terms.
+# Copyright (c) 2025 Cerulean Circle GmbH
+# Copyleft: See AGPLv3 (../LICENSE) and AI-GPL Addendum (../AI-GPL.md)
+# Backlinks: /LICENSE, /AI-GPL.md
 
 echo "🚀 Agent Branch Update Automation v1.0"
 echo "====================================="

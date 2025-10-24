@@ -1,23 +1,9 @@
 /**
- * Web4TSComponent Self-Healing Configuration Tests
- * 
- * Tests the automatic project initialization and self-healing configuration feature
- * that detects, backs up, and regenerates corrupted tsconfig.json and package.json files.
- * 
- * This feature is critical for production reliability as it ensures:
- * - All projects have valid root configurations
- * - Corrupted configs are detected and backed up
- * - Working configurations are regenerated automatically
- * - User customizations are preserved when valid
- * 
- * Test Categories:
- * 1. Corruption Detection (5 tests)
- * 2. Backup & Recovery (5 tests)
- * 3. User Customization Preservation (4 tests)
- * 4. Integration with Build Process (4 tests)
- * 5. Edge Cases & Error Handling (5 tests)
- * 
- * Total: 23 tests
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';

@@ -1,10 +1,9 @@
 /**
- * ONCE - Object Network Communication Engine
- * Universal Web4ORB kernel for P2P distributed object communication
- * 
- * Usage:
- *   import { ONCE } from '@web4x/once';
- *   const once = await ONCE.init();
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 // Layer 3 - Interfaces

@@ -1,7 +1,11 @@
 /**
- * ONCE Node.js Server Example
- * Demonstrates ONCE kernel running as a server with P2P capabilities
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../LICENSE) and AI-GPL Addendum (../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
+
 // Note: In a real implementation, these would be imported from the built ONCE package
 // For demo purposes, we'll create a simplified ONCE mock
 import { createServer } from 'http';

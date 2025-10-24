@@ -1,11 +1,11 @@
 /**
- * NamedLink Interface - Named link structure for LD link management
- * Web4 principle: Single interface per file
- * Purpose: Bidirectional linking between workspace locations and central storage
- * 
- * TRON Feedback: Web4 compliance violation identified - multiple interfaces in single file
- * Fixed: NamedLink moved to separate interface file
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
+
 export interface NamedLink {
   location: string;                // Relative path from link to scenario
   filename: string;                // Link filename (e.g., "test-unit.unit")

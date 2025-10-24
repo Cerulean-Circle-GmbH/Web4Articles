@@ -1,6 +1,9 @@
 /**
- * Scenario Manager v0.2.0.0 - Handles scenario-based configuration and storage
- * Implements requirements 9b768111-7a06-4266-9d71-0ef72e90c62b and 6707a628-bf3b-4dd4-a750-562f9f0c5fa4
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { Scenario } from '../layer3/Scenario.js';

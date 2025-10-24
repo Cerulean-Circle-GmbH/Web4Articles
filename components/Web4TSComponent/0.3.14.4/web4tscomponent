@@ -1,6 +1,8 @@
-#!/bin/bash
-# Web4TSComponent CLI Launcher
-# Direct Node execution (NOT a delegating wrapper!)
+# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+# SPDX-FileComment: See ../../../AI-GPL.md for AI-specific terms.
+# Copyright (c) 2025 Cerulean Circle GmbH
+# Copyleft: See AGPLv3 (../../../LICENSE) and AI-GPL Addendum (../../../AI-GPL.md)
+# Backlinks: /LICENSE, /AI-GPL.md
 
 # Resolve symlinks to find actual component directory
 SCRIPT_PATH="$(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null || echo "$0")"

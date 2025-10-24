@@ -1,9 +1,9 @@
 /**
- * Web4 IOR (Interoperable Object Reference) Interface - Unified Standard
- * 
- * Radically simplified yet resilient object reference system
- * Based on Occam's razor principle from Scenario component
- * Enhanced with minimal essential network features for ONCE compatibility
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 export interface IOR {

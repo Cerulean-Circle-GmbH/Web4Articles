@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 **📎 Previous Commit:** 861c193 - PO PDCA: Sprint 21 implementation-ready planning transformation - Epic vision converted to PO process-compliant tasks with template compliance, UUIDs, acceptance criteria, and immediate execution readiness  
 **🔗 Previous PDCA:** [2025-08-21-UTC-1628-sprint21-po-implementation-ready-planning.md](./2025-08-21-UTC-1628-sprint21-po-implementation-ready-planning.md)
 

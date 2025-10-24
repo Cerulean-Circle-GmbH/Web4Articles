@@ -1,3 +1,11 @@
+/**
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
+ */
+
 import { Requirement as ChangeRequest, RequirementScenario as ChangeRequestScenario, RequirementResult as ChangeRequestResult, RequirementStatus as ChangeRequestStatus, RequirementMetadata as ChangeRequestMetadata } from '../layer3/Requirement.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';

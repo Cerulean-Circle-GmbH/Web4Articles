@@ -1,8 +1,9 @@
 /**
- * GitTextIOR - Specialized IOR implementation for git text references
- * Web4 pattern: Empty constructor + scenario initialization + hibernation
- * Architecture: Extends IOR for specialized git text reference handling
- * Purpose: Handle git URL references with IOR text format: ior:git:text:giturl
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { BaseIOR } from '../layer3/BaseIOR.interface.js';

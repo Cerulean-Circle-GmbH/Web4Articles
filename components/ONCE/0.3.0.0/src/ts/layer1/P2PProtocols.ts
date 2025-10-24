@@ -1,8 +1,9 @@
 /**
- * P2P Protocols - Layer 1 Infrastructure
- * 
- * Web4 EAM Layer 1: Infrastructure and transport protocols
- * Decision 3d: P2P protocol handling in Layer1
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 export class P2PProtocols {

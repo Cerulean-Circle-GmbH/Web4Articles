@@ -1,8 +1,9 @@
 /**
- * Web4 Unit Interface - Layer 3 (Interface/Contract)
- * 
- * Defines the contract for Web4 Units - the atomic executable elements within components.
- * Units represent the smallest granular business logic operations in Web4 architecture.
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { IOR, Scenario } from './SimpleTypes.js';

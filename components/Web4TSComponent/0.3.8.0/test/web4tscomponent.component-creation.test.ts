@@ -1,12 +1,9 @@
 /**
- * Component Creation Tests
- * 
- * Tests the create() method and ensures:
- * - Default parameters create complete components
- * - All required files and directories exist
- * - CLI symlinks are properly created
- * - Components are fully functional after creation
- * - npm start works without additional setup
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';

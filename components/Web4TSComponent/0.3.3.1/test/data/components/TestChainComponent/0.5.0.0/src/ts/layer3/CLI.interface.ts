@@ -1,7 +1,9 @@
 /**
- * CLI Interface - Base CLI component interface with static start pattern
- * Web4 principle: Single interface per file, radical OOP static methods
- * Purpose: Foundation interface for all CLI implementations with static start and component initialization
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 export interface CLI {

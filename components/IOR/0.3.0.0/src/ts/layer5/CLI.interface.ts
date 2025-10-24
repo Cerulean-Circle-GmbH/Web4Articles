@@ -1,9 +1,9 @@
 /**
- * CLI Interface - Universal command line interface for all Web4 components
- * 
- * Web4 principle: Single interface per file
- * Pattern: Command delegation to same-named methods in default implementations
- * Inspired by TSRanger 2.2 but simplified for universal component usage
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 export interface CLI {

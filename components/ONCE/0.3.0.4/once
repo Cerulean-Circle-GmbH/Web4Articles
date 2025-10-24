@@ -1,6 +1,8 @@
-#!/bin/bash
-# ONCE CLI Tool v0.3.0.4 - Fresh start with working build
-# Target: 0.2.0.0 functionality + 0.3.0.2 structure
+# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+# SPDX-FileComment: See ../../../AI-GPL.md for AI-specific terms.
+# Copyright (c) 2025 Cerulean Circle GmbH
+# Copyleft: See AGPLv3 (../../../LICENSE) and AI-GPL Addendum (../../../AI-GPL.md)
+# Backlinks: /LICENSE, /AI-GPL.md
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 COMPONENT_DIR="$SCRIPT_DIR"

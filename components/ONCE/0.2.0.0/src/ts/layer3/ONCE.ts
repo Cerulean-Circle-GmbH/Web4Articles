@@ -1,6 +1,9 @@
 /**
- * ONCE v0.2.0.0 - Object Network Communication Engine
- * Enhanced from 0.1.0.2 with server hierarchy and scenario-based configuration
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { Scenario } from './Scenario.js';

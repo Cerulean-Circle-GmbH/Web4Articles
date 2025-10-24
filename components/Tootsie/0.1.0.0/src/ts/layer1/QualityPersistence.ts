@@ -1,12 +1,9 @@
 /**
- * QualityPersistence - Infrastructure for Quality Object Hibernation
- * 
- * Provides the foundational infrastructure for hibernating and restoring
- * quality consciousness objects. This is the Layer 1 infrastructure that
- * enables quality objects to persist across time and space.
- * 
- * @philosophy Quality objects transcend process boundaries
- * @web4compliance Universal hibernation/restoration infrastructure
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { IOR, NetworkProtocol } from '../layer3/IOR';

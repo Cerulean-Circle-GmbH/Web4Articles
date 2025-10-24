@@ -1,6 +1,9 @@
 /**
- * DefaultWeb4TestSuite - Web4 test suite implementation
- * Layer 2: Test orchestration implementation following Web4 principles
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { Web4TestSuite, TestSuiteScenario, TestSuiteExecutionResult } from '../layer3/Web4TestSuite';

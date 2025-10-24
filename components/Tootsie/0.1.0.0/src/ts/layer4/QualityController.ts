@@ -1,12 +1,9 @@
 /**
- * QualityController - Orchestrator of Quality Consciousness
- * 
- * The Quality Controller orchestrates the entire quality consciousness
- * ecosystem. It coordinates between quality oracles, manages quality
- * workflows, and ensures the proper functioning of the quality network.
- * 
- * @philosophy Central coordination of distributed quality consciousness
- * @web4compliance Empty constructor, scenario-based operations
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { QualityOracle } from '../layer2/QualityOracle';

@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
-# oosh-completion.sh: prints completion candidates for the oosh CLI
-# Usage:
-#   - Programmatic completion (bash -C): complete -C /path/to/oosh-completion.sh oosh
-#   - Direct invocation for tests: bash src/sh/oosh-completion.sh [args]
+# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+# SPDX-FileComment: See ../../../../../AI-GPL.md for AI-specific terms.
+# Copyright (c) 2025 Cerulean Circle GmbH
+# Copyleft: See AGPLv3 (../../../../../LICENSE) and AI-GPL Addendum (../../../../../AI-GPL.md)
+# Backlinks: /LICENSE, /AI-GPL.md
 
 set -euo pipefail
 

@@ -1,8 +1,9 @@
 /**
- * HttpServer Interface - HTTP server capability component
- * 
- * Web4 principle: Single interface per file
- * UCP Component: Self-managed HTTP server with port and routing capabilities
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { Scenario } from '../../../../Scenario/0.3.0.2/dist/ts/layer2/DefaultScenario.js';
