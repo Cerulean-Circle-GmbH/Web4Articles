@@ -1149,10 +1149,18 @@ echo "✅ Tab completion registered for: ${cliName} (isolated)"
    * Similar to v0313xHack but for 0.3.15.x series
    * 
    * @param sourceEnvContent Original source.env content from template
+   * @param componentName Component name for PS1 display
+   * @param componentVersion Version for PS1 display
+   * @param cliName CLI name for completion registration
    * @returns Modified source.env content with hacks applied
    * @cliHide
    */
-  private async v0315xHack(sourceEnvContent: string): Promise<string> {
+  private async v0315xHack(
+    sourceEnvContent: string, 
+    componentName: string, 
+    componentVersion: string, 
+    cliName: string
+  ): Promise<string> {
     let modifiedContent = sourceEnvContent;
     
     // PS1 hack for 0.3.15.x: Add ISOLATED prompt if not already present
@@ -1161,14 +1169,66 @@ echo "✅ Tab completion registered for: ${cliName} (isolated)"
       if (modifiedContent.includes('export PS1=')) {
         modifiedContent = modifiedContent.replace(
           /export PS1=".*?"/,
-          'export PS1="\\[\\033[1;36m\\][ISOLATED web4 ${COMP_NAME:-Component}/${COMP_VERSION:-Version}]\\[\\033[0m\\] \\[\\033[1;33m\\]\\w\\[\\033[0m\\] > "'
+          `export PS1="\\[\\033[1;36m\\][ISOLATED web4 ${componentName}/${componentVersion}]\\[\\033[0m\\] \\[\\033[1;33m\\]\\w\\[\\033[0m\\] > "`
         );
         console.log(`   🔧 Applied v0315x hack: ISOLATED PS1 prompt`);
       } else {
         // Add PS1 export if not present
-        modifiedContent += '\n# ISOLATED PS1 for test environment visibility\nexport PS1="\\[\\033[1;36m\\][ISOLATED web4 ${COMP_NAME:-Component}/${COMP_VERSION:-Version}]\\[\\033[0m\\] \\[\\033[1;33m\\]\\w\\[\\033[0m\\] > "\n';
+        modifiedContent += `\n# ISOLATED PS1 for test environment visibility\nexport PS1="\\[\\033[1;36m\\][ISOLATED web4 ${componentName}/${componentVersion}]\\[\\033[0m\\] \\[\\033[1;33m\\]\\w\\[\\033[0m\\] > "\n`;
         console.log(`   🔧 Applied v0315x hack: Added ISOLATED PS1 prompt`);
       }
+    }
+    
+    // Completion registration hack for 0.3.15.x
+    let completionHack = '';
+    
+    if (modifiedContent.includes('_web4_tscompletion')) {
+      // Old template - need to CREATE the per-CLI function AND register it
+      completionHack = `
+# PIGGY HARDCODE (test isolation only): Force completion registration
+# Normal auto-discovery expects symlinks, but isolated CLI is direct Node wrapper
+# Old template uses _web4_tscompletion, so we need to create the wrapper function
+eval "_${cliName}_completion() { _web4_tscompletion '${componentName}' '${cliName}'; }"
+complete -F _${cliName}_completion -o nospace ${cliName}
+echo "✅ Tab completion registered for: ${cliName} (isolated)"
+`;
+    } else {
+      // New template - uses generic _web4_generic_completion
+      completionHack = `
+# PIGGY HARDCODE (test isolation only): Force completion registration
+# Normal auto-discovery expects symlinks, but isolated CLI is direct Node wrapper
+complete -F _web4_generic_completion -o nospace ${cliName}
+echo "✅ Tab completion registered for: ${cliName} (isolated)"
+`;
+    }
+    
+    // Try to inject after _web4_auto_register_completions (0.3.15.x pattern)
+    if (modifiedContent.includes('_web4_auto_register_completions')) {
+      modifiedContent = modifiedContent.replace(
+        /(_web4_auto_register_completions\n)/,
+        `$1${completionHack}`
+      );
+      console.log(`   ✅ Applied v0315x hack (isolated completion after auto registration)`);
+    }
+    // Try to inject after export PS1= line (fallback pattern)
+    else if (modifiedContent.includes('export PS1=')) {
+      modifiedContent = modifiedContent.replace(
+        /(export PS1=.*?\n)/,
+        `$1${completionHack}`
+      );
+      console.log(`   ✅ Applied v0315x hack (isolated completion after PS1)`);
+    }
+    // Try to inject after _web4_register_completions (old template fallback)  
+    else if (modifiedContent.includes('_web4_register_completions')) {
+      modifiedContent = modifiedContent.replace(
+        /(_web4_register_completions\n)/,
+        `$1\n${completionHack}\n`
+      );
+      console.log(`   ✅ Applied v0315x hack (isolated completion after registration)`);
+    }
+    // No safe injection point - use as-is
+    else {
+      console.log(`   ⚠️  v0315x hack: no completion injection point found`);
     }
     
     return modifiedContent;
@@ -1220,7 +1280,10 @@ echo "✅ Tab completion registered for: ${cliName} (isolated)"
       console.log(`   🔍 Detected version 0.3.13.x - no hacks needed (handled by test isolation)`);
       return sourceEnvContent;
     } else if (versionKey.startsWith('0.3.15')) {
-      return await this.v0315xHack(sourceEnvContent);
+      // For 0.3.15.x, we need to pass component/version/CLI parameters for proper hack application
+      const componentName = this.model.component || 'Web4TSComponent';
+      const cliName = 'web4tscomponent';
+      return await this.v0315xHack(sourceEnvContent, componentName, version, cliName);
     } else if (versionKey.startsWith('0.3.16')) {
       return await this.v0316xHack(sourceEnvContent);
     }
