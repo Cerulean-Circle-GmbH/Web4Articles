@@ -26,6 +26,32 @@
 
 ## **📋 PDCA WRITING PROCESS**
 
+### **Step 0: ALWAYS Query trainAI First (CRITICAL)**
+```bash
+pdca trainAI how-to-pdca
+```
+
+**⚠️ EXPONENTIAL COST WARNING:**
+> "it would have been so much easier to ask pdca trainAI howto pdca in the first place and read the template. fixing shit later is exponentially more expensive as doing it correct because you know how."
+> — TRON, 2025-10-24
+
+**Why This Matters:**
+- ✅ Read template BEFORE starting = O(1) cost
+- ❌ Fix violations AFTER creation = O(n²) cost
+- ❌ Multiple fix iterations = O(n³) cost or worse
+
+**The Pattern:**
+1. Query `pdca trainAI how-to-pdca`
+2. Read template.md completely
+3. Read cmm3.compliance.checklist.md
+4. THEN create PDCA from knowledge, not assumptions
+
+**Anti-Pattern (CMM1 Chaos):**
+1. Jump into PDCA creation from memory
+2. Submit to cmm3check tool
+3. Fix violations iteratively
+4. Waste 10x-100x more time than Step 0 would have taken
+
 ### **Step 1: Copy Template**
 ```bash
 cp scrum.pmo/roles/_shared/PDCA/template.md <your-session-directory>/YYYY-MM-DD-UTC-HHMM.pdca.md
