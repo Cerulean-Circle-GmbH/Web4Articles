@@ -52,7 +52,7 @@ pdca trainAI how-to-pdca
 ```
 - Never use simple filename references
 - Never use single links without § notation
-- See [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md#L192-L218) | [§/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md](./howto.PDCA.md) for complete dual link specification
+- Complete specification: `pdca trainAI how-to-dual-links`
 
 **Anti-Pattern (CMM1 Chaos):**
 1. Jump into PDCA creation from memory
