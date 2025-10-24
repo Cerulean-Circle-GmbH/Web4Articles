@@ -14,4 +14,5 @@ export interface PDCAModel extends Model {
   version: string;
   createdAt: string;
   updatedAt: string;
+  cmm3Violations?: { [key: string]: string[] }; // Store detailed violation info for cmm3check
 }

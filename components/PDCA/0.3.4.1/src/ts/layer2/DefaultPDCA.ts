@@ -39,6 +39,8 @@ export class DefaultPDCA implements PDCA {
       name: '',
       origin: '',
       definition: '',
+      component: 'PDCA',
+      version: '0.3.4.1',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -200,6 +202,13 @@ export class DefaultPDCA implements PDCA {
       for (const violation of violations) {
         const description = this.getViolationDescription(violation);
         console.log(`   ${violation}: ${description}`);
+        
+        // Show specific violations if available (e.g., from check3c)
+        if (this.model.cmm3Violations && this.model.cmm3Violations[violation]) {
+          for (const detail of this.model.cmm3Violations[violation]) {
+            console.log(detail);
+          }
+        }
       }
       console.log();
     }
@@ -1533,8 +1542,11 @@ export class DefaultPDCA implements PDCA {
   private check3c(content: string): boolean {
     // Find all lines with dual links
     const lines = content.split('\n');
+    const violations: string[] = [];
     
-    for (const line of lines) {
+    for (let lineNum = 0; lineNum < lines.length; lineNum++) {
+      const line = lines[lineNum];
+      
       // Check for GitHub dual link patterns
       if (line.includes('[GitHub](') && line.includes('|')) {
         // Pattern 1: Standard dual link [GitHub](...) | [text](path)
@@ -1545,7 +1557,7 @@ export class DefaultPDCA implements PDCA {
         
         if (missingBracketsMatch) {
           // Found dual link with missing brackets - this is a violation
-          return false;
+          violations.push(`   Line ${lineNum + 1}: Missing brackets around local link\n      ${line.trim()}`);
         }
         
         if (standardMatch) {
@@ -1559,19 +1571,27 @@ export class DefaultPDCA implements PDCA {
           
           if (displayText.startsWith('/') && !displayText.startsWith('§/')) {
             // Absolute path without § notation
-            return false;
+            violations.push(`   Line ${lineNum + 1}: Absolute path without § notation\n      Display: ${displayText}\n      ${line.trim()}`);
           }
           
           // Check if GitHub URL is valid
           if (!githubUrl.includes('github.com')) {
-            return false;
+            violations.push(`   Line ${lineNum + 1}: Invalid GitHub URL (missing github.com)\n      URL: ${githubUrl}\n      ${line.trim()}`);
           }
         }
       }
     }
     
+    // Store violations for reporting
+    if (violations.length > 0) {
+      if (!this.model.cmm3Violations) {
+        this.model.cmm3Violations = {};
+      }
+      this.model.cmm3Violations['3c'] = violations;
+    }
+    
     // All dual links are properly formatted
-    return true;
+    return violations.length === 0;
   }
 
   /**
@@ -3942,3 +3962,4 @@ export class DefaultPDCA implements PDCA {
     return null;
   }
 }
+
