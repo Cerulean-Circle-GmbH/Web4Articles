@@ -1180,10 +1180,11 @@ echo "✅ Tab completion registered for: ${cliName} (isolated)"
       }
     }
     
-    // Completion registration hack for 0.3.15.x
-    let completionHack = '';
-    
-    if (modifiedContent.includes('_web4_tscompletion')) {
+    // Completion registration hack for 0.3.15.x - but only if not already present
+    if (!modifiedContent.includes('PIGGY HARDCODE (test isolation only)')) {
+      let completionHack = '';
+      
+      if (modifiedContent.includes('_web4_tscompletion')) {
       // Old template - need to CREATE the per-CLI function AND register it
       completionHack = `
 # PIGGY HARDCODE (test isolation only): Force completion registration
@@ -1227,9 +1228,12 @@ echo "✅ Tab completion registered for: ${cliName} (isolated)"
       );
       console.log(`   ✅ Applied v0315x hack (isolated completion after registration)`);
     }
-    // No safe injection point - use as-is
-    else {
-      console.log(`   ⚠️  v0315x hack: no completion injection point found`);
+      // No safe injection point - use as-is
+      else {
+        console.log(`   ⚠️  v0315x hack: no completion injection point found`);
+      }
+    } else {
+      console.log(`   ℹ️  v0315x hack: completion already applied, skipping injection`);
     }
     
     return modifiedContent;
