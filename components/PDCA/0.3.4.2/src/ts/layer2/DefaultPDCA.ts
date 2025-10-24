@@ -2235,10 +2235,10 @@ export class DefaultPDCA implements PDCA {
    * Systematically transfers knowledge to ensure agents don't repeat CMM2 mistakes
    * Includes collaboration patterns, instruction interpretation, test-first verification, and zero-knowledge method usage
    * 
-   * @param topic Training topic identifier (e.g., "how-to-start", "how-to-pdca", "how-to-cmm", "how-to-component", "how-to-feature-development", "how-to-test-workflow", "how-to-test-first", "how-to-dual-links", "how-to-ensure-links", "how-to-component-upgrade", "how-to-interpret-instructions", "how-to-collaborate", "how-to-chat-response") or number (e.g., "1", "2", "3")
+   * @param topic Training topic identifier (e.g., "how-to-start", "how-to-pdca", "how-to-cmm", "how-to-component", "how-to-feature-development", "how-to-test-workflow", "how-to-test-first", "how-to-dual-links", "how-to-ensure-links", "how-to-component-upgrade", "how-to-interpret-instructions", "how-to-collaborate", "how-to-chat-response", "how-to-decide") or number (e.g., "1", "2", "3")
    * @param options Optional training configuration
    * @cliSyntax topic
-   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-feature-development how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-interpret-instructions how-to-collaborate how-to-chat-response 1 2 3 4 5 6 7 8 9 10 11 12 13
+   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-feature-development how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-interpret-instructions how-to-collaborate how-to-chat-response how-to-decide 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
    */
   async trainAI(topic: string): Promise<this> {
     console.log(`\n🎓 AI Training Module - CMM3 Reproducible Learning\n`);
@@ -2269,7 +2269,8 @@ export class DefaultPDCA implements PDCA {
       'how-to-collaborate',
       'how-to-chat-response',
       'how-to-report',
-      'how-to-license-headers'
+      'how-to-license-headers',
+      'how-to-decide'
     ];
 
     // Handle numeric input - map number to topic name
@@ -3166,6 +3167,57 @@ export class DefaultPDCA implements PDCA {
           'Understands shebang conflicts with headers',
           'Can explain why headers use relative paths',
           'Recognizes process artifacts vs regular files'
+        ]
+      },
+      'how-to-decide': {
+        title: '⚖️ How to Decide: QA Decision Framework for PDCAs',
+        description: 'Master the art of presenting QA decisions - when to ask, what to ask, how to format decisions properly',
+        requiredReading: [
+          {
+            path: 'scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md',
+            reason: 'Complete decision-making framework with examples',
+            depth: 3
+          },
+          {
+            path: 'scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md',
+            reason: 'Section 1j: QA Decisions format compliance',
+            depth: 1
+          },
+          {
+            path: 'scrum.pmo/roles/_shared/PDCA/template.md',
+            reason: 'See QA Decisions section structure in official template',
+            depth: 1
+          }
+        ],
+        keyLessons: [
+          '✅ QA Decisions are for USER decisions, not agent decisions',
+          '⚖️ The 42 Rule: When in doubt, ASK! The answer to everything is often another question',
+          '✅ Three valid formats: Pending decisions [ ], Completed [x], or "All clear, no decisions to make"',
+          '✅ Present decisions when: Real risk exists, Multiple valid approaches, Ambiguous requirements, Significant impact',
+          '❌ DON\'T present when: User already decided, No real risk, Only one sensible option, Fake opposites',
+          '🚨 Destructive operations REQUIRE warnings (force push, delete, overwrite)',
+          '📋 Format: Numbered decisions with options a/b/c including rationale/consequences',
+          '✅ Check official docs BEFORE creating decisions (semver.org, CMMI, git docs, project glossary)',
+          '✅ Decision lifecycle: Pending [ ] → TRON answers → Agent implements → Completed [x]',
+          '❌ NEVER create different QA Decisions in chat - copy EXACTLY from PDCA',
+          '⚠️ Startup decisions: Focus Area, Role Selection, Session Duration, PDCA Location, Agent Identity',
+          '🔧 Interactive decisions: Checkbox pattern with indented metadata for branch updates',
+          '💡 Good decisions empower users, bad decisions waste time',
+          '🤝 Collaboration pattern: Present decision, STOP, wait for user response',
+          '❌ No fake opposites: Never present "do it" vs "don\'t do it" as options',
+          '✅ Decision quality: Clear title, distinct options, consequences explained, official sources checked'
+        ],
+        verificationChecklist: [
+          'Can identify when a decision is needed vs when it\'s not',
+          'Understands the three valid QA Decision formats',
+          'Can format decisions with proper checkbox syntax',
+          'Knows to check official documentation before creating decisions',
+          'Recognizes fake opposites and avoids them',
+          'Can write destructive operation warnings properly',
+          'Understands decision lifecycle from pending to completed',
+          'Knows to copy EXACT decisions from PDCA to chat (no paraphrasing)',
+          'Can present startup decisions with focus/role/duration/location',
+          'Understands the 42 Rule - asking when unsure is correct behavior'
         ]
       }
     };
