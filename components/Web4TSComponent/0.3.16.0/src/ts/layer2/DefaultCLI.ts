@@ -1628,11 +1628,13 @@ export abstract class DefaultCLI implements CLI {
           if (words.length > 1) {
             let secondWord = words[1];
             
-            // If we have completion values and only one match, use the completed word
-            if (values.length === 1 && this.model.completionCurrentWord === words[1]) {
-              // Extract the completed word from the single completion value
-              const completionMatch = values[0].match(/^\d+:\s*(\S+)/);
-              if (completionMatch) {
+            // For single completion match, show the completed word instead of partial
+            if (values.length === 1 && hasNumberedRefs) {
+              // Strip ANSI codes first, then extract completed word
+              const cleanValue = values[0].replace(/\x1b\[[0-9;]*m/g, '');
+              const completionMatch = cleanValue.match(/^\d+:\s*(\S+)/);
+              if (completionMatch && this.model.completionCompCword === 1) {
+                // Only replace if we're completing the method name (position 1)
                 secondWord = completionMatch[1];
               }
             }
