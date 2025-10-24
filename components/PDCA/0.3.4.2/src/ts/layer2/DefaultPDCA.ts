@@ -35,6 +35,13 @@ export class DefaultPDCA implements PDCA {
   private colors = DefaultColors.getInstance(); // DRY: Reuse Web4TSComponent colors
 
   constructor() {
+    // Initialize with version from directory (single source of truth)
+    const currentFileUrl = new URL(import.meta.url);
+    const currentVersionDir = dirname(dirname(dirname(currentFileUrl.pathname))); // Go up 3 levels
+    const componentDirName = currentVersionDir.split('/').pop() || '0.3.4.2';
+    const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(componentDirName);
+    const discoveredVersion = isVersionDir ? componentDirName : '0.3.4.2';
+    
     // Empty constructor - Web4 pattern
     this.model = {
       uuid: crypto.randomUUID(),
@@ -42,7 +49,7 @@ export class DefaultPDCA implements PDCA {
       origin: '',
       definition: '',
       component: 'PDCA',
-      version: '0.3.4.1',
+      version: discoveredVersion, // Discovered from directory, not hardcoded
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -57,13 +64,9 @@ export class DefaultPDCA implements PDCA {
     if (this.web4ts) return this.web4ts;
 
     const path = await import('path');
-    const { fileURLToPath } = await import('url');
-    const { dirname } = await import('path');
-
-    // Get component root (where this version's package.json is)
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-    const componentRoot = path.resolve(__dirname, '../../..');
+    const url = new URL(import.meta.url);
+    const __filename = url.pathname;
+    const componentRoot = path.resolve(path.dirname(__filename), '../../..');
 
     // Find project root (where components/ directory is)
     const projectRoot = componentRoot.split('/components/')[0];
@@ -77,9 +80,10 @@ export class DefaultPDCA implements PDCA {
     // Instantiate and configure Web4TSComponent
     this.web4ts = new DefaultWeb4TSComponent();
 
-    // Set 'on' context: load THIS component
+    // Set 'on' context: load THIS component version from model (DRY)
     const componentName = 'PDCA';
-    const currentVersion = '0.1.0.0';
+    const currentVersion = this.model.version; // Already set in constructor!
+    
     await this.web4ts.on(componentName, currentVersion);
 
     return this.web4ts;
@@ -1099,6 +1103,18 @@ export class DefaultPDCA implements PDCA {
             newPath = this.calculateRelativePathInternal(mdFile, path.join(projectRoot, localPath), path);
           }
         }
+        // Check if display text uses §/ notation but relative path is incorrect (PRIORITIZE THIS)
+        else if (displayText.startsWith('§/')) {
+          const absolutePath = displayText.substring(2); // Remove §/
+          const expectedPath = this.calculateRelativePathInternal(mdFile, path.join(projectRoot, absolutePath), path);
+          
+          // Check if relative path needs correction
+          if (localPath !== expectedPath && existsSync(path.join(projectRoot, absolutePath))) {
+            needsFix = true;
+            newDisplay = displayText; // Keep the §/ notation
+            newPath = expectedPath;
+          }
+        }
         // Check if GitHub path differs from local path
         else if (githubPath && githubPath !== localPath) {
           const expectedPath = this.calculateRelativePathInternal(mdFile, path.join(projectRoot, githubPath), path);
@@ -1352,7 +1368,6 @@ export class DefaultPDCA implements PDCA {
    * @cliHide
    */
   private async checkPDCACompliance(content: string, fileName: string, filePath?: string): Promise<string[]> {
-    console.log(`\n🐛 DEBUG checkPDCACompliance: fileName=${fileName}, filePath=${filePath}`);
     const violations: string[] = [];
 
     // 1. PDCA Compliance
@@ -1544,11 +1559,10 @@ export class DefaultPDCA implements PDCA {
    * 3c) Dual link format: [GitHub](URL) | [§/path](path)
    * Checks that all dual links follow proper format
    * Auto-fixes links before checking to reduce noise
+   * Uses DRY validateDualLink method
    * @cliHide
    */
   private async check3c(content: string, pdcaFilePath?: string): Promise<boolean> {
-    console.log(`\n🐛 DEBUG check3c called with pdcaFilePath: ${pdcaFilePath}`);
-    
     // Auto-fix dual links first if we have the file path
     if (pdcaFilePath) {
       const path = await import('path');
@@ -1567,6 +1581,7 @@ export class DefaultPDCA implements PDCA {
     // Find all lines with dual links
     const lines = content.split('\n');
     const violations: string[] = [];
+    const projectRoot = await this.getProjectRoot();
     
     for (let lineNum = 0; lineNum < lines.length; lineNum++) {
       const line = lines[lineNum];
@@ -1625,23 +1640,18 @@ export class DefaultPDCA implements PDCA {
               targetFilePath = path.resolve(pdcaDir, localPath);
             }
             
-            // Check if file exists
+            // Check if file exists at the resolved path
             const fileExists = existsSync(targetFilePath);
             
-            console.log(`\n  🔍 DEBUG Link Check:`);
-            console.log(`     Display: ${displayText}`);
-            console.log(`     Local: ${localPath}`);
-            console.log(`     Target: ${targetFilePath}`);
-            console.log(`     Exists: ${fileExists}`);
-            
-            // Only report if file truly doesn't exist (auto-fix couldn't help)
+            // ALWAYS report if file doesn't exist at the resolved path
+            // Then check if we can suggest a correct location
             if (!fileExists) {
               const correctLink = await this.generateCorrectDualLink(displayPath, pdcaFilePath);
               if (correctLink) {
-                // File exists but wrong relative path - report with suggestion
-                violations.push(`   ${this.colors.yellow}Line ${lineNum + 1}: Relative path incorrect (file exists elsewhere)${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.green}Should Be:${this.colors.reset} ${correctLink}`);
+                // File exists elsewhere - relative path is wrong
+                violations.push(`   ${this.colors.red}Line ${lineNum + 1}: Relative path incorrect (file exists elsewhere)${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.green}Should Be:${this.colors.reset} ${correctLink}`);
               } else {
-                // File doesn't exist in project - this is a real violation
+                // File doesn't exist anywhere in project
                 violations.push(`   ${this.colors.red}Line ${lineNum + 1}: Local path does not exist${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.green}Should Be:${this.colors.reset} ${this.colors.dim}(file not found in project)${this.colors.reset}`);
               }
             }
@@ -1760,6 +1770,113 @@ export class DefaultPDCA implements PDCA {
     } catch (error) {
       return null;
     }
+  }
+
+  /**
+   * DRY: Validate and optionally fix a dual link
+   * Returns: { isValid, correctedLink?, displayText?, relativePath? }
+   * @cliHide
+   */
+  private async validateDualLink(
+    line: string,
+    mdFilePath: string,
+    projectRoot: string
+  ): Promise<{
+    isValid: boolean;
+    needsFix: boolean;
+    violation?: string;
+    correctedLink?: string | null;
+    newDisplay?: string;
+    newPath?: string;
+  }> {
+    const path = await import('path');
+    const { existsSync } = await import('fs');
+    
+    // Pattern: Standard dual link [GitHub](...) | [text](path)
+    const standardMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
+    
+    if (!standardMatch) {
+      // Check for missing brackets
+      const missingBracketsMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*([^[].+[^)])$/);
+      if (missingBracketsMatch) {
+        return {
+          isValid: false,
+          needsFix: true,
+          violation: 'Missing brackets around local link',
+          correctedLink: null
+        };
+      }
+      return { isValid: true, needsFix: false };
+    }
+    
+    const [, githubUrl, displayText, localPath] = standardMatch;
+    
+    // Extract display path (remove §/ if present)
+    const displayPath = displayText.startsWith('§/') ? displayText.substring(2) : displayText;
+    
+    // Resolve local path to absolute
+    let targetFilePath: string;
+    if (path.isAbsolute(localPath)) {
+      targetFilePath = localPath;
+    } else {
+      const mdFileDir = path.dirname(path.join(projectRoot, mdFilePath));
+      targetFilePath = path.resolve(mdFileDir, localPath);
+    }
+    
+    // Check if file exists at resolved path
+    const fileExists = existsSync(targetFilePath);
+    
+    // ALWAYS report if file doesn't exist at the resolved path
+    if (!fileExists) {
+      const correctLink = await this.generateCorrectDualLink(displayPath, mdFilePath);
+      if (correctLink) {
+        // File exists elsewhere - relative path is wrong
+        return {
+          isValid: false,
+          needsFix: true,
+          violation: 'Relative path incorrect (file exists elsewhere)',
+          correctedLink: correctLink
+        };
+      } else {
+        // File doesn't exist anywhere
+        return {
+          isValid: false,
+          needsFix: false,
+          violation: 'Local path does not exist',
+          correctedLink: null
+        };
+      }
+    }
+    
+    // File exists - check if display text and relative path are correct
+    const targetRelativeToRoot = path.relative(projectRoot, targetFilePath);
+    const expectedCorrectLink = await this.generateCorrectDualLink(targetRelativeToRoot, mdFilePath);
+    
+    if (!expectedCorrectLink) {
+      return { isValid: true, needsFix: false };
+    }
+    
+    // Parse expected link
+    const expectedMatch = expectedCorrectLink.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
+    if (!expectedMatch) {
+      return { isValid: true, needsFix: false };
+    }
+    
+    const [, expectedGithubUrl, expectedDisplay, expectedPath] = expectedMatch;
+    
+    // Check if current link matches expected
+    if (displayText !== expectedDisplay || localPath !== expectedPath) {
+      return {
+        isValid: false,
+        needsFix: true,
+        violation: 'Display text or relative path incorrect',
+        correctedLink: expectedCorrectLink,
+        newDisplay: expectedDisplay,
+        newPath: expectedPath
+      };
+    }
+    
+    return { isValid: true, needsFix: false };
   }
 
   /**
@@ -1919,16 +2036,12 @@ export class DefaultPDCA implements PDCA {
     console.log(`🧪 Running PDCA tests with auto-promotion...`);
     
     try {
-      // Get current version from THIS component version's package.json
-      // Use import.meta.url to get the directory of THIS file, not cwd
-      // File is at: dist/ts/layer2/DefaultComponent.js
-      // Package.json is at: ./package.json (component root)
-      const __filename = fileURLToPath(import.meta.url);
-      const __dirname = dirname(__filename);
-      const componentRoot = path.resolve(__dirname, '../../..');  // Go up 3 levels: layer2 -> ts -> dist -> root
-      const packageJsonPath = path.join(componentRoot, 'package.json');
-      const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
-      const currentVersion = packageJson.version;
+      // Get current version from model (DRY - already set in constructor)
+      const currentVersion = this.model.version;
+      const path = await import('path');
+      const url = new URL(import.meta.url);
+      const __filename = url.pathname;
+      const componentRoot = path.resolve(path.dirname(__filename), '../../..');
       
       if (!insideTestEnvironment) {
         // Run vitest first (only if not in test environment)
