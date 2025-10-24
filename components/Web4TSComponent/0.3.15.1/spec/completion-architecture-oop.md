@@ -396,6 +396,8 @@ async getCompletionScenario(): Promise<void> {
 
 ### 2. `complete` - Receive Updated Scenario, Execute Completion
 
+**Legacy Protocol (Backward Compatibility):**
+
 ```typescript
 /**
  * Complete bash completion with updated Scenario from bash
@@ -420,6 +422,61 @@ async complete(scenarioJson: string): Promise<void> {
   // Format with DISPLAY/WORD protocol
   this.formatCompletionOutput(values);
 }
+```
+
+### 3. `shCompletion` - Direct Parameter API (Simplexity!)
+
+**New Protocol (Recommended):**
+
+```typescript
+/**
+ * Shell completion with direct parameter passing
+ * Simplexity: The highest art of complexity is simplicity
+ * 
+ * Web4 Pattern:
+ * - Model already exists (created in constructor via createEmptyModel)
+ * - Just update 2 fields, reuse existing DRY methods
+ * - No JSON serialization, no Scenario dance
+ * 
+ * @param cword - COMP_CWORD from bash
+ * @param words - COMP_WORDS from bash
+ * @cliHide
+ */
+async shCompletion(cword: string, ...words: string[]): Promise<void> {
+  // Update model directly (2 fields only!)
+  this.model.completionCompCword = parseInt(cword, 10);
+  this.model.completionCompWords = words;
+  
+  // Derive all other fields (DRY - reuse existing method!)
+  this.computeDerivedCompletionFields(this.model);
+  
+  // Get and output completions (DRY - reuse existing methods!)
+  const values = await this.getCompletionValues();
+  this.formatCompletionOutput(values);
+}
+```
+
+**Simplexity Comparison:**
+
+| **Aspect** | **Legacy (complete)** | **New (shCompletion)** |
+|------------|----------------------|------------------------|
+| **Bash Calls** | 2 (getScenario + complete) | 1 (shCompletion) |
+| **JSON Operations** | 4 (TS→JSON→Bash→JSON→TS) | 0 |
+| **Parameter Passing** | JSON string (complex) | Primitives (simple) |
+| **Model Update** | Parse JSON, call init() | Direct assignment |
+| **IPC Overhead** | 80-150ms | 50-100ms |
+| **Bash LOC** | ~80 lines (sed/awk logic) | ~10 lines |
+| **Error Vectors** | 3 (JSON parse, sed regex, escape) | 1 (parseInt) |
+
+**Why shCompletion embodies Simplexity:**
+1. Model already exists → No need to create Scenario
+2. Just update 2 fields → No JSON dance
+3. Reuse existing methods → DRY, no duplication
+4. Bash stays dumb → Only passes primitives
+5. TypeScript stays smart → Owns all logic
+
+**When complexity appears, look for the DRY violation hiding underneath.**
+
 
 /**
  * Compute derived completion fields from bash-provided compWords/compCword

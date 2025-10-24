@@ -194,8 +194,9 @@ export class Web4TSComponentCLI extends DefaultCLI {
     
     // Special handling for methods that MUST consume all their args (no command detection)
     // completeParameter: uses rest parameters (...contextArgs)
+    // shCompletion: uses rest parameters (...words)
     // completion: filter argument might be a method name (e.g., "completion method create")
-    if (command === 'completeParameter' || command === 'completion') {
+    if (command === 'completeParameter' || command === 'shCompletion' || command === 'completion') {
       const methodSpecificMaxArgs = this.getMethodMaxArguments(command);
       return methodSpecificMaxArgs !== null ? Math.min(methodSpecificMaxArgs, args.length) : args.length;
     }
@@ -255,8 +256,9 @@ export class Web4TSComponentCLI extends DefaultCLI {
    */
   private getMethodMaxArguments(command: string): number | null {
     // Special case: completeParameter uses rest parameters (...contextArgs)
-    // It should consume ALL remaining args to pass as context to completion method
-    if (command === 'completeParameter') {
+    // Special case: shCompletion uses rest parameters (...words)
+    // Both should consume ALL remaining args
+    if (command === 'completeParameter' || command === 'shCompletion') {
       return 999; // Consume all remaining args
     }
     
@@ -291,11 +293,11 @@ export class Web4TSComponentCLI extends DefaultCLI {
     // Compute derived fields from bash-provided data
     this.computeDerivedCompletionFields(this.model);
     
-    // Get valid completion values from model
-    const values = this.getValidCompletionValues();
+    // Get valid completion values from model (now async!)
+    const values = await this.getValidCompletionValues();
     
     // Format with DISPLAY/WORD protocol
-    await this.formatCompletionOutput(values);
+    this.formatCompletionOutput(values);
   }
 
 }
