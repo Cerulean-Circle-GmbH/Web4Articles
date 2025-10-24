@@ -1549,16 +1549,20 @@ export class DefaultPDCA implements PDCA {
       
       // Check for GitHub dual link patterns
       if (line.includes('[GitHub](') && line.includes('|')) {
-        // Pattern 1: Standard dual link [GitHub](...) | [text](path)
-        const standardMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
-        
-        // Pattern 2: Missing brackets [GitHub](...) | plain/text (VIOLATION)
-        const missingBracketsMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*([^[].+[^)])$/);
-        
-        if (missingBracketsMatch) {
-          // Found dual link with missing brackets - this is a violation
-          violations.push(`   Line ${lineNum + 1}: Missing brackets around local link\n      ${line.trim()}`);
+        // Split on | to check what comes after
+        const parts = line.split('|');
+        if (parts.length >= 2) {
+          const afterPipe = parts[1].trim();
+          
+          // Check if second part is NOT a markdown link (missing brackets)
+          if (!afterPipe.startsWith('[')) {
+            violations.push(`   Line ${lineNum + 1}: Missing brackets around local link\n      ${line.trim()}`);
+            continue; // Skip further checks for this malformed link
+          }
         }
+        
+        // Pattern: Standard dual link [GitHub](...) | [text](path)
+        const standardMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
         
         if (standardMatch) {
           const [, githubUrl, displayText, localPath] = standardMatch;
