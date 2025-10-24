@@ -2246,6 +2246,7 @@ export class DefaultPDCA implements PDCA {
       'component',
       'feature-development',
       'web4-vs-nodejs',
+      'tech-stack',
       'test-workflow',
       'test-without-versioning',
       'test-first',
@@ -2311,6 +2312,9 @@ export class DefaultPDCA implements PDCA {
       'web4-vs-nodejs': {
         title: '⚡ How to Web4 vs Node.js: Understanding the Web4 Framework',
       },
+      'tech-stack': {
+        title: '🛠️ How to Tech Stack: Project Technology & Testing Framework',
+      },
       'test-workflow': {
         title: '🧪 How to Test Workflow: Component Testing Cycle',
       },
@@ -2346,11 +2350,11 @@ export class DefaultPDCA implements PDCA {
    * Systematically transfers knowledge to ensure agents don't repeat CMM2 mistakes
    * Includes collaboration patterns, instruction interpretation, test-first verification, and zero-knowledge method usage
    * 
-   * @param topic Training topic identifier (e.g., ""start", ""pdca", ""cmm", ""component", ""feature-development", ""test-workflow", ""test-first", ""dual-links", ""ensure-links", ""component-upgrade", ""interpret-instructions", ""collaborate", ""chat-response", ""decide") or number (e.g., "1", "2", "3")
+   * @param topic Training topic identifier (e.g., ""start", ""pdca", ""cmm", ""component", ""feature-development", ""test-workflow", ""test-first", ""dual-links", ""ensure-links", ""component-upgrade", ""interpret-instructions", ""collaborate", ""chat-response", ""decide", ""tech-stack") or number (e.g., "1", "2", "3")
    * @param options Optional training configuration
    * @cliSyntax topic
    * @cliDefault topic ""
-   * @cliValues topic start pdca cmm component feature-development test-workflow test-first dual-links ensure-links component-upgrade interpret-instructions collaborate chat-response decide 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+   * @cliValues topic start pdca cmm component feature-development tech-stack test-workflow test-first dual-links ensure-links component-upgrade interpret-instructions collaborate chat-response decide 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
    */
   async trainAI(topic: string = ''): Promise<this> {
     console.log(`\n🎓 AI Training Module - CMM3 Reproducible Learning\n`);
@@ -2401,6 +2405,7 @@ export class DefaultPDCA implements PDCA {
                      key.includes('cmm') ? '📊' :
                      key.includes('component') ? '🔧' :
                      key.includes('feature') ? '🛠️' :
+                     key.includes('tech-stack') ? '🛠️' :
                      key.includes('test') ? '🧪' :
                      key.includes('dual') ? '🔗' :
                      key.includes('ensure') ? '✅' :
@@ -2425,8 +2430,9 @@ export class DefaultPDCA implements PDCA {
       console.log(`   - "start", "startup", "begin" → Read 'start' topic`);
       console.log(`   - "pdca", "document" → Read 'pdca' topic`);
       console.log(`   - "feature", "implement", "build" → Read 'feature-development' topic`);
-      console.log(`   - "component", "modify" → Read 'component' topic`);
+      console.log(`   - "component", "modify", "web4" → Read 'component' topic`);
       console.log(`   - "test", "testing" → Read 'test-first' or 'test-workflow' topic`);
+      console.log(`   - "vitest", "jest", "tech", "stack" → Read 'tech-stack' topic`);
       console.log(`   - "git", "commit", "push" → Read git protocol in 'start' or 'pdca' topic`);
       console.log(`   - "decision", "qa", "choose" → Read 'decide' topic`);
       console.log(`   - "link", "dual" → Read 'dual-links' or 'ensure-links' topic\n`);
@@ -2458,6 +2464,7 @@ export class DefaultPDCA implements PDCA {
       'component',
       'feature-development',
       'web4-vs-nodejs',
+      'tech-stack',
       'test-workflow',
       'test-without-versioning',
       'test-first',
@@ -3007,6 +3014,49 @@ export class DefaultPDCA implements PDCA {
           'Queried RAG before using file path resolution',
           'Recognized Node.js habit required explicit checking',
           'Will query "test patterns" proactively in future'
+        ]
+      },
+      'tech-stack': {
+        title: '🛠️ Tech Stack: Project Technology & Testing Framework',
+        description: 'Web4Articles uses modern TypeScript, ESM, and Vitest. Jest is BANNED. Understanding the tech stack prevents violations and ensures compatibility.',
+        requiredReading: [
+          {
+            path: 'docs/tech-stack.md',
+            reason: 'CRITICAL: Defines approved technologies and BANNED frameworks (Jest)',
+            depth: 2
+          }
+        ],
+        keyLessons: [
+          '✅ Testing Framework: Vitest ONLY - modern, ESM-native, TypeScript-first',
+          '❌ Jest is BANNED: Poor ESM support, legacy CJS patterns, slow migration',
+          '📦 Import Pattern: import { describe, it, expect } from \'vitest\'',
+          '⚠️ Tech Debt Violation: Any Jest config, scripts, or dependencies must be removed',
+          '🏗️ Architecture: Web4TSComponent v0.3.x - component-based, TypeScript-first',
+          '📝 Language: TypeScript (ES2020+) with full type safety',
+          '🔧 CLI System: Auto-discovery with method chaining',
+          '📊 Development Level: CMM4 (systematic, automated, quantitatively managed)',
+          '🎯 Tooling: PlantUML + Graphviz for architecture diagrams',
+          '🐳 Environment: Docker + Devcontainer for cross-platform consistency',
+          '✅ Module System: Pure ESM - NO CommonJS (require, module.exports)',
+          '✅ Modern JS: Full support for import.meta.url, top-level await',
+          '🔍 Detection: Search for jest, ts-jest, jest.config - all violations',
+          '🔧 Fix Pattern: Replace with vitest, vitest.config.ts',
+          '📊 RAG Queries: "test framework" → finds this topic',
+          '📊 RAG Queries: "vitest jest" → finds this topic',
+          '⚠️ Context Window Risk: Assuming Jest is allowed → BANNED',
+          '✅ Forcing Function: Query "tech stack" BEFORE adding dependencies'
+        ],
+        verificationChecklist: [
+          'Read docs/tech-stack.md completely',
+          'Understands Jest is BANNED - no exceptions',
+          'Knows correct import: import { describe, it, expect } from \'vitest\'',
+          'Can identify Jest violations (jest, ts-jest, jest.config)',
+          'Understands why Vitest: ESM-native, TypeScript-first, modern',
+          'Knows project uses pure ESM - no CommonJS',
+          'Understands Web4TSComponent architecture',
+          'Will query "tech stack" before adding new dependencies',
+          'Will check docs/tech-stack.md for approved technologies',
+          'Can explain to next agent why Jest is banned'
         ]
       },
       'test-workflow': {
