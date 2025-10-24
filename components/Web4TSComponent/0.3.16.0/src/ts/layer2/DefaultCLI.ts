@@ -1639,7 +1639,6 @@ export abstract class DefaultCLI implements CLI {
         
         // Format: "your web4 command >" with colored command
         const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
-        lines.push(`DISPLAY: `);
         lines.push(`DISPLAY: ${prompt}`);
       }
       
