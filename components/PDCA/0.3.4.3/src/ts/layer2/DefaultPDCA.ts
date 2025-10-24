@@ -2349,9 +2349,10 @@ export class DefaultPDCA implements PDCA {
    * @param topic Training topic identifier (e.g., "how-to-start", "how-to-pdca", "how-to-cmm", "how-to-component", "how-to-feature-development", "how-to-test-workflow", "how-to-test-first", "how-to-dual-links", "how-to-ensure-links", "how-to-component-upgrade", "how-to-interpret-instructions", "how-to-collaborate", "how-to-chat-response", "how-to-decide") or number (e.g., "1", "2", "3")
    * @param options Optional training configuration
    * @cliSyntax topic
+   * @cliDefault topic ""
    * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-feature-development how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-interpret-instructions how-to-collaborate how-to-chat-response how-to-decide 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
    */
-  async trainAI(topic: string): Promise<this> {
+  async trainAI(topic: string = ''): Promise<this> {
     console.log(`\n🎓 AI Training Module - CMM3 Reproducible Learning\n`);
 
     // Check if topic is missing or empty - show comprehensive help
