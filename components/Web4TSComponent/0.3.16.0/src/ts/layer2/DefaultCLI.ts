@@ -1595,7 +1595,6 @@ export abstract class DefaultCLI implements CLI {
     const hasNumberedRefs = values.some((v: string) => v.match(/^\d+:/));
     const hasSpaces = values.some((v: string) => v.includes(' '));
     
-    
     if (hasNumberedRefs || hasSpaces) {
       // Complex format: numbered method list or formatted text
       // Add DISPLAY lines (user-visible formatted output with ANSI colors)
@@ -1627,28 +1626,8 @@ export abstract class DefaultCLI implements CLI {
           coloredCommand = `${toolName}${words[0]}${reset}`;
           
           if (words.length > 1) {
-            let secondWord = words[1];
-            
-            // For single completion match, show the completed word instead of partial
-            if (values.length === 1 && this.model.completionCompCword === 1) {
-              // Strip ANSI codes first, then extract completed word
-              const cleanValue = values[0].replace(/\x1b\[[0-9;]*m/g, '');
-              
-              // Try numbered format first: "1: completion <params>"
-              let completionMatch = cleanValue.match(/^\d+:\s*(\S+)/);
-              
-              // If not numbered, try direct format: "completion <params>"
-              if (!completionMatch) {
-                completionMatch = cleanValue.match(/^(\S+)/);
-              }
-              
-              if (completionMatch) {
-                secondWord = completionMatch[1];
-              }
-            }
-            
-            // Second word: method name (white) - use completed word if available
-            coloredCommand += ` ${commands}${secondWord}${reset}`;
+            // Second word: method name (white)
+            coloredCommand += ` ${commands}${words[1]}${reset}`;
             
             // Remaining words: parameters (yellow bold)
             if (words.length > 2) {
@@ -1660,6 +1639,7 @@ export abstract class DefaultCLI implements CLI {
         
         // Format: "your web4 command >" with colored command
         const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
+        lines.push(`DISPLAY: `);
         lines.push(`DISPLAY: ${prompt}`);
       }
       

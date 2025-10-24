@@ -647,7 +647,7 @@ export class DefaultPDCA implements PDCA {
     // NOTE: This structure is temporarily duplicated from trainAI (lines 1702-2286)
     // Future work: Make trainAI call this method to eliminate duplication
     return {
-      'how-to-dual-links': {
+      'dual-links': {
         keyLessons: [
           '✅ Format: [GitHub](https://github.com/org/repo/blob/branch/path) | [§/path](path)',
           '✅ GitHub link: For human verification, works in any context',
@@ -680,7 +680,7 @@ export class DefaultPDCA implements PDCA {
         ],
         title: '🔗 How to Dual Links: GitHub + § Notation for Chat Reports'
       },
-      'how-to-test-first': {
+      'test-first': {
         keyLessons: [
           '✅ Test-First Pattern: Write test → Run test → See it fail → Fix code → See it pass',
           '🎯 Trust the tests: If tests pass, functionality works. No manual verification needed.',
@@ -709,9 +709,9 @@ export class DefaultPDCA implements PDCA {
         ],
         title: '🧪 How to Test-First Verification: Trust Tests, Avoid Manual Verification'
       },
-      'how-to-feature-development': {
+      'feature-development': {
         keyLessons: [
-          '✅ Phase 0 - RAG Preparation: Query trainAI BEFORE planning (how-to-test-first, how-to-component)',
+          '✅ Phase 0 - RAG Preparation: Query trainAI BEFORE planning (test-first, component)',
           '⏱️ RAG Preparation is Non-Negotiable: 30 min reading → 2-3 hours debugging saved',
           '📚 Read to depth 3: document → references → secondary references',
           '🧠 Build complete mental model BEFORE coding (prevents assumption cascade)',
@@ -745,7 +745,7 @@ export class DefaultPDCA implements PDCA {
           '📊 Web4 Principles Research Has Exponential ROI: 30 min reading → Apply 7 principles forever'
         ],
         verificationChecklist: [
-          'Queried trainAI before planning (how-to-test-first, relevant domain topics)',
+          'Queried trainAI before planning (test-first, relevant domain topics)',
           'Read referenced docs to depth 3 (not just surface level)',
           'Built complete mental model before coding',
           'Identified reusable parts at planning stage (not refactoring)',
@@ -768,7 +768,7 @@ export class DefaultPDCA implements PDCA {
         ],
         title: '🛠️ How to Feature Development: RAG-Powered Test-First CMM3 Pattern'
       },
-      'how-to-web4-vs-nodejs': {
+      'web4-vs-nodejs': {
         keyLessons: [
           '❌ __dirname and __filename: Node.js globals with underscores → Web4 violation!',
           '✅ Web4 Pattern: Use import.meta.url with URL() constructor',
@@ -810,7 +810,7 @@ export class DefaultPDCA implements PDCA {
         ],
         title: '🔄 Web4 vs Node.js: Pattern Migration Guide'
       },
-      'how-to-test-workflow': {
+      'test-workflow': {
         keyLessons: [
           '🔗 Semantic links: latest (dev work) → test (testing) → dev (stable) → prod (production)',
           '🧪 Test workflow: Work on `latest` → run `pdca test` → auto-promotes to `test` on success',
@@ -843,7 +843,7 @@ export class DefaultPDCA implements PDCA {
         ],
         title: '🧪 How to Test Workflow: Semantic Versioning and Test Iteration'
       },
-      'how-to-test-without-versioning': {
+      'test-without-versioning': {
         keyLessons: [
           '🔍 Viewing Tests: `web4tscomponent on <Component> latest test itCase` shows complete test tree',
           '📊 Test tree displays: file number, describe blocks, test cases with tokens (no execution, no versioning)',
@@ -877,7 +877,7 @@ export class DefaultPDCA implements PDCA {
         ],
         title: '🧪 How to Test Without Versioning: Baseline Verification'
       },
-      'how-to-report': {
+      'report': {
         keyLessons: [
           '🚨 Summary Generation = Red Flag: Elaborate formatting/boxes indicate context window pressure',
           '✅ Query RAG BEFORE Reporting: `pdca queryTrainAI "How should I report task completion?"`',
@@ -912,7 +912,7 @@ export class DefaultPDCA implements PDCA {
         ],
         title: '📊 How to Report: Concise Task Completion Without Summary Generation'
       },
-      'how-to-merge': {
+      'merge': {
         keyLessons: [
           '⚠️ Source Code Merge ≠ Complete Integration!',
           '✅ Post-Merge Checklist: Resolve conflicts → Commit → BUILD components → Test → Verify CLI',
@@ -2231,17 +2231,219 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
+   * Get ordered training topics list (internal helper)
+   * @cliHide
+   */
+  private getOrderedTopicsInternal(): string[] {
+    return [
+      'start',
+      'pdca',
+      'cmm',
+      'dual-links',
+      'ensure-links',
+      'component-upgrade',
+      'merge',
+      'component',
+      'feature-development',
+      'web4-vs-nodejs',
+      'tech-stack',
+      'test-workflow',
+      'test-without-versioning',
+      'test-first',
+      'interpret-instructions',
+      'collaborate',
+      'chat-response',
+      'report',
+      'license-headers',
+      'decide'
+    ];
+  }
+
+  /**
+   * Get available topics count (internal helper)
+   * @cliHide
+   */
+  private getAvailableTopicsCountInternal(): number {
+    return this.getOrderedTopicsInternal().length;
+  }
+
+  /**
+   * Get training topic info by key (internal helper)
+   * @cliHide
+   */
+  private getTrainingTopicInternal(key: string): any {
+    const trainingTopics = this.getAllTrainingTopicsInternal();
+    return trainingTopics[key] || null;
+  }
+
+  /**
+   * Get all training topics definitions (internal helper)
+   * @cliHide
+   */
+  private getAllTrainingTopicsInternal(): { [key: string]: any } {
+    return {
+      'start': {
+        title: '🚀 How to Start: Background Agent Startup Protocol',
+      },
+      'pdca': {
+        title: '📝 How to PDCA: Creating CMM3-Compliant Documentation',
+      },
+      'cmm': {
+        title: '📊 How to CMM: Understanding Maturity Levels',
+      },
+      'dual-links': {
+        title: '🔗 How to Dual Links: GitHub + Local References',
+      },
+      'ensure-links': {
+        title: '✅ How to Ensure Links: Validation & Verification',
+      },
+      'component-upgrade': {
+        title: '🔄 How to Component Upgrade: Version Promotion',
+      },
+      'merge': {
+        title: '🔄 How to Merge: Component merge workflow',
+      },
+      'component': {
+        title: '🔧 How to Component: Web4 Component System',
+      },
+      'feature-development': {
+        title: '🛠️ How to Feature Development: RAG-Powered Test-First CMM3 Pattern',
+      },
+      'web4-vs-nodejs': {
+        title: '⚡ How to Web4 vs Node.js: Understanding the Web4 Framework',
+      },
+      'tech-stack': {
+        title: '🛠️ How to Tech Stack: Project Technology & Testing Framework',
+      },
+      'test-workflow': {
+        title: '🧪 How to Test Workflow: Component Testing Cycle',
+      },
+      'test-without-versioning': {
+        title: '🧪 How to Test Without Versioning: Minimal Testing Pattern',
+      },
+      'test-first': {
+        title: '🧪 How to Test First: Test-Driven Development for CMM3',
+      },
+      'interpret-instructions': {
+        title: '🧠 How to Interpret Instructions: Zero-Knowledge Method Pattern',
+      },
+      'collaborate': {
+        title: '🤝 How to Collaborate: TRON Handshake and Feedback Points',
+      },
+      'chat-response': {
+        title: '💬 How to Chat Response: Communication Pattern',
+      },
+      'report': {
+        title: '📋 How to Report: CMM3 Reporting Standards',
+      },
+      'license-headers': {
+        title: '©️ How to License Headers: MIT License Application',
+      },
+      'decide': {
+        title: '⚖️ How to Decide: QA Decision Framework for PDCAs',
+      }
+    };
+  }
+
+  /**
    * Train AI agents on specific topics with CMM3-defined, reproducible learning paths
    * Systematically transfers knowledge to ensure agents don't repeat CMM2 mistakes
    * Includes collaboration patterns, instruction interpretation, test-first verification, and zero-knowledge method usage
    * 
-   * @param topic Training topic identifier (e.g., "how-to-start", "how-to-pdca", "how-to-cmm", "how-to-component", "how-to-feature-development", "how-to-test-workflow", "how-to-test-first", "how-to-dual-links", "how-to-ensure-links", "how-to-component-upgrade", "how-to-interpret-instructions", "how-to-collaborate", "how-to-chat-response", "how-to-decide") or number (e.g., "1", "2", "3")
+   * @param topic Training topic identifier (e.g., ""start", ""pdca", ""cmm", ""component", ""feature-development", ""test-workflow", ""test-first", ""dual-links", ""ensure-links", ""component-upgrade", ""interpret-instructions", ""collaborate", ""chat-response", ""decide", ""tech-stack") or number (e.g., "1", "2", "3")
    * @param options Optional training configuration
    * @cliSyntax topic
-   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-feature-development how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-interpret-instructions how-to-collaborate how-to-chat-response how-to-decide 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+   * @cliDefault topic ""
+   * @cliValues topic start pdca cmm component feature-development tech-stack test-workflow test-first dual-links ensure-links component-upgrade interpret-instructions collaborate chat-response decide 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
    */
-  async trainAI(topic: string): Promise<this> {
+  async trainAI(topic: string = ''): Promise<this> {
     console.log(`\n🎓 AI Training Module - CMM3 Reproducible Learning\n`);
+
+    // Check if topic is missing or empty - show comprehensive help
+    if (!topic || topic.trim() === '') {
+      console.log(`🚨 CRITICAL: Missing Topic Parameter\n`);
+      console.log(`════════════════════════════════════════════════════════════════════════════════`);
+      console.log(`\n❌ YOU JUST EXPERIENCED THE PAIN THIS TOOL EXISTS TO PREVENT\n`);
+      console.log(`You called a method without knowing its parameters.`);
+      console.log(`You felt frustrated, confused, unsure what to do next.`);
+      console.log(`You wasted time discovering what you SHOULD have read first.\n`);
+      console.log(`🔴 THIS IS EXACTLY WHY trainAI EXISTS - TO PREVENT THIS FEELING!\n`);
+      console.log(`════════════════════════════════════════════════════════════════════════════════\n`);
+      console.log(`💡 The Feature Development Pattern (feature-development):\n`);
+      console.log(`   Phase 0 - RAG Preparation: Query trainAI BEFORE planning`);
+      console.log(`   "30 min reading → 2-3 hours debugging saved"`);
+      console.log(`   "Read to depth 3: document → references → secondary references"`);
+      console.log(`   "Build complete mental model BEFORE coding (prevents assumption cascade)"\n`);
+      console.log(`🎯 YOU MUST READ BEFORE ACTING - NOT DISCOVER WHILE ACTING\n`);
+      console.log(`   Every method you call has documentation you should query FIRST.`);
+      console.log(`   Every feature you build has patterns you should learn FIRST.`);
+      console.log(`   Every git operation has protocols you should understand FIRST.\n`);
+      console.log(`📊 The Cost of Skipping Reading:\n`);
+      console.log(`   ❌ Skip reading → CMM1 chaos → 8 CMM3 violations → Delete and restart`);
+      console.log(`   ❌ Skip reading → git protocol violation → Interactive commands → Stash chaos`);
+      console.log(`   ❌ Skip reading → Wrong version → Manual edits → Break workflow`);
+      console.log(`   ✅ Read FIRST → CMM3 compliant → One loop success → TRON validation\n`);
+      console.log(`🏆 The Exponential Cost Principle:\n`);
+      console.log(`   - Doing it WRONG first, then RIGHT: 100x more expensive`);
+      console.log(`   - Doing it RIGHT first: Normal cost`);
+      console.log(`   - The knowledge EXISTS in trainAI - USE IT!\n`);
+      console.log(`🔄 CRITICAL: After 'Summarizing Chat' Events:\n`);
+      console.log(`   When you see 'summarizing chat' event, you LOSE detailed context.`);
+      console.log(`   IMMEDIATELY use trainAI to refresh your understanding:\n`);
+      console.log(`   ✅ CORRECT: Recognize summary → trainAI start → Review protocols → Continue work`);
+      console.log(`   ❌ WRONG: Continue mechanically → Repeat old mistakes → Break processes\n`);
+      console.log(`   Summary events are NOT permission to forget - they're triggers to REFRESH.`);
+      console.log(`   The same mistakes you made before summary will happen again unless you READ.\n`);
+      console.log(`════════════════════════════════════════════════════════════════════════════════\n`);
+      console.log(`📚 Available Training Topics (${this.getAvailableTopicsCountInternal()} topics): How To...\n`);
+      
+      const orderedTopics = this.getOrderedTopicsInternal();
+      orderedTopics.forEach((key, i) => {
+        const topicInfo = this.getTrainingTopicInternal(key);
+        const emoji = key.includes('start') ? '🚀' :
+                     key.includes('pdca') ? '📝' :
+                     key.includes('cmm') ? '📊' :
+                     key.includes('component') ? '🔧' :
+                     key.includes('feature') ? '🛠️' :
+                     key.includes('tech-stack') ? '🛠️' :
+                     key.includes('test') ? '🧪' :
+                     key.includes('dual') ? '🔗' :
+                     key.includes('ensure') ? '✅' :
+                     key.includes('merge') ? '🔄' :
+                     key.includes('interpret') ? '🧠' :
+                     key.includes('collaborate') ? '🤝' :
+                     key.includes('chat') ? '💬' :
+                     key.includes('report') ? '📋' :
+                     key.includes('license') ? '©️' :
+                     key.includes('decide') ? '⚖️' :
+                     key.includes('web4-vs-nodejs') ? '⚡' : '📖';
+        console.log(`   ${i + 1}:${key.padEnd(35)} ${emoji} ${topicInfo ? topicInfo.title.replace(/^[^a-zA-Z]+\s*/, '') : ''}`);
+      });
+      
+      console.log(`💡 Usage Examples:\n`);
+      console.log(`   pdca trainAI feature-development  # Learn BEFORE building features`);
+      console.log(`   pdca trainAI component            # Learn BEFORE modifying components`);
+      console.log(`   pdca trainAI start                # Learn startup protocol`);
+      console.log(`   pdca trainAI 9                    # Use topic number for quick access\n`);
+      console.log(`🧠 MEMORIZE THE KEYWORDS - Use Them as Triggers:\n`);
+      console.log(`   When you see these keywords in user prompts, READ the training FIRST:\n`);
+      console.log(`   - "start", "startup", "begin" → Read 'start' topic`);
+      console.log(`   - "pdca", "document" → Read 'pdca' topic`);
+      console.log(`   - "feature", "implement", "build" → Read 'feature-development' topic`);
+      console.log(`   - "component", "modify", "web4" → Read 'component' topic`);
+      console.log(`   - "test", "testing" → Read 'test-first' or 'test-workflow' topic`);
+      console.log(`   - "vitest", "jest", "tech", "stack" → Read 'tech-stack' topic`);
+      console.log(`   - "git", "commit", "push" → Read git protocol in 'start' or 'pdca' topic`);
+      console.log(`   - "decision", "qa", "choose" → Read 'decide' topic`);
+      console.log(`   - "link", "dual" → Read 'dual-links' or 'ensure-links' topic\n`);
+      console.log(`   DON'T wait to discover the right approach - READ when you see the keyword!\n`);
+      console.log(`🎯 REMEMBER: Perfect hindsight is worthless. Proactive reading is priceless.\n`);
+      console.log(`   You KNOW what you should have read AFTER you fail.`);
+      console.log(`   You SHOULD read it BEFORE you start.\n`);
+      console.log(`════════════════════════════════════════════════════════════════════════════════\n`);
+      
+      return this;
+    }
 
     // Future trainAI topics from gap analysis (2025-10-21-UTC-1047):
     // - how-to-environment-setup: Shell config, git setup, source.env
@@ -2252,25 +2454,26 @@ export class DefaultPDCA implements PDCA {
 
     // Single source of truth: ordered topic list for both display and numeric mapping
     const orderedTopics = [
-      'how-to-start',
-      'how-to-pdca',
-      'how-to-cmm',
-      'how-to-dual-links',
-      'how-to-ensure-links',
-      'how-to-component-upgrade',
-      'how-to-merge',
-      'how-to-component',
-      'how-to-feature-development',
-      'how-to-web4-vs-nodejs',
-      'how-to-test-workflow',
-      'how-to-test-without-versioning',
-      'how-to-test-first',
-      'how-to-interpret-instructions',
-      'how-to-collaborate',
-      'how-to-chat-response',
-      'how-to-report',
-      'how-to-license-headers',
-      'how-to-decide'
+      'start',
+      'pdca',
+      'cmm',
+      'dual-links',
+      'ensure-links',
+      'component-upgrade',
+      'merge',
+      'component',
+      'feature-development',
+      'web4-vs-nodejs',
+      'tech-stack',
+      'test-workflow',
+      'test-without-versioning',
+      'test-first',
+      'interpret-instructions',
+      'collaborate',
+      'chat-response',
+      'report',
+      'license-headers',
+      'decide'
     ];
 
     // Handle numeric input - map number to topic name
@@ -2295,7 +2498,7 @@ export class DefaultPDCA implements PDCA {
 
     // Training topic definitions - CMM3: Objective, Reproducible, Verifiable
     const trainingTopics: { [key: string]: TrainingTopic } = {
-      'how-to-start': {
+      'start': {
         title: '🚀 How to Start: Background Agent Startup Protocol',
         description: 'Complete startup sequence for new agents, including CMM4 understanding, identity setup, and initial PDCA creation',
         requiredReading: [
@@ -2349,7 +2552,7 @@ export class DefaultPDCA implements PDCA {
           'Understands collaboration model'
         ]
       },
-      'how-to-pdca': {
+      'pdca': {
         title: '📝 How to PDCA: Creating CMM3-Compliant Documentation',
         description: 'Learn to create excellent PDCAs with proper structure, links, and compliance',
         requiredReading: [
@@ -2376,7 +2579,7 @@ export class DefaultPDCA implements PDCA {
           '✅ DRY principle: cross-reference instead of duplicating content',
           '✅ Always include: "Never 2 1 (TO ONE). Always 4 2 (FOR TWO)." at end',
           '⚠️ CMM badges track compliance status throughout PDCA lifecycle',
-          '🔗 Dual link format: [GitHub](URL) | [§/path](path) - see how-to-dual-links',
+          '🔗 Dual link format: [GitHub](URL) | [§/path](path) - see dual-links',
           '🔗 Generate dual links: `pdca getDualLink <file>` (auto-fixes git status)',
           '🔗 Validate links: `pdca ensureValidLinks <file>` before PDCA completion',
           '🛑 1f Step 2: "Interrupt immediately on unexpected observations and ask TRON"',
@@ -2396,7 +2599,7 @@ export class DefaultPDCA implements PDCA {
           'Knows collaboration protocol during PDCA creation'
         ]
       },
-      'how-to-cmm': {
+      'cmm': {
         title: '🎯 How to CMM: Understanding Capability Maturity Levels',
         description: 'Master the CMM framework from chaos (CMM1) to feedback loop mastery (CMM4)',
         requiredReading: [
@@ -2427,7 +2630,7 @@ export class DefaultPDCA implements PDCA {
           'Understands why CMM4 enables LLM capability evolution'
         ]
       },
-      'how-to-dual-links': {
+      'dual-links': {
         title: '🔗 How to Dual Links: GitHub + § Notation for Chat Reports',
         description: 'Master dual link format: GitHub URLs for verification, § paths for local navigation',
         requiredReading: [
@@ -2489,7 +2692,7 @@ export class DefaultPDCA implements PDCA {
           'Recognizes context window exhaustion symptoms'
         ]
       },
-      'how-to-ensure-links': {
+      'ensure-links': {
         title: '✅ How to Ensure Links: CMM3 Atomic Link Validation',
         description: 'Zero-knowledge automation: Ensure all dual links are valid across entire project',
         requiredReading: [
@@ -2519,7 +2722,7 @@ export class DefaultPDCA implements PDCA {
           'Knows to validate links before PDCA/session completion'
         ]
       },
-      'how-to-component-upgrade': {
+      'component-upgrade': {
         title: '🚀 How to Component Upgrade: Link Management During Versioning',
         description: 'Maintain valid links when components evolve: version bumps, file moves, refactoring',
         requiredReading: [
@@ -2554,7 +2757,7 @@ export class DefaultPDCA implements PDCA {
           'Can maintain backward compatibility during refactoring'
         ]
       },
-      'how-to-merge': {
+      'merge': {
         title: '🔀 How to Merge: Post-Merge Integration and Build Requirements',
         description: 'Complete merge integration: source + build + runtime verification for symlinked components',
         requiredReading: [
@@ -2594,7 +2797,7 @@ export class DefaultPDCA implements PDCA {
           'Knows to check all symlink targets for build artifacts'
         ]
       },
-      'how-to-component': {
+      'component': {
         title: '🔧 How to Component: Web4 Component System',
         description: 'Learn Web4 component patterns, versioning, and CLI auto-discovery',
         requiredReading: [
@@ -2674,7 +2877,7 @@ export class DefaultPDCA implements PDCA {
           'Knows web4tscomponent initProject sets up DRY structure'
         ]
       },
-      'how-to-feature-development': {
+      'feature-development': {
         title: '🛠️ How to Feature Development: RAG-Powered Test-First CMM3 Pattern',
         description: 'Master CMM3-compliant feature development: RAG preparation, test-first design, automated verification, and knowledge loop closure',
         requiredReading: [
@@ -2700,7 +2903,7 @@ export class DefaultPDCA implements PDCA {
           }
         ],
         keyLessons: [
-          '✅ Phase 0 - RAG Preparation: Query trainAI BEFORE planning (how-to-test-first, how-to-component)',
+          '✅ Phase 0 - RAG Preparation: Query trainAI BEFORE planning (test-first, component)',
           '⏱️ RAG Preparation is Non-Negotiable: 30 min reading → 2-3 hours debugging saved',
           '📚 Read to depth 3: document → references → secondary references',
           '🧠 Build complete mental model BEFORE coding (prevents assumption cascade)',
@@ -2734,7 +2937,7 @@ export class DefaultPDCA implements PDCA {
           '📊 Web4 Principles Research Has Exponential ROI: 30 min reading → Apply 7 principles forever'
         ],
         verificationChecklist: [
-          'Queried trainAI before planning (how-to-test-first, relevant domain topics)',
+          'Queried trainAI before planning (test-first, relevant domain topics)',
           'Read referenced docs to depth 3 (not just surface level)',
           'Built complete mental model before coding',
           'Identified reusable parts at planning stage (not refactoring)',
@@ -2756,7 +2959,7 @@ export class DefaultPDCA implements PDCA {
           'Achieved "one loop" success (TRON impressed with efficiency)'
         ]
       },
-      'how-to-web4-vs-nodejs': {
+      'web4-vs-nodejs': {
         title: '🔄 Web4 vs Node.js: Pattern Migration Guide',
         description: 'Web4 components use modern ES modules and strict naming conventions. This guide covers common Node.js patterns and their Web4-compliant equivalents.',
         requiredReading: [
@@ -2813,7 +3016,50 @@ export class DefaultPDCA implements PDCA {
           'Will query "test patterns" proactively in future'
         ]
       },
-      'how-to-test-workflow': {
+      'tech-stack': {
+        title: '🛠️ Tech Stack: Project Technology & Testing Framework',
+        description: 'Web4Articles uses modern TypeScript, ESM, and Vitest. Jest is BANNED. Understanding the tech stack prevents violations and ensures compatibility.',
+        requiredReading: [
+          {
+            path: 'docs/tech-stack.md',
+            reason: 'CRITICAL: Defines approved technologies and BANNED frameworks (Jest)',
+            depth: 2
+          }
+        ],
+        keyLessons: [
+          '✅ Testing Framework: Vitest ONLY - modern, ESM-native, TypeScript-first',
+          '❌ Jest is BANNED: Poor ESM support, legacy CJS patterns, slow migration',
+          '📦 Import Pattern: import { describe, it, expect } from \'vitest\'',
+          '⚠️ Tech Debt Violation: Any Jest config, scripts, or dependencies must be removed',
+          '🏗️ Architecture: Web4TSComponent v0.3.x - component-based, TypeScript-first',
+          '📝 Language: TypeScript (ES2020+) with full type safety',
+          '🔧 CLI System: Auto-discovery with method chaining',
+          '📊 Development Level: CMM4 (systematic, automated, quantitatively managed)',
+          '🎯 Tooling: PlantUML + Graphviz for architecture diagrams',
+          '🐳 Environment: Docker + Devcontainer for cross-platform consistency',
+          '✅ Module System: Pure ESM - NO CommonJS (require, module.exports)',
+          '✅ Modern JS: Full support for import.meta.url, top-level await',
+          '🔍 Detection: Search for jest, ts-jest, jest.config - all violations',
+          '🔧 Fix Pattern: Replace with vitest, vitest.config.ts',
+          '📊 RAG Queries: "test framework" → finds this topic',
+          '📊 RAG Queries: "vitest jest" → finds this topic',
+          '⚠️ Context Window Risk: Assuming Jest is allowed → BANNED',
+          '✅ Forcing Function: Query "tech stack" BEFORE adding dependencies'
+        ],
+        verificationChecklist: [
+          'Read docs/tech-stack.md completely',
+          'Understands Jest is BANNED - no exceptions',
+          'Knows correct import: import { describe, it, expect } from \'vitest\'',
+          'Can identify Jest violations (jest, ts-jest, jest.config)',
+          'Understands why Vitest: ESM-native, TypeScript-first, modern',
+          'Knows project uses pure ESM - no CommonJS',
+          'Understands Web4TSComponent architecture',
+          'Will query "tech stack" before adding new dependencies',
+          'Will check docs/tech-stack.md for approved technologies',
+          'Can explain to next agent why Jest is banned'
+        ]
+      },
+      'test-workflow': {
         title: '🧪 How to Test Workflow: Semantic Versioning and Test Iteration',
         description: 'Master the test workflow: latest → test → dev → prod with auto-promotion and test iteration',
         requiredReading: [
@@ -2859,7 +3105,7 @@ export class DefaultPDCA implements PDCA {
           'Understands that `pdca test` manages symlinks but does not commit'
         ]
       },
-      'how-to-test-without-versioning': {
+      'test-without-versioning': {
         title: '🧪 How to Test Without Versioning: Baseline Verification',
         description: 'Learn to run tests without triggering version creation: test itCase for discovery, specific tests for verification, direct vitest for baseline',
         requiredReading: [
@@ -2906,7 +3152,7 @@ export class DefaultPDCA implements PDCA {
           'Understands baseline truth testing for CMM3 verification'
         ]
       },
-      'how-to-test-first': {
+      'test-first': {
         title: '🧪 How to Test-First Verification: Trust Tests, Avoid Manual Verification',
         description: 'Master the test-first pattern: Write tests first, trust them to show pass/fail, avoid manual verification loops',
         requiredReading: [
@@ -2948,7 +3194,7 @@ export class DefaultPDCA implements PDCA {
           'Stops after showing test results, waits for user direction'
         ]
       },
-      'how-to-interpret-instructions': {
+      'interpret-instructions': {
         title: '🎯 How to Interpret Instructions: Literal vs Implied Actions',
         description: 'Master the art of parsing user instructions to understand exactly what\'s requested vs what\'s assumed',
         requiredReading: [
@@ -2985,7 +3231,7 @@ export class DefaultPDCA implements PDCA {
           'Knows when to ask vs assume'
         ]
       },
-      'how-to-collaborate': {
+      'collaborate': {
         title: '🤝 How to Collaborate: User-in-the-Loop CMM4 Pattern',
         description: 'Understand CMM4 collaboration where user controls the loop and agent enables execution',
         requiredReading: [
@@ -3026,7 +3272,7 @@ export class DefaultPDCA implements PDCA {
           'Waits for user decision at feedback points'
         ]
       },
-      'how-to-chat-response': {
+      'chat-response': {
         title: '💬 How to Chat Response: CMM3 Compliance for Agent Replies',
         description: 'Master the art of chat responses - links only, no explanatory text, proper dual link format',
         requiredReading: [
@@ -3061,7 +3307,7 @@ export class DefaultPDCA implements PDCA {
           'Can generate project-root-relative paths'
         ]
       },
-      'how-to-report': {
+      'report': {
         title: '📊 How to Report: Concise Task Completion Without Summary Generation',
         description: 'Master concise reporting - avoid elaborate summaries (context window symptom), query RAG first, follow CMM3 format',
         requiredReading: [
@@ -3109,7 +3355,7 @@ export class DefaultPDCA implements PDCA {
           'Knows to query RAG when NOT feeling uncertain (paradox)'
         ]
       },
-      'how-to-license-headers': {
+      'license-headers': {
         title: '📄 How to License Headers: AI-GPL License Management',
         description: 'Master license header management - why headers matter, how to use licensetool, when to run checks',
         requiredReading: [
@@ -3169,7 +3415,7 @@ export class DefaultPDCA implements PDCA {
           'Recognizes process artifacts vs regular files'
         ]
       },
-      'how-to-decide': {
+      'decide': {
         title: '⚖️ How to Decide: QA Decision Framework for PDCAs',
         description: 'Master the art of presenting QA decisions - when to ask, what to ask, how to format decisions properly',
         requiredReading: [
@@ -3275,7 +3521,7 @@ export class DefaultPDCA implements PDCA {
    * @param topic Optional: limit search to specific topic
    * @cliSyntax query topic
    * @cliDefault topic ""
-   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-feature-development how-to-web4-vs-nodejs how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-merge how-to-interpret-instructions how-to-collaborate how-to-chat-response how-to-report how-to-license-headers
+   * @cliValues topic start pdca cmm component feature-development web4-vs-nodejs test-workflow test-first dual-links ensure-links component-upgrade merge interpret-instructions collaborate chat-response report license-headers
    */
   async queryTrainAI(query: string, topic: string = ''): Promise<this> {
     console.log(`\n🔍 trainAI Query Results\n`);

@@ -1060,6 +1060,90 @@ Standards:
    * @param targetVersion Version to isolate (NOT this.model.version!)
    * @cliHide
    */
+  /**
+   * Version-specific hacks for 0.3.13.x templates
+   * Injects PS1 prompt, PROJECT_ROOT override, and completion registration
+   * into old source.env templates that lack test isolation awareness
+   * 
+   * @param sourceEnvContent Original source.env content from old template
+   * @param componentName Component name for PS1 display
+   * @param componentVersion Version for PS1 display
+   * @param cliName CLI name for completion registration
+   * @returns Modified source.env content with hacks applied
+   */
+  private async v0313xHack(
+    sourceEnvContent: string, 
+    componentName: string, 
+    componentVersion: string, 
+    cliName: string
+  ): Promise<string> {
+    let modifiedContent = sourceEnvContent;
+    
+    // Fix 1: Replace WEB4_PROJECT_ROOT to use pwd (test/data) instead of git root
+    if (!modifiedContent.includes('test/data')) {
+      // Old template - replace the git rev-parse line with pwd
+      modifiedContent = modifiedContent.replace(
+        /export WEB4_PROJECT_ROOT="\$\(git rev-parse --show-toplevel.*?\)"/,
+        '# PIGGY HACK: Override for test isolation (was: git rev-parse --show-toplevel)\nexport WEB4_PROJECT_ROOT="$(pwd)"'
+      );
+      console.log(`   🔧 Replaced PROJECT_ROOT with pwd for test isolation`);
+      
+      // Also add ISOLATED PS1 prompt for old templates (they don't have it)
+      modifiedContent = modifiedContent.replace(
+        /(export PS1=".*?")/,
+        '# PIGGY HACK: Override PS1 for test isolation visibility\nexport PS1="\\[\\033[1;36m\\][ISOLATED web4 ' + componentName + '/' + componentVersion + ']\\[\\033[0m\\] \\[\\033[1;33m\\]\\w\\[\\033[0m\\] > "'
+      );
+      console.log(`   🔧 Added ISOLATED PS1 prompt for visibility`);
+    }
+    
+    // Fix 2: Inject completion registration
+    // Detect which completion function to use based on template version
+    let completionHack = '';
+    
+    if (modifiedContent.includes('_web4_tscompletion')) {
+      // Old template - need to CREATE the per-CLI function AND register it
+      completionHack = `
+# PIGGY HARDCODE (test isolation only): Force completion registration
+# Normal auto-discovery expects symlinks, but isolated CLI is direct Node wrapper
+# Old template uses _web4_tscompletion, so we need to create the wrapper function
+eval "_${cliName}_completion() { _web4_tscompletion '${componentName}' '${cliName}'; }"
+complete -F _${cliName}_completion -o nospace ${cliName}
+echo "✅ Tab completion registered for: ${cliName} (isolated)"
+`;
+    } else {
+      // New template - uses generic _web4_generic_completion
+      completionHack = `
+# PIGGY HARDCODE (test isolation only): Force completion registration
+# Normal auto-discovery expects symlinks, but isolated CLI is direct Node wrapper
+complete -F _web4_generic_completion -o nospace ${cliName}
+echo "✅ Tab completion registered for: ${cliName} (isolated)"
+`;
+    }
+    
+    // Try to inject after the test isolation PS1 block (new template)
+    if (modifiedContent.includes('export PS1=') && modifiedContent.includes('test_component')) {
+      modifiedContent = modifiedContent.replace(
+        /(export PS1=.*?\n)(    fi\n)/,
+        `$1        ${completionHack}$2`
+      );
+      console.log(`   ✅ Applied v0313x hack (isolated completion after PS1)`);
+    } 
+    // Try to inject after _web4_register_completions (old template)
+    else if (modifiedContent.includes('_web4_register_completions')) {
+      modifiedContent = modifiedContent.replace(
+        /(_web4_register_completions\n)/,
+        `$1\n${completionHack}\n`
+      );
+      console.log(`   ✅ Applied v0313x hack (isolated completion after registration)`);
+    }
+    // No safe injection point - use as-is
+    else {
+      console.log(`   ⚠️  v0313x hack: no completion injection point found`);
+    }
+    
+    return modifiedContent;
+  }
+
   private async initTestIsolationEnvironment(testDataPath: string, targetComponent: string, targetVersion: string): Promise<this> {
     // Path is already absolute (converted by bash wrapper)
     const absoluteTestDataPath = testDataPath;
@@ -1102,75 +1186,12 @@ Standards:
       console.log(`   📜 Using current template (${componentVersion} has no template)`);
     }
     
-    // 1b. PIGGY HACK: Inject fixes for test isolation in old templates
-    // Old templates don't have test isolation awareness, so we need to inject it
-    
-    // Fix 1: Replace WEB4_PROJECT_ROOT to use pwd (test/data) instead of git root
-    if (!sourceEnvContent.includes('test/data')) {
-      // Old template - replace the git rev-parse line with pwd
-      sourceEnvContent = sourceEnvContent.replace(
-        /export WEB4_PROJECT_ROOT="\$\(git rev-parse --show-toplevel.*?\)"/,
-        '# PIGGY HACK: Override for test isolation (was: git rev-parse --show-toplevel)\nexport WEB4_PROJECT_ROOT="$(pwd)"'
-      );
-      console.log(`   🔧 Replaced PROJECT_ROOT with pwd for test isolation`);
-      
-      // Also add ISOLATED PS1 prompt for old templates (they don't have it)
-      sourceEnvContent = sourceEnvContent.replace(
-        /(export PS1=".*?")/,
-        '# PIGGY HACK: Override PS1 for test isolation visibility\nexport PS1="\\[\\033[1;36m\\][ISOLATED web4 ' + componentName + '/' + componentVersion + ']\\[\\033[0m\\] \\[\\033[1;33m\\]\\w\\[\\033[0m\\] > "'
-      );
-      console.log(`   🔧 Added ISOLATED PS1 prompt for visibility`);
-    }
+    // Apply version-specific hacks for old templates
+    sourceEnvContent = await this.v0313xHack(sourceEnvContent, componentName, componentVersion, cliName);
     
     await fs.writeFile(sourceEnvPath, sourceEnvContent);
     await fs.chmod(sourceEnvPath, 0o755);
-    
-    // Fix 2: Inject completion registration
-    // Detect which completion function to use based on template version
-    let completionHack = '';
-    
-    if (sourceEnvContent.includes('_web4_tscompletion')) {
-      // Old template - need to CREATE the per-CLI function AND register it
-      completionHack = `
-# PIGGY HARDCODE (test isolation only): Force completion registration
-# Normal auto-discovery expects symlinks, but isolated CLI is direct Node wrapper
-# Old template uses _web4_tscompletion, so we need to create the wrapper function
-eval "_${cliName}_completion() { _web4_tscompletion '${componentName}' '${cliName}'; }"
-complete -F _${cliName}_completion -o nospace ${cliName}
-echo "✅ Tab completion registered for: ${cliName} (isolated)"
-`;
-    } else {
-      // New template - uses generic _web4_generic_completion
-      completionHack = `
-# PIGGY HARDCODE (test isolation only): Force completion registration
-# Normal auto-discovery expects symlinks, but isolated CLI is direct Node wrapper
-complete -F _web4_generic_completion -o nospace ${cliName}
-echo "✅ Tab completion registered for: ${cliName} (isolated)"
-`;
-    }
-    
-    // Try to inject after the test isolation PS1 block (new template)
-    if (sourceEnvContent.includes('export PS1=') && sourceEnvContent.includes('test_component')) {
-      const sourceEnvModified = sourceEnvContent.replace(
-        /(export PS1=.*?\n)(    fi\n)/,
-        `$1        ${completionHack}$2`
-      );
-      await fs.writeFile(sourceEnvPath, sourceEnvModified);
-      console.log(`   ✅ Created source.env (with isolated completion after PS1)`);
-    } 
-    // Try to inject after _web4_register_completions (old template)
-    else if (sourceEnvContent.includes('_web4_register_completions')) {
-      const sourceEnvModified = sourceEnvContent.replace(
-        /(_web4_register_completions\n)/,
-        `$1\n${completionHack}\n`
-      );
-      await fs.writeFile(sourceEnvPath, sourceEnvModified);
-      console.log(`   ✅ Created source.env (with isolated completion after registration)`);
-    }
-    // No safe injection point - use as-is
-    else {
-      console.log(`   ✅ Created source.env (no completion injection point found)`);
-    }
+    console.log(`   ✅ Created source.env`)
     
     // 2. Create package.json
     const packageJsonPath = path.join(absoluteTestDataPath, 'package.json');

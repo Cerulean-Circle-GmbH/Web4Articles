@@ -5,8 +5,6 @@
  */
 
 import { CLI } from '../layer3/CLI.interface.js';
-import { CLIModel } from '../layer3/CLIModel.interface.js';
-import { Scenario } from '../layer3/Scenario.interface.js';
 import { MethodInfo } from '../layer3/MethodInfo.interface.js';
 import { MethodSignature } from '../layer3/MethodSignature.interface.js';
 import { Component } from '../layer3/Component.interface.js';
@@ -14,12 +12,11 @@ import { Colors } from '../layer3/Colors.interface.js';
 import { TSCompletion } from '../layer4/TSCompletion.js';
 import { DefaultColors } from '../layer4/DefaultColors.js';
 import { readFileSync, existsSync, readdirSync } from 'fs';
-import { join, basename } from 'path';
+import { join } from 'path';
 import * as ts from 'typescript';
 import { webcrypto as crypto } from 'crypto';
 
 export abstract class DefaultCLI implements CLI {
-  protected model: CLIModel;
   protected componentClass: any;
   protected componentName: string = '';
   protected componentVersion: string = '';
@@ -28,45 +25,8 @@ export abstract class DefaultCLI implements CLI {
   protected colors: Colors = DefaultColors.getInstance();
   
   constructor() {
-    // Initialize with empty model - Web4 Scenario pattern
-    this.model = this.createEmptyModel();
+    // Empty constructor - Web4 pattern
     // NO component instantiation for usage display
-  }
-  
-  /**
-   * Create empty CLIModel with default values
-   * Web4 pattern: Initialize model structure in constructor
-   * @cliHide
-   */
-  protected createEmptyModel(): CLIModel {
-    return {
-      uuid: crypto.randomUUID(),
-      name: 'cli',
-      origin: 'system',
-      definition: 'CLI model',
-      componentClass: null,
-      componentName: '',
-      componentVersion: '',
-      componentInstance: null,
-      // Completion context - initialized empty
-      completionCliName: '',
-      completionCompWords: [],
-      completionCompCword: 0,
-      // Derived fields
-      completionCurrentWord: '',
-      completionPreviousWord: '',
-      completionCommand: null,
-      completionParameters: [],
-      completionParameterIndex: 0,
-      // "on" context
-      completionOnComponent: null,
-      completionOnVersion: null,
-      // Chaining
-      completionChainedCommands: [],
-      // State flags
-      completionIsCompletingMethod: false,
-      completionIsCompletingParameter: false
-    };
   }
   
   /**
@@ -90,144 +50,12 @@ export abstract class DefaultCLI implements CLI {
   }
   
   /**
-   * Initialize CLI with Scenario
-   * Web4 pattern: Components ALWAYS init with Scenario
-   * Merges incoming scenario model with existing model
-   * Pattern: DefaultWeb4TSComponent.ts:183-188
+   * Initialize CLI with component context (legacy - use initWithComponentClass)
    */
-  init(scenario: Scenario<CLIModel>): this {
-    // Merge incoming scenario model into existing model
-    this.model = {
-      ...this.model,
-      ...scenario.model
-    };
+  init(component: any): this {
+    // Legacy method - component instance initialization
+    this.componentInstance = component;
     return this;
-  }
-  
-  /**
-   * Compute derived completion fields from bash-provided compWords/compCword
-   * Web4 pattern: TypeScript owns all model logic, bash only provides raw data
-   * Pattern: completion-architecture-oop.md:426-456
-   * @cliHide
-   */
-  protected computeDerivedCompletionFields(model: CLIModel): void {
-    const words = model.completionCompWords;
-    const cword = model.completionCompCword;
-    
-    // Derived from bash data
-    model.completionCurrentWord = words[cword] || "";
-    model.completionPreviousWord = words[cword - 1] || "";
-    
-    // Parse command (word at index 1 if cword > 1, meaning we're past the command)
-    model.completionCommand = cword > 1 && words[1] ? words[1] : null;
-    
-    // Parse parameters (words from index 2 to cword-1)
-    model.completionParameters = cword > 2 ? words.slice(2, cword) : [];
-    model.completionParameterIndex = Math.max(0, cword - 2);
-    
-    // Detect "on" context
-    const onIndex = words.indexOf("on");
-    if (onIndex >= 0 && onIndex + 2 < words.length) {
-      model.completionOnComponent = words[onIndex + 1];
-      model.completionOnVersion = words[onIndex + 2];
-    }
-    
-    // Detect chained commands (TODO: implement chaining detection)
-    model.completionChainedCommands = [];
-    
-    // Set state flags
-    model.completionIsCompletingMethod = cword === 1;
-    model.completionIsCompletingParameter = cword > 1;
-  }
-  
-  /**
-   * Get valid completion values based on model state
-   * Web4 pattern: Model-driven logic replaces functional callbacks
-   * DRY: Single method to get values, no duplicate callback execution
-   * Pattern: completion-architecture-oop.md:570-574
-   * @cliHide
-   */
-  protected async getValidCompletionValues(): Promise<string[]> {
-    if (this.model.completionIsCompletingMethod) {
-      // Completing method name - use completionNameParameterCompletion for consistent formatting
-      // This provides numbered list, color coding, and parameter signatures
-      const filter = this.model.completionCurrentWord || '';
-      return await this.completionNameParameterCompletion(['completion', 'method', filter]);
-    } else if (this.model.completionIsCompletingParameter) {
-      // Completing parameter - delegate to existing completeParameter logic
-      // This reuses existing parameter completion callbacks dynamically
-      return this.getParameterCompletionValues();
-    }
-    return [];
-  }
-  
-  /**
-   * Get parameter completion values using existing callback system
-   * Bridges model-driven approach with existing TSCompletion utilities
-   * @cliHide
-   */
-  protected getParameterCompletionValues(): string[] {
-    const command = this.model.completionCommand;
-    if (!command) return [];
-    
-    const signature = this.methodSignatures.get(command);
-    if (!signature) return [];
-    
-    const paramIndex = this.model.completionParameterIndex;
-    
-    // Use TSCompletion to get parameter information
-    const componentPath = this.componentClass ? this.getComponentFilePath() : null;
-    
-    if (!componentPath) return [];
-    
-    try {
-      const params = TSCompletion.getEnhancedMethodParameters(componentPath, command);
-      if (paramIndex >= params.length) return [];
-      
-      const param = params[paramIndex];
-      const callback = param.callback;
-      
-      if (!callback || typeof (this as any)[callback] !== 'function') {
-        return [];
-      }
-      
-      // Execute callback with current filter
-      const result = (this as any)[callback](
-        command,
-        this.model.completionCurrentWord
-      );
-      
-      // Handle both array and string results
-      if (Array.isArray(result)) {
-        return result;
-      } else if (typeof result === 'string') {
-        return result.split('\n').filter(line => line.trim());
-      }
-    } catch (error) {
-      console.error(`Error getting parameter completion:`, error);
-    }
-    
-    return [];
-  }
-  
-  /**
-   * Get component file path for TSCompletion
-   * @cliHide
-   */
-  protected getComponentFilePath(): string | null {
-    try {
-      const web4ts = this.getWeb4TS();
-      const context = web4ts.getComponentContext();
-      
-      if (context) {
-        const componentPath = web4ts.resolveComponentPath(context.component, context.version);
-        return join(componentPath, 'src/ts/layer2', `Default${context.component}.ts`);
-      }
-    } catch (error) {
-      // Fallback: try to find component file in current directory structure
-    }
-    
-    return null;
   }
   
   /**
@@ -375,29 +203,6 @@ export abstract class DefaultCLI implements CLI {
     // Dynamic argument validation with overload support
     const minArgs = this.getMinimumArguments(command);
     if (args.length < minArgs) {
-      // Before failing, check if TSCompletion has a callback for the first missing parameter
-      // This enables tab completion to work: web4tscomponent completion <TAB>
-      const paramIndex = args.length; // Index of first missing parameter
-      
-      // Debug: log what we're checking
-      console.error(`DEBUG: Checking callback for command="${command}" paramIndex=${paramIndex}`);
-      
-      // Check DefaultCLI first (where most completion callbacks live), then component class
-      let callback = TSCompletion.getParameterCallback('DefaultCLI', command, paramIndex);
-      console.error(`DEBUG: DefaultCLI callback="${callback}"`);
-      
-      if (!callback) {
-        callback = TSCompletion.getParameterCallback(this.componentClass.name, command, paramIndex);
-        console.error(`DEBUG: ${this.componentClass.name} callback="${callback}"`);
-      }
-      
-      if (callback) {
-        // Return callback marker for bash completion to trigger
-        console.log(`WORD: __CALLBACK__:${callback}`);
-        return true;
-      }
-      
-      // No callback available - validation fails
       throw new Error(`At least ${minArgs} arguments required for ${command} command`);
     }
 
@@ -1346,13 +1151,15 @@ export abstract class DefaultCLI implements CLI {
    * Web4 pattern: Default value detection for enhanced optional syntax
    */
   private extractDefaultValue(param: any, methodName?: string): string | null {
-    // ✅ PRIORITY 1: Check TypeScript signature default (already extracted by TSCompletion)
-    // This is the ONLY source for explicit defaults - TypeScript native syntax
-    if (param.default !== undefined && param.default !== null) {
-      return param.default;
+    // ✅ ZERO CONFIG: Check for @cliDefault annotation
+    if (methodName) {
+      const cliAnnotations = TSCompletion.extractCliAnnotations(this.componentClass.name, methodName, param.name);
+      if (cliAnnotations.default) {
+        return cliAnnotations.default;
+      }
     }
     
-    // ✅ PRIORITY 2: Convention-based defaults for common parameter types
+    // ✅ CONVENTION: Common default values based on parameter type
     const description = param.description || '';
     
     if (description.includes('boolean')) {
@@ -1396,33 +1203,35 @@ export abstract class DefaultCLI implements CLI {
 
   /**
    * Generate structured usage output with unified Commands section
-   * STREAMING: Output sections immediately instead of buffering
    */
   public generateStructuredUsage(): string {
     const colors = this.colors;
     const componentName = this.getComponentName();
     const version = this.getComponentVersion();
     
-    // Header section - output immediately
-    console.log(`${colors.toolName}Web4 ${componentName} CLI Tool${colors.reset} v${colors.version}${version}${colors.reset} - Dynamic Method Discovery with Structured Documentation\n`);
+    let output = '';
     
-    // Commands section - output immediately
-    console.log(this.assembleUnifiedCommandsSection());
+    // Header section - ensure unit is cyan
+    output += `${colors.toolName}Web4 ${componentName} CLI Tool${colors.reset} v${colors.version}${version}${colors.reset} - Dynamic Method Discovery with Structured Documentation\n\n`;
     
-    // Parameters section - output immediately
-    console.log(this.assembleParameterSection());
+    // Unified Commands section (replaces Usage + Commands)
+    output += this.assembleUnifiedCommandsSection();
+    output += '\n';
     
-    // Examples section - output immediately
-    console.log(this.assembleExampleSection());
+    // Parameters section
+    output += this.assembleParameterSection();
+    output += '\n';
     
-    // Integration section - output immediately
-    console.log(`${colors.sections}Web4 Integration:${colors.reset}`);
-    console.log(`  ${colors.descriptions}${componentName} operates as atomic Web4 element with dynamic CLI documentation.${colors.reset}`);
-    console.log(`  ${colors.descriptions}Commands automatically discovered from component methods with structured formatting.${colors.reset}`);
-    console.log(`  ${colors.descriptions}TSCompletion color coding and professional documentation generation.${colors.reset}`);
+    // Examples section
+    output += this.assembleExampleSection();
     
-    // Return empty string since we've already output everything
-    return '';
+    // Integration section
+    output += `${colors.sections}Web4 Integration:${colors.reset}\n`;
+    output += `  ${colors.descriptions}${componentName} operates as atomic Web4 element with dynamic CLI documentation.${colors.reset}\n`;
+    output += `  ${colors.descriptions}Commands automatically discovered from component methods with structured formatting.${colors.reset}\n`;
+    output += `  ${colors.descriptions}TSCompletion color coding and professional documentation generation.${colors.reset}\n`;
+    
+    return output;
   }
 
   /**
@@ -1487,198 +1296,6 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
-   * Get default completion Scenario for bash
-   * CLI understands command line context and tells TSCompletion what to complete
-   * @cliHide
-   */
-  async getCompletionScenario(): Promise<void> {
-    // Use this.model which already has componentName, componentVersion from constructor
-    const componentName = this.componentName;
-    const componentVersion = this.componentVersion;
-    
-    // Get owner data (simplified - no User dependency for now)
-    const ownerData = JSON.stringify({
-      user: process.env.USER || 'system',
-      hostname: process.env.HOSTNAME || 'localhost',
-      uuid: this.model.uuid,
-      timestamp: new Date().toISOString(),
-      component: componentName,
-      version: componentVersion
-    });
-    
-    // Create default Scenario with complete CLIModel
-    const scenario = {
-      ior: {
-        uuid: this.model.uuid,
-        component: componentName,
-        version: componentVersion
-      },
-      owner: ownerData,
-      model: {
-        uuid: this.model.uuid,
-        name: 'cli',
-        origin: 'bash-completion',
-        definition: `CLI for ${componentName}`,
-        
-        // Component identity
-        componentClass: null,
-        componentName: componentName,
-        componentVersion: componentVersion,
-        componentInstance: null,
-        
-        // Completion context fields (bash will modify these)
-        completionCliName: '',
-        completionCompWords: [],
-        completionCompCword: 0,
-        
-        // Derived completion state (computed from above)
-        completionCurrentWord: '',
-        completionPreviousWord: '',
-        completionCommand: null,
-        completionParameters: [],
-        completionParameterIndex: 0,
-        
-        completionOnComponent: null,
-        completionOnVersion: null,
-        
-        completionChainedCommands: [],
-        
-        completionIsCompletingMethod: false,
-        completionIsCompletingParameter: false
-      }
-    };
-    
-    // Output as JSON for bash
-    console.log(JSON.stringify(scenario, null, 2));
-  }
-
-  /**
-   * Shell completion with direct parameter passing
-   * Simplexity: The highest art of complexity is simplicity
-   * 
-   * Web4 Pattern:
-   * - Model already exists (created in constructor via createEmptyModel)
-   * - Just update fields, reuse existing DRY methods
-   * - No JSON serialization, no Scenario dance, no ENV vars!
-   * 
-   * @param cword - COMP_CWORD from bash (current word index)
-   * @param words - COMP_WORDS from bash (all words in command line)
-   * @cliHide
-   */
-  async shCompletion(cword: string, ...words: string[]): Promise<void> {
-    // Update model directly (MODEL-DRIVEN!)
-    this.model.completionCompCword = parseInt(cword, 10);
-    this.model.completionCompWords = words;
-    this.model.completionCliName = words[0] || 'cli';  // First word is CLI name
-    
-    // Derive all other fields (DRY - reuse existing method!)
-    this.computeDerivedCompletionFields(this.model);
-    
-    // Get and output completions (DRY - reuse existing methods!)
-    const values = await this.getValidCompletionValues();
-    
-    // Format output using MODEL data (no commandContext needed!)
-    this.formatCompletionOutput(values);
-  }
-
-  /**
-   * Format completion values with DISPLAY/WORD protocol
-   * Handles both simple arrays and complex formatted output
-   * DRY helper used by completeParameter and future completion methods
-   * @param values Array of completion values/lines
-   * @cliHide
-   */
-  protected formatCompletionOutput(values: string[]): void {
-    const lines: string[] = [];
-    
-    // Detect complex format (numbered lines like "1: methodName <params>")
-    const hasNumberedRefs = values.some((v: string) => v.match(/^\d+:/));
-    const hasSpaces = values.some((v: string) => v.includes(' '));
-    
-    if (hasNumberedRefs || hasSpaces) {
-      // Complex format: numbered method list or formatted text
-      // Add DISPLAY lines (user-visible formatted output with ANSI colors)
-      // Split on embedded \n first (for multi-line documentation)
-      values.forEach((value: string) => {
-        value.split('\n').forEach((line: string) => {
-          lines.push(`DISPLAY: ${line}`);
-        });
-      });
-      
-      // Add colored prompt echo using MODEL data (Simplexity!)
-      if (this.model.completionCliName && this.model.completionCompWords.length > 0) {
-        // Prompt colors: "your web4 command >"
-        const promptWhite = '\x1b[37m';
-        const promptCyan = '\x1b[36m';
-        const reset = '\x1b[0m';
-        
-        // TSCompletion colors for command parts
-        const toolName = '\x1b[1;36m';      // Cyan bold for CLI name
-        const commands = '\x1b[0;37m';      // White for method names
-        const parameters = '\x1b[1;33m';    // Yellow bold for parameters
-        
-        // Build colored command from MODEL (DRY!)
-        const words = this.model.completionCompWords;
-        let coloredCommand = '';
-        
-        if (words.length > 0) {
-          // First word: CLI name (cyan bold)
-          coloredCommand = `${toolName}${words[0]}${reset}`;
-          
-          if (words.length > 1) {
-            // Second word: method name (white)
-            coloredCommand += ` ${commands}${words[1]}${reset}`;
-            
-            // Remaining words: parameters (yellow bold)
-            if (words.length > 2) {
-              const params = words.slice(2).join(' ');
-              coloredCommand += ` ${parameters}${params}${reset}`;
-            }
-          }
-        }
-        
-        // Format: "your web4 command >" with colored command
-        const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
-        lines.push(`DISPLAY: `);
-        lines.push(`DISPLAY: ${prompt}`);
-      }
-      
-      // Extract method names/words and add WORD lines (for bash compgen)
-      // CRITICAL: Strip ANSI codes before extracting words!
-      values.forEach((line: string) => {
-        // Strip ANSI escape codes: \x1b[...m
-        const cleanLine = line.replace(/\x1b\[[0-9;]*m/g, '');
-        
-        // Extract word: "1: methodName <params>" -> "methodName" OR "1: <?action>" -> "action"
-        const match = cleanLine.match(/^\d+:\s*(\S+)/);
-        let word = match ? match[1] : cleanLine.split(' ')[0];
-        
-        // Strip parameter syntax if present: <?action> -> action, <what> -> what
-        const paramMatch = word.match(/^<\??([^>:'"]+)/);
-        if (paramMatch) {
-          word = paramMatch[1];
-        }
-        
-        lines.push(`WORD: ${word}`);
-      });
-    } else {
-      // Simple format: plain words like ['dev', 'latest', 'prod'] OR parameter syntax like ['<?action>', '<what>']
-      // Extract naked names for WORD lines
-      values.forEach((value: string) => {
-        // Strip parameter syntax: <?action:'default'> -> action, <what> -> what
-        const cleanValue = value.replace(/\x1b\[[0-9;]*m/g, ''); // Strip ANSI first
-        // Match: <word>, <?word>, <?word:'default'>, <?word:"default">
-        const paramMatch = cleanValue.match(/^<\??([^>:'"]+)/);
-        const word = paramMatch ? paramMatch[1] : cleanValue;
-        lines.push(`WORD: ${word}`);
-      });
-    }
-    
-    // ONE console.log for entire block (efficient!)
-    console.log(lines.join('\n'));
-  }
-
-  /**
    * Execute parameter completion callback for dynamic tab completion
    * Called by bash completion when TSCompletion returns __CALLBACK__:methodName
    * Web4 pattern: Hidden via @cliHide, not via naming convention
@@ -1690,9 +1307,20 @@ export abstract class DefaultCLI implements CLI {
       // Pass context args to completion method (e.g., ['on', 'ComponentName'] for versionParameterCompletion)
       const values = await (this as any)[callbackName](contextArgs);
       
-      // Use DRY helper to format output with DISPLAY/WORD protocol
-      // Model already has completion context from bash
-      this.formatCompletionOutput(values);
+      // Smart Join (OOSH-inspired, matching TSCompletion.start() logic):
+      // If values contain numbered references (e.g. "1:filename") or any item with spaces,
+      // join with NEWLINES to trigger bash line-based completion (preserves spaces).
+      // Otherwise join with SPACES for backward compatibility (standard single-word completion).
+      const hasNumberedRefs = values.some((v: string) => v.match(/^\d+:/));
+      const hasSpaces = values.some((v: string) => v.includes(' '));
+      
+      if (hasNumberedRefs || hasSpaces) {
+        // Multi-LINE mode: each value on its own line
+        console.log(values.join('\n'));
+      } else {
+        // Multi-WORD mode: space-separated for compgen -W (no trailing newline)
+        process.stdout.write(values.join(' '));
+      }
     } else {
       // Callback not found - return empty (no completions)
       console.log('');
@@ -1987,14 +1615,11 @@ export abstract class DefaultCLI implements CLI {
             signature = `${methodColor}${methodName}${RESET} ${BRIGHT_YELLOW}${paramList}${RESET}`;
           }
           
-          // Return: ONE string with embedded newlines for semantic structure
-          // formatCompletionOutput adds DISPLAY: prefix, bash printf handles \n
-          const separator = `${BRIGHT_CYAN}${'─'.repeat(60)}${RESET}`;
-          const header = `${BRIGHT_WHITE_BOLD}📖 Documentation:${RESET}`;
+          // Return: full signature + separator + green doc + double newline
+          const separator = `\n${BRIGHT_CYAN}${'─'.repeat(60)}${RESET}\n`;
+          const header = `${BRIGHT_WHITE_BOLD}📖 Documentation:${RESET}\n`;
           const greenDoc = `${GREEN}${fullMethodDoc}${RESET}`;
-          
-          // Single string with \n - preserves semantic structure without artificial array splits
-          return [`${signature}\n${separator}\n${header}\n${greenDoc}\n`];
+          return [signature + separator + header + greenDoc + '\n\n'];
         }
         
         return [methodName];  // Plain method name for bash completion
