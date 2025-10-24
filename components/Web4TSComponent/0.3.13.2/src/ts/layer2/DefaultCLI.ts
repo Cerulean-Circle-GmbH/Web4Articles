@@ -1203,35 +1203,33 @@ export abstract class DefaultCLI implements CLI {
 
   /**
    * Generate structured usage output with unified Commands section
+   * STREAMING: Output sections immediately instead of buffering
    */
   public generateStructuredUsage(): string {
     const colors = this.colors;
     const componentName = this.getComponentName();
     const version = this.getComponentVersion();
     
-    let output = '';
+    // Header section - output immediately
+    console.log(`${colors.toolName}Web4 ${componentName} CLI Tool${colors.reset} v${colors.version}${version}${colors.reset} - Dynamic Method Discovery with Structured Documentation\n`);
     
-    // Header section - ensure unit is cyan
-    output += `${colors.toolName}Web4 ${componentName} CLI Tool${colors.reset} v${colors.version}${version}${colors.reset} - Dynamic Method Discovery with Structured Documentation\n\n`;
+    // Commands section - output immediately
+    console.log(this.assembleUnifiedCommandsSection());
     
-    // Unified Commands section (replaces Usage + Commands)
-    output += this.assembleUnifiedCommandsSection();
-    output += '\n';
+    // Parameters section - output immediately
+    console.log(this.assembleParameterSection());
     
-    // Parameters section
-    output += this.assembleParameterSection();
-    output += '\n';
+    // Examples section - output immediately
+    console.log(this.assembleExampleSection());
     
-    // Examples section
-    output += this.assembleExampleSection();
+    // Integration section - output immediately
+    console.log(`${colors.sections}Web4 Integration:${colors.reset}`);
+    console.log(`  ${colors.descriptions}${componentName} operates as atomic Web4 element with dynamic CLI documentation.${colors.reset}`);
+    console.log(`  ${colors.descriptions}Commands automatically discovered from component methods with structured formatting.${colors.reset}`);
+    console.log(`  ${colors.descriptions}TSCompletion color coding and professional documentation generation.${colors.reset}`);
     
-    // Integration section
-    output += `${colors.sections}Web4 Integration:${colors.reset}\n`;
-    output += `  ${colors.descriptions}${componentName} operates as atomic Web4 element with dynamic CLI documentation.${colors.reset}\n`;
-    output += `  ${colors.descriptions}Commands automatically discovered from component methods with structured formatting.${colors.reset}\n`;
-    output += `  ${colors.descriptions}TSCompletion color coding and professional documentation generation.${colors.reset}\n`;
-    
-    return output;
+    // Return empty string since we've already output everything
+    return '';
   }
 
   /**
