@@ -146,33 +146,9 @@ export class Web4TSComponentCLI extends DefaultCLI {
       throw new Error(`At least ${minArgs} arguments required for ${command} command`);
     }
     
-    // Check if parameters have valid values by attempting to get callback
-    // If callback exists, validate the provided value
-    // This handles: web4tscomponent completion m<TAB> where "m" is invalid
-    // ONLY for completion command (other commands let bash filter method names)
-    // @deprecated Legacy validation - Scenario-based completion handles this in model
-    if (command === 'completion' && signature.paramCount > 0) {
-      for (let i = 0; i < nonEmptyArgs.length && i < signature.paramCount; i++) {
-        const callback = TSCompletion.getParameterCallback('DefaultWeb4TSComponent', command, i) 
-                      || TSCompletion.getParameterCallback('DefaultCLI', command, i);
-        
-        if (callback) {
-          // Callback exists for this parameter - validate the value
-          // Call the callback to get valid values
-          const validValues = await this.getCallbackValues(callback, command, nonEmptyArgs.slice(0, i));
-          
-          // If provided value doesn't match any valid value, trigger callback
-          const providedValue = nonEmptyArgs[i];
-          const isValid = validValues.some(v => v === providedValue);
-          
-          if (!isValid) {
-            // Invalid value - trigger callback for completion
-            console.log(`WORD: __CALLBACK__:${callback}`);
-            return { executed: true, remainingArgs: [] };
-          }
-        }
-      }
-    }
+    // Removed: Legacy validation loop (lines 149-175)
+    // Rationale: CLIModel contains full completion state, validation is unnecessary
+    // With Scenario-based completion, TypeScript has all context needed for direct execution
 
     // Intelligently determine how many arguments this method consumes
     const consumedArgs = this.determineArgumentConsumption(command, args);
@@ -265,27 +241,9 @@ export class Web4TSComponentCLI extends DefaultCLI {
    * @deprecated Legacy functional approach - use model-driven getValidCompletionValues() instead
    * TODO: Remove after full migration to Scenario-based completion
    */
-  private async getCallbackValues(callbackName: string, command: string, contextArgs: string[]): Promise<string[]> {
-    try {
-      // Try CLI instance first
-      if (typeof (this as any)[callbackName] === 'function') {
-        const result = (this as any)[callbackName](contextArgs);
-        return Array.isArray(result) ? result : [];
-      }
-      
-      // Try component instance
-      const componentInstance = this.getOrCreateTSComponent();
-      if (typeof (componentInstance as any)[callbackName] === 'function') {
-        const result = (componentInstance as any)[callbackName](contextArgs);
-        return Array.isArray(result) ? result : [];
-      }
-      
-      return [];
-    } catch (error) {
-      // If callback fails, return empty array (will trigger callback in completion)
-      return [];
-    }
-  }
+  // Removed: getCallbackValues() method (lines 244-264)
+  // Rationale: Duplicates DefaultCLI.completeParameter() - DRY violation
+  // Use inherited completeParameter() method from DefaultCLI instead
 
   /**
    * Get maximum arguments for methods with default parameters
