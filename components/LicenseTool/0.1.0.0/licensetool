@@ -13,8 +13,6 @@
 # Copyleft: See AGPLv3 (../../../LICENSE) and AI-GPL Addendum (../../../AI-GPL.md)
 # Backlinks: /LICENSE, /AI-GPL.md
 
-#!/bin/bash
-
 # LicenseTool CLI Tool - Location Resilient Version
 # Web4 Architecture Standard - Self-Implementing Reference
 # Works from any directory via symlink resolution
