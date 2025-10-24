@@ -1163,8 +1163,9 @@ echo "✅ Tab completion registered for: ${cliName} (isolated)"
   ): Promise<string> {
     let modifiedContent = sourceEnvContent;
     
-    // PS1 hack for 0.3.15.x: Add ISOLATED prompt if not already present
-    if (!modifiedContent.includes('[ISOLATED web4')) {
+    // PS1 hack for 0.3.15.x: Replace shell variables with hardcoded values  
+    // Always replace PS1 to convert shell variables to hardcoded values
+    {
       // Replace existing PS1 export with ISOLATED version
       if (modifiedContent.includes('export PS1=')) {
         modifiedContent = modifiedContent.replace(
@@ -1280,7 +1281,7 @@ echo "✅ Tab completion registered for: ${cliName} (isolated)"
       console.log(`   🔍 Detected version 0.3.13.x - no hacks needed (handled by test isolation)`);
       return sourceEnvContent;
     } else if (versionKey.startsWith('0.3.15')) {
-      // For 0.3.15.x, we need to pass component/version/CLI parameters for proper hack application
+      // For 0.3.15.x, we need to pass component/version/CLI parameters for proper hack application  
       const componentName = this.model.component || 'Web4TSComponent';
       const cliName = 'web4tscomponent';
       return await this.v0315xHack(sourceEnvContent, componentName, version, cliName);

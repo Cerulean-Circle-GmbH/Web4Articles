@@ -2288,17 +2288,15 @@ exec node "${cliJsPath}" "$@"
     const testDataPath = path.join(componentPath, 'test', 'data');
     const sourceEnvPath = path.join(testDataPath, 'source.env');
     
-    // Check if test environment exists
-    if (!existsSync(testDataPath)) {
-      console.log(`❌ Test environment not found at: ${testDataPath}`);
-      console.log(`💡 Run 'web4tscomponent initProject' first to create test environment`);
-      throw new Error('Test environment does not exist');
-    }
-    
-    if (!existsSync(sourceEnvPath)) {
-      console.log(`❌ Test source.env not found at: ${sourceEnvPath}`);
-      console.log(`💡 Run 'web4tscomponent initProject' to initialize test environment`);
-      throw new Error('Test source.env does not exist');
+    // Check if test environment exists, if not, auto-initialize it
+    if (!existsSync(testDataPath) || !existsSync(sourceEnvPath)) {
+      console.log(`🔧 Test environment not ready, auto-initializing...`);
+      console.log(`   📂 Target: ${testDataPath}`);
+      
+      // Auto-initialize the test isolation environment
+      await this.initTestIsolationEnvironment(testDataPath, component, targetVersion);
+      
+      console.log(`✅ Test environment initialized successfully\n`);
     }
     
     console.log(`\n🧪 Test Shell for ${component} ${targetVersion}`);
