@@ -11,6 +11,7 @@ import { join, dirname } from 'path';
 
 // Use latest version for delegation (always available)
 import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js';
+import { DefaultColors } from '../../../../../Web4TSComponent/latest/dist/ts/layer4/DefaultColors.js';
 
 /**
  * Training topic definition - CMM3: Objective, Reproducible, Verifiable
@@ -31,6 +32,7 @@ export class DefaultPDCA implements PDCA {
   private model: PDCAModel;
   private web4ts?: any; // Lazy-initialized Web4TSComponent for delegation
   private defaultSession: string = 'scrum.pmo/project.journal/2025-10-14-UTC-0948-session'; // Default session path
+  private colors = DefaultColors.getInstance(); // DRY: Reuse Web4TSComponent colors
 
   constructor() {
     // Empty constructor - Web4 pattern
@@ -1559,7 +1561,7 @@ export class DefaultPDCA implements PDCA {
           
           // Check if second part is NOT a markdown link (missing brackets)
           if (!afterPipe.startsWith('[')) {
-            violations.push(`   Line ${lineNum + 1}: Missing brackets around local link\n      Detected: ${line.trim()}`);
+            violations.push(`   ${this.colors.red}Line ${lineNum + 1}: Missing brackets around local link${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}`);
             continue; // Skip further checks for this malformed link
           }
         }
@@ -1577,12 +1579,12 @@ export class DefaultPDCA implements PDCA {
           
           if (displayText.startsWith('/') && !displayText.startsWith('§/')) {
             // Absolute path without § notation
-            violations.push(`   Line ${lineNum + 1}: Absolute path without § notation\n      Detected: ${line.trim()}\n      Display text: ${displayText}`);
+            violations.push(`   ${this.colors.yellow}Line ${lineNum + 1}: Absolute path without § notation${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.dim}Display text:${this.colors.reset} ${displayText}`);
           }
           
           // Check if GitHub URL is valid
           if (!githubUrl.includes('github.com')) {
-            violations.push(`   Line ${lineNum + 1}: Invalid GitHub URL (missing github.com)\n      Detected: ${line.trim()}\n      URL: ${githubUrl}`);
+            violations.push(`   ${this.colors.red}Line ${lineNum + 1}: Invalid GitHub URL (missing github.com)${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.dim}URL:${this.colors.reset} ${githubUrl}`);
           }
           
           // NEW CHECKS: Validate paths and suggest fixes
@@ -1607,14 +1609,14 @@ export class DefaultPDCA implements PDCA {
             // Check if target file exists
             if (!existsSync(targetFilePath)) {
               const correctLink = await this.generateCorrectDualLink(displayPath, pdcaFilePath);
-              violations.push(`   Line ${lineNum + 1}: Local path does not exist\n      Detected: ${line.trim()}\n      Should Be: ${correctLink || '(file not found in project)'}`);
+              violations.push(`   ${this.colors.red}Line ${lineNum + 1}: Local path does not exist${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.green}Should Be:${this.colors.reset} ${correctLink || this.colors.dim + '(file not found in project)' + this.colors.reset}`);
             }
             
             // Check if display text matches actual path structure
             const targetRelativeToRoot = path.relative(projectRoot, targetFilePath);
             if (displayPath !== targetRelativeToRoot) {
               const correctLink = await this.generateCorrectDualLink(targetRelativeToRoot, pdcaFilePath);
-              violations.push(`   Line ${lineNum + 1}: Display text doesn't match actual path\n      Detected: ${line.trim()}\n      Should Be: ${correctLink || '(unable to generate)'}`);
+              violations.push(`   ${this.colors.yellow}Line ${lineNum + 1}: Display text doesn't match actual path${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.green}Should Be:${this.colors.reset} ${correctLink || this.colors.dim + '(unable to generate)' + this.colors.reset}`);
             }
           }
         }
