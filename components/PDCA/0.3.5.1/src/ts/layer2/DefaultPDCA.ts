@@ -42,6 +42,8 @@ export class DefaultPDCA implements PDCA {
       name: '',
       origin: '',
       definition: '',
+      component: '',
+      version: '',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -929,6 +931,37 @@ export class DefaultPDCA implements PDCA {
           'Knows to check all symlink targets for build artifacts'
         ],
         title: '🔀 How to Merge: Post-Merge Integration and Build Requirements'
+      },
+      'how-to-self-healing-patterns': {
+        keyLessons: [
+          '🔄 Self-Healing Pattern: Tool breaks files → Fix tool logic → Tool heals files',
+          '✅ Scalable: Fixes 400+ files automatically vs manual one-by-one',
+          '✅ Root Cause > Symptoms: Address why headers are wrong, not manually fix each file',
+          '🎯 Enhanced Detection: Check first 20 lines for shebang, not just line 1',
+          '🎯 Format Validation: hasValidHeader must check content AND format',
+          '🎯 Shebang Preservation: Extract → Remove → Process → Prepend pattern',
+          '🎯 Header Cleanup: Remove old/duplicate headers BEFORE inserting new',
+          '⚠️ File Persistence in WSL2/Docker: Use Node.js fs module, not Cursor tools',
+          '⚠️ Config Files: .gitmodules, package.json should NEVER have headers',
+          '✅ Test-First for Self-Healing: TC20 tests proved bug, proved fix, enabled automation',
+          '❌ Emergency Fixes Without Tests: Incomplete solutions, no verification',
+          '💡 User Paradigm Shift: "Can we not change the header template and execute apply?"',
+          '💡 This question unlocked self-healing approach',
+          '🎓 Meta-Pattern: When tool output is wrong, fix the tool, not the output'
+        ],
+        verificationChecklist: [
+          'Can identify when self-healing pattern applies (tool manages files)',
+          'Knows to check first N lines for patterns, not just line 1',
+          'Understands hasValidHeader needs format validation',
+          'Can implement shebang preservation pattern',
+          'Removes old headers before inserting new ones',
+          'Uses Node.js fs module for file operations in WSL2/Docker',
+          'Knows which files should never have headers',
+          'Writes tests BEFORE implementing self-healing logic',
+          'Can explain why emergency fixes are almost always wrong',
+          'Recognizes paradigm shift questions from users'
+        ],
+        title: '🔄 How to Self-Healing Patterns: Fix the Source, Not the Symptoms'
       }
     };
   }
@@ -1937,10 +1970,10 @@ export class DefaultPDCA implements PDCA {
    * Systematically transfers knowledge to ensure agents don't repeat CMM2 mistakes
    * Includes collaboration patterns, instruction interpretation, test-first verification, and zero-knowledge method usage
    * 
-   * @param topic Training topic identifier (e.g., "how-to-start", "how-to-pdca", "how-to-cmm", "how-to-component", "how-to-feature-development", "how-to-test-workflow", "how-to-test-first", "how-to-dual-links", "how-to-ensure-links", "how-to-component-upgrade", "how-to-interpret-instructions", "how-to-collaborate", "how-to-chat-response") or number (e.g., "1", "2", "3")
+   * @param topic Training topic identifier (e.g., "how-to-start", "how-to-pdca", "how-to-cmm", "how-to-component", "how-to-feature-development", "how-to-test-workflow", "how-to-test-first", "how-to-dual-links", "how-to-ensure-links", "how-to-component-upgrade", "how-to-interpret-instructions", "how-to-collaborate", "how-to-chat-response", "how-to-self-healing-patterns") or number (e.g., "1", "2", "3")
    * @param options Optional training configuration
    * @cliSyntax topic
-   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-feature-development how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-interpret-instructions how-to-collaborate how-to-chat-response 1 2 3 4 5 6 7 8 9 10 11 12 13
+   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-merge how-to-component how-to-feature-development how-to-web4-vs-nodejs how-to-test-workflow how-to-test-without-versioning how-to-test-first how-to-interpret-instructions how-to-collaborate how-to-chat-response how-to-report how-to-license-headers how-to-self-healing-patterns 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
    */
   async trainAI(topic: string): Promise<this> {
     console.log(`\n🎓 AI Training Module - CMM3 Reproducible Learning\n`);
@@ -1971,7 +2004,8 @@ export class DefaultPDCA implements PDCA {
       'how-to-collaborate',
       'how-to-chat-response',
       'how-to-report',
-      'how-to-license-headers'
+      'how-to-license-headers',
+      'how-to-self-healing-patterns'
     ];
 
     // Handle numeric input - map number to topic name
@@ -2171,7 +2205,12 @@ export class DefaultPDCA implements PDCA {
           '❌ NEVER assume all files are committed - VERIFY with git status',
           '🔄 RAG First: When uncertain, query trainAI before acting',
           '⚠️ Bootstrap Phase: Extra vigilance required - system being established (temporary)',
-          '🎯 Forcing Function: git status → commit all → push → THEN present link'
+          '🎯 Forcing Function: git status → commit all → push → THEN present link',
+          '🚨 ALWAYS use pdca getDualLink - NEVER manually construct',
+          '🚨 Even if you "know" the format - use the tool (zero-knowledge principle)',
+          '⚠️ Manual construction = CMM2 violation (assumes knowledge)',
+          '⚠️ Context window pressure makes you forget to use tools',
+          '✅ Tool usage = CMM3 (reproducible, verifiable, no assumptions)'
         ],
         verificationChecklist: [
           'Can write dual link format from memory',
@@ -2187,7 +2226,10 @@ export class DefaultPDCA implements PDCA {
           'Checks git status before presenting dual links',
           'Commits ALL uncommitted files, not just PDCA',
           'Queries trainAI when assumptions arise',
-          'Recognizes context window exhaustion symptoms'
+          'Recognizes context window exhaustion symptoms',
+          'Always uses pdca getDualLink instead of manual construction',
+          'Recognizes manual link construction as CMM2 violation',
+          'Can explain why tool usage is mandatory (zero-knowledge principle)'
         ]
       },
       'how-to-ensure-links': {
@@ -2634,7 +2676,13 @@ export class DefaultPDCA implements PDCA {
           '🚫 Never skip directly to fixing: Always run the test first to see the failure',
           '✨ Test-first enforces CMM3: Objective criteria (test assertions) over subjective judgment',
           '⚠️ Root cause: Efficiency bias → assumption cascade → skipping verification step',
-          '💡 When debugging: Write a test that reproduces the bug, then fix until test passes'
+          '💡 When debugging: Write a test that reproduces the bug, then fix until test passes',
+          '🚨 Emergency Fixes: Almost NEVER justified - leads to incomplete solutions',
+          '🚨 When NOT to skip tests: System-wide failures (still write tests first)',
+          '✅ Example: LicenseTool broke 400+ files → Still wrote TC20 tests first',
+          '✅ Test-First Even in "Emergencies": Proves bug exists, proves fix works',
+          '⚠️ Pressure to "just fix it" → Resist and write tests',
+          '🎓 Meta-Learning: Emergency fix without tests = incomplete fix = more work later'
         ],
         verificationChecklist: [
           'Can write a failing test before implementing a feature',
@@ -2646,7 +2694,10 @@ export class DefaultPDCA implements PDCA {
           'Understands why test-first is CMM3-compliant (objective criteria)',
           'Can explain why manual verification is CMM2 (subjective)',
           'Avoids over-implementation (doing more than requested)',
-          'Stops after showing test results, waits for user direction'
+          'Stops after showing test results, waits for user direction',
+          'Resists pressure to skip tests even in emergencies',
+          'Can write tests for system-wide failures',
+          'Understands why emergency fixes without tests fail'
         ]
       },
       'how-to-interpret-instructions': {
@@ -2855,7 +2906,14 @@ export class DefaultPDCA implements PDCA {
           '🎓 Dual-Licensing Model: Open-source (AGPLv3) + Commercial (AI use cases)',
           '🔄 Header Updates: Run licensetool apply after copyright year changes',
           '✨ Auto-Completion: Tab completion works for file paths and dryRun parameter',
-          '🧪 Test-First Pattern: 60 tests written before implementation (98.3% pass rate)'
+          '🧪 Test-First Pattern: 60 tests written before implementation (98.3% pass rate)',
+          '🔄 Self-Healing: If headers are wrong, fix LicenseTool logic, run apply',
+          '🔄 Enhanced Detection: Check first 20 lines for shebang (not just line 1)',
+          '🔄 Format Validation: hasValidHeader checks content AND format',
+          '🔄 Shebang Preservation: Extract → Remove → Process → Prepend',
+          '🔄 Header Cleanup: Remove all old/duplicate headers before inserting',
+          '⚠️ Exclusions: .gitmodules, package.json, *.lock files never get headers',
+          '🎯 Self-Healing Implementation: See how-to-self-healing-patterns'
         ],
         verificationChecklist: [
           'Can run licensetool check and interpret results',
@@ -2867,7 +2925,60 @@ export class DefaultPDCA implements PDCA {
           'Knows to check CI status after header changes',
           'Understands shebang conflicts with headers',
           'Can explain why headers use relative paths',
-          'Recognizes process artifacts vs regular files'
+          'Recognizes process artifacts vs regular files',
+          'Knows when to use self-healing approach (tool broke files)',
+          'Can implement enhanced detection strategies',
+          'Understands shebang preservation pattern',
+          'Knows which files should be excluded from licensing'
+        ]
+      },
+      'how-to-self-healing-patterns': {
+        title: '🔄 How to Self-Healing Patterns: Fix the Source, Not the Symptoms',
+        description: 'When automated tools break files they manage, fix the tool\'s logic and let it heal the damage',
+        requiredReading: [
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-24-UTC-0930.root-cause-file-modification-method.pdca.md',
+            reason: 'Breakthrough: Node.js fs module is the working method',
+            depth: 2
+          },
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-24-UTC-1130.fix-source-self-healing-approach.pdca.md',
+            reason: 'Complete self-healing implementation with test-first',
+            depth: 3
+          },
+          {
+            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-24-UTC-1105.emergency-fix-vs-test-first-evaluation.pdca.md',
+            reason: 'Why emergency fixes without tests fail',
+            depth: 2
+          }
+        ],
+        keyLessons: [
+          '🔄 Self-Healing Pattern: Tool breaks files → Fix tool logic → Tool heals files',
+          '✅ Scalable: Fixes 400+ files automatically vs manual one-by-one',
+          '✅ Root Cause > Symptoms: Address why headers are wrong, not manually fix each file',
+          '🎯 Enhanced Detection: Check first 20 lines for shebang, not just line 1',
+          '🎯 Format Validation: hasValidHeader must check content AND format',
+          '🎯 Shebang Preservation: Extract → Remove → Process → Prepend pattern',
+          '🎯 Header Cleanup: Remove old/duplicate headers BEFORE inserting new',
+          '⚠️ File Persistence in WSL2/Docker: Use Node.js fs module, not Cursor tools',
+          '⚠️ Config Files: .gitmodules, package.json should NEVER have headers',
+          '✅ Test-First for Self-Healing: TC20 tests proved bug, proved fix, enabled automation',
+          '❌ Emergency Fixes Without Tests: Incomplete solutions, no verification',
+          '💡 User Paradigm Shift: "Can we not change the header template and execute apply?"',
+          '💡 This question unlocked self-healing approach',
+          '🎓 Meta-Pattern: When tool output is wrong, fix the tool, not the output'
+        ],
+        verificationChecklist: [
+          'Can identify when self-healing pattern applies (tool manages files)',
+          'Knows to check first N lines for patterns, not just line 1',
+          'Understands hasValidHeader needs format validation',
+          'Can implement shebang preservation pattern',
+          'Removes old headers before inserting new ones',
+          'Uses Node.js fs module for file operations in WSL2/Docker',
+          'Knows which files should never have headers',
+          'Writes tests BEFORE implementing self-healing logic',
+          'Can explain why emergency fixes are almost always wrong',
+          'Recognizes paradigm shift questions from users'
         ]
       }
     };
@@ -2925,7 +3036,7 @@ export class DefaultPDCA implements PDCA {
    * @param topic Optional: limit search to specific topic
    * @cliSyntax query topic
    * @cliDefault topic ""
-   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-feature-development how-to-web4-vs-nodejs how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-merge how-to-interpret-instructions how-to-collaborate how-to-chat-response how-to-report how-to-license-headers
+   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-merge how-to-component how-to-feature-development how-to-web4-vs-nodejs how-to-test-workflow how-to-test-without-versioning how-to-test-first how-to-interpret-instructions how-to-collaborate how-to-chat-response how-to-report how-to-license-headers how-to-self-healing-patterns
    */
   async queryTrainAI(query: string, topic: string = ''): Promise<this> {
     console.log(`\n🔍 trainAI Query Results\n`);
