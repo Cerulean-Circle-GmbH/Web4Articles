@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
  * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
@@ -6,7 +7,6 @@
  * Backlinks: /LICENSE, /AI-GPL.md
  */
 
-#!/usr/bin/env node
 
 /**
  * Web4 User Component Lifecycle CLI
