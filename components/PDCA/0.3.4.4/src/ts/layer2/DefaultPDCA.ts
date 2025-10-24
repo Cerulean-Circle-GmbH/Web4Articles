@@ -2408,11 +2408,22 @@ export class DefaultPDCA implements PDCA {
         console.log(`   ${i + 1}:${key.padEnd(35)} ${emoji} ${topicInfo ? topicInfo.title.replace(/^[^a-zA-Z]+\s*/, '') : ''}`);
       });
       
-      console.log(`\n💡 Usage Examples:\n`);
+      console.log(`💡 Usage Examples:\n`);
       console.log(`   pdca trainAI feature-development  # Learn BEFORE building features`);
       console.log(`   pdca trainAI component            # Learn BEFORE modifying components`);
       console.log(`   pdca trainAI start                # Learn startup protocol`);
       console.log(`   pdca trainAI 9                    # Use topic number for quick access\n`);
+      console.log(`🧠 MEMORIZE THE KEYWORDS - Use Them as Triggers:\n`);
+      console.log(`   When you see these keywords in user prompts, READ the training FIRST:\n`);
+      console.log(`   - "start", "startup", "begin" → Read 'start' topic`);
+      console.log(`   - "pdca", "document" → Read 'pdca' topic`);
+      console.log(`   - "feature", "implement", "build" → Read 'feature-development' topic`);
+      console.log(`   - "component", "modify" → Read 'component' topic`);
+      console.log(`   - "test", "testing" → Read 'test-first' or 'test-workflow' topic`);
+      console.log(`   - "git", "commit", "push" → Read git protocol in 'start' or 'pdca' topic`);
+      console.log(`   - "decision", "qa", "choose" → Read 'decide' topic`);
+      console.log(`   - "link", "dual" → Read 'dual-links' or 'ensure-links' topic\n`);
+      console.log(`   DON'T wait to discover the right approach - READ when you see the keyword!\n`);
       console.log(`🎯 REMEMBER: Perfect hindsight is worthless. Proactive reading is priceless.\n`);
       console.log(`   You KNOW what you should have read AFTER you fail.`);
       console.log(`   You SHOULD read it BEFORE you start.\n`);
