@@ -1542,9 +1542,25 @@ export class DefaultPDCA implements PDCA {
   /**
    * 3c) Dual link format: [GitHub](URL) | [§/path](path)
    * Checks that all dual links follow proper format
+   * Auto-fixes links before checking to reduce noise
    * @cliHide
    */
   private async check3c(content: string, pdcaFilePath?: string): Promise<boolean> {
+    // Auto-fix dual links first if we have the file path
+    if (pdcaFilePath) {
+      const path = await import('path');
+      const fs = await import('fs/promises');
+      const projectRoot = await this.getProjectRoot();
+      const fullPath = path.join(projectRoot, pdcaFilePath);
+      
+      // Try to auto-fix links
+      const fixed = await this.fixMarkdownFile(fullPath, projectRoot, fs, path);
+      if (fixed) {
+        // Re-read the fixed content
+        content = await fs.readFile(fullPath, 'utf-8');
+      }
+    }
+    
     // Find all lines with dual links
     const lines = content.split('\n');
     const violations: string[] = [];
@@ -1587,7 +1603,7 @@ export class DefaultPDCA implements PDCA {
             violations.push(`   ${this.colors.red}Line ${lineNum + 1}: Invalid GitHub URL (missing github.com)${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.dim}URL:${this.colors.reset} ${githubUrl}`);
           }
           
-          // NEW CHECKS: Validate paths and suggest fixes
+          // NEW CHECKS: Validate paths and suggest fixes (only for unfixable issues)
           if (pdcaFilePath) {
             const path = await import('path');
             const { existsSync } = await import('fs');
@@ -1606,17 +1622,29 @@ export class DefaultPDCA implements PDCA {
               targetFilePath = path.resolve(pdcaDir, localPath);
             }
             
-            // Check if target file exists
-            if (!existsSync(targetFilePath)) {
+            // Check if file exists
+            const fileExists = existsSync(targetFilePath);
+            
+            // Only report if file truly doesn't exist (auto-fix couldn't help)
+            if (!fileExists) {
               const correctLink = await this.generateCorrectDualLink(displayPath, pdcaFilePath);
-              violations.push(`   ${this.colors.red}Line ${lineNum + 1}: Local path does not exist${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.green}Should Be:${this.colors.reset} ${correctLink || this.colors.dim + '(file not found in project)' + this.colors.reset}`);
+              if (!correctLink) {
+                // File doesn't exist in project - this is a real violation
+                violations.push(`   ${this.colors.red}Line ${lineNum + 1}: Local path does not exist${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.green}Should Be:${this.colors.reset} ${this.colors.dim}(file not found in project)${this.colors.reset}`);
+              }
             }
             
-            // Check if display text matches actual path structure
-            const targetRelativeToRoot = path.relative(projectRoot, targetFilePath);
-            if (displayPath !== targetRelativeToRoot) {
-              const correctLink = await this.generateCorrectDualLink(targetRelativeToRoot, pdcaFilePath);
-              violations.push(`   ${this.colors.yellow}Line ${lineNum + 1}: Display text doesn't match actual path${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.green}Should Be:${this.colors.reset} ${correctLink || this.colors.dim + '(unable to generate)' + this.colors.reset}`);
+            // Check if display text matches actual path (even if auto-fixed)
+            // This catches links that were auto-fixed but may still be wrong
+            if (fileExists) {
+              const targetRelativeToRoot = path.relative(projectRoot, targetFilePath);
+              if (displayPath !== targetRelativeToRoot) {
+                const correctLink = await this.generateCorrectDualLink(targetRelativeToRoot, pdcaFilePath);
+                // Only report if we can generate a correct link (file exists)
+                if (correctLink) {
+                  violations.push(`   ${this.colors.yellow}Line ${lineNum + 1}: Display text doesn't match actual path (after auto-fix)${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.green}Should Be:${this.colors.reset} ${correctLink}`);
+                }
+              }
             }
           }
         }
