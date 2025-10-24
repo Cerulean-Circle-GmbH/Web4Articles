@@ -1626,8 +1626,19 @@ export abstract class DefaultCLI implements CLI {
           coloredCommand = `${toolName}${words[0]}${reset}`;
           
           if (words.length > 1) {
-            // Second word: method name (white)
-            coloredCommand += ` ${commands}${words[1]}${reset}`;
+            let secondWord = words[1];
+            
+            // If we have completion values and only one match, use the completed word
+            if (values.length === 1 && this.model.completionCurrentWord === words[1]) {
+              // Extract the completed word from the single completion value
+              const completionMatch = values[0].match(/^\d+:\s*(\S+)/);
+              if (completionMatch) {
+                secondWord = completionMatch[1];
+              }
+            }
+            
+            // Second word: method name (white) - use completed word if available
+            coloredCommand += ` ${commands}${secondWord}${reset}`;
             
             // Remaining words: parameters (yellow bold)
             if (words.length > 2) {
