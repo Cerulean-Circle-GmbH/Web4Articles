@@ -2383,6 +2383,13 @@ export class DefaultPDCA implements PDCA {
       console.log(`   - Doing it WRONG first, then RIGHT: 100x more expensive`);
       console.log(`   - Doing it RIGHT first: Normal cost`);
       console.log(`   - The knowledge EXISTS in trainAI - USE IT!\n`);
+      console.log(`🔄 CRITICAL: After 'Summarizing Chat' Events:\n`);
+      console.log(`   When you see 'summarizing chat' event, you LOSE detailed context.`);
+      console.log(`   IMMEDIATELY use trainAI to refresh your understanding:\n`);
+      console.log(`   ✅ CORRECT: Recognize summary → trainAI start → Review protocols → Continue work`);
+      console.log(`   ❌ WRONG: Continue mechanically → Repeat old mistakes → Break processes\n`);
+      console.log(`   Summary events are NOT permission to forget - they're triggers to REFRESH.`);
+      console.log(`   The same mistakes you made before summary will happen again unless you READ.\n`);
       console.log(`════════════════════════════════════════════════════════════════════════════════\n`);
       console.log(`📚 Available Training Topics (${this.getAvailableTopicsCountInternal()} topics): How To...\n`);
       
