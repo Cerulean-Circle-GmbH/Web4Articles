@@ -1639,6 +1639,30 @@ export class DefaultPDCA implements PDCA {
             if (fileExists) {
               const targetRelativeToRoot = path.relative(projectRoot, targetFilePath);
               if (displayPath !== targetRelativeToRoot) {
+                // SPECIAL CASE: Check if this is a versioned component PDCA copied from older version
+                // Pattern: PDCA in components/<component>/<newVersion>/session/ but links to <oldVersion>/
+                const pdcaVersionMatch = pdcaFilePath.match(/components\/([^\/]+)\/([^\/]+)\/session\//);
+                const linkVersionMatch = displayPath.match(/components\/([^\/]+)\/([^\/]+)\//);
+                
+                if (pdcaVersionMatch && linkVersionMatch) {
+                  const [, pdcaComponent, pdcaVersion] = pdcaVersionMatch;
+                  const [, linkComponent, linkVersion] = linkVersionMatch;
+                  
+                  // Same component but different versions?
+                  if (pdcaComponent === linkComponent && pdcaVersion !== linkVersion) {
+                    // Check if this PDCA exists in the older version
+                    const pdcaFilename = path.basename(pdcaFilePath);
+                    const olderVersionPath = path.join(projectRoot, `components/${linkComponent}/${linkVersion}/session/${pdcaFilename}`);
+                    
+                    if (existsSync(olderVersionPath)) {
+                      // This PDCA was copied from older version and belongs there, not here
+                      violations.push(`   ${this.colors.cyan}ℹ️  Line ${lineNum + 1}: PDCA copied from v${linkVersion} (can safely be deleted from v${pdcaVersion})${this.colors.reset}\n      ${this.colors.dim}This PDCA exists in:${this.colors.reset} components/${linkComponent}/${linkVersion}/session/${pdcaFilename}\n      ${this.colors.dim}Current location:${this.colors.reset} ${pdcaFilePath}\n      ${this.colors.green}Action:${this.colors.reset} ${this.colors.dim}Safe to delete - belongs to older version${this.colors.reset}`);
+                      continue; // Don't report other violations for this link
+                    }
+                  }
+                }
+                
+                // Normal case: display text doesn't match
                 const correctLink = await this.generateCorrectDualLink(targetRelativeToRoot, pdcaFilePath);
                 // Only report if we can generate a correct link (file exists)
                 if (correctLink) {
