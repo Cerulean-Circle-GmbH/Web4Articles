@@ -118,8 +118,8 @@ export abstract class DefaultCLI implements CLI {
     model.completionCurrentWord = words[cword] || "";
     model.completionPreviousWord = words[cword - 1] || "";
     
-    // Parse command (word at index 1 if exists)
-    model.completionCommand = cword > 0 && words[1] ? words[1] : null;
+    // Parse command (word at index 1 if cword > 1, meaning we're past the command)
+    model.completionCommand = cword > 1 && words[1] ? words[1] : null;
     
     // Parse parameters (words from index 2 to cword-1)
     model.completionParameters = cword > 2 ? words.slice(2, cword) : [];
@@ -147,10 +147,12 @@ export abstract class DefaultCLI implements CLI {
    * Pattern: completion-architecture-oop.md:570-574
    * @cliHide
    */
-  protected getValidCompletionValues(): string[] {
+  protected async getValidCompletionValues(): Promise<string[]> {
     if (this.model.completionIsCompletingMethod) {
-      // Completing method name - return all method names
-      return Array.from(this.methodSignatures.keys());
+      // Completing method name - use completionNameParameterCompletion for consistent formatting
+      // This provides numbered list, color coding, and parameter signatures
+      const filter = this.model.completionCurrentWord || '';
+      return await this.completionNameParameterCompletion(['completion', 'method', filter]);
     } else if (this.model.completionIsCompletingParameter) {
       // Completing parameter - delegate to existing completeParameter logic
       // This reuses existing parameter completion callbacks dynamically
@@ -1551,14 +1553,42 @@ export abstract class DefaultCLI implements CLI {
   }
 
   /**
+   * Shell completion with direct parameter passing
+   * Simplexity: The highest art of complexity is simplicity
+   * 
+   * Web4 Pattern:
+   * - Model already exists (created in constructor via createEmptyModel)
+   * - Just update fields, reuse existing DRY methods
+   * - No JSON serialization, no Scenario dance, no ENV vars!
+   * 
+   * @param cword - COMP_CWORD from bash (current word index)
+   * @param words - COMP_WORDS from bash (all words in command line)
+   * @cliHide
+   */
+  async shCompletion(cword: string, ...words: string[]): Promise<void> {
+    // Update model directly (MODEL-DRIVEN!)
+    this.model.completionCompCword = parseInt(cword, 10);
+    this.model.completionCompWords = words;
+    this.model.completionCliName = words[0] || 'cli';  // First word is CLI name
+    
+    // Derive all other fields (DRY - reuse existing method!)
+    this.computeDerivedCompletionFields(this.model);
+    
+    // Get and output completions (DRY - reuse existing methods!)
+    const values = await this.getValidCompletionValues();
+    
+    // Format output using MODEL data (no commandContext needed!)
+    this.formatCompletionOutput(values);
+  }
+
+  /**
    * Format completion values with DISPLAY/WORD protocol
    * Handles both simple arrays and complex formatted output
    * DRY helper used by completeParameter and future completion methods
    * @param values Array of completion values/lines
-   * @param commandContext Optional command-line context for prompt echo
    * @cliHide
    */
-  protected formatCompletionOutput(values: string[], commandContext?: string[]): void {
+  protected formatCompletionOutput(values: string[]): void {
     const lines: string[] = [];
     
     // Detect complex format (numbered lines like "1: methodName <params>")
@@ -1575,8 +1605,8 @@ export abstract class DefaultCLI implements CLI {
         });
       });
       
-      // Add colored prompt echo if context provided AND in bash completion context
-      if (commandContext && commandContext.length > 0 && process.env.WEB4_CLI_NAME) {
+      // Add colored prompt echo using MODEL data (Simplexity!)
+      if (this.model.completionCliName && this.model.completionCompWords.length > 0) {
         // Prompt colors: "your web4 command >"
         const promptWhite = '\x1b[37m';
         const promptCyan = '\x1b[36m';
@@ -1587,34 +1617,49 @@ export abstract class DefaultCLI implements CLI {
         const commands = '\x1b[0;37m';      // White for method names
         const parameters = '\x1b[1;33m';    // Yellow bold for parameters
         
-        // Build colored command from original user input (WEB4_COMP_LINE)
-        // Bash exports: WEB4_COMP_LINE="web4tscomponent com" (user's actual typing)
-        const compLine = process.env.WEB4_COMP_LINE || '';
-        if (compLine) {
-          const words = compLine.trim().split(/\s+/);
-          let coloredCommand = '';
+        // Build colored command from MODEL (DRY!)
+        const words = this.model.completionCompWords;
+        let coloredCommand = '';
+        
+        if (words.length > 0) {
+          // First word: CLI name (cyan bold)
+          coloredCommand = `${toolName}${words[0]}${reset}`;
           
-          if (words.length > 0) {
-            // First word: CLI name (cyan bold)
-            coloredCommand = `${toolName}${words[0]}${reset}`;
+          if (words.length > 1) {
+            let secondWord = words[1];
             
-            if (words.length > 1) {
-              // Second word: method name (white)
-              coloredCommand += ` ${commands}${words[1]}${reset}`;
+            // For single completion match, show the completed word instead of partial
+            if (values.length === 1 && this.model.completionCompCword === 1) {
+              // Strip ANSI codes first, then extract completed word
+              const cleanValue = values[0].replace(/\x1b\[[0-9;]*m/g, '');
               
-              // Remaining words: parameters (yellow bold)
-              if (words.length > 2) {
-                const params = words.slice(2).join(' ');
-                coloredCommand += ` ${parameters}${params}${reset}`;
+              // Try numbered format first: "1: completion <params>"
+              let completionMatch = cleanValue.match(/^\d+:\s*(\S+)/);
+              
+              // If not numbered, try direct format: "completion <params>"
+              if (!completionMatch) {
+                completionMatch = cleanValue.match(/^(\S+)/);
+              }
+              
+              if (completionMatch) {
+                secondWord = completionMatch[1];
               }
             }
+            
+            // Second word: method name (white) - use completed word if available
+            coloredCommand += ` ${commands}${secondWord}${reset}`;
+            
+            // Remaining words: parameters (yellow bold)
+            if (words.length > 2) {
+              const params = words.slice(2).join(' ');
+              coloredCommand += ` ${parameters}${params}${reset}`;
+            }
           }
-          
-          // Format: "your web4 command >" with colored command
-          const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
-          lines.push(`DISPLAY: `);
-          lines.push(`DISPLAY: ${prompt}`);
         }
+        
+        // Format: "your web4 command >" with colored command
+        const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
+        lines.push(`DISPLAY: ${prompt}`);
       }
       
       // Extract method names/words and add WORD lines (for bash compgen)
@@ -1664,13 +1709,9 @@ export abstract class DefaultCLI implements CLI {
       // Pass context args to completion method (e.g., ['on', 'ComponentName'] for versionParameterCompletion)
       const values = await (this as any)[callbackName](contextArgs);
       
-      // Build command-line context for prompt echo
-      // Bash exports WEB4_CLI_NAME for us to use in prompt
-      const cliName = process.env.WEB4_CLI_NAME || 'cli';
-      const commandContext = [cliName, ...contextArgs];
-      
       // Use DRY helper to format output with DISPLAY/WORD protocol
-      this.formatCompletionOutput(values, commandContext);
+      // Model already has completion context from bash
+      this.formatCompletionOutput(values);
     } else {
       // Callback not found - return empty (no completions)
       console.log('');
