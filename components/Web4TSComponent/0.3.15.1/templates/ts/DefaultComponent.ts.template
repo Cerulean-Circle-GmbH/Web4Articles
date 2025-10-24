@@ -37,13 +37,9 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
     if (this.web4ts) return this.web4ts;
 
     const path = await import('path');
-    const { fileURLToPath } = await import('url');
-    const { dirname } = await import('path');
-
-    // Get component root (where this version's package.json is)
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-    const componentRoot = path.resolve(__dirname, '../../..');
+    const url = new URL(import.meta.url);
+    const __filename = url.pathname;
+    const componentRoot = path.resolve(path.dirname(__filename), '../../..');
 
     // Find project root (where components/ directory is)
     const projectRoot = componentRoot.split('/components/')[0];
@@ -57,9 +53,10 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
     // Instantiate and configure Web4TSComponent
     this.web4ts = new DefaultWeb4TSComponent();
 
-    // Set 'on' context: load THIS component
+    // Set 'on' context: load THIS component version from model (DRY)
     const componentName = '{{COMPONENT_NAME}}';
-    const currentVersion = '{{VERSION}}';
+    const currentVersion = this.model.version; // Already set in constructor!
+    
     await this.web4ts.on(componentName, currentVersion);
 
     return this.web4ts;
@@ -191,16 +188,12 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
     console.log(`🧪 Running {{COMPONENT_NAME}} tests with auto-promotion...`);
     
     try {
-      // Get current version from THIS component version's package.json
-      // Use import.meta.url to get the directory of THIS file, not cwd
-      // File is at: dist/ts/layer2/DefaultComponent.js
-      // Package.json is at: ./package.json (component root)
-      const __filename = fileURLToPath(import.meta.url);
-      const __dirname = dirname(__filename);
-      const componentRoot = path.resolve(__dirname, '../../..');  // Go up 3 levels: layer2 -> ts -> dist -> root
-      const packageJsonPath = path.join(componentRoot, 'package.json');
-      const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
-      const currentVersion = packageJson.version;
+      // Get current version from model (DRY - already set in constructor)
+      const currentVersion = this.model.version;
+      const path = await import('path');
+      const url = new URL(import.meta.url);
+      const __filename = url.pathname;
+      const componentRoot = path.resolve(path.dirname(__filename), '../../..');
       
       if (!insideTestEnvironment) {
         // Run vitest first (only if not in test environment)
