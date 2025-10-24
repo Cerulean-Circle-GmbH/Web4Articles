@@ -1316,18 +1316,22 @@ exec node "${cliJsPath}" "$@"
     await fs.symlink(componentVersion, latestLink, 'dir');
     console.log(`   ✅ Created components/${componentName}/latest → ${componentVersion}`);
     
-    // 8. Initialize ALL semantic links to point to the isolated version
-    // Semantic links live in components/{Component}/ directory, not scripts/
-    // This makes the isolated environment self-contained
+    // 8. Initialize semantic links to point BACK to main component directory
+    // This allows 'links' command to see ALL versions (like 0.3.13.2 does)
+    // Path calculation: from test/data/components/ComponentName/ back to main components/ComponentName/
+    const mainComponentDir = this.resolveComponentDirectory(componentName);
+    const relativePath = path.relative(componentMirrorDir, mainComponentDir);
+    
     for (const linkName of ['prod', 'test', 'dev']) {
       const semanticLink = path.join(componentMirrorDir, linkName);
+      const targetPath = path.join(relativePath, linkName);
       
       if (existsSync(semanticLink)) {
         await fs.unlink(semanticLink);
       }
-      await fs.symlink(componentVersion, semanticLink, 'dir');
+      await fs.symlink(targetPath, semanticLink, 'dir');
     }
-    console.log(`   ✅ Initialized semantic links (prod/test/dev → ${componentVersion})`);
+    console.log(`   ✅ Connected semantic links to main component directory (${relativePath})`);
     
     console.log(`\n✅ Test isolation environment initialized!`);
     console.log(`   📂 Location: ${absoluteTestDataPath}`);
