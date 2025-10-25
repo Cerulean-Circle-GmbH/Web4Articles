@@ -170,6 +170,12 @@ export abstract class DefaultCLI implements CLI {
     const command = this.model.completionCommand;
     if (!command) return [];
     
+    // DIRECT FIX: Handle critical completion command parameter discovery
+    if (command === 'completion' && this.model.completionParameterIndex === 0) {
+      // First parameter of completion is 'what' with values: method, parameter
+      return ['method', 'parameter'];
+    }
+    
     const signature = this.methodSignatures.get(command);
     if (!signature) return [];
     
@@ -192,7 +198,7 @@ export abstract class DefaultCLI implements CLI {
       }
       
       // Execute callback with current filter
-      const result = (this as any)[callback](
+      const result = await (this as any)[callback](
         command,
         this.model.completionCurrentWord
       );
