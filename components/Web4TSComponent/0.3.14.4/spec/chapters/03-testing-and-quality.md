@@ -258,13 +258,10 @@ Version 0.3.3.2 includes **12 test suites** with sequential execution (prevents 
 
 ### Test Isolation Strategy:
 
-- **Self-Discovering Project Root** - TypeScript uses `import.meta.url` to find its location and walks up to find project root (looks for `components/` directory)
-- **Copy, Not Mock** - Components are physically copied to `test/data` (excluding `test/` and `node_modules/` to avoid recursion)
-- **Direct Node Wrappers** - Fresh shell scripts generated that call `node .../CLI.js` directly
+- **ProjectRootMocker** - Redirects `process.cwd()` to `test/data` directory
 - **beforeEach** - Clean test environment for each test
-- **afterEach** - Clean up test data after each test  
+- **afterEach** - Clean up test data after each test
 - **No Production Impact** - Tests never touch production components
-- **No Symlinks** - Copying eliminates recursive loop risks (see Retroactive Isolation Architecture below)
 
 ### Retroactive Isolation Architecture (v0.3.14.4+):
 
@@ -280,40 +277,7 @@ Version 0.3.3.2 includes **12 test suites** with sequential execution (prevents 
    - Replaces old symlinks with shell script wrappers
    - Template: `templates/sh/version-wrapper.sh.template`
 
-2. **Test Environment Setup** (`initTestIsolationEnvironment`)
-   - **CRITICAL DESIGN DECISION: Copy Files, NOT Symlinks!**
-   - **Why Copy?** Symlinks create recursive path loops:
-     - `test/data/components/X/0.1.0` → symlink to real component
-     - Real component CONTAINS `test/data` directory  
-     - Result: `test/data → component → test/data → ...` (infinite loop!)
-   - **Copy Strategy:**
-     ```typescript
-     // COPY component files (exclude test/ and node_modules/)
-     for (const entry of entries) {
-       if (entry.name === 'test') {
-         await fs.mkdir(destPath, { recursive: true });
-         continue; // Skip test/ (avoid recursion)
-       }
-       if (entry.name === 'node_modules') {
-         continue; // Skip node_modules (is a symlink)
-       }
-       await fs.cp(srcPath, destPath, { recursive: true });
-     }
-     ```
-   - **Direct Node Wrapper:** Creates fresh shell script that calls `node` directly
-     - **Why?** Old component's `web4tscomponent` might be a wrapper (from old `initProject`)
-     - **Solution:** Generate new wrapper that directly executes the `.js` file:
-       ```bash
-       #!/bin/bash
-       exec node "/path/to/component/dist/ts/layer5/CLI.js" "$@"
-       ```
-   - **Trade-offs:**
-     - ⚠️ Disk Space: Copying uses more space than symlinking
-     - ✅ Safety: Eliminates all recursive loop risks
-     - ✅ Simplicity: No complex relative path calculations
-     - ✅ Reliability: Works for ANY version, regardless of structure
-
-3. **Wrapper Behavior:**
+2. **Wrapper Behavior:**
    ```bash
    # Detects environment mode
    if [[ Cursor Agent Mode ]]; then
