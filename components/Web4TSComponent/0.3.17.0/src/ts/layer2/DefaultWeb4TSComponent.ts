@@ -522,7 +522,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // - Build 0 (*.*.*.0): prod + latest
     // - Build 1+ (*.*.*.1+): dev + test + latest
     await this.updateLatestSymlink(componentName, version);
-    await this.updateScriptsIsolationWrappers(componentName, version);
+    await this.updateScriptsSymlinks(componentName, version);
     
     // Create base package.json for npm start ONLY principle
     await this.createBasePackageJson(componentName, version);
@@ -5544,7 +5544,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       const targetWrapperPath = path.join(versionsDir, targetWrapperName);
       if (!existsSync(targetWrapperPath)) {
         // Create the wrapper if it doesn't exist
-        await this.createVersionIsolationWrapper(component, version);
+        await this.createVersionScriptSymlink(component, version);
       }
       
       // Remove existing semantic symlink if exists
@@ -5776,7 +5776,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
           if (stats.isSymbolicLink()) {
             // Old symlink format - should be replaced with wrapper
             console.log(`   🔄 Converting old symlink to wrapper: ${entry}`);
-            await this.createVersionIsolationWrapper(component, version);
+            await this.createVersionScriptSymlink(component, version);
           } else if (!validVersions.includes(version)) {
             // Orphaned wrapper - version no longer exists
             console.log(`   🧹 Removing orphaned wrapper: ${entry} (version ${version} removed)`);
@@ -5874,7 +5874,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       if (isSymlink) {
         // Old symlink exists - replace with wrapper
         console.log(`   🔄 Replacing old symlink with wrapper: ${scriptName}`);
-        await this.createVersionIsolationWrapper(component, version);
+        await this.createVersionScriptSymlink(component, version);
       } else {
         // Wrapper script exists - verify it's valid
         console.log(`   ✅ Version wrapper script exists: ${scriptName}`);
@@ -5882,7 +5882,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     } else {
       // Create new wrapper script
       console.log(`   🔧 Creating missing version wrapper: ${scriptName}`);
-      await this.createVersionIsolationWrapper(component, version);
+      await this.createVersionScriptSymlink(component, version);
     }
   }
 
@@ -5965,7 +5965,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       await this.updateLatestSymlink(component, version);
       
       // Update scripts symlinks
-      await this.updateScriptsIsolationWrappers(component, version);
+      await this.updateScriptsSymlinks(component, version);
       
       console.log(`   🔗 Symlinks updated: latest → ${version}`);
     } catch (error) {
@@ -5995,94 +5995,28 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
   }
 
   /**
-   * Update scripts and scripts/versions with isolation wrappers (replaces symlinks)
-   * @cliHide
-   */
-  private async updateScriptsIsolationWrappers(component: string, version: string): Promise<void> {
-    try {
-      // Create version-specific isolation wrapper
-      await this.createVersionIsolationWrapper(component, version);
-      
-      // Update scripts/component symlink to point to latest version
-      await this.updateMainScriptSymlink(component, version);
-    } catch (error) {
-      console.log(`   ⚠️ Could not update scripts wrappers: ${(error as Error).message}`);
-    }
-  }
-
-  /**
-   * @deprecated Use updateScriptsIsolationWrappers() instead. This version creates symlinks, deprecated in 0.3.14.4
-   * Update scripts and scripts/versions symlinks
+   * Update scripts and scripts/versions symlinks (restored to 0.3.13.2 behavior)
    * @cliHide
    */
   private async updateScriptsSymlinks(component: string, version: string): Promise<void> {
-    console.log(`   ⚠️ DEPRECATED: updateScriptsSymlinks() is deprecated in 0.3.14.4, use updateScriptsIsolationWrappers()`);
     try {
-      // Update scripts/versions/component-vX.X.X.X symlink
+      // Create version-specific symlink (restored to 0.3.13.2 behavior)
       await this.createVersionScriptSymlink(component, version);
       
-      // Update scripts/versions/component symlink to point to latest version
+      // Update scripts/component symlink to point to latest version
       await this.updateMainScriptSymlink(component, version);
     } catch (error) {
       console.log(`   ⚠️ Could not update scripts symlinks: ${(error as Error).message}`);
     }
   }
 
-  /**
-   * Create version-specific isolation wrapper (replaces symlinks with shell scripts)
-   * @cliHide
-   */
-  private async createVersionIsolationWrapper(component: string, version: string): Promise<void> {
-    const projectRoot = this.resolveProjectRoot();
-    const versionsDir = path.join(projectRoot, 'scripts', 'versions');
-    
-    await fs.mkdir(versionsDir, { recursive: true });
-    
-    const componentLower = component.toLowerCase().replace(/[^a-z0-9]/g, '');
-    const wrapperName = `${componentLower}-v${version}`;
-    const wrapperPath = path.join(versionsDir, wrapperName);
-    
-    // Load wrapper template
-    const currentFileUrl = new URL(import.meta.url);
-    const currentFilePath = path.dirname(currentFileUrl.pathname);
-    const templatePath = path.join(currentFilePath, '../../../templates/sh/version-wrapper.sh.template');
-    
-    if (!existsSync(templatePath)) {
-      console.log(`   ⚠️ Wrapper template not found: ${templatePath}`);
-      return;
-    }
-    
-    try {
-      // Remove existing symlink if it exists
-      try {
-        const stats = await fs.lstat(wrapperPath);
-        if (stats.isSymbolicLink()) {
-          await fs.unlink(wrapperPath);
-        }
-      } catch {
-        // File doesn't exist, that's fine
-      }
-      
-      // Generate wrapper from template
-      const templateContent = await fs.readFile(templatePath, 'utf-8');
-      const wrapperContent = templateContent
-        .replace(/\{\{COMPONENT_NAME\}\}/g, component)
-        .replace(/\{\{VERSION\}\}/g, version)
-        .replace(/\{\{CLI_NAME\}\}/g, componentLower);
-      
-      await fs.writeFile(wrapperPath, wrapperContent, { mode: 0o755 });
-    } catch (error) {
-      console.log(`   ⚠️ Could not create wrapper: ${(error as Error).message}`);
-    }
-  }
+
 
   /**
-   * @deprecated Use createVersionIsolationWrapper() instead. This version creates symlinks, deprecated in 0.3.14.4
-   * Create version-specific script symlink
+   * Create version-specific script symlink (restored to 0.3.13.2 behavior)
    * @cliHide
    */
   private async createVersionScriptSymlink(component: string, version: string): Promise<void> {
-    console.log(`   ⚠️ DEPRECATED: createVersionScriptSymlink() is deprecated in 0.3.14.4, use createVersionIsolationWrapper()`);
     const projectRoot = this.resolveProjectRoot(); // Respects targetDirectory via model
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
     
@@ -6093,8 +6027,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     const scriptName = `${componentLower}-v${version}`;
     const scriptPath = path.join(versionsDir, scriptName);
     
-    // Find the CLI script in the component version
-    const componentVersionDir = this.resolveComponentPath(component, version);
+    // Find the CLI script in the component version (use project root directly)
+    const componentVersionDir = path.join(projectRoot, 'components', component, version);
     const possibleScripts = [
       `${componentLower}.sh`,
       `${componentLower}`,
@@ -6116,18 +6050,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
     
     try {
-      // Check if file exists and what type it is
+      // Remove existing file/symlink if it exists
       try {
-        const stats = await fs.lstat(scriptPath);
-        
-        // If it's a regular file (wrapper script), don't overwrite it!
-        // Wrappers are generated by generateVersionWrappers() for retroactive isolation
-        if (stats.isFile() && !stats.isSymbolicLink()) {
-          // It's a wrapper script - leave it alone
-          return;
-        }
-        
-        // It's a symlink or something else - remove it
         await fs.unlink(scriptPath);
       } catch {
         // File doesn't exist, that's fine
