@@ -746,12 +746,26 @@ export class TSCompletion implements Completion {
   static getParameterCallback(className: string, methodName: string, paramIndex: number): string | null {
     try {
       const params = TSCompletion.getEnhancedMethodParameters(className, methodName);
-      if (!params || paramIndex >= params.length) {
+      if (!params || params.length === 0) {
         return null;
       }
       
-      const param = params[paramIndex];
-      const paramName = param.name;
+      let param;
+      if (paramIndex >= params.length) {
+        // Check if last parameter is a rest parameter (...args)
+        const lastParam = params[params.length - 1];
+        if (lastParam.name.startsWith('...')) {
+          // Use rest parameter for all indices beyond the defined parameters
+          param = lastParam;
+        } else {
+          return null;
+        }
+      } else {
+        param = params[paramIndex];
+      }
+      
+      // Remove ... prefix from rest parameter names
+      const paramName = param.name.replace(/^\.\.\./, '');
       
       // Callback naming convention: {paramName}ParameterCompletion
       const callbackName = `${paramName}ParameterCompletion`;
@@ -995,3 +1009,4 @@ export class TSCompletion implements Completion {
 if (process.argv[1] && process.argv[1].endsWith('TSCompletion.ts')) {
   TSCompletion.start();
 }
+

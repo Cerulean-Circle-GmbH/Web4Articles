@@ -282,8 +282,15 @@ export abstract class DefaultCLI implements CLI {
       return join(web4ts.resolveComponentPath(context.component, context.version), 'test');
     }
     
+    // Check if we're in test isolation environment (test/data directory)
+    const cwd = process.cwd();
+    if (cwd.includes('/test/data')) {
+      // In test isolation: test files are in ../../test relative to test/data
+      return join(cwd, '../../test');
+    }
+    
     // Fallback to current working directory
-    return join(process.cwd(), 'test');
+    return join(cwd, 'test');
   }
 
   /**
@@ -1562,9 +1569,9 @@ export abstract class DefaultCLI implements CLI {
       
       if (callback) {
         // DRY: Use existing completeParameter method (outputs directly, no return needed)
-        await this.completeParameter(callback, 
-          this.model.completionCommand!,
-          this.model.completionCurrentWord || '');
+        // Pass full command context, not just command name and current word
+        const contextArgs = this.model.completionCompWords.slice(1); // Remove CLI name, keep command + params
+        await this.completeParameter(callback, ...contextArgs);
       }
     }
   }
