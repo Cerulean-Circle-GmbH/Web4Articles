@@ -158,17 +158,21 @@ export abstract class DefaultCLI implements CLI {
       // this.model provides context (command, paramIndex, currentWord) to TSCompletion
       
       const callback = TSCompletion.getParameterCallback(
-        'DefaultCLI',
+        'DefaultWeb4TSComponent',
         this.model.completionCommand!,
         this.model.completionParameterIndex
       );
       
       if (callback) {
-        // Execute discovered callback with model context
-        await this.completeParameter(callback, 
-          this.model.completionCommand!,
-          this.model.completionCurrentWord || '');
-        return []; // completeParameter outputs directly via DISPLAY/WORD protocol
+        // TSCompletion discovers callback on DefaultWeb4TSComponent (where method is defined)
+        // But execute callback on CLI instance (where parameter completion methods exist)
+        if (typeof (this as any)[callback] === 'function') {
+          const values = await (this as any)[callback]([
+            this.model.completionCommand!,
+            this.model.completionCurrentWord || ''
+          ]);
+          return values; // Return values for formatCompletionOutput in shCompletion
+        }
       }
       
       // No callback found - return empty (no completions available)
@@ -1542,11 +1546,27 @@ export abstract class DefaultCLI implements CLI {
     // Derive all other fields (DRY - reuse existing method!)
     this.computeDerivedCompletionFields(this.model);
     
-    // Get and output completions (DRY - reuse existing methods!)
-    const values = await this.getValidCompletionValues();
-    
-    // Format output using MODEL data (no commandContext needed!)
-    this.formatCompletionOutput(values);
+    // DRY: Use existing sophisticated completion system, don't reinvent!
+    if (this.model.completionIsCompletingMethod) {
+      // Method completion - use existing completionNameParameterCompletion
+      const filter = this.model.completionCurrentWord || '';
+      const values = await this.completionNameParameterCompletion(['completion', 'method', filter]);
+      this.formatCompletionOutput(values);
+    } else if (this.model.completionIsCompletingParameter) {
+      // Parameter completion - use existing completeParameter (outputs directly!)
+      const callback = TSCompletion.getParameterCallback(
+        'DefaultWeb4TSComponent',
+        this.model.completionCommand!,
+        this.model.completionParameterIndex
+      );
+      
+      if (callback) {
+        // DRY: Use existing completeParameter method (outputs directly, no return needed)
+        await this.completeParameter(callback, 
+          this.model.completionCommand!,
+          this.model.completionCurrentWord || '');
+      }
+    }
   }
 
   /**
@@ -1605,9 +1625,8 @@ export abstract class DefaultCLI implements CLI {
           }
         }
         
-        // Format: "your web4 command >" with colored command
+        // Format: "your web4 command >" with colored command (single DISPLAY line to avoid extra newline)
         const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
-        lines.push(`DISPLAY: `);
         lines.push(`DISPLAY: ${prompt}`);
       }
       
@@ -1631,6 +1650,44 @@ export abstract class DefaultCLI implements CLI {
       });
     } else {
       // Simple format: plain words like ['dev', 'latest', 'prod'] OR parameter syntax like ['<?action>', '<what>']
+      
+      // Add colored prompt echo using MODEL data (same as complex format!)
+      if (this.model.completionCliName && this.model.completionCompWords.length > 0) {
+        // Prompt colors: "your web4 command >"
+        const promptWhite = '\x1b[37m';
+        const promptCyan = '\x1b[36m';
+        const reset = '\x1b[0m';
+        
+        // TSCompletion colors for command parts
+        const toolName = '\x1b[1;36m';      // Cyan bold for CLI name
+        const commands = '\x1b[0;37m';      // White for method names
+        const parameters = '\x1b[1;33m';    // Yellow bold for parameters
+        
+        // Build colored command from MODEL (DRY!)
+        const words = this.model.completionCompWords;
+        let coloredCommand = '';
+        
+        if (words.length > 0) {
+          // First word: CLI name (cyan bold)
+          coloredCommand = `${toolName}${words[0]}${reset}`;
+          
+          if (words.length > 1) {
+            // Second word: method name (white)
+            coloredCommand += ` ${commands}${words[1]}${reset}`;
+            
+            // Remaining words: parameters (yellow bold)
+            if (words.length > 2) {
+              const params = words.slice(2).join(' ');
+              coloredCommand += ` ${parameters}${params}${reset}`;
+            }
+          }
+        }
+        
+        // Format: "your web4 command >" with colored command (single DISPLAY line to avoid extra newline)
+        const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
+        lines.push(`DISPLAY: ${prompt}`);
+      }
+      
       // Extract naked names for WORD lines
       values.forEach((value: string) => {
         // Strip parameter syntax: <?action:'default'> -> action, <what> -> what

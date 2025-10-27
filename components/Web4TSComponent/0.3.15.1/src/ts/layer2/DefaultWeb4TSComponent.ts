@@ -2216,7 +2216,7 @@ exec node "${cliJsPath}" "$@"
    * @param references - For selective testing: numeric references to select tests
    * @cliSyntax scope ...references
    * @TODO cliDefault scope all
-   * @cliValues file describe itCase shell
+   * @cliValues file describe itCase shell completion
    * @cliExample web4tscomponent test
    * @cliExample web4tscomponent test all
    * @cliExample web4tscomponent test shell
@@ -2229,6 +2229,11 @@ exec node "${cliJsPath}" "$@"
     // MODE 1: Test shell (bash completion testing in isolated test/data)
     if (scope === 'shell') {
       return await this.testShell(...references);
+    }
+    
+    // MODE 1.5: Completion test suite (end-to-end TAB completion tests)
+    if (scope === 'completion') {
+      return await this.testCompletion();
     }
     
     // MODE 2: Selective testing
@@ -2290,6 +2295,37 @@ exec node "${cliJsPath}" "$@"
       throw error;
     }
 
+    return this;
+  }
+
+  /**
+   * Run comprehensive TAB completion test suite
+   * Executes all end-to-end shell tests for completion integration
+   * @cliHide
+   */
+  async testCompletion(): Promise<this> {
+    const context = this.getComponentContext();
+    const componentRoot = context ? context.path : this.model.projectRoot;
+    const testSuitePath = path.join(componentRoot, 'test/sh/test-completion-suite.sh');
+    
+    console.log(`🧪 Running TAB completion test suite...`);
+    console.log(`📂 Component: ${context?.component || this.model.component} ${context?.version || this.model.version}`);
+    console.log(`📂 Test Suite: ${testSuitePath}`);
+    console.log();
+    
+    try {
+      execSync(`bash "${testSuitePath}"`, {
+        cwd: componentRoot,
+        stdio: 'inherit',
+        encoding: 'utf-8'
+      });
+      
+      console.log(`\n✅ TAB completion test suite completed successfully`);
+    } catch (error) {
+      console.error(`\n❌ TAB completion test suite failed`);
+      throw error;
+    }
+    
     return this;
   }
 
