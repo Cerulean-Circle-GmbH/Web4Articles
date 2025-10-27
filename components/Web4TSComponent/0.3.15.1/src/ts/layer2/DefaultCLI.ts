@@ -285,8 +285,9 @@ export abstract class DefaultCLI implements CLI {
     // Check if we're in test isolation environment (test/data directory)
     const cwd = process.cwd();
     if (cwd.includes('/test/data')) {
-      // In test isolation: test files are in ../../test relative to test/data
-      return join(cwd, '../../test');
+      // In test isolation: initTestIsolationEnvironment creates a symlink from test/data/test/ to the actual test directory
+      // So test files are accessible via ./test relative to test/data
+      return join(cwd, 'test');
     }
     
     // Fallback to current working directory
