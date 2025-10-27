@@ -1,0 +1,34 @@
+{
+  "name": "@web4x/web4tscomponent",
+  "version": "0.3.17.0",
+  "type": "module",
+  "description": "Web4 TypeScript Component Standards Enforcement & Architecture Compliance",
+  "main": "dist/ts/layer5/Web4TSComponentCLI.js",
+  "engines": {
+    "node": ">=20.17.0"
+  },
+  "scripts": {
+    "start": "./src/sh/start.sh",
+    "start:clean": "./src/sh/start-clean.sh",
+    "test": "./src/sh/test.sh verbose",
+    "test:bail": "npx vitest --bail=1",
+    "test:watch": "npx vitest --watch",
+    "test:file": "npx vitest",
+    "test:coverage": "npx vitest --coverage",
+    "clean": "./src/sh/clean.sh",
+    "clean:local": "./src/sh/clean-local.sh",
+    "build": "./src/sh/build.sh verbose",
+    "component": "./web4tscomponent",
+    "vitest": "npx vitest run",
+    "install-deps": "./src/sh/install-deps.sh"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "typescript": "^5.7.3",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "glob": "^11.0.3",
+    "minimatch": "^10.0.3"
+  }
+}

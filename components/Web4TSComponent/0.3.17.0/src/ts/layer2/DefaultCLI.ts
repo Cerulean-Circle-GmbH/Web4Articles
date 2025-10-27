@@ -1546,6 +1546,15 @@ export abstract class DefaultCLI implements CLI {
    * @cliHide
    */
   async shCompletion(cword: string, ...words: string[]): Promise<void> {
+    // DEBUG: Write entry to file FIRST - use try/catch to see if there's an error
+    try {
+      writeFileSync('/tmp/debug-completion.log', 
+        `DEBUG: shCompletion ENTRY: cword=${cword}, words=[${words.join(', ')}]\n`
+      );
+    } catch (error) {
+      console.log(`DEBUG ERROR: ${(error as Error).message}`);
+    }
+    
     // Update model directly (MODEL-DRIVEN!)
     this.model.completionCompCword = parseInt(cword, 10);
     this.model.completionCompWords = words;
@@ -1554,18 +1563,35 @@ export abstract class DefaultCLI implements CLI {
     // Derive all other fields (DRY - reuse existing method!)
     this.computeDerivedCompletionFields(this.model);
     
+    // DEBUG: Write state to file
+    appendFileSync('/tmp/debug-completion.log', 
+      `DEBUG: completionIsCompletingMethod=${this.model.completionIsCompletingMethod}\n` +
+      `DEBUG: completionIsCompletingParameter=${this.model.completionIsCompletingParameter}\n` +
+      `DEBUG: completionCommand=${this.model.completionCommand}\n` +
+      `DEBUG: completionParameterIndex=${this.model.completionParameterIndex}\n`
+    );
+    
     // DRY: Use existing sophisticated completion system, don't reinvent!
     if (this.model.completionIsCompletingMethod) {
       // Method completion - use existing completionNameParameterCompletion
+      appendFileSync('/tmp/debug-completion.log', 'DEBUG: Taking METHOD completion branch\n');
       const filter = this.model.completionCurrentWord || '';
       const values = await this.completionNameParameterCompletion(['completion', 'method', filter]);
       this.formatCompletionOutput(values);
     } else if (this.model.completionIsCompletingParameter) {
       // Parameter completion - use existing completeParameter (outputs directly!)
+      appendFileSync('/tmp/debug-completion.log', 'DEBUG: Taking PARAMETER completion branch\n');
       const callback = TSCompletion.getParameterCallback(
         'DefaultWeb4TSComponent',
         this.model.completionCommand!,
         this.model.completionParameterIndex
+      );
+      
+      // DEBUG: Write to file since console.error is suppressed
+      appendFileSync('/tmp/debug-completion.log', 
+        `DEBUG: Parameter completion for command="${this.model.completionCommand}" paramIndex=${this.model.completionParameterIndex}\n` +
+        `DEBUG: Found callback="${callback}"\n` +
+        `DEBUG: contextArgs=[${this.model.completionCompWords.slice(1).join(', ')}]\n`
       );
       
       if (callback) {
@@ -1574,6 +1600,8 @@ export abstract class DefaultCLI implements CLI {
         const contextArgs = this.model.completionCompWords.slice(1); // Remove CLI name, keep command + params
         await this.completeParameter(callback, ...contextArgs);
       }
+    } else {
+      appendFileSync('/tmp/debug-completion.log', 'DEBUG: Taking NEITHER branch - no completion detected\n');
     }
   }
 
@@ -1585,6 +1613,16 @@ export abstract class DefaultCLI implements CLI {
    * @cliHide
    */
   protected formatCompletionOutput(values: string[]): void {
+    // DEBUG: Log that formatCompletionOutput is being called
+    try {
+      writeFileSync('/tmp/debug-format.log', 
+        `DEBUG: formatCompletionOutput called with ${values.length} values\n` +
+        `DEBUG: First few values: ${values.slice(0, 3).join(', ')}\n`
+      );
+    } catch (error) {
+      console.log(`DEBUG FORMAT ERROR: ${(error as Error).message}`);
+    }
+    
     const lines: string[] = [];
     
     // Detect complex format (numbered lines like "1: methodName <params>")
