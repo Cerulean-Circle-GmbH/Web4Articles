@@ -156,67 +156,29 @@ export abstract class DefaultCLI implements CLI {
       const filter = this.model.completionCurrentWord || '';
       return await this.completionNameParameterCompletion(['completion', 'method', filter]);
     } else if (this.model.completionIsCompletingParameter) {
-      // Completing parameter - delegate to existing completeParameter logic
-      // This reuses existing parameter completion callbacks dynamically
-      return this.getParameterCompletionValues();
+      // Completing parameter - use TSCompletion as source of truth for callback discovery
+      // this.model provides context (command, paramIndex, currentWord) to TSCompletion
+      
+      const callback = TSCompletion.getParameterCallback(
+        'DefaultCLI',
+        this.model.completionCommand!,
+        this.model.completionParameterIndex
+      );
+      
+      if (callback) {
+        // Execute discovered callback with model context
+        await this.completeParameter(callback, 
+          this.model.completionCommand!,
+          this.model.completionCurrentWord || '');
+        return []; // completeParameter outputs directly via DISPLAY/WORD protocol
+      }
+      
+      // No callback found - return empty (no completions available)
+      return [];
     }
     return [];
   }
   
-  /**
-   * Get parameter completion values using existing callback system
-   * Bridges model-driven approach with existing TSCompletion utilities
-   * @cliHide
-   */
-  protected getParameterCompletionValues(): string[] {
-    const command = this.model.completionCommand;
-    if (!command) return [];
-    
-    // DIRECT FIX: Handle critical completion command parameter discovery
-    if (command === 'completion' && this.model.completionParameterIndex === 0) {
-      // First parameter of completion is 'what' with values: method, parameter
-      return ['method', 'parameter'];
-    }
-    
-    const signature = this.methodSignatures.get(command);
-    if (!signature) return [];
-    
-    const paramIndex = this.model.completionParameterIndex;
-    
-    // Use TSCompletion to get parameter information
-    const componentPath = this.componentClass ? this.getComponentFilePath() : null;
-    
-    if (!componentPath) return [];
-    
-    try {
-      const params = TSCompletion.getEnhancedMethodParameters(componentPath, command);
-      if (paramIndex >= params.length) return [];
-      
-      const param = params[paramIndex];
-      const callback = param.callback;
-      
-      if (!callback || typeof (this as any)[callback] !== 'function') {
-        return [];
-      }
-      
-      // Execute callback with current filter
-      const result = await (this as any)[callback](
-        command,
-        this.model.completionCurrentWord
-      );
-      
-      // Handle both array and string results
-      if (Array.isArray(result)) {
-        return result;
-      } else if (typeof result === 'string') {
-        return result.split('\n').filter(line => line.trim());
-      }
-    } catch (error) {
-      console.error(`Error getting parameter completion:`, error);
-    }
-    
-    return [];
-  }
   
   /**
    * Get component file path for TSCompletion
