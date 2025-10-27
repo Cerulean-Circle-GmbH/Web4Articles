@@ -29,7 +29,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     const componentDirName = path.basename(currentVersionDir);
     const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(componentDirName);
     
-    const discoveredRoot = this.findProjectRoot();
+    // Find project root from parent of component, not component itself (Web4 principle)
+    const discoveredRoot = this.findProjectRootFrom(path.dirname(path.dirname(currentVersionDir)));
     this.model = {
       uuid: randomUUID(),
       name: '',
@@ -208,12 +209,11 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
-   * Find project root from current working directory
-   * Web4 principle: Trust findProjectRootFrom() logic with markers
+   * Find project root from target directory (Web4 principle: use model state)
    * @cliHide
    */
   private findProjectRoot(): string {
-    return this.findProjectRootFrom(process.cwd());
+    return this.model.targetDirectory;
   }
 
   /**
