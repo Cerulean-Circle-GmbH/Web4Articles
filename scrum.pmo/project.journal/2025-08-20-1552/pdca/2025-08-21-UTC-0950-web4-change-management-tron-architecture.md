@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # PDCA: Web4 Change Management TRON Architecture - Self-Aware Objects with Scenario-Based Change Tracing
 
 **📎 Previous Commit:** bc11dbf (Tootsie Web4 Testing: Total Object-Oriented Testing Suite - test cases as Web4 objects with scenario execution via ONCE)  

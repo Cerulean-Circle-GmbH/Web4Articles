@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # PDCA: PDCA-Git Component Integration - GitScrumProject Dependency Architecture
 
 **📎 Previous Commit:** 216c8dd (PDCA Object Architecture Recognition: PDCA files as MDView of object instances with Plan/Do/Check/Act scenario trees)  

@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 [📎 Previous Commit: 7afa2b1 2025-08-25-UTC-0947-external-references-self-contained-script-learnings](../../../../../../)  
 [🔗 Previous PDCA: 2025-08-25-UTC-0947-external-references-self-contained-script-learnings.md](../../../) | [Local](2025-08-25-UTC-0947-external-references-self-contained-script-learnings.md)
 

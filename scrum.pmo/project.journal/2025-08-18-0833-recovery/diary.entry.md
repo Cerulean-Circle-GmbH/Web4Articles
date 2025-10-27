@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../LICENSE) and AI-GPL Addendum (../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # 🌅 Diary Entry: A TypeScript Developer's Web4x Journey - August 18, 2025
 
 *An emotional story of panic, recovery, collaboration, and the profound revelation that complex problems are solved "4 2" (FOR TWO)*

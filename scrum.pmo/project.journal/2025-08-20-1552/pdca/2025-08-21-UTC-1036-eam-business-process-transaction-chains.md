@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # PDCA: EAM Business Process Transaction Chains - Layer 4 Git-Based Rollback Architecture
 
 **📎 Previous Commit:** e24e515 (Complete Web4 Architecture: Layer 4 atomic transactions, Layer 5 orchestration, Layer 3 service contracts - Trans-Actions across components)  

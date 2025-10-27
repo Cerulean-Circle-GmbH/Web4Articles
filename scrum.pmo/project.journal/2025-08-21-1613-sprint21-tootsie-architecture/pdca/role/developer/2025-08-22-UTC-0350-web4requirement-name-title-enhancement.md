@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 **📎 Previous Commit:** Web4Requirement CLI build success with TypeScript fixes and component independence  
 **🔗 Previous PDCA:** [Web4Requirement CLI Build Success](2025-08-22-UTC-0345-web4requirement-cli-build-success.md)
 

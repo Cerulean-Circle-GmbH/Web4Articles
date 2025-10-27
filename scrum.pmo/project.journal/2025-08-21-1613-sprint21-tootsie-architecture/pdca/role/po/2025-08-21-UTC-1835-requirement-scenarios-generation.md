@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 **📎 Previous Commit:** fe3fbde - PO PDCA: Web4Requirement CLI improvement - Component enhancement for proper CLI usage vs manual JSON creation  
 **🏷️ Unit Component Version:** 0.1.3.0-requirement-scenarios-generation  
 **🔗 Previous PDCA:** [2025-08-21-UTC-1830-web4requirement-cli-improvement.md](./2025-08-21-UTC-1830-web4requirement-cli-improvement.md)
