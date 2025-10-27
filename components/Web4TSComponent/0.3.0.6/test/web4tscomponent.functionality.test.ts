@@ -1,9 +1,6 @@
 /**
- * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
- * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
- * Copyright (c) 2025 Cerulean Circle GmbH
- * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
- * Backlinks: /LICENSE, /AI-GPL.md
+ * Web4TSComponent Functionality Tests
+ * Tests for component creation and feature equivalence with 1.0.0.0
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';

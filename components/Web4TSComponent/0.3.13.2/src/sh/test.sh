@@ -1,8 +1,6 @@
-# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
-# SPDX-FileComment: See ../../../../../AI-GPL.md for AI-specific terms.
-# Copyright (c) 2025 Cerulean Circle GmbH
-# Copyleft: See AGPLv3 (../../../../../LICENSE) and AI-GPL Addendum (../../../../../AI-GPL.md)
-# Backlinks: /LICENSE, /AI-GPL.md
+#!/bin/sh
+# npm test → test.sh verbose → web4tscomponent test (verbose) → vitest (with recursion prevention & promotion)
+# Direct test.sh call → silent build
 
 MODE=${1:-silent}
 

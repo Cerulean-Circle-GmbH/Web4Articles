@@ -1,9 +1,11 @@
 /**
- * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
- * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
- * Copyright (c) 2025 Cerulean Circle GmbH
- * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
- * Backlinks: /LICENSE, /AI-GPL.md
+ * OwnerParams Interface
+ * 
+ * Web4 principle: Single interface per file
+ * Parameters for owner data generation
+ * 
+ * NOTE: Copied from components/User/0.3.0.4/src/ts/layer3/User.interface.ts
+ * to prevent build dependency on User component
  */
 
 export interface OwnerParams {

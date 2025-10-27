@@ -1,9 +1,6 @@
 /**
- * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
- * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
- * Copyright (c) 2025 Cerulean Circle GmbH
- * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
- * Backlinks: /LICENSE, /AI-GPL.md
+ * DefaultWeb4TSComponent - Web4 Architecture Layer 2 Implementation
+ * Implements Web4 TypeScript component standards enforcement
  */
 
 import { Web4TSComponent, ComponentMetadata, CLIStandardValidation, ComponentScaffoldOptions, ComponentDependency } from '../layer3/Web4TSComponent.js';

@@ -1,9 +1,11 @@
 /**
- * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
- * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
- * Copyright (c) 2025 Cerulean Circle GmbH
- * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
- * Backlinks: /LICENSE, /AI-GPL.md
+ * Web4TSComponent Dirtpig Detection Test
+ * Prevents agents from contaminating the project root with test components
+ * 
+ * This test ensures that:
+ * 1. No test components exist in the real project components/ directory
+ * 2. No broken symlinks point to non-existent test components
+ * 3. All test components are properly isolated in test/data/ directories
  */
 
 import { describe, it, expect } from 'vitest';

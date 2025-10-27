@@ -1,11 +1,3 @@
-<!--
-SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
-SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
-Copyright (c) 2025 Cerulean Circle GmbH
-Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
-Backlinks: /LICENSE, /AI-GPL.md
--->
-
 # 📋 **PDCA Cycle: WODA Reordering and Intensive Cross-Linking**
 
 > **🔗 CROSS-BRANCH REFERENCE**: This PDCA was created by another agent in branch `dev/2025-10-10-UTC-0124`  

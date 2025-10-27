@@ -1,9 +1,16 @@
 /**
- * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
- * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
- * Copyright (c) 2025 Cerulean Circle GmbH
- * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
- * Backlinks: /LICENSE, /AI-GPL.md
+ * Tab Completion Tests
+ * 
+ * Tests the intelligent tab completion mechanism:
+ * - TSCompletion inheritance chain discovery
+ * - Multi-parameter completion with context passing
+ * - Method completion, 1st parameter, 2nd parameter, chaining
+ * - Callback mechanism for dynamic completions
+ * 
+ * Architecture:
+ * - Layer 1: Bash (simulated via direct TSCompletion calls)
+ * - Layer 2: TSCompletion (AST parsing and completion logic)
+ * - Layer 3: Completion methods (componentParameterCompletion, versionParameterCompletion)
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';

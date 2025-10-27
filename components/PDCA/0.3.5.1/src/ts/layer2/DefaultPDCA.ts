@@ -1,9 +1,6 @@
 /**
- * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
- * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
- * Copyright (c) 2025 Cerulean Circle GmbH
- * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
- * Backlinks: /LICENSE, /AI-GPL.md
+ * DefaultPDCA - PDCA Component Implementation
+ * Web4 pattern: Empty constructor + scenario initialization + component functionality
  */
 
 import { PDCA } from '../layer3/PDCA.interface.js';
@@ -14,6 +11,7 @@ import { join, dirname } from 'path';
 
 // Use latest version for delegation (always available)
 import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js';
+import { DefaultColors } from '../../../../../Web4TSComponent/latest/dist/ts/layer4/DefaultColors.js';
 
 /**
  * Training topic definition - CMM3: Objective, Reproducible, Verifiable
@@ -34,16 +32,24 @@ export class DefaultPDCA implements PDCA {
   private model: PDCAModel;
   private web4ts?: any; // Lazy-initialized Web4TSComponent for delegation
   private defaultSession: string = 'scrum.pmo/project.journal/2025-10-14-UTC-0948-session'; // Default session path
+  private colors = DefaultColors.getInstance(); // DRY: Reuse Web4TSComponent colors
 
   constructor() {
+    // Initialize with version from directory (single source of truth)
+    const currentFileUrl = new URL(import.meta.url);
+    const currentVersionDir = dirname(dirname(dirname(currentFileUrl.pathname))); // Go up 3 levels
+    const componentDirName = currentVersionDir.split('/').pop() || '0.3.4.2';
+    const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(componentDirName);
+    const discoveredVersion = isVersionDir ? componentDirName : '0.3.4.2';
+    
     // Empty constructor - Web4 pattern
     this.model = {
       uuid: crypto.randomUUID(),
       name: '',
       origin: '',
       definition: '',
-      component: '',
-      version: '',
+      component: 'PDCA',
+      version: discoveredVersion, // Discovered from directory, not hardcoded
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -58,13 +64,9 @@ export class DefaultPDCA implements PDCA {
     if (this.web4ts) return this.web4ts;
 
     const path = await import('path');
-    const { fileURLToPath } = await import('url');
-    const { dirname } = await import('path');
-
-    // Get component root (where this version's package.json is)
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-    const componentRoot = path.resolve(__dirname, '../../..');
+    const url = new URL(import.meta.url);
+    const __filename = url.pathname;
+    const componentRoot = path.resolve(path.dirname(__filename), '../../..');
 
     // Find project root (where components/ directory is)
     const projectRoot = componentRoot.split('/components/')[0];
@@ -78,9 +80,10 @@ export class DefaultPDCA implements PDCA {
     // Instantiate and configure Web4TSComponent
     this.web4ts = new DefaultWeb4TSComponent();
 
-    // Set 'on' context: load THIS component
+    // Set 'on' context: load THIS component version from model (DRY)
     const componentName = 'PDCA';
-    const currentVersion = '0.1.0.0';
+    const currentVersion = this.model.version; // Already set in constructor!
+    
     await this.web4ts.on(componentName, currentVersion);
 
     return this.web4ts;
@@ -189,8 +192,9 @@ export class DefaultPDCA implements PDCA {
 
     // Check the file
     const fileName = path.basename(fullPath);
+    const fileRelPath = path.relative(projectRoot, fullPath);
     const content = await fs.readFile(fullPath, 'utf-8');
-    const violations = await this.checkPDCACompliance(content, fileName);
+    const violations = await this.checkPDCACompliance(content, fileName, fileRelPath);
 
     if (violations.length === 0) {
       console.log(`✅ ${fileName} - CMM3 Compliant\n`);
@@ -205,6 +209,13 @@ export class DefaultPDCA implements PDCA {
       for (const violation of violations) {
         const description = this.getViolationDescription(violation);
         console.log(`   ${violation}: ${description}`);
+        
+        // Show specific violations if available (e.g., from check3c)
+        if (this.model.cmm3Violations && this.model.cmm3Violations[violation]) {
+          for (const detail of this.model.cmm3Violations[violation]) {
+            console.log(detail);
+          }
+        }
       }
       console.log();
     }
@@ -264,8 +275,9 @@ export class DefaultPDCA implements PDCA {
 
     for (const filePath of pdcaFiles) {
       const fileName = path.basename(filePath);
+      const fileRelPath = path.relative(projectRoot, filePath);
       const content = await fs.readFile(filePath, 'utf-8');
-      const violations = await this.checkPDCACompliance(content, fileName);
+      const violations = await this.checkPDCACompliance(content, fileName, fileRelPath);
 
       if (violations.length === 0) {
         console.log(`✅ ${fileName} - CMM3 Compliant`);
@@ -635,7 +647,7 @@ export class DefaultPDCA implements PDCA {
     // NOTE: This structure is temporarily duplicated from trainAI (lines 1702-2286)
     // Future work: Make trainAI call this method to eliminate duplication
     return {
-      'how-to-dual-links': {
+      'dual-links': {
         keyLessons: [
           '✅ Format: [GitHub](https://github.com/org/repo/blob/branch/path) | [§/path](path)',
           '✅ GitHub link: For human verification, works in any context',
@@ -668,7 +680,7 @@ export class DefaultPDCA implements PDCA {
         ],
         title: '🔗 How to Dual Links: GitHub + § Notation for Chat Reports'
       },
-      'how-to-test-first': {
+      'test-first': {
         keyLessons: [
           '✅ Test-First Pattern: Write test → Run test → See it fail → Fix code → See it pass',
           '🎯 Trust the tests: If tests pass, functionality works. No manual verification needed.',
@@ -697,9 +709,9 @@ export class DefaultPDCA implements PDCA {
         ],
         title: '🧪 How to Test-First Verification: Trust Tests, Avoid Manual Verification'
       },
-      'how-to-feature-development': {
+      'feature-development': {
         keyLessons: [
-          '✅ Phase 0 - RAG Preparation: Query trainAI BEFORE planning (how-to-test-first, how-to-component)',
+          '✅ Phase 0 - RAG Preparation: Query trainAI BEFORE planning (test-first, component)',
           '⏱️ RAG Preparation is Non-Negotiable: 30 min reading → 2-3 hours debugging saved',
           '📚 Read to depth 3: document → references → secondary references',
           '🧠 Build complete mental model BEFORE coding (prevents assumption cascade)',
@@ -733,7 +745,7 @@ export class DefaultPDCA implements PDCA {
           '📊 Web4 Principles Research Has Exponential ROI: 30 min reading → Apply 7 principles forever'
         ],
         verificationChecklist: [
-          'Queried trainAI before planning (how-to-test-first, relevant domain topics)',
+          'Queried trainAI before planning (test-first, relevant domain topics)',
           'Read referenced docs to depth 3 (not just surface level)',
           'Built complete mental model before coding',
           'Identified reusable parts at planning stage (not refactoring)',
@@ -756,7 +768,7 @@ export class DefaultPDCA implements PDCA {
         ],
         title: '🛠️ How to Feature Development: RAG-Powered Test-First CMM3 Pattern'
       },
-      'how-to-web4-vs-nodejs': {
+      'web4-vs-nodejs': {
         keyLessons: [
           '❌ __dirname and __filename: Node.js globals with underscores → Web4 violation!',
           '✅ Web4 Pattern: Use import.meta.url with URL() constructor',
@@ -798,7 +810,7 @@ export class DefaultPDCA implements PDCA {
         ],
         title: '🔄 Web4 vs Node.js: Pattern Migration Guide'
       },
-      'how-to-test-workflow': {
+      'test-workflow': {
         keyLessons: [
           '🔗 Semantic links: latest (dev work) → test (testing) → dev (stable) → prod (production)',
           '🧪 Test workflow: Work on `latest` → run `pdca test` → auto-promotes to `test` on success',
@@ -831,7 +843,7 @@ export class DefaultPDCA implements PDCA {
         ],
         title: '🧪 How to Test Workflow: Semantic Versioning and Test Iteration'
       },
-      'how-to-test-without-versioning': {
+      'test-without-versioning': {
         keyLessons: [
           '🔍 Viewing Tests: `web4tscomponent on <Component> latest test itCase` shows complete test tree',
           '📊 Test tree displays: file number, describe blocks, test cases with tokens (no execution, no versioning)',
@@ -865,7 +877,7 @@ export class DefaultPDCA implements PDCA {
         ],
         title: '🧪 How to Test Without Versioning: Baseline Verification'
       },
-      'how-to-report': {
+      'report': {
         keyLessons: [
           '🚨 Summary Generation = Red Flag: Elaborate formatting/boxes indicate context window pressure',
           '✅ Query RAG BEFORE Reporting: `pdca queryTrainAI "How should I report task completion?"`',
@@ -900,7 +912,7 @@ export class DefaultPDCA implements PDCA {
         ],
         title: '📊 How to Report: Concise Task Completion Without Summary Generation'
       },
-      'how-to-merge': {
+      'merge': {
         keyLessons: [
           '⚠️ Source Code Merge ≠ Complete Integration!',
           '✅ Post-Merge Checklist: Resolve conflicts → Commit → BUILD components → Test → Verify CLI',
@@ -931,37 +943,6 @@ export class DefaultPDCA implements PDCA {
           'Knows to check all symlink targets for build artifacts'
         ],
         title: '🔀 How to Merge: Post-Merge Integration and Build Requirements'
-      },
-      'how-to-self-healing-patterns': {
-        keyLessons: [
-          '🔄 Self-Healing Pattern: Tool breaks files → Fix tool logic → Tool heals files',
-          '✅ Scalable: Fixes 400+ files automatically vs manual one-by-one',
-          '✅ Root Cause > Symptoms: Address why headers are wrong, not manually fix each file',
-          '🎯 Enhanced Detection: Check first 20 lines for shebang, not just line 1',
-          '🎯 Format Validation: hasValidHeader must check content AND format',
-          '🎯 Shebang Preservation: Extract → Remove → Process → Prepend pattern',
-          '🎯 Header Cleanup: Remove old/duplicate headers BEFORE inserting new',
-          '⚠️ File Persistence in WSL2/Docker: Use Node.js fs module, not Cursor tools',
-          '⚠️ Config Files: .gitmodules, package.json should NEVER have headers',
-          '✅ Test-First for Self-Healing: TC20 tests proved bug, proved fix, enabled automation',
-          '❌ Emergency Fixes Without Tests: Incomplete solutions, no verification',
-          '💡 User Paradigm Shift: "Can we not change the header template and execute apply?"',
-          '💡 This question unlocked self-healing approach',
-          '🎓 Meta-Pattern: When tool output is wrong, fix the tool, not the output'
-        ],
-        verificationChecklist: [
-          'Can identify when self-healing pattern applies (tool manages files)',
-          'Knows to check first N lines for patterns, not just line 1',
-          'Understands hasValidHeader needs format validation',
-          'Can implement shebang preservation pattern',
-          'Removes old headers before inserting new ones',
-          'Uses Node.js fs module for file operations in WSL2/Docker',
-          'Knows which files should never have headers',
-          'Writes tests BEFORE implementing self-healing logic',
-          'Can explain why emergency fixes are almost always wrong',
-          'Recognizes paradigm shift questions from users'
-        ],
-        title: '🔄 How to Self-Healing Patterns: Fix the Source, Not the Symptoms'
       }
     };
   }
@@ -1122,6 +1103,18 @@ export class DefaultPDCA implements PDCA {
             newPath = this.calculateRelativePathInternal(mdFile, path.join(projectRoot, localPath), path);
           }
         }
+        // Check if display text uses §/ notation but relative path is incorrect (PRIORITIZE THIS)
+        else if (displayText.startsWith('§/')) {
+          const absolutePath = displayText.substring(2); // Remove §/
+          const expectedPath = this.calculateRelativePathInternal(mdFile, path.join(projectRoot, absolutePath), path);
+          
+          // Check if relative path needs correction
+          if (localPath !== expectedPath && existsSync(path.join(projectRoot, absolutePath))) {
+            needsFix = true;
+            newDisplay = displayText; // Keep the §/ notation
+            newPath = expectedPath;
+          }
+        }
         // Check if GitHub path differs from local path
         else if (githubPath && githubPath !== localPath) {
           const expectedPath = this.calculateRelativePathInternal(mdFile, path.join(projectRoot, githubPath), path);
@@ -1267,8 +1260,9 @@ export class DefaultPDCA implements PDCA {
     for (const fileName of pdcaFiles) {
       const filePath = path.join(pdcaDir, fileName);
       try {
+        const fileRelPath = path.relative(projectRoot, filePath);
         const content = await fs.readFile(filePath, 'utf-8');
-        const violations = await this.checkPDCACompliance(content, fileName);
+        const violations = await this.checkPDCACompliance(content, fileName, fileRelPath);
         const level = this.determineCMMLevel(violations);
         
         pdcaData.set(fileName, { filename: fileName, violations, level });
@@ -1373,7 +1367,7 @@ export class DefaultPDCA implements PDCA {
    * Based on scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md
    * @cliHide
    */
-  private async checkPDCACompliance(content: string, fileName: string): Promise<string[]> {
+  private async checkPDCACompliance(content: string, fileName: string, filePath?: string): Promise<string[]> {
     const violations: string[] = [];
 
     // 1. PDCA Compliance
@@ -1391,7 +1385,7 @@ export class DefaultPDCA implements PDCA {
     // 3. Chat Response Compliance (relevant sections in PDCA)
     if (!this.check3a(content)) violations.push('3a');
     if (!this.check3b(content)) violations.push('3b');
-    if (!this.check3c(content)) violations.push('3c');
+    if (!(await this.check3c(content, filePath))) violations.push('3c');
 
     // 4. Link Compliance
     if (!this.check4a(content)) violations.push('4a');
@@ -1564,25 +1558,50 @@ export class DefaultPDCA implements PDCA {
   /**
    * 3c) Dual link format: [GitHub](URL) | [§/path](path)
    * Checks that all dual links follow proper format
+   * Auto-fixes links before checking to reduce noise
+   * Uses DRY validateDualLink method
    * @cliHide
    */
-  private check3c(content: string): boolean {
+  private async check3c(content: string, pdcaFilePath?: string): Promise<boolean> {
+    // Auto-fix dual links first if we have the file path
+    if (pdcaFilePath) {
+      const path = await import('path');
+      const fs = await import('fs/promises');
+      const projectRoot = await this.getProjectRoot();
+      const fullPath = path.join(projectRoot, pdcaFilePath);
+      
+      // Try to auto-fix links
+      const fixed = await this.fixMarkdownFile(fullPath, projectRoot, fs, path);
+      if (fixed) {
+        // Re-read the fixed content
+        content = await fs.readFile(fullPath, 'utf-8');
+      }
+    }
+    
     // Find all lines with dual links
     const lines = content.split('\n');
+    const violations: string[] = [];
+    const projectRoot = await this.getProjectRoot();
     
-    for (const line of lines) {
+    for (let lineNum = 0; lineNum < lines.length; lineNum++) {
+      const line = lines[lineNum];
+      
       // Check for GitHub dual link patterns
       if (line.includes('[GitHub](') && line.includes('|')) {
-        // Pattern 1: Standard dual link [GitHub](...) | [text](path)
-        const standardMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
-        
-        // Pattern 2: Missing brackets [GitHub](...) | plain/text (VIOLATION)
-        const missingBracketsMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*([^[].+[^)])$/);
-        
-        if (missingBracketsMatch) {
-          // Found dual link with missing brackets - this is a violation
-          return false;
+        // Split on | to check what comes after
+        const parts = line.split('|');
+        if (parts.length >= 2) {
+          const afterPipe = parts[1].trim();
+          
+          // Check if second part is NOT a markdown link (missing brackets)
+          if (!afterPipe.startsWith('[')) {
+            violations.push(`   ${this.colors.red}Line ${lineNum + 1}: Missing brackets around local link${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}`);
+            continue; // Skip further checks for this malformed link
+          }
         }
+        
+        // Pattern: Standard dual link [GitHub](...) | [text](path)
+        const standardMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
         
         if (standardMatch) {
           const [, githubUrl, displayText, localPath] = standardMatch;
@@ -1591,23 +1610,273 @@ export class DefaultPDCA implements PDCA {
           // Valid: [§/path/to/file](../../../path/to/file)
           // Valid: [local/file](local/file)
           // Invalid: [/absolute/path](../../../path) without §
-          // Invalid: display text and local path don't match pattern
           
           if (displayText.startsWith('/') && !displayText.startsWith('§/')) {
             // Absolute path without § notation
-            return false;
+            violations.push(`   ${this.colors.yellow}Line ${lineNum + 1}: Absolute path without § notation${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.dim}Display text:${this.colors.reset} ${displayText}`);
           }
           
           // Check if GitHub URL is valid
           if (!githubUrl.includes('github.com')) {
-            return false;
+            violations.push(`   ${this.colors.red}Line ${lineNum + 1}: Invalid GitHub URL (missing github.com)${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.dim}URL:${this.colors.reset} ${githubUrl}`);
+          }
+          
+          // NEW CHECKS: Validate paths and suggest fixes (only for unfixable issues)
+          if (pdcaFilePath) {
+            const path = await import('path');
+            const { existsSync } = await import('fs');
+            const projectRoot = await this.getProjectRoot();
+            
+            // Extract just the path from display text (remove §/ if present)
+            const displayPath = displayText.startsWith('§/') ? displayText.substring(2) : displayText;
+            
+            // Resolve the target file path
+            let targetFilePath: string;
+            if (path.isAbsolute(localPath)) {
+              targetFilePath = localPath;
+            } else {
+              // Relative path from PDCA location
+              const pdcaDir = path.dirname(path.join(projectRoot, pdcaFilePath));
+              targetFilePath = path.resolve(pdcaDir, localPath);
+            }
+            
+            // Check if file exists at the resolved path
+            const fileExists = existsSync(targetFilePath);
+            
+            // ALWAYS report if file doesn't exist at the resolved path
+            // Then check if we can suggest a correct location
+            if (!fileExists) {
+              const correctLink = await this.generateCorrectDualLink(displayPath, pdcaFilePath);
+              if (correctLink) {
+                // File exists elsewhere - relative path is wrong
+                violations.push(`   ${this.colors.red}Line ${lineNum + 1}: Relative path incorrect (file exists elsewhere)${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.green}Should Be:${this.colors.reset} ${correctLink}`);
+              } else {
+                // File doesn't exist anywhere in project
+                violations.push(`   ${this.colors.red}Line ${lineNum + 1}: Local path does not exist${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.green}Should Be:${this.colors.reset} ${this.colors.dim}(file not found in project)${this.colors.reset}`);
+              }
+            }
+            
+            // Check if display text matches actual path (even if auto-fixed)
+            // This catches links that were auto-fixed but may still be wrong
+            if (fileExists) {
+              const targetRelativeToRoot = path.relative(projectRoot, targetFilePath);
+              if (displayPath !== targetRelativeToRoot) {
+                // SPECIAL CASE: Check if this is a versioned component PDCA copied from older version
+                // Pattern: PDCA in components/<component>/<newVersion>/session/ but links to <oldVersion>/
+                const pdcaVersionMatch = pdcaFilePath.match(/components\/([^\/]+)\/([^\/]+)\/session\//);
+                const linkVersionMatch = displayPath.match(/components\/([^\/]+)\/([^\/]+)\//);
+                
+                if (pdcaVersionMatch && linkVersionMatch) {
+                  const [, pdcaComponent, pdcaVersion] = pdcaVersionMatch;
+                  const [, linkComponent, linkVersion] = linkVersionMatch;
+                  
+                  // Same component but different versions?
+                  if (pdcaComponent === linkComponent && pdcaVersion !== linkVersion) {
+                    // Check if this PDCA exists in the older version
+                    const pdcaFilename = path.basename(pdcaFilePath);
+                    const olderVersionPath = path.join(projectRoot, `components/${linkComponent}/${linkVersion}/session/${pdcaFilename}`);
+                    
+                    if (existsSync(olderVersionPath)) {
+                      // This PDCA was copied from older version and belongs there, not here
+                      violations.push(`   ${this.colors.cyan}ℹ️  Line ${lineNum + 1}: PDCA copied from v${linkVersion} (can safely be deleted from v${pdcaVersion})${this.colors.reset}\n      ${this.colors.dim}This PDCA exists in:${this.colors.reset} components/${linkComponent}/${linkVersion}/session/${pdcaFilename}\n      ${this.colors.dim}Current location:${this.colors.reset} ${pdcaFilePath}\n      ${this.colors.green}Action:${this.colors.reset} ${this.colors.dim}Safe to delete - belongs to older version${this.colors.reset}`);
+                      continue; // Don't report other violations for this link
+                    }
+                  }
+                }
+                
+                // Normal case: display text doesn't match
+                const correctLink = await this.generateCorrectDualLink(targetRelativeToRoot, pdcaFilePath);
+                // Only report if we can generate a correct link (file exists)
+                if (correctLink) {
+                  violations.push(`   ${this.colors.yellow}Line ${lineNum + 1}: Display text doesn't match actual path (after auto-fix)${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.green}Should Be:${this.colors.reset} ${correctLink}`);
+                }
+              }
+            }
           }
         }
       }
     }
     
+    // Store violations for reporting
+    if (violations.length > 0) {
+      if (!this.model.cmm3Violations) {
+        this.model.cmm3Violations = {};
+      }
+      this.model.cmm3Violations['3c'] = violations;
+    }
+    
     // All dual links are properly formatted
-    return true;
+    return violations.length === 0;
+  }
+  
+  /**
+   * Generate correct dual link format for a target file from a PDCA location
+   * @cliHide
+   */
+  private async generateCorrectDualLink(targetPath: string, pdcaPath: string): Promise<string | null> {
+    try {
+      const path = await import('path');
+      const { existsSync } = await import('fs');
+      const { execSync } = await import('child_process');
+      
+      const projectRoot = await this.getProjectRoot();
+      
+      // Normalize target path to project-root-relative
+      let normalizedPath: string;
+      if (path.isAbsolute(targetPath)) {
+        normalizedPath = path.relative(projectRoot, targetPath);
+      } else if (targetPath.startsWith('§/')) {
+        normalizedPath = targetPath.substring(2);
+      } else {
+        normalizedPath = targetPath;
+      }
+      
+      const fullPath = path.join(projectRoot, normalizedPath);
+      
+      // Check if file exists
+      if (!existsSync(fullPath)) {
+        return null;
+      }
+      
+      // Calculate relative path from PDCA to target
+      const pdcaDir = path.dirname(path.join(projectRoot, pdcaPath));
+      const relativePath = path.relative(pdcaDir, fullPath);
+      
+      // Get current branch
+      const branch = execSync('git branch --show-current', {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      
+      // Get git remote URL
+      const gitConfig = execSync('git config --get remote.origin.url', {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      
+      // Extract org/repo from git URL
+      const match = gitConfig.match(/github\.com[:/]([^/]+)\/([^/.]+)/);
+      if (!match) {
+        return null;
+      }
+      
+      const org = match[1];
+      const repo = match[2];
+      
+      const githubUrl = `https://github.com/${org}/${repo}/blob/${branch}/${normalizedPath}`;
+      
+      return `[GitHub](${githubUrl}) | [§/${normalizedPath}](${relativePath})`;
+      
+    } catch (error) {
+      return null;
+    }
+  }
+
+  /**
+   * DRY: Validate and optionally fix a dual link
+   * Returns: { isValid, correctedLink?, displayText?, relativePath? }
+   * @cliHide
+   */
+  private async validateDualLink(
+    line: string,
+    mdFilePath: string,
+    projectRoot: string
+  ): Promise<{
+    isValid: boolean;
+    needsFix: boolean;
+    violation?: string;
+    correctedLink?: string | null;
+    newDisplay?: string;
+    newPath?: string;
+  }> {
+    const path = await import('path');
+    const { existsSync } = await import('fs');
+    
+    // Pattern: Standard dual link [GitHub](...) | [text](path)
+    const standardMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
+    
+    if (!standardMatch) {
+      // Check for missing brackets
+      const missingBracketsMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*([^[].+[^)])$/);
+      if (missingBracketsMatch) {
+        return {
+          isValid: false,
+          needsFix: true,
+          violation: 'Missing brackets around local link',
+          correctedLink: null
+        };
+      }
+      return { isValid: true, needsFix: false };
+    }
+    
+    const [, githubUrl, displayText, localPath] = standardMatch;
+    
+    // Extract display path (remove §/ if present)
+    const displayPath = displayText.startsWith('§/') ? displayText.substring(2) : displayText;
+    
+    // Resolve local path to absolute
+    let targetFilePath: string;
+    if (path.isAbsolute(localPath)) {
+      targetFilePath = localPath;
+    } else {
+      const mdFileDir = path.dirname(path.join(projectRoot, mdFilePath));
+      targetFilePath = path.resolve(mdFileDir, localPath);
+    }
+    
+    // Check if file exists at resolved path
+    const fileExists = existsSync(targetFilePath);
+    
+    // ALWAYS report if file doesn't exist at the resolved path
+    if (!fileExists) {
+      const correctLink = await this.generateCorrectDualLink(displayPath, mdFilePath);
+      if (correctLink) {
+        // File exists elsewhere - relative path is wrong
+        return {
+          isValid: false,
+          needsFix: true,
+          violation: 'Relative path incorrect (file exists elsewhere)',
+          correctedLink: correctLink
+        };
+      } else {
+        // File doesn't exist anywhere
+        return {
+          isValid: false,
+          needsFix: false,
+          violation: 'Local path does not exist',
+          correctedLink: null
+        };
+      }
+    }
+    
+    // File exists - check if display text and relative path are correct
+    const targetRelativeToRoot = path.relative(projectRoot, targetFilePath);
+    const expectedCorrectLink = await this.generateCorrectDualLink(targetRelativeToRoot, mdFilePath);
+    
+    if (!expectedCorrectLink) {
+      return { isValid: true, needsFix: false };
+    }
+    
+    // Parse expected link
+    const expectedMatch = expectedCorrectLink.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
+    if (!expectedMatch) {
+      return { isValid: true, needsFix: false };
+    }
+    
+    const [, expectedGithubUrl, expectedDisplay, expectedPath] = expectedMatch;
+    
+    // Check if current link matches expected
+    if (displayText !== expectedDisplay || localPath !== expectedPath) {
+      return {
+        isValid: false,
+        needsFix: true,
+        violation: 'Display text or relative path incorrect',
+        correctedLink: expectedCorrectLink,
+        newDisplay: expectedDisplay,
+        newPath: expectedPath
+      };
+    }
+    
+    return { isValid: true, needsFix: false };
   }
 
   /**
@@ -1767,16 +2036,12 @@ export class DefaultPDCA implements PDCA {
     console.log(`🧪 Running PDCA tests with auto-promotion...`);
     
     try {
-      // Get current version from THIS component version's package.json
-      // Use import.meta.url to get the directory of THIS file, not cwd
-      // File is at: dist/ts/layer2/DefaultComponent.js
-      // Package.json is at: ./package.json (component root)
-      const __filename = fileURLToPath(import.meta.url);
-      const __dirname = dirname(__filename);
-      const componentRoot = path.resolve(__dirname, '../../..');  // Go up 3 levels: layer2 -> ts -> dist -> root
-      const packageJsonPath = path.join(componentRoot, 'package.json');
-      const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
-      const currentVersion = packageJson.version;
+      // Get current version from model (DRY - already set in constructor)
+      const currentVersion = this.model.version;
+      const path = await import('path');
+      const url = new URL(import.meta.url);
+      const __filename = url.pathname;
+      const componentRoot = path.resolve(path.dirname(__filename), '../../..');
       
       if (!insideTestEnvironment) {
         // Run vitest first (only if not in test environment)
@@ -1966,17 +2231,219 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
+   * Get ordered training topics list (internal helper)
+   * @cliHide
+   */
+  private getOrderedTopicsInternal(): string[] {
+    return [
+      'start',
+      'pdca',
+      'cmm',
+      'dual-links',
+      'ensure-links',
+      'component-upgrade',
+      'merge',
+      'component',
+      'feature-development',
+      'web4-vs-nodejs',
+      'tech-stack',
+      'test-workflow',
+      'test-without-versioning',
+      'test-first',
+      'interpret-instructions',
+      'collaborate',
+      'chat-response',
+      'report',
+      'license-headers',
+      'decide'
+    ];
+  }
+
+  /**
+   * Get available topics count (internal helper)
+   * @cliHide
+   */
+  private getAvailableTopicsCountInternal(): number {
+    return this.getOrderedTopicsInternal().length;
+  }
+
+  /**
+   * Get training topic info by key (internal helper)
+   * @cliHide
+   */
+  private getTrainingTopicInternal(key: string): any {
+    const trainingTopics = this.getAllTrainingTopicsInternal();
+    return trainingTopics[key] || null;
+  }
+
+  /**
+   * Get all training topics definitions (internal helper)
+   * @cliHide
+   */
+  private getAllTrainingTopicsInternal(): { [key: string]: any } {
+    return {
+      'start': {
+        title: '🚀 How to Start: Background Agent Startup Protocol',
+      },
+      'pdca': {
+        title: '📝 How to PDCA: Creating CMM3-Compliant Documentation',
+      },
+      'cmm': {
+        title: '📊 How to CMM: Understanding Maturity Levels',
+      },
+      'dual-links': {
+        title: '🔗 How to Dual Links: GitHub + Local References',
+      },
+      'ensure-links': {
+        title: '✅ How to Ensure Links: Validation & Verification',
+      },
+      'component-upgrade': {
+        title: '🔄 How to Component Upgrade: Version Promotion',
+      },
+      'merge': {
+        title: '🔄 How to Merge: Component merge workflow',
+      },
+      'component': {
+        title: '🔧 How to Component: Web4 Component System',
+      },
+      'feature-development': {
+        title: '🛠️ How to Feature Development: RAG-Powered Test-First CMM3 Pattern',
+      },
+      'web4-vs-nodejs': {
+        title: '⚡ How to Web4 vs Node.js: Understanding the Web4 Framework',
+      },
+      'tech-stack': {
+        title: '🛠️ How to Tech Stack: Project Technology & Testing Framework',
+      },
+      'test-workflow': {
+        title: '🧪 How to Test Workflow: Component Testing Cycle',
+      },
+      'test-without-versioning': {
+        title: '🧪 How to Test Without Versioning: Minimal Testing Pattern',
+      },
+      'test-first': {
+        title: '🧪 How to Test First: Test-Driven Development for CMM3',
+      },
+      'interpret-instructions': {
+        title: '🧠 How to Interpret Instructions: Zero-Knowledge Method Pattern',
+      },
+      'collaborate': {
+        title: '🤝 How to Collaborate: TRON Handshake and Feedback Points',
+      },
+      'chat-response': {
+        title: '💬 How to Chat Response: Communication Pattern',
+      },
+      'report': {
+        title: '📋 How to Report: CMM3 Reporting Standards',
+      },
+      'license-headers': {
+        title: '©️ How to License Headers: MIT License Application',
+      },
+      'decide': {
+        title: '⚖️ How to Decide: QA Decision Framework for PDCAs',
+      }
+    };
+  }
+
+  /**
    * Train AI agents on specific topics with CMM3-defined, reproducible learning paths
    * Systematically transfers knowledge to ensure agents don't repeat CMM2 mistakes
    * Includes collaboration patterns, instruction interpretation, test-first verification, and zero-knowledge method usage
    * 
-   * @param topic Training topic identifier (e.g., "how-to-start", "how-to-pdca", "how-to-cmm", "how-to-component", "how-to-feature-development", "how-to-test-workflow", "how-to-test-first", "how-to-dual-links", "how-to-ensure-links", "how-to-component-upgrade", "how-to-interpret-instructions", "how-to-collaborate", "how-to-chat-response", "how-to-self-healing-patterns") or number (e.g., "1", "2", "3")
+   * @param topic Training topic identifier (e.g., ""start", ""pdca", ""cmm", ""component", ""feature-development", ""test-workflow", ""test-first", ""dual-links", ""ensure-links", ""component-upgrade", ""interpret-instructions", ""collaborate", ""chat-response", ""decide", ""tech-stack") or number (e.g., "1", "2", "3")
    * @param options Optional training configuration
    * @cliSyntax topic
-   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-merge how-to-component how-to-feature-development how-to-web4-vs-nodejs how-to-test-workflow how-to-test-without-versioning how-to-test-first how-to-interpret-instructions how-to-collaborate how-to-chat-response how-to-report how-to-license-headers how-to-self-healing-patterns 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+   * @cliDefault topic ""
+   * @cliValues topic start pdca cmm component feature-development tech-stack test-workflow test-first dual-links ensure-links component-upgrade interpret-instructions collaborate chat-response decide 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
    */
-  async trainAI(topic: string): Promise<this> {
+  async trainAI(topic: string = ''): Promise<this> {
     console.log(`\n🎓 AI Training Module - CMM3 Reproducible Learning\n`);
+
+    // Check if topic is missing or empty - show comprehensive help
+    if (!topic || topic.trim() === '') {
+      console.log(`🚨 CRITICAL: Missing Topic Parameter\n`);
+      console.log(`════════════════════════════════════════════════════════════════════════════════`);
+      console.log(`\n❌ YOU JUST EXPERIENCED THE PAIN THIS TOOL EXISTS TO PREVENT\n`);
+      console.log(`You called a method without knowing its parameters.`);
+      console.log(`You felt frustrated, confused, unsure what to do next.`);
+      console.log(`You wasted time discovering what you SHOULD have read first.\n`);
+      console.log(`🔴 THIS IS EXACTLY WHY trainAI EXISTS - TO PREVENT THIS FEELING!\n`);
+      console.log(`════════════════════════════════════════════════════════════════════════════════\n`);
+      console.log(`💡 The Feature Development Pattern (feature-development):\n`);
+      console.log(`   Phase 0 - RAG Preparation: Query trainAI BEFORE planning`);
+      console.log(`   "30 min reading → 2-3 hours debugging saved"`);
+      console.log(`   "Read to depth 3: document → references → secondary references"`);
+      console.log(`   "Build complete mental model BEFORE coding (prevents assumption cascade)"\n`);
+      console.log(`🎯 YOU MUST READ BEFORE ACTING - NOT DISCOVER WHILE ACTING\n`);
+      console.log(`   Every method you call has documentation you should query FIRST.`);
+      console.log(`   Every feature you build has patterns you should learn FIRST.`);
+      console.log(`   Every git operation has protocols you should understand FIRST.\n`);
+      console.log(`📊 The Cost of Skipping Reading:\n`);
+      console.log(`   ❌ Skip reading → CMM1 chaos → 8 CMM3 violations → Delete and restart`);
+      console.log(`   ❌ Skip reading → git protocol violation → Interactive commands → Stash chaos`);
+      console.log(`   ❌ Skip reading → Wrong version → Manual edits → Break workflow`);
+      console.log(`   ✅ Read FIRST → CMM3 compliant → One loop success → TRON validation\n`);
+      console.log(`🏆 The Exponential Cost Principle:\n`);
+      console.log(`   - Doing it WRONG first, then RIGHT: 100x more expensive`);
+      console.log(`   - Doing it RIGHT first: Normal cost`);
+      console.log(`   - The knowledge EXISTS in trainAI - USE IT!\n`);
+      console.log(`🔄 CRITICAL: After 'Summarizing Chat' Events:\n`);
+      console.log(`   When you see 'summarizing chat' event, you LOSE detailed context.`);
+      console.log(`   IMMEDIATELY use trainAI to refresh your understanding:\n`);
+      console.log(`   ✅ CORRECT: Recognize summary → trainAI start → Review protocols → Continue work`);
+      console.log(`   ❌ WRONG: Continue mechanically → Repeat old mistakes → Break processes\n`);
+      console.log(`   Summary events are NOT permission to forget - they're triggers to REFRESH.`);
+      console.log(`   The same mistakes you made before summary will happen again unless you READ.\n`);
+      console.log(`════════════════════════════════════════════════════════════════════════════════\n`);
+      console.log(`📚 Available Training Topics (${this.getAvailableTopicsCountInternal()} topics): How To...\n`);
+      
+      const orderedTopics = this.getOrderedTopicsInternal();
+      orderedTopics.forEach((key, i) => {
+        const topicInfo = this.getTrainingTopicInternal(key);
+        const emoji = key.includes('start') ? '🚀' :
+                     key.includes('pdca') ? '📝' :
+                     key.includes('cmm') ? '📊' :
+                     key.includes('component') ? '🔧' :
+                     key.includes('feature') ? '🛠️' :
+                     key.includes('tech-stack') ? '🛠️' :
+                     key.includes('test') ? '🧪' :
+                     key.includes('dual') ? '🔗' :
+                     key.includes('ensure') ? '✅' :
+                     key.includes('merge') ? '🔄' :
+                     key.includes('interpret') ? '🧠' :
+                     key.includes('collaborate') ? '🤝' :
+                     key.includes('chat') ? '💬' :
+                     key.includes('report') ? '📋' :
+                     key.includes('license') ? '©️' :
+                     key.includes('decide') ? '⚖️' :
+                     key.includes('web4-vs-nodejs') ? '⚡' : '📖';
+        console.log(`   ${i + 1}:${key.padEnd(35)} ${emoji} ${topicInfo ? topicInfo.title.replace(/^[^a-zA-Z]+\s*/, '') : ''}`);
+      });
+      
+      console.log(`💡 Usage Examples:\n`);
+      console.log(`   pdca trainAI feature-development  # Learn BEFORE building features`);
+      console.log(`   pdca trainAI component            # Learn BEFORE modifying components`);
+      console.log(`   pdca trainAI start                # Learn startup protocol`);
+      console.log(`   pdca trainAI 9                    # Use topic number for quick access\n`);
+      console.log(`🧠 MEMORIZE THE KEYWORDS - Use Them as Triggers:\n`);
+      console.log(`   When you see these keywords in user prompts, READ the training FIRST:\n`);
+      console.log(`   - "start", "startup", "begin" → Read 'start' topic`);
+      console.log(`   - "pdca", "document" → Read 'pdca' topic`);
+      console.log(`   - "feature", "implement", "build" → Read 'feature-development' topic`);
+      console.log(`   - "component", "modify", "web4" → Read 'component' topic`);
+      console.log(`   - "test", "testing" → Read 'test-first' or 'test-workflow' topic`);
+      console.log(`   - "vitest", "jest", "tech", "stack" → Read 'tech-stack' topic`);
+      console.log(`   - "git", "commit", "push" → Read git protocol in 'start' or 'pdca' topic`);
+      console.log(`   - "decision", "qa", "choose" → Read 'decide' topic`);
+      console.log(`   - "link", "dual" → Read 'dual-links' or 'ensure-links' topic\n`);
+      console.log(`   DON'T wait to discover the right approach - READ when you see the keyword!\n`);
+      console.log(`🎯 REMEMBER: Perfect hindsight is worthless. Proactive reading is priceless.\n`);
+      console.log(`   You KNOW what you should have read AFTER you fail.`);
+      console.log(`   You SHOULD read it BEFORE you start.\n`);
+      console.log(`════════════════════════════════════════════════════════════════════════════════\n`);
+      
+      return this;
+    }
 
     // Future trainAI topics from gap analysis (2025-10-21-UTC-1047):
     // - how-to-environment-setup: Shell config, git setup, source.env
@@ -1987,25 +2454,26 @@ export class DefaultPDCA implements PDCA {
 
     // Single source of truth: ordered topic list for both display and numeric mapping
     const orderedTopics = [
-      'how-to-start',
-      'how-to-pdca',
-      'how-to-cmm',
-      'how-to-dual-links',
-      'how-to-ensure-links',
-      'how-to-component-upgrade',
-      'how-to-merge',
-      'how-to-component',
-      'how-to-feature-development',
-      'how-to-web4-vs-nodejs',
-      'how-to-test-workflow',
-      'how-to-test-without-versioning',
-      'how-to-test-first',
-      'how-to-interpret-instructions',
-      'how-to-collaborate',
-      'how-to-chat-response',
-      'how-to-report',
-      'how-to-license-headers',
-      'how-to-self-healing-patterns'
+      'start',
+      'pdca',
+      'cmm',
+      'dual-links',
+      'ensure-links',
+      'component-upgrade',
+      'merge',
+      'component',
+      'feature-development',
+      'web4-vs-nodejs',
+      'tech-stack',
+      'test-workflow',
+      'test-without-versioning',
+      'test-first',
+      'interpret-instructions',
+      'collaborate',
+      'chat-response',
+      'report',
+      'license-headers',
+      'decide'
     ];
 
     // Handle numeric input - map number to topic name
@@ -2030,7 +2498,7 @@ export class DefaultPDCA implements PDCA {
 
     // Training topic definitions - CMM3: Objective, Reproducible, Verifiable
     const trainingTopics: { [key: string]: TrainingTopic } = {
-      'how-to-start': {
+      'start': {
         title: '🚀 How to Start: Background Agent Startup Protocol',
         description: 'Complete startup sequence for new agents, including CMM4 understanding, identity setup, and initial PDCA creation',
         requiredReading: [
@@ -2084,7 +2552,7 @@ export class DefaultPDCA implements PDCA {
           'Understands collaboration model'
         ]
       },
-      'how-to-pdca': {
+      'pdca': {
         title: '📝 How to PDCA: Creating CMM3-Compliant Documentation',
         description: 'Learn to create excellent PDCAs with proper structure, links, and compliance',
         requiredReading: [
@@ -2111,7 +2579,7 @@ export class DefaultPDCA implements PDCA {
           '✅ DRY principle: cross-reference instead of duplicating content',
           '✅ Always include: "Never 2 1 (TO ONE). Always 4 2 (FOR TWO)." at end',
           '⚠️ CMM badges track compliance status throughout PDCA lifecycle',
-          '🔗 Dual link format: [GitHub](URL) | [§/path](path) - see how-to-dual-links',
+          '🔗 Dual link format: [GitHub](URL) | [§/path](path) - see dual-links',
           '🔗 Generate dual links: `pdca getDualLink <file>` (auto-fixes git status)',
           '🔗 Validate links: `pdca ensureValidLinks <file>` before PDCA completion',
           '🛑 1f Step 2: "Interrupt immediately on unexpected observations and ask TRON"',
@@ -2131,7 +2599,7 @@ export class DefaultPDCA implements PDCA {
           'Knows collaboration protocol during PDCA creation'
         ]
       },
-      'how-to-cmm': {
+      'cmm': {
         title: '🎯 How to CMM: Understanding Capability Maturity Levels',
         description: 'Master the CMM framework from chaos (CMM1) to feedback loop mastery (CMM4)',
         requiredReading: [
@@ -2162,7 +2630,7 @@ export class DefaultPDCA implements PDCA {
           'Understands why CMM4 enables LLM capability evolution'
         ]
       },
-      'how-to-dual-links': {
+      'dual-links': {
         title: '🔗 How to Dual Links: GitHub + § Notation for Chat Reports',
         description: 'Master dual link format: GitHub URLs for verification, § paths for local navigation',
         requiredReading: [
@@ -2205,12 +2673,7 @@ export class DefaultPDCA implements PDCA {
           '❌ NEVER assume all files are committed - VERIFY with git status',
           '🔄 RAG First: When uncertain, query trainAI before acting',
           '⚠️ Bootstrap Phase: Extra vigilance required - system being established (temporary)',
-          '🎯 Forcing Function: git status → commit all → push → THEN present link',
-          '🚨 ALWAYS use pdca getDualLink - NEVER manually construct',
-          '🚨 Even if you "know" the format - use the tool (zero-knowledge principle)',
-          '⚠️ Manual construction = CMM2 violation (assumes knowledge)',
-          '⚠️ Context window pressure makes you forget to use tools',
-          '✅ Tool usage = CMM3 (reproducible, verifiable, no assumptions)'
+          '🎯 Forcing Function: git status → commit all → push → THEN present link'
         ],
         verificationChecklist: [
           'Can write dual link format from memory',
@@ -2226,13 +2689,10 @@ export class DefaultPDCA implements PDCA {
           'Checks git status before presenting dual links',
           'Commits ALL uncommitted files, not just PDCA',
           'Queries trainAI when assumptions arise',
-          'Recognizes context window exhaustion symptoms',
-          'Always uses pdca getDualLink instead of manual construction',
-          'Recognizes manual link construction as CMM2 violation',
-          'Can explain why tool usage is mandatory (zero-knowledge principle)'
+          'Recognizes context window exhaustion symptoms'
         ]
       },
-      'how-to-ensure-links': {
+      'ensure-links': {
         title: '✅ How to Ensure Links: CMM3 Atomic Link Validation',
         description: 'Zero-knowledge automation: Ensure all dual links are valid across entire project',
         requiredReading: [
@@ -2262,7 +2722,7 @@ export class DefaultPDCA implements PDCA {
           'Knows to validate links before PDCA/session completion'
         ]
       },
-      'how-to-component-upgrade': {
+      'component-upgrade': {
         title: '🚀 How to Component Upgrade: Link Management During Versioning',
         description: 'Maintain valid links when components evolve: version bumps, file moves, refactoring',
         requiredReading: [
@@ -2297,7 +2757,7 @@ export class DefaultPDCA implements PDCA {
           'Can maintain backward compatibility during refactoring'
         ]
       },
-      'how-to-merge': {
+      'merge': {
         title: '🔀 How to Merge: Post-Merge Integration and Build Requirements',
         description: 'Complete merge integration: source + build + runtime verification for symlinked components',
         requiredReading: [
@@ -2337,7 +2797,7 @@ export class DefaultPDCA implements PDCA {
           'Knows to check all symlink targets for build artifacts'
         ]
       },
-      'how-to-component': {
+      'component': {
         title: '🔧 How to Component: Web4 Component System',
         description: 'Learn Web4 component patterns, versioning, and CLI auto-discovery',
         requiredReading: [
@@ -2417,7 +2877,7 @@ export class DefaultPDCA implements PDCA {
           'Knows web4tscomponent initProject sets up DRY structure'
         ]
       },
-      'how-to-feature-development': {
+      'feature-development': {
         title: '🛠️ How to Feature Development: RAG-Powered Test-First CMM3 Pattern',
         description: 'Master CMM3-compliant feature development: RAG preparation, test-first design, automated verification, and knowledge loop closure',
         requiredReading: [
@@ -2443,7 +2903,7 @@ export class DefaultPDCA implements PDCA {
           }
         ],
         keyLessons: [
-          '✅ Phase 0 - RAG Preparation: Query trainAI BEFORE planning (how-to-test-first, how-to-component)',
+          '✅ Phase 0 - RAG Preparation: Query trainAI BEFORE planning (test-first, component)',
           '⏱️ RAG Preparation is Non-Negotiable: 30 min reading → 2-3 hours debugging saved',
           '📚 Read to depth 3: document → references → secondary references',
           '🧠 Build complete mental model BEFORE coding (prevents assumption cascade)',
@@ -2477,7 +2937,7 @@ export class DefaultPDCA implements PDCA {
           '📊 Web4 Principles Research Has Exponential ROI: 30 min reading → Apply 7 principles forever'
         ],
         verificationChecklist: [
-          'Queried trainAI before planning (how-to-test-first, relevant domain topics)',
+          'Queried trainAI before planning (test-first, relevant domain topics)',
           'Read referenced docs to depth 3 (not just surface level)',
           'Built complete mental model before coding',
           'Identified reusable parts at planning stage (not refactoring)',
@@ -2499,7 +2959,7 @@ export class DefaultPDCA implements PDCA {
           'Achieved "one loop" success (TRON impressed with efficiency)'
         ]
       },
-      'how-to-web4-vs-nodejs': {
+      'web4-vs-nodejs': {
         title: '🔄 Web4 vs Node.js: Pattern Migration Guide',
         description: 'Web4 components use modern ES modules and strict naming conventions. This guide covers common Node.js patterns and their Web4-compliant equivalents.',
         requiredReading: [
@@ -2556,7 +3016,50 @@ export class DefaultPDCA implements PDCA {
           'Will query "test patterns" proactively in future'
         ]
       },
-      'how-to-test-workflow': {
+      'tech-stack': {
+        title: '🛠️ Tech Stack: Project Technology & Testing Framework',
+        description: 'Web4Articles uses modern TypeScript, ESM, and Vitest. Jest is BANNED. Understanding the tech stack prevents violations and ensures compatibility.',
+        requiredReading: [
+          {
+            path: 'docs/tech-stack.md',
+            reason: 'CRITICAL: Defines approved technologies and BANNED frameworks (Jest)',
+            depth: 2
+          }
+        ],
+        keyLessons: [
+          '✅ Testing Framework: Vitest ONLY - modern, ESM-native, TypeScript-first',
+          '❌ Jest is BANNED: Poor ESM support, legacy CJS patterns, slow migration',
+          '📦 Import Pattern: import { describe, it, expect } from \'vitest\'',
+          '⚠️ Tech Debt Violation: Any Jest config, scripts, or dependencies must be removed',
+          '🏗️ Architecture: Web4TSComponent v0.3.x - component-based, TypeScript-first',
+          '📝 Language: TypeScript (ES2020+) with full type safety',
+          '🔧 CLI System: Auto-discovery with method chaining',
+          '📊 Development Level: CMM4 (systematic, automated, quantitatively managed)',
+          '🎯 Tooling: PlantUML + Graphviz for architecture diagrams',
+          '🐳 Environment: Docker + Devcontainer for cross-platform consistency',
+          '✅ Module System: Pure ESM - NO CommonJS (require, module.exports)',
+          '✅ Modern JS: Full support for import.meta.url, top-level await',
+          '🔍 Detection: Search for jest, ts-jest, jest.config - all violations',
+          '🔧 Fix Pattern: Replace with vitest, vitest.config.ts',
+          '📊 RAG Queries: "test framework" → finds this topic',
+          '📊 RAG Queries: "vitest jest" → finds this topic',
+          '⚠️ Context Window Risk: Assuming Jest is allowed → BANNED',
+          '✅ Forcing Function: Query "tech stack" BEFORE adding dependencies'
+        ],
+        verificationChecklist: [
+          'Read docs/tech-stack.md completely',
+          'Understands Jest is BANNED - no exceptions',
+          'Knows correct import: import { describe, it, expect } from \'vitest\'',
+          'Can identify Jest violations (jest, ts-jest, jest.config)',
+          'Understands why Vitest: ESM-native, TypeScript-first, modern',
+          'Knows project uses pure ESM - no CommonJS',
+          'Understands Web4TSComponent architecture',
+          'Will query "tech stack" before adding new dependencies',
+          'Will check docs/tech-stack.md for approved technologies',
+          'Can explain to next agent why Jest is banned'
+        ]
+      },
+      'test-workflow': {
         title: '🧪 How to Test Workflow: Semantic Versioning and Test Iteration',
         description: 'Master the test workflow: latest → test → dev → prod with auto-promotion and test iteration',
         requiredReading: [
@@ -2602,7 +3105,7 @@ export class DefaultPDCA implements PDCA {
           'Understands that `pdca test` manages symlinks but does not commit'
         ]
       },
-      'how-to-test-without-versioning': {
+      'test-without-versioning': {
         title: '🧪 How to Test Without Versioning: Baseline Verification',
         description: 'Learn to run tests without triggering version creation: test itCase for discovery, specific tests for verification, direct vitest for baseline',
         requiredReading: [
@@ -2649,7 +3152,7 @@ export class DefaultPDCA implements PDCA {
           'Understands baseline truth testing for CMM3 verification'
         ]
       },
-      'how-to-test-first': {
+      'test-first': {
         title: '🧪 How to Test-First Verification: Trust Tests, Avoid Manual Verification',
         description: 'Master the test-first pattern: Write tests first, trust them to show pass/fail, avoid manual verification loops',
         requiredReading: [
@@ -2676,13 +3179,7 @@ export class DefaultPDCA implements PDCA {
           '🚫 Never skip directly to fixing: Always run the test first to see the failure',
           '✨ Test-first enforces CMM3: Objective criteria (test assertions) over subjective judgment',
           '⚠️ Root cause: Efficiency bias → assumption cascade → skipping verification step',
-          '💡 When debugging: Write a test that reproduces the bug, then fix until test passes',
-          '🚨 Emergency Fixes: Almost NEVER justified - leads to incomplete solutions',
-          '🚨 When NOT to skip tests: System-wide failures (still write tests first)',
-          '✅ Example: LicenseTool broke 400+ files → Still wrote TC20 tests first',
-          '✅ Test-First Even in "Emergencies": Proves bug exists, proves fix works',
-          '⚠️ Pressure to "just fix it" → Resist and write tests',
-          '🎓 Meta-Learning: Emergency fix without tests = incomplete fix = more work later'
+          '💡 When debugging: Write a test that reproduces the bug, then fix until test passes'
         ],
         verificationChecklist: [
           'Can write a failing test before implementing a feature',
@@ -2694,13 +3191,10 @@ export class DefaultPDCA implements PDCA {
           'Understands why test-first is CMM3-compliant (objective criteria)',
           'Can explain why manual verification is CMM2 (subjective)',
           'Avoids over-implementation (doing more than requested)',
-          'Stops after showing test results, waits for user direction',
-          'Resists pressure to skip tests even in emergencies',
-          'Can write tests for system-wide failures',
-          'Understands why emergency fixes without tests fail'
+          'Stops after showing test results, waits for user direction'
         ]
       },
-      'how-to-interpret-instructions': {
+      'interpret-instructions': {
         title: '🎯 How to Interpret Instructions: Literal vs Implied Actions',
         description: 'Master the art of parsing user instructions to understand exactly what\'s requested vs what\'s assumed',
         requiredReading: [
@@ -2737,7 +3231,7 @@ export class DefaultPDCA implements PDCA {
           'Knows when to ask vs assume'
         ]
       },
-      'how-to-collaborate': {
+      'collaborate': {
         title: '🤝 How to Collaborate: User-in-the-Loop CMM4 Pattern',
         description: 'Understand CMM4 collaboration where user controls the loop and agent enables execution',
         requiredReading: [
@@ -2778,7 +3272,7 @@ export class DefaultPDCA implements PDCA {
           'Waits for user decision at feedback points'
         ]
       },
-      'how-to-chat-response': {
+      'chat-response': {
         title: '💬 How to Chat Response: CMM3 Compliance for Agent Replies',
         description: 'Master the art of chat responses - links only, no explanatory text, proper dual link format',
         requiredReading: [
@@ -2813,7 +3307,7 @@ export class DefaultPDCA implements PDCA {
           'Can generate project-root-relative paths'
         ]
       },
-      'how-to-report': {
+      'report': {
         title: '📊 How to Report: Concise Task Completion Without Summary Generation',
         description: 'Master concise reporting - avoid elaborate summaries (context window symptom), query RAG first, follow CMM3 format',
         requiredReading: [
@@ -2861,7 +3355,7 @@ export class DefaultPDCA implements PDCA {
           'Knows to query RAG when NOT feeling uncertain (paradox)'
         ]
       },
-      'how-to-license-headers': {
+      'license-headers': {
         title: '📄 How to License Headers: AI-GPL License Management',
         description: 'Master license header management - why headers matter, how to use licensetool, when to run checks',
         requiredReading: [
@@ -2906,14 +3400,7 @@ export class DefaultPDCA implements PDCA {
           '🎓 Dual-Licensing Model: Open-source (AGPLv3) + Commercial (AI use cases)',
           '🔄 Header Updates: Run licensetool apply after copyright year changes',
           '✨ Auto-Completion: Tab completion works for file paths and dryRun parameter',
-          '🧪 Test-First Pattern: 60 tests written before implementation (98.3% pass rate)',
-          '🔄 Self-Healing: If headers are wrong, fix LicenseTool logic, run apply',
-          '🔄 Enhanced Detection: Check first 20 lines for shebang (not just line 1)',
-          '🔄 Format Validation: hasValidHeader checks content AND format',
-          '🔄 Shebang Preservation: Extract → Remove → Process → Prepend',
-          '🔄 Header Cleanup: Remove all old/duplicate headers before inserting',
-          '⚠️ Exclusions: .gitmodules, package.json, *.lock files never get headers',
-          '🎯 Self-Healing Implementation: See how-to-self-healing-patterns'
+          '🧪 Test-First Pattern: 60 tests written before implementation (98.3% pass rate)'
         ],
         verificationChecklist: [
           'Can run licensetool check and interpret results',
@@ -2925,60 +3412,58 @@ export class DefaultPDCA implements PDCA {
           'Knows to check CI status after header changes',
           'Understands shebang conflicts with headers',
           'Can explain why headers use relative paths',
-          'Recognizes process artifacts vs regular files',
-          'Knows when to use self-healing approach (tool broke files)',
-          'Can implement enhanced detection strategies',
-          'Understands shebang preservation pattern',
-          'Knows which files should be excluded from licensing'
+          'Recognizes process artifacts vs regular files'
         ]
       },
-      'how-to-self-healing-patterns': {
-        title: '🔄 How to Self-Healing Patterns: Fix the Source, Not the Symptoms',
-        description: 'When automated tools break files they manage, fix the tool\'s logic and let it heal the damage',
+      'decide': {
+        title: '⚖️ How to Decide: QA Decision Framework for PDCAs',
+        description: 'Master the art of presenting QA decisions - when to ask, what to ask, how to format decisions properly',
         requiredReading: [
           {
-            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-24-UTC-0930.root-cause-file-modification-method.pdca.md',
-            reason: 'Breakthrough: Node.js fs module is the working method',
-            depth: 2
-          },
-          {
-            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-24-UTC-1130.fix-source-self-healing-approach.pdca.md',
-            reason: 'Complete self-healing implementation with test-first',
+            path: 'scrum.pmo/roles/_shared/PDCA/PDCA.howto.decide.md',
+            reason: 'Complete decision-making framework with examples',
             depth: 3
           },
           {
-            path: 'scrum.pmo/project.journal/2025-10-20-UTC-1008-session/2025-10-24-UTC-1105.emergency-fix-vs-test-first-evaluation.pdca.md',
-            reason: 'Why emergency fixes without tests fail',
-            depth: 2
+            path: 'scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md',
+            reason: 'Section 1j: QA Decisions format compliance',
+            depth: 1
+          },
+          {
+            path: 'scrum.pmo/roles/_shared/PDCA/template.md',
+            reason: 'See QA Decisions section structure in official template',
+            depth: 1
           }
         ],
         keyLessons: [
-          '🔄 Self-Healing Pattern: Tool breaks files → Fix tool logic → Tool heals files',
-          '✅ Scalable: Fixes 400+ files automatically vs manual one-by-one',
-          '✅ Root Cause > Symptoms: Address why headers are wrong, not manually fix each file',
-          '🎯 Enhanced Detection: Check first 20 lines for shebang, not just line 1',
-          '🎯 Format Validation: hasValidHeader must check content AND format',
-          '🎯 Shebang Preservation: Extract → Remove → Process → Prepend pattern',
-          '🎯 Header Cleanup: Remove old/duplicate headers BEFORE inserting new',
-          '⚠️ File Persistence in WSL2/Docker: Use Node.js fs module, not Cursor tools',
-          '⚠️ Config Files: .gitmodules, package.json should NEVER have headers',
-          '✅ Test-First for Self-Healing: TC20 tests proved bug, proved fix, enabled automation',
-          '❌ Emergency Fixes Without Tests: Incomplete solutions, no verification',
-          '💡 User Paradigm Shift: "Can we not change the header template and execute apply?"',
-          '💡 This question unlocked self-healing approach',
-          '🎓 Meta-Pattern: When tool output is wrong, fix the tool, not the output'
+          '✅ QA Decisions are for USER decisions, not agent decisions',
+          '⚖️ The 42 Rule: When in doubt, ASK! The answer to everything is often another question',
+          '✅ Three valid formats: Pending decisions [ ], Completed [x], or "All clear, no decisions to make"',
+          '✅ Present decisions when: Real risk exists, Multiple valid approaches, Ambiguous requirements, Significant impact',
+          '❌ DON\'T present when: User already decided, No real risk, Only one sensible option, Fake opposites',
+          '🚨 Destructive operations REQUIRE warnings (force push, delete, overwrite)',
+          '📋 Format: Numbered decisions with options a/b/c including rationale/consequences',
+          '✅ Check official docs BEFORE creating decisions (semver.org, CMMI, git docs, project glossary)',
+          '✅ Decision lifecycle: Pending [ ] → TRON answers → Agent implements → Completed [x]',
+          '❌ NEVER create different QA Decisions in chat - copy EXACTLY from PDCA',
+          '⚠️ Startup decisions: Focus Area, Role Selection, Session Duration, PDCA Location, Agent Identity',
+          '🔧 Interactive decisions: Checkbox pattern with indented metadata for branch updates',
+          '💡 Good decisions empower users, bad decisions waste time',
+          '🤝 Collaboration pattern: Present decision, STOP, wait for user response',
+          '❌ No fake opposites: Never present "do it" vs "don\'t do it" as options',
+          '✅ Decision quality: Clear title, distinct options, consequences explained, official sources checked'
         ],
         verificationChecklist: [
-          'Can identify when self-healing pattern applies (tool manages files)',
-          'Knows to check first N lines for patterns, not just line 1',
-          'Understands hasValidHeader needs format validation',
-          'Can implement shebang preservation pattern',
-          'Removes old headers before inserting new ones',
-          'Uses Node.js fs module for file operations in WSL2/Docker',
-          'Knows which files should never have headers',
-          'Writes tests BEFORE implementing self-healing logic',
-          'Can explain why emergency fixes are almost always wrong',
-          'Recognizes paradigm shift questions from users'
+          'Can identify when a decision is needed vs when it\'s not',
+          'Understands the three valid QA Decision formats',
+          'Can format decisions with proper checkbox syntax',
+          'Knows to check official documentation before creating decisions',
+          'Recognizes fake opposites and avoids them',
+          'Can write destructive operation warnings properly',
+          'Understands decision lifecycle from pending to completed',
+          'Knows to copy EXACT decisions from PDCA to chat (no paraphrasing)',
+          'Can present startup decisions with focus/role/duration/location',
+          'Understands the 42 Rule - asking when unsure is correct behavior'
         ]
       }
     };
@@ -3036,7 +3521,7 @@ export class DefaultPDCA implements PDCA {
    * @param topic Optional: limit search to specific topic
    * @cliSyntax query topic
    * @cliDefault topic ""
-   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-merge how-to-component how-to-feature-development how-to-web4-vs-nodejs how-to-test-workflow how-to-test-without-versioning how-to-test-first how-to-interpret-instructions how-to-collaborate how-to-chat-response how-to-report how-to-license-headers how-to-self-healing-patterns
+   * @cliValues topic start pdca cmm component feature-development web4-vs-nodejs test-workflow test-first dual-links ensure-links component-upgrade merge interpret-instructions collaborate chat-response report license-headers
    */
   async queryTrainAI(query: string, topic: string = ''): Promise<this> {
     console.log(`\n🔍 trainAI Query Results\n`);
@@ -4056,3 +4541,4 @@ export class DefaultPDCA implements PDCA {
     return null;
   }
 }
+

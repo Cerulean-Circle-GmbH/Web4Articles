@@ -1,11 +1,3 @@
-<!--
-SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
-SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
-Copyright (c) 2025 Cerulean Circle GmbH
-Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
-Backlinks: /LICENSE, /AI-GPL.md
--->
-
 # 📋 **PDCA Cycle: Spec/README Merge - Web4TSComponent 0.3.11.1 → 0.3.12.1**
 
 **🗓️ Date:** 2025-10-11-UTC-1551  

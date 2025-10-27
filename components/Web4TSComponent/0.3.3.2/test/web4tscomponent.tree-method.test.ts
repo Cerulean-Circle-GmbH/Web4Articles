@@ -1,9 +1,17 @@
 /**
- * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
- * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
- * Copyright (c) 2025 Cerulean Circle GmbH
- * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
- * Backlinks: /LICENSE, /AI-GPL.md
+ * Web4TSComponent tree() Method Tests
+ * 
+ * Tests the tree() method which displays directory structure for components.
+ * WITHOUT context: Shows tree for current component (self-operation)
+ * WITH context: Shows tree for target component
+ * 
+ * Test Categories:
+ * 1. Context Modes (3 tests)
+ * 2. Directory Structure Display (4 tests)
+ * 3. Depth Parameter (3 tests)
+ * 4. Hidden Files Parameter (2 tests)
+ * 
+ * Total: 12 tests
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';

@@ -1,9 +1,7 @@
 /**
- * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
- * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
- * Copyright (c) 2025 Cerulean Circle GmbH
- * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
- * Backlinks: /LICENSE, /AI-GPL.md
+ * VersionManager - Web4 Semantic Version Management
+ * Handles 4-part semantic versioning (major.minor.patch.build) with reset logic
+ * Supports latest management and branch cherry-picking
  */
 
 import * as fs from 'fs/promises';

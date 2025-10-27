@@ -1,9 +1,9 @@
 /**
- * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
- * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
- * Copyright (c) 2025 Cerulean Circle GmbH
- * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
- * Backlinks: /LICENSE, /AI-GPL.md
+ * Tests for generated component auto-promotion via npm test
+ * 
+ * This test verifies that generated components have the SAME auto-promotion
+ * behavior as Web4TSComponent itself. When `npm test` is run on a generated
+ * component, it should automatically trigger version promotion based on test results.
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
