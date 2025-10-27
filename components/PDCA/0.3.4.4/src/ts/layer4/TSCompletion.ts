@@ -1,3 +1,11 @@
+/**
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
+ */
+
 // TypeScript Completion Backend for oosh CLI
 // Implements Completion interface for dynamic tab completion
 
@@ -263,10 +271,7 @@ export class TSCompletion implements Completion {
     return '';
   }
 
-  /**
-   * Check if a method has @cliHide annotation
-   * Used by DefaultCLI to determine if method should be visually distinguished
-   */
+  
   static isMethodHidden(className: string, methodName: string): boolean {
     const files = TSCompletion.getProjectSourceFiles();
     for (const file of files) {
@@ -571,11 +576,7 @@ export class TSCompletion implements Completion {
     return [];
   }
 
-  /**
-   * Enhanced method parameter extraction with union type support
-   * Web4 pattern: TypeScript AST parsing with union type detection for CLI generation
-   * Supports composite class names (comma-separated)
-   */
+  
   static getEnhancedMethodParameters(className: string, methodName: string): any[] {
     // Support comma-separated class names: "DefaultCLI,DefaultWeb4TSComponent"
     // Try each class until we find the method
@@ -644,18 +645,12 @@ export class TSCompletion implements Completion {
     return parameterInfo;
   }
 
-  /**
-   * Check if type string represents a union type
-   * Web4 pattern: Union type detection from TypeScript AST
-   */
+  
   private static isUnionType(typeString: string): boolean {
     return typeString.includes(' | ') || typeString.includes('|');
   }
 
-  /**
-   * Extract individual types from union type string
-   * Web4 pattern: Union type parsing from TypeScript AST
-   */
+  
   private static extractUnionTypes(typeString: string): string[] {
     if (!TSCompletion.isUnionType(typeString)) {
       return [typeString];
@@ -664,10 +659,7 @@ export class TSCompletion implements Completion {
     return typeString.split('|').map(type => type.trim());
   }
 
-  /**
-   * Extract CLI annotations from JSDoc (@cliHide, @cliSyntax, etc.)
-   * Web4 pattern: Pure TSDoc annotation parsing for zero config CLI generation
-   */
+  
   static extractCliAnnotations(className: string, methodName: string, paramName?: string): any {
     // Enhanced file discovery for zero config annotation processing
     const files = TSCompletion.getAllTypeScriptFiles();
@@ -690,14 +682,7 @@ export class TSCompletion implements Completion {
     return {};
   }
 
-  /**
-   * Extract @cliValues annotation for enum parameters
-   * Web4 pattern: TSDoc-driven enum value declaration for zero hardcoding
-   * @param className Class name to search
-   * @param methodName Method name to search (empty string = search all methods)
-   * @param paramName Parameter name to extract values for
-   * @returns Array of enum values, or empty array if not found
-   */
+  
   static extractCliValues(className: string, methodName: string, paramName: string): string[] {
     try {
       const files = TSCompletion.getAllTypeScriptFiles();
@@ -718,10 +703,7 @@ export class TSCompletion implements Completion {
     return [];
   }
 
-  /**
-   * Search class for @cliValues annotation
-   * Web4 pattern: TSDoc enum value extraction
-   */
+  
   private static searchClassForCliValues(
     sourceFile: ts.SourceFile,
     className: string,
@@ -798,9 +780,7 @@ export class TSCompletion implements Completion {
     return result;
   }
 
-  /**
-   * Get all TypeScript files in the component for zero config processing
-   */
+  
   private static getAllTypeScriptFiles(): string[] {
     const __dirname = path.dirname(new URL(import.meta.url).pathname);
     const componentRoot = path.resolve(__dirname, '../../..');
@@ -829,9 +809,7 @@ export class TSCompletion implements Completion {
     return files;
   }
 
-  /**
-   * Search class for CLI annotations with enhanced JSDoc extraction
-   */
+  
   private static searchClassForAnnotations(sourceFile: ts.SourceFile, className: string, methodName: string, paramName?: string): any | null {
     let result: any | null = null;
     
@@ -854,9 +832,7 @@ export class TSCompletion implements Completion {
     return result;
   }
 
-  /**
-   * Enhanced JSDoc text extraction with better comment detection
-   */
+  
   private static extractEnhancedJsDocText(node: ts.Node): string {
     // Get all JSDoc comments for the node
     const jsDocComments = ts.getJSDocCommentsAndTags(node);
@@ -876,10 +852,7 @@ export class TSCompletion implements Completion {
     return fullText;
   }
 
-  /**
-   * Parse CLI annotations from JSDoc text
-   * Web4 pattern: Zero config annotation parsing
-   */
+  
   private static parseCliAnnotations(jsDocText: string, paramName?: string): any {
     return {
       hide: jsDocText.includes('@cliHide'),
@@ -891,10 +864,7 @@ export class TSCompletion implements Completion {
     };
   }
 
-  /**
-   * Extract value from @annotation pattern
-   * For @cliDefault, extracts paramName and value (e.g., "@cliDefault version 0.1.0.0")
-   */
+  
   private static extractAnnotationValue(text: string, annotation: string, paramName?: string): string | null {
     if (annotation === 'cliDefault' && paramName) {
       // Special handling for @cliDefault paramName value

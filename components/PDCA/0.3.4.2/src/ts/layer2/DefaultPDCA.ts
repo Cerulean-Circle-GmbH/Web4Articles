@@ -1,6 +1,9 @@
 /**
- * DefaultPDCA - PDCA Component Implementation
- * Web4 pattern: Empty constructor + scenario initialization + component functionality
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { PDCA } from '../layer3/PDCA.interface.js';
@@ -13,9 +16,7 @@ import { join, dirname } from 'path';
 import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js';
 import { DefaultColors } from '../../../../../Web4TSComponent/latest/dist/ts/layer4/DefaultColors.js';
 
-/**
- * Training topic definition - CMM3: Objective, Reproducible, Verifiable
- */
+
 interface TrainingTopic {
   title: string;
   description: string;
@@ -55,11 +56,7 @@ export class DefaultPDCA implements PDCA {
     };
   }
 
-  /**
-   * Lazy initialization of Web4TSComponent for delegation (DRY principle)
-   * Dynamic imports resolve paths at runtime, enabling location-independent operation
-   * @cliHide
-   */
+  
   private async getWeb4TSComponent(): Promise<any> {
     if (this.web4ts) return this.web4ts;
 
@@ -89,9 +86,7 @@ export class DefaultPDCA implements PDCA {
     return this.web4ts;
   }
 
-  /**
-   * @cliHide
-   */
+  
   init(scenario: Scenario<PDCAModel>): this {
     if (scenario.model) {
       this.model = { ...this.model, ...scenario.model };
@@ -99,9 +94,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * @cliHide
-   */
+  
   async toScenario(name?: string): Promise<Scenario<PDCAModel>> {
     const ownerData = JSON.stringify({
       user: process.env.USER || 'system',
@@ -123,12 +116,7 @@ export class DefaultPDCA implements PDCA {
     };
   }
 
-  /**
-   * Set the default session path for PDCA operations
-   * 
-   * @param sessionPath - Path to session directory
-   * @cliSyntax sessionPath
-   */
+  
   async setSession(sessionPath: string): Promise<this> {
     console.log(`\n📁 Setting Default Session Path\n`);
     console.log(`   Old: ${this.defaultSession}`);
@@ -144,13 +132,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * Check a single PDCA file for CMM3 compliance violations
-   * Based on scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md
-   * 
-   * @param pdcaFile - Path to PDCA file (relative to project root or absolute)
-   * @cliSyntax pdcaFile
-   */
+  
   async cmm3check(pdcaFile: string): Promise<this> {
     console.log(`\n🔍 CMM3 Compliance Check - Single File`);
     console.log(`📄 File: ${pdcaFile}\n`);
@@ -223,13 +205,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * Check all PDCA files in a session directory for CMM3 compliance violations
-   * Based on scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md
-   * 
-   * @param sessionPath - Path to session directory (defaults to configured session)
-   * @cliSyntax sessionPath
-   */
+  
   async cmm3checkSession(sessionPath?: string): Promise<this> {
     const targetPath = sessionPath || this.defaultSession;
     console.log(`\n🔍 CMM3 Compliance Check - Session`);
@@ -306,10 +282,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * Get human-readable description for a violation code
-   * @cliHide
-   */
+  
   private getViolationDescription(code: string): string {
     const descriptions: Record<string, string> = {
       '1a': 'Template version 3.2.4.2 not found or incorrect structure',
@@ -334,13 +307,7 @@ export class DefaultPDCA implements PDCA {
     return descriptions[code] || 'Unknown violation';
   }
 
-  /**
-   * Check if CMM3 checklist or its dual-linked files have been modified since last PDCA component update
-   * Warns if any files are newer than the component's last code update timestamp
-   * Last synced: 2025-10-19-UTC-1500
-   * 
-   * @cliSyntax 
-   */
+  
   async checkCmm3Checklist(): Promise<this> {
     console.log(`\n🔍 Checking CMM3 Checklist Freshness\n`);
 
@@ -446,12 +413,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * Accept CMM3 checklist changes by updating the last code update timestamp
-   * This acknowledges that you have reviewed the checklist changes and updated the check methods accordingly
-   * 
-   * @cliSyntax 
-   */
+  
   async acceptCmm3Checklist(): Promise<this> {
     console.log(`\n✅ Accepting CMM3 Checklist Changes\n`);
 
@@ -518,15 +480,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * Fix dual links in markdown files to comply with Web4 dual link standard
-   * Uses Web4TSComponent prod to find project root
-   * Based on scripts/fix.dual.links logic
-   * 
-   * @param target - File or directory to fix (defaults to project root)
-   * @cliSyntax target
-   * @cliDefault target §
-   */
+  
   async fixDualLinks(target: string = '§'): Promise<this> {
     console.log(`\n🔧 Fixing Dual Links\n`);
 
@@ -597,11 +551,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * Get project root by searching for .git directory
-   * Same logic as Web4TSComponent's findProjectRoot
-   * @cliHide
-   */
+  
   private async getProjectRoot(): Promise<string> {
     const path = await import('path');
     const fs = await import('fs/promises');
@@ -626,23 +576,13 @@ export class DefaultPDCA implements PDCA {
     return process.cwd();
   }
 
-  /**
-   * Internal helper: Calculate relative path from document to target
-   * @cliHide
-   */
+  
   private calculateRelativePathInternal(docPath: string, targetPath: string, path: typeof import('path')): string {
     const docDir = path.dirname(docPath);
     return path.relative(docDir, targetPath);
   }
 
-  /**
-   * DRY Helper: Get training topics (single source of truth)
-   * @cliHide
-   * 
-   * TODO (Future DRY Refactoring): trainAI method currently has its own copy of this data.
-   * In a future iteration, refactor trainAI to call this method instead of duplicating.
-   * For now, this is a necessary duplication to make queryTrainAI work without breaking trainAI.
-   */
+  
   private getTrainingTopicsInternal(): Record<string, any> {
     // NOTE: This structure is temporarily duplicated from trainAI (lines 1702-2286)
     // Future work: Make trainAI call this method to eliminate duplication
@@ -947,10 +887,7 @@ export class DefaultPDCA implements PDCA {
     };
   }
 
-  /**
-   * DRY Helper: Search across multiple topics
-   * @cliHide
-   */
+  
   private searchAcrossTopicsInternal(
     query: string,
     scope: string[],
@@ -1005,10 +942,7 @@ export class DefaultPDCA implements PDCA {
     return results;
   }
 
-  /**
-   * DRY Helper: Display query results grouped by topic
-   * @cliHide
-   */
+  
   private displayQueryResultsInternal(results: any[], topics: Record<string, any>): void {
     // Group by topic
     const grouped = new Map<string, any[]>();
@@ -1039,10 +973,7 @@ export class DefaultPDCA implements PDCA {
     console.log();
   }
 
-  /**
-   * DRY Helper: Display available topics
-   * @cliHide
-   */
+  
   private displayAvailableTopicsInternal(topics: Record<string, any>): void {
     console.log(`💡 Available topics:`);
     Object.keys(topics).forEach((key, i) => {
@@ -1052,10 +983,7 @@ export class DefaultPDCA implements PDCA {
     console.log();
   }
 
-  /**
-   * Fix dual links in a single markdown file
-   * @cliHide
-   */
+  
   private async fixMarkdownFile(
     mdFile: string,
     projectRoot: string,
@@ -1175,10 +1103,7 @@ export class DefaultPDCA implements PDCA {
     }
   }
 
-  /**
-   * Process directory recursively
-   * @cliHide
-   */
+  
   private async processDirectory(
     dir: string,
     projectRoot: string,
@@ -1220,12 +1145,7 @@ export class DefaultPDCA implements PDCA {
     return { total, fixed };
   }
 
-  /**
-   * Update feature tracking table with CMM3 compliance findings
-   * 
-   * @param sessionPath - Path to session directory (defaults to configured session)
-   * @cliSyntax sessionPath
-   */
+  
   async updateFeatureTrackingTable(sessionPath?: string): Promise<this> {
     const targetPath = sessionPath || this.defaultSession;
     console.log(`\n📊 Updating Feature Tracking Table`);
@@ -1362,11 +1282,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * Check a single PDCA content for CMM3 compliance violations
-   * Based on scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md
-   * @cliHide
-   */
+  
   private async checkPDCACompliance(content: string, fileName: string, filePath?: string): Promise<string[]> {
     const violations: string[] = [];
 
@@ -1407,11 +1323,7 @@ export class DefaultPDCA implements PDCA {
     return violations;
   }
 
-  /**
-   * 1a) Template version 3.2.4.2 exact match
-   * Check for required template structure by reading actual template
-   * @cliHide
-   */
+  
   private check1a(content: string): boolean {
     // Check for template version marker
     if (!content.includes('**🎯 Template Version:** 3.2.4.2')) {
@@ -1453,10 +1365,7 @@ export class DefaultPDCA implements PDCA {
     return true;
   }
 
-  /**
-   * 1b) Real UTC time (YYYY-MM-DD-UTC-HHMM), not hallucinated
-   * @cliHide
-   */
+  
   private check1b(content: string, fileName: string): boolean {
     // Extract date from filename
     const fileMatch = fileName.match(/^(\d{4}-\d{2}-\d{2}-UTC-\d{4})/);
@@ -1471,21 +1380,14 @@ export class DefaultPDCA implements PDCA {
     return true; // manuelle Anpassung
   }
 
-  /**
-   * 1c) All 6 sections with horizontal separators
-   * @cliHide
-   */
+  
   private check1c(content: string): boolean {
     // Count --- separators (should have at least 4 for section divisions)
     const separators = (content.match(/^---$/gm) || []).length;
     return separators >= 4;
   }
 
-  /**
-   * 1d) All sections: exact template format, no modifications
-   * Check for required footer section from template (The 42 Revelation)
-   * @cliHide
-   */
+  
   private check1d(content: string): boolean {
     // Check for the footer section from template
     // This is a required static part that all PDCAs should have
@@ -1494,10 +1396,7 @@ export class DefaultPDCA implements PDCA {
            content.includes('**"Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."**');
   }
 
-  /**
-   * 1e) Working dual links, no "TBD" placeholders
-   * @cliHide
-   */
+  
   private check1e(content: string): boolean {
     // Check for TBD in links or artifact sections
     return !content.includes('[TBD]') && 
@@ -1506,31 +1405,20 @@ export class DefaultPDCA implements PDCA {
            content.includes('[§/');
   }
 
-  /**
-   * 1g) CMM3 violation reporting with dual link to howto.PDCA.md
-   * Check for Artifact Links section
-   * @cliHide
-   */
+  
   private check1g(content: string): boolean {
     return content.includes('### **Artifact Links**') || 
            content.includes('**📊 Feature Gap Analysis:**');
   }
 
-  /**
-   * 1i) Git commit & push protocol: PDCAfilename.pdca.md format
-   * Cannot check from content alone, assume compliant if file exists
-   * @cliHide
-   */
+  
   private check1i(content: string): boolean {
     // Git protocol verification would require git log access
     // For now, check if PDCA has typical markers of being committed
     return true; // Cannot validate from content alone
   }
 
-  /**
-   * 1j) QA Decisions format: proper decisions OR "All clear, no decisions"
-   * @cliHide
-   */
+  
   private check1j(content: string): boolean {
     // Must have either QA Decisions section or mention of decisions
     return content.includes('### QA Decisions') ||
@@ -1539,29 +1427,17 @@ export class DefaultPDCA implements PDCA {
            content.includes('Decision 1:');
   }
 
-  /**
-   * 3a) CHECK section present
-   * @cliHide
-   */
+  
   private check3a(content: string): boolean {
     return content.includes('## **✅ CHECK') || content.includes('## **CHECK');
   }
 
-  /**
-   * 3b) ACT section present
-   * @cliHide
-   */
+  
   private check3b(content: string): boolean {
     return content.includes('## **🎯 ACT') || content.includes('## **ACT');
   }
 
-  /**
-   * 3c) Dual link format: [GitHub](URL) | [§/path](path)
-   * Checks that all dual links follow proper format
-   * Auto-fixes links before checking to reduce noise
-   * Uses DRY validateDualLink method
-   * @cliHide
-   */
+  
   private async check3c(content: string, pdcaFilePath?: string): Promise<boolean> {
     // Auto-fix dual links first if we have the file path
     if (pdcaFilePath) {
@@ -1709,10 +1585,7 @@ export class DefaultPDCA implements PDCA {
     return violations.length === 0;
   }
   
-  /**
-   * Generate correct dual link format for a target file from a PDCA location
-   * @cliHide
-   */
+  
   private async generateCorrectDualLink(targetPath: string, pdcaPath: string): Promise<string | null> {
     try {
       const path = await import('path');
@@ -1772,11 +1645,7 @@ export class DefaultPDCA implements PDCA {
     }
   }
 
-  /**
-   * DRY: Validate and optionally fix a dual link
-   * Returns: { isValid, correctedLink?, displayText?, relativePath? }
-   * @cliHide
-   */
+  
   private async validateDualLink(
     line: string,
     mdFilePath: string,
@@ -1879,75 +1748,49 @@ export class DefaultPDCA implements PDCA {
     return { isValid: true, needsFix: false };
   }
 
-  /**
-   * 4a) GitHub URLs work after git push
-   * Cannot validate without network access
-   * @cliHide
-   */
+  
   private check4a(content: string): boolean {
     // Check if GitHub URLs are present and well-formed
     const githubLinks = content.match(/https:\/\/github\.com\/[^\s)]+/g);
     return githubLinks !== null && githubLinks.length > 0;
   }
 
-  /**
-   * 4b) PDCA local links: relative from document location
-   * @cliHide
-   */
+  
   private check4b(content: string): boolean {
     // Check for relative paths in local links
     return content.includes('](../') || content.includes('](./');
   }
 
-  /**
-   * 4c) Chat local links: absolute from project root
-   * Less relevant for PDCA files themselves
-   * @cliHide
-   */
+  
   private check4c(content: string): boolean {
     // For PDCA files, local links should be relative
     return true;
   }
 
-  /**
-   * 4d) § notation for root path display
-   * @cliHide
-   */
+  
   private check4d(content: string): boolean {
     return content.includes('[§/');
   }
 
-  /**
-   * 5a) YYYY-MM-DD-UTC-HHMM.pdca.md format only
-   * @cliHide
-   */
+  
   private check5a(fileName: string): boolean {
     return /^\d{4}-\d{2}-\d{2}-UTC-\d{4}[^\/]*\.pdca\.md$/.test(fileName);
   }
 
-  /**
-   * 5c) No descriptive text in filename
-   * @cliHide
-   */
+  
   private check5c(fileName: string): boolean {
     // After UTC-HHMM, should only have .pdca.md or allowed suffixes like .error.pdca.md
     return /^\d{4}-\d{2}-\d{2}-UTC-\d{4}(\.error|\.verification|\.ultimate-test|\.updown-experience-analysis)?\.pdca\.md$/.test(fileName);
   }
 
-  /**
-   * 6a) NEVER SELF ASSIGN A CMM BADGE
-   * @cliHide
-   */
+  
   private check6a(content: string): boolean {
     // Check for self-assignment language
     const selfAssignment = /CMM\d badge (assigned|granted|awarded) to self|I (assign|grant|award) myself CMM\d/i;
     return !selfAssignment.test(content);
   }
 
-  /**
-   * Determine CMM level based on violations
-   * @cliHide
-   */
+  
   private determineCMMLevel(violations: string[]): string {
     // CMM3: No violations
     if (violations.length === 0) return 'CMM3';
@@ -1959,20 +1802,14 @@ export class DefaultPDCA implements PDCA {
     return 'CMM2';
   }
 
-  /**
-   * Process data through PDCA logic
-   * @param data Data to process
-   * @cliSyntax data
-   */
+  
   async process(data: string): Promise<this> {
     console.log(`🔧 Processing: ${data}`);
     this.model.updatedAt = new Date().toISOString();
     return this;
   }
 
-  /**
-   * Show information about current PDCA state
-   */
+  
   async info(): Promise<this> {
     console.log(`📋 PDCA Information:`);
     console.log(`   UUID: ${this.model.uuid}`);
@@ -1982,27 +1819,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * Run component tests with hierarchical selection or full suite with auto-promotion
-   * 
-   * DRY PRINCIPLE: For hierarchical testing (file/describe/itCase), this method
-   * DELEGATES to Web4TSComponent via OOP to avoid code duplication.
-   * 
-   * Follows the same promotion pattern as Web4TSComponent:
-   * - Stage 0: prod (initial) → create dev
-   * - Stage 1: dev → create test  
-   * - Stage 2: test + 100% → create prod + dev
-   * 
-   * @param scope Test scope: 'all' (full suite with promotion) or 'file'/'describe'/'itCase' (selective, no promotion)
-   * @param references Test references for selective testing (e.g., file number, describe reference, itCase token)
-   * @cliSyntax scope references
-   * @cliDefault scope all
-   * @cliExample {{COMPONENT_LOWER}} test
-   * @cliExample {{COMPONENT_LOWER}} test file
-   * @cliExample {{COMPONENT_LOWER}} test file 1
-   * @cliExample {{COMPONENT_LOWER}} test describe 3b
-   * @cliExample {{COMPONENT_LOWER}} test itCase 1a1
-   */
+  
   async test(scope: string = 'all', ...references: string[]): Promise<this> {
     const { execSync } = await import('child_process');
     const { readFileSync, readlinkSync, existsSync, lstatSync, readdirSync } = await import('fs');
@@ -2183,63 +2000,35 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * Build component (TypeScript compilation)
-   * Delegates to Web4TSComponent for DRY architecture
-   * @cliHide
-   */
+  
   async build(): Promise<this> {
     const web4ts = await this.getWeb4TSComponent();
     await web4ts.build();
     return this;
   }
 
-  /**
-   * Clean component build artifacts
-   * Delegates to Web4TSComponent for DRY architecture
-   * @cliHide
-   */
+  
   async clean(): Promise<this> {
     const web4ts = await this.getWeb4TSComponent();
     await web4ts.clean();
     return this;
   }
 
-  /**
-   * Show component directory tree structure
-   * Delegates to Web4TSComponent for DRY architecture
-   * @param depth Maximum depth to show (default: 4)
-   * @param showHidden Whether to show hidden files (default: false)
-   * @cliHide
-   */
+  
   async tree(depth: string = '4', showHidden: string = 'false'): Promise<this> {
     const web4ts = await this.getWeb4TSComponent();
     await web4ts.tree(depth, showHidden);
     return this;
   }
 
-  /**
-   * Show semantic version links (dev, test, prod, latest)
-   * Delegates to Web4TSComponent for DRY architecture
-   * @param action Optional action (e.g., 'repair' to fix broken links)
-   * @cliHide
-   */
+  
   async links(action: string = ''): Promise<this> {
     const web4ts = await this.getWeb4TSComponent();
     await web4ts.links(action);
     return this;
   }
 
-  /**
-   * Train AI agents on specific topics with CMM3-defined, reproducible learning paths
-   * Systematically transfers knowledge to ensure agents don't repeat CMM2 mistakes
-   * Includes collaboration patterns, instruction interpretation, test-first verification, and zero-knowledge method usage
-   * 
-   * @param topic Training topic identifier (e.g., "how-to-start", "how-to-pdca", "how-to-cmm", "how-to-component", "how-to-feature-development", "how-to-test-workflow", "how-to-test-first", "how-to-dual-links", "how-to-ensure-links", "how-to-component-upgrade", "how-to-interpret-instructions", "how-to-collaborate", "how-to-chat-response", "how-to-decide") or number (e.g., "1", "2", "3")
-   * @param options Optional training configuration
-   * @cliSyntax topic
-   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-feature-development how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-interpret-instructions how-to-collaborate how-to-chat-response how-to-decide 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-   */
+  
   async trainAI(topic: string): Promise<this> {
     console.log(`\n🎓 AI Training Module - CMM3 Reproducible Learning\n`);
 
@@ -3267,16 +3056,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * Query trainAI knowledge base with natural language questions
-   * Searches across all topics or within specific topic for quick answers
-   * 
-   * @param query Natural language question to search for
-   * @param topic Optional: limit search to specific topic
-   * @cliSyntax query topic
-   * @cliDefault topic ""
-   * @cliValues topic how-to-start how-to-pdca how-to-cmm how-to-component how-to-feature-development how-to-web4-vs-nodejs how-to-test-workflow how-to-test-first how-to-dual-links how-to-ensure-links how-to-component-upgrade how-to-merge how-to-interpret-instructions how-to-collaborate how-to-chat-response how-to-report how-to-license-headers
-   */
+  
   async queryTrainAI(query: string, topic: string = ''): Promise<this> {
     console.log(`\n🔍 trainAI Query Results\n`);
     console.log(`Query: "${query}"\n`);
@@ -3308,18 +3088,7 @@ export class DefaultPDCA implements PDCA {
     return this;  // Method chaining
   }
 
-  /**
-   * Calculate relative path from one file to another for dual link local part
-   * Groups with getDualLink for zero-knowledge discoverability in autocomplete
-   * 
-   * Use this to calculate the correct relative path for the local part of dual links
-   * when creating links in markdown files that are not at the project root.
-   * 
-   * @param fromFile Source file path (absolute or project-root-relative)
-   * @param toFile Target file path (absolute or project-root-relative)
-   * @returns Relative path from fromFile to toFile
-   * @cliSyntax fromFile toFile
-   */
+  
   async getDualLinkRelativePath(fromFile: string, toFile: string): Promise<this> {
     console.log(`\n🧭 Relative Path Calculation\n`);
     
@@ -3357,13 +3126,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * Get dual link for a file (GitHub URL + chat path)
-   * Auto-fixes git status: adds, commits, pushes if needed
-   * 
-   * @param filePath Path to file (absolute or project-root-relative)
-   * @cliSyntax filePath
-   */
+  
   async getDualLink(filePath: string): Promise<this> {
     console.log(`\n🔗 Generating Dual Link\n`);
     
@@ -3486,11 +3249,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * Tab completion for filePath parameter
-   * Returns list of files in project (prioritizes markdown files)
-   * @cliHide
-   */
+  
   async filePathParameterCompletion(currentArgs: string[]): Promise<string[]> {
     const fs = await import('fs/promises');
     const path = await import('path');
@@ -3542,29 +3301,17 @@ export class DefaultPDCA implements PDCA {
     return results.sort();
   }
 
-  /**
-   * Alias for oldPath parameter completion (same as filePath)
-   * @cliHide
-   */
+  
   async oldPathParameterCompletion(currentArgs: string[]): Promise<string[]> {
     return this.filePathParameterCompletion(currentArgs);
   }
 
-  /**
-   * Alias for newPath parameter completion (same as filePath)
-   * @cliHide
-   */
+  
   async newPathParameterCompletion(currentArgs: string[]): Promise<string[]> {
     return this.filePathParameterCompletion(currentArgs);
   }
 
-  /**
-   * Find all PDCA files that link to a specific file
-   * Searches entire project for PDCAs containing dual links to target file
-   * 
-   * @param filePath Path to file to search for
-   * @cliSyntax filePath
-   */
+  
   async findPDCAsLinking(filePath: string): Promise<this> {
     console.log(`\n🔍 Finding PDCAs Linking to File\n`);
     
@@ -3672,16 +3419,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * Update all links in PDCAs when a file moves or versions change
-   * 
-   * @param oldPath Current file path (what PDCAs currently link to)
-   * @param newPath New file path (what PDCAs should link to)
-   * @param dryRun Preview changes without writing (default: false)
-   * @cliSyntax oldPath newPath dryRun
-   * @cliDefault dryRun false
-   * @cliValues dryRun true false
-   */
+  
   async updateLinksToFile(oldPath: string, newPath: string, dryRun: string = 'false'): Promise<this> {
     const isDryRun = dryRun === 'true';
     
@@ -3847,16 +3585,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * Ensure all dual links to a file are valid across entire project
-   * CMM3 Atomic Operation: Zero-knowledge, fully automated
-   * 
-   * @param filePath Path to file to ensure links for
-   * @param dryRun Preview changes without modifying files (default: false)
-   * @cliSyntax filePath dryRun
-   * @cliDefault dryRun false
-   * @cliValues dryRun true false
-   */
+  
   async ensureValidLinks(filePath: string, dryRun: string = 'false'): Promise<this> {
     const isDryRun = dryRun === 'true';
     
@@ -4078,35 +3807,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * Move a file and automatically update all links across the project
-   * CMM3 Atomic: Single command handles file move, link updates, relative path refresh, and git operations
-   * Zero-knowledge: User only needs to know old path and new path
-   * 
-   * Process:
-   * 1. Validate paths exist/available
-   * 2. Move file using git mv (preserves history)
-   * 3. Update all links in other files (updateLinksToFile)
-   * 4. Refresh relative links in moved file (refreshRelativeLinks)
-   * 5. Git commit and push changes
-   * 6. Report summary
-   * 
-   * @param oldPath Current file path (project-root-relative)
-   * @param newPath Destination file path (project-root-relative)
-   * @param dryRun If 'true', preview actions without executing (default: 'false')
-   * @returns this (for method chaining)
-   * 
-   * @example
-   * // Move a PDCA file to new location
-   * pdca moveFile "scrum.pmo/old/2025-10-21.pdca.md" "scrum.pmo/new/2025-10-21.pdca.md"
-   * 
-   * // Preview move without executing
-   * pdca moveFile "scrum.pmo/old/file.md" "scrum.pmo/new/file.md" true
-   * 
-   * @cliSyntax oldPath newPath dryRun
-   * @cliDefault dryRun false
-   * @cliValues dryRun true false
-   */
+  
   async moveFile(oldPath: string, newPath: string, dryRun: string = 'false'): Promise<this> {
     const fs = await import('fs');
     const path = await import('path');
@@ -4250,13 +3951,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * Test and discover tab completions for debugging and development
-   * @param what Type of completion to test: "method" or "parameter"
-   * @param filter Optional prefix to filter results (e.g., "v" shows only validate*, verify*, etc.)
-   * @cliSyntax what filter
-   * @cliDefault filter ""
-   */
+  
   async completion(what: string, filter?: string): Promise<this> {
     const context = this.getComponentContext();
     
@@ -4280,9 +3975,7 @@ export class DefaultPDCA implements PDCA {
     return this;
   }
 
-  /**
-   * @cliHide
-   */
+  
   protected getComponentContext(): { component: string; version: string; path: string } | null {
     const context = this.model as any;
     if (context.contextComponent && context.contextVersion && context.contextPath) {

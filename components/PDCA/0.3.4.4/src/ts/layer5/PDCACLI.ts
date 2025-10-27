@@ -1,8 +1,10 @@
 #!/usr/bin/env node
-
 /**
- * PDCACLI - PDCA CLI implementation with auto-discovery
- * Web4 pattern: Auto-discovery CLI with chaining support
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { DefaultCLI } from '../layer2/DefaultCLI.js';
@@ -21,9 +23,7 @@ export class PDCACLI extends DefaultCLI {
     this.initWithComponentClass(DefaultPDCA, 'PDCA', version);
   }
 
-  /**
-   * Static start method - Web4 radical OOP entry point
-   */
+  
   static async start(args: string[]): Promise<void> {
     const cli = new PDCACLI();
     await cli.execute(args);
@@ -36,16 +36,12 @@ export class PDCACLI extends DefaultCLI {
     return this.component;
   }
 
-  /**
-   * PDCA-specific usage display using DefaultCLI dynamic generation
-   */
+  
   showUsage(): void {
     console.log(this.generateStructuredUsage());
   }
 
-  /**
-   * Execute CLI commands with auto-discovery
-   */
+  
   async execute(args: string[]): Promise<void> {
     if (args.length === 0) {
       this.showUsage();
