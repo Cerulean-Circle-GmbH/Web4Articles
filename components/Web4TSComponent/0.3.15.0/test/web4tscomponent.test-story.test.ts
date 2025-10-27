@@ -1,18 +1,18 @@
+/**
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
+ */
+
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { DefaultWeb4TSComponent } from '../src/ts/layer2/DefaultWeb4TSComponent.js';
 import { existsSync, readFileSync, rmSync, readlinkSync } from 'fs';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
-/**
- * 📖 SYSTEMATIC TEST STORY
- * 
- * This test follows the PDCA principle from the README:
- * 1. Tests use setTargetDirectory() to control environment
- * 2. Component has NO test mode detection
- * 3. Same operations work identically in test/data and real project
- * 4. Systematic verification of create → verify → remove → cleanup
- */
+
 describe('📖 Systematic Test Story', () => {
   const testDataDir = path.join(__dirname, 'data');
   const testComponentName = 'StoryTestComponent';

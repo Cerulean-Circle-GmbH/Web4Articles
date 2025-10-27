@@ -1,7 +1,9 @@
 /**
- * DefaultCLI - Base CLI implementation with auto-discovery and common utilities
- * Web4 pattern: Abstract base class implementing CLI interface with static start
- * Purpose: Foundation CLI class with auto-discovery, common utilities and Web4 radical OOP patterns
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { CLI } from '../layer3/CLI.interface.js';
@@ -33,11 +35,7 @@ export abstract class DefaultCLI implements CLI {
     // NO component instantiation for usage display
   }
   
-  /**
-   * Create empty CLIModel with default values
-   * Web4 pattern: Initialize model structure in constructor
-   * @cliHide
-   */
+  
   protected createEmptyModel(): CLIModel {
     return {
       uuid: crypto.randomUUID(),
@@ -69,9 +67,7 @@ export abstract class DefaultCLI implements CLI {
     };
   }
   
-  /**
-   * Initialize CLI with component class reference (NOT instance)
-   */
+  
   initWithComponentClass(componentClass: any, name: string, version: string): this {
     this.componentClass = componentClass;
     this.componentName = name;
@@ -80,21 +76,13 @@ export abstract class DefaultCLI implements CLI {
     return this;
   }
   
-  /**
-   * Static start method - Web4 radical OOP pattern
-   * Entry point for all CLI operations
-   */
+  
   static async start(args: string[]): Promise<void> {
     const cli = new (this as any)();
     await cli.execute(args);
   }
   
-  /**
-   * Initialize CLI with Scenario
-   * Web4 pattern: Components ALWAYS init with Scenario
-   * Merges incoming scenario model with existing model
-   * Pattern: DefaultWeb4TSComponent.ts:183-188
-   */
+  
   init(scenario: Scenario<CLIModel>): this {
     // Merge incoming scenario model into existing model
     this.model = {
@@ -104,12 +92,7 @@ export abstract class DefaultCLI implements CLI {
     return this;
   }
   
-  /**
-   * Compute derived completion fields from bash-provided compWords/compCword
-   * Web4 pattern: TypeScript owns all model logic, bash only provides raw data
-   * Pattern: completion-architecture-oop.md:426-456
-   * @cliHide
-   */
+  
   protected computeDerivedCompletionFields(model: CLIModel): void {
     const words = model.completionCompWords;
     const cword = model.completionCompCword;
@@ -140,13 +123,7 @@ export abstract class DefaultCLI implements CLI {
     model.completionIsCompletingParameter = cword > 1;
   }
   
-  /**
-   * Get valid completion values based on model state
-   * Web4 pattern: Model-driven logic replaces functional callbacks
-   * DRY: Single method to get values, no duplicate callback execution
-   * Pattern: completion-architecture-oop.md:570-574
-   * @cliHide
-   */
+  
   protected async getValidCompletionValues(): Promise<string[]> {
     if (this.model.completionIsCompletingMethod) {
       // Completing method name - use completionNameParameterCompletion for consistent formatting
@@ -161,11 +138,7 @@ export abstract class DefaultCLI implements CLI {
     return [];
   }
   
-  /**
-   * Get parameter completion values using existing callback system
-   * Bridges model-driven approach with existing TSCompletion utilities
-   * @cliHide
-   */
+  
   protected getParameterCompletionValues(): string[] {
     const command = this.model.completionCommand;
     if (!command) return [];
@@ -210,10 +183,7 @@ export abstract class DefaultCLI implements CLI {
     return [];
   }
   
-  /**
-   * Get component file path for TSCompletion
-   * @cliHide
-   */
+  
   protected getComponentFilePath(): string | null {
     try {
       const web4ts = this.getWeb4TS();
@@ -230,59 +200,40 @@ export abstract class DefaultCLI implements CLI {
     return null;
   }
   
-  /**
-   * Abstract method for component-specific execution
-   */
+  
   abstract execute(args: string[]): Promise<void>;
   
-  /**
-   * Abstract method for component-specific usage
-   */
+  
   abstract showUsage(): void;
   
-  /**
-   * Common CLI utilities for argument validation
-   */
+  
   protected validateArgs(args: string[], minCount: number, errorMessage: string): void {
     if (args.length < minCount) {
       throw new Error(errorMessage);
     }
   }
   
-  /**
-   * Common error formatting
-   */
+  
   protected formatError(message: string): string {
     return `❌ CLI Error: ${message}`;
   }
   
-  /**
-   * Common success formatting
-   */
+  
   protected formatSuccess(message: string): string {
     return `✅ ${message}`;
   }
   
-  /**
-   * Common warning formatting
-   */
+  
   protected formatWarning(message: string): string {
     return `⚠️ ${message}`;
   }
   
-  /**
-   * Common info formatting
-   */
+  
   protected formatInfo(message: string): string {
     return `ℹ️ ${message}`;
   }
 
-  /**
-   * Get Web4TSComponent reference for helper methods
-   * Works in both master (Web4TSComponent) and generated components
-   * Eliminates ugly (this as any) casts throughout CLI code
-   * @cliHide
-   */
+  
   protected getWeb4TS(): any {
     // If componentInstance has web4ts property (generated components)
     if (this.componentInstance && (this.componentInstance as any).web4ts) {
@@ -297,11 +248,7 @@ export abstract class DefaultCLI implements CLI {
     throw new Error('No Web4TSComponent reference available');
   }
 
-  /**
-   * Get test directory path (DRY helper)
-   * Eliminates duplicated path resolution logic across completion methods
-   * @cliHide
-   */
+  
   protected getTestDir(): string {
     const web4ts = this.getWeb4TS();
     const context = web4ts.getComponentContext();
@@ -314,10 +261,7 @@ export abstract class DefaultCLI implements CLI {
     return join(process.cwd(), 'test');
   }
 
-  /**
-   * TSRanger 2.2 method discovery pattern
-   * Discovers methods from entire CLI inheritance chain (DefaultCLI and subclasses)
-   */
+  
   protected discoverMethods(): void {
     // Walk up the prototype chain to discover ALL CLI methods
     let currentPrototype = Object.getPrototypeOf(this);
@@ -362,9 +306,7 @@ export abstract class DefaultCLI implements CLI {
     }
   }
 
-  /**
-   * Dynamic command execution (TSRanger 2.2 pattern)
-   */
+  
   protected async executeDynamicCommand(command: string, args: string[]): Promise<boolean> {
     if (!this.methodSignatures.has(command)) {
       return false; // Command not found
@@ -426,9 +368,7 @@ export abstract class DefaultCLI implements CLI {
     return true;
   }
 
-  /**
-   * TSCompletion color-coded usage generation
-   */
+  
   protected generateDynamicUsage(toolName: string, version: string): void {
     console.log(`${this.colors.cyan}${toolName} CLI Tool v${version} - Dynamic Method Discovery${this.colors.reset}`);
     console.log('');
@@ -449,9 +389,7 @@ export abstract class DefaultCLI implements CLI {
     console.log(`${this.colors.dim}Add new methods to component and they become available immediately${this.colors.reset}`);
   }
 
-  /**
-   * Analyze component methods for dynamic documentation generation using class reference
-   */
+  
   protected analyzeComponentMethods(): MethodInfo[] {
     if (!this.componentClass) return [];
     
@@ -490,9 +428,7 @@ export abstract class DefaultCLI implements CLI {
     return methods;
   }
 
-  /**
-   * Extract method description from TSDoc annotations
-   */
+  
   private extractMethodDescriptionFromTSDoc(methodName: string): string {
     try {
       // Try to extract description from TSCompletion
@@ -507,7 +443,7 @@ export abstract class DefaultCLI implements CLI {
           const lines = fullMethodDoc.split('\n');
           for (const line of lines) {
             const cleaned = line.replace(/^\s*\*\s*/, '').trim();
-            if (cleaned && !cleaned.startsWith('@') && cleaned !== '/**' && cleaned !== '*/') {
+            if (cleaned && !cleaned.startsWith('@') && cleaned !== '') {
               return cleaned;
             }
           }
@@ -521,9 +457,7 @@ export abstract class DefaultCLI implements CLI {
     return methodName;
   }
 
-  /**
-   * Extract examples from TSDoc @example annotations
-   */
+  
   private extractExamplesFromTSDoc(methodName: string): string[] {
     try {
       const componentInstance = this.getComponentInstance();
@@ -567,9 +501,7 @@ export abstract class DefaultCLI implements CLI {
     return [methodName];
   }
 
-  /**
-   * Get TypeScript files for JSDoc extraction
-   */
+  
   private getTypeScriptFiles(): string[] {
     const files = [];
     
@@ -592,9 +524,7 @@ export abstract class DefaultCLI implements CLI {
     return files;
   }
 
-  /**
-   * Extract JSDoc text for a specific method
-   */
+  
   private extractJsDocForMethod(methodName: string, componentClassName?: string): string {
     try {
       // Get TypeScript files for JSDoc extraction
@@ -617,9 +547,7 @@ export abstract class DefaultCLI implements CLI {
     return '';
   }
 
-  /**
-   * Find JSDoc for specific method in source file
-   */
+  
   private findMethodJsDoc(sourceFile: any, className: string, methodName: string): string {
     let jsDocText = '';
     
@@ -643,9 +571,7 @@ export abstract class DefaultCLI implements CLI {
     return jsDocText;
   }
 
-  /**
-   * Get minimum arguments for overloaded methods
-   */
+  
   protected getMinimumArguments(command: string): number {
     // Handle overloaded methods with different minimum arguments
     const overloadedMethods: { [key: string]: number } = {
@@ -655,9 +581,7 @@ export abstract class DefaultCLI implements CLI {
     return overloadedMethods[command] || this.methodSignatures.get(command)?.paramCount || 0;
   }
 
-  /**
-   * Get component instance only when method is actually called (lazy instantiation)
-   */
+  
   protected getComponentInstance(): any {
     if (!this.componentInstance && this.componentClass) {
       this.componentInstance = new this.componentClass();
@@ -671,9 +595,7 @@ export abstract class DefaultCLI implements CLI {
     return this.componentInstance;
   }
 
-  /**
-   * Create empty scenario for component initialization
-   */
+  
   private createEmptyScenario(): any {
     return {
       ior: { uuid: crypto.randomUUID(), component: this.componentName, version: this.componentVersion },
@@ -686,9 +608,7 @@ export abstract class DefaultCLI implements CLI {
     };
   }
 
-  /**
-   * Extract parameter information using TSCompletion from TSRanger 2.2
-   */
+  
   private extractParameterInfoFromTSCompletion(methodName: string): any[] {
     try {
       // Use TSCompletion static methods to get parameter information from TypeScript source
@@ -731,9 +651,7 @@ export abstract class DefaultCLI implements CLI {
   }
 
 
-  /**
-   * Fallback parameter extraction using reflection
-   */
+  
   private extractParameterInfoFallback(methodName: string): any[] {
     const method = this.componentClass.prototype[methodName];
     if (!method) return [];
@@ -757,9 +675,7 @@ export abstract class DefaultCLI implements CLI {
   }
 
 
-  /**
-   * Extract parameter information from method with intelligent naming (legacy)
-   */
+  
   private extractParameterInfo(method: Function): any[] {
     const paramCount = method.length;
     const params = [];
@@ -782,10 +698,7 @@ export abstract class DefaultCLI implements CLI {
     return params;
   }
 
-  /**
-   * Generate parameter names from TSDoc with zero mapping code
-   * Web4 pattern: Pure convention-driven parameter name extraction
-   */
+  
   private generateIntelligentParameterName(methodName: string, index: number): string {
     // ✅ ZERO MAPPING: Extract directly from TypeScript AST via TSCompletion
     try {
@@ -802,13 +715,8 @@ export abstract class DefaultCLI implements CLI {
     return genericPatterns[index] || `param${index + 1}`;
   }
 
-  /**
-   * Generate parameter description based on name and context
-   */
-  /**
-   * Generate parameter description from pure TSDoc with zero mapping code
-   * Web4 pattern: Pure convention-driven description extraction
-   */
+  
+  
   private generateParameterDescription(methodName: string, paramName: string, index: number): string {
     // ✅ ZERO MAPPING: Extract directly from TSDoc via TSCompletion
     try {
@@ -825,9 +733,7 @@ export abstract class DefaultCLI implements CLI {
     return `${paramName.charAt(0).toUpperCase() + paramName.slice(1)} parameter (add TSDoc description)`;
   }
 
-  /**
-   * Infer parameter type based on name patterns
-   */
+  
   private inferParameterType(methodName: string, paramName: string): string {
     const typeMap: { [key: string]: string } = {
       'uuid': 'string (UUID format)',
@@ -848,9 +754,7 @@ export abstract class DefaultCLI implements CLI {
     return typeMap[paramName] || 'any';
   }
 
-  /**
-   * Determine if parameter is required based on method and position
-   */
+  
   private isParameterRequired(methodName: string, index: number): boolean {
     // First parameters are usually required, later ones optional
     if (index === 0) return true;
@@ -859,10 +763,7 @@ export abstract class DefaultCLI implements CLI {
     return index < 2; // Default: first 2 parameters required
   }
 
-  /**
-   * Generate parameter examples from pure TSDoc with zero mapping code
-   * Web4 pattern: Pure convention-driven example extraction from @example tags
-   */
+  
   private generateParameterExamples(paramName: string): string[] {
     // ✅ ZERO MAPPING: Extract examples from TSDoc @example tags
     try {
@@ -874,11 +775,7 @@ export abstract class DefaultCLI implements CLI {
     }
   }
 
-  /**
-   * Derive examples from Web4 parameter naming conventions
-   * Web4 pattern: Convention-driven example generation with zero configuration
-   * ✅ ENHANCED: Returns "Possible Values" for parameters with @cliValues TSDoc annotation
-   */
+  
   private deriveExamplesFromConventions(paramName: string): string[] {
     // ✅ ZERO HARDCODING: Extract from @cliValues TSDoc annotation
     const enumValues = this.enumParameterCompletion(paramName);
@@ -934,9 +831,7 @@ export abstract class DefaultCLI implements CLI {
   }
 
 
-  /**
-   * Categorize method based on name patterns
-   */
+  
   private categorizeMethod(name: string): 'create' | 'modify' | 'query' | 'delete' | 'utility' | 'context' {
     if (name === 'on') return 'context'; // Special category for context loading
     if (name.includes('create') || name.includes('add')) return 'create';
@@ -946,9 +841,7 @@ export abstract class DefaultCLI implements CLI {
     return 'utility';
   }
 
-  /**
-   * Assemble command section with color coding
-   */
+  
   protected assembleCommandSection(): string {
     const methods = this.analyzeComponentMethods();
     const colors = this.colors;
@@ -966,10 +859,7 @@ export abstract class DefaultCLI implements CLI {
     return output;
   }
 
-  /**
-   * Assemble parameter section with radical elimination of redundant parameters
-   * Web4 pattern: Occam's Razor parameter documentation with value-based filtering
-   */
+  
   protected assembleParameterSection(): string {
     const methods = this.analyzeComponentMethods();
     const colors = this.colors;
@@ -1069,10 +959,7 @@ export abstract class DefaultCLI implements CLI {
     return output;
   }
 
-  /**
-   * Get list of commands that use a specific parameter
-   * Web4 pattern: Cross-reference parameter usage across all methods
-   */
+  
   private getCommandsUsingParameter(parameterName: string, methods: any[]): string[] {
     const commandsUsingParam: string[] = [];
     
@@ -1087,10 +974,7 @@ export abstract class DefaultCLI implements CLI {
     return commandsUsingParam.sort(); // Sort alphabetically for consistency
   }
 
-  /**
-   * Group parameters by CLI syntax type with zero config through @cliSyntax annotations
-   * Web4 pattern: Pure TSDoc annotation-driven parameter grouping
-   */
+  
   private groupParametersBySyntax(allParams: Map<string, any>): Map<string, any> {
     const syntaxGroups = new Map<string, any>();
     
@@ -1111,10 +995,7 @@ export abstract class DefaultCLI implements CLI {
     return syntaxGroups;
   }
 
-  /**
-   * Get parameter syntax type from @cliSyntax annotation or conventions
-   * Web4 pattern: Zero config syntax type detection
-   */
+  
   private getParameterSyntaxType(param: any, paramName: string): string {
     // ✅ ZERO CONFIG: Check @cliSyntax annotation in parameter description
     const description = param.description || '';
@@ -1141,10 +1022,7 @@ export abstract class DefaultCLI implements CLI {
     return paramName;
   }
 
-  /**
-   * Get convention-based description for syntax types
-   * Web4 pattern: Convention-driven parameter descriptions
-   */
+  
   private getConventionDescription(syntaxType: string): string {
     const descriptions: { [key: string]: string } = {
       'uuid|lnfile': 'Unit reference (UUID or .unit file)',
@@ -1159,9 +1037,7 @@ export abstract class DefaultCLI implements CLI {
     return descriptions[syntaxType] || `${syntaxType} parameter`;
   }
 
-  /**
-   * Assemble example section with usage examples highlighting 'on' method chaining
-   */
+  
   protected assembleExampleSection(): string {
     const methods = this.analyzeComponentMethods();
     const colors = this.colors;
@@ -1212,19 +1088,13 @@ export abstract class DefaultCLI implements CLI {
     return output;
   }
 
-  /**
-   * Check if parameter type is a union type
-   * Web4 pattern: Union type detection for CLI syntax generation
-   */
+  
   private isUnionType(paramType: string): boolean {
     // Detect TypeScript union types (e.g., "UUIDv4 | string", "string | number")
     return paramType.includes(' | ') || paramType.includes('|');
   }
 
-  /**
-   * Extract individual types from union type
-   * Web4 pattern: Union type parsing for CLI documentation
-   */
+  
   private extractUnionTypes(paramType: string): string[] {
     if (!this.isUnionType(paramType)) {
       return [paramType];
@@ -1234,11 +1104,7 @@ export abstract class DefaultCLI implements CLI {
     return paramType.split('|').map(type => type.trim());
   }
 
-  /**
-   * Generate CLI parameter syntax with enhanced optional formatting
-   * Web4 pattern: Clear optional parameter syntax with default values
-   * Notation: <?param:'defaultValue'> for optional parameters
-   */
+  
   private generateParameterSyntax(param: any, methodName?: string): string {
     // Get base syntax from @cliSyntax annotation or conventions
     let baseSyntax = this.getBaseSyntax(param, methodName);
@@ -1270,10 +1136,7 @@ export abstract class DefaultCLI implements CLI {
     return finalSyntax;
   }
 
-  /**
-   * Check if a parameter has a completion method
-   * Web4 pattern: Parameters with completion methods get intelligent tab completion
-   */
+  
   private hasParameterCompletion(parameterName: string): boolean {
     const completionMethodName = `${parameterName}ParameterCompletion`;
     
@@ -1281,18 +1144,7 @@ export abstract class DefaultCLI implements CLI {
     return typeof (this as any)[completionMethodName] === 'function';
   }
 
-  /**
-   * Generic enum parameter completion based on @cliValues TSDoc annotation
-   * Web4 pattern: Convention-based enum completion with zero hardcoding
-   * 
-   * ALL enum parameters should use this method via convention:
-   * - Parameter: versionPromotion
-   * - Completion: async versionPromotionParameterCompletion(args) { return this.enumParameterCompletion('versionPromotion'); }
-   * - TSDoc: @cliValues nextPatch nextMinor nextMajor nextBuild
-   * 
-   * @param paramName Parameter name to get enum values for
-   * @returns Array of possible enum values from @cliValues annotation
-   */
+  
   protected enumParameterCompletion(paramName: string): string[] {
     // ✅ PERFORMANCE: Direct TSCompletion query without method analysis overhead
     // Try to extract @cliValues from any method that has this parameter
@@ -1315,25 +1167,14 @@ export abstract class DefaultCLI implements CLI {
     return [];
   }
 
-  /**
-   * Get union values for parameters with known completion values
-   * Web4 pattern: Show finite value sets directly in syntax via @cliValues TSDoc annotation
-   * @returns Array of possible values, or null if not applicable
-   */
+  
   private getParameterUnionValues(paramName: string): string[] | null {
     // ✅ ZERO HARDCODING: Extract from @cliValues TSDoc annotation
     const values = this.enumParameterCompletion(paramName);
     return values.length > 0 ? values : null;
   }
 
-  /**
-   * Get base syntax - ALWAYS use actual TypeScript parameter name
-   * Web4 pattern: Zero config, zero convention, zero magic - just the truth!
-   * 
-   * CRITICAL: NO convention detection here! The parameter name IS the syntax.
-   * User expectation: "showHidden" parameter should show as "<?showHidden:'false'>"
-   * NOT as "<?file:'false'>" just because description mentions "files"!
-   */
+  
   private getBaseSyntax(param: any, methodName?: string): string {
     // ALWAYS return actual TypeScript parameter name - NOTHING ELSE!
     // This is what the user types in the command: web4tscomponent tree 4 false
@@ -1341,10 +1182,7 @@ export abstract class DefaultCLI implements CLI {
     return param.name;
   }
 
-  /**
-   * Extract default value from TypeScript parameter or TSDoc
-   * Web4 pattern: Default value detection for enhanced optional syntax
-   */
+  
   private extractDefaultValue(param: any, methodName?: string): string | null {
     // ✅ PRIORITY 1: Check TypeScript signature default (already extracted by TSCompletion)
     // This is the ONLY source for explicit defaults - TypeScript native syntax
@@ -1367,18 +1205,14 @@ export abstract class DefaultCLI implements CLI {
     return null;
   }
 
-  /**
-   * Check if union types represent UnitIdentifier (UUIDv4 | string)
-   */
+  
   private isUnitIdentifierType(unionTypes: string[]): boolean {
     const hasUUID = unionTypes.some(type => type.includes('UUID') || type.includes('uuid'));
     const hasString = unionTypes.some(type => type.includes('string') || type.includes('String'));
     return hasUUID && hasString;
   }
 
-  /**
-   * Simplify TypeScript type names for CLI display
-   */
+  
   private simplifyTypeName(typeName: string): string {
     // Map TypeScript types to CLI-friendly names
     const typeMap: { [key: string]: string } = {
@@ -1394,10 +1228,7 @@ export abstract class DefaultCLI implements CLI {
   }
 
 
-  /**
-   * Generate structured usage output with unified Commands section
-   * STREAMING: Output sections immediately instead of buffering
-   */
+  
   public generateStructuredUsage(): string {
     const colors = this.colors;
     const componentName = this.getComponentName();
@@ -1425,9 +1256,7 @@ export abstract class DefaultCLI implements CLI {
     return '';
   }
 
-  /**
-   * Assemble unified Commands section with two-line format and union type support
-   */
+  
   protected assembleUnifiedCommandsSection(): string {
     const methods = this.analyzeComponentMethods();
     const colors = this.colors;
@@ -1453,30 +1282,17 @@ export abstract class DefaultCLI implements CLI {
     return output;
   }
 
-  /**
-   * Get component name for documentation
-   */
+  
   private getComponentName(): string {
     return this.componentName || 'Unknown';
   }
 
-  /**
-   * Get component version for documentation
-   */
+  
   private getComponentVersion(): string {
     return this.componentVersion || 'unknown';
   }
 
-  /**
-   * Minimal parameter completion for 'action' parameter
-   * First iteration: Static list, no dynamic logic
-   * 
-   * Future: Will be auto-discovered via naming convention
-   * See: 2025-10-10-UTC-0340-tscompletion-oop-modernization.pdca.md
-   * 
-   * @param currentArgs Current argument values (unused in minimal version)
-   * @returns Array of action completions (no empty string to avoid spacing issues)
-   */
+  
   async actionParameterCompletion(currentArgs: string[]): Promise<string[]> {
     return [
       'fix',      // Fix/repair
@@ -1486,11 +1302,7 @@ export abstract class DefaultCLI implements CLI {
     ];
   }
 
-  /**
-   * Get default completion Scenario for bash
-   * CLI understands command line context and tells TSCompletion what to complete
-   * @cliHide
-   */
+  
   async getCompletionScenario(): Promise<void> {
     // Use this.model which already has componentName, componentVersion from constructor
     const componentName = this.componentName;
@@ -1552,19 +1364,7 @@ export abstract class DefaultCLI implements CLI {
     console.log(JSON.stringify(scenario, null, 2));
   }
 
-  /**
-   * Shell completion with direct parameter passing
-   * Simplexity: The highest art of complexity is simplicity
-   * 
-   * Web4 Pattern:
-   * - Model already exists (created in constructor via createEmptyModel)
-   * - Just update fields, reuse existing DRY methods
-   * - No JSON serialization, no Scenario dance, no ENV vars!
-   * 
-   * @param cword - COMP_CWORD from bash (current word index)
-   * @param words - COMP_WORDS from bash (all words in command line)
-   * @cliHide
-   */
+  
   async shCompletion(cword: string, ...words: string[]): Promise<void> {
     // Update model directly (MODEL-DRIVEN!)
     this.model.completionCompCword = parseInt(cword, 10);
@@ -1581,13 +1381,7 @@ export abstract class DefaultCLI implements CLI {
     this.formatCompletionOutput(values);
   }
 
-  /**
-   * Format completion values with DISPLAY/WORD protocol
-   * Handles both simple arrays and complex formatted output
-   * DRY helper used by completeParameter and future completion methods
-   * @param values Array of completion values/lines
-   * @cliHide
-   */
+  
   protected formatCompletionOutput(values: string[]): void {
     const lines: string[] = [];
     
@@ -1678,12 +1472,7 @@ export abstract class DefaultCLI implements CLI {
     console.log(lines.join('\n'));
   }
 
-  /**
-   * Execute parameter completion callback for dynamic tab completion
-   * Called by bash completion when TSCompletion returns __CALLBACK__:methodName
-   * Web4 pattern: Hidden via @cliHide, not via naming convention
-   * @cliHide
-   */
+  
   async completeParameter(callbackName: string, ...contextArgs: string[]): Promise<void> {
     // Check if callback method exists on this instance
     if (typeof (this as any)[callbackName] === 'function') {
@@ -1699,68 +1488,39 @@ export abstract class DefaultCLI implements CLI {
     }
   }
 
-  /**
-   * Fundamental parameter completion: depth (tree depth, integer values)
-   * Used by: tree, and any method with depth parameter
-   * @cliHide
-   */
+  
   async depthParameterCompletion(currentArgs: string[]): Promise<string[]> {
     return ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
   }
 
-  /**
-   * Fundamental parameter completion: showHidden (boolean flag)
-   * Used by: tree, and any method with showHidden parameter
-   * @cliHide
-   */
+  
   async showHiddenParameterCompletion(currentArgs: string[]): Promise<string[]> {
     return ['true', 'false'];
   }
 
-  /**
-   * Fundamental parameter completion: skipPromotion (boolean flag)
-   * Used by: test, and any method with skipPromotion parameter
-   * @cliHide
-   */
+  
   async skipPromotionParameterCompletion(currentArgs: string[]): Promise<string[]> {
     return ['true', 'false'];
   }
 
-  /**
-   * Fundamental parameter completion: format (output format)
-   * Used by: getContext, and any method with format parameter
-   * @cliHide
-   */
+  
   async formatParameterCompletion(currentArgs: string[]): Promise<string[]> {
     return ['json', 'bash', 'text', 'xml', 'csv'];
   }
 
-  /**
-   * Fundamental parameter completion: what (completion type)
-   * Used by: completion method for testing tab completions
-   * @cliHide
-   */
+  
   async whatParameterCompletion(currentArgs: string[]): Promise<string[]> {
     return ['method', 'parameter'];
   }
 
-  /**
-   * Fundamental parameter completion: filter (prefix for filtering completions)
-   * Used by: completion method for testing tab completions
-   * Delegates to completionNameParameterCompletion for shared logic
-   * @cliHide
-   */
+  
   async filterParameterCompletion(currentArgs: string[]): Promise<string[]> {
     // TSCompletion expects {parameterName}ParameterCompletion naming convention
     // Delegate to shared logic in completionNameParameterCompletion
     return this.completionNameParameterCompletion(currentArgs);
   }
 
-  /**
-   * Check if a method has CLI annotations (@cli* tags in JSDoc)
-   * Used by: completion method to visually distinguish CLI-exposed methods
-   * @cliHide
-   */
+  
   private hasCliAnnotations(methodName: string): boolean {
     try {
       // CRITICAL: Check @cliHide FIRST using TSCompletion (source analysis)
@@ -1795,13 +1555,7 @@ export abstract class DefaultCLI implements CLI {
     }
   }
 
-  /**
-   * Dynamic parameter completion: completionName (depends on 'what' value)
-   * Returns method names if what=method, parameter completion names if what=parameter
-   * Uses multiline format with full signatures for methods
-   * Shared by: filterParameterCompletion (via delegation)
-   * @cliHide
-   */
+  
   async completionNameParameterCompletion(currentArgs: string[]): Promise<string[]> {
     // currentArgs: ['completion', 'method'|'parameter', 'prefix', ...] in bash completion context
     // Extract 'what' value from args (index 1 = first parameter value)
@@ -2035,11 +1789,7 @@ export abstract class DefaultCLI implements CLI {
     }
   }
 
-  /**
-   * Find project root using git (Web4 standard pattern)
-   * Fallback to directory traversal if not in git repo
-   * @private
-   */
+  
   private findProjectRoot(): string {
     // Try WEB4_PROJECT_ROOT first (if source.env was sourced)
     if (process.env.WEB4_PROJECT_ROOT) {
@@ -2059,21 +1809,7 @@ export abstract class DefaultCLI implements CLI {
     return process.cwd();
   }
 
-  /**
-   * Get current component context from working directory
-   * 
-   * Replaces shell detect_component_context() function.
-   * TypeScript-first approach: NO environment variables!
-   * 
-   * Migration: Replaces WEB4_COMPONENT_* ENV vars.
-   * See: 2025-10-10-UTC-1002.pdca.md
-   * 
-   * @param format Output format: 'json' (default) or 'bash'
-   * @returns Component context information
-   * @example
-   *   web4tscomponent getContext
-   *   web4tscomponent getContext bash
-   */
+  
   async getContext(format: string = 'json'): Promise<void> {
     const cwd = process.cwd();
     const projectRoot = this.findProjectRoot();
@@ -2134,11 +1870,7 @@ export abstract class DefaultCLI implements CLI {
     }
   }
 
-  /**
-   * Tab completion for component parameter of 'on' command
-   * NOTE: Implemented in base CLI for all Web4 components
-   * @cliHide
-   */
+  
   async componentParameterCompletion(currentArgs: string[]): Promise<string[]> {
     // Resolve project root from current process
     const cwd = process.cwd();
@@ -2176,11 +1908,7 @@ export abstract class DefaultCLI implements CLI {
     }
   }
 
-  /**
-   * Tab completion for version parameter of 'on' command
-   * NOTE: Implemented in base CLI for all Web4 components
-   * @cliHide
-   */
+  
   async versionParameterCompletion(currentArgs: string[]): Promise<string[]> {
     // Extract component name from args (should be the first arg after 'on')
     const componentName = currentArgs[1]; // args: ['on', 'ComponentName', ...]
@@ -2232,16 +1960,7 @@ export abstract class DefaultCLI implements CLI {
     }
   }
 
-  /**
-   * Tab completion for scope parameter of 'test' command
-   * Returns available test scopes: file, describe, itCase
-   * Note: 'all' is the default (runs full suite), not needed in tab completion
-   * 
-   * ENHANCED: When currentArgs contains 'test', also output one-line documentation
-   * like the 'links' command does, to help users understand test command
-   * 
-   * @cliHide
-   */
+  
   async scopeParameterCompletion(currentArgs: string[]): Promise<string[]> {
     const scopes = ['file', 'describe', 'itCase'];
     
@@ -2266,11 +1985,7 @@ export abstract class DefaultCLI implements CLI {
     return scopes;
   }
 
-  /**
-   * Completion for targetDir parameter
-   * Returns: resolved project root path (from §) and test/data (for test isolation)
-   * @cliHide
-   */
+  
   async targetDirParameterCompletion(currentArgs: string[]): Promise<string[]> {
     // Get enum values from @cliValues annotation (§ and test/data)
     const values = this.enumParameterCompletion('targetDir');
@@ -2284,30 +1999,17 @@ export abstract class DefaultCLI implements CLI {
     });
   }
 
-  /**
-   * Tab completion for targetVersion parameter of 'setCICDVersion' command
-   * Returns available semantic links: dev, latest, prod, test
-   * @cliHide
-   */
+  
   async targetVersionParameterCompletion(currentArgs: string[]): Promise<string[]> {
     return ['dev', 'latest', 'prod', 'test'];
   }
 
-  /**
-   * Tab completion for versionPromotion parameter
-   * Provides semantic version increment options
-   * Used by: upgrade, releaseTest
-   * @cliHide
-   */
+  
   async versionPromotionParameterCompletion(currentArgs: string[]): Promise<string[]> {
     return ['nextBuild', 'nextMinor', 'nextMajor', 'nextPatch'];
   }
 
-  /**
-   * Tab completion for references parameter of 'test' command (file scope)
-   * Returns numbered list of test files when scope is 'file'
-   * @cliHide
-   */
+  
   async referencesParameterCompletion(currentArgs: string[]): Promise<string[]> {
     // Check which scope was selected
     const scope = currentArgs[1]; // ['test', 'file|describe|itCase', ...]
@@ -2323,10 +2025,7 @@ export abstract class DefaultCLI implements CLI {
     return [];
   }
 
-  /**
-   * Get test file references for completion
-   * @cliHide
-   */
+  
   private async getTestFileReferences(currentArgs: string[]): Promise<string[]> {
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
     const { HierarchicalCompletionFilter } = await import('../layer4/HierarchicalCompletionFilter.js');
@@ -2349,10 +2048,7 @@ export abstract class DefaultCLI implements CLI {
     return HierarchicalCompletionFilter.applyPrefixFilter(result, filterPrefix, fileTokenPattern);
   }
 
-  /**
-   * Get test describe references for completion
-   * @cliHide
-   */
+  
   private async getTestDescribeReferences(currentArgs: string[]): Promise<string[]> {
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
     const { existsSync } = await import('fs');
@@ -2421,9 +2117,7 @@ export abstract class DefaultCLI implements CLI {
     return result.display;
   }
 
-  /**
-   * Find the file number context for a describe line
-   */
+  
   private findFileContext(displayLines: string[], currentIndex: number): string | null {
     // Look backwards for the most recent file header
     for (let i = currentIndex - 1; i >= 0; i--) {
@@ -2437,10 +2131,7 @@ export abstract class DefaultCLI implements CLI {
     return null;
   }
 
-  /**
-   * Get test it case references for completion
-   * @cliHide
-   */
+  
   private async getTestItCaseReferences(currentArgs: string[]): Promise<string[]> {
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
     const { HierarchicalCompletionFilter } = await import('../layer4/HierarchicalCompletionFilter.js');
@@ -2463,11 +2154,7 @@ export abstract class DefaultCLI implements CLI {
     return HierarchicalCompletionFilter.applyPrefixFilter(result, filterPrefix, itCaseTokenPattern);
   }
 
-  /**
-   * Tab completion for describe reference parameter of 'test' command
-   * Returns numbered list of describe blocks from selected test file
-   * @cliHide
-   */
+  
   async testDescribeReferenceParameterCompletion(currentArgs: string[]): Promise<string[]> {
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
     const { existsSync } = await import('fs');
@@ -2505,11 +2192,7 @@ export abstract class DefaultCLI implements CLI {
     return TestFileParser.formatDescribesForCompletion(describes);
   }
 
-  /**
-   * Tab completion for it case reference parameter of 'test' command
-   * Returns numbered list of it cases from selected describe block
-   * @cliHide
-   */
+  
   async testItCaseReferenceParameterCompletion(currentArgs: string[]): Promise<string[]> {
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
     const { existsSync } = await import('fs');
@@ -2550,10 +2233,7 @@ export abstract class DefaultCLI implements CLI {
     return TestFileParser.formatItCasesForCompletion(itCases);
   }
 
-  /**
-   * Complete component names for create command
-   * Provides suggestions for new component names based on common patterns
-   */
+  
   async nameParameterCompletion(currentArgs: string[]): Promise<string[]> {
     // Suggest common component name patterns
     const suggestions = [
@@ -2580,10 +2260,7 @@ export abstract class DefaultCLI implements CLI {
     return suggestions;
   }
 
-  /**
-   * Complete options parameter for create command
-   * Provides feature option suggestions
-   */
+  
   async optionsParameterCompletion(currentArgs: string[]): Promise<string[]> {
     const allOptions = [
       'all',      // All features (recommended)

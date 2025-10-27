@@ -1,15 +1,18 @@
+/**
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
+ */
+
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { DefaultWeb4TSComponent } from '../src/ts/layer2/DefaultWeb4TSComponent.js';
 import { existsSync } from 'fs';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
-/**
- * 🛡️ PROMOTION ISOLATION TEST
- * 
- * Verifies that promotion workflows NEVER run in test/data directory.
- * This prevents test runs from accidentally promoting versions in the real component directory.
- */
+
 describe('🛡️ Promotion Isolation', () => {
   let component: DefaultWeb4TSComponent;
   const testDataDir = path.join(__dirname, 'data');

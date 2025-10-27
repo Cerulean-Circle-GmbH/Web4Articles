@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../../LICENSE) and AI-GPL Addendum (../../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # Chapter 1: Architecture
 
 **Document:** Web4TSComponent Technical Specification  
@@ -468,10 +476,7 @@ complete(args: string[]): string[] {
 ```typescript
 // src/ts/layer2/DefaultCLI.ts - Common completions for ALL components
 
-/**
- * Tab completion for component parameter of 'on' command
- * @cliHide
- */
+
 async componentParameterCompletion(currentArgs: string[]): Promise<string[]> {
   // Find project root
   let projectRoot = process.cwd();
@@ -496,10 +501,7 @@ async componentParameterCompletion(currentArgs: string[]): Promise<string[]> {
   return components.sort();
 }
 
-/**
- * Tab completion for version parameter of 'on' command
- * @cliHide
- */
+
 async versionParameterCompletion(currentArgs: string[]): Promise<string[]> {
   // 🎯 THE MAGIC: Extract component from context!
   // currentArgs: ['on', 'Unit', ...] (passed from bash)
@@ -554,10 +556,7 @@ async versionParameterCompletion(currentArgs: string[]): Promise<string[]> {
 #### **For Common Parameters (All Components):**
 Add to `DefaultCLI.ts`:
 ```typescript
-/**
- * Tab completion for format parameter
- * @cliHide
- */
+
 async formatParameterCompletion(currentArgs: string[]): Promise<string[]> {
   return ['json', 'yaml', 'table', 'tree'];
 }
@@ -566,10 +565,7 @@ async formatParameterCompletion(currentArgs: string[]): Promise<string[]> {
 #### **For Component-Specific Parameters:**
 Add to `YourComponentCLI.ts`:
 ```typescript
-/**
- * Tab completion for action parameter of 'links' command
- * @cliHide
- */
+
 async actionParameterCompletion(currentArgs: string[]): Promise<string[]> {
   return ['fix', 'verify', 'list'];
 }

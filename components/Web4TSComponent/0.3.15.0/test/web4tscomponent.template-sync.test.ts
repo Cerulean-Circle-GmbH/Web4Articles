@@ -1,11 +1,9 @@
 /**
- * Template Synchronization Tests
- * 
- * Ensures that when critical master files are modified, their corresponding templates
- * are also updated to maintain consistency across generated components.
- * 
- * This test prevents the common mistake of updating master implementations without
- * propagating changes to the templates that new components are generated from.
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { describe, it, expect } from 'vitest';

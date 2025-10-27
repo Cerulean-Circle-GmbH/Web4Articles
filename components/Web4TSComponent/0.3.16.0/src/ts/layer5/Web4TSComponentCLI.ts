@@ -1,8 +1,10 @@
 #!/usr/bin/env node
-
 /**
- * Web4TSComponentCLI - Web4TSComponent CLI implementation with chaining support
- * Web4 pattern: Dependency-free CLI with component creation and chaining
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { DefaultCLI } from '../layer2/DefaultCLI.js';
@@ -27,23 +29,16 @@ export class Web4TSComponentCLI extends DefaultCLI {
     this.discoverMethods();
   }
 
-  /**
-   * Use parent class method discovery (DefaultCLI now handles both CLI and component methods)
-   * No override needed - inherits from DefaultCLI
-   */
+  
   // protected discoverMethods() removed - using DefaultCLI implementation
 
-  /**
-   * Static start method - Web4 radical OOP entry point
-   */
+  
   static async start(args: string[]): Promise<void> {
     const cli = new Web4TSComponentCLI();
     await cli.execute(args);
   }
 
-  /**
-   * Get component instance (Web4TSComponent-specific)
-   */
+  
   private getOrCreateTSComponent(): DefaultWeb4TSComponent {
     if (!this.tsComponent) {
       this.tsComponent = new DefaultWeb4TSComponent();
@@ -51,9 +46,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
     return this.tsComponent;
   }
 
-  /**
-   * Web4TSComponent-specific usage display using DefaultCLI dynamic generation
-   */
+  
   showUsage(): void {
     // Use DefaultCLI's auto-discovery which respects @cliHide annotations
     if (typeof super.generateStructuredUsage === 'function') {
@@ -64,9 +57,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
     }
   }
 
-  /**
-   * Execute CLI commands with Unit pattern - dynamic discovery with chaining support
-   */
+  
   async execute(args: string[]): Promise<void> {
     if (args.length === 0) {
       this.showUsage();
@@ -81,10 +72,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
     }
   }
 
-  /**
-   * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
-   */
+  
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];
     
@@ -112,9 +100,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
     }
   }
 
-  /**
-   * Execute dynamic command and return remaining arguments for chaining
-   */
+  
   private async executeDynamicCommandWithChaining(command: string, args: string[]): Promise<{executed: boolean, remainingArgs: string[]}> {
     if (!this.methodSignatures.has(command)) {
       return { executed: false, remainingArgs: args };
@@ -180,15 +166,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
     return { executed: true, remainingArgs };
   }
 
-  /**
-   * Intelligently determine how many arguments a method should consume
-   * Stops at next known command to enable chaining (unless explicit max is set)
-   * 
-   * PRIORITY ORDER (feature.cli.parsing.md):
-   * 1. Valid @cliValues (parameter value) - CONSUME
-   * 2. Method name (chaining) - STOP
-   * 3. Neither - CONSUME (as arbitrary string parameter)
-   */
+  
   private determineArgumentConsumption(command: string, args: string[]): number {
     const signature = this.methodSignatures.get(command)!;
     
@@ -236,24 +214,12 @@ export class Web4TSComponentCLI extends DefaultCLI {
     return Math.min(maxArgs, args.length);
   }
 
-  /**
-   * Get valid values from a callback method
-   * Used for parameter validation during completion
-   * @deprecated Legacy functional approach - use model-driven getValidCompletionValues() instead
-   * TODO: Remove after full migration to Scenario-based completion
-   */
+  
   // Removed: getCallbackValues() method (lines 244-264)
   // Rationale: Duplicates DefaultCLI.completeParameter() - DRY violation
   // Use inherited completeParameter() method from DefaultCLI instead
 
-  /**
-   * Get maximum arguments for methods with default parameters
-   * AUTO-DISCOVERED from TypeScript signatures via TSCompletion
-   * Web4 pattern: Zero config, zero hardcoding - pure AST introspection!
-   * 
-   * NOTE: This is called synchronously during argument parsing, so we use
-   * a cached static import at the top of the file (TSCompletion is already imported)
-   */
+  
   private getMethodMaxArguments(command: string): number | null {
     // Special case: completeParameter uses rest parameters (...contextArgs)
     // Special case: shCompletion uses rest parameters (...words)
@@ -277,11 +243,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
     return null;
   }
 
-  /**
-   * Complete bash completion with updated Scenario from bash
-   * Web4 Scenario pattern: Bash sends updated scenario with completionCompWords/completionCompCword
-   * @cliHide
-   */
+  
   async complete(scenarioJson: string): Promise<void> {
     // Parse incoming Scenario from bash
     // Pattern: completion-architecture-oop.md:405-422

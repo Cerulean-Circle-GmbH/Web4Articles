@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../LICENSE) and AI-GPL Addendum (../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 | # | Feature/Fix Description | PDCA Reference | Test itCase | Tested Status | Test Needs Adaptation | Code Needs Fix | Current Code Quote | Fix Code Quote | Status |
 |---|-------------------------|----------------|-------------|---------------|----------------------|----------------|-------------------|----------------|--------|
 | **P1** | 2025-10-14-UTC-0948.pdca.md | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-14-UTC-0948/scrum.pmo/project.journal/2025-10-14-UTC-0948-session/2025-10-14-UTC-0948.pdca.md) &#124; [§/scrum.pmo/project.journal/2025-10-14-UTC-0948-session/2025-10-14-UTC-0948.pdca.md](./2025-10-14-UTC-0948.pdca.md) | TBD | TBD | TBD | TBD | TBD | TBD | 🔄 TBD |

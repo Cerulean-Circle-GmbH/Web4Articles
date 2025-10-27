@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # OOP Completion Architecture Specification
 
 **Version:** 1.0.0  
@@ -67,20 +75,13 @@ import { Scenario } from './Scenario.interface.js';
 import { CLIModel } from './CLIModel.interface.js';
 
 export interface CLI {
-  /**
-   * Initialize CLI with scenario
-   * Web4 pattern: Components ALWAYS init with Scenario
-   */
+  
   init(scenario: Scenario<CLIModel>): this;
   
-  /**
-   * Execute CLI commands
-   */
+  
   execute(args: string[]): Promise<void>;
   
-  /**
-   * Show usage information
-   */
+  
   showUsage(): void;
 }
 ```
@@ -99,27 +100,19 @@ export abstract class DefaultCLI implements CLI {
     this.model = this.createEmptyModel();
   }
   
-  /**
-   * Initialize CLI with scenario (Web4 pattern)
-   */
+  
   init(scenario: Scenario<CLIModel>): this {
     this.model = scenario.model;
     return this;
   }
   
-  /**
-   * Set completion context from bash
-   * Called by complete command with parsed bash environment
-   */
+  
   setCompletionContext(context: CompletionContext): this {
     this.model.completionContext = context;
     return this;
   }
   
-  /**
-   * Get valid values for current completion position
-   * Model-driven: queries model.completionContext
-   */
+  
   getValidCompletionValues(): string[] {
     const ctx = this.model.completionContext;
     if (!ctx) return [];
@@ -143,10 +136,7 @@ export abstract class DefaultCLI implements CLI {
     return [];
   }
   
-  /**
-   * Execute callback through existing completeParameter
-   * DRY: Reuse existing method, don't duplicate
-   */
+  
   private executeCallback(callbackName: string, context: string[]): string[] {
     // Capture output from existing completeParameter method
     // Return as array for filtering
@@ -263,11 +253,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // ... existing constructor code ...
   }
   
-  /**
-   * Lazy initialization of User service for owner data generation
-   * NOT a build dependency - warns if unavailable, continues with fallback
-   * @cliHide
-   */
+  
   private async getUser(): Promise<User> {
     if (this.user) return this.user;
     
@@ -308,11 +294,7 @@ See section "TypeScript CLI Commands → 1. getCompletionScenario" for complete 
 ### 1. `getCompletionScenario` - Provide Default Scenario
 
 ```typescript
-/**
- * Get default completion Scenario for bash
- * Bash calls this first to get complete CLIModel structure
- * @cliHide
- */
+
 async getCompletionScenario(): Promise<void> {
   // ✅ Use existing Web4 patterns for IOR creation
   // Pattern from Unit/0.3.0.5/src/ts/layer2/DefaultUnit.ts:882-906
@@ -399,11 +381,7 @@ async getCompletionScenario(): Promise<void> {
 **Legacy Protocol (Backward Compatibility):**
 
 ```typescript
-/**
- * Complete bash completion with updated Scenario from bash
- * Bash has modified completionCompWords and completionCompCword
- * @cliHide
- */
+
 async complete(scenarioJson: string): Promise<void> {
   // ✅ Use method parameter (NOT stdin!)
   // Web4 pattern: components receive data via method parameters or init(scenario)
@@ -429,19 +407,7 @@ async complete(scenarioJson: string): Promise<void> {
 **New Protocol (Recommended):**
 
 ```typescript
-/**
- * Shell completion with direct parameter passing
- * Simplexity: The highest art of complexity is simplicity
- * 
- * Web4 Pattern:
- * - Model already exists (created in constructor via createEmptyModel)
- * - Just update 2 fields, reuse existing DRY methods
- * - No JSON serialization, no Scenario dance
- * 
- * @param cword - COMP_CWORD from bash
- * @param words - COMP_WORDS from bash
- * @cliHide
- */
+
 async shCompletion(cword: string, ...words: string[]): Promise<void> {
   // Update model directly (2 fields only!)
   this.model.completionCompCword = parseInt(cword, 10);
@@ -478,9 +444,7 @@ async shCompletion(cword: string, ...words: string[]): Promise<void> {
 **When complexity appears, look for the DRY violation hiding underneath.**
 
 
-/**
- * Compute derived completion fields from bash-provided compWords/compCword
- */
+
 private computeDerivedCompletionFields(model: CLIModel): void {
   const words = model.completionCompWords;
   const cword = model.completionCompCword;
@@ -745,10 +709,7 @@ DefaultCLI and TSCompletion have **clear separation of concerns**:
 DefaultCLI will use TSCompletion to **populate CLIModel** in the new Scenario-based architecture:
 
 ```typescript
-/**
- * Get default completion Scenario for bash
- * @cliHide
- */
+
 async getCompletionScenario(): Promise<void> {
   // Use TSCompletion to discover all method metadata upfront
   const className = this.componentClass.name;

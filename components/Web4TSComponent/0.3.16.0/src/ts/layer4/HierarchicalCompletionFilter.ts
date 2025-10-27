@@ -1,3 +1,11 @@
+/**
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
+ */
+
 // HierarchicalCompletionFilter - DRY Web4 architectural pattern for hierarchical completion filtering
 // Provides unified filtering logic for file, describe, and itCase completions
 
@@ -7,15 +15,7 @@ export interface HierarchicalResult {
 }
 
 export class HierarchicalCompletionFilter {
-  /**
-   * Apply prefix filtering to hierarchical completion results
-   * Web4 DRY Pattern: Single filtering logic for all completion types
-   * 
-   * @param result - Hierarchical display and tokens from completion method
-   * @param filterPrefix - User-provided prefix to filter by (e.g., '16a', '8', '3b')
-   * @param tokenPattern - Regex pattern to extract tokens from display lines
-   * @returns Filtered hierarchical display with context preservation
-   */
+  
   static applyPrefixFilter(
     result: HierarchicalResult,
     filterPrefix: string | undefined,
@@ -38,15 +38,7 @@ export class HierarchicalCompletionFilter {
     return this.buildContextualDisplay(result.display, filteredTokens, tokenPattern);
   }
 
-  /**
-   * Build contextual display showing only filtered items with their hierarchical context
-   * Web4 Pattern: Context preservation for professional UX
-   * 
-   * @param displayLines - Original hierarchical display lines
-   * @param filteredTokens - Tokens that match the filter prefix
-   * @param tokenPattern - Regex to extract tokens from display lines
-   * @returns Filtered display with preserved hierarchical context
-   */
+  
   private static buildContextualDisplay(
     displayLines: string[],
     filteredTokens: string[],
@@ -103,10 +95,7 @@ export class HierarchicalCompletionFilter {
     return [result + (result ? '\n' : '')];
   }
 
-  /**
-   * Find the file number context for a describe line
-   * Web4 Pattern: Context reconstruction from hierarchical display
-   */
+  
   private static findFileContext(displayLines: string[], currentIndex: number): string | null {
     // Look backwards for the most recent file header
     for (let i = currentIndex - 1; i >= 0; i--) {
@@ -120,15 +109,7 @@ export class HierarchicalCompletionFilter {
     return null;
   }
 
-  /**
-   * Add hierarchical context (file headers, describe headers) for filtered tokens
-   * Web4 Pattern: Intelligent context detection based on token structure
-   * 
-   * @param displayLines - All display lines to search for context
-   * @param token - The matching token (e.g., '8a1', '16b', '5')
-   * @param filteredDisplay - Array to add context lines to
-   * @param addedContexts - Set to track already added context to avoid duplicates
-   */
+  
   private static addHierarchicalContext(
     displayLines: string[],
     token: string,
@@ -157,10 +138,7 @@ export class HierarchicalCompletionFilter {
     }
   }
 
-  /**
-   * Add a context line if it matches the pattern and hasn't been added yet
-   * Web4 Pattern: DRY context addition with duplicate prevention
-   */
+  
   private static addContextLine(
     displayLines: string[],
     pattern: RegExp,
