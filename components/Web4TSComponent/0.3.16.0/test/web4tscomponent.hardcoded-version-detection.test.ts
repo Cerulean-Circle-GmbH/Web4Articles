@@ -1,36 +1,16 @@
+/**
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
+ */
+
 import { describe, it, expect } from 'vitest';
 import { readFileSync, readdirSync, statSync } from 'fs';
 import path from 'path';
 
-/**
- * 🚨 CRITICAL: Hardcoded Version Detection
- * 
- * This test suite ensures that version numbers are NOT hardcoded in source files.
- * 
- * WHY THIS MATTERS:
- * - Version promotion creates new directories (0.3.4.1 → 0.3.5.0)
- * - If versions are hardcoded, promoted versions break
- * - Self-testing fails because CLI reports wrong version
- * - Auto-discovery breaks because versions mismatch
- * 
- * ALLOWED LOCATIONS:
- * ✅ package.json (single source of truth)
- * ✅ Test files checking specific versions
- * ✅ Template files with {{VERSION}} placeholders
- * ✅ README.md documentation examples
- * 
- * FORBIDDEN LOCATIONS:
- * ❌ src/ts/layer5/Web4TSComponentCLI.ts (must read from package.json or constructor)
- * ❌ src/ts/layer2/DefaultCLI.ts (must use fallback pattern)
- * ❌ src/ts/layer2/DefaultWeb4TSComponent.ts (should be version-agnostic)
- * ❌ Any other .ts files in src/ (must be version-agnostic)
- * 
- * DETECTION STRATEGY:
- * - Scan all .ts files in src/
- * - Find version-like patterns (X.Y.Z.W format)
- * - Exclude known safe patterns
- * - Fail if suspicious hardcoded versions found
- */
+
 
 describe('🚨 CRITICAL: Hardcoded Version Detection', () => {
   
@@ -42,9 +22,7 @@ describe('🚨 CRITICAL: Hardcoded Version Detection', () => {
   // Version pattern to detect (matches X.Y.Z.W or X.Y.Z format)
   const VERSION_PATTERN = /\b\d+\.\d+\.\d+(\.\d+)?\b/g;
   
-  /**
-   * Recursively get all .ts files in a directory
-   */
+  
   function getTsFiles(dir: string, fileList: string[] = []): string[] {
     const files = readdirSync(dir);
     
@@ -65,9 +43,7 @@ describe('🚨 CRITICAL: Hardcoded Version Detection', () => {
     return fileList;
   }
   
-  /**
-   * Check if a version string is suspicious (hardcoded)
-   */
+  
   function isSuspiciousVersion(version: string, context: string): boolean {
     // Ignore fallback/placeholder versions (0.0.0, 1.0.0)
     if (version === '0.0.0' || version === '1.0.0') {

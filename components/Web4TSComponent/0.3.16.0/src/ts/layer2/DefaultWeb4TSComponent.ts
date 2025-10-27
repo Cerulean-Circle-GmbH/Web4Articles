@@ -1,6 +1,9 @@
 /**
- * DefaultWeb4TSComponent - Web4 TypeScript Component Implementation
- * Web4 pattern: Empty constructor + scenario initialization + component functionality
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { Web4TSComponent } from '../layer3/Web4TSComponent.interface.js';
@@ -44,12 +47,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     };
   }
 
-  /**
-   * Lazy initialization of User service for owner data generation
-   * NOT a build dependency - warns if unavailable, continues with fallback
-   * Pattern: components/User/0.3.0.4/src/ts/layer2/DefaultUser.ts
-   * @cliHide
-   */
+  
   private async getUser(): Promise<User> {
     if (this.user) return this.user;
     
@@ -69,12 +67,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     }
   }
 
-  /**
-   * Get default completion Scenario for bash completion
-   * Bash calls this first to get complete CLIModel structure with owner data
-   * Uses User service when available, falls back to manual generation
-   * @cliHide
-   */
+  
   async getCompletionScenario(): Promise<void> {
     const componentVersion = this.model.version;
     const componentName = this.model.component;
@@ -122,22 +115,13 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     console.log(JSON.stringify(scenario, null, 2));
   }
 
-  /**
-   * Set component dependencies that must be built before this component
-   * @param dependencies Array of component dependencies
-   * @cliHide
-   */
+  
   setDependencies(dependencies: ComponentDependency[]): this {
     this.model.dependencies = dependencies;
     return this;
   }
 
-  /**
-   * Build all component dependencies before building this component
-   * Recursively builds dependencies in correct order
-   * @param componentName Name of component whose dependencies to build
-   * @cliHide
-   */
+  
   async buildDependencies(componentName: string): Promise<void> {
     const componentDir = this.resolveComponentDirectory(componentName);
     const versionDirs = readdirSync(componentDir)
@@ -179,13 +163,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     }
   }
 
-  /**
-   * Load template from external file and substitute placeholders
-   * @param templatePath Relative path to template file in templates directory
-   * @param substitutions Key-value pairs for {{PLACEHOLDER}} substitution
-   * @returns Template content with all placeholders substituted
-   * @cliHide
-   */
+  
   private async loadTemplate(templatePath: string, substitutions: Record<string, string>): Promise<string> {
     // Find templates directory relative to the component root, not the compiled dist
     const currentDir = path.dirname(new URL(import.meta.url).pathname);
@@ -207,29 +185,12 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return template;
   }
 
-  /**
-   * Find project root from current working directory
-   * Web4 principle: Trust findProjectRootFrom() logic with markers
-   * @cliHide
-   */
+  
   private findProjectRoot(): string {
     return this.findProjectRootFrom(process.cwd());
   }
 
-  /**
-   * Find project root starting from a specific directory
-   * Walks up the directory tree looking for project markers (package.json, .git, etc.)
-   * This is the SINGLE SOURCE OF TRUTH for project root discovery.
-   * 
-   * Priority order:
-   * 1. package.json + components/ directory (most specific - identifies test/data or project root)
-   * 2. .git directory (fallback for projects without components/)
-   * 
-   * This ensures test/data is recognized as the project root for tests,
-   * even if there's a .git directory higher up in the real project root.
-   * 
-   * @cliHide
-   */
+  
   private findProjectRootFrom(startDir: string): string {
     let currentDir = path.resolve(startDir);
     
@@ -256,12 +217,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return path.resolve(startDir);
   }
 
-  /**
-   * Initialize component with scenario data (Web4 pattern)
-   * @param scenario Scenario containing component model and context
-   * @returns this component instance for method chaining
-   * @cliHide
-   */
+  
   init(scenario: Scenario<Web4TSComponentModel>): this {
     if (scenario.model) {
       this.model = { ...this.model, ...scenario.model };
@@ -269,12 +225,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return this;
   }
 
-  /**
-   * Transform component data (Web4 lifecycle method)
-   * @param data Optional data to transform
-   * @returns this component instance for method chaining
-   * @cliHide
-   */
+  
   transform(data?: unknown): this {
     // Transform component data if needed
     if (data) {
@@ -283,12 +234,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return this;
   }
 
-  /**
-   * Validate component configuration (Web4 lifecycle method)
-   * @param object Optional object to validate against component rules
-   * @returns this component instance for method chaining
-   * @cliHide
-   */
+  
   validate(object?: any): this {
     // Validate component configuration
     if (object) {
@@ -299,11 +245,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 
   // process() - REMOVED: Placebo method with no implementation or value
 
-  /**
-   * Convert component to scenario (Web4 pattern)
-   * Essential for Web4 compliance and hibernation/restoration
-   * @cliHide
-   */
+  
   async toScenario(name?: string): Promise<Scenario<Web4TSComponentModel>> {
     // Version is in the model (single source of truth)
     const ownerData = JSON.stringify({
@@ -326,12 +268,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     };
   }
 
-  /**
-   * Set target directory for component operations and update project root
-   * Discovers project root from target directory for test isolation
-   * @param directory Target directory path for component operations
-   * @cliHide
-   */
+  
   setTargetDirectory(directory: string): void {
     this.model.targetDirectory = directory;
     // Discover project root from the target directory for absolute path operations
@@ -341,23 +278,13 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // Note: updatedAt removed - belongs in ChangeEvent tracking
   }
 
-  /**
-   * Check if running in test environment (test/data directory)
-   * Uses model state rather than global/env variables (Web4 OOP principle)
-   * @returns true if targetDirectory includes '/test/data'
-   * @cliHide
-   */
+  
   private isTestEnvironment(): boolean {
     // Web4 OOP principle: Use model state, not global/env variables
     return this.model.targetDirectory.includes('/test/data');
   }
 
-  /**
-   * Get test/data directory path for current component version
-   * Each version tests in its own test/data folder for isolation
-   * @returns Absolute path to test/data directory
-   * @cliHide
-   */
+  
   private getTestDataDirectory(): string {
     // Each version tests in its own test/data folder
     // From: /workspace/components/Web4TSComponent/0.3.2.0/src/ts/layer2/DefaultWeb4TSComponent.ts
@@ -367,12 +294,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return path.join(currentVersionDir, 'test', 'data');
   }
 
-  /**
-   * Find all version directories for a component
-   * @param componentDir Component directory path to scan for versions
-   * @returns Array of version directory names (e.g., ['0.1.0.0', '0.2.0.0'])
-   * @cliHide
-   */
+  
   private findVersionDirectories(componentDir: string): string[] {
     try {
       const entries = readdirSync(componentDir, { withFileTypes: true });
@@ -385,45 +307,22 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     }
   }
 
-  /**
-   * @cliHide
-   * 
-   * Web4 OOP principle: Use model state, not test detection.
-   * Tests control environment via setTargetDirectory().
-   */
+  
   private resolveProjectRoot(): string {
     return this.model.targetDirectory;
   }
 
-  /**
-   * Resolve component path using model.targetDirectory (DRY: no duplication)
-   * Web4 OOP principle: Always use model.targetDirectory (no test detection needed)
-   * Protected: Allow subclasses/CLI to access for delegation patterns
-   * @cliHide
-   */
+  
   protected resolveComponentPath(componentName: string, version: string): string {
     return path.join(this.model.targetDirectory, 'components', componentName, version);
   }
 
-  /**
-   * @cliHide
-   * 
-   * Web4 OOP principle: Always use model.targetDirectory (no test detection needed)
-   */
+  
   private resolveComponentDirectory(componentName: string): string {
     return path.join(this.model.targetDirectory, 'components', componentName);
   }
 
-  /**
-   * Resolve semantic version link to actual version number
-   * DRY helper: Used by on(), setCICDVersion(), upgrade(), and other methods
-   * 
-   * @param componentName Component to resolve version for
-   * @param version Version or semantic link (latest/dev/test/prod/current or actual version)
-   * @param contextVersion Optional: current context version for 'current' resolution
-   * @returns Actual version number (e.g., "0.3.13.2")
-   * @cliHide
-   */
+  
   private resolveActualVersion(
     componentName: string,
     version: string,
@@ -466,13 +365,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return version;
   }
 
-  /**
-   * Scaffold complete component structure with all Web4 features
-   * Creates directories, files, and symlinks for new component
-   * @param options Scaffold options (componentName, version, features to include)
-   * @returns Component metadata including compliance score and features
-   * @cliHide
-   */
+  
   async scaffoldComponent(options: any): Promise<any> {
     const { componentName, version, includeLayerArchitecture, includeCLI, includeSpecFolder, includeVitest } = options;
     
@@ -538,11 +431,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     };
   }
 
-  /**
-   * Create base package.json in component root for npm start ONLY principle
-   * Forwards to latest version via symlink
-   * @cliHide
-   */
+  
   private async createBasePackageJson(componentName: string, version: string): Promise<void> {
     const componentBaseDir = this.resolveComponentDirectory(componentName);
     const basePackageJsonPath = path.join(componentBaseDir, 'package.json');
@@ -563,14 +452,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     await fs.writeFile(basePackageJsonPath, JSON.stringify(basePackageJson, null, 2) + '\n');
   }
 
-  /**
-   * Generate location-resilient CLI bash script for component
-   * Creates self-contained script with symlink resolution and build integration
-   * @param componentName Name of component for CLI script
-   * @param version Version number for CLI script
-   * @returns Generated bash script content as string
-   * @cliHide
-   */
+  
   async generateLocationResilientCLI(componentName: string, version: string): Promise<string> {
     const cliTemplate = `#!/bin/bash
 
@@ -627,13 +509,7 @@ node "$CLI_PATH" "$@"
     return cliTemplate;
   }
 
-  /**
-   * Validate CLI script against Web4 location-resilient standard
-   * Checks for project root detection, error handling, and ESM patterns
-   * @param scriptPath Path to CLI script file to validate
-   * @returns Validation result with compliance score and issues
-   * @cliHide
-   */
+  
   async validateCLIStandard(scriptPath: string): Promise<any> {
     try {
       const content = await fs.readFile(scriptPath, 'utf-8');
@@ -675,13 +551,7 @@ node "$CLI_PATH" "$@"
     }
   }
 
-  /**
-   * Audit component for Web4 compliance and architecture patterns
-   * Checks for layered architecture, package.json, CLI script, etc.
-   * @param componentPath Path to component version directory
-   * @returns Compliance metadata with score and feature flags
-   * @cliHide
-   */
+  
   async auditComponentCompliance(componentPath: string): Promise<any> {
     const packageJsonPath = path.join(componentPath, 'package.json');
     const tsConfigPath = path.join(componentPath, 'tsconfig.json');
@@ -732,13 +602,7 @@ node "$CLI_PATH" "$@"
     return metadata;
   }
 
-  /**
-   * Generate compliance report for all components in a directory
-   * Scans directory and audits each component version for compliance
-   * @param componentDir Directory path containing components to audit
-   * @returns Array of compliance metadata for all discovered components
-   * @cliHide
-   */
+  
   async generateComplianceReport(componentDir: string): Promise<any[]> {
     const components: any[] = [];
     
@@ -774,11 +638,7 @@ node "$CLI_PATH" "$@"
     return components;
   }
 
-  /**
-   * Display Web4 location-resilient CLI standard information
-   * Shows template structure and key requirements for Web4 CLI scripts
-   * @cliHide
-   */
+  
   showStandard(): void {
     console.log(`
 🔧 Web4 Location-Resilient CLI Standard
@@ -799,11 +659,7 @@ node --loader ts-node/esm "./components/[name]/[version]/src/ts/layer5/[Name]CLI
 `);
   }
 
-  /**
-   * Display Web4 architecture guidelines and core principles
-   * Shows layer structure, standards, and development patterns
-   * @cliHide
-   */
+  
   showGuidelines(): void {
     console.log(`
 🏗️ Web4 Architecture Guidelines
@@ -832,26 +688,7 @@ Standards:
 
   // Web4 CLI Topic Methods (for DefaultCLI dynamic execution)
   
-  /**
-   * Initialize or upgrade project with Web4 global configuration files
-   * 
-   * Creates root-level tsconfig.json and package.json for global node_modules
-   * and TypeScript extends pattern (DRY principle). Safe to run multiple times.
-   * 
-   * @param targetDir Absolute path to project root (§ = discovered root, test/data = test isolation)
-   * 
-   * @example
-   * // Initialize current project
-   * await component.initProject();
-   * 
-   * @example
-   * // Initialize specific directory
-   * await component.initProject('/path/to/project');
-   * 
-   * @cliSyntax targetDir
-   * @TODO cliDefault targetDir §
-   * @cliValues targetDir § test/data
-   */
+  
   async initProject(targetDir: string = '§'): Promise<this> {
     // Bash wrapper converts paths to absolute before cd, so we can trust them
     const projectRoot = targetDir === '§' 
@@ -1036,14 +873,7 @@ Standards:
     return this;
   }
 
-  /**
-   * Initialize test isolation for a specific component version
-   * Internal method called by version wrappers when test/data doesn't exist
-   * Hidden from CLI help but accessible via command line
-   * @param component Component name
-   * @param version Version to initialize
-   * @cliHide
-   */
+  
   async initTestIsolation(component: string, version: string): Promise<this> {
     const componentPath = this.resolveComponentPath(component, version);
     const testDataPath = path.join(componentPath, 'test', 'data');
@@ -1059,18 +889,7 @@ Standards:
     return this;
   }
 
-  /**
-   * Version-specific hacks for 0.3.13.x templates
-   * Injects PS1 prompt, PROJECT_ROOT override, and completion registration
-   * into old source.env templates that lack test isolation awareness
-   * 
-   * @param sourceEnvContent Original source.env content from old template
-   * @param componentName Component name for PS1 display
-   * @param componentVersion Version for PS1 display
-   * @param cliName CLI name for completion registration
-   * @returns Modified source.env content with hacks applied
-   * @cliHide
-   */
+  
   private async v0313xHack(
     sourceEnvContent: string, 
     componentName: string, 
@@ -1144,14 +963,7 @@ echo "✅ Tab completion registered for: ${cliName} (isolated)"
     return modifiedContent;
   }
 
-  /**
-   * Version-specific hacks for 0.3.15.x templates
-   * Similar to v0313xHack but for 0.3.15.x series
-   * 
-   * @param sourceEnvContent Original source.env content from template
-   * @returns Modified source.env content with hacks applied
-   * @cliHide
-   */
+  
   private async v0315xHack(sourceEnvContent: string): Promise<string> {
     let modifiedContent = sourceEnvContent;
     
@@ -1162,14 +974,7 @@ echo "✅ Tab completion registered for: ${cliName} (isolated)"
     return modifiedContent;
   }
 
-  /**
-   * Version-specific hacks for 0.3.16.x templates
-   * Similar to v0313xHack but for 0.3.16.x series
-   * 
-   * @param sourceEnvContent Original source.env content from template
-   * @returns Modified source.env content with hacks applied
-   * @cliHide
-   */
+  
   private async v0316xHack(sourceEnvContent: string): Promise<string> {
     let modifiedContent = sourceEnvContent;
     
@@ -1180,14 +985,7 @@ echo "✅ Tab completion registered for: ${cliName} (isolated)"
     return modifiedContent;
   }
 
-  /**
-   * Apply version-specific hacks to source.env content
-   * Detects current version and applies appropriate hack method
-   * 
-   * @param sourceEnvContent Original source.env content from template
-   * @returns Modified source.env content with version-specific hacks applied
-   * @cliHide
-   */
+  
   private async applySourceEnvHacks(sourceEnvContent: string): Promise<string> {
     const version = this.model.version;
     
@@ -1217,15 +1015,7 @@ echo "✅ Tab completion registered for: ${cliName} (isolated)"
     return sourceEnvContent;
   }
 
-  /**
-   * Initialize test isolation environment in test/data
-   * Creates scripts/versions/ structure and symlinks to test version CLI
-   * Web4 principle: Use model state and resolveComponentPath(), no dirty path calculations
-   * @param testDataPath Path to test/data directory
-   * @param targetComponent Component name to isolate (NOT this.model.component!)
-   * @param targetVersion Version to isolate (NOT this.model.version!)
-   * @cliHide
-   */
+  
   private async initTestIsolationEnvironment(testDataPath: string, targetComponent: string, targetVersion: string): Promise<this> {
     // Path is already absolute (converted by bash wrapper)
     const absoluteTestDataPath = testDataPath;
@@ -1441,12 +1231,7 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Generate version wrapper scripts for retroactive isolation
-   * Scans all components (not just Web4TSComponent) and creates proxy wrappers
-   * This ensures old versions CANNOT modify production state
-   * @cliHide
-   */
+  
   private async generateVersionWrappers(projectRoot: string): Promise<this> {
     const componentsDir = path.join(projectRoot, 'components');
     
@@ -1541,32 +1326,7 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Create new Web4-compliant component with auto-discovery CLI and full architecture
-   * 
-   * Generates a complete component with the same features as Web4TSComponent:
-   * - Auto-discovery CLI with method discovery
-   * - Web4 architecture patterns (empty constructor, scenarios)
-   * - TypeScript compilation and build system
-   * - Comprehensive layer structure (layer2/3/4/5)
-   * 
-   * @param name Component name (CamelCase, spaces become dots)
-   * @param version Semantic version in X.Y.Z.W format (default: 0.1.0.0)
-   * @param options Features to include: 'all' (recommended), 'cli', 'spec', 'vitest', 'layers'
-   * 
-   * @example
-   * // Create full-featured component
-   * await component.create('UserManager', '0.1.0.0', 'all');
-   * 
-   * @example  
-   * // Create minimal component
-   * await component.create('DataProcessor', '0.1.0.0', 'cli');
-   * 
-   * @cliSyntax component version options
-   * @TODO cliDefault version 0.1.0.0
-   * @TODO cliDefault options all
-   * @cliValues options all cli spec vitest layers
-   */
+  
   async create(component: string, version: string = '0.1.0.0', options: string = 'all'): Promise<void> {
     // Parse options (maps from 1.0.0.0 --cli --spec --vitest --layers)
     const scaffoldOptions: any = {
@@ -1642,16 +1402,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Set component property or generate CLI script
-   * Maps to generate-cli functionality for backward compatibility
-   * 
-   * @param component Component name for CLI generation
-   * @param property Property to set (cli-script, etc.)
-   * @param version Version for CLI script generation
-   * @cliSyntax component property version
-   * @cliHide
-   */
+  
   async set(component: string, property: string, version: string): Promise<void> {
     if (property === 'cli-script' || property === 'cli') {
       console.log(`🔨 Generating CLI script for ${component} v${version}`);
@@ -1668,23 +1419,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Validate and analyze component compliance (internal validation tool)
-   * 
-   * Analyzes component files for Web4 compliance and standards adherence.
-   * Validates CLI scripts, architecture, and implementation quality.
-   * Maps to validate-standard functionality for component validation.
-   * 
-   * @param path Path to component or CLI script to validate
-   * @param operation Type of validation ('validation' for CLI, 'standard' for compliance)
-   * 
-   * @example
-   * // Validate CLI script
-   * await component.get('./myscript.sh', 'validation');
-   * 
-   * @cliSyntax path operation
-   * @cliHide
-   */
+  
   async get(path: string, operation: string): Promise<void> {
     if (operation === 'validation' || operation === 'standard') {
       console.log(`🔍 Validating CLI standard: ${path}`);
@@ -1714,14 +1449,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Analyze component compliance from path
-   * Maps to audit-compliance functionality for backward compatibility
-   * 
-   * @param componentPath Path to component directory
-   * @cliSyntax componentPath
-   * @cliHide
-   */
+  
   async from(componentPath: string): Promise<this> {
     console.log(`🔍 Analyzing component: ${componentPath}`);
     const metadata = await this.auditComponentCompliance(componentPath);
@@ -1741,26 +1469,7 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Discover and analyze Web4 components in directory with compliance reporting
-   * 
-   * Scans directory structure for Web4-compliant components and provides
-   * detailed analysis of each component's features and compliance status.
-   * Perfect for auditing component ecosystems and finding available components.
-   * Maps to generate-report functionality for comprehensive component discovery.
-   * 
-   * @param componentDir Directory path to search for components (relative to project root)
-   * 
-   * @example
-   * // Discover all components in main directory
-   * await component.find('components/');
-   * 
-   * @example
-   * // Discover in backup location
-   * await component.find('backup/components/');
-   * 
-   * @cliSyntax componentDir
-   */
+  
   async find(componentDir: string): Promise<this> {
     console.log(`🔍 Discovering components in: ${componentDir}`);
     const components = await this.generateComplianceReport(componentDir);
@@ -1776,27 +1485,7 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Load component context for chaining operations (essential for workflows)
-   * 
-   * Essential method for chaining workflows. Loads component context that
-   * enables subsequent chained operations like tree, upgrade, setLatest.
-   * Based on Unit's on method pattern for consistent chaining architecture.
-   * 
-   * @param component Component name to load context for
-   * @param version Component version to load
-   * 
-   * @example
-   * // Load context for chaining
-   * await component.on('Unit', '0.3.0.5');
-   * 
-   * @example
-   * // Load context for this component
-   * await component.on('Web4TSComponent', '0.3.2.0');
-   * 
-   * @cliSyntax component version
-   * @TODO cliDefault version current
-   */
+  
   async on(component: string, version: string = 'latest'): Promise<this> {
     const componentPath = this.resolveComponentPath(component, version);
     
@@ -1828,37 +1517,7 @@ exec node "${cliJsPath}" "$@"
     return this; // Enable chaining
   }
 
-  /**
-   * Upgrade component to next version with semantic version control
-   * WITHOUT context: Upgrades current component (self-operation)
-   * WITH context: Upgrades target component
-   * 
-   * Performs intelligent version upgrades. If no context is loaded (via 'on'),
-   * upgrades the current component. Supports semantic versioning with nextBuild,
-   * nextPatch, nextMinor, nextMajor patterns.
-   * 
-   * @param versionPromotion Version upgrade type: 'nextBuild', 'nextPatch', 'nextMinor', 'nextMajor', or specific version
-   * 
-   * @example
-   * // WITH context: Upgrade target component
-   * await component.on('Web4TSComponent', 'latest').upgrade('nextBuild');
-   * 
-   * @example
-   * // WITHOUT context: Upgrade current component (0.1.0.0 → 0.1.0.1)
-   * await component.upgrade('nextBuild');
-   * 
-   * @example
-   * // Upgrade to next minor version (0.1.0.0 → 0.2.0.0)
-   * await component.upgrade('nextMinor');
-   * 
-   * @example
-   * // Upgrade to specific version
-   * await component.upgrade('1.0.0.0');
-   * 
-   * @cliSyntax versionPromotion
-   * @TODO cliDefault versionPromotion nextPatch
-   * @cliValues versionPromotion nextPatch nextMinor nextMajor nextBuild
-   */
+  
   async upgrade(versionPromotion: string = 'nextPatch'): Promise<this> {
     const context = this.getComponentContext();
     
@@ -1930,17 +1589,7 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Display tree structure of component directory
-   * WITHOUT context: Shows tree for current component (self-operation)
-   * WITH context: Shows tree for target component
-   * @param depth Maximum depth to traverse (default: 4)
-   * @param showHidden Show hidden files and directories
-   * @cliSyntax depth showHidden
-   * @TODO cliDefault depth 4
-   * @TODO cliDefault showHidden false
-   * @cliValues showHidden false true
-   */
+  
   async tree(depth: string = '4', showHidden: string = 'false'): Promise<this> {
     const context = this.getComponentContext();
     const maxDepth = parseInt(depth, 10) || 4;
@@ -1962,71 +1611,27 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Update latest symlink to point to specified version (requires context)
-   * Updates the 'latest' symlink to point to specified version
-   * 
-   * @deprecated Use setCICDVersion('latest', version) instead
-   * This method is kept for backward compatibility but hidden from CLI
-   * 
-   * @param targetVersion Version to set as latest (default: use current context version)
-   * @cliHide
-   */
+  
   async setLatest(targetVersion: string = 'current'): Promise<this> {
     return this.setCICDVersion('latest', targetVersion);
   }
 
-  /**
-   * Set development version link - version currently under development (requires context)
-   * 
-   * @deprecated Use setCICDVersion('dev', version) instead
-   * This method is kept for backward compatibility but hidden from CLI
-   * 
-   * @param targetVersion Version to set as dev (default: use current context version)
-   * @cliHide
-   */
+  
   async setDev(targetVersion: string = 'current'): Promise<this> {
     return this.setCICDVersion('dev', targetVersion);
   }
 
-  /**
-   * Set test version link - version ready for 100% revision testing (requires context)
-   * 
-   * @deprecated Use setCICDVersion('test', version) instead
-   * This method is kept for backward compatibility but hidden from CLI
-   * 
-   * @param targetVersion Version to set as test (default: use current context version)
-   * @cliHide
-   */
+  
   async setTest(targetVersion: string = 'current'): Promise<this> {
     return this.setCICDVersion('test', targetVersion);
   }
 
-  /**
-   * Set production version link - version that achieved 100% testing success (requires context)
-   * 
-   * @deprecated Use setCICDVersion('prod', version) instead
-   * This method is kept for backward compatibility but hidden from CLI
-   * 
-   * @param targetVersion Version to set as prod (default: use current context version)
-   * @cliHide
-   */
+  
   async setProd(targetVersion: string = 'current'): Promise<this> {
     return this.setCICDVersion('prod', targetVersion);
   }
 
-  /**
-   * Display semantic version links - shows own links if no context, or target component links if context loaded
-   * When no context: Show Web4TSComponent's own semantic version links
-   * When context loaded: Show semantic version links for the loaded component
-   * Shows development workflow status and version progression
-   * @param action Optional action: 'fix' to repair all links and symlinks
-   * @cliSyntax
-   * @cliValues action fix verify
-   * @cliExample web4tscomponent links
-   * @cliExample web4tscomponent links fix
-   * @cliExample web4tscomponent on Unit 0.3.2.0 links
-   */
+  
   async links(action: string = ''): Promise<this> {
     const context = this.getComponentContext();
     const componentName = context?.component || this.model.component;
@@ -2106,12 +1711,7 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Fix missing or broken semantic links (dev, test, prod, latest)
-   * Repairs or creates semantic symlinks using setCICDVersion() for DRY compliance
-   * @param componentName Component name to fix semantic links for
-   * @cliHide
-   */
+  
   private async fixSemanticLinks(componentName: string): Promise<void> {
     const componentDir = this.resolveComponentDirectory(componentName);
     const availableVersions = this.getAvailableVersions(componentDir);
@@ -2193,10 +1793,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Get icon for semantic link type
-   * @cliHide
-   */
+  
   private getLinkIcon(linkType: string): string {
     const icons: Record<string, string> = {
       'dev': '🚧',
@@ -2207,14 +1804,7 @@ exec node "${cliJsPath}" "$@"
     return icons[linkType] || '🔗';
   }
 
-  /**
-   * Create or update a semantic symlink (dev, test, prod, latest)
-   * Replaces existing symlink and updates scripts symlinks for 'latest'
-   * @param componentName Component name for semantic link
-   * @param linkType Type of semantic link (dev, test, prod, latest)
-   * @param targetVersion Version to point semantic link to
-   * @cliHide
-   */
+  
   private async createSemanticLink(componentName: string, linkType: string, targetVersion: string): Promise<void> {
     const componentDir = this.resolveComponentDirectory(componentName);
     const linkPath = path.join(componentDir, linkType);
@@ -2249,13 +1839,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Get all semantic links for a component
-   * Reads dev, test, prod, and latest symlinks
-   * @param componentName Component name to get semantic links for
-   * @returns Object with dev, test, prod, latest versions (null if not set)
-   * @cliHide
-   */
+  
   private async getSemanticLinks(componentName: string): Promise<{ dev: string | null; test: string | null; prod: string | null; latest: string | null }> {
     const componentDir = this.resolveComponentDirectory(componentName);
     const result = {
@@ -2280,29 +1864,7 @@ exec node "${cliJsPath}" "$@"
     return result;
   }
 
-  /**
-   * Execute test command - runs tests WITHOUT promotion
-   * Use releaseTest() for version promotion workflow
-   * 
-   * Mode 1 (Full Suite): Run all tests (default)
-   * Mode 2 (Selective): Run specific test file/describe/itCase by number
-   * 
-   * When no context: Run Web4TSComponent's own test suite
-   * When context loaded: Run test suite for the loaded component
-   * 
-   * @param scope - Test scope: empty/all (full suite), 'file', 'describe', or 'itCase'
-   * @param references - For selective testing: numeric references to select tests
-   * @cliSyntax scope ...references
-   * @TODO cliDefault scope all
-   * @cliValues file describe itCase shell
-   * @cliExample web4tscomponent test
-   * @cliExample web4tscomponent test all
-   * @cliExample web4tscomponent test shell
-   * @cliExample web4tscomponent test file 2
-   * @cliExample web4tscomponent test describe 2 1
-   * @cliExample web4tscomponent test itCase 2 1 3
-   * @cliExample web4tscomponent on Unit 0.3.0.5 test
-   */
+  
   async test(scope: string = 'all', ...references: string[]): Promise<this> {
     // MODE 1: Test shell (bash completion testing in isolated test/data)
     if (scope === 'shell') {
@@ -2371,15 +1933,7 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Start interactive shell in test/data environment for testing
-   * Optionally for a specific version (for retroactive isolation)
-   * Sources test environment's source.env for isolated completion testing
-   * 
-   * @param version Optional version to test (defaults to current context)
-   * @param command Optional command arguments to run in test shell (rest params)
-   * @cliHide
-   */
+  
   protected async testShell(version?: string, ...command: string[]): Promise<this> {
     const context = this.getComponentContext();
     
@@ -2443,22 +1997,7 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Run tests with configurable release promotion 
-   * Same as test() but on 100% success promotes using specified promotion level
-   * 
-   * Two-stage workflow:
-   * - Stage 1: dev → test (nextBuild) - same as test()
-   * - Stage 2: test → prod (specified promotion) + new dev (nextBuild)
-   * 
-   * @param versionPromotion Promotion level on test success: nextPatch, nextMinor, or nextMajor
-   * @cliSyntax versionPromotion
-   * @TODO cliDefault versionPromotion nextPatch
-   * @cliValues versionPromotion nextPatch nextMinor nextMajor nextBuild
-   * @cliExample web4tscomponent releaseTest
-   * @cliExample web4tscomponent releaseTest nextMinor
-   * @cliExample web4tscomponent on Unit 0.3.0.5 releaseTest nextMajor
-   */
+  
   async releaseTest(versionPromotion: string = 'nextPatch'): Promise<this> {
     const context = this.getComponentContext();
     const validPromotions = ['nextPatch', 'nextMinor', 'nextMajor'];
@@ -2584,13 +2123,7 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Handle release test success: promote test to prod using nextMinor (Stage 2 - Major Release)
-   * Workflow Stage 2 (Release): test → prod (nextMinor) + new dev (nextBuild)
-   * E.g., 0.3.4.2 (test) → 0.4.0.0 (prod) + 0.4.0.1 (dev)
-   * Used by releaseTest() for major version releases
-   * @cliHide
-   */
+  
   async handleReleaseTestSuccessPromotion(componentName: string, currentVersion: string, promotionLevel: string = 'nextPatch'): Promise<void> {
     console.log(`\n🎯 Analyzing release test success for version promotion...`);
     console.log(`📋 RELEASE MODE: Will use ${promotionLevel.toUpperCase()}`);
@@ -2677,15 +2210,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Determine which promotion stage to apply based on current semantic links
-   * Correct workflow:
-   * 1. Create 0.1.0.0 → prod + latest (initial production version)
-   * 2. No dev? → Create 0.1.0.1 → dev (start development)
-   * 3. Testing dev? → Create 0.1.0.2 → test (start testing)
-   * 4. 100% test pass? → Create 0.1.1.0 → prod + latest, Create 0.1.1.1 → dev (new cycle)
-   * @cliHide
-   */
+  
   private async determinePromotionStage(
     componentName: string, 
     currentVersion: string, 
@@ -2734,11 +2259,7 @@ exec node "${cliJsPath}" "$@"
     console.log(`   - If you're testing: make sure you're on the test version`);
   }
 
-  /**
-   * Stage 0: Create first dev version from prod
-   * E.g., 0.1.0.0 (prod) → 0.1.0.1 (dev)
-   * @cliHide
-   */
+  
   private async handleCreateFirstDev(componentName: string, currentVersion: string): Promise<void> {
     console.log(`\n🚧 Creating first dev version from ${currentVersion}...`);
     
@@ -2780,11 +2301,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Stage 1: Create test version from dev
-   * E.g., 0.1.0.1 (dev) → 0.1.0.2 (test)
-   * @cliHide
-   */
+  
   private async handleDevToTest(componentName: string, currentVersion: string): Promise<void> {
     console.log(`\n🧪 Creating test version from ${currentVersion}...`);
     
@@ -2827,13 +2344,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Handle first test run: promote dev to test (Stage 1)
-   * Workflow Stage 1: dev → test (nextBuild)
-   * E.g., 0.3.4.1 (dev) → 0.3.4.2 (test)
-   * @cliHide
-   * @deprecated Use determinePromotionStage instead
-   */
+  
   private async handleFirstTestRun(componentName: string, currentVersion: string): Promise<void> {
     console.log(`\n🧪 First test run detected for ${componentName} ${currentVersion}`);
     console.log(`📋 Workflow Stage 1: dev → test (nextBuild)`);
@@ -2863,12 +2374,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Handle 100% test success: promote test to prod (Stage 2)
-   * Workflow Stage 2: test → prod (nextPatch) + new dev (nextBuild)
-   * E.g., 0.3.4.2 (test) → 0.3.5.0 (prod) + 0.3.5.1 (dev)
-   * @cliHide
-   */
+  
   async handleTestSuccessPromotion(componentName: string, currentVersion: string): Promise<void> {
     console.log(`\n🎯 Analyzing test success for version promotion...`);
     
@@ -2940,10 +2446,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Verify that tests achieved 100% success
-   * @cliHide
-   */
+  
   async verifyTestSuccess(componentName: string, version: string): Promise<boolean> {
     // Read test results from vitest JSON output
     // Use component's directory, not process.cwd() (which may be different in test environments)
@@ -2987,11 +2490,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Compare two semantic versions FOR HIERARCHY CHECK ONLY
-   * Returns: -1 if v1 < v2, 0 if v1 == v2, 1 if v1 > v2
-   * @cliHide
-   */
+  
   private compareVersionsForHierarchy(v1: string, v2: string): number {
     const parts1 = v1.split('.').map(Number);
     const parts2 = v2.split('.').map(Number);
@@ -3007,21 +2506,12 @@ exec node "${cliJsPath}" "$@"
     return 0; // Equal
   }
 
-  /**
-   * Get current version from model (single source of truth)
-   * Model is initialized from directory name in constructor
-   * @cliHide
-   */
+  
   private async getCurrentVersion(): Promise<string> {
     return this.model.version;
   }
 
-  /**
-   * Create nextPatch version from current version
-   * nextPatch increments patch version and resets build to 0
-   * e.g., 0.3.2.0 → 0.3.3.0
-   * @cliHide
-   */
+  
   private async createNextPatchVersion(componentName: string, currentVersion: string): Promise<string> {
     // Use the existing upgrade method to create nextPatch (increment patch, reset build)
     const originalContext = this.getComponentContext();
@@ -3048,10 +2538,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Create nextBuild version from base version
-   * @cliHide
-   */
+  
   private async createNextBuildVersion(componentName: string, baseVersion: string): Promise<string> {
     // Use the existing upgrade method to create nextBuild
     const originalContext = this.getComponentContext();
@@ -3077,12 +2564,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Create nextMinor version from current version (for major releases)
-   * nextMinor increments minor version and resets patch and build to 0
-   * e.g., 0.3.4.2 → 0.4.0.0
-   * @cliHide
-   */
+  
   private async createNextMinorVersion(componentName: string, currentVersion: string): Promise<string> {
     const originalContext = this.getComponentContext();
     
@@ -3107,12 +2589,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Execute start command in loaded component context
-   * Build and run the loaded component using its build system
-   * @cliSyntax
-   * @cliExample web4tscomponent on Unit 0.3.0.5 start
-   */
+  
   async start(): Promise<this> {
     const context = this.getComponentContext();
     if (!context) {
@@ -3138,14 +2615,7 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Execute build command - builds own component if no context, or target component if context loaded
-   * When no context: Build Web4TSComponent itself using its build system
-   * When context loaded: Build the loaded component using its build system
-   * @cliSyntax
-   * @cliExample web4tscomponent build
-   * @cliExample web4tscomponent on Unit 0.3.0.5 build
-   */
+  
   async build(): Promise<this> {
     const context = this.getComponentContext();
     
@@ -3189,17 +2659,7 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Execute selective test command (called internally from test())
-   * Run specific test files, describe blocks, or it cases using vitest
-   * Supports numeric references with tab completion for fast test selection
-   * 
-   * Web4 Principle: Use model.targetDirectory for context discovery, not process.cwd()
-   * 
-   * @param scope - Type of test selection: 'file' | 'describe' | 'itCase'
-   * @param references - Numeric references (1-based) for selecting tests
-   * @cliHide
-   */
+  
   private async testSelective(scope: string, references: string[]): Promise<this> {
     // Import TestFileParser dynamically
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
@@ -3262,10 +2722,7 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Execute test for specific file (by numeric reference)
-   * @cliHide
-   */
+  
   private async testFile(
     testFiles: any[],
     testDir: string,
@@ -3317,11 +2774,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Execute test for specific describe block (by numeric references)
-   * Supports progressive filtering: just number shows all describes for that file
-   * @cliHide
-   */
+  
   private async testDescribe(
     testFiles: any[],
     testDir: string,
@@ -3415,10 +2868,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Execute test for specific it case (by hierarchical token like "5a1")
-   * @cliHide
-   */
+  
   private async testItCase(
     testFiles: any[],
     testDir: string,
@@ -3534,14 +2984,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Execute clean command
-   * WITHOUT context: Clean Web4TSComponent itself (self-operation)
-   * WITH context: Clean the loaded component
-   * @cliSyntax
-   * @cliExample web4tscomponent clean
-   * @cliExample web4tscomponent on Unit 0.3.0.5 clean
-   */
+  
   async clean(): Promise<this> {
     const context = this.getComponentContext();
     
@@ -3585,26 +3028,7 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Test and discover tab completions for debugging and development
-   * WITHOUT context: Test completions on Web4TSComponent itself
-   * WITH context: Test completions on the loaded component
-   * 
-   * Automatically discovers and lists methods or parameter completions based on 'what' parameter.
-   * Supports prefix filtering to narrow down results.
-   * 
-   * @param what Type of completion to test: "method" or "parameter"
-   * @param filter Optional prefix to filter results (e.g., "v" shows only validate*, verify*, etc.)
-   * 
-   * @cliSyntax what filter
-   * @cliValues what method parameter
-   * @cliExample web4tscomponent completion method
-   * @cliExample web4tscomponent completion method v
-   * @cliExample web4tscomponent completion parameter s
-   * @cliExample web4tscomponent on Unit 0.3.0.5 completion method
-   * 
-   * @remarks TSCompletion uses convention: filterParameterCompletion (not @cliCompletion tag)
-   */
+  
   async completion(what: string, filter?: string): Promise<this> {
     const context = this.getComponentContext();
     
@@ -3638,17 +3062,7 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Remove a specific version of a component
-   * Removes the version directory and updates symlinks accordingly
-   * @param component Component name to remove version from (uses context if not provided)
-   * @param version Version to remove (uses context version if not provided)
-   * @cliSyntax component version
-   * @TODO cliDefault component current
-   * @TODO cliDefault version current
-   * @cliExample web4tscomponent removeVersion Unit 0.2.0.0
-   * @cliExample web4tscomponent on Unit 0.2.0.0 removeVersion
-   */
+  
   async removeVersion(component: string = 'current', version: string = 'current'): Promise<this> {
     let targetComponent: string;
     let targetVersion: string;
@@ -3720,15 +3134,7 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Remove an entire component and all its versions
-   * Removes the complete component directory and all associated symlinks
-   * @param component Component name to remove completely (uses context if not provided)
-   * @cliSyntax component
-   * @TODO cliDefault component current
-   * @cliExample web4tscomponent removeComponent TestComponent
-   * @cliExample web4tscomponent on TestComponent 1.0.0.0 removeComponent
-   */
+  
   async removeComponent(component: string = 'current'): Promise<this> {
     let targetComponent: string;
 
@@ -3772,39 +3178,13 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Test zero config discovery functionality (development/testing only)
-   * Verifies that CLI auto-discovery is working correctly
-   * 
-   * @param message Test message to display (default: 'Zero config discovery works!')
-   * @cliSyntax message
-   * @TODO cliDefault message Zero config discovery works!
-   * @cliHide
-   */
+  
   async testDiscovery(message: string = 'Zero config discovery works!'): Promise<this> {
     console.log(`🧪 Discovery Test: ${message}`);
     return this;
   }
 
-  /**
-   * Compare multiple components and generate detailed comparison table
-   * 
-   * Analyzes multiple components and generates comprehensive comparison table
-   * in the exact format used in component analysis documentation. Shows
-   * package metadata, dependencies, file structure, and architectural differences.
-   * 
-   * @param components Comma-separated list of "ComponentName Version" pairs
-   * 
-   * @example
-   * // Compare multiple components
-   * await component.compare('Unit 0.3.0.5, Web4TSComponent 0.3.2.0, ONCE 0.2.0.0');
-   * 
-   * @example
-   * // Compare specific versions
-   * await component.compare('Web4Requirement 0.3.0.5, Unit 0.3.0.5');
-   * 
-   * @cliSyntax components
-   */
+  
   async compare(components: string): Promise<this> {
     console.log(`📊 Component Comparison Analysis`);
     console.log(`🔍 Analyzing components: ${components}`);
@@ -3846,13 +3226,7 @@ exec node "${cliJsPath}" "$@"
     return this;
   }
 
-  /**
-   * Parse component specifications from input string
-   * Converts "CompA 1.0.0.0, CompB 2.0.0.0" to array of {name, version} objects
-   * @param components Comma-separated component specifications
-   * @returns Array of parsed component specifications
-   * @cliHide
-   */
+  
   private parseComponentSpecs(components: string): Array<{name: string, version: string}> {
     const specs = components.split(',').map(spec => spec.trim());
     const result = [];
@@ -3871,13 +3245,7 @@ exec node "${cliJsPath}" "$@"
     return result;
   }
 
-  /**
-   * Generate safe filename from component specifications
-   * Creates filesystem-safe filename for comparison markdown file
-   * @param componentSpecs Array of component specifications to include in filename
-   * @returns Safe filename with timestamp and component names
-   * @cliHide
-   */
+  
   private generateSafeFilename(componentSpecs: Array<{name: string, version: string}>): string {
     // Create a descriptive but safe filename
     const componentParts = componentSpecs.map(spec => 
@@ -3903,15 +3271,7 @@ exec node "${cliJsPath}" "$@"
     return filename;
   }
 
-  /**
-   * Generate complete markdown content for comparison report
-   * Creates formatted markdown with tables and analysis
-   * @param componentSpecs Array of components being compared
-   * @param analyses Array of analysis results for each component
-   * @param originalComponents Original input string for documentation
-   * @returns Complete markdown content for comparison report
-   * @cliHide
-   */
+  
   private async generateComparisonMarkdown(
     componentSpecs: Array<{name: string, version: string}>, 
     analyses: any[],
@@ -3961,14 +3321,7 @@ exec node "${cliJsPath}" "$@"
     return lines.join('\n');
   }
 
-  /**
-   * Generate differences table content for markdown
-   * Creates package and configuration comparison table
-   * @param componentSpecs Array of components being compared
-   * @param analyses Array of analysis results for each component
-   * @returns Array of markdown table lines
-   * @cliHide
-   */
+  
   private async generateDifferencesTableContent(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<string[]> {
     const lines: string[] = [];
     
@@ -4053,14 +3406,7 @@ exec node "${cliJsPath}" "$@"
     return lines;
   }
 
-  /**
-   * Generate file comparison table content for markdown with dual links
-   * Creates file structure comparison table showing presence across components
-   * @param componentSpecs Array of components being compared
-   * @param analyses Array of analysis results for each component
-   * @returns Array of markdown table lines
-   * @cliHide
-   */
+  
   private async generateFileComparisonTableContent(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<string[]> {
     const lines: string[] = [];
     
@@ -4124,26 +3470,13 @@ exec node "${cliJsPath}" "$@"
     return lines;
   }
 
-  /**
-   * Generate dual link for file entry (local path only, relative to version folder)
-   * @param entry File or directory entry name
-   * @param componentSpecs Array of components being compared (unused, for interface consistency)
-   * @param analyses Array of analysis results (unused, for interface consistency)
-   * @returns Entry name as local relative path
-   * @cliHide
-   */
+  
   private generateDualLinkForEntry(entry: string, componentSpecs: Array<{name: string, version: string}>, analyses: any[]): string {
     // Simply return the entry as a local relative path
     return entry;
   }
 
-  /**
-   * Analyze components for comparison
-   * Loads and analyzes each component's structure, package.json, and files
-   * @param componentSpecs Array of component specifications to analyze
-   * @returns Array of analysis results for each component
-   * @cliHide
-   */
+  
   private async analyzeComponentsForComparison(componentSpecs: Array<{name: string, version: string}>): Promise<any[]> {
     const analyses = [];
     
@@ -4161,15 +3494,7 @@ exec node "${cliJsPath}" "$@"
     return analyses;
   }
 
-  /**
-   * Analyze component structure for comparison
-   * Reads package.json and recursively scans file structure
-   * @param componentPath Absolute path to component version directory
-   * @param name Component name
-   * @param version Component version
-   * @returns Analysis object with files, directories, dependencies, etc.
-   * @cliHide
-   */
+  
   private async analyzeComponentStructure(componentPath: string, name: string, version: string): Promise<any> {
     const analysis: any = {
       name,
@@ -4204,14 +3529,7 @@ exec node "${cliJsPath}" "$@"
     return analysis;
   }
 
-  /**
-   * Analyze file structure recursively
-   * Scans directory and adds files/directories to analysis object
-   * @param dirPath Absolute path to directory to analyze
-   * @param analysis Analysis object to populate with files and directories
-   * @param relativePath Current relative path from component root (for recursion)
-   * @cliHide
-   */
+  
   private async analyzeFileStructure(dirPath: string, analysis: any, relativePath: string = ''): Promise<void> {
     try {
       const entries = await fs.readdir(dirPath, { withFileTypes: true });
@@ -4246,13 +3564,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Generate differences table in exact format (console output)
-   * Displays package and configuration comparison table
-   * @param componentSpecs Array of components being compared
-   * @param analyses Array of analysis results for each component
-   * @cliHide
-   */
+  
   private async generateDifferencesTable(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<void> {
     console.log(`\n### **Differences Table**\n`);
     
@@ -4335,13 +3647,7 @@ exec node "${cliJsPath}" "$@"
     console.log(dependenciesRow);
   }
 
-  /**
-   * Generate file comparison table in exact format (console output)
-   * Displays file structure comparison table
-   * @param componentSpecs Array of components being compared
-   * @param analyses Array of analysis results for each component
-   * @cliHide
-   */
+  
   private async generateFileComparisonTable(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<void> {
     console.log(`\n### **File Comparison Table**\n`);
     
@@ -4401,10 +3707,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Group template pattern files that should be compared together
-   * @cliHide
-   */
+  
   private async groupTemplatePatternFiles(allEntries: string[], componentSpecs: any[], analyses: any[]): Promise<any[]> {
     const templateGroups = [];
     
@@ -4432,10 +3735,7 @@ exec node "${cliJsPath}" "$@"
     return templateGroups;
   }
 
-  /**
-   * Verify that files in a group follow the same template pattern
-   * @cliHide
-   */
+  
   private async verifyTemplateGroup(group: any, componentSpecs: any[], analyses: any[]): Promise<boolean> {
     const fileContents = [];
     
@@ -4468,10 +3768,7 @@ exec node "${cliJsPath}" "$@"
     return false;
   }
 
-  /**
-   * Generate a row for template group (files that follow same template pattern)
-   * @cliHide
-   */
+  
   private async generateTemplateGroupRow(group: any, componentSpecs: any[], analyses: any[]): Promise<void> {
     let row = `| ${group.type} (${group.files.join(', ')})`;
     
@@ -4498,10 +3795,7 @@ exec node "${cliJsPath}" "$@"
     console.log(row);
   }
 
-  /**
-   * Determine purpose of file/directory
-   * @cliHide
-   */
+  
   private determinePurpose(entry: string): string {
     const purposeMap: { [key: string]: string } = {
       'package.json': 'Package metadata, scripts, entry points',
@@ -4535,13 +3829,7 @@ exec node "${cliJsPath}" "$@"
     return 'Component file';
   }
 
-  /**
-   * Determine similarity based on actual content comparison
-   * - Identical: Files have NO diff at all (byte-identical)
-   * - Similar: Files stem from same template but adapted to component specifics
-   * - Folders: Identical if they exist in 2+ components (content irrelevant)
-   * @cliHide
-   */
+  
   private async determineSimilarity(entry: string, componentSpecs: any[], presentCount: number, totalCount: number, presencePattern: string[], analyses: any[]): Promise<string> {
     // Handle directories - identical if present in 2+ components (content doesn't matter)
     if (entry.endsWith('/')) {
@@ -4630,10 +3918,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Check if files are similar using simple template pattern detection
-   * @cliHide
-   */
+  
   private checkTemplateSimilarity(fileContents: string[], entry: string): boolean {
     if (fileContents.length < 2) return false;
 
@@ -4650,10 +3935,7 @@ exec node "${cliJsPath}" "$@"
     return passedChecks >= 2;
   }
 
-  /**
-   * Check if file has template similarity with files in other components
-   * @cliHide
-   */
+  
   private async hasCrossComponentTemplateSimilarity(entry: string, componentSpecs: any[], analyses: any[]): Promise<boolean> {
     // For CLI files, check if other components have CLI files following same template
     if (entry.includes('CLI.ts') && entry.includes('src/ts/layer5/')) {
@@ -4680,10 +3962,7 @@ exec node "${cliJsPath}" "$@"
     return false;
   }
 
-  /**
-   * Get file content for cross-component comparison
-   * @cliHide
-   */
+  
   private async getFileContent(entry: string, componentSpecs: any[], analyses: any[]): Promise<string | null> {
     for (let i = 0; i < componentSpecs.length; i++) {
       const analysis = analyses[i];
@@ -4702,10 +3981,7 @@ exec node "${cliJsPath}" "$@"
     return null;
   }
 
-  /**
-   * Check if a file follows a template pattern that should be compared across components
-   * @cliHide
-   */
+  
   private isTemplatePatternFile(entry: string): boolean {
     // CLI files in layer5 follow template patterns
     if (entry.includes('src/ts/layer5/') && entry.endsWith('CLI.ts')) {
@@ -4725,10 +4001,7 @@ exec node "${cliJsPath}" "$@"
     return false;
   }
 
-  /**
-   * Find template-similar files across components even with different names
-   * @cliHide
-   */
+  
   private async findTemplateSimilarFiles(entry: string, componentSpecs: any[], analyses: any[]): Promise<any[]> {
     const similarFiles = [];
     
@@ -4764,10 +4037,7 @@ exec node "${cliJsPath}" "$@"
     return similarFiles;
   }
 
-  /**
-   * Find the path of the original file for comparison
-   * @cliHide
-   */
+  
   private findOriginalFilePath(entry: string, componentSpecs: any[], analyses: any[]): string | null {
     for (let i = 0; i < componentSpecs.length; i++) {
       const analysis = analyses[i];
@@ -4780,10 +4050,7 @@ exec node "${cliJsPath}" "$@"
     return null;
   }
 
-  /**
-   * Check if two files follow the same template pattern
-   * @cliHide
-   */
+  
   private async areTemplatePatternFiles(filePath1: string | null, filePath2: string): Promise<boolean> {
     if (!filePath1) return false;
     
@@ -4798,10 +4065,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Check for common inheritance patterns (e.g., extends DefaultCLI)
-   * @cliHide
-   */
+  
   private hasCommonInheritancePattern(fileContents: string[]): boolean {
     const inheritanceClasses = fileContents.map(content => 
       this.extractClassExtension(content)
@@ -4814,19 +4078,13 @@ exec node "${cliJsPath}" "$@"
     return false;
   }
 
-  /**
-   * Extract the class that this file extends (e.g., "DefaultCLI")
-   * @cliHide
-   */
+  
   private extractClassExtension(content: string): string | null {
     const match = content.match(/extends\s+(\w+)/);
     return match ? match[1] : null;
   }
 
-  /**
-   * Check for explicit template references in comments or metadata
-   * @cliHide
-   */
+  
   private hasExplicitTemplateReferences(fileContents: string[]): boolean {
     const templatePatterns = [
       /(?:template|Template):\s*(\w+)/i,
@@ -4849,10 +4107,7 @@ exec node "${cliJsPath}" "$@"
     return false;
   }
 
-  /**
-   * Check for common import patterns indicating template usage
-   * @cliHide
-   */
+  
   private hasCommonImportPatterns(fileContents: string[]): boolean {
     const importPatterns = fileContents.map(content => {
       // Extract imports from template base classes
@@ -4882,10 +4137,7 @@ exec node "${cliJsPath}" "$@"
     return false;
   }
 
-  /**
-   * Check for specific template patterns based on file type
-   * @cliHide
-   */
+  
   private hasSpecificTemplatePatterns(fileContents: string[], entry: string): boolean {
     // CLI files should extend DefaultCLI and call initWithComponentClass
     if (entry.includes('CLI.ts') && !entry.includes('DefaultCLI.ts')) {
@@ -4916,10 +4168,7 @@ exec node "${cliJsPath}" "$@"
     return false;
   }
 
-  /**
-   * Check package.json similarity (same structure, different names/versions)
-   * @cliHide
-   */
+  
   private checkPackageJsonSimilarity(fileContents: string[]): boolean {
     try {
       const packages = fileContents.map(content => JSON.parse(content));
@@ -4939,10 +4188,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Check config file similarity (same structure, different values)
-   * @cliHide
-   */
+  
   private checkConfigFileSimilarity(fileContents: string[]): boolean {
     // Remove comments and normalize whitespace for comparison
     const normalized = fileContents.map(content => 
@@ -4958,10 +4204,7 @@ exec node "${cliJsPath}" "$@"
     });
   }
 
-  /**
-   * Check DefaultCLI.ts similarity (template-based but component-specific)
-   * @cliHide
-   */
+  
   private checkDefaultCLISimilarity(fileContents: string[]): boolean {
     // DefaultCLI files should have similar class structure but different component names
     const hasCommonStructure = fileContents.every(content => 
@@ -4974,10 +4217,7 @@ exec node "${cliJsPath}" "$@"
     return hasCommonStructure;
   }
 
-  /**
-   * Check TypeScript file similarity (interfaces, classes, similar structure)
-   * @cliHide
-   */
+  
   private checkTypeScriptFileSimilarity(fileContents: string[]): boolean {
     // Check for common TypeScript patterns
     const patterns = ['interface', 'class', 'export', 'import', 'type', 'enum'];
@@ -4994,10 +4234,7 @@ exec node "${cliJsPath}" "$@"
     });
   }
 
-  /**
-   * Check general structural similarity
-   * @cliHide
-   */
+  
   private checkGeneralStructuralSimilarity(fileContents: string[]): boolean {
     const firstContent = fileContents[0];
     
@@ -5007,10 +4244,7 @@ exec node "${cliJsPath}" "$@"
     });
   }
 
-  /**
-   * Calculate structural similarity between two text contents
-   * @cliHide
-   */
+  
   private calculateStructuralSimilarity(text1: string, text2: string): number {
     // Simple structural similarity based on line structure and length
     const lines1 = text1.split('\n').filter(line => line.trim().length > 0);
@@ -5036,10 +4270,7 @@ exec node "${cliJsPath}" "$@"
     return (lengthSimilarity + patternSimilarity) / 2;
   }
 
-  /**
-   * Recursively display tree structure
-   * @cliHide
-   */
+  
   private async displayTreeStructure(
     dirPath: string, 
     prefix: string, 
@@ -5151,11 +4382,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Get current component context for chained operations
-   * Protected: Allow subclasses/CLI to access for delegation patterns
-   * @cliHide
-   */
+  
   protected getComponentContext(): { component: string, version: string, path: string } | null {
     const context = this.model as any;
     if (!context.contextComponent || !context.contextVersion) {
@@ -5169,43 +4396,31 @@ exec node "${cliJsPath}" "$@"
     };
   }
 
-  /**
-   * Version increment helpers
-   * @cliHide
-   */
+  
   private incrementBuild(version: string): string {
     const [major, minor, patch, build] = version.split('.').map(Number);
     return `${major}.${minor}.${patch}.${build + 1}`;
   }
 
-  /**
-   * @cliHide
-   */
+  
   private incrementMinor(version: string): string {
     const [major, minor] = version.split('.').map(Number);
     return `${major}.${minor + 1}.0.0`;
   }
 
-  /**
-   * @cliHide
-   */
+  
   private incrementPatch(version: string): string {
     const [major, minor, patch] = version.split('.').map(Number);
     return `${major}.${minor}.${patch + 1}.0`;
   }
 
-  /**
-   * @cliHide
-   */
+  
   private incrementMajor(version: string): string {
     const [major] = version.split('.').map(Number);
     return `${major + 1}.0.0.0`;
   }
 
-  /**
-   * Create new version from existing component
-   * @cliHide
-   */
+  
   private async createVersionFromExisting(component: string, fromVersion: string, toVersion: string): Promise<void> {
     const sourcePath = this.resolveComponentPath(component, fromVersion);
     const targetPath = this.resolveComponentPath(component, toVersion);
@@ -5267,10 +4482,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Copy directory recursively
-   * @cliHide
-   */
+  
   private async copyDirectory(source: string, target: string): Promise<void> {
     await fs.mkdir(target, { recursive: true });
     const entries = await fs.readdir(source, { withFileTypes: true });
@@ -5301,30 +4513,7 @@ exec node "${cliJsPath}" "$@"
     }
   }
 
-  /**
-   * Display comprehensive information about Web4 standards and guidelines
-   * 
-   * Shows comprehensive information about Web4 component standards,
-   * implementation guidelines, and architecture patterns. Essential
-   * reference for understanding Web4 component development.
-   * 
-   * @param topic Information topic to display: 'overview' (default), 'standard', 'guidelines'
-   * 
-   * @example
-   * // Show general overview
-   * await component.info();
-   * 
-   * @example
-   * // Show Web4 standards
-   * await component.info('standard');
-   * 
-   * @example
-   * // Show implementation guidelines  
-   * await component.info('guidelines');
-   * 
-   * @cliSyntax topic
-   * @TODO cliDefault topic overview
-   */
+  
   async info(topic: string = 'overview'): Promise<void> {
     switch (topic) {
       case 'standard':
@@ -5350,9 +4539,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
   }
 
   // Private helper methods for scaffolding
-  /**
-   * @cliHide
-   */
+  
   private async createPackageJson(componentDir: string, componentName: string, version: string): Promise<void> {
       const packageJson = {
       "name": `@web4/${componentName.toLowerCase()}`,
@@ -5378,9 +4565,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       );
   }
 
-  /**
-   * @cliHide
-   */
+  
   private async createTsConfig(componentDir: string): Promise<void> {
       const tsConfig = {
       "compilerOptions": {
@@ -5398,19 +4583,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
         "declarationMap": true,
         "sourceMap": true
       },
-      "include": ["src/**/*"],
-      "exclude": ["dist", "node_modules", "test"]
-      };
-
-      await fs.writeFile(
-      path.join(componentDir, 'tsconfig.json'),
-        JSON.stringify(tsConfig, null, 2)
-      );
-  }
-
-  /**
-   * @cliHide
-   */
+      "include": ["src
   private async createLayerStructure(componentDir: string): Promise<void> {
     const layers = ['layer2', 'layer3', 'layer4', 'layer5'];
     
@@ -5419,9 +4592,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
-  /**
-   * @cliHide
-   */
+  
   private async createCLIScript(componentDir: string, componentName: string, version: string): Promise<void> {
     const cliScript = await this.generateLocationResilientCLI(componentName, version);
     const componentLowerCase = componentName.toLowerCase();
@@ -5429,9 +4600,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     await fs.writeFile(scriptPath, cliScript, { mode: 0o755 });
   }
 
-  /**
-   * @cliHide
-   */
+  
   private async createSpecStructure(componentDir: string): Promise<void> {
     await fs.mkdir(path.join(componentDir, 'spec'), { recursive: true });
   }
@@ -5441,10 +4610,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
   // New version uses template with proper JSON reporting for promotion verification
   // Proof: grep shows 0 callers for createVitestConfig(), only createVitestConfigFromTemplate() is called at line 248
 
-  /**
-   * Create test directory structure with basic test file
-   * @cliHide
-   */
+  
   private async createTestStructure(componentDir: string): Promise<void> {
     const testDir = path.join(componentDir, 'test');
     await fs.mkdir(testDir, { recursive: true });
@@ -5462,11 +4628,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     await fs.writeFile(path.join(testDir, `${componentName.toLowerCase()}.test.ts`), testContent);
   }
 
-  /**
-   * Verify and fix symlinks for component
-   * @deprecated Use 'links fix' instead - this method is kept for backward compatibility
-   * @cliHide
-   */
+  
   async verifyAndFix(): Promise<this> {
     const context = this.getComponentContext();
     const componentName = context?.component || 'Web4TSComponent';
@@ -5480,29 +4642,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     return this;
   }
 
-  /**
-   * Set CI/CD semantic links for a component version
-   * WITHOUT context: Sets link for current component (self-operation)
-   * WITH context: Sets link for target component
-   * 
-   * Unified method replacing individual setDev, setLatest, setProd, setTest methods
-   * 
-   * Sets links intelligently based on version build number:
-   * - Build 0 (*.*.*.0): prod version (stable release)
-   * - Build 1+ (*.*.*.1+): dev/test versions (development/testing)
-   * 
-   * Called during component creation to establish complete semantic link infrastructure
-   * 
-   * @param targetVersion Semantic link to set: 'dev', 'latest', 'prod', 'test'
-   * @param version Version to set for the link (default: current context version)
-   * @returns this for method chaining
-   * @cliSyntax targetVersion version
-   * @TODO cliDefault version current
-   * @cliValues targetVersion dev latest prod test
-   * @cliExample web4tscomponent setCICDVersion prod 1.0.0.0
-   * @cliExample web4tscomponent setCICDVersion dev 0.1.1.1
-   * @cliExample web4tscomponent on Component 0.1.0.0 setCICDVersion latest
-   */
+  
   async setCICDVersion(
     targetVersion: string,
     version: string = 'current'
@@ -5564,11 +4704,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     return this;
   }
 
-  /**
-   * Create semantic version symlink in scripts/versions
-   * Example: web4tscomponent.prod → web4tscomponent-v0.3.13.2
-   * @cliHide
-   */
+  
   private async createSemanticVersionSymlink(component: string, semantic: string, version: string): Promise<void> {
     const projectRoot = this.resolveProjectRoot();
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
@@ -5604,10 +4740,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
-  /**
-   * Verify and fix all symlinks for component
-   * @cliHide
-   */
+  
   private async verifyAndFixSymlinks(component: string): Promise<void> {
     console.log(`🔍 Scanning ${component} symlinks...`);
     
@@ -5635,10 +4768,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     console.log(`   ✅ Symlink verification completed`);
   }
 
-  /**
-   * Verify semantic links (dev, test, prod) are valid
-   * @cliHide
-   */
+  
   private async verifySemanticLinks(component: string, availableVersions: string[]): Promise<void> {
     const semanticLinks = await this.getSemanticLinks(component);
     const semanticTypes = ['dev', 'test', 'prod'] as const; // Don't check 'latest' as it's handled separately
@@ -5667,10 +4797,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
-  /**
-   * Verify latest symlink points to highest version
-   * @cliHide
-   */
+  
   private async verifyLatestSymlink(component: string, highestVersion: string): Promise<void> {
     const componentDir = this.resolveComponentDirectory(component);
     const latestPath = path.join(componentDir, 'latest');
@@ -5696,10 +4823,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
-  /**
-   * Verify scripts symlinks
-   * @cliHide
-   */
+  
   private async verifyScriptsSymlinks(component: string, versions: string[], highestVersion: string): Promise<void> {
     const projectRoot = this.resolveProjectRoot();
     const scriptsDir = path.join(projectRoot, 'scripts');
@@ -5781,13 +4905,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     await this.cleanupOrphanedScriptSymlinks(component, versions);
   }
 
-  /**
-   * Clean up broken/orphaned symlinks in scripts and scripts/versions
-   * Now handles two types:
-   * 1. Version wrappers: {cli}-v{version} (shell scripts, not symlinks)
-   * 2. Semantic symlinks: {cli}.{semantic} (symlinks pointing to version wrappers)
-   * @cliHide
-   */
+  
   private async cleanupOrphanedScriptSymlinks(component: string, validVersions: string[]): Promise<void> {
     const projectRoot = this.resolveProjectRoot();
     const scriptsDir = path.join(projectRoot, 'scripts');
@@ -5885,15 +5003,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
-  /**
-   * Verify version-specific script symlink exists and create if missing
-   * @param component Component name for symlink verification
-   * @param version Component version for symlink creation
-   * @cliSyntax component version  
-   * @TODO cliDefault component Web4TSComponent
-   * @TODO cliDefault version 0.3.2.0
-   * @cliHide
-   */
+  
   private async verifyVersionScriptSymlink(component: string, version: string): Promise<void> {
     const projectRoot = this.resolveProjectRoot();
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
@@ -5928,10 +5038,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
-  /**
-   * Get available versions from component directory
-   * @cliHide
-   */
+  
   private getAvailableVersions(componentDir: string): string[] {
     try {
       const entries = readdirSync(componentDir);
@@ -5956,19 +5063,12 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
-  /**
-   * Get highest version from array of versions
-   * @cliHide
-   */
+  
   private getHighestVersion(versions: string[]): string {
     return versions.sort((a, b) => this.compareVersions(b, a))[0];
   }
 
-  /**
-   * Compare two version strings (for sorting)
-   * Returns the difference for Array.sort() compatibility
-   * @cliHide
-   */
+  
   private compareVersions(a: string, b: string): number {
     const aParts = a.split('.').map(Number);
     const bParts = b.split('.').map(Number);
@@ -5981,26 +5081,14 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     return 0;
   }
 
-  /**
-   * Test method for README demonstration (development/testing only)
-   * Shows auto-discovery CLI parameter handling
-   * 
-   * @param inputData Data to process  
-   * @param outputFormat Format for output (json, xml, csv)
-   * @cliSyntax inputData outputFormat
-   * @TODO cliDefault outputFormat json
-   * @cliHide
-   */
+  
   async testNewMethod(inputData: string, outputFormat: string = 'json'): Promise<this> {
     console.log(`🚀 Processing ${inputData} as ${outputFormat}`);
     console.log(`✅ Test method completed successfully!`);
     return this;
   }
 
-  /**
-   * Update symlinks for component version (latest and scripts)
-   * @cliHide
-   */
+  
   private async updateSymlinks(component: string, version: string): Promise<void> {
     try {
       // Update latest symlink
@@ -6015,10 +5103,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
-  /**
-   * Update latest symlink in component directory
-   * @cliHide
-   */
+  
   private async updateLatestSymlink(component: string, version: string): Promise<void> {
     const componentDir = this.resolveComponentDirectory(component);
     const latestPath = path.join(componentDir, 'latest');
@@ -6036,10 +5121,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
-  /**
-   * Update scripts and scripts/versions with isolation wrappers (replaces symlinks)
-   * @cliHide
-   */
+  
   private async updateScriptsIsolationWrappers(component: string, version: string): Promise<void> {
     try {
       // Create version-specific isolation wrapper
@@ -6052,11 +5134,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
-  /**
-   * @deprecated Use updateScriptsIsolationWrappers() instead. This version creates symlinks, deprecated in 0.3.14.4
-   * Update scripts and scripts/versions symlinks
-   * @cliHide
-   */
+  
   private async updateScriptsSymlinks(component: string, version: string): Promise<void> {
     console.log(`   ⚠️ DEPRECATED: updateScriptsSymlinks() is deprecated in 0.3.14.4, use updateScriptsIsolationWrappers()`);
     try {
@@ -6070,10 +5148,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
-  /**
-   * Create version-specific isolation wrapper (replaces symlinks with shell scripts)
-   * @cliHide
-   */
+  
   private async createVersionIsolationWrapper(component: string, version: string): Promise<void> {
     const projectRoot = this.resolveProjectRoot();
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
@@ -6118,11 +5193,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
-  /**
-   * @deprecated Use createVersionIsolationWrapper() instead. This version creates symlinks, deprecated in 0.3.14.4
-   * Create version-specific script symlink
-   * @cliHide
-   */
+  
   private async createVersionScriptSymlink(component: string, version: string): Promise<void> {
     console.log(`   ⚠️ DEPRECATED: createVersionScriptSymlink() is deprecated in 0.3.14.4, use createVersionIsolationWrapper()`);
     const projectRoot = this.resolveProjectRoot(); // Respects targetDirectory via model
@@ -6183,10 +5254,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
-  /**
-   * Update main script symlink in scripts/ to point to latest
-   * @cliHide
-   */
+  
   private async updateMainScriptSymlink(component: string, version: string): Promise<void> {
     const projectRoot = this.resolveProjectRoot();
     const scriptsDir = path.join(projectRoot, 'scripts');
@@ -6210,15 +5278,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
-  /**
-   * Create component implementation with auto-discovery features
-   * @cliHide
-   */
+  
   private async createComponentImplementation(componentDir: string, componentName: string, version: string): Promise<void> {
-    const componentImplementation = `/**
- * Default${componentName} - ${componentName} Component Implementation
- * Web4 pattern: Empty constructor + scenario initialization + component functionality
- */
+    const componentImplementation = `
 
 import { ${componentName} } from '../layer3/${componentName}.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
@@ -6238,9 +5300,7 @@ export class Default${componentName} implements ${componentName} {
     };
   }
 
-  /**
-   * @cliHide
-   */
+  
   init(scenario: Scenario<${componentName}Model>): this {
     if (scenario.model) {
       this.model = { ...this.model, ...scenario.model };
@@ -6248,9 +5308,7 @@ export class Default${componentName} implements ${componentName} {
     return this;
   }
 
-  /**
-   * @cliHide
-   */
+  
   async toScenario(name?: string): Promise<Scenario<${componentName}Model>> {
     const ownerData = JSON.stringify({
       user: process.env.USER || 'system',
@@ -6272,13 +5330,7 @@ export class Default${componentName} implements ${componentName} {
     };
   }
 
-  /**
-   * Create example operation for ${componentName}
-   * @param input Input data to process
-   * @param format Output format (json, text, xml)
-   * @cliSyntax input format
-   * @TODO cliDefault format json
-   */
+  
   async create(input: string, format: string = 'json'): Promise<this> {
     console.log(\`🚀 Creating \${input} in \${format} format\`);
     this.model.name = input;
@@ -6287,20 +5339,14 @@ export class Default${componentName} implements ${componentName} {
     return this;
   }
 
-  /**
-   * Process data through ${componentName} logic
-   * @param data Data to process
-   * @cliSyntax data
-   */
+  
   async process(data: string): Promise<this> {
     console.log(\`🔧 Processing: \${data}\`);
     // Note: updatedAt removed - belongs in ChangeEvent tracking
     return this;
   }
 
-  /**
-   * Show information about current ${componentName} state
-   */
+  
   async info(): Promise<this> {
     console.log(\`📋 ${componentName} Information:\`);
     console.log(\`   UUID: \${this.model.uuid}\`);
@@ -6314,16 +5360,10 @@ export class Default${componentName} implements ${componentName} {
     await fs.writeFile(implementationPath, componentImplementation);
   }
 
-  /**
-   * Create component interfaces
-   * @cliHide
-   */
+  
   private async createComponentInterfaces(componentDir: string, componentName: string): Promise<void> {
     // Component interface
-    const componentInterface = `/**
- * ${componentName} - ${componentName} Component Interface
- * Web4 pattern: Component interface definition
- */
+    const componentInterface = `
 
 import { Scenario } from './Scenario.interface.js';
 import { ${componentName}Model } from './${componentName}Model.interface.js';
@@ -6340,10 +5380,7 @@ export interface ${componentName} {
     await fs.writeFile(interfacePath, componentInterface);
 
     // Component model interface
-    const modelInterface = `/**
- * ${componentName}Model - ${componentName} Component Model Interface
- * Web4 pattern: Component model following auto-discovery patterns
- */
+    const modelInterface = `
 
 import { Model } from './Model.interface.js';
 
@@ -6362,17 +5399,11 @@ export interface ${componentName}Model extends Model {
     await this.copyEssentialInterfaces(componentDir);
   }
 
-  /**
-   * Create CLI implementation with auto-discovery
-   * @cliHide
-   */
+  
   private async createCLIImplementation(componentDir: string, componentName: string, version: string): Promise<void> {
     const cliImplementation = `#!/usr/bin/env node
 
-/**
- * ${componentName}CLI - ${componentName} CLI implementation with auto-discovery
- * Web4 pattern: Auto-discovery CLI with chaining support
- */
+
 
 import { DefaultCLI } from '../layer2/DefaultCLI.js';
 import { Default${componentName} } from '../layer2/Default${componentName}.js';
@@ -6386,9 +5417,7 @@ export class ${componentName}CLI extends DefaultCLI {
     this.initWithComponentClass(Default${componentName}, '${componentName}', '${version}');
   }
 
-  /**
-   * Static start method - Web4 radical OOP entry point
-   */
+  
   static async start(args: string[]): Promise<void> {
     const cli = new ${componentName}CLI();
     await cli.execute(args);
@@ -6401,16 +5430,12 @@ export class ${componentName}CLI extends DefaultCLI {
     return this.component;
   }
 
-  /**
-   * ${componentName}-specific usage display using DefaultCLI dynamic generation
-   */
+  
   showUsage(): void {
     console.log(this.generateStructuredUsage());
   }
 
-  /**
-   * Execute CLI commands with auto-discovery
-   */
+  
   async execute(args: string[]): Promise<void> {
     if (args.length === 0) {
       this.showUsage();
@@ -6451,10 +5476,7 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     await fs.writeFile(cliPath, cliImplementation);
   }
 
-  /**
-   * Copy essential interfaces for auto-discovery
-   * @cliHide
-   */
+  
   private async copyEssentialInterfaces(componentDir: string): Promise<void> {
     const interfaceFiles = [
       'Model.interface.ts',
@@ -6499,10 +5521,7 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     }
   }
 
-  /**
-   * Create TSCompletion for auto-discovery
-   * @cliHide
-   */
+  
   private async createTSCompletion(componentDir: string): Promise<void> {
     const currentDir = path.dirname(new URL(import.meta.url).pathname);
     
@@ -6540,10 +5559,7 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     }
   }
 
-  /**
-   * Copy DefaultCLI for auto-discovery
-   * @cliHide
-   */
+  
   private async copyDefaultCLI(componentDir: string): Promise<void> {
     const currentDir = path.dirname(new URL(import.meta.url).pathname);
     const sourcePath = path.join(currentDir, '../../../src/ts/layer2/DefaultCLI.ts');
@@ -6559,10 +5575,7 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
 
   // NEW TEMPLATE-BASED METHODS
 
-  /**
-   * Create package.json from external template
-   * @cliHide
-   */
+  
   private async createPackageJsonFromTemplate(componentDir: string, componentName: string, version: string): Promise<void> {
     const packageJsonContent = await this.loadTemplate('config/package.json.template', {
       'COMPONENT_NAME': componentName,
@@ -6573,37 +5586,19 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     await fs.writeFile(path.join(componentDir, 'package.json'), packageJsonContent);
   }
 
-  /**
-   * Create tsconfig.json from external template
-   * @cliHide
-   */
+  
   private async createTsConfigFromTemplate(componentDir: string): Promise<void> {
     const tsConfigContent = await this.loadTemplate('config/tsconfig.json.template', {});
     await fs.writeFile(path.join(componentDir, 'tsconfig.json'), tsConfigContent);
   }
 
-  /**
-   * Create vitest.config.ts from external template
-   * @cliHide
-   */
+  
   private async createVitestConfigFromTemplate(componentDir: string): Promise<void> {
     const vitestConfigContent = await this.loadTemplate('config/vitest.config.ts.template', {});
     await fs.writeFile(path.join(componentDir, 'vitest.config.ts'), vitestConfigContent);
   }
 
-  /**
-   * Update shell script structure with latest smart build templates
-   * 
-   * Updates existing component build system to use the latest smart build templates
-   * with freshness detection, dependency awareness, and performance optimizations.
-   * Must be used after 'on' method to load component context.
-   * 
-   * @example
-   * // Update GitScrumProject build system
-   * await component.on('GitScrumProject', '0.2.0.0').updateBuildSystem();
-   * 
-   * @cliSyntax 
-   */
+  
   async updateBuildSystem(): Promise<this> {
     const context = this.getComponentContext();
     if (!context) {
@@ -6622,10 +5617,7 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     return this;
   }
 
-  /**
-   * Create shell script structure with executable permissions
-   * @cliHide
-   */
+  
   private async createShellScriptStructure(componentDir: string, componentName: string): Promise<void> {
     const shDir = path.join(componentDir, 'src/sh');
     await fs.mkdir(shDir, { recursive: true });
@@ -6651,10 +5643,7 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     }
   }
 
-  /**
-   * Create component implementation from external template
-   * @cliHide
-   */
+  
   private async createComponentImplementationFromTemplate(componentDir: string, componentName: string, version: string): Promise<void> {
     const implementationContent = await this.loadTemplate('ts/DefaultComponent.ts.template', {
       'COMPONENT_NAME': componentName,
@@ -6665,10 +5654,7 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     await fs.writeFile(implementationPath, implementationContent);
   }
 
-  /**
-   * Create CLI implementation from external template
-   * @cliHide
-   */
+  
   private async createCLIImplementationFromTemplate(componentDir: string, componentName: string, version: string): Promise<void> {
     const cliContent = await this.loadTemplate('ts/ComponentCLI.ts.template', {
       'COMPONENT_NAME': componentName,
@@ -6679,10 +5665,7 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     await fs.writeFile(cliPath, cliContent);
   }
 
-  /**
-   * Create component interfaces from external templates
-   * @cliHide
-   */
+  
   private async createComponentInterfacesFromTemplate(componentDir: string, componentName: string): Promise<void> {
     // Main component interface
     const componentInterfaceContent = await this.loadTemplate('ts/Component.interface.ts.template', {
@@ -6704,10 +5687,7 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     await this.copyEssentialInterfaces(componentDir);
   }
 
-  /**
-   * Cleanup version-specific script symlinks
-   * @cliHide
-   */
+  
   private async cleanupVersionScriptSymlinks(componentName: string, version: string): Promise<void> {
     const projectRoot = this.resolveProjectRoot();
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
@@ -6756,10 +5736,7 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     }
   }
 
-  /**
-   * Cleanup all script symlinks for a component
-   * @cliHide
-   */
+  
   private async cleanupAllComponentScriptSymlinks(componentName: string, versions: string[]): Promise<void> {
     const projectRoot = this.resolveProjectRoot();
     const scriptsDir = path.join(projectRoot, 'scripts');
@@ -6798,27 +5775,7 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     }
   }
 
-  /**
-   * Get current component context from working directory
-   * 
-   * DRY: Delegates to DefaultCLI.getContext() - single source of truth!
-   * Wrapper method for CLI auto-discovery.
-   * 
-   * Replaces shell detect_component_context() function.
-   * TypeScript-first approach: NO environment variables!
-   * 
-   * Migration: Replaces WEB4_COMPONENT_* ENV vars.
-   * See: 2025-10-10-UTC-1002.pdca.md
-   * 
-   * @param format Output format: 'json' (default) or 'bash'
-   * @returns Component context information
-   * @cliSyntax format
-   * @TODO cliDefault format json
-   * @cliValues format json bash text xml csv
-   * @example
-   *   web4tscomponent getContext
-   *   web4tscomponent getContext bash
-   */
+  
   async getContext(format: string = 'json'): Promise<void> {
     // Import DefaultCLI dynamically to access static logic
     const { DefaultCLI } = await import('./DefaultCLI.js');

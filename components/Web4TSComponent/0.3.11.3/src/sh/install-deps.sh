@@ -1,3 +1,4 @@
+#!/bin/bash
 # SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
 # SPDX-FileComment: See ../../../../../AI-GPL.md for AI-specific terms.
 # Copyright (c) 2025 Cerulean Circle GmbH
@@ -42,7 +43,7 @@ if [ ! -f "$PROJECT_ROOT/tsconfig.json" ] || [ "$TSCONFIG_VALID" = false ]; then
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "components/**/*.ts"],
+  "include": ["src*.ts", "components/**/*.ts"],
   "exclude": ["dist", "node_modules"]
 }
 EOF

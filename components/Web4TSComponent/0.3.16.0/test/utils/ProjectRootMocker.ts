@@ -1,9 +1,9 @@
 /**
- * ProjectRootMocker - Utility for mocking project root in tests
- * 
- * This utility allows tests to create components in test/data directory
- * while making the system believe it's working on the actual project root.
- * This prevents project structure contamination during testing.
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../LICENSE) and AI-GPL Addendum (../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import * as path from 'path';
@@ -18,11 +18,7 @@ export class ProjectRootMocker {
     this.testDataRoot = testDataRoot;
   }
 
-  /**
-   * Activate project root mocking
-   * - process.cwd() returns test data directory
-   * - This makes all relative path operations work from test data directory
-   */
+  
   mock(): void {
     if (this.isActive) {
       return; // Already mocked
@@ -36,9 +32,7 @@ export class ProjectRootMocker {
     this.isActive = true;
   }
 
-  /**
-   * Restore original project root behavior
-   */
+  
   restore(): void {
     if (!this.isActive) {
       return; // Not currently mocked
@@ -50,24 +44,17 @@ export class ProjectRootMocker {
     this.isActive = false;
   }
 
-  /**
-   * Get the current test data root path
-   */
+  
   getTestRoot(): string {
     return this.testDataRoot;
   }
 
-  /**
-   * Check if mocking is currently active
-   */
+  
   isMocked(): boolean {
     return this.isActive;
   }
 
-  /**
-   * Resolve a path relative to the test root
-   * Use this instead of path.resolve for test-aware path resolution
-   */
+  
   resolve(...pathSegments: string[]): string {
     // If first segment is absolute, use it as-is
     if (pathSegments.length > 0 && path.isAbsolute(pathSegments[0])) {

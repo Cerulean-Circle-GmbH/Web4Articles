@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../../LICENSE) and AI-GPL Addendum (../../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # Chapter 5: Troubleshooting & Quick Reference
 
 **Document:** Web4TSComponent Technical Specification  
@@ -20,9 +28,7 @@
 // 4. Component compiles without errors
 
 // Common fix:
-/**
- * @cliSyntax param1 param2  // ← Add this if missing
- */
+
 async myMethod(param1: string, param2: string): Promise<this>
 ```
 

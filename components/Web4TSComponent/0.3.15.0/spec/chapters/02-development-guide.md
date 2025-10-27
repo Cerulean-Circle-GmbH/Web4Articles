@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../../LICENSE) and AI-GPL Addendum (../../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # Chapter 2: Development Guide
 
 **Document:** Web4TSComponent Technical Specification  
@@ -27,13 +35,7 @@ Open: `src/ts/layer2/DefaultWeb4TSComponent.ts`
 Add your method anywhere in the class:
 
 ```typescript
-/**
- * Your new awesome feature
- * @param inputData Data to process
- * @param outputFormat Format for output (json, xml, csv)
- * @cliSyntax inputData outputFormat
- * @cliDefault outputFormat json
- */
+
 async myAwesomeFeature(inputData: string, outputFormat: string = 'json'): Promise<this> {
   console.log(`🚀 Processing ${inputData} as ${outputFormat}`);
   
@@ -74,13 +76,7 @@ npm start
 ### Required TSDoc Comments:
 
 ```typescript
-/**
- * Human description of what the method does
- * @param paramName Description of parameter
- * @cliSyntax paramName anotherParam
- * @cliDefault paramName defaultValue
- * @cliHide  // Use this to hide internal methods
- */
+
 ```
 
 ### TSDoc Annotations Explained:
@@ -153,11 +149,7 @@ async myMethod(param: string): Promise<void> {
 
 **✅ CORRECT:** Always add TSDoc:
 ```typescript
-/**
- * Description of method
- * @param param Description of parameter
- * @cliSyntax param
- */
+
 async myMethod(param: string): Promise<this>
 ```
 
@@ -186,11 +178,7 @@ async myMethod(): Promise<this> {
 Some methods work on a specific component (like upgrade, optimize, analyze). Use this pattern:
 
 ```typescript
-/**
- * Your context-aware method
- * @param parameter Your parameter
- * @cliSyntax parameter
- */
+
 async myContextMethod(parameter: string): Promise<this> {
   // Get component context (set by 'on' command)
   const context = this.getComponentContext();
@@ -248,13 +236,7 @@ async myContextMethod(parameter: string): Promise<this> {
 ### Example 1: Simple Data Processing
 
 ```typescript
-/**
- * Process component data with transformation
- * @param inputFile Path to input file
- * @param outputFormat Output format (json, xml, csv)
- * @cliSyntax inputFile outputFormat
- * @cliDefault outputFormat json
- */
+
 async processData(inputFile: string, outputFormat: string = 'json'): Promise<this> {
   console.log(`🔄 Processing ${inputFile} as ${outputFormat}`);
   
@@ -270,11 +252,7 @@ async processData(inputFile: string, outputFormat: string = 'json'): Promise<thi
 ### Example 2: Component Analysis
 
 ```typescript
-/**
- * Analyze component for quality metrics
- * @param componentPath Path to component directory
- * @cliSyntax componentPath
- */
+
 async analyzeQuality(componentPath: string): Promise<this> {
   console.log(`📊 Analyzing quality: ${componentPath}`);
   
@@ -290,12 +268,7 @@ async analyzeQuality(componentPath: string): Promise<this> {
 ### Example 3: Method Chaining Support
 
 ```typescript
-/**
- * Optimize component performance
- * @param level Optimization level (basic, advanced, extreme)
- * @cliSyntax level
- * @cliDefault level basic
- */
+
 async optimize(level: string = 'basic'): Promise<this> {
   const context = this.getComponentContext();
   if (!context) {
@@ -316,14 +289,7 @@ async optimize(level: string = 'basic'): Promise<this> {
 ### Example 4: Complete Method with Context
 
 ```typescript
-/**
- * Validate component structure and dependencies
- * @param checkLevel Validation level (basic, thorough, strict)
- * @param fixIssues Whether to fix found issues automatically
- * @cliSyntax checkLevel fixIssues
- * @cliDefault checkLevel basic
- * @cliDefault fixIssues false
- */
+
 async validateStructure(checkLevel: string = 'basic', fixIssues: string = 'false'): Promise<this> {
   const context = this.getComponentContext();
   if (!context) {

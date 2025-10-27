@@ -1,29 +1,18 @@
+/**
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
+ */
+
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { DefaultWeb4TSComponent } from '../src/ts/layer2/DefaultWeb4TSComponent.js';
 import { existsSync, readFileSync, rmSync, readlinkSync, readdirSync } from 'fs';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
-/**
- * 🎯 CONSOLIDATED TEST STORY - The MASTER Test Suite
- * 
- * This is THE comprehensive test suite that covers EVERYTHING:
- * - npm start ONLY principle
- * - Component lifecycle (create/upgrade/remove)
- * - Version promotion workflow
- * - Semantic links (dev/test/prod/latest)
- * - CLI auto-discovery
- * - Test isolation (test/data vs production)
- * - Context pattern (with/without)
- * - Location independence
- * - Tree visualization
- * - Script symlinks
- * - Hardcoded version detection
- * - DRY principles
- * 
- * ALL tests MUST work in test/data as if it's the project root.
- * The component MUST NOT know it's in test/data - it just uses model.targetDirectory.
- */
+
 
 describe('🎯 CONSOLIDATED TEST STORY - Master Suite', () => {
   const testDataDir = path.resolve(__dirname, 'data');

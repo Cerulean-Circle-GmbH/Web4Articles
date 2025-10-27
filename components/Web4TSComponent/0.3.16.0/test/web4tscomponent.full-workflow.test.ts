@@ -1,22 +1,18 @@
+/**
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
+ */
+
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { DefaultWeb4TSComponent } from '../src/ts/layer2/DefaultWeb4TSComponent.js';
 import { existsSync } from 'fs';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
-/**
- * 🎯 FULL WORKFLOW INTEGRATION TEST
- * 
- * This test exercises the COMPLETE lifecycle:
- * 1. Create component
- * 2. Run tests (simulated 100% success)
- * 3. Verify version promotion
- * 4. Verify ALL semantic symlinks are correct
- * 5. Remove promoted versions
- * 6. Verify symlinks are cleaned up
- * 
- * This is THE definitive test of component version management.
- */
+
 describe('🔄 Full Component Lifecycle Workflow', () => {
   let component: DefaultWeb4TSComponent;
   const testDataDir = path.join(__dirname, 'data');

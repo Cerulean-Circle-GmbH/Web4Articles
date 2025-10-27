@@ -1,11 +1,18 @@
+/**
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../LICENSE) and AI-GPL Addendum (../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
+ */
+
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
     environment: 'node',
     globals: true,
-    include: ['test/**/*.test.ts'],
-    exclude: ['test/data/**', 'test/logs/**', '**/node_modules/**'],  // Exclude test data, logs, and node_modules
+    include: ['testnode_modules/**'],  // Exclude test data, logs, and node_modules
     testTimeout: 180000,   // 180s per test (3 minutes) - standardized timeout
     hookTimeout: 180000,   // 180s for setup/teardown (increased from 30s to handle slow tests)
     teardownTimeout: 30000, // 30s for cleanup

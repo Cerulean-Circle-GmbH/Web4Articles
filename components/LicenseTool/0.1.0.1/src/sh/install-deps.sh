@@ -5,24 +5,6 @@
 # Copyleft: See AGPLv3 (../../../../../LICENSE) and AI-GPL Addendum (../../../../../AI-GPL.md)
 # Backlinks: /LICENSE, /AI-GPL.md
 
-# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
-# SPDX-FileComment: See ../../../../../AI-GPL.md for AI-specific terms.
-# Copyright (c) 2025 Cerulean Circle GmbH
-# Copyleft: See AGPLv3 (../../../../../LICENSE) and AI-GPL Addendum (../../../../../AI-GPL.md)
-# Backlinks: /LICENSE, /AI-GPL.md
-
-# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
-# SPDX-FileComment: See ../../../../../AI-GPL.md for AI-specific terms.
-# Copyright (c) 2025 Cerulean Circle GmbH
-# Copyleft: See AGPLv3 (../../../../../LICENSE) and AI-GPL Addendum (../../../../../AI-GPL.md)
-# Backlinks: /LICENSE, /AI-GPL.md
-
-# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
-# SPDX-FileComment: See ../../../../../AI-GPL.md for AI-specific terms.
-# Copyright (c) 2025 Cerulean Circle GmbH
-# Copyleft: See AGPLv3 (../../../../../LICENSE) and AI-GPL Addendum (../../../../../AI-GPL.md)
-# Backlinks: /LICENSE, /AI-GPL.md
-
 # 🚀 Auto-initialize Web4 project structure (if needed)
 PROJECT_ROOT="../../.."
 
@@ -62,7 +44,7 @@ if [ ! -f "$PROJECT_ROOT/tsconfig.json" ] || [ "$TSCONFIG_VALID" = false ]; then
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "components/**/*.ts"],
+  "include": ["src*.ts", "components/**/*.ts"],
   "exclude": ["dist", "node_modules"]
 }
 EOF

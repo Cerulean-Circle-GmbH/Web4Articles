@@ -1,18 +1,17 @@
+/**
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
+ */
+
 import { describe, it, expect, beforeAll } from 'vitest';
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
 import { join } from 'path';
 
-/**
- * Black Box Feature Tests for 2025-10-18 Enhancements
- * 
- * PHASE 2: Test web4programmer 0.2.0.3 (missing features - EXPECT FAILURES)
- * 
- * Purpose: Document which features are missing in 0.2.0.3
- * This justifies creating 0.2.0.4 with updated features
- * 
- * Reference: scrum.pmo/project.journal/2025-10-14-UTC-0948-session/2025-10-19-UTC-1002.pdca.md
- */
+
 
 describe('🧪 2025-10-18 Feature Black Box Tests - PHASE 2: web4programmer 0.2.0.3', () => {
   const projectRoot = process.cwd();
