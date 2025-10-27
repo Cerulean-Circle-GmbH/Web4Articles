@@ -14,6 +14,7 @@ import { join, dirname } from 'path';
 
 // Use latest version for delegation (always available)
 import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js';
+import { DefaultColors } from '../../../../../Web4TSComponent/latest/dist/ts/layer4/DefaultColors.js';
 
 /**
  * Training topic definition - CMM3: Objective, Reproducible, Verifiable
@@ -34,6 +35,7 @@ export class DefaultPDCA implements PDCA {
   private model: PDCAModel;
   private web4ts?: any; // Lazy-initialized Web4TSComponent for delegation
   private defaultSession: string = 'scrum.pmo/project.journal/2025-10-14-UTC-0948-session'; // Default session path
+  private colors = DefaultColors.getInstance(); // DRY: Reuse Web4TSComponent colors
 
   constructor() {
     // Empty constructor - Web4 pattern
@@ -42,6 +44,8 @@ export class DefaultPDCA implements PDCA {
       name: '',
       origin: '',
       definition: '',
+      component: 'PDCA',
+      version: '0.3.4.1',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -187,8 +191,9 @@ export class DefaultPDCA implements PDCA {
 
     // Check the file
     const fileName = path.basename(fullPath);
+    const fileRelPath = path.relative(projectRoot, fullPath);
     const content = await fs.readFile(fullPath, 'utf-8');
-    const violations = await this.checkPDCACompliance(content, fileName);
+    const violations = await this.checkPDCACompliance(content, fileName, fileRelPath);
 
     if (violations.length === 0) {
       console.log(`✅ ${fileName} - CMM3 Compliant\n`);
@@ -203,6 +208,13 @@ export class DefaultPDCA implements PDCA {
       for (const violation of violations) {
         const description = this.getViolationDescription(violation);
         console.log(`   ${violation}: ${description}`);
+        
+        // Show specific violations if available (e.g., from check3c)
+        if (this.model.cmm3Violations && this.model.cmm3Violations[violation]) {
+          for (const detail of this.model.cmm3Violations[violation]) {
+            console.log(detail);
+          }
+        }
       }
       console.log();
     }
@@ -262,8 +274,9 @@ export class DefaultPDCA implements PDCA {
 
     for (const filePath of pdcaFiles) {
       const fileName = path.basename(filePath);
+      const fileRelPath = path.relative(projectRoot, filePath);
       const content = await fs.readFile(filePath, 'utf-8');
-      const violations = await this.checkPDCACompliance(content, fileName);
+      const violations = await this.checkPDCACompliance(content, fileName, fileRelPath);
 
       if (violations.length === 0) {
         console.log(`✅ ${fileName} - CMM3 Compliant`);
@@ -1234,8 +1247,9 @@ export class DefaultPDCA implements PDCA {
     for (const fileName of pdcaFiles) {
       const filePath = path.join(pdcaDir, fileName);
       try {
+        const fileRelPath = path.relative(projectRoot, filePath);
         const content = await fs.readFile(filePath, 'utf-8');
-        const violations = await this.checkPDCACompliance(content, fileName);
+        const violations = await this.checkPDCACompliance(content, fileName, fileRelPath);
         const level = this.determineCMMLevel(violations);
         
         pdcaData.set(fileName, { filename: fileName, violations, level });
@@ -1340,7 +1354,8 @@ export class DefaultPDCA implements PDCA {
    * Based on scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md
    * @cliHide
    */
-  private async checkPDCACompliance(content: string, fileName: string): Promise<string[]> {
+  private async checkPDCACompliance(content: string, fileName: string, filePath?: string): Promise<string[]> {
+    console.log(`\n🐛 DEBUG checkPDCACompliance: fileName=${fileName}, filePath=${filePath}`);
     const violations: string[] = [];
 
     // 1. PDCA Compliance
@@ -1358,7 +1373,7 @@ export class DefaultPDCA implements PDCA {
     // 3. Chat Response Compliance (relevant sections in PDCA)
     if (!this.check3a(content)) violations.push('3a');
     if (!this.check3b(content)) violations.push('3b');
-    if (!this.check3c(content)) violations.push('3c');
+    if (!(await this.check3c(content, filePath))) violations.push('3c');
 
     // 4. Link Compliance
     if (!this.check4a(content)) violations.push('4a');
@@ -1531,25 +1546,50 @@ export class DefaultPDCA implements PDCA {
   /**
    * 3c) Dual link format: [GitHub](URL) | [§/path](path)
    * Checks that all dual links follow proper format
+   * Auto-fixes links before checking to reduce noise
    * @cliHide
    */
-  private check3c(content: string): boolean {
+  private async check3c(content: string, pdcaFilePath?: string): Promise<boolean> {
+    console.log(`\n🐛 DEBUG check3c called with pdcaFilePath: ${pdcaFilePath}`);
+    
+    // Auto-fix dual links first if we have the file path
+    if (pdcaFilePath) {
+      const path = await import('path');
+      const fs = await import('fs/promises');
+      const projectRoot = await this.getProjectRoot();
+      const fullPath = path.join(projectRoot, pdcaFilePath);
+      
+      // Try to auto-fix links
+      const fixed = await this.fixMarkdownFile(fullPath, projectRoot, fs, path);
+      if (fixed) {
+        // Re-read the fixed content
+        content = await fs.readFile(fullPath, 'utf-8');
+      }
+    }
+    
     // Find all lines with dual links
     const lines = content.split('\n');
+    const violations: string[] = [];
     
-    for (const line of lines) {
+    for (let lineNum = 0; lineNum < lines.length; lineNum++) {
+      const line = lines[lineNum];
+      
       // Check for GitHub dual link patterns
       if (line.includes('[GitHub](') && line.includes('|')) {
-        // Pattern 1: Standard dual link [GitHub](...) | [text](path)
-        const standardMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
-        
-        // Pattern 2: Missing brackets [GitHub](...) | plain/text (VIOLATION)
-        const missingBracketsMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*([^[].+[^)])$/);
-        
-        if (missingBracketsMatch) {
-          // Found dual link with missing brackets - this is a violation
-          return false;
+        // Split on | to check what comes after
+        const parts = line.split('|');
+        if (parts.length >= 2) {
+          const afterPipe = parts[1].trim();
+          
+          // Check if second part is NOT a markdown link (missing brackets)
+          if (!afterPipe.startsWith('[')) {
+            violations.push(`   ${this.colors.red}Line ${lineNum + 1}: Missing brackets around local link${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}`);
+            continue; // Skip further checks for this malformed link
+          }
         }
+        
+        // Pattern: Standard dual link [GitHub](...) | [text](path)
+        const standardMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
         
         if (standardMatch) {
           const [, githubUrl, displayText, localPath] = standardMatch;
@@ -1558,23 +1598,171 @@ export class DefaultPDCA implements PDCA {
           // Valid: [§/path/to/file](../../../path/to/file)
           // Valid: [local/file](local/file)
           // Invalid: [/absolute/path](../../../path) without §
-          // Invalid: display text and local path don't match pattern
           
           if (displayText.startsWith('/') && !displayText.startsWith('§/')) {
             // Absolute path without § notation
-            return false;
+            violations.push(`   ${this.colors.yellow}Line ${lineNum + 1}: Absolute path without § notation${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.dim}Display text:${this.colors.reset} ${displayText}`);
           }
           
           // Check if GitHub URL is valid
           if (!githubUrl.includes('github.com')) {
-            return false;
+            violations.push(`   ${this.colors.red}Line ${lineNum + 1}: Invalid GitHub URL (missing github.com)${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.dim}URL:${this.colors.reset} ${githubUrl}`);
+          }
+          
+          // NEW CHECKS: Validate paths and suggest fixes (only for unfixable issues)
+          if (pdcaFilePath) {
+            const path = await import('path');
+            const { existsSync } = await import('fs');
+            const projectRoot = await this.getProjectRoot();
+            
+            // Extract just the path from display text (remove §/ if present)
+            const displayPath = displayText.startsWith('§/') ? displayText.substring(2) : displayText;
+            
+            // Resolve the target file path
+            let targetFilePath: string;
+            if (path.isAbsolute(localPath)) {
+              targetFilePath = localPath;
+            } else {
+              // Relative path from PDCA location
+              const pdcaDir = path.dirname(path.join(projectRoot, pdcaFilePath));
+              targetFilePath = path.resolve(pdcaDir, localPath);
+            }
+            
+            // Check if file exists
+            const fileExists = existsSync(targetFilePath);
+            
+            console.log(`\n  🔍 DEBUG Link Check:`);
+            console.log(`     Display: ${displayText}`);
+            console.log(`     Local: ${localPath}`);
+            console.log(`     Target: ${targetFilePath}`);
+            console.log(`     Exists: ${fileExists}`);
+            
+            // Only report if file truly doesn't exist (auto-fix couldn't help)
+            if (!fileExists) {
+              const correctLink = await this.generateCorrectDualLink(displayPath, pdcaFilePath);
+              if (correctLink) {
+                // File exists but wrong relative path - report with suggestion
+                violations.push(`   ${this.colors.yellow}Line ${lineNum + 1}: Relative path incorrect (file exists elsewhere)${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.green}Should Be:${this.colors.reset} ${correctLink}`);
+              } else {
+                // File doesn't exist in project - this is a real violation
+                violations.push(`   ${this.colors.red}Line ${lineNum + 1}: Local path does not exist${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.green}Should Be:${this.colors.reset} ${this.colors.dim}(file not found in project)${this.colors.reset}`);
+              }
+            }
+            
+            // Check if display text matches actual path (even if auto-fixed)
+            // This catches links that were auto-fixed but may still be wrong
+            if (fileExists) {
+              const targetRelativeToRoot = path.relative(projectRoot, targetFilePath);
+              if (displayPath !== targetRelativeToRoot) {
+                // SPECIAL CASE: Check if this is a versioned component PDCA copied from older version
+                // Pattern: PDCA in components/<component>/<newVersion>/session/ but links to <oldVersion>/
+                const pdcaVersionMatch = pdcaFilePath.match(/components\/([^\/]+)\/([^\/]+)\/session\//);
+                const linkVersionMatch = displayPath.match(/components\/([^\/]+)\/([^\/]+)\//);
+                
+                if (pdcaVersionMatch && linkVersionMatch) {
+                  const [, pdcaComponent, pdcaVersion] = pdcaVersionMatch;
+                  const [, linkComponent, linkVersion] = linkVersionMatch;
+                  
+                  // Same component but different versions?
+                  if (pdcaComponent === linkComponent && pdcaVersion !== linkVersion) {
+                    // Check if this PDCA exists in the older version
+                    const pdcaFilename = path.basename(pdcaFilePath);
+                    const olderVersionPath = path.join(projectRoot, `components/${linkComponent}/${linkVersion}/session/${pdcaFilename}`);
+                    
+                    if (existsSync(olderVersionPath)) {
+                      // This PDCA was copied from older version and belongs there, not here
+                      violations.push(`   ${this.colors.cyan}ℹ️  Line ${lineNum + 1}: PDCA copied from v${linkVersion} (can safely be deleted from v${pdcaVersion})${this.colors.reset}\n      ${this.colors.dim}This PDCA exists in:${this.colors.reset} components/${linkComponent}/${linkVersion}/session/${pdcaFilename}\n      ${this.colors.dim}Current location:${this.colors.reset} ${pdcaFilePath}\n      ${this.colors.green}Action:${this.colors.reset} ${this.colors.dim}Safe to delete - belongs to older version${this.colors.reset}`);
+                      continue; // Don't report other violations for this link
+                    }
+                  }
+                }
+                
+                // Normal case: display text doesn't match
+                const correctLink = await this.generateCorrectDualLink(targetRelativeToRoot, pdcaFilePath);
+                // Only report if we can generate a correct link (file exists)
+                if (correctLink) {
+                  violations.push(`   ${this.colors.yellow}Line ${lineNum + 1}: Display text doesn't match actual path (after auto-fix)${this.colors.reset}\n      ${this.colors.dim}Detected:${this.colors.reset} ${line.trim()}\n      ${this.colors.green}Should Be:${this.colors.reset} ${correctLink}`);
+                }
+              }
+            }
           }
         }
       }
     }
     
+    // Store violations for reporting
+    if (violations.length > 0) {
+      if (!this.model.cmm3Violations) {
+        this.model.cmm3Violations = {};
+      }
+      this.model.cmm3Violations['3c'] = violations;
+    }
+    
     // All dual links are properly formatted
-    return true;
+    return violations.length === 0;
+  }
+  
+  /**
+   * Generate correct dual link format for a target file from a PDCA location
+   * @cliHide
+   */
+  private async generateCorrectDualLink(targetPath: string, pdcaPath: string): Promise<string | null> {
+    try {
+      const path = await import('path');
+      const { existsSync } = await import('fs');
+      const { execSync } = await import('child_process');
+      
+      const projectRoot = await this.getProjectRoot();
+      
+      // Normalize target path to project-root-relative
+      let normalizedPath: string;
+      if (path.isAbsolute(targetPath)) {
+        normalizedPath = path.relative(projectRoot, targetPath);
+      } else if (targetPath.startsWith('§/')) {
+        normalizedPath = targetPath.substring(2);
+      } else {
+        normalizedPath = targetPath;
+      }
+      
+      const fullPath = path.join(projectRoot, normalizedPath);
+      
+      // Check if file exists
+      if (!existsSync(fullPath)) {
+        return null;
+      }
+      
+      // Calculate relative path from PDCA to target
+      const pdcaDir = path.dirname(path.join(projectRoot, pdcaPath));
+      const relativePath = path.relative(pdcaDir, fullPath);
+      
+      // Get current branch
+      const branch = execSync('git branch --show-current', {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      
+      // Get git remote URL
+      const gitConfig = execSync('git config --get remote.origin.url', {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      
+      // Extract org/repo from git URL
+      const match = gitConfig.match(/github\.com[:/]([^/]+)\/([^/.]+)/);
+      if (!match) {
+        return null;
+      }
+      
+      const org = match[1];
+      const repo = match[2];
+      
+      const githubUrl = `https://github.com/${org}/${repo}/blob/${branch}/${normalizedPath}`;
+      
+      return `[GitHub](${githubUrl}) | [§/${normalizedPath}](${relativePath})`;
+      
+    } catch (error) {
+      return null;
+    }
   }
 
   /**
@@ -3945,3 +4133,4 @@ export class DefaultPDCA implements PDCA {
     return null;
   }
 }
+
