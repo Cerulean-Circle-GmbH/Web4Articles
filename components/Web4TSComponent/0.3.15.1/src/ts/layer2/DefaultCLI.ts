@@ -148,20 +148,24 @@ export abstract class DefaultCLI implements CLI {
    * @cliHide
    */
   protected async getValidCompletionValues(): Promise<string[]> {
+    console.log(`WORD: DEBUG-GET-VALID-COMPLETION-VALUES-CALLED`);
+    console.log(`WORD: DEBUG-IS-METHOD-${this.model.completionIsCompletingMethod}`);
+    console.log(`WORD: DEBUG-IS-PARAMETER-${this.model.completionIsCompletingParameter}`);
+    
     if (this.model.completionIsCompletingMethod) {
       // Completing method name - use completionNameParameterCompletion for consistent formatting
       // This provides numbered list, color coding, and parameter signatures
+      console.log(`WORD: DEBUG-TAKING-METHOD-PATH`);
       const filter = this.model.completionCurrentWord || '';
       return await this.completionNameParameterCompletion(['completion', 'method', filter]);
     } else if (this.model.completionIsCompletingParameter) {
       // Completing parameter - delegate to existing completeParameter logic
-      // This reuses existing parameter completion callbacks dynamically
-      console.log(`WORD: DEBUG-PARAMETER-COMPLETION-CALLED`);
+      // This reuses existing parameter completion callbacks dynamically  
+      console.log(`WORD: DEBUG-TAKING-PARAMETER-PATH`);
       const result = this.getParameterCompletionValues();
-      console.log(`WORD: DEBUG-PARAMETER-RESULT-${result.length}-VALUES`);
       return result;
     }
-    console.log(`WORD: DEBUG-NO-COMPLETION-PATH`);
+    console.log(`WORD: DEBUG-TAKING-EMPTY-PATH`);
     return [];
   }
   
@@ -177,8 +181,12 @@ export abstract class DefaultCLI implements CLI {
     // DIRECT FIX: Handle critical completion command parameter discovery
     if (command === 'completion' && this.model.completionParameterIndex === 0) {
       // First parameter of completion is 'what' with values: method, parameter
+      console.log('WORD: DEBUG-COMPLETION-FIX-TRIGGERED');
       return ['method', 'parameter'];
     }
+    
+    // DEBUG: Log the actual values to see what's happening
+    console.log(`WORD: DEBUG-COMMAND-${command || 'NULL'}-INDEX-${this.model.completionParameterIndex}`);
     
     const signature = this.methodSignatures.get(command);
     if (!signature) return [];
@@ -1576,19 +1584,30 @@ export abstract class DefaultCLI implements CLI {
    * @cliHide
    */
   async shCompletion(cword: string, ...words: string[]): Promise<void> {
+    console.log('WORD: DEBUG-SHCOMPLETION-CALLED');
+    console.log(`WORD: DEBUG-CWORD-${cword}-WORDS-${words.length}`);
+    
     // Update model directly (MODEL-DRIVEN!)
     this.model.completionCompCword = parseInt(cword, 10);
     this.model.completionCompWords = words;
     this.model.completionCliName = words[0] || 'cli';  // First word is CLI name
     
+    console.log('WORD: DEBUG-MODEL-UPDATED');
+    
     // Derive all other fields (DRY - reuse existing method!)
     this.computeDerivedCompletionFields(this.model);
+    
+    console.log('WORD: DEBUG-DERIVED-FIELDS-COMPUTED');
     
     // Get and output completions (DRY - reuse existing methods!)
     const values = await this.getValidCompletionValues();
     
+    console.log(`WORD: DEBUG-GOT-${values.length}-VALUES`);
+    
     // Format output using MODEL data (no commandContext needed!)
     this.formatCompletionOutput(values);
+    
+    console.log('WORD: DEBUG-SHCOMPLETION-COMPLETE');
   }
 
   /**
