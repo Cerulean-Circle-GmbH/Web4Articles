@@ -128,6 +128,103 @@ describe('TC1: Comment Style Detection', () => {
   });
 });
 
+describe('TC20: Self-Healing - LicenseTool Fixes What It Broke', () => {
+  it('should detect bash script even with /** block on line 1', async () => {
+    const tool = new DefaultLicenseTool();
+    await tool.init({ targetPath: testDataDir });
+    
+    // Create file with WRONG header (/** block) but shebang buried inside
+    const brokenFile = path.join(testDataDir, 'broken-exec');
+    writeFileSync(brokenFile, `/**
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ */
+
+#!/bin/bash
+
+echo "test"`);
+    
+    // getCommentStyleInternal should still detect it's bash
+    const style = await tool.getCommentStyleInternal(brokenFile);
+    expect(style).toBe('hash'); // Should detect bash despite /** on line 1
+  });
+
+  it('should detect bash script with shebang in first 20 lines', async () => {
+    const tool = new DefaultLicenseTool();
+    await tool.init({ targetPath: testDataDir });
+    
+    // Shebang on line 15
+    const lines = new Array(14).fill('# Some comment');
+    lines.push('#!/bin/bash');
+    lines.push('echo "test"');
+    
+    const testFile = path.join(testDataDir, 'delayed-shebang');
+    writeFileSync(testFile, lines.join('\n'));
+    
+    const style = await tool.getCommentStyleInternal(testFile);
+    expect(style).toBe('hash');
+  });
+
+  it('should fix files it previously broke (double header)', async () => {
+    const tool = new DefaultLicenseTool();
+    await tool.init({ targetPath: testDataDir });
+    
+    // Create broken file (what LicenseTool created before)
+    const brokenFile = path.join(testDataDir, 'pdca-broken');
+    writeFileSync(brokenFile, `/**
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../LICENSE) and AI-GPL Addendum (../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
+ */
+
+# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+# SPDX-FileComment: See ../../../AI-GPL.md for AI-specific terms.
+# Copyright (c) 2025 Cerulean Circle GmbH
+# Copyleft: See AGPLv3 (../../../LICENSE) and AI-GPL Addendum (../../../AI-GPL.md)
+# Backlinks: /LICENSE, /AI-GPL.md
+
+#!/bin/bash
+echo "test"`);
+    
+    // Apply should fix it
+    await tool.apply(testDataDir, false);
+    
+    const result = readFileSync(brokenFile, 'utf-8');
+    
+    // Shebang should be on line 1
+    expect(result.startsWith('#!/bin/bash')).toBe(true);
+    
+    // Should have hash header (not block)
+    expect(result).toContain('# SPDX-License-Identifier');
+    expect(result).not.toContain('/**'); // No block comment
+    
+    // Should only have ONE set of headers (not double)
+    const headerCount = (result.match(/SPDX-License-Identifier/g) || []).length;
+    expect(headerCount).toBe(1);
+  });
+
+  it('should preserve shebang when updating header', async () => {
+    const tool = new DefaultLicenseTool();
+    await tool.init({ targetPath: testDataDir });
+    
+    // File with correct shebang but old/missing header
+    const testFile = path.join(testDataDir, 'needs-update');
+    writeFileSync(testFile, '#!/bin/bash\n\necho "test"');
+    
+    await tool.apply(testDataDir, false);
+    
+    const result = readFileSync(testFile, 'utf-8');
+    
+    // Shebang must stay on line 1
+    const lines = result.split('\n');
+    expect(lines[0]).toBe('#!/bin/bash');
+    expect(lines[1]).toMatch(/^# SPDX-License/);
+  });
+});
+
 describe('TC2: Header Building', () => {
   it('should build correct block comment header for TypeScript', async () => {
     const tool = new DefaultLicenseTool();
