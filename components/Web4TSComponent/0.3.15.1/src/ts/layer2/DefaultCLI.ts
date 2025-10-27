@@ -156,8 +156,12 @@ export abstract class DefaultCLI implements CLI {
     } else if (this.model.completionIsCompletingParameter) {
       // Completing parameter - delegate to existing completeParameter logic
       // This reuses existing parameter completion callbacks dynamically
-      return this.getParameterCompletionValues();
+      console.log(`WORD: DEBUG-PARAMETER-COMPLETION-CALLED`);
+      const result = this.getParameterCompletionValues();
+      console.log(`WORD: DEBUG-PARAMETER-RESULT-${result.length}-VALUES`);
+      return result;
     }
+    console.log(`WORD: DEBUG-NO-COMPLETION-PATH`);
     return [];
   }
   
