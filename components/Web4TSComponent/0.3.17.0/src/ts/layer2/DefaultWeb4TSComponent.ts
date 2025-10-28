@@ -45,36 +45,36 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    */
   init(scenario?: Scenario<Web4TSComponentModel>): this {
     if (!this.model) {
-      // Initialize with version from directory (single source of truth)
-      const currentFileUrl = new URL(import.meta.url);
-      const currentVersionDir = path.resolve(path.dirname(currentFileUrl.pathname), '..', '..', '..');
-      const componentDirName = path.basename(currentVersionDir);
-      const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(componentDirName);
-      
+    // Initialize with version from directory (single source of truth)
+    const currentFileUrl = new URL(import.meta.url);
+    const currentVersionDir = path.resolve(path.dirname(currentFileUrl.pathname), '..', '..', '..');
+    const componentDirName = path.basename(currentVersionDir);
+    const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(componentDirName);
+    
       /**
        * @deprecated findProjectRoot() - Moved to DefaultCLI (Path Authority)
        * @pdca 2025-10-28-UTC-0934.pdca.md:158 - Path Separation
        */
-      const discoveredRoot = this.findProjectRoot();
+    const discoveredRoot = this.findProjectRoot();
       
       // ✅ Create version INSTANCE (radical OOP)
       const versionString = isVersionDir ? componentDirName : '0.0.0.0';
       const versionComponent = SemanticVersion.fromString(versionString);
       
-      this.model = {
-        uuid: randomUUID(),
-        name: '',
-        origin: '',
-        definition: '',
-        component: 'Web4TSComponent',
+    this.model = {
+      uuid: randomUUID(),
+      name: '',
+      origin: '',
+      definition: '',
+      component: 'Web4TSComponent',
         version: versionComponent,  // ✅ INSTANCE with behavior!
-        projectRoot: discoveredRoot, // Discovered once, used everywhere for absolute paths
-        targetDirectory: discoveredRoot // Can be overridden for test isolation
-        // Note: createdAt/updatedAt removed per Web4 principle - belong in ChangeEvent
-        // Note: componentStandards, validationRules, scaffoldingTemplates removed - never used
-      };
-    }
-    
+      projectRoot: discoveredRoot, // Discovered once, used everywhere for absolute paths
+      targetDirectory: discoveredRoot // Can be overridden for test isolation
+      // Note: createdAt/updatedAt removed per Web4 principle - belong in ChangeEvent
+      // Note: componentStandards, validationRules, scaffoldingTemplates removed - never used
+    };
+  }
+
     if (scenario?.model) {
       // Merge scenario data
       const { version: scenarioVersion, ...otherFields } = scenario.model;
@@ -335,7 +335,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       });
     }
 
-    return {
+      return {
       ior: {
         uuid: this.model.uuid,
         component: this.model.component,
@@ -1798,8 +1798,8 @@ Standards:
     // Target has ALL data in ITS model
     const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
     console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${target.model.component} ${target.model.version.toString()}:${this.colors.reset}`);
-    console.log(`${this.colors.dim}${componentPath}${this.colors.reset}`);
-    await this.displayTreeStructure(componentPath, '', maxDepth, 0, includeHidden);
+      console.log(`${this.colors.dim}${componentPath}${this.colors.reset}`);
+      await this.displayTreeStructure(componentPath, '', maxDepth, 0, includeHidden);
     
     return this;
   }
@@ -1887,17 +1887,17 @@ Standards:
     // Target has ALL data in ITS model
     const semanticLinks = await this.getSemanticLinks(target.model.component);
     const componentDir = this.resolveComponentDirectory(target.model.component);
-    const availableVersions = this.getAvailableVersions(componentDir);
+      const availableVersions = this.getAvailableVersions(componentDir);
 
     console.log(`🔗 Semantic Version Links for ${target.model.component}:`);
-    console.log(`   📊 Available versions: ${availableVersions.length}`);
-    console.log('');
+      console.log(`   📊 Available versions: ${availableVersions.length}`);
+      console.log('');
 
-    // Display semantic links with status indicators
-    const linkOrder = ['prod', 'test', 'dev', 'latest'] as const;
-    for (const linkType of linkOrder) {
+      // Display semantic links with status indicators
+      const linkOrder = ['prod', 'test', 'dev', 'latest'] as const;
+      for (const linkType of linkOrder) {
       const linkTarget = semanticLinks[linkType];
-      const icon = this.getLinkIcon(linkType);
+        const icon = this.getLinkIcon(linkType);
       const status = linkTarget ? `→ ${linkTarget}` : '(not set)';
       const exists = linkTarget && availableVersions.includes(linkTarget) ? '✅' : linkTarget ? '❌' : '⚪';
       
@@ -2135,22 +2135,22 @@ Standards:
     const target = this.model.context || this;
     
     console.log(`🧪 Running ${target.model.component} tests (no promotion)...`);
-    
-    // 🚨 RECURSION DETECTION: Check if we're already inside vitest
-    const insideTestEnvironment = !!(process.env.VITEST || process.env.VITEST_WORKER_ID);
-    
-    if (insideTestEnvironment) {
-      console.log(`🧪 Already in test environment - skipping recursive vitest execution`);
-      console.log(`✅ Test execution skipped (recursion prevented)`);
-      return this;
-    }
-    
+      
+      // 🚨 RECURSION DETECTION: Check if we're already inside vitest
+      const insideTestEnvironment = !!(process.env.VITEST || process.env.VITEST_WORKER_ID);
+      
+      if (insideTestEnvironment) {
+        console.log(`🧪 Already in test environment - skipping recursive vitest execution`);
+        console.log(`✅ Test execution skipped (recursion prevented)`);
+        return this;
+      }
+      
     // Run tests for target component
     const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
     
     try {
       execSync(this.model.context ? 'npm test' : 'npx vitest run --bail=false', { 
-        cwd: componentPath,
+        cwd: componentPath, 
         stdio: 'inherit',
         encoding: 'utf-8',  // ✅ CRITICAL: Forces proper stream handling, prevents EPIPE hang
       });
@@ -2576,7 +2576,7 @@ Standards:
       
       // CRITICAL: Only auto-switch for Web4TSComponent's SELF-testing (no context)
       // For other components (with context), the caller controls version switching
-      if (componentName === 'Web4TSComponent' && !this.getComponentContext()) {
+      if (componentName === 'Web4TSComponent' && !this.model.context) {
         console.log(`🔄 Switching to ${devVersion} to continue testing...`);
         
         // Use execSync to run npm test in the new version's directory
@@ -2621,7 +2621,7 @@ Standards:
       
       // CRITICAL: Only auto-switch for Web4TSComponent's SELF-testing (no context)
       // For other components (with context), the caller controls version switching
-      if (componentName === 'Web4TSComponent' && !this.getComponentContext()) {
+      if (componentName === 'Web4TSComponent' && !this.model.context) {
         console.log(`🔄 Switching to ${testVersion} to run tests...`);
         
         // Use execSync to run npm test in the new version's directory
@@ -2844,7 +2844,7 @@ Standards:
    */
   private async createNextPatchVersion(componentName: string, currentVersion: string): Promise<string> {
     // Use the existing upgrade method to create nextPatch (increment patch, reset build)
-    const originalContext = this.getComponentContext();
+    const originalContext = this.model.context;
     
     // Temporarily set context to current version
     await this.on(componentName, currentVersion);
@@ -2863,7 +2863,9 @@ Standards:
     } finally {
       // Restore original context
       if (originalContext) {
-        await this.on(originalContext.component, originalContext.version);
+        await this.on(originalContext.model.component, originalContext.model.version.toString());
+      } else {
+        this.model.context = undefined;
       }
     }
   }
@@ -2874,7 +2876,7 @@ Standards:
    */
   private async createNextBuildVersion(componentName: string, baseVersion: string): Promise<string> {
     // Use the existing upgrade method to create nextBuild
-    const originalContext = this.getComponentContext();
+    const originalContext = this.model.context;
     
     // Temporarily set context to base version
     await this.on(componentName, baseVersion);
@@ -2892,7 +2894,9 @@ Standards:
     } finally {
       // Restore original context
       if (originalContext) {
-        await this.on(originalContext.component, originalContext.version);
+        await this.on(originalContext.model.component, originalContext.model.version.toString());
+      } else {
+        this.model.context = undefined;
       }
     }
   }
@@ -2904,7 +2908,7 @@ Standards:
    * @cliHide
    */
   private async createNextMinorVersion(componentName: string, currentVersion: string): Promise<string> {
-    const originalContext = this.getComponentContext();
+    const originalContext = this.model.context;
     
     // Temporarily set context to current version
     await this.on(componentName, currentVersion);
@@ -2922,7 +2926,9 @@ Standards:
     } finally {
       // Restore original context
       if (originalContext) {
-        await this.on(originalContext.component, originalContext.version);
+        await this.on(originalContext.model.component, originalContext.model.version.toString());
+      } else {
+        this.model.context = undefined;
       }
     }
   }
@@ -2972,7 +2978,8 @@ Standards:
    * @cliValues verbose,silent,force
    */
   async build(...flags: string[]): Promise<this> {
-    const context = this.getComponentContext();
+    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
+    const target = this.model.context || this;
     
     // Parse flags - default to verbose if no flags provided
     const hasVerbose = flags.includes('verbose') || (flags.length === 0 && !flags.includes('silent'));
@@ -2986,29 +2993,9 @@ Standards:
     if (hasForce) buildArgs.push('force');
     const buildCmd = `./src/sh/build.sh ${buildArgs.join(' ')}`;
     
-    if (!context) {
-      // No context - build this component itself
-      console.log(`🔨 Building ${this.model.component} itself...`);
-      
-      const componentPath = this.resolveComponentPath(this.model.component, this.model.version.toString());
-      try {
-        execSync(buildCmd, { 
-          cwd: componentPath,
-          stdio: 'inherit'
-        });
-        console.log(`✅ ${this.model.component} build completed successfully`);
-      } catch (error) {
-        console.error(`❌ ${this.model.component} build failed`);
-        throw error;
-      }
-      
-      return this;
-    }
-
-    // Context loaded - build the target component
-    const componentPath = this.resolveComponentPath(context.component, context.version);
+    const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
     
-    console.log(`🔨 Building ${context.component} ${context.version}...`);
+    console.log(`🔨 Building ${target.model.component} ${target.model.version.toString()}...`);
     
     try {
       execSync(buildCmd, { 
@@ -3016,9 +3003,9 @@ Standards:
         stdio: 'inherit',
         shell: process.env.SHELL || '/bin/sh'
       });
-      console.log(`✅ Build completed for ${context.component} ${context.version}`);
+      console.log(`✅ Build completed for ${target.model.component} ${target.model.version.toString()}`);
     } catch (error) {
-      console.error(`❌ Build failed for ${context.component} ${context.version}`);
+      console.error(`❌ Build failed for ${target.model.component} ${target.model.version.toString()}`);
       throw error;
     }
 
@@ -3040,27 +3027,11 @@ Standards:
     // Import TestFileParser dynamically
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
     
-    const context = this.getComponentContext();
+    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
+    const target = this.model.context || this;
     
-    // Web4 Pattern: Determine test directory using model's context (targetDirectory)
-    // Priority: context > model.targetDirectory > model.projectRoot
-    let testDir: string;
-    
-    if (context) {
-      // When loaded with .on() command - test the target component
-      testDir = path.join(this.resolveComponentPath(context.component, context.version), 'test');
-    } else {
-      // No context - testing SELF (this component)
-      // Use targetDirectory (which is projectRoot by default, or test/data in isolation)
-      // Then append this component's path structure
-      const componentRoot = path.join(
-        this.model.targetDirectory,
-        'components',
-        this.model.component,
-        this.model.version.toString()
-      );
-      testDir = path.join(componentRoot, 'test');
-    }
+    // Web4 Pattern: Determine test directory using target instance
+    const testDir = path.join(this.resolveComponentPath(target.model.component, target.model.version.toString()), 'test');
     
     if (!existsSync(testDir)) {
       console.error(`❌ Test directory not found: ${testDir}`);
@@ -3130,16 +3101,9 @@ Standards:
     
     console.log(`🧪 Running tests from: ${targetFile.name}`);
     
-    // Web4 Pattern: Use model context for component root, not process.cwd()
-    const context = this.getComponentContext();
-    const componentRoot = context
-      ? this.resolveComponentPath(context.component, context.version)
-      : path.join(
-          this.model.targetDirectory,
-          'components',
-          this.model.component,
-          this.model.version.toString()
-        );
+    // ✅ RADICAL OOP: Use target instance for component root
+    const target = this.model.context || this;
+    const componentRoot = this.resolveComponentPath(target.model.component, target.model.version.toString());
     
     try {
       execSync(`npx vitest --run ${path.join('test', targetFile.name)}`, {
@@ -3226,16 +3190,9 @@ Standards:
     console.log(`   File: ${file.name}`);
     console.log(`   Reference: ${ref}`);
     
-    // Web4 Pattern: Use model context for component root, not process.cwd()
-    const context = this.getComponentContext();
-    const componentRoot = context
-      ? this.resolveComponentPath(context.component, context.version)
-      : path.join(
-          this.model.targetDirectory,
-          'components',
-          this.model.component,
-          this.model.version.toString()
-        );
+    // ✅ RADICAL OOP: Use target instance for component root
+    const target = this.model.context || this;
+    const componentRoot = this.resolveComponentPath(target.model.component, target.model.version.toString());
     
     try {
       execSync(`npx vitest --run -t "${describe.name}"`, {
@@ -3346,16 +3303,9 @@ Standards:
     console.log(`   Describe: ${targetDescribe.name}`);
     console.log(`   File: ${targetFile.name}`);
     
-    // Web4 Pattern: Use model context for component root, not process.cwd()
-    const context = this.getComponentContext();
-    const componentRoot = context
-      ? this.resolveComponentPath(context.component, context.version)
-      : path.join(
-          this.model.targetDirectory,
-          'components',
-          this.model.component,
-          this.model.version.toString()
-        );
+    // ✅ RADICAL OOP: Use target instance for component root
+    const target = this.model.context || this;
+    const componentRoot = this.resolveComponentPath(target.model.component, target.model.version.toString());
     
     try {
       execSync(`npx vitest --run -t "${targetIt.name}"`, {
@@ -3376,40 +3326,21 @@ Standards:
    * @cliExample web4tscomponent on Unit 0.3.0.5 clean
    */
   async clean(): Promise<this> {
-    const context = this.getComponentContext();
+    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
+    const target = this.model.context || this;
     
-    if (!context) {
-      // No context - clean this component itself
-      console.log(`🧹 Cleaning ${this.model.component} itself...`);
-      
-      const componentPath = this.resolveComponentPath(this.model.component, this.model.version.toString());
-      try {
-        execSync('npm run clean', { 
-          cwd: componentPath,
-          stdio: 'inherit',
-        });
-        console.log(`✅ Cleaned ${this.model.component}`);
-      } catch (error) {
-        console.error(`❌ Clean failed for ${this.model.component}`);
-        throw error;
-      }
-      
-      return this;
-    }
-
-    // WITH context - clean target component
-    const componentPath = this.resolveComponentPath(context.component, context.version);
+    const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
     
-    console.log(`🧹 Cleaning ${context.component} ${context.version}...`);
+    console.log(`🧹 Cleaning ${target.model.component} ${target.model.version.toString()}...`);
     
     try {
       execSync('npm run clean', { 
         cwd: componentPath, 
         stdio: 'inherit',
       });
-      console.log(`✅ Cleaned ${context.component} ${context.version}`);
+      console.log(`✅ Cleaned ${target.model.component} ${target.model.version.toString()}`);
     } catch (error) {
-      console.error(`❌ Clean failed for ${context.component} ${context.version}`);
+      console.error(`❌ Clean failed for ${target.model.component} ${target.model.version.toString()}`);
       throw error;
     }
 
@@ -3437,30 +3368,26 @@ Standards:
    * @remarks TSCompletion uses convention: filterParameterCompletion (not @cliCompletion tag)
    */
   async completion(what: string, filter?: string): Promise<this> {
-    const context = this.getComponentContext();
+    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
+    const target = this.model.context || this;
     
     // OOP: Instantiate CLI and call completeParameter directly (no shell!)
     const { Web4TSComponentCLI } = await import('../layer5/Web4TSComponentCLI.js');
     const cli = new Web4TSComponentCLI();
     
-    if (!context) {
-      // No context - test completions on Web4TSComponent itself
-      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on Web4TSComponent${filter ? ` (filter: ${filter})` : ''}`);
+    console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on ${target.model.component} ${target.model.version.toString()}${filter ? ` (filter: ${filter})` : ''}`);
       console.log(`---`);
       
-      // Call completeParameter directly via OOP (completeParameter is on DefaultCLI)
+    if (!this.model.context) {
+      // No context - call completeParameter directly via OOP
       await cli.completeParameter('completionNameParameterCompletion', 'completion', what, filter || '');
     } else {
-      // Context loaded - test completions on target component via its CLI
-      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on ${context.component} ${context.version}${filter ? ` (filter: ${filter})` : ''}`);
-      console.log(`---`);
-      
-      // Delegate to target component's CLI via web4tscomponent on context
-      const cliScriptName = context.component.toLowerCase().replace(/\./g, '');
+      // Context loaded - delegate to target component's CLI
+      const cliScriptName = target.model.component.toLowerCase().replace(/\./g, '');
       const cliPath = path.join(this.model.projectRoot, 'scripts', cliScriptName);
       
       execSync(`${cliPath} completeParameter completionNameParameterCompletion "completion" "${what}" "${filter || ''}" 2>/dev/null`, { 
-        cwd: this.resolveComponentPath(context.component, context.version),
+        cwd: this.resolveComponentPath(target.model.component, target.model.version.toString()),
         stdio: 'inherit',
       });
     }
@@ -3485,12 +3412,12 @@ Standards:
 
     // Only check context if either parameter is 'current'
     if (component === 'current' || version === 'current') {
-      const context = this.getComponentContext();
-      if (!context) {
+      if (!this.model.context) {
         throw new Error('No component context loaded and no component/version specified. Use "on <component> <version>" first or provide component and version.');
       }
-      targetComponent = component === 'current' ? context.component : component;
-      targetVersion = version === 'current' ? context.version : version;
+      const target = this.model.context;
+      targetComponent = component === 'current' ? target.model.component : component;
+      targetVersion = version === 'current' ? target.model.version.toString() : version;
     } else {
       // Both parameters explicitly provided
       targetComponent = component;
@@ -3563,11 +3490,10 @@ Standards:
     let targetComponent: string;
 
     if (component === 'current') {
-      const context = this.getComponentContext();
-      if (!context) {
+      if (!this.model.context) {
         throw new Error('No component context loaded and no component specified. Use "on <component> <version>" first or provide component name.');
       }
-      targetComponent = context.component;
+      targetComponent = this.model.context.model.component;
     } else {
       targetComponent = component;
     }
@@ -4980,24 +4906,6 @@ Standards:
   }
 
   /**
-   * Get current component context for chained operations
-   * Protected: Allow subclasses/CLI to access for delegation patterns
-   * @cliHide
-   */
-  protected getComponentContext(): { component: string, version: string, path: string } | null {
-    const context = this.model as any;
-    if (!context.contextComponent || !context.contextVersion) {
-      return null;
-    }
-    
-    return {
-      component: context.contextComponent,
-      version: typeof context.contextVersion === 'string' ? context.contextVersion : context.contextVersion.toString(),  // ✅ Handle both string and SemanticVersion
-      path: context.contextPath
-    };
-  }
-
-  /**
    * Version increment helpers
    * @cliHide
    */
@@ -5296,8 +5204,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   async verifyAndFix(): Promise<this> {
-    const context = this.getComponentContext();
-    const componentName = context?.component || 'Web4TSComponent';
+    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
+    const target = this.model.context || this;
+    const componentName = target.model.component;
     
     console.log(`🔍 Verifying and fixing symlinks for ${componentName}...`);
     
@@ -5335,24 +5244,13 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     targetVersion: string,
     version: string = 'current'
   ): Promise<this> {
-    const context = this.getComponentContext();
-    
-    // Determine component and version to work with
-    let componentName: string;
-    let componentDir: string;
-    
-    if (context) {
-      // WITH context: Set link for target component
-      componentName = context.component;
-      componentDir = this.resolveComponentDirectory(componentName);
-    } else {
-      // WITHOUT context: Use THIS component's identity (location-resilient!)
-      componentName = this.model.component;
-      componentDir = this.resolveComponentDirectory(componentName);
-    }
+    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
+    const target = this.model.context || this;
+    const componentName = target.model.component;
+    const componentDir = this.resolveComponentDirectory(componentName);
     
     // Use DRY helper to resolve version (handles 'current', semantic links, and actual versions)
-    const contextVersion = context?.version || this.model.version.toString();
+    const contextVersion = target.model.version.toString();
     const actualVersion = this.resolveActualVersion(componentName, version, contextVersion);
     
     // Validate targetVersion
@@ -6357,18 +6255,20 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
    * @cliSyntax 
    */
   async updateBuildSystem(): Promise<this> {
-    const context = this.getComponentContext();
-    if (!context) {
+    // ✅ RADICAL OOP: Context required for updateBuildSystem
+    if (!this.model.context) {
       throw new Error('No component context loaded. Use "on <component> <version>" first.');
     }
     
-    console.log(`🔧 Updating build system for ${context.component} ${context.version}...`);
+    const target = this.model.context;
+    
+    console.log(`🔧 Updating build system for ${target.model.component} ${target.model.version.toString()}...`);
     
     // Update shell scripts with latest templates
-    await this.createShellScriptStructure(context.path, context.component);
+    await this.createShellScriptStructure(target.model.origin, target.model.component);
     
     console.log(`✅ Build system updated with smart build templates`);
-    console.log(`   Location: ${context.path}`);
+    console.log(`   Location: ${target.model.origin}`);
     console.log(`   Features: Smart builds, dependency awareness, freshness detection`);
     
     return this;
