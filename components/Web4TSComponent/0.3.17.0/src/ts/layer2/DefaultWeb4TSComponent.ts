@@ -1885,55 +1885,22 @@ Standards:
       console.log(`✅ All links repaired for ${componentName}\n`);
     }
     
-    if (!context) {
-      // No context - use THIS component's identity (location-resilient!)
-      const semanticLinks = await this.getSemanticLinks(this.model.component);
-      const componentDir = this.resolveComponentDirectory(this.model.component);
-      const availableVersions = this.getAvailableVersions(componentDir);
-
-      console.log(`🔗 Semantic Version Links for ${this.model.component}:`);
-      console.log(`   📊 Available versions: ${availableVersions.length}`);
-      console.log('');
-
-      // Display semantic links with status indicators
-      const linkOrder = ['prod', 'test', 'dev', 'latest'] as const;
-      for (const linkType of linkOrder) {
-        const target = semanticLinks[linkType];
-        const icon = this.getLinkIcon(linkType);
-        const status = target ? `→ ${target}` : '(not set)';
-        const exists = target && availableVersions.includes(target) ? '✅' : target ? '❌' : '⚪';
-        
-        console.log(`   ${icon} ${linkType.padEnd(6)} ${status.padEnd(15)} ${exists}`);
-      }
-
-      console.log('');
-      console.log('Legend: ✅ Valid  ❌ Broken  ⚪ Not Set');
-      console.log('');
-      console.log('Workflow: dev → test → prod');
-      console.log('  🚧 dev:  Version under development');
-      console.log('  🧪 test: Ready for 100% revision testing');
-      console.log('  🚀 prod: Achieved 100% testing success');
-      console.log('  📦 latest: Current stable release');
-
-      return this;
-    }
-
-    // Context loaded - show target component links
-    const semanticLinks = await this.getSemanticLinks(context.component);
-    const componentDir = this.resolveComponentDirectory(context.component);
+    // Target has ALL data in ITS model
+    const semanticLinks = await this.getSemanticLinks(target.model.component);
+    const componentDir = this.resolveComponentDirectory(target.model.component);
     const availableVersions = this.getAvailableVersions(componentDir);
 
-    console.log(`\n🔗 Semantic Version Links for ${context.component}:`);
+    console.log(`🔗 Semantic Version Links for ${target.model.component}:`);
     console.log(`   📊 Available versions: ${availableVersions.length}`);
     console.log('');
 
     // Display semantic links with status indicators
     const linkOrder = ['prod', 'test', 'dev', 'latest'] as const;
     for (const linkType of linkOrder) {
-      const target = semanticLinks[linkType];
+      const linkTarget = semanticLinks[linkType];
       const icon = this.getLinkIcon(linkType);
-      const status = target ? `→ ${target}` : '(not set)';
-      const exists = target && availableVersions.includes(target) ? '✅' : target ? '❌' : '⚪';
+      const status = linkTarget ? `→ ${linkTarget}` : '(not set)';
+      const exists = linkTarget && availableVersions.includes(linkTarget) ? '✅' : linkTarget ? '❌' : '⚪';
       
       console.log(`   ${icon} ${linkType.padEnd(6)} ${status.padEnd(15)} ${exists}`);
     }
@@ -2338,8 +2305,6 @@ Standards:
    * @cliExample web4tscomponent on Unit 0.3.0.5 releaseTest nextMajor
    */
   async releaseTest(versionPromotion: string = 'nextPatch'): Promise<this> {
-    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
-    const target = this.model.context || this;
     const validPromotions = ['nextPatch', 'nextMinor', 'nextMajor'];
     
     if (!validPromotions.includes(versionPromotion)) {
@@ -2355,8 +2320,8 @@ Standards:
     console.log(`   🚀 On 100% success: Promotes using ${versionPromotion}`);
     console.log(`   🚧 ALWAYS work on dev version after test success\n`);
     
-    if (this.model.context) {
-      // WITH context: Test target component
+    if (!this.model.context) {
+      // ✅ NO context: Test current component (self-operation)
       const insideTestEnvironment = !!(process.env.VITEST || process.env.VITEST_WORKER_ID);
       
       if (insideTestEnvironment) {
@@ -2399,28 +2364,31 @@ Standards:
       return this;
     }
 
+    // ✅ WITH context: Test target component (RADICAL OOP pattern)
+    const target = this.model.context;
+
     // 🚨 RECURSION SAFETY CHECK
-    if (context.component === 'Web4TSComponent') {
+    if (target.model.component === 'Web4TSComponent') {
       console.log(`🚨 RECURSION SAFETY: Web4TSComponent cannot test itself via delegation`);
       throw new Error('Recursion prevented: Use without context instead.');
     }
 
     // Context loaded - check if dev and test are same version and do nextBuild first
-    const semanticLinks = await this.getSemanticLinks(context.component);
+    const semanticLinks = await this.getSemanticLinks(target.model.component);
     const devVersion = semanticLinks['dev'];
     const testVersion = semanticLinks['test'];
     
-    let targetVersion = context.version;
+    let targetVersion = target.model.version.toString();
     
     // If dev and test are the same version, do nextBuild promotion first
-    if (devVersion && testVersion && devVersion === testVersion && devVersion === context.version) {
+    if (devVersion && testVersion && devVersion === testVersion && devVersion === targetVersion) {
       console.log(`🔄 Dev and test are same version (${devVersion}) - creating nextBuild for testing...`);
       
       try {
-        const nextBuildVersion = await this.createNextBuildVersion(context.component, context.version);
-        await this.createSemanticLink(context.component, 'test', nextBuildVersion);
+        const nextBuildVersion = await this.createNextBuildVersion(target.model.component, targetVersion);
+        await this.createSemanticLink(target.model.component, 'test', nextBuildVersion);
         console.log(`✅ Test updated: test → ${nextBuildVersion}`);
-        await this.on(context.component, nextBuildVersion);
+        await this.on(target.model.component, nextBuildVersion);
         targetVersion = nextBuildVersion;
         console.log(`🎯 Now testing new build version: ${nextBuildVersion}`);
       } catch (error) {
@@ -2430,8 +2398,8 @@ Standards:
     }
 
     // Run target component tests and handle RELEASE promotion
-    const componentPath = this.resolveComponentPath(context.component, targetVersion);
-    console.log(`🧪 Running tests for ${context.component} ${targetVersion} (RELEASE MODE)...`);
+    const componentPath = this.resolveComponentPath(target.model.component, targetVersion);
+    console.log(`🧪 Running tests for ${target.model.component} ${targetVersion} (RELEASE MODE)...`);
     
     try {
       execSync('npm test', { 
@@ -2439,22 +2407,22 @@ Standards:
         stdio: 'inherit',
       });
       
-      console.log(`✅ Tests completed for ${context.component} ${targetVersion}`);
+      console.log(`✅ Tests completed for ${target.model.component} ${targetVersion}`);
       
       // RELEASE promotion based on versionPromotion level
-      const semanticLinks = await this.getSemanticLinks(context.component);
-      const currentTest = semanticLinks.test;
+      const semanticLinksAfter = await this.getSemanticLinks(target.model.component);
+      const currentTest = semanticLinksAfter.test;
       
       if (targetVersion !== currentTest) {
         // Stage 1: This is a dev version, promote to test
-        await this.handleFirstTestRun(context.component, targetVersion);
+        await this.handleFirstTestRun(target.model.component, targetVersion);
       } else {
         // Stage 2 RELEASE: This is the test version, use specified promotion level
-        await this.handleReleaseTestSuccessPromotion(context.component, targetVersion, versionPromotion);
+        await this.handleReleaseTestSuccessPromotion(target.model.component, targetVersion, versionPromotion);
       }
       
     } catch (error) {
-      console.error(`❌ Tests failed for ${context.component} ${targetVersion}`);
+      console.error(`❌ Tests failed for ${target.model.component} ${targetVersion}`);
       throw error;
     }
 
