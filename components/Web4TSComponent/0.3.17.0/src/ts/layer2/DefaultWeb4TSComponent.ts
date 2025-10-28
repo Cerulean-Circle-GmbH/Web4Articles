@@ -1347,13 +1347,12 @@ Standards:
       const cliName = componentName.toLowerCase().replace(/[^a-z0-9]/g, '');
       
       // Get context to check if this is the CURRENT running component
-      const context = this.getComponentContext();
-      const isCurrentComponent = context && context.component === componentName;
+      const isCurrentComponent = this.model.context && this.model.context.model.component === componentName;
       
       for (const version of versions) {
         // CRITICAL: Skip generating wrapper for the CURRENT running version!
         // The current version's CLI should be the REAL launcher, not a delegating wrapper
-        if (isCurrentComponent && version === context.version) {
+        if (isCurrentComponent && version === this.model.context!.model.version.toString()) {
           console.log(`   ⏭️  Skipped ${cliName}-v${version} (current running version - not isolated)`);
           continue;
         }
@@ -2132,55 +2131,34 @@ Standards:
     }
     
     // MODE 3: Full test suite (NO promotion - use releaseTest for that)
-    const context = this.getComponentContext();
+    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
+    const target = this.model.context || this;
     
-    if (!context) {
-      // No context - run this component's own tests
-      console.log(`🧪 Running ${this.model.component} tests (no promotion)...`);
-      
-      // 🚨 RECURSION DETECTION: Check if we're already inside vitest
-      const insideTestEnvironment = !!(process.env.VITEST || process.env.VITEST_WORKER_ID);
-      
-      if (insideTestEnvironment) {
-        console.log(`🧪 Already in test environment - skipping recursive vitest execution`);
-        console.log(`✅ Test execution skipped (recursion prevented)`);
-        return this;
-      }
-      
-      // Run vitest directly with --bail=false to run all tests even after failures
-      // (releaseTest uses bail=1 from config to stop on first failure)
-      const componentPath = this.resolveComponentPath(this.model.component, this.model.version.toString());
-      try {
-        execSync('npx vitest run --bail=false', { 
-          cwd: componentPath,
-          stdio: 'inherit',
-          encoding: 'utf-8',  // ✅ CRITICAL: Forces proper stream handling, prevents EPIPE hang
-        });
-        console.log(`✅ Tests completed successfully`);
-      } catch (error) {
-        console.error(`❌ Tests failed`);
-        throw error;
-      }
-      
+    console.log(`🧪 Running ${target.model.component} tests (no promotion)...`);
+    
+    // 🚨 RECURSION DETECTION: Check if we're already inside vitest
+    const insideTestEnvironment = !!(process.env.VITEST || process.env.VITEST_WORKER_ID);
+    
+    if (insideTestEnvironment) {
+      console.log(`🧪 Already in test environment - skipping recursive vitest execution`);
+      console.log(`✅ Test execution skipped (recursion prevented)`);
       return this;
     }
-
-    // Context loaded - run tests for target component
-    const componentPath = this.resolveComponentPath(context.component, context.version);
     
-    console.log(`🧪 Running tests for ${context.component} ${context.version} (no promotion)...`);
+    // Run tests for target component
+    const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
     
     try {
-      execSync('npm test', { 
-        cwd: componentPath, 
+      execSync(this.model.context ? 'npm test' : 'npx vitest run --bail=false', { 
+        cwd: componentPath,
         stdio: 'inherit',
         encoding: 'utf-8',  // ✅ CRITICAL: Forces proper stream handling, prevents EPIPE hang
       });
       
-      console.log(`✅ Tests completed for ${context.component} ${context.version}`);
+      console.log(`✅ Tests completed for ${target.model.component} ${target.model.version.toString()}`);
       
     } catch (error) {
-      console.error(`❌ Tests failed for ${context.component} ${context.version}`);
+      console.error(`❌ Tests failed for ${target.model.component} ${target.model.version.toString()}`);
       throw error;
     }
 
