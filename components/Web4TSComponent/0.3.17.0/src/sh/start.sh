@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 echo "🚀 Starting Web4TSComponent (normal)..."
 
 # Check if rebuild is needed

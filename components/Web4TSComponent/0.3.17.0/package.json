@@ -18,6 +18,8 @@
     "clean": "./src/sh/clean.sh",
     "clean:local": "./src/sh/clean-local.sh",
     "build": "./src/sh/build.sh verbose",
+    "build:force": "./src/sh/build.sh verbose force",
+    "build:silent": "./src/sh/build.sh silent",
     "component": "./web4tscomponent",
     "vitest": "npx vitest run",
     "install-deps": "./src/sh/install-deps.sh"

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 # npm test → test.sh verbose → web4tscomponent test (verbose) → vitest (with recursion prevention & promotion)
 # Direct test.sh call → silent build
 

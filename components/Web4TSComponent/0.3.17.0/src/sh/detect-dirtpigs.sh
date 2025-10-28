@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 # Dirtpig Detection Script
 # Detects leftover test artifacts, stale docs, and version mismatches
 

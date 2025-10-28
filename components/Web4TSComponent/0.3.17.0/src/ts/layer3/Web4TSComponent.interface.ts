@@ -15,8 +15,8 @@ export interface Web4TSComponent extends Component<Web4TSComponentModel> {
   // clean(): Promise<this>; - inherited
   // tree?(depth?: string, showHidden?: string): Promise<this>; - inherited
   
-  transform(data?: unknown): this;
-  validate(object?: any): this;
+  // transform(data?: unknown): this;
+  // validate(object?: any): this;
   // process() - REMOVED: placebo method with no value
   
   // Component-specific methods
