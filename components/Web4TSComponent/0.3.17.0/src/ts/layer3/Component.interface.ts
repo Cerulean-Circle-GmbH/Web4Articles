@@ -22,11 +22,13 @@ export interface Component<TModel extends Model = Model> {
   // ========================================
   
   /**
-   * Initialize component with scenario
-   * @param scenario Scenario containing component configuration
+   * Initialize component with optional scenario
+   * Empty constructor + init() pattern (radical OOP)
+   * @pdca 2025-10-28-UTC-0934.pdca.md:597 - Phase 1: Init Pattern
+   * @param scenario Optional scenario containing component configuration
    * @returns this for method chaining
    */
-  init(scenario: Scenario<TModel>): this;
+  init(scenario?: Scenario<TModel>): this;
   
   /**
    * Convert component state to scenario for persistence

@@ -21,7 +21,7 @@ describe('DefaultWeb4TSComponent - Scenario Pattern', () => {
    * @test toScenarioStructure
    */
   it('toScenario returns valid scenario structure', async () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     const scenario = await component.toScenario();
     
     expect(scenario).toBeDefined();
@@ -36,7 +36,7 @@ describe('DefaultWeb4TSComponent - Scenario Pattern', () => {
    * @test iorStructure
    */
   it('scenario IOR contains uuid, component, version', async () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     const scenario = await component.toScenario();
     
     expect(scenario.ior).toHaveProperty('uuid');
@@ -53,7 +53,7 @@ describe('DefaultWeb4TSComponent - Scenario Pattern', () => {
    * @test ownerDataFormat
    */
   it('scenario owner is a string (for encryption)', async () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     const scenario = await component.toScenario();
     
     expect(typeof scenario.owner).toBe('string');
@@ -66,7 +66,7 @@ describe('DefaultWeb4TSComponent - Scenario Pattern', () => {
    * @test modelContainsState
    */
   it('scenario model contains component state', async () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     const scenario = await component.toScenario();
     
     expect(scenario.model).toBeDefined();
@@ -81,7 +81,7 @@ describe('DefaultWeb4TSComponent - Scenario Pattern', () => {
    * @test scenarioNaming
    */
   it('toScenario accepts optional name parameter', async () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     
     // Should not throw with name parameter
     const scenario = await component.toScenario('test-scenario');
@@ -94,7 +94,7 @@ describe('DefaultWeb4TSComponent - Scenario Pattern', () => {
    * @test uuidConsistency
    */
   it('scenario IOR and model have same UUID', async () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     const scenario = await component.toScenario();
     
     expect(scenario.ior.uuid).toBe(scenario.model.uuid);
@@ -106,7 +106,7 @@ describe('DefaultWeb4TSComponent - Scenario Pattern', () => {
    * @test scenarioSerializable
    */
   it('scenario can be JSON stringified', async () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     const scenario = await component.toScenario();
     
     expect(() => JSON.stringify(scenario)).not.toThrow();
@@ -126,7 +126,7 @@ describe('DefaultWeb4TSComponent - Scenario Pattern', () => {
    * @test scenarioConsistency
    */
   it('multiple toScenario calls have same component data', async () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     const scenario1 = await component.toScenario();
     const scenario2 = await component.toScenario();
     

@@ -18,43 +18,62 @@ import { User } from '../layer3/User.interface.js';
 import { OwnerParams } from '../layer3/OwnerParams.interface.js';
 
 export class DefaultWeb4TSComponent implements Web4TSComponent {
-  private model: Web4TSComponentModel;
+  private model!: Web4TSComponentModel; // Definite assignment - initialized in init()
   private colors: Colors = DefaultColors.getInstance();
   private user?: User; // Optional User service (lazy initialization)
 
+  /**
+   * Empty constructor (Web4 radical OOP pattern)
+   * All initialization happens in init()
+   * @pdca 2025-10-28-UTC-0934.pdca.md:597 - Phase 1: Init Pattern
+   */
   constructor() {
-    // Initialize with version from directory (single source of truth)
-    const currentFileUrl = new URL(import.meta.url);
-    const currentVersionDir = path.resolve(path.dirname(currentFileUrl.pathname), '..', '..', '..');
-    const componentDirName = path.basename(currentVersionDir);
-    const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(componentDirName);
-    
-    const discoveredRoot = this.findProjectRoot();
-    this.model = {
-      uuid: randomUUID(),
-      name: '',
-      origin: '',
-      definition: '',
-      component: 'Web4TSComponent',
-      version: isVersionDir ? componentDirName : '0.0.0', // Read from directory name, fallback to 0.0.0
-      projectRoot: discoveredRoot, // Discovered once, used everywhere for absolute paths
-      targetDirectory: discoveredRoot // Can be overridden for test isolation
-      // Note: createdAt/updatedAt removed per Web4 principle - belong in ChangeEvent
-      // Note: componentStandards, validationRules, scaffoldingTemplates removed - never used
-    };
+    // Empty - initialization moved to init()
   }
 
 
   /**
-   * Initialize component with scenario data (Web4 pattern)
-   * @param scenario Scenario containing component model and context
+   * Initialize component with Scenario (Web4 radical OOP pattern)
+   * Discovers version from import.meta.url if no scenario provided
+   * @pdca 2025-10-28-UTC-0934.pdca.md:627 - Phase 1: Init Pattern
+   * @test test/ts/layer2/DefaultWeb4TSComponent.test.ts:initDiscoversVersion
+   * @test test/ts/layer2/DefaultWeb4TSComponent.test.ts:initMergesScenario
+   * @param scenario Optional scenario containing component model and context
    * @returns this component instance for method chaining
    * @cliHide
    */
-  init(scenario: Scenario<Web4TSComponentModel>): this {
-    if (scenario.model) {
+  init(scenario?: Scenario<Web4TSComponentModel>): this {
+    if (!this.model) {
+      // Initialize with version from directory (single source of truth)
+      const currentFileUrl = new URL(import.meta.url);
+      const currentVersionDir = path.resolve(path.dirname(currentFileUrl.pathname), '..', '..', '..');
+      const componentDirName = path.basename(currentVersionDir);
+      const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(componentDirName);
+      
+      /**
+       * @deprecated findProjectRoot() - Moved to DefaultCLI (Path Authority)
+       * @pdca 2025-10-28-UTC-0934.pdca.md:158 - Path Separation
+       */
+      const discoveredRoot = this.findProjectRoot();
+      
+      this.model = {
+        uuid: randomUUID(),
+        name: '',
+        origin: '',
+        definition: '',
+        component: 'Web4TSComponent',
+        version: isVersionDir ? componentDirName : '0.0.0', // Read from directory name, fallback to 0.0.0
+        projectRoot: discoveredRoot, // Discovered once, used everywhere for absolute paths
+        targetDirectory: discoveredRoot // Can be overridden for test isolation
+        // Note: createdAt/updatedAt removed per Web4 principle - belong in ChangeEvent
+        // Note: componentStandards, validationRules, scaffoldingTemplates removed - never used
+      };
+    }
+    
+    if (scenario?.model) {
       this.model = { ...this.model, ...scenario.model };
     }
+    
     return this;
   }
 

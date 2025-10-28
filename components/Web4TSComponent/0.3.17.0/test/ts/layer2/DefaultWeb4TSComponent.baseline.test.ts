@@ -21,7 +21,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test componentInstantiation
    */
   it('component constructor creates instance', () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     expect(component).toBeDefined();
     expect(component).toBeInstanceOf(DefaultWeb4TSComponent);
   });
@@ -32,7 +32,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test componentHasModel
    */
   it('component has model after construction', () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     const model = (component as any).model;
     expect(model).toBeDefined();
     expect(model).toHaveProperty('uuid');
@@ -46,7 +46,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test componentName
    */
   it('component has correct name', () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     const model = (component as any).model;
     expect(model.component).toBe('Web4TSComponent');
   });
@@ -57,7 +57,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test componentVersionFormat
    */
   it('component version follows X.Y.Z.W format', () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     const model = (component as any).model;
     const version = model.version;
     
@@ -71,7 +71,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test componentUUID
    */
   it('component generates valid UUID', () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     const model = (component as any).model;
     const uuid = model.uuid;
     
@@ -87,7 +87,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test toScenarioExists
    */
   it('component has toScenario method', () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     expect(typeof component.toScenario).toBe('function');
   });
 
@@ -97,7 +97,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test buildMethodExists
    */
   it('component has build method', () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     expect(typeof component.build).toBe('function');
   });
 
@@ -107,7 +107,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test testMethodExists
    */
   it('component has test method', () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     expect(typeof component.test).toBe('function');
   });
 
@@ -117,7 +117,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test cleanMethodExists
    */
   it('component has clean method', () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     expect(typeof component.clean).toBe('function');
   });
 
@@ -127,7 +127,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test onMethodExists
    */
   it('component has on method for context loading', () => {
-    const component = new DefaultWeb4TSComponent();
+    const component = new DefaultWeb4TSComponent().init();
     expect(typeof component.on).toBe('function');
   });
 
@@ -137,8 +137,8 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test multipleInstancesIndependent
    */
   it('multiple component instances have different UUIDs', () => {
-    const component1 = new DefaultWeb4TSComponent();
-    const component2 = new DefaultWeb4TSComponent();
+    const component1 = new DefaultWeb4TSComponent().init();
+    const component2 = new DefaultWeb4TSComponent().init();
     
     const uuid1 = (component1 as any).model.uuid;
     const uuid2 = (component2 as any).model.uuid;
