@@ -169,20 +169,34 @@ export class SemanticVersion implements Version {
 
   /**
    * Convert component state to scenario for persistence
+   * @pdca 2025-10-28-UTC-2015.user-scenario-antipattern.pdca.md - Owner data as scenario structure
    */
   async toScenario(name?: string): Promise<Scenario<VersionModel>> {
+    // ✅ Owner data as minimal User-like scenario (consistent with Web4 pattern)
+    const ownerScenario = {
+      ior: {
+        uuid: this.model.uuid,
+        component: 'User',
+        version: '0.0.0.0',
+        timestamp: new Date().toISOString()
+      },
+      owner: '',  // No nested owner in SemanticVersion
+      model: {
+        user: process.env.USER || 'system',
+        hostname: process.env.HOSTNAME || 'localhost',
+        uuid: this.model.uuid,
+        component: 'SemanticVersion',
+        version: this.model.versionString
+      }
+    };
+    
     return {
       ior: {
         uuid: this.model.uuid,
         component: 'SemanticVersion',
         version: this.model.versionString
       },
-      owner: JSON.stringify({
-        user: process.env.USER || 'system',
-        hostname: process.env.HOSTNAME || 'localhost',
-        uuid: this.model.uuid,
-        timestamp: new Date().toISOString()
-      }),
+      owner: JSON.stringify(ownerScenario),
       model: this.model
     };
   }
