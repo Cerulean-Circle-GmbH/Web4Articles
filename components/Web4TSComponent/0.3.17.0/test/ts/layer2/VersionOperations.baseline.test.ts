@@ -64,7 +64,9 @@ describe('DefaultWeb4TSComponent - Version Operations', () => {
     const component = new DefaultWeb4TSComponent().init();
     const version = (component as any).model.version;
     
-    const parts = version.split('.');
+    // ✅ Version is now a SemanticVersion instance
+    const versionString = version.toString();
+    const parts = versionString.split('.');
     expect(parts).toHaveLength(4);
     
     // All parts should be numbers
@@ -84,8 +86,8 @@ describe('DefaultWeb4TSComponent - Version Operations', () => {
     const component = new DefaultWeb4TSComponent().init();
     const version = (component as any).model.version;
     
-    // Should match the 0.3.17.0 directory we're in
-    expect(version).toBe('0.3.17.0');
+    // ✅ Version is now a SemanticVersion instance
+    expect(version.toString()).toBe('0.3.17.0');
   });
 
   /**

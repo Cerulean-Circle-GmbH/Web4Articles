@@ -9,6 +9,7 @@ import { Web4TSComponentModel } from '../layer3/Web4TSComponentModel.interface.j
 import { ComponentDependency } from '../layer3/ComponentDependency.interface.js';
 import { Colors } from '../layer3/Colors.interface.js';
 import { DefaultColors } from '../layer4/DefaultColors.js';
+import { SemanticVersion } from './SemanticVersion.js';
 import * as fs from 'fs/promises';
 import { existsSync, readdirSync, statSync, lstatSync, readlinkSync } from 'fs';
 import * as path from 'path';
@@ -56,13 +57,17 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
        */
       const discoveredRoot = this.findProjectRoot();
       
+      // ✅ Create version INSTANCE (radical OOP)
+      const versionString = isVersionDir ? componentDirName : '0.0.0.0';
+      const versionComponent = SemanticVersion.fromString(versionString);
+      
       this.model = {
         uuid: randomUUID(),
         name: '',
         origin: '',
         definition: '',
         component: 'Web4TSComponent',
-        version: isVersionDir ? componentDirName : '0.0.0', // Read from directory name, fallback to 0.0.0
+        version: versionComponent,  // ✅ INSTANCE with behavior!
         projectRoot: discoveredRoot, // Discovered once, used everywhere for absolute paths
         targetDirectory: discoveredRoot // Can be overridden for test isolation
         // Note: createdAt/updatedAt removed per Web4 principle - belong in ChangeEvent
@@ -71,7 +76,23 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     }
     
     if (scenario?.model) {
-      this.model = { ...this.model, ...scenario.model };
+      // Merge scenario data
+      const { version: scenarioVersion, ...otherFields } = scenario.model;
+      this.model = { ...this.model, ...otherFields };
+      
+      // ✅ If scenario has version, reconstruct instance
+      if (scenarioVersion) {
+        if (scenarioVersion instanceof SemanticVersion) {
+          this.model.version = scenarioVersion;
+        } else {
+          // Reconstruct from VersionModel data
+          this.model.version = new SemanticVersion().init({
+            ior: { uuid: '', component: 'SemanticVersion', version: '0.0.0.0' },
+            owner: '',
+            model: scenarioVersion as any
+          });
+        }
+      }
     }
     
     return this;
@@ -318,7 +339,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       ior: {
         uuid: this.model.uuid,
         component: this.model.component,
-        version: this.model.version
+        version: this.model.version.toString()  // ✅ Serialize to string
       },
       owner: ownerData,
       model: this.model
@@ -380,7 +401,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         .map(entry => entry.name);
     } catch {
       // Fallback: return current version from model
-      return [this.model.version];
+      return [this.model.version.toString()];  // ✅ Serialize to string
     }
   }
 
@@ -1708,7 +1729,7 @@ Standards:
     } else {
       // WITHOUT context: Use THIS component's identity (location-resilient!)
       componentName = this.model.component;
-      currentVersion = this.model.version;
+      currentVersion = this.model.version.toString();  // ✅ Serialize to string
       componentPath = this.resolveComponentPath(componentName, currentVersion);
     }
     
@@ -1786,8 +1807,8 @@ Standards:
       await this.displayTreeStructure(context.path, '', maxDepth, 0, includeHidden);
     } else {
       // WITHOUT context: Use THIS component's identity (location-resilient!)
-      const componentPath = this.resolveComponentPath(this.model.component, this.model.version);
-      console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${this.model.component} ${this.model.version}:${this.colors.reset}`);
+      const componentPath = this.resolveComponentPath(this.model.component, this.model.version.toString());
+      console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${this.model.component} ${this.model.version.toString()}:${this.colors.reset}`);
       console.log(`${this.colors.dim}${componentPath}${this.colors.reset}`);
       await this.displayTreeStructure(componentPath, '', maxDepth, 0, includeHidden);
     }
@@ -2171,7 +2192,7 @@ Standards:
       
       // Run vitest directly with --bail=false to run all tests even after failures
       // (releaseTest uses bail=1 from config to stop on first failure)
-      const componentPath = this.resolveComponentPath(this.model.component, this.model.version);
+      const componentPath = this.resolveComponentPath(this.model.component, this.model.version.toString());
       try {
         execSync('npx vitest run --bail=false', { 
           cwd: componentPath,
@@ -2350,7 +2371,7 @@ Standards:
       } else {
         console.log(`🧪 Running ${this.model.component} internal tests (RELEASE MODE)...`);
         
-        const componentPath = this.resolveComponentPath(this.model.component, this.model.version);
+        const componentPath = this.resolveComponentPath(this.model.component, this.model.version.toString());
         try {
           execSync('npx vitest run', { 
             cwd: componentPath,
@@ -2872,7 +2893,7 @@ Standards:
    * Model is initialized from directory name in constructor
    */
   private async getCurrentVersion(): Promise<string> {
-    return this.model.version;
+    return this.model.version.toString();
   }
 
   /**
@@ -3028,7 +3049,7 @@ Standards:
       // No context - build this component itself
       console.log(`🔨 Building ${this.model.component} itself...`);
       
-      const componentPath = this.resolveComponentPath(this.model.component, this.model.version);
+      const componentPath = this.resolveComponentPath(this.model.component, this.model.version.toString());
       try {
         execSync(buildCmd, { 
           cwd: componentPath,
@@ -3095,7 +3116,7 @@ Standards:
         this.model.targetDirectory,
         'components',
         this.model.component,
-        this.model.version
+        this.model.version.toString()
       );
       testDir = path.join(componentRoot, 'test');
     }
@@ -3176,7 +3197,7 @@ Standards:
           this.model.targetDirectory,
           'components',
           this.model.component,
-          this.model.version
+          this.model.version.toString()
         );
     
     try {
@@ -3272,7 +3293,7 @@ Standards:
           this.model.targetDirectory,
           'components',
           this.model.component,
-          this.model.version
+          this.model.version.toString()
         );
     
     try {
@@ -3392,7 +3413,7 @@ Standards:
           this.model.targetDirectory,
           'components',
           this.model.component,
-          this.model.version
+          this.model.version.toString()
         );
     
     try {
@@ -3420,7 +3441,7 @@ Standards:
       // No context - clean this component itself
       console.log(`🧹 Cleaning ${this.model.component} itself...`);
       
-      const componentPath = this.resolveComponentPath(this.model.component, this.model.version);
+      const componentPath = this.resolveComponentPath(this.model.component, this.model.version.toString());
       try {
         execSync('npm run clean', { 
           cwd: componentPath,
@@ -5032,7 +5053,7 @@ Standards:
     
     return {
       component: context.contextComponent,
-      version: context.contextVersion,
+      version: typeof context.contextVersion === 'string' ? context.contextVersion : context.contextVersion.toString(),  // ✅ Handle both string and SemanticVersion
       path: context.contextPath
     };
   }
@@ -5392,7 +5413,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
     
     // Use DRY helper to resolve version (handles 'current', semantic links, and actual versions)
-    const contextVersion = context?.version || this.model.version;
+    const contextVersion = context?.version || this.model.version.toString();
     const actualVersion = this.resolveActualVersion(componentName, version, contextVersion);
     
     // Validate targetVersion

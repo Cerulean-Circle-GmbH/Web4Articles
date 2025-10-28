@@ -61,8 +61,9 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
     const model = (component as any).model;
     const version = model.version;
     
-    expect(typeof version).toBe('string');
-    expect(version).toMatch(/^\d+\.\d+\.\d+\.\d+$/);
+    // ✅ Version is now a SemanticVersion instance
+    expect(typeof version).toBe('object');
+    expect(version.toString()).toMatch(/^\d+\.\d+\.\d+\.\d+$/);
   });
 
   /**
