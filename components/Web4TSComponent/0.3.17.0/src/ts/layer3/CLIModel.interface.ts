@@ -16,7 +16,7 @@ export interface CLIModel extends Model {
   
   /**
    * CLI Model with embedded component instances (radical OOP)
-   * @pdca 2025-10-28-UTC-0934.pdca.md:1153 - Phase 2: CLI Model
+   * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Deleted deprecated fields
    */
   
   /**
@@ -30,30 +30,6 @@ export interface CLIModel extends Model {
    * @pdca 2025-10-28-UTC-0934.pdca.md:1153 - Stores INSTANCE
    */
   user?: User;
-  
-  /**
-   * @deprecated Use component.model.component instead
-   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
-   */
-  componentClass?: any | null;
-  
-  /**
-   * @deprecated Use component.model.component instead
-   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
-   */
-  componentName?: string;
-  
-  /**
-   * @deprecated Use component.model.version instead
-   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
-   */
-  componentVersion?: string;
-  
-  /**
-   * @deprecated Use component instead
-   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
-   */
-  componentInstance?: any | null;
   
   // Completion context - FLAT in model (no CompletionContext relationship!)
   // From bash environment

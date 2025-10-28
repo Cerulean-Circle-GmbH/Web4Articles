@@ -65,10 +65,6 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         name: "cli",
         origin: "system",
         definition: "CLI model",
-        componentClass: null,
-        componentName: "",
-        componentVersion: "",
-        componentInstance: null,
         // Completion context - initialized empty
         completionCliName: "",
         completionCompWords: [],
