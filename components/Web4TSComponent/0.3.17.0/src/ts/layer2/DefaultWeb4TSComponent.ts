@@ -1804,58 +1804,7 @@ Standards:
     return this;
   }
 
-  // /**
-  //  * Update latest symlink to point to specified version (requires context)
-  //  * Updates the 'latest' symlink to point to specified version
-  //  * 
-  //  * @deprecated Use setCICDVersion('latest', version) instead
-  //  * This method is kept for backward compatibility but hidden from CLI
-  //  * 
-  //  * @param targetVersion Version to set as latest (default: use current context version)
-  //  * @cliHide
-  //  */
-  // async setLatest(targetVersion: string = 'current'): Promise<this> {
-  //   return this.setCICDVersion('latest', targetVersion);
-  // }
 
-  // /**
-  //  * Set development version link - version currently under development (requires context)
-  //  * 
-  //  * @deprecated Use setCICDVersion('dev', version) instead
-  //  * This method is kept for backward compatibility but hidden from CLI
-  //  * 
-  //  * @param targetVersion Version to set as dev (default: use current context version)
-  //  * @cliHide
-  //  */
-  // async setDev(targetVersion: string = 'current'): Promise<this> {
-  //   return this.setCICDVersion('dev', targetVersion);
-  // }
-
-  // /**
-  //  * Set test version link - version ready for 100% revision testing (requires context)
-  //  * 
-  //  * @deprecated Use setCICDVersion('test', version) instead
-  //  * This method is kept for backward compatibility but hidden from CLI
-  //  * 
-  //  * @param targetVersion Version to set as test (default: use current context version)
-  //  * @cliHide
-  //  */
-  // async setTest(targetVersion: string = 'current'): Promise<this> {
-  //   return this.setCICDVersion('test', targetVersion);
-  // }
-
-  // /**
-  //  * Set production version link - version that achieved 100% testing success (requires context)
-  //  * 
-  //  * @deprecated Use setCICDVersion('prod', version) instead
-  //  * This method is kept for backward compatibility but hidden from CLI
-  //  * 
-  //  * @param targetVersion Version to set as prod (default: use current context version)
-  //  * @cliHide
-  //  */
-  // async setProd(targetVersion: string = 'current'): Promise<this> {
-  //   return this.setCICDVersion('prod', targetVersion);
-  // }
 
   /**
    * Display semantic version links - shows own links if no context, or target component links if context loaded
