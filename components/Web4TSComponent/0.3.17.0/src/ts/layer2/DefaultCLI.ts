@@ -111,15 +111,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       // ✅ Use User component's toScenario() - universal Web4 interface
       const userScenario = await this.model.user.toScenario();
       
-      // Extract owner data from User scenario (if exists) or construct from model
-      ownerJson = userScenario.owner || JSON.stringify({
-        user: userScenario.model?.user || process.env.USER || 'system',
-        hostname: userScenario.model?.hostname || process.env.HOSTNAME || 'localhost',
-        uuid: userScenario.ior?.uuid || this.model.uuid,
-        timestamp: new Date().toISOString(),
-        component: componentName,
-        version: componentVersion
-      });
+      // ✅ Owner data IS the entire User scenario serialized
+      ownerJson = JSON.stringify(userScenario);
     } else {
       // Fallback: Generate basic owner data without User service
       ownerJson = JSON.stringify({

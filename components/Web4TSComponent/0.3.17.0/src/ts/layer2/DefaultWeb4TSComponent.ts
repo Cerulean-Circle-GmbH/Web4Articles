@@ -323,15 +323,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       // ✅ Use User component's toScenario() - universal Web4 interface
       const userScenario = await user.toScenario();
       
-      // Extract owner data from User scenario or construct from model
-      const ownerJson = userScenario.owner || JSON.stringify({
-        user: userScenario.model?.user || process.env.USER || 'system',
-        hostname: userScenario.model?.hostname || process.env.HOSTNAME || 'localhost',
-        uuid: userScenario.ior?.uuid || this.model.uuid,
-        timestamp: new Date().toISOString(),
-        component: this.model.component,
-        version: this.model.version
-      });
+      // ✅ Owner data IS the entire User scenario serialized
+      const ownerJson = JSON.stringify(userScenario);
       
       ownerData = Buffer.from(ownerJson).toString('base64');
     } catch (error) {

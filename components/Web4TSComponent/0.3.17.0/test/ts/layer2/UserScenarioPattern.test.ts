@@ -92,21 +92,21 @@ describe('DefaultCLI - User Service Integration', () => {
     expect(() => JSON.parse(decoded)).not.toThrow();
   });
   
-  it('should extract owner from User scenario if available', async () => {
+  it('should serialize entire User scenario as owner data', async () => {
     const cli = new DefaultCLI().init();
     
-    const mockOwnerData = JSON.stringify({
-      user: 'specific-user',
-      hostname: 'specific-host',
-      uuid: 'specific-uuid-456'
-    });
+    const mockUserScenario = {
+      ior: { uuid: 'user-123', component: 'User', version: '1.0.0.0', timestamp: new Date().toISOString() },
+      owner: 'base64encodeddata',  // User's own owner data
+      model: {
+        user: 'specific-user',
+        hostname: 'specific-host',
+        uuid: 'specific-uuid-456'
+      }
+    };
     
     cli.model.user = {
-      toScenario: vi.fn().mockResolvedValue({
-        ior: { uuid: 'user-123', component: 'User', version: '1.0.0.0', timestamp: new Date().toISOString() },
-        owner: mockOwnerData,  // Already has owner field
-        model: {}
-      })
+      toScenario: vi.fn().mockResolvedValue(mockUserScenario)
     } as any;
     
     const scenario = await cli.toScenario();
@@ -114,10 +114,13 @@ describe('DefaultCLI - User Service Integration', () => {
     const decoded = Buffer.from(scenario.owner, 'base64').toString('utf-8');
     const ownerObj = JSON.parse(decoded);
     
-    // Should use the owner data from User scenario
-    expect(ownerObj.user).toBe('specific-user');
-    expect(ownerObj.hostname).toBe('specific-host');
-    expect(ownerObj.uuid).toBe('specific-uuid-456');
+    // ✅ Owner data should be the ENTIRE User scenario
+    expect(ownerObj.ior).toBeDefined();
+    expect(ownerObj.ior.uuid).toBe('user-123');
+    expect(ownerObj.ior.component).toBe('User');
+    expect(ownerObj.model).toBeDefined();
+    expect(ownerObj.model.user).toBe('specific-user');
+    expect(ownerObj.model.hostname).toBe('specific-host');
   });
 });
 
