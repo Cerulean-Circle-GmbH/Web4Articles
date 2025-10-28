@@ -33,6 +33,16 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   protected methodSignatures: Map<string, MethodSignature> = new Map();
   protected colors: Colors = DefaultColors.getInstance();
 
+
+  /**
+   * Static start method - Web4 radical OOP pattern
+   * Entry point for all CLI operations
+   */
+  static async start(args: string[]): Promise<void> {
+    const cli = new (this as any)();
+    await cli.execute(args);
+  }
+  
   constructor() {
     // Initialize with empty model - Web4 Scenario pattern
     this.model = this.createEmptyModel();
@@ -132,14 +142,6 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     return this;
   }
 
-  /**
-   * Static start method - Web4 radical OOP pattern
-   * Entry point for all CLI operations
-   */
-  static async start(args: string[]): Promise<void> {
-    const cli = new (this as any)();
-    await cli.execute(args);
-  }
 
   /**
    * Compute derived completion fields from bash-provided compWords/compCword

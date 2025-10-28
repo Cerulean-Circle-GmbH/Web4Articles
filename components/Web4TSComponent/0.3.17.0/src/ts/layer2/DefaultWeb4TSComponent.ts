@@ -83,19 +83,19 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     }
   }
 
-  /**
-   * Get default completion Scenario for bash completion
-   * Bash calls this first to get complete CLIModel structure with owner data
-   * DRY: Uses toScenario() to generate proper scenario with User service
-   * @cliHide
-   */
-  async getCompletionScenario(): Promise<void> {
-    // Use toScenario() to get proper scenario with User service (DRY principle)
-    const scenario = await this.toScenario();
+  // /**
+  //  * Get default completion Scenario for bash completion
+  //  * Bash calls this first to get complete CLIModel structure with owner data
+  //  * DRY: Uses toScenario() to generate proper scenario with User service
+  //  * @cliHide
+  //  */
+  // async getCompletionScenario(): Promise<void> {
+  //   // Use toScenario() to get proper scenario with User service (DRY principle)
+  //   const scenario = await this.toScenario();
     
-    // Output as JSON for bash
-    console.log(JSON.stringify(scenario, null, 2));
-  }
+  //   // Output as JSON for bash
+  //   console.log(JSON.stringify(scenario, null, 2));
+  // }
 
   /**
    * Set component dependencies that must be built before this component
