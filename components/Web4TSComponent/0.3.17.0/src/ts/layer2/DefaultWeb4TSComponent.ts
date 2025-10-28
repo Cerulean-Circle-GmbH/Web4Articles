@@ -310,22 +310,33 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * Convert component to scenario (Web4 pattern)
    * Essential for Web4 compliance and hibernation/restoration
    * Uses User service for proper owner data generation with fallback
+   * @pdca 2025-10-28-UTC-2015.user-scenario-antipattern.pdca.md - Use User.toScenario()
    * @cliHide
    */
   async toScenario(name?: string): Promise<Scenario<Web4TSComponentModel>> {
-    // Generate owner data using User service (optional, with fallback)
+    // ✅ RADICAL OOP: Generate owner data using User.toScenario() (Web4 component interface)
     let ownerData: string;
     try {
       // Try to use User service if available (NOT a build dependency)
       const user = await this.getUser();
-      ownerData = await user.generateOwnerData({
-        user: process.env.USER || 'system',
-        hostname: process.env.HOSTNAME || 'localhost',
-        uuid: this.model.uuid
+      
+      // ✅ Use User component's toScenario() - universal Web4 interface
+      const userScenario = await user.toScenario();
+      
+      // Extract owner data from User scenario or construct from model
+      const ownerJson = userScenario.owner || JSON.stringify({
+        user: userScenario.model?.user || process.env.USER || 'system',
+        hostname: userScenario.model?.hostname || process.env.HOSTNAME || 'localhost',
+        uuid: userScenario.ior?.uuid || this.model.uuid,
+        timestamp: new Date().toISOString(),
+        component: this.model.component,
+        version: this.model.version
       });
+      
+      ownerData = Buffer.from(ownerJson).toString('base64');
     } catch (error) {
       // Fallback: Manual owner generation if User service unavailable
-      ownerData = JSON.stringify({
+      const fallbackJson = JSON.stringify({
         user: process.env.USER || 'system',
         hostname: process.env.HOSTNAME || 'localhost',
         uuid: this.model.uuid,
@@ -333,6 +344,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         component: this.model.component,
         version: this.model.version
       });
+      ownerData = Buffer.from(fallbackJson).toString('base64');
     }
 
       return {

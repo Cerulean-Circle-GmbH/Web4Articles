@@ -96,25 +96,32 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   /**
    * Convert CLI state to scenario for persistence
    * Implements Component interface requirement
-   * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Use User service for owner data
+   * @pdca 2025-10-28-UTC-2015.user-scenario-antipattern.pdca.md - Use User.toScenario()
+   * @test test/ts/layer2/UserScenarioPattern.test.ts - Scenario pattern verification
    * @returns Scenario representation of current CLI state
    */
   async toScenario(name?: string): Promise<Scenario<CLIModel>> {
     const componentName = this.model.component?.model.component || 'CLI';
     const componentVersion = this.model.component?.model.version?.toString() || '0.0.0.0';
     
-    // ✅ Generate owner JSON (use User service if available)
+    // ✅ RADICAL OOP: Use User.toScenario() for owner data (Web4 component interface)
     let ownerJson: string;
     
-    if (this.model.user && typeof this.model.user.generateOwnerData === 'function') {
-      // Use User service to generate owner data
-      ownerJson = await this.model.user.generateOwnerData({
-        user: process.env.USER || 'system',
-        hostname: process.env.HOSTNAME || 'localhost',
-        uuid: this.model.uuid
+    if (this.model.user) {
+      // ✅ Use User component's toScenario() - universal Web4 interface
+      const userScenario = await this.model.user.toScenario();
+      
+      // Extract owner data from User scenario (if exists) or construct from model
+      ownerJson = userScenario.owner || JSON.stringify({
+        user: userScenario.model?.user || process.env.USER || 'system',
+        hostname: userScenario.model?.hostname || process.env.HOSTNAME || 'localhost',
+        uuid: userScenario.ior?.uuid || this.model.uuid,
+        timestamp: new Date().toISOString(),
+        component: componentName,
+        version: componentVersion
       });
     } else {
-      // Fallback: Generate basic owner data
+      // Fallback: Generate basic owner data without User service
       ownerJson = JSON.stringify({
         user: process.env.USER || 'system',
         hostname: process.env.HOSTNAME || 'localhost',
