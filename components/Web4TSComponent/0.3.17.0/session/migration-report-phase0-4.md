@@ -197,10 +197,10 @@ $ npx vitest run --reporter=verbose
 | `web4tscomponent tree 1` | ✅ WORKS | Directory structure displayed correctly |
 | `web4tscomponent clean` | ✅ WORKS | Cleaned all artifacts |
 | `web4tscomponent build silent` | ✅ WORKS | Build completed successfully |
+| `web4tscomponent test file 1` | ✅ **FIXED** | Now works with layered test structure! |
 | `npx vitest run <file>` | ✅ WORKS | Individual test execution works |
-| `web4tscomponent test file` | ⚠️ PATH ISSUE | Known issue (documented in PDCA), use npx vitest instead |
 
-**Note:** The `web4tscomponent test file` command has a known path resolution issue (documented in 2025-10-28-UTC-1632.test-hang-investigation.pdca.md). Core functionality works via `npx vitest` directly.
+**Update (2025-10-28-UTC-2005):** The `test file` command has been **FIXED**! The `TestFileParser.scanTestFiles()` method is now recursive, properly handling the new layered test structure (`test/ts/layer2/`, etc.). All tests passing with the fix!
 
 ---
 
@@ -252,11 +252,10 @@ $ npx vitest run --reporter=verbose
 ## 📋 Known Issues & Future Work
 
 ### **Known Issues**
-1. **Test File Command Path Resolution** (Low Priority)
-   - **Issue:** `web4tscomponent test file` doesn't resolve test paths correctly
-   - **Workaround:** Use `npx vitest run <file>` directly
-   - **Impact:** Low (developers can use workaround)
-   - **PDCA:** [2025-10-28-UTC-1632.test-hang-investigation.pdca.md](./2025-10-28-UTC-1632.test-hang-investigation.pdca.md)
+1. **~~Test File Command Path Resolution~~** ✅ **FIXED (2025-10-28-UTC-2005)**
+   - **Issue:** `web4tscomponent test file` didn't work with layered test structure
+   - **Fix:** Made `TestFileParser.scanTestFiles()` recursive to handle `test/ts/layer2/`
+   - **Status:** ✅ **RESOLVED** - All test file commands now work perfectly!
 
 2. **Usage Dialog Performance** (Low Priority)
    - **Issue:** `web4tscomponent` (no args) takes ~39 seconds
