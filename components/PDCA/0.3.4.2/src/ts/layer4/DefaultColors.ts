@@ -1,6 +1,9 @@
 /**
- * DefaultColors implementation - ANSI terminal color codes
- * Web4 pattern: Single source of truth for all color definitions (DRY principle)
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { Colors } from '../layer3/Colors.interface.js';
@@ -28,14 +31,10 @@ export class DefaultColors implements Colors {
   examples = '\x1b[0;37m';      // White for example values
   sections = '\x1b[1;37m';      // White bold for section headers
   
-  /**
-   * Singleton instance
-   */
+  
   private static instance: DefaultColors;
   
-  /**
-   * Get singleton instance
-   */
+  
   static getInstance(): DefaultColors {
     if (!DefaultColors.instance) {
       DefaultColors.instance = new DefaultColors();

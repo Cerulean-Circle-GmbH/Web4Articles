@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 **📎 Previous Commit:** 218d20a - Web4Requirement Scenario-to-MD Enhancement: Complete bidirectional conversion with CLI  
 **🔗 Previous PDCA:** [Web4Requirement Scenario-to-MD Implementation](../developer/2025-08-22-UTC-0356-web4requirement-scenario-md-view-implementation.md)
 

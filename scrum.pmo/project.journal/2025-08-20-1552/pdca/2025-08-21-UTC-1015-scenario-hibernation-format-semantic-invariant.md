@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # PDCA: Scenario Hibernation Format Semantic Invariant - Universal Data Persistence
 
 **📎 Previous Commit:** 24049bd (Overcoming Babylon: Semantic invariants in pervasive services defeat MDA format hell - universal interoperability through service contracts)  

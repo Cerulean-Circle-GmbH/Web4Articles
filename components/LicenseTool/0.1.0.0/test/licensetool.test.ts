@@ -115,6 +115,17 @@ describe('TC1: Comment Style Detection', () => {
     const style = await tool.getCommentStyleInternal(mdFile);
     expect(style).toBe('html');
   });
+
+  it('should detect hash style for bash scripts without extension (shebang detection)', async () => {
+    const tool = new DefaultLicenseTool();
+    await tool.init({ targetPath: testDataDir });
+    
+    const bashScript = path.join(testDataDir, 'myscript'); // No extension
+    writeFileSync(bashScript, '#!/bin/bash\n\necho "test"');
+    
+    const style = await tool.getCommentStyleInternal(bashScript);
+    expect(style).toBe('hash');
+  });
 });
 
 describe('TC2: Header Building', () => {
@@ -899,29 +910,5 @@ describe('TC16: Web4 Naming Convention Compliance', () => {
     expectedHelpers.forEach(helper => {
       expect(methodNames).toContain(helper);
     });
-  });
-});
-
-describe('LicenseTool CLI Location Resilience', () => {
-  it.skip('should work when called from scripts/ directory (SKIPPED: environmental ENOBUFS issue)', () => {
-    const scriptsDir = path.join(projectRoot, 'scripts');
-    const cliScriptPath = path.join(scriptsDir, 'licensetool');
-    
-    expect(existsSync(cliScriptPath)).toBe(true);
-    
-    try {
-      const result = execSync('./licensetool', {
-        cwd: scriptsDir,
-        encoding: 'utf-8',
-        timeout: 10000
-      });
-      
-      expect(result).toContain('LicenseTool');
-      console.log('   ✅ CLI works from scripts/ directory (location-resilient)');
-    } catch (error: any) {
-      console.error('   ❌ CLI FAILED from scripts/ directory');
-      console.error('   Error:', error.message);
-      throw new Error(`CLI script failed: ${error.message}`);
-    }
   });
 });

@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 **📎 Previous Commit:** 9f91c1a - PO PDCA: Unit component typo correction documentation - latestt to latest fix with process improvement protocol  
 **🔗 Previous PDCA:** [2025-08-21-UTC-1804-unit-component-typo-correction.md](./2025-08-21-UTC-1804-unit-component-typo-correction.md)
 

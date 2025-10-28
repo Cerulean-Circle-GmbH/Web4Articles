@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # PDCA: TLA - The Last Architecture & The Last Acronym - Web4x Reference Implementation
 
 **📎 Previous Commit:** 6f5ee99 (THE LAST ARCHITECTURE: MDA sphere formation through semantic consolidation - Web3 Internet of Services realized with format hell contained at equator)  

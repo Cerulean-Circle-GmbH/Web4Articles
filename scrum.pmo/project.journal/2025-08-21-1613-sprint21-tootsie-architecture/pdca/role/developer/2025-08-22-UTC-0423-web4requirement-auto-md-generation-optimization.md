@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 **📎 Previous Commit:** 5f0b3d1 - PO PDCA: User Prompts to Requirements Conversion - Complete traceability established  
 **🔗 Previous PDCA:** [User Prompts to Requirements Conversion](../po/2025-08-22-UTC-0400-user-prompts-to-requirements-conversion.md)
 

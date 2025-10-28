@@ -466,6 +466,22 @@ export class DefaultLicenseTool implements LicenseTool {
       return 'html';
     }
     
+    // Content-based detection for files without extension
+    if (!ext) {
+      try {
+        const fs = await import('fs/promises');
+        const content = await fs.readFile(filePath, 'utf-8');
+        const firstLine = content.split('\n')[0].trim();
+        
+        // Detect shebang for bash/python/ruby/perl scripts
+        if (firstLine.startsWith('#!')) {
+          return 'hash';
+        }
+      } catch (err) {
+        // If can't read file, fall through to default
+      }
+    }
+    
     return 'block'; // Default
   }
 
