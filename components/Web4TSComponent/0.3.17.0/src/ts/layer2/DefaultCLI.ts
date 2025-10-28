@@ -24,7 +24,7 @@ import { join, basename } from "path";
 import * as ts from "typescript";
 import { webcrypto as crypto } from "crypto";
 
-export abstract class DefaultCLI implements CLI {
+export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   protected model: CLIModel;
   protected componentClass: any;
   protected componentName: string = "";
@@ -51,6 +51,66 @@ export abstract class DefaultCLI implements CLI {
       ...this.model,
       ...scenario.model,
     };
+    return this;
+  }
+
+  /**
+   * Convert CLI state to scenario for persistence
+   * Implements Component interface requirement
+   * @returns Scenario representation of current CLI state
+   */
+  async toScenario(name?: string): Promise<Scenario<CLIModel>> {
+    // Generate basic owner data (CLI doesn't have User service dependency)
+    const ownerData = JSON.stringify({
+      user: process.env.USER || 'system',
+      hostname: process.env.HOSTNAME || 'localhost',
+      uuid: this.model.uuid,
+      timestamp: new Date().toISOString(),
+      component: this.componentName || 'CLI',
+      version: this.componentVersion || '0.0.0'
+    });
+
+    return {
+      ior: {
+        uuid: this.model.uuid,
+        component: this.componentName || 'CLI',
+        version: this.componentVersion || '0.0.0'
+      },
+      owner: ownerData,
+      model: this.model
+    };
+  }
+
+  /**
+   * Test method - delegates to component instance
+   * Required by Component interface
+   */
+  async test(scope?: string, ...references: string[]): Promise<this> {
+    if (this.componentInstance) {
+      await this.componentInstance.test(scope, ...references);
+    }
+    return this;
+  }
+
+  /**
+   * Build method - delegates to component instance
+   * Required by Component interface
+   */
+  async build(): Promise<this> {
+    if (this.componentInstance) {
+      await this.componentInstance.build();
+    }
+    return this;
+  }
+
+  /**
+   * Clean method - delegates to component instance
+   * Required by Component interface
+   */
+  async clean(): Promise<this> {
+    if (this.componentInstance) {
+      await this.componentInstance.clean();
+    }
     return this;
   }
 

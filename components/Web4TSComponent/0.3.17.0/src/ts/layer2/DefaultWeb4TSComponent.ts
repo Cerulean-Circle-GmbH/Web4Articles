@@ -86,51 +86,12 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   /**
    * Get default completion Scenario for bash completion
    * Bash calls this first to get complete CLIModel structure with owner data
-   * Uses User service when available, falls back to manual generation
+   * DRY: Uses toScenario() to generate proper scenario with User service
    * @cliHide
    */
   async getCompletionScenario(): Promise<void> {
-    const componentVersion = this.model.version;
-    const componentName = this.model.component;
-    
-    // Generate owner data using User service (optional, warns if unavailable)
-    let ownerData: string;
-    try {
-      // Try to use User service if available (NOT a build dependency)
-      const user = await this.getUser();
-      ownerData = await user.generateOwnerData({
-        user: process.env.USER || 'system',
-        hostname: process.env.HOSTNAME || 'localhost',
-        uuid: this.model.uuid
-      });
-    } catch (error) {
-      // Fallback: Manual owner generation if User service unavailable
-      console.warn('⚠️  User service unavailable, using manual owner generation');
-      ownerData = JSON.stringify({
-        user: process.env.USER || 'system',
-        hostname: process.env.HOSTNAME || 'localhost',
-        uuid: this.model.uuid,
-        timestamp: new Date().toISOString(),
-        component: componentName,
-        version: componentVersion
-      });
-    }
-    
-    // Create default scenario structure (minimal for now - full CLIModel will be added later)
-    const scenario = {
-      ior: {
-        uuid: this.model.uuid,
-        component: componentName,
-        version: componentVersion
-      },
-      owner: ownerData,
-      model: {
-        uuid: this.model.uuid,
-        name: `${componentName}-cli-completion`,
-        origin: "bash-completion",
-        definition: "CLI completion context"
-      }
-    };
+    // Use toScenario() to get proper scenario with User service (DRY principle)
+    const scenario = await this.toScenario();
     
     // Output as JSON for bash
     console.log(JSON.stringify(scenario, null, 2));
@@ -280,13 +241,13 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @returns this component instance for method chaining
    * @cliHide
    */
-  transform(data?: unknown): this {
-    // Transform component data if needed
-    if (data) {
-      // Note: updatedAt removed - belongs in ChangeEvent tracking
-    }
-    return this;
-  }
+  // transform(data?: unknown): this {
+  //   // Transform component data if needed
+  //   if (data) {
+  //     // Note: updatedAt removed - belongs in ChangeEvent tracking
+  //   }
+  //   return this;
+  // }
 
   /**
    * Validate component configuration (Web4 lifecycle method)
@@ -308,11 +269,23 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   /**
    * Convert component to scenario (Web4 pattern)
    * Essential for Web4 compliance and hibernation/restoration
+   * Uses User service for proper owner data generation with fallback
    * @cliHide
    */
   async toScenario(name?: string): Promise<Scenario<Web4TSComponentModel>> {
-    // Version is in the model (single source of truth)
-      const ownerData = JSON.stringify({
+    // Generate owner data using User service (optional, with fallback)
+    let ownerData: string;
+    try {
+      // Try to use User service if available (NOT a build dependency)
+      const user = await this.getUser();
+      ownerData = await user.generateOwnerData({
+        user: process.env.USER || 'system',
+        hostname: process.env.HOSTNAME || 'localhost',
+        uuid: this.model.uuid
+      });
+    } catch (error) {
+      // Fallback: Manual owner generation if User service unavailable
+      ownerData = JSON.stringify({
         user: process.env.USER || 'system',
         hostname: process.env.HOSTNAME || 'localhost',
         uuid: this.model.uuid,
@@ -320,8 +293,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         component: this.model.component,
         version: this.model.version
       });
+    }
 
-      return {
+    return {
       ior: {
         uuid: this.model.uuid,
         component: this.model.component,
