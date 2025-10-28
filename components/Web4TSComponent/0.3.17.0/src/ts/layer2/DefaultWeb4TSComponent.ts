@@ -2934,23 +2934,24 @@ Standards:
    * @cliExample web4tscomponent on Unit 0.3.0.5 start
    */
   async start(): Promise<this> {
-    const context = this.getComponentContext();
-    if (!context) {
+    // ✅ RADICAL OOP: Context required for start
+    if (!this.model.context) {
       throw new Error('No component context loaded. Use "on <component> <version>" first.');
     }
 
-    const componentPath = this.resolveComponentPath(context.component, context.version);
+    const target = this.model.context;
+    const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
     
-    console.log(`🚀 Starting ${context.component} ${context.version}...`);
+    console.log(`🚀 Starting ${target.model.component} ${target.model.version.toString()}...`);
     
     try {
       execSync('npm start', { 
         cwd: componentPath, 
         stdio: 'inherit',
       });
-      console.log(`✅ Started ${context.component} ${context.version}`);
+      console.log(`✅ Started ${target.model.component} ${target.model.version.toString()}`);
     } catch (error) {
-      console.error(`❌ Failed to start ${context.component} ${context.version}`);
+      console.error(`❌ Failed to start ${target.model.component} ${target.model.version.toString()}`);
       throw error;
     }
 
