@@ -1675,11 +1675,6 @@ Standards:
     // ✅ Store INSTANCE in context (not data!)
     this.model.context = targetComponent;
     
-    // ❌ OLD: Store primitives (deprecated - will be removed)
-    (this.model as any).contextComponent = component;
-    (this.model as any).contextVersion = actualVersion;
-    (this.model as any).contextPath = componentPath;
-    
     if (actualVersion !== version) {
       console.log(`✅ Component context loaded: ${component} ${version} → ${actualVersion}`);
     } else {
@@ -1775,9 +1770,11 @@ Standards:
     console.log(`✅ ${componentName} ${nextVersion} created successfully`);
     console.log(`   Location: components/${componentName}/${nextVersion}`);
     
-    // Update context to new version for further chaining
-    (this.model as any).contextVersion = nextVersion;
-    (this.model as any).contextPath = `components/${componentName}/${nextVersion}`;
+    // ✅ RADICAL OOP: Update context INSTANCE for further chaining
+    if (this.model.context) {
+      this.model.context.model.version = SemanticVersion.fromString(nextVersion);
+      this.model.context.model.origin = `components/${componentName}/${nextVersion}`;
+    }
     
     return this;
   }
@@ -1794,22 +1791,16 @@ Standards:
    * @cliValues showHidden false true
    */
   async tree(depth: string = '4', showHidden: string = 'false'): Promise<this> {
-    const context = this.getComponentContext();
+    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
+    const target = this.model.context || this;
     const maxDepth = parseInt(depth, 10) || 4;
     const includeHidden = showHidden.toLowerCase() === 'true';
     
-    if (context) {
-      // WITH context: Show target component's tree
-      console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${context.component} ${context.version}:${this.colors.reset}`);
-      console.log(`${this.colors.dim}${context.path}${this.colors.reset}`);
-      await this.displayTreeStructure(context.path, '', maxDepth, 0, includeHidden);
-    } else {
-      // WITHOUT context: Use THIS component's identity (location-resilient!)
-      const componentPath = this.resolveComponentPath(this.model.component, this.model.version.toString());
-      console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${this.model.component} ${this.model.version.toString()}:${this.colors.reset}`);
-      console.log(`${this.colors.dim}${componentPath}${this.colors.reset}`);
-      await this.displayTreeStructure(componentPath, '', maxDepth, 0, includeHidden);
-    }
+    // Target has ALL data in ITS model
+    const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
+    console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${target.model.component} ${target.model.version.toString()}:${this.colors.reset}`);
+    console.log(`${this.colors.dim}${componentPath}${this.colors.reset}`);
+    await this.displayTreeStructure(componentPath, '', maxDepth, 0, includeHidden);
     
     return this;
   }
@@ -1880,8 +1871,9 @@ Standards:
    * @cliExample web4tscomponent on Unit 0.3.2.0 links
    */
   async links(action: string = ''): Promise<this> {
-    const context = this.getComponentContext();
-    const componentName = context?.component || this.model.component;
+    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
+    const target = this.model.context || this;
+    const componentName = target.model.component;
     
     // If 'fix' action requested, run verifyAndFix first
     if (action === 'fix') {
@@ -2234,12 +2226,13 @@ Standards:
    * @cliHide
    */
   async testCompletion(): Promise<this> {
-    const context = this.getComponentContext();
-    const componentRoot = context ? context.path : this.model.projectRoot;
+    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
+    const target = this.model.context || this;
+    const componentRoot = target.model.origin || this.model.projectRoot;
     const testSuitePath = path.join(componentRoot, 'test/sh/test-completion-suite.sh');
     
     console.log(`🧪 Running TAB completion test suite...`);
-    console.log(`📂 Component: ${context?.component || this.model.component} ${context?.version || this.model.version}`);
+    console.log(`📂 Component: ${target.model.component} ${target.model.version.toString()}`);
     console.log(`📂 Test Suite: ${testSuitePath}`);
     console.log();
     
@@ -2345,7 +2338,8 @@ Standards:
    * @cliExample web4tscomponent on Unit 0.3.0.5 releaseTest nextMajor
    */
   async releaseTest(versionPromotion: string = 'nextPatch'): Promise<this> {
-    const context = this.getComponentContext();
+    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
+    const target = this.model.context || this;
     const validPromotions = ['nextPatch', 'nextMinor', 'nextMajor'];
     
     if (!validPromotions.includes(versionPromotion)) {
@@ -2361,8 +2355,8 @@ Standards:
     console.log(`   🚀 On 100% success: Promotes using ${versionPromotion}`);
     console.log(`   🚧 ALWAYS work on dev version after test success\n`);
     
-    if (!context) {
-      // No context - run this component's own tests
+    if (this.model.context) {
+      // WITH context: Test target component
       const insideTestEnvironment = !!(process.env.VITEST || process.env.VITEST_WORKER_ID);
       
       if (insideTestEnvironment) {
@@ -3651,10 +3645,8 @@ Standards:
     await this.cleanupAllComponentScriptSymlinks(targetComponent, versions);
 
     // Clear context if we just removed the loaded component
-    const context = this.getComponentContext();
-    if (context && context.component === targetComponent) {
-      (this.model as any).contextComponent = null;
-      (this.model as any).contextVersion = null;
+    if (this.model.context && this.model.context.model.component === targetComponent) {
+      this.model.context = undefined;
       console.log(`🔧 Cleared component context`);
     }
 
