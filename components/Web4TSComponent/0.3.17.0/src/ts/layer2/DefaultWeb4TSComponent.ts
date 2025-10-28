@@ -19,7 +19,7 @@ import { User } from '../layer3/User.interface.js';
 import { OwnerParams } from '../layer3/OwnerParams.interface.js';
 
 export class DefaultWeb4TSComponent implements Web4TSComponent {
-  private model!: Web4TSComponentModel; // Definite assignment - initialized in init()
+  public model!: Web4TSComponentModel; // Definite assignment - initialized in init() - public for CLI/external access
   private colors: Colors = DefaultColors.getInstance();
   private user?: User; // Optional User service (lazy initialization)
 
@@ -2195,6 +2195,7 @@ Standards:
         execSync('npx vitest run --bail=false', { 
           cwd: componentPath,
           stdio: 'inherit',
+          encoding: 'utf-8',  // ✅ CRITICAL: Forces proper stream handling, prevents EPIPE hang
         });
         console.log(`✅ Tests completed successfully`);
       } catch (error) {
@@ -2214,6 +2215,7 @@ Standards:
       execSync('npm test', { 
         cwd: componentPath, 
         stdio: 'inherit',
+        encoding: 'utf-8',  // ✅ CRITICAL: Forces proper stream handling, prevents EPIPE hang
       });
       
       console.log(`✅ Tests completed for ${context.component} ${context.version}`);

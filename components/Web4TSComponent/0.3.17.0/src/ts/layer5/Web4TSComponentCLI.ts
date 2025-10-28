@@ -16,7 +16,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Empty constructor (Web4 radical OOP pattern)
-   * @pdca 2025-10-28-UTC-0934.pdca.md:597 - Phase 1: Init Pattern
+   * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Remove initWithComponentClass
    */
   constructor() {
     super(); // Call empty parent constructor
@@ -25,12 +25,11 @@ export class Web4TSComponentCLI extends DefaultCLI {
     // Initialize CLI
     this.init();
     
-    // Get version from a temporary component instance
+    // Get version and store component in model
     const tempComponent = new DefaultWeb4TSComponent().init();
-    const version = (tempComponent as any).model.version;
+    this.model.component = tempComponent; // ✅ Store instance in model
     
-    // Use deprecated method for now (will be removed in Phase 2 completion)
-    this.initWithComponentClass(DefaultWeb4TSComponent, 'Web4TSComponent', version);
+    // Discover methods from component
     this.discoverMethods();
   }
 

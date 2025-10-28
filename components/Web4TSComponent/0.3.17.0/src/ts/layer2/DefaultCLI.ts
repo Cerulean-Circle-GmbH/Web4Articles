@@ -28,26 +28,6 @@ import { webcrypto as crypto } from "crypto";
 
 export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   protected model!: CLIModel; // Definite assignment - initialized in init()
-  /**
-   * @deprecated Use this.model.component instead
-   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
-   */
-  protected componentClass: any;
-  /**
-   * @deprecated Use this.model.component.model.component instead
-   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
-   */
-  protected componentName: string = "";
-  /**
-   * @deprecated Use this.model.component.model.version instead
-   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
-   */
-  protected componentVersion: string = "";
-  /**
-   * @deprecated Use this.model.component instead
-   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
-   */
-  protected componentInstance: Component | null = null;
   protected methodSignatures: Map<string, MethodSignature> = new Map();
   protected colors: Colors = DefaultColors.getInstance();
 
@@ -72,14 +52,42 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
   /**
    * Initialize CLI with Scenario (Web4 radical OOP pattern)
-   * @pdca 2025-10-28-UTC-0934.pdca.md:599 - Phase 1: Init Pattern
-   * @pdca 2025-10-28-UTC-0934.pdca.md:1153 - Phase 2: CLI Model
+   * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 1: Inline createEmptyModel
+   * @test test/ts/layer2/PhaseCompletion.test.ts:createEmptyModelDeleted
    * @test test/ts/layer2/DefaultCLI.test.ts:initWithEmptyScenario
    * @test test/ts/layer2/DefaultCLI.test.ts:initWithProvidedScenario
    */
   init(scenario?: Scenario<CLIModel>): this {
     if (!this.model) {
-      this.model = this.createEmptyModel();
+      // ✅ Inlined createEmptyModel() logic directly
+      this.model = {
+        uuid: crypto.randomUUID(),
+        name: "cli",
+        origin: "system",
+        definition: "CLI model",
+        componentClass: null,
+        componentName: "",
+        componentVersion: "",
+        componentInstance: null,
+        // Completion context - initialized empty
+        completionCliName: "",
+        completionCompWords: [],
+        completionCompCword: 0,
+        // Derived fields
+        completionCurrentWord: "",
+        completionPreviousWord: "",
+        completionCommand: null,
+        completionParameters: [],
+        completionParameterIndex: 0,
+        // "on" context
+        completionOnComponent: null,
+        completionOnVersion: null,
+        // Chaining
+        completionChainedCommands: [],
+        // State flags
+        completionIsCompletingMethod: false,
+        completionIsCompletingParameter: false,
+      };
     }
     
     if (scenario?.model) {
@@ -92,24 +100,43 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   /**
    * Convert CLI state to scenario for persistence
    * Implements Component interface requirement
+   * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Use User service for owner data
    * @returns Scenario representation of current CLI state
    */
   async toScenario(name?: string): Promise<Scenario<CLIModel>> {
-    // Generate basic owner data (CLI doesn't have User service dependency)
-    const ownerData = JSON.stringify({
-      user: process.env.USER || 'system',
-      hostname: process.env.HOSTNAME || 'localhost',
-      uuid: this.model.uuid,
-      timestamp: new Date().toISOString(),
-      component: this.componentName || 'CLI',
-      version: this.componentVersion || '0.0.0'
-    });
+    const componentName = this.model.component?.model.component || 'CLI';
+    const componentVersion = this.model.component?.model.version?.toString() || '0.0.0.0';
+    
+    // ✅ Generate owner JSON (use User service if available)
+    let ownerJson: string;
+    
+    if (this.model.user && typeof this.model.user.generateOwnerData === 'function') {
+      // Use User service to generate owner data
+      ownerJson = await this.model.user.generateOwnerData({
+        user: process.env.USER || 'system',
+        hostname: process.env.HOSTNAME || 'localhost',
+        uuid: this.model.uuid
+      });
+    } else {
+      // Fallback: Generate basic owner data
+      ownerJson = JSON.stringify({
+        user: process.env.USER || 'system',
+        hostname: process.env.HOSTNAME || 'localhost',
+        uuid: this.model.uuid,
+        timestamp: new Date().toISOString(),
+        component: componentName,
+        version: componentVersion
+      });
+    }
+    
+    // ✅ Base64 encode once (DRY - mock-up for encryption)
+    const ownerData = Buffer.from(ownerJson).toString('base64');
 
     return {
       ior: {
         uuid: this.model.uuid,
-        component: this.componentName || 'CLI',
-        version: this.componentVersion || '0.0.0'
+        component: componentName,
+        version: componentVersion
       },
       owner: ownerData,
       model: this.model
@@ -117,62 +144,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   }
 
   /**
-   * Create empty CLIModel with default values
-   * Web4 pattern: Initialize model structure in constructor
-   * @cliHide
-   */
-  protected createEmptyModel(): CLIModel {
-    return {
-      uuid: crypto.randomUUID(),
-      name: "cli",
-      origin: "system",
-      definition: "CLI model",
-      componentClass: null,
-      componentName: "",
-      componentVersion: "",
-      componentInstance: null,
-      // Completion context - initialized empty
-      completionCliName: "",
-      completionCompWords: [],
-      completionCompCword: 0,
-      // Derived fields
-      completionCurrentWord: "",
-      completionPreviousWord: "",
-      completionCommand: null,
-      completionParameters: [],
-      completionParameterIndex: 0,
-      // "on" context
-      completionOnComponent: null,
-      completionOnVersion: null,
-      // Chaining
-      completionChainedCommands: [],
-      // State flags
-      completionIsCompletingMethod: false,
-      completionIsCompletingParameter: false,
-    };
-  }
-
-  /**
-   * Initialize CLI with component class reference (NOT instance)
-   * @deprecated Use loadComponent() instead
-   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
-   */
-  initWithComponentClass(
-    componentClass: any,
-    name: string,
-    version: string
-  ): this {
-    this.componentClass = componentClass;
-    this.componentName = name;
-    this.componentVersion = version;
-    this.discoverMethods(); // TSRanger 2.2 pattern
-    return this;
-  }
-
-  /**
    * Load component context (replaces initWithComponentClass)
    * Creates a Web4TSComponent instance and stores it in model
-   * @pdca 2025-10-28-UTC-0934.pdca.md:1198 - Phase 2: Component loading
+   * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Deleted initWithComponentClass
    * @test test/ts/layer2/DefaultCLI.test.ts:loadComponentStoresInstance
    */
   protected async loadComponent(name: string, version: string): Promise<this> {
@@ -190,7 +164,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
   /**
    * Get Web4TSComponent delegate (zero reconstruction!)
-   * @pdca 2025-10-28-UTC-0934.pdca.md:1210 - Phase 2: Delegation
+   * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Delegation
    * @test test/ts/layer2/DefaultCLI.test.ts:getWeb4ComponentReturnsInstance
    */
   protected getWeb4Component(): DefaultWeb4TSComponent {
@@ -198,6 +172,33 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       throw new Error('Component not loaded. Call loadComponent() first.');
     }
     return this.model.component;
+  }
+
+  /**
+   * Get component class from instance (for TSCompletion queries)
+   * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Helper method
+   */
+  protected getComponentClass(): any {
+    if (!this.model.component) {
+      return null;
+    }
+    return Object.getPrototypeOf(this.model.component).constructor;
+  }
+
+  /**
+   * Get component name from model
+   * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Helper method
+   */
+  protected getComponentName(): string {
+    return this.model.component?.model.component || 'CLI';
+  }
+
+  /**
+   * Get component version from model
+   * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Helper method
+   */
+  protected getComponentVersion(): string {
+    return this.model.component?.model.version?.toString() || '0.0.0.0';
   }
 
   /**
@@ -376,8 +377,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    */
   protected getWeb4TS(): any {
     // If componentInstance has web4ts property (generated components)
-    if (this.componentInstance && (this.componentInstance as any).web4ts) {
-      return (this.componentInstance as any).web4ts;
+    if (this.model.component && (this.model.component as any).web4ts) {
+      return (this.model.component as any).web4ts;
     }
 
     // If component has getOrCreateTSComponent method (Web4TSComponent itself)
@@ -448,9 +449,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       currentPrototype = Object.getPrototypeOf(currentPrototype);
     }
 
-    // Also discover component methods if componentClass is set
-    if (this.componentClass) {
-      const prototype = this.componentClass.prototype;
+    // Also discover component methods if component instance is set
+    if (this.model.component) {
+      const prototype = Object.getPrototypeOf(this.model.component);
       const methodNames = Object.getOwnPropertyNames(prototype)
         .filter((name) => typeof prototype[name] === "function")
         .filter((name) => !name.startsWith("_") && name !== "constructor")
@@ -505,12 +506,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
       if (!callback) {
         callback = TSCompletion.getParameterCallback(
-          this.componentClass.name,
+          this.getComponentClass().name,
           command,
           paramIndex
         );
         console.error(
-          `DEBUG: ${this.componentClass.name} callback="${callback}"`
+          `DEBUG: ${this.getComponentClass()?.name} callback="${callback}"`
         );
       }
 
@@ -591,10 +592,10 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Analyze component methods for dynamic documentation generation using class reference
    */
   protected analyzeComponentMethods(): MethodInfo[] {
-    if (!this.componentClass) return [];
+    if (!this.getComponentClass()) return [];
 
     const methods: MethodInfo[] = [];
-    const prototype = this.componentClass.prototype;
+    const prototype = this.getComponentClass()?.prototype;
     const methodNames = Object.getOwnPropertyNames(prototype);
 
     // Whitelist for internal CLI methods that start with __ (hidden but executable)
@@ -607,7 +608,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
       // ✅ ZERO CONFIG: Check @cliHide annotation with enhanced processing
       const cliAnnotations = TSCompletion.extractCliAnnotations(
-        this.componentClass.name,
+        this.getComponentClass().name,
         name
       );
       if (cliAnnotations.hide) {
@@ -761,7 +762,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     try {
       // Get TypeScript files for JSDoc extraction
       const files = this.getTypeScriptFiles();
-      const classNameToFind = componentClassName || this.componentClass.name;
+      const classNameToFind = componentClassName || this.getComponentClass()?.name;
 
       for (const file of files) {
         const src = readFileSync(file, "utf8");
@@ -847,16 +848,16 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Get component instance only when method is actually called (lazy instantiation)
    */
   protected getComponentInstance(): any {
-    if (!this.componentInstance && this.componentClass) {
-      this.componentInstance = new this.componentClass();
+    if (!this.model.component && this.getComponentClass()) {
+      this.model.component = new (this.getComponentClass())();
       // Initialize with empty scenario if component supports it
-      const instance = this.componentInstance; // TypeScript type narrowing helper
+      const instance = this.model.component; // TypeScript type narrowing helper
       if (instance && typeof instance.init === "function") {
         const emptyScenario = this.createEmptyScenario();
         instance.init(emptyScenario);
       }
     }
-    return this.componentInstance;
+    return this.model.component;
   }
 
   /**
@@ -866,8 +867,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     return {
       ior: {
         uuid: crypto.randomUUID(),
-        component: this.componentName,
-        version: this.componentVersion,
+        component: this.getComponentName(),
+        version: this.getComponentVersion(),
       },
       owner: "",
       model: {
@@ -888,7 +889,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       // Try to extract parameters using enhanced TSCompletion static methods
       if (typeof TSCompletion.getEnhancedMethodParameters === "function") {
         const paramInfo = TSCompletion.getEnhancedMethodParameters(
-          this.componentClass.name,
+          this.getComponentClass().name,
           methodName
         );
 
@@ -933,7 +934,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Fallback parameter extraction using reflection
    */
   private extractParameterInfoFallback(methodName: string): any[] {
-    const method = this.componentClass.prototype[methodName];
+    const method = this.getComponentClass()?.prototype[methodName];
     if (!method) return [];
 
     const paramCount = method.length;
@@ -998,7 +999,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // ✅ ZERO MAPPING: Extract directly from TypeScript AST via TSCompletion
     try {
       const paramInfo = TSCompletion.getEnhancedMethodParameters(
-        this.componentClass.name,
+        this.getComponentClass().name,
         methodName
       );
       if (paramInfo && paramInfo[index]) {
@@ -1028,7 +1029,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // ✅ ZERO MAPPING: Extract directly from TSDoc via TSCompletion
     try {
       const paramInfo = TSCompletion.getEnhancedMethodParameters(
-        this.componentClass.name,
+        this.getComponentClass().name,
         methodName
       );
       const param = paramInfo.find((p: any) => p.name === paramName);
@@ -1569,7 +1570,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     try {
       // Quick extraction: search for @cliValues in source files directly
       const values = TSCompletion.extractCliValues(
-        this.componentClass.name,
+        this.getComponentClass().name,
         "", // Empty method name = search all methods
         paramName
       );
@@ -1743,20 +1744,6 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   }
 
   /**
-   * Get component name for documentation
-   */
-  private getComponentName(): string {
-    return this.componentName || "Unknown";
-  }
-
-  /**
-   * Get component version for documentation
-   */
-  private getComponentVersion(): string {
-    return this.componentVersion || "unknown";
-  }
-
-  /**
    * Minimal parameter completion for 'action' parameter
    * First iteration: Static list, no dynamic logic
    *
@@ -1782,8 +1769,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    */
   async getCompletionScenario(): Promise<void> {
     // Use this.model which already has componentName, componentVersion from constructor
-    const componentName = this.componentName;
-    const componentVersion = this.componentVersion;
+    const componentName = this.getComponentName();
+    const componentVersion = this.getComponentVersion();
 
     // Get owner data (simplified - no User dependency for now)
     const ownerData = JSON.stringify({
@@ -2179,12 +2166,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     try {
       // CRITICAL: Check @cliHide FIRST using TSCompletion (source analysis)
       // Method.toString() doesn't have TSDoc comments (stripped in compilation)
-      if (TSCompletion.isMethodHidden(this.componentClass.name, methodName)) {
+      if (TSCompletion.isMethodHidden(this.getComponentClass()?.name || 'CLI', methodName)) {
         return false;
       }
 
       // Check if method exists on component class
-      const method = this.componentClass?.prototype?.[methodName];
+      const method = this.getComponentClass()?.prototype?.[methodName];
       if (!method) return false;
 
       // Check method source for @cli annotations
@@ -2202,7 +2189,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       // Fallback: check if TSCompletion found parameters
       // (TSCompletion only extracts parameters from methods with proper TSDoc)
       const paramInfo = TSCompletion.getEnhancedMethodParameters(
-        this.componentClass.name,
+        this.getComponentClass().name,
         methodName
       );
       if (paramInfo.length > 0) {
@@ -2392,7 +2379,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
         // ✅ SHOW DOCUMENTATION: Display TSDoc for discovered method
         // Get method documentation from TSCompletion
-        const componentClassName = this.componentClass.name;
+        const componentClassName = this.getComponentClass()?.name;
         const fullMethodDoc = TSCompletion.getMethodDoc(
           componentClassName,
           methodName
