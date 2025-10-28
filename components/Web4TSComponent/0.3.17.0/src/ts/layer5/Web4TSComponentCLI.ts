@@ -14,19 +14,23 @@ export class Web4TSComponentCLI extends DefaultCLI {
   private tsComponent: DefaultWeb4TSComponent | null;
   protected methodSignatures: Map<string, MethodSignature> = new Map();
 
+  /**
+   * Empty constructor (Web4 radical OOP pattern)
+   * @pdca 2025-10-28-UTC-0934.pdca.md:597 - Phase 1: Init Pattern
+   */
   constructor() {
-    super(); // Call DefaultCLI constructor
-    // Don't instantiate tsComponent for usage display - command-based instantiation only
+    super(); // Call empty parent constructor
     this.tsComponent = null;
+    
+    // Initialize CLI
+    this.init();
+    
     // Get version from a temporary component instance
-    /**
-     * @pdca 2025-10-28-UTC-0934.pdca.md:597 - Updated for init pattern
-     */
     const tempComponent = new DefaultWeb4TSComponent().init();
-    const version = (tempComponent as any).model.version; // Access model directly (synchronous)
-    // Initialize with component class reference (NOT instance) - no garbage creation
+    const version = (tempComponent as any).model.version;
+    
+    // Use deprecated method for now (will be removed in Phase 2 completion)
     this.initWithComponentClass(DefaultWeb4TSComponent, 'Web4TSComponent', version);
-    // Discover methods for chaining support
     this.discoverMethods();
   }
 
