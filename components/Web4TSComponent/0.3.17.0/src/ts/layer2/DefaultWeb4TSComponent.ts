@@ -1661,15 +1661,23 @@ Standards:
     // Use DRY helper to resolve actual version
     const actualVersion = this.resolveActualVersion(component, version);
     
-    // Set component context for chaining
-    this.model.name = component;
-    this.model.origin = componentPath;
-    this.model.definition = `Component context: ${component} ${actualVersion}`;
-    // Note: updatedAt removed - belongs in ChangeEvent tracking
+    // ✅ RADICAL OOP: Create component INSTANCE for context (not primitives!)
+    // @pdca 2025-10-28-UTC-0934.pdca.md:3057 - Phase 4: Context INSTANCE
+    const targetComponent = new DefaultWeb4TSComponent().init();
     
-    // Store context for chained operations
+    // ✅ Store version as INSTANCE (has behavior!)
+    targetComponent.model.version = SemanticVersion.fromString(actualVersion);
+    targetComponent.model.component = component;
+    targetComponent.model.origin = componentPath;
+    targetComponent.model.projectRoot = componentPath;
+    targetComponent.model.targetDirectory = componentPath;
+    
+    // ✅ Store INSTANCE in context (not data!)
+    this.model.context = targetComponent;
+    
+    // ❌ OLD: Store primitives (deprecated - will be removed)
     (this.model as any).contextComponent = component;
-    (this.model as any).contextVersion = actualVersion;  // Store ACTUAL version, not symlink name
+    (this.model as any).contextVersion = actualVersion;
     (this.model as any).contextPath = componentPath;
     
     if (actualVersion !== version) {
