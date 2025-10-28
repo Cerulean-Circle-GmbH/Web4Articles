@@ -11,6 +11,8 @@ import { MethodInfo } from "../layer3/MethodInfo.interface.js";
 import { MethodSignature } from "../layer3/MethodSignature.interface.js";
 import { Component } from "../layer3/Component.interface.js";
 import { Colors } from "../layer3/Colors.interface.js";
+import { User } from "../layer3/User.interface.js";
+import { DefaultWeb4TSComponent } from "./DefaultWeb4TSComponent.js";
 import { TSCompletion } from "../layer4/TSCompletion.js";
 import { DefaultColors } from "../layer4/DefaultColors.js";
 import {
@@ -25,10 +27,26 @@ import * as ts from "typescript";
 import { webcrypto as crypto } from "crypto";
 
 export abstract class DefaultCLI implements CLI, Component<CLIModel> {
-  protected model: CLIModel;
+  protected model!: CLIModel; // Definite assignment - initialized in init()
+  /**
+   * @deprecated Use this.model.component instead
+   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
+   */
   protected componentClass: any;
+  /**
+   * @deprecated Use this.model.component.model.component instead
+   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
+   */
   protected componentName: string = "";
+  /**
+   * @deprecated Use this.model.component.model.version instead
+   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
+   */
   protected componentVersion: string = "";
+  /**
+   * @deprecated Use this.model.component instead
+   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
+   */
   protected componentInstance: Component | null = null;
   protected methodSignatures: Map<string, MethodSignature> = new Map();
   protected colors: Colors = DefaultColors.getInstance();
@@ -43,24 +61,31 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     await cli.execute(args);
   }
   
+  /**
+   * Empty constructor (Web4 radical OOP pattern)
+   * All initialization happens in init()
+   * @pdca 2025-10-28-UTC-0934.pdca.md:597 - Phase 1: Init Pattern
+   */
   constructor() {
-    // Initialize with empty model - Web4 Scenario pattern
-    this.model = this.createEmptyModel();
-    // NO component instantiation for usage display
+    // Empty - initialization moved to init()
   }
 
   /**
-   * Initialize CLI with Scenario
-   * Web4 pattern: Components ALWAYS init with Scenario
-   * Merges incoming scenario model with existing model
-   * Pattern: DefaultWeb4TSComponent.ts:183-188
+   * Initialize CLI with Scenario (Web4 radical OOP pattern)
+   * @pdca 2025-10-28-UTC-0934.pdca.md:599 - Phase 1: Init Pattern
+   * @pdca 2025-10-28-UTC-0934.pdca.md:1153 - Phase 2: CLI Model
+   * @test test/ts/layer2/DefaultCLI.test.ts:initWithEmptyScenario
+   * @test test/ts/layer2/DefaultCLI.test.ts:initWithProvidedScenario
    */
-  init(scenario: Scenario<CLIModel>): this {
-    // Merge incoming scenario model into existing model
-    this.model = {
-      ...this.model,
-      ...scenario.model,
-    };
+  init(scenario?: Scenario<CLIModel>): this {
+    if (!this.model) {
+      this.model = this.createEmptyModel();
+    }
+    
+    if (scenario?.model) {
+      this.model = { ...this.model, ...scenario.model };
+    }
+    
     return this;
   }
 
@@ -129,6 +154,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
   /**
    * Initialize CLI with component class reference (NOT instance)
+   * @deprecated Use loadComponent() instead
+   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
    */
   initWithComponentClass(
     componentClass: any,
@@ -140,6 +167,45 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     this.componentVersion = version;
     this.discoverMethods(); // TSRanger 2.2 pattern
     return this;
+  }
+
+  /**
+   * Load component context (replaces initWithComponentClass)
+   * Creates a Web4TSComponent instance and stores it in model
+   * @pdca 2025-10-28-UTC-0934.pdca.md:1198 - Phase 2: Component loading
+   * @test test/ts/layer2/DefaultCLI.test.ts:loadComponentStoresInstance
+   */
+  protected async loadComponent(name: string, version: string): Promise<this> {
+    // Create and initialize component instance
+    const component = new DefaultWeb4TSComponent().init();
+    
+    // Store INSTANCE, not data
+    this.model.component = component;
+    
+    // Discover methods from the instance
+    this.discoverMethods();
+    
+    return this;
+  }
+
+  /**
+   * Get Web4TSComponent delegate (zero reconstruction!)
+   * @pdca 2025-10-28-UTC-0934.pdca.md:1210 - Phase 2: Delegation
+   * @test test/ts/layer2/DefaultCLI.test.ts:getWeb4ComponentReturnsInstance
+   */
+  protected getWeb4Component(): DefaultWeb4TSComponent {
+    if (!this.model.component) {
+      throw new Error('Component not loaded. Call loadComponent() first.');
+    }
+    return this.model.component;
+  }
+
+  /**
+   * Get User service delegate
+   * @pdca 2025-10-28-UTC-0934.pdca.md:1210 - Phase 2: Delegation
+   */
+  protected getUser(): User | undefined {
+    return this.model.user;
   }
 
 

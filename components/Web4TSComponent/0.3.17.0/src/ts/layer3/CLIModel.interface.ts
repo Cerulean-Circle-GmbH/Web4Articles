@@ -8,15 +8,52 @@
  */
 
 import { Model } from './Model.interface.js';
+import { DefaultWeb4TSComponent } from '../layer2/DefaultWeb4TSComponent.js';
+import { User } from './User.interface.js';
 
 export interface CLIModel extends Model {
   // uuid, name, origin, definition inherited from Model
   
-  // Component context
-  componentClass: any | null;
-  componentName: string;
-  componentVersion: string;
-  componentInstance: any | null;
+  /**
+   * CLI Model with embedded component instances (radical OOP)
+   * @pdca 2025-10-28-UTC-0934.pdca.md:1153 - Phase 2: CLI Model
+   */
+  
+  /**
+   * Web4TSComponent instance (not componentClass reference!)
+   * @pdca 2025-10-28-UTC-0934.pdca.md:1153 - Stores INSTANCE
+   */
+  component?: DefaultWeb4TSComponent;
+  
+  /**
+   * User service instance
+   * @pdca 2025-10-28-UTC-0934.pdca.md:1153 - Stores INSTANCE
+   */
+  user?: User;
+  
+  /**
+   * @deprecated Use component.model.component instead
+   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
+   */
+  componentClass?: any | null;
+  
+  /**
+   * @deprecated Use component.model.component instead
+   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
+   */
+  componentName?: string;
+  
+  /**
+   * @deprecated Use component.model.version instead
+   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
+   */
+  componentVersion?: string;
+  
+  /**
+   * @deprecated Use component instead
+   * @pdca 2025-10-28-UTC-0934.pdca.md:1534 - DELETE in Phase 2
+   */
+  componentInstance?: any | null;
   
   // Completion context - FLAT in model (no CompletionContext relationship!)
   // From bash environment
@@ -42,4 +79,5 @@ export interface CLIModel extends Model {
   completionIsCompletingMethod: boolean;    // True if completing method name
   completionIsCompletingParameter: boolean; // True if completing parameter
 }
+
 
