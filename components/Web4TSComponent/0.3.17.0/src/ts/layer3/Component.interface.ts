@@ -1,11 +1,12 @@
 /**
  * Component.interface.ts - Base interface for ALL Web4 components
- * Every Web4 component must implement these fundamental methods
+ * Every Web4 component must implement these fundamental lifecycle methods
  * 
  * Purpose: Provides common contract for:
  * - Lifecycle (init, toScenario)
- * - Development (test, build, clean)
- * - Introspection (tree)
+ * 
+ * Note: Development methods (test, build, clean) are in Web4TSComponent interface
+ * as they're specific to TypeScript component development, not universal
  */
 
 import { Scenario } from './Scenario.interface.js';
@@ -13,7 +14,7 @@ import { Model } from './Model.interface.js';
 
 /**
  * Base interface for all Web4 components
- * Ensures every component has fundamental lifecycle and development methods
+ * Ensures every component has fundamental lifecycle methods
  */
 export interface Component<TModel extends Model = Model> {
   // ========================================
@@ -33,63 +34,6 @@ export interface Component<TModel extends Model = Model> {
    * @returns Scenario representation of current state
    */
   toScenario(name?: string): Promise<Scenario<TModel>>;
-  
-  // ========================================
-  // DEVELOPMENT METHODS (Delegated to Web4TSComponent)
-  // ========================================
-  
-  /**
-   * Run component tests (full suite or selective)
-   * Delegates to Web4TSComponent for hierarchical testing
-   * 
-   * @param scope Test scope: 'all' | 'file' | 'describe' | 'itCase'
-   * @param references Hierarchical test references (e.g., '1', '2a', '3b2')
-   * @returns this for method chaining
-   * 
-   * @example
-   * await component.test();              // Run all tests
-   * await component.test('file', '1');   // Run test file #1
-   * await component.test('itCase', '2a1'); // Run specific test case
-   */
-  test(scope?: string, ...references: string[]): Promise<this>;
-  
-  /**
-   * Build component (TypeScript compilation)
-   * Delegates to Web4TSComponent
-   * 
-   * @returns this for method chaining
-   */
-  build(): Promise<this>;
-  
-  /**
-   * Clean component build artifacts
-   * Delegates to Web4TSComponent
-   * 
-   * @returns this for method chaining
-   */
-  clean(): Promise<this>;
-  
-  // ========================================
-  // INTROSPECTION METHODS (Optional but useful)
-  // ========================================
-  
-  /**
-   * Show component directory tree structure
-   * Delegates to Web4TSComponent
-   * 
-   * @param depth Maximum depth to show (default: 4)
-   * @param showHidden Whether to show hidden files (default: false)
-   * @returns this for method chaining
-   */
-  tree?(depth?: string, showHidden?: string): Promise<this>;
-  
-  /**
-   * Show semantic version links (dev, test, prod, latest)
-   * Delegates to Web4TSComponent
-   * 
-   * @param action Optional action (e.g., 'repair' to fix broken links)
-   * @returns this for method chaining
-   */
-  links?(action?: string): Promise<this>;
 }
+
 

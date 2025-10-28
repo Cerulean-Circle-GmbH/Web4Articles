@@ -82,39 +82,6 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   }
 
   /**
-   * Test method - delegates to component instance
-   * Required by Component interface
-   */
-  async test(scope?: string, ...references: string[]): Promise<this> {
-    if (this.componentInstance) {
-      await this.componentInstance.test(scope, ...references);
-    }
-    return this;
-  }
-
-  /**
-   * Build method - delegates to component instance
-   * Required by Component interface
-   */
-  async build(): Promise<this> {
-    if (this.componentInstance) {
-      await this.componentInstance.build();
-    }
-    return this;
-  }
-
-  /**
-   * Clean method - delegates to component instance
-   * Required by Component interface
-   */
-  async clean(): Promise<this> {
-    if (this.componentInstance) {
-      await this.componentInstance.clean();
-    }
-    return this;
-  }
-
-  /**
    * Create empty CLIModel with default values
    * Web4 pattern: Initialize model structure in constructor
    * @cliHide
