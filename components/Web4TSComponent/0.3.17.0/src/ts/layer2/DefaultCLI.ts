@@ -114,14 +114,22 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       // ✅ Owner data IS the entire User scenario serialized
       ownerJson = JSON.stringify(userScenario);
     } else {
-      // Fallback: Generate basic owner data without User service
+      // ✅ Fallback: Generate minimal User-like scenario without User service
       ownerJson = JSON.stringify({
-        user: process.env.USER || 'system',
-        hostname: process.env.HOSTNAME || 'localhost',
-        uuid: this.model.uuid,
-        timestamp: new Date().toISOString(),
-        component: componentName,
-        version: componentVersion
+        ior: {
+          uuid: this.model.uuid,
+          component: 'User',
+          version: '0.0.0.0',
+          timestamp: new Date().toISOString()
+        },
+        owner: '',  // No nested owner in fallback
+        model: {
+          user: process.env.USER || 'system',
+          hostname: process.env.HOSTNAME || 'localhost',
+          uuid: this.model.uuid,
+          component: componentName,
+          version: componentVersion
+        }
       });
     }
     

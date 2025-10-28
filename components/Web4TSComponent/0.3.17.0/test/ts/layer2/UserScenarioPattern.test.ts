@@ -76,20 +76,28 @@ describe('DefaultCLI - User Service Integration', () => {
     expect(generateOwnerDataSpy).not.toHaveBeenCalled();
   });
   
-  it('should work without User service (fallback)', async () => {
+  it('should work without User service (fallback scenario)', async () => {
     const cli = new DefaultCLI().init();
     cli.model.user = undefined;
     
     const scenario = await cli.toScenario();
     
-    // Should still generate valid scenario with fallback owner data
+    // Should still generate valid scenario with fallback User-like scenario
     expect(scenario).toBeDefined();
     expect(scenario.ior).toBeDefined();
     expect(scenario.owner).toBeDefined();
     
-    // Owner should be base64 encoded
+    // ✅ Owner should be base64 encoded scenario (not raw JSON)
     const decoded = Buffer.from(scenario.owner, 'base64').toString('utf-8');
-    expect(() => JSON.parse(decoded)).not.toThrow();
+    const ownerScenario = JSON.parse(decoded);
+    
+    // ✅ Fallback should be a valid scenario structure
+    expect(ownerScenario.ior).toBeDefined();
+    expect(ownerScenario.ior.component).toBe('User');
+    expect(ownerScenario.owner).toBeDefined();
+    expect(ownerScenario.model).toBeDefined();
+    expect(ownerScenario.model.user).toBeDefined();
+    expect(ownerScenario.model.hostname).toBeDefined();
   });
   
   it('should serialize entire User scenario as owner data', async () => {

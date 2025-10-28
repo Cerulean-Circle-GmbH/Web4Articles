@@ -328,14 +328,22 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       
       ownerData = Buffer.from(ownerJson).toString('base64');
     } catch (error) {
-      // Fallback: Manual owner generation if User service unavailable
+      // ✅ Fallback: Generate minimal User-like scenario without User service
       const fallbackJson = JSON.stringify({
-        user: process.env.USER || 'system',
-        hostname: process.env.HOSTNAME || 'localhost',
-        uuid: this.model.uuid,
-        timestamp: new Date().toISOString(),
-        component: this.model.component,
-        version: this.model.version
+        ior: {
+          uuid: this.model.uuid,
+          component: 'User',
+          version: '0.0.0.0',
+          timestamp: new Date().toISOString()
+        },
+        owner: '',  // No nested owner in fallback
+        model: {
+          user: process.env.USER || 'system',
+          hostname: process.env.HOSTNAME || 'localhost',
+          uuid: this.model.uuid,
+          component: this.model.component,
+          version: this.model.version.toString()
+        }
       });
       ownerData = Buffer.from(fallbackJson).toString('base64');
     }
