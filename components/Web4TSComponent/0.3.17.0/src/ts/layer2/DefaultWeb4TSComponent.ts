@@ -1722,24 +1722,14 @@ Standards:
    * @cliValues versionPromotion nextPatch nextMinor nextMajor nextBuild
    */
   async upgrade(versionPromotion: string = 'nextPatch'): Promise<this> {
-    const context = this.getComponentContext();
+    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
+    // @pdca 2025-10-28-UTC-0934.pdca.md:3090 - Phase 4: Instance pattern
+    const target = this.model.context || this;
     
-    // Determine component and version to upgrade
-    let componentName: string;
-    let currentVersion: string;
-    let componentPath: string;
-    
-    if (context) {
-      // WITH context: Upgrade target component
-      componentName = context.component;
-      currentVersion = context.version;
-      componentPath = context.path;
-    } else {
-      // WITHOUT context: Use THIS component's identity (location-resilient!)
-      componentName = this.model.component;
-      currentVersion = this.model.version.toString();  // ✅ Serialize to string
-      componentPath = this.resolveComponentPath(componentName, currentVersion);
-    }
+    // ✅ Component has ALL its data in ITS model
+    const componentName = target.model.component;
+    const currentVersion = target.model.version.toString();
+    const componentPath = this.resolveComponentPath(componentName, currentVersion);
     
     let nextVersion: string;
     
