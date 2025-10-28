@@ -3020,6 +3020,8 @@ Standards:
 
   /**
    * Execute test for specific file (by numeric reference)
+   * @pdca 2025-10-28-UTC-1950 - Fix for layered test structure
+   * @test test/ts/layer2/DefaultWeb4TSComponent.baseline.test.ts:testFile
    * @cliHide
    */
   private async testFile(
@@ -3048,14 +3050,15 @@ Standards:
       throw new Error(`Invalid file number`);
     }
     
-    console.log(`🧪 Running tests from: ${targetFile.name}`);
+    console.log(`🧪 Running tests from: ${targetFile.relativePath}`);
     
     // ✅ RADICAL OOP: Use target instance for component root
     const target = this.model.context || this;
     const componentRoot = this.resolveComponentPath(target.model.component, target.model.version.toString());
     
     try {
-      execSync(`npx vitest --run ${path.join('test', targetFile.name)}`, {
+      // ✅ FIX: Use relativePath which includes subdirectories (ts/layer2/file.test.ts)
+      execSync(`npx vitest --run ${path.join('test', targetFile.relativePath)}`, {
         cwd: componentRoot,
         stdio: 'inherit',
       });

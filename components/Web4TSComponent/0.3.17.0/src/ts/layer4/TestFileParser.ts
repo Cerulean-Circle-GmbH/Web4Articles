@@ -26,12 +26,15 @@ export interface ItCase {
 
 export class TestFileParser {
   /**
-   * Scan directory for test files
+   * Scan directory for test files (RECURSIVE for layered test structure)
+   * @pdca 2025-10-28-UTC-1950 - Fix test file command for layered structure
    * @param testDir - Absolute path to test directory
+   * @param baseDir - Base directory for relative path calculation (internal use)
    * @returns Array of test files with metadata
    */
-  static scanTestFiles(testDir: string): TestFile[] {
+  static scanTestFiles(testDir: string, baseDir?: string): TestFile[] {
     const files: TestFile[] = [];
+    const base = baseDir || testDir;
     
     try {
       const entries = readdirSync(testDir);
@@ -40,17 +43,24 @@ export class TestFileParser {
         const fullPath = path.join(testDir, entry);
         const stat = statSync(fullPath);
         
-        if (stat.isFile() && entry.endsWith('.test.ts')) {
+        if (stat.isDirectory()) {
+          // ✅ RECURSIVE: Scan subdirectories for layered test structure (test/ts/layer2/, etc.)
+          const subFiles = this.scanTestFiles(fullPath, base);
+          files.push(...subFiles);
+        } else if (stat.isFile() && entry.endsWith('.test.ts')) {
+          // Calculate relative path from base test directory
+          const relativePath = path.relative(base, fullPath);
+          
           files.push({
-            name: entry,
-            relativePath: entry,
+            name: path.basename(entry),
+            relativePath,
             absolutePath: fullPath,
           });
         }
       }
       
-      // Sort alphabetically
-      files.sort((a, b) => a.name.localeCompare(b.name));
+      // Sort alphabetically by relative path
+      files.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
     } catch (error) {
       console.error(`❌ Failed to scan test directory: ${testDir}`, error);
     }
