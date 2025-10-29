@@ -2585,7 +2585,14 @@ export class DefaultPDCA implements PDCA {
           '🛑 1f Step 2: "Interrupt immediately on unexpected observations and ask TRON"',
           '🤝 This is a feedback point - STOP and wait for TRON response',
           '⚠️ Present decisions when direction unclear (6c)',
-          '❌ Never assume what user wants next'
+          '❌ Never assume what user wants next',
+          '🚨 "pdca" TRIGGER WORD: When TRON says just "pdca" (alone or last word) = FULL CONTEXT REBUILD',
+          '🔄 Trigger Actions: 1) Stop work 2) Query `pdca trainAI` 3) Read COMPLETELY (not just first lines)',
+          '📚 Read ALL relevant topics: cmm, test-first, feature-development, component, pdca',
+          '🎯 Depth 3 Reading: document + 2 reference levels (NOT superficial skimming)',
+          '💡 Trigger Meaning: "You\'re confused. Reboot understanding. Read everything again properly."',
+          '✨ Example: Wrong template version → "pdca" → Complete trainAI reading → Correct PDCA',
+          '🎓 CMM4 Connection: Trigger activates feedback loop mastery - recognize confusion, reset, rebuild'
         ],
         verificationChecklist: [
           'Can create PDCA with correct filename format',
@@ -2596,7 +2603,9 @@ export class DefaultPDCA implements PDCA {
           'Validates dual links using getDualLink or ensureValidLinks',
           'Recognizes when to stop and ask TRON',
           'Can present decisions instead of assuming',
-          'Knows collaboration protocol during PDCA creation'
+          'Knows collaboration protocol during PDCA creation',
+          'Understands "pdca" trigger word = complete context rebuild',
+          'Will read trainAI completely (not just first lines) when triggered'
         ]
       },
       'cmm': {
