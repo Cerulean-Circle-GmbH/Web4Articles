@@ -2673,7 +2673,27 @@ export class DefaultPDCA implements PDCA {
           '❌ NEVER assume all files are committed - VERIFY with git status',
           '🔄 RAG First: When uncertain, query trainAI before acting',
           '⚠️ Bootstrap Phase: Extra vigilance required - system being established (temporary)',
-          '🎯 Forcing Function: git status → commit all → push → THEN present link'
+          '🎯 Forcing Function: git status → commit all → push → THEN present link',
+          '',
+          '🚨 CRITICAL: Two Different Contexts Require Different Formats',
+          '📊 Context 1 - Chat Reports to User:',
+          '  ✅ USE getDualLink output DIRECTLY with § notation + project-root-relative path',
+          '  ✅ Example: [GitHub](URL) | [§/components/PDCA/0.3.6.1/session/file.md](components/PDCA/0.3.6.1/session/file.md)',
+          '  ✅ Links work from any chat context',
+          '  ✅ trainAI report: "Task complete. Files: [dual link]. Git status: clean."',
+          '',
+          '📊 Context 2 - PDCA Artifact Links Section:',
+          '  ❌ getDualLink output FAILS (project-root-relative breaks from subdirectories)',
+          '  ✅ CONVERT to relative paths: Keep GitHub link, keep § display text, change HREF',
+          '  ✅ Same directory: [§/components/.../file.md](./file.md)',
+          '  ✅ Parent directory: [§/components/.../file.md](../../../../path/to/file.md)',
+          '  ✅ Test by clicking link in PDCA file before committing',
+          '',
+          '🎯 Pattern Recognition:',
+          '  ⚠️ Confusion: Same tool output used for different contexts',
+          '  ✅ Chat reports: § notation works from any context',
+          '  ✅ PDCA files: Relative paths for navigation from file location',
+          '  🚨 Missing this distinction breaks links repeatedly (discovered 2025-10-29)'
         ],
         verificationChecklist: [
           'Can write dual link format from memory',
@@ -2689,7 +2709,10 @@ export class DefaultPDCA implements PDCA {
           'Checks git status before presenting dual links',
           'Commits ALL uncommitted files, not just PDCA',
           'Queries trainAI when assumptions arise',
-          'Recognizes context window exhaustion symptoms'
+          'Recognizes context window exhaustion symptoms',
+          'Understands two different contexts: chat reports vs PDCA artifact links',
+          'Uses getDualLink output directly for chat reports',
+          'Converts to relative paths for PDCA artifact links'
         ]
       },
       'ensure-links': {
