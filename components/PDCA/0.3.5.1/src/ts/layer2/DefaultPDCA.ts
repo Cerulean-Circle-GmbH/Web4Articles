@@ -2582,6 +2582,10 @@ export class DefaultPDCA implements PDCA {
           '🔗 Dual link format: [GitHub](URL) | [§/path](path) - see dual-links',
           '🔗 Generate dual links: `pdca getDualLink <file>` (auto-fixes git status)',
           '🔗 Validate links: `pdca ensureValidLinks <file>` before PDCA completion',
+          '🚨 GIT COMMIT FORMAT (CMM3 0h/i): `git commit -m "PDCAfilename.pdca.md"` - LITERAL filename ONLY',
+          '❌ NEVER descriptive messages: "PDCA: Enhanced..." is WRONG - use "2025-10-29-UTC-2330.pdca.md"',
+          '✅ Git Protocol: git add [files] → git pull --no-edit → git commit -m "filename.pdca.md" → git push',
+          '💡 Why: Traceability (commit = PDCA), Consistency (no variation), Tooling (automation)',
           '🛑 1f Step 2: "Interrupt immediately on unexpected observations and ask TRON"',
           '🤝 This is a feedback point - STOP and wait for TRON response',
           '⚠️ Present decisions when direction unclear (6c)',
@@ -2604,6 +2608,8 @@ export class DefaultPDCA implements PDCA {
           'Recognizes when to stop and ask TRON',
           'Can present decisions instead of assuming',
           'Knows collaboration protocol during PDCA creation',
+          'Uses LITERAL PDCA filename as git commit message (NOT descriptive text)',
+          'Follows git protocol: add → pull → commit -m "filename.pdca.md" → push',
           'Understands "pdca" trigger word = complete context rebuild',
           'Will read trainAI completely (not just first lines) when triggered'
         ]
