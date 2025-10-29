@@ -2538,7 +2538,18 @@ export class DefaultPDCA implements PDCA {
           '🔗 Session end: Validate dual links with `pdca ensureValidLinks <session-dir>`',
           '🛑 Feedback points: After showing results, STOP and wait for user',
           '🤝 Collaboration: User controls loop, you execute within it',
-          '⚠️ "Show me" = show + STOP, not show + analyze + implement'
+          '⚠️ "Show me" = show + STOP, not show + analyze + implement',
+          '',
+          '📋 Official PDCA Template Location (CRITICAL):',
+          '📍 Path: `scrum.pmo/roles/_shared/PDCA/template.md`',
+          '📍 Version: 3.2.4.2 (current as of 2025-10-29)',
+          '❌ DO NOT use example PDCAs as templates (may have violations)',
+          '❌ DO NOT assume template location (query RAG first)',
+          '✅ Forcing function: Query "where is PDCA template?" before creating',
+          '✅ Verify file exists: `ls -la scrum.pmo/roles/_shared/PDCA/template.md`',
+          '✅ Generate dual link for user verification',
+          '🎯 Pattern: Agents often assume location → use examples → CMM3 violations',
+          '📊 Discovery: 2025-10-29 sprint revealed systemic template location assumption'
         ],
         verificationChecklist: [
           'Can recite the 12 startup steps from README.md',
@@ -2549,7 +2560,10 @@ export class DefaultPDCA implements PDCA {
           'Validates all dual links before session end',
           'Can recognize feedback points in startup sequence',
           'Knows when to wait vs continue',
-          'Understands collaboration model'
+          'Understands collaboration model',
+          'Knows official template location: scrum.pmo/roles/_shared/PDCA/template.md',
+          'Queries RAG for template location instead of assuming',
+          'Verifies template file exists before using'
         ]
       },
       'pdca': {
@@ -2585,7 +2599,47 @@ export class DefaultPDCA implements PDCA {
           '🛑 1f Step 2: "Interrupt immediately on unexpected observations and ask TRON"',
           '🤝 This is a feedback point - STOP and wait for TRON response',
           '⚠️ Present decisions when direction unclear (6c)',
-          '❌ Never assume what user wants next'
+          '❌ Never assume what user wants next',
+          '',
+          '🚨 CRITICAL: pdca moveFile Bug - DO NOT USE',
+          '❌ Bug discovered 2025-10-29: Renames ENTIRE DIRECTORY instead of single file',
+          '⚠️ Workaround: Use manual `git mv oldfile.pdca.md newfile.pdca.md` instead',
+          '📊 Impact: All files in directory moved inside new directory structure',
+          '✅ Bug report filed with component team',
+          '',
+          '📋 Template Verification Forcing Function (MANDATORY):',
+          '✅ Step 1: Query template location: `pdca queryTrainAI "where is PDCA template?"`',
+          '✅ Step 2: Verify file exists: `ls -la scrum.pmo/roles/_shared/PDCA/template.md`',
+          '✅ Step 3: Generate dual link for user verification',
+          '✅ Step 4: Add to QA Decisions: "TEMPLATE VERIFICATION: Template version 3.2.4.2 verified from [path]"',
+          '❌ NEVER use example PDCAs as templates (may have violations)',
+          '🎯 Pattern source: 2025-10-28-UTC-1756.pdca.md (line 31)',
+          '',
+          '📝 User Prompt Verbatim Documentation (MANDATORY):',
+          '✅ ALL user interactions must be documented verbatim in TRON Feedback subsections',
+          '✅ Format: `### **TRON Feedback (YYYY-MM-DD-UTC-HHMM)**` with quote block',
+          '✅ Include agent response and learning applied',
+          '❌ Violation discovered: 2025-10-28-UTC-1756.pdca.md has ZERO user prompts',
+          '🔄 Universal Exit Breadcrumb: After EVERY action, add user prompt to PDCA',
+          '🎯 Why: Future agents learn from user corrections, shows evolution of understanding',
+          '',
+          '🥖 Breadcrumb Methodology for Sprint Planning:',
+          '✅ Entry Breadcrumb: Context needed to start step (state from previous step, files needed)',
+          '✅ Exit Breadcrumb: Verification points to confirm completion (checkboxes)',
+          '📋 Rabbit Hole Task: Detailed work to perform (can lose context while diving)',
+          '🎯 Purpose: Navigate complexity without holding all context simultaneously',
+          '⚠️ Trust the plan: Breadcrumbs guide back to surface with correct exit',
+          '💡 Pattern enables automation: Baseline for rewritePDCA and createPDCA methods',
+          '📊 Source: 2025-10-29-UTC-1026.pdca.md (user introduced, agent systematized)',
+          '',
+          '🔄 Universal Exit Breadcrumb Checklist (Apply After EVERY Action):',
+          '1. Verbatim Documentation: Add user prompt to TRON Feedback section',
+          '2. Git Workflow: Commit changes, verify clean state',
+          '3. RAG Query: Check assumptions before proceeding',
+          '4. Links Only: Maintain minimal prose in sections',
+          '5. CMM3 Structure: Verify template compliance',
+          '⚠️ Why: Agents forget organizational meta-tasks during deep work',
+          '🎯 Wraps task-specific breadcrumbs to ensure process compliance'
         ],
         verificationChecklist: [
           'Can create PDCA with correct filename format',
@@ -2596,7 +2650,14 @@ export class DefaultPDCA implements PDCA {
           'Validates dual links using getDualLink or ensureValidLinks',
           'Recognizes when to stop and ask TRON',
           'Can present decisions instead of assuming',
-          'Knows collaboration protocol during PDCA creation'
+          'Knows collaboration protocol during PDCA creation',
+          'Knows pdca moveFile bug and uses git mv instead',
+          'Verifies official template location before creating PDCA',
+          'Documents template verification in QA Decisions section',
+          'Documents ALL user prompts verbatim in TRON Feedback subsections',
+          'Applies Universal Exit Breadcrumb checklist after every action',
+          'Can create execution plan with Entry/Exit breadcrumbs',
+          'Understands breadcrumb methodology for complex sprints'
         ]
       },
       'cmm': {
@@ -3284,14 +3345,30 @@ export class DefaultPDCA implements PDCA {
           '❌ Never assume user wants problem solved',
           '💡 Collaboration Model: User (Decision) → Agent (Execute) → FEEDBACK POINT 🛑 STOP → User (Reflection) → User (Decision)',
           '💡 Anti-Pattern: User → Agent → (everything done) → User sees result ❌',
-          '💡 Correct: User → Agent → Result → STOP → User → Next instruction ✅'
+          '💡 Correct: User → Agent → Result → STOP → User → Next instruction ✅',
+          '',
+          '🔄 TRON Recovery Protocol After Disconnection:',
+          '1. Source environment: `source source.env`',
+          '2. Read trainAI overview: `pdca trainAI` (see all topics)',
+          '3. Query RAG: `pdca queryTrainAI "how to report and dual links"`',
+          '4. Read README: Understand current project structure',
+          '5. Verify session context: Check branch, directory, recent commits',
+          '6. Query assumptions: Test projections against RAG',
+          '7. Create baseline: Establish verified understanding',
+          '8. Iterate: Repeat query → verify → relearn until aligned',
+          '9. Report back: Create PDCA documenting recovery and findings',
+          '🎯 Pattern source: 2025-10-29-UTC-1026.pdca.md',
+          '💡 User provides recovery protocol as breadcrumbs',
+          '✅ Recovery becomes teaching moment for future agents'
         ],
         verificationChecklist: [
           'Understands CMM4 collaboration loop',
           'Can identify feedback points',
           'Knows when to STOP vs continue',
           'Recognizes "helpful" vs "presumptuous"',
-          'Waits for user decision at feedback points'
+          'Waits for user decision at feedback points',
+          'Can execute TRON recovery protocol after disconnection',
+          'Knows 9-step recovery process with RAG queries'
         ]
       },
       'chat-response': {
