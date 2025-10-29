@@ -61,7 +61,11 @@ if [ -f "$SOURCE_ENV_PATH" ]; then
     NEEDS_SOURCE=false
     
     # Check if key variable is set (indicates environment was sourced)
-    if [ -z "$WEB4TSCOMPONENT_VERSION" ]; then
+    # Use WEB4_PROJECT_ROOT as marker (set by source.env)
+    if [ -z "$WEB4_PROJECT_ROOT" ]; then
+        NEEDS_SOURCE=true
+    # Check if this specific component version was already sourced
+    elif [ -z "$WEB4_SOURCED_COMPONENT" ] || [ "$WEB4_SOURCED_COMPONENT" != "$COMPONENT_VERSION" ]; then
         NEEDS_SOURCE=true
     # Check if source.env was modified after last sourcing
     elif [ -n "$SOURCE_ENV_MTIME" ] && [ -n "$WEB4_SOURCE_ENV_MTIME" ]; then
@@ -73,9 +77,11 @@ if [ -f "$SOURCE_ENV_PATH" ]; then
     # Source if needed
     if [ "$NEEDS_SOURCE" = true ]; then
         source "$SOURCE_ENV_PATH"
-        # Store the modification time for future checks
+        # Store the modification time and component version for future checks
         export WEB4_SOURCE_ENV_MTIME="$SOURCE_ENV_MTIME"
+        export WEB4_SOURCED_COMPONENT="$COMPONENT_VERSION"
     fi
+    # Silent when already loaded (no message spam on repeated calls)
 fi
 
 
