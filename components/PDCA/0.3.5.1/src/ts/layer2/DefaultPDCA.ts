@@ -2827,7 +2827,6 @@ export class DefaultPDCA implements PDCA {
           '❌ NEVER use --flag syntax (Unix-style)',
           '✅ Consistency: All Web4 components follow same pattern',
           '🔧 @cliSyntax defines parameter order in method signature',
-          '🔧 @cliDefault provides defaults for optional parameters',
           '🔧 @cliValues enables tab completion discovery',
           '✅ DRY: Symlink node_modules, never duplicate dependencies',
           '✅ DRY: Extend tsconfig.json from project root',
