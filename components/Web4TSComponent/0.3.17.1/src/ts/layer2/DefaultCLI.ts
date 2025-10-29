@@ -533,6 +533,13 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
     // Check if method exists on CLI (this) or component
     // CLI methods take precedence (e.g., completeParameter, actionParameterCompletion)
+    
+    // Print quick header for fast commands (links, clean, build, setCICDVersion)
+    const quickCommands = ['links', 'clean', 'build', 'setCICDVersion'];
+    if (quickCommands.includes(command)) {
+      this.printQuickHeader();
+    }
+    
     if (typeof (this as any)[command] === "function") {
       // Execute on CLI instance (DefaultCLI or Web4TSComponentCLI)
       const method = (this as any)[command];
@@ -1672,6 +1679,19 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // Extract base type name (remove import paths, generics, etc.)
     const baseType = typeName.replace(/.*\./, "").replace(/<.*>/, "");
     return typeMap[baseType] || baseType.toLowerCase();
+  }
+
+  /**
+   * Print quick one-liner header for fast commands
+   * Shows component name and version immediately without full usage dialog
+   */
+  protected printQuickHeader(): void {
+    const colors = this.colors;
+    const componentName = this.getComponentName();
+    const version = this.getComponentVersion();
+    console.log(
+      `${colors.toolName}Web4 ${componentName} CLI Tool${colors.reset} v${colors.version}${version}${colors.reset} - Dynamic Method Discovery with Structured Documentation\n`
+    );
   }
 
   /**
