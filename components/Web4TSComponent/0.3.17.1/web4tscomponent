@@ -35,9 +35,24 @@ if [ -z "$PROJECT_ROOT" ]; then
     exit 1
 fi
 
-# Auto-source environment if needed
+# Get component version from directory name (single source of truth)
+# Resolve symlinks: Follow the script file itself, not just the directory
+SCRIPT_FILE="${BASH_SOURCE[0]}"
+# Resolve all symlinks
+while [ -L "$SCRIPT_FILE" ]; do
+    SCRIPT_FILE="$(readlink "$SCRIPT_FILE")"
+    # Handle relative symlinks
+    if [[ "$SCRIPT_FILE" != /* ]]; then
+        SCRIPT_FILE="$(dirname "${BASH_SOURCE[0]}")/$SCRIPT_FILE"
+    fi
+done
+SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_FILE")" && pwd)"
+COMPONENT_VERSION="$(basename "$SCRIPT_DIR")"
+COMPONENT_PATH="$SCRIPT_DIR"
+
+# Auto-source component's environment if needed
 # Check if environment is loaded and fresh
-SOURCE_ENV_PATH="$PROJECT_ROOT/source.env"
+SOURCE_ENV_PATH="$COMPONENT_PATH/source.env"
 if [ -f "$SOURCE_ENV_PATH" ]; then
     # Get modification time of source.env
     SOURCE_ENV_MTIME=$(stat -f %m "$SOURCE_ENV_PATH" 2>/dev/null || stat -c %Y "$SOURCE_ENV_PATH" 2>/dev/null)
@@ -63,20 +78,6 @@ if [ -f "$SOURCE_ENV_PATH" ]; then
     fi
 fi
 
-# Get component version from directory name (single source of truth)
-# Resolve symlinks: Follow the script file itself, not just the directory
-SCRIPT_FILE="${BASH_SOURCE[0]}"
-# Resolve all symlinks
-while [ -L "$SCRIPT_FILE" ]; do
-    SCRIPT_FILE="$(readlink "$SCRIPT_FILE")"
-    # Handle relative symlinks
-    if [[ "$SCRIPT_FILE" != /* ]]; then
-        SCRIPT_FILE="$(dirname "${BASH_SOURCE[0]}")/$SCRIPT_FILE"
-    fi
-done
-SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_FILE")" && pwd)"
-COMPONENT_VERSION="$(basename "$SCRIPT_DIR")"
-COMPONENT_PATH="$SCRIPT_DIR"
 
 # Verify component exists
 if [ ! -d "$COMPONENT_PATH" ]; then
