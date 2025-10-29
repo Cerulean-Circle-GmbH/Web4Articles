@@ -439,6 +439,16 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * Print quick header for fast commands (DRY helper)
+   * Shows component name and version immediately without full usage dialog
+   * @cliHide
+   */
+  protected printQuickHeader(): void {
+    console.log(`${'\x1b[36m'}Web4 ${this.model.component} CLI Tool${'\x1b[0m'} v${'\x1b[33m'}${this.model.version.toString()}${'\x1b[0m'} - Dynamic Method Discovery with Structured Documentation\n`);
+  }
+
+
+  /**
    * @cliHide
    * 
    * Web4 OOP principle: Always use model.targetDirectory (no test detection needed)
@@ -1729,10 +1739,13 @@ Standards:
    * @cliValues versionPromotion nextPatch nextMinor nextMajor nextBuild
    */
   async upgrade(versionPromotion: string = 'nextPatch'): Promise<this> {
+        // Print quick header for immediate UX feedback
+        target.printQuickHeader();  
     // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
     // @pdca 2025-10-28-UTC-0934.pdca.md:3090 - Phase 4: Instance pattern
     const target = this.model.context || this;
-    
+  
+
     // ✅ Component has ALL its data in ITS model
     const componentName = target.model.component;
     const currentVersion = target.model.version.toString();
@@ -1803,8 +1816,11 @@ Standards:
    * @cliValues showHidden false true
    */
   async tree(depth: string = '4', showHidden: string = 'false'): Promise<this> {
+        // Print quick header for immediate UX feedback
+        this.printQuickHeader();
     // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
     const target = this.model.context || this;
+
     const maxDepth = parseInt(depth, 10) || 4;
     const includeHidden = showHidden.toLowerCase() === 'true';
     
@@ -1832,6 +1848,9 @@ Standards:
    * @cliExample web4tscomponent on Unit 0.3.2.0 links
    */
   async links(action: string = ''): Promise<this> {
+    // Print quick header for immediate UX feedback
+    this.printQuickHeader();
+    
     // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
     const target = this.model.context || this;
     const componentName = target.model.component;
@@ -2940,6 +2959,9 @@ Standards:
    * @cliValues verbose,silent,force
    */
   async build(...flags: string[]): Promise<this> {
+    // Print quick header for immediate UX feedback
+    this.printQuickHeader();
+    
     // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
     const target = this.model.context || this;
     
@@ -3291,6 +3313,9 @@ Standards:
    * @cliExample web4tscomponent on Unit 0.3.0.5 clean
    */
   async clean(): Promise<this> {
+    // Print quick header for immediate UX feedback
+    this.printQuickHeader();
+    
     // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
     const target = this.model.context || this;
     
@@ -5209,6 +5234,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     targetVersion: string,
     version: string = 'current'
   ): Promise<this> {
+    // Print quick header for immediate UX feedback
+    this.printQuickHeader();
+    
     // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
     const target = this.model.context || this;
     const componentName = target.model.component;

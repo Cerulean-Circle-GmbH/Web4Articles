@@ -165,12 +165,6 @@ export class Web4TSComponentCLI extends DefaultCLI {
     // Execute the method (CLI methods take precedence over component methods)
     // Web4 pattern: completeParameter, actionParameterCompletion are CLI methods
     
-    // Print quick header for fast commands (links, clean, build, setCICDVersion)
-    const quickCommands = ['links', 'clean', 'build', 'setCICDVersion'];
-    if (quickCommands.includes(command)) {
-      this.printQuickHeader();
-    }
-    
     if (typeof (this as any)[command] === 'function') {
       // Execute on CLI instance
       const method = (this as any)[command];
