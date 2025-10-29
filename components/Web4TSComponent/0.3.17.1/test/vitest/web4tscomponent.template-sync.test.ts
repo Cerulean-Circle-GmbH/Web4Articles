@@ -13,7 +13,7 @@ import { readFileSync, existsSync, readdirSync, statSync } from 'fs';
 import * as path from 'path';
 
 describe('🔄 Template Synchronization', () => {
-  const componentRoot = path.join(__dirname, '..');
+  const componentRoot = path.join(__dirname, '../..');
   
   describe('Critical File → Template Mapping', () => {
     it('should remind: DefaultWeb4TSComponent.ts changes may require DefaultComponent.ts.template updates', () => {
@@ -124,7 +124,7 @@ describe('🔄 Template Synchronization', () => {
       // This test verifies that infrastructure files added to src/ are included in copyEssentialInterfaces()
       // so that new components get them automatically during creation
       
-      const componentRoot = path.join(__dirname, '..');
+      const componentRoot = path.join(__dirname, '../..');
       const defaultWeb4TSComponentPath = path.join(componentRoot, 'src/ts/layer2/DefaultWeb4TSComponent.ts');
       const sourceContent = readFileSync(defaultWeb4TSComponentPath, 'utf8');
       
@@ -197,7 +197,7 @@ describe('🔄 Template Synchronization', () => {
       // Uses hybrid validation: Timestamp for template updates, Content for manual edits
       
       const projectRoot = path.join(__dirname, '../../../..');
-      const templatesDir = path.join(__dirname, '../templates');
+      const templatesDir = path.join(__dirname, '../../templates');
       
       // Define all critical files that must stay in sync with templates
       const criticalFiles = [
@@ -205,6 +205,7 @@ describe('🔄 Template Synchronization', () => {
           name: 'source.env',
           projectPath: path.join(projectRoot, 'source.env'),
           templatePath: path.join(templatesDir, 'project/source.env.template'),
+          checkTemplateOnly: true // source.env exists at multiple levels, template-only check
         },
         {
           name: 'root tsconfig.json',

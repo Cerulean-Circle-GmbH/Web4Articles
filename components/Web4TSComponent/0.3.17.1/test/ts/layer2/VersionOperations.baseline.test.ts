@@ -87,7 +87,7 @@ describe('DefaultWeb4TSComponent - Version Operations', () => {
     const version = (component as any).model.version;
     
     // ✅ Version is now a SemanticVersion instance
-    expect(version.toString()).toBe('0.3.17.0');
+    expect(version.toString()).toBe('0.3.17.1');
   });
 
   /**
