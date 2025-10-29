@@ -51,35 +51,14 @@ COMPONENT_VERSION="$(basename "$SCRIPT_DIR")"
 COMPONENT_PATH="$SCRIPT_DIR"
 
 # Auto-source component's environment if needed
-# Check if environment is loaded and fresh
+# Check if environment is loaded by testing for exported variables from source.env
 SOURCE_ENV_PATH="$COMPONENT_PATH/source.env"
 if [ -f "$SOURCE_ENV_PATH" ]; then
-    # Get modification time of source.env
-    SOURCE_ENV_MTIME=$(stat -f %m "$SOURCE_ENV_PATH" 2>/dev/null || stat -c %Y "$SOURCE_ENV_PATH" 2>/dev/null)
-    
-    # Check if environment needs sourcing
-    NEEDS_SOURCE=false
-    
-    # Check if key variable is set (indicates environment was sourced)
-    # Use WEB4_PROJECT_ROOT as marker (set by source.env)
+    # Check if source.env was already sourced by testing for WEB4_PROJECT_ROOT
+    # This variable is exported by source.env and inherits to subshells
     if [ -z "$WEB4_PROJECT_ROOT" ]; then
-        NEEDS_SOURCE=true
-    # Check if this specific component version was already sourced
-    elif [ -z "$WEB4_SOURCED_COMPONENT" ] || [ "$WEB4_SOURCED_COMPONENT" != "$COMPONENT_VERSION" ]; then
-        NEEDS_SOURCE=true
-    # Check if source.env was modified after last sourcing
-    elif [ -n "$SOURCE_ENV_MTIME" ] && [ -n "$WEB4_SOURCE_ENV_MTIME" ]; then
-        if [ "$SOURCE_ENV_MTIME" -gt "$WEB4_SOURCE_ENV_MTIME" ]; then
-            NEEDS_SOURCE=true
-        fi
-    fi
-    
-    # Source if needed
-    if [ "$NEEDS_SOURCE" = true ]; then
+        # Variable not set - need to source
         source "$SOURCE_ENV_PATH"
-        # Store the modification time and component version for future checks
-        export WEB4_SOURCE_ENV_MTIME="$SOURCE_ENV_MTIME"
-        export WEB4_SOURCED_COMPONENT="$COMPONENT_VERSION"
     fi
     # Silent when already loaded (no message spam on repeated calls)
 fi
