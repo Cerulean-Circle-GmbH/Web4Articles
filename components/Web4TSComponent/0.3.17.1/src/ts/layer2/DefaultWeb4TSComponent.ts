@@ -51,11 +51,10 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     const componentDirName = path.basename(currentVersionDir);
     const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(componentDirName);
     
-      /**
-       * @deprecated findProjectRoot() - Moved to DefaultCLI (Path Authority)
-       * @pdca 2025-10-28-UTC-0934.pdca.md:158 - Path Separation
-       */
-    const discoveredRoot = this.findProjectRoot();
+      // ✅ BASELINE COMPLIANCE: Component does NOT calculate projectRoot
+      // Use process.cwd() as default targetDirectory
+      // In production, CLI will call setTargetDirectory() with correct path
+      const defaultTargetDir = process.cwd();
       
       // ✅ Create version INSTANCE (radical OOP)
       const versionString = isVersionDir ? componentDirName : '0.0.0.0';
@@ -68,8 +67,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       definition: '',
       component: 'Web4TSComponent',
         version: versionComponent,  // ✅ INSTANCE with behavior!
-      projectRoot: discoveredRoot, // Discovered once, used everywhere for absolute paths
-      targetDirectory: discoveredRoot // Can be overridden for test isolation
+      projectRoot: defaultTargetDir, // ✅ Default only (CLI sets correct value via setTargetDirectory)
+      targetDirectory: defaultTargetDir // ✅ Default only (CLI sets correct value)
       // Note: createdAt/updatedAt removed per Web4 principle - belong in ChangeEvent
       // Note: componentStandards, validationRules, scaffoldingTemplates removed - never used
     };
@@ -223,59 +222,6 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
-   * Find project root from current working directory
-   * Web4 principle: Trust findProjectRootFrom() logic with markers
-   * @cliHide
-   */
-  private findProjectRoot(): string {
-    return this.findProjectRootFrom(process.cwd());
-  }
-
-  /**
-   * Find project root starting from a specific directory
-   * Walks up the directory tree looking for project markers (package.json, .git, etc.)
-   * This is the SINGLE SOURCE OF TRUTH for project root discovery.
-   * 
-   * Priority order:
-   * 1. package.json + components/ directory (most specific - identifies test/data or project root)
-   * 2. .git directory (fallback for projects without components/)
-   * 
-   * This ensures test/data is recognized as the project root for tests,
-   * even if there's a .git directory higher up in the real project root.
-   * 
-   * @cliHide
-   */
-  private findProjectRootFrom(startDir: string): string {
-    let currentDir = path.resolve(startDir);
-    
-    // First priority: Walk up looking for package.json + components/ directory
-    // This is MORE SPECIFIC and will correctly identify test/data or project root
-    while (currentDir !== path.dirname(currentDir)) { // Not at filesystem root
-      if (existsSync(path.join(currentDir, 'package.json')) &&
-          existsSync(path.join(currentDir, 'components'))) {
-        return currentDir;
-      }
-      currentDir = path.dirname(currentDir);
-    }
-    
-    // Fallback: Walk up looking for .git (for projects without components/ dir)
-    currentDir = path.resolve(startDir);
-    while (currentDir !== path.dirname(currentDir)) {
-      if (existsSync(path.join(currentDir, '.git'))) {
-        return currentDir;
-      }
-      currentDir = path.dirname(currentDir);
-    }
-    
-    // Last resort: return the start directory
-    return path.resolve(startDir);
-  }
-
-
-
-
-
-  /**
    * Transform component data (Web4 lifecycle method)
    * @param data Optional data to transform
    * @returns this component instance for method chaining
@@ -360,18 +306,24 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
-   * Set target directory for component operations and update project root
-   * Discovers project root from target directory for test isolation
-   * @param directory Target directory path for component operations
+   * Set target directory for component operations
+   * 
+   * ✅ BASELINE COMPLIANCE (2025-10-28-UTC-0934.pdca.md:158):
+   * This method ONLY stores the targetDirectory value.
+   * It does NOT calculate projectRoot - that's DefaultCLI's responsibility (path authority).
+   * 
+   * Usage:
+   * - Production: CLI calculates and passes project root as targetDirectory
+   * - Test isolation: Tests pass test/data path as targetDirectory
+   * 
+   * @param directory Target directory path (absolute, calculated by caller)
+   * @pdca 2025-10-29-UTC-1323.path-separation-violation-fix.pdca.md
    * @cliHide
    */
   setTargetDirectory(directory: string): void {
+    // ✅ ONLY store the value - no calculation
     this.model.targetDirectory = directory;
-    // Discover project root from the target directory for absolute path operations
-    // In production: discovers actual project root
-    // In test/data: discovers test/data as the "project root" for isolation
-    this.model.projectRoot = this.findProjectRootFrom(directory);
-    // Note: updatedAt removed - belongs in ChangeEvent tracking
+    // Note: projectRoot calculation removed - violates path separation baseline
   }
 
   /**
@@ -896,9 +848,9 @@ Standards:
    * @cliValues targetDir § test/data
    */
   async initProject(targetDir: string = '§'): Promise<this> {
-    // Bash wrapper converts paths to absolute before cd, so we can trust them
+    // ✅ BASELINE COMPLIANCE: Use targetDirectory as-is (set by CLI or test via setTargetDirectory)
     const projectRoot = targetDir === '§' 
-      ? (this.isTestEnvironment() ? this.getTestDataDirectory() : this.model.projectRoot)
+      ? this.model.targetDirectory  // ✅ Use stored value, don't calculate
       : targetDir; // Already absolute from bash wrapper
     
     // Detect test isolation mode
@@ -1740,7 +1692,7 @@ Standards:
    */
   async upgrade(versionPromotion: string = 'nextPatch'): Promise<this> {
         // Print quick header for immediate UX feedback
-        target.printQuickHeader();  
+        this.printQuickHeader();  
     // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
     // @pdca 2025-10-28-UTC-0934.pdca.md:3090 - Phase 4: Instance pattern
     const target = this.model.context || this;

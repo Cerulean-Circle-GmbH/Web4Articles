@@ -23,8 +23,25 @@ export interface Web4TSComponentModel extends Model {
   version: SemanticVersion;  // ✅ INSTANCE, not string!
   
   // Web4TSComponent-specific properties
-  projectRoot: string;        // Discovered once at init, used for all absolute path operations
-  targetDirectory: string;    // Can be overridden (e.g., test/data for test isolation)
+  /**
+   * Project root path (STORAGE only - NOT calculated by component)
+   * ✅ BASELINE COMPLIANCE (2025-10-28-UTC-0934.pdca.md:158):
+   * Component STORES this value (set by CLI via setTargetDirectory)
+   * Component does NOT CALCULATE this - that's DefaultCLI's responsibility
+   * @pdca 2025-10-29-UTC-1323.path-separation-violation-fix.pdca.md
+   */
+  projectRoot: string;
+  
+  /**
+   * Target directory for component operations (STORAGE only - NOT calculated)
+   * ✅ BASELINE COMPLIANCE (2025-10-28-UTC-0934.pdca.md:158):
+   * Component STORES this value (set by CLI or tests via setTargetDirectory)
+   * Component does NOT CALCULATE paths - that's DefaultCLI's responsibility
+   * Used for test isolation (e.g., test/data for tests, project root for production)
+   * @pdca 2025-10-29-UTC-1323.path-separation-violation-fix.pdca.md
+   */
+  targetDirectory: string;
+  
   dependencies?: ComponentDependency[];  // Component dependencies with auto-build
   
   /**
