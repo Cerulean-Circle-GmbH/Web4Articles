@@ -32,7 +32,7 @@ describe('PDCA trainAI Topic Verification (TC27)', () => {
 
   // TC27.2: how-to-start structure
   it('TC27.2: how-to-start should have required structure', async () => {
-    const output = await captureConsoleOutput(() => pdca.trainAI('how-to-start'));
+    const output = await captureConsoleOutput(() => pdca.trainAI('start'));
     
     expect(output).toContain('How to Start');
     expect(output).toContain('Required Reading');
@@ -43,7 +43,7 @@ describe('PDCA trainAI Topic Verification (TC27)', () => {
 
   // TC27.3: how-to-pdca includes dual link awareness
   it('TC27.3: how-to-pdca should include dual link awareness', async () => {
-    const output = await captureConsoleOutput(() => pdca.trainAI('how-to-pdca'));
+    const output = await captureConsoleOutput(() => pdca.trainAI('pdca'));
     
     expect(output).toContain('How to PDCA');
     expect(output).toContain('Dual link format');
@@ -53,7 +53,7 @@ describe('PDCA trainAI Topic Verification (TC27)', () => {
 
   // TC27.4: how-to-dual-links content
   it('TC27.4: how-to-dual-links should teach dual link format', async () => {
-    const output = await captureConsoleOutput(() => pdca.trainAI('how-to-dual-links'));
+    const output = await captureConsoleOutput(() => pdca.trainAI('dual-links'));
     
     expect(output).toContain('How to Dual Links');
     expect(output).toContain('GitHub');
@@ -65,7 +65,7 @@ describe('PDCA trainAI Topic Verification (TC27)', () => {
 
   // TC27.5: how-to-ensure-links content
   it('TC27.5: how-to-ensure-links should teach CMM3 atomic operation', async () => {
-    const output = await captureConsoleOutput(() => pdca.trainAI('how-to-ensure-links'));
+    const output = await captureConsoleOutput(() => pdca.trainAI('ensure-links'));
     
     expect(output).toContain('How to Ensure Links');
     expect(output).toContain('CMM3 Atomic');
@@ -78,7 +78,7 @@ describe('PDCA trainAI Topic Verification (TC27)', () => {
 
   // TC27.6: how-to-component-upgrade content
   it('TC27.6: how-to-component-upgrade should teach link management', async () => {
-    const output = await captureConsoleOutput(() => pdca.trainAI('how-to-component-upgrade'));
+    const output = await captureConsoleOutput(() => pdca.trainAI('component-upgrade'));
     
     expect(output).toContain('How to Component Upgrade');
     expect(output).toContain('updateLinksToFile');
@@ -170,7 +170,7 @@ describe('PDCA trainAI Integration Tests (TC28)', () => {
 
   // TC28.1: getDualLink mentioned in how-to-dual-links
   it('TC28.1: getDualLink should be taught in how-to-dual-links', async () => {
-    const output = await captureConsoleOutput(() => pdca.trainAI('how-to-dual-links'));
+    const output = await captureConsoleOutput(() => pdca.trainAI('dual-links'));
     
     expect(output).toContain('getDualLink');
     expect(output).toContain('pdca getDualLink');
@@ -178,7 +178,7 @@ describe('PDCA trainAI Integration Tests (TC28)', () => {
 
   // TC28.2: ensureValidLinks mentioned in how-to-ensure-links
   it('TC28.2: ensureValidLinks should be taught in how-to-ensure-links', async () => {
-    const output = await captureConsoleOutput(() => pdca.trainAI('how-to-ensure-links'));
+    const output = await captureConsoleOutput(() => pdca.trainAI('ensure-links'));
     
     expect(output).toContain('ensureValidLinks');
     expect(output).toContain('pdca ensureValidLinks');
@@ -186,7 +186,7 @@ describe('PDCA trainAI Integration Tests (TC28)', () => {
 
   // TC28.3: Dual links mentioned in how-to-pdca
   it('TC28.3: Dual links should be integrated into how-to-pdca', async () => {
-    const output = await captureConsoleOutput(() => pdca.trainAI('how-to-pdca'));
+    const output = await captureConsoleOutput(() => pdca.trainAI('pdca'));
     
     expect(output).toContain('Dual link');
     expect(output).toContain('getDualLink');
@@ -194,7 +194,7 @@ describe('PDCA trainAI Integration Tests (TC28)', () => {
 
   // TC28.4: Session end validation in how-to-start
   it('TC28.4: Session end validation should be in how-to-start', async () => {
-    const output = await captureConsoleOutput(() => pdca.trainAI('how-to-start'));
+    const output = await captureConsoleOutput(() => pdca.trainAI('start'));
     
     expect(output).toContain('session end');
     expect(output).toContain('Validate');
