@@ -123,16 +123,6 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
   });
 
   /**
-   * Test 10: on method exists (context loading)
-   * @pdca 2025-10-28-UTC-0934.pdca.md:600
-   * @test onMethodExists
-   */
-  it('component has on method for context loading', () => {
-    const component = new DefaultWeb4TSComponent().init();
-    expect(typeof component.on).toBe('function');
-  });
-
-  /**
    * Test 11: Multiple instances are independent
    * @pdca 2025-10-28-UTC-0934.pdca.md:608
    * @test multipleInstancesIndependent

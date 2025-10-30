@@ -5319,11 +5319,12 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       'Model.interface.ts',
       'Scenario.interface.ts',
       'CLI.interface.ts',
+      'CLIModel.interface.ts',           // ✅ Added for Path Authority architecture
       'MethodInfo.interface.ts',
-      'MethodSignature.interface.ts',  // ✅ Added for Phase 3 DefaultCLI refactoring
-      'Component.interface.ts',        // ✅ Added for Phase 1 architecture migration
+      'MethodSignature.interface.ts',    // ✅ Added for Phase 3 DefaultCLI refactoring
+      'Component.interface.ts',          // ✅ Added for Phase 1 architecture migration
       'Completion.ts',
-      'Colors.interface.ts'            // ✅ Added for DRY refactoring - centralized colors
+      'Colors.interface.ts'              // ✅ Added for DRY refactoring - centralized colors
     ];
 
     for (const file of interfaceFiles) {
