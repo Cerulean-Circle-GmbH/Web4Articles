@@ -122,19 +122,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     }
   }
 
-  // /**
-  //  * Get default completion Scenario for bash completion
-  //  * Bash calls this first to get complete CLIModel structure with owner data
-  //  * DRY: Uses toScenario() to generate proper scenario with User service
-  //  * @cliHide
-  //  */
-  // async getCompletionScenario(): Promise<void> {
-  //   // Use toScenario() to get proper scenario with User service (DRY principle)
-  //   const scenario = await this.toScenario();
     
-  //   // Output as JSON for bash
-  //   console.log(JSON.stringify(scenario, null, 2));
-  // }
 
   /**
    * Set component dependencies that must be built before this component
@@ -227,13 +215,6 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @returns this component instance for method chaining
    * @cliHide
    */
-  // transform(data?: unknown): this {
-  //   // Transform component data if needed
-  //   if (data) {
-  //     // Note: updatedAt removed - belongs in ChangeEvent tracking
-  //   }
-  //   return this;
-  // }
 
   /**
    * Validate component configuration (Web4 lifecycle method)
@@ -250,7 +231,6 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
  */
 
-  // process() - REMOVED: Placebo method with no implementation or value
 
   /**
    * Convert component to scenario (Web4 pattern)
@@ -567,59 +547,10 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliHide
    */
   async generateLocationResilientCLI(componentName: string, version: string): Promise<string> {
-    const cliTemplate = `#!/bin/bash
-
-# ${componentName} CLI Tool - Location Resilient Version
-# Web4 Architecture Standard - Self-Implementing Reference
-# Works from any directory via symlink resolution
-
-# Get component version directory from script location (location-resilient)
-# Resolve symlinks: Follow the script file itself, not just the directory
-SCRIPT_FILE="\${BASH_SOURCE[0]}"
-SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_FILE")" && pwd)"
-
-# Resolve all symlinks (Web4 standard pattern - handles relative symlinks correctly)
-while [ -L "$SCRIPT_FILE" ]; do
-    TARGET="$(readlink "$SCRIPT_FILE")"
-    # Handle relative symlinks: resolve relative to the directory containing the symlink
-    if [[ "$TARGET" != /* ]]; then
-        SCRIPT_FILE="$SCRIPT_DIR/$TARGET"
-    else
-        SCRIPT_FILE="$TARGET"
-    fi
-    # Update SCRIPT_DIR for next iteration
-    SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_FILE")" && pwd)"
-done
-
-COMPONENT_PATH="$SCRIPT_DIR"
-
-# Verify component exists
-if [ ! -d "$COMPONENT_PATH" ]; then
-    echo "❌ ${componentName} ${version} not found at $COMPONENT_PATH"
-    exit 1
-fi
-
-# Change to component directory
-cd "$COMPONENT_PATH" || {
-    echo "❌ Failed to cd to $COMPONENT_PATH"
-    exit 1
-}
-
-# Use smart build system (handles freshness, dependencies, everything)
-./src/sh/build.sh
-
-# Check if CLI is available after build
-CLI_PATH="dist/ts/layer5/${componentName}CLI.js"
-if [ ! -f "$CLI_PATH" ]; then
-    echo "❌ ${componentName} CLI build failed"
-    exit 1
-fi
-
-# Execute compiled CLI (no ts-node, no deprecation warnings)
-node "$CLI_PATH" "$@"
-`;
-    
-    return cliTemplate;
+    return await this.loadTemplate('sh/version-wrapper.sh.template', {
+      COMPONENT_NAME: componentName,
+      VERSION: version
+    });
   }
 
   /**
@@ -825,7 +756,6 @@ Standards:
 `);
   }
 
-  // Web4 CLI Topic Methods (for DefaultCLI dynamic execution)
   
   /**
    * Initialize or upgrade project with Web4 global configuration files
@@ -1031,341 +961,12 @@ Standards:
    * @param version Version to initialize
    * @cliHide
    */
-  // async initTestIsolation(component: string, version: string): Promise<this> {
-  //   const componentPath = this.resolveComponentPath(component, version);
-  //   const testDataPath = path.join(componentPath, 'test', 'data');
     
-  //   console.log(`\n🔧 Initializing test isolation for ${component} ${version}...`);
-  //   console.log(`   📂 Target: ${testDataPath}`);
     
-  //   // Call the private initialization method with correct component and version
-  //   await this.initTestIsolationEnvironment(testDataPath, component, version);
     
-  //   console.log(`✅ Test isolation environment ready for ${component} ${version}\n`);
     
-  //   return this;
-  // }
 
 
-
-//   private async initTestIsolationEnvironment(testDataPath: string, targetComponent: string, targetVersion: string): Promise<this> {
-//     // Path is already absolute (converted by bash wrapper)
-//     const absoluteTestDataPath = testDataPath;
-    
-//     // Use TARGET component/version (the one being isolated), not this.model!
-//     const componentName = targetComponent;
-//     const componentVersion = targetVersion;
-//     const cliName = componentName.toLowerCase().replace(/[^a-z0-9]/g, '');
-    
-//     // Use model.targetDirectory as the real project root (discovered in constructor)
-//     const realProjectRoot = this.model.targetDirectory;
-    
-//     // Trust resolveComponentPath() to find TARGET component location
-//     const componentPath = this.resolveComponentPath(componentName, componentVersion);
-    
-//     console.log(`   📦 Component: ${componentName} ${componentVersion}`);
-//     console.log(`   🔧 CLI: ${cliName}`);
-//     console.log(`   🌍 Main project root: ${realProjectRoot}`);
-//     console.log(`   🔍 Component path: ${componentPath}`);
-    
-//     // Create test/data directory structure
-//     await fs.mkdir(absoluteTestDataPath, { recursive: true });
-    
-//     // Create source.env, package.json, tsconfig.json (reuse existing logic)
-//     const currentDir = path.dirname(new URL(import.meta.url).pathname);
-    
-//     // 1. Create source.env FROM THE TARGET VERSION'S TEMPLATE!
-//     // CRITICAL: Use the OLD version's template, not the current one!
-//     const sourceEnvPath = path.join(absoluteTestDataPath, 'source.env');
-//     const oldTemplateFile = path.join(componentPath, 'templates/project/source.env.template');
-    
-//     let sourceEnvContent: string;
-//     if (existsSync(oldTemplateFile)) {
-//       // Use the old version's own template
-//       sourceEnvContent = await fs.readFile(oldTemplateFile, 'utf-8');
-//       console.log(`   📜 Using ${componentVersion}'s own source.env template`);
-//     } else {
-//       // Fallback: Use current template (for very old versions without templates)
-//       sourceEnvContent = await this.loadTemplate('project/source.env.template', {});
-//       console.log(`   📜 Using current template (${componentVersion} has no template)`);
-//     }
-    
-//     // Apply version-specific hacks for old templates
-//     // sourceEnvContent = await this.v0313xHack(sourceEnvContent, componentName, componentVersion, cliName);
-    
-//     await fs.writeFile(sourceEnvPath, sourceEnvContent);
-//     await fs.chmod(sourceEnvPath, 0o755);
-//     console.log(`   ✅ Created source.env`)
-    
-//     // 2. Create package.json
-//     const packageJsonPath = path.join(absoluteTestDataPath, 'package.json');
-//     const packageJsonContent = await this.loadTemplate('config/root-package.json.template', {});
-//     await fs.writeFile(packageJsonPath, packageJsonContent);
-//     console.log(`   ✅ Created package.json`);
-    
-//     // 3. Create tsconfig.json
-//     const tsConfigPath = path.join(absoluteTestDataPath, 'tsconfig.json');
-//     const tsConfigContent = await this.loadTemplate('config/root-tsconfig.json.template', {});
-//     await fs.writeFile(tsConfigPath, tsConfigContent);
-//     console.log(`   ✅ Created tsconfig.json`);
-    
-//     // 4. Symlink to shared node_modules (go up to real project root)
-//     const nodeModulesTarget = path.join(realProjectRoot, 'node_modules');
-//     const nodeModulesLink = path.join(absoluteTestDataPath, 'node_modules');
-    
-//     if (existsSync(nodeModulesLink)) {
-//       await fs.unlink(nodeModulesLink);
-//     }
-//     await fs.symlink(nodeModulesTarget, nodeModulesLink, 'dir');
-//     console.log(`   ✅ Symlinked node_modules`);
-    
-//     // 5. Create components/ directory and COPY component files (NO SYMLINKS - safer!)
-//     // CRITICAL DESIGN DECISION (2025-10-23):
-//     // - MUST copy, NOT symlink!
-//     // - Symlinks create recursive loops: test/data → component → test/data → ...
-//     // - Node.js error: "cannot copy to subdirectory of self"
-//     // - Trade-off: Disk space vs Safety (safety wins for test isolation!)
-//     const componentsDir = path.join(absoluteTestDataPath, 'components');
-//     const componentMirrorDir = path.join(componentsDir, componentName);
-//     const componentCopyPath = path.join(componentMirrorDir, componentVersion);
-    
-//     await fs.mkdir(componentMirrorDir, { recursive: true });
-    
-//     // COPY the component directory manually (exclude test/data to avoid recursion)
-//     if (existsSync(componentCopyPath)) {
-//       await fs.rm(componentCopyPath, { recursive: true, force: true });
-//     }
-//     await fs.mkdir(componentCopyPath, { recursive: true });
-    
-//     // Copy all entries EXCEPT node_modules
-//     // For test/, we'll handle it specially after the loop
-//     const entries = await fs.readdir(componentPath, { withFileTypes: true });
-//     for (const entry of entries) {
-//       const srcPath = path.join(componentPath, entry.name);
-//       const destPath = path.join(componentCopyPath, entry.name);
-      
-//       // Skip test directory - will copy separately
-//       if (entry.name === 'test') {
-//         continue;
-//       }
-      
-//       // Skip node_modules (symlink, can't copy)
-//       if (entry.name === 'node_modules') {
-//         continue;
-//       }
-      
-//       if (entry.isDirectory()) {
-//         await fs.cp(srcPath, destPath, { recursive: true });
-//       } else {
-//         await fs.copyFile(srcPath, destPath);
-//       }
-//     }
-    
-//     // Copy test/ directory but exclude test/data to avoid recursion
-//     const testSrcDir = path.join(componentPath, 'test');
-//     const testDestDir = path.join(componentCopyPath, 'test');
-//     if (existsSync(testSrcDir)) {
-//       await fs.mkdir(testDestDir, { recursive: true });
-      
-//       const testEntries = await fs.readdir(testSrcDir, { withFileTypes: true });
-//       for (const testEntry of testEntries) {
-//         if (testEntry.name === 'data') {
-//           // Skip test/data to avoid recursion
-//           continue;
-//         }
-//         const testSrc = path.join(testSrcDir, testEntry.name);
-//         const testDest = path.join(testDestDir, testEntry.name);
-        
-//         if (testEntry.isDirectory()) {
-//           await fs.cp(testSrc, testDest, { recursive: true });
-//         } else {
-//           await fs.copyFile(testSrc, testDest);
-//         }
-//       }
-//     }
-    
-//     console.log(`   ✅ Copied components/${componentName}/${componentVersion} (including tests, excluding test/data & node_modules)`);
-    
-//     // 5b. ALSO symlink tests to test/data/test/ for OLD code that uses process.cwd() + '/test'
-//     // Old versions' testSelective does: path.join(process.cwd(), 'test')
-//     // So when in test/data, they look for test/data/test/
-//     const oldCodeTestDir = path.join(absoluteTestDataPath, 'test');
-//     const actualTestDir = path.join(componentCopyPath, 'test');
-//     if (existsSync(actualTestDir)) {
-//       try {
-//         // Remove if exists
-//         if (existsSync(oldCodeTestDir)) {
-//           await fs.rm(oldCodeTestDir, { recursive: true, force: true });
-//         }
-//         // Symlink test/data/test → test/data/components/{Component}/{Version}/test
-//         await fs.symlink(actualTestDir, oldCodeTestDir, 'dir');
-//         console.log(`   ✅ Symlinked test/data/test → components/${componentName}/${componentVersion}/test (for old code compatibility)`);
-//       } catch (error) {
-//         console.log(`   ⚠️  Could not create test symlink: ${(error as Error).message}`);
-//       }
-//     }
-    
-//     // 6. Create scripts/ directory and CREATE a direct Node CLI wrapper
-//     // CRITICAL: Old component's 'web4tscomponent' file might be a wrapper from old initProject!
-//     // Solution: Generate FRESH shell script that calls node directly on the .js file
-//     const scriptsDir = path.join(absoluteTestDataPath, 'scripts');
-//     await fs.mkdir(scriptsDir, { recursive: true });
-    
-//     const cliScriptPath = path.join(scriptsDir, cliName);
-//     const cliJsPath = path.join(componentPath, 'dist/ts/layer5', `${componentName}CLI.js`);
-    
-//     if (!existsSync(cliJsPath)) {
-//       console.log(`   ⚠️  CLI not found: ${cliJsPath}`);
-//       console.log(`   💡 Build the component first: npm run build`);
-//     } else {
-//       // CREATE a direct shell wrapper that calls Node (NOT a version wrapper!)
-//       const cliWrapperContent = `#!/bin/bash
-// # Direct CLI wrapper for ${componentName} ${componentVersion} in test isolation
-// # This is NOT a version wrapper - it directly executes the CLI via Node
-
-// exec node "${cliJsPath}" "$@"
-// `;
-      
-//       if (existsSync(cliScriptPath)) {
-//         await fs.unlink(cliScriptPath);
-//       }
-//       await fs.writeFile(cliScriptPath, cliWrapperContent, { mode: 0o755 });
-//       console.log(`   ✅ Created scripts/${cliName} (direct Node wrapper)`);
-//     }
-    
-//     // 7. Create 'latest' symlink in components/{Component}/ for auto-discovery
-//     const latestLink = path.join(componentMirrorDir, 'latest');
-//     if (existsSync(latestLink)) {
-//       await fs.unlink(latestLink);
-//     }
-//     await fs.symlink(componentVersion, latestLink, 'dir');
-//     console.log(`   ✅ Created components/${componentName}/latest → ${componentVersion}`);
-    
-//     // 8. Initialize semantic links to point BACK to main component directory
-//     // This allows 'links' command to see ALL versions (like 0.3.13.2 does)
-//     // Path calculation: from test/data/components/ComponentName/ back to main components/ComponentName/
-//     const mainComponentDir = this.resolveComponentDirectory(componentName);
-//     const relativePath = path.relative(componentMirrorDir, mainComponentDir);
-    
-//     for (const linkName of ['prod', 'test', 'dev']) {
-//       const semanticLink = path.join(componentMirrorDir, linkName);
-//       const targetPath = path.join(relativePath, linkName);
-      
-//       if (existsSync(semanticLink)) {
-//         await fs.unlink(semanticLink);
-//       }
-//       await fs.symlink(targetPath, semanticLink, 'dir');
-//     }
-//     console.log(`   ✅ Connected semantic links to main component directory (${relativePath})`);
-    
-//     console.log(`\n✅ Test isolation environment initialized!`);
-//     console.log(`   📂 Location: ${absoluteTestDataPath}`);
-//     console.log(`   🔧 CLI available: ${cliName}`);
-//     console.log(`   🧪 Test with: cd ${absoluteTestDataPath} && source source.env`);
-//     console.log(`   🎯 Then try: ${cliName} <TAB>`);
-    
-//     return this;
-//   }
-
-  /**
-   * Generate version wrapper scripts for retroactive isolation
-   * Scans all components (not just Web4TSComponent) and creates proxy wrappers
-   * This ensures old versions CANNOT modify production state
-   * @cliHide
-
-  private async generateVersionWrappers(projectRoot: string): Promise<this> {
-    const componentsDir = path.join(projectRoot, 'components');
-    
-    // Skip if components directory doesn't exist
-    if (!existsSync(componentsDir)) {
-      return this;
-    }
-    
-    // ESM: Use import.meta.url to find template
-    const currentFileUrl = new URL(import.meta.url);
-    const currentFilePath = path.dirname(currentFileUrl.pathname);
-    const templatePath = path.join(currentFilePath, '../../../templates/sh/version-wrapper.sh.template');
-    
-    // Check if template exists
-    if (!existsSync(templatePath)) {
-      console.log(`\n⚠️  Version wrapper template not found: ${templatePath}`);
-      return this;
-    }
-    
-    const templateContent = await fs.readFile(templatePath, 'utf-8');
-    
-    // Scan all components
-    const componentNames = await fs.readdir(componentsDir);
-    let totalWrappers = 0;
-    
-    console.log(`\n🔧 Generating version wrappers for all components...`);
-    
-    for (const componentName of componentNames) {
-      const componentDir = path.join(componentsDir, componentName);
-      
-      // Skip if not a directory
-      const stats = await fs.lstat(componentDir);
-      if (!stats.isDirectory()) continue;
-      
-      // Find all version directories
-      const entries = await fs.readdir(componentDir);
-      const versions: string[] = [];
-      
-      for (const entry of entries) {
-        if (/^\d+\.\d+\.\d+\.\d+$/.test(entry)) {
-          versions.push(entry);
-        }
-      }
-      
-      if (versions.length === 0) continue;
-      
-      const cliName = componentName.toLowerCase().replace(/[^a-z0-9]/g, '');
-      
-      // Get context to check if this is the CURRENT running component
-      const isCurrentComponent = this.model.context && this.model.context.model.component === componentName;
-      
-      for (const version of versions) {
-        // CRITICAL: Skip generating wrapper for the CURRENT running version!
-        // The current version's CLI should be the REAL launcher, not a delegating wrapper
-        if (isCurrentComponent && version === this.model.context!.model.version.toString()) {
-          console.log(`   ⏭️  Skipped ${cliName}-v${version} (current running version - not isolated)`);
-          continue;
-        }
-        
-        // Generate wrapper for this version
-        const wrapperContent = templateContent
-          .replace(/\{\{COMPONENT_NAME\}\}/g, componentName)
-          .replace(/\{\{VERSION\}\}/g, version)
-          .replace(/\{\{CLI_NAME\}\}/g, cliName);
-        
-        const wrapperPath = path.join(
-          projectRoot,
-          'scripts/versions',
-          `${cliName}-v${version}`
-        );
-        
-        // Remove existing symlink if it exists
-        try {
-          const stats = await fs.lstat(wrapperPath);
-          if (stats.isSymbolicLink()) {
-            await fs.unlink(wrapperPath);
-            console.log(`   🔄 Replaced symlink: ${cliName}-v${version}`);
-          }
-        } catch {
-          // File doesn't exist, that's fine
-        }
-        
-        await fs.writeFile(wrapperPath, wrapperContent, { mode: 0o755 });
-        totalWrappers++;
-      }
-    }
-    
-    console.log(`   📦 ${totalWrappers} version wrapper(s) created across all components`);
-    console.log(`   🛡️  Old versions will run in isolated test environments`);
-    
-    return this;
-  }
-   */
 
 
 
@@ -2084,66 +1685,17 @@ Standards:
    * @param command Optional command arguments to run in test shell (rest params)
    * @cliHide
    */
-  // protected async testShell(version?: string, ...command: string[]): Promise<this> {
-  //   const context = this.getComponentContext();
     
-  //   // Determine which version to use
-  //   const targetVersion = version || (context ? context.version : this.model.version);
-  //   const component = context ? context.component : this.model.component;
     
-  //   const componentPath = this.resolveComponentPath(component, targetVersion);
-  //   const testDataPath = path.join(componentPath, 'test', 'data');
-  //   const sourceEnvPath = path.join(testDataPath, 'source.env');
     
-  //   // Check if test environment exists, if not, auto-initialize it
-  //   if (!existsSync(testDataPath) || !existsSync(sourceEnvPath)) {
-  //     console.log(`🔧 Test environment not ready, auto-initializing...`);
-  //     console.log(`   📂 Target: ${testDataPath}`);
       
-  //     // Auto-initialize the test isolation environment
-  //     await this.initTestIsolationEnvironment(testDataPath, component, targetVersion);
       
-  //     console.log(`✅ Test environment initialized successfully\n`);
-  //   }
     
-  //   console.log(`\n🧪 Test Shell for ${component} ${targetVersion}`);
-  //   console.log(`📂 Directory: ${testDataPath}`);
-  //   console.log(`🔧 Environment: test/data/source.env`);
     
-  //   // If command provided, run it; otherwise start interactive shell
-  //   if (command.length > 0) {
-  //     // Run command in test shell
-  //     const cmd = command.join(' ');
-  //     console.log(`▶️  Running: ${cmd}\n`);
       
-  //     try {
-  //       execSync(`cd "${testDataPath}" && source "${sourceEnvPath}" && ${cmd}`, {
-  //         stdio: 'inherit',
-  //         shell: '/bin/bash',
-  //       });
-  //     } catch (error) {
-  //       // Command failed
-  //       throw error;
-  //     }
-  //   } else {
-  //     // Interactive shell
-  //     console.log(`\n🎯 Test completion with: web4tscomponent <TAB>`);
-  //     console.log(`   Exit with: exit or Ctrl+D\n`);
       
-  //     try {
-  //       execSync(`cd "${testDataPath}" && bash --init-file "${sourceEnvPath}" -i`, {
-  //         stdio: 'inherit',
-  //       });
         
-  //       console.log(`\n✅ Exited test shell`);
-  //     } catch (error) {
-  //       // User exited shell (normal behavior)
-  //       console.log(`\n✅ Exited test shell`);
-  //     }
-  //   }
     
-  //   return this;
-  // }
 
   /**
    * Run tests with configurable release promotion 
@@ -4929,7 +4481,6 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
-  // Private helper methods for scaffolding
   /**
    * @cliHide
    */
@@ -5016,10 +4567,6 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     await fs.mkdir(path.join(componentDir, 'spec'), { recursive: true });
   }
 
-  // DEAD CODE REMOVED (2025-10-08): createVitestConfig() was replaced by createVitestConfigFromTemplate()
-  // Old version had hardcoded config without reporters/outputFile for test-results.json
-  // New version uses template with proper JSON reporting for promotion verification
-  // Proof: grep shows 0 callers for createVitestConfig(), only createVitestConfigFromTemplate() is called at line 248
 
   /**
    * Create test directory structure with basic test file
@@ -5712,103 +5259,12 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async createComponentImplementation(componentDir: string, componentName: string, version: string): Promise<void> {
-    const componentImplementation = `/**
- * Default${componentName} - ${componentName} Component Implementation
- * Web4 pattern: Empty constructor + scenario initialization + component functionality
- */
-
-import { ${componentName} } from '../layer3/${componentName}.interface.js';
-import { Scenario } from '../layer3/Scenario.interface.js';
-import { ${componentName}Model } from '../layer3/${componentName}Model.interface.js';
-
-export class Default${componentName} implements ${componentName} {
-  private model: ${componentName}Model;
-
-  constructor() {
-    // Empty constructor - Web4 pattern
-    this.model = {
-      uuid: crypto.randomUUID(),
-      name: '',
-      origin: '',
-      definition: ''
-      // Note: createdAt/updatedAt removed per Web4 principle - belong in ChangeEvent
-    };
-  }
-
-  /**
-   * @cliHide
-   */
-  init(scenario: Scenario<${componentName}Model>): this {
-    if (scenario.model) {
-      this.model = { ...this.model, ...scenario.model };
-    }
-    return this;
-  }
-
-  /**
-   * @cliHide
-   */
-  async toScenario(name?: string): Promise<Scenario<${componentName}Model>> {
-    const ownerData = JSON.stringify({
-      user: process.env.USER || 'system',
-      hostname: process.env.HOSTNAME || 'localhost',
-      uuid: this.model.uuid,
-      timestamp: new Date().toISOString(),
-      component: '${componentName}',
-      version: '${version}'
+    const content = await this.loadTemplate('ts/DefaultComponent.ts.template', {
+      COMPONENT_NAME: componentName,
+      VERSION: version
     });
-
-    return {
-      ior: {
-        uuid: this.model.uuid,
-        component: '${componentName}',
-        version: '${version}'
-      },
-      owner: ownerData,
-      model: this.model
-    };
-  }
-
-  /**
-   * Create example operation for ${componentName}
-   * @param input Input data to process
-   * @param format Output format (json, text, xml)
-   * @cliSyntax input format
-   * @TODO cliDefault format json
-   */
-  async create(input: string, format: string = 'json'): Promise<this> {
-    console.log(\`🚀 Creating \${input} in \${format} format\`);
-    this.model.name = input;
-    // Note: updatedAt removed - belongs in ChangeEvent tracking
-    console.log(\`✅ ${componentName} operation completed\`);
-    return this;
-  }
-
-  /**
-   * Process data through ${componentName} logic
-   * @param data Data to process
-   * @cliSyntax data
-   */
-  async process(data: string): Promise<this> {
-    console.log(\`🔧 Processing: \${data}\`);
-    // Note: updatedAt removed - belongs in ChangeEvent tracking
-    return this;
-  }
-
-  /**
-   * Show information about current ${componentName} state
-   */
-  async info(): Promise<this> {
-    console.log(\`📋 ${componentName} Information:\`);
-    console.log(\`   UUID: \${this.model.uuid}\`);
-    console.log(\`   Name: \${this.model.name || 'Not set'}\`);
-    // Note: createdAt/updatedAt removed - belong in ChangeEvent tracking
-    return this;
-  }
-}`;
-
-    const implementationPath = path.join(componentDir, 'src/ts/layer2', `Default${componentName}.ts`);
-    await fs.writeFile(implementationPath, componentImplementation);
+    const filePath = path.join(componentDir, 'src/ts/layer2', `Default${componentName}.ts`);
+    await fs.writeFile(filePath, content);
   }
 
   /**
@@ -5816,42 +5272,17 @@ export class Default${componentName} implements ${componentName} {
    * @cliHide
    */
   private async createComponentInterfaces(componentDir: string, componentName: string): Promise<void> {
-    // Component interface
-    const componentInterface = `/**
- * ${componentName} - ${componentName} Component Interface
- * Web4 pattern: Component interface definition
- */
-
-import { Scenario } from './Scenario.interface.js';
-import { ${componentName}Model } from './${componentName}Model.interface.js';
-
-export interface ${componentName} {
-  init(scenario: Scenario<${componentName}Model>): this;
-  toScenario(name?: string): Promise<Scenario<${componentName}Model>>;
-  create(input: string, format?: string): Promise<this>;
-  process(data: string): Promise<this>;
-  info(): Promise<this>;
-}`;
-
+    // Generate component interface
+    const componentInterface = await this.loadTemplate('ts/Component.interface.ts.template', {
+      COMPONENT_NAME: componentName
+    });
     const interfacePath = path.join(componentDir, 'src/ts/layer3', `${componentName}.interface.ts`);
     await fs.writeFile(interfacePath, componentInterface);
 
-    // Component model interface
-    const modelInterface = `/**
- * ${componentName}Model - ${componentName} Component Model Interface
- * Web4 pattern: Component model following auto-discovery patterns
- */
-
-import { Model } from './Model.interface.js';
-
-export interface ${componentName}Model extends Model {
-  uuid: string;
-  name: string;
-  origin: string;
-  definition: string;
-  // Note: createdAt/updatedAt removed per Web4 principle - belong in ChangeEvent
-}`;
-
+    // Generate component model interface
+    const modelInterface = await this.loadTemplate('ts/ComponentModel.interface.ts.template', {
+      COMPONENT_NAME: componentName
+    });
     const modelPath = path.join(componentDir, 'src/ts/layer3', `${componentName}Model.interface.ts`);
     await fs.writeFile(modelPath, modelInterface);
 
@@ -5864,88 +5295,12 @@ export interface ${componentName}Model extends Model {
    * @cliHide
    */
   private async createCLIImplementation(componentDir: string, componentName: string, version: string): Promise<void> {
-    const cliImplementation = `#!/usr/bin/env node
-
-/**
- * ${componentName}CLI - ${componentName} CLI implementation with auto-discovery
- * Web4 pattern: Auto-discovery CLI with chaining support
- */
-
-import { DefaultCLI } from '../layer2/DefaultCLI.js';
-import { Default${componentName} } from '../layer2/Default${componentName}.js';
-
-export class ${componentName}CLI extends DefaultCLI {
-  private component: Default${componentName} | null;
-
-  constructor() {
-    super();
-    this.component = null;
-    this.initWithComponentClass(Default${componentName}, '${componentName}', '${version}');
-  }
-
-  /**
-   * Static start method - Web4 radical OOP entry point
-   */
-  static async start(args: string[]): Promise<void> {
-    const cli = new ${componentName}CLI();
-    await cli.execute(args);
-  }
-
-  private getOrCreateComponent(): Default${componentName} {
-    if (!this.component) {
-      this.component = this.getComponentInstance() as Default${componentName};
-    }
-    return this.component;
-  }
-
-  /**
-   * ${componentName}-specific usage display using DefaultCLI dynamic generation
-   */
-  showUsage(): void {
-    console.log(this.generateStructuredUsage());
-  }
-
-  /**
-   * Execute CLI commands with auto-discovery
-   */
-  async execute(args: string[]): Promise<void> {
-    if (args.length === 0) {
-      this.showUsage();
-      return;
-    }
-
-    const command = args[0];
-    const commandArgs = args.slice(1);
-
-    try {
-      // Try dynamic command execution
-      if (await this.executeDynamicCommand(command, commandArgs)) {
-        return;
-      }
-
-      // Special cases
-      switch (command) {
-        case 'help':
-          this.showUsage();
-          break;
-          
-        default:
-          throw new Error(\`Unknown command: \${command}\`);
-      }
-    } catch (error) {
-      console.error(this.formatError((error as Error).message));
-      process.exit(1);
-    }
-  }
-}
-
-// Static entry point for shell execution
-if (import.meta.url === \`file://\${process.argv[1]}\`) {
-  ${componentName}CLI.start(process.argv.slice(2));
-}`;
-
+    const content = await this.loadTemplate('ts/ComponentCLI.ts.template', {
+      COMPONENT_NAME: componentName,
+      VERSION: version
+    });
     const cliPath = path.join(componentDir, 'src/ts/layer5', `${componentName}CLI.ts`);
-    await fs.writeFile(cliPath, cliImplementation);
+    await fs.writeFile(cliPath, content);
   }
 
   /**
@@ -6054,7 +5409,6 @@ if (import.meta.url === \`file://\${process.argv[1]}\`) {
     }
   }
 
-  // NEW TEMPLATE-BASED METHODS
 
   /**
    * Create package.json from external template
