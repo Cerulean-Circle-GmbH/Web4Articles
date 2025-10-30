@@ -1795,7 +1795,9 @@ Standards:
       console.log(`🔄 Dev and test are same version (${devVersion}) - creating nextBuild for testing...`);
       
       try {
-        const nextBuildVersion = await this.createNextBuildVersion(target.model.component, targetVersion);
+        // @pdca 2025-10-30-UTC-1430.functional-helper-elimination.pdca.md - Direct SemanticVersion usage (Radical OOP)
+        const nextBuildVersion = (await SemanticVersion.fromString(targetVersion).promoteRevision()).toString();
+        console.log(`✅ Calculated nextBuild version: ${nextBuildVersion}`);
         await this.createSemanticLink(target.model.component, 'test', nextBuildVersion);
         console.log(`✅ Test updated: test → ${nextBuildVersion}`);
         // ✅ Component no longer manipulates context (context now in CLIModel)
@@ -1888,13 +1890,19 @@ Standards:
       let newProdVersion: string;
       switch (promotionLevel) {
         case 'nextPatch':
-          newProdVersion = await this.createNextPatchVersion(componentName, currentVersion);
+          // @pdca 2025-10-30-UTC-1430.functional-helper-elimination.pdca.md - Direct SemanticVersion usage (Radical OOP)
+          newProdVersion = (await SemanticVersion.fromString(currentVersion).promotePatch()).toString();
+          console.log(`✅ Calculated nextPatch version: ${newProdVersion}`);
           break;
         case 'nextMinor':
-          newProdVersion = await this.createNextMinorVersion(componentName, currentVersion);
+          // @pdca 2025-10-30-UTC-1430.functional-helper-elimination.pdca.md - Direct SemanticVersion usage (Radical OOP)
+          newProdVersion = (await SemanticVersion.fromString(currentVersion).promoteMinor()).toString();
+          console.log(`✅ Calculated nextMinor version: ${newProdVersion}`);
           break;
         case 'nextMajor':
-          newProdVersion = await this.createNextMinorVersion(componentName, currentVersion); // Use nextMinor for now, will add nextMajor later
+          // @pdca 2025-10-30-UTC-1430.functional-helper-elimination.pdca.md - Direct SemanticVersion usage (Radical OOP)
+          newProdVersion = (await SemanticVersion.fromString(currentVersion).promoteMinor()).toString(); // Still using promoteMinor for now
+          console.log(`✅ Calculated nextMajor version: ${newProdVersion}`);
           break;
         default:
           throw new Error(`Invalid promotion level: ${promotionLevel}`);
@@ -1912,7 +1920,9 @@ Standards:
       
       // Step 4: Create nextBuild version for new development cycle
       console.log(`\n🔧 Step 4: Creating nextBuild version for development...`);
-      const nextBuildVersion = await this.createNextBuildVersion(componentName, newProdVersion);
+      // @pdca 2025-10-30-UTC-1430.functional-helper-elimination.pdca.md - Direct SemanticVersion usage (Radical OOP)
+      const nextBuildVersion = (await SemanticVersion.fromString(newProdVersion).promoteRevision()).toString();
+      console.log(`✅ Calculated nextBuild version: ${nextBuildVersion}`);
       
       // Step 5: Set nextBuild as new dev and test
       console.log(`\n🚧 Step 5: Setting up development workflow...`);
@@ -2001,7 +2011,9 @@ Standards:
     
     try {
       // Create nextBuild version (increment build number)
-      const devVersion = await this.createNextBuildVersion(componentName, currentVersion);
+      // @pdca 2025-10-30-UTC-1430.functional-helper-elimination.pdca.md - Direct SemanticVersion usage (Radical OOP)
+      const devVersion = (await SemanticVersion.fromString(currentVersion).promoteRevision()).toString();
+      console.log(`✅ Calculated nextBuild version: ${devVersion}`);
       
       // Set as dev
       await this.createSemanticLink(componentName, 'dev', devVersion);
@@ -2046,7 +2058,9 @@ Standards:
     
     try {
       // Create nextBuild version (increment build number)
-      const testVersion = await this.createNextBuildVersion(componentName, currentVersion);
+      // @pdca 2025-10-30-UTC-1430.functional-helper-elimination.pdca.md - Direct SemanticVersion usage (Radical OOP)
+      const testVersion = (await SemanticVersion.fromString(currentVersion).promoteRevision()).toString();
+      console.log(`✅ Calculated nextBuild version: ${testVersion}`);
       
       // Set as test
       await this.createSemanticLink(componentName, 'test', testVersion);
@@ -2103,7 +2117,9 @@ Standards:
     try {
       // Create nextBuild version (increment build number)
       console.log(`\n🔧 Creating nextBuild version from ${currentVersion}...`);
-      const nextBuildVersion = await this.createNextBuildVersion(componentName, currentVersion);
+      // @pdca 2025-10-30-UTC-1430.functional-helper-elimination.pdca.md - Direct SemanticVersion usage (Radical OOP)
+      const nextBuildVersion = (await SemanticVersion.fromString(currentVersion).promoteRevision()).toString();
+      // Note: console.log already exists in calling context
       
       // Set nextBuild as test
       console.log(`\n🧪 Setting ${nextBuildVersion} as test version...`);
@@ -2159,7 +2175,9 @@ Standards:
     try {
       // Step 1: Create nextPatch version from current (test becomes prod)
       console.log(`\n🔧 Step 1: Creating nextPatch version from ${currentVersion}...`);
-      const nextPatchVersion = await this.createNextPatchVersion(componentName, currentVersion);
+      // @pdca 2025-10-30-UTC-1430.functional-helper-elimination.pdca.md - Direct SemanticVersion usage (Radical OOP)
+      const nextPatchVersion = (await SemanticVersion.fromString(currentVersion).promotePatch()).toString();
+      // Note: console.log already exists in calling context
       
       // Step 2: Set nextPatch as new prod
       console.log(`\n🚀 Step 2: Promoting ${nextPatchVersion} to prod...`);
@@ -2173,7 +2191,9 @@ Standards:
       
       // Step 4: Create nextBuild version for new development cycle
       console.log(`\n🔧 Step 4: Creating nextBuild version for development...`);
-      const nextBuildVersion = await this.createNextBuildVersion(componentName, nextPatchVersion);
+      // @pdca 2025-10-30-UTC-1430.functional-helper-elimination.pdca.md - Direct SemanticVersion usage (Radical OOP)
+      const nextBuildVersion = (await SemanticVersion.fromString(nextPatchVersion).promoteRevision()).toString();
+      // Note: console.log already exists in calling context
       
       // Step 5: Set nextBuild as new dev and test
       console.log(`\n🚧 Step 5: Setting up development workflow...`);
@@ -2270,54 +2290,6 @@ Standards:
     return this.model.version.toString();
   }
 
-  /**
-   * Create nextPatch version from current version
-   * nextPatch increments patch version and resets build to 0
-   * e.g., 0.3.2.0 → 0.3.3.0
-   * @cliHide
-   */
-  private async createNextPatchVersion(componentName: string, currentVersion: string): Promise<string> {
-    // ✅ Use SemanticVersion class for version logic (DRY)
-    // @pdca 2025-10-30-UTC-1011.pdca.md - Use existing SemanticVersion class instead of manual math
-    const version = SemanticVersion.fromString(currentVersion);
-    const nextVersion = await version.promotePatch();
-    const nextPatchVersion = nextVersion.toString();
-    
-    console.log(`✅ Calculated nextPatch version: ${nextPatchVersion}`);
-    return nextPatchVersion;
-  }
-
-  /**
-   * Create nextBuild version from base version
-   * @cliHide
-   */
-  private async createNextBuildVersion(componentName: string, baseVersion: string): Promise<string> {
-    // ✅ Use SemanticVersion class for version logic (DRY)
-    // @pdca 2025-10-30-UTC-1011.pdca.md - Use existing SemanticVersion class instead of manual math
-    const version = SemanticVersion.fromString(baseVersion);
-    const nextVersion = await version.promoteRevision();  // promoteRevision = increment build
-    const nextBuildVersion = nextVersion.toString();
-    
-    console.log(`✅ Calculated nextBuild version: ${nextBuildVersion}`);
-    return nextBuildVersion;
-  }
-
-  /**
-   * Create nextMinor version from current version (for major releases)
-   * nextMinor increments minor version and resets patch and build to 0
-   * e.g., 0.3.4.2 → 0.4.0.0
-   * @cliHide
-   */
-  private async createNextMinorVersion(componentName: string, currentVersion: string): Promise<string> {
-    // ✅ Use SemanticVersion class for version logic (DRY)
-    // @pdca 2025-10-30-UTC-1011.pdca.md - Use existing SemanticVersion class instead of manual math
-    const version = SemanticVersion.fromString(currentVersion);
-    const nextVersion = await version.promoteMinor();
-    const nextMinorVersion = nextVersion.toString();
-    
-    console.log(`✅ Calculated nextMinor version: ${nextMinorVersion}`);
-    return nextMinorVersion;
-  }
 
   /**
    * Execute start command in loaded component context
