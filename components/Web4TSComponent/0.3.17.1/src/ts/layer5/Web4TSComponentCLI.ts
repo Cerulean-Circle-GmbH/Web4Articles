@@ -162,27 +162,37 @@ export class Web4TSComponentCLI extends DefaultCLI {
     const methodArgs = args.slice(0, consumedArgs);
     const remainingArgs = args.slice(consumedArgs);
 
-    // Execute the method (CLI methods take precedence over component methods)
-    // Web4 pattern: completeParameter, actionParameterCompletion are CLI methods
+    // Execute the method with context-aware priority
+    // Priority: CLI method > Context method (via on()) > Component method
+    // @pdca 2025-10-30-UTC-1011.pdca.md - Context-aware command execution
     
     if (typeof (this as any)[command] === 'function') {
-      // Execute on CLI instance
+      // 1. CLI method (on, test, completeParameter, etc.) - HIGHEST PRIORITY
       const method = (this as any)[command];
       if (signature.isAsync) {
         await method.apply(this, methodArgs);
       } else {
         method.apply(this, methodArgs);
       }
-    } else {
-      // Fallback to component instance
-      const componentInstance = this.getOrCreateTSComponent();
-      const method = (componentInstance as any)[command];
-      
+    } else if (this.model.context && typeof (this.model.context as any)[command] === 'function') {
+      // 2. Context method (via on()) - SECOND PRIORITY
+      // Example: web4tscomponent on PDCA 0.3.5.1 links → calls this.model.context.links()
+      const method = (this.model.context as any)[command];
       if (signature.isAsync) {
-        await method.apply(componentInstance, methodArgs);
+        await method.apply(this.model.context, methodArgs);
       } else {
-        method.apply(componentInstance, methodArgs);
+        method.apply(this.model.context, methodArgs);
       }
+    } else if (this.model.component && typeof (this.model.component as any)[command] === 'function') {
+      // 3. Primary component method - FALLBACK
+      const method = (this.model.component as any)[command];
+      if (signature.isAsync) {
+        await method.apply(this.model.component, methodArgs);
+      } else {
+        method.apply(this.model.component, methodArgs);
+      }
+    } else {
+      throw new Error(`Method not found: ${command}`);
     }
     
     return { executed: true, remainingArgs };

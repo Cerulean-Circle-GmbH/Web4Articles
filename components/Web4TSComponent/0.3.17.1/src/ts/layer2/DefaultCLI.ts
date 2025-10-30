@@ -59,12 +59,24 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    */
   init(scenario?: Scenario<CLIModel>): this {
     if (!this.model) {
-      // ✅ Inlined createEmptyModel() logic directly
+      // ✅ Path Authority: Calculate ALL paths ONCE and store in model
+      // INHERITANCE: This runs for ALL CLIs (Web4TSComponent, TestIsolatedComponent, PDCA, Unit, etc.)
+      // @pdca 2025-10-30-UTC-1011.pdca.md - Implementing Path Authority
+      const projectRoot = this.calculateProjectRootInternal();
+      
       this.model = {
         uuid: crypto.randomUUID(),
         name: "cli",
         origin: "system",
         definition: "CLI model",
+        
+        // ✅ Path Authority fields (calculated ONCE, inherited by ALL CLIs)
+        projectRoot: projectRoot,
+        componentsDir: join(projectRoot, 'components'),
+        scriptsDir: join(projectRoot, 'scripts'),
+        scriptsVersionDir: join(projectRoot, 'scripts', 'versions'),
+        testDataDir: join(projectRoot, 'test', 'data'),
+        
         // Completion context - initialized empty
         completionCliName: "",
         completionCompWords: [],
@@ -75,9 +87,6 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         completionCommand: null,
         completionParameters: [],
         completionParameterIndex: 0,
-        // "on" context
-        completionOnComponent: null,
-        completionOnVersion: null,
         // Chaining
         completionChainedCommands: [],
         // State flags
@@ -90,7 +99,196 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       this.model = { ...this.model, ...scenario.model };
     }
     
+    // ✅ Tell DefaultWeb4TSComponent where to operate (Path Authority → Component)
+    // Works for Web4TSComponent AND for generated components (TestIsolatedComponent, etc.)
+    if (this.model.component) {
+      this.model.component.setTargetDirectory(this.model.projectRoot);
+    }
+    
     return this;
+  }
+
+  /**
+   * Calculate project root - SINGLE SOURCE OF TRUTH for all path calculations
+   * Detects test isolation (test/data) vs production
+   * 
+   * Priority Order:
+   * 1. Test isolation detection (highest priority for test context)
+   * 2. WEB4_PROJECT_ROOT environment variable
+   * 3. Git repository root (git rev-parse --show-toplevel)
+   * 4. Directory traversal (package.json with Web4 markers)
+   * 5. Fallback: process.cwd()
+   * 
+   * CRITICAL: Test isolation check MUST be first to ensure tests
+   * running from test/data/components/TestIsolatedComponent/0.1.0.0
+   * correctly identify test/data as project root
+   * 
+   * @pdca 2025-10-30-UTC-1011.pdca.md - Path Authority implementation
+   * @pdca 2025-10-28-UTC-0934.pdca.md:244-271 - Original design
+   * @cliHide
+   * @returns Absolute path to project root
+   */
+  private calculateProjectRootInternal(): string {
+    const cwd = process.cwd();
+    
+    // 1. Check for test isolation FIRST (highest priority for test context)
+    // CRITICAL: Works for both Web4TSComponent tests AND generated component tests
+    // Example: /Users/.../Web4Articles/components/Web4TSComponent/0.3.17.1/test/data/components/TestIsolatedComponent/0.1.0.0
+    // Result: /Users/.../Web4Articles/components/Web4TSComponent/0.3.17.1/test/data
+    if (cwd.includes('/test/data')) {
+      // Find test/data directory by walking up from cwd
+      const parts = cwd.split('/');
+      const testIndex = parts.indexOf('test');
+      if (testIndex !== -1 && testIndex + 1 < parts.length && parts[testIndex + 1] === 'data') {
+        // Return path UP TO AND INCLUDING test/data
+        return parts.slice(0, testIndex + 2).join('/');
+      }
+    }
+    
+    // 2. Try WEB4_PROJECT_ROOT environment variable
+    if (process.env.WEB4_PROJECT_ROOT) {
+      return process.env.WEB4_PROJECT_ROOT;
+    }
+    
+    // 3. Try git root
+    try {
+      const { execSync } = require('child_process');
+      const gitRoot = execSync('git rev-parse --show-toplevel', { 
+        encoding: 'utf8',
+        stdio: ['pipe', 'pipe', 'ignore']  // Suppress stderr
+      }).trim();
+      if (existsSync(gitRoot)) {
+        return gitRoot;
+      }
+    } catch {
+      // Git not available or not in git repo - continue to next method
+    }
+    
+    // 4. Directory traversal looking for package.json with Web4 markers
+    let current = cwd;
+    const root = '/';
+    
+    while (current !== root) {
+      const packageJsonPath = join(current, 'package.json');
+      if (existsSync(packageJsonPath)) {
+        try {
+          const content = readFileSync(packageJsonPath, 'utf-8');
+          const pkg = JSON.parse(content);
+          
+          // Check for Web4 markers
+          if (pkg.name?.includes('web4') || 
+              pkg.dependencies?.['@web4x/web4tscomponent'] ||
+              existsSync(join(current, 'components'))) {
+            return current;
+          }
+        } catch {
+          // Invalid JSON, continue searching
+        }
+      }
+      
+      // Move up one directory
+      const parent = join(current, '..');
+      if (parent === current) break;  // Reached root
+      current = parent;
+    }
+    
+    // 5. Fallback: Use cwd
+    return cwd;
+  }
+
+  /**
+   * Load component context for delegation (universal across ALL components)
+   * Works for Web4TSComponent, PDCA, Unit, TestIsolatedComponent - ANY generated component!
+   * 
+   * INHERITANCE: This method is inherited by ALL CLIs:
+   * - Web4TSComponentCLI extends DefaultCLI → inherits on()
+   * - TestIsolatedComponentCLI extends DefaultCLI → inherits on()
+   * - PDCACLI extends DefaultCLI → inherits on()
+   * 
+   * @pdca 2025-10-30-UTC-1011.pdca.md - Moved from DefaultWeb4TSComponent to DefaultCLI
+   * @pdca 2025-10-28-UTC-0934.pdca.md:3057 - Context INSTANCE pattern
+   * 
+   * @param component Component name to load
+   * @param version Component version (default: 'latest')
+   * 
+   * @example web4tscomponent on PDCA 0.3.5.1 links
+   * @example testisolatedcomponent on Unit 0.3.0.5 tree
+   * @example pdca on Web4TSComponent 0.3.17.1 test
+   * 
+   * @cliSyntax component version
+   * @cliDefault version latest
+   */
+  async on(component: string, version: string = 'latest'): Promise<this> {
+    // Need to get web4ts reference for helper methods
+    const web4ts = this.getWeb4TS();
+    
+    // Use DRY helper to resolve actual version
+    const actualVersion = web4ts.resolveActualVersion(component, version);
+    
+    // ✅ CLI calculates ALL paths (Path Authority)
+    const componentPath = join(this.model.componentsDir, component, actualVersion);
+    
+    if (!existsSync(componentPath)) {
+      throw new Error(`Component not found: ${component} ${version} at ${componentPath}`);
+    }
+    
+    // ✅ Dynamically load target component class
+    const targetComponent = await this.loadComponentInstanceInternal(component, actualVersion, componentPath);
+    
+    // ✅ CLI tells component where to operate (Path Authority → Component)
+    targetComponent.setTargetDirectory(componentPath);
+    
+    // ✅ Store INSTANCE in CLI context (not component context!)
+    this.model.context = targetComponent;
+    
+    if (actualVersion !== version) {
+      console.log(`✅ Component context loaded: ${component} ${version} → ${actualVersion}`);
+    } else {
+      console.log(`✅ Component context loaded: ${component} ${actualVersion}`);
+    }
+    console.log(`   Path: ${componentPath}`);
+    
+    return this;  // Enable chaining
+  }
+
+  /**
+   * Dynamically load any component class (Web4TSComponent, PDCA, Unit, etc.)
+   * 
+   * DYNAMIC LOADING: Enables on() to work with ANY component type:
+   * - on('Web4TSComponent', '0.3.17.1') → loads DefaultWeb4TSComponent
+   * - on('PDCA', '0.3.5.1') → loads DefaultPDCA
+   * - on('Unit', '0.3.0.5') → loads DefaultUnit
+   * - on('TestIsolatedComponent', '0.1.0.0') → loads DefaultTestIsolatedComponent
+   * 
+   * @pdca 2025-10-30-UTC-1011.pdca.md - Universal component loading
+   * @cliHide
+   * @param componentName Name of component to load
+   * @param version Version of component to load
+   * @param componentPath Absolute path to component (from Path Authority)
+   * @returns Component instance ready for delegation
+   */
+  private async loadComponentInstanceInternal(
+    componentName: string, 
+    version: string,
+    componentPath: string
+  ): Promise<DefaultWeb4TSComponent> {
+    const modulePath = join(componentPath, 'dist', 'ts', 'layer2', `Default${componentName}.js`);
+    
+    if (!existsSync(modulePath)) {
+      throw new Error(`Component module not found: ${modulePath}`);
+    }
+    
+    // ✅ Dynamic import (works for ANY component type!)
+    const module = await import(modulePath);
+    const ComponentClass = module[`Default${componentName}`];
+    
+    if (!ComponentClass) {
+      throw new Error(`Component class not found: Default${componentName} in ${modulePath}`);
+    }
+    
+    const instance = new ComponentClass().init();
+    
+    return instance;
   }
 
   /**
@@ -234,13 +432,6 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // Parse parameters (words from index 2 to cword-1)
     model.completionParameters = cword > 2 ? words.slice(2, cword) : [];
     model.completionParameterIndex = Math.max(0, cword - 2);
-
-    // Detect "on" context
-    const onIndex = words.indexOf("on");
-    if (onIndex >= 0 && onIndex + 2 < words.length) {
-      model.completionOnComponent = words[onIndex + 1];
-      model.completionOnVersion = words[onIndex + 2];
-    }
 
     // Detect chained commands (TODO: implement chaining detection)
     model.completionChainedCommands = [];
@@ -395,30 +586,26 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
   /**
    * Get test directory path (DRY helper)
-   * Eliminates duplicated path resolution logic across completion methods
+   * ✅ Path Authority: Read from model (calculated ONCE in init())
+   * 
+   * INHERITANCE: This method is inherited and works correctly for:
+   * - Web4TSComponentCLI (returns Web4TSComponent/0.3.17.1/test)
+   * - TestIsolatedComponentCLI (returns TestIsolatedComponent/0.1.0.0/test)
+   * - PDCACLI (returns PDCA/0.3.5.1/test)
+   * - ALL generated component CLIs (returns their component/version/test)
+   * 
+   * @pdca 2025-10-30-UTC-1011.pdca.md - Simplified to use stored path
+   * @pdca 2025-10-28-UTC-0934.pdca.md:298-304 - Original design
    * @cliHide
+   * @returns Absolute path to component test directory
    */
   protected getTestDir(): string {
+    // ✅ RADICAL DRY: Path calculated ONCE in init(), stored in model
+    // For current component (from getWeb4TS()), test directory is at component/test
     const web4ts = this.getWeb4TS();
-    const context = web4ts.getComponentContext();
-
-    if (context) {
-      return join(
-        web4ts.resolveComponentPath(context.component, context.version),
-        "test"
-      );
-    }
-
-    // Check if we're in test isolation environment (test/data directory)
-    const cwd = process.cwd();
-    if (cwd.includes("/test/data")) {
-      // In test isolation: initTestIsolationEnvironment creates a symlink from test/data/test/ to the actual test directory
-      // So test files are accessible via ./test relative to test/data
-      return join(cwd, "test");
-    }
-
-    // Fallback to current working directory
-    return join(cwd, "test");
+    const componentPath = web4ts.model.origin || web4ts.model.projectRoot || this.model.projectRoot;
+    
+    return join(componentPath, 'test');
   }
 
   /**
@@ -1818,9 +2005,6 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         completionCommand: null,
         completionParameters: [],
         completionParameterIndex: 0,
-
-        completionOnComponent: null,
-        completionOnVersion: null,
 
         completionChainedCommands: [],
 

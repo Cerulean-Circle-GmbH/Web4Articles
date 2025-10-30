@@ -1605,61 +1605,6 @@ Standards:
   }
 
   /**
-   * Load component context for chaining operations (essential for workflows)
-   * 
-   * Essential method for chaining workflows. Loads component context that
-   * enables subsequent chained operations like tree, upgrade, setLatest.
-   * Based on Unit's on method pattern for consistent chaining architecture.
-   * 
-   * @param component Component name to load context for
-   * @param version Component version to load
-   * 
-   * @example
-   * // Load context for chaining
-   * await component.on('Unit', '0.3.0.5');
-   * 
-   * @example
-   * // Load context for this component
-   * await component.on('Web4TSComponent', '0.3.2.0');
-   * 
-   * @cliSyntax component version
-   * @TODO cliDefault version current
-   */
-  async on(component: string, version: string = 'latest'): Promise<this> {
-    const componentPath = this.resolveComponentPath(component, version);
-    
-    if (!existsSync(componentPath)) {
-      throw new Error(`Component not found: ${component} ${version} at ${componentPath}`);
-    }
-    
-    // Use DRY helper to resolve actual version
-    const actualVersion = this.resolveActualVersion(component, version);
-    
-    // ✅ RADICAL OOP: Create component INSTANCE for context (not primitives!)
-    // @pdca 2025-10-28-UTC-0934.pdca.md:3057 - Phase 4: Context INSTANCE
-    const targetComponent = new DefaultWeb4TSComponent().init();
-    
-    // ✅ Store version as INSTANCE (has behavior!)
-    targetComponent.model.version = SemanticVersion.fromString(actualVersion);
-    targetComponent.model.component = component;
-    targetComponent.model.origin = componentPath;
-    targetComponent.model.projectRoot = componentPath;
-    targetComponent.model.targetDirectory = componentPath;
-    
-    // ✅ Store INSTANCE in context (not data!)
-    this.model.context = targetComponent;
-    
-    if (actualVersion !== version) {
-      console.log(`✅ Component context loaded: ${component} ${version} → ${actualVersion}`);
-    } else {
-      console.log(`✅ Component context loaded: ${component} ${version}`);
-    }
-    console.log(`   Path: ${componentPath}`);
-    
-    return this; // Enable chaining
-  }
-
-  /**
    * Upgrade component to next version with semantic version control
    * WITHOUT context: Upgrades current component (self-operation)
    * WITH context: Upgrades target component
@@ -1869,8 +1814,9 @@ Standards:
     // Determine what links should be
     const highestVersion = this.getHighestVersion(availableVersions);
     
-    // Load component into context for setCICDVersion
-    await this.on(componentName, highestVersion);
+    // ✅ Component no longer manipulates context (context now in CLIModel)
+    // @pdca 2025-10-30-UTC-1011.pdca.md - Context manipulation removed
+    // TODO: Refactor setCICDVersion to work without context if needed
     
     // Fix 'latest' - should always point to highest version
     if (!semanticLinks.latest || semanticLinks.latest !== highestVersion) {
@@ -2299,7 +2245,9 @@ Standards:
         const nextBuildVersion = await this.createNextBuildVersion(target.model.component, targetVersion);
         await this.createSemanticLink(target.model.component, 'test', nextBuildVersion);
         console.log(`✅ Test updated: test → ${nextBuildVersion}`);
-        await this.on(target.model.component, nextBuildVersion);
+        // ✅ Component no longer manipulates context (context now in CLIModel)
+        // @pdca 2025-10-30-UTC-1011.pdca.md - Context manipulation removed
+        // await this.on(target.model.component, nextBuildVersion);
         targetVersion = nextBuildVersion;
         console.log(`🎯 Now testing new build version: ${nextBuildVersion}`);
       } catch (error) {
@@ -2776,31 +2724,14 @@ Standards:
    * @cliHide
    */
   private async createNextPatchVersion(componentName: string, currentVersion: string): Promise<string> {
-    // Use the existing upgrade method to create nextPatch (increment patch, reset build)
-    const originalContext = this.model.context;
+    // ✅ Use SemanticVersion class for version logic (DRY)
+    // @pdca 2025-10-30-UTC-1011.pdca.md - Use existing SemanticVersion class instead of manual math
+    const version = SemanticVersion.fromString(currentVersion);
+    const nextVersion = await version.promotePatch();
+    const nextPatchVersion = nextVersion.toString();
     
-    // Temporarily set context to current version
-    await this.on(componentName, currentVersion);
-    
-    try {
-      await this.upgrade('nextPatch'); // Use nextPatch to increment patch version
-      
-      // Calculate what the nextPatch version would be (increment patch, reset build)
-      // This should match what upgrade('nextPatch') actually created
-      const parts = currentVersion.split('.').map(Number);
-      const nextPatchVersion = `${parts[0]}.${parts[1]}.${parts[2] + 1}.0`; // Increment patch, reset build to 0
-      
-      console.log(`✅ Created nextPatch version: ${nextPatchVersion}`);
-      return nextPatchVersion;
-      
-    } finally {
-      // Restore original context
-      if (originalContext) {
-        await this.on(originalContext.model.component, originalContext.model.version.toString());
-      } else {
-        this.model.context = undefined;
-      }
-    }
+    console.log(`✅ Calculated nextPatch version: ${nextPatchVersion}`);
+    return nextPatchVersion;
   }
 
   /**
@@ -2808,30 +2739,14 @@ Standards:
    * @cliHide
    */
   private async createNextBuildVersion(componentName: string, baseVersion: string): Promise<string> {
-    // Use the existing upgrade method to create nextBuild
-    const originalContext = this.model.context;
+    // ✅ Use SemanticVersion class for version logic (DRY)
+    // @pdca 2025-10-30-UTC-1011.pdca.md - Use existing SemanticVersion class instead of manual math
+    const version = SemanticVersion.fromString(baseVersion);
+    const nextVersion = await version.promoteRevision();  // promoteRevision = increment build
+    const nextBuildVersion = nextVersion.toString();
     
-    // Temporarily set context to base version
-    await this.on(componentName, baseVersion);
-    
-    try {
-      await this.upgrade('nextBuild');
-      
-      // Calculate what the nextBuild version would be
-      const parts = baseVersion.split('.').map(Number);
-      const nextBuildVersion = `${parts[0]}.${parts[1]}.${parts[2]}.${parts[3] + 1}`;
-      
-      console.log(`✅ Created nextBuild version: ${nextBuildVersion}`);
-      return nextBuildVersion;
-      
-    } finally {
-      // Restore original context
-      if (originalContext) {
-        await this.on(originalContext.model.component, originalContext.model.version.toString());
-      } else {
-        this.model.context = undefined;
-      }
-    }
+    console.log(`✅ Calculated nextBuild version: ${nextBuildVersion}`);
+    return nextBuildVersion;
   }
 
   /**
@@ -2841,29 +2756,14 @@ Standards:
    * @cliHide
    */
   private async createNextMinorVersion(componentName: string, currentVersion: string): Promise<string> {
-    const originalContext = this.model.context;
+    // ✅ Use SemanticVersion class for version logic (DRY)
+    // @pdca 2025-10-30-UTC-1011.pdca.md - Use existing SemanticVersion class instead of manual math
+    const version = SemanticVersion.fromString(currentVersion);
+    const nextVersion = await version.promoteMinor();
+    const nextMinorVersion = nextVersion.toString();
     
-    // Temporarily set context to current version
-    await this.on(componentName, currentVersion);
-    
-    try {
-      await this.upgrade('nextMinor'); // Increment minor, reset patch and build
-      
-      // Calculate what the nextMinor version would be
-      const parts = currentVersion.split('.').map(Number);
-      const nextMinorVersion = `${parts[0]}.${parts[1] + 1}.0.0`; // Increment minor, reset others
-      
-      console.log(`✅ Created nextMinor version: ${nextMinorVersion}`);
-      return nextMinorVersion;
-      
-    } finally {
-      // Restore original context
-      if (originalContext) {
-        await this.on(originalContext.model.component, originalContext.model.version.toString());
-      } else {
-        this.model.context = undefined;
-      }
-    }
+    console.log(`✅ Calculated nextMinor version: ${nextMinorVersion}`);
+    return nextMinorVersion;
   }
 
   /**
@@ -2966,8 +2866,10 @@ Standards:
     // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
     const target = this.model.context || this;
     
-    // Web4 Pattern: Determine test directory using target instance
-    const testDir = path.join(this.resolveComponentPath(target.model.component, target.model.version.toString()), 'test');
+    // ✅ Path Authority: Use component's origin (set by CLI, NOT calculated here!)
+    // @pdca 2025-10-30-UTC-1011.pdca.md - Fixed path doubling by using origin
+    const componentPath = target.model.origin || target.model.projectRoot;
+    const testDir = path.join(componentPath, 'test');
     
     if (!existsSync(testDir)) {
       console.error(`❌ Test directory not found: ${testDir}`);

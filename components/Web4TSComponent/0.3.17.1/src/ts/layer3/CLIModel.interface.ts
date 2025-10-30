@@ -19,6 +19,16 @@ export interface CLIModel extends Model {
    * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Deleted deprecated fields
    */
   
+  // ✅ Path Authority - Project-level absolute paths (CLI's sole responsibility)
+  // Applied to ALL CLIs through inheritance: Web4TSComponentCLI, TestIsolatedComponentCLI, PDCACLI, etc.
+  // @pdca 2025-10-30-UTC-1011.pdca.md - Path Authority architecture
+  // @pdca 2025-10-28-UTC-0934.pdca.md:207-218 - Original design
+  projectRoot: string;              // e.g., /Users/.../Web4Articles (or test/data in test isolation)
+  componentsDir: string;            // e.g., projectRoot/components
+  scriptsDir: string;               // e.g., projectRoot/scripts  
+  scriptsVersionDir: string;        // e.g., projectRoot/scripts/versions
+  testDataDir: string;              // e.g., projectRoot/test/data
+  
   /**
    * Web4TSComponent instance (not componentClass reference!)
    * @pdca 2025-10-28-UTC-0934.pdca.md:1153 - Stores INSTANCE
@@ -30,6 +40,14 @@ export interface CLIModel extends Model {
    * @pdca 2025-10-28-UTC-0934.pdca.md:1153 - Stores INSTANCE
    */
   user?: User;
+  
+  /**
+   * UNIFIED CONTEXT: Single source of truth for delegation
+   * Replaces Web4TSComponentModel.context - context belongs to CLI, not component!
+   * Target component loaded via on() for cross-component operations
+   * @pdca 2025-10-30-UTC-1011.pdca.md - Moved from Web4TSComponentModel to CLIModel
+   */
+  context?: DefaultWeb4TSComponent;
   
   // Completion context - FLAT in model (no CompletionContext relationship!)
   // From bash environment
@@ -43,10 +61,6 @@ export interface CLIModel extends Model {
   completionCommand: string | null;    // Detected command (null if completing method)
   completionParameters: string[];      // Parameters provided so far
   completionParameterIndex: number;    // Which parameter (0-based)
-  
-  // "on" context (flat)
-  completionOnComponent: string | null;   // Component from "on ComponentName version"
-  completionOnVersion: string | null;     // Version from "on ComponentName version"
   
   // Chaining context
   completionChainedCommands: string[]; // Commands in chain
