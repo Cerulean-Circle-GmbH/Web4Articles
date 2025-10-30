@@ -202,25 +202,25 @@ describe('PDCA trainAI Integration Tests (TC28)', () => {
 
   // TC28.5: Example workflows shown
   it('TC28.5: Training topics should show example command usage', async () => {
-    const dualLinksOutput = await captureConsoleOutput(() => pdca.trainAI('how-to-dual-links'));
+    const dualLinksOutput = await captureConsoleOutput(() => pdca.trainAI('dual-links'));
     expect(dualLinksOutput).toContain('pdca getDualLink');
     
-    const ensureLinksOutput = await captureConsoleOutput(() => pdca.trainAI('how-to-ensure-links'));
+    const ensureLinksOutput = await captureConsoleOutput(() => pdca.trainAI('ensure-links'));
     expect(ensureLinksOutput).toContain('pdca ensureValidLinks');
     
-    const upgradeOutput = await captureConsoleOutput(() => pdca.trainAI('how-to-component-upgrade'));
+    const upgradeOutput = await captureConsoleOutput(() => pdca.trainAI('component-upgrade'));
     expect(upgradeOutput).toContain('pdca updateLinksToFile');
     expect(upgradeOutput).toContain('pdca findPDCAsLinking');
   });
 
   // TC28.6: Topic dependencies clear
   it('TC28.6: Topic dependencies should be indicated in required reading', async () => {
-    const ensureLinksOutput = await captureConsoleOutput(() => pdca.trainAI('how-to-ensure-links'));
+    const ensureLinksOutput = await captureConsoleOutput(() => pdca.trainAI('ensure-links'));
     
     // how-to-ensure-links should reference the design PDCA
     expect(ensureLinksOutput).toContain('2025-10-20-UTC-1215.pdca.md');
     
-    const dualLinksOutput = await captureConsoleOutput(() => pdca.trainAI('how-to-dual-links'));
+    const dualLinksOutput = await captureConsoleOutput(() => pdca.trainAI('dual-links'));
     
     // how-to-dual-links should reference CMM3 compliance checklist
     expect(dualLinksOutput).toContain('cmm3.compliance.checklist.md');
