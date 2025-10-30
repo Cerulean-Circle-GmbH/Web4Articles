@@ -236,7 +236,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     const targetComponent = await this.loadComponentInstanceInternal(component, actualVersion, componentPath);
     
     // ✅ CLI tells component where to operate (Path Authority → Component)
-    targetComponent.setTargetDirectory(componentPath);
+    // setTargetDirectory expects PROJECT ROOT (for test isolation support)
+    // Component will use resolveComponentPath() to calculate full path when needed
+    targetComponent.setTargetDirectory(this.model.projectRoot);
     
     // ✅ Store INSTANCE in CLI context (not component context!)
     this.model.context = targetComponent;
