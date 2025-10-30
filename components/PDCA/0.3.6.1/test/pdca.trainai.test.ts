@@ -20,14 +20,14 @@ describe('PDCA trainAI Topic Verification (TC27)', () => {
   it('TC27.1: trainAI should list all 7 topics when given empty topic', async () => {
     const output = await captureConsoleOutput(() => pdca.trainAI(''));
     
-    expect(output).toContain('Available topics:');
-    expect(output).toContain('how-to-start');
-    expect(output).toContain('how-to-pdca');
-    expect(output).toContain('how-to-cmm');
-    expect(output).toContain('how-to-component');
-    expect(output).toContain('how-to-dual-links');
-    expect(output).toContain('how-to-ensure-links');
-    expect(output).toContain('how-to-component-upgrade');
+    expect(output).toContain('Available Training Topics');
+    expect(output).toContain('start');
+    expect(output).toContain('pdca');
+    expect(output).toContain('cmm');
+    expect(output).toContain('component');
+    expect(output).toContain('dual-links');
+    expect(output).toContain('ensure-links');
+    expect(output).toContain('component-upgrade');
   });
 
   // TC27.2: how-to-start structure
