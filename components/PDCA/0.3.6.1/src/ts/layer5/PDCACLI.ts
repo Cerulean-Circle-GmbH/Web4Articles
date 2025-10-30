@@ -64,7 +64,12 @@ export class PDCACLI extends DefaultCLI {
    */
   async execute(args: string[]): Promise<void> {
     if (args.length === 0) {
-      this.showUsage();
+      // Fast path: Show minimal usage hint without expensive TSCompletion analysis
+      // Full documentation available via: pdca help
+      const colors = (this as any).colors;
+      console.log(`${colors.toolName}Web4 PDCA CLI Tool${colors.reset} v${colors.version}${(this as any).componentVersion}${colors.reset}`);
+      console.log(`\n${colors.descriptions}Run ${colors.commands}pdca help${colors.reset} ${colors.descriptions}for full documentation${colors.reset}`);
+      console.log(`${colors.descriptions}Run ${colors.commands}pdca <command>${colors.reset} ${colors.descriptions}to execute a command${colors.reset}\n`);
       return;
     }
 
