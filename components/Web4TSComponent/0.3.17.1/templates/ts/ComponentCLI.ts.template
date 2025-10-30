@@ -12,9 +12,20 @@ export class {{COMPONENT_NAME}}CLI extends DefaultCLI {
   private component: Default{{COMPONENT_NAME}} | null;
 
   constructor() {
-    super();
+    super(); // Call empty parent constructor
     this.component = null;
-    this.initWithComponentClass(Default{{COMPONENT_NAME}}, '{{COMPONENT_NAME}}', '{{VERSION}}');
+    
+    // ✅ Path Authority: Initialize CLI (calculates projectRoot, sets paths)
+    // @pdca 2025-10-30-UTC-1011.pdca.md - New init pattern without initWithComponentClass
+    this.init();
+    
+    // ✅ Web4 Radical OOP: Empty constructor + init() with OPTIONAL scenario
+    // Create component instance and init (scenario is optional!)
+    const tempComponent = new Default{{COMPONENT_NAME}}().init();
+    this.model.component = tempComponent as any;
+    
+    // ✅ Discover methods from component
+    this.discoverMethods();
   }
 
   /**

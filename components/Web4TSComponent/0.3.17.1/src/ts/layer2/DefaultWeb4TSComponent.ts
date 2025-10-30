@@ -301,8 +301,11 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliHide
    */
   setTargetDirectory(directory: string): void {
-    // ✅ ONLY store the value - no calculation
+    // ✅ PATH AUTHORITY: Store both targetDirectory (project root) and origin (component path)
+    // When called from CLI.on(), directory is the full component path
+    // origin is used by commands (tree, test, build, etc.) to avoid path doubling
     this.model.targetDirectory = directory;
+    this.model.origin = directory;
     // Note: projectRoot calculation removed - violates path separation baseline
   }
 
@@ -1322,8 +1325,8 @@ Standards:
     const maxDepth = parseInt(depth, 10) || 4;
     const includeHidden = showHidden.toLowerCase() === 'true';
     
-    // Target has ALL data in ITS model
-    const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
+    // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
+    const componentPath = target.model.origin || this.resolveComponentPath(target.model.component, target.model.version.toString());
     console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${target.model.component} ${target.model.version.toString()}:${this.colors.reset}`);
       console.log(`${this.colors.dim}${componentPath}${this.colors.reset}`);
       await this.displayTreeStructure(componentPath, '', maxDepth, 0, includeHidden);
@@ -1626,7 +1629,8 @@ Standards:
       }
       
     // Run tests for target component
-    const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
+    // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
+    const componentPath = target.model.origin || this.resolveComponentPath(target.model.component, target.model.version.toString());
     
     try {
       execSync(this.model.context ? 'npm test' : 'npx vitest run --bail=false', { 
@@ -2331,7 +2335,8 @@ Standards:
     }
 
     const target = this.model.context;
-    const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
+    // ✅ PATH AUTHORITY: Use target's origin (from on()) - target is always loaded via on()
+    const componentPath = target.model.origin || this.resolveComponentPath(target.model.component, target.model.version.toString());
     
     console.log(`🚀 Starting ${target.model.component} ${target.model.version.toString()}...`);
     
@@ -2381,7 +2386,8 @@ Standards:
     if (hasForce) buildArgs.push('force');
     const buildCmd = `./src/sh/build.sh ${buildArgs.join(' ')}`;
     
-    const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
+    // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
+    const componentPath = target.model.origin || this.resolveComponentPath(target.model.component, target.model.version.toString());
     
     console.log(`🔨 Building ${target.model.component} ${target.model.version.toString()}...`);
     
@@ -2495,7 +2501,8 @@ Standards:
     
     // ✅ RADICAL OOP: Use target instance for component root
     const target = this.model.context || this;
-    const componentRoot = this.resolveComponentPath(target.model.component, target.model.version.toString());
+    // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
+    const componentRoot = target.model.origin || this.resolveComponentPath(target.model.component, target.model.version.toString());
     
     try {
       // ✅ FIX: Use relativePath which includes subdirectories (ts/layer2/file.test.ts)
@@ -2585,7 +2592,8 @@ Standards:
     
     // ✅ RADICAL OOP: Use target instance for component root
     const target = this.model.context || this;
-    const componentRoot = this.resolveComponentPath(target.model.component, target.model.version.toString());
+    // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
+    const componentRoot = target.model.origin || this.resolveComponentPath(target.model.component, target.model.version.toString());
     
     try {
       execSync(`npx vitest --run -t "${describe.name}"`, {
@@ -2698,7 +2706,8 @@ Standards:
     
     // ✅ RADICAL OOP: Use target instance for component root
     const target = this.model.context || this;
-    const componentRoot = this.resolveComponentPath(target.model.component, target.model.version.toString());
+    // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
+    const componentRoot = target.model.origin || this.resolveComponentPath(target.model.component, target.model.version.toString());
     
     try {
       execSync(`npx vitest --run -t "${targetIt.name}"`, {
@@ -2725,7 +2734,8 @@ Standards:
     // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
     const target = this.model.context || this;
     
-    const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
+    // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
+    const componentPath = target.model.origin || this.resolveComponentPath(target.model.component, target.model.version.toString());
     
     console.log(`🧹 Cleaning ${target.model.component} ${target.model.version.toString()}...`);
     
