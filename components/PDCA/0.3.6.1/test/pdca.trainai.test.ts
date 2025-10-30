@@ -115,13 +115,13 @@ describe('PDCA trainAI Topic Verification (TC27)', () => {
   // TC27.8: Verify all topics have key lessons
   it('TC27.8: All topics should have at least 5 key lessons', async () => {
     const topics = [
-      'how-to-start',
-      'how-to-pdca',
-      'how-to-cmm',
-      'how-to-component',
-      'how-to-dual-links',
-      'how-to-ensure-links',
-      'how-to-component-upgrade'
+      'start',
+      'pdca',
+      'cmm',
+      'component',
+      'dual-links',
+      'ensure-links',
+      'component-upgrade'
     ];
     
     for (const topic of topics) {
@@ -138,13 +138,13 @@ describe('PDCA trainAI Topic Verification (TC27)', () => {
   // TC27.9: Verify all topics have verification checklist
   it('TC27.9: All topics should have verification checklist', async () => {
     const topics = [
-      'how-to-start',
-      'how-to-pdca',
-      'how-to-cmm',
-      'how-to-component',
-      'how-to-dual-links',
-      'how-to-ensure-links',
-      'how-to-component-upgrade'
+      'start',
+      'pdca',
+      'cmm',
+      'component',
+      'dual-links',
+      'ensure-links',
+      'component-upgrade'
     ];
     
     for (const topic of topics) {
