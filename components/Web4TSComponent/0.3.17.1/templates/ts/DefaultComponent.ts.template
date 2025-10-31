@@ -14,7 +14,7 @@ import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/di
 
 export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   private model: {{COMPONENT_NAME}}Model;
-  private web4ts?: any; // Lazy-initialized Web4TSComponent for delegation
+  private web4ts?: DefaultWeb4TSComponent; // Lazy-initialized Web4TSComponent for delegation
 
   constructor() {
     // Empty constructor - Web4 pattern

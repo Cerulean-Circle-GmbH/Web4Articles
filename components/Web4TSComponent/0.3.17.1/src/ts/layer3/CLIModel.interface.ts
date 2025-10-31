@@ -8,15 +8,14 @@
  */
 
 import { Model } from './Model.interface.js';
-import { DefaultWeb4TSComponent } from '../layer2/DefaultWeb4TSComponent.js';
-import { User } from './User.interface.js';
 
 export interface CLIModel extends Model {
   // uuid, name, origin, definition inherited from Model
   
   /**
-   * CLI Model with embedded component instances (radical OOP)
+   * CLI Model - DATA ONLY (no instances!)
    * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Deleted deprecated fields
+   * @pdca 2025-10-31-UTC-1208.cli-model-duplication-cleanup.pdca.md - Removed instances (component, context, user)
    */
   
   // ✅ Path Authority - Project-level absolute paths (CLI's sole responsibility)
@@ -29,25 +28,10 @@ export interface CLIModel extends Model {
   scriptsVersionDir: string;        // e.g., projectRoot/scripts/versions
   testDataDir: string;              // e.g., projectRoot/test/data
   
-  /**
-   * Web4TSComponent instance (not componentClass reference!)
-   * @pdca 2025-10-28-UTC-0934.pdca.md:1153 - Stores INSTANCE
-   */
-  component?: DefaultWeb4TSComponent;
-  
-  /**
-   * User service instance
-   * @pdca 2025-10-28-UTC-0934.pdca.md:1153 - Stores INSTANCE
-   */
-  user?: User;
-  
-  /**
-   * UNIFIED CONTEXT: Single source of truth for delegation
-   * Replaces Web4TSComponentModel.context - context belongs to CLI, not component!
-   * Target component loaded via on() for cross-component operations
-   * @pdca 2025-10-30-UTC-1011.pdca.md - Moved from Web4TSComponentModel to CLIModel
-   */
-  context?: DefaultWeb4TSComponent;
+  // ❌ DELETED: component, context, user moved to DefaultCLI instance variables
+  // Models = DATA ONLY (strings, numbers, booleans, arrays)
+  // Instances = BEHAVIOR (belong in class, not model!)
+  // @pdca 2025-10-31-UTC-1208.cli-model-duplication-cleanup.pdca.md
   
   // Completion context - FLAT in model (no CompletionContext relationship!)
   // From bash environment

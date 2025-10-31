@@ -30,6 +30,14 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   protected model!: CLIModel; // Definite assignment - initialized in init()
   protected methodSignatures: Map<string, MethodSignature> = new Map();
   protected colors: Colors = DefaultColors.getInstance();
+  
+  // ✅ Instances belong HERE, not in model!
+  // Models = DATA ONLY (serializable)
+  // Instances = BEHAVIOR (belong in class)
+  // @pdca 2025-10-31-UTC-1208.cli-model-duplication-cleanup.pdca.md
+  protected component?: DefaultWeb4TSComponent;  // Own component instance
+  protected context?: DefaultWeb4TSComponent;    // Loaded via on() for delegation
+  protected user?: User;                          // User service instance
 
 
   /**
@@ -101,8 +109,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     
     // ✅ Tell DefaultWeb4TSComponent where to operate (Path Authority → Component)
     // Works for Web4TSComponent AND for generated components (TestIsolatedComponent, etc.)
-    if (this.model.component) {
-      this.model.component.setTargetDirectory(this.model.projectRoot);
+    if (this.component) {
+      this.component.setTargetDirectory(this.model.projectRoot);
     }
     
     return this;
@@ -241,7 +249,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     targetComponent.setTargetDirectory(this.model.projectRoot);
     
     // ✅ Store INSTANCE in CLI context (not component context!)
-    this.model.context = targetComponent;
+    this.context = targetComponent;
     
     if (actualVersion !== version) {
       console.log(`✅ Component context loaded: ${component} ${version} → ${actualVersion}`);
@@ -288,7 +296,13 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       throw new Error(`Component class not found: Default${componentName} in ${modulePath}`);
     }
     
-    const instance = new ComponentClass().init();
+    // ✅ CLI is Path Authority - pass targetDirectory to component
+    // @pdca 2025-10-31-UTC-1208.cli-model-duplication-cleanup.pdca.md
+    const instance = new ComponentClass().init({
+      model: {
+        targetDirectory: this.model.projectRoot
+      }
+    });
     
     return instance;
   }
@@ -301,15 +315,15 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @returns Scenario representation of current CLI state
    */
   async toScenario(name?: string): Promise<Scenario<CLIModel>> {
-    const componentName = this.model.component?.model.component || 'CLI';
-    const componentVersion = this.model.component?.model.version?.toString() || '0.0.0.0';
+    const componentName = this.component?.model.component || 'CLI';
+    const componentVersion = this.component?.model.version?.toString() || '0.0.0.0';
     
     // ✅ RADICAL OOP: Use User.toScenario() for owner data (Web4 component interface)
     let ownerJson: string;
     
-    if (this.model.user) {
+    if (this.user) {
       // ✅ Use User component's toScenario() - universal Web4 interface
-      const userScenario = await this.model.user.toScenario();
+      const userScenario = await this.user.toScenario();
       
       // ✅ Owner data IS the entire User scenario serialized
       ownerJson = JSON.stringify(userScenario);
@@ -358,7 +372,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     const component = new DefaultWeb4TSComponent().init();
     
     // Store INSTANCE, not data
-    this.model.component = component;
+    this.component = component;
     
     // Discover methods from the instance
     this.discoverMethods();
@@ -372,10 +386,10 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @test test/ts/layer2/DefaultCLI.test.ts:getWeb4ComponentReturnsInstance
    */
   protected getWeb4Component(): DefaultWeb4TSComponent {
-    if (!this.model.component) {
+    if (!this.component) {
       throw new Error('Component not loaded. Call loadComponent() first.');
     }
-    return this.model.component;
+    return this.component;
   }
 
   /**
@@ -383,10 +397,10 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Helper method
    */
   protected getComponentClass(): any {
-    if (!this.model.component) {
+    if (!this.component) {
       return null;
     }
-    return Object.getPrototypeOf(this.model.component).constructor;
+    return Object.getPrototypeOf(this.component).constructor;
   }
 
   /**
@@ -394,7 +408,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Helper method
    */
   protected getComponentName(): string {
-    return this.model.component?.model.component || 'CLI';
+    return this.component?.model.component || 'CLI';
   }
 
   /**
@@ -402,7 +416,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Helper method
    */
   protected getComponentVersion(): string {
-    return this.model.component?.model.version?.toString() || '0.0.0.0';
+    return this.component?.model.version?.toString() || '0.0.0.0';
   }
 
   /**
@@ -410,7 +424,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @pdca 2025-10-28-UTC-0934.pdca.md:1210 - Phase 2: Delegation
    */
   protected getUser(): User | undefined {
-    return this.model.user;
+    return this.user;
   }
 
 
@@ -574,8 +588,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    */
   protected getWeb4TS(): any {
     // If componentInstance has web4ts property (generated components)
-    if (this.model.component && (this.model.component as any).web4ts) {
-      return (this.model.component as any).web4ts;
+    if (this.component && (this.component as any).web4ts) {
+      return (this.component as any).web4ts;
     }
 
     // If component has getOrCreateTSComponent method (Web4TSComponent itself)
@@ -643,8 +657,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     }
 
     // Also discover component methods if component instance is set
-    if (this.model.component) {
-      const prototype = Object.getPrototypeOf(this.model.component);
+    if (this.component) {
+      const prototype = Object.getPrototypeOf(this.component);
       const methodNames = Object.getOwnPropertyNames(prototype)
         .filter((name) => typeof prototype[name] === "function")
         .filter((name) => !name.startsWith("_") && name !== "constructor")
@@ -1042,16 +1056,16 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Get component instance only when method is actually called (lazy instantiation)
    */
   protected getComponentInstance(): any {
-    if (!this.model.component && this.getComponentClass()) {
-      this.model.component = new (this.getComponentClass())();
+    if (!this.component && this.getComponentClass()) {
+      this.component = new (this.getComponentClass())();
       // Initialize with empty scenario if component supports it
-      const instance = this.model.component; // TypeScript type narrowing helper
+      const instance = this.component; // TypeScript type narrowing helper
       if (instance && typeof instance.init === "function") {
         const emptyScenario = this.createEmptyScenario();
         instance.init(emptyScenario);
       }
     }
-    return this.model.component;
+    return this.component;
   }
 
   /**

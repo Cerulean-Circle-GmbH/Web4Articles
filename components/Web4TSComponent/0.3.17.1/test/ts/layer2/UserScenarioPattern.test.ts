@@ -34,14 +34,16 @@ describe('DefaultCLI - User Service Integration', () => {
       }
     };
     
-    cli.model.user = {
+    // ✅ User is now instance variable, not in model
+    // @pdca 2025-10-31-UTC-1208.cli-model-duplication-cleanup.pdca.md
+    (cli as any).user = {
       toScenario: vi.fn().mockResolvedValue(mockUserScenario)
     } as any;
     
     const scenario = await cli.toScenario();
     
     // Verify toScenario() was called
-    expect(cli.model.user.toScenario).toHaveBeenCalled();
+    expect((cli as any).user.toScenario).toHaveBeenCalled();
     
     // Verify owner data is base64 encoded
     expect(scenario.owner).toBeDefined();
@@ -62,7 +64,9 @@ describe('DefaultCLI - User Service Integration', () => {
       model: {}
     });
     
-    cli.model.user = {
+    // ✅ User is now instance variable, not in model
+    // @pdca 2025-10-31-UTC-1208.cli-model-duplication-cleanup.pdca.md
+    (cli as any).user = {
       toScenario: toScenarioMock,
       generateOwnerData: generateOwnerDataSpy
     } as any;
@@ -78,7 +82,9 @@ describe('DefaultCLI - User Service Integration', () => {
   
   it('should work without User service (fallback scenario)', async () => {
     const cli = new DefaultCLI().init();
-    cli.model.user = undefined;
+    // ✅ User is now instance variable, not in model
+    // @pdca 2025-10-31-UTC-1208.cli-model-duplication-cleanup.pdca.md
+    (cli as any).user = undefined;
     
     const scenario = await cli.toScenario();
     
@@ -113,7 +119,9 @@ describe('DefaultCLI - User Service Integration', () => {
       }
     };
     
-    cli.model.user = {
+    // ✅ User is now instance variable, not in model
+    // @pdca 2025-10-31-UTC-1208.cli-model-duplication-cleanup.pdca.md
+    (cli as any).user = {
       toScenario: vi.fn().mockResolvedValue(mockUserScenario)
     } as any;
     
