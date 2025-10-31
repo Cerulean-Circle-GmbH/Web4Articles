@@ -4,23 +4,16 @@
  * Web4 principle: Single interface per file
  * User component for user identification and management
  * 
- * NOTE: Copied from components/User/0.3.0.4/src/ts/layer3/User.interface.ts
- * to prevent build dependency on User component
+ * @pdca 2025-10-31-UTC-1045.template-sync-path-authority.pdca.md - Removed OwnerParams (obsolete after User service migration)
  */
 
 import { Scenario } from './Scenario.interface.js';
-import { OwnerParams } from './OwnerParams.interface.js';
 
 export interface User {
   /**
    * Initialize from scenario - Web4 pattern
    */
   init(scenario: Scenario): this;
-
-  /**
-   * Generate owner data for scenarios
-   */
-  generateOwnerData(params: OwnerParams): Promise<string>;
 
   /**
    * Convert to scenario for hibernation
