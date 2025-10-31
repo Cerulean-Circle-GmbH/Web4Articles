@@ -223,7 +223,7 @@ describe('PDCA moveFile Tests', () => {
     fs.rmSync(tempDir, { recursive: true, force: true });
   });
 
-  test.skip('TC32: moveFile - updates links in other files', async () => {
+  test('TC32: moveFile - updates links in other files', async () => {
     const pdca = new DefaultPDCA();
     const tempDir = path.join(testDir, 'temp-TC32');
     
@@ -264,7 +264,7 @@ describe('PDCA moveFile Tests', () => {
     fs.rmSync(tempDir, { recursive: true, force: true });
   });
 
-  test.skip('TC33: moveFile - refreshes relative links in moved file', async () => {
+  test('TC33: moveFile - refreshes relative links in moved file', async () => {
     const pdca = new DefaultPDCA();
     const tempDir = path.join(testDir, 'temp-TC33');
     
@@ -308,7 +308,7 @@ describe('PDCA moveFile Tests', () => {
     fs.rmSync(tempDir, { recursive: true, force: true });
   });
 
-  test.skip('TC34: moveFile - dry run does not modify files', async () => {
+  test('TC34: moveFile - dry run does not modify files', async () => {
     const pdca = new DefaultPDCA();
     const tempDir = path.join(testDir, 'temp-TC34');
     
@@ -358,7 +358,7 @@ describe('PDCA moveFile Tests', () => {
     consoleSpy.mockRestore();
   });
 
-  test.skip('TC36: moveFile - error when destination already exists', async () => {
+  test('TC36: moveFile - error when destination already exists', async () => {
     const pdca = new DefaultPDCA();
     const tempDir = path.join(testDir, 'temp-TC36');
     
@@ -403,7 +403,7 @@ describe('PDCA moveFile Tests', () => {
     fs.rmSync(tempDir, { recursive: true, force: true });
   });
 
-  test.skip('TC37: moveFile - error when destination directory does not exist', async () => {
+  test('TC37: moveFile - error when destination directory does not exist', async () => {
     const pdca = new DefaultPDCA();
     const tempDir = path.join(testDir, 'temp-TC37');
     
@@ -442,7 +442,7 @@ describe('PDCA moveFile Tests', () => {
     fs.rmSync(tempDir, { recursive: true, force: true });
   });
 
-  test.skip('TC38: moveFile - handles file with multiple incoming and outgoing links', async () => {
+  test('TC38: moveFile - handles file with multiple incoming and outgoing links', async () => {
     const pdca = new DefaultPDCA();
     const tempDir = path.join(testDir, 'temp-TC38');
     
