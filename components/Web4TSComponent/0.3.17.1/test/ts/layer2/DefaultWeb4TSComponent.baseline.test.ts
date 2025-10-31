@@ -3,12 +3,14 @@
  * Testing DefaultWeb4TSComponent core functionality
  * 
  * @pdca 2025-10-28-UTC-0934.pdca.md:494 - Phase 0: Baseline Tests
+ * @pdca 2025-10-31-UTC-1230.test-isolation-violation-fix.pdca.md - Test isolation
  * @baseline 0.3.14.4
  * @target 0.3.17.0
  */
 
 import { describe, it, expect } from 'vitest';
 import { DefaultWeb4TSComponent } from '../../../src/ts/layer2/DefaultWeb4TSComponent.js';
+import { createTestComponent } from '../helpers/testHelpers.js';
 
 /**
  * Test Component Lifecycle - MUST be GREEN
@@ -21,7 +23,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test componentInstantiation
    */
   it('component constructor creates instance', () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = createTestComponent();
     expect(component).toBeDefined();
     expect(component).toBeInstanceOf(DefaultWeb4TSComponent);
   });
@@ -32,7 +34,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test componentHasModel
    */
   it('component has model after construction', () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = createTestComponent();
     const model = (component as any).model;
     expect(model).toBeDefined();
     expect(model).toHaveProperty('uuid');
@@ -46,7 +48,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test componentName
    */
   it('component has correct name', () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = createTestComponent();
     const model = (component as any).model;
     expect(model.component).toBe('Web4TSComponent');
   });
@@ -57,7 +59,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test componentVersionFormat
    */
   it('component version follows X.Y.Z.W format', () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = createTestComponent();
     const model = (component as any).model;
     const version = model.version;
     
@@ -72,7 +74,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test componentUUID
    */
   it('component generates valid UUID', () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = createTestComponent();
     const model = (component as any).model;
     const uuid = model.uuid;
     
@@ -88,7 +90,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test toScenarioExists
    */
   it('component has toScenario method', () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = createTestComponent();
     expect(typeof component.toScenario).toBe('function');
   });
 
@@ -98,7 +100,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test buildMethodExists
    */
   it('component has build method', () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = createTestComponent();
     expect(typeof component.build).toBe('function');
   });
 
@@ -108,7 +110,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test testMethodExists
    */
   it('component has test method', () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = createTestComponent();
     expect(typeof component.test).toBe('function');
   });
 
@@ -118,7 +120,7 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test cleanMethodExists
    */
   it('component has clean method', () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = createTestComponent();
     expect(typeof component.clean).toBe('function');
   });
 
@@ -128,8 +130,8 @@ describe('DefaultWeb4TSComponent - Baseline Lifecycle', () => {
    * @test multipleInstancesIndependent
    */
   it('multiple component instances have different UUIDs', () => {
-    const component1 = new DefaultWeb4TSComponent().init();
-    const component2 = new DefaultWeb4TSComponent().init();
+    const component1 = createTestComponent();
+    const component2 = createTestComponent();
     
     const uuid1 = (component1 as any).model.uuid;
     const uuid2 = (component2 as any).model.uuid;

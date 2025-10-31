@@ -17,16 +17,22 @@ export class Web4TSComponentCLI extends DefaultCLI {
   /**
    * Empty constructor (Web4 radical OOP pattern)
    * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Remove initWithComponentClass
+   * @pdca 2025-10-31-UTC-1230.test-isolation-violation-fix.pdca.md - Pass targetDirectory
    */
   constructor() {
     super(); // Call empty parent constructor
     this.tsComponent = null;
     
-    // Initialize CLI
+    // Initialize CLI (calculates projectRoot as Path Authority)
     this.init();
     
-    // Get version and store component in model
-    const tempComponent = new DefaultWeb4TSComponent().init();
+    // ✅ Get version and store component in model - pass targetDirectory from CLI
+    // CLI is Path Authority - component is Path Consumer
+    const tempComponent = new DefaultWeb4TSComponent().init({
+      model: {
+        targetDirectory: this.model.projectRoot // ✅ CLI provides path
+      }
+    });
     this.model.component = tempComponent; // ✅ Store instance in model
     
     // Discover methods from component
@@ -50,10 +56,16 @@ export class Web4TSComponentCLI extends DefaultCLI {
   /**
    * Get component instance (Web4TSComponent-specific)
    * @pdca 2025-10-28-UTC-0934.pdca.md:597 - Updated for init pattern
+   * @pdca 2025-10-31-UTC-1230.test-isolation-violation-fix.pdca.md - Pass targetDirectory
    */
   private getOrCreateTSComponent(): DefaultWeb4TSComponent {
     if (!this.tsComponent) {
-      this.tsComponent = new DefaultWeb4TSComponent().init();
+      // ✅ CLI is Path Authority - provides targetDirectory to component
+      this.tsComponent = new DefaultWeb4TSComponent().init({
+        model: {
+          targetDirectory: this.model.projectRoot // ✅ CLI provides path
+        }
+      });
     }
     return this.tsComponent;
   }

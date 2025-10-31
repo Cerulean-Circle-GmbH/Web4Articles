@@ -59,15 +59,15 @@ describe('🧪 Component Creation Test Isolation', () => {
     const { DefaultWeb4TSComponent } = await import('../../src/ts/layer2/DefaultWeb4TSComponent.js');
     
     // ✅ Test Isolation Pattern (2025-10-30-UTC-0832.test-evidence-persistence.pdca.md):
-    // Component uses setTargetDirectory() to create in test/data
+    // Component uses targetDirectory in init() for test isolation
     // Evidence persists after test for manual inspection
     // test/data becomes a testable alternate isolated project root
+    // @pdca 2025-10-31-UTC-1230.test-isolation-violation-fix.pdca.md - init() requires targetDirectory
     
-    // Create component instance
-    const component = new DefaultWeb4TSComponent().init();
-    
-    // Set target directory to test/data for test isolation
-    component.setTargetDirectory(testDataDir);
+    // Create component instance with test isolation
+    const component = new DefaultWeb4TSComponent().init({
+      model: { targetDirectory: testDataDir }
+    });
     
     // Create component in test isolation
     await component.create(testComponentName, testVersion, 'all');

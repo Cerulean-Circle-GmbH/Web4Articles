@@ -3,12 +3,22 @@
  * Testing toScenario() and scenario-based initialization
  * 
  * @pdca 2025-10-28-UTC-0934.pdca.md:494 - Phase 0: Baseline Tests
+ * @pdca 2025-10-31-UTC-1230.test-isolation-violation-fix.pdca.md - Test isolation
  * @baseline 0.3.14.4
  * @target 0.3.17.0
  */
 
 import { describe, it, expect } from 'vitest';
 import { DefaultWeb4TSComponent } from '../../../src/ts/layer2/DefaultWeb4TSComponent.js';
+import { createTestComponent } from '../helpers/testHelpers.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// ✅ Web4 Pattern: Module-level path calculation for tests
+const currentFileUrl = new URL(import.meta.url);
+const currentDir = path.dirname(fileURLToPath(currentFileUrl));
+const componentRoot = path.join(currentDir, '../../..');
+const testDataPath = path.join(componentRoot, 'test/data');
 
 /**
  * Test Scenario Pattern - MUST be GREEN
@@ -21,7 +31,7 @@ describe('DefaultWeb4TSComponent - Scenario Pattern', () => {
    * @test toScenarioStructure
    */
   it('toScenario returns valid scenario structure', async () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = new DefaultWeb4TSComponent().init({ model: { targetDirectory: testDataPath } });
     const scenario = await component.toScenario();
     
     expect(scenario).toBeDefined();
@@ -36,7 +46,7 @@ describe('DefaultWeb4TSComponent - Scenario Pattern', () => {
    * @test iorStructure
    */
   it('scenario IOR contains uuid, component, version', async () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = new DefaultWeb4TSComponent().init({ model: { targetDirectory: testDataPath } });
     const scenario = await component.toScenario();
     
     expect(scenario.ior).toHaveProperty('uuid');
@@ -53,7 +63,7 @@ describe('DefaultWeb4TSComponent - Scenario Pattern', () => {
    * @test ownerDataFormat
    */
   it('scenario owner is a string (for encryption)', async () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = new DefaultWeb4TSComponent().init({ model: { targetDirectory: testDataPath } });
     const scenario = await component.toScenario();
     
     expect(typeof scenario.owner).toBe('string');
@@ -66,7 +76,7 @@ describe('DefaultWeb4TSComponent - Scenario Pattern', () => {
    * @test modelContainsState
    */
   it('scenario model contains component state', async () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = new DefaultWeb4TSComponent().init({ model: { targetDirectory: testDataPath } });
     const scenario = await component.toScenario();
     
     expect(scenario.model).toBeDefined();
@@ -81,7 +91,7 @@ describe('DefaultWeb4TSComponent - Scenario Pattern', () => {
    * @test scenarioNaming
    */
   it('toScenario accepts optional name parameter', async () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = new DefaultWeb4TSComponent().init({ model: { targetDirectory: testDataPath } });
     
     // Should not throw with name parameter
     const scenario = await component.toScenario('test-scenario');
@@ -94,7 +104,7 @@ describe('DefaultWeb4TSComponent - Scenario Pattern', () => {
    * @test uuidConsistency
    */
   it('scenario IOR and model have same UUID', async () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = new DefaultWeb4TSComponent().init({ model: { targetDirectory: testDataPath } });
     const scenario = await component.toScenario();
     
     expect(scenario.ior.uuid).toBe(scenario.model.uuid);
@@ -106,7 +116,7 @@ describe('DefaultWeb4TSComponent - Scenario Pattern', () => {
    * @test scenarioSerializable
    */
   it('scenario can be JSON stringified', async () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = new DefaultWeb4TSComponent().init({ model: { targetDirectory: testDataPath } });
     const scenario = await component.toScenario();
     
     expect(() => JSON.stringify(scenario)).not.toThrow();
@@ -126,7 +136,7 @@ describe('DefaultWeb4TSComponent - Scenario Pattern', () => {
    * @test scenarioConsistency
    */
   it('multiple toScenario calls have same component data', async () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = new DefaultWeb4TSComponent().init({ model: { targetDirectory: testDataPath } });
     const scenario1 = await component.toScenario();
     const scenario2 = await component.toScenario();
     

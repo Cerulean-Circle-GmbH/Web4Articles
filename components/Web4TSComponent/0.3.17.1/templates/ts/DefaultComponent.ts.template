@@ -52,8 +52,10 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
 
     // Instantiate Web4TSComponent (Path Authority set via DefaultCLI)
     // @pdca 2025-10-30-UTC-1011.pdca.md - on() moved to DefaultCLI
-    this.web4ts = new DefaultWeb4TSComponent().init();
-    this.web4ts.setTargetDirectory(projectRoot);
+    // @pdca 2025-10-31-UTC-1230.test-isolation-violation-fix.pdca.md - init() requires targetDirectory
+    this.web4ts = new DefaultWeb4TSComponent().init({
+      model: { targetDirectory: projectRoot }
+    });
 
     return this.web4ts;
   }

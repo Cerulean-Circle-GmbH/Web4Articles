@@ -9,16 +9,27 @@ import { readFile, mkdir, rm } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
 import { DefaultWeb4TSComponent } from '../../src/ts/layer2/DefaultWeb4TSComponent.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// ✅ Web4 Pattern: Module-level path calculation for tests
+const currentFileUrl = new URL(import.meta.url);
+const currentDir = path.dirname(fileURLToPath(currentFileUrl));
+const componentRoot = path.join(currentDir, '../..');
+const testDataPath = path.join(componentRoot, 'test/data');
 
 describe('Template-Based Code Generation', () => {
   let component: DefaultWeb4TSComponent;
   let testDir: string;
 
   beforeAll(async () => {
-    component = new DefaultWeb4TSComponent().init();
+    // @pdca 2025-10-31-UTC-1230.test-isolation-violation-fix.pdca.md - init() requires targetDirectory
+    component = new DefaultWeb4TSComponent().init({
+      model: { targetDirectory: testDataPath }
+    });
     
     // Create test directory in test/data (isolated project root)
-    testDir = join(component.model.projectRoot, 'components/Web4TSComponent/0.3.17.1/test/data/template-gen-test');
+    testDir = join(testDataPath, 'template-gen-test');
     if (existsSync(testDir)) {
       await rm(testDir, { recursive: true, force: true });
     }

@@ -16,6 +16,7 @@ export class {{COMPONENT_NAME}}CLI extends DefaultCLI {
   /**
    * Empty constructor (Web4 radical OOP pattern)
    * @pdca 2025-10-30-UTC-1011.pdca.md - Path Authority architecture
+   * @pdca 2025-10-31-UTC-1230.test-isolation-violation-fix.pdca.md - Pass targetDirectory
    */
   constructor() {
     super(); // Call empty parent constructor
@@ -24,8 +25,13 @@ export class {{COMPONENT_NAME}}CLI extends DefaultCLI {
     // Initialize CLI (Path Authority - calculates projectRoot, sets paths)
     this.init();
     
-    // Get version and store component in model (Web4 Radical OOP: empty init())
-    const tempComponent = new Default{{COMPONENT_NAME}}().init();
+    // ✅ Get version and store component in model - CLI provides targetDirectory
+    // CLI is Path Authority - component is Path Consumer
+    const tempComponent = new Default{{COMPONENT_NAME}}().init({
+      model: {
+        targetDirectory: this.model.projectRoot // ✅ CLI provides path
+      }
+    });
     this.model.component = tempComponent as any;
     
     // Discover methods from component
@@ -42,7 +48,12 @@ export class {{COMPONENT_NAME}}CLI extends DefaultCLI {
 
   private getOrCreateComponent(): Default{{COMPONENT_NAME}} {
     if (!this.component) {
-      this.component = this.getComponentInstance() as Default{{COMPONENT_NAME}};
+      // ✅ CLI is Path Authority - provides targetDirectory to component
+      this.component = new Default{{COMPONENT_NAME}}().init({
+        model: {
+          targetDirectory: this.model.projectRoot // ✅ CLI provides path
+        }
+      }) as Default{{COMPONENT_NAME}};
     }
     return this.component;
   }

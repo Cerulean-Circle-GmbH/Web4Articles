@@ -9,6 +9,14 @@
 
 import { describe, it, expect } from 'vitest';
 import { DefaultWeb4TSComponent } from '../../../src/ts/layer2/DefaultWeb4TSComponent.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// ✅ Web4 Pattern: Module-level path calculation for tests
+const currentFileUrl = new URL(import.meta.url);
+const currentDir = path.dirname(fileURLToPath(currentFileUrl));
+const componentRoot = path.join(currentDir, '../../..');
+const testDataPath = path.join(componentRoot, 'test/data');
 
 /**
  * Test Version Operations - MUST be GREEN
@@ -21,7 +29,7 @@ describe('DefaultWeb4TSComponent - Version Operations', () => {
    * @test parseVersionExists
    */
   it('component can parse version strings', () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = new DefaultWeb4TSComponent().init({ model: { targetDirectory: testDataPath } });
     const parseVersion = (component as any).parseVersion;
     
     if (parseVersion) {
@@ -37,7 +45,7 @@ describe('DefaultWeb4TSComponent - Version Operations', () => {
    * @test compareVersionsExists
    */
   it('component can compare version strings', () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = new DefaultWeb4TSComponent().init({ model: { targetDirectory: testDataPath } });
     const compareVersions = (component as any).compareVersions;
     
     if (compareVersions) {
@@ -61,7 +69,7 @@ describe('DefaultWeb4TSComponent - Version Operations', () => {
    * @test versionFormatValidation
    */
   it('component version uses semantic X.Y.Z.W format', () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = new DefaultWeb4TSComponent().init({ model: { targetDirectory: testDataPath } });
     const version = (component as any).model.version;
     
     // ✅ Version is now a SemanticVersion instance
@@ -83,7 +91,7 @@ describe('DefaultWeb4TSComponent - Version Operations', () => {
    * @test versionDiscovery
    */
   it('component discovers version from directory structure', () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = new DefaultWeb4TSComponent().init({ model: { targetDirectory: testDataPath } });
     const version = (component as any).model.version;
     
     // ✅ Version is now a SemanticVersion instance
@@ -96,7 +104,7 @@ describe('DefaultWeb4TSComponent - Version Operations', () => {
    * @test upgradeMethodExists
    */
   it('component has upgrade method', () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = new DefaultWeb4TSComponent().init({ model: { targetDirectory: testDataPath } });
     expect(typeof component.upgrade).toBe('function');
   });
 
@@ -106,7 +114,7 @@ describe('DefaultWeb4TSComponent - Version Operations', () => {
    * @test versionPromotionTypes
    */
   it('component supports version promotion types', () => {
-    const component = new DefaultWeb4TSComponent().init();
+    const component = new DefaultWeb4TSComponent().init({ model: { targetDirectory: testDataPath } });
     const upgrade = component.upgrade;
     
     // Method should accept promotion type parameter
