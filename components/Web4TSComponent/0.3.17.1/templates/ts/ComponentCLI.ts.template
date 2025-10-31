@@ -1,30 +1,34 @@
 #!/usr/bin/env node
 
 /**
- * {{COMPONENT_NAME}}CLI - {{COMPONENT_NAME}} CLI implementation with auto-discovery
- * Web4 pattern: Auto-discovery CLI with chaining support
+ * {{COMPONENT_NAME}}CLI - {{COMPONENT_NAME}} CLI implementation with chaining support
+ * Web4 pattern: Dependency-free CLI with component creation and chaining
  */
 
 import { DefaultCLI } from '../layer2/DefaultCLI.js';
 import { Default{{COMPONENT_NAME}} } from '../layer2/Default{{COMPONENT_NAME}}.js';
+import { MethodSignature } from '../layer3/MethodSignature.interface.js';
 
 export class {{COMPONENT_NAME}}CLI extends DefaultCLI {
   private component: Default{{COMPONENT_NAME}} | null;
+  protected methodSignatures: Map<string, MethodSignature> = new Map();
 
+  /**
+   * Empty constructor (Web4 radical OOP pattern)
+   * @pdca 2025-10-30-UTC-1011.pdca.md - Path Authority architecture
+   */
   constructor() {
     super(); // Call empty parent constructor
     this.component = null;
     
-    // ✅ Path Authority: Initialize CLI (calculates projectRoot, sets paths)
-    // @pdca 2025-10-30-UTC-1011.pdca.md - New init pattern without initWithComponentClass
+    // Initialize CLI (Path Authority - calculates projectRoot, sets paths)
     this.init();
     
-    // ✅ Web4 Radical OOP: Empty constructor + init() with OPTIONAL scenario
-    // Create component instance and init (scenario is optional!)
+    // Get version and store component in model (Web4 Radical OOP: empty init())
     const tempComponent = new Default{{COMPONENT_NAME}}().init();
     this.model.component = tempComponent as any;
     
-    // ✅ Discover methods from component
+    // Discover methods from component
     this.discoverMethods();
   }
 
