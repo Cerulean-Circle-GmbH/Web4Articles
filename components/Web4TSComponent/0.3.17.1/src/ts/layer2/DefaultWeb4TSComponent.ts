@@ -5292,6 +5292,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       'Scenario.interface.ts',
       'CLI.interface.ts',
       'CLIModel.interface.ts',           // ✅ Added for Path Authority architecture
+      'User.interface.ts',               // ✅ Added for Path Authority - User service in CLIModel
       'MethodInfo.interface.ts',
       'MethodSignature.interface.ts',    // ✅ Added for Phase 3 DefaultCLI refactoring
       'Component.interface.ts',          // ✅ Added for Phase 1 architecture migration
