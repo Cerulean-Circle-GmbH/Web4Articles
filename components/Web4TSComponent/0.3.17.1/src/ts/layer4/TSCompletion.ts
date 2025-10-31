@@ -6,6 +6,7 @@
 import type { Completion } from '../layer3/Completion.js';
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import * as ts from 'typescript';
 
 export class TSCompletion implements Completion {
@@ -44,7 +45,9 @@ export class TSCompletion implements Completion {
     return '';
   }
   static getProjectSourceFiles(): string[] {
-    const __dirname = path.dirname(new URL(import.meta.url).pathname);
+    // ✅ Web4 Pattern: No underscore naming, use fileURLToPath for ESM
+    const currentFileUrl = new URL(import.meta.url);
+    const currentDir = path.dirname(fileURLToPath(currentFileUrl));
     
     // ✅ FIX: Resolve to src/ts/ directory, not dist/ts/
     // When running from dist/ts/layer4/, we need to go: ../../../src/ts/
@@ -52,12 +55,12 @@ export class TSCompletion implements Completion {
     // Solution: Detect if we're in dist/ or src/ and adjust accordingly
     
     let srcBase: string;
-    if (__dirname.includes('/dist/ts/')) {
+    if (currentDir.includes('/dist/ts/')) {
       // Running from compiled code: dist/ts/layer4 → ../../../src/ts
-      srcBase = path.resolve(__dirname, '../../../src/ts');
+      srcBase = path.resolve(currentDir, '../../../src/ts');
     } else {
       // Running directly from source: src/ts/layer4 → ../
-      srcBase = path.resolve(__dirname, '..');
+      srcBase = path.resolve(currentDir, '..');
     }
     
     const dirs = [
@@ -869,8 +872,10 @@ export class TSCompletion implements Completion {
    * Get all TypeScript files in the component for zero config processing
    */
   private static getAllTypeScriptFiles(): string[] {
-    const __dirname = path.dirname(new URL(import.meta.url).pathname);
-    const componentRoot = path.resolve(__dirname, '../../..');
+    // ✅ Web4 Pattern: No underscore naming, use fileURLToPath for ESM
+    const currentFileUrl = new URL(import.meta.url);
+    const currentDir = path.dirname(fileURLToPath(currentFileUrl));
+    const componentRoot = path.resolve(currentDir, '../../..');
     
     const searchDirs = [
       path.join(componentRoot, 'src/ts/layer2'),

@@ -13,9 +13,13 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { existsSync } from 'fs';
 import { readFile, rm, mkdir } from 'fs/promises';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 
 describe('🧪 Component Creation Test Isolation', () => {
-  const componentRoot = path.join(__dirname, '../..');
+  // ✅ Web4 Pattern: No underscore naming, use fileURLToPath for ESM
+  const currentFileUrl = new URL(import.meta.url);
+  const currentDir = path.dirname(fileURLToPath(currentFileUrl));
+  const componentRoot = path.join(currentDir, '../..');
   const testDataDir = path.join(componentRoot, 'test/data');
   const testComponentName = 'TestIsolatedComponent';
   const testVersion = '0.1.0.0';

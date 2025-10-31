@@ -11,9 +11,13 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync, existsSync, readdirSync, statSync } from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 
 describe('🔄 Template Synchronization', () => {
-  const componentRoot = path.join(__dirname, '../..');
+  // ✅ Web4 Pattern: No underscore naming, use fileURLToPath for ESM
+  const currentFileUrl = new URL(import.meta.url);
+  const currentDir = path.dirname(fileURLToPath(currentFileUrl));
+  const componentRoot = path.join(currentDir, '../..');
   
   describe('Critical File → Template Mapping', () => {
     it('should remind: DefaultWeb4TSComponent.ts changes may require DefaultComponent.ts.template updates', () => {
@@ -124,7 +128,7 @@ describe('🔄 Template Synchronization', () => {
       // This test verifies that infrastructure files added to src/ are included in copyEssentialInterfaces()
       // so that new components get them automatically during creation
       
-      const componentRoot = path.join(__dirname, '../..');
+      // ✅ Web4 Pattern: Reuse componentRoot from outer scope
       const defaultWeb4TSComponentPath = path.join(componentRoot, 'src/ts/layer2/DefaultWeb4TSComponent.ts');
       const sourceContent = readFileSync(defaultWeb4TSComponentPath, 'utf8');
       
@@ -196,8 +200,9 @@ describe('🔄 Template Synchronization', () => {
       // This is the MASTER sync check for ALL template-generated project files
       // Uses hybrid validation: Timestamp for template updates, Content for manual edits
       
-      const projectRoot = path.join(__dirname, '../../../..');
-      const templatesDir = path.join(__dirname, '../../templates');
+      // ✅ Web4 Pattern: Calculate from componentRoot
+      const projectRoot = path.join(componentRoot, '../../../..');
+      const templatesDir = path.join(componentRoot, 'templates');
       
       // Define all critical files that must stay in sync with templates
       const criticalFiles = [

@@ -76,8 +76,8 @@ describe('Template-Based Code Generation', () => {
       // Verify Web4 pattern: empty constructor
       expect(content).toContain('constructor()');
       
-      // Verify Web4 pattern: init with scenario
-      expect(content).toContain('init(scenario: Scenario<TestComp1Model>)');
+      // Verify Web4 pattern: init with OPTIONAL scenario (current pattern)
+      expect(content).toContain('init(scenario?: Scenario<TestComp1Model>)');
     });
 
     it('should create file with toScenario method', async () => {
@@ -110,7 +110,7 @@ describe('Template-Based Code Generation', () => {
       // Verify interface export
       expect(content).toContain('export interface TestComp3');
       
-      // Verify Web4 standard methods
+      // Verify Web4 standard methods (interface has required parameter)
       expect(content).toContain('init(scenario: Scenario<TestComp3Model>)');
       expect(content).toContain('toScenario');
     });

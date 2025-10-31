@@ -14,12 +14,17 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Web4TSComponentCLI } from '../../src/ts/layer5/Web4TSComponentCLI.js';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 import * as fs from 'fs';
+
+// ✅ Web4 Pattern: Calculate once at module level for reuse
+const currentFileUrl = new URL(import.meta.url);
+const currentDir = path.dirname(fileURLToPath(currentFileUrl));
+const componentRoot = path.join(currentDir, '../..');
 
 describe('🧪 DefaultCLI - Path Authority (Production Scenario)', () => {
   let cli: Web4TSComponentCLI;
   let originalCwd: string;
-  const componentRoot = path.join(__dirname, '../..');
   
   beforeEach(() => {
     // Save original cwd
@@ -65,7 +70,7 @@ describe('🧪 DefaultCLI - Path Authority (Production Scenario)', () => {
 describe('🧪 DefaultCLI - Path Authority (Test Isolation Scenario)', () => {
   let cli: Web4TSComponentCLI;
   let originalCwd: string;
-  const componentRoot = path.join(__dirname, '../..');
+  // ✅ Web4 Pattern: Reuse module-level componentRoot
   const testIsolationRoot = path.join(componentRoot, 'test/data');
   const testComponentPath = path.join(testIsolationRoot, 'components/TestIsolatedComponent/0.1.0.0');
   
