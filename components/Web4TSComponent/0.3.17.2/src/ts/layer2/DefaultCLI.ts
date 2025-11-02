@@ -21,6 +21,9 @@ import {
   readdirSync,
   writeFileSync,
   appendFileSync,
+  lstatSync,
+  readlinkSync,
+  mkdirSync,
 } from "fs";
 import { join, basename } from "path";
 import * as ts from "typescript";
@@ -221,11 +224,20 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @cliDefault version latest
    */
   async on(component: string, version: string = 'latest'): Promise<this> {
-    // Need to get web4ts reference for helper methods
-    const web4ts = this.getWeb4TS();
+    // ✅ Direct access to component (OOP pattern - Phase 3)
+    // ✅ CLI calculates paths - Path Authority principle
     
-    // Use DRY helper to resolve actual version
-    const actualVersion = web4ts.resolveActualVersion(component, version);
+    // Resolve 'latest' symlink to actual version
+    let actualVersion = version;
+    if (version === 'latest' || version === 'dev' || version === 'prod' || version === 'test') {
+      const symlinkPath = join(this.model.componentsDir, component, version);
+      if (existsSync(symlinkPath)) {
+        const stats = lstatSync(symlinkPath);
+        if (stats.isSymbolicLink()) {
+          actualVersion = basename(readlinkSync(symlinkPath));
+        }
+      }
+    }
     
     // ✅ CLI calculates ALL paths (Path Authority)
     const componentPath = join(this.model.componentsDir, component, actualVersion);
@@ -235,10 +247,15 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     }
     
     // ✅ Dynamically load target component class (already initialized with componentPath)
-    const targetComponent = await this.loadComponentInstanceInternal(component, actualVersion, componentPath);
+    const targetComponent = await this.loadComponent(component, actualVersion, componentPath);
     
     // ✅ Store INSTANCE in CLI context (not component context!)
     this.context = targetComponent;
+    
+    // ✅ CRITICAL: Also set context in CLI's component so delegated commands work!
+    // When commands like 'test itCase' are delegated to this.component, 
+    // the component needs to know about the loaded context (targetComponent)
+    this.component!.model.context = targetComponent;
     
     if (actualVersion !== version) {
       console.log(`✅ Component context loaded: ${component} ${version} → ${actualVersion}`);
@@ -266,7 +283,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @param componentPath Absolute path to component (from Path Authority)
    * @returns Component instance ready for delegation
    */
-  private async loadComponentInstanceInternal(
+  private async loadComponent(
     componentName: string, 
     version: string,
     componentPath: string
@@ -286,15 +303,27 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     }
     
     // ✅ CLI is Path Authority - provide ALL paths to component (OOP!)
-    // componentRoot = Component's own directory (for test/ access)
-    // projectRoot = Overall project root
-    // targetDirectory = Where to create new components
-    // @pdca 2025-10-31-UTC-1208.cli-model-duplication-cleanup.pdca.md
+    // @pdca 2025-10-31-UTC-2000.on-context-path-initialization.pdca.md
     const instance = new ComponentClass().init({
       model: {
-        componentRoot: componentPath,           // Component's own root
-        projectRoot: this.model.projectRoot,    // Overall project root
-        targetDirectory: this.model.projectRoot // Where to create components (project root in production)
+        // Component-specific paths
+        componentRoot: componentPath,           // Component's own root directory
+        targetDirectory: this.model.projectRoot, // Where to create new components
+        
+        // ✅ Path Authority: CLI provides ALL calculated paths to loaded component
+        // This ensures the loaded component can execute commands (like test) using correct paths
+        projectRoot: this.model.projectRoot,
+        componentsDir: this.model.componentsDir,
+        scriptsDir: this.model.scriptsDir,
+        scriptsVersionDir: this.model.scriptsVersionDir,
+        testDataDir: join(componentPath, 'test', 'data'), // Component-specific test isolation
+        
+        // ✅ CRITICAL: For old versions (0.3.13.2 and earlier) that use getComponentContext()
+        // These versions look for contextComponent, contextVersion, contextPath in model
+        // This makes on() work with legacy code that hasn't migrated to this.model.context
+        contextComponent: componentName,
+        contextVersion: version,
+        contextPath: componentPath,
       }
     });
     
@@ -355,36 +384,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     };
   }
 
-  /**
-   * Load component context (replaces initWithComponentClass)
-   * Creates a Web4TSComponent instance and stores it in model
-   * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Deleted initWithComponentClass
-   * @test test/ts/layer2/DefaultCLI.test.ts:loadComponentStoresInstance
-   */
-  protected async loadComponent(name: string, version: string): Promise<this> {
-    // Create and initialize component instance
-    const component = new DefaultWeb4TSComponent().init();
-    
-    // Store INSTANCE, not data
-    this.component = component;
-    
-    // Discover methods from the instance
-    this.discoverMethods();
-    
-    return this;
-  }
 
-  /**
-   * Get Web4TSComponent delegate (zero reconstruction!)
-   * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Delegation
-   * @test test/ts/layer2/DefaultCLI.test.ts:getWeb4ComponentReturnsInstance
-   */
-  protected getWeb4Component(): DefaultWeb4TSComponent {
-    if (!this.component) {
-      throw new Error('Component not loaded. Call loadComponent() first.');
-    }
-    return this.component;
-  }
 
   /**
    * Get component class from instance (for TSCompletion queries)
@@ -502,20 +502,15 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    */
   protected getComponentFilePath(): string | null {
     try {
-      const web4ts = this.getWeb4TS();
-      const context = web4ts.getComponentContext();
-
-      if (context) {
-        const componentPath = web4ts.resolveComponentPath(
-          context.component,
-          context.version
-        );
-        return join(
-          componentPath,
-          "src/ts/layer2",
-          `Default${context.component}.ts`
-        );
-      }
+      // ✅ Direct access to component (OOP pattern - Phase 3)
+      // Use context if available (from on() command), otherwise use main component
+      const targetComponent = this.context || this.component!;
+      
+      return join(
+        targetComponent.model.componentRoot,
+        "src/ts/layer2",
+        `Default${targetComponent.model.component}.ts`
+      );
     } catch (error) {
       // Fallback: try to find component file in current directory structure
     }
@@ -574,25 +569,6 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     return `ℹ️ ${message}`;
   }
 
-  /**
-   * Get Web4TSComponent reference for helper methods
-   * Works in both master (Web4TSComponent) and generated components
-   * Eliminates ugly (this as any) casts throughout CLI code
-   * @cliHide
-   */
-  protected getWeb4TS(): any {
-    // If componentInstance has web4ts property (generated components)
-    if (this.component && (this.component as any).web4ts) {
-      return (this.component as any).web4ts;
-    }
-
-    // If component has getOrCreateTSComponent method (Web4TSComponent itself)
-    if (typeof (this as any).getOrCreateTSComponent === "function") {
-      return (this as any).getOrCreateTSComponent();
-    }
-
-    throw new Error("No Web4TSComponent reference available");
-  }
 
   /**
    * Get test directory path (DRY helper)
@@ -611,11 +587,11 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    */
   protected getTestDir(): string {
     // ✅ RADICAL DRY: Path calculated ONCE in init(), stored in model
-    // For current component (from getWeb4TS()), test directory is at component/test
-    const web4ts = this.getWeb4TS();
-    const componentPath = web4ts.model.origin || web4ts.model.projectRoot || this.model.projectRoot;
-    
-    return join(componentPath, 'test');
+    // ✅ Direct access to component (OOP pattern - Phase 3)
+    // ✅ OOP Context Resolution: Use `on` context if set, otherwise use CLI's component
+    // Component's componentRoot is its version directory (e.g., .../Web4TSComponent/0.3.17.2)
+    const targetComponent = this.context || this.component;
+    return join(targetComponent!.model.componentRoot, 'test');
   }
 
   /**
@@ -729,7 +705,10 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     }
 
     // Check if method exists on CLI (this) or component
-    // CLI methods take precedence (e.g., completeParameter, actionParameterCompletion)
+    // Priority order:
+    // 1. CLI methods (e.g., completeParameter, actionParameterCompletion, on)
+    // 2. Loaded context via on() (if set)
+    // 3. CLI's own component (fallback)
     
     if (typeof (this as any)[command] === "function") {
       // Execute on CLI instance (DefaultCLI or Web4TSComponentCLI)
@@ -740,9 +719,11 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         method.apply(this, args);
       }
     } else {
-      // Fallback to component instance
-      const componentInstance = this.getComponentInstance();
-      const method = componentInstance[command];
+      // ✅ OOP Context Resolution: Use loaded context if available (from on() command)
+      // This enables: web4tscomponent on Web4TSComponent 0.3.13.2 test itCase
+      // to execute test on 0.3.13.2, not on the CLI's own component (0.3.17.2)
+      const componentInstance = this.context || this.component!;
+      const method = (componentInstance as any)[command];
 
       if (signature.isAsync) {
         await method.apply(componentInstance, args);
@@ -840,7 +821,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   private extractMethodDescriptionFromTSDoc(methodName: string): string {
     try {
       // Try to extract description from TSCompletion
-      const componentInstance = this.getComponentInstance();
+      const componentInstance = this.component!;
       if (componentInstance) {
         const componentClassName = componentInstance.constructor.name;
         // Get full method documentation using TSCompletion
@@ -878,7 +859,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    */
   private extractExamplesFromTSDoc(methodName: string): string[] {
     try {
-      const componentInstance = this.getComponentInstance();
+      const componentInstance = this.component!;
       if (componentInstance) {
         const componentClassName = componentInstance.constructor.name;
 
@@ -1046,32 +1027,6 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     );
   }
 
-  /**
-   * Get component instance only when method is actually called (lazy instantiation)
-   * @pdca 2025-10-31-UTC-1630.pdca.md - Fixed to provide targetDirectory from CLI's model
-   */
-  protected getComponentInstance(): any {
-    if (!this.component && this.getComponentClass()) {
-      this.component = new (this.getComponentClass())();
-      // Initialize with scenario containing targetDirectory from CLI (Path Authority pattern)
-      const instance = this.component; // TypeScript type narrowing helper
-      if (instance && typeof instance.init === "function") {
-        instance.init({
-          ior: {
-            uuid: crypto.randomUUID(),
-            component: this.getComponentName(),
-            version: this.getComponentVersion(),
-          },
-          owner: "",
-          model: {
-            uuid: crypto.randomUUID(),
-            targetDirectory: this.model.projectRoot,
-          } as any,
-        });
-      }
-    }
-    return this.component;
-  }
 
   /**
    * Extract parameter information using TSCompletion from TSRanger 2.2
@@ -2661,6 +2616,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   /**
    * Find project root using git (Web4 standard pattern)
    * Fallback to directory traversal if not in git repo
+   * 
+   * CRITICAL: Must distinguish between:
+   * - Project root: has .git + package.json + components/ directory
+   * - Component directory: has package.json but is INSIDE components/
+   * 
+   * @pdca 2025-10-31-UTC-2000.on-context-path-initialization.pdca.md
    * @private
    */
   private findProjectRoot(): string {
@@ -2669,12 +2630,14 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       return process.env.WEB4_PROJECT_ROOT;
     }
 
-    // Fallback: traverse up looking for .git and package.json
+    // Fallback: traverse up looking for .git, package.json, AND components/ directory
+    // This distinguishes project root from component directory
     let current = process.cwd();
     while (current !== "/") {
       if (
         existsSync(join(current, ".git")) &&
-        existsSync(join(current, "package.json"))
+        existsSync(join(current, "package.json")) &&
+        existsSync(join(current, "components"))  // ← CRITICAL: Project root has components/
       ) {
         return current;
       }

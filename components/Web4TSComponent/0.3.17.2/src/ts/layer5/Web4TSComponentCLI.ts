@@ -16,15 +16,21 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Constructor - creates component for discovery
-   * @pdca 2025-10-31-UTC-1430.component-discovery-radical-oop.pdca.md - Remove duplication
+   * @pdca 2025-10-31-UTC-1727.pdca.md - Phase 2: Fix Component Initialization
    */
   constructor() {
     super();
-    this.init();
+    this.init();  // ← DefaultCLI calculates ALL paths in model
     
-    // ✅ Create component BEFORE discovery (uses inherited this.component field)
-    // Component discovers its own root from import.meta.url (0.3.13.2 behavior)
+    // ✅ Create component with defaults
+    // Component discovers its own componentRoot from import.meta.url
     this.component = new DefaultWeb4TSComponent().init();
+    
+    // ✅ Direct model assignment (OOP - NO re-init!)
+    // Component already set: IOR, owner, version, componentRoot (from its own location)
+    // CLI provides: projectRoot, targetDirectory (path context for operations)
+    this.component.model.projectRoot = this.model.projectRoot;
+    this.component.model.targetDirectory = this.model.projectRoot;
     
     this.discoverMethods();  // ✅ NOW this.component exists for discovery!
   }
