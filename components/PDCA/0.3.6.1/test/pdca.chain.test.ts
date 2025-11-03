@@ -28,6 +28,14 @@ describe('PDCA chain - Bidirectional Linking', () => {
     }
     fs.mkdirSync(testDataDir, { recursive: true });
 
+    // Create minimal template in test data dir for chain to use
+    const templateDir = path.join(testDataDir, 'scrum.pmo/roles/_shared/PDCA');
+    fs.mkdirSync(templateDir, { recursive: true });
+    const minimalTemplate = `# Test PDCA Template
+**🔗 Previous PDCA:** {{PREV}}
+**➡️ Next PDCA:** Use pdca chain`;
+    fs.writeFileSync(path.join(templateDir, 'template.md'), minimalTemplate);
+
     // Initialize PDCA component
     pdca = new DefaultPDCA();
     await pdca.init({

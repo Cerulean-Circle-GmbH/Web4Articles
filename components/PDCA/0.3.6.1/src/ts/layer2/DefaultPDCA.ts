@@ -4802,7 +4802,9 @@ export class DefaultPDCA implements PDCA {
     const path = await import('path');
     
     const isDryRun = dryRun === 'true';
-    const projectRoot = await this.getProjectRoot();
+    
+    // Use workingDirectory from model for tests, otherwise use actual project root
+    const projectRoot = this.model.workingDirectory || await this.getProjectRoot();
     
     // Get session directory from model or use current directory
     const sessionDir = this.model.sessionDirectory || process.cwd();
