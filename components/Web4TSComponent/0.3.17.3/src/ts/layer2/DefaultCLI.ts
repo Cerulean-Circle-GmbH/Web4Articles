@@ -356,7 +356,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         ior: {
           uuid: this.model.uuid,
           component: 'User',
-          version: '0.0.0.0',
+          version: '0.1.0.0',
           timestamp: new Date().toISOString()
         },
         owner: '',  // No nested owner in fallback

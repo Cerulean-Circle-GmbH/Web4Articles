@@ -839,7 +839,7 @@ Standards:
    * @TODO cliDefault targetDir §
    * @cliValues targetDir § test/data
    */
-  async initProject(targetDir: string = '§'): Promise<this> {
+  async initProject(targetDir: string = '§', force: boolean = false): Promise<this> {
     // ✅ BASELINE COMPLIANCE: Use targetDirectory as-is (set by CLI or test via setTargetDirectory)
     const projectRoot = targetDir === '§' 
       ? this.model.targetDirectory  // ✅ Use stored value, don't calculate
@@ -903,15 +903,16 @@ Standards:
       console.log(`   ✅ Created tsconfig.json`);
     } else {
       // Timestamp-based sync: Check if template is newer than existing file
+      // @pdca 2025-11-03-UTC-1430.pdca.md - force parameter skips timestamp check
       const tsconfigTemplatePath = path.join(currentDir, '../../../templates', 'config/root-tsconfig.json.template');
       const tsConfigStats = await fs.stat(tsConfigPath);
       const tsconfigTemplateStats = await fs.stat(tsconfigTemplatePath);
       
-      if (tsconfigTemplateStats.mtime > tsConfigStats.mtime) {
-        // Template is newer - update the file
+      if (force || tsconfigTemplateStats.mtime > tsConfigStats.mtime) {
+        // Template is newer OR force mode - update the file
         const tsConfigContent = await this.loadTemplate('config/root-tsconfig.json.template', {});
         await fs.writeFile(tsConfigPath, tsConfigContent);
-        console.log(`   ✅ Updated tsconfig.json (template is newer)`);
+        console.log(`   ✅ ${force ? 'Force updated' : 'Updated'} tsconfig.json${force ? '' : ' (template is newer)'}`);
       } else {
         console.log(`   ℹ️  tsconfig.json already up to date`);
       }
@@ -958,15 +959,16 @@ Standards:
       console.log(`   ✅ Created package.json`);
     } else {
       // Timestamp-based sync: Check if template is newer than existing file
+      // @pdca 2025-11-03-UTC-1430.pdca.md - force parameter skips timestamp check
       const packageTemplatePath = path.join(currentDir, '../../../templates', 'config/root-package.json.template');
       const packageStats = await fs.stat(packageJsonPath);
       const packageTemplateStats = await fs.stat(packageTemplatePath);
       
-      if (packageTemplateStats.mtime > packageStats.mtime) {
-        // Template is newer - update the file
+      if (force || packageTemplateStats.mtime > packageStats.mtime) {
+        // Template is newer OR force mode - update the file
         const packageJsonContent = await this.loadTemplate('config/root-package.json.template', {});
         await fs.writeFile(packageJsonPath, packageJsonContent);
-        console.log(`   ✅ Updated package.json (template is newer)`);
+        console.log(`   ✅ ${force ? 'Force updated' : 'Updated'} package.json${force ? '' : ' (template is newer)'}`);
       } else {
         console.log(`   ℹ️  package.json already up to date`);
       }
@@ -983,15 +985,16 @@ Standards:
     
     if (existsSync(sourceEnvPath)) {
       // Timestamp-based sync: Check if template is newer than existing file
+      // @pdca 2025-11-03-UTC-1430.pdca.md - force parameter skips timestamp check
       const sourceEnvStats = await fs.stat(sourceEnvPath);
       const templateStats = await fs.stat(templatePath);
       
-      if (templateStats.mtime > sourceEnvStats.mtime) {
-        // Template is newer - update the file
+      if (force || templateStats.mtime > sourceEnvStats.mtime) {
+        // Template is newer OR force mode - update the file
         const sourceEnvContent = await this.loadTemplate('project/source.env.template', {});
         await fs.writeFile(sourceEnvPath, sourceEnvContent);
         await fs.chmod(sourceEnvPath, 0o755);
-        console.log(`   ✅ Updated source.env (tab completion, PATH)`);
+        console.log(`   ✅ ${force ? 'Force updated' : 'Updated'} source.env${force ? '' : ' (template is newer)'}`);
       } else {
         console.log(`   ℹ️  source.env already up to date`);
       }
