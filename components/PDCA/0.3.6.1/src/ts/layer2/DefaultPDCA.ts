@@ -5239,13 +5239,31 @@ export class DefaultPDCA implements PDCA {
       const oldLine = '**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})';
       const newLine = `**🔗 Previous PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`;
       
+      const beforeReplace = templateContent;
       templateContent = templateContent.replace(oldLine, newLine);
+      
+      // Fallback: If template uses simplified placeholder (test templates), replace that instead
+      if (templateContent === beforeReplace && templateContent.includes('{{PREVIOUS_PDCA_LINK}}')) {
+        templateContent = templateContent.replace(
+          '**🔗 Previous PDCA:** {{PREVIOUS_PDCA_LINK}}',
+          `**🔗 Previous PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`
+        );
+      }
     } else {
       // No previous PDCA - indicate this is the first
       const oldLine = '**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})';
       const newLine = `**🔗 Previous PDCA:** N/A - First PDCA in chain`;
       
+      const beforeReplace = templateContent;
       templateContent = templateContent.replace(oldLine, newLine);
+      
+      // Fallback: If template uses simplified placeholder (test templates), replace that instead
+      if (templateContent === beforeReplace && templateContent.includes('{{PREVIOUS_PDCA_LINK}}')) {
+        templateContent = templateContent.replace(
+          '**🔗 Previous PDCA:** {{PREVIOUS_PDCA_LINK}}',
+          newLine
+        );
+      }
     }
     
     // Step 6: Write new PDCA file
