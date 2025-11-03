@@ -5228,6 +5228,65 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
+   * Rewrites a corrupted PDCA by generating a fresh one using createPDCA and deleting the original
+   * @cliSyntax rewritePDCA <filePath> <title> <objective> [dryRun]
+   * @cliDescription Replaces a corrupted PDCA with a fresh template-compliant version
+   * @cliExample pdca rewritePDCA components/PDCA/0.3.6.1/session/2025-11-03-UTC-1400.pdca.md "Fixed Title" "Fixed Objective"
+   * @cliExample pdca rewritePDCA path/to/corrupted.pdca.md "Title" "Objective" true
+   * @cliValues dryRun true false
+   */
+  async rewritePDCA(filePath: string, title: string, objective: string, dryRun: string = 'false'): Promise<this> {
+    const fs = await import('fs');
+    const path = await import('path');
+    
+    const isDryRun = dryRun === 'true';
+    
+    console.log(`\n🔄 Rewriting Corrupted PDCA${isDryRun ? ' (DRY RUN)' : ''}\n`);
+    console.log(`📄 Corrupted File: ${filePath}`);
+    console.log(`📋 New Title: ${title}`);
+    console.log(`🎯 New Objective: ${objective}\n`);
+    
+    // Step 1: Validate that the corrupted file exists
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`File not found: ${filePath}`);
+    }
+    
+    console.log(`✅ Corrupted file exists: ${path.basename(filePath)}\n`);
+    
+    // Step 2: Extract session directory from file path
+    const sessionDir = path.dirname(filePath);
+    const originalSessionDir = this.model.sessionDirectory;
+    
+    // Temporarily set session directory for createPDCA
+    this.model.sessionDirectory = sessionDir;
+    
+    console.log(`📂 Session Directory: ${sessionDir}\n`);
+    
+    try {
+      // Step 3: Create new PDCA using createPDCA (ensures template compliance)
+      console.log(`📝 Creating fresh PDCA using createPDCA...\n`);
+      await this.createPDCA(title, objective, dryRun);
+      
+      // Step 4: Delete original corrupted file (if not dry run)
+      if (!isDryRun) {
+        console.log(`🗑️  Deleting corrupted original: ${path.basename(filePath)}`);
+        fs.unlinkSync(filePath);
+        console.log(`✅ Corrupted file deleted\n`);
+      } else {
+        console.log(`✓ Would delete corrupted file: ${path.basename(filePath)}\n`);
+      }
+      
+      console.log(`✨ PDCA rewrite complete!\n`);
+      
+    } finally {
+      // Restore original session directory
+      this.model.sessionDirectory = originalSessionDir;
+    }
+    
+    return this;
+  }
+
+  /**
    * Find most recent PDCA file in directory (internal helper)
    * Looks for files matching pattern: YYYY-MM-DD-UTC-HHMM.pdca.md
    */
