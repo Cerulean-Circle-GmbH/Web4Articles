@@ -32,17 +32,33 @@ describe('PDCA chain - Bidirectional Linking', () => {
     const templateDir = path.join(testDataDir, 'scrum.pmo/roles/_shared/PDCA');
     fs.mkdirSync(templateDir, { recursive: true });
     const minimalTemplate = `# Test PDCA Template
+**🗓️ Date:** {{UTC_TIMESTAMP}}
+**🎯 Template Version:** 3.2.4.2
+**👤 Agent Name:** {{AGENT_NAME}}
+**👤 Branch:** {{BRANCH_NAME}}
 **🔗 Previous PDCA:** {{PREV}}
-**➡️ Next PDCA:** Use pdca chain`;
+**➡️ Next PDCA:** Use pdca chain
+
+## **📊 SUMMARY**
+
+## **📋 PLAN**
+
+## **🔧 DO**
+
+## **✅ CHECK**
+
+## **🎯 ACT**`;
     fs.writeFileSync(path.join(templateDir, 'template.md'), minimalTemplate);
 
     // Initialize PDCA component
     pdca = new DefaultPDCA();
     await pdca.init({
-      workingDirectory: testDataDir,
-      sessionDirectory: testDataDir,
-      currentBranch: 'dev/test-branch',
-      repoUrl: 'https://github.com/test-org/test-repo'
+      model: {
+        workingDirectory: testDataDir,
+        sessionDirectory: testDataDir,
+        currentBranch: 'dev/test-branch',
+        repoUrl: 'https://github.com/test-org/test-repo'
+      }
     });
   });
 
@@ -108,7 +124,7 @@ describe('PDCA chain - Bidirectional Linking', () => {
     
     // Should contain dual link format
     expect(newContent).toContain('**🔗 Previous PDCA:** [GitHub]');
-    expect(newContent).toContain(`](${existingPDCA})`);
+    expect(newContent).toContain(`](./${existingPDCA})`);
   });
 
   it('TC43: chain - updates previous PDCA\'s Next PDCA line', async () => {
@@ -181,8 +197,9 @@ Some content here.`;
 
     // Then: No files created or modified
     const files = fs.readdirSync(testDataDir);
-    expect(files.length).toBe(1); // Only original file
-    expect(files[0]).toBe(existingPDCA);
+    const pdcaFiles = files.filter(f => f.endsWith('.pdca.md'));
+    expect(pdcaFiles.length).toBe(1); // Only original file
+    expect(pdcaFiles[0]).toBe(existingPDCA);
     
     const unchangedContent = fs.readFileSync(path.join(testDataDir, existingPDCA), 'utf-8');
     expect(unchangedContent).toBe(originalContent);
@@ -192,11 +209,15 @@ Some content here.`;
     // Given: Invalid session directory
     const invalidDir = path.join(testDataDir, 'nonexistent');
     
+    // Re-initialize with invalid directory
+    pdca = new DefaultPDCA();
     await pdca.init({
-      workingDirectory: invalidDir,
-      sessionDirectory: invalidDir,
-      currentBranch: 'dev/test-branch',
-      repoUrl: 'https://github.com/test-org/test-repo'
+      model: {
+        workingDirectory: invalidDir,
+        sessionDirectory: invalidDir,
+        currentBranch: 'dev/test-branch',
+        repoUrl: 'https://github.com/test-org/test-repo'
+      }
     });
 
     // When/Then: Should throw error with helpful message
