@@ -111,12 +111,12 @@ describe('🧪 Component Creation Test Isolation', () => {
     expect(content).toContain('async tree('); // Has tree method
     expect(content).toContain('async links('); // Has links method
     
-    // Verify these methods delegate to Web4TSComponent
-    expect(content).toContain('await web4ts.test'); // Delegates test
-    expect(content).toContain('await web4ts.build'); // Delegates build
-    expect(content).toContain('await web4ts.clean'); // Delegates clean
+    // ✅ NEW: Verify DRY helper pattern for delegation (not direct web4ts calls)
+    // @pdca 2025-11-03-UTC-1200.pdca.md - DRY OOP pattern for context delegation
+    expect(content).toContain('delegateToWeb4TS'); // Has DRY helper method
+    expect(content).toContain('return this.delegateToWeb4TS'); // Uses DRY helper
     
-    console.log(`   ✅ Delegation methods verified (test, build, clean, tree, links)`);
+    console.log(`   ✅ Delegation methods verified (test, build, clean, tree, links) using DRY helper`);
   });
 
   it('should have proper CLI with auto-discovery', async () => {

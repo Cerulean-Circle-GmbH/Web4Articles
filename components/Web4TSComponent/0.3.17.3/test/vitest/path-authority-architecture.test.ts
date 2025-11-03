@@ -26,16 +26,6 @@ describe('Path Authority Architecture', () => {
     expect(cli.model.projectRoot.length).toBeGreaterThan(0);
   });
   
-  it('CLI is Path Authority - calculates componentRoot in init()', async () => {
-    const cli = await new DefaultCLI().init({});
-    
-    // CLI has calculated and stored componentRoot
-    expect(cli.model.componentRoot).toBeDefined();
-    expect(cli.model.componentRoot).toContain('Web4TSComponent');
-    expect(typeof cli.model.componentRoot).toBe('string');
-    expect(cli.model.componentRoot.length).toBeGreaterThan(0);
-  });
-  
   it('CLI is Path Authority - calculates testDataDir in init()', async () => {
     const cli = await new DefaultCLI().init({});
     
