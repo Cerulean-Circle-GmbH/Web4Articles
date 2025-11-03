@@ -2639,19 +2639,21 @@ export class DefaultPDCA implements PDCA {
           '✅ Generates UTC timestamp filename automatically (YYYY-MM-DD-UTC-HHMM.pdca.md)',
           '✅ Creates session directory if it doesn\'t exist',
           '✅ Writes to session directory: components/PDCA/{{version}}/session/',
+          '✅ Automatically updates previous PDCA\'s "Next PDCA:" DualLink (bidirectional chaining)',
           '✅ Returns this for method chaining',
-          '✅ Dry run mode: Preview without creating file',
-          '🎯 Purpose: Ensures consistent PDCA structure, prevents omissions/inconsistencies',
-          '🎯 Pattern: Programmatic boilerplate generation → AI population of content',
-          '📊 Old problem: AI created PDCAs directly → omissions, structural variations, deleted mandatory sections',
-          '📊 New solution: Fixed boilerplate always generated first → guaranteed coverage of all 176 template lines',
+          '✅ Dry run mode: Preview without creating file or updating links',
+          '🎯 Purpose: Ensures consistent PDCA structure, prevents omissions/inconsistencies, maintains chain integrity',
+          '🎯 Pattern: Find previous PDCA → Generate boilerplate → AI population → Update previous link',
+          '📊 Old problem: AI created PDCAs directly → omissions, structural variations, deleted mandatory sections, broken chains',
+          '📊 New solution: Fixed boilerplate always generated first → guaranteed coverage of all 176 template lines + automatic chain maintenance',
           '🎯 Use case: Starting new feature/task documentation from scratch',
           '📋 Placeholders populated: TITLE, OBJECTIVE, UTC_TIMESTAMP, AGENT_NAME, BRANCH_NAME, SESSION_NAME, SPRINT_NAME, TASK_NAME, and more',
+          '🔗 Bidirectional chaining: Finds most recent PDCA, creates new one with "Previous PDCA:" link, updates old one with "Next PDCA:" link',
           '⚠️ NEVER DELETE SECTIONS: Especially EMOTIONAL REFLECTION and PDCA PROCESS UPDATE (validated by cmm3check)',
           '⚠️ ACCEPTABLE EXTENSIONS: Phase/DoR/DoD pattern in PLAN section (for complex sprints)',
           '❌ PROHIBITED: Adding META sections or other unauthorized top-level sections',
           '📊 Source: 2025-11-03-UTC-0837.pdca.md (TDD implementation, 9/9 tests passing)',
-          '📊 Analysis: 2025-11-03-UTC-0954.pdca.md (template deviation analysis, cmm3check enhancement)',
+          '📊 Analysis: 2025-11-03-UTC-0954.pdca.md (template deviation analysis, cmm3check enhancement, bidirectional chaining)',
           '🔧 Method signature: async createPDCA(title: string, objective: string, dryRun?: string): Promise<this>',
           '',
           '📋 Workflow for New PDCAs (MANDATORY):',
@@ -5055,13 +5057,23 @@ export class DefaultPDCA implements PDCA {
     console.log(`📋 Title: ${title}`);
     console.log(`🎯 Objective: ${objective}\n`);
     
-    // Step 1: Ensure session directory exists
+    // Step 1: Find most recent PDCA to update its "Next PDCA:" link
+    const mostRecentPDCA = await this.findMostRecentPDCAInternal(sessionDir);
+    
+    if (mostRecentPDCA) {
+      console.log(`🔍 Most Recent PDCA: ${path.basename(mostRecentPDCA)}`);
+      console.log(`🔗 Will update its "Next PDCA:" link\n`);
+    } else {
+      console.log(`🔍 No previous PDCA found - this will be the first PDCA\n`);
+    }
+    
+    // Step 2: Ensure session directory exists
     if (!isDryRun && !fs.existsSync(sessionDir)) {
       console.log(`📁 Creating session directory: ${sessionDir}`);
       fs.mkdirSync(sessionDir, { recursive: true });
     }
     
-    // Step 2: Generate new PDCA filename with current UTC timestamp
+    // Step 3: Generate new PDCA filename with current UTC timestamp
     const now = new Date();
     const year = now.getUTCFullYear();
     const month = String(now.getUTCMonth() + 1).padStart(2, '0');
@@ -5074,7 +5086,7 @@ export class DefaultPDCA implements PDCA {
     
     console.log(`📝 New PDCA Filename: ${newPDCAFilename}\n`);
     
-    // Step 3: Read template
+    // Step 4: Read template
     const templatePath = path.join(projectRoot, 'scrum.pmo/roles/_shared/PDCA/template.md');
     if (!fs.existsSync(templatePath)) {
       throw new Error(`Template not found: ${templatePath}`);
@@ -5082,7 +5094,7 @@ export class DefaultPDCA implements PDCA {
     
     let templateContent = fs.readFileSync(templatePath, 'utf-8');
     
-    // Step 4: Populate template placeholders
+    // Step 5: Populate template placeholders
     // Generate current UTC timestamp string for display
     const utcDateString = now.toUTCString();
     
@@ -5106,7 +5118,7 @@ export class DefaultPDCA implements PDCA {
       .replace(/{{REQUIREMENT_UUID}}/g, 'TBD')
       .replace(/{{SUCCESS_SUMMARY}}/g, 'TBD');
     
-    // Step 5: Write new PDCA file
+    // Step 6: Write new PDCA file
     if (!isDryRun) {
       fs.writeFileSync(newPDCAPath, templateContent, 'utf-8');
       console.log(`✅ New PDCA created: ${newPDCAFilename}`);
@@ -5114,6 +5126,15 @@ export class DefaultPDCA implements PDCA {
     } else {
       console.log(`✓ Would create new PDCA: ${newPDCAFilename}`);
       console.log(`✓ Would write to: ${newPDCAPath}\n`);
+    }
+    
+    // Step 7: Update previous PDCA's "Next PDCA:" link (bidirectional chaining)
+    if (mostRecentPDCA && !isDryRun) {
+      await this.updateNextLinkInternal(mostRecentPDCA, newPDCAPath);
+      console.log(`🔗 Bidirectional chain established: ${path.basename(mostRecentPDCA)} ←→ ${newPDCAFilename}\n`);
+    } else if (mostRecentPDCA && isDryRun) {
+      console.log(`✓ Would update previous PDCA's "Next PDCA:" link`);
+      console.log(`✓ Would establish bidirectional chain: ${path.basename(mostRecentPDCA)} ←→ ${newPDCAFilename}\n`);
     }
     
     console.log(`✨ PDCA boilerplate ready for AI population!\n`);
