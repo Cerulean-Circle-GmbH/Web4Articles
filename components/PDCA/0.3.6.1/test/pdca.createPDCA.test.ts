@@ -293,5 +293,109 @@ describe('PDCA createPDCA - Programmatic PDCA Generation', () => {
     
     expect(content).toContain(title);
   });
+
+  it('TC59: createPDCA - updates previous PDCA\'s "Next PDCA:" link (bidirectional chaining)', async () => {
+    // Given: First PDCA exists with older timestamp (manually created)
+    const sessionDir = path.join(testDataDir, 'session');
+    const firstPDCA = '2025-11-03-UTC-0800.pdca.md';
+    const firstContent = `# Test PDCA
+**➡️ Next PDCA:** Use pdca chain`;
+    fs.writeFileSync(path.join(sessionDir, firstPDCA), firstContent);
+    
+    // When: Create second PDCA using createPDCA
+    await pdca.createPDCA('Second PDCA', 'Follow-up feature');
+    
+    // Then: First PDCA's "Next PDCA:" link updated with DualLinks to second
+    const files = fs.readdirSync(sessionDir);
+    const pdcaFiles = files.filter(f => f.endsWith('.pdca.md')).sort();
+    expect(pdcaFiles.length).toBe(2);
+    
+    const updatedFirstContent = fs.readFileSync(path.join(sessionDir, firstPDCA), 'utf-8');
+    const secondPDCA = pdcaFiles[1];
+    
+    // Verify bidirectional link was added
+    expect(updatedFirstContent).toContain(`**➡️ Next PDCA:**`);
+    expect(updatedFirstContent).toContain(`[GitHub](`);
+    expect(updatedFirstContent).toContain(`](./${secondPDCA})`); // Relative path with ./ prefix
+    expect(updatedFirstContent).not.toContain('Use pdca chain'); // Placeholder replaced
+  });
+
+  it('TC60: createPDCA - with no previous PDCA skips link update', async () => {
+    // Given: Empty session directory (only scrum.pmo dir)
+    const sessionDir = path.join(testDataDir, 'session');
+    const initialFiles = fs.readdirSync(sessionDir);
+    const initialPDCAs = initialFiles.filter(f => f.endsWith('.pdca.md'));
+    expect(initialPDCAs.length).toBe(0);
+    
+    // When: Create first PDCA
+    await pdca.createPDCA('First PDCA', 'Initial feature');
+    
+    // Then: PDCA created without attempting to update non-existent previous
+    const files = fs.readdirSync(sessionDir);
+    const pdcaFiles = files.filter(f => f.endsWith('.pdca.md'));
+    expect(pdcaFiles.length).toBe(1);
+    
+    // No error thrown, PDCA created successfully
+    const content = fs.readFileSync(path.join(sessionDir, pdcaFiles[0]), 'utf-8');
+    expect(content).toContain('First PDCA');
+  });
+
+  it('TC61: createPDCA - dry run shows would-update message for bidirectional chain', async () => {
+    // Given: First PDCA exists with older timestamp (manually created)
+    const sessionDir = path.join(testDataDir, 'session');
+    const firstPDCA = '2025-11-03-UTC-0800.pdca.md';
+    const firstContent = `# Test PDCA
+**➡️ Next PDCA:** Use pdca chain`;
+    fs.writeFileSync(path.join(sessionDir, firstPDCA), firstContent);
+    
+    // When: Create second PDCA in dry run mode
+    await pdca.createPDCA('Second PDCA', 'Follow-up feature', 'true');
+    
+    // Then: First PDCA NOT modified (dry run)
+    const files = fs.readdirSync(sessionDir);
+    const pdcaFiles = files.filter(f => f.endsWith('.pdca.md'));
+    expect(pdcaFiles.length).toBe(1); // Still only first PDCA
+    
+    // First PDCA unchanged
+    const unchangedContent = fs.readFileSync(path.join(sessionDir, firstPDCA), 'utf-8');
+    expect(unchangedContent).toBe(firstContent);
+  });
+
+  it('TC62: createPDCA - bidirectional link update verified across multiple PDCAs', async () => {
+    // Given: Chain of 2 pre-existing PDCAs (manually created with older timestamps)
+    const sessionDir = path.join(testDataDir, 'session');
+    const firstPDCA = '2025-11-03-UTC-0700.pdca.md';
+    const secondPDCA = '2025-11-03-UTC-0800.pdca.md';
+    
+    const firstContent = `# First PDCA
+**🔗 Previous PDCA:** N/A
+**➡️ Next PDCA:** [§/session/${secondPDCA}](${secondPDCA})`;
+    
+    const secondContent = `# Second PDCA
+**🔗 Previous PDCA:** [§/session/${firstPDCA}](${firstPDCA})
+**➡️ Next PDCA:** Use pdca chain`;
+    
+    fs.writeFileSync(path.join(sessionDir, firstPDCA), firstContent);
+    fs.writeFileSync(path.join(sessionDir, secondPDCA), secondContent);
+    
+    // When: Create third PDCA using createPDCA
+    await pdca.createPDCA('Third PDCA', 'Feature 3');
+    
+    // Then: Verify previous PDCA's Next link was updated
+    const files = fs.readdirSync(sessionDir);
+    const pdcaFiles = files.filter(f => f.endsWith('.pdca.md')).sort();
+    expect(pdcaFiles.length).toBe(3);
+    
+    const updatedSecondContent = fs.readFileSync(path.join(sessionDir, secondPDCA), 'utf-8');
+    const thirdPDCA = pdcaFiles[2];
+    
+    // Second → Third (Next link updated by createPDCA)
+    expect(updatedSecondContent).toContain(`](./${thirdPDCA})`); // Relative path with ./ prefix
+    expect(updatedSecondContent).not.toContain('Use pdca chain'); // Placeholder replaced
+    
+    // Verify the chain is maintained
+    expect(updatedSecondContent).toContain('**🔗 Previous PDCA:**');
+    expect(updatedSecondContent).toContain('**➡️ Next PDCA:**');
+  });
 });
 

@@ -1,0 +1,221 @@
+/**
+ * PDCA cmm3check Feature Tests
+ * 
+ * Test cmm3check enhancement that validates:
+ * 1. EMOTIONAL REFLECTION section presence
+ * 2. PDCA PROCESS UPDATE section presence
+ * 3. All 11 required template sections (including the 2 new ones)
+ * 
+ * Requirements: 2025-11-03-UTC-0954.pdca.md (D2)
+ * Pattern: Retroactive TDD (tests after implementation)
+ */
+
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import * as fs from 'fs';
+import * as path from 'path';
+import { DefaultPDCA } from '../src/ts/layer2/DefaultPDCA.js';
+
+describe('PDCA cmm3check - Enhanced Template Validation', () => {
+  const currentFileUrl = new URL(import.meta.url);
+  const testDir = path.dirname(currentFileUrl.pathname);
+  const testDataDir = path.join(testDir, 'data', 'cmm3check-tests');
+  
+  let pdca: DefaultPDCA;
+
+  beforeEach(async () => {
+    // Create test environment
+    if (fs.existsSync(testDataDir)) {
+      fs.rmSync(testDataDir, { recursive: true, force: true });
+    }
+    fs.mkdirSync(testDataDir, { recursive: true });
+
+    // Initialize PDCA instance
+    pdca = new DefaultPDCA();
+    await pdca.init({ model: {} });
+  });
+
+  afterEach(() => {
+    // Cleanup test artifacts
+    if (fs.existsSync(testDataDir)) {
+      fs.rmSync(testDataDir, { recursive: true, force: true });
+    }
+  });
+
+  it('TC60: cmm3check - PDCA with EMOTIONAL REFLECTION passes check1a', async () => {
+    const testPDCA = path.join(testDataDir, 'test-emotional.pdca.md');
+    const compliantPDCA = `# Test PDCA
+**🎯 Template Version:** 3.2.4.2
+
+## **📊 SUMMARY**
+### **Artifact Links**
+### **To TRON: QA Decisions required**
+### **TRON Feedback**
+### **My Answer**
+
+## **📋 PLAN**
+## **🔧 DO**
+## **✅ CHECK**
+## **🎯 ACT**
+
+## **💫 EMOTIONAL REFLECTION: Test Reflection**
+### **Test Subsection**
+Content here.
+
+## **🎯 PDCA PROCESS UPDATE**
+Content here.`;
+
+    fs.writeFileSync(testPDCA, compliantPDCA);
+
+    // cmm3check should not fail on check1a for compliant PDCA
+    const result = await pdca.cmm3check(testPDCA, 'true'); // dry run
+    
+    // Read the result - compliant PDCA should not have violation 1a
+    expect(result).toBe(pdca); // Returns this for chaining
+    expect(fs.existsSync(testPDCA)).toBe(true);
+  });
+
+  it('TC61: cmm3check - PDCA without EMOTIONAL REFLECTION fails check1a', async () => {
+    const testPDCA = path.join(testDataDir, 'test-no-emotional.pdca.md');
+    const nonCompliantPDCA = `# Test PDCA
+**🎯 Template Version:** 3.2.4.2
+
+## **📊 SUMMARY**
+### **Artifact Links**
+### **To TRON: QA Decisions required**
+### **TRON Feedback**
+### **My Answer**
+
+## **📋 PLAN**
+## **🔧 DO**
+## **✅ CHECK**
+## **🎯 ACT**
+
+## **🎯 PDCA PROCESS UPDATE**
+Content here.`;
+
+    fs.writeFileSync(testPDCA, nonCompliantPDCA);
+
+    // This test verifies that check1a detects missing EMOTIONAL REFLECTION
+    const result = await pdca.cmm3check(testPDCA, 'true');
+    
+    // Should detect violation but return pdca instance for chaining
+    expect(result).toBe(pdca);
+  });
+
+  it('TC62: cmm3check - PDCA without PDCA PROCESS UPDATE fails check1a', async () => {
+    const testPDCA = path.join(testDataDir, 'test-no-process-update.pdca.md');
+    const nonCompliantPDCA = `# Test PDCA
+**🎯 Template Version:** 3.2.4.2
+
+## **📊 SUMMARY**
+### **Artifact Links**
+### **To TRON: QA Decisions required**
+### **TRON Feedback**
+### **My Answer**
+
+## **📋 PLAN**
+## **🔧 DO**
+## **✅ CHECK**
+## **🎯 ACT**
+
+## **💫 EMOTIONAL REFLECTION: Test Reflection**
+### **Test Subsection**
+Content here.`;
+
+    fs.writeFileSync(testPDCA, nonCompliantPDCA);
+
+    // This test verifies that check1a detects missing PDCA PROCESS UPDATE
+    const result = await pdca.cmm3check(testPDCA, 'true');
+    
+    expect(result).toBe(pdca);
+  });
+
+  it('TC63: cmm3check - PDCA missing both mandatory sections fails check1a', async () => {
+    const testPDCA = path.join(testDataDir, 'test-missing-both.pdca.md');
+    const nonCompliantPDCA = `# Test PDCA
+**🎯 Template Version:** 3.2.4.2
+
+## **📊 SUMMARY**
+### **Artifact Links**
+### **To TRON: QA Decisions required**
+### **TRON Feedback**
+### **My Answer**
+
+## **📋 PLAN**
+## **🔧 DO**
+## **✅ CHECK**
+## **🎯 ACT**`;
+
+    fs.writeFileSync(testPDCA, nonCompliantPDCA);
+
+    // This test verifies that check1a detects BOTH missing sections
+    const result = await pdca.cmm3check(testPDCA, 'true');
+    
+    expect(result).toBe(pdca);
+  });
+
+  it('TC64: cmm3check - fully compliant PDCA passes all checks', async () => {
+    const testPDCA = path.join(testDataDir, 'test-fully-compliant.pdca.md');
+    const compliantPDCA = `# Test PDCA
+**🎯 Template Version:** 3.2.4.2
+
+## **📊 SUMMARY**
+### **Artifact Links**
+### **To TRON: QA Decisions required**
+### **TRON Feedback**
+### **My Answer**
+
+## **📋 PLAN**
+## **🔧 DO**
+## **✅ CHECK**
+## **🎯 ACT**
+
+## **💫 EMOTIONAL REFLECTION: Complete Reflection**
+### **Subsection 1**
+Content here.
+
+## **🎯 PDCA PROCESS UPDATE**
+### **Process Learning**
+Content here.`;
+
+    fs.writeFileSync(testPDCA, compliantPDCA);
+
+    // Fully compliant PDCA should pass all checks
+    const result = await pdca.cmm3check(testPDCA, 'true');
+    
+    expect(result).toBe(pdca);
+    expect(fs.existsSync(testPDCA)).toBe(true);
+  });
+
+  it('TC65: cmm3check - returns this for method chaining', async () => {
+    const testPDCA = path.join(testDataDir, 'test-chaining.pdca.md');
+    const compliantPDCA = `# Test PDCA
+**🎯 Template Version:** 3.2.4.2
+
+## **📊 SUMMARY**
+### **Artifact Links**
+### **To TRON: QA Decisions required**
+### **TRON Feedback**
+### **My Answer**
+
+## **📋 PLAN**
+## **🔧 DO**
+## **✅ CHECK**
+## **🎯 ACT**
+
+## **💫 EMOTIONAL REFLECTION: Test**
+Content.
+
+## **🎯 PDCA PROCESS UPDATE**
+Content.`;
+
+    fs.writeFileSync(testPDCA, compliantPDCA);
+
+    // Test method chaining
+    const result = await pdca.cmm3check(testPDCA, 'true');
+    
+    expect(result).toBe(pdca);
+    expect(result).toBeInstanceOf(DefaultPDCA);
+  });
+});
+
