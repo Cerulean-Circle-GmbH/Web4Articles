@@ -15,6 +15,7 @@ import { User } from "../layer3/User.interface.js";
 // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Removed DefaultWeb4TSComponent import for true generic base class
 import { TSCompletion } from "../layer4/TSCompletion.js";
 import { DefaultColors } from "../layer4/DefaultColors.js";
+import { execSync } from 'child_process';  // ← Add this for ESM compatibility
 import {
   readFileSync,
   existsSync,
@@ -154,8 +155,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     
     // 2. Use git root (NOT environment variable - filesystem detection only)
     // @pdca 2025-11-03-UTC-1430.pdca.md - Removed process.env.WEB4_PROJECT_ROOT check
+    // @pdca 2025-11-03-UTC-1828.pdca.md - Fixed ESM compatibility: use top-level import instead of require()
     try {
-      const { execSync } = require('child_process');
       const gitRoot = execSync('git rev-parse --show-toplevel', { 
         encoding: 'utf8',
         stdio: ['pipe', 'pipe', 'ignore']  // Suppress stderr

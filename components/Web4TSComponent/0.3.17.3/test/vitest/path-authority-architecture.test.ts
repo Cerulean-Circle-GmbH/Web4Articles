@@ -58,8 +58,12 @@ describe('Path Authority Architecture', () => {
     // CLI calculates test isolation directory (componentRoot + /test/data)
     const testDataDir = cli.model.testDataDir; // CLI calculated this ONCE in init()
     
+    // @pdca 2025-11-03-UTC-1828.pdca.md - BOTH projectRoot AND targetDirectory required
     const component = await new DefaultWeb4TSComponent().init({
-      model: { targetDirectory: testDataDir } // CLI provides this
+      model: { 
+        projectRoot: testDataDir,
+        targetDirectory: testDataDir 
+      }
     });
     
     // Component detects test isolation by path pattern
@@ -74,9 +78,12 @@ describe('Path Authority Architecture', () => {
   it('initProject uses model state, NOT process.cwd()', async () => {
     const cli = await new DefaultCLI().init({});
     
-    // CLI provides targetDirectory
+    // @pdca 2025-11-03-UTC-1828.pdca.md - BOTH projectRoot AND targetDirectory required
     const component = await new DefaultWeb4TSComponent().init({
-      model: { targetDirectory: cli.model.testDataDir }
+      model: { 
+        projectRoot: cli.model.testDataDir,
+        targetDirectory: cli.model.testDataDir 
+      }
     });
     
     // initProject('§') should use this.model.targetDirectory
@@ -92,14 +99,21 @@ describe('Path Authority Architecture', () => {
     const cli = await new DefaultCLI().init({});
     
     // Test Isolation: CLI provides testDataDir
+    // @pdca 2025-11-03-UTC-1828.pdca.md - BOTH projectRoot AND targetDirectory required
     const testComponent = await new DefaultWeb4TSComponent().init({
-      model: { targetDirectory: cli.model.testDataDir }
+      model: { 
+        projectRoot: cli.model.testDataDir,
+        targetDirectory: cli.model.testDataDir 
+      }
     });
     expect(testComponent.model.targetDirectory).toContain('/test/data');
     
     // Production: CLI provides projectRoot
     const prodComponent = await new DefaultWeb4TSComponent().init({
-      model: { targetDirectory: cli.model.projectRoot }
+      model: { 
+        projectRoot: cli.model.projectRoot,
+        targetDirectory: cli.model.projectRoot 
+      }
     });
     expect(prodComponent.model.targetDirectory).not.toContain('/test/data');
     
@@ -110,8 +124,12 @@ describe('Path Authority Architecture', () => {
   it('Environment-agnostic - Component has NO env var access', async () => {
     const cli = await new DefaultCLI().init({});
     
+    // @pdca 2025-11-03-UTC-1828.pdca.md - BOTH projectRoot AND targetDirectory required
     const component = await new DefaultWeb4TSComponent().init({
-      model: { targetDirectory: cli.model.projectRoot }
+      model: { 
+        projectRoot: cli.model.projectRoot,
+        targetDirectory: cli.model.projectRoot 
+      }
     });
     
     // Component behavior is determined by model state

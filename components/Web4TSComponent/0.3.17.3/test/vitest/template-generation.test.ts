@@ -23,9 +23,12 @@ describe('Template-Based Code Generation', () => {
   let testDir: string;
 
   beforeAll(async () => {
-    // @pdca 2025-10-31-UTC-1230.test-isolation-violation-fix.pdca.md - init() requires targetDirectory
+    // @pdca 2025-11-03-UTC-1828.pdca.md - BOTH projectRoot AND targetDirectory required
     component = new DefaultWeb4TSComponent().init({
-      model: { targetDirectory: testDataPath }
+      model: { 
+        projectRoot: testDataPath,
+        targetDirectory: testDataPath 
+      }
     });
     
     // Create test directory in test/data (isolated project root)

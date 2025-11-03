@@ -65,8 +65,12 @@ describe('🧪 Component Creation Test Isolation', () => {
     // @pdca 2025-10-31-UTC-1230.test-isolation-violation-fix.pdca.md - init() requires targetDirectory
     
     // Create component instance with test isolation
+    // @pdca 2025-11-03-UTC-1828.pdca.md - BOTH projectRoot AND targetDirectory required
     const component = new DefaultWeb4TSComponent().init({
-      model: { targetDirectory: testDataDir }
+      model: { 
+        projectRoot: testDataDir,
+        targetDirectory: testDataDir 
+      }
     });
     
     // Create component in test isolation
