@@ -1058,6 +1058,39 @@ Standards:
     console.log(`   Layers: ${metadata.hasLayeredArchitecture ? '✅' : '❌'}`);
     console.log(`   Spec: ${metadata.hasScenarioSupport ? '✅' : '❌'}`);
     
+    // @pdca 2025-11-03-HHMM.pdca.md - Create component-level source.env for local shell completion
+    const componentRoot = this.resolveComponentPath(component, version);
+    const sourceEnvPath = path.join(componentRoot, 'source.env');
+    const cliName = component.toLowerCase().replace(/\s+/g, '');
+    
+    // Generate component-specific source.env content
+    const sourceEnvContent = `#!/bin/bash
+# ${component} Component Environment
+# Version: ${version}
+# Component-level tab completion and PATH setup
+
+# Add this component to PATH
+COMPONENT_DIR="$(cd "$(dirname "\${BASH_SOURCE[0]}")" && pwd)"
+export PATH="\${COMPONENT_DIR}:\${PATH}"
+
+echo "✅ ${component} environment loaded"
+echo "   Version: ${version}"
+echo "   CLI: ${cliName}"
+
+# Register tab completion for this component's CLI
+if type _web4_generic_completion &>/dev/null; then
+    complete -F _web4_generic_completion -o nospace ${cliName}
+    echo "   🎯 Tab completion registered for: ${cliName}"
+else
+    echo "   ⚠️  Tab completion not available (source project source.env first)"
+fi
+`;
+    
+    const fsLib = await import('fs/promises');
+    await fsLib.writeFile(sourceEnvPath, sourceEnvContent);
+    await fsLib.chmod(sourceEnvPath, 0o755);
+    console.log(`   ✅ Created component source.env (tab completion, PATH)`);
+    
     // Tier 1 Improvement: Automatically initialize component integration
     // PDCA: 2025-10-10-UTC-1850-component-initialization-ux-gap.pdca.md
     console.log(`🔗 Initializing project integration...`);
