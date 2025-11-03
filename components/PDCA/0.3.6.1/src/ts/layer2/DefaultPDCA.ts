@@ -2715,8 +2715,8 @@ export class DefaultPDCA implements PDCA {
           '✅ DO: Always use createPDCA, validate with cmm3check, follow template structure',
           '',
           '🔄 Fixing Corrupted PDCAs (rewritePDCA):',
-          '📊 Source: 2025-11-03-UTC-1419.pdca.md (rewritePDCA feature, 8/8 tests passing)',
-          '🔧 Method signature: async rewritePDCA(filePath: string, title: string, objective: string, dryRun?: string): Promise<this>',
+          '📊 Source: 2025-11-03-UTC-1507.pdca.md (rewritePDCA redesign - in-place rewriting)',
+          '🔧 Method signature: async rewritePDCA(filePath: string, dryRun?: string): Promise<this>',
           '',
           '✅ When to Use rewritePDCA:',
           '- PDCA is corrupted (missing sections, invalid structure)',
@@ -2724,40 +2724,42 @@ export class DefaultPDCA implements PDCA {
           '- PDCA fails cmm3check validation',
           '- PDCA has unpopulated {{}} placeholders that cannot be easily filled',
           '',
-          '📋 rewritePDCA Workflow:',
+          '📋 rewritePDCA Workflow (Simplified):',
           '1. Identify corrupted PDCA: pdca cmm3check <file> (shows violations)',
-          '2. Extract title/objective: Read corrupted file for context',
-          '3. Rewrite PDCA: pdca rewritePDCA <corrupted-file-path> "New Title" "New Objective"',
-          '4. Populate fresh PDCA: Fill sections with correct content',
-          '5. Validate: pdca cmm3check <new-file> (should pass)',
+          '2. Rewrite in-place: pdca rewritePDCA <corrupted-file-path>',
+          '3. Populate fresh PDCA: Fill remaining sections with correct content',
+          '4. Validate: pdca cmm3check <file> (should pass)',
           '',
-          '🎯 How rewritePDCA Works:',
+          '🎯 How rewritePDCA Works (In-Place):',
           '✅ Step 1: Validates corrupted file exists',
-          '✅ Step 2: Extracts session directory from file path',
-          '✅ Step 3: Calls createPDCA to generate fresh template-compliant PDCA',
-          '✅ Step 4: Deletes corrupted original (git provides backup)',
-          '✅ Step 5: Returns this for method chaining',
+          '✅ Step 2: Auto-extracts title from line 1: # 📋 **PDCA Cycle: TITLE - ...**',
+          '✅ Step 3: Auto-extracts objective from header: **🎯 Objective:** ...',
+          '✅ Step 4: Preserves timestamp from filename: YYYY-MM-DD-UTC-HHMM',
+          '✅ Step 5: Reads template and populates with extracted metadata',
+          '✅ Step 6: Writes to SAME filename (true in-place rewrite)',
+          '✅ Step 7: Returns this for method chaining',
           '',
-          '💡 Design Principle: "Replace, Don\'t Repair"',
-          '❌ DO NOT: Try to manually fix corrupted PDCAs section by section',
-          '✅ DO: Use rewritePDCA to regenerate from template (guarantees compliance)',
-          '🎯 Benefits: Fresh template ensures all sections present, correct structure, passes cmm3check',
+          '💡 Design Principle: "Preserve Time, Extract Truth, Rewrite in Place"',
+          '✅ Timeline Integrity: Original timestamp preserved (no new files)',
+          '✅ Zero Manual Input: Title and objective extracted automatically',
+          '✅ True Rewrite: Same file updated, not create-new-delete-old',
+          '🎯 Benefits: Maintains PDCA chain chronology, eliminates user error, faster workflow',
           '',
           '📋 Example Usage:',
           '```bash',
-          '# Regular rewrite (deletes original)',
-          'pdca rewritePDCA components/PDCA/0.3.6.1/session/2025-11-03-UTC-1400.pdca.md "Fixed Title" "Fixed Objective"',
+          '# Regular rewrite (in-place, preserves timestamp)',
+          'pdca rewritePDCA components/PDCA/0.3.6.1/session/2025-11-03-UTC-1400.pdca.md',
           '',
-          '# Dry run (preview without deleting)',
-          'pdca rewritePDCA path/to/corrupted.pdca.md "Title" "Objective" true',
+          '# Dry run (preview extraction and changes)',
+          'pdca rewritePDCA path/to/corrupted.pdca.md true',
           '```',
           '',
           '⚠️ Important Notes:',
-          '- Requires manual title/objective input (don\'t parse corrupted content)',
-          '- Original file is permanently deleted (git history provides backup)',
-          '- New PDCA gets current timestamp (not original timestamp)',
-          '- Bidirectional links updated automatically via createPDCA',
-          '- Content must be re-populated manually (no content preservation)',
+          '- NO manual input needed: title/objective auto-extracted from file',
+          '- Timestamp preserved: original filename maintained',
+          '- In-place rewrite: file updated directly (not deleted/recreated)',
+          '- Git backup available: use git checkout if needed',
+          '- Content NOT preserved: DO/CHECK/ACT sections reset to template',
           '',
           '📋 Template Verification Forcing Function (MANDATORY):',
           '✅ Step 1: Query template location: `pdca queryTrainAI "where is PDCA template?"`',
@@ -5291,62 +5293,204 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
-   * Rewrites a corrupted PDCA by generating a fresh one using createPDCA and deleting the original
-   * @cliSyntax rewritePDCA <filePath> <title> <objective> [dryRun]
-   * @cliDescription Replaces a corrupted PDCA with a fresh template-compliant version
-   * @cliExample pdca rewritePDCA components/PDCA/0.3.6.1/session/2025-11-03-UTC-1400.pdca.md "Fixed Title" "Fixed Objective"
-   * @cliExample pdca rewritePDCA path/to/corrupted.pdca.md "Title" "Objective" true
+   * Rewrites a corrupted PDCA in-place by extracting metadata and repopulating from template
+   * @cliSyntax rewritePDCA <filePath> [dryRun]
+   * @cliDescription Rewrites a corrupted PDCA in-place, preserving timestamp and auto-extracting title/objective
+   * @cliExample pdca rewritePDCA components/PDCA/0.3.6.1/session/2025-11-03-UTC-1400.pdca.md
+   * @cliExample pdca rewritePDCA path/to/corrupted.pdca.md true
    * @cliValues dryRun true false
    */
-  async rewritePDCA(filePath: string, title: string, objective: string, dryRun: string = 'false'): Promise<this> {
+  async rewritePDCA(filePath: string, dryRun: string = 'false'): Promise<this> {
     const fs = await import('fs');
     const path = await import('path');
     
     const isDryRun = dryRun === 'true';
     
     console.log(`\n🔄 Rewriting Corrupted PDCA${isDryRun ? ' (DRY RUN)' : ''}\n`);
-    console.log(`📄 Corrupted File: ${filePath}`);
-    console.log(`📋 New Title: ${title}`);
-    console.log(`🎯 New Objective: ${objective}\n`);
+    console.log(`📄 Corrupted File: ${filePath}\n`);
     
     // Step 1: Validate that the corrupted file exists
     if (!fs.existsSync(filePath)) {
       throw new Error(`File not found: ${filePath}`);
     }
     
-    console.log(`✅ Corrupted file exists: ${path.basename(filePath)}\n`);
+    // Step 2: Read corrupted file content
+    const content = fs.readFileSync(filePath, 'utf-8');
+    console.log(`✅ Read corrupted file: ${path.basename(filePath)}`);
     
-    // Step 2: Extract session directory from file path
-    const sessionDir = path.dirname(filePath);
-    const originalSessionDir = this.model.sessionDirectory;
+    // Step 3: Extract metadata
+    const title = this.extractTitleFromPDCA(content);
+    const objective = this.extractObjectiveFromPDCA(content);
+    const timestamp = this.extractTimestampFromFilename(filePath);
     
-    // Temporarily set session directory for createPDCA
-    this.model.sessionDirectory = sessionDir;
+    console.log(`📋 Extracted Title: ${title}`);
+    console.log(`🎯 Extracted Objective: ${objective}`);
+    console.log(`⏰ Extracted Timestamp: ${timestamp}\n`);
     
-    console.log(`📂 Session Directory: ${sessionDir}\n`);
+    // Step 4: Get project root and read template
+    const projectRoot = this.model.workingDirectory || await this.getProjectRoot();
+    const templatePath = path.join(projectRoot, 'scrum.pmo/roles/_shared/PDCA/template.md');
     
-    try {
-      // Step 3: Create new PDCA using createPDCA (ensures template compliance)
-      console.log(`📝 Creating fresh PDCA using createPDCA...\n`);
-      await this.createPDCA(title, objective, dryRun);
-      
-      // Step 4: Delete original corrupted file (if not dry run)
-      if (!isDryRun) {
-        console.log(`🗑️  Deleting corrupted original: ${path.basename(filePath)}`);
-        fs.unlinkSync(filePath);
-        console.log(`✅ Corrupted file deleted\n`);
-      } else {
-        console.log(`✓ Would delete corrupted file: ${path.basename(filePath)}\n`);
-      }
-      
-      console.log(`✨ PDCA rewrite complete!\n`);
-      
-    } finally {
-      // Restore original session directory
-      this.model.sessionDirectory = originalSessionDir;
+    if (!fs.existsSync(templatePath)) {
+      throw new Error(`Template not found: ${templatePath}`);
     }
     
+    let templateContent = fs.readFileSync(templatePath, 'utf-8');
+    console.log(`📄 Loaded template from: ${templatePath}\n`);
+    
+    // Step 5: Populate template with extracted metadata
+    const sessionDir = path.dirname(filePath);
+    const currentBranch = this.model.currentBranch || 'main';
+    
+    // Parse timestamp to Date object for UTC string
+    const timestampMatch = timestamp.match(/(\d{4})-(\d{2})-(\d{2})-UTC-(\d{2})(\d{2})/);
+    if (!timestampMatch) {
+      throw new Error(`Invalid timestamp format: ${timestamp}`);
+    }
+    
+    const [_, year, month, day, hour, minute] = timestampMatch;
+    const date = new Date(Date.UTC(
+      parseInt(year), 
+      parseInt(month) - 1, 
+      parseInt(day), 
+      parseInt(hour), 
+      parseInt(minute)
+    ));
+    const utcDateString = date.toUTCString();
+    
+    // Populate basic placeholders
+    templateContent = templateContent
+      .replace(/{{TITLE}}/g, title)
+      .replace(/{{OBJECTIVE}}/g, objective)
+      .replace(/{{UTC_TIMESTAMP}}/g, utcDateString)
+      .replace(/{{AGENT_NAME}}/g, 'Claude Sonnet 4.5')
+      .replace(/{{BRANCH_NAME}}/g, currentBranch)
+      .replace(/{{SESSION_NAME}}/g, 'N/A')
+      .replace(/{{SPRINT_NAME}}/g, 'Current Sprint')
+      .replace(/{{TASK_NAME}}/g, title)
+      .replace(/{{KEY_ISSUES}}/g, 'None')
+      .replace(/{{PREVIOUS_COMMIT_SHA}}/g, 'TBD')
+      .replace(/{{PREVIOUS_COMMIT_DESCRIPTION}}/g, 'TBD')
+      .replace(/{{PLAN_OBJECTIVE}}/g, objective)
+      .replace(/{{REQUIREMENT_UUID}}/g, 'TBD')
+      .replace(/{{SUCCESS_SUMMARY}}/g, 'TBD');
+    
+    // Step 6: Find previous PDCA and populate "Previous PDCA:" link
+    const mostRecentPDCA = await this.findMostRecentPDCAInternal(sessionDir);
+    
+    if (mostRecentPDCA && path.basename(mostRecentPDCA) !== path.basename(filePath)) {
+      const previousFilename = path.basename(mostRecentPDCA);
+      const sessionRelativePath = path.relative(projectRoot, sessionDir);
+      const previousPDCAProjectPath = `${sessionRelativePath}/${previousFilename}`;
+      
+      const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+      const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${previousPDCAProjectPath}`;
+      const sectionPath = `§/${previousPDCAProjectPath}`;
+      const relativePath = `./${previousFilename}`;
+      
+      const oldLine = '**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})';
+      const newLine = `**🔗 Previous PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`;
+      
+      const beforeReplace = templateContent;
+      templateContent = templateContent.replace(oldLine, newLine);
+      
+      if (templateContent === beforeReplace && templateContent.includes('{{PREVIOUS_PDCA_LINK}}')) {
+        templateContent = templateContent.replace(
+          '**🔗 Previous PDCA:** {{PREVIOUS_PDCA_LINK}}',
+          `**🔗 Previous PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`
+        );
+      }
+    } else {
+      const oldLine = '**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})';
+      const newLine = `**🔗 Previous PDCA:** N/A - First PDCA in chain`;
+      
+      const beforeReplace = templateContent;
+      templateContent = templateContent.replace(oldLine, newLine);
+      
+      if (templateContent === beforeReplace && templateContent.includes('{{PREVIOUS_PDCA_LINK}}')) {
+        templateContent = templateContent.replace(
+          '**🔗 Previous PDCA:** {{PREVIOUS_PDCA_LINK}}',
+          newLine
+        );
+      }
+    }
+    
+    // Step 7: Write to SAME filename (in-place rewrite)
+    if (!isDryRun) {
+      fs.writeFileSync(filePath, templateContent, 'utf-8');
+      console.log(`✅ Rewritten in-place: ${path.basename(filePath)}`);
+      console.log(`📁 Location: ${filePath}\n`);
+    } else {
+      console.log(`✓ Would rewrite file: ${path.basename(filePath)}`);
+      console.log(`✓ Would preserve timestamp: ${timestamp}\n`);
+    }
+    
+    console.log(`✨ PDCA rewrite complete!\n`);
+    
     return this;
+  }
+  
+  /**
+   * Extract title from PDCA content
+   * Parses line 1: # 📋 **PDCA Cycle: TITLE - DESCRIPTION**
+   * @cliHide
+   */
+  private extractTitleFromPDCA(content: string): string {
+    const lines = content.split('\n');
+    const titleLine = lines[0] || '';
+    
+    // Match pattern: # 📋 **PDCA Cycle: TITLE - DESCRIPTION**
+    const match = titleLine.match(/# 📋 \*\*PDCA Cycle: (.+?) -/);
+    if (match) {
+      return match[1].trim();
+    }
+    
+    // Fallback: try without emoji
+    const fallbackMatch = titleLine.match(/# \*\*PDCA Cycle: (.+?) -/);
+    if (fallbackMatch) {
+      return fallbackMatch[1].trim();
+    }
+    
+    // Last resort: return placeholder
+    return 'Untitled PDCA';
+  }
+  
+  /**
+   * Extract objective from PDCA content
+   * Parses line 4: **🎯 Objective:** OBJECTIVE_TEXT
+   * @cliHide
+   */
+  private extractObjectiveFromPDCA(content: string): string {
+    const lines = content.split('\n');
+    
+    // Find line containing "**🎯 Objective:**"
+    for (const line of lines) {
+      const match = line.match(/\*\*🎯 Objective:\*\* (.+)/);
+      if (match) {
+        return match[1].trim();
+      }
+    }
+    
+    // Fallback: return placeholder
+    return 'No objective found';
+  }
+  
+  /**
+   * Extract timestamp from PDCA filename
+   * Parses pattern: YYYY-MM-DD-UTC-HHMM.pdca.md
+   * @cliHide
+   */
+  private extractTimestampFromFilename(filePath: string): string {
+    const path = require('path');
+    const filename = path.basename(filePath);
+    
+    // Match pattern: YYYY-MM-DD-UTC-HHMM
+    const match = filename.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{4})/);
+    if (match) {
+      return match[1];
+    }
+    
+    throw new Error(`Could not extract timestamp from filename: ${filename}`);
   }
 
   /**

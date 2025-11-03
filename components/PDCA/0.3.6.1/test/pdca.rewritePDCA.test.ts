@@ -1,6 +1,6 @@
 /**
  * @fileoverview Test suite for PDCA rewritePDCA feature
- * Tests the ability to replace corrupted PDCAs with fresh createPDCA-generated ones
+ * Tests the ability to rewrite corrupted PDCAs in-place with auto-extraction
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
@@ -35,9 +35,14 @@ describe('PDCA rewritePDCA Tests', () => {
     }
     fs.mkdirSync(testDataDir, { recursive: true });
 
-    // Create a corrupted PDCA file
+    // Create a corrupted PDCA file with extractable title and objective
     corruptedPDCAPath = path.join(testDataDir, '2025-11-03-UTC-1400.pdca.md');
-    const corruptedContent = `# Corrupted PDCA
+    const corruptedContent = `# 📋 **PDCA Cycle: Corrupted Test PDCA - Testing Extraction**
+
+**🗓️ Date:** Mon, 03 Nov 2025 14:00:00 GMT  
+**🎯 Objective:** Testing rewritePDCA extraction and in-place rewriting  
+**🎯 Template Version:** 3.2.4.2  
+
 This PDCA is missing sections and has invalid structure.
 It needs to be rewritten.`;
     fs.writeFileSync(corruptedPDCAPath, corruptedContent, 'utf-8');
@@ -69,7 +74,7 @@ It needs to be rewritten.`;
 **🚨 Issues:** {{KEY_ISSUES}}  
 
 **📎 Previous Commit:** {{PREVIOUS_COMMIT_SHA}} - {{PREVIOUS_COMMIT_DESCRIPTION}}  
-**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})  
+**🔗 Previous PDCA:** {{PREVIOUS_PDCA_LINK}}  
 **➡️ Next PDCA:** Use pdca chain
 
 ---
@@ -78,12 +83,28 @@ It needs to be rewritten.`;
 
 ### **Artifact Links**
 - **PDCA Document:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **Changed Files:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **New Components:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **Requirements Created:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+- **Related Artifacts:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
 
 ### **To TRON: QA Decisions required**
+**TEMPLATE VERIFICATION: Before using this template, verify it matches current 3.1.4.2 requirements exactly - no modifications or assumptions**
+- [x] {{COMPLETED_DECISION}}: {{DECISION_DESCRIPTION}}
+- [ ] {{PENDING_DECISION}}: {{DECISION_DESCRIPTION}}
+- [ ] {{FOLLOWUP_REQUIRED}}: {{DECISION_DESCRIPTION}}
 
 ### **TRON Feedback ({{FEEDBACK_TIMESTAMP}})**
+\`\`\`quote
+{{VERBATIM_WORD_BY_WORD_USER_PROMPT_NO_REFORMULATION}}
+{{PRESERVE_ALL_LINE_BREAKS_SPACING_NUMBERING}}
+\`\`\`
 
 ### **My Answer**
+{{IMMEDIATE_CHAT_RESPONSE_TO_FEEDBACK}}
+{{EXPLANATION_OF_UNDERSTANDING_AND_ACTIONS}}
+
+**Learning Applied:** {{KEY_INSIGHT_FROM_FEEDBACK}}
 
 ---
 
@@ -91,13 +112,29 @@ It needs to be rewritten.`;
 
 **Objective:** {{PLAN_OBJECTIVE}}
 
+**Requirements Traceability:** {{REQUIREMENT_UUID}}
+
+**Implementation Strategy:**
+- **{{STRATEGY_ELEMENT_1}}:** {{STRATEGY_DESCRIPTION_1}}
+- **{{STRATEGY_ELEMENT_2}}:** {{STRATEGY_DESCRIPTION_2}}
+- **{{STRATEGY_ELEMENT_3}}:** {{STRATEGY_DESCRIPTION_3}}
+
 ---
 
 ## **🔧 DO**
 
+**{{DO_SECTION_TITLE}}**
+
 ---
 
 ## **✅ CHECK**
+
+**Verification Results:**
+
+**{{CHECK_CATEGORY_1}} ({{STATUS_1}})**
+\`\`\`
+{{VERIFICATION_OUTPUT_1}}
+\`\`\`
 
 ---
 
@@ -105,74 +142,56 @@ It needs to be rewritten.`;
 
 **Success Achieved:** {{SUCCESS_SUMMARY}}
 
-## **💫 EMOTIONAL REFLECTION: {{EMOTIONAL_HEADLINE}}**
-
 ---
-## **🎯 PDCA PROCESS UPDATE**
-
-**Process Learning:**
-- ✅ **PDCA Protocol:** Must create PDCA documentation for all significant work
-
-**Quality Impact:** TBD
-
-**Next PDCA Focus:** TBD  
-
----
-
-**🎯 Summary**
-
----
-
-### **📚 The 42 Revelation**
-
-**"Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."** 🤝✨`;
+`;
       fs.writeFileSync(templatePath, minimalTemplate, 'utf-8');
     }
   });
 
   afterEach(() => {
-    // Clean up test data
+    // Clean up test data directory
     if (fs.existsSync(testDataDir)) {
-      fs.rmSync(testDataDir, { recursive: true, force: true });
+      try {
+        fs.rmSync(testDataDir, { recursive: true, force: true });
+      } catch (err) {
+        // Ignore cleanup errors
+      }
     }
   });
 
-  // TC72: rewritePDCA creates new PDCA using createPDCA
-  it('TC72: rewritePDCA - creates new PDCA using createPDCA', async () => {
-    // Verify corrupted file exists before
+  // TC72: rewritePDCA extracts title and objective from corrupted file
+  it('TC72: rewritePDCA - extracts title and objective from corrupted file', async () => {
+    // Verify corrupted file exists
     expect(fs.existsSync(corruptedPDCAPath)).toBe(true);
-    const filesBefore = fs.readdirSync(testDataDir).filter(f => f.endsWith('.pdca.md'));
-    expect(filesBefore).toHaveLength(1);
 
-    // Execute rewritePDCA
-    await pdca.rewritePDCA(corruptedPDCAPath, 'Test Rewrite', 'Testing rewritePDCA feature');
+    // Execute rewritePDCA (no title/objective parameters - auto-extract)
+    await pdca.rewritePDCA(corruptedPDCAPath);
 
-    // Verify new PDCA was created
-    const filesAfter = fs.readdirSync(testDataDir).filter(f => f.endsWith('.pdca.md'));
-    expect(filesAfter.length).toBeGreaterThan(0);
-    
-    // Find the newly created PDCA (will have current timestamp)
-    const newPDCAFiles = filesAfter.filter(f => f !== path.basename(corruptedPDCAPath));
-    expect(newPDCAFiles.length).toBeGreaterThan(0);
-    
-    // Verify new PDCA has template content
-    const newPDCAPath = path.join(testDataDir, newPDCAFiles[0]);
-    const newContent = fs.readFileSync(newPDCAPath, 'utf-8');
-    expect(newContent).toContain('Test Rewrite');
-    expect(newContent).toContain('Testing rewritePDCA feature');
+    // Verify file still exists (in-place rewrite)
+    expect(fs.existsSync(corruptedPDCAPath)).toBe(true);
+
+    // Verify new content has extracted title and objective
+    const newContent = fs.readFileSync(corruptedPDCAPath, 'utf-8');
+    expect(newContent).toContain('Corrupted Test PDCA'); // Extracted title
+    expect(newContent).toContain('Testing rewritePDCA extraction and in-place rewriting'); // Extracted objective
     expect(newContent).toContain('📋 **PDCA Cycle:');
   });
 
-  // TC73: rewritePDCA deletes original corrupted file
-  it('TC73: rewritePDCA - deletes original corrupted file', async () => {
-    // Verify corrupted file exists before
-    expect(fs.existsSync(corruptedPDCAPath)).toBe(true);
+  // TC73: rewritePDCA preserves original timestamp
+  it('TC73: rewritePDCA - preserves original timestamp', async () => {
+    const originalFilename = path.basename(corruptedPDCAPath);
+    expect(originalFilename).toBe('2025-11-03-UTC-1400.pdca.md');
 
     // Execute rewritePDCA
-    await pdca.rewritePDCA(corruptedPDCAPath, 'Test Rewrite', 'Testing deletion');
+    await pdca.rewritePDCA(corruptedPDCAPath);
 
-    // Verify original corrupted file was deleted
-    expect(fs.existsSync(corruptedPDCAPath)).toBe(false);
+    // Verify filename is unchanged (timestamp preserved)
+    const filesAfter = fs.readdirSync(testDataDir).filter(f => f.endsWith('.pdca.md'));
+    expect(filesAfter).toContain(originalFilename);
+    expect(filesAfter).toHaveLength(1); // Only one file (in-place rewrite)
+
+    // Verify file still exists at original path
+    expect(fs.existsSync(corruptedPDCAPath)).toBe(true);
   });
 
   // TC74: rewritePDCA validates file path exists
@@ -181,7 +200,7 @@ It needs to be rewritten.`;
 
     // Should throw error for non-existent file
     await expect(
-      pdca.rewritePDCA(nonExistentPath, 'Test', 'Test')
+      pdca.rewritePDCA(nonExistentPath)
     ).rejects.toThrow();
   });
 
@@ -190,88 +209,71 @@ It needs to be rewritten.`;
     const invalidPath = path.join(testDataDir, 'invalid-path.pdca.md');
 
     await expect(
-      pdca.rewritePDCA(invalidPath, 'Test Title', 'Test Objective')
+      pdca.rewritePDCA(invalidPath)
     ).rejects.toThrow('not found');
   });
 
-  // TC76: rewritePDCA dry run doesn't delete original
-  it('TC76: rewritePDCA - dry run does not delete original', async () => {
-    // Verify corrupted file exists before
+  // TC76: rewritePDCA dry run doesn't modify original
+  it('TC76: rewritePDCA - dry run does not modify original', async () => {
+    // Read original content before dry run
+    const originalContent = fs.readFileSync(corruptedPDCAPath, 'utf-8');
     expect(fs.existsSync(corruptedPDCAPath)).toBe(true);
-    const filesBefore = fs.readdirSync(testDataDir).filter(f => f.endsWith('.pdca.md'));
 
     // Execute rewritePDCA with dry run
-    await pdca.rewritePDCA(corruptedPDCAPath, 'Test Rewrite', 'Testing dry run', 'true');
+    await pdca.rewritePDCA(corruptedPDCAPath, 'true');
 
     // Verify original file still exists
     expect(fs.existsSync(corruptedPDCAPath)).toBe(true);
     
-    // Verify new file was still created (createPDCA respects dry run differently)
+    // Verify content is unchanged
+    const contentAfter = fs.readFileSync(corruptedPDCAPath, 'utf-8');
+    expect(contentAfter).toBe(originalContent);
+    
+    // Verify only one file exists (no new files created)
     const filesAfter = fs.readdirSync(testDataDir).filter(f => f.endsWith('.pdca.md'));
-    // In dry run, original should still be there
-    expect(filesAfter).toContain(path.basename(corruptedPDCAPath));
+    expect(filesAfter).toHaveLength(1);
   });
 
   // TC77: rewritePDCA preserves session directory structure
   it('TC77: rewritePDCA - preserves session directory structure', async () => {
     // Execute rewritePDCA
-    await pdca.rewritePDCA(corruptedPDCAPath, 'Test Rewrite', 'Testing directory preservation');
+    await pdca.rewritePDCA(corruptedPDCAPath);
 
-    // Verify new PDCA is in same directory as original
+    // Verify file is in same directory
     const filesAfter = fs.readdirSync(testDataDir).filter(f => f.endsWith('.pdca.md'));
-    expect(filesAfter.length).toBeGreaterThan(0);
-    
-    // Verify directory structure unchanged
-    expect(fs.existsSync(testDataDir)).toBe(true);
-    expect(fs.statSync(testDataDir).isDirectory()).toBe(true);
+    expect(filesAfter).toHaveLength(1);
+    expect(filesAfter[0]).toBe(path.basename(corruptedPDCAPath));
+
+    // Verify file path is unchanged
+    expect(fs.existsSync(corruptedPDCAPath)).toBe(true);
   });
 
   // TC78: rewritePDCA returns this for method chaining
   it('TC78: rewritePDCA - returns this for method chaining', async () => {
-    const result = await pdca.rewritePDCA(corruptedPDCAPath, 'Test Rewrite', 'Testing chaining');
-
-    // Verify returns this (DefaultPDCA instance)
+    const result = await pdca.rewritePDCA(corruptedPDCAPath);
+    
+    // Verify it returns the PDCA instance for chaining
     expect(result).toBe(pdca);
-    expect(result).toBeInstanceOf(DefaultPDCA);
   });
 
-  // TC79: rewritePDCA updates bidirectional links via createPDCA
-  it('TC79: rewritePDCA - updates bidirectional links via createPDCA', async () => {
-    // Create a pre-existing PDCA to establish chain (must be AFTER corrupted file to become "most recent")
-    const existingPDCA = path.join(testDataDir, '2025-11-03-UTC-1430.pdca.md');
-    const existingContent = `# Test PDCA
+  // TC79: rewritePDCA uses template-compliant structure
+  it('TC79: rewritePDCA - uses template-compliant structure', async () => {
+    // Execute rewritePDCA
+    await pdca.rewritePDCA(corruptedPDCAPath);
 
-**➡️ Next PDCA:** Use pdca chain
+    // Read rewritten content
+    const rewrittenContent = fs.readFileSync(corruptedPDCAPath, 'utf-8');
 
-## Test Content`;
-    fs.writeFileSync(existingPDCA, existingContent, 'utf-8');
-
-    // Corrupted file timestamp: 2025-11-03-UTC-1400.pdca.md (created in beforeEach)
-    // Existing file timestamp: 2025-11-03-UTC-1430.pdca.md (newer, so it won't be updated)
-    // New file will be created with current timestamp (~1436) and will update existing as "previous"
+    // Verify template structure is present
+    expect(rewrittenContent).toContain('## **📊 SUMMARY**');
+    expect(rewrittenContent).toContain('## **📋 PLAN**');
+    expect(rewrittenContent).toContain('## **🔧 DO**');
+    expect(rewrittenContent).toContain('## **✅ CHECK**');
+    expect(rewrittenContent).toContain('## **🎯 ACT**');
     
-    // Execute rewritePDCA (should create new PDCA and update chain)
-    await pdca.rewritePDCA(corruptedPDCAPath, 'Test Rewrite', 'Testing bidirectional links');
-
-    // The newly created PDCA should have a "Previous PDCA:" link to existing (1430)
-    const filesAfter = fs.readdirSync(testDataDir).filter(f => f.endsWith('.pdca.md'));
-    // Should have: existing (1430) + new (~1436), corrupted (1400) was deleted
-    expect(filesAfter.length).toBeGreaterThanOrEqual(2);
-    
-    // Find the newly created PDCA
-    const newPDCAFiles = filesAfter.filter(f => f !== path.basename(existingPDCA));
-    expect(newPDCAFiles.length).toBeGreaterThan(0);
-    
-    // Verify new PDCA has Previous PDCA link
-    const newPDCAPath = path.join(testDataDir, newPDCAFiles[0]);
-    const newContent = fs.readFileSync(newPDCAPath, 'utf-8');
-    expect(newContent).toContain('**🔗 Previous PDCA:**');
-    expect(newContent).toContain('2025-11-03-UTC-1430.pdca.md');
-    
-    // Verify existing PDCA was updated with "Next PDCA:" link
-    const updatedExistingContent = fs.readFileSync(existingPDCA, 'utf-8');
-    expect(updatedExistingContent).toMatch(/\*\*➡️ Next PDCA:\*\*.*\[GitHub\]/);
-    expect(updatedExistingContent).toContain(newPDCAFiles[0]);
+    // Verify metadata is populated
+    expect(rewrittenContent).toContain('Corrupted Test PDCA'); // Title
+    expect(rewrittenContent).toContain('Testing rewritePDCA extraction and in-place rewriting'); // Objective
+    expect(rewrittenContent).toContain('Claude Sonnet 4.5'); // Agent name
   });
 });
-
