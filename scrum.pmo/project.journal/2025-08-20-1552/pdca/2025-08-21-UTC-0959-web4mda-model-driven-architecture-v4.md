@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # PDCA: Web4MDA Model-Driven Architecture v4 - Beyond Cognitive Limits to Ultimate Modeling Architecture
 
 **📎 Previous Commit:** 182252d (Web4 Change Management TRON: Self-aware objects with scenario-based change tracing - CHANGE HAPPENZ the Web4Way)  

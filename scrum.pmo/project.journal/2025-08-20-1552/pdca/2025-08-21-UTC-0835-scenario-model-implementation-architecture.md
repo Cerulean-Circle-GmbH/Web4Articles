@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # PDCA: Scenario-Model Implementation Architecture - Scenarios Implement Model Interface
 
 **📎 Previous Commit:** bb3cda3 (Web4 Constructor Pattern: Empty constructors + scenario initialization - configurations are misunderstood scenarios)  

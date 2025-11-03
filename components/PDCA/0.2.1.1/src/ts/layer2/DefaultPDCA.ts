@@ -1,6 +1,9 @@
 /**
- * DefaultPDCA - PDCA Component Implementation
- * Web4 pattern: Empty constructor + scenario initialization + component functionality
+ * SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+ * SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+ * Copyright (c) 2025 Cerulean Circle GmbH
+ * Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+ * Backlinks: /LICENSE, /AI-GPL.md
  */
 
 import { PDCA } from '../layer3/PDCA.interface.js';
@@ -1016,11 +1019,12 @@ export class DefaultPDCA implements PDCA {
     if (!fileMatch) return false;
 
     // Check if date appears in content with exact format
-    const dateMatch = content.match(/\*\*(?:🗓️ Date|Created):\*\*\s*(\d{4}-\d{2}-\d{2}-UTC-\d{4})/);
+    const dateMatch = content.match(/\*\*(?:🗓️ Date|Created):\*\*\s*(\d{4}-\d{2}-\d{2})\s*UTC\s*(\d{2}):(\d{2})/);
     if (!dateMatch) return false;
 
-    // Filename and content date must match
-    return fileMatch[1] === dateMatch[1];
+    // Filename and content date must match (content has space before UTC, filename has dash)
+    const contentDate = `${dateMatch[1]}-UTC-${dateMatch[2]}${dateMatch[3]}`;
+    return fileMatch[1] === contentDate;
   }
 
   /**

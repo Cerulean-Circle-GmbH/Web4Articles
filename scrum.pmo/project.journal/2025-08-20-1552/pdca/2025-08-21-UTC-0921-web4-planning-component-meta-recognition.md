@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../LICENSE) and AI-GPL Addendum (../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # PDCA: Web4 Planning Component Meta-Recognition - Planning Documents as MDViews of Plan Objects
 
 **📎 Previous Commit:** 1685e4c (ONCE Web4ORB Kernel: P2P Object Network Communication Engine foundation - TSRanger v3.0 built on ONCE infrastructure)  

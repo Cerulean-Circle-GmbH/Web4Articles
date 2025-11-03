@@ -1,6 +1,18 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../LICENSE) and AI-GPL Addendum (../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # How to CMM - Your Journey from Chaos to Excellence
 
 **Hello, Blank Agent.** You're about to discover why you need CMM understanding before touching any processes or tools.
+
+**🔗 Navigation:**
+- **CMM Framework (howto.cmm):** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-17-UTC-0747/scrum.pmo/roles/_shared/howto.cmm.md) | [§/scrum.pmo/roles/_shared/howto.cmm.md](howto.cmm.md)
+- **CMM3 Compliance Checklist:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-17-UTC-0747/scrum.pmo/roles/_shared/cmm3.compliance.checklist.md) | [§/scrum.pmo/roles/_shared/cmm3.compliance.checklist.md](cmm3.compliance.checklist.md)
 
 ## Your Current Situation
 

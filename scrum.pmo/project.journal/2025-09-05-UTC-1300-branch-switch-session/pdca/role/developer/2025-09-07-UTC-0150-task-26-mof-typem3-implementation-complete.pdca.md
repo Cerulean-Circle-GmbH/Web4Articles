@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 # PDCA: Task 26 - MOF M3/M2/M1 Hierarchy TypeM3 Implementation Complete
 **UUID:** 9a8b7c6d-5e4f-3210-9876-543210fedcba  
 **Created:** 2025-09-07 UTC 01:50  

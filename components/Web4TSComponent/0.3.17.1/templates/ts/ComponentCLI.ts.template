@@ -1,0 +1,94 @@
+#!/usr/bin/env node
+
+/**
+ * {{COMPONENT_NAME}}CLI - {{COMPONENT_NAME}} CLI implementation with chaining support
+ * Web4 pattern: Dependency-free CLI with component creation and chaining
+ */
+
+import { DefaultCLI } from '../layer2/DefaultCLI.js';
+import { Default{{COMPONENT_NAME}} } from '../layer2/Default{{COMPONENT_NAME}}.js';
+import { MethodSignature } from '../layer3/MethodSignature.interface.js';
+
+export class {{COMPONENT_NAME}}CLI extends DefaultCLI {
+  private component: Default{{COMPONENT_NAME}} | null;
+  protected methodSignatures: Map<string, MethodSignature> = new Map();
+
+  /**
+   * Empty constructor (Web4 radical OOP pattern)
+   * @pdca 2025-10-30-UTC-1011.pdca.md - Path Authority architecture
+   */
+  constructor() {
+    super(); // Call empty parent constructor
+    this.component = null;
+    
+    // Initialize CLI (Path Authority - calculates projectRoot, sets paths)
+    this.init();
+    
+    // Get version and store component in model (Web4 Radical OOP: empty init())
+    const tempComponent = new Default{{COMPONENT_NAME}}().init();
+    this.model.component = tempComponent as any;
+    
+    // Discover methods from component
+    this.discoverMethods();
+  }
+
+  /**
+   * Static start method - Web4 radical OOP entry point
+   */
+  static async start(args: string[]): Promise<void> {
+    const cli = new {{COMPONENT_NAME}}CLI();
+    await cli.execute(args);
+  }
+
+  private getOrCreateComponent(): Default{{COMPONENT_NAME}} {
+    if (!this.component) {
+      this.component = this.getComponentInstance() as Default{{COMPONENT_NAME}};
+    }
+    return this.component;
+  }
+
+  /**
+   * {{COMPONENT_NAME}}-specific usage display using DefaultCLI dynamic generation
+   */
+  showUsage(): void {
+    console.log(this.generateStructuredUsage());
+  }
+
+  /**
+   * Execute CLI commands with auto-discovery
+   */
+  async execute(args: string[]): Promise<void> {
+    if (args.length === 0) {
+      this.showUsage();
+      return;
+    }
+
+    const command = args[0];
+    const commandArgs = args.slice(1);
+
+    try {
+      // Try dynamic command execution
+      if (await this.executeDynamicCommand(command, commandArgs)) {
+        return;
+      }
+
+      // Special cases
+      switch (command) {
+        case 'help':
+          this.showUsage();
+          break;
+          
+        default:
+          throw new Error(`Unknown command: ${command}`);
+      }
+    } catch (error) {
+      console.error(this.formatError((error as Error).message));
+      process.exit(1);
+    }
+  }
+}
+
+// Static entry point for shell execution
+if (import.meta.url === `file://${process.argv[1]}`) {
+  {{COMPONENT_NAME}}CLI.start(process.argv.slice(2));
+}

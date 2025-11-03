@@ -1,3 +1,11 @@
+<!--
+SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+SPDX-FileComment: See ../../../../../../AI-GPL.md for AI-specific terms.
+Copyright (c) 2025 Cerulean Circle GmbH
+Copyleft: See AGPLv3 (../../../../../../LICENSE) and AI-GPL Addendum (../../../../../../AI-GPL.md)
+Backlinks: /LICENSE, /AI-GPL.md
+-->
+
 **📎 Previous Commit:** 3b4ee83 - lesson: eliminate false negative tests - bad tests most expensive technical debt  
 **🔗 Previous PDCA:** [GitHub](https://github.com/2cuGitHub/Web4Articles/blob/cursor/tsranger-v22-testing-2025-08-20-1012/scrum.pmo/project.journal/2025-08-20-1012-tsranger-v22-testing/pdca/role/developer/2025-08-20-UTC-1620-false-negative-test-elimination-critical-lesson.md) | [2025-08-20-UTC-1620-false-negative-test-elimination-critical-lesson.md](../2025-08-20-UTC-1620-false-negative-test-elimination-critical-lesson.md)
 
