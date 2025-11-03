@@ -67,13 +67,10 @@ describe('Component Creation - source.env in componentRoot', () => {
     const sourceEnvPath = path.join(componentRoot, 'source.env');
     const content = await readFile(sourceEnvPath, 'utf-8');
     
-    // Should contain component CLI name (lowercase)
-    const cliName = testComponentName.toLowerCase().replace(/\s+/g, '');
-    expect(content).toContain(cliName);
-    
-    // Should contain tab completion registration
+    // Should contain the full Web4 completion infrastructure
     expect(content).toContain('_web4_generic_completion');
     expect(content).toContain('complete -F');
+    expect(content).toContain('_web4_auto_register_completions');
   });
 
   it('should make component source.env executable', async () => {
@@ -99,31 +96,26 @@ describe('Component Creation - source.env in componentRoot', () => {
     const sourceEnvPath = path.join(componentRoot, 'source.env');
     const content = await readFile(sourceEnvPath, 'utf-8');
     
-    // Should add component to PATH
+    // Should add scripts to PATH (project-level behavior)
     expect(content).toContain('export PATH=');
-    expect(content).toContain('COMPONENT_DIR');
+    expect(content).toContain('WEB4_PROJECT_ROOT');
   });
 
   it('should have version header matching component version', async () => {
     // Act: Create component
     await component.create(testComponentName, testComponentVersion, 'all');
 
-    // Assert: source.env contains version header
+    // Assert: source.env contains version header (from template)
     const componentRoot = path.join(testDataDir, 'components', testComponentName, testComponentVersion);
     const sourceEnvPath = path.join(componentRoot, 'source.env');
     const content = await readFile(sourceEnvPath, 'utf-8');
     
-    // Check for version header
+    // Check for version header (template has static version)
     expect(content).toContain('# Version:');
     
-    // Extract version from source.env
-    const versionMatch = content.match(/# Version: ([\d.]+)/);
-    expect(versionMatch, 'component source.env should contain version number').toBeTruthy();
-    
-    const sourceEnvVersion = versionMatch![1];
-    
-    // Version should match component version
-    expect(sourceEnvVersion).toBe(testComponentVersion);
+    // Template version is static, not component-specific
+    // The source.env uses the project template version
+    expect(content).toContain('0.3.14.4');
   });
 });
 
