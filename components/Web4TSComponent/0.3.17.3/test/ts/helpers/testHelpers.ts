@@ -18,10 +18,18 @@ const testDataPath = path.join(componentRoot, 'test/data');
  * Create a test component with proper test isolation
  * Uses test/data as targetDirectory
  */
-export function createTestComponent(): DefaultWeb4TSComponent {
+export async function createTestComponent(): Promise<DefaultWeb4TSComponent> {
+  const version = await SemanticVersion.fromString('0.3.17.3');
   return new DefaultWeb4TSComponent().init({
     model: {
-      targetDirectory: testDataPath
+      targetDirectory: testDataPath,
+      component: 'Web4TSComponent',
+      version: version,
+      name: 'Web4TSComponent',
+      origin: '',
+      definition: '',
+      componentRoot: componentRoot,
+      uuid: ''
     }
   });
 }

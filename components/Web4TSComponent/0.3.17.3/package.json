@@ -5,7 +5,7 @@
   "description": "Web4 Component Architecture Project",
   "private": true,
   "devDependencies": {
-    "@types/node": "^24.1.0",
+    "@types/node": "^24.10.0",
     "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   },
