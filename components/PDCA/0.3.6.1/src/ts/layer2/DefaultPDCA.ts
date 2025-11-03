@@ -4785,6 +4785,217 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
+   * Create new PDCA and establish bidirectional chain with previous PDCA
+   * 
+   * Automatically:
+   * 1. Detects most recent PDCA in session directory
+   * 2. Creates new PDCA with timestamp filename
+   * 3. Adds "Previous PDCA:" links in new file
+   * 4. Updates previous PDCA's "Next PDCA:" link
+   * 
+   * @param newTitle Title for the new PDCA
+   * @param dryRun If 'true', shows what would happen without modifying files
+   * @cliSyntax newTitle <?dryRun>
+   */
+  async chain(newTitle: string, dryRun: string = 'false'): Promise<this> {
+    const fs = await import('fs');
+    const path = await import('path');
+    
+    const isDryRun = dryRun === 'true';
+    const projectRoot = await this.getProjectRoot();
+    
+    // Get session directory from model or use current directory
+    const sessionDir = this.model.sessionDirectory || process.cwd();
+    
+    // Verify session directory exists
+    if (!fs.existsSync(sessionDir)) {
+      throw new Error(`Session directory does not exist: ${sessionDir}`);
+    }
+    
+    console.log(`\n🔗 Creating Chained PDCA${isDryRun ? ' (DRY RUN)' : ''}\n`);
+    console.log(`📂 Session Directory: ${path.relative(projectRoot, sessionDir)}`);
+    console.log(`📝 New PDCA Title: ${newTitle}\n`);
+    
+    // Step 1: Find most recent PDCA in session directory
+    const mostRecentPDCA = await this.findMostRecentPDCAInternal(sessionDir);
+    
+    if (mostRecentPDCA) {
+      console.log(`🔍 Most Recent PDCA: ${path.basename(mostRecentPDCA)}`);
+    } else {
+      console.log(`🔍 No previous PDCA found - this will be the first in chain`);
+    }
+    
+    // Step 2: Generate new PDCA filename with current UTC timestamp
+    const now = new Date();
+    const year = now.getUTCFullYear();
+    const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(now.getUTCDate()).padStart(2, '0');
+    const hour = String(now.getUTCHours()).padStart(2, '0');
+    const minute = String(now.getUTCMinutes()).padStart(2, '0');
+    const timestamp = `${year}-${month}-${day}-UTC-${hour}${minute}`;
+    const newPDCAFilename = `${timestamp}.pdca.md`;
+    const newPDCAPath = path.join(sessionDir, newPDCAFilename);
+    
+    console.log(`📝 New PDCA Filename: ${newPDCAFilename}\n`);
+    
+    // Step 3: Read template
+    const templatePath = path.join(projectRoot, 'scrum.pmo/roles/_shared/PDCA/template.md');
+    if (!fs.existsSync(templatePath)) {
+      throw new Error(`Template not found: ${templatePath}`);
+    }
+    
+    let templateContent = fs.readFileSync(templatePath, 'utf-8');
+    
+    // Step 4: Generate dual links for previous PDCA
+    let previousPDCALinks = 'N/A - First PDCA in chain';
+    
+    if (mostRecentPDCA) {
+      const branch = this.model.currentBranch || 'main';
+      const repoUrl = this.model.repoUrl || 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+      const previousRelative = path.relative(projectRoot, mostRecentPDCA);
+      const previousFilename = path.basename(mostRecentPDCA);
+      
+      const githubUrl = `${repoUrl}/blob/${branch}/${previousRelative}`;
+      const sectionPath = `§/${previousRelative}`;
+      const relativePath = `./${previousFilename}`;
+      
+      previousPDCALinks = `[GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`;
+    }
+    
+    // Step 5: Populate template with new PDCA data
+    const currentDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
+    
+    templateContent = templateContent
+      .replace(/{{TITLE}}/g, 'PDCA Cycle')
+      .replace(/{{DESCRIPTION}}/g, newTitle)
+      .replace(/{{UTC_TIMESTAMP}}/g, currentDate)
+      .replace(/{{OBJECTIVE}}/g, newTitle)
+      .replace(/{{CMM_STATUS}}/g, '🔵 CMM3')
+      .replace(/{{BADGE_TYPE}}/g, 'Planning')
+      .replace(/{{BADGE_TIMESTAMP}}/g, currentDate)
+      .replace(/{{AGENT_NAME}}/g, 'Claude Sonnet 4.5')
+      .replace(/{{AGENT_DESCRIPTION}}/g, 'Feature Development Agent')
+      .replace(/{{ROLE_NAME}}/g, 'Developer')
+      .replace(/{{CONTEXT_SPECIALIZATION}}/g, 'Implementation')
+      .replace(/{{BRANCH_NAME}}/g, this.model.currentBranch || 'main')
+      .replace(/{{BRANCH_PURPOSE}}/g, 'Feature development')
+      .replace(/{{SYNC_BRANCHES}}/g, 'N/A')
+      .replace(/{{SYNC_PURPOSE}}/g, 'N/A')
+      .replace(/{{SESSION_NAME}}/g, 'N/A')
+      .replace(/{{SPRINT_NAME}}/g, 'Current Sprint')
+      .replace(/{{TASK_NAME}}/g, newTitle)
+      .replace(/{{KEY_ISSUES}}/g, 'None')
+      .replace(/{{PREVIOUS_COMMIT_SHA}}/g, 'TBD')
+      .replace(/{{PREVIOUS_COMMIT_DESCRIPTION}}/g, 'TBD');
+    
+    // Replace Previous PDCA link
+    const previousPDCAPattern = /\*\*🔗 Previous PDCA:\*\* \[GitHub\]\({{GITHUB_URL}}\) \| \[§\/scrum\.pmo\/project\.journal\/{{SESSION}}\/{{FILENAME}}\]\(\.\.\/{{OTHER_SESSION}}\/{{FILENAME}}\)/;
+    templateContent = templateContent.replace(
+      previousPDCAPattern,
+      `**🔗 Previous PDCA:** ${previousPDCALinks}`
+    );
+    
+    // Also handle simpler template pattern
+    templateContent = templateContent.replace(
+      /\*\*🔗 Previous PDCA:\*\* .+/,
+      `**🔗 Previous PDCA:** ${previousPDCALinks}`
+    );
+    
+    // Step 6: Write new PDCA file
+    if (!isDryRun) {
+      fs.writeFileSync(newPDCAPath, templateContent, 'utf-8');
+      console.log(`✅ New PDCA created: ${newPDCAFilename}`);
+    } else {
+      console.log(`✓ Would create new PDCA: ${newPDCAFilename}`);
+    }
+    
+    // Step 7: Update previous PDCA's "Next PDCA:" link
+    if (mostRecentPDCA && !isDryRun) {
+      await this.updateNextLinkInternal(mostRecentPDCA, newPDCAPath);
+    } else if (mostRecentPDCA && isDryRun) {
+      console.log(`✓ Would update previous PDCA's "Next PDCA:" link`);
+    }
+    
+    console.log(`\n✨ Bidirectional chain established!`);
+    if (mostRecentPDCA) {
+      console.log(`   ${path.basename(mostRecentPDCA)} ←→ ${newPDCAFilename}\n`);
+    } else {
+      console.log(`   ${newPDCAFilename} (first in chain)\n`);
+    }
+    
+    return this;
+  }
+
+  /**
+   * Find most recent PDCA file in directory (internal helper)
+   * Looks for files matching pattern: YYYY-MM-DD-UTC-HHMM.pdca.md
+   */
+  private async findMostRecentPDCAInternal(directory: string): Promise<string | null> {
+    const fs = await import('fs');
+    const path = await import('path');
+    
+    if (!fs.existsSync(directory)) {
+      return null;
+    }
+    
+    const files = fs.readdirSync(directory);
+    const pdcaPattern = /^(\d{4}-\d{2}-\d{2}-UTC-\d{4})\.pdca\.md$/;
+    
+    const pdcaFiles = files
+      .filter(f => pdcaPattern.test(f))
+      .map(f => ({
+        filename: f,
+        timestamp: f.match(pdcaPattern)![1],
+        fullPath: path.join(directory, f)
+      }))
+      .sort((a, b) => b.timestamp.localeCompare(a.timestamp)); // Most recent first
+    
+    return pdcaFiles.length > 0 ? pdcaFiles[0].fullPath : null;
+  }
+
+  /**
+   * Update previous PDCA's "Next PDCA:" link (internal helper)
+   */
+  private async updateNextLinkInternal(previousPDCAPath: string, newPDCAPath: string): Promise<void> {
+    const fs = await import('fs');
+    const path = await import('path');
+    
+    const projectRoot = await this.getProjectRoot();
+    const branch = this.model.currentBranch || 'main';
+    const repoUrl = this.model.repoUrl || 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+    
+    // Generate dual links for new PDCA
+    const newRelative = path.relative(projectRoot, newPDCAPath);
+    const newFilename = path.basename(newPDCAPath);
+    
+    const githubUrl = `${repoUrl}/blob/${branch}/${newRelative}`;
+    const sectionPath = `§/${newRelative}`;
+    const relativePath = `./${newFilename}`;
+    
+    const nextPDCALink = `**➡️ Next PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`;
+    
+    // Read previous PDCA
+    let content = fs.readFileSync(previousPDCAPath, 'utf-8');
+    
+    // Replace "Next PDCA: Use pdca chain" with actual links
+    content = content.replace(
+      /\*\*➡️ Next PDCA:\*\* Use pdca chain/,
+      nextPDCALink
+    );
+    
+    // Also handle case where it might have different text
+    content = content.replace(
+      /\*\*➡️ Next PDCA:\*\* .+/,
+      nextPDCALink
+    );
+    
+    // Write back
+    fs.writeFileSync(previousPDCAPath, content, 'utf-8');
+    
+    console.log(`✅ Updated previous PDCA's next link: ${path.basename(previousPDCAPath)}`);
+  }
+
+  /**
    * LEGACY moveFile implementation (replaced by mv wrapper above)
    * Kept for reference during transition period
    */
