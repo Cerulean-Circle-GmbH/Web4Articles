@@ -240,7 +240,7 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
   });
 
   describe('🎯 End-to-End Tab Completion Tests', () => {
-    it('should have getCompletionScenario method in CLI', async () => {
+    it('should have toScenario method in CLI', async () => {
       // Dynamically import the CLI
       const cliPath = path.join(testComponentPath, `dist/ts/layer5/${testComponentName}CLI.js`);
       expect(existsSync(cliPath)).toBe(true);
@@ -248,10 +248,11 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
       const { IdealMinimalComponentCLI } = await import(cliPath);
       const cli = new IdealMinimalComponentCLI();
       
-      // Verify getCompletionScenario exists
-      expect(typeof (cli as any).getCompletionScenario).toBe('function');
+      // Verify toScenario exists (replaces obsolete getCompletionScenario)
+      // @pdca 2025-11-03-UTC-1430.pdca.md - toScenario is the Single Source of Truth
+      expect(typeof (cli as any).toScenario).toBe('function');
       
-      console.log(`   ✅ getCompletionScenario method exists`);
+      console.log(`   ✅ toScenario method exists`);
     });
 
     it('should return valid completion scenario', async () => {
