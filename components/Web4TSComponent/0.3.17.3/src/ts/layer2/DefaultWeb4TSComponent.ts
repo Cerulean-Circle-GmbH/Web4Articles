@@ -415,7 +415,21 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliHide
    */
   protected printQuickHeader(): void {
-    console.log(`${'\x1b[36m'}Web4 ${this.model.component} CLI Tool${'\x1b[0m'} v${'\x1b[33m'}${this.model.version.toString()}${'\x1b[0m'} - Dynamic Method Discovery with Structured Documentation\n`);
+    const target = this.model.context || this;
+    const cyan = '\x1b[36m';
+    const yellow = '\x1b[33m';
+    const dim = '\x1b[2m';
+    const reset = '\x1b[0m';
+    
+    // Show calling component's info
+    let header = `${cyan}Web4 ${target.model.component} CLI Tool${reset} v${yellow}${target.model.version.toString()}${reset}`;
+    
+    // If delegating, show delegation context
+    if (this.model.context) {
+      header += ` ${dim}(via ${this.model.component} v${this.model.version.toString()})${reset}`;
+    }
+    
+    console.log(header + ' - Dynamic Method Discovery with Structured Documentation\n');
   }
 
 
