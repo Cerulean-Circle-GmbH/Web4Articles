@@ -840,10 +840,54 @@ Standards:
    * @cliValues targetDir § test/data
    */
   async initProject(targetDir: string = '§', force: boolean = false): Promise<this> {
-    // ✅ BASELINE COMPLIANCE: Use targetDirectory as-is (set by CLI or test via setTargetDirectory)
-    const projectRoot = targetDir === '§' 
-      ? this.model.targetDirectory  // ✅ Use stored value, don't calculate
-      : targetDir; // Already absolute from bash wrapper
+    // @pdca 2025-11-03-UTC-1811.pdca.md - Fix § to dynamically calculate project root from cwd
+    // § means "calculate project root NOW from current working directory"
+    // Explicit paths (like test/data) bypass calculation and use the provided path
+    let projectRoot: string;
+    
+    if (targetDir === '§') {
+      // Dynamically calculate from process.cwd() (NOT from stored targetDirectory)
+      const cwd = process.cwd();
+      
+      // Check for test isolation FIRST
+      if (cwd.includes('/test/data')) {
+        const parts = cwd.split('/');
+        const testIndex = parts.indexOf('test');
+        if (testIndex !== -1 && testIndex + 1 < parts.length && parts[testIndex + 1] === 'data') {
+          projectRoot = parts.slice(0, testIndex + 2).join('/');
+        } else {
+          projectRoot = cwd;
+        }
+      } else {
+        // Use git root or directory traversal
+        try {
+          const { execSync } = require('child_process');
+          const gitRoot = execSync('git rev-parse --show-toplevel', { 
+            encoding: 'utf8',
+            stdio: ['pipe', 'pipe', 'ignore']
+          }).trim();
+          projectRoot = gitRoot;
+        } catch {
+          // Fallback: traverse up looking for components/ directory
+          let current = cwd;
+          while (current !== '/') {
+            if (existsSync(path.join(current, 'components')) &&
+                existsSync(path.join(current, '.git'))) {
+              projectRoot = current;
+              break;
+            }
+            const parent = path.join(current, '..');
+            if (parent === current) break;
+            current = parent;
+          }
+          if (!projectRoot) {
+            projectRoot = cwd; // Last resort
+          }
+        }
+      }
+    } else {
+      projectRoot = targetDir; // Explicit path (test isolation or user-provided)
+    }
     
     // Detect test isolation mode
     const isTestIsolation = projectRoot.includes('/test/data');
