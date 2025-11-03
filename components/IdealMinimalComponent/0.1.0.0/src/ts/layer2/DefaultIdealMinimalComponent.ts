@@ -6,6 +6,7 @@
 import { IdealMinimalComponent } from '../layer3/IdealMinimalComponent.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { IdealMinimalComponentModel } from '../layer3/IdealMinimalComponentModel.interface.js';
+import { User } from '../layer3/User.interface.js';
 import { existsSync, lstatSync, readlinkSync, readdirSync, statSync } from 'fs';
 import { join, dirname } from 'path';
 
@@ -16,6 +17,7 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
   // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Changed to public for Component interface compliance
   model: IdealMinimalComponentModel;
   private web4ts?: DefaultWeb4TSComponent; // Lazy-initialized Web4TSComponent for delegation
+  private user?: User; // Optional User service (lazy initialization) - @pdca 2025-11-03-1135.pdca.md
 
   constructor() {
     // Empty constructor - Web4 pattern
@@ -30,6 +32,31 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
       component: 'IdealMinimalComponent',  // For CLI display
       version: '0.1.0.0'             // Component version
     };
+  }
+
+  /**
+   * Lazy initialization of User service for owner data generation
+   * NOT a build dependency - warns if unavailable, continues with fallback
+   * @pdca 2025-11-03-1135.pdca.md - User service integration pattern
+   * @cliHide
+   */
+  private async getUser(): Promise<User> {
+    if (this.user) return this.user;
+    
+    try {
+      // Dynamic ESM import - fails gracefully if User not available
+      // @ts-ignore - Optional dependency, path resolved at runtime
+      const userModule = await import('../../User/latest/dist/ts/layer2/DefaultUser.js');
+      const { DefaultUser } = userModule;
+      
+      // Initialize User with empty constructor (uses system/localhost defaults)
+      this.user = new DefaultUser();
+      
+      return this.user!; // Non-null assertion: we just assigned it
+    } catch (error) {
+      // User service not available - throw for caller to handle fallback
+      throw new Error('User service not available');
+    }
   }
 
   /**
@@ -76,16 +103,42 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
 
   /**
    * @cliHide
+   * @pdca 2025-11-03-1135.pdca.md - Use User service with fallback pattern
    */
   async toScenario(name?: string): Promise<Scenario<IdealMinimalComponentModel>> {
-    const ownerData = JSON.stringify({
-      user: process.env.USER || 'system',
-      hostname: process.env.HOSTNAME || 'localhost',
-      uuid: this.model.uuid,
-      timestamp: new Date().toISOString(),
-      component: 'IdealMinimalComponent',
-      version: '0.1.0.0'
-    });
+    // ✅ RADICAL OOP: Generate owner data using User.toScenario() (Web4 component interface)
+    let ownerData: string;
+    try {
+      // Try to use User service if available (NOT a build dependency)
+      const user = await this.getUser();
+      
+      // ✅ Use User component's toScenario() - universal Web4 interface
+      const userScenario = await user.toScenario();
+      
+      // ✅ Owner data IS the entire User scenario serialized
+      const ownerJson = JSON.stringify(userScenario);
+      
+      ownerData = Buffer.from(ownerJson).toString('base64');
+    } catch (error) {
+      // ✅ Fallback: Generate minimal User-like scenario without User service
+      const fallbackJson = JSON.stringify({
+        ior: {
+          uuid: this.model.uuid,
+          component: 'User',
+          version: '0.0.0.0',
+          timestamp: new Date().toISOString()
+        },
+        owner: '',  // No nested owner in fallback
+        model: {
+          user: process.env.USER || 'system',
+          hostname: process.env.HOSTNAME || 'localhost',
+          uuid: this.model.uuid,
+          component: 'IdealMinimalComponent',
+          version: '0.1.0.0'
+        }
+      });
+      ownerData = Buffer.from(fallbackJson).toString('base64');
+    }
 
     return {
       ior: {
