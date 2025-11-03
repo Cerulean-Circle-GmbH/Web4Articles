@@ -1292,25 +1292,29 @@ Standards:
     
     switch (versionPromotion) {
       case 'nextBuild':
-        nextVersion = this.incrementBuild(currentVersion);
+        // @pdca 2025-11-03-UTC-0800.pdca.md - Consolidated to SemanticVersion (DRY principle)
+        nextVersion = (await SemanticVersion.fromString(currentVersion).promoteRevision()).toString();
         console.log(`🔧 Upgrading ${componentName} to next build: ${currentVersion} → ${nextVersion}`);
         break;
         
       case 'nextPatch':
       case 'patch':
-        nextVersion = this.incrementPatch(currentVersion);
+        // @pdca 2025-11-03-UTC-0800.pdca.md - Consolidated to SemanticVersion (DRY principle)
+        nextVersion = (await SemanticVersion.fromString(currentVersion).promotePatch()).toString();
         console.log(`🔧 Upgrading ${componentName} to next patch: ${currentVersion} → ${nextVersion}`);
         break;
         
       case 'nextMinor':
       case 'minor':
-        nextVersion = this.incrementMinor(currentVersion);
+        // @pdca 2025-11-03-UTC-0800.pdca.md - Consolidated to SemanticVersion (DRY principle)
+        nextVersion = (await SemanticVersion.fromString(currentVersion).promoteMinor()).toString();
         console.log(`🚀 Upgrading ${componentName} to next minor: ${currentVersion} → ${nextVersion}`);
         break;
         
       case 'nextMajor':
       case 'major':
-        nextVersion = this.incrementMajor(currentVersion);
+        // @pdca 2025-11-03-UTC-0800.pdca.md - Consolidated to SemanticVersion (DRY principle)
+        nextVersion = (await SemanticVersion.fromString(currentVersion).promoteMajor()).toString();
         console.log(`💥 Upgrading ${componentName} to next major: ${currentVersion} → ${nextVersion}`);
         break;
         
@@ -4319,37 +4323,15 @@ Standards:
   }
 
   /**
-   * Version increment helpers
-   * @cliHide
+   * Version increment helpers removed - consolidated to SemanticVersion component
+   * @pdca 2025-11-03-UTC-0800.pdca.md - DRY principle: Use SemanticVersion.promoteX() methods
+   * 
+   * Previous methods (now redundant):
+   * - incrementBuild() → SemanticVersion.promoteRevision()
+   * - incrementPatch() → SemanticVersion.promotePatch()
+   * - incrementMinor() → SemanticVersion.promoteMinor()
+   * - incrementMajor() → SemanticVersion.promoteMajor()
    */
-  private incrementBuild(version: string): string {
-    const [major, minor, patch, build] = version.split('.').map(Number);
-    return `${major}.${minor}.${patch}.${build + 1}`;
-  }
-
-  /**
-   * @cliHide
-   */
-  private incrementMinor(version: string): string {
-    const [major, minor] = version.split('.').map(Number);
-    return `${major}.${minor + 1}.0.0`;
-  }
-
-  /**
-   * @cliHide
-   */
-  private incrementPatch(version: string): string {
-    const [major, minor, patch] = version.split('.').map(Number);
-    return `${major}.${minor}.${patch + 1}.0`;
-  }
-
-  /**
-   * @cliHide
-   */
-  private incrementMajor(version: string): string {
-    const [major] = version.split('.').map(Number);
-    return `${major + 1}.0.0.0`;
-  }
 
   /**
    * Create new version from existing component
