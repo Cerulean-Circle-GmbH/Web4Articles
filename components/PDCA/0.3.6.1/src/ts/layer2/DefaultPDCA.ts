@@ -1428,7 +1428,9 @@ export class DefaultPDCA implements PDCA {
       '## **📋 PLAN**',
       '## **🔧 DO**',
       '## **✅ CHECK**',
-      '## **🎯 ACT**'
+      '## **🎯 ACT**',
+      '## **💫 EMOTIONAL REFLECTION',  // Added: Template line 135-145 (mandatory)
+      '## **🎯 PDCA PROCESS UPDATE**'  // Added: Template line 147-158 (mandatory)
     ];
     
     // Alternative section formats (older PDCAs might use different emojis)
@@ -1436,7 +1438,9 @@ export class DefaultPDCA implements PDCA {
       '## **PLAN**',
       '## **DO**',
       '## **CHECK**',
-      '## **ACT**'
+      '## **ACT**',
+      '## **EMOTIONAL REFLECTION',  // Alternative without emoji
+      '## **PDCA PROCESS UPDATE**'  // Alternative without emoji
     ];
     
     // Check if all required sections exist (with fallback to alternatives)
