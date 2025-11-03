@@ -397,5 +397,60 @@ describe('PDCA createPDCA - Programmatic PDCA Generation', () => {
     expect(updatedSecondContent).toContain('**🔗 Previous PDCA:**');
     expect(updatedSecondContent).toContain('**➡️ Next PDCA:**');
   });
+
+  it('TC70: createPDCA - populates Previous PDCA dual link', async () => {
+    // Given: First PDCA exists
+    const sessionDir = path.join(testDataDir, 'session');
+    const firstPDCA = '2025-11-03-UTC-0800.pdca.md';
+    const firstContent = `# First PDCA
+**🎯 Template Version:** 3.2.4.2
+**➡️ Next PDCA:** Use pdca chain`;
+    fs.writeFileSync(path.join(sessionDir, firstPDCA), firstContent);
+
+    // When: Create second PDCA using createPDCA
+    await pdca.createPDCA('Second PDCA', 'Test objective');
+
+    // Then: New PDCA should have populated Previous PDCA dual link
+    const files = fs.readdirSync(sessionDir);
+    const secondPDCA = files.filter(f => f.endsWith('.pdca.md')).sort()[1];
+    const secondContent = fs.readFileSync(path.join(sessionDir, secondPDCA), 'utf-8');
+
+    // Should NOT contain unpopulated placeholders
+    expect(secondContent).not.toContain('{{GITHUB_URL}}');
+    expect(secondContent).not.toContain('{{SESSION}}');
+    expect(secondContent).not.toContain('{{FILENAME}}');
+    expect(secondContent).not.toContain('{{OTHER_SESSION}}');
+
+    // Should contain actual dual link to previous PDCA
+    expect(secondContent).toContain('**🔗 Previous PDCA:**');
+    expect(secondContent).toContain('[GitHub](');
+    expect(secondContent).toContain('github.com');
+    expect(secondContent).toContain('2025-11-03-UTC-0800.pdca.md');
+    expect(secondContent).toContain('[§/components/PDCA/');
+    expect(secondContent).toContain(`](./${firstPDCA})`); // Relative path
+  });
+
+  it('TC71: createPDCA - first PDCA indicates no previous PDCA', async () => {
+    // Given: No previous PDCAs exist
+    // When: Create first PDCA
+    await pdca.createPDCA('First PDCA', 'Test objective');
+
+    // Then: Should indicate no previous PDCA
+    const sessionDir = path.join(testDataDir, 'session');
+    const files = fs.readdirSync(sessionDir);
+    const firstPDCAPath = path.join(sessionDir, files[0]);
+    const firstContent = fs.readFileSync(firstPDCAPath, 'utf-8');
+
+    // Should not have unpopulated template placeholders
+    const githubUrlMatches = firstContent.match(/{{GITHUB_URL}}/g) || [];
+    // Filter out those in code blocks/quotes (documented examples)
+    const codeBlocksRemoved = firstContent.replace(/```[\s\S]*?```/g, '').replace(/`[^`]+`/g, '');
+    expect(codeBlocksRemoved).not.toContain('{{SESSION}}');
+    expect(codeBlocksRemoved).not.toContain('{{OTHER_SESSION}}');
+    
+    // Previous PDCA line should indicate no previous PDCA exists
+    const previousLine = firstContent.match(/\*\*🔗 Previous PDCA:\*\* .*/)[0];
+    expect(previousLine).toMatch(/N\/A|First PDCA/i);
+  });
 });
 

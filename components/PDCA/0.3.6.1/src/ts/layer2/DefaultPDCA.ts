@@ -5173,6 +5173,36 @@ export class DefaultPDCA implements PDCA {
       .replace(/{{REQUIREMENT_UUID}}/g, 'TBD')
       .replace(/{{SUCCESS_SUMMARY}}/g, 'TBD');
     
+    // Step 5b: Populate "Previous PDCA:" dual link
+    if (mostRecentPDCA) {
+      const previousFilename = path.basename(mostRecentPDCA);
+      const sessionRelativePath = path.relative(projectRoot, sessionDir);
+      const previousPDCAProjectPath = `${sessionRelativePath}/${previousFilename}`;
+      
+      // Generate GitHub URL for previous PDCA
+      const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+      const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${previousPDCAProjectPath}`;
+      
+      // Generate § notation (project-root-relative)
+      const sectionPath = `§/${previousPDCAProjectPath}`;
+      
+      // Generate relative path (both PDCAs in same directory, so just filename with ./ prefix)
+      const relativePath = `./${previousFilename}`;
+      
+      // Find and replace the entire "Previous PDCA:" line in template
+      // Template line: **🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})  
+      const oldLine = '**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})';
+      const newLine = `**🔗 Previous PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`;
+      
+      templateContent = templateContent.replace(oldLine, newLine);
+    } else {
+      // No previous PDCA - indicate this is the first
+      const oldLine = '**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})';
+      const newLine = `**🔗 Previous PDCA:** N/A - First PDCA in chain`;
+      
+      templateContent = templateContent.replace(oldLine, newLine);
+    }
+    
     // Step 6: Write new PDCA file
     if (!isDryRun) {
       fs.writeFileSync(newPDCAPath, templateContent, 'utf-8');
