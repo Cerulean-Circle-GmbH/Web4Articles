@@ -127,24 +127,26 @@ describe('PDCA mv() - Core File Move + Link Update', () => {
   /**
    * TC_MV_04: mv() updates dual links in other files
    * Verifies: When file B moves, file A's link to B updates
+   * Note: updateLinksToFile only searches PDCA files, so we use .pdca.md extension
    */
   test('TC_MV_04: mv() - updates dual links in referencing files', async () => {
     const pdca = new DefaultPDCA();
     
-    // Setup: File A links to File B
+    // Setup: File A links to File B (both PDCA files for link update to work)
     const sourceDir = path.join(tempTestDir, 'tc04/source');
     const targetDir = path.join(tempTestDir, 'tc04/target');
     fs.mkdirSync(sourceDir, { recursive: true });
     fs.mkdirSync(targetDir, { recursive: true });
     
-    const fileA = path.join(sourceDir, 'file-a.md');
-    const fileB = path.join(sourceDir, 'file-b.md');
-    const fileBMoved = path.join(targetDir, 'file-b.md');
+    const fileA = path.join(sourceDir, 'file-a.pdca.md');
+    const fileB = path.join(sourceDir, 'file-b.pdca.md');
+    const fileBMoved = path.join(targetDir, 'file-b.pdca.md');
     
-    // File A has dual link to File B
+    // File A has dual link to File B (project-root-relative in § notation)
+    const fileBProjectPath = `components/PDCA/0.3.6.1/test/temp-mv-tests/tc04/source/file-b.pdca.md`;
     fs.writeFileSync(fileA, `# File A
 
-See also: [GitHub](https://github.com/org/repo/blob/branch/file-b.md) | [§/path/file-b.md](./file-b.md)
+See also: [GitHub](https://github.com/org/repo/blob/branch/${fileBProjectPath}) | [§/${fileBProjectPath}](./file-b.pdca.md)
 `);
     
     fs.writeFileSync(fileB, '# File B\n\nContent.');
@@ -154,8 +156,8 @@ See also: [GitHub](https://github.com/org/repo/blob/branch/file-b.md) | [§/path
     
     // Verify: File A's link updated to relative path
     const fileAContent = fs.readFileSync(fileA, 'utf-8');
-    expect(fileAContent).toContain('../target/file-b.md');
-    expect(fileAContent).not.toContain('./file-b.md');
+    expect(fileAContent).toContain('../target/file-b.pdca.md');
+    expect(fileAContent).not.toContain('./file-b.pdca.md');
   });
 
   /**
@@ -170,16 +172,17 @@ See also: [GitHub](https://github.com/org/repo/blob/branch/file-b.md) | [§/path
     const targetDir = path.join(tempTestDir, 'tc05/target/subdir');
     fs.mkdirSync(sourceDir, { recursive: true });
     
-    const fileA = path.join(sourceDir, 'file-a.md');
-    const fileB = path.join(sourceDir, 'file-b.md');
-    const fileBMoved = path.join(targetDir, 'file-b.md');
+    const fileA = path.join(sourceDir, 'file-a.pdca.md');
+    const fileB = path.join(sourceDir, 'file-b.pdca.md');
+    const fileBMoved = path.join(targetDir, 'file-b.pdca.md');
     
+    const fileAProjectPath = `components/PDCA/0.3.6.1/test/temp-mv-tests/tc05/source/file-a.pdca.md`;
     fs.writeFileSync(fileA, '# File A');
     
     // File B links to A (same directory)
     fs.writeFileSync(fileB, `# File B
 
-Reference: [GitHub](https://github.com/org/repo/blob/branch/file-a.md) | [§/path/file-a.md](./file-a.md)
+Reference: [GitHub](https://github.com/org/repo/blob/branch/${fileAProjectPath}) | [§/${fileAProjectPath}](./file-a.pdca.md)
 `);
     
     // Execute: Move B to subdir
@@ -187,8 +190,8 @@ Reference: [GitHub](https://github.com/org/repo/blob/branch/file-a.md) | [§/pat
     
     // Verify: B's link to A updated to relative path from new location
     const fileBContent = fs.readFileSync(fileBMoved, 'utf-8');
-    expect(fileBContent).toContain('../../source/file-a.md');
-    expect(fileBContent).not.toContain('./file-a.md');
+    expect(fileBContent).toContain('../../source/file-a.pdca.md');
+    expect(fileBContent).not.toContain('./file-a.pdca.md');
   });
 
   /**

@@ -4501,7 +4501,143 @@ export class DefaultPDCA implements PDCA {
    * @cliDefault dryRun false
    * @cliValues dryRun true false
    */
+  /**
+   * mv - Core file move operation with dual link updates
+   * DRY: Single source of truth for file moving logic
+   * Used by: moveFile (wrapper), rename (wrapper)
+   * 
+   * @param oldPath Source file path (project-root-relative, absolute, or §/ notation)
+   * @param newPath Target file path (project-root-relative, absolute, or §/ notation)
+   * @param dryRun 'true' for dry-run mode, 'false' to execute
+   * @returns this for method chaining
+   */
+  async mv(oldPath: string, newPath: string, dryRun: string = 'false'): Promise<this> {
+    const fs = await import('fs');
+    const path = await import('path');
+    const { execSync } = await import('child_process');
+    
+    const isDryRun = dryRun === 'true';
+    const projectRoot = await this.getProjectRoot();
+    
+    // Normalize paths (inline - DRY principle from updateLinksToFile)
+    const normalizePath = (p: string): string => {
+      if (path.isAbsolute(p)) return path.relative(projectRoot, p);
+      if (p.startsWith('§/')) return p.substring(2);
+      return p;
+    };
+    
+    const oldNormalized = normalizePath(oldPath);
+    const newNormalized = normalizePath(newPath);
+    
+    // Create full paths for file system checks
+    const oldFullPath = path.join(projectRoot, oldNormalized);
+    const newFullPath = path.join(projectRoot, newNormalized);
+
+    // Step 1: Input Validation
+    if (!fs.existsSync(oldFullPath)) {
+      throw new Error(`Source file not found: ${oldNormalized}`);
+    }
+
+    const newDir = path.dirname(newFullPath);
+    if (!fs.existsSync(newDir)) {
+      // Auto-create target directory (DRY: consistent with user expectation)
+      if (!isDryRun) {
+        fs.mkdirSync(newDir, { recursive: true });
+      }
+    }
+
+    if (fs.existsSync(newFullPath)) {
+      throw new Error(`Destination file already exists: ${newNormalized}`);
+    }
+
+    // Step 2: Execute Move
+    // Try git mv first (preserves history), fall back to fs.rename if not in git
+    if (!isDryRun) {
+      try {
+        execSync(`git mv "${oldNormalized}" "${newNormalized}"`, {
+          cwd: projectRoot,
+          stdio: 'pipe'
+        });
+      } catch (gitError: any) {
+        // File not in git or git error - use fs.rename as fallback
+        try {
+          fs.renameSync(oldFullPath, newFullPath);
+        } catch (fsError: any) {
+          throw new Error(`Failed to move file: ${fsError.message}`);
+        }
+      }
+    }
+
+    // Step 3: Update Links in Other Files (DRY: Reuse updateLinksToFile)
+    await this.updateLinksToFile(oldPath, newPath, dryRun);
+
+    // Step 4: Refresh Relative Links in Moved File
+    if (!isDryRun) {
+      const movedFileContent = fs.readFileSync(newFullPath, 'utf-8');
+      const lines = movedFileContent.split('\n');
+      let fileModified = false;
+      const newLines: string[] = [];
+      
+      for (const line of lines) {
+        const dualLinkMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
+        
+        if (dualLinkMatch) {
+          const githubUrl = dualLinkMatch[1];
+          const displayText = dualLinkMatch[2];
+          const localPath = dualLinkMatch[3];
+          
+          // Extract the target file path from § notation
+          const sectionMatch = displayText.match(/§\/(.+)/);
+          if (sectionMatch) {
+            const targetPath = sectionMatch[1];
+            const targetFullPath = path.join(projectRoot, targetPath);
+            
+            // Calculate new relative path from moved file's new location
+            const movedFileDir = path.dirname(newFullPath);
+            const newRelativePath = path.relative(movedFileDir, targetFullPath);
+            
+            // Only update if the relative path changed
+            if (newRelativePath !== localPath) {
+              const newLine = line.replace(
+                /\[GitHub\]\(([^)]+)\)\s*\|\s*\[[^\]]*\]\(([^)]+)\)/,
+                `[GitHub](${githubUrl}) | [§/${targetPath}](${newRelativePath})`
+              );
+              newLines.push(newLine);
+              fileModified = true;
+              continue;
+            }
+          }
+        }
+        
+        newLines.push(line);
+      }
+      
+      if (fileModified) {
+        fs.writeFileSync(newFullPath, newLines.join('\n'));
+      }
+    }
+
+    return this;
+  }
+
+  /**
+   * moveFile - Wrapper around mv() for backward compatibility
+   * @deprecated Use mv() directly for new code
+   * @param oldPath Source file path
+   * @param newPath Target file path
+   * @param dryRun 'true' for dry-run mode
+   * @returns this for method chaining
+   */
   async moveFile(oldPath: string, newPath: string, dryRun: string = 'false'): Promise<this> {
+    // DRY: Delegate to mv() - single source of truth
+    return this.mv(oldPath, newPath, dryRun);
+  }
+
+  /**
+   * LEGACY moveFile implementation (replaced by mv wrapper above)
+   * Kept for reference during transition period
+   */
+  private async moveFileLegacy(oldPath: string, newPath: string, dryRun: string = 'false'): Promise<this> {
     const fs = await import('fs');
     const path = await import('path');
     const { execSync } = await import('child_process');
