@@ -2465,8 +2465,9 @@ Standards:
     // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
     const target = this.model.context || this;
     
-    // ✅ OOP: Use component's own root stored in model (NOT calculated!)
-    const componentPath = target.model.componentRoot;
+    // ✅ CRITICAL: Use THIS (Web4TSComponent)'s componentRoot which was initialized with target's path
+    // @pdca 2025-11-03-UTC-1237.pdca.md - Delegation uses web4ts.model.componentRoot, not target.model.componentRoot
+    const componentPath = this.model.componentRoot;
     const testDir = path.join(componentPath, 'test');
     
     if (!existsSync(testDir)) {

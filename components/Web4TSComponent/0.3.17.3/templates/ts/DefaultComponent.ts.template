@@ -75,17 +75,25 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
     // Find project root (where components/ directory is)
     const projectRoot = componentRoot.split('/components/')[0];
 
-    // Import Web4TSComponent class dynamically (OOP way!)
+    // Import Web4TSComponent and SemanticVersion dynamically
     const web4tscomponentModule = await import(
       `${projectRoot}/components/Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js`
     );
+    const semanticVersionModule = await import(
+      `${projectRoot}/components/Web4TSComponent/latest/dist/ts/layer2/SemanticVersion.js`
+    );
     const { DefaultWeb4TSComponent } = web4tscomponentModule;
+    const { SemanticVersion } = semanticVersionModule;
 
-    // Instantiate Web4TSComponent (Path Authority set via DefaultCLI)
-    // @pdca 2025-10-30-UTC-1011.pdca.md - on() moved to DefaultCLI
-    // @pdca 2025-10-31-UTC-1230.test-isolation-violation-fix.pdca.md - init() requires targetDirectory
+    // ✅ CRITICAL: Initialize Web4TSComponent with THIS component's identity for delegation
+    // @pdca 2025-11-03-UTC-1237.pdca.md - Full delegation initialization
     this.web4ts = new DefaultWeb4TSComponent().init({
-      model: { targetDirectory: projectRoot }
+      model: {
+        component: this.model.component,           // THIS component's name
+        version: await SemanticVersion.fromString(this.model.version || '0.0.0.0'), // THIS component's version
+        componentRoot: componentRoot,              // THIS component's root directory
+        targetDirectory: projectRoot               // Project root for path authority
+      }
     });
 
     return this.web4ts;
