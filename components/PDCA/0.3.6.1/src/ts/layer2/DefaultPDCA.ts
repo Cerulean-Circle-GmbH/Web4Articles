@@ -320,6 +320,7 @@ export class DefaultPDCA implements PDCA {
       '1g': 'CMM3 violation not properly reported',
       '1i': 'Git commit/push protocol not followed',
       '1j': 'QA Decisions section not properly formatted',
+      '1k': 'Template placeholders not populated ({{}} tokens found)',
       '3a': 'Links only requirement not met',
       '3b': 'QA Decisions not copied verbatim',
       '3c': 'Dual link format incorrect',
@@ -1381,6 +1382,7 @@ export class DefaultPDCA implements PDCA {
     // 1h requires external research capability, skip for now
     if (!this.check1i(content)) violations.push('1i');
     if (!this.check1j(content)) violations.push('1j');
+    if (!this.check1k(content)) violations.push('1k');
 
     // 3. Chat Response Compliance (relevant sections in PDCA)
     if (!this.check3a(content)) violations.push('3a');
@@ -1541,6 +1543,23 @@ export class DefaultPDCA implements PDCA {
            content.includes('All clear, no decisions') ||
            content.includes('**D1:**') ||
            content.includes('Decision 1:');
+  }
+
+  /**
+   * 1k) Template placeholders must be populated (no unpopulated {{}} tokens)
+   * Allows placeholders in code blocks (```), inline code (`), and quote blocks
+   * @cliHide
+   */
+  private check1k(content: string): boolean {
+    // Remove code blocks (```...```)
+    let contentWithoutCodeBlocks = content.replace(/```[\s\S]*?```/g, '');
+    
+    // Remove inline code (`...`)
+    contentWithoutCodeBlocks = contentWithoutCodeBlocks.replace(/`[^`]+`/g, '');
+    
+    // Check for any remaining {{}} placeholders
+    const placeholderRegex = /\{\{[^}]+\}\}/;
+    return !placeholderRegex.test(contentWithoutCodeBlocks);
   }
 
   /**
