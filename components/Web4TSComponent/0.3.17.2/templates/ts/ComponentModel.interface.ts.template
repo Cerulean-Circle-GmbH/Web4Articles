@@ -12,6 +12,7 @@ export interface {{COMPONENT_NAME}}Model extends Model {
   definition: string;
   createdAt: string;
   updatedAt: string;
-  version?: string;          // Component version for test promotion
+  component?: string;        // Component name for CLI display
+  version?: string;          // Component version for CLI display and test promotion
   targetDirectory?: string;  // Path Authority from CLI
 }

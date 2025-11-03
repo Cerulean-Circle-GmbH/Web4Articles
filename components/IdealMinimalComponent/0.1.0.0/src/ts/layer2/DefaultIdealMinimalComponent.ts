@@ -19,13 +19,16 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
 
   constructor() {
     // Empty constructor - Web4 pattern
+    // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Initialize with component name for CLI display
     this.model = {
       uuid: crypto.randomUUID(),
       name: '',
       origin: '',
       definition: '',
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      component: 'IdealMinimalComponent',  // For CLI display
+      version: '0.1.0.0'             // Component version
     };
   }
 

@@ -19,13 +19,16 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
 
   constructor() {
     // Empty constructor - Web4 pattern
+    // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Initialize with component name for CLI display
     this.model = {
       uuid: crypto.randomUUID(),
       name: '',
       origin: '',
       definition: '',
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      component: '{{COMPONENT_NAME}}',  // For CLI display
+      version: '{{VERSION}}'             // Component version
     };
   }
 
