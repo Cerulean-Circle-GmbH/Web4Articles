@@ -4944,6 +4944,100 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
+   * Create a new PDCA from template with programmatic boilerplate generation
+   * Generates complete PDCA structure from template for AI population
+   * 
+   * @param title - PDCA title
+   * @param objective - PDCA objective
+   * @param dryRun - 'true' for dry-run mode (preview only, no file creation)
+   * @cliSyntax title objective <?dryRun>
+   * @cliDefault dryRun "false"
+   * @cliValues dryRun true false
+   */
+  async createPDCA(title: string, objective: string, dryRun: string = 'false'): Promise<this> {
+    const fs = await import('fs');
+    const path = await import('path');
+    
+    const isDryRun = dryRun === 'true';
+    
+    // Use workingDirectory from model for tests, otherwise use actual project root
+    const projectRoot = this.model.workingDirectory || await this.getProjectRoot();
+    
+    // Get session directory from model or detect from current directory
+    const sessionDir = this.model.sessionDirectory || path.join(await this.getProjectRoot(), 'components/PDCA/0.3.6.1/session');
+    
+    console.log(`\n📝 Creating New PDCA${isDryRun ? ' (DRY RUN)' : ''}\n`);
+    console.log(`📂 Session Directory: ${path.relative(projectRoot, sessionDir)}`);
+    console.log(`📋 Title: ${title}`);
+    console.log(`🎯 Objective: ${objective}\n`);
+    
+    // Step 1: Ensure session directory exists
+    if (!isDryRun && !fs.existsSync(sessionDir)) {
+      console.log(`📁 Creating session directory: ${sessionDir}`);
+      fs.mkdirSync(sessionDir, { recursive: true });
+    }
+    
+    // Step 2: Generate new PDCA filename with current UTC timestamp
+    const now = new Date();
+    const year = now.getUTCFullYear();
+    const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(now.getUTCDate()).padStart(2, '0');
+    const hour = String(now.getUTCHours()).padStart(2, '0');
+    const minute = String(now.getUTCMinutes()).padStart(2, '0');
+    const timestamp = `${year}-${month}-${day}-UTC-${hour}${minute}`;
+    const newPDCAFilename = `${timestamp}.pdca.md`;
+    const newPDCAPath = path.join(sessionDir, newPDCAFilename);
+    
+    console.log(`📝 New PDCA Filename: ${newPDCAFilename}\n`);
+    
+    // Step 3: Read template
+    const templatePath = path.join(projectRoot, 'scrum.pmo/roles/_shared/PDCA/template.md');
+    if (!fs.existsSync(templatePath)) {
+      throw new Error(`Template not found: ${templatePath}`);
+    }
+    
+    let templateContent = fs.readFileSync(templatePath, 'utf-8');
+    
+    // Step 4: Populate template placeholders
+    // Generate current UTC timestamp string for display
+    const utcDateString = now.toUTCString();
+    
+    // Get current branch from model or default
+    const currentBranch = this.model.currentBranch || 'main';
+    
+    // Populate basic placeholders
+    templateContent = templateContent
+      .replace(/{{TITLE}}/g, title)
+      .replace(/{{OBJECTIVE}}/g, objective)
+      .replace(/{{UTC_TIMESTAMP}}/g, utcDateString)
+      .replace(/{{AGENT_NAME}}/g, 'Claude Sonnet 4.5')
+      .replace(/{{BRANCH_NAME}}/g, currentBranch)
+      .replace(/{{SESSION_NAME}}/g, 'N/A')
+      .replace(/{{SPRINT_NAME}}/g, 'Current Sprint')
+      .replace(/{{TASK_NAME}}/g, title)
+      .replace(/{{KEY_ISSUES}}/g, 'None')
+      .replace(/{{PREVIOUS_COMMIT_SHA}}/g, 'TBD')
+      .replace(/{{PREVIOUS_COMMIT_DESCRIPTION}}/g, 'TBD')
+      .replace(/{{PLAN_OBJECTIVE}}/g, objective)
+      .replace(/{{REQUIREMENT_UUID}}/g, 'TBD')
+      .replace(/{{SUCCESS_SUMMARY}}/g, 'TBD');
+    
+    // Step 5: Write new PDCA file
+    if (!isDryRun) {
+      fs.writeFileSync(newPDCAPath, templateContent, 'utf-8');
+      console.log(`✅ New PDCA created: ${newPDCAFilename}`);
+      console.log(`📁 Location: ${newPDCAPath}\n`);
+    } else {
+      console.log(`✓ Would create new PDCA: ${newPDCAFilename}`);
+      console.log(`✓ Would write to: ${newPDCAPath}\n`);
+    }
+    
+    console.log(`✨ PDCA boilerplate ready for AI population!\n`);
+    
+    return this;
+  }
+
+  /**
    * Find most recent PDCA file in directory (internal helper)
    * Looks for files matching pattern: YYYY-MM-DD-UTC-HHMM.pdca.md
    */
