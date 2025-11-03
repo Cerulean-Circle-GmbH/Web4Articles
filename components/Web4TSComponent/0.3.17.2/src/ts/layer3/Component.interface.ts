@@ -15,8 +15,17 @@ import { Model } from './Model.interface.js';
 /**
  * Base interface for all Web4 components
  * Ensures every component has fundamental lifecycle methods
+ * 
+ * @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Added REQUIRED model property for polymorphic access
  */
 export interface Component<TModel extends Model = Model> {
+  /**
+   * Component's internal model/state (REQUIRED)
+   * Every Web4 component MUST have a model (empty constructor + init pattern)
+   * Exposed for polymorphic access in DefaultCLI and other generic contexts
+   */
+  model: TModel;
+  
   // ========================================
   // LIFECYCLE METHODS (Web4 pattern)
   // ========================================

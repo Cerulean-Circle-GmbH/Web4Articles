@@ -13,7 +13,8 @@ import { join, dirname } from 'path';
 import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js';
 
 export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
-  private model: IdealMinimalComponentModel;
+  // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Changed to public for Component interface compliance
+  model: IdealMinimalComponentModel;
   private web4ts?: DefaultWeb4TSComponent; // Lazy-initialized Web4TSComponent for delegation
 
   constructor() {
@@ -186,8 +187,8 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
     console.log(`🧪 Running IdealMinimalComponent tests with auto-promotion...`);
     
     try {
-      // Get current version from model (DRY - already set in constructor)
-      const currentVersion = this.model.version;
+      // Get current version from model (optional - may not be set in all components)
+      const currentVersion = this.model.version || '0.1.0.0';
       const path = await import('path');
       const url = new URL(import.meta.url);
       const __filename = url.pathname;

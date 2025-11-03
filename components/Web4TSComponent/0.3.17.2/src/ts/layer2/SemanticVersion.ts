@@ -11,7 +11,8 @@ import { Scenario } from '../layer3/Scenario.interface.js';
 import { randomUUID } from 'crypto';
 
 export class SemanticVersion implements Version {
-  private model!: VersionModel;
+  // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Changed to public for Component interface compliance
+  model!: VersionModel;
 
   /**
    * Empty constructor (Web4 radical OOP pattern)

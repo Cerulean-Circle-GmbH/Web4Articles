@@ -12,7 +12,7 @@ import { MethodSignature } from "../layer3/MethodSignature.interface.js";
 import { Component } from "../layer3/Component.interface.js";
 import { Colors } from "../layer3/Colors.interface.js";
 import { User } from "../layer3/User.interface.js";
-import { DefaultWeb4TSComponent } from "./DefaultWeb4TSComponent.js";
+// @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Removed DefaultWeb4TSComponent import for true generic base class
 import { TSCompletion } from "../layer4/TSCompletion.js";
 import { DefaultColors } from "../layer4/DefaultColors.js";
 import {
@@ -30,7 +30,8 @@ import * as ts from "typescript";
 import { webcrypto as crypto } from "crypto";
 
 export abstract class DefaultCLI implements CLI, Component<CLIModel> {
-  protected model!: CLIModel; // Definite assignment - initialized in init()
+  // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Changed to public for Component interface compliance
+  model!: CLIModel; // Definite assignment - initialized in init()
   protected methodSignatures: Map<string, MethodSignature> = new Map();
   protected colors: Colors = DefaultColors.getInstance();
   
@@ -38,9 +39,10 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   // Models = DATA ONLY (serializable)
   // Instances = BEHAVIOR (belong in class)
   // @pdca 2025-10-31-UTC-1208.cli-model-duplication-cleanup.pdca.md
-  protected component?: DefaultWeb4TSComponent;  // Own component instance
-  protected context?: DefaultWeb4TSComponent;    // Loaded via on() for delegation
-  protected user?: User;                          // User service instance
+  // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Use Component interface with model property
+  protected component?: Component;  // Own component instance
+  protected context?: Component;    // Loaded via on() for delegation
+  protected user?: User;            // User service instance
 
 
   /**
@@ -255,7 +257,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // ✅ CRITICAL: Also set context in CLI's component so delegated commands work!
     // When commands like 'test itCase' are delegated to this.component, 
     // the component needs to know about the loaded context (targetComponent)
-    this.component!.model.context = targetComponent;
+    (this.component!.model as any).context = targetComponent;
     
     if (actualVersion !== version) {
       console.log(`✅ Component context loaded: ${component} ${version} → ${actualVersion}`);
@@ -277,6 +279,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * - on('TestIsolatedComponent', '0.1.0.0') → loads DefaultTestIsolatedComponent
    * 
    * @pdca 2025-10-30-UTC-1011.pdca.md - Universal component loading
+   * @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Return Component interface
    * @cliHide
    * @param componentName Name of component to load
    * @param version Version of component to load
@@ -287,7 +290,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     componentName: string, 
     version: string,
     componentPath: string
-  ): Promise<DefaultWeb4TSComponent> {
+  ): Promise<Component> {
     const modulePath = join(componentPath, 'dist', 'ts', 'layer2', `Default${componentName}.js`);
     
     if (!existsSync(modulePath)) {
@@ -338,8 +341,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @returns Scenario representation of current CLI state
    */
   async toScenario(name?: string): Promise<Scenario<CLIModel>> {
-    const componentName = this.component?.model.component || 'CLI';
-    const componentVersion = this.component?.model.version?.toString() || '0.0.0.0';
+    const componentName = (this.component?.model as any)?.component || 'CLI';
+    const componentVersion = (this.component?.model as any)?.version?.toString() || '0.0.0.0';
     
     // ✅ RADICAL OOP: Use User.toScenario() for owner data (Web4 component interface)
     let ownerJson: string;
@@ -402,7 +405,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Helper method
    */
   protected getComponentName(): string {
-    return this.component?.model.component || 'CLI';
+    return (this.component?.model as any)?.component || 'CLI';
   }
 
   /**
@@ -410,7 +413,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Helper method
    */
   protected getComponentVersion(): string {
-    return this.component?.model.version?.toString() || '0.0.0.0';
+    return (this.component?.model as any)?.version?.toString() || '0.0.0.0';
   }
 
   /**
@@ -507,9 +510,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       const targetComponent = this.context || this.component!;
       
       return join(
-        targetComponent.model.componentRoot,
+        (targetComponent.model as any).componentRoot,
         "src/ts/layer2",
-        `Default${targetComponent.model.component}.ts`
+        `Default${(targetComponent.model as any).component}.ts`
       );
     } catch (error) {
       // Fallback: try to find component file in current directory structure
@@ -591,7 +594,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // ✅ OOP Context Resolution: Use `on` context if set, otherwise use CLI's component
     // Component's componentRoot is its version directory (e.g., .../Web4TSComponent/0.3.17.2)
     const targetComponent = this.context || this.component;
-    return join(targetComponent!.model.componentRoot, 'test');
+    return join((targetComponent!.model as any).componentRoot, 'test');
   }
 
   /**

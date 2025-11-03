@@ -5419,6 +5419,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     
     try {
       const content = await fs.readFile(sourcePath, 'utf-8');
+      // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - DefaultCLI now truly generic, no modifications needed
       await fs.writeFile(targetPath, content);
     } catch (error) {
       console.log(`   ⚠️ Could not copy DefaultCLI.ts: ${(error as Error).message}`);

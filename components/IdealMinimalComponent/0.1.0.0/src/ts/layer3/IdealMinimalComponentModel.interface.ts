@@ -12,4 +12,6 @@ export interface IdealMinimalComponentModel extends Model {
   definition: string;
   createdAt: string;
   updatedAt: string;
+  version?: string;          // Component version for test promotion
+  targetDirectory?: string;  // Path Authority from CLI
 }

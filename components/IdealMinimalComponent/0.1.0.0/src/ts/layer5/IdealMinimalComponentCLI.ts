@@ -10,7 +10,8 @@ import { DefaultIdealMinimalComponent } from '../layer2/DefaultIdealMinimalCompo
 import { MethodSignature } from '../layer3/MethodSignature.interface.js';
 
 export class IdealMinimalComponentCLI extends DefaultCLI {
-  private component: DefaultIdealMinimalComponent | null;
+  // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Use declare to override component type
+  protected declare component: DefaultIdealMinimalComponent;
   protected methodSignatures: Map<string, MethodSignature> = new Map();
 
   /**
@@ -18,19 +19,19 @@ export class IdealMinimalComponentCLI extends DefaultCLI {
    * @pdca 2025-10-30-UTC-1011.pdca.md - Path Authority architecture
    * @pdca 2025-10-31-UTC-1230.test-isolation-violation-fix.pdca.md - Pass targetDirectory
    * @pdca 2025-10-31-UTC-1208.cli-model-duplication-cleanup.pdca.md - Remove useless tempComponent
+   * @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Create component immediately for discovery
    */
   constructor() {
     super(); // Call empty parent constructor
-    this.component = null;
     
     // Initialize CLI (Path Authority - calculates projectRoot, sets paths)
     this.init();
     
+    // Create component for method discovery
+    this.component = new DefaultIdealMinimalComponent().init();
+    
     // Discover methods from CLI (walks CLI prototype chain)
     this.discoverMethods();
-    
-    // ✅ Component created on-demand via getOrCreateComponent()
-    // No premature instantiation, no wasted memory
   }
 
   /**
@@ -39,18 +40,6 @@ export class IdealMinimalComponentCLI extends DefaultCLI {
   static async start(args: string[]): Promise<void> {
     const cli = new IdealMinimalComponentCLI();
     await cli.execute(args);
-  }
-
-  private getOrCreateComponent(): DefaultIdealMinimalComponent {
-    if (!this.component) {
-      // ✅ CLI is Path Authority - provides targetDirectory to component
-      this.component = new DefaultIdealMinimalComponent().init({
-        model: {
-          targetDirectory: this.model.projectRoot // ✅ CLI provides path
-        }
-      }) as DefaultIdealMinimalComponent;
-    }
-    return this.component;
   }
 
   /**
