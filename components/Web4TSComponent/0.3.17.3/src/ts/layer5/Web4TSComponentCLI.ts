@@ -12,6 +12,8 @@ import { MethodSignature } from '../layer3/MethodSignature.interface.js';
 import { TSCompletion } from '../layer4/TSCompletion.js';
 
 export class Web4TSComponentCLI extends DefaultCLI {
+  // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Override component type for Web4TSComponent-specific operations
+  protected declare component: DefaultWeb4TSComponent;
   protected methodSignatures: Map<string, MethodSignature> = new Map();
 
   /**
