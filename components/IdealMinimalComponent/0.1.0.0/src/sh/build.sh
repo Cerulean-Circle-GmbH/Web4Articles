@@ -4,7 +4,7 @@
 MODE=${1:-silent}
 
 if [ "$MODE" = "force" ]; then
-    echo "🔧 Force building Web4TSComponent..."
+    echo "🔧 Force building IdealMinimalComponent..."
     # Clean everything
     ./src/sh/clean.sh
     # Install dependencies and create symlink
@@ -12,11 +12,11 @@ if [ "$MODE" = "force" ]; then
     # Build TypeScript
     echo "🔨 Building TypeScript..."
     npx tsc
-elif [ ! -f "dist/ts/layer5/Web4TSComponentCLI.js" ] || find src -name "*.ts" -newer "dist/ts/layer5/Web4TSComponentCLI.js" 2>/dev/null | grep -q .; then
+elif [ ! -f "dist/ts/layer5/IdealMinimalComponentCLI.js" ] || find src -name "*.ts" -newer "dist/ts/layer5/IdealMinimalComponentCLI.js" 2>/dev/null | grep -q .; then
     if [ "$MODE" = "verbose" ]; then
-        echo "🔧 Smart building Web4TSComponent (changes detected)..."
+        echo "🔧 Smart building IdealMinimalComponent (changes detected)..."
     else
-        echo "✅ Building Web4TSComponent..." >&2
+        echo "✅ Building IdealMinimalComponent..." >&2
     fi
     
     # Clean local artifacts only
@@ -40,6 +40,6 @@ elif [ ! -f "dist/ts/layer5/Web4TSComponentCLI.js" ] || find src -name "*.ts" -n
     fi
 else
     if [ "$MODE" = "verbose" ]; then
-        echo "✅ Web4TSComponent is up to date, no build needed"
+        echo "✅ IdealMinimalComponent is up to date, no build needed"
     fi
 fi
