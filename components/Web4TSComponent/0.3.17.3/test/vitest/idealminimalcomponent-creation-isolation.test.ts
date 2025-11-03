@@ -238,5 +238,133 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
       throw error;
     }
   });
+
+  describe('🎯 End-to-End Tab Completion Tests', () => {
+    it('should have getCompletionScenario method in CLI', async () => {
+      // Dynamically import the CLI
+      const cliPath = path.join(testComponentPath, `dist/ts/layer5/${testComponentName}CLI.js`);
+      expect(existsSync(cliPath)).toBe(true);
+      
+      const { IdealMinimalComponentCLI } = await import(cliPath);
+      const cli = new IdealMinimalComponentCLI();
+      
+      // Verify getCompletionScenario exists
+      expect(typeof (cli as any).getCompletionScenario).toBe('function');
+      
+      console.log(`   ✅ getCompletionScenario method exists`);
+    });
+
+    it('should return valid completion scenario', async () => {
+      // Import the CLI
+      const cliPath = path.join(testComponentPath, `dist/ts/layer5/${testComponentName}CLI.js`);
+      const { IdealMinimalComponentCLI } = await import(cliPath);
+      const cli = new IdealMinimalComponentCLI();
+      
+      // Get completion scenario with timeout
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('getCompletionScenario timed out after 5s')), 5000)
+      );
+      
+      const scenarioPromise = (cli as any).getCompletionScenario();
+      
+      try {
+        await Promise.race([scenarioPromise, timeoutPromise]);
+        console.log(`   ✅ getCompletionScenario completes without hanging`);
+      } catch (error: any) {
+        if (error.message.includes('timed out')) {
+          throw new Error('❌ getCompletionScenario hangs (timeout after 5s) - this is why tab completion shows "Thinking..." forever!');
+        }
+        throw error;
+      }
+    });
+
+    it('should have complete method in CLI', async () => {
+      // Import the CLI
+      const cliPath = path.join(testComponentPath, `dist/ts/layer5/${testComponentName}CLI.js`);
+      const { IdealMinimalComponentCLI } = await import(cliPath);
+      const cli = new IdealMinimalComponentCLI();
+      
+      // Verify complete exists
+      expect(typeof (cli as any).complete).toBe('function');
+      
+      console.log(`   ✅ complete method exists`);
+    });
+
+    it('should complete method names without hanging', async () => {
+      // Import the CLI
+      const cliPath = path.join(testComponentPath, `dist/ts/layer5/${testComponentName}CLI.js`);
+      const { IdealMinimalComponentCLI } = await import(cliPath);
+      const cli = new IdealMinimalComponentCLI();
+      
+      // Create a minimal scenario for completion
+      const scenario = JSON.stringify({
+        ior: {
+          uuid: 'test-uuid',
+          component: testComponentName,
+          version: testVersion,
+          ownerData: Buffer.from('{}').toString('base64')
+        },
+        model: {
+          uuid: 'test-uuid',
+          projectRoot: testDataDir,
+          completionCompWords: ['idealminimalcomponent', 'li'],
+          completionCompCword: 1
+        }
+      });
+      
+      // Test completion with timeout
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('complete timed out after 5s')), 5000)
+      );
+      
+      const completePromise = (cli as any).complete(scenario);
+      
+      try {
+        await Promise.race([completePromise, timeoutPromise]);
+        console.log(`   ✅ complete method completes without hanging`);
+      } catch (error: any) {
+        if (error.message.includes('timed out')) {
+          throw new Error('❌ complete() hangs (timeout after 5s) - this causes "Thinking..." in bash completion!');
+        }
+        throw error;
+      }
+    });
+
+    it('should discover component methods for completion', async () => {
+      // Import the CLI
+      const cliPath = path.join(testComponentPath, `dist/ts/layer5/${testComponentName}CLI.js`);
+      const { IdealMinimalComponentCLI } = await import(cliPath);
+      const cli = new IdealMinimalComponentCLI();
+      
+      // Get method signatures
+      const methodSignatures = (cli as any).methodSignatures;
+      expect(methodSignatures).toBeDefined();
+      
+      // Should discover component methods
+      const expectedMethods = ['create', 'process', 'info', 'test', 'completion'];
+      const discoveredMethods: string[] = [];
+      const missingMethods: string[] = [];
+      
+      for (const method of expectedMethods) {
+        if (methodSignatures.has(method)) {
+          discoveredMethods.push(method);
+        } else {
+          missingMethods.push(method);
+        }
+      }
+      
+      if (missingMethods.length > 0) {
+        console.log(`   ⚠️  Missing methods: ${missingMethods.join(', ')}`);
+        console.log(`   ✅ Discovered methods: ${discoveredMethods.join(', ')}`);
+        console.log(`   📊 Total discovered: ${methodSignatures.size}`);
+      }
+      
+      // At least some methods should be discovered
+      expect(methodSignatures.size).toBeGreaterThan(0);
+      expect(discoveredMethods.length).toBeGreaterThan(0);
+      
+      console.log(`   ✅ Method discovery working (${methodSignatures.size} methods discovered)`);
+    });
+  });
 });
 

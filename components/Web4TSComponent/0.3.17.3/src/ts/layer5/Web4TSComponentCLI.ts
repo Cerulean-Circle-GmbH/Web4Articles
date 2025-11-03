@@ -290,29 +290,6 @@ export class Web4TSComponentCLI extends DefaultCLI {
     return null;
   }
 
-  /**
-   * Complete bash completion with updated Scenario from bash
-   * Web4 Scenario pattern: Bash sends updated scenario with completionCompWords/completionCompCword
-   * @cliHide
-   */
-  async complete(scenarioJson: string): Promise<void> {
-    // Parse incoming Scenario from bash
-    // Pattern: completion-architecture-oop.md:405-422
-    const scenario = JSON.parse(scenarioJson);
-    
-    // Merge scenario into model using init()
-    this.init(scenario);
-    
-    // Compute derived fields from bash-provided data
-    this.computeDerivedCompletionFields(this.model);
-    
-    // Get valid completion values from model (now async!)
-    const values = await this.getValidCompletionValues();
-    
-    // Format with DISPLAY/WORD protocol
-    this.formatCompletionOutput(values);
-  }
-
 }
 
 // Static entry point for shell execution - Web4 radical OOP pattern
