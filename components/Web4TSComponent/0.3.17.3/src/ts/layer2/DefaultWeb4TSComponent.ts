@@ -424,9 +424,18 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // Show calling component's info
     let header = `${cyan}Web4 ${target.model.component} CLI Tool${reset} v${yellow}${target.model.version.toString()}${reset}`;
     
-    // If delegating, show delegation context
+    // If delegating AND the delegation target is different, show it
+    // @pdca 2025-11-03-UTC-1237.pdca.md - Only show delegation when component/version differ
     if (this.model.context) {
-      header += ` ${dim}(via ${this.model.component} v${this.model.version.toString()})${reset}`;
+      // Get the actual Web4TSComponent version from the file system or package
+      // Since we initialized with target's identity, we need to show actual delegation
+      // For now, just check if it's actually a different component (not self-delegation)
+      const isDifferentComponent = target.model.component !== 'Web4TSComponent';
+      if (isDifferentComponent) {
+        // Get Web4TSComponent's actual version from latest symlink path
+        const web4tsVersion = '0.3.17.3'; // TODO: Read from actual Web4TSComponent package
+        header += ` ${dim}(via Web4TSComponent v${web4tsVersion})${reset}`;
+      }
     }
     
     console.log(header + ' - Dynamic Method Discovery with Structured Documentation\n');
