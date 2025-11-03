@@ -11,33 +11,23 @@ import { MethodSignature } from '../layer3/MethodSignature.interface.js';
 import { TSCompletion } from '../layer4/TSCompletion.js';
 
 export class Web4TSComponentCLI extends DefaultCLI {
-  private tsComponent: DefaultWeb4TSComponent | null;
   protected methodSignatures: Map<string, MethodSignature> = new Map();
 
   /**
-   * Empty constructor (Web4 radical OOP pattern)
-   * @pdca 2025-10-28-UTC-1822.phase1-2-completion.pdca.md - Phase 2: Remove initWithComponentClass
+   * Constructor - creates component for discovery
+   * @pdca 2025-10-31-UTC-1430.component-discovery-radical-oop.pdca.md - Remove duplication
    */
   constructor() {
-    super(); // Call empty parent constructor
-    this.tsComponent = null;
-    
-    // Initialize CLI
+    super();
     this.init();
     
-    // Get version and store component in model
-    const tempComponent = new DefaultWeb4TSComponent().init();
-    this.model.component = tempComponent; // ✅ Store instance in model
+    // ✅ Create component BEFORE discovery (uses inherited this.component field)
+    this.component = new DefaultWeb4TSComponent().init({
+      model: { targetDirectory: this.model.projectRoot }
+    } as any);
     
-    // Discover methods from component
-    this.discoverMethods();
+    this.discoverMethods();  // ✅ NOW this.component exists for discovery!
   }
-
-  /**
-   * Use parent class method discovery (DefaultCLI now handles both CLI and component methods)
-   * No override needed - inherits from DefaultCLI
-   */
-  // protected discoverMethods() removed - using DefaultCLI implementation
 
   /**
    * Static start method - Web4 radical OOP entry point
@@ -45,17 +35,6 @@ export class Web4TSComponentCLI extends DefaultCLI {
   static async start(args: string[]): Promise<void> {
     const cli = new Web4TSComponentCLI();
     await cli.execute(args);
-  }
-
-  /**
-   * Get component instance (Web4TSComponent-specific)
-   * @pdca 2025-10-28-UTC-0934.pdca.md:597 - Updated for init pattern
-   */
-  private getOrCreateTSComponent(): DefaultWeb4TSComponent {
-    if (!this.tsComponent) {
-      this.tsComponent = new DefaultWeb4TSComponent().init();
-    }
-    return this.tsComponent;
   }
 
   /**
@@ -174,22 +153,22 @@ export class Web4TSComponentCLI extends DefaultCLI {
       } else {
         method.apply(this, methodArgs);
       }
-    } else if (this.model.context && typeof (this.model.context as any)[command] === 'function') {
+    } else if (this.context && typeof (this.context as any)[command] === 'function') {
       // 2. Context method (via on()) - SECOND PRIORITY
-      // Example: web4tscomponent on PDCA 0.3.5.1 links → calls this.model.context.links()
-      const method = (this.model.context as any)[command];
+      // Example: web4tscomponent on PDCA 0.3.5.1 links → calls this.context.links()
+      const method = (this.context as any)[command];
       if (signature.isAsync) {
-        await method.apply(this.model.context, methodArgs);
+        await method.apply(this.context, methodArgs);
       } else {
-        method.apply(this.model.context, methodArgs);
+        method.apply(this.context, methodArgs);
       }
-    } else if (this.model.component && typeof (this.model.component as any)[command] === 'function') {
+    } else if (this.component && typeof (this.component as any)[command] === 'function') {
       // 3. Primary component method - FALLBACK
-      const method = (this.model.component as any)[command];
+      const method = (this.component as any)[command];
       if (signature.isAsync) {
-        await method.apply(this.model.component, methodArgs);
+        await method.apply(this.component, methodArgs);
       } else {
-        method.apply(this.model.component, methodArgs);
+        method.apply(this.component, methodArgs);
       }
     } else {
       throw new Error(`Method not found: ${command}`);

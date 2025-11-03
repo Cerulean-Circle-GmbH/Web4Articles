@@ -50,10 +50,45 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     const componentDirName = path.basename(currentVersionDir);
     const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(componentDirName);
     
-      // ✅ BASELINE COMPLIANCE: Component does NOT calculate projectRoot
-      // Use process.cwd() as default targetDirectory
-      // In production, CLI will call setTargetDirectory() with correct path
-      const defaultTargetDir = process.cwd();
+      // ✅ FAIL FAST: targetDirectory is REQUIRED (Path Authority Principle)
+      // 
+      // WEB4 PATH AUTHORITY PRINCIPLE:
+      // DefaultCLI is the PATH AUTHORITY - calculates ALL paths ONCE
+      // DefaultWeb4TSComponent is PATH CONSUMER - NEVER calculates paths
+      // 
+      // RATIONALE:
+      // 1. Path Separation: Only CLI calculates paths (single source of truth)
+      // 2. Test Isolation: CLI detects test/data and passes correct path
+      // 3. No Assumptions: Component cannot guess where it should operate
+      // 4. DRY Compliance: Path calculation logic exists ONCE (in CLI)
+      // 
+      // @pdca 2025-10-29-UTC-1323.path-separation-violation-fix.pdca.md
+      // @pdca 2025-10-30-UTC-1011.pdca.md - Path Authority architecture
+      // @pdca 2025-10-31-UTC-1230.test-isolation-violation-fix.pdca.md
+      if (!scenario?.model?.targetDirectory) {
+        throw new Error(
+          'CRITICAL: targetDirectory is required in scenario.model.\n' +
+          '\n' +
+          'WEB4 PATH AUTHORITY PRINCIPLE:\n' +
+          '  DefaultCLI = Path Authority (calculates paths)\n' +
+          '  DefaultWeb4TSComponent = Path Consumer (receives paths)\n' +
+          '\n' +
+          'Components are FORBIDDEN from calculating paths!\n' +
+          '  ❌ NO process.cwd()\n' +
+          '  ❌ NO findProjectRoot()\n' +
+          '  ❌ NO path calculations\n' +
+          '  ✅ ONLY receive targetDirectory from CLI\n' +
+          '\n' +
+          'Usage:\n' +
+          '  Production: CLI passes this.model.projectRoot\n' +
+          '  Tests: Pass test/data explicitly\n' +
+          '\n' +
+          'Example:\n' +
+          '  const component = new DefaultWeb4TSComponent().init({\n' +
+          '    model: { targetDirectory: cliCalculatedPath }\n' +
+          '  });'
+        );
+      }
       
       // ✅ Create version INSTANCE (radical OOP)
       const versionString = isVersionDir ? componentDirName : '0.0.0.0';
@@ -66,8 +101,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       definition: '',
       component: 'Web4TSComponent',
         version: versionComponent,  // ✅ INSTANCE with behavior!
-      projectRoot: defaultTargetDir, // ✅ Default only (CLI sets correct value via setTargetDirectory)
-      targetDirectory: defaultTargetDir // ✅ Default only (CLI sets correct value)
+      projectRoot: scenario.model.targetDirectory, // ✅ From CLI (Path Authority)
+      targetDirectory: scenario.model.targetDirectory // ✅ From CLI (Path Authority)
       // Note: createdAt/updatedAt removed per Web4 principle - belong in ChangeEvent
       // Note: componentStandards, validationRules, scaffoldingTemplates removed - never used
     };
@@ -367,7 +402,47 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliHide
    */
   protected resolveComponentPath(componentName: string, version: string): string {
-    return path.join(this.model.targetDirectory, 'components', componentName, version);
+    const componentPath = path.join(this.model.targetDirectory, 'components', componentName, version);
+    
+    // ✅ RUNTIME DETECTION: Prevent nested components/ directories (test isolation violation)
+    // 
+    // CRITICAL: If targetDirectory points to a component version directory,
+    // we're about to create: components/MyComponent/0.1.0.0/components/...
+    // 
+    // This happens when:
+    // 1. process.cwd() was used as default (wrong!)
+    // 2. Tests run from component directory without test isolation
+    // 3. CLI not properly setting targetDirectory to project root
+    // 
+    // @pdca 2025-10-31-UTC-1230.test-isolation-violation-fix.pdca.md
+    const targetDirName = path.basename(this.model.targetDirectory);
+    const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(targetDirName);
+    
+    if (isVersionDir) {
+      throw new Error(
+        `CRITICAL TEST ISOLATION VIOLATION: Attempting to create nested components/ directory!\n` +
+        `\n` +
+        `Current targetDirectory: ${this.model.targetDirectory}\n` +
+        `Would create: ${componentPath}\n` +
+        `\n` +
+        `This indicates targetDirectory is set to a component version directory\n` +
+        `instead of the project root or test/data.\n` +
+        `\n` +
+        `WEB4 PATH AUTHORITY PRINCIPLE VIOLATION:\n` +
+        `  DefaultCLI must calculate and provide correct targetDirectory.\n` +
+        `  Component is FORBIDDEN from calculating paths (including process.cwd()).\n` +
+        `\n` +
+        `Expected patterns:\n` +
+        `  Production: /path/to/project/root\n` +
+        `  Tests: /path/to/component/version/test/data\n` +
+        `\n` +
+        `Current (WRONG): /path/to/components/MyComponent/0.1.0.0\n` +
+        `\n` +
+        `Fix: Ensure CLI passes correct targetDirectory in init() scenario.`
+      );
+    }
+    
+    return componentPath;
   }
 
   /**

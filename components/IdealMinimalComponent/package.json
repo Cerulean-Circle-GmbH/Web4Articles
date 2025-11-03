@@ -1,0 +1,12 @@
+{
+  "name": "@web4x/idealminimalcomponent",
+  "version": "0.1.0.0",
+  "type": "module",
+  "description": "IdealMinimalComponent Component - Base Entry Point",
+  "scripts": {
+    "start": "cd latest && npm start",
+    "test": "cd latest && npm test",
+    "build": "cd latest && npm run build"
+  },
+  "private": true
+}

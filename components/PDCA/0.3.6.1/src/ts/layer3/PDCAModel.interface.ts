@@ -18,4 +18,9 @@ export interface PDCAModel extends Model {
   createdAt: string;
   updatedAt: string;
   cmm3Violations?: { [key: string]: string[] }; // Store detailed violation info for cmm3check
+  // Chain feature properties
+  sessionDirectory?: string; // Directory where PDCAs are stored
+  workingDirectory?: string; // Project root or working directory
+  currentBranch?: string; // Git branch for GitHub URLs
+  repoUrl?: string; // GitHub repository URL
 }

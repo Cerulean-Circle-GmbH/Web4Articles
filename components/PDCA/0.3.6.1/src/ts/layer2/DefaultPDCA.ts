@@ -2601,11 +2601,30 @@ export class DefaultPDCA implements PDCA {
           '⚠️ Present decisions when direction unclear (6c)',
           '❌ Never assume what user wants next',
           '',
-          '🚨 CRITICAL: pdca moveFile Bug - DO NOT USE',
-          '❌ Bug discovered 2025-10-29: Renames ENTIRE DIRECTORY instead of single file',
-          '⚠️ Workaround: Use manual `git mv oldfile.pdca.md newfile.pdca.md` instead',
-          '📊 Impact: All files in directory moved inside new directory structure',
-          '✅ Bug report filed with component team',
+          '🔧 File Operations: mv, rename, moveFile',
+          '✅ `pdca mv <oldPath> <newPath> [dryRun]` - Core file move + dual link updates',
+          '✅ `pdca rename <file> <case> [dryRun]` - Rename with strategies (now/creationDate/strip/feature)',
+          '⚠️ `pdca moveFile` - Deprecated, use mv() instead (wrapper maintained for compatibility)',
+          '📊 TC39 Bug: RESOLVED (2025-11-03) - Relative links now calculated correctly from moved file location',
+          '🎯 DRY Pattern: mv() is single source of truth, moveFile/rename delegate to it',
+          '🔧 Implementation: Git mv with fs.rename fallback, auto-creates target directories',
+          '📋 Rename Cases: now (current UTC), creationDate (git creation), strip (remove description), feature (add .feature. marker)',
+          '📊 Source: 2025-10-31-UTC-1113.pdca.md (TDD implementation, 28/28 tests passing)',
+          '',
+          '🔗 PDCA Chaining: Bidirectional Navigation',
+          '✅ `pdca chain <newTitle> [dryRun]` - Create new PDCA and update previous PDCA\'s next link',
+          '✅ Auto-detects most recent PDCA in current session directory (by timestamp)',
+          '✅ Creates new PDCA with UTC timestamp filename (YYYY-MM-DD-UTC-HHMM.pdca.md)',
+          '✅ Adds "Previous PDCA:" dual links to new PDCA',
+          '✅ Updates previous PDCA: "Next PDCA: Use pdca chain" → dual links to new PDCA',
+          '✅ Generates correct GitHub URLs using current branch from model',
+          '✅ Handles first PDCA in chain (displays "N/A - First PDCA in chain")',
+          '✅ Dry run mode: Preview without creating/modifying files',
+          '🎯 Pattern: Each PDCA links forward and backward in the chain',
+          '📊 Use case: Continuous development sessions with multiple PDCAs',
+          '🎯 Benefits: Navigate PDCA history bidirectionally, automatic link maintenance',
+          '📋 Template: Reads from scrum.pmo/roles/_shared/PDCA/template.md',
+          '📊 Source: 2025-11-03-UTC-0737.pdca.md (TDD implementation, 9/9 tests passing)',
           '',
           '📋 Template Verification Forcing Function (MANDATORY):',
           '✅ Step 1: Query template location: `pdca queryTrainAI "where is PDCA template?"`',
@@ -2672,7 +2691,7 @@ export class DefaultPDCA implements PDCA {
           'Recognizes when to stop and ask TRON',
           'Can present decisions instead of assuming',
           'Knows collaboration protocol during PDCA creation',
-          'Knows pdca moveFile bug and uses git mv instead',
+          'Knows pdca mv/rename/chain commands and when to use each',
           'Verifies official template location before creating PDCA',
           'Documents template verification in QA Decisions section',
           'Documents ALL user prompts verbatim in TRON Feedback subsections',
@@ -4501,7 +4520,503 @@ export class DefaultPDCA implements PDCA {
    * @cliDefault dryRun false
    * @cliValues dryRun true false
    */
+  /**
+   * mv - Core file move operation with dual link updates
+   * DRY: Single source of truth for file moving logic
+   * Used by: moveFile (wrapper), rename (wrapper)
+   * 
+   * @param oldPath Source file path (project-root-relative, absolute, or §/ notation)
+   * @param newPath Target file path (project-root-relative, absolute, or §/ notation)
+   * @param dryRun 'true' for dry-run mode, 'false' to execute
+   * @returns this for method chaining
+   */
+  async mv(oldPath: string, newPath: string, dryRun: string = 'false'): Promise<this> {
+    const fs = await import('fs');
+    const path = await import('path');
+    const { execSync } = await import('child_process');
+    
+    const isDryRun = dryRun === 'true';
+    const projectRoot = await this.getProjectRoot();
+    
+    // Normalize paths (inline - DRY principle from updateLinksToFile)
+    const normalizePath = (p: string): string => {
+      if (path.isAbsolute(p)) return path.relative(projectRoot, p);
+      if (p.startsWith('§/')) return p.substring(2);
+      return p;
+    };
+    
+    const oldNormalized = normalizePath(oldPath);
+    const newNormalized = normalizePath(newPath);
+    
+    // Create full paths for file system checks
+    const oldFullPath = path.join(projectRoot, oldNormalized);
+    const newFullPath = path.join(projectRoot, newNormalized);
+
+    // Step 1: Input Validation
+    if (!fs.existsSync(oldFullPath)) {
+      throw new Error(`Source file not found: ${oldNormalized}`);
+    }
+
+    const newDir = path.dirname(newFullPath);
+    if (!fs.existsSync(newDir)) {
+      // Auto-create target directory (DRY: consistent with user expectation)
+      if (!isDryRun) {
+        fs.mkdirSync(newDir, { recursive: true });
+      }
+    }
+
+    if (fs.existsSync(newFullPath)) {
+      throw new Error(`Destination file already exists: ${newNormalized}`);
+    }
+
+    // Step 2: Execute Move
+    // Try git mv first (preserves history), fall back to fs.rename if not in git
+    if (!isDryRun) {
+      try {
+        execSync(`git mv "${oldNormalized}" "${newNormalized}"`, {
+          cwd: projectRoot,
+          stdio: 'pipe'
+        });
+      } catch (gitError: any) {
+        // File not in git or git error - use fs.rename as fallback
+        try {
+          fs.renameSync(oldFullPath, newFullPath);
+        } catch (fsError: any) {
+          throw new Error(`Failed to move file: ${fsError.message}`);
+        }
+      }
+    }
+
+    // Step 3: Update Links in Other Files (DRY: Reuse updateLinksToFile)
+    await this.updateLinksToFile(oldPath, newPath, dryRun);
+
+    // Step 4: Refresh Relative Links in Moved File
+    if (!isDryRun) {
+      const movedFileContent = fs.readFileSync(newFullPath, 'utf-8');
+      const lines = movedFileContent.split('\n');
+      let fileModified = false;
+      const newLines: string[] = [];
+      
+      for (const line of lines) {
+        const dualLinkMatch = line.match(/\[GitHub\]\(([^)]+)\)\s*\|\s*\[([^\]]*)\]\(([^)]+)\)/);
+        
+        if (dualLinkMatch) {
+          const githubUrl = dualLinkMatch[1];
+          const displayText = dualLinkMatch[2];
+          const localPath = dualLinkMatch[3];
+          
+          // Extract the target file path from § notation
+          const sectionMatch = displayText.match(/§\/(.+)/);
+          if (sectionMatch) {
+            const targetPath = sectionMatch[1];
+            const targetFullPath = path.join(projectRoot, targetPath);
+            
+            // Calculate new relative path from moved file's new location
+            const movedFileDir = path.dirname(newFullPath);
+            const newRelativePath = path.relative(movedFileDir, targetFullPath);
+            
+            // Only update if the relative path changed
+            if (newRelativePath !== localPath) {
+              const newLine = line.replace(
+                /\[GitHub\]\(([^)]+)\)\s*\|\s*\[[^\]]*\]\(([^)]+)\)/,
+                `[GitHub](${githubUrl}) | [§/${targetPath}](${newRelativePath})`
+              );
+              newLines.push(newLine);
+              fileModified = true;
+              continue;
+            }
+          }
+        }
+        
+        newLines.push(line);
+      }
+      
+      if (fileModified) {
+        fs.writeFileSync(newFullPath, newLines.join('\n'));
+      }
+    }
+
+    return this;
+  }
+
+  /**
+   * moveFile - Wrapper around mv() for backward compatibility
+   * @deprecated Use mv() directly for new code
+   * @param oldPath Source file path
+   * @param newPath Target file path
+   * @param dryRun 'true' for dry-run mode
+   * @returns this for method chaining
+   */
   async moveFile(oldPath: string, newPath: string, dryRun: string = 'false'): Promise<this> {
+    // DRY: Delegate to mv() - single source of truth
+    return this.mv(oldPath, newPath, dryRun);
+  }
+
+  /**
+   * rename - Rename file using different naming strategies
+   * DRY: Delegates to mv() after computing new filename
+   * 
+   * @param filePath File to rename
+   * @param renameCase Naming strategy: 'now' | 'creationDate' | 'strip' | 'feature'
+   * @param dryRun 'true' for dry-run mode
+   * @returns this for method chaining
+   * 
+   * Cases:
+   * - now: Rename to current UTC timestamp (YYYY-MM-DD-UTC-HHMM)
+   * - creationDate: Rename to git creation date
+   * - strip: Remove description, keep timestamp only
+   * - feature: Add .feature. marker before extension
+   */
+  async rename(
+    filePath: string,
+    renameCase: 'now' | 'creationDate' | 'strip' | 'feature',
+    dryRun: string = 'false'
+  ): Promise<this> {
+    const path = await import('path');
+    const { execSync } = await import('child_process');
+    
+    const projectRoot = await this.getProjectRoot();
+    
+    // Normalize path
+    const normalizePath = (p: string): string => {
+      if (path.isAbsolute(p)) return path.relative(projectRoot, p);
+      if (p.startsWith('§/')) return p.substring(2);
+      return p;
+    };
+    
+    const normalized = normalizePath(filePath);
+    const fullPath = path.join(projectRoot, normalized);
+    const dir = path.dirname(fullPath);
+    const oldName = path.basename(fullPath);
+    
+    // Parse filename components
+    const ext = path.extname(oldName); // e.g., '.md' or '.pdca.md'
+    const baseExt = oldName.endsWith('.pdca.md') ? '.pdca.md' : ext;
+    const nameWithoutExt = oldName.substring(0, oldName.length - baseExt.length);
+    
+    // Check for .feature. marker
+    const hasFeature = nameWithoutExt.includes('.feature');
+    const nameWithoutFeature = hasFeature 
+      ? nameWithoutExt.replace(/\.feature$/, '')
+      : nameWithoutExt;
+    
+    // Extract timestamp if present (YYYY-MM-DD-UTC-HHMM pattern)
+    const timestampMatch = nameWithoutFeature.match(/^(\d{4}-\d{2}-\d{2}-UTC-\d{4})/);
+    const timestamp = timestampMatch ? timestampMatch[1] : null;
+    const description = timestamp 
+      ? nameWithoutFeature.substring(timestamp.length).replace(/^\./, '') // Remove leading dot
+      : nameWithoutFeature;
+    
+    let newName: string;
+    
+    switch (renameCase) {
+      case 'now': {
+        // Generate current UTC timestamp
+        const now = new Date();
+        const year = now.getUTCFullYear();
+        const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(now.getUTCDate()).padStart(2, '0');
+        const hour = String(now.getUTCHours()).padStart(2, '0');
+        const minute = String(now.getUTCMinutes()).padStart(2, '0');
+        const newTimestamp = `${year}-${month}-${day}-UTC-${hour}${minute}`;
+        
+        // Build new name: timestamp + feature (if present) + extension
+        newName = hasFeature 
+          ? `${newTimestamp}.feature${baseExt}`
+          : `${newTimestamp}${baseExt}`;
+        break;
+      }
+      
+      case 'creationDate': {
+        // Get git creation date
+        try {
+          const gitLog = execSync(
+            `git log --follow --diff-filter=A --format=%aI -- "${normalized}"`,
+            { cwd: projectRoot, encoding: 'utf-8' }
+          ).trim();
+          
+          if (!gitLog) {
+            throw new Error(`File has no git history: ${normalized}`);
+          }
+          
+          const creationDate = new Date(gitLog.split('\n')[0]);
+          const year = creationDate.getUTCFullYear();
+          const month = String(creationDate.getUTCMonth() + 1).padStart(2, '0');
+          const day = String(creationDate.getUTCDate()).padStart(2, '0');
+          const hour = String(creationDate.getUTCHours()).padStart(2, '0');
+          const minute = String(creationDate.getUTCMinutes()).padStart(2, '0');
+          const newTimestamp = `${year}-${month}-${day}-UTC-${hour}${minute}`;
+          
+          newName = hasFeature 
+            ? `${newTimestamp}.feature${baseExt}`
+            : `${newTimestamp}${baseExt}`;
+        } catch (error: any) {
+          throw new Error(`Failed to get git creation date: ${error.message}`);
+        }
+        break;
+      }
+      
+      case 'strip': {
+        // Remove description, keep only timestamp
+        if (!timestamp) {
+          throw new Error(`File does not have timestamp pattern: ${oldName}`);
+        }
+        
+        // If already stripped (no description), no change needed
+        if (!description || description === '') {
+          newName = oldName; // No-op
+        } else {
+          newName = hasFeature 
+            ? `${timestamp}.feature${baseExt}`
+            : `${timestamp}${baseExt}`;
+        }
+        break;
+      }
+      
+      case 'feature': {
+        // Add .feature. marker if not present
+        if (hasFeature) {
+          newName = oldName; // No-op - already has feature marker
+        } else {
+          // Insert .feature before extension
+          newName = `${nameWithoutExt}.feature${baseExt}`;
+        }
+        break;
+      }
+      
+      default:
+        throw new Error(`Invalid rename case: ${renameCase}`);
+    }
+    
+    // If name unchanged, return without calling mv
+    if (newName === oldName) {
+      return this;
+    }
+    
+    const newPath = path.join(dir, newName);
+    
+    // DRY: Delegate to mv() for actual move operation
+    return this.mv(fullPath, newPath, dryRun);
+  }
+
+  /**
+   * Create new PDCA and establish bidirectional chain with previous PDCA
+   * 
+   * Automatically:
+   * 1. Detects most recent PDCA in session directory
+   * 2. Creates new PDCA with timestamp filename
+   * 3. Adds "Previous PDCA:" links in new file
+   * 4. Updates previous PDCA's "Next PDCA:" link
+   * 
+   * @param newTitle Title for the new PDCA
+   * @param dryRun If 'true', shows what would happen without modifying files
+   * @cliSyntax newTitle <?dryRun>
+   */
+  async chain(newTitle: string, dryRun: string = 'false'): Promise<this> {
+    const fs = await import('fs');
+    const path = await import('path');
+    
+    const isDryRun = dryRun === 'true';
+    
+    // Use workingDirectory from model for tests, otherwise use actual project root
+    const projectRoot = this.model.workingDirectory || await this.getProjectRoot();
+    
+    // Get session directory from model or use current directory
+    const sessionDir = this.model.sessionDirectory || process.cwd();
+    
+    // Verify session directory exists
+    if (!fs.existsSync(sessionDir)) {
+      throw new Error(`Session directory does not exist: ${sessionDir}`);
+    }
+    
+    console.log(`\n🔗 Creating Chained PDCA${isDryRun ? ' (DRY RUN)' : ''}\n`);
+    console.log(`📂 Session Directory: ${path.relative(projectRoot, sessionDir)}`);
+    console.log(`📝 New PDCA Title: ${newTitle}\n`);
+    
+    // Step 1: Find most recent PDCA in session directory
+    const mostRecentPDCA = await this.findMostRecentPDCAInternal(sessionDir);
+    
+    if (mostRecentPDCA) {
+      console.log(`🔍 Most Recent PDCA: ${path.basename(mostRecentPDCA)}`);
+    } else {
+      console.log(`🔍 No previous PDCA found - this will be the first in chain`);
+    }
+    
+    // Step 2: Generate new PDCA filename with current UTC timestamp
+    const now = new Date();
+    const year = now.getUTCFullYear();
+    const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(now.getUTCDate()).padStart(2, '0');
+    const hour = String(now.getUTCHours()).padStart(2, '0');
+    const minute = String(now.getUTCMinutes()).padStart(2, '0');
+    const timestamp = `${year}-${month}-${day}-UTC-${hour}${minute}`;
+    const newPDCAFilename = `${timestamp}.pdca.md`;
+    const newPDCAPath = path.join(sessionDir, newPDCAFilename);
+    
+    console.log(`📝 New PDCA Filename: ${newPDCAFilename}\n`);
+    
+    // Step 3: Read template
+    const templatePath = path.join(projectRoot, 'scrum.pmo/roles/_shared/PDCA/template.md');
+    if (!fs.existsSync(templatePath)) {
+      throw new Error(`Template not found: ${templatePath}`);
+    }
+    
+    let templateContent = fs.readFileSync(templatePath, 'utf-8');
+    
+    // Step 4: Generate dual links for previous PDCA
+    let previousPDCALinks = 'N/A - First PDCA in chain';
+    
+    if (mostRecentPDCA) {
+      const branch = this.model.currentBranch || 'main';
+      const repoUrl = this.model.repoUrl || 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+      const previousRelative = path.relative(projectRoot, mostRecentPDCA);
+      const previousFilename = path.basename(mostRecentPDCA);
+      
+      const githubUrl = `${repoUrl}/blob/${branch}/${previousRelative}`;
+      const sectionPath = `§/${previousRelative}`;
+      const relativePath = `./${previousFilename}`;
+      
+      previousPDCALinks = `[GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`;
+    }
+    
+    // Step 5: Populate template with new PDCA data
+    const currentDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
+    
+    templateContent = templateContent
+      .replace(/{{TITLE}}/g, 'PDCA Cycle')
+      .replace(/{{DESCRIPTION}}/g, newTitle)
+      .replace(/{{UTC_TIMESTAMP}}/g, currentDate)
+      .replace(/{{OBJECTIVE}}/g, newTitle)
+      .replace(/{{CMM_STATUS}}/g, '🔵 CMM3')
+      .replace(/{{BADGE_TYPE}}/g, 'Planning')
+      .replace(/{{BADGE_TIMESTAMP}}/g, currentDate)
+      .replace(/{{AGENT_NAME}}/g, 'Claude Sonnet 4.5')
+      .replace(/{{AGENT_DESCRIPTION}}/g, 'Feature Development Agent')
+      .replace(/{{ROLE_NAME}}/g, 'Developer')
+      .replace(/{{CONTEXT_SPECIALIZATION}}/g, 'Implementation')
+      .replace(/{{BRANCH_NAME}}/g, this.model.currentBranch || 'main')
+      .replace(/{{BRANCH_PURPOSE}}/g, 'Feature development')
+      .replace(/{{SYNC_BRANCHES}}/g, 'N/A')
+      .replace(/{{SYNC_PURPOSE}}/g, 'N/A')
+      .replace(/{{SESSION_NAME}}/g, 'N/A')
+      .replace(/{{SPRINT_NAME}}/g, 'Current Sprint')
+      .replace(/{{TASK_NAME}}/g, newTitle)
+      .replace(/{{KEY_ISSUES}}/g, 'None')
+      .replace(/{{PREVIOUS_COMMIT_SHA}}/g, 'TBD')
+      .replace(/{{PREVIOUS_COMMIT_DESCRIPTION}}/g, 'TBD');
+    
+    // Replace Previous PDCA link
+    const previousPDCAPattern = /\*\*🔗 Previous PDCA:\*\* \[GitHub\]\({{GITHUB_URL}}\) \| \[§\/scrum\.pmo\/project\.journal\/{{SESSION}}\/{{FILENAME}}\]\(\.\.\/{{OTHER_SESSION}}\/{{FILENAME}}\)/;
+    templateContent = templateContent.replace(
+      previousPDCAPattern,
+      `**🔗 Previous PDCA:** ${previousPDCALinks}`
+    );
+    
+    // Also handle simpler template pattern
+    templateContent = templateContent.replace(
+      /\*\*🔗 Previous PDCA:\*\* .+/,
+      `**🔗 Previous PDCA:** ${previousPDCALinks}`
+    );
+    
+    // Step 6: Write new PDCA file
+    if (!isDryRun) {
+      fs.writeFileSync(newPDCAPath, templateContent, 'utf-8');
+      console.log(`✅ New PDCA created: ${newPDCAFilename}`);
+    } else {
+      console.log(`✓ Would create new PDCA: ${newPDCAFilename}`);
+    }
+    
+    // Step 7: Update previous PDCA's "Next PDCA:" link
+    if (mostRecentPDCA && !isDryRun) {
+      await this.updateNextLinkInternal(mostRecentPDCA, newPDCAPath);
+    } else if (mostRecentPDCA && isDryRun) {
+      console.log(`✓ Would update previous PDCA's "Next PDCA:" link`);
+    }
+    
+    console.log(`\n✨ Bidirectional chain established!`);
+    if (mostRecentPDCA) {
+      console.log(`   ${path.basename(mostRecentPDCA)} ←→ ${newPDCAFilename}\n`);
+    } else {
+      console.log(`   ${newPDCAFilename} (first in chain)\n`);
+    }
+    
+    return this;
+  }
+
+  /**
+   * Find most recent PDCA file in directory (internal helper)
+   * Looks for files matching pattern: YYYY-MM-DD-UTC-HHMM.pdca.md
+   */
+  private async findMostRecentPDCAInternal(directory: string): Promise<string | null> {
+    const fs = await import('fs');
+    const path = await import('path');
+    
+    if (!fs.existsSync(directory)) {
+      return null;
+    }
+    
+    const files = fs.readdirSync(directory);
+    const pdcaPattern = /^(\d{4}-\d{2}-\d{2}-UTC-\d{4})\.pdca\.md$/;
+    
+    const pdcaFiles = files
+      .filter(f => pdcaPattern.test(f))
+      .map(f => ({
+        filename: f,
+        timestamp: f.match(pdcaPattern)![1],
+        fullPath: path.join(directory, f)
+      }))
+      .sort((a, b) => b.timestamp.localeCompare(a.timestamp)); // Most recent first
+    
+    return pdcaFiles.length > 0 ? pdcaFiles[0].fullPath : null;
+  }
+
+  /**
+   * Update previous PDCA's "Next PDCA:" link (internal helper)
+   */
+  private async updateNextLinkInternal(previousPDCAPath: string, newPDCAPath: string): Promise<void> {
+    const fs = await import('fs');
+    const path = await import('path');
+    
+    const projectRoot = await this.getProjectRoot();
+    const branch = this.model.currentBranch || 'main';
+    const repoUrl = this.model.repoUrl || 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+    
+    // Generate dual links for new PDCA
+    const newRelative = path.relative(projectRoot, newPDCAPath);
+    const newFilename = path.basename(newPDCAPath);
+    
+    const githubUrl = `${repoUrl}/blob/${branch}/${newRelative}`;
+    const sectionPath = `§/${newRelative}`;
+    const relativePath = `./${newFilename}`;
+    
+    const nextPDCALink = `**➡️ Next PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`;
+    
+    // Read previous PDCA
+    let content = fs.readFileSync(previousPDCAPath, 'utf-8');
+    
+    // Replace "Next PDCA: Use pdca chain" with actual links
+    content = content.replace(
+      /\*\*➡️ Next PDCA:\*\* Use pdca chain/,
+      nextPDCALink
+    );
+    
+    // Also handle case where it might have different text
+    content = content.replace(
+      /\*\*➡️ Next PDCA:\*\* .+/,
+      nextPDCALink
+    );
+    
+    // Write back
+    fs.writeFileSync(previousPDCAPath, content, 'utf-8');
+    
+    console.log(`✅ Updated previous PDCA's next link: ${path.basename(previousPDCAPath)}`);
+  }
+
+  /**
+   * LEGACY moveFile implementation (replaced by mv wrapper above)
+   * Kept for reference during transition period
+   */
+  private async moveFileLegacy(oldPath: string, newPath: string, dryRun: string = 'false'): Promise<this> {
     const fs = await import('fs');
     const path = await import('path');
     const { execSync } = await import('child_process');
