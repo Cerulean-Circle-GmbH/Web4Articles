@@ -2519,8 +2519,9 @@ Standards:
   }
 
   /**
-   * Execute test for specific file (by numeric reference)
+   * Execute test for specific file (by numeric reference OR file path)
    * @pdca 2025-10-28-UTC-1950 - Fix for layered test structure
+   * @pdca 2025-11-03-UTC-1430 - Support both numbers and file paths
    * @test test/ts/layer2/DefaultWeb4TSComponent.baseline.test.ts:testFile
    * @cliHide
    */
@@ -2536,18 +2537,52 @@ Standards:
       console.log(`\n📁 Available test files:`);
       const formatted = TestFileParser.formatFilesForCompletion(testFiles);
       formatted.forEach(f => console.log(`   ${f}`));
-      console.log(`\n💡 Usage: web4tscomponent test file <number>`);
+      console.log(`\n💡 Usage: web4tscomponent test file <number|path>`);
+      console.log(`   Example: web4tscomponent test file 5`);
+      console.log(`   Example: web4tscomponent test file test/vitest/my-test.test.ts`);
       return;
     }
     
-    // Get file by number
-    const fileNum = parseInt(references[0], 10);
-    const targetFile = TestFileParser.getFileByNumber(testFiles, fileNum);
+    let targetFile;
+    const input = references[0];
     
-    if (!targetFile) {
-      console.error(`❌ Invalid file number: ${fileNum}`);
-      console.log(`💡 Valid range: 1-${testFiles.length}`);
-      throw new Error(`Invalid file number`);
+    // Check if input is a number or a file path
+    const fileNum = parseInt(input, 10);
+    if (!isNaN(fileNum) && /^\d+$/.test(input)) {
+      // It's a number - use numeric lookup
+      targetFile = TestFileParser.getFileByNumber(testFiles, fileNum);
+      
+      if (!targetFile) {
+        console.error(`❌ Invalid file number: ${fileNum}`);
+        console.log(`💡 Valid range: 1-${testFiles.length}`);
+        throw new Error(`Invalid file number`);
+      }
+    } else {
+      // It's a file path - find by path matching
+      let searchPath = input;
+      
+      // Normalize path (remove leading 'test/' if present, we'll add it back)
+      if (searchPath.startsWith('test/')) {
+        searchPath = searchPath.substring(5);
+      }
+      
+      // Try to find matching file
+      targetFile = testFiles.find(f => 
+        f.relativePath === searchPath || 
+        f.relativePath.endsWith(searchPath) ||
+        path.basename(f.relativePath) === path.basename(searchPath)
+      );
+      
+      if (!targetFile) {
+        console.error(`❌ Test file not found: ${input}`);
+        console.log(`💡 Available files:`);
+        const formatted = TestFileParser.formatFilesForCompletion(testFiles);
+        formatted.slice(0, 10).forEach(f => console.log(`   ${f}`));
+        if (testFiles.length > 10) {
+          console.log(`   ... and ${testFiles.length - 10} more`);
+        }
+        throw new Error(`Test file not found`);
+      }
     }
     
     console.log(`🧪 Running tests from: ${targetFile.relativePath}`);
