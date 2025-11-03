@@ -152,12 +152,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       }
     }
     
-    // 2. Try WEB4_PROJECT_ROOT environment variable
-    if (process.env.WEB4_PROJECT_ROOT) {
-      return process.env.WEB4_PROJECT_ROOT;
-    }
-    
-    // 3. Try git root
+    // 2. Use git root (NOT environment variable - filesystem detection only)
+    // @pdca 2025-11-03-UTC-1430.pdca.md - Removed process.env.WEB4_PROJECT_ROOT check
     try {
       const { execSync } = require('child_process');
       const gitRoot = execSync('git rev-parse --show-toplevel', { 
@@ -354,7 +350,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       // ✅ Owner data IS the entire User scenario serialized
       ownerJson = JSON.stringify(userScenario);
     } else {
-      // ✅ Fallback: Generate minimal User-like scenario without User service
+      // @pdca 2025-11-03-UTC-1430.pdca.md - Single Source of Truth: User component required
+      // Fallback with minimal data (NO environment variable access)
       ownerJson = JSON.stringify({
         ior: {
           uuid: this.model.uuid,
@@ -1915,73 +1912,11 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   }
 
   /**
-   * Get default completion Scenario for bash
-   * CLI understands command line context and tells TSCompletion what to complete
-   * @cliHide
-   */
-  async getCompletionScenario(): Promise<void> {
-    // Use this.model which already has componentName, componentVersion from constructor
-    const componentName = this.getComponentName();
-    const componentVersion = this.getComponentVersion();
-
-    // Get owner data (simplified - no User dependency for now)
-    const ownerData = JSON.stringify({
-      user: process.env.USER || "system",
-      hostname: process.env.HOSTNAME || "localhost",
-      uuid: this.model.uuid,
-      timestamp: new Date().toISOString(),
-      component: componentName,
-      version: componentVersion,
-    });
-
-    // Create default Scenario with complete CLIModel
-    const scenario = {
-      ior: {
-        uuid: this.model.uuid,
-        component: componentName,
-        version: componentVersion,
-      },
-      owner: ownerData,
-      model: {
-        uuid: this.model.uuid,
-        name: "cli",
-        origin: "bash-completion",
-        definition: `CLI for ${componentName}`,
-
-        // Component identity
-        componentClass: null,
-        componentName: componentName,
-        componentVersion: componentVersion,
-        componentInstance: null,
-
-        // Completion context fields (bash will modify these)
-        completionCliName: "",
-        completionCompWords: [],
-        completionCompCword: 0,
-
-        // Derived completion state (computed from above)
-        completionCurrentWord: "",
-        completionPreviousWord: "",
-        completionCommand: null,
-        completionParameters: [],
-        completionParameterIndex: 0,
-
-        completionChainedCommands: [],
-
-        completionIsCompletingMethod: false,
-        completionIsCompletingParameter: false,
-      },
-    };
-
-    // Output as JSON for bash
-    console.log(JSON.stringify(scenario, null, 2));
-  }
-
-  /**
    * Complete bash completion with updated Scenario from bash
    * Web4 Scenario pattern: Bash sends updated scenario with completionCompWords/completionCompCword
    * DRY: Moved from ComponentCLI template to DefaultCLI for inheritance
    * @pdca 2025-11-03-UTC-1237.pdca.md - DRY principle: complete() inherited by all CLIs
+   * @pdca 2025-11-03-UTC-1430.pdca.md - Deleted getCompletionScenario() - use toScenario() instead
    * @cliHide
    */
   async complete(scenarioJson: string): Promise<void> {
@@ -2652,12 +2587,10 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @private
    */
   private findProjectRoot(): string {
-    // Try WEB4_PROJECT_ROOT first (if source.env was sourced)
-    if (process.env.WEB4_PROJECT_ROOT) {
-      return process.env.WEB4_PROJECT_ROOT;
-    }
-
-    // Fallback: traverse up looking for .git, package.json, AND components/ directory
+    // @pdca 2025-11-03-UTC-1430.pdca.md - Zero Knowledge, Zero Config, Just Scenarios and Models
+    // Web4 Principle: NEVER rely on environment variables (use filesystem detection only)
+    
+    // Traverse up looking for .git, package.json, AND components/ directory
     // This distinguishes project root from component directory
     let current = process.cwd();
     while (current !== "/") {

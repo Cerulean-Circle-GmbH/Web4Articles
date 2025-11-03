@@ -261,18 +261,19 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
       const cli = new IdealMinimalComponentCLI();
       
       // Get completion scenario with timeout
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('getCompletionScenario timed out after 5s')), 5000)
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('toScenario timed out after 5s')), 5000)
       );
       
-      const scenarioPromise = (cli as any).getCompletionScenario();
+      // @pdca 2025-11-03-UTC-1430.pdca.md - Use toScenario() instead of obsolete getCompletionScenario()
+      const scenarioPromise = cli.toScenario();
       
       try {
         await Promise.race([scenarioPromise, timeoutPromise]);
-        console.log(`   ✅ getCompletionScenario completes without hanging`);
+        console.log(`   ✅ toScenario completes without hanging`);
       } catch (error: any) {
         if (error.message.includes('timed out')) {
-          throw new Error('❌ getCompletionScenario hangs (timeout after 5s) - this is why tab completion shows "Thinking..." forever!');
+          throw new Error('❌ toScenario hangs (timeout after 5s) - check completion implementation!');
         }
         throw error;
       }
