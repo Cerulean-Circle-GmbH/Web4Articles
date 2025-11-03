@@ -4634,6 +4634,153 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
+   * rename - Rename file using different naming strategies
+   * DRY: Delegates to mv() after computing new filename
+   * 
+   * @param filePath File to rename
+   * @param renameCase Naming strategy: 'now' | 'creationDate' | 'strip' | 'feature'
+   * @param dryRun 'true' for dry-run mode
+   * @returns this for method chaining
+   * 
+   * Cases:
+   * - now: Rename to current UTC timestamp (YYYY-MM-DD-UTC-HHMM)
+   * - creationDate: Rename to git creation date
+   * - strip: Remove description, keep timestamp only
+   * - feature: Add .feature. marker before extension
+   */
+  async rename(
+    filePath: string,
+    renameCase: 'now' | 'creationDate' | 'strip' | 'feature',
+    dryRun: string = 'false'
+  ): Promise<this> {
+    const path = await import('path');
+    const { execSync } = await import('child_process');
+    
+    const projectRoot = await this.getProjectRoot();
+    
+    // Normalize path
+    const normalizePath = (p: string): string => {
+      if (path.isAbsolute(p)) return path.relative(projectRoot, p);
+      if (p.startsWith('§/')) return p.substring(2);
+      return p;
+    };
+    
+    const normalized = normalizePath(filePath);
+    const fullPath = path.join(projectRoot, normalized);
+    const dir = path.dirname(fullPath);
+    const oldName = path.basename(fullPath);
+    
+    // Parse filename components
+    const ext = path.extname(oldName); // e.g., '.md' or '.pdca.md'
+    const baseExt = oldName.endsWith('.pdca.md') ? '.pdca.md' : ext;
+    const nameWithoutExt = oldName.substring(0, oldName.length - baseExt.length);
+    
+    // Check for .feature. marker
+    const hasFeature = nameWithoutExt.includes('.feature');
+    const nameWithoutFeature = hasFeature 
+      ? nameWithoutExt.replace(/\.feature$/, '')
+      : nameWithoutExt;
+    
+    // Extract timestamp if present (YYYY-MM-DD-UTC-HHMM pattern)
+    const timestampMatch = nameWithoutFeature.match(/^(\d{4}-\d{2}-\d{2}-UTC-\d{4})/);
+    const timestamp = timestampMatch ? timestampMatch[1] : null;
+    const description = timestamp 
+      ? nameWithoutFeature.substring(timestamp.length).replace(/^\./, '') // Remove leading dot
+      : nameWithoutFeature;
+    
+    let newName: string;
+    
+    switch (renameCase) {
+      case 'now': {
+        // Generate current UTC timestamp
+        const now = new Date();
+        const year = now.getUTCFullYear();
+        const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(now.getUTCDate()).padStart(2, '0');
+        const hour = String(now.getUTCHours()).padStart(2, '0');
+        const minute = String(now.getUTCMinutes()).padStart(2, '0');
+        const newTimestamp = `${year}-${month}-${day}-UTC-${hour}${minute}`;
+        
+        // Build new name: timestamp + feature (if present) + extension
+        newName = hasFeature 
+          ? `${newTimestamp}.feature${baseExt}`
+          : `${newTimestamp}${baseExt}`;
+        break;
+      }
+      
+      case 'creationDate': {
+        // Get git creation date
+        try {
+          const gitLog = execSync(
+            `git log --follow --diff-filter=A --format=%aI -- "${normalized}"`,
+            { cwd: projectRoot, encoding: 'utf-8' }
+          ).trim();
+          
+          if (!gitLog) {
+            throw new Error(`File has no git history: ${normalized}`);
+          }
+          
+          const creationDate = new Date(gitLog.split('\n')[0]);
+          const year = creationDate.getUTCFullYear();
+          const month = String(creationDate.getUTCMonth() + 1).padStart(2, '0');
+          const day = String(creationDate.getUTCDate()).padStart(2, '0');
+          const hour = String(creationDate.getUTCHours()).padStart(2, '0');
+          const minute = String(creationDate.getUTCMinutes()).padStart(2, '0');
+          const newTimestamp = `${year}-${month}-${day}-UTC-${hour}${minute}`;
+          
+          newName = hasFeature 
+            ? `${newTimestamp}.feature${baseExt}`
+            : `${newTimestamp}${baseExt}`;
+        } catch (error: any) {
+          throw new Error(`Failed to get git creation date: ${error.message}`);
+        }
+        break;
+      }
+      
+      case 'strip': {
+        // Remove description, keep only timestamp
+        if (!timestamp) {
+          throw new Error(`File does not have timestamp pattern: ${oldName}`);
+        }
+        
+        // If already stripped (no description), no change needed
+        if (!description || description === '') {
+          newName = oldName; // No-op
+        } else {
+          newName = hasFeature 
+            ? `${timestamp}.feature${baseExt}`
+            : `${timestamp}${baseExt}`;
+        }
+        break;
+      }
+      
+      case 'feature': {
+        // Add .feature. marker if not present
+        if (hasFeature) {
+          newName = oldName; // No-op - already has feature marker
+        } else {
+          // Insert .feature before extension
+          newName = `${nameWithoutExt}.feature${baseExt}`;
+        }
+        break;
+      }
+      
+      default:
+        throw new Error(`Invalid rename case: ${renameCase}`);
+    }
+    
+    // If name unchanged, return without calling mv
+    if (newName === oldName) {
+      return this;
+    }
+    
+    const newPath = path.join(dir, newName);
+    
+    // DRY: Delegate to mv() for actual move operation
+    return this.mv(fullPath, newPath, dryRun);
+  }
+
+  /**
    * LEGACY moveFile implementation (replaced by mv wrapper above)
    * Kept for reference during transition period
    */
