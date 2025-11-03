@@ -2691,7 +2691,12 @@ export class DefaultPDCA implements PDCA {
           '   6. Final validation: Re-run grep, ensure ZERO matches (except in quotes/examples)',
           '   7. NO PDCA is complete with unpopulated {{}} placeholders',
           '❌ Common mistake: Leaving {{DESCRIPTION}}, {{CMM_STATUS}}, {{CONTEXT_SPECIALIZATION}} unpopulated',
+          '🔧 Automated Validation: cmm3check now includes check1k for placeholder validation',
+          '✅ cmm3check detects unpopulated placeholders: Violation 1k reported when {{}} tokens found',
+          '✅ Code blocks and inline code excluded: Placeholders in ```code``` and `inline` are allowed',
+          '🎯 Enforcement: cmm3check provides objective validation of placeholder population',
           '📊 Analysis source: 2025-11-03-UTC-1120.pdca.md (placeholder population pattern documented)',
+          '📊 Implementation: 2025-11-03-UTC-1129.pdca.md (cmm3check enhancement, 4 new tests)',
           '',
           '⚠️ NEVER DELETE SECTIONS: Especially EMOTIONAL REFLECTION and PDCA PROCESS UPDATE (validated by cmm3check)',
           '⚠️ ACCEPTABLE EXTENSIONS: Phase/DoR/DoD pattern in PLAN section (for complex sprints)',
@@ -2834,7 +2839,9 @@ export class DefaultPDCA implements PDCA {
           'KNOWS which 14 placeholders createPDCA populates vs 25+ AI must populate',
           'RUNS grep -n "{{" <pdca-file> validation BEFORE committing PDCAs',
           'Populates ALL remaining {{ }} placeholders after createPDCA generation',
-          'NEVER commits PDCAs with unpopulated placeholders (except in quotes/examples)'
+          'NEVER commits PDCAs with unpopulated placeholders (except in quotes/examples)',
+          'Understands cmm3check now validates placeholders with check1k violation code',
+          'Knows cmm3check will flag unpopulated {{}} as violation 1k automatically'
         ]
       },
       'cmm': {
