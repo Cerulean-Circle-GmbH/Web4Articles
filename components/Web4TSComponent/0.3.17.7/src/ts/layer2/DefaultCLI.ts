@@ -452,7 +452,45 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         filtered = filtered.filter((name) => name.startsWith(filterPrefix));
       }
 
-      // Generate full CLI signatures with color coding
+      // SINGLE MATCH: Show full documentation (UX improvement!)
+      if (filtered.length === 1) {
+        const methodName = filtered[0];
+        const componentClassName = this.getComponentClass()?.name;
+        const fullMethodDoc = TSCompletion.getMethodDoc(componentClassName, methodName);
+        
+        if (fullMethodDoc) {
+          const BRIGHT_CYAN = this.colors.toolName;
+          const BRIGHT_WHITE_BOLD = this.colors.sections;
+          const BRIGHT_YELLOW = this.colors.parameters;
+          const GREEN = this.colors.descriptions;
+          const RESET = this.colors.reset;
+          
+          // Build full signature
+          const parameters = this.extractParameterInfoFromTSCompletion(methodName);
+          const isCLIMethod = this.hasCliAnnotations(methodName);
+          const methodColor = isCLIMethod ? BRIGHT_WHITE_BOLD : "";
+          
+          let signature = `${methodColor}${methodName}${RESET}`;
+          if (parameters && parameters.length > 0) {
+            const paramList = parameters
+              .map((p: any) => this.generateParameterSyntax(p, methodName))
+              .join(" ");
+            signature = `${methodColor}${methodName}${RESET} ${BRIGHT_YELLOW}${paramList}${RESET}`;
+          }
+          
+          // Return formatted documentation
+          const separator = `${BRIGHT_CYAN}${"─".repeat(60)}${RESET}`;
+          const header = `${BRIGHT_WHITE_BOLD}📖 Documentation:${RESET}`;
+          const greenDoc = `${GREEN}${fullMethodDoc}${RESET}`;
+          
+          return [`${signature}\n${separator}\n${header}\n${greenDoc}\n`];
+        }
+        
+        // No doc - return plain method name
+        return [methodName];
+      }
+
+      // MULTIPLE MATCHES: Generate numbered list with signatures
       const BRIGHT_CYAN = this.colors.toolName; 
       const BRIGHT_YELLOW = this.colors.parameters;
       const BRIGHT_WHITE_BOLD = this.colors.sections;
@@ -1977,9 +2015,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     this.model.completionParameters = cwordNum >= 2 ? words.slice(2, cwordNum) : [];
     this.model.completionParameterIndex = Math.max(0, cwordNum - 2);
     
-    // Default: completing parameter (not method)
-    this.model.completionIsCompletingMethod = false;
-    this.model.completionIsCompletingParameter = cwordNum >= 2; // If we're past command, we're completing parameter
+    // Default: Set flags based on cword position
+    this.model.completionIsCompletingMethod = cwordNum === 1; // cword=1 means completing method
+    this.model.completionIsCompletingParameter = cwordNum >= 2; // cword>=2 means completing parameter
     this.model.completionChainedCommands = [];
     
     // METHOD CHAINING: After 'on <component> <?version>', detect chained method
