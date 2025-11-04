@@ -2378,14 +2378,11 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       const command = this.model.completionCommand;
       const paramIndex = this.model.completionParameterIndex;
       
-      // Show signature with method (white) and parameters (yellow)
-      const signature = await this.getMethodSignatureFromModel();
-      this.model.completionOutputLines.push(`DISPLAY: ${cyan}📊 Completing: ${yellow}PARAMETER${reset} of ${white}${command}${reset}`);
-      this.model.completionOutputLines.push(`DISPLAY: ${cyan}Signature:${reset} ${signature}`);
-      
-      // Get parameter info
+      // Get component class for TSCompletion
       const target = this.context || this;
       const componentClass = target.constructor.name;
+      
+      // Get parameters for signature
       let params = TSCompletion.getEnhancedMethodParameters(componentClass, command!);
       if ((!params || params.length === 0) && componentClass !== 'DefaultWeb4TSComponent') {
         params = TSCompletion.getEnhancedMethodParameters('DefaultWeb4TSComponent', command!);
@@ -2393,6 +2390,51 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       if (!params || params.length === 0) {
         params = TSCompletion.getEnhancedMethodParameters('DefaultCLI', command!);
       }
+      
+      // Build colored signature: method (white) + parameters (yellow)
+      let signature = `${white}${command}${reset}`;
+      if (params && params.length > 0) {
+        const paramStrings = params.map((p: any) => {
+          const name = p.name || 'param';
+          const required = p.required !== false;
+          const defaultValue = p.defaultValue;
+          
+          if (required) {
+            return `<${name}>`;
+          } else if (defaultValue !== undefined) {
+            return `<?${name}:'${defaultValue}'>`;
+          } else {
+            return `<?${name}>`;
+          }
+        });
+        signature += ` ${yellow}${paramStrings.join(' ')}${reset}`;
+      }
+      
+      // SINGLE MATCH: Show method documentation (UX improvement!)
+      // Try all possible classes where the method might be defined
+      let fullMethodDoc = TSCompletion.getMethodDoc(componentClass, command!);
+      if (!fullMethodDoc && componentClass !== 'DefaultCLI') {
+        fullMethodDoc = TSCompletion.getMethodDoc('DefaultCLI', command!);
+      }
+      if (!fullMethodDoc && componentClass !== 'DefaultWeb4TSComponent') {
+        fullMethodDoc = TSCompletion.getMethodDoc('DefaultWeb4TSComponent', command!);
+      }
+      
+      if (fullMethodDoc) {
+        // Show signature with documentation
+        const separator = `${cyan}${"─".repeat(60)}${reset}`;
+        const header = `${white}📖 Documentation:${reset}`;
+        const greenDoc = `${green}${fullMethodDoc}${reset}`;
+        
+        this.model.completionOutputLines.push(`DISPLAY: ${signature}`);
+        this.model.completionOutputLines.push(`DISPLAY: ${separator}`);
+        this.model.completionOutputLines.push(`DISPLAY: ${header}`);
+        this.model.completionOutputLines.push(`DISPLAY: ${greenDoc}`);
+        this.model.completionOutputLines.push('DISPLAY: ');
+      }
+      
+      // Show parameter completion info
+      this.model.completionOutputLines.push(`DISPLAY: ${cyan}📊 Completing: ${yellow}PARAMETER${reset} of ${white}${command}${reset}`);
       
       // Show which parameter (colored)
       if (params && params.length > paramIndex) {
