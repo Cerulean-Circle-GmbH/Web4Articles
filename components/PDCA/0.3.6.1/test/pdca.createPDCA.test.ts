@@ -143,12 +143,12 @@ describe('PDCA createPDCA - Programmatic PDCA Generation', () => {
     // When: Create new PDCA
     await pdca.createPDCA('Test Feature Implementation', 'Implement test feature using TDD');
 
-    // Then: PDCA file created with timestamp format YYYY-MM-DD-UTC-HHMM.pdca.md
+    // Then: PDCA file created with timestamp format YYYY-MM-DD-UTC-HHMMSS.pdca.md (or legacy HHMM)
     const files = fs.readdirSync(sessionDir);
     const pdcaFiles = files.filter(f => f.endsWith('.pdca.md'));
     
     expect(pdcaFiles.length).toBe(1);
-    expect(pdcaFiles[0]).toMatch(/^\d{4}-\d{2}-\d{2}-UTC-\d{4}\.pdca\.md$/);
+    expect(pdcaFiles[0]).toMatch(/^\d{4}-\d{2}-\d{2}-UTC-\d{4,6}\.pdca\.md$/); // Support both HHMM and HHMMSS
   });
 
   it('TC51: createPDCA - populates template with provided title', async () => {
@@ -201,8 +201,8 @@ describe('PDCA createPDCA - Programmatic PDCA Generation', () => {
     // Should not contain placeholder
     expect(content).not.toContain('{{UTC_TIMESTAMP}}');
     
-    // Filename should match current date
-    const datePattern = /(\d{4})-(\d{2})-(\d{2})-UTC-(\d{4})/;
+    // Filename should match current date (support both HHMM and HHMMSS formats)
+    const datePattern = /(\d{4})-(\d{2})-(\d{2})-UTC-(\d{4,6})/;
     const match = pdcaFile!.match(datePattern);
     expect(match).not.toBeNull();
     
@@ -470,7 +470,7 @@ describe('PDCA createPDCA - Programmatic PDCA Generation', () => {
     // Then: PDCA should be created in custom directory
     const files = fs.readdirSync(customDir).filter(f => f.endsWith('.pdca.md'));
     expect(files.length).toBe(1);
-    expect(files[0]).toMatch(/^\d{4}-\d{2}-\d{2}-UTC-\d{4}\.pdca\.md$/);
+    expect(files[0]).toMatch(/^\d{4}-\d{2}-\d{2}-UTC-\d{4,6}\.pdca\.md$/); // Support both HHMM and HHMMSS
     
     // And: PDCA should contain correct title and objective
     const content = fs.readFileSync(path.join(customDir, files[0]), 'utf-8');
