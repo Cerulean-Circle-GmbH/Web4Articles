@@ -571,5 +571,134 @@ describe('PDCA createPDCA - Programmatic PDCA Generation', () => {
     expect(relativeContent).toContain('Relative Path');
     expect(absoluteContent).toContain('Absolute Path');
   });
+
+  /**
+   * TC92: Verify Previous Commit Auto-Population
+   * Test that createPDCA automatically populates "Previous Commit" field
+   * with git log output instead of leaving "TBD - TBD"
+   */
+  it('TC92 should auto-populate Previous Commit field with git log', async () => {
+    // Given: A git repository with commits
+    pdca = new DefaultPDCA({ componentRoot: testDataDir });
+    
+    // When: Creating a PDCA
+    await pdca.createPDCA('Test Commit Population', 'Verify Previous Commit auto-populates', undefined, false);
+    
+    // Then: Previous Commit field should be populated (not TBD)
+    const files = fs.readdirSync(path.join(testDataDir, 'session')).filter(f => f.endsWith('.pdca.md'));
+    expect(files.length).toBe(1);
+    
+    const content = fs.readFileSync(path.join(testDataDir, 'session', files[0]), 'utf-8');
+    
+    // Should contain "Previous Commit:" with SHA pattern (7+ hex chars) and message
+    expect(content).toMatch(/\*\*📎 Previous Commit:\*\* [a-f0-9]{7,} - .+/);
+    
+    // Should NOT contain the TBD placeholder
+    expect(content).not.toContain('**📎 Previous Commit:** TBD - TBD');
+  });
+
+  /**
+   * TC93: Handle Fresh Repo with No Commits
+   * Test graceful fallback to TBD when git repo has no commits yet
+   */
+  it('TC93 should fallback to TBD for fresh repo with no commits', async () => {
+    // Given: A fresh git repo with no commits
+    const freshRepoDir = path.join(testDataDir, 'fresh-repo');
+    fs.mkdirSync(freshRepoDir, { recursive: true });
+    fs.mkdirSync(path.join(freshRepoDir, 'session'), { recursive: true });
+    
+    // Copy template to fresh repo
+    const templateDir = path.join(freshRepoDir, 'scrum.pmo/roles/_shared/PDCA');
+    fs.mkdirSync(templateDir, { recursive: true });
+    const templatePath = path.join(testDataDir, 'scrum.pmo/roles/_shared/PDCA/template.md');
+    const freshTemplatePath = path.join(templateDir, 'template.md');
+    fs.copyFileSync(templatePath, freshTemplatePath);
+    
+    // Initialize git but don't commit
+    const { execSync } = require('child_process');
+    try {
+      execSync('git init', { cwd: freshRepoDir });
+    } catch (error) {
+      // Ignore if git not available
+    }
+    
+    pdca = new DefaultPDCA({ componentRoot: freshRepoDir });
+    
+    // When: Creating a PDCA in fresh repo
+    await pdca.createPDCA('Test Fresh Repo', 'Verify fallback to TBD', undefined, false);
+    
+    // Then: Should fallback to TBD gracefully
+    const files = fs.readdirSync(path.join(freshRepoDir, 'session')).filter(f => f.endsWith('.pdca.md'));
+    expect(files.length).toBe(1);
+    
+    const content = fs.readFileSync(path.join(freshRepoDir, 'session', files[0]), 'utf-8');
+    
+    // Should contain TBD as fallback
+    expect(content).toContain('**📎 Previous Commit:** TBD - TBD');
+  });
+
+  /**
+   * TC94: Handle Git Command Errors
+   * Test that createPDCA doesn't crash if git command fails
+   */
+  it('TC94 should fallback to TBD if git command fails', async () => {
+    // Given: A non-git directory
+    const nonGitDir = path.join(testDataDir, 'non-git');
+    fs.mkdirSync(nonGitDir, { recursive: true });
+    fs.mkdirSync(path.join(nonGitDir, 'session'), { recursive: true });
+    
+    // Copy template to non-git dir
+    const templateDir = path.join(nonGitDir, 'scrum.pmo/roles/_shared/PDCA');
+    fs.mkdirSync(templateDir, { recursive: true });
+    const templatePath = path.join(testDataDir, 'scrum.pmo/roles/_shared/PDCA/template.md');
+    const nonGitTemplatePath = path.join(templateDir, 'template.md');
+    fs.copyFileSync(templatePath, nonGitTemplatePath);
+    
+    pdca = new DefaultPDCA({ componentRoot: nonGitDir });
+    
+    // When: Creating a PDCA without git (should not throw)
+    await expect(async () => {
+      await pdca.createPDCA('Test No Git', 'Verify error handling', undefined, false);
+    }).not.toThrow();
+    
+    // Then: Should fallback to TBD gracefully
+    const files = fs.readdirSync(path.join(nonGitDir, 'session')).filter(f => f.endsWith('.pdca.md'));
+    expect(files.length).toBe(1);
+    
+    const content = fs.readFileSync(path.join(nonGitDir, 'session', files[0]), 'utf-8');
+    
+    // Should contain TBD as fallback (git command failed)
+    expect(content).toContain('**📎 Previous Commit:** TBD - TBD');
+  });
+
+  /**
+   * TC95: Verify Commit Format
+   * Test that commit format matches expected pattern: "{sha} - {message}"
+   */
+  it('TC95 should use format "{sha} - {message}"', async () => {
+    // Given: A git repository with commits
+    pdca = new DefaultPDCA({ componentRoot: testDataDir });
+    
+    // When: Creating a PDCA
+    await pdca.createPDCA('Test Commit Format', 'Verify format matches expectation', undefined, false);
+    
+    // Then: Format should match git log -1 --format="%h - %s"
+    const files = fs.readdirSync(path.join(testDataDir, 'session')).filter(f => f.endsWith('.pdca.md'));
+    const content = fs.readFileSync(path.join(testDataDir, 'session', files[0]), 'utf-8');
+    
+    // Extract Previous Commit line
+    const commitMatch = content.match(/\*\*📎 Previous Commit:\*\* (.+)/);
+    expect(commitMatch).not.toBeNull();
+    
+    if (commitMatch) {
+      const commitValue = commitMatch[1];
+      
+      // Should match pattern: 7-40 hex chars, space, dash, space, message
+      expect(commitValue).toMatch(/^[a-f0-9]{7,40} - .+$/);
+      
+      // Should not be TBD
+      expect(commitValue).not.toBe('TBD - TBD');
+    }
+  });
 });
 
