@@ -284,53 +284,46 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
       }
     });
 
-    it('should have complete method in CLI', async () => {
+    it('should have shCompletion method in CLI (new parameterless API)', async () => {
       // Import the CLI
       const cliPath = path.join(testComponentPath, `dist/ts/layer5/${testComponentName}CLI.js`);
       const { IdealMinimalComponentCLI } = await import(cliPath);
       const cli = new IdealMinimalComponentCLI();
       
-      // Verify complete exists
-      expect(typeof (cli as any).complete).toBe('function');
+      // Verify shCompletion exists (NEW parameterless completion API)
+      expect(typeof (cli as any).shCompletion).toBe('function');
       
-      console.log(`   ✅ complete method exists`);
+      console.log(`   ✅ shCompletion method exists (new parameterless OOP API)`);
     });
 
-    it('should complete method names without hanging', async () => {
+    it('should complete method names without hanging using shCompletion', async () => {
       // Import the CLI
       const cliPath = path.join(testComponentPath, `dist/ts/layer5/${testComponentName}CLI.js`);
       const { IdealMinimalComponentCLI } = await import(cliPath);
       const cli = new IdealMinimalComponentCLI();
       
-      // Create a minimal scenario for completion
-      const scenario = JSON.stringify({
-        ior: {
-          uuid: 'test-uuid',
-          component: testComponentName,
-          version: testVersion,
-          ownerData: Buffer.from('{}').toString('base64')
-        },
-        model: {
-          uuid: 'test-uuid',
-          projectRoot: testDataDir,
-          completionCompWords: ['idealminimalcomponent', 'li'],
-          completionCompCword: 1
-        }
-      });
+      // Set model state directly (NEW parameterless OOP pattern)
+      cli.model.completionCompCword = 1;
+      cli.model.completionCompWords = ['idealminimalcomponent', ''];
+      cli.model.completionCliName = 'idealminimalcomponent';
       
-      // Test completion with timeout
+      // Call computeDerivedCompletionFields to set derived state
+      (cli as any).computeDerivedCompletionFields(cli.model);
+      
+      // Test shCompletion with timeout (should NOT hang)
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('complete timed out after 5s')), 5000)
+        setTimeout(() => reject(new Error('shCompletion timed out after 5s')), 5000)
       );
       
-      const completePromise = (cli as any).complete(scenario);
+      // shCompletion outputs directly to stdout, doesn't return values
+      const completionPromise = (cli as any).shCompletion('1', 'idealminimalcomponent', '');
       
       try {
-        await Promise.race([completePromise, timeoutPromise]);
-        console.log(`   ✅ complete method completes without hanging`);
+        await Promise.race([completionPromise, timeoutPromise]);
+        console.log(`   ✅ shCompletion completes without hanging (new parameterless API)`);
       } catch (error: any) {
         if (error.message.includes('timed out')) {
-          throw new Error('❌ complete() hangs (timeout after 5s) - this causes "Thinking..." in bash completion!');
+          throw new Error('❌ shCompletion() hangs (timeout after 5s) - this causes "Thinking..." in bash completion!');
         }
         throw error;
       }
