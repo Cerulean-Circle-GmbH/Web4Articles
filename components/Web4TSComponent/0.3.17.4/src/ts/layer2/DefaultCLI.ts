@@ -2026,6 +2026,13 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @cliHide
    */
   protected formatCompletionOutput(values: string[]): void {
+    // UX: Always provide feedback when no completions are available
+    if (!values || values.length === 0) {
+      console.log("DISPLAY: (no completions available)");
+      console.log("WORD: ");
+      return;
+    }
+
     // DEBUG: Log that formatCompletionOutput is being called
     try {
       writeFileSync(
@@ -2189,10 +2196,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
       // Use DRY helper to format output with DISPLAY/WORD protocol
       // Model already has completion context from bash (via shCompletion)
+      // formatCompletionOutput handles empty arrays with UX feedback
       this.formatCompletionOutput(values);
     } else {
-      // Callback not found - return empty (no completions)
-      console.log("");
+      // UX: Callback not found - provide feedback instead of silent failure
+      console.log("DISPLAY: (no completions available)");
+      console.log("WORD: ");
     }
   }
 

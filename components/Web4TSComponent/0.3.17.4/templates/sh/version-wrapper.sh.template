@@ -51,13 +51,13 @@ COMPONENT_VERSION="$(basename "$SCRIPT_DIR")"
 COMPONENT_PATH="$SCRIPT_DIR"
 
 # Auto-source component's environment if needed
-# Check if environment is loaded by testing for exported variables from source.env
+# Check if environment is loaded by testing for completion functions
 SOURCE_ENV_PATH="$COMPONENT_PATH/source.env"
 if [ -f "$SOURCE_ENV_PATH" ]; then
-    # Check if source.env was already sourced by testing for WEB4_PROJECT_ROOT
-    # This variable is exported by source.env and inherits to subshells
-    if [ -z "$WEB4_PROJECT_ROOT" ]; then
-        # Variable not set - need to source
+    # Check if source.env was already sourced by testing for completion function
+    # The completion function is defined by source.env and inherits to subshells
+    if ! declare -F _web4_generic_completion > /dev/null 2>&1; then
+        # Completion function not defined - need to source
         source "$SOURCE_ENV_PATH"
     fi
     # Silent when already loaded (no message spam on repeated calls)
