@@ -1910,206 +1910,6 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
 
   /**
-   * CLI Signature Completion - Natural OOP Entry Point
-   * 
-   * Replaces the awkward fake context injection pattern with clean,
-   * natural method calls. Shows diagnostic output and signature highlighting.
-   * 
-   * After "💭 Thinking...", displays:
-   * - Which internal method is being used
-   * - Current signature with highlighted parameter
-   * 
-   * @param cword - COMP_CWORD from bash (current word index)
-   * @param words - COMP_WORDS from bash (all words in command line)
-   * @cliHide
-   */
-  async cliSignature(cword: string, ...words: string[]): Promise<void> {
-    // Store completion context in MODEL (Radical OOP!)
-    this.model.completionCliName = words[0] || "";
-    this.model.completionCompWords = words;
-    this.model.completionCompCword = parseInt(cword, 10);
-    this.computeDerivedCompletionFields(this.model);
-
-    // Route to appropriate completion handler
-    if (this.model.completionIsCompletingMethod) {
-      await this.completeMethodName();
-    } else if (this.model.completionIsCompletingParameter) {
-      await this.completeCommandParameter();
-    }
-  }
-
-  /**
-   * Complete method names (when cursor is at method position)
-   * Natural API - no fake context injection!
-   * 
-   * @cliHide
-   */
-  private async completeMethodName(): Promise<void> {
-    const filter = this.model.completionCurrentWord || "";
-    
-    // Diagnostic output
-    console.log(`DISPLAY: 📊 Completing: METHOD`);
-    console.log(`DISPLAY: 🔧 Using: getMethodNames(filter="${filter}")`);
-    
-    // Get all method names
-    const values = await this.getMethodNames(filter);
-    
-    this.formatCompletionOutput(values);
-  }
-
-  /**
-   * Complete command parameters (when cursor is at parameter position)
-   * Shows signature with highlighted parameter
-   * 
-   * @cliHide
-   */
-  private async completeCommandParameter(): Promise<void> {
-    const command = this.model.completionCommand!;
-    const paramIndex = this.model.completionParameterIndex;
-    
-    // Get callback via TSCompletion
-    const componentClassName = this.getComponentClass()?.name || "DefaultCLI";
-    const callback = TSCompletion.getParameterCallback(
-      componentClassName,
-      command,
-      paramIndex
-    );
-
-    // Get and display signature with highlighting
-    const signature = await this.getMethodSignature(command);
-    const highlighted = this.highlightParameter(signature, paramIndex);
-    
-    // Diagnostic output
-    console.log(`DISPLAY: 📊 Completing: PARAMETER ${paramIndex}`);
-    console.log(`DISPLAY: 📝 Signature: ${highlighted}`);
-    console.log(`DISPLAY: 🔧 Using: ${callback || "(no completion)"}`);
-
-    if (callback) {
-      // Pass full command context
-      const contextArgs = this.model.completionCompWords.slice(1);
-      await this.completeParameter(callback, ...contextArgs);
-    } else {
-      // No completion available
-      console.log("DISPLAY: (no completions available)");
-      this.outputPrompt();
-      console.log("WORD: ");
-    }
-  }
-
-  /**
-   * Get method names with optional filtering
-   * Natural API - no fake context injection needed!
-   * 
-   * TODO: This still uses temporary state modification to call completionNameParameterCompletion()
-   * Future: Extract core logic from completionNameParameterCompletion into parameterless helper
-   * 
-   * @param filter Optional prefix filter
-   * @returns Array of formatted method signatures
-   * @cliHide
-   */
-  private async getMethodNames(filter: string = ""): Promise<string[]> {
-    // Temporarily set model state to get method list
-    // NOTE: This is still a workaround - completionNameParameterCompletion should be refactored
-    const originalCompWords = this.model.completionCompWords;
-    this.model.completionCompWords = [
-      this.model.completionCliName,
-      "completion",
-      "method",
-      filter
-    ];
-    
-    const result = await this.completionNameParameterCompletion();
-    
-    // Restore original state
-    this.model.completionCompWords = originalCompWords;
-    
-    return result;
-  }
-
-  /**
-   * Get method signature from TSDoc/annotations
-   * @cliHide
-   */
-  private async getMethodSignature(methodName: string): Promise<string> {
-    // Get the formatted signature from completionNameParameterCompletion
-    const allMethods = await this.getMethodNames("");
-    
-    // Find the signature that starts with this method name
-    const sig = allMethods.find((s: string) => 
-      s.includes(methodName + " ") || s.includes(methodName + "<")
-    );
-    
-    // Strip ANSI codes for clean signature
-    if (sig) {
-      return sig.replace(/\x1b\[[0-9;]*m/g, "");
-    }
-    
-    return methodName;
-  }
-
-  /**
-   * Highlight the parameter being completed in a signature
-   * Example: "setCICDVersion <targetVersion> <?version:'current'>"
-   *          Parameter 0: "<targetVersion>" gets highlighted in yellow
-   * 
-   * @cliHide
-   */
-  private highlightParameter(signature: string, paramIndex: number): string {
-    const params = signature.match(/<[^>]+>/g) || [];
-    if (paramIndex < params.length) {
-      const param = params[paramIndex];
-      // Use ANSI yellow highlight
-      return signature.replace(param, `\x1b[1;43;30m${param}\x1b[0m`);
-    }
-    return signature;
-  }
-
-  /**
-   * Output the "your web4 command >" prompt
-   * DRY helper extracted from multiple locations
-   * @cliHide
-   */
-  private outputPrompt(): void {
-    if (
-      this.model.completionCliName &&
-      this.model.completionCompWords.length > 0
-    ) {
-      // Prompt colors: "your web4 command >"
-      const promptWhite = "\x1b[37m";
-      const promptCyan = "\x1b[36m";
-      const reset = "\x1b[0m";
-
-      // TSCompletion colors for command parts
-      const toolName = "\x1b[1;36m"; // Cyan bold for CLI name
-      const commands = "\x1b[0;37m"; // White for method names
-      const parameters = "\x1b[1;33m"; // Yellow bold for parameters
-
-      // Build colored command from MODEL (DRY!)
-      let coloredCommand = `${toolName}${this.model.completionCliName}${reset}`;
-
-      // Add method and parameters from completionCompWords
-      for (let i = 1; i < this.model.completionCompWords.length; i++) {
-        const word = this.model.completionCompWords[i];
-        if (word) {
-          // First word after CLI name is method, rest are parameters
-          if (i === 1) {
-            coloredCommand += ` ${commands}${word}${reset}`;
-          } else {
-            // Use yellow for parameters
-            const params = this.model.completionCompWords.slice(i).filter(w => w).join(" ");
-            coloredCommand += ` ${parameters}${params}${reset}`;
-            break; // Already added all remaining parameters
-          }
-        }
-      }
-
-      // Format: "your web4 command >" with colored command
-      const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
-      console.log(`DISPLAY: ${prompt}`);
-    }
-  }
-
-  /**
    * Shell completion with direct parameter passing
    * Simplexity: The highest art of complexity is simplicity
    *
@@ -2118,14 +1918,144 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * - Just update fields, reuse existing DRY methods
    * - No JSON serialization, no Scenario dance, no ENV vars!
    *
-   * @deprecated Use cliSignature() instead - this uses fake context injection
    * @param cword - COMP_CWORD from bash (current word index)
    * @param words - COMP_WORDS from bash (all words in command line)
    * @cliHide
    */
   async shCompletion(cword: string, ...words: string[]): Promise<void> {
-    // Delegate to new natural API
-    return this.cliSignature(cword, ...words);
+    // DEBUG: Write entry to file FIRST - use try/catch to see if there's an error
+    try {
+      writeFileSync(
+        "/tmp/debug-completion.log",
+        `DEBUG: shCompletion ENTRY: cword=${cword}, words=[${words.join(
+          ", "
+        )}]\n`
+      );
+    } catch (error) {
+      console.log(`DEBUG ERROR: ${(error as Error).message}`);
+    }
+
+    // Update model directly (MODEL-DRIVEN!)
+    this.model.completionCompCword = parseInt(cword, 10);
+    this.model.completionCompWords = words;
+    this.model.completionCliName = words[0] || "cli"; // First word is CLI name
+
+    // Derive all other fields (DRY - reuse existing method!)
+    this.computeDerivedCompletionFields(this.model);
+
+    // DEBUG: Write state to file
+    appendFileSync(
+      "/tmp/debug-completion.log",
+      `DEBUG: completionIsCompletingMethod=${this.model.completionIsCompletingMethod}\n` +
+        `DEBUG: completionIsCompletingParameter=${this.model.completionIsCompletingParameter}\n` +
+        `DEBUG: completionCommand=${this.model.completionCommand}\n` +
+        `DEBUG: completionParameterIndex=${this.model.completionParameterIndex}\n`
+    );
+
+    // DRY: Use existing sophisticated completion system, don't reinvent!
+    if (this.model.completionIsCompletingMethod) {
+      // Method completion - use existing completionNameParameterCompletion
+      appendFileSync(
+        "/tmp/debug-completion.log",
+        "DEBUG: Taking METHOD completion branch\n"
+      );
+      const filter = this.model.completionCurrentWord || "";
+      
+      // RADICAL OOP FIX: Inject fake context into model for completionNameParameterCompletion
+      // completionNameParameterCompletion expects: ['cli', 'completion', 'method', filter]
+      // But when completing method names, we have: ['cli', ''] 
+      // So we temporarily inject the 'completion method' context
+      const originalCompWords = this.model.completionCompWords;
+      this.model.completionCompWords = [originalCompWords[0], "completion", "method", filter];
+      
+      const values = await this.completionNameParameterCompletion();
+      
+      // Restore original model state
+      this.model.completionCompWords = originalCompWords;
+      
+      this.formatCompletionOutput(values);
+    } else if (this.model.completionIsCompletingParameter) {
+      // Parameter completion - use existing completeParameter (outputs directly!)
+      appendFileSync(
+        "/tmp/debug-completion.log",
+        "DEBUG: Taking PARAMETER completion branch\n"
+      );
+      
+      // RADICAL OOP: Use getComponentClass() instead of hardcoded component name
+      const componentClassName = this.getComponentClass()?.name || "DefaultCLI";
+      const callback = TSCompletion.getParameterCallback(
+        componentClassName,
+        this.model.completionCommand!,
+        this.model.completionParameterIndex
+      );
+
+      // DEBUG: Write to file since console.error is suppressed
+      appendFileSync(
+        "/tmp/debug-completion.log",
+        `DEBUG: Parameter completion for command="${this.model.completionCommand}" paramIndex=${this.model.completionParameterIndex}\n` +
+          `DEBUG: Component class="${componentClassName}"\n` +
+          `DEBUG: Found callback="${callback}"\n` +
+          `DEBUG: contextArgs=[${this.model.completionCompWords
+            .slice(1)
+            .join(", ")}]\n`
+      );
+
+      if (callback) {
+        // DRY: Use existing completeParameter method (outputs directly, no return needed)
+        // Pass full command context, not just command name and current word
+        const contextArgs = this.model.completionCompWords.slice(1); // Remove CLI name, keep command + params
+        await this.completeParameter(callback, ...contextArgs);
+      } else {
+        // UX: Always provide feedback when no completions are available
+        console.log("DISPLAY: (no completions available)");
+        
+        // Add the "your web4 command >" prompt so user can continue typing
+        if (
+          this.model.completionCliName &&
+          this.model.completionCompWords.length > 0
+        ) {
+          // Prompt colors: "your web4 command >"
+          const promptWhite = "\x1b[37m";
+          const promptCyan = "\x1b[36m";
+          const reset = "\x1b[0m";
+
+          // TSCompletion colors for command parts
+          const toolName = "\x1b[1;36m"; // Cyan bold for CLI name
+          const commands = "\x1b[0;37m"; // White for method names
+          const parameters = "\x1b[1;33m"; // Yellow bold for parameters
+
+          // Build colored command from MODEL (DRY!)
+          let coloredCommand = `${toolName}${this.model.completionCliName}${reset}`;
+
+          // Add method and parameters from completionCompWords
+          for (let i = 1; i < this.model.completionCompWords.length; i++) {
+            const word = this.model.completionCompWords[i];
+            if (word) {
+              // First word after CLI name is method, rest are parameters
+              if (i === 1) {
+                coloredCommand += ` ${commands}${word}${reset}`;
+              } else {
+                // Use yellow for parameters
+                const params = this.model.completionCompWords.slice(i).filter(w => w).join(" ");
+                coloredCommand += ` ${parameters}${params}${reset}`;
+                break; // Already added all remaining parameters
+              }
+            }
+          }
+
+          // Format: "your web4 command >" with colored command
+          const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
+          console.log(`DISPLAY: ${prompt}`);
+        }
+        
+        console.log("WORD: ");
+      }
+    } else {
+      appendFileSync(
+        "/tmp/debug-completion.log",
+        "DEBUG: Taking NEITHER branch - no completion detected\n"
+      );
+    }
   }
 
   /**
@@ -2139,7 +2069,46 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // UX: Always provide feedback when no completions are available
     if (!values || values.length === 0) {
       console.log("DISPLAY: (no completions available)");
-      this.outputPrompt();
+      
+      // Add the "your web4 command >" prompt so user can continue typing
+      if (
+        this.model.completionCliName &&
+        this.model.completionCompWords.length > 0
+      ) {
+        // Prompt colors: "your web4 command >"
+        const promptWhite = "\x1b[37m";
+        const promptCyan = "\x1b[36m";
+        const reset = "\x1b[0m";
+
+        // TSCompletion colors for command parts
+        const toolName = "\x1b[1;36m"; // Cyan bold for CLI name
+        const commands = "\x1b[0;37m"; // White for method names
+        const parameters = "\x1b[1;33m"; // Yellow bold for parameters
+
+        // Build colored command from MODEL (DRY!)
+        let coloredCommand = `${toolName}${this.model.completionCliName}${reset}`;
+
+        // Add method and parameters from completionCompWords
+        for (let i = 1; i < this.model.completionCompWords.length; i++) {
+          const word = this.model.completionCompWords[i];
+          if (word) {
+            // First word after CLI name is method, rest are parameters
+            if (i === 1) {
+              coloredCommand += ` ${commands}${word}${reset}`;
+            } else {
+              // Use yellow for parameters
+              const params = this.model.completionCompWords.slice(i).filter(w => w).join(" ");
+              coloredCommand += ` ${parameters}${params}${reset}`;
+              break; // Already added all remaining parameters
+            }
+          }
+        }
+
+        // Format: "your web4 command >" with colored command
+        const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
+        console.log(`DISPLAY: ${prompt}`);
+      }
+      
       console.log("WORD: ");
       return;
     }
