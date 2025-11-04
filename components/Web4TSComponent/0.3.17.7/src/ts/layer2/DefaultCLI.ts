@@ -456,7 +456,15 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       if (filtered.length === 1) {
         const methodName = filtered[0];
         const componentClassName = this.getComponentClass()?.name;
-        const fullMethodDoc = TSCompletion.getMethodDoc(componentClassName, methodName);
+        
+        // Try all possible classes where the method might be defined (same logic as parameter completion!)
+        let fullMethodDoc = TSCompletion.getMethodDoc(componentClassName, methodName);
+        if (!fullMethodDoc && componentClassName !== 'DefaultCLI') {
+          fullMethodDoc = TSCompletion.getMethodDoc('DefaultCLI', methodName);
+        }
+        if (!fullMethodDoc && componentClassName !== 'DefaultWeb4TSComponent') {
+          fullMethodDoc = TSCompletion.getMethodDoc('DefaultWeb4TSComponent', methodName);
+        }
         
         if (fullMethodDoc) {
           const BRIGHT_CYAN = this.colors.toolName;
@@ -478,7 +486,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
             signature = `${methodColor}${methodName}${RESET} ${BRIGHT_YELLOW}${paramList}${RESET}`;
           }
           
-          // Return formatted documentation
+          // Return formatted documentation as a SINGLE STRING with embedded newlines
+          // This ensures formatCompletionOutput() treats it as ONE value and extracts ONE word
           const separator = `${BRIGHT_CYAN}${"─".repeat(60)}${RESET}`;
           const header = `${BRIGHT_WHITE_BOLD}📖 Documentation:${RESET}`;
           const greenDoc = `${GREEN}${fullMethodDoc}${RESET}`;
@@ -2170,11 +2179,14 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
       // Extract method names/words and add WORD lines (for bash compgen)
       // CRITICAL: Strip ANSI codes before extracting words!
-      values.forEach((line: string) => {
+      values.forEach((value: string) => {
+        // For single-match documentation (multi-line string), extract word from FIRST LINE only
+        const firstLine = value.split("\n")[0];
+        
         // Strip ANSI escape codes: \x1b[...m
-        const cleanLine = line.replace(/\x1b\[[0-9;]*m/g, "");
+        const cleanLine = firstLine.replace(/\x1b\[[0-9;]*m/g, "");
 
-        // Extract word: "1: methodName <params>" -> "methodName" OR "1: <?action>" -> "action"
+        // Extract word: "1: methodName <params>" -> "methodName" OR "methodName <params>" -> "methodName"
         const match = cleanLine.match(/^\d+:\s*(\S+)/);
         let word = match ? match[1] : cleanLine.split(" ")[0];
 
