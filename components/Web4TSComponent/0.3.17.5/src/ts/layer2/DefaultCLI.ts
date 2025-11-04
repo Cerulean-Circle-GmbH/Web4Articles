@@ -2000,39 +2000,51 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Get method names with optional filtering
    * Natural API - no fake context injection needed!
    * 
+   * TODO: This still uses temporary state modification to call completionNameParameterCompletion()
+   * Future: Extract core logic from completionNameParameterCompletion into parameterless helper
+   * 
    * @param filter Optional prefix filter
-   * @returns Array of method names/signatures
+   * @returns Array of formatted method signatures
    * @cliHide
    */
   private async getMethodNames(filter: string = ""): Promise<string[]> {
-    await this.discoverMethods();
+    // Temporarily set model state to get method list
+    // NOTE: This is still a workaround - completionNameParameterCompletion should be refactored
+    const originalCompWords = this.model.completionCompWords;
+    this.model.completionCompWords = [
+      this.model.completionCliName,
+      "completion",
+      "method",
+      filter
+    ];
     
-    if (!this.model.methodSignatures || this.model.methodSignatures.length === 0) {
-      return [];
-    }
-
-    // Filter by prefix if provided
-    const filtered = filter
-      ? this.model.methodSignatures.filter(sig => 
-          sig.toLowerCase().startsWith(filter.toLowerCase())
-        )
-      : this.model.methodSignatures;
-
-    return filtered;
+    const result = await this.completionNameParameterCompletion();
+    
+    // Restore original state
+    this.model.completionCompWords = originalCompWords;
+    
+    return result;
   }
 
   /**
-   * Get method signature from discovered methods
+   * Get method signature from TSDoc/annotations
    * @cliHide
    */
   private async getMethodSignature(methodName: string): Promise<string> {
-    await this.discoverMethods();
+    // Get the formatted signature from completionNameParameterCompletion
+    const allMethods = await this.getMethodNames("");
     
-    const sig = this.model.methodSignatures?.find(s => 
-      s.startsWith(methodName + " ") || s === methodName
+    // Find the signature that starts with this method name
+    const sig = allMethods.find((s: string) => 
+      s.includes(methodName + " ") || s.includes(methodName + "<")
     );
     
-    return sig || methodName;
+    // Strip ANSI codes for clean signature
+    if (sig) {
+      return sig.replace(/\x1b\[[0-9;]*m/g, "");
+    }
+    
+    return methodName;
   }
 
   /**
