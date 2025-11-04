@@ -16,9 +16,8 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "allowImportingTsExtensions": true,
-    "noEmit": true
+    "allowImportingTsExtensions": true
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "components/**/*.ts"],
-  "exclude": ["dist", "node_modules"]
+  "include": ["components/**/src/**/*.ts"],
+  "exclude": ["dist", "node_modules", "**/test/**"]
 }
