@@ -1908,30 +1908,6 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     ];
   }
 
-  /**
-   * Complete bash completion with updated Scenario from bash
-   * Web4 Scenario pattern: Bash sends updated scenario with completionCompWords/completionCompCword
-   * DRY: Moved from ComponentCLI template to DefaultCLI for inheritance
-   * @pdca 2025-11-03-UTC-1237.pdca.md - DRY principle: complete() inherited by all CLIs
-   * @pdca 2025-11-03-UTC-1430.pdca.md - Deleted getCompletionScenario() - use toScenario() instead
-   * @cliHide
-   */
-  async complete(scenarioJson: string): Promise<void> {
-    // Parse incoming Scenario from bash
-    const scenario = JSON.parse(scenarioJson);
-    
-    // Merge scenario into model using init()
-    this.init(scenario);
-    
-    // Compute derived fields from bash-provided data
-    this.computeDerivedCompletionFields(this.model);
-    
-    // Get valid completion values from model (now async!)
-    const values = await this.getValidCompletionValues();
-    
-    // Format with DISPLAY/WORD protocol
-    this.formatCompletionOutput(values);
-  }
 
   /**
    * Shell completion with direct parameter passing
