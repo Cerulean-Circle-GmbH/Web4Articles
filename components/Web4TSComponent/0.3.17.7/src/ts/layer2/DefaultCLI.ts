@@ -443,13 +443,17 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     const cword = model.completionCompCword;
 
     // Derived from bash data
-    model.completionCurrentWord = words[cword] || "";
+    // CRITICAL: If cword >= words.length, cursor is AFTER last word (completing next word with empty prefix)
+    // Otherwise, cursor is ON a word (filtering/completing that word)
+    // @pdca 2025-11-04-UTC-2159.pdca.md - Fix filtering for method chaining
+    model.completionCurrentWord = cword < words.length ? (words[cword] || "") : "";
     model.completionPreviousWord = words[cword - 1] || "";
 
     // Parse command (word at index 1 if cword > 1, meaning we're past the command)
     model.completionCommand = cword > 1 && words[1] ? words[1] : null;
 
     // Parse parameters (words from index 2 to cword-1)
+    // NOTE: will be adjusted if method chaining is detected
     model.completionParameters = cword > 2 ? words.slice(2, cword) : [];
     model.completionParameterIndex = Math.max(0, cword - 2);
 
@@ -477,6 +481,10 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         // We're past 'on' parameters - this is a chained method!
         model.completionIsCompletingMethod = true;
         model.completionIsCompletingParameter = false;
+        
+        // CRITICAL FIX: When chaining, only take 'on' command params (not the chained method filter word)
+        // @pdca 2025-11-04-UTC-2159.pdca.md - User feedback: filtering not working for chained methods
+        model.completionParameters = words.slice(2, onMaxParams + 2); // Only take 'on' params (component + version)
       } else if (providedParams >= onRequiredParams && cword > 2 + onRequiredParams) {
         // Required params filled, and cursor is past them
         // Check if current word looks like a method (not a version)
@@ -503,21 +511,43 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    */
   protected async getValidCompletionValues(): Promise<string[]> {
     if (this.model.completionIsCompletingMethod) {
-      // For method completion, use completionNameParameterCompletion to get FORMATTED output
-      // This provides the UX layer: numbered list, signatures, colors, documentation
-      // CRITICAL: User NEEDS to see method signatures, not just method names!
-      
-      // Inject the 'completion method' context that completionNameParameterCompletion expects
-      const originalCompWords = this.model.completionCompWords;
-      const filter = this.model.completionCurrentWord || '';
-      this.model.completionCompWords = [originalCompWords[0], "completion", "method", filter];
-      
-      const values = await this.completionNameParameterCompletion();
-      
-      // Restore original model state
-      this.model.completionCompWords = originalCompWords;
-      
-      return values;
+      // METHOD COMPLETION: Get all methods, filter by current word, format with signatures
+      // RADICAL OOP: All data from this.model!
+      // @pdca 2025-11-04-UTC-2159.pdca.md - Direct, NO intermediate method!
+      const filterPrefix = this.model.completionCurrentWord || "";
+      const allMethodNames = Array.from(this.methodSignatures.keys());
+      let filtered = allMethodNames
+        .filter((name) => !name.endsWith("ParameterCompletion"))
+        .filter((name) => name !== "completeParameter")
+        .filter((name) => name !== "execute")
+        .filter((name) => name !== "start")
+        .sort();
+
+      // Apply prefix filtering if provided
+      if (filterPrefix) {
+        filtered = filtered.filter((name) => name.startsWith(filterPrefix));
+      }
+
+      // Generate full CLI signatures with color coding
+      const BRIGHT_CYAN = this.colors.toolName; 
+      const BRIGHT_YELLOW = this.colors.parameters;
+      const BRIGHT_WHITE_BOLD = this.colors.sections;
+      const RESET = this.colors.reset;
+
+      return filtered.map((methodName, index) => {
+        const parameters = this.extractParameterInfoFromTSCompletion(methodName);
+        const isCLIMethod = this.hasCliAnnotations(methodName);
+        const methodColor = isCLIMethod ? BRIGHT_WHITE_BOLD : "";
+        let displayName = methodName;
+
+        if (parameters && parameters.length > 0) {
+          const paramList = parameters
+            .map((p: any) => this.generateParameterSyntax(p, methodName))
+            .join(" ");
+          return `${BRIGHT_CYAN}${index + 1}:${RESET} ${methodColor}${methodName}${RESET} ${BRIGHT_YELLOW}${paramList}${RESET}`;
+        }
+        return `${BRIGHT_CYAN}${index + 1}:${RESET} ${methodColor}${displayName}${RESET}`;
+      });
     } else if (this.model.completionIsCompletingParameter) {
       // Radical OOP: Get component class from this.context or this
       const target = this.context || this;
@@ -2017,155 +2047,6 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   }
 
   /**
-   * Shell completion with direct parameter passing (DEPRECATED IMPLEMENTATION - KEPT FOR REFERENCE)
-   * Simplexity: The highest art of complexity is simplicity
-   *
-   * Web4 Pattern:
-   * - Model already exists (created in constructor via createEmptyModel)
-   * - Just update fields, reuse existing DRY methods
-   * - No JSON serialization, no Scenario dance, no ENV vars!
-   *
-   * @param cword - COMP_CWORD from bash (current word index)
-   * @param words - COMP_WORDS from bash (all words in command line)
-   * @cliHide
-   *
-  async shCompletionOLD(cword: string, ...words: string[]): Promise<void> {
-    // DEBUG: Write entry to file FIRST - use try/catch to see if there's an error
-    try {
-      writeFileSync(
-        "/tmp/debug-completion.log",
-        `DEBUG: shCompletion ENTRY: cword=${cword}, words=[${words.join(
-          ", "
-        )}]\n`
-      );
-    } catch (error) {
-      console.log(`DEBUG ERROR: ${(error as Error).message}`);
-    }
-
-    // Update model directly (MODEL-DRIVEN!)
-    this.model.completionCompCword = parseInt(cword, 10);
-    this.model.completionCompWords = words;
-    this.model.completionCliName = words[0] || "cli"; // First word is CLI name
-
-    // Derive all other fields (DRY - reuse existing method!)
-    this.computeDerivedCompletionFields(this.model);
-
-    // DEBUG: Write state to file
-    appendFileSync(
-      "/tmp/debug-completion.log",
-      `DEBUG: completionIsCompletingMethod=${this.model.completionIsCompletingMethod}\n` +
-        `DEBUG: completionIsCompletingParameter=${this.model.completionIsCompletingParameter}\n` +
-        `DEBUG: completionCommand=${this.model.completionCommand}\n` +
-        `DEBUG: completionParameterIndex=${this.model.completionParameterIndex}\n`
-    );
-
-    // DRY: Use existing sophisticated completion system, don't reinvent!
-    if (this.model.completionIsCompletingMethod) {
-      // Method completion - use existing completionNameParameterCompletion
-      appendFileSync(
-        "/tmp/debug-completion.log",
-        "DEBUG: Taking METHOD completion branch\n"
-      );
-      const filter = this.model.completionCurrentWord || "";
-      
-      // RADICAL OOP FIX: Inject fake context into model for completionNameParameterCompletion
-      // completionNameParameterCompletion expects: ['cli', 'completion', 'method', filter]
-      // But when completing method names, we have: ['cli', ''] 
-      // So we temporarily inject the 'completion method' context
-      const originalCompWords = this.model.completionCompWords;
-      this.model.completionCompWords = [originalCompWords[0], "completion", "method", filter];
-      
-      const values = await this.completionNameParameterCompletion();
-      
-      // Restore original model state
-      this.model.completionCompWords = originalCompWords;
-      
-      this.formatCompletionOutput(values);
-    } else if (this.model.completionIsCompletingParameter) {
-      // Parameter completion - use existing completeParameter (outputs directly!)
-      appendFileSync(
-        "/tmp/debug-completion.log",
-        "DEBUG: Taking PARAMETER completion branch\n"
-      );
-      
-      // RADICAL OOP: Use getComponentClass() instead of hardcoded component name
-      const componentClassName = this.getComponentClass()?.name || "DefaultCLI";
-      const callback = TSCompletion.getParameterCallback(
-        componentClassName,
-        this.model.completionCommand!,
-        this.model.completionParameterIndex
-      );
-
-      // DEBUG: Write to file since console.error is suppressed
-      appendFileSync(
-        "/tmp/debug-completion.log",
-        `DEBUG: Parameter completion for command="${this.model.completionCommand}" paramIndex=${this.model.completionParameterIndex}\n` +
-          `DEBUG: Component class="${componentClassName}"\n` +
-          `DEBUG: Found callback="${callback}"\n` +
-          `DEBUG: contextArgs=[${this.model.completionCompWords
-            .slice(1)
-            .join(", ")}]\n`
-      );
-
-      if (callback) {
-        // DRY: Use existing completeParameter method (outputs directly, no return needed)
-        // Pass full command context, not just command name and current word
-        const contextArgs = this.model.completionCompWords.slice(1); // Remove CLI name, keep command + params
-        await this.completeParameter(callback, ...contextArgs);
-      } else {
-        // UX: Always provide feedback when no completions are available
-        console.log("DISPLAY: (no completions available)");
-        
-        // Add the "your web4 command >" prompt so user can continue typing
-        if (
-          this.model.completionCliName &&
-          this.model.completionCompWords.length > 0
-        ) {
-          // Prompt colors: "your web4 command >"
-          const promptWhite = "\x1b[37m";
-          const promptCyan = "\x1b[36m";
-          const reset = "\x1b[0m";
-
-          // TSCompletion colors for command parts
-          const toolName = "\x1b[1;36m"; // Cyan bold for CLI name
-          const commands = "\x1b[0;37m"; // White for method names
-          const parameters = "\x1b[1;33m"; // Yellow bold for parameters
-
-          // Build colored command from MODEL (DRY!)
-          let coloredCommand = `${toolName}${this.model.completionCliName}${reset}`;
-
-          // Add method and parameters from completionCompWords
-          for (let i = 1; i < this.model.completionCompWords.length; i++) {
-            const word = this.model.completionCompWords[i];
-            if (word) {
-              // First word after CLI name is method, rest are parameters
-              if (i === 1) {
-                coloredCommand += ` ${commands}${word}${reset}`;
-              } else {
-                // Use yellow for parameters
-                const params = this.model.completionCompWords.slice(i).filter(w => w).join(" ");
-                coloredCommand += ` ${parameters}${params}${reset}`;
-                break; // Already added all remaining parameters
-              }
-            }
-          }
-
-          // Format: "your web4 command >" with colored command
-          const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
-          console.log(`DISPLAY: ${prompt}`);
-        }
-        
-        console.log("WORD: ");
-      }
-    } else {
-      appendFileSync(
-        "/tmp/debug-completion.log",
-        "DEBUG: Taking NEITHER branch - no completion detected\n"
-      );
-    }
-  }
-
-  /**
    * Format completion values with DISPLAY/WORD protocol
    * Handles both simple arrays and complex formatted output
    * DRY helper used by completeParameter and future completion methods
@@ -2688,16 +2569,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   /**
    * Fundamental parameter completion: filter (prefix for filtering completions)
    * Used by: completion method for testing tab completions
-   * Delegates to completionNameParameterCompletion for shared logic
-   * 
-   * RADICAL OOP: Now parameterless - relies on model state
-   * 
+   * RADICAL OOP: Parameterless - relies on model state
    * @cliHide
    */
   async filterParameterCompletion(): Promise<string[]> {
-    // TSCompletion expects {parameterName}ParameterCompletion naming convention
-    // Delegate to shared logic in completionNameParameterCompletion
-    return this.completionNameParameterCompletion();
+    // Return empty array - filter is typed by user, not selected from list
+    return [];
   }
 
   /**
@@ -2747,271 +2624,10 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   }
 
   /**
-   * @deprecated FUNCTIONAL SHIT - Replaced by Radical OOP cliSignature() API
-   * This method requires fake context injection and is awkward to use.
-   * Use getValidCompletionValues() instead, which uses this.model state.
-   * 
-   * Dynamic parameter completion: completionName (depends on 'what' value)
-   * Returns method names if what=method, parameter completion names if what=parameter
-   * Uses multiline format with full signatures for methods
-   * Shared by: filterParameterCompletion (via delegation)
-   * @pdca 2025-11-04-UTC-1842-critical-bug-diagnostic-stdout.pdca.md - Deprecated functional shit
-   * @cliHide
+   * DELETED - 270 lines of FUNCTIONAL SHIT removed!
+   * Use getValidCompletionValues() instead - it's DIRECT and SIMPLE!
+   * @pdca 2025-11-04-UTC-2159.pdca.md - Radical OOP refactor
    */
-  async completionNameParameterCompletion(): Promise<string[]> {
-    // Extract values from model state  
-    // Format: ['web4tscomponent', 'completion', 'method'|'parameter', 'prefix', ...]
-    const what = this.model.completionCompWords[2]; // 'method' or 'parameter'
-    const filterPrefix = this.model.completionCompWords[3] || ""; // Optional prefix
-
-    if (!what || (what !== "method" && what !== "parameter")) {
-      // No valid 'what' value yet - return empty
-      return [];
-    }
-
-    // ANSI color codes (use centralized Colors instance)
-    const BRIGHT_CYAN = this.colors.toolName; // Numbers
-    const BRIGHT_YELLOW = this.colors.parameters; // Parameters
-    const BRIGHT_WHITE_BOLD = this.colors.sections; // CLI methods (user-facing commands)
-    const RESET = this.colors.reset;
-
-    if (what === "parameter") {
-      // Return parameter names in Web4 notation with defaults (matching method signatures)
-      const allMethods = Array.from(this.methodSignatures.keys());
-      let filtered = allMethods
-        .filter((name) => name.endsWith("ParameterCompletion"))
-        .sort();
-
-      // Apply prefix filtering if provided
-      if (filterPrefix) {
-        filtered = filtered.filter((name) => name.startsWith(filterPrefix));
-      }
-
-      // ✅ EXACT MATCH: Execute the completion callback to discover parameter values
-      // Example: "versionPromotion" → execute versionPromotionParameterCompletion
-      if (filtered.length === 1) {
-        const callbackName = filtered[0];
-        const paramName = callbackName.replace(/ParameterCompletion$/, "");
-
-        // Check if filter exactly matches the parameter name (discovery mode)
-        if (filterPrefix === paramName) {
-          // Execute the completion callback to show available values
-          const callback = (this as any)[callbackName];
-          if (callback && typeof callback === "function") {
-            try {
-              // Call the completion callback with empty args (discovery mode)
-              const results = await callback.call(this, []);
-              const resultArray = Array.isArray(results) ? results : [results];
-
-              // ✅ POST-PROCESSING: Format values for better UX
-              // 1. Color values bright cyan (matching shell completion style)
-              // 2. Add double newline for clean separation from prompt
-              const BRIGHT_CYAN = this.colors.toolName;
-              const RESET = this.colors.reset;
-
-              if (resultArray.length > 0) {
-                // Color each result bright cyan
-                const coloredResults = resultArray.map(
-                  (val) => `${BRIGHT_CYAN}${val}${RESET}`
-                );
-
-                // Add double newline to last element for clean spacing
-                const lastIndex = coloredResults.length - 1;
-                coloredResults[lastIndex] = coloredResults[lastIndex] + "\n\n";
-
-                return coloredResults;
-              }
-
-              return resultArray;
-            } catch (error) {
-              // If callback fails, return parameter name
-              return [paramName];
-            }
-          }
-        }
-
-        // Otherwise return plain name for bash completion
-        return [paramName];
-      }
-
-      // ✅ DRY FIX: Extract parameters from ALL methods ONCE (not once per parameter!)
-      // Cache results to avoid O(parameters × methods) complexity
-      const allMethodNames = Array.from(this.methodSignatures.keys()).filter(
-        (m) => !m.endsWith("ParameterCompletion")
-      );
-
-      // Extract parameters from all methods ONCE (DRY principle)
-      // Also cache CLI annotation checks to avoid repeated calls during sort
-      const allMethodParams = new Map<string, any[]>();
-      const cliMethodsSet = new Set<string>();
-
-      for (const methodName of allMethodNames) {
-        const params = this.extractParameterInfoFromTSCompletion(methodName);
-        allMethodParams.set(methodName, params);
-
-        // Cache CLI annotation check: method with TSDoc parameters from TSCompletion = CLI method
-        // This avoids calling hasCliAnnotations which would re-call getEnhancedMethodParameters
-        if (params.length > 0) {
-          cliMethodsSet.add(methodName);
-        }
-      }
-
-      // Sort methods: CLI methods first (they have better metadata)
-      const methodNames = allMethodNames.sort((a, b) => {
-        const aIsCLI = cliMethodsSet.has(a);
-        const bIsCLI = cliMethodsSet.has(b);
-        if (aIsCLI && !bIsCLI) return -1;
-        if (!aIsCLI && bIsCLI) return 1;
-        return a.localeCompare(b);
-      });
-
-      // Transform: versionParameterCompletion → <?version:'0.1.0.0'>
-      // Now use cached parameter data for each parameter
-      return filtered.map((callbackName, index) => {
-        const paramName = callbackName.replace(/ParameterCompletion$/, "");
-
-        let paramSyntax = `<${paramName}>`; // Default: required parameter
-        let bestParam: any = null;
-
-        // Search cached method parameters (no repeated extraction!)
-        // Prefer optional parameters with defaults over required ones
-        for (const methodName of methodNames) {
-          const params = allMethodParams.get(methodName)!; // Cached lookup
-          const param = params.find((p) => p.name === paramName);
-
-          if (param) {
-            if (!bestParam) {
-              bestParam = { param, methodName };
-            }
-            // If we found an optional parameter with default, prefer it
-            if (!param.required && param.default) {
-              bestParam = { param, methodName };
-              break; // Found ideal match - optional with default
-            }
-          }
-        }
-
-        if (bestParam) {
-          paramSyntax = this.generateParameterSyntax(
-            bestParam.param,
-            bestParam.methodName
-          );
-        }
-
-        return `${BRIGHT_CYAN}${
-          index + 1
-        }:${RESET} ${BRIGHT_YELLOW}${paramSyntax}${RESET}`;
-      });
-    } else {
-      // what === 'method' - Use methodSignatures for ALL methods (including @cliHide)
-      // Discovery tool should show hidden methods for debugging/development
-      const allMethodNames = Array.from(this.methodSignatures.keys());
-      let filtered = allMethodNames
-        .filter((name) => !name.endsWith("ParameterCompletion"))
-        .filter((name) => name !== "completeParameter")
-        .filter((name) => name !== "execute")
-        .filter((name) => name !== "start")
-        .sort();
-
-      // Apply prefix filtering if provided
-      if (filterPrefix) {
-        filtered = filtered.filter((name) => name.startsWith(filterPrefix));
-      }
-
-      // ✅ SINGLE MATCH: Auto-complete if only one method matches
-      // Standard shell behavior: one match = complete it, multiple = show list
-      if (filtered.length === 1) {
-        const methodName = filtered[0];
-
-        // ✅ SHOW DOCUMENTATION: Display TSDoc for discovered method
-        // Get method documentation from TSCompletion
-        const componentClassName = this.getComponentClass()?.name;
-        const fullMethodDoc = TSCompletion.getMethodDoc(
-          componentClassName,
-          methodName
-        );
-
-        if (fullMethodDoc) {
-          // Format documentation with full signature and green TSDoc
-          const BRIGHT_CYAN = this.colors.toolName;
-          const BRIGHT_WHITE_BOLD = this.colors.sections;
-          const BRIGHT_YELLOW = this.colors.parameters;
-          const GREEN = this.colors.descriptions;
-          const RESET = this.colors.reset;
-
-          // Extract parameters for full signature
-          const parameters =
-            this.extractParameterInfoFromTSCompletion(methodName);
-
-          // Build full colored signature (method name + parameters)
-          const isCLIMethod = this.hasCliAnnotations(methodName);
-          const methodColor = isCLIMethod ? BRIGHT_WHITE_BOLD : "";
-
-          let signature = `${methodColor}${methodName}${RESET}`;
-          if (parameters && parameters.length > 0) {
-            const paramList = parameters
-              .map((p: any) => {
-                return this.generateParameterSyntax(p, methodName);
-              })
-              .join(" ");
-            signature = `${methodColor}${methodName}${RESET} ${BRIGHT_YELLOW}${paramList}${RESET}`;
-          }
-
-          // Return: ONE string with embedded newlines for semantic structure
-          // formatCompletionOutput adds DISPLAY: prefix, bash printf handles \n
-          const separator = `${BRIGHT_CYAN}${"─".repeat(60)}${RESET}`;
-          const header = `${BRIGHT_WHITE_BOLD}📖 Documentation:${RESET}`;
-          const greenDoc = `${GREEN}${fullMethodDoc}${RESET}`;
-
-          // Single string with \n - preserves semantic structure without artificial array splits
-          return [`${signature}\n${separator}\n${header}\n${greenDoc}\n`];
-        }
-
-        return [methodName]; // Plain method name for bash completion
-      }
-
-      // Generate full CLI signatures using extractParameterInfoFromTSCompletion (with color coding)
-      return filtered.map((methodName, index) => {
-        // Extract parameters for this method
-        const parameters =
-          this.extractParameterInfoFromTSCompletion(methodName);
-
-        // Check if method has CLI annotations for visual distinction
-        const isCLIMethod = this.hasCliAnnotations(methodName);
-        const methodColor = isCLIMethod ? BRIGHT_WHITE_BOLD : ""; // CLI methods: bright white bold, internal: plain
-
-        // ✅ SEARCH HIGHLIGHTING: Highlight filter prefix in red
-        const RED = this.colors.red;
-        let displayName = methodName;
-        if (
-          filterPrefix &&
-          methodName.toLowerCase().startsWith(filterPrefix.toLowerCase())
-        ) {
-          // Split: prefix (red) + rest (normal method color)
-          const prefix = methodName.substring(0, filterPrefix.length);
-          const rest = methodName.substring(filterPrefix.length);
-          displayName = `${RED}${prefix}${RESET}${methodColor}${rest}${RESET}`;
-        } else {
-          displayName = `${methodColor}${methodName}${RESET}`;
-        }
-
-        if (parameters && parameters.length > 0) {
-          // Build parameter list using auto-discovery
-          const paramList = parameters
-            .map((p: any) => {
-              return this.generateParameterSyntax(p, methodName);
-            })
-            .join(" ");
-          // Color scheme: number (bright cyan), search term (red), method name (bright white bold for CLI, plain for internal), parameters (bright yellow)
-          return `${BRIGHT_CYAN}${
-            index + 1
-          }:${RESET} ${displayName} ${BRIGHT_YELLOW}${paramList}${RESET}`;
-        }
-        // No parameters - just method name
-        return `${BRIGHT_CYAN}${index + 1}:${RESET} ${displayName}`;
-      });
-    }
-  }
 
   /**
    * Find project root using git (Web4 standard pattern)
