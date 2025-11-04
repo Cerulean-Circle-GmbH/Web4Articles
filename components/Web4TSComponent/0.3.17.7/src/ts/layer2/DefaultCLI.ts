@@ -1993,8 +1993,16 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @cliHide
    */
   async shCompletion(cword: string, ...words: string[]): Promise<void> {
-    // Delegate to new cliSignature API
-    return this.cliSignature(cword, ...words);
+    // ENTRY POINT from bash via source.env
+    // Set model FIRST (Radical OOP pattern)
+    // @pdca 2025-11-04-UTC-2220-method-chaining-completion.pdca.md
+    const cwordNum = parseInt(cword, 10);
+    this.model.completionCompWords = words;
+    this.model.completionCompCword = cwordNum;
+    this.model.completionCliName = words[0] || "cli"; // First word is CLI name (CRITICAL for prompt!)
+    
+    // THEN call parameterless cliSignature (100% Radical OOP!)
+    return this.cliSignature();
   }
 
   /**
@@ -2551,21 +2559,15 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
   /**
    * CLI signature completion with diagnostic output
-   * Entry point for bash completion - sets model and delegates
-   * Replaces shCompletion with cleaner, diagnostic-rich API
+   * PARAMETERLESS! Model already set by shCompletion (100% Radical OOP!)
+   * Called by shCompletion after model is populated from bash parameters
    * 
-   * @param cword Current word index from bash COMP_CWORD
-   * @param words All words from bash COMP_WORDS
    * @pdca 2025-11-04-UTC-1819.pdca.md - Radical OOP cliSignature implementation
    * @pdca 2025-11-04-UTC-2220-method-chaining-completion.pdca.md - Method chaining after 'on' command
    * @cliHide
    */
-  async cliSignature(cword: string, ...words: string[]): Promise<void> {
-    // 1. Parse and store in model (same as shCompletion)
-    const cwordNum = parseInt(cword, 10);
-    this.model.completionCompWords = words;
-    this.model.completionCompCword = cwordNum;
-    this.model.completionCliName = words[0] || "cli"; // First word is CLI name (CRITICAL for prompt!)
+  async cliSignature(): Promise<void> {
+    // 1. Compute derived fields from model (set by shCompletion)
     this.computeDerivedCompletionFields(this.model);
 
     // 2. Load context for method chaining after 'on' command
