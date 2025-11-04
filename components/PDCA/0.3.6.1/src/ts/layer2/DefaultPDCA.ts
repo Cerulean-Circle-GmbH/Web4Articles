@@ -5137,22 +5137,47 @@ export class DefaultPDCA implements PDCA {
    * 
    * @param title - PDCA title
    * @param objective - PDCA objective
+   * @param sessionDirectory - Optional custom session directory (absolute or relative path)
    * @param dryRun - 'true' for dry-run mode (preview only, no file creation)
-   * @cliSyntax title objective <?dryRun>
+   * @cliSyntax title objective <?sessionDirectory> <?dryRun>
    * @cliDefault dryRun "false"
    * @cliValues dryRun true false
    */
-  async createPDCA(title: string, objective: string, dryRun: string = 'false'): Promise<this> {
+  async createPDCA(title: string, objective: string, sessionDirectory?: string, dryRun: string = 'false'): Promise<this> {
     const fs = await import('fs');
     const path = await import('path');
     
-    const isDryRun = dryRun === 'true';
+    // Backward compatibility: If sessionDirectory is 'true' or 'false', it's actually the old dryRun param
+    let actualSessionDir: string | undefined = sessionDirectory;
+    let actualDryRun: string = dryRun;
+    
+    if (sessionDirectory === 'true' || sessionDirectory === 'false') {
+      // Old signature: createPDCA(title, objective, dryRun)
+      actualDryRun = sessionDirectory;
+      actualSessionDir = undefined;
+    }
+    
+    const isDryRun = actualDryRun === 'true';
     
     // Use workingDirectory from model for tests, otherwise use actual project root
     const projectRoot = this.model.workingDirectory || await this.getProjectRoot();
     
-    // Get session directory from model or detect from current directory
-    const sessionDir = this.model.sessionDirectory || path.join(await this.getProjectRoot(), 'components/PDCA/0.3.6.1/session');
+    // Get session directory: parameter → model → default
+    // Priority: 1. Explicit parameter, 2. Model setting, 3. Default PDCA location
+    let sessionDir: string;
+    if (actualSessionDir) {
+      // Parameter provided - validate it exists
+      sessionDir = path.isAbsolute(actualSessionDir) 
+        ? actualSessionDir 
+        : path.resolve(projectRoot, actualSessionDir);
+      
+      if (!fs.existsSync(sessionDir)) {
+        throw new Error(`Session directory does not exist: ${sessionDir}`);
+      }
+    } else {
+      // Fallback to model or default
+      sessionDir = this.model.sessionDirectory || path.join(await this.getProjectRoot(), 'components/PDCA/0.3.6.1/session');
+    }
     
     console.log(`\n📝 Creating New PDCA${isDryRun ? ' (DRY RUN)' : ''}\n`);
     console.log(`📂 Session Directory: ${path.relative(projectRoot, sessionDir)}`);
