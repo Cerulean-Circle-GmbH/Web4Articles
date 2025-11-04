@@ -501,11 +501,12 @@ fi
 ### **Test Execution**
 
 ```bash
-# Make script executable
-chmod +x /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.8/session/test-completion.sh
+# Shell tests (black-box integration)
+cd /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.8
+./test/sh/test-completion.sh
 
-# Run tests
-./test-completion.sh
+# Vitest tests (includes shell test runner + individual scenarios)
+npm test -- test/vitest/completion-black-box.test.ts
 ```
 
 ### **Expected Results**
