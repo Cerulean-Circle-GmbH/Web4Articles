@@ -1980,8 +1980,11 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         "/tmp/debug-completion.log",
         "DEBUG: Taking PARAMETER completion branch\n"
       );
+      
+      // RADICAL OOP: Use getComponentClass() instead of hardcoded component name
+      const componentClassName = this.getComponentClass()?.name || "DefaultCLI";
       const callback = TSCompletion.getParameterCallback(
-        "DefaultWeb4TSComponent",
+        componentClassName,
         this.model.completionCommand!,
         this.model.completionParameterIndex
       );
@@ -1990,6 +1993,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       appendFileSync(
         "/tmp/debug-completion.log",
         `DEBUG: Parameter completion for command="${this.model.completionCommand}" paramIndex=${this.model.completionParameterIndex}\n` +
+          `DEBUG: Component class="${componentClassName}"\n` +
           `DEBUG: Found callback="${callback}"\n` +
           `DEBUG: contextArgs=[${this.model.completionCompWords
             .slice(1)
@@ -2001,6 +2005,10 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         // Pass full command context, not just command name and current word
         const contextArgs = this.model.completionCompWords.slice(1); // Remove CLI name, keep command + params
         await this.completeParameter(callback, ...contextArgs);
+      } else {
+        // UX: Always provide feedback when no completions are available
+        console.log("DISPLAY: (no completions available)");
+        console.log("WORD: ");
       }
     } else {
       appendFileSync(
