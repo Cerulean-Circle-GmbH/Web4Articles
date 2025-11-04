@@ -463,12 +463,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     if (this.model.completionIsCompletingMethod) {
       // Completing method name - use completionNameParameterCompletion for consistent formatting
       // This provides numbered list, color coding, and parameter signatures
-      const filter = this.model.completionCurrentWord || "";
-      return await this.completionNameParameterCompletion([
-        "completion",
-        "method",
-        filter,
-      ]);
+      // Model state already has completionCompWords set properly by caller
+      return await this.completionNameParameterCompletion();
     } else if (this.model.completionIsCompletingParameter) {
       // Completing parameter - use TSCompletion as source of truth for callback discovery
       // this.model provides context (command, paramIndex, currentWord) to TSCompletion
@@ -1903,7 +1899,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @param currentArgs Current argument values (unused in minimal version)
    * @returns Array of action completions (no empty string to avoid spacing issues)
    */
-  async actionParameterCompletion(currentArgs: string[]): Promise<string[]> {
+  async actionParameterCompletion(): Promise<string[]> {
     return [
       "fix", // Fix/repair
       "verify", // Verify/check
@@ -1988,11 +1984,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         "DEBUG: Taking METHOD completion branch\n"
       );
       const filter = this.model.completionCurrentWord || "";
-      const values = await this.completionNameParameterCompletion([
-        "completion",
-        "method",
-        filter,
-      ]);
+      // Model state already has completionCompWords set properly
+      const values = await this.completionNameParameterCompletion();
       this.formatCompletionOutput(values);
     } else if (this.model.completionIsCompletingParameter) {
       // Parameter completion - use existing completeParameter (outputs directly!)
@@ -2185,6 +2178,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Execute parameter completion callback for dynamic tab completion
    * Called by bash completion when TSCompletion returns __CALLBACK__:methodName
    * Web4 pattern: Hidden via @cliHide, not via naming convention
+   * 
+   * RADICAL OOP: Completion methods are parameterless - they use this.model state
+   * 
    * @cliHide
    */
   async completeParameter(
@@ -2193,11 +2189,11 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   ): Promise<void> {
     // Check if callback method exists on this instance
     if (typeof (this as any)[callbackName] === "function") {
-      // Pass context args to completion method (e.g., ['on', 'ComponentName'] for versionParameterCompletion)
-      const values = await (this as any)[callbackName](contextArgs);
+      // Call parameterless completion method (uses this.model for all context)
+      const values = await (this as any)[callbackName]();
 
       // Use DRY helper to format output with DISPLAY/WORD protocol
-      // Model already has completion context from bash
+      // Model already has completion context from bash (via shCompletion)
       this.formatCompletionOutput(values);
     } else {
       // Callback not found - return empty (no completions)
@@ -2210,7 +2206,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Used by: tree, and any method with depth parameter
    * @cliHide
    */
-  async depthParameterCompletion(currentArgs: string[]): Promise<string[]> {
+  async depthParameterCompletion(): Promise<string[]> {
     return ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
   }
 
@@ -2219,9 +2215,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Used by: tree, and any method with showHidden parameter
    * @cliHide
    */
-  async showHiddenParameterCompletion(
-    currentArgs: string[]
-  ): Promise<string[]> {
+  async showHiddenParameterCompletion(): Promise<string[]> {
     return ["true", "false"];
   }
 
@@ -2230,9 +2224,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Used by: test, and any method with skipPromotion parameter
    * @cliHide
    */
-  async skipPromotionParameterCompletion(
-    currentArgs: string[]
-  ): Promise<string[]> {
+  async skipPromotionParameterCompletion(): Promise<string[]> {
     return ["true", "false"];
   }
 
@@ -2241,7 +2233,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Used by: getContext, and any method with format parameter
    * @cliHide
    */
-  async formatParameterCompletion(currentArgs: string[]): Promise<string[]> {
+  async formatParameterCompletion(): Promise<string[]> {
     return ["json", "bash", "text", "xml", "csv"];
   }
 
@@ -2250,7 +2242,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Used by: completion method for testing tab completions
    * @cliHide
    */
-  async whatParameterCompletion(currentArgs: string[]): Promise<string[]> {
+  async whatParameterCompletion(): Promise<string[]> {
     return ["method", "parameter"];
   }
 
@@ -2258,12 +2250,15 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Fundamental parameter completion: filter (prefix for filtering completions)
    * Used by: completion method for testing tab completions
    * Delegates to completionNameParameterCompletion for shared logic
+   * 
+   * RADICAL OOP: Now parameterless - relies on model state
+   * 
    * @cliHide
    */
-  async filterParameterCompletion(currentArgs: string[]): Promise<string[]> {
+  async filterParameterCompletion(): Promise<string[]> {
     // TSCompletion expects {parameterName}ParameterCompletion naming convention
     // Delegate to shared logic in completionNameParameterCompletion
-    return this.completionNameParameterCompletion(currentArgs);
+    return this.completionNameParameterCompletion();
   }
 
   /**
@@ -2319,13 +2314,11 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Shared by: filterParameterCompletion (via delegation)
    * @cliHide
    */
-  async completionNameParameterCompletion(
-    currentArgs: string[]
-  ): Promise<string[]> {
-    // currentArgs: ['completion', 'method'|'parameter', 'prefix', ...] in bash completion context
-    // Extract 'what' value from args (index 1 = first parameter value)
-    const what = currentArgs[1]; // Index 1 contains the 'what' value
-    const filterPrefix = currentArgs[2]; // Optional prefix for filtering
+  async completionNameParameterCompletion(): Promise<string[]> {
+    // Extract values from model state  
+    // Format: ['web4tscomponent', 'completion', 'method'|'parameter', 'prefix', ...]
+    const what = this.model.completionCompWords[2]; // 'method' or 'parameter'
+    const filterPrefix = this.model.completionCompWords[3] || ""; // Optional prefix
 
     if (!what || (what !== "method" && what !== "parameter")) {
       // No valid 'what' value yet - return empty
@@ -2707,19 +2700,11 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * NOTE: Implemented in base CLI for all Web4 components
    * @cliHide
    */
-  async componentParameterCompletion(currentArgs: string[]): Promise<string[]> {
-    // Resolve project root from current process
-    const cwd = process.cwd();
+  async componentParameterCompletion(): Promise<string[]> {
+    // Use model-driven project root (CLI calculated it already!)
+    const projectRoot = this.model.projectRoot;
     const { readdirSync, lstatSync, existsSync } = await import("fs");
     const { join } = await import("path");
-
-    // Find project root by looking for components directory
-    let projectRoot = cwd;
-    while (!existsSync(join(projectRoot, "components"))) {
-      const parent = join(projectRoot, "..");
-      if (parent === projectRoot) break; // Reached filesystem root
-      projectRoot = parent;
-    }
 
     try {
       const componentsDir = join(projectRoot, "components");
@@ -2747,28 +2732,24 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   /**
    * Tab completion for version parameter of 'on' command
    * NOTE: Implemented in base CLI for all Web4 components
+   * 
+   * RADICAL OOP: Uses this.model.completionCompWords, NOT passed parameters
+   * 
    * @cliHide
    */
-  async versionParameterCompletion(currentArgs: string[]): Promise<string[]> {
-    // Extract component name from args (should be the first arg after 'on')
-    const componentName = currentArgs[1]; // args: ['on', 'ComponentName', ...]
+  async versionParameterCompletion(): Promise<string[]> {
+    // Extract component name from model state
+    // Format: ['web4tscomponent', 'on', 'ComponentName', '']
+    const componentName = this.model.completionCompWords[2];
 
     if (!componentName) {
       return ["latest", "dev", "test", "prod"];
     }
 
-    // Resolve project root from current process
-    const cwd = process.cwd();
+    // Use model-driven project root (CLI calculated it already!)
+    const projectRoot = this.model.projectRoot;
     const { readdirSync, existsSync } = await import("fs");
     const { join } = await import("path");
-
-    // Find project root by looking for components directory
-    let projectRoot = cwd;
-    while (!existsSync(join(projectRoot, "components"))) {
-      const parent = join(projectRoot, "..");
-      if (parent === projectRoot) break; // Reached filesystem root
-      projectRoot = parent;
-    }
 
     try {
       const componentDir = join(projectRoot, "components", componentName);
@@ -2805,18 +2786,18 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Returns available test scopes: file, describe, itCase
    * Note: 'all' is the default (runs full suite), not needed in tab completion
    *
-   * ENHANCED: When currentArgs contains 'test', also output one-line documentation
+   * ENHANCED: When command is 'test', also output one-line documentation
    * like the 'links' command does, to help users understand test command
+   *
+   * RADICAL OOP: Uses this.model.completionCommand, NOT passed parameters
    *
    * @cliHide
    */
-  async scopeParameterCompletion(currentArgs: string[]): Promise<string[]> {
+  async scopeParameterCompletion(): Promise<string[]> {
     const scopes = ["file", "describe", "itCase"];
 
-    // Check if we're completing for the 'test' command
-    // currentArgs format when called from bash: ['test', ...]
-    // (NOT [className, 'test'] - that's for other callbacks!)
-    if (currentArgs.length >= 1 && currentArgs[0] === "test") {
+    // Check if we're completing for the 'test' command (from model state!)
+    if (this.model.completionCommand === "test") {
       // Output ONE LINE documentation BEFORE the parameter options
       // This helps users understand what 'test' does while seeing parameter options
       const GREEN = this.colors.descriptions;
@@ -2845,7 +2826,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Returns: resolved project root path (from §) and test/data (for test isolation)
    * @cliHide
    */
-  async targetDirParameterCompletion(currentArgs: string[]): Promise<string[]> {
+  async targetDirParameterCompletion(): Promise<string[]> {
     // Get enum values from @cliValues annotation (§ and test/data)
     const values = this.enumParameterCompletion("targetDir");
 
@@ -2863,9 +2844,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Returns available semantic links: dev, latest, prod, test
    * @cliHide
    */
-  async targetVersionParameterCompletion(
-    currentArgs: string[]
-  ): Promise<string[]> {
+  async targetVersionParameterCompletion(): Promise<string[]> {
     return ["dev", "latest", "prod", "test"];
   }
 
@@ -2875,29 +2854,29 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Used by: upgrade, releaseTest
    * @cliHide
    */
-  async versionPromotionParameterCompletion(
-    currentArgs: string[]
-  ): Promise<string[]> {
+  async versionPromotionParameterCompletion(): Promise<string[]> {
     return ["nextBuild", "nextMinor", "nextMajor", "nextPatch"];
   }
 
   /**
    * Tab completion for references parameter of 'test' command (file scope)
    * Returns numbered list of test files when scope is 'file'
+   * 
+   * RADICAL OOP: Uses this.model.completionCompWords, NOT passed parameters
+   * 
    * @cliHide
    */
-  async referencesParameterCompletion(
-    currentArgs: string[]
-  ): Promise<string[]> {
-    // Check which scope was selected
-    const scope = currentArgs[1]; // ['test', 'file|describe|itCase', ...]
+  async referencesParameterCompletion(): Promise<string[]> {
+    // Extract scope from model state (CLI already parsed it into completionCompWords)
+    // Format: ['web4tscomponent', 'test', 'file|describe|itCase', '']
+    const scope = this.model.completionCompWords[2];
 
     if (scope === "file") {
-      return this.getTestFileReferences(currentArgs);
+      return this.getTestFileReferences();
     } else if (scope === "describe") {
-      return this.getTestDescribeReferences(currentArgs);
+      return this.getTestDescribeReferences();
     } else if (scope === "itCase") {
-      return this.getTestItCaseReferences(currentArgs);
+      return this.getTestItCaseReferences();
     }
 
     return [];
@@ -2905,11 +2884,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
   /**
    * Get test file references for completion
+   * 
+   * RADICAL OOP: Uses this.model.completionCompWords, NOT passed parameters
+   * 
    * @cliHide
    */
-  private async getTestFileReferences(
-    currentArgs: string[]
-  ): Promise<string[]> {
+  private async getTestFileReferences(): Promise<string[]> {
     const { TestFileParser } = await import("../layer4/TestFileParser.js");
     const { HierarchicalCompletionFilter } = await import(
       "../layer4/HierarchicalCompletionFilter.js"
@@ -2926,8 +2906,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // Get all files in hierarchical format with tokens
     const result = TestFileParser.getAllFilesHierarchical(testDir);
 
-    // Apply DRY Web4 filtering pattern
-    const filterPrefix = currentArgs[2];
+    // Apply DRY Web4 filtering pattern (extract filter prefix from model)
+    // Format: ['web4tscomponent', 'test', 'file', '']
+    const filterPrefix = this.model.completionCompWords[3] || "";
     const fileTokenPattern = /^(\d+):/; // Pattern to match file tokens in display like "1:", "17:"
 
     return HierarchicalCompletionFilter.applyPrefixFilter(
@@ -2939,11 +2920,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
   /**
    * Get test describe references for completion
+   * 
+   * RADICAL OOP: Uses this.model.completionCompWords, NOT passed parameters
+   * 
    * @cliHide
    */
-  private async getTestDescribeReferences(
-    currentArgs: string[]
-  ): Promise<string[]> {
+  private async getTestDescribeReferences(): Promise<string[]> {
     const { TestFileParser } = await import("../layer4/TestFileParser.js");
     const { existsSync } = await import("fs");
 
@@ -2957,8 +2939,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // Get all describes in hierarchical format with tokens
     const result = TestFileParser.getAllDescribesHierarchical(testDir);
 
-    // Check if there's a filter prefix (e.g., '1a' from 'test describe 1a')
-    const filterPrefix = currentArgs[2];
+    // Check if there's a filter prefix from model (e.g., '1a' from 'test describe 1a')
+    // Format: ['web4tscomponent', 'test', 'describe', '1a']
+    const filterPrefix = this.model.completionCompWords[3] || "";
 
     if (filterPrefix) {
       // Filter tokens that start with the prefix
@@ -3037,11 +3020,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
   /**
    * Get test it case references for completion
+   * 
+   * RADICAL OOP: Uses this.model.completionCompWords, NOT passed parameters
+   * 
    * @cliHide
    */
-  private async getTestItCaseReferences(
-    currentArgs: string[]
-  ): Promise<string[]> {
+  private async getTestItCaseReferences(): Promise<string[]> {
     const { TestFileParser } = await import("../layer4/TestFileParser.js");
     const { HierarchicalCompletionFilter } = await import(
       "../layer4/HierarchicalCompletionFilter.js"
@@ -3058,8 +3042,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // Get all it cases in hierarchical format with tokens
     const result = TestFileParser.getAllItCasesHierarchical(testDir);
 
-    // Apply DRY Web4 filtering pattern
-    const filterPrefix = currentArgs[2];
+    // Apply DRY Web4 filtering pattern (extract filter prefix from model)
+    // Format: ['web4tscomponent', 'test', 'itCase', '1a1']
+    const filterPrefix = this.model.completionCompWords[3] || "";
     const itCaseTokenPattern = /(\d+[a-z]\d+)\)/; // Pattern to match it case tokens like "1a1)", "17b2)"
 
     return HierarchicalCompletionFilter.applyPrefixFilter(
@@ -3072,17 +3057,18 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   /**
    * Tab completion for describe reference parameter of 'test' command
    * Returns numbered list of describe blocks from selected test file
+   * 
+   * RADICAL OOP: Uses this.model.completionCompWords, NOT passed parameters
+   * 
    * @cliHide
    */
-  async testDescribeReferenceParameterCompletion(
-    currentArgs: string[]
-  ): Promise<string[]> {
+  async testDescribeReferenceParameterCompletion(): Promise<string[]> {
     const { TestFileParser } = await import("../layer4/TestFileParser.js");
     const { existsSync } = await import("fs");
 
-    // Extract file number from args: ['test', 'describe', '2', ...]
-    const scope = currentArgs[1];
-    const fileNumStr = currentArgs[2];
+    // Extract file number from model: ['web4tscomponent', 'test', 'describe', '2', ...]
+    const scope = this.model.completionCompWords[2];
+    const fileNumStr = this.model.completionCompWords[3];
 
     if (!fileNumStr || scope !== "describe") {
       return [];
@@ -3118,18 +3104,19 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   /**
    * Tab completion for it case reference parameter of 'test' command
    * Returns numbered list of it cases from selected describe block
+   * 
+   * RADICAL OOP: Uses this.model.completionCompWords, NOT passed parameters
+   * 
    * @cliHide
    */
-  async testItCaseReferenceParameterCompletion(
-    currentArgs: string[]
-  ): Promise<string[]> {
+  async testItCaseReferenceParameterCompletion(): Promise<string[]> {
     const { TestFileParser } = await import("../layer4/TestFileParser.js");
     const { existsSync } = await import("fs");
 
-    // Extract file and describe numbers: ['test', 'itCase', '2', '1', ...]
-    const scope = currentArgs[1];
-    const fileNumStr = currentArgs[2];
-    const describeNumStr = currentArgs[3];
+    // Extract file and describe numbers from model: ['web4tscomponent', 'test', 'itCase', '2', '1', ...]
+    const scope = this.model.completionCompWords[2];
+    const fileNumStr = this.model.completionCompWords[3];
+    const describeNumStr = this.model.completionCompWords[4];
 
     if (!fileNumStr || !describeNumStr || scope !== "itCase") {
       return [];
@@ -3168,8 +3155,10 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   /**
    * Complete component names for create command
    * Provides suggestions for new component names based on common patterns
+   * 
+   * RADICAL OOP: Uses this.model.completionCompWords, NOT passed parameters
    */
-  async nameParameterCompletion(currentArgs: string[]): Promise<string[]> {
+  async nameParameterCompletion(): Promise<string[]> {
     // Suggest common component name patterns
     const suggestions = [
       "UserManager",
@@ -3184,7 +3173,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       "LoggingService",
     ];
 
-    const filterPrefix = currentArgs[1];
+    // Extract filter prefix from model: ['web4tscomponent', 'create', 'User', ...]
+    const filterPrefix = this.model.completionCompWords[2] || "";
     if (filterPrefix) {
       const filtered = suggestions.filter((name) =>
         name.toLowerCase().startsWith(filterPrefix.toLowerCase())
@@ -3198,8 +3188,10 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   /**
    * Complete options parameter for create command
    * Provides feature option suggestions
+   * 
+   * RADICAL OOP: Uses this.model.completionCompWords, NOT passed parameters
    */
-  async optionsParameterCompletion(currentArgs: string[]): Promise<string[]> {
+  async optionsParameterCompletion(): Promise<string[]> {
     const allOptions = [
       "all", // All features (recommended)
       "cli", // CLI only
@@ -3215,7 +3207,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       "layers spec vitest", // Layers + spec + vitest
     ];
 
-    const filterPrefix = currentArgs[3] || currentArgs[2] || currentArgs[1]; // Handle different contexts
+    // Extract filter from model - could be at different positions depending on command context
+    // Format: ['web4tscomponent', 'create', 'ComponentName', 'all', ...]
+    const filterPrefix = this.model.completionCompWords[4] || this.model.completionCompWords[3] || this.model.completionCompWords[2] || "";
     if (filterPrefix) {
       const filtered = allOptions.filter(
         (option) =>
