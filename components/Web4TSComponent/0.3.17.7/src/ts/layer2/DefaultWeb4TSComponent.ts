@@ -1721,8 +1721,15 @@ Standards:
     // Use target's targetDirectory (component's own root where tests are)
     const componentPath = target.model.targetDirectory;
     
+    // 🚨 RECURSION PREVENTION: Detect if already called from npm test
+    // @pdca 2025-11-04-UTC-2044.pdca.md - Prevent test.sh → component test → npm test → test.sh loop
+    const calledFromNpmTest = process.env.npm_lifecycle_event === 'test';
+    const shouldUseNpmTest = this.model.context && !calledFromNpmTest;
+    
+    const testCommand = shouldUseNpmTest ? 'npm test' : 'npx vitest run --bail=false';
+    
     try {
-      execSync(this.model.context ? 'npm test' : 'npx vitest run --bail=false', { 
+      execSync(testCommand, { 
         cwd: componentPath, 
         stdio: 'inherit',
         encoding: 'utf-8',  // ✅ CRITICAL: Forces proper stream handling, prevents EPIPE hang
