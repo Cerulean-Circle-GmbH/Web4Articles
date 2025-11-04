@@ -7,6 +7,8 @@
 
 ## 🎯 Key Architectural Improvements in 0.3.17.4
 
+STOP USING "| head"  or "| tail" OUTPUT FILTERING FOREVER!!!!!!
+
 ### 1. **Parameterless Completion Methods** (Radical OOP Enforcement)
 - **Before**: `referencesParameterCompletion(currentArgs: string[])` - functional anti-pattern
 - **After**: `referencesParameterCompletion()` - uses `this.model.completionCompWords`
