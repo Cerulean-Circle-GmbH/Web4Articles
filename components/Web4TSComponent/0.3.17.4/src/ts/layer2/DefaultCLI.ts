@@ -2008,6 +2008,46 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       } else {
         // UX: Always provide feedback when no completions are available
         console.log("DISPLAY: (no completions available)");
+        
+        // Add the "your web4 command >" prompt so user can continue typing
+        if (
+          this.model.completionCliName &&
+          this.model.completionCompWords.length > 0
+        ) {
+          // Prompt colors: "your web4 command >"
+          const promptWhite = "\x1b[37m";
+          const promptCyan = "\x1b[36m";
+          const reset = "\x1b[0m";
+
+          // TSCompletion colors for command parts
+          const toolName = "\x1b[1;36m"; // Cyan bold for CLI name
+          const commands = "\x1b[0;37m"; // White for method names
+          const parameters = "\x1b[1;33m"; // Yellow bold for parameters
+
+          // Build colored command from MODEL (DRY!)
+          let coloredCommand = `${toolName}${this.model.completionCliName}${reset}`;
+
+          // Add method and parameters from completionCompWords
+          for (let i = 1; i < this.model.completionCompWords.length; i++) {
+            const word = this.model.completionCompWords[i];
+            if (word) {
+              // First word after CLI name is method, rest are parameters
+              if (i === 1) {
+                coloredCommand += ` ${commands}${word}${reset}`;
+              } else {
+                // Use yellow for parameters
+                const params = this.model.completionCompWords.slice(i).filter(w => w).join(" ");
+                coloredCommand += ` ${parameters}${params}${reset}`;
+                break; // Already added all remaining parameters
+              }
+            }
+          }
+
+          // Format: "your web4 command >" with colored command
+          const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
+          console.log(`DISPLAY: ${prompt}`);
+        }
+        
         console.log("WORD: ");
       }
     } else {
@@ -2029,6 +2069,46 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // UX: Always provide feedback when no completions are available
     if (!values || values.length === 0) {
       console.log("DISPLAY: (no completions available)");
+      
+      // Add the "your web4 command >" prompt so user can continue typing
+      if (
+        this.model.completionCliName &&
+        this.model.completionCompWords.length > 0
+      ) {
+        // Prompt colors: "your web4 command >"
+        const promptWhite = "\x1b[37m";
+        const promptCyan = "\x1b[36m";
+        const reset = "\x1b[0m";
+
+        // TSCompletion colors for command parts
+        const toolName = "\x1b[1;36m"; // Cyan bold for CLI name
+        const commands = "\x1b[0;37m"; // White for method names
+        const parameters = "\x1b[1;33m"; // Yellow bold for parameters
+
+        // Build colored command from MODEL (DRY!)
+        let coloredCommand = `${toolName}${this.model.completionCliName}${reset}`;
+
+        // Add method and parameters from completionCompWords
+        for (let i = 1; i < this.model.completionCompWords.length; i++) {
+          const word = this.model.completionCompWords[i];
+          if (word) {
+            // First word after CLI name is method, rest are parameters
+            if (i === 1) {
+              coloredCommand += ` ${commands}${word}${reset}`;
+            } else {
+              // Use yellow for parameters
+              const params = this.model.completionCompWords.slice(i).filter(w => w).join(" ");
+              coloredCommand += ` ${parameters}${params}${reset}`;
+              break; // Already added all remaining parameters
+            }
+          }
+        }
+
+        // Format: "your web4 command >" with colored command
+        const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
+        console.log(`DISPLAY: ${prompt}`);
+      }
+      
       console.log("WORD: ");
       return;
     }
