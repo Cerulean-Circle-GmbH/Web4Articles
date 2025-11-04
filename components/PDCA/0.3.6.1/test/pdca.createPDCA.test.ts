@@ -452,5 +452,124 @@ describe('PDCA createPDCA - Programmatic PDCA Generation', () => {
     const previousLine = firstContent.match(/\*\*🔗 Previous PDCA:\*\* .*/)[0];
     expect(previousLine).toMatch(/N\/A|First PDCA/i);
   });
+
+  // ============================================================================
+  // TC80-TC85: Custom Session Directory Feature
+  // PDCA: 2025-11-04-UTC-0726.pdca.md
+  // Feature: Enable createPDCA to work in any component directory
+  // ============================================================================
+
+  it('TC80: createPDCA - custom sessionDirectory creates PDCA in specified location', async () => {
+    // Given: Custom session directory exists
+    const customDir = path.join(testDataDir, 'custom-component', 'session');
+    fs.mkdirSync(customDir, { recursive: true });
+    
+    // When: Create PDCA with custom sessionDirectory
+    await pdca.createPDCA('Custom Dir Test', 'Test in custom location', customDir);
+    
+    // Then: PDCA should be created in custom directory
+    const files = fs.readdirSync(customDir).filter(f => f.endsWith('.pdca.md'));
+    expect(files.length).toBe(1);
+    expect(files[0]).toMatch(/^\d{4}-\d{2}-\d{2}-UTC-\d{4}\.pdca\.md$/);
+    
+    // And: PDCA should contain correct title and objective
+    const content = fs.readFileSync(path.join(customDir, files[0]), 'utf-8');
+    expect(content).toContain('Custom Dir Test');
+    expect(content).toContain('Test in custom location');
+  });
+
+  it('TC81: createPDCA - non-existent sessionDirectory throws error', async () => {
+    // Given: Invalid directory path
+    const invalidDir = path.join(testDataDir, 'does-not-exist');
+    
+    // When/Then: Creating PDCA with non-existent directory should throw
+    await expect(
+      pdca.createPDCA('Should Fail', 'Invalid directory', invalidDir)
+    ).rejects.toThrow(/directory does not exist|ENOENT/i);
+    
+    // And: No PDCA file should be created
+    expect(fs.existsSync(invalidDir)).toBe(false);
+  });
+
+  it('TC82: createPDCA - without sessionDirectory uses default (backward compat)', async () => {
+    // Given: Default session directory exists
+    const defaultSessionDir = path.join(testDataDir, 'session');
+    const filesBefore = fs.readdirSync(defaultSessionDir).filter(f => f.endsWith('.pdca.md'));
+    
+    // When: Create PDCA without sessionDirectory parameter
+    await pdca.createPDCA('Default Location', 'Uses default path');
+    
+    // Then: PDCA created in default location
+    const filesAfter = fs.readdirSync(defaultSessionDir).filter(f => f.endsWith('.pdca.md'));
+    expect(filesAfter.length).toBe(filesBefore.length + 1);
+    
+    // And: New PDCA has correct content
+    const newFile = filesAfter.filter(f => !filesBefore.includes(f))[0];
+    const content = fs.readFileSync(path.join(defaultSessionDir, newFile), 'utf-8');
+    expect(content).toContain('Default Location');
+    expect(content).toContain('Uses default path');
+  });
+
+  it('TC83: createPDCA - bidirectional links work with custom directory', async () => {
+    // Given: Custom directory with existing PDCA
+    const customDir = path.join(testDataDir, 'web4tscomponent', 'session');
+    fs.mkdirSync(customDir, { recursive: true });
+    
+    const firstPDCA = '2025-11-04-UTC-0700.pdca.md';
+    const firstContent = `# First PDCA
+**🎯 Template Version:** 3.2.4.2
+**➡️ Next PDCA:** Use pdca chain`;
+    fs.writeFileSync(path.join(customDir, firstPDCA), firstContent);
+    
+    // When: Create second PDCA in same custom directory
+    await pdca.createPDCA('Second in Custom', 'Chain test', customDir);
+    
+    // Then: New PDCA should link to previous
+    const files = fs.readdirSync(customDir).filter(f => f.endsWith('.pdca.md')).sort();
+    const secondContent = fs.readFileSync(path.join(customDir, files[1]), 'utf-8');
+    
+    expect(secondContent).toContain('**🔗 Previous PDCA:**');
+    expect(secondContent).toContain(firstPDCA);
+    expect(secondContent).toContain('[GitHub](');
+  });
+
+  it('TC84: createPDCA - dry run with custom directory', async () => {
+    // Given: Custom directory exists
+    const customDir = path.join(testDataDir, 'dryrun-custom');
+    fs.mkdirSync(customDir, { recursive: true });
+    
+    // When: Create PDCA in dry-run mode with custom directory
+    await pdca.createPDCA('Dry Run Custom', 'Should not create', customDir, 'true');
+    
+    // Then: No PDCA file should be created
+    const files = fs.readdirSync(customDir).filter(f => f.endsWith('.pdca.md'));
+    expect(files.length).toBe(0);
+  });
+
+  it('TC85: createPDCA - relative vs absolute paths work identically', async () => {
+    // Given: Two identical directories (one accessed via relative, one via absolute)
+    const relativeDir = path.join(testDataDir, 'relative-test');
+    const absoluteDir = path.resolve(testDataDir, 'absolute-test');
+    fs.mkdirSync(relativeDir, { recursive: true });
+    fs.mkdirSync(absoluteDir, { recursive: true });
+    
+    // When: Create PDCAs using relative and absolute paths
+    await pdca.createPDCA('Relative Path', 'Relative test', relativeDir);
+    await pdca.createPDCA('Absolute Path', 'Absolute test', absoluteDir);
+    
+    // Then: Both should create valid PDCAs
+    const relativeFiles = fs.readdirSync(relativeDir).filter(f => f.endsWith('.pdca.md'));
+    const absoluteFiles = fs.readdirSync(absoluteDir).filter(f => f.endsWith('.pdca.md'));
+    
+    expect(relativeFiles.length).toBe(1);
+    expect(absoluteFiles.length).toBe(1);
+    
+    // And: Both should have correct content
+    const relativeContent = fs.readFileSync(path.join(relativeDir, relativeFiles[0]), 'utf-8');
+    const absoluteContent = fs.readFileSync(path.join(absoluteDir, absoluteFiles[0]), 'utf-8');
+    
+    expect(relativeContent).toContain('Relative Path');
+    expect(absoluteContent).toContain('Absolute Path');
+  });
 });
 
