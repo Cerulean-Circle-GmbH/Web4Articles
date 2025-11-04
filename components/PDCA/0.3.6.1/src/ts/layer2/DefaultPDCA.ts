@@ -7,7 +7,7 @@ import { PDCA } from '../layer3/PDCA.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { PDCAModel } from '../layer3/PDCAModel.interface.js';
 import { existsSync, lstatSync, readlinkSync, readdirSync, statSync } from 'fs';
-import { join, dirname } from 'path';
+import { join, dirname, basename } from 'path';
 
 // Use latest version for delegation (always available)
 import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js';
@@ -5589,8 +5589,7 @@ export class DefaultPDCA implements PDCA {
    * @cliHide
    */
   private extractTimestampFromFilename(filePath: string): string {
-    const path = require('path');
-    const filename = path.basename(filePath);
+    const filename = basename(filePath);
     
     // Match pattern: YYYY-MM-DD-UTC-HHMM
     const match = filename.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{4})/);
