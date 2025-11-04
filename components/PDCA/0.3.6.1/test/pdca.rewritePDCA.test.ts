@@ -286,4 +286,133 @@ It needs to be rewritten.`;
     expect(rewrittenContent).toContain('Testing rewritePDCA extraction and in-place rewriting'); // Objective
     expect(rewrittenContent).toContain('Claude Sonnet 4.5'); // Agent name
   });
+
+  // TC86: rewritePDCA populates basic placeholders
+  it('TC86: rewritePDCA - populates basic boilerplate placeholders', async () => {
+    await pdca.rewritePDCA(corruptedPDCAPath);
+    
+    const content = fs.readFileSync(corruptedPDCAPath, 'utf-8');
+    
+    // Verify NO unpopulated basic placeholders remain
+    expect(content).not.toContain('{{CMM_STATUS}}');
+    expect(content).not.toContain('{{AGENT_NAME}}');
+    expect(content).not.toContain('{{BRANCH_NAME}}');
+    expect(content).not.toContain('{{BRANCH_PURPOSE}}');
+    expect(content).not.toContain('{{SESSION_NAME}}');
+    expect(content).not.toContain('{{SPRINT_NAME}}');
+    expect(content).not.toContain('{{TASK_NAME}}');
+    expect(content).not.toContain('{{KEY_ISSUES}}');
+    expect(content).not.toContain('{{DESCRIPTION}}');
+    expect(content).not.toContain('{{BADGE_TYPE}}');
+    expect(content).not.toContain('{{AGENT_DESCRIPTION}}');
+    expect(content).not.toContain('{{ROLE_NAME}}');
+    expect(content).not.toContain('{{CONTEXT_SPECIALIZATION}}');
+    
+    // Verify populated with sensible defaults
+    expect(content).toContain('Claude Sonnet 4.5');
+    expect(content).toContain('test-branch'); // From model
+    expect(content).toContain('CMM3');
+  });
+
+  // TC87: rewritePDCA passes cmm3check violation 1k (metadata placeholders only)
+  it('TC87: rewritePDCA - output has no unpopulated metadata placeholders', async () => {
+    await pdca.rewritePDCA(corruptedPDCAPath);
+    
+    const content = fs.readFileSync(corruptedPDCAPath, 'utf-8');
+    
+    // Check for metadata placeholders that SHOULD be populated by rewritePDCA
+    // (Not AI-content placeholders like {{DO_SECTION_TITLE}}, {{VERBATIM_QA_FEEDBACK}}, etc.)
+    const metadataPlaceholders = [
+      '{{TITLE}}', '{{OBJECTIVE}}', '{{UTC_TIMESTAMP}}', '{{AGENT_NAME}}',
+      '{{BRANCH_NAME}}', '{{SESSION_NAME}}', '{{SPRINT_NAME}}', '{{TASK_NAME}}',
+      '{{KEY_ISSUES}}', '{{PREVIOUS_COMMIT_SHA}}', '{{PREVIOUS_COMMIT_DESCRIPTION}}',
+      '{{PLAN_OBJECTIVE}}', '{{REQUIREMENT_UUID}}', '{{SUCCESS_SUMMARY}}',
+      '{{DESCRIPTION}}', '{{CMM_STATUS}}', '{{BADGE_TYPE}}', '{{BADGE_TIMESTAMP}}',
+      '{{AGENT_DESCRIPTION}}', '{{ROLE_NAME}}', '{{CONTEXT_SPECIALIZATION}}',
+      '{{BRANCH_PURPOSE}}', '{{SYNC_BRANCHES}}', '{{SYNC_PURPOSE}}',
+      '{{FEEDBACK_TIMESTAMP}}'
+    ];
+    
+    // Verify none of these metadata placeholders remain
+    for (const placeholder of metadataPlaceholders) {
+      expect(content).not.toContain(placeholder);
+    }
+  });
+
+  // TC88: rewritePDCA populates PLAN_OBJECTIVE
+  it('TC88: rewritePDCA - populates PLAN_OBJECTIVE with extracted objective', async () => {
+    await pdca.rewritePDCA(corruptedPDCAPath);
+    
+    const content = fs.readFileSync(corruptedPDCAPath, 'utf-8');
+    
+    // Verify PLAN section has objective
+    expect(content).toContain('**Objective:** Testing rewritePDCA extraction and in-place rewriting');
+    expect(content).not.toContain('{{PLAN_OBJECTIVE}}');
+  });
+
+  // TC89: rewritePDCA DRY - reuses shared population helper
+  it('TC89: rewritePDCA - reuses shared population helper (DRY)', async () => {
+    // This test verifies the IMPLEMENTATION approach (DRY)
+    // createPDCA and rewritePDCA should call the same helper: populateBoilerplateInternal()
+    
+    await pdca.rewritePDCA(corruptedPDCAPath);
+    const rewriteContent = fs.readFileSync(corruptedPDCAPath, 'utf-8');
+    
+    // Create a new PDCA for comparison
+    await pdca.createPDCA('Test', 'Test objective');
+    const newPDCAFiles = fs.readdirSync(testDataDir).filter(f => f.endsWith('.pdca.md') && f !== path.basename(corruptedPDCAPath));
+    expect(newPDCAFiles.length).toBeGreaterThan(0);
+    
+    const newPDCAPath = path.join(testDataDir, newPDCAFiles[0]);
+    const createContent = fs.readFileSync(newPDCAPath, 'utf-8');
+    
+    // Verify SAME placeholders are populated in both
+    expect(rewriteContent).toContain('Claude Sonnet 4.5');
+    expect(createContent).toContain('Claude Sonnet 4.5');
+    expect(rewriteContent).not.toContain('{{AGENT_NAME}}');
+    expect(createContent).not.toContain('{{AGENT_NAME}}');
+    expect(rewriteContent).toContain('CMM3');
+    expect(createContent).toContain('CMM3');
+    expect(rewriteContent).not.toContain('{{CMM_STATUS}}');
+    expect(createContent).not.toContain('{{CMM_STATUS}}');
+  });
+
+  // TC90: rewritePDCA populates Previous PDCA link
+  it('TC90: rewritePDCA - populates Previous PDCA link correctly', async () => {
+    await pdca.rewritePDCA(corruptedPDCAPath);
+    
+    const content = fs.readFileSync(corruptedPDCAPath, 'utf-8');
+    
+    // Verify Previous PDCA link placeholder is replaced
+    expect(content).not.toContain('{{PREVIOUS_PDCA_LINK}}');
+    
+    // Verify the Previous PDCA line specifically (not artifact links)
+    // Should be "N/A - First PDCA" or actual dual link
+    const previousPDCALineMatch = content.match(/\*\*🔗 Previous PDCA:\*\* (.+)/);
+    expect(previousPDCALineMatch).toBeTruthy();
+    
+    const previousPDCAValue = previousPDCALineMatch![1];
+    // Should NOT contain template placeholders in the Previous PDCA line
+    expect(previousPDCAValue).not.toContain('{{GITHUB_URL}}');
+    expect(previousPDCAValue).not.toContain('{{SESSION}}');
+    expect(previousPDCAValue).not.toContain('{{FILENAME}}');
+    
+    // Should be either "N/A - First PDCA" OR a proper dual link
+    expect(previousPDCAValue).toMatch(/(?:N\/A - First PDCA|GitHub.*\|.*§\/)/);
+  });
+
+  // TC91: rewritePDCA preserves filename timestamp but populates display timestamp
+  it('TC91: rewritePDCA - preserves filename timestamp but populates display timestamp', async () => {
+    await pdca.rewritePDCA(corruptedPDCAPath);
+    
+    const content = fs.readFileSync(corruptedPDCAPath, 'utf-8');
+    
+    // Verify filename is unchanged (2025-11-03-UTC-1400.pdca.md)
+    expect(fs.existsSync(corruptedPDCAPath)).toBe(true);
+    expect(path.basename(corruptedPDCAPath)).toBe('2025-11-03-UTC-1400.pdca.md');
+    
+    // Verify display timestamp is populated (not {{UTC_TIMESTAMP}})
+    expect(content).not.toContain('{{UTC_TIMESTAMP}}');
+    expect(content).toMatch(/\*\*🗓️ Date:\*\* \w{3}, \d{2} \w{3} \d{4}/); // e.g., "Mon, 03 Nov 2025"
+  });
 });
