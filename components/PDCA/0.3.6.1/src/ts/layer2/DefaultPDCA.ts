@@ -321,6 +321,7 @@ export class DefaultPDCA implements PDCA {
       '1i': 'Git commit/push protocol not followed',
       '1j': 'QA Decisions section not properly formatted',
       '1k': 'Template placeholders not populated ({{}} tokens found)',
+      '1l': 'Definition of Ready (DoR) or Definition of Done (DoD) missing in PLAN section',
       '3a': 'Links only requirement not met',
       '3b': 'QA Decisions not copied verbatim',
       '3c': 'Dual link format incorrect',
@@ -1383,6 +1384,7 @@ export class DefaultPDCA implements PDCA {
     if (!this.check1i(content)) violations.push('1i');
     if (!this.check1j(content)) violations.push('1j');
     if (!this.check1k(content)) violations.push('1k');
+    if (!this.check1l(content)) violations.push('1l');  // NEW: DoR/DoD check
 
     // 3. Chat Response Compliance (relevant sections in PDCA)
     if (!this.check3a(content)) violations.push('3a');
@@ -1560,6 +1562,27 @@ export class DefaultPDCA implements PDCA {
     // Check for any remaining {{}} placeholders
     const placeholderRegex = /\{\{[^}]+\}\}/;
     return !placeholderRegex.test(contentWithoutCodeBlocks);
+  }
+
+  /**
+   * 1l) Definition of Ready (DoR) and Definition of Done (DoD) present in PLAN section
+   * Ensures all PDCAs have explicit DoR/DoD sections for CMM3 compliance
+   * @cliHide
+   */
+  private check1l(content: string): boolean {
+    // Check for DoR section
+    const hasDoR = content.includes('### **Definition of Ready (DoR)**') || 
+                   content.includes('### **Definition of Ready**') ||
+                   content.includes('### Definition of Ready (DoR)') ||
+                   content.includes('## Definition of Ready');
+    
+    // Check for DoD section
+    const hasDoD = content.includes('### **Definition of Done (DoD)**') || 
+                   content.includes('### **Definition of Done**') ||
+                   content.includes('### Definition of Done (DoD)') ||
+                   content.includes('## Definition of Done');
+    
+    return hasDoR && hasDoD;
   }
 
   /**
