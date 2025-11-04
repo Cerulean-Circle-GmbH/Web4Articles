@@ -24,26 +24,15 @@ export class Web4TSComponentCLI extends DefaultCLI {
     super();
     this.init();  // ← DefaultCLI calculates ALL paths in model
     
-    console.log('[DEBUG Web4TSComponentCLI.constructor] After DefaultCLI.init():');
-    console.log('  this.model.projectRoot:', this.model.projectRoot);
-    
     // ✅ Create component with defaults
     // Component discovers its own componentRoot from import.meta.url
     this.component = new DefaultWeb4TSComponent().init();
-    
-    console.log('[DEBUG Web4TSComponentCLI.constructor] After component.init():');
-    console.log('  component.model.projectRoot:', this.component.model.projectRoot);
-    console.log('  component.model.targetDirectory:', this.component.model.targetDirectory);
     
     // ✅ Direct model assignment (OOP - NO re-init!)
     // Component already set: IOR, owner, version, componentRoot (from its own location)
     // CLI provides: projectRoot, targetDirectory (path context for operations)
     this.component.model.projectRoot = this.model.projectRoot;
     this.component.model.targetDirectory = this.model.projectRoot;
-    
-    console.log('[DEBUG Web4TSComponentCLI.constructor] After direct assignment:');
-    console.log('  component.model.projectRoot:', this.component.model.projectRoot);
-    console.log('  component.model.targetDirectory:', this.component.model.targetDirectory);
     
     this.discoverMethods();  // ✅ NOW this.component exists for discovery!
   }
