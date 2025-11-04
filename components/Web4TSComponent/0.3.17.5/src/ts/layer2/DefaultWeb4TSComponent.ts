@@ -432,9 +432,17 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       // For now, just check if it's actually a different component (not self-delegation)
       const isDifferentComponent = target.model.component !== 'Web4TSComponent';
       if (isDifferentComponent) {
-        // Get Web4TSComponent's actual version from latest symlink path
-        const web4tsVersion = '0.3.17.3'; // TODO: Read from actual Web4TSComponent package
-        header += ` ${dim}(via Web4TSComponent v${web4tsVersion})${reset}`;
+        // Get Web4TSComponent's actual version dynamically
+        // Read from latest symlink (projectRoot is Path Authority field in model)
+        try {
+          const web4tsDir = path.join(this.model.projectRoot, 'components', 'Web4TSComponent');
+          const latestSymlink = path.join(web4tsDir, 'latest');
+          const web4tsVersion = readlinkSync(latestSymlink);
+          header += ` ${dim}(via Web4TSComponent v${web4tsVersion})${reset}`;
+        } catch (error) {
+          // Fallback: if symlink can't be read, don't show version
+          header += ` ${dim}(via Web4TSComponent)${reset}`;
+        }
       }
     }
     

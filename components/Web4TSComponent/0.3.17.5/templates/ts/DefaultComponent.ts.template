@@ -87,11 +87,13 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
 
     // ✅ CRITICAL: Initialize Web4TSComponent with THIS component's identity for delegation
     // @pdca 2025-11-03-UTC-1237.pdca.md - Full delegation initialization
+    // @pdca 2025-11-04-UTC-1630.pdca.md - Added projectRoot for version display fix
     this.web4ts = new DefaultWeb4TSComponent().init({
       model: {
         component: this.model.component,           // THIS component's name
         version: await SemanticVersion.fromString(this.model.version || '0.0.0.0'), // THIS component's version
         componentRoot: componentRoot,              // THIS component's root directory
+        projectRoot: projectRoot,                  // Project root for Path Authority (version display needs this)
         targetDirectory: projectRoot               // Project root for path authority
       }
     });
