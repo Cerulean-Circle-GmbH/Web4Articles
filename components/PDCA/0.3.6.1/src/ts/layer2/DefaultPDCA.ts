@@ -5714,32 +5714,52 @@ export class DefaultPDCA implements PDCA {
    * @cliHide
    */
   private mergeSections(template: string, extractedSections: Record<string, string>): string {
-    let result = template;
+    // Line-by-line parsing approach (fixes template bleeding bug)
+    const templateLines = template.split('\n');
+    const result: string[] = [];
+    let i = 0;
     
-    for (const [sectionName, sectionContent] of Object.entries(extractedSections)) {
-      // Clean the extracted content - remove trailing --- dividers (with optional whitespace)
-      let cleanContent = sectionContent;
-      // Remove patterns like: "\n\n---", "\n---", "---" at end
-      cleanContent = cleanContent.replace(/\s*---\s*$/, '').trimEnd();
+    while (i < templateLines.length) {
+      const line = templateLines[i];
       
-      // Find section in template using regex
-      // Pattern: ## **SectionName** ... content ... (--- or end of file)
-      const sectionRegex = new RegExp(
-        `(## \\*\\*${this.escapeRegex(sectionName)}\\*\\*[^\\n]*\\n\\n)([\\s\\S]*?)(\\n\\n---|$)`,
-        'm'
-      );
+      // Check if this is a main section header: ## **SectionName**
+      const sectionMatch = line.match(/^## \*\*(.+?)\*\*$/);
       
-      const match = result.match(sectionRegex);
-      if (match) {
-        // Replace the content between header and divider with extracted content
-        result = result.replace(
-          sectionRegex,
-          `$1${cleanContent}$3`
-        );
+      if (sectionMatch) {
+        const sectionName = sectionMatch[1];
+        
+        // If we have extracted content for this section, use it
+        if (extractedSections[sectionName]) {
+          // Clean the extracted content - remove trailing --- dividers
+          let cleanContent = extractedSections[sectionName];
+          cleanContent = cleanContent.replace(/\s*---\s*$/, '').trimEnd();
+          
+          // Add section header
+          result.push(line);
+          result.push(''); // Blank line after header
+          
+          // Add extracted content
+          result.push(cleanContent);
+          
+          // Skip template content until next ## ** or ---
+          i++;
+          while (i < templateLines.length) {
+            const nextLine = templateLines[i];
+            if (nextLine.match(/^## \*\*/) || nextLine.trim() === '---') {
+              break; // Stop at next section or divider
+            }
+            i++; // Skip this template line
+          }
+          continue; // Don't increment i again (we're already at next section/divider)
+        }
       }
+      
+      // Keep this line (either not a section header, or no extracted content for it)
+      result.push(line);
+      i++;
     }
     
-    return result;
+    return result.join('\n');
   }
   
   /**
