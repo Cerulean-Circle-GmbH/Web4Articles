@@ -2344,11 +2344,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // @pdca 2025-11-04-UTC-2159.pdca.md - Centralized output in model
     const isMethod = this.model.completionIsCompletingMethod;
     
-    // ANSI color codes for diagnostic output
-    const cyan = '\x1b[36m';
-    const yellow = '\x1b[33m';
-    const green = '\x1b[32m';
-    const reset = '\x1b[0m';
+    // DRY: Use this.colors (already defined!)
+    const cyan = this.colors.cyan;
+    const yellow = this.colors.parameters;
+    const green = this.colors.descriptions;
+    const white = this.colors.sections;
+    const reset = this.colors.reset;
     
     // Empty line after "💭 Thinking..."
     this.model.completionOutputLines.push('DISPLAY: ');
@@ -2364,21 +2365,23 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     }
     
     if (isMethod) {
-      // Method completion - show which completion we're doing and context info
+      // METHOD completion - show context info
       let contextInfo = '';
       if (this.model.completionCommand === 'on' && this.context) {
         const contextName = this.context.constructor.name.replace('Default', '');
         const contextVersion = (this.context.model as any).version?.toString() || 'unknown';
         contextInfo = ` (after 'on ${contextName} ${contextVersion}')`;
       }
-      this.model.completionOutputLines.push(`DISPLAY: ${cyan}📊 Completing: METHOD${contextInfo}${reset}`);
+      this.model.completionOutputLines.push(`DISPLAY: ${cyan}📊 Completing: ${white}METHOD${contextInfo}${reset}`);
     } else {
+      // PARAMETER completion
       const command = this.model.completionCommand;
       const paramIndex = this.model.completionParameterIndex;
       
-      // Show signature with all parameters (colored)
+      // Show signature with method (white) and parameters (yellow)
       const signature = await this.getMethodSignatureFromModel();
-      this.model.completionOutputLines.push(`DISPLAY: ${cyan}Completing:${reset} ${yellow}${signature}${reset}`);
+      this.model.completionOutputLines.push(`DISPLAY: ${cyan}📊 Completing: ${yellow}PARAMETER${reset} of ${white}${command}${reset}`);
+      this.model.completionOutputLines.push(`DISPLAY: ${cyan}Signature:${reset} ${signature}`);
       
       // Get parameter info
       const target = this.context || this;
@@ -2417,7 +2420,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       }
       
       if (callback) {
-        this.model.completionOutputLines.push(`DISPLAY: ${green}Output of ${callbackClass}.${callback}():${reset}`);
+        this.model.completionOutputLines.push(`DISPLAY: ${green}Callback: ${callbackClass}.${callback}()${reset}`);
       }
     }
     
