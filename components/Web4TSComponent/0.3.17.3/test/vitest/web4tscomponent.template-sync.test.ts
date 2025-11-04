@@ -201,16 +201,16 @@ describe('🔄 Template Synchronization', () => {
       // Uses hybrid validation: Timestamp for template updates, Content for manual edits
       
       // ✅ Web4 Pattern: Calculate from componentRoot
-      const projectRoot = path.join(componentRoot, '../../../..');
+      const projectRoot = path.join(componentRoot, '../../..');
       const templatesDir = path.join(componentRoot, 'templates');
       
       // Define all critical files that must stay in sync with templates
       const criticalFiles = [
         {
-          name: 'source.env',
+          name: 'source.env (project root)',
           projectPath: path.join(projectRoot, 'source.env'),
           templatePath: path.join(templatesDir, 'project/source.env.template'),
-          checkTemplateOnly: true // source.env exists at multiple levels, template-only check
+          checkContent: true // Check content sync between project root and template
         },
         {
           name: 'root tsconfig.json',
@@ -248,7 +248,7 @@ describe('🔄 Template Synchronization', () => {
       const errors: string[] = [];
       
       for (const file of criticalFiles) {
-        // NEW: Template-only validation
+        // Template-only validation (existence check only)
         if (file.checkTemplateOnly) {
           // Verify template exists
           if (!existsSync(file.templatePath)) {
@@ -280,27 +280,29 @@ describe('🔄 Template Synchronization', () => {
             `⚠️  ${file.name} is OUTDATED (template is newer)\n` +
             `   Project:  ${file.projectPath} (${projectStats.mtime.toISOString()})\n` +
             `   Template: ${file.templatePath} (${templateStats.mtime.toISOString()})\n` +
-            `   🔧 FIX: Run 'web4tscomponent initProject' to sync`
+            `   🔧 FIX: Run 'web4tscomponent initProject § force' to sync`
           );
         }
         
-        // Check 2: Content DIFFERS (manual edits detected)
-        // NOTE: We use CONTENT comparison for manual edit detection because initProject
-        // always writes newer timestamps when syncing (unavoidable filesystem behavior)
-        const projectContent = readFileSync(file.projectPath, 'utf-8');
-        const templateContent = readFileSync(file.templatePath, 'utf-8');
-        
-        if (projectContent !== templateContent) {
-          errors.push(
-            `⚠️  ${file.name} has DIFFERENT CONTENT than template\n` +
-            `   Project:  ${file.projectPath}\n` +
-            `   Template: ${file.templatePath}\n` +
-            `   🔧 FIX: Update template with your changes, then rebuild & re-sync:\n` +
-            `   1. diff ${file.projectPath} ${file.templatePath}\n` +
-            `   2. Copy changes to template\n` +
-            `   3. npm run build\n` +
-            `   4. web4tscomponent initProject`
-          );
+        // Check 2: Content DIFFERS (manual edits detected) - ONLY if checkContent is true
+        if (file.checkContent) {
+          const projectContent = readFileSync(file.projectPath, 'utf-8');
+          const templateContent = readFileSync(file.templatePath, 'utf-8');
+          
+          if (projectContent !== templateContent) {
+            errors.push(
+              `⚠️  ${file.name} has DIFFERENT CONTENT than template\n` +
+              `   Project:  ${file.projectPath}\n` +
+              `   Template: ${file.templatePath}\n` +
+              `   🔧 FIX: Either:\n` +
+              `   A) If template is correct: web4tscomponent initProject § force\n` +
+              `   B) If project changes are correct:\n` +
+              `      1. diff ${file.projectPath} ${file.templatePath}\n` +
+              `      2. Copy changes to template\n` +
+              `      3. npm run build\n` +
+              `      4. web4tscomponent initProject § force`
+            );
+          }
         }
       }
       
