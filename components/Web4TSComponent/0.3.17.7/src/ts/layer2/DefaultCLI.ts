@@ -256,12 +256,17 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // the component needs to know about the loaded context (targetComponent)
     (this.component!.model as any).context = targetComponent;
     
-    if (actualVersion !== version) {
-      console.log(`✅ Component context loaded: ${component} ${version} → ${actualVersion}`);
-    } else {
-      console.log(`✅ Component context loaded: ${component} ${actualVersion}`);
+    // Only output if NOT in completion mode (completion mode shows diagnostic instead)
+    // @pdca 2025-11-04-UTC-2220-method-chaining-completion.pdca.md
+    const inCompletionMode = this.model.completionCompWords && this.model.completionCompWords.length > 0;
+    if (!inCompletionMode) {
+      if (actualVersion !== version) {
+        console.log(`✅ Component context loaded: ${component} ${version} → ${actualVersion}`);
+      } else {
+        console.log(`✅ Component context loaded: ${component} ${actualVersion}`);
+      }
+      console.log(`   Path: ${componentPath}`);
     }
-    console.log(`   Path: ${componentPath}`);
     
     return this;  // Enable chaining
   }
@@ -2572,19 +2577,11 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       
       if (componentName) {
         try {
-          // Suppress console output during completion
-          const originalLog = console.log;
-          console.log = () => {};
-          
-          // Load the component context (silently - no console output during completion)
+          // Load the component context - outputs will be in DISPLAY format
           await this.on(componentName, version);
-          
-          // Restore console.log
-          console.log = originalLog;
         } catch (error) {
-          // Restore console.log even on error
-          console.log = console.log;
           // If loading fails, continue without context (will complete from current component)
+          // Error already output by on() method
         }
       }
     }
