@@ -2782,25 +2782,39 @@ export class DefaultPDCA implements PDCA {
           '4. AI populates remaining content sections (DO, CHECK, ACT, etc.)',
           '5. Validate: pdca cmm3check <file> (should pass)',
           '',
-          '🎯 How rewritePDCA Works (In-Place + Auto-Population):',
+          '🎯 How rewritePDCA Works (In-Place + Auto-Population + Smart Preservation):',
           '✅ Step 1: Validates corrupted file exists',
           '✅ Step 2: Auto-extracts title from line 1: # 📋 **PDCA Cycle: TITLE - ...**',
           '✅ Step 3: Auto-extracts objective from header: **🎯 Objective:** ...',
           '✅ Step 4: Preserves timestamp from filename: YYYY-MM-DD-UTC-HHMM',
-          '✅ Step 5: Reads template and auto-populates ALL metadata placeholders 🆕',
+          '✅ Step 5: Reads template and auto-populates ALL metadata placeholders',
           '   - Uses populateBoilerplateInternal() (shared DRY helper)',
           '   - Populates: {{TITLE}}, {{OBJECTIVE}}, {{UTC_TIMESTAMP}}, {{AGENT_NAME}}',
           '   - Populates: {{BRANCH_NAME}}, {{CMM_STATUS}}, {{BADGE_TYPE}}, {{TASK_NAME}}',
           '   - Populates: {{DESCRIPTION}}, {{AGENT_DESCRIPTION}}, {{ROLE_NAME}}, etc.',
-          '✅ Step 6: Writes to SAME filename (true in-place rewrite)',
-          '✅ Step 7: Returns this for method chaining',
+          '✅ Step 6: 🆕 SMART CONTENT PRESERVATION (Option B - Always Preserve):',
+          '   - Analyzes corrupted PDCA for salvageable sections',
+          '   - Uses extractSections() to parse ## **SectionName** headers',
+          '   - Uses isValidContent() to validate each section:',
+          '     • Length > 50 characters (not just placeholder stubs)',
+          '     • Placeholders < 5 (actual content, not just {{}} tokens)',
+          '     • No "CORRUPTED" or "MISSING" markers',
+          '   - Uses mergeSections() to insert valid content into fresh template',
+          '   - Result: Valid sections preserved, invalid sections reset to template',
+          '✅ Step 7: Writes to SAME filename (true in-place rewrite)',
+          '✅ Step 8: Returns this for method chaining',
           '',
-          '💡 Design Principle: "Preserve Time, Extract Truth, Auto-Populate, Rewrite in Place"',
+          '💡 Design Principle: "Preserve Time, Extract Truth, Save Valid Work, Auto-Populate"',
           '✅ Timeline Integrity: Original timestamp preserved (no new files)',
           '✅ Zero Manual Input: Title and objective extracted automatically',
-          '✅ CMM3 Compliance: ALL metadata placeholders auto-populated (passes cmm3check 1k) 🆕',
-          '✅ DRY Architecture: Shared populateBoilerplateInternal() with createPDCA 🆕',
+          '✅ CMM3 Compliance: ALL metadata placeholders auto-populated (passes cmm3check 1k)',
+          '✅ DRY Architecture: Shared populateBoilerplateInternal() with createPDCA',
           '✅ True Rewrite: Same file updated, not create-new-delete-old',
+          '✅ 🆕 Smart Preservation: Valid content sections automatically preserved!',
+          '   - Option B (implemented): Always attempts to preserve valid sections',
+          '   - No flags needed - does the right thing automatically',
+          '   - Example: If DO section has valid content → preserved',
+          '   - Example: If CHECK section is "CORRUPTED" → reset to template',
           '🎯 Benefits: Maintains chain chronology, eliminates user error, faster workflow, CMM3 ready',
           '',
           '📋 Example Usage:',
@@ -5565,6 +5579,23 @@ export class DefaultPDCA implements PDCA {
       }
     }
     
+    // Step 6.5: OPTION B - Smart Content Preservation (Always Preserve)
+    console.log(`🔍 Analyzing corrupted content for preservation...\n`);
+    const extractedSections = this.extractSections(content);
+    const sectionNames = Object.keys(extractedSections);
+    
+    if (sectionNames.length > 0) {
+      console.log(`✅ Found ${sectionNames.length} valid section(s) to preserve:`);
+      sectionNames.forEach(name => console.log(`   - ${name}`));
+      console.log();
+      
+      // Merge extracted content into template
+      templateContent = this.mergeSections(templateContent, extractedSections);
+      console.log(`✅ Valid content preserved in rewritten PDCA\n`);
+    } else {
+      console.log(`⚠️  No valid content found to preserve (all sections corrupted or incomplete)\n`);
+    }
+    
     // Step 7: Write to SAME filename (in-place rewrite)
     if (!isDryRun) {
       fs.writeFileSync(filePath, templateContent, 'utf-8');
@@ -5619,6 +5650,104 @@ export class DefaultPDCA implements PDCA {
       .replace(/{{SYNC_BRANCHES}}/g, 'main ← dev branch')
       .replace(/{{SYNC_PURPOSE}}/g, 'Feature validation before merge')
       .replace(/{{FEEDBACK_TIMESTAMP}}/g, new Date().toISOString().split('T')[0] + ' UTC');
+  }
+  
+  /**
+   * Extract sections from corrupted PDCA for content preservation (Option B)
+   * Parses ## **SectionName** headers and extracts content between them
+   * Only returns sections that pass isValidContent() validation
+   * @cliHide
+   */
+  private extractSections(content: string): Record<string, string> {
+    const sections: Record<string, string> = {};
+    
+    // Regex to match section headers: ## **SECTION NAME**
+    const sectionRegex = /^## \*\*(.+?)\*\*$/gm;
+    
+    // Find all section matches
+    const matches = [...content.matchAll(sectionRegex)];
+    
+    for (let i = 0; i < matches.length; i++) {
+      const sectionName = matches[i][1];
+      const startIndex = matches[i].index! + matches[i][0].length;
+      const endIndex = i < matches.length - 1 ? matches[i + 1].index! : content.length;
+      const sectionContent = content.substring(startIndex, endIndex).trim();
+      
+      // Only preserve valid content
+      if (this.isValidContent(sectionContent)) {
+        sections[sectionName] = sectionContent;
+      }
+    }
+    
+    return sections;
+  }
+  
+  /**
+   * Validate if content is salvageable for preservation (Option B)
+   * Content is valid if:
+   * - Length > 50 characters (not just placeholder stubs)
+   * - Placeholders < 5 (not just template tokens)
+   * - Does not start with corruption markers (CORRUPTED, MISSING)
+   * @cliHide
+   */
+  private isValidContent(content: string): boolean {
+    if (!content || content.length < 50) {
+      return false; // Too short - likely just placeholder
+    }
+    
+    const placeholderMatches = content.match(/\{\{.*?\}\}/g);
+    if (placeholderMatches && placeholderMatches.length > 5) {
+      return false; // Too many placeholders - not populated
+    }
+    
+    if (content.startsWith('CORRUPTED') || content.startsWith('MISSING')) {
+      return false; // Explicitly marked as broken
+    }
+    
+    return true;
+  }
+  
+  /**
+   * Merge extracted sections into template (Option B content preservation)
+   * Finds matching section headers in template and replaces placeholder content
+   * with extracted valid content from corrupted PDCA
+   * @cliHide
+   */
+  private mergeSections(template: string, extractedSections: Record<string, string>): string {
+    let result = template;
+    
+    for (const [sectionName, sectionContent] of Object.entries(extractedSections)) {
+      // Clean the extracted content - remove trailing --- dividers (with optional whitespace)
+      let cleanContent = sectionContent;
+      // Remove patterns like: "\n\n---", "\n---", "---" at end
+      cleanContent = cleanContent.replace(/\s*---\s*$/, '').trimEnd();
+      
+      // Find section in template using regex
+      // Pattern: ## **SectionName** ... content ... (--- or end of file)
+      const sectionRegex = new RegExp(
+        `(## \\*\\*${this.escapeRegex(sectionName)}\\*\\*[^\\n]*\\n\\n)([\\s\\S]*?)(\\n\\n---|$)`,
+        'm'
+      );
+      
+      const match = result.match(sectionRegex);
+      if (match) {
+        // Replace the content between header and divider with extracted content
+        result = result.replace(
+          sectionRegex,
+          `$1${cleanContent}$3`
+        );
+      }
+    }
+    
+    return result;
+  }
+  
+  /**
+   * Escape special regex characters for use in RegExp constructor
+   * @cliHide
+   */
+  private escapeRegex(str: string): string {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
   
   /**

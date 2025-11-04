@@ -415,4 +415,216 @@ It needs to be rewritten.`;
     expect(content).not.toContain('{{UTC_TIMESTAMP}}');
     expect(content).toMatch(/\*\*🗓️ Date:\*\* \w{3}, \d{2} \w{3} \d{4}/); // e.g., "Mon, 03 Nov 2025"
   });
+
+  // ========================================
+  // OPTION B: SMART CONTENT PRESERVATION TESTS (Always Preserve)
+  // ========================================
+
+  // TC-PRESERVE-01: Valid DO section is preserved during rewrite
+  it('TC-PRESERVE-01: Preserves valid DO section content automatically', async () => {
+    // Setup: Create corrupted PDCA with valid DO section but missing PLAN
+    const preserveTestPath = path.join(testDataDir, '2025-11-04-UTC-1030.pdca.md');
+    const validDOContent = `**Implementation Steps:**
+1. Created extractSections() helper method
+2. Created isValidContent() validation logic
+3. Created mergeSections() content merger
+4. Enhanced rewritePDCA to call helpers
+
+This is valid content with over 50 characters and minimal placeholders.`;
+
+    const corruptedWithValidDO = `# 📋 **PDCA Cycle: Test Preservation - Test Preservation**
+
+**🗓️ Date:** Tue, 04 Nov 2025 10:30:00 GMT  
+**🎯 Objective:** Test that valid content is preserved  
+**🎯 Template Version:** 3.2.4.2  
+
+## **📋 PLAN**
+
+CORRUPTED PLAN SECTION
+
+---
+
+## **🔧 DO**
+
+${validDOContent}
+
+---
+
+## **✅ CHECK**
+
+MISSING CHECK SECTION`;
+
+    fs.writeFileSync(preserveTestPath, corruptedWithValidDO, 'utf-8');
+
+    // Action: rewritePDCA (Option B always preserves)
+    await pdca.rewritePDCA(preserveTestPath);
+
+    // Assert: Valid DO section content should be preserved
+    const rewrittenContent = fs.readFileSync(preserveTestPath, 'utf-8');
+    expect(rewrittenContent).toContain('Implementation Steps');
+    expect(rewrittenContent).toContain('extractSections() helper method');
+    expect(rewrittenContent).toContain('This is valid content with over 50 characters');
+  });
+
+  // TC-PRESERVE-02: Invalid CHECK section is reset to template
+  it('TC-PRESERVE-02: Resets invalid CHECK section to template automatically', async () => {
+    // Setup: Create corrupted PDCA with explicitly invalid CHECK section
+    const resetTestPath = path.join(testDataDir, '2025-11-04-UTC-1031.pdca.md');
+    const corruptedWithInvalidCheck = `# 📋 **PDCA Cycle: Test Reset - Test Reset**
+
+**🗓️ Date:** Tue, 04 Nov 2025 10:31:00 GMT  
+**🎯 Objective:** Test that invalid content is reset  
+**🎯 Template Version:** 3.2.4.2  
+
+## **📋 PLAN**
+
+Valid plan content here with sufficient length to pass validation.
+
+---
+
+## **🔧 DO**
+
+Valid DO content here with sufficient length to pass validation.
+
+---
+
+## **✅ CHECK**
+
+MISSING CHECK SECTION
+
+---`;
+
+    fs.writeFileSync(resetTestPath, corruptedWithInvalidCheck, 'utf-8');
+
+    // Action: rewritePDCA (Option B resets invalid sections)
+    await pdca.rewritePDCA(resetTestPath);
+
+    // Assert: Invalid CHECK section should be reset (not contain "MISSING")
+    const rewrittenContent = fs.readFileSync(resetTestPath, 'utf-8');
+    expect(rewrittenContent).not.toContain('MISSING CHECK SECTION');
+    
+    // Should contain template CHECK structure
+    expect(rewrittenContent).toContain('## **✅ CHECK**');
+    expect(rewrittenContent).toContain('**Verification Results:**');
+  });
+
+  // TC-PRESERVE-03: Mixed content (selective preservation)
+  it('TC-PRESERVE-03: Selectively preserves valid sections, resets invalid sections', async () => {
+    // Setup: Create PDCA with mixed content (some valid, some invalid)
+    const mixedTestPath = path.join(testDataDir, '2025-11-04-UTC-1032.pdca.md');
+    const validACTContent = `**Success Achieved:** Feature implementation complete with zero regressions!
+
+**Code Quality Enhanced:**
+- DRY principle applied with shared helper
+- Clean separation of concerns
+- Comprehensive test coverage
+
+This is valid ACT content with sufficient length and minimal placeholders.`;
+
+    const mixedContent = `# 📋 **PDCA Cycle: Mixed Test - Mixed Test**
+
+**🗓️ Date:** Tue, 04 Nov 2025 10:32:00 GMT  
+**🎯 Objective:** Test mixed content preservation  
+**🎯 Template Version:** 3.2.4.2  
+
+## **📋 PLAN**
+
+CORRUPTED PLAN
+
+---
+
+## **🔧 DO**
+
+Valid DO section with implementation details and sufficient length.
+
+---
+
+## **✅ CHECK**
+
+Short.
+
+---
+
+## **🎯 ACT**
+
+${validACTContent}
+
+---`;
+
+    fs.writeFileSync(mixedTestPath, mixedContent, 'utf-8');
+
+    // Action: rewritePDCA
+    await pdca.rewritePDCA(mixedTestPath);
+
+    // Assert: Valid sections preserved (DO, ACT), invalid sections reset (PLAN, CHECK)
+    const rewrittenContent = fs.readFileSync(mixedTestPath, 'utf-8');
+    
+    // Valid DO section should be preserved
+    expect(rewrittenContent).toContain('Valid DO section with implementation details');
+    
+    // Valid ACT section should be preserved (check for the actual content)
+    expect(rewrittenContent).toContain('**Success Achieved:**');
+    expect(rewrittenContent).toContain('Feature implementation complete');
+    expect(rewrittenContent).toContain('DRY principle applied');
+    
+    // Invalid PLAN should be reset (not contain "CORRUPTED")
+    expect(rewrittenContent).not.toContain('CORRUPTED PLAN');
+    
+    // Invalid CHECK should be reset (not contain just "Short.")
+    expect(rewrittenContent).toContain('**Verification Results:**');
+  });
+
+  // TC-PRESERVE-04: Demo PDCA validation (real-world test)
+  it('TC-PRESERVE-04: Preserves valid DO section from demo PDCA (1011)', async () => {
+    // Setup: Create a PDCA similar to the corrupted demo PDCA (1011)
+    const demoTestPath = path.join(testDataDir, '2025-11-04-UTC-1011-demo.pdca.md');
+    const validDemoContent = `**1. rename with now**
+
+The \`rename now\` command updates a PDCA filename to the current UTC timestamp...
+
+**2. rename with creationDate**
+
+The \`rename creationDate\` command restores a PDCA filename to its original creation date...
+
+This DO section has over 300 lines of comprehensive command documentation.`;
+
+    const demoPDCA = `# 📋 **PDCA Cycle: Demo - Demo**
+
+**🗓️ Date:** Tue, 04 Nov 2025 10:11:36 GMT  
+**🎯 Objective:** Show PDCA commands  
+**🎯 Template Version:** 3.2.4.2  
+
+## **📋 PLAN**
+
+CORRUPTED CONTENT
+
+---
+
+## **🔧 DO**
+
+${validDemoContent}
+
+---
+
+## **✅ CHECK**
+
+MISSING CHECK SECTION
+
+---`;
+
+    fs.writeFileSync(demoTestPath, demoPDCA, 'utf-8');
+
+    // Action: rewritePDCA
+    await pdca.rewritePDCA(demoTestPath);
+
+    // Assert: Valid DO section with command documentation is preserved
+    const rewrittenContent = fs.readFileSync(demoTestPath, 'utf-8');
+    expect(rewrittenContent).toContain('rename with now');
+    expect(rewrittenContent).toContain('rename with creationDate');
+    expect(rewrittenContent).toContain('over 300 lines of comprehensive command documentation');
+    
+    // Invalid sections should be reset
+    expect(rewrittenContent).not.toContain('CORRUPTED CONTENT');
+    expect(rewrittenContent).not.toContain('MISSING CHECK SECTION');
+  });
 });
