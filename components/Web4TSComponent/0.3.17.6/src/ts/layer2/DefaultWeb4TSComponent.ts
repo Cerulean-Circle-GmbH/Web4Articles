@@ -4769,6 +4769,15 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
   }
 
   /**
+   * Tab completion for targetVersion parameter of 'setCICDVersion' command
+   * Returns available semantic links: dev, latest, prod, test
+   * @cliHide
+   */
+  async targetVersionParameterCompletion(): Promise<string[]> {
+    return ["dev", "latest", "prod", "test"];
+  }
+
+  /**
    * Create semantic version symlink in scripts/versions
    * Example: web4tscomponent.prod → web4tscomponent-v0.3.13.2
    * @cliHide

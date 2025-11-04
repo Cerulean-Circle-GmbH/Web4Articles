@@ -46,12 +46,9 @@ describe('cliSignature - Radical OOP API', () => {
       // Act
       await cli.cliSignature(cword, ...words);
 
-      // Assert - diagnostic goes to stderr
-      const stderrOutput = stderrLogs.join('\n');
-      expect(stderrOutput).toContain('📊 Completing: METHOD');
-      
-      // Assert - completions go to stdout (DISPLAY with formatted output)
+      // Assert - diagnostic goes to stdout as DISPLAY lines (with colors)
       const stdoutOutput = stdoutLogs.join('\n');
+      expect(stdoutOutput).toContain('📊 Completing: METHOD'); // Check content (color codes may vary)
       expect(stdoutOutput).toContain('WORD:');
       expect(stdoutOutput).toContain('DISPLAY:');
     }, 60000); // 60 second timeout for TSDoc parsing
@@ -96,12 +93,13 @@ describe('cliSignature - Radical OOP API', () => {
       // Act
       await cli.cliSignature(cword, ...words);
 
-      // Assert - diagnostic on stderr
-      const stderrOutput = stderrLogs.join('\n');
-      expect(stderrOutput).toMatch(/📊 Completing: PARAMETER \d+ of 'on'/);
+      // Assert - diagnostic on stdout as DISPLAY lines (with colors)
+      const stdoutOutput = stdoutLogs.join('\n');
+      expect(stdoutOutput).toContain('Completing:'); // Check content (color codes may vary)
+      expect(stdoutOutput).toContain('Parameter:');
     });
 
-    it('should show signature on stderr (visible to user)', async () => {
+    it('should show signature as DISPLAY line (visible to user)', async () => {
       // Arrange - completing first parameter of 'on'
       const cword = '2';
       const words = ['web4tscomponent', 'on', ''];
@@ -109,9 +107,10 @@ describe('cliSignature - Radical OOP API', () => {
       // Act
       await cli.cliSignature(cword, ...words);
 
-      // Assert - signature shown on stderr (visible diagnostic)
-      const stderrOutput = stderrLogs.join('\n');
-      expect(stderrOutput).toContain('on');
+      // Assert - signature shown on stdout as DISPLAY line (visible diagnostic, with colors)
+      const stdoutOutput = stdoutLogs.join('\n');
+      expect(stdoutOutput).toContain('Completing:'); // Check content (color codes may vary)
+      expect(stdoutOutput).toContain('on');
     });
 
     it('should output completions to stdout only', async () => {
@@ -127,8 +126,8 @@ describe('cliSignature - Radical OOP API', () => {
       expect(stdoutOutput).toContain('WORD:');
       // Should have actual completions (components)
       expect(stdoutOutput.split('\n').filter(l => l.startsWith('WORD:')).length).toBeGreaterThan(0);
-      // Assert - NO diagnostic on stdout
-      expect(stdoutOutput).not.toContain('📊');
+      // Assert - diagnostic is now in DISPLAY lines (not bare text)
+      expect(stdoutOutput).toContain('DISPLAY:');
     });
   });
 
@@ -141,13 +140,10 @@ describe('cliSignature - Radical OOP API', () => {
       // Act
       await cli.cliSignature(cword, ...words);
 
-      // Assert - diagnostic on stderr (visible to user!)
-      const stderrOutput = stderrLogs.join('\n');
-      expect(stderrOutput).toContain('📊 Completing: PARAMETER 0 of \'on\'');
-      expect(stderrOutput).toContain('on');
-      
-      // Assert - completions on stdout (bash protocol)
+      // Assert - diagnostic on stdout as DISPLAY lines (visible to user, with colors!)
       const stdoutOutput = stdoutLogs.join('\n');
+      expect(stdoutOutput).toContain('Completing:'); // Check content (color codes may vary)
+      expect(stdoutOutput).toContain('Parameter:');
       expect(stdoutOutput).toContain('WORD:');
       // Now actually works! Should have component completions
       expect(stdoutOutput.split('\n').filter(l => l.startsWith('WORD:')).length).toBeGreaterThan(0);
@@ -161,13 +157,10 @@ describe('cliSignature - Radical OOP API', () => {
       // Act
       await cli.cliSignature(cword, ...words);
 
-      // Assert - diagnostic on stderr
-      const stderrOutput = stderrLogs.join('\n');
-      expect(stderrOutput).toContain('📊 Completing: PARAMETER 1 of \'on\'');
-      expect(stderrOutput).toContain('on');
-      
-      // Assert - completions on stdout
+      // Assert - diagnostic on stdout as DISPLAY lines (with colors)
       const stdoutOutput = stdoutLogs.join('\n');
+      expect(stdoutOutput).toContain('Completing:'); // Check content (color codes may vary)
+      expect(stdoutOutput).toContain('Parameter:');
       expect(stdoutOutput).toContain('WORD:');
       // Now works! Should have version completions
       expect(stdoutOutput.split('\n').filter(l => l.startsWith('WORD:')).length).toBeGreaterThan(0);
@@ -183,12 +176,9 @@ describe('cliSignature - Radical OOP API', () => {
       // Act - call shCompletion (delegates to cliSignature)
       await (cli as any).shCompletion(cword, ...words);
 
-      // Assert - diagnostic on stderr (visible!)
-      const stderrOutput = stderrLogs.join('\n');
-      expect(stderrOutput).toContain('📊 Completing: METHOD');
-      
-      // Assert - completions on stdout (bash protocol)
+      // Assert - diagnostic on stdout as DISPLAY lines (visible, with colors!)
       const stdoutOutput = stdoutLogs.join('\n');
+      expect(stdoutOutput).toContain('📊 Completing: METHOD'); // Check content (color codes may vary)
       expect(stdoutOutput).toContain('WORD:');
       expect(stdoutOutput).toContain('DISPLAY:');
     }, 60000); // 60 second timeout for TSDoc parsing

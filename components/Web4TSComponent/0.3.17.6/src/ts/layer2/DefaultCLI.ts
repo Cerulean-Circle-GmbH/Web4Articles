@@ -496,15 +496,27 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
           this.model.completionParameterIndex
         );
       }
+      
+      // If still not found, try DefaultWeb4TSComponent (where component-specific commands are defined)
+      if (!callback && componentClass !== 'DefaultWeb4TSComponent') {
+        callback = TSCompletion.getParameterCallback(
+          'DefaultWeb4TSComponent',
+          this.model.completionCommand!,
+          this.model.completionParameterIndex
+        );
+      }
 
       if (callback) {
         // TSCompletion discovers callback on component class
         // Execute callback on CLI instance (where parameter completion methods exist)
+        // RADICAL OOP: Call without parameters - callback uses this.model state!
+        
+        // Try to find callback method on CLI (this), then on component (this.context)
         if (typeof (this as any)[callback] === "function") {
-          const values = await (this as any)[callback]([
-            this.model.completionCommand!,
-            this.model.completionCurrentWord || "",
-          ]);
+          const values = await (this as any)[callback]();
+          return values; // Return values for formatCompletionOutput in shCompletion
+        } else if (this.context && typeof (this.context as any)[callback] === "function") {
+          const values = await (this.context as any)[callback]();
           return values; // Return values for formatCompletionOutput in shCompletion
         }
       }
@@ -2212,6 +2224,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
           }
         }
 
+        // Empty line before prompt for spacing
+        lines.push(`DISPLAY: `);
+        
         // Format: "your web4 command >" with colored command (single DISPLAY line to avoid extra newline)
         const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
         lines.push(`DISPLAY: ${prompt}`);
@@ -2235,6 +2250,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
         lines.push(`WORD: ${word}`);
       });
+      
+      // Empty line after WORD list for spacing
+      lines.push('DISPLAY: ');
     } else {
       // Simple format: plain words like ['dev', 'latest', 'prod'] OR parameter syntax like ['<?action>', '<what>']
 
@@ -2273,6 +2291,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
           }
         }
 
+        // Empty line before prompt for spacing
+        lines.push(`DISPLAY: `);
+        
         // Format: "your web4 command >" with colored command (single DISPLAY line to avoid extra newline)
         const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
         lines.push(`DISPLAY: ${prompt}`);
@@ -2287,6 +2308,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         const word = paramMatch ? paramMatch[1] : cleanValue;
         lines.push(`WORD: ${word}`);
       });
+      
+      // Empty line after WORD list for spacing
+      lines.push('DISPLAY: ');
     }
 
     // ONE console.log for entire block (efficient!)
@@ -2372,28 +2396,55 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
   /**
    * Output diagnostic showing which completion method is being used
    * RADICAL OOP: Uses this.model state, NO parameters!
-   * Output goes to STDERR (visible to user, doesn't break bash completion protocol)
-   * @pdca 2025-11-04-UTC-1842-critical-bug-diagnostic-stdout.pdca.md - Fix stdout pollution
+   * Output goes to STDOUT as DISPLAY: lines (visible to user after "💭 Thinking...")
+   * Uses empty DISPLAY: lines for spacing as requested by user
+   * @pdca 2025-11-04-UTC-1927-completion-display-removed.pdca.md - User visibility
    * @cliHide
    */
   private async outputCompletionDiagnostic(): Promise<void> {
     const isMethod = this.model.completionIsCompletingMethod;
     
+    // ANSI color codes for diagnostic output
+    const cyan = '\x1b[36m';
+    const yellow = '\x1b[33m';
+    const green = '\x1b[32m';
+    const reset = '\x1b[0m';
+    
+    // Empty line after "💭 Thinking..."
+    console.log('DISPLAY: ');
+    
     if (isMethod) {
       // Method completion - just show which completion we're doing
-      console.error(`📊 Completing: METHOD`);
+      console.log(`DISPLAY: ${cyan}📊 Completing: METHOD${reset}`);
     } else {
       const command = this.model.completionCommand;
       const paramIndex = this.model.completionParameterIndex;
       
-      // Show signature with all parameters
+      // Show signature with all parameters (colored)
       const signature = await this.getMethodSignatureFromModel();
-      console.error(signature);
-      console.error(`📊 Completing: PARAMETER ${paramIndex} of '${command}'`);
+      console.log(`DISPLAY: ${cyan}Completing:${reset} ${yellow}${signature}${reset}`);
       
-      // Show which callback will be used
+      // Get parameter info
       const target = this.context || this;
       const componentClass = target.constructor.name;
+      let params = TSCompletion.getEnhancedMethodParameters(componentClass, command!);
+      if ((!params || params.length === 0) && componentClass !== 'DefaultWeb4TSComponent') {
+        params = TSCompletion.getEnhancedMethodParameters('DefaultWeb4TSComponent', command!);
+      }
+      if (!params || params.length === 0) {
+        params = TSCompletion.getEnhancedMethodParameters('DefaultCLI', command!);
+      }
+      
+      // Show which parameter (colored)
+      if (params && params.length > paramIndex) {
+        const paramName = params[paramIndex].name || 'param';
+        const required = params[paramIndex].required !== false;
+        const paramSyntax = required ? `<${paramName}>` : `<?${paramName}>`;
+        console.log(`DISPLAY: ${cyan}Parameter:${reset} ${yellow}${paramSyntax}${reset}`);
+      }
+      console.log('DISPLAY: ');
+      
+      // Show which callback will be used (colored)
       let callback = TSCompletion.getParameterCallback(componentClass, command!, paramIndex);
       let callbackClass = componentClass;
       
@@ -2410,11 +2461,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       }
       
       if (callback) {
-        console.error(`🔧 Using: ${callbackClass}.${callback}()`);
-      } else {
-        console.error(`🔧 Using: (no callback found)`);
+        console.log(`DISPLAY: ${green}Output of ${callbackClass}.${callback}():${reset}`);
       }
     }
+    
+    // Empty line before completions list
+    console.log('DISPLAY: ');
   }
 
   /**
