@@ -94,7 +94,7 @@ Options:
   - ❌ Requires full parser
   - ❌ Overkill
 
-User Decision: [ ] a / [ ] b
+User Decision: [x] 1: Radical OOP - use this.model and count words, respect optional parameters
 
 **Decision 2: Where to implement context switching?**
 
@@ -107,7 +107,7 @@ Options:
   - ❌ Too late - already determined what to complete
   - ❌ Harder to switch context
 
-User Decision: [ ] a / [ ] b
+User Decision: [x] a - Implement in cliSignature()
 
 **Decision 3: How to show component versions in diagnostic?**
 
@@ -125,13 +125,56 @@ Options:
   - ❌ User can't tell which completion version is running
   - ❌ Less transparent
 
-User Decision: [ ] a / [ ] b
+User Decision: [x] a - Show both completion and target component versions
 
 ---
 
 ## 🔨 **DO**
 
-*Implementation will be documented after decisions*
+### **Implementation**
+
+**Change 1: Detect Method Chaining in `computeDerivedCompletionFields()`**
+
+Location: `DefaultCLI.ts` lines 433-487
+
+Added logic to detect when `on` command parameters are fully consumed:
+- Count required parameters (1: component) and optional parameters (1: version)
+- Check if `providedParams > onMaxParams` → definitely chaining
+- Check if required params filled and current word doesn't look like a version → chaining
+- Set `model.completionIsCompletingMethod = true` when chaining detected
+
+**Change 2: Load Context in `cliSignature()`**
+
+Location: `DefaultCLI.ts` lines 2549-2564
+
+After detecting method chaining, load the target component:
+```typescript
+if (this.model.completionCommand === 'on' && this.model.completionIsCompletingMethod) {
+  const componentName = this.model.completionParameters[0];
+  const version = this.model.completionParameters[1] || 'latest';
+  if (componentName) {
+    try {
+      await this.on(componentName, version); // Loads context
+    } catch (error) {
+      // Continue without context if loading fails
+    }
+  }
+}
+```
+
+**Change 3: Enhanced Diagnostic Output**
+
+Location: `DefaultCLI.ts` lines 2451-2466
+
+Added component version display when context exists:
+```
+Completion Component: Web4TSComponent v0.3.17.7
+Target Component: IdealMinimalComponent v0.3.17.7
+
+📊 Completing: METHOD (after 'on IdealMinimalComponent 0.3.17.7')
+```
+
+Shows both which component is running completion AND which component methods will be completed.
 
 ---
 

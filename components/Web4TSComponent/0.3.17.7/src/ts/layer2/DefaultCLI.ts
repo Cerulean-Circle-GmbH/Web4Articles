@@ -427,6 +427,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Compute derived completion fields from bash-provided compWords/compCword
    * Web4 pattern: TypeScript owns all model logic, bash only provides raw data
    * Pattern: completion-architecture-oop.md:426-456
+   * @pdca 2025-11-04-UTC-2220-method-chaining-completion.pdca.md - Detect method chaining after 'on' command
    * @cliHide
    */
   protected computeDerivedCompletionFields(model: CLIModel): void {
@@ -444,12 +445,45 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     model.completionParameters = cword > 2 ? words.slice(2, cword) : [];
     model.completionParameterIndex = Math.max(0, cword - 2);
 
-    // Detect chained commands (TODO: implement chaining detection)
+    // Detect chained commands - check if 'on' command parameters are fully consumed
+    // @pdca 2025-11-04-UTC-2220-method-chaining-completion.pdca.md
     model.completionChainedCommands = [];
-
-    // Set state flags
-    model.completionIsCompletingMethod = cword === 1;
-    model.completionIsCompletingParameter = cword > 1;
+    
+    // METHOD CHAINING DETECTION: After 'on <component> <?version>', next word is a chained method
+    if (model.completionCommand === 'on') {
+      // on command signature: on <component> <?version>
+      // Required: 1 parameter (component)
+      // Optional: 1 parameter (version)
+      // Minimum words to complete 'on': cword >= 3 (cli, on, component)
+      // Maximum words before chaining: cword <= 4 (cli, on, component, version)
+      
+      const onRequiredParams = 1;  // <component>
+      const onOptionalParams = 1;  // <?version>
+      const onMaxParams = onRequiredParams + onOptionalParams;
+      
+      // Count provided parameters (words after 'on' command, before current word)
+      const providedParams = model.completionParameters.length;
+      
+      // If we have more params than the 'on' command can take, we're chaining
+      if (providedParams > onMaxParams) {
+        // We're past 'on' parameters - this is a chained method!
+        model.completionIsCompletingMethod = true;
+        model.completionIsCompletingParameter = false;
+      } else if (providedParams >= onRequiredParams && cword > 2 + onRequiredParams) {
+        // Required params filled, and cursor is past them
+        // Check if current word looks like a method (not a version)
+        const currentWord = model.completionCurrentWord;
+        // If current word exists and doesn't look like a version number, treat as method
+        if (currentWord && !/^[0-9]/.test(currentWord) && currentWord !== 'latest' && currentWord !== 'dev' && currentWord !== 'test' && currentWord !== 'prod') {
+          model.completionIsCompletingMethod = true;
+          model.completionIsCompletingParameter = false;
+        }
+      }
+    } else {
+      // Default: Set state flags
+      model.completionIsCompletingMethod = cword === 1;
+      model.completionIsCompletingParameter = cword > 1;
+    }
   }
 
   /**
@@ -2399,6 +2433,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * Output goes to STDOUT as DISPLAY: lines (visible to user after "💭 Thinking...")
    * Uses empty DISPLAY: lines for spacing as requested by user
    * @pdca 2025-11-04-UTC-1927-completion-display-removed.pdca.md - User visibility
+   * @pdca 2025-11-04-UTC-2220-method-chaining-completion.pdca.md - Show component versions
    * @cliHide
    */
   private async outputCompletionDiagnostic(): Promise<void> {
@@ -2413,9 +2448,25 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // Empty line after "💭 Thinking..."
     console.log('DISPLAY: ');
     
+    // Show component versions when context differs
+    // @pdca 2025-11-04-UTC-2220-method-chaining-completion.pdca.md
+    if (this.context && this.component) {
+      const completionComponent = `${this.component.constructor.name.replace('Default', '')} v${(this.component.model as any).version?.toString() || 'unknown'}`;
+      const targetComponent = `${this.context.constructor.name.replace('Default', '')} v${(this.context.model as any).version?.toString() || 'unknown'}`;
+      console.log(`DISPLAY: ${cyan}Completion Component:${reset} ${completionComponent}`);
+      console.log(`DISPLAY: ${cyan}Target Component:${reset} ${targetComponent}`);
+      console.log('DISPLAY: ');
+    }
+    
     if (isMethod) {
-      // Method completion - just show which completion we're doing
-      console.log(`DISPLAY: ${cyan}📊 Completing: METHOD${reset}`);
+      // Method completion - show which completion we're doing and context info
+      let contextInfo = '';
+      if (this.model.completionCommand === 'on' && this.context) {
+        const contextName = this.context.constructor.name.replace('Default', '');
+        const contextVersion = (this.context.model as any).version?.toString() || 'unknown';
+        contextInfo = ` (after 'on ${contextName} ${contextVersion}')`;
+      }
+      console.log(`DISPLAY: ${cyan}📊 Completing: METHOD${contextInfo}${reset}`);
     } else {
       const command = this.model.completionCommand;
       const paramIndex = this.model.completionParameterIndex;
@@ -2501,6 +2552,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @param cword Current word index from bash COMP_CWORD
    * @param words All words from bash COMP_WORDS
    * @pdca 2025-11-04-UTC-1819.pdca.md - Radical OOP cliSignature implementation
+   * @pdca 2025-11-04-UTC-2220-method-chaining-completion.pdca.md - Method chaining after 'on' command
    * @cliHide
    */
   async cliSignature(cword: string, ...words: string[]): Promise<void> {
@@ -2511,14 +2563,40 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     this.model.completionCliName = words[0] || "cli"; // First word is CLI name (CRITICAL for prompt!)
     this.computeDerivedCompletionFields(this.model);
 
-    // 2. Delegate to parameterless methods based on state
+    // 2. Load context for method chaining after 'on' command
+    // @pdca 2025-11-04-UTC-2220-method-chaining-completion.pdca.md
+    if (this.model.completionCommand === 'on' && this.model.completionIsCompletingMethod) {
+      // We're completing a chained method after 'on' - load the target component
+      const componentName = this.model.completionParameters[0]; // First param is component name
+      const version = this.model.completionParameters[1] || 'latest'; // Second param is version (optional)
+      
+      if (componentName) {
+        try {
+          // Suppress console output during completion
+          const originalLog = console.log;
+          console.log = () => {};
+          
+          // Load the component context (silently - no console output during completion)
+          await this.on(componentName, version);
+          
+          // Restore console.log
+          console.log = originalLog;
+        } catch (error) {
+          // Restore console.log even on error
+          console.log = console.log;
+          // If loading fails, continue without context (will complete from current component)
+        }
+      }
+    }
+
+    // 3. Delegate to parameterless methods based on state
     if (this.model.completionIsCompletingMethod) {
       await this.completeMethodName();
     } else {
       await this.completeCommandParameter();
     }
 
-    // 3. Output prompt (reuse existing outputPrompt if it exists, otherwise inline)
+    // 4. Output prompt (reuse existing outputPrompt if it exists, otherwise inline)
     if (typeof (this as any).outputPrompt === 'function') {
       (this as any).outputPrompt();
     }
