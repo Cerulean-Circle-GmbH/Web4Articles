@@ -106,6 +106,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         // State flags
         completionIsCompletingMethod: false,
         completionIsCompletingParameter: false,
+        // Output buffer (Radical OOP - output is STATE!)
+        // @pdca 2025-11-04-UTC-2159.pdca.md - Centralized output in model
+        completionOutputLines: [],
       };
     }
     
@@ -1996,13 +1999,21 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // ENTRY POINT from bash via source.env
     // Set model FIRST (Radical OOP pattern)
     // @pdca 2025-11-04-UTC-2220-method-chaining-completion.pdca.md
+    // @pdca 2025-11-04-UTC-2159.pdca.md - Initialize output buffer, output from model, auto-clear
     const cwordNum = parseInt(cword, 10);
     this.model.completionCompWords = words;
     this.model.completionCompCword = cwordNum;
     this.model.completionCliName = words[0] || "cli"; // First word is CLI name (CRITICAL for prompt!)
+    this.model.completionOutputLines = []; // Initialize output buffer (Radical OOP - output is STATE!)
     
-    // THEN call parameterless cliSignature (100% Radical OOP!)
-    return this.cliSignature();
+    // Build completion (methods PUSH to model.completionOutputLines)
+    await this.cliSignature();
+    
+    // Output all lines to stdout (bash protocol)
+    this.model.completionOutputLines.forEach(line => console.log(line));
+    
+    // Auto-clear buffer (Decision 1a - safety over control)
+    this.model.completionOutputLines = [];
   }
 
   /**
@@ -2162,9 +2173,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @cliHide
    */
   protected formatCompletionOutput(values: string[]): void {
+    // Radical OOP: PUSH to model.completionOutputLines instead of console.log
+    // @pdca 2025-11-04-UTC-2159.pdca.md - Centralized output in model
+    
     // UX: Always provide feedback when no completions are available
     if (!values || values.length === 0) {
-      console.log("DISPLAY: (no completions available)");
+      this.model.completionOutputLines.push("DISPLAY: (no completions available)");
       
       // Add the "your web4 command >" prompt so user can continue typing
       if (
@@ -2202,22 +2216,11 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
         // Format: "your web4 command >" with colored command
         const prompt = `${promptWhite}your ${promptCyan}web4${promptWhite} command >${reset} ${coloredCommand}`;
-        console.log(`DISPLAY: ${prompt}`);
+        this.model.completionOutputLines.push(`DISPLAY: ${prompt}`);
       }
       
-      console.log("WORD: ");
+      this.model.completionOutputLines.push("WORD: ");
       return;
-    }
-
-    // DEBUG: Log that formatCompletionOutput is being called
-    try {
-      writeFileSync(
-        "/tmp/debug-format.log",
-        `DEBUG: formatCompletionOutput called with ${values.length} values\n` +
-          `DEBUG: First few values: ${values.slice(0, 3).join(", ")}\n`
-      );
-    } catch (error) {
-      console.log(`DEBUG FORMAT ERROR: ${(error as Error).message}`);
     }
 
     const lines: string[] = [];
@@ -2360,8 +2363,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       lines.push('DISPLAY: ');
     }
 
-    // ONE console.log for entire block (efficient!)
-    console.log(lines.join("\n"));
+    // Radical OOP: PUSH all lines to model instead of console.log
+    // @pdca 2025-11-04-UTC-2159.pdca.md - Centralized output in model
+    this.model.completionOutputLines.push(...lines);
   }
 
   /**
@@ -2450,6 +2454,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @cliHide
    */
   private async outputCompletionDiagnostic(): Promise<void> {
+    // Radical OOP: PUSH to model.completionOutputLines instead of console.log
+    // @pdca 2025-11-04-UTC-2159.pdca.md - Centralized output in model
     const isMethod = this.model.completionIsCompletingMethod;
     
     // ANSI color codes for diagnostic output
@@ -2459,16 +2465,16 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     const reset = '\x1b[0m';
     
     // Empty line after "💭 Thinking..."
-    console.log('DISPLAY: ');
+    this.model.completionOutputLines.push('DISPLAY: ');
     
     // Show component versions when context differs
     // @pdca 2025-11-04-UTC-2220-method-chaining-completion.pdca.md
     if (this.context && this.component) {
       const completionComponent = `${this.component.constructor.name.replace('Default', '')} v${(this.component.model as any).version?.toString() || 'unknown'}`;
       const targetComponent = `${this.context.constructor.name.replace('Default', '')} v${(this.context.model as any).version?.toString() || 'unknown'}`;
-      console.log(`DISPLAY: ${cyan}Completion Component:${reset} ${completionComponent}`);
-      console.log(`DISPLAY: ${cyan}Target Component:${reset} ${targetComponent}`);
-      console.log('DISPLAY: ');
+      this.model.completionOutputLines.push(`DISPLAY: ${cyan}Completion Component:${reset} ${completionComponent}`);
+      this.model.completionOutputLines.push(`DISPLAY: ${cyan}Target Component:${reset} ${targetComponent}`);
+      this.model.completionOutputLines.push('DISPLAY: ');
     }
     
     if (isMethod) {
@@ -2479,14 +2485,14 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         const contextVersion = (this.context.model as any).version?.toString() || 'unknown';
         contextInfo = ` (after 'on ${contextName} ${contextVersion}')`;
       }
-      console.log(`DISPLAY: ${cyan}📊 Completing: METHOD${contextInfo}${reset}`);
+      this.model.completionOutputLines.push(`DISPLAY: ${cyan}📊 Completing: METHOD${contextInfo}${reset}`);
     } else {
       const command = this.model.completionCommand;
       const paramIndex = this.model.completionParameterIndex;
       
       // Show signature with all parameters (colored)
       const signature = await this.getMethodSignatureFromModel();
-      console.log(`DISPLAY: ${cyan}Completing:${reset} ${yellow}${signature}${reset}`);
+      this.model.completionOutputLines.push(`DISPLAY: ${cyan}Completing:${reset} ${yellow}${signature}${reset}`);
       
       // Get parameter info
       const target = this.context || this;
@@ -2504,9 +2510,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         const paramName = params[paramIndex].name || 'param';
         const required = params[paramIndex].required !== false;
         const paramSyntax = required ? `<${paramName}>` : `<?${paramName}>`;
-        console.log(`DISPLAY: ${cyan}Parameter:${reset} ${yellow}${paramSyntax}${reset}`);
+        this.model.completionOutputLines.push(`DISPLAY: ${cyan}Parameter:${reset} ${yellow}${paramSyntax}${reset}`);
       }
-      console.log('DISPLAY: ');
+      this.model.completionOutputLines.push('DISPLAY: ');
       
       // Show which callback will be used (colored)
       let callback = TSCompletion.getParameterCallback(componentClass, command!, paramIndex);
@@ -2525,12 +2531,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       }
       
       if (callback) {
-        console.log(`DISPLAY: ${green}Output of ${callbackClass}.${callback}():${reset}`);
+        this.model.completionOutputLines.push(`DISPLAY: ${green}Output of ${callbackClass}.${callback}():${reset}`);
       }
     }
     
     // Empty line before completions list
-    console.log('DISPLAY: ');
+    this.model.completionOutputLines.push('DISPLAY: ');
   }
 
   /**

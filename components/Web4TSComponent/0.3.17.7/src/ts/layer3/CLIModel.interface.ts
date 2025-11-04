@@ -52,6 +52,10 @@ export interface CLIModel extends Model {
   // Completion state flags
   completionIsCompletingMethod: boolean;    // True if completing method name
   completionIsCompletingParameter: boolean; // True if completing parameter
+  
+  // Completion output buffer (Radical OOP - output is STATE!)
+  // @pdca 2025-11-04-UTC-2159.pdca.md - Centralized output in model
+  completionOutputLines: string[];         // DISPLAY: and WORD: lines built by methods, output by shCompletion()
 }
 
 
