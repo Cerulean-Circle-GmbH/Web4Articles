@@ -178,7 +178,7 @@ web4tscomponent test file
 
 ```bash
 # Run all tests
-cd components/Web4TSComponent/0.3.17.3
+cd components/Web4TSComponent/latest
 web4tscomponent test
 
 # Run specific test file by number
@@ -566,7 +566,7 @@ The system is **resilient** and automatically fixes corrupted configs:
 
 ## 🗺️ Path Authority Principle & Path Calculations
 
-**NEW in 0.3.17.3:** Web4TSComponent now implements the **Path Authority Principle** - a Radical OOP pattern where the CLI is the single source of truth for ALL path calculations.
+Web4TSComponent implements the **Path Authority Principle** - a Radical OOP pattern where the CLI is the single source of truth for ALL path calculations.
 
 ### 🎯 Core Principle
 
@@ -587,7 +587,7 @@ Web4TSComponent uses **7 critical path fields**, all calculated by the CLI:
 |-------|------|-----------|---------|---------|
 | `projectRoot` | string | CLI | Overall project root directory | `/Users/.../Web4Articles` |
 | `componentsDir` | string | CLI | Components directory | `{projectRoot}/components` |
-| `componentRoot` | string | CLI | Component's own version directory | `.../components/Web4TSComponent/0.3.17.3` |
+| `componentRoot` | string | CLI | Component's own version directory | `.../components/Web4TSComponent/0.3.17.8` |
 | `scriptsDir` | string | CLI | Scripts directory | `{projectRoot}/scripts` |
 | `scriptsVersionDir` | string | CLI | Versioned scripts directory | `{projectRoot}/scripts/versions` |
 | `testDataDir` | string | CLI | Test isolation directory | `{componentRoot}/test/data` |
@@ -637,7 +637,7 @@ private findProjectRoot(): string {
 ├── package.json
 ├── components/
 │   └── Web4TSComponent/
-│       └── 0.3.17.3/                        ← ❌ NOT project root (has package.json but is inside components/)
+│       └── 0.3.17.8/                        ← ❌ NOT project root (has package.json but is inside components/)
 │           ├── package.json
 │           └── src/
 ```
@@ -658,7 +658,7 @@ init(scenario?: Scenario<CLIModel>): this {
       uuid: crypto.randomUUID(),
       name: 'CLI',
       component: 'CLI',
-      version: new SemanticVersion().init({ model: { versionString: '0.3.17.3' } }),
+      version: new SemanticVersion().init({ model: { versionString: '0.3.17.8' } }),
       origin: 'system',
       definition: 'CLI model',
       
@@ -871,7 +871,7 @@ Test isolation works by providing different paths via scenario:
   model: {
     projectRoot: '/Users/.../Web4Articles',
     targetDirectory: '/Users/.../Web4Articles',  // Create in project root
-    testDataDir: '/Users/.../Web4Articles/components/Web4TSComponent/0.3.17.3/test/data'
+    testDataDir: '/Users/.../Web4Articles/components/Web4TSComponent/0.3.17.8/test/data'
   }
 }
 
@@ -879,8 +879,8 @@ Test isolation works by providing different paths via scenario:
 {
   model: {
     projectRoot: '/Users/.../Web4Articles',  // Same project root
-    targetDirectory: '/Users/.../Web4Articles/components/Web4TSComponent/0.3.17.3/test/data',  // Create in test/data!
-    testDataDir: '/Users/.../Web4Articles/components/Web4TSComponent/0.3.17.3/test/data'
+    targetDirectory: '/Users/.../Web4Articles/components/Web4TSComponent/0.3.17.8/test/data',  // Create in test/data!
+    testDataDir: '/Users/.../Web4Articles/components/Web4TSComponent/0.3.17.8/test/data'
   }
 }
 ```
