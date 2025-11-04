@@ -8,6 +8,7 @@ import { Scenario } from '../layer3/Scenario.interface.js';
 import { PDCAModel } from '../layer3/PDCAModel.interface.js';
 import { existsSync, lstatSync, readlinkSync, readdirSync, statSync } from 'fs';
 import { join, dirname, basename } from 'path';
+import { execSync } from 'child_process';
 
 // Use latest version for delegation (always available)
 import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js';
@@ -5383,9 +5384,9 @@ export class DefaultPDCA implements PDCA {
     
     // Get current branch from model or default
     const currentBranch = this.model.currentBranch || 'main';
-    
+
     // NEW: Get previous commit for baseline (auto-populate)
-    const previousCommit = this.getPreviousCommit();
+    const previousCommit = this.getPreviousCommit(projectRoot);
     
     // Populate basic placeholders using shared DRY helper
     templateContent = this.populateBoilerplateInternal(
@@ -5624,13 +5625,12 @@ export class DefaultPDCA implements PDCA {
    * @returns Format: "{short-sha} - {commit message}" or "TBD - TBD" if no commits/errors
    * @cliHide
    */
-  private getPreviousCommit(): string {
+  private getPreviousCommit(projectRoot: string): string {
     try {
-      const { execSync } = require('child_process');
       const commit = execSync('git log -1 --format="%h - %s"', { 
         encoding: 'utf-8',
-        cwd: process.cwd()
-      }).trim();
+        cwd: projectRoot
+      }).toString().trim();
       return commit || 'TBD - TBD';
     } catch (error) {
       // Graceful fallback: fresh repo with no commits, or git not available
@@ -5650,6 +5650,17 @@ export class DefaultPDCA implements PDCA {
     currentBranch: string,
     previousCommit?: string
   ): string {
+    // Split previousCommit into SHA and description (format: "abc1234 - Commit message")
+    let commitSha = 'TBD';
+    let commitDescription = 'TBD';
+    if (previousCommit && previousCommit !== 'TBD - TBD') {
+      const parts = previousCommit.split(' - ');
+      if (parts.length >= 2) {
+        commitSha = parts[0];
+        commitDescription = parts.slice(1).join(' - '); // Handle messages with " - " in them
+      }
+    }
+    
     return templateContent
       // Basic metadata
       .replace(/{{TITLE}}/g, title)
@@ -5661,10 +5672,8 @@ export class DefaultPDCA implements PDCA {
       .replace(/{{SPRINT_NAME}}/g, 'Current Sprint')
       .replace(/{{TASK_NAME}}/g, title)
       .replace(/{{KEY_ISSUES}}/g, 'None')
-      .replace(/{{PREVIOUS_COMMIT_SHA}}/g, previousCommit || 'TBD')
-      .replace(/{{PREVIOUS_COMMIT_DESCRIPTION}}/g, previousCommit || 'TBD')
-      // NEW: Replace full "Previous Commit:" line format
-      .replace(/(\*\*📎 Previous Commit:\*\*\s+)TBD - TBD/g, `$1${previousCommit || 'TBD - TBD'}`)
+      .replace(/{{PREVIOUS_COMMIT_SHA}}/g, commitSha)
+      .replace(/{{PREVIOUS_COMMIT_DESCRIPTION}}/g, commitDescription)
       .replace(/{{PLAN_OBJECTIVE}}/g, objective)
       .replace(/{{REQUIREMENT_UUID}}/g, 'TBD')
       .replace(/{{SUCCESS_SUMMARY}}/g, 'TBD')
