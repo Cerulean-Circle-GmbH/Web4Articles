@@ -1668,22 +1668,16 @@ Standards:
    * @param references - For selective testing: numeric references to select tests
    * @cliSyntax scope ...references
    * @TODO cliDefault scope all
-   * @cliValues file describe itCase shell completion
+   * @cliValues file describe itCase
    * @cliExample web4tscomponent test
    * @cliExample web4tscomponent test all
-   * @cliExample web4tscomponent test shell
    * @cliExample web4tscomponent test file 2
    * @cliExample web4tscomponent test describe 2 1
    * @cliExample web4tscomponent test itCase 2 1 3
    * @cliExample web4tscomponent on Unit 0.3.0.5 test
    */
   async test(scope: string = 'all', ...references: string[]): Promise<this> {
-    // MODE 1: Test shell (bash completion testing in isolated test/data)
-    // if (scope === 'shell') {
-    //   return await this.testShell(...references);
-    // }
-    
-    // MODE 1.5: Completion test suite (end-to-end TAB completion tests)
+    // MODE 1.5: Completion test suite (end-to-end TAB completion tests) - INTERNAL USE
     if (scope === 'completion') {
       return await this.testCompletion();
     }
