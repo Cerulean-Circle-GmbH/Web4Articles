@@ -1,46 +1,92 @@
-# 🚀 Web4TSComponent 0.3.17.3 - shCompletion Simplification & Path Authority
+# 🚀 Web4TSComponent 0.3.17.4 - Parameterless Completion Methods (Radical OOP)
 
-**Version:** 0.3.17.3  
-**Status:** Production - shCompletion API & Path Authority Architecture  
+**Version:** 0.3.17.4  
+**Status:** Development - Model-Driven Completion Architecture  
 **Type:** Meta-component with auto-discovery CLI  
 **Purpose:** Create, manage, and enforce Web4 TypeScript component standards with automatic version promotion
 
-## 🎯 Key Architectural Improvements in 0.3.17.3
+## 🎯 Key Architectural Improvements in 0.3.17.4
 
-### 1. **shCompletion Simplification** (-176 lines of bash complexity)
+### 1. **Parameterless Completion Methods** (Radical OOP Enforcement)
+- **Before**: `referencesParameterCompletion(currentArgs: string[])` - functional anti-pattern
+- **After**: `referencesParameterCompletion()` - uses `this.model.completionCompWords`
+- **Impact**: 19 completion methods + 3 helpers refactored to be parameterless
+- **Benefit**: True OOP - methods rely on model state, NOT passed parameters
+- **Test**: `completion-model-driven.test.ts` validates all completion methods
+
+### 2. **Method Name Completion Integration** (Critical Fix)
+- **Issue**: Parameterless refactoring broke method name completion (returned 0 methods)
+- **Root Cause**: `completionNameParameterCompletion()` expects specific model state
+- **Fix**: `shCompletion` injects fake context `['cli', 'completion', 'method', filter]` into model
+- **Test**: New integration test catches regression (would have failed before fix)
+
+### 3. **Continued from 0.3.17.3: shCompletion Simplification**
 - **Before**: 50+ lines per source.env (getCompletionScenario + JSON + sed + complete)
 - **After**: 6 lines per source.env (shCompletion with direct parameters)
 - **Impact**: 4 files updated × 44 lines saved = -176 lines total
 - **Benefit**: No JSON manipulation, no sed, just direct parameter passing
 
-### 2. **Path Authority Architecture** (Zero process.cwd() violations)
+### 4. **Continued from 0.3.17.3: Path Authority Architecture**
 - **Principle**: DefaultCLI calculates ALL paths (projectRoot, targetDirectory, componentRoot)
 - **Enforcement**: DefaultWeb4TSComponent uses ONLY model state (NEVER calculates paths)
 - **Tests**: Comprehensive four-cases architecture enforcement test
 - **Violations**: Automatic detection of process.cwd() and path calculation methods
 
-### 3. **Four Cases Validation** (Production + Test Isolation)
-All operations work correctly in both contexts:
-1. ✅ **Production `create`** → Component in projectRoot/components
-2. ✅ **Test `create`** → Component in test/data/components
-3. ✅ **Production `initProject`** → Files in projectRoot
-4. ✅ **Test `initProject`** → Files in test/data
-
-### 4. **Test Evidence Persistence**
-- Tests clean OLD evidence (fresh start)
-- Tests create components in test/data
-- Tests keep evidence after run (manual inspection)
-- Next run cleans and starts fresh
-
-### 5. **Architecture Compliance Tests**
-- **process.cwd() Detection**: Scans source code for violations
-- **Path Calculation Detection**: Prevents Component from calculating paths
-- **Model Initialization**: Requires BOTH projectRoot AND targetDirectory
-- **Test Isolation**: Ensures no production contamination
+### 5. **Template Sync Validation** (Enhanced)
+- **Test**: `web4tscomponent.template-sync.test.ts` now validates content sync
+- **Before**: Only checked template existence for source.env
+- **After**: Checks content differences between project root and template
+- **Benefit**: Catches when templates are updated but not applied via `initProject`
 
 ---
 
 ## 🧪 Comprehensive Test Suite
+
+### New: Completion Model-Driven Tests
+
+**Test File**: `test/vitest/completion-model-driven.test.ts`
+
+Critical test that validates parameterless, model-driven completion architecture:
+
+```bash
+# Run the completion model-driven test
+web4tscomponent test file completion-model-driven.test
+```
+
+**Test Coverage** (13 tests):
+
+1. **scopeParameterCompletion - Parameterless**
+   - ✅ Uses `this.model.completionCommand`, not passed parameters
+   - ✅ Detects 'test' command from model state
+
+2. **referencesParameterCompletion - Parameterless**
+   - ✅ Uses `this.model.completionCompWords` for scope detection
+   - ✅ Handles file/describe/itCase scopes from model state
+
+3. **componentParameterCompletion - Parameterless**
+   - ✅ Lists components from project using model state
+
+4. **versionParameterCompletion - Parameterless**
+   - ✅ Extracts component from `model.completionCompWords[2]`
+
+5. **Architecture Enforcement - Method Signatures**
+   - ✅ `scopeParameterCompletion()` has 0 parameters
+   - ✅ `referencesParameterCompletion()` has 0 parameters
+   - ✅ `componentParameterCompletion()` has 0 parameters
+   - ✅ `versionParameterCompletion()` has 0 parameters
+   - ✅ `completionNameParameterCompletion()` has 0 parameters
+
+6. **Method Name Completion - Critical Integration** (NEW)
+   - ✅ Completes method names when `COMP_CWORD=1` (after CLI name)
+   - ✅ Returns 203 methods including `test`, `build`, `create`
+   - ✅ Filters by prefix (`te` → `test`, `testCompletion`, etc.)
+   - ⚠️ **This test catches the regression** where forgetting to inject fake context caused 0 methods to return
+
+**Why This Test is Critical**:
+- Parameterless refactoring could accidentally break completion
+- Method name completion requires special model state injection
+- Without this test, regression would only be caught manually
+- Test runs in 38s (includes method discovery for 203 methods)
 
 ### Architecture Enforcement Tests
 
