@@ -1984,8 +1984,19 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         "DEBUG: Taking METHOD completion branch\n"
       );
       const filter = this.model.completionCurrentWord || "";
-      // Model state already has completionCompWords set properly
+      
+      // RADICAL OOP FIX: Inject fake context into model for completionNameParameterCompletion
+      // completionNameParameterCompletion expects: ['cli', 'completion', 'method', filter]
+      // But when completing method names, we have: ['cli', ''] 
+      // So we temporarily inject the 'completion method' context
+      const originalCompWords = this.model.completionCompWords;
+      this.model.completionCompWords = [originalCompWords[0], "completion", "method", filter];
+      
       const values = await this.completionNameParameterCompletion();
+      
+      // Restore original model state
+      this.model.completionCompWords = originalCompWords;
+      
       this.formatCompletionOutput(values);
     } else if (this.model.completionIsCompletingParameter) {
       // Parameter completion - use existing completeParameter (outputs directly!)
