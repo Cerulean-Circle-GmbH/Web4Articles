@@ -2583,7 +2583,11 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
           await this.on(componentName, version);
         } catch (error) {
           // If loading fails, continue without context (will complete from current component)
-          // Error already output by on() method
+          // Output error as DISPLAY so user sees it during completion
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          console.log(`DISPLAY: ⚠️  Failed to load ${componentName} ${version}: ${errorMessage}`);
+          console.log('DISPLAY: Completing from current component instead');
+          console.log('DISPLAY: ');
         }
       }
     }
