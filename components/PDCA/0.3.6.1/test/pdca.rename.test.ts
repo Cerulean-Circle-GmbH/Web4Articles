@@ -502,5 +502,30 @@ describe('PDCA rename - Error Handling', () => {
     
     await expect(pdca.rename(original, 'invalid-case' as any)).rejects.toThrow();
   });
+
+  /**
+   * TC96: Autocomplete - Baseline (method doesn't exist yet)
+   * Verifies: renameCaseParameterCompletion method doesn't exist (TDD baseline)
+   * TDD Phase: RED - This test should PASS initially (method missing)
+   * Status: COMPLETE - Method now exists, baseline test no longer relevant
+   */
+  test.skip('TC96: should NOT have renameCaseParameterCompletion method yet (baseline)', async () => {
+    const pdca = new DefaultPDCA();
+    expect(typeof (pdca as any).renameCaseParameterCompletion).toBe('undefined');
+  });
+
+  /**
+   * TC97: Autocomplete - Method returns all four case values
+   * Verifies: renameCaseParameterCompletion returns ['now', 'creationDate', 'strip', 'feature']
+   * TDD Phase: RED initially (method doesn't exist), GREEN after implementation
+   */
+  test('TC97: renameCaseParameterCompletion should return all four case values', async () => {
+    const pdca = new DefaultPDCA();
+    
+    const completions = await (pdca as any).renameCaseParameterCompletion([]);
+    
+    expect(completions).toEqual(['now', 'creationDate', 'strip', 'feature']);
+    expect(completions).toHaveLength(4);
+  });
 });
 

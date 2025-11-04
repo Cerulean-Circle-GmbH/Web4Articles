@@ -4295,6 +4295,16 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
+   * Parameter completion for rename command's renameCase parameter
+   * Returns the four valid case transformation options
+   * Used by: rename
+   * @cliHide
+   */
+  async renameCaseParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    return ['now', 'creationDate', 'strip', 'feature'];
+  }
+
+  /**
    * Find all PDCA files that link to a specific file
    * Searches entire project for PDCAs containing dual links to target file
    * 
