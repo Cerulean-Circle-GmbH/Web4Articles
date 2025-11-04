@@ -17,8 +17,10 @@ import { Web4TSComponentCLI } from "../../src/ts/layer5/Web4TSComponentCLI.js";
 describe("🎯 Completion Methods: Model-Driven (Radical OOP)", () => {
   let cli: DefaultCLI;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     cli = new Web4TSComponentCLI();
+    // CRITICAL: Must discover methods before completion works
+    await cli.discoverMethods();
   });
 
   describe("scopeParameterCompletion - MUST be parameterless", () => {
@@ -136,6 +138,92 @@ describe("🎯 Completion Methods: Model-Driven (Radical OOP)", () => {
       expect(method).toBeDefined();
       expect(method.length).toBe(0); // MUST be 0 (parameterless)
     });
+
+    it("completionNameParameterCompletion signature must be parameterless", () => {
+      const method = (cli as any).completionNameParameterCompletion;
+      expect(method).toBeDefined();
+      expect(method.length).toBe(0); // MUST be 0 (parameterless)
+    });
+  });
+
+  describe("Method Name Completion - Critical Integration Test", () => {
+    it("should complete method names when COMP_CWORD=1 (after CLI name)", async () => {
+      // This is the CRITICAL test that catches the regression where
+      // completionNameParameterCompletion returned 0 values for method name completion
+      
+      // Simulate bash completion state: web4tscomponent <Tab>
+      cli.model.completionCompCword = 1;
+      cli.model.completionCompWords = ["web4tscomponent", ""];
+      cli.model.completionCliName = "web4tscomponent";
+      
+      // Derive all completion fields (like shCompletion does)
+      (cli as any).computeDerivedCompletionFields(cli.model);
+      
+      // Verify we're in method completion mode
+      expect(cli.model.completionIsCompletingMethod).toBe(true);
+      expect(cli.model.completionIsCompletingParameter).toBe(false);
+      
+      // Now simulate what shCompletion does: inject fake context for completionNameParameterCompletion
+      const originalCompWords = cli.model.completionCompWords;
+      const filter = cli.model.completionCurrentWord || "";
+      cli.model.completionCompWords = [originalCompWords[0], "completion", "method", filter];
+      
+      // Call completionNameParameterCompletion - it MUST return methods
+      const result = await (cli as any).completionNameParameterCompletion();
+      
+      // Restore model state
+      cli.model.completionCompWords = originalCompWords;
+      
+      // CRITICAL: Must return method names, NOT empty array
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toBeGreaterThan(0);
+      
+      // Should include common methods
+      const methodNames = result.map((line: string) => {
+        // Strip ANSI codes first
+        const cleanLine = line.replace(/\x1B\[\d+;?\d*m/g, '');
+        // Extract method name from formatted line like "1: methodName"
+        const match = cleanLine.match(/(\d+):\s*(\w+)/);
+        return match ? match[2] : null;
+      }).filter(Boolean);
+      
+      expect(methodNames).toContain("test");
+      expect(methodNames).toContain("build");
+      expect(methodNames).toContain("create");
+    }, 60000); // Increase timeout to 60s
+
+    it("should filter method names by prefix", async () => {
+      // Simulate: web4tscomponent te<Tab>
+      cli.model.completionCompCword = 1;
+      cli.model.completionCompWords = ["web4tscomponent", "te"];
+      cli.model.completionCliName = "web4tscomponent";
+      cli.model.completionCurrentWord = "te";
+      
+      (cli as any).computeDerivedCompletionFields(cli.model);
+      
+      // Inject fake context with filter
+      const originalCompWords = cli.model.completionCompWords;
+      const filter = cli.model.completionCurrentWord || "";
+      cli.model.completionCompWords = [originalCompWords[0], "completion", "method", filter];
+      
+      const result = await (cli as any).completionNameParameterCompletion();
+      
+      cli.model.completionCompWords = originalCompWords;
+      
+      // Should return methods starting with "te"
+      expect(result.length).toBeGreaterThan(0);
+      
+      const methodNames = result.map((line: string) => {
+        // Strip ANSI codes
+        const cleanLine = line.replace(/\x1B\[\d+;?\d*m/g, '');
+        const match = cleanLine.match(/(\d+):\s*(\w+)/);
+        return match ? match[2] : null;
+      }).filter(Boolean);
+      
+      // All returned methods should start with "te"
+      expect(methodNames.every((name: string) => name.startsWith("te"))).toBe(true);
+      expect(methodNames).toContain("test");
+    }, 60000); // Increase timeout to 60s
   });
 });
 
