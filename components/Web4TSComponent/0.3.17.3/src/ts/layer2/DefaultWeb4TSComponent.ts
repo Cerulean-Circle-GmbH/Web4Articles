@@ -374,7 +374,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // we're about to create: components/MyComponent/0.1.0.0/components/...
     // 
     // This happens when:
-    // 1. process.cwd() was used as default (wrong!)
+    // 1. targetDirectory was not provided (VIOLATION!)
     // 2. Tests run from component directory without test isolation
     // 3. CLI not properly setting targetDirectory to project root
     // 
@@ -394,7 +394,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         `\n` +
         `WEB4 PATH AUTHORITY PRINCIPLE VIOLATION:\n` +
         `  DefaultCLI must calculate and provide correct targetDirectory.\n` +
-        `  Component is FORBIDDEN from calculating paths (including process.cwd()).\n` +
+        `  Component is FORBIDDEN from calculating paths (including cwd access).\n` +
         `\n` +
         `Expected patterns:\n` +
         `  Production: /path/to/project/root\n` +
@@ -2305,8 +2305,8 @@ Standards:
    */
   async verifyTestSuccess(componentName: string, version: string): Promise<boolean> {
     // Read test results from vitest JSON output
-    // Use component's directory, not process.cwd() (which may be different in test environments)
-    const componentsDir = path.join(this.model.targetDirectory || process.cwd(), 'components');
+    // ✅ Use model.targetDirectory (Path Authority: calculated by CLI)
+    const componentsDir = path.join(this.model.targetDirectory, 'components');
     const componentVersionDir = path.join(componentsDir, componentName, version);
     const testResultsPath = path.join(componentVersionDir, 'test/test-results.json');
     
@@ -2464,7 +2464,7 @@ Standards:
    * Run specific test files, describe blocks, or it cases using vitest
    * Supports numeric references with tab completion for fast test selection
    * 
-   * Web4 Principle: Use model.targetDirectory for context discovery, not process.cwd()
+   * Web4 Principle: Use model.targetDirectory for context discovery, not cwd
    * 
    * @param scope - Type of test selection: 'file' | 'describe' | 'itCase'
    * @param references - Numeric references (1-based) for selecting tests
