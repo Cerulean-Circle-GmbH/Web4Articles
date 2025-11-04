@@ -5362,7 +5362,8 @@ export class DefaultPDCA implements PDCA {
     const day = String(now.getUTCDate()).padStart(2, '0');
     const hour = String(now.getUTCHours()).padStart(2, '0');
     const minute = String(now.getUTCMinutes()).padStart(2, '0');
-    const timestamp = `${year}-${month}-${day}-UTC-${hour}${minute}`;
+    const second = String(now.getUTCSeconds()).padStart(2, '0');
+    const timestamp = `${year}-${month}-${day}-UTC-${hour}${minute}${second}`;
     const newPDCAFilename = `${timestamp}.pdca.md`;
     const newPDCAPath = path.join(sessionDir, newPDCAFilename);
     
@@ -5383,13 +5384,17 @@ export class DefaultPDCA implements PDCA {
     // Get current branch from model or default
     const currentBranch = this.model.currentBranch || 'main';
     
+    // NEW: Get previous commit for baseline (auto-populate)
+    const previousCommit = this.getPreviousCommit();
+    
     // Populate basic placeholders using shared DRY helper
     templateContent = this.populateBoilerplateInternal(
       templateContent,
       title,
       objective,
       utcDateString,
-      currentBranch
+      currentBranch,
+      previousCommit
     );
     
     // Step 5b: Populate "Previous PDCA:" dual link
@@ -5531,12 +5536,14 @@ export class DefaultPDCA implements PDCA {
     const utcDateString = date.toUTCString();
     
     // Populate basic placeholders using shared DRY helper
+    // Note: rewritePDCA doesn't auto-populate Previous Commit (preserves original or uses TBD)
     templateContent = this.populateBoilerplateInternal(
       templateContent,
       title,
       objective,
       utcDateString,
-      currentBranch
+      currentBranch,
+      undefined // Don't auto-populate in rewrite - preserve original or use TBD
     );
     
     // Step 6: Find previous PDCA and populate "Previous PDCA:" link
@@ -5612,6 +5619,26 @@ export class DefaultPDCA implements PDCA {
   }
   
   /**
+   * Get most recent git commit SHA and message for PDCA baseline
+   * Used to auto-populate "Previous Commit" field in PDCA header
+   * @returns Format: "{short-sha} - {commit message}" or "TBD - TBD" if no commits/errors
+   * @cliHide
+   */
+  private getPreviousCommit(): string {
+    try {
+      const { execSync } = require('child_process');
+      const commit = execSync('git log -1 --format="%h - %s"', { 
+        encoding: 'utf-8',
+        cwd: process.cwd()
+      }).trim();
+      return commit || 'TBD - TBD';
+    } catch (error) {
+      // Graceful fallback: fresh repo with no commits, or git not available
+      return 'TBD - TBD';
+    }
+  }
+  
+  /**
    * Populate template boilerplate placeholders (DRY helper for createPDCA and rewritePDCA)
    * @cliHide
    */
@@ -5620,7 +5647,8 @@ export class DefaultPDCA implements PDCA {
     title: string,
     objective: string,
     utcDateString: string,
-    currentBranch: string
+    currentBranch: string,
+    previousCommit?: string
   ): string {
     return templateContent
       // Basic metadata
@@ -5633,8 +5661,10 @@ export class DefaultPDCA implements PDCA {
       .replace(/{{SPRINT_NAME}}/g, 'Current Sprint')
       .replace(/{{TASK_NAME}}/g, title)
       .replace(/{{KEY_ISSUES}}/g, 'None')
-      .replace(/{{PREVIOUS_COMMIT_SHA}}/g, 'TBD')
-      .replace(/{{PREVIOUS_COMMIT_DESCRIPTION}}/g, 'TBD')
+      .replace(/{{PREVIOUS_COMMIT_SHA}}/g, previousCommit || 'TBD')
+      .replace(/{{PREVIOUS_COMMIT_DESCRIPTION}}/g, previousCommit || 'TBD')
+      // NEW: Replace full "Previous Commit:" line format
+      .replace(/(\*\*📎 Previous Commit:\*\*\s+)TBD - TBD/g, `$1${previousCommit || 'TBD - TBD'}`)
       .replace(/{{PLAN_OBJECTIVE}}/g, objective)
       .replace(/{{REQUIREMENT_UUID}}/g, 'TBD')
       .replace(/{{SUCCESS_SUMMARY}}/g, 'TBD')
@@ -5834,7 +5864,7 @@ export class DefaultPDCA implements PDCA {
 
   /**
    * Find most recent PDCA file in directory (internal helper)
-   * Looks for files matching pattern: YYYY-MM-DD-UTC-HHMM.pdca.md
+   * Looks for files matching pattern: YYYY-MM-DD-UTC-HHMMSS.pdca.md (or legacy HHMM format)
    */
   private async findMostRecentPDCAInternal(directory: string): Promise<string | null> {
     const fs = await import('fs');
@@ -5845,7 +5875,7 @@ export class DefaultPDCA implements PDCA {
     }
     
     const files = fs.readdirSync(directory);
-    const pdcaPattern = /^(\d{4}-\d{2}-\d{2}-UTC-\d{4})\.pdca\.md$/;
+    const pdcaPattern = /^(\d{4}-\d{2}-\d{2}-UTC-\d{4,6})\.pdca\.md$/;
     
     const pdcaFiles = files
       .filter(f => pdcaPattern.test(f))
