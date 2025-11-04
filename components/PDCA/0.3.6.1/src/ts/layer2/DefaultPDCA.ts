@@ -4821,12 +4821,32 @@ export class DefaultPDCA implements PDCA {
 
     // Step 2: Execute Move
     // Try git mv first (preserves history), fall back to fs.rename if not in git
+    let usedGit = false;
     if (!isDryRun) {
       try {
         execSync(`git mv "${oldNormalized}" "${newNormalized}"`, {
           cwd: projectRoot,
           stdio: 'pipe'
         });
+        usedGit = true;
+        
+        // ATOMIC OPERATION: Commit the rename immediately
+        // This ensures rename is always committed, regardless of bidirectional links
+        console.log(`\n📦 Git operations:`);
+        const commitMsg = `refactor: rename ${path.basename(oldNormalized)} to ${path.basename(newNormalized)}`;
+        execSync(`git add "${newNormalized}"`, { cwd: projectRoot });
+        execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot });
+        
+        const branch = execSync('git branch --show-current', {
+          cwd: projectRoot,
+          encoding: 'utf-8'
+        }).trim();
+        execSync(`git push origin ${branch}`, { cwd: projectRoot });
+        
+        console.log(`   ✅ Renamed: ${oldNormalized} → ${newNormalized}`);
+        console.log(`   ✅ Committed: ${commitMsg}`);
+        console.log(`   ✅ Pushed to remote\n`);
+        
       } catch (gitError: any) {
         // File not in git or git error - use fs.rename as fallback
         try {
@@ -4838,6 +4858,7 @@ export class DefaultPDCA implements PDCA {
     }
 
     // Step 3: Update Links in Other Files (DRY: Reuse updateLinksToFile)
+    // This will commit separately if any bidirectional links are updated
     await this.updateLinksToFile(oldPath, newPath, dryRun);
 
     // Step 4: Refresh Relative Links in Moved File
