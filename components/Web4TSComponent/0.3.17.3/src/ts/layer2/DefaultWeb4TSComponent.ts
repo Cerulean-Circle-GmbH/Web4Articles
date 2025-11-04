@@ -4766,7 +4766,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async createSemanticVersionSymlink(component: string, semantic: string, version: string): Promise<void> {
-    const projectRoot = this.resolveProjectRoot();
+    // ✅ Use model.projectRoot for scripts/ (Path Authority)
+    const projectRoot = this.model.projectRoot;
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
     const componentLower = component.toLowerCase().replace(/[^a-z0-9]/g, '');
     
@@ -4897,7 +4898,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async verifyScriptsSymlinks(component: string, versions: string[], highestVersion: string): Promise<void> {
-    const projectRoot = this.resolveProjectRoot();
+    // ✅ Use model.projectRoot (Path Authority: CLI calculates this)
+    // NOT resolveProjectRoot() which returns targetDirectory
+    const projectRoot = this.model.projectRoot;
     const scriptsDir = path.join(projectRoot, 'scripts');
     const versionsDir = path.join(scriptsDir, 'versions');
     const componentLower = component.toLowerCase();
@@ -4985,7 +4988,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async cleanupOrphanedScriptSymlinks(component: string, validVersions: string[]): Promise<void> {
-    const projectRoot = this.resolveProjectRoot();
+    // ✅ Use model.projectRoot for scripts/ (Path Authority)
+    const projectRoot = this.model.projectRoot;
     const scriptsDir = path.join(projectRoot, 'scripts');
     const versionsDir = path.join(scriptsDir, 'versions');
     const componentLower = component.toLowerCase();
@@ -5091,7 +5095,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async verifyVersionScriptSymlink(component: string, version: string): Promise<void> {
-    const projectRoot = this.resolveProjectRoot();
+    // ✅ Use model.projectRoot for scripts/ (Path Authority)
+    const projectRoot = this.model.projectRoot;
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
     const componentLower = component.toLowerCase();
     const scriptName = `${componentLower}-v${version}`;
@@ -5255,7 +5260,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async createVersionScriptSymlink(component: string, version: string): Promise<void> {
-    const projectRoot = this.resolveProjectRoot(); // Respects targetDirectory via model
+    // ✅ Use model.projectRoot (Path Authority: CLI calculates this)
+    // NOT resolveProjectRoot() which returns targetDirectory
+    const projectRoot = this.model.projectRoot;
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
     
     // Ensure scripts/versions directory exists
@@ -5308,7 +5315,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async updateMainScriptSymlink(component: string, version: string): Promise<void> {
-    const projectRoot = this.resolveProjectRoot();
+    // ✅ Use model.projectRoot for scripts/ (Path Authority)
+    const projectRoot = this.model.projectRoot;
     const scriptsDir = path.join(projectRoot, 'scripts');
     const componentLower = component.toLowerCase();
     const mainScriptPath = path.join(scriptsDir, componentLower);
@@ -5640,7 +5648,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async cleanupVersionScriptSymlinks(componentName: string, version: string): Promise<void> {
-    const projectRoot = this.resolveProjectRoot();
+    // ✅ Use model.projectRoot for scripts/ (Path Authority)
+    const projectRoot = this.model.projectRoot;
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
     
     if (!existsSync(versionsDir)) {
@@ -5692,7 +5701,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async cleanupAllComponentScriptSymlinks(componentName: string, versions: string[]): Promise<void> {
-    const projectRoot = this.resolveProjectRoot();
+    // ✅ Use model.projectRoot for scripts/ (Path Authority)
+    const projectRoot = this.model.projectRoot;
     const scriptsDir = path.join(projectRoot, 'scripts');
     const versionsDir = path.join(scriptsDir, 'versions');
     
