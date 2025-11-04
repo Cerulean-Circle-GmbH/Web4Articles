@@ -157,6 +157,16 @@ It needs to be rewritten.`;
         // Ignore cleanup errors
       }
     }
+    
+    // Clean up test template directory
+    const templateDir = path.join(__dirname, '..', 'scrum.pmo');
+    if (fs.existsSync(templateDir)) {
+      try {
+        fs.rmSync(templateDir, { recursive: true, force: true });
+      } catch (err) {
+        // Ignore cleanup errors
+      }
+    }
   });
 
   // TC72: rewritePDCA extracts title and objective from corrupted file
