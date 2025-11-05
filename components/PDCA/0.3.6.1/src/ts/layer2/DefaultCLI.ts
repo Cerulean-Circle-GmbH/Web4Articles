@@ -1304,10 +1304,23 @@ export abstract class DefaultCLI implements CLI {
    * @cliHide
    */
   async completeParameter(callbackName: string, ...contextArgs: string[]): Promise<void> {
-    // Check if callback method exists on this instance
+    // Check if callback method exists on this instance OR on component instance
+    let target: any = null;
+    
     if (typeof (this as any)[callbackName] === 'function') {
+      // Method exists on CLI instance (e.g., depthParameterCompletion in DefaultCLI)
+      target = this;
+    } else {
+      // Try component instance (e.g., renameCaseParameterCompletion in DefaultPDCA)
+      const componentInstance = this.getComponentInstance();
+      if (componentInstance && typeof componentInstance[callbackName] === 'function') {
+        target = componentInstance;
+      }
+    }
+    
+    if (target) {
       // Pass context args to completion method (e.g., ['on', 'ComponentName'] for versionParameterCompletion)
-      const values = await (this as any)[callbackName](contextArgs);
+      const values = await target[callbackName](contextArgs);
       
       // Smart Join (OOSH-inspired, matching TSCompletion.start() logic):
       // If values contain numbered references (e.g. "1:filename") or any item with spaces,
