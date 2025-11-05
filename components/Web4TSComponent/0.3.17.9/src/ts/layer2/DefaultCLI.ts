@@ -664,8 +664,13 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
   /**
    * Common error formatting
+   * @pdca 2025-11-05-UTC-2100.pdca.md - Distinguish test failures from CLI errors
    */
   protected formatError(message: string): string {
+    // Detect test failures (vitest/execSync errors)
+    if (message.includes('npx vitest') || message.includes('Test Files') || message.includes('FAIL')) {
+      return `❌ Test execution failed:\n${message}`;
+    }
     return `❌ CLI Error: ${message}`;
   }
 
