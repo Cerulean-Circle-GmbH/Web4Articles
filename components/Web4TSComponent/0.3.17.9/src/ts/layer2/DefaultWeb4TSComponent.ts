@@ -290,10 +290,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliHide
    */
   private async loadWeb4TSComponentTemplate(templatePath: string, substitutions: Record<string, string>): Promise<string> {
-    // Always load from Web4TSComponent's templates, not the current component
-    // @pdca 2025-11-05-UTC-2100.pdca.md - Use componentsDirectory (Path Authority)
-    const web4tsComponentPath = path.join(this.model.componentsDirectory, 'Web4TSComponent', this.model.version.toString());
-    const templateFullPath = path.join(web4tsComponentPath, 'templates', templatePath);
+    // Always load from Web4TSComponent's OWN templates (componentRoot)
+    // @pdca 2025-11-05-UTC-2100.pdca.md - Use componentRoot for OWN resources (Path Authority)
+    const templateFullPath = path.join(this.model.componentRoot, 'templates', templatePath);
     
     if (!existsSync(templateFullPath)) {
       throw new Error(`Web4TSComponent template not found: ${templateFullPath}`);
@@ -2605,9 +2604,8 @@ Standards:
       console.log(`\n📁 Available test files:`);
       const formatted = TestFileParser.formatFilesForCompletion(testFiles);
       formatted.forEach(f => console.log(`   ${f}`));
-      console.log(`\n💡 Usage: web4tscomponent test file <number|path>`);
+      console.log(`\n💡 Usage: web4tscomponent test file <number>`);
       console.log(`   Example: web4tscomponent test file 5`);
-      console.log(`   Example: web4tscomponent test file test/vitest/my-test.test.ts`);
       return;
     }
     
@@ -2690,7 +2688,7 @@ Standards:
       const result = TestFileParser.getAllDescribesHierarchical(testDir);
       console.log(`\n📋 Available describe blocks:\n`);
       console.log(result.display.join('\n'));
-      console.log(`\n💡 Usage: web4tscomponent test describe <reference>`);
+      console.log(`\n💡 Usage: web4tscomponent test describe <token>`);
       console.log(`   Example: web4tscomponent test describe 17a`);
       return;
     }
