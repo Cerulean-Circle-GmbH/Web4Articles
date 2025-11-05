@@ -6,6 +6,9 @@ test-results.json
 .DS_Store
 scenarios/local.once
 
+# Test artifacts - templates created during test runs
+components/PDCA/*/scrum.pmo/
+
 # Logs
 logs
 *.log

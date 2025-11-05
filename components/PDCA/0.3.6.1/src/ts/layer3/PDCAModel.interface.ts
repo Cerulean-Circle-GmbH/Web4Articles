@@ -23,4 +23,5 @@ export interface PDCAModel extends Model {
   workingDirectory?: string; // Project root or working directory
   currentBranch?: string; // Git branch for GitHub URLs
   repoUrl?: string; // GitHub repository URL
+  componentRoot?: string; // Component root directory (for tests - overrides workingDirectory)
 }

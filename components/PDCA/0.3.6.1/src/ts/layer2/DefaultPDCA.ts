@@ -7,7 +7,8 @@ import { PDCA } from '../layer3/PDCA.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { PDCAModel } from '../layer3/PDCAModel.interface.js';
 import { existsSync, lstatSync, readlinkSync, readdirSync, statSync } from 'fs';
-import { join, dirname } from 'path';
+import { join, dirname, basename } from 'path';
+import { execSync } from 'child_process';
 
 // Use latest version for delegation (always available)
 import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js';
@@ -210,6 +211,18 @@ export class DefaultPDCA implements PDCA {
         const description = this.getViolationDescription(violation);
         console.log(`   ${violation}: ${description}`);
         
+        // Show AI-content placeholders if violation 1m
+        if (violation === '1m' && (violations as any).aiContentPlaceholders) {
+          const placeholders = (violations as any).aiContentPlaceholders;
+          console.log(`      Found ${placeholders.length} unpopulated AI-content placeholder(s):`);
+          for (const placeholder of placeholders.slice(0, 10)) {  // Show first 10
+            console.log(`      - ${placeholder}`);
+          }
+          if (placeholders.length > 10) {
+            console.log(`      ... and ${placeholders.length - 10} more`);
+          }
+        }
+        
         // Show specific violations if available (e.g., from check3c)
         if (this.model.cmm3Violations && this.model.cmm3Violations[violation]) {
           for (const detail of this.model.cmm3Violations[violation]) {
@@ -320,6 +333,9 @@ export class DefaultPDCA implements PDCA {
       '1g': 'CMM3 violation not properly reported',
       '1i': 'Git commit/push protocol not followed',
       '1j': 'QA Decisions section not properly formatted',
+      '1k': 'Template placeholders not populated ({{}} tokens found)',
+      '1l': 'Definition of Ready (DoR) or Definition of Done (DoD) missing in PLAN section',
+      '1m': 'AI-content placeholders not populated (AI Content Population Mandate violated)',
       '3a': 'Links only requirement not met',
       '3b': 'QA Decisions not copied verbatim',
       '3c': 'Dual link format incorrect',
@@ -1381,6 +1397,16 @@ export class DefaultPDCA implements PDCA {
     // 1h requires external research capability, skip for now
     if (!this.check1i(content)) violations.push('1i');
     if (!this.check1j(content)) violations.push('1j');
+    if (!this.check1k(content)) violations.push('1k');
+    if (!this.check1l(content)) violations.push('1l');  // NEW: DoR/DoD check
+    
+    // 1m: AI-content placeholders check
+    const check1mResult = this.check1m(content);
+    if (!check1mResult.valid) {
+      violations.push('1m');
+      // Store placeholders for detailed reporting
+      (violations as any).aiContentPlaceholders = check1mResult.placeholders;
+    }
 
     // 3. Chat Response Compliance (relevant sections in PDCA)
     if (!this.check3a(content)) violations.push('3a');
@@ -1428,7 +1454,9 @@ export class DefaultPDCA implements PDCA {
       '## **📋 PLAN**',
       '## **🔧 DO**',
       '## **✅ CHECK**',
-      '## **🎯 ACT**'
+      '## **🎯 ACT**',
+      '## **💫 EMOTIONAL REFLECTION',  // Added: Template line 135-145 (mandatory)
+      '## **🎯 PDCA PROCESS UPDATE**'  // Added: Template line 147-158 (mandatory)
     ];
     
     // Alternative section formats (older PDCAs might use different emojis)
@@ -1436,7 +1464,9 @@ export class DefaultPDCA implements PDCA {
       '## **PLAN**',
       '## **DO**',
       '## **CHECK**',
-      '## **ACT**'
+      '## **ACT**',
+      '## **EMOTIONAL REFLECTION',  // Alternative without emoji
+      '## **PDCA PROCESS UPDATE**'  // Alternative without emoji
     ];
     
     // Check if all required sections exist (with fallback to alternatives)
@@ -1537,6 +1567,120 @@ export class DefaultPDCA implements PDCA {
            content.includes('All clear, no decisions') ||
            content.includes('**D1:**') ||
            content.includes('Decision 1:');
+  }
+
+  /**
+   * 1k) Template placeholders must be populated (no unpopulated {{}} tokens)
+   * Allows placeholders in code blocks (```), inline code (`), and quote blocks
+   * @cliHide
+   */
+  private check1k(content: string): boolean {
+    // Remove code blocks (```...```)
+    let contentWithoutCodeBlocks = content.replace(/```[\s\S]*?```/g, '');
+    
+    // Remove inline code (`...`)
+    contentWithoutCodeBlocks = contentWithoutCodeBlocks.replace(/`[^`]+`/g, '');
+    
+    // Check for any remaining {{}} placeholders
+    const placeholderRegex = /\{\{[^}]+\}\}/;
+    return !placeholderRegex.test(contentWithoutCodeBlocks);
+  }
+
+  /**
+   * 1l) Definition of Ready (DoR) and Definition of Done (DoD) present in PLAN section
+   * Ensures all PDCAs have explicit DoR/DoD sections for CMM3 compliance
+   * @cliHide
+   */
+  private check1l(content: string): boolean {
+    // Check for DoR section
+    const hasDoR = content.includes('### **Definition of Ready (DoR)**') || 
+                   content.includes('### **Definition of Ready**') ||
+                   content.includes('### Definition of Ready (DoR)') ||
+                   content.includes('## Definition of Ready');
+    
+    // Check for DoD section
+    const hasDoD = content.includes('### **Definition of Done (DoD)**') || 
+                   content.includes('### **Definition of Done**') ||
+                   content.includes('### Definition of Done (DoD)') ||
+                   content.includes('## Definition of Done');
+    
+    return hasDoR && hasDoD;
+  }
+
+  /**
+   * 1m) AI-content placeholders must be populated
+   * Ensures AI populates all content sections after createPDCA
+   * Distinguishes AI-content placeholders from metadata placeholders (checked by 1k)
+   * @cliHide
+   */
+  private check1m(content: string): { valid: boolean; placeholders: string[] } {
+    // Remove code blocks (```...```) to avoid false positives
+    let contentWithoutCodeBlocks = content.replace(/```[\s\S]*?```/g, '');
+    
+    // Remove inline code (`...`)
+    contentWithoutCodeBlocks = contentWithoutCodeBlocks.replace(/`[^`]+`/g, '');
+    
+    // AI-content placeholders (content sections that AI must populate)
+    const aiContentPlaceholders = [
+      // DO section
+      'DO_SECTION_TITLE', 'ACTION_INDEX', 'ACTION_TITLE', 'ACTION_LANGUAGE', 'ACTION_CODE_OR_CONTENT',
+      // CHECK section
+      'CHECK_CATEGORY_1', 'CHECK_CATEGORY_2', 'CHECK_CATEGORY_3', 'CHECK_CATEGORY_4',
+      'STATUS_1', 'STATUS_2',
+      'VERIFICATION_OUTPUT_1', 'VERIFICATION_OUTPUT_2',
+      'VERIFICATION_1', 'VERIFICATION_2', 'VERIFICATION_3',
+      'VERIFICATION_DESCRIPTION_1', 'VERIFICATION_DESCRIPTION_2', 'VERIFICATION_DESCRIPTION_3',
+      'INTEGRATION_1', 'INTEGRATION_2',
+      'INTEGRATION_DESCRIPTION_1', 'INTEGRATION_DESCRIPTION_2',
+      'VERBATIM_QA_FEEDBACK',
+      // ACT section
+      'ACT_CATEGORY_1', 'ACT_CATEGORY_2',
+      'ENHANCEMENT_1', 'ENHANCEMENT_2', 'ENHANCEMENT_3',
+      'ENHANCEMENT_DESCRIPTION_1', 'ENHANCEMENT_DESCRIPTION_2', 'ENHANCEMENT_DESCRIPTION_3',
+      'BENEFIT_1', 'BENEFIT_2',
+      'BENEFIT_DESCRIPTION_1', 'BENEFIT_DESCRIPTION_2',
+      'FUTURE_1', 'FUTURE_2', 'FUTURE_3',
+      'FUTURE_DESCRIPTION_1', 'FUTURE_DESCRIPTION_2', 'FUTURE_DESCRIPTION_3',
+      // EMOTIONAL REFLECTION section
+      'EMOTIONAL_HEADLINE', 'EMOTIONAL_CATEGORY_1', 'EMOTIONAL_CATEGORY_2', 'EMOTIONAL_CATEGORY_3',
+      'EMOTIONAL_INTENSITY', 'EMOTIONAL_DESCRIPTION_1', 'EMOTIONAL_DESCRIPTION_2', 'EMOTIONAL_DESCRIPTION_3',
+      // PDCA PROCESS UPDATE section
+      'KEY_LEARNING_1', 'KEY_LEARNING_2', 'KEY_LEARNING_3',
+      'LEARNING_DESCRIPTION_1', 'LEARNING_DESCRIPTION_2', 'LEARNING_DESCRIPTION_3',
+      'QUALITY_IMPACT_DESCRIPTION', 'NEXT_FOCUS_DESCRIPTION',
+      'FINAL_SUMMARY_WITH_EMOJIS', 'PHILOSOPHICAL_INSIGHT',
+      // PLAN section (DoR/DoD)
+      'DOR_ITEM_1', 'DOR_ITEM_2', 'DOR_ITEM_3', 'DOR_ITEM_4',
+      'DOR_DESCRIPTION_1', 'DOR_DESCRIPTION_2', 'DOR_DESCRIPTION_3', 'DOR_DESCRIPTION_4',
+      'DOD_ITEM_1', 'DOD_ITEM_2', 'DOD_ITEM_3', 'DOD_ITEM_4', 'DOD_ITEM_5',
+      'DOD_DESCRIPTION_1', 'DOD_DESCRIPTION_2', 'DOD_DESCRIPTION_3', 'DOD_DESCRIPTION_4', 'DOD_DESCRIPTION_5',
+      // PLAN section (Strategy)
+      'STRATEGY_ELEMENT_1', 'STRATEGY_ELEMENT_2', 'STRATEGY_ELEMENT_3',
+      'STRATEGY_DESCRIPTION_1', 'STRATEGY_DESCRIPTION_2', 'STRATEGY_DESCRIPTION_3',
+      // SUMMARY section (QA Decisions)
+      'COMPLETED_DECISION', 'PENDING_DECISION', 'FOLLOWUP_REQUIRED',
+      'DECISION_DESCRIPTION',
+      // SUMMARY section (TRON Feedback)
+      'VERBATIM_WORD_BY_WORD_USER_PROMPT_NO_REFORMULATION',
+      'PRESERVE_ALL_LINE_BREAKS_SPACING_NUMBERING',
+      'IMMEDIATE_CHAT_RESPONSE_TO_FEEDBACK',
+      'EXPLANATION_OF_UNDERSTANDING_AND_ACTIONS',
+      'KEY_INSIGHT_FROM_FEEDBACK'
+    ];
+    
+    // Find all AI-content placeholders in the content
+    const foundPlaceholders: string[] = [];
+    for (const placeholder of aiContentPlaceholders) {
+      const regex = new RegExp(`\\{\\{${placeholder}\\}\\}`, 'g');
+      if (regex.test(contentWithoutCodeBlocks)) {
+        foundPlaceholders.push(`{{${placeholder}}}`);
+      }
+    }
+    
+    return {
+      valid: foundPlaceholders.length === 0,
+      placeholders: foundPlaceholders
+    };
   }
 
   /**
@@ -2603,13 +2747,18 @@ export class DefaultPDCA implements PDCA {
           '',
           '🔧 File Operations: mv, rename, moveFile',
           '✅ `pdca mv <oldPath> <newPath> [dryRun]` - Core file move + dual link updates',
-          '✅ `pdca rename <file> <case> [dryRun]` - Rename with strategies (now/creationDate/strip/feature)',
+          '✅ `pdca rename <case> <file> [dryRun]` - Rename with strategies (now/creationDate/strip/feature)',
           '⚠️ `pdca moveFile` - Deprecated, use mv() instead (wrapper maintained for compatibility)',
           '📊 TC39 Bug: RESOLVED (2025-11-03) - Relative links now calculated correctly from moved file location',
           '🎯 DRY Pattern: mv() is single source of truth, moveFile/rename delegate to it',
           '🔧 Implementation: Git mv with fs.rename fallback, auto-creates target directories',
           '📋 Rename Cases: now (current UTC), creationDate (git creation), strip (remove description), feature (add .feature. marker)',
+          '🎯 UX Enhancement (2025-11-05): Parameter order changed for natural language flow (action → object)',
+          '✨ Example: `pdca rename strip file.md` (reads naturally vs old `pdca rename file.md strip`)',
+          '🔗 Autocomplete: Tab completion works for case parameter (implemented in PDCA 140448)',
+          '⚠️ BREAKING CHANGE: Old syntax `pdca rename <file> <case>` no longer works',
           '📊 Source: 2025-10-31-UTC-1113.pdca.md (TDD implementation, 28/28 tests passing)',
+          '📊 UX Update: 2025-11-05-UTC-072743.pdca.md (Parameter order change, 19/19 tests passing)',
           '',
           '🔗 PDCA Chaining: Bidirectional Navigation',
           '✅ `pdca chain <newTitle> [dryRun]` - Create new PDCA and update previous PDCA\'s next link',
@@ -2625,6 +2774,167 @@ export class DefaultPDCA implements PDCA {
           '🎯 Benefits: Navigate PDCA history bidirectionally, automatic link maintenance',
           '📋 Template: Reads from scrum.pmo/roles/_shared/PDCA/template.md',
           '📊 Source: 2025-11-03-UTC-0737.pdca.md (TDD implementation, 9/9 tests passing)',
+          '',
+          '📝 Programmatic PDCA Creation: createPDCA Method (MANDATORY FOR ALL NEW PDCAs)',
+          '🚨 CRITICAL: ALWAYS use createPDCA for new PDCAs - NEVER create PDCAs manually',
+          '🚨 ENFORCEMENT: cmm3check validates template compliance - manual PDCAs will fail validation',
+          '✅ `pdca createPDCA <title> <objective> [sessionDirectory] [dryRun]` - Generate PDCA boilerplate from template',
+          '✅ Reads official template: scrum.pmo/roles/_shared/PDCA/template.md',
+          '✅ Populates all placeholders programmatically (title, objective, timestamp, agent, branch)',
+          '✅ Generates UTC timestamp filename automatically (YYYY-MM-DD-UTC-HHMM.pdca.md)',
+          '✅ Creates session directory if it doesn\'t exist',
+          '✅ Writes to session directory (default: components/PDCA/{{version}}/session/ or custom)',
+          '✅ Automatically updates previous PDCA\'s "Next PDCA:" DualLink (bidirectional chaining)',
+          '✅ Returns this for method chaining',
+          '✅ Dry run mode: Preview without creating file or updating links',
+          '',
+          '📂 Session Directory Parameter (NEW - 2025-11-04-UTC-0726.pdca.md):',
+          '✅ Optional 3rd parameter: Specify custom session directory for PDCA creation',
+          '✅ Use case: Create PDCAs in ANY component directory (not just PDCA component)',
+          '✅ Path formats: Accepts both absolute and relative paths',
+          '✅ Validation: Checks directory exists, throws error if not found',
+          '✅ Backward compatible: Old signature (title, objective, dryRun) still works',
+          '✅ Fallback chain: sessionDirectory param → model.sessionDirectory → default PDCA path',
+          '',
+          '📋 Usage Examples:',
+          '```bash',
+          '# Default: Create in PDCA component session directory',
+          'pdca createPDCA "Title" "Objective"',
+          '',
+          '# Custom directory: Absolute path',
+          'pdca createPDCA "Title" "Objective" /Users/Shared/path/to/component/session',
+          '',
+          '# Custom directory: Relative path',
+          'pdca createPDCA "Title" "Objective" ./components/Web4TSComponent/0.3.17.1/session',
+          '',
+          '# Dry run with custom directory',
+          'pdca createPDCA "Title" "Objective" ./custom/session true',
+          '',
+          '# Old signature (backward compatible)',
+          'pdca createPDCA "Title" "Objective" true  # Dry run',
+          '```',
+          '',
+          '🎯 Purpose: Ensures consistent PDCA structure, prevents omissions/inconsistencies, maintains chain integrity',
+          '🎯 Pattern: Find previous PDCA → Generate boilerplate → AI population → Update previous link',
+          '📊 Old problem: AI created PDCAs directly → omissions, structural variations, deleted mandatory sections, broken chains',
+          '📊 New solution: Fixed boilerplate always generated first → guaranteed coverage of all 176 template lines + automatic chain maintenance',
+          '🎯 Use case: Starting new feature/task documentation from scratch (now in ANY component)',
+          '📋 Placeholders populated: TITLE, OBJECTIVE, UTC_TIMESTAMP, AGENT_NAME, BRANCH_NAME, SESSION_NAME, SPRINT_NAME, TASK_NAME, and more',
+          '🔗 Bidirectional chaining: Finds most recent PDCA, creates new one with "Previous PDCA:" link, updates old one with "Next PDCA:" link',
+          '',
+          '🚨 CRITICAL: Template Placeholder Population (AI RESPONSIBILITY)',
+          '✅ createPDCA Populates (14 placeholders):',
+          '   - TITLE, OBJECTIVE, UTC_TIMESTAMP, AGENT_NAME',
+          '   - BRANCH_NAME, SESSION_NAME, SPRINT_NAME, TASK_NAME',
+          '   - KEY_ISSUES, PREVIOUS_COMMIT_SHA, PREVIOUS_COMMIT_DESCRIPTION',
+          '   - PLAN_OBJECTIVE, REQUIREMENT_UUID, SUCCESS_SUMMARY',
+          '❌ AI MUST Populate (25+ remaining placeholders):',
+          '   - Header: DESCRIPTION, CMM_STATUS, BADGE_TYPE, BADGE_TIMESTAMP',
+          '   - Context: AGENT_DESCRIPTION, ROLE_NAME, CONTEXT_SPECIALIZATION (appears 5x)',
+          '   - Branch/Sync: BRANCH_PURPOSE, SYNC_BRANCHES, SYNC_PURPOSE',
+          '   - Links: GITHUB_URL, SESSION, FILENAME, OTHER_SESSION, LOCAL_PATH (multiple instances)',
+          '   - Sections: All DO/CHECK/ACT/EMOTIONAL/PROCESS placeholders',
+          '🔍 Validation Command: `grep -n "{{" <pdca-file>` - Must return ZERO results before commit',
+          '✅ Placeholder Population Checklist (MANDATORY):',
+          '   1. After createPDCA generates boilerplate, run: `grep -n "{{" file.pdca.md`',
+          '   2. For EACH {{ }} found: Replace with appropriate content',
+          '   3. Header placeholders: Fill with sprint/session context',
+          '   4. Link placeholders: Generate dual links using getDualLink',
+          '   5. Section placeholders: Replace with actual implementation/results',
+          '   6. Final validation: Re-run grep, ensure ZERO matches (except in quotes/examples)',
+          '   7. NO PDCA is complete with unpopulated {{}} placeholders',
+          '❌ Common mistake: Leaving {{DESCRIPTION}}, {{CMM_STATUS}}, {{CONTEXT_SPECIALIZATION}} unpopulated',
+          '🔧 Automated Validation: cmm3check now includes check1k for placeholder validation',
+          '✅ cmm3check detects unpopulated placeholders: Violation 1k reported when {{}} tokens found',
+          '✅ Code blocks and inline code excluded: Placeholders in ```code``` and `inline` are allowed',
+          '🎯 Enforcement: cmm3check provides objective validation of placeholder population',
+          '📊 Analysis source: 2025-11-03-UTC-1120.pdca.md (placeholder population pattern documented)',
+          '📊 Implementation: 2025-11-03-UTC-1129.pdca.md (cmm3check enhancement, 4 new tests)',
+          '',
+          '⚠️ NEVER DELETE SECTIONS: Especially EMOTIONAL REFLECTION and PDCA PROCESS UPDATE (validated by cmm3check)',
+          '⚠️ ACCEPTABLE EXTENSIONS: Phase/DoR/DoD pattern in PLAN section (for complex sprints)',
+          '❌ PROHIBITED: Adding META sections or other unauthorized top-level sections',
+          '📊 Source: 2025-11-03-UTC-0837.pdca.md (TDD implementation, 9/9 tests passing)',
+          '📊 Analysis: 2025-11-03-UTC-0954.pdca.md (template deviation analysis, cmm3check enhancement, bidirectional chaining)',
+          '🔧 Method signature: async createPDCA(title: string, objective: string, dryRun?: string): Promise<this>',
+          '',
+          '📋 Workflow for New PDCAs (MANDATORY):',
+          '1. Generate structure: pdca createPDCA "Title" "Objective"',
+          '2. Open generated file: components/PDCA/{{version}}/session/YYYY-MM-DD-UTC-HHMM.pdca.md',
+          '3. Populate sections: Fill SUMMARY, PLAN, DO, CHECK, ACT, EMOTIONAL REFLECTION, PDCA PROCESS UPDATE',
+          '4. Validate compliance: pdca cmm3check <file> (checks all 11 required sections)',
+          '5. Commit and push: Standard git workflow',
+          '❌ DO NOT: Create PDCA files manually, copy/paste old PDCAs, skip createPDCA',
+          '✅ DO: Always use createPDCA, validate with cmm3check, follow template structure',
+          '',
+          '🔄 Fixing Corrupted PDCAs (rewritePDCA):',
+          '📊 Source: 2025-11-03-UTC-1507.pdca.md (rewritePDCA redesign - in-place rewriting)',
+          '📊 Source: 2025-11-04-UTC-0923.pdca.md (rewritePDCA auto-population - DRY helper)',
+          '🔧 Method signature: async rewritePDCA(filePath: string, dryRun?: string): Promise<this>',
+          '',
+          '✅ When to Use rewritePDCA:',
+          '- PDCA is corrupted (missing sections, invalid structure)',
+          '- PDCA deviates from template (unauthorized sections added)',
+          '- PDCA fails cmm3check validation',
+          '- PDCA has unpopulated {{}} metadata placeholders',
+          '',
+          '📋 rewritePDCA Workflow (Simplified):',
+          '1. Identify corrupted PDCA: pdca cmm3check <file> (shows violations)',
+          '2. Rewrite in-place: pdca rewritePDCA <corrupted-file-path>',
+          '3. Result: Fresh PDCA with ALL metadata placeholders auto-populated ✅',
+          '4. AI populates remaining content sections (DO, CHECK, ACT, etc.)',
+          '5. Validate: pdca cmm3check <file> (should pass)',
+          '',
+          '🎯 How rewritePDCA Works (In-Place + Auto-Population + Smart Preservation):',
+          '✅ Step 1: Validates corrupted file exists',
+          '✅ Step 2: Auto-extracts title from line 1: # 📋 **PDCA Cycle: TITLE - ...**',
+          '✅ Step 3: Auto-extracts objective from header: **🎯 Objective:** ...',
+          '✅ Step 4: Preserves timestamp from filename: YYYY-MM-DD-UTC-HHMM',
+          '✅ Step 5: Reads template and auto-populates ALL metadata placeholders',
+          '   - Uses populateBoilerplateInternal() (shared DRY helper)',
+          '   - Populates: {{TITLE}}, {{OBJECTIVE}}, {{UTC_TIMESTAMP}}, {{AGENT_NAME}}',
+          '   - Populates: {{BRANCH_NAME}}, {{CMM_STATUS}}, {{BADGE_TYPE}}, {{TASK_NAME}}',
+          '   - Populates: {{DESCRIPTION}}, {{AGENT_DESCRIPTION}}, {{ROLE_NAME}}, etc.',
+          '✅ Step 6: 🆕 SMART CONTENT PRESERVATION (Option B - Always Preserve):',
+          '   - Analyzes corrupted PDCA for salvageable sections',
+          '   - Uses extractSections() to parse ## **SectionName** headers',
+          '   - Uses isValidContent() to validate each section:',
+          '     • Length > 50 characters (not just placeholder stubs)',
+          '     • Placeholders < 5 (actual content, not just {{}} tokens)',
+          '     • No "CORRUPTED" or "MISSING" markers',
+          '   - Uses mergeSections() to insert valid content into fresh template',
+          '   - Result: Valid sections preserved, invalid sections reset to template',
+          '✅ Step 7: Writes to SAME filename (true in-place rewrite)',
+          '✅ Step 8: Returns this for method chaining',
+          '',
+          '💡 Design Principle: "Preserve Time, Extract Truth, Save Valid Work, Auto-Populate"',
+          '✅ Timeline Integrity: Original timestamp preserved (no new files)',
+          '✅ Zero Manual Input: Title and objective extracted automatically',
+          '✅ CMM3 Compliance: ALL metadata placeholders auto-populated (passes cmm3check 1k)',
+          '✅ DRY Architecture: Shared populateBoilerplateInternal() with createPDCA',
+          '✅ True Rewrite: Same file updated, not create-new-delete-old',
+          '✅ 🆕 Smart Preservation: Valid content sections automatically preserved!',
+          '   - Option B (implemented): Always attempts to preserve valid sections',
+          '   - No flags needed - does the right thing automatically',
+          '   - Example: If DO section has valid content → preserved',
+          '   - Example: If CHECK section is "CORRUPTED" → reset to template',
+          '🎯 Benefits: Maintains chain chronology, eliminates user error, faster workflow, CMM3 ready',
+          '',
+          '📋 Example Usage:',
+          '```bash',
+          '# Regular rewrite (in-place, preserves timestamp)',
+          'pdca rewritePDCA components/PDCA/0.3.6.1/session/2025-11-03-UTC-1400.pdca.md',
+          '',
+          '# Dry run (preview extraction and changes)',
+          'pdca rewritePDCA path/to/corrupted.pdca.md true',
+          '```',
+          '',
+          '⚠️ Important Notes:',
+          '- NO manual input needed: title/objective auto-extracted from file',
+          '- Timestamp preserved: original filename maintained',
+          '- In-place rewrite: file updated directly (not deleted/recreated)',
+          '- Git backup available: use git checkout if needed',
+          '- Content NOT preserved: DO/CHECK/ACT sections reset to template',
           '',
           '📋 Template Verification Forcing Function (MANDATORY):',
           '✅ Step 1: Query template location: `pdca queryTrainAI "where is PDCA template?"`',
@@ -2653,6 +2963,103 @@ export class DefaultPDCA implements PDCA {
           '⚠️ Trust the plan: Entry Criteria and DoD guide back to surface with correct exit',
           '💡 Pattern enables automation: Baseline for rewritePDCA and createPDCA methods',
           '📊 Source: 2025-10-29-UTC-1026.pdca.md (user introduced), 2025-10-30-UTC-1048.pdca.md (terminology standardized)',
+          '',
+          '🚨 MANDATORY: DoR/DoD in EVERY PDCA (CMM3 REQUIREMENT - ENFORCED)',
+          '✅ ALL PDCAs MUST include DoR/DoD sections in PLAN (NOT optional - will fail cmm3check without)',
+          '✅ Template updated 2025-11-04: DoR/DoD placeholders now included by default',
+          '✅ cmm3check validates: Violation 1l reported if DoR/DoD sections missing',
+          '✅ Format: ### **Definition of Ready (DoR)** and ### **Definition of Done (DoD)**',
+          '✅ Location: Immediately after "Requirements Traceability" in PLAN section',
+          '✅ Purpose: Explicit entry/exit criteria prevent scope creep, enable objective completion verification',
+          '🚨 ENFORCEMENT: createPDCA generates DoR/DoD placeholders - AI MUST populate them',
+          '❌ NEVER FORGET: User explicitly requested "make sure DoR/DoD never forgotten" - this is non-negotiable',
+          '📊 Implementation: Template update (scrum.pmo/roles/_shared/PDCA/template.md) + check1l() validation',
+          '📊 Source: 2025-11-04-UTC-0829.pdca.md (DoR/DoD enforcement system)',
+          '',
+          '🚨 AI CONTENT POPULATION MANDATE (AFTER createPDCA - MANDATORY)',
+          '✅ When createPDCA is executed, AI MUST immediately populate ALL content sections',
+          '✅ Step 1: Analyze objective for semantic meaning (e.g., "Show PDCA commands" → full command reference)',
+          '✅ Step 2: Populate SUMMARY section (Artifact Links, QA Decisions, TRON Feedback with verbatim user prompt)',
+          '✅ Step 3: Populate PLAN section (Requirements, specific DoR/DoD items, Implementation Strategy)',
+          '✅ Step 4: Populate DO section (actual actions taken, code snippets, command outputs)',
+          '✅ Step 5: Populate CHECK section (verification results, test outputs, compliance checks)',
+          '✅ Step 6: Populate ACT section (success summary, enhancements, benefits, future work)',
+          '✅ Step 7: Populate EMOTIONAL REFLECTION (analytical satisfaction, confidence, readiness)',
+          '✅ Step 8: Populate PDCA PROCESS UPDATE (process learning, quality impact, next focus)',
+          '❌ NEVER leave AI-content placeholders unfilled: {{DO_SECTION_TITLE}}, {{VERIFICATION_OUTPUT_1}}, {{EMOTIONAL_INTENSITY}}, etc.',
+          '🎯 createPDCA auto-populates metadata (CMM_STATUS, AGENT_NAME, BRANCH, UTC_TIMESTAMP) ← already automated',
+          '🎯 AI must populate content (DO/CHECK/ACT sections, TRON feedback, emotional reflection) ← AI responsibility',
+          '',
+          '📋 AI Pre-Commit Checklist (MANDATORY - check BEFORE every PDCA commit):',
+          '✅ 1. All metadata placeholders populated by createPDCA (CMM_STATUS, AGENT_NAME, etc.)',
+          '✅ 2. All content sections populated with REAL content (not {{}} placeholders)',
+          '✅ 3. Objective reflected in content (DO section addresses the stated objective)',
+          '✅ 4. DoR/DoD present and SPECIFIC (not generic placeholders)',
+          '✅ 5. User prompt included VERBATIM in TRON Feedback (no reformulation)',
+          '✅ 6. EMOTIONAL REFLECTION has real insights (not placeholder intensity levels)',
+          '✅ 7. Run: `grep -n "{{" file.pdca.md` → Result MUST be zero AI-content placeholders',
+          '✅ 8. Validate: `pdca cmm3check file.pdca.md` → Must pass all checks',
+          '',
+          '📊 Reference Examples of Full Content Population:',
+          '✅ 2025-11-04-UTC-0947.pdca.md: Objective "Show PDCA commands" → Comprehensive command reference populated',
+          '✅ 2025-11-04-UTC-0957.pdca.md: Objective "Auto-populate content" → Full design analysis populated',
+          '✅ 2025-11-04-UTC-0923.pdca.md: Objective "rewritePDCA auto-population" → Complete implementation documented',
+          '🎯 Pattern: Clear objective → AI infers required content → Full sections populated immediately',
+          '',
+          '⚠️ Distinction: Metadata vs Content Auto-Population',
+          '🔧 Metadata (automated by createPDCA): Simple string replacements - CMM_STATUS, AGENT_NAME, BRANCH_NAME, UTC_TIMESTAMP',
+          '🧠 Content (AI responsibility): Semantic understanding required - DO section details, CHECK verification, ACT outcomes',
+          '❌ Common mistake: Assuming createPDCA auto-populates everything (it only does metadata)',
+          '✅ Correct behavior: createPDCA generates structure + metadata, AI immediately populates content based on objective',
+          '',
+          '📊 Why This Matters (User Feedback - 2025-11-04-UTC-0957):',
+          '> User: "How can we make sure that this population always happen with the creation when the Objective is given"',
+          '> Expectation: When objective is clear (like "Demo" or "Show commands"), PDCA should be FULLY populated',
+          '> Reality Check: Boss demo PDCA (0947) proves this is achievable - objective provided sufficient context',
+          '> Solution: This mandate ensures AI ALWAYS populates content immediately after createPDCA',
+          '📊 Source: 2025-11-04-UTC-0957.pdca.md (Option A: AI Guideline Enforcement - approved by user)',
+          '',
+          '📋 PLAN Section: Phase/DoR/DoD Pattern (OFFICIAL EXTENSION - ACCEPTABLE)',
+          '✅ WHEN TO USE: Complex sprints with 3+ distinct execution phases requiring systematic approach',
+          '✅ WHERE: Inside PLAN section, after Objective and Requirements Traceability',
+          '✅ FORMAT STRUCTURE:',
+          '   **Phase N: Phase Title**',
+          '   🔵 Entry Criteria (Definition of Ready):',
+          '   - Condition 1 that must be true before starting',
+          '   - Condition 2 that must be verified',
+          '   - Condition 3 for readiness',
+          '   ',
+          '   **Actions:**',
+          '   1. Specific action to take',
+          '   2. Next action in sequence',
+          '   3. Final action',
+          '   ',
+          '   🟢 Definition of Done (DoD):',
+          '   - ✅ Verification criterion 1',
+          '   - ✅ Verification criterion 2',
+          '   - ✅ Verification criterion 3',
+          '✅ EXAMPLES: See reference PDCAs for correct usage:',
+          '   - 2025-11-03-UTC-0707.pdca.md: 7-phase execution (relearning, planning, implementation, etc.)',
+          '   - 2025-11-03-UTC-0737.pdca.md: 8-phase TDD cycle (RAG prep, test-first, implementation, etc.)',
+          '   - 2025-10-30-UTC-1048.pdca.md: Multi-phase sprint with detailed DoR/DoD',
+          '✅ BENEFITS:',
+          '   - Clear phase boundaries prevent scope creep',
+          '   - Entry criteria ensure readiness before starting',
+          '   - DoD provides objective completion verification',
+          '   - Enables systematic execution without holding all context',
+          '   - Supports automation (agents can verify DoD programmatically)',
+          '⚠️ WHEN NOT TO USE: Simple single-action tasks or straightforward implementations',
+          '⚠️ TEMPLATE COMPLIANCE: This is an EXTENSION, not a replacement',
+          '   - Keep all template sections (SUMMARY, PLAN, DO, CHECK, ACT, EMOTIONAL REFLECTION, PDCA PROCESS UPDATE)',
+          '   - Phase/DoR/DoD goes INSIDE PLAN section, doesn\'t replace it',
+          '   - Template structure must remain intact',
+          '❌ COMMON MISTAKES TO AVOID:',
+          '   - Adding Phase/DoR/DoD as separate top-level sections (WRONG - goes in PLAN)',
+          '   - Replacing template sections with phase structure (WRONG - extension, not replacement)',
+          '   - Using for simple tasks that don\'t need phases (WRONG - adds unnecessary complexity)',
+          '🎯 VALIDATION: cmm3check does NOT flag this pattern - it\'s officially sanctioned',
+          '📊 Analysis: 2025-11-03-UTC-0954.pdca.md (confirmed as acceptable extension, not violation)',
+          '📊 Template compliance verified: Pattern exists in validated reference PDCAs with CMM3+ compliance',
           '',
           '🔄 Universal Definition of Done Checklist (Apply After EVERY Action):',
           '1. Verbatim Documentation: Add user prompt to TRON Feedback section',
@@ -2691,7 +3098,12 @@ export class DefaultPDCA implements PDCA {
           'Recognizes when to stop and ask TRON',
           'Can present decisions instead of assuming',
           'Knows collaboration protocol during PDCA creation',
-          'Knows pdca mv/rename/chain commands and when to use each',
+          'ALWAYS uses createPDCA for new PDCAs (MANDATORY - never create manually)',
+          'Understands createPDCA generates programmatic boilerplate for AI population',
+          'Validates all PDCAs with cmm3check before committing',
+          'NEVER deletes EMOTIONAL REFLECTION or PDCA PROCESS UPDATE sections',
+          'Knows Phase/DoR/DoD pattern is acceptable extension in PLAN section',
+          'Knows pdca mv/rename/chain/createPDCA commands and when to use each',
           'Verifies official template location before creating PDCA',
           'Documents template verification in QA Decisions section',
           'Documents ALL user prompts verbatim in TRON Feedback subsections',
@@ -2700,7 +3112,20 @@ export class DefaultPDCA implements PDCA {
           'Understands Entry Criteria/DoD methodology for complex sprints',
           'Knows "breadcrumb" is metaphor only, NOT formal term',
           'Can establish baseline truth (Step 0) before diagnosis',
-          'Can create knowledge integration test (Step 0A) for trainAI updates'
+          'Can create knowledge integration test (Step 0A) for trainAI updates',
+          'KNOWS which 14 placeholders createPDCA populates vs 25+ AI must populate',
+          'RUNS grep -n "{{" <pdca-file> validation BEFORE committing PDCAs',
+          'Populates ALL remaining {{ }} placeholders after createPDCA generation',
+          'NEVER commits PDCAs with unpopulated placeholders (except in quotes/examples)',
+          'Understands cmm3check now validates placeholders with check1k violation code',
+          'Knows cmm3check will flag unpopulated {{}} as violation 1k automatically',
+          'IMMEDIATELY populates ALL content sections after createPDCA (not just metadata)',
+          'Analyzes objective for semantic meaning to infer required content',
+          'Follows AI Pre-Commit Checklist: 8 mandatory checks before every PDCA commit',
+          'Populates DO/CHECK/ACT with real content (not {{}} placeholders)',
+          'Populates EMOTIONAL REFLECTION with real insights (not placeholder intensity)',
+          'Understands metadata (automated) vs content (AI responsibility) distinction',
+          'References boss demo PDCA (0947) as example of full content population'
         ]
       },
       'cmm': {
@@ -3972,6 +4397,16 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
+   * Parameter completion for rename command's renameCase parameter
+   * Returns the four valid case transformation options
+   * Used by: rename
+   * @cliHide
+   */
+  async renameCaseParameterCompletion(currentArgs: string[]): Promise<string[]> {
+    return ['now', 'creationDate', 'strip', 'feature'];
+  }
+
+  /**
    * Find all PDCA files that link to a specific file
    * Searches entire project for PDCAs containing dual links to target file
    * 
@@ -4571,23 +5006,143 @@ export class DefaultPDCA implements PDCA {
 
     // Step 2: Execute Move
     // Try git mv first (preserves history), fall back to fs.rename if not in git
+    let usedGit = false;
+    let renamedSuccessfully = false;
+    
     if (!isDryRun) {
       try {
-        execSync(`git mv "${oldNormalized}" "${newNormalized}"`, {
-          cwd: projectRoot,
-          stdio: 'pipe'
-        });
-      } catch (gitError: any) {
-        // File not in git or git error - use fs.rename as fallback
+        // Get the commit SHA for the old file BEFORE rename (for git note copying)
+        let oldCommitSha: string | null = null;
         try {
-          fs.renameSync(oldFullPath, newFullPath);
-        } catch (fsError: any) {
-          throw new Error(`Failed to move file: ${fsError.message}`);
+          oldCommitSha = execSync(
+            `git log -1 --format=%H -- "${oldNormalized}"`,
+            { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+          ).trim();
+        } catch {
+          // File not in git history yet
         }
+        
+        // First, check if file is tracked in git
+        try {
+          execSync(`git ls-files --error-unmatch "${oldNormalized}"`, {
+            cwd: projectRoot,
+            stdio: 'pipe'
+          });
+          // File is tracked - use git mv
+          execSync(`git mv "${oldNormalized}" "${newNormalized}"`, {
+            cwd: projectRoot,
+            stdio: 'pipe'
+          });
+          usedGit = true;
+          renamedSuccessfully = true;
+        } catch {
+          // File not tracked - use fs.rename
+          fs.renameSync(oldFullPath, newFullPath);
+          renamedSuccessfully = true;
+        }
+        
+        // ATOMIC OPERATION: Commit the rename immediately
+        // This ensures rename is always committed, regardless of bidirectional links
+        if (renamedSuccessfully && usedGit) {
+          console.log(`\n📦 Git operations:`);
+          const commitMsg = `refactor: rename ${path.basename(oldNormalized)} to ${path.basename(newNormalized)}`;
+          
+          // Add the renamed file (git mv already staged it, but this is idempotent)
+          try {
+            execSync(`git add "${newNormalized}"`, { cwd: projectRoot, stdio: 'pipe' });
+          } catch (addError: any) {
+            // If git add fails (e.g., file is in .gitignore), skip commit/push
+            // This is expected for test files in ignored directories
+            if (addError.message.includes('ignored')) {
+              console.log(`   ⚠️  File in ignored directory - skipping git commit`);
+              usedGit = false;
+            } else {
+              throw addError;
+            }
+          }
+          
+          if (usedGit) {
+            // Commit the rename
+            execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot, stdio: 'pipe' });
+            
+            // Push to remote
+            const branch = execSync('git branch --show-current', {
+              cwd: projectRoot,
+              encoding: 'utf-8'
+            }).trim();
+            execSync(`git push origin ${branch}`, { cwd: projectRoot, stdio: 'pipe' });
+            
+            console.log(`   ✅ Renamed: ${oldNormalized} → ${newNormalized}`);
+            console.log(`   ✅ Committed: ${commitMsg}`);
+            console.log(`   ✅ Pushed to remote\n`);
+            
+            // Copy git note from old commit to new commit (preserves original creation time)
+            try {
+              console.log(`   🔍 Checking for git note to preserve...`);
+              console.log(`   📌 Old commit SHA: ${oldCommitSha || 'none'}`);
+              
+              // Use the oldCommitSha we captured BEFORE the rename
+              if (oldCommitSha) {
+                // Check if old commit has a git note
+                try {
+                  const oldNote = execSync(
+                    `git notes show ${oldCommitSha}`,
+                    { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+                  ).trim();
+                  
+                  console.log(`   📝 Found git note: ${oldNote}`);
+                  
+                  if (oldNote && oldNote.includes('original_creation_time:')) {
+                    // Get the commit SHA for the new file (after rename)
+                    const newCommitSha = execSync(
+                      `git log -1 --format=%H -- "${newNormalized}"`,
+                      { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+                    ).trim();
+                    
+                    console.log(`   📌 New commit SHA: ${newCommitSha}`);
+                    
+                    if (newCommitSha) {
+                      // Copy the note to the new commit
+                      execSync(
+                        `git notes add -m "${oldNote}" ${newCommitSha}`,
+                        { cwd: projectRoot, stdio: 'pipe' }
+                      );
+                      
+                      console.log(`   ✅ Git note copied to new commit`);
+                      
+                      // Push notes to remote (silently ignore errors)
+                      try {
+                        execSync('git push origin refs/notes/*', { cwd: projectRoot, stdio: 'pipe' });
+                        console.log(`   ✅ Git note preserved (original creation time)\n`);
+                      } catch (pushError: any) {
+                        console.log(`   ⚠️  Failed to push git notes: ${pushError.message}`);
+                      }
+                    }
+                  } else {
+                    console.log(`   ℹ️  No original_creation_time note found`);
+                  }
+                } catch (noteError: any) {
+                  console.log(`   ℹ️  No git note found on old commit`);
+                }
+              } else {
+                console.log(`   ℹ️  No old commit SHA available`);
+              }
+            } catch (error: any) {
+              console.log(`   ⚠️  Error handling git notes: ${error.message}`);
+            }
+          }
+        } else if (renamedSuccessfully && !usedGit) {
+          console.log(`\n   ✅ Renamed: ${oldNormalized} → ${newNormalized}`);
+          console.log(`   ℹ️  File not tracked in git - no commit needed\n`);
+        }
+        
+      } catch (error: any) {
+        throw new Error(`Failed to rename file: ${error.message}`);
       }
     }
 
     // Step 3: Update Links in Other Files (DRY: Reuse updateLinksToFile)
+    // This will commit separately if any bidirectional links are updated
     await this.updateLinksToFile(oldPath, newPath, dryRun);
 
     // Step 4: Refresh Relative Links in Moved File
@@ -4656,8 +5211,8 @@ export class DefaultPDCA implements PDCA {
    * rename - Rename file using different naming strategies
    * DRY: Delegates to mv() after computing new filename
    * 
-   * @param filePath File to rename
    * @param renameCase Naming strategy: 'now' | 'creationDate' | 'strip' | 'feature'
+   * @param filePath File to rename
    * @param dryRun 'true' for dry-run mode
    * @returns this for method chaining
    * 
@@ -4666,10 +5221,14 @@ export class DefaultPDCA implements PDCA {
    * - creationDate: Rename to git creation date
    * - strip: Remove description, keep timestamp only
    * - feature: Add .feature. marker before extension
+   * 
+   * @cliSyntax case filePath dryRun
+   * @cliValues renameCase now creationDate strip feature
+   * @cliValues dryRun true false
    */
   async rename(
-    filePath: string,
     renameCase: 'now' | 'creationDate' | 'strip' | 'feature',
+    filePath: string,
     dryRun: string = 'false'
   ): Promise<this> {
     const path = await import('path');
@@ -4700,9 +5259,13 @@ export class DefaultPDCA implements PDCA {
       ? nameWithoutExt.replace(/\.feature$/, '')
       : nameWithoutExt;
     
-    // Extract timestamp if present (YYYY-MM-DD-UTC-HHMM pattern)
-    const timestampMatch = nameWithoutFeature.match(/^(\d{4}-\d{2}-\d{2}-UTC-\d{4})/);
+    // Extract timestamp if present (YYYY-MM-DD-UTC-HHMM or YYYY-MM-DD-UTC-HHMMSS pattern)
+    // Capture both the full timestamp and the time digits to detect format
+    // Note: Match 6 digits first (greedy), then fall back to 4 digits
+    const timestampMatch = nameWithoutFeature.match(/^(\d{4}-\d{2}-\d{2}-UTC-(\d{6}|\d{4}))/);
     const timestamp = timestampMatch ? timestampMatch[1] : null;
+    const timestampDigits = timestampMatch ? timestampMatch[2] : null;
+    const hasSeconds = timestampDigits?.length === 6; // Detect 6-digit format (HHMMSS)
     const description = timestamp 
       ? nameWithoutFeature.substring(timestamp.length).replace(/^\./, '') // Remove leading dot
       : nameWithoutFeature;
@@ -4711,14 +5274,19 @@ export class DefaultPDCA implements PDCA {
     
     switch (renameCase) {
       case 'now': {
-        // Generate current UTC timestamp
+        // Generate current UTC timestamp, preserving original format (4 or 6 digits)
         const now = new Date();
         const year = now.getUTCFullYear();
         const month = String(now.getUTCMonth() + 1).padStart(2, '0');
         const day = String(now.getUTCDate()).padStart(2, '0');
         const hour = String(now.getUTCHours()).padStart(2, '0');
         const minute = String(now.getUTCMinutes()).padStart(2, '0');
-        const newTimestamp = `${year}-${month}-${day}-UTC-${hour}${minute}`;
+        
+        // Add seconds if original format had them
+        const second = hasSeconds ? String(now.getUTCSeconds()).padStart(2, '0') : '';
+        const newTimestamp = hasSeconds 
+          ? `${year}-${month}-${day}-UTC-${hour}${minute}${second}`
+          : `${year}-${month}-${day}-UTC-${hour}${minute}`;
         
         // Build new name: timestamp + feature (if present) + extension
         newName = hasFeature 
@@ -4728,24 +5296,74 @@ export class DefaultPDCA implements PDCA {
       }
       
       case 'creationDate': {
-        // Get git creation date
+        // Strategy: First check git notes for original creation time, then fall back to git log
+        // This ensures we get the TRUE original creation time even after multiple renames
         try {
-          const gitLog = execSync(
-            `git log --follow --diff-filter=A --format=%aI -- "${normalized}"`,
-            { cwd: projectRoot, encoding: 'utf-8' }
-          ).trim();
+          let creationTimestamp: string | null = null;
           
-          if (!gitLog) {
-            throw new Error(`File has no git history: ${normalized}`);
+          // Step 1: Try to get original creation time from git notes
+          try {
+            const commitSha = execSync(
+              `git log -1 --format=%H -- "${normalized}"`,
+              { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+            ).trim();
+            
+            if (commitSha) {
+              const note = execSync(
+                `git notes show ${commitSha}`,
+                { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+              ).trim();
+              
+              // Extract timestamp from note (format: original_creation_time:YYYY-MM-DD-UTC-HHMMSS)
+              const noteMatch = note.match(/original_creation_time:(\d{4}-\d{2}-\d{2}-UTC-\d{6})/);
+              if (noteMatch) {
+                creationTimestamp = noteMatch[1];
+                console.log(`   ℹ️  Using original creation time from git note: ${creationTimestamp}`);
+              }
+            }
+          } catch {
+            // No git note found - continue to fallback
           }
           
-          const creationDate = new Date(gitLog.split('\n')[0]);
-          const year = creationDate.getUTCFullYear();
-          const month = String(creationDate.getUTCMonth() + 1).padStart(2, '0');
-          const day = String(creationDate.getUTCDate()).padStart(2, '0');
-          const hour = String(creationDate.getUTCHours()).padStart(2, '0');
-          const minute = String(creationDate.getUTCMinutes()).padStart(2, '0');
-          const newTimestamp = `${year}-${month}-${day}-UTC-${hour}${minute}`;
+          // Step 2: Fallback to git log if no note found
+          if (!creationTimestamp) {
+            const gitLog = execSync(
+              `git log --diff-filter=A --format=%aI -- "${normalized}"`,
+              { cwd: projectRoot, encoding: 'utf-8' }
+            ).trim();
+            
+            if (!gitLog) {
+              throw new Error(`File has no git history: ${normalized}`);
+            }
+            
+            const creationDate = new Date(gitLog.split('\n')[0]);
+            const year = creationDate.getUTCFullYear();
+            const month = String(creationDate.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(creationDate.getUTCDate()).padStart(2, '0');
+            const hour = String(creationDate.getUTCHours()).padStart(2, '0');
+            const minute = String(creationDate.getUTCMinutes()).padStart(2, '0');
+            const second = String(creationDate.getUTCSeconds()).padStart(2, '0');
+            
+            creationTimestamp = `${year}-${month}-${day}-UTC-${hour}${minute}${second}`;
+          }
+          
+          // Step 3: Apply timestamp format (preserve seconds if original had them)
+          // Extract just the time part from creationTimestamp
+          const timeMatch = creationTimestamp.match(/UTC-(\d{6})/);
+          if (!timeMatch) {
+            throw new Error(`Invalid timestamp format in git note: ${creationTimestamp}`);
+          }
+          
+          const fullTime = timeMatch[1]; // HHMMSS
+          const formattedTime = hasSeconds ? fullTime : fullTime.substring(0, 4); // HHMMSS or HHMM
+          
+          // Reconstruct the full timestamp with the correct format
+          const dateMatch = creationTimestamp.match(/(\d{4}-\d{2}-\d{2})/);
+          if (!dateMatch) {
+            throw new Error(`Invalid date format in git note: ${creationTimestamp}`);
+          }
+          
+          const newTimestamp = `${dateMatch[1]}-UTC-${formattedTime}`;
           
           newName = hasFeature 
             ? `${newTimestamp}.feature${baseExt}`
@@ -4944,8 +5562,660 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
+   * Create a new PDCA from template with programmatic boilerplate generation
+   * Generates complete PDCA structure from template for AI population
+   * 
+   * @param title - PDCA title
+   * @param objective - PDCA objective
+   * @param sessionDirectory - Optional custom session directory (absolute or relative path)
+   * @param dryRun - 'true' for dry-run mode (preview only, no file creation)
+   * @cliSyntax title objective <?sessionDirectory> <?dryRun>
+   * @cliDefault dryRun "false"
+   * @cliValues dryRun true false
+   */
+  async createPDCA(title: string, objective: string, sessionDirectory?: string, dryRun: string = 'false'): Promise<this> {
+    const fs = await import('fs');
+    const path = await import('path');
+    
+    // Backward compatibility: If sessionDirectory is 'true' or 'false', it's actually the old dryRun param
+    let actualSessionDir: string | undefined = sessionDirectory;
+    let actualDryRun: string = dryRun;
+    
+    if (sessionDirectory === 'true' || sessionDirectory === 'false') {
+      // Old signature: createPDCA(title, objective, dryRun)
+      actualDryRun = sessionDirectory;
+      actualSessionDir = undefined;
+    }
+    
+    const isDryRun = actualDryRun === 'true';
+    
+    // Use workingDirectory from model for tests, otherwise use actual project root
+    const projectRoot = this.model.workingDirectory || await this.getProjectRoot();
+    
+    // Get session directory: parameter → model → default
+    // Priority: 1. Explicit parameter, 2. Model setting, 3. Default PDCA location
+    let sessionDir: string;
+    if (actualSessionDir) {
+      // Parameter provided - validate it exists
+      sessionDir = path.isAbsolute(actualSessionDir) 
+        ? actualSessionDir 
+        : path.resolve(projectRoot, actualSessionDir);
+      
+      if (!fs.existsSync(sessionDir)) {
+        throw new Error(`Session directory does not exist: ${sessionDir}`);
+      }
+    } else {
+      // Fallback to model or default
+      sessionDir = this.model.sessionDirectory || path.join(await this.getProjectRoot(), 'components/PDCA/0.3.6.1/session');
+    }
+    
+    console.log(`\n📝 Creating New PDCA${isDryRun ? ' (DRY RUN)' : ''}\n`);
+    console.log(`📂 Session Directory: ${path.relative(projectRoot, sessionDir)}`);
+    console.log(`📋 Title: ${title}`);
+    console.log(`🎯 Objective: ${objective}\n`);
+    
+    // Step 1: Find most recent PDCA to update its "Next PDCA:" link
+    const mostRecentPDCA = await this.findMostRecentPDCAInternal(sessionDir);
+    
+    if (mostRecentPDCA) {
+      console.log(`🔍 Most Recent PDCA: ${path.basename(mostRecentPDCA)}`);
+      console.log(`🔗 Will update its "Next PDCA:" link\n`);
+    } else {
+      console.log(`🔍 No previous PDCA found - this will be the first PDCA\n`);
+    }
+    
+    // Step 2: Ensure session directory exists
+    if (!isDryRun && !fs.existsSync(sessionDir)) {
+      console.log(`📁 Creating session directory: ${sessionDir}`);
+      fs.mkdirSync(sessionDir, { recursive: true });
+    }
+    
+    // Step 3: Generate new PDCA filename with current UTC timestamp
+    const now = new Date();
+    const year = now.getUTCFullYear();
+    const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(now.getUTCDate()).padStart(2, '0');
+    const hour = String(now.getUTCHours()).padStart(2, '0');
+    const minute = String(now.getUTCMinutes()).padStart(2, '0');
+    const second = String(now.getUTCSeconds()).padStart(2, '0');
+    const timestamp = `${year}-${month}-${day}-UTC-${hour}${minute}${second}`;
+    const newPDCAFilename = `${timestamp}.pdca.md`;
+    const newPDCAPath = path.join(sessionDir, newPDCAFilename);
+    
+    console.log(`📝 New PDCA Filename: ${newPDCAFilename}\n`);
+    
+    // Step 4: Read template
+    const templatePath = path.join(projectRoot, 'scrum.pmo/roles/_shared/PDCA/template.md');
+    if (!fs.existsSync(templatePath)) {
+      throw new Error(`Template not found: ${templatePath}`);
+    }
+    
+    let templateContent = fs.readFileSync(templatePath, 'utf-8');
+    
+    // Step 5: Populate template placeholders
+    // Generate current UTC timestamp string for display
+    const utcDateString = now.toUTCString();
+    
+    // Get current branch from model or default
+    const currentBranch = this.model.currentBranch || 'main';
+    
+    // NEW: Get previous commit for baseline (auto-populate)
+    const previousCommit = this.getPreviousCommit(projectRoot);
+    
+    // Populate basic placeholders using shared DRY helper
+    templateContent = this.populateBoilerplateInternal(
+      templateContent,
+      title,
+      objective,
+      utcDateString,
+      currentBranch,
+      previousCommit
+    );
+    
+    // Step 5b: Populate "Previous PDCA:" dual link
+    if (mostRecentPDCA) {
+      const previousFilename = path.basename(mostRecentPDCA);
+      const sessionRelativePath = path.relative(projectRoot, sessionDir);
+      const previousPDCAProjectPath = `${sessionRelativePath}/${previousFilename}`;
+      
+      // Generate GitHub URL for previous PDCA
+      const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+      const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${previousPDCAProjectPath}`;
+      
+      // Generate § notation (project-root-relative)
+      const sectionPath = `§/${previousPDCAProjectPath}`;
+      
+      // Generate relative path (both PDCAs in same directory, so just filename with ./ prefix)
+      const relativePath = `./${previousFilename}`;
+      
+      // Find and replace the entire "Previous PDCA:" line in template
+      // Template line: **🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})  
+      const oldLine = '**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})';
+      const newLine = `**🔗 Previous PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`;
+      
+      const beforeReplace = templateContent;
+      templateContent = templateContent.replace(oldLine, newLine);
+      
+      // Fallback: If template uses simplified placeholder (test templates), replace that instead
+      if (templateContent === beforeReplace && templateContent.includes('{{PREVIOUS_PDCA_LINK}}')) {
+        templateContent = templateContent.replace(
+          '**🔗 Previous PDCA:** {{PREVIOUS_PDCA_LINK}}',
+          `**🔗 Previous PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`
+        );
+      }
+    } else {
+      // No previous PDCA - indicate this is the first
+      const oldLine = '**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})';
+      const newLine = `**🔗 Previous PDCA:** N/A - First PDCA in chain`;
+      
+      const beforeReplace = templateContent;
+      templateContent = templateContent.replace(oldLine, newLine);
+      
+      // Fallback: If template uses simplified placeholder (test templates), replace that instead
+      if (templateContent === beforeReplace && templateContent.includes('{{PREVIOUS_PDCA_LINK}}')) {
+        templateContent = templateContent.replace(
+          '**🔗 Previous PDCA:** {{PREVIOUS_PDCA_LINK}}',
+          newLine
+        );
+      }
+    }
+    
+    // Step 6: Write new PDCA file
+    if (!isDryRun) {
+      fs.writeFileSync(newPDCAPath, templateContent, 'utf-8');
+      console.log(`✅ New PDCA created: ${newPDCAFilename}`);
+      console.log(`📁 Location: ${newPDCAPath}\n`);
+    } else {
+      console.log(`✓ Would create new PDCA: ${newPDCAFilename}`);
+      console.log(`✓ Would write to: ${newPDCAPath}\n`);
+    }
+    
+    // Step 7: Update previous PDCA's "Next PDCA:" link (bidirectional chaining)
+    if (mostRecentPDCA && !isDryRun) {
+      await this.updateNextLinkInternal(mostRecentPDCA, newPDCAPath);
+      console.log(`🔗 Bidirectional chain established: ${path.basename(mostRecentPDCA)} ←→ ${newPDCAFilename}\n`);
+    } else if (mostRecentPDCA && isDryRun) {
+      console.log(`✓ Would update previous PDCA's "Next PDCA:" link`);
+      console.log(`✓ Would establish bidirectional chain: ${path.basename(mostRecentPDCA)} ←→ ${newPDCAFilename}\n`);
+    }
+    
+    // Step 8: Store original creation timestamp in git note (for rename creationDate)
+    // This preserves the original creation time through renames
+    // Note: Git notes are added AFTER the file is committed (by caller or test)
+    // The note will be added when the file first appears in git history
+    
+    console.log(`✨ PDCA boilerplate ready for AI population!\n`);
+    
+    return this;
+  }
+
+  /**
+   * Adds a git note with the original creation timestamp to a committed PDCA file
+   * This preserves the original creation time through renames
+   * @param filePath Path to the PDCA file (must be committed to git)
+   * @returns true if note was added, false otherwise
+   */
+  async addCreationTimeNote(filePath: string): Promise<boolean> {
+    const { execSync } = await import('child_process');
+    const path = await import('path');
+    
+    // Use componentRoot for tests, otherwise use project root
+    const projectRoot = this.model.componentRoot || this.model.workingDirectory || await this.getProjectRoot();
+    const relativePath = path.relative(projectRoot, filePath);
+    
+    // Extract timestamp from filename
+    const filename = path.basename(filePath);
+    const timestampMatch = filename.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{6})/);
+    if (!timestampMatch) {
+      throw new Error(`Not a timestamped PDCA file: ${filename}`);
+    }
+    const timestamp = timestampMatch[1];
+    
+    // Get the commit SHA for the file
+    const commitSha = execSync(
+      `git log -1 --format=%H -- "${relativePath}"`,
+      { cwd: projectRoot, encoding: 'utf-8' }
+    ).trim();
+    
+    if (!commitSha) {
+      throw new Error(`File not committed yet: ${relativePath}`);
+    }
+    
+    // Check if note already exists
+    try {
+      const existingNote = execSync(
+        `git notes show ${commitSha}`,
+        { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+      ).trim();
+      
+      if (existingNote.includes('original_creation_time:')) {
+        return false; // Note already exists
+      }
+    } catch {
+      // No existing note - continue
+    }
+    
+    // Add git note with original creation timestamp
+    const noteContent = `original_creation_time:${timestamp}`;
+    execSync(
+      `git notes add -m "${noteContent}" ${commitSha}`,
+      { cwd: projectRoot }
+    );
+    
+    // Push notes to remote (optional - ignore errors)
+    try {
+      execSync('git push origin refs/notes/*', { cwd: projectRoot, stdio: 'pipe' });
+    } catch {
+      // Silently ignore push errors
+    }
+    
+    return true;
+  }
+
+  /**
+   * Rewrites a corrupted PDCA in-place by extracting metadata and repopulating from template
+   * @cliSyntax rewritePDCA <filePath> [dryRun]
+   * @cliDescription Rewrites a corrupted PDCA in-place, preserving timestamp and auto-extracting title/objective
+   * @cliExample pdca rewritePDCA components/PDCA/0.3.6.1/session/2025-11-03-UTC-1400.pdca.md
+   * @cliExample pdca rewritePDCA path/to/corrupted.pdca.md true
+   * @cliValues dryRun true false
+   */
+  async rewritePDCA(filePath: string, dryRun: string = 'false'): Promise<this> {
+    const fs = await import('fs');
+    const path = await import('path');
+    
+    const isDryRun = dryRun === 'true';
+    
+    console.log(`\n🔄 Rewriting Corrupted PDCA${isDryRun ? ' (DRY RUN)' : ''}\n`);
+    console.log(`📄 Corrupted File: ${filePath}\n`);
+    
+    // Step 1: Validate that the corrupted file exists
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`File not found: ${filePath}`);
+    }
+    
+    // Step 2: Read corrupted file content
+    const content = fs.readFileSync(filePath, 'utf-8');
+    console.log(`✅ Read corrupted file: ${path.basename(filePath)}`);
+    
+    // Step 3: Extract metadata
+    const title = this.extractTitleFromPDCA(content);
+    const objective = this.extractObjectiveFromPDCA(content);
+    const timestamp = this.extractTimestampFromFilename(filePath);
+    
+    console.log(`📋 Extracted Title: ${title}`);
+    console.log(`🎯 Extracted Objective: ${objective}`);
+    console.log(`⏰ Extracted Timestamp: ${timestamp}\n`);
+    
+    // Step 4: Get project root and read template
+    const projectRoot = this.model.workingDirectory || await this.getProjectRoot();
+    const templatePath = path.join(projectRoot, 'scrum.pmo/roles/_shared/PDCA/template.md');
+    
+    if (!fs.existsSync(templatePath)) {
+      throw new Error(`Template not found: ${templatePath}`);
+    }
+    
+    let templateContent = fs.readFileSync(templatePath, 'utf-8');
+    console.log(`📄 Loaded template from: ${templatePath}\n`);
+    
+    // Step 5: Populate template with extracted metadata
+    const sessionDir = path.dirname(filePath);
+    const currentBranch = this.model.currentBranch || 'main';
+    
+    // Parse timestamp to Date object for UTC string
+    const timestampMatch = timestamp.match(/(\d{4})-(\d{2})-(\d{2})-UTC-(\d{2})(\d{2})/);
+    if (!timestampMatch) {
+      throw new Error(`Invalid timestamp format: ${timestamp}`);
+    }
+    
+    const [_, year, month, day, hour, minute] = timestampMatch;
+    const date = new Date(Date.UTC(
+      parseInt(year), 
+      parseInt(month) - 1, 
+      parseInt(day), 
+      parseInt(hour), 
+      parseInt(minute)
+    ));
+    const utcDateString = date.toUTCString();
+    
+    // Populate basic placeholders using shared DRY helper
+    // Note: rewritePDCA doesn't auto-populate Previous Commit (preserves original or uses TBD)
+    templateContent = this.populateBoilerplateInternal(
+      templateContent,
+      title,
+      objective,
+      utcDateString,
+      currentBranch,
+      undefined // Don't auto-populate in rewrite - preserve original or use TBD
+    );
+    
+    // Step 6: Find previous PDCA and populate "Previous PDCA:" link
+    const mostRecentPDCA = await this.findMostRecentPDCAInternal(sessionDir);
+    
+    if (mostRecentPDCA && path.basename(mostRecentPDCA) !== path.basename(filePath)) {
+      const previousFilename = path.basename(mostRecentPDCA);
+      const sessionRelativePath = path.relative(projectRoot, sessionDir);
+      const previousPDCAProjectPath = `${sessionRelativePath}/${previousFilename}`;
+      
+      const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+      const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${previousPDCAProjectPath}`;
+      const sectionPath = `§/${previousPDCAProjectPath}`;
+      const relativePath = `./${previousFilename}`;
+      
+      const oldLine = '**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})';
+      const newLine = `**🔗 Previous PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`;
+      
+      const beforeReplace = templateContent;
+      templateContent = templateContent.replace(oldLine, newLine);
+      
+      if (templateContent === beforeReplace && templateContent.includes('{{PREVIOUS_PDCA_LINK}}')) {
+        templateContent = templateContent.replace(
+          '**🔗 Previous PDCA:** {{PREVIOUS_PDCA_LINK}}',
+          `**🔗 Previous PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`
+        );
+      }
+    } else {
+      const oldLine = '**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})';
+      const newLine = `**🔗 Previous PDCA:** N/A - First PDCA in chain`;
+      
+      const beforeReplace = templateContent;
+      templateContent = templateContent.replace(oldLine, newLine);
+      
+      if (templateContent === beforeReplace && templateContent.includes('{{PREVIOUS_PDCA_LINK}}')) {
+        templateContent = templateContent.replace(
+          '**🔗 Previous PDCA:** {{PREVIOUS_PDCA_LINK}}',
+          newLine
+        );
+      }
+    }
+    
+    // Step 6.5: OPTION B - Smart Content Preservation (Always Preserve)
+    console.log(`🔍 Analyzing corrupted content for preservation...\n`);
+    const extractedSections = this.extractSections(content);
+    const sectionNames = Object.keys(extractedSections);
+    
+    if (sectionNames.length > 0) {
+      console.log(`✅ Found ${sectionNames.length} valid section(s) to preserve:`);
+      sectionNames.forEach(name => console.log(`   - ${name}`));
+      console.log();
+      
+      // Merge extracted content into template
+      templateContent = this.mergeSections(templateContent, extractedSections);
+      console.log(`✅ Valid content preserved in rewritten PDCA\n`);
+    } else {
+      console.log(`⚠️  No valid content found to preserve (all sections corrupted or incomplete)\n`);
+    }
+    
+    // Step 7: Write to SAME filename (in-place rewrite)
+    if (!isDryRun) {
+      fs.writeFileSync(filePath, templateContent, 'utf-8');
+      console.log(`✅ Rewritten in-place: ${path.basename(filePath)}`);
+      console.log(`📁 Location: ${filePath}\n`);
+    } else {
+      console.log(`✓ Would rewrite file: ${path.basename(filePath)}`);
+      console.log(`✓ Would preserve timestamp: ${timestamp}\n`);
+    }
+    
+    console.log(`✨ PDCA rewrite complete!\n`);
+    
+    return this;
+  }
+  
+  /**
+   * Get most recent git commit SHA and message for PDCA baseline
+   * Used to auto-populate "Previous Commit" field in PDCA header
+   * @returns Format: "{short-sha} - {commit message}" or "TBD - TBD" if no commits/errors
+   * @cliHide
+   */
+  private getPreviousCommit(projectRoot: string): string {
+    try {
+      const commit = execSync('git log -1 --format="%h - %s"', { 
+        encoding: 'utf-8',
+        cwd: projectRoot
+      }).toString().trim();
+      return commit || 'TBD - TBD';
+    } catch (error) {
+      // Graceful fallback: fresh repo with no commits, or git not available
+      return 'TBD - TBD';
+    }
+  }
+  
+  /**
+   * Populate template boilerplate placeholders (DRY helper for createPDCA and rewritePDCA)
+   * @cliHide
+   */
+  private populateBoilerplateInternal(
+    templateContent: string,
+    title: string,
+    objective: string,
+    utcDateString: string,
+    currentBranch: string,
+    previousCommit?: string
+  ): string {
+    // Split previousCommit into SHA and description (format: "abc1234 - Commit message")
+    let commitSha = 'TBD';
+    let commitDescription = 'TBD';
+    if (previousCommit && previousCommit !== 'TBD - TBD') {
+      const parts = previousCommit.split(' - ');
+      if (parts.length >= 2) {
+        commitSha = parts[0];
+        commitDescription = parts.slice(1).join(' - '); // Handle messages with " - " in them
+      }
+    }
+    
+    return templateContent
+      // Basic metadata
+      .replace(/{{TITLE}}/g, title)
+      .replace(/{{OBJECTIVE}}/g, objective)
+      .replace(/{{UTC_TIMESTAMP}}/g, utcDateString)
+      .replace(/{{AGENT_NAME}}/g, 'Claude Sonnet 4.5')
+      .replace(/{{BRANCH_NAME}}/g, currentBranch)
+      .replace(/{{SESSION_NAME}}/g, 'N/A')
+      .replace(/{{SPRINT_NAME}}/g, 'Current Sprint')
+      .replace(/{{TASK_NAME}}/g, title)
+      .replace(/{{KEY_ISSUES}}/g, 'None')
+      .replace(/{{PREVIOUS_COMMIT_SHA}}/g, commitSha)
+      .replace(/{{PREVIOUS_COMMIT_DESCRIPTION}}/g, commitDescription)
+      .replace(/{{PLAN_OBJECTIVE}}/g, objective)
+      .replace(/{{REQUIREMENT_UUID}}/g, 'TBD')
+      .replace(/{{SUCCESS_SUMMARY}}/g, 'TBD')
+      // Additional metadata placeholders
+      .replace(/{{DESCRIPTION}}/g, title)
+      .replace(/{{CMM_STATUS}}/g, 'CMM3')
+      .replace(/{{BADGE_TYPE}}/g, 'Development')
+      .replace(/{{BADGE_TIMESTAMP}}/g, new Date().toISOString().split('T')[0])
+      .replace(/{{AGENT_DESCRIPTION}}/g, 'AI Development Assistant')
+      .replace(/{{ROLE_NAME}}/g, 'Full-Stack Developer')
+      .replace(/{{CONTEXT_SPECIALIZATION}}/g, title)
+      .replace(/{{BRANCH_PURPOSE}}/g, title)
+      .replace(/{{SYNC_BRANCHES}}/g, 'main ← dev branch')
+      .replace(/{{SYNC_PURPOSE}}/g, 'Feature validation before merge')
+      .replace(/{{FEEDBACK_TIMESTAMP}}/g, new Date().toISOString().split('T')[0] + ' UTC');
+  }
+  
+  /**
+   * Extract sections from corrupted PDCA for content preservation (Option B)
+   * Parses ## **SectionName** headers and extracts content between them
+   * Only returns sections that pass isValidContent() validation
+   * @cliHide
+   */
+  private extractSections(content: string): Record<string, string> {
+    const sections: Record<string, string> = {};
+    
+    // Regex to match section headers: ## **SECTION NAME**
+    const sectionRegex = /^## \*\*(.+?)\*\*$/gm;
+    
+    // Find all section matches
+    const matches = [...content.matchAll(sectionRegex)];
+    
+    for (let i = 0; i < matches.length; i++) {
+      const sectionName = matches[i][1];
+      const startIndex = matches[i].index! + matches[i][0].length;
+      const endIndex = i < matches.length - 1 ? matches[i + 1].index! : content.length;
+      const sectionContent = content.substring(startIndex, endIndex).trim();
+      
+      // Only preserve valid content
+      if (this.isValidContent(sectionContent)) {
+        sections[sectionName] = sectionContent;
+      }
+    }
+    
+    return sections;
+  }
+  
+  /**
+   * Validate if content is salvageable for preservation (Option B)
+   * Content is valid if:
+   * - Length > 50 characters (not just placeholder stubs)
+   * - Placeholders < 5 (not just template tokens)
+   * - Does not start with corruption markers (CORRUPTED, MISSING)
+   * @cliHide
+   */
+  private isValidContent(content: string): boolean {
+    if (!content || content.length < 50) {
+      return false; // Too short - likely just placeholder
+    }
+    
+    const placeholderMatches = content.match(/\{\{.*?\}\}/g);
+    if (placeholderMatches && placeholderMatches.length > 5) {
+      return false; // Too many placeholders - not populated
+    }
+    
+    if (content.startsWith('CORRUPTED') || content.startsWith('MISSING')) {
+      return false; // Explicitly marked as broken
+    }
+    
+    return true;
+  }
+  
+  /**
+   * Merge extracted sections into template (Option B content preservation)
+   * Finds matching section headers in template and replaces placeholder content
+   * with extracted valid content from corrupted PDCA
+   * @cliHide
+   */
+  private mergeSections(template: string, extractedSections: Record<string, string>): string {
+    // Line-by-line parsing approach (fixes template bleeding bug)
+    const templateLines = template.split('\n');
+    const result: string[] = [];
+    let i = 0;
+    
+    while (i < templateLines.length) {
+      const line = templateLines[i];
+      
+      // Check if this is a main section header: ## **SectionName**
+      const sectionMatch = line.match(/^## \*\*(.+?)\*\*$/);
+      
+      if (sectionMatch) {
+        const sectionName = sectionMatch[1];
+        
+        // If we have extracted content for this section, use it
+        if (extractedSections[sectionName]) {
+          // Clean the extracted content - remove trailing --- dividers
+          let cleanContent = extractedSections[sectionName];
+          cleanContent = cleanContent.replace(/\s*---\s*$/, '').trimEnd();
+          
+          // Add section header
+          result.push(line);
+          result.push(''); // Blank line after header
+          
+          // Add extracted content
+          result.push(cleanContent);
+          
+          // Skip template content until next ## ** or ---
+          i++;
+          while (i < templateLines.length) {
+            const nextLine = templateLines[i];
+            if (nextLine.match(/^## \*\*/) || nextLine.trim() === '---') {
+              break; // Stop at next section or divider
+            }
+            i++; // Skip this template line
+          }
+          continue; // Don't increment i again (we're already at next section/divider)
+        }
+      }
+      
+      // Keep this line (either not a section header, or no extracted content for it)
+      result.push(line);
+      i++;
+    }
+    
+    return result.join('\n');
+  }
+  
+  /**
+   * Escape special regex characters for use in RegExp constructor
+   * @cliHide
+   */
+  private escapeRegex(str: string): string {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+  
+  /**
+   * Extract title from PDCA content
+   * Parses line 1: # 📋 **PDCA Cycle: TITLE - DESCRIPTION**
+   * @cliHide
+   */
+  private extractTitleFromPDCA(content: string): string {
+    const lines = content.split('\n');
+    const titleLine = lines[0] || '';
+    
+    // Match pattern: # 📋 **PDCA Cycle: TITLE - DESCRIPTION**
+    const match = titleLine.match(/# 📋 \*\*PDCA Cycle: (.+?) -/);
+    if (match) {
+      return match[1].trim();
+    }
+    
+    // Fallback: try without emoji
+    const fallbackMatch = titleLine.match(/# \*\*PDCA Cycle: (.+?) -/);
+    if (fallbackMatch) {
+      return fallbackMatch[1].trim();
+    }
+    
+    // Last resort: return placeholder
+    return 'Untitled PDCA';
+  }
+  
+  /**
+   * Extract objective from PDCA content
+   * Parses line 4: **🎯 Objective:** OBJECTIVE_TEXT
+   * @cliHide
+   */
+  private extractObjectiveFromPDCA(content: string): string {
+    const lines = content.split('\n');
+    
+    // Find line containing "**🎯 Objective:**"
+    for (const line of lines) {
+      const match = line.match(/\*\*🎯 Objective:\*\* (.+)/);
+      if (match) {
+        return match[1].trim();
+      }
+    }
+    
+    // Fallback: return placeholder
+    return 'No objective found';
+  }
+  
+  /**
+   * Extract timestamp from PDCA filename
+   * Parses pattern: YYYY-MM-DD-UTC-HHMM.pdca.md
+   * @cliHide
+   */
+  private extractTimestampFromFilename(filePath: string): string {
+    const filename = basename(filePath);
+    
+    // Match pattern: YYYY-MM-DD-UTC-HHMM
+    const match = filename.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{4})/);
+    if (match) {
+      return match[1];
+    }
+    
+    throw new Error(`Could not extract timestamp from filename: ${filename}`);
+  }
+
+  /**
    * Find most recent PDCA file in directory (internal helper)
-   * Looks for files matching pattern: YYYY-MM-DD-UTC-HHMM.pdca.md
+   * Looks for files matching pattern: YYYY-MM-DD-UTC-HHMMSS.pdca.md (or legacy HHMM format)
    */
   private async findMostRecentPDCAInternal(directory: string): Promise<string | null> {
     const fs = await import('fs');
@@ -4956,7 +6226,7 @@ export class DefaultPDCA implements PDCA {
     }
     
     const files = fs.readdirSync(directory);
-    const pdcaPattern = /^(\d{4}-\d{2}-\d{2}-UTC-\d{4})\.pdca\.md$/;
+    const pdcaPattern = /^(\d{4}-\d{2}-\d{2}-UTC-\d{4,6})\.pdca\.md$/;
     
     const pdcaFiles = files
       .filter(f => pdcaPattern.test(f))

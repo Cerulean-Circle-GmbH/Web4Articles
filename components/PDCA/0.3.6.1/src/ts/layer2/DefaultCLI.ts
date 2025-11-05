@@ -1045,21 +1045,26 @@ export abstract class DefaultCLI implements CLI {
    * Generate CLI parameter syntax with enhanced optional formatting
    * Web4 pattern: Clear optional parameter syntax with default values
    * Notation: <?param:'defaultValue'> for optional parameters
+   * Notation: <param:value1|value2|value3> for union types
    */
   private generateParameterSyntax(param: any, methodName?: string): string {
     // Get base syntax from @cliSyntax annotation or conventions
     let baseSyntax = this.getBaseSyntax(param, methodName);
     
-    // ✅ ENHANCED: Apply Web4 notation for optional parameters first
+    // ✅ NEW: Check for union values from @cliValues annotation
+    const unionValues = this.getParameterUnionValues(param.name);
+    if (unionValues && unionValues.length > 0) {
+      // Add union values to syntax: <paramName:value1|value2|value3>
+      baseSyntax = `${baseSyntax}:${unionValues.join('|')}`;
+    }
+    
+    // ✅ ENHANCED: Apply Web4 notation for optional parameters
     let finalSyntax: string;
     if (param.required) {
       finalSyntax = `<${baseSyntax}>`;
     } else {
       // Check for default value in TypeScript or TSDoc
       const defaultValue = this.extractDefaultValue(param, methodName);
-      
-      // ✅ NOTE: Syntax shows ONLY the default value, not all union values
-      // "Possible Values" documentation will show all values with default highlighted
       
       if (defaultValue) {
         finalSyntax = `<?${baseSyntax}:'${defaultValue}'>`;  // ✅ Web4 notation: <?parameter:'defaultValue'>
@@ -1304,10 +1309,23 @@ export abstract class DefaultCLI implements CLI {
    * @cliHide
    */
   async completeParameter(callbackName: string, ...contextArgs: string[]): Promise<void> {
-    // Check if callback method exists on this instance
+    // Check if callback method exists on this instance OR on component instance
+    let target: any = null;
+    
     if (typeof (this as any)[callbackName] === 'function') {
+      // Method exists on CLI instance (e.g., depthParameterCompletion in DefaultCLI)
+      target = this;
+    } else {
+      // Try component instance (e.g., renameCaseParameterCompletion in DefaultPDCA)
+      const componentInstance = this.getComponentInstance();
+      if (componentInstance && typeof componentInstance[callbackName] === 'function') {
+        target = componentInstance;
+      }
+    }
+    
+    if (target) {
       // Pass context args to completion method (e.g., ['on', 'ComponentName'] for versionParameterCompletion)
-      const values = await (this as any)[callbackName](contextArgs);
+      const values = await target[callbackName](contextArgs);
       
       // Smart Join (OOSH-inspired, matching TSCompletion.start() logic):
       // If values contain numbered references (e.g. "1:filename") or any item with spaces,
