@@ -757,7 +757,8 @@ Test content
 `;
     fs.writeFileSync(path.join(templateDir, 'template.md'), template);
 
-    pdca = new DefaultPDCA({ componentRoot: testDataDir });
+    pdca = new DefaultPDCA();
+    await pdca.init({ model: { componentRoot: testDataDir } });
   });
 
   afterEach(() => {
@@ -766,7 +767,7 @@ Test content
     }
   });
 
-  it.only('TC122: createPDCA stores original creation time in git note', async () => {
+  it('TC122: createPDCA stores original creation time in git note', async () => {
     // Given: A new PDCA is being created in isolated test directory
     const { execSync } = await import('child_process');
     const sessionDir = path.join(testDataDir, 'session');
