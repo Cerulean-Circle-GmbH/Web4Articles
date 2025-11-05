@@ -1883,7 +1883,8 @@ Standards:
         // @pdca 2025-11-05-UTC-2100.pdca.md - Use componentsDirectory (Path Authority)
         const componentPath = path.join(this.model.componentsDirectory, this.model.component, this.model.version.toString());
         try {
-          execSync('npx vitest run', { 
+          // @pdca 2025-11-05-UTC-2226.pdca.md - Disable bail to see ALL failures
+          execSync('npx vitest run --bail=999', { 
             cwd: componentPath,
             stdio: 'inherit',
           });
@@ -2665,7 +2666,8 @@ Standards:
     
     try {
       // ✅ FIX: Use relativePath which includes subdirectories (ts/layer2/file.test.ts)
-      execSync(`npx vitest --run ${path.join('test', targetFile.relativePath)}`, {
+      // @pdca 2025-11-05-UTC-2226.pdca.md - Disable bail to see ALL failures
+      execSync(`npx vitest --run --bail=999 ${path.join('test', targetFile.relativePath)}`, {
         cwd: componentRoot,
         stdio: 'inherit',
       });
@@ -2756,7 +2758,8 @@ Standards:
     const componentRoot = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
     
     try {
-      execSync(`npx vitest --run -t "${describe.name}"`, {
+      // @pdca 2025-11-05-UTC-2226.pdca.md - Disable bail to see ALL failures
+      execSync(`npx vitest --run --bail=999 -t "${describe.name}"`, {
         cwd: componentRoot,
         stdio: 'inherit',
       });
@@ -2871,7 +2874,8 @@ Standards:
     const componentRoot = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
     
     try {
-      execSync(`npx vitest --run -t "${targetIt.name}"`, {
+      // @pdca 2025-11-05-UTC-2226.pdca.md - Disable bail to see ALL failures
+      execSync(`npx vitest --run --bail=999 -t "${targetIt.name}"`, {
         cwd: componentRoot,
         stdio: 'inherit',
       });
