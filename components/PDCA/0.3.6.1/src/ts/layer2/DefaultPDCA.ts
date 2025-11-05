@@ -5026,6 +5026,7 @@ export class DefaultPDCA implements PDCA {
    * - strip: Remove description, keep timestamp only
    * - feature: Add .feature. marker before extension
    * 
+   * @cliSyntax case filePath dryRun
    * @cliValues renameCase now creationDate strip feature
    * @cliValues dryRun true false
    */
