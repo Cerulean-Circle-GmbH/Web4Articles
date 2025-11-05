@@ -408,6 +408,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // ✅ ONLY store the value - no calculation
     // Sets PROJECT ROOT for this component to operate in (test isolation support)
     this.model.targetDirectory = directory;
+    // @pdca 2025-11-05-UTC-2226.pdca.md - CRITICAL: Update componentsDirectory when targetDirectory changes
+    // Path Authority: componentsDirectory is derived from targetDirectory
+    this.model.componentsDirectory = path.join(directory, 'components');
     // Note: projectRoot calculation removed - violates path separation baseline
   }
 
@@ -5002,9 +5005,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    */
   private async verifyScriptsSymlinks(component: string, versions: string[], highestVersion: string): Promise<void> {
     // ✅ Use model.projectRoot (Path Authority: CLI calculates this)
-    // NOT resolveProjectRoot() which returns targetDirectory
-    const projectRoot = this.model.projectRoot;
-    const scriptsDir = path.join(projectRoot, 'scripts');
+    // @pdca 2025-11-05-UTC-2226.pdca.md - Use targetDirectory for test isolation
+    const scriptsDir = path.join(this.model.targetDirectory, 'scripts');
     const versionsDir = path.join(scriptsDir, 'versions');
     const componentLower = component.toLowerCase();
     
@@ -5092,9 +5094,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async cleanupOrphanedScriptSymlinks(component: string, validVersions: string[]): Promise<void> {
-    // ✅ Use model.projectRoot for scripts/ (Path Authority)
-    const projectRoot = this.model.projectRoot;
-    const scriptsDir = path.join(projectRoot, 'scripts');
+    // @pdca 2025-11-05-UTC-2226.pdca.md - Use targetDirectory for test isolation
+    const scriptsDir = path.join(this.model.targetDirectory, 'scripts');
     const versionsDir = path.join(scriptsDir, 'versions');
     const componentLower = component.toLowerCase();
     
@@ -5419,14 +5420,15 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async updateMainScriptSymlink(component: string, version: string): Promise<void> {
-    // ✅ Use model.projectRoot for scripts/ (Path Authority)
-    const projectRoot = this.model.projectRoot;
-    const scriptsDir = path.join(projectRoot, 'scripts');
+    // @pdca 2025-11-05-UTC-2226.pdca.md - Use targetDirectory for test isolation
+    // Scripts must go to test/data/scripts in test mode, not projectRoot/scripts
+    const scriptsDir = path.join(this.model.targetDirectory, 'scripts');
     const componentLower = component.toLowerCase();
     const mainScriptPath = path.join(scriptsDir, componentLower);
     
     // Target: ../components/ComponentName/latest/componentname
-    const componentDir = path.join(projectRoot, 'components', component);
+    // @pdca 2025-11-05-UTC-2226.pdca.md - Use componentsDirectory (already derived from targetDirectory)
+    const componentDir = path.join(this.model.componentsDirectory, component);
     const targetPath = path.relative(scriptsDir, path.join(componentDir, 'latest', componentLower));
     
     try {
@@ -5806,9 +5808,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async cleanupAllComponentScriptSymlinks(componentName: string, versions: string[]): Promise<void> {
-    // ✅ Use model.projectRoot for scripts/ (Path Authority)
-    const projectRoot = this.model.projectRoot;
-    const scriptsDir = path.join(projectRoot, 'scripts');
+    // @pdca 2025-11-05-UTC-2226.pdca.md - Use targetDirectory for test isolation
+    const scriptsDir = path.join(this.model.targetDirectory, 'scripts');
     const versionsDir = path.join(scriptsDir, 'versions');
     
     if (!existsSync(versionsDir)) {
