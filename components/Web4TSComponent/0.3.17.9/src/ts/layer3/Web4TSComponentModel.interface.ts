@@ -50,6 +50,30 @@ export interface Web4TSComponentModel extends Model {
    */
   targetDirectory: string;
   
+  /**
+   * Pre-calculated components directory (targetDirectory + '/components')
+   * CLI calculates this ONCE, component only USES it (Path Authority Principle)
+   * Production: projectRoot/components
+   * Test Isolation: componentRoot/test/data/components
+   * @pdca 2025-11-05-UTC-2100.pdca.md - Path Authority refactoring
+   */
+  componentsDirectory: string;
+  
+  /**
+   * Semantic flag indicating test isolation mode
+   * Replaces path inspection (isTestEnvironment() checks)
+   * Component uses this flag instead of inspecting targetDirectory path
+   * @pdca 2025-11-05-UTC-2100.pdca.md - Path Authority refactoring
+   */
+  isTestIsolation: boolean;
+  
+  /**
+   * Test data directory path (only set when isTestIsolation = true)
+   * Example: §/components/Web4TSComponent/0.3.17.9/test/data
+   * @pdca 2025-11-05-UTC-2100.pdca.md - Path Authority refactoring
+   */
+  testDataDirectory?: string;
+  
   dependencies?: ComponentDependency[];  // Component dependencies with auto-build
   
   /**

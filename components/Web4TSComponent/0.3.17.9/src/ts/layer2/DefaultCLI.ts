@@ -272,6 +272,14 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // @pdca 2025-11-05-UTC-1809.pdca.md - Option D: Set context on both instances
     (this.context.model as any).context = targetComponent;
     
+    // ✅ CRITICAL: Set ALL paths on loaded context (Path Authority Principle)
+    // @pdca 2025-11-05-UTC-2100.pdca.md - Phase 2: CLI provides ALL paths to context
+    (this.context.model as any).projectRoot = this.model.projectRoot;
+    (this.context.model as any).targetDirectory = this.model.projectRoot;
+    (this.context.model as any).componentsDirectory = (this.component!.model as any).componentsDirectory;
+    (this.context.model as any).isTestIsolation = false;
+    // testDataDirectory only set when isTestIsolation = true (in test setup)
+    
     // ✅ REMOVED: Context already discovered itself in init()!
     // @pdca 2025-11-05-UTC-1223.pdca.md - Self-discovery pattern, no batch rediscovery
     // Each component discovers its own methods when created, not batch-discovered by CLI

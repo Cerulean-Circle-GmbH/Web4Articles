@@ -126,7 +126,10 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         version: versionComponent,  // ✅ INSTANCE with behavior!
       componentRoot: componentRoot, // ✅ Component's OWN root (for test/ access)
       projectRoot: scenario?.model?.projectRoot || componentRoot, // ✅ Overall project root (from CLI)
-      targetDirectory: scenario?.model?.targetDirectory || componentRoot // ✅ Where to CREATE components
+      targetDirectory: scenario?.model?.targetDirectory || componentRoot, // ✅ Where to CREATE components
+      // @pdca 2025-11-05-UTC-2100.pdca.md - Path Authority: CLI provides ALL paths
+      componentsDirectory: scenario?.model?.componentsDirectory || path.join(componentRoot, 'components'), // Pre-calculated by CLI
+      isTestIsolation: scenario?.model?.isTestIsolation || false, // Semantic flag instead of path inspection
       // Note: createdAt/updatedAt removed per Web4 principle - belong in ChangeEvent
       // Note: componentStandards, validationRules, scaffoldingTemplates removed - never used
     };
@@ -204,7 +207,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliHide
    */
   async buildDependencies(componentName: string, version?: string): Promise<void> {
-    const componentDir = this.resolveComponentDirectory(componentName);
+    const componentDir = path.join(this.model.componentsDirectory, componentName);
     
     // Determine which version to build
     let targetVersion: string;
@@ -288,7 +291,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    */
   private async loadWeb4TSComponentTemplate(templatePath: string, substitutions: Record<string, string>): Promise<string> {
     // Always load from Web4TSComponent's templates, not the current component
-    const web4tsComponentPath = this.resolveComponentPath('Web4TSComponent', this.model.version.toString());
+    // @pdca 2025-11-05-UTC-2100.pdca.md - Use componentsDirectory (Path Authority)
+    const web4tsComponentPath = path.join(this.model.componentsDirectory, 'Web4TSComponent', this.model.version.toString());
     const templateFullPath = path.join(web4tsComponentPath, 'templates', templatePath);
     
     if (!existsSync(templateFullPath)) {
@@ -404,16 +408,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // Note: projectRoot calculation removed - violates path separation baseline
   }
 
-  /**
-   * Check if running in test environment (test/data directory)
-   * Uses model state rather than global/env variables (Web4 OOP principle)
-   * @returns true if targetDirectory includes '/test/data'
-   * @cliHide
-   */
-  private isTestEnvironment(): boolean {
-    // Web4 OOP principle: Use model state, not global/env variables
-    return this.model.targetDirectory.includes('/test/data');
-  }
+  // @pdca 2025-11-05-UTC-2100.pdca.md - REMOVED isTestEnvironment() - use model.isTestIsolation flag
 
   /**
    * Get test/data directory path for current component version
@@ -448,65 +443,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     }
   }
 
-  /**
-   * @cliHide
-   * 
-   * Web4 OOP principle: Use model state, not test detection.
-   * Tests control environment via setTargetDirectory().
-   */
-  private resolveProjectRoot(): string {
-    return this.model.targetDirectory;
-  }
+  // @pdca 2025-11-05-UTC-2100.pdca.md - REMOVED resolveProjectRoot() - use model.projectRoot directly
 
-  /**
-   * Resolve component path using model.targetDirectory (DRY: no duplication)
-   * Web4 OOP principle: Always use model.targetDirectory (no test detection needed)
-   * Protected: Allow subclasses/CLI to access for delegation patterns
-   * @cliHide
-   */
-  protected resolveComponentPath(componentName: string, version: string): string {
-    const componentPath = path.join(this.model.targetDirectory, 'components', componentName, version);
-    
-    // ✅ RUNTIME DETECTION: Prevent nested components/ directories (test isolation violation)
-    // 
-    // CRITICAL: If targetDirectory points to a component version directory,
-    // we're about to create: components/MyComponent/0.1.0.0/components/...
-    // 
-    // This happens when:
-    // 1. targetDirectory was not provided (VIOLATION!)
-    // 2. Tests run from component directory without test isolation
-    // 3. CLI not properly setting targetDirectory to project root
-    // 
-    // @pdca 2025-10-31-UTC-1230.test-isolation-violation-fix.pdca.md
-    const targetDirName = path.basename(this.model.targetDirectory);
-    const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(targetDirName);
-    
-    if (isVersionDir) {
-      throw new Error(
-        `CRITICAL TEST ISOLATION VIOLATION: Attempting to create nested components/ directory!\n` +
-        `\n` +
-        `Current targetDirectory: ${this.model.targetDirectory}\n` +
-        `Would create: ${componentPath}\n` +
-        `\n` +
-        `This indicates targetDirectory is set to a component version directory\n` +
-        `instead of the project root or test/data.\n` +
-        `\n` +
-        `WEB4 PATH AUTHORITY PRINCIPLE VIOLATION:\n` +
-        `  DefaultCLI must calculate and provide correct targetDirectory.\n` +
-        `  Component is FORBIDDEN from calculating paths (including cwd access).\n` +
-        `\n` +
-        `Expected patterns:\n` +
-        `  Production: /path/to/project/root\n` +
-        `  Tests: /path/to/component/version/test/data\n` +
-        `\n` +
-        `Current (WRONG): /path/to/components/MyComponent/0.1.0.0\n` +
-        `\n` +
-        `Fix: Ensure CLI passes correct targetDirectory in init() scenario.`
-      );
-    }
-    
-    return componentPath;
-  }
+  // @pdca 2025-11-05-UTC-2100.pdca.md - REMOVED resolveComponentPath() - use path.join(model.componentsDirectory, name, version)
 
   /**
    * Print quick header for fast commands (DRY helper)
@@ -549,14 +488,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
 
-  /**
-   * @cliHide
-   * 
-   * Web4 OOP principle: Always use model.targetDirectory (no test detection needed)
-   */
-  private resolveComponentDirectory(componentName: string): string {
-    return path.join(this.model.targetDirectory, 'components', componentName);
-  }
+  // @pdca 2025-11-05-UTC-2100.pdca.md - REMOVED resolveComponentDirectory() - use path.join(model.componentsDirectory, name)
 
   /**
    * Resolve semantic version link to actual version number
@@ -589,7 +521,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // Resolve semantic link (latest/dev/test/prod) to actual version
     const semanticLinks = ['latest', 'dev', 'test', 'prod'];
     if (semanticLinks.includes(version)) {
-      const componentDir = this.resolveComponentDirectory(componentName);
+      const componentDir = path.join(this.model.componentsDirectory, componentName);
       const linkPath = path.join(componentDir, version);
       
       if (existsSync(linkPath) && lstatSync(linkPath).isSymbolicLink()) {
@@ -620,7 +552,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   async scaffoldComponent(options: any): Promise<any> {
     const { componentName, version, includeLayerArchitecture, includeCLI, includeSpecFolder, includeVitest } = options;
     
-    const componentDir = this.resolveComponentPath(componentName, version);
+    // @pdca 2025-11-05-UTC-2100.pdca.md - Use componentsDirectory (Path Authority)
+    const componentDir = path.join(this.model.componentsDirectory, componentName, version);
     
     // Create directory structure
     await fs.mkdir(componentDir, { recursive: true });
@@ -688,7 +621,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliHide
    */
   private async createBasePackageJson(componentName: string, version: string): Promise<void> {
-    const componentBaseDir = this.resolveComponentDirectory(componentName);
+    const componentBaseDir = path.join(this.model.componentsDirectory, componentName);
     const basePackageJsonPath = path.join(componentBaseDir, 'package.json');
     
     const basePackageJson = {
@@ -843,7 +776,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       if (path.isAbsolute(componentDir)) {
         fullComponentDir = componentDir;
       } else {
-        const projectRoot = this.resolveProjectRoot();
+        // @pdca 2025-11-05-UTC-2100.pdca.md - Use projectRoot directly (Path Authority)
+        const projectRoot = this.model.projectRoot;
         fullComponentDir = path.join(projectRoot, componentDir);
       }
       
@@ -1192,7 +1126,8 @@ Standards:
     console.log(`   Spec: ${metadata.hasScenarioSupport ? '✅' : '❌'}`);
     
     // @pdca 2025-11-03-HHMM.pdca.md - Create component-level source.env using project template
-    const componentRoot = this.resolveComponentPath(component, version);
+    // @pdca 2025-11-05-UTC-2100.pdca.md - Use componentsDirectory (Path Authority)
+    const componentRoot = path.join(this.model.componentsDirectory, component, version);
     const sourceEnvPath = path.join(componentRoot, 'source.env');
     
     // Use the project source.env template with component-specific substitutions
@@ -1216,7 +1151,7 @@ Standards:
     const versionParts = version.split('.');
     const buildNumber = parseInt(versionParts[3] || '0', 10);
     
-    const componentDir = this.resolveComponentDirectory(component);
+    const componentDir = path.join(this.model.componentsDirectory, component);
     const fs = await import('fs/promises');
     
     // Always set latest
@@ -1434,7 +1369,8 @@ Standards:
     // ✅ Component has ALL its data in ITS model
     const componentName = target.model.component;
     const currentVersion = target.model.version.toString();
-    const componentPath = this.resolveComponentPath(componentName, currentVersion);
+    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
+    const componentPath = path.join(target.model.componentsDirectory, componentName, currentVersion);
     
     let nextVersion: string;
     
@@ -1514,7 +1450,8 @@ Standards:
     const includeHidden = showHidden.toLowerCase() === 'true';
     
     // Target has ALL data in ITS model
-    const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
+    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
+    const componentPath = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
     console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${target.model.component} ${target.model.version.toString()}:${this.colors.reset}`);
       console.log(`${this.colors.dim}${componentPath}${this.colors.reset}`);
       await this.displayTreeStructure(componentPath, '', maxDepth, 0, includeHidden);
@@ -1556,7 +1493,7 @@ Standards:
     
     // Target has ALL data in ITS model
     const semanticLinks = await this.getSemanticLinks(target.model.component);
-    const componentDir = this.resolveComponentDirectory(target.model.component);
+    const componentDir = path.join(this.model.componentsDirectory, target.model.component);
       const availableVersions = this.getAvailableVersions(componentDir);
 
     console.log(`🔗 Semantic Version Links for ${target.model.component}:`);
@@ -1593,7 +1530,7 @@ Standards:
    * @cliHide
    */
   private async fixSemanticLinks(componentName: string): Promise<void> {
-    const componentDir = this.resolveComponentDirectory(componentName);
+    const componentDir = path.join(this.model.componentsDirectory, componentName);
     const availableVersions = this.getAvailableVersions(componentDir);
     
     if (availableVersions.length === 0) {
@@ -1697,7 +1634,7 @@ Standards:
    * @cliHide
    */
   private async createSemanticLink(componentName: string, linkType: string, targetVersion: string): Promise<void> {
-    const componentDir = this.resolveComponentDirectory(componentName);
+    const componentDir = path.join(this.model.componentsDirectory, componentName);
     const linkPath = path.join(componentDir, linkType);
     const targetDir = path.join(componentDir, targetVersion);
 
@@ -1738,7 +1675,7 @@ Standards:
    * @cliHide
    */
   private async getSemanticLinks(componentName: string): Promise<{ dev: string | null; test: string | null; prod: string | null; latest: string | null }> {
-    const componentDir = this.resolveComponentDirectory(componentName);
+    const componentDir = path.join(this.model.componentsDirectory, componentName);
     const result = {
       dev: null as string | null,
       test: null as string | null,
@@ -1940,7 +1877,8 @@ Standards:
       } else {
         console.log(`🧪 Running ${this.model.component} internal tests (RELEASE MODE)...`);
         
-        const componentPath = this.resolveComponentPath(this.model.component, this.model.version.toString());
+        // @pdca 2025-11-05-UTC-2100.pdca.md - Use componentsDirectory (Path Authority)
+        const componentPath = path.join(this.model.componentsDirectory, this.model.component, this.model.version.toString());
         try {
           execSync('npx vitest run', { 
             cwd: componentPath,
@@ -2012,7 +1950,8 @@ Standards:
     }
 
     // Run target component tests and handle RELEASE promotion
-    const componentPath = this.resolveComponentPath(target.model.component, targetVersion);
+    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
+    const componentPath = path.join(target.model.componentsDirectory, target.model.component, targetVersion);
     console.log(`🧪 Running tests for ${target.model.component} ${targetVersion} (RELEASE MODE)...`);
     
     try {
@@ -2226,7 +2165,8 @@ Standards:
         console.log(`🔄 Switching to ${devVersion} to continue testing...`);
         
         // Use execSync to run npm test in the new version's directory
-        const componentPath = this.resolveComponentPath(componentName, devVersion);
+        // @pdca 2025-11-05-UTC-2100.pdca.md - Use componentsDirectory (Path Authority)
+        const componentPath = path.join(this.model.componentsDirectory, componentName, devVersion);
         console.log(`🧪 Now running tests on ${devVersion} (dev version)...`);
         
         try {
@@ -2274,7 +2214,8 @@ Standards:
         
         // Use execSync to run npm test in the new version's directory
         // (Can't use .on() because that would trigger recursion safety check)
-        const componentPath = this.resolveComponentPath(componentName, testVersion);
+        // @pdca 2025-11-05-UTC-2100.pdca.md - Use componentsDirectory (Path Authority)
+        const componentPath = path.join(this.model.componentsDirectory, componentName, testVersion);
         console.log(`🧪 Now running tests on ${testVersion} (test version)...`);
         
         try {
@@ -2505,7 +2446,8 @@ Standards:
 
     const target = this.model.context;
     // ✅ PATH AUTHORITY: Use target's origin (from on()) - target is always loaded via on()
-    const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
+    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
+    const componentPath = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
     
     console.log(`🚀 Starting ${target.model.component} ${target.model.version.toString()}...`);
     
@@ -2565,7 +2507,8 @@ Standards:
     const buildCmd = `./src/sh/build.sh ${buildArgs.join(' ')}`;
     
     // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
-    const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
+    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
+    const componentPath = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
     
     console.log(`🔨 Building ${target.model.component} ${target.model.version.toString()}...`);
     
@@ -2715,7 +2658,8 @@ Standards:
     // ✅ RADICAL OOP: Use target instance for component root
     const target = this.model.context || this;
     // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
-    const componentRoot = this.resolveComponentPath(target.model.component, target.model.version.toString());
+    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
+    const componentRoot = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
     
     try {
       // ✅ FIX: Use relativePath which includes subdirectories (ts/layer2/file.test.ts)
@@ -2806,7 +2750,8 @@ Standards:
     // ✅ RADICAL OOP: Use target instance for component root
     const target = this.model.context || this;
     // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
-    const componentRoot = this.resolveComponentPath(target.model.component, target.model.version.toString());
+    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
+    const componentRoot = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
     
     try {
       execSync(`npx vitest --run -t "${describe.name}"`, {
@@ -2920,7 +2865,8 @@ Standards:
     // ✅ RADICAL OOP: Use target instance for component root
     const target = this.model.context || this;
     // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
-    const componentRoot = this.resolveComponentPath(target.model.component, target.model.version.toString());
+    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
+    const componentRoot = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
     
     try {
       execSync(`npx vitest --run -t "${targetIt.name}"`, {
@@ -2950,7 +2896,8 @@ Standards:
     const target = this.model.context || this;
     
     // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
-    const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
+    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
+    const componentPath = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
     
     const isGlobalClean = force === 'force';
     const cleanType = isGlobalClean ? 'clean:global' : 'clean';
@@ -3011,7 +2958,7 @@ Standards:
       const cliPath = path.join(this.model.projectRoot, 'scripts', cliScriptName);
       
       execSync(`${cliPath} completeParameter completionNameParameterCompletion "completion" "${what}" "${filter || ''}" 2>/dev/null`, { 
-        cwd: this.resolveComponentPath(target.model.component, target.model.version.toString()),
+        cwd: path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString()),
         stdio: 'inherit',
       });
     }
@@ -3048,7 +2995,7 @@ Standards:
       targetVersion = version;
     }
 
-    const componentDir = this.resolveComponentDirectory(targetComponent);
+    const componentDir = path.join(this.model.componentsDirectory, targetComponent);
     const versionDir = path.join(componentDir, targetVersion);
 
     if (!existsSync(versionDir)) {
@@ -3122,7 +3069,7 @@ Standards:
       targetComponent = component;
     }
 
-    const componentDir = this.resolveComponentDirectory(targetComponent);
+    const componentDir = path.join(this.model.componentsDirectory, targetComponent);
 
     if (!existsSync(componentDir)) {
       throw new Error(`Component ${targetComponent} does not exist at ${componentDir}`);
@@ -3207,7 +3154,7 @@ Standards:
     
     // Save to first component's version directory
     const firstSpec = componentSpecs[0];
-    const firstComponentDir = this.resolveComponentDirectory(firstSpec.name);
+    const firstComponentDir = path.join(this.model.componentsDirectory, firstSpec.name);
     const firstVersionDir = path.join(firstComponentDir, firstSpec.version);
     const filename = this.generateSafeFilename(componentSpecs);
     const outputPath = path.join(firstVersionDir, filename);
@@ -4545,8 +4492,9 @@ Standards:
    * @cliHide
    */
   private async createVersionFromExisting(component: string, fromVersion: string, toVersion: string): Promise<void> {
-    const sourcePath = this.resolveComponentPath(component, fromVersion);
-    const targetPath = this.resolveComponentPath(component, toVersion);
+    // @pdca 2025-11-05-UTC-2100.pdca.md - Use componentsDirectory (Path Authority)
+    const sourcePath = path.join(this.model.componentsDirectory, component, fromVersion);
+    const targetPath = path.join(this.model.componentsDirectory, component, toVersion);
     
     // 🚨 CRITICAL: Check if target version already exists
     if (existsSync(targetPath)) {
@@ -4857,7 +4805,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
     const target = this.model.context || this;
     const componentName = target.model.component;
-    const componentDir = this.resolveComponentDirectory(componentName);
+    const componentDir = path.join(this.model.componentsDirectory, componentName);
     
     // Use DRY helper to resolve version (handles 'current', semantic links, and actual versions)
     const contextVersion = target.model.version.toString();
@@ -4958,7 +4906,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     console.log(`🔍 Scanning ${component} symlinks...`);
     
     // Get highest version
-    const componentDir = this.resolveComponentDirectory(component);
+    const componentDir = path.join(this.model.componentsDirectory, component);
     const versions = this.getAvailableVersions(componentDir);
     
     if (versions.length === 0) {
@@ -4999,7 +4947,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
           console.log(`   ❌ ${linkType} link broken: ${linkType} → ${target} (version not found)`);
           // Remove broken semantic link
           try {
-            const componentDir = this.resolveComponentDirectory(component);
+            const componentDir = path.join(this.model.componentsDirectory, component);
             const linkPath = path.join(componentDir, linkType);
             await fs.unlink(linkPath);
             console.log(`   🔧 Removed broken ${linkType} link`);
@@ -5018,7 +4966,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async verifyLatestSymlink(component: string, highestVersion: string): Promise<void> {
-    const componentDir = this.resolveComponentDirectory(component);
+    const componentDir = path.join(this.model.componentsDirectory, component);
     const latestPath = path.join(componentDir, 'latest');
     
     try {
@@ -5091,7 +5039,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     // Fix old wrong pattern: componentname.sh files in component directories
     // These should be renamed to just componentname (no .sh extension)
     for (const version of versions) {
-      const componentDir = this.resolveComponentPath(component, version);
+      // @pdca 2025-11-05-UTC-2100.pdca.md - Use componentsDirectory (Path Authority)
+      const componentDir = path.join(this.model.componentsDirectory, component, version);
       const wrongShFile = path.join(componentDir, `${componentLower}.sh`);
       const correctFile = path.join(componentDir, componentLower);
       
@@ -5370,7 +5319,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async updateLatestSymlink(component: string, version: string): Promise<void> {
-    const componentDir = this.resolveComponentDirectory(component);
+    const componentDir = path.join(this.model.componentsDirectory, component);
     const latestPath = path.join(componentDir, 'latest');
     
     try {
@@ -5826,7 +5775,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
         const linkTarget = await fs.readlink(mainScriptPath);
         if (linkTarget.includes(versionScriptName)) {
           // Repoint to highest remaining version
-          const componentDir = this.resolveComponentDirectory(componentName);
+          const componentDir = path.join(this.model.componentsDirectory, componentName);
           const versions = this.getAvailableVersions(componentDir);
           const highestVersion = versions.length > 0 ? this.getHighestVersion(versions) : null;
           

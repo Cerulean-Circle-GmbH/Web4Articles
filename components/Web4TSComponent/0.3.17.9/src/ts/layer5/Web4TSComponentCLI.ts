@@ -37,10 +37,13 @@ export class Web4TSComponentCLI extends DefaultCLI {
     
     // ✅ Direct model assignment (OOP - NO re-init!)
     // Component already set: IOR, owner, version, componentRoot (from its own location)
-    // CLI provides: projectRoot, targetDirectory (path context for operations)
+    // CLI provides: projectRoot, targetDirectory, and ALL calculated paths (Path Authority)
+    // @pdca 2025-11-05-UTC-2100.pdca.md - Phase 2: CLI calculates ALL paths
     this.component.model.projectRoot = this.model.projectRoot;
-    // targetDirectory = projectRoot for general operations (creating test components, etc.)
     this.component.model.targetDirectory = this.model.projectRoot;
+    this.component.model.componentsDirectory = join(this.model.projectRoot, 'components');
+    this.component.model.isTestIsolation = false;
+    // testDataDirectory only set when isTestIsolation = true (in test setup)
     
     // ✅ Each object discovers itself: CLI discovers CLI methods, Component discovers component methods!
   }
