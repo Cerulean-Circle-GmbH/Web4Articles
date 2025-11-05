@@ -11,7 +11,9 @@ echo "=========================================="
 # Test setup
 PROJECT_ROOT="/Users/Shared/Workspaces/temp/Web4Articles"
 cd "$PROJECT_ROOT"
-source source.env
+
+# Set up PATH to find CLI commands
+export PATH="$PROJECT_ROOT/scripts:$PATH"
 
 # Helper function to check if dist exists
 dist_exists() {

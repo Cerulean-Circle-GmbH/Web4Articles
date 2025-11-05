@@ -245,12 +245,12 @@ pdca trainAILegacy decide
 
 - [x] `buildDependencies()` is called from `build()` method
 - [x] PDCA 0.3.17.9 declares PDCA 0.3.5.2 as dependency
-- [x] Manual test: Delete PDCA 0.3.5.2 dist/, build PDCA 0.3.17.9, verify auto-build
+- [x] ~~Manual test~~ **CMM3 Automated test**: Delete PDCA 0.3.5.2 dist/, build PDCA 0.3.17.9, verify auto-build
 - [x] `pdca trainAILegacy` works after clean build
-- [ ] Vitest test verifies dependency build integration (deferred)
-- [ ] Black-box test verifies end-to-end dependency flow (deferred)
+- [x] **CMM3 Shell test** verifies dependency build integration (`test-dependency-auto-build.sh`)
+- [ ] Vitest integration test (deferred - shell test is sufficient for CMM3)
 - [x] No build errors or warnings
-- [x] Documentation updated (TSDoc comments in code)
+- [x] Documentation updated (TSDoc comments in code, PDCA with test results)
 
 ### Test Results
 
@@ -274,42 +274,62 @@ pdca trainAILegacy decide
 - Build output shows clear dependency build messages
 - Runtime import succeeds after dependency build
 
-### Additional Test: Clean + Rebuild ✅
+### CMM3 Automated Test: Clean + Rebuild ✅
+
+**Test Script**: `components/Web4TSComponent/0.3.17.8/test/sh/test-dependency-auto-build.sh`
 
 **Test Case**: Verify dependencies work after `clean` operation on all affected versions
 
 ```bash
-# Clean all affected versions
-web4tscomponent on PDCA clean  # Cleans latest (0.3.17.9)
-cd components/PDCA/0.3.5.2 && npm run clean  # Clean 0.3.5.2
-
-# Rebuild PDCA 0.3.17.9 (should auto-build 0.3.5.2)
-pdca build
-
-# Verify trainAILegacy works
-pdca trainAILegacy decide
+# Run the automated test
+./components/Web4TSComponent/0.3.17.8/test/sh/test-dependency-auto-build.sh
 ```
 
-**Expected Result**: 
-- PDCA 0.3.5.2 is automatically rebuilt as dependency
-- PDCA 0.3.17.9 builds successfully
-- `trainAILegacy` works without errors
+**Test Steps (Automated)**:
+1. Clean PDCA 0.3.17.9 dist/ directory
+2. Clean PDCA 0.3.5.2 dist/ directory
+3. Verify both dist/ directories are removed
+4. Build PDCA 0.3.17.9 (should auto-build 0.3.5.2)
+5. Verify PDCA 0.3.5.2 dist/ was created (dependency built)
+6. Verify PDCA 0.3.17.9 dist/ was created
+7. Test `trainAILegacy` functionality (uses dependency)
+8. Verify build log shows dependency detection
+9. Verify build log shows dependency build
+10. Verify build log confirms dependency success
 
-**Actual Result**: ✅ **SUCCESS**
+**Test Result**: ✅ **ALL TESTS PASSED**
 ```
-📦 Building 1 dependencies...
-🔧 Building dependency: PDCA/0.3.5.2
-🧹 Cleaning local artifacts...
-🔧 Smart building PDCA (changes detected)...
-[... build output ...]
-✅ Dependency built: PDCA/0.3.5.2
-🔨 Building PDCA 0.3.17.9...
-✅ Build completed for PDCA 0.3.17.9
+🧪 Testing Component Dependency Auto-Build
+==========================================
+
+📋 Test 1: Clean PDCA versions
+   Cleaning PDCA 0.3.17.9...
+   Cleaning PDCA 0.3.5.2...
+   ✅ Both versions cleaned successfully
+
+📋 Test 2: Build PDCA 0.3.17.9 (should auto-build 0.3.5.2)
+   ✅ PDCA 0.3.5.2 automatically built as dependency
+   ✅ PDCA 0.3.17.9 built successfully
+
+📋 Test 3: Verify trainAILegacy works (uses dependency)
+   ✅ trainAILegacy successfully accessed PDCA 0.3.5.2
+
+📋 Test 4: Verify build log shows dependency auto-build
+   ✅ Build log shows dependency detection
+   ✅ Build log shows PDCA 0.3.5.2 being built
+   ✅ Build log confirms PDCA 0.3.5.2 built successfully
+
+==========================================
+✅ ALL TESTS PASSED
+   Component dependency auto-build is working correctly
+   CMM3 Verified: Objective, Reproducible, Verifiable
+==========================================
 ```
 
-Then `pdca trainAILegacy decide` successfully displayed training topic from PDCA 0.3.5.2.
-
-**CMM3 Verification**: ✅ Reproducible - dependencies are automatically rebuilt after clean operation
+**CMM3 Compliance**: ✅ **VERIFIED**
+- **Objective**: Test uses file system checks and log parsing (not subjective observation)
+- **Reproducible**: Test script can be run repeatedly with same results
+- **Verifiable**: Test exits with code 0 (pass) or 1 (fail), no ambiguity
 
 ### Deferred Items
 
