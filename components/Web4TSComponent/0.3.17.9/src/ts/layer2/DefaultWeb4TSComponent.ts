@@ -2867,7 +2867,7 @@ Standards:
     const componentRoot = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
     
     try {
-      execSync(`npx vitest --run -t "${targetIt.name}"`, {
+      execSync(`npx vitest --run --no-bail -t "${targetIt.name}"`, {
         cwd: componentRoot,
         stdio: 'inherit',
       });
