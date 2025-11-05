@@ -26,7 +26,7 @@ export default defineConfig({
     testTimeout: 30000,
     hookTimeout: 30000,
     teardownTimeout: 30000,
-    bail: 1,  // Stop on first failure to prevent cascade hangs
+    // bail: 1,  // DISABLED for systematic test validation - need to see ALL failures
     // CRITICAL: Single fork prevents EPIPE worker process hang
     pool: 'forks',
     poolOptions: {
