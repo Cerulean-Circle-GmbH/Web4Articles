@@ -28,6 +28,7 @@ export class TestFileParser {
   /**
    * Scan directory for test files (RECURSIVE for layered test structure)
    * @pdca 2025-10-28-UTC-1950 - Fix test file command for layered structure
+   * @pdca 2025-11-05-UTC-1900 - Respect vitest exclude patterns
    * @param testDir - Absolute path to test directory
    * @param baseDir - Base directory for relative path calculation (internal use)
    * @returns Array of test files with metadata
@@ -35,6 +36,14 @@ export class TestFileParser {
   static scanTestFiles(testDir: string, baseDir?: string): TestFile[] {
     const files: TestFile[] = [];
     const base = baseDir || testDir;
+    
+    // Vitest exclude patterns (from vitest.config.ts)
+    const excludePatterns = [
+      /^data\//,           // test/data/**
+      /^logs\//,           // test/logs/**
+      /\/node_modules\//,  // **/node_modules/**
+      /^ts\/layer5\//      // test/ts/layer5/**
+    ];
     
     try {
       const entries = readdirSync(testDir);
@@ -51,13 +60,26 @@ export class TestFileParser {
           continue;
         }
         
+        // Calculate relative path to check against exclude patterns
+        const relativePath = path.relative(base, fullPath);
+        
+        // Check if path matches any exclude pattern
+        const isExcluded = excludePatterns.some(pattern => pattern.test(relativePath));
+        
         if (stat.isDirectory()) {
+          // Skip excluded directories entirely (don't recurse into them)
+          if (isExcluded) {
+            continue;
+          }
+          
           // ✅ RECURSIVE: Scan subdirectories for layered test structure (test/ts/layer2/, etc.)
           const subFiles = this.scanTestFiles(fullPath, base);
           files.push(...subFiles);
         } else if (stat.isFile() && entry.endsWith('.test.ts')) {
-          // Calculate relative path from base test directory
-          const relativePath = path.relative(base, fullPath);
+          // Skip excluded test files
+          if (isExcluded) {
+            continue;
+          }
           
           files.push({
             name: path.basename(entry),
