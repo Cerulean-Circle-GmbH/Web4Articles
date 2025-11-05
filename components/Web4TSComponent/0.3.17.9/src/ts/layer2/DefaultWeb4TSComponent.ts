@@ -1817,8 +1817,10 @@ Standards:
       }
       
     // Run tests for target component
-    // Use target's targetDirectory (component's own root where tests are)
-    const componentPath = target.model.targetDirectory;
+    // Use target's componentRoot (where component actually lives and has tests)
+    // @pdca 2025-11-05-UTC-1900 - Use componentRoot, not targetDirectory
+    // targetDirectory is projectRoot (for creating test components), but tests are in componentRoot
+    const componentPath = target.model.componentRoot;
     
     // 🚨 RECURSION PREVENTION: Detect if already called from npm test
     // @pdca 2025-11-04-UTC-2044.pdca.md - Prevent test.sh → component test → npm test → test.sh loop

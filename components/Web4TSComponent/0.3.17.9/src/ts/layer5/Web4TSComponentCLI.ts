@@ -39,9 +39,8 @@ export class Web4TSComponentCLI extends DefaultCLI {
     // Component already set: IOR, owner, version, componentRoot (from its own location)
     // CLI provides: projectRoot, targetDirectory (path context for operations)
     this.component.model.projectRoot = this.model.projectRoot;
-    // @pdca 2025-11-05-UTC-1900 - Use componentRoot (where component lives) not projectRoot (workspace)
-    // This ensures "web4tscomponent test" runs tests from component's test/ directory
-    this.component.model.targetDirectory = this.component.model.componentRoot;
+    // targetDirectory = projectRoot for general operations (creating test components, etc.)
+    this.component.model.targetDirectory = this.model.projectRoot;
     
     // ✅ Each object discovers itself: CLI discovers CLI methods, Component discovers component methods!
   }
