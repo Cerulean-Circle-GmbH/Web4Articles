@@ -812,20 +812,40 @@ Test content
     }
   });
 
-  it.skip('TC123: rename now preserves git note', async () => {
+  it('TC123: rename now preserves git note', async () => {
     // Given: A PDCA with a git note
     const { execSync } = await import('child_process');
-    await pdca.createPDCA('Test Preserve Note', 'Verify note survives rename', undefined, false);
+    const sessionDir = path.join(testDataDir, 'session');
     
-    const files = fs.readdirSync(path.join(testDataDir, 'session')).filter(f => f.endsWith('.pdca.md'));
+    // Create PDCA
+    await pdca.createPDCA('Test Preserve Note', 'Verify note survives rename', sessionDir, false);
+    
+    const files = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
     const originalFile = files[0];
+    const originalFilePath = path.join(sessionDir, originalFile);
     const originalTimestamp = originalFile.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{6})/)?.[1];
     
-    // When: Renaming with 'now'
-    await pdca.rename('now', path.join(testDataDir, 'session', originalFile), false);
+    // Commit the file and add git note
+    execSync(`git add session/${originalFile}`, { cwd: testDataDir });
+    execSync(`git commit -m "Add test PDCA"`, { cwd: testDataDir });
+    await pdca.addCreationTimeNote(originalFilePath);
+    
+    // Verify note exists
+    const originalCommitSha = execSync(
+      `git log -1 --format=%H -- session/${originalFile}`,
+      { cwd: testDataDir, encoding: 'utf-8' }
+    ).trim();
+    const originalNote = execSync(
+      `git notes show ${originalCommitSha}`,
+      { cwd: testDataDir, encoding: 'utf-8' }
+    ).trim();
+    expect(originalNote).toContain(`original_creation_time:${originalTimestamp}`);
+    
+    // When: Renaming with 'now' (this should copy the git note)
+    await pdca.rename('now', originalFilePath, false);
     
     // Then: New file should have git note with ORIGINAL timestamp
-    const newFiles = fs.readdirSync(path.join(testDataDir, 'session')).filter(f => f.endsWith('.pdca.md'));
+    const newFiles = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
     expect(newFiles.length).toBe(1);
     
     const newCommitSha = execSync(
@@ -842,30 +862,43 @@ Test content
     expect(note).toContain(originalTimestamp!);
   });
 
-  it.skip('TC124: rename creationDate reads from git note', async () => {
+  it('TC124: rename creationDate reads from git note', async () => {
     // Given: A PDCA created at T1, renamed to T2
     const { execSync } = await import('child_process');
-    await pdca.createPDCA('Test Restore Time', 'Verify creationDate uses note', undefined, false);
+    const sessionDir = path.join(testDataDir, 'session');
     
-    const files = fs.readdirSync(path.join(testDataDir, 'session')).filter(f => f.endsWith('.pdca.md'));
+    // Create PDCA
+    await pdca.createPDCA('Test Restore Time', 'Verify creationDate uses note', sessionDir, false);
+    
+    const files = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
     const originalFile = files[0];
+    const originalFilePath = path.join(sessionDir, originalFile);
     const originalTimestamp = originalFile.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{6})/)?.[1];
     
-    // Rename with 'now' (changes timestamp)
-    await pdca.rename('now', path.join(testDataDir, 'session', originalFile), false);
+    // Commit the file and add git note
+    execSync(`git add session/${originalFile}`, { cwd: testDataDir });
+    execSync(`git commit -m "Add test PDCA"`, { cwd: testDataDir });
+    await pdca.addCreationTimeNote(originalFilePath);
     
-    const renamedFiles = fs.readdirSync(path.join(testDataDir, 'session')).filter(f => f.endsWith('.pdca.md'));
+    // Wait 1 second to ensure timestamp changes
+    await new Promise(resolve => setTimeout(resolve, 1100));
+    
+    // Rename with 'now' (changes timestamp)
+    await pdca.rename('now', originalFilePath, false);
+    
+    const renamedFiles = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
     const renamedFile = renamedFiles[0];
+    const renamedFilePath = path.join(sessionDir, renamedFile);
     const newTimestamp = renamedFile.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{6})/)?.[1];
     
     // Verify timestamp changed
     expect(newTimestamp).not.toBe(originalTimestamp);
     
-    // When: Renaming with 'creationDate'
-    await pdca.rename('creationDate', path.join(testDataDir, 'session', renamedFile), false);
+    // When: Renaming with 'creationDate' (should read from git note)
+    await pdca.rename('creationDate', renamedFilePath, false);
     
     // Then: Filename should be restored to ORIGINAL timestamp (from note)
-    const restoredFiles = fs.readdirSync(path.join(testDataDir, 'session')).filter(f => f.endsWith('.pdca.md'));
+    const restoredFiles = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
     const restoredFile = restoredFiles[0];
     const restoredTimestamp = restoredFile.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{6})/)?.[1];
     

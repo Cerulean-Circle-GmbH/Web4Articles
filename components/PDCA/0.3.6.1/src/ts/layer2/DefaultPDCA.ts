@@ -5032,26 +5032,89 @@ export class DefaultPDCA implements PDCA {
         
         // ATOMIC OPERATION: Commit the rename immediately
         // This ensures rename is always committed, regardless of bidirectional links
-        if (renamedSuccessfully) {
+        if (renamedSuccessfully && usedGit) {
           console.log(`\n📦 Git operations:`);
           const commitMsg = `refactor: rename ${path.basename(oldNormalized)} to ${path.basename(newNormalized)}`;
           
           // Add the renamed file (git mv already staged it, but this is idempotent)
-          execSync(`git add "${newNormalized}"`, { cwd: projectRoot, stdio: 'pipe' });
+          try {
+            execSync(`git add "${newNormalized}"`, { cwd: projectRoot, stdio: 'pipe' });
+          } catch (addError: any) {
+            // If git add fails (e.g., file is in .gitignore), skip commit/push
+            // This is expected for test files in ignored directories
+            if (addError.message.includes('ignored')) {
+              console.log(`   ⚠️  File in ignored directory - skipping git commit`);
+              usedGit = false;
+            } else {
+              throw addError;
+            }
+          }
           
-          // Commit the rename
-          execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot, stdio: 'pipe' });
-          
-          // Push to remote
-          const branch = execSync('git branch --show-current', {
-            cwd: projectRoot,
-            encoding: 'utf-8'
-          }).trim();
-          execSync(`git push origin ${branch}`, { cwd: projectRoot, stdio: 'pipe' });
-          
-          console.log(`   ✅ Renamed: ${oldNormalized} → ${newNormalized}`);
-          console.log(`   ✅ Committed: ${commitMsg}`);
-          console.log(`   ✅ Pushed to remote\n`);
+          if (usedGit) {
+            // Commit the rename
+            execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot, stdio: 'pipe' });
+            
+            // Push to remote
+            const branch = execSync('git branch --show-current', {
+              cwd: projectRoot,
+              encoding: 'utf-8'
+            }).trim();
+            execSync(`git push origin ${branch}`, { cwd: projectRoot, stdio: 'pipe' });
+            
+            console.log(`   ✅ Renamed: ${oldNormalized} → ${newNormalized}`);
+            console.log(`   ✅ Committed: ${commitMsg}`);
+            console.log(`   ✅ Pushed to remote\n`);
+            
+            // Copy git note from old commit to new commit (preserves original creation time)
+            try {
+              // Get the commit SHA for the old file (before rename)
+              const oldCommitSha = execSync(
+                `git log -1 --format=%H -- "${oldNormalized}"`,
+                { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+              ).trim();
+              
+              if (oldCommitSha) {
+                // Check if old commit has a git note
+                try {
+                  const oldNote = execSync(
+                    `git notes show ${oldCommitSha}`,
+                    { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+                  ).trim();
+                  
+                  if (oldNote && oldNote.includes('original_creation_time:')) {
+                    // Get the commit SHA for the new file (after rename)
+                    const newCommitSha = execSync(
+                      `git log -1 --format=%H -- "${newNormalized}"`,
+                      { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+                    ).trim();
+                    
+                    if (newCommitSha) {
+                      // Copy the note to the new commit
+                      execSync(
+                        `git notes add -m "${oldNote}" ${newCommitSha}`,
+                        { cwd: projectRoot, stdio: 'pipe' }
+                      );
+                      
+                      // Push notes to remote (silently ignore errors)
+                      try {
+                        execSync('git push origin refs/notes/*', { cwd: projectRoot, stdio: 'pipe' });
+                        console.log(`   ✅ Git note preserved (original creation time)\n`);
+                      } catch {
+                        // Silently ignore push errors
+                      }
+                    }
+                  }
+                } catch {
+                  // No note exists on old commit - continue
+                }
+              }
+            } catch {
+              // Silently ignore git note errors - not critical for rename operation
+            }
+          }
+        } else if (renamedSuccessfully && !usedGit) {
+          console.log(`\n   ✅ Renamed: ${oldNormalized} → ${newNormalized}`);
+          console.log(`   ℹ️  File not tracked in git - no commit needed\n`);
         }
         
       } catch (error: any) {
@@ -5214,30 +5277,74 @@ export class DefaultPDCA implements PDCA {
       }
       
       case 'creationDate': {
-        // Get git creation date of CURRENT file (not ancestors through renames)
-        // Note: Removed --follow flag to get THIS file's creation, not ancestor files
+        // Strategy: First check git notes for original creation time, then fall back to git log
+        // This ensures we get the TRUE original creation time even after multiple renames
         try {
-          const gitLog = execSync(
-            `git log --diff-filter=A --format=%aI -- "${normalized}"`,
-            { cwd: projectRoot, encoding: 'utf-8' }
-          ).trim();
+          let creationTimestamp: string | null = null;
           
-          if (!gitLog) {
-            throw new Error(`File has no git history: ${normalized}`);
+          // Step 1: Try to get original creation time from git notes
+          try {
+            const commitSha = execSync(
+              `git log -1 --format=%H -- "${normalized}"`,
+              { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+            ).trim();
+            
+            if (commitSha) {
+              const note = execSync(
+                `git notes show ${commitSha}`,
+                { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+              ).trim();
+              
+              // Extract timestamp from note (format: original_creation_time:YYYY-MM-DD-UTC-HHMMSS)
+              const noteMatch = note.match(/original_creation_time:(\d{4}-\d{2}-\d{2}-UTC-\d{6})/);
+              if (noteMatch) {
+                creationTimestamp = noteMatch[1];
+                console.log(`   ℹ️  Using original creation time from git note: ${creationTimestamp}`);
+              }
+            }
+          } catch {
+            // No git note found - continue to fallback
           }
           
-          const creationDate = new Date(gitLog.split('\n')[0]);
-          const year = creationDate.getUTCFullYear();
-          const month = String(creationDate.getUTCMonth() + 1).padStart(2, '0');
-          const day = String(creationDate.getUTCDate()).padStart(2, '0');
-          const hour = String(creationDate.getUTCHours()).padStart(2, '0');
-          const minute = String(creationDate.getUTCMinutes()).padStart(2, '0');
+          // Step 2: Fallback to git log if no note found
+          if (!creationTimestamp) {
+            const gitLog = execSync(
+              `git log --diff-filter=A --format=%aI -- "${normalized}"`,
+              { cwd: projectRoot, encoding: 'utf-8' }
+            ).trim();
+            
+            if (!gitLog) {
+              throw new Error(`File has no git history: ${normalized}`);
+            }
+            
+            const creationDate = new Date(gitLog.split('\n')[0]);
+            const year = creationDate.getUTCFullYear();
+            const month = String(creationDate.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(creationDate.getUTCDate()).padStart(2, '0');
+            const hour = String(creationDate.getUTCHours()).padStart(2, '0');
+            const minute = String(creationDate.getUTCMinutes()).padStart(2, '0');
+            const second = String(creationDate.getUTCSeconds()).padStart(2, '0');
+            
+            creationTimestamp = `${year}-${month}-${day}-UTC-${hour}${minute}${second}`;
+          }
           
-          // Add seconds if original format had them
-          const second = hasSeconds ? String(creationDate.getUTCSeconds()).padStart(2, '0') : '';
-          const newTimestamp = hasSeconds
-            ? `${year}-${month}-${day}-UTC-${hour}${minute}${second}`
-            : `${year}-${month}-${day}-UTC-${hour}${minute}`;
+          // Step 3: Apply timestamp format (preserve seconds if original had them)
+          // Extract just the time part from creationTimestamp
+          const timeMatch = creationTimestamp.match(/UTC-(\d{6})/);
+          if (!timeMatch) {
+            throw new Error(`Invalid timestamp format in git note: ${creationTimestamp}`);
+          }
+          
+          const fullTime = timeMatch[1]; // HHMMSS
+          const formattedTime = hasSeconds ? fullTime : fullTime.substring(0, 4); // HHMMSS or HHMM
+          
+          // Reconstruct the full timestamp with the correct format
+          const dateMatch = creationTimestamp.match(/(\d{4}-\d{2}-\d{2})/);
+          if (!dateMatch) {
+            throw new Error(`Invalid date format in git note: ${creationTimestamp}`);
+          }
+          
+          const newTimestamp = `${dateMatch[1]}-UTC-${formattedTime}`;
           
           newName = hasFeature 
             ? `${newTimestamp}.feature${baseExt}`
