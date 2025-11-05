@@ -123,15 +123,43 @@ Follow the structure in [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Art
 
 ## **🚨 CRITICAL REQUIREMENTS**
 
-### **1. Use Current Template**
+### **1. CMM3 Compliance Gate (MANDATORY)**
+
+**🚨 CRITICAL RULE:** CMM3 compliance is a GATE for code access
+
+- ✅ **CMM3 compliant PDCA:** Agent granted code access, work proceeds
+- ❌ **NOT CMM3 compliant:** Agent must DELETE PDCA and redo correctly
+  - No code access until CMM3 compliant
+  - Prevents compounding violations
+  - Enforces quality at entry
+
+**Why This Matters:**
+- Fixing violations AFTER work done is 100x more expensive than getting it right first
+- Non-compliant PDCAs create technical debt and process violations
+- CMM3 gate ensures reproducibility and verifiability from the start
+
+**Verification Before Proceeding:**
+```bash
+pdca cmm3check session/YYYY-MM-DD-UTC-HHMM.pdca.md
+```
+
+**If violations found:**
+1. DELETE the non-compliant PDCA
+2. Re-read [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](./template.md)
+3. Re-read [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md) | [§/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md](../../SaveRestartAgent/cmm3.compliance.checklist.md)
+4. Create NEW compliant PDCA from knowledge, not assumptions
+
+**Reference:** Identified in [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/components/Web4TSComponent/0.3.17.9/session/2025-11-05-UTC-1704.pdca.md) | [§/components/Web4TSComponent/0.3.17.9/session/2025-11-05-UTC-1704.pdca.md](../../../components/Web4TSComponent/0.3.17.9/session/2025-11-05-UTC-1704.pdca.md) during template synchronization failure analysis
+
+### **2. Use Current Template**
 - **ALWAYS** check [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/_shared/PDCA/template.md) | [§/scrum.pmo/roles/_shared/PDCA/template.md](./template.md) for latest format
 - **NEVER** rely on examples or documentation for structure
 - Template is versioned and maintains format consistency
 
-### **2. Git Commit Format**
+### **3. Git Commit Format**
 See [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md#4-naminglocation) | [§/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md#4-naminglocation](../../SaveRestartAgent/cmm3.compliance.checklist.md#4-naminglocation)
 
-### **3. Template Compliance**
+### **4. Template Compliance**
 See [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md#5-pdca-template-compliance) | [§/scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md#5-pdca-template-compliance](../../SaveRestartAgent/cmm3.compliance.checklist.md#5-pdca-template-compliance) for:
 - Required sections
 - Horizontal separators
