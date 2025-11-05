@@ -5063,9 +5063,13 @@ export class DefaultPDCA implements PDCA {
       ? nameWithoutExt.replace(/\.feature$/, '')
       : nameWithoutExt;
     
-    // Extract timestamp if present (YYYY-MM-DD-UTC-HHMM pattern)
-    const timestampMatch = nameWithoutFeature.match(/^(\d{4}-\d{2}-\d{2}-UTC-\d{4})/);
+    // Extract timestamp if present (YYYY-MM-DD-UTC-HHMM or YYYY-MM-DD-UTC-HHMMSS pattern)
+    // Capture both the full timestamp and the time digits to detect format
+    // Note: Match 6 digits first (greedy), then fall back to 4 digits
+    const timestampMatch = nameWithoutFeature.match(/^(\d{4}-\d{2}-\d{2}-UTC-(\d{6}|\d{4}))/);
     const timestamp = timestampMatch ? timestampMatch[1] : null;
+    const timestampDigits = timestampMatch ? timestampMatch[2] : null;
+    const hasSeconds = timestampDigits?.length === 6; // Detect 6-digit format (HHMMSS)
     const description = timestamp 
       ? nameWithoutFeature.substring(timestamp.length).replace(/^\./, '') // Remove leading dot
       : nameWithoutFeature;
@@ -5074,14 +5078,19 @@ export class DefaultPDCA implements PDCA {
     
     switch (renameCase) {
       case 'now': {
-        // Generate current UTC timestamp
+        // Generate current UTC timestamp, preserving original format (4 or 6 digits)
         const now = new Date();
         const year = now.getUTCFullYear();
         const month = String(now.getUTCMonth() + 1).padStart(2, '0');
         const day = String(now.getUTCDate()).padStart(2, '0');
         const hour = String(now.getUTCHours()).padStart(2, '0');
         const minute = String(now.getUTCMinutes()).padStart(2, '0');
-        const newTimestamp = `${year}-${month}-${day}-UTC-${hour}${minute}`;
+        
+        // Add seconds if original format had them
+        const second = hasSeconds ? String(now.getUTCSeconds()).padStart(2, '0') : '';
+        const newTimestamp = hasSeconds 
+          ? `${year}-${month}-${day}-UTC-${hour}${minute}${second}`
+          : `${year}-${month}-${day}-UTC-${hour}${minute}`;
         
         // Build new name: timestamp + feature (if present) + extension
         newName = hasFeature 
@@ -5091,7 +5100,7 @@ export class DefaultPDCA implements PDCA {
       }
       
       case 'creationDate': {
-        // Get git creation date
+        // Get git creation date, preserving original format (4 or 6 digits)
         try {
           const gitLog = execSync(
             `git log --follow --diff-filter=A --format=%aI -- "${normalized}"`,
@@ -5108,7 +5117,12 @@ export class DefaultPDCA implements PDCA {
           const day = String(creationDate.getUTCDate()).padStart(2, '0');
           const hour = String(creationDate.getUTCHours()).padStart(2, '0');
           const minute = String(creationDate.getUTCMinutes()).padStart(2, '0');
-          const newTimestamp = `${year}-${month}-${day}-UTC-${hour}${minute}`;
+          
+          // Add seconds if original format had them
+          const second = hasSeconds ? String(creationDate.getUTCSeconds()).padStart(2, '0') : '';
+          const newTimestamp = hasSeconds
+            ? `${year}-${month}-${day}-UTC-${hour}${minute}${second}`
+            : `${year}-${month}-${day}-UTC-${hour}${minute}`;
           
           newName = hasFeature 
             ? `${newTimestamp}.feature${baseExt}`
@@ -5403,7 +5417,7 @@ export class DefaultPDCA implements PDCA {
     
     // Get current branch from model or default
     const currentBranch = this.model.currentBranch || 'main';
-
+    
     // NEW: Get previous commit for baseline (auto-populate)
     const previousCommit = this.getPreviousCommit(projectRoot);
     

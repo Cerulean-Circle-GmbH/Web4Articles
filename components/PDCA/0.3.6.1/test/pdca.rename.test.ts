@@ -491,6 +491,16 @@ describe('PDCA rename - Error Handling', () => {
     }
   });
   
+  afterEach(() => {
+    // Clean up test files after each test to prevent conflicts
+    if (fs.existsSync(tempTestDir)) {
+      const files = fs.readdirSync(tempTestDir);
+      files.forEach(file => {
+        fs.unlinkSync(path.join(tempTestDir, file));
+      });
+    }
+  });
+  
   afterAll(() => {
     if (fs.existsSync(tempTestDir)) {
       fs.rmSync(tempTestDir, { recursive: true, force: true });
@@ -554,7 +564,6 @@ describe('PDCA rename - Error Handling', () => {
     
     // Assert: New file should have 4-digit timestamp (HHMM format)
     const files = fs.readdirSync(tempTestDir);
-    console.log('TC98 - Files after rename:', files);
     const renamedFile = files.find(f => f.match(/^\d{4}-\d{2}-\d{2}-UTC-\d{4}\.pdca\.md$/));
     
     expect(renamedFile).toBeDefined();
