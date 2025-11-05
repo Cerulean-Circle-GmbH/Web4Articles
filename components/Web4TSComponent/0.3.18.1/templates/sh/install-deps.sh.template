@@ -1,6 +1,11 @@
 #!/usr/bin/env sh
 # 🚀 Auto-initialize Web4 project structure (if needed)
-PROJECT_ROOT="../../.."
+
+# DRY: Source shared project root discovery library
+# @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+. "$SCRIPT_DIR/lib-project-root.sh"
+# PROJECT_ROOT is now available (set by library)
 
 # Ensure root tsconfig.json exists and is valid
 TSCONFIG_VALID=true

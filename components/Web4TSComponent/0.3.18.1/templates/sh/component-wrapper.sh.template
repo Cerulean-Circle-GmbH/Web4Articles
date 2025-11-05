@@ -3,12 +3,12 @@
 # Web4 pattern: Component shell wrapper with smart build delegation
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# Use WEB4_PROJECT_ROOT if available, otherwise calculate from script location
-if [ -n "$WEB4_PROJECT_ROOT" ]; then
-    PROJECT_ROOT="$WEB4_PROJECT_ROOT"
-else
-    PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
-fi
+
+# DRY: Source shared project root discovery library
+# @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md
+. "$SCRIPT_DIR/src/sh/lib-project-root.sh"
+# PROJECT_ROOT is now available (set by library)
+
 COMPONENT_VERSION="{{VERSION}}"
 COMPONENT_PATH="$PROJECT_ROOT/components/{{COMPONENT_NAME}}/$COMPONENT_VERSION"
 
