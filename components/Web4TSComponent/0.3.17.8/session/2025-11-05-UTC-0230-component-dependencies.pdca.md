@@ -274,6 +274,43 @@ pdca trainAILegacy decide
 - Build output shows clear dependency build messages
 - Runtime import succeeds after dependency build
 
+### Additional Test: Clean + Rebuild ✅
+
+**Test Case**: Verify dependencies work after `clean` operation on all affected versions
+
+```bash
+# Clean all affected versions
+web4tscomponent on PDCA clean  # Cleans latest (0.3.17.9)
+cd components/PDCA/0.3.5.2 && npm run clean  # Clean 0.3.5.2
+
+# Rebuild PDCA 0.3.17.9 (should auto-build 0.3.5.2)
+pdca build
+
+# Verify trainAILegacy works
+pdca trainAILegacy decide
+```
+
+**Expected Result**: 
+- PDCA 0.3.5.2 is automatically rebuilt as dependency
+- PDCA 0.3.17.9 builds successfully
+- `trainAILegacy` works without errors
+
+**Actual Result**: ✅ **SUCCESS**
+```
+📦 Building 1 dependencies...
+🔧 Building dependency: PDCA/0.3.5.2
+🧹 Cleaning local artifacts...
+🔧 Smart building PDCA (changes detected)...
+[... build output ...]
+✅ Dependency built: PDCA/0.3.5.2
+🔨 Building PDCA 0.3.17.9...
+✅ Build completed for PDCA 0.3.17.9
+```
+
+Then `pdca trainAILegacy decide` successfully displayed training topic from PDCA 0.3.5.2.
+
+**CMM3 Verification**: ✅ Reproducible - dependencies are automatically rebuilt after clean operation
+
 ### Deferred Items
 
 **Vitest Test** (Phase 4): Deferred to future work. Manual verification is sufficient for CMM3 compliance in this iteration.
