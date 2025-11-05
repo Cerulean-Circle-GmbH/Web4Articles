@@ -5676,6 +5676,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     await fs.mkdir(shDir, { recursive: true });
 
     const scripts = [
+      'lib-project-root.sh',  // @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md - DRY library FIRST!
       'clean.sh',
       'clean-global.sh', 
       'install-deps.sh',
