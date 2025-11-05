@@ -1,25 +1,24 @@
 /**
- * Default{{COMPONENT_NAME}} - {{COMPONENT_NAME}} Component Implementation
+ * DefaultIdealMinimalComponent - IdealMinimalComponent Component Implementation
  * Web4 pattern: Empty constructor + scenario initialization + component functionality
  */
 
-import { {{COMPONENT_NAME}} } from '../layer3/{{COMPONENT_NAME}}.interface.js';
+import { IdealMinimalComponent } from '../layer3/IdealMinimalComponent.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
-import { {{COMPONENT_NAME}}Model } from '../layer3/{{COMPONENT_NAME}}Model.interface.js';
+import { IdealMinimalComponentModel } from '../layer3/IdealMinimalComponentModel.interface.js';
 import { User } from '../layer3/User.interface.js';
-import { MethodSignature } from '../layer3/MethodSignature.interface.js';
 import { existsSync, lstatSync, readlinkSync, readdirSync, statSync } from 'fs';
 import { join, dirname } from 'path';
 
 // Use latest version for delegation (always available)
 import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js';
 
-export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
+export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
   // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Changed to public for Component interface compliance
-  model: {{COMPONENT_NAME}}Model;
+  model: IdealMinimalComponentModel;
   private web4ts?: DefaultWeb4TSComponent; // Lazy-initialized Web4TSComponent for delegation
   private user?: User; // Optional User service (lazy initialization) - @pdca 2025-11-03-1135.pdca.md
-  private methods: Map<string, MethodSignature> = new Map(); // @pdca 2025-11-05-UTC-2301 - Match Web4TSComponent type
+  private methods: Map<string, any> = new Map(); // Method discovery cache - @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md
 
   constructor() {
     // Empty constructor - Web4 pattern
@@ -31,8 +30,8 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
       definition: '',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      component: '{{COMPONENT_NAME}}',  // For CLI display
-      version: '{{VERSION}}'             // Component version
+      component: 'IdealMinimalComponent',  // For CLI display
+      version: '0.3.18.0'             // Component version
     };
   }
 
@@ -50,7 +49,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
    * @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md - Method discovery for tab completion
    * @cliHide
    */
-  getMethodSignature(name: string): MethodSignature | null {
+  getMethodSignature(name: string): any | null {
     return this.methods.get(name) || null;
   }
   
@@ -172,7 +171,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
    * @cliHide
    * @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md - Added method discovery
    */
-  init(scenario?: Scenario<{{COMPONENT_NAME}}Model>): this {
+  init(scenario?: Scenario<IdealMinimalComponentModel>): this {
     if (scenario?.model) {
       this.model = { ...this.model, ...scenario.model };
     }
@@ -187,7 +186,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
    * @cliHide
    * @pdca 2025-11-03-1135.pdca.md - Use User service with fallback pattern
    */
-  async toScenario(name?: string): Promise<Scenario<{{COMPONENT_NAME}}Model>> {
+  async toScenario(name?: string): Promise<Scenario<IdealMinimalComponentModel>> {
     // ✅ RADICAL OOP: Generate owner data using User.toScenario() (Web4 component interface)
     let ownerData: string;
     try {
@@ -215,8 +214,8 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
           user: process.env.USER || 'system',
           hostname: process.env.HOSTNAME || 'localhost',
           uuid: this.model.uuid,
-          component: '{{COMPONENT_NAME}}',
-          version: '{{VERSION}}'
+          component: 'IdealMinimalComponent',
+          version: '0.3.18.0'
         }
       });
       ownerData = Buffer.from(fallbackJson).toString('base64');
@@ -225,8 +224,8 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
     return {
       ior: {
         uuid: this.model.uuid,
-        component: '{{COMPONENT_NAME}}',
-        version: '{{VERSION}}'
+        component: 'IdealMinimalComponent',
+        version: '0.3.18.0'
       },
       owner: ownerData,
       model: this.model
@@ -234,7 +233,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   }
 
   /**
-   * Create example operation for {{COMPONENT_NAME}}
+   * Create example operation for IdealMinimalComponent
    * @param input Input data to process
    * @param format Output format (json, text, xml)
    * @cliSyntax input format
@@ -244,12 +243,12 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
     console.log(`🚀 Creating ${input} in ${format} format`);
     this.model.name = input;
     this.model.updatedAt = new Date().toISOString();
-    console.log(`✅ {{COMPONENT_NAME}} operation completed`);
+    console.log(`✅ IdealMinimalComponent operation completed`);
     return this;
   }
 
   /**
-   * Process data through {{COMPONENT_NAME}} logic
+   * Process data through IdealMinimalComponent logic
    * @param data Data to process
    * @cliSyntax data
    */
@@ -260,10 +259,10 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   }
 
   /**
-   * Show information about current {{COMPONENT_NAME}} state
+   * Show information about current IdealMinimalComponent state
    */
   async info(): Promise<this> {
-    console.log(`📋 {{COMPONENT_NAME}} Information:`);
+    console.log(`📋 IdealMinimalComponent Information:`);
     console.log(`   UUID: ${this.model.uuid}`);
     console.log(`   Name: ${this.model.name || 'Not set'}`);
     console.log(`   Created: ${this.model.createdAt}`);
@@ -349,12 +348,12 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
     const context = this.getComponentContext();
     
     // OOP: Instantiate own CLI and call completeParameter directly (no shell!)
-    const { {{COMPONENT_NAME}}CLI } = await import('../layer5/{{COMPONENT_NAME}}CLI.js');
-    const cli = new {{COMPONENT_NAME}}CLI();
+    const { IdealMinimalComponentCLI } = await import('../layer5/IdealMinimalComponentCLI.js');
+    const cli = new IdealMinimalComponentCLI();
     
     if (!context) {
-      // No context - test completions on {{COMPONENT_NAME}} itself
-      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on {{COMPONENT_NAME}}${filter ? ` (filter: ${filter})` : ''}`);
+      // No context - test completions on IdealMinimalComponent itself
+      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on IdealMinimalComponent${filter ? ` (filter: ${filter})` : ''}`);
       console.log(`---`);
       
       // Call completeParameter directly via OOP (completeParameter is on DefaultCLI)
