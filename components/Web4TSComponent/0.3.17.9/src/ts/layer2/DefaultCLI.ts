@@ -455,9 +455,26 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       // METHOD COMPLETION: Get all methods, filter by current word, format with signatures
       // RADICAL OOP: All data from this.model!
       // @pdca 2025-11-04-UTC-2159.pdca.md - Direct, NO intermediate method!
+      // @pdca 2025-11-05-UTC-1900 - Check all three sources: CLI, context, component (like execution does)
       const filterPrefix = this.model.completionCurrentWord || "";
-      const allMethodNames = Array.from(this.cliMethods.keys());
-      let filtered = allMethodNames
+      
+      // Collect methods from all three sources (same pattern as executeDynamicCommandWithChaining)
+      const allMethodNames = new Set<string>();
+      
+      // 1. CLI methods
+      this.cliMethods.forEach((_, name) => allMethodNames.add(name));
+      
+      // 2. Context methods (loaded component)
+      if (this.context !== null) {
+        this.context.listMethods().forEach(name => allMethodNames.add(name));
+      }
+      
+      // 3. Component methods (Web4TSComponent itself)
+      if (this.component !== null) {
+        this.component.listMethods().forEach(name => allMethodNames.add(name));
+      }
+      
+      let filtered = Array.from(allMethodNames)
         .filter((name) => !name.endsWith("ParameterCompletion"))
         .filter((name) => name !== "completeParameter")
         .filter((name) => name !== "execute")
