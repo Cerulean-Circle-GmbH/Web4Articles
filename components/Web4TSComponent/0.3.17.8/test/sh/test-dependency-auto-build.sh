@@ -49,9 +49,20 @@ fi
 
 echo "   ✅ Both versions cleaned successfully"
 
-# Test 2: Build dependent component (should auto-build dependency)
+# Test 2: Verify PDCA 0.3.17.9 can start (UX regression test)
 echo ""
-echo "📋 Test 2: Build PDCA 0.3.17.9 (should auto-build 0.3.5.2)"
+echo "📋 Test 2: Verify PDCA 0.3.17.9 can start after dependency clean"
+if pdca --help > /tmp/test-pdca-start.log 2>&1; then
+    echo "   ✅ PDCA 0.3.17.9 CLI starts successfully"
+else
+    echo "❌ FAILED: PDCA 0.3.17.9 CLI cannot start (node_modules issue?)"
+    cat /tmp/test-pdca-start.log
+    exit 1
+fi
+
+# Test 3: Build dependent component (should auto-build dependency)
+echo ""
+echo "📋 Test 3: Build PDCA 0.3.17.9 (should auto-build 0.3.5.2)"
 pdca build > /tmp/test-dependency-build.log 2>&1
 
 # Verify dependency was built
@@ -72,9 +83,9 @@ fi
 
 echo "   ✅ PDCA 0.3.17.9 built successfully"
 
-# Test 3: Verify runtime functionality
+# Test 4: Verify runtime functionality
 echo ""
-echo "📋 Test 3: Verify trainAILegacy works (uses dependency)"
+echo "📋 Test 4: Verify trainAILegacy works (uses dependency)"
 if pdca trainAILegacy decide > /tmp/test-trainai-legacy.log 2>&1; then
     # Check if output contains expected content
     if grep -q "How to Decide" /tmp/test-trainai-legacy.log; then
@@ -90,9 +101,9 @@ else
     exit 1
 fi
 
-# Test 4: Verify build log shows dependency build
+# Test 5: Verify build log shows dependency build
 echo ""
-echo "📋 Test 4: Verify build log shows dependency auto-build"
+echo "📋 Test 5: Verify build log shows dependency auto-build"
 if grep -q "Building 1 dependencies" /tmp/test-dependency-build.log; then
     echo "   ✅ Build log shows dependency detection"
 else
