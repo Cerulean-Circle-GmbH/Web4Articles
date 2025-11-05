@@ -282,6 +282,95 @@ describe('Bash Completion - Black Box Integration', () => {
       expect(itCaseMatches).toBeTruthy();
       expect(itCaseMatches!.length).toBeGreaterThan(50); // Should have many test cases
     });
+
+    it('should complete describe with describe tokens (not filenames)', () => {
+      // @pdca 2025-11-05-UTC-1900 - Regression test for describe completion
+      const output = runCompletion(3, 'web4tscomponent', 'test', 'describe', '');
+      const clean = stripAnsi(output);
+
+      // Verify diagnostic output
+      expect(clean).toContain('📊 Completing: PARAMETER of test');
+      expect(clean).toContain('Parameter: <references>');
+
+      // Verify describe tokens are present (format: Xa like "1a", "18a")
+      expect(clean).toContain('WORD: 1a');
+      expect(clean).toContain('WORD: 18a');
+
+      // Verify NO filenames are in WORD lines
+      const wordLines = clean.split('\n').filter((line: string) => line.startsWith('WORD: '));
+      const hasFilenames = wordLines.some((line: string) => line.includes('.test.ts'));
+      expect(hasFilenames).toBe(false);
+
+      // Count describe tokens
+      const describeMatches = clean.match(/WORD: \d+[a-z]$/gm);
+      expect(describeMatches).toBeTruthy();
+      expect(describeMatches!.length).toBeGreaterThan(100); // Many describe blocks
+    });
+
+    it('should filter describe completion by prefix', () => {
+      // @pdca 2025-11-05-UTC-1900 - Regression test for describe prefix filtering
+      const output = runCompletion(3, 'web4tscomponent', 'test', 'describe', '4');
+      const clean = stripAnsi(output);
+
+      // Should show tokens starting with "4"
+      expect(clean).toContain('WORD: 4a');
+      expect(clean).toContain('WORD: 4b');
+      expect(clean).toContain('WORD: 40a');
+      expect(clean).toContain('WORD: 42a');
+      expect(clean).toContain('WORD: 43a');
+
+      // Should NOT show tokens not starting with "4"
+      expect(clean).not.toContain('WORD: 1a');
+      expect(clean).not.toContain('WORD: 18a');
+    });
+
+    it('should complete component methods (upgrade, test, build)', () => {
+      // @pdca 2025-11-05-UTC-1900 - Regression test for method completion including component methods
+      const output = runCompletion(1, 'web4tscomponent', '');
+      const clean = stripAnsi(output);
+
+      // Verify component methods are present
+      expect(clean).toContain('WORD: upgrade');
+      expect(clean).toContain('WORD: test');
+      expect(clean).toContain('WORD: build');
+      expect(clean).toContain('WORD: create');
+      expect(clean).toContain('WORD: clean');
+
+      // Count total methods (should be many)
+      const wordMatches = clean.match(/WORD: \w+/g);
+      expect(wordMatches).toBeTruthy();
+      expect(wordMatches!.length).toBeGreaterThan(50); // Many methods available
+    });
+
+    it('should filter methods by prefix', () => {
+      // @pdca 2025-11-05-UTC-1900 - Regression test for method prefix filtering
+      const output = runCompletion(1, 'web4tscomponent', 'up');
+      const clean = stripAnsi(output);
+
+      // Should show methods starting with "up"
+      expect(clean).toContain('WORD: upgrade');
+      expect(clean).toContain('WORD: updateBuildSystem');
+
+      // Should NOT show unrelated methods
+      expect(clean).not.toContain('WORD: test');
+      expect(clean).not.toContain('WORD: build');
+      expect(clean).not.toContain('WORD: create');
+    });
+
+    it('should exclude test/data files from file completion (vitest exclude)', () => {
+      // @pdca 2025-11-05-UTC-1900 - Regression test for vitest exclude pattern filtering
+      const output = runCompletion(3, 'web4tscomponent', 'test', 'file', '');
+      const clean = stripAnsi(output);
+
+      // Count file tokens - should be 33 (not 43)
+      const wordMatches = clean.match(/WORD: \d+$/gm);
+      expect(wordMatches).toBeTruthy();
+      expect(wordMatches!.length).toBe(33); // Excludes test/data/**, test/logs/**
+
+      // Verify no display of test/data paths (they shouldn't be in DISPLAY either)
+      expect(clean).not.toContain('test/data/components');
+      expect(clean).not.toContain('ArchTestIsolate1');
+    });
   });
 });
 
