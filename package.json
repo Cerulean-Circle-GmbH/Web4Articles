@@ -4,6 +4,9 @@
   "type": "module",
   "description": "Web4 Component Architecture Project",
   "private": true,
+  "scripts": {
+    "clean:global": "echo '🧹 Cleaning global node_modules...' && rm -rf node_modules && echo '✅ Global node_modules cleaned. Run npm install to restore.'"
+  },
   "devDependencies": {
     "@types/node": "^24.1.0",
     "typescript": "^5.9.3",

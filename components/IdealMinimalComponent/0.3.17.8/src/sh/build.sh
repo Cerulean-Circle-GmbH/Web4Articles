@@ -1,0 +1,45 @@
+#!/bin/sh
+# Smart build - only rebuild if needed, unless forced
+# Modes: silent (default), verbose, force
+MODE=${1:-silent}
+
+if [ "$MODE" = "force" ]; then
+    echo "🔧 Force building IdealMinimalComponent..."
+    # Clean everything
+    ./src/sh/clean.sh
+    # Install dependencies and create symlink
+    ./src/sh/install-deps.sh
+    # Build TypeScript
+    echo "🔨 Building TypeScript..."
+    npx tsc
+elif [ ! -f "dist/ts/layer5/IdealMinimalComponentCLI.js" ] || find src -name "*.ts" -newer "dist/ts/layer5/IdealMinimalComponentCLI.js" 2>/dev/null | grep -q .; then
+    if [ "$MODE" = "verbose" ]; then
+        echo "🔧 Smart building IdealMinimalComponent (changes detected)..."
+    else
+        echo "✅ Building IdealMinimalComponent..." >&2
+    fi
+    
+    # Clean local artifacts only
+    ./src/sh/clean-local.sh
+    
+    # Install dependencies if needed
+    if [ ! -L "node_modules" ] || [ ! -d "../../../node_modules" ]; then
+        ./src/sh/install-deps.sh
+    else
+        if [ "$MODE" = "verbose" ]; then
+            echo "📦 Dependencies already installed"
+        fi
+    fi
+    
+    # Build TypeScript
+    if [ "$MODE" = "verbose" ]; then
+        echo "🔨 Building TypeScript..."
+        npx tsc
+    else
+        npx tsc 2>&1 | grep -v "^$" >&2
+    fi
+else
+    if [ "$MODE" = "verbose" ]; then
+        echo "✅ IdealMinimalComponent is up to date, no build needed"
+    fi
+fi

@@ -374,7 +374,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // we're about to create: components/MyComponent/0.1.0.0/components/...
     // 
     // This happens when:
-    // 1. process.cwd() was used as default (wrong!)
+    // 1. targetDirectory was not provided (VIOLATION!)
     // 2. Tests run from component directory without test isolation
     // 3. CLI not properly setting targetDirectory to project root
     // 
@@ -394,7 +394,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         `\n` +
         `WEB4 PATH AUTHORITY PRINCIPLE VIOLATION:\n` +
         `  DefaultCLI must calculate and provide correct targetDirectory.\n` +
-        `  Component is FORBIDDEN from calculating paths (including process.cwd()).\n` +
+        `  Component is FORBIDDEN from calculating paths (including cwd access).\n` +
         `\n` +
         `Expected patterns:\n` +
         `  Production: /path/to/project/root\n` +
@@ -1668,22 +1668,16 @@ Standards:
    * @param references - For selective testing: numeric references to select tests
    * @cliSyntax scope ...references
    * @TODO cliDefault scope all
-   * @cliValues file describe itCase shell completion
+   * @cliValues file describe itCase
    * @cliExample web4tscomponent test
    * @cliExample web4tscomponent test all
-   * @cliExample web4tscomponent test shell
    * @cliExample web4tscomponent test file 2
    * @cliExample web4tscomponent test describe 2 1
    * @cliExample web4tscomponent test itCase 2 1 3
    * @cliExample web4tscomponent on Unit 0.3.0.5 test
    */
   async test(scope: string = 'all', ...references: string[]): Promise<this> {
-    // MODE 1: Test shell (bash completion testing in isolated test/data)
-    // if (scope === 'shell') {
-    //   return await this.testShell(...references);
-    // }
-    
-    // MODE 1.5: Completion test suite (end-to-end TAB completion tests)
+    // MODE 1.5: Completion test suite (end-to-end TAB completion tests) - INTERNAL USE
     if (scope === 'completion') {
       return await this.testCompletion();
     }
@@ -2305,8 +2299,8 @@ Standards:
    */
   async verifyTestSuccess(componentName: string, version: string): Promise<boolean> {
     // Read test results from vitest JSON output
-    // Use component's directory, not process.cwd() (which may be different in test environments)
-    const componentsDir = path.join(this.model.targetDirectory || process.cwd(), 'components');
+    // ✅ Use model.targetDirectory (Path Authority: calculated by CLI)
+    const componentsDir = path.join(this.model.targetDirectory, 'components');
     const componentVersionDir = path.join(componentsDir, componentName, version);
     const testResultsPath = path.join(componentVersionDir, 'test/test-results.json');
     
@@ -2464,7 +2458,7 @@ Standards:
    * Run specific test files, describe blocks, or it cases using vitest
    * Supports numeric references with tab completion for fast test selection
    * 
-   * Web4 Principle: Use model.targetDirectory for context discovery, not process.cwd()
+   * Web4 Principle: Use model.targetDirectory for context discovery, not cwd
    * 
    * @param scope - Type of test selection: 'file' | 'describe' | 'itCase'
    * @param references - Numeric references (1-based) for selecting tests
@@ -4766,7 +4760,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async createSemanticVersionSymlink(component: string, semantic: string, version: string): Promise<void> {
-    const projectRoot = this.resolveProjectRoot();
+    // ✅ Use model.projectRoot for scripts/ (Path Authority)
+    const projectRoot = this.model.projectRoot;
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
     const componentLower = component.toLowerCase().replace(/[^a-z0-9]/g, '');
     
@@ -4897,7 +4892,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async verifyScriptsSymlinks(component: string, versions: string[], highestVersion: string): Promise<void> {
-    const projectRoot = this.resolveProjectRoot();
+    // ✅ Use model.projectRoot (Path Authority: CLI calculates this)
+    // NOT resolveProjectRoot() which returns targetDirectory
+    const projectRoot = this.model.projectRoot;
     const scriptsDir = path.join(projectRoot, 'scripts');
     const versionsDir = path.join(scriptsDir, 'versions');
     const componentLower = component.toLowerCase();
@@ -4985,7 +4982,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async cleanupOrphanedScriptSymlinks(component: string, validVersions: string[]): Promise<void> {
-    const projectRoot = this.resolveProjectRoot();
+    // ✅ Use model.projectRoot for scripts/ (Path Authority)
+    const projectRoot = this.model.projectRoot;
     const scriptsDir = path.join(projectRoot, 'scripts');
     const versionsDir = path.join(scriptsDir, 'versions');
     const componentLower = component.toLowerCase();
@@ -5091,7 +5089,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async verifyVersionScriptSymlink(component: string, version: string): Promise<void> {
-    const projectRoot = this.resolveProjectRoot();
+    // ✅ Use model.projectRoot for scripts/ (Path Authority)
+    const projectRoot = this.model.projectRoot;
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
     const componentLower = component.toLowerCase();
     const scriptName = `${componentLower}-v${version}`;
@@ -5255,7 +5254,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async createVersionScriptSymlink(component: string, version: string): Promise<void> {
-    const projectRoot = this.resolveProjectRoot(); // Respects targetDirectory via model
+    // ✅ Use model.projectRoot (Path Authority: CLI calculates this)
+    // NOT resolveProjectRoot() which returns targetDirectory
+    const projectRoot = this.model.projectRoot;
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
     
     // Ensure scripts/versions directory exists
@@ -5308,7 +5309,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async updateMainScriptSymlink(component: string, version: string): Promise<void> {
-    const projectRoot = this.resolveProjectRoot();
+    // ✅ Use model.projectRoot for scripts/ (Path Authority)
+    const projectRoot = this.model.projectRoot;
     const scriptsDir = path.join(projectRoot, 'scripts');
     const componentLower = component.toLowerCase();
     const mainScriptPath = path.join(scriptsDir, componentLower);
@@ -5640,7 +5642,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async cleanupVersionScriptSymlinks(componentName: string, version: string): Promise<void> {
-    const projectRoot = this.resolveProjectRoot();
+    // ✅ Use model.projectRoot for scripts/ (Path Authority)
+    const projectRoot = this.model.projectRoot;
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
     
     if (!existsSync(versionsDir)) {
@@ -5692,7 +5695,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    * @cliHide
    */
   private async cleanupAllComponentScriptSymlinks(componentName: string, versions: string[]): Promise<void> {
-    const projectRoot = this.resolveProjectRoot();
+    // ✅ Use model.projectRoot for scripts/ (Path Authority)
+    const projectRoot = this.model.projectRoot;
     const scriptsDir = path.join(projectRoot, 'scripts');
     const versionsDir = path.join(scriptsDir, 'versions');
     

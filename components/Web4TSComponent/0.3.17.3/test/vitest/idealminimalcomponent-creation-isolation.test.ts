@@ -62,8 +62,12 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
     // @pdca 2025-11-03-UTC-1237.pdca.md - Full delegation initialization test
     
     // Create component instance with test isolation
+    // @pdca 2025-11-03-UTC-1828.pdca.md - BOTH projectRoot AND targetDirectory required
     const component = new DefaultWeb4TSComponent().init({
-      model: { targetDirectory: testDataDir }
+      model: { 
+        projectRoot: testDataDir,
+        targetDirectory: testDataDir 
+      }
     });
     
     // Create IdealMinimalComponent in test isolation
