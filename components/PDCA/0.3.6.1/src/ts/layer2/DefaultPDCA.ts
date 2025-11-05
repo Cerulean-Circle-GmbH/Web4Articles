@@ -5214,10 +5214,11 @@ export class DefaultPDCA implements PDCA {
       }
       
       case 'creationDate': {
-        // Get git creation date, preserving original format (4 or 6 digits)
+        // Get git creation date of CURRENT file (not ancestors through renames)
+        // Note: Removed --follow flag to get THIS file's creation, not ancestor files
         try {
           const gitLog = execSync(
-            `git log --follow --diff-filter=A --format=%aI -- "${normalized}"`,
+            `git log --diff-filter=A --format=%aI -- "${normalized}"`,
             { cwd: projectRoot, encoding: 'utf-8' }
           ).trim();
           
