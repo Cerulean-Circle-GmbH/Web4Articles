@@ -1,5 +1,5 @@
-#!/bin/sh
-echo "🚀 Starting {{COMPONENT_NAME}} (full clean)..."
+#!/usr/bin/env sh
+echo "🚀 Starting Web4TSComponent (full clean)..."
 
 # Full clean (local + global)
 ./src/sh/clean.sh

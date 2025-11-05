@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 echo "🚀 Starting Web4TSComponent (normal)..."
 
 # Check if rebuild is needed
@@ -6,7 +6,7 @@ if [ ! -f "dist/ts/layer5/Web4TSComponentCLI.js" ] || find src -name "*.ts" -new
     echo "🔧 Source files updated, rebuilding..."
     
     # Clean local artifacts only
-    ./src/sh/clean.sh
+    ./src/sh/clean-local.sh
     
     # Install dependencies if needed
     if [ ! -L "node_modules" ] || [ ! -d "../../../node_modules" ]; then

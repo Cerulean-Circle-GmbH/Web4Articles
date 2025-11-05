@@ -1,8 +1,8 @@
-#!/bin/sh
-echo "🚀 Starting {{COMPONENT_NAME}} (normal)..."
+#!/usr/bin/env sh
+echo "🚀 Starting Web4TSComponent (normal)..."
 
 # Check if rebuild is needed
-if [ ! -f "dist/ts/layer5/{{COMPONENT_NAME}}CLI.js" ] || find src -name "*.ts" -newer "dist/ts/layer5/{{COMPONENT_NAME}}CLI.js" 2>/dev/null | grep -q .; then
+if [ ! -f "dist/ts/layer5/Web4TSComponentCLI.js" ] || find src -name "*.ts" -newer "dist/ts/layer5/Web4TSComponentCLI.js" 2>/dev/null | grep -q .; then
     echo "🔧 Source files updated, rebuilding..."
     
     # Clean local artifacts only
