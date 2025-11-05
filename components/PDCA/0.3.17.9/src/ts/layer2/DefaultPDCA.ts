@@ -16,6 +16,9 @@ import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/di
 // Radical OOP Training Module
 import { DefaultTrainingModule } from '../layer4/DefaultTrainingModule.js';
 
+// Radical OOP CMM3 Check Module
+import { DefaultCMM3CheckModule } from '../layer4/DefaultCMM3CheckModule.js';
+
 export class DefaultPDCA implements PDCA {
   // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Changed to public for Component interface compliance
   model: PDCAModel;
@@ -234,7 +237,7 @@ export class DefaultPDCA implements PDCA {
     console.log(`\n🎓 AI Training Module - Web4TSComponent 0.3.17.8 Journey\n`);
     
     // Radical OOP: Delegate to TrainingModule
-    const trainingModule = new DefaultTrainingModule().init({});
+    const trainingModule = new DefaultTrainingModule().init();
     
     if (!topic || topic.trim() === '') {
       trainingModule.listTopics();
@@ -242,6 +245,39 @@ export class DefaultPDCA implements PDCA {
       trainingModule.showTopic(topic);
     }
     
+    return this;
+  }
+
+  /**
+   * Check a single PDCA file for CMM3 compliance violations
+   * 
+   * RADICAL OOP: Delegates to CMM3CheckModule (DRY principle)
+   * CMM3CheckModule manages functional complexity through OOP structure
+   * 
+   * @param pdcaFile Path to PDCA file to check
+   * @cliSyntax pdcaFile
+   */
+  async cmm3check(pdcaFile: string): Promise<this> {
+    // Radical OOP: Delegate to CMM3CheckModule
+    const checkModule = new DefaultCMM3CheckModule().init();
+    await checkModule.checkFile(pdcaFile);
+    return this;
+  }
+
+  /**
+   * Check all PDCA files in a session directory for CMM3 compliance violations
+   * 
+   * RADICAL OOP: Delegates to CMM3CheckModule (DRY principle)
+   * CMM3CheckModule manages functional complexity through OOP structure
+   * 
+   * @param sessionPath Path to session directory (defaults to 'session')
+   * @cliSyntax sessionPath
+   * @cliDefault sessionPath session
+   */
+  async cmm3checkSession(sessionPath?: string): Promise<this> {
+    // Radical OOP: Delegate to CMM3CheckModule
+    const checkModule = new DefaultCMM3CheckModule().init();
+    await checkModule.checkSession(sessionPath);
     return this;
   }
 
