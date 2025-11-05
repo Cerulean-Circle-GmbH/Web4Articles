@@ -5010,8 +5010,8 @@ export class DefaultPDCA implements PDCA {
    * rename - Rename file using different naming strategies
    * DRY: Delegates to mv() after computing new filename
    * 
-   * @param filePath File to rename
    * @param renameCase Naming strategy: 'now' | 'creationDate' | 'strip' | 'feature'
+   * @param filePath File to rename
    * @param dryRun 'true' for dry-run mode
    * @returns this for method chaining
    * 
@@ -5022,8 +5022,8 @@ export class DefaultPDCA implements PDCA {
    * - feature: Add .feature. marker before extension
    */
   async rename(
-    filePath: string,
     renameCase: 'now' | 'creationDate' | 'strip' | 'feature',
+    filePath: string,
     dryRun: string = 'false'
   ): Promise<this> {
     const path = await import('path');

@@ -61,7 +61,7 @@ describe('PDCA rename() - Wrapper Around mv()', () => {
     fs.writeFileSync(original, '# PDCA\n\n## PLAN\n\nContent.');
     
     // Execute: rename with 'now' case
-    await pdca.rename(original, 'now');
+    await pdca.rename('now', original);
     
     // Verify: Original gone, new file exists with current timestamp format
     expect(fs.existsSync(original)).toBe(false);
@@ -84,7 +84,7 @@ describe('PDCA rename() - Wrapper Around mv()', () => {
     fs.writeFileSync(original, '# PDCA');
     
     // Execute: dry-run
-    await pdca.rename(original, 'now', 'true');
+    await pdca.rename('now', original, 'true');
     
     // Verify: No changes
     expect(fs.existsSync(original)).toBe(true);
@@ -119,7 +119,7 @@ describe('PDCA rename Case: now', () => {
     const original = path.join(testDir, '2025-01-01-UTC-0000.old-name.pdca.md');
     fs.writeFileSync(original, '# PDCA');
     
-    await pdca.rename(original, 'now');
+    await pdca.rename('now', original);
     
     // Verify: New filename matches current UTC time
     const files = fs.readdirSync(testDir);
@@ -158,7 +158,7 @@ describe('PDCA rename Case: now', () => {
     const original = path.join(testDir, '2025-01-01-UTC-0000.old.feature.pdca.md');
     fs.writeFileSync(original, '# Feature PDCA');
     
-    await pdca.rename(original, 'now');
+    await pdca.rename('now', original);
     
     const files = fs.readdirSync(testDir);
     expect(files[0]).toMatch(/^\d{4}-\d{2}-\d{2}-UTC-\d{4}\.feature\.pdca\.md$/);
@@ -177,7 +177,7 @@ describe('PDCA rename Case: now', () => {
     const original = path.join(testDir, '2025-01-01-UTC-0000.very-long-description-here.pdca.md');
     fs.writeFileSync(original, '# PDCA');
     
-    await pdca.rename(original, 'now');
+    await pdca.rename('now', original);
     
     const files = fs.readdirSync(testDir);
     // Should have NO description between timestamp and .pdca.md
@@ -198,7 +198,7 @@ describe('PDCA rename Case: now', () => {
     const original = path.join(testDir, 'old-document.md');
     fs.writeFileSync(original, '# Document');
     
-    await pdca.rename(original, 'now');
+    await pdca.rename('now', original);
     
     const files = fs.readdirSync(testDir);
     expect(files[0]).toMatch(/^\d{4}-\d{2}-\d{2}-UTC-\d{4}\.md$/);
@@ -237,7 +237,7 @@ describe('PDCA rename Case: creationDate', () => {
     
     // This will fail if file not in git, but test verifies method exists
     try {
-      await pdca.rename(original, 'creationDate');
+      await pdca.rename('creationDate', original);
       
       // If succeeded, verify filename format
       const files = fs.readdirSync(testDir);
@@ -262,7 +262,7 @@ describe('PDCA rename Case: creationDate', () => {
     fs.writeFileSync(original, '# Feature');
     
     try {
-      await pdca.rename(original, 'creationDate');
+      await pdca.rename('creationDate', original);
       const files = fs.readdirSync(testDir);
       expect(files[0]).toMatch(/\.feature\.pdca\.md$/);
     } catch (error: any) {
@@ -284,7 +284,7 @@ describe('PDCA rename Case: creationDate', () => {
     fs.writeFileSync(original, '# PDCA');
     
     try {
-      await pdca.rename(original, 'creationDate');
+      await pdca.rename('creationDate', original);
       const files = fs.readdirSync(testDir);
       expect(files[0]).not.toContain('description');
     } catch (error: any) {
@@ -337,7 +337,7 @@ describe('PDCA rename Case: strip', () => {
     const original = path.join(testDir, '2025-10-20-UTC-1234.long-description-here.pdca.md');
     fs.writeFileSync(original, '# PDCA');
     
-    await pdca.rename(original, 'strip');
+    await pdca.rename('strip', original);
     
     const files = fs.readdirSync(testDir);
     expect(files[0]).toBe('2025-10-20-UTC-1234.pdca.md');
@@ -357,7 +357,7 @@ describe('PDCA rename Case: strip', () => {
     fs.writeFileSync(original, '# PDCA');
     
     // Should not fail, just report no change needed
-    await pdca.rename(original, 'strip');
+    await pdca.rename('strip', original);
     
     const files = fs.readdirSync(testDir);
     expect(files[0]).toBe('2025-10-20-UTC-1234.pdca.md');
@@ -376,7 +376,7 @@ describe('PDCA rename Case: strip', () => {
     const original = path.join(testDir, '2025-10-20-UTC-1234.desc.feature.pdca.md');
     fs.writeFileSync(original, '# Feature PDCA');
     
-    await pdca.rename(original, 'strip');
+    await pdca.rename('strip', original);
     
     const files = fs.readdirSync(testDir);
     expect(files[0]).toBe('2025-10-20-UTC-1234.feature.pdca.md');
@@ -427,7 +427,7 @@ describe('PDCA rename Case: feature', () => {
     const original = path.join(testDir, '2025-10-20-UTC-1234.description.pdca.md');
     fs.writeFileSync(original, '# PDCA');
     
-    await pdca.rename(original, 'feature');
+    await pdca.rename('feature', original);
     
     const files = fs.readdirSync(testDir);
     expect(files[0]).toBe('2025-10-20-UTC-1234.description.feature.pdca.md');
@@ -446,7 +446,7 @@ describe('PDCA rename Case: feature', () => {
     const original = path.join(testDir, '2025-10-20-UTC-1234.desc.feature.pdca.md');
     fs.writeFileSync(original, '# Feature PDCA');
     
-    await pdca.rename(original, 'feature');
+    await pdca.rename('feature', original);
     
     const files = fs.readdirSync(testDir);
     expect(files[0]).toBe('2025-10-20-UTC-1234.desc.feature.pdca.md');
@@ -465,7 +465,7 @@ describe('PDCA rename Case: feature', () => {
     const original = path.join(testDir, '2025-10-20-UTC-1234.pdca.md');
     fs.writeFileSync(original, '# PDCA');
     
-    await pdca.rename(original, 'feature');
+    await pdca.rename('feature', original);
     
     const files = fs.readdirSync(testDir);
     expect(files[0]).toBe('2025-10-20-UTC-1234.feature.pdca.md');
