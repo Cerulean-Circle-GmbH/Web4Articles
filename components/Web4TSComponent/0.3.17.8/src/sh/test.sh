@@ -1,5 +1,5 @@
-#!/usr/bin/env sh
-# npm test → test.sh verbose → web4tscomponent test (verbose) → vitest (with recursion prevention & promotion)
+#!/bin/sh
+# npm test → test.sh verbose → pdca test (verbose) → vitest (with recursion prevention & promotion)
 # Direct test.sh call → silent build
 
 MODE=${1:-silent}
@@ -12,6 +12,8 @@ else
     ./src/sh/build.sh
 fi
 
-# Run web4tscomponent test (handles vitest execution, recursion prevention, and promotion)
-./web4tscomponent test
+# Run component test (handles vitest execution, recursion prevention, and promotion)
+# DRY: Delegates to Web4TSComponent which has smart recursion prevention
+# @pdca 2025-11-04-UTC-2044.pdca.md - Component test is GOOD DEFAULT, forces proper workflow
+./pdca test
 

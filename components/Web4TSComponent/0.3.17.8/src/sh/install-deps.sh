@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/sh
 # 🚀 Auto-initialize Web4 project structure (if needed)
 PROJECT_ROOT="../../.."
 

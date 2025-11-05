@@ -218,6 +218,31 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * Load template from Web4TSComponent's templates directory
+   * This ensures updateBuildSystem always uses the latest Web4TSComponent templates
+   * @cliHide
+   */
+  private async loadWeb4TSComponentTemplate(templatePath: string, substitutions: Record<string, string>): Promise<string> {
+    // Always load from Web4TSComponent's templates, not the current component
+    const web4tsComponentPath = this.resolveComponentPath('Web4TSComponent', this.model.version.toString());
+    const templateFullPath = path.join(web4tsComponentPath, 'templates', templatePath);
+    
+    if (!existsSync(templateFullPath)) {
+      throw new Error(`Web4TSComponent template not found: ${templateFullPath}`);
+    }
+    
+    let template = await fs.readFile(templateFullPath, 'utf-8');
+    
+    // Substitute all placeholders in the format {{PLACEHOLDER}}
+    for (const [key, value] of Object.entries(substitutions)) {
+      const placeholder = `{{${key}}}`;
+      template = template.replace(new RegExp(placeholder, 'g'), value);
+    }
+    
+    return template;
+  }
+
+  /**
    * Transform component data (Web4 lifecycle method)
    * @param data Optional data to transform
    * @returns this component instance for method chaining
@@ -2845,11 +2870,13 @@ Standards:
    * Execute clean command
    * WITHOUT context: Clean Web4TSComponent itself (self-operation)
    * WITH context: Clean the loaded component
-   * @cliSyntax
+   * @param force If 'force', performs global clean (deletes global node_modules). Default is local clean only.
+   * @cliSyntax force
    * @cliExample web4tscomponent clean
+   * @cliExample web4tscomponent clean force
    * @cliExample web4tscomponent on Unit 0.3.0.5 clean
    */
-  async clean(): Promise<this> {
+  async clean(force: string = ''): Promise<this> {
     // Print quick header for immediate UX feedback
     this.printQuickHeader();
     
@@ -2859,10 +2886,13 @@ Standards:
     // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
     const componentPath = this.resolveComponentPath(target.model.component, target.model.version.toString());
     
-    console.log(`🧹 Cleaning ${target.model.component} ${target.model.version.toString()}...`);
+    const isGlobalClean = force === 'force';
+    const cleanType = isGlobalClean ? 'clean:global' : 'clean';
+    
+    console.log(`🧹 Cleaning ${target.model.component} ${target.model.version.toString()}${isGlobalClean ? ' (GLOBAL - includes project root node_modules)' : ' (local only)'}...`);
     
     try {
-      execSync('npm run clean', { 
+      execSync(`npm run ${cleanType}`, { 
         cwd: componentPath, 
         stdio: 'inherit',
       });
@@ -5624,7 +5654,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
     const scripts = [
       'clean.sh',
-      'clean-local.sh', 
+      'clean-global.sh', 
       'install-deps.sh',
       'build.sh',
       'start.sh',
@@ -5633,7 +5663,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     ];
 
     for (const script of scripts) {
-      const scriptContent = await this.loadTemplate(`sh/${script}.template`, {
+      // ✅ Use loadWeb4TSComponentTemplate to ensure we always use Web4TSComponent's templates
+      const scriptContent = await this.loadWeb4TSComponentTemplate(`sh/${script}.template`, {
         'COMPONENT_NAME': componentName,
         'COMPONENT_LOWER': componentName.toLowerCase()
       });

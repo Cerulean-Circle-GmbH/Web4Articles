@@ -5,7 +5,7 @@ MODE=${1:-silent}
 
 if [ "$MODE" = "force" ]; then
     echo "🔧 Force building {{COMPONENT_NAME}}..."
-    # Clean everything
+    # Clean local artifacts
     ./src/sh/clean.sh
     # Install dependencies and create symlink
     ./src/sh/install-deps.sh
@@ -20,7 +20,7 @@ elif [ ! -f "dist/ts/layer5/{{COMPONENT_NAME}}CLI.js" ] || find src -name "*.ts"
     fi
     
     # Clean local artifacts only
-    ./src/sh/clean-local.sh
+    ./src/sh/clean.sh
     
     # Install dependencies if needed
     if [ ! -L "node_modules" ] || [ ! -d "../../../node_modules" ]; then

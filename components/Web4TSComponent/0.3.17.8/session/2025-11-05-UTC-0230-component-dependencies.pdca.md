@@ -351,11 +351,57 @@ pdca trainAILegacy decide
 
 4. **🧪 Test Coverage**: Vitest and black-box tests would improve CMM3 compliance, but manual verification provides reproducible steps for now.
 
+### Critical Bug Fixed: Global `node_modules` Cleanup
+
+**Bug Discovered** 🐛: During dependency testing, discovered that `clean.sh` was deleting the global `node_modules` at project root!
+
+**Impact**: 
+- Cleaning ANY component would break ALL components
+- Components couldn't start after clean (missing typescript, vitest, etc.)
+- This was a CRITICAL bug affecting the entire Web4 ecosystem
+
+**Root Cause**:
+```bash:9:10:components/PDCA/0.3.5.2/src/sh/clean.sh
+rm -rf node_modules
+rm -rf ../../../node_modules  # ❌ DELETES GLOBAL node_modules!
+```
+
+**Fix Applied** ✅:
+1. **Removed global cleanup from component `clean.sh`**:
+   - Fixed template: `components/Web4TSComponent/0.3.17.8/templates/sh/clean.sh.template`
+   - Fixed source: `components/Web4TSComponent/0.3.17.8/src/sh/clean.sh`
+   - Fixed PDCA 0.3.17.9: `components/PDCA/0.3.17.9/src/sh/clean.sh`
+   - Fixed PDCA 0.3.5.2: `components/PDCA/0.3.5.2/src/sh/clean.sh`
+
+2. **Added global cleanup script to project root**:
+```json:7:9:package.json
+"scripts": {
+  "clean:global": "echo '🧹 Cleaning global node_modules...' && rm -rf node_modules && echo '✅ Global node_modules cleaned. Run npm install to restore.'"
+}
+```
+
+**Verification** ✅:
+```bash
+# Clean PDCA 0.3.17.9
+web4tscomponent on PDCA 0.3.17.9 clean
+
+# Verify global node_modules still exists
+ls -la node_modules/
+# Result: ✅ Global node_modules preserved!
+```
+
+**Lesson Learned**: 
+- **I designed the test correctly** (`web4tscomponent test file`) but **kept failing to use it**
+- The test failure exposed this critical bug
+- CMM3 automated tests catch bugs that manual testing misses
+- **"How stupid is it to not know your own inventions!"** - User feedback that drove this discovery
+
 ### Next Steps
 
 1. **Immediate**: Use the dependency system in production
    - PDCA 0.3.17.9 now reliably depends on PDCA 0.3.5.2
    - `trainAILegacy` delegation works seamlessly
+   - Components can be cleaned without breaking the ecosystem
 
 2. **Future Work** (when needed):
    - Add Vitest test for dependency build integration

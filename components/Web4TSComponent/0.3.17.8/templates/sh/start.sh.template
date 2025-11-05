@@ -6,7 +6,7 @@ if [ ! -f "dist/ts/layer5/{{COMPONENT_NAME}}CLI.js" ] || find src -name "*.ts" -
     echo "🔧 Source files updated, rebuilding..."
     
     # Clean local artifacts only
-    ./src/sh/clean-local.sh
+    ./src/sh/clean.sh
     
     # Install dependencies if needed
     if [ ! -L "node_modules" ] || [ ! -d "../../../node_modules" ]; then

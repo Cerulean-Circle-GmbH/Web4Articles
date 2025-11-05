@@ -13,7 +13,7 @@
     "test:file": "npx vitest",
     "test:coverage": "npx vitest --coverage",
     "clean": "./src/sh/clean.sh",
-    "clean:local": "./src/sh/clean-local.sh",
+    "clean:global": "./src/sh/clean-global.sh",
     "build": "./src/sh/build.sh",
     "component": "./{{COMPONENT_NAME_LOWER}}",
     "vitest": "npx vitest run",
