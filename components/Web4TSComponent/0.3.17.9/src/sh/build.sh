@@ -4,7 +4,7 @@
 MODE=${1:-silent}
 
 if [ "$MODE" = "force" ]; then
-    echo "🔧 Force building PDCA..."
+    echo "🔧 Force building Web4TSComponent..."
     # Clean local artifacts
     ./src/sh/clean.sh
     # Install dependencies and create symlink
@@ -12,11 +12,11 @@ if [ "$MODE" = "force" ]; then
     # Build TypeScript
     echo "🔨 Building TypeScript..."
     npx tsc
-elif [ ! -f "dist/ts/layer5/PDCACLI.js" ] || find src -name "*.ts" -newer "dist/ts/layer5/PDCACLI.js" 2>/dev/null | grep -q .; then
+elif [ ! -f "dist/ts/layer5/Web4TSComponentCLI.js" ] || find src -name "*.ts" -newer "dist/ts/layer5/Web4TSComponentCLI.js" 2>/dev/null | grep -q .; then
     if [ "$MODE" = "verbose" ]; then
-        echo "🔧 Smart building PDCA (changes detected)..."
+        echo "🔧 Smart building Web4TSComponent (changes detected)..."
     else
-        echo "✅ Building PDCA..." >&2
+        echo "✅ Building Web4TSComponent..." >&2
     fi
     
     # Clean local artifacts only
@@ -40,6 +40,6 @@ elif [ ! -f "dist/ts/layer5/PDCACLI.js" ] || find src -name "*.ts" -newer "dist/
     fi
 else
     if [ "$MODE" = "verbose" ]; then
-        echo "✅ PDCA is up to date, no build needed"
+        echo "✅ Web4TSComponent is up to date, no build needed"
     fi
 fi
