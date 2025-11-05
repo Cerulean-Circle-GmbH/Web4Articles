@@ -2224,34 +2224,69 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
 
       // Extract method names/words and add WORD lines (for bash compgen)
       // CRITICAL: Strip ANSI codes before extracting words!
+      // @pdca 2025-11-05-UTC-1900 - Scope-aware token extraction for itCase/describe
+      
+      // Get scope from model (format: ['web4tscomponent', 'test', 'file|describe|itCase', ...])
+      const scope = this.model.completionCompWords[2];
+      
       values.forEach((value: string) => {
-        // For single-match documentation (multi-line string), extract word from FIRST LINE only
-        const firstLine = value.split("\n")[0];
+        // For itCase/describe scopes, extract ALL tokens from ALL lines
+        // For other scopes, extract word from FIRST LINE only
+        const linesToProcess = (scope === 'itCase' || scope === 'describe') 
+          ? value.split("\n") 
+          : [value.split("\n")[0]];
         
-        // Strip ANSI escape codes: \x1b[...m
-        const cleanLine = firstLine.replace(/\x1b\[[0-9;]*m/g, "");
+        linesToProcess.forEach((line: string) => {
+          // Strip ANSI escape codes: \x1b[...m
+          const cleanLine = line.replace(/\x1b\[[0-9;]*m/g, "");
+          
+          let word: string | undefined;
+          
+          // Scope-specific token extraction
+          if (scope === 'itCase') {
+            // Extract itCase tokens: "         18a12) should work" -> "18a12"
+            // Pattern: (\d+[a-z]\d+\)) captures "18a12)"
+            const itCaseMatch = cleanLine.match(/(\d+[a-z]\d+)\)/);
+            if (itCaseMatch) {
+              word = itCaseMatch[1]; // Extract "18a12"
+            }
+            // Skip file headers and describe headers (no itCase token pattern)
+          } else if (scope === 'describe') {
+            // Extract describe tokens: "    18a) Test Cases" -> "18a"
+            // Pattern: (\d+[a-z]\)) captures "18a)"
+            const describeMatch = cleanLine.match(/(\d+[a-z])\)/);
+            if (describeMatch) {
+              word = describeMatch[1]; // Extract "18a"
+            }
+            // Skip file headers (no describe token pattern)
+          } else {
+            // Default extraction for file scope and methods
+            // Extract word: "1: methodName <params>" -> "methodName" OR "1:\tfilename" -> "1"
+            // @pdca 2025-11-05-UTC-1616 - Extract token (number) for hierarchical file completions
+            // Check if this is a hierarchical token (number followed by tab or colon-space-tab)
+            const hierarchicalMatch = cleanLine.match(/^(\d+):\t/);
+            if (hierarchicalMatch) {
+              // Hierarchical format: "1:\tfilename" -> extract "1"
+              word = hierarchicalMatch[1];
+            } else {
+              // Method format: "1: methodName <params>" -> extract "methodName"
+              const methodMatch = cleanLine.match(/^\d+:\s*(\S+)/);
+              word = methodMatch ? methodMatch[1] : cleanLine.split(" ")[0];
+            }
+          }
+          
+          if (!word) {
+            return; // Skip this line if no token was extracted
+          }
 
-        // Extract word: "1: methodName <params>" -> "methodName" OR "1:\tfilename" -> "1"
-        // @pdca 2025-11-05-UTC-1616 - Extract token (number) for hierarchical completions
-        // Check if this is a hierarchical token (number followed by tab or colon-space-tab)
-        const hierarchicalMatch = cleanLine.match(/^(\d+):\t/);
-        let word;
-        if (hierarchicalMatch) {
-          // Hierarchical format: "1:\tfilename" -> extract "1"
-          word = hierarchicalMatch[1];
-        } else {
-          // Method format: "1: methodName <params>" -> extract "methodName"
-          const methodMatch = cleanLine.match(/^\d+:\s*(\S+)/);
-          word = methodMatch ? methodMatch[1] : cleanLine.split(" ")[0];
-        }
+          // Strip parameter syntax if present: <?action> -> action, <what> -> what
+          const paramMatch = word.match(/^<\??([^>:'"]+)/);
+          if (paramMatch) {
+            word = paramMatch[1];
+          }
 
-        // Strip parameter syntax if present: <?action> -> action, <what> -> what
-        const paramMatch = word.match(/^<\??([^>:'"]+)/);
-        if (paramMatch) {
-          word = paramMatch[1];
-        }
-
-        lines.push(`WORD: ${word}`);
+          lines.push(`WORD: ${word}`);
+        });
       });
       
       // Empty line after WORD list for spacing

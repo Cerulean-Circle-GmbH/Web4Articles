@@ -249,6 +249,39 @@ describe('Bash Completion - Black Box Integration', () => {
       expect(wordMatches).toBeTruthy();
       expect(wordMatches!.length).toBeGreaterThan(10); // Should have many files
     });
+
+    it('should complete itCase with test case references (not filenames)', () => {
+      // @pdca 2025-11-05-UTC-1900 - Regression test for itCase completion token extraction
+      const output = runCompletion(3, 'web4tscomponent', 'test', 'itCase', '');
+      const clean = stripAnsi(output);
+
+      // Verify diagnostic output
+      expect(clean).toContain('📊 Completing: PARAMETER of test');
+      expect(clean).toContain('Parameter: <references>');
+      expect(clean).toContain('Callback: DefaultWeb4TSComponent.referencesParameterCompletion()');
+
+      // Verify itCase tokens are present (format: XaY like "1a1", "18a12")
+      // CRITICAL: Must be tokens, NOT filenames like "web4tscomponent.test.ts"
+      expect(clean).toContain('WORD: 1a1');
+      expect(clean).toContain('WORD: 1a2');
+      expect(clean).toContain('WORD: 18a12'); // Example from real test suite
+
+      // Verify NO filenames are in WORD lines
+      // WORD lines should only contain itCase references (digits+letter+digits)
+      const wordLines = clean.split('\n').filter((line: string) => line.startsWith('WORD: '));
+      const hasFilenames = wordLines.some((line: string) => line.includes('.test.ts'));
+      expect(hasFilenames).toBe(false); // Must NOT have filenames in completion
+
+      // Verify pattern: all WORD lines should match itCase format (e.g., "18a12")
+      const itCasePattern = /^WORD: \d+[a-z]\d+$/;
+      const allValidItCaseTokens = wordLines.every((line: string) => itCasePattern.test(line));
+      expect(allValidItCaseTokens).toBe(true);
+
+      // Count itCase tokens to ensure many are present
+      const itCaseMatches = clean.match(/WORD: \d+[a-z]\d+/g);
+      expect(itCaseMatches).toBeTruthy();
+      expect(itCaseMatches!.length).toBeGreaterThan(50); // Should have many test cases
+    });
   });
 });
 
