@@ -5011,6 +5011,17 @@ export class DefaultPDCA implements PDCA {
     
     if (!isDryRun) {
       try {
+        // Get the commit SHA for the old file BEFORE rename (for git note copying)
+        let oldCommitSha: string | null = null;
+        try {
+          oldCommitSha = execSync(
+            `git log -1 --format=%H -- "${oldNormalized}"`,
+            { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+          ).trim();
+        } catch {
+          // File not in git history yet
+        }
+        
         // First, check if file is tracked in git
         try {
           execSync(`git ls-files --error-unmatch "${oldNormalized}"`, {
@@ -5067,12 +5078,7 @@ export class DefaultPDCA implements PDCA {
             
             // Copy git note from old commit to new commit (preserves original creation time)
             try {
-              // Get the commit SHA for the old file (before rename)
-              const oldCommitSha = execSync(
-                `git log -1 --format=%H -- "${oldNormalized}"`,
-                { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
-              ).trim();
-              
+              // Use the oldCommitSha we captured BEFORE the rename
               if (oldCommitSha) {
                 // Check if old commit has a git note
                 try {
