@@ -5007,38 +5007,55 @@ export class DefaultPDCA implements PDCA {
     // Step 2: Execute Move
     // Try git mv first (preserves history), fall back to fs.rename if not in git
     let usedGit = false;
+    let renamedSuccessfully = false;
+    
     if (!isDryRun) {
       try {
-        execSync(`git mv "${oldNormalized}" "${newNormalized}"`, {
-          cwd: projectRoot,
-          stdio: 'pipe'
-        });
-        usedGit = true;
+        // First, check if file is tracked in git
+        try {
+          execSync(`git ls-files --error-unmatch "${oldNormalized}"`, {
+            cwd: projectRoot,
+            stdio: 'pipe'
+          });
+          // File is tracked - use git mv
+          execSync(`git mv "${oldNormalized}" "${newNormalized}"`, {
+            cwd: projectRoot,
+            stdio: 'pipe'
+          });
+          usedGit = true;
+          renamedSuccessfully = true;
+        } catch {
+          // File not tracked - use fs.rename
+          fs.renameSync(oldFullPath, newFullPath);
+          renamedSuccessfully = true;
+        }
         
         // ATOMIC OPERATION: Commit the rename immediately
         // This ensures rename is always committed, regardless of bidirectional links
-        console.log(`\n📦 Git operations:`);
-        const commitMsg = `refactor: rename ${path.basename(oldNormalized)} to ${path.basename(newNormalized)}`;
-        execSync(`git add "${newNormalized}"`, { cwd: projectRoot });
-        execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot });
-        
-        const branch = execSync('git branch --show-current', {
-          cwd: projectRoot,
-          encoding: 'utf-8'
-        }).trim();
-        execSync(`git push origin ${branch}`, { cwd: projectRoot });
-        
-        console.log(`   ✅ Renamed: ${oldNormalized} → ${newNormalized}`);
-        console.log(`   ✅ Committed: ${commitMsg}`);
-        console.log(`   ✅ Pushed to remote\n`);
-        
-      } catch (gitError: any) {
-        // File not in git or git error - use fs.rename as fallback
-        try {
-          fs.renameSync(oldFullPath, newFullPath);
-        } catch (fsError: any) {
-          throw new Error(`Failed to move file: ${fsError.message}`);
+        if (renamedSuccessfully) {
+          console.log(`\n📦 Git operations:`);
+          const commitMsg = `refactor: rename ${path.basename(oldNormalized)} to ${path.basename(newNormalized)}`;
+          
+          // Add the renamed file (git mv already staged it, but this is idempotent)
+          execSync(`git add "${newNormalized}"`, { cwd: projectRoot, stdio: 'pipe' });
+          
+          // Commit the rename
+          execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot, stdio: 'pipe' });
+          
+          // Push to remote
+          const branch = execSync('git branch --show-current', {
+            cwd: projectRoot,
+            encoding: 'utf-8'
+          }).trim();
+          execSync(`git push origin ${branch}`, { cwd: projectRoot, stdio: 'pipe' });
+          
+          console.log(`   ✅ Renamed: ${oldNormalized} → ${newNormalized}`);
+          console.log(`   ✅ Committed: ${commitMsg}`);
+          console.log(`   ✅ Pushed to remote\n`);
         }
+        
+      } catch (error: any) {
+        throw new Error(`Failed to rename file: ${error.message}`);
       }
     }
 

@@ -719,7 +719,7 @@ describe('PDCA rename - Git Commit Atomicity', () => {
     }
   });
 
-  test.skip('TC117: Renamed file is committed and has git history', async () => {
+  test('TC117: Renamed file is committed and has git history', async () => {
     // Arrange: Create a test PDCA file
     const pdca = new DefaultPDCA();
     const testFile = path.join(tempTestDir, '2025-11-05-UTC-104958.pdca.md');
