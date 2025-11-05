@@ -302,13 +302,12 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
       const { IdealMinimalComponentCLI } = await import(cliPath);
       const cli = new IdealMinimalComponentCLI();
       
-      // Set model state directly (NEW parameterless OOP pattern)
+      // Set model state directly (Radical OOP pattern)
+      // @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md
+      // Removed obsolete computeDerivedCompletionFields() - functional shit removed during Radical OOP refactoring
       cli.model.completionCompCword = 1;
       cli.model.completionCompWords = ['idealminimalcomponent', ''];
       cli.model.completionCliName = 'idealminimalcomponent';
-      
-      // Call computeDerivedCompletionFields to set derived state
-      (cli as any).computeDerivedCompletionFields(cli.model);
       
       // Test shCompletion with timeout (should NOT hang)
       const timeoutPromise = new Promise((_, reject) => 
