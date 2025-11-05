@@ -2262,7 +2262,10 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       
       values.forEach((value: string) => {
         // Process ALL lines from hierarchical output
-        value.split("\n").forEach((line: string) => {
+        const allLines = value.split("\n");
+        let isFirstSignatureLine = true; // Track first non-empty line for single-match extraction
+        
+        allLines.forEach((line: string) => {
           const cleanLine = line.replace(/\x1b\[[0-9;]*m/g, "");
           
           let word: string | undefined;
@@ -2291,6 +2294,16 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
               else if (cleanLine.match(/^\d+:\s\S/)) {
                 const methodMatch = cleanLine.match(/^\d+:\s(\S+)/);
                 word = methodMatch ? methodMatch[1] : undefined;
+              }
+              // 5. single match: "methodName <params>" -> "methodName" (no number prefix)
+              // Used for single-match method completion with documentation
+              // ONLY extract from the first non-decoration line (signature line)
+              else if (isFirstSignatureLine && !cleanLine.match(/^[\s─📖]*$/) && !cleanLine.includes('Documentation:')) {
+                const singleMatch = cleanLine.match(/^(\S+)/);
+                if (singleMatch) {
+                  word = singleMatch[1];
+                  isFirstSignatureLine = false; // Don't extract from subsequent lines
+                }
               }
             }
           }
