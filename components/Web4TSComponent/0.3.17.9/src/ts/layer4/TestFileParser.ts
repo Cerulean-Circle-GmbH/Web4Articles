@@ -436,7 +436,8 @@ export class TestFileParser {
       // Add describe blocks with letter indices
       describes.forEach((desc, descIndex) => {
         const letter = String.fromCharCode('a'.charCodeAt(0) + descIndex);
-        display.push(`      ${green}${letter})${reset} ${desc.name}`);
+        // @pdca 2025-11-05-UTC-1900 - Include file number for consistent token extraction
+        display.push(`      ${cyan}${fileNum}${green}${letter})${reset} ${desc.name}`);
         tokens.push(`${fileNum}${letter}`);
       });
     });
