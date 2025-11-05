@@ -1,6 +1,6 @@
 {
   "name": "web4-project",
-  "version": "1.0.0",
+  "version": "0.3.18.0",
   "type": "module",
   "description": "Web4 Component Architecture Project",
   "private": true,
