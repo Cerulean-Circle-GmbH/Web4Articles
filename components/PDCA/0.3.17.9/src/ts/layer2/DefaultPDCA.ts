@@ -130,6 +130,17 @@ export class DefaultPDCA implements PDCA {
     if (scenario?.model) {
       this.model = { ...this.model, ...scenario.model };
     }
+    
+    // ✅ DECLARE DEPENDENCIES: PDCA 0.3.17.9 depends on PDCA 0.3.5.2 for trainAILegacy
+    // @pdca 2025-11-05-UTC-0230-component-dependencies.pdca.md
+    this.model.dependencies = [
+      {
+        component: 'PDCA',
+        version: '0.3.5.2',
+        path: undefined // Use default path resolution
+      }
+    ];
+    
     return this;
   }
 
@@ -245,6 +256,50 @@ export class DefaultPDCA implements PDCA {
       trainingModule.showTopic(topic);
     }
     
+    return this;
+  }
+
+  /**
+   * Train AI with legacy topics from PDCA 0.3.5.2
+   * 
+   * RADICAL OOP: Delegates to the stable production version
+   * This maintains access to the comprehensive CMM3 training library:
+   * - start, pdca, cmm, dual-links, ensure-links
+   * - component-upgrade, merge, component
+   * - feature-development, web4-vs-nodejs, tech-stack
+   * - test-workflow, test-without-versioning, test-first
+   * - interpret-instructions, collaborate, chat-response
+   * - report, license-headers, decide
+   * 
+   * @param topic Training topic identifier or number (20 topics available)
+   * @cliSyntax topic
+   * @cliDefault topic ""
+   */
+  async trainAILegacy(topic: string = ''): Promise<this> {
+    // Delegate to PDCA 0.3.5.2 for legacy training topics
+    // This maintains access to the comprehensive CMM3 training library
+    // while we build the new Radical OOP training system
+    
+    // Dynamic import from the stable production version
+    const legacyPath = '/Users/Shared/Workspaces/temp/Web4Articles/components/PDCA/0.3.5.2/dist/ts/layer2/DefaultPDCA.js';
+    const { DefaultPDCA: LegacyPDCA } = await import(legacyPath);
+    const legacyPDCA = new LegacyPDCA();
+    
+    // Create a minimal scenario for the legacy PDCA
+    const legacyScenario = {
+      ior: {
+        uuid: 'trainAILegacy-delegation',
+        component: 'PDCA',
+        version: '0.3.5.2'
+      },
+      owner: 'PDCA-0.3.17.9',
+      model: {}
+    };
+    
+    // Initialize the legacy PDCA with the scenario
+    legacyPDCA.init(legacyScenario);
+    
+    await legacyPDCA.trainAI(topic);
     return this;
   }
 

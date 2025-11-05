@@ -136,30 +136,40 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * Build all component dependencies before building this component
    * Recursively builds dependencies in correct order
    * @param componentName Name of component whose dependencies to build
+   * @param version Version of component to build (defaults to latest)
    * @cliHide
    */
-  async buildDependencies(componentName: string): Promise<void> {
+  async buildDependencies(componentName: string, version?: string): Promise<void> {
     const componentDir = this.resolveComponentDirectory(componentName);
-    const versionDirs = readdirSync(componentDir)
-      .filter(name => /^\d+\.\d+\.\d+\.\d+$/.test(name))
-      .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
     
-    if (versionDirs.length === 0) {
-      console.log(`⚠️  No versions found for ${componentName}, skipping dependency build`);
-      return;
+    // Determine which version to build
+    let targetVersion: string;
+    if (version) {
+      // Use specified version
+      targetVersion = version;
+    } else {
+      // Find latest version
+      const versionDirs = readdirSync(componentDir)
+        .filter(name => /^\d+\.\d+\.\d+\.\d+$/.test(name))
+        .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
+      
+      if (versionDirs.length === 0) {
+        console.log(`⚠️  No versions found for ${componentName}, skipping dependency build`);
+        return;
+      }
+      
+      targetVersion = versionDirs[0];
     }
     
-    // Use latest version
-    const latestVersion = versionDirs[0];
-    const componentVersionDir = path.join(componentDir, latestVersion);
+    const componentVersionDir = path.join(componentDir, targetVersion);
     const packageJsonPath = path.join(componentVersionDir, 'package.json');
     
     if (!existsSync(packageJsonPath)) {
-      console.log(`⚠️  No package.json in ${componentName}/${latestVersion}, skipping`);
+      console.log(`⚠️  No package.json in ${componentName}/${targetVersion}, skipping`);
       return;
     }
     
-    console.log(`🔧 Building dependency: ${componentName}/${latestVersion}`);
+    console.log(`🔧 Building dependency: ${componentName}/${targetVersion}`);
     
     try {
       // Build the dependency
@@ -169,13 +179,13 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
           cwd: componentVersionDir,
           stdio: 'inherit'
         });
-        console.log(`✅ Dependency built: ${componentName}/${latestVersion}`);
+        console.log(`✅ Dependency built: ${componentName}/${targetVersion}`);
       } else {
-        console.log(`⚠️  No build.sh in ${componentName}/${latestVersion}, skipping`);
+        console.log(`⚠️  No build.sh in ${componentName}/${targetVersion}, skipping`);
       }
     } catch (error) {
-      console.error(`❌ Failed to build dependency ${componentName}/${latestVersion}: ${(error as Error).message}`);
-      throw new Error(`Dependency build failed: ${componentName}/${latestVersion}`);
+      console.error(`❌ Failed to build dependency ${componentName}/${targetVersion}: ${(error as Error).message}`);
+      throw new Error(`Dependency build failed: ${componentName}/${targetVersion}`);
     }
   }
 
@@ -2441,6 +2451,15 @@ Standards:
     
     // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
     const target = this.model.context || this;
+    
+    // ✅ AUTO-BUILD DEPENDENCIES: Build dependencies before building this component
+    // @pdca 2025-11-05-UTC-0230-component-dependencies.pdca.md
+    if (target.model.dependencies && target.model.dependencies.length > 0) {
+      console.log(`📦 Building ${target.model.dependencies.length} dependencies...`);
+      for (const dep of target.model.dependencies) {
+        await this.buildDependencies(dep.component, dep.version);
+      }
+    }
     
     // Parse flags - default to verbose if no flags provided
     const hasVerbose = flags.includes('verbose') || (flags.length === 0 && !flags.includes('silent'));

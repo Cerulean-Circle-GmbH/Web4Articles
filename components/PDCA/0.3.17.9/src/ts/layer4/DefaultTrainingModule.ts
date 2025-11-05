@@ -36,13 +36,47 @@ export class DefaultTrainingModule implements TrainingModule {
   /**
    * Define all training topics - SINGLE SOURCE OF TRUTH
    * DRY: Each topic defined ONCE, used everywhere
+   * Numbers are CALCULATED from array index, not hardcoded!
    * @cliHide
    */
   private defineTopics(): TrainingTopic[] {
-    return [
+    const topics = [
+      {
+        id: 'cmm3-brutal-honesty',
+        emoji: '🔥',
+        title: 'CMM3 Brutal Honesty: How can you teach if you do not know?',
+        description: 'The cmm3check tool gives you the brutal truth about your own work',
+        requiredReading: [
+          'components/PDCA/0.3.17.9/src/ts/layer4/DefaultCMM3CheckModule.ts',
+          'Run: pdca cmm3checkSession components/PDCA/0.3.17.9/session'
+        ],
+        keyLessons: [
+          '🔴 "How can you teach if you do not know?"',
+          '🔴 I taught CMM3 verification while my own PDCAs were CMM1',
+          '🔴 I taught DRY while hardcoding topic numbers manually',
+          '✅ cmm3check gives BRUTAL HONESTY - no excuses, no hallucination',
+          '✅ Violations: 1a (template structure), 1j (QA Decisions missing)',
+          '✅ You cannot fake CMM3 - the tool will catch you',
+          '⚠️ Teaching without practicing = CMM2 hypocrisy',
+          '⚠️ "you see how expensive fixing is... on a ridiculous unimportant topic"',
+          '🎯 Use cmm3check on YOUR OWN work FIRST',
+          '🎯 8 edits to fix hardcoded numbers - could have been 1 line: topics.map((t,i) => ({...t, number: i+1}))',
+          '💡 The tool is your mirror - it shows you the truth',
+          '💡 The user is your mirror - they catch what tools miss',
+          '🔥 If your PDCAs fail cmm3check, you are not CMM3',
+          '🔥 If your code violates what you teach, you have NO CHOICE but to fix it',
+          '🔥 Fix your own work before teaching others - or the irony will destroy you'
+        ],
+        verificationChecklist: [
+          'Have you run cmm3check on your own PDCAs?',
+          'Do you know what violations you have?',
+          'Have you fixed them or do you just talk about fixing?',
+          'Can you explain each violation code?',
+          'Do you use the tool regularly or just teach about it?'
+        ]
+      },
       {
         id: 'radical-oop',
-        number: 1,
         emoji: '🎯',
         title: 'Radical OOP: 100% Model-Driven Architecture',
         description: 'Learn why this.model everywhere beats functional parameter passing',
@@ -71,7 +105,6 @@ export class DefaultTrainingModule implements TrainingModule {
       },
       {
         id: 'functional-vs-oop',
-        number: 2,
         emoji: '⚡',
         title: 'Functional vs OOP: Why Functional Programming Fails',
         description: 'Understand the cost of functional patterns in OOP codebases',
@@ -98,7 +131,6 @@ export class DefaultTrainingModule implements TrainingModule {
       },
       {
         id: 'cmm3-verification',
-        number: 3,
         emoji: '✅',
         title: 'CMM3 Verification: Reproducible Testing Without Hallucination',
         description: 'Learn to verify objectively, not assume subjectively',
@@ -127,7 +159,6 @@ export class DefaultTrainingModule implements TrainingModule {
       },
       {
         id: 'test-first',
-        number: 4,
         emoji: '🧪',
         title: 'Test-First: Write Tests Before Code',
         description: 'Understand why tests catch bugs that manual verification misses',
@@ -155,7 +186,6 @@ export class DefaultTrainingModule implements TrainingModule {
       },
       {
         id: 'bash-completion',
-        number: 5,
         emoji: '🖥️',
         title: 'Bash Completion: DISPLAY: and WORD: Protocol',
         description: 'Master the bash completion protocol for tab completion',
@@ -184,7 +214,6 @@ export class DefaultTrainingModule implements TrainingModule {
       },
       {
         id: 'output-filtering',
-        number: 6,
         emoji: '🚫',
         title: 'Output Filtering: Why Filtering is Forbidden',
         description: 'Understand why | head and | tail cause infinite loops',
@@ -212,7 +241,6 @@ export class DefaultTrainingModule implements TrainingModule {
       },
       {
         id: 'error-handling',
-        number: 7,
         emoji: '🛡️',
         title: 'Error Handling: Professional Error Management',
         description: 'Learn why empty catch blocks are unacceptable',
@@ -239,6 +267,13 @@ export class DefaultTrainingModule implements TrainingModule {
         ]
       }
     ];
+    
+    // RADICAL OOP: Numbers are CALCULATED from array index, not hardcoded!
+    // DRY: Change order = numbers update automatically
+    return topics.map((topic, index) => ({
+      ...topic,
+      number: index + 1
+    }));
   }
 
   /**
