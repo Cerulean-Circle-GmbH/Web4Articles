@@ -141,12 +141,17 @@ export class DefaultTrainingModule implements TrainingModule {
         keyLessons: [
           '🔴 "Hallucinating and writing about checking is not checking"',
           '🔴 "Writing and hallucinating about acting on the not done checks is not ACTing"',
+          '🔴 "you tested manually...that is not cmm3. cmm3 means there is a test case automated."',
           '✅ CMM3 = Objective, Reproducible, Verifiable',
           '✅ "I do not only want MANUAL verification. i want CMM3 reproducible Verification!!!!"',
           '✅ "cmm4 is only cmm4 if everything is cmm4 no cmm3 test no cmm4 result!!!!"',
+          '✅ Manual testing is CMM2 (subjective), automated testing is CMM3 (objective)',
           '⚠️ Claiming success without running tests is CMM2 hallucination',
+          '⚠️ Writing about CMM3 compliance while only doing manual tests is CMM2 hypocrisy',
           '🎯 Run the test → See the output → Report actual results',
+          '🎯 Create automated test → Run it → Verify it passes → That\'s CMM3',
           '💡 Empty checkboxes mean "not done", not "will do"',
+          '💡 "Tested manually" ≠ "CMM3 verified" - you need an automated test script',
           '🔥 User feedback: "but you did not mitigat it...you continued to write about it but you did not CHECK ANYTHING!!!"'
         ],
         verificationChecklist: [
