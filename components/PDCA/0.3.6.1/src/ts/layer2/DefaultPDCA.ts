@@ -211,6 +211,18 @@ export class DefaultPDCA implements PDCA {
         const description = this.getViolationDescription(violation);
         console.log(`   ${violation}: ${description}`);
         
+        // Show AI-content placeholders if violation 1m
+        if (violation === '1m' && (violations as any).aiContentPlaceholders) {
+          const placeholders = (violations as any).aiContentPlaceholders;
+          console.log(`      Found ${placeholders.length} unpopulated AI-content placeholder(s):`);
+          for (const placeholder of placeholders.slice(0, 10)) {  // Show first 10
+            console.log(`      - ${placeholder}`);
+          }
+          if (placeholders.length > 10) {
+            console.log(`      ... and ${placeholders.length - 10} more`);
+          }
+        }
+        
         // Show specific violations if available (e.g., from check3c)
         if (this.model.cmm3Violations && this.model.cmm3Violations[violation]) {
           for (const detail of this.model.cmm3Violations[violation]) {
@@ -323,6 +335,7 @@ export class DefaultPDCA implements PDCA {
       '1j': 'QA Decisions section not properly formatted',
       '1k': 'Template placeholders not populated ({{}} tokens found)',
       '1l': 'Definition of Ready (DoR) or Definition of Done (DoD) missing in PLAN section',
+      '1m': 'AI-content placeholders not populated (AI Content Population Mandate violated)',
       '3a': 'Links only requirement not met',
       '3b': 'QA Decisions not copied verbatim',
       '3c': 'Dual link format incorrect',
@@ -1386,6 +1399,14 @@ export class DefaultPDCA implements PDCA {
     if (!this.check1j(content)) violations.push('1j');
     if (!this.check1k(content)) violations.push('1k');
     if (!this.check1l(content)) violations.push('1l');  // NEW: DoR/DoD check
+    
+    // 1m: AI-content placeholders check
+    const check1mResult = this.check1m(content);
+    if (!check1mResult.valid) {
+      violations.push('1m');
+      // Store placeholders for detailed reporting
+      (violations as any).aiContentPlaceholders = check1mResult.placeholders;
+    }
 
     // 3. Chat Response Compliance (relevant sections in PDCA)
     if (!this.check3a(content)) violations.push('3a');
@@ -1584,6 +1605,82 @@ export class DefaultPDCA implements PDCA {
                    content.includes('## Definition of Done');
     
     return hasDoR && hasDoD;
+  }
+
+  /**
+   * 1m) AI-content placeholders must be populated
+   * Ensures AI populates all content sections after createPDCA
+   * Distinguishes AI-content placeholders from metadata placeholders (checked by 1k)
+   * @cliHide
+   */
+  private check1m(content: string): { valid: boolean; placeholders: string[] } {
+    // Remove code blocks (```...```) to avoid false positives
+    let contentWithoutCodeBlocks = content.replace(/```[\s\S]*?```/g, '');
+    
+    // Remove inline code (`...`)
+    contentWithoutCodeBlocks = contentWithoutCodeBlocks.replace(/`[^`]+`/g, '');
+    
+    // AI-content placeholders (content sections that AI must populate)
+    const aiContentPlaceholders = [
+      // DO section
+      'DO_SECTION_TITLE', 'ACTION_INDEX', 'ACTION_TITLE', 'ACTION_LANGUAGE', 'ACTION_CODE_OR_CONTENT',
+      // CHECK section
+      'CHECK_CATEGORY_1', 'CHECK_CATEGORY_2', 'CHECK_CATEGORY_3', 'CHECK_CATEGORY_4',
+      'STATUS_1', 'STATUS_2',
+      'VERIFICATION_OUTPUT_1', 'VERIFICATION_OUTPUT_2',
+      'VERIFICATION_1', 'VERIFICATION_2', 'VERIFICATION_3',
+      'VERIFICATION_DESCRIPTION_1', 'VERIFICATION_DESCRIPTION_2', 'VERIFICATION_DESCRIPTION_3',
+      'INTEGRATION_1', 'INTEGRATION_2',
+      'INTEGRATION_DESCRIPTION_1', 'INTEGRATION_DESCRIPTION_2',
+      'VERBATIM_QA_FEEDBACK',
+      // ACT section
+      'ACT_CATEGORY_1', 'ACT_CATEGORY_2',
+      'ENHANCEMENT_1', 'ENHANCEMENT_2', 'ENHANCEMENT_3',
+      'ENHANCEMENT_DESCRIPTION_1', 'ENHANCEMENT_DESCRIPTION_2', 'ENHANCEMENT_DESCRIPTION_3',
+      'BENEFIT_1', 'BENEFIT_2',
+      'BENEFIT_DESCRIPTION_1', 'BENEFIT_DESCRIPTION_2',
+      'FUTURE_1', 'FUTURE_2', 'FUTURE_3',
+      'FUTURE_DESCRIPTION_1', 'FUTURE_DESCRIPTION_2', 'FUTURE_DESCRIPTION_3',
+      // EMOTIONAL REFLECTION section
+      'EMOTIONAL_HEADLINE', 'EMOTIONAL_CATEGORY_1', 'EMOTIONAL_CATEGORY_2', 'EMOTIONAL_CATEGORY_3',
+      'EMOTIONAL_INTENSITY', 'EMOTIONAL_DESCRIPTION_1', 'EMOTIONAL_DESCRIPTION_2', 'EMOTIONAL_DESCRIPTION_3',
+      // PDCA PROCESS UPDATE section
+      'KEY_LEARNING_1', 'KEY_LEARNING_2', 'KEY_LEARNING_3',
+      'LEARNING_DESCRIPTION_1', 'LEARNING_DESCRIPTION_2', 'LEARNING_DESCRIPTION_3',
+      'QUALITY_IMPACT_DESCRIPTION', 'NEXT_FOCUS_DESCRIPTION',
+      'FINAL_SUMMARY_WITH_EMOJIS', 'PHILOSOPHICAL_INSIGHT',
+      // PLAN section (DoR/DoD)
+      'DOR_ITEM_1', 'DOR_ITEM_2', 'DOR_ITEM_3', 'DOR_ITEM_4',
+      'DOR_DESCRIPTION_1', 'DOR_DESCRIPTION_2', 'DOR_DESCRIPTION_3', 'DOR_DESCRIPTION_4',
+      'DOD_ITEM_1', 'DOD_ITEM_2', 'DOD_ITEM_3', 'DOD_ITEM_4', 'DOD_ITEM_5',
+      'DOD_DESCRIPTION_1', 'DOD_DESCRIPTION_2', 'DOD_DESCRIPTION_3', 'DOD_DESCRIPTION_4', 'DOD_DESCRIPTION_5',
+      // PLAN section (Strategy)
+      'STRATEGY_ELEMENT_1', 'STRATEGY_ELEMENT_2', 'STRATEGY_ELEMENT_3',
+      'STRATEGY_DESCRIPTION_1', 'STRATEGY_DESCRIPTION_2', 'STRATEGY_DESCRIPTION_3',
+      // SUMMARY section (QA Decisions)
+      'COMPLETED_DECISION', 'PENDING_DECISION', 'FOLLOWUP_REQUIRED',
+      'DECISION_DESCRIPTION',
+      // SUMMARY section (TRON Feedback)
+      'VERBATIM_WORD_BY_WORD_USER_PROMPT_NO_REFORMULATION',
+      'PRESERVE_ALL_LINE_BREAKS_SPACING_NUMBERING',
+      'IMMEDIATE_CHAT_RESPONSE_TO_FEEDBACK',
+      'EXPLANATION_OF_UNDERSTANDING_AND_ACTIONS',
+      'KEY_INSIGHT_FROM_FEEDBACK'
+    ];
+    
+    // Find all AI-content placeholders in the content
+    const foundPlaceholders: string[] = [];
+    for (const placeholder of aiContentPlaceholders) {
+      const regex = new RegExp(`\\{\\{${placeholder}\\}\\}`, 'g');
+      if (regex.test(contentWithoutCodeBlocks)) {
+        foundPlaceholders.push(`{{${placeholder}}}`);
+      }
+    }
+    
+    return {
+      valid: foundPlaceholders.length === 0,
+      placeholders: foundPlaceholders
+    };
   }
 
   /**

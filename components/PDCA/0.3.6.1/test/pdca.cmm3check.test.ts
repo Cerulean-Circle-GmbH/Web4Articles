@@ -350,5 +350,280 @@ Content.`;
     const result = await pdca.cmm3check(testPDCA, 'true');
     expect(result).toBe(pdca);
   });
+
+  /**
+   * TC104: Baseline - cmm3check doesn't detect AI-content placeholders
+   * Verifies: Current implementation doesn't check for AI-content population
+   * TDD Phase: Baseline test - should PASS with current implementation
+   * PDCA: 2025-11-05-UTC-091303
+   * Status: SKIPPED - Implementation complete, baseline no longer relevant
+   */
+  it.skip('TC104: cmm3check does NOT detect AI-content placeholders (baseline)', async () => {
+    const testFile = path.join(testDataDir, 'test-ai-content-placeholders.pdca.md');
+    const content = `# Test PDCA
+**🎯 Template Version:** 3.2.4.2
+
+## **📊 SUMMARY**
+Content here.
+
+## **📋 PLAN**
+### **Definition of Ready (DoR)**
+- [ ] {{DOR_ITEM_1}}: {{DOR_DESCRIPTION_1}}
+
+## **🔧 DO**
+**{{DO_SECTION_TITLE}}**
+
+## **✅ CHECK**
+**{{CHECK_CATEGORY_1}} ({{STATUS_1}})**
+
+## **🎯 ACT**
+**{{ACT_CATEGORY_1}} Enhanced:**
+
+## **💫 EMOTIONAL REFLECTION: {{EMOTIONAL_HEADLINE}}**
+Content.
+
+## **🎯 PDCA PROCESS UPDATE**
+Content.`;
+    
+    fs.writeFileSync(testFile, content);
+    
+    // Current behavior: Should NOT detect AI-content placeholders
+    const output: string[] = [];
+    const originalLog = console.log;
+    console.log = (...args: any[]) => { output.push(args.join(' ')); };
+    
+    try {
+      await pdca.cmm3check(testFile);
+      console.log = originalLog;
+      
+      const outputStr = output.join('\n');
+      // Should NOT contain violation 1m (baseline - current behavior)
+      expect(outputStr).not.toContain('1m');
+      expect(outputStr).not.toContain('AI-content placeholders');
+    } catch (e) {
+      console.log = originalLog;
+      throw e;
+    }
+  });
+
+  /**
+   * TC105: cmm3check detects single AI-content placeholder
+   * Verifies: New check1m() detects {{DO_SECTION_TITLE}} and reports violation
+   * TDD Phase: RED - Expected to FAIL until implementation
+   * PDCA: 2025-11-05-UTC-091303
+   */
+  it('TC105: cmm3check detects {{DO_SECTION_TITLE}} and reports violation 1m', async () => {
+    const testFile = path.join(testDataDir, 'test-single-placeholder.pdca.md');
+    const content = `# Test PDCA
+**🎯 Template Version:** 3.2.4.2
+
+## **📊 SUMMARY**
+Content.
+
+## **📋 PLAN**
+Content.
+
+## **🔧 DO**
+**{{DO_SECTION_TITLE}}**
+Some content here.
+
+## **✅ CHECK**
+Content.
+
+## **🎯 ACT**
+Content.
+
+## **💫 EMOTIONAL REFLECTION: Test**
+Content.
+
+## **🎯 PDCA PROCESS UPDATE**
+Content.`;
+    
+    fs.writeFileSync(testFile, content);
+    
+    const output: string[] = [];
+    const originalLog = console.log;
+    console.log = (...args: any[]) => { output.push(args.join(' ')); };
+    
+    try {
+      await pdca.cmm3check(testFile);
+      console.log = originalLog;
+      
+      const outputStr = output.join('\n');
+      expect(outputStr).toContain('1m');
+      expect(outputStr).toContain('AI-content placeholders not populated');
+      expect(outputStr).toContain('{{DO_SECTION_TITLE}}');
+    } catch (e) {
+      console.log = originalLog;
+      throw e;
+    }
+  });
+
+  /**
+   * TC106: cmm3check detects multiple AI-content placeholders
+   * Verifies: check1m() detects and reports all AI-content placeholders
+   * TDD Phase: RED - Expected to FAIL until implementation
+   * PDCA: 2025-11-05-UTC-091303
+   */
+  it('TC106: cmm3check detects multiple AI-content placeholders', async () => {
+    const testFile = path.join(testDataDir, 'test-multiple-placeholders.pdca.md');
+    const content = `# Test PDCA
+**🎯 Template Version:** 3.2.4.2
+
+## **📊 SUMMARY**
+Content.
+
+## **📋 PLAN**
+Content.
+
+## **🔧 DO**
+**{{DO_SECTION_TITLE}}**
+
+## **✅ CHECK**
+**{{CHECK_CATEGORY_1}} ({{STATUS_1}})**
+**{{VERIFICATION_1}}:** {{VERIFICATION_DESCRIPTION_1}}
+
+## **🎯 ACT**
+Content.
+
+## **💫 EMOTIONAL REFLECTION: {{EMOTIONAL_HEADLINE}}**
+**{{EMOTIONAL_INTENSITY}}** {{EMOTIONAL_DESCRIPTION_1}}
+
+## **🎯 PDCA PROCESS UPDATE**
+Content.`;
+    
+    fs.writeFileSync(testFile, content);
+    
+    const output: string[] = [];
+    const originalLog = console.log;
+    console.log = (...args: any[]) => { output.push(args.join(' ')); };
+    
+    try {
+      await pdca.cmm3check(testFile);
+      console.log = originalLog;
+      
+      const outputStr = output.join('\n');
+      expect(outputStr).toContain('1m');
+      expect(outputStr).toContain('{{DO_SECTION_TITLE}}');
+      expect(outputStr).toContain('{{CHECK_CATEGORY_1}}');
+      expect(outputStr).toContain('{{EMOTIONAL_HEADLINE}}');
+    } catch (e) {
+      console.log = originalLog;
+      throw e;
+    }
+  });
+
+  /**
+   * TC107: cmm3check passes when AI-content is populated
+   * Verifies: No violation 1m when all AI-content placeholders are replaced
+   * TDD Phase: Should PASS after implementation
+   * PDCA: 2025-11-05-UTC-091303
+   */
+  it('TC107: cmm3check passes when all AI-content is populated', async () => {
+    const testFile = path.join(testDataDir, 'test-populated-content.pdca.md');
+    const content = `# Test PDCA
+**🎯 Template Version:** 3.2.4.2
+
+## **📊 SUMMARY**
+All content populated.
+
+## **📋 PLAN**
+Implementation strategy defined.
+
+## **🔧 DO**
+**Implementation Complete**
+All code changes implemented successfully.
+
+## **✅ CHECK**
+**Tests Passing (GREEN)**
+All 5 tests passed.
+
+## **🎯 ACT**
+**Success Achieved**
+Feature complete and verified.
+
+## **💫 EMOTIONAL REFLECTION: Success Achieved**
+**High** confidence in the solution.
+
+## **🎯 PDCA PROCESS UPDATE**
+Process learning documented.`;
+    
+    fs.writeFileSync(testFile, content);
+    
+    const output: string[] = [];
+    const originalLog = console.log;
+    console.log = (...args: any[]) => { output.push(args.join(' ')); };
+    
+    try {
+      await pdca.cmm3check(testFile);
+      console.log = originalLog;
+      
+      const outputStr = output.join('\n');
+      expect(outputStr).not.toContain('1m');
+      expect(outputStr).not.toContain('AI-content placeholders');
+    } catch (e) {
+      console.log = originalLog;
+      throw e;
+    }
+  });
+
+  /**
+   * TC108: cmm3check distinguishes AI-content from metadata placeholders
+   * Verifies: check1m() detects AI-content but check1k() detects metadata separately
+   * TDD Phase: Should PASS after implementation
+   * PDCA: 2025-11-05-UTC-091303
+   */
+  it('TC108: cmm3check distinguishes AI-content from metadata placeholders', async () => {
+    const testFile = path.join(testDataDir, 'test-metadata-vs-content.pdca.md');
+    const content = `# Test PDCA
+**🎯 Template Version:** 3.2.4.2
+**📎 Previous Commit:** {{PREVIOUS_COMMIT_SHA}} - {{PREVIOUS_COMMIT_DESCRIPTION}}
+
+## **📊 SUMMARY**
+Content.
+
+## **📋 PLAN**
+Content.
+
+## **🔧 DO**
+**Implementation Complete**
+All code changes done.
+
+## **✅ CHECK**
+**{{CHECK_CATEGORY_1}} (GREEN)**
+
+## **🎯 ACT**
+Content.
+
+## **💫 EMOTIONAL REFLECTION: Test**
+Content.
+
+## **🎯 PDCA PROCESS UPDATE**
+Content.`;
+    
+    fs.writeFileSync(testFile, content);
+    
+    const output: string[] = [];
+    const originalLog = console.log;
+    console.log = (...args: any[]) => { output.push(args.join(' ')); };
+    
+    try {
+      await pdca.cmm3check(testFile);
+      console.log = originalLog;
+      
+      const outputStr = output.join('\n');
+      
+      // Should detect AI-content placeholder (CHECK_CATEGORY_1)
+      expect(outputStr).toContain('1m');
+      expect(outputStr).toContain('{{CHECK_CATEGORY_1}}');
+      
+      // Should also detect metadata placeholders (violation 1k)
+      // Note: check1k() doesn't report specific placeholders, just that they exist
+      expect(outputStr).toContain('1k');
+    } catch (e) {
+      console.log = originalLog;
+      throw e;
+    }
+  });
 });
 
