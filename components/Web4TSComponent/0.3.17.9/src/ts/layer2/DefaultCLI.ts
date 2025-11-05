@@ -2166,8 +2166,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     const lines: string[] = [];
 
     // Detect complex format (numbered lines like "1: methodName <params>")
-    const hasNumberedRefs = values.some((v: string) => v.match(/^\d+:/));
-    const hasSpaces = values.some((v: string) => v.includes(" "));
+    // @pdca 2025-11-05-UTC-1900 - Strip ANSI codes before checking for numbered refs
+    const hasNumberedRefs = values.some((v: string) => {
+      const clean = v.replace(/\x1b\[[0-9;]*m/g, "");
+      return clean.match(/^\d+:/) !== null;
+    });
+    const hasSpaces = values.some((v: string) => v.includes(" ") || v.includes("\t"));
 
     if (hasNumberedRefs || hasSpaces) {
       // Complex format: numbered method list or formatted text
@@ -2222,68 +2226,50 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         lines.push(`DISPLAY: ${prompt}`);
       }
 
-      // Extract method names/words and add WORD lines (for bash compgen)
+      // Extract tokens and add WORD lines (for bash compgen)
       // CRITICAL: Strip ANSI codes before extracting words!
-      // @pdca 2025-11-05-UTC-1900 - Scope-aware token extraction for itCase/describe
-      
-      // Get scope from model (format: ['web4tscomponent', 'test', 'file|describe|itCase', ...])
-      const scope = this.model.completionCompWords[2];
+      // @pdca 2025-11-05-UTC-1900 - Standardized token extraction using HierarchicalCompletionFilter patterns
       
       values.forEach((value: string) => {
-        // For itCase/describe scopes, extract ALL tokens from ALL lines
-        // For other scopes, extract word from FIRST LINE only
-        const linesToProcess = (scope === 'itCase' || scope === 'describe') 
-          ? value.split("\n") 
-          : [value.split("\n")[0]];
-        
-        linesToProcess.forEach((line: string) => {
-          // Strip ANSI escape codes: \x1b[...m
+        // Process ALL lines from hierarchical output
+        value.split("\n").forEach((line: string) => {
           const cleanLine = line.replace(/\x1b\[[0-9;]*m/g, "");
           
           let word: string | undefined;
           
-          // Scope-specific token extraction
-          if (scope === 'itCase') {
-            // Extract itCase tokens: "         18a12) should work" -> "18a12"
-            // Pattern: (\d+[a-z]\d+\)) captures "18a12)"
-            const itCaseMatch = cleanLine.match(/(\d+[a-z]\d+)\)/);
-            if (itCaseMatch) {
-              word = itCaseMatch[1]; // Extract "18a12"
-            }
-            // Skip file headers and describe headers (no itCase token pattern)
-          } else if (scope === 'describe') {
-            // Extract describe tokens: "    18a) Test Cases" -> "18a"
-            // Pattern: (\d+[a-z]\)) captures "18a)"
-            const describeMatch = cleanLine.match(/(\d+[a-z])\)/);
+          // Try hierarchical token patterns in order of specificity:
+          
+          // 1. itCase: "      18a12) test name" -> "18a12"
+          const itCaseMatch = cleanLine.match(/^\s+(\d+[a-z]\d+)\)/);
+          if (itCaseMatch) {
+            word = itCaseMatch[1];
+          }
+          // 2. describe: "    18a) describe name" -> "18a"  
+          else {
+            const describeMatch = cleanLine.match(/^\s+(\d+[a-z])\)/);
             if (describeMatch) {
-              word = describeMatch[1]; // Extract "18a"
+              word = describeMatch[1];
             }
-            // Skip file headers (no describe token pattern)
-          } else {
-            // Default extraction for file scope and methods
-            // Extract word: "1: methodName <params>" -> "methodName" OR "1:\tfilename" -> "1"
-            // @pdca 2025-11-05-UTC-1616 - Extract token (number) for hierarchical file completions
-            // Check if this is a hierarchical token (number followed by tab or colon-space-tab)
-            const hierarchicalMatch = cleanLine.match(/^(\d+):\t/);
-            if (hierarchicalMatch) {
-              // Hierarchical format: "1:\tfilename" -> extract "1"
-              word = hierarchicalMatch[1];
-            } else {
-              // Method format: "1: methodName <params>" -> extract "methodName"
-              const methodMatch = cleanLine.match(/^\d+:\s*(\S+)/);
-              word = methodMatch ? methodMatch[1] : cleanLine.split(" ")[0];
+            // 3. file header: "1:\tfilename" or "1:  filename" -> "1"
+            // Extract file number from lines with tab or 2+ spaces (context lines in filtered results)
+            else {
+              const fileMatch = cleanLine.match(/^(\d+):(?:\t|\s{2,})/);
+              if (fileMatch) {
+                word = fileMatch[1];
+              }
+              // 4. method: "1: methodName <params>" -> "methodName" (single space)
+              else if (cleanLine.match(/^\d+:\s\S/)) {
+                const methodMatch = cleanLine.match(/^\d+:\s(\S+)/);
+                word = methodMatch ? methodMatch[1] : undefined;
+              }
             }
           }
           
-          if (!word) {
-            return; // Skip this line if no token was extracted
-          }
+          if (!word) return; // Skip if no token extracted
 
           // Strip parameter syntax if present: <?action> -> action, <what> -> what
           const paramMatch = word.match(/^<\??([^>:'"]+)/);
-          if (paramMatch) {
-            word = paramMatch[1];
-          }
+          if (paramMatch) word = paramMatch[1];
 
           lines.push(`WORD: ${word}`);
         });
@@ -3145,6 +3131,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    */
   private async getTestDescribeReferences(): Promise<string[]> {
     const { TestFileParser } = await import("../layer4/TestFileParser.js");
+    const { HierarchicalCompletionFilter } = await import(
+      "../layer4/HierarchicalCompletionFilter.js"
+    );
     const { existsSync } = await import("fs");
 
     // Use DRY helper to get test directory
@@ -3157,84 +3146,17 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // Get all describes in hierarchical format with tokens
     const result = TestFileParser.getAllDescribesHierarchical(testDir);
 
-    // Check if there's a filter prefix from model (e.g., '1a' from 'test describe 1a')
+    // Apply DRY Web4 filtering pattern (extract filter prefix from model)
     // Format: ['web4tscomponent', 'test', 'describe', '1a']
     const filterPrefix = this.model.completionCompWords[3] || "";
+    const describeTokenPattern = /(\d+[a-z])\)/; // Pattern to match describe tokens like "1a)", "17b)"
 
-    if (filterPrefix) {
-      // Filter tokens that start with the prefix
-      const filteredTokens = result.tokens.filter((token) =>
-        token.startsWith(filterPrefix)
-      );
-
-      if (filteredTokens.length === 0) {
-        // No matches - return empty
-        return [];
-      }
-
-      // Filter the display lines to show only matching entries
-      const filteredDisplay: string[] = [];
-      const displayLines = result.display;
-
-      for (let i = 0; i < displayLines.length; i++) {
-        const line = displayLines[i];
-
-        // Find file context for this line
-        const fileContext = this.findFileContext(displayLines, i);
-
-        // Strip ANSI escape codes for pattern matching
-        const cleanLine = line.replace(/\x1B\[[0-9;]*m/g, "");
-
-        // Check if this line represents a describe block
-        // @pdca 2025-11-05-UTC-1900 - Match new format with file number: "18a)" instead of "a)"
-        const describeMatch = cleanLine.match(/^\s+(\d+[a-z])\)/);
-        if (describeMatch) {
-          const fullToken = describeMatch[1]; // Already includes file number like "18a"
-
-          if (filteredTokens.includes(fullToken)) {
-            // Add file header if not already added
-            const fileHeaderPattern = new RegExp(`^${fileContext}:\\s`);
-            const fileHeaderIndex = displayLines.findIndex((l) => {
-              const cleanL = l.replace(/\x1B\[[0-9;]*m/g, "");
-              return fileHeaderPattern.test(cleanL);
-            });
-            if (
-              fileHeaderIndex !== -1 &&
-              !filteredDisplay.includes(displayLines[fileHeaderIndex])
-            ) {
-              filteredDisplay.push(displayLines[fileHeaderIndex]);
-            }
-
-            // Add the matching describe line
-            filteredDisplay.push(line);
-          }
-        }
-      }
-
-      return [filteredDisplay.join("\n")];
-    }
-
-    // OOSH Pattern: Return hierarchical display for bash printf + token extraction
-    return result.display;
-  }
-
-  /**
-   * Find the file number context for a describe line
-   */
-  private findFileContext(
-    displayLines: string[],
-    currentIndex: number
-  ): string | null {
-    // Look backwards for the most recent file header
-    for (let i = currentIndex - 1; i >= 0; i--) {
-      const line = displayLines[i];
-      const cleanLine = line.replace(/\x1B\[[0-9;]*m/g, "");
-      const fileMatch = cleanLine.match(/^(\d+):/);
-      if (fileMatch) {
-        return fileMatch[1];
-      }
-    }
-    return null;
+    // @pdca 2025-11-05-UTC-1900 - Standardized to use HierarchicalCompletionFilter (DRY)
+    return HierarchicalCompletionFilter.applyPrefixFilter(
+      result,
+      filterPrefix,
+      describeTokenPattern
+    );
   }
 
   /**
