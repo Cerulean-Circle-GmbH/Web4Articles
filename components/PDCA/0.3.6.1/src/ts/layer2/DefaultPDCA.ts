@@ -5078,6 +5078,9 @@ export class DefaultPDCA implements PDCA {
             
             // Copy git note from old commit to new commit (preserves original creation time)
             try {
+              console.log(`   🔍 Checking for git note to preserve...`);
+              console.log(`   📌 Old commit SHA: ${oldCommitSha || 'none'}`);
+              
               // Use the oldCommitSha we captured BEFORE the rename
               if (oldCommitSha) {
                 // Check if old commit has a git note
@@ -5087,12 +5090,16 @@ export class DefaultPDCA implements PDCA {
                     { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
                   ).trim();
                   
+                  console.log(`   📝 Found git note: ${oldNote}`);
+                  
                   if (oldNote && oldNote.includes('original_creation_time:')) {
                     // Get the commit SHA for the new file (after rename)
                     const newCommitSha = execSync(
                       `git log -1 --format=%H -- "${newNormalized}"`,
                       { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
                     ).trim();
+                    
+                    console.log(`   📌 New commit SHA: ${newCommitSha}`);
                     
                     if (newCommitSha) {
                       // Copy the note to the new commit
@@ -5101,21 +5108,27 @@ export class DefaultPDCA implements PDCA {
                         { cwd: projectRoot, stdio: 'pipe' }
                       );
                       
+                      console.log(`   ✅ Git note copied to new commit`);
+                      
                       // Push notes to remote (silently ignore errors)
                       try {
                         execSync('git push origin refs/notes/*', { cwd: projectRoot, stdio: 'pipe' });
                         console.log(`   ✅ Git note preserved (original creation time)\n`);
-                      } catch {
-                        // Silently ignore push errors
+                      } catch (pushError: any) {
+                        console.log(`   ⚠️  Failed to push git notes: ${pushError.message}`);
                       }
                     }
+                  } else {
+                    console.log(`   ℹ️  No original_creation_time note found`);
                   }
-                } catch {
-                  // No note exists on old commit - continue
+                } catch (noteError: any) {
+                  console.log(`   ℹ️  No git note found on old commit`);
                 }
+              } else {
+                console.log(`   ℹ️  No old commit SHA available`);
               }
-            } catch {
-              // Silently ignore git note errors - not critical for rename operation
+            } catch (error: any) {
+              console.log(`   ⚠️  Error handling git notes: ${error.message}`);
             }
           }
         } else if (renamedSuccessfully && !usedGit) {
