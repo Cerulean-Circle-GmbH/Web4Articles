@@ -41,6 +41,16 @@ describe('PDCA rename() - Wrapper Around mv()', () => {
     }
   });
   
+  afterEach(() => {
+    // Clean up test files after each test to prevent conflicts
+    if (fs.existsSync(tempTestDir)) {
+      const files = fs.readdirSync(tempTestDir);
+      files.forEach(file => {
+        fs.unlinkSync(path.join(tempTestDir, file));
+      });
+    }
+  });
+  
   afterAll(() => {
     if (fs.existsSync(tempTestDir)) {
       fs.rmSync(tempTestDir, { recursive: true, force: true });
@@ -526,6 +536,139 @@ describe('PDCA rename - Error Handling', () => {
     
     expect(completions).toEqual(['now', 'creationDate', 'strip', 'feature']);
     expect(completions).toHaveLength(4);
+  });
+
+  /**
+   * TC98: Baseline - rename now generates 4-digit timestamp (current behavior)
+   * Verifies: Current implementation generates HHMM format (4 digits)
+   * TDD Phase: Baseline test - should PASS with current implementation
+   * PDCA: 2025-11-05-UTC-083559
+   */
+  test('TC98: rename now generates 4-digit timestamp (current behavior baseline)', async () => {
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-0830.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    // Act: Rename with 'now' case
+    await pdca.rename('now', testFile);
+    
+    // Assert: New file should have 4-digit timestamp (HHMM format)
+    const files = fs.readdirSync(tempTestDir);
+    console.log('TC98 - Files after rename:', files);
+    const renamedFile = files.find(f => f.match(/^\d{4}-\d{2}-\d{2}-UTC-\d{4}\.pdca\.md$/));
+    
+    expect(renamedFile).toBeDefined();
+    expect(renamedFile).toMatch(/UTC-\d{4}\./); // 4 digits only
+  });
+
+  /**
+   * TC99: Format Preservation - rename now preserves 6-digit format
+   * Verifies: When original has seconds (HHMMSS), new timestamp also has seconds
+   * TDD Phase: RED - Expected to FAIL until implementation
+   * PDCA: 2025-11-05-UTC-083559
+   */
+  test('TC99: rename now preserves 6-digit timestamp format', async () => {
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-083045.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    // Act: Rename with 'now' case
+    await pdca.rename('now', testFile);
+    
+    // Assert: New file should have 6-digit timestamp (HHMMSS format)
+    const files = fs.readdirSync(tempTestDir);
+    const renamedFile = files.find(f => f.match(/^\d{4}-\d{2}-\d{2}-UTC-\d{6}\.pdca\.md$/));
+    
+    expect(renamedFile).toBeDefined();
+    expect(renamedFile).toMatch(/UTC-\d{6}\./); // 6 digits preserved
+  });
+
+  /**
+   * TC100: Format Preservation - rename creationDate preserves 6-digit format
+   * Verifies: When original has seconds, git creation date also includes seconds
+   * TDD Phase: RED - Expected to FAIL until implementation
+   * PDCA: 2025-11-05-UTC-083559
+   * Note: Skipped due to git operations in test environment
+   */
+  test.skip('TC100: rename creationDate preserves 6-digit timestamp format', async () => {
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-083045-creation.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    // Note: Would need git operations here, skipping for now
+    await pdca.rename('creationDate', testFile);
+    
+    const files = fs.readdirSync(tempTestDir);
+    const renamedFile = files.find(f => f.match(/^\d{4}-\d{2}-\d{2}-UTC-\d{6}\.pdca\.md$/));
+    
+    expect(renamedFile).toBeDefined();
+    expect(renamedFile).toMatch(/UTC-\d{6}\./); // 6 digits preserved
+  });
+
+  /**
+   * TC101: Format Preservation - rename strip preserves original format (6 digits)
+   * Verifies: strip removes description but preserves timestamp format
+   * TDD Phase: RED - Expected to FAIL until implementation
+   * PDCA: 2025-11-05-UTC-083559
+   */
+  test('TC101: rename strip preserves original timestamp format (6 digits)', async () => {
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-083045.my-description.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    // Act: Rename with 'strip' case
+    await pdca.rename('strip', testFile);
+    
+    // Assert: Description removed, but 6-digit timestamp preserved
+    const files = fs.readdirSync(tempTestDir);
+    const renamedFile = files.find(f => f === '2025-11-05-UTC-083045.pdca.md');
+    
+    expect(renamedFile).toBeDefined();
+    expect(renamedFile).toMatch(/UTC-\d{6}\./); // 6 digits preserved
+  });
+
+  /**
+   * TC102: Format Preservation - rename feature preserves original format (6 digits)
+   * Verifies: feature adds marker but preserves timestamp format
+   * TDD Phase: RED - Expected to FAIL until implementation
+   * PDCA: 2025-11-05-UTC-083559
+   */
+  test('TC102: rename feature preserves original timestamp format (6 digits)', async () => {
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-083045-feature.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    // Act: Rename with 'feature' case
+    await pdca.rename('feature', testFile);
+    
+    // Assert: .feature marker added, 6-digit timestamp preserved
+    const files = fs.readdirSync(tempTestDir);
+    const renamedFile = files.find(f => f === '2025-11-05-UTC-083045-feature.feature.pdca.md');
+    
+    expect(renamedFile).toBeDefined();
+    expect(renamedFile).toMatch(/UTC-\d{6}/); // 6 digits preserved
+  });
+
+  /**
+   * TC103: Backward Compatibility - rename operations work with legacy 4-digit timestamps
+   * Verifies: 4-digit timestamps continue to work (format preserved)
+   * TDD Phase: Should PASS (backward compatibility)
+   * PDCA: 2025-11-05-UTC-083559
+   */
+  test('TC103: rename operations work with legacy 4-digit timestamps', async () => {
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-0830-legacy.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    // Act: Rename with 'now' case
+    await pdca.rename('now', testFile);
+    
+    // Assert: New file should have 4-digit timestamp (format preserved)
+    const files = fs.readdirSync(tempTestDir);
+    const renamedFile = files.find(f => f.match(/^\d{4}-\d{2}-\d{2}-UTC-\d{4}\.pdca\.md$/));
+    
+    expect(renamedFile).toBeDefined();
+    expect(renamedFile).toMatch(/UTC-\d{4}\./); // 4 digits preserved for legacy
   });
 });
 
