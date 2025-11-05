@@ -1,11 +1,11 @@
 /**
- * DefaultIdealMinimalComponent - IdealMinimalComponent Component Implementation
+ * DefaultTestCompProd - TestCompProd Component Implementation
  * Web4 pattern: Empty constructor + scenario initialization + component functionality
  */
 
-import { IdealMinimalComponent } from '../layer3/IdealMinimalComponent.interface.js';
+import { TestCompProd } from '../layer3/TestCompProd.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
-import { IdealMinimalComponentModel } from '../layer3/IdealMinimalComponentModel.interface.js';
+import { TestCompProdModel } from '../layer3/TestCompProdModel.interface.js';
 import { User } from '../layer3/User.interface.js';
 import { existsSync, lstatSync, readlinkSync, readdirSync, statSync } from 'fs';
 import { join, dirname } from 'path';
@@ -13,9 +13,9 @@ import { join, dirname } from 'path';
 // Use latest version for delegation (always available)
 import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js';
 
-export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
+export class DefaultTestCompProd implements TestCompProd {
   // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Changed to public for Component interface compliance
-  model: IdealMinimalComponentModel;
+  model: TestCompProdModel;
   private web4ts?: DefaultWeb4TSComponent; // Lazy-initialized Web4TSComponent for delegation
   private user?: User; // Optional User service (lazy initialization) - @pdca 2025-11-03-1135.pdca.md
   private methods: Map<string, any> = new Map(); // Method discovery cache - @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md
@@ -30,8 +30,8 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
       definition: '',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      component: 'IdealMinimalComponent',  // For CLI display
-      version: '0.3.18.0'             // Component version
+      component: 'TestCompProd',  // For CLI display
+      version: '0.1.0.0'             // Component version
     };
   }
 
@@ -171,7 +171,7 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
    * @cliHide
    * @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md - Added method discovery
    */
-  init(scenario?: Scenario<IdealMinimalComponentModel>): this {
+  init(scenario?: Scenario<TestCompProdModel>): this {
     if (scenario?.model) {
       this.model = { ...this.model, ...scenario.model };
     }
@@ -186,7 +186,7 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
    * @cliHide
    * @pdca 2025-11-03-1135.pdca.md - Use User service with fallback pattern
    */
-  async toScenario(name?: string): Promise<Scenario<IdealMinimalComponentModel>> {
+  async toScenario(name?: string): Promise<Scenario<TestCompProdModel>> {
     // ✅ RADICAL OOP: Generate owner data using User.toScenario() (Web4 component interface)
     let ownerData: string;
     try {
@@ -214,8 +214,8 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
           user: process.env.USER || 'system',
           hostname: process.env.HOSTNAME || 'localhost',
           uuid: this.model.uuid,
-          component: 'IdealMinimalComponent',
-          version: '0.3.18.0'
+          component: 'TestCompProd',
+          version: '0.1.0.0'
         }
       });
       ownerData = Buffer.from(fallbackJson).toString('base64');
@@ -224,8 +224,8 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
     return {
       ior: {
         uuid: this.model.uuid,
-        component: 'IdealMinimalComponent',
-        version: '0.3.18.0'
+        component: 'TestCompProd',
+        version: '0.1.0.0'
       },
       owner: ownerData,
       model: this.model
@@ -233,7 +233,7 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
   }
 
   /**
-   * Create example operation for IdealMinimalComponent
+   * Create example operation for TestCompProd
    * @param input Input data to process
    * @param format Output format (json, text, xml)
    * @cliSyntax input format
@@ -243,12 +243,12 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
     console.log(`🚀 Creating ${input} in ${format} format`);
     this.model.name = input;
     this.model.updatedAt = new Date().toISOString();
-    console.log(`✅ IdealMinimalComponent operation completed`);
+    console.log(`✅ TestCompProd operation completed`);
     return this;
   }
 
   /**
-   * Process data through IdealMinimalComponent logic
+   * Process data through TestCompProd logic
    * @param data Data to process
    * @cliSyntax data
    */
@@ -259,10 +259,10 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
   }
 
   /**
-   * Show information about current IdealMinimalComponent state
+   * Show information about current TestCompProd state
    */
   async info(): Promise<this> {
-    console.log(`📋 IdealMinimalComponent Information:`);
+    console.log(`📋 TestCompProd Information:`);
     console.log(`   UUID: ${this.model.uuid}`);
     console.log(`   Name: ${this.model.name || 'Not set'}`);
     console.log(`   Created: ${this.model.createdAt}`);
@@ -348,12 +348,12 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
     const context = this.getComponentContext();
     
     // OOP: Instantiate own CLI and call completeParameter directly (no shell!)
-    const { IdealMinimalComponentCLI } = await import('../layer5/IdealMinimalComponentCLI.js');
-    const cli = new IdealMinimalComponentCLI();
+    const { TestCompProdCLI } = await import('../layer5/TestCompProdCLI.js');
+    const cli = new TestCompProdCLI();
     
     if (!context) {
-      // No context - test completions on IdealMinimalComponent itself
-      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on IdealMinimalComponent${filter ? ` (filter: ${filter})` : ''}`);
+      // No context - test completions on TestCompProd itself
+      console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on TestCompProd${filter ? ` (filter: ${filter})` : ''}`);
       console.log(`---`);
       
       // Call completeParameter directly via OOP (completeParameter is on DefaultCLI)

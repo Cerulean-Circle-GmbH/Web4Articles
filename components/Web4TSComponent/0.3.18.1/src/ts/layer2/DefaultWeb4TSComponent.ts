@@ -5507,6 +5507,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       'MethodInfo.interface.ts',
       'MethodSignature.interface.ts',    // ✅ Added for Phase 3 DefaultCLI refactoring
       'Component.interface.ts',          // ✅ Added for Phase 1 architecture migration
+      'Reference.interface.ts',          // ✅ Added for DefaultCLI nullable reference type - @pdca 2025-11-05-UTC-2301
       'Completion.ts',
       'Colors.interface.ts'              // ✅ Added for DRY refactoring - centralized colors
     ];
@@ -5678,7 +5679,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     const scripts = [
       'lib-project-root.sh',  // @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md - DRY library FIRST!
       'clean.sh',
-      'clean-global.sh', 
+      'clean-local.sh',       // Local artifact cleanup
+      'clean-global.sh',      // Global node_modules cleanup
       'install-deps.sh',
       'build.sh',
       'start.sh',

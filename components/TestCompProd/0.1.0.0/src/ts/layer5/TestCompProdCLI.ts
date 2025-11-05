@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 
 /**
- * IdealMinimalComponentCLI - IdealMinimalComponent CLI implementation with chaining support
+ * TestCompProdCLI - TestCompProd CLI implementation with chaining support
  * Web4 pattern: Dependency-free CLI with component creation and chaining
  */
 
 import { DefaultCLI } from '../layer2/DefaultCLI.js';
-import { DefaultIdealMinimalComponent } from '../layer2/DefaultIdealMinimalComponent.js';
+import { DefaultTestCompProd } from '../layer2/DefaultTestCompProd.js';
 import { MethodSignature } from '../layer3/MethodSignature.interface.js';
 
-export class IdealMinimalComponentCLI extends DefaultCLI {
+export class TestCompProdCLI extends DefaultCLI {
   // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Use declare to override component type
-  protected declare component: DefaultIdealMinimalComponent;
+  protected declare component: DefaultTestCompProd;
   protected methodSignatures: Map<string, MethodSignature> = new Map();
 
   /**
@@ -28,22 +28,32 @@ export class IdealMinimalComponentCLI extends DefaultCLI {
     this.init();
     
     // Create component for method discovery
-    this.component = new DefaultIdealMinimalComponent().init();
+    this.component = new DefaultTestCompProd().init();
     
     // Discover methods from CLI (walks CLI prototype chain)
     this.discoverMethods();
+    
+    // Copy component methods to methodSignatures for test/completion discovery
+    // @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md - Populate methodSignatures from component
+    const componentMethods = this.component.listMethods();
+    for (const methodName of componentMethods) {
+      const signature = this.component.getMethodSignature(methodName);
+      if (signature) {
+        this.methodSignatures.set(methodName, signature);
+      }
+    }
   }
 
   /**
    * Static start method - Web4 radical OOP entry point
    */
   static async start(args: string[]): Promise<void> {
-    const cli = new IdealMinimalComponentCLI();
+    const cli = new TestCompProdCLI();
     await cli.execute(args);
   }
 
   /**
-   * IdealMinimalComponent-specific usage display using DefaultCLI dynamic generation
+   * TestCompProd-specific usage display using DefaultCLI dynamic generation
    */
   showUsage(): void {
     console.log(this.generateStructuredUsage());
@@ -85,5 +95,5 @@ export class IdealMinimalComponentCLI extends DefaultCLI {
 
 // Static entry point for shell execution
 if (import.meta.url === `file://${process.argv[1]}`) {
-  IdealMinimalComponentCLI.start(process.argv.slice(2));
+  TestCompProdCLI.start(process.argv.slice(2));
 }

@@ -63,9 +63,9 @@ cd "$COMPONENT_PATH" || {
 ./src/sh/build.sh
 
 # Check if CLI is available after smart build
-CLI_PATH="dist/ts/layer5/IdealMinimalComponentCLI.js"
+CLI_PATH="dist/ts/layer5/TestCompProdCLI.js"
 if [ ! -f "$CLI_PATH" ]; then
-    echo "❌ IdealMinimalComponent CLI build failed"
+    echo "❌ TestCompProd CLI build failed"
     exit 1
 fi
 

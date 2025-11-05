@@ -1,11 +1,11 @@
 /**
- * IdealMinimalComponentModel - IdealMinimalComponent Component Model Interface
+ * TestCompProdModel - TestCompProd Component Model Interface
  * Web4 pattern: Component model following auto-discovery patterns
  */
 
 import { Model } from './Model.interface.js';
 
-export interface IdealMinimalComponentModel extends Model {
+export interface TestCompProdModel extends Model {
   uuid: string;
   name: string;
   origin: string;

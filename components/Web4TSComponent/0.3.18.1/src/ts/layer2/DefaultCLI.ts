@@ -474,12 +474,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       
       // 2. Context methods (loaded component)
       if (this.context !== null) {
-        this.context.listMethods().forEach(name => allMethodNames.add(name));
+        this.context.listMethods().forEach((name: string) => allMethodNames.add(name));
       }
       
       // 3. Component methods (Web4TSComponent itself)
       if (this.component !== null) {
-        this.component.listMethods().forEach(name => allMethodNames.add(name));
+        this.component.listMethods().forEach((name: string) => allMethodNames.add(name));
       }
       
       let filtered = Array.from(allMethodNames)
