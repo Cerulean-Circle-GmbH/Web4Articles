@@ -5613,9 +5613,77 @@ export class DefaultPDCA implements PDCA {
       console.log(`✓ Would establish bidirectional chain: ${path.basename(mostRecentPDCA)} ←→ ${newPDCAFilename}\n`);
     }
     
+    // Step 8: Store original creation timestamp in git note (for rename creationDate)
+    // This preserves the original creation time through renames
+    // Note: Git notes are added AFTER the file is committed (by caller or test)
+    // The note will be added when the file first appears in git history
+    
     console.log(`✨ PDCA boilerplate ready for AI population!\n`);
     
     return this;
+  }
+
+  /**
+   * Adds a git note with the original creation timestamp to a committed PDCA file
+   * This preserves the original creation time through renames
+   * @param filePath Path to the PDCA file (must be committed to git)
+   * @returns true if note was added, false otherwise
+   */
+  async addCreationTimeNote(filePath: string): Promise<boolean> {
+    const { execSync } = await import('child_process');
+    const path = await import('path');
+    
+    // Use componentRoot for tests, otherwise use project root
+    const projectRoot = this.model.componentRoot || this.model.workingDirectory || await this.getProjectRoot();
+    const relativePath = path.relative(projectRoot, filePath);
+    
+    // Extract timestamp from filename
+    const filename = path.basename(filePath);
+    const timestampMatch = filename.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{6})/);
+    if (!timestampMatch) {
+      throw new Error(`Not a timestamped PDCA file: ${filename}`);
+    }
+    const timestamp = timestampMatch[1];
+    
+    // Get the commit SHA for the file
+    const commitSha = execSync(
+      `git log -1 --format=%H -- "${relativePath}"`,
+      { cwd: projectRoot, encoding: 'utf-8' }
+    ).trim();
+    
+    if (!commitSha) {
+      throw new Error(`File not committed yet: ${relativePath}`);
+    }
+    
+    // Check if note already exists
+    try {
+      const existingNote = execSync(
+        `git notes show ${commitSha}`,
+        { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+      ).trim();
+      
+      if (existingNote.includes('original_creation_time:')) {
+        return false; // Note already exists
+      }
+    } catch {
+      // No existing note - continue
+    }
+    
+    // Add git note with original creation timestamp
+    const noteContent = `original_creation_time:${timestamp}`;
+    execSync(
+      `git notes add -m "${noteContent}" ${commitSha}`,
+      { cwd: projectRoot }
+    );
+    
+    // Push notes to remote (optional - ignore errors)
+    try {
+      execSync('git push origin refs/notes/*', { cwd: projectRoot, stdio: 'pipe' });
+    } catch {
+      // Silently ignore push errors
+    }
+    
+    return true;
   }
 
   /**
