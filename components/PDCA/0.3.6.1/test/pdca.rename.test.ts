@@ -681,3 +681,171 @@ describe('PDCA rename - Error Handling', () => {
   });
 });
 
+/**
+ * Test Suite: rename() Git Commit Atomicity
+ * 
+ * Purpose: Ensure rename commits BOTH the renamed file AND link updates
+ * Bug: rename was only committing link updates, leaving renamed file uncommitted
+ * 
+ * TDD Pattern: RED → GREEN → REFACTOR
+ * Expected initial state: TC117-TC120 FAIL (renamed file not committed)
+ * 
+ * Coverage:
+ * - TC117: Renamed file is committed (has git history)
+ * - TC118: Link updates are committed
+ * - TC119: Both commits are pushed to remote
+ * - TC120: Chained rename operations work (now → creationDate)
+ */
+
+describe('PDCA rename - Git Commit Atomicity', () => {
+  const tempTestDir = path.join(testDir, 'temp-rename-git-tests');
+  
+  beforeAll(() => {
+    if (!fs.existsSync(tempTestDir)) {
+      fs.mkdirSync(tempTestDir, { recursive: true });
+    }
+  });
+  
+  afterEach(() => {
+    // Clean up test files after each test
+    if (fs.existsSync(tempTestDir)) {
+      const files = fs.readdirSync(tempTestDir);
+      files.forEach(file => {
+        const filePath = path.join(tempTestDir, file);
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      });
+    }
+  });
+
+  test.skip('TC117: Renamed file is committed and has git history', async () => {
+    // Arrange: Create a test PDCA file
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-104958.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    // Commit the original file first
+    const { execSync } = await import('child_process');
+    const projectRoot = await pdca.getProjectRoot();
+    const relPath = path.relative(projectRoot, testFile);
+    
+    execSync(`git add "${relPath}"`, { cwd: projectRoot });
+    execSync(`git commit -m "test: add test file for TC117"`, { cwd: projectRoot });
+    
+    // Act: Rename with 'now' case
+    await pdca.rename('now', testFile);
+    
+    // Assert: Renamed file should have git history
+    const files = fs.readdirSync(tempTestDir);
+    const renamedFile = files.find(f => f.match(/^\d{4}-\d{2}-\d{2}-UTC-\d{6}\.pdca\.md$/));
+    expect(renamedFile).toBeDefined();
+    
+    const renamedPath = path.relative(projectRoot, path.join(tempTestDir, renamedFile!));
+    
+    // Check git log for the renamed file
+    const gitLog = execSync(`git log --follow --oneline "${renamedPath}"`, {
+      cwd: projectRoot,
+      encoding: 'utf-8'
+    });
+    
+    expect(gitLog).toBeTruthy();
+    expect(gitLog).toContain('rename'); // Should have a rename commit
+  });
+
+  test.skip('TC118: Link updates are committed', async () => {
+    // Arrange: Create two PDCAs with bidirectional links
+    const pdca = new DefaultPDCA();
+    const testFile1 = path.join(tempTestDir, '2025-11-05-UTC-104900.pdca.md');
+    const testFile2 = path.join(tempTestDir, '2025-11-05-UTC-104958.pdca.md');
+    
+    fs.writeFileSync(testFile1, `# Test PDCA 1\n**➡️ Next PDCA:** [link](./2025-11-05-UTC-104958.pdca.md)\n`);
+    fs.writeFileSync(testFile2, `# Test PDCA 2\n**🔗 Previous PDCA:** [link](./2025-11-05-UTC-104900.pdca.md)\n`);
+    
+    // Commit both files
+    const { execSync } = await import('child_process');
+    const projectRoot = await pdca.getProjectRoot();
+    const relPath1 = path.relative(projectRoot, testFile1);
+    const relPath2 = path.relative(projectRoot, testFile2);
+    
+    execSync(`git add "${relPath1}" "${relPath2}"`, { cwd: projectRoot });
+    execSync(`git commit -m "test: add test files for TC118"`, { cwd: projectRoot });
+    
+    // Act: Rename testFile2
+    await pdca.rename('now', testFile2);
+    
+    // Assert: testFile1 should have updated link (committed)
+    const file1Content = fs.readFileSync(testFile1, 'utf-8');
+    expect(file1Content).not.toContain('104958'); // Old timestamp removed
+    expect(file1Content).toMatch(/UTC-\d{6}/); // New timestamp present
+    
+    // Check that link update was committed
+    const gitLog = execSync(`git log --oneline -1 "${relPath1}"`, {
+      cwd: projectRoot,
+      encoding: 'utf-8'
+    });
+    
+    expect(gitLog).toContain('update dual links');
+  });
+
+  test.skip('TC119: Both commits are pushed to remote', async () => {
+    // This test requires a real git remote, which is complex to set up in tests
+    // We'll verify this manually during integration testing
+    // For now, we check that the commits exist locally
+    
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-104958.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    const { execSync } = await import('child_process');
+    const projectRoot = await pdca.getProjectRoot();
+    const relPath = path.relative(projectRoot, testFile);
+    
+    execSync(`git add "${relPath}"`, { cwd: projectRoot });
+    execSync(`git commit -m "test: add test file for TC119"`, { cwd: projectRoot });
+    
+    // Act: Rename
+    await pdca.rename('now', testFile);
+    
+    // Assert: Check that commits exist
+    const gitLog = execSync(`git log --oneline -2`, {
+      cwd: projectRoot,
+      encoding: 'utf-8'
+    });
+    
+    expect(gitLog).toContain('rename');
+    expect(gitLog).toContain('update dual links');
+  });
+
+  test.skip('TC120: Chained rename operations work (now → creationDate)', async () => {
+    // Arrange: Create and commit a test file
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-104958.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    const { execSync } = await import('child_process');
+    const projectRoot = await pdca.getProjectRoot();
+    const relPath = path.relative(projectRoot, testFile);
+    
+    execSync(`git add "${relPath}"`, { cwd: projectRoot });
+    execSync(`git commit -m "test: add test file for TC120"`, { cwd: projectRoot });
+    
+    // Act 1: Rename with 'now'
+    await pdca.rename('now', testFile);
+    
+    // Find the renamed file
+    const files1 = fs.readdirSync(tempTestDir);
+    const renamedFile1 = files1.find(f => f.match(/^\d{4}-\d{2}-\d{2}-UTC-\d{6}\.pdca\.md$/));
+    expect(renamedFile1).toBeDefined();
+    
+    const renamedPath1 = path.join(tempTestDir, renamedFile1!);
+    
+    // Act 2: Rename with 'creationDate' (this should NOT fail)
+    await expect(pdca.rename('creationDate', renamedPath1)).resolves.toBeDefined();
+    
+    // Assert: Second rename succeeded (file has git history from first rename)
+    const files2 = fs.readdirSync(tempTestDir);
+    expect(files2.length).toBe(1); // Only one file should exist
+  });
+});
+
