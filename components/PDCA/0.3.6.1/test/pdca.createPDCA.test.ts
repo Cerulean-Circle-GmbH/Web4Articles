@@ -767,9 +767,49 @@ Test content
     }
   });
 
-  it('TC122: createPDCA stores original creation time in git note', () => {
-    // Simple test to verify setup
-    expect(true).toBe(true);
+  it('TC122: createPDCA stores original creation time in git note', async () => {
+    // Given: A new PDCA is being created in isolated test directory
+    const { execSync } = await import('child_process');
+    const sessionDir = path.join(testDataDir, 'session');
+    
+    // When: Creating a PDCA with explicit sessionDirectory
+    await pdca.createPDCA('Test Git Notes', 'Verify git note is created', sessionDir, false);
+    
+    // Then: File should be created
+    const files = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
+    expect(files.length).toBe(1);
+    
+    // Extract timestamp from filename
+    const timestampMatch = files[0].match(/(\d{4}-\d{2}-\d{2}-UTC-\d{6})/);
+    expect(timestampMatch).not.toBeNull();
+    
+    if (timestampMatch) {
+      const expectedTimestamp = timestampMatch[1];
+      
+      // Add and commit the file (since createPDCA doesn't commit in test env)
+      const filePath = path.join(sessionDir, files[0]);
+      execSync(`git add session/${files[0]}`, { cwd: testDataDir });
+      execSync(`git commit -m "Test commit"`, { cwd: testDataDir });
+      
+      // Add git note with original creation timestamp
+      const noteAdded = await pdca.addCreationTimeNote(filePath);
+      expect(noteAdded).toBe(true);
+      
+      // Get the commit SHA for the file
+      const commitSha = execSync(
+        `git log -1 --format=%H -- session/${files[0]}`,
+        { cwd: testDataDir, encoding: 'utf-8' }
+      ).trim();
+      
+      // Verify git note exists and contains correct timestamp
+      const note = execSync(
+        `git notes show ${commitSha}`,
+        { cwd: testDataDir, encoding: 'utf-8' }
+      ).trim();
+      
+      expect(note).toContain('original_creation_time:');
+      expect(note).toContain(expectedTimestamp);
+    }
   });
 
   it.skip('TC123: rename now preserves git note', async () => {
