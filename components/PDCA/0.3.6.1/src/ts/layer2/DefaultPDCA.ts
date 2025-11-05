@@ -5025,6 +5025,9 @@ export class DefaultPDCA implements PDCA {
    * - creationDate: Rename to git creation date
    * - strip: Remove description, keep timestamp only
    * - feature: Add .feature. marker before extension
+   * 
+   * @cliValues renameCase now creationDate strip feature
+   * @cliValues dryRun true false
    */
   async rename(
     renameCase: 'now' | 'creationDate' | 'strip' | 'feature',
