@@ -3186,9 +3186,10 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         const cleanLine = line.replace(/\x1B\[[0-9;]*m/g, "");
 
         // Check if this line represents a describe block
-        const describeMatch = cleanLine.match(/^\s+([a-z])\)/);
-        if (describeMatch && fileContext) {
-          const fullToken = `${fileContext}${describeMatch[1]}`;
+        // @pdca 2025-11-05-UTC-1900 - Match new format with file number: "18a)" instead of "a)"
+        const describeMatch = cleanLine.match(/^\s+(\d+[a-z])\)/);
+        if (describeMatch) {
+          const fullToken = describeMatch[1]; // Already includes file number like "18a"
 
           if (filteredTokens.includes(fullToken)) {
             // Add file header if not already added
