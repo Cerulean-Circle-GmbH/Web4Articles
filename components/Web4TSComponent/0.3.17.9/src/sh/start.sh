@@ -1,8 +1,8 @@
 #!/bin/sh
-echo "🚀 Starting PDCA (normal)..."
+echo "🚀 Starting Web4TSComponent (normal)..."
 
 # Check if rebuild is needed
-if [ ! -f "dist/ts/layer5/PDCACLI.js" ] || find src -name "*.ts" -newer "dist/ts/layer5/PDCACLI.js" 2>/dev/null | grep -q .; then
+if [ ! -f "dist/ts/layer5/Web4TSComponentCLI.js" ] || find src -name "*.ts" -newer "dist/ts/layer5/Web4TSComponentCLI.js" 2>/dev/null | grep -q .; then
     echo "🔧 Source files updated, rebuilding..."
     
     # Clean local artifacts only

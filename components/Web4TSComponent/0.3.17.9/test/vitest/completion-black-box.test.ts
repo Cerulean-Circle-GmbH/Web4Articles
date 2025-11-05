@@ -225,6 +225,30 @@ describe('Bash Completion - Black Box Integration', () => {
 
       expect(hasMethodLabel && hasDocumentation && hasWord).toBe(true);
     });
+
+    it('should complete all file numbers for test file command', () => {
+      // @pdca 2025-11-05-UTC-1616 - Regression test for hierarchical file completion
+      const output = runCompletion(3, 'web4tscomponent', 'test', 'file', '');
+      const clean = stripAnsi(output);
+
+      // Verify diagnostic output
+      expect(clean).toContain('📊 Completing: PARAMETER of test');
+      expect(clean).toContain('Parameter: <references>');
+      expect(clean).toContain('Callback: DefaultWeb4TSComponent.referencesParameterCompletion()');
+
+      // Verify ALL file numbers are present (not just "1:")
+      // At minimum, check for first 5 files
+      expect(clean).toContain('WORD: 1');
+      expect(clean).toContain('WORD: 2');
+      expect(clean).toContain('WORD: 3');
+      expect(clean).toContain('WORD: 4');
+      expect(clean).toContain('WORD: 5');
+
+      // Count WORD lines to ensure multiple tokens are generated
+      const wordMatches = clean.match(/WORD: \d+/g);
+      expect(wordMatches).toBeTruthy();
+      expect(wordMatches!.length).toBeGreaterThan(10); // Should have many files
+    });
   });
 });
 

@@ -298,16 +298,12 @@ export class TestFileParser {
     const cyan = colors.toolName;  // Use toolName for cyan bold
     const reset = colors.reset;
 
-    const lines: string[] = [];
     files.forEach((file, fileIndex) => {
       const fileNum = fileIndex + 1;
       const token = `${fileNum}`;
-      lines.push(`${cyan}${fileNum}:${reset}\t${file.name}`);
+      display.push(`${cyan}${fileNum}:${reset}\t${file.name}`);
       tokens.push(token);
     });
-
-    // Return as single string with newlines to trigger OOSH multi-line mode
-    display.push(lines.join('\n'));
 
     return { display, tokens };
   }

@@ -1,5 +1,5 @@
 #!/bin/sh
-echo "🚀 Starting PDCA (full clean)..."
+echo "🚀 Starting Web4TSComponent (full clean)..."
 
 # Clean local artifacts
 ./src/sh/clean.sh

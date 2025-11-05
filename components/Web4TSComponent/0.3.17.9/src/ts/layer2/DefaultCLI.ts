@@ -266,6 +266,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // the component needs to know about the loaded context (targetComponent)
     (this.component!.model as any).context = targetComponent;
     
+    // ✅ FIX: Also set context on loaded component itself (self-reference)
+    // This fixes context-aware methods (updateBuildSystem, start, etc.)
+    // that need this.model.context to be set, regardless of which instance runs them
+    // @pdca 2025-11-05-UTC-1809.pdca.md - Option D: Set context on both instances
+    (this.context.model as any).context = targetComponent;
+    
     // ✅ REMOVED: Context already discovered itself in init()!
     // @pdca 2025-11-05-UTC-1223.pdca.md - Self-discovery pattern, no batch rediscovery
     // Each component discovers its own methods when created, not batch-discovered by CLI
@@ -568,9 +574,14 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         // Try to find callback method on CLI (this), then on component (this.context)
         if (typeof (this as any)[callback] === "function") {
           const values = await (this as any)[callback]();
+          console.error(`DEBUG: Callback ${callback} returned ${values ? values.length : 0} values`);
+          if (values && values.length > 0) {
+            console.error(`DEBUG: First value length: ${values[0].length}, contains newline: ${values[0].includes('\n')}`);
+          }
           return values; // Return values for formatCompletionOutput in shCompletion
         } else if (this.context && typeof (this.context as any)[callback] === "function") {
           const values = await (this.context as any)[callback]();
+          console.error(`DEBUG: Callback ${callback} (context) returned ${values ? values.length : 0} values`);
           return values; // Return values for formatCompletionOutput in shCompletion
         }
       }
@@ -2096,6 +2107,15 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // Radical OOP: PUSH to model.completionOutputLines instead of console.log
     // @pdca 2025-11-04-UTC-2159.pdca.md - Centralized output in model
     
+    // DEBUG: Check what we're receiving
+    console.error(`DEBUG: formatCompletionOutput received ${values.length} values`);
+    if (values.length > 0) {
+      console.error(`DEBUG: First value: ${JSON.stringify(values[0].substring(0, 100))}`);
+      if (values.length > 1) {
+        console.error(`DEBUG: Second value: ${JSON.stringify(values[1].substring(0, 100))}`);
+      }
+    }
+    
     // UX: Always provide feedback when no completions are available
     if (!values || values.length === 0) {
       this.model.completionOutputLines.push("DISPLAY: (no completions available)");
@@ -2211,9 +2231,19 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         // Strip ANSI escape codes: \x1b[...m
         const cleanLine = firstLine.replace(/\x1b\[[0-9;]*m/g, "");
 
-        // Extract word: "1: methodName <params>" -> "methodName" OR "methodName <params>" -> "methodName"
-        const match = cleanLine.match(/^\d+:\s*(\S+)/);
-        let word = match ? match[1] : cleanLine.split(" ")[0];
+        // Extract word: "1: methodName <params>" -> "methodName" OR "1:\tfilename" -> "1"
+        // @pdca 2025-11-05-UTC-1616 - Extract token (number) for hierarchical completions
+        // Check if this is a hierarchical token (number followed by tab or colon-space-tab)
+        const hierarchicalMatch = cleanLine.match(/^(\d+):\t/);
+        let word;
+        if (hierarchicalMatch) {
+          // Hierarchical format: "1:\tfilename" -> extract "1"
+          word = hierarchicalMatch[1];
+        } else {
+          // Method format: "1: methodName <params>" -> extract "methodName"
+          const methodMatch = cleanLine.match(/^\d+:\s*(\S+)/);
+          word = methodMatch ? methodMatch[1] : cleanLine.split(" ")[0];
+        }
 
         // Strip parameter syntax if present: <?action> -> action, <what> -> what
         const paramMatch = word.match(/^<\??([^>:'"]+)/);
@@ -2526,8 +2556,10 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @cliHide
    */
   private async completeCommandParameter(): Promise<void> {
+    console.error(`DEBUG: completeCommandParameter called`);
     await this.outputCompletionDiagnostic();
     const values = await this.getValidCompletionValues();
+    console.error(`DEBUG: getValidCompletionValues returned ${values.length} values`);
     this.formatCompletionOutput(values);
   }
 
