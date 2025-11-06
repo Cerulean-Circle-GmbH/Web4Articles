@@ -6079,6 +6079,33 @@ export class DefaultPDCA implements PDCA {
       fs.writeFileSync(filePath, templateContent, 'utf-8');
       console.log(`✅ Rewritten in-place: ${path.basename(filePath)}`);
       console.log(`📁 Location: ${filePath}\n`);
+      
+      // Step 8: Commit and push the rewritten PDCA
+      const { execSync } = await import('child_process');
+      
+      try {
+        console.log(`📦 Git operations:`);
+        
+        const relativePath = path.relative(projectRoot, filePath);
+        
+        // Add and commit
+        execSync(`git add "${relativePath}"`, { cwd: projectRoot, stdio: 'pipe' });
+        console.log(`   ✅ Added: ${relativePath}`);
+        
+        const commitMsg = `fix: rewrite corrupted PDCA ${path.basename(filePath)}`;
+        execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot, stdio: 'pipe' });
+        console.log(`   ✅ Committed: ${commitMsg}`);
+        
+        // Push to remote
+        const branch = execSync('git branch --show-current', {
+          cwd: projectRoot,
+          encoding: 'utf-8'
+        }).trim();
+        execSync(`git push origin ${branch}`, { cwd: projectRoot, stdio: 'inherit' });
+        console.log(`   ✅ Pushed to remote\n`);
+      } catch (gitError: any) {
+        console.log(`   ⚠️  Git error: ${gitError.message}\n`);
+      }
     } else {
       console.log(`✓ Would rewrite file: ${path.basename(filePath)}`);
       console.log(`✓ Would preserve timestamp: ${timestamp}\n`);
