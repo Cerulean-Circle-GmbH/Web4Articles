@@ -1237,5 +1237,47 @@ Test content
     expect(sessionContext).not.toContain('N/A →');
     expect(sessionContext).not.toContain('{{SESSION_NAME}}');
   });
+
+  it('TC136: Git note preserved through multiple renames with intermediate commits', async () => {
+    const { execSync } = await import('child_process');
+    const sessionDir = path.join(testDataDir, 'session');
+    
+    // Given: A PDCA created at T1
+    await pdca.createPDCA('Multi Rename Test', 'Test git note preservation', sessionDir, false);
+    
+    const files = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
+    const originalFile = files[0];
+    const originalTimestamp = originalFile.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{6})/)?.[1];
+    
+    // Commit the file and add git note
+    execSync(`git add session/${originalFile}`, { cwd: testDataDir });
+    execSync(`git commit -m "Add TC136 test PDCA"`, { cwd: testDataDir });
+    await pdca.addCreationTimeNote(path.join(sessionDir, originalFile));
+    
+    // Wait to ensure different timestamps
+    await new Promise(resolve => setTimeout(resolve, 1100));
+    
+    // When: Multiple renames (each creates multiple commits)
+    // Rename 1: now (creates 2 commits: rename + relative path fix)
+    await pdca.rename('now', path.join(sessionDir, originalFile), false);
+    let currentFiles = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
+    
+    // Wait again
+    await new Promise(resolve => setTimeout(resolve, 1100));
+    
+    // Rename 2: now again (creates 2 more commits)
+    await pdca.rename('now', path.join(sessionDir, currentFiles[0]), false);
+    currentFiles = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
+    
+    // Then: rename creationDate should still work (git note must be preserved)
+    await pdca.rename('creationDate', path.join(sessionDir, currentFiles[0]), false);
+    
+    const finalFiles = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
+    const finalFile = finalFiles[0];
+    const finalTimestamp = finalFile.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{6})/)?.[1];
+    
+    // Verify we successfully restored to original timestamp
+    expect(finalTimestamp).toBe(originalTimestamp);
+  });
 });
 

@@ -5076,56 +5076,66 @@ export class DefaultPDCA implements PDCA {
             console.log(`   ✅ Committed: ${commitMsg}`);
             console.log(`   ✅ Pushed to remote\n`);
             
-            // Copy git note from old commit to new commit (preserves original creation time)
+            // Copy git note from most recent commit that has one (preserves original creation time)
+            // Search backwards through file history to find a commit with a git note
             try {
-              console.log(`   🔍 Checking for git note to preserve...`);
-              console.log(`   📌 Old commit SHA: ${oldCommitSha || 'none'}`);
+              console.log(`   🔍 Searching for git note to preserve...`);
               
-              // Use the oldCommitSha we captured BEFORE the rename
-              if (oldCommitSha) {
-                // Check if old commit has a git note
+              const commitHistory = execSync(
+                `git log --all --follow --format=%H -- "${newNormalized}"`,
+                { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+              ).trim().split('\n');
+              
+              let foundNote = null;
+              
+              // Search backwards through history for a commit with a git note
+              for (const commitSha of commitHistory) {
+                if (!commitSha) continue;
+                
                 try {
-                  const oldNote = execSync(
-                    `git notes show ${oldCommitSha}`,
+                  const note = execSync(
+                    `git notes show ${commitSha}`,
                     { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
                   ).trim();
                   
-                  console.log(`   📝 Found git note: ${oldNote}`);
-                  
-                  if (oldNote && oldNote.includes('original_creation_time:')) {
-                    // Get the commit SHA for the new file (after rename)
-                    const newCommitSha = execSync(
-                      `git log -1 --format=%H -- "${newNormalized}"`,
-                      { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
-                    ).trim();
-                    
-                    console.log(`   📌 New commit SHA: ${newCommitSha}`);
-                    
-                    if (newCommitSha) {
-                      // Copy the note to the new commit
-                      execSync(
-                        `git notes add -m "${oldNote}" ${newCommitSha}`,
-                        { cwd: projectRoot, stdio: 'pipe' }
-                      );
-                      
-                      console.log(`   ✅ Git note copied to new commit`);
-                      
-                      // Push notes to remote (silently ignore errors)
-                      try {
-                        execSync('git push origin refs/notes/*', { cwd: projectRoot, stdio: 'pipe' });
-                        console.log(`   ✅ Git note preserved (original creation time)\n`);
-                      } catch (pushError: any) {
-                        console.log(`   ⚠️  Failed to push git notes: ${pushError.message}`);
-                      }
-                    }
-                  } else {
-                    console.log(`   ℹ️  No original_creation_time note found`);
+                  if (note && note.includes('original_creation_time:')) {
+                    foundNote = note;
+                    console.log(`   📝 Found git note in history: ${note}`);
+                    break;
                   }
-                } catch (noteError: any) {
-                  console.log(`   ℹ️  No git note found on old commit`);
+                } catch {
+                  // No note on this commit, continue searching
+                }
+              }
+              
+              if (foundNote) {
+                // Get the commit SHA for the new file (after rename)
+                const newCommitSha = execSync(
+                  `git log -1 --format=%H -- "${newNormalized}"`,
+                  { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+                ).trim();
+                
+                console.log(`   📌 New commit SHA: ${newCommitSha}`);
+                
+                if (newCommitSha) {
+                  // Copy the note to the new commit
+                  execSync(
+                    `git notes add -m "${foundNote}" ${newCommitSha}`,
+                    { cwd: projectRoot, stdio: 'pipe' }
+                  );
+                  
+                  console.log(`   ✅ Git note copied to new commit`);
+                  
+                  // Push notes to remote (silently ignore errors)
+                  try {
+                    execSync('git push origin refs/notes/*', { cwd: projectRoot, stdio: 'pipe' });
+                    console.log(`   ✅ Git note preserved (original creation time)\n`);
+                  } catch (pushError: any) {
+                    console.log(`   ⚠️  Failed to push git notes: ${pushError.message}`);
+                  }
                 }
               } else {
-                console.log(`   ℹ️  No old commit SHA available`);
+                console.log(`   ℹ️  No git note found in file history`);
               }
             } catch (error: any) {
               console.log(`   ⚠️  Error handling git notes: ${error.message}`);
@@ -5192,47 +5202,62 @@ export class DefaultPDCA implements PDCA {
         // Commit the link fixes in the renamed file
         if (usedGit) {
           try {
-            // Get the commit SHA before the new commit (to copy git note from)
-            const previousCommitSha = execSync(
-              `git log -1 --format=%H -- "${newNormalized}"`,
-              { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
-            ).trim();
-            
             execSync(`git add "${newNormalized}"`, { cwd: projectRoot, stdio: 'pipe' });
             const commitMsg = `fix: update relative paths in ${path.basename(newNormalized)} after rename`;
             execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot, stdio: 'pipe' });
             
-            // Copy git note from previous commit to new commit (preserve original creation time)
-            if (previousCommitSha) {
-              try {
-                const oldNote = execSync(
-                  `git notes show ${previousCommitSha}`,
-                  { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
-                ).trim();
+            // Copy git note from most recent commit that has one (preserve original creation time)
+            // Search backwards through file history to find a commit with a git note
+            try {
+              const commitHistory = execSync(
+                `git log --all --follow --format=%H -- "${newNormalized}"`,
+                { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+              ).trim().split('\n');
+              
+              let foundNote = null;
+              
+              // Search backwards through history for a commit with a git note
+              for (const commitSha of commitHistory) {
+                if (!commitSha) continue;
                 
-                if (oldNote && oldNote.includes('original_creation_time:')) {
-                  const newCommitSha = execSync(
-                    `git log -1 --format=%H -- "${newNormalized}"`,
+                try {
+                  const note = execSync(
+                    `git notes show ${commitSha}`,
                     { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
                   ).trim();
                   
-                  if (newCommitSha) {
-                    execSync(
-                      `git notes add -m "${oldNote}" ${newCommitSha}`,
-                      { cwd: projectRoot, stdio: 'pipe' }
-                    );
-                    
-                    // Push notes to remote (silently ignore errors)
-                    try {
-                      execSync('git push origin refs/notes/*', { cwd: projectRoot, stdio: 'pipe' });
-                    } catch {
-                      // Ignore push errors for notes
-                    }
+                  if (note && note.includes('original_creation_time:')) {
+                    foundNote = note;
+                    break;
+                  }
+                } catch {
+                  // No note on this commit, continue searching
+                }
+              }
+              
+              if (foundNote) {
+                // Copy the note to the new commit
+                const newCommitSha = execSync(
+                  `git log -1 --format=%H -- "${newNormalized}"`,
+                  { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+                ).trim();
+                
+                if (newCommitSha) {
+                  execSync(
+                    `git notes add -m "${foundNote}" ${newCommitSha}`,
+                    { cwd: projectRoot, stdio: 'pipe' }
+                  );
+                  
+                  // Push notes to remote (silently ignore errors)
+                  try {
+                    execSync('git push origin refs/notes/*', { cwd: projectRoot, stdio: 'pipe' });
+                  } catch {
+                    // Ignore push errors for notes
                   }
                 }
-              } catch {
-                // No note found on previous commit - that's okay
               }
+            } catch {
+              // Git note search failed - this is okay (file might not have notes)
             }
             
             const branch = execSync('git branch --show-current', {
@@ -5363,27 +5388,36 @@ export class DefaultPDCA implements PDCA {
           let creationTimestamp: string | null = null;
           
           // Step 1: Try to get original creation time from git notes
+          // Search backwards through file history to find a commit with a git note
           try {
-            const commitSha = execSync(
-              `git log -1 --format=%H -- "${normalized}"`,
+            const commitHistory = execSync(
+              `git log --all --follow --format=%H -- "${normalized}"`,
               { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
-            ).trim();
+            ).trim().split('\n');
             
-            if (commitSha) {
-              const note = execSync(
-                `git notes show ${commitSha}`,
-                { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
-              ).trim();
+            // Search backwards through history for a commit with a git note
+            for (const commitSha of commitHistory) {
+              if (!commitSha) continue;
               
-              // Extract timestamp from note (format: original_creation_time:YYYY-MM-DD-UTC-HHMMSS)
-              const noteMatch = note.match(/original_creation_time:(\d{4}-\d{2}-\d{2}-UTC-\d{6})/);
-              if (noteMatch) {
-                creationTimestamp = noteMatch[1];
-                console.log(`   ℹ️  Using original creation time from git note: ${creationTimestamp}`);
+              try {
+                const note = execSync(
+                  `git notes show ${commitSha}`,
+                  { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+                ).trim();
+                
+                // Extract timestamp from note (format: original_creation_time:YYYY-MM-DD-UTC-HHMMSS)
+                const noteMatch = note.match(/original_creation_time:(\d{4}-\d{2}-\d{2}-UTC-\d{6})/);
+                if (noteMatch) {
+                  creationTimestamp = noteMatch[1];
+                  console.log(`   ℹ️  Using original creation time from git note: ${creationTimestamp}`);
+                  break;
+                }
+              } catch {
+                // No note on this commit, continue searching
               }
             }
           } catch {
-            // No git note found - continue to fallback
+            // Git note search failed - continue to fallback
           }
           
           // Step 2: Fallback to git log if no note found
