@@ -288,12 +288,14 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
    * @param references Test references for selective testing (e.g., file number, describe reference, itCase token)
    * @cliSyntax scope references
    * @cliDefault scope all
+   * @cliValues file describe itCase
    * @cliExample {{COMPONENT_LOWER}} test
    * @cliExample {{COMPONENT_LOWER}} test file
    * @cliExample {{COMPONENT_LOWER}} test file 1
    * @cliExample {{COMPONENT_LOWER}} test describe 3b
    * @cliExample {{COMPONENT_LOWER}} test itCase 1a1
    * @pdca 2025-11-03-UTC-1200.pdca.md - Replaced 178-line implementation with 1-line delegation
+   * @pdca 2025-11-06-UTC-0150.delegated-parameter-completion-broken.pdca.md - Added @cliValues for parameter completion
    */
   async test(scope: string = 'all', ...references: string[]): Promise<this> {
     return this.delegateToWeb4TS('test', scope, ...references);
