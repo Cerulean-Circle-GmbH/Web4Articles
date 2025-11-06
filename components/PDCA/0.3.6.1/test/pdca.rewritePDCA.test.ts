@@ -466,8 +466,8 @@ MISSING CHECK SECTION`;
     expect(rewrittenContent).toContain('This is valid content with over 50 characters');
   });
 
-  // TC-PRESERVE-02: Invalid CHECK section is reset to template
-  it('TC-PRESERVE-02: Resets invalid CHECK section to template automatically', async () => {
+  // TC-PRESERVE-02: Invalid CHECK section is preserved in recovery (zero data loss)
+  it('TC-PRESERVE-02: Preserves invalid CHECK section in recovery section (zero data loss)', async () => {
     // Setup: Create corrupted PDCA with explicitly invalid CHECK section
     const resetTestPath = path.join(testDataDir, '2025-11-04-UTC-1031.pdca.md');
     const corruptedWithInvalidCheck = `# 📋 **PDCA Cycle: Test Reset - Test Reset**
@@ -496,20 +496,21 @@ MISSING CHECK SECTION
 
     fs.writeFileSync(resetTestPath, corruptedWithInvalidCheck, 'utf-8');
 
-    // Action: rewritePDCA (Option B resets invalid sections)
+    // Action: rewritePDCA (Zero data loss: preserves all content)
     await pdca.rewritePDCA(resetTestPath);
 
-    // Assert: Invalid CHECK section should be reset (not contain "MISSING")
+    // Assert: Invalid content preserved in recovery section (zero data loss)
     const rewrittenContent = fs.readFileSync(resetTestPath, 'utf-8');
-    expect(rewrittenContent).not.toContain('MISSING CHECK SECTION');
+    expect(rewrittenContent).toContain('MISSING CHECK SECTION'); // Now preserved, not lost
+    expect(rewrittenContent).toContain('🔍 RECOVERED CONTENT'); // In recovery section
     
-    // Should contain template CHECK structure
+    // Should still contain template CHECK structure
     expect(rewrittenContent).toContain('## **✅ CHECK**');
     expect(rewrittenContent).toContain('**Verification Results:**');
   });
 
-  // TC-PRESERVE-03: Mixed content (selective preservation)
-  it('TC-PRESERVE-03: Selectively preserves valid sections, resets invalid sections', async () => {
+  // TC-PRESERVE-03: Mixed content (zero data loss with valid + invalid)
+  it('TC-PRESERVE-03: Preserves valid sections + invalid in recovery (zero data loss)', async () => {
     // Setup: Create PDCA with mixed content (some valid, some invalid)
     const mixedTestPath = path.join(testDataDir, '2025-11-04-UTC-1032.pdca.md');
     const validACTContent = `**Success Achieved:** Feature implementation complete with zero regressions!
@@ -556,21 +557,23 @@ ${validACTContent}
     // Action: rewritePDCA
     await pdca.rewritePDCA(mixedTestPath);
 
-    // Assert: Valid sections preserved (DO, ACT), invalid sections reset (PLAN, CHECK)
+    // Assert: Valid sections preserved in correct places, invalid in recovery (zero data loss)
     const rewrittenContent = fs.readFileSync(mixedTestPath, 'utf-8');
     
-    // Valid DO section should be preserved
+    // Valid DO section should be preserved in DO
     expect(rewrittenContent).toContain('Valid DO section with implementation details');
     
-    // Valid ACT section should be preserved (check for the actual content)
+    // Valid ACT section should be preserved in ACT
     expect(rewrittenContent).toContain('**Success Achieved:**');
     expect(rewrittenContent).toContain('Feature implementation complete');
     expect(rewrittenContent).toContain('DRY principle applied');
     
-    // Invalid PLAN should be reset (not contain "CORRUPTED")
-    expect(rewrittenContent).not.toContain('CORRUPTED PLAN');
+    // Invalid content preserved in recovery section (zero data loss)
+    expect(rewrittenContent).toContain('CORRUPTED PLAN'); // Now preserved, not lost
+    expect(rewrittenContent).toContain('Short.'); // Now preserved, not lost
+    expect(rewrittenContent).toContain('🔍 RECOVERED CONTENT');
     
-    // Invalid CHECK should be reset (not contain just "Short.")
+    // Should still have template structure
     expect(rewrittenContent).toContain('**Verification Results:**');
   });
 
