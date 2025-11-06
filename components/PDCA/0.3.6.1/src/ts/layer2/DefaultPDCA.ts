@@ -6246,9 +6246,26 @@ export class DefaultPDCA implements PDCA {
   private async updateNextLinkInternal(previousPDCAPath: string, newPDCAPath: string): Promise<void> {
     const fs = await import('fs');
     const path = await import('path');
+    const { execSync } = await import('child_process');
     
-    const projectRoot = await this.getProjectRoot();
-    const branch = this.model.currentBranch || 'main';
+    // Use componentRoot or workingDirectory from model for tests, otherwise use actual project root
+    const projectRoot = this.model.componentRoot || this.model.workingDirectory || await this.getProjectRoot();
+    
+    // Get current branch from git (branch-aware dual links)
+    // Fall back to model setting or 'main' if git fails (e.g., in tests)
+    let branch: string;
+    try {
+      branch = execSync('git branch --show-current', {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      if (!branch) {
+        branch = this.model.currentBranch || 'main';
+      }
+    } catch {
+      branch = this.model.currentBranch || 'main';
+    }
+    
     const repoUrl = this.model.repoUrl || 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
     
     // Generate dual links for new PDCA

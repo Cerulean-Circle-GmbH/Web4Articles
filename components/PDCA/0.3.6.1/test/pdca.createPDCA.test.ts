@@ -971,5 +971,55 @@ Test content
     
     expect(finalTimestamp).toBe(originalTimestamp);
   });
+
+  /**
+   * TC127: Next PDCA link uses current git branch in GitHub URL
+   * 
+   * When createPDCA establishes bidirectional chains, the "Next PDCA" link
+   * in the previous PDCA must use the current git branch in the GitHub URL,
+   * not hardcoded 'main'.
+   * 
+   * Example:
+   *  ❌ Wrong: blob/main/components/PDCA/...
+   *  ✅ Right: blob/dev/2025-10-31-UTC-11-07/components/PDCA/...
+   * 
+   * Requirement: CMM3 4c - Links MUST be verifiable (same branch)
+   * Pattern: Use getDualLink internally for branch-aware GitHub URLs
+   */
+  it('TC127: createPDCA Next PDCA link uses correct git branch in GitHub URL', async () => {
+    const { execSync } = await import('child_process');
+    const sessionDir = path.join(testDataDir, 'session');
+    
+    // Given: A git repository on a non-main branch
+    execSync('git checkout -b test-branch-127', { cwd: testDataDir });
+    const currentBranch = execSync('git branch --show-current', { 
+      cwd: testDataDir, 
+      encoding: 'utf-8' 
+    }).trim();
+    expect(currentBranch).toBe('test-branch-127');
+    
+    // Create first PDCA
+    await pdca.createPDCA('First PDCA', 'Initial test', sessionDir, false);
+    const files1 = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
+    expect(files1.length).toBe(1);
+    const firstPdcaPath = path.join(sessionDir, files1[0]);
+    
+    // When: Creating second PDCA (should update first PDCA's "Next PDCA" link)
+    await pdca.createPDCA('Second PDCA', 'Next test', sessionDir, false);
+    
+    // Then: First PDCA's "Next PDCA" link should have correct branch in GitHub URL
+    const firstPdcaContent = fs.readFileSync(firstPdcaPath, 'utf-8');
+    const nextPdcaMatch = firstPdcaContent.match(/\*\*➡️ Next PDCA:\*\* \[GitHub\]\((https:\/\/github\.com\/[^)]+)\)/);
+    
+    expect(nextPdcaMatch).toBeTruthy();
+    const githubUrl = nextPdcaMatch![1];
+    
+    // Verify GitHub URL contains current branch, not 'main'
+    expect(githubUrl).toContain('blob/test-branch-127/');
+    expect(githubUrl).not.toContain('blob/main/');
+    
+    // Verify complete URL structure (path varies by test environment)
+    expect(githubUrl).toMatch(/https:\/\/github\.com\/[^/]+\/[^/]+\/blob\/test-branch-127\//);
+  });
 });
 
