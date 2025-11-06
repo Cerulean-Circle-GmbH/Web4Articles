@@ -5192,9 +5192,48 @@ export class DefaultPDCA implements PDCA {
         // Commit the link fixes in the renamed file
         if (usedGit) {
           try {
+            // Get the commit SHA before the new commit (to copy git note from)
+            const previousCommitSha = execSync(
+              `git log -1 --format=%H -- "${newNormalized}"`,
+              { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+            ).trim();
+            
             execSync(`git add "${newNormalized}"`, { cwd: projectRoot, stdio: 'pipe' });
             const commitMsg = `fix: update relative paths in ${path.basename(newNormalized)} after rename`;
             execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot, stdio: 'pipe' });
+            
+            // Copy git note from previous commit to new commit (preserve original creation time)
+            if (previousCommitSha) {
+              try {
+                const oldNote = execSync(
+                  `git notes show ${previousCommitSha}`,
+                  { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+                ).trim();
+                
+                if (oldNote && oldNote.includes('original_creation_time:')) {
+                  const newCommitSha = execSync(
+                    `git log -1 --format=%H -- "${newNormalized}"`,
+                    { cwd: projectRoot, encoding: 'utf-8', stdio: 'pipe' }
+                  ).trim();
+                  
+                  if (newCommitSha) {
+                    execSync(
+                      `git notes add -m "${oldNote}" ${newCommitSha}`,
+                      { cwd: projectRoot, stdio: 'pipe' }
+                    );
+                    
+                    // Push notes to remote (silently ignore errors)
+                    try {
+                      execSync('git push origin refs/notes/*', { cwd: projectRoot, stdio: 'pipe' });
+                    } catch {
+                      // Ignore push errors for notes
+                    }
+                  }
+                }
+              } catch {
+                // No note found on previous commit - that's okay
+              }
+            }
             
             const branch = execSync('git branch --show-current', {
               cwd: projectRoot,
