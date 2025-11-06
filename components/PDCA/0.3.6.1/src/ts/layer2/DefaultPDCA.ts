@@ -5792,7 +5792,7 @@ export class DefaultPDCA implements PDCA {
           // Push to remote (ignore errors in test/isolated environments)
           try {
             const branch = execSync('git branch --show-current', { cwd: projectRoot, encoding: 'utf-8' }).trim();
-            execSync(`git push origin ${branch}`, { cwd: projectRoot, stdio: 'pipe' });
+            execSync(`git push origin ${branch}`, { cwd: projectRoot, stdio: 'inherit' });
             console.log(`   ✅ Pushed to remote\n`);
           } catch (pushError: any) {
             console.log(`   ⚠️  Push skipped (no remote configured)\n`);
