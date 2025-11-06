@@ -5232,6 +5232,7 @@ export class DefaultPDCA implements PDCA {
     dryRun: string = 'false'
   ): Promise<this> {
     const path = await import('path');
+    const fs = await import('fs');
     const { execSync } = await import('child_process');
     
     const projectRoot = await this.getProjectRoot();
@@ -5332,11 +5333,25 @@ export class DefaultPDCA implements PDCA {
               { cwd: projectRoot, encoding: 'utf-8' }
             ).trim();
             
-            if (!gitLog) {
-              throw new Error(`File has no git history: ${normalized}`);
+            if (gitLog) {
+              const creationDate = new Date(gitLog.split('\n')[0]);
+              const year = creationDate.getUTCFullYear();
+              const month = String(creationDate.getUTCMonth() + 1).padStart(2, '0');
+              const day = String(creationDate.getUTCDate()).padStart(2, '0');
+              const hour = String(creationDate.getUTCHours()).padStart(2, '0');
+              const minute = String(creationDate.getUTCMinutes()).padStart(2, '0');
+              const second = String(creationDate.getUTCSeconds()).padStart(2, '0');
+              
+              creationTimestamp = `${year}-${month}-${day}-UTC-${hour}${minute}${second}`;
             }
-            
-            const creationDate = new Date(gitLog.split('\n')[0]);
+          }
+          
+          // Step 3: Final fallback to filesystem creation time for untracked files
+          if (!creationTimestamp) {
+            console.log(`   ℹ️  File not in git, using filesystem creation time`);
+            const stats = fs.statSync(fullPath);
+            // Use birthtime if available (creation time), otherwise mtime (modification time)
+            const creationDate = stats.birthtime || stats.mtime;
             const year = creationDate.getUTCFullYear();
             const month = String(creationDate.getUTCMonth() + 1).padStart(2, '0');
             const day = String(creationDate.getUTCDate()).padStart(2, '0');
@@ -5347,7 +5362,7 @@ export class DefaultPDCA implements PDCA {
             creationTimestamp = `${year}-${month}-${day}-UTC-${hour}${minute}${second}`;
           }
           
-          // Step 3: Apply timestamp format (preserve seconds if original had them)
+          // Step 4: Apply timestamp format (preserve seconds if original had them)
           // Extract just the time part from creationTimestamp
           const timeMatch = creationTimestamp.match(/UTC-(\d{6})/);
           if (!timeMatch) {
