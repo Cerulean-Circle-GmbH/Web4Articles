@@ -5188,6 +5188,27 @@ export class DefaultPDCA implements PDCA {
       
       if (fileModified) {
         fs.writeFileSync(newFullPath, newLines.join('\n'));
+        
+        // Commit the link fixes in the renamed file
+        if (usedGit) {
+          try {
+            execSync(`git add "${newNormalized}"`, { cwd: projectRoot, stdio: 'pipe' });
+            const commitMsg = `fix: update relative paths in ${path.basename(newNormalized)} after rename`;
+            execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot, stdio: 'pipe' });
+            
+            const branch = execSync('git branch --show-current', {
+              cwd: projectRoot,
+              encoding: 'utf-8'
+            }).trim();
+            execSync(`git push origin ${branch}`, { cwd: projectRoot, stdio: 'inherit' });
+            
+            console.log(`\n📦 Relative path updates:`);
+            console.log(`   ✅ Fixed relative paths in renamed file`);
+            console.log(`   ✅ Committed and pushed\n`);
+          } catch (error: any) {
+            console.log(`   ⚠️  Failed to commit link fixes: ${error.message}`);
+          }
+        }
       }
     }
 
