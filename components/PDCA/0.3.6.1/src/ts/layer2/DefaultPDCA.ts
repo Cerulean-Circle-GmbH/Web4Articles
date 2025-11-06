@@ -5797,6 +5797,32 @@ export class DefaultPDCA implements PDCA {
       }
     }
     
+    // Step 5c: Populate "PDCA Document:" self-referential dual link (Priority 1 auto-population)
+    {
+      const sessionRelativePath = path.relative(projectRoot, sessionDir);
+      const newPDCAProjectPath = `${sessionRelativePath}/${newPDCAFilename}`;
+      
+      // Generate GitHub URL for this PDCA
+      const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+      const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${newPDCAProjectPath}`;
+      
+      // Generate § notation (project-root-relative)
+      const sectionPath = `§/${newPDCAProjectPath}`;
+      
+      // Generate relative path (self-reference in same directory)
+      const relativePath = `./${newPDCAFilename}`;
+      
+      // Replace the "PDCA Document:" line in Artifact Links section
+      // Template line: - **PDCA Document:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+      const oldLine = /- \*\*PDCA Document:\*\* \[GitHub\]\(\{\{GITHUB_URL\}\}\) \| \[\{\{LOCAL_PATH\}\}\]\(\{\{LOCAL_PATH\}\}\)/;
+      const newLine = `- **PDCA Document:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`;
+      
+      templateContent = templateContent.replace(oldLine, newLine);
+      
+      // Fallback: Also handle simplified template placeholders if present
+      templateContent = templateContent.replace('{{ARTIFACT_LINKS}}', newLine);
+    }
+    
     // Step 6: Write new PDCA file
     if (!isDryRun) {
       fs.writeFileSync(newPDCAPath, templateContent, 'utf-8');

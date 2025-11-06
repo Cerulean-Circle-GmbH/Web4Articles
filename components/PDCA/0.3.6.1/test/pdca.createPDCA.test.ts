@@ -1006,5 +1006,44 @@ Test content
     // Verify complete URL structure (path varies by test environment)
     expect(githubUrl).toMatch(/https:\/\/github\.com\/[^/]+\/[^/]+\/blob\/test-branch-127\//);
   });
+
+  it('TC130: createPDCA auto-populates PDCA Document link (self-referential dual link)', async () => {
+    const sessionDir = path.join(testDataDir, 'session');
+    
+    // Given: Empty session directory
+    // When: Create a new PDCA
+    await pdca.createPDCA('Auto-Population Test', 'Priority 1 Implementation', sessionDir, false);
+    
+    // Then: PDCA file should contain self-referential dual link in Artifact Links section
+    const files = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
+    expect(files.length).toBe(1);
+    
+    const pdcaPath = path.join(sessionDir, files[0]);
+    const content = fs.readFileSync(pdcaPath, 'utf-8');
+    
+    // Extract PDCA Document link from Artifact Links section
+    const artifactLinkMatch = content.match(/- \*\*PDCA Document:\*\* \[GitHub\]\((https:\/\/github\.com\/[^)]+)\) \| \[([^\]]+)\]\(([^)]+)\)/);
+    
+    expect(artifactLinkMatch).toBeTruthy();
+    
+    const githubUrl = artifactLinkMatch![1];
+    const localPathDisplay = artifactLinkMatch![2];
+    const localPathHref = artifactLinkMatch![3];
+    
+    // Verify GitHub URL points to this PDCA file
+    expect(githubUrl).toContain(files[0]);
+    
+    // Verify local path display starts with §/
+    expect(localPathDisplay).toMatch(/^§\//);
+    
+    // Verify local path href is a relative path to itself
+    expect(localPathHref).toBe(`./${files[0]}`);
+    
+    // Verify the PDCA Document line specifically does not contain template placeholders
+    const pdcaDocumentLine = content.split('\n').find(line => line.includes('**PDCA Document:**'));
+    expect(pdcaDocumentLine).toBeDefined();
+    expect(pdcaDocumentLine).not.toContain('{{GITHUB_URL}}');
+    expect(pdcaDocumentLine).not.toContain('{{LOCAL_PATH}}');
+  });
 });
 
