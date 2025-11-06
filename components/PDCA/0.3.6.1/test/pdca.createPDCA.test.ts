@@ -1045,5 +1045,57 @@ Test content
     expect(pdcaDocumentLine).not.toContain('{{GITHUB_URL}}');
     expect(pdcaDocumentLine).not.toContain('{{LOCAL_PATH}}');
   });
+
+  it('TC131: createPDCA auto-populates Changed Files link (GitHub compare URL)', async () => {
+    const { execSync } = await import('child_process');
+    const sessionDir = path.join(testDataDir, 'session');
+    
+    // Given: A git repository with some commit history
+    // Create a first PDCA to establish baseline
+    await pdca.createPDCA('First PDCA', 'Baseline', sessionDir, false);
+    const files1 = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
+    expect(files1.length).toBe(1);
+    
+    // Add and commit the first PDCA to create a previous commit
+    const firstPdcaPath = path.join(sessionDir, files1[0]);
+    try {
+      execSync(`git add -f "${files1[0]}"`, { cwd: sessionDir });
+      execSync(`git commit -m "test: add first pdca for TC131"`, { cwd: sessionDir });
+    } catch (e) {
+      // Ignore git errors in test environment
+    }
+    
+    // Wait 1.5 seconds to ensure second PDCA gets different timestamp
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // When: Create a second PDCA (this should have a Changed Files link)
+    await pdca.createPDCA('Second PDCA', 'Test Changed Files Link', sessionDir, false);
+    
+    // Then: Second PDCA should contain Changed Files link with GitHub compare URL
+    const files2 = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
+    expect(files2.length).toBe(2);
+    
+    const secondPdcaFile = files2.find(f => f !== files1[0]);
+    expect(secondPdcaFile).toBeDefined();
+    
+    const secondPdcaPath = path.join(sessionDir, secondPdcaFile!);
+    const content = fs.readFileSync(secondPdcaPath, 'utf-8');
+    
+    // Extract Changed Files link from Artifact Links section
+    const changedFilesMatch = content.match(/- \*\*Changed Files:\*\* \[GitHub\]\((https:\/\/github\.com\/[^)]+\/compare\/[^)]+)\)/);
+    
+    expect(changedFilesMatch).toBeTruthy();
+    
+    const githubCompareUrl = changedFilesMatch![1];
+    
+    // Verify GitHub compare URL format: https://github.com/org/repo/compare/SHA1...SHA2
+    expect(githubCompareUrl).toMatch(/https:\/\/github\.com\/[^/]+\/[^/]+\/compare\/[a-f0-9]+\.\.\.[a-f0-9]+/);
+    
+    // Verify the Changed Files line specifically does not contain template placeholders
+    const changedFilesLine = content.split('\n').find(line => line.includes('**Changed Files:**'));
+    expect(changedFilesLine).toBeDefined();
+    expect(changedFilesLine).not.toContain('{{GITHUB_URL}}');
+    expect(changedFilesLine).not.toContain('{{LOCAL_PATH}}');
+  });
 });
 

@@ -5823,6 +5823,40 @@ export class DefaultPDCA implements PDCA {
       templateContent = templateContent.replace('{{ARTIFACT_LINKS}}', newLine);
     }
     
+    // Step 5d: Populate "Changed Files:" GitHub compare link (Priority 2 auto-population)
+    {
+      const { execSync } = await import('child_process');
+      
+      try {
+        // Get current HEAD commit SHA
+        const currentCommitSha = execSync('git rev-parse HEAD', { 
+          cwd: projectRoot, 
+          encoding: 'utf-8' 
+        }).trim();
+        
+        // Extract previous commit SHA from previousCommit string (format: "SHA - message" or "TBD")
+        const previousCommitSha = previousCommit.includes(' - ') 
+          ? previousCommit.split(' - ')[0] 
+          : previousCommit;
+        
+        if (previousCommitSha && previousCommitSha !== 'TBD' && currentCommitSha) {
+          // Generate GitHub compare URL
+          const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+          const compareUrl = `${githubBaseUrl}/compare/${previousCommitSha}...${currentCommitSha}`;
+          
+          // Replace the "Changed Files:" line in Artifact Links section
+          // Template line: - **Changed Files:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+          const oldLine = /- \*\*Changed Files:\*\* \[GitHub\]\(\{\{GITHUB_URL\}\}\) \| \[\{\{LOCAL_PATH\}\}\]\(\{\{LOCAL_PATH\}\}\)/;
+          const newLine = `- **Changed Files:** [GitHub](${compareUrl})`;
+          
+          templateContent = templateContent.replace(oldLine, newLine);
+        }
+      } catch (error: any) {
+        // If git commands fail, leave placeholder (test environment or no git)
+        console.log(`   ℹ️  Could not generate Changed Files link: ${error.message}`);
+      }
+    }
+    
     // Step 6: Write new PDCA file
     if (!isDryRun) {
       fs.writeFileSync(newPDCAPath, templateContent, 'utf-8');
