@@ -6057,21 +6057,37 @@ export class DefaultPDCA implements PDCA {
       }
     }
     
-    // Step 6.5: OPTION B - Smart Content Preservation (Always Preserve)
-    console.log(`🔍 Analyzing corrupted content for preservation...\n`);
-    const extractedSections = this.extractSections(content);
-    const sectionNames = Object.keys(extractedSections);
+    // Step 6.5: Zero Data Loss - Extract ALL content
+    console.log(`🔍 Analyzing corrupted content (zero data loss mode)...\n`);
+    const { mappableSections, unmappableContent } = this.extractAllContent(content);
+    const sectionNames = Object.keys(mappableSections);
     
     if (sectionNames.length > 0) {
-      console.log(`✅ Found ${sectionNames.length} valid section(s) to preserve:`);
+      console.log(`✅ Found ${sectionNames.length} mappable section(s):`);
       sectionNames.forEach(name => console.log(`   - ${name}`));
       console.log();
       
       // Merge extracted content into template
-      templateContent = this.mergeSections(templateContent, extractedSections);
-      console.log(`✅ Valid content preserved in rewritten PDCA\n`);
-    } else {
-      console.log(`⚠️  No valid content found to preserve (all sections corrupted or incomplete)\n`);
+      templateContent = this.mergeSections(templateContent, mappableSections);
+      console.log(`✅ Mappable content preserved in correct sections\n`);
+    }
+    
+    if (unmappableContent.length > 0) {
+      console.log(`⚠️  Found ${unmappableContent.length} unmappable content fragment(s)`);
+      console.log(`   Creating recovery section to preserve all data...\n`);
+      
+      // Append recovery section at the end
+      const recoverySection = `\n---\n\n## **🔍 RECOVERED CONTENT**\n\n` +
+        `**⚠️ The following content could not be automatically mapped to standard PDCA sections.**\n` +
+        `**Please review and manually integrate this content where appropriate.**\n` +
+        unmappableContent.join('\n') + '\n\n---\n';
+      
+      templateContent += recoverySection;
+      console.log(`✅ Unmappable content preserved in recovery section\n`);
+    }
+    
+    if (sectionNames.length === 0 && unmappableContent.length === 0) {
+      console.log(`⚠️  No content found to preserve (empty or metadata-only file)\n`);
     }
     
     // Step 7: Write to SAME filename (in-place rewrite)
@@ -6188,6 +6204,124 @@ export class DefaultPDCA implements PDCA {
       .replace(/{{FEEDBACK_TIMESTAMP}}/g, new Date().toISOString().split('T')[0] + ' UTC');
   }
   
+  /**
+   * Extract ALL content from corrupted PDCA (zero data loss)
+   * Returns: { mappableSections, unmappableContent }
+   * - mappableSections: Content with recognizable section headers
+   * - unmappableContent: Orphaned/unidentifiable content that must be preserved
+   * @cliHide
+   */
+  private extractAllContent(content: string): { 
+    mappableSections: Record<string, string>, 
+    unmappableContent: string[] 
+  } {
+    const mappableSections: Record<string, string> = {};
+    const unmappableContent: string[] = [];
+    
+    // Split content into lines for processing
+    const lines = content.split('\n');
+    let currentSection: string | null = null;
+    let currentContent: string[] = [];
+    let orphanedLines: string[] = [];
+    
+    // Known section headers (with and without proper ## formatting)
+    const sectionPatterns = [
+      { regex: /^## \*\*📊 SUMMARY\*\*/, name: '📊 SUMMARY' },
+      { regex: /^## \*\*📋 PLAN\*\*/, name: '📋 PLAN' },
+      { regex: /^## \*\*🔧 DO\*\*/, name: '🔧 DO' },
+      { regex: /^## \*\*✅ CHECK\*\*/, name: '✅ CHECK' },
+      { regex: /^## \*\*🎯 ACT\*\*/, name: '🎯 ACT' },
+      { regex: /^## \*\*💭 EMOTIONAL REFLECTION\*\*/, name: '💭 EMOTIONAL REFLECTION' },
+      // Fuzzy patterns for corrupted headers (missing ##)
+      { regex: /^\*\*📊 SUMMARY\*\*/, name: '📊 SUMMARY' },
+      { regex: /^\*\*📋 PLAN\*\*/, name: '📋 PLAN' },
+      { regex: /^\*\*🔧 DO\*\*/, name: '🔧 DO' },
+      { regex: /^\*\*✅ CHECK\*\*/, name: '✅ CHECK' },
+      { regex: /^\*\*🎯 ACT\*\*/, name: '🎯 ACT' },
+      { regex: /^\*\*💭 EMOTIONAL REFLECTION\*\*/, name: '💭 EMOTIONAL REFLECTION' },
+    ];
+    
+    let inMetadataHeader = true; // First part before any section is metadata
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      
+      // Check if this line is a section header
+      let matchedSection: string | null = null;
+      for (const pattern of sectionPatterns) {
+        if (pattern.regex.test(line)) {
+          matchedSection = pattern.name;
+          break;
+        }
+      }
+      
+      if (matchedSection) {
+        // Save previous section if it exists
+        if (currentSection && currentContent.length > 0) {
+          const sectionText = currentContent.join('\n').trim();
+          if (this.isValidContent(sectionText)) {
+            mappableSections[currentSection] = sectionText;
+          } else if (sectionText.length > 0) {
+            unmappableContent.push(`\n### From ${currentSection}:\n${sectionText}`);
+          }
+        }
+        
+        // Save orphaned lines before this section
+        if (orphanedLines.length > 0 && !inMetadataHeader) {
+          const orphanedText = orphanedLines.join('\n').trim();
+          if (orphanedText.length > 10) { // Ignore tiny fragments
+            unmappableContent.push(`\n### Orphaned Content:\n${orphanedText}`);
+          }
+          orphanedLines = [];
+        }
+        
+        // Start new section
+        inMetadataHeader = false;
+        currentSection = matchedSection;
+        currentContent = [];
+      } else if (line.trim() === '---') {
+        // Divider - end of current section
+        if (currentSection && currentContent.length > 0) {
+          const sectionText = currentContent.join('\n').trim();
+          if (this.isValidContent(sectionText)) {
+            mappableSections[currentSection] = sectionText;
+          } else if (sectionText.length > 0) {
+            unmappableContent.push(`\n### From ${currentSection}:\n${sectionText}`);
+          }
+          currentSection = null;
+          currentContent = [];
+        }
+      } else if (currentSection) {
+        // We're inside a section - collect content
+        currentContent.push(line);
+      } else if (!inMetadataHeader) {
+        // We're not in a section and past metadata - orphaned content
+        orphanedLines.push(line);
+      }
+      // If inMetadataHeader, skip (don't collect header/metadata lines)
+    }
+    
+    // Save final section if exists
+    if (currentSection && currentContent.length > 0) {
+      const sectionText = currentContent.join('\n').trim();
+      if (this.isValidContent(sectionText)) {
+        mappableSections[currentSection] = sectionText;
+      } else if (sectionText.length > 0) {
+        unmappableContent.push(`\n### From ${currentSection}:\n${sectionText}`);
+      }
+    }
+    
+    // Save final orphaned lines
+    if (orphanedLines.length > 0 && !inMetadataHeader) {
+      const orphanedText = orphanedLines.join('\n').trim();
+      if (orphanedText.length > 10) {
+        unmappableContent.push(`\n### Orphaned Content:\n${orphanedText}`);
+      }
+    }
+    
+    return { mappableSections, unmappableContent };
+  }
+
   /**
    * Extract sections from corrupted PDCA for content preservation (Option B)
    * Parses ## **SectionName** headers and extracts content between them
