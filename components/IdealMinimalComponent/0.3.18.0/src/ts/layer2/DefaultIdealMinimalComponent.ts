@@ -7,6 +7,7 @@ import { IdealMinimalComponent } from '../layer3/IdealMinimalComponent.interface
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { IdealMinimalComponentModel } from '../layer3/IdealMinimalComponentModel.interface.js';
 import { User } from '../layer3/User.interface.js';
+import { MethodSignature } from '../layer3/MethodSignature.interface.js';
 import { existsSync, lstatSync, readlinkSync, readdirSync, statSync } from 'fs';
 import { join, dirname } from 'path';
 
@@ -18,7 +19,7 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
   model: IdealMinimalComponentModel;
   private web4ts?: DefaultWeb4TSComponent; // Lazy-initialized Web4TSComponent for delegation
   private user?: User; // Optional User service (lazy initialization) - @pdca 2025-11-03-1135.pdca.md
-  private methods: Map<string, any> = new Map(); // Method discovery cache - @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md
+  private methods: Map<string, MethodSignature> = new Map(); // @pdca 2025-11-05-UTC-2301 - Match Web4TSComponent type
 
   constructor() {
     // Empty constructor - Web4 pattern
@@ -49,7 +50,7 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
    * @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md - Method discovery for tab completion
    * @cliHide
    */
-  getMethodSignature(name: string): any | null {
+  getMethodSignature(name: string): MethodSignature | null {
     return this.methods.get(name) || null;
   }
   

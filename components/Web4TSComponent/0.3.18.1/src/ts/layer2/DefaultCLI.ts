@@ -795,11 +795,21 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     command: string,
     args: string[]
   ): Promise<boolean> {
-    if (!this.cliMethods.has(command)) {
-      return false; // Command not found
+    // ✅ RADICAL OOP FIX: Check component methods in addition to CLI methods
+    // @pdca 2025-11-06-UTC-0030.functional-vs-radical-oop-analysis.pdca.md
+    // Check if method exists in CLI methods OR component methods
+    const isCliMethod = this.cliMethods.has(command);
+    const isComponentMethod = (this.context && this.context.hasMethod(command)) || 
+                               (this.component && this.component.hasMethod(command));
+    
+    if (!isCliMethod && !isComponentMethod) {
+      return false; // Command not found in either CLI or component
     }
 
-    const signature = this.cliMethods.get(command)!;
+    // Get signature from appropriate source
+    const signature = isCliMethod 
+      ? this.cliMethods.get(command)!
+      : (this.context?.getMethodSignature(command) || this.component?.getMethodSignature(command))!;
 
     // Dynamic argument validation with overload support
     const minArgs = this.getMinimumArguments(command);
@@ -844,8 +854,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       );
     }
 
-    // Check if method exists on CLI (this) or component
-    // Priority order:
+    // Execute method - Priority order:
     // 1. CLI methods (e.g., completeParameter, actionParameterCompletion, on)
     // 2. Loaded context via on() (if set)
     // 3. CLI's own component (fallback)
