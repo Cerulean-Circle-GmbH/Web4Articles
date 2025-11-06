@@ -5747,7 +5747,63 @@ export class DefaultPDCA implements PDCA {
       console.log(`✓ Would write to: ${newPDCAPath}\n`);
     }
     
-    // Step 7: Update previous PDCA's "Next PDCA:" link (bidirectional chaining)
+    // Step 7: Commit new PDCA and add git note (preserves original creation timestamp)
+    if (!isDryRun) {
+      const { execSync } = await import('child_process');
+      
+      try {
+        console.log(`📦 Git operations:`);
+        
+        // Add and commit the new PDCA
+        const newRelativePath = path.relative(projectRoot, newPDCAPath);
+        let isGitIgnored = false;
+        
+        try {
+          execSync(`git add "${newRelativePath}"`, { cwd: projectRoot });
+          console.log(`   ✅ Added: ${newRelativePath}`);
+        } catch (addError: any) {
+          // If file is gitignored (e.g., test files), skip git operations gracefully
+          if (addError.message.includes('ignored by one of your .gitignore files')) {
+            console.log(`   ℹ️  File is git-ignored, skipping git operations (test environment)\n`);
+            isGitIgnored = true;
+          } else {
+            throw new Error(`git add failed: ${addError.message}`);
+          }
+        }
+        
+        // Only proceed with git operations if file is not ignored
+        if (!isGitIgnored) {
+          const commitMsg = `feat: create PDCA ${newPDCAFilename}`;
+          try {
+            execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot });
+            console.log(`   ✅ Committed: ${commitMsg}`);
+          } catch (commitError: any) {
+            console.log(`   ⚠️  Commit failed: ${commitError.message}`);
+          }
+          
+          // Add git note with original creation timestamp
+          try {
+            await this.addCreationTimeNote(newPDCAPath);
+            console.log(`   ✅ Git note added (original creation time: ${timestamp})`);
+          } catch (noteError: any) {
+            console.log(`   ⚠️  Failed to add git note: ${noteError.message}`);
+          }
+          
+          // Push to remote (ignore errors in test/isolated environments)
+          try {
+            const branch = execSync('git branch --show-current', { cwd: projectRoot, encoding: 'utf-8' }).trim();
+            execSync(`git push origin ${branch}`, { cwd: projectRoot, stdio: 'pipe' });
+            console.log(`   ✅ Pushed to remote\n`);
+          } catch (pushError: any) {
+            console.log(`   ⚠️  Push skipped (no remote configured)\n`);
+          }
+        }
+      } catch (gitError: any) {
+        console.log(`   ⚠️  Git error: ${gitError.message}\n`);
+      }
+    }
+    
+    // Step 8: Update previous PDCA's "Next PDCA:" link (bidirectional chaining)
     if (mostRecentPDCA && !isDryRun) {
       await this.updateNextLinkInternal(mostRecentPDCA, newPDCAPath);
       console.log(`🔗 Bidirectional chain established: ${path.basename(mostRecentPDCA)} ←→ ${newPDCAFilename}\n`);
@@ -5755,11 +5811,6 @@ export class DefaultPDCA implements PDCA {
       console.log(`✓ Would update previous PDCA's "Next PDCA:" link`);
       console.log(`✓ Would establish bidirectional chain: ${path.basename(mostRecentPDCA)} ←→ ${newPDCAFilename}\n`);
     }
-    
-    // Step 8: Store original creation timestamp in git note (for rename creationDate)
-    // This preserves the original creation time through renames
-    // Note: Git notes are added AFTER the file is committed (by caller or test)
-    // The note will be added when the file first appears in git history
     
     console.log(`✨ PDCA boilerplate ready for AI population!\n`);
     
@@ -6314,6 +6365,22 @@ export class DefaultPDCA implements PDCA {
     fs.writeFileSync(previousPDCAPath, content, 'utf-8');
     
     console.log(`✅ Updated previous PDCA's next link: ${path.basename(previousPDCAPath)}`);
+    
+    // Commit the bidirectional link update
+    try {
+      const previousRelative = path.relative(projectRoot, previousPDCAPath);
+      execSync(`git add "${previousRelative}"`, { cwd: projectRoot, stdio: 'pipe' });
+      
+      const commitMsg = `fix: add next PDCA link to ${path.basename(previousPDCAPath)}`;
+      execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot, stdio: 'pipe' });
+      
+      const currentBranch = execSync('git branch --show-current', { cwd: projectRoot, encoding: 'utf-8' }).trim();
+      execSync(`git push origin ${currentBranch}`, { cwd: projectRoot, stdio: 'pipe' });
+      
+      console.log(`   ✅ Committed and pushed bidirectional link update`);
+    } catch (gitError: any) {
+      console.log(`   ⚠️  Git error: ${gitError.message}`);
+    }
   }
 
   /**
