@@ -1081,15 +1081,23 @@ Test content
     const secondPdcaPath = path.join(sessionDir, secondPdcaFile!);
     const content = fs.readFileSync(secondPdcaPath, 'utf-8');
     
-    // Extract Changed Files link from Artifact Links section
-    const changedFilesMatch = content.match(/- \*\*Changed Files:\*\* \[GitHub\]\((https:\/\/github\.com\/[^)]+\/compare\/[^)]+)\)/);
+    // Extract Changed Files link from Artifact Links section (dual link format)
+    const changedFilesMatch = content.match(/- \*\*Changed Files:\*\* \[GitHub\]\((https:\/\/github\.com\/[^)]+\/compare\/[^)]+)\) \| \[([^\]]+)\]\(([^)]+)\)/);
     
     expect(changedFilesMatch).toBeTruthy();
     
     const githubCompareUrl = changedFilesMatch![1];
+    const localPathDisplay = changedFilesMatch![2];
+    const localPathHref = changedFilesMatch![3];
     
     // Verify GitHub compare URL format: https://github.com/org/repo/compare/SHA1...SHA2
     expect(githubCompareUrl).toMatch(/https:\/\/github\.com\/[^/]+\/[^/]+\/compare\/[a-f0-9]+\.\.\.[a-f0-9]+/);
+    
+    // Verify local path display starts with §/
+    expect(localPathDisplay).toMatch(/^§\//);
+    
+    // Verify local path href is a relative path to the PDCA itself
+    expect(localPathHref).toBe(`./${secondPdcaFile}`);
     
     // Verify the Changed Files line specifically does not contain template placeholders
     const changedFilesLine = content.split('\n').find(line => line.includes('**Changed Files:**'));

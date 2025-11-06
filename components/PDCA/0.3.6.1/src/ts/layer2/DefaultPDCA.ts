@@ -5844,10 +5844,16 @@ export class DefaultPDCA implements PDCA {
           const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
           const compareUrl = `${githubBaseUrl}/compare/${previousCommitSha}...${currentCommitSha}`;
           
+          // Local path points to this PDCA (which documents the changes)
+          const sessionRelativePath = path.relative(projectRoot, sessionDir);
+          const newPDCAProjectPath = `${sessionRelativePath}/${newPDCAFilename}`;
+          const sectionPath = `§/${newPDCAProjectPath}`;
+          const relativePath = `./${newPDCAFilename}`;
+          
           // Replace the "Changed Files:" line in Artifact Links section
           // Template line: - **Changed Files:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
           const oldLine = /- \*\*Changed Files:\*\* \[GitHub\]\(\{\{GITHUB_URL\}\}\) \| \[\{\{LOCAL_PATH\}\}\]\(\{\{LOCAL_PATH\}\}\)/;
-          const newLine = `- **Changed Files:** [GitHub](${compareUrl})`;
+          const newLine = `- **Changed Files:** [GitHub](${compareUrl}) | [${sectionPath}](${relativePath})`;
           
           templateContent = templateContent.replace(oldLine, newLine);
         }
