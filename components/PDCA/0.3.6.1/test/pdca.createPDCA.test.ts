@@ -1198,5 +1198,36 @@ Test content
     // Should indicate no requirements found
     expect(reqTraceLine).toMatch(/No requirements\.md found|TBD/i);
   });
+
+  it('TC135: createPDCA auto-populates Session Directory Context', async () => {
+    // Given: A session directory with component context in its path
+    const componentDir = path.join(testDataDir, 'components/TestComponent/1.2.3');
+    const sessionDir = path.join(componentDir, 'session');
+    fs.mkdirSync(sessionDir, { recursive: true });
+    
+    // When: Create a PDCA
+    await pdca.createPDCA('Session Context Test', 'Priority 5 Implementation', sessionDir, false);
+    
+    // Then: PDCA should contain auto-populated session context
+    const files = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
+    expect(files.length).toBe(1);
+    
+    const pdcaPath = path.join(sessionDir, files[0]);
+    const content = fs.readFileSync(pdcaPath, 'utf-8');
+    
+    // Find the Project Journal Session line in header
+    const sessionLineMatch = content.match(/\*\*🎯 Project Journal Session:\*\* (.+)/);
+    expect(sessionLineMatch).toBeTruthy();
+    
+    const sessionContext = sessionLineMatch![1];
+    
+    // Should contain component name and version from path
+    expect(sessionContext).toContain('TestComponent');
+    expect(sessionContext).toContain('1.2.3');
+    
+    // Should NOT be "N/A" or contain template placeholders
+    expect(sessionContext).not.toContain('N/A →');
+    expect(sessionContext).not.toContain('{{SESSION_NAME}}');
+  });
 });
 

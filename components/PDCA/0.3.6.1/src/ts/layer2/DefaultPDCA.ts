@@ -5923,6 +5923,31 @@ export class DefaultPDCA implements PDCA {
       }
     }
     
+    // Step 5g: Populate Session Directory Context (Priority 5 auto-population)
+    {
+      // Extract session context from session directory path
+      // Example: components/PDCA/0.3.6.1/session → PDCA/0.3.6.1
+      const sessionRelativePath = path.relative(projectRoot, sessionDir);
+      const pathParts = sessionRelativePath.split(path.sep);
+      
+      // Remove the last part (session) and the first part (components) to get context
+      const relevantParts = pathParts.filter(part => part !== 'session' && part !== 'components');
+      const sessionContext = relevantParts.length > 0 ? relevantParts.join('/') : 'Unknown';
+      
+      // Replace the Project Journal Session line in header
+      // Template line: **🎯 Project Journal Session:** N/A → {{TASK_NAME}}
+      templateContent = templateContent.replace(
+        /\*\*🎯 Project Journal Session:\*\* N\/A → .+/,
+        `**🎯 Project Journal Session:** ${sessionContext}`
+      );
+      
+      // Also handle simple placeholder format
+      templateContent = templateContent.replace(
+        /\*\*🎯 Project Journal Session:\*\* \{\{SESSION_NAME\}\}/,
+        `**🎯 Project Journal Session:** ${sessionContext}`
+      );
+    }
+    
     // Step 6: Write new PDCA file
     if (!isDryRun) {
       fs.writeFileSync(newPDCAPath, templateContent, 'utf-8');
