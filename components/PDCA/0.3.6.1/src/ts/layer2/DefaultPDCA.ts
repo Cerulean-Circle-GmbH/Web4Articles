@@ -6242,9 +6242,25 @@ export class DefaultPDCA implements PDCA {
     ];
     
     let inMetadataHeader = true; // First part before any section is metadata
+    let metadataEndLine = -1; // Track where metadata ends
+    
+    // First pass: find where metadata ends (after template version line)
+    for (let i = 0; i < lines.length && metadataEndLine === -1; i++) {
+      if (lines[i].includes('Template Version')) {
+        metadataEndLine = i;
+      }
+    }
     
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
+      
+      // Once past metadata, we're looking for real content
+      if (inMetadataHeader && i > metadataEndLine && metadataEndLine !== -1) {
+        // Skip a few blank lines after metadata
+        if (line.trim() !== '' && !line.match(/^#+\s+/)) {
+          inMetadataHeader = false; // Real content starts here
+        }
+      }
       
       // Check if this line is a section header
       let matchedSection: string | null = null;
