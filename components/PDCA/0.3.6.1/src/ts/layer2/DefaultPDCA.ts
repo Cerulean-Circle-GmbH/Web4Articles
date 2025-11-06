@@ -5857,6 +5857,23 @@ export class DefaultPDCA implements PDCA {
       }
     }
     
+    // Step 5e: Populate Template Verification checkbox (Priority 3 auto-population)
+    {
+      // Verify template file exists and extract version
+      if (fs.existsSync(templatePath)) {
+        // Extract template version from the template content
+        const versionMatch = templateContent.match(/\*\*🎯 Template Version:\*\* ([\d.]+)/);
+        const templateVersion = versionMatch ? versionMatch[1] : 'unknown';
+        
+        // Replace the TEMPLATE VERIFICATION line with checked checkbox
+        // Template line: **TEMPLATE VERIFICATION: Before using this template, verify it matches current 3.1.4.2 requirements exactly - no modifications or assumptions**
+        const oldLine = /\*\*TEMPLATE VERIFICATION:[^*]*\*\*/;
+        const newLine = `- [x] Template Verified: Using PDCA template version ${templateVersion}`;
+        
+        templateContent = templateContent.replace(oldLine, newLine);
+      }
+    }
+    
     // Step 6: Write new PDCA file
     if (!isDryRun) {
       fs.writeFileSync(newPDCAPath, templateContent, 'utf-8');

@@ -1097,5 +1097,41 @@ Test content
     expect(changedFilesLine).not.toContain('{{GITHUB_URL}}');
     expect(changedFilesLine).not.toContain('{{LOCAL_PATH}}');
   });
+
+  it('TC132: createPDCA auto-populates Template Verification checkbox', async () => {
+    const sessionDir = path.join(testDataDir, 'session');
+    
+    // Given: Template file exists at expected location
+    const templatePath = path.join(testDataDir, 'scrum.pmo/roles/_shared/PDCA/template.md');
+    expect(fs.existsSync(templatePath)).toBe(true);
+    
+    // When: Create a new PDCA
+    await pdca.createPDCA('Template Verification Test', 'Priority 3 Implementation', sessionDir, false);
+    
+    // Then: PDCA should contain auto-populated template verification checkbox
+    const files = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
+    expect(files.length).toBe(1);
+    
+    const pdcaPath = path.join(sessionDir, files[0]);
+    const content = fs.readFileSync(pdcaPath, 'utf-8');
+    
+    // Find the QA Decisions section
+    const qaSection = content.match(/### \*\*To TRON: QA Decisions required\*\*([\s\S]*?)###/);
+    expect(qaSection).toBeTruthy();
+    
+    // Verify template verification checkbox is checked and populated
+    const templateVerificationLine = content.split('\n').find(line => 
+      line.includes('Template Verified') || line.includes('TEMPLATE VERIFICATION')
+    );
+    
+    expect(templateVerificationLine).toBeDefined();
+    expect(templateVerificationLine).toMatch(/- \[x\]/); // Checkbox should be checked
+    expect(templateVerificationLine).toContain('Template Verified');
+    expect(templateVerificationLine).toMatch(/3\.\d+\.\d+\.\d+/); // Should contain version number
+    
+    // Verify no template placeholders remain in QA Decisions section
+    expect(templateVerificationLine).not.toContain('{{COMPLETED_DECISION}}');
+    expect(templateVerificationLine).not.toContain('{{DECISION_DESCRIPTION}}');
+  });
 });
 
