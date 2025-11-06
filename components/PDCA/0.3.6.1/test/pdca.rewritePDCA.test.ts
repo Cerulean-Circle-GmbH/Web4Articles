@@ -635,7 +635,7 @@ MISSING CHECK SECTION
   // TC150: rewritePDCA preserves content from sections with missing headers
   it('TC150: Preserves content from section with missing header (zero data loss)', async () => {
     // Setup: Create corrupted PDCA with content but missing ## header marker
-    const tc150Path = path.join(testDataDir, '2025-11-06-UTC-TC150.pdca.md');
+    const tc150Path = path.join(testDataDir, '2025-11-06-UTC-0900.pdca.md');
     const actContentWithoutHeader = `**🎯 ACT** (CORRUPTION: Missing ## header markers)
 
 **Success Achieved:** File populated and corrupted for rewritePDCA testing
@@ -698,7 +698,7 @@ ${actContentWithoutHeader}
   // TC151: rewritePDCA creates recovery section for unmappable content
   it('TC151: Creates recovery section for content that cannot be mapped', async () => {
     // Setup: Create PDCA with orphaned content that doesn't belong to any section
-    const tc151Path = path.join(testDataDir, '2025-11-06-UTC-TC151.pdca.md');
+    const tc151Path = path.join(testDataDir, '2025-11-06-UTC-0901.pdca.md');
     const corrupted151 = `# 📋 **PDCA Cycle: TC151 Test - TC151 Test**
 
 **🗓️ Date:** Wed, 06 Nov 2025 09:01:00 GMT  
@@ -742,7 +742,7 @@ Valid DO.
   // TC152: rewritePDCA correctly maps recognized sections even without proper headers
   it('TC152: Maps recognized sections to correct locations in template', async () => {
     // Setup: Create PDCA with content that can be recognized by keywords
-    const tc152Path = path.join(testDataDir, '2025-11-06-UTC-TC152.pdca.md');
+    const tc152Path = path.join(testDataDir, '2025-11-06-UTC-0902.pdca.md');
     const corrupted152 = `# 📋 **PDCA Cycle: TC152 Test - TC152 Test**
 
 **🗓️ Date:** Wed, 06 Nov 2025 09:02:00 GMT  
@@ -806,7 +806,7 @@ ACT
   // TC153: rewritePDCA preserves ALL content (comprehensive zero data loss test)
   it('TC153: Preserves ALL content with zero data loss (comprehensive test)', async () => {
     // Setup: Create highly corrupted PDCA with valuable content scattered everywhere
-    const tc153Path = path.join(testDataDir, '2025-11-06-UTC-TC153.pdca.md');
+    const tc153Path = path.join(testDataDir, '2025-11-06-UTC-0903.pdca.md');
     const corrupted153 = `# 📋 **PDCA Cycle: TC153 Comprehensive - TC153 Comprehensive**
 
 **🗓️ Date:** Wed, 06 Nov 2025 09:03:00 GMT  
