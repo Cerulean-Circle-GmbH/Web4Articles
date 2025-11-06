@@ -59,11 +59,18 @@ cd "$COMPONENT_PATH" || {
     exit 1
 }
 
-# Use our smart build system (handles freshness, dependencies, everything)
-./src/sh/build.sh
-
-# Check if CLI is available after smart build
+# Smart build: Skip for completion if CLI already exists (speed optimization)
+# @pdca 2025-11-06-UTC-0140.test-completion-hanging-regression.pdca.md
 CLI_PATH="dist/ts/layer5/IdealMinimalComponentCLI.js"
+if [[ "$1" == "shCompletion" || "$1" == "completion" ]] && [ -f "$CLI_PATH" ]; then
+    # Completion command + CLI exists = skip build for speed (<1s requirement)
+    :
+else
+    # Normal command or first-time build = use smart build system
+    ./src/sh/build.sh
+fi
+
+# Verify CLI is available
 if [ ! -f "$CLI_PATH" ]; then
     echo "❌ IdealMinimalComponent CLI build failed"
     exit 1
