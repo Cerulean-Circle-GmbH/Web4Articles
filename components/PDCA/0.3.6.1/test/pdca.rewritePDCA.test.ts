@@ -627,4 +627,239 @@ MISSING CHECK SECTION
     expect(rewrittenContent).not.toContain('CORRUPTED CONTENT');
     expect(rewrittenContent).not.toContain('MISSING CHECK SECTION');
   });
+
+  // ========================================
+  // ZERO DATA LOSS TESTS (TDD - New Requirements)
+  // ========================================
+
+  // TC150: rewritePDCA preserves content from sections with missing headers
+  it('TC150: Preserves content from section with missing header (zero data loss)', async () => {
+    // Setup: Create corrupted PDCA with content but missing ## header marker
+    const tc150Path = path.join(testDataDir, '2025-11-06-UTC-TC150.pdca.md');
+    const actContentWithoutHeader = `**🎯 ACT** (CORRUPTION: Missing ## header markers)
+
+**Success Achieved:** File populated and corrupted for rewritePDCA testing
+
+Testing Improvements Enhanced:
+- **Corruption Type 1:** Missing header markers (this section)
+- **Corruption Type 2:** Invalid dual links  
+- **Corruption Type 3:** Malformed code blocks
+
+rewritePDCA Benefits:
+- **Auto-Fix:** Should restore proper markdown structure
+- **Validation:** Should detect and repair broken links`;
+
+    const corrupted150 = `# 📋 **PDCA Cycle: TC150 Test - TC150 Test**
+
+**🗓️ Date:** Wed, 06 Nov 2025 09:00:00 GMT  
+**🎯 Objective:** Test content preservation from sections with missing headers  
+**🎯 Template Version:** 3.2.4.2  
+
+## **📋 PLAN**
+
+Valid plan content here.
+
+---
+
+## **🔧 DO**
+
+Valid DO content here.
+
+---
+
+## **✅ CHECK**
+
+Valid CHECK content here.
+
+---
+
+${actContentWithoutHeader}
+
+---`;
+
+    fs.writeFileSync(tc150Path, corrupted150, 'utf-8');
+
+    // Action: rewritePDCA
+    await pdca.rewritePDCA(tc150Path);
+
+    // Assert: Content from section without header MUST be preserved
+    const rewritten = fs.readFileSync(tc150Path, 'utf-8');
+    expect(rewritten).toContain('File populated and corrupted for rewritePDCA testing');
+    expect(rewritten).toContain('Testing Improvements Enhanced');
+    expect(rewritten).toContain('Corruption Type 1');
+    expect(rewritten).toContain('Corruption Type 2');
+    expect(rewritten).toContain('rewritePDCA Benefits');
+    expect(rewritten).toContain('Auto-Fix');
+    
+    // Header should be fixed
+    expect(rewritten).toContain('## **🎯 ACT**');
+  });
+
+  // TC151: rewritePDCA creates recovery section for unmappable content
+  it('TC151: Creates recovery section for content that cannot be mapped', async () => {
+    // Setup: Create PDCA with orphaned content that doesn't belong to any section
+    const tc151Path = path.join(testDataDir, '2025-11-06-UTC-TC151.pdca.md');
+    const corrupted151 = `# 📋 **PDCA Cycle: TC151 Test - TC151 Test**
+
+**🗓️ Date:** Wed, 06 Nov 2025 09:01:00 GMT  
+**🎯 Objective:** Test recovery section creation  
+**🎯 Template Version:** 3.2.4.2  
+
+This is orphaned content at the top that doesn't belong to any section header.
+It contains important information about the corruption scenario.
+Multiple lines of valuable data that must not be lost.
+
+## **📋 PLAN**
+
+Valid plan.
+
+---
+
+Random content between sections that has no clear section home.
+This could be notes, observations, or partial data.
+
+## **🔧 DO**
+
+Valid DO.
+
+---`;
+
+    fs.writeFileSync(tc151Path, corrupted151, 'utf-8');
+
+    // Action: rewritePDCA
+    await pdca.rewritePDCA(tc151Path);
+
+    // Assert: Unmappable content preserved in recovery section
+    const rewritten = fs.readFileSync(tc151Path, 'utf-8');
+    expect(rewritten).toContain('orphaned content at the top');
+    expect(rewritten).toContain('important information about the corruption scenario');
+    expect(rewritten).toContain('Random content between sections');
+    
+    // Recovery section should exist
+    expect(rewritten).toContain('🔍 RECOVERED CONTENT');
+  });
+
+  // TC152: rewritePDCA correctly maps recognized sections even without proper headers
+  it('TC152: Maps recognized sections to correct locations in template', async () => {
+    // Setup: Create PDCA with content that can be recognized by keywords
+    const tc152Path = path.join(testDataDir, '2025-11-06-UTC-TC152.pdca.md');
+    const corrupted152 = `# 📋 **PDCA Cycle: TC152 Test - TC152 Test**
+
+**🗓️ Date:** Wed, 06 Nov 2025 09:02:00 GMT  
+**🎯 Objective:** Test smart section mapping  
+**🎯 Template Version:** 3.2.4.2  
+
+PLAN
+
+**Objective:** This is clearly plan content
+
+**Definition of Ready:**
+- Item 1
+- Item 2
+
+DO
+
+**Implementation:**
+Step 1: Do this
+Step 2: Do that
+
+CHECK
+
+**Verification Results:**
+All tests passed successfully.
+
+ACT
+
+**Success Achieved:** Mission accomplished!`;
+
+    fs.writeFileSync(tc152Path, corrupted152, 'utf-8');
+
+    // Action: rewritePDCA
+    await pdca.rewritePDCA(tc152Path);
+
+    // Assert: Content mapped to correct sections
+    const rewritten = fs.readFileSync(tc152Path, 'utf-8');
+    
+    // PLAN content should be in PLAN section
+    const planMatch = rewritten.match(/## \*\*📋 PLAN\*\*([\s\S]*?)---/);
+    expect(planMatch).toBeTruthy();
+    expect(planMatch![0]).toContain('This is clearly plan content');
+    expect(planMatch![0]).toContain('Definition of Ready');
+    
+    // DO content should be in DO section  
+    const doMatch = rewritten.match(/## \*\*🔧 DO\*\*([\s\S]*?)---/);
+    expect(doMatch).toBeTruthy();
+    expect(doMatch![0]).toContain('Implementation');
+    expect(doMatch![0]).toContain('Step 1: Do this');
+    
+    // CHECK content should be in CHECK section
+    const checkMatch = rewritten.match(/## \*\*✅ CHECK\*\*([\s\S]*?)---/);
+    expect(checkMatch).toBeTruthy();
+    expect(checkMatch![0]).toContain('Verification Results');
+    
+    // ACT content should be in ACT section
+    const actMatch = rewritten.match(/## \*\*🎯 ACT\*\*([\s\S]*?)(?:---|$)/);
+    expect(actMatch).toBeTruthy();
+    expect(actMatch![0]).toContain('Mission accomplished');
+  });
+
+  // TC153: rewritePDCA preserves ALL content (comprehensive zero data loss test)
+  it('TC153: Preserves ALL content with zero data loss (comprehensive test)', async () => {
+    // Setup: Create highly corrupted PDCA with valuable content scattered everywhere
+    const tc153Path = path.join(testDataDir, '2025-11-06-UTC-TC153.pdca.md');
+    const corrupted153 = `# 📋 **PDCA Cycle: TC153 Comprehensive - TC153 Comprehensive**
+
+**🗓️ Date:** Wed, 06 Nov 2025 09:03:00 GMT  
+**🎯 Objective:** Comprehensive zero data loss test  
+
+Important note at the top: UNIQUE_STRING_ALPHA_12345
+
+## **📋 PLAN**
+
+Valid plan with UNIQUE_STRING_BETA_67890
+
+**🔧 DO** (missing ##)
+
+DO content with UNIQUE_STRING_GAMMA_24680
+
+Some orphaned text with UNIQUE_STRING_DELTA_13579
+
+## **✅ CHECK**
+
+CHECK content with UNIQUE_STRING_EPSILON_11111
+
+Random insertion with UNIQUE_STRING_ZETA_22222
+
+**🎯 ACT** (missing ##)
+
+ACT content with UNIQUE_STRING_ETA_33333`;
+
+    fs.writeFileSync(tc153Path, corrupted153, 'utf-8');
+
+    // Action: rewritePDCA
+    await pdca.rewritePDCA(tc153Path);
+
+    // Assert: EVERY unique string must be present (zero data loss)
+    const rewritten = fs.readFileSync(tc153Path, 'utf-8');
+    
+    const uniqueStrings = [
+      'UNIQUE_STRING_ALPHA_12345',
+      'UNIQUE_STRING_BETA_67890',
+      'UNIQUE_STRING_GAMMA_24680',
+      'UNIQUE_STRING_DELTA_13579',
+      'UNIQUE_STRING_EPSILON_11111',
+      'UNIQUE_STRING_ZETA_22222',
+      'UNIQUE_STRING_ETA_33333'
+    ];
+    
+    for (const uniqueString of uniqueStrings) {
+      expect(rewritten).toContain(uniqueString);
+    }
+    
+    // All headers should be properly formatted
+    expect(rewritten).toContain('## **📋 PLAN**');
+    expect(rewritten).toContain('## **🔧 DO**');
+    expect(rewritten).toContain('## **✅ CHECK**');
+    expect(rewritten).toContain('## **🎯 ACT**');
+  });
 });
