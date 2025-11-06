@@ -855,4 +855,116 @@ ACT content with UNIQUE_STRING_ETA_33333`;
     expect(rewritten).toContain('## **✅ CHECK**');
     expect(rewritten).toContain('## **🎯 ACT**');
   });
+
+  // ================================================================================
+  // METADATA PRESERVATION TESTS (2025-11-06)
+  // Tests for extractMetadata() and metadata preservation in rewritePDCA
+  // ================================================================================
+
+  it('TC-META-01: extractMetadata() extracts all header fields correctly', async () => {
+    // Setup: Create PDCA with complete metadata
+    const testPath = path.join(testDataDir, '2025-11-06-UTC-1357.pdca.md');
+    const fullMetadata = `# 📋 **PDCA Cycle: Test Title - Test Description**
+
+**🗓️ Date:** Thu, 06 Nov 2025 13:57:11 GMT  
+**🎯 Objective:** Test Objective Content  
+**🎯 Template Version:** 3.2.4.2  
+**🏅 CMM Badge:** CMM3 (Development - Earned 2025-11-06)  
+
+**👤 Agent Name:** Claude Sonnet 4.5 → AI Development Assistant  
+**👤 Agent Role:** Full-Stack Developer → Test Context  
+**👤 Branch:** dev/2025-10-31-UTC-11-07 → Development Branch  
+**🔄 Sync Requirements:** main ← dev branch → Feature validation before merge  
+**🎯 Project Journal Session:** Web4TSComponent/0.3.17.1
+**🎯 Sprint:** Current Sprint → Test Sprint
+**✅ Task:** Test Task  
+**🚨 Issues:** None  
+
+**📎 Previous Commit:** abc123def - fix: test commit message  
+**🔗 Previous PDCA:** [GitHub](https://github.com/test/prev.pdca.md) | [§/test/prev.pdca.md](./prev.pdca.md)  
+**➡️ Next PDCA:** [GitHub](https://github.com/test/next.pdca.md) | [§/test/next.pdca.md](./next.pdca.md)
+
+---
+
+## **📊 SUMMARY**
+
+Test content`;
+
+    fs.writeFileSync(testPath, fullMetadata, 'utf-8');
+
+    // Action: Extract metadata
+    const extracted = await pdca.extractMetadata(testPath);
+
+    // Assert: All fields extracted correctly
+    expect(extracted.date).toBe('Thu, 06 Nov 2025 13:57:11 GMT');
+    expect(extracted.objective).toBe('Test Objective Content');
+    expect(extracted.templateVersion).toBe('3.2.4.2');
+    expect(extracted.cmmBadge).toBe('CMM3 (Development - Earned 2025-11-06)');
+    expect(extracted.agentName).toBe('Claude Sonnet 4.5 → AI Development Assistant');
+    expect(extracted.agentRole).toBe('Full-Stack Developer → Test Context');
+    expect(extracted.branch).toBe('dev/2025-10-31-UTC-11-07 → Development Branch');
+    expect(extracted.syncRequirements).toBe('main ← dev branch → Feature validation before merge');
+    expect(extracted.projectSession).toBe('Web4TSComponent/0.3.17.1');
+    expect(extracted.sprint).toBe('Current Sprint → Test Sprint');
+    expect(extracted.task).toBe('Test Task');
+    expect(extracted.issues).toBe('None');
+    expect(extracted.previousCommit).toBe('abc123def - fix: test commit message');
+    expect(extracted.previousPDCA).toBe('[GitHub](https://github.com/test/prev.pdca.md) | [§/test/prev.pdca.md](./prev.pdca.md)');
+    expect(extracted.nextPDCA).toBe('[GitHub](https://github.com/test/next.pdca.md) | [§/test/next.pdca.md](./next.pdca.md)');
+  });
+
+  it('TC-META-02: rewritePDCA preserves original metadata from corrupted file', async () => {
+    // Setup: Create corrupted PDCA with valid metadata
+    const testPath = path.join(testDataDir, '2025-11-06-UTC-1400.pdca.md');
+    const corruptedWithMetadata = `# 📋 **PDCA Cycle: Original Title - Original Description**
+
+**🗓️ Date:** Thu, 06 Nov 2025 14:00:00 GMT  
+**🎯 Objective:** Original Objective  
+**🎯 Template Version:** 3.2.4.2  
+
+**📎 Previous Commit:** original123 - fix: original commit  
+**🔗 Previous PDCA:** [GitHub](https://github.com/test/original-prev.pdca.md) | [§/test/original-prev.pdca.md](./original-prev.pdca.md)  
+**➡️ Next PDCA:** Use pdca chain
+
+**🎯 Project Journal Session:** OriginalComponent/1.2.3
+
+---
+
+SUMMARY (missing ## and **)
+
+Some content here
+
+## PLAN (missing ** and emoji)
+
+Planning content
+
+## DO (completely malformed)
+
+Doing content`;
+
+    fs.writeFileSync(testPath, corruptedWithMetadata, 'utf-8');
+
+    // Action: rewritePDCA
+    await pdca.rewritePDCA(testPath);
+
+    // Assert: Metadata preserved, structure fixed, content recovered
+    const rewritten = fs.readFileSync(testPath, 'utf-8');
+    
+    // Metadata should be preserved
+    expect(rewritten).toContain('**🗓️ Date:** Thu, 06 Nov 2025 14:00:00 GMT');
+    expect(rewritten).toContain('**🎯 Objective:** Original Objective');
+    expect(rewritten).toContain('**📎 Previous Commit:** original123 - fix: original commit');
+    expect(rewritten).toContain('**🔗 Previous PDCA:** [GitHub](https://github.com/test/original-prev.pdca.md)');
+    expect(rewritten).toContain('**🎯 Project Journal Session:** OriginalComponent/1.2.3');
+    
+    // Structure should be fixed (proper section headers)
+    expect(rewritten).toContain('## **📊 SUMMARY**');
+    expect(rewritten).toContain('## **📋 PLAN**');
+    expect(rewritten).toContain('## **🔧 DO**');
+    
+    // Content should be recovered
+    expect(rewritten).toContain('Some content here');
+    expect(rewritten).toContain('Planning content');
+    expect(rewritten).toContain('Doing content');
+  });
 });

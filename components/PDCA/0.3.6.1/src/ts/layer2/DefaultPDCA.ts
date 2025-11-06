@@ -6197,6 +6197,143 @@ export class DefaultPDCA implements PDCA {
   }
 
   /**
+   * Extracts all metadata from a PDCA file header
+   * Used by rewritePDCA to preserve original metadata when fixing corrupted files
+   * @param filePath Path to the PDCA file
+   * @returns Object containing all extracted metadata fields
+   * @cliHide
+   */
+  async extractMetadata(filePath: string): Promise<{
+    date?: string;
+    objective?: string;
+    templateVersion?: string;
+    cmmBadge?: string;
+    agentName?: string;
+    agentRole?: string;
+    branch?: string;
+    syncRequirements?: string;
+    projectSession?: string;
+    sprint?: string;
+    task?: string;
+    issues?: string;
+    previousCommit?: string;
+    previousPDCA?: string;
+    nextPDCA?: string;
+  }> {
+    const fs = await import('fs');
+    
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`File not found: ${filePath}`);
+    }
+    
+    const content = fs.readFileSync(filePath, 'utf-8');
+    const lines = content.split('\n');
+    
+    // Extract metadata using regex patterns
+    // These patterns handle malformed headers by being flexible
+    const metadata: any = {};
+    
+    for (const line of lines) {
+      // Stop at first section header (after metadata)
+      if (line.match(/^##/)) {
+        break;
+      }
+      
+      // Date
+      if (line.includes('**🗓️ Date:**')) {
+        const match = line.match(/\*\*🗓️ Date:\*\* (.+?)(?:\s\s|$)/);
+        if (match) metadata.date = match[1].trim();
+      }
+      
+      // Objective
+      if (line.includes('**🎯 Objective:**')) {
+        const match = line.match(/\*\*🎯 Objective:\*\* (.+?)(?:\s\s|$)/);
+        if (match) metadata.objective = match[1].trim();
+      }
+      
+      // Template Version
+      if (line.includes('**🎯 Template Version:**')) {
+        const match = line.match(/\*\*🎯 Template Version:\*\* (.+?)(?:\s\s|$)/);
+        if (match) metadata.templateVersion = match[1].trim();
+      }
+      
+      // CMM Badge
+      if (line.includes('**🏅 CMM Badge:**')) {
+        const match = line.match(/\*\*🏅 CMM Badge:\*\* (.+?)(?:\s\s|$)/);
+        if (match) metadata.cmmBadge = match[1].trim();
+      }
+      
+      // Agent Name
+      if (line.includes('**👤 Agent Name:**')) {
+        const match = line.match(/\*\*👤 Agent Name:\*\* (.+?)(?:\s\s|$)/);
+        if (match) metadata.agentName = match[1].trim();
+      }
+      
+      // Agent Role
+      if (line.includes('**👤 Agent Role:**')) {
+        const match = line.match(/\*\*👤 Agent Role:\*\* (.+?)(?:\s\s|$)/);
+        if (match) metadata.agentRole = match[1].trim();
+      }
+      
+      // Branch
+      if (line.includes('**👤 Branch:**')) {
+        const match = line.match(/\*\*👤 Branch:\*\* (.+?)(?:\s\s|$)/);
+        if (match) metadata.branch = match[1].trim();
+      }
+      
+      // Sync Requirements
+      if (line.includes('**🔄 Sync Requirements:**')) {
+        const match = line.match(/\*\*🔄 Sync Requirements:\*\* (.+?)(?:\s\s|$)/);
+        if (match) metadata.syncRequirements = match[1].trim();
+      }
+      
+      // Project Journal Session
+      if (line.includes('**🎯 Project Journal Session:**')) {
+        const match = line.match(/\*\*🎯 Project Journal Session:\*\* (.+?)$/);
+        if (match) metadata.projectSession = match[1].trim();
+      }
+      
+      // Sprint
+      if (line.includes('**🎯 Sprint:**')) {
+        const match = line.match(/\*\*🎯 Sprint:\*\* (.+?)$/);
+        if (match) metadata.sprint = match[1].trim();
+      }
+      
+      // Task
+      if (line.includes('**✅ Task:**')) {
+        const match = line.match(/\*\*✅ Task:\*\* (.+?)(?:\s\s|$)/);
+        if (match) metadata.task = match[1].trim();
+      }
+      
+      // Issues
+      if (line.includes('**🚨 Issues:**')) {
+        const match = line.match(/\*\*🚨 Issues:\*\* (.+?)(?:\s\s|$)/);
+        if (match) metadata.issues = match[1].trim();
+      }
+      
+      // Previous Commit
+      if (line.includes('**📎 Previous Commit:**')) {
+        const match = line.match(/\*\*📎 Previous Commit:\*\* (.+?)(?:\s\s|$)/);
+        if (match) metadata.previousCommit = match[1].trim();
+      }
+      
+      // Previous PDCA (full link)
+      if (line.includes('**🔗 Previous PDCA:**')) {
+        const match = line.match(/\*\*🔗 Previous PDCA:\*\* (.+?)(?:\s\s|$)/);
+        if (match) metadata.previousPDCA = match[1].trim();
+      }
+      
+      // Next PDCA (full link)
+      if (line.includes('**➡️ Next PDCA:**')) {
+        const match = line.match(/\*\*➡️ Next PDCA:\*\* (.+?)$/);
+        if (match) metadata.nextPDCA = match[1].trim();
+      }
+    }
+    
+    return metadata;
+  }
+
+  /**
    * Rewrites a corrupted PDCA in-place by extracting metadata and repopulating from template
    * @cliSyntax rewritePDCA <filePath> [dryRun]
    * @cliDescription Rewrites a corrupted PDCA in-place, preserving timestamp and auto-extracting title/objective
