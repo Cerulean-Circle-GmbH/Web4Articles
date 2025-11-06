@@ -1718,7 +1718,7 @@ Standards:
    * @param references - For selective testing: numeric references to select tests
    * @cliSyntax scope ...references
    * @TODO cliDefault scope all
-   * @cliValues file describe itCase shell completion
+   * @cliValues scope file describe itCase
    * @cliExample web4tscomponent test
    * @cliExample web4tscomponent test all
    * @cliExample web4tscomponent test shell

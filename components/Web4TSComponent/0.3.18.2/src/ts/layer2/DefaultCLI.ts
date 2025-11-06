@@ -459,6 +459,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @cliHide
    */
   protected async getValidCompletionValues(): Promise<string[]> {
+    console.error(`DEBUG: getValidCompletionValues() called, isMethod=${this.model.completionIsCompletingMethod}, isParam=${this.model.completionIsCompletingParameter}`);
     if (this.model.completionIsCompletingMethod) {
       // METHOD COMPLETION: Get all methods, filter by current word, format with signatures
       // RADICAL OOP: All data from this.model!
@@ -565,6 +566,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       // Radical OOP: Get component class from this.context or this
       const target = this.context || this;
       const componentClass = target.constructor.name;
+      
+      console.error(`DEBUG: Completing parameter for ${this.model.completionCommand}, componentClass=${componentClass}`);
 
       // Try to find callback - check current class and parent classes
       let callback = TSCompletion.getParameterCallback(
@@ -572,6 +575,7 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         this.model.completionCommand!,
         this.model.completionParameterIndex
       );
+      console.error(`DEBUG: Callback from ${componentClass}: ${callback || 'null'}`);
 
       // If not found on current class, try DefaultCLI (base class where on command is defined)
       if (!callback && componentClass !== 'DefaultCLI') {
@@ -608,6 +612,42 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
           const values = await (this.context as any)[callback]();
           console.error(`DEBUG: Callback ${callback} (context) returned ${values ? values.length : 0} values`);
           return values; // Return values for formatCompletionOutput in shCompletion
+        }
+      }
+
+      // COMPLETION DELEGATION PATTERN (Option B)
+      // @pdca 2025-11-06-UTC-0150.delegated-parameter-completion-broken.pdca.md
+      // If no callback found, check if method delegates to Web4TSComponent infrastructure
+      if (!callback && this.component && typeof (this.component as any).getWeb4TSComponent === 'function') {
+        // Component has getWeb4TSComponent() - check if method delegates
+        const methodExists = typeof (this.component as any)[this.model.completionCommand!] === 'function';
+        
+        if (methodExists) {
+          console.error(`DEBUG: Checking if ${this.model.completionCommand} delegates to Web4TSComponent`);
+          console.error(`DEBUG: this.component exists: ${!!this.component}, has getWeb4TSComponent: ${typeof (this.component as any).getWeb4TSComponent === 'function'}`);
+          
+          // Get Web4TSComponent instance (like delegateToWeb4TS does)
+          const web4ts = await (this.component as any).getWeb4TSComponent();
+          console.error(`DEBUG: Got web4ts: ${!!web4ts}, web4ts has ${this.model.completionCommand}: ${typeof (web4ts as any)[this.model.completionCommand!] === 'function'}`);
+          
+          // DELEGATION WORKAROUND: Call Web4TSComponent's parameter completion method directly
+          // @pdca 2025-11-06-UTC-0150.delegated-parameter-completion-broken.pdca.md
+          // Issue: TSCompletion searches local files, can't find annotations in infrastructure component
+          // Solution: Call scopeParameterCompletion() directly (exists on both CLIs via DefaultCLI inheritance)
+          
+          // For test command, use scopeParameterCompletion
+          if (this.model.completionCommand === 'test' && this.model.completionParameterIndex === 0) {
+            console.error(`DEBUG: Delegating test parameter completion to scopeParameterCompletion()`);
+            if (typeof (this as any).scopeParameterCompletion === 'function') {
+              const values = await (this as any).scopeParameterCompletion();
+              console.error(`DEBUG: scopeParameterCompletion() returned ${values ? values.length : 0} values (delegated)`);
+              return values;
+            }
+          }
+          
+          // For other delegated methods with @cliValues, TSCompletion can't find them across components
+          // Future enhancement: Make TSCompletion component-aware or use runtime delegation
+          console.error(`DEBUG: No delegation handler for ${this.model.completionCommand} parameter ${this.model.completionParameterIndex}`);
         }
       }
 
