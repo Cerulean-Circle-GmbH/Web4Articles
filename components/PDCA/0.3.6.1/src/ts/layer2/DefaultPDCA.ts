@@ -5874,6 +5874,55 @@ export class DefaultPDCA implements PDCA {
       }
     }
     
+    // Step 5f: Populate Requirements Traceability (Priority 4 auto-population)
+    {
+      // Search for requirements.md in component directory
+      // Traverse up from session directory to find component root
+      let searchDir = sessionDir;
+      let requirementsPath: string | null = null;
+      let attempts = 0;
+      const maxAttempts = 5; // Prevent infinite loop
+      
+      // Search upward for requirements.md
+      while (attempts < maxAttempts) {
+        const candidatePath = path.join(searchDir, 'requirements.md');
+        if (fs.existsSync(candidatePath)) {
+          requirementsPath = candidatePath;
+          break;
+        }
+        
+        // Move up one directory
+        const parentDir = path.dirname(searchDir);
+        if (parentDir === searchDir) break; // Reached root
+        searchDir = parentDir;
+        attempts++;
+      }
+      
+      if (requirementsPath) {
+        // Generate dual link for requirements.md
+        const requirementsProjectPath = path.relative(projectRoot, requirementsPath);
+        const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+        const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${requirementsProjectPath}`;
+        const sectionPath = `§/${requirementsProjectPath}`;
+        
+        // Calculate relative path from PDCA to requirements.md
+        const relativePath = path.relative(path.dirname(newPDCAPath), requirementsPath);
+        
+        // Replace the Requirements Traceability line in PLAN section
+        // Template line: **Requirements Traceability:** TBD or {{REQUIREMENT_UUID}}
+        templateContent = templateContent.replace(
+          /\*\*Requirements Traceability:\*\* (TBD|\{\{REQUIREMENT_UUID\}\})/,
+          `**Requirements Traceability:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`
+        );
+      } else {
+        // No requirements.md found
+        templateContent = templateContent.replace(
+          /\*\*Requirements Traceability:\*\* (TBD|\{\{REQUIREMENT_UUID\}\})/,
+          `**Requirements Traceability:** No requirements.md found in component`
+        );
+      }
+    }
+    
     // Step 6: Write new PDCA file
     if (!isDryRun) {
       fs.writeFileSync(newPDCAPath, templateContent, 'utf-8');

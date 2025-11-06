@@ -1133,5 +1133,70 @@ Test content
     expect(templateVerificationLine).not.toContain('{{COMPLETED_DECISION}}');
     expect(templateVerificationLine).not.toContain('{{DECISION_DESCRIPTION}}');
   });
+
+  it('TC133: createPDCA auto-populates Requirements Traceability when requirements.md exists', async () => {
+    const sessionDir = path.join(testDataDir, 'session');
+    
+    // Given: A requirements.md file exists in the component directory
+    const componentDir = path.join(testDataDir, 'components/TestComponent');
+    fs.mkdirSync(componentDir, { recursive: true });
+    const requirementsPath = path.join(componentDir, 'requirements.md');
+    fs.writeFileSync(requirementsPath, '# Test Requirements\n\nTest content');
+    
+    // When: Create a PDCA in a session directory within this component
+    const componentSessionDir = path.join(componentDir, 'session');
+    fs.mkdirSync(componentSessionDir, { recursive: true });
+    
+    await pdca.createPDCA('Requirements Test', 'Priority 4 Implementation', componentSessionDir, false);
+    
+    // Then: PDCA should contain auto-populated requirements traceability link
+    const files = fs.readdirSync(componentSessionDir).filter(f => f.endsWith('.pdca.md'));
+    expect(files.length).toBe(1);
+    
+    const pdcaPath = path.join(componentSessionDir, files[0]);
+    const content = fs.readFileSync(pdcaPath, 'utf-8');
+    
+    // Find the Requirements Traceability line in PLAN section
+    const reqTraceMatch = content.match(/\*\*Requirements Traceability:\*\* (.+)/);
+    expect(reqTraceMatch).toBeTruthy();
+    
+    const reqTraceLine = reqTraceMatch![1];
+    
+    // Should contain a GitHub link and § notation for requirements.md
+    expect(reqTraceLine).toMatch(/\[GitHub\]/);
+    expect(reqTraceLine).toMatch(/requirements\.md/);
+    expect(reqTraceLine).toMatch(/§\//);
+    
+    // Should NOT be "TBD" or contain template placeholders
+    expect(reqTraceLine).not.toBe('TBD');
+    expect(reqTraceLine).not.toContain('{{REQUIREMENT_UUID}}');
+  });
+
+  it('TC134: createPDCA indicates when requirements.md does not exist', async () => {
+    const sessionDir = path.join(testDataDir, 'session');
+    
+    // Given: No requirements.md file in component directory
+    const filesBefore = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
+    
+    // When: Create a PDCA
+    await pdca.createPDCA('No Requirements Test', 'Priority 4 Edge Case', sessionDir, false);
+    
+    // Then: PDCA should indicate no requirements file found
+    const filesAfter = fs.readdirSync(sessionDir).filter(f => f.endsWith('.pdca.md'));
+    const newFiles = filesAfter.filter(f => !filesBefore.includes(f));
+    expect(newFiles.length).toBe(1);
+    
+    const pdcaPath = path.join(sessionDir, newFiles[0]);
+    const content = fs.readFileSync(pdcaPath, 'utf-8');
+    
+    // Find the Requirements Traceability line
+    const reqTraceMatch = content.match(/\*\*Requirements Traceability:\*\* (.+)/);
+    expect(reqTraceMatch).toBeTruthy();
+    
+    const reqTraceLine = reqTraceMatch![1];
+    
+    // Should indicate no requirements found
+    expect(reqTraceLine).toMatch(/No requirements\.md found|TBD/i);
+  });
 });
 
