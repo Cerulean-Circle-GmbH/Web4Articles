@@ -6359,7 +6359,11 @@ export class DefaultPDCA implements PDCA {
     const content = fs.readFileSync(filePath, 'utf-8');
     console.log(`✅ Read corrupted file: ${path.basename(filePath)}`);
     
-    // Step 3: Extract metadata
+    // Step 3: Extract ALL metadata from corrupted file (for preservation)
+    const originalMetadata = await this.extractMetadata(filePath);
+    console.log(`🔍 Extracted ${Object.keys(originalMetadata).length} metadata field(s) from original`);
+    
+    // Step 4: Extract title/objective/timestamp for template population
     const title = this.extractTitleFromPDCA(content);
     const objective = this.extractObjectiveFromPDCA(content);
     const timestamp = this.extractTimestampFromFilename(filePath);
@@ -6482,6 +6486,147 @@ export class DefaultPDCA implements PDCA {
     if (sectionNames.length === 0 && unmappableContent.length === 0) {
       console.log(`⚠️  No content found to preserve (empty or metadata-only file)\n`);
     }
+    
+    // Step 6.75: Restore original metadata (metadata preservation)
+    console.log(`🔄 Restoring original metadata...\n`);
+    let restoredCount = 0;
+    
+    // Restore date if extracted
+    if (originalMetadata.date) {
+      templateContent = templateContent.replace(
+        /\*\*🗓️ Date:\*\* .+?(?:\s\s|$)/,
+        `**🗓️ Date:** ${originalMetadata.date}  `
+      );
+      restoredCount++;
+    }
+    
+    // Restore objective if extracted (and different from template)
+    if (originalMetadata.objective && originalMetadata.objective !== objective) {
+      templateContent = templateContent.replace(
+        /\*\*🎯 Objective:\*\* .+?(?:\s\s|$)/,
+        `**🎯 Objective:** ${originalMetadata.objective}  `
+      );
+      restoredCount++;
+    }
+    
+    // Restore template version if extracted
+    if (originalMetadata.templateVersion) {
+      templateContent = templateContent.replace(
+        /\*\*🎯 Template Version:\*\* .+?(?:\s\s|$)/,
+        `**🎯 Template Version:** ${originalMetadata.templateVersion}  `
+      );
+      restoredCount++;
+    }
+    
+    // Restore CMM badge if extracted
+    if (originalMetadata.cmmBadge) {
+      templateContent = templateContent.replace(
+        /\*\*🏅 CMM Badge:\*\* .+?(?:\s\s|$)/,
+        `**🏅 CMM Badge:** ${originalMetadata.cmmBadge}  `
+      );
+      restoredCount++;
+    }
+    
+    // Restore agent name if extracted
+    if (originalMetadata.agentName) {
+      templateContent = templateContent.replace(
+        /\*\*👤 Agent Name:\*\* .+?(?:\s\s|$)/,
+        `**👤 Agent Name:** ${originalMetadata.agentName}  `
+      );
+      restoredCount++;
+    }
+    
+    // Restore agent role if extracted
+    if (originalMetadata.agentRole) {
+      templateContent = templateContent.replace(
+        /\*\*👤 Agent Role:\*\* .+?(?:\s\s|$)/,
+        `**👤 Agent Role:** ${originalMetadata.agentRole}  `
+      );
+      restoredCount++;
+    }
+    
+    // Restore branch if extracted
+    if (originalMetadata.branch) {
+      templateContent = templateContent.replace(
+        /\*\*👤 Branch:\*\* .+?(?:\s\s|$)/,
+        `**👤 Branch:** ${originalMetadata.branch}  `
+      );
+      restoredCount++;
+    }
+    
+    // Restore sync requirements if extracted
+    if (originalMetadata.syncRequirements) {
+      templateContent = templateContent.replace(
+        /\*\*🔄 Sync Requirements:\*\* .+?(?:\s\s|$)/,
+        `**🔄 Sync Requirements:** ${originalMetadata.syncRequirements}  `
+      );
+      restoredCount++;
+    }
+    
+    // Restore project session if extracted
+    if (originalMetadata.projectSession) {
+      templateContent = templateContent.replace(
+        /\*\*🎯 Project Journal Session:\*\* .+?$/m,
+        `**🎯 Project Journal Session:** ${originalMetadata.projectSession}`
+      );
+      restoredCount++;
+    }
+    
+    // Restore sprint if extracted
+    if (originalMetadata.sprint) {
+      templateContent = templateContent.replace(
+        /\*\*🎯 Sprint:\*\* .+?$/m,
+        `**🎯 Sprint:** ${originalMetadata.sprint}`
+      );
+      restoredCount++;
+    }
+    
+    // Restore task if extracted
+    if (originalMetadata.task) {
+      templateContent = templateContent.replace(
+        /\*\*✅ Task:\*\* .+?(?:\s\s|$)/,
+        `**✅ Task:** ${originalMetadata.task}  `
+      );
+      restoredCount++;
+    }
+    
+    // Restore issues if extracted
+    if (originalMetadata.issues) {
+      templateContent = templateContent.replace(
+        /\*\*🚨 Issues:\*\* .+?(?:\s\s|$)/,
+        `**🚨 Issues:** ${originalMetadata.issues}  `
+      );
+      restoredCount++;
+    }
+    
+    // Restore previous commit if extracted
+    if (originalMetadata.previousCommit) {
+      templateContent = templateContent.replace(
+        /\*\*📎 Previous Commit:\*\* .+?(?:\s\s|$)/,
+        `**📎 Previous Commit:** ${originalMetadata.previousCommit}  `
+      );
+      restoredCount++;
+    }
+    
+    // Restore previous PDCA if extracted (overrides auto-generated)
+    if (originalMetadata.previousPDCA) {
+      templateContent = templateContent.replace(
+        /\*\*🔗 Previous PDCA:\*\* .+?(?:\s\s|$)/,
+        `**🔗 Previous PDCA:** ${originalMetadata.previousPDCA}  `
+      );
+      restoredCount++;
+    }
+    
+    // Restore next PDCA if extracted
+    if (originalMetadata.nextPDCA) {
+      templateContent = templateContent.replace(
+        /\*\*➡️ Next PDCA:\*\* .+?$/m,
+        `**➡️ Next PDCA:** ${originalMetadata.nextPDCA}`
+      );
+      restoredCount++;
+    }
+    
+    console.log(`✅ Restored ${restoredCount} metadata field(s) from original\n`);
     
     // Step 7: Write to SAME filename (in-place rewrite)
     if (!isDryRun) {
