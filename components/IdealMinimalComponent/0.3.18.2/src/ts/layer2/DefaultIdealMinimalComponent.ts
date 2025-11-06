@@ -32,7 +32,7 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       component: 'IdealMinimalComponent',  // For CLI display
-      version: '0.3.18.0'             // Component version
+      version: '0.3.18.2'             // Component version
     };
   }
 
@@ -216,7 +216,7 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
           hostname: process.env.HOSTNAME || 'localhost',
           uuid: this.model.uuid,
           component: 'IdealMinimalComponent',
-          version: '0.3.18.0'
+          version: '0.3.18.2'
         }
       });
       ownerData = Buffer.from(fallbackJson).toString('base64');
@@ -226,7 +226,7 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
       ior: {
         uuid: this.model.uuid,
         component: 'IdealMinimalComponent',
-        version: '0.3.18.0'
+        version: '0.3.18.2'
       },
       owner: ownerData,
       model: this.model

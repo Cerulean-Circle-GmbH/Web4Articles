@@ -1455,9 +1455,9 @@ Standards:
     const maxDepth = parseInt(depth, 10) || 4;
     const includeHidden = showHidden.toLowerCase() === 'true';
     
-    // Target has ALL data in ITS model
-    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
-    const componentPath = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
+    // ✅ Path Authority: CLI owns path infrastructure, target owns component data
+    // @pdca 2025-11-06-UTC-0120.tree-command-fix.pdca.md - Use CLI's componentsDirectory (always defined)
+    const componentPath = path.join(this.model.componentsDirectory, target.model.component, target.model.version.toString());
     console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${target.model.component} ${target.model.version.toString()}:${this.colors.reset}`);
       console.log(`${this.colors.dim}${componentPath}${this.colors.reset}`);
       await this.displayTreeStructure(componentPath, '', maxDepth, 0, includeHidden);
