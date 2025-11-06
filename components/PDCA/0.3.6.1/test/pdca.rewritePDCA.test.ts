@@ -626,9 +626,10 @@ MISSING CHECK SECTION
     expect(rewrittenContent).toContain('rename with creationDate');
     expect(rewrittenContent).toContain('over 300 lines of comprehensive command documentation');
     
-    // Invalid sections should be reset
-    expect(rewrittenContent).not.toContain('CORRUPTED CONTENT');
-    expect(rewrittenContent).not.toContain('MISSING CHECK SECTION');
+    // Invalid content preserved in recovery (zero data loss)
+    expect(rewrittenContent).toContain('CORRUPTED CONTENT'); // Now preserved
+    expect(rewrittenContent).toContain('MISSING CHECK SECTION'); // Now preserved
+    expect(rewrittenContent).toContain('🔍 RECOVERED CONTENT');
   });
 
   // ========================================
