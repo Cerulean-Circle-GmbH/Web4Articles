@@ -5421,8 +5421,10 @@ export class DefaultPDCA implements PDCA {
         throw new Error(`Invalid rename case: ${renameCase}`);
     }
     
-    // If name unchanged, return without calling mv
+    // If name unchanged, inform user and return
     if (newName === oldName) {
+      console.log(`\n   ℹ️  File already has correct name: ${oldName}`);
+      console.log(`   ✅ No rename needed\n`);
       return this;
     }
     
