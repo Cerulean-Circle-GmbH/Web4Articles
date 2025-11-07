@@ -696,8 +696,11 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // setCICDVersion intelligently sets links based on build number:
     // - Build 0 (*.*.*.0): prod + latest
     // - Build 1+ (*.*.*.1+): dev + test + latest
-    await this.updateLatestSymlink(componentName, version);
-    await this.updateScriptsSymlinks(componentName, version);
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Set model for symlink methods
+    this.model.component = componentName;
+    this.model.toVersion = version;
+    await this.updateLatestSymlink();
+    await this.updateScriptsSymlinks();
     
     // Create base package.json for npm start ONLY principle
     await this.createBasePackageJson(componentName, version);
@@ -1538,7 +1541,10 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 
       // Update scripts symlinks only for 'latest' to maintain backward compatibility
       if (linkType === 'latest') {
-        await this.updateScriptsSymlinks(componentName, targetVersion);
+        // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Set model for symlink methods
+        this.model.component = componentName;
+        this.model.toVersion = targetVersion;
+        await this.updateScriptsSymlinks();
       }
 
     } catch (error) {
@@ -1646,10 +1652,10 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         encoding: 'utf-8',  // ✅ CRITICAL: Forces proper stream handling, prevents EPIPE hang
       });
       
-      console.log(`✅ Tests completed for ${target.model.component} ${target.model.version.toString()}`);
+      console.log(`✅ Tests completed for ${this.model.component} ${this.model.version.toString()}`);
       
     } catch (error) {
-      console.error(`❌ Tests failed for ${target.model.component} ${target.model.version.toString()}`);
+      console.error(`❌ Tests failed for ${this.model.component} ${this.model.version.toString()}`);
       throw error;
     }
 
@@ -2026,6 +2032,62 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 
 
 
+
+  /**
+   * Display location-resilient CLI standard
+   * Shows key requirements and template structure for Web4 CLIs
+   * @cliHide
+   */
+  showStandard(): void {
+    console.log(`
+🔧 Web4 Location-Resilient CLI Standard
+
+Key Requirements:
+• Location Independence: CLI works from any directory
+• Project Root Detection: Automatic via git or directory traversal  
+• ESM Compatibility: Use ts-node/esm loader
+• Error Handling: Proper exit codes and error messages
+• Web4 Patterns: Empty constructors, scenario support, layer architecture
+
+Template Structure:
+#!/bin/bash
+find_project_root() { ... }
+PROJECT_ROOT=$(find_project_root)
+cd "$PROJECT_ROOT"
+node --loader ts-node/esm "./components/[name]/[version]/src/ts/layer5/[Name]CLI.ts" "$@"
+`);
+  }
+
+  /**
+   * Display Web4 architecture guidelines and core principles
+   * Shows layer structure, standards, and development patterns
+   * @cliHide
+   */
+  showGuidelines(): void {
+    console.log(`
+🏗️ Web4 Architecture Guidelines
+
+Core Principles:
+• Empty Constructors: No logic in constructors
+• Scenario Initialization: Use init(scenario) pattern
+• Layer Architecture: Separate concerns across layers 2-5
+• Location Resilience: Components work from any directory
+• ESM Native: Full ES module support
+• TypeScript First: Strong typing throughout
+
+Component Structure:
+• Layer 2: Implementation classes (Default*)
+• Layer 3: Interfaces and types
+• Layer 4: Utilities and helpers  
+• Layer 5: CLI and entry points
+
+Standards:
+• Vitest for testing (Jest banned)
+• Empty constructors + scenario pattern
+• Universal identifier patterns
+• Command chaining support
+`);
+  }
 
   /**
    * Build component using its build system
