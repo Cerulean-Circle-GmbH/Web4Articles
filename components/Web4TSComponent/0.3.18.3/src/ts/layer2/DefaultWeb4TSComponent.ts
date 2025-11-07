@@ -332,10 +332,12 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliHide
    */
   private async loadTemplate(templatePath: string, substitutions: Record<string, string>): Promise<string> {
-    // Find templates directory relative to the component root, not the compiled dist
-    const currentDir = path.dirname(new URL(import.meta.url).pathname);
-    // From dist/ts/layer2/ go back to component root, then to templates
-    const templateFullPath = path.join(currentDir, '../../../templates', templatePath);
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use model + COMPONENT_STRUCTURE
+    const templateFullPath = path.join(
+      this.model.componentRoot,
+      DefaultWeb4TSComponent.COMPONENT_STRUCTURE.TEMPLATES_DIR,
+      templatePath
+    );
     
     if (!existsSync(templateFullPath)) {
       throw new Error(`Template not found: ${templateFullPath}`);
@@ -377,27 +379,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return template;
   }
 
-  /**
-   * Transform component data (Web4 lifecycle method)
-   * @param data Optional data to transform
-   * @returns this component instance for method chaining
-   * @cliHide
-   */
 
-  /**
-   * Validate component configuration (Web4 lifecycle method)
-   * @param object Optional object to validate against component rules
-   * @returns this component instance for method chaining
-   * @cliHide
-
-  validate(object?: any): this {
-    // Validate component configuration
-    if (object) {
-      // Note: updatedAt removed - belongs in ChangeEvent tracking
-    }
-    return this;
-  }
- */
 
 
   /**
