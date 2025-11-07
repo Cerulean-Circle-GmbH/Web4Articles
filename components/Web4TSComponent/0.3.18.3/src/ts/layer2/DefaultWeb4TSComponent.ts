@@ -1833,7 +1833,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     }
     
     // Check if test result indicates 100% success
-    const testSuccess = await this.verifyTestSuccess(componentName, currentVersion);
+    const testSuccess = await this.verifyTestSuccess();
     if (!testSuccess) {
       console.log(`⚠️  Test success verification failed - skipping promotion`);
       return;
@@ -1928,14 +1928,16 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 
   /**
    * Verify that tests achieved 100% success
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: No functional parameters, use Path Authority
    * @cliHide
    */
-  async verifyTestSuccess(componentName: string, version: string): Promise<boolean> {
-    // Read test results from vitest JSON output
-    // ✅ Use model.targetDirectory (Path Authority: calculated by CLI)
-    const componentsDir = path.join(this.model.targetDirectory, 'components');
-    const componentVersionDir = path.join(componentsDir, componentName, version);
-    const testResultsPath = path.join(componentVersionDir, 'test/test-results.json');
+  private async verifyTestSuccess(): Promise<boolean> {
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths (Path Authority)
+    const testResultsPath = path.join(
+      this.model.targetComponentRoot!,
+      DefaultWeb4TSComponent.COMPONENT_STRUCTURE.TEST_DIR,
+      'test-results.json'
+    );
     
     if (!existsSync(testResultsPath)) {
       console.log(`⚠️  No test results file found at ${testResultsPath}`);
