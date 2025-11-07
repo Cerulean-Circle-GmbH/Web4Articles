@@ -505,14 +505,14 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliHide
    */
   protected printQuickHeader(): void {
-    const target = this.model.context || this;
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly (already reflects context)
     const cyan = '\x1b[36m';
     const yellow = '\x1b[33m';
     const dim = '\x1b[2m';
     const reset = '\x1b[0m';
     
-    // Show calling component's info
-    let header = `${cyan}Web4 ${target.model.component} CLI Tool${reset} v${yellow}${target.model.version.toString()}${reset}`;
+    // Show calling component's info (this.model already updated by updateModelPaths)
+    let header = `${cyan}Web4 ${this.model.component} CLI Tool${reset} v${yellow}${this.model.version.toString()}${reset}`;
     
     // If delegating AND the delegation target is different, show it
     // @pdca 2025-11-03-UTC-1237.pdca.md - Only show delegation when component/version differ
@@ -520,7 +520,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       // Get the actual Web4TSComponent version from the file system or package
       // Since we initialized with target's identity, we need to show actual delegation
       // For now, just check if it's actually a different component (not self-delegation)
-      const isDifferentComponent = target.model.component !== 'Web4TSComponent';
+      const isDifferentComponent = this.model.component !== 'Web4TSComponent';
       if (isDifferentComponent) {
         // Get Web4TSComponent's actual version dynamically
         // Read from latest symlink (projectRoot is Path Authority field in model)
@@ -1488,20 +1488,17 @@ Standards:
    * @cliValues showHidden false true
    */
   async tree(depth: string = '4', showHidden: string = 'false'): Promise<this> {
-        // Print quick header for immediate UX feedback
-        this.printQuickHeader();
-    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
-    const target = this.model.context || this;
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Print header AFTER updateModelPaths()
+    this.printQuickHeader();
 
     const maxDepth = parseInt(depth, 10) || 4;
     const includeHidden = showHidden.toLowerCase() === 'true';
     
-    // ✅ Path Authority: CLI owns path infrastructure, target owns component data
-    // @pdca 2025-11-06-UTC-0120.tree-command-fix.pdca.md - Use CLI's componentsDirectory (always defined)
-    const componentPath = path.join(this.model.componentsDirectory, target.model.component, target.model.version.toString());
-    console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${target.model.component} ${target.model.version.toString()}:${this.colors.reset}`);
-      console.log(`${this.colors.dim}${componentPath}${this.colors.reset}`);
-      await this.displayTreeStructure(componentPath, '', maxDepth, 0, includeHidden);
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated targetComponentRoot
+    const componentPath = this.model.targetComponentRoot!;
+    console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${this.model.component} ${this.model.version.toString()}:${this.colors.reset}`);
+    console.log(`${this.colors.dim}${componentPath}${this.colors.reset}`);
+    await this.displayTreeStructure(componentPath, '', maxDepth, 0, includeHidden);
     
     return this;
   }
