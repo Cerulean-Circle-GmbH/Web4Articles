@@ -4416,18 +4416,16 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Verify version-specific script symlink exists and create if missing
-   * @param component Component name for symlink verification
+   * Uses this.model for component identity
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model (no functional parameters)
    * @param version Component version for symlink creation
-   * @cliSyntax component version  
-   * @TODO cliDefault component Web4TSComponent
-   * @TODO cliDefault version 0.3.2.0
    * @cliHide
    */
-  private async verifyVersionScriptSymlink(component: string, version: string): Promise<void> {
+  private async verifyVersionScriptSymlink(version: string): Promise<void> {
     // ✅ Use model.projectRoot for scripts/ (Path Authority)
     const projectRoot = this.model.projectRoot;
     const versionsDir = path.join(projectRoot, 'scripts', 'versions');
-    const componentLower = component.toLowerCase();
+    const componentLower = this.model.component.toLowerCase();
     const scriptName = `${componentLower}-v${version}`;
     const scriptPath = path.join(versionsDir, scriptName);
     
@@ -4446,7 +4444,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       if (isSymlink) {
         // Old symlink exists - replace with wrapper
         console.log(`   🔄 Replacing old symlink with wrapper: ${scriptName}`);
-        await this.createVersionScriptSymlink(component, version);
+        await this.createVersionScriptSymlink(version);
       } else {
         // Wrapper script exists - verify it's valid
         console.log(`   ✅ Version wrapper script exists: ${scriptName}`);
@@ -4454,7 +4452,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     } else {
       // Create new wrapper script
       console.log(`   🔧 Creating missing version wrapper: ${scriptName}`);
-      await this.createVersionScriptSymlink(component, version);
+      await this.createVersionScriptSymlink(version);
     }
   }
 
@@ -4571,9 +4569,11 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Create version-specific script symlink (restored to 0.3.13.2 behavior)
+   * Uses this.model for component identity
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model (no functional parameters)
    * @cliHide
    */
-  private async createVersionScriptSymlink(component: string, version: string): Promise<void> {
+  private async createVersionScriptSymlink(version: string): Promise<void> {
     // ✅ Use model.projectRoot (Path Authority: CLI calculates this)
     // NOT resolveProjectRoot() which returns targetDirectory
     const projectRoot = this.model.projectRoot;
@@ -4582,12 +4582,12 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     // Ensure scripts/versions directory exists
     await fs.mkdir(versionsDir, { recursive: true });
     
-    const componentLower = component.toLowerCase();
+    const componentLower = this.model.component.toLowerCase();
     const scriptName = `${componentLower}-v${version}`;
     const scriptPath = path.join(versionsDir, scriptName);
     
     // Find the CLI script in the component version (use project root directly)
-    const componentVersionDir = path.join(projectRoot, 'components', component, version);
+    const componentVersionDir = path.join(projectRoot, 'components', this.model.component, version);
     const possibleScripts = [
       `${componentLower}.sh`,
       `${componentLower}`,
