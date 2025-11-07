@@ -76,7 +76,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     const methodNames = Object.getOwnPropertyNames(prototype)
       .filter((name) => typeof prototype[name] === "function")
       .filter((name) => !name.startsWith("_") && name !== "constructor")
-      .filter((name) => !["init", "toScenario", "hasMethod", "getMethodSignature", "listMethods", "discoverMethods"].includes(name));
+      .filter((name) => !["init", "hasMethod", "getMethodSignature", "listMethods", "discoverMethods"].includes(name));
 
     for (const methodName of methodNames) {
       const method = prototype[methodName];
@@ -126,47 +126,39 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    */
   init(scenario?: Scenario<Web4TSComponentModel>): this {
     if (!this.model) {
-    // Initialize with version from directory (single source of truth)
-    const currentFileUrl = new URL(import.meta.url);
-    const currentVersionDir = path.resolve(path.dirname(currentFileUrl.pathname), '..', '..', '..');
-    const componentDirName = path.basename(currentVersionDir);
-    const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(componentDirName);
-    
-      // ✅ Discover component's own root ONCE and store in model (OOP!)
-      const componentRoot = currentVersionDir;
+      // ✅ Discover component's own root from file system (single source of truth)
+      const currentFileUrl = new URL(import.meta.url);
+      const currentVersionDir = path.resolve(path.dirname(currentFileUrl.pathname), '..', '..', '..');
+      const componentDirName = path.basename(currentVersionDir);
+      const isVersionDir = /^\d+\.\d+\.\d+\.\d+$/.test(componentDirName);
       
       // ✅ Create version INSTANCE (radical OOP)
       const versionString = isVersionDir ? componentDirName : '0.0.0.0';
       const versionComponent = SemanticVersion.fromString(versionString);
       
-    // @pdca 2025-11-05-UTC-2100.pdca.md - Path Authority: Calculate paths ONCE
-    const targetDir = scenario?.model?.targetDirectory || componentRoot;
-    
-    this.model = {
-      uuid: randomUUID(),
-      name: '',
-      origin: '',
-      definition: '',
-      component: 'Web4TSComponent',
-        version: versionComponent,  // ✅ INSTANCE with behavior!
-      componentRoot: componentRoot, // ✅ Component's OWN root (for test/ access)
-      projectRoot: scenario?.model?.projectRoot || componentRoot, // ✅ Overall project root (from CLI)
-      targetDirectory: targetDir, // ✅ Where to CREATE components
-      // @pdca 2025-11-05-UTC-2100.pdca.md - Path Authority: CLI provides ALL paths
-      // Fallback: Calculate from targetDirectory (NOT componentRoot!)
-      componentsDirectory: scenario?.model?.componentsDirectory || path.join(targetDir, 'components'),
-      isTestIsolation: scenario?.model?.isTestIsolation || false, // Semantic flag instead of path inspection
-      // Note: createdAt/updatedAt removed per Web4 principle - belong in ChangeEvent
-      // Note: componentStandards, validationRules, scaffoldingTemplates removed - never used
-    };
-  }
+      // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md
+      // ✅ Minimal initial model - NO path calculations yet (updateModelPaths does ALL)
+      this.model = {
+        uuid: randomUUID(),
+        name: '',
+        origin: '',
+        definition: '',
+        component: 'Web4TSComponent',
+        version: versionComponent,
+        componentRoot: currentVersionDir,  // Only path needed for updateModelPaths()
+        projectRoot: '',  // Set by updateModelPaths() or scenario
+        targetDirectory: '',
+        componentsDirectory: '',
+        isTestIsolation: false,
+      };
+    }
 
+    // ✅ Merge scenario data FIRST (before path calculation)
     if (scenario?.model) {
-      // Merge scenario data
       const { version: scenarioVersion, ...otherFields } = scenario.model;
       this.model = { ...this.model, ...otherFields };
       
-      // ✅ If scenario has version, reconstruct instance
+      // ✅ Handle version reconstruction
       if (scenarioVersion) {
         if (scenarioVersion instanceof SemanticVersion) {
           this.model.version = scenarioVersion;
@@ -185,7 +177,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // @pdca 2025-11-05-UTC-1158.pdca.md - Event-driven, not batch
     this.discoverMethods();
     
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Calculate initial paths
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md
+    // ✅ Calculate ALL paths ONCE at the end (after scenario merge, single source of truth)
     this.updateModelPaths();
     
     return this;
@@ -243,6 +236,17 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // If no context, component/version already set in init()
     
     const cli = this.getCLI();
+    
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Fallbacks for standalone use
+    if (!this.model.projectRoot) {
+      this.model.projectRoot = this.model.componentRoot;
+    }
+    if (!this.model.targetDirectory) {
+      this.model.targetDirectory = this.model.projectRoot;
+    }
+    if (!this.model.componentsDirectory) {
+      this.model.componentsDirectory = path.join(this.model.targetDirectory, 'components');
+    }
     
     // ✅ Calculate TARGET component root using THIS model's data (no target variable!)
     this.model.targetComponentRoot = path.join(
