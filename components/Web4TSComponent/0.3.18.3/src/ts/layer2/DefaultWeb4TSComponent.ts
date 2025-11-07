@@ -2419,8 +2419,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 
   /**
    * Execute clean command
-   * WITHOUT context: Clean Web4TSComponent itself (self-operation)
-   * WITH context: Clean the loaded component
+   * Works on current context (this.model reflects target after updateModelPaths())
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model
    * @param force If 'force', performs global clean (deletes global node_modules). Default is local clean only.
    * @cliSyntax force
    * @cliExample web4tscomponent clean
@@ -2431,25 +2431,22 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // Print quick header for immediate UX feedback
     this.printQuickHeader();
     
-    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
-    const target = this.model.context || this;
-    
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
     const componentPath = this.model.targetComponentRoot!;
     
     const isGlobalClean = force === 'force';
     const cleanType = isGlobalClean ? 'clean:global' : 'clean';
     
-    console.log(`🧹 Cleaning ${target.model.component} ${target.model.version.toString()}${isGlobalClean ? ' (GLOBAL - includes project root node_modules)' : ' (local only)'}...`);
+    console.log(`🧹 Cleaning ${this.model.component} ${this.model.version.toString()}${isGlobalClean ? ' (GLOBAL - includes project root node_modules)' : ' (local only)'}...`);
     
     try {
       execSync(`npm run ${cleanType}`, { 
         cwd: componentPath, 
         stdio: 'inherit',
       });
-      console.log(`✅ Cleaned ${target.model.component} ${target.model.version.toString()}`);
+      console.log(`✅ Cleaned ${this.model.component} ${this.model.version.toString()}`);
     } catch (error) {
-      console.error(`❌ Clean failed for ${target.model.component} ${target.model.version.toString()}`);
+      console.error(`❌ Clean failed for ${this.model.component} ${this.model.version.toString()}`);
       throw error;
     }
 
