@@ -5884,9 +5884,20 @@ export class DefaultPDCA implements PDCA {
           ).trim();
           
           // Parse violations
-          const hasViolation1c = checkOutput.includes('Violation 1c');
-          const hasViolation1d = checkOutput.includes('Violation 1d');
-          const hasOtherViolations = checkOutput.match(/Violation \d[^cd]/);
+          // Check for link-specific violations (1c: missing dual links, 1d: broken links)
+          const hasViolation1c = checkOutput.includes('Violation 1c') || checkOutput.includes('Violations: 1c') || /\b1c[,:]\s/.test(checkOutput);
+          const hasViolation1d = checkOutput.includes('Violation 1d') || checkOutput.includes('Violations: 1d') || /\b1d[,:]\s/.test(checkOutput);
+          
+          // Check for any other violations (template issues, missing sections, etc.)
+          // Match patterns like "Violations: 1l", "Violation 1a", "1l:", etc.
+          // But exclude 1c and 1d (link-only issues)
+          const otherViolationPatterns = [
+            /Violations?: 1[^cd\s]/,           // "Violations: 1l" or "Violation 1a"
+            /\b1[^cd\s][,:]\s/,                // "1l:" or "1a,"
+            /Violations?: [2-9]/,              // "Violations: 2x" (any non-1 category)
+            /\b[2-9][a-z][,:]\s/               // "2a:" (any non-1 category)
+          ];
+          const hasOtherViolations = otherViolationPatterns.some(pattern => pattern.test(checkOutput));
           
           if (hasViolation1c || hasViolation1d) {
             hasLinkIssuesOnly = !hasOtherViolations;
