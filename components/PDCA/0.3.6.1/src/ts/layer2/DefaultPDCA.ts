@@ -5876,9 +5876,11 @@ export class DefaultPDCA implements PDCA {
         
         try {
           // Capture cmm3check output
+          // CRITICAL: Use PDCA component's CLI, not project root's CLI
+          const pdcaComponentRoot = path.join(projectRoot, 'components/PDCA/latest');
           const checkOutput = execSync(
-            `node dist/js/cli.js cmm3check "${currentPath}"`,
-            { cwd: projectRoot, encoding: 'utf-8' }
+            `node dist/ts/layer5/PDCACLI.js cmm3check "${currentPath}"`,
+            { cwd: pdcaComponentRoot, encoding: 'utf-8' }
           ).trim();
           
           // Parse violations
