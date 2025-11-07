@@ -533,8 +533,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     }
     
     // Resolve semantic link (latest/dev/test/prod) to actual version
-    const semanticLinks = ['latest', 'dev', 'test', 'prod'];
-    if (semanticLinks.includes(version)) {
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion constant
+    if (SemanticVersion.SEMANTIC_LINKS_SET.has(version as any)) {
       // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly
       const componentDir = path.join(this.model.componentsDirectory, this.model.component);
       const linkPath = path.join(componentDir, version);
@@ -3015,11 +3015,11 @@ Standards:
 
     // Clean up semantic symlinks pointing to removed version
     // ONLY repoint 'latest' automatically - other links should be managed explicitly
-    const semanticLinks = ['latest', 'dev', 'test', 'prod'];
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion constant
     const versions = this.getAvailableVersions(componentDir);
     const highestVersion = versions.length > 0 ? this.getHighestVersion(versions) : null;
     
-    for (const linkName of semanticLinks) {
+    for (const linkName of SemanticVersion.SEMANTIC_LINKS) {
       const symlinkPath = path.join(componentDir, linkName);
       
       // Check if symlink exists using lstat (doesn't follow symlinks, works with broken links)
@@ -4820,9 +4820,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     const actualVersion = this.resolveActualVersion(version);
     
     // Validate targetVersion
-    const validLinks = ['dev', 'latest', 'prod', 'test'];
-    if (!validLinks.includes(targetVersion)) {
-      throw new Error(`Invalid targetVersion: ${targetVersion}. Must be one of: ${validLinks.join(', ')}`);
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion constant
+    if (!SemanticVersion.SEMANTIC_LINKS_SET.has(targetVersion as any)) {
+      throw new Error(`Invalid targetVersion: ${targetVersion}. Must be one of: ${Array.from(SemanticVersion.SEMANTIC_LINKS).join(', ')}`);
     }
     
     console.log(`🔗 Setting ${targetVersion} symlink for ${componentName}:`);
