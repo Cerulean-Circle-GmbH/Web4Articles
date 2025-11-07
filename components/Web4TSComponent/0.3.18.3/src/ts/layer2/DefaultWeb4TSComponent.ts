@@ -4808,25 +4808,22 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     targetVersion: string,
     version: string = 'current'
   ): Promise<this> {
-    // Print quick header for immediate UX feedback
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Print header AFTER updateModelPaths()
     this.printQuickHeader();
     
-    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
-    const target = this.model.context || this;
-    const componentName = target.model.component;
-    const componentDir = path.join(this.model.componentsDirectory, componentName);
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly (no target variable)
+    const componentDir = path.join(this.model.componentsDirectory, this.model.component);
     
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Radical OOP helper
     // resolveActualVersion now uses this.model directly (no parameters needed)
     const actualVersion = this.resolveActualVersion(version);
     
-    // Validate targetVersion
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion helper
     if (!SemanticVersion.isSemanticLink(targetVersion)) {
       throw new Error(`Invalid targetVersion: ${targetVersion}. Must be one of: ${Array.from(SemanticVersion.SEMANTIC_LINKS).join(', ')}`);
     }
     
-    console.log(`🔗 Setting ${targetVersion} symlink for ${componentName}:`);
+    console.log(`🔗 Setting ${targetVersion} symlink for ${this.model.component}:`);
     console.log(`   Target: ${actualVersion}`);
     
     const fs = await import('fs/promises');
@@ -4846,9 +4843,32 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       await fs.symlink(actualVersion, linkPath);
       console.log(`   ✅ ${targetVersion} → ${actualVersion}`);
       
+      // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Inline single-use helper
       // Also create scripts/versions semantic symlink (except for 'latest' which uses main script)
       if (targetVersion !== 'latest') {
-        await this.createSemanticVersionSymlink(componentName, targetVersion, actualVersion);
+        const projectRoot = this.model.projectRoot;
+        const versionsDir = path.join(projectRoot, 'scripts', 'versions');
+        const componentLower = this.model.component.toLowerCase().replace(/[^a-z0-9]/g, '');
+        
+        // Semantic link name: web4tscomponent.prod
+        const semanticLinkName = `${componentLower}.${targetVersion}`;
+        const semanticLinkPath = path.join(versionsDir, semanticLinkName);
+        
+        // Target: web4tscomponent-v0.3.13.2
+        const targetWrapperName = `${componentLower}-v${actualVersion}`;
+        const targetWrapperPath = path.join(versionsDir, targetWrapperName);
+        
+        // Ensure target wrapper exists
+        if (!existsSync(targetWrapperPath)) {
+          await this.createVersionScriptSymlink(this.model.component, actualVersion);
+        }
+        
+        // Remove existing semantic symlink if exists
+        await fs.unlink(semanticLinkPath).catch(() => {});
+        
+        // Create semantic symlink pointing to versioned wrapper
+        await fs.symlink(targetWrapperName, semanticLinkPath);
+        console.log(`   📜 Created script symlink: ${semanticLinkName} → ${targetWrapperName}`);
       }
     } catch (error) {
       throw new Error(`Failed to set ${targetVersion} link: ${error}`);
@@ -4864,47 +4884,6 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    */
   async targetVersionParameterCompletion(): Promise<string[]> {
     return ["dev", "latest", "prod", "test"];
-  }
-
-  /**
-   * Create semantic version symlink in scripts/versions
-   * Example: web4tscomponent.prod → web4tscomponent-v0.3.13.2
-   * @cliHide
-   */
-  private async createSemanticVersionSymlink(component: string, semantic: string, version: string): Promise<void> {
-    // ✅ Use model.projectRoot for scripts/ (Path Authority)
-    const projectRoot = this.model.projectRoot;
-    const versionsDir = path.join(projectRoot, 'scripts', 'versions');
-    const componentLower = component.toLowerCase().replace(/[^a-z0-9]/g, '');
-    
-    // Semantic link name: web4tscomponent.prod
-    const semanticLinkName = `${componentLower}.${semantic}`;
-    const semanticLinkPath = path.join(versionsDir, semanticLinkName);
-    
-    // Target: web4tscomponent-v0.3.13.2
-    const targetWrapperName = `${componentLower}-v${version}`;
-    
-    try {
-      // Ensure target wrapper exists
-      const targetWrapperPath = path.join(versionsDir, targetWrapperName);
-      if (!existsSync(targetWrapperPath)) {
-        // Create the wrapper if it doesn't exist
-        await this.createVersionScriptSymlink(component, version);
-      }
-      
-      // Remove existing semantic symlink if exists
-      try {
-        await fs.unlink(semanticLinkPath);
-      } catch {
-        // Doesn't exist, that's fine
-      }
-      
-      // Create symlink: .prod → -v0.3.13.2
-      await fs.symlink(targetWrapperName, semanticLinkPath);
-      console.log(`   🔗 Created semantic symlink: ${semanticLinkName} → ${targetWrapperName}`);
-    } catch (error) {
-      console.log(`   ⚠️  Could not create semantic symlink ${semanticLinkName}: ${(error as Error).message}`);
-    }
   }
 
   /**
