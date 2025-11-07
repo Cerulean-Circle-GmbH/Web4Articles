@@ -55,6 +55,39 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   private methods: Map<string, MethodSignature> = new Map();
 
   /**
+   * Execute start command in loaded component context
+   * Build and run the loaded component using its build system
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model
+   * @cliSyntax
+   * @cliExample web4tscomponent on Unit 0.3.0.5 start
+   * @TODO In web4x, static start() is the entry point to initialize resources like DB connections
+   */
+   async start(): Promise<this> {
+     // ✅ RADICAL OOP: Context required for start
+     if (!this.model.context) {
+       throw new Error('No component context loaded. Use "on <component> <version>" first.');
+     }
+ 
+     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths + this.model
+     const componentPath = this.model.targetComponentRoot!;
+     
+     console.log(`🚀 Starting ${this.model.component} ${this.model.version.toString()}...`);
+     
+     try {
+       execSync('npm start', { 
+         cwd: componentPath, 
+         stdio: 'inherit',
+       });
+       console.log(`✅ Started ${this.model.component} ${this.model.version.toString()}`);
+     } catch (error) {
+       console.error(`❌ Failed to start ${this.model.component} ${this.model.version.toString()}`);
+       throw error;
+     }
+ 
+     return this;
+   }
+
+  /**
    * Empty constructor (Web4 radical OOP pattern)
    * All initialization happens in init()
    * @pdca 2025-10-28-UTC-0934.pdca.md:597 - Phase 1: Init Pattern
@@ -1976,63 +2009,28 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
 
-  /**
-   * Execute start command in loaded component context
-   * Build and run the loaded component using its build system
-   * @cliSyntax
-   * @cliExample web4tscomponent on Unit 0.3.0.5 start
-   */
-  async start(): Promise<this> {
-    // ✅ RADICAL OOP: Context required for start
-    if (!this.model.context) {
-      throw new Error('No component context loaded. Use "on <component> <version>" first.');
-    }
 
-    const target = this.model.context;
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
-    const componentPath = this.model.targetComponentRoot!;
-    
-    console.log(`🚀 Starting ${target.model.component} ${target.model.version.toString()}...`);
-    
-    try {
-      execSync('npm start', { 
-        cwd: componentPath, 
-        stdio: 'inherit',
-      });
-      console.log(`✅ Started ${target.model.component} ${target.model.version.toString()}`);
-    } catch (error) {
-      console.error(`❌ Failed to start ${target.model.component} ${target.model.version.toString()}`);
-      throw error;
-    }
-
-    return this;
-  }
 
   /**
-   * Execute build command - builds own component if no context, or target component if context loaded
-   * When no context: Build Web4TSComponent itself using its build system
-   * When context loaded: Build the loaded component using its build system
+   * Build component using its build system
+   * Works on current context (this.model reflects target after updateModelPaths())
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model
+   * @param flags Optional build flags: 'verbose' (default), 'silent', 'force'
    * @cliSyntax
+   * @cliValues verbose,silent,force
    * @cliExample web4tscomponent build
    * @cliExample web4tscomponent on Unit 0.3.0.5 build
-   */
-  /**
-   * Build component with optional flags
-   * @param flags Optional build flags: 'verbose' (default), 'silent', 'force'
-   * @cliValues verbose,silent,force
    */
   async build(...flags: string[]): Promise<this> {
     // Print quick header for immediate UX feedback
     this.printQuickHeader();
     
-    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
-    const target = this.model.context || this;
-    
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model
     // ✅ AUTO-BUILD DEPENDENCIES: Build dependencies before building this component
     // @pdca 2025-11-05-UTC-0230-component-dependencies.pdca.md
-    if (target.model.dependencies && target.model.dependencies.length > 0) {
-      console.log(`📦 Building ${target.model.dependencies.length} dependencies...`);
-      for (const dep of target.model.dependencies) {
+    if (this.model.dependencies && this.model.dependencies.length > 0) {
+      console.log(`📦 Building ${this.model.dependencies.length} dependencies...`);
+      for (const dep of this.model.dependencies) {
         await this.buildDependencies(dep.component, dep.version);
       }
     }
@@ -2052,7 +2050,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
     const componentPath = this.model.targetComponentRoot!;
     
-    console.log(`🔨 Building ${target.model.component} ${target.model.version.toString()}...`);
+    console.log(`🔨 Building ${this.model.component} ${this.model.version.toString()}...`);
     
     try {
       execSync(buildCmd, { 
@@ -2060,9 +2058,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         stdio: 'inherit',
         shell: process.env.SHELL || '/bin/sh'
       });
-      console.log(`✅ Build completed for ${target.model.component} ${target.model.version.toString()}`);
+      console.log(`✅ Build completed for ${this.model.component} ${this.model.version.toString()}`);
     } catch (error) {
-      console.error(`❌ Build failed for ${target.model.component} ${target.model.version.toString()}`);
+      console.error(`❌ Build failed for ${this.model.component} ${this.model.version.toString()}`);
       throw error;
     }
 
