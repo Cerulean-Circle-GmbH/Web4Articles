@@ -467,24 +467,6 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 
   // @pdca 2025-11-05-UTC-2100.pdca.md - REMOVED isTestEnvironment() - use model.isTestIsolation flag
 
-  /**
-   * Find all version directories for a component
-   * @param componentDir Component directory path to scan for versions
-   * @returns Array of version directory names (e.g., ['0.1.0.0', '0.2.0.0'])
-   * @cliHide
-   */
-  private findVersionDirectories(componentDir: string): string[] {
-    try {
-      const entries = readdirSync(componentDir, { withFileTypes: true });
-      return entries
-        .filter(entry => entry.isDirectory() && /^\d+\.\d+\.\d+\.\d+$/.test(entry.name))
-        .map(entry => entry.name);
-    } catch {
-      // Fallback: return current version from model
-      return [this.model.version.toString()];  // ✅ Serialize to string
-    }
-  }
-
   // @pdca 2025-11-05-UTC-2100.pdca.md - REMOVED resolveProjectRoot() - use model.projectRoot directly
 
   // @pdca 2025-11-05-UTC-2100.pdca.md - REMOVED resolveComponentPath() - use path.join(model.componentsDirectory, name, version)
