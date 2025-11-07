@@ -2455,8 +2455,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 
   /**
    * Test and discover tab completions for debugging and development
-   * WITHOUT context: Test completions on Web4TSComponent itself
-   * WITH context: Test completions on the loaded component
+   * Works on current context (this.model reflects target after updateModelPaths())
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model
    * 
    * Automatically discovers and lists methods or parameter completions based on 'what' parameter.
    * Supports prefix filtering to narrow down results.
@@ -2474,14 +2474,11 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @remarks TSCompletion uses convention: filterParameterCompletion (not @cliCompletion tag)
    */
   async completion(what: string, filter?: string): Promise<this> {
-    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
-    const target = this.model.context || this;
-    
     // OOP: Instantiate CLI and call completeParameter directly (no shell!)
     const { Web4TSComponentCLI } = await import('../layer5/Web4TSComponentCLI.js');
     const cli = new Web4TSComponentCLI();
     
-    console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on ${target.model.component} ${target.model.version.toString()}${filter ? ` (filter: ${filter})` : ''}`);
+    console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on ${this.model.component} ${this.model.version.toString()}${filter ? ` (filter: ${filter})` : ''}`);
       console.log(`---`);
       
     if (!this.model.context) {
@@ -2489,10 +2486,10 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       await cli.completeParameter('completionNameParameterCompletion', 'completion', what, filter || '');
     } else {
       // Context loaded - delegate to target component's CLI
-      const cliScriptName = target.model.component.toLowerCase().replace(/\./g, '');
+      const cliScriptName = this.model.component.toLowerCase().replace(/\./g, '');
       // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
-      const cli = this.getCLI();
-      const cliPath = path.join(cli.model.projectRoot, 'scripts', cliScriptName);
+      const infrastructureCLI = this.getCLI();
+      const cliPath = path.join(infrastructureCLI.model.projectRoot, 'scripts', cliScriptName);
       const componentPath = this.model.targetComponentRoot!;
       
       execSync(`${cliPath} completeParameter completionNameParameterCompletion "completion" "${what}" "${filter || ''}" 2>/dev/null`, { 
