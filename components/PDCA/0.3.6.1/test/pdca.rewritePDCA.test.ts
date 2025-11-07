@@ -1127,4 +1127,192 @@ Orphaned area
     expect(decision1Matches).toBeTruthy();
     expect(decision1Matches?.length).toBe(1); // Should NOT be duplicated
   });
+
+  test("TC-CORRUPT-01: Handles corrupted headers without emojis/bold and non-bold Artifact Links", async () => {
+    const pdca = new DefaultPDCA();
+    const sessionPath = path.join(process.cwd(), "temp", "test-corrupt", `session-${Date.now()}`);
+    fs.mkdirSync(sessionPath, { recursive: true });
+    
+    const testPath = path.join(sessionPath, "2025-11-07-UTC-080000.pdca.md");
+    
+    // Corrupted PDCA with:
+    // 1. Section header missing emojis/bold (## SUMMARY instead of ## **📊 SUMMARY**)
+    // 2. Artifact Links without bold asterisks (### Artifact Links instead of ### **Artifact Links**)
+    // 3. Metadata-like fields appearing after metadata header section
+    const corruptedWithBadHeaders = `# 📋 **PDCA Cycle: Test Corrupted Headers - Validation Test**
+
+**🗓️ Date:** Fri, 07 Nov 2025 08:00:00 GMT  
+**🎯 Objective:** Test corrupted header recognition  
+**🎯 Template Version:** 3.2.4.2  
+**🏅 CMM Badge:** CMM4 (Test)  
+
+**👤 Agent Name:** Test Agent  
+**👤 Agent Role:** Tester  
+**👤 Branch:** test  
+**🔄 Sync Requirements:** test  
+**🎯 Project Journal Session:** Test/0.0.0
+**🎯 Sprint:** Test Sprint
+**✅ Task:** Test Task  
+**🚨 Issues:** None  
+
+**📎 Previous Commit:** abc123 - test  
+**🔗 Previous PDCA:** [GitHub](https://test.com) | [§/test](./test)  
+**➡️ Next PDCA:** Use pdca chain
+
+<!-- Some comment -->
+
+---
+
+## SUMMARY (corrupted header - missing emojis and formatting)
+
+Some content here...
+
+### Artifact Links
+- **PDCA Document:** [GitHub](https://test.com/doc.md) | [§/test/doc.md](./doc.md)
+- **Implementation:** [GitHub](https://test.com/impl.ts) | [§/test/impl.ts](./impl.ts)
+
+### QA Decisions (non-standard variation)
+- [x] Decision 1: Completed
+- [ ] Decision 2: Pending
+
+---
+
+## PLAN (broken header)
+
+Some plan content...
+
+---
+
+## **🔧 DO**
+
+Some do content...`;
+
+    fs.writeFileSync(testPath, corruptedWithBadHeaders, 'utf-8');
+
+    // Action: rewritePDCA should recognize corrupted headers and map Artifact Links
+    await pdca.rewritePDCA(testPath);
+
+    // Assert: Artifact Links should be in SUMMARY section, not RECOVERED CONTENT
+    const rewritten = fs.readFileSync(testPath, 'utf-8');
+    
+    // 1. SUMMARY section should exist and be properly formatted
+    expect(rewritten).toContain('## **📊 SUMMARY**');
+    
+    // 2. Artifact Links should be in SUMMARY section
+    const summaryStart = rewritten.indexOf('## **📊 SUMMARY**');
+    const planStart = rewritten.indexOf('## **📋 PLAN**');
+    const summarySection = rewritten.substring(summaryStart, planStart);
+    
+    expect(summarySection).toContain('### **Artifact Links**');
+    expect(summarySection).toContain('**PDCA Document:** [GitHub](https://test.com/doc.md)');
+    expect(summarySection).toContain('**Implementation:** [GitHub](https://test.com/impl.ts)');
+    
+    // 3. QA Decisions should be in SUMMARY and normalized
+    expect(summarySection).toContain('### **To TRON: QA Decisions required**');
+    expect(summarySection).toContain('Decision 1: Completed');
+    expect(summarySection).toContain('Decision 2: Pending');
+    
+    // 4. Artifact Links should NOT be in RECOVERED CONTENT
+    if (rewritten.includes('## **🔍 RECOVERED CONTENT**')) {
+      const recoveredStart = rewritten.indexOf('## **🔍 RECOVERED CONTENT**');
+      const recoveredSection = rewritten.substring(recoveredStart);
+      
+      // Should NOT contain the main artifact links
+      expect(recoveredSection).not.toContain('**PDCA Document:** [GitHub](https://test.com/doc.md)');
+    }
+    
+    // 5. All section headers should be properly formatted
+    expect(rewritten).toContain('## **📋 PLAN**');
+    expect(rewritten).toContain('## **🔧 DO**');
+    expect(rewritten).toContain('## **✅ CHECK**');
+    expect(rewritten).toContain('## **🎯 ACT**');
+  });
+
+  test("TC-MERGE-01: Merges duplicate Artifact Links subsections with different content (zero data loss)", async () => {
+    const pdca = new DefaultPDCA();
+    const sessionPath = path.join(process.cwd(), "temp", "test-merge", `session-${Date.now()}`);
+    fs.mkdirSync(sessionPath, { recursive: true });
+    
+    const testPath = path.join(sessionPath, "2025-11-07-UTC-090000.pdca.md");
+    
+    // Corrupted PDCA with TWO Artifact Links blocks with DIFFERENT content
+    const corruptedWithMultipleBlocks = `# 📋 **PDCA Cycle: Test Merge - Validation**
+
+**🗓️ Date:** Fri, 07 Nov 2025 09:00:00 GMT  
+**🎯 Objective:** Test merging of duplicate subsections  
+**🎯 Template Version:** 3.2.4.2  
+
+**👤 Agent Name:** Test Agent  
+**👤 Agent Role:** Tester  
+**👤 Branch:** test  
+**🔄 Sync Requirements:** test  
+**🎯 Project Journal Session:** Test/0.0.0
+**🎯 Sprint:** Test Sprint
+**✅ Task:** Test Task  
+**🚨 Issues:** None  
+
+**📎 Previous Commit:** abc123 - test  
+**🔗 Previous PDCA:** [GitHub](https://test.com) | [§/test](./test)  
+**➡️ Next PDCA:** Use pdca chain
+
+---
+
+## SUMMARY
+
+### Artifact Links
+- **PDCA Document:** [GitHub](https://test.com/doc1.md) | [§/test/doc1.md](./doc1.md)
+- **Implementation:** [GitHub](https://test.com/impl1.ts) | [§/test/impl1.ts](./impl1.ts)
+
+### QA Decisions
+- [x] Decision 1: Done
+- [ ] Decision 2: Pending
+
+---
+
+Some orphaned content...
+
+### Artifact Links
+- **Test Suite:** [GitHub](https://test.com/test.ts) | [§/test/test.ts](./test.ts)
+- **Related Doc:** [GitHub](https://test.com/doc2.md) | [§/test/doc2.md](./doc2.md)
+
+### To TRON: QA Decisions required
+- [x] Decision 3: Completed
+- [ ] Decision 4: Review needed
+
+---
+
+## PLAN
+
+Some plan content...`;
+
+    fs.writeFileSync(testPath, corruptedWithMultipleBlocks, 'utf-8');
+
+    // Action: rewritePDCA should merge both Artifact Links blocks
+    await pdca.rewritePDCA(testPath);
+
+    // Assert: Only ONE Artifact Links block with ALL 4 links
+    const rewritten = fs.readFileSync(testPath, 'utf-8');
+    
+    // 1. Count occurrences of "### **Artifact Links**" header
+    const artifactLinksMatches = rewritten.match(/### \*\*Artifact Links\*\*/g);
+    expect(artifactLinksMatches).toBeTruthy();
+    expect(artifactLinksMatches?.length).toBe(1); // Should appear exactly once
+    
+    // 2. All 4 links should be present (zero data loss)
+    expect(rewritten).toContain('**PDCA Document:** [GitHub](https://test.com/doc1.md)');
+    expect(rewritten).toContain('**Implementation:** [GitHub](https://test.com/impl1.ts)');
+    expect(rewritten).toContain('**Test Suite:** [GitHub](https://test.com/test.ts)');
+    expect(rewritten).toContain('**Related Doc:** [GitHub](https://test.com/doc2.md)');
+    
+    // 3. Only ONE QA Decisions block with ALL 4 decisions
+    const qaMatches = rewritten.match(/### \*\*To TRON: QA Decisions required\*\*/g);
+    expect(qaMatches).toBeTruthy();
+    expect(qaMatches?.length).toBe(1); // Should appear exactly once
+    
+    // 4. All 4 decisions should be present (zero data loss)
+    expect(rewritten).toContain('Decision 1: Done');
+    expect(rewritten).toContain('Decision 2: Pending');
+    expect(rewritten).toContain('Decision 3: Completed');
+    expect(rewritten).toContain('Decision 4: Review needed');
+  });
 });

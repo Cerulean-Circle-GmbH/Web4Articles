@@ -6808,19 +6808,44 @@ export class DefaultPDCA implements PDCA {
     
     // Known section headers (with and without proper ## formatting)
     const sectionPatterns = [
+      // Perfect template format
       { regex: /^## \*\*📊 SUMMARY\*\*/, name: '📊 SUMMARY' },
       { regex: /^## \*\*📋 PLAN\*\*/, name: '📋 PLAN' },
       { regex: /^## \*\*🔧 DO\*\*/, name: '🔧 DO' },
       { regex: /^## \*\*✅ CHECK\*\*/, name: '✅ CHECK' },
       { regex: /^## \*\*🎯 ACT\*\*/, name: '🎯 ACT' },
       { regex: /^## \*\*💭 EMOTIONAL REFLECTION\*\*/, name: '💭 EMOTIONAL REFLECTION' },
-      // Fuzzy patterns for corrupted headers (missing ##)
-      { regex: /^\*\*📊 SUMMARY\*\*/, name: '📊 SUMMARY' },
-      { regex: /^\*\*📋 PLAN\*\*/, name: '📋 PLAN' },
-      { regex: /^\*\*🔧 DO\*\*/, name: '🔧 DO' },
-      { regex: /^\*\*✅ CHECK\*\*/, name: '✅ CHECK' },
-      { regex: /^\*\*🎯 ACT\*\*/, name: '🎯 ACT' },
-      { regex: /^\*\*💭 EMOTIONAL REFLECTION\*\*/, name: '💭 EMOTIONAL REFLECTION' },
+      // Missing bold asterisks (corrupted)
+      { regex: /^## 📊 SUMMARY/i, name: '📊 SUMMARY' },
+      { regex: /^## 📋 PLAN/i, name: '📋 PLAN' },
+      { regex: /^## 🔧 DO/i, name: '🔧 DO' },
+      { regex: /^## ✅ CHECK/i, name: '✅ CHECK' },
+      { regex: /^## 🎯 ACT/i, name: '🎯 ACT' },
+      { regex: /^## 💭 EMOTIONAL REFLECTION/i, name: '💭 EMOTIONAL REFLECTION' },
+      // Missing emojis (corrupted) - with or without bold
+      { regex: /^## \*\*SUMMARY\*\*/i, name: '📊 SUMMARY' },
+      { regex: /^## SUMMARY/i, name: '📊 SUMMARY' },
+      { regex: /^## \*\*PLAN\*\*/i, name: '📋 PLAN' },
+      { regex: /^## PLAN/i, name: '📋 PLAN' },
+      { regex: /^## \*\*DO\*\*/i, name: '🔧 DO' },
+      { regex: /^## DO/i, name: '🔧 DO' },
+      { regex: /^## \*\*CHECK\*\*/i, name: '✅ CHECK' },
+      { regex: /^## CHECK/i, name: '✅ CHECK' },
+      { regex: /^## \*\*ACT\*\*/i, name: '🎯 ACT' },
+      { regex: /^## ACT/i, name: '🎯 ACT' },
+      { regex: /^## \*\*EMOTIONAL REFLECTION\*\*/i, name: '💭 EMOTIONAL REFLECTION' },
+      { regex: /^## EMOTIONAL REFLECTION/i, name: '💭 EMOTIONAL REFLECTION' },
+      // Wrong header level (# instead of ##)
+      { regex: /^# \*\*📊 SUMMARY\*\*/, name: '📊 SUMMARY' },
+      { regex: /^# \*\*📋 PLAN\*\*/, name: '📋 PLAN' },
+      { regex: /^# \*\*🔧 DO\*\*/, name: '🔧 DO' },
+      { regex: /^# \*\*✅ CHECK\*\*/, name: '✅ CHECK' },
+      { regex: /^# \*\*🎯 ACT\*\*/, name: '🎯 ACT' },
+      { regex: /^# SUMMARY/i, name: '📊 SUMMARY' },
+      { regex: /^# PLAN/i, name: '📋 PLAN' },
+      { regex: /^# DO/i, name: '🔧 DO' },
+      { regex: /^# CHECK/i, name: '✅ CHECK' },
+      { regex: /^# ACT/i, name: '🎯 ACT' },
     ];
     
     let inMetadataHeader = true; // First part before any section is metadata
@@ -6839,7 +6864,8 @@ export class DefaultPDCA implements PDCA {
       /^\*\*📎 Previous Commit:/,
       /^\*\*🔗 Previous PDCA:/,
       /^\*\*➡️ Next PDCA:/,
-      /^#/, // Any heading
+      /^# 📋/, // ONLY the main PDCA title (with specific emoji)
+      /^<!--/, // HTML comments in metadata area
       /^---$/, // Dividers
     ];
     
@@ -7029,60 +7055,109 @@ export class DefaultPDCA implements PDCA {
     
     // Pattern 1: Detect "Artifact Links" subsection - should go in SUMMARY
     // Pattern 2: Detect "QA Decisions" subsection - should go in SUMMARY
-    const artifactLinksPattern = /### \*\*Artifact Links\*\*/i;
-    const qaDecisionsPattern = /### (?:\*\*)?(?:To TRON: )?QA Decisions(?: required)?(?:\*\*)?/i;
+    // Made patterns more flexible to handle variations (with or without bold asterisks)
+    // Patterns now ignore any trailing text (like comments or variations)
+    const artifactLinksPattern = /### (?:\*\*)?Artifact Links(?:\*\*)?/i;
+    const qaDecisionsPattern = /### (?:\*\*)?(?:To TRON: )?QA Decisions/i;
     
-    // Step 1: Normalize QA Decisions in already-extracted SUMMARY section
+    // Step 1: Extract and merge Artifact Links and QA Decisions from SUMMARY
+    let mergedArtifactLinks: string[] = [];
+    let mergedQADecisions: string[] = [];
+    
     if (mappedSections['📊 SUMMARY']) {
-      mappedSections['📊 SUMMARY'] = mappedSections['📊 SUMMARY'].replace(
-        /### (?:\*\*)?(?:To TRON: )?QA Decisions(?: required)?(?:\*\*)?\s*\n/gi,
-        '### **To TRON: QA Decisions required**\n'
-      );
+      const summaryContent = mappedSections['📊 SUMMARY'];
+      
+      // Extract ALL Artifact Links subsections (there might be multiple)
+      const artifactLinksRegex = /### (?:\*\*)?Artifact Links(?:\*\*)?.*\n([\s\S]*?)(?=\n### |\n---|$)/gi;
+      let match;
+      while ((match = artifactLinksRegex.exec(summaryContent)) !== null) {
+        const content = match[1].trim();
+        if (content) {
+          mergedArtifactLinks.push(content);
+        }
+      }
+      
+      // Extract ALL QA Decisions subsections (there might be multiple)
+      const qaDecisionsRegex = /### (?:\*\*)?(?:To TRON: )?QA Decisions.*\n([\s\S]*?)(?=\n### |\n---|$)/gi;
+      while ((match = qaDecisionsRegex.exec(summaryContent)) !== null) {
+        const content = match[1].trim();
+        if (content) {
+          mergedQADecisions.push(content);
+        }
+      }
     }
     
-    // Step 2: Process unmappable content for intelligent mapping
+    // Step 2: Process unmappable content for intelligent mapping and merging
     for (const content of unmappableContent) {
       let wasMapped = false;
       
       // Check if this unmappable content contains Artifact Links or QA Decisions
       if (artifactLinksPattern.test(content) || qaDecisionsPattern.test(content)) {
-        // Check if SUMMARY section already exists
-        const summaryExists = mappedSections['📊 SUMMARY'];
-        
-        // Smart Prevention: Check if this content already exists in SUMMARY
-        const isDuplicate = summaryExists && (
-          (artifactLinksPattern.test(content) && artifactLinksPattern.test(summaryExists)) ||
-          (qaDecisionsPattern.test(content) && qaDecisionsPattern.test(summaryExists))
-        );
-        
-        if (isDuplicate) {
-          // Skip this content - it's already in SUMMARY section
-          // Don't add it to trulyUnmappable either (it's already mapped)
-          wasMapped = true;
-          continue;
+        // Extract Artifact Links from this block
+        const artifactLinksMatch = content.match(/### (?:\*\*)?Artifact Links(?:\*\*)?.*\n([\s\S]*?)(?=\n### |\n---|$)/i);
+        if (artifactLinksMatch) {
+          const extractedContent = artifactLinksMatch[1].trim();
+          if (extractedContent) {
+            mergedArtifactLinks.push(extractedContent);
+            wasMapped = true;
+          }
         }
         
-        // This should go in SUMMARY section
-        if (!mappedSections['📊 SUMMARY']) {
-          mappedSections['📊 SUMMARY'] = '';
+        // Extract QA Decisions from this block
+        const qaDecisionsMatch = content.match(/### (?:\*\*)?(?:To TRON: )?QA Decisions.*\n([\s\S]*?)(?=\n### |\n---|$)/i);
+        if (qaDecisionsMatch) {
+          const extractedContent = qaDecisionsMatch[1].trim();
+          if (extractedContent) {
+            mergedQADecisions.push(extractedContent);
+            wasMapped = true;
+          }
         }
         
-        // Clean and normalize the content
-        let cleanContent = content.replace(/^### From .+?:\n/, '').trim();
+        // If this content had ONLY Artifact Links/QA Decisions, mark as mapped
+        // Otherwise, it might have other content that needs to be preserved
+        const withoutSubsections = content
+          .replace(/### (?:\*\*)?Artifact Links(?:\*\*)?.*\n[\s\S]*?(?=\n### |\n---|$)/gi, '')
+          .replace(/### (?:\*\*)?(?:To TRON: )?QA Decisions.*\n[\s\S]*?(?=\n### |\n---|$)/gi, '')
+          .trim();
         
-        // Normalize QA Decisions header to template format
-        cleanContent = cleanContent.replace(
-          /### (?:\*\*)?(?:To TRON: )?QA Decisions(?: required)?(?:\*\*)?\s*\n/i,
-          '### **To TRON: QA Decisions required**\n'
-        );
-        
-        mappedSections['📊 SUMMARY'] += '\n\n' + cleanContent;
-        wasMapped = true;
-      }
-      
-      if (!wasMapped) {
+        if (withoutSubsections.length > 10) {
+          // There's other content besides the subsections - preserve it
+          trulyUnmappable.push(withoutSubsections);
+        }
+      } else {
+        // No Artifact Links or QA Decisions patterns found
         trulyUnmappable.push(content);
       }
+    }
+    
+    // Step 3: Rebuild SUMMARY section with merged content (with line-level deduplication)
+    if (mergedArtifactLinks.length > 0 || mergedQADecisions.length > 0) {
+      let rebuiltSummary = '';
+      
+      // Add merged Artifact Links (zero data loss - all blocks combined, duplicates removed)
+      if (mergedArtifactLinks.length > 0) {
+        rebuiltSummary += '\n\n### **Artifact Links**\n';
+        // Deduplicate by splitting into lines and using Set
+        const allLines = mergedArtifactLinks.flatMap(block => block.split('\n'));
+        const uniqueLines = Array.from(new Set(allLines.map(line => line.trim())))
+          .filter(line => line.length > 0)
+          .map(line => line); // Keep original line content
+        rebuiltSummary += uniqueLines.join('\n');
+      }
+      
+      // Add merged QA Decisions (zero data loss - all blocks combined, duplicates removed)
+      if (mergedQADecisions.length > 0) {
+        rebuiltSummary += '\n\n### **To TRON: QA Decisions required**\n';
+        // Deduplicate by splitting into lines and using Set
+        const allLines = mergedQADecisions.flatMap(block => block.split('\n'));
+        const uniqueLines = Array.from(new Set(allLines.map(line => line.trim())))
+          .filter(line => line.length > 0)
+          .map(line => line); // Keep original line content
+        rebuiltSummary += uniqueLines.join('\n');
+      }
+      
+      // Replace or add to SUMMARY section
+      mappedSections['📊 SUMMARY'] = rebuiltSummary.trim();
     }
     
     return { mappedSections, trulyUnmappable };
