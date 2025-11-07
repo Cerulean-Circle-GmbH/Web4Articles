@@ -5,7 +5,7 @@
 
 import { Web4TSComponent } from '../layer3/Web4TSComponent.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
-import { Web4TSComponentModel } from '../layer3/Web4TSComponentModel.interface.js';
+import { Web4TSComponentModel, COMPONENT_STRUCTURE } from '../layer3/Web4TSComponentModel.interface.js';
 import { ComponentDependency } from '../layer3/ComponentDependency.interface.js';
 import { Colors } from '../layer3/Colors.interface.js';
 import { DefaultColors } from '../layer4/DefaultColors.js';
@@ -170,6 +170,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // @pdca 2025-11-05-UTC-1158.pdca.md - Event-driven, not batch
     this.discoverMethods();
     
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Calculate initial paths
+    this.updateModelPaths();
+    
     return this;
   }
 
@@ -207,6 +210,28 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    */
   private getCLI(): any {
     return this.cli || this;
+  }
+
+  /**
+   * Update model with calculated paths for target component (this or context)
+   * Called after init() or when context changes (on/removeComponent)
+   * Radical OOP: Intelligence in methods, pure data in model
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md
+   * @cliHide
+   */
+  private updateModelPaths(): void {
+    const target = this.model.context || this;
+    const cli = this.getCLI();
+    
+    // ✅ Calculate TARGET component root and PUT it IN the model (DRY):
+    this.model.targetComponentRoot = path.join(
+      cli.model.componentsDirectory,
+      target.model.component,
+      target.model.version.toString()
+    );
+    
+    // ✅ Backward compatibility alias
+    this.model.componentPath = this.model.targetComponentRoot;
   }
 
     
@@ -3131,6 +3156,10 @@ Standards:
     // Clear context if we just removed the loaded component
     if (this.model.context && this.model.context.model.component === targetComponent) {
       this.model.context = undefined;
+      
+      // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Recalculate paths back to this component
+      this.updateModelPaths();
+      
       console.log(`🔧 Cleared component context`);
     }
 

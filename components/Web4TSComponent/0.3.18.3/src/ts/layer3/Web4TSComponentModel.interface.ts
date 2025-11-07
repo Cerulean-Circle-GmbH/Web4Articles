@@ -83,7 +83,36 @@ export interface Web4TSComponentModel extends Model {
    */
   context?: any;  // Will be DefaultWeb4TSComponent (avoiding circular import)
   
+  /**
+   * Calculated path to TARGET component root (this OR context)
+   * Set by updateModelPaths() after init() or when context changes
+   * Example: /Users/.../components/IdealMinimalComponent/0.3.18.2
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md
+   */
+  targetComponentRoot?: string;
+  
+  /**
+   * Alias for targetComponentRoot (backward compatibility)
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md
+   */
+  componentPath?: string;
+  
   // Note: createdAt/updatedAt removed per Web4 principle - these belong in ChangeEvent
   // Note: componentStandards, validationRules, scaffoldingTemplates removed - never used in main test story
 }
+
+/**
+ * Component structure constants - SINGLE SOURCE OF TRUTH
+ * Used by create(), load(), and path calculations throughout the system
+ * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md
+ */
+export const COMPONENT_STRUCTURE = {
+  TEST_DIR: 'test',
+  SRC_DIR: 'src',
+  TEST_DATA_DIR: 'test/data',
+  TEMPLATES_DIR: 'templates',
+  DIST_DIR: 'dist',
+  SCRIPTS_DIR: 'scripts',
+  SESSION_DIR: 'session',
+} as const;
 
