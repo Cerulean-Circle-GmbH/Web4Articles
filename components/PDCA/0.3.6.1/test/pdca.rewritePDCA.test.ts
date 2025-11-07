@@ -968,3 +968,58 @@ Doing content`;
     expect(rewritten).toContain('Doing content');
   });
 });
+
+describe("Intelligent Content Mapping Tests", () => {
+  test("TC-MAP-01: Identifies 'Artifact Links' pattern in corrupted content", async () => {
+    const pdca = new DefaultPDCA();
+    const sessionPath = path.join(process.cwd(), "temp", "test-mapping", `session-${Date.now()}`);
+    fs.mkdirSync(sessionPath, { recursive: true });
+    
+    const testPath = path.join(sessionPath, "2025-11-07-UTC-070000.pdca.md");
+    
+    // Corrupted PDCA with Artifact Links that should be recognized
+    const corruptedWithLinks = `# 📋 **PDCA Cycle: Test - Test**
+
+**🗓️ Date:** Fri, 07 Nov 2025 06:00:00 GMT  
+**🎯 Objective:** Test intelligent mapping  
+
+SUMMARY Section (missing header)
+
+### **Artifact Links**
+- **PDCA Document:** [GitHub](https://github.com/test/file.md) | [§/test/file.md](./file.md)
+- **Test Artifact:** Some test link
+
+### QA Decisions
+- [x] Decision 1: Completed
+- [ ] Decision 2: Pending`;
+
+    fs.writeFileSync(testPath, corruptedWithLinks, 'utf-8');
+
+    // Action: rewritePDCA with intelligent mapping
+    await pdca.rewritePDCA(testPath);
+
+    // Assert: Artifact Links mapped to SUMMARY section, not RECOVERED
+    const rewritten = fs.readFileSync(testPath, 'utf-8');
+    
+    // Should have proper SUMMARY header
+    expect(rewritten).toContain('## **📊 SUMMARY**');
+    
+    // Artifact Links should be in SUMMARY section
+    expect(rewritten).toContain('### **Artifact Links**');
+    expect(rewritten).toContain('**PDCA Document:** [GitHub](https://github.com/test/file.md)');
+    expect(rewritten).toContain('**Test Artifact:** Some test link');
+    
+    // QA Decisions should be in SUMMARY section
+    expect(rewritten).toContain('### **To TRON: QA Decisions required**');
+    expect(rewritten).toContain('[x] Decision 1: Completed');
+    expect(rewritten).toContain('[ ] Decision 2: Pending');
+    
+    // Should NOT be in RECOVERED CONTENT section
+    const recoveredMatch = rewritten.match(/## \*\*🔍 RECOVERED CONTENT\*\*/);
+    if (recoveredMatch) {
+      const recoveredSection = rewritten.substring(recoveredMatch.index);
+      expect(recoveredSection).not.toContain('**PDCA Document:**');
+      expect(recoveredSection).not.toContain('Decision 1: Completed');
+    }
+  });
+});
