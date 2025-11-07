@@ -511,54 +511,6 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   // @pdca 2025-11-05-UTC-2100.pdca.md - REMOVED resolveComponentDirectory() - use path.join(model.componentsDirectory, name)
 
   /**
-   * Resolve semantic version link to actual version number
-   * DRY helper: Used by setCICDVersion() and other methods
-   * Works on current component (this.model.component set by updateModelPaths)
-   * 
-   * @param version Version or semantic link (latest/dev/test/prod/current or actual version)
-   * @returns Actual version number (e.g., "0.3.13.2")
-   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Radical OOP (use model, not parameters)
-   * @cliHide
-   */
-  private resolveActualVersion(version: string): string {
-    // Handle 'current' keyword
-    if (version === 'current') {
-      // Use THIS model's version (already set by updateModelPaths)
-      return this.model.version.toString();
-    }
-    
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use SemanticVersion for validation
-    // If already a version number, return as-is (let SemanticVersion validate)
-    if (this.model.version.isValid(version)) {
-      return version;
-    }
-    
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use SemanticVersion for link detection
-    // Resolve semantic link (latest/dev/test/prod) to actual version
-    if (SemanticVersion.isSemanticLink(version)) {
-      // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly
-      const componentDir = path.join(this.model.componentsDirectory, this.model.component);
-      const linkPath = path.join(componentDir, version);
-      
-      if (existsSync(linkPath) && lstatSync(linkPath).isSymbolicLink()) {
-        const resolvedVersion = readlinkSync(linkPath);
-        // Extract version number from link target (handles both "0.1.0.0" and "../0.1.0.0")
-        const versionMatch = resolvedVersion.match(/(\d+\.\d+\.\d+\.\d+)/);
-        if (versionMatch) {
-          return versionMatch[1];
-        }
-        // If no version pattern, assume it's already a clean version
-        return resolvedVersion;
-      } else {
-        throw new Error(`Semantic link '${version}' does not exist or is not a symlink for ${this.model.component}`);
-      }
-    }
-    
-    // Unknown format - return as-is and let caller validate
-    return version;
-  }
-
-  /**
    * Scaffold complete component structure with all Web4 features
    * Creates directories, files, and symlinks for new component
    * @param options Scaffold options (componentName, version, features to include)
@@ -4814,9 +4766,24 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly (no target variable)
     const componentDir = path.join(this.model.componentsDirectory, this.model.component);
     
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Radical OOP helper
-    // resolveActualVersion now uses this.model directly (no parameters needed)
-    const actualVersion = this.resolveActualVersion(version);
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Inline resolveActualVersion (single use)
+    let actualVersion: string;
+    if (version === 'current') {
+      actualVersion = this.model.version.toString();
+    } else if (this.model.version.isValid(version)) {
+      actualVersion = version;
+    } else if (SemanticVersion.isSemanticLink(version)) {
+      const linkPath = path.join(componentDir, version);
+      if (existsSync(linkPath) && lstatSync(linkPath).isSymbolicLink()) {
+        const resolvedVersion = readlinkSync(linkPath);
+        const versionMatch = resolvedVersion.match(/(\d+\.\d+\.\d+\.\d+)/);
+        actualVersion = versionMatch ? versionMatch[1] : resolvedVersion;
+      } else {
+        throw new Error(`Semantic link '${version}' does not exist or is not a symlink for ${this.model.component}`);
+      }
+    } else {
+      actualVersion = version; // Unknown format - let later validation catch it
+    }
     
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion helper
     if (!SemanticVersion.isSemanticLink(targetVersion)) {
