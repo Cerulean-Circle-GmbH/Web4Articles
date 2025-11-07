@@ -7,6 +7,7 @@ import { Web4TSComponent } from '../layer3/Web4TSComponent.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { Web4TSComponentModel } from '../layer3/Web4TSComponentModel.interface.js';
 import { ComponentDependency } from '../layer3/ComponentDependency.interface.js';
+import { CLI } from '../layer3/CLI.interface.js';
 import { Colors } from '../layer3/Colors.interface.js';
 import { DefaultColors } from '../layer4/DefaultColors.js';
 import { SemanticVersion } from './SemanticVersion.js';
@@ -42,8 +43,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * Back-reference to CLI for Path Authority (Radical OOP - DRY)
    * Set by CLI constructor: cli.component.cli = this
    * @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Fix type (was any)
    */
-  private cli?: any;
+  private cli?: CLI;
   
   /**
    * Component's method signatures (class metadata, not model state)
