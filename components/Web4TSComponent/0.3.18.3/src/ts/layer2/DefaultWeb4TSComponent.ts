@@ -1410,17 +1410,12 @@ Standards:
   async upgrade(versionPromotion: string = 'nextPatch'): Promise<this> {
         // Print quick header for immediate UX feedback
         this.printQuickHeader();  
-    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
-    // @pdca 2025-10-28-UTC-0934.pdca.md:3090 - Phase 4: Instance pattern
-    const target = this.model.context || this;
-  
-
-    // ✅ Component has ALL its data in ITS model
+    
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
+    const target = this.model.context || this;  // For component NAME/VERSION
     const componentName = target.model.component;
     const currentVersion = target.model.version.toString();
-    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths (Path Authority)
-    const cli = this.getCLI();
-    const componentPath = path.join(cli.model.componentsDirectory, componentName, currentVersion);
+    const componentPath = this.model.targetComponentRoot!;  // For PATH
     
     let nextVersion: string;
     
@@ -1804,12 +1799,8 @@ Standards:
       }
       
     // Run tests for target component
-    // Use target's componentRoot (where component actually lives and has tests)
-    // @pdca 2025-11-05-UTC-1900 - Use componentRoot, not targetDirectory
-    // targetDirectory is projectRoot (for creating test components), but tests are in componentRoot
-    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths (Path Authority)
-    const cli = this.getCLI();
-    const componentPath = cli.model.componentRoot;
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
+    const componentPath = this.model.targetComponentRoot!;
     
     // 🚨 RECURSION PREVENTION: Detect if already called from npm test
     // @pdca 2025-11-04-UTC-2044.pdca.md - Prevent test.sh → component test → npm test → test.sh loop
@@ -2003,9 +1994,8 @@ Standards:
     }
 
     // Run target component tests and HANDLE RELEASE promotion
-    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths (Path Authority)
-    const cli = this.getCLI();
-    const componentPath = path.join(cli.model.componentsDirectory, target.model.component, targetVersion);
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
+    const componentPath = this.model.targetComponentRoot!;
     console.log(`🧪 Running tests for ${target.model.component} ${targetVersion} (RELEASE MODE)...`);
     
     try {
@@ -2499,10 +2489,8 @@ Standards:
     }
 
     const target = this.model.context;
-    // ✅ PATH AUTHORITY: Use CLI's paths (Path Authority)
-    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths
-    const cli = this.getCLI();
-    const componentPath = path.join(cli.model.componentsDirectory, target.model.component, target.model.version.toString());
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
+    const componentPath = this.model.targetComponentRoot!;
     
     console.log(`🚀 Starting ${target.model.component} ${target.model.version.toString()}...`);
     
@@ -2561,10 +2549,8 @@ Standards:
     if (hasForce) buildArgs.push('force');
     const buildCmd = `./src/sh/build.sh ${buildArgs.join(' ')}`;
     
-    // ✅ PATH AUTHORITY: Use CLI's paths (Path Authority)
-    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths
-    const cli = this.getCLI();
-    const componentPath = path.join(cli.model.componentsDirectory, target.model.component, target.model.version.toString());
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
+    const componentPath = this.model.targetComponentRoot!;
     
     console.log(`🔨 Building ${target.model.component} ${target.model.version.toString()}...`);
     
