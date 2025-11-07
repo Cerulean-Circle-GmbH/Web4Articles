@@ -1429,14 +1429,13 @@ Standards:
    * @cliValues versionPromotion nextPatch nextMinor nextMajor nextBuild
    */
   async upgrade(versionPromotion: string = 'nextPatch'): Promise<this> {
-        // Print quick header for immediate UX feedback
-        this.printQuickHeader();  
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP
+    const componentPath = this.model.targetComponentRoot!;
+    const componentName = this.model.component;
+    const currentVersion = this.model.version.toString();
     
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
-    const target = this.model.context || this;  // For component NAME/VERSION
-    const componentName = target.model.component;
-    const currentVersion = target.model.version.toString();
-    const componentPath = this.model.targetComponentRoot!;  // For PATH
+    // Print quick header AFTER model reflects correct context
+    this.printQuickHeader();
     
     let nextVersion: string;
     
