@@ -4739,11 +4739,15 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Verify semantic links (dev, test, prod) are valid
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion.SEMANTIC_LINKS
    * @cliHide
    */
   private async verifySemanticLinks(component: string, availableVersions: string[]): Promise<void> {
     const semanticLinks = await this.getSemanticLinks(component);
-    const semanticTypes = ['dev', 'test', 'prod'] as const; // Don't check 'latest' as it's handled separately
+    
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Filter from SemanticVersion constant
+    // Don't check 'latest' as it's handled separately
+    const semanticTypes = SemanticVersion.SEMANTIC_LINKS.filter(link => link !== 'latest');
     
     for (const linkType of semanticTypes) {
       const target = semanticLinks[linkType];
