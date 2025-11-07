@@ -2271,8 +2271,10 @@ Standards:
     
     console.log(`🧪 Running tests from: ${targetFile.relativePath}`);
     
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
-    const componentRoot = this.model.targetComponentRoot!;
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model.componentRoot (not targetComponentRoot)
+    // componentRoot is THIS component's root, targetComponentRoot changes with context
+    // For test execution, we always test THIS component
+    const componentRoot = this.model.componentRoot;
     
     try {
       // ✅ FIX: Use relativePath which includes subdirectories (ts/layer2/file.test.ts)
@@ -2362,8 +2364,8 @@ Standards:
     console.log(`   File: ${file.name}`);
     console.log(`   Reference: ${ref}`);
     
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
-    const componentRoot = this.model.targetComponentRoot!;
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model.componentRoot (not targetComponentRoot)
+    const componentRoot = this.model.componentRoot;
     
     try {
       // @pdca 2025-11-05-UTC-2226.pdca.md - Disable bail to see ALL failures
@@ -2475,8 +2477,8 @@ Standards:
     console.log(`   Describe: ${targetDescribe.name}`);
     console.log(`   File: ${targetFile.name}`);
     
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
-    const componentRoot = this.model.targetComponentRoot!;
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model.componentRoot (not targetComponentRoot)
+    const componentRoot = this.model.componentRoot;
     
     try {
       // @pdca 2025-11-05-UTC-2226.pdca.md - Disable bail to see ALL failures
