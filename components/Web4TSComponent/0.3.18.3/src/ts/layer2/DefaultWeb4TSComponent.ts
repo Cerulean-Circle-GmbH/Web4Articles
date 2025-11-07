@@ -4112,7 +4112,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
         
         // Ensure target wrapper exists
         if (!existsSync(targetWrapperPath)) {
-          await this.createVersionScriptSymlink(this.model.component, actualVersion);
+          await this.createVersionScriptSymlink(actualVersion);
         }
         
         // Remove existing semantic symlink if exists
@@ -4547,7 +4547,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
   private async updateScriptsSymlinks(): Promise<void> {
     try {
       // Create version-specific symlink (restored to 0.3.13.2 behavior)
-      await this.createVersionScriptSymlink(this.model.toVersion!);
+      await this.createVersionScriptSymlink();
       
       // Update scripts/component symlink to point to latest version
       await this.updateMainScriptSymlink();
@@ -4560,11 +4560,11 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Create version-specific script symlink (restored to 0.3.13.2 behavior)
-   * Uses this.model for component identity
-   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model (no functional parameters)
+   * Uses this.model for component identity and version (defaults to toVersion, or provide specific version)
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model (optional parameter for verification loops)
    * @cliHide
    */
-  private async createVersionScriptSymlink(version: string): Promise<void> {
+  private async createVersionScriptSymlink(version: string = this.model.toVersion!): Promise<void> {
     // ✅ Use model.projectRoot (Path Authority: CLI calculates this)
     // NOT resolveProjectRoot() which returns targetDirectory
     const projectRoot = this.model.projectRoot;
