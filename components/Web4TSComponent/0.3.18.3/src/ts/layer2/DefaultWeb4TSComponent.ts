@@ -24,6 +24,13 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   private user?: User; // Optional User service (lazy initialization)
   
   /**
+   * Back-reference to CLI for Path Authority (Radical OOP - DRY)
+   * Set by CLI constructor: cli.component.cli = this
+   * @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md
+   */
+  private cli?: any;
+  
+  /**
    * Component's method signatures (class metadata, not model state)
    * Populated in init() via discoverMethods()
    * @pdca 2025-11-05-UTC-1158.pdca.md - Self-discovery pattern
@@ -189,6 +196,17 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       // User service not available - throw for caller to handle fallback
       throw new Error('User service not available');
     }
+  }
+
+  /**
+   * Get CLI for Path Authority (Radical OOP - DRY)
+   * Returns CLI instance that has path infrastructure, or self as fallback
+   * @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md
+   * @returns CLI instance (with path authority) or this (if standalone)
+   * @cliHide
+   */
+  private getCLI(): any {
+    return this.cli || this;
   }
 
     
@@ -1375,8 +1393,9 @@ Standards:
     // ✅ Component has ALL its data in ITS model
     const componentName = target.model.component;
     const currentVersion = target.model.version.toString();
-    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
-    const componentPath = path.join(target.model.componentsDirectory, componentName, currentVersion);
+    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths (Path Authority)
+    const cli = this.getCLI();
+    const componentPath = path.join(cli.model.componentsDirectory, componentName, currentVersion);
     
     let nextVersion: string;
     
@@ -1763,7 +1782,9 @@ Standards:
     // Use target's componentRoot (where component actually lives and has tests)
     // @pdca 2025-11-05-UTC-1900 - Use componentRoot, not targetDirectory
     // targetDirectory is projectRoot (for creating test components), but tests are in componentRoot
-    const componentPath = target.model.componentRoot;
+    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths (Path Authority)
+    const cli = this.getCLI();
+    const componentPath = cli.model.componentRoot;
     
     // 🚨 RECURSION PREVENTION: Detect if already called from npm test
     // @pdca 2025-11-04-UTC-2044.pdca.md - Prevent test.sh → component test → npm test → test.sh loop
@@ -1956,9 +1977,10 @@ Standards:
       }
     }
 
-    // Run target component tests and handle RELEASE promotion
-    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
-    const componentPath = path.join(target.model.componentsDirectory, target.model.component, targetVersion);
+    // Run target component tests and HANDLE RELEASE promotion
+    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths (Path Authority)
+    const cli = this.getCLI();
+    const componentPath = path.join(cli.model.componentsDirectory, target.model.component, targetVersion);
     console.log(`🧪 Running tests for ${target.model.component} ${targetVersion} (RELEASE MODE)...`);
     
     try {
@@ -2452,9 +2474,10 @@ Standards:
     }
 
     const target = this.model.context;
-    // ✅ PATH AUTHORITY: Use target's origin (from on()) - target is always loaded via on()
-    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
-    const componentPath = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
+    // ✅ PATH AUTHORITY: Use CLI's paths (Path Authority)
+    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths
+    const cli = this.getCLI();
+    const componentPath = path.join(cli.model.componentsDirectory, target.model.component, target.model.version.toString());
     
     console.log(`🚀 Starting ${target.model.component} ${target.model.version.toString()}...`);
     
@@ -2513,9 +2536,10 @@ Standards:
     if (hasForce) buildArgs.push('force');
     const buildCmd = `./src/sh/build.sh ${buildArgs.join(' ')}`;
     
-    // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
-    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
-    const componentPath = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
+    // ✅ PATH AUTHORITY: Use CLI's paths (Path Authority)
+    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths
+    const cli = this.getCLI();
+    const componentPath = path.join(cli.model.componentsDirectory, target.model.component, target.model.version.toString());
     
     console.log(`🔨 Building ${target.model.component} ${target.model.version.toString()}...`);
     
@@ -2663,9 +2687,10 @@ Standards:
     
     // ✅ RADICAL OOP: Use target instance for component root
     const target = this.model.context || this;
-    // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
-    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
-    const componentRoot = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
+    // ✅ PATH AUTHORITY: Use CLI's paths (Path Authority)
+    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths
+    const cli = this.getCLI();
+    const componentRoot = path.join(cli.model.componentsDirectory, target.model.component, target.model.version.toString());
     
     try {
       // ✅ FIX: Use relativePath which includes subdirectories (ts/layer2/file.test.ts)
@@ -2756,9 +2781,10 @@ Standards:
     
     // ✅ RADICAL OOP: Use target instance for component root
     const target = this.model.context || this;
-    // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
-    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
-    const componentRoot = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
+    // ✅ PATH AUTHORITY: Use CLI's paths (Path Authority)
+    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths
+    const cli = this.getCLI();
+    const componentRoot = path.join(cli.model.componentsDirectory, target.model.component, target.model.version.toString());
     
     try {
       // @pdca 2025-11-05-UTC-2226.pdca.md - Disable bail to see ALL failures
@@ -2872,9 +2898,10 @@ Standards:
     
     // ✅ RADICAL OOP: Use target instance for component root
     const target = this.model.context || this;
-    // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
-    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
-    const componentRoot = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
+    // ✅ PATH AUTHORITY: Use CLI's paths (Path Authority)
+    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths
+    const cli = this.getCLI();
+    const componentRoot = path.join(cli.model.componentsDirectory, target.model.component, target.model.version.toString());
     
     try {
       // @pdca 2025-11-05-UTC-2226.pdca.md - Disable bail to see ALL failures
@@ -2904,9 +2931,10 @@ Standards:
     // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
     const target = this.model.context || this;
     
-    // ✅ PATH AUTHORITY: Use target's origin (from on()) or calculate path (self-operation)
-    // @pdca 2025-11-05-UTC-2100.pdca.md - Use target's componentsDirectory (Path Authority)
-    const componentPath = path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString());
+    // ✅ PATH AUTHORITY: Use CLI's paths (Path Authority)
+    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths
+    const cli = this.getCLI();
+    const componentPath = path.join(cli.model.componentsDirectory, target.model.component, target.model.version.toString());
     
     const isGlobalClean = force === 'force';
     const cleanType = isGlobalClean ? 'clean:global' : 'clean';
@@ -2964,10 +2992,13 @@ Standards:
     } else {
       // Context loaded - delegate to target component's CLI
       const cliScriptName = target.model.component.toLowerCase().replace(/\./g, '');
-      const cliPath = path.join(this.model.projectRoot, 'scripts', cliScriptName);
+      // ✅ PATH AUTHORITY: Use CLI's paths (Path Authority)
+      // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths
+      const cli = this.getCLI();
+      const cliPath = path.join(cli.model.projectRoot, 'scripts', cliScriptName);
       
       execSync(`${cliPath} completeParameter completionNameParameterCompletion "completion" "${what}" "${filter || ''}" 2>/dev/null`, { 
-        cwd: path.join(target.model.componentsDirectory, target.model.component, target.model.version.toString()),
+        cwd: path.join(cli.model.componentsDirectory, target.model.component, target.model.version.toString()),
         stdio: 'inherit',
       });
     }
