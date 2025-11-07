@@ -1306,7 +1306,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     await this.createVersionFromExisting();
     
     // Update symlinks to maintain proper script accessibility
-    await this.updateSymlinks(this.model.component, nextVersion);
+    await this.updateSymlinks();
     
     console.log(`✅ ${this.model.component} ${nextVersion} created successfully`);
     console.log(`   Location: components/${this.model.component}/${nextVersion}`);
@@ -4497,17 +4497,19 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Update symlinks for component version (latest and scripts)
+   * Uses this.model for component identity and version (from toVersion)
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model (no functional parameters)
    * @cliHide
    */
-  private async updateSymlinks(component: string, version: string): Promise<void> {
+  private async updateSymlinks(): Promise<void> {
     try {
       // Update latest symlink
-      await this.updateLatestSymlink(component, version);
+      await this.updateLatestSymlink();
       
       // Update scripts symlinks
-      await this.updateScriptsSymlinks(component, version);
+      await this.updateScriptsSymlinks();
       
-      console.log(`   🔗 Symlinks updated: latest → ${version}`);
+      console.log(`   🔗 Symlinks updated: latest → ${this.model.toVersion}`);
     } catch (error) {
       console.log(`   ⚠️ Symlink update had issues: ${(error as Error).message}`);
     }
@@ -4515,10 +4517,12 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Update latest symlink in component directory
+   * Uses this.model for component identity and version (from toVersion)
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model (no functional parameters)
    * @cliHide
    */
-  private async updateLatestSymlink(component: string, version: string): Promise<void> {
-    const componentDir = path.join(this.model.componentsDirectory, component);
+  private async updateLatestSymlink(): Promise<void> {
+    const componentDir = path.join(this.model.componentsDirectory, this.model.component);
     const latestPath = path.join(componentDir, 'latest');
     
     try {
@@ -4528,7 +4532,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       }
       
       // Create new latest symlink
-      await fs.symlink(version, latestPath);
+      await fs.symlink(this.model.toVersion!, latestPath);
     } catch (error) {
       console.log(`   ⚠️ Could not update latest symlink: ${(error as Error).message}`);
     }
@@ -4536,15 +4540,17 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Update scripts and scripts/versions symlinks (restored to 0.3.13.2 behavior)
+   * Uses this.model for component identity and version (from toVersion)
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model (no functional parameters)
    * @cliHide
    */
-  private async updateScriptsSymlinks(component: string, version: string): Promise<void> {
+  private async updateScriptsSymlinks(): Promise<void> {
     try {
       // Create version-specific symlink (restored to 0.3.13.2 behavior)
-      await this.createVersionScriptSymlink(component, version);
+      await this.createVersionScriptSymlink(this.model.toVersion!);
       
       // Update scripts/component symlink to point to latest version
-      await this.updateMainScriptSymlink(component, version);
+      await this.updateMainScriptSymlink();
     } catch (error) {
       console.log(`   ⚠️ Could not update scripts symlinks: ${(error as Error).message}`);
     }
@@ -4611,18 +4617,20 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Update main script symlink in scripts/ to point to latest
+   * Uses this.model for component identity
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model (no functional parameters)
    * @cliHide
    */
-  private async updateMainScriptSymlink(component: string, version: string): Promise<void> {
+  private async updateMainScriptSymlink(): Promise<void> {
     // @pdca 2025-11-05-UTC-2226.pdca.md - Use targetDirectory for test isolation
     // Scripts must go to test/data/scripts in test mode, not projectRoot/scripts
     const scriptsDir = path.join(this.model.targetDirectory, 'scripts');
-    const componentLower = component.toLowerCase();
+    const componentLower = this.model.component.toLowerCase();
     const mainScriptPath = path.join(scriptsDir, componentLower);
     
     // Target: ../components/ComponentName/latest/componentname
     // @pdca 2025-11-05-UTC-2226.pdca.md - Use componentsDirectory (already derived from targetDirectory)
-    const componentDir = path.join(this.model.componentsDirectory, component);
+    const componentDir = path.join(this.model.componentsDirectory, this.model.component);
     const targetPath = path.relative(scriptsDir, path.join(componentDir, 'latest', componentLower));
     
     try {
