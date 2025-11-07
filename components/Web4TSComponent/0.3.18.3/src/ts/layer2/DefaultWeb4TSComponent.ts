@@ -2698,10 +2698,8 @@ Standards:
     
     // ✅ RADICAL OOP: Use target instance for component root
     const target = this.model.context || this;
-    // ✅ PATH AUTHORITY: Use CLI's paths (Path Authority)
-    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths
-    const cli = this.getCLI();
-    const componentRoot = path.join(cli.model.componentsDirectory, target.model.component, target.model.version.toString());
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
+    const componentRoot = this.model.targetComponentRoot!;
     
     try {
       // ✅ FIX: Use relativePath which includes subdirectories (ts/layer2/file.test.ts)
@@ -2792,10 +2790,8 @@ Standards:
     
     // ✅ RADICAL OOP: Use target instance for component root
     const target = this.model.context || this;
-    // ✅ PATH AUTHORITY: Use CLI's paths (Path Authority)
-    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths
-    const cli = this.getCLI();
-    const componentRoot = path.join(cli.model.componentsDirectory, target.model.component, target.model.version.toString());
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
+    const componentRoot = this.model.targetComponentRoot!;
     
     try {
       // @pdca 2025-11-05-UTC-2226.pdca.md - Disable bail to see ALL failures
@@ -2909,10 +2905,8 @@ Standards:
     
     // ✅ RADICAL OOP: Use target instance for component root
     const target = this.model.context || this;
-    // ✅ PATH AUTHORITY: Use CLI's paths (Path Authority)
-    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths
-    const cli = this.getCLI();
-    const componentRoot = path.join(cli.model.componentsDirectory, target.model.component, target.model.version.toString());
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
+    const componentRoot = this.model.targetComponentRoot!;
     
     try {
       // @pdca 2025-11-05-UTC-2226.pdca.md - Disable bail to see ALL failures
@@ -2942,10 +2936,8 @@ Standards:
     // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
     const target = this.model.context || this;
     
-    // ✅ PATH AUTHORITY: Use CLI's paths (Path Authority)
-    // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths
-    const cli = this.getCLI();
-    const componentPath = path.join(cli.model.componentsDirectory, target.model.component, target.model.version.toString());
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
+    const componentPath = this.model.targetComponentRoot!;
     
     const isGlobalClean = force === 'force';
     const cleanType = isGlobalClean ? 'clean:global' : 'clean';
@@ -3003,13 +2995,13 @@ Standards:
     } else {
       // Context loaded - delegate to target component's CLI
       const cliScriptName = target.model.component.toLowerCase().replace(/\./g, '');
-      // ✅ PATH AUTHORITY: Use CLI's paths (Path Authority)
-      // @pdca 2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md - Use CLI's paths
+      // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
       const cli = this.getCLI();
       const cliPath = path.join(cli.model.projectRoot, 'scripts', cliScriptName);
+      const componentPath = this.model.targetComponentRoot!;
       
       execSync(`${cliPath} completeParameter completionNameParameterCompletion "completion" "${what}" "${filter || ''}" 2>/dev/null`, { 
-        cwd: path.join(cli.model.componentsDirectory, target.model.component, target.model.version.toString()),
+        cwd: componentPath,
         stdio: 'inherit',
       });
     }
