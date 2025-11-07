@@ -506,13 +506,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    */
   protected printQuickHeader(): void {
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly (already reflects context)
-    const cyan = '\x1b[36m';
-    const yellow = '\x1b[33m';
-    const dim = '\x1b[2m';
-    const reset = '\x1b[0m';
-    
     // Show calling component's info (this.model already updated by updateModelPaths)
-    let header = `${cyan}Web4 ${this.model.component} CLI Tool${reset} v${yellow}${this.model.version.toString()}${reset}`;
+    let header = `${this.colors.cyan}Web4 ${this.model.component} CLI Tool${this.colors.reset} v${this.colors.yellow}${this.model.version.toString()}${this.colors.reset}`;
     
     // If delegating AND the delegation target is different, show it
     // @pdca 2025-11-03-UTC-1237.pdca.md - Only show delegation when component/version differ
@@ -528,10 +523,10 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
           const web4tsDir = path.join(this.model.projectRoot, 'components', 'Web4TSComponent');
           const latestSymlink = path.join(web4tsDir, 'latest');
           const web4tsVersion = readlinkSync(latestSymlink);
-          header += ` ${dim}(via Web4TSComponent v${web4tsVersion})${reset}`;
+          header += ` ${this.colors.dim}(via Web4TSComponent v${web4tsVersion})${this.colors.reset}`;
         } catch (error) {
           // Fallback: if symlink can't be read, don't show version
-          header += ` ${dim}(via Web4TSComponent)${reset}`;
+          header += ` ${this.colors.dim}(via Web4TSComponent)${this.colors.reset}`;
         }
       }
     }
