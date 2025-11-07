@@ -150,6 +150,32 @@ export class SemanticVersion implements Version {
   }
 
   /**
+   * Compare two version strings (static helper for sorting)
+   * @param a First version string
+   * @param b Second version string
+   * @returns -1 if a < b, 0 if equal, 1 if a > b
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use existing compareTo()
+   */
+  static compare(a: string, b: string): number {
+    const versionA = SemanticVersion.fromString(a);
+    const versionB = SemanticVersion.fromString(b);
+    return versionA.compareTo(versionB);
+  }
+
+  /**
+   * Get highest version from array of version strings
+   * @param versions Array of version strings
+   * @returns Highest version string
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Consolidate version comparison
+   */
+  static getHighest(versions: string[]): string {
+    if (versions.length === 0) {
+      throw new Error('Cannot get highest version from empty array');
+    }
+    return versions.sort((a, b) => SemanticVersion.compare(b, a))[0];
+  }
+
+  /**
    * Promote to next major version (immutable)
    * Returns NEW instance
    * @pdca 2025-10-28-UTC-0934.pdca.md:1356

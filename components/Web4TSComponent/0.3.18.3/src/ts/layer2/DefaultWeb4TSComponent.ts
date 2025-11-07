@@ -1191,6 +1191,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * @TODO needs 0.3.18.3 review still
    * Discover and analyze Web4 components in directory with compliance reporting
    * 
    * Scans directory structure for Web4-compliant components and provides
@@ -5063,6 +5064,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Get available versions from component directory
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion.compare()
    * @cliHide
    */
   private getAvailableVersions(componentDir: string): string[] {
@@ -5070,7 +5072,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
       const entries = readdirSync(componentDir);
       return entries.filter(entry => {
         // Skip semantic symlinks
-        if (['latest', 'dev', 'test', 'prod'].includes(entry)) {
+        if (SemanticVersion.SEMANTIC_LINKS_SET.has(entry as any)) {
           return false;
         }
         
@@ -5083,7 +5085,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
           // Skip entries that can't be stat'd (broken symlinks, etc.)
           return false;
         }
-      }).sort((a, b) => this.compareVersions(a, b));
+      }).sort((a, b) => SemanticVersion.compare(a, b));
     } catch {
       return [];
     }
@@ -5091,27 +5093,11 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Get highest version from array of versions
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Delegate to SemanticVersion
    * @cliHide
    */
   private getHighestVersion(versions: string[]): string {
-    return versions.sort((a, b) => this.compareVersions(b, a))[0];
-  }
-
-  /**
-   * Compare two version strings (for sorting)
-   * Returns the difference for Array.sort() compatibility
-   * @cliHide
-   */
-  private compareVersions(a: string, b: string): number {
-    const aParts = a.split('.').map(Number);
-    const bParts = b.split('.').map(Number);
-    
-    for (let i = 0; i < 4; i++) {
-      if (aParts[i] !== bParts[i]) {
-        return aParts[i] - bParts[i];
-      }
-    }
-    return 0;
+    return SemanticVersion.getHighest(versions);
   }
 
   /**
