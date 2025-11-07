@@ -1639,16 +1639,16 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   /**
    * Run comprehensive TAB completion test suite
    * Executes all end-to-end shell tests for completion integration
+   * Works on current context (this.model reflects target after updateModelPaths())
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model
    * @cliHide
    */
   async testCompletion(): Promise<this> {
-    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
-    const target = this.model.context || this;
     const componentRoot = this.model.projectRoot;
     const testSuitePath = path.join(componentRoot, 'test/sh/test-completion-suite.sh');
     
     console.log(`🧪 Running TAB completion test suite...`);
-    console.log(`📂 Component: ${target.model.component} ${target.model.version.toString()}`);
+    console.log(`📂 Component: ${this.model.component} ${this.model.version.toString()}`);
     console.log(`📂 Test Suite: ${testSuitePath}`);
     console.log();
     
