@@ -4766,24 +4766,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly (no target variable)
     const componentDir = path.join(this.model.componentsDirectory, this.model.component);
     
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Inline resolveActualVersion (single use)
-    let actualVersion: string;
-    if (version === 'current') {
-      actualVersion = this.model.version.toString();
-    } else if (this.model.version.isValid(version)) {
-      actualVersion = version;
-    } else if (SemanticVersion.isSemanticLink(version)) {
-      const linkPath = path.join(componentDir, version);
-      if (existsSync(linkPath) && lstatSync(linkPath).isSymbolicLink()) {
-        const resolvedVersion = readlinkSync(linkPath);
-        const versionMatch = resolvedVersion.match(/(\d+\.\d+\.\d+\.\d+)/);
-        actualVersion = versionMatch ? versionMatch[1] : resolvedVersion;
-      } else {
-        throw new Error(`Semantic link '${version}' does not exist or is not a symlink for ${this.model.component}`);
-      }
-    } else {
-      actualVersion = version; // Unknown format - let later validation catch it
-    }
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use SemanticVersion.resolveVersion (semantic responsibility)
+    const actualVersion = await SemanticVersion.resolveVersion(version, componentDir, this.model.version);
     
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion helper
     if (!SemanticVersion.isSemanticLink(targetVersion)) {

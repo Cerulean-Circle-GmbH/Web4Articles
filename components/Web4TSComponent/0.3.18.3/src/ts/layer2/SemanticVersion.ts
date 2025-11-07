@@ -213,6 +213,51 @@ export class SemanticVersion implements Version {
   }
 
   /**
+   * Resolve version string to actual version number
+   * Handles: actual versions, semantic links, 'current' keyword
+   * 
+   * @param versionString Version to resolve (e.g., 'latest', 'current', '0.3.18.3')
+   * @param componentDir Component directory for resolving semantic links
+   * @param currentVersion Current version for 'current' keyword resolution
+   * @returns Actual version number
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Move to SemanticVersion (semantic responsibility)
+   */
+  static async resolveVersion(
+    versionString: string,
+    componentDir: string,
+    currentVersion: SemanticVersion
+  ): Promise<string> {
+    const { existsSync, lstatSync, readlinkSync } = await import('fs');
+    const path = await import('path');
+    
+    // Handle 'current' keyword
+    if (versionString === 'current') {
+      return currentVersion.toString();
+    }
+    
+    // If already a valid version number, return as-is
+    if (currentVersion.isValid(versionString)) {
+      return versionString;
+    }
+    
+    // Resolve semantic link (latest/dev/test/prod)
+    if (SemanticVersion.isSemanticLink(versionString)) {
+      const linkPath = path.join(componentDir, versionString);
+      if (existsSync(linkPath) && lstatSync(linkPath).isSymbolicLink()) {
+        const resolvedVersion = readlinkSync(linkPath);
+        // Extract version number from link target (handles both "0.1.0.0" and "../0.1.0.0")
+        const versionMatch = resolvedVersion.match(/(\d+\.\d+\.\d+\.\d+)/);
+        return versionMatch ? versionMatch[1] : resolvedVersion;
+      } else {
+        throw new Error(`Semantic link '${versionString}' does not exist or is not a symlink`);
+      }
+    }
+    
+    // Unknown format - return as-is and let caller validate
+    return versionString;
+  }
+
+  /**
    * Convert component state to scenario for persistence
    * @pdca 2025-10-28-UTC-2015.user-scenario-antipattern.pdca.md - Owner data as scenario structure
    */
