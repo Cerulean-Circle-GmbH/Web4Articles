@@ -6495,7 +6495,13 @@ export class DefaultPDCA implements PDCA {
     // Step 6.5: Zero Data Loss - Extract ALL content
     console.log(`🔍 Analyzing corrupted content (zero data loss mode)...\n`);
     const { mappableSections, unmappableContent } = this.extractAllContent(content);
-    const sectionNames = Object.keys(mappableSections);
+    
+    // Step 6.6: Intelligent Content Mapping - Map recognizable patterns from unmappable content
+    console.log(`🧠 Applying intelligent content mapping...\n`);
+    const { mappedSections: intelligentlyMappedSections, trulyUnmappable } = 
+      this.mapIntelligentContent(mappableSections, unmappableContent);
+    
+    const sectionNames = Object.keys(intelligentlyMappedSections);
     
     if (sectionNames.length > 0) {
       console.log(`✅ Found ${sectionNames.length} mappable section(s):`);
@@ -6503,25 +6509,25 @@ export class DefaultPDCA implements PDCA {
       console.log();
       
       // Merge extracted content into template
-      templateContent = this.mergeSections(templateContent, mappableSections);
+      templateContent = this.mergeSections(templateContent, intelligentlyMappedSections);
       console.log(`✅ Mappable content preserved in correct sections\n`);
     }
     
-    if (unmappableContent.length > 0) {
-      console.log(`⚠️  Found ${unmappableContent.length} unmappable content fragment(s)`);
+    if (trulyUnmappable.length > 0) {
+      console.log(`⚠️  Found ${trulyUnmappable.length} unmappable content fragment(s)`);
       console.log(`   Creating recovery section to preserve all data...\n`);
       
       // Append recovery section at the end
       const recoverySection = `\n---\n\n## **🔍 RECOVERED CONTENT**\n\n` +
         `**⚠️ The following content could not be automatically mapped to standard PDCA sections.**\n` +
         `**Please review and manually integrate this content where appropriate.**\n` +
-        unmappableContent.join('\n') + '\n\n---\n';
+        trulyUnmappable.join('\n') + '\n\n---\n';
       
       templateContent += recoverySection;
       console.log(`✅ Unmappable content preserved in recovery section\n`);
     }
     
-    if (sectionNames.length === 0 && unmappableContent.length === 0) {
+    if (sectionNames.length === 0 && trulyUnmappable.length === 0) {
       console.log(`⚠️  No content found to preserve (empty or metadata-only file)\n`);
     }
     
@@ -7004,6 +7010,58 @@ export class DefaultPDCA implements PDCA {
    * with extracted valid content from corrupted PDCA
    * @cliHide
    */
+  /**
+   * Intelligently map recognizable content patterns to template sections
+   * This method enhances content recovery by identifying subsections like
+   * "Artifact Links" and "QA Decisions" and placing them in the correct template location
+   * @cliHide
+   */
+  private mapIntelligentContent(
+    extractedSections: Record<string, string>,
+    unmappableContent: string[]
+  ): { 
+    mappedSections: Record<string, string>, 
+    trulyUnmappable: string[] 
+  } {
+    const mappedSections = { ...extractedSections };
+    const trulyUnmappable: string[] = [];
+    
+    // Pattern 1: Detect "Artifact Links" subsection - should go in SUMMARY
+    // Pattern 2: Detect "QA Decisions" subsection - should go in SUMMARY
+    const artifactLinksPattern = /### \*\*Artifact Links\*\*/i;
+    const qaDecisionsPattern = /### (?:\*\*)?(?:To TRON: )?QA Decisions(?: required)?(?:\*\*)?/i;
+    
+    for (const content of unmappableContent) {
+      let wasMapped = false;
+      
+      // Check if this unmappable content contains Artifact Links or QA Decisions
+      if (artifactLinksPattern.test(content) || qaDecisionsPattern.test(content)) {
+        // This should go in SUMMARY section
+        if (!mappedSections['📊 SUMMARY']) {
+          mappedSections['📊 SUMMARY'] = '';
+        }
+        
+        // Clean and normalize the content
+        let cleanContent = content.replace(/^### From .+?:\n/, '').trim();
+        
+        // Normalize QA Decisions header to template format
+        cleanContent = cleanContent.replace(
+          /### (?:\*\*)?(?:To TRON: )?QA Decisions(?: required)?(?:\*\*)?\s*\n/i,
+          '### **To TRON: QA Decisions required**\n'
+        );
+        
+        mappedSections['📊 SUMMARY'] += '\n\n' + cleanContent;
+        wasMapped = true;
+      }
+      
+      if (!wasMapped) {
+        trulyUnmappable.push(content);
+      }
+    }
+    
+    return { mappedSections, trulyUnmappable };
+  }
+
   private mergeSections(template: string, extractedSections: Record<string, string>): string {
     // Line-by-line parsing approach (fixes template bleeding bug)
     const templateLines = template.split('\n');
