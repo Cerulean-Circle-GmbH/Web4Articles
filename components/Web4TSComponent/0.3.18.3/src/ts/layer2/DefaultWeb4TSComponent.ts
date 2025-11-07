@@ -1294,30 +1294,29 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @TODO needs 0.3.18.3 review still
    */
   async upgrade(versionPromotion: string = 'nextPatch'): Promise<this> {
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP
-    const componentName = this.model.component;
-    const currentVersion = this.model.version.toString();
-    
     // Print quick header AFTER model reflects correct context
     this.printQuickHeader();
     
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion.promote()
-    const nextVersion = await SemanticVersion.promote(currentVersion, versionPromotion);
-    console.log(`🔧 Upgrading ${componentName}: ${currentVersion} → ${nextVersion}`);
+    const nextVersion = await SemanticVersion.promote(this.model.version.toString(), versionPromotion);
+    console.log(`🔧 Upgrading ${this.model.component}: ${this.model.version.toString()} → ${nextVersion}`);
+    
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Set target version in model (no functional parameters)
+    this.model.toVersion = nextVersion;
     
     // Create new version from existing
-    await this.createVersionFromExisting(componentName, currentVersion, nextVersion);
+    await this.createVersionFromExisting();
     
     // Update symlinks to maintain proper script accessibility
-    await this.updateSymlinks(componentName, nextVersion);
+    await this.updateSymlinks(this.model.component, nextVersion);
     
-    console.log(`✅ ${componentName} ${nextVersion} created successfully`);
-    console.log(`   Location: components/${componentName}/${nextVersion}`);
+    console.log(`✅ ${this.model.component} ${nextVersion} created successfully`);
+    console.log(`   Location: components/${this.model.component}/${nextVersion}`);
     
     // ✅ RADICAL OOP: Update context INSTANCE for further chaining
     if (this.model.context) {
       this.model.context.model.version = SemanticVersion.fromString(nextVersion);
-      this.model.context.model.origin = `components/${componentName}/${nextVersion}`;
+      this.model.context.model.origin = `components/${this.model.component}/${nextVersion}`;
     }
     
     return this;
@@ -3243,102 +3242,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     }
   }
 
-  /**
-   * Group template pattern files that should be compared together
-   * @cliHide
-   */
-  private async groupTemplatePatternFiles(allEntries: string[], componentSpecs: any[], analyses: any[]): Promise<any[]> {
-    const templateGroups = [];
-    
-    // Group CLI files in layer5
-    const cliFiles = allEntries.filter(entry => 
-      entry.includes('src/ts/layer5/') && entry.endsWith('CLI.ts')
-    );
-    
-    if (cliFiles.length > 1) {
-      // Check if CLI files follow same template pattern
-      const cliGroup = {
-        type: 'CLI Template',
-        files: cliFiles,
-        pattern: 'extends DefaultCLI'
-      };
-      
-      // Verify they actually follow the same template
-      const isValidGroup = await this.verifyTemplateGroup(cliGroup, componentSpecs, analyses);
-      
-      if (isValidGroup) {
-        templateGroups.push(cliGroup);
-      }
-    }
-    
-    return templateGroups;
-  }
 
-  /**
-   * Verify that files in a group follow the same template pattern
-   * @cliHide
-   */
-  private async verifyTemplateGroup(group: any, componentSpecs: any[], analyses: any[]): Promise<boolean> {
-    const fileContents = [];
-    
-    // Collect contents of all files in the group
-    for (const file of group.files) {
-      for (let i = 0; i < componentSpecs.length; i++) {
-        const analysis = analyses[i];
-        const spec = componentSpecs[i];
-        
-        if (analysis.files.has(file)) {
-          // Use the actual component path from analysis
-          const filePath = path.join(analysis.path, file);
-          
-          try {
-            const content = await fs.readFile(filePath, 'utf8');
-            fileContents.push(content);
-            break; // Found the file in this component
-          } catch (error) {
-            continue;
-          }
-        }
-      }
-    }
-    
-    // Use simple template similarity detection
-    if (fileContents.length >= 2) {
-      return this.checkTemplateSimilarity(fileContents, group.files[0]);
-    }
-    
-    return false;
-  }
-
-  /**
-   * Generate a row for template group (files that follow same template pattern)
-   * @cliHide
-   */
-  private async generateTemplateGroupRow(group: any, componentSpecs: any[], analyses: any[]): Promise<void> {
-    let row = `| ${group.type} (${group.files.join(', ')})`;
-    
-    let presentCount = 0;
-    const presencePattern = [];
-    
-    // Check presence across components
-    for (const analysis of analyses) {
-      const hasAnyFile = group.files.some((file: string) => analysis.files.has(file));
-      const symbol = hasAnyFile ? '✅' : '❌';
-      row += ` | ${symbol}`;
-      
-      if (hasAnyFile) {
-        presentCount++;
-        presencePattern.push(analysis.name.charAt(0));
-      }
-    }
-    
-    // Template groups are always similar
-    const purpose = 'CLI template pattern';
-    const similarity = presentCount >= 2 ? `🟨 Similar (${presencePattern.join('+')})` : `🟪 Unique – ${presencePattern[0]}`;
-    
-    row += ` | ${purpose} | ${similarity} |`;
-    console.log(row);
-  }
 
   /**
    * Determine purpose of file/directory
@@ -3567,78 +3471,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return false;
   }
 
-  /**
-   * Find template-similar files across components even with different names
-   * @cliHide
-   */
-  private async findTemplateSimilarFiles(entry: string, componentSpecs: any[], analyses: any[]): Promise<any[]> {
-    const similarFiles = [];
-    
-    // For CLI files, look for other CLI files in the same layer across components
-    if (entry.includes('CLI.ts') && entry.includes('src/ts/layer5/')) {
-      for (let i = 0; i < componentSpecs.length; i++) {
-        const analysis = analyses[i];
-        const spec = componentSpecs[i];
-        
-        // Find CLI files in this component's layer5
-        const cliFiles = Array.from(analysis.files as Set<string>).filter(file => 
-          file.includes('src/ts/layer5/') && file.endsWith('CLI.ts')
-        );
-        
-        for (const cliFile of cliFiles) {
-          if (cliFile !== entry) {
-            // Check if these CLI files follow the same template pattern
-            const thisFilePath = path.join(analysis.path, cliFile);
-            const originalFilePath = this.findOriginalFilePath(entry, componentSpecs, analyses);
-            
-            if (await this.areTemplatePatternFiles(originalFilePath, thisFilePath)) {
-              similarFiles.push({
-                file: cliFile,
-                component: spec.name,
-                path: thisFilePath
-              });
-            }
-          }
-        }
-      }
-    }
-    
-    return similarFiles;
-  }
 
-  /**
-   * Find the path of the original file for comparison
-   * @cliHide
-   */
-  private findOriginalFilePath(entry: string, componentSpecs: any[], analyses: any[]): string | null {
-    for (let i = 0; i < componentSpecs.length; i++) {
-      const analysis = analyses[i];
-      
-      if (analysis.files.has(entry)) {
-        // Use the actual component path from analysis
-        return path.join(analysis.path, entry);
-      }
-    }
-    return null;
-  }
 
-  /**
-   * Check if two files follow the same template pattern
-   * @cliHide
-   */
-  private async areTemplatePatternFiles(filePath1: string | null, filePath2: string): Promise<boolean> {
-    if (!filePath1) return false;
-    
-    try {
-      const content1 = await fs.readFile(filePath1, 'utf8');
-      const content2 = await fs.readFile(filePath2, 'utf8');
-      
-      // Use simple template similarity detection
-      return this.checkTemplateSimilarity([content1, content2], path.basename(filePath1));
-    } catch (error) {
-      return false;
-    }
-  }
 
   /**
    * Check for common inheritance patterns (e.g., extends DefaultCLI)
@@ -3800,54 +3634,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     });
   }
 
-  /**
-   * Check DefaultCLI.ts similarity (template-based but component-specific)
-   * @cliHide
-   */
-  private checkDefaultCLISimilarity(fileContents: string[]): boolean {
-    // DefaultCLI files should have similar class structure but different component names
-    const hasCommonStructure = fileContents.every(content => 
-      content.includes('class Default') && 
-      content.includes('CLI') &&
-      content.includes('export default') &&
-      content.includes('discoverMethods')
-    );
-    
-    return hasCommonStructure;
-  }
 
-  /**
-   * Check TypeScript file similarity (interfaces, classes, similar structure)
-   * @cliHide
-   */
-  private checkTypeScriptFileSimilarity(fileContents: string[]): boolean {
-    // Check for common TypeScript patterns
-    const patterns = ['interface', 'class', 'export', 'import', 'type', 'enum'];
-    const firstContent = fileContents[0];
-    
-    return fileContents.every(content => {
-      // Check if files have similar TypeScript structure
-      const firstPatterns = patterns.filter(pattern => firstContent.includes(pattern));
-      const currentPatterns = patterns.filter(pattern => content.includes(pattern));
-      
-      // Files are similar if they share most structural patterns
-      const commonPatterns = firstPatterns.filter(pattern => currentPatterns.includes(pattern));
-      return commonPatterns.length >= Math.min(firstPatterns.length, currentPatterns.length) * 0.6;
-    });
-  }
 
-  /**
-   * Check general structural similarity
-   * @cliHide
-   */
-  private checkGeneralStructuralSimilarity(fileContents: string[]): boolean {
-    const firstContent = fileContents[0];
-    
-    return fileContents.every(content => {
-      const similarity = this.calculateStructuralSimilarity(firstContent, content);
-      return similarity > 0.5; // 50% structural similarity threshold for general files
-    });
-  }
 
   /**
    * Calculate structural similarity between two text contents
@@ -3993,46 +3781,57 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     }
   }
 
-  /**
-   * Version increment helpers removed - consolidated to SemanticVersion component
-   * @pdca 2025-11-03-UTC-0800.pdca.md - DRY principle: Use SemanticVersion.promoteX() methods
-   * 
-   * Previous methods (now redundant):
-   * - incrementBuild() → SemanticVersion.promoteRevision()
-   * - incrementPatch() → SemanticVersion.promotePatch()
-   * - incrementMinor() → SemanticVersion.promoteMinor()
-   * - incrementMajor() → SemanticVersion.promoteMajor()
-   */
+
 
   /**
    * Create new version from existing component
+   * Works on current context (this.model reflects target after updateModelPaths())
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model (no functional parameters)
    * @cliHide
    */
-  private async createVersionFromExisting(component: string, fromVersion: string, toVersion: string): Promise<void> {
-    // @pdca 2025-11-05-UTC-2100.pdca.md - Use componentsDirectory (Path Authority)
-    const sourcePath = path.join(this.model.componentsDirectory, component, fromVersion);
-    const targetPath = path.join(this.model.componentsDirectory, component, toVersion);
+  private async createVersionFromExisting(): Promise<void> {
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use componentsDirectory (Path Authority)
+    const sourcePath = path.join(this.model.componentsDirectory, this.model.component, this.model.version.toString());
+    const targetPath = path.join(this.model.componentsDirectory, this.model.component, this.model.toVersion!);
     
     // 🚨 CRITICAL: Check if target version already exists
     if (existsSync(targetPath)) {
-      console.error(`❌ ERROR: Version ${toVersion} already exists!`);
+      console.error(`❌ ERROR: Version ${this.model.toVersion} already exists!`);
       console.error(`   Path: ${targetPath}`);
       console.error(`   This would overwrite existing work - ABORTING!`);
-      throw new Error(`Version ${toVersion} already exists - refusing to overwrite`);
+      throw new Error(`Version ${this.model.toVersion} already exists - refusing to overwrite`);
     }
     
     // Copy entire component structure
     await this.copyDirectory(sourcePath, targetPath);
     
     // Update package.json version
+    await this.updatePackageJsonVersion(targetPath);
+    
+    // Update CLI script version reference if exists
+    await this.updateCLIScriptVersion(targetPath);
+  }
+  
+  /**
+   * Update package.json version field
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Extract helper method
+   * @cliHide
+   */
+  private async updatePackageJsonVersion(targetPath: string): Promise<void> {
     const packageJsonPath = `${targetPath}/package.json`;
     if (existsSync(packageJsonPath)) {
       const packageContent = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
-      packageContent.version = toVersion;
+      packageContent.version = this.model.toVersion;
       await fs.writeFile(packageJsonPath, JSON.stringify(packageContent, null, 2));
     }
-    
-    // Update CLI script version reference if exists (with human-readable error handling)
+  }
+  
+  /**
+   * Update CLI script COMPONENT_VERSION variable
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Extract helper method
+   * @cliHide
+   */
+  private async updateCLIScriptVersion(targetPath: string): Promise<void> {
     try {
       const cliScripts = await fs.readdir(targetPath);
       const cliScript = cliScripts.find(file => 
@@ -4049,7 +3848,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
           let cliContent = await fs.readFile(cliScriptPath, 'utf-8');
           cliContent = cliContent.replace(
             /COMPONENT_VERSION="[^"]+"/,
-            `COMPONENT_VERSION="${toVersion}"`
+            `COMPONENT_VERSION="${this.model.toVersion}"`
           );
           await fs.writeFile(cliScriptPath, cliContent);
           console.log(`   ✅ CLI script updated: ${cliScript}`);
@@ -4162,63 +3961,6 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     }
   }
 
-  /**
-   * @cliHide
-   */
-  private async createPackageJson(componentDir: string, componentName: string, version: string): Promise<void> {
-      const packageJson = {
-      "name": `@web4/${componentName.toLowerCase()}`,
-      "version": version,
-      "type": "module",
-      "main": `./src/ts/layer5/${componentName}CLI.ts`,
-      "scripts": {
-        "build": "tsc",
-        "test": "vitest",
-        "clean": "rm -rf dist/"
-      },
-      "devDependencies": {
-        "@types/node": "^24.1.0",
-          "typescript": "^5.0.0",
-        "vitest": "^3.2.4",
-        "ts-node": "^10.9.2"
-        }
-      };
-
-      await fs.writeFile(
-      path.join(componentDir, 'package.json'),
-        JSON.stringify(packageJson, null, 2)
-      );
-  }
-
-  /**
-   * @cliHide
-   */
-  private async createTsConfig(componentDir: string): Promise<void> {
-      const tsConfig = {
-      "compilerOptions": {
-        "target": "ES2022",
-        "module": "ES2022",
-        "moduleResolution": "node",
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "strict": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "outDir": "./dist",
-        "rootDir": "./src",
-        "declaration": true,
-        "declarationMap": true,
-        "sourceMap": true
-      },
-      "include": ["src/**/*"],
-      "exclude": ["dist", "node_modules", "test"]
-      };
-
-      await fs.writeFile(
-      path.join(componentDir, 'tsconfig.json'),
-        JSON.stringify(tsConfig, null, 2)
-      );
-  }
 
   /**
    * @cliHide

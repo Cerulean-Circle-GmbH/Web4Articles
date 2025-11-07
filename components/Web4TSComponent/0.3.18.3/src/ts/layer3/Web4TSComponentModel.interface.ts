@@ -104,6 +104,13 @@ export interface Web4TSComponentModel extends Model {
    */
   promotionLevel?: string;
   
+  /**
+   * Target version for upgrade operations
+   * Set by upgrade() method, used by createVersionFromExisting()
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Radical OOP: No functional parameters
+   */
+  toVersion?: string;
+  
   // Note: createdAt/updatedAt removed per Web4 principle - these belong in ChangeEvent
   // Note: componentStandards, validationRules, scaffoldingTemplates removed - never used in main test story
 }
