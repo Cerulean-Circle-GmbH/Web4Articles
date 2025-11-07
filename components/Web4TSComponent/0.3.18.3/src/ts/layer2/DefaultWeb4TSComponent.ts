@@ -1703,7 +1703,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       
       // 🎯 SELF-PROMOTION: After tests complete, handle RELEASE version promotion
       console.log(`\n🔍 Checking for RELEASE promotion opportunity...`);
-      const currentVersion = await this.getCurrentVersion();
+      const currentVersion = this.model.version.toString();
       
       // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Set in model
       this.model.promotionLevel = versionPromotion;
@@ -1973,14 +1973,6 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       console.error(`❌ Error reading test results: ${(error as Error).message}`);
       return false;
     }
-  }
-
-  /**
-   * Get current version from model (single source of truth)
-   * Model is initialized from directory name in constructor
-   */
-  private async getCurrentVersion(): Promise<string> {
-    return this.model.version.toString();
   }
 
 
