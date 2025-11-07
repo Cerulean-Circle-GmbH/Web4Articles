@@ -1289,8 +1289,6 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliSyntax versionPromotion
    * @TODO cliDefault versionPromotion nextPatch
    * @cliValues versionPromotion nextPatch nextMinor nextMajor nextBuild
-   */
-  /**
    * @TODO needs 0.3.18.3 review still
    */
   async upgrade(versionPromotion: string = 'nextPatch'): Promise<this> {
@@ -1370,10 +1368,33 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly
     const componentName = this.model.component;
     
-    // If 'fix' action requested, run verifyAndFix first
+    // If 'fix' action requested, verify and fix all symlinks
     if (action === 'fix') {
       console.log(`\n🔧 Fixing all links and symlinks for ${componentName}...`);
-      await this.verifyAndFix();
+      
+      // Inline verifyAndFixSymlinks logic (was deprecated method)
+      console.log(`🔍 Scanning ${componentName} symlinks...`);
+      
+      const componentDir = path.join(this.model.componentsDirectory, componentName);
+      const availableVersions = this.getAvailableVersions(componentDir);
+      
+      if (availableVersions.length === 0) {
+        console.log(`   ❌ No versions found for ${componentName}`);
+      } else {
+        const highestVersion = this.getHighestVersion(availableVersions);
+        console.log(`   📊 Highest version found: ${highestVersion}`);
+        
+        // Verify and fix latest symlink
+        await this.verifyLatestSymlink(componentName, highestVersion);
+        
+        // Verify and fix scripts symlinks
+        await this.verifyScriptsSymlinks(componentName, availableVersions, highestVersion);
+        
+        // Verify semantic links
+        await this.verifySemanticLinks(componentName, availableVersions);
+        
+        console.log(`   ✅ Symlink verification completed`);
+      }
       
       // Also fix semantic links (dev, test, prod, latest)
       await this.fixSemanticLinks(componentName);
@@ -4012,24 +4033,6 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     await fs.writeFile(path.join(testDir, `${componentName.toLowerCase()}.test.ts`), testContent);
   }
 
-  /**
-   * Verify and fix symlinks for component
-   * Works on current context (this.model reflects target after updateModelPaths())
-   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model
-   * @deprecated Use 'links fix' instead - this method is kept for backward compatibility
-   * @cliHide
-   */
-  async verifyAndFix(): Promise<this> {
-    const componentName = this.model.component;
-    
-    console.log(`🔍 Verifying and fixing symlinks for ${componentName}...`);
-    
-    // Verify and fix all symlinks
-    await this.verifyAndFixSymlinks(componentName);
-    
-    console.log(`✅ Symlink verification and repair completed for ${componentName}`);
-    return this;
-  }
 
   /**
    * Set CI/CD semantic links for a component version
@@ -4133,37 +4136,6 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
    */
   async targetVersionParameterCompletion(): Promise<string[]> {
     return ["dev", "latest", "prod", "test"];
-  }
-
-  /**
-   * Verify and fix all symlinks for component
-   * @cliHide
-   */
-  private async verifyAndFixSymlinks(component: string): Promise<void> {
-    console.log(`🔍 Scanning ${component} symlinks...`);
-    
-    // Get highest version
-    const componentDir = path.join(this.model.componentsDirectory, component);
-    const versions = this.getAvailableVersions(componentDir);
-    
-    if (versions.length === 0) {
-      console.log(`   ❌ No versions found for ${component}`);
-      return;
-    }
-    
-    const highestVersion = this.getHighestVersion(versions);
-    console.log(`   📊 Highest version found: ${highestVersion}`);
-    
-    // Verify and fix latest symlink
-    await this.verifyLatestSymlink(component, highestVersion);
-    
-    // Verify and fix scripts symlinks
-    await this.verifyScriptsSymlinks(component, versions, highestVersion);
-    
-    // Verify semantic links
-    await this.verifySemanticLinks(component, versions);
-    
-    console.log(`   ✅ Symlink verification completed`);
   }
 
   /**
