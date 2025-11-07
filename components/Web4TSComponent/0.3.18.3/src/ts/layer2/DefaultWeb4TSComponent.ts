@@ -511,6 +511,97 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   // @pdca 2025-11-05-UTC-2100.pdca.md - REMOVED resolveComponentDirectory() - use path.join(model.componentsDirectory, name)
 
   /**
+   * Validate and heal a config file (tsconfig.json or package.json)
+   * Creates timestamped backup if corrupted, validates structure
+   * @param filePath Path to file to validate
+   * @param validator Function to validate parsed content
+   * @param fileType Description for logging (e.g., "tsconfig.json")
+   * @returns true if valid, false if needs healing
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY helper
+   * @cliHide
+   */
+  private async validateAndBackupIfCorrupted(
+    filePath: string,
+    validator: (parsed: any) => boolean,
+    fileType: string
+  ): Promise<boolean> {
+    if (!existsSync(filePath)) {
+      return false; // File doesn't exist, needs creation
+    }
+
+    try {
+      const content = await fs.readFile(filePath, 'utf-8');
+      const parsed = JSON.parse(content);
+      
+      if (!validator(parsed)) {
+        console.log(`   ⚠️  Detected corrupted ${fileType} - backing up and resetting...`);
+        await this.createTimestampedBackup(filePath, content);
+        return false;
+      }
+      
+      return true; // Valid
+    } catch (error) {
+      // Invalid JSON
+      console.log(`   ⚠️  Detected corrupted ${fileType} - backing up and resetting...`);
+      const content = await fs.readFile(filePath, 'utf-8');
+      await this.createTimestampedBackup(filePath, content);
+      return false;
+    }
+  }
+
+  /**
+   * Create timestamped backup of a file
+   * Format: filename.backup.YYYYMMDDHHmmssSSS
+   * @param filePath Original file path
+   * @param content Content to backup
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY helper
+   * @cliHide
+   */
+  private async createTimestampedBackup(filePath: string, content: string): Promise<void> {
+    const now = new Date();
+    const timestamp = now.toISOString().replace(/[-:]/g, '').replace(/[T.]/g, '-').slice(0, -1);
+    const backupPath = `${filePath}.backup.${timestamp}`;
+    await fs.writeFile(backupPath, content);
+  }
+
+  /**
+   * Sync file from template with timestamp-based update detection
+   * @param targetPath Target file path
+   * @param templateRelativePath Template path relative to templates directory
+   * @param fileType Description for logging
+   * @param force Skip timestamp check
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY helper
+   * @cliHide
+   */
+  private async syncFileFromTemplate(
+    targetPath: string,
+    templateRelativePath: string,
+    fileType: string,
+    force: boolean
+  ): Promise<void> {
+    const content = await this.loadTemplate(templateRelativePath, {});
+    
+    if (!existsSync(targetPath)) {
+      await fs.writeFile(targetPath, content);
+      console.log(`   ✅ Created ${fileType}`);
+      return;
+    }
+
+    // Timestamp-based sync
+    const currentDir = path.dirname(new URL(import.meta.url).pathname);
+    const templateFullPath = path.join(currentDir, '../../../templates', templateRelativePath);
+    const targetStats = await fs.stat(targetPath);
+    const templateStats = await fs.stat(templateFullPath);
+    
+    if (force || templateStats.mtime > targetStats.mtime) {
+      await fs.writeFile(targetPath, content);
+      console.log(`   ✅ ${force ? 'Force updated' : 'Updated'} ${fileType}${force ? '' : ' (template is newer)'}`);
+    } else {
+      console.log(`   ℹ️  ${fileType} already up to date`);
+    }
+  }
+
+  /**
    * Scaffold complete component structure with all Web4 features
    * Creates directories, files, and symlinks for new component
    * @param options Scaffold options (componentName, version, features to include)
@@ -771,62 +862,6 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return components;
   }
 
-  /**
-   * Display Web4 location-resilient CLI standard information
-   * Shows template structure and key requirements for Web4 CLI scripts
-   * @cliHide
-   */
-  showStandard(): void {
-    console.log(`
-🔧 Web4 Location-Resilient CLI Standard
-
-Key Requirements:
-• Location Independence: CLI works from any directory
-• Project Root Detection: Automatic via git or directory traversal  
-• ESM Compatibility: Use ts-node/esm loader
-• Error Handling: Proper exit codes and error messages
-• Web4 Patterns: Empty constructors, scenario support, layer architecture
-
-Template Structure:
-#!/bin/bash
-find_project_root() { ... }
-PROJECT_ROOT=$(find_project_root)
-cd "$PROJECT_ROOT"
-node --loader ts-node/esm "./components/[name]/[version]/src/ts/layer5/[Name]CLI.ts" "$@"
-`);
-  }
-
-  /**
-   * Display Web4 architecture guidelines and core principles
-   * Shows layer structure, standards, and development patterns
-   * @cliHide
-   */
-  showGuidelines(): void {
-    console.log(`
-🏗️ Web4 Architecture Guidelines
-
-Core Principles:
-• Empty Constructors: No logic in constructors
-• Scenario Initialization: Use init(scenario) pattern
-• Layer Architecture: Separate concerns across layers 2-5
-• Location Resilience: Components work from any directory
-• ESM Native: Full ES module support
-• TypeScript First: Strong typing throughout
-
-Component Structure:
-• Layer 2: Implementation classes (Default*)
-• Layer 3: Interfaces and types
-• Layer 4: Utilities and helpers  
-• Layer 5: CLI and entry points
-
-Standards:
-• Vitest for testing (Jest banned)
-• Empty constructors + scenario pattern
-• Universal identifier patterns
-• Command chaining support
-`);
-  }
-
   
   /**
    * Initialize or upgrade project with Web4 global configuration files
@@ -854,133 +889,42 @@ Standards:
       ? this.model.targetDirectory  // ✅ Use stored value, don't calculate
       : targetDir; // Already absolute from bash wrapper
     
-    // Detect test isolation mode
-    const isTestIsolation = projectRoot.includes('/test/data');
-    
-    // if (isTestIsolation) {
-    //   console.log(`🧪 Initializing test isolation environment at: ${projectRoot}`);
-    //   // Use this component's own name and version for current version test isolation
-    //   return await this.initTestIsolationEnvironment(projectRoot, this.model.component, this.model.version);
-    // }
-    
     console.log(`🚀 Initializing Web4 project at: ${projectRoot}`);
     
     // Create root directory if needed
     await fs.mkdir(projectRoot, { recursive: true });
     
-    // Get template path (same logic as loadTemplate method) - needed for all template sync operations
-    const currentDir = path.dirname(new URL(import.meta.url).pathname);
-    
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use DRY helpers
     // 🛡️ SELF-HEALING: Validate and heal root tsconfig.json
     const tsConfigPath = path.join(projectRoot, 'tsconfig.json');
-    let tsconfigValid = true;
+    const tsconfigValid = await this.validateAndBackupIfCorrupted(
+      tsConfigPath,
+      (parsed) => parsed.compilerOptions && parsed.compilerOptions.module,
+      'tsconfig.json'
+    );
     
-    if (existsSync(tsConfigPath)) {
-      // Validate existing tsconfig.json
-      try {
-        const content = await fs.readFile(tsConfigPath, 'utf-8');
-        const parsed = JSON.parse(content);
-        
-        // Check if it has required Web4 structure
-        if (!parsed.compilerOptions || !parsed.compilerOptions.module) {
-          tsconfigValid = false;
-          console.log(`   ⚠️  Detected corrupted tsconfig.json - backing up and resetting...`);
-          
-          // Create timestamped backup with milliseconds for uniqueness
-          const now = new Date();
-          const timestamp = now.toISOString().replace(/[-:]/g, '').replace(/[T.]/g, '-').slice(0, -1); // YYYYMMDDHHmmssSSS
-          const backupPath = path.join(projectRoot, `tsconfig.json.backup.${timestamp}`);
-          await fs.writeFile(backupPath, content);
-        }
-      } catch (error) {
-        // Invalid JSON
-        tsconfigValid = false;
-        console.log(`   ⚠️  Detected corrupted tsconfig.json - backing up and resetting...`);
-        
-        // Create timestamped backup with milliseconds for uniqueness
-        const content = await fs.readFile(tsConfigPath, 'utf-8');
-        const now = new Date();
-        const timestamp = now.toISOString().replace(/[-:]/g, '').replace(/[T.]/g, '-').slice(0, -1); // YYYYMMDDHHmmssSSS
-        const backupPath = path.join(projectRoot, `tsconfig.json.backup.${timestamp}`);
-        await fs.writeFile(backupPath, content);
-      }
-    }
-    
-    if (!existsSync(tsConfigPath) || !tsconfigValid) {
-      const tsConfigContent = await this.loadTemplate('config/root-tsconfig.json.template', {});
-      await fs.writeFile(tsConfigPath, tsConfigContent);
+    if (!tsconfigValid) {
+      const content = await this.loadTemplate('config/root-tsconfig.json.template', {});
+      await fs.writeFile(tsConfigPath, content);
       console.log(`   ✅ Created tsconfig.json`);
     } else {
-      // Timestamp-based sync: Check if template is newer than existing file
-      // @pdca 2025-11-03-UTC-1430.pdca.md - force parameter skips timestamp check
-      const tsconfigTemplatePath = path.join(currentDir, '../../../templates', 'config/root-tsconfig.json.template');
-      const tsConfigStats = await fs.stat(tsConfigPath);
-      const tsconfigTemplateStats = await fs.stat(tsconfigTemplatePath);
-      
-      if (force || tsconfigTemplateStats.mtime > tsConfigStats.mtime) {
-        // Template is newer OR force mode - update the file
-        const tsConfigContent = await this.loadTemplate('config/root-tsconfig.json.template', {});
-        await fs.writeFile(tsConfigPath, tsConfigContent);
-        console.log(`   ✅ ${force ? 'Force updated' : 'Updated'} tsconfig.json${force ? '' : ' (template is newer)'}`);
-      } else {
-        console.log(`   ℹ️  tsconfig.json already up to date`);
-      }
+      await this.syncFileFromTemplate(tsConfigPath, 'config/root-tsconfig.json.template', 'tsconfig.json', force);
     }
     
     // 🛡️ SELF-HEALING: Validate and heal root package.json
     const packageJsonPath = path.join(projectRoot, 'package.json');
-    let packageValid = true;
+    const packageValid = await this.validateAndBackupIfCorrupted(
+      packageJsonPath,
+      (parsed) => parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0,
+      'package.json'
+    );
     
-    if (existsSync(packageJsonPath)) {
-            // Validate existing package.json
-      try {
-        const content = await fs.readFile(packageJsonPath, 'utf-8');
-        const parsed = JSON.parse(content);
-        
-        // Check if it has required fields (at minimum needs to be an object with some content)
-        if (!parsed || typeof parsed !== 'object' || Object.keys(parsed).length === 0) {
-          packageValid = false;
-          console.log(`   ⚠️  Detected corrupted package.json - backing up and resetting...`);
-          
-          // Create timestamped backup with milliseconds for uniqueness
-          const now = new Date();
-          const timestamp = now.toISOString().replace(/[-:]/g, '').replace(/[T.]/g, '-').slice(0, -1); // YYYYMMDDHHmmssSSS
-          const backupPath = path.join(projectRoot, `package.json.backup.${timestamp}`);
-          await fs.writeFile(backupPath, content);
-        }
-      } catch (error) {
-        // Invalid JSON
-        packageValid = false;
-        console.log(`   ⚠️  Detected corrupted package.json - backing up and resetting...`);
-        
-        // Create timestamped backup with milliseconds for uniqueness
-        const content = await fs.readFile(packageJsonPath, 'utf-8');
-        const now = new Date();
-        const timestamp = now.toISOString().replace(/[-:]/g, '').replace(/[T.]/g, '-').slice(0, -1); // YYYYMMDDHHmmssSSS
-        const backupPath = path.join(projectRoot, `package.json.backup.${timestamp}`);
-        await fs.writeFile(backupPath, content);
-      }
-    }
-    
-    if (!existsSync(packageJsonPath) || !packageValid) {
-      const packageJsonContent = await this.loadTemplate('config/root-package.json.template', {});
-      await fs.writeFile(packageJsonPath, packageJsonContent);
+    if (!packageValid) {
+      const content = await this.loadTemplate('config/root-package.json.template', {});
+      await fs.writeFile(packageJsonPath, content);
       console.log(`   ✅ Created package.json`);
     } else {
-      // Timestamp-based sync: Check if template is newer than existing file
-      // @pdca 2025-11-03-UTC-1430.pdca.md - force parameter skips timestamp check
-      const packageTemplatePath = path.join(currentDir, '../../../templates', 'config/root-package.json.template');
-      const packageStats = await fs.stat(packageJsonPath);
-      const packageTemplateStats = await fs.stat(packageTemplatePath);
-      
-      if (force || packageTemplateStats.mtime > packageStats.mtime) {
-        // Template is newer OR force mode - update the file
-        const packageJsonContent = await this.loadTemplate('config/root-package.json.template', {});
-        await fs.writeFile(packageJsonPath, packageJsonContent);
-        console.log(`   ✅ ${force ? 'Force updated' : 'Updated'} package.json${force ? '' : ' (template is newer)'}`);
-      } else {
-        console.log(`   ℹ️  package.json already up to date`);
-      }
+      await this.syncFileFromTemplate(packageJsonPath, 'config/root-package.json.template', 'package.json', force);
     }
     
     // Create global node_modules directory
@@ -990,29 +934,11 @@ Standards:
     
     // 🛡️ SELF-HEALING: Create or update source.env (essential for tab completion)
     const sourceEnvPath = path.join(projectRoot, 'source.env');
-    const templatePath = path.join(currentDir, '../../../templates', 'project/source.env.template');
+    await this.syncFileFromTemplate(sourceEnvPath, 'project/source.env.template', 'source.env', force);
     
+    // Make source.env executable
     if (existsSync(sourceEnvPath)) {
-      // Timestamp-based sync: Check if template is newer than existing file
-      // @pdca 2025-11-03-UTC-1430.pdca.md - force parameter skips timestamp check
-      const sourceEnvStats = await fs.stat(sourceEnvPath);
-      const templateStats = await fs.stat(templatePath);
-      
-      if (force || templateStats.mtime > sourceEnvStats.mtime) {
-        // Template is newer OR force mode - update the file
-        const sourceEnvContent = await this.loadTemplate('project/source.env.template', {});
-        await fs.writeFile(sourceEnvPath, sourceEnvContent);
-        await fs.chmod(sourceEnvPath, 0o755);
-        console.log(`   ✅ ${force ? 'Force updated' : 'Updated'} source.env${force ? '' : ' (template is newer)'}`);
-      } else {
-        console.log(`   ℹ️  source.env already up to date`);
-      }
-    } else {
-      // File doesn't exist - create it
-      const sourceEnvContent = await this.loadTemplate('project/source.env.template', {});
-      await fs.writeFile(sourceEnvPath, sourceEnvContent);
       await fs.chmod(sourceEnvPath, 0o755);
-      console.log(`   ✅ Created source.env (tab completion, PATH)`);
     }
     
     console.log(`\n✅ Project initialized successfully!`);
@@ -1020,9 +946,6 @@ Standards:
     console.log(`   Components can now use: "extends": "../../../tsconfig.json"`);
     console.log(`   DRY principle: All components symlink to shared node_modules`);
     console.log(`   👉 Source environment: . source.env`);
-    
-    // Generate version wrapper scripts for retroactive isolation
-    //await this.generateVersionWrappers(projectRoot);
     
     return this;
   }
