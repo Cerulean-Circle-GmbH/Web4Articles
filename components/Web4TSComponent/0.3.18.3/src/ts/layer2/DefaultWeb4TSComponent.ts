@@ -4132,10 +4132,11 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
   /**
    * Tab completion for targetVersion parameter of 'setCICDVersion' command
    * Returns available semantic links: dev, latest, prod, test
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion.SEMANTIC_LINKS
    * @cliHide
    */
   async targetVersionParameterCompletion(): Promise<string[]> {
-    return ["dev", "latest", "prod", "test"];
+    return Array.from(SemanticVersion.SEMANTIC_LINKS);
   }
 
   /**
