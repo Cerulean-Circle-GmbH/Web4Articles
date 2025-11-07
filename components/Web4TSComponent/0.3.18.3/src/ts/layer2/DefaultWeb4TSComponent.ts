@@ -440,6 +440,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * @deprecated /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.18.3/session/2025-11-07-UTC-0030.test-refactoring-model-driven.pdca.md
    * Set target directory for component operations
    * 
    * ✅ BASELINE COMPLIANCE (2025-10-28-UTC-0934.pdca.md:158):
@@ -465,21 +466,6 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   // @pdca 2025-11-05-UTC-2100.pdca.md - REMOVED isTestEnvironment() - use model.isTestIsolation flag
-
-  /**
-   * Get test/data directory path for current component version
-   * Each version tests in its own test/data folder for isolation
-   * @returns Absolute path to test/data directory
-   * @cliHide
-   */
-  private getTestDataDirectory(): string {
-    // Each version tests in its own test/data folder
-    // From: /workspace/components/Web4TSComponent/0.3.2.0/src/ts/layer2/DefaultWeb4TSComponent.ts
-    // To:   /workspace/components/Web4TSComponent/0.3.2.0/test/data
-    const currentFileUrl = new URL(import.meta.url);
-    const currentVersionDir = path.resolve(path.dirname(currentFileUrl.pathname), '..', '..', '..');
-    return path.join(currentVersionDir, 'test', 'data');
-  }
 
   /**
    * Find all version directories for a component
