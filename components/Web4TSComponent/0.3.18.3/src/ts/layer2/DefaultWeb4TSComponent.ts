@@ -274,6 +274,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * @TODO needs 0.3.18.3 review still
    * Build all component dependencies before building this component
    * Recursively builds dependencies in correct order
    * @param componentName Name of component whose dependencies to build
@@ -331,6 +332,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * @TODO needs 0.3.18.3 review still
    * Load template from external file and substitute placeholders
    * @param templatePath Relative path to template file in templates directory
    * @param substitutions Key-value pairs for {{PLACEHOLDER}} substitution
@@ -361,6 +363,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * @TODO needs 0.3.18.3 review still
    * Load template from Web4TSComponent's templates directory
    * This ensures updateBuildSystem always uses the latest Web4TSComponent templates
    * @cliHide
@@ -604,6 +607,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * @TODO needs 0.3.18.3 review still
    * Scaffold complete component structure with all Web4 features
    * Creates directories, files, and symlinks for new component
    * @param options Scaffold options (componentName, version, features to include)
@@ -677,6 +681,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * @TODO needs 0.3.18.3 review still BAD INLINE CODE, TEMPLATE USE!!!
    * Create base package.json in component root for npm start ONLY principle
    * Forwards to latest version via symlink
    * @cliHide
@@ -702,6 +707,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * @TODO needs 0.3.18.3 review still
    * Generate location-resilient CLI bash script for component
    * Creates self-contained script with symlink resolution and build integration
    * @param componentName Name of component for CLI script
@@ -717,6 +723,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * @TODO needs 0.3.18.3 review still
    * Validate CLI script against Web4 location-resilient standard
    * Checks for project root detection, error handling, and ESM patterns
    * @param scriptPath Path to CLI script file to validate
@@ -765,6 +772,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * @TODO needs 0.3.18.3 review still
    * Audit component for Web4 compliance and architecture patterns
    * Checks for layered architecture, package.json, CLI script, etc.
    * @param componentPath Path to component version directory
@@ -822,6 +830,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * @TODO needs 0.3.18.3 review still
    * Generate compliance report for all components in a directory
    * Scans directory and audits each component version for compliance
    * @param componentDir Directory path containing components to audit
@@ -952,14 +961,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return this;
   }
 
-  /**
-   * Initialize test isolation for a specific component version
-   * Internal method called by version wrappers when test/data doesn't exist
-   * Hidden from CLI help but accessible via command line
-   * @param component Component name
-   * @param version Version to initialize
-   * @cliHide
-   */
+
     
     
     
@@ -970,6 +972,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 
 
   /**
+   * @TODO needs 0.3.18.3 review still
+   * @TODO does not use the component dir enum
    * Create new Web4-compliant component with auto-discovery CLI and full architecture
    * 
    * Generates a complete component with the same features as Web4TSComponent:
@@ -1087,6 +1091,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * @TODO needs 0.3.18.3 review still
    * Set component property or generate CLI script
    * Maps to generate-cli functionality for backward compatibility
    * 
@@ -1094,7 +1099,6 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @param property Property to set (cli-script, etc.)
    * @param version Version for CLI script generation
    * @cliSyntax component property version
-   * @cliHide
    */
   async set(component: string, property: string, version: string): Promise<void> {
     if (property === 'cli-script' || property === 'cli') {
@@ -1113,6 +1117,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * @TODO needs 0.3.18.3 review still
    * Validate and analyze component compliance (internal validation tool)
    * 
    * Analyzes component files for Web4 compliance and standards adherence.
@@ -1127,7 +1132,6 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * await component.get('./myscript.sh', 'validation');
    * 
    * @cliSyntax path operation
-   * @cliHide
    */
   async get(path: string, operation: string): Promise<void> {
     if (operation === 'validation' || operation === 'standard') {
@@ -1159,6 +1163,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
+   * @TODO needs 0.3.18.3 review still
    * Analyze component compliance from path
    * Maps to audit-compliance functionality for backward compatibility
    * 
@@ -1251,53 +1256,20 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @TODO cliDefault versionPromotion nextPatch
    * @cliValues versionPromotion nextPatch nextMinor nextMajor nextBuild
    */
+  /**
+   * @TODO needs 0.3.18.3 review still
+   */
   async upgrade(versionPromotion: string = 'nextPatch'): Promise<this> {
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP
-    const componentPath = this.model.targetComponentRoot!;
     const componentName = this.model.component;
     const currentVersion = this.model.version.toString();
     
     // Print quick header AFTER model reflects correct context
     this.printQuickHeader();
     
-    let nextVersion: string;
-    
-    switch (versionPromotion) {
-      case 'nextBuild':
-        // @pdca 2025-11-03-UTC-0800.pdca.md - Consolidated to SemanticVersion (DRY principle)
-        nextVersion = (await SemanticVersion.fromString(currentVersion).promoteRevision()).toString();
-        console.log(`🔧 Upgrading ${componentName} to next build: ${currentVersion} → ${nextVersion}`);
-        break;
-        
-      case 'nextPatch':
-      case 'patch':
-        // @pdca 2025-11-03-UTC-0800.pdca.md - Consolidated to SemanticVersion (DRY principle)
-        nextVersion = (await SemanticVersion.fromString(currentVersion).promotePatch()).toString();
-        console.log(`🔧 Upgrading ${componentName} to next patch: ${currentVersion} → ${nextVersion}`);
-        break;
-        
-      case 'nextMinor':
-      case 'minor':
-        // @pdca 2025-11-03-UTC-0800.pdca.md - Consolidated to SemanticVersion (DRY principle)
-        nextVersion = (await SemanticVersion.fromString(currentVersion).promoteMinor()).toString();
-        console.log(`🚀 Upgrading ${componentName} to next minor: ${currentVersion} → ${nextVersion}`);
-        break;
-        
-      case 'nextMajor':
-      case 'major':
-        // @pdca 2025-11-03-UTC-0800.pdca.md - Consolidated to SemanticVersion (DRY principle)
-        nextVersion = (await SemanticVersion.fromString(currentVersion).promoteMajor()).toString();
-        console.log(`💥 Upgrading ${componentName} to next major: ${currentVersion} → ${nextVersion}`);
-        break;
-        
-      default:
-        if (versionPromotion.match(/^\d+\.\d+\.\d+\.\d+$/)) {
-          nextVersion = versionPromotion;
-          console.log(`🎯 Upgrading ${componentName} to specific version: ${currentVersion} → ${nextVersion}`);
-        } else {
-          throw new Error(`Invalid version type: ${versionPromotion}. Use: nextBuild, nextMinor, nextMajor, or specific version`);
-        }
-    }
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion.promote()
+    const nextVersion = await SemanticVersion.promote(currentVersion, versionPromotion);
+    console.log(`🔧 Upgrading ${componentName}: ${currentVersion} → ${nextVersion}`);
     
     // Create new version from existing
     await this.createVersionFromExisting(componentName, currentVersion, nextVersion);

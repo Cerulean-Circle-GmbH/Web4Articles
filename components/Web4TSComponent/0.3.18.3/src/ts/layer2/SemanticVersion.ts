@@ -204,6 +204,45 @@ export class SemanticVersion implements Version {
   }
 
   /**
+   * Promote version by type (DRY helper for upgrade operations)
+   * Handles all promotion types and specific version strings
+   * 
+   * @param currentVersionString Current version string
+   * @param promotionType Type of promotion or specific version (nextBuild, nextPatch, nextMinor, nextMajor, or X.Y.Z.W)
+   * @returns New version string
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Consolidate promotion logic
+   */
+  static async promote(currentVersionString: string, promotionType: string): Promise<string> {
+    // If it's a specific version, return it (validation happens elsewhere)
+    if (promotionType.match(/^\d+\.\d+\.\d+\.\d+$/)) {
+      return promotionType;
+    }
+
+    const version = SemanticVersion.fromString(currentVersionString);
+    
+    switch (promotionType) {
+      case 'nextBuild':
+      case 'build':
+        return (await version.promoteRevision()).toString();
+      
+      case 'nextPatch':
+      case 'patch':
+        return (await version.promotePatch()).toString();
+      
+      case 'nextMinor':
+      case 'minor':
+        return (await version.promoteMinor()).toString();
+      
+      case 'nextMajor':
+      case 'major':
+        return (await version.promoteMajor()).toString();
+      
+      default:
+        throw new Error(`Invalid version promotion type: ${promotionType}. Use: nextBuild, nextPatch, nextMinor, nextMajor, or specific version (X.Y.Z.W)`);
+    }
+  }
+
+  /**
    * Check if string is a valid semantic link name
    * @param link Link name to check (e.g., 'latest', 'dev')
    * @returns true if valid semantic link
