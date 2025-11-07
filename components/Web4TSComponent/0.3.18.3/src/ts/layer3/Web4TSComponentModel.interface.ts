@@ -97,6 +97,13 @@ export interface Web4TSComponentModel extends Model {
    */
   componentPath?: string;
   
+  /**
+   * Promotion level for release testing (nextPatch, nextMinor, nextMajor)
+   * Set by releaseTest() method, used by promotion workflow
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Radical OOP: No functional parameters
+   */
+  promotionLevel?: string;
+  
   // Note: createdAt/updatedAt removed per Web4 principle - these belong in ChangeEvent
   // Note: componentStandards, validationRules, scaffoldingTemplates removed - never used in main test story
 }

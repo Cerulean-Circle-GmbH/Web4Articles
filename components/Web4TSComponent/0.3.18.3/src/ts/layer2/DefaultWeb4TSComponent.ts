@@ -1705,6 +1705,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       console.log(`\n🔍 Checking for RELEASE promotion opportunity...`);
       const currentVersion = await this.getCurrentVersion();
       
+      // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Set in model
+      this.model.promotionLevel = versionPromotion;
+      
       // Determine which promotion stage to apply
       const semanticLinks = await this.getSemanticLinks('Web4TSComponent');
       const currentTest = semanticLinks.test;
@@ -1714,7 +1717,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         await this.handleFirstTestRun('Web4TSComponent', currentVersion);
       } else {
         // Stage 2 RELEASE: This is the test version, use specified promotion level
-        await this.handleReleaseTestSuccessPromotion('Web4TSComponent', currentVersion, versionPromotion);
+        await this.handleReleaseTestSuccessPromotion();
       }
       
       return this;
@@ -1770,6 +1773,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       
       console.log(`✅ Tests completed for ${target.model.component} ${targetVersion}`);
       
+      // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Set in model
+      this.model.promotionLevel = versionPromotion;
+      
       // RELEASE promotion based on versionPromotion level
       const semanticLinksAfter = await this.getSemanticLinks(target.model.component);
       const currentTest = semanticLinksAfter.test;
@@ -1779,7 +1785,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         await this.handleFirstTestRun(target.model.component, targetVersion);
       } else {
         // Stage 2 RELEASE: This is the test version, use specified promotion level
-        await this.handleReleaseTestSuccessPromotion(target.model.component, targetVersion, versionPromotion);
+        await this.handleReleaseTestSuccessPromotion();
       }
       
     } catch (error) {
@@ -1791,14 +1797,19 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
-   * Handle release test success: promote test to prod using nextMinor (Stage 2 - Major Release)
-   * Workflow Stage 2 (Release): test → prod (nextMinor) + new dev (nextBuild)
+   * Handle release test success: promote test to prod using promotion level from model
+   * Workflow Stage 2 (Release): test → prod (promotionLevel) + new dev (nextBuild)
    * E.g., 0.3.4.2 (test) → 0.4.0.0 (prod) + 0.4.0.1 (dev)
    * Used by releaseTest() for major version releases
-   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion.promote()
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: No functional parameters
    * @cliHide
    */
-  async handleReleaseTestSuccessPromotion(componentName: string, currentVersion: string, promotionLevel: string = 'nextPatch'): Promise<void> {
+  private async handleReleaseTestSuccessPromotion(): Promise<void> {
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model
+    const componentName = this.model.component;
+    const currentVersion = this.model.version.toString();
+    const promotionLevel = this.model.promotionLevel || 'nextPatch';
+    
     console.log(`\n🎯 Analyzing release test success for version promotion...`);
     console.log(`📋 RELEASE MODE: Will use ${promotionLevel.toUpperCase()}`);
     
