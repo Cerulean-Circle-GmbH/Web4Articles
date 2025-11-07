@@ -1694,95 +1694,87 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
-   * Execute shell tests in isolation using test/data as project root
+   * Start an interactive bash shell in test isolation
+   * 
+   * Opens a bash shell with --norc that sources test/data/source.env,
+   * making test/data the effective project root for manual testing and debugging.
+   * 
+   * This allows developers to manually test commands in the isolated environment
+   * where test/data acts as the project root, preventing pollution of production files.
    * 
    * Follows Radical OOP principles:
    * - Uses this.model.componentRoot for Path Authority
-   * - Uses this.model.isTestIsolation flag for context
-   * - Returns this for method chaining
+   * - Sets up test isolation environment automatically
+   * - Returns this for method chaining (after shell exits)
    * 
    * @pdca 2025-11-07-UTC-0200.pdca.md
-   * @phase Phase 4 - Minimal Implementation
+   * @phase Phase 4 - Minimal Implementation (revised for interactive shell)
    * @param version Optional version parameter (for future extensibility)
    * @cliSyntax version?
    * @cliExample web4tscomponent test shell
    * @cliExample web4tscomponent test shell 0.3.18.3
    */
   async testShell(version?: string): Promise<this> {
-    // Path Authority: use model state, not cwd
+    // Path Authority: use model state
     const componentRoot = this.model.componentRoot;
-    const isTestIsolation = this.model.isTestIsolation;
+    const testDataDir = path.join(componentRoot, 'test', 'data');
+    const sourceEnvPath = path.join(testDataDir, 'source.env');
     
-    // Shell tests location
-    const shellTestDir = path.join(componentRoot, 'test', 'shell');
-    
-    console.log(`🐚 Running shell tests...`);
+    console.log(`🐚 Starting interactive bash shell in test isolation...`);
     console.log(`📂 Component: ${this.model.component} ${this.model.version.toString()}`);
-    console.log(`📂 Test Directory: ${shellTestDir}`);
-    console.log(`🧪 Test Isolation: ${isTestIsolation ? 'YES (test/data)' : 'NO (production)'}`);
+    console.log(`📂 Test Data Directory (PROJECT_ROOT): ${testDataDir}`);
+    console.log(`📂 Source Environment: ${sourceEnvPath}`);
     console.log();
+    console.log(`💡 This shell runs in test isolation:`);
+    console.log(`   - Project root is: ${testDataDir}`);
+    console.log(`   - All operations happen in test/data`);
+    console.log(`   - Production files in components/ are NEVER touched`);
+    console.log();
+    console.log(`🔧 Type 'exit' to return to normal shell`);
+    console.log(`${'='.repeat(60)}\n`);
     
-    // Check if shell test directory exists
-    if (!existsSync(shellTestDir)) {
-      console.log(`ℹ️  No shell tests found at: ${shellTestDir}`);
-      console.log(`💡 Create shell tests in test/shell/ directory`);
+    // Check if test/data exists
+    if (!existsSync(testDataDir)) {
+      console.error(`❌ Test data directory not found: ${testDataDir}`);
+      console.log(`💡 Create test/data directory first`);
       return this;
     }
     
-    // Find all .sh files in shell test directory
-    const shellScripts = readdirSync(shellTestDir)
-      .filter((file: string) => file.endsWith('.sh'))
-      .sort();
-    
-    if (shellScripts.length === 0) {
-      console.log(`ℹ️  No shell test scripts found in: ${shellTestDir}`);
-      console.log(`💡 Add *.sh files to test/shell/ directory`);
-      return this;
-    }
-    
-    console.log(`📋 Found ${shellScripts.length} shell test script(s):`);
-    shellScripts.forEach((script: string) => console.log(`   - ${script}`));
-    console.log();
-    
-    // Determine source.env location based on test isolation
-    const sourceEnvPath = isTestIsolation 
-      ? path.join(componentRoot, 'test', 'data', 'source.env')
-      : path.join(componentRoot, 'source.env');
-    
-    // Execute each shell script
-    let failedTests = 0;
-    for (const script of shellScripts) {
-      const scriptPath = path.join(shellTestDir, script);
-      console.log(`▶️  Executing: ${script}`);
+    // Check if source.env exists
+    if (!existsSync(sourceEnvPath)) {
+      console.warn(`⚠️  source.env not found: ${sourceEnvPath}`);
+      console.log(`💡 Creating minimal source.env...`);
       
-      try {
-        // Use bash --norc and source source.env
-        const bashCommand = `source "${sourceEnvPath}" && bash "${scriptPath}"`;
-        execSync(bashCommand, {
-          cwd: componentRoot,
-          stdio: 'inherit',
-          shell: 'bash --norc',
-          env: {
-            ...process.env,
-            PROJECT_ROOT: this.model.projectRoot,
-            COMPONENT_ROOT: componentRoot,
-            IS_TEST_ISOLATION: isTestIsolation ? 'true' : 'false',
-          },
-        });
-        console.log(`✅ ${script} passed\n`);
-      } catch (error) {
-        console.error(`❌ ${script} failed\n`);
-        failedTests++;
-      }
+      // Create minimal source.env
+      const minimalSourceEnv = `#!/bin/bash
+# Minimal source.env for test isolation
+export PROJECT_ROOT="${testDataDir}"
+export COMPONENT_ROOT="${componentRoot}"
+export IS_TEST_ISOLATION="true"
+`;
+      await fs.writeFile(sourceEnvPath, minimalSourceEnv);
+      console.log(`✅ Created: ${sourceEnvPath}\n`);
     }
     
-    // Summary
-    console.log(`\n${'='.repeat(60)}`);
-    if (failedTests === 0) {
-      console.log(`✅ All ${shellScripts.length} shell test(s) passed`);
-    } else {
-      console.error(`❌ ${failedTests} of ${shellScripts.length} shell test(s) failed`);
-      throw new Error('Shell tests failed');
+    try {
+      // Start interactive bash with --norc, sourcing source.env, in test/data directory
+      execSync(`bash --norc --init-file "${sourceEnvPath}"`, {
+        cwd: testDataDir,
+        stdio: 'inherit',
+        env: {
+          ...process.env,
+          PROJECT_ROOT: testDataDir,
+          COMPONENT_ROOT: componentRoot,
+          IS_TEST_ISOLATION: 'true',
+        },
+      });
+      
+      console.log(`\n${'='.repeat(60)}`);
+      console.log(`✅ Exited test isolation shell`);
+    } catch (error) {
+      // User exit (Ctrl+D or 'exit' command) is not an error
+      console.log(`\n${'='.repeat(60)}`);
+      console.log(`✅ Exited test isolation shell`);
     }
     
     return this;
