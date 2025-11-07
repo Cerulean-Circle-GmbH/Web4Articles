@@ -527,14 +527,15 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       return this.model.version.toString();
     }
     
-    // If already a version number, return as-is
-    if (/^\d+\.\d+\.\d+\.\d+$/.test(version)) {
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use SemanticVersion for validation
+    // If already a version number, return as-is (let SemanticVersion validate)
+    if (this.model.version.isValid(version)) {
       return version;
     }
     
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use SemanticVersion for link detection
     // Resolve semantic link (latest/dev/test/prod) to actual version
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion constant
-    if (SemanticVersion.SEMANTIC_LINKS_SET.has(version as any)) {
+    if (SemanticVersion.isSemanticLink(version)) {
       // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly
       const componentDir = path.join(this.model.componentsDirectory, this.model.component);
       const linkPath = path.join(componentDir, version);
@@ -4820,8 +4821,8 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     const actualVersion = this.resolveActualVersion(version);
     
     // Validate targetVersion
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion constant
-    if (!SemanticVersion.SEMANTIC_LINKS_SET.has(targetVersion as any)) {
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion helper
+    if (!SemanticVersion.isSemanticLink(targetVersion)) {
       throw new Error(`Invalid targetVersion: ${targetVersion}. Must be one of: ${Array.from(SemanticVersion.SEMANTIC_LINKS).join(', ')}`);
     }
     

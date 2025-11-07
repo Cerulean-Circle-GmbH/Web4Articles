@@ -204,6 +204,15 @@ export class SemanticVersion implements Version {
   }
 
   /**
+   * Check if string is a valid semantic link name
+   * @param link Link name to check (e.g., 'latest', 'dev')
+   * @returns true if valid semantic link
+   */
+  static isSemanticLink(link: string): boolean {
+    return SemanticVersion.SEMANTIC_LINKS_SET.has(link as any);
+  }
+
+  /**
    * Convert component state to scenario for persistence
    * @pdca 2025-10-28-UTC-2015.user-scenario-antipattern.pdca.md - Owner data as scenario structure
    */
