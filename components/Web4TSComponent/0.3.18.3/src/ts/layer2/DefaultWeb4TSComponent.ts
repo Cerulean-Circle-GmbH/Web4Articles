@@ -1714,7 +1714,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       
       if (currentVersion !== currentTest) {
         // Stage 1: This is a dev version, promote to test
-        await this.handleFirstTestRun('Web4TSComponent', currentVersion);
+        await this.handleFirstTestRun();
       } else {
         // Stage 2 RELEASE: This is the test version, use specified promotion level
         await this.handleReleaseTestSuccessPromotion();
@@ -1782,7 +1782,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       
       if (targetVersion !== currentTest) {
         // Stage 1: This is a dev version, promote to test
-        await this.handleFirstTestRun(target.model.component, targetVersion);
+        await this.handleFirstTestRun();
       } else {
         // Stage 2 RELEASE: This is the test version, use specified promotion level
         await this.handleReleaseTestSuccessPromotion();
@@ -1888,9 +1888,14 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * Handle first test run: promote dev to test (Stage 1)
    * Workflow Stage 1: dev → test (nextBuild)
    * E.g., 0.3.4.1 (dev) → 0.3.4.2 (test)
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: No functional parameters
    * @cliHide
    */
-  private async handleFirstTestRun(componentName: string, currentVersion: string): Promise<void> {
+  private async handleFirstTestRun(): Promise<void> {
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model
+    const componentName = this.model.component;
+    const currentVersion = this.model.version.toString();
+    
     console.log(`\n🧪 First test run detected for ${componentName} ${currentVersion}`);
     console.log(`📋 Workflow Stage 1: dev → test (nextBuild)`);
     
@@ -1904,8 +1909,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     try {
       // Create nextBuild version (increment build number)
       console.log(`\n🔧 Creating nextBuild version from ${currentVersion}...`);
-      // @pdca 2025-10-30-UTC-1430.functional-helper-elimination.pdca.md - Direct SemanticVersion usage (Radical OOP)
-      const nextBuildVersion = (await SemanticVersion.fromString(currentVersion).promoteRevision()).toString();
+      // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion.promote()
+      const nextBuildVersion = await SemanticVersion.promote(currentVersion, 'nextBuild');
       // Note: console.log already exists in calling context
       
       // Set nextBuild as test
