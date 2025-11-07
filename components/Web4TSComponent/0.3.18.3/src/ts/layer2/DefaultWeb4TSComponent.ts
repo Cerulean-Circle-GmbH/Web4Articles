@@ -1496,6 +1496,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   /**
    * Get all semantic links for a component
    * Reads dev, test, prod, and latest symlinks
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion.SEMANTIC_LINKS
    * @param componentName Component name to get semantic links for
    * @returns Object with dev, test, prod, latest versions (null if not set)
    * @cliHide
@@ -1509,7 +1510,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       latest: null as string | null
     };
 
-    for (const linkType of ['dev', 'test', 'prod', 'latest'] as const) {
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion constant
+    for (const linkType of SemanticVersion.SEMANTIC_LINKS) {
       const linkPath = path.join(componentDir, linkType);
       try {
         if (existsSync(linkPath)) {
