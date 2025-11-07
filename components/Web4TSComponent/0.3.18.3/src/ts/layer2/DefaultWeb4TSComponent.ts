@@ -2067,6 +2067,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * Execute selective test command (called internally from test())
    * Run specific test files, describe blocks, or it cases using vitest
    * Supports numeric references with tab completion for fast test selection
+   * Works on current context (this.model reflects target after updateModelPaths())
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model
    * 
    * Web4 Principle: Use model.targetDirectory for context discovery, not cwd
    * 
@@ -2077,9 +2079,6 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   private async testSelective(scope: string, references: string[]): Promise<this> {
     // Import TestFileParser dynamically
     const { TestFileParser } = await import('../layer4/TestFileParser.js');
-    
-    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
-    const target = this.model.context || this;
     
     // ✅ CRITICAL: Use THIS (Web4TSComponent)'s componentRoot which was initialized with target's path
     // @pdca 2025-11-03-UTC-1237.pdca.md - Delegation uses web4ts.model.componentRoot, not target.model.componentRoot
@@ -2632,21 +2631,10 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return this;
   }
 
-  /**
-   * Test zero config discovery functionality (development/testing only)
-   * Verifies that CLI auto-discovery is working correctly
-   * 
-   * @param message Test message to display (default: 'Zero config discovery works!')
-   * @cliSyntax message
-   * @TODO cliDefault message Zero config discovery works!
-   * @cliHide
-   */
-  async testDiscovery(message: string = 'Zero config discovery works!'): Promise<this> {
-    console.log(`🧪 Discovery Test: ${message}`);
-    return this;
-  }
+
 
   /**
+   * @TODO needs 0.3.18.3 review still
    * Compare multiple components and generate detailed comparison table
    * 
    * Analyzes multiple components and generates comprehensive comparison table
