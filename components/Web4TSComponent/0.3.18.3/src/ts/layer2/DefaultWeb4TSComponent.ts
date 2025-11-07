@@ -4272,13 +4272,13 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Verify and fix symlinks for component
+   * Works on current context (this.model reflects target after updateModelPaths())
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model
    * @deprecated Use 'links fix' instead - this method is kept for backward compatibility
    * @cliHide
    */
   async verifyAndFix(): Promise<this> {
-    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
-    const target = this.model.context || this;
-    const componentName = target.model.component;
+    const componentName = this.model.component;
     
     console.log(`🔍 Verifying and fixing symlinks for ${componentName}...`);
     
