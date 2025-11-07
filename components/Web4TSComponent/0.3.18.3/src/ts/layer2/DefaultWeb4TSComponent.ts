@@ -1381,8 +1381,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
-   * Fix missing or broken semantic links (dev, test, prod, latest)
-   * Repairs or creates semantic symlinks using setCICDVersion() for DRY compliance
+   * Fix missing or broken semantic links using defined policy
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Extract repeated pattern
    * @param componentName Component name to fix semantic links for
    * @cliHide
    */
@@ -1396,74 +1396,45 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     }
     
     const semanticLinks = await this.getSemanticLinks(componentName);
-    
-    // Determine what links should be
     const highestVersion = this.getHighestVersion(availableVersions);
     
-    // ✅ Component no longer manipulates context (context now in CLIModel)
-    // @pdca 2025-10-30-UTC-1011.pdca.md - Context manipulation removed
-    // TODO: Refactor setCICDVersion to work without context if needed
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Define policy ONCE, iterate
+    // Policy: All semantic links point to highest version by default
+    const linkNames = ['latest', 'prod', 'dev', 'test'];
     
-    // Fix 'latest' - should always point to highest version
-    if (!semanticLinks.latest || semanticLinks.latest !== highestVersion) {
-      console.log(`   🔧 Fixing 'latest' link: ${semanticLinks.latest || 'missing'} → ${highestVersion}`);
-      try {
-        await this.setCICDVersion('latest', highestVersion);
-      } catch (error) {
-        console.log(`   ❌ Could not fix 'latest': ${(error as Error).message}`);
-      }
+    for (const linkName of linkNames) {
+      await this.fixSemanticLink(linkName, semanticLinks, highestVersion, availableVersions);
     }
+  }
+
+  /**
+   * Fix individual semantic link (DRY helper)
+   * Checks if link is missing, broken, or outdated and repairs it
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Extract repeated pattern
+   * @cliHide
+   */
+  private async fixSemanticLink(
+    linkName: string,
+    semanticLinks: Record<string, string | null>,
+    targetVersion: string,
+    availableVersions: string[]
+  ): Promise<void> {
+    const currentLink = semanticLinks[linkName];
     
-    // Fix 'prod' - if missing, set to latest
-    if (!semanticLinks.prod) {
-      console.log(`   🔧 Creating missing 'prod' link → ${highestVersion}`);
-      try {
-        await this.setCICDVersion('prod', highestVersion);
-      } catch (error) {
-        console.log(`   ❌ Could not create 'prod': ${(error as Error).message}`);
-      }
-    } else if (!availableVersions.includes(semanticLinks.prod)) {
-      console.log(`   🔧 Fixing broken 'prod' link: ${semanticLinks.prod} (missing) → ${highestVersion}`);
-      try {
-        await this.setCICDVersion('prod', highestVersion);
-      } catch (error) {
-        console.log(`   ❌ Could not fix 'prod': ${(error as Error).message}`);
-      }
-    }
+    // Check if link needs fixing
+    const isMissing = !currentLink;
+    const isBroken = currentLink && !availableVersions.includes(currentLink);
+    const isOutdated = currentLink && currentLink !== targetVersion;
     
-    // Fix 'dev' - should point to highest version (active development)
-    if (!semanticLinks.dev || semanticLinks.dev !== highestVersion) {
-      const action = !semanticLinks.dev ? 'Creating missing' : 'Updating';
-      console.log(`   🔧 ${action} 'dev' link → ${highestVersion}`);
+    if (isMissing || isBroken || isOutdated) {
+      const status = isMissing ? 'Creating missing' : isBroken ? 'Fixing broken' : 'Updating';
+      const from = currentLink ? `: ${currentLink}` : '';
+      console.log(`   🔧 ${status} '${linkName}' link${from} → ${targetVersion}`);
+      
       try {
-        await this.setCICDVersion('dev', highestVersion);
+        await this.setCICDVersion(linkName, targetVersion);
       } catch (error) {
-        console.log(`   ❌ Could not ${action.toLowerCase()} 'dev': ${(error as Error).message}`);
-      }
-    } else if (!availableVersions.includes(semanticLinks.dev)) {
-      console.log(`   🔧 Fixing broken 'dev' link: ${semanticLinks.dev} (missing) → ${highestVersion}`);
-      try {
-        await this.setCICDVersion('dev', highestVersion);
-      } catch (error) {
-        console.log(`   ❌ Could not fix 'dev': ${(error as Error).message}`);
-      }
-    }
-    
-    // Fix 'test' - should point to highest version (ready for testing)
-    if (!semanticLinks.test || semanticLinks.test !== highestVersion) {
-      const action = !semanticLinks.test ? 'Creating missing' : 'Updating';
-      console.log(`   🔧 ${action} 'test' link → ${highestVersion}`);
-      try {
-        await this.setCICDVersion('test', highestVersion);
-      } catch (error) {
-        console.log(`   ❌ Could not ${action.toLowerCase()} 'test': ${(error as Error).message}`);
-      }
-    } else if (!availableVersions.includes(semanticLinks.test)) {
-      console.log(`   🔧 Fixing broken 'test' link: ${semanticLinks.test} (missing) → ${highestVersion}`);
-      try {
-        await this.setCICDVersion('test', highestVersion);
-      } catch (error) {
-        console.log(`   ❌ Could not fix 'test': ${(error as Error).message}`);
+        console.log(`   ❌ Could not fix '${linkName}': ${(error as Error).message}`);
       }
     }
   }
