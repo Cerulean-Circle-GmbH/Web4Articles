@@ -483,22 +483,23 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     
     // If delegating AND the delegation target is different, show it
     // @pdca 2025-11-03-UTC-1237.pdca.md - Only show delegation when component/version differ
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE OOP: Detect delegation semantically
     if (this.model.context) {
-      // Get the actual Web4TSComponent version from the file system or package
-      // Since we initialized with target's identity, we need to show actual delegation
-      // For now, just check if it's actually a different component (not self-delegation)
-      const isDifferentComponent = this.model.component !== 'Web4TSComponent';
+      // ✅ Get infrastructure component name from componentRoot (not hardcoded!)
+      const infrastructureComponentName = path.basename(path.dirname(this.model.componentRoot));
+      const isDifferentComponent = this.model.component !== infrastructureComponentName;
+      
       if (isDifferentComponent) {
-        // Get Web4TSComponent's actual version dynamically
+        // Get infrastructure component's actual version dynamically
         // Read from latest symlink (projectRoot is Path Authority field in model)
         try {
-          const web4tsDir = path.join(this.model.projectRoot, 'components', 'Web4TSComponent');
-          const latestSymlink = path.join(web4tsDir, 'latest');
-          const web4tsVersion = readlinkSync(latestSymlink);
-          header += ` ${this.colors.dim}(via Web4TSComponent v${web4tsVersion})${this.colors.reset}`;
+          const infraDir = path.join(this.model.projectRoot, 'components', infrastructureComponentName);
+          const latestSymlink = path.join(infraDir, 'latest');
+          const infraVersion = readlinkSync(latestSymlink);
+          header += ` ${this.colors.dim}(via ${infrastructureComponentName} v${infraVersion})${this.colors.reset}`;
         } catch (error) {
           // Fallback: if symlink can't be read, don't show version
-          header += ` ${this.colors.dim}(via Web4TSComponent)${this.colors.reset}`;
+          header += ` ${this.colors.dim}(via ${infrastructureComponentName})${this.colors.reset}`;
         }
       }
     }
