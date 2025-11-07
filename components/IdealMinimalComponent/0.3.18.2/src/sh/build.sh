@@ -17,7 +17,7 @@ done
 
 if [ "$FORCE" = "true" ]; then
     if [ "$VERBOSE" = "true" ]; then
-        echo "🔧 Force building Web4TSComponent..."
+        echo "🔧 Force building IdealMinimalComponent..."
     fi
     # Clean everything
     ./src/sh/clean.sh
@@ -28,11 +28,11 @@ if [ "$FORCE" = "true" ]; then
         echo "🔨 Building TypeScript..."
     fi
     npx tsc --traceResolution --extendedDiagnostics
-elif [ ! -f "dist/ts/layer5/Web4TSComponentCLI.js" ] || find src -name "*.ts" -newer "dist/ts/layer5/Web4TSComponentCLI.js" 2>/dev/null | grep -q .; then
+elif [ ! -f "dist/ts/layer5/IdealMinimalComponentCLI.js" ] || find src -name "*.ts" -newer "dist/ts/layer5/IdealMinimalComponentCLI.js" 2>/dev/null | grep -q .; then
     if [ "$VERBOSE" = "true" ]; then
-        echo "🔧 Smart building Web4TSComponent (changes detected)..."
+        echo "🔧 Smart building IdealMinimalComponent (changes detected)..."
     else
-        echo "✅ Building Web4TSComponent..." >&2
+        echo "✅ Building IdealMinimalComponent..." >&2
     fi
     
     # Clean local artifacts only
@@ -56,6 +56,6 @@ elif [ ! -f "dist/ts/layer5/Web4TSComponentCLI.js" ] || find src -name "*.ts" -n
     fi
 else
     if [ "$VERBOSE" = "true" ]; then
-        echo "✅ Web4TSComponent is up to date, no build needed"
+        echo "✅ IdealMinimalComponent is up to date, no build needed"
     fi
 fi
