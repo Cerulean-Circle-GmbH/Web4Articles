@@ -2280,6 +2280,7 @@ Standards:
       execSync(`npx vitest --run --bail=999 ${path.join('test', targetFile.relativePath)}`, {
         cwd: componentRoot,
         stdio: 'inherit',
+        shell: process.env.SHELL || '/bin/bash'
       });
     } catch (error) {
       // Vitest will have already shown the error output
