@@ -7048,66 +7048,7 @@ export class DefaultPDCA implements PDCA {
       undefined // Don't auto-populate in rewrite - preserve original or use TBD
     );
     
-    // Step 6: Find previous PDCA and populate "Previous PDCA:" link
-    // IMPORTANT: Find the chronologically previous file, not just the "most recent"
-    // This is critical for correct linking after rename operations reorder files
-    const fs2 = await import('fs');
-    const files = fs2.readdirSync(sessionDir);
-    const pdcaPattern = /^(\d{4}-\d{2}-\d{2}-UTC-\d{4,6})\.pdca\.md$/;
-    const pdcaFiles = files
-      .filter(f => pdcaPattern.test(f))
-      .map(f => ({
-        filename: f,
-        timestamp: f.match(pdcaPattern)![1],
-        fullPath: path.join(sessionDir, f)
-      }))
-      .sort((a, b) => a.timestamp.localeCompare(b.timestamp)); // Chronological order (oldest first)
-    
-    // Find the current file's index
-    const currentFilename = path.basename(filePath);
-    const currentIndex = pdcaFiles.findIndex(f => f.filename === currentFilename);
-    
-    // Previous PDCA is the one immediately before in chronological order
-    const previousPDCA = currentIndex > 0 ? pdcaFiles[currentIndex - 1] : null;
-    
-    if (previousPDCA) {
-      const previousFilename = previousPDCA.filename;
-      const sessionRelativePath = path.relative(projectRoot, sessionDir);
-      const previousPDCAProjectPath = `${sessionRelativePath}/${previousFilename}`;
-      
-      const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
-      const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${previousPDCAProjectPath}`;
-      const sectionPath = `§/${previousPDCAProjectPath}`;
-      const relativePath = `./${previousFilename}`;
-      
-      const oldLine = '**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})';
-      const newLine = `**🔗 Previous PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`;
-      
-      const beforeReplace = templateContent;
-      templateContent = templateContent.replace(oldLine, newLine);
-      
-      if (templateContent === beforeReplace && templateContent.includes('{{PREVIOUS_PDCA_LINK}}')) {
-        templateContent = templateContent.replace(
-          '**🔗 Previous PDCA:** {{PREVIOUS_PDCA_LINK}}',
-          `**🔗 Previous PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`
-        );
-      }
-    } else {
-      const oldLine = '**🔗 Previous PDCA:** [GitHub]({{GITHUB_URL}}) | [§/scrum.pmo/project.journal/{{SESSION}}/{{FILENAME}}](../{{OTHER_SESSION}}/{{FILENAME}})';
-      const newLine = `**🔗 Previous PDCA:** N/A - First PDCA in chain`;
-      
-      const beforeReplace = templateContent;
-      templateContent = templateContent.replace(oldLine, newLine);
-      
-      if (templateContent === beforeReplace && templateContent.includes('{{PREVIOUS_PDCA_LINK}}')) {
-        templateContent = templateContent.replace(
-          '**🔗 Previous PDCA:** {{PREVIOUS_PDCA_LINK}}',
-          newLine
-        );
-      }
-    }
-    
-    // Step 6.5: Zero Data Loss - Extract ALL content
+    // Step 6: Zero Data Loss - Extract ALL content
     console.log(`🔍 Analyzing corrupted content (zero data loss mode)...\n`);
     const { mappableSections, unmappableContent } = this.extractAllContent(content);
     
@@ -7318,6 +7259,10 @@ export class DefaultPDCA implements PDCA {
       } catch (gitError: any) {
         console.log(`   ⚠️  Git error: ${gitError.message}\n`);
       }
+      
+      // Step 9: Update bidirectional chain links
+      console.log(`🔗 Updating bidirectional PDCA chain links...\n`);
+      await this.updateChainLinksInternal(filePath, sessionDir, false);
     } else {
       console.log(`✓ Would rewrite file: ${path.basename(filePath)}`);
       console.log(`✓ Would preserve timestamp: ${timestamp}\n`);
@@ -8153,6 +8098,137 @@ export class DefaultPDCA implements PDCA {
       .sort((a, b) => b.timestamp.localeCompare(a.timestamp)); // Most recent first
     
     return pdcaFiles.length > 0 ? pdcaFiles[0].fullPath : null;
+  }
+
+  /**
+   * Update bidirectional chain links for a PDCA (internal helper)
+   * This method combines the logic from createPDCA and rewritePDCA to:
+   * 1. Set the current PDCA's "Previous PDCA:" link
+   * 2. Update the previous PDCA's "Next PDCA:" link
+   * 
+   * @param currentPDCAPath - Path to the PDCA file being created/rewritten
+   * @param sessionDir - Session directory containing all PDCAs
+   * @param isDryRun - Whether this is a dry-run (don't commit changes)
+   */
+  private async updateChainLinksInternal(
+    currentPDCAPath: string, 
+    sessionDir: string, 
+    isDryRun: boolean = false
+  ): Promise<void> {
+    const fs = await import('fs');
+    const path = await import('path');
+    const { execSync } = await import('child_process');
+    
+    const projectRoot = this.model.componentRoot || this.model.workingDirectory || await this.getProjectRoot();
+    
+    // Get current branch
+    let currentBranch: string;
+    try {
+      currentBranch = execSync('git branch --show-current', {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      if (!currentBranch) {
+        currentBranch = this.model.currentBranch || 'main';
+      }
+    } catch {
+      currentBranch = this.model.currentBranch || 'main';
+    }
+    
+    const repoUrl = this.model.repoUrl || 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+    
+    // Find chronologically previous PDCA
+    const files = fs.readdirSync(sessionDir);
+    const pdcaPattern = /^(\d{4}-\d{2}-\d{2}-UTC-\d{4,6})\.pdca\.md$/;
+    const pdcaFiles = files
+      .filter(f => pdcaPattern.test(f))
+      .map(f => ({
+        filename: f,
+        timestamp: f.match(pdcaPattern)![1],
+        fullPath: path.join(sessionDir, f)
+      }))
+      .sort((a, b) => a.timestamp.localeCompare(b.timestamp)); // Chronological order
+    
+    const currentFilename = path.basename(currentPDCAPath);
+    const currentIndex = pdcaFiles.findIndex(f => f.filename === currentFilename);
+    const previousPDCA = currentIndex > 0 ? pdcaFiles[currentIndex - 1] : null;
+    
+    if (!previousPDCA) {
+      console.log(`ℹ️  No previous PDCA found (first in chain)`);
+      
+      // Still need to set Previous PDCA to "N/A - First PDCA in chain" if template has placeholder
+      let currentContent = fs.readFileSync(currentPDCAPath, 'utf-8');
+      const firstPDCALink = `**🔗 Previous PDCA:** N/A - First PDCA in chain`;
+      
+      // Replace any Previous PDCA pattern with "N/A - First PDCA"
+      if (currentContent.includes('{{PREVIOUS_PDCA_LINK}}') || /\*\*🔗 Previous PDCA:\*\* \[GitHub\]/.test(currentContent)) {
+        currentContent = currentContent.replace(/\*\*🔗 Previous PDCA:\*\* .+/, firstPDCALink);
+        fs.writeFileSync(currentPDCAPath, currentContent, 'utf-8');
+        console.log(`✅ Set "Previous PDCA:" to "N/A - First PDCA in chain"`);
+      }
+      
+      return;
+    }
+    
+    // Step 1: Update current PDCA's "Previous PDCA:" link
+    const previousFilename = previousPDCA.filename;
+    const sessionRelativePath = path.relative(projectRoot, sessionDir);
+    const previousPDCAProjectPath = `${sessionRelativePath}/${previousFilename}`;
+    
+    const githubUrl = `${repoUrl}/blob/${currentBranch}/${previousPDCAProjectPath}`;
+    const sectionPath = `§/${previousPDCAProjectPath}`;
+    const relativePath = `./${previousFilename}`;
+    
+    let currentContent = fs.readFileSync(currentPDCAPath, 'utf-8');
+    const previousLinkPattern = /\*\*🔗 Previous PDCA:\*\* .+/;
+    const newPreviousLink = `**🔗 Previous PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`;
+    
+    if (previousLinkPattern.test(currentContent)) {
+      currentContent = currentContent.replace(previousLinkPattern, newPreviousLink);
+      fs.writeFileSync(currentPDCAPath, currentContent, 'utf-8');
+      console.log(`✅ Set "Previous PDCA:" link: ${currentFilename} → ${previousFilename}`);
+    }
+    
+    // Step 2: Update previous PDCA's "Next PDCA:" link
+    const currentRelativePath = path.relative(projectRoot, currentPDCAPath);
+    const currentGithubUrl = `${repoUrl}/blob/${currentBranch}/${currentRelativePath}`;
+    const currentSectionPath = `§/${currentRelativePath}`;
+    const currentRelativeLink = `./${currentFilename}`;
+    
+    const nextPDCALink = `**➡️ Next PDCA:** [GitHub](${currentGithubUrl}) | [${currentSectionPath}](${currentRelativeLink})`;
+    
+    let previousContent = fs.readFileSync(previousPDCA.fullPath, 'utf-8');
+    
+    // Replace "Next PDCA: Use pdca chain" or any existing Next PDCA link
+    previousContent = previousContent.replace(
+      /\*\*➡️ Next PDCA:\*\* .+/,
+      nextPDCALink
+    );
+    
+    fs.writeFileSync(previousPDCA.fullPath, previousContent, 'utf-8');
+    console.log(`✅ Updated "Next PDCA:" link: ${previousFilename} → ${currentFilename}`);
+    
+    // Step 3: Commit both updates (if not dry-run)
+    if (!isDryRun) {
+      try {
+        const currentRelative = path.relative(projectRoot, currentPDCAPath);
+        const previousRelative = path.relative(projectRoot, previousPDCA.fullPath);
+        
+        execSync(`git add "${currentRelative}" "${previousRelative}"`, { cwd: projectRoot, stdio: 'pipe' });
+        execSync(
+          `git commit -m "fix: Update bidirectional chain links for ${currentFilename}"`,
+          { cwd: projectRoot, stdio: 'pipe' }
+        );
+        execSync('git push', { cwd: projectRoot, stdio: 'pipe' });
+        
+        console.log(`✅ Committed and pushed bidirectional chain link updates`);
+      } catch (error: unknown) {
+        const err = error as { message?: string };
+        console.log(`⚠️  Warning: Could not commit chain link updates: ${err.message || 'unknown error'}`);
+      }
+    }
+    
+    console.log(`🔗 Bidirectional chain established: ${previousFilename} ←→ ${currentFilename}`);
   }
 
   /**

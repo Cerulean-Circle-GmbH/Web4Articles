@@ -954,7 +954,13 @@ Doing content`;
     expect(rewritten).toContain('**🗓️ Date:** Thu, 06 Nov 2025 14:00:00 GMT');
     expect(rewritten).toContain('**🎯 Objective:** Original Objective');
     expect(rewritten).toContain('**📎 Previous Commit:** original123 - fix: original commit');
-    expect(rewritten).toContain('**🔗 Previous PDCA:** [GitHub](https://github.com/test/original-prev.pdca.md)');
+    
+    // NOTE: Previous PDCA link is REGENERATED based on chronological order, not preserved from original
+    // This is the correct behavior - chain links should always reflect current directory state
+    expect(rewritten).toContain('**🔗 Previous PDCA:**'); // Link exists
+    // It will be "N/A - First PDCA" if this is the first file, or a link to the chronologically previous file
+    expect(rewritten).toMatch(/\*\*🔗 Previous PDCA:\*\* (?:N\/A - First PDCA in chain|\[GitHub\])/);
+    
     expect(rewritten).toContain('**🎯 Project Journal Session:** OriginalComponent/1.2.3');
     
     // Structure should be fixed (proper section headers)
@@ -966,6 +972,47 @@ Doing content`;
     expect(rewritten).toContain('Some content here');
     expect(rewritten).toContain('Planning content');
     expect(rewritten).toContain('Doing content');
+  });
+
+  // TC-CHAIN-01: rewritePDCA should update bidirectional chain links
+  it('TC-CHAIN-01: should update previous PDCA Next link and set current Previous link', async () => {
+    // Arrange: Create two PDCAs in chronological order
+    const firstPDCA = path.join(testDataDir, '2025-11-07-UTC-100000.pdca.md');
+    const secondPDCA = path.join(testDataDir, '2025-11-07-UTC-110000.pdca.md');
+    
+    // First PDCA with "Use pdca chain" Next link
+    fs.writeFileSync(firstPDCA, `# 📋 **PDCA Cycle: First PDCA - First PDCA**
+
+**🗓️ Date:** Thu, 07 Nov 2025 10:00:00 GMT  
+**🎯 Objective:** First test PDCA  
+**🔗 Previous PDCA:** N/A - First PDCA in chain
+**➡️ Next PDCA:** Use pdca chain
+
+## **📊 SUMMARY**
+Content here.
+`, 'utf-8');
+
+    // Second PDCA (corrupted, needs rewrite)
+    fs.writeFileSync(secondPDCA, `# 📋 **PDCA Cycle: Second PDCA - Second PDCA**
+
+**🗓️ Date:** Thu, 07 Nov 2025 11:00:00 GMT  
+**🎯 Objective:** Second test PDCA that needs rewriting
+`, 'utf-8');
+
+    // Act: rewritePDCA on second PDCA
+    await pdca.rewritePDCA(secondPDCA);
+
+    // Assert 1: First PDCA's Next link should now point to second PDCA
+    const firstContent = fs.readFileSync(firstPDCA, 'utf-8');
+    expect(firstContent).toContain('**➡️ Next PDCA:**');
+    expect(firstContent).toContain('2025-11-07-UTC-110000.pdca.md');
+    expect(firstContent).not.toContain('Use pdca chain');
+    
+    // Assert 2: Second PDCA's Previous link should point to first PDCA
+    const secondContent = fs.readFileSync(secondPDCA, 'utf-8');
+    expect(secondContent).toContain('**🔗 Previous PDCA:**');
+    expect(secondContent).toContain('2025-11-07-UTC-100000.pdca.md');
+    expect(secondContent).not.toContain('N/A - First PDCA');
   });
 });
 
