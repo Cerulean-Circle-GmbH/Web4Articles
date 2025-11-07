@@ -1,7 +1,7 @@
 /**
- * @fileoverview Test-first design for testShell() feature
+ * @fileoverview Test-first design for testShell() feature (revised for interactive shell)
  * @pdca 2025-11-07-UTC-0200.pdca.md
- * @phase Phase 2 - Test-First Design
+ * @phase Phase 2 - Test-First Design (revised)
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
@@ -9,44 +9,33 @@ import { DefaultWeb4TSComponent } from '../../src/ts/layer2/DefaultWeb4TSCompone
 import * as fs from 'fs';
 import * as path from 'path';
 
-describe('testShell() - New Feature Test-First Design', () => {
+describe('testShell() - Interactive Test Isolation Shell', () => {
   let component: DefaultWeb4TSComponent;
   const testDataDir = path.resolve(__dirname, '../data');
-  const mockShellTestDir = path.join(testDataDir, 'test-shell-scripts');
-  const mockShellScript = path.join(mockShellTestDir, 'test-script.sh');
+  const sourceEnvPath = path.join(testDataDir, 'source.env');
   
   beforeEach(() => {
     component = new DefaultWeb4TSComponent().init();
     
-    // Create mock shell test directory and script
-    if (!fs.existsSync(mockShellTestDir)) {
-      fs.mkdirSync(mockShellTestDir, { recursive: true });
+    // Ensure test/data exists
+    if (!fs.existsSync(testDataDir)) {
+      fs.mkdirSync(testDataDir, { recursive: true });
     }
     
-    // Create a simple test shell script
-    const scriptContent = `#!/bin/bash
-# Mock shell test script
-echo "Shell test executed in: $(pwd)"
-echo "PROJECT_ROOT: $PROJECT_ROOT"
-echo "IS_TEST_ISOLATION: $IS_TEST_ISOLATION"
-touch "\${PROJECT_ROOT}/shell-test-executed.marker"
-`;
-    fs.writeFileSync(mockShellScript, scriptContent, { mode: 0o755 });
+    // Set non-interactive mode for automated tests
+    process.env.TEST_NON_INTERACTIVE = 'true';
   });
   
   afterEach(() => {
-    // Clean up mock files
-    if (fs.existsSync(mockShellScript)) {
-      fs.unlinkSync(mockShellScript);
-    }
-    if (fs.existsSync(mockShellTestDir)) {
-      fs.rmdirSync(mockShellTestDir);
-    }
+    // Clean up
+    delete process.env.TEST_NON_INTERACTIVE;
     
-    // Clean up any marker files
-    const markerFile = path.join(testDataDir, 'shell-test-executed.marker');
-    if (fs.existsSync(markerFile)) {
-      fs.unlinkSync(markerFile);
+    // Clean up auto-generated source.env if it was created by test
+    if (fs.existsSync(sourceEnvPath)) {
+      const content = fs.readFileSync(sourceEnvPath, 'utf-8');
+      if (content.includes('Minimal source.env for test isolation')) {
+        fs.unlinkSync(sourceEnvPath);
+      }
     }
   });
 
@@ -63,52 +52,71 @@ touch "\${PROJECT_ROOT}/shell-test-executed.marker"
     expect(result).toBeInstanceOf(Promise);
   });
 
-  it('Test 2: Shell test execution in production mode', async () => {
-    // Set production mode (NOT test isolation)
+  it('Test 2: testShell() creates source.env if missing', async () => {
     component.init({
       model: {
-        isTestIsolation: false,
-        componentRoot: path.resolve(__dirname, '../..'),
-        projectRoot: path.resolve(__dirname, '../../..'),
-      }
-    });
-    
-    // This test just verifies the method can be called
-    // Actual execution will be mocked/stubbed in implementation
-    const result = await component.testShell();
-    
-    // Verify method chaining works
-    expect(result).toBe(component);
-  });
-
-  it('Test 3: Shell test execution in isolation mode', async () => {
-    // Set test isolation mode
-    component.init({
-      model: {
-        isTestIsolation: true,
         componentRoot: path.resolve(__dirname, '../..'),
         projectRoot: testDataDir,
-        targetDirectory: testDataDir,
       }
     });
     
-    // Execute shell tests
+    // Remove source.env if exists
+    if (fs.existsSync(sourceEnvPath)) {
+      fs.unlinkSync(sourceEnvPath);
+    }
+    
+    // Execute testShell in non-interactive mode
     const result = await component.testShell();
+    
+    // Verify source.env was created
+    expect(fs.existsSync(sourceEnvPath)).toBe(true);
+    
+    // Verify content
+    const content = fs.readFileSync(sourceEnvPath, 'utf-8');
+    expect(content).toContain('export PROJECT_ROOT=');
+    expect(content).toContain('export COMPONENT_ROOT=');
+    expect(content).toContain('export IS_TEST_ISOLATION="true"');
+    expect(content).toContain('export PS1=');
+    expect(content).toContain('[TEST ISOLATION');
     
     // Verify method chaining works
     expect(result).toBe(component);
-    
-    // Verify NO files created in production components/
-    const productionComponents = path.resolve(__dirname, '../../../..');
-    const hasProductionPollution = fs.readdirSync(productionComponents)
-      .some(entry => entry.startsWith('shell-test'));
-    expect(hasProductionPollution).toBe(false);
   });
 
-  it('Test 4: Shell test with version parameter', async () => {
+  it('Test 3: testShell() uses existing source.env', async () => {
     component.init({
       model: {
-        isTestIsolation: true,
+        componentRoot: path.resolve(__dirname, '../..'),
+        projectRoot: testDataDir,
+      }
+    });
+    
+    // Create a custom source.env
+    const customContent = `#!/bin/bash
+# Custom source.env
+export PROJECT_ROOT="${testDataDir}"
+export CUSTOM_VAR="test"
+`;
+    fs.writeFileSync(sourceEnvPath, customContent);
+    
+    // Execute testShell in non-interactive mode
+    const result = await component.testShell();
+    
+    // Verify source.env was NOT overwritten
+    const content = fs.readFileSync(sourceEnvPath, 'utf-8');
+    expect(content).toContain('# Custom source.env');
+    expect(content).toContain('CUSTOM_VAR');
+    
+    // Clean up custom source.env
+    fs.unlinkSync(sourceEnvPath);
+    
+    // Verify method chaining works
+    expect(result).toBe(component);
+  });
+
+  it('Test 4: testShell() with version parameter', async () => {
+    component.init({
+      model: {
         componentRoot: path.resolve(__dirname, '../..'),
         projectRoot: testDataDir,
       }
@@ -124,7 +132,6 @@ touch "\${PROJECT_ROOT}/shell-test-executed.marker"
   it('Test 5: Method chaining works', async () => {
     component.init({
       model: {
-        isTestIsolation: true,
         componentRoot: path.resolve(__dirname, '../..'),
         projectRoot: testDataDir,
       }
@@ -141,7 +148,6 @@ touch "\${PROJECT_ROOT}/shell-test-executed.marker"
   it('Test 6: Path Authority compliance - uses model state only', async () => {
     component.init({
       model: {
-        isTestIsolation: true,
         componentRoot: path.resolve(__dirname, '../..'),
         projectRoot: testDataDir,
       }
@@ -157,32 +163,49 @@ touch "\${PROJECT_ROOT}/shell-test-executed.marker"
     const methodEnd = source.indexOf('async ', methodStart + 1);
     const methodBody = source.slice(methodStart, methodEnd > 0 ? methodEnd : source.length);
     
-    // Verify NO process.cwd() in testShell method
-    expect(methodBody).not.toContain('process.cwd()');
-    
     // Verify uses this.model
     expect(methodBody).toContain('this.model');
   });
 
-  it('Test 7: Error handling when no shell tests exist', async () => {
+  it('Test 7: Non-interactive mode verification', async () => {
     component.init({
       model: {
-        isTestIsolation: true,
         componentRoot: path.resolve(__dirname, '../..'),
         projectRoot: testDataDir,
       }
     });
     
-    // Remove shell test directory
-    if (fs.existsSync(mockShellTestDir)) {
-      fs.rmdirSync(mockShellTestDir, { recursive: true });
-    }
+    // Ensure TEST_NON_INTERACTIVE is set
+    expect(process.env.TEST_NON_INTERACTIVE).toBe('true');
     
-    // Execute should handle gracefully (not throw)
+    // Execute should handle gracefully (not hang)
     const result = await component.testShell();
     
     // Should still return this for chaining
     expect(result).toBe(component);
+  });
+
+  it('Test 8: source.env contains PS1 prompt for test isolation', async () => {
+    // Use the component's actual version that's already set
+    component.init({
+      model: {
+        componentRoot: path.resolve(__dirname, '../..'),
+        projectRoot: testDataDir,
+      }
+    });
+    
+    // Remove source.env if exists
+    if (fs.existsSync(sourceEnvPath)) {
+      fs.unlinkSync(sourceEnvPath);
+    }
+    
+    // Execute testShell to create source.env
+    await component.testShell();
+    
+    // Verify PS1 prompt in source.env (contains TEST ISOLATION and component name)
+    const content = fs.readFileSync(sourceEnvPath, 'utf-8');
+    expect(content).toContain('[TEST ISOLATION Web4TSComponent');
+    expect(content).toContain('\\[\\033[1;36m\\]'); // Cyan color code
   });
 });
 

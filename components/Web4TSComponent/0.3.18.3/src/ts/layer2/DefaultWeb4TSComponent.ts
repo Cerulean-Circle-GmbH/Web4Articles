@@ -1720,18 +1720,24 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     const testDataDir = path.join(componentRoot, 'test', 'data');
     const sourceEnvPath = path.join(testDataDir, 'source.env');
     
-    console.log(`🐚 Starting interactive bash shell in test isolation...`);
+    // Check if running in non-interactive mode (for automated tests)
+    const isNonInteractive = process.env.TEST_NON_INTERACTIVE === 'true';
+    
+    console.log(`🐚 Starting ${isNonInteractive ? 'non-interactive' : 'interactive'} bash shell in test isolation...`);
     console.log(`📂 Component: ${this.model.component} ${this.model.version.toString()}`);
     console.log(`📂 Test Data Directory (PROJECT_ROOT): ${testDataDir}`);
     console.log(`📂 Source Environment: ${sourceEnvPath}`);
     console.log();
-    console.log(`💡 This shell runs in test isolation:`);
-    console.log(`   - Project root is: ${testDataDir}`);
-    console.log(`   - All operations happen in test/data`);
-    console.log(`   - Production files in components/ are NEVER touched`);
-    console.log();
-    console.log(`🔧 Type 'exit' to return to normal shell`);
-    console.log(`${'='.repeat(60)}\n`);
+    
+    if (!isNonInteractive) {
+      console.log(`💡 This shell runs in test isolation:`);
+      console.log(`   - Project root is: ${testDataDir}`);
+      console.log(`   - All operations happen in test/data`);
+      console.log(`   - Production files in components/ are NEVER touched`);
+      console.log();
+      console.log(`🔧 Type 'exit' to return to normal shell`);
+      console.log(`${'='.repeat(60)}\n`);
+    }
     
     // Check if test/data exists
     if (!existsSync(testDataDir)) {
@@ -1760,24 +1766,35 @@ export PS1="\\[\\033[1;36m\\][TEST ISOLATION ${this.model.component} ${this.mode
     }
     
     try {
-      // Start interactive bash with --norc, sourcing source.env, in test/data directory
-      execSync(`bash --norc --init-file "${sourceEnvPath}"`, {
-        cwd: testDataDir,
-        stdio: 'inherit',
-        env: {
-          ...process.env,
-          PROJECT_ROOT: testDataDir,
-          COMPONENT_ROOT: componentRoot,
-          IS_TEST_ISOLATION: 'true',
-        },
-      });
-      
-      console.log(`\n${'='.repeat(60)}`);
-      console.log(`✅ Exited test isolation shell`);
+      if (isNonInteractive) {
+        // Non-interactive mode: just verify setup and exit
+        console.log(`✅ Test isolation shell setup verified`);
+        console.log(`   - Working directory would be: ${testDataDir}`);
+        console.log(`   - Source environment: ${sourceEnvPath}`);
+        console.log(`   - PROJECT_ROOT: ${testDataDir}`);
+        console.log(`   - IS_TEST_ISOLATION: true`);
+      } else {
+        // Interactive mode: start bash shell
+        execSync(`bash --norc --init-file "${sourceEnvPath}"`, {
+          cwd: testDataDir,
+          stdio: 'inherit',
+          env: {
+            ...process.env,
+            PROJECT_ROOT: testDataDir,
+            COMPONENT_ROOT: componentRoot,
+            IS_TEST_ISOLATION: 'true',
+          },
+        });
+        
+        console.log(`\n${'='.repeat(60)}`);
+        console.log(`✅ Exited test isolation shell`);
+      }
     } catch (error) {
-      // User exit (Ctrl+D or 'exit' command) is not an error
-      console.log(`\n${'='.repeat(60)}`);
-      console.log(`✅ Exited test isolation shell`);
+      if (!isNonInteractive) {
+        // User exit (Ctrl+D or 'exit' command) is not an error
+        console.log(`\n${'='.repeat(60)}`);
+        console.log(`✅ Exited test isolation shell`);
+      }
     }
     
     return this;
