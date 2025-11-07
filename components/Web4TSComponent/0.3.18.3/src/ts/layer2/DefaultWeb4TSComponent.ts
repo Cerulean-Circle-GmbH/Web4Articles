@@ -1385,13 +1385,13 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         console.log(`   📊 Highest version found: ${highestVersion}`);
         
         // Verify and fix latest symlink
-        await this.verifyLatestSymlink(componentName, highestVersion);
+        await this.verifyLatestSymlink();
         
         // Verify and fix scripts symlinks
-        await this.verifyScriptsSymlinks(componentName, availableVersions, highestVersion);
+        await this.verifyScriptsSymlinks();
         
         // Verify semantic links
-        await this.verifySemanticLinks(componentName, availableVersions);
+        await this.verifySemanticLinks();
         
         console.log(`   ✅ Symlink verification completed`);
       }
@@ -4141,11 +4141,16 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Verify semantic links (dev, test, prod) are valid
-   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion.SEMANTIC_LINKS
+   * Uses this.model for component identity and calculates availableVersions internally
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model (no functional parameters)
    * @cliHide
    */
-  private async verifySemanticLinks(component: string, availableVersions: string[]): Promise<void> {
-    const semanticLinks = await this.getSemanticLinks(component);
+  private async verifySemanticLinks(): Promise<void> {
+    const semanticLinks = await this.getSemanticLinks(this.model.component);
+    
+    // Calculate availableVersions internally (Path Authority)
+    const componentDir = path.join(this.model.componentsDirectory, this.model.component);
+    const availableVersions = this.getAvailableVersions(componentDir);
     
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Filter from SemanticVersion constant
     // Don't check 'latest' as it's handled separately
@@ -4161,7 +4166,6 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
           console.log(`   ❌ ${linkType} link broken: ${linkType} → ${target} (version not found)`);
           // Remove broken semantic link
           try {
-            const componentDir = path.join(this.model.componentsDirectory, component);
             const linkPath = path.join(componentDir, linkType);
             await fs.unlink(linkPath);
             console.log(`   🔧 Removed broken ${linkType} link`);
@@ -4177,11 +4181,17 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Verify latest symlink points to highest version
+   * Uses this.model for component identity and calculates highestVersion internally
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model (no functional parameters)
    * @cliHide
    */
-  private async verifyLatestSymlink(component: string, highestVersion: string): Promise<void> {
-    const componentDir = path.join(this.model.componentsDirectory, component);
+  private async verifyLatestSymlink(): Promise<void> {
+    const componentDir = path.join(this.model.componentsDirectory, this.model.component);
     const latestPath = path.join(componentDir, 'latest');
+    
+    // Calculate highestVersion internally
+    const availableVersions = this.getAvailableVersions(componentDir);
+    const highestVersion = this.getHighestVersion(availableVersions);
     
     try {
       if (existsSync(latestPath)) {
@@ -4206,14 +4216,21 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
 
   /**
    * Verify scripts symlinks
+   * Uses this.model for component identity and calculates versions/highestVersion internally
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model (no functional parameters)
    * @cliHide
    */
-  private async verifyScriptsSymlinks(component: string, versions: string[], highestVersion: string): Promise<void> {
+  private async verifyScriptsSymlinks(): Promise<void> {
     // ✅ Use model.projectRoot (Path Authority: CLI calculates this)
     // @pdca 2025-11-05-UTC-2226.pdca.md - Use targetDirectory for test isolation
     const scriptsDir = path.join(this.model.targetDirectory, 'scripts');
     const versionsDir = path.join(scriptsDir, 'versions');
-    const componentLower = component.toLowerCase();
+    const componentLower = this.model.component.toLowerCase();
+    
+    // Calculate versions and highestVersion internally
+    const componentDir = path.join(this.model.componentsDirectory, this.model.component);
+    const versions = this.getAvailableVersions(componentDir);
+    const highestVersion = this.getHighestVersion(versions);
     
     // Ensure scripts and versions directories exist (FIX, don't just report errors!)
     try {
@@ -4227,7 +4244,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     
     // Check main script symlink
     const mainScriptPath = path.join(scriptsDir, componentLower);
-    const expectedTarget = `../components/${component}/latest/${componentLower}`;
+    const expectedTarget = `../components/${this.model.component}/latest/${componentLower}`;
     
     try {
       if (existsSync(mainScriptPath)) {
@@ -4253,9 +4270,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     // These should be renamed to just componentname (no .sh extension)
     for (const version of versions) {
       // @pdca 2025-11-05-UTC-2100.pdca.md - Use componentsDirectory (Path Authority)
-      const componentDir = path.join(this.model.componentsDirectory, component, version);
-      const wrongShFile = path.join(componentDir, `${componentLower}.sh`);
-      const correctFile = path.join(componentDir, componentLower);
+      const versionDir = path.join(this.model.componentsDirectory, this.model.component, version);
+      const wrongShFile = path.join(versionDir, `${componentLower}.sh`);
+      const correctFile = path.join(versionDir, componentLower);
       
       if (existsSync(wrongShFile)) {
         try {
@@ -4284,25 +4301,27 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     
     // Verify version-specific symlinks exist
     for (const version of versions) {
-      await this.verifyVersionScriptSymlink(component, version);
+      await this.verifyVersionScriptSymlink(version);
     }
     
     // Clean up broken/orphaned symlinks in scripts/versions
-    await this.cleanupOrphanedScriptSymlinks(component, versions);
+    await this.cleanupOrphanedScriptSymlinks(versions);
   }
 
   /**
    * Clean up broken/orphaned symlinks in scripts and scripts/versions
+   * Uses this.model for component identity, calculates validVersions internally
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model (no functional parameters)
    * Now handles two types:
    * 1. Version wrappers: {cli}-v{version} (shell scripts, not symlinks)
    * 2. Semantic symlinks: {cli}.{semantic} (symlinks pointing to version wrappers)
    * @cliHide
    */
-  private async cleanupOrphanedScriptSymlinks(component: string, validVersions: string[]): Promise<void> {
+  private async cleanupOrphanedScriptSymlinks(validVersions: string[]): Promise<void> {
     // @pdca 2025-11-05-UTC-2226.pdca.md - Use targetDirectory for test isolation
     const scriptsDir = path.join(this.model.targetDirectory, 'scripts');
     const versionsDir = path.join(scriptsDir, 'versions');
-    const componentLower = component.toLowerCase();
+    const componentLower = this.model.component.toLowerCase();
     
     // Check scripts/versions directory for orphaned entries
     try {
@@ -4328,7 +4347,7 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
           if (stats.isSymbolicLink()) {
             // Old symlink format - should be replaced with wrapper
             console.log(`   🔄 Converting old symlink to wrapper: ${entry}`);
-            await this.createVersionScriptSymlink(component, version);
+            await this.createVersionScriptSymlink(version);
           } else if (!validVersions.includes(version)) {
             // Orphaned wrapper - version no longer exists
             console.log(`   🧹 Removing orphaned wrapper: ${entry} (version ${version} removed)`);
