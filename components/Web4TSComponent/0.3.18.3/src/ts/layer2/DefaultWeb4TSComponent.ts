@@ -1513,12 +1513,11 @@ Standards:
    * @cliExample web4tscomponent on Unit 0.3.2.0 links
    */
   async links(action: string = ''): Promise<this> {
-    // Print quick header for immediate UX feedback
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Print header AFTER updateModelPaths()
     this.printQuickHeader();
     
-    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
-    const target = this.model.context || this;
-    const componentName = target.model.component;
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly
+    const componentName = this.model.component;
     
     // If 'fix' action requested, run verifyAndFix first
     if (action === 'fix') {
@@ -1530,14 +1529,14 @@ Standards:
       console.log(`✅ All links repaired for ${componentName}\n`);
     }
     
-    // Target has ALL data in ITS model
-    const semanticLinks = await this.getSemanticLinks(target.model.component);
-    const componentDir = path.join(this.model.componentsDirectory, target.model.component);
-      const availableVersions = this.getAvailableVersions(componentDir);
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly
+    const semanticLinks = await this.getSemanticLinks(this.model.component);
+    const componentDir = path.join(this.model.componentsDirectory, this.model.component);
+    const availableVersions = this.getAvailableVersions(componentDir);
 
-    console.log(`🔗 Semantic Version Links for ${target.model.component}:`);
-      console.log(`   📊 Available versions: ${availableVersions.length}`);
-      console.log('');
+    console.log(`🔗 Semantic Version Links for ${this.model.component}:`);
+    console.log(`   📊 Available versions: ${availableVersions.length}`);
+    console.log('');
 
       // Display semantic links with status indicators
       const linkOrder = ['prod', 'test', 'dev', 'latest'] as const;
