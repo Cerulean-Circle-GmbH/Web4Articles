@@ -1795,6 +1795,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * Workflow Stage 2 (Release): test → prod (nextMinor) + new dev (nextBuild)
    * E.g., 0.3.4.2 (test) → 0.4.0.0 (prod) + 0.4.0.1 (dev)
    * Used by releaseTest() for major version releases
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion.promote()
    * @cliHide
    */
   async handleReleaseTestSuccessPromotion(componentName: string, currentVersion: string, promotionLevel: string = 'nextPatch'): Promise<void> {
@@ -1831,29 +1832,11 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     console.log(`📋 Workflow Stage 2 (Release): test → prod (${promotionLevel}) + new dev (nextBuild)`);
     
     try {
+      // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion.promote()
       // Step 1: Create promotion version from current (based on promotion level)
       console.log(`\n🔧 Step 1: Creating ${promotionLevel} version from ${currentVersion}...`);
-      
-      let newProdVersion: string;
-      switch (promotionLevel) {
-        case 'nextPatch':
-          // @pdca 2025-10-30-UTC-1430.functional-helper-elimination.pdca.md - Direct SemanticVersion usage (Radical OOP)
-          newProdVersion = (await SemanticVersion.fromString(currentVersion).promotePatch()).toString();
-          console.log(`✅ Calculated nextPatch version: ${newProdVersion}`);
-          break;
-        case 'nextMinor':
-          // @pdca 2025-10-30-UTC-1430.functional-helper-elimination.pdca.md - Direct SemanticVersion usage (Radical OOP)
-          newProdVersion = (await SemanticVersion.fromString(currentVersion).promoteMinor()).toString();
-          console.log(`✅ Calculated nextMinor version: ${newProdVersion}`);
-          break;
-        case 'nextMajor':
-          // @pdca 2025-10-30-UTC-1430.functional-helper-elimination.pdca.md - Direct SemanticVersion usage (Radical OOP)
-          newProdVersion = (await SemanticVersion.fromString(currentVersion).promoteMinor()).toString(); // Still using promoteMinor for now
-          console.log(`✅ Calculated nextMajor version: ${newProdVersion}`);
-          break;
-        default:
-          throw new Error(`Invalid promotion level: ${promotionLevel}`);
-      }
+      const newProdVersion = await SemanticVersion.promote(currentVersion, promotionLevel);
+      console.log(`✅ Calculated ${promotionLevel} version: ${newProdVersion}`);
       
       // Step 2: Set new version as prod
       console.log(`\n🚀 Step 2: Promoting ${newProdVersion} to prod (${promotionLevel.toUpperCase()})...`);
@@ -1867,8 +1850,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       
       // Step 4: Create nextBuild version for new development cycle
       console.log(`\n🔧 Step 4: Creating nextBuild version for development...`);
-      // @pdca 2025-10-30-UTC-1430.functional-helper-elimination.pdca.md - Direct SemanticVersion usage (Radical OOP)
-      const nextBuildVersion = (await SemanticVersion.fromString(newProdVersion).promoteRevision()).toString();
+      const nextBuildVersion = await SemanticVersion.promote(newProdVersion, 'nextBuild');
       console.log(`✅ Calculated nextBuild version: ${nextBuildVersion}`);
       
       // Step 5: Set nextBuild as new dev and test
