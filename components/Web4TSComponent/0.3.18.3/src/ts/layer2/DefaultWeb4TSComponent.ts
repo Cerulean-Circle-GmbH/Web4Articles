@@ -1560,12 +1560,11 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   /**
    * Execute test command - runs tests WITHOUT promotion
    * Use releaseTest() for version promotion workflow
+   * Works on current context (this.model reflects target after updateModelPaths())
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE Radical OOP: Use this.model
    * 
    * Mode 1 (Full Suite): Run all tests (default)
    * Mode 2 (Selective): Run specific test file/describe/itCase by number
-   * 
-   * When no context: Run Web4TSComponent's own test suite
-   * When context loaded: Run test suite for the loaded component
    * 
    * @param scope - Test scope: empty/all (full suite), 'file', 'describe', or 'itCase'
    * @param references - For selective testing: numeric references to select tests
@@ -1598,10 +1597,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     }
     
     // MODE 3: Full test suite (NO promotion - use releaseTest for that)
-    // ✅ RADICAL OOP: Work with component INSTANCE (this or context)
-    const target = this.model.context || this;
-    
-    console.log(`🧪 Running ${target.model.component} tests (no promotion)...`);
+    console.log(`🧪 Running ${this.model.component} tests (no promotion)...`);
       
       // 🚨 RECURSION DETECTION: Check if we're already inside vitest
       const insideTestEnvironment = !!(process.env.VITEST || process.env.VITEST_WORKER_ID);
