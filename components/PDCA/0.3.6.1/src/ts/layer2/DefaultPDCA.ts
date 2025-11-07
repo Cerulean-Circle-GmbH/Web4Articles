@@ -5778,13 +5778,165 @@ export class DefaultPDCA implements PDCA {
         
         let fixedThisFile = false;
         
-        // Step 1: Check for filename issues
-        // TODO: Implement filename analysis and rename operations
+        // Step 1: Check for filename issues (description, wrong timestamp)
+        const hasDescription = currentName.match(/-[a-zA-Z]/);  // e.g., "-with-description"
+        const timestampMatch = currentName.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{6})/);
+        
+        if (hasDescription || timestampMatch) {
+          console.log(`📝 Filename Analysis:`);
+          if (hasDescription) {
+            console.log(`   ⚠️  Description detected in filename`);
+          }
+          if (timestampMatch) {
+            console.log(`   ℹ️  Timestamp: ${timestampMatch[1]}`);
+          }
+          console.log();
+          
+          // Step 1a: Strip description if present
+          if (hasDescription) {
+            console.log(`🔧 Step 1a: Stripping description from filename...`);
+            if (dryRun === 'true') {
+              console.log(`   💡 DRY RUN: Would call rename('strip', '${currentPath}')`);
+            } else {
+              try {
+                await this.rename('strip', currentPath, 'false');
+                fixedThisFile = true;
+                
+                // Update currentPath after rename
+                const newFiles = fs.readdirSync(path.dirname(currentPath))
+                  .filter(f => f.endsWith('.pdca.md'));
+                
+                // Find the file by git hash again (it was renamed)
+                if (snapshot.gitHash) {
+                  for (const file of newFiles) {
+                    const checkPath = path.join(path.dirname(currentPath), file);
+                    try {
+                      const checkHash = execSync(
+                        `git log -1 --format=%H -- "${checkPath}"`,
+                        { cwd: projectRoot, encoding: 'utf-8' }
+                      ).trim();
+                      if (checkHash === snapshot.gitHash) {
+                        currentPath = checkPath;
+                        break;
+                      }
+                    } catch {
+                      // Continue searching
+                    }
+                  }
+                }
+              } catch (error) {
+                console.log(`   ❌ Failed to strip description: ${error instanceof Error ? error.message : String(error)}`);
+              }
+            }
+            console.log();
+          }
+          
+          // Step 1b: Correct timestamp if wrong
+          if (timestampMatch && snapshot.gitHash) {
+            console.log(`🔧 Step 1b: Checking timestamp accuracy...`);
+            if (dryRun === 'true') {
+              console.log(`   💡 DRY RUN: Would call rename('creationDate', '${currentPath}')`);
+            } else {
+              try {
+                await this.rename('creationDate', currentPath, 'false');
+                fixedThisFile = true;
+                
+                // Update currentPath after rename
+                const newFiles = fs.readdirSync(path.dirname(currentPath))
+                  .filter(f => f.endsWith('.pdca.md'));
+                
+                // Find the file by git hash again
+                for (const file of newFiles) {
+                  const checkPath = path.join(path.dirname(currentPath), file);
+                  try {
+                    const checkHash = execSync(
+                      `git log -1 --format=%H -- "${checkPath}"`,
+                      { cwd: projectRoot, encoding: 'utf-8' }
+                    ).trim();
+                    if (checkHash === snapshot.gitHash) {
+                      currentPath = checkPath;
+                      break;
+                    }
+                  } catch {
+                    // Continue searching
+                  }
+                }
+              } catch (error) {
+                console.log(`   ❌ Failed to correct timestamp: ${error instanceof Error ? error.message : String(error)}`);
+              }
+            }
+            console.log();
+          }
+        }
         
         // Step 2: Run cmm3check to categorize content issues
-        // TODO: Implement cmm3check integration and intelligent triage
+        console.log(`🔍 Step 2: Checking PDCA compliance...`);
+        let hasLinkIssuesOnly = false;
+        let hasTemplateViolations = false;
         
-        // Placeholder: Mark as fixed if any operation was performed
+        try {
+          // Capture cmm3check output
+          const checkOutput = execSync(
+            `node dist/js/cli.js cmm3check "${currentPath}"`,
+            { cwd: projectRoot, encoding: 'utf-8' }
+          ).trim();
+          
+          // Parse violations
+          const hasViolation1c = checkOutput.includes('Violation 1c');
+          const hasViolation1d = checkOutput.includes('Violation 1d');
+          const hasOtherViolations = checkOutput.match(/Violation \d[^cd]/);
+          
+          if (hasViolation1c || hasViolation1d) {
+            hasLinkIssuesOnly = !hasOtherViolations;
+            console.log(`   ⚠️  Link issues detected (1c/1d)`);
+          }
+          
+          if (hasOtherViolations) {
+            hasTemplateViolations = true;
+            console.log(`   ⚠️  Template violations detected`);
+          }
+          
+          if (!hasViolation1c && !hasViolation1d && !hasOtherViolations) {
+            console.log(`   ✅ PDCA is compliant`);
+          }
+        } catch (error) {
+          // cmm3check might fail or not exist - skip content checks
+          console.log(`   ℹ️  Could not run cmm3check, skipping content checks`);
+        }
+        console.log();
+        
+        // Step 3: Intelligent triage - apply appropriate fix
+        if (hasLinkIssuesOnly) {
+          console.log(`🔧 Step 3: Applying surgical fix (fixDualLinks)...`);
+          if (dryRun === 'true') {
+            console.log(`   💡 DRY RUN: Would call fixDualLinks('${currentPath}')`);
+          } else {
+            try {
+              await this.fixDualLinks(currentPath);
+              fixedThisFile = true;
+              console.log(`   ✅ Links fixed`);
+            } catch (error) {
+              console.log(`   ❌ Failed to fix links: ${error instanceof Error ? error.message : String(error)}`);
+            }
+          }
+          console.log();
+        } else if (hasTemplateViolations) {
+          console.log(`🔧 Step 3: Applying full fix (rewritePDCA)...`);
+          if (dryRun === 'true') {
+            console.log(`   💡 DRY RUN: Would call rewritePDCA('${currentPath}')`);
+          } else {
+            try {
+              await this.rewritePDCA(currentPath, 'false');
+              fixedThisFile = true;
+              console.log(`   ✅ PDCA rewritten`);
+            } catch (error) {
+              console.log(`   ❌ Failed to rewrite PDCA: ${error instanceof Error ? error.message : String(error)}`);
+            }
+          }
+          console.log();
+        }
+        
+        // Mark as fixed if any operation was performed
         if (fixedThisFile) {
           totalFixed++;
         }
