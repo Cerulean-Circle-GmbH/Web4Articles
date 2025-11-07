@@ -1496,30 +1496,28 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   /**
    * Get all semantic links for a component
    * Reads dev, test, prod, and latest symlinks
-   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion.SEMANTIC_LINKS
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Dynamic structure from SemanticVersion
    * @param componentName Component name to get semantic links for
    * @returns Object with dev, test, prod, latest versions (null if not set)
    * @cliHide
    */
-  private async getSemanticLinks(componentName: string): Promise<{ dev: string | null; test: string | null; prod: string | null; latest: string | null }> {
+  private async getSemanticLinks(componentName: string): Promise<Record<string, string | null>> {
     const componentDir = path.join(this.model.componentsDirectory, componentName);
-    const result = {
-      dev: null as string | null,
-      test: null as string | null,
-      prod: null as string | null,
-      latest: null as string | null
-    };
-
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion constant
+    
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE OOP: Dynamic from constant
+    const result: Record<string, string | null> = {};
+    
+    // Initialize from SemanticVersion.SEMANTIC_LINKS (single source of truth)
     for (const linkType of SemanticVersion.SEMANTIC_LINKS) {
       const linkPath = path.join(componentDir, linkType);
       try {
         if (existsSync(linkPath)) {
-          const target = await fs.readlink(linkPath);
-          result[linkType] = target;
+          result[linkType] = await fs.readlink(linkPath);
+        } else {
+          result[linkType] = null;
         }
       } catch (error) {
-        // Leave as null
+        result[linkType] = null;
       }
     }
 
@@ -1640,28 +1638,11 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     return this;
   }
 
-  /**
-   * Start interactive shell in test/data environment for testing
-   * Optionally for a specific version (for retroactive isolation)
-   * Sources test environment's source.env for isolated completion testing
-   * 
-   * @param version Optional version to test (defaults to current context)
-   * @param command Optional command arguments to run in test shell (rest params)
-   * @cliHide
-   */
-    
-    
-    
-      
-      
-    
-    
-      
-      
         
     
 
   /**
+   * @TODO needs 0.3.18.3 review still
    * Run tests with configurable release promotion 
    * Same as test() but on 100% success promotes using specified promotion level
    * 
