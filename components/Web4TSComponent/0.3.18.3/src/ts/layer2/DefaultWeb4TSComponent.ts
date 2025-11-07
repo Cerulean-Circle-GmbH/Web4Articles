@@ -1398,11 +1398,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     const semanticLinks = await this.getSemanticLinks(componentName);
     const highestVersion = this.getHighestVersion(availableVersions);
     
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Define policy ONCE, iterate
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion.SEMANTIC_LINKS
     // Policy: All semantic links point to highest version by default
-    const linkNames = ['latest', 'prod', 'dev', 'test'];
-    
-    for (const linkName of linkNames) {
+    for (const linkName of SemanticVersion.SEMANTIC_LINKS) {
       await this.fixSemanticLink(linkName, semanticLinks, highestVersion, availableVersions);
     }
   }
