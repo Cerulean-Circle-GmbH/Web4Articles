@@ -101,18 +101,3 @@ export interface Web4TSComponentModel extends Model {
   // Note: componentStandards, validationRules, scaffoldingTemplates removed - never used in main test story
 }
 
-/**
- * Component structure constants - SINGLE SOURCE OF TRUTH
- * Used by create(), load(), and path calculations throughout the system
- * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md
- */
-export const COMPONENT_STRUCTURE = {
-  TEST_DIR: 'test',
-  SRC_DIR: 'src',
-  TEST_DATA_DIR: 'test/data',
-  TEMPLATES_DIR: 'templates',
-  DIST_DIR: 'dist',
-  SCRIPTS_DIR: 'scripts',
-  SESSION_DIR: 'session',
-} as const;
-

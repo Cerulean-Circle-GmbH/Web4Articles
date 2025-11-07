@@ -5,7 +5,7 @@
 
 import { Web4TSComponent } from '../layer3/Web4TSComponent.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
-import { Web4TSComponentModel, COMPONENT_STRUCTURE } from '../layer3/Web4TSComponentModel.interface.js';
+import { Web4TSComponentModel } from '../layer3/Web4TSComponentModel.interface.js';
 import { ComponentDependency } from '../layer3/ComponentDependency.interface.js';
 import { Colors } from '../layer3/Colors.interface.js';
 import { DefaultColors } from '../layer4/DefaultColors.js';
@@ -22,6 +22,21 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   public model!: Web4TSComponentModel; // Definite assignment - initialized in init() - public for CLI/external access
   private colors: Colors = DefaultColors.getInstance();
   private user?: User; // Optional User service (lazy initialization)
+  
+  /**
+   * Component structure constants - SINGLE SOURCE OF TRUTH
+   * Used by create(), load(), and path calculations throughout the system
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md
+   */
+  private static readonly COMPONENT_STRUCTURE = {
+    TEST_DIR: 'test',
+    SRC_DIR: 'src',
+    TEST_DATA_DIR: 'test/data',
+    TEMPLATES_DIR: 'templates',
+    DIST_DIR: 'dist',
+    SCRIPTS_DIR: 'scripts',
+    SESSION_DIR: 'session',
+  } as const;
   
   /**
    * Back-reference to CLI for Path Authority (Radical OOP - DRY)
@@ -220,14 +235,20 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliHide
    */
   private updateModelPaths(): void {
-    const target = this.model.context || this;
+    // ✅ TRUE Radical OOP: Copy context data to THIS model (single source of truth)
+    if (this.model.context) {
+      this.model.component = this.model.context.model.component;
+      this.model.version = this.model.context.model.version;
+    }
+    // If no context, component/version already set in init()
+    
     const cli = this.getCLI();
     
-    // ✅ Calculate TARGET component root and PUT it IN the model (DRY):
+    // ✅ Calculate TARGET component root using THIS model's data (no target variable!)
     this.model.targetComponentRoot = path.join(
       cli.model.componentsDirectory,
-      target.model.component,
-      target.model.version.toString()
+      this.model.component,
+      this.model.version.toString()
     );
     
     // ✅ Backward compatibility alias
