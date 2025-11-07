@@ -4494,21 +4494,6 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     return SemanticVersion.getHighest(versions);
   }
 
-  /**
-   * Test method for README demonstration (development/testing only)
-   * Shows auto-discovery CLI parameter handling
-   * 
-   * @param inputData Data to process  
-   * @param outputFormat Format for output (json, xml, csv)
-   * @cliSyntax inputData outputFormat
-   * @TODO cliDefault outputFormat json
-   * @cliHide
-   */
-  async testNewMethod(inputData: string, outputFormat: string = 'json'): Promise<this> {
-    console.log(`🚀 Processing ${inputData} as ${outputFormat}`);
-    console.log(`✅ Test method completed successfully!`);
-    return this;
-  }
 
   /**
    * Update symlinks for component version (latest and scripts)
