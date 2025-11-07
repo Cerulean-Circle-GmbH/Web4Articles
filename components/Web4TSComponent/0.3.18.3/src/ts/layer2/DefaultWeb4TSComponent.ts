@@ -512,25 +512,19 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 
   /**
    * Resolve semantic version link to actual version number
-   * DRY helper: Used by on(), setCICDVersion(), upgrade(), and other methods
+   * DRY helper: Used by setCICDVersion() and other methods
+   * Works on current component (this.model.component set by updateModelPaths)
    * 
-   * @param componentName Component to resolve version for
    * @param version Version or semantic link (latest/dev/test/prod/current or actual version)
-   * @param contextVersion Optional: current context version for 'current' resolution
    * @returns Actual version number (e.g., "0.3.13.2")
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Radical OOP (use model, not parameters)
    * @cliHide
    */
-  private resolveActualVersion(
-    componentName: string,
-    version: string,
-    contextVersion?: string
-  ): string {
+  private resolveActualVersion(version: string): string {
     // Handle 'current' keyword
     if (version === 'current') {
-      if (!contextVersion) {
-        throw new Error('Cannot resolve "current" version without context');
-      }
-      return contextVersion;
+      // Use THIS model's version (already set by updateModelPaths)
+      return this.model.version.toString();
     }
     
     // If already a version number, return as-is
@@ -541,7 +535,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // Resolve semantic link (latest/dev/test/prod) to actual version
     const semanticLinks = ['latest', 'dev', 'test', 'prod'];
     if (semanticLinks.includes(version)) {
-      const componentDir = path.join(this.model.componentsDirectory, componentName);
+      // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly
+      const componentDir = path.join(this.model.componentsDirectory, this.model.component);
       const linkPath = path.join(componentDir, version);
       
       if (existsSync(linkPath) && lstatSync(linkPath).isSymbolicLink()) {
@@ -554,7 +549,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         // If no version pattern, assume it's already a clean version
         return resolvedVersion;
       } else {
-        throw new Error(`Semantic link '${version}' does not exist or is not a symlink for ${componentName}`);
+        throw new Error(`Semantic link '${version}' does not exist or is not a symlink for ${this.model.component}`);
       }
     }
     
@@ -4820,9 +4815,9 @@ Run './web4tscomponent' without arguments to see the auto-generated help.
     const componentName = target.model.component;
     const componentDir = path.join(this.model.componentsDirectory, componentName);
     
-    // Use DRY helper to resolve version (handles 'current', semantic links, and actual versions)
-    const contextVersion = target.model.version.toString();
-    const actualVersion = this.resolveActualVersion(componentName, version, contextVersion);
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Radical OOP helper
+    // resolveActualVersion now uses this.model directly (no parameters needed)
+    const actualVersion = this.resolveActualVersion(version);
     
     // Validate targetVersion
     const validLinks = ['dev', 'latest', 'prod', 'test'];
