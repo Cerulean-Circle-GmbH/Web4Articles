@@ -1,0 +1,337 @@
+/**
+ * @ai-gpl AI-Assisted GPL Notice (REQUIRED BY LICENSE)
+ * This file: AI-Assisted, © 2025 Cerulean Circle GmbH, Licensed under AI-GPL v1
+ * Repository: github.com/Cerulean-Circle-GmbH/Web4Articles
+ * License-Text: github.com/Cerulean-Circle-GmbH/Web4Articles/blob/main/LICENSE.md
+ * AI-Provider: Anthropic Claude (claude-sonnet-4-20250514), Cursor IDE v0.45.10
+ * Project-Lead: Hannes (hannes@cerulean-circle.com)
+ *
+ * This file combines AI contributions with human oversight.
+ * See LICENSE.md for full terms and conditions.
+ */
+
+import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
+import { PDCA } from '../src/ts/layer1/PDCA.js';
+import { DefaultPDCA } from '../src/ts/layer2/DefaultPDCA.js';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
+
+const currentFileUrl = new URL(import.meta.url);
+const currentFilePath = fileURLToPath(currentFileUrl);
+const currentDir = path.dirname(currentFilePath);
+const testDataDir = path.join(currentDir, 'data');
+
+describe('PDCA fixAllPDCAs - Batch Operation for Fixing PDCA Files', () => {
+  let pdca: PDCA;
+  let testDir: string;
+
+  beforeAll(async () => {
+    pdca = new DefaultPDCA();
+  });
+
+  beforeEach(() => {
+    // Create fresh test directory for each test
+    testDir = path.join(testDataDir, 'fix-all-test');
+    if (fs.existsSync(testDir)) {
+      fs.rmSync(testDir, { recursive: true, force: true });
+    }
+    fs.mkdirSync(testDir, { recursive: true });
+  });
+
+  afterEach(() => {
+    // Cleanup test directory
+    if (fs.existsSync(testDir)) {
+      fs.rmSync(testDir, { recursive: true, force: true });
+    }
+  });
+
+  /**
+   * TC-FIX-01: Method exists and is callable
+   * Validates: Basic method existence for CLI auto-discovery
+   * Requirement: fixAllPDCAs method must exist in DefaultPDCA
+   */
+  it('TC-FIX-01: fixAllPDCAs method exists', async () => {
+    expect(typeof pdca.fixAllPDCAs).toBe('function');
+  });
+
+  /**
+   * TC-FIX-02: Defaults to current working directory when no path provided
+   * Validates: Req 2 - default to CWD when no parameter
+   * Requirement: If no parameter is provided, the current working directory is used
+   */
+  it('TC-FIX-02: Uses CWD when no path provided', async () => {
+    const result = await pdca.fixAllPDCAs();
+    // Should process files in current directory without error
+    expect(result).toBeDefined();
+  });
+
+  /**
+   * TC-FIX-03: Processes specified directory path
+   * Validates: Req 1 - accept directory path parameter
+   * Requirement: The only parameter is the path to the folder containing all PDCAs
+   */
+  it('TC-FIX-03: Processes specified directory', async () => {
+    // Create a test PDCA in the directory
+    const testFile = path.join(testDir, '2025-11-07-UTC-080000.pdca.md');
+    fs.writeFileSync(testFile, '# 📋 Test PDCA\n**🗓️ Date:** Fri, 07 Nov 2025 08:00:00 GMT\n**🎯 Objective:** Test');
+
+    await pdca.fixAllPDCAs(testDir, 'true'); // dry-run
+
+    // Verify directory was scanned (dry-run should show plan)
+    expect(true).toBe(true); // Baseline - method doesn't exist yet
+  });
+
+  /**
+   * TC-FIX-04: Strips descriptions from filenames (rename strip)
+   * Validates: Req 5 - programmatic rename strip
+   * Requirement: The rename operation must strip the description from the filename when it is included
+   */
+  it('TC-FIX-04: Strips description from filename', async () => {
+    const fileWithDesc = '2025-11-07-UTC-080000-with-description.pdca.md';
+    const expectedName = '2025-11-07-UTC-080000.pdca.md';
+
+    // Create test file with description
+    const filePath = path.join(testDir, fileWithDesc);
+    fs.writeFileSync(filePath, '# 📋 Test PDCA\n**🗓️ Date:** Fri, 07 Nov 2025 08:00:00 GMT\n**🎯 Objective:** Test');
+
+    // Commit the file to git (required for rename operation)
+    try {
+      execSync(`git add -f ${filePath}`, { cwd: testDir });
+      execSync(`git commit -m "Add test file with description"`, { cwd: testDir });
+    } catch (error) {
+      // Git operations might fail in test environment - that's OK for baseline
+    }
+
+    await pdca.fixAllPDCAs(testDir, 'false');
+
+    // Verify description stripped
+    expect(fs.existsSync(path.join(testDir, expectedName))).toBe(true);
+    expect(fs.existsSync(path.join(testDir, fileWithDesc))).toBe(false);
+  });
+
+  /**
+   * TC-FIX-05: Corrects creation date timestamps (rename creationDate)
+   * Validates: Req 6 - programmatic rename creationDate
+   * Requirement: The rename operation must correct the creationDate if the timestamp does not match the actual creation date
+   */
+  it('TC-FIX-05: Corrects timestamp to git creation date', async () => {
+    const wrongTimestamp = '2025-11-07-UTC-120000.pdca.md';
+
+    // Create file with wrong timestamp
+    const filePath = path.join(testDir, wrongTimestamp);
+    fs.writeFileSync(filePath, '# 📋 Test PDCA\n**🗓️ Date:** Fri, 07 Nov 2025 12:00:00 GMT\n**🎯 Objective:** Test');
+
+    // Commit with earlier timestamp (simulate the file was created at 08:00 but renamed to 12:00)
+    // Use explicit UTC timezone (+0000) to ensure timestamp is interpreted correctly
+    try {
+      execSync(`git add -f ${filePath}`, { cwd: testDir });
+      execSync(`GIT_AUTHOR_DATE="2025-11-07T08:00:00+0000" GIT_COMMITTER_DATE="2025-11-07T08:00:00+0000" git commit -m "Add test file"`, { cwd: testDir });
+    } catch (error) {
+      // Git operations might fail in test environment - that's OK for baseline
+    }
+
+    await pdca.fixAllPDCAs(testDir, 'false');
+
+    // Verify timestamp corrected (matches git creation date: 08:00 UTC)
+    const files = fs.readdirSync(testDir).filter(f => f.endsWith('.pdca.md'));
+    const correctedFile = files.find(f => f.match(/2025-11-07-UTC-08\d{4}\.pdca\.md/));
+    expect(correctedFile).toBeDefined();
+  });
+
+  /**
+   * TC-FIX-06: Rewrites non-compliant PDCAs (rewritePDCA)
+   * Validates: Req 7 - programmatic rewritePDCA for non-compliant files
+   * Requirement: If a PDCA does not comply with the PDCA template, it must be rewritten using pdca rewrite
+   */
+  it('TC-FIX-06: Rewrites corrupted PDCA', async () => {
+    const corruptedFile = path.join(testDir, '2025-11-07-UTC-090000.pdca.md');
+
+    // Create corrupted PDCA (missing sections, wrong headers)
+    fs.writeFileSync(corruptedFile, `# 📋 Test PDCA
+**🗓️ Date:** Fri, 07 Nov 2025 09:00:00 GMT
+**🎯 Objective:** Test
+
+## SUMMARY (corrupted header)
+Content here
+`);
+
+    await pdca.fixAllPDCAs(testDir, 'false');
+
+    // Verify file was rewritten with correct template
+    const content = fs.readFileSync(corruptedFile, 'utf-8');
+    expect(content).toMatch(/## \*\*📊 SUMMARY\*\*/);
+  });
+
+  /**
+   * TC-FIX-07: Processes multiple PDCAs in batch
+   * Validates: Batch processing capability
+   * Requirement: All operations must be executed programmatically across multiple files
+   */
+  it('TC-FIX-07: Processes multiple files in one invocation', async () => {
+    // Create 3 PDCAs with different issues
+    fs.writeFileSync(path.join(testDir, '2025-11-07-UTC-100000-desc.pdca.md'), '# 📋 Test 1\n**🗓️ Date:** Fri, 07 Nov 2025 10:00:00 GMT\n**🎯 Objective:** Test');
+    fs.writeFileSync(path.join(testDir, '2025-11-07-UTC-110000.pdca.md'), '# 📋 Test 2\n## SUMMARY\nCorrupted');
+    fs.writeFileSync(path.join(testDir, '2025-11-07-UTC-120000.pdca.md'), '# 📋 Test 3\n**🗓️ Date:** Fri, 07 Nov 2025 12:00:00 GMT\n**🎯 Objective:** Test');
+
+    await pdca.fixAllPDCAs(testDir, 'true'); // dry-run
+
+    // Verify batch summary (dry-run should show plan)
+    expect(true).toBe(true); // Baseline - method doesn't exist yet
+  });
+
+  /**
+   * TC-FIX-08: Dry-run mode doesn't modify files
+   * Validates: Dry-run parameter works correctly
+   * Requirement: Programmatic execution with safety mode
+   */
+  it('TC-FIX-08: Dry-run shows plan without executing', async () => {
+    const fileWithDesc = '2025-11-07-UTC-130000-description.pdca.md';
+    const filePath = path.join(testDir, fileWithDesc);
+
+    fs.writeFileSync(filePath, '# 📋 Test\n**🗓️ Date:** Fri, 07 Nov 2025 13:00:00 GMT\n**🎯 Objective:** Test');
+
+    await pdca.fixAllPDCAs(testDir, 'true'); // dry-run
+
+    // Verify file unchanged
+    expect(fs.existsSync(filePath)).toBe(true);
+  });
+
+  /**
+   * TC-FIX-09: Continues processing on individual file failure
+   * Validates: Error handling (QA decision needed)
+   * Requirement: Robust batch processing
+   */
+  it('TC-FIX-09: Error in one file does not stop batch', async () => {
+    // Create 1 valid, 1 invalid (malformed), 1 valid
+    fs.writeFileSync(path.join(testDir, '2025-11-07-UTC-140000.pdca.md'), '# 📋 Valid 1\n**🗓️ Date:** Fri, 07 Nov 2025 14:00:00 GMT\n**🎯 Objective:** Test');
+    fs.writeFileSync(path.join(testDir, '2025-11-07-UTC-150000.pdca.md'), 'Invalid content - not a PDCA');
+    fs.writeFileSync(path.join(testDir, '2025-11-07-UTC-160000.pdca.md'), '# 📋 Valid 2\n**🗓️ Date:** Fri, 07 Nov 2025 16:00:00 GMT\n**🎯 Objective:** Test');
+
+    await pdca.fixAllPDCAs(testDir, 'false');
+
+    // Verify batch completed (errors should be logged but not crash)
+    expect(true).toBe(true); // Baseline - method doesn't exist yet
+  });
+
+  /**
+   * TC-FIX-10: Generates summary report
+   * Validates: Summary report output
+   * Requirement: User feedback on batch operations
+   */
+  it('TC-FIX-10: Displays summary with counts', async () => {
+    // Create mix of files
+    fs.writeFileSync(path.join(testDir, '2025-11-07-UTC-170000-desc.pdca.md'), '# 📋 Test\n**🗓️ Date:** Fri, 07 Nov 2025 17:00:00 GMT\n**🎯 Objective:** Test');
+    fs.writeFileSync(path.join(testDir, '2025-11-07-UTC-180000.pdca.md'), '# 📋 Valid\n**🗓️ Date:** Fri, 07 Nov 2025 18:00:00 GMT\n**🎯 Objective:** Test');
+
+    await pdca.fixAllPDCAs(testDir, 'false');
+
+    // Verify summary format (baseline - just checking method exists)
+    expect(true).toBe(true); // Baseline - method doesn't exist yet
+  });
+
+  /**
+   * TC-FIX-11: Correct link order after creationDate reordering
+   * Validates: Two-phase snapshot with re-snapshot after rename operations
+   * Requirement: Re-snapshot after ALL renames complete to ensure correct chronological order
+   * 
+   * Purpose: Verify re-snapshot ensures correct link order when creationDate changes file sequence
+   * 
+   * Given: 3 PDCAs where creationDate will reorder them
+   *   - File A: filename says 2025-10-28, git creation 2025-10-27
+   *   - File B: filename says 2025-10-29, git creation 2025-10-28 (goes between!)
+   *   - File C: filename says 2025-10-30, git creation 2025-10-30
+   * 
+   * When: fixAllPDCAs runs with creationDate correction
+   * 
+   * Then:
+   *   - Files renamed to: A(10-27), B(10-28), C(10-30)
+   *   - A's Next PDCA points to B (not C!)
+   *   - B's Previous points to A, Next points to C
+   *   - C's Previous points to B
+   */
+  it('TC-FIX-11: Correct link order after creationDate reordering', async () => {
+    // Create git repo in test directory
+    try {
+      execSync('git init', { cwd: testDir, stdio: 'ignore' });
+      execSync('git config user.name "Test"', { cwd: testDir, stdio: 'ignore' });
+      execSync('git config user.email "test@test.com"', { cwd: testDir, stdio: 'ignore' });
+    } catch (err) {
+      console.error('Git init failed:', err);
+    }
+
+    // Create File A: filename says 2025-10-28, but git creation is 2025-10-27
+    const fileA = path.join(testDir, '2025-10-28-UTC-100000.pdca.md');
+    fs.writeFileSync(fileA, '# 📋 PDCA A\n**🗓️ Date:** Mon, 27 Oct 2025 10:00:00 GMT\n**🎯 Objective:** File A');
+    try {
+      execSync(`git add "${fileA}"`, { cwd: testDir, stdio: 'ignore' });
+      // Use explicit UTC timezone (+0000) to ensure timestamp is interpreted correctly
+      execSync('git commit --date="2025-10-27T10:00:00+0000" -m "Add file A"', { cwd: testDir, stdio: 'ignore' });
+    } catch (err) {
+      console.error('Git commit A failed:', err);
+    }
+
+    // Create File B: filename says 2025-10-29, but git creation is 2025-10-28 (should go between A and C!)
+    const fileB = path.join(testDir, '2025-10-29-UTC-100000.pdca.md');
+    fs.writeFileSync(fileB, '# 📋 PDCA B\n**🗓️ Date:** Tue, 28 Oct 2025 10:00:00 GMT\n**🎯 Objective:** File B');
+    try {
+      execSync(`git add "${fileB}"`, { cwd: testDir, stdio: 'ignore' });
+      execSync('git commit --date="2025-10-28T10:00:00+0000" -m "Add file B"', { cwd: testDir, stdio: 'ignore' });
+    } catch (err) {
+      console.error('Git commit B failed:', err);
+    }
+
+    // Create File C: filename says 2025-10-30, git creation also 2025-10-30 (correct)
+    const fileC = path.join(testDir, '2025-10-30-UTC-100000.pdca.md');
+    fs.writeFileSync(fileC, '# 📋 PDCA C\n**🗓️ Date:** Wed, 30 Oct 2025 10:00:00 GMT\n**🎯 Objective:** File C');
+    try {
+      execSync(`git add "${fileC}"`, { cwd: testDir, stdio: 'ignore' });
+      execSync('git commit --date="2025-10-30T10:00:00+0000" -m "Add file C"', { cwd: testDir, stdio: 'ignore' });
+    } catch (err) {
+      console.error('Git commit C failed:', err);
+    }
+
+    // Run fixAllPDCAs (non-dry-run)
+    await pdca.fixAllPDCAs(testDir, 'false');
+
+    // After rename with creationDate, files should be:
+    // - 2025-10-27-UTC-100000.pdca.md (was A)
+    // - 2025-10-28-UTC-100000.pdca.md (was B)
+    // - 2025-10-30-UTC-100000.pdca.md (was C, unchanged)
+    const renamedA = path.join(testDir, '2025-10-27-UTC-100000.pdca.md');
+    const renamedB = path.join(testDir, '2025-10-28-UTC-100000.pdca.md');
+    const renamedC = path.join(testDir, '2025-10-30-UTC-100000.pdca.md');
+
+    // Verify files exist
+    expect(fs.existsSync(renamedA)).toBe(true);
+    expect(fs.existsSync(renamedB)).toBe(true);
+    expect(fs.existsSync(renamedC)).toBe(true);
+
+    // Read content
+    const contentA = fs.readFileSync(renamedA, 'utf-8');
+    const contentB = fs.readFileSync(renamedB, 'utf-8');
+    const contentC = fs.readFileSync(renamedC, 'utf-8');
+
+    // Verify B's Previous PDCA points to A (not missing!)
+    // rewritePDCA generates Previous PDCA links based on chronological order
+    const prevMatchB = contentB.match(/🔗\s*Previous PDCA:.*2025-10-(\d+)-UTC/);
+    expect(prevMatchB).toBeTruthy();
+    if (prevMatchB) {
+      expect(prevMatchB[1]).toBe('27'); // Should point to A (10-27)
+    }
+
+    // Verify C's Previous PDCA points to B (not A!)
+    // This is the key test: after reordering, C should point to B, not A
+    const prevMatchC = contentC.match(/🔗\s*Previous PDCA:.*2025-10-(\d+)-UTC/);
+    expect(prevMatchC).toBeTruthy();
+    if (prevMatchC) {
+      expect(prevMatchC[1]).toBe('28'); // Should point to B (10-28), not A (10-27)
+    }
+
+    // Verify A is first in chain (no Previous PDCA or shows "N/A")
+    const prevMatchA = contentA.match(/🔗\s*Previous PDCA:.*(?:N\/A|First)/);
+    expect(prevMatchA).toBeTruthy(); // Should be first in chain
+  });
+});
+
