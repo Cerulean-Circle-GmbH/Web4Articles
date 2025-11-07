@@ -7014,6 +7014,7 @@ export class DefaultPDCA implements PDCA {
    * Intelligently map recognizable content patterns to template sections
    * This method enhances content recovery by identifying subsections like
    * "Artifact Links" and "QA Decisions" and placing them in the correct template location
+   * with smart prevention of duplicates
    * @cliHide
    */
   private mapIntelligentContent(
@@ -7031,11 +7032,36 @@ export class DefaultPDCA implements PDCA {
     const artifactLinksPattern = /### \*\*Artifact Links\*\*/i;
     const qaDecisionsPattern = /### (?:\*\*)?(?:To TRON: )?QA Decisions(?: required)?(?:\*\*)?/i;
     
+    // Step 1: Normalize QA Decisions in already-extracted SUMMARY section
+    if (mappedSections['📊 SUMMARY']) {
+      mappedSections['📊 SUMMARY'] = mappedSections['📊 SUMMARY'].replace(
+        /### (?:\*\*)?(?:To TRON: )?QA Decisions(?: required)?(?:\*\*)?\s*\n/gi,
+        '### **To TRON: QA Decisions required**\n'
+      );
+    }
+    
+    // Step 2: Process unmappable content for intelligent mapping
     for (const content of unmappableContent) {
       let wasMapped = false;
       
       // Check if this unmappable content contains Artifact Links or QA Decisions
       if (artifactLinksPattern.test(content) || qaDecisionsPattern.test(content)) {
+        // Check if SUMMARY section already exists
+        const summaryExists = mappedSections['📊 SUMMARY'];
+        
+        // Smart Prevention: Check if this content already exists in SUMMARY
+        const isDuplicate = summaryExists && (
+          (artifactLinksPattern.test(content) && artifactLinksPattern.test(summaryExists)) ||
+          (qaDecisionsPattern.test(content) && qaDecisionsPattern.test(summaryExists))
+        );
+        
+        if (isDuplicate) {
+          // Skip this content - it's already in SUMMARY section
+          // Don't add it to trulyUnmappable either (it's already mapped)
+          wasMapped = true;
+          continue;
+        }
+        
         // This should go in SUMMARY section
         if (!mappedSections['📊 SUMMARY']) {
           mappedSections['📊 SUMMARY'] = '';

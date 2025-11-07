@@ -1022,4 +1022,109 @@ SUMMARY Section (missing header)
       expect(recoveredSection).not.toContain('Decision 1: Completed');
     }
   });
+
+  test("TC-DEDUP-01: Prevents duplicate Artifact Links when already in SUMMARY", async () => {
+    const pdca = new DefaultPDCA();
+    const sessionPath = path.join(process.cwd(), "temp", "test-dedup", `session-${Date.now()}`);
+    fs.mkdirSync(sessionPath, { recursive: true });
+    
+    const testPath = path.join(sessionPath, "2025-11-07-UTC-070000.pdca.md");
+    
+    // Corrupted PDCA with duplicate Artifact Links:
+    // 1. One in a proper SUMMARY section (will be extracted by extractAllContent)
+    // 2. One in orphaned content (will be processed by mapIntelligentContent)
+    const corruptedWithDuplicates = `# 📋 **PDCA Cycle: Test - Test**
+
+**🗓️ Date:** Fri, 07 Nov 2025 06:00:00 GMT  
+**🎯 Objective:** Test deduplication  
+
+## **📊 SUMMARY**
+
+### **Artifact Links**
+- **PDCA Document:** [GitHub](https://github.com/test/file.md) | [§/test/file.md](./file.md)
+- **Implementation:** Some implementation link
+
+---
+
+Orphaned content area (broken structure)
+
+### **Artifact Links**
+- **PDCA Document:** [GitHub](https://github.com/test/file.md) | [§/test/file.md](./file.md)
+- **Implementation:** Some implementation link
+
+### **To TRON: QA Decisions required**
+- [x] Decision 1: Completed`;
+
+    fs.writeFileSync(testPath, corruptedWithDuplicates, 'utf-8');
+
+    // Action: rewritePDCA with smart prevention
+    await pdca.rewritePDCA(testPath);
+
+    // Assert: Artifact Links appear only ONCE in SUMMARY section
+    const rewritten = fs.readFileSync(testPath, 'utf-8');
+    
+    // Count occurrences of "### **Artifact Links**"
+    const artifactLinksMatches = rewritten.match(/### \*\*Artifact Links\*\*/g);
+    expect(artifactLinksMatches).toBeTruthy();
+    expect(artifactLinksMatches?.length).toBe(1); // Should appear exactly once
+    
+    // Count occurrences of the PDCA Document link
+    const pdcaDocMatches = rewritten.match(/\*\*PDCA Document:\*\* \[GitHub\]/g);
+    expect(pdcaDocMatches).toBeTruthy();
+    expect(pdcaDocMatches?.length).toBe(1); // Should appear exactly once, not twice
+    
+    // Verify it's in SUMMARY section
+    expect(rewritten).toContain('## **📊 SUMMARY**');
+    const summaryStart = rewritten.indexOf('## **📊 SUMMARY**');
+    const nextSection = rewritten.indexOf('## **📋 PLAN**', summaryStart);
+    const summarySection = rewritten.substring(summaryStart, nextSection);
+    expect(summarySection).toContain('### **Artifact Links**');
+    expect(summarySection).toContain('**PDCA Document:** [GitHub](https://github.com/test/file.md)');
+  });
+
+  test("TC-DEDUP-02: Prevents duplicate QA Decisions when already in SUMMARY", async () => {
+    const pdca = new DefaultPDCA();
+    const sessionPath = path.join(process.cwd(), "temp", "test-dedup", `session-${Date.now()}`);
+    fs.mkdirSync(sessionPath, { recursive: true });
+    
+    const testPath = path.join(sessionPath, "2025-11-07-UTC-070100.pdca.md");
+    
+    // Corrupted PDCA with QA Decisions appearing twice
+    const corruptedWithDuplicates = `# 📋 **PDCA Cycle: Test - Test**
+
+**🗓️ Date:** Fri, 07 Nov 2025 06:01:00 GMT  
+**🎯 Objective:** Test QA deduplication  
+
+## **📊 SUMMARY**
+
+### QA Decisions
+- [x] Decision 1: Done
+- [ ] Decision 2: Pending
+
+---
+
+Orphaned area
+
+### **To TRON: QA Decisions required**
+- [x] Decision 1: Done
+- [ ] Decision 2: Pending`;
+
+    fs.writeFileSync(testPath, corruptedWithDuplicates, 'utf-8');
+
+    // Action: rewritePDCA with smart prevention
+    await pdca.rewritePDCA(testPath);
+
+    // Assert: QA Decisions appear only ONCE (normalized)
+    const rewritten = fs.readFileSync(testPath, 'utf-8');
+    
+    // Count occurrences of QA Decisions header (in any format)
+    const qaMatches = rewritten.match(/### \*\*To TRON: QA Decisions required\*\*/g);
+    expect(qaMatches).toBeTruthy();
+    expect(qaMatches?.length).toBe(1); // Should appear exactly once
+    
+    // Count occurrences of "Decision 1: Done"
+    const decision1Matches = rewritten.match(/Decision 1: Done/g);
+    expect(decision1Matches).toBeTruthy();
+    expect(decision1Matches?.length).toBe(1); // Should NOT be duplicated
+  });
 });
