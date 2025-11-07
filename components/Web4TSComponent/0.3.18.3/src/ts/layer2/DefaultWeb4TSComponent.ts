@@ -1976,26 +1976,6 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   }
 
   /**
-   * Compare two semantic versions FOR HIERARCHY CHECK ONLY
-   * Returns: -1 if v1 < v2, 0 if v1 == v2, 1 if v1 > v2
-   * @cliHide
-   */
-  private compareVersionsForHierarchy(v1: string, v2: string): number {
-    const parts1 = v1.split('.').map(Number);
-    const parts2 = v2.split('.').map(Number);
-    
-    for (let i = 0; i < 4; i++) {
-      const p1 = parts1[i] || 0;
-      const p2 = parts2[i] || 0;
-      
-      if (p1 > p2) return 1;
-      if (p1 < p2) return -1;
-    }
-    
-    return 0; // Equal
-  }
-
-  /**
    * Get current version from model (single source of truth)
    * Model is initialized from directory name in constructor
    */
