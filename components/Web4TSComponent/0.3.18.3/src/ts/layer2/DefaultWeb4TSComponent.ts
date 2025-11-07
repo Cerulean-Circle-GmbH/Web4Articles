@@ -1606,10 +1606,10 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliExample web4tscomponent on Unit 0.3.0.5 test
    */
   async test(scope: string = 'all', ...references: string[]): Promise<this> {
-    // MODE 1: Test shell (bash completion testing in isolated test/data)
-    // if (scope === 'shell') {
-    //   return await this.testShell(...references);
-    // }
+    // MODE 1: Test shell (bash shell testing in isolated test/data)
+    if (scope === 'shell') {
+      return await this.testShell(references[0]);
+    }
     
     // MODE 1.5: Completion test suite (end-to-end TAB completion tests)
     if (scope === 'completion') {
@@ -1744,6 +1744,11 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     shellScripts.forEach((script: string) => console.log(`   - ${script}`));
     console.log();
     
+    // Determine source.env location based on test isolation
+    const sourceEnvPath = isTestIsolation 
+      ? path.join(componentRoot, 'test', 'data', 'source.env')
+      : path.join(componentRoot, 'source.env');
+    
     // Execute each shell script
     let failedTests = 0;
     for (const script of shellScripts) {
@@ -1751,10 +1756,12 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       console.log(`▶️  Executing: ${script}`);
       
       try {
-        execSync(`bash "${scriptPath}"`, {
+        // Use bash --norc and source source.env
+        const bashCommand = `source "${sourceEnvPath}" && bash "${scriptPath}"`;
+        execSync(bashCommand, {
           cwd: componentRoot,
           stdio: 'inherit',
-          shell: process.env.SHELL || '/bin/bash',
+          shell: 'bash --norc',
           env: {
             ...process.env,
             PROJECT_ROOT: this.model.projectRoot,
