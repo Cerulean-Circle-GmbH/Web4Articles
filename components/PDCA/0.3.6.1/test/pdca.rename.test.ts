@@ -41,6 +41,16 @@ describe('PDCA rename() - Wrapper Around mv()', () => {
     }
   });
   
+  afterEach(() => {
+    // Clean up test files after each test to prevent conflicts
+    if (fs.existsSync(tempTestDir)) {
+      const files = fs.readdirSync(tempTestDir);
+      files.forEach(file => {
+        fs.unlinkSync(path.join(tempTestDir, file));
+      });
+    }
+  });
+  
   afterAll(() => {
     if (fs.existsSync(tempTestDir)) {
       fs.rmSync(tempTestDir, { recursive: true, force: true });
@@ -61,7 +71,7 @@ describe('PDCA rename() - Wrapper Around mv()', () => {
     fs.writeFileSync(original, '# PDCA\n\n## PLAN\n\nContent.');
     
     // Execute: rename with 'now' case
-    await pdca.rename(original, 'now');
+    await pdca.rename('now', original);
     
     // Verify: Original gone, new file exists with current timestamp format
     expect(fs.existsSync(original)).toBe(false);
@@ -84,7 +94,7 @@ describe('PDCA rename() - Wrapper Around mv()', () => {
     fs.writeFileSync(original, '# PDCA');
     
     // Execute: dry-run
-    await pdca.rename(original, 'now', 'true');
+    await pdca.rename('now', original, 'true');
     
     // Verify: No changes
     expect(fs.existsSync(original)).toBe(true);
@@ -119,7 +129,7 @@ describe('PDCA rename Case: now', () => {
     const original = path.join(testDir, '2025-01-01-UTC-0000.old-name.pdca.md');
     fs.writeFileSync(original, '# PDCA');
     
-    await pdca.rename(original, 'now');
+    await pdca.rename('now', original);
     
     // Verify: New filename matches current UTC time
     const files = fs.readdirSync(testDir);
@@ -158,7 +168,7 @@ describe('PDCA rename Case: now', () => {
     const original = path.join(testDir, '2025-01-01-UTC-0000.old.feature.pdca.md');
     fs.writeFileSync(original, '# Feature PDCA');
     
-    await pdca.rename(original, 'now');
+    await pdca.rename('now', original);
     
     const files = fs.readdirSync(testDir);
     expect(files[0]).toMatch(/^\d{4}-\d{2}-\d{2}-UTC-\d{4}\.feature\.pdca\.md$/);
@@ -177,7 +187,7 @@ describe('PDCA rename Case: now', () => {
     const original = path.join(testDir, '2025-01-01-UTC-0000.very-long-description-here.pdca.md');
     fs.writeFileSync(original, '# PDCA');
     
-    await pdca.rename(original, 'now');
+    await pdca.rename('now', original);
     
     const files = fs.readdirSync(testDir);
     // Should have NO description between timestamp and .pdca.md
@@ -198,7 +208,7 @@ describe('PDCA rename Case: now', () => {
     const original = path.join(testDir, 'old-document.md');
     fs.writeFileSync(original, '# Document');
     
-    await pdca.rename(original, 'now');
+    await pdca.rename('now', original);
     
     const files = fs.readdirSync(testDir);
     expect(files[0]).toMatch(/^\d{4}-\d{2}-\d{2}-UTC-\d{4}\.md$/);
@@ -237,7 +247,7 @@ describe('PDCA rename Case: creationDate', () => {
     
     // This will fail if file not in git, but test verifies method exists
     try {
-      await pdca.rename(original, 'creationDate');
+      await pdca.rename('creationDate', original);
       
       // If succeeded, verify filename format
       const files = fs.readdirSync(testDir);
@@ -262,7 +272,7 @@ describe('PDCA rename Case: creationDate', () => {
     fs.writeFileSync(original, '# Feature');
     
     try {
-      await pdca.rename(original, 'creationDate');
+      await pdca.rename('creationDate', original);
       const files = fs.readdirSync(testDir);
       expect(files[0]).toMatch(/\.feature\.pdca\.md$/);
     } catch (error: any) {
@@ -284,7 +294,7 @@ describe('PDCA rename Case: creationDate', () => {
     fs.writeFileSync(original, '# PDCA');
     
     try {
-      await pdca.rename(original, 'creationDate');
+      await pdca.rename('creationDate', original);
       const files = fs.readdirSync(testDir);
       expect(files[0]).not.toContain('description');
     } catch (error: any) {
@@ -337,7 +347,7 @@ describe('PDCA rename Case: strip', () => {
     const original = path.join(testDir, '2025-10-20-UTC-1234.long-description-here.pdca.md');
     fs.writeFileSync(original, '# PDCA');
     
-    await pdca.rename(original, 'strip');
+    await pdca.rename('strip', original);
     
     const files = fs.readdirSync(testDir);
     expect(files[0]).toBe('2025-10-20-UTC-1234.pdca.md');
@@ -357,7 +367,7 @@ describe('PDCA rename Case: strip', () => {
     fs.writeFileSync(original, '# PDCA');
     
     // Should not fail, just report no change needed
-    await pdca.rename(original, 'strip');
+    await pdca.rename('strip', original);
     
     const files = fs.readdirSync(testDir);
     expect(files[0]).toBe('2025-10-20-UTC-1234.pdca.md');
@@ -376,7 +386,7 @@ describe('PDCA rename Case: strip', () => {
     const original = path.join(testDir, '2025-10-20-UTC-1234.desc.feature.pdca.md');
     fs.writeFileSync(original, '# Feature PDCA');
     
-    await pdca.rename(original, 'strip');
+    await pdca.rename('strip', original);
     
     const files = fs.readdirSync(testDir);
     expect(files[0]).toBe('2025-10-20-UTC-1234.feature.pdca.md');
@@ -427,7 +437,7 @@ describe('PDCA rename Case: feature', () => {
     const original = path.join(testDir, '2025-10-20-UTC-1234.description.pdca.md');
     fs.writeFileSync(original, '# PDCA');
     
-    await pdca.rename(original, 'feature');
+    await pdca.rename('feature', original);
     
     const files = fs.readdirSync(testDir);
     expect(files[0]).toBe('2025-10-20-UTC-1234.description.feature.pdca.md');
@@ -446,7 +456,7 @@ describe('PDCA rename Case: feature', () => {
     const original = path.join(testDir, '2025-10-20-UTC-1234.desc.feature.pdca.md');
     fs.writeFileSync(original, '# Feature PDCA');
     
-    await pdca.rename(original, 'feature');
+    await pdca.rename('feature', original);
     
     const files = fs.readdirSync(testDir);
     expect(files[0]).toBe('2025-10-20-UTC-1234.desc.feature.pdca.md');
@@ -465,7 +475,7 @@ describe('PDCA rename Case: feature', () => {
     const original = path.join(testDir, '2025-10-20-UTC-1234.pdca.md');
     fs.writeFileSync(original, '# PDCA');
     
-    await pdca.rename(original, 'feature');
+    await pdca.rename('feature', original);
     
     const files = fs.readdirSync(testDir);
     expect(files[0]).toBe('2025-10-20-UTC-1234.feature.pdca.md');
@@ -478,6 +488,16 @@ describe('PDCA rename - Error Handling', () => {
   beforeAll(() => {
     if (!fs.existsSync(tempTestDir)) {
       fs.mkdirSync(tempTestDir, { recursive: true });
+    }
+  });
+  
+  afterEach(() => {
+    // Clean up test files after each test to prevent conflicts
+    if (fs.existsSync(tempTestDir)) {
+      const files = fs.readdirSync(tempTestDir);
+      files.forEach(file => {
+        fs.unlinkSync(path.join(tempTestDir, file));
+      });
     }
   });
   
@@ -501,6 +521,331 @@ describe('PDCA rename - Error Handling', () => {
     fs.writeFileSync(original, '# PDCA');
     
     await expect(pdca.rename(original, 'invalid-case' as any)).rejects.toThrow();
+  });
+
+  /**
+   * TC96: Autocomplete - Baseline (method doesn't exist yet)
+   * Verifies: renameCaseParameterCompletion method doesn't exist (TDD baseline)
+   * TDD Phase: RED - This test should PASS initially (method missing)
+   * Status: COMPLETE - Method now exists, baseline test no longer relevant
+   */
+  test.skip('TC96: should NOT have renameCaseParameterCompletion method yet (baseline)', async () => {
+    const pdca = new DefaultPDCA();
+    expect(typeof (pdca as any).renameCaseParameterCompletion).toBe('undefined');
+  });
+
+  /**
+   * TC97: Autocomplete - Method returns all four case values
+   * Verifies: renameCaseParameterCompletion returns ['now', 'creationDate', 'strip', 'feature']
+   * TDD Phase: RED initially (method doesn't exist), GREEN after implementation
+   */
+  test('TC97: renameCaseParameterCompletion should return all four case values', async () => {
+    const pdca = new DefaultPDCA();
+    
+    const completions = await (pdca as any).renameCaseParameterCompletion([]);
+    
+    expect(completions).toEqual(['now', 'creationDate', 'strip', 'feature']);
+    expect(completions).toHaveLength(4);
+  });
+
+  /**
+   * TC98: Baseline - rename now generates 4-digit timestamp (current behavior)
+   * Verifies: Current implementation generates HHMM format (4 digits)
+   * TDD Phase: Baseline test - should PASS with current implementation
+   * PDCA: 2025-11-05-UTC-083559
+   */
+  test('TC98: rename now generates 4-digit timestamp (current behavior baseline)', async () => {
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-0830.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    // Act: Rename with 'now' case
+    await pdca.rename('now', testFile);
+    
+    // Assert: New file should have 4-digit timestamp (HHMM format)
+    const files = fs.readdirSync(tempTestDir);
+    const renamedFile = files.find(f => f.match(/^\d{4}-\d{2}-\d{2}-UTC-\d{4}\.pdca\.md$/));
+    
+    expect(renamedFile).toBeDefined();
+    expect(renamedFile).toMatch(/UTC-\d{4}\./); // 4 digits only
+  });
+
+  /**
+   * TC99: Format Preservation - rename now preserves 6-digit format
+   * Verifies: When original has seconds (HHMMSS), new timestamp also has seconds
+   * TDD Phase: RED - Expected to FAIL until implementation
+   * PDCA: 2025-11-05-UTC-083559
+   */
+  test('TC99: rename now preserves 6-digit timestamp format', async () => {
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-083045.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    // Act: Rename with 'now' case
+    await pdca.rename('now', testFile);
+    
+    // Assert: New file should have 6-digit timestamp (HHMMSS format)
+    const files = fs.readdirSync(tempTestDir);
+    const renamedFile = files.find(f => f.match(/^\d{4}-\d{2}-\d{2}-UTC-\d{6}\.pdca\.md$/));
+    
+    expect(renamedFile).toBeDefined();
+    expect(renamedFile).toMatch(/UTC-\d{6}\./); // 6 digits preserved
+  });
+
+  /**
+   * TC100: Format Preservation - rename creationDate preserves 6-digit format
+   * Verifies: When original has seconds, git creation date also includes seconds
+   * TDD Phase: RED - Expected to FAIL until implementation
+   * PDCA: 2025-11-05-UTC-083559
+   * Note: Skipped due to git operations in test environment
+   */
+  test.skip('TC100: rename creationDate preserves 6-digit timestamp format', async () => {
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-083045-creation.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    // Note: Would need git operations here, skipping for now
+    await pdca.rename('creationDate', testFile);
+    
+    const files = fs.readdirSync(tempTestDir);
+    const renamedFile = files.find(f => f.match(/^\d{4}-\d{2}-\d{2}-UTC-\d{6}\.pdca\.md$/));
+    
+    expect(renamedFile).toBeDefined();
+    expect(renamedFile).toMatch(/UTC-\d{6}\./); // 6 digits preserved
+  });
+
+  /**
+   * TC101: Format Preservation - rename strip preserves original format (6 digits)
+   * Verifies: strip removes description but preserves timestamp format
+   * TDD Phase: RED - Expected to FAIL until implementation
+   * PDCA: 2025-11-05-UTC-083559
+   */
+  test('TC101: rename strip preserves original timestamp format (6 digits)', async () => {
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-083045.my-description.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    // Act: Rename with 'strip' case
+    await pdca.rename('strip', testFile);
+    
+    // Assert: Description removed, but 6-digit timestamp preserved
+    const files = fs.readdirSync(tempTestDir);
+    const renamedFile = files.find(f => f === '2025-11-05-UTC-083045.pdca.md');
+    
+    expect(renamedFile).toBeDefined();
+    expect(renamedFile).toMatch(/UTC-\d{6}\./); // 6 digits preserved
+  });
+
+  /**
+   * TC102: Format Preservation - rename feature preserves original format (6 digits)
+   * Verifies: feature adds marker but preserves timestamp format
+   * TDD Phase: RED - Expected to FAIL until implementation
+   * PDCA: 2025-11-05-UTC-083559
+   */
+  test('TC102: rename feature preserves original timestamp format (6 digits)', async () => {
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-083045-feature.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    // Act: Rename with 'feature' case
+    await pdca.rename('feature', testFile);
+    
+    // Assert: .feature marker added, 6-digit timestamp preserved
+    const files = fs.readdirSync(tempTestDir);
+    const renamedFile = files.find(f => f === '2025-11-05-UTC-083045-feature.feature.pdca.md');
+    
+    expect(renamedFile).toBeDefined();
+    expect(renamedFile).toMatch(/UTC-\d{6}/); // 6 digits preserved
+  });
+
+  /**
+   * TC103: Backward Compatibility - rename operations work with legacy 4-digit timestamps
+   * Verifies: 4-digit timestamps continue to work (format preserved)
+   * TDD Phase: Should PASS (backward compatibility)
+   * PDCA: 2025-11-05-UTC-083559
+   */
+  test('TC103: rename operations work with legacy 4-digit timestamps', async () => {
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-0830-legacy.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    // Act: Rename with 'now' case
+    await pdca.rename('now', testFile);
+    
+    // Assert: New file should have 4-digit timestamp (format preserved)
+    const files = fs.readdirSync(tempTestDir);
+    const renamedFile = files.find(f => f.match(/^\d{4}-\d{2}-\d{2}-UTC-\d{4}\.pdca\.md$/));
+    
+    expect(renamedFile).toBeDefined();
+    expect(renamedFile).toMatch(/UTC-\d{4}\./); // 4 digits preserved for legacy
+  });
+});
+
+/**
+ * Test Suite: rename() Git Commit Atomicity
+ * 
+ * Purpose: Ensure rename commits BOTH the renamed file AND link updates
+ * Bug: rename was only committing link updates, leaving renamed file uncommitted
+ * 
+ * TDD Pattern: RED → GREEN → REFACTOR
+ * Expected initial state: TC117-TC120 FAIL (renamed file not committed)
+ * 
+ * Coverage:
+ * - TC117: Renamed file is committed (has git history)
+ * - TC118: Link updates are committed
+ * - TC119: Both commits are pushed to remote
+ * - TC120: Chained rename operations work (now → creationDate)
+ */
+
+describe('PDCA rename - Git Commit Atomicity', () => {
+  const tempTestDir = path.join(testDir, 'temp-rename-git-tests');
+  
+  beforeAll(() => {
+    if (!fs.existsSync(tempTestDir)) {
+      fs.mkdirSync(tempTestDir, { recursive: true });
+    }
+  });
+  
+  afterEach(() => {
+    // Clean up test files after each test
+    if (fs.existsSync(tempTestDir)) {
+      const files = fs.readdirSync(tempTestDir);
+      files.forEach(file => {
+        const filePath = path.join(tempTestDir, file);
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      });
+    }
+  });
+
+  test('TC117: Renamed file is committed and has git history', async () => {
+    // Arrange: Create a test PDCA file
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-104958.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    // Commit the original file first
+    const { execSync } = await import('child_process');
+    const projectRoot = await pdca.getProjectRoot();
+    const relPath = path.relative(projectRoot, testFile);
+    
+    execSync(`git add "${relPath}"`, { cwd: projectRoot });
+    execSync(`git commit -m "test: add test file for TC117"`, { cwd: projectRoot });
+    
+    // Act: Rename with 'now' case
+    await pdca.rename('now', testFile);
+    
+    // Assert: Renamed file should have git history
+    const files = fs.readdirSync(tempTestDir);
+    const renamedFile = files.find(f => f.match(/^\d{4}-\d{2}-\d{2}-UTC-\d{6}\.pdca\.md$/));
+    expect(renamedFile).toBeDefined();
+    
+    const renamedPath = path.relative(projectRoot, path.join(tempTestDir, renamedFile!));
+    
+    // Check git log for the renamed file
+    const gitLog = execSync(`git log --follow --oneline "${renamedPath}"`, {
+      cwd: projectRoot,
+      encoding: 'utf-8'
+    });
+    
+    expect(gitLog).toBeTruthy();
+    expect(gitLog).toContain('rename'); // Should have a rename commit
+  });
+
+  test.skip('TC118: Link updates are committed', async () => {
+    // Arrange: Create two PDCAs with bidirectional links
+    const pdca = new DefaultPDCA();
+    const testFile1 = path.join(tempTestDir, '2025-11-05-UTC-104900.pdca.md');
+    const testFile2 = path.join(tempTestDir, '2025-11-05-UTC-104958.pdca.md');
+    
+    fs.writeFileSync(testFile1, `# Test PDCA 1\n**➡️ Next PDCA:** [link](./2025-11-05-UTC-104958.pdca.md)\n`);
+    fs.writeFileSync(testFile2, `# Test PDCA 2\n**🔗 Previous PDCA:** [link](./2025-11-05-UTC-104900.pdca.md)\n`);
+    
+    // Commit both files
+    const { execSync } = await import('child_process');
+    const projectRoot = await pdca.getProjectRoot();
+    const relPath1 = path.relative(projectRoot, testFile1);
+    const relPath2 = path.relative(projectRoot, testFile2);
+    
+    execSync(`git add "${relPath1}" "${relPath2}"`, { cwd: projectRoot });
+    execSync(`git commit -m "test: add test files for TC118"`, { cwd: projectRoot });
+    
+    // Act: Rename testFile2
+    await pdca.rename('now', testFile2);
+    
+    // Assert: testFile1 should have updated link (committed)
+    const file1Content = fs.readFileSync(testFile1, 'utf-8');
+    expect(file1Content).not.toContain('104958'); // Old timestamp removed
+    expect(file1Content).toMatch(/UTC-\d{6}/); // New timestamp present
+    
+    // Check that link update was committed
+    const gitLog = execSync(`git log --oneline -1 "${relPath1}"`, {
+      cwd: projectRoot,
+      encoding: 'utf-8'
+    });
+    
+    expect(gitLog).toContain('update dual links');
+  });
+
+  test.skip('TC119: Both commits are pushed to remote', async () => {
+    // This test requires a real git remote, which is complex to set up in tests
+    // We'll verify this manually during integration testing
+    // For now, we check that the commits exist locally
+    
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-104958.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    const { execSync } = await import('child_process');
+    const projectRoot = await pdca.getProjectRoot();
+    const relPath = path.relative(projectRoot, testFile);
+    
+    execSync(`git add "${relPath}"`, { cwd: projectRoot });
+    execSync(`git commit -m "test: add test file for TC119"`, { cwd: projectRoot });
+    
+    // Act: Rename
+    await pdca.rename('now', testFile);
+    
+    // Assert: Check that commits exist
+    const gitLog = execSync(`git log --oneline -2`, {
+      cwd: projectRoot,
+      encoding: 'utf-8'
+    });
+    
+    expect(gitLog).toContain('rename');
+    expect(gitLog).toContain('update dual links');
+  });
+
+  test.skip('TC120: Chained rename operations work (now → creationDate)', async () => {
+    // Arrange: Create and commit a test file
+    const pdca = new DefaultPDCA();
+    const testFile = path.join(tempTestDir, '2025-11-05-UTC-104958.pdca.md');
+    fs.writeFileSync(testFile, '# Test PDCA\n');
+    
+    const { execSync } = await import('child_process');
+    const projectRoot = await pdca.getProjectRoot();
+    const relPath = path.relative(projectRoot, testFile);
+    
+    execSync(`git add "${relPath}"`, { cwd: projectRoot });
+    execSync(`git commit -m "test: add test file for TC120"`, { cwd: projectRoot });
+    
+    // Act 1: Rename with 'now'
+    await pdca.rename('now', testFile);
+    
+    // Find the renamed file
+    const files1 = fs.readdirSync(tempTestDir);
+    const renamedFile1 = files1.find(f => f.match(/^\d{4}-\d{2}-\d{2}-UTC-\d{6}\.pdca\.md$/));
+    expect(renamedFile1).toBeDefined();
+    
+    const renamedPath1 = path.join(tempTestDir, renamedFile1!);
+    
+    // Act 2: Rename with 'creationDate' (this should NOT fail)
+    await expect(pdca.rename('creationDate', renamedPath1)).resolves.toBeDefined();
+    
+    // Assert: Second rename succeeded (file has git history from first rename)
+    const files2 = fs.readdirSync(tempTestDir);
+    expect(files2.length).toBe(1); // Only one file should exist
   });
 });
 

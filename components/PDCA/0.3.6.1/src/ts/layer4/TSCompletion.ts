@@ -947,6 +947,7 @@ export class TSCompletion implements Completion {
 }
 
 // CLI entry point for completion
-if (process.argv[1] && process.argv[1].endsWith('TSCompletion.ts')) {
+// Support both .ts (ts-node) and .js (compiled) execution
+if (process.argv[1] && (process.argv[1].endsWith('TSCompletion.ts') || process.argv[1].endsWith('TSCompletion.js'))) {
   TSCompletion.start();
 }

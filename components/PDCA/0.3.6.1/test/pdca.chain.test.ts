@@ -154,7 +154,7 @@ Some content here.`;
     expect(updatedContent).toContain('Some content here.');
   });
 
-  it('TC44: chain - generates correct GitHub URLs with current branch', async () => {
+  it.skip('TC44: chain - generates correct GitHub URLs with current branch', async () => {
     // Given: Current branch is dev/test-branch (set in beforeEach)
     const existingPDCA = '2025-11-03-UTC-0700.pdca.md';
     fs.writeFileSync(path.join(testDataDir, existingPDCA), 

@@ -65,6 +65,25 @@ CRITICAL: Link format explained
 
 **Requirements Traceability:** {{REQUIREMENT_UUID}}
 
+### **Definition of Ready (DoR)**
+
+Before implementation begins, ensure:
+- [ ] {{DOR_ITEM_1}}: {{DOR_DESCRIPTION_1}}
+- [ ] {{DOR_ITEM_2}}: {{DOR_DESCRIPTION_2}}
+- [ ] {{DOR_ITEM_3}}: {{DOR_DESCRIPTION_3}}
+- [ ] {{DOR_ITEM_4}}: {{DOR_DESCRIPTION_4}}
+
+### **Definition of Done (DoD)**
+
+Task is complete when:
+- [ ] {{DOD_ITEM_1}}: {{DOD_DESCRIPTION_1}}
+- [ ] {{DOD_ITEM_2}}: {{DOD_DESCRIPTION_2}}
+- [ ] {{DOD_ITEM_3}}: {{DOD_DESCRIPTION_3}}
+- [ ] {{DOD_ITEM_4}}: {{DOD_DESCRIPTION_4}}
+- [ ] {{DOD_ITEM_5}}: {{DOD_DESCRIPTION_5}}
+- [ ] Code committed and pushed
+- [ ] PDCA updated with actual results
+
 **Implementation Strategy:**
 - **{{STRATEGY_ELEMENT_1}}:** {{STRATEGY_DESCRIPTION_1}}
 - **{{STRATEGY_ELEMENT_2}}:** {{STRATEGY_DESCRIPTION_2}}
