@@ -2279,8 +2279,6 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     console.log(`   File: ${file.name}`);
     console.log(`   Reference: ${ref}`);
     
-    // ✅ RADICAL OOP: Use target instance for component root
-    const target = this.model.context || this;
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated paths
     const componentRoot = this.model.targetComponentRoot!;
     
