@@ -273,8 +273,10 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     const cli = this.getCLI();
     
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Fallbacks for standalone use
+    // FIX: projectRoot should be parent of componentRoot, not the same!
     if (!this.model.projectRoot) {
-      this.model.projectRoot = this.model.componentRoot;
+      // componentRoot is /components/Name/Version, go up 3 levels to get project root
+      this.model.projectRoot = path.dirname(path.dirname(path.dirname(this.model.componentRoot)));
     }
     if (!this.model.targetDirectory) {
       this.model.targetDirectory = this.model.projectRoot;
@@ -4236,13 +4238,6 @@ ${'='.repeat(80)}
           console.log(`   Caller Version:   ${this.model.version?.toString()}`);
           console.log(`   Target Component: ${targetModel.component}`);
           console.log(`   Target Version:   ${targetModel.version?.toString()}`);
-          console.log();
-        }
-        
-        // Raw JSON (optional, for debugging)
-        if (process.env.DEBUG_VERBOSE === 'true') {
-          console.log(`🔍 Raw Model (DEBUG_VERBOSE=true):`);
-          console.log(JSON.stringify(targetModel, null, 2));
           console.log();
         }
         
