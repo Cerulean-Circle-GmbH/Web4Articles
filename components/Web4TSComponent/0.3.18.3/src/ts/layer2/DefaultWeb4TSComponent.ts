@@ -1775,7 +1775,8 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 # Sources component's source.env and adds test isolation PS1 prompt
 source "${componentSourceEnv}"
 
-# Override PS1 to show test isolation context
+# Component's source.env exports PS1, but bash --init-file needs it without export
+# Re-declare PS1 to override the export (this makes it work with --init-file)
 PS1="\\[\\033[1;36m\\][TEST ISOLATION ${this.model.component} ${this.model.version.toString()}]\\[\\033[0m\\] \\[\\033[1;32m\\]\\u@\\h\\[\\033[0m\\] \\[\\033[1;34m\\]\\w\\[\\033[0m\\] > "
 `;
         await fs.writeFile(wrapperPath, wrapperContent);
