@@ -76,7 +76,7 @@ describe('testShell() - Interactive Test Isolation Shell', () => {
     expect(content).toContain('export PROJECT_ROOT=');
     expect(content).toContain('export COMPONENT_ROOT=');
     expect(content).toContain('export IS_TEST_ISOLATION="true"');
-    expect(content).toContain('export PS1=');
+    expect(content).toContain('PS1='); // Without export for --init-file
     expect(content).toContain('[TEST ISOLATION');
     
     // Verify method chaining works

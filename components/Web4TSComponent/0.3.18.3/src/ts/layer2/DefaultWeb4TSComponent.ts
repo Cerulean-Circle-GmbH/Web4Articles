@@ -1758,8 +1758,8 @@ export PROJECT_ROOT="${testDataDir}"
 export COMPONENT_ROOT="${componentRoot}"
 export IS_TEST_ISOLATION="true"
 
-# Set prompt to show test isolation context
-export PS1="\\[\\033[1;36m\\][TEST ISOLATION ${this.model.component} ${this.model.version.toString()}]\\[\\033[0m\\] \\[\\033[1;32m\\]\\u@\\h\\[\\033[0m\\] \\[\\033[1;34m\\]\\w\\[\\033[0m\\] > "
+# Set prompt to show test isolation context (must be set WITHOUT export for --init-file)
+PS1="\\[\\033[1;36m\\][TEST ISOLATION ${this.model.component} ${this.model.version.toString()}]\\[\\033[0m\\] \\[\\033[1;32m\\]\\u@\\h\\[\\033[0m\\] \\[\\033[1;34m\\]\\w\\[\\033[0m\\] > "
 `;
       await fs.writeFile(sourceEnvPath, minimalSourceEnv);
       console.log(`✅ Created: ${sourceEnvPath}\n`);
