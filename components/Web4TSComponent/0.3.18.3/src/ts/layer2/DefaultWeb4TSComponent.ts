@@ -1782,7 +1782,8 @@ PS1="\\[\\033[1;36m\\][TEST ISOLATION ${this.model.component} ${this.model.versi
         await fs.writeFile(wrapperPath, wrapperContent);
         
         // Start bash shell with wrapper as init file
-        execSync(`bash --norc --init-file "${wrapperPath}"`, {
+        // NOTE: Do NOT use --norc! It prevents PS1 from working properly
+        execSync(`bash --init-file "${wrapperPath}"`, {
           cwd: testDataDir,
           stdio: 'inherit',
           env: {
