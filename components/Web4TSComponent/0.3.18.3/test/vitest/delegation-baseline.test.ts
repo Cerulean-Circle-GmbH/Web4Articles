@@ -30,7 +30,8 @@ function executeCLI(command: string): { stdout: string; stderr: string; exitCode
       cwd: projectRoot,
       encoding: 'utf-8',
       stdio: ['pipe', 'pipe', 'pipe'],
-      timeout: 30000
+      timeout: 30000,
+      shell: process.env.SHELL || '/bin/bash'
     });
     return { stdout, stderr: '', exitCode: 0 };
   } catch (error: any) {
@@ -43,7 +44,8 @@ function executeCLI(command: string): { stdout: string; stderr: string; exitCode
 }
 
 describe('Delegation Baseline Test - Infrastructure Methods', () => {
-  const componentCLI = 'idealminimalcomponent';
+  // Use latest version of IdealMinimalComponent for testing
+  const componentCLI = path.join(projectRoot, 'components/IdealMinimalComponent/latest/idealminimalcomponent');
 
   describe('✅ Working Infrastructure Methods (Fixed)', () => {
     it('should execute links command (delegation)', () => {
@@ -80,6 +82,17 @@ describe('Delegation Baseline Test - Infrastructure Methods', () => {
       // Exit code may be non-zero if tests fail, but command should be recognized
       expect(result.stdout).not.toContain('Unknown command');
       expect(result.stdout + result.stderr).toContain('test');
+    });
+
+    it('should execute info command (delegation)', () => {
+      const result = executeCLI(`${componentCLI} info`);
+      
+      expect(result.exitCode).toBe(0);
+      expect(result.stdout).toContain('Component Model Information');
+      expect(result.stdout).toContain('Component Identity');
+      expect(result.stdout).toContain('IdealMinimalComponent');
+      expect(result.stdout).not.toContain('Unknown command');
+      expect(result.stdout).not.toContain('Error:');
     });
   });
 
