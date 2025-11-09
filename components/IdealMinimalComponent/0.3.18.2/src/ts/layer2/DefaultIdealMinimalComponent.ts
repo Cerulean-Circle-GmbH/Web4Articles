@@ -261,70 +261,13 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
 
   /**
    * Show information about current IdealMinimalComponent state
-   * 
-   * Pretty prints this.model (or context.model if using "on" delegation).
-   * 
-   * Follows Radical OOP principles:
-   * - Uses this.model or this.model.context.model for state
-   * - No functional parameters for state
-   * - Returns this for method chaining
+   * Delegates to Web4TSComponent for DRY architecture and consistent model display
+   * @param topic Optional topic to show (e.g., 'standard', 'guidelines', 'model')
+   * @cliSyntax topic
+   * @cliDefault topic model
    */
-  async info(): Promise<this> {
-    // Determine which model to display (context if in "on" mode, otherwise this)
-    const targetModel = this.model.context?.model || this.model;
-    const isContextMode = !!this.model.context;
-    
-    // Pretty print the model
-    console.log(`
-${'='.repeat(80)}
-📊 IdealMinimalComponent Model Information
-${'='.repeat(80)}
-`);
-    
-    if (isContextMode) {
-      console.log(`🎯 Context Mode: Showing context.model (delegated component)\n`);
-    }
-    
-    // Component Identity
-    console.log(`🏷️  Component Identity:`);
-    console.log(`   Name:         ${targetModel.name || 'N/A'}`);
-    console.log(`   Component:    ${targetModel.component || 'N/A'}`);
-    console.log(`   Version:      ${targetModel.version?.toString() || 'N/A'}`);
-    console.log(`   UUID:         ${targetModel.uuid || 'N/A'}`);
-    console.log();
-    
-    // Paths
-    console.log(`📂 Paths:`);
-    console.log(`   Project Root:     ${targetModel.projectRoot || 'N/A'}`);
-    console.log(`   Component Root:   ${targetModel.componentRoot || 'N/A'}`);
-    console.log(`   Target Directory: ${targetModel.targetDirectory || 'N/A'}`);
-    console.log();
-    
-    // Timestamps (IdealMinimalComponent has these)
-    if (targetModel.createdAt || targetModel.updatedAt) {
-      console.log(`📅 Timestamps:`);
-      if (targetModel.createdAt) {
-        console.log(`   Created: ${targetModel.createdAt}`);
-      }
-      if (targetModel.updatedAt) {
-        console.log(`   Updated: ${targetModel.updatedAt}`);
-      }
-      console.log();
-    }
-    
-    // Context Info
-    if (isContextMode) {
-      console.log(`🔗 Context Delegation:`);
-      console.log(`   Caller Component: ${this.model.component}`);
-      console.log(`   Caller Version:   ${this.model.version?.toString()}`);
-      console.log(`   Target Component: ${targetModel.component}`);
-      console.log(`   Target Version:   ${targetModel.version?.toString()}`);
-      console.log();
-    }
-    
-    console.log(`${'='.repeat(80)}\n`);
-    
-    return this;
+  async info(topic: string = 'model'): Promise<this> {
+    return this.delegateToWeb4TS('info', topic);
   }
 
   /**

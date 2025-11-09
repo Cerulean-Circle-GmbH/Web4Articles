@@ -261,14 +261,13 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
 
   /**
    * Show information about current {{COMPONENT_NAME}} state
+   * Delegates to Web4TSComponent for DRY architecture and consistent model display
+   * @param topic Optional topic to show (e.g., 'standard', 'guidelines', 'model')
+   * @cliSyntax topic
+   * @cliDefault topic model
    */
-  async info(): Promise<this> {
-    console.log(`📋 {{COMPONENT_NAME}} Information:`);
-    console.log(`   UUID: ${this.model.uuid}`);
-    console.log(`   Name: ${this.model.name || 'Not set'}`);
-    console.log(`   Created: ${this.model.createdAt}`);
-    console.log(`   Updated: ${this.model.updatedAt}`);
-    return this;
+  async info(topic: string = 'model'): Promise<this> {
+    return this.delegateToWeb4TS('info', topic);
   }
 
   /**
