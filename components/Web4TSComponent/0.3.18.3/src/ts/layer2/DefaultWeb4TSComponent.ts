@@ -4167,7 +4167,11 @@ Standards:
    * @cliSyntax topic
    * @TODO cliDefault topic overview
    */
-  async info(topic: string = 'overview'): Promise<void> {
+  async info(topic: string = 'model'): Promise<this> {
+    // Determine which model to display (context if in "on" mode, otherwise this)
+    const targetModel = this.model.context?.model || this.model;
+    const isContextMode = !!this.model.context;
+    
     switch (topic) {
       case 'standard':
       case 'standards':
@@ -4177,18 +4181,76 @@ Standards:
       case 'guide':
         this.showGuidelines();
         break;
+      case 'model':
       case 'overview':
       default:
+        // Pretty print the model
         console.log(`
-🚀 Web4TSComponent 0.3.2.0 - Auto-Discovery CLI Architecture
-
-This is outdated hardcoded help text. The CLI now uses auto-discovery!
-Run './web4tscomponent' without arguments to see the auto-generated help.
-
-🎯 Auto-discovery CLI with Web4 compliance patterns
+${'='.repeat(80)}
+📊 Component Model Information
+${'='.repeat(80)}
 `);
+        
+        if (isContextMode) {
+          console.log(`🎯 Context Mode: Showing context.model (delegated component)\n`);
+        }
+        
+        // Component Identity
+        console.log(`🏷️  Component Identity:`);
+        console.log(`   Name:         ${targetModel.name || 'N/A'}`);
+        console.log(`   Component:    ${targetModel.component || 'N/A'}`);
+        console.log(`   Version:      ${targetModel.version?.toString() || 'N/A'}`);
+        console.log(`   UUID:         ${targetModel.uuid || 'N/A'}`);
+        console.log();
+        
+        // Paths
+        console.log(`📂 Paths:`);
+        console.log(`   Project Root:     ${targetModel.projectRoot || 'N/A'}`);
+        console.log(`   Component Root:   ${targetModel.componentRoot || 'N/A'}`);
+        console.log(`   Target Directory: ${targetModel.targetDirectory || 'N/A'}`);
+        console.log(`   Dependencies:     ${targetModel.dependencies || 'N/A'}`);
+        console.log();
+        
+        // Configuration
+        console.log(`⚙️  Configuration:`);
+        console.log(`   Origin:       ${targetModel.origin || 'N/A'}`);
+        console.log(`   Definition:   ${targetModel.definition || 'N/A'}`);
+        console.log();
+        
+        // Upgrade/Target Info
+        if (targetModel.toVersion || targetModel.targetComponentRoot) {
+          console.log(`🎯 Target/Upgrade Info:`);
+          if (targetModel.toVersion) {
+            console.log(`   To Version:   ${targetModel.toVersion}`);
+          }
+          if (targetModel.targetComponentRoot) {
+            console.log(`   Target Root:  ${targetModel.targetComponentRoot}`);
+          }
+          console.log();
+        }
+        
+        // Context Info
+        if (isContextMode) {
+          console.log(`🔗 Context Delegation:`);
+          console.log(`   Caller Component: ${this.model.component}`);
+          console.log(`   Caller Version:   ${this.model.version?.toString()}`);
+          console.log(`   Target Component: ${targetModel.component}`);
+          console.log(`   Target Version:   ${targetModel.version?.toString()}`);
+          console.log();
+        }
+        
+        // Raw JSON (optional, for debugging)
+        if (process.env.DEBUG_VERBOSE === 'true') {
+          console.log(`🔍 Raw Model (DEBUG_VERBOSE=true):`);
+          console.log(JSON.stringify(targetModel, null, 2));
+          console.log();
+        }
+        
+        console.log(`${'='.repeat(80)}\n`);
         break;
     }
+    
+    return this;
   }
 
 
