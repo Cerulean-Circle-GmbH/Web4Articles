@@ -1696,19 +1696,20 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   /**
    * Start an interactive bash shell in test isolation
    * 
-   * Opens a bash shell with --norc that sources test/data/source.env,
-   * making test/data the effective project root for manual testing and debugging.
+   * Opens a bash shell that sources the component's source.env with test isolation context.
+   * Uses test/data as the effective project root for manual testing and debugging.
    * 
    * This allows developers to manually test commands in the isolated environment
    * where test/data acts as the project root, preventing pollution of production files.
    * 
    * Follows Radical OOP principles:
    * - Uses this.model.componentRoot for Path Authority
-   * - Sets up test isolation environment automatically
+   * - Uses component's existing source.env (DRY - no duplication)
+   * - Sets custom PS1 prompt to show test isolation context
    * - Returns this for method chaining (after shell exits)
    * 
-   * @pdca 2025-11-07-UTC-0200.pdca.md
-   * @phase Phase 4 - Minimal Implementation (revised for interactive shell)
+   * @pdca 2025-11-09-UTC-1420.test-shell-use-component-source-env.pdca.md
+   * @phase Phase 2 - Use Component's source.env
    * @param version Optional version parameter (for future extensibility)
    * @cliSyntax version?
    * @cliExample web4tscomponent test shell
@@ -1718,7 +1719,12 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // Path Authority: use model state
     const componentRoot = this.model.componentRoot;
     const testDataDir = path.join(componentRoot, 'test', 'data');
-    const sourceEnvPath = path.join(testDataDir, 'source.env');
+    
+    // Use component's existing source.env (DRY!)
+    const componentSourceEnv = path.join(componentRoot, 'source.env');
+    
+    // Create temporary wrapper for test isolation PS1 prompt
+    const wrapperPath = path.join(testDataDir, '.bash_test_init');
     
     // Check if running in non-interactive mode (for automated tests)
     const isNonInteractive = process.env.TEST_NON_INTERACTIVE === 'true';
@@ -1726,7 +1732,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     console.log(`🐚 Starting ${isNonInteractive ? 'non-interactive' : 'interactive'} bash shell in test isolation...`);
     console.log(`📂 Component: ${this.model.component} ${this.model.version.toString()}`);
     console.log(`📂 Test Data Directory (PROJECT_ROOT): ${testDataDir}`);
-    console.log(`📂 Source Environment: ${sourceEnvPath}`);
+    console.log(`📂 Component Source Environment: ${componentSourceEnv}`);
     console.log();
     
     if (!isNonInteractive) {
@@ -1734,6 +1740,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       console.log(`   - Project root is: ${testDataDir}`);
       console.log(`   - All operations happen in test/data`);
       console.log(`   - Production files in components/ are NEVER touched`);
+      console.log(`   - Using component's source.env with custom PS1`);
       console.log();
       console.log(`🔧 Type 'exit' to return to normal shell`);
       console.log(`${'='.repeat(60)}\n`);
@@ -1746,23 +1753,11 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       return this;
     }
     
-    // Check if source.env exists
-    if (!existsSync(sourceEnvPath)) {
-      console.warn(`⚠️  source.env not found: ${sourceEnvPath}`);
-      console.log(`💡 Creating minimal source.env...`);
-      
-      // Create minimal source.env with PS1 prompt
-      const minimalSourceEnv = `#!/bin/bash
-# Minimal source.env for test isolation
-export PROJECT_ROOT="${testDataDir}"
-export COMPONENT_ROOT="${componentRoot}"
-export IS_TEST_ISOLATION="true"
-
-# Set prompt to show test isolation context (must be set WITHOUT export for --init-file)
-PS1="\\[\\033[1;36m\\][TEST ISOLATION ${this.model.component} ${this.model.version.toString()}]\\[\\033[0m\\] \\[\\033[1;32m\\]\\u@\\h\\[\\033[0m\\] \\[\\033[1;34m\\]\\w\\[\\033[0m\\] > "
-`;
-      await fs.writeFile(sourceEnvPath, minimalSourceEnv);
-      console.log(`✅ Created: ${sourceEnvPath}\n`);
+    // Check if component's source.env exists
+    if (!existsSync(componentSourceEnv)) {
+      console.error(`❌ Component source.env not found: ${componentSourceEnv}`);
+      console.log(`💡 Run 'web4tscomponent initProject' to create it`);
+      return this;
     }
     
     try {
@@ -1770,12 +1765,23 @@ PS1="\\[\\033[1;36m\\][TEST ISOLATION ${this.model.component} ${this.model.versi
         // Non-interactive mode: just verify setup and exit
         console.log(`✅ Test isolation shell setup verified`);
         console.log(`   - Working directory would be: ${testDataDir}`);
-        console.log(`   - Source environment: ${sourceEnvPath}`);
+        console.log(`   - Source environment: ${componentSourceEnv}`);
         console.log(`   - PROJECT_ROOT: ${testDataDir}`);
         console.log(`   - IS_TEST_ISOLATION: true`);
       } else {
-        // Interactive mode: start bash shell
-        execSync(`bash --norc --init-file "${sourceEnvPath}"`, {
+        // Interactive mode: Create temporary wrapper that sources component's source.env + sets PS1
+        const wrapperContent = `#!/bin/bash
+# Temporary wrapper for test isolation shell
+# Sources component's source.env and adds test isolation PS1 prompt
+source "${componentSourceEnv}"
+
+# Override PS1 to show test isolation context
+PS1="\\[\\033[1;36m\\][TEST ISOLATION ${this.model.component} ${this.model.version.toString()}]\\[\\033[0m\\] \\[\\033[1;32m\\]\\u@\\h\\[\\033[0m\\] \\[\\033[1;34m\\]\\w\\[\\033[0m\\] > "
+`;
+        await fs.writeFile(wrapperPath, wrapperContent);
+        
+        // Start bash shell with wrapper as init file
+        execSync(`bash --norc --init-file "${wrapperPath}"`, {
           cwd: testDataDir,
           stdio: 'inherit',
           env: {
@@ -1786,10 +1792,18 @@ PS1="\\[\\033[1;36m\\][TEST ISOLATION ${this.model.component} ${this.model.versi
           },
         });
         
+        // Clean up temporary wrapper
+        await fs.unlink(wrapperPath);
+        
         console.log(`\n${'='.repeat(60)}`);
         console.log(`✅ Exited test isolation shell`);
       }
     } catch (error) {
+      // Clean up wrapper on error
+      if (existsSync(wrapperPath)) {
+        await fs.unlink(wrapperPath);
+      }
+      
       if (!isNonInteractive) {
         // User exit (Ctrl+D or 'exit' command) is not an error
         console.log(`\n${'='.repeat(60)}`);

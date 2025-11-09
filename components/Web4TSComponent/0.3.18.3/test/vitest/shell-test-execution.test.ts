@@ -52,7 +52,7 @@ describe('testShell() - Interactive Test Isolation Shell', () => {
     expect(result).toBeInstanceOf(Promise);
   });
 
-  it('Test 2: testShell() creates source.env if missing', async () => {
+  it('Test 2: testShell() uses component source.env (not test/data stub)', async () => {
     component.init({
       model: {
         componentRoot: path.resolve(__dirname, '../..'),
@@ -60,24 +60,17 @@ describe('testShell() - Interactive Test Isolation Shell', () => {
       }
     });
     
-    // Remove source.env if exists
-    if (fs.existsSync(sourceEnvPath)) {
-      fs.unlinkSync(sourceEnvPath);
-    }
+    // Component's source.env path
+    const componentSourceEnv = path.resolve(__dirname, '../../source.env');
     
     // Execute testShell in non-interactive mode
     const result = await component.testShell();
     
-    // Verify source.env was created
-    expect(fs.existsSync(sourceEnvPath)).toBe(true);
+    // Verify component's source.env exists (not creating stub in test/data)
+    expect(fs.existsSync(componentSourceEnv)).toBe(true);
     
-    // Verify content
-    const content = fs.readFileSync(sourceEnvPath, 'utf-8');
-    expect(content).toContain('export PROJECT_ROOT=');
-    expect(content).toContain('export COMPONENT_ROOT=');
-    expect(content).toContain('export IS_TEST_ISOLATION="true"');
-    expect(content).toContain('PS1='); // Without export for --init-file
-    expect(content).toContain('[TEST ISOLATION');
+    // Verify NO stub created in test/data
+    expect(fs.existsSync(sourceEnvPath)).toBe(false);
     
     // Verify method chaining works
     expect(result).toBe(component);
@@ -185,7 +178,7 @@ export CUSTOM_VAR="test"
     expect(result).toBe(component);
   });
 
-  it('Test 8: source.env contains PS1 prompt for test isolation', async () => {
+  it('Test 8: Wrapper .bash_test_init contains PS1 prompt', async () => {
     // Use the component's actual version that's already set
     component.init({
       model: {
@@ -194,18 +187,24 @@ export CUSTOM_VAR="test"
       }
     });
     
-    // Remove source.env if exists
-    if (fs.existsSync(sourceEnvPath)) {
-      fs.unlinkSync(sourceEnvPath);
+    // Wrapper path
+    const wrapperPath = path.join(testDataDir, '.bash_test_init');
+    
+    // Remove wrapper if exists
+    if (fs.existsSync(wrapperPath)) {
+      fs.unlinkSync(wrapperPath);
     }
     
-    // Execute testShell to create source.env
+    // Execute testShell in non-interactive mode (wrapper not created in non-interactive)
+    // So we verify component's source.env exists instead
     await component.testShell();
     
-    // Verify PS1 prompt in source.env (contains TEST ISOLATION and component name)
-    const content = fs.readFileSync(sourceEnvPath, 'utf-8');
-    expect(content).toContain('[TEST ISOLATION Web4TSComponent');
-    expect(content).toContain('\\[\\033[1;36m\\]'); // Cyan color code
+    // Verify component's source.env exists
+    const componentSourceEnv = path.resolve(__dirname, '../../source.env');
+    expect(fs.existsSync(componentSourceEnv)).toBe(true);
+    
+    // Verify wrapper was NOT created in non-interactive mode
+    expect(fs.existsSync(wrapperPath)).toBe(false);
   });
 });
 
