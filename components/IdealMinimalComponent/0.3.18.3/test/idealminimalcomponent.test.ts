@@ -78,3 +78,74 @@ describe('IdealMinimalComponent CLI Location Resilience', () => {
     }
   });
 });
+
+describe('IdealMinimalComponent Delegated Infrastructure Methods', () => {
+  it('should execute info command (delegation to Web4TSComponent)', () => {
+    // Find project root
+    const findProjectRoot = (startDir: string): string => {
+      let currentDir = path.resolve(startDir);
+      while (currentDir !== path.dirname(currentDir)) {
+        if (existsSync(path.join(currentDir, 'package.json')) &&
+            existsSync(path.join(currentDir, 'components'))) {
+          return currentDir;
+        }
+        currentDir = path.dirname(currentDir);
+      }
+      return path.resolve(startDir);
+    };
+    
+    const projectRoot = findProjectRoot(__dirname);
+    const scriptsDir = path.join(projectRoot, 'scripts');
+    const cliScriptPath = path.join(scriptsDir, 'idealminimalcomponent');
+    
+    try {
+      const result = execSync('./idealminimalcomponent info', {
+        cwd: scriptsDir,
+        encoding: 'utf-8',
+        timeout: 10000
+      });
+      
+      expect(result).toContain('Component Model Information');
+      expect(result).toContain('Component Identity');
+      expect(result).toContain('IdealMinimalComponent');
+      console.log('   ✅ info() command works (delegated to Web4TSComponent)');
+    } catch (error: any) {
+      console.error('   ❌ info() command FAILED');
+      console.error('   Error:', error.message);
+      throw new Error(`info() command failed: ${error.message}`);
+    }
+  });
+
+  it('should execute links command (delegation to Web4TSComponent)', () => {
+    const findProjectRoot = (startDir: string): string => {
+      let currentDir = path.resolve(startDir);
+      while (currentDir !== path.dirname(currentDir)) {
+        if (existsSync(path.join(currentDir, 'package.json')) &&
+            existsSync(path.join(currentDir, 'components'))) {
+          return currentDir;
+        }
+        currentDir = path.dirname(currentDir);
+      }
+      return path.resolve(startDir);
+    };
+    
+    const projectRoot = findProjectRoot(__dirname);
+    const scriptsDir = path.join(projectRoot, 'scripts');
+    
+    try {
+      const result = execSync('./idealminimalcomponent links', {
+        cwd: scriptsDir,
+        encoding: 'utf-8',
+        timeout: 10000
+      });
+      
+      expect(result).toContain('Semantic Version Links');
+      console.log('   ✅ links() command works (delegated to Web4TSComponent)');
+    } catch (error: any) {
+      console.error('   ❌ links() command FAILED');
+      console.error('   Error:', error.message);
+      throw new Error(`links() command failed: ${error.message}`);
+    }
+  });
+});
+

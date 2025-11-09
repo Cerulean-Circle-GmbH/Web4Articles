@@ -11,13 +11,10 @@ import { MethodSignature } from '../layer3/MethodSignature.interface.js';
 import { existsSync, lstatSync, readlinkSync, readdirSync, statSync } from 'fs';
 import { join, dirname } from 'path';
 
-// Use latest version for delegation (always available)
-import { DefaultWeb4TSComponent } from '../../../../../Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js';
-
 export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
   // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Changed to public for Component interface compliance
   model: IdealMinimalComponentModel;
-  private web4ts?: DefaultWeb4TSComponent; // Lazy-initialized Web4TSComponent for delegation
+  private web4ts?: any; // Lazy-initialized Web4TSComponent for delegation (dynamic import, no static dependency)
   private user?: User; // Optional User service (lazy initialization) - @pdca 2025-11-03-1135.pdca.md
   private methods: Map<string, MethodSignature> = new Map(); // @pdca 2025-11-05-UTC-2301 - Match Web4TSComponent type
 
