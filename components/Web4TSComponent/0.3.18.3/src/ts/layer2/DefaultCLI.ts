@@ -2880,17 +2880,20 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // @pdca 2025-11-03-UTC-1430.pdca.md - Zero Knowledge, Zero Config, Just Scenarios and Models
     // Web4 Principle: NEVER rely on environment variables (use filesystem detection only)
     
-    // Traverse up looking for .git, package.json, AND components/ directory
-    // This distinguishes project root from component directory
+    // @pdca 2025-11-09-UTC-1540.test-isolation-project-root-detection.pdca.md
+    // FIX: Prioritize package.json + components/ for test isolation support
+    // Traverse up looking for package.json AND components/ directory
+    // This works for both production (has .git) and test isolation (no .git)
     let current = process.cwd();
     while (current !== "/") {
-      if (
-        existsSync(join(current, ".git")) &&
-        existsSync(join(current, "package.json")) &&
-        existsSync(join(current, "components"))  // ← CRITICAL: Project root has components/
-      ) {
+      const hasPackageJson = existsSync(join(current, "package.json"));
+      const hasComponents = existsSync(join(current, "components"));
+      
+      // Primary check: package.json + components/ (works in test isolation AND production)
+      if (hasPackageJson && hasComponents) {
         return current;
       }
+      
       current = join(current, "..");
     }
 
