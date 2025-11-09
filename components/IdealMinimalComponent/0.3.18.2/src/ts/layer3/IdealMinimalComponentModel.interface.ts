@@ -15,4 +15,5 @@ export interface IdealMinimalComponentModel extends Model {
   component?: string;        // Component name for CLI display
   version?: string;          // Component version for CLI display and test promotion
   targetDirectory?: string;  // Path Authority from CLI
+  context?: any;             // Context for "on" delegation mode (holds delegated component instance)
 }
