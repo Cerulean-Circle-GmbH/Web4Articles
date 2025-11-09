@@ -1716,6 +1716,30 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliExample web4tscomponent test shell 0.3.18.3
    */
   async testShell(version?: string): Promise<this> {
+    // If version parameter provided, delegate to that version's context
+    if (version) {
+      const targetVersion = SemanticVersion.fromString(version);
+      const componentsDir = path.dirname(this.model.componentRoot); // Go up one level from /components/Web4TSComponent/0.3.18.3 to /components/Web4TSComponent/
+      const targetComponentRoot = path.join(componentsDir, targetVersion.toString());
+      
+      // Check if target version exists
+      if (!existsSync(targetComponentRoot)) {
+        console.error(`❌ Version ${version} not found: ${targetComponentRoot}`);
+        return this;
+      }
+      
+      // Create context for target version and delegate
+      const context = new DefaultWeb4TSComponent().init();
+      context.model.version = targetVersion;
+      context.model.componentRoot = targetComponentRoot;
+      context.model.component = this.model.component;
+      context.model.projectRoot = this.model.projectRoot;
+      
+      // Delegate to target version's testShell (without version param to avoid recursion)
+      await context.testShell();
+      return this;
+    }
+    
     // Path Authority: use model state
     const componentRoot = this.model.componentRoot;
     const testDataDir = path.join(componentRoot, 'test', 'data');
@@ -1777,7 +1801,7 @@ source "${componentSourceEnv}"
 
 # Component's source.env exports PS1, but bash --init-file needs it without export
 # Re-declare PS1 to override the export (this makes it work with --init-file)
-PS1="\\[\\033[1;36m\\][TEST ISOLATION ${this.model.component} ${this.model.version.toString()}]\\[\\033[0m\\] \\[\\033[1;32m\\]\\u@\\h\\[\\033[0m\\] \\[\\033[1;34m\\]\\w\\[\\033[0m\\] > "
+PS1="\\[\\033[1;36m\\][TEST ISOLATION ${this.model.component} ${this.model.version.toString()}]\\[\\033[0m\\] \\[\\033[1;32m\\]\\u@\\h\\[\\033[0m\\] \\n\\[\\033[1;34m\\]\\w\\[\\033[0m\\] > "
 `;
         await fs.writeFile(wrapperPath, wrapperContent);
         
