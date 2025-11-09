@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
-echo "🚀 Starting Web4TSComponent (normal)..."
+echo "🚀 Starting IdealMinimalComponent (normal)..."
 
 # Check if rebuild is needed
-if [ ! -f "dist/ts/layer5/Web4TSComponentCLI.js" ] || find src -name "*.ts" -newer "dist/ts/layer5/Web4TSComponentCLI.js" 2>/dev/null | grep -q .; then
+if [ ! -f "dist/ts/layer5/IdealMinimalComponentCLI.js" ] || find src -name "*.ts" -newer "dist/ts/layer5/IdealMinimalComponentCLI.js" 2>/dev/null | grep -q .; then
     echo "🔧 Source files updated, rebuilding..."
     
     # Clean local artifacts only

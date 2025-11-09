@@ -266,6 +266,11 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // the component needs to know about the loaded context (targetComponent)
     (this.component!.model as any).context = targetComponent;
     
+    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Recalculate paths for context component
+    if (this.component && typeof (this.component as any).updateModelPaths === 'function') {
+      (this.component as any).updateModelPaths();
+    }
+    
     // ✅ FIX: Also set context on loaded component itself (self-reference)
     // This fixes context-aware methods (updateBuildSystem, start, etc.)
     // that need this.model.context to be set, regardless of which instance runs them
