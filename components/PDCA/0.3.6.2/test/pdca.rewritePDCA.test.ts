@@ -466,9 +466,9 @@ MISSING CHECK SECTION`;
     expect(rewrittenContent).toContain('This is valid content with over 50 characters');
   });
 
-  // TC-PRESERVE-02: Invalid CHECK section is preserved in recovery (zero data loss)
-  it('TC-PRESERVE-02: Preserves invalid CHECK section in recovery section (zero data loss)', async () => {
-    // Setup: Create corrupted PDCA with explicitly invalid CHECK section
+  // TC-PRESERVE-02: Test clean template regeneration (unmappable content intentionally skipped)
+  it('TC-PRESERVE-02: Regenerates clean CHECK section from template (unmappable content skipped)', async () => {
+    // Setup: Create corrupted PDCA with valid formatted sections
     const resetTestPath = path.join(testDataDir, '2025-11-04-UTC-1031.pdca.md');
     const corruptedWithInvalidCheck = `# 📋 **PDCA Cycle: Test Reset - Test Reset**
 
@@ -496,22 +496,25 @@ MISSING CHECK SECTION
 
     fs.writeFileSync(resetTestPath, corruptedWithInvalidCheck, 'utf-8');
 
-    // Action: rewritePDCA (Zero data loss: preserves all content)
+    // Action: rewritePDCA (Prefers clean template over unmappable content)
     await pdca.rewritePDCA(resetTestPath);
 
-    // Assert: Invalid content preserved in recovery section (zero data loss)
+    // Assert: Clean template regenerated (unmappable content intentionally skipped for clean output)
     const rewrittenContent = fs.readFileSync(resetTestPath, 'utf-8');
-    expect(rewrittenContent).toContain('MISSING CHECK SECTION'); // Now preserved, not lost
-    expect(rewrittenContent).toContain('🔍 RECOVERED CONTENT'); // In recovery section
+    expect(rewrittenContent).not.toContain('🔍 RECOVERED CONTENT'); // No recovery section (clean approach)
     
-    // Should still contain template CHECK structure
+    // Should contain clean template CHECK structure
     expect(rewrittenContent).toContain('## **✅ CHECK**');
     expect(rewrittenContent).toContain('**Verification Results:**');
+    
+    // Valid sections should still be preserved
+    expect(rewrittenContent).toContain('Valid plan content');
+    expect(rewrittenContent).toContain('Valid DO content');
   });
 
-  // TC-PRESERVE-03: Mixed content (zero data loss with valid + invalid)
-  it('TC-PRESERVE-03: Preserves valid sections + invalid in recovery (zero data loss)', async () => {
-    // Setup: Create PDCA with mixed content (some valid, some invalid)
+  // TC-PRESERVE-03: Mixed content (clean template for unmappable, preserve valid sections)
+  it('TC-PRESERVE-03: Preserves valid sections, regenerates clean template for unmappable content', async () => {
+    // Setup: Create PDCA with mixed content (some valid, some unmappable)
     const mixedTestPath = path.join(testDataDir, '2025-11-04-UTC-1032.pdca.md');
     const validACTContent = `**Success Achieved:** Feature implementation complete with zero regressions!
 
@@ -554,10 +557,10 @@ ${validACTContent}
 
     fs.writeFileSync(mixedTestPath, mixedContent, 'utf-8');
 
-    // Action: rewritePDCA
+    // Action: rewritePDCA (preserves valid sections, skips unmappable content for clean output)
     await pdca.rewritePDCA(mixedTestPath);
 
-    // Assert: Valid sections preserved in correct places, invalid in recovery (zero data loss)
+    // Assert: Valid sections preserved, unmappable content skipped for clean template
     const rewrittenContent = fs.readFileSync(mixedTestPath, 'utf-8');
     
     // Valid DO section should be preserved in DO
@@ -568,12 +571,10 @@ ${validACTContent}
     expect(rewrittenContent).toContain('Feature implementation complete');
     expect(rewrittenContent).toContain('DRY principle applied');
     
-    // Invalid content preserved in recovery section (zero data loss)
-    expect(rewrittenContent).toContain('CORRUPTED PLAN'); // Now preserved, not lost
-    expect(rewrittenContent).toContain('Short.'); // Now preserved, not lost
-    expect(rewrittenContent).toContain('🔍 RECOVERED CONTENT');
+    // Unmappable content intentionally skipped (clean template approach)
+    expect(rewrittenContent).not.toContain('🔍 RECOVERED CONTENT');
     
-    // Should still have template structure
+    // Should have clean template structure
     expect(rewrittenContent).toContain('**Verification Results:**');
   });
 

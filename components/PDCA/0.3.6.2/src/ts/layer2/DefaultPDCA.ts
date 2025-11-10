@@ -6379,11 +6379,18 @@ export class DefaultPDCA implements PDCA {
    * @param objective - PDCA objective
    * @param sessionDirectory - Optional custom session directory (absolute or relative path)
    * @param dryRun - 'true' for dry-run mode (preview only, no file creation)
+   * @param customTimestamp - Optional: custom timestamp in format YYYY-MM-DD-UTC-HHMMSS (for rewritePDCA)
    * @cliSyntax title objective <?sessionDirectory> <?dryRun>
    * @cliDefault dryRun "false"
    * @cliValues dryRun true false
    */
-  async createPDCA(title: string, objective: string, sessionDirectory?: string, dryRun: string = 'false'): Promise<this> {
+  async createPDCA(
+    title: string, 
+    objective: string, 
+    sessionDirectory?: string, 
+    dryRun: string = 'false',
+    customTimestamp?: string
+  ): Promise<this> {
     const fs = await import('fs');
     const path = await import('path');
     
@@ -6440,15 +6447,40 @@ export class DefaultPDCA implements PDCA {
       fs.mkdirSync(sessionDir, { recursive: true });
     }
     
-    // Step 3: Generate new PDCA filename with current UTC timestamp
-    const now = new Date();
-    const year = now.getUTCFullYear();
-    const month = String(now.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(now.getUTCDate()).padStart(2, '0');
-    const hour = String(now.getUTCHours()).padStart(2, '0');
-    const minute = String(now.getUTCMinutes()).padStart(2, '0');
-    const second = String(now.getUTCSeconds()).padStart(2, '0');
-    const timestamp = `${year}-${month}-${day}-UTC-${hour}${minute}${second}`;
+    // Step 3: Generate new PDCA filename with timestamp
+    let timestamp: string;
+    let now: Date;
+    
+    if (customTimestamp) {
+      // Use custom timestamp (for rewritePDCA to preserve original timestamp)
+      timestamp = customTimestamp;
+      // Parse custom timestamp to Date for UTC string generation
+      const match = customTimestamp.match(/(\d{4})-(\d{2})-(\d{2})-UTC-(\d{2})(\d{2})(\d{2})?/);
+      if (!match) {
+        throw new Error(`Invalid customTimestamp format: ${customTimestamp}. Expected: YYYY-MM-DD-UTC-HHMMSS`);
+      }
+      const [_, year, month, day, hour, minute, second = '00'] = match;
+      now = new Date(Date.UTC(
+        parseInt(year),
+        parseInt(month) - 1,
+        parseInt(day),
+        parseInt(hour),
+        parseInt(minute),
+        parseInt(second)
+      ));
+      console.log(`⏰ Using custom timestamp: ${timestamp} (for rewritePDCA)\n`);
+    } else {
+      // Generate current UTC timestamp
+      now = new Date();
+      const year = now.getUTCFullYear();
+      const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(now.getUTCDate()).padStart(2, '0');
+      const hour = String(now.getUTCHours()).padStart(2, '0');
+      const minute = String(now.getUTCMinutes()).padStart(2, '0');
+      const second = String(now.getUTCSeconds()).padStart(2, '0');
+      timestamp = `${year}-${month}-${day}-UTC-${hour}${minute}${second}`;
+    }
+    
     const newPDCAFilename = `${timestamp}.pdca.md`;
     const newPDCAPath = path.join(sessionDir, newPDCAFilename);
     
@@ -7067,18 +7099,21 @@ export class DefaultPDCA implements PDCA {
     }
     
     if (!isDryRun) {
-      // Step 6: Create NEW clean PDCA using createPDCA (all auto-population happens here!)
+      // Step 6: Create NEW clean PDCA using createPDCA with ORIGINAL timestamp
       //         This gives us: PDCA Document link, chain links, proper metadata, etc.
-      console.log(`📝 Creating new PDCA using createPDCA (all auto-population enabled)...\n`);
-      await this.createPDCA(title, objective, sessionDir, 'false');
+      //         AND creates the file with the correct original timestamp!
+      console.log(`📝 Creating new PDCA using createPDCA with original timestamp...\n`);
+      await this.createPDCA(title, objective, sessionDir, 'false', timestamp);
       
-      // Step 7: Find the newly created PDCA
-      const files = fs.readdirSync(sessionDir).filter((f: string) => f.endsWith('.pdca.md'));
-      const sortedFiles = files.sort();
-      const newPDCAFilename = sortedFiles[sortedFiles.length - 1];
-      const newPDCAPath = path.join(sessionDir, newPDCAFilename);
+      // Step 7: Find the newly created PDCA (now has the ORIGINAL timestamp!)
+      const expectedFilename = `${timestamp}.pdca.md`;
+      const newPDCAPath = path.join(sessionDir, expectedFilename);
       
-      console.log(`✅ Created new PDCA: ${newPDCAFilename}\n`);
+      if (!fs.existsSync(newPDCAPath)) {
+        throw new Error(`Failed to create PDCA: ${newPDCAPath}`);
+      }
+      
+      console.log(`✅ Created new PDCA with original timestamp: ${expectedFilename}\n`);
       
       // Step 8: Merge corrupted content into new PDCA
       console.log(`🔄 Merging corrupted content into new clean PDCA...\n`);
@@ -7157,28 +7192,15 @@ export class DefaultPDCA implements PDCA {
       fs.writeFileSync(newPDCAPath, newContent, 'utf-8');
       console.log(`✅ Placeholders populated\n`);
       
-      // Step 8.7: Rename new PDCA to match original timestamp (using git note if available)
-      console.log(`🔄 Restoring original timestamp to filename...\n`);
-      const expectedFilename = `${timestamp}.pdca.md`;
-      const finalPath = path.join(sessionDir, expectedFilename);
-      
-      // Step 8.8: Delete the corrupted file FIRST (before renaming to avoid conflict)
+      // Step 8.7: Delete the original corrupted file (if different from new file)
       if (fs.existsSync(filePath) && filePath !== newPDCAPath) {
         fs.unlinkSync(filePath);
-        console.log(`✅ Deleted corrupted file: ${path.basename(filePath)}\n`);
-      }
-      
-      // Step 8.9: Now safely rename new PDCA to match original timestamp
-      if (newPDCAPath !== finalPath) {
-        fs.renameSync(newPDCAPath, finalPath);
-        console.log(`✅ Renamed to original timestamp: ${expectedFilename}\n`);
-      } else {
-        console.log(`✅ Filename already matches original timestamp\n`);
+        console.log(`✅ Deleted original corrupted file: ${path.basename(filePath)}\n`);
       }
       
       console.log(`✨ PDCA rewrite complete!`);
-      console.log(`📦 Original timestamp preserved in git note AND filename`);
-      console.log(`📄 Final file: ${finalPath}\n`);
+      console.log(`📦 Original timestamp preserved in filename AND git note`);
+      console.log(`📄 Final file: ${newPDCAPath}\n`);
     } else {
       console.log(`✓ Would add git note to preserve timestamp: ${timestamp}`);
       console.log(`✓ Would create new PDCA using createPDCA`);
