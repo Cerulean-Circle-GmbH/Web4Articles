@@ -133,12 +133,15 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
     const { DefaultWeb4TSComponent } = web4tscomponentModule;
     const { SemanticVersion } = semanticVersionModule;
 
-    // ✅ CRITICAL: Initialize Web4TSComponent with THIS component's identity for delegation
+    // ✅ CRITICAL: Initialize Web4TSComponent for delegation
     // @pdca 2025-11-03-UTC-1237.pdca.md - Full delegation initialization
     // @pdca 2025-11-04-UTC-1630.pdca.md - Added projectRoot for version display fix
+    // @pdca 2025-11-10-UTC-1010.pdca.md - DO NOT override component identity!
+    // Web4TSComponent must retain its own identity ('Web4TSComponent')
+    // The delegating component's identity will be set via context in delegateToWeb4TS()
     this.web4ts = new DefaultWeb4TSComponent().init({
       model: {
-        component: this.model.component,           // THIS component's name
+        // DO NOT set 'component' here - let Web4TSComponent keep its own identity
         version: await SemanticVersion.fromString(this.model.version || '0.0.0.0'), // THIS component's version
         componentRoot: componentRoot,              // THIS component's root directory
         projectRoot: projectRoot,                  // Project root for Path Authority (version display needs this)
