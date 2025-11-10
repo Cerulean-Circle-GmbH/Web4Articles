@@ -91,6 +91,20 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
       await symlink(testVersion, linkPath, 'dir');
       console.log(`   🔗 Created symlink: Web4TSComponent/${linkName} → ${testVersion}`);
     }
+    
+    // ✅ CRITICAL: Create web4tscomponent CLI symlink in test/data/scripts
+    // @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
+    // Without this, 'web4tscomponent' command is not available in test isolation
+    const scriptsDir = path.join(testDataDir, 'scripts');
+    await mkdir(scriptsDir, { recursive: true });
+    
+    const web4tsComponentCLILink = path.join(scriptsDir, 'web4tscomponent');
+    if (existsSync(web4tsComponentCLILink)) {
+      await rm(web4tsComponentCLILink, { force: true });
+    }
+    // Create symlink to Web4TSComponent CLI
+    await symlink('../components/Web4TSComponent/latest/web4tscomponent', web4tsComponentCLILink);
+    console.log(`   🔗 Created CLI symlink: scripts/web4tscomponent → Web4TSComponent/latest/web4tscomponent`);
   });
 
   // ✅ NO afterAll - evidence persists for inspection
