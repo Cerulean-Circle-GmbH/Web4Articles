@@ -6228,7 +6228,22 @@ export class DefaultPDCA implements PDCA {
     // Read file content
     let content = fs.readFileSync(filePath, 'utf-8');
     const projectRoot = this.model.workingDirectory || await this.getProjectRoot();
-    const currentBranch = this.model.currentBranch || 'main';
+    
+    // Get current branch from git (branch-aware dual links)
+    // Fall back to model setting or 'main' if git fails (e.g., in tests)
+    let currentBranch: string;
+    try {
+      currentBranch = execSync('git branch --show-current', {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      if (!currentBranch) {
+        currentBranch = this.model.currentBranch || 'main';
+      }
+    } catch {
+      currentBranch = this.model.currentBranch || 'main';
+    }
+    
     const sessionDir = path.dirname(filePath);
     
     // Find current file's index in snapshot
