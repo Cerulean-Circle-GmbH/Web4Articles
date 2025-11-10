@@ -5774,11 +5774,12 @@ export class DefaultPDCA implements PDCA {
         let fixedThisFile = false;
         
         // Check for filename issues (description, wrong timestamp)
-        // Description pattern: after timestamp, has dash followed by lowercase letters
-        // e.g., "2025-10-28-UTC-100000-with-description.pdca.md"
+        // Description pattern: after timestamp, has dash OR dot followed by description
+        // e.g., "2025-10-28-UTC-100000-with-description.pdca.md" (dash separator)
+        // e.g., "2025-10-28-UTC-100000.with-description.pdca.md" (dot separator)
         // Should NOT match "-UTC" which is part of the timestamp
         // Support both HHMM (4 digits) and HHMMSS (6 digits) timestamp formats
-        const hasDescription = currentName.match(/-UTC-\d{4,6}-.+\.pdca\.md$/);  // Has extra text after timestamp
+        const hasDescription = currentName.match(/-UTC-\d{4,6}[.-].+\.pdca\.md$/);  // Has extra text after timestamp (dash or dot)
         const timestampMatch = currentName.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{4,6})/);
         
         if (hasDescription || timestampMatch) {
