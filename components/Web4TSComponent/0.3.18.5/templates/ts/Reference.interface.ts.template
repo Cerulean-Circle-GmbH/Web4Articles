@@ -1,0 +1,13 @@
+/**
+ * Reference<T> - Type-safe nullable reference wrapper
+ * Web4 pattern: All references are nullable by default
+ * 
+ * Usage: Reference<Default{{COMPONENT_NAME}}> = Default{{COMPONENT_NAME}} | null
+ * 
+ * Why: Makes nullable references explicit and type-safe
+ * Eliminates `any` type usage for component references
+ * 
+ * @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md - Added to templates
+ */
+export type Reference<T> = T | null;
+
