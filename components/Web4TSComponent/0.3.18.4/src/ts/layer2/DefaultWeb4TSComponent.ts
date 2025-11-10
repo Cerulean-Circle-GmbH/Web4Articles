@@ -547,6 +547,22 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     console.log(header + ' - Dynamic Method Discovery with Structured Documentation\n');
   }
 
+  /**
+   * Get the target component instance for operations
+   * Single source of truth for context resolution (Radical OOP principle)
+   * 
+   * @pdca 2025-11-10-UTC-1010.pdca.md - Radical OOP: getTarget() eliminates "functional shit"
+   * 
+   * Returns context if set (delegation mode), otherwise returns this
+   * This centralizes the "this.model.context || this" pattern into ONE method
+   * 
+   * @returns The target component instance to operate on
+   * @cliHide
+   */
+  protected getTarget(): DefaultWeb4TSComponent {
+    return (this.model.context as DefaultWeb4TSComponent) || this;
+  }
+
 
   // @pdca 2025-11-05-UTC-2100.pdca.md - REMOVED resolveComponentDirectory() - use path.join(model.componentsDirectory, name)
 
