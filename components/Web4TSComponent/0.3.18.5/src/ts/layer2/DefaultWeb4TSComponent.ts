@@ -1553,6 +1553,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     const availableVersions = this.getAvailableVersions(componentDir);
 
     console.log(`🔗 Semantic Version Links for ${target.model.component}:`);
+    console.log(`   📂 Searching in: ${this.colors.dim}${componentDir}${this.colors.reset}`);
     console.log(`   📊 Available versions: ${availableVersions.length}`);
     console.log('');
 
