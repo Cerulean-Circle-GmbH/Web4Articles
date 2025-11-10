@@ -304,24 +304,33 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
     // Delegating components set these properties BEFORE calling methods (in delegateToWeb4TS)
     // Direct mode (no delegation) calculates them here
-    if (!this.model.displayName) {
-      // Not set by delegating component, so we're in direct mode
+    // Check if display properties need calculation (either not set OR still at default values from init())
+    const needsDisplayCalculation = !this.model.isDelegation && 
+      (this.model.displayName === 'Web4TSComponent' || this.model.displayName === this.model.component);
+    
+    if (needsDisplayCalculation) {
+      // Direct mode: calculate display properties from model
       this.model.displayName = this.model.component;
       this.model.displayVersion = this.model.version.toString();
       this.model.isDelegation = false;
       this.model.delegationInfo = undefined;
       
       // Test isolation context (direct mode only, delegates set it themselves)
+      // @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
+      // Detect test isolation by path pattern (model-driven, no environment variables!)
       const target = this.getTarget();
-      if (target.model.isTestIsolation && target.model.projectRoot) {
+      if (target.model.projectRoot) {
         const match = target.model.projectRoot.match(/components\/([^/]+)\/([^/]+)\/test\/data/);
         if (match) {
           this.model.testIsolationContext = `${match[1]} v${match[2]}`;
+          this.model.isTestIsolation = true;
         } else {
-          this.model.testIsolationContext = 'test/data environment';
+          this.model.testIsolationContext = undefined;
+          this.model.isTestIsolation = false;
         }
       } else {
         this.model.testIsolationContext = undefined;
+        this.model.isTestIsolation = false;
       }
     }
     // else: Display properties already set by delegating component (Radical OOP!)
