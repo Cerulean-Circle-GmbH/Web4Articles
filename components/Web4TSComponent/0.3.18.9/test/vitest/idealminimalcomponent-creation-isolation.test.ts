@@ -523,6 +523,95 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
         console.log = originalLog;
       }
     });
+
+    it('should initialize component automatically in shCompletion for method discovery', async () => {
+      // @pdca 2025-11-10-UTC-2030.fix-upgrade-delegation.pdca.md
+      // Test that shCompletion override calls initComponent() for method discovery
+      
+      const cliPath = path.join(testComponentPath, `dist/ts/layer5/${testComponentName}CLI.js`);
+      const { IdealMinimalComponentCLI } = await import(cliPath);
+      const cli = new IdealMinimalComponentCLI();
+      
+      // DO NOT call initComponent() manually - shCompletion should do it
+      expect(cli.component).toBeFalsy(); // Component not initialized yet (undefined or null)
+      
+      // Capture stdout to check completion output
+      const originalLog = console.log;
+      const capturedOutput: string[] = [];
+      console.log = (...args: any[]) => {
+        capturedOutput.push(args.join(' '));
+      };
+      
+      try {
+        // Set up completion state for method completion (upgrade + i<TAB> should show 'info')
+        cli.model.completionCompCword = 1;
+        cli.model.completionCompWords = ['idealminimalcomponent', 'i'];
+        cli.model.completionCliName = 'idealminimalcomponent';
+        
+        // Run completion (should auto-initialize component and show delegated methods)
+        await (cli as any).shCompletion('1', 'idealminimalcomponent', 'i');
+        
+        console.log = originalLog;
+        
+        // After shCompletion, component should be initialized
+        expect(cli.component).toBeDefined();
+        
+        // Check that delegated methods appear (e.g., 'info', 'initProject', etc.)
+        const output = capturedOutput.join('\n');
+        expect(output).not.toContain('(no completions available)');
+        
+        // Should have WORD: lines with methods starting with 'i'
+        const wordLines = capturedOutput.filter(line => line.startsWith('WORD:'));
+        expect(wordLines.length).toBeGreaterThan(0);
+        
+        console.log(`   ✅ shCompletion auto-initializes component (${wordLines.length} methods discovered)`);
+      } finally {
+        console.log = originalLog;
+      }
+    });
+
+    it('should upgrade correct component when delegated', async () => {
+      // @pdca 2025-11-10-UTC-2030.fix-upgrade-delegation.pdca.md
+      // Test that idealminimalcomponent upgrade upgrades IdealMinimalComponent, not Web4TSComponent
+      
+      const cliPath = path.join(testComponentPath, `dist/ts/layer5/${testComponentName}CLI.js`);
+      const { IdealMinimalComponentCLI } = await import(cliPath);
+      const cli = new IdealMinimalComponentCLI();
+      
+      // Initialize component
+      await (cli as any).initComponent();
+      
+      // Capture stdout to check which component is upgraded
+      const originalLog = console.log;
+      const capturedOutput: string[] = [];
+      console.log = (...args: any[]) => {
+        capturedOutput.push(args.join(' '));
+      };
+      
+      try {
+        // Call upgrade (should upgrade IdealMinimalComponent, not Web4TSComponent)
+        await (cli.component as any).upgrade('nextBuild');
+        
+        console.log = originalLog;
+        
+        const output = capturedOutput.join('\n');
+        
+        // Should say "Upgrading IdealMinimalComponent"
+        expect(output).toContain('Upgrading IdealMinimalComponent');
+        expect(output).not.toContain('Upgrading Web4TSComponent');
+        
+        // Should create IdealMinimalComponent version
+        expect(output).toContain('IdealMinimalComponent 0.3.18.10 created successfully');
+        
+        // Verify the new version was created in test isolation
+        const upgradedPath = path.join(testDataDir, 'components', 'IdealMinimalComponent', '0.3.18.10');
+        expect(existsSync(upgradedPath)).toBe(true);
+        
+        console.log(`   ✅ Delegated upgrade creates correct component (IdealMinimalComponent 0.3.18.10)`);
+      } finally {
+        console.log = originalLog;
+      }
+    });
   });
 });
 
