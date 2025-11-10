@@ -1,0 +1,42 @@
+#!/bin/bash
+# {{COMPONENT_NAME}} CLI Tool - Simplified Wrapper using Smart Build System
+# Web4 pattern: Component shell wrapper with smart build delegation
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+
+# DRY: Source shared project root discovery library
+# @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md
+. "$SCRIPT_DIR/src/sh/lib-project-root.sh"
+# PROJECT_ROOT is now available (set by library)
+
+COMPONENT_VERSION="{{VERSION}}"
+COMPONENT_PATH="$PROJECT_ROOT/components/{{COMPONENT_NAME}}/$COMPONENT_VERSION"
+
+# Check if component exists
+if [ ! -d "$COMPONENT_PATH" ]; then
+    echo "❌ {{COMPONENT_NAME}} $COMPONENT_VERSION not found at $COMPONENT_PATH"
+    exit 1
+fi
+
+# Change to component directory and use smart build system
+cd "$COMPONENT_PATH"
+
+# Smart build: Skip for completion if CLI already exists (speed optimization)
+# @pdca 2025-11-06-UTC-0140.test-completion-hanging-regression.pdca.md
+CLI_PATH="dist/ts/layer5/{{COMPONENT_NAME}}CLI.js"
+if [[ "$1" == "shCompletion" || "$1" == "completion" ]] && [ -f "$CLI_PATH" ]; then
+    # Completion command + CLI exists = skip build for speed (<1s requirement)
+    :
+else
+    # Normal command or first-time build = use smart build system
+    ./src/sh/build.sh
+fi
+
+# Verify CLI is available
+if [ ! -f "$CLI_PATH" ]; then
+    echo "❌ {{COMPONENT_NAME}} CLI build failed"
+    exit 1
+fi
+
+# Execute CLI with all arguments
+node "$CLI_PATH" "$@"
