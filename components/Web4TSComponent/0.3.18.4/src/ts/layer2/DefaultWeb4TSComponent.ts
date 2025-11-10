@@ -517,31 +517,30 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliHide
    */
   protected printQuickHeader(): void {
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly (already reflects context)
-    // Show calling component's info (this.model already updated by updateModelPaths)
-    let header = `${this.colors.cyan}Web4 ${this.model.component} CLI Tool${this.colors.reset} v${this.colors.yellow}${this.model.version.toString()}${this.colors.reset}`;
+    // @pdca 2025-11-10-UTC-1010.pdca.md - Context-aware header display
+    // When delegating: Show CALLER component (via INFRASTRUCTURE component)
+    // When direct: Show THIS component
     
-    // If delegating AND the delegation target is different, show it
-    // @pdca 2025-11-03-UTC-1237.pdca.md - Only show delegation when component/version differ
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE OOP: Detect delegation semantically
+    let componentName: string;
+    let componentVersion: string;
+    let showDelegation = false;
+    
     if (this.model.context) {
-      // ✅ Get infrastructure component name from componentRoot (not hardcoded!)
-      const infrastructureComponentName = path.basename(path.dirname(this.model.componentRoot));
-      const isDifferentComponent = this.model.component !== infrastructureComponentName;
-      
-      if (isDifferentComponent) {
-        // Get infrastructure component's actual version dynamically
-        // Read from latest symlink (projectRoot is Path Authority field in model)
-        try {
-          const infraDir = path.join(this.model.projectRoot, 'components', infrastructureComponentName);
-          const latestSymlink = path.join(infraDir, 'latest');
-          const infraVersion = readlinkSync(latestSymlink);
-          header += ` ${this.colors.dim}(via ${infrastructureComponentName} v${infraVersion})${this.colors.reset}`;
-        } catch (error) {
-          // Fallback: if symlink can't be read, don't show version
-          header += ` ${this.colors.dim}(via ${infrastructureComponentName})${this.colors.reset}`;
-        }
-      }
+      // Delegation mode: Show the CALLER (context) component
+      componentName = this.model.context.model.component;
+      componentVersion = this.model.context.model.version || this.model.version.toString();
+      showDelegation = true;
+    } else {
+      // Direct mode: Show THIS component
+      componentName = this.model.component;
+      componentVersion = this.model.version.toString();
+    }
+    
+    let header = `${this.colors.cyan}Web4 ${componentName} CLI Tool${this.colors.reset} v${this.colors.yellow}${componentVersion}${this.colors.reset}`;
+    
+    if (showDelegation) {
+      // Show which infrastructure component is doing the work
+      header += ` ${this.colors.dim}(via ${this.model.component} v${this.model.version.toString()})${this.colors.reset}`;
     }
     
     console.log(header + ' - Dynamic Method Discovery with Structured Documentation\n');
