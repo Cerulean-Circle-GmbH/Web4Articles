@@ -6794,6 +6794,43 @@ export class DefaultPDCA implements PDCA {
       console.log(`✓ Would establish bidirectional chain: ${path.basename(mostRecentPDCA)} ←→ ${newPDCAFilename}\n`);
     }
     
+    // Step 9: Update forward chain link (Next PDCA) if there's a chronologically next file
+    // This is important when customTimestamp is used (e.g., by rewritePDCA), allowing
+    // PDCAs to be inserted into the middle of an existing chain
+    if (!isDryRun) {
+      const allFiles = fs.readdirSync(sessionDir)
+        .filter((f: string) => f.endsWith('.pdca.md'))
+        .sort();
+      
+      const currentIndex = allFiles.indexOf(newPDCAFilename);
+      if (currentIndex !== -1 && currentIndex < allFiles.length - 1) {
+        const nextFilename = allFiles[currentIndex + 1];
+        
+        console.log(`🔗 Found chronologically next PDCA: ${nextFilename}`);
+        console.log(`🔗 Updating forward chain link...\n`);
+        
+        // Update the current file's "Next PDCA" link
+        let content = fs.readFileSync(newPDCAPath, 'utf-8');
+        
+        // Generate links for next PDCA
+        const sessionRelativePath = path.relative(projectRoot, sessionDir);
+        const nextPDCAProjectPath = `${sessionRelativePath}/${nextFilename}`;
+        const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+        const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${nextPDCAProjectPath}`;
+        const sectionPath = `§/${nextPDCAProjectPath}`;
+        const relativePath = `./${nextFilename}`;
+        
+        // Replace "Use pdca chain" with actual link
+        content = content.replace(
+          /\*\*➡️ Next PDCA:\*\* Use pdca chain/,
+          `**➡️ Next PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`
+        );
+        
+        fs.writeFileSync(newPDCAPath, content, 'utf-8');
+        console.log(`✅ Forward chain link updated: ${newPDCAFilename} → ${nextFilename}\n`);
+      }
+    }
+    
     console.log(`✨ PDCA boilerplate ready for AI population!\n`);
     
     return this;
@@ -7175,11 +7212,20 @@ export class DefaultPDCA implements PDCA {
         console.log();
       }
       
-      // If there's unmappable content, add a recovery section ONLY if not in dry run
-      // Note: For rewritePDCA, we prefer clean output over preserving unstructured content
+      // Step 8.4b: Preserve unmappable content in RECOVERED CONTENT section (zero data loss)
       if (unmappableContent.length > 0) {
-        console.log(`⚠️  Found ${unmappableContent.length} unmappable content fragment(s) - will skip (preferring clean template)\n`);
-        // Don't add RECOVERED CONTENT section - the new PDCA from createPDCA is already clean
+        console.log(`⚠️  Found ${unmappableContent.length} unmappable content fragment(s) - will preserve in RECOVERED CONTENT section\n`);
+        
+        // Add RECOVERED CONTENT section at the end of the file
+        const recoverySection = `\n---\n\n## **🔍 RECOVERED CONTENT**\n\n` +
+          `**⚠️  The following content could not be automatically mapped to template sections.**\n` +
+          `**Please review and manually integrate into appropriate sections above.**\n\n` +
+          unmappableContent.map((fragment, i) => 
+            `### Fragment ${i + 1}\n\n${fragment}\n`
+          ).join('\n---\n\n');
+        
+        newContent += recoverySection;
+        console.log(`✅ Unmappable content preserved in RECOVERED CONTENT section (zero data loss)\n`);
       }
       
       fs.writeFileSync(newPDCAPath, newContent, 'utf-8');
@@ -7192,45 +7238,9 @@ export class DefaultPDCA implements PDCA {
       fs.writeFileSync(newPDCAPath, newContent, 'utf-8');
       console.log(`✅ Placeholders populated\n`);
       
-      // Step 8.6: Update forward chain link (Next PDCA) if there's a chronologically next file
-      console.log(`🔄 Checking for chronologically next PDCA...\n`);
-      const allFiles = fs.readdirSync(sessionDir)
-        .filter((f: string) => f.endsWith('.pdca.md'))
-        .sort();
+      // Note: Forward chain link (Next PDCA) is now handled by createPDCA in Step 9
       
-      const currentIndex = allFiles.indexOf(path.basename(newPDCAPath));
-      if (currentIndex !== -1 && currentIndex < allFiles.length - 1) {
-        const nextFilename = allFiles[currentIndex + 1];
-        const nextFilePath = path.join(sessionDir, nextFilename);
-        
-        console.log(`✅ Found next PDCA: ${nextFilename}`);
-        console.log(`🔗 Updating forward chain link...\n`);
-        
-        // Update the current file's "Next PDCA" link
-        newContent = fs.readFileSync(newPDCAPath, 'utf-8');
-        
-        // Generate links for next PDCA
-        const sessionRelativePath = path.relative(await this.getProjectRoot(), sessionDir);
-        const nextPDCAProjectPath = `${sessionRelativePath}/${nextFilename}`;
-        const currentBranch = this.model.currentBranch || 'main';
-        const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
-        const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${nextPDCAProjectPath}`;
-        const sectionPath = `§/${nextPDCAProjectPath}`;
-        const relativePath = `./${nextFilename}`;
-        
-        // Replace "Use pdca chain" with actual link
-        newContent = newContent.replace(
-          /\*\*➡️ Next PDCA:\*\* Use pdca chain/,
-          `**➡️ Next PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`
-        );
-        
-        fs.writeFileSync(newPDCAPath, newContent, 'utf-8');
-        console.log(`✅ Forward chain link updated\n`);
-      } else {
-        console.log(`ℹ️  No chronologically next PDCA found (this is the most recent)\n`);
-      }
-      
-      // Step 8.7: Delete the original corrupted file (if different from new file)
+      // Step 8.6: Delete the original corrupted file (if different from new file)
       if (fs.existsSync(filePath) && filePath !== newPDCAPath) {
         fs.unlinkSync(filePath);
         console.log(`✅ Deleted original corrupted file: ${path.basename(filePath)}\n`);
