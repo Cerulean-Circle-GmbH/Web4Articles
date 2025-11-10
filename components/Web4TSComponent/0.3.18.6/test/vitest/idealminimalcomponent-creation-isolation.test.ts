@@ -13,9 +13,10 @@
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { existsSync } from 'fs';
-import { readFile, rm, mkdir } from 'fs/promises';
+import { readFile, rm, mkdir, symlink } from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 
 describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
   // ✅ Web4 Pattern: No underscore naming, use fileURLToPath for ESM
@@ -36,13 +37,16 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
   /**
    * Evidence-Based Testing Pattern (2025-10-30-UTC-0832.test-evidence-persistence.pdca.md):
    * 
-   * - beforeAll: Clean OLD evidence (fresh start)
+   * - beforeAll: Clean OLD evidence (fresh start) + Setup Web4TSComponent for delegation
    * - Tests run: Create components in test/data
    * - afterAll: DO NOTHING (keep evidence for inspection)
    * - Next run: beforeAll cleans again
    * 
    * test/data becomes a testable alternate isolated project root.
    * After tests run, you can cd into test/data and inspect/test manually.
+   * 
+   * @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
+   * CRITICAL: Copy Web4TSComponent into test/data so IdealMinimalComponent can delegate!
    */
   beforeAll(async () => {
     // Clean old evidence before tests (fresh start)
@@ -55,6 +59,37 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
     // Ensure test/data directory exists
     if (!existsSync(testDataDir)) {
       await mkdir(testDataDir, { recursive: true });
+    }
+    
+    // ✅ CRITICAL: Copy Web4TSComponent into test/data for delegation
+    // IdealMinimalComponent needs Web4TSComponent to exist at: test/data/components/Web4TSComponent/latest/
+    const web4tsSourceDir = componentRoot; // Current Web4TSComponent version being tested
+    const web4tsTestDataDir = path.join(testDataDir, 'components/Web4TSComponent');
+    const web4tsTestVersionDir = path.join(web4tsTestDataDir, testVersion);
+    
+    // Clean old Web4TSComponent copy
+    if (existsSync(web4tsTestDataDir)) {
+      await rm(web4tsTestDataDir, { recursive: true, force: true });
+      console.log(`   🧹 Cleaned old Web4TSComponent from test/data`);
+    }
+    
+    // Copy Web4TSComponent to test/data using rsync (excludes test/data to avoid circular copy)
+    await mkdir(web4tsTestDataDir, { recursive: true });
+    execSync(`rsync -a --exclude='test/data' "${web4tsSourceDir}/" "${web4tsTestVersionDir}/"`, {
+      stdio: 'pipe'  // Suppress output
+    });
+    console.log(`   📦 Copied Web4TSComponent ${testVersion} to test/data for delegation`);
+    
+    // Create symlinks (latest, dev, test) pointing to the copied version
+    const symlinkTargets = ['latest', 'dev', 'test'];
+    for (const linkName of symlinkTargets) {
+      const linkPath = path.join(web4tsTestDataDir, linkName);
+      if (existsSync(linkPath)) {
+        await rm(linkPath, { force: true });
+      }
+      // Create relative symlink
+      await symlink(testVersion, linkPath, 'dir');
+      console.log(`   🔗 Created symlink: Web4TSComponent/${linkName} → ${testVersion}`);
     }
   });
 

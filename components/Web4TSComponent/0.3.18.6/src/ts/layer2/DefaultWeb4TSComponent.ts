@@ -300,35 +300,31 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // ✅ Backward compatibility alias
     this.model.componentPath = this.model.targetComponentRoot;
     
-    // ✅ Radical OOP: Calculate display properties ONCE (not on every call!)
+    // ✅ Radical OOP: Display properties - Set by delegating component OR calculate for direct mode
     // @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
-    if (this.model.context) {
-      // Delegation mode: Show CALLER component
-      this.model.displayName = this.model.context.model.component;
-      this.model.displayVersion = this.model.context.model.version.toString();
-      this.model.isDelegation = true;
-      this.model.delegationInfo = `via ${this.model.component} v${this.model.version.toString()}`;
-    } else {
-      // Direct mode: Show THIS component
+    // Delegating components set these properties BEFORE calling methods (in delegateToWeb4TS)
+    // Direct mode (no delegation) calculates them here
+    if (!this.model.displayName) {
+      // Not set by delegating component, so we're in direct mode
       this.model.displayName = this.model.component;
       this.model.displayVersion = this.model.version.toString();
       this.model.isDelegation = false;
       this.model.delegationInfo = undefined;
-    }
-    
-    // ✅ Radical OOP: Calculate test isolation context ONCE (not regex on every call!)
-    // @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
-    const target = this.getTarget();
-    if (target.model.isTestIsolation && target.model.projectRoot) {
-      const match = target.model.projectRoot.match(/components\/([^/]+)\/([^/]+)\/test\/data/);
-      if (match) {
-        this.model.testIsolationContext = `${match[1]} v${match[2]}`;
+      
+      // Test isolation context (direct mode only, delegates set it themselves)
+      const target = this.getTarget();
+      if (target.model.isTestIsolation && target.model.projectRoot) {
+        const match = target.model.projectRoot.match(/components\/([^/]+)\/([^/]+)\/test\/data/);
+        if (match) {
+          this.model.testIsolationContext = `${match[1]} v${match[2]}`;
+        } else {
+          this.model.testIsolationContext = 'test/data environment';
+        }
       } else {
-        this.model.testIsolationContext = 'test/data environment';
+        this.model.testIsolationContext = undefined;
       }
-    } else {
-      this.model.testIsolationContext = undefined;
     }
+    // else: Display properties already set by delegating component (Radical OOP!)
   }
 
     
@@ -1859,6 +1855,33 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       console.error(`❌ Component source.env not found: ${componentSourceEnv}`);
       console.log(`💡 Run 'web4tscomponent initProject' to create it`);
       return this;
+    }
+    
+    // ✅ Setup test isolation by running baseline tests
+    // @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
+    // Automatically populate test/data with IdealMinimalComponent so there's something to test
+    console.log(`📦 Setting up test isolation environment...`);
+    console.log(`   Running baseline test to populate test/data`);
+    console.log();
+    
+    try {
+      // Run the baseline test that creates IdealMinimalComponent and Web4TSComponent in test/data
+      const { execSync } = await import('child_process');
+      execSync(
+        `npx vitest run test/vitest/idealminimalcomponent-creation-isolation.test.ts`,
+        {
+          cwd: componentRoot,
+          stdio: 'inherit'  // Show output
+        }
+      );
+      console.log();
+      console.log(`✅ Test isolation environment ready!`);
+      console.log(`   IdealMinimalComponent created in test/data`);
+      console.log(`   Try: idealminimalcomponent info`);
+      console.log();
+    } catch (error) {
+      console.error(`⚠️  Baseline test had issues, but continuing...`);
+      console.log();
     }
     
     try {

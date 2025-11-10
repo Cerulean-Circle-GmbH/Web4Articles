@@ -175,6 +175,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
    * DRY helper for delegating methods to Web4TSComponent with correct context
    * Sets context ONCE so Web4TSComponent operates on THIS component's data
    * @pdca 2025-11-03-UTC-1200.pdca.md - DRY OOP pattern for context delegation
+   * @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md - Set display properties (Radical OOP)
    * @cliHide
    */
   private async delegateToWeb4TS<T extends (...args: any[]) => any>(
@@ -183,6 +184,25 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
   ): Promise<this> {
     const web4ts = await this.getWeb4TSComponent();
     web4ts.model.context = this;  // ← Set context ONCE in ONE place
+    
+    // ✅ RADICAL OOP: Set display properties in Web4TSComponent's model (NO functional calculation!)
+    // @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
+    // Web4TSComponent will just READ these properties (model-driven display)
+    web4ts.model.displayName = this.model.component;  // Show THIS component's name
+    web4ts.model.displayVersion = this.model.version || '0.0.0.0';  // Show THIS component's version
+    web4ts.model.isDelegation = true;  // We ARE delegating
+    web4ts.model.delegationInfo = `via Web4TSComponent v${web4ts.model.version.toString()}`;  // Show infrastructure
+    
+    // Test isolation context (if applicable)
+    if (this.model.isTestIsolation && this.model.projectRoot) {
+      const match = this.model.projectRoot.match(/components\/([^/]+)\/([^/]+)\/test\/data/);
+      if (match) {
+        web4ts.model.testIsolationContext = `${match[1]} v${match[2]}`;
+      } else {
+        web4ts.model.testIsolationContext = 'test/data environment';
+      }
+    }
+    
     await (web4ts as any)[method](...args);
     return this;
   }
