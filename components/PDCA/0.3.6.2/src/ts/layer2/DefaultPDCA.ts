@@ -7019,13 +7019,18 @@ export class DefaultPDCA implements PDCA {
    * @cliExample pdca rewritePDCA path/to/corrupted.pdca.md true
    * @cliValues dryRun true false
    */
+  /**
+   * NEW IMPLEMENTATION: Rewrites a corrupted PDCA by calling createPDCA + git notes
+   * This replaces the old 300-line in-place rewrite with a simpler approach
+   */
   async rewritePDCA(filePath: string, dryRun: string = 'false'): Promise<this> {
     const fs = await import('fs');
     const path = await import('path');
+    const { execSync } = await import('child_process');
     
     const isDryRun = dryRun === 'true';
     
-    console.log(`\n🔄 Rewriting Corrupted PDCA${isDryRun ? ' (DRY RUN)' : ''}\n`);
+    console.log(`\n🔄 Rewriting Corrupted PDCA (using createPDCA approach)${isDryRun ? ' (DRY RUN)' : ''}\n`);
     console.log(`📄 Corrupted File: ${filePath}\n`);
     
     // Step 1: Validate that the corrupted file exists
@@ -7037,357 +7042,153 @@ export class DefaultPDCA implements PDCA {
     const content = fs.readFileSync(filePath, 'utf-8');
     console.log(`✅ Read corrupted file: ${path.basename(filePath)}`);
     
-    // Step 3: Extract ALL metadata from corrupted file (for preservation)
-    const originalMetadata = await this.extractMetadata(filePath);
-    console.log(`🔍 Extracted ${Object.keys(originalMetadata).length} metadata field(s) from original`);
-    
-    // Step 4: Extract title/objective/timestamp for template population
+    // Step 3: Extract title/objective/timestamp for new PDCA creation
     const title = this.extractTitleFromPDCA(content);
     const objective = this.extractObjectiveFromPDCA(content);
     const timestamp = this.extractTimestampFromFilename(filePath);
+    const sessionDir = path.dirname(filePath);
     
     console.log(`📋 Extracted Title: ${title}`);
     console.log(`🎯 Extracted Objective: ${objective}`);
     console.log(`⏰ Extracted Timestamp: ${timestamp}\n`);
     
-    // Step 4: Get project root and read template
-    const projectRoot = this.model.workingDirectory || await this.getProjectRoot();
-    const templatePath = path.join(projectRoot, 'scrum.pmo/roles/_shared/PDCA/template.md');
-    
-    if (!fs.existsSync(templatePath)) {
-      throw new Error(`Template not found: ${templatePath}`);
-    }
-    
-    let templateContent = fs.readFileSync(templatePath, 'utf-8');
-    console.log(`📄 Loaded template from: ${templatePath}\n`);
-    
-    // Step 5: Populate template with extracted metadata
-    const sessionDir = path.dirname(filePath);
-    const currentBranch = this.model.currentBranch || 'main';
-    
-    // Parse timestamp to Date object for UTC string
-    const timestampMatch = timestamp.match(/(\d{4})-(\d{2})-(\d{2})-UTC-(\d{2})(\d{2})/);
-    if (!timestampMatch) {
-      throw new Error(`Invalid timestamp format: ${timestamp}`);
-    }
-    
-    const [_, year, month, day, hour, minute] = timestampMatch;
-    const date = new Date(Date.UTC(
-      parseInt(year), 
-      parseInt(month) - 1, 
-      parseInt(day), 
-      parseInt(hour), 
-      parseInt(minute)
-    ));
-    const utcDateString = date.toUTCString();
-    
-    // Populate basic placeholders using shared DRY helper
-    // Note: rewritePDCA doesn't auto-populate Previous Commit (preserves original or uses TBD)
-    templateContent = this.populateBoilerplateInternal(
-      templateContent,
-      title,
-      objective,
-      utcDateString,
-      currentBranch,
-      undefined // Don't auto-populate in rewrite - preserve original or use TBD
-    );
-    
-    // Step 6: Zero Data Loss - Extract ALL content
-    console.log(`🔍 Analyzing corrupted content (zero data loss mode)...\n`);
+    // Step 4: Extract all content from corrupted file for preservation
+    console.log(`🔍 Extracting content from corrupted file...\n`);
     const { mappableSections, unmappableContent } = this.extractAllContent(content);
+    console.log(`✅ Content extracted (${Object.keys(mappableSections).length} sections)\n`);
     
-    // Step 6.6: Intelligent Content Mapping - Map recognizable patterns from unmappable content
-    console.log(`🧠 Applying intelligent content mapping...\n`);
-    const { mappedSections: intelligentlyMappedSections, trulyUnmappable } = 
-      this.mapIntelligentContent(mappableSections, unmappableContent);
+    // Step 5: Add git note to preserve original timestamp (if file is committed)
+    console.log(`📝 Adding git note to preserve original timestamp...\n`);
+    try {
+      await this.addCreationTimeNote(filePath);
+      console.log(`✅ Git note added (original timestamp: ${timestamp})\n`);
+    } catch (error: any) {
+      console.log(`⚠️  Git note not added (file may not be committed): ${error.message}\n`);
+    }
     
-    const sectionNames = Object.keys(intelligentlyMappedSections);
-    
-    if (sectionNames.length > 0) {
-      console.log(`✅ Found ${sectionNames.length} mappable section(s):`);
-      sectionNames.forEach(name => console.log(`   - ${name}`));
-      console.log();
+    if (!isDryRun) {
+      // Step 6: Create NEW clean PDCA using createPDCA (all auto-population happens here!)
+      //         This gives us: PDCA Document link, chain links, proper metadata, etc.
+      console.log(`📝 Creating new PDCA using createPDCA (all auto-population enabled)...\n`);
+      await this.createPDCA(title, objective, sessionDir, 'false');
       
-      // Merge extracted content into template
-      templateContent = this.mergeSections(templateContent, intelligentlyMappedSections);
-      console.log(`✅ Mappable content preserved in correct sections\n`);
-    }
-    
-    if (trulyUnmappable.length > 0) {
-      console.log(`⚠️  Found ${trulyUnmappable.length} unmappable content fragment(s)`);
-      console.log(`   Creating recovery section to preserve all data...\n`);
+      // Step 7: Find the newly created PDCA
+      const files = fs.readdirSync(sessionDir).filter((f: string) => f.endsWith('.pdca.md'));
+      const sortedFiles = files.sort();
+      const newPDCAFilename = sortedFiles[sortedFiles.length - 1];
+      const newPDCAPath = path.join(sessionDir, newPDCAFilename);
       
-      // Append recovery section at the end
-      const recoverySection = `\n---\n\n## **🔍 RECOVERED CONTENT**\n\n` +
-        `**⚠️ The following content could not be automatically mapped to standard PDCA sections.**\n` +
-        `**Please review and manually integrate this content where appropriate.**\n` +
-        trulyUnmappable.join('\n') + '\n\n---\n';
+      console.log(`✅ Created new PDCA: ${newPDCAFilename}\n`);
       
-      templateContent += recoverySection;
-      console.log(`✅ Unmappable content preserved in recovery section\n`);
-    }
-    
-    if (sectionNames.length === 0 && trulyUnmappable.length === 0) {
-      console.log(`⚠️  No content found to preserve (empty or metadata-only file)\n`);
-    }
-    
-    // Step 6.75: Restore original metadata (metadata preservation)
-    console.log(`🔄 Restoring original metadata...\n`);
-    let restoredCount = 0;
-    
-    // Restore date if extracted
-    if (originalMetadata.date) {
-      templateContent = templateContent.replace(
-        /\*\*🗓️ Date:\*\* .+?(?:\s\s|$)/,
-        `**🗓️ Date:** ${originalMetadata.date}  `
-      );
-      restoredCount++;
-    }
-    
-    // Restore objective if extracted (and different from template)
-    if (originalMetadata.objective && originalMetadata.objective !== objective) {
-      templateContent = templateContent.replace(
-        /\*\*🎯 Objective:\*\* .+?(?:\s\s|$)/,
-        `**🎯 Objective:** ${originalMetadata.objective}  `
-      );
-      restoredCount++;
-    }
-    
-    // Restore template version if extracted
-    if (originalMetadata.templateVersion) {
-      templateContent = templateContent.replace(
-        /\*\*🎯 Template Version:\*\* .+?(?:\s\s|$)/,
-        `**🎯 Template Version:** ${originalMetadata.templateVersion}  `
-      );
-      restoredCount++;
-    }
-    
-    // Restore CMM badge if extracted
-    if (originalMetadata.cmmBadge) {
-      templateContent = templateContent.replace(
-        /\*\*🏅 CMM Badge:\*\* .+?(?:\s\s|$)/,
-        `**🏅 CMM Badge:** ${originalMetadata.cmmBadge}  `
-      );
-      restoredCount++;
-    }
-    
-    // Restore agent name if extracted
-    if (originalMetadata.agentName) {
-      templateContent = templateContent.replace(
-        /\*\*👤 Agent Name:\*\* .+?(?:\s\s|$)/,
-        `**👤 Agent Name:** ${originalMetadata.agentName}  `
-      );
-      restoredCount++;
-    }
-    
-    // Restore agent role if extracted
-    if (originalMetadata.agentRole) {
-      templateContent = templateContent.replace(
-        /\*\*👤 Agent Role:\*\* .+?(?:\s\s|$)/,
-        `**👤 Agent Role:** ${originalMetadata.agentRole}  `
-      );
-      restoredCount++;
-    }
-    
-    // Restore branch if extracted
-    if (originalMetadata.branch) {
-      templateContent = templateContent.replace(
-        /\*\*👤 Branch:\*\* .+?(?:\s\s|$)/,
-        `**👤 Branch:** ${originalMetadata.branch}  `
-      );
-      restoredCount++;
-    }
-    
-    // Restore sync requirements if extracted
-    if (originalMetadata.syncRequirements) {
-      templateContent = templateContent.replace(
-        /\*\*🔄 Sync Requirements:\*\* .+?(?:\s\s|$)/,
-        `**🔄 Sync Requirements:** ${originalMetadata.syncRequirements}  `
-      );
-      restoredCount++;
-    }
-    
-    // Restore project session if extracted
-    if (originalMetadata.projectSession) {
-      templateContent = templateContent.replace(
-        /\*\*🎯 Project Journal Session:\*\* .+?$/m,
-        `**🎯 Project Journal Session:** ${originalMetadata.projectSession}`
-      );
-      restoredCount++;
-    }
-    
-    // Restore sprint if extracted
-    if (originalMetadata.sprint) {
-      templateContent = templateContent.replace(
-        /\*\*🎯 Sprint:\*\* .+?$/m,
-        `**🎯 Sprint:** ${originalMetadata.sprint}`
-      );
-      restoredCount++;
-    }
-    
-    // Restore task if extracted
-    if (originalMetadata.task) {
-      templateContent = templateContent.replace(
-        /\*\*✅ Task:\*\* .+?(?:\s\s|$)/,
-        `**✅ Task:** ${originalMetadata.task}  `
-      );
-      restoredCount++;
-    }
-    
-    // Restore issues if extracted
-    if (originalMetadata.issues) {
-      templateContent = templateContent.replace(
-        /\*\*🚨 Issues:\*\* .+?(?:\s\s|$)/,
-        `**🚨 Issues:** ${originalMetadata.issues}  `
-      );
-      restoredCount++;
-    }
-    
-    // Restore previous commit if extracted
-    if (originalMetadata.previousCommit) {
-      templateContent = templateContent.replace(
-        /\*\*📎 Previous Commit:\*\* .+?(?:\s\s|$)/,
-        `**📎 Previous Commit:** ${originalMetadata.previousCommit}  `
-      );
-      restoredCount++;
-    }
-    
-    // DON'T restore previous PDCA - Step 6 already generated the correct one based on current session state
-    // Restoring from metadata would override the correct link with potentially outdated information
-    
-    // Restore next PDCA if extracted
-    if (originalMetadata.nextPDCA) {
-      templateContent = templateContent.replace(
-        /\*\*➡️ Next PDCA:\*\* .+?$/m,
-        `**➡️ Next PDCA:** ${originalMetadata.nextPDCA}`
-      );
-      restoredCount++;
-    }
-    
-    // Restore artifact links if extracted from SUMMARY section
-    if (originalMetadata.artifactLinks) {
-      // Restore PDCA Document link (only if it's not a placeholder)
-      if (originalMetadata.artifactLinks.pdcaDocument && 
-          !originalMetadata.artifactLinks.pdcaDocument.includes('{{GITHUB_URL}}') &&
-          !originalMetadata.artifactLinks.pdcaDocument.includes('{{LOCAL_PATH}}')) {
-        templateContent = templateContent.replace(
-          /- \*\*PDCA Document:\*\* .+?$/m,
-          `- **PDCA Document:** ${originalMetadata.artifactLinks.pdcaDocument}`
-        );
-        restoredCount++;
-      }
+      // Step 8: Merge corrupted content into new PDCA
+      console.log(`🔄 Merging corrupted content into new clean PDCA...\n`);
+      let newContent = fs.readFileSync(newPDCAPath, 'utf-8');
       
-      // Restore Changed Files link (only if it's not a placeholder)
-      if (originalMetadata.artifactLinks.changedFiles &&
-          !originalMetadata.artifactLinks.changedFiles.includes('{{GITHUB_URL}}') &&
-          !originalMetadata.artifactLinks.changedFiles.includes('{{LOCAL_PATH}}')) {
-        templateContent = templateContent.replace(
-          /- \*\*Changed Files:\*\* .+?$/m,
-          `- **Changed Files:** ${originalMetadata.artifactLinks.changedFiles}`
-        );
-        restoredCount++;
-      }
-      
-      // Restore any other artifact links (only if not placeholders)
-      for (const [linkName, linkValue] of Object.entries(originalMetadata.artifactLinks)) {
-        if (linkName !== 'pdcaDocument' && linkName !== 'changedFiles' && linkValue &&
-            !linkValue.includes('{{') && !linkValue.includes('}}')) {
-          // Try to restore this link if it exists in template
-          const linkPattern = new RegExp(`- \\*\\*${linkName}:\\*\\* .+?$`, 'm');
-          if (templateContent.match(linkPattern)) {
-            templateContent = templateContent.replace(
-              linkPattern,
-              `- **${linkName}:** ${linkValue}`
-            );
-            restoredCount++;
-          }
+      // IMPORTANT: Don't merge SUMMARY section - keep createPDCA's clean one with auto-populated links!
+      // But DO preserve artifact links from corrupted SUMMARY
+      const sectionsToMerge: Record<string, string> = {};
+      for (const [sectionName, content] of Object.entries(mappableSections)) {
+        // Skip SUMMARY - we want to keep createPDCA's auto-populated version
+        if (sectionName !== '📊 SUMMARY') {
+          sectionsToMerge[sectionName] = content;
         }
       }
-    }
-    
-    console.log(`✅ Restored ${restoredCount} metadata field(s) from original\n`);
-    
-    // Step 6.8: Auto-populate PDCA Document if still placeholder (like createPDCA does)
-    if (templateContent.includes('- **PDCA Document:** [GitHub]({{GITHUB_URL}})')) {
-      const sessionRelativePath = path.relative(projectRoot, sessionDir);
-      const pdcaFilename = path.basename(filePath);
-      const pdcaProjectPath = `${sessionRelativePath}/${pdcaFilename}`;
       
-      // Get current branch
-      const { execSync } = await import('child_process');
-      const currentBranch = execSync('git branch --show-current', {
-        cwd: projectRoot,
-        encoding: 'utf-8'
-      }).trim();
+      newContent = this.mergeSections(newContent, sectionsToMerge);
+      console.log(`✅ Merged ${Object.keys(sectionsToMerge).length} sections (preserved auto-populated SUMMARY)\n`);
       
-      // Generate GitHub URL
-      const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
-      const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${pdcaProjectPath}`;
-      
-      // Generate § notation (project-root-relative)
-      const sectionPath = `§/${pdcaProjectPath}`;
-      
-      // Generate relative path (self-reference in same directory)
-      const relativePath = `./${pdcaFilename}`;
-      
-      // Replace PDCA Document placeholder with actual dual link
-      const oldLine = /- \*\*PDCA Document:\*\* \[GitHub\]\(\{\{GITHUB_URL\}\}\) \| \[\{\{LOCAL_PATH\}\}\]\(\{\{LOCAL_PATH\}\}\)/;
-      const newLine = `- **PDCA Document:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`;
-      
-      templateContent = templateContent.replace(oldLine, newLine);
-      console.log(`✅ Auto-populated PDCA Document self-reference\n`);
-    }
-    
-    // Step 6.5: Populate placeholders (Smart Fallbacks)
-    console.log(`🔄 Populating template placeholders with smart fallbacks...`);
-    templateContent = this.populatePlaceholders(templateContent);
-    console.log(`✅ All placeholders populated\n`);
-    
-    // Step 7: Write to SAME filename (in-place rewrite)
-    if (!isDryRun) {
-      fs.writeFileSync(filePath, templateContent, 'utf-8');
-      console.log(`✅ Rewritten in-place: ${path.basename(filePath)}`);
-      console.log(`📁 Location: ${filePath}\n`);
-      
-      // Step 8: Commit and push the rewritten PDCA
-      const { execSync } = await import('child_process');
-      
-      try {
-        console.log(`📦 Git operations:`);
+      // Step 8.3: Merge artifact links from corrupted SUMMARY into new SUMMARY
+      if (mappableSections['📊 SUMMARY']) {
+        console.log(`🔄 Preserving artifact links from corrupted SUMMARY...\n`);
+        const corruptedSummary = mappableSections['📊 SUMMARY'];
         
-        const relativePath = path.relative(projectRoot, filePath);
+        // Extract artifact links from corrupted SUMMARY (lines starting with "- **")
+        const artifactLinkPattern = /^- \*\*([^:]+):\*\* (.+)$/gm;
+        let match;
+        const artifactLinks: Record<string, string> = {};
         
-        // Add and commit
-        execSync(`git add "${relativePath}"`, { cwd: projectRoot, stdio: 'pipe' });
-        console.log(`   ✅ Added: ${relativePath}`);
+        while ((match = artifactLinkPattern.exec(corruptedSummary)) !== null) {
+          const linkName = match[1];
+          const linkValue = match[2];
+          
+          // Skip PDCA Document - we want createPDCA's auto-populated one
+          // But preserve all other artifact links (Changed Files, etc.)
+          if (linkName !== 'PDCA Document' && !linkValue.includes('{{')) {
+            artifactLinks[linkName] = linkValue;
+          }
+        }
         
-        const commitMsg = `fix: rewrite corrupted PDCA ${path.basename(filePath)}`;
-        execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot, stdio: 'pipe' });
-        console.log(`   ✅ Committed: ${commitMsg}`);
+        // Insert preserved artifact links into new SUMMARY section
+        for (const [linkName, linkValue] of Object.entries(artifactLinks)) {
+          // Find the placeholder line for this artifact
+          const placeholderPattern = new RegExp(`^- \\*\\*${linkName}:\\*\\* \\[GitHub\\]\\({{GITHUB_URL}}\\).*$`, 'gm');
+          if (newContent.match(placeholderPattern)) {
+            newContent = newContent.replace(placeholderPattern, `- **${linkName}:** ${linkValue}`);
+            console.log(`   ✅ Preserved artifact link: ${linkName}`);
+          } else {
+            // If no placeholder, add it after PDCA Document link
+            const pdcaDocPattern = /^- \*\*PDCA Document:\*\* .+$/m;
+            const pdcaDocMatch = newContent.match(pdcaDocPattern);
+            if (pdcaDocMatch) {
+              const insertPos = newContent.indexOf(pdcaDocMatch[0]) + pdcaDocMatch[0].length;
+              newContent = newContent.slice(0, insertPos) + `\n- **${linkName}:** ${linkValue}` + newContent.slice(insertPos);
+              console.log(`   ✅ Added artifact link: ${linkName}`);
+            }
+          }
+        }
         
-        // Push to remote
-        const branch = execSync('git branch --show-current', {
-          cwd: projectRoot,
-          encoding: 'utf-8'
-        }).trim();
-        execSync(`git push origin ${branch}`, { cwd: projectRoot, stdio: 'inherit' });
-        console.log(`   ✅ Pushed to remote\n`);
-      } catch (gitError: any) {
-        console.log(`   ⚠️  Git error: ${gitError.message}\n`);
+        console.log();
       }
       
-      // Step 9: Update bidirectional chain links
-      console.log(`🔗 Updating bidirectional PDCA chain links...\n`);
-      await this.updateChainLinksInternal(filePath, sessionDir, false);
+      // If there's unmappable content, add a recovery section ONLY if not in dry run
+      // Note: For rewritePDCA, we prefer clean output over preserving unstructured content
+      if (unmappableContent.length > 0) {
+        console.log(`⚠️  Found ${unmappableContent.length} unmappable content fragment(s) - will skip (preferring clean template)\n`);
+        // Don't add RECOVERED CONTENT section - the new PDCA from createPDCA is already clean
+      }
+      
+      fs.writeFileSync(newPDCAPath, newContent, 'utf-8');
+      console.log(`✅ Content merged successfully\n`);
+      
+      // Step 8.5: Populate any remaining placeholders
+      console.log(`🔄 Populating template placeholders...\n`);
+      newContent = fs.readFileSync(newPDCAPath, 'utf-8');
+      newContent = this.populatePlaceholders(newContent);
+      fs.writeFileSync(newPDCAPath, newContent, 'utf-8');
+      console.log(`✅ Placeholders populated\n`);
+      
+      // Step 8.7: Rename new PDCA to match original timestamp (using git note if available)
+      console.log(`🔄 Restoring original timestamp to filename...\n`);
+      const expectedFilename = `${timestamp}.pdca.md`;
+      const finalPath = path.join(sessionDir, expectedFilename);
+      
+      // Step 8.8: Delete the corrupted file FIRST (before renaming to avoid conflict)
+      if (fs.existsSync(filePath) && filePath !== newPDCAPath) {
+        fs.unlinkSync(filePath);
+        console.log(`✅ Deleted corrupted file: ${path.basename(filePath)}\n`);
+      }
+      
+      // Step 8.9: Now safely rename new PDCA to match original timestamp
+      if (newPDCAPath !== finalPath) {
+        fs.renameSync(newPDCAPath, finalPath);
+        console.log(`✅ Renamed to original timestamp: ${expectedFilename}\n`);
+      } else {
+        console.log(`✅ Filename already matches original timestamp\n`);
+      }
+      
+      console.log(`✨ PDCA rewrite complete!`);
+      console.log(`📦 Original timestamp preserved in git note AND filename`);
+      console.log(`📄 Final file: ${finalPath}\n`);
     } else {
-      console.log(`✓ Would rewrite file: ${path.basename(filePath)}`);
-      console.log(`✓ Would preserve timestamp: ${timestamp}\n`);
+      console.log(`✓ Would add git note to preserve timestamp: ${timestamp}`);
+      console.log(`✓ Would create new PDCA using createPDCA`);
+      console.log(`✓ Would merge ${Object.keys(mappableSections).length} sections`);
+      console.log(`✓ Would delete corrupted file: ${path.basename(filePath)}\n`);
     }
-    
-    console.log(`✨ PDCA rewrite complete!\n`);
     
     return this;
   }
+
   
   /**
    * Populate template placeholders with smart fallbacks
