@@ -6850,9 +6850,9 @@ export class DefaultPDCA implements PDCA {
     const projectRoot = this.model.componentRoot || this.model.workingDirectory || await this.getProjectRoot();
     const relativePath = path.relative(projectRoot, filePath);
     
-    // Extract timestamp from filename
+    // Extract timestamp from filename (supports both HHMM and HHMMSS formats)
     const filename = path.basename(filePath);
-    const timestampMatch = filename.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{6})/);
+    const timestampMatch = filename.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{4,6})/);
     if (!timestampMatch) {
       throw new Error(`Not a timestamped PDCA file: ${filename}`);
     }
