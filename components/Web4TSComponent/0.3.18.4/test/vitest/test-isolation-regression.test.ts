@@ -161,5 +161,101 @@ describe('Test Isolation - Regression Prevention (CMM3)', () => {
       expect(content).toContain('@pdca 2025-11-10-UTC-1010');
     });
   });
+
+  describe('Symlink Resolution: pwd -P Fix (Critical)', () => {
+    /**
+     * @pdca 2025-11-10-UTC-1010.pdca.md - Critical bug: Node.js ES module resolution fails with symlinks
+     * 
+     * Issue: When web4tscomponent is called via latest symlink after sourcing source.env,
+     * it produced NO OUTPUT (exit code 0, but completely silent).
+     * 
+     * Root Cause: pwd preserves symlinks, Node.js ES module resolution fails silently with symlinked paths.
+     * Fix: Use pwd -P to resolve all symlinks to real paths.
+     */
+    
+    it('should use pwd -P in bash wrapper to resolve symlinks', () => {
+      const bashWrapper = join(componentVersion, 'web4tscomponent');
+      const content = execSync(`cat "${bashWrapper}"`, { encoding: 'utf8' });
+      
+      // Critical: Must use pwd -P (not just pwd) to resolve symlinks
+      expect(content).toContain('pwd -P');
+      
+      // Verify it's in the SCRIPT_DIR assignment
+      expect(content).toMatch(/SCRIPT_DIR=.*pwd -P/);
+    });
+
+    it('should use pwd -P in all wrapper templates', () => {
+      const templates = [
+        'templates/sh/component-wrapper.sh.template',
+        'templates/sh/version-wrapper.sh.template',
+        'templates/sh/install-deps.sh.template',
+        'templates/sh/clean-global.sh.template'
+      ];
+      
+      templates.forEach(templatePath => {
+        const fullPath = join(componentVersion, templatePath);
+        expect(existsSync(fullPath), `Template should exist: ${templatePath}`).toBe(true);
+        
+        const content = execSync(`cat "${fullPath}"`, { encoding: 'utf8' });
+        
+        // All templates must use pwd -P for symlink resolution
+        expect(content, `Template ${templatePath} should use pwd -P`).toContain('pwd -P');
+      });
+    });
+
+    it('should produce output when called via symlink (integration test)', () => {
+      // Test the actual user scenario that was broken:
+      // 1. web4tscomponent is a symlink to latest/web4tscomponent
+      // 2. latest is a symlink to 0.3.18.4
+      // 3. CLI must still produce output
+      
+      const output = runInProduction(`${cliPath} info`);
+      
+      // Critical: Must produce output (not empty/silent)
+      expect(output.trim().length).toBeGreaterThan(0);
+      expect(output).toContain('Component Model Information');
+      expect(output).toContain('Component Identity:');
+      expect(output).toContain('Version:');
+      
+      // Verify it shows the RESOLVED version (0.3.18.4), not "latest"
+      expect(output).toMatch(/Version:\s+0\.3\.18\.4/);
+    });
+
+    it('should work with source.env + web4tscomponent combination (user workflow)', () => {
+      // This is the EXACT user workflow that was broken:
+      // . source.env && web4tscomponent info
+      //
+      // The combination was producing exit code 0 but NO OUTPUT
+      // This test verifies the fix works end-to-end
+      
+      const sourceEnvPath = join(projectRoot, 'source.env');
+      
+      // Only run if source.env exists (may not in CI)
+      if (!existsSync(sourceEnvPath)) {
+        console.log('⚠️  Skipping source.env test (file not found)');
+        return;
+      }
+      
+      const command = `. "${sourceEnvPath}" 2>/dev/null && ${cliPath} info`;
+      const output = runInProduction(command);
+      
+      // Critical: Combination must produce output
+      expect(output.trim().length).toBeGreaterThan(0);
+      expect(output).toContain('Component Model Information');
+    });
+
+    it('should document the symlink issue in PDCA', () => {
+      const pdcaPath = join(componentVersion, 'session/2025-11-10-UTC-1010.pdca.md');
+      const content = execSync(`cat "${pdcaPath}"`, { encoding: 'utf8' });
+      
+      // CMM3: Critical issues must be documented
+      expect(content).toContain('pwd -P');
+      expect(content).toContain('symlink');
+      expect(content).toContain('Node.js ES module');
+      
+      // Should document the failure mode
+      expect(content).toContain('NO OUTPUT');
+    });
+  });
 });
 
