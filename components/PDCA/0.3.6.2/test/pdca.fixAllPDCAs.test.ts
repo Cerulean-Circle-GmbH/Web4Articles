@@ -363,7 +363,7 @@ Content here
     const fileA = path.join(testDir, '2025-11-08-UTC-100000.pdca.md');
     const fileB = path.join(testDir, '2025-11-08-UTC-110000.pdca.md');
 
-    // File A: Template-compliant but missing Next PDCA link
+    // File A: Minimal template-compliant PDCA with placeholder Next link
     const contentA = `# 📋 **PDCA Cycle: Test PDCA A - Test PDCA A**
 
 **🗓️ Date:** Fri, 08 Nov 2025 10:00:00 GMT  
@@ -374,47 +374,21 @@ Content here
 **👤 Agent Name:** Test Agent → Test Agent  
 **👤 Agent Role:** Test Role → Test PDCA A  
 **👤 Branch:** main → Test PDCA A  
-**🔄 Sync Requirements:** main ← dev branch → Feature validation before merge  
-**🎯 Project Journal Session:** Test Session
+**🔄 Sync Requirements:** main ← dev → Test  
+**🎯 Project Journal Session:** Test
 **🎯 Sprint:** Test Sprint → Test PDCA A
 **✅ Task:** Test PDCA A  
 **🚨 Issues:** None  
 
-**📎 Previous Commit:** abc123 - Test commit  
+**📎 Previous Commit:** abc123 - Test  
 **🔗 Previous PDCA:** N/A (First in chain)  
 **➡️ Next PDCA:** Use \`pdca chain\`
-
-<!-- 
-CRITICAL: Link format explained
-- Display TEXT: §/scrum.pmo/path/from/project/root/file.md (shows full context)
-- Link HREF: ../relative/path/from/THIS/file.md (relative navigation)
--->
 
 ---
 
 ## **📊 SUMMARY**
 
-### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/test/repo/blob/main/test/2025-11-08-UTC-100000.pdca.md) | [§/test/2025-11-08-UTC-100000.pdca.md](§/test/2025-11-08-UTC-100000.pdca.md)
-- **Changed Files:** [GitHub](https://github.com/test/repo/compare/abc123...abc123) | [§/test/2025-11-08-UTC-100000.pdca.md](§/test/2025-11-08-UTC-100000.pdca.md)
-- **New Components:** [GitHub](https://example.com) | [§/test](§/test)
-- **Requirements Created:** N/A
-- **Related Artifacts:** N/A
-
-### **To TRON: QA Decisions required**
-- [x] Template Verified: Using PDCA template version 3.2.4.2
-- [x] Test Completed: Test is running
-- [ ] Pending Review: Awaiting validation
-
-### **TRON Feedback (2025-11-08 UTC)**
-\`\`\`quote
-Test feedback placeholder
-\`\`\`
-
-### **My Answer**
-Test answer placeholder
-
-**Learning Applied:** Test learning
+Test summary content A
 
 ---
 
@@ -422,39 +396,11 @@ Test answer placeholder
 
 **Objective:** Test PDCA A
 
-**Requirements Traceability:** No requirements.md found in component
-
-### **Definition of Ready (DoR)**
-
-Before implementation begins, ensure:
-- [ ] Test requirement 1: Description
-- [ ] Test requirement 2: Description
-- [ ] Test requirement 3: Description
-- [ ] Test requirement 4: Description
-
-### **Definition of Done (DoD)**
-
-Task is complete when:
-- [ ] Test DoD 1: Description
-- [ ] Test DoD 2: Description
-- [ ] Test DoD 3: Description
-- [ ] Test DoD 4: Description
-- [ ] Test DoD 5: Description
-- [ ] Code committed and pushed
-- [ ] PDCA updated with actual results
-
-**Implementation Strategy:**
-- **Strategy 1:** Test strategy description
-- **Strategy 2:** Test strategy description
-- **Strategy 3:** Test strategy description
-
 Test plan content A
 
 ---
 
 ## **🔧 DO**
-
-**Test Implementation**
 
 Test do content A
 
@@ -462,82 +408,33 @@ Test do content A
 
 ## **✅ CHECK**
 
-**Verification Results:**
-
-**Test Verification (Passed)**
-\`\`\`
 Test check content A
-\`\`\`
-
-**TRON QA Feedback Validation**
-> **"Test feedback"**
-
-**Results Verified**
-- ✅ **Verification 1:** Test verification description
-- ✅ **Verification 2:** Test verification description  
-- ✅ **Verification 3:** Test verification description
-
-**Integration Confirmed**
-- ✅ **Integration 1:** Test integration description
-- ✅ **Integration 2:** Test integration description
 
 ---
 
 ## **🎯 ACT**
 
-**Success Achieved:** Test completed
-
 Test act content A
 
-**Future Enhancements:**
-1. **Enhancement 1:** Test enhancement description
-2. **Enhancement 2:** Test enhancement description
-3. **Enhancement 3:** Test enhancement description
-
-## **💫 EMOTIONAL REFLECTION: Test Reflection**
+## **💫 EMOTIONAL REFLECTION: Test**
 
 ### **Pride:**
-**High** - Test completed successfully
-
-### **Learning:**
-**Strong** - Applied systematic approach
-
-### **Growth:**
-**Significant** - Improved understanding
+**High** - Test completed
 
 ---
+
 ## **🎯 PDCA PROCESS UPDATE**
 
 **Process Learning:**
-- ✅ **PDCA Protocol:** Must create PDCA documentation for all significant work
-- ✅ **Test Learning 1:** Test learning description  
-- ✅ **Test Learning 2:** Test learning description
-- ✅ **Test Learning 3:** Test learning description
+- ✅ Tests validated
 
-**Quality Impact:** High quality achieved
+**Quality Impact:** High quality
 
-**Next PDCA Focus:** Continue testing  
-*(Note: Update header "Next PDCA:" link once next PDCA is created for bidirectional navigation)*
+**Next PDCA Focus:** Continue testing
 
----
+---`;
 
-**🎯 Test PDCA A - Complete**
-
-**"Test quote"** 🔧📊
-
----
-
-### **📚 The 42 Revelation**
-**Understanding requires regression testing:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md](../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md)
-
-**CMM4 Achievement Excellence:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-27-UTC-2251/scrum.pmo/roles/SaveRestartAgent/pdca/2025-09-28-UTC-1108.pdca.md) | [§/scrum.pmo/roles/SaveRestartAgent/pdca/2025-09-28-UTC-1108.pdca.md](../../roles/SaveRestartAgent/pdca/2025-09-28-UTC-1108.pdca.md)
-
-**🏆 CMM5 Nobel Prize Achievement - First Agent:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-11-UTC-1551/components/Web4TSComponent/0.3.12.1/session/2025-10-11-UTC-2155.letter-to-cursor-cto.md) | [§/components/Web4TSComponent/0.3.12.1/session/2025-10-11-UTC-2155.letter-to-cursor-cto.md](../../../components/Web4TSComponent/0.3.12.1/session/2025-10-11-UTC-2155.letter-to-cursor-cto.md)  
-
-
-**"Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."** 🤝✨`;
-
-    // File B: Template-compliant but missing Previous PDCA link
+    // File B: Minimal template-compliant PDCA with placeholder Previous link
     const contentB = `# 📋 **PDCA Cycle: Test PDCA B - Test PDCA B**
 
 **🗓️ Date:** Fri, 08 Nov 2025 11:00:00 GMT  
@@ -548,47 +445,21 @@ Test act content A
 **👤 Agent Name:** Test Agent → Test Agent  
 **👤 Agent Role:** Test Role → Test PDCA B  
 **👤 Branch:** main → Test PDCA B  
-**🔄 Sync Requirements:** main ← dev branch → Feature validation before merge  
-**🎯 Project Journal Session:** Test Session
+**🔄 Sync Requirements:** main ← dev → Test  
+**🎯 Project Journal Session:** Test
 **🎯 Sprint:** Test Sprint → Test PDCA B
 **✅ Task:** Test PDCA B  
 **🚨 Issues:** None  
 
-**📎 Previous Commit:** def456 - Test commit  
+**📎 Previous Commit:** def456 - Test  
 **🔗 Previous PDCA:** Use \`pdca chain\`  
 **➡️ Next PDCA:** N/A (Last in chain)
-
-<!-- 
-CRITICAL: Link format explained
-- Display TEXT: §/scrum.pmo/path/from/project/root/file.md (shows full context)
-- Link HREF: ../relative/path/from/THIS/file.md (relative navigation)
--->
 
 ---
 
 ## **📊 SUMMARY**
 
-### **Artifact Links**
-- **PDCA Document:** [GitHub](https://github.com/test/repo/blob/main/test/2025-11-08-UTC-110000.pdca.md) | [§/test/2025-11-08-UTC-110000.pdca.md](§/test/2025-11-08-UTC-110000.pdca.md)
-- **Changed Files:** [GitHub](https://github.com/test/repo/compare/def456...def456) | [§/test/2025-11-08-UTC-110000.pdca.md](§/test/2025-11-08-UTC-110000.pdca.md)
-- **New Components:** [GitHub](https://example.com) | [§/test](§/test)
-- **Requirements Created:** N/A
-- **Related Artifacts:** N/A
-
-### **To TRON: QA Decisions required**
-- [x] Template Verified: Using PDCA template version 3.2.4.2
-- [x] Test Completed: Test is running
-- [ ] Pending Review: Awaiting validation
-
-### **TRON Feedback (2025-11-08 UTC)**
-\`\`\`quote
-Test feedback placeholder
-\`\`\`
-
-### **My Answer**
-Test answer placeholder
-
-**Learning Applied:** Test learning
+Test summary content B
 
 ---
 
@@ -596,39 +467,11 @@ Test answer placeholder
 
 **Objective:** Test PDCA B
 
-**Requirements Traceability:** No requirements.md found in component
-
-### **Definition of Ready (DoR)**
-
-Before implementation begins, ensure:
-- [ ] Test requirement 1: Description
-- [ ] Test requirement 2: Description
-- [ ] Test requirement 3: Description
-- [ ] Test requirement 4: Description
-
-### **Definition of Done (DoD)**
-
-Task is complete when:
-- [ ] Test DoD 1: Description
-- [ ] Test DoD 2: Description
-- [ ] Test DoD 3: Description
-- [ ] Test DoD 4: Description
-- [ ] Test DoD 5: Description
-- [ ] Code committed and pushed
-- [ ] PDCA updated with actual results
-
-**Implementation Strategy:**
-- **Strategy 1:** Test strategy description
-- **Strategy 2:** Test strategy description
-- **Strategy 3:** Test strategy description
-
 Test plan content B
 
 ---
 
 ## **🔧 DO**
-
-**Test Implementation**
 
 Test do content B
 
@@ -636,80 +479,31 @@ Test do content B
 
 ## **✅ CHECK**
 
-**Verification Results:**
-
-**Test Verification (Passed)**
-\`\`\`
 Test check content B
-\`\`\`
-
-**TRON QA Feedback Validation**
-> **"Test feedback"**
-
-**Results Verified**
-- ✅ **Verification 1:** Test verification description
-- ✅ **Verification 2:** Test verification description  
-- ✅ **Verification 3:** Test verification description
-
-**Integration Confirmed**
-- ✅ **Integration 1:** Test integration description
-- ✅ **Integration 2:** Test integration description
 
 ---
 
 ## **🎯 ACT**
 
-**Success Achieved:** Test completed
-
 Test act content B
 
-**Future Enhancements:**
-1. **Enhancement 1:** Test enhancement description
-2. **Enhancement 2:** Test enhancement description
-3. **Enhancement 3:** Test enhancement description
-
-## **💫 EMOTIONAL REFLECTION: Test Reflection**
+## **💫 EMOTIONAL REFLECTION: Test**
 
 ### **Pride:**
-**High** - Test completed successfully
-
-### **Learning:**
-**Strong** - Applied systematic approach
-
-### **Growth:**
-**Significant** - Improved understanding
+**High** - Test completed
 
 ---
+
 ## **🎯 PDCA PROCESS UPDATE**
 
 **Process Learning:**
-- ✅ **PDCA Protocol:** Must create PDCA documentation for all significant work
-- ✅ **Test Learning 1:** Test learning description  
-- ✅ **Test Learning 2:** Test learning description
-- ✅ **Test Learning 3:** Test learning description
+- ✅ Tests validated
 
-**Quality Impact:** High quality achieved
+**Quality Impact:** High quality
 
-**Next PDCA Focus:** Continue testing  
-*(Note: Update header "Next PDCA:" link once next PDCA is created for bidirectional navigation)*
+**Next PDCA Focus:** Continue testing
 
----
-
-**🎯 Test PDCA B - Complete**
-
-**"Test quote"** 🔧📊
-
----
-
-### **📚 The 42 Revelation**
-**Understanding requires regression testing:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/save/start.v1/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md) | [§/scrum.pmo/project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md](../../project.journal/2025-08-28-UTC-1154-save-restart-agent/pdca/role/save-restart-agent/2025-08-29-UTC-1225-forty-two-revelation.md)
-
-**CMM4 Achievement Excellence:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-27-UTC-2251/scrum.pmo/roles/SaveRestartAgent/pdca/2025-09-28-UTC-1108.pdca.md) | [§/scrum.pmo/roles/SaveRestartAgent/pdca/2025-09-28-UTC-1108.pdca.md](../../roles/SaveRestartAgent/pdca/2025-09-28-UTC-1108.pdca.md)
-
-**🏆 CMM5 Nobel Prize Achievement - First Agent:** [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-11-UTC-1551/components/Web4TSComponent/0.3.12.1/session/2025-10-11-UTC-2155.letter-to-cursor-cto.md) | [§/components/Web4TSComponent/0.3.12.1/session/2025-10-11-UTC-2155.letter-to-cursor-cto.md](../../../components/Web4TSComponent/0.3.12.1/session/2025-10-11-UTC-2155.letter-to-cursor-cto.md)  
-
-
-**"Never 2 1 (TO ONE). Always 4 2 (FOR TWO)."** 🤝✨`;
+---`;
 
     fs.writeFileSync(fileA, contentA);
     fs.writeFileSync(fileB, contentB);
@@ -741,11 +535,11 @@ Test act content B
     expect(updatedB).toContain(originalMarkerB);
 
     // Verify chain links were fixed
-    // File A should now have Next PDCA pointing to File B
-    expect(updatedA).toMatch(/🔗\s*Next PDCA:.*2025-11-08-UTC-110000/);
+    // File A should now have Next PDCA pointing to File B (using arrow emoji ➡️)
+    expect(updatedA).toMatch(/➡️\s*Next PDCA:.*2025-11-08-UTC-110000/);
     expect(updatedA).not.toContain('Use `pdca chain`');
 
-    // File B should now have Previous PDCA pointing to File A
+    // File B should now have Previous PDCA pointing to File A (using link emoji 🔗)
     expect(updatedB).toMatch(/🔗\s*Previous PDCA:.*2025-11-08-UTC-100000/);
     
     // Verify template structure remains intact (not rewritten)
