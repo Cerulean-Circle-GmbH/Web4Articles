@@ -5788,8 +5788,9 @@ export class DefaultPDCA implements PDCA {
         // Description pattern: after timestamp, has dash followed by lowercase letters
         // e.g., "2025-10-28-UTC-100000-with-description.pdca.md"
         // Should NOT match "-UTC" which is part of the timestamp
-        const hasDescription = currentName.match(/-UTC-\d{6}-.+\.pdca\.md$/);  // Has extra text after timestamp
-        const timestampMatch = currentName.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{6})/);
+        // Support both HHMM (4 digits) and HHMMSS (6 digits) timestamp formats
+        const hasDescription = currentName.match(/-UTC-\d{4,6}-.+\.pdca\.md$/);  // Has extra text after timestamp
+        const timestampMatch = currentName.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{4,6})/);
         
         if (hasDescription || timestampMatch) {
           console.log(`📝 Filename Analysis:`);
@@ -8051,8 +8052,9 @@ export class DefaultPDCA implements PDCA {
   private extractTimestampFromFilename(filePath: string): string {
     const filename = basename(filePath);
     
-    // Match pattern: YYYY-MM-DD-UTC-HHMM
-    const match = filename.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{4})/);
+    // Match pattern: YYYY-MM-DD-UTC-HHMM or YYYY-MM-DD-UTC-HHMMSS
+    // Support both 4-digit (HHMM) and 6-digit (HHMMSS) time formats
+    const match = filename.match(/(\d{4}-\d{2}-\d{2}-UTC-\d{4,6})/);
     if (match) {
       return match[1];
     }
