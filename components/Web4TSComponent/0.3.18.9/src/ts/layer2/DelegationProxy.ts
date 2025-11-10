@@ -64,17 +64,15 @@ export class DelegationProxy<T extends Component> implements Component {
   }
   
   /**
-   * Set target component and eagerly load Web4TSComponent for method discovery
-   * @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md
+   * Set target component and load Web4TSComponent for method discovery
+   * @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
+   * CRITICAL: Must await loading for getDelegationTarget() to work immediately
    */
-  setTarget(target: T): this {
+  async setTarget(target: T): Promise<this> {
     this.model.target = target;
     
-    // Eagerly load Web4TSComponent for synchronous hasMethod() calls
-    // This is fire-and-forget; the Proxy will await it when needed
-    this.getWeb4TS().catch(err => {
-      console.error('Warning: Failed to load Web4TSComponent for delegation:', err);
-    });
+    // Load Web4TSComponent synchronously for immediate getDelegationTarget() access
+    await this.getWeb4TS();
     
     return this;
   }
@@ -139,6 +137,7 @@ export class DelegationProxy<T extends Component> implements Component {
   
   /**
    * Create Proxy wrapper (Radical OOP factory method)
+   * @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
    */
   toProxy(): T {
     const self = this;
@@ -147,7 +146,32 @@ export class DelegationProxy<T extends Component> implements Component {
       get(target: T, prop: string | symbol): any {
         const propName = typeof prop === 'symbol' ? prop.toString() : prop;
         
-        // 1. If property exists on target → use it
+        // 0. Check for Promise-like properties (don't delegate these!)
+        // This prevents `await proxy` from trying to delegate `.then()`
+        if (propName === 'then' || propName === 'catch' || propName === 'finally') {
+          return undefined;
+        }
+        
+        // 1. Check DelegationProxy's own methods (metadata access)
+        // @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
+        if (propName === 'hasDelegation' || propName === 'getDelegationTarget') {
+          const value = (self as any)[propName];
+          if (typeof value === 'function') {
+            return value.bind(self);
+          }
+          return value;
+        }
+        
+        // 2. Check Component interface methods (discovery/metadata)
+        if (propName === 'listMethods' || propName === 'hasMethod' || propName === 'getMethodSignature') {
+          const value = (self as any)[propName];
+          if (typeof value === 'function') {
+            return value.bind(self);
+          }
+          return value;
+        }
+        
+        // 3. If property exists on target → use it (own methods)
         if (prop in target) {
           const value = (target as any)[prop];
           if (typeof value === 'function') {
@@ -156,7 +180,7 @@ export class DelegationProxy<T extends Component> implements Component {
           return value;
         }
         
-        // 2. If property doesn't exist → delegate
+        // 4. If property doesn't exist → delegate transparently
         return async function(...args: any[]): Promise<T> {
           await self.delegateMethod(propName, ...args);
           return target;
@@ -165,14 +189,25 @@ export class DelegationProxy<T extends Component> implements Component {
     }) as T;
   }
   
-  // Component interface methods (check BOTH target and Web4TSComponent for delegated methods)
+  // ============================================================================
+  // Component Interface Methods
+  // @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
+  // ✅ RADICAL OOP: Return ONLY what this component knows (transparent delegation)
+  // ============================================================================
+  
+  /**
+   * Check if method exists (checks target AND delegation for execution)
+   * Used by CLI to determine if command is available
+   * @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
+   * ✅ RADICAL OOP: Check BOTH because Proxy CAN handle delegated methods at call-time
+   */
   hasMethod(name: string): boolean {
-    // Check target first (component's own methods)
+    // Check target first (own methods)
     if (this.model.target.hasMethod(name)) {
       return true;
     }
     
-    // Check Web4TSComponent for delegated methods
+    // Check delegation target (delegated methods ARE available via Proxy)
     if (this.model.web4ts && this.model.web4ts.hasMethod(name)) {
       return true;
     }
@@ -180,13 +215,17 @@ export class DelegationProxy<T extends Component> implements Component {
     return false;
   }
   
+  /**
+   * Get method signature (check target first, then delegation)
+   * Delegated methods are available via Proxy interception
+   */
   getMethodSignature(name: string): any {
     // Check target first
     if (this.model.target.hasMethod(name)) {
       return this.model.target.getMethodSignature(name);
     }
     
-    // Check Web4TSComponent for delegated methods
+    // Check delegation target
     if (this.model.web4ts && this.model.web4ts.hasMethod(name)) {
       return this.model.web4ts.getMethodSignature(name);
     }
@@ -194,13 +233,34 @@ export class DelegationProxy<T extends Component> implements Component {
     return undefined;
   }
   
+  /**
+   * List available methods (ONLY target's own methods)
+   * @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
+   * ✅ RADICAL OOP: Component knows ONLY its own methods
+   * Delegated methods discovered separately via getDelegationTarget()
+   */
   listMethods(): string[] {
-    // Combine methods from both target and Web4TSComponent
-    const targetMethods = this.model.target.listMethods();
-    const web4tsMethods = this.model.web4ts ? this.model.web4ts.listMethods() : [];
-    
-    // Merge and deduplicate
-    return Array.from(new Set([...targetMethods, ...web4tsMethods]));
+    // Return ONLY target's methods - NO aggregation!
+    return this.model.target.listMethods();
+  }
+  
+  /**
+   * Check if this component uses delegation
+   * @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
+   * NEW: Explicit metadata for CLI to discover delegation
+   */
+  hasDelegation(): boolean {
+    return !!this.model.web4ts;
+  }
+  
+  /**
+   * Get the delegation target for method discovery
+   * @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
+   * NEW: Allows CLI to query delegated methods separately
+   * @returns Web4TSComponent instance if delegation exists, undefined otherwise
+   */
+  getDelegationTarget(): any {
+    return this.model.web4ts;
   }
   
   async getWeb4TSComponent(): Promise<any> {
@@ -214,19 +274,19 @@ export class DelegationProxy<T extends Component> implements Component {
   /**
    * Static start method - Web4 Radical OOP entry point
    * Creates a Proxy-wrapped component with automatic method delegation
+   * @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
    * 
    * @param target The component to wrap
    * @returns Proxied component with automatic delegation
    * 
    * Usage:
    * ```typescript
-   * this.component = DelegationProxy.start(new DefaultComponent().init());
+   * this.component = await DelegationProxy.start(new DefaultComponent().init());
    * ```
    */
-  static start<T extends Component>(target: T): T {
-    return new DelegationProxy<T>()
-      .init()
-      .setTarget(target)
-      .toProxy();
+  static async start<T extends Component>(target: T): Promise<T> {
+    const proxy = new DelegationProxy<T>().init();
+    await proxy.setTarget(target); // Must await to load Web4TSComponent
+    return proxy.toProxy();
   }
 }

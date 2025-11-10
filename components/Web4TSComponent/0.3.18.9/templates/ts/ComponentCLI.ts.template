@@ -40,37 +40,53 @@ export class {{COMPONENT_NAME}}CLI extends DefaultCLI {
   /**
    * Initialize component asynchronously (Radical OOP)
    * Called by start() before executing commands
-   * @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md
-   * @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion.pdca.md
+   * @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
+   * ✅ RADICAL OOP: Separate discovery of own methods vs delegated methods
    */
   async initComponent(): Promise<void> {
     // ✅ STEP 1: Create component (knows its OWN methods)
     const component = await new Default{{COMPONENT_NAME}}().init();
     
-    // ✅ STEP 2: Pre-load Web4TSComponent (knows ITS methods)
-    // @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion.pdca.md
-    // CRITICAL: Load BEFORE wrapping, so DelegationProxy.listMethods() can return merged list
-    // Each object maintains its OWN method list (Radical OOP)
+    // ✅ STEP 2: Pre-load Web4TSComponent (for delegation to work at call-time)
     await (component as any).getWeb4TSComponent();
     
-    // ✅ STEP 3: Wrap with DelegationProxy (NOW knows BOTH)
+    // ✅ STEP 3: Wrap with DelegationProxy (transparent delegation)
     // @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md
+    // @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
     // Proxy intercepts missing methods and delegates them to Web4TSComponent
-    // Type cast: DelegationProxy expects base Component interface
-    this.component = DelegationProxy.start(component as any) as any;
+    // CRITICAL: await start() to ensure Web4TSComponent is loaded before getDelegationTarget()
+    this.component = await DelegationProxy.start(component as any) as any;
     
-    // ✅ STEP 4: Discover CLI methods (CLI knows ITS methods)
+    // ✅ STEP 4: Discover CLI's own methods
     this.discoverMethods();
     
-    // ✅ STEP 5: Copy component methods (merged list) to methodSignatures
-    // @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md - Populate methodSignatures from component
-    // listMethods() now returns BOTH component AND delegated methods (Radical OOP)
+    // ✅ STEP 5: Discover component's OWN methods
+    // @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
+    // RADICAL OOP: Component knows ONLY its own methods (3 for IdealMinimalComponent)
     if (this.component) {
-      const componentMethods = this.component.listMethods();
-      for (const methodName of componentMethods) {
+      const ownMethods = this.component.listMethods();
+      for (const methodName of ownMethods) {
         const signature = this.component.getMethodSignature(methodName);
         if (signature) {
           this.methodSignatures.set(methodName, signature);
+        }
+      }
+    }
+    
+    // ✅ STEP 6: Discover DELEGATED methods (if delegation exists)
+    // @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
+    // RADICAL OOP: Query delegation target separately via metadata
+    if (this.component && (this.component as any).hasDelegation && (this.component as any).hasDelegation()) {
+      const delegationTarget = (this.component as any).getDelegationTarget();
+      if (delegationTarget) {
+        const delegatedMethods = delegationTarget.listMethods();
+        for (const methodName of delegatedMethods) {
+          const signature = delegationTarget.getMethodSignature(methodName);
+          if (signature) {
+            // Mark as delegated for help display
+            signature.isDelegated = true;
+            this.methodSignatures.set(methodName, signature);
+          }
         }
       }
     }

@@ -194,37 +194,21 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
 
   /**
    * @cliHide
-   * @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md - Added method discovery
+   * @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
+   * ✅ RADICAL OOP: Component knows ONLY its own methods
    */
   async init(scenario?: Scenario<IdealMinimalComponentModel>): Promise<this> {
     if (scenario?.model) {
       this.model = { ...this.model, ...scenario.model };
     }
     
-    // Discover methods for CLI completion
+    // Discover OWN methods only (Radical OOP)
     this.discoverMethods();
     
-    // @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md
-    // ✅ RADICAL OOP: Dynamically discover delegated methods from Web4TSComponent
-    // NO HARDCODING! Get methods from Web4TSComponent itself (Single Source of Truth)
-    try {
-      const web4ts = await this.getWeb4TSComponent();
-      const delegatedMethods = web4ts.listMethods();
-      
-      // Register each delegated method that we don't already have
-      for (const methodName of delegatedMethods) {
-        if (!this.methods.has(methodName)) {
-          const signature = web4ts.getMethodSignature(methodName);
-          if (signature) {
-            this.methods.set(methodName, signature);
-          }
-        }
-      }
-    } catch (error) {
-      // Graceful degradation: If Web4TSComponent not available, component still works
-      // (useful for standalone components or during build)
-      console.debug('Note: Web4TSComponent delegation not available:', error);
-    }
+    // @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
+    // ❌ REMOVED: Component should NOT discover delegated methods
+    // ✅ RADICAL OOP: CLI discovers delegated methods separately via getDelegationTarget()
+    // Component knows ONLY its own methods (create, process, completion)
     
     return this;
   }
