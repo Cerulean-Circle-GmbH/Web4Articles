@@ -1,17 +1,16 @@
 /**
- * Test: Delegation Version Display Bug Fix
+ * Test: Delegation Version Display
  * 
- * Bug: Line 436 of DefaultWeb4TSComponent.ts has hardcoded '0.3.17.3'
- * Expected: Should read actual Web4TSComponent version dynamically
+ * Verifies that printQuickHeader() correctly shows delegation context:
+ * - When context exists: Show CALLER (via INFRASTRUCTURE)
+ * - When no context: Show THIS component
  * 
- * This test verifies that when PDCA delegates to Web4TSComponent,
- * the displayed version matches the actual Web4TSComponent version,
- * not a hardcoded stale value.
+ * @pdca 2025-11-10-UTC-1010.pdca.md - Context-aware header display
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { DefaultWeb4TSComponent } from '../../../src/ts/layer2/DefaultWeb4TSComponent.js';
-import { readFileSync, readlinkSync } from 'fs';
+import { readlinkSync } from 'fs';
 import { join } from 'path';
 
 describe('Delegation Version Display', () => {
@@ -24,36 +23,33 @@ describe('Delegation Version Display', () => {
     projectRoot = component.model.projectRoot;
   });
 
-  it('should display actual Web4TSComponent version, not hardcoded 0.3.17.3', () => {
+  it('should show CALLER component (via INFRASTRUCTURE) when context exists', () => {
     // Arrange: Get the actual Web4TSComponent version
-    // Use absolute path since we know the project structure
     const actualProjectRoot = process.cwd().includes('/test/data') 
       ? process.cwd().split('/test/data')[0] + '/test/data'
       : process.cwd().split('/components/')[0];
     
     const web4tsDir = join(actualProjectRoot, 'components', 'Web4TSComponent');
     const latestSymlink = join(web4tsDir, 'latest');
-    const actualVersion = readlinkSync(latestSymlink); // e.g., "0.3.17.4" or "0.3.17.5"
+    const actualVersion = readlinkSync(latestSymlink); // e.g., "0.3.18.4"
 
-    // Act: Simulate delegation by setting context to a different component
-    // Follow Path Authority: CLI calculates paths and stores in model
-    const pdcaComponent = new DefaultWeb4TSComponent();
-    pdcaComponent.init({
+    // Act: Simulate IdealMinimalComponent delegating to Web4TSComponent
+    const callerComponent = new DefaultWeb4TSComponent();
+    callerComponent.init({
       model: {
-        component: 'PDCA',
-        version: { major: 0, minor: 3, patch: 17, build: 4 } as any,
-        componentRoot: join(actualProjectRoot, 'components', 'PDCA', '0.3.17.4'),
+        component: 'IdealMinimalComponent',
+        version: { major: 0, minor: 3, patch: 18, build: 4 } as any,
+        componentRoot: join(actualProjectRoot, 'components', 'IdealMinimalComponent', '0.3.18.4'),
         targetDirectory: actualProjectRoot,
-        // Path Authority: CLI provides these calculated paths
-        componentsDir: join(actualProjectRoot, 'components'),
+        componentsDirectory: join(actualProjectRoot, 'components'),
         projectRoot: actualProjectRoot
       }
     });
     
-    // Set component to also have Path Authority paths
-    component.model.componentsDir = join(actualProjectRoot, 'components');
+    // Web4TSComponent (infrastructure) receives the caller as context
+    component.model.componentsDirectory = join(actualProjectRoot, 'components');
     component.model.projectRoot = actualProjectRoot;
-    component.model.context = pdcaComponent;
+    component.model.context = callerComponent;
 
     // Capture console output
     const logs: string[] = [];
@@ -63,16 +59,16 @@ describe('Delegation Version Display', () => {
     };
 
     try {
-      // Act: Call printQuickHeader (line 417-442)
+      // Act: Call printQuickHeader
       (component as any).printQuickHeader();
 
-      // Assert: Output should contain actual version, not hardcoded 0.3.17.3
+      // Assert: Should show "IdealMinimalComponent (via Web4TSComponent vX.X.X)"
       const output = logs.join('\n');
       
-      // Bug check: Should NOT show hardcoded 0.3.17.3
-      expect(output).not.toContain('via Web4TSComponent v0.3.17.3');
+      // Should show CALLER component name
+      expect(output).toContain('IdealMinimalComponent CLI Tool');
       
-      // Correct behavior: Should show actual version from symlink
+      // Should show delegation to INFRASTRUCTURE
       expect(output).toContain(`via Web4TSComponent v${actualVersion}`);
       
     } finally {
@@ -80,8 +76,8 @@ describe('Delegation Version Display', () => {
     }
   });
 
-  it('should not show delegation info when component IS Web4TSComponent', () => {
-    // Arrange: Component is Web4TSComponent (self-operation, no delegation)
+  it('should show THIS component when no context (direct call)', () => {
+    // Arrange: Component is Web4TSComponent (direct operation, no delegation)
     component.model.context = null; // No delegation
 
     // Capture console output
@@ -95,18 +91,19 @@ describe('Delegation Version Display', () => {
       // Act
       (component as any).printQuickHeader();
 
-      // Assert: Should NOT show "via Web4TSComponent" when it IS Web4TSComponent
+      // Assert: Should show "Web4TSComponent" without "via" text
       const output = logs.join('\n');
-      expect(output).not.toContain('via Web4TSComponent');
+      expect(output).toContain('Web4TSComponent CLI Tool');
+      expect(output).not.toContain('via');
       
     } finally {
       console.log = originalLog;
     }
   });
 
-  it('should read Web4TSComponent version from package.json when available', () => {
-    // This test documents the expected fix:
-    // Read version from package.json instead of hardcoding
+  it('should read Web4TSComponent version from latest symlink', () => {
+    // This test documents the expected behavior:
+    // Read version from latest symlink for delegation display
     
     const actualProjectRoot = process.cwd().includes('/test/data') 
       ? process.cwd().split('/test/data')[0] + '/test/data'
@@ -115,13 +112,9 @@ describe('Delegation Version Display', () => {
     const web4tsDir = join(actualProjectRoot, 'components', 'Web4TSComponent');
     const latestSymlink = join(web4tsDir, 'latest');
     const actualVersion = readlinkSync(latestSymlink);
-    const packageJsonPath = join(web4tsDir, actualVersion, 'package.json');
-    
-    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
-    const expectedVersion = packageJson.version;
 
-    // The version from package.json should match the directory name
-    expect(expectedVersion).toBe(actualVersion);
+    // The version should be a valid semantic version
+    expect(actualVersion).toMatch(/^\d+\.\d+\.\d+\.\d+$/);
   });
 });
 

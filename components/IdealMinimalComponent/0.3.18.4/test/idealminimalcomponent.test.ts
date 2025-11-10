@@ -203,7 +203,7 @@ describe('IdealMinimalComponent Radical OOP: info() with Context Delegation', ()
     expect(result).toContain('0.3.18.4');
   });
 
-  it('should show context delegation info', () => {
+  it('should show context delegation info with correct caller and target', () => {
     const projectRoot = findProjectRoot(__dirname);
     const scriptsDir = path.join(projectRoot, 'scripts');
     
@@ -215,8 +215,18 @@ describe('IdealMinimalComponent Radical OOP: info() with Context Delegation', ()
     
     // Context Delegation section should exist
     expect(result).toContain('Context Delegation:');
+    
+    // Caller should be IdealMinimalComponent (the component that initiated the call)
     expect(result).toContain('Caller Component:');
+    expect(result).toMatch(/Caller Component:\s+IdealMinimalComponent/);
+    
+    // Target should be Web4TSComponent (the infrastructure doing the work)
     expect(result).toContain('Target Component:');
+    expect(result).toMatch(/Target Component:\s+Web4TSComponent/);
+    
+    // Header should show: IdealMinimalComponent (via Web4TSComponent)
+    expect(result).toContain('IdealMinimalComponent CLI Tool');
+    expect(result).toContain('via Web4TSComponent');
   });
 
   it('should work when called via symlink after sourcing source.env', () => {
