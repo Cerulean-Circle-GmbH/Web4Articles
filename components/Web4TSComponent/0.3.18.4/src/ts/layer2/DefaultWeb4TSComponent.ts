@@ -4263,8 +4263,9 @@ Standards:
    * @TODO cliDefault topic overview
    */
   async info(topic: string = 'model'): Promise<this> {
-    // Determine which model to display (context if in "on" mode, otherwise this)
-    const targetModel = this.model.context?.model || this.model;
+    // @pdca 2025-11-10-UTC-1010.pdca.md - Radical OOP: Use getTarget() single source of truth
+    const target = this.getTarget();
+    const targetModel = target.model;
     const isContextMode = !!this.model.context;
     
     switch (topic) {
@@ -4279,7 +4280,8 @@ Standards:
       case 'model':
       case 'overview':
       default:
-        // Pretty print the model
+        // @pdca 2025-11-10-UTC-1010.pdca.md - Use printQuickHeader() for consistency
+        // Pretty print the model with quick header
         console.log(`
 ${'='.repeat(80)}
 📊 Component Model Information
@@ -4324,13 +4326,14 @@ ${'='.repeat(80)}
           console.log();
         }
         
-        // Context Info
+        // @pdca 2025-11-10-UTC-1010.pdca.md - Show Context Delegation info (caller vs target)
+        // This clarifies WHO is calling and WHAT is being delegated to
         if (isContextMode) {
           console.log(`🔗 Context Delegation:`);
           console.log(`   Caller Component: ${this.model.component}`);
-          console.log(`   Caller Version:   ${this.model.version?.toString()}`);
+          console.log(`   Caller Version:   ${this.model.version.toString()}`);
           console.log(`   Target Component: ${targetModel.component}`);
-          console.log(`   Target Version:   ${targetModel.version?.toString()}`);
+          console.log(`   Target Version:   ${targetModel.version?.toString() || 'N/A'}`);
           console.log();
         }
         
