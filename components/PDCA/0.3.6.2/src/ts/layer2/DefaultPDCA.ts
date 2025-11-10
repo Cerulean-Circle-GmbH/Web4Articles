@@ -6125,91 +6125,65 @@ export class DefaultPDCA implements PDCA {
     let updated = false;
     
     // Check and fix Previous PDCA link
+    // ALWAYS update to match snapshot chronological order (links may have been set during Phase 2)
     const previousSnapshot = currentIndex > 0 ? allSnapshots[currentIndex - 1] : null;
     if (previousSnapshot) {
-      // Check if current Previous PDCA link is broken
-      const currentPrevMatch = content.match(/\*\*🔗 Previous PDCA:\*\* \[GitHub\]\([^)]+\) \| \[([^\]]+)\]\(([^)]+)\)/);
+      const previousFilename = path.basename(previousSnapshot.originalPath);
+      const sessionRelativePath = path.relative(projectRoot, sessionDir);
+      const previousPDCAProjectPath = `${sessionRelativePath}/${previousFilename}`;
       
-      if (currentPrevMatch) {
-        const currentPrevPath = currentPrevMatch[2]; // Relative path from link
-        const absolutePrevPath = path.resolve(sessionDir, currentPrevPath);
-        
-        // If link is broken (file doesn't exist), update it
-        if (!fs.existsSync(absolutePrevPath)) {
-          console.log(`   🔧 Fixing broken Previous PDCA link`);
-          
-          const previousFilename = path.basename(previousSnapshot.originalPath);
-          const sessionRelativePath = path.relative(projectRoot, sessionDir);
-          const previousPDCAProjectPath = `${sessionRelativePath}/${previousFilename}`;
-          
-          const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
-          const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${previousPDCAProjectPath}`;
-          const sectionPath = `§/${previousPDCAProjectPath}`;
-          const relativePath = `./${previousFilename}`;
-          
-          content = content.replace(
-            /\*\*🔗 Previous PDCA:\*\* \[GitHub\]\([^)]+\) \| \[[^\]]+\]\([^)]+\)/,
-            `**🔗 Previous PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`
-          );
-          updated = true;
-        }
+      const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+      const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${previousPDCAProjectPath}`;
+      const sectionPath = `§/${previousPDCAProjectPath}`;
+      const relativePath = `./${previousFilename}`;
+      
+      const expectedLink = `**🔗 Previous PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`;
+      
+      // Check if link needs updating
+      if (!content.includes(expectedLink)) {
+        console.log(`   🔧 Updating Previous PDCA link to match chronological order`);
+        content = content.replace(
+          /\*\*🔗 Previous PDCA:\*\* \[GitHub\]\([^)]+\) \| \[[^\]]+\]\([^)]+\)/,
+          expectedLink
+        );
+        updated = true;
+      }
+    } else {
+      // First file in chain - ensure Previous PDCA shows N/A or "First in chain"
+      const expectedLink = `**🔗 Previous PDCA:** N/A (First in chain)`;
+      if (!content.includes(expectedLink)) {
+        console.log(`   🔧 Updating Previous PDCA link (first in chain)`);
+        content = content.replace(
+          /\*\*🔗 Previous PDCA:\*\* (?:\[GitHub\]\([^)]+\) \| \[[^\]]+\]\([^)]+\)|.+)/,
+          expectedLink
+        );
+        updated = true;
       }
     }
     
     // Check and fix Next PDCA link
+    // ALWAYS update to match snapshot chronological order (links may have been set during Phase 2)
     const nextSnapshot = currentIndex < allSnapshots.length - 1 ? allSnapshots[currentIndex + 1] : null;
     if (nextSnapshot) {
-      // Check if current Next PDCA link is broken or template placeholder
-      const currentNextMatch = content.match(/\*\*➡️ Next PDCA:\*\* (.+)/);
+      const nextFilename = path.basename(nextSnapshot.originalPath);
+      const sessionRelativePath = path.relative(projectRoot, sessionDir);
+      const nextPDCAProjectPath = `${sessionRelativePath}/${nextFilename}`;
       
-      if (currentNextMatch) {
-        const nextLinkContent = currentNextMatch[1];
-        
-        // If it's the template placeholder or a broken link, update it
-        if (nextLinkContent.includes('Use pdca chain') || nextLinkContent.includes('{{')) {
-          console.log(`   🔧 Fixing Next PDCA link (was template placeholder)`);
-          
-          const nextFilename = path.basename(nextSnapshot.originalPath);
-          const sessionRelativePath = path.relative(projectRoot, sessionDir);
-          const nextPDCAProjectPath = `${sessionRelativePath}/${nextFilename}`;
-          
-          const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
-          const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${nextPDCAProjectPath}`;
-          const sectionPath = `§/${nextPDCAProjectPath}`;
-          const relativePath = `./${nextFilename}`;
-          
-          content = content.replace(
-            /\*\*➡️ Next PDCA:\*\* .+/,
-            `**➡️ Next PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`
-          );
-          updated = true;
-        } else {
-          // Check if the link points to an existing file
-          const linkMatch = nextLinkContent.match(/\[([^\]]+)\]\(([^)]+)\)/);
-          if (linkMatch) {
-            const nextPath = linkMatch[2];
-            const absoluteNextPath = path.resolve(sessionDir, nextPath);
-            
-            if (!fs.existsSync(absoluteNextPath)) {
-              console.log(`   🔧 Fixing broken Next PDCA link`);
-              
-              const nextFilename = path.basename(nextSnapshot.originalPath);
-              const sessionRelativePath = path.relative(projectRoot, sessionDir);
-              const nextPDCAProjectPath = `${sessionRelativePath}/${nextFilename}`;
-              
-              const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
-              const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${nextPDCAProjectPath}`;
-              const sectionPath = `§/${nextPDCAProjectPath}`;
-              const relativePath = `./${nextFilename}`;
-              
-              content = content.replace(
-                /\*\*➡️ Next PDCA:\*\* .+/,
-                `**➡️ Next PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`
-              );
-              updated = true;
-            }
-          }
-        }
+      const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+      const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${nextPDCAProjectPath}`;
+      const sectionPath = `§/${nextPDCAProjectPath}`;
+      const relativePath = `./${nextFilename}`;
+      
+      const expectedLink = `**➡️ Next PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`;
+      
+      // Check if link needs updating
+      if (!content.includes(expectedLink)) {
+        console.log(`   🔧 Updating Next PDCA link to match chronological order`);
+        content = content.replace(
+          /\*\*➡️ Next PDCA:\*\* .+/,
+          expectedLink
+        );
+        updated = true;
       }
     }
     
