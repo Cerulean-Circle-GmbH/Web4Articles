@@ -6494,8 +6494,21 @@ export class DefaultPDCA implements PDCA {
     // Generate current UTC timestamp string for display
     const utcDateString = now.toUTCString();
     
-    // Get current branch from model or default
-    const currentBranch = this.model.currentBranch || 'main';
+    // Get current branch from git (branch-aware dual links)
+    // Fall back to model setting or 'main' if git fails (e.g., in tests)
+    const { execSync } = await import('child_process');
+    let currentBranch: string;
+    try {
+      currentBranch = execSync('git branch --show-current', {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      if (!currentBranch) {
+        currentBranch = this.model.currentBranch || 'main';
+      }
+    } catch {
+      currentBranch = this.model.currentBranch || 'main';
+    }
     
     // NEW: Get previous commit for baseline (auto-populate)
     const previousCommit = this.getPreviousCommit(projectRoot);
