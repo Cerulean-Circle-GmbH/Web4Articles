@@ -8286,6 +8286,144 @@ export class DefaultPDCA implements PDCA {
    * @param sessionDir - Session directory containing all PDCAs
    * @param isDryRun - Whether this is a dry-run (don't commit changes)
    */
+  /**
+   * Find previous version's session directory
+   * 
+   * @param currentSessionDir Current version's session directory (e.g., .../Component/0.3.16.0/session)
+   * @returns Previous version's session directory or null if not found
+   * 
+   * Example: .../Component/0.3.16.0/session → .../Component/0.3.15.1/session
+   */
+  private async findPreviousVersionSession(currentSessionDir: string): Promise<string | null> {
+    const fs = await import('fs');
+    const path = await import('path');
+    
+    // Parse current version directory structure
+    // Expected: .../Component/X.Y.Z.W/session
+    const sessionDirParts = currentSessionDir.split(path.sep);
+    const sessionIndex = sessionDirParts.lastIndexOf('session');
+    
+    if (sessionIndex < 1) {
+      return null; // Invalid directory structure
+    }
+    
+    const currentVersion = sessionDirParts[sessionIndex - 1];
+    const componentDir = sessionDirParts.slice(0, sessionIndex - 1).join(path.sep);
+    
+    // Parse semantic version (X.Y.Z.W)
+    const versionMatch = currentVersion.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
+    if (!versionMatch) {
+      return null; // Not a semantic version
+    }
+    
+    // Get all version directories in component
+    try {
+      const entries = fs.readdirSync(componentDir);
+      const versionDirs = entries
+        .filter(entry => {
+          const fullPath = path.join(componentDir, entry);
+          return fs.statSync(fullPath).isDirectory() && /^\d+\.\d+\.\d+\.\d+$/.test(entry);
+        })
+        .sort((a, b) => {
+          // Sort by semantic version
+          const aParts = a.split('.').map(Number);
+          const bParts = b.split('.').map(Number);
+          for (let i = 0; i < 4; i++) {
+            if (aParts[i] !== bParts[i]) {
+              return aParts[i] - bParts[i];
+            }
+          }
+          return 0;
+        });
+      
+      // Find current version index and get previous
+      const currentIndex = versionDirs.indexOf(currentVersion);
+      if (currentIndex <= 0) {
+        return null; // First version or not found
+      }
+      
+      const previousVersion = versionDirs[currentIndex - 1];
+      const previousSessionDir = path.join(componentDir, previousVersion, 'session');
+      
+      // Verify previous session directory exists
+      if (fs.existsSync(previousSessionDir)) {
+        return previousSessionDir;
+      }
+      
+      return null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  /**
+   * Find next version's session directory
+   * 
+   * @param currentSessionDir Current version's session directory (e.g., .../Component/0.3.16.0/session)
+   * @returns Next version's session directory or null if not found
+   * 
+   * Example: .../Component/0.3.16.0/session → .../Component/0.3.17.0/session
+   */
+  private async findNextVersionSession(currentSessionDir: string): Promise<string | null> {
+    const fs = await import('fs');
+    const path = await import('path');
+    
+    // Parse current version directory structure
+    const sessionDirParts = currentSessionDir.split(path.sep);
+    const sessionIndex = sessionDirParts.lastIndexOf('session');
+    
+    if (sessionIndex < 1) {
+      return null;
+    }
+    
+    const currentVersion = sessionDirParts[sessionIndex - 1];
+    const componentDir = sessionDirParts.slice(0, sessionIndex - 1).join(path.sep);
+    
+    // Parse semantic version
+    const versionMatch = currentVersion.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
+    if (!versionMatch) {
+      return null;
+    }
+    
+    // Get all version directories
+    try {
+      const entries = fs.readdirSync(componentDir);
+      const versionDirs = entries
+        .filter(entry => {
+          const fullPath = path.join(componentDir, entry);
+          return fs.statSync(fullPath).isDirectory() && /^\d+\.\d+\.\d+\.\d+$/.test(entry);
+        })
+        .sort((a, b) => {
+          const aParts = a.split('.').map(Number);
+          const bParts = b.split('.').map(Number);
+          for (let i = 0; i < 4; i++) {
+            if (aParts[i] !== bParts[i]) {
+              return aParts[i] - bParts[i];
+            }
+          }
+          return 0;
+        });
+      
+      // Find current version index and get next
+      const currentIndex = versionDirs.indexOf(currentVersion);
+      if (currentIndex < 0 || currentIndex >= versionDirs.length - 1) {
+        return null; // Last version or not found
+      }
+      
+      const nextVersion = versionDirs[currentIndex + 1];
+      const nextSessionDir = path.join(componentDir, nextVersion, 'session');
+      
+      // Verify next session directory exists
+      if (fs.existsSync(nextSessionDir)) {
+        return nextSessionDir;
+      }
+      
+      return null;
+    } catch (error) {
+      return null;
+    }
+  }
+
   private async updateChainLinksInternal(
     currentPDCAPath: string, 
     sessionDir: string, 
@@ -8330,17 +8468,94 @@ export class DefaultPDCA implements PDCA {
     const previousPDCA = currentIndex > 0 ? pdcaFiles[currentIndex - 1] : null;
     
     if (!previousPDCA) {
-      console.log(`ℹ️  No previous PDCA found (first in chain)`);
+      console.log(`ℹ️  No previous PDCA in current session (first in this version)`);
       
-      // Still need to set Previous PDCA to "N/A - First PDCA in chain" if template has placeholder
+      // CROSS-VERSION LINKING: Check if there's a previous version with PDCAs
+      const previousVersionSession = await this.findPreviousVersionSession(sessionDir);
+      
+      if (previousVersionSession) {
+        // Found previous version - link to its last PDCA
+        console.log(`📂 Found previous version session: ${previousVersionSession}`);
+        
+        const prevVersionFiles = fs.readdirSync(previousVersionSession);
+        const prevPdcaFiles = prevVersionFiles
+          .filter(f => pdcaPattern.test(f))
+          .map(f => ({
+            filename: f,
+            timestamp: f.match(pdcaPattern)![1],
+            fullPath: path.join(previousVersionSession, f)
+          }))
+          .sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+        
+        if (prevPdcaFiles.length > 0) {
+          // Get last PDCA from previous version
+          const lastPrevPDCA = prevPdcaFiles[prevPdcaFiles.length - 1];
+          console.log(`🔗 Cross-version link: ${currentFilename} → ${lastPrevPDCA.filename} (previous version)`);
+          
+          // Build cross-version link
+          const prevVersionRelative = path.relative(projectRoot, previousVersionSession);
+          const prevPDCAProjectPath = `${prevVersionRelative}/${lastPrevPDCA.filename}`;
+          const prevGithubUrl = `${repoUrl}/blob/${currentBranch}/${prevPDCAProjectPath}`;
+          const prevSectionPath = `§/${prevPDCAProjectPath}`;
+          
+          // Calculate relative path from current session to previous version's session
+          const currentSessionDir = path.dirname(currentPDCAPath);
+          const prevRelativePath = path.relative(currentSessionDir, lastPrevPDCA.fullPath);
+          
+          const crossVersionLink = `**🔗 Previous PDCA:** [GitHub](${prevGithubUrl}) | [${prevSectionPath}](${prevRelativePath})`;
+          
+          // Update current PDCA
+          let currentContent = fs.readFileSync(currentPDCAPath, 'utf-8');
+          currentContent = currentContent.replace(/\*\*🔗 Previous PDCA:\*\* .+/, crossVersionLink);
+          fs.writeFileSync(currentPDCAPath, currentContent, 'utf-8');
+          console.log(`✅ Set cross-version "Previous PDCA:" link`);
+          
+          // Update previous version's last PDCA to point forward
+          const currentRelativePath = path.relative(projectRoot, currentPDCAPath);
+          const currentGithubUrl = `${repoUrl}/blob/${currentBranch}/${currentRelativePath}`;
+          const currentSectionPath = `§/${currentRelativePath}`;
+          const currentFromPrevRelativePath = path.relative(previousVersionSession, currentPDCAPath);
+          
+          const forwardCrossVersionLink = `**➡️ Next PDCA:** [GitHub](${currentGithubUrl}) | [${currentSectionPath}](${currentFromPrevRelativePath})`;
+          
+          let prevContent = fs.readFileSync(lastPrevPDCA.fullPath, 'utf-8');
+          prevContent = prevContent.replace(/\*\*➡️ Next PDCA:\*\* .+/, forwardCrossVersionLink);
+          fs.writeFileSync(lastPrevPDCA.fullPath, prevContent, 'utf-8');
+          console.log(`✅ Updated previous version's last PDCA forward link`);
+          
+          // Commit both files
+          if (!isDryRun) {
+            try {
+              const currentRelative = path.relative(projectRoot, currentPDCAPath);
+              const prevRelative = path.relative(projectRoot, lastPrevPDCA.fullPath);
+              
+              execSync(`git add "${currentRelative}" "${prevRelative}"`, { cwd: projectRoot, stdio: 'pipe' });
+              execSync(
+                `git commit -m "fix: Establish cross-version chain link for ${currentFilename}"`,
+                { cwd: projectRoot, stdio: 'pipe' }
+              );
+              execSync('git push', { cwd: projectRoot, stdio: 'pipe' });
+              console.log(`✅ Committed and pushed cross-version chain link`);
+            } catch (error: unknown) {
+              const err = error as { message?: string };
+              console.log(`⚠️  Warning: Could not commit cross-version link: ${err.message || 'unknown error'}`);
+            }
+          }
+          
+          return;
+        }
+      }
+      
+      // No previous version or no PDCAs in it - truly first PDCA
+      console.log(`ℹ️  No previous version found - truly first PDCA in chain`);
       let currentContent = fs.readFileSync(currentPDCAPath, 'utf-8');
-      const firstPDCALink = `**🔗 Previous PDCA:** N/A - First PDCA in chain`;
+      const firstPDCALink = `**🔗 Previous PDCA:** N/A (First in chain)`;
       
       // Replace any Previous PDCA pattern with "N/A - First PDCA"
       if (currentContent.includes('{{PREVIOUS_PDCA_LINK}}') || /\*\*🔗 Previous PDCA:\*\* \[GitHub\]/.test(currentContent)) {
         currentContent = currentContent.replace(/\*\*🔗 Previous PDCA:\*\* .+/, firstPDCALink);
         fs.writeFileSync(currentPDCAPath, currentContent, 'utf-8');
-        console.log(`✅ Set "Previous PDCA:" to "N/A - First PDCA in chain"`);
+        console.log(`✅ Set "Previous PDCA:" to "N/A (First in chain)"`);
       }
       
       return;
@@ -8403,6 +8618,73 @@ export class DefaultPDCA implements PDCA {
       );
       fs.writeFileSync(currentPDCAPath, currentContent, 'utf-8');
       console.log(`✅ Set "Next PDCA:" link: ${currentFilename} → ${nextFilename}`);
+    } else {
+      // No next PDCA in current session - this is the last PDCA in this version
+      console.log(`ℹ️  No next PDCA in current session (last in this version)`);
+      
+      // CROSS-VERSION LINKING: Check if there's a next version with PDCAs
+      const nextVersionSession = await this.findNextVersionSession(sessionDir);
+      
+      if (nextVersionSession) {
+        // Found next version - link to its first PDCA
+        console.log(`📂 Found next version session: ${nextVersionSession}`);
+        
+        const nextVersionFiles = fs.readdirSync(nextVersionSession);
+        const nextPdcaFiles = nextVersionFiles
+          .filter(f => pdcaPattern.test(f))
+          .map(f => ({
+            filename: f,
+            timestamp: f.match(pdcaPattern)![1],
+            fullPath: path.join(nextVersionSession, f)
+          }))
+          .sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+        
+        if (nextPdcaFiles.length > 0) {
+          // Get first PDCA from next version
+          const firstNextPDCA = nextPdcaFiles[0];
+          console.log(`🔗 Cross-version forward link: ${currentFilename} → ${firstNextPDCA.filename} (next version)`);
+          
+          // Build cross-version forward link
+          const nextVersionRelative = path.relative(projectRoot, nextVersionSession);
+          const nextPDCAProjectPath = `${nextVersionRelative}/${firstNextPDCA.filename}`;
+          const nextGithubUrl = `${repoUrl}/blob/${currentBranch}/${nextPDCAProjectPath}`;
+          const nextSectionPath = `§/${nextPDCAProjectPath}`;
+          
+          // Calculate relative path from current session to next version's session
+          const currentSessionDir = path.dirname(currentPDCAPath);
+          const nextRelativePath = path.relative(currentSessionDir, firstNextPDCA.fullPath);
+          
+          const crossVersionForwardLink = `**➡️ Next PDCA:** [GitHub](${nextGithubUrl}) | [${nextSectionPath}](${nextRelativePath})`;
+          
+          // Update current PDCA
+          currentContent = currentContent.replace(/\*\*➡️ Next PDCA:\*\* .+/, crossVersionForwardLink);
+          fs.writeFileSync(currentPDCAPath, currentContent, 'utf-8');
+          console.log(`✅ Set cross-version "Next PDCA:" forward link`);
+          
+          // Note: We don't update the next version's first PDCA backward link here
+          // That will be done when that PDCA is processed by updateChainLinksInternal
+        } else {
+          // Next version exists but has no PDCAs - set as last in chain
+          console.log(`ℹ️  Next version has no PDCAs - setting as last in chain`);
+          const lastPDCALink = `**➡️ Next PDCA:** N/A (Last in chain)`;
+          currentContent = currentContent.replace(/\*\*➡️ Next PDCA:\*\* .+/, lastPDCALink);
+          fs.writeFileSync(currentPDCAPath, currentContent, 'utf-8');
+          console.log(`✅ Set "Next PDCA:" to "N/A (Last in chain)"`);
+        }
+      } else {
+        // No next version found - truly last PDCA in chain
+        console.log(`ℹ️  No next version found - truly last PDCA in chain`);
+        
+        // Check if it's linking to itself (self-referential loop bug)
+        if (currentContent.match(new RegExp(`Next PDCA:.*${currentFilename}`))) {
+          console.log(`⚠️  Detected self-referential Next PDCA link - fixing`);
+        }
+        
+        const lastPDCALink = `**➡️ Next PDCA:** N/A (Last in chain)`;
+        currentContent = currentContent.replace(/\*\*➡️ Next PDCA:\*\* .+/, lastPDCALink);
+        fs.writeFileSync(currentPDCAPath, currentContent, 'utf-8');
+        console.log(`✅ Set "Next PDCA:" to "N/A (Last in chain)"`);
+      }
     }
     
     // Step 3: Commit both updates (if not dry-run)
