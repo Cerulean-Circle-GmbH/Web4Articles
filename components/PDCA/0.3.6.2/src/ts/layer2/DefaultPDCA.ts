@@ -6853,6 +6853,11 @@ export class DefaultPDCA implements PDCA {
     previousCommit?: string;
     previousPDCA?: string;
     nextPDCA?: string;
+    artifactLinks?: {
+      pdcaDocument?: string;
+      changedFiles?: string;
+      [key: string]: string | undefined;
+    };
   }> {
     const fs = await import('fs');
     
@@ -6961,6 +6966,45 @@ export class DefaultPDCA implements PDCA {
       if (line.includes('**➡️ Next PDCA:**')) {
         const match = line.match(/\*\*➡️ Next PDCA:\*\* (.+?)$/);
         if (match) metadata.nextPDCA = match[1].trim();
+      }
+    }
+    
+    // Extract artifact links from SUMMARY section
+    // Find the SUMMARY section (flexible pattern - with or without emoji)
+    // Pattern: ## **<anything on same line>SUMMARY**
+    const summaryMatch = content.match(/## \*\*[^\n]*SUMMARY\*\*([\s\S]*?)(?:\n---|$)/);
+    if (summaryMatch) {
+      const summaryContent = summaryMatch[1];
+      
+      // Extract artifact links subsection
+      const artifactLinksMatch = summaryContent.match(/### \*\*Artifact Links\*\*([\s\S]*?)(?:\n###|\n##|\n---|$)/);
+      if (artifactLinksMatch) {
+        const artifactLinksContent = artifactLinksMatch[1];
+        metadata.artifactLinks = {};
+        
+        // Extract PDCA Document link
+        const pdcaDocMatch = artifactLinksContent.match(/- \*\*PDCA Document:\*\* (.+?)$/m);
+        if (pdcaDocMatch) {
+          metadata.artifactLinks.pdcaDocument = pdcaDocMatch[1].trim();
+        }
+        
+        // Extract Changed Files link
+        const changedFilesMatch = artifactLinksContent.match(/- \*\*Changed Files:\*\* (.+?)$/m);
+        if (changedFilesMatch) {
+          metadata.artifactLinks.changedFiles = changedFilesMatch[1].trim();
+        }
+        
+        // Extract any other artifact links (generic pattern)
+        const allLinksMatches = artifactLinksContent.matchAll(/- \*\*(.+?):\*\* (.+?)$/gm);
+        for (const match of allLinksMatches) {
+          const linkName = match[1].trim();
+          const linkValue = match[2].trim();
+          
+          // Don't overwrite specific ones we already extracted
+          if (linkName !== 'PDCA Document' && linkName !== 'Changed Files') {
+            metadata.artifactLinks[linkName] = linkValue;
+          }
+        }
       }
     }
     
@@ -7218,6 +7262,42 @@ export class DefaultPDCA implements PDCA {
         `**➡️ Next PDCA:** ${originalMetadata.nextPDCA}`
       );
       restoredCount++;
+    }
+    
+    // Restore artifact links if extracted from SUMMARY section
+    if (originalMetadata.artifactLinks) {
+      // Restore PDCA Document link
+      if (originalMetadata.artifactLinks.pdcaDocument) {
+        templateContent = templateContent.replace(
+          /- \*\*PDCA Document:\*\* .+?$/m,
+          `- **PDCA Document:** ${originalMetadata.artifactLinks.pdcaDocument}`
+        );
+        restoredCount++;
+      }
+      
+      // Restore Changed Files link
+      if (originalMetadata.artifactLinks.changedFiles) {
+        templateContent = templateContent.replace(
+          /- \*\*Changed Files:\*\* .+?$/m,
+          `- **Changed Files:** ${originalMetadata.artifactLinks.changedFiles}`
+        );
+        restoredCount++;
+      }
+      
+      // Restore any other artifact links
+      for (const [linkName, linkValue] of Object.entries(originalMetadata.artifactLinks)) {
+        if (linkName !== 'pdcaDocument' && linkName !== 'changedFiles' && linkValue) {
+          // Try to restore this link if it exists in template
+          const linkPattern = new RegExp(`- \\*\\*${linkName}:\\*\\* .+?$`, 'm');
+          if (templateContent.match(linkPattern)) {
+            templateContent = templateContent.replace(
+              linkPattern,
+              `- **${linkName}:** ${linkValue}`
+            );
+            restoredCount++;
+          }
+        }
+      }
     }
     
     console.log(`✅ Restored ${restoredCount} metadata field(s) from original\n`);
