@@ -5677,6 +5677,103 @@ export class DefaultPDCA implements PDCA {
     
     console.log(`📁 Target Directory: ${normalized}\n`);
     
+    // ========================================================================
+    // PHASE 0: Extension Detection & Fix - Detect .md files that are actually PDCAs
+    // ========================================================================
+    console.log(`🔍 Phase 0: Detecting misnamed PDCA files (.md without .pdca extension)...\n`);
+    
+    const mdFiles = fs.readdirSync(targetPath)
+      .filter(f => f.endsWith('.md') && !f.endsWith('.pdca.md'))
+      .map(f => path.join(targetPath, f));
+    
+    let phase0Renamed = 0;
+    
+    if (mdFiles.length > 0) {
+      console.log(`📝 Found ${mdFiles.length} .md file(s) to check for PDCA structure\n`);
+      
+      for (const mdFile of mdFiles) {
+        const content = fs.readFileSync(mdFile, 'utf-8');
+        
+        // Detect PDCA structure by checking for required sections
+        // A PDCA must have at least 3 of the 4 main sections
+        const hasPlan = /## \*\*📋 PLAN\*\*/.test(content);
+        const hasDo = /## \*\*🔧 DO\*\*/.test(content);
+        const hasCheck = /## \*\*✅ CHECK\*\*/.test(content);
+        const hasAct = /## \*\*🎯 ACT\*\*/.test(content);
+        
+        const sectionCount = [hasPlan, hasDo, hasCheck, hasAct].filter(Boolean).length;
+        
+        if (sectionCount >= 3) {
+          // This .md file is actually a PDCA - rename it
+          const newPath = mdFile.replace(/\.md$/, '.pdca.md');
+          
+          console.log(`✅ PDCA structure detected in ${path.basename(mdFile)}`);
+          console.log(`   Sections found: ${sectionCount}/4 (PLAN=${hasPlan}, DO=${hasDo}, CHECK=${hasCheck}, ACT=${hasAct})`);
+          
+          if (dryRun === 'true') {
+            console.log(`   ⚠️  DRY RUN: Would rename to ${path.basename(newPath)}\n`);
+          } else {
+            try {
+              // Rename the file
+              fs.renameSync(mdFile, newPath);
+              console.log(`   🔄 Renamed to ${path.basename(newPath)}`);
+              phase0Renamed++; // Count the rename BEFORE commit/push (rename succeeded)
+              
+              // Get the original file's git commit date to preserve it
+              let commitDate = '';
+              try {
+                commitDate = execSync(
+                  `git log -1 --format=%aI -- "${path.basename(mdFile)}"`,
+                  { cwd: path.dirname(mdFile), encoding: 'utf-8' }
+                ).trim();
+              } catch {
+                // If git log fails, use current date
+              }
+              
+              // Commit with original date to preserve timestamp
+              execSync(`git add "${mdFile}" "${newPath}"`, { cwd: path.dirname(newPath) });
+              
+              const commitCmd = commitDate
+                ? `git commit -m "fix: rename misnamed PDCA .md to .pdca.md - ${path.basename(newPath)}" --date="${commitDate}"`
+                : `git commit -m "fix: rename misnamed PDCA .md to .pdca.md - ${path.basename(newPath)}"`;
+              
+              execSync(commitCmd, { cwd: path.dirname(newPath) });
+              
+              // Add git note with original creation timestamp (consistent with createPDCA)
+              try {
+                await this.addCreationTimeNote(newPath);
+                console.log(`   ✅ Git note added (original creation time preserved)`);
+              } catch (noteError: any) {
+                console.log(`   ⚠️  Failed to add git note: ${noteError.message}`);
+              }
+              
+              // Push to remote
+              try {
+                const branch = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf-8', cwd: path.dirname(newPath) }).trim();
+                execSync(`git push origin ${branch}`, { cwd: path.dirname(newPath) });
+                console.log(`   ✅ Committed and pushed\n`);
+              } catch (pushError: any) {
+                console.log(`   ⚠️  Could not push to remote: ${pushError.message}`);
+                console.log(`   ✅ Committed locally\n`);
+              }
+            } catch (error: any) {
+              console.log(`   ⚠️  Could not rename/commit: ${error.message}\n`);
+            }
+          }
+        } else {
+          console.log(`ℹ️  ${path.basename(mdFile)} is not a PDCA (only ${sectionCount}/4 sections)\n`);
+        }
+      }
+      
+      if (phase0Renamed > 0) {
+        console.log(`✅ Phase 0 Complete: ${phase0Renamed} file(s) renamed to .pdca.md\n`);
+      } else {
+        console.log(`ℹ️  Phase 0 Complete: No PDCA-structured .md files found\n`);
+      }
+    } else {
+      console.log(`ℹ️  No .md files to check\n`);
+    }
+    
     // Phase 1: Snapshot - Collect all PDCA files with git identity tracking
     console.log(`📊 Phase 1: Scanning directory...\n`);
     const allFiles = fs.readdirSync(targetPath)
@@ -6001,9 +6098,11 @@ export class DefaultPDCA implements PDCA {
           const hasRequiredSections = [
             /## \*\*📊 SUMMARY\*\*/,
             /## \*\*📋 PLAN\*\*/,
-            /## \*\*🚀 DO\*\*/,
+            /## \*\*🔧 DO\*\*/,  // Template 3.2.4.2 uses wrench emoji
             /## \*\*✅ CHECK\*\*/,
-            /## \*\*🎯 ACT\*\*/
+            /## \*\*🎯 ACT\*\*/,  // Template 3.2.4.2 uses dart emoji
+            /## \*\*💫 EMOTIONAL REFLECTION/,
+            /## \*\*🎯 PDCA PROCESS UPDATE\*\*/
           ].every(pattern => pattern.test(content));
           
           // Check for broken/placeholder chain links
