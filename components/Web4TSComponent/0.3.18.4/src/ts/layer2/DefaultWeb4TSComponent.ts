@@ -4263,6 +4263,9 @@ Standards:
    * @TODO cliDefault topic overview
    */
   async info(topic: string = 'model'): Promise<this> {
+    // @pdca 2025-11-10-UTC-1010.pdca.md - Add printQuickHeader() ONCE at the start
+    this.printQuickHeader();
+    
     // @pdca 2025-11-10-UTC-1010.pdca.md - Radical OOP: Use getTarget() single source of truth
     const target = this.getTarget();
     const targetModel = target.model;
@@ -4271,21 +4274,16 @@ Standards:
     switch (topic) {
       case 'standard':
       case 'standards':
-        this.printQuickHeader();
         this.showStandard();
         break;
       case 'guidelines':
       case 'guide':
-        this.printQuickHeader();
         this.showGuidelines();
         break;
       case 'model':
       case 'overview':
       default:
-        // @pdca 2025-11-10-UTC-1010.pdca.md - Add printQuickHeader() for consistency
-        this.printQuickHeader();
-        
-        // Pretty print the model with quick header
+        // Pretty print the model
         console.log(`
 ${'='.repeat(80)}
 📊 Component Model Information
