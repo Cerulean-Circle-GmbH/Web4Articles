@@ -1707,20 +1707,9 @@ export class DefaultPDCA implements PDCA {
    * @cliHide
    */
   private async check3c(content: string, pdcaFilePath?: string): Promise<boolean> {
-    // Auto-fix dual links first if we have the file path
-    if (pdcaFilePath) {
-      const path = await import('path');
-      const fs = await import('fs/promises');
-      const projectRoot = await this.getProjectRoot();
-      const fullPath = path.join(projectRoot, pdcaFilePath);
-      
-      // Try to auto-fix links
-      const fixed = await this.fixMarkdownFile(fullPath, projectRoot, fs, path);
-      if (fixed) {
-        // Re-read the fixed content
-        content = await fs.readFile(fullPath, 'utf-8');
-      }
-    }
+    // ✅ Pure read-only validation - no side effects
+    // Note: Auto-fix removed to prevent side-effects during compliance checks
+    // fixDualLinks() is called explicitly by fixAllPDCAs when needed (respects dry-run)
     
     // Find all lines with dual links
     const lines = content.split('\n');
