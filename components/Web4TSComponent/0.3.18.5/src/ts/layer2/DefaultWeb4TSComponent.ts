@@ -1381,9 +1381,10 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     const maxDepth = parseInt(depth, 10) || 4;
     const includeHidden = showHidden.toLowerCase() === 'true';
     
-    // @pdca 2025-11-10-UTC-1010.pdca.md - Use getTarget() for correct context resolution
+    // @pdca 2025-11-10-UTC-1115.radical-oop-delegation-analysis.pdca.md - Radical OOP: No fallback!
+    // If target.model.targetComponentRoot is undefined, it's a delegation setup bug, not a fallback case
     const target = this.getTarget();
-    const componentPath = target.model.targetComponentRoot || this.model.targetComponentRoot!;
+    const componentPath = target.model.targetComponentRoot!;
     
     console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${target.model.component} ${target.model.version.toString()}:${this.colors.reset}`);
     console.log(`${this.colors.dim}${componentPath}${this.colors.reset}`);
@@ -1421,7 +1422,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       // Inline verifyAndFixSymlinks logic (was deprecated method)
       console.log(`🔍 Scanning ${componentName} symlinks...`);
       
-      const componentDir = path.join(this.model.componentsDirectory, componentName);
+      // @pdca 2025-11-10-UTC-1115.radical-oop-delegation-analysis.pdca.md - Use cli for Path Authority
+      const cli = this.getCLI();
+      const componentDir = path.join(cli.model.componentsDirectory, componentName);
       const availableVersions = this.getAvailableVersions(componentDir);
       
       if (availableVersions.length === 0) {
@@ -1447,12 +1450,15 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       console.log(`✅ All links repaired for ${componentName}\n`);
     }
     
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly
-    const semanticLinks = await this.getSemanticLinks(this.model.component);
-    const componentDir = path.join(this.model.componentsDirectory, this.model.component);
+    // @pdca 2025-11-10-UTC-1115.radical-oop-delegation-analysis.pdca.md - Use target for WHAT, cli for WHERE
+    // Target provides component name/version (WHAT to show)
+    // CLI provides directory paths (WHERE to look)
+    const cli = this.getCLI();
+    const semanticLinks = await this.getSemanticLinks(target.model.component);
+    const componentDir = path.join(cli.model.componentsDirectory, target.model.component);
     const availableVersions = this.getAvailableVersions(componentDir);
 
-    console.log(`🔗 Semantic Version Links for ${this.model.component}:`);
+    console.log(`🔗 Semantic Version Links for ${target.model.component}:`);
     console.log(`   📊 Available versions: ${availableVersions.length}`);
     console.log('');
 
