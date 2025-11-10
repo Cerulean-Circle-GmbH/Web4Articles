@@ -2,7 +2,7 @@
 # {{COMPONENT_NAME}} CLI Tool - Simplified Wrapper using Smart Build System
 # Web4 pattern: Component shell wrapper with smart build delegation
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 
 # DRY: Source shared project root discovery library
 # @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md

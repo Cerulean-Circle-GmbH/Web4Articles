@@ -4,7 +4,7 @@ echo "⚠️  WARNING: This will delete the global node_modules at project root!
 
 # DRY: Source shared project root discovery library
 # @pdca 2025-11-05-UTC-2226.pdca.md - DRY shell libraries
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -P)"
 . "$SCRIPT_DIR/lib-project-root.sh"
 
 GLOBAL_NODE_MODULES="$PROJECT_ROOT/node_modules"
