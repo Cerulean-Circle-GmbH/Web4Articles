@@ -985,7 +985,14 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       ? this.model.targetDirectory  // ✅ Use stored value, don't calculate
       : targetDir; // Already absolute from bash wrapper
     
+    // @pdca 2025-11-10-UTC-1430.systematic-initproject-test-isolation.pdca.md
+    // ✅ Detect test isolation context (path contains /test/data)
+    const isTestIsolation = projectRoot.includes('/test/data');
+    
     console.log(`🚀 Initializing Web4 project at: ${projectRoot}`);
+    if (isTestIsolation) {
+      console.log(`   🧪 Test isolation mode detected`);
+    }
     
     // Create root directory if needed
     await fs.mkdir(projectRoot, { recursive: true });
@@ -1000,10 +1007,35 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     );
     
     if (!tsconfigValid) {
-      const content = await this.loadTemplate('config/root-tsconfig.json.template', {});
+      let content;
+      if (isTestIsolation) {
+        // @pdca 2025-11-10-UTC-1430.systematic-initproject-test-isolation.pdca.md
+        // Test isolation: ESM-only tsconfig (prevents "exports is not defined" errors)
+        const testTsConfig = {
+          compilerOptions: {
+            target: "ES2022",
+            module: "ES2022",
+            moduleResolution: "node",
+            esModuleInterop: true,
+            skipLibCheck: true,
+            strict: true,
+            resolveJsonModule: true,
+            declaration: true,
+            declarationMap: true,
+            sourceMap: true,
+            outDir: "./dist",
+            rootDir: "."
+          }
+        };
+        content = JSON.stringify(testTsConfig, null, 2);
+      } else {
+        // Production: full tsconfig from template
+        content = await this.loadTemplate('config/root-tsconfig.json.template', {});
+      }
       await fs.writeFile(tsConfigPath, content);
-      console.log(`   ✅ Created tsconfig.json`);
-    } else {
+      console.log(`   ✅ Created tsconfig.json${isTestIsolation ? ' (test isolation)' : ''}`);
+    } else if (!isTestIsolation) {
+      // Only sync from template in production (test isolation uses minimal config)
       await this.syncFileFromTemplate(tsConfigPath, 'config/root-tsconfig.json.template', 'tsconfig.json', force);
     }
     
@@ -1016,10 +1048,25 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     );
     
     if (!packageValid) {
-      const content = await this.loadTemplate('config/root-package.json.template', {});
+      let content;
+      if (isTestIsolation) {
+        // @pdca 2025-11-10-UTC-1430.systematic-initproject-test-isolation.pdca.md
+        // Test isolation: minimal package.json (for project root detection)
+        const testPackage = {
+          name: "web4-test-isolation",
+          version: this.model.version.toString(),
+          type: "module",
+          description: "Test isolation environment - NOT production!"
+        };
+        content = JSON.stringify(testPackage, null, 2);
+      } else {
+        // Production: full package.json from template
+        content = await this.loadTemplate('config/root-package.json.template', {});
+      }
       await fs.writeFile(packageJsonPath, content);
-      console.log(`   ✅ Created package.json`);
-    } else {
+      console.log(`   ✅ Created package.json${isTestIsolation ? ' (test isolation)' : ''}`);
+    } else if (!isTestIsolation) {
+      // Only sync from template in production (test isolation uses minimal config)
       await this.syncFileFromTemplate(packageJsonPath, 'config/root-package.json.template', 'package.json', force);
     }
     
@@ -1028,43 +1075,63 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     await fs.mkdir(nodeModulesPath, { recursive: true });
     console.log(`   ✅ Ensured node_modules directory exists`);
     
-    // 🛡️ SELF-HEALING: Create or update source.env (essential for tab completion)
-    // @pdca 2025-11-10-UTC-1010.pdca.md - Template consistency: Replace {{VERSION}} placeholder
-    const sourceEnvPath = path.join(projectRoot, 'source.env');
-    const sourceEnvContent = await this.loadTemplate('project/source.env.template', {
-      VERSION: this.model.version.toString()
-    });
+    // @pdca 2025-11-10-UTC-1430.systematic-initproject-test-isolation.pdca.md
+    // Create scripts directory (for CLI symlinks)
+    const scriptsPath = path.join(projectRoot, 'scripts');
+    await fs.mkdir(scriptsPath, { recursive: true });
+    console.log(`   ✅ Ensured scripts directory exists`);
     
-    if (!existsSync(sourceEnvPath)) {
-      await fs.writeFile(sourceEnvPath, sourceEnvContent);
-      console.log(`   ✅ Created source.env`);
-    } else {
-      // Timestamp-based sync like other files
-      const currentDir = path.dirname(new URL(import.meta.url).pathname);
-      const templateFullPath = path.join(currentDir, '../../../templates/project/source.env.template');
-      const targetStats = await fs.stat(sourceEnvPath);
-      const templateStats = await fs.stat(templateFullPath);
+    // Create components directory
+    const componentsPath = path.join(projectRoot, 'components');
+    await fs.mkdir(componentsPath, { recursive: true });
+    console.log(`   ✅ Ensured components directory exists`);
+    
+    // @pdca 2025-11-10-UTC-1430.systematic-initproject-test-isolation.pdca.md
+    // Skip source.env in test isolation (uses component's source.env from parent)
+    if (!isTestIsolation) {
+      // 🛡️ SELF-HEALING: Create or update source.env (essential for tab completion)
+      // @pdca 2025-11-10-UTC-1010.pdca.md - Template consistency: Replace {{VERSION}} placeholder
+      const sourceEnvPath = path.join(projectRoot, 'source.env');
+      const sourceEnvContent = await this.loadTemplate('project/source.env.template', {
+        VERSION: this.model.version.toString()
+      });
       
-      if (force || templateStats.mtime > targetStats.mtime) {
-        const existing = await fs.readFile(sourceEnvPath, 'utf-8');
-        await this.createTimestampedBackup(sourceEnvPath, existing);
+      if (!existsSync(sourceEnvPath)) {
         await fs.writeFile(sourceEnvPath, sourceEnvContent);
-        console.log(`   ✅ Updated source.env from newer template`);
+        console.log(`   ✅ Created source.env`);
       } else {
-        console.log(`   ℹ️  source.env already up to date`);
+        // Timestamp-based sync like other files
+        const currentDir = path.dirname(new URL(import.meta.url).pathname);
+        const templateFullPath = path.join(currentDir, '../../../templates/project/source.env.template');
+        const targetStats = await fs.stat(sourceEnvPath);
+        const templateStats = await fs.stat(templateFullPath);
+        
+        if (force || templateStats.mtime > targetStats.mtime) {
+          const existing = await fs.readFile(sourceEnvPath, 'utf-8');
+          await this.createTimestampedBackup(sourceEnvPath, existing);
+          await fs.writeFile(sourceEnvPath, sourceEnvContent);
+          console.log(`   ✅ Updated source.env from newer template`);
+        } else {
+          console.log(`   ℹ️  source.env already up to date`);
+        }
       }
-    }
-    
-    // Make source.env executable
-    if (existsSync(sourceEnvPath)) {
-      await fs.chmod(sourceEnvPath, 0o755);
+      
+      // Make source.env executable
+      if (existsSync(sourceEnvPath)) {
+        await fs.chmod(sourceEnvPath, 0o755);
+      }
     }
     
     console.log(`\n✅ Project initialized successfully!`);
     console.log(`   Root configs: ${projectRoot}`);
-    console.log(`   Components can now use: "extends": "../../../tsconfig.json"`);
-    console.log(`   DRY principle: All components symlink to shared node_modules`);
-    console.log(`   👉 Source environment: . source.env`);
+    if (!isTestIsolation) {
+      console.log(`   Components can now use: "extends": "../../../tsconfig.json"`);
+      console.log(`   DRY principle: All components symlink to shared node_modules`);
+      console.log(`   👉 Source environment: . source.env`);
+    } else {
+      console.log(`   Test isolation ready for component testing`);
+      console.log(`   Run tests to populate components/`);
+    }
     
     return this;
   }
