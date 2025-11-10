@@ -1935,8 +1935,22 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     
     // ✅ Setup test isolation by running baseline tests
     // @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
-    // Automatically populate test/data with IdealMinimalComponent so there's something to test
+    // @pdca 2025-11-10-UTC-1430.systematic-initproject-test-isolation.pdca.md
+    // Clean test/data first to ensure fresh, reproducible environment
     console.log(`📦 Setting up test isolation environment...`);
+    console.log(`   Cleaning test/data for fresh start`);
+    
+    // Clean test/data directory (except .gitkeep if exists)
+    if (existsSync(testDataDir)) {
+      const entries = await fs.readdir(testDataDir);
+      for (const entry of entries) {
+        if (entry === '.gitkeep') continue; // Keep .gitkeep
+        const entryPath = path.join(testDataDir, entry);
+        await fs.rm(entryPath, { recursive: true, force: true });
+      }
+      console.log(`   ✅ Cleaned test/data directory`);
+    }
+    
     console.log(`   Running baseline test to populate test/data`);
     console.log();
     
