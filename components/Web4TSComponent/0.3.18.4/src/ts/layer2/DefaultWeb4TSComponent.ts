@@ -4271,16 +4271,20 @@ Standards:
     switch (topic) {
       case 'standard':
       case 'standards':
+        this.printQuickHeader();
         this.showStandard();
         break;
       case 'guidelines':
       case 'guide':
+        this.printQuickHeader();
         this.showGuidelines();
         break;
       case 'model':
       case 'overview':
       default:
-        // @pdca 2025-11-10-UTC-1010.pdca.md - Use printQuickHeader() for consistency
+        // @pdca 2025-11-10-UTC-1010.pdca.md - Add printQuickHeader() for consistency
+        this.printQuickHeader();
+        
         // Pretty print the model with quick header
         console.log(`
 ${'='.repeat(80)}
