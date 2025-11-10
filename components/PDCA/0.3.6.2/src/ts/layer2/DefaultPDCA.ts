@@ -6003,8 +6003,34 @@ export class DefaultPDCA implements PDCA {
             console.log(`   ✅ PDCA is compliant`);
           }
         } catch (error) {
-          // cmm3check might fail or not exist - skip content checks
-          console.log(`   ℹ️  Could not run cmm3check, skipping content checks`);
+          // cmm3check might fail or not exist - use basic heuristic
+          console.log(`   ℹ️  Could not run cmm3check, using basic compliance check`);
+          
+          // Basic heuristic: check if file has required template 3.2.4.2 sections
+          const content = fs.readFileSync(currentPath, 'utf-8');
+          const hasRequiredSections = [
+            /## \*\*📊 SUMMARY\*\*/,
+            /## \*\*📋 PLAN\*\*/,
+            /## \*\*🚀 DO\*\*/,
+            /## \*\*✅ CHECK\*\*/,
+            /## \*\*🎯 ACT\*\*/
+          ].every(pattern => pattern.test(content));
+          
+          // Check for broken/placeholder chain links
+          const hasPlaceholderLinks = content.includes('Use `pdca chain`') || 
+                                      content.match(/\{\{[^}]+\}\}/);
+          
+          if (hasRequiredSections && hasPlaceholderLinks) {
+            // Template-compliant with just placeholder links
+            hasLinkIssuesOnly = true;
+            console.log(`   ⚠️  Link issues detected (placeholder links)`);
+          } else if (!hasRequiredSections) {
+            // Missing required sections - needs rewrite
+            hasTemplateViolations = true;
+            console.log(`   ⚠️  Template violations detected (missing sections)`);
+          } else {
+            console.log(`   ✅ PDCA is compliant`);
+          }
         }
         console.log();
         

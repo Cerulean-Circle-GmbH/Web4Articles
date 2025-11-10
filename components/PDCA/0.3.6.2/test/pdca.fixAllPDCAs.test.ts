@@ -454,10 +454,13 @@ Test act content B
     fs.writeFileSync(fileA, contentA);
     fs.writeFileSync(fileB, contentB);
 
-    // Commit both files
+    // Commit both files with explicit timestamps matching their filenames
     try {
-      execSync(`git add "${fileA}" "${fileB}"`, { cwd: testDir, stdio: 'ignore' });
-      execSync('git commit -m "Add compliant PDCAs with broken links"', { cwd: testDir, stdio: 'ignore' });
+      execSync(`git add "${fileA}"`, { cwd: testDir, stdio: 'ignore' });
+      execSync('git commit --date="2025-11-08T10:00:00+0000" -m "Add compliant PDCA A"', { cwd: testDir, stdio: 'ignore' });
+      
+      execSync(`git add "${fileB}"`, { cwd: testDir, stdio: 'ignore' });
+      execSync('git commit --date="2025-11-08T11:00:00+0000" -m "Add compliant PDCA B"', { cwd: testDir, stdio: 'ignore' });
     } catch (err) {
       console.error('Git commit failed:', err);
     }
