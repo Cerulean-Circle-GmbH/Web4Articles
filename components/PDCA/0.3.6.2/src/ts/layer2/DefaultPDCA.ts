@@ -7266,8 +7266,10 @@ export class DefaultPDCA implements PDCA {
     
     // Restore artifact links if extracted from SUMMARY section
     if (originalMetadata.artifactLinks) {
-      // Restore PDCA Document link
-      if (originalMetadata.artifactLinks.pdcaDocument) {
+      // Restore PDCA Document link (only if it's not a placeholder)
+      if (originalMetadata.artifactLinks.pdcaDocument && 
+          !originalMetadata.artifactLinks.pdcaDocument.includes('{{GITHUB_URL}}') &&
+          !originalMetadata.artifactLinks.pdcaDocument.includes('{{LOCAL_PATH}}')) {
         templateContent = templateContent.replace(
           /- \*\*PDCA Document:\*\* .+?$/m,
           `- **PDCA Document:** ${originalMetadata.artifactLinks.pdcaDocument}`
@@ -7275,8 +7277,10 @@ export class DefaultPDCA implements PDCA {
         restoredCount++;
       }
       
-      // Restore Changed Files link
-      if (originalMetadata.artifactLinks.changedFiles) {
+      // Restore Changed Files link (only if it's not a placeholder)
+      if (originalMetadata.artifactLinks.changedFiles &&
+          !originalMetadata.artifactLinks.changedFiles.includes('{{GITHUB_URL}}') &&
+          !originalMetadata.artifactLinks.changedFiles.includes('{{LOCAL_PATH}}')) {
         templateContent = templateContent.replace(
           /- \*\*Changed Files:\*\* .+?$/m,
           `- **Changed Files:** ${originalMetadata.artifactLinks.changedFiles}`
@@ -7284,9 +7288,10 @@ export class DefaultPDCA implements PDCA {
         restoredCount++;
       }
       
-      // Restore any other artifact links
+      // Restore any other artifact links (only if not placeholders)
       for (const [linkName, linkValue] of Object.entries(originalMetadata.artifactLinks)) {
-        if (linkName !== 'pdcaDocument' && linkName !== 'changedFiles' && linkValue) {
+        if (linkName !== 'pdcaDocument' && linkName !== 'changedFiles' && linkValue &&
+            !linkValue.includes('{{') && !linkValue.includes('}}')) {
           // Try to restore this link if it exists in template
           const linkPattern = new RegExp(`- \\*\\*${linkName}:\\*\\* .+?$`, 'm');
           if (templateContent.match(linkPattern)) {
@@ -7301,6 +7306,37 @@ export class DefaultPDCA implements PDCA {
     }
     
     console.log(`✅ Restored ${restoredCount} metadata field(s) from original\n`);
+    
+    // Step 6.8: Auto-populate PDCA Document if still placeholder (like createPDCA does)
+    if (templateContent.includes('- **PDCA Document:** [GitHub]({{GITHUB_URL}})')) {
+      const sessionRelativePath = path.relative(projectRoot, sessionDir);
+      const pdcaFilename = path.basename(filePath);
+      const pdcaProjectPath = `${sessionRelativePath}/${pdcaFilename}`;
+      
+      // Get current branch
+      const { execSync } = await import('child_process');
+      const currentBranch = execSync('git branch --show-current', {
+        cwd: projectRoot,
+        encoding: 'utf-8'
+      }).trim();
+      
+      // Generate GitHub URL
+      const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+      const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${pdcaProjectPath}`;
+      
+      // Generate § notation (project-root-relative)
+      const sectionPath = `§/${pdcaProjectPath}`;
+      
+      // Generate relative path (self-reference in same directory)
+      const relativePath = `./${pdcaFilename}`;
+      
+      // Replace PDCA Document placeholder with actual dual link
+      const oldLine = /- \*\*PDCA Document:\*\* \[GitHub\]\(\{\{GITHUB_URL\}\}\) \| \[\{\{LOCAL_PATH\}\}\]\(\{\{LOCAL_PATH\}\}\)/;
+      const newLine = `- **PDCA Document:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`;
+      
+      templateContent = templateContent.replace(oldLine, newLine);
+      console.log(`✅ Auto-populated PDCA Document self-reference\n`);
+    }
     
     // Step 6.5: Populate placeholders (Smart Fallbacks)
     console.log(`🔄 Populating template placeholders with smart fallbacks...`);
