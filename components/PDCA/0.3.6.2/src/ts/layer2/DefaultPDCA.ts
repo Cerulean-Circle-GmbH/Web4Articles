@@ -6207,13 +6207,18 @@ export class DefaultPDCA implements PDCA {
     if (updated) {
       fs.writeFileSync(filePath, content, 'utf-8');
       
-      // Commit the changes
+      // Commit and push the changes
       try {
         execSync(`git add "${filePath}"`, { cwd: projectRoot });
         execSync(`git commit -m "fix: Update PDCA chain links in ${path.basename(filePath)}"`, { cwd: projectRoot });
+        
+        // Get current branch
+        const branch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: projectRoot, encoding: 'utf-8' }).trim();
+        execSync(`git push origin ${branch}`, { cwd: projectRoot });
+        console.log(`   ✅ Committed and pushed chain link updates`);
       } catch (error) {
         // Git operations might fail - that's OK
-        console.log(`   ⚠️  Could not commit: ${error instanceof Error ? error.message : String(error)}`);
+        console.log(`   ⚠️  Could not commit/push: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
   }
