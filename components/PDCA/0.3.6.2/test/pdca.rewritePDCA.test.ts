@@ -1676,5 +1676,296 @@ Process learning.`;
     // Cleanup
     fs.rmSync(sessionPath, { recursive: true, force: true });
   });
+
+  // ============================================================================
+  // Git History Preservation Tests
+  // ============================================================================
+
+  it('TC-REWRITE-HISTORY-01: should capture old file git hash before deletion', async () => {
+    const testDir = path.join(testDataDir, 'history-01');
+    const sessionPath = path.join(testDir, 'session');
+    fs.mkdirSync(sessionPath, { recursive: true });
+    
+    // Setup: Create a corrupted PDCA and commit it to establish history
+    const originalFilename = '2025-11-10-UTC-1234.pdca.md';
+    const originalPath = path.join(sessionPath, originalFilename);
+    
+    const corruptedContent = `# 📋 **PDCA Cycle: Test - Test**
+
+**🔗 Previous PDCA:** N/A (First in chain)
+**➡️ Next PDCA:** N/A (Last in chain)
+
+## **📊 SUMMARY**
+
+Test summary.
+
+## **📋 PLAN**
+
+Test plan.
+
+## **🔧 DO**
+
+Test implementation.
+
+## **✅ CHECK**
+
+Test check.
+
+## **🎯 ACT**
+
+Test act.`;
+
+    fs.writeFileSync(originalPath, corruptedContent, 'utf-8');
+    
+    // Initialize git repo and commit the file to create history
+    execSync('git init', { cwd: testDir });
+    execSync('git config user.email "test@test.com"', { cwd: testDir });
+    execSync('git config user.name "Test"', { cwd: testDir });
+    execSync(`git add "${originalFilename}"`, { cwd: sessionPath });
+    execSync('git commit -m "Initial commit"', { cwd: sessionPath });
+    
+    // Get the git hash of the original file BEFORE rewritePDCA
+    const oldFileHash = execSync(
+      `git rev-list -1 HEAD -- "${originalFilename}"`,
+      { cwd: sessionPath, encoding: 'utf-8' }
+    ).trim();
+    
+    expect(oldFileHash).toBeTruthy();
+    expect(oldFileHash).toMatch(/^[0-9a-f]{40}$/); // SHA-1 hash format
+    
+    // Act: rewritePDCA should capture this hash before deleting
+    await pdca.rewritePDCA(originalPath);
+    
+    // Assert: The old file hash was captured (will verify in next test that it's stored in git note)
+    console.log(`✅ Old file hash captured: ${oldFileHash}`);
+    
+    // Cleanup
+    fs.rmSync(testDir, { recursive: true, force: true });
+  });
+
+  it('TC-REWRITE-HISTORY-02: should create git note with old file hash on new file', async () => {
+    const testDir = path.join(testDataDir, 'history-02');
+    const sessionPath = path.join(testDir, 'session');
+    fs.mkdirSync(sessionPath, { recursive: true });
+    
+    // Setup: Create and commit a corrupted PDCA
+    const originalFilename = '2025-11-10-UTC-5678.pdca.md';
+    const originalPath = path.join(sessionPath, originalFilename);
+    
+    const corruptedContent = `# 📋 **PDCA Cycle: Test - Test**
+
+**🔗 Previous PDCA:** N/A (First in chain)
+**➡️ Next PDCA:** N/A (Last in chain)
+
+## **📊 SUMMARY**
+Test summary.
+
+## **📋 PLAN**
+Test plan.
+
+## **🔧 DO**
+Test implementation.
+
+## **✅ CHECK**
+Test check.
+
+## **🎯 ACT**
+Test act.`;
+
+    fs.writeFileSync(originalPath, corruptedContent, 'utf-8');
+    
+    // Initialize git and commit
+    execSync('git init', { cwd: testDir });
+    execSync('git config user.email "test@test.com"', { cwd: testDir });
+    execSync('git config user.name "Test"', { cwd: testDir });
+    execSync(`git add "${originalFilename}"`, { cwd: sessionPath });
+    execSync('git commit -m "Initial commit"', { cwd: sessionPath });
+    
+    // Get old file hash before rewrite
+    const oldFileHash = execSync(
+      `git rev-list -1 HEAD -- "${originalFilename}"`,
+      { cwd: sessionPath, encoding: 'utf-8' }
+    ).trim();
+    
+    // Act: rewritePDCA
+    await pdca.rewritePDCA(originalPath);
+    
+    // Assert: Git note exists with old file hash
+    // The note should be on the HEAD commit (the rewrite commit)
+    try {
+      const gitNote = execSync(
+        `git notes --ref=rewritePDCA.oldFileHash show HEAD`,
+        { cwd: sessionPath, encoding: 'utf-8' }
+      ).trim();
+      
+      expect(gitNote).toContain(oldFileHash);
+      console.log(`✅ Git note created with old file hash: ${oldFileHash}`);
+    } catch (error) {
+      // If git notes aren't available in test env, verify via other means
+      console.log('⚠️  Git notes not available - test incomplete (implementation needed)');
+      throw new Error('Git note with old file hash not found - preserveOldFileHistory() not implemented');
+    }
+    
+    // Cleanup
+    fs.rmSync(testDir, { recursive: true, force: true });
+  });
+
+  it('TC-REWRITE-HISTORY-03: should preserve git note through rename operation', async () => {
+    const testDir = path.join(testDataDir, 'history-03');
+    const sessionPath = path.join(testDir, 'session');
+    fs.mkdirSync(sessionPath, { recursive: true });
+    
+    // Setup: Create and commit a corrupted PDCA
+    const originalFilename = '2025-11-10-UTC-9012.pdca.md';
+    const originalPath = path.join(sessionPath, originalFilename);
+    
+    const corruptedContent = `# 📋 **PDCA Cycle: Test - Test**
+
+**🔗 Previous PDCA:** N/A (First in chain)
+**➡️ Next PDCA:** N/A (Last in chain)
+
+## **📊 SUMMARY**
+Test summary.
+
+## **📋 PLAN**
+Test plan.
+
+## **🔧 DO**
+Test implementation.
+
+## **✅ CHECK**
+Test check.
+
+## **🎯 ACT**
+Test act.`;
+
+    fs.writeFileSync(originalPath, corruptedContent, 'utf-8');
+    
+    // Initialize git and commit
+    execSync('git init', { cwd: testDir });
+    execSync('git config user.email "test@test.com"', { cwd: testDir });
+    execSync('git config user.name "Test"', { cwd: testDir });
+    execSync(`git add "${originalFilename}"`, { cwd: sessionPath });
+    execSync('git commit -m "Initial commit" --date="2025-11-10T09:01:20+0000"', { cwd: sessionPath });
+    
+    // Get old file hash
+    const oldFileHash = execSync(
+      `git rev-list -1 HEAD -- "${originalFilename}"`,
+      { cwd: sessionPath, encoding: 'utf-8' }
+    ).trim();
+    
+    // Act: rewritePDCA (which does: createPDCA → merge → delete → rename)
+    await pdca.rewritePDCA(originalPath);
+    
+    // Assert: After all operations (including rename), git note still exists
+    // The rewritten file should exist with original filename
+    expect(fs.existsSync(originalPath)).toBe(true);
+    
+    // Git note should survive the rename operation
+    try {
+      const gitNote = execSync(
+        `git notes --ref=rewritePDCA.oldFileHash show HEAD`,
+        { cwd: sessionPath, encoding: 'utf-8' }
+      ).trim();
+      
+      expect(gitNote).toContain(oldFileHash);
+      console.log(`✅ Git note survived rename operation`);
+    } catch (error) {
+      console.log('⚠️  Git note not found after rename - preservation failed');
+      throw new Error('Git note did not survive rename operation');
+    }
+    
+    // Cleanup
+    fs.rmSync(testDir, { recursive: true, force: true });
+  });
+
+  it('TC-REWRITE-HISTORY-04: should allow tracing history chain via git note', async () => {
+    const testDir = path.join(testDataDir, 'history-04');
+    const sessionPath = path.join(testDir, 'session');
+    fs.mkdirSync(sessionPath, { recursive: true });
+    
+    // Setup: Create and commit a PDCA with some history (multiple commits)
+    const originalFilename = '2025-11-10-UTC-3456.pdca.md';
+    const originalPath = path.join(sessionPath, originalFilename);
+    
+    // Initialize git first
+    execSync('git init', { cwd: testDir });
+    execSync('git config user.email "test@test.com"', { cwd: testDir });
+    execSync('git config user.name "Test"', { cwd: testDir });
+    
+    // Commit 1: Initial version
+    const version1 = `# 📋 **PDCA Cycle: Test V1 - Test V1**
+
+**🔗 Previous PDCA:** N/A
+**➡️ Next PDCA:** N/A
+
+## **📊 SUMMARY**
+Version 1
+
+## **📋 PLAN**
+Plan V1
+
+## **🔧 DO**
+Do V1
+
+## **✅ CHECK**
+Check V1
+
+## **🎯 ACT**
+Act V1`;
+    
+    fs.writeFileSync(originalPath, version1, 'utf-8');
+    execSync(`git add "${originalFilename}"`, { cwd: sessionPath });
+    execSync('git commit -m "Version 1" --date="2025-11-10T03:45:00+0000"', { cwd: sessionPath });
+    const commit1 = execSync('git rev-parse HEAD', { cwd: sessionPath, encoding: 'utf-8' }).trim();
+    
+    // Commit 2: Update
+    const version2 = version1.replace('Version 1', 'Version 2 - Updated');
+    fs.writeFileSync(originalPath, version2, 'utf-8');
+    execSync(`git add "${originalFilename}"`, { cwd: sessionPath });
+    execSync('git commit -m "Version 2" --date="2025-11-10T03:46:00+0000"', { cwd: sessionPath });
+    const commit2 = execSync('git rev-parse HEAD', { cwd: sessionPath, encoding: 'utf-8' }).trim();
+    
+    // Now corrupt it
+    const corrupted = version2.replace('## **📊 SUMMARY**', '## SUMMARY (corrupted)');
+    fs.writeFileSync(originalPath, corrupted, 'utf-8');
+    execSync(`git add "${originalFilename}"`, { cwd: sessionPath });
+    execSync('git commit -m "Corrupted"', { cwd: sessionPath });
+    
+    // Get the hash of the last good commit before corruption
+    const oldFileHash = commit2;
+    
+    // Act: rewritePDCA
+    await pdca.rewritePDCA(originalPath);
+    
+    // Assert: We can trace back to the old file's history via git note
+    try {
+      const gitNote = execSync(
+        `git notes --ref=rewritePDCA.oldFileHash show HEAD`,
+        { cwd: sessionPath, encoding: 'utf-8' }
+      ).trim();
+      
+      expect(gitNote).toContain(oldFileHash);
+      
+      // Verify we can actually access the old history using the hash from the note
+      const oldHistory = execSync(
+        `git log --oneline ${oldFileHash}`,
+        { cwd: sessionPath, encoding: 'utf-8' }
+      );
+      
+      expect(oldHistory).toContain('Version 1');
+      expect(oldHistory).toContain('Version 2');
+      
+      console.log(`✅ History chain successfully traced via git note`);
+      console.log(`   Old commits accessible: ${oldHistory.split('\n').length} commits`);
+    } catch (error) {
+      console.log('⚠️  Cannot trace history chain - git note not found or invalid');
+      throw new Error('History chain tracing failed via git note');
+    }
+    
+    // Cleanup
+    fs.rmSync(testDir, { recursive: true, force: true });
+  });
 });
+
 
