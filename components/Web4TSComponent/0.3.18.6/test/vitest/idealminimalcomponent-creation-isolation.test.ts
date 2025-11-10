@@ -1,13 +1,14 @@
 /**
  * IdealMinimalComponent Creation Test Isolation
  * 
- * Tests that IdealMinimalComponent v0.1.0.0 can be created in test isolation (./test/data)
+ * Tests that IdealMinimalComponent (current version) can be created in test isolation (./test/data)
  * using the delegation pattern - created component delegates to Web4TSComponent master.
  * 
  * Test-first development: Validates the delegation fixes (header display, path resolution)
  * work correctly in test isolation environment.
  * 
  * @pdca 2025-11-03-UTC-1237.pdca.md - Context-aware delegation validation
+ * @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md - Use current version
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
@@ -23,8 +24,13 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
   const componentRoot = path.join(currentDir, '../..');
   const testDataDir = path.join(componentRoot, 'test/data');
   const testComponentName = 'IdealMinimalComponent';
-  const testVersion = '0.1.0.0';
-  // Component will be created at: targetDirectory/components/IdealMinimalComponent/0.1.0.0
+  
+  // ✅ Use CURRENT version (same as Web4TSComponent version under test)
+  // Extract version from componentRoot path: .../Web4TSComponent/0.3.18.6
+  const versionMatch = componentRoot.match(/(\d+\.\d+\.\d+\.\d+)$/);
+  const testVersion = versionMatch ? versionMatch[1] : '0.0.0.0';
+  
+  // Component will be created at: targetDirectory/components/IdealMinimalComponent/<current-version>
   const testComponentPath = path.join(testDataDir, 'components', testComponentName, testVersion);
 
   /**
@@ -54,7 +60,7 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
 
   // ✅ NO afterAll - evidence persists for inspection
 
-  it('should create IdealMinimalComponent v0.1.0.0 in test/data using targetDirectory', async () => {
+  it(`should create IdealMinimalComponent v${testVersion} in test/data using targetDirectory`, async () => {
     // Import dynamically to avoid module-level import issues
     const { DefaultWeb4TSComponent } = await import('../../src/ts/layer2/DefaultWeb4TSComponent.js');
     
