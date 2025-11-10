@@ -94,7 +94,9 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
     
     // Check for full delegation initialization (not just targetDirectory)
     expect(content).toContain('getWeb4TSComponent'); // Lazy delegation loader
-    expect(content).toContain('component: this.model.component'); // Sets component name
+    // @pdca 2025-11-10-UTC-1010.pdca.md - DO NOT override component identity!
+    // The template was corrected to NOT set 'component: this.model.component'
+    expect(content).toContain('DO NOT set \'component\' here'); // Comment explaining identity preservation
     expect(content).toContain('version: await SemanticVersion.fromString'); // Sets version as SemanticVersion
     expect(content).toContain('componentRoot: componentRoot'); // Sets componentRoot
     expect(content).toContain('targetDirectory: projectRoot'); // Sets targetDirectory
