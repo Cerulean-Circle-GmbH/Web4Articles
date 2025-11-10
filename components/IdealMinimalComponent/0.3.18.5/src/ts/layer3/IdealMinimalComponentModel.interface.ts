@@ -12,8 +12,12 @@ export interface IdealMinimalComponentModel extends Model {
   definition: string;
   createdAt: string;
   updatedAt: string;
-  component?: string;        // Component name for CLI display
-  version?: string;          // Component version for CLI display and test promotion
-  targetDirectory?: string;  // Path Authority from CLI
-  context?: any;             // Context for "on" delegation mode (holds delegated component instance)
+  component?: string;             // Component name for CLI display
+  version?: string;               // Component version for CLI display and test promotion
+  // @pdca 2025-11-10-UTC-1010.pdca.md - Path Authority fields for delegation
+  componentRoot?: string;         // THIS component's root directory
+  projectRoot?: string;           // Project root directory (for delegation)
+  targetDirectory?: string;       // Target directory for operations (Path Authority from CLI)
+  targetComponentRoot?: string;   // Target component's root (for tree/links delegation)
+  context?: any;                  // Context for "on" delegation mode (holds delegated component instance)
 }

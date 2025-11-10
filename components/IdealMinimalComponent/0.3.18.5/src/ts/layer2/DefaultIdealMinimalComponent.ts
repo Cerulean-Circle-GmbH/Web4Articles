@@ -122,6 +122,13 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
 
     // Find project root (where components/ directory is)
     const projectRoot = componentRoot.split('/components/')[0];
+    
+    // @pdca 2025-11-10-UTC-1010.pdca.md - Set THIS component's paths for delegation
+    // When Web4TSComponent reads context, it needs to know THIS component's paths
+    this.model.componentRoot = componentRoot;
+    this.model.projectRoot = projectRoot;
+    this.model.targetDirectory = projectRoot;
+    this.model.targetComponentRoot = componentRoot;
 
     // Import Web4TSComponent and SemanticVersion dynamically
     const web4tscomponentModule = await import(

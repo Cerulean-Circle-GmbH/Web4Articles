@@ -1381,9 +1381,11 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     const maxDepth = parseInt(depth, 10) || 4;
     const includeHidden = showHidden.toLowerCase() === 'true';
     
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use pre-calculated targetComponentRoot
-    const componentPath = this.model.targetComponentRoot!;
-    console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${this.model.component} ${this.model.version.toString()}:${this.colors.reset}`);
+    // @pdca 2025-11-10-UTC-1010.pdca.md - Use getTarget() for correct context resolution
+    const target = this.getTarget();
+    const componentPath = target.model.targetComponentRoot || this.model.targetComponentRoot!;
+    
+    console.log(`${this.colors.cyan}${this.colors.bold}📁 Tree structure for ${target.model.component} ${target.model.version.toString()}:${this.colors.reset}`);
     console.log(`${this.colors.dim}${componentPath}${this.colors.reset}`);
     await this.displayTreeStructure(componentPath, '', maxDepth, 0, includeHidden);
     
@@ -1408,8 +1410,9 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Print header AFTER updateModelPaths()
     this.printQuickHeader();
     
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly
-    const componentName = this.model.component;
+    // @pdca 2025-11-10-UTC-1010.pdca.md - Use getTarget() for correct context resolution
+    const target = this.getTarget();
+    const componentName = target.model.component;
     
     // If 'fix' action requested, verify and fix all symlinks
     if (action === 'fix') {
