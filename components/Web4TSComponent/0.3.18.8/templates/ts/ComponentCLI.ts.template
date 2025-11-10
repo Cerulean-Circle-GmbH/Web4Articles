@@ -14,9 +14,9 @@ import { DelegationProxy } from '../layer2/DelegationProxy.js';
 import { MethodSignature } from '../layer3/MethodSignature.interface.js';
 
 export class {{COMPONENT_NAME}}CLI extends DefaultCLI {
-  // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Use declare to override component type
-  // @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md - Now wrapped in DelegationProxy
-  protected declare component: Default{{COMPONENT_NAME}};
+  // Component is initialized asynchronously in initComponent()
+  // Type is handled by base DefaultCLI
+  // @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md
   protected methodSignatures: Map<string, MethodSignature> = new Map();
 
   /**
@@ -33,14 +33,23 @@ export class {{COMPONENT_NAME}}CLI extends DefaultCLI {
     // Initialize CLI (Path Authority - calculates projectRoot, sets paths)
     this.init();
     
+    // Component will be initialized asynchronously in initComponent()
+    // (because init() now needs to await Web4TSComponent method discovery)
+  }
+  
+  /**
+   * Initialize component asynchronously (Radical OOP)
+   * Called by start() before executing commands
+   * @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md
+   */
+  async initComponent(): Promise<void> {
     // ✅ Create component and wrap in DelegationProxy for automatic method delegation
     // @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md
     // Proxy intercepts missing methods (info, test, build, clean, tree, links, etc.)
     // and automatically delegates them to Web4TSComponent with proper context
     // Uses static start() method - proper Web4 Radical OOP!
-    this.component = DelegationProxy.start(
-      new Default{{COMPONENT_NAME}}().init()
-    );
+    const component = await new Default{{COMPONENT_NAME}}().init();
+    this.component = DelegationProxy.start(component) as any; // Type cast for Proxy wrapper
     
     // Discover methods from CLI (walks CLI prototype chain)
     this.discoverMethods();
@@ -58,9 +67,11 @@ export class {{COMPONENT_NAME}}CLI extends DefaultCLI {
 
   /**
    * Static start method - Web4 radical OOP entry point
+   * @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md
    */
   static async start(args: string[]): Promise<void> {
     const cli = new {{COMPONENT_NAME}}CLI();
+    await cli.initComponent(); // Initialize component asynchronously
     await cli.execute(args);
   }
 

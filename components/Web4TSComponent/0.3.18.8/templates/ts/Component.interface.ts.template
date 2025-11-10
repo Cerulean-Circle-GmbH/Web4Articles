@@ -11,7 +11,7 @@ import { Scenario } from './Scenario.interface.js';
 import { {{COMPONENT_NAME}}Model } from './{{COMPONENT_NAME}}Model.interface.js';
 
 export interface {{COMPONENT_NAME}} {
-  init(scenario: Scenario<{{COMPONENT_NAME}}Model>): this;
+  init(scenario?: Scenario<{{COMPONENT_NAME}}Model>): Promise<this>;
   toScenario(name?: string): Promise<Scenario<{{COMPONENT_NAME}}Model>>;
   create(input: string, format?: string): Promise<this>;
   process(data: string): Promise<this>;

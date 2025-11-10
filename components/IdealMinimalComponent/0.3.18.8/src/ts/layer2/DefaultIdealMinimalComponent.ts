@@ -196,7 +196,7 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
    * @cliHide
    * @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md - Added method discovery
    */
-  init(scenario?: Scenario<IdealMinimalComponentModel>): this {
+  async init(scenario?: Scenario<IdealMinimalComponentModel>): Promise<this> {
     if (scenario?.model) {
       this.model = { ...this.model, ...scenario.model };
     }
@@ -205,17 +205,25 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
     this.discoverMethods();
     
     // @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md
-    // Register delegated methods for CLI discovery (even though they're not implemented here)
-    // These methods are automatically provided by DelegationProxy wrapping in CLI
-    const delegatedMethods = ['info', 'test', 'build', 'clean', 'tree', 'links', 'upgrade', 'initProject'];
-    for (const methodName of delegatedMethods) {
-      if (!this.methods.has(methodName)) {
-        this.methods.set(methodName, {
-          name: methodName,
-          paramCount: 0, // Will be determined at runtime by Web4TSComponent
-          isAsync: true
-        });
+    // ✅ RADICAL OOP: Dynamically discover delegated methods from Web4TSComponent
+    // NO HARDCODING! Get methods from Web4TSComponent itself (Single Source of Truth)
+    try {
+      const web4ts = await this.getWeb4TSComponent();
+      const delegatedMethods = web4ts.listMethods();
+      
+      // Register each delegated method that we don't already have
+      for (const methodName of delegatedMethods) {
+        if (!this.methods.has(methodName)) {
+          const signature = web4ts.getMethodSignature(methodName);
+          if (signature) {
+            this.methods.set(methodName, signature);
+          }
+        }
       }
+    } catch (error) {
+      // Graceful degradation: If Web4TSComponent not available, component still works
+      // (useful for standalone components or during build)
+      console.debug('Note: Web4TSComponent delegation not available:', error);
     }
     
     return this;

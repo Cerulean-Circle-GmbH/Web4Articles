@@ -11,7 +11,7 @@ import { Scenario } from './Scenario.interface.js';
 import { IdealMinimalComponentModel } from './IdealMinimalComponentModel.interface.js';
 
 export interface IdealMinimalComponent {
-  init(scenario: Scenario<IdealMinimalComponentModel>): this;
+  init(scenario?: Scenario<IdealMinimalComponentModel>): Promise<this>;
   toScenario(name?: string): Promise<Scenario<IdealMinimalComponentModel>>;
   create(input: string, format?: string): Promise<this>;
   process(data: string): Promise<this>;
