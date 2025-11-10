@@ -369,6 +369,10 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
       const { IdealMinimalComponentCLI } = await import(cliPath);
       const cli = new IdealMinimalComponentCLI();
       
+      // @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md
+      // CRITICAL: Must initialize component for method discovery!
+      await (cli as any).initComponent();
+      
       // Set model state directly (Radical OOP pattern)
       // @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md
       // Removed obsolete computeDerivedCompletionFields() - functional shit removed during Radical OOP refactoring
@@ -376,22 +380,43 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
       cli.model.completionCompWords = ['idealminimalcomponent', ''];
       cli.model.completionCliName = 'idealminimalcomponent';
       
-      // Test shCompletion with timeout (should NOT hang)
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('shCompletion timed out after 5s')), 5000)
-      );
-      
-      // shCompletion outputs directly to stdout, doesn't return values
-      const completionPromise = (cli as any).shCompletion('1', 'idealminimalcomponent', '');
+      // Capture stdout to check completion output
+      const originalLog = console.log;
+      const capturedOutput: string[] = [];
+      console.log = (...args: any[]) => {
+        capturedOutput.push(args.join(' '));
+      };
       
       try {
+        // Test shCompletion with timeout (should NOT hang)
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('shCompletion timed out after 5s')), 5000)
+        );
+        
+        // shCompletion outputs directly to stdout, doesn't return values
+        const completionPromise = (cli as any).shCompletion('1', 'idealminimalcomponent', '');
+        
         await Promise.race([completionPromise, timeoutPromise]);
-        console.log(`   ✅ shCompletion completes without hanging (new parameterless API)`);
+        
+        console.log = originalLog;
+        
+        // Verify we got actual completions, not "(no completions available)"
+        const output = capturedOutput.join('\n');
+        expect(output).not.toContain('(no completions available)');
+        
+        // Should have WORD: lines with method names
+        const wordLines = capturedOutput.filter(line => line.startsWith('WORD:'));
+        expect(wordLines.length).toBeGreaterThan(0);
+        
+        console.log(`   ✅ shCompletion completes without hanging AND returns ${wordLines.length} methods`);
       } catch (error: any) {
+        console.log = originalLog;
         if (error.message.includes('timed out')) {
           throw new Error('❌ shCompletion() hangs (timeout after 5s) - this causes "Thinking..." in bash completion!');
         }
         throw error;
+      } finally {
+        console.log = originalLog;
       }
     });
 
