@@ -13,7 +13,7 @@
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { existsSync } from 'fs';
-import { readFile, rm, mkdir, symlink } from 'fs/promises';
+import { readFile, rm, mkdir, symlink, writeFile } from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
@@ -60,6 +60,40 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
     if (!existsSync(testDataDir)) {
       await mkdir(testDataDir, { recursive: true });
     }
+    
+    // ✅ CRITICAL: Create minimal package.json in test/data for project root detection
+    // @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
+    // Without this, CLI's find_project_root() climbs up to production root
+    const testDataPackageJson = path.join(testDataDir, 'package.json');
+    await writeFile(testDataPackageJson, JSON.stringify({
+      name: "web4-test-isolation",
+      version: testVersion,
+      type: "module",
+      description: "Test isolation environment - NOT production!"
+    }, null, 2));
+    console.log(`   📄 Created test/data/package.json for project root detection`);
+    
+    // ✅ CRITICAL: Create tsconfig.json in test/data to prevent CommonJS compilation
+    // @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
+    // Without this, TypeScript defaults to CommonJS and generates "exports is not defined" errors
+    const testDataTsConfig = path.join(testDataDir, 'tsconfig.json');
+    await writeFile(testDataTsConfig, JSON.stringify({
+      compilerOptions: {
+        target: "ES2022",
+        module: "ES2022",
+        moduleResolution: "node",
+        esModuleInterop: true,
+        skipLibCheck: true,
+        strict: true,
+        resolveJsonModule: true,
+        declaration: true,
+        declarationMap: true,
+        sourceMap: true,
+        outDir: "./dist",
+        rootDir: "."
+      }
+    }, null, 2));
+    console.log(`   📄 Created test/data/tsconfig.json for ESM compilation`);
     
     // ✅ CRITICAL: Copy Web4TSComponent into test/data for delegation
     // IdealMinimalComponent needs Web4TSComponent to exist at: test/data/components/Web4TSComponent/latest/
