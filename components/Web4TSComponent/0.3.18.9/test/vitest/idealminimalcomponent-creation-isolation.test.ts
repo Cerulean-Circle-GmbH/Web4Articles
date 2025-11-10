@@ -238,15 +238,17 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
     
     const cliContent = await readFile(cliPath, 'utf-8');
     
-    // Verify CLI has proper type override
-    expect(cliContent).toContain('protected declare component:'); // Uses declare
-    expect(cliContent).toContain(`Default${testComponentName}`); // Overrides to specific type
+    // Verify CLI has async component initialization (NO more 'protected declare component')
+    expect(cliContent).toContain('async initComponent()'); // Async initialization
+    expect(cliContent).toContain('// Type is handled by base DefaultCLI'); // Comment about typing
     
     // Verify DelegationProxy wrapping (NEW pattern - replaces explicit methods)
     expect(cliContent).toContain('DelegationProxy.start('); // Uses static factory
-    expect(cliContent).toContain(`new Default${testComponentName}().init()`); // Wraps component
+    expect(cliContent).toContain('await new Default'); // Awaits async init
+    expect(cliContent).toContain('.init()'); // Calls init()
+    expect(cliContent).toContain('await cli.initComponent()'); // Called in start()
     
-    console.log(`   ✅ CLI with DelegationProxy wrapping`);
+    console.log(`   ✅ CLI with async DelegationProxy wrapping`);
   });
 
   it('should have component-level source.env', async () => {
