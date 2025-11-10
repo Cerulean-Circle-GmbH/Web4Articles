@@ -7557,6 +7557,15 @@ export class DefaultPDCA implements PDCA {
       
       // Note: Forward chain link (Next PDCA) is now handled by createPDCA in Step 9
       
+      // Step 8.6: Preserve old file history in git note BEFORE deletion
+      console.log(`📜 Preserving git history provenance...\n`);
+      try {
+        await this.preserveOldFileHistory(filePath, newPDCAPath);
+        console.log(`✅ Git history provenance preserved in git note\n`);
+      } catch (error: any) {
+        console.log(`⚠️  Could not preserve git history: ${error.message}\n`);
+      }
+      
       // Step 8.7: Commit and push the merged content
       console.log(`📦 Git operations...\n`);
       try {
@@ -7570,7 +7579,7 @@ export class DefaultPDCA implements PDCA {
         console.log(`⚠️  Could not commit/push: ${error.message}\n`);
       }
       
-      // Step 8.6: Delete the original corrupted file (if different from new file)
+      // Step 8.8: Delete the original corrupted file (if different from new file)
       if (fs.existsSync(filePath) && filePath !== newPDCAPath) {
         fs.unlinkSync(filePath);
         console.log(`✅ Deleted original corrupted file: ${path.basename(filePath)}\n`);
@@ -7578,6 +7587,7 @@ export class DefaultPDCA implements PDCA {
       
       console.log(`✨ PDCA rewrite complete!`);
       console.log(`📦 Original timestamp preserved in filename AND git note`);
+      console.log(`📜 Old file history preserved in git note (rewritePDCA.oldFileHash)`);
       console.log(`📄 Final file: ${newPDCAPath}\n`);
     } else {
       console.log(`✓ Would add git note to preserve timestamp: ${timestamp}`);
@@ -8133,6 +8143,89 @@ export class DefaultPDCA implements PDCA {
     
     if (content.startsWith('CORRUPTED') || content.startsWith('MISSING')) {
       return false; // Explicitly marked as broken
+    }
+    
+    return true;
+  }
+
+  /**
+   * Preserves the git history of the old file before deletion during rewritePDCA
+   * 
+   * Purpose: When rewritePDCA deletes the old corrupted file, the git history chain
+   *          for that file ends at the deletion commit. This method captures the git
+   *          object hash of the old file and stores it in a git note on the new file,
+   *          allowing users to trace back through the complete history even after deletion.
+   * 
+   * Git Note Format:
+   * - Ref: rewritePDCA.oldFileHash
+   * - Content: <40-char SHA-1 hash of last commit containing old file>
+   * - Attached to: HEAD commit (the rewrite commit)
+   * 
+   * Usage:
+   * - Called by rewritePDCA before deleting old file
+   * - Users can access via: git notes --ref=rewritePDCA.oldFileHash show HEAD
+   * - History traceable via: git log <hash-from-note>
+   * 
+   * @param oldFilePath Path to the old corrupted file (will be deleted)
+   * @param newFilePath Path to the new rewritten file (already committed)
+   * @returns true if note was added, false otherwise
+   * @cliHide
+   */
+  private async preserveOldFileHistory(oldFilePath: string, newFilePath: string): Promise<boolean> {
+    const { execSync } = await import('child_process');
+    const path = await import('path');
+    const fs = await import('fs');
+    
+    // Use componentRoot for tests, otherwise use project root
+    const projectRoot = this.model.componentRoot || this.model.workingDirectory || await this.getProjectRoot();
+    const oldRelativePath = path.relative(projectRoot, oldFilePath);
+    
+    // Check if old file exists (it should, since we haven't deleted it yet)
+    if (!fs.existsSync(oldFilePath)) {
+      throw new Error(`Old file not found: ${oldFilePath}`);
+    }
+    
+    // Get the git object hash of the last commit that touched the old file
+    // This is the commit we want users to be able to trace back to
+    let oldFileHash: string;
+    try {
+      oldFileHash = execSync(
+        `git rev-list -1 HEAD -- "${oldRelativePath}"`,
+        { cwd: projectRoot, encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] }
+      ).trim();
+    } catch (error: any) {
+      // If git command fails, file might not be committed yet
+      throw new Error(`Could not get git hash for old file: ${error.message}`);
+    }
+    
+    if (!oldFileHash) {
+      throw new Error(`Old file not in git history: ${oldRelativePath}`);
+    }
+    
+    // Validate it's a proper SHA-1 hash
+    if (!/^[0-9a-f]{40}$/.test(oldFileHash)) {
+      throw new Error(`Invalid git hash format: ${oldFileHash}`);
+    }
+    
+    console.log(`   📜 Old file git hash: ${oldFileHash}`);
+    
+    // Add git note to HEAD commit (the rewrite commit)
+    // Using custom ref namespace to avoid conflicts with other notes
+    try {
+      execSync(
+        `git notes --ref=rewritePDCA.oldFileHash add -m "${oldFileHash}" HEAD`,
+        { cwd: projectRoot, stdio: ['pipe', 'pipe', 'pipe'] }
+      );
+      console.log(`   ✅ Git note added to HEAD commit`);
+      console.log(`   📝 Note ref: rewritePDCA.oldFileHash`);
+      console.log(`   🔗 History traceable via: git log ${oldFileHash}`);
+    } catch (error: any) {
+      // Note might already exist (e.g., from previous run)
+      if (error.message?.includes('already exists')) {
+        console.log(`   ℹ️  Git note already exists (OK)`);
+        return true;
+      }
+      throw new Error(`Could not add git note: ${error.message}`);
     }
     
     return true;
