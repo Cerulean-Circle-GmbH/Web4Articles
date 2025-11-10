@@ -1438,11 +1438,23 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     this.printQuickHeader();
     
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - DRY: Use SemanticVersion.promote()
-    const nextVersion = await SemanticVersion.promote(this.model.version.toString(), versionPromotion);
-    console.log(`🔧 Upgrading ${this.model.component}: ${this.model.version.toString()} → ${nextVersion}`);
+    // @pdca 2025-11-10-UTC-2030.fix-upgrade-delegation.pdca.md - Use getTarget() for correct component in delegation
+    const target = this.getTarget();
+    const targetComponent = target.model.component || this.model.component;
+    const targetVersion = target.model.version || this.model.version;
+    
+    const nextVersion = await SemanticVersion.promote(targetVersion.toString(), versionPromotion);
+    console.log(`🔧 Upgrading ${targetComponent}: ${targetVersion.toString()} → ${nextVersion}`);
     
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Set target version in model (no functional parameters)
     this.model.toVersion = nextVersion;
+    
+    // Ensure we're operating on the correct component
+    if (target !== this) {
+      // Delegated call: set target's component info in our model for createVersionFromExisting
+      this.model.component = targetComponent;
+      this.model.version = targetVersion;
+    }
     
     // Create new version from existing
     await this.createVersionFromExisting();
@@ -1450,13 +1462,13 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // Update symlinks to maintain proper script accessibility
     await this.updateSymlinks();
     
-    console.log(`✅ ${this.model.component} ${nextVersion} created successfully`);
-    console.log(`   Location: components/${this.model.component}/${nextVersion}`);
+    console.log(`✅ ${targetComponent} ${nextVersion} created successfully`);
+    console.log(`   Location: components/${targetComponent}/${nextVersion}`);
     
     // ✅ RADICAL OOP: Update context INSTANCE for further chaining
     if (this.model.context) {
       this.model.context.model.version = SemanticVersion.fromString(nextVersion);
-      this.model.context.model.origin = `components/${this.model.component}/${nextVersion}`;
+      this.model.context.model.origin = `components/${targetComponent}/${nextVersion}`;
     }
     
     return this;
