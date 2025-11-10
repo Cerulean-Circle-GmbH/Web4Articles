@@ -83,6 +83,20 @@ export class IdealMinimalComponentCLI extends DefaultCLI {
   }
 
   /**
+   * Override shCompletion to ensure component is initialized for method discovery
+   * @pdca 2025-11-10-UTC-2030.fix-upgrade-delegation.pdca.md
+   */
+  async shCompletion(cword: string, ...words: string[]): Promise<void> {
+    // CRITICAL: Initialize component before completion (dynamic method discovery)
+    if (!this.component) {
+      await this.initComponent();
+    }
+    
+    // Call parent implementation
+    await super.shCompletion(cword, ...words);
+  }
+
+  /**
    * Execute CLI commands with auto-discovery
    */
   async execute(args: string[]): Promise<void> {
