@@ -120,8 +120,19 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
     const __filename = url.pathname;
     const componentRoot = path.resolve(path.dirname(__filename), '../../..');
 
-    // Find project root (where components/ directory is)
-    const projectRoot = componentRoot.split('/components/')[0];
+    // @pdca 2025-11-10-UTC-1230.test-isolation-path-pollution-analysis.pdca.md
+    // Web4 Principle: Detect project root correctly for test isolation
+    // Component path: .../test/data/components/ComponentName/0.1.0.0
+    // OR: .../components/ComponentName/0.1.0.0
+    // Project root is 2 levels up from component directory
+    // (ComponentName/ and components/)
+    const componentsDir = path.dirname(path.dirname(componentRoot)); // Go up 2: version → component → components
+    const projectRoot = path.dirname(componentsDir); // Go up 1 more: components → project root
+    
+    // @pdca 2025-11-10-UTC-1230.test-isolation-path-pollution-analysis.pdca.md
+    // Web4 Principle: Detect test isolation from model paths, NOT environment variables
+    // Test isolation: projectRoot contains '/test/data'
+    const isTestIsolation = projectRoot.includes('/test/data');
     
     // @pdca 2025-11-10-UTC-1010.pdca.md - Set THIS component's paths for delegation
     // When Web4TSComponent reads context, it needs to know THIS component's paths
@@ -129,6 +140,7 @@ export class Default{{COMPONENT_NAME}} implements {{COMPONENT_NAME}} {
     this.model.projectRoot = projectRoot;
     this.model.targetDirectory = projectRoot;
     this.model.targetComponentRoot = componentRoot;
+    this.model.isTestIsolation = isTestIsolation;
 
     // Import Web4TSComponent and SemanticVersion dynamically
     const web4tscomponentModule = await import(
