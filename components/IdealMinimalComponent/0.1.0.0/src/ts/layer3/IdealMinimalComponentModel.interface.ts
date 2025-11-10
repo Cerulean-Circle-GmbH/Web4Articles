@@ -1,0 +1,23 @@
+/**
+ * IdealMinimalComponentModel - IdealMinimalComponent Component Model Interface
+ * Web4 pattern: Component model following auto-discovery patterns
+ */
+
+import { Model } from './Model.interface.js';
+
+export interface IdealMinimalComponentModel extends Model {
+  uuid: string;
+  name: string;
+  origin: string;
+  definition: string;
+  createdAt: string;
+  updatedAt: string;
+  component?: string;             // Component name for CLI display
+  version?: string;               // Component version for CLI display and test promotion
+  // @pdca 2025-11-10-UTC-1010.pdca.md - Path Authority fields for delegation
+  componentRoot?: string;         // THIS component's root directory
+  projectRoot?: string;           // Project root directory (for delegation)
+  targetDirectory?: string;       // Target directory for operations (Path Authority from CLI)
+  targetComponentRoot?: string;   // Target component's root (for tree/links delegation)
+  context?: any;                  // Context for "on" delegation mode (holds delegated component instance)
+}
