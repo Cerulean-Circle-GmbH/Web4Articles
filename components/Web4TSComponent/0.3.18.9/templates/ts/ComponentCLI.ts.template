@@ -49,18 +49,21 @@ export class {{COMPONENT_NAME}}CLI extends DefaultCLI {
     // and automatically delegates them to Web4TSComponent with proper context
     // Uses static start() method - proper Web4 Radical OOP!
     const component = await new Default{{COMPONENT_NAME}}().init();
-    this.component = DelegationProxy.start(component) as any; // Type cast for Proxy wrapper
+    // Type cast: DelegationProxy expects base Component interface, but we have {{COMPONENT_NAME}} interface
+    this.component = DelegationProxy.start(component as any) as any;
     
     // Discover methods from CLI (walks CLI prototype chain)
     this.discoverMethods();
     
     // Copy component methods to methodSignatures for test/completion discovery
     // @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md - Populate methodSignatures from component
-    const componentMethods = this.component.listMethods();
-    for (const methodName of componentMethods) {
-      const signature = this.component.getMethodSignature(methodName);
-      if (signature) {
-        this.methodSignatures.set(methodName, signature);
+    if (this.component) {
+      const componentMethods = this.component.listMethods();
+      for (const methodName of componentMethods) {
+        const signature = this.component.getMethodSignature(methodName);
+        if (signature) {
+          this.methodSignatures.set(methodName, signature);
+        }
       }
     }
   }
