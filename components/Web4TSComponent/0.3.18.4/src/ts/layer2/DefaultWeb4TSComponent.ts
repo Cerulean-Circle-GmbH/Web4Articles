@@ -4327,13 +4327,17 @@ ${'='.repeat(80)}
         }
         
         // @pdca 2025-11-10-UTC-1010.pdca.md - Show Context Delegation info (caller vs target)
-        // This clarifies WHO is calling and WHAT is being delegated to
+        // This clarifies WHO is calling and WHAT infrastructure component is doing the work
+        // When IdealMinimalComponent.info() delegates to Web4TSComponent.info():
+        //   - Caller: IdealMinimalComponent (in context)
+        //   - Target: Web4TSComponent (this infrastructure component)
         if (isContextMode) {
           console.log(`🔗 Context Delegation:`);
-          console.log(`   Caller Component: ${this.model.component}`);
-          console.log(`   Caller Version:   ${this.model.version.toString()}`);
-          console.log(`   Target Component: ${targetModel.component}`);
-          console.log(`   Target Version:   ${targetModel.version?.toString() || 'N/A'}`);
+          console.log(`   Caller Component: ${targetModel.component}`);
+          console.log(`   Caller Version:   ${targetModel.version?.toString() || 'N/A'}`);
+          // Target is THIS component (the infrastructure doing the work)
+          console.log(`   Target Component: ${this.model.component}`);
+          console.log(`   Target Version:   ${this.model.version.toString()}`);
           console.log();
         }
         
