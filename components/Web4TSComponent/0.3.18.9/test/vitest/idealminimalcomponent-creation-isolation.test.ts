@@ -401,6 +401,10 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
       const { IdealMinimalComponentCLI } = await import(cliPath);
       const cli = new IdealMinimalComponentCLI();
       
+      // @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md
+      // Async component initialization required for dynamic delegation discovery
+      await (cli as any).initComponent();
+      
       // Get method signatures
       const methodSignatures = (cli as any).methodSignatures;
       expect(methodSignatures).toBeDefined();
@@ -439,6 +443,10 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
       const { IdealMinimalComponentCLI } = await import(cliPath);
       const cli = new IdealMinimalComponentCLI();
       
+      // @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md
+      // Async component initialization required for dynamic delegation discovery
+      await (cli as any).initComponent();
+      
       // Methods that should be delegated via Proxy (not explicitly defined)
       const delegatedMethods = ['info', 'test', 'build', 'clean', 'tree', 'links'];
       
@@ -457,6 +465,10 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
       const cliPath = path.join(testComponentPath, `dist/ts/layer5/${testComponentName}CLI.js`);
       const { IdealMinimalComponentCLI } = await import(cliPath);
       const cli = new IdealMinimalComponentCLI();
+      
+      // @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md
+      // Async component initialization required for dynamic delegation discovery
+      await (cli as any).initComponent();
       
       // Capture stdout to check completion output
       const originalLog = console.log;
