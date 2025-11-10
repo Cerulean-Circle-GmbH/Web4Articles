@@ -8324,6 +8324,27 @@ export class DefaultPDCA implements PDCA {
     fs.writeFileSync(previousPDCA.fullPath, previousContent, 'utf-8');
     console.log(`✅ Updated "Next PDCA:" link: ${previousFilename} → ${currentFilename}`);
     
+    // Step 2.5: Check if there's a NEXT PDCA after current and update current's Next link
+    const nextPDCA = currentIndex < pdcaFiles.length - 1 ? pdcaFiles[currentIndex + 1] : null;
+    
+    if (nextPDCA) {
+      const nextFilename = nextPDCA.filename;
+      const nextPDCAProjectPath = `${sessionRelativePath}/${nextFilename}`;
+      const nextGithubUrl = `${repoUrl}/blob/${currentBranch}/${nextPDCAProjectPath}`;
+      const nextSectionPath = `§/${nextPDCAProjectPath}`;
+      const nextRelativePath = `./${nextFilename}`;
+      
+      const nextLink = `**➡️ Next PDCA:** [GitHub](${nextGithubUrl}) | [${nextSectionPath}](${nextRelativePath})`;
+      
+      // Update current PDCA's Next link
+      currentContent = currentContent.replace(
+        /\*\*➡️ Next PDCA:\*\* .+/,
+        nextLink
+      );
+      fs.writeFileSync(currentPDCAPath, currentContent, 'utf-8');
+      console.log(`✅ Set "Next PDCA:" link: ${currentFilename} → ${nextFilename}`);
+    }
+    
     // Step 3: Commit both updates (if not dry-run)
     if (!isDryRun) {
       try {
