@@ -333,5 +333,163 @@ Content here
     const prevMatchA = contentA.match(/🔗\s*Previous PDCA:.*(?:N\/A|First)/);
     expect(prevMatchA).toBeTruthy(); // Should be first in chain
   });
+
+  /**
+   * TC-FIX-12: Fix dual links only when rewritePDCA not needed
+   * Validates: Phase 3 - dual link fixing for compliant files
+   * Requirement: If file is template-compliant, only fix dual links (no rewrite)
+   * 
+   * Purpose: Verify compliant PDCAs get chain links fixed without full rewrite
+   * 
+   * Given: A valid PDCA with correct template 3.2.4.2 structure but broken/missing chain links
+   * When: fixAllPDCAs runs
+   * Then: 
+   *   - Chain links are fixed (Previous/Next PDCA)
+   *   - Full rewritePDCA is NOT triggered
+   *   - Original content sections remain untouched
+   *   - File structure stays intact
+   */
+  it('TC-FIX-12: Fix dual links only when rewritePDCA not needed', async () => {
+    // Create git repo in test directory
+    try {
+      execSync('git init', { cwd: testDir, stdio: 'ignore' });
+      execSync('git config user.name "Test"', { cwd: testDir, stdio: 'ignore' });
+      execSync('git config user.email "test@test.com"', { cwd: testDir, stdio: 'ignore' });
+    } catch (err) {
+      console.error('Git init failed:', err);
+    }
+
+    // Create two template-compliant PDCAs with broken/missing chain links
+    const fileA = path.join(testDir, '2025-11-08-UTC-100000.pdca.md');
+    const fileB = path.join(testDir, '2025-11-08-UTC-110000.pdca.md');
+
+    // File A: Template-compliant but missing Next PDCA link
+    const contentA = `# 📋 **PDCA Cycle: Test PDCA A**
+
+[GitHub](https://github.com/test/repo/blob/main/test/2025-11-08-UTC-100000.pdca.md) | [§/test/2025-11-08-UTC-100000.pdca.md](§/test/2025-11-08-UTC-100000.pdca.md)
+
+## **📊 SUMMARY**
+
+**PDCA Document:** [GitHub](https://github.com/test/repo/blob/main/test/2025-11-08-UTC-100000.pdca.md) | [§/test/2025-11-08-UTC-100000.pdca.md](§/test/2025-11-08-UTC-100000.pdca.md)
+
+**Component:** \`PDCA 0.3.6.2\`
+**Template Version:** 3.2.4.2
+**🗓️ Date:** Fri, 08 Nov 2025 10:00:00 GMT
+**🎯 Objective:** Test PDCA A
+
+### **🔗 PDCA Chain**
+- 🔗 Previous PDCA: N/A (First in chain)
+- 🔗 Next PDCA: Use \`pdca chain\`
+
+---
+
+## **📋 PLAN**
+
+Test plan content A
+
+---
+
+## **🚀 DO**
+
+Test do content A
+
+---
+
+## **✅ CHECK**
+
+Test check content A
+
+---
+
+## **🔄 ACT**
+
+Test act content A
+
+---`;
+
+    // File B: Template-compliant but missing Previous PDCA link
+    const contentB = `# 📋 **PDCA Cycle: Test PDCA B**
+
+[GitHub](https://github.com/test/repo/blob/main/test/2025-11-08-UTC-110000.pdca.md) | [§/test/2025-11-08-UTC-110000.pdca.md](§/test/2025-11-08-UTC-110000.pdca.md)
+
+## **📊 SUMMARY**
+
+**PDCA Document:** [GitHub](https://github.com/test/repo/blob/main/test/2025-11-08-UTC-110000.pdca.md) | [§/test/2025-11-08-UTC-110000.pdca.md](§/test/2025-11-08-UTC-110000.pdca.md)
+
+**Component:** \`PDCA 0.3.6.2\`
+**Template Version:** 3.2.4.2
+**🗓️ Date:** Fri, 08 Nov 2025 11:00:00 GMT
+**🎯 Objective:** Test PDCA B
+
+### **🔗 PDCA Chain**
+- 🔗 Previous PDCA: Use \`pdca chain\`
+- 🔗 Next PDCA: N/A (Last in chain)
+
+---
+
+## **📋 PLAN**
+
+Test plan content B
+
+---
+
+## **🚀 DO**
+
+Test do content B
+
+---
+
+## **✅ CHECK**
+
+Test check content B
+
+---
+
+## **🔄 ACT**
+
+Test act content B
+
+---`;
+
+    fs.writeFileSync(fileA, contentA);
+    fs.writeFileSync(fileB, contentB);
+
+    // Commit both files
+    try {
+      execSync(`git add "${fileA}" "${fileB}"`, { cwd: testDir, stdio: 'ignore' });
+      execSync('git commit -m "Add compliant PDCAs with broken links"', { cwd: testDir, stdio: 'ignore' });
+    } catch (err) {
+      console.error('Git commit failed:', err);
+    }
+
+    // Store original content markers to verify no rewrite occurred
+    const originalMarkerA = 'Test plan content A';
+    const originalMarkerB = 'Test plan content B';
+
+    // Run fixAllPDCAs
+    await pdca.fixAllPDCAs(testDir, 'false');
+
+    // Read updated content
+    const updatedA = fs.readFileSync(fileA, 'utf-8');
+    const updatedB = fs.readFileSync(fileB, 'utf-8');
+
+    // Verify original content markers are preserved (no rewrite occurred)
+    expect(updatedA).toContain(originalMarkerA);
+    expect(updatedB).toContain(originalMarkerB);
+
+    // Verify chain links were fixed
+    // File A should now have Next PDCA pointing to File B
+    expect(updatedA).toMatch(/🔗\s*Next PDCA:.*2025-11-08-UTC-110000/);
+    expect(updatedA).not.toContain('Use `pdca chain`');
+
+    // File B should now have Previous PDCA pointing to File A
+    expect(updatedB).toMatch(/🔗\s*Previous PDCA:.*2025-11-08-UTC-100000/);
+    
+    // Verify template structure remains intact (not rewritten)
+    expect(updatedA).toMatch(/## \*\*📋 PLAN\*\*/);
+    expect(updatedA).toMatch(/## \*\*🚀 DO\*\*/);
+    expect(updatedB).toMatch(/## \*\*📋 PLAN\*\*/);
+    expect(updatedB).toMatch(/## \*\*🚀 DO\*\*/);
+  });
 });
 
