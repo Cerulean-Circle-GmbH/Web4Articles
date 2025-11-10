@@ -53,8 +53,9 @@ describe('Template-Based Code Generation', () => {
       // Verify bash shebang
       expect(result).toContain('#!/bin/bash');
       
-      // Verify location resilience pattern
-      expect(result).toContain('find_project_root');
+      // @pdca 2025-11-10-UTC-1210.baseline-test-verification-required.pdca.md
+      // Verify location resilience pattern (DRY library-based)
+      expect(result).toContain('lib-project-root.sh');
     });
 
     it('should generate script with Web4 location resilience pattern', async () => {
