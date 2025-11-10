@@ -1824,10 +1824,12 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 # Sources component's source.env and adds test isolation PS1 prompt
 source "${componentSourceEnv}"
 
-# @pdca 2025-11-10-UTC-1010.pdca.md - Test Isolation: Override PATH to prevent production pollution
+# @pdca 2025-11-10-UTC-1010.pdca.md - Test Isolation: REPLACE PATH (not append) to prevent production pollution
 # Source.env adds production scripts to PATH, but test isolation should ONLY see test/data scripts
-# This prevents 'which pdca' from finding production scripts in test isolation
-export PATH="${testDataDir}/scripts:${testDataDir}/node_modules/.bin:\$PATH"
+# We MUST replace the entire PATH, not just prepend, to remove production script paths
+# Save original system PATH (before source.env polluted it)
+SYSTEM_PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH="${testDataDir}/scripts:${testDataDir}/node_modules/.bin:\$SYSTEM_PATH"
 
 # Component's source.env exports PS1, but bash --init-file needs it without export
 # Re-declare PS1 to override the export (this makes it work with --init-file)
