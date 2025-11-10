@@ -1902,23 +1902,6 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // Check if running in non-interactive mode (for automated tests)
     const isNonInteractive = process.env.TEST_NON_INTERACTIVE === 'true';
     
-    console.log(`🐚 Starting ${isNonInteractive ? 'non-interactive' : 'interactive'} bash shell in test isolation...`);
-    console.log(`📂 Component: ${this.model.component} ${this.model.version.toString()}`);
-    console.log(`📂 Test Data Directory (PROJECT_ROOT): ${testDataDir}`);
-    console.log(`📂 Component Source Environment: ${componentSourceEnv}`);
-    console.log();
-    
-    if (!isNonInteractive) {
-      console.log(`💡 This shell runs in test isolation:`);
-      console.log(`   - Project root is: ${testDataDir}`);
-      console.log(`   - All operations happen in test/data`);
-      console.log(`   - Production files in components/ are NEVER touched`);
-      console.log(`   - Using component's source.env with custom PS1`);
-      console.log();
-      console.log(`🔧 Type 'exit' to return to normal shell`);
-      console.log(`${'='.repeat(60)}\n`);
-    }
-    
     // Check if test/data exists
     if (!existsSync(testDataDir)) {
       console.error(`❌ Test data directory not found: ${testDataDir}`);
@@ -1972,6 +1955,24 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     } catch (error) {
       console.error(`⚠️  Baseline test had issues, but continuing...`);
       console.log();
+    }
+    
+    // NOW show shell startup message AFTER test execution
+    console.log(`🐚 Starting ${isNonInteractive ? 'non-interactive' : 'interactive'} bash shell in test isolation...`);
+    console.log(`📂 Component: ${this.model.component} ${this.model.version.toString()}`);
+    console.log(`📂 Test Data Directory (PROJECT_ROOT): ${testDataDir}`);
+    console.log(`📂 Component Source Environment: ${componentSourceEnv}`);
+    console.log();
+    
+    if (!isNonInteractive) {
+      console.log(`💡 This shell runs in test isolation:`);
+      console.log(`   - Project root is: ${testDataDir}`);
+      console.log(`   - All operations happen in test/data`);
+      console.log(`   - Production files in components/ are NEVER touched`);
+      console.log(`   - Using component's source.env with custom PS1`);
+      console.log();
+      console.log(`🔧 Type 'exit' to return to normal shell`);
+      console.log(`${'='.repeat(60)}\n`);
     }
     
     try {
