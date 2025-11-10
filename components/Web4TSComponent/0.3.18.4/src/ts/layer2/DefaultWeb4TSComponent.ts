@@ -982,8 +982,31 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     console.log(`   ✅ Ensured node_modules directory exists`);
     
     // 🛡️ SELF-HEALING: Create or update source.env (essential for tab completion)
+    // @pdca 2025-11-10-UTC-1010.pdca.md - Template consistency: Replace {{VERSION}} placeholder
     const sourceEnvPath = path.join(projectRoot, 'source.env');
-    await this.syncFileFromTemplate(sourceEnvPath, 'project/source.env.template', 'source.env', force);
+    const sourceEnvContent = await this.loadTemplate('project/source.env.template', {
+      VERSION: this.model.version.toString()
+    });
+    
+    if (!existsSync(sourceEnvPath)) {
+      await fs.writeFile(sourceEnvPath, sourceEnvContent);
+      console.log(`   ✅ Created source.env`);
+    } else {
+      // Timestamp-based sync like other files
+      const currentDir = path.dirname(new URL(import.meta.url).pathname);
+      const templateFullPath = path.join(currentDir, '../../../templates/project/source.env.template');
+      const targetStats = await fs.stat(sourceEnvPath);
+      const templateStats = await fs.stat(templateFullPath);
+      
+      if (force || templateStats.mtime > targetStats.mtime) {
+        const existing = await fs.readFile(sourceEnvPath, 'utf-8');
+        await this.createTimestampedBackup(sourceEnvPath, existing);
+        await fs.writeFile(sourceEnvPath, sourceEnvContent);
+        console.log(`   ✅ Updated source.env from newer template`);
+      } else {
+        console.log(`   ℹ️  source.env already up to date`);
+      }
+    }
     
     // Make source.env executable
     if (existsSync(sourceEnvPath)) {
