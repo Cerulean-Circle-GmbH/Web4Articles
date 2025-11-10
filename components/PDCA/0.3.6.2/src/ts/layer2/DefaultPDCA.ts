@@ -6331,15 +6331,76 @@ export class DefaultPDCA implements PDCA {
         updated = true;
       }
     } else {
-      // First file in chain - ensure Previous PDCA shows N/A or "First in chain"
-      const expectedLink = `**🔗 Previous PDCA:** N/A (First in chain)`;
-      if (!content.includes(expectedLink)) {
-        console.log(`   🔧 Updating Previous PDCA link (first in chain)`);
-        content = content.replace(
-          /\*\*🔗 Previous PDCA:\*\* (?:\[GitHub\]\([^)]+\) \| \[[^\]]+\]\([^)]+\)|.+)/,
-          expectedLink
-        );
-        updated = true;
+      // First file in session - check for cross-version link to previous version
+      console.log(`   ℹ️  No previous PDCA in current session (first in this version)`);
+      
+      // CROSS-VERSION LINKING: Check if there's a previous version with PDCAs
+      const previousVersionSession = await this.findPreviousVersionSession(sessionDir);
+      
+      if (previousVersionSession) {
+        // Found previous version - link to its last PDCA
+        console.log(`   📂 Found previous version session: ${previousVersionSession}`);
+        
+        const pdcaPattern = /^\d{4}-\d{2}-\d{2}-UTC-\d{4,6}\.pdca\.md$/;
+        const prevVersionFiles = fs.readdirSync(previousVersionSession);
+        const prevPdcaFiles = prevVersionFiles
+          .filter(f => pdcaPattern.test(f))
+          .map(f => ({
+            filename: f,
+            timestamp: f.match(/^(\d{4}-\d{2}-\d{2}-UTC-\d{4,6})/)![1],
+            fullPath: path.join(previousVersionSession, f)
+          }))
+          .sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+        
+        if (prevPdcaFiles.length > 0) {
+          // Get last PDCA from previous version
+          const lastPrevPDCA = prevPdcaFiles[prevPdcaFiles.length - 1];
+          console.log(`   🔗 Cross-version link to: ${lastPrevPDCA.filename} (previous version)`);
+          
+          // Build cross-version link
+          const prevVersionRelative = path.relative(projectRoot, previousVersionSession);
+          const prevPDCAProjectPath = `${prevVersionRelative}/${lastPrevPDCA.filename}`;
+          const prevGithubUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/${currentBranch}/${prevPDCAProjectPath}`;
+          const prevSectionPath = `§/${prevPDCAProjectPath}`;
+          
+          // Calculate relative path from current session to previous version's session
+          const currentSessionDir = path.dirname(filePath);
+          const prevRelativePath = path.relative(currentSessionDir, lastPrevPDCA.fullPath);
+          
+          const crossVersionLink = `**🔗 Previous PDCA:** [GitHub](${prevGithubUrl}) | [${prevSectionPath}](${prevRelativePath})`;
+          
+          // Check if link needs updating
+          if (!content.includes(crossVersionLink)) {
+            console.log(`   🔧 Updating Previous PDCA link (cross-version)`);
+            content = content.replace(
+              /\*\*🔗 Previous PDCA:\*\* (?:\[GitHub\]\([^)]+\) \| \[[^\]]+\]\([^)]+\)|.+)/,
+              crossVersionLink
+            );
+            updated = true;
+          }
+        } else {
+          // Previous version exists but has no PDCAs - truly first
+          const expectedLink = `**🔗 Previous PDCA:** N/A (First in chain)`;
+          if (!content.includes(expectedLink)) {
+            console.log(`   🔧 Updating Previous PDCA link (first in chain)`);
+            content = content.replace(
+              /\*\*🔗 Previous PDCA:\*\* (?:\[GitHub\]\([^)]+\) \| \[[^\]]+\]\([^)]+\)|.+)/,
+              expectedLink
+            );
+            updated = true;
+          }
+        }
+      } else {
+        // No previous version - truly first PDCA
+        const expectedLink = `**🔗 Previous PDCA:** N/A (First in chain)`;
+        if (!content.includes(expectedLink)) {
+          console.log(`   🔧 Updating Previous PDCA link (first in chain)`);
+          content = content.replace(
+            /\*\*🔗 Previous PDCA:\*\* (?:\[GitHub\]\([^)]+\) \| \[[^\]]+\]\([^)]+\)|.+)/,
+            expectedLink
+          );
+          updated = true;
+        }
       }
     }
     
@@ -6366,6 +6427,87 @@ export class DefaultPDCA implements PDCA {
           expectedLink
         );
         updated = true;
+      }
+    } else {
+      // Last file in session - check for cross-version link to next version
+      console.log(`   ℹ️  No next PDCA in current session (last in this version)`);
+      
+      // CROSS-VERSION LINKING: Check if there's a next version with PDCAs
+      const nextVersionSession = await this.findNextVersionSession(sessionDir);
+      
+      if (nextVersionSession) {
+        // Found next version - link to its first PDCA
+        console.log(`   📂 Found next version session: ${nextVersionSession}`);
+        
+        const pdcaPattern = /^\d{4}-\d{2}-\d{2}-UTC-\d{4,6}\.pdca\.md$/;
+        const nextVersionFiles = fs.readdirSync(nextVersionSession);
+        const nextPdcaFiles = nextVersionFiles
+          .filter(f => pdcaPattern.test(f))
+          .map(f => ({
+            filename: f,
+            timestamp: f.match(/^(\d{4}-\d{2}-\d{2}-UTC-\d{4,6})/)![1],
+            fullPath: path.join(nextVersionSession, f)
+          }))
+          .sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+        
+        if (nextPdcaFiles.length > 0) {
+          // Get first PDCA from next version
+          const firstNextPDCA = nextPdcaFiles[0];
+          console.log(`   🔗 Cross-version forward link to: ${firstNextPDCA.filename} (next version)`);
+          
+          // Build cross-version forward link
+          const nextVersionRelative = path.relative(projectRoot, nextVersionSession);
+          const nextPDCAProjectPath = `${nextVersionRelative}/${firstNextPDCA.filename}`;
+          const nextGithubUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/${currentBranch}/${nextPDCAProjectPath}`;
+          const nextSectionPath = `§/${nextPDCAProjectPath}`;
+          
+          // Calculate relative path from current session to next version's session
+          const currentSessionDir = path.dirname(filePath);
+          const nextRelativePath = path.relative(currentSessionDir, firstNextPDCA.fullPath);
+          
+          const crossVersionForwardLink = `**➡️ Next PDCA:** [GitHub](${nextGithubUrl}) | [${nextSectionPath}](${nextRelativePath})`;
+          
+          // Check if link needs updating
+          if (!content.includes(crossVersionForwardLink)) {
+            console.log(`   🔧 Updating Next PDCA link (cross-version)`);
+            content = content.replace(
+              /\*\*➡️ Next PDCA:\*\* .+/,
+              crossVersionForwardLink
+            );
+            updated = true;
+          }
+        } else {
+          // Next version exists but has no PDCAs - set as last in chain
+          console.log(`   ℹ️  Next version has no PDCAs - setting as last in chain`);
+          const lastPDCALink = `**➡️ Next PDCA:** N/A (Last in chain)`;
+          if (!content.includes(lastPDCALink)) {
+            console.log(`   🔧 Updating Next PDCA link (last in chain)`);
+            content = content.replace(
+              /\*\*➡️ Next PDCA:\*\* .+/,
+              lastPDCALink
+            );
+            updated = true;
+          }
+        }
+      } else {
+        // No next version found - truly last PDCA in chain
+        console.log(`   ℹ️  No next version found - truly last PDCA in chain`);
+        
+        // Check if it's linking to itself (self-referential loop bug)
+        const currentFilename = path.basename(filePath);
+        if (content.match(new RegExp(`Next PDCA:.*${currentFilename}`))) {
+          console.log(`   ⚠️  Detected self-referential Next PDCA link - fixing`);
+        }
+        
+        const lastPDCALink = `**➡️ Next PDCA:** N/A (Last in chain)`;
+        if (!content.includes(lastPDCALink)) {
+          console.log(`   🔧 Updating Next PDCA link (last in chain)`);
+          content = content.replace(
+            /\*\*➡️ Next PDCA:\*\* .+/,
+            lastPDCALink
+          );
+          updated = true;
+        }
       }
     }
     
