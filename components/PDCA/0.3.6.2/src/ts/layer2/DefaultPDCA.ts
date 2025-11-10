@@ -7192,6 +7192,44 @@ export class DefaultPDCA implements PDCA {
       fs.writeFileSync(newPDCAPath, newContent, 'utf-8');
       console.log(`✅ Placeholders populated\n`);
       
+      // Step 8.6: Update forward chain link (Next PDCA) if there's a chronologically next file
+      console.log(`🔄 Checking for chronologically next PDCA...\n`);
+      const allFiles = fs.readdirSync(sessionDir)
+        .filter((f: string) => f.endsWith('.pdca.md'))
+        .sort();
+      
+      const currentIndex = allFiles.indexOf(path.basename(newPDCAPath));
+      if (currentIndex !== -1 && currentIndex < allFiles.length - 1) {
+        const nextFilename = allFiles[currentIndex + 1];
+        const nextFilePath = path.join(sessionDir, nextFilename);
+        
+        console.log(`✅ Found next PDCA: ${nextFilename}`);
+        console.log(`🔗 Updating forward chain link...\n`);
+        
+        // Update the current file's "Next PDCA" link
+        newContent = fs.readFileSync(newPDCAPath, 'utf-8');
+        
+        // Generate links for next PDCA
+        const sessionRelativePath = path.relative(await this.getProjectRoot(), sessionDir);
+        const nextPDCAProjectPath = `${sessionRelativePath}/${nextFilename}`;
+        const currentBranch = this.model.currentBranch || 'main';
+        const githubBaseUrl = 'https://github.com/Cerulean-Circle-GmbH/Web4Articles';
+        const githubUrl = `${githubBaseUrl}/blob/${currentBranch}/${nextPDCAProjectPath}`;
+        const sectionPath = `§/${nextPDCAProjectPath}`;
+        const relativePath = `./${nextFilename}`;
+        
+        // Replace "Use pdca chain" with actual link
+        newContent = newContent.replace(
+          /\*\*➡️ Next PDCA:\*\* Use pdca chain/,
+          `**➡️ Next PDCA:** [GitHub](${githubUrl}) | [${sectionPath}](${relativePath})`
+        );
+        
+        fs.writeFileSync(newPDCAPath, newContent, 'utf-8');
+        console.log(`✅ Forward chain link updated\n`);
+      } else {
+        console.log(`ℹ️  No chronologically next PDCA found (this is the most recent)\n`);
+      }
+      
       // Step 8.7: Delete the original corrupted file (if different from new file)
       if (fs.existsSync(filePath) && filePath !== newPDCAPath) {
         fs.unlinkSync(filePath);
