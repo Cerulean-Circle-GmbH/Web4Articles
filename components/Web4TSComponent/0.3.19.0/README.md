@@ -280,7 +280,13 @@ Web4 uses a **visual notation** for parameters:
 | `<param>` | **Required** parameter | `<component>` |
 | `<?param>` | **Optional** parameter | `<?version>` |
 | `<?param:'value'>` | Optional with **default** | `<?version:'0.1.0.0'>` |
-| `!<param>` | **Internal** parameter (not for CLI) | `!<identifier>` |
+| `!<param>` | **Internal** parameter (completion method missing) | `!<identifier>` |
+
+**Note about `!` prefix**: When you see `!<param>`, it means:
+- The parameter exists in the method signature
+- The `paramParameterCompletion` method is NOT implemented
+- Tab completion won't suggest values for this parameter
+- You'll need to provide the value manually or check the method's TSDoc
 
 **Examples:**
 ```bash
