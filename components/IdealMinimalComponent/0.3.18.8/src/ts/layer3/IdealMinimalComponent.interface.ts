@@ -1,5 +1,5 @@
 /**
- * {{COMPONENT_NAME}} - {{COMPONENT_NAME}} Component Interface
+ * IdealMinimalComponent - IdealMinimalComponent Component Interface
  * Web4 pattern: Component interface definition
  * 
  * @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md
@@ -8,11 +8,11 @@
  */
 
 import { Scenario } from './Scenario.interface.js';
-import { {{COMPONENT_NAME}}Model } from './{{COMPONENT_NAME}}Model.interface.js';
+import { IdealMinimalComponentModel } from './IdealMinimalComponentModel.interface.js';
 
-export interface {{COMPONENT_NAME}} {
-  init(scenario: Scenario<{{COMPONENT_NAME}}Model>): this;
-  toScenario(name?: string): Promise<Scenario<{{COMPONENT_NAME}}Model>>;
+export interface IdealMinimalComponent {
+  init(scenario: Scenario<IdealMinimalComponentModel>): this;
+  toScenario(name?: string): Promise<Scenario<IdealMinimalComponentModel>>;
   create(input: string, format?: string): Promise<this>;
   process(data: string): Promise<this>;
   // Delegated methods (info, test, etc.) are available via DelegationProxy but not declared here

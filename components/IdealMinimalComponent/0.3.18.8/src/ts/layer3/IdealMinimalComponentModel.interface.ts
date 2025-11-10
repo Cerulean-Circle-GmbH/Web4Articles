@@ -1,11 +1,11 @@
 /**
- * {{COMPONENT_NAME}}Model - {{COMPONENT_NAME}} Component Model Interface
+ * IdealMinimalComponentModel - IdealMinimalComponent Component Model Interface
  * Web4 pattern: Component model following auto-discovery patterns
  */
 
 import { Model } from './Model.interface.js';
 
-export interface {{COMPONENT_NAME}}Model extends Model {
+export interface IdealMinimalComponentModel extends Model {
   uuid: string;
   name: string;
   origin: string;
