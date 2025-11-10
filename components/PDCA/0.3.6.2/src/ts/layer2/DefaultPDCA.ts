@@ -5978,6 +5978,58 @@ export class DefaultPDCA implements PDCA {
     }
     
     // ========================================================================
+    // PHASE 1 CLEANUP: Commit deletions from strip operations
+    // ========================================================================
+    // After all rename('strip') operations, old files are deleted by git mv
+    // but the deletions need to be committed. This ensures clean git status.
+    if (dryRun !== 'true') {
+      try {
+        // Check if there are any changes to commit (deletions from strip)
+        const gitStatus = execSync('git status --porcelain', { 
+          cwd: projectRoot, 
+          encoding: 'utf-8' 
+        }).trim();
+        
+        if (gitStatus) {
+          // Count deleted files
+          const deletedFiles = gitStatus.split('\n').filter(line => line.startsWith(' D ')).length;
+          
+          if (deletedFiles > 0) {
+            console.log(`\n📦 Phase 1 Cleanup: Committing ${deletedFiles} deletion(s)...\n`);
+            
+            // Stage all changes (deletions from git mv)
+            execSync(`git add -A`, { cwd: projectRoot, stdio: 'pipe' });
+            
+            // Commit with descriptive message
+            const commitMsg = deletedFiles === 1
+              ? `refactor: strip description from PDCA filename`
+              : `refactor: strip descriptions from ${deletedFiles} PDCA filenames`;
+            
+            execSync(`git commit -m "${commitMsg}"`, { cwd: projectRoot, stdio: 'pipe' });
+            console.log(`   ✅ Committed ${deletedFiles} deletion(s)`);
+            
+            // Push to remote
+            try {
+              const currentBranch = execSync('git branch --show-current', {
+                cwd: projectRoot,
+                encoding: 'utf-8'
+              }).trim();
+              
+              execSync(`git push origin ${currentBranch}`, { cwd: projectRoot, stdio: 'pipe' });
+              console.log(`   ✅ Pushed to remote (${currentBranch})\n`);
+            } catch (pushError: any) {
+              console.log(`   ⚠️  Could not push to remote: ${pushError.message}\n`);
+            }
+          }
+        }
+      } catch (cleanupError: any) {
+        // Git cleanup failed - log but continue
+        // This can happen in test environments without proper git setup
+        console.log(`   ⚠️  Git cleanup warning: ${cleanupError.message}\n`);
+      }
+    }
+    
+    // ========================================================================
     // PHASE 1.5: Re-snapshot after all renames complete
     // ========================================================================
     console.log(`\n📊 Phase 1.5: Re-Snapshotting after filename corrections...\n`);

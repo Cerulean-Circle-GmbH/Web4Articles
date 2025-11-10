@@ -699,3 +699,172 @@ Test PDCA for Phase 0 extension detection.
   });
 });
 
+/**
+ * TC-FIX-14: Automatic cleanup of old files after strip operation (Phase 1)
+ * 
+ * Context: After rename('strip') removes descriptions from filenames, the old files
+ * should be automatically committed and deleted. No manual `git add -A && git commit`
+ * should be required.
+ * 
+ * Test:
+ * 1. Create 2 PDCA files with descriptions in filenames
+ * 2. Run fixAllPDCAs
+ * 3. Verify old files with descriptions are NOT in git status (deleted and committed)
+ * 4. Verify new files without descriptions exist
+ * 5. Verify a single commit was made for the strip operations
+ */
+describe('TC-FIX-14: Automatic cleanup after strip operation', () => {
+  const testDir = path.join(testDataDir, 'strip-cleanup');
+  
+  beforeEach(async () => {
+    await fs.promises.mkdir(testDir, { recursive: true });
+    
+    // Initialize git repository
+    execSync('git init', { cwd: testDir });
+    execSync('git config user.email "test@example.com"', { cwd: testDir });
+    execSync('git config user.name "Test User"', { cwd: testDir });
+    
+    // Create 2 PDCA files with descriptions in filenames
+    const pdcaContent = `# 🎯 TEST PDCA FOR CLEANUP
+
+**MISSION:** Verify automatic cleanup after strip
+
+---
+
+## **📊 SUMMARY**
+
+Test PDCA for automatic cleanup verification.
+
+---
+
+## **📋 PLAN**
+
+**Objective:** Test cleanup automation
+
+### **Definition of Ready (DoR)**
+- [ ] Test environment ready
+
+### **Definition of Done (DoD)**
+- [ ] Cleanup verified
+
+**Implementation Strategy:**
+- Test cleanup behavior
+
+---
+
+## **🔧 DO**
+
+**Implementation Steps:**
+1. Create test files
+2. Run fixAllPDCAs
+3. Verify cleanup
+
+---
+
+## **✅ CHECK**
+
+**Verification Results:**
+- ✅ Cleanup operational
+
+---
+
+## **🎯 ACT**
+
+**Success Achieved:** Cleanup verified
+
+**Future Enhancements:**
+1. Add more cleanup tests
+
+## **💫 EMOTIONAL REFLECTION: Cleanup Success**
+
+### **Satisfaction:**
+**High** - Cleanup is working
+
+---
+
+## **🎯 PDCA PROCESS UPDATE**
+
+**Process Learning:**
+- ✅ Cleanup validated
+
+**Quality Impact:** High quality cleanup
+
+**Next PDCA Focus:** Continue testing
+`;
+    
+    const file1 = path.join(testDir, '2025-10-27-UTC-1500.architecture-analysis.pdca.md');
+    const file2 = path.join(testDir, '2025-10-27-UTC-1530.prompt-construction.pdca.md');
+    
+    await fs.promises.writeFile(file1, pdcaContent);
+    await fs.promises.writeFile(file2, pdcaContent);
+    
+    // Commit both files with timestamps matching their filenames
+    execSync('git add .', { cwd: testDir });
+    execSync('git commit -m "Add test PDCAs with descriptions" --date="2025-10-27T15:00:00+0000"', { cwd: testDir });
+  });
+  
+  it('should automatically cleanup old files after strip operation', async () => {
+    const pdca = new DefaultPDCA();
+    
+    // Debug: Check initial state
+    console.log('Before fixAllPDCAs:');
+    console.log('  Files:', fs.readdirSync(testDir).filter(f => f.endsWith('.pdca.md')));
+    
+    // Get initial commit count
+    const commitsBefore = execSync('git rev-list --count HEAD', { 
+      cwd: testDir, 
+      encoding: 'utf-8' 
+    }).trim();
+    
+    // Run fixAllPDCAs (NOT dry-run)
+    await pdca.fixAllPDCAs(testDir, 'false');
+    
+    // Debug: Check final state
+    console.log('After fixAllPDCAs:');
+    console.log('  Files:', fs.readdirSync(testDir).filter(f => f.endsWith('.pdca.md')));
+    
+    // Verify old files with descriptions are gone
+    const oldFile1 = path.join(testDir, '2025-10-27-UTC-1500.architecture-analysis.pdca.md');
+    const oldFile2 = path.join(testDir, '2025-10-27-UTC-1530.prompt-construction.pdca.md');
+    
+    expect(fs.existsSync(oldFile1), 'Old file 1 should not exist').toBe(false);
+    expect(fs.existsSync(oldFile2), 'Old file 2 should not exist').toBe(false);
+    
+    // Verify new files without descriptions exist
+    const newFile1 = path.join(testDir, '2025-10-27-UTC-1500.pdca.md');
+    const newFile2 = path.join(testDir, '2025-10-27-UTC-1530.pdca.md');
+    
+    expect(fs.existsSync(newFile1), 'New file 1 should exist').toBe(true);
+    expect(fs.existsSync(newFile2), 'New file 2 should exist').toBe(true);
+    
+    // CORE TEST: Verify git status is clean (no uncommitted deletions)
+    const gitStatus = execSync('git status --porcelain', { 
+      cwd: testDir, 
+      encoding: 'utf-8' 
+    }).trim();
+    
+    expect(gitStatus, 'Git status should be clean after fixAllPDCAs').toBe('');
+    
+    // Verify commits were made (initial + strip commit + potential chain fixes)
+    const commitsAfter = execSync('git rev-list --count HEAD', { 
+      cwd: testDir, 
+      encoding: 'utf-8' 
+    }).trim();
+    
+    expect(parseInt(commitsAfter)).toBeGreaterThan(parseInt(commitsBefore));
+    
+    // Verify the strip commit message exists
+    const recentCommits = execSync('git log --oneline -10', { 
+      cwd: testDir, 
+      encoding: 'utf-8' 
+    });
+    
+    expect(recentCommits).toMatch(/refactor:.*strip.*description/i);
+    console.log('✅ Cleanup commit verified');
+  });
+  
+  afterEach(async () => {
+    await fs.promises.rm(testDir, { recursive: true, force: true });
+  });
+});
+
