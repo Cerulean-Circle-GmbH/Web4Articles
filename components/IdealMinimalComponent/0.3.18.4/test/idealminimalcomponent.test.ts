@@ -149,3 +149,121 @@ describe('IdealMinimalComponent Delegated Infrastructure Methods', () => {
   });
 });
 
+describe('IdealMinimalComponent Radical OOP: info() with Context Delegation', () => {
+  /**
+   * @pdca 2025-11-10-UTC-1010.pdca.md - Radical OOP: getTarget() single source of truth
+   * 
+   * The info() command should show a quick header and delegate to the target component.
+   * When IdealMinimalComponent doesn't set specific paths, it should show paths from
+   * the Web4TSComponent it delegates to.
+   */
+  
+  const findProjectRoot = (startDir: string): string => {
+    let currentDir = path.resolve(startDir);
+    while (currentDir !== path.dirname(currentDir)) {
+      if (existsSync(path.join(currentDir, 'package.json')) &&
+          existsSync(path.join(currentDir, 'components'))) {
+        return currentDir;
+      }
+      currentDir = path.dirname(currentDir);
+    }
+    return path.resolve(startDir);
+  };
+
+  it('should show Component Model Information header', () => {
+    const projectRoot = findProjectRoot(__dirname);
+    const scriptsDir = path.join(projectRoot, 'scripts');
+    
+    const result = execSync('./idealminimalcomponent info', {
+      cwd: scriptsDir,
+      encoding: 'utf-8',
+      timeout: 10000
+    });
+    
+    // Must have the header from printQuickHeader()
+    expect(result).toContain('📊 Component Model Information');
+    expect(result).toContain('================================================================================');
+  });
+
+  it('should show component identity', () => {
+    const projectRoot = findProjectRoot(__dirname);
+    const scriptsDir = path.join(projectRoot, 'scripts');
+    
+    const result = execSync('./idealminimalcomponent info', {
+      cwd: scriptsDir,
+      encoding: 'utf-8',
+      timeout: 10000
+    });
+    
+    // Component Identity section
+    expect(result).toContain('Component Identity:');
+    expect(result).toContain('Component:');
+    expect(result).toContain('IdealMinimalComponent');
+    expect(result).toContain('Version:');
+    expect(result).toContain('0.3.18.4');
+  });
+
+  it('should show context delegation info', () => {
+    const projectRoot = findProjectRoot(__dirname);
+    const scriptsDir = path.join(projectRoot, 'scripts');
+    
+    const result = execSync('./idealminimalcomponent info', {
+      cwd: scriptsDir,
+      encoding: 'utf-8',
+      timeout: 10000
+    });
+    
+    // Context Delegation section should exist
+    expect(result).toContain('Context Delegation:');
+    expect(result).toContain('Caller Component:');
+    expect(result).toContain('Target Component:');
+  });
+
+  it('should work when called via symlink after sourcing source.env', () => {
+    // This is the EXACT user workflow that was broken with pwd (not pwd -P)
+    const projectRoot = findProjectRoot(__dirname);
+    const sourceEnvPath = path.join(projectRoot, 'source.env');
+    
+    if (!existsSync(sourceEnvPath)) {
+      console.log('   ⚠️  Skipping source.env test (file not found)');
+      return;
+    }
+    
+    const command = `. "${sourceEnvPath}" 2>/dev/null && idealminimalcomponent info`;
+    
+    try {
+      const result = execSync(command, {
+        cwd: projectRoot,
+        encoding: 'utf-8',
+        shell: '/bin/bash',
+        timeout: 15000
+      });
+      
+      // Critical: Must produce output (not silent like before pwd -P fix)
+      expect(result.trim().length).toBeGreaterThan(0);
+      expect(result).toContain('Component Model Information');
+      expect(result).toContain('IdealMinimalComponent');
+      console.log('   ✅ Symlink workflow works (. source.env && idealminimalcomponent info)');
+    } catch (error: any) {
+      console.error('   ❌ Symlink workflow FAILED');
+      console.error('   Error:', error.message);
+      throw new Error(`Symlink workflow failed: ${error.message}`);
+    }
+  });
+
+  it('should have pwd -P in wrapper (symlink resolution fix)', () => {
+    const projectRoot = findProjectRoot(__dirname);
+    const componentDir = path.join(projectRoot, 'components/IdealMinimalComponent/0.3.18.4');
+    const wrapperPath = path.join(componentDir, 'idealminimalcomponent');
+    
+    expect(existsSync(wrapperPath)).toBe(true);
+    
+    const wrapperContent = execSync(`cat "${wrapperPath}"`, { encoding: 'utf-8' });
+    
+    // Critical: Wrapper must use pwd -P (not just pwd) for symlink resolution
+    expect(wrapperContent).toContain('pwd -P');
+    expect(wrapperContent).toMatch(/SCRIPT_DIR=.*pwd -P/);
+    console.log('   ✅ Wrapper uses pwd -P (template fix inherited)');
+  });
+});
+
