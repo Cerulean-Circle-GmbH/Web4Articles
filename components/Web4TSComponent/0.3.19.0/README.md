@@ -205,6 +205,202 @@ web4tscomponent on MyComponent 0.1.0.0 upgrade nextBuild
 
 ---
 
+## 🔍 Discovering Commands & Usage (The Web4 Way)
+
+### Why There's No `--help` Flag
+
+**Web4 CLIs don't use flags at all.** No `--help`, no `--version`, no `-v`, no `-h`. This is a **core architectural principle**, not an oversight.
+
+**Why?**
+1. **Simplicity**: No complex flag parsing, just method names
+2. **Auto-Discovery**: Commands are discovered from TypeScript, not configured
+3. **Consistency**: Every Web4 component works exactly the same way
+4. **Natural Language**: Commands read like method calls, not unix flags
+5. **Tab Completion**: Positional arguments enable intelligent completion
+
+### How to Get Help: Just Run the Command
+
+```bash
+# Want help? Just run the command with no arguments
+web4tscomponent
+
+# Output shows ALL available methods automatically:
+# 📋 Available Commands:
+#    build, clean, create, info, links, on, test, tree, upgrade, ...
+#    
+# Each method auto-discovered from TypeScript!
+```
+
+**The command itself IS the help system.** No separate documentation needed.
+
+### Discovering What a Method Does
+
+Web4 has **three levels of discovery**:
+
+#### **Level 1: See All Methods**
+```bash
+web4tscomponent
+# Shows all 120+ methods with their signatures
+# Example output:
+#   create <component> <?version:'0.1.0.0'> <?options:'all'>
+#   upgrade <?versionPromotion:'nextBuild'>
+#   test <?file>
+```
+
+#### **Level 2: Search for Specific Methods**
+```bash
+# Use completion to filter
+web4tscomponent completion method test
+# Shows all methods starting with "test":
+#   test <?file>
+#   testShell <?version>
+```
+
+#### **Level 3: Get Method Documentation**
+```bash
+# Type until only ONE match remains
+web4tscomponent completion method create
+# Shows full TSDoc documentation:
+#   create <component> <?version:'0.1.0.0'> <?options:'all'>
+#   ────────────────────────────────────────────────────────────
+#   📖 Documentation:
+#   Creates a new Web4 TypeScript component with full structure
+#   
+#   @param component - Component name (e.g., 'MyComponent')
+#   @param version - Initial version (default: '0.1.0.0')
+#   @param options - What to create: 'all', 'cli', 'spec', etc.
+```
+
+### Understanding Parameter Syntax
+
+Web4 uses a **visual notation** for parameters:
+
+| Notation | Meaning | Example |
+|----------|---------|---------|
+| `<param>` | **Required** parameter | `<component>` |
+| `<?param>` | **Optional** parameter | `<?version>` |
+| `<?param:'value'>` | Optional with **default** | `<?version:'0.1.0.0'>` |
+| `!<param>` | **Internal** parameter (not for CLI) | `!<identifier>` |
+
+**Examples:**
+```bash
+# create <component> <?version:'0.1.0.0'> <?options:'all'>
+web4tscomponent create MyComponent              # Uses defaults
+web4tscomponent create MyComponent 1.0.0.0      # Custom version
+web4tscomponent create MyComponent 1.0.0.0 cli  # Only CLI files
+
+# upgrade <?versionPromotion:'nextBuild'>
+web4tscomponent upgrade           # Uses default: nextBuild
+web4tscomponent upgrade nextPatch # Explicit promotion
+```
+
+### Interactive Discovery with Tab Completion
+
+**The BEST way to learn:** Use tab completion!
+
+```bash
+# Press Tab to see all commands
+web4tscomponent <Tab>
+
+# Type partial name + Tab
+web4tscomponent cre<Tab>
+# Completes to: create
+
+# Press Tab again to see parameters
+web4tscomponent create <Tab>
+# Shows: all available components (context-aware!)
+
+# Tab completion works at EVERY level
+web4tscomponent on <Tab>          # Lists all components
+web4tscomponent on Unit <Tab>     # Lists all versions of Unit
+web4tscomponent on Unit 0.3.2.0 <Tab>  # Lists all methods again!
+```
+
+### Method Chaining (Advanced)
+
+Web4 supports **natural method chaining**:
+
+```bash
+# Load context, then chain operations
+web4tscomponent on MyComponent 0.1.0.0 test build upgrade nextBuild
+
+# Each method returns the component instance
+# Enables fluent API calls in one line
+```
+
+### Why This Is Better Than `--help`
+
+**Traditional CLI (`--help` pattern):**
+```bash
+mycommand --help        # Shows static help text
+mycommand create --help # Shows create-specific help
+# Problems:
+# - Help text gets outdated
+# - Requires manual documentation
+# - No interactive discovery
+# - No tab completion
+```
+
+**Web4 CLI (auto-discovery pattern):**
+```bash
+web4tscomponent         # Shows ALL methods (auto-discovered)
+web4tscomponent completion method create  # Shows method details
+# Benefits:
+# - Help is ALWAYS current (generated from code)
+# - Zero maintenance required
+# - Interactive discovery with tab completion
+# - Context-aware suggestions
+```
+
+### Practical Examples
+
+#### "How do I create a component?"
+```bash
+# Discovery approach:
+web4tscomponent completion method create
+# Shows signature + full documentation
+
+# Or just try it:
+web4tscomponent create
+# Shows error with guidance on required parameters
+```
+
+#### "What versions of a component exist?"
+```bash
+# Use the 'links' method:
+web4tscomponent links
+# Shows all semantic version links (latest, prod, test, dev)
+
+# Or for specific component:
+web4tscomponent on MyComponent 0.1.0.0 links
+```
+
+#### "How do I upgrade a component?"
+```bash
+# Discovery:
+web4tscomponent completion method upgrade
+# Shows: upgrade <?versionPromotion:'nextBuild'>
+
+# Usage:
+web4tscomponent upgrade           # nextBuild (default)
+web4tscomponent upgrade nextPatch # Explicit
+web4tscomponent upgrade nextMinor # Minor bump
+```
+
+### The Web4 Philosophy
+
+**"Code is documentation. Let the component tell you what it can do."**
+
+- **No flags** → Simplicity
+- **Auto-discovery** → Always current
+- **Tab completion** → Interactive learning
+- **Natural language** → Readable commands
+- **Method chaining** → Fluent API
+
+**This is Radical OOP applied to CLI design.** The component's methods ARE the commands. No translation layer, no configuration, no flags.
+
+---
+
 ## 🎯 Radical OOP Principles
 
 Web4TSComponent enforces these core principles:
