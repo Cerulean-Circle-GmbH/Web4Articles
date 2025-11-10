@@ -1,7 +1,7 @@
-#!/bin/sh
-echo "🚀 Starting PDCA (full clean)..."
+#!/usr/bin/env sh
+echo "🚀 Starting Web4TSComponent (full clean)..."
 
-# Clean local artifacts
+# Full clean (local + global)
 ./src/sh/clean.sh
 
 # Install dependencies and create symlink

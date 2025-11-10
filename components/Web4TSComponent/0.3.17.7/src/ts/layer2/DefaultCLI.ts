@@ -259,6 +259,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // the component needs to know about the loaded context (targetComponent)
     (this.component!.model as any).context = targetComponent;
     
+    // ✅ FIX: Also set context on loaded component itself (self-reference)
+    // This fixes context-aware methods (updateBuildSystem, start, etc.)
+    // that need this.model.context to be set, regardless of which instance runs them
+    // @pdca 2025-11-05-UTC-1809.pdca.md - Option D: Set context on both instances
+    (this.context.model as any).context = targetComponent;
+    
     // Only output if NOT in completion mode (completion mode shows diagnostic instead)
     // @pdca 2025-11-04-UTC-2220-method-chaining-completion.pdca.md
     const inCompletionMode = this.model.completionCompWords && this.model.completionCompWords.length > 0;

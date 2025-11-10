@@ -1,6 +1,6 @@
 {
   "name": "@web4x/idealminimalcomponent",
-  "version": "0.3.17.8",
+  "version": "0.3.18.3",
   "type": "module",
   "description": "IdealMinimalComponent Component - Base Entry Point",
   "scripts": {
