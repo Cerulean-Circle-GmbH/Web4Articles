@@ -1014,6 +1014,123 @@ Content here.
     expect(secondContent).toContain('2025-11-07-UTC-100000.pdca.md');
     expect(secondContent).not.toContain('N/A - First PDCA');
   });
+
+  /**
+   * TC-REWRITE-30: Auto-populate "PDCA Document" artifact link (like createPDCA)
+   * Validates: rewritePDCA should auto-generate self-referential PDCA Document link
+   * Requirement: Same auto-population logic as createPDCA for consistency
+   */
+  it('TC-REWRITE-30: Auto-populates PDCA Document artifact link', async () => {
+    // Arrange: Create corrupted PDCA WITHOUT PDCA Document link
+    const testPath = path.join(testDataDir, '2025-11-10-UTC-100000.pdca.md');
+    const corruptedContent = `# 📋 **PDCA Cycle: Test - Test**
+
+**🗓️ Date:** Sun, 10 Nov 2025 10:00:00 GMT  
+**🎯 Objective:** Test PDCA Document auto-population  
+**🎯 Template Version:** 3.2.4.2  
+
+## **📊 SUMMARY**
+
+### **Artifact Links**
+- **PDCA Document:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+
+## **📋 PLAN**
+Test content
+`;
+    fs.writeFileSync(testPath, corruptedContent, 'utf-8');
+
+    // Act: rewritePDCA should auto-populate PDCA Document link
+    await pdca.rewritePDCA(testPath);
+
+    // Assert: PDCA Document link should be populated with actual dual link
+    const rewritten = fs.readFileSync(testPath, 'utf-8');
+    
+    // Should contain GitHub URL to this file
+    expect(rewritten).toMatch(/\*\*PDCA Document:\*\* \[GitHub\]\(https:\/\/github\.com\/Cerulean-Circle-GmbH\/Web4Articles\/blob\/test-branch\/.+2025-11-10-UTC-100000\.pdca\.md\)/);
+    
+    // Should contain § notation for local navigation
+    expect(rewritten).toMatch(/\[§\/.+2025-11-10-UTC-100000\.pdca\.md\]\(\.\/2025-11-10-UTC-100000\.pdca\.md\)/);
+    
+    // Should NOT contain template placeholders
+    expect(rewritten).not.toContain('{{GITHUB_URL}}');
+    expect(rewritten).not.toContain('{{LOCAL_PATH}}');
+  });
+
+  /**
+   * TC-REWRITE-31: Preserve "Next PDCA" link when it exists
+   * Validates: rewritePDCA should preserve existing Next PDCA dual links
+   * Requirement: Don't overwrite valid Next PDCA links with "Use pdca chain"
+   */
+  it('TC-REWRITE-31: Preserves existing Next PDCA link', async () => {
+    // Arrange: Create corrupted PDCA WITH valid Next PDCA link
+    const testPath = path.join(testDataDir, '2025-11-10-UTC-110000.pdca.md');
+    const nextPDCALink = '[GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/test-branch/session/2025-11-10-UTC-120000.pdca.md) | [§/session/2025-11-10-UTC-120000.pdca.md](./2025-11-10-UTC-120000.pdca.md)';
+    
+    const corruptedContent = `# 📋 **PDCA Cycle: Test - Test**
+
+**🗓️ Date:** Sun, 10 Nov 2025 11:00:00 GMT  
+**🎯 Objective:** Test Next PDCA preservation  
+**🎯 Template Version:** 3.2.4.2  
+
+**🔗 Previous PDCA:** N/A
+**➡️ Next PDCA:** ${nextPDCALink}
+
+## **📊 SUMMARY**
+Test content
+`;
+    fs.writeFileSync(testPath, corruptedContent, 'utf-8');
+
+    // Act: rewritePDCA should preserve the Next PDCA link
+    await pdca.rewritePDCA(testPath);
+
+    // Assert: Next PDCA link should be preserved
+    const rewritten = fs.readFileSync(testPath, 'utf-8');
+    
+    // Should contain the original Next PDCA link
+    expect(rewritten).toContain('**➡️ Next PDCA:** ' + nextPDCALink);
+    
+    // Should NOT be replaced with template default
+    expect(rewritten).not.toContain('**➡️ Next PDCA:** Use pdca chain');
+  });
+
+  /**
+   * TC-REWRITE-32: Populate "Changed Files" artifact link with GitHub compare URL
+   * Validates: rewritePDCA should auto-generate Changed Files link like createPDCA
+   * Requirement: Same auto-population logic as createPDCA for consistency
+   */
+  it('TC-REWRITE-32: Auto-populates Changed Files with GitHub compare link', async () => {
+    // Arrange: Create corrupted PDCA WITH previous commit metadata
+    const testPath = path.join(testDataDir, '2025-11-10-UTC-130000.pdca.md');
+    const corruptedContent = `# 📋 **PDCA Cycle: Test - Test**
+
+**🗓️ Date:** Sun, 10 Nov 2025 13:00:00 GMT  
+**🎯 Objective:** Test Changed Files auto-population  
+**🎯 Template Version:** 3.2.4.2  
+
+**📎 Previous Commit:** abc123 - Previous commit message
+
+## **📊 SUMMARY**
+
+### **Artifact Links**
+- **Changed Files:** [GitHub]({{GITHUB_URL}}) | [{{LOCAL_PATH}}]({{LOCAL_PATH}})
+
+## **📋 PLAN**
+Test content
+`;
+    fs.writeFileSync(testPath, corruptedContent, 'utf-8');
+
+    // Act: rewritePDCA should auto-populate Changed Files link
+    await pdca.rewritePDCA(testPath);
+
+    // Assert: Changed Files should have GitHub compare URL
+    const rewritten = fs.readFileSync(testPath, 'utf-8');
+    
+    // Should contain GitHub compare URL (abc123...currentSHA)
+    expect(rewritten).toMatch(/\*\*Changed Files:\*\* \[GitHub\]\(https:\/\/github\.com\/Cerulean-Circle-GmbH\/Web4Articles\/compare\/abc123\.\.\..+\)/);
+    
+    // Should NOT contain template placeholders
+    expect(rewritten).not.toContain('**Changed Files:** [GitHub]({{GITHUB_URL}})');
+  });
 });
 
 describe("Intelligent Content Mapping Tests", () => {
