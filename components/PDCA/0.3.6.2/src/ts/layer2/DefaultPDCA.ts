@@ -7236,6 +7236,19 @@ export class DefaultPDCA implements PDCA {
       
       // Note: Forward chain link (Next PDCA) is now handled by createPDCA in Step 9
       
+      // Step 8.7: Commit and push the merged content
+      console.log(`📦 Git operations...\n`);
+      try {
+        execSync(`git add "${newPDCAPath}"`, { cwd: path.dirname(newPDCAPath) });
+        execSync(`git commit -m "feat: rewrite PDCA ${path.basename(newPDCAPath)}"`, { cwd: path.dirname(newPDCAPath) });
+        
+        const branch = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf-8' }).trim();
+        execSync(`git push origin ${branch}`, { cwd: path.dirname(newPDCAPath) });
+        console.log(`✅ Committed and pushed rewritten PDCA\n`);
+      } catch (error: any) {
+        console.log(`⚠️  Could not commit/push: ${error.message}\n`);
+      }
+      
       // Step 8.6: Delete the original corrupted file (if different from new file)
       if (fs.existsSync(filePath) && filePath !== newPDCAPath) {
         fs.unlinkSync(filePath);
