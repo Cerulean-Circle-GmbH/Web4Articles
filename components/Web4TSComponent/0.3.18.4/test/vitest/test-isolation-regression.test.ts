@@ -22,11 +22,12 @@ import { existsSync } from 'fs';
 import { join } from 'path';
 
 describe('Test Isolation - Regression Prevention (CMM3)', () => {
-  // Vitest runs from component root
+  // Vitest runs from component root (components/Web4TSComponent/0.3.18.4)
   const componentVersion = process.cwd();
   const cliPath = join(componentVersion, 'web4tscomponent');
   const testDataDir = join(componentVersion, 'test/data');
-  const projectRoot = join(componentVersion, '../..');
+  // Go up 3 levels: 0.3.18.4 -> Web4TSComponent -> components -> Web4Articles
+  const projectRoot = join(componentVersion, '../../..');
   
   /**
    * Helper: Run CLI from test/data directory (test isolation)
@@ -242,6 +243,68 @@ describe('Test Isolation - Regression Prevention (CMM3)', () => {
       // Critical: Combination must produce output
       expect(output.trim().length).toBeGreaterThan(0);
       expect(output).toContain('Component Model Information');
+    });
+
+    it('should work via scripts/web4tscomponent symlink (ACTUAL broken workflow)', () => {
+      // This is the EXACT symlink chain that was broken:
+      // scripts/web4tscomponent -> ../components/Web4TSComponent/latest/web4tscomponent
+      // latest -> 0.3.18.4
+      //
+      // When pwd (not pwd -P) was used, Node.js ES modules failed silently
+      // This test uses the ACTUAL symlink path that users call
+      
+      const symlinkedCLI = join(projectRoot, 'scripts/web4tscomponent');
+      
+      if (!existsSync(symlinkedCLI)) {
+        console.log('⚠️  Skipping symlink test (scripts/web4tscomponent not found)');
+        return;
+      }
+      
+      // Call via the symlinked path (not absolute path like other tests)
+      const output = runInProduction(`scripts/web4tscomponent info`);
+      
+      // Critical: Must produce output when called via symlink chain
+      expect(output.trim().length).toBeGreaterThan(0);
+      expect(output).toContain('Component Model Information');
+      expect(output).toContain('Version:');
+      expect(output).toMatch(/Version:\s+0\.3\.18\.4/);
+    });
+
+    it('should work with source.env + scripts/web4tscomponent (EXACT broken combination)', () => {
+      // This recreates the EXACT failure scenario:
+      // 1. User sources source.env (sets up PATH with scripts/ directory)
+      // 2. User calls web4tscomponent (which resolves to scripts/web4tscomponent symlink)
+      // 3. Symlink points to latest/web4tscomponent (another symlink)
+      // 4. Without pwd -P, Node.js ES modules fail silently
+      //
+      // This is THE test that would have caught the bug!
+      
+      const sourceEnvPath = join(projectRoot, 'source.env');
+      const symlinkedCLI = join(projectRoot, 'scripts/web4tscomponent');
+      
+      if (!existsSync(sourceEnvPath) || !existsSync(symlinkedCLI)) {
+        console.log('⚠️  Skipping combined symlink test (files not found)');
+        return;
+      }
+      
+      // Use relative path like user would (not absolute)
+      const command = `cd "${projectRoot}" && . source.env 2>/dev/null && web4tscomponent info`;
+      
+      try {
+        const output = execSync(command, {
+          encoding: 'utf8',
+          stdio: ['pipe', 'pipe', 'pipe']
+        });
+        
+        // Critical: Must produce output (this was completely empty before fix)
+        expect(output.trim().length, 'Output should not be empty').toBeGreaterThan(0);
+        expect(output, 'Should contain model info').toContain('Component Model Information');
+        expect(output, 'Should show version').toMatch(/Version:\s+0\.3\.18\.4/);
+      } catch (error: any) {
+        // Even on error, check if there was ANY output
+        const output = error.stdout || error.stderr || '';
+        throw new Error(`Command failed. Output was: "${output}"`);
+      }
     });
 
     it('should document the symlink issue in PDCA', () => {
