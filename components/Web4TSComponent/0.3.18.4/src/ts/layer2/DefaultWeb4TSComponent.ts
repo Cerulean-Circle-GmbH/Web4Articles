@@ -1801,6 +1801,11 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 # Sources component's source.env and adds test isolation PS1 prompt
 source "${componentSourceEnv}"
 
+# @pdca 2025-11-10-UTC-1010.pdca.md - Test Isolation: Override PATH to prevent production pollution
+# Source.env adds production scripts to PATH, but test isolation should ONLY see test/data scripts
+# This prevents 'which pdca' from finding production scripts in test isolation
+export PATH="${testDataDir}/scripts:${testDataDir}/node_modules/.bin:\$PATH"
+
 # Component's source.env exports PS1, but bash --init-file needs it without export
 # Re-declare PS1 to override the export (this makes it work with --init-file)
 PS1="\\[\\033[1;36m\\][TEST ISOLATION ${this.model.component} ${this.model.version.toString()}]\\[\\033[0m\\] \\[\\033[1;32m\\]\\u@\\h\\[\\033[0m\\] \\n\\[\\033[1;34m\\]\\w\\[\\033[0m\\] > "
@@ -2694,16 +2699,29 @@ Standards:
    * @remarks TSCompletion uses convention: filterParameterCompletion (not @cliCompletion tag)
    */
   async completion(what: string, filter?: string): Promise<this> {
-    // OOP: Instantiate CLI and call completeParameter directly (no shell!)
+    // @pdca 2025-11-10-UTC-1010.pdca.md - Radical OOP: Use cliSignature() instead of non-existent callback
+    // OOP: Instantiate CLI and set up model for completion (model-driven state)
     const { Web4TSComponentCLI } = await import('../layer5/Web4TSComponentCLI.js');
     const cli = new Web4TSComponentCLI();
     
     console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on ${this.model.component} ${this.model.version.toString()}${filter ? ` (filter: ${filter})` : ''}`);
-      console.log(`---`);
-      
+    console.log(`---`);
+    
+    // Radical OOP: Set up model to simulate bash completion environment
+    // Model-driven: All completion state in model, NO global state
+    cli.model.completionCommand = 'completion';
+    cli.model.completionIsCompletingMethod = (what === 'method');
+    cli.model.completionCompWords = ['web4tscomponent', what, filter || ''];
+    cli.model.completionParameters = [what, filter || ''];
+    cli.model.completionCurrentWord = filter || '';
+    
     if (!this.model.context) {
-      // No context - call completeParameter directly via OOP
-      await cli.completeParameter('completionNameParameterCompletion', 'completion', what, filter || '');
+      // No context - complete on Web4TSComponent itself using cliSignature
+      await cli.cliSignature();
+      
+      // Output the buffered lines (cliSignature pushes to model.completionOutputLines)
+      cli.model.completionOutputLines.forEach(line => console.log(line));
+      cli.model.completionOutputLines = []; // Clear buffer
     } else {
       // Context loaded - delegate to target component's CLI
       const cliScriptName = this.model.component.toLowerCase().replace(/\./g, '');
@@ -2712,9 +2730,9 @@ Standards:
       const cliPath = path.join(infrastructureCLI.model.projectRoot, 'scripts', cliScriptName);
       const componentPath = this.model.targetComponentRoot!;
       
-      execSync(`${cliPath} completeParameter completionNameParameterCompletion "completion" "${what}" "${filter || ''}" 2>/dev/null`, { 
+      execSync(`${cliPath} shCompletion ${(what === 'method') ? 1 : 2} ${what} "${filter || ''}" 2>/dev/null`, { 
         cwd: componentPath,
-        stdio: 'inherit',
+        stdio: 'inherit'
       });
     }
     

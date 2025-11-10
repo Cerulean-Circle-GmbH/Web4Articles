@@ -42,7 +42,10 @@ export class Web4TSComponentCLI extends DefaultCLI {
     this.component.model.projectRoot = this.model.projectRoot;
     this.component.model.targetDirectory = this.model.projectRoot;
     this.component.model.componentsDirectory = join(this.model.projectRoot, 'components');
-    this.component.model.isTestIsolation = false;
+    // @pdca 2025-11-10-UTC-1010.pdca.md - Radical OOP: Detect test isolation from MODEL, not environment
+    // Model-driven: If projectRoot includes '/test/data', we're in test isolation
+    // NO environment variables (Web4 is environment-agnostic)
+    this.component.model.isTestIsolation = this.model.projectRoot.includes('/test/data');
     // testDataDirectory only set when isTestIsolation = true (in test setup)
     
     // ✅ Each object discovers itself: CLI discovers CLI methods, Component discovers component methods!

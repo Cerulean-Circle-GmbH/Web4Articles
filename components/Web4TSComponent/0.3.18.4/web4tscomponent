@@ -91,4 +91,11 @@ if [ ! -f "$CLI_PATH" ]; then
 fi
 
 # Execute CLI with all arguments
-node "$CLI_PATH" "$@"
+# @pdca 2025-11-10-UTC-1010.pdca.md - Radical OOP: Bash sets CONTEXT (cwd), TypeScript reads from context
+# Web4 is environment-agnostic: CLI calculates projectRoot from process.cwd(), not environment variables
+# This ensures test isolation works: when run from test/data, CLI detects test/data as project root
+cd "$PROJECT_ROOT" || {
+    echo "❌ Failed to cd to PROJECT_ROOT: $PROJECT_ROOT"
+    exit 1
+}
+node "$COMPONENT_PATH/$CLI_PATH" "$@"

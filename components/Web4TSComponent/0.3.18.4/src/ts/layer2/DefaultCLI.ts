@@ -464,7 +464,6 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @cliHide
    */
   protected async getValidCompletionValues(): Promise<string[]> {
-    console.error(`DEBUG: getValidCompletionValues() called, isMethod=${this.model.completionIsCompletingMethod}, isParam=${this.model.completionIsCompletingParameter}`);
     if (this.model.completionIsCompletingMethod) {
       // METHOD COMPLETION: Get all methods, filter by current word, format with signatures
       // RADICAL OOP: All data from this.model!
@@ -551,28 +550,40 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       const BRIGHT_CYAN = this.colors.toolName; 
       const BRIGHT_YELLOW = this.colors.parameters;
       const BRIGHT_WHITE_BOLD = this.colors.sections;
+      const RED = this.colors.red;
       const RESET = this.colors.reset;
 
       return filtered.map((methodName, index) => {
         const parameters = this.extractParameterInfoFromTSCompletion(methodName);
         const isCLIMethod = this.hasCliAnnotations(methodName);
         const methodColor = isCLIMethod ? BRIGHT_WHITE_BOLD : "";
+        
+        // @pdca 2025-11-10-UTC-1010.pdca.md - UX: Highlight filter prefix in RED (lost during refactoring)
+        // This matches 0.3.17.2 baseline behavior where search term was highlighted
         let displayName = methodName;
+        if (filterPrefix && methodName.toLowerCase().startsWith(filterPrefix.toLowerCase())) {
+          // Split: prefix (red) + rest (normal method color)
+          const prefix = methodName.substring(0, filterPrefix.length);
+          const rest = methodName.substring(filterPrefix.length);
+          displayName = `${RED}${prefix}${RESET}${methodColor}${rest}${RESET}`;
+        } else {
+          displayName = `${methodColor}${methodName}${RESET}`;
+        }
 
         if (parameters && parameters.length > 0) {
           const paramList = parameters
             .map((p: any) => this.generateParameterSyntax(p, methodName))
             .join(" ");
-          return `${BRIGHT_CYAN}${index + 1}:${RESET} ${methodColor}${methodName}${RESET} ${BRIGHT_YELLOW}${paramList}${RESET}`;
+          return `${BRIGHT_CYAN}${index + 1}:${RESET} ${displayName} ${BRIGHT_YELLOW}${paramList}${RESET}`;
         }
-        return `${BRIGHT_CYAN}${index + 1}:${RESET} ${methodColor}${displayName}${RESET}`;
+        // No parameters - just method name
+        return `${BRIGHT_CYAN}${index + 1}:${RESET} ${displayName}`;
       });
     } else if (this.model.completionIsCompletingParameter) {
       // Radical OOP: Get component class from this.context or this
       const target = this.context || this;
       const componentClass = target.constructor.name;
       
-      console.error(`DEBUG: Completing parameter for ${this.model.completionCommand}, componentClass=${componentClass}`);
 
       // Try to find callback - check current class and parent classes
       let callback = TSCompletion.getParameterCallback(
@@ -580,7 +591,6 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         this.model.completionCommand!,
         this.model.completionParameterIndex
       );
-      console.error(`DEBUG: Callback from ${componentClass}: ${callback || 'null'}`);
 
       // If not found on current class, try DefaultCLI (base class where on command is defined)
       if (!callback && componentClass !== 'DefaultCLI') {
@@ -608,14 +618,11 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         // Try to find callback method on CLI (this), then on component (this.context)
         if (typeof (this as any)[callback] === "function") {
           const values = await (this as any)[callback]();
-          console.error(`DEBUG: Callback ${callback} returned ${values ? values.length : 0} values`);
           if (values && values.length > 0) {
-            console.error(`DEBUG: First value length: ${values[0].length}, contains newline: ${values[0].includes('\n')}`);
           }
           return values; // Return values for formatCompletionOutput in shCompletion
         } else if (this.context && typeof (this.context as any)[callback] === "function") {
           const values = await (this.context as any)[callback]();
-          console.error(`DEBUG: Callback ${callback} (context) returned ${values ? values.length : 0} values`);
           return values; // Return values for formatCompletionOutput in shCompletion
         }
       }
@@ -628,12 +635,9 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         const methodExists = typeof (this.component as any)[this.model.completionCommand!] === 'function';
         
         if (methodExists) {
-          console.error(`DEBUG: Checking if ${this.model.completionCommand} delegates to Web4TSComponent`);
-          console.error(`DEBUG: this.component exists: ${!!this.component}, has getWeb4TSComponent: ${typeof (this.component as any).getWeb4TSComponent === 'function'}`);
           
           // Get Web4TSComponent instance (like delegateToWeb4TS does)
           const web4ts = await (this.component as any).getWeb4TSComponent();
-          console.error(`DEBUG: Got web4ts: ${!!web4ts}, web4ts has ${this.model.completionCommand}: ${typeof (web4ts as any)[this.model.completionCommand!] === 'function'}`);
           
           // DELEGATION WORKAROUND: Call Web4TSComponent's parameter completion method directly
           // @pdca 2025-11-06-UTC-0150.delegated-parameter-completion-broken.pdca.md
@@ -642,17 +646,14 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
           
           // For test command, use scopeParameterCompletion
           if (this.model.completionCommand === 'test' && this.model.completionParameterIndex === 0) {
-            console.error(`DEBUG: Delegating test parameter completion to scopeParameterCompletion()`);
             if (typeof (this as any).scopeParameterCompletion === 'function') {
               const values = await (this as any).scopeParameterCompletion();
-              console.error(`DEBUG: scopeParameterCompletion() returned ${values ? values.length : 0} values (delegated)`);
               return values;
             }
           }
           
           // For other delegated methods with @cliValues, TSCompletion can't find them across components
           // Future enhancement: Make TSCompletion component-aware or use runtime delegation
-          console.error(`DEBUG: No delegation handler for ${this.model.completionCommand} parameter ${this.model.completionParameterIndex}`);
         }
       }
 
@@ -874,7 +875,6 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         command,
         paramIndex
       );
-      console.error(`DEBUG: DefaultCLI callback="${callback}"`);
 
       if (!callback) {
         callback = TSCompletion.getParameterCallback(
@@ -2192,11 +2192,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     // @pdca 2025-11-04-UTC-2159.pdca.md - Centralized output in model
     
     // DEBUG: Check what we're receiving
-    console.error(`DEBUG: formatCompletionOutput received ${values.length} values`);
     if (values.length > 0) {
-      console.error(`DEBUG: First value: ${JSON.stringify(values[0].substring(0, 100))}`);
       if (values.length > 1) {
-        console.error(`DEBUG: Second value: ${JSON.stringify(values[1].substring(0, 100))}`);
       }
     }
     
@@ -2674,10 +2671,8 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
    * @cliHide
    */
   private async completeCommandParameter(): Promise<void> {
-    console.error(`DEBUG: completeCommandParameter called`);
     await this.outputCompletionDiagnostic();
     const values = await this.getValidCompletionValues();
-    console.error(`DEBUG: getValidCompletionValues returned ${values.length} values`);
     this.formatCompletionOutput(values);
   }
 
