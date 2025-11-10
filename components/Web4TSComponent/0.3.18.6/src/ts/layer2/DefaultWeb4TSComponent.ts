@@ -185,6 +185,11 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         targetDirectory: '',
         componentsDirectory: '',
         isTestIsolation: false,
+        // @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
+        // Display properties - calculated in updateModelPaths()
+        displayName: 'Web4TSComponent',
+        displayVersion: versionString,
+        isDelegation: false,
       };
     }
 
@@ -294,6 +299,36 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     
     // ✅ Backward compatibility alias
     this.model.componentPath = this.model.targetComponentRoot;
+    
+    // ✅ Radical OOP: Calculate display properties ONCE (not on every call!)
+    // @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
+    if (this.model.context) {
+      // Delegation mode: Show CALLER component
+      this.model.displayName = this.model.context.model.component;
+      this.model.displayVersion = this.model.context.model.version.toString();
+      this.model.isDelegation = true;
+      this.model.delegationInfo = `via ${this.model.component} v${this.model.version.toString()}`;
+    } else {
+      // Direct mode: Show THIS component
+      this.model.displayName = this.model.component;
+      this.model.displayVersion = this.model.version.toString();
+      this.model.isDelegation = false;
+      this.model.delegationInfo = undefined;
+    }
+    
+    // ✅ Radical OOP: Calculate test isolation context ONCE (not regex on every call!)
+    // @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
+    const target = this.getTarget();
+    if (target.model.isTestIsolation && target.model.projectRoot) {
+      const match = target.model.projectRoot.match(/components\/([^/]+)\/([^/]+)\/test\/data/);
+      if (match) {
+        this.model.testIsolationContext = `${match[1]} v${match[2]}`;
+      } else {
+        this.model.testIsolationContext = 'test/data environment';
+      }
+    } else {
+      this.model.testIsolationContext = undefined;
+    }
   }
 
     
@@ -512,132 +547,30 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   // @pdca 2025-11-05-UTC-2100.pdca.md - REMOVED resolveComponentPath() - use path.join(model.componentsDirectory, name, version)
 
   /**
-   * Print quick header for fast commands (DRY helper)
-   * Shows component name and version immediately without full usage dialog
-   * @cliHide
-   */
-  /**
    * Print CLI header with component identity and optional test isolation indicator
-   * Radical OOP: Encapsulated methods for each concern, model-driven display
-   * @pdca 2025-11-10-UTC-1115.radical-oop-delegation-analysis.pdca.md
+   * Radical OOP: Model-driven display (NO functional helpers, NO if statements)
+   * All display properties calculated ONCE in updateModelPaths()
+   * @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
    * @cliHide
    */
   protected printQuickHeader(): void {
-    // Line 1: Component identity (with delegation indicator if applicable)
-    console.log(this.buildHeaderLine());
+    // Build header line (NO logic, just read model!)
+    let header = `${this.colors.cyan}Web4 ${this.model.displayName} CLI Tool${this.colors.reset}`;
+    header += ` v${this.colors.yellow}${this.model.displayVersion}${this.colors.reset}`;
     
-    // Line 2: Test isolation indicator (if in test isolation mode)
-    const testIsolationLine = this.buildTestIsolationLine();
-    if (testIsolationLine) {
-      console.log(testIsolationLine);
-    }
-    
-    console.log(''); // Blank line after header
-  }
-
-  /**
-   * Build main header line with component identity
-   * Radical OOP: Single responsibility - build header string only
-   * @pdca 2025-11-10-UTC-1115.radical-oop-delegation-analysis.pdca.md
-   * @returns Formatted header line
-   * @cliHide
-   */
-  private buildHeaderLine(): string {
-    const identity = this.getComponentIdentity();
-    const delegation = this.getDelegationInfo();
-    
-    let header = `${this.colors.cyan}Web4 ${identity.name} CLI Tool${this.colors.reset}`;
-    header += ` v${this.colors.yellow}${identity.version}${this.colors.reset}`;
-    
-    if (delegation) {
-      header += ` ${this.colors.dim}(via ${delegation.infrastructureComponent} v${delegation.infrastructureVersion})${this.colors.reset}`;
+    if (this.model.isDelegation && this.model.delegationInfo) {
+      header += ` ${this.colors.dim}(${this.model.delegationInfo})${this.colors.reset}`;
     }
     
     header += ' - Dynamic Method Discovery with Structured Documentation';
+    console.log(header);
     
-    return header;
-  }
-
-  /**
-   * Get component identity (name and version)
-   * Radical OOP: Encapsulate identity resolution logic
-   * @pdca 2025-11-10-UTC-1115.radical-oop-delegation-analysis.pdca.md
-   * @returns Component name and version
-   * @cliHide
-   */
-  private getComponentIdentity(): { name: string; version: string } {
-    if (this.model.context) {
-      // Delegation mode: Show CALLER component
-      return {
-        name: this.model.context.model.component,
-        version: this.model.context.model.version || this.model.version.toString()
-      };
-    } else {
-      // Direct mode: Show THIS component
-      return {
-        name: this.model.component,
-        version: this.model.version.toString()
-      };
-    }
-  }
-
-  /**
-   * Get delegation information if in delegation mode
-   * Radical OOP: Encapsulate delegation detection and info extraction
-   * @pdca 2025-11-10-UTC-1115.radical-oop-delegation-analysis.pdca.md
-   * @returns Delegation info or null if not delegating
-   * @cliHide
-   */
-  private getDelegationInfo(): { infrastructureComponent: string; infrastructureVersion: string } | null {
-    if (!this.model.context) {
-      return null;
+    // Test isolation line (NO logic, just read model!)
+    if (this.model.testIsolationContext) {
+      console.log(`${this.colors.yellow}⚠️  TEST ISOLATION MODE${this.colors.reset} ${this.colors.dim}(${this.model.testIsolationContext})${this.colors.reset}`);
     }
     
-    return {
-      infrastructureComponent: this.model.component,
-      infrastructureVersion: this.model.version.toString()
-    };
-  }
-
-  /**
-   * Build test isolation indicator line
-   * Radical OOP: Encapsulate test isolation detection and display
-   * @pdca 2025-11-10-UTC-1115.radical-oop-delegation-analysis.pdca.md
-   * @returns Formatted test isolation line or null if not in test isolation
-   * @cliHide
-   */
-  private buildTestIsolationLine(): string | null {
-    const target = this.getTarget();
-    
-    if (!target.model.isTestIsolation) {
-      return null;
-    }
-    
-    // Extract test isolation context from projectRoot
-    const testContext = this.getTestIsolationContext();
-    
-    return `${this.colors.yellow}⚠️  TEST ISOLATION MODE${this.colors.reset} ${this.colors.dim}(${testContext})${this.colors.reset}`;
-  }
-
-  /**
-   * Get test isolation context information
-   * Radical OOP: Encapsulate test context extraction logic
-   * @pdca 2025-11-10-UTC-1115.radical-oop-delegation-analysis.pdca.md
-   * @returns Test isolation context description
-   * @cliHide
-   */
-  private getTestIsolationContext(): string {
-    const target = this.getTarget();
-    
-    // Extract component and version from projectRoot if it contains test/data
-    if (target.model.projectRoot && target.model.projectRoot.includes('/test/data')) {
-      const match = target.model.projectRoot.match(/components\/([^/]+)\/([^/]+)\/test\/data/);
-      if (match) {
-        return `${match[1]} v${match[2]}`;
-      }
-    }
-    
-    return 'test/data environment';
+    console.log(''); // Blank line after header
   }
 
   /**

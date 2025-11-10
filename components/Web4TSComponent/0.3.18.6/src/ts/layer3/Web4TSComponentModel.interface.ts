@@ -74,6 +74,29 @@ export interface Web4TSComponentModel extends Model {
    */
   testDataDirectory?: string;
   
+  /**
+   * Display identity (calculated ONCE in updateModelPaths - Radical OOP)
+   * Eliminates functional helpers with if statements
+   * @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
+   */
+  displayName: string;         // Component name to show (this OR context)
+  displayVersion: string;      // Version to show (this OR context)
+  
+  /**
+   * Delegation state (calculated ONCE - Radical OOP)
+   * Eliminates functional helpers with if statements
+   * @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
+   */
+  isDelegation: boolean;       // true if this.model.context exists
+  delegationInfo?: string;     // e.g., "via Web4TSComponent v0.3.18.6"
+  
+  /**
+   * Test isolation display (calculated ONCE - Radical OOP)
+   * Eliminates functional helpers with regex on every call
+   * @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
+   */
+  testIsolationContext?: string; // e.g., "Web4TSComponent v0.3.18.6" or null
+  
   dependencies?: ComponentDependency[];  // Component dependencies with auto-build
   
   /**
