@@ -30,10 +30,12 @@ export class DefaultUnit implements Unit {
       name: '',
       origin: '',
       definition: '',
+      indexPath: '',              // Will be set when stored
+      references: [],             // Unified reference tracking
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      component: 'Unit',  // For CLI display
-      version: '0.3.19.1'             // Component version
+      component: 'Unit',          // For CLI display
+      version: '0.3.19.1'         // Component version
     };
   }
 
@@ -492,4 +494,207 @@ export class DefaultUnit implements Unit {
     }
     return null;
   }
+
+  // ==================== BUSINESS LOGIC METHODS ====================
+  // @pdca 2025-11-11-UTC-0003.migrate-unit-to-storage-service.pdca.md
+  // Phase 4b: Critical CLI Commands Migration
+
+  /**
+   * Create unit from source file or directory
+   * @pdca 2025-11-11-UTC-0003 - Migrated with Radical OOP (CLI path authority, method chaining)
+   * @cliSyntax filename <?startPos> <?endPos>
+   */
+  async from(filename: string): Promise<this>;
+  async from(filename: string, startPos: string, endPos: string): Promise<this>;
+  async from(pathInput: string, startPos?: string, endPos?: string): Promise<this> {
+    try {
+      const cli = this.getCLI();
+      // ✅ RADICAL OOP: Use CLI's projectRoot (Path Authority)
+      const projectRoot = cli.model.projectRoot || this.model.projectRoot || '';
+      const fullPath = path.isAbsolute(pathInput) ? pathInput : path.join(projectRoot, pathInput);
+      
+      // Check if path is folder or file
+      const { promises: fs } = await import('fs');
+      const stats = await fs.stat(fullPath);
+      
+      if (stats.isDirectory()) {
+        // Create folder atomic element
+        await this.createFromFolder(pathInput);
+      } else {
+        // File functionality
+        if (startPos && endPos) {
+          // Word-in-file mode: GitTextIOR with positions
+          await this.createFromWordInFile(pathInput, startPos, endPos);
+        } else {
+          // Complete file mode: Simple ior:url reference
+          await this.createFromCompleteFile(pathInput);
+        }
+      }
+      
+      // ✅ RADICAL OOP: Return this for method chaining
+      return this;
+    } catch (error) {
+      console.error(`Failed to create unit from file: ${(error as Error).message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Create unit from word-in-file with GitTextIOR (precise positioning)
+   * @pdca 2025-11-11-UTC-0003 - Migrated with Radical OOP
+   * @cliHide
+   */
+  private async createFromWordInFile(filename: string, startPos: string, endPos: string): Promise<void> {
+    const { promises: fs } = await import('fs');
+    const { GitTextIOR } = await import('./GitTextIOR.js');
+    
+    // Read file content
+    const fileContent = await fs.readFile(filename, 'utf-8');
+    const lines = fileContent.split('\n');
+    
+    // Parse positions (line:column format)
+    const [startLine, startCol] = startPos.split(':').map(Number);
+    const [endLine, endCol] = endPos.split(':').map(Number);
+    
+    // Extract text from specified range
+    let extractedText = '';
+    for (let i = startLine - 1; i <= endLine - 1; i++) {
+      if (i === startLine - 1 && i === endLine - 1) {
+        // Same line
+        extractedText = lines[i].substring(startCol - 1, endCol);
+      } else if (i === startLine - 1) {
+        // Start line
+        extractedText += lines[i].substring(startCol - 1) + '\n';
+      } else if (i === endLine - 1) {
+        // End line
+        extractedText += lines[i].substring(0, endCol);
+      } else {
+        // Middle lines
+        extractedText += lines[i] + '\n';
+      }
+    }
+    
+    // Extract unit name from text (first word or identifier)
+    const nameMatch = extractedText.match(/\b[A-Za-z][A-Za-z0-9_]*\b/);
+    const unitName = nameMatch ? nameMatch[0] : 'ExtractedUnit';
+    
+    // Create GitTextIOR for origin with absolute path
+    const gitIOR = new GitTextIOR();
+    const absolutePath = path.resolve(filename);
+    const relativePath = absolutePath.replace('/workspace/', '');
+    const gitUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${relativePath}#L${startPos}-${endPos}`;
+    const originIOR = gitIOR.parse(gitUrl);
+    
+    // Set terminal identity
+    this.setTerminalIdentity(unitName, originIOR, '');
+    
+    console.log(`✅ Unit created from word-in-file: ${unitName}`);
+    console.log(`   UUID: ${this.model.uuid}`);
+    console.log(`   Origin GitTextIOR: ${originIOR}`);
+    console.log(`   Extracted from: ${filename} (${startPos}-${endPos})`);
+  }
+
+  /**
+   * Create unit from complete file with simple ior:url reference
+   * @pdca 2025-11-11-UTC-0003 - Migrated with Radical OOP
+   * @cliHide
+   */
+  private async createFromCompleteFile(filename: string): Promise<void> {
+    const { promises: fs } = await import('fs');
+    const { TypeM3 } = await import('../layer3/TypeM3.enum.js');
+    
+    // Generate simple IOR from file
+    const originIOR = await this.generateSimpleIOR(filename);
+    
+    // Extract file name for unit name
+    const fileName = path.basename(filename, path.extname(filename));
+    
+    // Analyze file type for TypeM3 classification
+    const extension = path.extname(filename);
+    if (extension === '.ts' || extension === '.js') {
+      this.model.typeM3 = TypeM3.CLASS;
+    } else if (extension === '.md' || extension === '.txt') {
+      this.model.typeM3 = TypeM3.ATTRIBUTE;
+    } else {
+      this.model.typeM3 = TypeM3.ATTRIBUTE;
+    }
+    
+    // Update unit model
+    this.model.name = fileName;
+    this.model.origin = originIOR;
+    this.model.definition = originIOR; // Same as origin for complete files
+    this.model.updatedAt = new Date().toISOString();
+    
+    // Store unit
+    const scenario = await this.toScenario();
+    await this.storage.saveScenario(this.model.uuid, scenario, []);
+    
+    console.log(`✅ Unit created from complete file: ${fileName}`);
+    console.log(`   UUID: ${this.model.uuid}`);
+    console.log(`   Origin IOR: ${originIOR}`);
+    console.log(`   File: ${filename}`);
+    console.log(`   TypeM3: ${this.model.typeM3}`);
+  }
+
+  /**
+   * Create unit from folder (atomic element)
+   * @pdca 2025-11-11-UTC-0003 - Migrated with Radical OOP
+   * @cliHide
+   */
+  private async createFromFolder(folderPath: string): Promise<void> {
+    const cli = this.getCLI();
+    // ✅ RADICAL OOP: Use CLI's projectRoot (Path Authority)
+    const projectRoot = cli.model.projectRoot || this.model.projectRoot || '';
+    const fullPath = path.isAbsolute(folderPath) ? folderPath : path.join(projectRoot, folderPath);
+    
+    // Generate simple IOR from folder
+    const originIOR = await this.generateSimpleIOR(fullPath);
+    
+    // Extract folder name for unit name
+    const folderName = path.basename(fullPath);
+    
+    // Update unit model
+    this.model.name = folderName;
+    this.model.origin = originIOR;
+    this.model.definition = originIOR;
+    this.model.typeM3 = (await import('../layer3/TypeM3.enum.js')).TypeM3.ATTRIBUTE;
+    this.model.updatedAt = new Date().toISOString();
+    
+    // Store unit
+    const scenario = await this.toScenario();
+    await this.storage.saveScenario(this.model.uuid, scenario, []);
+    
+    console.log(`✅ Unit created from folder: ${folderName}`);
+    console.log(`   UUID: ${this.model.uuid}`);
+    console.log(`   Origin IOR: ${originIOR}`);
+    console.log(`   Folder: ${fullPath}`);
+  }
+
+  /**
+   * Generate simple IOR format: ior:giturlFromFile
+   * @pdca 2025-11-11-UTC-0003 - Migrated with Radical OOP (CLI path authority)
+   * @cliHide
+   */
+  private async generateSimpleIOR(filePath: string): Promise<string> {
+    const cli = this.getCLI();
+    // ✅ RADICAL OOP: Use CLI's projectRoot (Path Authority)
+    const projectRoot = cli.model.projectRoot || this.model.projectRoot || '';
+    const relativePath = path.relative(projectRoot, filePath);
+    
+    return `ior:git:github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${relativePath}`;
+  }
+
+  /**
+   * Set terminal identity (name, origin, definition)
+   * @pdca 2025-11-11-UTC-0003 - Migrated, already has method chaining
+   * @cliHide
+   */
+  setTerminalIdentity(name: string, origin: string, definition: string): this {
+    this.model.name = name;
+    this.model.origin = origin;
+    this.model.definition = definition;
+    this.model.updatedAt = new Date().toISOString();
+    return this;
+  }
 }
+
