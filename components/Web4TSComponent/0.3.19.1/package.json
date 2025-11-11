@@ -1,0 +1,16 @@
+{
+  "name": "web4-project",
+  "version": "0.3.19.1",
+  "type": "module",
+  "description": "Web4 Component Architecture Project",
+  "private": true,
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "glob": "^11.0.3",
+    "minimatch": "^10.0.3"
+  }
+}

@@ -517,34 +517,49 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliHide
    */
   protected printQuickHeader(): void {
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly (already reflects context)
-    // Show calling component's info (this.model already updated by updateModelPaths)
-    let header = `${this.colors.cyan}Web4 ${this.model.component} CLI Tool${this.colors.reset} v${this.colors.yellow}${this.model.version.toString()}${this.colors.reset}`;
+    // @pdca 2025-11-10-UTC-1010.pdca.md - Context-aware header display
+    // When delegating: Show CALLER component (via INFRASTRUCTURE component)
+    // When direct: Show THIS component
     
-    // If delegating AND the delegation target is different, show it
-    // @pdca 2025-11-03-UTC-1237.pdca.md - Only show delegation when component/version differ
-    // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - TRUE OOP: Detect delegation semantically
+    let componentName: string;
+    let componentVersion: string;
+    let showDelegation = false;
+    
     if (this.model.context) {
-      // ✅ Get infrastructure component name from componentRoot (not hardcoded!)
-      const infrastructureComponentName = path.basename(path.dirname(this.model.componentRoot));
-      const isDifferentComponent = this.model.component !== infrastructureComponentName;
-      
-      if (isDifferentComponent) {
-        // Get infrastructure component's actual version dynamically
-        // Read from latest symlink (projectRoot is Path Authority field in model)
-        try {
-          const infraDir = path.join(this.model.projectRoot, 'components', infrastructureComponentName);
-          const latestSymlink = path.join(infraDir, 'latest');
-          const infraVersion = readlinkSync(latestSymlink);
-          header += ` ${this.colors.dim}(via ${infrastructureComponentName} v${infraVersion})${this.colors.reset}`;
-        } catch (error) {
-          // Fallback: if symlink can't be read, don't show version
-          header += ` ${this.colors.dim}(via ${infrastructureComponentName})${this.colors.reset}`;
-        }
-      }
+      // Delegation mode: Show the CALLER (context) component
+      componentName = this.model.context.model.component;
+      componentVersion = this.model.context.model.version || this.model.version.toString();
+      showDelegation = true;
+    } else {
+      // Direct mode: Show THIS component
+      componentName = this.model.component;
+      componentVersion = this.model.version.toString();
+    }
+    
+    let header = `${this.colors.cyan}Web4 ${componentName} CLI Tool${this.colors.reset} v${this.colors.yellow}${componentVersion}${this.colors.reset}`;
+    
+    if (showDelegation) {
+      // Show which infrastructure component is doing the work
+      header += ` ${this.colors.dim}(via ${this.model.component} v${this.model.version.toString()})${this.colors.reset}`;
     }
     
     console.log(header + ' - Dynamic Method Discovery with Structured Documentation\n');
+  }
+
+  /**
+   * Get the target component instance for operations
+   * Single source of truth for context resolution (Radical OOP principle)
+   * 
+   * @pdca 2025-11-10-UTC-1010.pdca.md - Radical OOP: getTarget() eliminates "functional shit"
+   * 
+   * Returns context if set (delegation mode), otherwise returns this
+   * This centralizes the "this.model.context || this" pattern into ONE method
+   * 
+   * @returns The target component instance to operate on
+   * @cliHide
+   */
+  protected getTarget(): DefaultWeb4TSComponent {
+    return (this.model.context as DefaultWeb4TSComponent) || this;
   }
 
 
@@ -982,8 +997,31 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     console.log(`   ✅ Ensured node_modules directory exists`);
     
     // 🛡️ SELF-HEALING: Create or update source.env (essential for tab completion)
+    // @pdca 2025-11-10-UTC-1010.pdca.md - Template consistency: Replace {{VERSION}} placeholder
     const sourceEnvPath = path.join(projectRoot, 'source.env');
-    await this.syncFileFromTemplate(sourceEnvPath, 'project/source.env.template', 'source.env', force);
+    const sourceEnvContent = await this.loadTemplate('project/source.env.template', {
+      VERSION: this.model.version.toString()
+    });
+    
+    if (!existsSync(sourceEnvPath)) {
+      await fs.writeFile(sourceEnvPath, sourceEnvContent);
+      console.log(`   ✅ Created source.env`);
+    } else {
+      // Timestamp-based sync like other files
+      const currentDir = path.dirname(new URL(import.meta.url).pathname);
+      const templateFullPath = path.join(currentDir, '../../../templates/project/source.env.template');
+      const targetStats = await fs.stat(sourceEnvPath);
+      const templateStats = await fs.stat(templateFullPath);
+      
+      if (force || templateStats.mtime > targetStats.mtime) {
+        const existing = await fs.readFile(sourceEnvPath, 'utf-8');
+        await this.createTimestampedBackup(sourceEnvPath, existing);
+        await fs.writeFile(sourceEnvPath, sourceEnvContent);
+        console.log(`   ✅ Updated source.env from newer template`);
+      } else {
+        console.log(`   ℹ️  source.env already up to date`);
+      }
+    }
     
     // Make source.env executable
     if (existsSync(sourceEnvPath)) {
@@ -1800,6 +1838,13 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 # Temporary wrapper for test isolation shell
 # Sources component's source.env and adds test isolation PS1 prompt
 source "${componentSourceEnv}"
+
+# @pdca 2025-11-10-UTC-1010.pdca.md - Test Isolation: REPLACE PATH (not append) to prevent production pollution
+# Source.env adds production scripts to PATH, but test isolation should ONLY see test/data scripts
+# We MUST replace the entire PATH, not just prepend, to remove production script paths
+# Save original system PATH (before source.env polluted it)
+SYSTEM_PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH="${testDataDir}/scripts:${testDataDir}/node_modules/.bin:\$SYSTEM_PATH"
 
 # Component's source.env exports PS1, but bash --init-file needs it without export
 # Re-declare PS1 to override the export (this makes it work with --init-file)
@@ -2694,16 +2739,29 @@ Standards:
    * @remarks TSCompletion uses convention: filterParameterCompletion (not @cliCompletion tag)
    */
   async completion(what: string, filter?: string): Promise<this> {
-    // OOP: Instantiate CLI and call completeParameter directly (no shell!)
+    // @pdca 2025-11-10-UTC-1010.pdca.md - Radical OOP: Use cliSignature() instead of non-existent callback
+    // OOP: Instantiate CLI and set up model for completion (model-driven state)
     const { Web4TSComponentCLI } = await import('../layer5/Web4TSComponentCLI.js');
     const cli = new Web4TSComponentCLI();
     
     console.log(`🔍 Discovering ${what === 'method' ? 'methods' : 'parameter completions'} on ${this.model.component} ${this.model.version.toString()}${filter ? ` (filter: ${filter})` : ''}`);
-      console.log(`---`);
-      
+    console.log(`---`);
+    
+    // Radical OOP: Set up model to simulate bash completion environment
+    // Model-driven: All completion state in model, NO global state
+    cli.model.completionCommand = 'completion';
+    cli.model.completionIsCompletingMethod = (what === 'method');
+    cli.model.completionCompWords = ['web4tscomponent', what, filter || ''];
+    cli.model.completionParameters = [what, filter || ''];
+    cli.model.completionCurrentWord = filter || '';
+    
     if (!this.model.context) {
-      // No context - call completeParameter directly via OOP
-      await cli.completeParameter('completionNameParameterCompletion', 'completion', what, filter || '');
+      // No context - complete on Web4TSComponent itself using cliSignature
+      await cli.cliSignature();
+      
+      // Output the buffered lines (cliSignature pushes to model.completionOutputLines)
+      cli.model.completionOutputLines.forEach(line => console.log(line));
+      cli.model.completionOutputLines = []; // Clear buffer
     } else {
       // Context loaded - delegate to target component's CLI
       const cliScriptName = this.model.component.toLowerCase().replace(/\./g, '');
@@ -2712,9 +2770,9 @@ Standards:
       const cliPath = path.join(infrastructureCLI.model.projectRoot, 'scripts', cliScriptName);
       const componentPath = this.model.targetComponentRoot!;
       
-      execSync(`${cliPath} completeParameter completionNameParameterCompletion "completion" "${what}" "${filter || ''}" 2>/dev/null`, { 
+      execSync(`${cliPath} shCompletion ${(what === 'method') ? 1 : 2} ${what} "${filter || ''}" 2>/dev/null`, { 
         cwd: componentPath,
-        stdio: 'inherit',
+        stdio: 'inherit'
       });
     }
     
@@ -4204,8 +4262,12 @@ Standards:
    * @TODO cliDefault topic overview
    */
   async info(topic: string = 'model'): Promise<this> {
-    // Determine which model to display (context if in "on" mode, otherwise this)
-    const targetModel = this.model.context?.model || this.model;
+    // @pdca 2025-11-10-UTC-1010.pdca.md - Add printQuickHeader() ONCE at the start
+    this.printQuickHeader();
+    
+    // @pdca 2025-11-10-UTC-1010.pdca.md - Radical OOP: Use getTarget() single source of truth
+    const target = this.getTarget();
+    const targetModel = target.model;
     const isContextMode = !!this.model.context;
     
     switch (topic) {
@@ -4265,13 +4327,18 @@ ${'='.repeat(80)}
           console.log();
         }
         
-        // Context Info
+        // @pdca 2025-11-10-UTC-1010.pdca.md - Show Context Delegation info (caller vs target)
+        // This clarifies WHO is calling and WHAT infrastructure component is doing the work
+        // When IdealMinimalComponent.info() delegates to Web4TSComponent.info():
+        //   - Caller: IdealMinimalComponent (in context)
+        //   - Target: Web4TSComponent (this infrastructure component)
         if (isContextMode) {
           console.log(`🔗 Context Delegation:`);
-          console.log(`   Caller Component: ${this.model.component}`);
-          console.log(`   Caller Version:   ${this.model.version?.toString()}`);
-          console.log(`   Target Component: ${targetModel.component}`);
-          console.log(`   Target Version:   ${targetModel.version?.toString()}`);
+          console.log(`   Caller Component: ${targetModel.component}`);
+          console.log(`   Caller Version:   ${targetModel.version?.toString() || 'N/A'}`);
+          // Target is THIS component (the infrastructure doing the work)
+          console.log(`   Target Component: ${this.model.component}`);
+          console.log(`   Target Version:   ${this.model.version.toString()}`);
           console.log();
         }
         

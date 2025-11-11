@@ -1,0 +1,140 @@
+/**
+ * Web4TSComponentModel - Web4 TypeScript Component Model Interface
+ * Web4 principle: Single interface per file, minimal Model extension
+ * Purpose: Component model following Web4 architecture patterns
+ */
+
+import { Model } from './Model.interface.js';
+import { ComponentDependency } from './ComponentDependency.interface.js';
+import { SemanticVersion } from '../layer2/SemanticVersion.js';
+
+export interface Web4TSComponentModel extends Model {
+  // uuid inherited from Model - don't redeclare
+  name: string;
+  origin: string;
+  definition: string;
+  
+  // Single source of truth: component identity
+  component: string;  // Component name (e.g., 'Web4TSComponent')
+  /**
+   * Version component (INSTANCE with behavior!)
+   * @pdca 2025-10-28-UTC-0934.pdca.md:2290 - Phase 3: Version INSTANCE
+   */
+  version: SemanticVersion;  // ✅ INSTANCE, not string!
+  
+  // Web4TSComponent-specific properties
+  /**
+   * Component's own root directory (where THIS component lives)
+   * Used for accessing component's own test/ directory
+   * Example: /Users/.../Web4Articles/components/Web4TSComponent/0.3.17.2
+   */
+  componentRoot: string;
+  
+  /**
+   * Project root path (overall project root)
+   * Example: /Users/.../Web4Articles
+   * ✅ BASELINE COMPLIANCE (2025-10-28-UTC-0934.pdca.md:158):
+   * Component STORES this value (set by CLI)
+   * Component does NOT CALCULATE this - that's DefaultCLI's responsibility
+   * @pdca 2025-10-29-UTC-1323.path-separation-violation-fix.pdca.md
+   */
+  projectRoot: string;
+  
+  /**
+   * Target directory for component operations (where to CREATE new components)
+   * ✅ BASELINE COMPLIANCE (2025-10-28-UTC-0934.pdca.md:158):
+   * Component STORES this value (set by CLI or tests via setTargetDirectory)
+   * Component does NOT CALCULATE paths - that's DefaultCLI's responsibility
+   * Used for test isolation (e.g., test/data for tests, project root for production)
+   * @pdca 2025-10-29-UTC-1323.path-separation-violation-fix.pdca.md
+   */
+  targetDirectory: string;
+  
+  /**
+   * Pre-calculated components directory (targetDirectory + '/components')
+   * CLI calculates this ONCE, component only USES it (Path Authority Principle)
+   * Production: projectRoot/components
+   * Test Isolation: componentRoot/test/data/components
+   * @pdca 2025-11-05-UTC-2100.pdca.md - Path Authority refactoring
+   */
+  componentsDirectory: string;
+  
+  /**
+   * Semantic flag indicating test isolation mode
+   * Replaces path inspection (isTestEnvironment() checks)
+   * Component uses this flag instead of inspecting targetDirectory path
+   * @pdca 2025-11-05-UTC-2100.pdca.md - Path Authority refactoring
+   */
+  isTestIsolation: boolean;
+  
+  /**
+   * Test data directory path (only set when isTestIsolation = true)
+   * Example: §/components/Web4TSComponent/0.3.17.9/test/data
+   * @pdca 2025-11-05-UTC-2100.pdca.md - Path Authority refactoring
+   */
+  testDataDirectory?: string;
+  
+  /**
+   * Display identity (calculated ONCE in updateModelPaths - Radical OOP)
+   * Eliminates functional helpers with if statements
+   * @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
+   */
+  displayName: string;         // Component name to show (this OR context)
+  displayVersion: string;      // Version to show (this OR context)
+  
+  /**
+   * Delegation state (calculated ONCE - Radical OOP)
+   * Eliminates functional helpers with if statements
+   * @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
+   */
+  isDelegation: boolean;       // true if this.model.context exists
+  delegationInfo?: string;     // e.g., "via Web4TSComponent v0.3.18.6"
+  
+  /**
+   * Test isolation display (calculated ONCE - Radical OOP)
+   * Eliminates functional helpers with regex on every call
+   * @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
+   */
+  testIsolationContext?: string; // e.g., "Web4TSComponent v0.3.18.6" or null
+  
+  dependencies?: ComponentDependency[];  // Component dependencies with auto-build
+  
+  /**
+   * Context: Another component INSTANCE (not data!)
+   * Used by on() to load target component for operations
+   * @pdca 2025-10-28-UTC-0934.pdca.md:3041 - Phase 4: Context INSTANCE
+   */
+  context?: any;  // Will be DefaultWeb4TSComponent (avoiding circular import)
+  
+  /**
+   * Calculated path to TARGET component root (this OR context)
+   * Set by updateModelPaths() after init() or when context changes
+   * Example: /Users/.../components/IdealMinimalComponent/0.3.18.2
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md
+   */
+  targetComponentRoot?: string;
+  
+  /**
+   * Alias for targetComponentRoot (backward compatibility)
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md
+   */
+  componentPath?: string;
+  
+  /**
+   * Promotion level for release testing (nextPatch, nextMinor, nextMajor)
+   * Set by releaseTest() method, used by promotion workflow
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Radical OOP: No functional parameters
+   */
+  promotionLevel?: string;
+  
+  /**
+   * Target version for upgrade operations
+   * Set by upgrade() method, used by createVersionFromExisting()
+   * @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Radical OOP: No functional parameters
+   */
+  toVersion?: string;
+  
+  // Note: createdAt/updatedAt removed per Web4 principle - these belong in ChangeEvent
+  // Note: componentStandards, validationRules, scaffoldingTemplates removed - never used in main test story
+}
+
