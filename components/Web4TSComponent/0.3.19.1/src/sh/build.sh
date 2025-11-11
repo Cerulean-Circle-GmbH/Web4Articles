@@ -52,7 +52,7 @@ elif [ ! -f "dist/ts/layer5/Web4TSComponentCLI.js" ] || find src -name "*.ts" -n
         echo "🔨 Building TypeScript..."
         npx tsc 
     else
-        npx tsc 2>&1 | grep -v "^$" >&2
+        npx tsc 2>&1 | grep -v "^$" >&2 || true
     fi
 else
     if [ "$VERBOSE" = "true" ]; then
