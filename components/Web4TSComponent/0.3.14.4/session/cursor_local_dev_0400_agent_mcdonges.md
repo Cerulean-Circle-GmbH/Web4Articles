@@ -12865,13 +12865,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -21590,13 +21590,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -23865,13 +23865,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -29616,13 +29616,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -31907,13 +31907,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -34203,13 +34203,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -36497,13 +36497,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -39652,13 +39652,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -41999,13 +41999,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -44976,13 +44976,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -47377,13 +47377,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -49794,13 +49794,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -52136,13 +52136,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -54568,13 +54568,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -56901,13 +56901,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -59465,13 +59465,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -61822,13 +61822,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -64782,13 +64782,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -67124,13 +67124,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -69475,13 +69475,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -71924,13 +71924,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples
@@ -76119,13 +76119,13 @@ export abstract class DefaultCLI implements CLI {
     
     // ✅ HIGHLIGHT: Real chaining syntax (most common usage - works in single command!)
     output += `  ${colors.descriptions}# Method chaining in single command (common pattern - use often!)${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                    ${colors.descriptions}# Load context + show structure${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Web4TSComponent 0.3.2.0${colors.reset} ${colors.commands}upgrade${colors.reset} ${colors.parameters}nextBuild${colors.reset}     ${colors.descriptions}# Load + upgrade component${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}MyComponent 0.1.0.0${colors.reset} ${colors.commands}links${colors.reset} ${colors.parameters}fix${colors.reset}              ${colors.descriptions}# Load + fix symlinks${colors.reset}\n`;
     output += '\n';
     output += `  ${colors.descriptions}# Alternative: Separate commands (also works)${colors.reset}\n`;
     output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}on${colors.reset} ${colors.parameters}Unit 0.3.0.5${colors.reset}                        ${colors.descriptions}# 1. Load component context${colors.reset}\n`;
-    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}2${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
+    output += `  ${colors.toolName}${componentName}${colors.reset} ${colors.commands}tree${colors.reset} ${colors.parameters}4${colors.reset}                                 ${colors.descriptions}# 2. Show directory structure${colors.reset}\n`;
     output += '\n';
     
     // Standard categorized examples

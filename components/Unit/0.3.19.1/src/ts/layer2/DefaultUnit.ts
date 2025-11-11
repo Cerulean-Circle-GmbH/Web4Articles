@@ -6,10 +6,13 @@
 import { Unit } from '../layer3/Unit.interface.js';
 import { Scenario } from '../layer3/Scenario.interface.js';
 import { UnitModel } from '../layer3/UnitModel.interface.js';
+import { UnitReference, SyncStatus } from '../layer3/UnitReference.interface.js';
+
 import { User } from '../layer3/User.interface.js';
 import { MethodSignature } from '../layer3/MethodSignature.interface.js';
 import { DefaultStorage } from './DefaultStorage.js'; // @pdca 2025-11-11-UTC-0003 - Storage Service pattern
 import { UnitIdentifier, isUUIDv4, isFilePath } from '../layer3/UnitIdentifier.type.js'; // @pdca 2025-11-11-UTC-0003
+import * as fs from 'fs/promises';
 import { existsSync, lstatSync, readlinkSync, readdirSync, statSync } from 'fs';
 import { join, dirname } from 'path';
 import * as path from 'path'; // @pdca 2025-11-11-UTC-0003 - For updateModelPaths()
@@ -401,6 +404,215 @@ export class DefaultUnit implements Unit {
    */
   getModel(): UnitModel {
     return this.model;
+  }
+
+  /**
+   * @TODO added manually
+   * Display comprehensive unit information with auto-upgrade support
+   * Web4 pattern: Auto-discovery CLI method with file loading capability
+   * 
+   * @param unitFile Optional unit file to load and analyze
+   * @cliSyntax unitFile
+   * @cliDefault unitFile ""
+   * @returns this - Enables command chaining for fluent interface
+   * @example
+   * ```bash
+   * unit info °folder.unit
+   * unit on MyComponent 0.1.0.0 info
+   * ```
+   */
+  async info(unitFile?: string): Promise<this> {
+    // If unit file specified, load it first (includes auto-upgrade)
+    if (unitFile) {
+      await this.loadFromUnitFile(unitFile);
+    }
+    
+    const scenario = await this.toScenario();
+    
+    console.log(`${'\x1b[36m'}═══ Unit Information ═══${'\x1b[0m'}`);
+    console.log('');
+    
+    // Key Information (Highlighted)
+    console.log(`${'\x1b[1m'}Name:${'\x1b[0m'}       ${scenario.model.name || '\x1b[90m(not specified)\x1b[0m'}`);
+    console.log(`${'\x1b[1m'}TypeM3:${'\x1b[0m'}     ${scenario.model.typeM3 || '\x1b[90m(not classified)\x1b[0m'}`);
+    console.log('');
+    console.log(`${'\x1b[1m'}Definition:${'\x1b[0m'}`);
+    if (scenario.model.definition) {
+      console.log(`${scenario.model.definition}`);
+    } else {
+      console.log(`${'\x1b[90m'}(not specified)${'\x1b[0m'}`);
+    }
+    console.log('');
+    console.log(`${'\x1b[1m'}Origin:${'\x1b[0m'}     ${scenario.model.origin || '\x1b[90m(not specified)\x1b[0m'}`);
+    console.log('');
+    console.log(`${'\x1b[1m'}References:${'\x1b[0m'} ${scenario.model.references?.length || 0} links`);
+    if (scenario.model.references && scenario.model.references.length > 0) {
+      scenario.model.references.forEach((ref: any, index: number) => {
+        const filename = ref.linkLocation.split('/').pop()?.replace('ior:local:ln:file:', '') || 'unknown';
+        const status = ref.syncStatus === 'SYNCED' ? '\x1b[32m●\x1b[0m' : '\x1b[31m●\x1b[0m';
+        console.log(`  ${index + 1}. ${status} ${filename} → ${ref.linkTarget}`);
+      });
+    } else {
+      console.log(`    ${'\x1b[90m'}(no references)${'\x1b[0m'}`);
+    }
+    console.log('');
+    
+    // Technical Details
+    console.log(`${'\x1b[90m'}Technical Details:${'\x1b[0m'}`);
+    console.log(`${'\x1b[90m'}  UUID:       ${scenario.model.uuid}${'\x1b[0m'}`);
+    console.log(`${'\x1b[90m'}  Index Path: ${scenario.model.indexPath || '(not indexed)'}${'\x1b[0m'}`);
+    console.log(`${'\x1b[90m'}  Created:    ${scenario.model.createdAt}${'\x1b[0m'}`);
+    console.log(`${'\x1b[90m'}  Updated:    ${scenario.model.updatedAt}${'\x1b[0m'}`);
+    
+    return this;
+  }
+
+  /**
+   * @TODO added manually
+   * Load unit from .unit file
+   * Web4 pattern: File-based scenario loading
+   */
+  private async loadFromUnitFile(unitFile: string): Promise<void> {
+    const cli = this.getCLI();
+    // ✅ RADICAL OOP: Use CLI's projectRoot (Path Authority)
+    const projectRoot = cli.model.projectRoot || this.model.projectRoot || '';
+
+    const fullPath = path.isAbsolute(unitFile) ? unitFile : path.join(projectRoot, unitFile);
+    
+    try {
+      // Read symlink target to get scenario path
+      const scenarioPath = await fs.readlink(fullPath);
+      const fullScenarioPath = path.isAbsolute(scenarioPath) ? 
+        scenarioPath : 
+        path.resolve(path.dirname(fullPath), scenarioPath);
+      
+      const scenarioContent = await fs.readFile(fullScenarioPath, 'utf-8');
+      const scenario = JSON.parse(scenarioContent);
+      
+      if (scenario.model) {
+        this.model = scenario.model;
+        
+        // Check for version mismatch and auto-upgrade
+        const fileVersion = scenario.ior?.version;
+        const currentVersion = '0.3.0.5'; // CLI version
+        
+        if (fileVersion && fileVersion !== currentVersion) {
+          console.log(`📈 Auto-upgrading from ${fileVersion} to ${currentVersion}...`);
+          if (await this.upgrade(currentVersion)) {
+            console.log(`✅ Upgrade successful`);
+            // Save upgraded scenario
+            const upgradedScenario = await this.toScenario();
+            await this.storage.saveScenario(this.model.uuid, upgradedScenario, []);
+          } else {
+            console.log(`⚠️ Upgrade failed, continuing with original data`);
+          }
+        }
+      } else {
+        throw new Error(`Invalid scenario format in unit file: ${unitFile}`);
+      }
+    } catch (error) {
+      throw new Error(`Failed to load unit from file ${unitFile}: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * @TODO added manually
+   * Upgrade unit model to target version
+   * Radical OOP: Method implementation of Upgrade interface
+   * Modern TypeScript: ESM imports, type safety, class-based pattern
+   */
+  async upgrade(targetVersion: string): Promise<boolean> {
+    try {
+      if (targetVersion === '0.3.0.5') {
+        return await this.upgradeToVersion035();
+      }
+      
+      throw new Error(`Unsupported upgrade target version: ${targetVersion}`);
+    } catch (error) {
+      console.error(`Upgrade failed: ${(error as Error).message}`);
+      return false;
+    }
+  }
+
+
+  /**
+   * @TODO added manually
+   * Upgrade from 0.3.0.4 to 0.3.0.5 model
+   * Transforms symlinkPaths + namedLinks to unified references array
+   * Keeps existing IOR string format for compatibility
+   */
+  private async upgradeToVersion035(): Promise<boolean> {
+    const currentModel = this.model as any; // Cast for 0.3.0.4 compatibility
+    
+    // Transform to enhanced 0.3.0.5 model
+    const enhancedModel: UnitModel = {
+      uuid: currentModel.uuid,
+      name: currentModel.name,
+      origin: currentModel.origin || '',           // ✅ UNCHANGED: IOR string format
+      definition: currentModel.definition || '',   // ✅ UNCHANGED: IOR string format
+      typeM3: currentModel.typeM3,
+      indexPath: currentModel.indexPath,
+      
+      // ✅ ENHANCED: Transform arrays to unified references
+      references: this.transformArraysToReferences(currentModel),
+      
+      createdAt: currentModel.createdAt,
+      updatedAt: new Date().toISOString()
+    };
+    
+    // Update internal model
+    this.model = enhancedModel;
+    
+    // Save enhanced scenario with version update
+    const scenario = await this.toScenario();
+    scenario.ior.version = '0.3.0.5';
+    await this.storage.saveScenario(this.model.uuid, scenario, []);
+    
+    console.log(`✅ Unit upgraded to 0.3.0.5: ${this.model.uuid}`);
+    return true;
+  }  
+
+  /**
+   * @TODO added manually
+   * Transform old arrays to unified references (0.3.0.4 → 0.3.0.5)
+   * Uses existing IOR string format for compatibility
+   */
+  private transformArraysToReferences(currentModel: any): UnitReference[] {
+    const references: UnitReference[] = [];
+    
+    // Convert symlinkPaths to references
+    if (currentModel.symlinkPaths) {
+      for (const path of currentModel.symlinkPaths) {
+        references.push({
+          linkLocation: `ior:local:ln:file:${path}`,
+          linkTarget: `ior:unit:${currentModel.uuid}`,
+          syncStatus: SyncStatus.SYNCED
+        });
+      }
+    }
+    
+    // Convert namedLinks to references
+    if (currentModel.namedLinks) {
+      for (const link of currentModel.namedLinks) {
+        const absolutePath = this.resolveLinkPath(link.location, link.filename);
+        references.push({
+          linkLocation: `ior:local:ln:file:${absolutePath}`,
+          linkTarget: `ior:unit:${currentModel.uuid}`,
+          syncStatus: SyncStatus.SYNCED
+        });
+      }
+    }
+    
+    return references;
+  }
+
+  /**
+   * @TODO added manually
+   * Resolve link path from location and filename (0.3.0.4 compatibility)
+   */
+  private resolveLinkPath(location: string, filename: string): string {
+    const baseDir = location.replace('../scenarios/', '/workspace/scenarios/');
+    return `${dirname(baseDir)}/${filename}`;
   }
 
   /**
