@@ -6843,7 +6843,7 @@ Perfect! ✅ **Fix Complete & Verified**
 
 **Verified Working:**
 ```bash
-$ web4tscomponent tree 2
+$ web4tscomponent tree 4
 📁 Tree structure for current component:
 /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.3.2
 ├── dist/
@@ -6861,7 +6861,7 @@ The `tree` command now follows the same pattern as `build`, `test`, and `links` 
 ```
 
 ```shellscript
-$ web4tscomponent tree 2
+$ web4tscomponent tree 4
 📁 Tree structure for current component:
 /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.3.2
 ├── dist/
@@ -44991,7 +44991,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
    */
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];
@@ -60492,7 +60492,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
    */
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];
@@ -84436,7 +84436,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
    */
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];
@@ -84737,7 +84737,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
    */
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];
@@ -185998,7 +185998,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
    */
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];
@@ -186217,7 +186217,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
    */
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];
@@ -303596,14 +303596,14 @@ This is THE comprehensive test suite that supersedes redundant tests. It systema
 #### Part 6: Context Pattern
 | Story | Test Name | CLI Command | Method | Line |
 |-------|-----------|-------------|--------|------|
-| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 2 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) |
+| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 4 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) |
 | 6.2 | Operations WITH context work on target component | `web4tscomponent on ContextTest 0.1.0.0 upgrade nextBuild` | [`on()` + `upgrade()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L865) | [:412](test/web4tscomponent.consolidated-story.test.ts#L412) |
 | 6.3 | Context is maintained through chaining | `web4tscomponent on + upgrade + setDev` | Chaining | [:426](test/web4tscomponent.consolidated-story.test.ts#L426) |
 
 #### Part 7: Tree Visualization
 | Story | Test Name | CLI Command | Method | Line |
 |-------|-----------|-------------|--------|------|
-| 7.1 | tree() without context shows current structure | `web4tscomponent tree 2 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) |
+| 7.1 | tree() without context shows current structure | `web4tscomponent tree 4 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) |
 | 7.2 | tree() with context shows target component | `web4tscomponent on TreeTest 0.1.0.0 tree 3 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:465](test/web4tscomponent.consolidated-story.test.ts#L465) |
 | 7.3 | tree() shows semantic symlinks | - | Validation | [:474](test/web4tscomponent.consolidated-story.test.ts#L474) |
 | 7.4 | tree() respects depth parameter | `web4tscomponent on TreeTest 0.1.0.0 tree <depth> false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:489](test/web4tscomponent.consolidated-story.test.ts#L489) |
@@ -304325,14 +304325,14 @@ This is THE comprehensive test suite that supersedes redundant tests. It systema
 #### Part 6: Context Pattern
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 2 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
+| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 4 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
 | 6.2 | Operations WITH context work on target component | `web4tscomponent on ContextTest 0.1.0.0 upgrade nextBuild` | [`on()` + `upgrade()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L865) | [:412](test/web4tscomponent.consolidated-story.test.ts#L412) | ⏳ TODO |
 | 6.3 | Context is maintained through chaining | `web4tscomponent on + upgrade + setDev` | Chaining | [:426](test/web4tscomponent.consolidated-story.test.ts#L426) | ⏳ TODO |
 
 #### Part 7: Tree Visualization
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 7.1 | tree() without context shows current structure | `web4tscomponent tree 2 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
+| 7.1 | tree() without context shows current structure | `web4tscomponent tree 4 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
 | 7.2 | tree() with context shows target component | `web4tscomponent on TreeTest 0.1.0.0 tree 3 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:465](test/web4tscomponent.consolidated-story.test.ts#L465) | ⏳ TODO |
 | 7.3 | tree() shows semantic symlinks | - | Validation | [:474](test/web4tscomponent.consolidated-story.test.ts#L474) | ⏳ TODO |
 | 7.4 | tree() respects depth parameter | `web4tscomponent on TreeTest 0.1.0.0 tree <depth> false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:489](test/web4tscomponent.consolidated-story.test.ts#L489) | ⏳ TODO |
@@ -305014,14 +305014,14 @@ This is THE comprehensive test suite that supersedes redundant tests. It systema
 #### Part 6: Context Pattern
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 2 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
+| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 4 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
 | 6.2 | Operations WITH context work on target component | `web4tscomponent on ContextTest 0.1.0.0 upgrade nextBuild` | [`on()` + `upgrade()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L865) | [:412](test/web4tscomponent.consolidated-story.test.ts#L412) | ⏳ TODO |
 | 6.3 | Context is maintained through chaining | `web4tscomponent on + upgrade + setDev` | Chaining | [:426](test/web4tscomponent.consolidated-story.test.ts#L426) | ⏳ TODO |
 
 #### Part 7: Tree Visualization
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 7.1 | tree() without context shows current structure | `web4tscomponent tree 2 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
+| 7.1 | tree() without context shows current structure | `web4tscomponent tree 4 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
 | 7.2 | tree() with context shows target component | `web4tscomponent on TreeTest 0.1.0.0 tree 3 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:465](test/web4tscomponent.consolidated-story.test.ts#L465) | ⏳ TODO |
 | 7.3 | tree() shows semantic symlinks | - | Validation | [:474](test/web4tscomponent.consolidated-story.test.ts#L474) | ⏳ TODO |
 | 7.4 | tree() respects depth parameter | `web4tscomponent on TreeTest 0.1.0.0 tree <depth> false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:489](test/web4tscomponent.consolidated-story.test.ts#L489) | ⏳ TODO |
@@ -305683,14 +305683,14 @@ This is THE comprehensive test suite that supersedes redundant tests. It systema
 #### Part 6: Context Pattern
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 2 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
+| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 4 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
 | 6.2 | Operations WITH context work on target component | `web4tscomponent on ContextTest 0.1.0.0 upgrade nextBuild` | [`on()` + `upgrade()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L865) | [:412](test/web4tscomponent.consolidated-story.test.ts#L412) | ⏳ TODO |
 | 6.3 | Context is maintained through chaining | `web4tscomponent on + upgrade + setDev` | Chaining | [:426](test/web4tscomponent.consolidated-story.test.ts#L426) | ⏳ TODO |
 
 #### Part 7: Tree Visualization
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 7.1 | tree() without context shows current structure | `web4tscomponent tree 2 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
+| 7.1 | tree() without context shows current structure | `web4tscomponent tree 4 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
 | 7.2 | tree() with context shows target component | `web4tscomponent on TreeTest 0.1.0.0 tree 3 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:465](test/web4tscomponent.consolidated-story.test.ts#L465) | ⏳ TODO |
 | 7.3 | tree() shows semantic symlinks | - | Validation | [:474](test/web4tscomponent.consolidated-story.test.ts#L474) | ⏳ TODO |
 | 7.4 | tree() respects depth parameter | `web4tscomponent on TreeTest 0.1.0.0 tree <depth> false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:489](test/web4tscomponent.consolidated-story.test.ts#L489) | ⏳ TODO |
@@ -306367,14 +306367,14 @@ This is THE comprehensive test suite that supersedes redundant tests. It systema
 #### Part 6: Context Pattern
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 2 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
+| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 4 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
 | 6.2 | Operations WITH context work on target component | `web4tscomponent on ContextTest 0.1.0.0 upgrade nextBuild` | [`on()` + `upgrade()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L865) | [:412](test/web4tscomponent.consolidated-story.test.ts#L412) | ⏳ TODO |
 | 6.3 | Context is maintained through chaining | `web4tscomponent on + upgrade + setDev` | Chaining | [:426](test/web4tscomponent.consolidated-story.test.ts#L426) | ⏳ TODO |
 
 #### Part 7: Tree Visualization
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 7.1 | tree() without context shows current structure | `web4tscomponent tree 2 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
+| 7.1 | tree() without context shows current structure | `web4tscomponent tree 4 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
 | 7.2 | tree() with context shows target component | `web4tscomponent on TreeTest 0.1.0.0 tree 3 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:465](test/web4tscomponent.consolidated-story.test.ts#L465) | ⏳ TODO |
 | 7.3 | tree() shows semantic symlinks | - | Validation | [:474](test/web4tscomponent.consolidated-story.test.ts#L474) | ⏳ TODO |
 | 7.4 | tree() respects depth parameter | `web4tscomponent on TreeTest 0.1.0.0 tree <depth> false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:489](test/web4tscomponent.consolidated-story.test.ts#L489) | ⏳ TODO |
@@ -307034,14 +307034,14 @@ This is THE comprehensive test suite that supersedes redundant tests. It systema
 #### Part 6: Context Pattern
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 2 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
+| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 4 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
 | 6.2 | Operations WITH context work on target component | `web4tscomponent on ContextTest 0.1.0.0 upgrade nextBuild` | [`on()` + `upgrade()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L865) | [:412](test/web4tscomponent.consolidated-story.test.ts#L412) | ⏳ TODO |
 | 6.3 | Context is maintained through chaining | `web4tscomponent on + upgrade + setDev` | Chaining | [:426](test/web4tscomponent.consolidated-story.test.ts#L426) | ⏳ TODO |
 
 #### Part 7: Tree Visualization
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 7.1 | tree() without context shows current structure | `web4tscomponent tree 2 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
+| 7.1 | tree() without context shows current structure | `web4tscomponent tree 4 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
 | 7.2 | tree() with context shows target component | `web4tscomponent on TreeTest 0.1.0.0 tree 3 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:465](test/web4tscomponent.consolidated-story.test.ts#L465) | ⏳ TODO |
 | 7.3 | tree() shows semantic symlinks | - | Validation | [:474](test/web4tscomponent.consolidated-story.test.ts#L474) | ⏳ TODO |
 | 7.4 | tree() respects depth parameter | `web4tscomponent on TreeTest 0.1.0.0 tree <depth> false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:489](test/web4tscomponent.consolidated-story.test.ts#L489) | ⏳ TODO |
@@ -307701,14 +307701,14 @@ This is THE comprehensive test suite that supersedes redundant tests. It systema
 #### Part 6: Context Pattern
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 2 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
+| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 4 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
 | 6.2 | Operations WITH context work on target component | `web4tscomponent on ContextTest 0.1.0.0 upgrade nextBuild` | [`on(component: string, version: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L865) + [`upgrade(versionType: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L912) | [:412](test/web4tscomponent.consolidated-story.test.ts#L412) | ⏳ TODO |
 | 6.3 | Context is maintained through chaining | `web4tscomponent on + upgrade + setDev` | Chaining | [:426](test/web4tscomponent.consolidated-story.test.ts#L426) | ⏳ TODO |
 
 #### Part 7: Tree Visualization
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 7.1 | tree() without context shows current structure | `web4tscomponent tree 2 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
+| 7.1 | tree() without context shows current structure | `web4tscomponent tree 4 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
 | 7.2 | tree() with context shows target component | `web4tscomponent on TreeTest 0.1.0.0 tree 3 false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:465](test/web4tscomponent.consolidated-story.test.ts#L465) | ⏳ TODO |
 | 7.3 | tree() shows semantic symlinks | - | Validation | [:474](test/web4tscomponent.consolidated-story.test.ts#L474) | ⏳ TODO |
 | 7.4 | tree() respects depth parameter | `web4tscomponent on TreeTest 0.1.0.0 tree <depth> false` | [`tree()`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:489](test/web4tscomponent.consolidated-story.test.ts#L489) | ⏳ TODO |
@@ -308368,14 +308368,14 @@ This is THE comprehensive test suite that supersedes redundant tests. It systema
 #### Part 6: Context Pattern
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 2 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
+| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 4 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
 | 6.2 | Operations WITH context work on target component | `web4tscomponent on ContextTest 0.1.0.0 upgrade nextBuild` | [`on(component: string, version: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L865) + [`upgrade(versionType: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L912) | [:412](test/web4tscomponent.consolidated-story.test.ts#L412) | ⏳ TODO |
 | 6.3 | Context is maintained through chaining | `web4tscomponent on + upgrade + setDev` | Chaining | [:426](test/web4tscomponent.consolidated-story.test.ts#L426) | ⏳ TODO |
 
 #### Part 7: Tree Visualization
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 7.1 | tree() without context shows current structure | `web4tscomponent tree 2 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
+| 7.1 | tree() without context shows current structure | `web4tscomponent tree 4 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
 | 7.2 | tree() with context shows target component | `web4tscomponent on TreeTest 0.1.0.0 tree 3 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:465](test/web4tscomponent.consolidated-story.test.ts#L465) | ⏳ TODO |
 | 7.3 | tree() shows semantic symlinks | - | Validation | [:474](test/web4tscomponent.consolidated-story.test.ts#L474) | ⏳ TODO |
 | 7.4 | tree() respects depth parameter | `web4tscomponent on TreeTest 0.1.0.0 tree <depth> false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:489](test/web4tscomponent.consolidated-story.test.ts#L489) | ⏳ TODO |
@@ -309035,14 +309035,14 @@ This is THE comprehensive test suite that supersedes redundant tests. It systema
 #### Part 6: Context Pattern
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 2 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
+| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 4 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
 | 6.2 | Operations WITH context work on target component | `web4tscomponent on ContextTest 0.1.0.0 upgrade nextBuild` | [`on(component: string, version: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L865) + [`upgrade(versionType: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L912) | [:412](test/web4tscomponent.consolidated-story.test.ts#L412) | ⏳ TODO |
 | 6.3 | Context is maintained through chaining | `web4tscomponent on + upgrade + setDev` | Chaining | [:426](test/web4tscomponent.consolidated-story.test.ts#L426) | ⏳ TODO |
 
 #### Part 7: Tree Visualization
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 7.1 | tree() without context shows current structure | `web4tscomponent tree 2 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
+| 7.1 | tree() without context shows current structure | `web4tscomponent tree 4 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
 | 7.2 | tree() with context shows target component | `web4tscomponent on TreeTest 0.1.0.0 tree 3 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:465](test/web4tscomponent.consolidated-story.test.ts#L465) | ⏳ TODO |
 | 7.3 | tree() shows semantic symlinks | - | Validation | [:474](test/web4tscomponent.consolidated-story.test.ts#L474) | ⏳ TODO |
 | 7.4 | tree() respects depth parameter | `web4tscomponent on TreeTest 0.1.0.0 tree <depth> false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:489](test/web4tscomponent.consolidated-story.test.ts#L489) | ⏳ TODO |
@@ -309702,14 +309702,14 @@ This is THE comprehensive test suite that supersedes redundant tests. It systema
 #### Part 6: Context Pattern
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 2 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
+| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 4 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
 | 6.2 | Operations WITH context work on target component | `web4tscomponent on ContextTest 0.1.0.0 upgrade nextBuild` | [`on(component: string, version: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L865) + [`upgrade(versionType: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L912) | [:412](test/web4tscomponent.consolidated-story.test.ts#L412) | ⏳ TODO |
 | 6.3 | Context is maintained through chaining | `web4tscomponent on + upgrade + setDev` | Chaining | [:426](test/web4tscomponent.consolidated-story.test.ts#L426) | ⏳ TODO |
 
 #### Part 7: Tree Visualization
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 7.1 | tree() without context shows current structure | `web4tscomponent tree 2 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
+| 7.1 | tree() without context shows current structure | `web4tscomponent tree 4 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
 | 7.2 | tree() with context shows target component | `web4tscomponent on TreeTest 0.1.0.0 tree 3 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:465](test/web4tscomponent.consolidated-story.test.ts#L465) | ⏳ TODO |
 | 7.3 | tree() shows semantic symlinks | - | Validation | [:474](test/web4tscomponent.consolidated-story.test.ts#L474) | ⏳ TODO |
 | 7.4 | tree() respects depth parameter | `web4tscomponent on TreeTest 0.1.0.0 tree <depth> false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:489](test/web4tscomponent.consolidated-story.test.ts#L489) | ⏳ TODO |
@@ -318033,14 +318033,14 @@ This is THE comprehensive test suite that supersedes redundant tests. It systema
 #### Part 6: Context Pattern
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 2 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
+| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 4 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ⏳ TODO |
 | 6.2 | Operations WITH context work on target component | `web4tscomponent on ContextTest 0.1.0.0 upgrade nextBuild` | [`on(component: string, version: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L865) + [`upgrade(versionType: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L912) | [:412](test/web4tscomponent.consolidated-story.test.ts#L412) | ⏳ TODO |
 | 6.3 | Context is maintained through chaining | `web4tscomponent on + upgrade + setDev` | Chaining | [:426](test/web4tscomponent.consolidated-story.test.ts#L426) | ⏳ TODO |
 
 #### Part 7: Tree Visualization
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 7.1 | tree() without context shows current structure | `web4tscomponent tree 2 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
+| 7.1 | tree() without context shows current structure | `web4tscomponent tree 4 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ⏳ TODO |
 | 7.2 | tree() with context shows target component | `web4tscomponent on TreeTest 0.1.0.0 tree 3 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:465](test/web4tscomponent.consolidated-story.test.ts#L465) | ⏳ TODO |
 | 7.3 | tree() shows semantic symlinks | - | Validation | [:474](test/web4tscomponent.consolidated-story.test.ts#L474) | ⏳ TODO |
 | 7.4 | tree() respects depth parameter | `web4tscomponent on TreeTest 0.1.0.0 tree <depth> false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:489](test/web4tscomponent.consolidated-story.test.ts#L489) | ⏳ TODO |

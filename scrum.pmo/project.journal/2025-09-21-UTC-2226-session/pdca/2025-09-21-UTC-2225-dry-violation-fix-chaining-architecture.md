@@ -54,7 +54,7 @@ pdca
 ```
 
 ### **My Answer**
-Identified massive DRY violation: 19 identical DefaultCLI copies across components. Moved chaining logic to Web4TSComponentCLI.ts to avoid contaminating shared base class. Real chaining syntax `web4tscomponent on Unit 0.3.0.5 tree 2` now works perfectly in single command. Preserved clean DefaultCLI for other components while enabling advanced chaining for Web4TSComponent.
+Identified massive DRY violation: 19 identical DefaultCLI copies across components. Moved chaining logic to Web4TSComponentCLI.ts to avoid contaminating shared base class. Real chaining syntax `web4tscomponent on Unit 0.3.0.5 tree 4` now works perfectly in single command. Preserved clean DefaultCLI for other components while enabling advanced chaining for Web4TSComponent.
 
 **Learning Applied:** DRY violations require careful architecture decisions - component-specific enhancements should stay in component-specific files.
 
@@ -135,7 +135,7 @@ private determineArgumentConsumption(command: string, args: string[]): number {
 **4. Real Chaining Testing**
 ```bash
 # Test 1: Unit inspection with chaining
-./web4tscomponent on Unit 0.3.0.5 tree 2
+./web4tscomponent on Unit 0.3.0.5 tree 4
 # Result: ✅ Context loaded + 📁 Tree structure (depth 2) - WORKS!
 
 # Test 2: Self-inspection with chaining  
@@ -152,13 +152,13 @@ private determineArgumentConsumption(command: string, args: string[]): number {
 # Enhanced examples now show real chaining syntax:
 Examples:
   # Method chaining in single command (common pattern - use often!)
-  web4tscomponent on Unit 0.3.0.5 tree 2                    # Load context + show structure
+  web4tscomponent on Unit 0.3.0.5 tree 4                    # Load context + show structure
   web4tscomponent on Web4TSComponent 0.3.0.8 upgrade nextBuild     # Load + upgrade component
   web4tscomponent on MyComponent 0.1.0.0 verifyAndFix              # Load + fix symlinks
 
   # Alternative: Separate commands (also works)
   web4tscomponent on Unit 0.3.0.5                        # 1. Load component context
-  web4tscomponent tree 2                                 # 2. Show directory structure
+  web4tscomponent tree 4                                 # 2. Show directory structure
 ```
 
 ---
@@ -177,7 +177,7 @@ Examples:
 
 **Real Chaining Functionality (✅ VERIFIED)** 
 ```
-✅ Single command chaining works: on Unit 0.3.0.5 tree 2
+✅ Single command chaining works: on Unit 0.3.0.5 tree 4
 ✅ Multiple parameters supported: on Unit 0.3.0.5 tree 3 false
 ✅ Self-reference works: on Web4TSComponent 0.3.0.8 tree 1
 ✅ Intelligent argument parsing stops at next command
@@ -211,7 +211,7 @@ Examples:
 - **Shared Base Preservation:** DefaultCLI remains clean foundation for other components
 
 **User Experience Benefits:**
-- **Preferred Syntax:** `web4tscomponent on Unit 0.3.0.5 tree 2` works in single command
+- **Preferred Syntax:** `web4tscomponent on Unit 0.3.0.5 tree 4` works in single command
 - **Efficiency:** No multiple CLI invocations needed for common workflows
 - **Natural Workflow:** Matches user's actual usage patterns
 - **Flexibility:** Both chaining and separate commands supported

@@ -42637,11 +42637,11 @@ cd /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.
 source source.env
 
 # Test 1: Web4TSComponent delegates to itself (should work)
-web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 # Test 2: TestIsolatedComponent inherits on() from DefaultCLI
 cd test/data/components/TestIsolatedComponent/0.1.0.0
-./testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 2
+./testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 4
 ```
 
 **Expected:**
@@ -42887,7 +42887,7 @@ $ testisolatedcomponent on PDCA 0.3.5.1 links
 
 ```bash
 # This SHOULD work:
-testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 2
+testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 4
 # Because Web4TSComponent EXISTS at test/data/../../components/Web4TSComponent/0.3.17.1/
 
 # OR create PDCA in test/data first:
@@ -42908,7 +42908,7 @@ $ testisolatedcomponent on PDCA 0.3.5.1 links
 
 ```shellscript
 # This SHOULD work:
-testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 2
+testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 4
 # Because Web4TSComponent EXISTS at test/data/../../components/Web4TSComponent/0.3.17.1/
 
 # OR create PDCA in test/data first:
@@ -42922,7 +42922,7 @@ testisolatedcomponent on PDCA 0.3.5.1 links  # Now works!
 
 ```
 # This SHOULD work:
-testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 2
+testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 4
 # Because Web4TSComponent EXISTS at test/data/../../components/Web4TSComponent/0.3.17.1/
 
 # OR create PDCA in test/data first:
@@ -177274,11 +177274,11 @@ cd /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.
 source source.env
 
 # Test 1: Web4TSComponent delegates to itself (should work)
-web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 # Test 2: TestIsolatedComponent inherits on() from DefaultCLI
 cd test/data/components/TestIsolatedComponent/0.1.0.0
-./testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 2
+./testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 4
 ```
 
 **Expected:**
@@ -178288,11 +178288,11 @@ cd /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.
 source source.env
 
 # Test 1: Web4TSComponent delegates to itself (should work)
-web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 # Test 2: TestIsolatedComponent inherits on() from DefaultCLI
 cd test/data/components/TestIsolatedComponent/0.1.0.0
-./testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 2
+./testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 4
 ```
 
 **Expected:**
@@ -178506,7 +178506,7 @@ $ npx vitest run component-creation-isolation
 
 **Test 1: Web4TSComponent delegates to itself**
 ```bash
-$ web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+$ web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 ✅ Component context loaded: Web4TSComponent 0.3.17.1
    Path: /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.1
@@ -179459,11 +179459,11 @@ cd /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.
 source source.env
 
 # Test 1: Web4TSComponent delegates to itself (should work)
-web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 # Test 2: TestIsolatedComponent inherits on() from DefaultCLI
 cd test/data/components/TestIsolatedComponent/0.1.0.0
-./testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 2
+./testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 4
 ```
 
 **Expected:**
@@ -179677,7 +179677,7 @@ $ npx vitest run component-creation-isolation
 
 **Test 1: Web4TSComponent delegates to itself**
 ```bash
-$ web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+$ web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 ✅ Component context loaded: Web4TSComponent 0.3.17.1
    Path: /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.1
@@ -179919,7 +179919,7 @@ THSI IS DEFENITLY NOT CORRECT
 
 ```
 
-/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.1/test/data/components/TestIsolatedComponent/0.1.0.0 > cd /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.1 && web4tscomponent on Web4TSComponent 0.3.17.1 tree 2 2>&1 | head -40
+/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.1/test/data/components/TestIsolatedComponent/0.1.0.0 > cd /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.1 && web4tscomponent on Web4TSComponent 0.3.17.1 tree 4 2>&1 | head -40
 
 ✅ Component context loaded: Web4TSComponent 0.3.17.1
 
@@ -231391,7 +231391,7 @@ No more path doubling! Let me create a PDCA to document this critical bug fix:
 
 **USER REPORT:**
 ```
-web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 WRONG OUTPUT:
 📁 Tree structure for Web4TSComponent 0.3.17.1:
@@ -231449,7 +231449,7 @@ When using `on()`:
 - All use pattern: `target.model.origin || this.resolveComponentPath(...)`
 
 **Step 3:** Rebuild and verify with `on()` context
-- Test: `web4tscomponent on Web4TSComponent 0.3.17.1 tree 2`
+- Test: `web4tscomponent on Web4TSComponent 0.3.17.1 tree 4`
 - Expected: Correct path without doubling
 
 ---
@@ -231499,7 +231499,7 @@ $ cd /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.1
 $ npm run build
 ✅ Build successful
 
-$ web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+$ web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 📁 Tree structure for Web4TSComponent 0.3.17.1:
 /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.1
@@ -231520,7 +231520,7 @@ $ web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
 
 **Manual Test 1: tree command with on() ✅**
 ```bash
-$ web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+$ web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 BEFORE FIX:
 /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.1/components/Web4TSComponent/0.3.17.1
@@ -231654,7 +231654,7 @@ AFTER FIX:
 ### **THE PROBLEM YOU FOUND:**
 
 ```
-web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 ❌ WRONG:
 /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.1/components/Web4TSComponent/0.3.17.1
@@ -231711,7 +231711,7 @@ setTargetDirectory(directory: string): void {
 **Recommendation:** **1a** - Current behavior is correct. When CLI calls `setTargetDirectory(componentPath)`, it means "this component operates at this absolute path". Both fields should be set to maintain consistency.
 
 ```plaintext
-web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 ❌ WRONG:
 /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.1/components/Web4TSComponent/0.3.17.1
@@ -231734,7 +231734,7 @@ setTargetDirectory(directory: string): void {
 ```
 
 ```plaintext
-web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 ❌ WRONG:
 /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.1/components/Web4TSComponent/0.3.17.1
@@ -252476,7 +252476,7 @@ Let me check the execution plan from the Path Authority PDCA:
 
 **Verification:**
 ```bash
-web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 ✅ Shows: /Users/.../Web4Articles/components/Web4TSComponent/0.3.17.1
 ❌ NOT:  /Users/.../Web4Articles/components/Web4TSComponent/0.3.17.1/components/Web4TSComponent/0.3.17.1
 ```
@@ -252521,7 +252521,7 @@ web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
 **Where do you want to go?** 🎯
 
 ```shellscript
-web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 ✅ Shows: /Users/.../Web4Articles/components/Web4TSComponent/0.3.17.1
 ❌ NOT:  /Users/.../Web4Articles/components/Web4TSComponent/0.3.17.1/components/Web4TSComponent/0.3.17.1
 ```
@@ -261085,11 +261085,11 @@ cd /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.
 source source.env
 
 # Test 1: Web4TSComponent delegates to itself (should work)
-web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 # Test 2: TestIsolatedComponent inherits on() from DefaultCLI
 cd test/data/components/TestIsolatedComponent/0.1.0.0
-./testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 2
+./testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 4
 ```
 
 **Expected:**
@@ -261303,7 +261303,7 @@ $ npx vitest run component-creation-isolation
 
 **Test 1: Web4TSComponent delegates to itself**
 ```bash
-$ web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+$ web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 ✅ Component context loaded: Web4TSComponent 0.3.17.1
    Path: /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.1
@@ -262324,11 +262324,11 @@ cd /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.
 source source.env
 
 # Test 1: Web4TSComponent delegates to itself (should work)
-web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 # Test 2: TestIsolatedComponent inherits on() from DefaultCLI
 cd test/data/components/TestIsolatedComponent/0.1.0.0
-./testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 2
+./testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 4
 ```
 
 **Expected:**
@@ -262542,7 +262542,7 @@ $ npx vitest run component-creation-isolation
 
 **Test 1: Web4TSComponent delegates to itself**
 ```bash
-$ web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+$ web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 ✅ Component context loaded: Web4TSComponent 0.3.17.1
    Path: /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.1
@@ -263563,11 +263563,11 @@ cd /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.
 source source.env
 
 # Test 1: Web4TSComponent delegates to itself (should work)
-web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 # Test 2: TestIsolatedComponent inherits on() from DefaultCLI
 cd test/data/components/TestIsolatedComponent/0.1.0.0
-./testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 2
+./testisolatedcomponent on Web4TSComponent 0.3.17.1 tree 4
 ```
 
 **Expected:**
@@ -263781,7 +263781,7 @@ $ npx vitest run component-creation-isolation
 
 **Test 1: Web4TSComponent delegates to itself**
 ```bash
-$ web4tscomponent on Web4TSComponent 0.3.17.1 tree 2
+$ web4tscomponent on Web4TSComponent 0.3.17.1 tree 4
 
 ✅ Component context loaded: Web4TSComponent 0.3.17.1
    Path: /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.17.1

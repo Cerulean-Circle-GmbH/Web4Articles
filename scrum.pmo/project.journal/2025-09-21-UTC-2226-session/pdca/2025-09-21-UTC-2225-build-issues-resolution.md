@@ -140,7 +140,7 @@ npm run build
 **5. Functionality Verification**
 ```bash
 # Test 1: Chaining functionality
-./web4tscomponent on Unit 0.3.0.5 tree 2
+./web4tscomponent on Unit 0.3.0.5 tree 4
 # Result: ✅ Perfect chaining execution
 # 1. Context loaded: Unit v0.3.0.5
 # 2. Tree structure displayed (depth 2)

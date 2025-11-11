@@ -213,7 +213,7 @@ $ web4tscomponent links fix
    * @param file Optional file to start from
    * @cliSyntax <depth> <?file>
    * @cliExample web4tscomponent tree 3
-   * @cliExample web4tscomponent tree 2 src/
+   * @cliExample web4tscomponent tree 4 src/
    */
   async tree(depth: number, file?: string): Promise<this> {
 ```

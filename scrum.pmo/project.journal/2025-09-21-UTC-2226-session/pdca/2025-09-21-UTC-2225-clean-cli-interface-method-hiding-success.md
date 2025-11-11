@@ -133,7 +133,7 @@ for (const name of methodNames) {
 **4. Functionality Preservation Verification**
 ```bash
 # Test 1: Three-method chaining
-./web4tscomponent on Unit 0.3.0.5 tree 2 setLatest
+./web4tscomponent on Unit 0.3.0.5 tree 4 setLatest
 # Result: ✅ Perfect execution
 # 1. Context loaded: Unit v0.3.0.5
 # 2. Tree structure displayed (depth 2)

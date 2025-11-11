@@ -80,7 +80,7 @@ Enhanced the examples section to prominently feature the 'on' method chaining pa
 - verifyAndFix: Fix symlinks for loaded component
 
 // Common chaining scenarios identified:
-1. Unit inspection: on Unit 0.3.0.5 → tree 2
+1. Unit inspection: on Unit 0.3.0.5 → tree 4
 2. Component upgrade: on Web4TSComponent 0.3.0.8 → upgrade nextBuild
 3. Symlink maintenance: on MyComponent 0.1.0.0 → verifyAndFix
 ```
@@ -114,7 +114,7 @@ private categorizeMethod(name: string): 'create' | 'modify' | 'query' | 'delete'
 Examples:
   # Method chaining with 'on' (common pattern - use often!)
   web4tscomponent on Unit 0.3.0.5                        # 1. Load component context
-  web4tscomponent tree 2                                 # 2. Show directory structure
+  web4tscomponent tree 4                                 # 2. Show directory structure
 
   web4tscomponent on Web4TSComponent 0.3.0.8          # 1. Load this component
   web4tscomponent upgrade nextBuild                     # 2. Upgrade to next version
@@ -131,7 +131,7 @@ Examples:
 ./web4tscomponent on Unit 0.3.0.5
 # Result: ✅ Component context loaded: Unit v0.3.0.5
 
-./web4tscomponent tree 2  
+./web4tscomponent tree 4  
 # Result: ❌ No component context loaded (correct - demonstrates separate execution)
 ```
 

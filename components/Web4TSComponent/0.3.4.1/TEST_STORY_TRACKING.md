@@ -140,14 +140,14 @@ This is THE comprehensive test suite that supersedes redundant tests. It systema
 #### Part 6: Context Pattern
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 2 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ✅ PASS |
+| 6.1 | Operations WITHOUT context work on Web4TSComponent itself | `web4tscomponent tree 4 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:399](test/web4tscomponent.consolidated-story.test.ts#L399) | ✅ PASS |
 | 6.2 | Operations WITH context work on target component | `web4tscomponent on ContextTest 0.1.0.0 upgrade nextBuild` | [`on(component: string, version: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L865) + [`upgrade(versionType: string): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L912) | [:412](test/web4tscomponent.consolidated-story.test.ts#L412) | ✅ PASS |
 | 6.3 | Context is maintained through chaining | `web4tscomponent on + upgrade + setDev` | Chaining | [:426](test/web4tscomponent.consolidated-story.test.ts#L426) | ✅ PASS |
 
 #### Part 7: Tree Visualization
 | Story | Test Name | CLI Command | Method | Line | Status |
 |-------|-----------|-------------|--------|------|--------|
-| 7.1 | tree() without context shows current structure | `web4tscomponent tree 2 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ✅ PASS |
+| 7.1 | tree() without context shows current structure | `web4tscomponent tree 4 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:455](test/web4tscomponent.consolidated-story.test.ts#L455) | ✅ PASS |
 | 7.2 | tree() with context shows target component | `web4tscomponent on TreeTest 0.1.0.0 tree 3 false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:465](test/web4tscomponent.consolidated-story.test.ts#L465) | ✅ PASS |
 | 7.3 | tree() shows semantic symlinks | - | Validation | [:474](test/web4tscomponent.consolidated-story.test.ts#L474) | ✅ PASS |
 | 7.4 | tree() respects depth parameter | `web4tscomponent on TreeTest 0.1.0.0 tree <depth> false` | [`tree(depth: string = '4', showHidden: string = 'false'): Promise<this>`](src/ts/layer2/DefaultWeb4TSComponent.ts#L980) | [:489](test/web4tscomponent.consolidated-story.test.ts#L489) | ✅ PASS |

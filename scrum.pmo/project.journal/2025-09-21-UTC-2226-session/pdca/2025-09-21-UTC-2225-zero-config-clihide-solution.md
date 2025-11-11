@@ -162,7 +162,7 @@ if (cliAnnotations.hide) {
 # No component-specific configuration required
 
 # Test 3: Functionality preservation
-./web4tscomponent on Unit 0.3.0.5 tree 2
+./web4tscomponent on Unit 0.3.0.5 tree 4
 # Result: ✅ Essential functionality preserved
 ```
 

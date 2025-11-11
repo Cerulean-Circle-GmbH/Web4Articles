@@ -223,13 +223,13 @@ Commands:
 
 Examples:
   # Method chaining in single command (common pattern - use often!)
-  web4tscomponent on Unit 0.3.0.5 tree 2
+  web4tscomponent on Unit 0.3.0.5 tree 4
   web4tscomponent on Web4TSComponent 0.3.2.0 upgrade nextBuild
   web4tscomponent on MyComponent 0.1.0.0 verifyAndFix
 
   # Alternative: Separate commands (also works)
   web4tscomponent on Unit 0.3.0.5
-  web4tscomponent tree 2
+  web4tscomponent tree 4
 
   # Create operations
   web4tscomponent create Auth.Validator 0.1.0.0 all

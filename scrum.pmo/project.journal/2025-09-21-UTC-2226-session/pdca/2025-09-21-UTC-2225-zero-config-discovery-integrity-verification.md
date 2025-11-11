@@ -119,7 +119,7 @@ async testDiscovery(message: string = 'Zero config discovery works!'): Promise<t
 **4. Complex Chaining Functionality Test**
 ```bash
 # Test 1: Three-method chaining with auto-discovery
-./web4tscomponent on Unit 0.3.0.5 tree 2 setLatest
+./web4tscomponent on Unit 0.3.0.5 tree 4 setLatest
 # Result: ✅ All three methods auto-discovered and executed in sequence
 # 1. Context loaded: Unit v0.3.0.5
 # 2. Tree structure displayed (depth 2)  

@@ -120,7 +120,7 @@ private async displayTreeStructure(
 
 # Method works with component context:
 ./web4tscomponent on Unit 0.3.0.5  # Loads context
-./web4tscomponent tree 2            # Would show tree (separate invocation)
+./web4tscomponent tree 4            # Would show tree (separate invocation)
 ```
 
 **4. File Protection Tests Implementation**

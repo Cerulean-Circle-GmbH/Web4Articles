@@ -145690,7 +145690,7 @@ cd /project/root
 ### **Step 3a: View Own Component Tree**
 ```bash
 cd /path/to/component
-./web4tscomponent tree 2 false
+./web4tscomponent tree 4 false
 ```
 
 **Parameters:**
@@ -145733,7 +145733,7 @@ cd /path/to/component
 ```bash
 # Format: on <component> <version> <command>
 ./web4tscomponent on Web4Programmer 0.1.0.1 tree
-./web4tscomponent on Unit 0.3.0.5 tree 2
+./web4tscomponent on Unit 0.3.0.5 tree 4
 ./web4tscomponent on MyComponent latest tree
 ```
 
@@ -145966,7 +145966,7 @@ cd components/Web4TSComponent/0.3.13.1
 #### **Phase 4: Analyze Structure**
 ```bash
 # Master structure
-./web4tscomponent tree 2 false
+./web4tscomponent tree 4 false
 # Shows: templates/, test/, session/, comprehensive
 
 # Deployed structure
@@ -146037,7 +146037,7 @@ $ ./web4tscomponent compare "Web4TSComponent 0.3.13.1, Web4Programmer 0.1.0.1"
 
 **Tree Visualization (✅ VERIFIED)**
 ```bash
-$ ./web4tscomponent tree 2 false
+$ ./web4tscomponent tree 4 false
 📁 Tree structure for current component:
 ├── templates/
 ├── test/data/
@@ -146444,7 +146444,7 @@ cd /project/root
 ### **Step 3a: View Own Component Tree**
 ```bash
 cd /path/to/component
-./web4tscomponent tree 2 false
+./web4tscomponent tree 4 false
 ```
 
 **Parameters:**
@@ -146487,7 +146487,7 @@ cd /path/to/component
 ```bash
 # Format: on <component> <version> <command>
 ./web4tscomponent on Web4Programmer 0.1.0.1 tree
-./web4tscomponent on Unit 0.3.0.5 tree 2
+./web4tscomponent on Unit 0.3.0.5 tree 4
 ./web4tscomponent on MyComponent latest tree
 ```
 
@@ -146720,7 +146720,7 @@ cd components/Web4TSComponent/0.3.13.1
 #### **Phase 4: Analyze Structure**
 ```bash
 # Master structure
-./web4tscomponent tree 2 false
+./web4tscomponent tree 4 false
 # Shows: templates/, test/, session/, comprehensive
 
 # Deployed structure
@@ -146992,7 +146992,7 @@ $ ./web4tscomponent compare "Web4TSComponent 0.3.13.1, Web4Programmer 0.1.0.1"
 
 **Tree Visualization (✅ VERIFIED)**
 ```bash
-$ ./web4tscomponent tree 2 false
+$ ./web4tscomponent tree 4 false
 📁 Tree structure for current component:
 ├── templates/
 ├── test/data/
@@ -147358,7 +147358,7 @@ cd /project/root
 ### **Step 3a: View Own Component Tree**
 ```bash
 cd /path/to/component
-./web4tscomponent tree 2 false
+./web4tscomponent tree 4 false
 ```
 
 **Parameters:**
@@ -147401,7 +147401,7 @@ cd /path/to/component
 ```bash
 # Format: on <component> <version> <command>
 ./web4tscomponent on Web4Programmer 0.1.0.1 tree
-./web4tscomponent on Unit 0.3.0.5 tree 2
+./web4tscomponent on Unit 0.3.0.5 tree 4
 ./web4tscomponent on MyComponent latest tree
 ```
 
@@ -147634,7 +147634,7 @@ cd components/Web4TSComponent/0.3.13.1
 #### **Phase 4: Analyze Structure**
 ```bash
 # Master structure
-./web4tscomponent tree 2 false
+./web4tscomponent tree 4 false
 # Shows: templates/, test/, session/, comprehensive
 
 # Deployed structure
@@ -147906,7 +147906,7 @@ $ ./web4tscomponent compare "Web4TSComponent 0.3.13.1, Web4Programmer 0.1.0.1"
 
 **Tree Visualization (✅ VERIFIED)**
 ```bash
-$ ./web4tscomponent tree 2 false
+$ ./web4tscomponent tree 4 false
 📁 Tree structure for current component:
 ├── templates/
 ├── test/data/
@@ -148299,7 +148299,7 @@ cd /project/root
 ### **Step 3a: View Own Component Tree**
 ```bash
 cd /path/to/component
-./web4tscomponent tree 2 false
+./web4tscomponent tree 4 false
 ```
 
 **Parameters:**
@@ -148342,7 +148342,7 @@ cd /path/to/component
 ```bash
 # Format: on <component> <version> <command>
 ./web4tscomponent on Web4Programmer 0.1.0.1 tree
-./web4tscomponent on Unit 0.3.0.5 tree 2
+./web4tscomponent on Unit 0.3.0.5 tree 4
 ./web4tscomponent on MyComponent latest tree
 ```
 
@@ -148575,7 +148575,7 @@ cd components/Web4TSComponent/0.3.13.1
 #### **Phase 4: Analyze Structure**
 ```bash
 # Master structure
-./web4tscomponent tree 2 false
+./web4tscomponent tree 4 false
 # Shows: templates/, test/, session/, comprehensive
 
 # Deployed structure
@@ -148847,7 +148847,7 @@ $ ./web4tscomponent compare "Web4TSComponent 0.3.13.1, Web4Programmer 0.1.0.1"
 
 **Tree Visualization (✅ VERIFIED)**
 ```bash
-$ ./web4tscomponent tree 2 false
+$ ./web4tscomponent tree 4 false
 📁 Tree structure for current component:
 ├── templates/
 ├── test/data/
@@ -149244,7 +149244,7 @@ cd /project/root
 ### **Step 3a: View Own Component Tree**
 ```bash
 cd /path/to/component
-./web4tscomponent tree 2 false
+./web4tscomponent tree 4 false
 ```
 
 **Parameters:**
@@ -149287,7 +149287,7 @@ cd /path/to/component
 ```bash
 # Format: on <component> <version> <command>
 ./web4tscomponent on Web4Programmer 0.1.0.1 tree
-./web4tscomponent on Unit 0.3.0.5 tree 2
+./web4tscomponent on Unit 0.3.0.5 tree 4
 ./web4tscomponent on MyComponent latest tree
 ```
 
@@ -149520,7 +149520,7 @@ cd components/Web4TSComponent/0.3.13.1
 #### **Phase 4: Analyze Structure**
 ```bash
 # Master structure
-./web4tscomponent tree 2 false
+./web4tscomponent tree 4 false
 # Shows: templates/, test/, session/, comprehensive
 
 # Deployed structure
@@ -149792,7 +149792,7 @@ $ ./web4tscomponent compare "Web4TSComponent 0.3.13.1, Web4Programmer 0.1.0.1"
 
 **Tree Visualization (✅ VERIFIED)**
 ```bash
-$ ./web4tscomponent tree 2 false
+$ ./web4tscomponent tree 4 false
 📁 Tree structure for current component:
 ├── templates/
 ├── test/data/

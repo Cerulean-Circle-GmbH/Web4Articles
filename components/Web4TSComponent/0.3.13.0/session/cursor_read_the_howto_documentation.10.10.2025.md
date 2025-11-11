@@ -337479,7 +337479,7 @@ $ web4tscomponent links fix
    * @param file Optional file to start from
    * @cliSyntax <depth> <?file>
    * @cliExample web4tscomponent tree 3
-   * @cliExample web4tscomponent tree 2 src/
+   * @cliExample web4tscomponent tree 4 src/
    */
   async tree(depth: number, file?: string): Promise<this> {
 ```
@@ -406201,7 +406201,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
    */
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];
@@ -407665,7 +407665,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
    */
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];
@@ -410454,7 +410454,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
    */
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];
@@ -410723,7 +410723,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
    */
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];
@@ -410953,7 +410953,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
    */
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];
@@ -474754,7 +474754,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
    */
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];
@@ -475022,7 +475022,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
    */
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];
@@ -475251,7 +475251,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
    */
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];
@@ -475477,7 +475477,7 @@ export class Web4TSComponentCLI extends DefaultCLI {
 
   /**
    * Execute commands with chaining support
-   * Supports: web4tscomponent on Unit 0.3.0.5 tree 2
+   * Supports: web4tscomponent on Unit 0.3.0.5 tree 4
    */
   private async executeWithChaining(args: string[]): Promise<void> {
     let remainingArgs = [...args];

@@ -134,7 +134,7 @@ describe('🧪 Test Isolation Delegation Runtime Verification', () => {
 
   describe('🌳 tree Command - Radical OOP Delegation', () => {
     it('should show IdealMinimalComponent tree (NOT Web4TSComponent tree)', () => {
-      const result = executeCLIInTestIsolation(`${testComponentCLI} tree 2`);
+      const result = executeCLIInTestIsolation(`${testComponentCLI} tree 4`);
       
       expect(result.exitCode).toBe(0);
       expect(result.stdout).toContain('Tree structure for IdealMinimalComponent');
@@ -143,7 +143,7 @@ describe('🧪 Test Isolation Delegation Runtime Verification', () => {
     });
 
     it('should show CORRECT test isolation path in tree', () => {
-      const result = executeCLIInTestIsolation(`${testComponentCLI} tree 2`);
+      const result = executeCLIInTestIsolation(`${testComponentCLI} tree 4`);
       
       expect(result.exitCode).toBe(0);
       // Should show test/data path, not production path
@@ -154,7 +154,7 @@ describe('🧪 Test Isolation Delegation Runtime Verification', () => {
     });
 
     it('should show IdealMinimalComponent directories (src, test, etc)', () => {
-      const result = executeCLIInTestIsolation(`${testComponentCLI} tree 2`);
+      const result = executeCLIInTestIsolation(`${testComponentCLI} tree 4`);
       
       expect(result.exitCode).toBe(0);
       // Should show IdealMinimalComponent structure
