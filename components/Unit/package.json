@@ -1,0 +1,12 @@
+{
+  "name": "@web4x/unit",
+  "version": "0.3.19.1",
+  "type": "module",
+  "description": "Unit Component - Base Entry Point",
+  "scripts": {
+    "start": "cd latest && npm start",
+    "test": "cd latest && npm test",
+    "build": "cd latest && npm run build"
+  },
+  "private": true
+}
