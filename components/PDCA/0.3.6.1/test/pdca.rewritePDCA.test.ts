@@ -466,8 +466,8 @@ MISSING CHECK SECTION`;
     expect(rewrittenContent).toContain('This is valid content with over 50 characters');
   });
 
-  // TC-PRESERVE-02: Invalid CHECK section is reset to template
-  it('TC-PRESERVE-02: Resets invalid CHECK section to template automatically', async () => {
+  // TC-PRESERVE-02: Invalid CHECK section is preserved in recovery (zero data loss)
+  it('TC-PRESERVE-02: Preserves invalid CHECK section in recovery section (zero data loss)', async () => {
     // Setup: Create corrupted PDCA with explicitly invalid CHECK section
     const resetTestPath = path.join(testDataDir, '2025-11-04-UTC-1031.pdca.md');
     const corruptedWithInvalidCheck = `# 📋 **PDCA Cycle: Test Reset - Test Reset**
@@ -496,20 +496,21 @@ MISSING CHECK SECTION
 
     fs.writeFileSync(resetTestPath, corruptedWithInvalidCheck, 'utf-8');
 
-    // Action: rewritePDCA (Option B resets invalid sections)
+    // Action: rewritePDCA (Zero data loss: preserves all content)
     await pdca.rewritePDCA(resetTestPath);
 
-    // Assert: Invalid CHECK section should be reset (not contain "MISSING")
+    // Assert: Invalid content preserved in recovery section (zero data loss)
     const rewrittenContent = fs.readFileSync(resetTestPath, 'utf-8');
-    expect(rewrittenContent).not.toContain('MISSING CHECK SECTION');
+    expect(rewrittenContent).toContain('MISSING CHECK SECTION'); // Now preserved, not lost
+    expect(rewrittenContent).toContain('🔍 RECOVERED CONTENT'); // In recovery section
     
-    // Should contain template CHECK structure
+    // Should still contain template CHECK structure
     expect(rewrittenContent).toContain('## **✅ CHECK**');
     expect(rewrittenContent).toContain('**Verification Results:**');
   });
 
-  // TC-PRESERVE-03: Mixed content (selective preservation)
-  it('TC-PRESERVE-03: Selectively preserves valid sections, resets invalid sections', async () => {
+  // TC-PRESERVE-03: Mixed content (zero data loss with valid + invalid)
+  it('TC-PRESERVE-03: Preserves valid sections + invalid in recovery (zero data loss)', async () => {
     // Setup: Create PDCA with mixed content (some valid, some invalid)
     const mixedTestPath = path.join(testDataDir, '2025-11-04-UTC-1032.pdca.md');
     const validACTContent = `**Success Achieved:** Feature implementation complete with zero regressions!
@@ -556,21 +557,23 @@ ${validACTContent}
     // Action: rewritePDCA
     await pdca.rewritePDCA(mixedTestPath);
 
-    // Assert: Valid sections preserved (DO, ACT), invalid sections reset (PLAN, CHECK)
+    // Assert: Valid sections preserved in correct places, invalid in recovery (zero data loss)
     const rewrittenContent = fs.readFileSync(mixedTestPath, 'utf-8');
     
-    // Valid DO section should be preserved
+    // Valid DO section should be preserved in DO
     expect(rewrittenContent).toContain('Valid DO section with implementation details');
     
-    // Valid ACT section should be preserved (check for the actual content)
+    // Valid ACT section should be preserved in ACT
     expect(rewrittenContent).toContain('**Success Achieved:**');
     expect(rewrittenContent).toContain('Feature implementation complete');
     expect(rewrittenContent).toContain('DRY principle applied');
     
-    // Invalid PLAN should be reset (not contain "CORRUPTED")
-    expect(rewrittenContent).not.toContain('CORRUPTED PLAN');
+    // Invalid content preserved in recovery section (zero data loss)
+    expect(rewrittenContent).toContain('CORRUPTED PLAN'); // Now preserved, not lost
+    expect(rewrittenContent).toContain('Short.'); // Now preserved, not lost
+    expect(rewrittenContent).toContain('🔍 RECOVERED CONTENT');
     
-    // Invalid CHECK should be reset (not contain just "Short.")
+    // Should still have template structure
     expect(rewrittenContent).toContain('**Verification Results:**');
   });
 
@@ -623,8 +626,693 @@ MISSING CHECK SECTION
     expect(rewrittenContent).toContain('rename with creationDate');
     expect(rewrittenContent).toContain('over 300 lines of comprehensive command documentation');
     
-    // Invalid sections should be reset
-    expect(rewrittenContent).not.toContain('CORRUPTED CONTENT');
-    expect(rewrittenContent).not.toContain('MISSING CHECK SECTION');
+    // Invalid content preserved in recovery (zero data loss)
+    expect(rewrittenContent).toContain('CORRUPTED CONTENT'); // Now preserved
+    expect(rewrittenContent).toContain('MISSING CHECK SECTION'); // Now preserved
+    expect(rewrittenContent).toContain('🔍 RECOVERED CONTENT');
+  });
+
+  // ========================================
+  // ZERO DATA LOSS TESTS (TDD - New Requirements)
+  // ========================================
+
+  // TC150: rewritePDCA preserves content from sections with missing headers
+  it('TC150: Preserves content from section with missing header (zero data loss)', async () => {
+    // Setup: Create corrupted PDCA with content but missing ## header marker
+    const tc150Path = path.join(testDataDir, '2025-11-06-UTC-0900.pdca.md');
+    const actContentWithoutHeader = `**🎯 ACT** (CORRUPTION: Missing ## header markers)
+
+**Success Achieved:** File populated and corrupted for rewritePDCA testing
+
+Testing Improvements Enhanced:
+- **Corruption Type 1:** Missing header markers (this section)
+- **Corruption Type 2:** Invalid dual links  
+- **Corruption Type 3:** Malformed code blocks
+
+rewritePDCA Benefits:
+- **Auto-Fix:** Should restore proper markdown structure
+- **Validation:** Should detect and repair broken links`;
+
+    const corrupted150 = `# 📋 **PDCA Cycle: TC150 Test - TC150 Test**
+
+**🗓️ Date:** Wed, 06 Nov 2025 09:00:00 GMT  
+**🎯 Objective:** Test content preservation from sections with missing headers  
+**🎯 Template Version:** 3.2.4.2  
+
+## **📋 PLAN**
+
+Valid plan content here.
+
+---
+
+## **🔧 DO**
+
+Valid DO content here.
+
+---
+
+## **✅ CHECK**
+
+Valid CHECK content here.
+
+---
+
+${actContentWithoutHeader}
+
+---`;
+
+    fs.writeFileSync(tc150Path, corrupted150, 'utf-8');
+
+    // Action: rewritePDCA
+    await pdca.rewritePDCA(tc150Path);
+
+    // Assert: Content from section without header MUST be preserved
+    const rewritten = fs.readFileSync(tc150Path, 'utf-8');
+    expect(rewritten).toContain('File populated and corrupted for rewritePDCA testing');
+    expect(rewritten).toContain('Testing Improvements Enhanced');
+    expect(rewritten).toContain('Corruption Type 1');
+    expect(rewritten).toContain('Corruption Type 2');
+    expect(rewritten).toContain('rewritePDCA Benefits');
+    expect(rewritten).toContain('Auto-Fix');
+    
+    // Header should be fixed
+    expect(rewritten).toContain('## **🎯 ACT**');
+  });
+
+  // TC151: rewritePDCA creates recovery section for unmappable content
+  it('TC151: Creates recovery section for content that cannot be mapped', async () => {
+    // Setup: Create PDCA with orphaned content that doesn't belong to any section
+    const tc151Path = path.join(testDataDir, '2025-11-06-UTC-0901.pdca.md');
+    const corrupted151 = `# 📋 **PDCA Cycle: TC151 Test - TC151 Test**
+
+**🗓️ Date:** Wed, 06 Nov 2025 09:01:00 GMT  
+**🎯 Objective:** Test recovery section creation  
+**🎯 Template Version:** 3.2.4.2  
+
+This is orphaned content at the top that doesn't belong to any section header.
+It contains important information about the corruption scenario.
+Multiple lines of valuable data that must not be lost.
+
+## **📋 PLAN**
+
+Valid plan.
+
+---
+
+Random content between sections that has no clear section home.
+This could be notes, observations, or partial data.
+
+## **🔧 DO**
+
+Valid DO.
+
+---`;
+
+    fs.writeFileSync(tc151Path, corrupted151, 'utf-8');
+
+    // Action: rewritePDCA
+    await pdca.rewritePDCA(tc151Path);
+
+    // Assert: Unmappable content preserved in recovery section
+    const rewritten = fs.readFileSync(tc151Path, 'utf-8');
+    expect(rewritten).toContain('orphaned content at the top');
+    expect(rewritten).toContain('important information about the corruption scenario');
+    expect(rewritten).toContain('Random content between sections');
+    
+    // Recovery section should exist
+    expect(rewritten).toContain('🔍 RECOVERED CONTENT');
+  });
+
+  // TC152: rewritePDCA preserves completely unstructured content in recovery
+  it('TC152: Preserves completely unstructured content in recovery (zero data loss)', async () => {
+    // Setup: Create PDCA with completely unstructured content (no headers at all)
+    const tc152Path = path.join(testDataDir, '2025-11-06-UTC-0902.pdca.md');
+    const corrupted152 = `# 📋 **PDCA Cycle: TC152 Test - TC152 Test**
+
+**🗓️ Date:** Wed, 06 Nov 2025 09:02:00 GMT  
+**🎯 Objective:** Test unstructured content preservation  
+**🎯 Template Version:** 3.2.4.2  
+
+PLAN
+
+**Objective:** This is clearly plan content
+
+**Definition of Ready:**
+- Item 1
+- Item 2
+
+DO
+
+**Implementation:**
+Step 1: Do this
+Step 2: Do that
+
+CHECK
+
+**Verification Results:**
+All tests passed successfully.
+
+ACT
+
+**Success Achieved:** Mission accomplished!`;
+
+    fs.writeFileSync(tc152Path, corrupted152, 'utf-8');
+
+    // Action: rewritePDCA
+    await pdca.rewritePDCA(tc152Path);
+
+    // Assert: All content preserved (zero data loss), even if not in correct sections
+    const rewritten = fs.readFileSync(tc152Path, 'utf-8');
+    
+    // All unique content strings must be present (zero data loss)
+    expect(rewritten).toContain('This is clearly plan content');
+    expect(rewritten).toContain('Definition of Ready');
+    expect(rewritten).toContain('Implementation');
+    expect(rewritten).toContain('Step 1: Do this');
+    expect(rewritten).toContain('Verification Results');
+    expect(rewritten).toContain('Mission accomplished');
+    
+    // Since this content has no proper headers, it should be in recovery
+    expect(rewritten).toContain('🔍 RECOVERED CONTENT');
+  });
+
+  // TC153: rewritePDCA preserves ALL content (comprehensive zero data loss test)
+  it('TC153: Preserves ALL content with zero data loss (comprehensive test)', async () => {
+    // Setup: Create highly corrupted PDCA with valuable content scattered everywhere
+    const tc153Path = path.join(testDataDir, '2025-11-06-UTC-0903.pdca.md');
+    const corrupted153 = `# 📋 **PDCA Cycle: TC153 Comprehensive - TC153 Comprehensive**
+
+**🗓️ Date:** Wed, 06 Nov 2025 09:03:00 GMT  
+**🎯 Objective:** Comprehensive zero data loss test  
+
+Important note at the top: UNIQUE_STRING_ALPHA_12345
+
+## **📋 PLAN**
+
+Valid plan with UNIQUE_STRING_BETA_67890
+
+**🔧 DO** (missing ##)
+
+DO content with UNIQUE_STRING_GAMMA_24680
+
+Some orphaned text with UNIQUE_STRING_DELTA_13579
+
+## **✅ CHECK**
+
+CHECK content with UNIQUE_STRING_EPSILON_11111
+
+Random insertion with UNIQUE_STRING_ZETA_22222
+
+**🎯 ACT** (missing ##)
+
+ACT content with UNIQUE_STRING_ETA_33333`;
+
+    fs.writeFileSync(tc153Path, corrupted153, 'utf-8');
+
+    // Action: rewritePDCA
+    await pdca.rewritePDCA(tc153Path);
+
+    // Assert: EVERY unique string must be present (zero data loss)
+    const rewritten = fs.readFileSync(tc153Path, 'utf-8');
+    
+    const uniqueStrings = [
+      'UNIQUE_STRING_ALPHA_12345',
+      'UNIQUE_STRING_BETA_67890',
+      'UNIQUE_STRING_GAMMA_24680',
+      'UNIQUE_STRING_DELTA_13579',
+      'UNIQUE_STRING_EPSILON_11111',
+      'UNIQUE_STRING_ZETA_22222',
+      'UNIQUE_STRING_ETA_33333'
+    ];
+    
+    for (const uniqueString of uniqueStrings) {
+      expect(rewritten).toContain(uniqueString);
+    }
+    
+    // All headers should be properly formatted
+    expect(rewritten).toContain('## **📋 PLAN**');
+    expect(rewritten).toContain('## **🔧 DO**');
+    expect(rewritten).toContain('## **✅ CHECK**');
+    expect(rewritten).toContain('## **🎯 ACT**');
+  });
+
+  // ================================================================================
+  // METADATA PRESERVATION TESTS (2025-11-06)
+  // Tests for extractMetadata() and metadata preservation in rewritePDCA
+  // ================================================================================
+
+  it('TC-META-01: extractMetadata() extracts all header fields correctly', async () => {
+    // Setup: Create PDCA with complete metadata
+    const testPath = path.join(testDataDir, '2025-11-06-UTC-1357.pdca.md');
+    const fullMetadata = `# 📋 **PDCA Cycle: Test Title - Test Description**
+
+**🗓️ Date:** Thu, 06 Nov 2025 13:57:11 GMT  
+**🎯 Objective:** Test Objective Content  
+**🎯 Template Version:** 3.2.4.2  
+**🏅 CMM Badge:** CMM3 (Development - Earned 2025-11-06)  
+
+**👤 Agent Name:** Claude Sonnet 4.5 → AI Development Assistant  
+**👤 Agent Role:** Full-Stack Developer → Test Context  
+**👤 Branch:** dev/2025-10-31-UTC-11-07 → Development Branch  
+**🔄 Sync Requirements:** main ← dev branch → Feature validation before merge  
+**🎯 Project Journal Session:** Web4TSComponent/0.3.17.1
+**🎯 Sprint:** Current Sprint → Test Sprint
+**✅ Task:** Test Task  
+**🚨 Issues:** None  
+
+**📎 Previous Commit:** abc123def - fix: test commit message  
+**🔗 Previous PDCA:** [GitHub](https://github.com/test/prev.pdca.md) | [§/test/prev.pdca.md](./prev.pdca.md)  
+**➡️ Next PDCA:** [GitHub](https://github.com/test/next.pdca.md) | [§/test/next.pdca.md](./next.pdca.md)
+
+---
+
+## **📊 SUMMARY**
+
+Test content`;
+
+    fs.writeFileSync(testPath, fullMetadata, 'utf-8');
+
+    // Action: Extract metadata
+    const extracted = await pdca.extractMetadata(testPath);
+
+    // Assert: All fields extracted correctly
+    expect(extracted.date).toBe('Thu, 06 Nov 2025 13:57:11 GMT');
+    expect(extracted.objective).toBe('Test Objective Content');
+    expect(extracted.templateVersion).toBe('3.2.4.2');
+    expect(extracted.cmmBadge).toBe('CMM3 (Development - Earned 2025-11-06)');
+    expect(extracted.agentName).toBe('Claude Sonnet 4.5 → AI Development Assistant');
+    expect(extracted.agentRole).toBe('Full-Stack Developer → Test Context');
+    expect(extracted.branch).toBe('dev/2025-10-31-UTC-11-07 → Development Branch');
+    expect(extracted.syncRequirements).toBe('main ← dev branch → Feature validation before merge');
+    expect(extracted.projectSession).toBe('Web4TSComponent/0.3.17.1');
+    expect(extracted.sprint).toBe('Current Sprint → Test Sprint');
+    expect(extracted.task).toBe('Test Task');
+    expect(extracted.issues).toBe('None');
+    expect(extracted.previousCommit).toBe('abc123def - fix: test commit message');
+    expect(extracted.previousPDCA).toBe('[GitHub](https://github.com/test/prev.pdca.md) | [§/test/prev.pdca.md](./prev.pdca.md)');
+    expect(extracted.nextPDCA).toBe('[GitHub](https://github.com/test/next.pdca.md) | [§/test/next.pdca.md](./next.pdca.md)');
+  });
+
+  it('TC-META-02: rewritePDCA preserves original metadata from corrupted file', async () => {
+    // Setup: Create corrupted PDCA with valid metadata
+    const testPath = path.join(testDataDir, '2025-11-06-UTC-1400.pdca.md');
+    const corruptedWithMetadata = `# 📋 **PDCA Cycle: Original Title - Original Description**
+
+**🗓️ Date:** Thu, 06 Nov 2025 14:00:00 GMT  
+**🎯 Objective:** Original Objective  
+**🎯 Template Version:** 3.2.4.2  
+
+**📎 Previous Commit:** original123 - fix: original commit  
+**🔗 Previous PDCA:** [GitHub](https://github.com/test/original-prev.pdca.md) | [§/test/original-prev.pdca.md](./original-prev.pdca.md)  
+**➡️ Next PDCA:** Use pdca chain
+
+**🎯 Project Journal Session:** OriginalComponent/1.2.3
+
+---
+
+SUMMARY (missing ## and **)
+
+Some content here
+
+## PLAN (missing ** and emoji)
+
+Planning content
+
+## DO (completely malformed)
+
+Doing content`;
+
+    fs.writeFileSync(testPath, corruptedWithMetadata, 'utf-8');
+
+    // Action: rewritePDCA
+    await pdca.rewritePDCA(testPath);
+
+    // Assert: Metadata preserved, structure fixed, content recovered
+    const rewritten = fs.readFileSync(testPath, 'utf-8');
+    
+    // Metadata should be preserved
+    expect(rewritten).toContain('**🗓️ Date:** Thu, 06 Nov 2025 14:00:00 GMT');
+    expect(rewritten).toContain('**🎯 Objective:** Original Objective');
+    expect(rewritten).toContain('**📎 Previous Commit:** original123 - fix: original commit');
+    expect(rewritten).toContain('**🔗 Previous PDCA:** [GitHub](https://github.com/test/original-prev.pdca.md)');
+    expect(rewritten).toContain('**🎯 Project Journal Session:** OriginalComponent/1.2.3');
+    
+    // Structure should be fixed (proper section headers)
+    expect(rewritten).toContain('## **📊 SUMMARY**');
+    expect(rewritten).toContain('## **📋 PLAN**');
+    expect(rewritten).toContain('## **🔧 DO**');
+    
+    // Content should be recovered
+    expect(rewritten).toContain('Some content here');
+    expect(rewritten).toContain('Planning content');
+    expect(rewritten).toContain('Doing content');
+  });
+});
+
+describe("Intelligent Content Mapping Tests", () => {
+  test("TC-MAP-01: Identifies 'Artifact Links' pattern in corrupted content", async () => {
+    const pdca = new DefaultPDCA();
+    const sessionPath = path.join(process.cwd(), "temp", "test-mapping", `session-${Date.now()}`);
+    fs.mkdirSync(sessionPath, { recursive: true });
+    
+    const testPath = path.join(sessionPath, "2025-11-07-UTC-070000.pdca.md");
+    
+    // Corrupted PDCA with Artifact Links that should be recognized
+    const corruptedWithLinks = `# 📋 **PDCA Cycle: Test - Test**
+
+**🗓️ Date:** Fri, 07 Nov 2025 06:00:00 GMT  
+**🎯 Objective:** Test intelligent mapping  
+
+SUMMARY Section (missing header)
+
+### **Artifact Links**
+- **PDCA Document:** [GitHub](https://github.com/test/file.md) | [§/test/file.md](./file.md)
+- **Test Artifact:** Some test link
+
+### QA Decisions
+- [x] Decision 1: Completed
+- [ ] Decision 2: Pending`;
+
+    fs.writeFileSync(testPath, corruptedWithLinks, 'utf-8');
+
+    // Action: rewritePDCA with intelligent mapping
+    await pdca.rewritePDCA(testPath);
+
+    // Assert: Artifact Links mapped to SUMMARY section, not RECOVERED
+    const rewritten = fs.readFileSync(testPath, 'utf-8');
+    
+    // Should have proper SUMMARY header
+    expect(rewritten).toContain('## **📊 SUMMARY**');
+    
+    // Artifact Links should be in SUMMARY section
+    expect(rewritten).toContain('### **Artifact Links**');
+    expect(rewritten).toContain('**PDCA Document:** [GitHub](https://github.com/test/file.md)');
+    expect(rewritten).toContain('**Test Artifact:** Some test link');
+    
+    // QA Decisions should be in SUMMARY section
+    expect(rewritten).toContain('### **To TRON: QA Decisions required**');
+    expect(rewritten).toContain('[x] Decision 1: Completed');
+    expect(rewritten).toContain('[ ] Decision 2: Pending');
+    
+    // Should NOT be in RECOVERED CONTENT section
+    const recoveredMatch = rewritten.match(/## \*\*🔍 RECOVERED CONTENT\*\*/);
+    if (recoveredMatch) {
+      const recoveredSection = rewritten.substring(recoveredMatch.index);
+      expect(recoveredSection).not.toContain('**PDCA Document:**');
+      expect(recoveredSection).not.toContain('Decision 1: Completed');
+    }
+  });
+
+  test("TC-DEDUP-01: Prevents duplicate Artifact Links when already in SUMMARY", async () => {
+    const pdca = new DefaultPDCA();
+    const sessionPath = path.join(process.cwd(), "temp", "test-dedup", `session-${Date.now()}`);
+    fs.mkdirSync(sessionPath, { recursive: true });
+    
+    const testPath = path.join(sessionPath, "2025-11-07-UTC-070000.pdca.md");
+    
+    // Corrupted PDCA with duplicate Artifact Links:
+    // 1. One in a proper SUMMARY section (will be extracted by extractAllContent)
+    // 2. One in orphaned content (will be processed by mapIntelligentContent)
+    const corruptedWithDuplicates = `# 📋 **PDCA Cycle: Test - Test**
+
+**🗓️ Date:** Fri, 07 Nov 2025 06:00:00 GMT  
+**🎯 Objective:** Test deduplication  
+
+## **📊 SUMMARY**
+
+### **Artifact Links**
+- **PDCA Document:** [GitHub](https://github.com/test/file.md) | [§/test/file.md](./file.md)
+- **Implementation:** Some implementation link
+
+---
+
+Orphaned content area (broken structure)
+
+### **Artifact Links**
+- **PDCA Document:** [GitHub](https://github.com/test/file.md) | [§/test/file.md](./file.md)
+- **Implementation:** Some implementation link
+
+### **To TRON: QA Decisions required**
+- [x] Decision 1: Completed`;
+
+    fs.writeFileSync(testPath, corruptedWithDuplicates, 'utf-8');
+
+    // Action: rewritePDCA with smart prevention
+    await pdca.rewritePDCA(testPath);
+
+    // Assert: Artifact Links appear only ONCE in SUMMARY section
+    const rewritten = fs.readFileSync(testPath, 'utf-8');
+    
+    // Count occurrences of "### **Artifact Links**"
+    const artifactLinksMatches = rewritten.match(/### \*\*Artifact Links\*\*/g);
+    expect(artifactLinksMatches).toBeTruthy();
+    expect(artifactLinksMatches?.length).toBe(1); // Should appear exactly once
+    
+    // Count occurrences of the PDCA Document link
+    const pdcaDocMatches = rewritten.match(/\*\*PDCA Document:\*\* \[GitHub\]/g);
+    expect(pdcaDocMatches).toBeTruthy();
+    expect(pdcaDocMatches?.length).toBe(1); // Should appear exactly once, not twice
+    
+    // Verify it's in SUMMARY section
+    expect(rewritten).toContain('## **📊 SUMMARY**');
+    const summaryStart = rewritten.indexOf('## **📊 SUMMARY**');
+    const nextSection = rewritten.indexOf('## **📋 PLAN**', summaryStart);
+    const summarySection = rewritten.substring(summaryStart, nextSection);
+    expect(summarySection).toContain('### **Artifact Links**');
+    expect(summarySection).toContain('**PDCA Document:** [GitHub](https://github.com/test/file.md)');
+  });
+
+  test("TC-DEDUP-02: Prevents duplicate QA Decisions when already in SUMMARY", async () => {
+    const pdca = new DefaultPDCA();
+    const sessionPath = path.join(process.cwd(), "temp", "test-dedup", `session-${Date.now()}`);
+    fs.mkdirSync(sessionPath, { recursive: true });
+    
+    const testPath = path.join(sessionPath, "2025-11-07-UTC-070100.pdca.md");
+    
+    // Corrupted PDCA with QA Decisions appearing twice
+    const corruptedWithDuplicates = `# 📋 **PDCA Cycle: Test - Test**
+
+**🗓️ Date:** Fri, 07 Nov 2025 06:01:00 GMT  
+**🎯 Objective:** Test QA deduplication  
+
+## **📊 SUMMARY**
+
+### QA Decisions
+- [x] Decision 1: Done
+- [ ] Decision 2: Pending
+
+---
+
+Orphaned area
+
+### **To TRON: QA Decisions required**
+- [x] Decision 1: Done
+- [ ] Decision 2: Pending`;
+
+    fs.writeFileSync(testPath, corruptedWithDuplicates, 'utf-8');
+
+    // Action: rewritePDCA with smart prevention
+    await pdca.rewritePDCA(testPath);
+
+    // Assert: QA Decisions appear only ONCE (normalized)
+    const rewritten = fs.readFileSync(testPath, 'utf-8');
+    
+    // Count occurrences of QA Decisions header (in any format)
+    const qaMatches = rewritten.match(/### \*\*To TRON: QA Decisions required\*\*/g);
+    expect(qaMatches).toBeTruthy();
+    expect(qaMatches?.length).toBe(1); // Should appear exactly once
+    
+    // Count occurrences of "Decision 1: Done"
+    const decision1Matches = rewritten.match(/Decision 1: Done/g);
+    expect(decision1Matches).toBeTruthy();
+    expect(decision1Matches?.length).toBe(1); // Should NOT be duplicated
+  });
+
+  test("TC-CORRUPT-01: Handles corrupted headers without emojis/bold and non-bold Artifact Links", async () => {
+    const pdca = new DefaultPDCA();
+    const sessionPath = path.join(process.cwd(), "temp", "test-corrupt", `session-${Date.now()}`);
+    fs.mkdirSync(sessionPath, { recursive: true });
+    
+    const testPath = path.join(sessionPath, "2025-11-07-UTC-080000.pdca.md");
+    
+    // Corrupted PDCA with:
+    // 1. Section header missing emojis/bold (## SUMMARY instead of ## **📊 SUMMARY**)
+    // 2. Artifact Links without bold asterisks (### Artifact Links instead of ### **Artifact Links**)
+    // 3. Metadata-like fields appearing after metadata header section
+    const corruptedWithBadHeaders = `# 📋 **PDCA Cycle: Test Corrupted Headers - Validation Test**
+
+**🗓️ Date:** Fri, 07 Nov 2025 08:00:00 GMT  
+**🎯 Objective:** Test corrupted header recognition  
+**🎯 Template Version:** 3.2.4.2  
+**🏅 CMM Badge:** CMM4 (Test)  
+
+**👤 Agent Name:** Test Agent  
+**👤 Agent Role:** Tester  
+**👤 Branch:** test  
+**🔄 Sync Requirements:** test  
+**🎯 Project Journal Session:** Test/0.0.0
+**🎯 Sprint:** Test Sprint
+**✅ Task:** Test Task  
+**🚨 Issues:** None  
+
+**📎 Previous Commit:** abc123 - test  
+**🔗 Previous PDCA:** [GitHub](https://test.com) | [§/test](./test)  
+**➡️ Next PDCA:** Use pdca chain
+
+<!-- Some comment -->
+
+---
+
+## SUMMARY (corrupted header - missing emojis and formatting)
+
+Some content here...
+
+### Artifact Links
+- **PDCA Document:** [GitHub](https://test.com/doc.md) | [§/test/doc.md](./doc.md)
+- **Implementation:** [GitHub](https://test.com/impl.ts) | [§/test/impl.ts](./impl.ts)
+
+### QA Decisions (non-standard variation)
+- [x] Decision 1: Completed
+- [ ] Decision 2: Pending
+
+---
+
+## PLAN (broken header)
+
+Some plan content...
+
+---
+
+## **🔧 DO**
+
+Some do content...`;
+
+    fs.writeFileSync(testPath, corruptedWithBadHeaders, 'utf-8');
+
+    // Action: rewritePDCA should recognize corrupted headers and map Artifact Links
+    await pdca.rewritePDCA(testPath);
+
+    // Assert: Artifact Links should be in SUMMARY section, not RECOVERED CONTENT
+    const rewritten = fs.readFileSync(testPath, 'utf-8');
+    
+    // 1. SUMMARY section should exist and be properly formatted
+    expect(rewritten).toContain('## **📊 SUMMARY**');
+    
+    // 2. Artifact Links should be in SUMMARY section
+    const summaryStart = rewritten.indexOf('## **📊 SUMMARY**');
+    const planStart = rewritten.indexOf('## **📋 PLAN**');
+    const summarySection = rewritten.substring(summaryStart, planStart);
+    
+    expect(summarySection).toContain('### **Artifact Links**');
+    expect(summarySection).toContain('**PDCA Document:** [GitHub](https://test.com/doc.md)');
+    expect(summarySection).toContain('**Implementation:** [GitHub](https://test.com/impl.ts)');
+    
+    // 3. QA Decisions should be in SUMMARY and normalized
+    expect(summarySection).toContain('### **To TRON: QA Decisions required**');
+    expect(summarySection).toContain('Decision 1: Completed');
+    expect(summarySection).toContain('Decision 2: Pending');
+    
+    // 4. Artifact Links should NOT be in RECOVERED CONTENT
+    if (rewritten.includes('## **🔍 RECOVERED CONTENT**')) {
+      const recoveredStart = rewritten.indexOf('## **🔍 RECOVERED CONTENT**');
+      const recoveredSection = rewritten.substring(recoveredStart);
+      
+      // Should NOT contain the main artifact links
+      expect(recoveredSection).not.toContain('**PDCA Document:** [GitHub](https://test.com/doc.md)');
+    }
+    
+    // 5. All section headers should be properly formatted
+    expect(rewritten).toContain('## **📋 PLAN**');
+    expect(rewritten).toContain('## **🔧 DO**');
+    expect(rewritten).toContain('## **✅ CHECK**');
+    expect(rewritten).toContain('## **🎯 ACT**');
+  });
+
+  test("TC-MERGE-01: Merges duplicate Artifact Links subsections with different content (zero data loss)", async () => {
+    const pdca = new DefaultPDCA();
+    const sessionPath = path.join(process.cwd(), "temp", "test-merge", `session-${Date.now()}`);
+    fs.mkdirSync(sessionPath, { recursive: true });
+    
+    const testPath = path.join(sessionPath, "2025-11-07-UTC-090000.pdca.md");
+    
+    // Corrupted PDCA with TWO Artifact Links blocks with DIFFERENT content
+    const corruptedWithMultipleBlocks = `# 📋 **PDCA Cycle: Test Merge - Validation**
+
+**🗓️ Date:** Fri, 07 Nov 2025 09:00:00 GMT  
+**🎯 Objective:** Test merging of duplicate subsections  
+**🎯 Template Version:** 3.2.4.2  
+
+**👤 Agent Name:** Test Agent  
+**👤 Agent Role:** Tester  
+**👤 Branch:** test  
+**🔄 Sync Requirements:** test  
+**🎯 Project Journal Session:** Test/0.0.0
+**🎯 Sprint:** Test Sprint
+**✅ Task:** Test Task  
+**🚨 Issues:** None  
+
+**📎 Previous Commit:** abc123 - test  
+**🔗 Previous PDCA:** [GitHub](https://test.com) | [§/test](./test)  
+**➡️ Next PDCA:** Use pdca chain
+
+---
+
+## SUMMARY
+
+### Artifact Links
+- **PDCA Document:** [GitHub](https://test.com/doc1.md) | [§/test/doc1.md](./doc1.md)
+- **Implementation:** [GitHub](https://test.com/impl1.ts) | [§/test/impl1.ts](./impl1.ts)
+
+### QA Decisions
+- [x] Decision 1: Done
+- [ ] Decision 2: Pending
+
+---
+
+Some orphaned content...
+
+### Artifact Links
+- **Test Suite:** [GitHub](https://test.com/test.ts) | [§/test/test.ts](./test.ts)
+- **Related Doc:** [GitHub](https://test.com/doc2.md) | [§/test/doc2.md](./doc2.md)
+
+### To TRON: QA Decisions required
+- [x] Decision 3: Completed
+- [ ] Decision 4: Review needed
+
+---
+
+## PLAN
+
+Some plan content...`;
+
+    fs.writeFileSync(testPath, corruptedWithMultipleBlocks, 'utf-8');
+
+    // Action: rewritePDCA should merge both Artifact Links blocks
+    await pdca.rewritePDCA(testPath);
+
+    // Assert: Only ONE Artifact Links block with ALL 4 links
+    const rewritten = fs.readFileSync(testPath, 'utf-8');
+    
+    // 1. Count occurrences of "### **Artifact Links**" header
+    const artifactLinksMatches = rewritten.match(/### \*\*Artifact Links\*\*/g);
+    expect(artifactLinksMatches).toBeTruthy();
+    expect(artifactLinksMatches?.length).toBe(1); // Should appear exactly once
+    
+    // 2. All 4 links should be present (zero data loss)
+    expect(rewritten).toContain('**PDCA Document:** [GitHub](https://test.com/doc1.md)');
+    expect(rewritten).toContain('**Implementation:** [GitHub](https://test.com/impl1.ts)');
+    expect(rewritten).toContain('**Test Suite:** [GitHub](https://test.com/test.ts)');
+    expect(rewritten).toContain('**Related Doc:** [GitHub](https://test.com/doc2.md)');
+    
+    // 3. Only ONE QA Decisions block with ALL 4 decisions
+    const qaMatches = rewritten.match(/### \*\*To TRON: QA Decisions required\*\*/g);
+    expect(qaMatches).toBeTruthy();
+    expect(qaMatches?.length).toBe(1); // Should appear exactly once
+    
+    // 4. All 4 decisions should be present (zero data loss)
+    expect(rewritten).toContain('Decision 1: Done');
+    expect(rewritten).toContain('Decision 2: Pending');
+    expect(rewritten).toContain('Decision 3: Completed');
+    expect(rewritten).toContain('Decision 4: Review needed');
   });
 });
