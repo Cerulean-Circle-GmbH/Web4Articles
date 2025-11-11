@@ -20,4 +20,5 @@ export interface IdealMinimalComponentModel extends Model {
   targetDirectory?: string;       // Target directory for operations (Path Authority from CLI)
   targetComponentRoot?: string;   // Target component's root (for tree/links delegation)
   context?: any;                  // Context for "on" delegation mode (holds delegated component instance)
+  isTestIsolation?: boolean;      // Test isolation mode flag (for DelegationProxy context)
 }

@@ -172,52 +172,43 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
   }
 
   /**
-   * DRY helper for delegating methods to Web4TSComponent with correct context
-   * Sets context ONCE so Web4TSComponent operates on THIS component's data
-   * @pdca 2025-11-03-UTC-1200.pdca.md - DRY OOP pattern for context delegation
-   * @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md - Set display properties (Radical OOP)
-   * @cliHide
+   * ✅ REMOVED: delegateToWeb4TS() helper method
+   * 
+   * @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md
+   * 
+   * This method is NO LONGER NEEDED! DelegationProxy automatically intercepts
+   * missing method calls and delegates them to Web4TSComponent with proper context.
+   * 
+   * The old pattern was:
+   *   private async delegateToWeb4TS(method, ...args) { ... }
+   * 
+   * The new pattern is:
+   *   DelegationProxy.start(component) wraps the component in a Proxy
+   *   that automatically delegates missing methods.
+   * 
+   * Benefits:
+   *   - Zero boilerplate in generated components
+   *   - Automatic delegation of ALL Web4TSComponent methods
+   *   - DRY: delegation logic is in ONE place (DelegationProxy)
    */
-  private async delegateToWeb4TS<T extends (...args: any[]) => any>(
-    method: string,
-    ...args: Parameters<T>
-  ): Promise<this> {
-    const web4ts = await this.getWeb4TSComponent();
-    web4ts.model.context = this;  // ← Set context ONCE in ONE place
-    
-    // ✅ RADICAL OOP: Set display properties in Web4TSComponent's model (NO functional calculation!)
-    // @pdca 2025-11-10-UTC-1400.eliminate-functional-helpers-make-model-driven.pdca.md
-    // Web4TSComponent will just READ these properties (model-driven display)
-    web4ts.model.displayName = this.model.component;  // Show THIS component's name
-    web4ts.model.displayVersion = this.model.version || '0.0.0.0';  // Show THIS component's version
-    web4ts.model.isDelegation = true;  // We ARE delegating
-    web4ts.model.delegationInfo = `via Web4TSComponent v${web4ts.model.version.toString()}`;  // Show infrastructure
-    
-    // Test isolation context (if applicable)
-    if (this.model.isTestIsolation && this.model.projectRoot) {
-      const match = this.model.projectRoot.match(/components\/([^/]+)\/([^/]+)\/test\/data/);
-      if (match) {
-        web4ts.model.testIsolationContext = `${match[1]} v${match[2]}`;
-      } else {
-        web4ts.model.testIsolationContext = 'test/data environment';
-      }
-    }
-    
-    await (web4ts as any)[method](...args);
-    return this;
-  }
 
   /**
    * @cliHide
-   * @pdca 2025-11-05-UTC-2301.dry-shell-libraries.pdca.md - Added method discovery
+   * @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
+   * ✅ RADICAL OOP: Component knows ONLY its own methods
    */
-  init(scenario?: Scenario<IdealMinimalComponentModel>): this {
+  async init(scenario?: Scenario<IdealMinimalComponentModel>): Promise<this> {
     if (scenario?.model) {
       this.model = { ...this.model, ...scenario.model };
     }
     
-    // Discover methods for CLI completion
+    // Discover OWN methods only (Radical OOP)
     this.discoverMethods();
+    
+    // @pdca 2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md
+    // ❌ REMOVED: Component should NOT discover delegated methods
+    // ✅ RADICAL OOP: CLI discovers delegated methods separately via getDelegationTarget()
+    // Component knows ONLY its own methods (create, process, completion)
     
     return this;
   }
@@ -299,84 +290,26 @@ export class DefaultIdealMinimalComponent implements IdealMinimalComponent {
   }
 
   /**
-   * Show information about current IdealMinimalComponent state
-   * Delegates to Web4TSComponent for DRY architecture and consistent model display
-   * @param topic Optional topic to show (e.g., 'standard', 'guidelines', 'model')
-   * @cliSyntax topic
-   * @cliDefault topic model
-   */
-  async info(topic: string = 'model'): Promise<this> {
-    return this.delegateToWeb4TS('info', topic);
-  }
-
-  /**
-   * Run component tests with hierarchical selection or full suite with auto-promotion
+   * ✅ REMOVED: Explicit delegation methods (info, test, build, clean, tree, links)
    * 
-   * DRY PRINCIPLE: Delegates ALL testing to Web4TSComponent to avoid code duplication.
-   * Web4TSComponent handles:
-   * - Hierarchical testing (file/describe/itCase)
-   * - Full suite execution with vitest
-   * - Auto-promotion workflow (dev → test → prod)
-   * - Test result verification
-   * - Recursion detection
+   * @pdca 2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md
    * 
-   * Context delegation ensures Web4TSComponent operates on THIS component's data.
+   * These methods are now automatically delegated via DelegationProxy.
+   * No need for explicit boilerplate!
    * 
-   * @param scope Test scope: 'all' (full suite with promotion) or 'file'/'describe'/'itCase' (selective, no promotion)
-   * @param references Test references for selective testing (e.g., file number, describe reference, itCase token)
-   * @cliSyntax scope references
-   * @cliDefault scope all
-   * @cliValues file describe itCase
-   * @cliExample {{COMPONENT_LOWER}} test
-   * @cliExample {{COMPONENT_LOWER}} test file
-   * @cliExample {{COMPONENT_LOWER}} test file 1
-   * @cliExample {{COMPONENT_LOWER}} test describe 3b
-   * @cliExample {{COMPONENT_LOWER}} test itCase 1a1
-   * @pdca 2025-11-03-UTC-1200.pdca.md - Replaced 178-line implementation with 1-line delegation
-   * @pdca 2025-11-06-UTC-0150.delegated-parameter-completion-broken.pdca.md - Added @cliValues for parameter completion
+   * Proxy pattern intercepts missing methods and delegates them to Web4TSComponent
+   * with proper context, display properties, and test isolation awareness.
+   * 
+   * Methods automatically delegated:
+   * - info(topic)           - Show component information
+   * - test(scope, ...refs)  - Run tests with auto-promotion
+   * - build()               - Build component
+   * - clean()               - Clean build artifacts
+   * - tree(depth, hidden)   - Show directory structure
+   * - links(action)         - Show/manage version links
+   * - upgrade(version)      - Upgrade component version
+   * - ... and any future Web4TSComponent methods!
    */
-  async test(scope: string = 'all', ...references: string[]): Promise<this> {
-    return this.delegateToWeb4TS('test', scope, ...references);
-  }
-
-  /**
-   * Build component (TypeScript compilation)
-   * Delegates to Web4TSComponent for DRY architecture
-   * @cliHide
-   */
-  async build(): Promise<this> {
-    return this.delegateToWeb4TS('build');
-  }
-
-  /**
-   * Clean component build artifacts
-   * Delegates to Web4TSComponent for DRY architecture
-   * @cliHide
-   */
-  async clean(): Promise<this> {
-    return this.delegateToWeb4TS('clean');
-  }
-
-  /**
-   * Show component directory tree structure
-   * Delegates to Web4TSComponent for DRY architecture
-   * @param depth Maximum depth to show (default: 4)
-   * @param showHidden Whether to show hidden files (default: false)
-   * @cliHide
-   */
-  async tree(depth: string = '4', showHidden: string = 'false'): Promise<this> {
-    return this.delegateToWeb4TS('tree', depth, showHidden);
-  }
-
-  /**
-   * Show semantic version links (dev, test, prod, latest)
-   * Delegates to Web4TSComponent for DRY architecture
-   * @param action Optional action (e.g., 'repair' to fix broken links)
-   * @cliHide
-   */
-  async links(action: string = ''): Promise<this> {
-    return this.delegateToWeb4TS('links', action);
-  }
 
   /**
    * Test and discover tab completions for debugging and development

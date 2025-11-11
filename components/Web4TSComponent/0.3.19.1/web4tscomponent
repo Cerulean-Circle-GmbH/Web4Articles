@@ -1,0 +1,103 @@
+#!/bin/bash
+# Web4TSComponent CLI Tool - Location Independent Version
+# Web4 pattern: Works from any directory, finds project root
+# Based on proven test component pattern
+
+# Function to find project root (test isolation aware)
+# @pdca 2025-11-09-UTC-1540.test-isolation-project-root-detection.pdca.md
+find_project_root() {
+    # Primary check: package.json + components/ (works in test isolation AND production)
+    # This allows test/data to be recognized as a project root without .git
+    local current_dir="$PWD"
+    while [ "$current_dir" != "/" ]; do
+        if [ -f "$current_dir/package.json" ] && [ -d "$current_dir/components" ]; then
+            echo "$current_dir"
+            return 0
+        fi
+        current_dir="$(dirname "$current_dir")"
+    done
+    
+    # Fallback: If nothing found, return PWD
+    echo "$PWD"
+    return 1
+}
+
+# Main execution - location independent
+PROJECT_ROOT=$(find_project_root)
+if [ -z "$PROJECT_ROOT" ]; then
+    echo "❌ Error: Not in a Web4 project directory"
+    echo "💡 Run this from within a Web4 project (must have package.json and components/)"
+    exit 1
+fi
+
+# Get component version from directory name (single source of truth)
+# Resolve symlinks: Follow the script file itself, not just the directory
+SCRIPT_FILE="${BASH_SOURCE[0]}"
+# Resolve all symlinks
+while [ -L "$SCRIPT_FILE" ]; do
+    SCRIPT_FILE="$(readlink "$SCRIPT_FILE")"
+    # Handle relative symlinks
+    if [[ "$SCRIPT_FILE" != /* ]]; then
+        SCRIPT_FILE="$(dirname "${BASH_SOURCE[0]}")/$SCRIPT_FILE"
+    fi
+done
+SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_FILE")" && pwd -P)"
+COMPONENT_VERSION="$(basename "$SCRIPT_DIR")"
+COMPONENT_PATH="$SCRIPT_DIR"
+
+# Auto-source component's environment if needed
+# Check if environment is loaded by testing for completion functions
+SOURCE_ENV_PATH="$COMPONENT_PATH/source.env"
+if [ -f "$SOURCE_ENV_PATH" ]; then
+    # Check if source.env was already sourced by testing for completion function
+    # The completion function is defined by source.env and inherits to subshells
+    if ! declare -F _web4_generic_completion > /dev/null 2>&1; then
+        # Completion function not defined - need to source
+        source "$SOURCE_ENV_PATH"
+    fi
+    # Silent when already loaded (no message spam on repeated calls)
+fi
+
+
+# Verify component exists
+if [ ! -d "$COMPONENT_PATH" ]; then
+    echo "❌ Web4TSComponent $COMPONENT_VERSION not found at $COMPONENT_PATH"
+    echo "🔍 Project root: $PROJECT_ROOT"
+    exit 1
+fi
+
+# Change to component directory and use smart build system
+cd "$COMPONENT_PATH" || {
+    echo "❌ Failed to cd to $COMPONENT_PATH"
+    echo "   Current dir: $(pwd)"
+    exit 1
+}
+
+# Smart build: Skip for completion if CLI already exists (speed optimization)
+# @pdca 2025-11-06-UTC-0140.test-completion-hanging-regression.pdca.md
+CLI_PATH="dist/ts/layer5/Web4TSComponentCLI.js"
+if [[ "$1" == "shCompletion" || "$1" == "completion" ]] && [ -f "$CLI_PATH" ]; then
+    # Completion command + CLI exists = skip build for speed (<1s requirement)
+    :
+else
+    # Normal command or first-time build = use smart build system
+    ./src/sh/build.sh
+fi
+
+# Verify CLI is available
+if [ ! -f "$CLI_PATH" ]; then
+    echo "❌ Web4TSComponent CLI build failed"
+    exit 1
+fi
+
+# Execute CLI with all arguments
+# @pdca 2025-11-10-UTC-1010.pdca.md - Radical OOP: Bash sets CONTEXT (cwd), TypeScript reads from context
+# Web4 is environment-agnostic: CLI calculates projectRoot from process.cwd(), not environment variables
+# This ensures test isolation works: when run from test/data, CLI detects test/data as project root
+
+cd "$PROJECT_ROOT" || {
+    echo "❌ Failed to cd to PROJECT_ROOT: $PROJECT_ROOT"
+    exit 1
+}
+# Use absolute path with resolved symlinks (Node.js module resolution requires real paths)
+node "$COMPONENT_PATH/$CLI_PATH" "$@"
