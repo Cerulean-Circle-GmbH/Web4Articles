@@ -891,6 +891,301 @@ export class DefaultUnit implements Unit {
     }
     return match[1];
   }
+
+  /**
+   * Set unit definition from source file with GitTextIOR
+   * @pdca 2025-11-11-UTC-0003 - Migrated with Radical OOP (method chaining)
+   * @cliSyntax identifier file startPos endPos
+   */
+  async definition(identifier: UnitIdentifier, file: string, startPos: string, endPos: string): Promise<this>;
+  async definition(file: string, startPos: string, endPos: string): Promise<this>;
+  async definition(identifierOrFile: UnitIdentifier | string, fileOrStartPos?: string, startPosOrEndPos?: string, endPos?: string): Promise<this> {
+    let targetUnit: DefaultUnit;
+    let file: string;
+    let startPos: string;
+    let endPosValue: string;
+
+    if (endPos !== undefined) {
+      // 4 parameters: identifier, file, startPos, endPos
+      targetUnit = await this.loadUnitFromIdentifier(identifierOrFile as UnitIdentifier);
+      file = fileOrStartPos!;
+      startPos = startPosOrEndPos!;
+      endPosValue = endPos;
+    } else {
+      // 3 parameters: file, startPos, endPos (use context)
+      const target = this.getTarget();
+      if (target === this) {
+        throw new Error('No unit context loaded. Use "unit on <uuid|lnfile>" first or provide identifier parameter.');
+      }
+      targetUnit = target;
+      file = identifierOrFile as string;
+      startPos = fileOrStartPos!;
+      endPosValue = startPosOrEndPos!;
+    }
+
+    // Create GitTextIOR from file position
+    const gitTextIOR = await this.createGitTextIOR(file, startPos, endPosValue);
+    
+    // Set definition as GitTextIOR reference
+    targetUnit.model.definition = gitTextIOR;
+    targetUnit.model.updatedAt = new Date().toISOString();
+    
+    // Save updated scenario
+    const scenario = await targetUnit.toScenario();
+    await targetUnit.storage.saveScenario(targetUnit.model.uuid, scenario, []);
+    
+    console.log(`✅ ${targetUnit.model.name || 'Unit'}: definition set from ${file}:${startPos}-${endPosValue}`);
+    console.log(`   GitTextIOR: ${gitTextIOR}`);
+    
+    // ✅ RADICAL OOP: Return this for method chaining
+    return this;
+  }
+
+  /**
+   * Display unit origin and definition references
+   * @pdca 2025-11-11-UTC-0003 - Migrated with Radical OOP (method chaining)
+   * @cliSyntax uuid
+   */
+  async origin(uuid: string): Promise<this> {
+    try {
+      // Display dual links to origin and definition as clickable URLs
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      console.log(`Unit ${scenario.model.name || uuid} Source References:`);
+      console.log('');
+      
+      if (scenario.model.origin) {
+        const originUrl = scenario.model.origin.replace('ior:git:text:', '');
+        console.log(`Origin: ${originUrl}`);
+        console.log(`Local: scenarios/index/${uuid.slice(0, 5).split('').join('/')}/${uuid}.scenario.json`);
+      } else {
+        console.log('Origin: not specified');
+      }
+      
+      console.log('');
+      
+      if (scenario.model.definition) {
+        const definitionUrl = scenario.model.definition.replace('ior:git:text:', '');
+        console.log(`Definition: ${definitionUrl}`);
+        console.log(`Local: scenarios/index/${uuid.slice(0, 5).split('').join('/')}/${uuid}.scenario.json`);
+      } else {
+        console.log('Definition: not specified');
+      }
+      
+      console.log('');
+      
+      // ✅ RADICAL OOP: Return this for method chaining
+      return this;
+    } catch (error) {
+      console.error(`Failed to show origin: ${(error as Error).message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a unit link (symlink file)
+   * @pdca 2025-11-11-UTC-0003 - Migrated with Radical OOP (CLI path authority, method chaining)
+   * @cliSyntax identifier
+   */
+  async deleteLink(identifier: UnitIdentifier): Promise<this> {
+    try {
+      let uuid: string;
+      let linkPath: string;
+      
+      if (isUUIDv4(identifier)) {
+        // UUIDv4 instance - find link by UUID
+        uuid = identifier.toString();
+        throw new Error('UUID-based link deletion not yet implemented');
+      } else if (typeof identifier === 'string' && this.isUUID(identifier)) {
+        // UUID string - find link by UUID
+        uuid = identifier;
+        throw new Error('UUID-based link deletion not yet implemented');
+      } else if (typeof identifier === 'string') {
+        // File path - use as link file
+        const { readlinkSync, unlinkSync } = await import('fs');
+        const cli = this.getCLI();
+        // ✅ RADICAL OOP: Use CLI's targetDirectory (Path Authority)
+        const currentDir = cli.model.targetDirectory || this.model.targetDirectory || '';
+        linkPath = identifier.startsWith('/') ? identifier : path.join(currentDir, identifier);
+        
+        // Read the symlink to get scenario path
+        const scenarioPath = readlinkSync(linkPath);
+        uuid = this.extractUuidFromPath(scenarioPath);
+        
+        // Load unit scenario
+        const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+        
+        // Remove from references
+        const referenceIndex = scenario.model.references.findIndex(
+          ref => ref.linkLocation.includes(identifier)
+        );
+        if (referenceIndex > -1) {
+          scenario.model.references.splice(referenceIndex, 1);
+        }
+        
+        // Update scenario in storage
+        await this.storage.saveScenario(uuid, scenario, []);
+        
+        // Delete the actual symlink file
+        unlinkSync(linkPath);
+        
+        console.log(`✅ Link deleted: ${identifier}`);
+        console.log(`   UUID: ${uuid}`);
+      } else {
+        throw new Error(`Invalid identifier type: ${typeof identifier}`);
+      }
+      
+      // ✅ RADICAL OOP: Return this for method chaining
+      return this;
+    } catch (error) {
+      console.error(`Failed to delete link: ${(error as Error).message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a unit completely (all links + scenario)
+   * @pdca 2025-11-11-UTC-0003 - Migrated with Radical OOP (CLI path authority, method chaining)
+   * @cliSyntax linkFilename
+   */
+  async deleteUnit(linkFilename: string): Promise<this> {
+    try {
+      const { readlinkSync, unlinkSync } = await import('fs');
+      const { unlink } = await import('fs/promises');
+      const cli = this.getCLI();
+      // ✅ RADICAL OOP: Use CLI's targetDirectory (Path Authority)
+      const currentDir = cli.model.targetDirectory || this.model.targetDirectory || '';
+      const linkPath = path.join(currentDir, linkFilename);
+      
+      // Read the symlink to get scenario path
+      const scenarioPath = readlinkSync(linkPath);
+      const uuid = this.extractUuidFromPath(scenarioPath);
+      
+      // Load unit scenario to get all links
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      // Delete all LD link files
+      let deletedLinks = 0;
+      for (const ref of scenario.model.references) {
+        try {
+          const refPath = ref.linkLocation.replace('ior:local:ln:file:', '');
+          unlinkSync(refPath);
+          deletedLinks++;
+          console.log(`   Deleted link: ${refPath}`);
+        } catch (error) {
+          console.warn(`   Warning: Could not delete link ${ref.linkLocation}: ${(error as Error).message}`);
+        }
+      }
+      
+      // Delete the unit scenario from central storage
+      const scenarioFullPath = scenario.model.indexPath;
+      await unlink(scenarioFullPath);
+      
+      console.log(`✅ Unit deleted completely: ${uuid}`);
+      console.log(`   Scenario removed: ${scenarioFullPath}`);
+      console.log(`   Links deleted: ${deletedLinks}/${scenario.model.references.length}`);
+      console.log(`   References removed: ${scenario.model.references.length}`);
+      
+      // ✅ RADICAL OOP: Return this for method chaining
+      return this;
+    } catch (error) {
+      console.error(`Failed to delete unit: ${(error as Error).message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Validate terminal identity completeness
+   * @pdca 2025-11-11-UTC-0003 - Migrated
+   * @cliHide
+   */
+  validateTerminalIdentity(): { isComplete: boolean; missing: string[] } {
+    const missing: string[] = [];
+    
+    if (!this.model.name || this.model.name.trim() === '') {
+      missing.push('name');
+    }
+    if (!this.model.origin || this.model.origin.trim() === '') {
+      missing.push('origin');
+    }
+    if (!this.model.definition || this.model.definition.trim() === '') {
+      missing.push('definition');
+    }
+
+    return {
+      isComplete: missing.length === 0,
+      missing
+    };
+  }
+
+  /**
+   * Show terminal identity warning if incomplete
+   * @pdca 2025-11-11-UTC-0003 - Migrated
+   * @cliHide
+   */
+  showTerminalIdentityWarning(): void {
+    const validation = this.validateTerminalIdentity();
+    if (!validation.isComplete) {
+      console.warn(`⚠️  Warning: Unit '${this.model.uuid}' missing terminal identity information:`);
+      validation.missing.forEach(field => {
+        console.warn(`   - ${field}: not specified`);
+      });
+      console.warn('');
+      console.warn('   Next build version will require migration method for missing model info.');
+      console.warn('   Please update unit with complete terminal identity (uni-t) attributes.');
+    }
+  }
+
+  /**
+   * Helper: Load unit from identifier (UUID, UUIDv4, or file path)
+   * @pdca 2025-11-11-UTC-0003 - Migrated
+   * @cliHide
+   */
+  private async loadUnitFromIdentifier(identifier: UnitIdentifier): Promise<DefaultUnit> {
+    let uuid: string;
+    
+    if (isUUIDv4(identifier)) {
+      uuid = identifier.toString();
+    } else if (typeof identifier === 'string' && this.isUUID(identifier)) {
+      uuid = identifier;
+    } else if (typeof identifier === 'string') {
+      // File path - read symlink to get UUID
+      const { readlinkSync } = await import('fs');
+      const cli = this.getCLI();
+      const currentDir = cli.model.targetDirectory || this.model.targetDirectory || '';
+      const linkPath = path.resolve(currentDir, identifier);
+      const scenarioPath = readlinkSync(linkPath);
+      uuid = this.extractUuidFromPath(scenarioPath);
+    } else {
+      throw new Error(`Invalid identifier: ${identifier}`);
+    }
+    
+    // Load scenario and create unit instance
+    const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+    const unit = new DefaultUnit();
+    unit.setCLI(this.getCLI());
+    await unit.init(scenario);
+    return unit;
+  }
+
+  /**
+   * Helper: Create GitTextIOR from file position
+   * @pdca 2025-11-11-UTC-0003 - Migrated with CLI path authority
+   * @cliHide
+   */
+  private async createGitTextIOR(file: string, startPos: string, endPos: string): Promise<string> {
+    const { GitTextIOR } = await import('./GitTextIOR.js');
+    const cli = this.getCLI();
+    const projectRoot = cli.model.projectRoot || this.model.projectRoot || '';
+    
+    const absolutePath = path.isAbsolute(file) ? file : path.join(projectRoot, file);
+    const relativePath = path.relative(projectRoot, absolutePath);
+    const gitUrl = `https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/${relativePath}#L${startPos}-${endPos}`;
+    
+    const gitIOR = new GitTextIOR();
+    return gitIOR.parse(gitUrl);
+  }
 }
+
 
 
