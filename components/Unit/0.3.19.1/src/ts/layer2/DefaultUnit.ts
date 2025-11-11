@@ -1185,7 +1185,186 @@ export class DefaultUnit implements Unit {
     const gitIOR = new GitTextIOR();
     return gitIOR.parse(gitUrl);
   }
+
+  /**
+   * List found references from previous search
+   * @pdca 2025-11-11-UTC-0003 - Migrated with Radical OOP (method chaining)
+   * @cliSyntax
+   */
+  async list(): Promise<this> {
+    try {
+      // Try to load found references from persistent storage first
+      const { promises: fs } = await import('fs');
+      const { tmpdir } = await import('os');
+      
+      const tempFile = path.join(tmpdir(), 'unit-found-references.json');
+      let foundRefs: any = null;
+      
+      try {
+        const data = await fs.readFile(tempFile, 'utf-8');
+        foundRefs = JSON.parse(data);
+      } catch {
+        // Fallback to unit model
+        const extendedModel = this.model as any;
+        foundRefs = extendedModel.foundReferences;
+      }
+      
+      if (!foundRefs || !foundRefs.files || foundRefs.files.length === 0) {
+        console.log(`❌ No found references available`);
+        console.log(`   💡 Use 'unit find <name>' first to discover references`);
+        return this;
+      }
+      
+      console.log(`\n📄 Browsing ${foundRefs.count} found references for: "${foundRefs.searchTerm}"`);
+      console.log(`   💡 Background agent safe mode - showing detailed list\n`);
+      
+      // Show detailed list without interactive less
+      foundRefs.files.forEach((file: string, index: number) => {
+        const displayIndex = (index + 1).toString().padStart(4);
+        console.log(`${displayIndex}. ${file}`);
+      });
+      
+      console.log(`\n✅ Listed ${foundRefs.files.length} references`);
+      
+      // ✅ RADICAL OOP: Return this for method chaining
+      return this;
+    } catch (error) {
+      console.error(`Failed to list references: ${(error as Error).message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Add storage capability (deprecated in 0.3.19.1)
+   * @pdca 2025-11-11-UTC-0003 - Migrated (kept for compatibility)
+   * @cliHide
+   */
+  addStorageCapability(capability: string): this {
+    // Note: storageCapabilities removed per Occam's Razor
+    console.log(`Note: Storage capability '${capability}' noted (capabilities removed in 0.3.19.1)`);
+    this.model.updatedAt = new Date().toISOString();
+    return this;
+  }
+
+  /**
+   * Resolve speaking name to UUID
+   * @pdca 2025-11-11-UTC-0003 - Migrated with CLI path authority
+   * @cliHide
+   */
+  private async resolveSpeakingName(speakingName: string): Promise<string | null> {
+    try {
+      const cli = this.getCLI();
+      // ✅ RADICAL OOP: Use CLI's projectRoot (Path Authority)
+      const projectRoot = cli.model.projectRoot || this.model.projectRoot || '';
+      const ontologyDir = path.join(projectRoot, 'scenarios', 'ontology');
+      const unitFileName = `${speakingName.replace(/\s+/g, '.')}.unit`;
+      const unitLinkPath = path.join(ontologyDir, unitFileName);
+      
+      // Check if the speaking name exists as a unit link
+      const { promises: fs } = await import('fs');
+      try {
+        await fs.access(unitLinkPath);
+        const scenarioPath = await fs.readlink(unitLinkPath);
+        // Extract UUID from scenario path
+        const uuidMatch = scenarioPath.match(/([a-f0-9-]{36})\.scenario\.json$/);
+        if (uuidMatch) {
+          return uuidMatch[1];
+        }
+      } catch {
+        // Unit link doesn't exist, continue to search
+      }
+      
+      // Fallback: Search through all units for matching names
+      const indexDir = path.join(projectRoot, 'scenarios', 'index');
+      const allScenarios = await this.findAllScenarios(indexDir);
+      
+      for (const scenarioPath of allScenarios) {
+        try {
+          const scenarioContent = await fs.readFile(scenarioPath, 'utf-8');
+          const scenario = JSON.parse(scenarioContent);
+          if (scenario.model?.name === speakingName) {
+            return scenario.ior.uuid;
+          }
+        } catch {
+          // Skip invalid scenarios
+        }
+      }
+      
+      return null;
+    } catch (error) {
+      console.warn(`Failed to resolve speaking name ${speakingName}: ${(error as Error).message}`);
+      return null;
+    }
+  }
+
+  /**
+   * Find all scenario files in the index directory
+   * @pdca 2025-11-11-UTC-0003 - Migrated
+   * @cliHide
+   */
+  private async findAllScenarios(indexDir: string): Promise<string[]> {
+    const scenarios: string[] = [];
+    const { promises: fs } = await import('fs');
+    
+    async function scanDirectory(dir: string): Promise<void> {
+      try {
+        const entries = await fs.readdir(dir, { withFileTypes: true });
+        
+        for (const entry of entries) {
+          const fullPath = path.join(dir, entry.name);
+          
+          if (entry.isDirectory()) {
+            await scanDirectory(fullPath);
+          } else if (entry.name.endsWith('.scenario.json')) {
+            scenarios.push(fullPath);
+          }
+        }
+      } catch {
+        // Skip directories that can't be read
+      }
+    }
+    
+    await scanDirectory(indexDir);
+    return scenarios;
+  }
+
+  /**
+   * Add speaking name link for this unit
+   * @pdca 2025-11-11-UTC-0003 - Migrated with Radical OOP (method chaining)
+   * @cliSyntax speakingName
+   */
+  async addSpeakingName(speakingName: string): Promise<this> {
+    try {
+      // Add speaking name link for this unit
+      console.log(`✅ Speaking name to add: ${speakingName} -> ${this.model.uuid}`);
+      // TODO: Implementation when storage methods are fully migrated
+      
+      // ✅ RADICAL OOP: Return this for method chaining
+      return this;
+    } catch (error) {
+      throw new Error(`Failed to add speaking name: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Remove speaking name link for this unit
+   * @pdca 2025-11-11-UTC-0003 - Migrated with Radical OOP (method chaining)
+   * @cliSyntax speakingName
+   */
+  async removeSpeakingName(speakingName: string): Promise<this> {
+    try {
+      // Remove speaking name link for this unit
+      console.log(`✅ Speaking name to remove: ${speakingName}`);
+      // TODO: Implementation when storage methods are fully migrated
+      
+      // ✅ RADICAL OOP: Return this for method chaining
+      return this;
+    } catch (error) {
+      throw new Error(`Failed to remove speaking name: ${(error as Error).message}`);
+    }
+  }
 }
+
 
 
 
