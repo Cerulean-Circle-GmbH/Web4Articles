@@ -2238,6 +2238,7 @@ export class DefaultPDCA implements PDCA {
     return [
       'start',
       'pdca',
+      'git-protocol',
       'cmm',
       'dual-links',
       'ensure-links',
@@ -2287,6 +2288,9 @@ export class DefaultPDCA implements PDCA {
       },
       'pdca': {
         title: '📝 How to PDCA: Creating CMM3-Compliant Documentation',
+      },
+      'git-protocol': {
+        title: '🔐 How to Git Protocol: Atomic Commands & Safety',
       },
       'cmm': {
         title: '📊 How to CMM: Understanding Maturity Levels',
@@ -2402,6 +2406,7 @@ export class DefaultPDCA implements PDCA {
         const topicInfo = this.getTrainingTopicInternal(key);
         const emoji = key.includes('start') ? '🚀' :
                      key.includes('pdca') ? '📝' :
+                     key.includes('git-protocol') ? '🔐' :
                      key.includes('cmm') ? '📊' :
                      key.includes('component') ? '🔧' :
                      key.includes('feature') ? '🛠️' :
@@ -2456,6 +2461,7 @@ export class DefaultPDCA implements PDCA {
     const orderedTopics = [
       'start',
       'pdca',
+      'git-protocol',
       'cmm',
       'dual-links',
       'ensure-links',
@@ -2612,6 +2618,65 @@ export class DefaultPDCA implements PDCA {
           'Follows git protocol: add → pull → commit -m "filename.pdca.md" → push',
           'Understands "pdca" trigger word = complete context rebuild',
           'Will read trainAI completely (not just first lines) when triggered'
+        ]
+      },
+      'git-protocol': {
+        title: '🔐 How to Git Protocol: Atomic Commands & Safety',
+        description: 'Master git protocol for CMM3 compliance: atomic commands, specific file staging, no bulk operations, no output filtering',
+        requiredReading: [
+          {
+            path: 'scrum.pmo/project.journal/2025-09-18-UTC-0808-session/pdca/role/developer/2025-09-18-UTC-0843-git-protocol-violation-correction.md',
+            reason: 'Definitive git protocol requirements and violation examples',
+            depth: 2
+          },
+          {
+            path: 'scrum.pmo/roles/SaveRestartAgent/cmm3.compliance.checklist.md',
+            reason: 'CMM3 checklist item 1i: git commit & push protocol',
+            depth: 2
+          }
+        ],
+        keyLessons: [
+          '✅ ATOMIC COMMANDS ONLY: Each git operation as separate command',
+          '✅ SPECIFIC FILE PATHS: git add path/to/file.ext (NEVER git add ., git add -A, git add *)',
+          '✅ NO COMMAND CHAINING: Never use && operators (e.g., git add file && git commit)',
+          '✅ NON-INTERACTIVE: All commands without interactive prompts',
+          '✅ SEQUENTIAL EXECUTION: Proper order: add → commit → push',
+          '✅ COMMIT MESSAGE: ONE-LINER with PDCA filename ONLY: git commit -m "2025-11-11-UTC-1854.pdca.md"',
+          '✅ ALWAYS PUSH: git push required for GitHub dual links to work',
+          '🚨 CRITICAL: NO OUTPUT FILTERING WITH head OR tail - STRICTLY FORBIDDEN ALWAYS',
+          '❌ NEVER: git add . (bulk operation - may stage unintended files)',
+          '❌ NEVER: git add -A (bulk operation - stages everything)',
+          '❌ NEVER: git add * (wildcard - unpredictable staging)',
+          '❌ NEVER: command | head (output filtering breaks CMM3 verification)',
+          '❌ NEVER: command | tail (output filtering hides critical information)',
+          '❌ NEVER: command | grep (output filtering prevents full verification)',
+          '⚠️ DANGER OF BULK OPERATIONS: Unintended files, hidden changes, lack of control, quality risk',
+          '⚠️ DANGER OF OUTPUT FILTERING: Incomplete verification, missed errors, false confidence',
+          '✅ BENEFITS OF SPECIFIC STAGING: Intentional commits, change visibility, quality control, atomic operations',
+          '💡 Why specific paths: Only stage files explicitly intended for commit',
+          '💡 Why no filtering: Full output needed for CMM3 reproducibility and verification',
+          '🔐 Safety Protocol: Review each file before staging, verify all output completely',
+          '📊 Quality Control: Understand what each file contains before committing',
+          '🎯 Atomic Operations: One file or logical group per git add command'
+        ],
+        verificationChecklist: [
+          'NEVER uses git add . (bulk operation)',
+          'NEVER uses git add -A (bulk operation)',
+          'NEVER uses git add * (wildcard operation)',
+          'ALWAYS uses specific file paths in git add',
+          'NEVER chains commands with && operator',
+          'NEVER uses | head to filter output',
+          'NEVER uses | tail to filter output',
+          'NEVER uses | grep to filter output',
+          'Uses atomic commands (one operation per command)',
+          'Uses non-interactive commands only',
+          'Follows sequential order: add → commit → push',
+          'Uses ONE-LINER commit with PDCA filename ONLY',
+          'Always pushes after committing (for GitHub dual links)',
+          'Reviews each file before staging',
+          'Verifies full command output without filtering',
+          'Understands dangers of bulk operations',
+          'Understands why output filtering breaks CMM3'
         ]
       },
       'cmm': {
