@@ -63,6 +63,120 @@ npm install  # without proper symlink setup
 
 **Related:** See [Automatic Project Initialization](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-automatic-project-initialization) | [chapters/01-architecture.md](chapters/01-architecture.md#-automatic-project-initialization) for how DRY is enforced
 
+### 6. Flat Model Principle (Scenarios)
+
+**Core Principle:** Models MUST be flat (primitives + IORs only) for serialization and hibernation.
+
+```typescript
+// ✅ CORRECT - Flat model with IORs
+interface Web4TSComponentModel {
+  uuid: string;
+  component: string;
+  version: {  // ← IOR (Interoperable Object Reference)
+    uuid: string;
+    component: string;
+    version: string;
+  };
+  projectRoot: string;
+}
+
+// ❌ WRONG - Object references in model
+interface Web4TSComponentModel {
+  uuid: string;
+  component: string;
+  version: SemanticVersion;     // ← Object instance (NOT serializable)
+  context: Web4TSComponent;     // ← Object reference (causes circular JSON)
+}
+
+// ✅ CORRECT - Object references as private attributes
+class DefaultWeb4TSComponent {
+  private context?: Web4TSComponent;  // ← Private, not in model
+  model: Web4TSComponentModel;        // ← Flat, serializable
+}
+```
+
+**Why Models Must Be Flat:**
+1. ✅ **Serializable** - Can convert to JSON for scenarios
+2. ✅ **Hibernation** - Universal format for persisting object state
+3. ✅ **No Circular References** - IORs are identifiers, not object references
+4. ✅ **Interoperable** - Can be shared across components/processes/networks
+
+**What Belongs in Model:**
+- ✅ Primitives: `string`, `number`, `boolean`, `null`
+- ✅ Arrays: `string[]`, `number[]`
+- ✅ Plain objects: `{ key: value }`
+- ✅ IORs: `{ uuid: string, component: string, version: string }`
+- ✅ Nested scenarios: Full scenario objects from `component.toScenario()`
+
+**What NEVER Belongs in Model:**
+- ❌ Object references: `this.context`, `this.web4ts`
+- ❌ Class instances: `new SomeClass()`
+- ❌ Functions/callbacks: `() => {}`
+- ❌ Circular references: `{ parent: this }`
+
+**Implementation Pattern:**
+```typescript
+async toScenario(): Promise<Scenario<Web4TSComponentModel>> {
+  // ✅ Filter out object references before serialization
+  const { context, version, ...cleanModel } = this.model;
+  
+  // ✅ Convert nested components to their scenarios
+  const versionScenario = await this.model.version.toScenario();
+  
+  return {
+    ior: {
+      uuid: this.model.uuid,
+      component: this.model.component,
+      version: this.model.version.toString()
+    },
+    owner: ownerData,
+    model: {
+      ...cleanModel,
+      version: versionScenario  // ← Full scenario, not object
+    }
+  };
+}
+```
+
+**Reference:** [2025-11-11-UTC-2012.refactor-create-scenario-generation-radical-oop.pdca.md](../../session/2025-11-11-UTC-2012.refactor-create-scenario-generation-radical-oop.pdca.md)
+
+### 7. Nested Scenarios Pattern
+
+**Each component creates its own scenario** - scenarios compose hierarchically.
+
+```typescript
+// ✅ Component calls toScenario() on nested components
+const web4tsScenario = await web4ts.toScenario();
+// → Internally calls SemanticVersion.toScenario() for version
+//   → Which calls User.toScenario() for owner
+//   → Result: Fully nested, serializable scenario tree
+```
+
+**Scenario Structure Example:**
+```json
+{
+  "ior": { "uuid": "...", "component": "Web4TSComponent", "version": "0.3.20.2" },
+  "owner": "base64encodedUserScenario...",
+  "model": {
+    "uuid": "...",
+    "component": "Web4TSComponent",
+    "version": {
+      "ior": { "uuid": "...", "component": "SemanticVersion", "version": "0.3.20.2" },
+      "owner": "base64encodedUserScenario...",
+      "model": { "major": 0, "minor": 3, "patch": 20, "revision": 2 }
+    }
+  }
+}
+```
+
+**Key Properties:**
+- ✅ **Self-Contained** - Each scenario includes all data needed to restore that component
+- ✅ **Composable** - Scenarios nest naturally without circular references
+- ✅ **Traceable** - Each nested component has its own IOR (identity)
+- ✅ **Auditable** - Owner field tracks who created each component instance
+
+**Reference:** [2025-11-11-UTC-2012.refactor-create-scenario-generation-radical-oop.pdca.md](../../session/2025-11-11-UTC-2012.refactor-create-scenario-generation-radical-oop.pdca.md)
+
 ---
 
 ## 🚀 Quick Reference

@@ -463,6 +463,94 @@ web4tscomponent --help
 web4tscomponent create MyComponent --cli
 ```
 
+### 7. Flat Model Principle (Scenarios)
+```typescript
+// ✅ CORRECT - Models are flat (primitives + IORs only)
+interface MyModel {
+  uuid: string;
+  name: string;
+  version: { uuid: string, component: string, version: string };  // ← IOR
+}
+
+// ❌ WRONG - Object references in model (causes circular reference)
+interface MyModel {
+  uuid: string;
+  name: string;
+  context: Web4TSComponent;  // ← Object reference (NOT serializable)
+  version: SemanticVersion;  // ← Object instance (NOT serializable)
+}
+
+// ✅ CORRECT - Object references as private attributes
+class MyComponent {
+  private context: Web4TSComponent;  // ← Private, not in model
+  model: MyModel;  // ← Flat, serializable
+}
+```
+
+**Why Models Must Be Flat:**
+1. ✅ **Serializable** - Can convert to JSON for scenarios
+2. ✅ **Hibernation** - Universal format for persisting object state
+3. ✅ **No Circular References** - IORs are identifiers, not references
+4. ✅ **Interoperable** - Can be shared across components/processes/networks
+
+**What Belongs in Model:**
+- ✅ Primitives: `string`, `number`, `boolean`, `null`
+- ✅ Arrays of primitives: `string[]`, `number[]`
+- ✅ Plain objects (flat): `{ key: value }`
+- ✅ IORs: `{ uuid: string, component: string, version: string }`
+- ✅ Nested scenarios: Full scenario objects from `component.toScenario()`
+
+**What NEVER Belongs in Model:**
+- ❌ Object references: `this.context`, `this.web4ts`
+- ❌ Class instances: `new SomeClass()`
+- ❌ Functions: `() => {}`
+- ❌ Circular references: `{ parent: this }`
+
+**Implementation Pattern:**
+```typescript
+async toScenario(): Promise<Scenario<MyModel>> {
+  // ✅ Filter out object references before serialization
+  const { context, web4ts, ...cleanModel } = this.model;
+  
+  // ✅ Convert nested components to scenarios
+  const versionScenario = await this.model.version.toScenario();
+  
+  return {
+    ior: { uuid: this.model.uuid, component: 'MyComponent', version: '1.0.0' },
+    owner: ownerData,
+    model: {
+      ...cleanModel,
+      version: versionScenario  // ← Full scenario, not object reference
+    }
+  };
+}
+```
+
+**Reference:** [2025-11-11-UTC-2012.refactor-create-scenario-generation-radical-oop.pdca.md](session/2025-11-11-UTC-2012.refactor-create-scenario-generation-radical-oop.pdca.md)
+
+### 8. Nested Scenarios Pattern
+```typescript
+// ✅ Each component creates its own scenario via toScenario()
+const web4tsScenario = await web4ts.toScenario();  
+// → Calls SemanticVersion.toScenario() for version
+//   → Calls User.toScenario() for owner
+//   → Result: Fully nested, serializable scenario tree
+
+// Model contains complete scenarios, not object references:
+{
+  "model": {
+    "uuid": "...",
+    "version": {              // ← Full SemanticVersion scenario
+      "ior": { "uuid": "...", "component": "SemanticVersion", "version": "0.3.20.2" },
+      "owner": "base64...",   // ← Nested User scenario
+      "model": { "major": 0, "minor": 3, "patch": 20, "revision": 2 }
+    }
+  }
+}
+```
+
+**Reference:** [2025-11-11-UTC-2012.refactor-create-scenario-generation-radical-oop.pdca.md](session/2025-11-11-UTC-2012.refactor-create-scenario-generation-radical-oop.pdca.md)
+
 ---
 
 ## 📚 References
