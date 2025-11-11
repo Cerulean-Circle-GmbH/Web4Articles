@@ -4238,7 +4238,8 @@ export class DefaultPDCA implements PDCA {
         
         if (entry.isDirectory()) {
           await scanDir(fullPath);
-        } else if (entry.isFile() && entry.name.endsWith('.pdca.md')) {
+        } else if (entry.isFile() && entry.name.endsWith('.md')) {
+          // Accept ANY .md file (PDCAs, READMEs, etc.), not just .pdca.md
           pdcaFiles.push(fullPath);
         }
       }
