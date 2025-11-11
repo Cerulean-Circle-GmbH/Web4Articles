@@ -468,17 +468,17 @@ web4tscomponent create MyComponent --cli
 ## 📚 References
 
 **Multi-Component Development Workflow:**
-- `session/2025-11-06-UTC-0050.multi-component-development-workflow.pdca.md`
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/03200/components/Web4TSComponent/0.3.18.2/session/2025-11-06-UTC-0050.multi-component-development-workflow.pdca.md) | [§/components/Web4TSComponent/0.3.18.2/session/2025-11-06-UTC-0050.multi-component-development-workflow.pdca.md](components/Web4TSComponent/0.3.18.2/session/2025-11-06-UTC-0050.multi-component-development-workflow.pdca.md)
 
 **Path Authority:**
-- `session/2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md`
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/03200/components/Web4TSComponent/0.3.18.3/session/2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md) | [§/components/Web4TSComponent/0.3.18.3/session/2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md](components/Web4TSComponent/0.3.18.3/session/2025-11-06-UTC-0200.systematic-path-authority-violation.pdca.md)
 
 **Delegation Architecture:**
-- `session/2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md`
-- `session/2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md`
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/03200/components/Web4TSComponent/0.3.18.9/session/2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md) | [§/components/Web4TSComponent/0.3.18.9/session/2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md](components/Web4TSComponent/0.3.18.9/session/2025-11-10-UTC-2200.fix-delegated-method-completion-radical-oop.pdca.md)
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/03200/components/Web4TSComponent/0.3.18.8/session/2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md) | [§/components/Web4TSComponent/0.3.18.8/session/2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md](components/Web4TSComponent/0.3.18.8/session/2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md)
 
 **Functional vs Radical OOP:**
-- `session/2025-11-06-UTC-0030.functional-vs-radical-oop-analysis.pdca.md`
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/03200/components/Web4TSComponent/0.3.18.1/session/2025-11-06-UTC-0030.functional-vs-radical-oop-analysis.pdca.md) | [§/components/Web4TSComponent/0.3.18.1/session/2025-11-06-UTC-0030.functional-vs-radical-oop-analysis.pdca.md](components/Web4TSComponent/0.3.18.1/session/2025-11-06-UTC-0030.functional-vs-radical-oop-analysis.pdca.md)
 
 ---
 
