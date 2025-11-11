@@ -8,6 +8,7 @@ import { Scenario } from '../layer3/Scenario.interface.js';
 import { UnitModel } from '../layer3/UnitModel.interface.js';
 import { User } from '../layer3/User.interface.js';
 import { MethodSignature } from '../layer3/MethodSignature.interface.js';
+import { DefaultStorage } from './DefaultStorage.js'; // @pdca 2025-11-11-UTC-0003 - Storage Service pattern
 import { existsSync, lstatSync, readlinkSync, readdirSync, statSync } from 'fs';
 import { join, dirname } from 'path';
 import * as path from 'path'; // @pdca 2025-11-11-UTC-0003 - For updateModelPaths()
@@ -16,6 +17,7 @@ export class DefaultUnit implements Unit {
   // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Changed to public for Component interface compliance
   model: UnitModel;
   private cli?: any; // CLI back-reference for path authority - @pdca 2025-11-11-UTC-0003
+  private storage!: DefaultStorage; // @pdca 2025-11-11-UTC-0003 - Storage Service (initialized in init)
   private web4ts?: any; // Lazy-initialized Web4TSComponent for delegation (dynamic import, no static dependency)
   private user?: User; // Optional User service (lazy initialization) - @pdca 2025-11-03-1135.pdca.md
   private methods: Map<string, MethodSignature> = new Map(); // @pdca 2025-11-05-UTC-2301 - Match Web4TSComponent type
@@ -273,6 +275,23 @@ export class DefaultUnit implements Unit {
     if (scenario?.model) {
       this.model = { ...this.model, ...scenario.model };
     }
+    
+    // ✅ RADICAL OOP: Initialize storage in init(), not constructor
+    // @pdca 2025-11-11-UTC-0003.migrate-unit-to-storage-service.pdca.md
+    this.storage = new DefaultStorage();
+    // Create storage scenario with its own model
+    const storageScenario = {
+      ior: { uuid: crypto.randomUUID(), component: 'Storage', version: '0.3.19.1' },
+      owner: '',
+      model: { 
+        uuid: crypto.randomUUID(), 
+        projectRoot: this.model.projectRoot || '', 
+        indexBaseDir: '', 
+        createdAt: new Date().toISOString(), 
+        updatedAt: new Date().toISOString() 
+      }
+    };
+    this.storage.init(storageScenario);
     
     // Discover OWN methods only (Radical OOP)
     this.discoverMethods();
