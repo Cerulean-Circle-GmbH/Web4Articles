@@ -340,6 +340,48 @@ export class DefaultUnit implements Unit {
   }
 
   /**
+   * Get current scenario (Radical OOP getter pattern)
+   * @pdca 2025-11-11-UTC-0003.migrate-unit-to-storage-service.pdca.md
+   * @cliHide
+   */
+  async getScenario(name?: string): Promise<Scenario<UnitModel>> {
+    return this.toScenario(name);
+  }
+
+  /**
+   * Validate Unit model structure
+   * @pdca 2025-11-11-UTC-0003.migrate-unit-to-storage-service.pdca.md
+   * @cliHide
+   */
+  async validateModel(): Promise<this> {
+    // Comprehensive UnitModel validation
+    try {
+      // Required string properties
+      if (!this.model.uuid || typeof this.model.uuid !== 'string') throw new Error('Invalid uuid');
+      if (!this.model.name || typeof this.model.name !== 'string') throw new Error('Invalid name');
+      if (!this.model.origin || typeof this.model.origin !== 'string') throw new Error('Invalid origin');
+      if (!this.model.definition || typeof this.model.definition !== 'string') throw new Error('Invalid definition');
+      
+      // Timestamp validation
+      if (!this.model.createdAt || isNaN(Date.parse(this.model.createdAt))) throw new Error('Invalid createdAt');
+      if (!this.model.updatedAt || isNaN(Date.parse(this.model.updatedAt))) throw new Error('Invalid updatedAt');
+      
+      return this; // ✅ Method chaining
+    } catch (error) {
+      throw new Error(`Unit model validation failed: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * Get model (testing/debugging helper)
+   * @pdca 2025-11-11-UTC-0003.migrate-unit-to-storage-service.pdca.md
+   * @cliHide
+   */
+  getModel(): UnitModel {
+    return this.model;
+  }
+
+  /**
    * Create example operation for Unit
    * @param input Input data to process
    * @param format Output format (json, text, xml)
