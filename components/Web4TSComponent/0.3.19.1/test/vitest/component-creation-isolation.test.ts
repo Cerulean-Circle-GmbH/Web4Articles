@@ -104,23 +104,36 @@ describe('🧪 Component Creation Test Isolation', () => {
   });
 
   it('should have all Web4TSComponent features via delegation', async () => {
-    // Verify that the component delegates to Web4TSComponent for operations
+    // Verify that the component delegates to Web4TSComponent via DelegationProxy
     const defaultComponentPath = path.join(testComponentPath, `src/ts/layer2/Default${testComponentName}.ts`);
     const content = await readFile(defaultComponentPath, 'utf-8');
     
-    // Verify delegation methods exist for key operations
-    expect(content).toContain('async test('); // Has test method
-    expect(content).toContain('async build('); // Has build method  
-    expect(content).toContain('async clean('); // Has clean method
-    expect(content).toContain('async tree('); // Has tree method
-    expect(content).toContain('async links('); // Has links method
+    // ✅ NEW: DelegationProxy pattern (2025-11-10-UTC-1845.eliminate-delegation-dry-violation.pdca.md)
+    // Components should NOT have explicit delegation methods
+    // Instead, they use DelegationProxy for automatic delegation
     
-    // ✅ NEW: Verify DRY helper pattern for delegation (not direct web4ts calls)
-    // @pdca 2025-11-03-UTC-1200.pdca.md - DRY OOP pattern for context delegation
-    expect(content).toContain('delegateToWeb4TS'); // Has DRY helper method
-    expect(content).toContain('return this.delegateToWeb4TS'); // Uses DRY helper
+    // Verify DelegationProxy is imported
+    expect(content).toContain('DelegationProxy'); // Imports DelegationProxy
     
-    console.log(`   ✅ Delegation methods verified (test, build, clean, tree, links) using DRY helper`);
+    // Verify NO explicit delegation methods (that's the point of DelegationProxy!)
+    expect(content).not.toContain('async test('); // NO explicit test method
+    expect(content).not.toContain('async build('); // NO explicit build method  
+    expect(content).not.toContain('async clean('); // NO explicit clean method
+    expect(content).not.toContain('async tree('); // NO explicit tree method
+    expect(content).not.toContain('async links('); // NO explicit links method
+    
+    // Verify comment explaining DelegationProxy pattern
+    expect(content).toContain('✅ REMOVED: Explicit delegation methods');
+    expect(content).toContain('automatically delegated via DelegationProxy');
+    
+    // Verify CLI uses DelegationProxy
+    const cliPath = path.join(testComponentPath, `src/ts/layer5/${testComponentName}CLI.ts`);
+    const cliContent = await readFile(cliPath, 'utf-8');
+    
+    expect(cliContent).toContain('DelegationProxy'); // CLI imports DelegationProxy
+    expect(cliContent).toContain('DelegationProxy.start'); // CLI wraps component with proxy
+    
+    console.log(`   ✅ DelegationProxy pattern verified (automatic delegation, no boilerplate)`);
   });
 
   it('should have proper CLI with auto-discovery', async () => {
