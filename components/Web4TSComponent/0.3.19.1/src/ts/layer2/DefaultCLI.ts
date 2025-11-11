@@ -342,7 +342,21 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
     
     // ✅ CLI is Path Authority - provide ALL paths to component (OOP!)
     // @pdca 2025-10-31-UTC-2000.on-context-path-initialization.pdca.md
-    const instance = new ComponentClass().init({
+    // @pdca 2025-11-11-UTC-1000.cli-backref-on-command.pdca.md - CLI back-reference for path authority
+    
+    // ✅ STEP 1: Create component instance
+    const instance = new ComponentClass();
+    
+    // ✅ STEP 2: Set CLI back-reference BEFORE init() (if component supports it)
+    // @pdca 2025-11-11-UTC-1000.cli-backref-on-command.pdca.md
+    // CRITICAL: Must be set before init() calls updateModelPaths()
+    // Components without setCLI() safely ignore this (duck typing)
+    if (typeof instance.setCLI === 'function') {
+      instance.setCLI(this);
+    }
+    
+    // ✅ STEP 3: Initialize component (will use CLI for path authority if needed)
+    await instance.init({
       model: {
         // Component-specific paths
         componentRoot: componentPath,           // Component's own root directory
