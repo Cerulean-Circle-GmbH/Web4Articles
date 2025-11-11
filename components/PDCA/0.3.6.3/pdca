@@ -1,0 +1,59 @@
+#!/bin/bash
+# SPDX-License-Identifier: AGPL-3.0-only WITH AI-GPL-Addendum
+# SPDX-FileComment: See ../../../AI-GPL.md for AI-specific terms.
+# Copyright (c) 2025 Cerulean Circle GmbH
+# Copyleft: See AGPLv3 (../../../LICENSE) and AI-GPL Addendum (../../../AI-GPL.md)
+# Backlinks: /LICENSE, /AI-GPL.md
+
+# PDCA CLI Tool - Location Resilient Version
+# Web4 Architecture Standard - Self-Implementing Reference
+# Works from any directory via symlink resolution
+
+# Capture user's original working directory BEFORE any cd commands
+# This is needed for relative path calculations in dual links
+export USER_PWD="$PWD"
+
+# Get component version directory from script location (location-resilient)
+# Resolve symlinks: Follow the script file itself, not just the directory
+SCRIPT_FILE="${BASH_SOURCE[0]}"
+SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_FILE")" && pwd)"
+
+# Resolve all symlinks (Web4 standard pattern - handles relative symlinks correctly)
+while [ -L "$SCRIPT_FILE" ]; do
+    TARGET="$(readlink "$SCRIPT_FILE")"
+    # Handle relative symlinks: resolve relative to the directory containing the symlink
+    if [[ "$TARGET" != /* ]]; then
+        SCRIPT_FILE="$SCRIPT_DIR/$TARGET"
+    else
+        SCRIPT_FILE="$TARGET"
+    fi
+    # Update SCRIPT_DIR for next iteration
+    SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_FILE")" && pwd)"
+done
+
+COMPONENT_PATH="$SCRIPT_DIR"
+
+# Verify component exists
+if [ ! -d "$COMPONENT_PATH" ]; then
+    echo "❌ PDCA 0.1.0.0 not found at $COMPONENT_PATH"
+    exit 1
+fi
+
+# Change to component directory
+cd "$COMPONENT_PATH" || {
+    echo "❌ Failed to cd to $COMPONENT_PATH"
+    exit 1
+}
+
+# Use smart build system (handles freshness, dependencies, everything)
+./src/sh/build.sh
+
+# Check if CLI is available after build
+CLI_PATH="dist/ts/layer5/PDCACLI.js"
+if [ ! -f "$CLI_PATH" ]; then
+    echo "❌ PDCA CLI build failed"
+    exit 1
+fi
+
+# Execute compiled CLI (no ts-node, no deprecation warnings)
+node "$CLI_PATH" "$@"
