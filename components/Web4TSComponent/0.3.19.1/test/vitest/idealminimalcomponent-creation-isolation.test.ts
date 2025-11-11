@@ -600,14 +600,14 @@ describe('🧪 IdealMinimalComponent Creation Test Isolation', () => {
         expect(output).toContain('Upgrading IdealMinimalComponent');
         expect(output).not.toContain('Upgrading Web4TSComponent');
         
-        // Should create IdealMinimalComponent version
-        expect(output).toContain('IdealMinimalComponent 0.3.18.10 created successfully');
+        // Should create IdealMinimalComponent version (nextBuild from 0.3.19.1 → 0.3.19.2)
+        expect(output).toContain('IdealMinimalComponent 0.3.19.2 created successfully');
         
         // Verify the new version was created in test isolation
-        const upgradedPath = path.join(testDataDir, 'components', 'IdealMinimalComponent', '0.3.18.10');
+        const upgradedPath = path.join(testDataDir, 'components', 'IdealMinimalComponent', '0.3.19.2');
         expect(existsSync(upgradedPath)).toBe(true);
         
-        console.log(`   ✅ Delegated upgrade creates correct component (IdealMinimalComponent 0.3.18.10)`);
+        console.log(`   ✅ Delegated upgrade creates correct component (IdealMinimalComponent 0.3.19.2)`);
       } finally {
         console.log = originalLog;
       }
