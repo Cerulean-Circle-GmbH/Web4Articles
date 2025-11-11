@@ -1,0 +1,31 @@
+{
+  "name": "@web4x/pdca",
+  "version": "0.3.20.0",
+  "type": "module",
+  "description": "PDCA Component",
+  "main": "dist/ts/layer5/PDCACLI.js",
+  "scripts": {
+    "start": "./src/sh/start.sh",
+    "start:clean": "./src/sh/start-clean.sh",
+    "test": "./src/sh/test.sh",
+    "test:bail": "npx vitest --bail=1",
+    "test:watch": "npx vitest --watch",
+    "test:file": "npx vitest",
+    "test:coverage": "npx vitest --coverage",
+    "clean": "./src/sh/clean.sh",
+    "clean:global": "./src/sh/clean-global.sh",
+    "build": "./src/sh/build.sh",
+    "component": "./pdca",
+    "vitest": "npx vitest run",
+    "install-deps": "./src/sh/install-deps.sh"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "glob": "^11.0.3",
+    "minimatch": "^10.0.3"
+  }
+}
