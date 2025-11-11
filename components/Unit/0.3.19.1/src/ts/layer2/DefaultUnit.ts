@@ -508,6 +508,9 @@ export class DefaultUnit implements Unit {
   async from(filename: string): Promise<this>;
   async from(filename: string, startPos: string, endPos: string): Promise<this>;
   async from(pathInput: string, startPos?: string, endPos?: string): Promise<this> {
+    // Print quick header for immediate UX feedback
+    await (await this.getWeb4TSComponent()).printQuickHeader();
+    
     try {
       const cli = this.getCLI();
       // ✅ RADICAL OOP: Use CLI's projectRoot (Path Authority)
@@ -704,6 +707,9 @@ export class DefaultUnit implements Unit {
    * @cliSyntax identifier filename
    */
   async link(identifier: UnitIdentifier, filename: string): Promise<this> {
+    // Print quick header for immediate UX feedback
+    await (await this.getWeb4TSComponent()).printQuickHeader();
+    
     try {
       const { promises: fs } = await import('fs');
       
@@ -762,6 +768,9 @@ export class DefaultUnit implements Unit {
    * @cliSyntax unit folder <?originalUnit>
    */
   async linkInto(unit: UnitIdentifier, folder: string, originalUnit?: UnitIdentifier): Promise<this> {
+    // Print quick header for immediate UX feedback
+    await (await this.getWeb4TSComponent()).printQuickHeader();
+    
     try {
       const { promises: fs } = await import('fs');
       
@@ -900,6 +909,9 @@ export class DefaultUnit implements Unit {
   async definition(identifier: UnitIdentifier, file: string, startPos: string, endPos: string): Promise<this>;
   async definition(file: string, startPos: string, endPos: string): Promise<this>;
   async definition(identifierOrFile: UnitIdentifier | string, fileOrStartPos?: string, startPosOrEndPos?: string, endPos?: string): Promise<this> {
+    // Print quick header for immediate UX feedback
+    await (await this.getWeb4TSComponent()).printQuickHeader();
+    
     let targetUnit: DefaultUnit;
     let file: string;
     let startPos: string;
@@ -947,6 +959,9 @@ export class DefaultUnit implements Unit {
    * @cliSyntax uuid
    */
   async origin(uuid: string): Promise<this> {
+    // Print quick header for immediate UX feedback
+    await (await this.getWeb4TSComponent()).printQuickHeader();
+    
     try {
       // Display dual links to origin and definition as clickable URLs
       const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
@@ -988,6 +1003,9 @@ export class DefaultUnit implements Unit {
    * @cliSyntax identifier
    */
   async deleteLink(identifier: UnitIdentifier): Promise<this> {
+    // Print quick header for immediate UX feedback
+    await (await this.getWeb4TSComponent()).printQuickHeader();
+    
     try {
       let uuid: string;
       let linkPath: string;
@@ -1049,6 +1067,9 @@ export class DefaultUnit implements Unit {
    * @cliSyntax linkFilename
    */
   async deleteUnit(linkFilename: string): Promise<this> {
+    // Print quick header for immediate UX feedback
+    await (await this.getWeb4TSComponent()).printQuickHeader();
+    
     try {
       const { readlinkSync, unlinkSync } = await import('fs');
       const { unlink } = await import('fs/promises');
@@ -1192,6 +1213,9 @@ export class DefaultUnit implements Unit {
    * @cliSyntax
    */
   async list(): Promise<this> {
+    // Print quick header for immediate UX feedback
+    await (await this.getWeb4TSComponent()).printQuickHeader();
+    
     try {
       // Try to load found references from persistent storage first
       const { promises: fs } = await import('fs');
