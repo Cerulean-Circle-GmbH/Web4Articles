@@ -9,6 +9,7 @@ import { UnitModel } from '../layer3/UnitModel.interface.js';
 import { User } from '../layer3/User.interface.js';
 import { MethodSignature } from '../layer3/MethodSignature.interface.js';
 import { DefaultStorage } from './DefaultStorage.js'; // @pdca 2025-11-11-UTC-0003 - Storage Service pattern
+import { UnitIdentifier, isUUIDv4, isFilePath } from '../layer3/UnitIdentifier.type.js'; // @pdca 2025-11-11-UTC-0003
 import { existsSync, lstatSync, readlinkSync, readdirSync, statSync } from 'fs';
 import { join, dirname } from 'path';
 import * as path from 'path'; // @pdca 2025-11-11-UTC-0003 - For updateModelPaths()
@@ -696,5 +697,200 @@ export class DefaultUnit implements Unit {
     this.model.updatedAt = new Date().toISOString();
     return this;
   }
+
+  /**
+   * Create LD link to existing unit
+   * @pdca 2025-11-11-UTC-0003 - Migrated with Radical OOP (CLI path authority, method chaining)
+   * @cliSyntax identifier filename
+   */
+  async link(identifier: UnitIdentifier, filename: string): Promise<this> {
+    try {
+      const { promises: fs } = await import('fs');
+      
+      // Extract UUID from union type parameter
+      let uuid: string;
+      if (isUUIDv4(identifier)) {
+        uuid = identifier.toString();
+      } else if (typeof identifier === 'string' && this.isUUID(identifier)) {
+        uuid = identifier;
+      } else {
+        throw new Error(`Invalid UUID identifier: ${identifier}`);
+      }
+      
+      // Convert multi-word filenames (spaces → single dots) for consistency
+      const convertedFilename = filename.replace(/\s+/g, '.');
+      
+      // ✅ RADICAL OOP: Use CLI's targetDirectory (Path Authority)
+      const cli = this.getCLI();
+      const currentDir = cli.model.targetDirectory || this.model.targetDirectory || '';
+      const linkPath = path.join(currentDir, `${convertedFilename}.unit`);
+      
+      // Load existing unit scenario
+      const existingScenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      // Update scenario with new link
+      const { SyncStatus } = await import('../layer3/UnitReference.interface.js');
+      existingScenario.model.references.push({
+        linkLocation: `ior:local:ln:file:${linkPath}`,
+        linkTarget: `ior:unit:${uuid}`,
+        syncStatus: SyncStatus.SYNCED
+      });
+      
+      // Create new LD link pointing to existing scenario
+      const scenarioPath = existingScenario.model.indexPath;
+      
+      // Create actual filesystem symlink
+      const relativePath = path.relative(currentDir, scenarioPath);
+      await fs.symlink(relativePath, linkPath);
+      
+      await this.storage.saveScenario(uuid, existingScenario, [linkPath]);
+      
+      console.log(`✅ Link created: ${convertedFilename}.unit → ${uuid}`);
+      console.log(`   Target: ${scenarioPath}`);
+      
+      // ✅ RADICAL OOP: Return this for method chaining
+      return this;
+    } catch (error) {
+      console.error(`Failed to create link: ${(error as Error).message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Create additional link to same unit in different location
+   * @pdca 2025-11-11-UTC-0003 - Migrated with Radical OOP (CLI path authority, method chaining)
+   * @cliSyntax unit folder <?originalUnit>
+   */
+  async linkInto(unit: UnitIdentifier, folder: string, originalUnit?: UnitIdentifier): Promise<this> {
+    try {
+      const { promises: fs } = await import('fs');
+      
+      let uuid: string;
+      let linkFilename: string;
+      
+      // Extract UUID from unit parameter
+      if (isUUIDv4(unit)) {
+        uuid = unit.toString();
+        const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+        linkFilename = this.convertNameToFilename(scenario.model.name) + '.unit';
+      } else if (typeof unit === 'string' && this.isUUID(unit)) {
+        uuid = unit;
+        const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+        linkFilename = this.convertNameToFilename(scenario.model.name) + '.unit';
+      } else if (typeof unit === 'string') {
+        // File path - extract UUID and preserve filename
+        const { readlinkSync } = await import('fs');
+        const cli = this.getCLI();
+        const currentDir = cli.model.targetDirectory || this.model.targetDirectory || '';
+        const existingLinkPath = path.resolve(currentDir, unit);
+        
+        const scenarioPath = readlinkSync(existingLinkPath);
+        uuid = this.extractUuidFromPath(scenarioPath);
+        linkFilename = path.basename(unit);
+      } else {
+        throw new Error(`Invalid unit identifier: ${unit}`);
+      }
+      
+      // Load unit scenario
+      const scenario = await this.storage.loadScenario(uuid) as Scenario<UnitModel>;
+      
+      // ✅ RADICAL OOP: Use CLI's projectRoot for folder resolution
+      const cli = this.getCLI();
+      const projectRoot = cli.model.projectRoot || this.model.projectRoot || '';
+      const targetPath = path.resolve(projectRoot, folder);
+      const newLinkPath = path.join(targetPath, linkFilename);
+      
+      // Create directory if it doesn't exist
+      await fs.mkdir(targetPath, { recursive: true });
+      
+      // Create symbolic link to scenario
+      const relativePath = path.relative(targetPath, scenario.model.indexPath);
+      await fs.symlink(relativePath, newLinkPath);
+      
+      // Update scenario model with new link reference
+      const { SyncStatus } = await import('../layer3/UnitReference.interface.js');
+      if (!scenario.model.references) {
+        scenario.model.references = [];
+      }
+      scenario.model.references.push({
+        linkLocation: `ior:local:ln:file:${newLinkPath}`,
+        linkTarget: `ior:unit:${uuid}`,
+        syncStatus: SyncStatus.SYNCED
+      });
+      scenario.model.updatedAt = new Date().toISOString();
+      
+      // Handle copy tracking if originalUnit provided
+      if (originalUnit) {
+        let originalUUID: string;
+        if (isUUIDv4(originalUnit)) {
+          originalUUID = originalUnit.toString();
+        } else if (typeof originalUnit === 'string' && this.isUUID(originalUnit)) {
+          originalUUID = originalUnit;
+        } else if (typeof originalUnit === 'string') {
+          const originalLinkPath = path.resolve(projectRoot, originalUnit);
+          const originalScenarioPath = readlinkSync(originalLinkPath);
+          originalUUID = this.extractUuidFromPath(originalScenarioPath);
+        } else {
+          throw new Error(`Invalid original unit identifier: ${originalUnit}`);
+        }
+        
+        // Add copy IOR to track relationship
+        const copyIOR = await this.generateSimpleIOR(newLinkPath);
+        const originalScenario = await this.storage.loadScenario(originalUUID) as Scenario<UnitModel>;
+        
+        originalScenario.model.references.push({
+          linkLocation: copyIOR,
+          linkTarget: `ior:unit:${uuid}`,
+          syncStatus: SyncStatus.SYNCED
+        });
+        
+        await this.storage.saveScenario(originalUUID, originalScenario, []);
+      }
+      
+      await this.storage.saveScenario(uuid, scenario, [newLinkPath]);
+      
+      console.log(`✅ Link created: ${linkFilename} → ${folder}`);
+      console.log(`   Target: ${scenario.model.indexPath}`);
+      
+      // ✅ RADICAL OOP: Return this for method chaining
+      return this;
+    } catch (error) {
+      console.error(`Failed to create link into folder: ${(error as Error).message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Helper: Check if string is valid UUID
+   * @pdca 2025-11-11-UTC-0003 - Migrated
+   * @cliHide
+   */
+  private isUUID(str: string): boolean {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(str);
+  }
+
+  /**
+   * Helper: Convert name to filename (spaces → dots)
+   * @pdca 2025-11-11-UTC-0003 - Migrated
+   * @cliHide
+   */
+  private convertNameToFilename(name: string): string {
+    return name.replace(/\s+/g, '.');
+  }
+
+  /**
+   * Helper: Extract UUID from scenario path
+   * @pdca 2025-11-11-UTC-0003 - Migrated
+   * @cliHide
+   */
+  private extractUuidFromPath(scenarioPath: string): string {
+    const match = scenarioPath.match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\.scenario\.json/i);
+    if (!match) {
+      throw new Error(`Could not extract UUID from path: ${scenarioPath}`);
+    }
+    return match[1];
+  }
 }
+
 
