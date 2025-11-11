@@ -1,0 +1,40 @@
+# ESLint Ignore File for Web4 TypeScript Projects
+# @pdca components/ONCE/0.3.20.2/session/2025-11-11-UTC-0748.enforce-radical-oop-with-eslint.pdca.md
+
+# Compiled output
+dist/
+**/dist/
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# JavaScript files (we only lint TypeScript)
+**/*.js
+**/*.mjs
+**/*.cjs
+
+# Scenario data (generated at runtime)
+scenarios/
+**/scenarios/
+
+# Build artifacts
+*.d.ts
+*.d.ts.map
+*.js.map
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+

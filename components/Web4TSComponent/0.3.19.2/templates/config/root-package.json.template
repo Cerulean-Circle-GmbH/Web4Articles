@@ -1,0 +1,24 @@
+{
+  "name": "web4-project",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Web4 Component Architecture Project",
+  "private": true,
+  "scripts": {
+    "lint:all": "echo '⚠️  Linting all components is slow. Use component build.sh instead.' && eslint 'components/**/*.ts' --max-warnings 0",
+    "lint:fix:all": "echo '⚠️  Fixing all components is slow. Use component build.sh instead.' && eslint 'components/**/*.ts' --fix",
+    "lint:component": "echo 'Usage: npm run lint:component -- components/YourComponent/0.1.0.0' && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.57.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "glob": "^11.0.3",
+    "minimatch": "^10.0.3"
+  }
+}

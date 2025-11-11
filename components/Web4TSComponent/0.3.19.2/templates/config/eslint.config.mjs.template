@@ -1,0 +1,124 @@
+// eslint.config.mjs - TRUE Radical OOP Enforcement for Web4 TypeScript Components
+// @pdca components/ONCE/0.3.20.2/session/2025-11-11-UTC-0748.enforce-radical-oop-with-eslint.pdca.md
+// Using ESLint 9.x Flat Config Format (ES Module)
+
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsparser from '@typescript-eslint/parser';
+
+export default [
+  {
+    files: ['components/**/*.ts'],
+    languageOptions: {
+      parser: tsparser,
+      parserOptions: {
+        ecmaVersion: 2022,
+        sourceType: 'module',
+        project: './tsconfig.json',
+      },
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+        Buffer: 'readonly',
+        __dirname: 'off',  // Explicitly disable
+        __filename: 'off', // Explicitly disable
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tseslint,
+    },
+    rules: {
+      // ═══════════════════════════════════════════════════════════════════
+      // 🎯 TRUE Radical OOP: No CommonJS
+      // @pdca 2025-11-11-UTC-0735.migrate-commonjs-to-esm.pdca.md
+      // ═══════════════════════════════════════════════════════════════════
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'CallExpression[callee.name="require"]',
+          message: '🚫 CommonJS require() is PROHIBITED. Use dynamic import() instead. See: @pdca 2025-11-11-UTC-0735.migrate-commonjs-to-esm.pdca.md',
+        },
+        {
+          selector: 'MemberExpression[object.name="module"][property.name="exports"]',
+          message: '🚫 CommonJS module.exports is PROHIBITED. Use ES module export instead.',
+        },
+        {
+          selector: 'MemberExpression[object.name="exports"]',
+          message: '🚫 CommonJS exports is PROHIBITED. Use ES module export instead.',
+        },
+      ],
+
+      // ═══════════════════════════════════════════════════════════════════
+      // 🎯 TRUE Radical OOP: No Node.js Legacy Globals
+      // Use import.meta.url instead of __dirname/__filename
+      // ═══════════════════════════════════════════════════════════════════
+      'no-restricted-globals': [
+        'error',
+        {
+          name: '__dirname',
+          message: '🚫 __dirname is PROHIBITED. Use import.meta.url with path.dirname() instead.',
+        },
+        {
+          name: '__filename',
+          message: '🚫 __filename is PROHIBITED. Use import.meta.url instead.',
+        },
+      ],
+
+      // ═══════════════════════════════════════════════════════════════════
+      // 🎯 Modern Async/Await Patterns
+      // ═══════════════════════════════════════════════════════════════════
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/await-thenable': 'error',
+      'no-async-promise-executor': 'error',
+      'prefer-promise-reject-errors': 'error',
+
+      // ═══════════════════════════════════════════════════════════════════
+      // 🎯 TypeScript Strictness (supports Radical OOP)
+      // ═══════════════════════════════════════════════════════════════════
+      '@typescript-eslint/explicit-function-return-type': ['warn', {
+        allowExpressions: true,
+        allowTypedFunctionExpressions: true,
+      }],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': ['error', {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+      }],
+      '@typescript-eslint/consistent-type-imports': ['error', {
+        prefer: 'type-imports',
+      }],
+
+      // ═══════════════════════════════════════════════════════════════════
+      // 🎯 Code Quality (general best practices)
+      // ═══════════════════════════════════════════════════════════════════
+      'no-console': 'off',  // Web4 components use console for CLI output
+      'no-debugger': 'error',
+      'no-var': 'error',
+      'prefer-const': 'error',
+      'prefer-arrow-callback': 'error',
+      'arrow-body-style': ['error', 'as-needed'],
+      'object-shorthand': ['error', 'always'],
+      'prefer-template': 'error',
+      'eqeqeq': ['error', 'always'],
+    },
+  },
+  {
+    // Test files can be more relaxed
+    files: ['**/*.test.ts', '**/*.spec.ts', '**/test/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+    },
+  },
+  {
+    ignores: [
+      'dist/',
+      'node_modules/',
+      '**/*.js',
+      '**/*.mjs',
+      '**/*.cjs',
+      'scenarios/',
+      '**/scenarios/',
+    ],
+  },
+];
+

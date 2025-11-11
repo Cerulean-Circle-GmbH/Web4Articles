@@ -1,0 +1,104 @@
+#!/usr/bin/env sh
+# Smart build - only rebuild if needed, unless forced
+# Flags: verbose (default from package.json), silent, force, nolint
+# Usage: ./build.sh [verbose|silent] [force] [nolint]
+#        ./build.sh force [verbose|silent]
+#        ./build.sh nolint
+# Note: Linting only runs on explicit builds (when arguments are provided)
+
+# Parse flags (support any order)
+VERBOSE=false
+FORCE=false
+NOLINT=false
+EXPLICIT_BUILD=false
+
+# Check if any arguments were provided (explicit build)
+if [ $# -gt 0 ]; then
+    EXPLICIT_BUILD=true
+fi
+
+for arg in "$@"; do
+    case "$arg" in
+        verbose) VERBOSE=true ;;
+        silent) VERBOSE=false ;;
+        force) FORCE=true ;;
+        nolint) NOLINT=true ;;
+    esac
+done
+
+if [ "$FORCE" = "true" ]; then
+    if [ "$VERBOSE" = "true" ]; then
+        echo "🔧 Force building {{COMPONENT_NAME}}..."
+    fi
+    # Clean everything
+    ./src/sh/clean.sh
+    # Install dependencies and create symlink
+    ./src/sh/install-deps.sh
+    # Build TypeScript
+    if [ "$VERBOSE" = "true" ]; then
+        echo "🔨 Building TypeScript..."
+    fi
+    npx tsc --traceResolution --extendedDiagnostics
+elif [ ! -f "dist/ts/layer5/{{COMPONENT_NAME}}CLI.js" ] || find src -name "*.ts" -newer "dist/ts/layer5/{{COMPONENT_NAME}}CLI.js" 2>/dev/null | grep -q .; then
+    if [ "$VERBOSE" = "true" ]; then
+        echo "🔧 Smart building {{COMPONENT_NAME}} (changes detected)..."
+    else
+        echo "✅ Building {{COMPONENT_NAME}}..." >&2
+    fi
+    
+    # Clean local artifacts only
+    ./src/sh/clean-local.sh
+    
+    # Install dependencies if needed
+    if [ ! -L "node_modules" ] || [ ! -d "../../../node_modules" ]; then
+        ./src/sh/install-deps.sh
+    else
+        if [ "$VERBOSE" = "true" ]; then
+            echo "📦 Dependencies already installed"
+        fi
+    fi
+    
+    # Run ESLint before building (Radical OOP enforcement)
+    # @pdca 2025-11-11-UTC-0806.implement-radical-oop-eslint.pdca.md
+    # Only run linting on explicit builds (not on auto-rebuild)
+    if [ "$EXPLICIT_BUILD" = "true" ] && [ "$NOLINT" = "false" ]; then
+        if [ "$VERBOSE" = "true" ]; then
+            echo "🔍 Running ESLint to enforce TRUE Radical OOP..."
+            npx eslint 'src/**/*.ts' --max-warnings 0
+            LINT_EXIT=$?
+        else
+            npx eslint 'src/**/*.ts' --max-warnings 0 --format compact 2>&1
+            LINT_EXIT=$?
+        fi
+        
+        if [ $LINT_EXIT -ne 0 ]; then
+            echo "❌ ESLint found Radical OOP violations!" >&2
+            echo "📋 Fix violations or run 'npm run lint:fix' from project root" >&2
+            echo "💡 To skip linting: ./build.sh nolint" >&2
+            echo "📖 See: components/ONCE/0.3.20.2/session/2025-11-11-UTC-0748.enforce-radical-oop-with-eslint.pdca.md" >&2
+            exit 1
+        fi
+        
+        if [ "$VERBOSE" = "true" ]; then
+            echo "✅ ESLint passed - TRUE Radical OOP compliance verified"
+        fi
+    elif [ "$EXPLICIT_BUILD" = "true" ] && [ "$NOLINT" = "true" ]; then
+        if [ "$VERBOSE" = "true" ]; then
+            echo "⏭️  Skipping ESLint (nolint flag set)"
+        fi
+    elif [ "$EXPLICIT_BUILD" = "false" ] && [ "$VERBOSE" = "true" ]; then
+        echo "⏭️  Skipping ESLint (auto-rebuild, not explicit build)"
+    fi
+    
+    # Build TypeScript
+    if [ "$VERBOSE" = "true" ]; then
+        echo "🔨 Building TypeScript..."
+        npx tsc 
+    else
+        npx tsc 2>&1 | grep -v "^$" >&2
+    fi
+else
+    if [ "$VERBOSE" = "true" ]; then
+        echo "✅ {{COMPONENT_NAME}} is up to date, no build needed"
+    fi
+fi

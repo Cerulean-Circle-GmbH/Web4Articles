@@ -52,7 +52,7 @@ elif [ ! -f "dist/ts/layer5/IdealMinimalComponentCLI.js" ] || find src -name "*.
         echo "🔨 Building TypeScript..."
         npx tsc 
     else
-        npx tsc 2>&1 | grep -v "^$" >&2
+        npx tsc 2>&1 | grep -v "^$" >&2 || true
     fi
 else
     if [ "$VERBOSE" = "true" ]; then
