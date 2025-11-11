@@ -46,11 +46,15 @@ export class UnitCLI extends DefaultCLI {
    */
   async initComponent(): Promise<void> {
     // ✅ STEP 1: Create component (knows its OWN methods)
-    const component = await new DefaultUnit().init();
+    const component = new DefaultUnit();
     
-    // ✅ STEP 1.5: Set CLI back-reference for path authority
+    // ✅ STEP 1.5: Set CLI back-reference for path authority BEFORE init()
     // @pdca 2025-11-11-UTC-0003.migrate-unit-to-storage-service.pdca.md
+    // CRITICAL: Must be set before init() calls updateModelPaths()
     component.setCLI(this);
+    
+    // ✅ STEP 1.75: Initialize component (will call updateModelPaths() which needs CLI)
+    await component.init();
     
     // ✅ STEP 2: Pre-load Web4TSComponent (for delegation to work at call-time)
     await (component as any).getWeb4TSComponent();

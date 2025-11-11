@@ -10,6 +10,7 @@ import { User } from '../layer3/User.interface.js';
 import { MethodSignature } from '../layer3/MethodSignature.interface.js';
 import { existsSync, lstatSync, readlinkSync, readdirSync, statSync } from 'fs';
 import { join, dirname } from 'path';
+import * as path from 'path'; // @pdca 2025-11-11-UTC-0003 - For updateModelPaths()
 
 export class DefaultUnit implements Unit {
   // @pdca 2025-11-03-1105-component-template-bugs.pdca.md - Changed to public for Component interface compliance
@@ -103,6 +104,54 @@ export class DefaultUnit implements Unit {
   setCLI(cli: any): this {
     this.cli = cli;
     return this;
+  }
+
+  /**
+   * Get the target unit instance for operations
+   * Single source of truth for context resolution (Radical OOP principle)
+   * @pdca 2025-11-11-UTC-0003.migrate-unit-to-storage-service.pdca.md
+   * @pdca 2025-11-10-UTC-1010.pdca.md - Pattern from Web4TSComponent 0.3.19.1
+   * @cliHide
+   */
+  protected getTarget(): DefaultUnit {
+    return (this.model.context as DefaultUnit) || this;
+  }
+
+  /**
+   * Update model paths after context/scenario loading
+   * Path Authority: CLI is sole authority for path calculations
+   * @pdca 2025-11-11-UTC-0003.migrate-unit-to-storage-service.pdca.md
+   * @pdca 2025-11-07-UTC-0000 - Pattern from Web4TSComponent 0.3.19.1
+   * @cliHide
+   */
+  private updateModelPaths(): void {
+    // ✅ Copy context data to THIS model if in delegation mode
+    if (this.model.context) {
+      this.model.component = this.model.context.model.component;
+      this.model.version = this.model.context.model.version;
+    }
+    
+    const cli = this.getCLI();
+    
+    // Calculate projectRoot from componentRoot if not set
+    if (!this.model.projectRoot && this.model.componentRoot) {
+      this.model.projectRoot = path.dirname(path.dirname(path.dirname(this.model.componentRoot)));
+    }
+    if (!this.model.targetDirectory && this.model.projectRoot) {
+      this.model.targetDirectory = this.model.projectRoot;
+    }
+    if (!this.model.componentsDirectory && this.model.targetDirectory) {
+      this.model.componentsDirectory = path.join(this.model.targetDirectory, 'components');
+    }
+    
+    // Calculate TARGET component root using CLI's path authority
+    if (this.model.component && this.model.version && cli.model.componentsDirectory) {
+      this.model.targetComponentRoot = path.join(
+        cli.model.componentsDirectory,
+        this.model.component,
+        this.model.version
+      );
+    }
   }
 
   /**
@@ -232,6 +281,10 @@ export class DefaultUnit implements Unit {
     // ❌ REMOVED: Component should NOT discover delegated methods
     // ✅ RADICAL OOP: CLI discovers delegated methods separately via getDelegationTarget()
     // Component knows ONLY its own methods (create, process, completion)
+    
+    // ✅ Path Authority: Calculate all paths after initialization
+    // @pdca 2025-11-11-UTC-0003.migrate-unit-to-storage-service.pdca.md
+    this.updateModelPaths();
     
     return this;
   }

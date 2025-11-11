@@ -18,6 +18,7 @@ export interface UnitModel extends Model {
   componentRoot?: string;         // THIS component's root directory
   projectRoot?: string;           // Project root directory (for delegation)
   targetDirectory?: string;       // Target directory for operations (Path Authority from CLI)
+  componentsDirectory?: string;   // Components directory (from CLI) - @pdca 2025-11-11-UTC-0003
   targetComponentRoot?: string;   // Target component's root (for tree/links delegation)
   context?: any;                  // Context for "on" delegation mode (holds delegated component instance)
   isTestIsolation?: boolean;      // Test isolation mode flag (for DelegationProxy context)
