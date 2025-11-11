@@ -73,7 +73,7 @@ export class DefaultPDCA implements PDCA {
 
     // Import Web4TSComponent class dynamically (OOP way!)
     const web4tscomponentModule = await import(
-      `${projectRoot}/components/Web4TSComponent/latest/dist/ts/layer2/DefaultWeb4TSComponent.js`
+      `${projectRoot}/components/Web4TSComponent/0.3.5.2/dist/ts/layer2/DefaultWeb4TSComponent.js`
     );
     const { DefaultWeb4TSComponent } = web4tscomponentModule;
 
