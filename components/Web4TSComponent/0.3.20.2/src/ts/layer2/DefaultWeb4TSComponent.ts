@@ -510,9 +510,13 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
 
     // ✅ FLAT MODEL PRINCIPLE: Filter out object references before serialization
     // @pdca 2025-11-11-UTC-2012.refactor-create-scenario-generation-radical-oop.pdca.md
-    // Option B (Quick Fix): Remove context from model copy to prevent circular reference
+    // Option B (Quick Fix): Remove context AND version from model copy to prevent circular reference
     // TODO 0.3.20.3+: Move context to private attribute (Option A - principle-correct)
-    const { context, ...cleanModel } = this.model;
+    const { context, version, ...cleanModel } = this.model;
+
+    // ✅ FLAT MODEL: Convert SemanticVersion object to full scenario (not just IOR)
+    // Each component creates its own scenario - User creates User scenario, SemanticVersion creates SemanticVersion scenario
+    const versionScenario = await this.model.version.toScenario();
 
       return {
       ior: {
@@ -521,7 +525,10 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
         version: this.model.version.toString()  // ✅ Serialize to string
       },
       owner: ownerData,
-      model: cleanModel as Web4TSComponentModel  // ✅ Clean model without object references
+      model: {
+        ...cleanModel,
+        version: versionScenario as any  // ✅ Store FULL scenario, not just IOR (cast for type compatibility)
+      }
     };
   }
 
