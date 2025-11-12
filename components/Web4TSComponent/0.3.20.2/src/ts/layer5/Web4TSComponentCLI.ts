@@ -84,9 +84,20 @@ export class Web4TSComponentCLI extends DefaultCLI {
    * Execute CLI commands with Unit pattern - dynamic discovery with chaining support
    */
   async execute(args: string[]): Promise<void> {
-    // ✅ THE ONLY FLAG IN WEB4: --help (educational exception)
+    // ✅ THE ONLY FLAGS IN WEB4: All help variations (educational exception)
+    // Catch ALL common help flag patterns from different OS/CLI cultures
     // All other flags (--version, --verbose, -v, etc.) are STRICTLY FORBIDDEN
-    if (args.length === 1 && args[0] === '--help') {
+    const HELP_FLAGS = [
+      '--help',   // Unix/Linux standard
+      '-h',       // Unix/Linux short form
+      '-help',    // Java/old Unix style
+      '/h',       // Windows/DOS style
+      '/?',       // Windows/DOS help
+      '-?',       // DOS/PowerShell
+      'help',     // Natural language (already handled, but listed for completeness)
+    ];
+    
+    if (args.length === 1 && HELP_FLAGS.includes(args[0])) {
       this.showHelpWithPreamble();
       return;
     }
@@ -105,18 +116,19 @@ export class Web4TSComponentCLI extends DefaultCLI {
   }
 
   /**
-   * Show help with Web4 philosophy preamble (--help flag only)
-   * This is THE ONLY flag supported in Web4, as an educational tool
+   * Show help with Web4 philosophy preamble (all help flag variations)
+   * These are THE ONLY flags supported in Web4, as educational tools
    */
   private showHelpWithPreamble(): void {
     console.log('');
     console.log('═'.repeat(80));
-    console.log('🚫 WHY WEB4 FORBIDS FLAGS (Except This One)');
+    console.log('🚫 WHY WEB4 FORBIDS FLAGS (Except These)');
     console.log('═'.repeat(80));
     console.log('');
-    console.log('You just used the ONLY flag supported in Web4: --help');
+    console.log('You just used one of the ONLY flags supported in Web4:');
+    console.log('  --help, -h, -help, /?, /h, -?');
     console.log('');
-    console.log('This flag exists ONLY to explain why ALL other flags are forbidden.');
+    console.log('These flags exist ONLY to explain why ALL other flags are forbidden.');
     console.log('');
     console.log('❌ NO FLAGS ALLOWED:');
     console.log('   --version, --verbose, -v, -h, --config, --output, --dry-run, etc.');
