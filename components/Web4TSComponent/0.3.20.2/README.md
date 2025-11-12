@@ -209,13 +209,13 @@ web4tscomponent on MyComponent 0.1.0.0 upgrade nextBuild
 
 ### Why There's No `--help` Flag
 
-**Web4 CLIs don't use flags at all.** No `--version`, no `-v`, no `-h`. This is a **core architectural principle**, not an oversight.
+**Web4 CLIs don't use flags at all.** No `--version`, no `-v`. This is a **core architectural principle**, not an oversight.
 
-**Wait, what about `--help`?**
+**Wait, what about help flags?**
 
-There's **ONE exception**: `web4tscomponent --help` works, but it's an **educational tool** that explains why flags are forbidden before showing you the actual help. It exists solely to teach Web4 philosophy to newcomers.
+There's **ONE exception family**: All common help flag variations work (`--help`, `-h`, `-help`, `/?`, `/h`, `-?`), but they're **educational tools** that explain why flags are forbidden before showing you the actual help. They exist solely to teach Web4 philosophy to newcomers from different OS/CLI backgrounds.
 
-**Why No Flags?**
+**Why No Other Flags?**
 1. **Simplicity**: No complex flag parsing, just method names
 2. **Auto-Discovery**: Commands are discovered from TypeScript, not configured
 3. **Consistency**: Every Web4 component works exactly the same way

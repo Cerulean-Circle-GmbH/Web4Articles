@@ -63,32 +63,47 @@ npm install  # without proper symlink setup
 
 **Related:** See [Automatic Project Initialization](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-automatic-project-initialization) | [chapters/01-architecture.md](chapters/01-architecture.md#-automatic-project-initialization) for how DRY is enforced
 
-### 5a. The `--help` Exception (Educational Tool)
+### 5a. The Help Flag Exception Family (Educational Tools)
 
-**The ONLY flag in Web4:**
+**The ONLY flags in Web4 (all variations):**
 
 ```bash
-# ✅ THE ONLY SUPPORTED FLAG (educational exception)
-web4tscomponent --help
+# ✅ ALL SUPPORTED HELP FLAG VARIATIONS (educational exceptions)
+web4tscomponent --help    # Unix/Linux standard
+web4tscomponent -h        # Unix/Linux short form
+web4tscomponent -help     # Java/old Unix style
+web4tscomponent /?        # Windows/DOS help
+web4tscomponent /h        # Windows/DOS style
+web4tscomponent -?        # DOS/PowerShell
 
-# Shows philosophy preamble explaining:
+# All show philosophy preamble explaining:
 # • Why flags broke Unix/Linux OOP in the 1980s-1990s
 # • How Web4 restores method-based design
 # • Then shows normal help output
 ```
 
-**Why this exception exists:**
+**Why these exceptions exist:**
 
-The `--help` flag is so ingrained in CLI culture that we support it as an **educational tool**. When users run `--help`, they see a detailed explanation of why Web4 forbids flags, how flags broke the original OOP intent of Unix, and how Web4 restores that vision.
+Help flags are so ingrained across ALL CLI cultures (Unix, Linux, Windows, DOS, Java, PowerShell) that we support **all common variations** as **educational tools**. When users run any help flag, they see a detailed explanation of why Web4 forbids flags, how flags broke the original OOP intent of Unix, and how Web4 restores that vision.
 
-**This is the ONLY flag ever supported in Web4.** All other flags (`--version`, `--verbose`, `-v`, `-h`, etc.) are strictly forbidden.
+**These are the ONLY flags ever supported in Web4.** All other flags (`--version`, `--verbose`, `-v`, `--config`, etc.) are strictly forbidden.
+
+**DRY Implementation:**
+```typescript
+const HELP_FLAGS = [
+  '--help', '-h', '-help',  // Unix/Linux/Java
+  '/h', '/?', '-?',         // Windows/DOS/PowerShell
+  'help',                   // Natural language
+];
+```
 
 **Philosophy:**
 - Flags are configuration, not behavior
-- Flags destroyed Unix's method-based simplicity
+- Flags destroyed Unix's method-based simplicity across ALL platforms
 - Web4 uses methods: `info` instead of `--version`, `verbose` instead of `--verbose`
 - Tab completion and auto-discovery replace flag documentation
 - Method chaining replaces flag combinations
+- Support ALL cultures to educate ALL users
 
 ### 6. Flat Model Principle (Scenarios)
 
