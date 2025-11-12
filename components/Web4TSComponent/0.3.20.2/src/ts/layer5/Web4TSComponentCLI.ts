@@ -84,6 +84,13 @@ export class Web4TSComponentCLI extends DefaultCLI {
    * Execute CLI commands with Unit pattern - dynamic discovery with chaining support
    */
   async execute(args: string[]): Promise<void> {
+    // ✅ THE ONLY FLAG IN WEB4: --help (educational exception)
+    // All other flags (--version, --verbose, -v, etc.) are STRICTLY FORBIDDEN
+    if (args.length === 1 && args[0] === '--help') {
+      this.showHelpWithPreamble();
+      return;
+    }
+
     if (args.length === 0) {
       this.showUsage();
       return;
@@ -95,6 +102,66 @@ export class Web4TSComponentCLI extends DefaultCLI {
       console.error(this.formatError((error as Error).message));
       process.exit(1);
     }
+  }
+
+  /**
+   * Show help with Web4 philosophy preamble (--help flag only)
+   * This is THE ONLY flag supported in Web4, as an educational tool
+   */
+  private showHelpWithPreamble(): void {
+    console.log('');
+    console.log('═'.repeat(80));
+    console.log('🚫 WHY WEB4 FORBIDS FLAGS (Except This One)');
+    console.log('═'.repeat(80));
+    console.log('');
+    console.log('You just used the ONLY flag supported in Web4: --help');
+    console.log('');
+    console.log('This flag exists ONLY to explain why ALL other flags are forbidden.');
+    console.log('');
+    console.log('❌ NO FLAGS ALLOWED:');
+    console.log('   --version, --verbose, -v, -h, --config, --output, --dry-run, etc.');
+    console.log('');
+    console.log('🎯 THE PROBLEM WITH FLAGS:');
+    console.log('');
+    console.log('Flags broke the original intent of Object-Oriented Programming in Unix/Linux.');
+    console.log('');
+    console.log('In the 1970s, Unix was designed with OOP principles:');
+    console.log('  • Everything is an object (file)');
+    console.log('  • Objects have methods (programs)');
+    console.log('  • Method calls use natural arguments: mv source destination');
+    console.log('');
+    console.log('Then came flags in the 1980s-1990s, destroying this simplicity:');
+    console.log('  • tar -xzvf file.tar.gz        # Cryptic letter soup');
+    console.log('  • find . -name "*.txt" -type f # Hidden magic');
+    console.log('  • ls -lAh --color=auto         # Configuration nightmare');
+    console.log('');
+    console.log('The result?');
+    console.log('  ❌ Every tool has different flag syntax');
+    console.log('  ❌ Need --help just to use basic features');
+    console.log('  ❌ Cannot auto-discover what a tool does');
+    console.log('  ❌ Cannot chain operations naturally');
+    console.log('  ❌ Flags are configuration, not behavior');
+    console.log('');
+    console.log('✅ WEB4 RESTORES THE ORIGINAL VISION:');
+    console.log('');
+    console.log('  • Methods, not flags:       web4tscomponent create MyComponent');
+    console.log('  • Natural arguments:        web4tscomponent upgrade nextBuild');
+    console.log('  • Auto-discovery:           web4tscomponent (shows all methods)');
+    console.log('  • Method chaining:          web4tscomponent upgrade test build');
+    console.log('  • Tab completion:           web4tscomponent com<TAB> → completion');
+    console.log('');
+    console.log('Flags are a crutch for poorly designed CLIs that try to be Swiss Army knives.');
+    console.log('Web4 components are focused objects with discoverable methods.');
+    console.log('');
+    console.log('If you need --verbose, create a "verbose" method.');
+    console.log('If you need --config, create a "configure" method.');
+    console.log('If you need --version, just run "info" (it\'s there, auto-discovered).');
+    console.log('');
+    console.log('═'.repeat(80));
+    console.log('📖 ACTUAL HELP OUTPUT BELOW');
+    console.log('═'.repeat(80));
+    console.log('');
+    this.showUsage();
   }
 
   /**
