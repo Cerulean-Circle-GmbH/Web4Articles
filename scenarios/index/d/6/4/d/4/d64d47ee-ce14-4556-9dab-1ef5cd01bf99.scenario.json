@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "d64d47ee-ce14-4556-9dab-1ef5cd01bf99",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDA4OjEzOjM1LjM1NVoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "d64d47ee-ce14-4556-9dab-1ef5cd01bf99",
+    "name": "Web4 Component Version Management Standard",
+    "title": "Web4 Component Version Management Standard",
+    "description": "Establish standard version management workflow: work in 'latest', git mv to semantic version before breaking changes, tag commits, create new 'latest' from tagged version. Requires Web4 Version component for automation."
+  },
+  "unitIndex": {
+    "uuid": "d64d47ee-ce14-4556-9dab-1ef5cd01bf99",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/d/6/4/d/4/d64d47ee-ce14-4556-9dab-1ef5cd01bf99.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/d64d47ee-ce14-4556-9dab-1ef5cd01bf99.scenario.json"
+    ],
+    "createdAt": "2025-08-26T08:13:35.384Z",
+    "updatedAt": "2025-08-26T08:13:35.384Z"
+  }
+}

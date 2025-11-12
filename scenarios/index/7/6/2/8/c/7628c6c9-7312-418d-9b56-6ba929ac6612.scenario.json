@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "7628c6c9-7312-418d-9b56-6ba929ac6612",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDA5OjA5OjEzLjE4MloiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "7628c6c9-7312-418d-9b56-6ba929ac6612",
+    "name": "JSON Package Configuration Standards",
+    "title": "JSON Package Configuration Standards",
+    "description": "Enforce valid JSON syntax in all package.json files across Web4 components. Comments in JSON configuration files must be removed or replaced with JSON-compliant alternatives. Invalid JSON syntax breaks npm build processes and violates UCP self-containedness principles."
+  },
+  "unitIndex": {
+    "uuid": "7628c6c9-7312-418d-9b56-6ba929ac6612",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/7/6/2/8/c/7628c6c9-7312-418d-9b56-6ba929ac6612.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/7628c6c9-7312-418d-9b56-6ba929ac6612.scenario.json"
+    ],
+    "createdAt": "2025-08-26T09:09:13.200Z",
+    "updatedAt": "2025-08-26T09:09:13.200Z"
+  }
+}

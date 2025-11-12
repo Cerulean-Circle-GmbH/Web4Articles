@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "f19819b1-87be-45b3-a042-0cef1f0944c7",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"f19819b1-87be-45b3-a042-0cef1f0944c7\",\"timestamp\":\"2025-09-13T11:39:02.364Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "f19819b1-87be-45b3-a042-0cef1f0944c7",
+    "createdAt": "2025-09-13T11:39:02.364Z",
+    "updatedAt": "2025-09-13T11:39:02.365Z",
+    "name": "DRY Test Unit",
+    "definition": "Testing DRY compliant automatic linking with linkInto method",
+    "indexPath": "/workspace/scenarios/index/f/1/9/8/1/f19819b1-87be-45b3-a042-0cef1f0944c7.scenario.json",
+    "symlinkPaths": [
+      "/workspace/unit-f19819b1"
+    ]
+  }
+}

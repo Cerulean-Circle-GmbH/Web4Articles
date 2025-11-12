@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "6415cc74-eb57-4d8d-a415-54bcc2342cfb",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"6415cc74-eb57-4d8d-a415-54bcc2342cfb\",\"timestamp\":\"2025-09-14T10:42:43.920Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "6415cc74-eb57-4d8d-a415-54bcc2342cfb",
+    "createdAt": "2025-09-14T10:42:43.920Z",
+    "updatedAt": "2025-09-14T10:42:43.922Z",
+    "name": "DORY Session Summary",
+    "definition": "Session summary table format with dual links to PDCAs in first column and exact QA TRON quotes for reference",
+    "indexPath": "/workspace/scenarios/index/6/4/1/5/c/6415cc74-eb57-4d8d-a415-54bcc2342cfb.scenario.json",
+    "symlinkPaths": [
+      "/workspace/unit-6415cc74"
+    ]
+  }
+}

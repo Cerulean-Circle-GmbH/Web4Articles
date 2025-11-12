@@ -1,0 +1,18 @@
+{
+  "ior": {
+    "uuid": "0bbca8a2-c6f2-45fe-ae1c-571cb029ca81",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"0bbca8a2-c6f2-45fe-ae1c-571cb029ca81\",\"timestamp\":\"2025-09-12T18:15:45.808Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "0bbca8a2-c6f2-45fe-ae1c-571cb029ca81",
+    "createdAt": "2025-09-12T18:15:36.474Z",
+    "updatedAt": "2025-09-12T18:15:45.818Z",
+    "name": "extends",
+    "definition": "M3 relationship metaclass defining inheritance between classes with property and behavior inheritance semantics",
+    "indexPath": "/workspace/scenarios/index/0/b/b/c/a/0bbca8a2-c6f2-45fe-ae1c-571cb029ca81.scenario.json",
+    "symlinkPaths": [],
+    "typeM3": "RELATIONSHIP"
+  }
+}

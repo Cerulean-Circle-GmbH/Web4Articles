@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "74e0d5d1-d8a4-4281-9259-c97dec913bfb",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"74e0d5d1-d8a4-4281-9259-c97dec913bfb\",\"timestamp\":\"2025-09-11T15:49:11.432Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "74e0d5d1-d8a4-4281-9259-c97dec913bfb",
+    "createdAt": "2025-09-11T15:49:11.429Z",
+    "updatedAt": "2025-09-11T15:49:11.432Z",
+    "name": "Test Unit Name",
+    "definition": "Testing filename conversion with 0.3.0.4 standards",
+    "indexPath": "/workspace/scenarios/index/7/4/e/0/d/74e0d5d1-d8a4-4281-9259-c97dec913bfb.scenario.json",
+    "symlinkPaths": [
+      "/workspace/unit-74e0d5d1"
+    ]
+  }
+}

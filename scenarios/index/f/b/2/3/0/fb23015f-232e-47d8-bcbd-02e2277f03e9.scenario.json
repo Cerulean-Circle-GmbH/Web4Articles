@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "fb23015f-232e-47d8-bcbd-02e2277f03e9",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDEwOjMzOjAxLjAyNVoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "fb23015f-232e-47d8-bcbd-02e2277f03e9",
+    "name": "Web4 Universal Hibernation Engine for All Formats",
+    "title": "Web4 Universal Hibernation Engine for All Formats",
+    "description": "Universal hibernation engine supporting all data formats (CSV/JSON/XML/Database/YAML). Enables semantic equivalence across formats through object hibernation and resurrection. Core component for format-agnostic object persistence and Web4 scenario-based development."
+  },
+  "unitIndex": {
+    "uuid": "fb23015f-232e-47d8-bcbd-02e2277f03e9",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/f/b/2/3/0/fb23015f-232e-47d8-bcbd-02e2277f03e9.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/fb23015f-232e-47d8-bcbd-02e2277f03e9.scenario.json"
+    ],
+    "createdAt": "2025-08-26T10:33:01.036Z",
+    "updatedAt": "2025-08-26T10:33:01.036Z"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "66fec201-019f-4bd2-b73f-36e03339aa80",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI1VDA4OjE5OjM1LjM0OVoiLCJ1dWlkIjoiMTY2OGM0OTQtNGU0ZS00ZmIwLTg0YjktYTEwMWJlNDA1ZmQ1In0=",
+  "model": {
+    "uuid": "66fec201-019f-4bd2-b73f-36e03339aa80",
+    "name": "Test Clean Output",
+    "title": "Test Clean Output",
+    "description": "Testing that Node warnings are suppressed for clean user experience"
+  },
+  "unitIndex": {
+    "uuid": "66fec201-019f-4bd2-b73f-36e03339aa80",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/6/6/f/e/c/66fec201-019f-4bd2-b73f-36e03339aa80.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/66fec201-019f-4bd2-b73f-36e03339aa80.scenario.json"
+    ],
+    "createdAt": "2025-08-25T08:19:35.369Z",
+    "updatedAt": "2025-08-25T08:19:35.369Z"
+  }
+}

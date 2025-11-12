@@ -1,0 +1,37 @@
+{
+  "ior": {
+    "uuid": "907284e1-9cb6-4077-9cb1-61852b8401ee",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"907284e1-9cb6-4077-9cb1-61852b8401ee\",\"timestamp\":\"2025-09-08T13:43:57.711Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "907284e1-9cb6-4077-9cb1-61852b8401ee",
+    "name": "ESM Async Pattern",
+    "origin": "",
+    "definition": "Using await import() for dynamic module loading in ESM context",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/9/0/7/2/8/907284e1-9cb6-4077-9cb1-61852b8401ee.scenario.json",
+    "symlinkPaths": [
+      "/workspace/scenarios/ontology/ESM.Async.Pattern.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../index/9/0/7/2/8/907284e1-9cb6-4077-9cb1-61852b8401ee.scenario.json",
+        "filename": "ESM.Async.Pattern.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process",
+      "ESM Async Pattern"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-08T13:43:57.708Z",
+    "updatedAt": "2025-09-08T13:43:57.715Z"
+  }
+}

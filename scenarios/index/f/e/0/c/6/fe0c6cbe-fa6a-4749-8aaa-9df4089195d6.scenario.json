@@ -1,0 +1,48 @@
+{
+  "ior": {
+    "uuid": "fe0c6cbe-fa6a-4749-8aaa-9df4089195d6",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"donges\",\"hostname\":\"localhost\",\"uuid\":\"fe0c6cbe-fa6a-4749-8aaa-9df4089195d6\",\"timestamp\":\"2025-11-11T15:02:24.738Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "fe0c6cbe-fa6a-4749-8aaa-9df4089195d6",
+    "name": "ESM Conversion Pattern",
+    "origin": "",
+    "definition": "Systematic approach to converting CJS require() to ESM import statements",
+    "typeM3": "CLASS",
+    "indexPath": "/Users/Shared/Workspaces/temp/Web4Articles/scenarios/index/f/e/0/c/6/fe0c6cbe-fa6a-4749-8aaa-9df4089195d6.scenario.json",
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/scenarios/ontology/ESM.Conversion.Pattern.unit",
+        "linkTarget": "ior:unit:fe0c6cbe-fa6a-4749-8aaa-9df4089195d6",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:../index/f/e/0/c/6/ESM.Conversion.Pattern.unit",
+        "linkTarget": "ior:unit:fe0c6cbe-fa6a-4749-8aaa-9df4089195d6",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.2/ESM.Conversion.Pattern.unit",
+        "linkTarget": "ior:unit:fe0c6cbe-fa6a-4749-8aaa-9df4089195d6",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.2/ESM.Conversion.Pattern.unit",
+        "linkTarget": "ior:unit:fe0c6cbe-fa6a-4749-8aaa-9df4089195d6",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.2/ESM.Conversion.Pattern.unit",
+        "linkTarget": "ior:unit:fe0c6cbe-fa6a-4749-8aaa-9df4089195d6",
+        "syncStatus": "SYNCED"
+      }
+    ],
+    "createdAt": "2025-09-08T13:43:45.478Z",
+    "updatedAt": "2025-11-11T15:02:24.741Z",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.13.2/ESM.Conversion.Pattern.unit"
+    ]
+  }
+}

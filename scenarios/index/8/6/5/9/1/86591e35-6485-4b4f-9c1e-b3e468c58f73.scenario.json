@@ -1,0 +1,26 @@
+{
+  "ior": {
+    "uuid": "86591e35-6485-4b4f-9c1e-b3e468c58f73",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"86591e35-6485-4b4f-9c1e-b3e468c58f73\",\"timestamp\":\"2025-09-22T12:08:08.618Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "86591e35-6485-4b4f-9c1e-b3e468c58f73",
+    "createdAt": "2025-09-22T12:08:08.616Z",
+    "updatedAt": "2025-09-22T12:08:08.629Z",
+    "name": "Multi.Word.Test",
+    "definition": "Testing multi-word name conversion",
+    "indexPath": "/workspace/scenarios/index/8/6/5/9/1/86591e35-6485-4b4f-9c1e-b3e468c58f73.scenario.json",
+    "symlinkPaths": [
+      "/workspace/Multi.Word.Test.unit"
+    ],
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/Multi.Word.Test.unit",
+        "linkTarget": "ior:unit:86591e35-6485-4b4f-9c1e-b3e468c58f73",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "642c1856-929a-483d-ada0-0b801e8dc2d0",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDA4OjEzOjQwLjA3N1oiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "642c1856-929a-483d-ada0-0b801e8dc2d0",
+    "name": "Web4 Version Component Development",
+    "title": "Web4 Version Component Development",
+    "description": "Create Web4 Version component to automate version management workflow: semantic versioning, git tagging, folder restructuring, and latest version creation for Web4 components."
+  },
+  "unitIndex": {
+    "uuid": "642c1856-929a-483d-ada0-0b801e8dc2d0",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/6/4/2/c/1/642c1856-929a-483d-ada0-0b801e8dc2d0.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/642c1856-929a-483d-ada0-0b801e8dc2d0.scenario.json"
+    ],
+    "createdAt": "2025-08-26T08:13:40.087Z",
+    "updatedAt": "2025-08-26T08:13:40.087Z"
+  }
+}

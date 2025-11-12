@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "c2a30e29-3d03-49c8-86ba-500e81d8a390",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDEwOjMxOjI5LjE5NVoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "c2a30e29-3d03-49c8-86ba-500e81d8a390",
+    "name": "Web4 Business Processes as Git Transactions",
+    "title": "Web4 Business Processes as Git Transactions",
+    "description": "Business processes implemented as Git-versioned transaction chains with atomic rollback per step OR overall. Complete audit trail, time travel debugging, and granular rollback capability. Replaces mainstream database transactions with ACID properties."
+  },
+  "unitIndex": {
+    "uuid": "c2a30e29-3d03-49c8-86ba-500e81d8a390",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/c/2/a/3/0/c2a30e29-3d03-49c8-86ba-500e81d8a390.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/c2a30e29-3d03-49c8-86ba-500e81d8a390.scenario.json"
+    ],
+    "createdAt": "2025-08-26T10:31:29.222Z",
+    "updatedAt": "2025-08-26T10:31:29.222Z"
+  }
+}

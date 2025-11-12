@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "71223733-75d1-4002-bee1-e004d5ccd76c",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI4VDE3OjE1OjUxLjgzOFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "71223733-75d1-4002-bee1-e004d5ccd76c",
+    "name": "Global CLI Color Requirement",
+    "title": "Global CLI Color Requirement",
+    "description": "All Web4Articles CLI tools must implement consistent colored output using cyan for commands, yellow for parameters, green for comments/descriptions, and bold for emphasis. This establishes visual consistency across the entire ecosystem and improves user experience with professional-grade terminal interfaces."
+  },
+  "unitIndex": {
+    "uuid": "71223733-75d1-4002-bee1-e004d5ccd76c",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/7/1/2/2/3/71223733-75d1-4002-bee1-e004d5ccd76c.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/71223733-75d1-4002-bee1-e004d5ccd76c.scenario.json"
+    ],
+    "createdAt": "2025-08-28T17:15:51.863Z",
+    "updatedAt": "2025-08-28T17:15:51.863Z"
+  }
+}

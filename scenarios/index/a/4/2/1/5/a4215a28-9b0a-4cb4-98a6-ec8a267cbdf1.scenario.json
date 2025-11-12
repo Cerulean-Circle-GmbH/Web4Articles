@@ -1,0 +1,29 @@
+{
+  "ior": {
+    "uuid": "a4215a28-9b0a-4cb4-98a6-ec8a267cbdf1",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"a4215a28-9b0a-4cb4-98a6-ec8a267cbdf1\",\"timestamp\":\"2025-09-21T22:20:11.621Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "a4215a28-9b0a-4cb4-98a6-ec8a267cbdf1",
+    "createdAt": "2025-09-21T22:20:11.619Z",
+    "updatedAt": "2025-09-21T22:20:11.630Z",
+    "name": "TestUnit",
+    "definition": "Testing unit creation",
+    "indexPath": "/workspace/scenarios/index/a/4/2/1/5/a4215a28-9b0a-4cb4-98a6-ec8a267cbdf1.scenario.json",
+    "symlinkPaths": [],
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/scenarios/ontology/TestUnit.unit",
+        "linkTarget": "ior:unit:a4215a28-9b0a-4cb4-98a6-ec8a267cbdf1",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/MDAv4/M3/CLASS/TestUnit.unit",
+        "linkTarget": "ior:unit:a4215a28-9b0a-4cb4-98a6-ec8a267cbdf1",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}

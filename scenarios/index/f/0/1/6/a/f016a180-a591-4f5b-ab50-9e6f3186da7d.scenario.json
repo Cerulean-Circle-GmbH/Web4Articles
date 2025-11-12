@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "f016a180-a591-4f5b-ab50-9e6f3186da7d",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA5LTA0VDEwOjAyOjU1LjA0OFoiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "f016a180-a591-4f5b-ab50-9e6f3186da7d",
+    "name": "Web4 Component Radical OOP CLI Entry Points",
+    "title": "Web4 Component Radical OOP CLI Entry Points",
+    "description": "All Web4 component CLIs must use static start methods instead of functional main entry points following radical OOP principles, eliminating functional programming patterns and using static class methods for component initialization and execution"
+  },
+  "unitIndex": {
+    "uuid": "f016a180-a591-4f5b-ab50-9e6f3186da7d",
+    "indexPath": "/workspace/scenarios/index/f/0/1/6/a/f016a180-a591-4f5b-ab50-9e6f3186da7d.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/f016a180-a591-4f5b-ab50-9e6f3186da7d.scenario.json"
+    ],
+    "createdAt": "2025-09-04T10:02:55.052Z",
+    "updatedAt": "2025-09-04T10:02:55.052Z"
+  }
+}

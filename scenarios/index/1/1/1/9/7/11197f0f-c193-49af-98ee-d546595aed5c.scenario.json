@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "11197f0f-c193-49af-98ee-d546595aed5c",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDExOjAwOjMwLjUyMloiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "11197f0f-c193-49af-98ee-d546595aed5c",
+    "name": "Web4 Requirement Process File Enhancement",
+    "title": "Web4 Requirement Process File Enhancement",
+    "description": "Add process-file command to requirement CLI that scans markdown files for requirement patterns like [requirement:uuid:web4-xxx-name], extracts context, creates proper Web4 requirements, and updates file with dual links. This feature enables batch processing of requirement documentation and maintains traceability through proper dual link format."
+  },
+  "unitIndex": {
+    "uuid": "11197f0f-c193-49af-98ee-d546595aed5c",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/1/1/1/9/7/11197f0f-c193-49af-98ee-d546595aed5c.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/11197f0f-c193-49af-98ee-d546595aed5c.scenario.json"
+    ],
+    "createdAt": "2025-08-26T11:00:30.533Z",
+    "updatedAt": "2025-08-26T11:00:30.533Z"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "1bb60c85-0bf3-4217-b66e-ce9583757acb",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoidWJ1bnR1IiwiaG9zdG5hbWUiOiJjdXJzb3IiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA5LTA3VDIxOjQwOjI4Ljk0M1oiLCJ1dWlkIjoiYTFmNGM5MWYtMGY2YS00ZDQ2LTgwODEtNjE5ZDMzNjhhODEyIn0=",
+  "model": {
+    "uuid": "1bb60c85-0bf3-4217-b66e-ce9583757acb",
+    "name": "Test Folder Structure Standard",
+    "title": "Test Folder Structure Standard",
+    "description": "Test folders must be siblings to src folders, not children, for proper separation of concerns and build tool compatibility"
+  },
+  "unitIndex": {
+    "uuid": "1bb60c85-0bf3-4217-b66e-ce9583757acb",
+    "indexPath": "/workspace/scenarios/index/1/b/b/6/0/1bb60c85-0bf3-4217-b66e-ce9583757acb.scenario.json",
+    "symlinkPaths": [
+      "/workspace/spec/requirements/1bb60c85-0bf3-4217-b66e-ce9583757acb.scenario.json"
+    ],
+    "createdAt": "2025-09-07T21:40:28.947Z",
+    "updatedAt": "2025-09-07T21:40:28.947Z"
+  }
+}

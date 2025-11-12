@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "32081300-b6cd-42c7-8741-02f90e44d5cf",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"32081300-b6cd-42c7-8741-02f90e44d5cf\",\"timestamp\":\"2025-09-11T20:23:08.216Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "32081300-b6cd-42c7-8741-02f90e44d5cf",
+    "createdAt": "2025-09-11T20:23:08.213Z",
+    "updatedAt": "2025-09-11T20:23:08.217Z",
+    "name": "Test Chain",
+    "definition": "Testing command chaining",
+    "indexPath": "/workspace/scenarios/index/3/2/0/8/1/32081300-b6cd-42c7-8741-02f90e44d5cf.scenario.json",
+    "symlinkPaths": [
+      "/workspace/unit-32081300"
+    ]
+  }
+}

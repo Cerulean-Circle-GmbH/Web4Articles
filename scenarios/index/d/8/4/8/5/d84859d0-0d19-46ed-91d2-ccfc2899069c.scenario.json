@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "d84859d0-0d19-46ed-91d2-ccfc2899069c",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI1VDEyOjM5OjMxLjk2M1oiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "d84859d0-0d19-46ed-91d2-ccfc2899069c",
+    "name": "Test Integration Implementation",
+    "title": "Test Integration Implementation",
+    "description": "Testing that Web4Requirement latest now uses Unit UUID Index Storage for scenario management with proper symbolic links and central storage"
+  },
+  "unitIndex": {
+    "uuid": "d84859d0-0d19-46ed-91d2-ccfc2899069c",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/d/8/4/8/5/d84859d0-0d19-46ed-91d2-ccfc2899069c.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/d84859d0-0d19-46ed-91d2-ccfc2899069c.scenario.json"
+    ],
+    "createdAt": "2025-08-22T16:35:28.933Z",
+    "updatedAt": "2025-08-22T16:35:28.933Z"
+  }
+}

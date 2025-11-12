@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "7bc34094-7160-4a8f-a99e-03a38323bc97",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI0VDExOjAxOjQ5LjU2MVoiLCJ1dWlkIjoiZDczNTIxNTItZmNiMi00ZjRlLTljOTctNTgxMzMyNzRmNWMwIn0=",
+  "model": {
+    "uuid": "7bc34094-7160-4a8f-a99e-03a38323bc97",
+    "name": "Test Requirement",
+    "title": "Test Requirement",
+    "description": "Testing the fixed requirement CLI setup"
+  },
+  "unitIndex": {
+    "uuid": "7bc34094-7160-4a8f-a99e-03a38323bc97",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/7/b/c/3/4/7bc34094-7160-4a8f-a99e-03a38323bc97.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/7bc34094-7160-4a8f-a99e-03a38323bc97.scenario.json"
+    ],
+    "createdAt": "2025-08-24T11:01:49.582Z",
+    "updatedAt": "2025-08-24T11:01:49.582Z"
+  }
+}

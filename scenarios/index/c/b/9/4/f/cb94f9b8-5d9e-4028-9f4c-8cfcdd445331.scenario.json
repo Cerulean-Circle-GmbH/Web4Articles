@@ -1,0 +1,27 @@
+{
+  "ior": {
+    "uuid": "cb94f9b8-5d9e-4028-9f4c-8cfcdd445331",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"cb94f9b8-5d9e-4028-9f4c-8cfcdd445331\",\"timestamp\":\"2025-09-13T11:59:22.576Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "cb94f9b8-5d9e-4028-9f4c-8cfcdd445331",
+    "createdAt": "2025-09-13T11:59:22.576Z",
+    "updatedAt": "2025-09-13T11:59:22.585Z",
+    "indexPath": "/workspace/scenarios/index/c/b/9/4/f/cb94f9b8-5d9e-4028-9f4c-8cfcdd445331.scenario.json",
+    "symlinkPaths": [],
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/scenarios/ontology/unnamed.unit",
+        "linkTarget": "ior:unit:cb94f9b8-5d9e-4028-9f4c-8cfcdd445331",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/MDAv4/M3/CLASS/unnamed.unit",
+        "linkTarget": "ior:unit:cb94f9b8-5d9e-4028-9f4c-8cfcdd445331",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}

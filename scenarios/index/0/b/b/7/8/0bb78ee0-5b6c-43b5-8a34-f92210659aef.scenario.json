@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "0bb78ee0-5b6c-43b5-8a34-f92210659aef",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI1VDEzOjI4OjUzLjY0M1oiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "0bb78ee0-5b6c-43b5-8a34-f92210659aef",
+    "name": "User Component Code Consolidation",
+    "title": "User Component Code Consolidation",
+    "description": "Migrate fix-scenario-uuids.js standalone script functionality into DefaultUser.ts TypeScript class, eliminating standalone JS files in favor of integrated component architecture."
+  },
+  "unitIndex": {
+    "uuid": "0bb78ee0-5b6c-43b5-8a34-f92210659aef",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/0/b/b/7/8/0bb78ee0-5b6c-43b5-8a34-f92210659aef.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/0bb78ee0-5b6c-43b5-8a34-f92210659aef.scenario.json"
+    ],
+    "createdAt": "2025-08-25T13:28:53.654Z",
+    "updatedAt": "2025-08-25T13:28:53.654Z"
+  }
+}

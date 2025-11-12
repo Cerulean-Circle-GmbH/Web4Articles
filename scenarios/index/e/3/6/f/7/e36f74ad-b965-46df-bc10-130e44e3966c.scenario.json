@@ -1,0 +1,38 @@
+{
+  "ior": {
+    "uuid": "e36f74ad-b965-46df-bc10-130e44e3966c",
+    "component": "unit",
+    "version": "0.3.0.5"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"e36f74ad-b965-46df-bc10-130e44e3966c\",\"timestamp\":\"2025-09-13T12:18:38.771Z\",\"component\":\"unit\",\"version\":\"0.3.0.5\"}",
+  "model": {
+    "uuid": "e36f74ad-b965-46df-bc10-130e44e3966c",
+    "name": "Test Unit",
+    "origin": "",
+    "definition": "Test definition",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/e/3/6/f/7/e36f74ad-b965-46df-bc10-130e44e3966c.scenario.json",
+    "symlinkPaths": [
+      "/workspace/temp-filename-test/Test.Unit.unit"
+    ],
+    "namedLinks": [],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-13T12:18:38.771Z",
+    "updatedAt": "2025-09-13T12:18:38.777Z",
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/temp-filename-test/Test.Unit.unit",
+        "linkTarget": "ior:unit:e36f74ad-b965-46df-bc10-130e44e3966c",
+        "syncStatus": "SYNCED"
+      }
+    ]
+  }
+}

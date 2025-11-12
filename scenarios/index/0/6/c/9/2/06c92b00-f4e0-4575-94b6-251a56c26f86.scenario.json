@@ -1,0 +1,19 @@
+{
+  "ior": {
+    "uuid": "06c92b00-f4e0-4575-94b6-251a56c26f86",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"06c92b00-f4e0-4575-94b6-251a56c26f86\",\"timestamp\":\"2025-09-12T18:15:55.146Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "06c92b00-f4e0-4575-94b6-251a56c26f86",
+    "createdAt": "2025-09-12T18:15:55.146Z",
+    "updatedAt": "2025-09-12T18:15:55.148Z",
+    "name": "VersionFolder→Folder",
+    "definition": "M1 inheritance relationship instance: VersionFolder extends Folder with version-specific enhancements",
+    "indexPath": "/workspace/scenarios/index/0/6/c/9/2/06c92b00-f4e0-4575-94b6-251a56c26f86.scenario.json",
+    "symlinkPaths": [
+      "/workspace/unit-06c92b00"
+    ]
+  }
+}

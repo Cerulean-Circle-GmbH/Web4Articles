@@ -1,0 +1,31 @@
+{
+  "ior": {
+    "uuid": "c77a99e2-151c-42dd-a3dd-62df19a42a79",
+    "component": "Unit",
+    "version": "0.3.19.1"
+  },
+  "owner": "eyJpb3IiOnsidXVpZCI6ImM3N2E5OWUyLTE1MWMtNDJkZC1hM2RkLTYyZGYxOWE0MmE3OSIsImNvbXBvbmVudCI6IlVzZXIiLCJ2ZXJzaW9uIjoiMC4wLjAuMCIsInRpbWVzdGFtcCI6IjIwMjUtMTEtMTFUMTU6Mzg6MTYuNzMxWiJ9LCJvd25lciI6IiIsIm1vZGVsIjp7InVzZXIiOiJkb25nZXMiLCJob3N0bmFtZSI6ImxvY2FsaG9zdCIsInV1aWQiOiJjNzdhOTllMi0xNTFjLTQyZGQtYTNkZC02MmRmMTlhNDJhNzkiLCJjb21wb25lbnQiOiJVbml0IiwidmVyc2lvbiI6IjAuMy4xOS4xIn19",
+  "model": {
+    "uuid": "c77a99e2-151c-42dd-a3dd-62df19a42a79",
+    "name": "Scenario Symlink",
+    "origin": "",
+    "definition": "Named symbolic link connecting ontological workspace to UUID-indexed storage",
+    "typeM3": "CLASS",
+    "indexPath": "/Users/Shared/Workspaces/temp/Web4Articles/scenarios/index/c/7/7/a/9/c77a99e2-151c-42dd-a3dd-62df19a42a79.scenario.json",
+    "references": [
+      {
+        "linkLocation": "ior:local:ln:file:/workspace/scenarios/ontology/Scenario.Symlink.unit",
+        "linkTarget": "ior:unit:c77a99e2-151c-42dd-a3dd-62df19a42a79",
+        "syncStatus": "SYNCED"
+      },
+      {
+        "linkLocation": "ior:local:ln:file:../index/c/7/7/a/9/Scenario.Symlink.unit",
+        "linkTarget": "ior:unit:c77a99e2-151c-42dd-a3dd-62df19a42a79",
+        "syncStatus": "SYNCED"
+      }
+    ],
+    "createdAt": "2025-09-08T13:44:44.808Z",
+    "updatedAt": "2025-11-11T15:38:16.731Z",
+    "symlinkPaths": []
+  }
+}

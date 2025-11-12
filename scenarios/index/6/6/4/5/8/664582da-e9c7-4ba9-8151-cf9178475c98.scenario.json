@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "664582da-e9c7-4ba9-8151-cf9178475c98",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI1VDEzOjIwOjUwLjExN1oiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "664582da-e9c7-4ba9-8151-cf9178475c98",
+    "name": "PDCA Previous Commit and Previous PDCA Reference Standardization",
+    "title": "PDCA Previous Commit and Previous PDCA Reference Standardization",
+    "description": "Standardize all PDCA documents to consistently include Previous Commit SHA and Previous PDCA reference sections. Fix missing references and eliminate duplicates to maintain CMM4 compliance and proper audit trail."
+  },
+  "unitIndex": {
+    "uuid": "664582da-e9c7-4ba9-8151-cf9178475c98",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/6/6/4/5/8/664582da-e9c7-4ba9-8151-cf9178475c98.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/664582da-e9c7-4ba9-8151-cf9178475c98.scenario.json"
+    ],
+    "createdAt": "2025-08-25T13:20:50.127Z",
+    "updatedAt": "2025-08-25T13:20:50.127Z"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "ior": {
+    "uuid": "e5409b4d-1a8c-4f35-9c70-c981d17c759f",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"e5409b4d-1a8c-4f35-9c70-c981d17c759f\",\"timestamp\":\"2025-09-06T21:15:17.878Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "e5409b4d-1a8c-4f35-9c70-c981d17c759f",
+    "name": "ing",
+    "origin": "ior:git:text:https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/once0304/../scrum.pmo/sprints/sprint-20/Web4TLA.Specification.dialogue.md#L2039:80-2039:120",
+    "definition": "",
+    "indexPath": "/workspace/scenarios/index/e/5/4/0/9/e5409b4d-1a8c-4f35-9c70-c981d17c759f.scenario.json",
+    "symlinkPaths": [
+      "/workspace/temp/ing.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../scenarios/index/e/5/4/0/9/e5409b4d-1a8c-4f35-9c70-c981d17c759f.scenario.json",
+        "filename": "ing.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-06T21:15:17.859Z",
+    "updatedAt": "2025-09-06T21:15:17.882Z"
+  }
+}

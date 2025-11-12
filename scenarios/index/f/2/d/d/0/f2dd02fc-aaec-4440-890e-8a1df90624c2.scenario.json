@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "f2dd02fc-aaec-4440-890e-8a1df90624c2",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI1VDEyOjMwOjI0LjEyMFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "f2dd02fc-aaec-4440-890e-8a1df90624c2",
+    "name": "User Scenario Owner UUID Retroactive Fix",
+    "title": "User Scenario Owner UUID Retroactive Fix",
+    "description": "Add method to User component that takes arbitrary scenario file from scenarios/index and fixes the owner UUID to be consistent user UUID instead of random UUID, then re-encodes owner field"
+  },
+  "unitIndex": {
+    "uuid": "f2dd02fc-aaec-4440-890e-8a1df90624c2",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/f/2/d/d/0/f2dd02fc-aaec-4440-890e-8a1df90624c2.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/f2dd02fc-aaec-4440-890e-8a1df90624c2.scenario.json"
+    ],
+    "createdAt": "2025-08-25T12:30:24.144Z",
+    "updatedAt": "2025-08-25T12:30:24.144Z"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "ior": {
+    "uuid": "57195862-e8a5-4303-a0e5-78983c6157e1",
+    "component": "Unit",
+    "version": "0.3.0.4"
+  },
+  "owner": "{\"user\":\"ubuntu\",\"hostname\":\"cursor\",\"uuid\":\"57195862-e8a5-4303-a0e5-78983c6157e1\",\"timestamp\":\"2025-09-08T13:44:55.960Z\",\"component\":\"Unit\",\"version\":\"0.3.0.4\"}",
+  "model": {
+    "uuid": "57195862-e8a5-4303-a0e5-78983c6157e1",
+    "name": "Execution Capabilities",
+    "origin": "",
+    "definition": "Functional operations available on Unit instances (transform, validate, process)",
+    "typeM3": "CLASS",
+    "indexPath": "/workspace/scenarios/index/5/7/1/9/5/57195862-e8a5-4303-a0e5-78983c6157e1.scenario.json",
+    "symlinkPaths": [
+      "/workspace/scenarios/ontology/Execution.Capabilities.unit"
+    ],
+    "namedLinks": [
+      {
+        "location": "../index/5/7/1/9/5/57195862-e8a5-4303-a0e5-78983c6157e1.scenario.json",
+        "filename": "Execution.Capabilities.unit"
+      }
+    ],
+    "executionCapabilities": [
+      "transform",
+      "validate",
+      "process",
+      "Execution Capabilities"
+    ],
+    "storageCapabilities": [
+      "scenarios",
+      "ld-links"
+    ],
+    "createdAt": "2025-09-08T13:44:55.958Z",
+    "updatedAt": "2025-09-08T13:44:55.964Z"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "38b02e9a-a4ff-4eac-a5d8-8bdf6988249c",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI5VDE4OjA5OjQxLjM1NFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "38b02e9a-a4ff-4eac-a5d8-8bdf6988249c",
+    "name": "Web4CLI Default Usage Display",
+    "title": "Web4CLI Default Usage Display",
+    "description": "All Web4Articles CLI tools must automatically display usage help when invoked without parameters. This provides immediate user guidance and eliminates confusion about command syntax. When no parameters are provided, the CLI must show the complete usage information including Usage, Commands, Parameters, and Examples sections. This ensures discoverability and professional user experience across all Web4 tools."
+  },
+  "unitIndex": {
+    "uuid": "38b02e9a-a4ff-4eac-a5d8-8bdf6988249c",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/3/8/b/0/2/38b02e9a-a4ff-4eac-a5d8-8bdf6988249c.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/38b02e9a-a4ff-4eac-a5d8-8bdf6988249c.scenario.json"
+    ],
+    "createdAt": "2025-08-29T18:09:41.365Z",
+    "updatedAt": "2025-08-29T18:09:41.365Z"
+  }
+}

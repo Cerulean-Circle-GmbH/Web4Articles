@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "ff0eb28c-de09-4b4e-9307-6254d42f356f",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDA3OjUwOjIyLjE0MFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "ff0eb28c-de09-4b4e-9307-6254d42f356f",
+    "name": "PDCA Dual Link Automation Script",
+    "title": "PDCA Dual Link Automation Script",
+    "description": "Automated script to fix dual links in PDCA files following requirement e8535c4e-591d-4955-9874-6a853545e970 standard using project structure from source.env for batch processing"
+  },
+  "unitIndex": {
+    "uuid": "ff0eb28c-de09-4b4e-9307-6254d42f356f",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/f/f/0/e/b/ff0eb28c-de09-4b4e-9307-6254d42f356f.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/ff0eb28c-de09-4b4e-9307-6254d42f356f.scenario.json"
+    ],
+    "createdAt": "2025-08-26T07:50:22.162Z",
+    "updatedAt": "2025-08-26T07:50:22.162Z"
+  }
+}

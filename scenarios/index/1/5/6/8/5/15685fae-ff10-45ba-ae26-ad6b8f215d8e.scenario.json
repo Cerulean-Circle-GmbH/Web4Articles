@@ -1,0 +1,23 @@
+{
+  "IOR": {
+    "uuid": "15685fae-ff10-45ba-ae26-ad6b8f215d8e",
+    "component": "Web4Requirement",
+    "version": "v1.0"
+  },
+  "owner": "eyJ1c2VyIjoiZG9uZ2VzIiwiaG9zdG5hbWUiOiJsb2NhbGhvc3QiLCJ1dGNUaW1lc3RhbXAiOiIyMDI1LTA4LTI2VDEwOjMyOjQ5LjIwOFoiLCJ1dWlkIjoiN2U2NTEzOWQtMzhjZi00ZjM0LWI3NjktMGE4NmRkM2E5NGUzIn0=",
+  "model": {
+    "uuid": "15685fae-ff10-45ba-ae26-ad6b8f215d8e",
+    "name": "Web4 ONCE Kernel Implementation with IOR Support",
+    "title": "Web4 ONCE Kernel Implementation with IOR Support",
+    "description": "Implementation of Universal Object Network Communication Engine with IOR (Interoperable Object Reference) support. Core foundation component enabling distributed object networks, location transparency, and universal object addressing across Web4 architecture."
+  },
+  "unitIndex": {
+    "uuid": "15685fae-ff10-45ba-ae26-ad6b8f215d8e",
+    "indexPath": "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scenarios/index/1/5/6/8/5/15685fae-ff10-45ba-ae26-ad6b8f215d8e.scenario.json",
+    "symlinkPaths": [
+      "/Users/Shared/Workspaces/2cuGitHub/Web4Articles/spec/requirements/15685fae-ff10-45ba-ae26-ad6b8f215d8e.scenario.json"
+    ],
+    "createdAt": "2025-08-26T10:32:49.233Z",
+    "updatedAt": "2025-08-26T10:32:49.233Z"
+  }
+}
