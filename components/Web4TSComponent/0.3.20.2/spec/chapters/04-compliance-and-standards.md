@@ -63,6 +63,33 @@ npm install  # without proper symlink setup
 
 **Related:** See [Automatic Project Initialization](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-10-UTC-0124/components/Web4TSComponent/0.3.11.1/spec/chapters/01-architecture.md#-automatic-project-initialization) | [chapters/01-architecture.md](chapters/01-architecture.md#-automatic-project-initialization) for how DRY is enforced
 
+### 5a. The `--help` Exception (Educational Tool)
+
+**The ONLY flag in Web4:**
+
+```bash
+# ✅ THE ONLY SUPPORTED FLAG (educational exception)
+web4tscomponent --help
+
+# Shows philosophy preamble explaining:
+# • Why flags broke Unix/Linux OOP in the 1980s-1990s
+# • How Web4 restores method-based design
+# • Then shows normal help output
+```
+
+**Why this exception exists:**
+
+The `--help` flag is so ingrained in CLI culture that we support it as an **educational tool**. When users run `--help`, they see a detailed explanation of why Web4 forbids flags, how flags broke the original OOP intent of Unix, and how Web4 restores that vision.
+
+**This is the ONLY flag ever supported in Web4.** All other flags (`--version`, `--verbose`, `-v`, `-h`, etc.) are strictly forbidden.
+
+**Philosophy:**
+- Flags are configuration, not behavior
+- Flags destroyed Unix's method-based simplicity
+- Web4 uses methods: `info` instead of `--version`, `verbose` instead of `--verbose`
+- Tab completion and auto-discovery replace flag documentation
+- Method chaining replaces flag combinations
+
 ### 6. Flat Model Principle (Scenarios)
 
 **Core Principle:** Models MUST be flat (primitives + IORs only) for serialization and hibernation.
