@@ -1269,7 +1269,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
       console.log(`   🔗 test → ${version}`);
     }
     
-    // @pdca 2025-11-11-UTC-2012.refactor-create-scenario-generation-radical-oop.pdca.md
+    // @pdca 2025-11-12-UTC-1700.fix-scenario-storage-architecture.pdca.md
     // Generate scenario file for created component - links to Web4TSComponent's own scenario
     console.log(`📊 Generating component scenario...`);
     
@@ -1282,10 +1282,34 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
     // Use Web4TSComponent's own scenario (same as used by 'info' command)
     const web4tsScenario = await this.toScenario();
     
-    // Write Web4TSComponent scenario to created component's directory
-    const scenarioPath = path.join(componentRoot, `${component}.component.json`);
+    // Generate UUID for scenario
+    const scenarioUuid = crypto.randomUUID();
+    
+    // Detect test isolation: check if projectRoot contains /test/data
+    const isTestIsolation = this.model.projectRoot.includes('/test/data');
+    
+    // Determine scenarios root directory
+    // Test isolation: projectRoot/scenarios
+    // Production: projectRoot/../../../scenarios (up from component version dir)
+    const scenariosRoot = isTestIsolation
+      ? path.join(this.model.projectRoot, 'scenarios')
+      : path.join(this.model.projectRoot, '../../..', 'scenarios');
+    
+    // Create directory: scenarios/{GeneratingComponent}/{Version}/
+    const scenarioDir = path.join(scenariosRoot, generatingComponent, generatingVersion.toString());
+    await fs.mkdir(scenarioDir, { recursive: true });
+    
+    // Write scenario to centralized storage: scenarios/{Component}/{Version}/{uuid}.scenario.json
+    const scenarioPath = path.join(scenarioDir, `${scenarioUuid}.scenario.json`);
     await fs.writeFile(scenarioPath, JSON.stringify(web4tsScenario, null, 2));
-    console.log(`   ✅ Scenario: ${component}.component.json`);
+    
+    // Create symlink from component directory to scenario
+    const symlinkPath = path.join(componentRoot, `${component}.component.json`);
+    const relativePath = path.relative(componentRoot, scenarioPath);
+    await fs.symlink(relativePath, symlinkPath);
+    
+    console.log(`   ✅ Scenario: ${scenarioUuid}.scenario.json`);
+    console.log(`   🔗 Symlink: ${component}.component.json → scenarios/${generatingComponent}/${generatingVersion}/`);
     
     // Verify component is callable
     const cliScriptName = component.toLowerCase().replace(/\./g, '');
