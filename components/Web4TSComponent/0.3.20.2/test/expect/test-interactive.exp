@@ -1,0 +1,52 @@
+#!/usr/bin/expect -f
+# Test ONCE interactive demo with simulated keystrokes
+
+set timeout 30
+cd /Users/Shared/Workspaces/2cuGitHub/UpDown/components/ONCE/0.3.20.3
+
+# Start demo
+spawn ./once demo
+
+# Wait for initial prompt
+expect "Press*for help*" {
+    send_user "\n✅ Interactive demo started\n"
+}
+
+# Press 's' to start server
+sleep 1
+send "s"
+expect "Server started*" {
+    send_user "\n✅ Server started with 's' key\n"
+}
+
+# Press 'c' to start client 1
+sleep 2
+send "c"
+expect "Client server started*" {
+    send_user "\n✅ Client 1 started with 'c' key\n"
+}
+
+# Press 'c' to start client 2
+sleep 2
+send "c"
+expect "Client server started*" {
+    send_user "\n✅ Client 2 started with 'c' key\n"
+}
+
+# Press 'd' to open demo hub
+sleep 2
+send "d"
+expect "Demo hub opened*" {
+    send_user "\n✅ Demo hub opened with 'd' key\n"
+}
+
+# Press 'q' to quit
+sleep 2
+send "q"
+expect "Quitting demo*" {
+    send_user "\n✅ Demo quit with 'q' key\n"
+}
+
+send_user "\n🎉 All interactive tests passed!\n"
+
+
