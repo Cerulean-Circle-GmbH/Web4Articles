@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONCE Server v${this.version} - Object Network Communication Engine</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #0891b2 0%, #06b6d4 50%, #0e7490 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 3em;
+            background: linear-gradient(45deg, #fff, #67e8f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .cerulean-logo {
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 8px rgba(8,145,178,0.3));
+        }
+        .cerulean-branding {
+            color: #67e8f9;
+            font-style: italic;
+            margin: 10px 0;
+        }
+        .header h2 {
+            margin: 10px 0;
+            color: rgba(255,255,255,0.8);
+            font-weight: 300;
+        }
+        .status {
+            background: rgba(0,255,0,0.2);
+            border: 2px solid rgba(0,255,0,0.4);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        .status h3 {
+            margin-top: 0;
+            color: #4ade80;
+            font-size: 1.5em;
+        }
+        .server-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        .info-card {
+            background: rgba(255,255,255,0.15);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .info-card h3 {
+            margin-top: 0;
+            color: #a8edea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .endpoints {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .endpoints h3 {
+            margin-top: 0;
+            color: #fbbf24;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .endpoint {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            border-left: 4px solid #10b981;
+        }
+        .endpoint strong {
+            color: #10b981;
+        }
+        .endpoint code {
+            background: rgba(0,0,0,0.4);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            color: #a8edea;
+        }
+        .endpoint a {
+            color: #a8edea;
+            text-decoration: none;
+        }
+        .endpoint a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+        .hierarchy-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .primary-badge {
+            background: linear-gradient(45deg, #10b981, #34d399);
+            color: white;
+        }
+        .client-badge {
+            background: linear-gradient(45deg, #3b82f6, #60a5fa);
+            color: white;
+        }
+        .emoji {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <svg width="60" height="60" viewBox="0 0 100 100" class="cerulean-logo">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#0891b2" stroke-width="3"/>
+                <circle cx="50" cy="50" r="30" fill="#06b6d4" opacity="0.3"/>
+                <circle cx="50" cy="50" r="15" fill="#0891b2"/>
+                <text x="50" y="55" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">C</text>
+            </svg>
+            <h1><span class="emoji">🚀</span> ONCE Server</h1>
+            <h2>Object Network Communication Engine</h2>
+            <p>Enhanced v${this.version} with Server Hierarchy & Dynamic Port Management</p>
+            <p class="cerulean-branding">Powered by <strong>Cerulean Circle GmbH</strong></p>
+            <span class="hierarchy-badge ${this.serverModel.isPrimaryServer ? 'primary-badge' : 'client-badge'}">
+                ${this.serverModel.isPrimaryServer ? '🟢 Primary Server' : '🔵 Client Server'}
+            </span>
+        </div>
+        
+        <div class="status">
+            <h3><span class="emoji">✅</span> Server Status: Running</h3>
+            <p>ONCE kernel v${this.version} initialized and ready for enhanced P2P communication</p>
+        </div>
+
+        <div class="server-info">
+            <div class="info-card">
+                <h3><span class="emoji">🆔</span> Identity</h3>
+                <p><strong>UUID:</strong><br><code>${this.serverModel.uuid}</code></p>
+                <p><strong>Domain:</strong> ${this.serverModel.domain}</p>
+                <p><strong>State:</strong> ${this.serverModel.state}</p>
+            </div>
+            
+            <div class="info-card">
+                <h3><span class="emoji">🌐</span> Network</h3>
+                <p><strong>HTTP Port:</strong> ${this.httpPort}</p>
+                <p><strong>WebSocket Port:</strong> ${this.wsPort}</p>
+                <p><strong>Server Type:</strong> ${this.serverModel.isPrimaryServer ? 'Primary (42777)' : 'Client (8080+)'}</p>
+            </div>
+            
+            <div class="info-card">
+                <h3><span class="emoji">⚡</span> Capabilities</h3>
+                ${this.capabilitiesHTML}
+            </div>
+        </div>
+
+        <div class="endpoints">
+            <h3><span class="emoji">📡</span> Available Endpoints</h3>
+            
+            <div class="endpoint">
+                <strong>Server Status:</strong> 
+                <code><a href="/" target="_blank">/</a></code>
+                <p>This page - server status and information</p>
+            </div>
+            
+            <div class="endpoint">
+                <strong>Health Check:</strong> 
+                <code><a href="/health" target="_blank">/health</a></code>
+                <p>JSON server health and status information</p>
+            </div>
+            
+            <div class="endpoint">
+                <strong>Server Registry:</strong> 
+                <code><a href="/servers" target="_blank">/servers</a></code>
+                <p>${this.serverModel.isPrimaryServer ? 'JSON list of all registered servers in hierarchy' : 'Only available on primary server'}</p>
+            </div>
+            
+            <div class="endpoint">
+                <strong>Interactive Client:</strong> 
+                <code><a href="/once" target="_blank">/once</a></code>
+                <p>Interactive WebSocket browser client with message exchange</p>
+            </div>
+            
+            <div class="endpoint">
+                <strong>Demo Hub:</strong> 
+                <code><a href="/demo" target="_blank">/demo</a></code>
+                <p>Live server management dashboard with auto-refresh and status monitoring</p>
+            </div>
+        </div>
+        
+        ${this.serverModel.isPrimaryServer ? '<div class="endpoints"><h3><span class="emoji">🔧</span> Primary Server APIs</h3><div class="endpoint"><strong>Start Server API:</strong> <code>/start-server</code> (POST)<p>Dynamically spawn a new client server (primary only)</p></div></div>' : ''}
+
+
+        <div class="endpoints">
+            <h3><span class="emoji">🔌</span> WebSocket Connection</h3>
+            <p>WebSocket endpoint available at: <code>ws://localhost:${this.httpPort}/</code></p>
+            <p>Use this endpoint for real-time P2P communication with ONCE v${this.version} kernel</p>
+            <p><strong>New in v${this.version}:</strong> Enhanced server hierarchy, dynamic port management, scenario-based configuration</p>
+        </div>
+    </div>
+
+    <script>
+        console.log('🚀 ONCE Server v${this.version} Interface Loaded');
+        console.log('Server UUID:', '${this.serverModel.uuid}');
+        console.log('Server Type:', '${this.serverModel.isPrimaryServer ? 'Primary' : 'Client'}');
+        console.log('HTTP Port:', '${this.httpPort}');
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONCE Browser Client - Interactive Demo</title>
+    <style>
+        body { 
+            font-family: 'Courier New', monospace; 
+            background: #1a1a1a; 
+            color: #0f0; 
+            margin: 0;
+            padding: 20px;
+        }
+        .demo-header { 
+            border: 2px solid #0f0; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            text-align: center;
+            background: rgba(0, 255, 0, 0.1);
+        }
+        .connection-status {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .message-log { 
+            background: #000; 
+            border: 1px solid #0f0; 
+            padding: 15px; 
+            height: 400px; 
+            overflow-y: scroll; 
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .acknowledgment { color: #ff0; font-weight: bold; }
+        .connection { color: #0ff; }
+        .message { color: #0f0; }
+        .error { color: #f00; }
+        .timestamp { color: #999; font-size: 0.9em; }
+        
+        .controls {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background: #ff0;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .stat-box {
+            border: 1px solid #0f0;
+            padding: 10px;
+            background: rgba(0, 255, 0, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-header">
+        <h1 id="pageTitle">🎭 ONCE Interactive Demo</h1>
+        <p>Web4 P2P Communication - Radical OOP Architecture</p>
+        <div class="connection-status" id="connectionStatus">🔴 Disconnected</div>
+        <div class="connection-status" id="primaryConnection" style="font-size: 0.9em; color: #0ff;"></div>
+    </div>
+    
+    <div class="stats">
+        <div class="stat-box">
+            <strong>Messages Sent:</strong> <span id="messagesSent">0</span>
+        </div>
+        <div class="stat-box">
+            <strong>Messages Received:</strong> <span id="messagesReceived">0</span>
+        </div>
+        <div class="stat-box">
+            <strong>Acknowledgments:</strong> <span id="acknowledgmentsSent">0</span>
+        </div>
+        <div class="stat-box">
+            <strong>Connection Time:</strong> <span id="connectionTime">--:--:--</span>
+        </div>
+        <div class="stat-box" style="grid-column: 1 / -1;">
+            <strong>Connected Servers:</strong> <span id="connectedServers">Loading...</span>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <button onclick="sendBroadcastMessage()">📡 Broadcast to All</button>
+        <button onclick="sendRelayMessage()">🔄 Relay via Primary</button>
+        <button onclick="sendP2PMessage()">🔗 P2P Direct</button>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+    
+    <div class="message-log" id="messageLog">
+        <div class="connection">📡 Initializing ONCE Browser Client...</div>
+    </div>
+    
+    <script>
+        // ONCE Browser Client - Dynamic version from server
+        const urlParams = new URLSearchParams(window.location.search);
+        const defaultHost = window.location.host || 'localhost:8080';
+        const serverHost = urlParams.get('server') || defaultHost;
+        const isDemoMode = urlParams.get('demo') === 'true' || window.location.pathname === '/once';
+        
+        // UUID generator fallback for browsers without crypto.randomUUID
+        function generateUUID() {
+            if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+                return crypto.randomUUID();
+            }
+            // Fallback: simple UUID v4 generator
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+        
+        let ws = null;
+        let serverVersion = 'unknown';
+        let stats = {
+            messagesSent: 0,
+            messagesReceived: 0,
+            acknowledgmentsSent: 0,
+            connectionTime: null
+        };
+        let connectedServers = []; // Store list of connected servers for relay
+        
+        console.log('ONCE Browser Client - Demo Mode:', isDemoMode);
+        console.log('Connecting to server:', serverHost);
+        
+        addMessage('connection', '🎭 ONCE Browser Client started');
+        addMessage('connection', `📡 Attempting connection to: ${serverHost}`);
+        
+        // WebSocket connection
+        function connectToServer() {
+            try {
+                ws = new WebSocket(`ws://${serverHost}`);
+                
+                ws.onopen = function() {
+                    stats.connectionTime = new Date();
+                    updateConnectionStatus('🟢 Browser → ' + serverHost);
+                    addMessage('connection', '✅ Connected to ONCE server');
+                    
+                    // Fetch server UUID, version, and primary connection info
+                    fetchServerInfo();
+                    
+                    // Fetch connected servers from primary
+                    fetchConnectedServers();
+                    
+                    // Send connection message
+                    const connectionMsg = {
+                        type: 'client-connected',
+                        data: {
+                            clientId: 'browser-' + Date.now(),
+                            timestamp: new Date().toISOString()
+                        }
+                    };
+                    
+                    ws.send(JSON.stringify(connectionMsg));
+                    stats.acknowledgmentsSent++;
+                    updateStats();
+                    addMessage('acknowledgment', '📨 Sent connection acknowledgment');
+                };
+                
+                ws.onmessage = function(event) {
+                    try {
+                        const message = JSON.parse(event.data);
+                        stats.messagesReceived++;
+                        updateStats();
+                        
+                        // Enhanced logging with sender UUID and URL
+                        let logMsg = `📥 Received: ${message.type || 'unknown'}`;
+                        
+                        // Handle different message types
+                        if (message.type === 'server-registered' && message.data) {
+                            // Server registration notification
+                            const serverUUID = message.data.uuid ? message.data.uuid.substring(0, 8) : 'unknown';
+                            const serverHost = message.data.host || message.data.hostname || 'unknown';
+                            const serverPort = message.data.httpPort || 'unknown';
+                            logMsg = `📥 Server Registered: [${serverUUID}] ${serverHost}:${serverPort}`;
+                        } else if (message.scenario && message.scenario.uuid) {
+                            // Scenario message with full context
+                            const scenarioUUID = message.scenario.uuid.substring(0, 8);
+                            const messageType = message.scenario.state?.type || message.type;
+                            logMsg = `📥 [${scenarioUUID}] ${messageType}`;
+                            
+                            // Add sender info if available
+                            if (message.scenario.state && message.scenario.state.from) {
+                                const from = message.scenario.state.from;
+                                const senderHost = from.host || 'localhost';
+                                const senderPort = from.port || 'unknown';
+                                
+                                // Handle browser client UUIDs (format: "browser-timestamp")
+                                let senderIdentity;
+                                if (from.uuid && from.uuid.startsWith('browser-')) {
+                                    senderIdentity = `browser@${senderHost}:${senderPort}`;
+                                } else {
+                                    const senderUUID = from.uuid ? from.uuid.substring(0, 8) : 'unknown';
+                                    senderIdentity = `[${senderUUID}] ${senderHost}:${senderPort}`;
+                                }
+                                
+                                logMsg += ` from ${senderIdentity}`;
+                            }
+                            
+                            // Add content preview for broadcast messages
+                            if (message.scenario.state?.content) {
+                                const content = message.scenario.state.content;
+                                const preview = content.length > 50 ? content.substring(0, 50) + '...' : content;
+                                logMsg += ` - "${preview}"`;
+                            }
+                        }
+                        
+                        addMessage('message', logMsg);
+                        
+                        // Auto-acknowledge received messages
+                        if (message.type) {
+                            const ackMsg = {
+                                type: 'acknowledgment',
+                                data: {
+                                    acknowledgedType: message.type,
+                                    timestamp: new Date().toISOString()
+                                }
+                            };
+                            
+                            ws.send(JSON.stringify(ackMsg));
+                            stats.acknowledgmentsSent++;
+                            updateStats();
+                            
+                            // Include acknowledged message type in log
+                            addMessage('acknowledgment', `📨 [browser] Acknowledged: ${message.type}`);
+                        }
+                    } catch (error) {
+                        addMessage('error', `❌ Error parsing message: ${error.message}`);
+                    }
+                };
+                
+                ws.onclose = function() {
+                    updateConnectionStatus('🔴 Disconnected');
+                    addMessage('connection', '❌ Disconnected from ONCE server');
+                };
+                
+                ws.onerror = function(error) {
+                    addMessage('error', `❌ WebSocket error: ${error.message || 'Connection failed'}`);
+                };
+                
+            } catch (error) {
+                addMessage('error', `❌ Failed to connect: ${error.message}`);
+            }
+        }
+        
+        // UI Functions
+        function addMessage(type, text) {
+            const log = document.getElementById('messageLog');
+            const div = document.createElement('div');
+            div.className = type;
+            
+            const timestamp = new Date().toLocaleTimeString();
+            div.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${text}`;
+            
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        function updateConnectionStatus(status) {
+            document.getElementById('connectionStatus').textContent = status;
+        }
+        
+        function updateStats() {
+            document.getElementById('messagesSent').textContent = stats.messagesSent;
+            document.getElementById('messagesReceived').textContent = stats.messagesReceived;
+            document.getElementById('acknowledgmentsSent').textContent = stats.acknowledgmentsSent;
+            
+            if (stats.connectionTime) {
+                const now = new Date();
+                const diff = now - stats.connectionTime;
+                const hours = Math.floor(diff / 3600000).toString().padStart(2, '0');
+                const minutes = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+                const seconds = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+                document.getElementById('connectionTime').textContent = `${hours}:${minutes}:${seconds}`;
+            }
+        }
+        
+        // Control Functions - All messages are Scenarios
+        function sendBroadcastMessage() {
+            console.log('[sendBroadcastMessage] Called');
+            console.log('[sendBroadcastMessage] WebSocket state:', ws ? ws.readyState : 'null');
+            console.log('[sendBroadcastMessage] Server version:', serverVersion);
+            
+            if (!ws) {
+                addMessage('error', '❌ WebSocket not initialized');
+                console.error('[sendBroadcastMessage] WebSocket is null');
+                return;
+            }
+            
+            if (ws.readyState !== WebSocket.OPEN) {
+                addMessage('error', '❌ Not connected (WebSocket state: ' + ws.readyState + ')');
+                console.error('[sendBroadcastMessage] WebSocket not open:', ws.readyState);
+                return;
+            }
+            
+            try {
+                const scenario = {
+                    type: 'scenario-message',
+                    scenario: {
+                        uuid: generateUUID(),
+                        objectType: 'ONCEMessage',
+                        version: serverVersion || '0.3.20.5',
+                        state: {
+                            type: 'broadcast',
+                            from: { 
+                                uuid: 'browser-' + Date.now(), 
+                                port: parseInt(serverHost.split(':')[1] || '8080'),
+                                host: serverHost.split(':')[0]
+                            },
+                            to: 'all',
+                            content: '📡 Broadcast from browser: ' + new Date().toLocaleTimeString(),
+                            timestamp: new Date().toISOString(),
+                            sequence: stats.messagesSent + 1
+                        },
+                        metadata: {
+                            created: new Date().toISOString(),
+                            modified: new Date().toISOString(),
+                            creator: 'browser-client',
+                            description: 'Browser-triggered broadcast'
+                        }
+                    }
+                };
+                
+                console.log('[sendBroadcastMessage] Sending scenario:', JSON.stringify(scenario, null, 2));
+                ws.send(JSON.stringify(scenario));
+                stats.messagesSent++;
+                updateStats();
+                addMessage('message', '📡 Broadcast scenario sent to all servers');
+                console.log('[sendBroadcastMessage] Broadcast sent successfully');
+            } catch (error) {
+                addMessage('error', '❌ Error sending broadcast: ' + error.message);
+                console.error('[sendBroadcastMessage] Error:', error);
+            }
+        }
+        
+        function sendRelayMessage() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                // Get current server's port to exclude it from relay targets
+                const currentPort = parseInt(serverHost.split(':')[1] || '8080');
+                
+                // Get first available client server (not primary, not current server)
+                const targetServer = connectedServers.find(s => {
+                    if (s.isPrimaryServer) return false; // Skip primary
+                    const sPort = s.capabilities?.find(c => c.capability === 'httpPort')?.port || s.port;
+                    return sPort !== currentPort; // Skip current server
+                });
+                
+                if (!targetServer) {
+                    addMessage('error', '❌ No other client servers available for relay');
+                    return;
+                }
+                
+                const targetPort = targetServer.capabilities.find(c => c.capability === 'httpPort')?.port || 0;
+                
+                const scenario = {
+                    type: 'scenario-relay',
+                    scenario: {
+                        uuid: generateUUID(),
+                        objectType: 'ONCEMessage',
+                        version: serverVersion || '0.3.20.5',
+                        state: {
+                            type: 'relay',
+                            from: { 
+                                uuid: 'browser-' + Date.now(), 
+                                host: serverHost.split(':')[0],
+                                port: parseInt(serverHost.split(':')[1] || '8080') 
+                            },
+                            to: { uuid: targetServer.uuid, port: targetPort },
+                            content: '🔄 Relay from browser via primary: ' + new Date().toLocaleTimeString(),
+                            timestamp: new Date().toISOString(),
+                            sequence: stats.messagesSent + 1
+                        },
+                        metadata: {
+                            created: new Date().toISOString(),
+                            modified: new Date().toISOString(),
+                            creator: 'browser-client',
+                            description: 'Browser-triggered relay'
+                        }
+                    },
+                    targetUUID: targetServer.uuid
+                };
+                
+                ws.send(JSON.stringify(scenario));
+                stats.messagesSent++;
+                updateStats();
+                addMessage('message', `🔄 Relay scenario sent to ${targetServer.uuid.substring(0, 8)}... (port ${targetPort})`);
+            } else {
+                addMessage('error', '❌ Not connected');
+            }
+        }
+        
+        function sendP2PMessage() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                const scenario = {
+                    type: 'scenario-p2p',
+                    scenario: {
+                        uuid: generateUUID(),
+                        objectType: 'ONCEMessage',
+                        version: '0.3.20.3',
+                        state: {
+                            type: 'p2p',
+                            from: { uuid: 'browser-' + Date.now(), port: parseInt(serverHost.split(':')[1] || '8080') },
+                            to: { uuid: 'peer', port: 0 },
+                            content: '🔗 P2P from browser: ' + new Date().toLocaleTimeString(),
+                            timestamp: new Date().toISOString(),
+                            sequence: stats.messagesSent + 1
+                        },
+                        metadata: {
+                            created: new Date().toISOString(),
+                            modified: new Date().toISOString(),
+                            creator: 'browser-client',
+                            description: 'Browser-triggered P2P'
+                        }
+                    },
+                    peerPort: 0
+                };
+                
+                ws.send(JSON.stringify(scenario));
+                stats.messagesSent++;
+                updateStats();
+                addMessage('message', '🔗 P2P scenario sent directly');
+            } else {
+                addMessage('error', '❌ Not connected');
+            }
+        }
+        
+        function clearLog() {
+            document.getElementById('messageLog').innerHTML = '';
+            addMessage('connection', '🧹 Log cleared');
+        }
+        
+        // Fetch connected servers from primary server
+        async function fetchConnectedServers() {
+            try {
+                // Step 1: Get primary server info from current server's /health
+                const hostname = serverHost.split(':')[0];
+                const port = serverHost.split(':')[1] || '8080';
+                console.log(`[fetchConnectedServers] Fetching from ${hostname}:${port}/health`);
+                const healthResponse = await fetch(`http://${hostname}:${port}/health`);
+                
+                if (!healthResponse.ok) {
+                    throw new Error(`Health check failed: ${healthResponse.status} ${healthResponse.statusText}`);
+                }
+                
+                const healthData = await healthResponse.json();
+                console.log(`[fetchConnectedServers] Health data:`, healthData);
+                
+                // Step 2: Determine primary server address
+                let primaryHost, primaryPort;
+                if (healthData.isPrimaryServer) {
+                    // We're on the primary
+                    primaryHost = hostname;
+                    primaryPort = port;
+                } else if (healthData.primaryServer) {
+                    // We're on a client, get primary from health data
+                    primaryHost = healthData.primaryServer.host || hostname;
+                    primaryPort = healthData.primaryServer.port || 42777;
+                } else {
+                    throw new Error('Cannot determine primary server address');
+                }
+                
+                console.log(`[fetchConnectedServers] Fetching from primary ${primaryHost}:${primaryPort}/servers`);
+                
+                // Step 3: Fetch connected servers from primary
+                const response = await fetch(`http://${primaryHost}:${primaryPort}/servers`);
+                
+                if (!response.ok) {
+                    throw new Error(`Servers fetch failed: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log(`[fetchConnectedServers] Servers data:`, data);
+                
+                // Store servers for relay functionality
+                connectedServers = data.servers || [];
+                
+                const serverCount = connectedServers.length;
+                const serverList = connectedServers.map(s => {
+                    const port = s.capabilities.find(c => c.capability === 'httpPort')?.port;
+                    return port;
+                }).filter(Boolean).join(', ');
+                
+                document.getElementById('connectedServers').textContent = 
+                    `${serverCount} servers (ports: ${serverList || 'None'})`;
+                
+                addMessage('connection', `📊 ${serverCount} servers connected via primary (${primaryHost}:${primaryPort})`);
+            } catch (error) {
+                const errorMsg = error.message || 'Unknown error';
+                document.getElementById('connectedServers').textContent = `Error: ${errorMsg}`;
+                console.error('[fetchConnectedServers] Failed:', error);
+                addMessage('error', `❌ Failed to fetch servers: ${errorMsg}`);
+            }
+        }
+        
+        // Fetch current server info (UUID)
+        async function fetchServerInfo() {
+            try {
+                const hostname = serverHost.split(':')[0];
+                const port = serverHost.split(':')[1] || '8080';
+                const response = await fetch(`http://${hostname}:${port}/health`);
+                const data = await response.json();
+                
+                // Store server version globally
+                serverVersion = data.version || 'unknown';
+                
+                // Update page title with version
+                document.getElementById('pageTitle').textContent = `🎭 ONCE v${serverVersion} Interactive Demo`;
+                document.title = `ONCE v${serverVersion} Browser Client`;
+                
+                // Update connection status with server UUID
+                if (data.uuid) {
+                    const shortUuid = data.uuid.substring(0, 8);
+                    updateConnectionStatus(`🟢 Browser → ${hostname}:${port} [${shortUuid}]`);
+                }
+                
+                // Show primary server connection if this is a client server
+                if (data.primaryServer && data.primaryServer.connected) {
+                    const primaryHost = data.primaryServer.host;
+                    const primaryPort = data.primaryServer.port;
+                    document.getElementById('primaryConnection').textContent = 
+                        `🟢 Server → Primary: ${primaryHost}:${primaryPort}`;
+                } else if (data.isPrimaryServer) {
+                    document.getElementById('primaryConnection').textContent = 
+                        `🟢 This is the Primary Server`;
+                }
+            } catch (error) {
+                console.error('Failed to fetch server info:', error);
+            }
+        }
+        
+        // Update stats periodically
+        setInterval(updateStats, 1000);
+        
+        // Auto-connect when page loads
+        connectToServer();
+        
+        // Welcome message for demo mode
+        if (isDemoMode) {
+            setTimeout(() => {
+                addMessage('message', '🎭 Welcome to ONCE v0.3.20.3 Interactive Demo!');
+                addMessage('message', '🌐 This browser client demonstrates Web4 P2P communication');
+                addMessage('message', '🚀 TRUE Radical OOP architecture - v0.3.20.3');
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

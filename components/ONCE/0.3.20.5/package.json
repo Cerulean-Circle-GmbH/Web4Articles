@@ -1,0 +1,39 @@
+{
+  "name": "@web4x/once",
+  "version": "0.3.20.5",
+  "type": "module",
+  "description": "ONCE Component",
+  "main": "dist/ts/layer5/ONCECLI.js",
+  "scripts": {
+    "start": "./src/sh/start.sh",
+    "start:clean": "./src/sh/start-clean.sh",
+    "test": "./src/sh/test.sh",
+    "test:bail": "npx vitest --bail=1",
+    "test:watch": "npx vitest --watch",
+    "test:file": "npx vitest",
+    "test:coverage": "npx vitest --coverage",
+    "test:e2e:setup": "npx playwright install chromium",
+    "clean": "./src/sh/clean.sh",
+    "clean:global": "./src/sh/clean-global.sh",
+    "build": "./src/sh/build.sh",
+    "component": "./once",
+    "vitest": "npx vitest run",
+    "install-deps": "./src/sh/install-deps.sh",
+    "postinstall": "npx playwright install chromium --with-deps 2>/dev/null || true"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.1.0",
+    "playwright": "^1.56.1",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@types/uuid": "^10.0.0",
+    "@types/ws": "^8.5.8",
+    "glob": "^11.0.3",
+    "minimatch": "^10.0.3",
+    "uuid": "^11.1.0",
+    "ws": "^8.14.2"
+  }
+}

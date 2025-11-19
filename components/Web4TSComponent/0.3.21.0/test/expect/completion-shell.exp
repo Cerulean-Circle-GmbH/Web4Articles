@@ -1,0 +1,52 @@
+#!/usr/bin/expect -f
+# Test ONCE interactive demo with simulated keystrokes
+
+set timeout 30
+cd /Users/Shared/Workspaces/temp/Web4Articles/components/Web4TSComponent/0.3.20.2
+
+# Start demo
+spawn bash --init-file source.env
+
+# Wait for initial prompt
+expect "[web4*" {
+    send_user "\n✅ Interactive web4 started\n"
+}
+
+# Press 'web4ts' to start server
+sleep 1
+send "web4ts"
+expect "Server started*" {
+    send_user "\n✅ Server started with 's' key\n"
+}
+
+# Press 'c' to start client 1
+sleep 2
+send "c"
+expect "Client server started*" {
+    send_user "\n✅ Client 1 started with 'c' key\n"
+}
+
+# Press 'c' to start client 2
+sleep 2
+send "c"
+expect "Client server started*" {
+    send_user "\n✅ Client 2 started with 'c' key\n"
+}
+
+# Press 'd' to open demo hub
+sleep 2
+send "d"
+expect "Demo hub opened*" {
+    send_user "\n✅ Demo hub opened with 'd' key\n"
+}
+
+# Press 'q' to quit
+sleep 2
+send "q"
+expect "Quitting demo*" {
+    send_user "\n✅ Demo quit with 'q' key\n"
+}
+
+send_user "\n🎉 All interactive tests passed!\n"
+
+

@@ -1,0 +1,98 @@
+{
+  "timestamp": "2025-11-19T09:05:30.033Z",
+  "configuration": {
+    "primary": {
+      "uuid": "b0fc9ffa-58b9-4eaa-9481-6a9b82c9a679",
+      "port": 42777
+    },
+    "clients": [
+      {
+        "uuid": "ab9572d0-e7e2-4eff-a254-78b6e40303b7",
+        "port": 8087
+      },
+      {
+        "uuid": "4c67c2d8-dae1-4721-ae64-505cb9f2db1c",
+        "port": 8088
+      }
+    ]
+  },
+  "messages": [
+    {
+      "uuid": "dc2b3446-4b0e-4532-957a-29e4484b41e3",
+      "objectType": "ONCEMessage",
+      "version": "0.3.20.5",
+      "state": {
+        "type": "broadcast",
+        "from": {
+          "uuid": "b0fc9ffa-58b9-4eaa-9481-6a9b82c9a679",
+          "port": 42777
+        },
+        "to": "all",
+        "content": "Broadcast message from primary to all clients",
+        "timestamp": "2025-11-19T09:05:26.028Z",
+        "sequence": 1
+      },
+      "metadata": {
+        "created": "2025-11-19T09:05:26.029Z",
+        "modified": "2025-11-19T09:05:26.029Z",
+        "creator": "ONCE-demoMessages",
+        "description": "Broadcast pattern demo message"
+      }
+    },
+    {
+      "uuid": "5a143e09-d2b9-443b-a8d6-d790065921ae",
+      "objectType": "ONCEMessage",
+      "version": "0.3.20.5",
+      "state": {
+        "type": "relay",
+        "from": {
+          "uuid": "ab9572d0-e7e2-4eff-a254-78b6e40303b7",
+          "port": 8087
+        },
+        "to": {
+          "uuid": "4c67c2d8-dae1-4721-ae64-505cb9f2db1c",
+          "port": 8088
+        },
+        "content": "Relay message from client 1 to client 2 via primary",
+        "timestamp": "2025-11-19T09:05:27.030Z",
+        "sequence": 2
+      },
+      "metadata": {
+        "created": "2025-11-19T09:05:27.030Z",
+        "modified": "2025-11-19T09:05:27.030Z",
+        "creator": "ONCE-demoMessages",
+        "description": "Relay pattern demo message"
+      }
+    },
+    {
+      "uuid": "22394754-dd34-4968-a7d9-393afe3c610e",
+      "objectType": "ONCEMessage",
+      "version": "0.3.20.5",
+      "state": {
+        "type": "p2p",
+        "from": {
+          "uuid": "ab9572d0-e7e2-4eff-a254-78b6e40303b7",
+          "port": 8087
+        },
+        "to": {
+          "uuid": "4c67c2d8-dae1-4721-ae64-505cb9f2db1c",
+          "port": 8088
+        },
+        "content": "Direct P2P message from client 1 to client 2",
+        "timestamp": "2025-11-19T09:05:28.031Z",
+        "sequence": 3
+      },
+      "metadata": {
+        "created": "2025-11-19T09:05:28.031Z",
+        "modified": "2025-11-19T09:05:28.031Z",
+        "creator": "ONCE-demoMessages",
+        "description": "P2P pattern demo message"
+      }
+    }
+  ],
+  "patterns": {
+    "broadcast": 1,
+    "relay": 1,
+    "p2p": 1
+  }
+}
