@@ -1,0 +1,364 @@
+@startuml src-structure
+'!theme plain
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+top to bottom direction
+
+title Web4TSComponent Source Structure
+
+package "src" {
+  package "ts" {
+    package "layer5" <<CLI Entry Point>> {
+      class Web4TSComponentCLI {
+        #component: Reference<DefaultWeb4TSComponent>
+        +constructor()
+        +static start(args: string[]): Promise<void>
+        +execute(args: string[]): Promise<void>
+        +showUsage(): void
+        -executeWithChaining(args: string[]): Promise<void>
+        -executeDynamicCommandWithChaining(command: string, args: string[]): Promise<{executed: boolean, remainingArgs: string[]}>
+        -determineArgumentConsumption(command: string, args: string[]): number
+      }
+    }
+
+    package "layer4" <<Utilities>> {
+      class TSCompletion {
+        +static getClasses(): string[]
+        +static getMethods(className: string): string[]
+        +static getParameters(className: string, methodName: string): string[]
+        +static getEnhancedMethodParameters(classes: string, method: string): ParameterInfo[]
+        +static extractCliValues(className: string, methodName: string, paramName: string): string[]
+        +static getParameterCallback(className: string, methodName: string, paramIndex: number): string | null
+      }
+      
+      class DefaultColors {
+        +static getInstance(): Colors
+        +info(text: string): string
+        +success(text: string): string
+        +error(text: string): string
+        +warning(text: string): string
+      }
+      
+      class HierarchicalCompletionFilter {
+        +static applyPrefixFilter(result: HierarchicalResult, filterPrefix: string, tokenPattern: RegExp): string[]
+        -static buildContextualDisplay(displayLines: string[], filteredTokens: string[], tokenPattern: RegExp): string[]
+      }
+      
+      class TestFileParser {
+        +static parseTestFile(filePath: string): TestFileInfo
+        +static findTestFiles(directory: string): string[]
+      }
+    }
+
+    package "layer3" <<Interfaces>> {
+      interface CLI {
+        +execute(args: string[]): Promise<void>
+        +showUsage(): void
+      }
+      
+      interface Component<T extends Model> {
+        +model: T
+        +init(scenario?: Scenario<T>): this
+        +hasMethod(name: string): boolean
+        +getMethodSignature(name: string): MethodSignature | null
+      }
+      
+      interface Web4TSComponent {
+        +model: Web4TSComponentModel
+        +init(scenario?: Scenario<Web4TSComponentModel>): this
+        +create(component: string, version?: string): Promise<this>
+        +load(component: string, version: string): Promise<this>
+      }
+      
+      interface Model {
+        +uuid: string
+        +name: string
+        +origin: string
+        +definition: string
+      }
+      
+      interface CLIModel extends Model {
+        +projectRoot: string
+        +componentsDir: string
+        +scriptsDir: string
+        +testDataDir: string
+      }
+      
+      interface Web4TSComponentModel extends Model {
+        +component: string
+        +version: SemanticVersion
+        +componentRoot: string
+        +projectRoot: string
+        +targetDirectory: string
+        +context?: Component
+      }
+      
+      interface Scenario<T extends Model> {
+        +model: T
+      }
+      
+      interface MethodSignature {
+        +name: string
+        +paramCount: number
+        +isAsync: boolean
+        +returnType: string
+      }
+      
+      interface MethodInfo {
+        +name: string
+        +signature: MethodSignature
+        +description: string
+      }
+      
+      interface Reference<T> {
+        // Type alias for T | null
+      }
+      
+      interface Colors {
+        +info(text: string): string
+        +success(text: string): string
+        +error(text: string): string
+        +warning(text: string): string
+      }
+      
+      interface User {
+        +name: string
+        +email: string
+      }
+      
+      interface Completion {
+        +getClasses(): string[]
+        +getMethods(className: string): string[]
+        +getParameters(className: string, methodName: string): string[]
+      }
+      
+      interface ComponentDependency {
+        +name: string
+        +version: string
+      }
+      
+      class Version {
+        +major: number
+        +minor: number
+        +patch: number
+        +build: number
+      }
+      
+      interface VersionModel extends Model {
+        +version: Version
+      }
+    }
+
+    package "layer2" <<Implementation>> {
+      class DefaultCLI {
+        +model: CLIModel
+        #cliMethods: Map<string, MethodSignature>
+        #component: Reference<Component>
+        #context: Reference<Component>
+        #colors: Colors
+        +init(scenario?: Scenario<CLIModel>): this
+        +<b>execute(args: string[]): Promise<void></b>
+        +<b>showUsage(): void</b>
+        +discoverMethods(): void
+        +hasMethod(name: string): boolean
+        +getMethodSignature(name: string): MethodSignature | null
+        +listMethods(): string[]
+        +<b>on(component: string, version?: string): Promise<this></b>
+        +toScenario(name?: string): Promise<Scenario<CLIModel>>
+        +generateStructuredUsage(): string
+        +getContext(format?: string): Promise<void>
+        +<b>static start(args: string[]): Promise<void></b>
+      }
+      
+      class DefaultWeb4TSComponent {
+        +model: Web4TSComponentModel
+        -methods: Map<string, MethodSignature>
+        -colors: Colors
+        -cli?: CLI
+        +init(scenario?: Scenario<Web4TSComponentModel>): this
+        +execute(): Promise<void>
+        +showUsage(): void
+        +discoverMethods(): void
+        +hasMethod(name: string): boolean
+        +getMethodSignature(name: string): MethodSignature | null
+        +listMethods(): string[]
+        +<b>create(component: string, version?: string): Promise<this></b>
+        +<b>load(component: string, version: string): Promise<this></b>
+        +<b>start(): Promise<this></b>
+        +setDependencies(dependencies: ComponentDependency[]): this
+        +buildDependencies(componentName: string, version?: string): Promise<void>
+        +toScenario(name?: string): Promise<Scenario<Web4TSComponentModel>>
+        +setTargetDirectory(directory: string): void
+        +<b>build(...flags: string[]): Promise<this></b>
+        +<b>clean(force?: string): Promise<this></b>
+        +<b>test(scope?: string, ...references: string[]): Promise<this></b>
+        +<b>upgrade(versionPromotion?: string): Promise<this></b>
+        +<b>tree(depth?: string, showHidden?: string): Promise<this></b>
+        +<b>links(action?: string): Promise<this></b>
+        +<b>info(topic?: string): Promise<this></b>
+        +getContext(format?: string): Promise<void>
+      }
+      
+      class DelegationProxy {
+        +model: DelegationProxyModel
+        +init(scenario?: Scenario<DelegationProxyModel>): this
+        +setTarget(target: Component): Promise<this>
+        +getProxy(): Component
+        +toProxy(): Component
+        +hasMethod(name: string): boolean
+        +getMethodSignature(name: string): any
+        +listMethods(): string[]
+        +hasDelegation(): boolean
+        +getDelegationTarget(): any
+        +getWeb4TSComponent(): Promise<any>
+        +toScenario(): any
+      }
+      
+      class SemanticVersion {
+        +major: number
+        +minor: number
+        +patch: number
+        +build: number
+        +init(scenario?: Scenario<VersionModel>): this
+        +parse(version: string): this
+        +isValid(version: string): boolean
+        +toString(): string
+        +compareTo(other: Version): number
+        +promoteMajor(): Promise<Version>
+        +promoteMinor(): Promise<Version>
+        +promotePatch(): Promise<Version>
+        +promoteRevision(): Promise<Version>
+        +toScenario(name?: string): Promise<Scenario<VersionModel>>
+        +hasMethod(name: string): boolean
+        +getMethodSignature(name: string): MethodSignature | null
+        +listMethods(): string[]
+        +static parse(version: string): SemanticVersion
+      }
+  }
+}
+
+package "layer1" <<Shell Scripts>> {
+  class build.sh
+  class clean.sh
+  class clean-global.sh
+  class clean-local.sh
+  class detect-dirtpigs.sh
+  class install-deps.sh
+  class lib-project-root.sh
+  class start.sh
+  class start-clean.sh
+  class test.sh
+}
+
+' ========================================
+' LAYOUT ENFORCEMENT: Layer ordering
+' ========================================
+' Hidden relationships to enforce vertical layer order:
+' Layer 5 (top) -> Layer 4 -> Layer 3 -> Layer 2 -> Layer 1 (bottom)
+' Using explicit hidden relationships to ensure layer4 is above layer3
+' Note: In top-to-bottom layout, smaller y = higher position
+' To make layer4 above layer3, we need layer4 to have smaller y than layer3
+' Using up direction to position layer4 above layer3
+layer4 -[hidden]up-> layer3
+layer5 -[hidden]up-> layer4
+layer3 -[hidden]up-> layer2
+layer1 -[hidden]up-> ts
+
+' ========================================
+' INHERITANCE RELATIONSHIPS
+' ========================================
+' Layer 5 -> Layer 2 (direct inheritance, three layers down)
+Web4TSComponentCLI -up-|> DefaultCLI : extends
+
+' Layer 2 -> Layer 3 (implements interfaces, one layer up)
+DefaultCLI -up-..|> CLI : implements
+DefaultCLI -up-..|> Component : implements
+DefaultWeb4TSComponent -up-..|> Web4TSComponent : implements
+DelegationProxy -up-..|> Component : implements
+
+' ========================================
+' INTERFACE EXTENSIONS (Layer 3 internal)
+' ========================================
+' Short relationships within layer 3
+' Note: These are already defined by "extends Model" in interface definitions above
+' CLIModel --|> Model : extends
+' Web4TSComponentModel --|> Model : extends
+' VersionModel --|> Model : extends
+
+' ========================================
+' IMPLEMENTATION RELATIONSHIPS
+' ========================================
+' Layer 4 -> Layer 3 (implements interfaces, using down to position layer4 above layer3)
+TSCompletion -down-..|> Completion : implements
+DefaultColors -down-..|> Colors : implements
+
+' ========================================
+' COMPOSITION RELATIONSHIPS
+' ========================================
+' Layer 5 -> Layer 2 (direct composition, three layers down)
+' Web4TSComponentCLI *-- DefaultWeb4TSComponent : contains
+
+' Layer 2 -> Layer 3 (uses interfaces, one layer up)
+' DefaultCLI *-- CLIModel : contains
+' DefaultCLI *-- MethodSignature : uses
+' DefaultCLI *-- Reference : uses
+' DefaultCLI *-- Colors : uses
+' DefaultCLI *-- Scenario : uses
+' DefaultCLI *-- MethodInfo : uses
+' DefaultCLI *-- Component : uses
+' DefaultCLI *-- User : uses
+
+' DefaultWeb4TSComponent *-- Web4TSComponentModel : contains
+' DefaultWeb4TSComponent *-- MethodSignature : uses
+' DefaultWeb4TSComponent *-- SemanticVersion : uses
+' DefaultWeb4TSComponent *-- Colors : uses
+' DefaultWeb4TSComponent *-- CLI : references
+' DefaultWeb4TSComponent *-- Scenario : uses
+' DefaultWeb4TSComponent *-- ComponentDependency : uses
+
+' DelegationProxy *-- Component : wraps
+' DelegationProxy *-- Model : contains
+
+' Layer 2 -> Layer 4 (cross-layer dependency, two layers up)
+' DefaultCLI ..> TSCompletion : uses
+
+' Layer 5 -> Layer 3 (cross-layer dependency, two layers down)
+' Web4TSComponentCLI ..> MethodSignature : uses
+' Web4TSComponentCLI ..> Reference : uses
+
+' Layer 5 -> Layer 4 (cross-layer dependency, one layer down)
+' Web4TSComponentCLI ..> TSCompletion : uses
+
+' ========================================
+' UTILITY DEPENDENCIES (Layer 4 internal)
+' ========================================
+' Short relationships within layer 4
+' TSCompletion ..> MethodSignature : uses
+' HierarchicalCompletionFilter ..> TSCompletion : uses
+
+note right of DefaultCLI
+  Abstract base class for CLI implementations.
+  Provides auto-discovery, method chaining,
+  and common utilities.
+end note
+
+note right of DefaultWeb4TSComponent
+  Main component implementation.
+  Handles component creation, loading,
+  and lifecycle management.
+end note
+
+note right of Web4TSComponentCLI
+  CLI entry point extending DefaultCLI.
+  Provides Web4TSComponent-specific
+  command execution with chaining.
+end note
+
+note right of TSCompletion
+  TypeScript completion backend.
+  Provides dynamic tab completion
+  using AST introspection.
+end note
+
+@enduml
+

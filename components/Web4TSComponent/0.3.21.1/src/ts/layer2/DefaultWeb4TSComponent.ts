@@ -105,6 +105,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * Discover this component's methods from its prototype chain
    * Called automatically in init() - component discovers ITSELF
    * @pdca 2025-11-05-UTC-1158.pdca.md - Self-discovery pattern
+   * @cliHide
    */
   private discoverMethods(): void {
     const prototype = Object.getPrototypeOf(this);
@@ -127,6 +128,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * Check if component has a method (Component interface)
    * @param name Method name to check
    * @returns true if method exists, false otherwise
+   * @cliHide
    */
   hasMethod(name: string): boolean {
     return this.methods.has(name);
@@ -136,6 +138,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * Get method signature (Component interface)
    * @param name Method name
    * @returns Method signature or null if not found
+   * @cliHide
    */
   getMethodSignature(name: string): MethodSignature | null {
     return this.methods.get(name) || null;
@@ -144,6 +147,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
   /**
    * List all method names (Component interface)
    * @returns Array of method names
+   * @cliHide
    */
   listMethods(): string[] {
     return Array.from(this.methods.keys());
@@ -1935,6 +1939,7 @@ export class DefaultWeb4TSComponent implements Web4TSComponent {
    * @cliSyntax version?
    * @cliExample web4tscomponent test shell
    * @cliExample web4tscomponent test shell 0.3.18.3
+   * @cliHide
    */
   async testShell(version?: string): Promise<this> {
     // If version parameter provided, delegate to that version's context
@@ -2447,61 +2452,61 @@ PS1="\\[\\033[1;36m\\][TEST ISOLATION ${this.model.component} ${this.model.versi
 
 
 
-  /**
-   * Display location-resilient CLI standard
-   * Shows key requirements and template structure for Web4 CLIs
-   * @cliHide
-   */
-  showStandard(): void {
-    console.log(`
-🔧 Web4 Location-Resilient CLI Standard
+//   /**
+//    * Display location-resilient CLI standard
+//    * Shows key requirements and template structure for Web4 CLIs
+//    * @cliHide
+//    */
+//   showStandard(): void {
+//     console.log(`
+// 🔧 Web4 Location-Resilient CLI Standard
 
-Key Requirements:
-• Location Independence: CLI works from any directory
-• Project Root Detection: Automatic via git or directory traversal  
-• ESM Compatibility: Use ts-node/esm loader
-• Error Handling: Proper exit codes and error messages
-• Web4 Patterns: Empty constructors, scenario support, layer architecture
+// Key Requirements:
+// • Location Independence: CLI works from any directory
+// • Project Root Detection: Automatic via git or directory traversal  
+// • ESM Compatibility: Use ts-node/esm loader
+// • Error Handling: Proper exit codes and error messages
+// • Web4 Patterns: Empty constructors, scenario support, layer architecture
 
-Template Structure:
-#!/bin/bash
-find_project_root() { ... }
-PROJECT_ROOT=$(find_project_root)
-cd "$PROJECT_ROOT"
-node --loader ts-node/esm "./components/[name]/[version]/src/ts/layer5/[Name]CLI.ts" "$@"
-`);
-  }
+// Template Structure:
+// #!/bin/bash
+// find_project_root() { ... }
+// PROJECT_ROOT=$(find_project_root)
+// cd "$PROJECT_ROOT"
+// node --loader ts-node/esm "./components/[name]/[version]/src/ts/layer5/[Name]CLI.ts" "$@"
+// `);
+//   }
 
-  /**
-   * Display Web4 architecture guidelines and core principles
-   * Shows layer structure, standards, and development patterns
-   * @cliHide
-   */
-  showGuidelines(): void {
-    console.log(`
-🏗️ Web4 Architecture Guidelines
+//   /**
+//    * Display Web4 architecture guidelines and core principles
+//    * Shows layer structure, standards, and development patterns
+//    * @cliHide
+//    */
+//   showGuidelines(): void {
+//     console.log(`
+// 🏗️ Web4 Architecture Guidelines
 
-Core Principles:
-• Empty Constructors: No logic in constructors
-• Scenario Initialization: Use init(scenario) pattern
-• Layer Architecture: Separate concerns across layers 2-5
-• Location Resilience: Components work from any directory
-• ESM Native: Full ES module support
-• TypeScript First: Strong typing throughout
+// Core Principles:
+// • Empty Constructors: No logic in constructors
+// • Scenario Initialization: Use init(scenario) pattern
+// • Layer Architecture: Separate concerns across layers 2-5
+// • Location Resilience: Components work from any directory
+// • ESM Native: Full ES module support
+// • TypeScript First: Strong typing throughout
 
-Component Structure:
-• Layer 2: Implementation classes (Default*)
-• Layer 3: Interfaces and types
-• Layer 4: Utilities and helpers  
-• Layer 5: CLI and entry points
+// Component Structure:
+// • Layer 2: Implementation classes (Default*)
+// • Layer 3: Interfaces and types
+// • Layer 4: Utilities and helpers  
+// • Layer 5: CLI and entry points
 
-Standards:
-• Vitest for testing (Jest banned)
-• Empty constructors + scenario pattern
-• Universal identifier patterns
-• Command chaining support
-`);
-  }
+// Standards:
+// • Vitest for testing (Jest banned)
+// • Empty constructors + scenario pattern
+// • Universal identifier patterns
+// • Command chaining support
+// `);
+//   }
 
   /**
    * Build component using its build system
@@ -3139,1045 +3144,1018 @@ Standards:
 
 
 
-  /**
-   * @TODO needs 0.3.18.3 review still
-   * Compare multiple components and generate detailed comparison table
-   * 
-   * Analyzes multiple components and generates comprehensive comparison table
-   * in the exact format used in component analysis documentation. Shows
-   * package metadata, dependencies, file structure, and architectural differences.
-   * 
-   * @param components Comma-separated list of "ComponentName Version" pairs
-   * 
-   * @example
-   * // Compare multiple components
-   * await component.compare('Unit 0.3.0.5, Web4TSComponent 0.3.2.0, ONCE 0.2.0.0');
-   * 
-   * @example
-   * // Compare specific versions
-   * await component.compare('Web4Requirement 0.3.0.5, Unit 0.3.0.5');
-   * 
-   * @cliSyntax components
-   */
-  async compare(components: string): Promise<this> {
-    console.log(`📊 Component Comparison Analysis`);
-    console.log(`🔍 Analyzing components: ${components}`);
+  // /**
+  //  * @TODO needs 0.3.18.3 review still
+  //  * Compare multiple components and generate detailed comparison table
+  //  * 
+  //  * Analyzes multiple components and generates comprehensive comparison table
+  //  * in the exact format used in component analysis documentation. Shows
+  //  * package metadata, dependencies, file structure, and architectural differences.
+  //  * 
+  //  * @param components Comma-separated list of "ComponentName Version" pairs
+  //  * 
+  //  * @example
+  //  * // Compare multiple components
+  //  * await component.compare('Unit 0.3.0.5, Web4TSComponent 0.3.2.0, ONCE 0.2.0.0');
+  //  * 
+  //  * @example
+  //  * // Compare specific versions
+  //  * await component.compare('Web4Requirement 0.3.0.5, Unit 0.3.0.5');
+  //  * 
+  //  * @cliSyntax components
+  //  */
+  // async compare(components: string): Promise<this> {
+  //   console.log(`📊 Component Comparison Analysis`);
+  //   console.log(`🔍 Analyzing components: ${components}`);
     
-    // Parse component specifications
-    const componentSpecs = this.parseComponentSpecs(components);
+  //   // Parse component specifications
+  //   const componentSpecs = this.parseComponentSpecs(components);
     
-    if (componentSpecs.length < 2) {
-      throw new Error('At least 2 components required for comparison. Format: "Component1 Version1, Component2 Version2"');
-    }
+  //   if (componentSpecs.length < 2) {
+  //     throw new Error('At least 2 components required for comparison. Format: "Component1 Version1, Component2 Version2"');
+  //   }
     
-    console.log(`\n📋 Components to analyze: ${componentSpecs.length}`);
-    for (const spec of componentSpecs) {
-      console.log(`   - ${spec.name} ${spec.version}`);
-    }
+  //   console.log(`\n📋 Components to analyze: ${componentSpecs.length}`);
+  //   for (const spec of componentSpecs) {
+  //     console.log(`   - ${spec.name} ${spec.version}`);
+  //   }
     
-    // Analyze each component
-    const analyses = await this.analyzeComponentsForComparison(componentSpecs);
+  //   // Analyze each component
+  //   const analyses = await this.analyzeComponentsForComparison(componentSpecs);
     
-    // Generate comparison content for file
-    const comparisonContent = await this.generateComparisonMarkdown(componentSpecs, analyses, components);
+  //   // Generate comparison content for file
+  //   const comparisonContent = await this.generateComparisonMarkdown(componentSpecs, analyses, components);
     
-    // Save to first component's version directory
-    const firstSpec = componentSpecs[0];
-    const firstComponentDir = path.join(this.model.componentsDirectory, firstSpec.name);
-    const firstVersionDir = path.join(firstComponentDir, firstSpec.version);
-    const filename = this.generateSafeFilename(componentSpecs);
-    const outputPath = path.join(firstVersionDir, filename);
+  //   // Save to first component's version directory
+  //   const firstSpec = componentSpecs[0];
+  //   const firstComponentDir = path.join(this.model.componentsDirectory, firstSpec.name);
+  //   const firstVersionDir = path.join(firstComponentDir, firstSpec.version);
+  //   const filename = this.generateSafeFilename(componentSpecs);
+  //   const outputPath = path.join(firstVersionDir, filename);
     
-    await fs.writeFile(outputPath, comparisonContent, 'utf-8');
+  //   await fs.writeFile(outputPath, comparisonContent, 'utf-8');
     
-    // Generate comparison tables to console
-    await this.generateDifferencesTable(componentSpecs, analyses);
-    await this.generateFileComparisonTable(componentSpecs, analyses);
+  //   // Generate comparison tables to console
+  //   await this.generateDifferencesTable(componentSpecs, analyses);
+  //   await this.generateFileComparisonTable(componentSpecs, analyses);
     
-    console.log(`\n✅ Component comparison analysis complete`);
-    console.log(`📄 Analysis saved to: ${outputPath}`);
+  //   console.log(`\n✅ Component comparison analysis complete`);
+  //   console.log(`📄 Analysis saved to: ${outputPath}`);
     
-    return this;
-  }
+  //   return this;
+  // }
 
-  /**
-   * Parse component specifications from input string
-   * Converts "CompA 1.0.0.0, CompB 2.0.0.0" to array of {name, version} objects
-   * @param components Comma-separated component specifications
-   * @returns Array of parsed component specifications
-   * @cliHide
-   */
-  private parseComponentSpecs(components: string): Array<{name: string, version: string}> {
-    const specs = components.split(',').map(spec => spec.trim());
-    const result = [];
+  // /**
+  //  * Parse component specifications from input string
+  //  * Converts "CompA 1.0.0.0, CompB 2.0.0.0" to array of {name, version} objects
+  //  * @param components Comma-separated component specifications
+  //  * @returns Array of parsed component specifications
+  //  * @cliHide
+  //  */
+  // private parseComponentSpecs(components: string): Array<{name: string, version: string}> {
+  //   const specs = components.split(',').map(spec => spec.trim());
+  //   const result = [];
     
-    for (const spec of specs) {
-      const parts = spec.trim().split(/\s+/);
-      if (parts.length >= 2) {
-        const name = parts[0];
-        const version = parts[1];
-        result.push({ name, version });
-      } else {
-        throw new Error(`Invalid component specification: "${spec}". Use format: "ComponentName Version"`);
-      }
-    }
+  //   for (const spec of specs) {
+  //     const parts = spec.trim().split(/\s+/);
+  //     if (parts.length >= 2) {
+  //       const name = parts[0];
+  //       const version = parts[1];
+  //       result.push({ name, version });
+  //     } else {
+  //       throw new Error(`Invalid component specification: "${spec}". Use format: "ComponentName Version"`);
+  //     }
+  //   }
     
-    return result;
-  }
+  //   return result;
+  // }
 
-  /**
-   * Generate safe filename from component specifications
-   * Creates filesystem-safe filename for comparison markdown file
-   * @param componentSpecs Array of component specifications to include in filename
-   * @returns Safe filename with timestamp and component names
-   * @cliHide
-   */
-  private generateSafeFilename(componentSpecs: Array<{name: string, version: string}>): string {
-    // Create a descriptive but safe filename
-    const componentParts = componentSpecs.map(spec => 
-      `${spec.name.toLowerCase()}-${spec.version.replace(/\./g, '')}`
-    );
+  // /**
+  //  * Generate safe filename from component specifications
+  //  * Creates filesystem-safe filename for comparison markdown file
+  //  * @param componentSpecs Array of component specifications to include in filename
+  //  * @returns Safe filename with timestamp and component names
+  //  * @cliHide
+  //  */
+  // private generateSafeFilename(componentSpecs: Array<{name: string, version: string}>): string {
+  //   // Create a descriptive but safe filename
+  //   const componentParts = componentSpecs.map(spec => 
+  //     `${spec.name.toLowerCase()}-${spec.version.replace(/\./g, '')}`
+  //   );
     
-    const baseName = componentParts.join('-vs-');
-    const timestamp = new Date().toISOString().slice(0, 16).replace(/[:-]/g, '');
+  //   const baseName = componentParts.join('-vs-');
+  //   const timestamp = new Date().toISOString().slice(0, 16).replace(/[:-]/g, '');
     
-    // Ensure filename is not too long and is filesystem-safe
-    const maxLength = 200;
-    let filename = `${baseName}-comparison-${timestamp}.md`;
+  //   // Ensure filename is not too long and is filesystem-safe
+  //   const maxLength = 200;
+  //   let filename = `${baseName}-comparison-${timestamp}.md`;
     
-    if (filename.length > maxLength) {
-      // Truncate but keep the important parts
-      const truncatedBase = baseName.slice(0, maxLength - 30);
-      filename = `${truncatedBase}-comparison-${timestamp}.md`;
-    }
+  //   if (filename.length > maxLength) {
+  //     // Truncate but keep the important parts
+  //     const truncatedBase = baseName.slice(0, maxLength - 30);
+  //     filename = `${truncatedBase}-comparison-${timestamp}.md`;
+  //   }
     
-    // Remove any remaining unsafe characters
-    filename = filename.replace(/[^a-zA-Z0-9.-]/g, '-');
+  //   // Remove any remaining unsafe characters
+  //   filename = filename.replace(/[^a-zA-Z0-9.-]/g, '-');
     
-    return filename;
-  }
+  //   return filename;
+  // }
 
-  /**
-   * Generate complete markdown content for comparison report
-   * Creates formatted markdown with tables and analysis
-   * @param componentSpecs Array of components being compared
-   * @param analyses Array of analysis results for each component
-   * @param originalComponents Original input string for documentation
-   * @returns Complete markdown content for comparison report
-   * @cliHide
-   */
-  private async generateComparisonMarkdown(
-    componentSpecs: Array<{name: string, version: string}>, 
-    analyses: any[],
-    originalComponents: string
-  ): Promise<string> {
-    const lines: string[] = [];
+  // /**
+  //  * Generate complete markdown content for comparison report
+  //  * Creates formatted markdown with tables and analysis
+  //  * @param componentSpecs Array of components being compared
+  //  * @param analyses Array of analysis results for each component
+  //  * @param originalComponents Original input string for documentation
+  //  * @returns Complete markdown content for comparison report
+  //  * @cliHide
+  //  */
+  // private async generateComparisonMarkdown(
+  //   componentSpecs: Array<{name: string, version: string}>, 
+  //   analyses: any[],
+  //   originalComponents: string
+  // ): Promise<string> {
+  //   const lines: string[] = [];
     
-    // Header
-    const componentList = componentSpecs.map(spec => `${spec.name} ${spec.version}`).join(' vs ');
-    lines.push(`# Component Comparison Analysis`);
-    lines.push(`## ${componentList}`);
-    lines.push('');
-    lines.push(`**Generated:** ${new Date().toISOString().slice(0, 19).replace('T', ' ')} UTC`);
-    lines.push(`**Tool:** Web4TSComponent Compare`);
-    lines.push(`**Command:** \`web4tscomponent compare "${originalComponents}"\``);
-    lines.push('');
-    lines.push('---');
-    lines.push('');
+  //   // Header
+  //   const componentList = componentSpecs.map(spec => `${spec.name} ${spec.version}`).join(' vs ');
+  //   lines.push(`# Component Comparison Analysis`);
+  //   lines.push(`## ${componentList}`);
+  //   lines.push('');
+  //   lines.push(`**Generated:** ${new Date().toISOString().slice(0, 19).replace('T', ' ')} UTC`);
+  //   lines.push(`**Tool:** Web4TSComponent Compare`);
+  //   lines.push(`**Command:** \`web4tscomponent compare "${originalComponents}"\``);
+  //   lines.push('');
+  //   lines.push('---');
+  //   lines.push('');
     
-    // Executive Summary
-    lines.push('## Executive Summary');
-    lines.push('');
-    lines.push(`This analysis compares ${componentSpecs.length} components to identify architectural differences, dependencies, and file structure variations.`);
-    lines.push('');
+  //   // Executive Summary
+  //   lines.push('## Executive Summary');
+  //   lines.push('');
+  //   lines.push(`This analysis compares ${componentSpecs.length} components to identify architectural differences, dependencies, and file structure variations.`);
+  //   lines.push('');
     
-    // Differences Table
-    lines.push('## Package and Configuration Differences');
-    lines.push('');
-    const differencesTable = await this.generateDifferencesTableContent(componentSpecs, analyses);
-    lines.push(...differencesTable);
-    lines.push('');
+  //   // Differences Table
+  //   lines.push('## Package and Configuration Differences');
+  //   lines.push('');
+  //   const differencesTable = await this.generateDifferencesTableContent(componentSpecs, analyses);
+  //   lines.push(...differencesTable);
+  //   lines.push('');
     
-    // File Comparison Table
-    lines.push('## File Structure Analysis');
-    lines.push('');
-    const fileTable = await this.generateFileComparisonTableContent(componentSpecs, analyses);
-    lines.push(...fileTable);
-    lines.push('');
+  //   // File Comparison Table
+  //   lines.push('## File Structure Analysis');
+  //   lines.push('');
+  //   const fileTable = await this.generateFileComparisonTableContent(componentSpecs, analyses);
+  //   lines.push(...fileTable);
+  //   lines.push('');
     
-    // Footer
-    lines.push('---');
-    lines.push('');
-    lines.push(`**Analysis completed:** ✅ Component comparison analysis complete`);
-    lines.push(`**Generated by:** Web4TSComponent Compare Tool`);
-    lines.push(`**Components analyzed:** ${componentSpecs.length}`);
+  //   // Footer
+  //   lines.push('---');
+  //   lines.push('');
+  //   lines.push(`**Analysis completed:** ✅ Component comparison analysis complete`);
+  //   lines.push(`**Generated by:** Web4TSComponent Compare Tool`);
+  //   lines.push(`**Components analyzed:** ${componentSpecs.length}`);
     
-    return lines.join('\n');
-  }
+  //   return lines.join('\n');
+  // }
 
-  /**
-   * Generate differences table content for markdown
-   * Creates package and configuration comparison table
-   * @param componentSpecs Array of components being compared
-   * @param analyses Array of analysis results for each component
-   * @returns Array of markdown table lines
-   * @cliHide
-   */
-  private async generateDifferencesTableContent(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<string[]> {
-    const lines: string[] = [];
+  // /**
+  //  * Generate differences table content for markdown
+  //  * Creates package and configuration comparison table
+  //  * @param componentSpecs Array of components being compared
+  //  * @param analyses Array of analysis results for each component
+  //  * @returns Array of markdown table lines
+  //  * @cliHide
+  //  */
+  // private async generateDifferencesTableContent(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<string[]> {
+  //   const lines: string[] = [];
     
-    // Table header
-    let header = '| Aspect';
-    for (const spec of componentSpecs) {
-      header += ` | ${spec.name} ${spec.version}`;
-    }
-    header += ' |';
-    lines.push(header);
+  //   // Table header
+  //   let header = '| Aspect';
+  //   for (const spec of componentSpecs) {
+  //     header += ` | ${spec.name} ${spec.version}`;
+  //   }
+  //   header += ' |';
+  //   lines.push(header);
     
-    // Table separator
-    let separator = '|---|';
-    for (let i = 0; i < componentSpecs.length; i++) {
-      separator += '---|';
-    }
-    lines.push(separator);
+  //   // Table separator
+  //   let separator = '|---|';
+  //   for (let i = 0; i < componentSpecs.length; i++) {
+  //     separator += '---|';
+  //   }
+  //   lines.push(separator);
     
-    // Package name row
-    let packageNameRow = '| package name';
-    for (const analysis of analyses) {
-      const packageName = analysis.packageJson?.name || '(not specified)';
-      packageNameRow += ` | ${packageName}`;
-    }
-    packageNameRow += ' |';
-    lines.push(packageNameRow);
+  //   // Package name row
+  //   let packageNameRow = '| package name';
+  //   for (const analysis of analyses) {
+  //     const packageName = analysis.packageJson?.name || '(not specified)';
+  //     packageNameRow += ` | ${packageName}`;
+  //   }
+  //   packageNameRow += ' |';
+  //   lines.push(packageNameRow);
     
-    // Version row
-    let versionRow = '| version';
-    for (const analysis of analyses) {
-      versionRow += ` | ${analysis.version}`;
-    }
-    versionRow += ' |';
-    lines.push(versionRow);
+  //   // Version row
+  //   let versionRow = '| version';
+  //   for (const analysis of analyses) {
+  //     versionRow += ` | ${analysis.version}`;
+  //   }
+  //   versionRow += ' |';
+  //   lines.push(versionRow);
     
-    // Engines.node row
-    let enginesRow = '| engines.node';
-    for (const analysis of analyses) {
-      const nodeEngine = analysis.engines?.node || '(not specified)';
-      enginesRow += ` | ${nodeEngine}`;
-    }
-    enginesRow += ' |';
-    lines.push(enginesRow);
+  //   // Engines.node row
+  //   let enginesRow = '| engines.node';
+  //   for (const analysis of analyses) {
+  //     const nodeEngine = analysis.engines?.node || '(not specified)';
+  //     enginesRow += ` | ${nodeEngine}`;
+  //   }
+  //   enginesRow += ' |';
+  //   lines.push(enginesRow);
     
-    // Scripts.test row
-    let scriptsTestRow = '| scripts.test';
-    for (const analysis of analyses) {
-      const testScript = analysis.scripts?.test || '(not specified)';
-      scriptsTestRow += ` | ${testScript}`;
-    }
-    scriptsTestRow += ' |';
-    lines.push(scriptsTestRow);
+  //   // Scripts.test row
+  //   let scriptsTestRow = '| scripts.test';
+  //   for (const analysis of analyses) {
+  //     const testScript = analysis.scripts?.test || '(not specified)';
+  //     scriptsTestRow += ` | ${testScript}`;
+  //   }
+  //   scriptsTestRow += ' |';
+  //   lines.push(scriptsTestRow);
     
-    // DevDependencies.vitest row
-    let vitestRow = '| devDependencies.vitest';
-    for (const analysis of analyses) {
-      const vitest = analysis.devDependencies?.vitest || '(not specified)';
-      vitestRow += ` | ${vitest}`;
-    }
-    vitestRow += ' |';
-    lines.push(vitestRow);
+  //   // DevDependencies.vitest row
+  //   let vitestRow = '| devDependencies.vitest';
+  //   for (const analysis of analyses) {
+  //     const vitest = analysis.devDependencies?.vitest || '(not specified)';
+  //     vitestRow += ` | ${vitest}`;
+  //   }
+  //   vitestRow += ' |';
+  //   lines.push(vitestRow);
     
-    // DevDependencies.typescript row
-    let typescriptRow = '| devDependencies.typescript';
-    for (const analysis of analyses) {
-      const typescript = analysis.devDependencies?.typescript || '(not specified)';
-      typescriptRow += ` | ${typescript}`;
-    }
-    typescriptRow += ' |';
-    lines.push(typescriptRow);
+  //   // DevDependencies.typescript row
+  //   let typescriptRow = '| devDependencies.typescript';
+  //   for (const analysis of analyses) {
+  //     const typescript = analysis.devDependencies?.typescript || '(not specified)';
+  //     typescriptRow += ` | ${typescript}`;
+  //   }
+  //   typescriptRow += ' |';
+  //   lines.push(typescriptRow);
     
-    // Dependencies row
-    let dependenciesRow = '| dependencies';
-    for (const analysis of analyses) {
-      const deps = analysis.dependencies;
-      const depsList = deps ? Object.entries(deps).map(([key, value]) => `${key} ${value}`).join(', ') : '(none)';
-      dependenciesRow += ` | ${depsList}`;
-    }
-    dependenciesRow += ' |';
-    lines.push(dependenciesRow);
+  //   // Dependencies row
+  //   let dependenciesRow = '| dependencies';
+  //   for (const analysis of analyses) {
+  //     const deps = analysis.dependencies;
+  //     const depsList = deps ? Object.entries(deps).map(([key, value]) => `${key} ${value}`).join(', ') : '(none)';
+  //     dependenciesRow += ` | ${depsList}`;
+  //   }
+  //   dependenciesRow += ' |';
+  //   lines.push(dependenciesRow);
     
-    return lines;
-  }
+  //   return lines;
+  // }
 
-  /**
-   * Generate file comparison table content for markdown with dual links
-   * Creates file structure comparison table showing presence across components
-   * @param componentSpecs Array of components being compared
-   * @param analyses Array of analysis results for each component
-   * @returns Array of markdown table lines
-   * @cliHide
-   */
-  private async generateFileComparisonTableContent(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<string[]> {
-    const lines: string[] = [];
+  // /**
+  //  * Generate file comparison table content for markdown with dual links
+  //  * Creates file structure comparison table showing presence across components
+  //  * @param componentSpecs Array of components being compared
+  //  * @param analyses Array of analysis results for each component
+  //  * @returns Array of markdown table lines
+  //  * @cliHide
+  //  */
+  // private async generateFileComparisonTableContent(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<string[]> {
+  //   const lines: string[] = [];
     
-    // Table header
-    let header = '| Entry (file/dir)';
-    for (const spec of componentSpecs) {
-      header += ` | ${spec.name} ${spec.version}`;
-    }
-    header += ' | Purpose | Similarity |';
-    lines.push(header);
+  //   // Table header
+  //   let header = '| Entry (file/dir)';
+  //   for (const spec of componentSpecs) {
+  //     header += ` | ${spec.name} ${spec.version}`;
+  //   }
+  //   header += ' | Purpose | Similarity |';
+  //   lines.push(header);
     
-    // Table separator
-    let separator = '|---|';
-    for (let i = 0; i < componentSpecs.length; i++) {
-      separator += '---|';
-    }
-    separator += '---|---|';
-    lines.push(separator);
+  //   // Table separator
+  //   let separator = '|---|';
+  //   for (let i = 0; i < componentSpecs.length; i++) {
+  //     separator += '---|';
+  //   }
+  //   separator += '---|---|';
+  //   lines.push(separator);
     
-    // Collect all unique files and directories
-    const allEntries = new Set<string>();
-    for (const analysis of analyses) {
-      for (const file of analysis.files) {
-        allEntries.add(file);
-      }
-      for (const dir of analysis.directories) {
-        allEntries.add(dir + '/');
-      }
-    }
+  //   // Collect all unique files and directories
+  //   const allEntries = new Set<string>();
+  //   for (const analysis of analyses) {
+  //     for (const file of analysis.files) {
+  //       allEntries.add(file);
+  //     }
+  //     for (const dir of analysis.directories) {
+  //       allEntries.add(dir + '/');
+  //     }
+  //   }
     
-    // Process all files individually with dual links
-    const sortedEntries = Array.from(allEntries).sort();
-    for (const entry of sortedEntries) {
+  //   // Process all files individually with dual links
+  //   const sortedEntries = Array.from(allEntries).sort();
+  //   for (const entry of sortedEntries) {
       
-      // Generate dual link for the entry
-      const dualLink = this.generateDualLinkForEntry(entry, componentSpecs, analyses);
-      let row = `| ${dualLink}`;
+  //     // Generate dual link for the entry
+  //     const dualLink = this.generateDualLinkForEntry(entry, componentSpecs, analyses);
+  //     let row = `| ${dualLink}`;
       
-      let presentCount = 0;
-      const presencePattern = [];
+  //     let presentCount = 0;
+  //     const presencePattern = [];
       
-      for (const analysis of analyses) {
-        const isPresent = analysis.files.has(entry) || analysis.directories.has(entry.endsWith('/') ? entry.slice(0, -1) : entry);
-        const symbol = isPresent ? '✅' : '❌';
-        row += ` | ${symbol}`;
+  //     for (const analysis of analyses) {
+  //       const isPresent = analysis.files.has(entry) || analysis.directories.has(entry.endsWith('/') ? entry.slice(0, -1) : entry);
+  //       const symbol = isPresent ? '✅' : '❌';
+  //       row += ` | ${symbol}`;
         
-        if (isPresent) {
-          presentCount++;
-          presencePattern.push(analysis.name.charAt(0));
-        }
-      }
+  //       if (isPresent) {
+  //         presentCount++;
+  //         presencePattern.push(analysis.name.charAt(0));
+  //       }
+  //     }
       
-      // Determine purpose and similarity
-      const purpose = this.determinePurpose(entry);
-      const similarity = await this.determineSimilarity(entry, componentSpecs, presentCount, componentSpecs.length, presencePattern, analyses);
+  //     // Determine purpose and similarity
+  //     const purpose = this.determinePurpose(entry);
+  //     const similarity = await this.determineSimilarity(entry, componentSpecs, presentCount, componentSpecs.length, presencePattern, analyses);
       
-      row += ` | ${purpose} | ${similarity} |`;
-      lines.push(row);
-    }
+  //     row += ` | ${purpose} | ${similarity} |`;
+  //     lines.push(row);
+  //   }
     
-    return lines;
-  }
+  //   return lines;
+  // }
 
-  /**
-   * Generate dual link for file entry (local path only, relative to version folder)
-   * @param entry File or directory entry name
-   * @param componentSpecs Array of components being compared (unused, for interface consistency)
-   * @param analyses Array of analysis results (unused, for interface consistency)
-   * @returns Entry name as local relative path
-   * @cliHide
-   */
-  private generateDualLinkForEntry(entry: string, componentSpecs: Array<{name: string, version: string}>, analyses: any[]): string {
-    // Simply return the entry as a local relative path
-    return entry;
-  }
+  // /**
+  //  * Generate dual link for file entry (local path only, relative to version folder)
+  //  * @param entry File or directory entry name
+  //  * @param componentSpecs Array of components being compared (unused, for interface consistency)
+  //  * @param analyses Array of analysis results (unused, for interface consistency)
+  //  * @returns Entry name as local relative path
+  //  * @cliHide
+  //  */
+  // private generateDualLinkForEntry(entry: string, componentSpecs: Array<{name: string, version: string}>, analyses: any[]): string {
+  //   // Simply return the entry as a local relative path
+  //   return entry;
+  // }
 
-  /**
-   * Analyze components for comparison
-   * Loads and analyzes each component's structure, package.json, and files
-   * @param componentSpecs Array of component specifications to analyze
-   * @returns Array of analysis results for each component
-   * @cliHide
-   */
-  private async analyzeComponentsForComparison(componentSpecs: Array<{name: string, version: string}>): Promise<any[]> {
-    const analyses = [];
+  // /**
+  //  * Analyze components for comparison
+  //  * Loads and analyzes each component's structure, package.json, and files
+  //  * @param componentSpecs Array of component specifications to analyze
+  //  * @returns Array of analysis results for each component
+  //  * @cliHide
+  //  */
+  // private async analyzeComponentsForComparison(componentSpecs: Array<{name: string, version: string}>): Promise<any[]> {
+  //   const analyses = [];
     
-    for (const spec of componentSpecs) {
-      const componentPath = path.join(this.model.targetDirectory, 'components', spec.name, spec.version);
+  //   for (const spec of componentSpecs) {
+  //     const componentPath = path.join(this.model.targetDirectory, 'components', spec.name, spec.version);
       
-      if (!existsSync(componentPath)) {
-        throw new Error(`Component not found: ${spec.name} ${spec.version} at ${componentPath}`);
-      }
+  //     if (!existsSync(componentPath)) {
+  //       throw new Error(`Component not found: ${spec.name} ${spec.version} at ${componentPath}`);
+  //     }
       
-      const analysis = await this.analyzeComponentStructure(componentPath, spec.name, spec.version);
-      analyses.push(analysis);
-    }
+  //     const analysis = await this.analyzeComponentStructure(componentPath, spec.name, spec.version);
+  //     analyses.push(analysis);
+  //   }
     
-    return analyses;
-  }
+  //   return analyses;
+  // }
 
-  /**
-   * Analyze component structure for comparison
-   * Reads package.json and recursively scans file structure
-   * @param componentPath Absolute path to component version directory
-   * @param name Component name
-   * @param version Component version
-   * @returns Analysis object with files, directories, dependencies, etc.
-   * @cliHide
-   */
-  private async analyzeComponentStructure(componentPath: string, name: string, version: string): Promise<any> {
-    const analysis: any = {
-      name,
-      version,
-      path: componentPath,
-      packageJson: null as any,
-      files: new Set<string>(),
-      directories: new Set<string>(),
-      scripts: {},
-      dependencies: {},
-      devDependencies: {},
-      engines: {}
-    };
+  // /**
+  //  * Analyze component structure for comparison
+  //  * Reads package.json and recursively scans file structure
+  //  * @param componentPath Absolute path to component version directory
+  //  * @param name Component name
+  //  * @param version Component version
+  //  * @returns Analysis object with files, directories, dependencies, etc.
+  //  * @cliHide
+  //  */
+  // private async analyzeComponentStructure(componentPath: string, name: string, version: string): Promise<any> {
+  //   const analysis: any = {
+  //     name,
+  //     version,
+  //     path: componentPath,
+  //     packageJson: null as any,
+  //     files: new Set<string>(),
+  //     directories: new Set<string>(),
+  //     scripts: {},
+  //     dependencies: {},
+  //     devDependencies: {},
+  //     engines: {}
+  //   };
     
-    // Analyze package.json
-    const packageJsonPath = path.join(componentPath, 'package.json');
-    if (existsSync(packageJsonPath)) {
-      try {
-        analysis.packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
-        analysis.scripts = analysis.packageJson?.scripts || {};
-        analysis.dependencies = analysis.packageJson?.dependencies || {};
-        analysis.devDependencies = analysis.packageJson?.devDependencies || {};
-        analysis.engines = analysis.packageJson?.engines || {};
-      } catch (error) {
-        console.log(`   ⚠️ Could not parse package.json for ${name}`);
-      }
-    }
+  //   // Analyze package.json
+  //   const packageJsonPath = path.join(componentPath, 'package.json');
+  //   if (existsSync(packageJsonPath)) {
+  //     try {
+  //       analysis.packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
+  //       analysis.scripts = analysis.packageJson?.scripts || {};
+  //       analysis.dependencies = analysis.packageJson?.dependencies || {};
+  //       analysis.devDependencies = analysis.packageJson?.devDependencies || {};
+  //       analysis.engines = analysis.packageJson?.engines || {};
+  //     } catch (error) {
+  //       console.log(`   ⚠️ Could not parse package.json for ${name}`);
+  //     }
+  //   }
     
-    // Analyze file structure
-    await this.analyzeFileStructure(componentPath, analysis);
+  //   // Analyze file structure
+  //   await this.analyzeFileStructure(componentPath, analysis);
     
-    return analysis;
-  }
+  //   return analysis;
+  // }
 
-  /**
-   * Analyze file structure recursively
-   * Scans directory and adds files/directories to analysis object
-   * @param dirPath Absolute path to directory to analyze
-   * @param analysis Analysis object to populate with files and directories
-   * @param relativePath Current relative path from component root (for recursion)
-   * @cliHide
-   */
-  private async analyzeFileStructure(dirPath: string, analysis: any, relativePath: string = ''): Promise<void> {
-    try {
-      const entries = await fs.readdir(dirPath, { withFileTypes: true });
+  // /**
+  //  * Analyze file structure recursively
+  //  * Scans directory and adds files/directories to analysis object
+  //  * @param dirPath Absolute path to directory to analyze
+  //  * @param analysis Analysis object to populate with files and directories
+  //  * @param relativePath Current relative path from component root (for recursion)
+  //  * @cliHide
+  //  */
+  // private async analyzeFileStructure(dirPath: string, analysis: any, relativePath: string = ''): Promise<void> {
+  //   try {
+  //     const entries = await fs.readdir(dirPath, { withFileTypes: true });
       
-      for (const entry of entries) {
-        const entryPath = relativePath ? `${relativePath}/${entry.name}` : entry.name;
+  //     for (const entry of entries) {
+  //       const entryPath = relativePath ? `${relativePath}/${entry.name}` : entry.name;
         
-        // Filter out irrelevant files and directories from comparison
-        if (entry.name === 'sessions' || 
-            entry.name === 'spec' ||
-            entry.name.startsWith('spec.requirement') ||
-            entryPath.startsWith('spec/') ||
-            entryPath.includes('temp-filename-test/temp-filename-test')) {
-          continue; // Skip irrelevant content
-        }
+  //       // Filter out irrelevant files and directories from comparison
+  //       if (entry.name === 'sessions' || 
+  //           entry.name === 'spec' ||
+  //           entry.name.startsWith('spec.requirement') ||
+  //           entryPath.startsWith('spec/') ||
+  //           entryPath.includes('temp-filename-test/temp-filename-test')) {
+  //         continue; // Skip irrelevant content
+  //       }
         
-        if (entry.isDirectory()) {
-          analysis.directories.add(entryPath);
+  //       if (entry.isDirectory()) {
+  //         analysis.directories.add(entryPath);
           
-          // Recursively analyze important directories
-          if (!entry.name.startsWith('.') && 
-              entry.name !== 'node_modules' && 
-              entry.name !== 'dist') {
-            await this.analyzeFileStructure(path.join(dirPath, entry.name), analysis, entryPath);
-          }
-        } else {
-          analysis.files.add(entryPath);
-        }
-      }
-    } catch (error) {
-      console.log(`   ⚠️ Could not analyze directory: ${dirPath}`);
-    }
-  }
+  //         // Recursively analyze important directories
+  //         if (!entry.name.startsWith('.') && 
+  //             entry.name !== 'node_modules' && 
+  //             entry.name !== 'dist') {
+  //           await this.analyzeFileStructure(path.join(dirPath, entry.name), analysis, entryPath);
+  //         }
+  //       } else {
+  //         analysis.files.add(entryPath);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log(`   ⚠️ Could not analyze directory: ${dirPath}`);
+  //   }
+  // }
 
-  /**
-   * Generate differences table in exact format (console output)
-   * Displays package and configuration comparison table
-   * @param componentSpecs Array of components being compared
-   * @param analyses Array of analysis results for each component
-   * @cliHide
-   */
-  private async generateDifferencesTable(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<void> {
-    console.log(`\n### **Differences Table**\n`);
+  // /**
+  //  * Generate differences table in exact format (console output)
+  //  * Displays package and configuration comparison table
+  //  * @param componentSpecs Array of components being compared
+  //  * @param analyses Array of analysis results for each component
+  //  * @cliHide
+  //  */
+  // private async generateDifferencesTable(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<void> {
+  //   console.log(`\n### **Differences Table**\n`);
     
-    // Table header
-    let header = '| Aspect';
-    for (const spec of componentSpecs) {
-      header += ` | ${spec.name} ${spec.version}`;
-    }
-    header += ' |';
-    console.log(header);
+  //   // Table header
+  //   let header = '| Aspect';
+  //   for (const spec of componentSpecs) {
+  //     header += ` | ${spec.name} ${spec.version}`;
+  //   }
+  //   header += ' |';
+  //   console.log(header);
     
-    // Table separator
-    let separator = '|---|';
-    for (let i = 0; i < componentSpecs.length; i++) {
-      separator += '---|';
-    }
-    console.log(separator);
+  //   // Table separator
+  //   let separator = '|---|';
+  //   for (let i = 0; i < componentSpecs.length; i++) {
+  //     separator += '---|';
+  //   }
+  //   console.log(separator);
     
-    // Package name row
-    let packageNameRow = '| package name';
-    for (const analysis of analyses) {
-      const packageName = analysis.packageJson?.name || '(not specified)';
-      packageNameRow += ` | ${packageName}`;
-    }
-    packageNameRow += ' |';
-    console.log(packageNameRow);
+  //   // Package name row
+  //   let packageNameRow = '| package name';
+  //   for (const analysis of analyses) {
+  //     const packageName = analysis.packageJson?.name || '(not specified)';
+  //     packageNameRow += ` | ${packageName}`;
+  //   }
+  //   packageNameRow += ' |';
+  //   console.log(packageNameRow);
     
-    // Version row
-    let versionRow = '| version';
-    for (const analysis of analyses) {
-      versionRow += ` | ${analysis.version}`;
-    }
-    versionRow += ' |';
-    console.log(versionRow);
+  //   // Version row
+  //   let versionRow = '| version';
+  //   for (const analysis of analyses) {
+  //     versionRow += ` | ${analysis.version}`;
+  //   }
+  //   versionRow += ' |';
+  //   console.log(versionRow);
     
-    // Engines.node row
-    let enginesRow = '| engines.node';
-    for (const analysis of analyses) {
-      const nodeEngine = analysis.engines?.node || '(not specified)';
-      enginesRow += ` | ${nodeEngine}`;
-    }
-    enginesRow += ' |';
-    console.log(enginesRow);
+  //   // Engines.node row
+  //   let enginesRow = '| engines.node';
+  //   for (const analysis of analyses) {
+  //     const nodeEngine = analysis.engines?.node || '(not specified)';
+  //     enginesRow += ` | ${nodeEngine}`;
+  //   }
+  //   enginesRow += ' |';
+  //   console.log(enginesRow);
     
-    // Scripts.test row
-    let scriptsTestRow = '| scripts.test';
-    for (const analysis of analyses) {
-      const testScript = analysis.scripts?.test || '(not specified)';
-      scriptsTestRow += ` | ${testScript}`;
-    }
-    scriptsTestRow += ' |';
-    console.log(scriptsTestRow);
+  //   // Scripts.test row
+  //   let scriptsTestRow = '| scripts.test';
+  //   for (const analysis of analyses) {
+  //     const testScript = analysis.scripts?.test || '(not specified)';
+  //     scriptsTestRow += ` | ${testScript}`;
+  //   }
+  //   scriptsTestRow += ' |';
+  //   console.log(scriptsTestRow);
     
-    // DevDependencies.vitest row
-    let vitestRow = '| devDependencies.vitest';
-    for (const analysis of analyses) {
-      const vitest = analysis.devDependencies?.vitest || '(not specified)';
-      vitestRow += ` | ${vitest}`;
-    }
-    vitestRow += ' |';
-    console.log(vitestRow);
+  //   // DevDependencies.vitest row
+  //   let vitestRow = '| devDependencies.vitest';
+  //   for (const analysis of analyses) {
+  //     const vitest = analysis.devDependencies?.vitest || '(not specified)';
+  //     vitestRow += ` | ${vitest}`;
+  //   }
+  //   vitestRow += ' |';
+  //   console.log(vitestRow);
     
-    // DevDependencies.typescript row
-    let typescriptRow = '| devDependencies.typescript';
-    for (const analysis of analyses) {
-      const typescript = analysis.devDependencies?.typescript || '(not specified)';
-      typescriptRow += ` | ${typescript}`;
-    }
-    typescriptRow += ' |';
-    console.log(typescriptRow);
+  //   // DevDependencies.typescript row
+  //   let typescriptRow = '| devDependencies.typescript';
+  //   for (const analysis of analyses) {
+  //     const typescript = analysis.devDependencies?.typescript || '(not specified)';
+  //     typescriptRow += ` | ${typescript}`;
+  //   }
+  //   typescriptRow += ' |';
+  //   console.log(typescriptRow);
     
-    // Dependencies row
-    let dependenciesRow = '| dependencies';
-    for (const analysis of analyses) {
-      const deps = analysis.dependencies;
-      const depsList = deps ? Object.entries(deps).map(([key, value]) => `${key} ${value}`).join(', ') : '(none)';
-      dependenciesRow += ` | ${depsList}`;
-    }
-    dependenciesRow += ' |';
-    console.log(dependenciesRow);
-  }
+  //   // Dependencies row
+  //   let dependenciesRow = '| dependencies';
+  //   for (const analysis of analyses) {
+  //     const deps = analysis.dependencies;
+  //     const depsList = deps ? Object.entries(deps).map(([key, value]) => `${key} ${value}`).join(', ') : '(none)';
+  //     dependenciesRow += ` | ${depsList}`;
+  //   }
+  //   dependenciesRow += ' |';
+  //   console.log(dependenciesRow);
+  // }
 
-  /**
-   * Generate file comparison table in exact format (console output)
-   * Displays file structure comparison table
-   * @param componentSpecs Array of components being compared
-   * @param analyses Array of analysis results for each component
-   * @cliHide
-   */
-  private async generateFileComparisonTable(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<void> {
-    console.log(`\n### **File Comparison Table**\n`);
+  // /**
+  //  * Generate file comparison table in exact format (console output)
+  //  * Displays file structure comparison table
+  //  * @param componentSpecs Array of components being compared
+  //  * @param analyses Array of analysis results for each component
+  //  * @cliHide
+  //  */
+  // private async generateFileComparisonTable(componentSpecs: Array<{name: string, version: string}>, analyses: any[]): Promise<void> {
+  //   console.log(`\n### **File Comparison Table**\n`);
     
-    // Table header
-    let header = '| Entry (file/dir)';
-    for (const spec of componentSpecs) {
-      header += ` | ${spec.name} ${spec.version}`;
-    }
-    header += ' | Purpose | Similarity |';
-    console.log(header);
+  //   // Table header
+  //   let header = '| Entry (file/dir)';
+  //   for (const spec of componentSpecs) {
+  //     header += ` | ${spec.name} ${spec.version}`;
+  //   }
+  //   header += ' | Purpose | Similarity |';
+  //   console.log(header);
     
-    // Table separator
-    let separator = '|---|';
-    for (let i = 0; i < componentSpecs.length; i++) {
-      separator += '---|';
-    }
-    separator += '---|---|';
-    console.log(separator);
+  //   // Table separator
+  //   let separator = '|---|';
+  //   for (let i = 0; i < componentSpecs.length; i++) {
+  //     separator += '---|';
+  //   }
+  //   separator += '---|---|';
+  //   console.log(separator);
     
-    // Collect all unique files and directories
-    const allEntries = new Set<string>();
-    for (const analysis of analyses) {
-      for (const file of analysis.files) {
-        allEntries.add(file);
-      }
-      for (const dir of analysis.directories) {
-        allEntries.add(dir + '/');
-      }
-    }
+  //   // Collect all unique files and directories
+  //   const allEntries = new Set<string>();
+  //   for (const analysis of analyses) {
+  //     for (const file of analysis.files) {
+  //       allEntries.add(file);
+  //     }
+  //     for (const dir of analysis.directories) {
+  //       allEntries.add(dir + '/');
+  //     }
+  //   }
     
-    // Process all files individually (maintain table format)
-    const sortedEntries = Array.from(allEntries).sort();
-    for (const entry of sortedEntries) {
+  //   // Process all files individually (maintain table format)
+  //   const sortedEntries = Array.from(allEntries).sort();
+  //   for (const entry of sortedEntries) {
       
-      let row = `| ${entry}`;
+  //     let row = `| ${entry}`;
       
-      let presentCount = 0;
-      const presencePattern = [];
+  //     let presentCount = 0;
+  //     const presencePattern = [];
       
-      for (const analysis of analyses) {
-        const isPresent = analysis.files.has(entry) || analysis.directories.has(entry.endsWith('/') ? entry.slice(0, -1) : entry);
-        const symbol = isPresent ? '✅' : '❌';
-        row += ` | ${symbol}`;
+  //     for (const analysis of analyses) {
+  //       const isPresent = analysis.files.has(entry) || analysis.directories.has(entry.endsWith('/') ? entry.slice(0, -1) : entry);
+  //       const symbol = isPresent ? '✅' : '❌';
+  //       row += ` | ${symbol}`;
         
-        if (isPresent) {
-          presentCount++;
-          presencePattern.push(analysis.name.charAt(0));
-        }
-      }
+  //       if (isPresent) {
+  //         presentCount++;
+  //         presencePattern.push(analysis.name.charAt(0));
+  //       }
+  //     }
       
-      // Determine purpose and similarity
-      const purpose = this.determinePurpose(entry);
-      const similarity = await this.determineSimilarity(entry, componentSpecs, presentCount, componentSpecs.length, presencePattern, analyses);
+  //     // Determine purpose and similarity
+  //     const purpose = this.determinePurpose(entry);
+  //     const similarity = await this.determineSimilarity(entry, componentSpecs, presentCount, componentSpecs.length, presencePattern, analyses);
       
-      row += ` | ${purpose} | ${similarity} |`;
-      console.log(row);
-    }
-  }
+  //     row += ` | ${purpose} | ${similarity} |`;
+  //     console.log(row);
+  //   }
+  // }
 
 
 
-  /**
-   * Determine purpose of file/directory
-   * @cliHide
-   */
-  private determinePurpose(entry: string): string {
-    const purposeMap: { [key: string]: string } = {
-      'package.json': 'Package metadata, scripts, entry points',
-      'package-lock.json': 'Deterministic dependency lockfile',
-      'tsconfig.json': 'TypeScript compiler configuration',
-      'vitest.config.ts': 'Vitest test runner configuration',
-      'README.md': 'Component documentation',
-      'dist/': 'Compiled JS and type declarations',
-      'src/': 'Source code (layers 2/3/4/5)',
-      'test/': 'Automated test specs',
-      'bin/': 'CLI executable shims',
-      'scenarios/': 'Example/runtime scenarios',
-      'spec/': 'Requirements/spec artifacts',
-      'node_modules/': 'Installed dependencies directory'
-    };
+  // /**
+  //  * Determine purpose of file/directory
+  //  * @cliHide
+  //  */
+  // private determinePurpose(entry: string): string {
+  //   const purposeMap: { [key: string]: string } = {
+  //     'package.json': 'Package metadata, scripts, entry points',
+  //     'package-lock.json': 'Deterministic dependency lockfile',
+  //     'tsconfig.json': 'TypeScript compiler configuration',
+  //     'vitest.config.ts': 'Vitest test runner configuration',
+  //     'README.md': 'Component documentation',
+  //     'dist/': 'Compiled JS and type declarations',
+  //     'src/': 'Source code (layers 2/3/4/5)',
+  //     'test/': 'Automated test specs',
+  //     'bin/': 'CLI executable shims',
+  //     'scenarios/': 'Example/runtime scenarios',
+  //     'spec/': 'Requirements/spec artifacts',
+  //     'node_modules/': 'Installed dependencies directory'
+  //   };
     
-    if (purposeMap[entry]) {
-      return purposeMap[entry];
-    }
+  //   if (purposeMap[entry]) {
+  //     return purposeMap[entry];
+  //   }
     
-    // Pattern-based purpose detection
-    if (entry.includes('CLI.ts')) return 'CLI entry';
-    if (entry.includes('Default') && entry.includes('.ts')) return 'Core component implementation';
-    if (entry.includes('.interface.ts')) return 'TypeScript interface definition';
-    if (entry.includes('.test.ts')) return 'Component test specs';
-    if (entry.includes('layer2/')) return 'Implementation layer';
-    if (entry.includes('layer3/')) return 'Interface layer';
-    if (entry.includes('layer4/')) return 'Service layer';
-    if (entry.includes('layer5/')) return 'CLI layer';
+  //   // Pattern-based purpose detection
+  //   if (entry.includes('CLI.ts')) return 'CLI entry';
+  //   if (entry.includes('Default') && entry.includes('.ts')) return 'Core component implementation';
+  //   if (entry.includes('.interface.ts')) return 'TypeScript interface definition';
+  //   if (entry.includes('.test.ts')) return 'Component test specs';
+  //   if (entry.includes('layer2/')) return 'Implementation layer';
+  //   if (entry.includes('layer3/')) return 'Interface layer';
+  //   if (entry.includes('layer4/')) return 'Service layer';
+  //   if (entry.includes('layer5/')) return 'CLI layer';
     
-    return 'Component file';
-  }
+  //   return 'Component file';
+  // }
 
-  /**
-   * Determine similarity based on actual content comparison
-   * - Identical: Files have NO diff at all (byte-identical)
-   * - Similar: Files stem from same template but adapted to component specifics
-   * - Folders: Identical if they exist in 2+ components (content irrelevant)
-   * @cliHide
-   */
-  private async determineSimilarity(entry: string, componentSpecs: any[], presentCount: number, totalCount: number, presencePattern: string[], analyses: any[]): Promise<string> {
-    // Handle directories - identical if present in 2+ components (content doesn't matter)
-    if (entry.endsWith('/')) {
-      if (presentCount >= 2) {
-        return '🟩 Identical';
-      } else if (presentCount === 1) {
-        const uniqueComponent = presencePattern[0];
-        return `🟪 Unique – ${uniqueComponent}`;
-      } else {
-        return '🟥 Different';
-      }
-    }
+  // /**
+  //  * Determine similarity based on actual content comparison
+  //  * - Identical: Files have NO diff at all (byte-identical)
+  //  * - Similar: Files stem from same template but adapted to component specifics
+  //  * - Folders: Identical if they exist in 2+ components (content irrelevant)
+  //  * @cliHide
+  //  */
+  // private async determineSimilarity(entry: string, componentSpecs: any[], presentCount: number, totalCount: number, presencePattern: string[], analyses: any[]): Promise<string> {
+  //   // Handle directories - identical if present in 2+ components (content doesn't matter)
+  //   if (entry.endsWith('/')) {
+  //     if (presentCount >= 2) {
+  //       return '🟩 Identical';
+  //     } else if (presentCount === 1) {
+  //       const uniqueComponent = presencePattern[0];
+  //       return `🟪 Unique – ${uniqueComponent}`;
+  //     } else {
+  //       return '🟥 Different';
+  //     }
+  //   }
 
-    // Handle files - need to check actual content
-    if (presentCount < 2) {
-      // File exists in only one or no components
-      if (presentCount === 1) {
-        const uniqueComponent = presencePattern[0];
-        return `🟪 Unique – ${uniqueComponent}`;
-      } else {
-        return '🟥 Different';
-      }
-    }
+  //   // Handle files - need to check actual content
+  //   if (presentCount < 2) {
+  //     // File exists in only one or no components
+  //     if (presentCount === 1) {
+  //       const uniqueComponent = presencePattern[0];
+  //       return `🟪 Unique – ${uniqueComponent}`;
+  //     } else {
+  //       return '🟥 Different';
+  //     }
+  //   }
 
-    // Files present in 2+ components - check for content similarity
-    const presentComponents = [];
-    const filePaths = [];
+  //   // Files present in 2+ components - check for content similarity
+  //   const presentComponents = [];
+  //   const filePaths = [];
     
-    for (let i = 0; i < componentSpecs.length; i++) {
-      const analysis = analyses[i];
-      if (analysis.files.has(entry)) {
-        presentComponents.push(componentSpecs[i]);
-        // Use the actual component path from analysis
-        filePaths.push(path.join(analysis.path, entry));
-      }
-    }
+  //   for (let i = 0; i < componentSpecs.length; i++) {
+  //     const analysis = analyses[i];
+  //     if (analysis.files.has(entry)) {
+  //       presentComponents.push(componentSpecs[i]);
+  //       // Use the actual component path from analysis
+  //       filePaths.push(path.join(analysis.path, entry));
+  //     }
+  //   }
 
-    // Enhanced: Check for cross-component template similarity
-    // Files that exist in only one component but follow same template pattern as files in other components
-    if (presentCount === 1 && this.isTemplatePatternFile(entry)) {
-      const hasTemplateSimilarity = await this.hasCrossComponentTemplateSimilarity(entry, componentSpecs, analyses);
-      if (hasTemplateSimilarity) {
-        return '🟨 Similar';
-      }
-    }
+  //   // Enhanced: Check for cross-component template similarity
+  //   // Files that exist in only one component but follow same template pattern as files in other components
+  //   if (presentCount === 1 && this.isTemplatePatternFile(entry)) {
+  //     const hasTemplateSimilarity = await this.hasCrossComponentTemplateSimilarity(entry, componentSpecs, analyses);
+  //     if (hasTemplateSimilarity) {
+  //       return '🟨 Similar';
+  //     }
+  //   }
 
-    // Read and compare file contents
-    try {
-      const fileContents = [];
-      for (const filePath of filePaths) {
-        try {
-          const content = await fs.readFile(filePath, 'utf8');
-          fileContents.push(content);
-        } catch (error) {
-          // File might be binary or unreadable, treat as different
-          return `🟨 Similar (${presencePattern.join('+')})`;
-        }
-      }
+  //   // Read and compare file contents
+  //   try {
+  //     const fileContents = [];
+  //     for (const filePath of filePaths) {
+  //       try {
+  //         const content = await fs.readFile(filePath, 'utf8');
+  //         fileContents.push(content);
+  //       } catch (error) {
+  //         // File might be binary or unreadable, treat as different
+  //         return `🟨 Similar (${presencePattern.join('+')})`;
+  //       }
+  //     }
 
-      // Check if all files are byte-identical
-      const firstContent = fileContents[0];
-      const allIdentical = fileContents.every(content => content === firstContent);
+  //     // Check if all files are byte-identical
+  //     const firstContent = fileContents[0];
+  //     const allIdentical = fileContents.every(content => content === firstContent);
       
-      if (allIdentical) {
-        return '🟩 Identical';
-      }
+  //     if (allIdentical) {
+  //       return '🟩 Identical';
+  //     }
 
-      // Check if files are similar (same template structure but adapted)
-      const similarity = this.checkTemplateSimilarity(fileContents, entry);
-      if (similarity) {
-        if (presentCount === totalCount) {
-          return '🟨 Similar';
-        } else {
-          const pattern = presencePattern.join('+');
-          return `🟨 Similar (${pattern})`;
-        }
-      } else {
-        const pattern = presencePattern.join('+');
-        return `🟥 Different (${pattern})`;
-      }
+  //     // Check if files are similar (same template structure but adapted)
+  //     const similarity = this.checkTemplateSimilarity(fileContents, entry);
+  //     if (similarity) {
+  //       if (presentCount === totalCount) {
+  //         return '🟨 Similar';
+  //       } else {
+  //         const pattern = presencePattern.join('+');
+  //         return `🟨 Similar (${pattern})`;
+  //       }
+  //     } else {
+  //       const pattern = presencePattern.join('+');
+  //       return `🟥 Different (${pattern})`;
+  //     }
 
-    } catch (error) {
-      // Error reading files
-      const pattern = presencePattern.join('+');
-      return `🟨 Similar (${pattern})`;
-    }
-  }
+  //   } catch (error) {
+  //     // Error reading files
+  //     const pattern = presencePattern.join('+');
+  //     return `🟨 Similar (${pattern})`;
+  //   }
+  // }
 
-  /**
-   * Check if files are similar using simple template pattern detection
-   * @cliHide
-   */
-  private checkTemplateSimilarity(fileContents: string[], entry: string): boolean {
-    if (fileContents.length < 2) return false;
+  // /**
+  //  * Check if files are similar using simple template pattern detection
+  //  * @cliHide
+  //  */
+  // private checkTemplateSimilarity(fileContents: string[], entry: string): boolean {
+  //   if (fileContents.length < 2) return false;
 
-    // Simple template similarity checks
-    const checks = [
-      this.hasCommonInheritancePattern(fileContents),
-      this.hasExplicitTemplateReferences(fileContents),
-      this.hasCommonImportPatterns(fileContents),
-      this.hasSpecificTemplatePatterns(fileContents, entry)
-    ];
+  //   // Simple template similarity checks
+  //   const checks = [
+  //     this.hasCommonInheritancePattern(fileContents),
+  //     this.hasExplicitTemplateReferences(fileContents),
+  //     this.hasCommonImportPatterns(fileContents),
+  //     this.hasSpecificTemplatePatterns(fileContents, entry)
+  //   ];
     
-    // If 2+ checks pass, files are template-similar
-    const passedChecks = checks.filter(check => check).length;
-    return passedChecks >= 2;
-  }
+  //   // If 2+ checks pass, files are template-similar
+  //   const passedChecks = checks.filter(check => check).length;
+  //   return passedChecks >= 2;
+  // }
 
-  /**
-   * Check if file has template similarity with files in other components
-   * @cliHide
-   */
-  private async hasCrossComponentTemplateSimilarity(entry: string, componentSpecs: any[], analyses: any[]): Promise<boolean> {
-    // For CLI files, check if other components have CLI files following same template
-    if (entry.includes('CLI.ts') && entry.includes('src/ts/layer5/')) {
-      const thisFileContent = await this.getFileContent(entry, componentSpecs, analyses);
-      if (!thisFileContent) return false;
+  // /**
+  //  * Check if file has template similarity with files in other components
+  //  * @cliHide
+  //  */
+  // private async hasCrossComponentTemplateSimilarity(entry: string, componentSpecs: any[], analyses: any[]): Promise<boolean> {
+  //   // For CLI files, check if other components have CLI files following same template
+  //   if (entry.includes('CLI.ts') && entry.includes('src/ts/layer5/')) {
+  //     const thisFileContent = await this.getFileContent(entry, componentSpecs, analyses);
+  //     if (!thisFileContent) return false;
       
-      // Look for CLI files in other components
-      for (let i = 0; i < componentSpecs.length; i++) {
-        const analysis = analyses[i];
-        const spec = componentSpecs[i];
+  //     // Look for CLI files in other components
+  //     for (let i = 0; i < componentSpecs.length; i++) {
+  //       const analysis = analyses[i];
+  //       const spec = componentSpecs[i];
         
-        const otherCLIFiles = Array.from(analysis.files as Set<string>)
-          .filter(file => file.includes('src/ts/layer5/') && file.endsWith('CLI.ts') && file !== entry);
+  //       const otherCLIFiles = Array.from(analysis.files as Set<string>)
+  //         .filter(file => file.includes('src/ts/layer5/') && file.endsWith('CLI.ts') && file !== entry);
         
-        for (const otherCLIFile of otherCLIFiles) {
-          const otherFileContent = await this.getFileContent(otherCLIFile, [spec], [analysis]);
-          if (otherFileContent && this.checkTemplateSimilarity([thisFileContent, otherFileContent], entry)) {
-            return true; // Found template-similar CLI file in another component
-          }
-        }
-      }
-    }
+  //       for (const otherCLIFile of otherCLIFiles) {
+  //         const otherFileContent = await this.getFileContent(otherCLIFile, [spec], [analysis]);
+  //         if (otherFileContent && this.checkTemplateSimilarity([thisFileContent, otherFileContent], entry)) {
+  //           return true; // Found template-similar CLI file in another component
+  //         }
+  //       }
+  //     }
+  //   }
     
-    return false;
-  }
+  //   return false;
+  // }
 
-  /**
-   * Get file content for cross-component comparison
-   * @cliHide
-   */
-  private async getFileContent(entry: string, componentSpecs: any[], analyses: any[]): Promise<string | null> {
-    for (let i = 0; i < componentSpecs.length; i++) {
-      const analysis = analyses[i];
+  // /**
+  //  * Get file content for cross-component comparison
+  //  * @cliHide
+  //  */
+  // private async getFileContent(entry: string, componentSpecs: any[], analyses: any[]): Promise<string | null> {
+  //   for (let i = 0; i < componentSpecs.length; i++) {
+  //     const analysis = analyses[i];
       
-      if (analysis.files.has(entry)) {
-        // Use the actual component path from analysis
-        const filePath = path.join(analysis.path, entry);
+  //     if (analysis.files.has(entry)) {
+  //       // Use the actual component path from analysis
+  //       const filePath = path.join(analysis.path, entry);
         
-        try {
-          return await fs.readFile(filePath, 'utf8');
-        } catch (error) {
-          continue;
-        }
-      }
-    }
-    return null;
-  }
+  //       try {
+  //         return await fs.readFile(filePath, 'utf8');
+  //       } catch (error) {
+  //         continue;
+  //       }
+  //     }
+  //   }
+  //   return null;
+  // }
 
   /**
    * Check if a file follows a template pattern that should be compared across components
    * @cliHide
    */
-  private isTemplatePatternFile(entry: string): boolean {
-    // CLI files in layer5 follow template patterns
-    if (entry.includes('src/ts/layer5/') && entry.endsWith('CLI.ts')) {
-      return true;
-    }
+  // private isTemplatePatternFile(entry: string): boolean {
+  //   // CLI files in layer5 follow template patterns
+  //   if (entry.includes('src/ts/layer5/') && entry.endsWith('CLI.ts')) {
+  //     return true;
+  //   }
     
-    // Default implementation files in layer2 follow patterns
-    if (entry.includes('src/ts/layer2/Default') && entry.endsWith('.ts')) {
-      return true;
-    }
+  //   // Default implementation files in layer2 follow patterns
+  //   if (entry.includes('src/ts/layer2/Default') && entry.endsWith('.ts')) {
+  //     return true;
+  //   }
     
-    // Interface files often follow patterns
-    if (entry.endsWith('.interface.ts')) {
-      return true;
-    }
+  //   // Interface files often follow patterns
+  //   if (entry.endsWith('.interface.ts')) {
+  //     return true;
+  //   }
     
-    return false;
-  }
+  //   return false;
+  // }
 
 
 
 
-  /**
-   * Check for common inheritance patterns (e.g., extends DefaultCLI)
-   * @cliHide
-   */
-  private hasCommonInheritancePattern(fileContents: string[]): boolean {
-    const inheritanceClasses = fileContents.map(content => 
-      this.extractClassExtension(content)
-    ).filter(cls => cls !== null);
+  // /**
+  //  * Check for common inheritance patterns (e.g., extends DefaultCLI)
+  //  * @cliHide
+  //  */
+  // private hasCommonInheritancePattern(fileContents: string[]): boolean {
+  //   const inheritanceClasses = fileContents.map(content => 
+  //     this.extractClassExtension(content)
+  //   ).filter(cls => cls !== null);
     
-    // If 2+ files extend the same base class, they're template-similar
-    if (inheritanceClasses.length >= 2 && new Set(inheritanceClasses).size === 1) {
-      return true;
-    }
-    return false;
-  }
+  //   // If 2+ files extend the same base class, they're template-similar
+  //   if (inheritanceClasses.length >= 2 && new Set(inheritanceClasses).size === 1) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
-  /**
-   * Extract the class that this file extends (e.g., "DefaultCLI")
-   * @cliHide
-   */
-  private extractClassExtension(content: string): string | null {
-    const match = content.match(/extends\s+(\w+)/);
-    return match ? match[1] : null;
-  }
+  // /**
+  //  * Extract the class that this file extends (e.g., "DefaultCLI")
+  //  * @cliHide
+  //  */
+  // private extractClassExtension(content: string): string | null {
+  //   const match = content.match(/extends\s+(\w+)/);
+  //   return match ? match[1] : null;
+  // }
 
-  /**
-   * Check for explicit template references in comments or metadata
-   * @cliHide
-   */
-  private hasExplicitTemplateReferences(fileContents: string[]): boolean {
-    const templatePatterns = [
-      /(?:template|Template):\s*(\w+)/i,
-      /based\s+on:\s*(\w+)/i,
-      /extends:\s*(\w+)/i
-    ];
+  // /**
+  //  * Check for explicit template references in comments or metadata
+  //  * @cliHide
+  //  */
+  // private hasExplicitTemplateReferences(fileContents: string[]): boolean {
+  //   const templatePatterns = [
+  //     /(?:template|Template):\s*(\w+)/i,
+  //     /based\s+on:\s*(\w+)/i,
+  //     /extends:\s*(\w+)/i
+  //   ];
     
-    const templateReferences = fileContents.map(content => {
-      for (const pattern of templatePatterns) {
-        const match = content.match(pattern);
-        if (match) return match[1];
-      }
-      return null;
-    }).filter(ref => ref !== null);
+  //   const templateReferences = fileContents.map(content => {
+  //     for (const pattern of templatePatterns) {
+  //       const match = content.match(pattern);
+  //       if (match) return match[1];
+  //     }
+  //     return null;
+  //   }).filter(ref => ref !== null);
     
-    // If 2+ files reference the same template, they're similar
-    if (templateReferences.length >= 2 && new Set(templateReferences).size === 1) {
-      return true;
-    }
-    return false;
-  }
+  //   // If 2+ files reference the same template, they're similar
+  //   if (templateReferences.length >= 2 && new Set(templateReferences).size === 1) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
-  /**
-   * Check for common import patterns indicating template usage
-   * @cliHide
-   */
-  private hasCommonImportPatterns(fileContents: string[]): boolean {
-    const importPatterns = fileContents.map(content => {
-      // Extract imports from template base classes
-      const imports = content.match(/import\s+{[^}]*}\s+from\s+['"](\.\.\/.*Default\w+)['"]/g);
-      if (imports) {
-        return imports.map(imp => {
-          const match = imp.match(/Default\w+/);
-          return match ? match[0] : null;
-        }).filter(imp => imp !== null);
-      }
-      return [];
-    });
+  // /**
+  //  * Check for common import patterns indicating template usage
+  //  * @cliHide
+  //  */
+  // private hasCommonImportPatterns(fileContents: string[]): boolean {
+  //   const importPatterns = fileContents.map(content => {
+  //     // Extract imports from template base classes
+  //     const imports = content.match(/import\s+{[^}]*}\s+from\s+['"](\.\.\/.*Default\w+)['"]/g);
+  //     if (imports) {
+  //       return imports.map(imp => {
+  //         const match = imp.match(/Default\w+/);
+  //         return match ? match[0] : null;
+  //       }).filter(imp => imp !== null);
+  //     }
+  //     return [];
+  //   });
     
-    // Find common imports across files
-    const allImports = importPatterns.flat();
-    const importCounts = new Map<string, number>();
+  //   // Find common imports across files
+  //   const allImports = importPatterns.flat();
+  //   const importCounts = new Map<string, number>();
     
-    for (const imp of allImports) {
-      importCounts.set(imp, (importCounts.get(imp) || 0) + 1);
-    }
+  //   for (const imp of allImports) {
+  //     importCounts.set(imp, (importCounts.get(imp) || 0) + 1);
+  //   }
     
-    // If any import appears in 2+ files, they share template patterns
-    for (const count of importCounts.values()) {
-      if (count >= 2) return true;
-    }
+  //   // If any import appears in 2+ files, they share template patterns
+  //   for (const count of importCounts.values()) {
+  //     if (count >= 2) return true;
+  //   }
     
-    return false;
-  }
+  //   return false;
+  // }
 
-  /**
-   * Check for specific template patterns based on file type
-   * @cliHide
-   */
-  private hasSpecificTemplatePatterns(fileContents: string[], entry: string): boolean {
-    // CLI files should extend DefaultCLI and call initWithComponentClass
-    if (entry.includes('CLI.ts') && !entry.includes('DefaultCLI.ts')) {
-      return fileContents.every(content => 
-        content.includes('extends DefaultCLI') && 
-        content.includes('initWithComponentClass')
-      );
-    }
+  // /**
+  //  * Check for specific template patterns based on file type
+  //  * @cliHide
+  //  */
+  // private hasSpecificTemplatePatterns(fileContents: string[], entry: string): boolean {
+  //   // CLI files should extend DefaultCLI and call initWithComponentClass
+  //   if (entry.includes('CLI.ts') && !entry.includes('DefaultCLI.ts')) {
+  //     return fileContents.every(content => 
+  //       content.includes('extends DefaultCLI') && 
+  //       content.includes('initWithComponentClass')
+  //     );
+  //   }
     
-    // Package.json files should have similar structure
-    if (entry === 'package.json') {
-      return this.checkPackageJsonSimilarity(fileContents);
-    }
+  //   // Package.json files should have similar structure
+  //   if (entry === 'package.json') {
+  //     return this.checkPackageJsonSimilarity(fileContents);
+  //   }
     
-    // Interface files should have similar patterns
-    if (entry.endsWith('.interface.ts')) {
-      return fileContents.every(content => 
-        content.includes('interface') && 
-        (content.includes('export') || content.includes('export default'))
-      );
-    }
+  //   // Interface files should have similar patterns
+  //   if (entry.endsWith('.interface.ts')) {
+  //     return fileContents.every(content => 
+  //       content.includes('interface') && 
+  //       (content.includes('export') || content.includes('export default'))
+  //     );
+  //   }
     
-    // Config files should have similar structure
-    if (entry === 'tsconfig.json' || entry.includes('config.ts')) {
-      return this.checkConfigFileSimilarity(fileContents);
-    }
+  //   // Config files should have similar structure
+  //   if (entry === 'tsconfig.json' || entry.includes('config.ts')) {
+  //     return this.checkConfigFileSimilarity(fileContents);
+  //   }
     
-    return false;
-  }
+  //   return false;
+  // }
 
-  /**
-   * Check package.json similarity (same structure, different names/versions)
-   * @cliHide
-   */
-  private checkPackageJsonSimilarity(fileContents: string[]): boolean {
-    try {
-      const packages = fileContents.map(content => JSON.parse(content));
+  // /**
+  //  * Check package.json similarity (same structure, different names/versions)
+  //  * @cliHide
+  //  */
+  // private checkPackageJsonSimilarity(fileContents: string[]): boolean {
+  //   try {
+  //     const packages = fileContents.map(content => JSON.parse(content));
       
-      // Check if they have similar structure
-      const firstKeys = Object.keys(packages[0]).sort();
-      const allHaveSimilarStructure = packages.every(pkg => {
-        const keys = Object.keys(pkg).sort();
-        // Allow some variation in keys but require core structure
-        const commonKeys = ['name', 'version', 'scripts', 'devDependencies'];
-        return commonKeys.every(key => keys.includes(key));
-      });
+  //     // Check if they have similar structure
+  //     const firstKeys = Object.keys(packages[0]).sort();
+  //     const allHaveSimilarStructure = packages.every(pkg => {
+  //       const keys = Object.keys(pkg).sort();
+  //       // Allow some variation in keys but require core structure
+  //       const commonKeys = ['name', 'version', 'scripts', 'devDependencies'];
+  //       return commonKeys.every(key => keys.includes(key));
+  //     });
       
-      return allHaveSimilarStructure;
-    } catch (error) {
-      return false;
-    }
-  }
+  //     return allHaveSimilarStructure;
+  //   } catch (error) {
+  //     return false;
+  //   }
+  // }
 
-  /**
-   * Check config file similarity (same structure, different values)
-   * @cliHide
-   */
-  private checkConfigFileSimilarity(fileContents: string[]): boolean {
-    // Remove comments and normalize whitespace for comparison
-    const normalized = fileContents.map(content => 
-      content.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').trim()
-    );
+  // /**
+  //  * Check config file similarity (same structure, different values)
+  //  * @cliHide
+  //  */
+  // private checkConfigFileSimilarity(fileContents: string[]): boolean {
+  //   // Remove comments and normalize whitespace for comparison
+  //   const normalized = fileContents.map(content => 
+  //     content.replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').trim()
+  //   );
     
-    // Check if structure is similar (same property names, possibly different values)
-    const firstNormalized = normalized[0];
-    return normalized.every(content => {
-      // Calculate similarity ratio based on common structure
-      const similarity = this.calculateStructuralSimilarity(firstNormalized, content);
-      return similarity > 0.7; // 70% structural similarity threshold
-    });
-  }
-
-
+  //   // Check if structure is similar (same property names, possibly different values)
+  //   const firstNormalized = normalized[0];
+  //   return normalized.every(content => {
+  //     // Calculate similarity ratio based on common structure
+  //     const similarity = this.calculateStructuralSimilarity(firstNormalized, content);
+  //     return similarity > 0.7; // 70% structural similarity threshold
+  //   });
+  // }
 
 
-  /**
-   * Calculate structural similarity between two text contents
-   * @cliHide
-   */
-  private calculateStructuralSimilarity(text1: string, text2: string): number {
-    // Simple structural similarity based on line structure and length
-    const lines1 = text1.split('\n').filter(line => line.trim().length > 0);
-    const lines2 = text2.split('\n').filter(line => line.trim().length > 0);
-    
-    const lengthSimilarity = 1 - Math.abs(lines1.length - lines2.length) / Math.max(lines1.length, lines2.length);
-    
-    // Count similar line patterns (ignoring specific values)
-    const pattern1 = lines1.map(line => line.replace(/['"]\w+['"]/g, '""').replace(/\d+/g, '0'));
-    const pattern2 = lines2.map(line => line.replace(/['"]\w+['"]/g, '""').replace(/\d+/g, '0'));
-    
-    let commonPatterns = 0;
-    const minLength = Math.min(pattern1.length, pattern2.length);
-    
-    for (let i = 0; i < minLength; i++) {
-      if (pattern1[i] === pattern2[i]) {
-        commonPatterns++;
-      }
-    }
-    
-    const patternSimilarity = minLength > 0 ? commonPatterns / minLength : 0;
-    
-    return (lengthSimilarity + patternSimilarity) / 2;
-  }
+
+
+
 
   /**
    * Recursively display tree structure
@@ -4496,11 +4474,13 @@ Standards:
     switch (topic) {
       case 'standard':
       case 'standards':
-        this.showStandard();
+        // TODO: Implement showStandard() method
+        console.log('📋 Web4 Standards information - Coming soon');
         break;
       case 'guidelines':
       case 'guide':
-        this.showGuidelines();
+        // TODO: Implement showGuidelines() method
+        console.log('🏗️  Web4 Architecture Guidelines - Coming soon');
         break;
       case 'model':
       case 'overview':

@@ -494,11 +494,33 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
       // 2. Context methods (loaded component)
       if (this.context !== null) {
         this.context.listMethods().forEach((name: string) => allMethodNames.add(name));
+        
+        // ✅ FIX: Check for delegated methods via DelegationProxy
+        // @pdca 2025-11-19-UTC-1535.completion-test-issues-analysis.pdca.md
+        // DelegationProxy.listMethods() only returns target's methods, not delegated ones
+        // Need to also check delegation target (Web4TSComponent) for delegated methods
+        if (typeof (this.context as any).hasDelegation === 'function' && (this.context as any).hasDelegation()) {
+          const delegationTarget = (this.context as any).getDelegationTarget();
+          if (delegationTarget && typeof delegationTarget.listMethods === 'function') {
+            delegationTarget.listMethods().forEach((name: string) => allMethodNames.add(name));
+          }
+        }
       }
       
       // 3. Component methods (Web4TSComponent itself)
       if (this.component !== null) {
         this.component.listMethods().forEach((name: string) => allMethodNames.add(name));
+        
+        // ✅ FIX: Check for delegated methods via DelegationProxy
+        // @pdca 2025-11-19-UTC-1535.completion-test-issues-analysis.pdca.md
+        // DelegationProxy.listMethods() only returns target's methods, not delegated ones
+        // Need to also check delegation target (Web4TSComponent) for delegated methods
+        if (typeof (this.component as any).hasDelegation === 'function' && (this.component as any).hasDelegation()) {
+          const delegationTarget = (this.component as any).getDelegationTarget();
+          if (delegationTarget && typeof delegationTarget.listMethods === 'function') {
+            delegationTarget.listMethods().forEach((name: string) => allMethodNames.add(name));
+          }
+        }
       }
       
       let filtered = Array.from(allMethodNames)
@@ -641,7 +663,55 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         }
       }
 
-      // COMPLETION DELEGATION PATTERN (Option B)
+      // ✅ FIX: Check for delegated methods via DelegationProxy
+      // @pdca 2025-11-19-UTC-1535.completion-test-issues-analysis.pdca.md
+      // If no callback found, check if component has delegation and method is delegated
+      const componentToCheck = this.context || this.component;
+      if (!callback && componentToCheck) {
+        // Check if component has the method (works through DelegationProxy)
+        let methodExists = false;
+        if (typeof (componentToCheck as any).hasMethod === 'function') {
+          methodExists = (componentToCheck as any).hasMethod(this.model.completionCommand!);
+        } else {
+          // Fallback: check if method is callable
+          methodExists = typeof (componentToCheck as any)[this.model.completionCommand!] === 'function';
+        }
+        
+        // If method exists and component has delegation, get callback from DefaultCLI
+        // (parameter completion methods are on CLI, not component)
+        if (methodExists) {
+          // Always check DefaultCLI first for parameter completion callbacks
+          // Parameter completion methods are defined on DefaultCLI, not on components
+          callback = TSCompletion.getParameterCallback(
+            'DefaultCLI',
+            this.model.completionCommand!,
+            this.model.completionParameterIndex
+          );
+          
+          // If not found in DefaultCLI, try delegation target's class
+          if (!callback && typeof (componentToCheck as any).hasDelegation === 'function' && (componentToCheck as any).hasDelegation()) {
+            const delegationTarget = (componentToCheck as any).getDelegationTarget();
+            if (delegationTarget) {
+              const delegationClass = delegationTarget.constructor.name;
+              callback = TSCompletion.getParameterCallback(
+                delegationClass,
+                this.model.completionCommand!,
+                this.model.completionParameterIndex
+              );
+            }
+          }
+          
+          // If callback found, execute it on this CLI (parameter completion methods are on CLI)
+          if (callback && typeof (this as any)[callback] === "function") {
+            const values = await (this as any)[callback]();
+            if (values && values.length > 0) {
+              return values;
+            }
+          }
+        }
+      }
+
+      // COMPLETION DELEGATION PATTERN (Option B - Legacy, kept for backward compatibility)
       // @pdca 2025-11-06-UTC-0150.delegated-parameter-completion-broken.pdca.md
       // If no callback found, check if method delegates to Web4TSComponent infrastructure
       if (!callback && this.component && typeof (this.component as any).getWeb4TSComponent === 'function') {
@@ -2266,8 +2336,10 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         this.model.completionOutputLines.push(`DISPLAY: ${prompt}`);
       }
       
-      this.model.completionOutputLines.push("WORD: ");
-      return;
+      // ✅ FIX: Don't add empty WORD line when no completions available
+      // @pdca 2025-11-19-UTC-1535.completion-test-issues-analysis.pdca.md
+      // Empty WORD lines cause comparison test failures - filter out in extractWordLines instead
+      return; // Don't add empty WORD line - bash completion will handle empty case
     }
 
     const lines: string[] = [];
@@ -2391,7 +2463,11 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
           const paramMatch = word.match(/^<\??([^>:'"]+)/);
           if (paramMatch) word = paramMatch[1];
 
+          // ✅ FIX: Filter out empty strings from WORD lines
+          // @pdca 2025-11-19-UTC-1535.completion-test-issues-analysis.pdca.md
+          if (word && word.trim().length > 0) {
           lines.push(`WORD: ${word}`);
+          }
         });
       });
       
@@ -2450,7 +2526,12 @@ export abstract class DefaultCLI implements CLI, Component<CLIModel> {
         // Match: <word>, <?word>, <?word:'default'>, <?word:"default">
         const paramMatch = cleanValue.match(/^<\??([^>:'"]+)/);
         const word = paramMatch ? paramMatch[1] : cleanValue;
+          
+          // ✅ FIX: Filter out empty strings from WORD lines
+          // @pdca 2025-11-19-UTC-1535.completion-test-issues-analysis.pdca.md
+          if (word && word.trim().length > 0) {
         lines.push(`WORD: ${word}`);
+          }
       });
       
       // Empty line after WORD list for spacing

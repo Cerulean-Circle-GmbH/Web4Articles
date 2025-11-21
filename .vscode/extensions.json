@@ -5,6 +5,7 @@
         "anysphere.remote-ssh",
         "shd101wyy.markdown-preview-enhanced",
         "yzhang.markdown-all-in-one",
-        "iliazeus.vscode-ansi"
+        "iliazeus.vscode-ansi",
+        "shivaprasanth.code-notebook-plantuml"
     ]
 }
