@@ -1,0 +1,92 @@
+#!/bin/bash
+# Web4TSComponent CLI Tool - Location Independent Version
+# Web4 pattern: Works from any directory, finds project root via git
+# Based on proven test component pattern
+
+# Function to find project root using git (Web4 standard pattern)
+find_project_root() {
+    # Try git first (most reliable for Web4 projects)
+    local git_root=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [ -n "$git_root" ] && [ -d "$git_root" ]; then
+        if [ -f "$git_root/package.json" ] || [ -f "$git_root/README.md" ]; then
+            echo "$git_root"
+            return 0
+        fi
+    fi
+    
+    # Fallback: directory traversal looking for .git + package.json
+    local current_dir="$PWD"
+    while [ "$current_dir" != "/" ]; do
+        if [ -d "$current_dir/.git" ] && [ -f "$current_dir/package.json" ]; then
+            echo "$current_dir"
+            return 0
+        fi
+        current_dir="$(dirname "$current_dir")"
+    done
+    
+    return 1
+}
+
+# Main execution - location independent
+PROJECT_ROOT=$(find_project_root)
+if [ -z "$PROJECT_ROOT" ]; then
+    echo "❌ Error: Not in a Web4 project directory"
+    echo "💡 Run this from within a Web4 project (must have .git and package.json)"
+    exit 1
+fi
+
+# Get component version from directory name (single source of truth)
+# Resolve symlinks: Follow the script file itself, not just the directory
+SCRIPT_FILE="${BASH_SOURCE[0]}"
+# Resolve all symlinks
+while [ -L "$SCRIPT_FILE" ]; do
+    SCRIPT_FILE="$(readlink "$SCRIPT_FILE")"
+    # Handle relative symlinks
+    if [[ "$SCRIPT_FILE" != /* ]]; then
+        SCRIPT_FILE="$(dirname "${BASH_SOURCE[0]}")/$SCRIPT_FILE"
+    fi
+done
+SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_FILE")" && pwd)"
+COMPONENT_VERSION="$(basename "$SCRIPT_DIR")"
+COMPONENT_PATH="$SCRIPT_DIR"
+
+# Auto-source component's environment if needed
+# Check if environment is loaded by testing for completion functions
+SOURCE_ENV_PATH="$COMPONENT_PATH/source.env"
+if [ -f "$SOURCE_ENV_PATH" ]; then
+    # Check if source.env was already sourced by testing for completion function
+    # The completion function is defined by source.env and inherits to subshells
+    if ! declare -F _web4_generic_completion > /dev/null 2>&1; then
+        # Completion function not defined - need to source
+        source "$SOURCE_ENV_PATH"
+    fi
+    # Silent when already loaded (no message spam on repeated calls)
+fi
+
+
+# Verify component exists
+if [ ! -d "$COMPONENT_PATH" ]; then
+    echo "❌ Web4TSComponent $COMPONENT_VERSION not found at $COMPONENT_PATH"
+    echo "🔍 Project root: $PROJECT_ROOT"
+    exit 1
+fi
+
+# Change to component directory and use smart build system
+cd "$COMPONENT_PATH" || {
+    echo "❌ Failed to cd to $COMPONENT_PATH"
+    echo "   Current dir: $(pwd)"
+    exit 1
+}
+
+# Use our smart build system (handles freshness, dependencies, everything)
+./src/sh/build.sh
+
+# Check if CLI is available after smart build
+CLI_PATH="dist/ts/layer5/PDCACLI.js"
+if [ ! -f "$CLI_PATH" ]; then
+    echo "❌ PDCA CLI build failed"
+    exit 1
+fi
+
+# Execute CLI with all arguments
+node "$CLI_PATH" "$@"

@@ -165,6 +165,28 @@ See [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/0350/
 - Horizontal separators
 - Emoji consistency
 
+### **4. CMM3 Validation Before Code Access**
+**🛑 CRITICAL: NO code access until PDCA is CMM3 validated**
+
+**The Pattern:**
+1. Write PDCA following template and guidelines
+2. Validate with `pdca cmm3check <filename>`
+3. **ONLY IF CMM3 compliant:** Grant code access and proceed
+4. **IF violations found:** Fix violations, validate again
+
+**Why This Matters:**
+- ❌ Starting work with CMM1/CMM2 PDCA = chaos foundation
+- ❌ Fixing CMM1 chaos is 100x more expensive than doing it right
+- ✅ CMM3 PDCA = solid foundation for reproducible work
+- ✅ Validation first = prevents compounding errors
+
+**Example:**
+```bash
+pdca cmm3check session/2025-11-05-UTC-1650.pdca.md
+# Output: ✅ CMM3 Compliant
+# Now proceed with code access
+```
+
 ---
 
 ## **❌ COMMON MISTAKES TO AVOID**
