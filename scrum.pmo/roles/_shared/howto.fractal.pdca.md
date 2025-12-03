@@ -40,17 +40,16 @@ Available topics: `start`, `pdca`, `cmm`, `component`, `feature-development`, `t
 ### **Key Dual Link Insight**
 
 **In markdown files (PDCAs)**:
-```markdown
-[GitHub](https://github.com/org/repo/blob/branch/path) | [§/path/to/file](./relative/path)
-```
+
+`[GitHub](https://...) | [§/path/to/file](./relative/path)`
+
 - GitHub link: absolute URL for verification
 - § notation: project-root-relative path for display
 - Link target: relative path from the markdown file
 
 **In CHAT responses**:
-```markdown
-[GitHub](https://github.com/org/repo/blob/branch/path) | [§/path/to/file](/absolute/path/to/file)
-```
+
+`[GitHub](https://...) | [§/path/to/file](/absolute/path/to/file)`
 - § notation: same (project-root-relative for display)
 - Link target: **MUST be absolute** (chat is not in the project)
 
@@ -197,7 +196,7 @@ Document the fractalization in the tracking PDCA:
 **Required Updates**:
 
 **A. Iteration Section**:
-```markdown
+```
 ### **Iteration X.Y: [Name] ([Original Duration]h → [New Duration]h)**
 **Status**: 🔵 PLANNED
 **Duration Estimate**: [New Total] hours (split into [N] sub-iterations)
@@ -220,7 +219,7 @@ Document the fractalization in the tracking PDCA:
 ```
 
 **B. Progress Tracking Section**:
-```markdown
+```
 **🎯 Iteration X.Y Fractalized into [N] Sub-Iterations**:
 ```
 Iteration X.Y: [Name] ([Total Duration])
@@ -231,7 +230,7 @@ Iteration X.Y: [Name] ([Total Duration])
 ```
 
 **C. Complexity Analysis Section**:
-```markdown
+```
 **Iteration X.Y Complexity Analysis**:
 - **[N] Sub-Iterations**: Fractalized for manageability
 - **CHECK Criteria**: Applied to EVERY sub-iteration
@@ -261,7 +260,7 @@ The detailed iteration PDCA should include all sub-iterations in the DO phase:
 **Location**: `session/[date]-UTC-[time].iteration-[number]-[name].pdca.md`
 
 **Structure**:
-```markdown
+```
 ## **D - DO (Implementation)**
 
 ### **Overview of Sub-Iterations**
@@ -351,7 +350,7 @@ After completing the fractalized iteration, document lessons learned:
 **Location**: Tracking PDCA, "Self-Feedback & Learning Log" section
 
 **Template**:
-```markdown
+```
 **Lesson from [Source] ([Date])**:
 ```quote
 [User feedback about complexity/scope]
@@ -497,13 +496,13 @@ Iteration 1.6: 2-3h → 13-18h (9 sub-iterations)
 
 ### **Anti-Pattern 1: Fractalization Without CHECK Criteria**
 ❌ **Wrong**:
-```markdown
+```
 Sub-Iteration 1: Do interface changes (2h)
 Sub-Iteration 2: Update implementation (3h)
 ```
 
 ✅ **Right**:
-```markdown
+```
 Sub-Iteration 1: Interface Renaming (2h)
 **CHECK**:
 - [ ] Compilation passes
