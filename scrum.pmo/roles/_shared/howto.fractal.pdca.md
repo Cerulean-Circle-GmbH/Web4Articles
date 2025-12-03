@@ -23,6 +23,29 @@
 
 ---
 
+## **🔴 MANDATORY CHECK: Web4 Principles Before Every Commit**
+
+**⚠️ STOP AND READ DEEPLY BEFORE EVERY COMMIT**
+
+Before committing ANY code during fractal PDCA execution, you MUST verify compliance with Web4 principles.
+
+**Required Reading** (read deeply, not just skim):
+- 📄 **Web4 Principles Checklist**: [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.21.8/session/web4-principles-checklist.md) | [§/components/ONCE/0.3.21.8/session/web4-principles-checklist.md](../../UpDown/components/ONCE/0.3.21.8/session/web4-principles-checklist.md)
+
+**Example PDCA** (how to identify and fix violations):
+- 📄 **Fix Web4 Principle Violations**: [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/Web4Requirement/0.3.20.6/session/2025-12-02-UTC-2145.fix-web4-principle-violations.pdca.md) | [§/components/Web4Requirement/0.3.20.6/session/2025-12-02-UTC-2145.fix-web4-principle-violations.pdca.md](../../UpDown/components/Web4Requirement/0.3.20.6/session/2025-12-02-UTC-2145.fix-web4-principle-violations.pdca.md)
+
+**Key Principles to Check**:
+- [ ] **Principle 5**: Reference<T> for nullable references (no `?:` pattern)
+- [ ] **Principle 19**: One file, one type (no multiple interfaces per file)
+- [ ] **Principle 4**: Radical OOP (no arrow functions, no functional patterns)
+- [ ] **Principle 20**: ESM only (no `__filename`, no `require()`)
+- [ ] **Principle 21**: Wrap functional built-ins (`import * as fs`)
+
+**If violations found**: Create a fractal PDCA to fix them BEFORE proceeding.
+
+---
+
 ## **🎯 Minimal Fractal PDCA Checklist**
 
 ### **Step 1: Identify Fractal Candidates**
