@@ -77,6 +77,36 @@ Before committing ANY code during fractal PDCA execution, you MUST read and veri
 
 ---
 
+## **🔄 OPTIONAL: Lazy Deprecation Migration Before Each Commit**
+
+**If token budget allows**, resolve ONE deprecated pattern before committing:
+
+1. **Check for `@deprecated`** methods/patterns in files you touched
+2. **Migrate ONE** to the new Web4 pattern (Principle 16: nameVerb + TypeScript accessors)
+3. **Update callers** if simple, or leave for next iteration
+4. **Include in same commit** — no separate PDCA needed for single migrations
+
+**Examples of lazy migrations:**
+| Encountered | Migrate To |
+|-------------|------------|
+| `getProjectRoot()` | `get projectRoot()` |
+| `setDependencies(v)` | `set dependencies(v)` |
+| `buildDependencies()` | `dependenciesBuild()` |
+| `createComponent()` | `componentCreate()` |
+
+**Why this matters:**
+- Keeps codebase progressively cleaner
+- Avoids accumulating technical debt
+- Each commit leaves code better than found
+- No overhead — just opportunistic improvement
+
+**Skip if:**
+- Token budget is low (complex main task)
+- Migration requires touching many files
+- Would significantly delay the main task
+
+---
+
 ## **🗂️ MANDATORY: Update Fractal PDCA Stack Before Every Commit**
 
 **Every tracking PDCA should have a "Fractal PDCA Stack" section at the top** showing the active call stack from deepest to root — like a debugger stack trace. Only show the active path, not completed branches.
