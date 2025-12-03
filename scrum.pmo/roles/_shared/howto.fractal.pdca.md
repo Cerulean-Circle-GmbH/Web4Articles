@@ -474,9 +474,65 @@ Final Validation → Git Commit → Update Tracking → Done ✅
 
 ---
 
+## **🎓 Self-Informing with PDCA Tools**
+
+When you are uncertain about any Web4, CMM3, or PDCA concept, **use the tools to self-inform before assuming**.
+
+### **How to Self-Inform**
+
+**1. Run a component without parameters** to see its capabilities:
+```bash
+cd /path/to/component
+./component-name
+```
+
+This shows all available methods, parameters, and examples.
+
+**2. Use `trainAI` for specific topics**:
+```bash
+./pdca trainAI dual-links    # Learn about dual links
+./pdca trainAI pdca          # Learn about PDCA process
+./pdca trainAI cmm           # Learn about CMM compliance
+./pdca trainAI decide        # Learn about QA decisions
+./pdca trainAI start         # Overview of all topics
+```
+
+Available topics: `start`, `pdca`, `cmm`, `component`, `feature-development`, `tech-stack`, `test-workflow`, `test-first`, `dual-links`, `ensure-links`, `component-upgrade`, `interpret-instructions`, `collaborate`, `chat-response`, `decide`
+
+**3. Use `queryTrainAI` for natural language questions**:
+```bash
+./pdca queryTrainAI "how do I format dual links?" dual-links
+```
+
+### **Key Dual Link Insight**
+
+**In markdown files (PDCAs)**:
+```markdown
+[GitHub](https://github.com/org/repo/blob/branch/path) | [§/path/to/file](./relative/path)
+```
+- GitHub link: absolute URL for verification
+- § notation: project-root-relative path for display
+- Link target: relative path from the markdown file
+
+**In CHAT responses**:
+```markdown
+[GitHub](https://github.com/org/repo/blob/branch/path) | [§/path/to/file](/absolute/path/to/file)
+```
+- § notation: same (project-root-relative for display)
+- Link target: **MUST be absolute** (chat is not in the project)
+
+**Tool**: Use `pdca getDualLink <file>` to generate correct format.
+
+### **RAG First Principle**
+
+> When uncertain, query `trainAI` before acting. Context window exhaustion leads to assumptions and violations.
+
+---
+
 **Version History**:
+- v1.1.0 (2025-12-03): Added self-informing section with pdca trainAI usage
 - v1.0.0 (2025-11-21): Initial version based on ONCE v0.3.21.2 Iteration 1.6 fractalization
 
-**Maintained By**: AI Assistant (Claude Sonnet 4.5)  
+**Maintained By**: AI Assistant (Claude Opus 4.5)  
 **Location**: `/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scrum.pmo/roles/_shared/howto.fractal.pdca.md`
 
