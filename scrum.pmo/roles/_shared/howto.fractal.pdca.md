@@ -79,44 +79,48 @@ Before committing ANY code during fractal PDCA execution, you MUST read and veri
 
 ## **🗂️ MANDATORY: Update Fractal PDCA Stack Before Every Commit**
 
-**Every tracking PDCA should have a "Fractal PDCA Stack" section at the top** that shows the current position in the PDCA hierarchy as a tree view. This enables quick navigation without reading the entire document.
+**Every tracking PDCA should have a "Fractal PDCA Stack" section at the top** showing the active call stack from deepest to root — like a debugger stack trace. Only show the active path, not completed branches.
 
 ### **Why This Is Important**
 
 1. **Quick Context**: See immediately where you are in the fractal hierarchy
-2. **Avoid Re-Reading**: Navigate directly to the relevant section via line numbers
-3. **Status Tracking**: Visual ✅/🔵/🔄 indicators show progress at a glance
-4. **Dual Links**: Each node has clickable links for deep dives
+2. **Avoid Re-Reading**: Navigate directly to the relevant PDCA via working dual links
+3. **Focus**: Only active path shown — completed branches are collapsed
+4. **Dual Links**: Each level has clickable links (not inside code blocks!)
 
-### **Stack Format**
+### **Stack Format** (numbered list, deepest first)
 
-```
-📁 [Project Name]
-├── 🔵 Main PDCA: [name]
-│   └── GitHub | §/path/to/main.pdca.md
-│
-└── 📋 Tracking PDCA (THIS FILE) ← Line N
-    │
-    ├── ✅ Iteration X: [Name] ← Line N
-    │   └── PDCA: filename.pdca.md
-    │
-    └── 🔵 Current Iteration (ACTIVE) ← Line N
-        └── GitHub | §/path/to/current.pdca.md
-            │
-            └── 📋 Sub-PDCAs:
-                ├── ✅ Completed: filename.pdca.md
-                └── 🔵 Current: filename.pdca.md (CURRENT)
-```
+**Active Call Stack** (deepest → root):
 
-**Legend:** ✅ Complete | 🔵 Active | 🔄 Planned | 🔴 Blocked
+1. **CURRENT →** [Current Task Name]
+   - [GitHub](https://...) | [§/path/to/current.pdca.md](./relative/path)
+
+2. Parent Iteration Name
+   - [GitHub](https://...) | [§/path/to/parent.pdca.md](./relative/path)
+   - Section: [Link to section](#anchor) (line ~N)
+
+3. Tracking PDCA **(THIS FILE)**
+   - Section: [ITERATION MASTER PLAN](#anchor) (line ~N)
+
+4. Main PDCA: Root
+   - [GitHub](https://...) | [§/path/to/main.pdca.md](./relative/path)
+
+**Completed branches** (N iterations) — see [MASTER PLAN](#anchor)
+
+### **Key Principles**
+
+- **Numbered list**: Not a code block — dual links must work!
+- **Deepest first**: Like a debugger stack trace (current frame at top)
+- **Skip completed**: Only show the active path, reference completed branches
+- **Working links**: Every level has a dual link to navigate
 
 ### **When to Update**
 
 **Update the stack BEFORE every commit** by:
-1. Marking completed iterations with ✅
-2. Updating the "Current Deepest Active" indicator
-3. Adding new sub-PDCAs as they are created
-4. Updating line numbers if the document structure changed
+1. Moving to the next task? Update item 1
+2. Completed a sub-iteration? Remove it, update parent
+3. Started a new fractal? Add new item 1, shift others down
+4. Finished an iteration? Collapse into "Completed branches"
 
 ### **Example Reference**
 
