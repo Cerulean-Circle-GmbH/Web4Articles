@@ -88,31 +88,25 @@ Before committing ANY code during fractal PDCA execution, you MUST read and veri
 3. **Focus**: Only active path shown — completed branches are collapsed
 4. **Dual Links**: Each level has clickable links (not inside code blocks!)
 
-### **Stack Format** (numbered list, deepest first)
+### **Stack Format** (hierarchical nested list)
 
-**Active Call Stack** (deepest → root):
-
-1. **CURRENT →** [Current Task Name]
-   - [GitHub](https://...) | [§/path/to/current.pdca.md](./relative/path)
-
-2. Parent Iteration Name
-   - [GitHub](https://...) | [§/path/to/parent.pdca.md](./relative/path)
-   - Section: [Link to section](#anchor) (line ~N)
-
-3. Tracking PDCA **(THIS FILE)**
-   - Section: [ITERATION MASTER PLAN](#anchor) (line ~N)
-
-4. Main PDCA: Root
-   - [GitHub](https://...) | [§/path/to/main.pdca.md](./relative/path)
-
-**Completed branches** (N iterations) — see [MASTER PLAN](#anchor)
+- 📁 **Main PDCA**: [Name] — [GitHub](https://...) | [§/.../main.pdca.md](./path)
+  - 📋 **Tracking PDCA** (THIS FILE) — [Section: MASTER PLAN](#anchor)
+    - ✅ Completed branches (N iterations)
+    - 🔄 Future branches
+    - 🔵 **Active Iteration**: [Name] — [Section](#anchor)
+      - [GitHub](https://...) | [§/.../iteration.pdca.md](./path)
+      - ✅ Completed sub-PDCA — [§/.../sub.pdca.md](./path)
+      - **🔵 CURRENT →** [Current Task] (status)
+        - [GitHub](https://...) | [§/.../current.pdca.md](./path)
 
 ### **Key Principles**
 
-- **Numbered list**: Not a code block — dual links must work!
-- **Deepest first**: Like a debugger stack trace (current frame at top)
-- **Skip completed**: Only show the active path, reference completed branches
-- **Working links**: Every level has a dual link to navigate
+- **Hierarchical list**: Shows tree structure with siblings visible
+- **Nested bullets**: Markdown list, not code block → dual links work!
+- **Collapsed completed**: Show ✅ summary, not every detail
+- **Working links**: Every node has clickable dual links
+- **Siblings visible**: Can see previous/next branches at each level
 
 ### **When to Update**
 
