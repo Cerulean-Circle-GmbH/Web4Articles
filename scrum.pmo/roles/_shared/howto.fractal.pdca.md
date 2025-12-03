@@ -77,6 +77,53 @@ Before committing ANY code during fractal PDCA execution, you MUST read and veri
 
 ---
 
+## **🗂️ MANDATORY: Update Fractal PDCA Stack Before Every Commit**
+
+**Every tracking PDCA should have a "Fractal PDCA Stack" section at the top** that shows the current position in the PDCA hierarchy as a tree view. This enables quick navigation without reading the entire document.
+
+### **Why This Is Important**
+
+1. **Quick Context**: See immediately where you are in the fractal hierarchy
+2. **Avoid Re-Reading**: Navigate directly to the relevant section via line numbers
+3. **Status Tracking**: Visual ✅/🔵/🔄 indicators show progress at a glance
+4. **Dual Links**: Each node has clickable links for deep dives
+
+### **Stack Format**
+
+```
+📁 [Project Name]
+├── 🔵 Main PDCA: [name]
+│   └── GitHub | §/path/to/main.pdca.md
+│
+└── 📋 Tracking PDCA (THIS FILE) ← Line N
+    │
+    ├── ✅ Iteration X: [Name] ← Line N
+    │   └── PDCA: filename.pdca.md
+    │
+    └── 🔵 Current Iteration (ACTIVE) ← Line N
+        └── GitHub | §/path/to/current.pdca.md
+            │
+            └── 📋 Sub-PDCAs:
+                ├── ✅ Completed: filename.pdca.md
+                └── 🔵 Current: filename.pdca.md (CURRENT)
+```
+
+**Legend:** ✅ Complete | 🔵 Active | 🔄 Planned | 🔴 Blocked
+
+### **When to Update**
+
+**Update the stack BEFORE every commit** by:
+1. Marking completed iterations with ✅
+2. Updating the "Current Deepest Active" indicator
+3. Adding new sub-PDCAs as they are created
+4. Updating line numbers if the document structure changed
+
+### **Example Reference**
+
+See: [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.21.2/session/2025-11-19-UTC-1800.iteration-tracking.pdca.md) | [§/components/ONCE/0.3.21.2/session/2025-11-19-UTC-1800.iteration-tracking.pdca.md](../../UpDown/components/ONCE/0.3.21.2/session/2025-11-19-UTC-1800.iteration-tracking.pdca.md)
+
+---
+
 ## **📋 Overview**
 
 **Fractal PDCA** is the practice of splitting large, complex iterations into smaller, manageable sub-iterations, each with complete PDCA cycles (Plan-Do-Check-Act) and clear CHECK criteria.
@@ -219,7 +266,7 @@ Document the fractalization in the tracking PDCA:
 ```
 
 **B. Progress Tracking Section**:
-```
+
 **🎯 Iteration X.Y Fractalized into [N] Sub-Iterations**:
 ```
 Iteration X.Y: [Name] ([Total Duration])
@@ -227,10 +274,10 @@ Iteration X.Y: [Name] ([Total Duration])
   ├── X.Y.2: [Name] (Xh)
   └── X.Y.3: [Name] (Xh)
 ```
-```
+
 
 **C. Complexity Analysis Section**:
-```
+
 **Iteration X.Y Complexity Analysis**:
 - **[N] Sub-Iterations**: Fractalized for manageability
 - **CHECK Criteria**: Applied to EVERY sub-iteration
@@ -238,7 +285,7 @@ Iteration X.Y: [Name] ([Total Duration])
 - **PRIMARY USE CASE**: [If applicable]
 - **Manual Verification**: Included for critical sub-iterations
 - **Existing Tests**: Must pass at every step ([N]/[N])
-```
+
 
 **Checklist**:
 - [ ] Iteration section shows fractalization (original → split)
