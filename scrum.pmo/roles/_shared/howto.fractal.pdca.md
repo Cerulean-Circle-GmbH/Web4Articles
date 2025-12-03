@@ -1,9 +1,80 @@
 # HowTo: Fractal PDCA - Breaking Down Complex Iterations
 
-**Version**: 1.0.0  
-**Date**: 2025-11-21  
-**Author**: AI Assistant (Claude Sonnet 4.5)  
+**Version**: 1.2.0  
+**Date**: 2025-12-03  
+**Author**: AI Assistant (Claude Opus 4.5)  
 **Purpose**: Guide for fractally splitting complex PDCA iterations into manageable sub-iterations
+
+---
+
+## **🎓 Self-Informing with PDCA Tools** ⚠️ READ FIRST
+
+When you are uncertain about any Web4, CMM3, or PDCA concept, **use the tools to self-inform before assuming**.
+
+### **How to Self-Inform**
+
+**1. Run a component without parameters** to see its capabilities:
+```bash
+cd /path/to/component
+./component-name
+```
+
+This shows all available methods, parameters, and examples.
+
+**2. Use `trainAI` for specific topics**:
+```bash
+./pdca trainAI dual-links    # Learn about dual links
+./pdca trainAI pdca          # Learn about PDCA process
+./pdca trainAI cmm           # Learn about CMM compliance
+./pdca trainAI decide        # Learn about QA decisions
+./pdca trainAI start         # Overview of all topics
+```
+
+Available topics: `start`, `pdca`, `cmm`, `component`, `feature-development`, `tech-stack`, `test-workflow`, `test-first`, `dual-links`, `ensure-links`, `component-upgrade`, `interpret-instructions`, `collaborate`, `chat-response`, `decide`
+
+**3. Use `queryTrainAI` for natural language questions**:
+```bash
+./pdca queryTrainAI "how do I format dual links?" dual-links
+```
+
+### **Key Dual Link Insight**
+
+**In markdown files (PDCAs)**:
+```markdown
+[GitHub](https://github.com/org/repo/blob/branch/path) | [§/path/to/file](./relative/path)
+```
+- GitHub link: absolute URL for verification
+- § notation: project-root-relative path for display
+- Link target: relative path from the markdown file
+
+**In CHAT responses**:
+```markdown
+[GitHub](https://github.com/org/repo/blob/branch/path) | [§/path/to/file](/absolute/path/to/file)
+```
+- § notation: same (project-root-relative for display)
+- Link target: **MUST be absolute** (chat is not in the project)
+
+**Tool**: Use `pdca getDualLink <file>` to generate correct format.
+
+### **RAG First Principle**
+
+> When uncertain, query `trainAI` before acting. Context window exhaustion leads to assumptions and violations.
+
+---
+
+## **🔴 MANDATORY CHECK: Web4 Principles Before Every Commit**
+
+**⚠️ STOP AND READ DEEPLY BEFORE EVERY COMMIT**
+
+Before committing ANY code during fractal PDCA execution, you MUST read and verify compliance with Web4 principles.
+
+**📄 REQUIRED READING** (read deeply, not just skim - contains 21 principles):
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.21.8/session/web4-principles-checklist.md) | [§/components/ONCE/0.3.21.8/session/web4-principles-checklist.md](../../UpDown/components/ONCE/0.3.21.8/session/web4-principles-checklist.md)
+
+**📄 EXAMPLE PDCA** (how to identify and fix violations):
+- [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/Web4Requirement/0.3.20.6/session/2025-12-02-UTC-2145.fix-web4-principle-violations.pdca.md) | [§/components/Web4Requirement/0.3.20.6/session/2025-12-02-UTC-2145.fix-web4-principle-violations.pdca.md](../../UpDown/components/Web4Requirement/0.3.20.6/session/2025-12-02-UTC-2145.fix-web4-principle-violations.pdca.md)
+
+**If violations found**: Create a fractal PDCA to fix them BEFORE proceeding.
 
 ---
 
@@ -20,29 +91,6 @@
 
 **Key Principle**:
 > Each sub-iteration MUST have its own CHECK phase with compilation, tests, and success criteria. Never proceed to the next sub-iteration until the current one passes CHECK.
-
----
-
-## **🔴 MANDATORY CHECK: Web4 Principles Before Every Commit**
-
-**⚠️ STOP AND READ DEEPLY BEFORE EVERY COMMIT**
-
-Before committing ANY code during fractal PDCA execution, you MUST verify compliance with Web4 principles.
-
-**Required Reading** (read deeply, not just skim):
-- 📄 **Web4 Principles Checklist**: [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.21.8/session/web4-principles-checklist.md) | [§/components/ONCE/0.3.21.8/session/web4-principles-checklist.md](../../UpDown/components/ONCE/0.3.21.8/session/web4-principles-checklist.md)
-
-**Example PDCA** (how to identify and fix violations):
-- 📄 **Fix Web4 Principle Violations**: [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/Web4Requirement/0.3.20.6/session/2025-12-02-UTC-2145.fix-web4-principle-violations.pdca.md) | [§/components/Web4Requirement/0.3.20.6/session/2025-12-02-UTC-2145.fix-web4-principle-violations.pdca.md](../../UpDown/components/Web4Requirement/0.3.20.6/session/2025-12-02-UTC-2145.fix-web4-principle-violations.pdca.md)
-
-**Key Principles to Check**:
-- [ ] **Principle 5**: Reference<T> for nullable references (no `?:` pattern)
-- [ ] **Principle 19**: One file, one type (no multiple interfaces per file)
-- [ ] **Principle 4**: Radical OOP (no arrow functions, no functional patterns)
-- [ ] **Principle 20**: ESM only (no `__filename`, no `require()`)
-- [ ] **Principle 21**: Wrap functional built-ins (`import * as fs`)
-
-**If violations found**: Create a fractal PDCA to fix them BEFORE proceeding.
 
 ---
 
@@ -497,65 +545,10 @@ Final Validation → Git Commit → Update Tracking → Done ✅
 
 ---
 
-## **🎓 Self-Informing with PDCA Tools**
-
-When you are uncertain about any Web4, CMM3, or PDCA concept, **use the tools to self-inform before assuming**.
-
-### **How to Self-Inform**
-
-**1. Run a component without parameters** to see its capabilities:
-```bash
-cd /path/to/component
-./component-name
-```
-
-This shows all available methods, parameters, and examples.
-
-**2. Use `trainAI` for specific topics**:
-```bash
-./pdca trainAI dual-links    # Learn about dual links
-./pdca trainAI pdca          # Learn about PDCA process
-./pdca trainAI cmm           # Learn about CMM compliance
-./pdca trainAI decide        # Learn about QA decisions
-./pdca trainAI start         # Overview of all topics
-```
-
-Available topics: `start`, `pdca`, `cmm`, `component`, `feature-development`, `tech-stack`, `test-workflow`, `test-first`, `dual-links`, `ensure-links`, `component-upgrade`, `interpret-instructions`, `collaborate`, `chat-response`, `decide`
-
-**3. Use `queryTrainAI` for natural language questions**:
-```bash
-./pdca queryTrainAI "how do I format dual links?" dual-links
-```
-
-### **Key Dual Link Insight**
-
-**In markdown files (PDCAs)**:
-```markdown
-[GitHub](https://github.com/org/repo/blob/branch/path) | [§/path/to/file](./relative/path)
-```
-- GitHub link: absolute URL for verification
-- § notation: project-root-relative path for display
-- Link target: relative path from the markdown file
-
-**In CHAT responses**:
-```markdown
-[GitHub](https://github.com/org/repo/blob/branch/path) | [§/path/to/file](/absolute/path/to/file)
-```
-- § notation: same (project-root-relative for display)
-- Link target: **MUST be absolute** (chat is not in the project)
-
-**Tool**: Use `pdca getDualLink <file>` to generate correct format.
-
-### **RAG First Principle**
-
-> When uncertain, query `trainAI` before acting. Context window exhaustion leads to assumptions and violations.
-
----
-
 **Version History**:
+- v1.2.0 (2025-12-03): Moved self-inform to top, DRY principle violations check via reference
 - v1.1.0 (2025-12-03): Added self-informing section with pdca trainAI usage
 - v1.0.0 (2025-11-21): Initial version based on ONCE v0.3.21.2 Iteration 1.6 fractalization
 
 **Maintained By**: AI Assistant (Claude Opus 4.5)  
 **Location**: `/Users/Shared/Workspaces/2cuGitHub/Web4Articles/scrum.pmo/roles/_shared/howto.fractal.pdca.md`
-
