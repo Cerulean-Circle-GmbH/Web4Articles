@@ -146,6 +146,34 @@ Before committing ANY code during fractal PDCA execution, you MUST read and veri
 3. Started a new fractal? Add new item 1, shift others down
 4. Finished an iteration? Collapse into "Completed branches"
 
+### **⚠️ CRITICAL: 100% Completion Rule for PDCAs**
+
+**When marking a PDCA as ✅ COMPLETE, it MUST be 100% complete:**
+
+1. **All tasks checked** — No `- [ ]` unchecked items remain
+2. **All CHECK criteria passed** — Every criterion has ✅
+3. **Future work extracted** — Any `FUTURE`, `DEFERRED`, or remaining `[ ]` items must be:
+   - **Removed** from the completed PDCA (or clearly marked as "tracked elsewhere")
+   - **Added** to the tracking PDCA's BACKLOG section
+   - **Linked** back to source PDCA for context
+
+**Why This Matters:**
+- Future work in completed PDCAs gets **lost forever** when context window resets
+- Only the tracking PDCA's BACKLOG survives across sessions
+- A PDCA marked complete but containing future work is a **lie** that causes technical debt
+
+**BACKLOG Format in Tracking PDCA:**
+
+```markdown
+## **📋 BACKLOG: Future Work** (100% coverage from completed PDCAs)
+
+### 🔵 [Category Name] (from [source.pdca.md](./path))
+- [ ] **ID** Description of deferred work
+- [ ] **ID** Another item
+```
+
+**Rule:** If you can't extract all future work to the tracking PDCA, the child PDCA is NOT complete — mark it 🔵 IN PROGRESS.
+
 ### **Example Reference**
 
 See: [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.21.2/session/2025-11-19-UTC-1800.iteration-tracking.pdca.md) | [§/components/ONCE/0.3.21.2/session/2025-11-19-UTC-1800.iteration-tracking.pdca.md](../../UpDown/components/ONCE/0.3.21.2/session/2025-11-19-UTC-1800.iteration-tracking.pdca.md)
