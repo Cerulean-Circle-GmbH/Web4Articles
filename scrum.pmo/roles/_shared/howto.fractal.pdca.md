@@ -5,6 +5,25 @@
 **Author**: AI Assistant (Claude Opus 4.5)  
 **Purpose**: Guide for fractally splitting complex PDCA iterations into manageable sub-iterations
 
+## **🎯 Minimal Fractal PDCA Checklist**
+
+### **Step 1: Identify Fractal Candidates**
+
+Review the tracking PDCA iteration plan:
+
+**Reference Documents**: READ THEM FIRST
+- 📄 [CMM3 Compliance Checklist](./cmm3.compliance.checklist.md) | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-17-UTC-0747/scrum.pmo/roles/_shared/cmm3.compliance.checklist.md)
+- 📄 [PDCA Template](./PDCA/template.md) | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/template.md)
+- 📄 [PDCA HowTo](./PDCA/howto.PDCA.md) | [GitHub](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.PDCA.md)
+
+**Checklist**:
+- [ ] Iteration duration estimated at **>4 hours**?
+- [ ] Iteration has **>3 distinct technical concerns**?
+- [ ] Iteration touches **core architecture** or **introduces new paradigm**?
+- [ ] User feedback indicates **complexity underestimated**?
+- [ ] **If ANY = YES**: Proceed to Step 2 (Fractalize) (---> ### **Step 2: Analyze & Decompose**)
+
+
 ---
 
 ## **🎓 Self-Informing with PDCA Tools** ⚠️ READ FIRST
@@ -17,6 +36,9 @@ When you are uncertain about any Web4, CMM3, or PDCA concept, **use the tools to
 ```bash
 cd /path/to/component
 ./component-name
+
+# e.g. 
+components/PDCA/0.3.5.2/pdca
 ```
 
 This shows all available methods, parameters, and examples.
@@ -123,12 +145,12 @@ Before committing ANY code during fractal PDCA execution, you MUST read and veri
 - 📁 **Main PDCA**: [Name] — [GitHub](https://...) | [§/.../main.pdca.md](./path)
   - 📋 **Tracking PDCA** (THIS FILE) — [Section: MASTER PLAN](#anchor)
     - ✅ Completed branches (N iterations)
-    - 🔄 Future branches
     - 🔵 **Active Iteration**: [Name] — [Section](#anchor)
       - [GitHub](https://...) | [§/.../iteration.pdca.md](./path)
       - ✅ Completed sub-PDCA — [§/.../sub.pdca.md](./path)
       - **🔵 CURRENT →** [Current Task] (status)
         - [GitHub](https://...) | [§/.../current.pdca.md](./path)
+    - 🔄 Future Itterations - especially next one
 
 ### **Key Principles**
 
@@ -177,6 +199,60 @@ Before committing ANY code during fractal PDCA execution, you MUST read and veri
 ### **Example Reference**
 
 See: [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.21.2/session/2025-11-19-UTC-1800.iteration-tracking.pdca.md) | [§/components/ONCE/0.3.21.2/session/2025-11-19-UTC-1800.iteration-tracking.pdca.md](../../UpDown/components/ONCE/0.3.21.2/session/2025-11-19-UTC-1800.iteration-tracking.pdca.md)
+
+---
+
+## **🧪 Tootsie Testing - Web4 Principle 25** ⚠️ MANDATORY
+
+**Web4 uses ONLY Tootsie tests** - Radical OOP test objects, NOT traditional test runners.
+
+### **Running Tootsie Tests**
+
+```bash
+# From the component directory
+cd /path/to/component/version
+
+# Run test by file number
+./once tootsie file 1           # Runs Test01_...
+./once tootsie file 2           # Runs Test02_...
+
+# Run test by full name
+./once tootsie file Test01_PathAuthorityAndProjectRootDetection
+
+# Test isolation is AUTOMATIC - production files CANNOT be affected
+```
+
+### **Key Points**
+
+1. **Command**: `once tootsie file <number>` or `once tootsie file <TestName>`
+2. **NOT**: `npm test`, `vitest`, `jest`, `mocha`, or ANY other test runner
+3. **Location**: Tests live in `/test/tootsie/` directory
+4. **Base Class**: All tests extend `ONCETestCase.ts`
+5. **Isolation**: Automatic test/data isolation - production safe
+
+### **Example Output**
+
+```
+🔒 Test Isolation Enforced
+📄 Test File: Test01_PathAuthority...ts
+📦 Tootsie loaded
+🧪 Executing test...
+   ✅ Test PASSED
+```
+
+### **CHECK Phase Testing**
+
+During CHECK phase of any sub-iteration:
+```bash
+# Run ALL Tootsie tests for the component
+./once tootsie file 1
+./once tootsie file 2
+./once tootsie file 3
+# ... etc
+```
+
+**Reference**:
+- 📄 [ONCE README - Tootsie Section](../../UpDown/components/ONCE/0.3.21.8/README.md#-tootsie-testing---quality-consciousness-) | [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.21.8/README.md#-tootsie-testing---quality-consciousness-)
 
 ---
 
