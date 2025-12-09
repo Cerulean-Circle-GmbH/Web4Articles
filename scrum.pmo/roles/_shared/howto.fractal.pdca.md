@@ -251,6 +251,30 @@ During CHECK phase of any sub-iteration:
 # ... etc
 ```
 
+### **Web4 Lazy Migration Scan (Optional - When Token Budget Allows)**
+
+Before committing, run the Web4 lazy migration scan to identify violations for future cleanup:
+
+```bash
+# Run Web4 violation scan (NEVER FAILS - just logs checklist)
+cd /path/to/ONCE/0.3.21.8
+npx tsx test/tootsie/Test19_Web4LazyMigrationScan.ts
+```
+
+This test scans for:
+- **P16**: `getXyz()`/`setXyz()` → TypeScript getters/setters
+- **P16**: `xyzGet()` without params → `get xyz()`
+- **P16**: `createXyz()` → `xyzCreate()`
+- **P4**: Arrow functions in forEach/map/filter → method references
+- **P3**: Underscore prefix properties → `propertyField` suffix
+- **P26**: Factory functions → `new Class().init(scenario)`
+
+**Note**: This test NEVER FAILS. It outputs a lazy migration checklist. Fix violations incrementally.
+
+**Reference**:
+- 📄 [Test19_Web4LazyMigrationScan.ts](../../UpDown/components/ONCE/0.3.21.8/test/tootsie/Test19_Web4LazyMigrationScan.ts) | [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.21.8/test/tootsie/Test19_Web4LazyMigrationScan.ts)
+- 📄 [Web4 Principles Checklist](../../UpDown/components/ONCE/0.3.21.8/session/web4-principles-checklist.md) | [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.21.8/session/web4-principles-checklist.md)
+
 **Reference**:
 - 📄 [ONCE README - Tootsie Section](../../UpDown/components/ONCE/0.3.21.8/README.md#-tootsie-testing---quality-consciousness-) | [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.21.8/README.md#-tootsie-testing---quality-consciousness-)
 
