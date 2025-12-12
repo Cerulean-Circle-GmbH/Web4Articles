@@ -537,10 +537,36 @@ Sub-Iteration X.Y.3
   - [ ] Do NOT proceed until CHECK passes
 - [ ] **AFTER CHECK PASSES**:
   - [ ] Update tracking PDCA (mark sub-iteration complete)
-  - [ ] Git commit (if appropriate)
+  - [ ] Git commit with proper message format (see below)
+  - [ ] **Verify git state is CLEAN** (`git status` shows nothing)
   - [ ] Proceed to next sub-iteration
 
+### **⚠️ MANDATORY: Git Protocol & Clean State**
+
+**After EVERY prompt that makes changes, you MUST:**
+
+1. **Add ALL modified files**: `git add .` or specific files
+2. **Commit with CMM3 format** (per [CMM3 1i](./cmm3.compliance.checklist.md)):
+   - Format: `git commit -m "PDCAfilename.pdca.md"` (one-liner)
+   - Or descriptive: `git commit -m "type(scope): description"`
+3. **Verify CLEAN state**: `git status` must show `nothing to commit, working tree clean`
+4. **Push if GitHub links needed**: `git push` (dual links require push to be accessible)
+
+**⚠️ CRITICAL: Git state MUST be clean before returning control to TRON.**
+
+```bash
+# Verify clean state:
+git status
+# Expected output:
+# On branch dev/...
+# nothing to commit, working tree clean
+```
+
+**CMM3 1i Quote:**
+> "Git commit & push protocol: One-liner commit `git commit -m "PDCAfilename.pdca.md"` then ALWAYS push `git push` - GitHub dual links REQUIRE push to be accessible"
+
 **Reference**:
+- 📄 [CMM3 Section 1i](./cmm3.compliance.checklist.md) - Git commit & push protocol
 - 📄 [CMM3 Section 1d](./cmm3.compliance.checklist.md#1d-structure) - Process structure
 - 📄 [PDCA HowTo](./PDCA/howto.PDCA.md) - Execution guidance
 
