@@ -669,13 +669,29 @@ All references use **dual-link format** (workspace-relative + GitHub):
    - Sections: Creation, Execution, Documentation
 
 ### **Related References**:
-4. **Git Protocol**
+
+4. **Per-Prompt Checklist** (CMM3 1f Protocol) — **QUALITY GATE**
+   - UpDown Workspace: [§/components/ONCE/0.3.22.1/session/2025-12-17-UTC-1200.agent-context.md](../../UpDown/components/ONCE/0.3.22.1/session/2025-12-17-UTC-1200.agent-context.md)
+   - GitHub: [agent-context.md](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.22.1/session/2025-12-17-UTC-1200.agent-context.md)
+   - Contains: Phase 1-4 checklist (PLAN→DO→CHECK→ACT) for EVERY prompt
+
+5. **PDCA Automation Improvement** — **LESSONS LEARNED**
+   - UpDown Workspace: [§/components/ONCE/0.3.22.1/session/2025-12-19-UTC-improvement-pdca-automation.md](../../UpDown/components/ONCE/0.3.22.1/session/2025-12-19-UTC-improvement-pdca-automation.md)
+   - GitHub: [improvement-pdca-automation.md](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.22.1/session/2025-12-19-UTC-improvement-pdca-automation.md)
+   - Contains: 6-step post-prompt protocol for PDCA hygiene automation
+
+6. **Git Protocol**
    - Workspace: [§/scrum.pmo/roles/_shared/PDCA/howto.git-protocol.md](./PDCA/howto.git-protocol.md)
    - GitHub: [howto.git-protocol.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-09-24-UTC-1028/scrum.pmo/roles/_shared/PDCA/howto.git-protocol.md)
 
-5. **Decide Framework (QA)**
+7. **Decide Framework (QA)**
    - Workspace: [§/scrum.pmo/roles/_shared/decide.md](./decide.md)
    - GitHub: [decide.md](https://github.com/Cerulean-Circle-GmbH/Web4Articles/blob/dev/2025-10-17-UTC-0747/scrum.pmo/roles/_shared/decide.md)
+
+8. **Learning Log** — **AGENT LESSONS**
+   - UpDown Workspace: [§/components/ONCE/0.3.22.1/session/learning.md](../../UpDown/components/ONCE/0.3.22.1/session/learning.md)
+   - GitHub: [learning.md](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.22.1/session/learning.md)
+   - Contains: L1-L15 lessons including "grep > checkbox" (L15)
 
 ---
 

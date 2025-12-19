@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../UpDown"
+		},
+		{
+			"path": "../../../EAMD.ucp"
+		}
+	],
+	"settings": {}
+}
