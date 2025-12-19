@@ -81,6 +81,15 @@ Available topics: `start`, `pdca`, `cmm`, `component`, `feature-development`, `t
 
 > When uncertain, query `trainAI` before acting. Context window exhaustion leads to assumptions and violations.
 
+### **L16: Self-Re-Inform After Context Summary**
+
+When context was summarized (message says "Summary:..."), immediately re-read:
+1. **Tracking PDCA** → fractal stack, what's next
+2. **Agent context** → per-prompt checklist  
+3. **This file** → methodology
+
+> `read_file` costs tokens but prevents mistakes that cost MORE tokens to fix.
+
 ---
 
 ## **🔴 MANDATORY CHECK: Web4 Principles Before Every Commit**
