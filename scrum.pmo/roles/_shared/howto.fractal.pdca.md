@@ -84,9 +84,15 @@ Available topics: `start`, `pdca`, `cmm`, `component`, `feature-development`, `t
 ### **L16: Self-Re-Inform After Context Summary**
 
 When context was summarized (message says "Summary:..."), immediately re-read:
+
 1. **Tracking PDCA** → fractal stack, what's next
-2. **Agent context** → per-prompt checklist  
-3. **This file** → methodology
+   - [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.22.1/session/2025-12-12-UTC-2100.iteration-tracking.pdca.md) | [§/.../iteration-tracking.pdca.md](../../UpDown/components/ONCE/0.3.22.1/session/2025-12-12-UTC-2100.iteration-tracking.pdca.md)
+
+2. **Agent context** → per-prompt checklist, architecture
+   - [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.22.1/session/2025-12-17-UTC-1200.agent-context.md) | [§/.../agent-context.md](../../UpDown/components/ONCE/0.3.22.1/session/2025-12-17-UTC-1200.agent-context.md)
+
+3. **Learning log** → lessons L1-L16
+   - [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.22.1/session/learning.md) | [§/.../learning.md](../../UpDown/components/ONCE/0.3.22.1/session/learning.md)
 
 > `read_file` costs tokens but prevents mistakes that cost MORE tokens to fix.
 
