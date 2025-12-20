@@ -509,6 +509,13 @@ The detailed iteration PDCA should include all sub-iterations in the DO phase:
 
 ### **Step 6: Execute with CHECK Gates**
 
+**⚠️ MANDATORY: 6-Step Post-Prompt Protocol**
+```
+1. UPDATE checkboxes   2. UPDATE stack   3. EXTRACT deferred → 🔶 QUEUED
+4. COMMIT (PDCAfilename.pdca.md)   5. VERIFY clean   6. DUAL LINKS
+```
+Details: [§/.../improvement-pdca-automation.md](../../UpDown/components/ONCE/0.3.22.1/session/2025-12-19-UTC-improvement-pdca-automation.md) | [GitHub](https://github.com/Cerulean-Circle-GmbH/UpDown/blob/dev/web4v0100/components/ONCE/0.3.22.1/session/2025-12-19-UTC-improvement-pdca-automation.md)
+
 **CRITICAL RULE**: Never proceed to next sub-iteration until current passes CHECK.
 
 **Execution Flow**:
@@ -579,6 +586,8 @@ git status
 
 **CMM3 1i Quote:**
 > "Git commit & push protocol: One-liner commit `git commit -m "PDCAfilename.pdca.md"` then ALWAYS push `git push` - GitHub dual links REQUIRE push to be accessible"
+
+**TRON Trigger**: If you forget, TRON says **"Checklist"** → immediately perform all 6 post-prompt steps.
 
 **Reference**:
 - 📄 [CMM3 Section 1i](./cmm3.compliance.checklist.md) - Git commit & push protocol
