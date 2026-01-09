@@ -1,9 +1,50 @@
 # HowTo: Fractal PDCA - Breaking Down Complex Iterations
 
-**Version**: 1.2.0  
-**Date**: 2025-12-03  
+**Version**: 1.3.0  
+**Date**: 2026-01-08  
 **Author**: AI Assistant (Claude Opus 4.5)  
 **Purpose**: Guide for fractally splitting complex PDCA iterations into manageable sub-iterations
+
+---
+
+## **🚫 TLA = The Last Acronym** (Web4 Semantic Naming)
+
+> **TLA** stands for **"The Last Acronym"** for **"The Last Architecture"** (Web4).
+> 
+> **⚠️ STOP INVENTING ABBREVIATIONS! No one can understand them — not even yourself after context reset!**
+
+### **Rules**
+
+1. **NEVER invent new abbreviations** — Use full descriptive names
+2. **NEVER use ambiguous short forms** — `MC`, `CPA`, `SOI` mean NOTHING
+3. **ALWAYS use the PDCA filename** — It IS the unique identifier
+4. **ALWAYS write out full names in tables** — Readability > brevity
+
+### **Bad Examples (FORBIDDEN)**
+
+```markdown
+| MC | CPA | SOI | MDE |  ← MEANINGLESS ALPHABET SOUP
+| ✅ | ✅ | 🟡 | ⏳ |
+```
+
+### **Good Examples (REQUIRED)**
+
+```markdown
+| PDCA | Status |
+|------|--------|
+| Model Consolidation DRY Cleanup | ✅ COMPLETE |
+| CLI Path Authority Full Migration | ✅ COMPLETE |
+| Scenario-Only Init Violations | 🟡 PLAN |
+```
+
+### **Why This Matters**
+
+- **Context window resets** — Abbreviations become meaningless
+- **Semantic Web principle** — Names carry meaning
+- **Collaboration** — Others (and future you) need to understand
+- **PDCA filename IS the identifier** — No need for abbreviations
+
+---
 
 ## **🎯 Minimal Fractal PDCA Checklist**
 
