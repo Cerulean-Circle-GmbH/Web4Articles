@@ -46,6 +46,55 @@
 
 ---
 
+## **🗂️ MANDATORY Stack Format** (DO NOT INVENT OTHER STRUCTURES)
+
+> **⚠️ The FRACTAL PDCA STACK section MUST be at the TOP of the tracking PDCA and contain ALL incomplete work in hierarchical format. DO NOT create separate "CURRENT STATUS" sections or tables.**
+
+### **Required Format**
+
+```markdown
+## **🗂️ FRACTAL PDCA STACK** (hierarchical, update before every commit)
+
+➡️ **Next:** [PDCA Name](./path.pdca.md) — 🟡 PLAN
+
+- 🔵 **Parent PDCA Name** — **XX% COMPLETE** (~Xh/Yh)
+  - [GitHub](https://...) | [§/path/to/pdca.md](./path.pdca.md)
+  - **Goal**: One-line description
+  - ✅ Completed sub-tasks
+  - **🔵 CURRENT →** Current sub-task description
+    - [GitHub](https://...) | [§/path/to/sub.pdca.md](./sub.pdca.md)
+  - ⏳ Pending sub-tasks
+  - 🔮 Future sub-tasks — FUTURE
+- 🟡 **Another PDCA** — **IN PROGRESS**
+  - Details...
+
+📊 **Build Status**
+\`\`\`
+tsc --noEmit   # ✅ 0 errors
+./once build   # ✅ Exit 0
+\`\`\`
+
+**[→ Completed History](#-completed-pdca-history)**
+```
+
+### **Rules**
+
+1. **Stack AT THE TOP** — `🗂️ FRACTAL PDCA STACK` is the FIRST section after header
+2. **NO separate status sections** — All incomplete work is IN the stack
+3. **Hierarchical indentation** — Shows parent→child relationships
+4. **`➡️ Next:`** — Always shows what's immediately next
+5. **Completed PDCAs** — Go to `📜 COMPLETED PDCA HISTORY` at the bottom
+6. **Details in history** — Use `<details>` for collapsed completed PDCA lists
+
+### **Forbidden**
+
+- ❌ Creating `🔴 CURRENT STATUS` sections
+- ❌ Tables for incomplete PDCAs (tables are for completed history only)
+- ❌ Moving stack content to other sections
+- ❌ Inventing new section types
+
+---
+
 ## **🎯 Minimal Fractal PDCA Checklist**
 
 ### **Step 1: Identify Fractal Candidates**
