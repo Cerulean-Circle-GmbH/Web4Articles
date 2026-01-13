@@ -4633,9 +4633,15 @@ ${'='.repeat(80)}
   ): Promise<this> {
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Print header AFTER updateModelPaths()
     this.printQuickHeader();
-    
+
+    // @pdca 2026-01-13-UTC-0835.setCICDVersion-delegation-context-bug.pdca.md
+    // Use delegation context component name when in delegation mode
+    const componentName = this.model.isDelegation
+      ? this.model.displayName
+      : this.model.component;
+
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use this.model directly (no target variable)
-    const componentDir = path.join(this.model.componentsDirectory, this.model.component);
+    const componentDir = path.join(this.model.componentsDirectory, componentName);
     
     // @pdca 2025-11-07-UTC-0000.eliminate-path-duplication-all-cases.pdca.md - Use SemanticVersion.resolveVersion (semantic responsibility)
     const actualVersion = await SemanticVersion.resolveVersion(version, componentDir, this.model.version);
@@ -4645,7 +4651,7 @@ ${'='.repeat(80)}
       throw new Error(`Invalid targetVersion: ${targetVersion}. Must be one of: ${Array.from(SemanticVersion.SEMANTIC_LINKS).join(', ')}`);
     }
     
-    console.log(`🔗 Setting ${targetVersion} symlink for ${this.model.component}:`);
+    console.log(`🔗 Setting ${targetVersion} symlink for ${componentName}:`);
     console.log(`   Target: ${actualVersion}`);
     
     const fs = await import('fs/promises');
@@ -4670,7 +4676,7 @@ ${'='.repeat(80)}
       if (targetVersion !== 'latest') {
         const projectRoot = this.model.projectRoot;
         const versionsDir = path.join(projectRoot, 'scripts', 'versions');
-        const componentLower = this.model.component.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const componentLower = componentName.toLowerCase().replace(/[^a-z0-9]/g, '');
         
         // Semantic link name: web4tscomponent.prod
         const semanticLinkName = `${componentLower}.${targetVersion}`;
