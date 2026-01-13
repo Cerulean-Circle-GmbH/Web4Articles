@@ -16,9 +16,9 @@
 | **UpDown** | 0.3.20.6 | Active | Tootsie testing, componentDescriptor |
 | **ONCE** | 0.3.22.2 | Embedded | Stripped-down + ONCE-specific methods |
 
-**Linked Spec Folders:**
-- [updown-0.3.20.6](./updown-0.3.20.6) → UpDown/components/Web4TSComponent/0.3.20.6/spec
-- [once-0.3.22.2](./once-0.3.22.2) → UpDown/components/ONCE/0.3.22.2/spec
+**This file is symlinked to:**
+- UpDown/components/Web4TSComponent/0.3.20.6/spec/release.comparison.md
+- UpDown/components/ONCE/0.3.22.2/spec/release.comparison.md
 
 ---
 
