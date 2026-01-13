@@ -17,8 +17,8 @@
 | **ONCE** | 0.3.22.2 | Embedded | Stripped-down + ONCE-specific methods |
 
 **This file is symlinked to:**
-- UpDown/components/Web4TSComponent/0.3.20.6/spec/release.comparison.md
-- UpDown/components/ONCE/0.3.22.2/spec/release.comparison.md
+- UpDown/components/Web4TSComponent/0.3.20.6/spec/web4tscomponent.release.comparison.md
+- UpDown/components/ONCE/0.3.22.2/spec/web4tscomponent.release.comparison.md
 
 ---
 
